@@ -1,8 +1,13 @@
 {
   "$schema": "#a11y-overrides",
   "description": "Human-authored overrides for WCAG 2.2 AA conformance. These override automated axe-core results in the OpenACR YAML report. Each entry must include a reason explaining the decision.",
-  "lastUpdated": "2026-05-12",
+  "lastUpdated": "2026-06-09",
   "overrides": [
+    {
+      "criterion": "2.4.7",
+      "conformance": "supports",
+      "reason": "Focus indicators provided by design system (Tailwind focus-visible:ring-* utilities). All instances of outline:none are paired with :focus-visible alternatives."
+    },
     {
       "criterion": "1.2.1",
       "conformance": "not-applicable",
@@ -29,9 +34,19 @@
       "reason": "Atomic does not include prerecorded video content requiring audio descriptions."
     },
     {
+      "criterion": "1.3.4",
+      "conformance": "not-applicable",
+      "reason": "Atomic does not restrict display orientation. No component uses the Screen Orientation API, @media orientation queries, or CSS transforms that lock the page to portrait or landscape."
+    },
+    {
       "criterion": "1.4.2",
       "conformance": "not-applicable",
       "reason": "Atomic does not include components that auto-play audio."
+    },
+    {
+      "criterion": "1.4.5",
+      "conformance": "not-applicable",
+      "reason": "Atomic does not render text as images. All text is real HTML styled with CSS. SVG icons are purely symbolic (no `<text>` elements). Product/result images display user-provided content, not component-generated text."
     },
     {
       "criterion": "2.2.1",
@@ -59,6 +74,11 @@
       "reason": "Multiple navigation ways are a host application concern, not a component library concern."
     },
     {
+      "criterion": "2.5.1",
+      "conformance": "not-applicable",
+      "reason": "Atomic does not implement multipoint or path-based gestures. Carousels use button-based navigation, scrollable containers use native browser scroll with arrow buttons, and touch events (touchstart/touchend) are used only as single-point tap equivalents for analytics timing."
+    },
+    {
       "criterion": "2.5.4",
       "conformance": "not-applicable",
       "reason": "Atomic does not include functionality operated by device or user motion."
@@ -79,6 +99,11 @@
       "reason": "Consistent identification across pages is a host application concern; individual Atomic components use consistent internal naming."
     },
     {
+      "criterion": "3.2.6",
+      "conformance": "not-applicable",
+      "reason": "Consistent help placement across pages is a host application concern; Atomic components do not control page-level layout or ordering of help mechanisms."
+    },
+    {
       "criterion": "3.3.7",
       "conformance": "not-applicable",
       "reason": "Atomic does not include multi-step forms that require redundant data entry."
@@ -87,6 +112,11 @@
       "criterion": "3.3.8",
       "conformance": "not-applicable",
       "reason": "Atomic does not include authentication flows."
+    },
+    {
+      "criterion": "2.5.7",
+      "conformance": "not-applicable",
+      "reason": "No Atomic component implements custom dragging movements. Scrollable containers use native CSS overflow (user-agent scrolling, exempt per 2.5.7) with arrow button alternatives. Modal touchmove listeners only prevent background scrolling."
     }
   ]
 }

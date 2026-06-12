@@ -1,6 +1,6 @@
 @isTest
 private class RecommendationsControllerTest {
-  // This is a demo token and it's okay to be public.
+  // This API key is intentionally public — it belongs to a sample organization used for samples/docs.
   static final String sampleHeadlessConfiguration = '{"accessToken":"xx564559b1-0045-48e1-953c-3addd1ee4457","organizationId":"searchuisamples"}';
   @IsTest
   static void shouldReturnStringifiedConfiguration() {

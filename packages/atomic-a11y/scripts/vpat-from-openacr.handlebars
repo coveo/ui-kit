@@ -1,38 +1,63 @@
-# VPAT® 2.5 - {{product.name}}
+# {{author.company_name}} Accessibility Conformance Report
 
-## Name of Product/Version
-{{product.name}}{{#if product.version}} {{product.version}}{{/if}}
+International Edition
 
-## Report Dates and Version
-- Report Date: {{report_date}}
-- Last Modified Date: {{last_modified_date}}
-- Version: {{product.name}}-{{product.version}}-{{version}}
+(Based on VPAT® Version 2.5Rev)
 
-## Product Description
-{{product.description}}
+**Name of Product/Version:** {{product.name}}{{#if product.version}} {{product.version}}{{/if}}
 
-## Contact Information
-- Name: {{author.name}}
-- Company: {{author.company_name}}
-- Email: {{author.email}}
-- Website: {{author.website}}
+**Report Date:** {{report_date}}
 
-## Notes
-{{notes}}
+**Product Description:** {{product.description}}
 
-## Evaluation Methods Used
-{{evaluation_methods_used}}
+**Contact Information:** {{author.email}}
 
-## WCAG 2.2 AA Conformance Table
+**Notes:** {{notes}}
+
+**Evaluation Methods Used:** {{evaluation_methods_used}}
+
+## Applicable Standards/Guidelines
+
+This report covers the degree of conformance for the following accessibility standard/guidelines:
+
+| Standard/Guideline | Included In Report |
+| --- | --- |
+{{#each catalog.standards as |catalog-standard|}}
+| {{catalog-standard.label}} | {{#each catalog-standard.chapters as |ch|}}{{#with (catalogChapter ch) as |chapter|}}{{#with (lookup ../../../chapters chapter.id) as |ch-data|}}Level {{chapter.short_label}} ({{#if ch-data.disabled}}No{{else}}Yes{{/if}}){{#unless @last}}, {{/unless}}{{/with}}{{/with}}{{/each}} |
+{{/each}}
+
+## Terms
+
+The terms used in the Conformance Level information are defined as follows:
+
+{{#each catalog.terms as |term|}}
+- **{{term.label}}:** {{term.description}}
+{{/each}}
+
+## WCAG 2.x Report
+
+Note: When reporting on conformance with the WCAG 2.x Success Criteria, they are scoped for full pages, complete processes, and programming units, respectively.
+
+{{#each catalog.standards as |catalog-standard|}}
+{{#each catalog-standard.chapters as |catalog-standard-chapter|}}
+{{#with (catalogChapter catalog-standard-chapter) as |catalog-chapter|}}
+{{#with (lookup ../../../chapters catalog-chapter.id) as |data-category|}}
+{{#unless data-category.disabled}}
+### {{catalog-chapter.label}}
+
+Notes: {{data-category.notes}}
 
 | Criteria | Conformance Level | Remarks and Explanations |
 | --- | --- | --- |
-{{#each standards}}
-{{#each chapters}}
-{{#with (lookup @root.chapters chapter_id)}}
-{{#each criteria}}
-| {{num}} {{handle}} ({{level}}) | {{conformance}} | {{remarks}} |
+{{#each data-category.criteria as |data-criteria|}}
+| {{data-criteria.num}} {{catalogCriteriaLabel catalog-chapter.id data-criteria.num}} | {{#each data-criteria.components as |data-components|}}{{levelLabel data-components.adherence.level}}{{/each}} | {{#each data-criteria.components as |data-components|}}{{data-components.adherence.notes}}{{/each}} |
 {{/each}}
+{{/unless}}
+{{/with}}
 {{/with}}
 {{/each}}
 {{/each}}
+
+## Legal Disclaimer ({{author.company_name}})
+
+This document is provided for informational purposes only and the contents hereof are subject to change without notice. {{author.company_name}} does not warrant that this document is error free, nor does it provide any other warranties or conditions, whether expressed orally or implied in law, including implied warranties and conditions of merchantability or fitness for a particular purpose.

@@ -1,9 +1,17 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {html} from 'lit';
+import {within} from 'shadow-dom-testing-library';
+import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
+import {buildSearchResponseWithResults} from '@/storybook-utils/api/search/search-response-mocks';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-sort-dropdown/atomic-sort-dropdown.js';
 import '@/src/components/search/atomic-sort-expression/atomic-sort-expression.js';
+import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
+
+const searchApiHarness = new MockSearchApi();
 
 const {decorator, play} = wrapInSearchInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(
@@ -20,12 +28,16 @@ const meta: Meta = {
   parameters: {
     ...parameters,
     chromatic: {disableSnapshot: true},
+    msw: {handlers: [...searchApiHarness.handlers]},
     actions: {
       handles: events,
     },
   },
   args,
   argTypes,
+  beforeEach: async () => {
+    searchApiHarness.clearAll();
+  },
 
   play,
 };
@@ -53,5 +65,51 @@ export const Default: Story = {
         expression="sncost ascending, date descending"
       ></atomic-sort-expression>
     `,
+  },
+};
+
+export const A11yStatusMessage: Story = {
+  name: 'A11y Status Message',
+  tags: ['a11y', 'test', '!dev'],
+  args: {
+    'default-slot': `
+      <atomic-sort-expression
+        label="relevance"
+        expression="relevancy"
+      ></atomic-sort-expression>
+      <atomic-sort-expression
+        label="most-recent"
+        expression="date descending"
+      ></atomic-sort-expression>
+    `,
+  },
+  decorators: [
+    (story) => html`
+      <atomic-query-summary></atomic-query-summary>
+      ${story()}
+    `,
+  ],
+  beforeEach: async () => {
+    searchApiHarness.searchEndpoint.mockOnce(
+      buildSearchResponseWithResults(120)
+    );
+    searchApiHarness.searchEndpoint.mockOnce(
+      buildSearchResponseWithResults(84)
+    );
+  },
+  play: async (context) => {
+    await play(context);
+    await testStatusMessageA11y(context, {
+      triggerAction: async () => {
+        const canvas = within(context.canvasElement);
+        const select = await canvas.findByShadowRole('combobox', {
+          name: /sort by/i,
+        });
+        (select as HTMLSelectElement).value = 'date descending';
+        select.dispatchEvent(new Event('change', {bubbles: true}));
+      },
+      expectedText: 'Results loaded. Results 1-10 of 84',
+      timeout: 5000,
+    });
   },
 };

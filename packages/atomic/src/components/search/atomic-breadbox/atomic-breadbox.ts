@@ -29,6 +29,7 @@ import {
   FocusTargetController,
 } from '@/src/utils/accessibility-utils';
 import {getFieldValueCaption} from '@/src/utils/field-utils';
+import {HiddenStateController} from '@/src/utils/hidden-state-controller';
 
 /**
  * The `atomic-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
@@ -44,6 +45,8 @@ import {getFieldValueCaption} from '@/src/utils/field-utils';
  * @part show-less - The button to display less breadcrumbs.
  * @part label - The "Filters" label.
  * @part clear - The button to clear all filters.
+ *
+ * @cssState empty - Hides the element when there are no breadcrumbs to display.
  */
 @customElement('atomic-breadbox')
 @bindings()
@@ -81,6 +84,8 @@ export class AtomicBreadbox
   private breadcrumbShowMoreFocus!: FocusTargetController;
   private breadcrumbShowLessFocus!: FocusTargetController;
 
+  #hiddenState = new HiddenStateController(this);
+
   public bindings!: Bindings;
   public breadcrumbManager!: BreadcrumbManager;
   public facetManager!: FacetManager;
@@ -96,6 +101,15 @@ export class AtomicBreadbox
   @state() public error!: Error;
   @state() private isCollapsed = true;
   @state() private showMoreText = '';
+
+  /**
+   * Whether to disable the collapsing behavior of breadcrumbs.
+   *
+   * When set, all breadcrumbs are always displayed in a wrapping layout
+   * instead of being collapsed into a single row with a "+ N" show more button.
+   */
+  @property({type: Boolean, attribute: 'disable-collapse'})
+  disableCollapse = false;
 
   private breadboxAriaMessage = new AriaLiveRegionController(
     this,
@@ -133,7 +147,9 @@ export class AtomicBreadbox
     this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
     this.facetManager = buildFacetManager(this.bindings.engine);
 
-    if (window.ResizeObserver && this.parentElement) {
+    if (this.disableCollapse) {
+      this.isCollapsed = false;
+    } else if (window.ResizeObserver && this.parentElement) {
       this.resizeObserver = new ResizeObserver(() => this.adaptBreadcrumbs());
       this.resizeObserver.observe(this.parentElement);
     }
@@ -161,6 +177,7 @@ export class AtomicBreadbox
   render() {
     const breadcrumbs = this.allBreadcrumbs;
 
+    this.#hiddenState.isEmpty = !breadcrumbs.length;
     if (!breadcrumbs.length) {
       return nothing;
     }
@@ -172,36 +189,38 @@ export class AtomicBreadbox
       },
     })(
       html`${this.renderBreadcrumbs(breadcrumbs)}
-      ${renderBreadcrumbShowMore({
-        props: {
-          refCallback: async (el) => {
-            await this.breadcrumbShowLessFocus.setTarget(el!);
-          },
-          onShowMore: () => {
-            this.firstExpandedBreadcrumbIndex =
-              this.numberOfBreadcrumbs - this.numberOfCollapsedBreadcrumbs;
-            this.breadcrumbShowMoreFocus.focusOnNextTarget();
-            this.isCollapsed = false;
-          },
-          isCollapsed: this.isCollapsed,
-          i18n: this.bindings.i18n,
-          numberOfCollapsedBreadcrumbs: this.numberOfCollapsedBreadcrumbs,
-          value: this.showMoreText,
-          ariaLabel: this.bindings.i18n.t('show-n-more-filters', {
-            value: this.numberOfCollapsedBreadcrumbs,
-          }),
-        },
-      })}
-      ${renderBreadcrumbShowLess({
-        props: {
-          onShowLess: () => {
-            this.breadcrumbShowLessFocus.focusOnNextTarget();
-            this.isCollapsed = true;
-          },
-          isCollapsed: this.isCollapsed,
-          i18n: this.bindings.i18n,
-        },
-      })}
+      ${this.disableCollapse
+        ? nothing
+        : html`${renderBreadcrumbShowMore({
+            props: {
+              refCallback: async (el) => {
+                await this.breadcrumbShowLessFocus.setTarget(el!);
+              },
+              onShowMore: () => {
+                this.firstExpandedBreadcrumbIndex =
+                  this.numberOfBreadcrumbs - this.numberOfCollapsedBreadcrumbs;
+                this.breadcrumbShowMoreFocus.focusOnNextTarget();
+                this.isCollapsed = false;
+              },
+              isCollapsed: this.isCollapsed,
+              i18n: this.bindings.i18n,
+              numberOfCollapsedBreadcrumbs: this.numberOfCollapsedBreadcrumbs,
+              value: this.showMoreText,
+              ariaLabel: this.bindings.i18n.t('show-n-more-filters', {
+                value: this.numberOfCollapsedBreadcrumbs,
+              }),
+            },
+          })}
+          ${renderBreadcrumbShowLess({
+            props: {
+              onShowLess: () => {
+                this.breadcrumbShowLessFocus.focusOnNextTarget();
+                this.isCollapsed = true;
+              },
+              isCollapsed: this.isCollapsed,
+              i18n: this.bindings.i18n,
+            },
+          })}`}
       ${renderBreadcrumbClearAll({
         props: {
           refCallback: async (ref) => {
@@ -259,7 +278,7 @@ export class AtomicBreadbox
   }
 
   private adaptBreadcrumbs() {
-    if (!this.breadcrumbs.length) {
+    if (this.disableCollapse || !this.breadcrumbs.length) {
       return;
     }
     this.showAllBreadcrumbs();

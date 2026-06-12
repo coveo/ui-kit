@@ -3,13 +3,14 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
 import {expect} from 'storybook/test';
+import {testDialogA11y} from '@/storybook-utils/a11y/dialog.js';
 import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters as commonParameters} from '@/storybook-utils/common/common-meta-parameters';
 import '@/src/components/commerce/atomic-commerce-refine-modal/atomic-commerce-refine-modal.js';
 import '@/src/components/commerce/atomic-commerce-refine-toggle/atomic-commerce-refine-toggle.js';
 
-const mockCommerceApi = new MockCommerceApi();
+const commerceApiHarness = new MockCommerceApi();
 
 const {decorator, play} = wrapInCommerceInterface();
 const {events, args, argTypes, styleTemplate} = getStorybookHelpers(
@@ -30,7 +31,7 @@ const meta: Meta = {
     actions: {
       handles: events,
     },
-    msw: {handlers: [...mockCommerceApi.handlers]},
+    msw: {handlers: [...commerceApiHarness.handlers]},
   },
   args: {
     ...args,
@@ -107,4 +108,13 @@ export default meta;
 
 export const DefaultModal: Story = {
   name: 'Default modal',
+};
+
+export const A11yDialog: Story = {
+  tags: ['a11y', 'test', '!dev'],
+  name: 'A11y Dialog',
+  play: async (context) => {
+    await play(context);
+    await testDialogA11y(context, {triggerLabel: 'Sort & Filter'});
+  },
 };

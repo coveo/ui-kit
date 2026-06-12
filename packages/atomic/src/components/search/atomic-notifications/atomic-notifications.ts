@@ -18,6 +18,7 @@ import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
+import {HiddenStateController} from '@/src/utils/hidden-state-controller';
 import InfoIcon from '../../../images/info.svg';
 import type {Bindings} from '../atomic-search-interface/interfaces';
 
@@ -28,6 +29,8 @@ import type {Bindings} from '../atomic-search-interface/interfaces';
  * @part notification - The wrapper around a single notification.
  * @part icon - The icon of the notification.
  * @part text - The text of the notification.
+ *
+ * @cssState empty - Hides the element when there are no notifications to display.
  */
 @customElement('atomic-notifications')
 @bindings()
@@ -64,6 +67,7 @@ export class AtomicNotifications
   public notifyTrigger!: NotifyTrigger;
 
   protected ariaMessage = new AriaLiveRegionController(this, 'notifications');
+  #hiddenState = new HiddenStateController(this);
 
   constructor() {
     super();
@@ -127,6 +131,7 @@ export class AtomicNotifications
   @bindingGuard()
   @errorGuard()
   render() {
+    this.#hiddenState.isEmpty = !this.notifications.length;
     if (!this.notifications.length) {
       return nothing;
     }

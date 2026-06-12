@@ -168,4 +168,12 @@ export default class QuanticFeedback extends LightningElement {
     if (this.hideLabels) return '';
     return this.dislikeLabel;
   }
+
+  get hasQuestion() {
+    return !!this.question?.trim();
+  }
+
+  get shouldShowExplainWhyButton() {
+    return !this.hideExplainWhyButton;
+  }
 }

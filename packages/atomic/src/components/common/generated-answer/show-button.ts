@@ -21,6 +21,7 @@ export const renderShowButton: FunctionalComponent<ShowButtonProps> = ({
       style: 'text-primary',
       part: 'answer-show-button',
       class: 'hidden items-center hover:bg-transparent',
+      ariaExpanded: props.isCollapsed ? 'false' : 'true',
       onClick: props.onClick,
     },
   })(html`

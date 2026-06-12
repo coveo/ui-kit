@@ -1,6 +1,7 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
+import {testCheckboxA11y} from '@/storybook-utils/a11y/checkbox.js';
 import {commerceFacetWidthDecorator} from '@/storybook-utils/commerce/commerce-facet-width-decorator';
 import {
   hideFacetTypesHook,
@@ -9,6 +10,26 @@ import {
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import '@/src/components/commerce/atomic-commerce-facets/atomic-commerce-facets.js';
 import '@/src/components/commerce/atomic-commerce-numeric-facet/atomic-commerce-numeric-facet.js';
+import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
+import {
+  commerceFacetTransformer,
+  createFacetSearchTransformer,
+} from '@/storybook-utils/api/commerce/facet-transformer';
+import {commercePaginationTransformer} from '@/storybook-utils/api/commerce/pagination-transformer';
+import {richResponse as baseSearchResponse} from '@/storybook-utils/api/commerce/search-response';
+
+const commerceApiHarness = new MockCommerceApi();
+commerceApiHarness.searchEndpoint.addRequestTransformer(
+  commerceFacetTransformer,
+  commercePaginationTransformer
+);
+commerceApiHarness.productListingEndpoint.addRequestTransformer(
+  commerceFacetTransformer,
+  commercePaginationTransformer
+);
+commerceApiHarness.facetSearchEndpoint.addRequestTransformer(
+  createFacetSearchTransformer(baseSearchResponse)
+);
 
 const {play, decorator} = wrapInCommerceInterface({
   includeCodeRoot: false,
@@ -26,6 +47,9 @@ const meta: Meta = {
   decorators: [commerceFacetWidthDecorator, decorator],
   parameters: {
     ...parameters,
+    msw: {
+      handlers: [...commerceApiHarness.handlers],
+    },
     chromatic: {disableSnapshot: true},
     actions: {
       handles: events,
@@ -33,6 +57,9 @@ const meta: Meta = {
   },
   args,
   argTypes,
+  beforeEach: () => {
+    commerceApiHarness.clearAll();
+  },
 };
 
 export default meta;
@@ -48,5 +75,21 @@ export const Default: Story = {
   play: async (context) => {
     await play(context);
     await hideFacetTypesHook('atomic-commerce-numeric-facet', context);
+  },
+};
+
+export const A11yCheckbox: Story = {
+  tags: ['a11y', 'test', '!dev'],
+  decorators: [
+    (_) => {
+      return html`<div id="code-root">
+        <atomic-commerce-facets></atomic-commerce-facets>
+      </div>`;
+    },
+  ],
+  play: async (context) => {
+    await play(context);
+    await hideFacetTypesHook('atomic-commerce-numeric-facet', context);
+    await testCheckboxA11y(context, {checkboxName: /\$\d/});
   },
 };

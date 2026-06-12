@@ -2,10 +2,28 @@ import type {FacetSortCriterion} from '@coveo/headless';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
+import {within} from 'shadow-dom-testing-library';
+import {userEvent} from 'storybook/test';
+import {testCheckboxA11y} from '@/storybook-utils/a11y/checkbox.js';
+import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
+import {testDisclosureA11y} from '@/storybook-utils/a11y/disclosure.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {facetDecorator} from '@/storybook-utils/common/facets-decorator';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
+import {buildSearchResponseWithResults} from '@/storybook-utils/api/search/search-response-mocks.js';
+import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
+import {
+  searchFacetTransformer,
+  searchFacetSearchTransformer,
+} from '@/storybook-utils/api/search/facet-transformer';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-facet/atomic-facet.js';
+
+const searchApiHarness = new MockSearchApi();
+searchApiHarness.searchEndpoint.addRequestTransformer(searchFacetTransformer);
+searchApiHarness.facetSearchEndpoint.addRequestTransformer(
+  searchFacetSearchTransformer
+);
 
 const {decorator, play} = wrapInSearchInterface();
 const {events, args, argTypes, template} = getStorybookHelpers('atomic-facet', {
@@ -32,6 +50,9 @@ const meta: Meta = {
   parameters: {
     ...parameters,
     chromatic: {disableSnapshot: true},
+    msw: {
+      handlers: [...searchApiHarness.handlers],
+    },
     actions: {
       handles: events,
     },
@@ -120,4 +141,94 @@ export const CustomSort: Story = {
       ></atomic-facet>`;
     },
   ],
+};
+
+export const A11yCheckbox: Story = {
+  tags: ['a11y', 'test', '!dev'],
+  args: {
+    field: 'objecttype',
+  },
+  decorators: [facetDecorator],
+  play: async (context) => {
+    await play(context);
+    await testCheckboxA11y(context);
+  },
+};
+
+export const A11yStatusMessage: Story = {
+  name: 'A11y Status Message',
+  tags: ['a11y', 'test', '!dev'],
+  args: {
+    field: 'objecttype',
+  },
+  decorators: [
+    facetDecorator,
+    (story) => html`<atomic-query-summary></atomic-query-summary>${story()}`,
+  ],
+  beforeEach: () => {
+    searchApiHarness.searchEndpoint.mockOnce(
+      buildSearchResponseWithResults(120)
+    );
+    searchApiHarness.searchEndpoint.mockOnce(
+      buildSearchResponseWithResults(42)
+    );
+  },
+  play: async (context) => {
+    await play(context);
+    await testStatusMessageA11y(context, {
+      triggerAction: async () => {
+        const [checkbox] = await within(
+          context.canvasElement
+        ).findAllByShadowLabelText('Inclusion filter on', {exact: false});
+        checkbox.click();
+      },
+      expectedText: 'Results loaded. Results 1-10 of 42',
+      timeout: 5000,
+    });
+  },
+};
+
+export const A11yDisclosure: Story = {
+  tags: ['a11y', 'test', '!dev'],
+  parameters: {
+    a11y: {
+      options: {
+        rules: {'color-contrast': {enabled: false}},
+      },
+    },
+  },
+  args: {
+    field: 'objecttype',
+  },
+  decorators: [facetDecorator],
+  play: async (context) => {
+    await play(context);
+    await testDisclosureA11y(context, {
+      trigger: {expanded: true},
+    });
+  },
+};
+
+export const A11yFacetSearchNoResults: Story = {
+  name: 'A11y Facet Search No Results',
+  tags: ['a11y', 'test', '!dev'],
+  args: {
+    field: 'objecttype',
+    label: 'Object Type',
+    decorators: [facetDecorator],
+  },
+  play: async (context) => {
+    await play(context);
+    await testStatusMessageA11y(context, {
+      triggerAction: async (canvasElement) => {
+        const input = await within(canvasElement).findByShadowLabelText(
+          'Search for values in',
+          {exact: false}
+        );
+        await userEvent.type(input, 'zzz');
+      },
+      expectedText: '0 values found in the Object Type facet',
+      timeout: 5000,
+    });
+  },
 };

@@ -65,7 +65,7 @@
     ".oxfmtrc.json",
     ".cspell.json"
   ],
-  "globalEnv": ["DEPLOYMENT_ENVIRONMENT", "NODE_ENV", "CI"],
+  "globalEnv": ["DEPLOYMENT_ENVIRONMENT", "NODE_ENV", "CI", "CDN_COMMIT_SHA"],
   "globalPassThroughEnv": [
     "GITHUB_*",
     "RUNNER_*",

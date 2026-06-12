@@ -334,6 +334,20 @@ export class AtomicGeneratedAnswerFeedbackModal
     `;
   }
 
+  private renderRequiredFieldsAlert() {
+    return html`
+      <span
+        class=${multiClassMap({
+          'sr-only': true,
+          hidden: !this.answerEvaluationRequired,
+        })}
+        role="alert"
+      >
+        ${this.bindings.i18n.t('required-fields-error')}
+      </span>
+    `;
+  }
+
   private renderFeedbackOptions() {
     return html`
       <fieldset>
@@ -359,7 +373,6 @@ export class AtomicGeneratedAnswerFeedbackModal
                   class=${multiClassMap({
                     'options flex flex-shrink-0 text-base': true,
                   })}
-                  aria-label=${this.bindings.i18n.t(localeKey)}
                 >
                   ${this.renderFeedbackOption('yes', correspondingAnswer)}
                   ${this.renderFeedbackOption('unknown', correspondingAnswer)}
@@ -428,8 +441,8 @@ export class AtomicGeneratedAnswerFeedbackModal
         @submit=${(e: Event) => this.handleSubmit(e)}
         class=${multiClassMap({'flex flex-col gap-8 leading-4': true})}
       >
-        ${this.renderFeedbackOptions()} ${this.renderLinkToCorrectAnswerField()}
-        ${this.renderAddNotesField()}
+        ${this.renderRequiredFieldsAlert()} ${this.renderFeedbackOptions()}
+        ${this.renderLinkToCorrectAnswerField()} ${this.renderAddNotesField()}
       </form>
     `;
   }
@@ -444,7 +457,12 @@ export class AtomicGeneratedAnswerFeedbackModal
           icon=${Success}
           class=${multiClassMap({'w-48': true})}
         ></atomic-icon>
-        <p class=${multiClassMap({'text-base': true})}>
+        <p
+          class=${multiClassMap({'text-base': true})}
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+        >
           ${this.bindings.i18n.t('generated-answer-feedback-success')}
         </p>
       </div>
@@ -468,7 +486,9 @@ export class AtomicGeneratedAnswerFeedbackModal
           class=${multiClassMap({'flex items-center justify-between': true})}
         >
           <div class=${multiClassMap({'required-label text-base': true})}>
-            <span class=${multiClassMap({'text-error mr-0.5': true})}>*</span>
+            <span class=${multiClassMap({'text-error-red mr-0.5': true})}
+              >*</span
+            >
             ${this.bindings.i18n.t('required-fields')}
           </div>
           <div class=${multiClassMap({'flex gap-2': true})}>

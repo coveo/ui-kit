@@ -1,4 +1,4 @@
-import type {Locator, Page, Request} from '@playwright/test';
+import {expect, type Locator, type Page, type Request} from '@playwright/test';
 import {isUaSearchEvent} from '../../../../../../playwright/utils/requests';
 
 export class SortObject {
@@ -32,7 +32,20 @@ export class SortObject {
     } else {
       await this.sortDropDown.press('Space');
     }
-    await this.sortButton('Oldest').waitFor({state: 'visible'});
+    const overlay = this.page.locator('div[part="dropdown overlay"]');
+    await overlay.waitFor({state: 'visible'});
+    await overlay
+      .locator('[role="option"]')
+      .first()
+      .waitFor({state: 'visible'});
+  }
+
+  async selectNextSortOptionUsingKeyboard(
+    expectedLabel: string
+  ): Promise<void> {
+    await this.sortDropDown.press('ArrowDown');
+    await this.sortDropDown.press('Enter');
+    await expect(this.sortDropDown).toHaveText(expectedLabel);
   }
 
   async waitForSortUaAnalytics(eventValue: any): Promise<Request> {
@@ -60,24 +73,22 @@ export class SortObject {
     return uaRequest;
   }
 
-  async allSortLabelOptions() {
-    const options = await this.page
-      .locator('div[part="dropdown overlay"]')
-      .allInnerTexts();
-    const arrSort = options[0].split('\n');
-    return arrSort;
-  }
+  async getSortLabelValue(): Promise<{label: string; value: string | null}[]> {
+    const sortOptions = this.page.locator(
+      'div[part="dropdown overlay"] [role="option"]'
+    );
+    await sortOptions.first().waitFor({state: 'visible'});
 
-  async getSortLabelValue() {
-    const arrSort = await this.allSortLabelOptions();
-    const sortLabelwithValueList = await Promise.all(
-      arrSort.map(async (item) => ({
-        label: item,
-        value: await this.page
-          .getByRole('option', {name: item})
-          .getAttribute('data-value'),
+    return sortOptions.evaluateAll((options) =>
+      options.map((option) => ({
+        label: (
+          (option as HTMLElement).innerText ||
+          option.getAttribute('aria-label') ||
+          option.getAttribute('title') ||
+          ''
+        ).trim(),
+        value: option.getAttribute('data-value'),
       }))
     );
-    return sortLabelwithValueList;
   }
 }

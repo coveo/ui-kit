@@ -158,6 +158,21 @@ describe('GeneratedAnswerController', () => {
       );
     });
 
+    it('should announce the answer when the error wrapper has no message (Answer API success)', () => {
+      const controller = createController({
+        getGeneratedAnswerState: () => ({
+          isVisible: true,
+          isStreaming: false,
+          answer: 'Test answer',
+          error: {message: undefined, code: undefined},
+        }),
+      });
+
+      expect(controller.getGeneratedAnswerStatus()).toBe(
+        'Generated answer: Test answer'
+      );
+    });
+
     it('should return empty string when the answer only contains whitespace', () => {
       const controller = createController({
         getGeneratedAnswerState: () => ({

@@ -172,6 +172,8 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   /** @type {boolean} */
   hasInitializationError = false;
   /** @type {boolean} */
+  _areFollowUpsEnabled = false;
+  /** @type {boolean} */
   _exceedsMaximumHeight = false;
   /** @type {boolean} */
   _liked = false;
@@ -196,7 +198,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize);
-    if (this.collapsible) {
+    if (this.isCollapsibleEnabled) {
       this._exceedsMaximumHeight = this.isMaximumHeightExceeded();
     }
   }
@@ -259,7 +261,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     this.updateFeedbackState();
     this.ariaLiveMessage.dispatchMessage(this.getGeneratedAnswerStatus());
 
-    if (this.collapsible) {
+    if (this.isCollapsibleEnabled) {
       this.updateGeneratedAnswerCSSVariables();
     }
   }
@@ -400,7 +402,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   handleAnswerContentUpdated = (event) => {
     event.stopPropagation();
-    if (this.collapsible) {
+    if (this.isCollapsibleEnabled) {
       this._exceedsMaximumHeight = this.isMaximumHeightExceeded();
     }
     this.updateGeneratedAnswerCSSVariables();
@@ -456,6 +458,10 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     return this?.state?.answer;
   }
 
+  get answerId() {
+    return this?.state?.answerId;
+  }
+
   get citations() {
     return this?.state?.citations;
   }
@@ -481,6 +487,15 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     return this.state.isVisible;
   }
 
+  get areFollowUpsEnabled() {
+    // TODO SFINT-6786: Modify this getter to return the actual value from the state for follow-up enabled/agentId.
+    return this._areFollowUpsEnabled;
+  }
+
+  get isCollapsibleEnabled() {
+    return this.collapsible && !this.areFollowUpsEnabled;
+  }
+
   get isAnswerCollapsed() {
     // Answer is considered collapsed only if it exceeds the maximum height and was not expanded.
     return this._exceedsMaximumHeight && !this.isExpanded;
@@ -499,6 +514,14 @@ export default class QuanticGeneratedAnswer extends LightningElement {
         : 'generated-answer__answer--collapsed';
     }
     return `generated-answer__answer ${collapsedStateClass}`;
+  }
+
+  get contentSectionClass() {
+    const baseClass =
+      'generated-answer__content slds-p-top_medium slds-p-horizontal_large';
+    return this.areFollowUpsEnabled
+      ? `${baseClass} generated-answer__content--scrollable`
+      : baseClass;
   }
 
   get hasRetryableError() {
@@ -535,12 +558,12 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     ];
   }
 
-  get generatedAnswerFooterCssClass() {
-    return 'slds-grid slds-wrap slds-grid_align-spread generated-answer__footer';
-  }
-
-  get generatedAnswerFooterRowClass() {
-    return 'generated-answer__footer-row slds-grid slds-col slds-size_1-of-1 slds-wrap slds-grid_align-spread';
+  get generatedAnswerHeaderClass() {
+    const headerBaseClass =
+      'generated-answer__card-header slds-grid slds-grid_vertical-align-center slds-grid_align-spread slds-p-horizontal_large slds-p-vertical_small';
+    return this.isVisible
+      ? `${headerBaseClass} slds-border_bottom`
+      : headerBaseClass;
   }
 
   get citationFields() {
@@ -563,28 +586,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   get toggleCollapseAnswerIcon() {
     return this.isAnswerCollapsed ? 'utility:chevrondown' : 'utility:chevronup';
-  }
-
-  get shouldShowCollapseGeneratingMessage() {
-    // If the answer is collapsed and is still streaming,
-    // we should show a message letting the user know it's still generating.
-    return (
-      this.collapsible &&
-      this.isVisible &&
-      this.isStreaming &&
-      this._exceedsMaximumHeight
-    );
-  }
-
-  get shouldShowToggleCollapseAnswer() {
-    // Only show the toggle collapse button if the answer is
-    // collapsible, visible, not streaming, and exceeds the maximum height.
-    return (
-      this.collapsible &&
-      this.isVisible &&
-      !this.isStreaming &&
-      this._exceedsMaximumHeight
-    );
   }
 
   /**
