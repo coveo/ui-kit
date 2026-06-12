@@ -24,6 +24,13 @@ const INPUT_REPORT = resolve(
 );
 
 if (!existsSync(INPUT_REPORT)) {
+  console.log(
+    '⏭️  No a11y-report.json found (shard download may have failed). Skipping drift check.'
+  );
+  process.exit(0);
+}
+
+if (!existsSync(INPUT_REPORT)) {
   console.log('⏭️  No a11y-report.json found. Skipping drift check.');
   process.exit(0);
 }
