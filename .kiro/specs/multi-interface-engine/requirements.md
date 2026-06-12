@@ -27,7 +27,7 @@ The Multi-Interface Engine feature enables a single `Engine` instance in `headle
 2. THE build function SHALL return the built Interface object with full type inference — no explicit generic annotation required from consumers.
 3. THE Interface type SHALL constrain which controllers and Action_Loaders are compatible with it.
 4. WHEN multiple Interface instances are built for the same interface type, THE Engine SHALL create separate instances with distinct Interface_IDs.
-5. WHERE a developer provides an explicit `id` parameter, THE build function SHALL use the provided value as the Interface_ID instead of auto-generating one.
+5. WHERE a developer provides an explicit `id` parameter, THE build function SHALL use the provided value as the Interface_ID and skip auto-generation entirely.
 6. THE Interface SHALL bundle its API facade code at build time. Feature state SHALL be lazy-loaded on first use (via controller or action loader).
 
 ### Requirement 2: Interface Type Safety
