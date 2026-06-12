@@ -1,0 +1,21 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import meta, { ThinkingBeforeSearch } from './atomic-agent-stream-of-thought.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={meta} />
+
+<AtomicDocTemplate
+  stories={{ ThinkingBeforeSearch }}
+  defaultStory="ThinkingBeforeSearch"
+  githubPath="common/atomic-agent-stream-of-thought/atomic-agent-stream-of-thought.ts"
+  tagName="atomic-agent-stream-of-thought"
+  className="AtomicAgentStreamOfThought"
+>
+
+The `atomic-agent-stream-of-thought` component displays a timeline of agent reasoning steps during answer generation, showing real-time progress and completion status.
+
+```html
+<atomic-agent-stream-of-thought></atomic-agent-stream-of-thought>
+```
+
+</AtomicDocTemplate>
