@@ -1,0 +1,1 @@
+# @coveo/headless-thermidor
