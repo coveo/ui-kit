@@ -4,7 +4,8 @@
  * Downloads the a11y-report.json from a CI run and regenerates openacr.yaml.
  * Usage: node scripts/update-openacr.mjs --run-id=<GITHUB_RUN_ID>
  */
-import {execSync} from 'node:child_process';
+import {execFileSync} from 'node:child_process';
+import {rmSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {transformJsonToOpenAcr} from '../dist/index.js';
 import {formatWithOxfmt} from './format-with-oxfmt.mjs';
@@ -27,8 +28,18 @@ if (!runId) {
 }
 
 console.log(`[update-openacr] Downloading a11y report from run ${runId}...`);
-execSync(
-  `gh run download ${runId} -n atomic-storybook-a11y-report -D packages/atomic/reports`,
+rmSync(REPORT_PATH, {force: true});
+execFileSync(
+  'gh',
+  [
+    'run',
+    'download',
+    runId,
+    '-n',
+    'atomic-storybook-a11y-report',
+    '-D',
+    'packages/atomic/reports',
+  ],
   {cwd: REPO_ROOT, stdio: 'inherit'}
 );
 

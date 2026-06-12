@@ -11,22 +11,37 @@
  * comparison file are always formatted identically.
  */
 import {execFileSync} from 'node:child_process';
-import {dirname, resolve} from 'node:path';
-import {fileURLToPath} from 'node:url';
+import {createRequire} from 'node:module';
+import {dirname, join} from 'node:path';
 
-const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../../..');
+// Resolve oxfmt's executable from its own package metadata. `require.resolve`
+// walks up to the workspace root where oxfmt is installed and follows pnpm's
+// store symlinks, so this works regardless of hoisting layout.
+const require = createRequire(import.meta.url);
+const oxfmtPkgPath = require.resolve('oxfmt/package.json');
+const oxfmtPkg = require('oxfmt/package.json');
+const oxfmtBin = join(
+  dirname(oxfmtPkgPath),
+  typeof oxfmtPkg.bin === 'string' ? oxfmtPkg.bin : oxfmtPkg.bin.oxfmt
+);
 
 /**
  * Formats the file at `absolutePath` in place using oxfmt.
+ *
+ * oxfmt's bin is a Node script, so it is invoked directly with the current
+ * `node` binary (`process.execPath`). This is the same CLI that `lint:check`
+ * runs (`oxfmt --check .`), guaranteeing identical output, while avoiding a
+ * dependency on `pnpm` being resolvable on PATH.
+ *
+ * `execFileSync` (not `execSync`) passes arguments as an array without a shell,
+ * preventing command injection from the path. Failures are non-fatal: the
+ * unformatted file is still valid YAML, so we warn and continue.
  *
  * @param {string} absolutePath - Absolute path to the file to format.
  */
 export function formatWithOxfmt(absolutePath) {
   try {
-    execFileSync('pnpm', ['exec', 'oxfmt', absolutePath], {
-      cwd: REPO_ROOT,
-      stdio: 'pipe',
-    });
+    execFileSync(process.execPath, [oxfmtBin, absolutePath], {stdio: 'pipe'});
   } catch (error) {
     console.warn(
       `[format-with-oxfmt] Could not format ${absolutePath}: ${
