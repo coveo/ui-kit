@@ -7,6 +7,7 @@
 import {execSync} from 'node:child_process';
 import {resolve} from 'node:path';
 import {transformJsonToOpenAcr} from '../dist/index.js';
+import {formatWithOxfmt} from './format-with-oxfmt.mjs';
 
 const PKG_ROOT = resolve(import.meta.dirname, '..');
 const REPO_ROOT = resolve(PKG_ROOT, '../..');
@@ -32,10 +33,12 @@ execSync(
 );
 
 console.log('[update-openacr] Regenerating openacr.yaml...');
+const OPENACR_PATH = resolve(PKG_ROOT, 'reports/openacr.yaml');
 await transformJsonToOpenAcr({
   inputFile: REPORT_PATH,
-  outputFile: resolve(PKG_ROOT, 'reports/openacr.yaml'),
+  outputFile: OPENACR_PATH,
 });
+formatWithOxfmt(OPENACR_PATH);
 
 console.log(
   '[update-openacr] ✓ Done. Review and commit packages/atomic-a11y/reports/openacr.yaml'

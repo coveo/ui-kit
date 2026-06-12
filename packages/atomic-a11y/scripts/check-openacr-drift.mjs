@@ -8,6 +8,7 @@
 import {existsSync, readFileSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {transformJsonToOpenAcr} from '../dist/index.js';
+import {formatWithOxfmt} from './format-with-oxfmt.mjs';
 
 const PKG_ROOT = resolve(import.meta.dirname, '..');
 const REPO_ROOT = resolve(PKG_ROOT, '../..');
@@ -33,6 +34,9 @@ await transformJsonToOpenAcr({
   inputFile: INPUT_REPORT,
   outputFile: GENERATED_OPENACR,
 });
+// Format the same way the committed file is formatted (see update-openacr /
+// json-to-openacr), otherwise the comparison would flag formatting differences.
+formatWithOxfmt(GENERATED_OPENACR);
 
 // `report_date` and `last_modified_date` are regenerated to the current date on
 // every run, so a raw comparison would fail daily even with no conformance
