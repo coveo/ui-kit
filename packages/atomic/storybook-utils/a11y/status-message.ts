@@ -32,6 +32,27 @@ export interface StatusMessageA11yOptions {
   timeout?: number;
 }
 
+export interface StatusMessageSequenceA11yOptions {
+  /**
+   * A function that performs the action expected to produce status messages
+   * (e.g., submit a search that triggers loading then results).
+   */
+  triggerAction: (canvasElement: HTMLElement) => Promise<void>;
+
+  /**
+   * An ordered sequence of expected announcements. The test verifies that
+   * live region content matches each item in order, ensuring the user hears
+   * a meaningful progression of status updates.
+   */
+  expectedSequence: Array<string | RegExp>;
+
+  /**
+   * Timeout in ms to wait for the entire sequence to complete.
+   * @default 5000
+   */
+  timeout?: number;
+}
+
 function isHiddenByAncestor(element: HTMLElement): boolean {
   let current: Element | null = element.parentElement;
   while (current) {
@@ -151,6 +172,126 @@ export async function testStatusMessageA11y(
           {timeout}
         );
       }
+    );
+  } catch (error) {
+    status = 'failed';
+    throw error;
+  } finally {
+    context.reporting?.addReport?.({
+      type: 'a11y-interactive',
+      version: 1,
+      status,
+      result: {criteriaCovered: [...COVERED_CRITERIA]},
+    });
+  }
+}
+
+function textMatches(text: string, expected: string | RegExp): boolean {
+  return typeof expected === 'string'
+    ? text.includes(expected)
+    : expected.test(text);
+}
+
+/**
+ * Returns true when every expected announcement appears, in order, within the
+ * observed announcements. Extra announcements in between are allowed.
+ */
+function isOrderedSubsequence(
+  observed: string[],
+  expected: Array<string | RegExp>
+): boolean {
+  let matched = 0;
+  for (const text of observed) {
+    if (matched < expected.length && textMatches(text, expected[matched])) {
+      matched++;
+    }
+  }
+  return matched === expected.length;
+}
+
+function describeSequence(
+  expected: Array<string | RegExp>,
+  observed: string[]
+): string {
+  const format = (items: Array<string | RegExp>) =>
+    items.length === 0
+      ? '  (none)'
+      : items
+          .map(
+            (item, index) =>
+              `  ${index + 1}. ${typeof item === 'string' ? `"${item}"` : item}`
+          )
+          .join('\n');
+
+  return (
+    `Expected status messages in order:\n${format(expected)}\n\n` +
+    `Observed announcements:\n${format(observed)}`
+  );
+}
+
+/**
+ * Tests that a user action produces a meaningful, ordered sequence of status
+ * messages in ARIA live regions (e.g. "Generating answer" then "Generated
+ * answer: ...").
+ *
+ * This is stronger than a single {@link testStatusMessageA11y} assertion: it
+ * validates the full progression of announcements a screen reader user hears,
+ * not just that one message eventually appears. Live regions are polled while
+ * waiting, so every distinct state a region passes through is recorded; the
+ * test passes once each entry in `expectedSequence` has been announced in order.
+ *
+ * @remarks
+ * This is an opt-in helper. The caller provides the action that triggers the
+ * status messages since this varies per component.
+ */
+export async function testStatusMessageSequenceA11y(
+  context: StoryContext,
+  options: StatusMessageSequenceA11yOptions
+): Promise<void> {
+  const {canvasElement, step} = context;
+  const timeout = options.timeout ?? 5000;
+
+  let status: 'passed' | 'failed' = 'passed';
+
+  try {
+    const lastTextByRegion = new Map<HTMLElement, string>();
+    const observed: string[] = [];
+
+    // Seed each region's current text as a baseline so pre-existing content is
+    // not mistaken for a new announcement.
+    for (const region of findLiveRegions(canvasElement)) {
+      lastTextByRegion.set(region, region.textContent?.trim() ?? '');
+    }
+
+    const recordNewAnnouncements = () => {
+      for (const region of findLiveRegions(canvasElement)) {
+        if (region.getAttribute('aria-hidden') === 'true') {
+          continue;
+        }
+        const text = region.textContent?.trim() ?? '';
+        if (text.length === 0 || lastTextByRegion.get(region) === text) {
+          continue;
+        }
+        lastTextByRegion.set(region, text);
+        observed.push(text);
+      }
+    };
+
+    await step('Trigger action that should produce status messages', () =>
+      options.triggerAction(canvasElement)
+    );
+
+    await step('Status messages are announced in the expected order', () =>
+      waitFor(
+        () => {
+          recordNewAnnouncements();
+          expect(
+            isOrderedSubsequence(observed, options.expectedSequence),
+            describeSequence(options.expectedSequence, observed)
+          ).toBe(true);
+        },
+        {timeout}
+      )
     );
   } catch (error) {
     status = 'failed';
