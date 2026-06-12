@@ -20,7 +20,7 @@ const HASH_FILE = resolve(PKG_ROOT, '.vpat-pdf.sha256');
 const OPENACR_FILE = resolve(PKG_ROOT, 'reports/openacr.yaml');
 const CATALOG_FILE = resolve(
   PKG_ROOT,
-  'a11y/catalog/2.5-edition-wcag-2.2-en.yaml'
+  'a11y/catalog/2.5-edition-wcag-2.2-508-eu-en.yaml'
 );
 const TEMPLATE_FILE = resolve(PKG_ROOT, 'scripts/vpat-from-openacr.handlebars');
 
