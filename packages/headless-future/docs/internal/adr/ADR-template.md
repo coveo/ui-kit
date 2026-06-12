@@ -1,6 +1,6 @@
 # Short, action-oriented decision title
 
-**Status**: Proposed | Accepted | Rejected | Superseded
+**Status**: `🟡 Proposed` | `🟢 Accepted` | `🔴 Rejected` | `⛔️ Superseded`  
 **Related docs**: RFCs, issues, PRs, design docs
 
 ## 1. Context

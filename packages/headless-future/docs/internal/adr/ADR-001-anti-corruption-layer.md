@@ -1,6 +1,6 @@
 # ADR-001: Anti-Corruption Layer
 
-**Status**: Proposed  
+**Status**: `🟡 Proposed`  
 **Related docs**: -
 
 ## 1. Context
