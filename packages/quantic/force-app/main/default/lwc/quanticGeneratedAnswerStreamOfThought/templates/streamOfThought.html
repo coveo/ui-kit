@@ -1,10 +1,11 @@
 <template>
   <template lwc:if={hasSteps}>
     <div class="slds-grid slds-grid_vertical">
-      <template for:each={resolvedSteps} for:item="step">
+      <template for:each={stepsToDisplay} for:item="step">
         <div
           key={step.key}
           data-testid="step-item"
+          data-step-name={step.name}
           class="slds-grid slds-grid_vertical-align-center slds-m-vertical_xxx-small"
         >
           <template lwc:if={step.isActive}>

@@ -112,11 +112,12 @@ export default class QuanticGeneratedAnswerStreamOfThought extends LightningElem
   };
 
   /** @returns {Array<{key: number, isActive: boolean, label: string}>} */
-  get resolvedSteps() {
+  get stepsToDisplay() {
     return this.steps.map((step, index) => {
       const labelKey = STEP_LABEL_KEYS[step.name][step.status];
       return {
         key: index,
+        name: step.name,
         isActive: step.status === 'active',
         label: labelKey,
       };

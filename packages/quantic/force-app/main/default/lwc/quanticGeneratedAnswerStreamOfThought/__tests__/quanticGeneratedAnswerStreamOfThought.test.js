@@ -89,6 +89,34 @@ describe('quantic generated answer stream of thought component', () => {
       expect(stepItems).toHaveLength(2);
     });
 
+    it('should render steps in the correct order', async () => {
+      const element = createTestComponent({
+        agentSteps: [
+          {name: 'thinking', status: 'completed', startedAt: 0},
+          {name: 'searching', status: 'completed', startedAt: 10},
+          {name: 'thinking', status: 'completed', startedAt: 20},
+          {name: 'searching', status: 'completed', startedAt: 30},
+          {name: 'thinking', status: 'completed', startedAt: 40},
+          {name: 'answering', status: 'active', startedAt: 30},
+        ],
+        isStreaming: true,
+      });
+      await flushPromises();
+
+      const stepItems = element.shadowRoot.querySelectorAll(selectors.stepItem);
+      const names = Array.from(stepItems).map((el) =>
+        el.getAttribute('data-step-name')
+      );
+      expect(names).toEqual([
+        'thinking-before-search',
+        'searching',
+        'thinking-after-search',
+        'searching',
+        'thinking-after-search',
+        'answering',
+      ]);
+    });
+
     it('should show checkmarks for completed steps and spinners for active steps', async () => {
       const element = createTestComponent({
         agentSteps: [
