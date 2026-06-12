@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import {
   buildSearchBox,
   buildStandaloneSearchBox,
@@ -346,7 +345,7 @@ export class AtomicSearchBox
 
   private get isSearchDisabledForEndUser() {
     const queryValue = this.searchBoxState?.value;
-    if (isNullOrUndefined(queryValue)) {
+    if (queryValue == null) {
       return this.disableSearch;
     }
 

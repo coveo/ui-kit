@@ -1,4 +1,4 @@
-import {RecordValue, StringValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   type AsyncThunkCommerceOptions,
@@ -9,7 +9,10 @@ import type {CommerceRecommendationsRequest} from '../../../api/commerce/recomme
 import type {RecommendationsCommerceSuccessResponse} from '../../../api/commerce/recommendations/recommendations-response.js';
 import type {NavigatorContext} from '../../../app/navigator-context-provider.js';
 import type {RecommendationsSection} from '../../../state/state-sections.js';
-import {validatePayload} from '../../../utils/validate-payload.js';
+import {
+  validatePayload,
+  requiredNonEmptyString,
+} from '../../../utils/validate-payload.js';
 import {
   buildPaginatedCommerceAPIRequest,
   type StateNeededForPaginatedCommerceAPIRequest,
@@ -148,15 +151,13 @@ export interface PromoteChildToParentPayload extends SlotIdPayload {
   child: ChildProduct;
 }
 
-const promoteChildToParentDefinition = {
-  child: new RecordValue({
-    options: {required: true},
-    values: {
-      permanentid: new StringValue({required: true}),
-    },
+const promoteChildToParentDefinition = z.object({
+  child: z.object({
+    permanentid: z.string(),
   }),
-  ...recommendationsSlotDefinition,
-};
+  slotId: requiredNonEmptyString,
+  productId: z.optional(z.string().check(z.minLength(1))),
+});
 
 export const promoteChildToParent = createAction(
   'commerce/recommendations/promoteChildToParent',

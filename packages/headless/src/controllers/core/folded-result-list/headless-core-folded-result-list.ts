@@ -1,4 +1,3 @@
-import {Schema} from '@coveo/bueno';
 import type {AsyncThunkAction} from '@reduxjs/toolkit';
 import type {Result} from '../../../api/search/search/result.js';
 import type {CoreEngine} from '../../../app/engine.js';
@@ -36,9 +35,7 @@ import type {SearchStatusState} from '../status/headless-core-status.js';
 
 export type {FoldedCollection, FoldedResult};
 
-const optionsSchema = new Schema<Required<FoldingOptions>>(
-  foldingOptionsSchemaDefinition
-);
+const optionsSchema = foldingOptionsSchemaDefinition;
 
 export interface FoldingOptions {
   /**

@@ -1,4 +1,4 @@
-import {Schema, StringValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {
   buildFacetConditionsManager,
   buildNumericFacet,
@@ -89,9 +89,9 @@ export class AtomicNumericFacet
   extends LitElement
   implements InitializableComponent<Bindings>
 {
-  private static readonly propsSchema = new Schema({
-    displayValuesAs: new StringValue({constrainTo: ['checkbox', 'link']}),
-    withInput: new StringValue({constrainTo: ['integer', 'decimal']}),
+  private static readonly propsSchema = z.object({
+    displayValuesAs: z.optional(z.enum(['checkbox', 'link'])),
+    withInput: z.optional(z.enum(['integer', 'decimal'])),
   });
 
   static styles: CSSResultGroup = numericFacetCommonStyles;

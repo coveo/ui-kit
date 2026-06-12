@@ -1,4 +1,3 @@
-import {isUndefined} from '@coveo/bueno';
 import type {InteractiveResult, Result} from '@coveo/headless';
 import {type CSSResultGroup, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
@@ -110,13 +109,14 @@ export class AtomicResultLink
       const result = this.result!;
       const interactiveResult = this.interactiveResult!;
 
-      const href = isUndefined(this.hrefTemplate)
-        ? result.clickUri
-        : buildStringTemplateFromResult(
-            this.hrefTemplate,
-            result,
-            this.bindings
-          );
+      const href =
+        this.hrefTemplate === undefined
+          ? result.clickUri
+          : buildStringTemplateFromResult(
+              this.hrefTemplate,
+              result,
+              this.bindings
+            );
 
       return renderLinkWithItemAnalytics({
         props: {

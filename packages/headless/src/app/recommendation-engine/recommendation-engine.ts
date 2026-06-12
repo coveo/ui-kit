@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import type {StateFromReducersMapObject} from '@reduxjs/toolkit';
 import type {Logger} from 'pino';
 import {NoopPreprocessRequest} from '../../api/preprocess-request.js';
@@ -102,11 +101,11 @@ export function buildRecommendationEngine(
 
   engine.dispatch(updateSearchConfiguration({timezone, locale, proxyBaseUrl}));
 
-  if (!isNullOrUndefined(pipeline)) {
+  if (pipeline != null) {
     engine.dispatch(setPipeline(pipeline));
   }
 
-  if (!isNullOrUndefined(searchHub)) {
+  if (searchHub != null) {
     engine.dispatch(setSearchHub(searchHub));
   }
 
@@ -124,7 +123,7 @@ function validateConfiguration(
   logger: Logger
 ) {
   try {
-    recommendationEngineConfigurationSchema.validate(configuration);
+    recommendationEngineConfigurationSchema.parse(configuration);
   } catch (error) {
     logger.error(error as Error, 'Recommendation engine configuration error');
     throw error;

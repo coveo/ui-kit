@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import type {ThunkDispatch, UnknownAction} from '@reduxjs/toolkit';
 import type {StateNeededByInsightAnalyticsProvider} from '../../../api/analytics/insight-analytics.js';
 import type {SearchResponseSuccess} from '../../../api/search/search/search-response.js';
@@ -133,8 +132,7 @@ export class AsyncInsightSearchThunkProcessor<RejectionType> {
       results.length === 0 && queryCorrections && queryCorrections.length !== 0;
 
     const shouldExecuteNextDidYouMeanAutoCorrection =
-      !isNullOrUndefined(queryCorrection) &&
-      !isNullOrUndefined(queryCorrection.correctedQuery);
+      queryCorrection != null && queryCorrection.correctedQuery != null;
 
     const shouldExitWithNoAutoCorrection =
       !shouldExecuteLegacyDidYouMeanAutoCorrection &&

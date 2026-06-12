@@ -1,4 +1,4 @@
-import {BooleanValue, RecordValue, StringValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   type AsyncThunkCommerceOptions,
@@ -139,10 +139,13 @@ export const prepareForSearchWithQuery = createAsyncThunk<
   AsyncThunkCommerceOptions<StateNeededByExecuteSearch>
 >('commerce/search/prepareForSearchWithQuery', (payload, thunk) => {
   const {dispatch} = thunk;
-  validatePayload(payload, {
-    query: new StringValue(),
-    clearFilters: new BooleanValue(),
-  });
+  validatePayload(
+    payload,
+    z.object({
+      query: z.optional(z.string()),
+      clearFilters: z.optional(z.boolean()),
+    })
+  );
 
   if (payload.clearFilters) {
     dispatch(deleteAllCoreFacets());
@@ -186,14 +189,11 @@ export interface PromoteChildToParentPayload {
   child: ChildProduct;
 }
 
-const promoteChildToParentDefinition = {
-  child: new RecordValue({
-    options: {required: true},
-    values: {
-      permanentid: new StringValue({required: true}),
-    },
+const promoteChildToParentDefinition = z.object({
+  child: z.object({
+    permanentid: z.string(),
   }),
-};
+});
 
 export const promoteChildToParent = createAction(
   'commerce/search/promoteChildToParent',

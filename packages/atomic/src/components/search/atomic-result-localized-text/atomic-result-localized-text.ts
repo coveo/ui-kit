@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import {type Result, ResultTemplatesHelpers} from '@coveo/headless';
 import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
@@ -97,7 +96,7 @@ export class AtomicResultLocalizedText
         this.result,
         fieldName
       );
-      if (!isNullOrUndefined(fieldValueRaw)) {
+      if (fieldValueRaw != null) {
         ret[i18nParameter] = fieldValueRaw;
       }
     });

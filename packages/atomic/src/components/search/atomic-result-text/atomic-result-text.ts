@@ -1,4 +1,4 @@
-import {BooleanValue, Schema, StringValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {
   HighlightUtils,
   type Result,
@@ -31,10 +31,10 @@ export class AtomicResultText
   extends LightDomMixin(LitElement)
   implements InitializableComponent<Bindings>
 {
-  private static readonly propsSchema = new Schema({
-    field: new StringValue({required: true, emptyAllowed: false}),
-    shouldHighlight: new BooleanValue(),
-    disableHighlight: new BooleanValue(),
+  private static readonly propsSchema = z.object({
+    field: z.string().check(z.minLength(1)),
+    shouldHighlight: z.optional(z.boolean()),
+    disableHighlight: z.optional(z.boolean()),
   });
 
   /**

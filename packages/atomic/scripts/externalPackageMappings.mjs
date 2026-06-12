@@ -51,9 +51,9 @@ export function generateExternalPackageMappings() {
       cdn: `${headlessBase}/headless.esm.js`,
       local: resolve(headlessBaseDir, './src/index.ts'),
     },
-    '@coveo/bueno': {
-      cdn: `${buenoBase}/bueno.esm.js`,
-      local: resolve(buenoBaseDir, './src/index.ts'),
+    '@coveo/bueno/zod': {
+      cdn: `${buenoBase}/zod.esm.js`,
+      local: resolve(buenoBaseDir, './src/zod.ts'),
     },
   };
 }

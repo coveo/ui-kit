@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import {type Product, ProductTemplatesHelpers} from '@coveo/headless/commerce';
 import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
@@ -195,7 +194,7 @@ export class AtomicProductImage
       this.product,
       this.imageAltField
     );
-    if (isNullOrUndefined(value)) {
+    if (value == null) {
       return null;
     }
     return (value as string).trim();

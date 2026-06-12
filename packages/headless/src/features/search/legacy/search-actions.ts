@@ -1,4 +1,4 @@
-import {NumberValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import type {EventDescription} from 'coveo.analytics';
 import HistoryStore from '../../../api/analytics/coveo.analytics/history-store.js';
@@ -158,15 +158,15 @@ export async function legacyFetchInstantResults(
   // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
   config: any
 ) {
-  validatePayload(payload, {
-    id: requiredNonEmptyString,
-    q: requiredNonEmptyString,
-    maxResultsPerQuery: new NumberValue({
-      required: true,
-      min: 1,
-    }),
-    cacheTimeout: new NumberValue(),
-  });
+  validatePayload(
+    payload,
+    z.object({
+      id: requiredNonEmptyString,
+      q: requiredNonEmptyString,
+      maxResultsPerQuery: z.number().check(z.minimum(1)),
+      cacheTimeout: z.optional(z.number()),
+    })
+  );
   const {q, maxResultsPerQuery} = payload;
   const state = config.getState();
 

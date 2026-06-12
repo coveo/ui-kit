@@ -1,4 +1,4 @@
-import {NumberValue, Schema} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {
   buildProductListing,
   buildSearch,
@@ -58,8 +58,8 @@ export class AtomicCommercePager
   extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
-  private static readonly propsSchema = new Schema({
-    numberOfPages: new NumberValue({min: 0}),
+  private static readonly propsSchema = z.object({
+    numberOfPages: z.optional(z.number().check(z.minimum(0))),
   });
 
   @state() public bindings!: CommerceBindings;

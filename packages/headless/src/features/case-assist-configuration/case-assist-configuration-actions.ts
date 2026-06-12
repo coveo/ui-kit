@@ -1,4 +1,4 @@
-import {StringValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {createAction} from '@reduxjs/toolkit';
 import {
   nonEmptyString,
@@ -12,7 +12,7 @@ interface SetCaseAssistConfigurationActionCreatorPayload {
    */
   caseAssistId: string;
   /**
-   * The locale of the current user. Must comply with IETF’s BCP 47 definition: https://www.rfc-editor.org/info/bcp47.
+   * The locale of the current user. Must comply with IETF's BCP 47 definition: https://www.rfc-editor.org/info/bcp47.
    */
   locale?: string;
   /**
@@ -29,9 +29,12 @@ interface SetCaseAssistConfigurationActionCreatorPayload {
 export const setCaseAssistConfiguration = createAction(
   'caseAssistConfiguration/set',
   (payload: SetCaseAssistConfigurationActionCreatorPayload) =>
-    validatePayload(payload, {
-      caseAssistId: requiredNonEmptyString,
-      locale: nonEmptyString,
-      proxyBaseUrl: new StringValue({required: false, url: true}),
-    })
+    validatePayload(
+      payload,
+      z.object({
+        caseAssistId: requiredNonEmptyString,
+        locale: nonEmptyString,
+        proxyBaseUrl: z.optional(z.url()),
+      })
+    )
 );

@@ -24,7 +24,7 @@ const buenoVersion = isNightly
 const buenoBase = commitSha
   ? `/bueno/commits/${commitSha}`
   : `/bueno/${buenoVersion}`;
-const buenoPath = isCDN ? `${buenoBase}/bueno.esm.js` : '@coveo/bueno';
+const buenoPath = isCDN ? `${buenoBase}/zod.esm.js` : '@coveo/bueno';
 
 /**
  * @type {import('esbuild').BuildOptions}

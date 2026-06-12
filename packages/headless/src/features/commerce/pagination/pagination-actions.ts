@@ -1,4 +1,4 @@
-import {NumberValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {createAction} from '@reduxjs/toolkit';
 import {
   nonRequiredEmptyAllowedString,
@@ -6,9 +6,9 @@ import {
   validatePayload,
 } from '../../../utils/validate-payload.js';
 
-const slotIdDefinition = {
+const slotIdDefinition = z.object({
   slotId: nonRequiredEmptyAllowedString,
-};
+});
 
 interface SlotIdPayload {
   /**
@@ -17,10 +17,10 @@ interface SlotIdPayload {
   slotId?: string;
 }
 
-const setPageSizeDefinition = {
-  ...slotIdDefinition,
-  pageSize: new NumberValue({required: true, min: 0}),
-};
+const setPageSizeDefinition = z.object({
+  slotId: nonRequiredEmptyAllowedString,
+  pageSize: z.number().check(z.minimum(0)),
+});
 
 export type SetPageSizePayload = SlotIdPayload & {
   /**
@@ -35,10 +35,10 @@ export const setPageSize = createAction(
     validatePayload(payload, setPageSizeDefinition)
 );
 
-const selectPageDefinition = {
-  ...slotIdDefinition,
-  page: new NumberValue({required: true, min: 0}),
-};
+const selectPageDefinition = z.object({
+  slotId: nonRequiredEmptyAllowedString,
+  page: z.number().check(z.minimum(0)),
+});
 
 export type SelectPagePayload = SlotIdPayload & {
   /**
@@ -72,7 +72,10 @@ export type RegisterRecommendationsSlotPaginationPayload =
 export const registerRecommendationsSlotPagination = createAction(
   'commerce/pagination/registerRecommendationsSlot',
   (payload: RegisterRecommendationsSlotPaginationPayload) =>
-    validatePayload(payload, {
-      slotId: requiredNonEmptyString,
-    })
+    validatePayload(
+      payload,
+      z.object({
+        slotId: requiredNonEmptyString,
+      })
+    )
 );

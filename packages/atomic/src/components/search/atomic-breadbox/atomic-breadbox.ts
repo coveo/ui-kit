@@ -1,4 +1,4 @@
-import {NumberValue, Schema} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {
   type BreadcrumbManager,
   type BreadcrumbManagerState,
@@ -67,12 +67,8 @@ export class AtomicBreadbox
     `,
   ];
 
-  private static readonly propsSchema = new Schema({
-    pathLimit: new NumberValue({
-      default: 3,
-      min: 1,
-      required: false,
-    }),
+  private static readonly propsSchema = z.object({
+    pathLimit: z.optional(z.number().check(z.minimum(1))),
   });
 
   private resizeObserver?: ResizeObserver;

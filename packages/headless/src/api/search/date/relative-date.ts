@@ -1,4 +1,4 @@
-import {NumberValue, Schema, StringValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import dayjs, {type QUnitType} from 'dayjs';
 import quarterOfYear from 'dayjs/plugin/quarterOfYear.js';
 import {
@@ -53,20 +53,19 @@ export interface RelativeDate {
   amount?: number;
 }
 
-const buildRelativeDateDefinition = (period: RelativeDatePeriod) => {
-  const isNow = period === 'now';
-  return {
-    amount: new NumberValue({required: !isNow, min: 1}),
-    unit: new StringValue({
-      required: !isNow,
-      constrainTo: validRelativeDateUnits,
-    }),
-    period: new StringValue({
-      required: true,
-      constrainTo: validRelativeDatePeriods,
-    }),
-  };
-};
+const nowSchema = z.object({
+  period: z.enum(['now']),
+  amount: z.optional(z.number().check(z.minimum(1))),
+  unit: z.optional(z.enum(validRelativeDateUnits as [string, ...string[]])),
+});
+
+const pastOrNextSchema = z.object({
+  period: z.enum(['past', 'next']),
+  amount: z.number().check(z.minimum(1)),
+  unit: z.enum(validRelativeDateUnits as [string, ...string[]]),
+});
+
+const relativeDateSchema = z.union([nowSchema, pastOrNextSchema]);
 
 /**
  * Validates a relative date and throws if it's invalid.
@@ -82,9 +81,7 @@ export function validateRelativeDate(date: RelativeDate | string) {
   const relativeDate =
     typeof date === 'string' ? parseRelativeDate(date) : date;
 
-  new Schema(buildRelativeDateDefinition(relativeDate.period)).validate(
-    relativeDate
-  );
+  relativeDateSchema.parse(relativeDate);
 
   const dayJsDate = relativeToAbsoluteDate(relativeDate);
   const stringifiedDate = JSON.stringify(relativeDate);

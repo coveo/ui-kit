@@ -181,7 +181,7 @@ function validateConfiguration(
   logger: Logger
 ) {
   try {
-    insightEngineConfigurationSchema.validate(configuration);
+    insightEngineConfigurationSchema.parse(configuration);
   } catch (error) {
     logger.error(error as Error, 'Insight engine configuration error');
     throw error;

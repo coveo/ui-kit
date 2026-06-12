@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import {configuration} from '../../app/common-reducers.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import type {StateWithHistory} from '../../app/undoable.js';
@@ -85,7 +84,7 @@ export function buildHistoryManager(engine: SearchEngine): HistoryManager {
   const getState = () => engine.state;
 
   const canGoBack = (state: HistoryManagerState) => {
-    return state.past.length > 0 && !isNullOrUndefined(state.present);
+    return state.past.length > 0 && state.present != null;
   };
 
   return {

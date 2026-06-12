@@ -1,4 +1,4 @@
-import {ArrayValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import type {CategoryFacetMetadata} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents.js';
 import type {SearchAppState} from '../../../state/search-app-state.js';
 import {
@@ -25,13 +25,10 @@ export interface LogCategoryFacetBreadcrumbActionCreatorPayload {
   categoryFacetPath: string[];
 }
 
-const categoryFacetBreadcrumbPayloadDefinition = {
+const categoryFacetBreadcrumbPayloadDefinition = z.object({
   categoryFacetId: facetIdDefinition,
-  categoryFacetPath: new ArrayValue({
-    required: true,
-    each: requiredNonEmptyString,
-  }),
-};
+  categoryFacetPath: z.array(requiredNonEmptyString),
+});
 
 const getCategoryFacetMetadata = (
   state: Partial<SearchAppState>,

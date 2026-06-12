@@ -1,4 +1,4 @@
-import {NumberValue, Schema} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {
   buildInteractiveResult,
   type InteractiveResult,
@@ -37,8 +37,8 @@ export class AtomicResultPrintableUri
 {
   static styles = styles;
 
-  private static readonly propsSchema = new Schema({
-    maxNumberOfParts: new NumberValue({min: 3}),
+  private static readonly propsSchema = z.object({
+    maxNumberOfParts: z.optional(z.number().check(z.minimum(3))),
   });
 
   /**

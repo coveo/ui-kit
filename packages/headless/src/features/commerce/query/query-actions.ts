@@ -1,4 +1,4 @@
-import {StringValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {createAction} from '@reduxjs/toolkit';
 import {validatePayload} from '../../../utils/validate-payload.js';
 
@@ -12,7 +12,10 @@ export interface UpdateQueryPayload {
 export const updateQuery = createAction(
   'commerce/query/update',
   (payload: UpdateQueryPayload) =>
-    validatePayload(payload, {
-      query: new StringValue(),
-    })
+    validatePayload(
+      payload,
+      z.object({
+        query: z.optional(z.string()),
+      })
+    )
 );

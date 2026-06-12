@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import {isEmptyString} from './utils.js';
 
 export interface HighlightKeyword {
@@ -71,7 +70,7 @@ export function highlightString(params: HighlightParams): string {
     throw Error('delimiters should be a non-empty string');
   }
 
-  if (isNullOrUndefined(params.content) || isEmptyString(params.content)) {
+  if (params.content == null || isEmptyString(params.content)) {
     return params.content;
   }
   if (params.highlights.length === 0) {

@@ -1,11 +1,4 @@
-import {
-  ArrayValue,
-  BooleanValue,
-  RecordValue,
-  Schema,
-  type SchemaDefinition,
-  StringValue,
-} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import type {CoreEngine} from '../../../../../app/engine.js';
 import {facetValueStates} from '../../../../../features/facets/facet-api/value.js';
 import {validateManualDateRanges} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions.js';
@@ -110,35 +103,37 @@ export interface DateFacetOptions {
   rangeAlgorithm?: RangeFacetRangeAlgorithm;
 }
 
-const dateRangeRequestDefinition: SchemaDefinition<DateRangeRequest> = {
-  start: new StringValue(),
-  end: new StringValue(),
-  endInclusive: new BooleanValue(),
-  state: new StringValue({constrainTo: facetValueStates}),
-};
-
-const dateFacetOptionsSchema = new Schema<Required<DateFacetOptions>>({
-  facetId,
-  field,
-  tabs: new RecordValue({
-    options: {
-      required: false,
-    },
-    values: {
-      included: new ArrayValue({each: new StringValue()}),
-      excluded: new ArrayValue({each: new StringValue()}),
-    },
-  }),
-  generateAutomaticRanges,
-  filterFacetCount,
-  injectionDepth,
-  numberOfValues,
-  currentValues: new ArrayValue({
-    each: new RecordValue({values: dateRangeRequestDefinition}),
-  }),
-  sortCriteria: new StringValue({constrainTo: rangeFacetSortCriteria}),
-  rangeAlgorithm: new StringValue({constrainTo: rangeFacetRangeAlgorithm}),
+const dateRangeRequestSchema = z.object({
+  start: z.optional(z.string()),
+  end: z.optional(z.string()),
+  endInclusive: z.optional(z.boolean()),
+  state: z.optional(
+    z.enum(facetValueStates as unknown as [string, ...string[]])
+  ),
 });
+
+const dateFacetOptionsSchema: z.ZodMiniType<Required<DateFacetOptions>> =
+  z.object({
+    facetId,
+    field,
+    tabs: z.optional(
+      z.object({
+        included: z.optional(z.array(z.string())),
+        excluded: z.optional(z.array(z.string())),
+      })
+    ),
+    generateAutomaticRanges,
+    filterFacetCount,
+    injectionDepth,
+    numberOfValues,
+    currentValues: z.optional(z.array(dateRangeRequestSchema)),
+    sortCriteria: z.optional(
+      z.enum(rangeFacetSortCriteria as unknown as [string, ...string[]])
+    ),
+    rangeAlgorithm: z.optional(
+      z.enum(rangeFacetRangeAlgorithm as unknown as [string, ...string[]])
+    ),
+  }) as unknown as z.ZodMiniType<Required<DateFacetOptions>>;
 
 export function validateDateFacetOptions(
   engine: CoreEngine<ConfigurationSection & SearchSection & DateFacetSection>,

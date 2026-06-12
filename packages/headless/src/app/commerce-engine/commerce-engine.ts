@@ -195,7 +195,7 @@ function validateConfiguration(
   logger: Logger
 ) {
   try {
-    commerceEngineConfigurationSchema.validate(configuration);
+    commerceEngineConfigurationSchema.parse(configuration);
   } catch (error) {
     logger.error(error, 'Commerce engine configuration error');
     throw error;

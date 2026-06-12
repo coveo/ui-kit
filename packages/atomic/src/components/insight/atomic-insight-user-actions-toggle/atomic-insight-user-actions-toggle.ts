@@ -1,5 +1,5 @@
 import '@/src/components/insight/atomic-insight-user-actions-modal/atomic-insight-user-actions-modal';
-import {Schema, StringValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {
   buildUserActions as buildInsightUserActions,
   type UserActions as InsightUserActions,
@@ -72,12 +72,9 @@ export class AtomicInsightUserActionsToggle
         userId: this.userId,
         ticketCreationDateTime: this.ticketCreationDateTime,
       }),
-      new Schema({
-        userId: new StringValue({required: true, emptyAllowed: false}),
-        ticketCreationDateTime: new StringValue({
-          required: true,
-          emptyAllowed: false,
-        }),
+      z.object({
+        userId: z.string().check(z.minLength(1)),
+        ticketCreationDateTime: z.string().check(z.minLength(1)),
       }),
       false
     );

@@ -1,4 +1,4 @@
-import {NumberValue, Schema, StringValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {
   buildDateFacet,
   buildDateFilter,
@@ -63,13 +63,10 @@ export class AtomicInsightTimeframeFacet
   extends LitElement
   implements InitializableComponent<InsightBindings>
 {
-  private static readonly propsSchema = new Schema({
-    injectionDepth: new NumberValue({min: 0, required: false}),
-    headingLevel: new NumberValue({min: 0, max: 6, required: false}),
-    sortCriteria: new StringValue({
-      constrainTo: ['ascending', 'descending'],
-      required: false,
-    }),
+  private static readonly propsSchema = z.object({
+    injectionDepth: z.optional(z.number().check(z.minimum(0))),
+    headingLevel: z.optional(z.number().check(z.minimum(0), z.maximum(6))),
+    sortCriteria: z.optional(z.enum(['ascending', 'descending'])),
   });
 
   static styles: CSSResultGroup = facetCommonStyles;

@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import {createReducer} from '@reduxjs/toolkit';
 import {
   restoreSearchParameters,
@@ -59,7 +58,7 @@ export const configurationReducer = createReducer(
         state.analytics.originLevel2 = action.payload;
       })
       .addCase(restoreSearchParameters, (state, action) => {
-        if (!isNullOrUndefined(action.payload.tab)) {
+        if (action.payload.tab != null) {
           state.analytics.originLevel2 = action.payload.tab;
         }
       })
@@ -72,13 +71,13 @@ function handleUpdateBasicConfiguration(
   state: ConfigurationState,
   payload: UpdateBasicConfigurationActionCreatorPayload
 ) {
-  if (!isNullOrUndefined(payload.accessToken)) {
+  if (payload.accessToken != null) {
     state.accessToken = payload.accessToken;
   }
 
   state.environment = payload.environment ?? 'prod';
 
-  if (!isNullOrUndefined(payload.organizationId)) {
+  if (payload.organizationId != null) {
     state.organizationId = payload.organizationId;
   }
 }
@@ -87,16 +86,16 @@ function handleUpdateSearchConfiguration(
   state: ConfigurationState,
   payload: UpdateSearchConfigurationActionCreatorPayload
 ) {
-  if (!isNullOrUndefined(payload.proxyBaseUrl)) {
+  if (payload.proxyBaseUrl != null) {
     state.search.apiBaseUrl = payload.proxyBaseUrl;
   }
-  if (!isNullOrUndefined(payload.locale)) {
+  if (payload.locale != null) {
     state.search.locale = payload.locale;
   }
-  if (!isNullOrUndefined(payload.timezone)) {
+  if (payload.timezone != null) {
     state.search.timezone = payload.timezone;
   }
-  if (!isNullOrUndefined(payload.authenticationProviders)) {
+  if (payload.authenticationProviders != null) {
     state.search.authenticationProviders = payload.authenticationProviders;
   }
 }
@@ -105,28 +104,28 @@ function handleUpdateAnalyticsConfiguration(
   state: ConfigurationState,
   payload: UpdateAnalyticsConfigurationActionCreatorPayload
 ) {
-  if (!isNullOrUndefined(payload.enabled)) {
+  if (payload.enabled != null) {
     state.analytics.enabled = payload.enabled;
   }
-  if (!isNullOrUndefined(payload.originContext)) {
+  if (payload.originContext != null) {
     state.analytics.originContext = payload.originContext;
   }
-  if (!isNullOrUndefined(payload.originLevel2)) {
+  if (payload.originLevel2 != null) {
     state.analytics.originLevel2 = payload.originLevel2;
   }
-  if (!isNullOrUndefined(payload.originLevel3)) {
+  if (payload.originLevel3 != null) {
     state.analytics.originLevel3 = payload.originLevel3;
   }
-  if (!isNullOrUndefined(payload.proxyBaseUrl)) {
+  if (payload.proxyBaseUrl != null) {
     state.analytics.apiBaseUrl = payload.proxyBaseUrl;
   }
-  if (!isNullOrUndefined(payload.trackingId)) {
+  if (payload.trackingId != null) {
     state.analytics.trackingId = payload.trackingId;
   }
-  if (!isNullOrUndefined(payload.analyticsMode)) {
+  if (payload.analyticsMode != null) {
     state.analytics.analyticsMode = payload.analyticsMode;
   }
-  if (!isNullOrUndefined(payload.source)) {
+  if (payload.source != null) {
     state.analytics.source = payload.source;
   }
 
@@ -138,19 +137,19 @@ function handleUpdateAnalyticsConfiguration(
     }
   } catch (_) {}
 
-  if (!isNullOrUndefined(payload.runtimeEnvironment)) {
+  if (payload.runtimeEnvironment != null) {
     state.analytics.runtimeEnvironment = payload.runtimeEnvironment;
   }
-  if (!isNullOrUndefined(payload.anonymous)) {
+  if (payload.anonymous != null) {
     state.analytics.anonymous = payload.anonymous;
   }
-  if (!isNullOrUndefined(payload.deviceId)) {
+  if (payload.deviceId != null) {
     state.analytics.deviceId = payload.deviceId;
   }
-  if (!isNullOrUndefined(payload.userDisplayName)) {
+  if (payload.userDisplayName != null) {
     state.analytics.userDisplayName = payload.userDisplayName;
   }
-  if (!isNullOrUndefined(payload.documentLocation)) {
+  if (payload.documentLocation != null) {
     state.analytics.documentLocation = payload.documentLocation;
   }
 }
@@ -159,7 +158,7 @@ function handleUpdateAgentId(state: ConfigurationState, payload: string) {
   state.knowledge.agentId = payload;
   try {
     const searchAgentDebugMagicCookie = getSearchAgentDebugMagicCookie();
-    if (!isNullOrUndefined(searchAgentDebugMagicCookie)) {
+    if (searchAgentDebugMagicCookie != null) {
       state.knowledge.debugAgentSession = true;
     }
   } catch (_) {}

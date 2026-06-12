@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import {createReducer, type Reducer} from '@reduxjs/toolkit';
 import type P from 'pino';
 import type {Logger} from 'pino';
@@ -30,11 +29,11 @@ const possiblyWarnOnMismatch = (
   logger: Logger
 ) => {
   const tokenValue = token[tokenProp];
-  if (isNullOrUndefined(tokenValue)) {
+  if (tokenValue == null) {
     return;
   }
 
-  if (isNullOrUndefined(payload)) {
+  if (payload == null) {
     return;
   }
 
@@ -58,7 +57,7 @@ const shouldReconcileValues = (
   tokenValue: string | undefined,
   stateValue: string
 ): boolean => {
-  if (isNullOrUndefined(tokenValue)) {
+  if (tokenValue == null) {
     return false;
   }
 

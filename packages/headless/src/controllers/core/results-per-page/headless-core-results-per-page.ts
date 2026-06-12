@@ -1,4 +1,4 @@
-import {NumberValue, Schema} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {configuration} from '../../../app/common-reducers.js';
 import type {CoreEngine} from '../../../app/engine.js';
 import {
@@ -17,8 +17,8 @@ import {
   type Controller,
 } from '../../controller/headless-controller.js';
 
-const initialStateSchema = new Schema({
-  numberOfResults: new NumberValue({min: 0}),
+const initialStateSchema = z.object({
+  numberOfResults: z.optional(z.number().check(z.minimum(0))),
 });
 
 export interface ResultsPerPageProps {
@@ -103,7 +103,7 @@ export function buildCoreResultsPerPage(
     'buildResultsPerPage'
   );
 
-  const num = validated.numberOfResults;
+  const num = validated?.numberOfResults;
 
   if (num !== undefined) {
     dispatch(registerNumberOfResults(num));

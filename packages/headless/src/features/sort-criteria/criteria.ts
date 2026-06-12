@@ -1,4 +1,4 @@
-import {EnumValue, isArray, RecordValue, StringValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 
 /**
  * The available sort orders.
@@ -70,7 +70,7 @@ export type SortCriterion =
 export const buildCriterionExpression = (
   criterion: SortCriterion | SortCriterion[]
 ): string => {
-  if (isArray(criterion)) {
+  if (Array.isArray(criterion)) {
     return criterion.map((c) => buildCriterionExpression(c)).join(',');
   }
 
@@ -135,10 +135,14 @@ export const buildQueryRankingExpressionSortCriterion = (): SortByQRE => ({
  */
 export const buildNoSortCriterion = (): SortByNoSort => ({by: SortBy.NoSort});
 
-export const criterionDefinition = new RecordValue({
-  values: {
-    by: new EnumValue({enum: SortBy, required: true}),
-    order: new EnumValue({enum: SortOrder}),
-    field: new StringValue(),
-  },
+export const criterionDefinition = z.object({
+  by: z.enum([
+    SortBy.Relevancy,
+    SortBy.QRE,
+    SortBy.Date,
+    SortBy.Field,
+    SortBy.NoSort,
+  ]),
+  order: z.optional(z.enum([SortOrder.Ascending, SortOrder.Descending])),
+  field: z.optional(z.string()),
 });

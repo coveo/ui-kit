@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import type {EventDescription} from 'coveo.analytics';
 import HistoryStore from '../../../api/analytics/coveo.analytics/history-store.js';
 import {getSearchApiBaseUrl} from '../../../api/platform-client.js';
@@ -72,7 +71,7 @@ export const buildSearchAndFoldingLoadCollectionRequest = async (
         eventDescription
       ))),
     ...(state.excerptLength &&
-      !isNullOrUndefined(state.excerptLength.length) && {
+      state.excerptLength.length != null && {
         excerptLength: state.excerptLength.length,
       }),
     ...(state.configuration.search.authenticationProviders.length && {

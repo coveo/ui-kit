@@ -1,4 +1,4 @@
-import {ArrayValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   buildContentURL,
@@ -69,7 +69,7 @@ export const previousPreview = createAction('resultPreview/previous');
 export const preparePreviewPagination = createAction(
   'resultPreview/prepare',
   (payload: PreparePreviewPaginationActionPayload) =>
-    validatePayload(payload, {results: new ArrayValue({required: true})})
+    validatePayload(payload, z.object({results: z.array(z.unknown())}))
 );
 
 export type UpdateContentURLOptions = HtmlRequestOptions & {

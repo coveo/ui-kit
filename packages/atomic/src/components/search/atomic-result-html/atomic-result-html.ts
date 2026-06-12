@@ -1,4 +1,4 @@
-import {BooleanValue, Schema, StringValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import type {Result} from '@coveo/headless';
 import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
@@ -28,9 +28,9 @@ export class AtomicResultHtml
   extends LightDomMixin(LitElement)
   implements InitializableComponent<Bindings>
 {
-  private static readonly propsSchema = new Schema({
-    field: new StringValue({required: true, emptyAllowed: false}),
-    sanitize: new BooleanValue(),
+  private static readonly propsSchema = z.object({
+    field: z.string().check(z.minLength(1)),
+    sanitize: z.optional(z.boolean()),
   });
 
   /**

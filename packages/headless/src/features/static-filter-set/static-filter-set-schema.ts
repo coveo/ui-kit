@@ -1,24 +1,15 @@
-import {ArrayValue, RecordValue, StringValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {
   requiredEmptyAllowedString,
   requiredNonEmptyString,
 } from '../../utils/validate-payload.js';
-import type {StaticFilterValueState} from './static-filter-set-state.js';
 
 export const staticFilterIdSchema = requiredNonEmptyString;
 
-export const staticFilterValueSchema = new RecordValue({
-  options: {required: true},
-  values: {
-    caption: requiredEmptyAllowedString,
-    expression: requiredEmptyAllowedString,
-    state: new StringValue<StaticFilterValueState>({
-      constrainTo: ['idle', 'selected', 'excluded'],
-    }),
-  },
+export const staticFilterValueSchema = z.object({
+  caption: requiredEmptyAllowedString,
+  expression: requiredEmptyAllowedString,
+  state: z.optional(z.enum(['idle', 'selected', 'excluded'] as const)),
 });
 
-export const staticFilterValuesSchema = new ArrayValue({
-  required: true,
-  each: staticFilterValueSchema,
-});
+export const staticFilterValuesSchema = z.array(staticFilterValueSchema);

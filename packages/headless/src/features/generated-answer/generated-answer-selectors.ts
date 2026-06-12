@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import {createSelector} from '@reduxjs/toolkit';
 import type {StreamAnswerAPIState} from '../../api/knowledge/stream-answer-api-state.js';
 import type {SearchAppState} from '../../state/search-app-state.js';
@@ -35,7 +34,7 @@ const isGeneratedAnswerFeatureEnabledWithAnswerAPI = (
 ): state is StreamAnswerAPIState =>
   'answer' in state &&
   'generatedAnswer' in state &&
-  !isNullOrUndefined(state.generatedAnswer?.answerConfigurationId);
+  state.generatedAnswer?.answerConfigurationId != null;
 
 export const isGeneratedAnswerFeatureEnabledWithAgentAPI = (
   state: Partial<SearchAppState>

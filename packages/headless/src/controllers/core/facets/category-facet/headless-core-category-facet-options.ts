@@ -1,4 +1,4 @@
-import {ArrayValue, RecordValue, Schema, StringValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {
   type CategoryFacetSortCriterion,
   categoryFacetSortCriteria,
@@ -113,19 +113,14 @@ export interface CategoryFacetSearchOptions {
   query?: string;
 }
 
-export const categoryFacetOptionsSchema = new Schema<
-  Required<CategoryFacetOptions>
->({
+export const categoryFacetOptionsSchema = z.object({
   field,
-  tabs: new RecordValue({
-    options: {
-      required: false,
-    },
-    values: {
-      included: new ArrayValue({each: new StringValue()}),
-      excluded: new ArrayValue({each: new StringValue()}),
-    },
-  }),
+  tabs: z.optional(
+    z.object({
+      included: z.optional(z.array(z.string())),
+      excluded: z.optional(z.array(z.string())),
+    })
+  ),
   basePath,
   delimitingCharacter,
   facetId,
@@ -134,7 +129,7 @@ export const categoryFacetOptionsSchema = new Schema<
   filterFacetCount,
   injectionDepth,
   numberOfValues,
-  sortCriteria: new StringValue<CategoryFacetSortCriterion>({
-    constrainTo: categoryFacetSortCriteria,
-  }),
+  sortCriteria: z.optional(
+    z.enum(categoryFacetSortCriteria as [string, ...string[]])
+  ),
 });

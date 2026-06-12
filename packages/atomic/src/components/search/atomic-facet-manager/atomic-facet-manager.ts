@@ -1,4 +1,4 @@
-import {NumberValue, Schema} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {
   buildFacetManager,
   type FacetManager,
@@ -38,8 +38,8 @@ export class AtomicFacetManager
   extends ChildrenUpdateCompleteMixin(LightDomMixin(LitElement))
   implements InitializableComponent<Bindings>
 {
-  private static readonly propsSchema = new Schema({
-    collapseFacetsAfter: new NumberValue({min: -1, required: true}),
+  private static readonly propsSchema = z.object({
+    collapseFacetsAfter: z.number().check(z.minimum(-1)),
   });
 
   @state() public bindings!: Bindings;

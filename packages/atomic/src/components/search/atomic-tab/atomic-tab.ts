@@ -1,4 +1,4 @@
-import {Schema, StringValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
@@ -12,9 +12,9 @@ import {LightDomMixin} from '@/src/mixins/light-dom';
  */
 @customElement('atomic-tab')
 export class AtomicTab extends LightDomMixin(LitElement) {
-  private static readonly propsSchema = new Schema({
-    label: new StringValue({required: true, emptyAllowed: false}),
-    name: new StringValue({required: true, emptyAllowed: false}),
+  private static readonly propsSchema = z.object({
+    label: z.string().check(z.minLength(1)),
+    name: z.string().check(z.minLength(1)),
   });
 
   /**

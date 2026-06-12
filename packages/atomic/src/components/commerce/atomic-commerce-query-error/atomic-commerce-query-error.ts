@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import {
   buildProductListing,
   buildSearch,
@@ -82,7 +81,7 @@ export class AtomicCommerceQueryError
     const url =
       commerce.apiBaseUrl ?? getCommerceApiBaseUrl(organizationId, environment);
 
-    const hasError = !isNullOrUndefined(error);
+    const hasError = error != null;
     if (hasError) {
       this.ariaMessage.message = getAriaMessageFromErrorType(
         i18n,

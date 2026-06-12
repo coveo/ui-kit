@@ -1,4 +1,4 @@
-import {NumberValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import HistoryStore from '../../api/analytics/coveo.analytics/history-store.js';
 import {getSearchApiBaseUrl} from '../../api/platform-client.js';
@@ -30,9 +30,9 @@ export type StateNeededByQuerySuggest = ConfigurationSection &
   QuerySetSection &
   Partial<ContextSection & PipelineSection & SearchHubSection>;
 
-const idDefinition = {
+const idDefinition = z.object({
   id: requiredNonEmptyString,
-};
+});
 
 export interface RegisterQuerySuggestActionCreatorPayload {
   /**
@@ -51,10 +51,13 @@ export interface RegisterQuerySuggestActionCreatorPayload {
 export const registerQuerySuggest = createAction(
   'querySuggest/register',
   (payload: RegisterQuerySuggestActionCreatorPayload) =>
-    validatePayload(payload, {
-      ...idDefinition,
-      count: new NumberValue({min: 0}),
-    })
+    validatePayload(
+      payload,
+      z.object({
+        id: requiredNonEmptyString,
+        count: z.optional(z.number().check(z.minimum(0))),
+      })
+    )
 );
 
 export const unregisterQuerySuggest = createAction(
@@ -77,10 +80,13 @@ export interface SelectQuerySuggestionActionCreatorPayload {
 export const selectQuerySuggestion = createAction(
   'querySuggest/selectSuggestion',
   (payload: SelectQuerySuggestionActionCreatorPayload) =>
-    validatePayload(payload, {
-      ...idDefinition,
-      expression: requiredEmptyAllowedString,
-    })
+    validatePayload(
+      payload,
+      z.object({
+        id: requiredNonEmptyString,
+        expression: requiredEmptyAllowedString,
+      })
+    )
 );
 
 export interface ClearQuerySuggestActionCreatorPayload {

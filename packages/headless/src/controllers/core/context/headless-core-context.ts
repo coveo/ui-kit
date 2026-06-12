@@ -1,4 +1,4 @@
-import {RecordValue, Schema} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import type {AnyAction, Dispatch} from '@reduxjs/toolkit';
 import type {CoreEngine} from '../../../app/engine.js';
 import {
@@ -41,10 +41,8 @@ export interface ContextInitialState {
   values: ContextPayload;
 }
 
-const initialStateSchema = new Schema<ContextInitialState>({
-  values: new RecordValue({
-    options: {required: false},
-  }),
+const initialStateSchema = z.object({
+  values: z.optional(z.record(z.string(), z.unknown())),
 });
 
 /**
@@ -127,7 +125,7 @@ export function buildCoreContext(
     'buildContext'
   );
 
-  if (initialState.values) {
+  if (initialState?.values) {
     dispatch(setContext(initialState.values));
   }
 

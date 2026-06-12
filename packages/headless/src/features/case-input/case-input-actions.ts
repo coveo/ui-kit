@@ -1,3 +1,4 @@
+import * as z from '@coveo/bueno/zod';
 import {createAction} from '@reduxjs/toolkit';
 import {
   requiredEmptyAllowedString,
@@ -19,8 +20,11 @@ export interface SetCaseInputActionCreatorPayload {
 export const updateCaseInput = createAction(
   'caseAssist/caseInput/update',
   (payload: SetCaseInputActionCreatorPayload) =>
-    validatePayload(payload, {
-      fieldName: requiredNonEmptyString,
-      fieldValue: requiredEmptyAllowedString,
-    })
+    validatePayload(
+      payload,
+      z.object({
+        fieldName: requiredNonEmptyString,
+        fieldValue: requiredEmptyAllowedString,
+      })
+    )
 );

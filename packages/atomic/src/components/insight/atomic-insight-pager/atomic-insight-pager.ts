@@ -1,4 +1,4 @@
-import {NumberValue, Schema} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {
   buildPager as buildInsightPager,
   buildSearchStatus as buildInsightSearchStatus,
@@ -111,8 +111,8 @@ export class AtomicInsightPager
       () => ({
         numberOfPages: this.numberOfPages,
       }),
-      new Schema({
-        numberOfPages: new NumberValue({min: 0}),
+      z.object({
+        numberOfPages: z.optional(z.number().check(z.minimum(0))),
       })
     );
   }

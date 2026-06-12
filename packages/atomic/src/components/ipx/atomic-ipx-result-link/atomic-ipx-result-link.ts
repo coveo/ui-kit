@@ -1,4 +1,3 @@
-import {isUndefined} from '@coveo/bueno';
 import type {
   InteractiveResult,
   IPXActionsHistoryActionCreators,
@@ -134,13 +133,14 @@ export class AtomicIpxResultLink
       const result = this.result!;
       const interactiveResult = this.interactiveResult!;
 
-      const href = isUndefined(this.hrefTemplate)
-        ? result.clickUri
-        : buildStringTemplateFromResult(
-            this.hrefTemplate,
-            result,
-            this.bindings
-          );
+      const href =
+        this.hrefTemplate === undefined
+          ? result.clickUri
+          : buildStringTemplateFromResult(
+              this.hrefTemplate,
+              result,
+              this.bindings
+            );
 
       return renderLinkWithItemAnalytics({
         props: {

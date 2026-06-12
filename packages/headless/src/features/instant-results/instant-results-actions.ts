@@ -1,3 +1,4 @@
+import * as z from '@coveo/bueno/zod';
 import {createAction} from '@reduxjs/toolkit';
 import type {Result} from '../../api/search/search/result.js';
 import {
@@ -31,14 +32,14 @@ export interface ClearExpiredInstantResultsActionCreatorPayload {
   id: string;
 }
 
-const instantResultsRegisterDefinition = {
+const instantResultsRegisterDefinition = z.object({
   id: requiredNonEmptyString,
-};
+});
 
-const instantResultsQueryDefinition = {
-  ...instantResultsRegisterDefinition,
+const instantResultsQueryDefinition = z.object({
+  id: requiredNonEmptyString,
   q: requiredEmptyAllowedString,
-};
+});
 
 export const registerInstantResults = createAction(
   'instantResults/register',

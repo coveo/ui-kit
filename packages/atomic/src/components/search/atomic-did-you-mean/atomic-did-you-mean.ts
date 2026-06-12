@@ -1,4 +1,4 @@
-import {Schema, StringValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {
   buildDidYouMean,
   buildQueryTrigger,
@@ -45,10 +45,8 @@ export class AtomicDidYouMean
   extends LitElement
   implements InitializableComponent<Bindings>
 {
-  private static readonly propsSchema = new Schema({
-    queryCorrectionMode: new StringValue({
-      constrainTo: ['legacy', 'next'],
-    }),
+  private static readonly propsSchema = z.object({
+    queryCorrectionMode: z.optional(z.enum(['legacy', 'next'])),
   });
 
   public bindings!: Bindings;

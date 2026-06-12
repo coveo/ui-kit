@@ -1,4 +1,4 @@
-import {NumberValue, Schema} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {nonEmptyString} from '../../utils/validate-payload.js';
 
 export interface InstantResultOptions {
@@ -18,13 +18,10 @@ export interface InstantResultOptions {
 
 const instantResultsOptionDefinitions = {
   searchBoxId: nonEmptyString,
-  maxResultsPerQuery: new NumberValue({
-    required: true,
-    min: 1,
-  }),
-  cacheTimeout: new NumberValue(),
+  maxResultsPerQuery: z.number().check(z.minimum(1)),
+  cacheTimeout: z.optional(z.number()),
 };
 
-export const instantResultsOptionsSchema = new Schema<
-  Required<InstantResultOptions>
->(instantResultsOptionDefinitions);
+export const instantResultsOptionsSchema = z.object(
+  instantResultsOptionDefinitions
+);

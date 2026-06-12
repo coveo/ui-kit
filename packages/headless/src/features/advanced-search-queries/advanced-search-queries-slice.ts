@@ -1,4 +1,3 @@
-import {isUndefined} from '@coveo/bueno';
 import {createReducer} from '@reduxjs/toolkit';
 import {change} from '../history/history-actions.js';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions.js';
@@ -14,44 +13,44 @@ export const advancedSearchQueriesReducer = createReducer(
     builder
       .addCase(updateAdvancedSearchQueries, (state, action) => {
         const {aq, cq, lq, dq} = action.payload;
-        if (!isUndefined(aq)) {
+        if (aq !== undefined) {
           state.aq = aq;
           state.aqWasSet = true;
         }
-        if (!isUndefined(cq)) {
+        if (cq !== undefined) {
           state.cq = cq;
           state.cqWasSet = true;
         }
-        if (!isUndefined(lq)) {
+        if (lq !== undefined) {
           state.lq = lq;
           state.lqWasSet = true;
         }
-        if (!isUndefined(dq)) {
+        if (dq !== undefined) {
           state.dq = dq;
           state.dqWasSet = true;
         }
       })
       .addCase(registerAdvancedSearchQueries, (state, action) => {
         const {aq, cq, lq, dq} = action.payload;
-        if (!isUndefined(aq)) {
+        if (aq !== undefined) {
           state.defaultFilters.aq = aq;
           if (!state.aqWasSet) {
             state.aq = aq;
           }
         }
-        if (!isUndefined(cq)) {
+        if (cq !== undefined) {
           state.defaultFilters.cq = cq;
           if (!state.cqWasSet) {
             state.cq = cq;
           }
         }
-        if (!isUndefined(lq)) {
+        if (lq !== undefined) {
           state.defaultFilters.lq = lq;
           if (!state.lqWasSet) {
             state.lq = lq;
           }
         }
-        if (!isUndefined(dq)) {
+        if (dq !== undefined) {
           state.defaultFilters.dq = dq;
           if (!state.dqWasSet) {
             state.dq = dq;
@@ -64,11 +63,11 @@ export const advancedSearchQueriesReducer = createReducer(
       )
       .addCase(restoreSearchParameters, (state, action) => {
         const {aq, cq} = action.payload;
-        if (!isUndefined(aq)) {
+        if (aq !== undefined) {
           state.aq = aq;
           state.aqWasSet = true;
         }
-        if (!isUndefined(cq)) {
+        if (cq !== undefined) {
           state.cq = cq;
           state.cqWasSet = true;
         }

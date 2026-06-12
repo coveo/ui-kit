@@ -1,4 +1,4 @@
-import {ArrayValue, Schema, StringValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {
   buildUserActions as buildInsightUserActions,
   type UserActions as InsightUserActions,
@@ -55,16 +55,10 @@ export class AtomicInsightUserActionsTimeline
     }
   `;
 
-  private static readonly propsSchema = new Schema({
-    userId: new StringValue({required: true, emptyAllowed: false}),
-    ticketCreationDateTime: new StringValue({
-      required: true,
-      emptyAllowed: false,
-    }),
-    excludedCustomActions: new ArrayValue({
-      each: new StringValue({}),
-      required: false,
-    }),
+  private static readonly propsSchema = z.object({
+    userId: z.string().check(z.minLength(1)),
+    ticketCreationDateTime: z.string().check(z.minLength(1)),
+    excludedCustomActions: z.optional(z.array(z.string())),
   });
 
   @state() public bindings!: InsightBindings;

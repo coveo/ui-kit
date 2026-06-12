@@ -1,4 +1,4 @@
-import {Schema, StringValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {configuration} from '../../app/common-reducers.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {buildSearchParameterSerializer} from '../../features/search-parameters/search-parameter-serializer.js';
@@ -28,8 +28,8 @@ export interface UrlManagerInitialState {
   fragment: string;
 }
 
-export const initialStateSchema = new Schema<Required<UrlManagerInitialState>>({
-  fragment: new StringValue(),
+export const initialStateSchema = z.object({
+  fragment: z.optional(z.string()),
 });
 
 /**

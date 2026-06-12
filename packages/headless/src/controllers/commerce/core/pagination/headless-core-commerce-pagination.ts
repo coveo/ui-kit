@@ -1,4 +1,4 @@
-import {NumberValue, Schema} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {createSelector} from '@reduxjs/toolkit';
 import type {
   CommerceEngine,
@@ -97,8 +97,8 @@ export interface PaginationProps {
   options?: PaginationOptions;
 }
 
-const optionsSchema = new Schema({
-  pageSize: new NumberValue({min: 1, max: 1000, required: false}),
+const optionsSchema = z.object({
+  pageSize: z.optional(z.number().check(z.minimum(1), z.maximum(1000))),
 });
 
 /**

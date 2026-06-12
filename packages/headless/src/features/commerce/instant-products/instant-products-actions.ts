@@ -1,4 +1,4 @@
-import {RecordValue, StringValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {createAction} from '@reduxjs/toolkit';
 import type {ChildProduct} from '../../../api/commerce/common/product.js';
 import {
@@ -14,14 +14,14 @@ export interface CoreInstantProductPayload {
   id: string;
 }
 
-const instantProductsIdDefinition = {
+const instantProductsIdDefinition = z.object({
   id: requiredNonEmptyString,
-};
+});
 
-const instantProductsQueryDefinition = {
-  ...instantProductsIdDefinition,
+const instantProductsQueryDefinition = z.object({
+  id: requiredNonEmptyString,
   query: requiredEmptyAllowedString,
-};
+});
 
 export type ClearExpiredInstantProductsPayload = CoreInstantProductPayload;
 
@@ -31,15 +31,13 @@ export const clearExpiredProducts = createAction(
     validatePayload(payload, instantProductsIdDefinition)
 );
 
-const promoteChildToParentDefinition = {
-  child: new RecordValue({
-    options: {required: true},
-    values: {
-      permanentid: new StringValue({required: true}),
-    },
+const promoteChildToParentDefinition = z.object({
+  child: z.object({
+    permanentid: z.string(),
   }),
-  ...instantProductsQueryDefinition,
-};
+  id: requiredNonEmptyString,
+  query: requiredEmptyAllowedString,
+}) as unknown as z.ZodMiniType<PromoteChildToParentPayload>;
 
 export interface PromoteChildToParentPayload extends UpdateInstantProductQueryPayload {
   child: ChildProduct;

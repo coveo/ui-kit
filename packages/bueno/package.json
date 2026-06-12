@@ -20,6 +20,11 @@
       "import": "./dist/bueno.esm.js",
       "require": "./dist/bueno.js",
       "default": "./dist/bueno.esm.js"
+    },
+    "./zod": {
+      "types": "./dist/definitions/zod.d.ts",
+      "import": "./dist/zod.esm.js",
+      "default": "./dist/zod.esm.js"
     }
   },
   "scripts": {
@@ -30,6 +35,9 @@
     "clean": "node ../../utils/ci/rm-rf.mjs dist/*",
     "test": "vitest run",
     "test:watch": "vitest"
+  },
+  "dependencies": {
+    "zod": "^4.0.0"
   },
   "devDependencies": {
     "vitest": "catalog:"

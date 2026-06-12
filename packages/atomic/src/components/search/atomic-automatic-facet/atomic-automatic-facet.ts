@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import type {AutomaticFacet, FacetValue, SearchStatus} from '@coveo/headless';
 import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
@@ -112,7 +111,7 @@ export class AtomicAutomaticFacet
   }
 
   private get label() {
-    return isNullOrUndefined(this.facet.state.label)
+    return this.facet.state.label == null
       ? this.facet.state.field
       : this.facet.state.label;
   }

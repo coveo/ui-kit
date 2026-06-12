@@ -1,4 +1,4 @@
-import {NumberValue, Schema, StringValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import type {RelativeDateUnit} from '@coveo/headless';
 import {LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
@@ -18,25 +18,10 @@ export class AtomicTimeframe
   extends LightDomMixin(LitElement)
   implements Timeframe, LitElementWithError
 {
-  private static readonly propsSchema = new Schema({
-    period: new StringValue({
-      constrainTo: ['past', 'next'],
-      required: false,
-    }),
-    unit: new StringValue({
-      constrainTo: [
-        'minute',
-        'hour',
-        'day',
-        'week',
-        'month',
-        'quarter',
-        'year',
-      ],
-      required: true,
-      emptyAllowed: false,
-    }),
-    amount: new NumberValue({min: 1, required: false}),
+  private static readonly propsSchema = z.object({
+    period: z.optional(z.enum(['past', 'next'])),
+    unit: z.enum(['minute', 'hour', 'day', 'week', 'month', 'quarter', 'year']),
+    amount: z.optional(z.number().check(z.minimum(1))),
   });
   /**
    * The direction of time relative to the current moment.

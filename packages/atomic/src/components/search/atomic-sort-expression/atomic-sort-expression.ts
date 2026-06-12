@@ -1,4 +1,4 @@
-import {ArrayValue, Schema, StringValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
@@ -11,13 +11,10 @@ import '@/src/components/common/atomic-component-error/atomic-component-error';
  */
 @customElement('atomic-sort-expression')
 export class AtomicSortExpression extends LightDomMixin(LitElement) {
-  private static readonly propsSchema = new Schema({
-    label: new StringValue({required: true, emptyAllowed: false}),
-    expression: new StringValue({required: true, emptyAllowed: false}),
-    tabsExcluded: new ArrayValue({
-      each: new StringValue({}),
-      required: false,
-    }),
+  private static readonly propsSchema = z.object({
+    label: z.string().check(z.minLength(1)),
+    expression: z.string().check(z.minLength(1)),
+    tabsExcluded: z.optional(z.array(z.string())),
   });
 
   /**

@@ -1,4 +1,3 @@
-import {SchemaValidationError} from '@coveo/bueno';
 import type {Parameters} from '../../../../features/commerce/parameters/parameters-actions.js';
 import {parametersDefinition} from '../../../../features/commerce/parameters/parameters-schema.js';
 import {parametersReducer as commerceParameters} from '../../../../features/commerce/parameters/parameters-slice.js';
@@ -81,7 +80,7 @@ describe('parameter manager', () => {
             initialState: {parameters: {page: -1}},
             parametersDefinition,
           })
-        ).toThrow(SchemaValidationError);
+        ).toThrow();
       });
 
       it('dispatches #restoreActionCreator with initial parameters', () => {

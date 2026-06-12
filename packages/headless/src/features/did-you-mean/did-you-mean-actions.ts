@@ -1,4 +1,4 @@
-import {StringValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {createAction} from '@reduxjs/toolkit';
 import {
   requiredNonEmptyString,
@@ -26,12 +26,5 @@ export const applyDidYouMeanCorrection = createAction(
 export const setCorrectionMode = createAction(
   'didYouMean/automaticCorrections/mode',
   (payload: CorrectionMode) =>
-    validatePayload(
-      payload,
-      new StringValue<CorrectionMode>({
-        constrainTo: ['next', 'legacy'],
-        emptyAllowed: false,
-        required: true,
-      })
-    )
+    validatePayload(payload, z.enum(['next', 'legacy']))
 );
