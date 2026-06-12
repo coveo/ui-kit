@@ -102,7 +102,7 @@ The Multi-Interface Engine feature enables a single `Engine` instance in `headle
 
 #### Acceptance Criteria
 
-1. THE Engine SHALL store feature state using flat feature-slug keys (e.g., `"searchbox-{interfaceId}"`), where each feature instance gets its own keyed partition.
+1. THE Engine SHALL store feature state using flat keys prefixed by interface ID (e.g., `"{interfaceId}/searchBox"`), where each feature instance gets its own keyed partition. This format regroups interfaces visually in Redux DevTools.
 2. WHEN a mutation is dispatched scoped to Interface A, THE Engine SHALL apply the mutation only to the state partition belonging to Interface A.
 3. WHEN Interface A state changes, THE Engine SHALL NOT trigger state change notifications for Interface B subscribers.
 4. WHEN a Composed_Interface owns state, THE Engine SHALL store that state in a partition keyed by the composed interface's own ID, separate from the partitions of its constituent Interfaces.
@@ -159,7 +159,7 @@ The Multi-Interface Engine feature enables a single `Engine` instance in `headle
 
 1. WHEN a controller, state getter, or action loader is called for a feature that has not been loaded for that Interface, THE Engine SHALL automatically load the feature (adopt the slice and register selectors).
 2. WHEN the same feature is loaded multiple times for the same Interface, THE Engine SHALL treat subsequent loads as idempotent no-ops.
-3. WHEN a feature self-registers, THE Interface's request builder SHALL switch from the default selector to the operational selector for the relevant request section (Two_Tier_Selector swap).
+3. WHEN a feature self-registers, THE request builder SHALL include live state values from that feature. Non-registered features SHALL contribute their initial state values.
 
 ### Requirement 13: Two-Tier Request Section Selectors
 
@@ -169,7 +169,7 @@ The Multi-Interface Engine feature enables a single `Engine` instance in `headle
 
 1. THE Interface request builder SHALL assign a default selector to each section of an API request, returning static deterministic values when the corresponding feature is inactive.
 2. THE Interface request builder SHALL assign an operational selector to each section of an API request, reading from live state when the corresponding feature is active.
-3. WHEN a feature self-registers, THE Interface's request builder SHALL switch from the default selector to the operational selector for that feature's section.
+3. WHEN a feature self-registers, THE request builder SHALL include live state values from that feature. Non-registered features SHALL contribute their initial state values.
 4. THE selector switch SHALL be idempotent and one-time per feature per Interface.
 
 ## Design Constraints
