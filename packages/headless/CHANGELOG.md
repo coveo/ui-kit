@@ -1,3 +1,9 @@
+## 3.51.5
+
+### Patch Changes
+
+- [#7794](https://github.com/coveo/ui-kit/pull/7794) [`a25786a`](https://github.com/coveo/ui-kit/commit/a25786abf99c9cd1168e193bd0c6ef5b296f22e9) - feat(headless): change search agent follow-up citations clicks events to custom event
+
 ## 3.51.4
 
 ### Patch Changes

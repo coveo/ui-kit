@@ -1,3 +1,13 @@
+## 3.59.6
+
+### Patch Changes
+
+- [#7764](https://github.com/coveo/ui-kit/pull/7764) [`043b310`](https://github.com/coveo/ui-kit/commit/043b31022692d059ac61c8ad1cedb1db164105fd) - Removed `aria-expanded` from the expandable text "Show more" button when it is a one-way reveal (non-collapsible). The attribute is preserved when `isCollapsible` is true, since that follows the disclosure pattern.
+
+- Updated dependencies [[`a25786a`](https://github.com/coveo/ui-kit/commit/a25786abf99c9cd1168e193bd0c6ef5b296f22e9)]:
+  - @coveo/headless@3.51.5
+  - @coveo/atomic-legacy@0.0.21
+
 ## 3.59.5
 
 ### Patch Changes
