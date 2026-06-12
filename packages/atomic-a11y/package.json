@@ -10,13 +10,13 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "a11y:merge-shards": "pnpm build && node scripts/merge-shards-cli.mjs",
+    "a11y:merge-shards": "node scripts/merge-shards-cli.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
     "a11y:validate": "node scripts/validate-openacr.mjs",
-    "a11y:vpat": "pnpm build && node scripts/json-to-openacr.mjs && node scripts/validate-openacr.mjs && node scripts/generate-vpat.mjs",
+    "a11y:vpat": "node scripts/json-to-openacr.mjs && node scripts/validate-openacr.mjs && node scripts/generate-vpat.mjs",
     "a11y:vpat-pdf": "node scripts/build-vpat-pdf.mjs",
-    "a11y:update-openacr": "pnpm build && node scripts/update-openacr.mjs"
+    "a11y:update-openacr": "node scripts/update-openacr.mjs"
   },
   "dependencies": {
     "handlebars": "4.7.9",

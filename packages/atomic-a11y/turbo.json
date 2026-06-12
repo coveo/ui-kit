@@ -4,6 +4,18 @@
     "build": {
       "outputs": ["dist/**"]
     },
+    "a11y:merge-shards": {
+      "dependsOn": ["build"],
+      "cache": false
+    },
+    "a11y:vpat": {
+      "dependsOn": ["build"],
+      "cache": false
+    },
+    "a11y:update-openacr": {
+      "dependsOn": ["build"],
+      "cache": false
+    },
     "a11y:vpat-pdf": {
       "dependsOn": ["build", "@coveo/atomic#build:cdn"],
       "outputs": []

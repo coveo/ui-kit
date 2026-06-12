@@ -46,12 +46,18 @@ await transformJsonToOpenAcr({
 ## Scripts
 
 ```bash
-pnpm build                # Generate WCAG data + compile TypeScript
+pnpm build                # Compile TypeScript (dist/)
 pnpm test                 # Run unit tests
-pnpm a11y:merge-shards    # Merge shard reports from parallel CI runs
-pnpm a11y:vpat            # Generate OpenACR YAML + VPAT markdown
-pnpm a11y:vpat-pdf        # Generate VPAT PDF for CDN (reads committed openacr.yaml)
-pnpm a11y:update-openacr  # Download a11y report from CI and regenerate openacr.yaml
+```
+
+The `a11y:*` tasks are run through turbo so their `build` dependency runs first
+(and is cached — no redundant rebuilds):
+
+```bash
+pnpm exec turbo run a11y:merge-shards   --filter=@coveo/atomic-a11y   # Merge shard reports from parallel CI runs
+pnpm exec turbo run a11y:vpat           --filter=@coveo/atomic-a11y   # Generate OpenACR YAML + VPAT markdown
+pnpm exec turbo run a11y:vpat-pdf       --filter=@coveo/atomic-a11y   # Generate VPAT PDF for CDN (reads committed openacr.yaml)
+pnpm exec turbo run a11y:update-openacr --filter=@coveo/atomic-a11y   # Download a11y report from CI and regenerate openacr.yaml
 ```
 
 ## Updating openacr.yaml
@@ -69,7 +75,7 @@ You have two options:
 This avoids running the full Storybook test suite locally. The CI already ran the tests and produced the report — you just download it:
 
 ```bash
-pnpm --filter @coveo/atomic-a11y a11y:update-openacr --run-id=<RUN_ID>
+pnpm exec turbo run a11y:update-openacr --filter=@coveo/atomic-a11y -- --run-id=<RUN_ID>
 ```
 
 Replace `<RUN_ID>` with the GitHub Actions run ID from the failing check (shown in the error message). This uses the `gh` CLI to download the `a11y-report.json` artifact and regenerates `openacr.yaml`.
@@ -83,8 +89,8 @@ If you prefer to regenerate from scratch:
 ```bash
 cd packages/atomic
 pnpm test:storybook          # generates a11y-report.json in packages/atomic/reports/
-cd ../atomic-a11y
-pnpm a11y:vpat               # regenerates openacr.yaml from the report
+cd ../..
+pnpm exec turbo run a11y:vpat --filter=@coveo/atomic-a11y   # regenerates openacr.yaml from the report
 ```
 
 ---
@@ -114,7 +120,7 @@ Automated tests can't cover every WCAG criterion. For the rest, record results p
    - Result is `pass` | `fail` | `partial` | `not-applicable`, or `{conformance, remarks}` to add a note (the remark shows in the VPAT). Put the **AT + browser** you used and a **repro for any fail** in `remarks`.
    - Key is `{wcag-id}-{slug}`; the id must be a real WCAG 2.2 A/AA criterion. List only what you tested — omitted criteria stay _Does Not Support [manual audit required]_.
 
-3. **Run `pnpm a11y:vpat`** — regenerates the VPAT and warns on invalid keys.
+3. **Run `pnpm exec turbo run a11y:vpat --filter=@coveo/atomic-a11y`** — regenerates the VPAT and warns on invalid keys.
 4. **Open a PR** using the [manual-audit PR checklist](docs/manual-audit-guide.md#pr-checklist) (method, environment, criteria audited) and commit the file + regenerated VPAT.
 
 Each criterion's VPAT verdict is the **worst** result across all surface files plus the automated and interactive signals (`fail > partial > pass > not-applicable`). So a manual `fail` surfaces even if axe was clean, and a manual `pass` can't hide a real axe violation. For permanent, by-design exceptions, use `a11y/a11y-overrides.json` (authoritative — it wins outright).
