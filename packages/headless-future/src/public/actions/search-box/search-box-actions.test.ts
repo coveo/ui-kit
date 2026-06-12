@@ -1,0 +1,128 @@
+/**
+ * SearchBox Public Actions Tests
+ */
+
+import {describe, it, expect, beforeEach} from 'vitest';
+import {
+  Engine,
+  FullEngine,
+  getFullEngine,
+} from '@/src/core/interface/engine/engine.js';
+import {createTestEngine} from '@/src/test/test-utils.js';
+import {getQuery} from '@/src/core/interface/search-box/search-box-selectors.js';
+import {loadSearchBoxActions, setQuery} from './search-box-actions.js';
+
+describe('search-box actions', () => {
+  let engine: Engine;
+  let fullEngine: FullEngine;
+
+  beforeEach(() => {
+    engine = createTestEngine();
+    fullEngine = getFullEngine(engine);
+  });
+
+  describe('loadSearchBoxActions', () => {
+    it('should adopt the searchBox slice on the engine', async () => {
+      loadSearchBoxActions(engine);
+      // After adopting, the slice should be available and query should be default
+      // Give time for adoptSlice (async) to settle
+      await new Promise((r) => setTimeout(r, 0));
+      expect(fullEngine.read(getQuery)).toBe('');
+    });
+
+    it('should return an object with a setQuery action', () => {
+      const actions = loadSearchBoxActions(engine);
+      expect(actions).toHaveProperty('setQuery');
+      expect(typeof actions.setQuery).toBe('function');
+    });
+
+    it('should update state when setQuery action is called', async () => {
+      const actions = loadSearchBoxActions(engine);
+      await new Promise((r) => setTimeout(r, 0));
+
+      actions.setQuery({query: 'hello world'});
+      expect(fullEngine.read(getQuery)).toBe('hello world');
+    });
+
+    it('should accept empty string via setQuery action', async () => {
+      const actions = loadSearchBoxActions(engine);
+      await new Promise((r) => setTimeout(r, 0));
+
+      actions.setQuery({query: 'something'});
+      actions.setQuery({query: ''});
+      expect(fullEngine.read(getQuery)).toBe('');
+    });
+
+    it('should handle multiple calls to setQuery', async () => {
+      const actions = loadSearchBoxActions(engine);
+      await new Promise((r) => setTimeout(r, 0));
+
+      actions.setQuery({query: 'first'});
+      expect(fullEngine.read(getQuery)).toBe('first');
+
+      actions.setQuery({query: 'second'});
+      expect(fullEngine.read(getQuery)).toBe('second');
+    });
+  });
+
+  describe('setQuery (named export)', () => {
+    it('should return a function', () => {
+      const action = setQuery(engine);
+      expect(typeof action).toBe('function');
+    });
+
+    it('should adopt the slice if not already adopted', async () => {
+      setQuery(engine);
+      await new Promise((r) => setTimeout(r, 0));
+      expect(fullEngine.read(getQuery)).toBe('');
+    });
+
+    it('should update state when the returned function is called', async () => {
+      const action = setQuery(engine);
+      await new Promise((r) => setTimeout(r, 0));
+
+      action({query: 'test query'});
+      expect(fullEngine.read(getQuery)).toBe('test query');
+    });
+
+    it('should not re-adopt the slice on subsequent calls with the same engine', async () => {
+      // First call adopts the slice
+      const action1 = setQuery(engine);
+      await new Promise((r) => setTimeout(r, 0));
+
+      action1({query: 'first'});
+      expect(fullEngine.read(getQuery)).toBe('first');
+
+      // Second call should skip adoption but still work
+      const action2 = setQuery(engine);
+      action2({query: 'second'});
+      expect(fullEngine.read(getQuery)).toBe('second');
+    });
+
+    it('should work with different engine instances independently', async () => {
+      const engine2 = createTestEngine();
+      const fullEngine2 = getFullEngine(engine2);
+
+      const action1 = setQuery(engine);
+      const action2 = setQuery(engine2);
+      await new Promise((r) => setTimeout(r, 0));
+
+      action1({query: 'engine1 query'});
+      action2({query: 'engine2 query'});
+
+      expect(fullEngine.read(getQuery)).toBe('engine1 query');
+      expect(fullEngine2.read(getQuery)).toBe('engine2 query');
+    });
+
+    it('should work after loadSearchBoxActions has already adopted the slice', async () => {
+      // Adopt via loadSearchBoxActions first
+      loadSearchBoxActions(engine);
+      await new Promise((r) => setTimeout(r, 0));
+
+      // Named export should still work (slice already adopted)
+      const action = setQuery(engine);
+      action({query: 'after load'});
+      expect(fullEngine.read(getQuery)).toBe('after load');
+    });
+  });
+});
