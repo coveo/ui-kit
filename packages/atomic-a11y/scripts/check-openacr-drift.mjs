@@ -71,7 +71,7 @@ conformance, or component coverage changed.
 
 To update, run:
 
-  pnpm --filter @coveo/atomic-a11y a11y:update-openacr --run-id=${runId}
+  pnpm exec turbo run a11y:update-openacr --filter=@coveo/atomic-a11y -- --run-id=${runId}
 
 Then review the changes and commit the updated openacr.yaml.
 
