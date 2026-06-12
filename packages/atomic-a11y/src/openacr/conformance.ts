@@ -102,7 +102,7 @@ export function buildRemarks(context: RemarksContext): string {
   const {override, aggregate, interactiveAggregate, manualAggregates} = context;
 
   if (override) {
-    return `[Override] ${override.reason}`;
+    return override.reason;
   }
 
   const covered = aggregate?.coveredComponents.size ?? 0;

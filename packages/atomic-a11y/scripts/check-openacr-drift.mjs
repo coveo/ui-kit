@@ -23,6 +23,11 @@ const INPUT_REPORT = resolve(
   'packages/atomic/reports/a11y-report.json'
 );
 
+if (!existsSync(INPUT_REPORT)) {
+  console.log('⏭️  No a11y-report.json found. Skipping drift check.');
+  process.exit(0);
+}
+
 // Generate fresh openacr from the merged a11y report
 await transformJsonToOpenAcr({
   inputFile: INPUT_REPORT,

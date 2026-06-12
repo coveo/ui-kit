@@ -1289,6 +1289,13 @@
     <shortDescription>Something went wrong and we couldn't generate an answer.</shortDescription>
   </labels>
   <labels>
+    <fullName>quantic_GeneratedAnswerErrorTurnLimitReached</fullName>
+    <value>Conversation turn limit reached. Please start a new conversation.</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Generated answer conversation turn limit reached error.</shortDescription>
+  </labels>
+  <labels>
     <fullName>quantic_ShowingResultsFor</fullName>
     <value>Showing results for {{0}}</value>
     <language>en_US</language>

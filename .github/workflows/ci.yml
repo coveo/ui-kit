@@ -446,7 +446,7 @@ jobs:
           retention-days: 1
           if-no-files-found: warn
   merge-storybook-a11y-reports:
-    name: 'Merge Storybook a11y reports'
+    name: 'Merge Storybook a11y reports and validate OpenACR'
     needs: [affected, storybook-atomic]
     if: always() && contains(needs.affected.outputs.projects, '@coveo/atomic')
     runs-on: ubuntu-latest
