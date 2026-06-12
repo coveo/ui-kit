@@ -7,6 +7,7 @@ jest.mock('c/quanticUtils', () => ({
     format: jest.fn((label, count) => `Show ${count} previous questions`),
   },
 }));
+jest.mock('c/quanticHeadlessLoader');
 
 jest.mock(
   '@salesforce/label/c.quantic_ShowPreviousQuestions_plural',
