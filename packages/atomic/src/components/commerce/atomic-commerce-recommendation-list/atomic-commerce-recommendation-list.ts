@@ -308,7 +308,7 @@ export class AtomicCommerceRecommendationList
 
     if (recListWithRecommendation.length > 1) {
       this.bindings.engine.logger.warn(
-        `WARNING: There are multiple atomic-commerce-recommendation-list in this page with the same slot-id property "${this.slotId}". Make sure to set a different recommendation property for each.`
+        `There are multiple atomic-commerce-recommendation-list in this page with the same slot-id property "${this.slotId}". Make sure to set a different recommendation property for each.`
       );
     }
   }
