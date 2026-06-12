@@ -106,12 +106,16 @@ export class AtomicNoResults
       bindings: {i18n},
     } = this;
 
-    this.ariaMessage.message = getSummary(
-      i18n,
-      this.querySummaryState.query,
-      this.searchStatusState.hasResults,
-      'no-results'
-    );
+    this.ariaMessage.message =
+      this.searchStatusState.firstSearchExecuted &&
+      !this.searchStatusState.isLoading
+        ? getSummary(
+            i18n,
+            this.querySummaryState.query,
+            this.searchStatusState.hasResults,
+            'no-results'
+          )
+        : '';
 
     return html`${noItemsGuard(
       {
