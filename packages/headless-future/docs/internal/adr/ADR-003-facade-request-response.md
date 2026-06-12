@@ -1,4 +1,4 @@
-# ADR-002: Centralized Request Building and Response Handling for Endpoint Facades
+# ADR-003: Centralized Request Building and Response Handling for Endpoint Facades
 
 **Status**: `🟡 Proposed`  
 **Related docs**: [ADR-000 Architecture Decision Charter](./ADR-000-architecture-decision-charter.md), [ADR-002 Multi-Interface Engine](./ADR-002-multi-interface-engine.md)
