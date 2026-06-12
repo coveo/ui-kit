@@ -473,6 +473,9 @@ jobs:
       - name: 'Merge a11y shard reports'
         run: pnpm run a11y:merge-shards -- ../atomic/reports/a11y-report.json
         working-directory: packages/atomic-a11y
+      - name: 'Generate and validate OpenACR/VPAT'
+        run: pnpm a11y:vpat
+        working-directory: packages/atomic-a11y
       - name: 'Upload merged a11y report'
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
