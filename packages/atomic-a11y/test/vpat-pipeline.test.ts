@@ -148,6 +148,8 @@ describe('transformJsonToOpenAcr (integration)', () => {
     const aa = result.chapters.success_criteria_level_aa.criteria;
     const row = aa.find((c) => c.num === '1.4.3');
     expect(row?.components[0].adherence.level).toBe('supports');
-    expect(row?.components[0].adherence.notes).toContain('[Override]');
+    expect(row?.components[0].adherence.notes).toContain(
+      'Design tokens meet AA'
+    );
   });
 });

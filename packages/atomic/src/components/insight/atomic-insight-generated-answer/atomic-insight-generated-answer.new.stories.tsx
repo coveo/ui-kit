@@ -5,6 +5,7 @@ import type {
 } from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
+import {testSwitchA11y} from '@/storybook-utils/a11y/switch.js';
 import {MockAnswerApi} from '@/storybook-utils/api/answer/mock';
 import {MockInsightApi} from '@/storybook-utils/api/insight/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
@@ -94,5 +95,17 @@ export const DisableCitationAnchoring: Story = {
   name: 'Citation anchoring disabled',
   args: {
     'disable-citation-anchoring': true,
+  },
+};
+
+export const A11ySwitch: Story = {
+  name: 'A11y Switch (Toggle)',
+  tags: ['a11y', 'test', '!dev'],
+  args: {
+    'with-toggle': true,
+  },
+  play: async (context) => {
+    await meta.play!(context as any);
+    await testSwitchA11y(context);
   },
 };

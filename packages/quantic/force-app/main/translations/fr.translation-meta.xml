@@ -709,6 +709,10 @@
     <name>quantic_CouldNotGenerateAnAnswer</name>
   </customLabels>
   <customLabels>
+    <label>Limite de tours de conversation atteinte. Veuillez commencer une nouvelle conversation.</label>
+    <name>quantic_GeneratedAnswerErrorTurnLimitReached</name>
+  </customLabels>
+  <customLabels>
     <label>Résultats affichés pour {{0}}</label>
     <name>quantic_ShowingResultsFor</name>
   </customLabels>
@@ -899,5 +903,9 @@
   <customLabels>
     <name>quantic_SubmitFollowUp</name>
     <label>Soumettre un suivi</label>
+  </customLabels>
+  <customLabels>
+    <label>Afficher {{0}} questions précédentes</label>
+    <name>quantic_ShowPreviousQuestions_plural</name>
   </customLabels>
 </Translations>
