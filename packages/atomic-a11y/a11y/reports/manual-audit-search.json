@@ -1,0 +1,9 @@
+{
+  "surface": "search",
+  "wcag22Criteria": {
+    "2.4.11-focus-not-obscured-minimum": {
+      "conformance": "fail",
+      "remarks": "Popovers are non-persistent and dismiss on focus change (pass). However, modal dialogs (refine-modal, quickview-modal, feedback modals) use atomic-modal whose focus trap is broken (KIT-5811) — focus can escape and land behind the modal backdrop, obscuring the focused element."
+    }
+  }
+}

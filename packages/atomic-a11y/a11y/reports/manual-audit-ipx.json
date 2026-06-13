@@ -1,0 +1,9 @@
+{
+  "surface": "ipx",
+  "wcag22Criteria": {
+    "2.4.11-focus-not-obscured-minimum": {
+      "conformance": "fail",
+      "remarks": "IPX button is a small fixed-position element that cannot obscure focused elements. However, refine-modal within IPX uses atomic-modal whose focus trap is broken (KIT-5811) — focus can escape and land behind the modal backdrop."
+    }
+  }
+}

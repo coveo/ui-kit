@@ -1,0 +1,9 @@
+{
+  "surface": "commerce",
+  "wcag22Criteria": {
+    "2.4.11-focus-not-obscured-minimum": {
+      "conformance": "fail",
+      "remarks": "Refine-modal uses atomic-modal with aria-modal and focus trap, but focus can escape the trap due to KIT-5811 (scope property undefined at runtime). When focus escapes, the focused element is obscured behind the modal backdrop."
+    }
+  }
+}
