@@ -1,0 +1,9 @@
+{
+  "surface": "recommendations",
+  "wcag22Criteria": {
+    "1.4.10-reflow": {
+      "conformance": "pass",
+      "remarks": "Recommendation list uses responsive grid. Reflows to single column at narrow viewports."
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "surface": "commerce",
+  "wcag22Criteria": {
+    "1.4.10-reflow": {
+      "conformance": "pass",
+      "remarks": "Layout uses responsive CSS grid (minmax(0, 1fr)), mobile breakpoint at 1024px switches to single-column. Facets hidden on mobile, accessible via refine-modal. Product grid uses single-column below 640px. No horizontal scrolling at 320px viewport."
+    }
+  }
+}
