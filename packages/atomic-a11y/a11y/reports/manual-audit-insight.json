@@ -1,0 +1,9 @@
+{
+  "surface": "insight",
+  "wcag22Criteria": {
+    "1.4.11-non-text-contrast": {
+      "conformance": "partial",
+      "remarks": "Numeric facet input border uses border-neutral (#e5e8e8) at 1.23:1 vs white, failing 3:1 (see KIT-5807). All other components pass: search box border is supplementary, facet checkboxes use neutral-dark at 5.56:1, pager buttons identified by text."
+    }
+  }
+}
