@@ -1,0 +1,6 @@
+{
+  "surface": "recommendations",
+  "wcag22Criteria": {
+    "2.4.3-focus-order": "pass"
+  }
+}
