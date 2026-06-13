@@ -48,6 +48,8 @@ describe('pagination slice', () => {
     perPage: 999,
     totalEntries: 999,
     totalPages: 999,
+    totalProducts: 999,
+    totalSpotlightContent: 999,
   };
   const slotId = 'recommendations-slot-id';
 
