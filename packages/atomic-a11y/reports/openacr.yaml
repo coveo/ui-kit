@@ -20,7 +20,7 @@ notes: Generated from a11y/reports/a11y-report.json. Conformance is derived from
   axe-core results, interactive keyboard tests, and manual audits. Rows marked
   [Manual audit required] have no automated or interactive coverage and are
   reported as Does Not Support pending manual verification.
-evaluation_methods_used: axe-core 4.11.4; Storybook addon-a11y; Storybook
+evaluation_methods_used: axe-core 4.12.0; Storybook addon-a11y; Storybook
   interactive play() tests; Manual audit
 repository: https://github.com/coveo/ui-kit
 feedback: https://github.com/coveo/ui-kit/issues
