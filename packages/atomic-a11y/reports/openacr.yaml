@@ -448,10 +448,8 @@ chapters:
         components:
           - name: web
             adherence:
-              level: does-not-support
-              notes:
-                'WCAG 3.3.3: no automated, interactive, or manual coverage. [Manual audit
-                required]'
+              level: supports
+              notes: Supports — manual audit found Supports.
       - num: 3.3.4
         components:
           - name: web
