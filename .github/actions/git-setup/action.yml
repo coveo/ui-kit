@@ -1,8 +1,0 @@
-name: Git Setup
-description: Set up the Git Authentication
-runs:
-  using: composite
-  steps:
-    - name: Git Setup
-      shell: bash
-      run: node ./.github/actions/git-setup/git-setup.mjs
