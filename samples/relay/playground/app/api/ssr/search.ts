@@ -3,16 +3,16 @@ export async function search(
   clientId: string,
   userAgent: string,
   locationUrl: string,
-  referrer: string,
+  referrer: string
 ) {
-  const url = process.env["NEXT_PUBLIC_SEARCH_URL"];
-  const trackingId = process.env["NEXT_PUBLIC_TRACKING_ID"];
+  const url = process.env['NEXT_PUBLIC_SEARCH_URL'];
+  const trackingId = process.env['NEXT_PUBLIC_TRACKING_ID'];
 
   if (!url) {
     return {
       success: false,
       status: 500,
-      message: "Commerce API search URL is not defined.",
+      message: 'Commerce API search URL is not defined.',
     };
   }
 
@@ -30,25 +30,25 @@ export async function search(
         referrer,
       },
     },
-    language: "en",
-    country: "US",
-    currency: "USD",
+    language: 'en',
+    country: 'US',
+    currency: 'USD',
     page: 0,
     perPage: 5,
     facets: [],
-    sort: { sortCriteria: "relevance" },
+    sort: {sortCriteria: 'relevance'},
     query,
   };
 
   const headers = {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${process.env["NEXT_PUBLIC_TOKEN"]}`,
-    "User-Agent": userAgent,
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${process.env['NEXT_PUBLIC_TOKEN']}`,
+    'User-Agent': userAgent,
   };
 
   try {
     const response = await fetch(url, {
-      method: "POST",
+      method: 'POST',
       headers,
       body: JSON.stringify(requestBody),
     });
@@ -58,7 +58,7 @@ export async function search(
       return {
         success: false,
         status: response.status,
-        message: errorMessage || "Failed to fetch data from Coveo",
+        message: errorMessage || 'Failed to fetch data from Coveo',
       };
     }
 
@@ -67,11 +67,11 @@ export async function search(
       data: await response.json(),
     };
   } catch (error) {
-    console.error("Search error:", error);
+    console.error('Search error:', error);
     return {
       success: false,
       status: 500,
-      message: "Failed to fetch data from Coveo",
+      message: 'Failed to fetch data from Coveo',
     };
   }
 }

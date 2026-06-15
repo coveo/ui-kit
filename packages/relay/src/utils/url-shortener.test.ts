@@ -1,29 +1,29 @@
-import { truncateUrl } from "./url-shortener.js";
+import {truncateUrl} from './url-shortener.js';
 
-describe("truncateUrl", () => {
+describe('truncateUrl', () => {
   // Note: to obtain a UTF-8 encoded escape sequence, run encodeUriComponent('<value>') in your browser console or NodeJS REPL
   const URL_PLAIN: string =
-    "http://coveo.com/this/is/a/really/long/url/that/will/be/truncated?at=some&arbitrary=point";
+    'http://coveo.com/this/is/a/really/long/url/that/will/be/truncated?at=some&arbitrary=point';
 
   it.each([[8], [16], [32], [64], [128]])(
     `truncateUrl('${URL_PLAIN}', %d) truncates to exactly that length`,
     (limit) => {
       expect(truncateUrl(URL_PLAIN, limit)).toBe(URL_PLAIN.substring(0, limit));
-    },
+    }
   );
 
   /** Decoded: `'http://test/ ¿OKツ😅#fine'` */
   const URL_WITH_ESCAPES: string =
-    "http://test/%20%C2%BFOK%E3%83%84%F0%9F%98%85#fine";
+    'http://test/%20%C2%BFOK%E3%83%84%F0%9F%98%85#fine';
   // Number of bytes in code-point:     <1>< 2  >  <   3   ><    4     >
 
   it.each([[7], [22], [45], [46], [47], [48], [100]])(
     `truncateUrl('${URL_WITH_ESCAPES}', %d) truncates to the exact limit outside of codepoints`,
     (limit) => {
       expect(truncateUrl(URL_WITH_ESCAPES, limit)).toBe(
-        URL_WITH_ESCAPES.substring(0, limit),
+        URL_WITH_ESCAPES.substring(0, limit)
       );
-    },
+    }
   );
 
   it.each([
@@ -35,9 +35,9 @@ describe("truncateUrl", () => {
     `truncateUrl('${URL_WITH_ESCAPES}', %d) does not break up single-byte codepoints`,
     (limit, expectedLength) => {
       expect(truncateUrl(URL_WITH_ESCAPES, limit)).toBe(
-        URL_WITH_ESCAPES.substring(0, expectedLength),
+        URL_WITH_ESCAPES.substring(0, expectedLength)
       );
-    },
+    }
   );
 
   it.each([
@@ -52,9 +52,9 @@ describe("truncateUrl", () => {
     `truncateUrl('${URL_WITH_ESCAPES}', %d) does not break up two-byte codepoints`,
     (limit, expectedLength) => {
       expect(truncateUrl(URL_WITH_ESCAPES, limit)).toBe(
-        URL_WITH_ESCAPES.substring(0, expectedLength),
+        URL_WITH_ESCAPES.substring(0, expectedLength)
       );
-    },
+    }
   );
 
   it.each([
@@ -72,9 +72,9 @@ describe("truncateUrl", () => {
     `truncateUrl('${URL_WITH_ESCAPES}', %d) does not break up three-byte codepoints`,
     (limit, expectedLength) => {
       expect(truncateUrl(URL_WITH_ESCAPES, limit)).toBe(
-        URL_WITH_ESCAPES.substring(0, expectedLength),
+        URL_WITH_ESCAPES.substring(0, expectedLength)
       );
-    },
+    }
   );
 
   it.each([
@@ -95,12 +95,12 @@ describe("truncateUrl", () => {
     `truncateUrl('${URL_WITH_ESCAPES}', %d) does not break up four-byte codepoints`,
     (limit, expectedLength) => {
       expect(truncateUrl(URL_WITH_ESCAPES, limit)).toBe(
-        URL_WITH_ESCAPES.substring(0, expectedLength),
+        URL_WITH_ESCAPES.substring(0, expectedLength)
       );
-    },
+    }
   );
 
-  const URL_WITH_INVALID_ESCAPES: string = "http://test/%this%is%so%invalid";
+  const URL_WITH_INVALID_ESCAPES: string = 'http://test/%this%is%so%invalid';
 
   it.each([
     [12, 12],
@@ -122,8 +122,8 @@ describe("truncateUrl", () => {
     `truncateUrl('${URL_WITH_INVALID_ESCAPES}', %d) only checks for percent with invalid escapes`,
     (limit, expectedLength) => {
       expect(truncateUrl(URL_WITH_INVALID_ESCAPES, limit)).toBe(
-        URL_WITH_INVALID_ESCAPES.substring(0, expectedLength),
+        URL_WITH_INVALID_ESCAPES.substring(0, expectedLength)
       );
-    },
+    }
   );
 });

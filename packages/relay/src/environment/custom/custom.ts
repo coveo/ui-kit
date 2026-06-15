@@ -1,4 +1,4 @@
-import type { Environment } from "../environment.js";
+import type {Environment} from '../environment.js';
 
 /**
  * Partial override of the `Environment` interface, used to customize Relay’s behavior
@@ -9,5 +9,5 @@ import type { Environment } from "../environment.js";
  */
 export type CustomEnvironment = Pick<
   Environment,
-  "getClientId" | "getLocation" | "getReferrer" | "getUserAgent" | "send"
+  'getClientId' | 'getLocation' | 'getReferrer' | 'getUserAgent' | 'send'
 >;

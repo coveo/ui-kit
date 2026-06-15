@@ -1,8 +1,8 @@
-const { version } = require("./package.json");
+const {version} = require('./package.json');
 
 module.exports = {
-  output: "export",
-  assetPrefix: ".",
+  output: 'export',
+  assetPrefix: '.',
   reactStrictMode: true,
   transpilePackages: [],
   env: {

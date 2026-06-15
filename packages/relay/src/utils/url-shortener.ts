@@ -37,7 +37,7 @@ export function truncateUrl(input: string, limit: number): string {
     return input;
   }
   // A valid escape sequence is a percent followed by 2 hexadecimal characters; check if we split one up.
-  let end: number = input.indexOf("%", limit - 2);
+  let end: number = input.indexOf('%', limit - 2);
   if (end < 0 || end > limit) {
     end = limit;
   } else {
@@ -45,7 +45,7 @@ export function truncateUrl(input: string, limit: number): string {
   }
   // Check that truncating at end won't break up an UTF-8 multibyte sequence half-way,
   // by peeking backwards to find the first byte of an UTF-8 sequence (if present).
-  while (end > 2 && input.charAt(end - 3) == "%") {
+  while (end > 2 && input.charAt(end - 3) == '%') {
     const peekByte = Number.parseInt(input.substring(end - 2, end), 16);
     // Note: if parsing fails, NaN gets coerced to 0 by the bitwise and.
     if ((peekByte & UTF8_HIGH_BIT) != UTF8_HIGH_BIT) {

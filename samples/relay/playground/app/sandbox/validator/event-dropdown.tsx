@@ -1,5 +1,5 @@
-import { Select } from "@mantine/core";
-import { SampleEvent } from "../events";
+import {Select} from '@mantine/core';
+import {SampleEvent} from '../events';
 
 interface EventDropdownProps {
   events: SampleEvent[];

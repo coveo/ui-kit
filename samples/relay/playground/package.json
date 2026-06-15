@@ -19,15 +19,15 @@
     "@monaco-editor/react": "^4.5.1",
     "next": "^16.0.10",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "ts-dedent": "^2.2.0"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "3.3.4",
+    "@eslint/js": "^10.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "serve": "^14.2.1",
-    "tsconfig": "workspace:*",
     "globals": "17.4.0",
-    "@eslint/js": "^10.0.0",
-    "@eslint/eslintrc": "3.3.4"
+    "serve": "^14.2.1"
   }
 }
