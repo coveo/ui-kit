@@ -1,4 +1,8 @@
-import {buildCartController, Engine} from '@coveo/headless-future';
+import {
+  buildCartController,
+  buildConversationInterface,
+  Engine,
+} from '@coveo/headless-future';
 import {getSampleConfiguration} from './env.js';
 
 let clientId: string | null = null;
@@ -33,7 +37,10 @@ export function buildSampleEngine() {
     navigatorContextProvider: getNavigatorContext,
   });
 
-  const cartController = buildCartController({engine});
+  const conversationInterface = buildConversationInterface({engine});
+  const cartController = buildCartController({
+    interface: conversationInterface,
+  });
   cartController.setItems({items: []});
 
   return engine;

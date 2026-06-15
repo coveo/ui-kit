@@ -1,76 +1,64 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {
-  type Engine,
-  type FullEngine,
-} from '@/src/core/interface/engine/engine.js';
-import * as engineModule from '@/src/core/interface/engine/engine.js';
-import {cartSlice} from '@/src/core/internal/cart/cart-slice.js';
-import * as cartMutators from '@/src/core/interface/cart/cart-mutators.js';
-import {setItems, updateItemQuantity} from './cart-actions.js';
+import {Engine, getFullEngine} from '@/src/core/interface/engine/engine.js';
+import {createTestEngine} from '@/src/test/test-utils.js';
+import {buildSearchInterface} from '@/src/public/interfaces/search.js';
+import type {Interface} from '@/src/core/interface/utils/interface-types.js';
+import {STATE_ID} from '@/src/core/interface/utils/symbols.js';
+import {getOrCreateCartSelectors} from '@/src/core/internal/cart/cart-selectors.js';
+import {loadCartActions} from './cart-actions.js';
 
 describe('cart actions', () => {
   let engine: Engine;
-  let fullEngine: FullEngine;
+  let searchInterface: Interface<'search'>;
 
   beforeEach(() => {
-    engine = {} as Engine;
-    fullEngine = {
-      adoptSlice: vi.fn(),
-      mutate: vi.fn(),
-    } as unknown as FullEngine;
-
-    vi.spyOn(engineModule, 'getFullEngine').mockReturnValue(fullEngine);
+    engine = createTestEngine();
+    searchInterface = buildSearchInterface({engine});
   });
 
-  it('setItems adopts cart slice', () => {
-    const items = [
-      {productId: 'p1', name: 'A', price: 1, quantity: 1},
-      {productId: 'p1', name: 'A', price: 1, quantity: 2},
-    ];
-    const payload = {items};
-
-    setItems(engine, payload);
-
-    expect(fullEngine.adoptSlice).toHaveBeenCalledWith(cartSlice);
+  it('should adopt the cart slice on the engine', () => {
+    loadCartActions({interface: searchInterface});
+    const stateId = searchInterface[STATE_ID];
+    const selectors = getOrCreateCartSelectors(stateId);
+    const fullEngine = getFullEngine(engine);
+    expect(fullEngine.read(selectors.getItems)).toEqual([]);
   });
 
-  it('setItems dispatches setItems mutation', () => {
-    const items = [
-      {productId: 'p1', name: 'A', price: 1, quantity: 1},
-      {productId: 'p1', name: 'A', price: 1, quantity: 2},
-    ];
-    const payload = {items};
-    const mutation = {type: 'cart/setItems', payload: items};
-
-    vi.spyOn(cartMutators, 'setItems').mockReturnValue(mutation);
-
-    setItems(engine, payload);
-
-    expect(cartMutators.setItems).toHaveBeenCalledWith(payload);
-    expect(fullEngine.mutate).toHaveBeenCalledWith(mutation);
+  it('should return an object with setItems and updateItemQuantity actions', () => {
+    const actions = loadCartActions({interface: searchInterface});
+    expect(actions).toHaveProperty('setItems');
+    expect(actions).toHaveProperty('updateItemQuantity');
+    expect(typeof actions.setItems).toBe('function');
+    expect(typeof actions.updateItemQuantity).toBe('function');
   });
 
-  it('updateItemQuantity adopts cart slice', () => {
-    const payload = {
-      item: {productId: 'p1', name: 'A', price: 1, quantity: 0},
-    };
+  it('should update state when setItems is called', () => {
+    const actions = loadCartActions({interface: searchInterface});
+    const stateId = searchInterface[STATE_ID];
+    const selectors = getOrCreateCartSelectors(stateId);
+    const fullEngine = getFullEngine(engine);
 
-    updateItemQuantity(engine, payload);
+    const items = [{productId: 'p1', name: 'A', price: 1, quantity: 2}];
+    actions.setItems({items});
 
-    expect(fullEngine.adoptSlice).toHaveBeenCalledWith(cartSlice);
+    expect(fullEngine.read(selectors.getItems)).toEqual(items);
   });
 
-  it('updateItemQuantity dispatches updateItemQuantity mutation', () => {
-    const payload = {
-      item: {productId: 'p1', name: 'A', price: 1, quantity: 0},
-    };
-    const mutation = {type: 'cart/updateItemQuantity', payload: payload.item};
+  it('should update state when updateItemQuantity is called', () => {
+    const actions = loadCartActions({interface: searchInterface});
+    const stateId = searchInterface[STATE_ID];
+    const selectors = getOrCreateCartSelectors(stateId);
+    const fullEngine = getFullEngine(engine);
 
-    vi.spyOn(cartMutators, 'updateItemQuantity').mockReturnValue(mutation);
+    actions.setItems({
+      items: [{productId: 'p1', name: 'A', price: 1, quantity: 1}],
+    });
+    actions.updateItemQuantity({
+      item: {productId: 'p1', name: 'A', price: 1, quantity: 5},
+    });
 
-    updateItemQuantity(engine, payload);
-
-    expect(cartMutators.updateItemQuantity).toHaveBeenCalledWith(payload);
-    expect(fullEngine.mutate).toHaveBeenCalledWith(mutation);
+    expect(fullEngine.read(selectors.getItems)).toEqual([
+      {productId: 'p1', name: 'A', price: 1, quantity: 5},
+    ]);
   });
 });

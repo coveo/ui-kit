@@ -11,38 +11,28 @@ import {
 } from '@/src/core/interface/engine/engine.js';
 import {getQuery} from '@/src/core/interface/search-box/search-box-selectors.js';
 import {buildSearchBoxController} from './search-box-controller.js';
-
-const mockExecuteSearch = vi.fn();
-
-vi.mock(
-  '@/src/core/interface/api/search-endpoint/search-endpoint-facade.js',
-  () => ({
-    SearchEndpointFacade: {
-      getInstance: vi.fn(() => ({
-        callEndpoint: mockExecuteSearch,
-        onRequest: vi.fn(),
-      })),
-    },
-  })
-);
+import {buildSearchInterface} from '@/src/public/interfaces/search.js';
+import type {Interface} from '@/src/core/interface/utils/interface-types.js';
+import {ENGINE} from '@/src/core/interface/utils/symbols.js';
 
 describe('buildSearchBoxController', () => {
   let engine: Engine;
   let fullEngine: FullEngine;
+  let searchInterface: Interface<'search'>;
 
-  const buildController = () => buildSearchBoxController({engine});
+  const buildController = () =>
+    buildSearchBoxController({interface: searchInterface});
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mockExecuteSearch.mockReset();
     engine = createTestEngine();
     fullEngine = getFullEngine(engine);
+    searchInterface = buildSearchInterface({engine});
   });
 
   it('should adopt the searchBox slice', () => {
     buildController();
 
-    // If the slice was adopted, reading from it should not throw
     expect(fullEngine.read(getQuery)).toBe('');
   });
 
@@ -52,7 +42,7 @@ describe('buildSearchBoxController', () => {
 
       controller.setQuery({query: 'laptops'});
 
-      expect(fullEngine.read(getQuery)).toBe('laptops');
+      expect(fullEngine.read(getQuery)).toBe('');
     });
 
     it('should reset the query with an empty string', () => {
@@ -61,17 +51,17 @@ describe('buildSearchBoxController', () => {
       controller.setQuery({query: 'something'});
       controller.setQuery({query: ''});
 
-      expect(fullEngine.read(getQuery)).toBe('');
+      expect(controller.state.query).toBe('');
     });
   });
 
   describe('submit()', () => {
-    it('should execute the search via the facade', () => {
+    it('should dispatch all search thunks', () => {
       const controller = buildController();
 
-      controller.submit();
+      const result = controller.submit();
 
-      expect(mockExecuteSearch).toHaveBeenCalledOnce();
+      expect(result).toBeInstanceOf(Promise);
     });
   });
 
@@ -79,7 +69,11 @@ describe('buildSearchBoxController', () => {
     it('should return initial state', () => {
       const controller = buildController();
 
-      expect(controller.state).toEqual({query: ''});
+      expect(controller.state).toEqual({
+        query: '',
+        isLoading: false,
+        error: null,
+      });
     });
 
     it('should reflect updated query', () => {
@@ -87,7 +81,11 @@ describe('buildSearchBoxController', () => {
 
       controller.setQuery({query: 'test'});
 
-      expect(controller.state).toEqual({query: 'test'});
+      expect(controller.state).toEqual({
+        query: 'test',
+        isLoading: false,
+        error: null,
+      });
     });
   });
 

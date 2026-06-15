@@ -1,49 +1,32 @@
-import {
-  Engine,
-  FullEngine,
-  getFullEngine,
-} from '@/src/core/interface/engine/engine.js';
-import {loadSearchBox} from '@/src/core/index.js';
-import {setQuery as setQueryMutation} from '@/src/core/interface/search-box/search-box-mutators.js';
+import type {Requires} from '@/src/core/interface/utils/interface-types.js';
+import {ENGINE, STATE_ID, THUNKS} from '@/src/core/interface/utils/symbols.js';
+import {getOrCreateSearchBoxActions} from '@/src/core/internal/search-box/search-box-actions.js';
+import {getOrCreateSearchBoxSlice} from '@/src/core/internal/search-box/search-box-slice.js';
+
+export interface LoadSearchBoxActionsOptions {
+  interface: Requires<'search'>;
+}
 
 /**
- * Loads the search box actions.
- * @param engine - The engine to use for the actions.
- * @returns The search box actions.
+ * Loads the search box actions for the given interface.
+ * @param options - The options containing the interface handle.
+ * @returns The search box actions: `setQuery` and `submit`.
  */
-export const loadSearchBoxActions = (engine: Engine): SearchBoxActions => {
-  const fullEngine = getInitializedEngine(engine);
+export function loadSearchBoxActions(options: LoadSearchBoxActionsOptions) {
+  const engine = options.interface[ENGINE];
+  const stateId = options.interface[STATE_ID];
+  const thunks = options.interface[THUNKS].search;
+
+  engine.adoptSlice(getOrCreateSearchBoxSlice(stateId));
+
+  const actions = getOrCreateSearchBoxActions(stateId);
 
   return {
-    setQuery: (payload: SearchBoxSetQueryPayload) => {
-      fullEngine.mutate(setQueryMutation(payload.query));
+    setQuery(payload: {query: string}) {
+      engine.mutate(actions.setQuery(payload.query));
+    },
+    submit() {
+      return Promise.all(thunks.map((thunk) => engine.mutate(thunk({engine}))));
     },
   };
-};
-
-/**
- * Gets a curried function that sets the query for the search box.
- * @param engine - The engine to use for the action.
- * @returns A function that sets the query string.
- */
-export const setQuery = (engine: Engine): SearchBoxActions['setQuery'] => {
-  const fullEngine = getInitializedEngine(engine);
-
-  return (payload: SearchBoxSetQueryPayload) => {
-    fullEngine.mutate(setQueryMutation(payload.query));
-  };
-};
-
-interface SearchBoxSetQueryPayload {
-  query: string;
 }
-
-interface SearchBoxActions {
-  setQuery: (payload: SearchBoxSetQueryPayload) => void;
-}
-
-const getInitializedEngine = (engine: Engine): FullEngine => {
-  const fullEngine = getFullEngine(engine);
-  loadSearchBox(fullEngine);
-  return fullEngine;
-};

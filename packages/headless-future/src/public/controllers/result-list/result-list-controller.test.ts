@@ -8,94 +8,104 @@ import {
   createMockSearchResults,
 } from '@/src/test/test-utils.js';
 import {Engine, getFullEngine} from '@/src/core/interface/engine/engine.js';
-import {resultsSlice} from '@/src/core/internal/result-list/result-list-slice.js';
-import {
-  clearResults,
-  setResults,
-} from '@/src/core/internal/result-list/result-list-actions.js';
 import {searchEndpointSlice} from '@/src/core/internal/api/search-endpoint/search-endpoint-slice.js';
 import {setStatus} from '@/src/core/internal/api/search-endpoint/search-endpoint-actions.js';
+import {getOrCreateResultsActions} from '@/src/core/internal/result-list/result-list-actions.js';
 import {buildResultListController} from './result-list-controller.js';
+import {buildSearchInterface} from '@/src/public/interfaces/search.js';
+import type {Interface} from '@/src/core/interface/utils/interface-types.js';
+import {STATE_ID} from '@/src/core/interface/utils/symbols.js';
 
 describe('buildResultListController', () => {
   let engine: Engine;
+  let searchInterface: Interface<'search'>;
 
   beforeEach(() => {
     engine = createTestEngine();
+    searchInterface = buildSearchInterface({engine});
   });
 
-  it('should adopt the result slice', async () => {
-    // Adopt resultsSlice first so state can be read; the controller
-    // internally adopts resultSlice (single-result slice) as well.
-    await getFullEngine(engine).adoptSlice(resultsSlice);
-    const controller = buildResultListController({engine});
+  it('should adopt the result slice and return defined state', () => {
+    const controller = buildResultListController({interface: searchInterface});
     expect(controller.state).toBeDefined();
   });
 
   describe('state getter', () => {
-    it('should return empty results initially', async () => {
-      await getFullEngine(engine).adoptSlice(resultsSlice);
-      const controller = buildResultListController({engine});
+    it('should return empty results initially', () => {
+      const controller = buildResultListController({
+        interface: searchInterface,
+      });
 
       expect(controller.state).toEqual({results: []});
     });
 
-    it('should return results after they are set', async () => {
+    it('should return results after they are set via scoped action', () => {
+      const controller = buildResultListController({
+        interface: searchInterface,
+      });
+
+      const stateId = searchInterface[STATE_ID];
+      const actions = getOrCreateResultsActions(stateId);
       const fullEngine = getFullEngine(engine);
-      await fullEngine.adoptSlice(resultsSlice);
-      const controller = buildResultListController({engine});
 
       const mockResults = createMockSearchResults(3);
-      fullEngine.mutate(setResults(mockResults));
+      fullEngine.mutate(actions.setResultsFromResponse(mockResults));
 
-      expect(controller.state.results).toEqual(mockResults);
       expect(controller.state.results).toHaveLength(3);
-    });
-
-    it('should reflect cleared results', async () => {
-      const fullEngine = getFullEngine(engine);
-      await fullEngine.adoptSlice(resultsSlice);
-      const controller = buildResultListController({engine});
-
-      fullEngine.mutate(setResults(createMockSearchResults(2)));
-      fullEngine.mutate(clearResults());
-
-      expect(controller.state.results).toEqual([]);
+      expect(controller.state.results[0].uniqueId).toBe(
+        mockResults[0].uniqueId
+      );
+      expect(controller.state.results[0].title).toBe(mockResults[0].title);
     });
   });
 
   describe('subscribe()', () => {
-    it('should invoke callback when results change', async () => {
-      const fullEngine = getFullEngine(engine);
-      await fullEngine.adoptSlice(resultsSlice);
-      const controller = buildResultListController({engine});
+    it('should invoke callback when results change', () => {
+      const controller = buildResultListController({
+        interface: searchInterface,
+      });
       const callback = vi.fn();
 
+      const stateId = searchInterface[STATE_ID];
+      const actions = getOrCreateResultsActions(stateId);
+      const fullEngine = getFullEngine(engine);
+
       controller.subscribe(callback);
-      fullEngine.mutate(setResults(createMockSearchResults(1)));
+      fullEngine.mutate(
+        actions.setResultsFromResponse(createMockSearchResults(1))
+      );
 
       expect(callback).toHaveBeenCalledTimes(1);
     });
 
-    it('should invoke callback for each distinct change', async () => {
-      const fullEngine = getFullEngine(engine);
-      await fullEngine.adoptSlice(resultsSlice);
-      const controller = buildResultListController({engine});
+    it('should invoke callback for each distinct change', () => {
+      const controller = buildResultListController({
+        interface: searchInterface,
+      });
       const callback = vi.fn();
 
+      const stateId = searchInterface[STATE_ID];
+      const actions = getOrCreateResultsActions(stateId);
+      const fullEngine = getFullEngine(engine);
+
       controller.subscribe(callback);
-      fullEngine.mutate(setResults(createMockSearchResults(1)));
-      fullEngine.mutate(setResults(createMockSearchResults(3)));
-      fullEngine.mutate(clearResults());
+      fullEngine.mutate(
+        actions.setResultsFromResponse(createMockSearchResults(1))
+      );
+      fullEngine.mutate(
+        actions.setResultsFromResponse(createMockSearchResults(3))
+      );
+      fullEngine.mutate(actions.setResultsFromResponse([]));
 
       expect(callback).toHaveBeenCalledTimes(3);
     });
 
     it('should not invoke callback when unrelated state changes', async () => {
       const fullEngine = getFullEngine(engine);
-      await fullEngine.adoptSlice(resultsSlice);
       await fullEngine.adoptSlice(searchEndpointSlice);
-      const controller = buildResultListController({engine});
+      const controller = buildResultListController({
+        interface: searchInterface,
+      });
       const callback = vi.fn();
 
       controller.subscribe(callback);

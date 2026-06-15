@@ -1,19 +1,22 @@
-import {
-  setItems as _setItems,
-  updateItemQuantity as _updateItemQuantity,
-} from '@/src/core/internal/cart/cart-actions.js';
+import {getOrCreateCartActions} from '@/src/core/internal/cart/cart-actions.js';
 import type {StateMutation} from '@/src/core/interface/engine/engine-types.js';
 import type {
   SetCartItemsPayload,
   UpdateItemQuantityPayload,
 } from './cart-types.js';
 
-export const setItems = (payload: SetCartItemsPayload): StateMutation => {
-  return _setItems(payload.items);
+export const setItems = (
+  payload: SetCartItemsPayload,
+  interfaceId: string = 'default'
+): StateMutation => {
+  const actions = getOrCreateCartActions(interfaceId);
+  return actions.setItems(payload.items);
 };
 
 export const updateItemQuantity = (
-  payload: UpdateItemQuantityPayload
+  payload: UpdateItemQuantityPayload,
+  interfaceId: string = 'default'
 ): StateMutation => {
-  return _updateItemQuantity(payload.item);
+  const actions = getOrCreateCartActions(interfaceId);
+  return actions.updateItemQuantity(payload.item);
 };

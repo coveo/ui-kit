@@ -1,13 +1,17 @@
 import type {FullEngine} from '@/src/core/interface/engine/engine.js';
 import type {CoveoSearchEndpointResponse} from './search-endpoint-types.js';
-import {setResultsFromResponse} from '@/src/core/internal/result-list/result-list-actions.js';
-import {setTotalCount} from '@/src/core/internal/pagination/pagination-actions.js';
-import {updateFromResponse} from '@/src/core/internal/facets/facets-actions.js';
+import {getOrCreateResultsActions} from '@/src/core/internal/result-list/result-list-actions.js';
+import {getOrCreatePaginationActions} from '@/src/core/internal/pagination/pagination-actions.js';
+import {getOrCreateFacetsActions} from '@/src/core/internal/facets/facets-actions.js';
 
 export const handleSearchEndpointResponse = (
   engine: FullEngine,
-  response: CoveoSearchEndpointResponse
+  response: CoveoSearchEndpointResponse,
+  interfaceId = 'default'
 ) => {
+  const {setResultsFromResponse} = getOrCreateResultsActions(interfaceId);
+  const {updateFromResponse} = getOrCreateFacetsActions(interfaceId);
+  const {setTotalCount} = getOrCreatePaginationActions(interfaceId);
   engine.mutate(setResultsFromResponse(response.results));
   engine.mutate(setTotalCount(response.totalCount));
   engine.mutate(updateFromResponse(response.facets));

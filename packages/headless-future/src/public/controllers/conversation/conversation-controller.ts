@@ -3,18 +3,20 @@ import type {
   ConversationSession,
   ConversationStreaming,
   ConversationTurn,
-} from '@/src/core/index.js';
-import {
-  ConversationRuntime,
-  conversationEndpointSelectors,
-  conversationMutators,
-  conversationSelectors,
-  createMemoizedStateSelector,
-  getFullEngine,
-  loadConversation,
-  loadConversationEndpoint,
-} from '@/src/core/index.js';
-import {Controller, ControllerOptions} from '../controller-types.js';
+} from '@/src/core/interface/conversation/conversation-types.js';
+import {ConversationRuntime} from '@/src/core/interface/api/conversation-endpoint/conversation-runtime.js';
+import {loadConversation} from '@/src/core/interface/conversation/conversation-loader.js';
+import {loadConversationEndpoint} from '@/src/core/interface/api/conversation-endpoint/conversation-endpoint-loader.js';
+import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
+import type {
+  Interface,
+  Requires,
+} from '@/src/core/interface/utils/interface-types.js';
+import {ENGINE, STATE_ID} from '@/src/core/interface/utils/symbols.js';
+import {getOrCreateConversationActions} from '@/src/core/internal/conversation/conversation-actions.js';
+import {getOrCreateConversationSelectors} from '@/src/core/internal/conversation/conversation-selectors.js';
+import {getOrCreateConversationEndpointSelectors} from '@/src/core/internal/api/conversation-endpoint/conversation-endpoint-selectors.js';
+import {Controller} from '../controller-types.js';
 
 /**
  * Conversation Controller
@@ -60,7 +62,9 @@ export interface ConversationControllerState {
   streaming: ConversationControllerStreaming;
 }
 
-export interface ConversationControllerOptions extends ControllerOptions {}
+export interface ConversationControllerOptions {
+  interface: Interface<'conversation'> & Requires<'conversation'>;
+}
 
 export interface ConversationControllerSubmitTurnOptions {
   /**
@@ -76,15 +80,55 @@ export interface ConversationControllerSubmitTurnOptions {
   conversationToken?: string | null;
 }
 
-const buildStateSelector = () => {
-  return createMemoizedStateSelector(
-    conversationSelectors.messages,
-    conversationSelectors.turns,
-    conversationSelectors.activeTurnId,
-    conversationSelectors.session,
-    conversationEndpointSelectors.isLoading,
-    conversationEndpointSelectors.error,
-    conversationEndpointSelectors.streaming,
+export const buildConversationController: (
+  options: ConversationControllerOptions
+) => ConversationController = (options) => {
+  const fullEngine = options.interface[ENGINE];
+  const stateId = options.interface[STATE_ID];
+
+  loadConversation(fullEngine, stateId);
+  loadConversationEndpoint(fullEngine, stateId);
+
+  const actions = getOrCreateConversationActions(stateId);
+  const selectors = getOrCreateConversationSelectors(stateId);
+  const endpointSelectors = getOrCreateConversationEndpointSelectors(stateId);
+
+  const runtime = ConversationRuntime.getInstance(fullEngine, stateId, {
+    readSession: () => fullEngine.read(selectors.getSession),
+    setSession: (session) => {
+      fullEngine.mutate(actions.setSession(session));
+    },
+    patchSession: (sessionPatch) => {
+      fullEngine.mutate(actions.patchSession(sessionPatch));
+    },
+    setError: (error) => {
+      fullEngine.mutate(actions.setError(error));
+    },
+    startTurn: (payload) => {
+      fullEngine.mutate(actions.startTurn(payload));
+    },
+    abortTurn: (payload) => {
+      fullEngine.mutate(actions.abortTurn(payload));
+    },
+    appendAgentChunk: (payload) => {
+      fullEngine.mutate(actions.appendAgentChunk(payload));
+    },
+    completeTurn: (payload) => {
+      fullEngine.mutate(actions.completeTurn(payload));
+    },
+    failTurn: (payload) => {
+      fullEngine.mutate(actions.failTurn(payload));
+    },
+  });
+
+  const controllerState = createMemoizedStateSelector(
+    selectors.getMessages,
+    selectors.getTurns,
+    selectors.getActiveTurnId,
+    selectors.getSession,
+    endpointSelectors.getIsLoading,
+    endpointSelectors.getError,
+    endpointSelectors.getStreaming,
     (
       messages,
       turns,
@@ -103,43 +147,6 @@ const buildStateSelector = () => {
       streaming,
     })
   );
-};
-
-export const buildConversationController: (
-  options: ConversationControllerOptions
-) => ConversationController = (options) => {
-  const fullEngine = getFullEngine(options.engine);
-  loadConversation(fullEngine);
-  loadConversationEndpoint(fullEngine);
-
-  const runtime = ConversationRuntime.getInstance(fullEngine, {
-    readSession: () => fullEngine.read(conversationSelectors.session),
-    setSession: (session) => {
-      fullEngine.mutate(conversationMutators.setSession(session));
-    },
-    patchSession: (sessionPatch) => {
-      fullEngine.mutate(conversationMutators.patchSession(sessionPatch));
-    },
-    setError: (error) => {
-      fullEngine.mutate(conversationMutators.setError(error));
-    },
-    startTurn: (payload) => {
-      fullEngine.mutate(conversationMutators.startTurn(payload));
-    },
-    abortTurn: (payload) => {
-      fullEngine.mutate(conversationMutators.abortTurn(payload));
-    },
-    appendAgentChunk: (payload) => {
-      fullEngine.mutate(conversationMutators.appendAgentChunk(payload));
-    },
-    completeTurn: (payload) => {
-      fullEngine.mutate(conversationMutators.completeTurn(payload));
-    },
-    failTurn: (payload) => {
-      fullEngine.mutate(conversationMutators.failTurn(payload));
-    },
-  });
-  const stateSelect = buildStateSelector();
 
   return {
     submitTurn(input, options) {
@@ -150,11 +157,11 @@ export const buildConversationController: (
     abortTurn() {
       runtime.abortTurn();
     },
-    subscribe(callback) {
-      return fullEngine.subscribe(stateSelect, callback);
-    },
     get state() {
-      return fullEngine.read(stateSelect);
+      return fullEngine.read(controllerState);
+    },
+    subscribe(callback) {
+      return fullEngine.subscribe(controllerState, callback);
     },
   };
 };

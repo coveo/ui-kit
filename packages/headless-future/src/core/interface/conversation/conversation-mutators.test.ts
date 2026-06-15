@@ -11,19 +11,24 @@ import {
   startTurn,
 } from './conversation-mutators.js';
 
+const TEST_ID = 'test';
+
 describe('conversation mutators', () => {
   describe('mutation shape', () => {
     it('startTurn returns expected mutation', () => {
       expect(
-        startTurn({
-          turnId: 'turn-1',
-          userMessageId: 'msg-user-1',
-          agentMessageId: 'msg-agent-1',
-          input: 'Hello',
-          createdAt: 100,
-        })
+        startTurn(
+          {
+            turnId: 'turn-1',
+            userMessageId: 'msg-user-1',
+            agentMessageId: 'msg-agent-1',
+            input: 'Hello',
+            createdAt: 100,
+          },
+          TEST_ID
+        )
       ).toEqual({
-        type: 'conversation/startTurn',
+        type: `${TEST_ID}/conversation/startTurn`,
         payload: {
           turnId: 'turn-1',
           userMessageId: 'msg-user-1',
@@ -36,12 +41,15 @@ describe('conversation mutators', () => {
 
     it('appendAgentChunk returns expected mutation', () => {
       expect(
-        appendAgentChunk({
-          turnId: 'turn-1',
-          chunk: 'World',
-        })
+        appendAgentChunk(
+          {
+            turnId: 'turn-1',
+            chunk: 'World',
+          },
+          TEST_ID
+        )
       ).toEqual({
-        type: 'conversation/appendAgentChunk',
+        type: `${TEST_ID}/conversation/appendAgentChunk`,
         payload: {
           turnId: 'turn-1',
           chunk: 'World',
@@ -51,12 +59,15 @@ describe('conversation mutators', () => {
 
     it('completeTurn returns expected mutation', () => {
       expect(
-        completeTurn({
-          turnId: 'turn-1',
-          finalizedAt: 200,
-        })
+        completeTurn(
+          {
+            turnId: 'turn-1',
+            finalizedAt: 200,
+          },
+          TEST_ID
+        )
       ).toEqual({
-        type: 'conversation/completeTurn',
+        type: `${TEST_ID}/conversation/completeTurn`,
         payload: {
           turnId: 'turn-1',
           finalizedAt: 200,
@@ -66,13 +77,16 @@ describe('conversation mutators', () => {
 
     it('failTurn returns expected mutation', () => {
       expect(
-        failTurn({
-          turnId: 'turn-1',
-          reason: 'protocol_error',
-          finalizedAt: 220,
-        })
+        failTurn(
+          {
+            turnId: 'turn-1',
+            reason: 'protocol_error',
+            finalizedAt: 220,
+          },
+          TEST_ID
+        )
       ).toEqual({
-        type: 'conversation/failTurn',
+        type: `${TEST_ID}/conversation/failTurn`,
         payload: {
           turnId: 'turn-1',
           reason: 'protocol_error',
@@ -83,12 +97,15 @@ describe('conversation mutators', () => {
 
     it('abortTurn returns expected mutation', () => {
       expect(
-        abortTurn({
-          turnId: 'turn-1',
-          finalizedAt: 240,
-        })
+        abortTurn(
+          {
+            turnId: 'turn-1',
+            finalizedAt: 240,
+          },
+          TEST_ID
+        )
       ).toEqual({
-        type: 'conversation/abortTurn',
+        type: `${TEST_ID}/conversation/abortTurn`,
         payload: {
           turnId: 'turn-1',
           finalizedAt: 240,
@@ -98,12 +115,15 @@ describe('conversation mutators', () => {
 
     it('setSession returns expected mutation', () => {
       expect(
-        setSession({
-          conversationSessionId: 'session-1',
-          conversationToken: 'token-1',
-        })
+        setSession(
+          {
+            conversationSessionId: 'session-1',
+            conversationToken: 'token-1',
+          },
+          TEST_ID
+        )
       ).toEqual({
-        type: 'conversation/setSession',
+        type: `${TEST_ID}/conversation/setSession`,
         payload: {
           conversationSessionId: 'session-1',
           conversationToken: 'token-1',
@@ -113,11 +133,14 @@ describe('conversation mutators', () => {
 
     it('patchSession returns expected mutation', () => {
       expect(
-        patchSession({
-          conversationToken: 'token-2',
-        })
+        patchSession(
+          {
+            conversationToken: 'token-2',
+          },
+          TEST_ID
+        )
       ).toEqual({
-        type: 'conversation/patchSession',
+        type: `${TEST_ID}/conversation/patchSession`,
         payload: {
           conversationToken: 'token-2',
         },
@@ -125,23 +148,23 @@ describe('conversation mutators', () => {
     });
 
     it('setError returns expected mutation', () => {
-      expect(setError('boom')).toEqual({
-        type: 'conversation/setError',
+      expect(setError('boom', TEST_ID)).toEqual({
+        type: `${TEST_ID}/conversation/setError`,
         payload: 'boom',
       });
-      expect(setError(null)).toEqual({
-        type: 'conversation/setError',
+      expect(setError(null, TEST_ID)).toEqual({
+        type: `${TEST_ID}/conversation/setError`,
         payload: null,
       });
     });
 
     it('setStreamingConnected returns expected mutation', () => {
-      expect(setStreamingConnected(true)).toEqual({
-        type: 'conversation/setStreamingConnected',
+      expect(setStreamingConnected(true, TEST_ID)).toEqual({
+        type: `${TEST_ID}/conversation/setStreamingConnected`,
         payload: true,
       });
-      expect(setStreamingConnected(false)).toEqual({
-        type: 'conversation/setStreamingConnected',
+      expect(setStreamingConnected(false, TEST_ID)).toEqual({
+        type: `${TEST_ID}/conversation/setStreamingConnected`,
         payload: false,
       });
     });

@@ -1,5 +1,18 @@
 import {createAction} from '@reduxjs/toolkit';
 
-const ACTION_PREFIX = 'searchBox';
+export function createSearchBoxActions(interfaceId: string) {
+  return {
+    setQuery: createAction<string>(`${interfaceId}/searchBox/setQuery`),
+  };
+}
 
-export const setQuery = createAction<string>(`${ACTION_PREFIX}/setQuery`);
+const actionsCache = new Map<
+  string,
+  ReturnType<typeof createSearchBoxActions>
+>();
+export function getOrCreateSearchBoxActions(interfaceId: string) {
+  if (!actionsCache.has(interfaceId)) {
+    actionsCache.set(interfaceId, createSearchBoxActions(interfaceId));
+  }
+  return actionsCache.get(interfaceId)!;
+}

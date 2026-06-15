@@ -1,14 +1,14 @@
 import {describe, expect, it} from 'vitest';
 import {
-  conversationEndpointSlice,
+  createConversationEndpointSlice,
   initialConversationEndpointState,
 } from './conversation-endpoint-slice.js';
-import {
-  setConfiguration,
-  setError,
-  setStatus,
-  setStreamingConnected,
-} from './conversation-endpoint-actions.js';
+import {getOrCreateConversationEndpointActions} from './conversation-endpoint-actions.js';
+
+const TEST_ID = 'test';
+const conversationEndpointSlice = createConversationEndpointSlice(TEST_ID);
+const {setConfiguration, setError, setStatus, setStreamingConnected} =
+  getOrCreateConversationEndpointActions(TEST_ID);
 
 describe('conversationEndpointSlice', () => {
   it('should have the correct initial state', () => {

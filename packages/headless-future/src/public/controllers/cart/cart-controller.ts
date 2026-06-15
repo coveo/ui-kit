@@ -1,22 +1,15 @@
-import {getFullEngine} from '@/src/core/interface/engine/engine.js';
 import {loadCart} from '@/src/core/interface/cart/cart-loader.js';
-import {
-  setItems,
-  updateItemQuantity,
-} from '@/src/core/interface/cart/cart-mutators.js';
-import {items} from '@/src/core/interface/cart/cart-selectors.js';
-import {createSelector} from '@reduxjs/toolkit';
+import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
+import {ENGINE, STATE_ID} from '@/src/core/interface/utils/symbols.js';
+import {getOrCreateCartActions} from '@/src/core/internal/cart/cart-actions.js';
+import {getOrCreateCartSelectors} from '@/src/core/internal/cart/cart-selectors.js';
 import {
   CartController,
   CartControllerOptions,
 } from './cart-controller-types.js';
 
-const stateSelect = createSelector([items], (items) => ({
-  items,
-}));
-
 /**
- * Creates a cart controller bound to an engine instance.
+ * Creates a cart controller bound to an interface instance.
  *
  * @param options - The controller creation options.
  * @returns A cart controller.
@@ -24,24 +17,31 @@ const stateSelect = createSelector([items], (items) => ({
 export const buildCartController = (
   options: CartControllerOptions
 ): CartController => {
-  const {engine} = options;
-  const fullEngine = getFullEngine(engine);
-  loadCart(fullEngine);
+  const engine = options.interface[ENGINE];
+  const stateId = options.interface[STATE_ID];
+
+  loadCart(engine, stateId);
+
+  const actions = getOrCreateCartActions(stateId);
+  const selectors = getOrCreateCartSelectors(stateId);
+
+  const controllerState = createMemoizedStateSelector(
+    selectors.getItems,
+    (items) => ({items})
+  );
 
   return {
     setItems(payload) {
-      fullEngine.mutate(setItems(payload));
+      engine.mutate(actions.setItems(payload.items));
     },
     updateItemQuantity(payload) {
-      fullEngine.mutate(updateItemQuantity(payload));
-    },
-    subscribe(callback) {
-      return fullEngine.subscribe(stateSelect, callback);
+      engine.mutate(actions.updateItemQuantity(payload.item));
     },
     get state() {
-      return {
-        items: fullEngine.read(items),
-      };
+      return engine.read(controllerState);
+    },
+    subscribe(callback) {
+      return engine.subscribe(controllerState, callback);
     },
   };
 };

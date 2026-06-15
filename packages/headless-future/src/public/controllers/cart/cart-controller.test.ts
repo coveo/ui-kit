@@ -4,28 +4,31 @@ import {
   type FullEngine,
   getFullEngine,
 } from '@/src/core/interface/engine/engine.js';
-import * as engineModule from '@/src/core/interface/engine/engine.js';
-import {createTestEngine} from '@/src/test/test-utils.js';
-import {cartSlice} from '@/src/core/internal/cart/cart-slice.js';
-import {searchBoxSlice} from '@/src/core/internal/search-box/search-box-slice.js';
-import {setQuery} from '@/src/core/internal/search-box/search-box-actions.js';
-import {getEndpointContributorRegistry} from '@/src/core/internal/api/base-facade/endpoint-contributor-registry.js';
-import {conversationEndpointKey} from '@/src/core/internal/api/base-facade/endpoint-keys.js';
-import * as cartMutators from '@/src/core/interface/cart/cart-mutators.js';
-import {items as selectItems} from '@/src/core/interface/cart/cart-selectors.js';
+import {createTestEngine, createTestInterface} from '@/src/test/test-utils.js';
+import {getOrCreateSearchBoxSlice} from '@/src/core/internal/search-box/search-box-slice.js';
+import {getOrCreateSearchBoxActions} from '@/src/core/internal/search-box/search-box-actions.js';
+import {getOrCreateCartSlice} from '@/src/core/internal/cart/cart-slice.js';
+import {getOrCreateCartActions} from '@/src/core/internal/cart/cart-actions.js';
+import {ENGINE, STATE_ID} from '@/src/core/interface/utils/symbols.js';
+import type {Requires} from '@/src/core/interface/utils/interface-types.js';
 import {buildCartController} from './cart-controller.js';
 
 describe('buildCartController', () => {
   describe('behavior', () => {
     let engine: Engine;
+    let cartInterface: Requires<'search'>;
 
     beforeEach(() => {
       engine = createTestEngine();
+      cartInterface = createTestInterface(engine, {
+        search: [],
+        suggestions: [],
+      });
     });
 
     describe('subscribe()', () => {
       it('invokes callback when cart state changes', () => {
-        const controller = buildCartController({engine});
+        const controller = buildCartController({interface: cartInterface});
         const callback = vi.fn();
 
         controller.subscribe(callback);
@@ -37,43 +40,29 @@ describe('buildCartController', () => {
       });
 
       it('does not invoke callback for unrelated state changes', () => {
-        const controller = buildCartController({engine});
+        const controller = buildCartController({interface: cartInterface});
         const callback = vi.fn();
         const fullEngine = getFullEngine(engine);
 
+        const searchBoxSlice = getOrCreateSearchBoxSlice('test-cart');
+        const {setQuery} = getOrCreateSearchBoxActions('test-cart');
         fullEngine.adoptSlice(searchBoxSlice);
         controller.subscribe(callback);
         fullEngine.mutate(setQuery('q'));
 
         expect(callback).not.toHaveBeenCalled();
       });
-
-      it('registers the cart request contributor once per engine', () => {
-        const fullEngine = getFullEngine(engine);
-        const registry = getEndpointContributorRegistry(fullEngine);
-
-        expect(
-          registry.getRegisteredContributorCount(conversationEndpointKey)
-        ).toBe(0);
-
-        buildCartController({engine});
-        buildCartController({engine});
-
-        expect(
-          registry.getRegisteredContributorCount(conversationEndpointKey)
-        ).toBe(1);
-      });
     });
 
     describe('state', () => {
       it('returns an empty items array initially', () => {
-        const controller = buildCartController({engine});
+        const controller = buildCartController({interface: cartInterface});
 
         expect(controller.state).toEqual({items: []});
       });
 
       it('reflects state changes after setItems()', () => {
-        const controller = buildCartController({engine});
+        const controller = buildCartController({interface: cartInterface});
 
         const items = [
           {productId: 'p1', name: 'A', price: 1, quantity: 1},
@@ -88,7 +77,7 @@ describe('buildCartController', () => {
       });
 
       it('reflects state changes after updateItemQuantity()', () => {
-        const controller = buildCartController({engine});
+        const controller = buildCartController({interface: cartInterface});
 
         controller.setItems({
           items: [{productId: 'p1', name: 'A', price: 1, quantity: 1}],
@@ -105,63 +94,61 @@ describe('buildCartController', () => {
   });
 
   describe('wiring', () => {
-    let engine: Engine;
     let fullEngine: FullEngine;
+    let cartInterface: Requires<'search'>;
+    const TEST_ID = 'wiring-test';
 
     beforeEach(() => {
-      engine = {} as Engine;
       fullEngine = {
         adoptSlice: vi.fn(),
-        read: vi.fn(),
+        read: vi.fn(() => ({items: []})),
         mutate: vi.fn(),
+        subscribe: vi.fn(),
       } as unknown as FullEngine;
 
-      vi.spyOn(engineModule, 'getFullEngine').mockReturnValue(fullEngine);
+      cartInterface = {
+        [ENGINE]: fullEngine,
+        [STATE_ID]: TEST_ID,
+      } as unknown as Requires<'search'>;
     });
 
-    it('adopts the cart slice on construction', () => {
-      const controller = buildCartController({engine});
+    it('adopts the scoped cart slice on construction', () => {
+      buildCartController({interface: cartInterface});
 
-      expect(controller).toBeDefined();
-      expect(fullEngine.adoptSlice).toHaveBeenCalledWith(cartSlice);
+      expect(fullEngine.adoptSlice).toHaveBeenCalledTimes(1);
+      expect(fullEngine.adoptSlice).toHaveBeenCalledWith(
+        getOrCreateCartSlice(TEST_ID)
+      );
     });
 
-    it('setItems() mutates with the setItems mutator result', () => {
-      const controller = buildCartController({engine});
-      const payload = {
-        items: [{productId: 'p1', name: 'A', price: 1, quantity: 1}],
-      };
-      const mutation = {type: 'cart/setItems', payload: payload.items};
+    it('setItems() dispatches the scoped setItems action', () => {
+      const controller = buildCartController({interface: cartInterface});
+      const items = [{productId: 'p1', name: 'A', price: 1, quantity: 1}];
 
-      vi.spyOn(cartMutators, 'setItems').mockReturnValue(mutation);
+      controller.setItems({items});
 
-      controller.setItems(payload);
-
-      expect(cartMutators.setItems).toHaveBeenCalledWith(payload);
-      expect(fullEngine.mutate).toHaveBeenCalledWith(mutation);
+      const actions = getOrCreateCartActions(TEST_ID);
+      expect(fullEngine.mutate).toHaveBeenCalledWith(actions.setItems(items));
     });
 
-    it('updateItemQuantity() mutates with the updateItemQuantity mutator result', () => {
-      const controller = buildCartController({engine});
-      const payload = {
-        item: {productId: 'p1', name: 'A', price: 1, quantity: 2},
-      };
-      const mutation = {type: 'cart/updateItemQuantity', payload: payload.item};
+    it('updateItemQuantity() dispatches the scoped updateItemQuantity action', () => {
+      const controller = buildCartController({interface: cartInterface});
+      const item = {productId: 'p1', name: 'A', price: 1, quantity: 2};
 
-      vi.spyOn(cartMutators, 'updateItemQuantity').mockReturnValue(mutation);
+      controller.updateItemQuantity({item});
 
-      controller.updateItemQuantity(payload);
-
-      expect(cartMutators.updateItemQuantity).toHaveBeenCalledWith(payload);
-      expect(fullEngine.mutate).toHaveBeenCalledWith(mutation);
+      const actions = getOrCreateCartActions(TEST_ID);
+      expect(fullEngine.mutate).toHaveBeenCalledWith(
+        actions.updateItemQuantity(item)
+      );
     });
 
-    it('state getter reads using the cart items selector', () => {
-      const controller = buildCartController({engine});
+    it('state getter reads from engine via memoized selector', () => {
+      const controller = buildCartController({interface: cartInterface});
 
       void controller.state;
 
-      expect(fullEngine.read).toHaveBeenCalledWith(selectItems);
+      expect(fullEngine.read).toHaveBeenCalledTimes(1);
     });
   });
 

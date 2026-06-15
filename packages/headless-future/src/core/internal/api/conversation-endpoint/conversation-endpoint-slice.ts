@@ -1,11 +1,6 @@
 import type {ConversationEndpointState} from '@/src/core/interface/api/conversation-endpoint/conversation-endpoint-types.js';
 import {createSlice} from '@reduxjs/toolkit';
-import {
-  setStatus,
-  setError,
-  setConfiguration,
-  setStreamingConnected,
-} from './conversation-endpoint-actions.js';
+import {getOrCreateConversationEndpointActions} from './conversation-endpoint-actions.js';
 
 export const initialConversationEndpointState: ConversationEndpointState = {
   configuration: {},
@@ -16,28 +11,36 @@ export const initialConversationEndpointState: ConversationEndpointState = {
   },
 };
 
-export const conversationEndpointSlice = createSlice({
-  name: 'conversationEndpoint',
-  initialState: initialConversationEndpointState,
-  reducers: {},
-  extraReducers: (builder) => {
-    builder.addCase(setStatus, (state, action) => {
-      state.status = action.payload;
-    });
-    builder.addCase(setError, (state, action) => {
-      state.error = action.payload;
-    });
-    builder.addCase(setConfiguration, (state, action) => {
-      state.configuration = action.payload;
-    });
-    builder.addCase(setStreamingConnected, (state, action) => {
-      state.streaming.isConnected = action.payload;
-    });
-  },
-  selectors: {
-    status: (state) => state.status,
-    error: (state) => state.error,
-    configuration: (state) => state.configuration,
-    streaming: (state) => state.streaming,
-  },
-});
+export function createConversationEndpointSlice(interfaceId: string) {
+  const actions = getOrCreateConversationEndpointActions(interfaceId);
+  return createSlice({
+    name: `${interfaceId}/conversationEndpoint`,
+    initialState: initialConversationEndpointState,
+    reducers: {},
+    extraReducers: (builder) => {
+      builder.addCase(actions.setStatus, (state, action) => {
+        state.status = action.payload;
+      });
+      builder.addCase(actions.setError, (state, action) => {
+        state.error = action.payload;
+      });
+      builder.addCase(actions.setConfiguration, (state, action) => {
+        state.configuration = action.payload;
+      });
+      builder.addCase(actions.setStreamingConnected, (state, action) => {
+        state.streaming.isConnected = action.payload;
+      });
+    },
+  });
+}
+
+const sliceCache = new Map<
+  string,
+  ReturnType<typeof createConversationEndpointSlice>
+>();
+export function getOrCreateConversationEndpointSlice(interfaceId: string) {
+  if (!sliceCache.has(interfaceId)) {
+    sliceCache.set(interfaceId, createConversationEndpointSlice(interfaceId));
+  }
+  return sliceCache.get(interfaceId)!;
+}

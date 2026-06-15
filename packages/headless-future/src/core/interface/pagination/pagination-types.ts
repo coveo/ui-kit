@@ -9,8 +9,8 @@
  * Pagination feature state
  */
 export interface PaginationState {
-  /** Current page number (1-indexed) */
-  currentPage: number;
+  /** Offset of the first result (0-indexed) */
+  firstResult: number;
   /** Number of results per page */
   pageSize: number;
   /** Total number of results across all pages */

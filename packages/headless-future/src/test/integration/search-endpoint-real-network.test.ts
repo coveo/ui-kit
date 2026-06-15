@@ -6,11 +6,7 @@ import {
   loadConfigurationActions,
   getSampleEngineConfiguration,
 } from '@/src/index.js';
-import {
-  SearchEndpointFacade,
-  getFullEngine,
-  searchEndpointSelectors,
-} from '@/src/core/index.js';
+import {buildSearchInterface} from '@/src/public/interfaces/search.js';
 
 const sampleConfiguration = getSampleEngineConfiguration();
 const query = 'test';
@@ -32,24 +28,23 @@ const waitFor = async (
 describe('search endpoint real-network sanity check', () => {
   it('runs query end-to-end and updates state from real response', async () => {
     const engine = new Engine();
-    const fullEngine = getFullEngine(engine);
 
     loadConfigurationActions(engine).setConfiguration(sampleConfiguration);
 
-    const searchBox = buildSearchBoxController({engine});
-    const resultList = buildResultListController({engine});
-    SearchEndpointFacade.getInstance(fullEngine);
+    const searchInterface = buildSearchInterface({engine});
+
+    const searchBox = buildSearchBoxController({interface: searchInterface});
+    const resultList = buildResultListController({interface: searchInterface});
 
     searchBox.setQuery({query});
-    searchBox.submit();
+    await searchBox.submit();
 
     await waitFor(() => {
-      return fullEngine.read(searchEndpointSelectors.status) === 'idle';
+      return !searchBox.state.isLoading;
     });
 
-    const error = fullEngine.read(searchEndpointSelectors.error);
-    if (error !== null) {
-      throw new Error(`Search API returned an error: ${error}`);
+    if (searchBox.state.error !== null) {
+      throw new Error(`Search API returned an error: ${searchBox.state.error}`);
     }
 
     const stateResults = resultList.state.results;

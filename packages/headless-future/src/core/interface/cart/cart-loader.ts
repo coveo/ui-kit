@@ -1,24 +1,31 @@
 import {getEndpointContributorRegistry} from '@/src/core/internal/api/base-facade/endpoint-contributor-registry.js';
 import {conversationEndpointKey} from '@/src/core/internal/api/base-facade/endpoint-keys.js';
-import {cartSlice} from '@/src/core/internal/cart/cart-slice.js';
+import {getOrCreateCartSlice} from '@/src/core/internal/cart/cart-slice.js';
+import {getOrCreateCartSelectors} from '@/src/core/internal/cart/cart-selectors.js';
 import {FullEngine} from '@/src/core/interface/engine/engine.js';
-import {items} from './cart-selectors.js';
 
-const cartLoadedEngines = new WeakSet<FullEngine>();
+const cartLoadedKeys = new WeakMap<FullEngine, Set<string>>();
 
-export const loadCart = (engine: FullEngine) => {
-  if (cartLoadedEngines.has(engine)) {
+export const loadCart = (engine: FullEngine, interfaceId: string) => {
+  if (!cartLoadedKeys.has(engine)) {
+    cartLoadedKeys.set(engine, new Set());
+  }
+
+  const loadedIds = cartLoadedKeys.get(engine)!;
+  if (loadedIds.has(interfaceId)) {
     return;
   }
 
-  engine.adoptSlice(cartSlice);
+  engine.adoptSlice(getOrCreateCartSlice(interfaceId));
+
+  const selectors = getOrCreateCartSelectors(interfaceId);
   const registry = getEndpointContributorRegistry(engine);
 
   registry.register(conversationEndpointKey, () => ({
     context: {
-      cart: engine.read(items),
+      cart: engine.read(selectors.getItems),
     },
   }));
 
-  cartLoadedEngines.add(engine);
+  loadedIds.add(interfaceId);
 };

@@ -11,7 +11,7 @@ import {setQuery} from '@/src/core/interface/search-box/search-box-mutators.js';
 import {setStatus} from '@/src/core/interface/api/search-endpoint/search-endpoint-mutators.js';
 import {isLoading} from '@/src/core/interface/api/search-endpoint/search-endpoint-selectors.js';
 import {Engine, FullEngine, getFullEngine} from './engine.js';
-import {searchBoxSlice} from '@/src/core/internal/search-box/search-box-slice.js';
+import {getOrCreateSearchBoxSlice} from '@/src/core/internal/search-box/search-box-slice.js';
 import {resultsSlice} from '@/src/core/internal/result-list/result-list-slice.js';
 import {searchEndpointSlice} from '@/src/core/internal/api/search-endpoint/search-endpoint-slice.js';
 import type {NavigatorContextProvider} from '@/src/core/interface/navigator-context/navigator-context-types.js';
@@ -23,7 +23,7 @@ describe('Engine: read()', () => {
 
   beforeEach(() => {
     engine = getFullEngine(createTestEngine());
-    engine.adoptSlice(searchBoxSlice);
+    engine.adoptSlice(getOrCreateSearchBoxSlice('default'));
     engine.adoptSlice(resultsSlice);
     engine.adoptSlice(searchEndpointSlice);
   });
@@ -44,7 +44,10 @@ describe('Engine: read()', () => {
   it('should work with inline selector functions', () => {
     engine.mutate(setQuery('test'));
 
-    const query = engine.read((state: State) => state.searchBox?.query ?? '');
+    const query = engine.read(
+      (state: Record<string, any>) =>
+        (state['default/searchBox'] as {query: string} | undefined)?.query ?? ''
+    );
 
     expect(query).toBe('test');
   });
@@ -55,7 +58,7 @@ describe('Engine: subscribe()', () => {
 
   beforeEach(() => {
     engine = getFullEngine(createTestEngine());
-    engine.adoptSlice(searchBoxSlice);
+    engine.adoptSlice(getOrCreateSearchBoxSlice('default'));
     engine.adoptSlice(resultsSlice);
   });
 
@@ -151,7 +154,7 @@ describe('Engine: mutate()', () => {
 
   beforeEach(() => {
     engine = getFullEngine(createTestEngine());
-    engine.adoptSlice(searchBoxSlice);
+    engine.adoptSlice(getOrCreateSearchBoxSlice('default'));
     engine.adoptSlice(resultsSlice);
     engine.adoptSlice(searchEndpointSlice);
   });
@@ -174,7 +177,7 @@ describe('Engine: mutate()', () => {
     // Ensure slice is adopted first
     engine.read(getQuery);
 
-    engine.mutate({type: 'searchBox/setQuery', payload: 'test'});
+    engine.mutate({type: 'default/searchBox/setQuery', payload: 'test'});
 
     expect(engine.read(getQuery)).toBe('test');
   });

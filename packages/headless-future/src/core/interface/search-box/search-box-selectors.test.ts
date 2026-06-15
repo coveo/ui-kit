@@ -7,14 +7,14 @@ import {createTestEngine} from '@/src/test/test-utils.js';
 import {getQuery} from './search-box-selectors.js';
 import {setQuery} from './search-box-mutators.js';
 import {FullEngine, getFullEngine} from '@/src/core/interface/engine/engine.js';
-import {searchBoxSlice} from '@/src/core/internal/search-box/search-box-slice.js';
+import {getOrCreateSearchBoxSlice} from '@/src/core/internal/search-box/search-box-slice.js';
 
 describe('searchBox selectors', () => {
   let engine: FullEngine;
 
   beforeEach(() => {
     engine = getFullEngine(createTestEngine());
-    engine.adoptSlice(searchBoxSlice);
+    engine.adoptSlice(getOrCreateSearchBoxSlice('default'));
   });
 
   describe('query selector', () => {

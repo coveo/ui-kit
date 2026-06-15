@@ -9,12 +9,8 @@ import {
   dispatchConversationEvent,
   type ConversationDispatchEffect,
 } from './conversation-event-dispatcher.js';
-import {loadConversationEndpoint} from './conversation-endpoint-loader.js';
-import {
-  setStatus,
-  setError,
-  setStreamingConnected,
-} from './conversation-endpoint-mutators.js';
+import {getOrCreateConversationEndpointSlice} from '@/src/core/internal/api/conversation-endpoint/conversation-endpoint-slice.js';
+import {getOrCreateConversationEndpointActions} from '@/src/core/internal/api/conversation-endpoint/conversation-endpoint-actions.js';
 
 interface ActiveTurnContext {
   turnId: string;
@@ -81,32 +77,43 @@ export interface ConversationRuntimeStatePort {
 }
 
 export class ConversationRuntime {
-  private static engineToRuntimeMap = new WeakMap<
+  private static runtimeCache = new WeakMap<
     FullEngine,
-    ConversationRuntime
+    Map<string, ConversationRuntime>
   >();
+
+  private endpointActions;
 
   private constructor(
     private engine: FullEngine,
+    interfaceId: string,
     private endpointFacade: ConversationEndpointFacade,
     private conversationState: ConversationRuntimeStatePort
   ) {
-    loadConversationEndpoint(engine);
+    engine.adoptSlice(getOrCreateConversationEndpointSlice(interfaceId));
+    this.endpointActions = getOrCreateConversationEndpointActions(interfaceId);
   }
 
   static getInstance(
     engine: FullEngine,
+    interfaceId: string,
     conversationState: ConversationRuntimeStatePort
   ): ConversationRuntime {
-    let runtime = ConversationRuntime.engineToRuntimeMap.get(engine);
+    if (!ConversationRuntime.runtimeCache.has(engine)) {
+      ConversationRuntime.runtimeCache.set(engine, new Map());
+    }
+
+    const engineRuntimes = ConversationRuntime.runtimeCache.get(engine)!;
+    let runtime = engineRuntimes.get(interfaceId);
 
     if (!runtime) {
       runtime = new ConversationRuntime(
         engine,
+        interfaceId,
         ConversationEndpointFacade.getInstance(engine),
         conversationState
       );
-      ConversationRuntime.engineToRuntimeMap.set(engine, runtime);
+      engineRuntimes.set(interfaceId, runtime);
     }
 
     return runtime;
@@ -196,7 +203,10 @@ export class ConversationRuntime {
       return;
     }
 
-    this.applyMutations([setStreamingConnected(true), setStatus('streaming')]);
+    this.applyMutations([
+      this.endpointActions.setStreamingConnected(true),
+      this.endpointActions.setStatus('streaming'),
+    ]);
 
     let terminalEventReceived = false;
     let streamErrored = false;
@@ -316,7 +326,7 @@ export class ConversationRuntime {
           break;
 
         case 'set_endpoint_error':
-          this.applyMutations([setError(effect.error)]);
+          this.applyMutations([this.endpointActions.setError(effect.error)]);
           break;
       }
     }
@@ -344,9 +354,9 @@ export class ConversationRuntime {
 
   private applyEndpointStoppedMutations(error?: string) {
     this.applyMutations([
-      ...(error !== undefined ? [setError(error)] : []),
-      setStatus('idle'),
-      setStreamingConnected(false),
+      ...(error !== undefined ? [this.endpointActions.setError(error)] : []),
+      this.endpointActions.setStatus('idle'),
+      this.endpointActions.setStreamingConnected(false),
     ]);
   }
 

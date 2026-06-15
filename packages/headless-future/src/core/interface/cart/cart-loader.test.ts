@@ -1,6 +1,6 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import type {FullEngine} from '@/src/core/interface/engine/engine.js';
-import {cartSlice} from '@/src/core/internal/cart/cart-slice.js';
+import {getOrCreateCartSlice} from '@/src/core/internal/cart/cart-slice.js';
 import {getEndpointContributorRegistry} from '@/src/core/internal/api/base-facade/endpoint-contributor-registry.js';
 import {conversationEndpointKey} from '@/src/core/internal/api/base-facade/endpoint-keys.js';
 import {loadCart} from './cart-loader.js';
@@ -17,6 +17,8 @@ const createMockEngine = (): MockEngine => {
   } as unknown as MockEngine;
 };
 
+const TEST_ID = 'test-interface';
+
 describe('loadCart', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -25,11 +27,13 @@ describe('loadCart', () => {
   it('adopts cart slice and registers cart provider once per engine', () => {
     const engine = createMockEngine();
 
-    loadCart(engine);
-    loadCart(engine);
+    loadCart(engine, TEST_ID);
+    loadCart(engine, TEST_ID);
 
     expect(engine.adoptSlice).toHaveBeenCalledTimes(1);
-    expect(engine.adoptSlice).toHaveBeenCalledWith(cartSlice);
+    expect(engine.adoptSlice).toHaveBeenCalledWith(
+      getOrCreateCartSlice(TEST_ID)
+    );
 
     const registry = getEndpointContributorRegistry(engine);
     expect(

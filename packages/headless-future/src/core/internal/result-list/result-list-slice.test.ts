@@ -1,13 +1,26 @@
 import {describe, it, expect} from 'vitest';
-import {resultsSlice, initialResultListState} from './result-list-slice.js';
-import {clearResults, setResults} from './result-list-actions.js';
-import type {SearchResult} from '@/src/core/interface/result-list/result-list-types.js';
+import {
+  createResultsSlice,
+  getOrCreateResultsSlice,
+  initialResultListState,
+} from './result-list-slice.js';
+import {
+  createResultsActions,
+  getOrCreateResultsActions,
+} from './result-list-actions.js';
+import {
+  createResultsSelectors,
+  getOrCreateResultsSelectors,
+} from './result-list-selectors.js';
+import type {CoveoSearchResult} from '@/src/core/interface/api/search-endpoint/search-endpoint-types.js';
 
-const mockResult = (overrides: Partial<SearchResult> = {}): SearchResult => ({
+const mockCoveoResult = (
+  overrides: Partial<CoveoSearchResult> = {}
+): CoveoSearchResult => ({
   uniqueId: '1',
   title: 'Test',
   uri: 'test',
-  excerpt: 'test',
+  excerpt: 'test excerpt',
   printableUri: 'test',
   clickUri: 'test',
   raw: {},
@@ -15,7 +28,7 @@ const mockResult = (overrides: Partial<SearchResult> = {}): SearchResult => ({
   ...overrides,
 });
 
-describe('resultsSlice: initialState', () => {
+describe('initialResultListState', () => {
   it('should have correct initial state', () => {
     expect(initialResultListState).toEqual({
       results: [],
@@ -23,89 +36,204 @@ describe('resultsSlice: initialState', () => {
   });
 });
 
-describe('resultsSlice: setResults', () => {
-  it('should update results array', () => {
-    const results: SearchResult[] = [
-      mockResult({
-        uniqueId: '1',
-        title: 'Result 1',
-        uri: 'uri1',
-        excerpt: 'excerpt1',
-      }),
-      mockResult({
-        uniqueId: '2',
-        title: 'Result 2',
-        uri: 'uri2',
-        excerpt: 'excerpt2',
-      }),
+describe('createResultsActions', () => {
+  it('should create actions scoped to the given interfaceId', () => {
+    const actions = createResultsActions('search-1');
+
+    expect(actions.setResultsFromResponse.type).toBe(
+      'search-1/results/setResultsFromResponse'
+    );
+  });
+
+  it('should create independent actions for different interfaceIds', () => {
+    const actions1 = createResultsActions('interface-a');
+    const actions2 = createResultsActions('interface-b');
+
+    expect(actions1.setResultsFromResponse.type).not.toBe(
+      actions2.setResultsFromResponse.type
+    );
+  });
+});
+
+describe('getOrCreateResultsActions', () => {
+  it('should return the same reference for the same interfaceId', () => {
+    const first = getOrCreateResultsActions('cached-id');
+    const second = getOrCreateResultsActions('cached-id');
+
+    expect(first).toBe(second);
+  });
+
+  it('should return different references for different interfaceIds', () => {
+    const a = getOrCreateResultsActions('id-a');
+    const b = getOrCreateResultsActions('id-b');
+
+    expect(a).not.toBe(b);
+  });
+});
+
+describe('createResultsSlice', () => {
+  it('should create a slice scoped to the interfaceId', () => {
+    const slice = createResultsSlice('my-interface');
+
+    expect(slice.name).toBe('my-interface/results');
+  });
+
+  it('should handle setResultsFromResponse action', () => {
+    const slice = createResultsSlice('test');
+    const actions = getOrCreateResultsActions('test');
+
+    const coveoResults: CoveoSearchResult[] = [
+      mockCoveoResult({uniqueId: '1', title: 'Result 1'}),
+      mockCoveoResult({uniqueId: '2', title: 'Result 2'}),
     ];
 
-    const state = resultsSlice.reducer(
+    const state = slice.reducer(
       initialResultListState,
-      setResults(results)
+      actions.setResultsFromResponse(coveoResults)
     );
 
-    expect(state.results).toEqual(results);
-    expect(state.results.length).toBe(2);
+    expect(state.results).toHaveLength(2);
+    expect(state.results[0].uniqueId).toBe('1');
+    expect(state.results[0].title).toBe('Result 1');
+    expect(state.results[1].uniqueId).toBe('2');
+    expect(state.results[1].title).toBe('Result 2');
+  });
+
+  it('should map CoveoSearchResult fields correctly', () => {
+    const slice = createResultsSlice('map-test');
+    const actions = getOrCreateResultsActions('map-test');
+
+    const coveoResult = mockCoveoResult({
+      uniqueId: 'abc',
+      title: 'My Title',
+      uri: 'https://example.com',
+      excerpt: 'An excerpt',
+      printableUri: 'example.com',
+      clickUri: 'https://example.com/click',
+      raw: {source: 'web'},
+      score: 42,
+    });
+
+    const state = slice.reducer(
+      initialResultListState,
+      actions.setResultsFromResponse([coveoResult])
+    );
+
+    expect(state.results[0]).toEqual({
+      uniqueId: 'abc',
+      title: 'My Title',
+      uri: 'https://example.com',
+      excerpt: 'An excerpt',
+      printableUri: 'example.com',
+      clickUri: 'https://example.com/click',
+      raw: {source: 'web'},
+      score: 42,
+    });
   });
 
   it('should replace previous results completely', () => {
+    const slice = createResultsSlice('replace-test');
+    const actions = getOrCreateResultsActions('replace-test');
+
     const oldState = {
-      ...initialResultListState,
       results: [
-        mockResult({uniqueId: 'old', title: 'Old', uri: 'old', excerpt: 'old'}),
+        {
+          uniqueId: 'old',
+          title: 'Old',
+          uri: 'old',
+          excerpt: 'old',
+          printableUri: 'old',
+          clickUri: 'old',
+          raw: {},
+          score: 0,
+        },
       ],
     };
 
-    const newResults: SearchResult[] = [
-      mockResult({uniqueId: 'new', title: 'New', uri: 'new', excerpt: 'new'}),
+    const state = slice.reducer(
+      oldState,
+      actions.setResultsFromResponse([
+        mockCoveoResult({uniqueId: 'new', title: 'New'}),
+      ])
+    );
+
+    expect(state.results).toHaveLength(1);
+    expect(state.results[0].uniqueId).toBe('new');
+  });
+
+  it('should not respond to actions from a different interfaceId', () => {
+    const slice = createResultsSlice('slice-a');
+    const actionsB = getOrCreateResultsActions('slice-b');
+
+    const state = slice.reducer(
+      initialResultListState,
+      actionsB.setResultsFromResponse([mockCoveoResult()])
+    );
+
+    expect(state.results).toEqual([]);
+  });
+});
+
+describe('getOrCreateResultsSlice', () => {
+  it('should return the same reference for the same interfaceId', () => {
+    const first = getOrCreateResultsSlice('cached-slice');
+    const second = getOrCreateResultsSlice('cached-slice');
+
+    expect(first).toBe(second);
+  });
+
+  it('should return different references for different interfaceIds', () => {
+    const a = getOrCreateResultsSlice('slice-x');
+    const b = getOrCreateResultsSlice('slice-y');
+
+    expect(a).not.toBe(b);
+  });
+});
+
+describe('createResultsSelectors', () => {
+  it('should return initial results when slice is not in state', () => {
+    const selectors = createResultsSelectors('sel-test');
+    const state = {};
+
+    const results = selectors.getResults(state);
+
+    expect(results).toEqual([]);
+  });
+
+  it('should return results from scoped state', () => {
+    const selectors = createResultsSelectors('sel-test-2');
+    const mockResults = [
+      {
+        uniqueId: '1',
+        title: 'Test',
+        uri: 'test',
+        excerpt: 'test',
+        printableUri: 'test',
+        clickUri: 'test',
+        raw: {},
+        score: 0,
+      },
     ];
+    const state = {'sel-test-2/results': {results: mockResults}};
 
-    const state = resultsSlice.reducer(oldState, setResults(newResults));
+    const results = selectors.getResults(state);
 
-    expect(state.results).toEqual(newResults);
-    expect(state.results.length).toBe(1);
-  });
-
-  it('should accept empty array', () => {
-    const oldState = {
-      ...initialResultListState,
-      results: [mockResult()],
-    };
-
-    const state = resultsSlice.reducer(oldState, setResults([]));
-
-    expect(state.results).toEqual([]);
+    expect(results).toEqual(mockResults);
   });
 });
 
-describe('resultsSlice: clearResults', () => {
-  it('should clear results array', () => {
-    const stateWithResults = {
-      ...initialResultListState,
-      results: [
-        mockResult({uniqueId: '1'}),
-        mockResult({
-          uniqueId: '2',
-          title: 'Test 2',
-          uri: 'test2',
-          excerpt: 'test2',
-        }),
-      ],
-    };
+describe('getOrCreateResultsSelectors', () => {
+  it('should return the same reference for the same interfaceId', () => {
+    const first = getOrCreateResultsSelectors('cached-sel');
+    const second = getOrCreateResultsSelectors('cached-sel');
 
-    const state = resultsSlice.reducer(stateWithResults, clearResults());
-
-    expect(state.results).toEqual([]);
+    expect(first).toBe(second);
   });
-});
 
-describe('resultsSlice: state immutability', () => {
-  it('should not mutate original state for any action', () => {
-    const original = {...initialResultListState};
+  it('should return different references for different interfaceIds', () => {
+    const a = getOrCreateResultsSelectors('sel-a');
+    const b = getOrCreateResultsSelectors('sel-b');
 
-    resultsSlice.reducer(original, setResults([mockResult()]));
-
-    expect(original.results).toEqual([]);
+    expect(a).not.toBe(b);
   });
 });

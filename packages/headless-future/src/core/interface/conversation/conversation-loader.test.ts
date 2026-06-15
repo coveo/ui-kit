@@ -1,9 +1,11 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import type {FullEngine} from '@/src/core/interface/engine/engine.js';
-import {conversationSlice} from '@/src/core/internal/conversation/conversation-slice.js';
+import {getOrCreateConversationSlice} from '@/src/core/internal/conversation/conversation-slice.js';
 import {getEndpointContributorRegistry} from '@/src/core/internal/api/base-facade/endpoint-contributor-registry.js';
 import {conversationEndpointKey} from '@/src/core/internal/api/base-facade/endpoint-keys.js';
 import {loadConversation} from './conversation-loader.js';
+
+const TEST_ID = 'test';
 
 type MockEngine = FullEngine & {
   adoptSlice: ReturnType<typeof vi.fn>;
@@ -12,7 +14,7 @@ type MockEngine = FullEngine & {
 
 const createMockEngine = (): MockEngine => {
   const state = {
-    conversation: {
+    [`${TEST_ID}/conversation`]: {
       messages: [
         {
           id: 'user-message-1',
@@ -59,11 +61,13 @@ describe('loadConversation', () => {
   it('adopts conversation slice and registers request contributor once per engine', () => {
     const engine = createMockEngine();
 
-    loadConversation(engine);
-    loadConversation(engine);
+    loadConversation(engine, TEST_ID);
+    loadConversation(engine, TEST_ID);
 
     expect(engine.adoptSlice).toHaveBeenCalledTimes(1);
-    expect(engine.adoptSlice).toHaveBeenCalledWith(conversationSlice);
+    expect(engine.adoptSlice).toHaveBeenCalledWith(
+      getOrCreateConversationSlice(TEST_ID)
+    );
 
     const registry = getEndpointContributorRegistry(engine);
     expect(

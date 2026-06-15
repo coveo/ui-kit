@@ -1,37 +1,35 @@
-import {Engine, getFullEngine} from '@/src/core/interface/engine/engine.js';
-import {cartSlice} from '@/src/core/internal/cart/cart-slice.js';
-import {
-  setItems as setItemsMutator,
-  updateItemQuantity as updateItemQuantityMutator,
-} from '@/src/core/interface/cart/cart-mutators.js';
+import type {Requires} from '@/src/core/interface/utils/interface-types.js';
+import {ENGINE, STATE_ID} from '@/src/core/interface/utils/symbols.js';
+import {getOrCreateCartActions} from '@/src/core/internal/cart/cart-actions.js';
+import {getOrCreateCartSlice} from '@/src/core/internal/cart/cart-slice.js';
 import type {
   SetCartItemsPayload,
   UpdateItemQuantityPayload,
 } from '@/src/core/interface/cart/cart-types.js';
 
-/**
- * Sets the items in the cart.
- *
- * @param engine - The engine instance to perform the action on.
- * @param payload - The action payload.
- */
-export const setItems = (engine: Engine, payload: SetCartItemsPayload) => {
-  const fullEngine = getFullEngine(engine);
-  fullEngine.adoptSlice(cartSlice);
-  fullEngine.mutate(setItemsMutator(payload));
-};
+export interface LoadCartActionsOptions {
+  interface: Requires<'search'>;
+}
 
 /**
- * Updates the quantity of an item in the cart.
- *
- * @param engine - The engine instance to perform the action on.
- * @param payload - The action payload.
+ * Loads the cart actions for the given interface.
+ * @param options - The options containing the interface handle.
+ * @returns The cart actions: `setItems` and `updateItemQuantity`.
  */
-export const updateItemQuantity = (
-  engine: Engine,
-  payload: UpdateItemQuantityPayload
-) => {
-  const fullEngine = getFullEngine(engine);
-  fullEngine.adoptSlice(cartSlice);
-  fullEngine.mutate(updateItemQuantityMutator(payload));
-};
+export function loadCartActions(options: LoadCartActionsOptions) {
+  const engine = options.interface[ENGINE];
+  const stateId = options.interface[STATE_ID];
+
+  engine.adoptSlice(getOrCreateCartSlice(stateId));
+
+  const actions = getOrCreateCartActions(stateId);
+
+  return {
+    setItems(payload: SetCartItemsPayload) {
+      engine.mutate(actions.setItems(payload.items));
+    },
+    updateItemQuantity(payload: UpdateItemQuantityPayload) {
+      engine.mutate(actions.updateItemQuantity(payload.item));
+    },
+  };
+}

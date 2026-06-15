@@ -1,20 +1,30 @@
 import {createAction} from '@reduxjs/toolkit';
 import type {ConversationEndpointStatus} from '@/src/core/interface/api/conversation-endpoint/conversation-endpoint-types.js';
 
-const ACTION_PREFIX = 'conversationEndpoint';
+export function createConversationEndpointActions(interfaceId: string) {
+  const prefix = `${interfaceId}/conversationEndpoint`;
+  return {
+    setStatus: createAction<ConversationEndpointStatus>(`${prefix}/setStatus`),
+    setError: createAction<string | null>(`${prefix}/setError`),
+    setConfiguration: createAction<Record<string, any>>(
+      `${prefix}/setConfiguration`
+    ),
+    setStreamingConnected: createAction<boolean>(
+      `${prefix}/setStreamingConnected`
+    ),
+  };
+}
 
-export const setStatus = createAction<ConversationEndpointStatus>(
-  `${ACTION_PREFIX}/setStatus`
-);
-
-export const setError = createAction<string | null>(
-  `${ACTION_PREFIX}/setError`
-);
-
-export const setConfiguration = createAction<Record<string, any>>(
-  `${ACTION_PREFIX}/setConfiguration`
-);
-
-export const setStreamingConnected = createAction<boolean>(
-  `${ACTION_PREFIX}/setStreamingConnected`
-);
+const actionsCache = new Map<
+  string,
+  ReturnType<typeof createConversationEndpointActions>
+>();
+export function getOrCreateConversationEndpointActions(interfaceId: string) {
+  if (!actionsCache.has(interfaceId)) {
+    actionsCache.set(
+      interfaceId,
+      createConversationEndpointActions(interfaceId)
+    );
+  }
+  return actionsCache.get(interfaceId)!;
+}

@@ -1,42 +1,70 @@
 /**
- * Facets Slice Tests
+ * Facets Scoped Factories Tests
  */
 
 import {describe, it, expect} from 'vitest';
-import {facetsSlice, initialFacetsState} from './facets-slice.js';
 import {
-  clearFacetSelections,
-  setFacet,
-  toggleFacetValue,
-  updateFacetValues,
+  createFacetsSlice,
+  getOrCreateFacetsSlice,
+  initialFacetsState,
+} from './facets-slice.js';
+import {
+  createFacetsActions,
+  getOrCreateFacetsActions,
 } from './facets-actions.js';
-import type {
-  FacetState,
-  FacetValue,
-} from '@/src/core/interface/facets/facets-types.js';
+import {
+  createFacetsSelectors,
+  getOrCreateFacetsSelectors,
+} from './facets-selectors.js';
+import type {FacetsState} from '@/src/core/interface/facets/facets-types.js';
+import type {CoveoFacetResponse} from '@/src/core/interface/api/search-endpoint/search-endpoint-types.js';
 
-describe('facetsSlice: initialState', () => {
+describe('createFacetsActions', () => {
+  it('should create actions scoped to the interfaceId', () => {
+    const actions = createFacetsActions('search');
+    expect(actions.updateFromResponse.type).toBe(
+      'search/facets/updateFromResponse'
+    );
+  });
+
+  it('should create different actions for different interfaceIds', () => {
+    const actionsA = createFacetsActions('interfaceA');
+    const actionsB = createFacetsActions('interfaceB');
+    expect(actionsA.updateFromResponse.type).not.toBe(
+      actionsB.updateFromResponse.type
+    );
+  });
+});
+
+describe('getOrCreateFacetsActions', () => {
+  it('should return the same instance for the same interfaceId', () => {
+    const a = getOrCreateFacetsActions('cached-facet-actions');
+    const b = getOrCreateFacetsActions('cached-facet-actions');
+    expect(a).toBe(b);
+  });
+
+  it('should return different instances for different interfaceIds', () => {
+    const a = getOrCreateFacetsActions('facet-actions-x');
+    const b = getOrCreateFacetsActions('facet-actions-y');
+    expect(a).not.toBe(b);
+  });
+});
+
+describe('createFacetsSlice', () => {
   it('should have empty object as initial state', () => {
     expect(initialFacetsState).toEqual({});
   });
-});
 
-describe('facetsSlice: setFacet', () => {
-  it('should add a new facet', () => {
-    const facet: FacetState = {
-      id: 'category',
-      label: 'Category',
-      values: [],
-      selectedValues: [],
-    };
-
-    const state = facetsSlice.reducer(initialFacetsState, setFacet(facet));
-
-    expect(state.category).toEqual(facet);
+  it('should create a slice with scoped name', () => {
+    const slice = createFacetsSlice('myInterface');
+    expect(slice.name).toBe('myInterface/facets');
   });
 
-  it('should update an existing facet', () => {
-    const initialState = {
+  it('should update facet values from response', () => {
+    const actions = getOrCreateFacetsActions('test-response');
+    const slice = createFacetsSlice('test-response');
+
+    const stateWithFacet: FacetsState = {
       category: {
         id: 'category',
         label: 'Category',
@@ -45,191 +73,33 @@ describe('facetsSlice: setFacet', () => {
       },
     };
 
-    const updatedFacet: FacetState = {
-      id: 'category',
-      label: 'Updated Category',
-      values: [{id: 'val1', label: 'Value 1', count: 10}],
-      selectedValues: [],
-    };
-
-    const state = facetsSlice.reducer(initialState, setFacet(updatedFacet));
-
-    expect(state.category).toEqual(updatedFacet);
-  });
-
-  it('should not affect other facets', () => {
-    const initialState = {
-      category: {
-        id: 'category',
-        label: 'Category',
-        values: [],
-        selectedValues: [],
-      },
-      brand: {
-        id: 'brand',
-        label: 'Brand',
-        values: [],
-        selectedValues: [],
-      },
-    };
-
-    const newFacet: FacetState = {
-      id: 'price',
-      label: 'Price',
-      values: [],
-      selectedValues: [],
-    };
-
-    const state = facetsSlice.reducer(initialState, setFacet(newFacet));
-
-    expect(state.category).toEqual(initialState.category);
-    expect(state.brand).toEqual(initialState.brand);
-    expect(state.price).toEqual(newFacet);
-  });
-});
-
-describe('facetsSlice: toggleFacetValue', () => {
-  const facetWithValues: Record<string, FacetState> = {
-    category: {
-      id: 'category',
-      label: 'Category',
-      values: [
-        {id: 'electronics', label: 'Electronics', count: 50},
-        {id: 'books', label: 'Books', count: 30},
-      ],
-      selectedValues: [],
-    },
-  };
-
-  it('should add value to selectedValues when not selected', () => {
-    const state = facetsSlice.reducer(
-      facetWithValues,
-      toggleFacetValue({
+    const response: CoveoFacetResponse[] = [
+      {
         facetId: 'category',
-        valueId: 'electronics',
-      })
-    );
-
-    expect(state.category.selectedValues).toContain('electronics');
-    expect(state.category.selectedValues.length).toBe(1);
-  });
-
-  it('should remove value from selectedValues when already selected', () => {
-    const initialState = {
-      ...facetWithValues,
-      category: {
-        ...facetWithValues.category,
-        selectedValues: ['electronics'],
+        field: 'category',
+        values: [
+          {value: 'Electronics', numberOfResults: 50},
+          {value: 'Books', numberOfResults: 30},
+        ],
       },
-    };
+    ];
 
-    const state = facetsSlice.reducer(
-      initialState,
-      toggleFacetValue({
-        facetId: 'category',
-        valueId: 'electronics',
-      })
+    const state = slice.reducer(
+      stateWithFacet,
+      actions.updateFromResponse(response)
     );
 
-    expect(state.category.selectedValues).not.toContain('electronics');
-    expect(state.category.selectedValues.length).toBe(0);
+    expect(state.category.values).toEqual([
+      {id: 'Electronics', label: 'Electronics', count: 50},
+      {id: 'Books', label: 'Books', count: 30},
+    ]);
   });
 
-  it('should toggle multiple values independently', () => {
-    let state = facetWithValues;
+  it('should not modify state when response is undefined', () => {
+    const actions = getOrCreateFacetsActions('test-undefined');
+    const slice = createFacetsSlice('test-undefined');
 
-    // Add electronics
-    state = facetsSlice.reducer(
-      state,
-      toggleFacetValue({
-        facetId: 'category',
-        valueId: 'electronics',
-      })
-    );
-    expect(state.category.selectedValues).toEqual(['electronics']);
-
-    // Add books
-    state = facetsSlice.reducer(
-      state,
-      toggleFacetValue({
-        facetId: 'category',
-        valueId: 'books',
-      })
-    );
-    expect(state.category.selectedValues).toEqual(['electronics', 'books']);
-
-    // Remove electronics
-    state = facetsSlice.reducer(
-      state,
-      toggleFacetValue({
-        facetId: 'category',
-        valueId: 'electronics',
-      })
-    );
-    expect(state.category.selectedValues).toEqual(['books']);
-  });
-
-  it('should handle non-existent facet gracefully', () => {
-    const state = facetsSlice.reducer(
-      initialFacetsState,
-      toggleFacetValue({
-        facetId: 'nonexistent',
-        valueId: 'value',
-      })
-    );
-
-    expect(state).toEqual(initialFacetsState);
-  });
-
-  it('should not affect other facets', () => {
-    const initialState = {
-      category: {
-        id: 'category',
-        label: 'Category',
-        values: [],
-        selectedValues: [],
-      },
-      brand: {
-        id: 'brand',
-        label: 'Brand',
-        values: [],
-        selectedValues: ['nike'],
-      },
-    };
-
-    const state = facetsSlice.reducer(
-      initialState,
-      toggleFacetValue({
-        facetId: 'category',
-        valueId: 'electronics',
-      })
-    );
-
-    expect(state.brand.selectedValues).toEqual(['nike']);
-  });
-});
-
-describe('facetsSlice: clearFacetSelections', () => {
-  it('should clear all selected values for a facet', () => {
-    const initialState = {
-      category: {
-        id: 'category',
-        label: 'Category',
-        values: [],
-        selectedValues: ['electronics', 'books', 'clothing'],
-      },
-    };
-
-    const state = facetsSlice.reducer(
-      initialState,
-      clearFacetSelections('category')
-    );
-
-    expect(state.category.selectedValues).toEqual([]);
-  });
-
-  it('should not affect other facet properties', () => {
-    const initialState = {
+    const stateWithFacet: FacetsState = {
       category: {
         id: 'category',
         label: 'Category',
@@ -238,146 +108,39 @@ describe('facetsSlice: clearFacetSelections', () => {
       },
     };
 
-    const state = facetsSlice.reducer(
-      initialState,
-      clearFacetSelections('category')
+    const state = slice.reducer(
+      stateWithFacet,
+      actions.updateFromResponse(undefined)
     );
 
-    expect(state.category.id).toBe('category');
-    expect(state.category.label).toBe('Category');
-    expect(state.category.values).toEqual(initialState.category.values);
+    expect(state).toEqual(stateWithFacet);
   });
 
-  it('should handle non-existent facet gracefully', () => {
-    const state = facetsSlice.reducer(
-      initialFacetsState,
-      clearFacetSelections('nonexistent')
-    );
+  it('should ignore response facets that do not exist in state', () => {
+    const actions = getOrCreateFacetsActions('test-missing');
+    const slice = createFacetsSlice('test-missing');
 
-    expect(state).toEqual(initialFacetsState);
-  });
-
-  it('should not affect other facets', () => {
-    const initialState = {
-      category: {
-        id: 'category',
-        label: 'Category',
-        values: [],
-        selectedValues: ['electronics'],
-      },
-      brand: {
-        id: 'brand',
-        label: 'Brand',
-        values: [],
-        selectedValues: ['nike', 'adidas'],
-      },
-    };
-
-    const state = facetsSlice.reducer(
-      initialState,
-      clearFacetSelections('category')
-    );
-
-    expect(state.category.selectedValues).toEqual([]);
-    expect(state.brand.selectedValues).toEqual(['nike', 'adidas']);
-  });
-});
-
-describe('facetsSlice: updateFacetValues', () => {
-  it('should update facet values', () => {
-    const initialState = {
-      category: {
-        id: 'category',
-        label: 'Category',
-        values: [],
-        selectedValues: [],
-      },
-    };
-
-    const newValues: FacetValue[] = [
-      {id: 'electronics', label: 'Electronics', count: 50},
-      {id: 'books', label: 'Books', count: 30},
-    ];
-
-    const state = facetsSlice.reducer(
-      initialState,
-      updateFacetValues({
-        facetId: 'category',
-        values: newValues,
-      })
-    );
-
-    expect(state.category.values).toEqual(newValues);
-  });
-
-  it('should replace previous values completely', () => {
-    const initialState = {
-      category: {
-        id: 'category',
-        label: 'Category',
-        values: [
-          {id: 'old1', label: 'Old 1', count: 10},
-          {id: 'old2', label: 'Old 2', count: 20},
-        ],
-        selectedValues: [],
-      },
-    };
-
-    const newValues: FacetValue[] = [{id: 'new1', label: 'New 1', count: 15}];
-
-    const state = facetsSlice.reducer(
-      initialState,
-      updateFacetValues({
-        facetId: 'category',
-        values: newValues,
-      })
-    );
-
-    expect(state.category.values).toEqual(newValues);
-    expect(state.category.values.length).toBe(1);
-  });
-
-  it('should not affect selectedValues', () => {
-    const initialState = {
-      category: {
-        id: 'category',
-        label: 'Category',
-        values: [],
-        selectedValues: ['electronics', 'books'],
-      },
-    };
-
-    const newValues: FacetValue[] = [
-      {id: 'electronics', label: 'Electronics', count: 50},
-    ];
-
-    const state = facetsSlice.reducer(
-      initialState,
-      updateFacetValues({
-        facetId: 'category',
-        values: newValues,
-      })
-    );
-
-    expect(state.category.selectedValues).toEqual(['electronics', 'books']);
-  });
-
-  it('should handle non-existent facet gracefully', () => {
-    const state = facetsSlice.reducer(
-      initialFacetsState,
-      updateFacetValues({
+    const response: CoveoFacetResponse[] = [
+      {
         facetId: 'nonexistent',
-        values: [],
-      })
+        field: 'nonexistent',
+        values: [{value: 'val', numberOfResults: 5}],
+      },
+    ];
+
+    const state = slice.reducer(
+      initialFacetsState,
+      actions.updateFromResponse(response)
     );
 
     expect(state).toEqual(initialFacetsState);
   });
-});
 
-describe('facetsSlice: state immutability', () => {
-  it('should not mutate original state for any action', () => {
-    const original: Record<string, FacetState> = {
+  it('should maintain state immutability', () => {
+    const actions = getOrCreateFacetsActions('test-immutable');
+    const slice = createFacetsSlice('test-immutable');
+
+    const original: FacetsState = {
       category: {
         id: 'category',
         label: 'Category',
@@ -386,16 +149,83 @@ describe('facetsSlice: state immutability', () => {
       },
     };
 
-    facetsSlice.reducer(
-      original,
-      toggleFacetValue({
+    const response: CoveoFacetResponse[] = [
+      {
         facetId: 'category',
-        valueId: 'val1',
-      })
-    );
-    expect(original.category.selectedValues).toEqual([]);
+        field: 'category',
+        values: [{value: 'New', numberOfResults: 1}],
+      },
+    ];
 
-    facetsSlice.reducer(original, clearFacetSelections('category'));
-    expect(original.category.selectedValues).toEqual([]);
+    slice.reducer(original, actions.updateFromResponse(response));
+    expect(original.category.values).toEqual([]);
+  });
+});
+
+describe('getOrCreateFacetsSlice', () => {
+  it('should return the same instance for the same interfaceId', () => {
+    const a = getOrCreateFacetsSlice('cached-facet-slice');
+    const b = getOrCreateFacetsSlice('cached-facet-slice');
+    expect(a).toBe(b);
+  });
+
+  it('should return different instances for different interfaceIds', () => {
+    const a = getOrCreateFacetsSlice('facet-slice-x');
+    const b = getOrCreateFacetsSlice('facet-slice-y');
+    expect(a).not.toBe(b);
+  });
+});
+
+describe('createFacetsSelectors', () => {
+  it('should build facets request from state', () => {
+    const selectors = createFacetsSelectors('myFacets');
+    const state = {
+      'myFacets/facets': {
+        category: {
+          id: 'category',
+          label: 'Category',
+          values: [],
+          selectedValues: ['electronics', 'books'],
+        },
+        brand: {
+          id: 'brand',
+          label: 'Brand',
+          values: [],
+          selectedValues: ['nike'],
+        },
+      } as FacetsState,
+    };
+
+    const result = selectors.buildFacetsRequest(state);
+    expect(result).toEqual([
+      {facetId: 'category', selectedValues: ['electronics', 'books']},
+      {facetId: 'brand', selectedValues: ['nike']},
+    ]);
+  });
+
+  it('should return empty array when no facets exist', () => {
+    const selectors = createFacetsSelectors('emptyFacets');
+    const state = {'emptyFacets/facets': {} as FacetsState};
+    expect(selectors.buildFacetsRequest(state)).toEqual([]);
+  });
+
+  it('should return initial state when slice is not present', () => {
+    const selectors = createFacetsSelectors('missing');
+    const state = {};
+    expect(selectors.buildFacetsRequest(state)).toEqual([]);
+  });
+});
+
+describe('getOrCreateFacetsSelectors', () => {
+  it('should return the same instance for the same interfaceId', () => {
+    const a = getOrCreateFacetsSelectors('cached-facet-sel');
+    const b = getOrCreateFacetsSelectors('cached-facet-sel');
+    expect(a).toBe(b);
+  });
+
+  it('should return different instances for different interfaceIds', () => {
+    const a = getOrCreateFacetsSelectors('facet-sel-x');
+    const b = getOrCreateFacetsSelectors('facet-sel-y');
+    expect(a).not.toBe(b);
   });
 });

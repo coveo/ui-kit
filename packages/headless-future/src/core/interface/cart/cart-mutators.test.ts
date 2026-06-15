@@ -5,6 +5,8 @@ import type {
   UpdateItemQuantityPayload,
 } from './cart-types.js';
 
+const TEST_ID = 'test-interface';
+
 describe('cart mutators', () => {
   it('setItems returns expected mutation', () => {
     const items = [
@@ -13,8 +15,8 @@ describe('cart mutators', () => {
     ];
     const payload: SetCartItemsPayload = {items};
 
-    expect(setItems(payload)).toEqual({
-      type: 'cart/setItems',
+    expect(setItems(payload, TEST_ID)).toEqual({
+      type: `${TEST_ID}/cart/setItems`,
       payload: items,
     });
   });
@@ -23,8 +25,8 @@ describe('cart mutators', () => {
     const item = {productId: 'p1', name: 'A', price: 10, quantity: 0};
     const payload: UpdateItemQuantityPayload = {item};
 
-    expect(updateItemQuantity(payload)).toEqual({
-      type: 'cart/updateItemQuantity',
+    expect(updateItemQuantity(payload, TEST_ID)).toEqual({
+      type: `${TEST_ID}/cart/updateItemQuantity`,
       payload: item,
     });
   });

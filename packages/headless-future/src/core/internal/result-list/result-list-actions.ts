@@ -2,14 +2,35 @@ import {createAction} from '@reduxjs/toolkit';
 import type {SearchResult} from '@/src/core/interface/result-list/result-list-types.js';
 import type {CoveoSearchResult} from '@/src/core/interface/api/search-endpoint/search-endpoint-types.js';
 
-const ACTION_PREFIX = 'results';
+export function createResultsActions(interfaceId: string) {
+  return {
+    setResultsFromResponse: createAction<CoveoSearchResult[]>(
+      `${interfaceId}/results/setResultsFromResponse`
+    ),
+  };
+}
 
-export const setResults = createAction<SearchResult[]>(
-  `${ACTION_PREFIX}/setResults`
-);
+const actionsCache = new Map<string, ReturnType<typeof createResultsActions>>();
+export function getOrCreateResultsActions(interfaceId: string) {
+  if (!actionsCache.has(interfaceId)) {
+    actionsCache.set(interfaceId, createResultsActions(interfaceId));
+  }
+  return actionsCache.get(interfaceId)!;
+}
 
-export const clearResults = createAction(`${ACTION_PREFIX}/clearResults`);
+/**
+ * @deprecated Use `getOrCreateResultsActions(interfaceId)` instead.
+ */
+export const setResults = createAction<SearchResult[]>('results/setResults');
 
+/**
+ * @deprecated Use scoped factories instead.
+ */
+export const clearResults = createAction('results/clearResults');
+
+/**
+ * @deprecated Use `getOrCreateResultsActions(interfaceId).setResultsFromResponse` instead.
+ */
 export const setResultsFromResponse = createAction<CoveoSearchResult[]>(
-  `${ACTION_PREFIX}/setResultsFromResponse`
+  'results/setResultsFromResponse'
 );

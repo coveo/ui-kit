@@ -1,5 +1,4 @@
 import {Unsubscribe} from '@/src/core/index.js';
-import {Engine} from '@/src/core/interface/engine/engine.js';
 
 export interface Controller {
   /**
@@ -14,11 +13,4 @@ export interface Controller {
    * @returns A function that unsubscribes the listener.
    */
   subscribe(callback: () => void): Unsubscribe;
-}
-
-export interface ControllerOptions {
-  /**
-   * The engine that owns the controller state.
-   */
-  engine: Engine;
 }

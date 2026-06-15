@@ -2,10 +2,8 @@ import {
   SetCartItemsPayload,
   UpdateItemQuantityPayload,
 } from '@/src/core/interface/cart/cart-types.js';
-import {
-  Controller,
-  ControllerOptions,
-} from '@/src/public/controllers/controller-types.js';
+import {Controller} from '@/src/public/controllers/controller-types.js';
+import type {Requires} from '@/src/core/interface/utils/interface-types.js';
 
 export interface CartController extends Controller {
   /**
@@ -25,7 +23,9 @@ export interface CartController extends Controller {
   readonly state: CartControllerState;
 }
 
-export interface CartControllerOptions extends ControllerOptions {}
+export interface CartControllerOptions {
+  interface: Requires<'search'>;
+}
 
 export interface CartControllerItem {
   productId: string;

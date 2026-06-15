@@ -1,19 +1,24 @@
 import {createAction} from '@reduxjs/toolkit';
 
-const ACTION_PREFIX = 'pagination';
+export function createPaginationActions(interfaceId: string) {
+  return {
+    setFirstResult: createAction<number>(
+      `${interfaceId}/pagination/setFirstResult`
+    ),
+    setPageSize: createAction<number>(`${interfaceId}/pagination/setPageSize`),
+    setTotalCount: createAction<number>(
+      `${interfaceId}/pagination/setTotalCount`
+    ),
+  };
+}
 
-export const setPage = createAction<number>(`${ACTION_PREFIX}/setPage`);
-
-export const setPageSize = createAction<number>(`${ACTION_PREFIX}/setPageSize`);
-
-export const setTotalCount = createAction<number>(
-  `${ACTION_PREFIX}/setTotalCount`
-);
-
-export const nextPage = createAction(`${ACTION_PREFIX}/nextPage`);
-
-export const previousPage = createAction(`${ACTION_PREFIX}/previousPage`);
-
-export const resetToFirstPage = createAction(
-  `${ACTION_PREFIX}/resetToFirstPage`
-);
+const actionsCache = new Map<
+  string,
+  ReturnType<typeof createPaginationActions>
+>();
+export function getOrCreatePaginationActions(interfaceId: string) {
+  if (!actionsCache.has(interfaceId)) {
+    actionsCache.set(interfaceId, createPaginationActions(interfaceId));
+  }
+  return actionsCache.get(interfaceId)!;
+}

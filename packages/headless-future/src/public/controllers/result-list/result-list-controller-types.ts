@@ -1,5 +1,8 @@
 import type {Controller} from '@/src/public/controllers/controller-types.js';
-import type {ControllerOptions} from '@/src/public/controllers/controller-types.js';
+import type {
+  Interface,
+  Requires,
+} from '@/src/core/interface/utils/interface-types.js';
 
 export interface ResultListControllerResult {
   uniqueId: string;
@@ -20,4 +23,6 @@ export interface ResultListController extends Controller {
   readonly state: ResultListControllerState;
 }
 
-export interface ResultListControllerOptions extends ControllerOptions {}
+export interface ResultListControllerOptions {
+  interface: Interface & Requires<'search'>;
+}

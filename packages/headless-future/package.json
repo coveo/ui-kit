@@ -22,6 +22,21 @@
       "import": "./dist/index.js",
       "default": "./dist/index.js"
     },
+    "./interfaces/commerce": {
+      "types": "./dist/public/interfaces/commerce.d.ts",
+      "import": "./dist/public/interfaces/commerce.js",
+      "default": "./dist/public/interfaces/commerce.js"
+    },
+    "./interfaces/conversation": {
+      "types": "./dist/public/interfaces/conversation.d.ts",
+      "import": "./dist/public/interfaces/conversation.js",
+      "default": "./dist/public/interfaces/conversation.js"
+    },
+    "./interfaces/search": {
+      "types": "./dist/public/interfaces/search.d.ts",
+      "import": "./dist/public/interfaces/search.js",
+      "default": "./dist/public/interfaces/search.js"
+    },
     "./package.json": "./package.json"
   },
   "scripts": {

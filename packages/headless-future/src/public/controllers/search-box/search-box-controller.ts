@@ -1,14 +1,11 @@
-import {
-  getFullEngine,
-  searchBoxSelectors,
-  searchBoxMutators,
-  loadSearchBox,
-} from '@/src/core/index.js';
-import {SearchEndpointFacade} from '@/src/core/interface/api/search-endpoint/search-endpoint-facade.js';
-import {
-  Controller,
-  ControllerOptions,
-} from '@/src/public/controllers/controller-types.js';
+import type {Requires} from '@/src/core/interface/utils/interface-types.js';
+import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
+import {ENGINE, STATE_ID, THUNKS} from '@/src/core/interface/utils/symbols.js';
+import {getOrCreateSearchBoxActions} from '@/src/core/internal/search-box/search-box-actions.js';
+import {getOrCreateSearchBoxSelectors} from '@/src/core/internal/search-box/search-box-selectors.js';
+import {getOrCreateSearchBoxSlice} from '@/src/core/internal/search-box/search-box-slice.js';
+import {getOrCreateSearchEndpointSelectors} from '@/src/core/internal/api/search-endpoint/search-endpoint-thunk-slice.js';
+import type {Controller} from '@/src/public/controllers/controller-types.js';
 
 /**
  * Builds a `SearchBoxController` instance.
@@ -18,32 +15,46 @@ import {
 export const buildSearchBoxController: (
   options: SearchBoxControllerOptions
 ) => SearchBoxController = (options) => {
-  const fullEngine = getFullEngine(options.engine);
-  loadSearchBox(fullEngine);
+  const engine = options.interface[ENGINE];
+  const stateId = options.interface[STATE_ID];
+  const thunks = options.interface[THUNKS].search;
 
-  const searchEndpointFacade = SearchEndpointFacade.getInstance(fullEngine);
+  engine.adoptSlice(getOrCreateSearchBoxSlice(stateId));
 
-  const stateSelect = (): SearchBoxControllerState => ({
-    query: fullEngine.read(searchBoxSelectors.getQuery),
-  });
+  const actions = getOrCreateSearchBoxActions(stateId);
+  const selectors = getOrCreateSearchBoxSelectors(stateId);
+  const endpointSelectors = getOrCreateSearchEndpointSelectors(stateId);
+
+  const controllerState = createMemoizedStateSelector(
+    selectors.getQuery,
+    endpointSelectors.getStatus,
+    endpointSelectors.getError,
+    (query, status, error) => ({
+      query,
+      isLoading: status === 'pending',
+      error,
+    })
+  );
 
   return {
-    setQuery: (options: SearchBoxControllerSetQueryOptions) => {
-      fullEngine.mutate(searchBoxMutators.setQuery(options.query));
+    setQuery({query}: SearchBoxControllerSetQueryOptions) {
+      engine.mutate(actions.setQuery(query));
     },
-    submit: () => {
-      searchEndpointFacade.callEndpoint();
+    submit() {
+      return Promise.all(thunks.map((thunk) => engine.mutate(thunk({engine}))));
     },
     get state() {
-      return stateSelect();
+      return engine.read(controllerState);
     },
     subscribe(callback: () => void) {
-      return fullEngine.subscribe(stateSelect, callback);
+      return engine.subscribe(controllerState, callback);
     },
   };
 };
 
-export interface SearchBoxControllerOptions extends ControllerOptions {}
+export interface SearchBoxControllerOptions {
+  interface: Requires<'search'>;
+}
 
 export interface SearchBoxController extends Controller {
   /**
@@ -56,7 +67,7 @@ export interface SearchBoxController extends Controller {
   /**
    * Executes the search query.
    */
-  submit(): void;
+  submit(): Promise<unknown[]>;
 
   readonly state: SearchBoxControllerState;
 }
@@ -73,4 +84,14 @@ export interface SearchBoxControllerState {
    * The current search query.
    */
   query: string;
+
+  /**
+   * Whether a search request is currently in flight.
+   */
+  isLoading: boolean;
+
+  /**
+   * The error message from the last failed search request, or null.
+   */
+  error: string | null;
 }

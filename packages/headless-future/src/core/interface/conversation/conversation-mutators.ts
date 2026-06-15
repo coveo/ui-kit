@@ -1,14 +1,4 @@
-import {
-  startTurn as _startTurn,
-  appendAgentChunk as _appendAgentChunk,
-  completeTurn as _completeTurn,
-  failTurn as _failTurn,
-  abortTurn as _abortTurn,
-  setSession as _setSession,
-  patchSession as _patchSession,
-  setError as _setError,
-  setStreamingConnected as _setStreamingConnected,
-} from '@/src/core/internal/conversation/conversation-actions.js';
+import {getOrCreateConversationActions} from '@/src/core/internal/conversation/conversation-actions.js';
 import type {StateMutation} from '@/src/core/interface/engine/engine-types.js';
 import type {
   AppendAgentChunkPayload,
@@ -18,42 +8,67 @@ import type {
   StartTurnPayload,
 } from './conversation-types.js';
 
-export const startTurn = (payload: StartTurnPayload): StateMutation => {
-  return _startTurn(payload);
+export const startTurn = (
+  payload: StartTurnPayload,
+  interfaceId: string = 'default'
+): StateMutation => {
+  return getOrCreateConversationActions(interfaceId).startTurn(payload);
 };
 
 export const appendAgentChunk = (
-  payload: AppendAgentChunkPayload
+  payload: AppendAgentChunkPayload,
+  interfaceId: string = 'default'
 ): StateMutation => {
-  return _appendAgentChunk(payload);
+  return getOrCreateConversationActions(interfaceId).appendAgentChunk(payload);
 };
 
-export const completeTurn = (payload: FinalizeTurnPayload): StateMutation => {
-  return _completeTurn(payload);
+export const completeTurn = (
+  payload: FinalizeTurnPayload,
+  interfaceId: string = 'default'
+): StateMutation => {
+  return getOrCreateConversationActions(interfaceId).completeTurn(payload);
 };
 
-export const failTurn = (payload: FailTurnPayload): StateMutation => {
-  return _failTurn(payload);
+export const failTurn = (
+  payload: FailTurnPayload,
+  interfaceId: string = 'default'
+): StateMutation => {
+  return getOrCreateConversationActions(interfaceId).failTurn(payload);
 };
 
-export const abortTurn = (payload: FinalizeTurnPayload): StateMutation => {
-  return _abortTurn(payload);
+export const abortTurn = (
+  payload: FinalizeTurnPayload,
+  interfaceId: string = 'default'
+): StateMutation => {
+  return getOrCreateConversationActions(interfaceId).abortTurn(payload);
 };
 
-export const setSession = (session: ConversationSession): StateMutation => {
-  return _setSession(session);
+export const setSession = (
+  session: ConversationSession,
+  interfaceId: string = 'default'
+): StateMutation => {
+  return getOrCreateConversationActions(interfaceId).setSession(session);
 };
 
 export const patchSession = (
-  sessionPatch: ConversationSession
+  sessionPatch: ConversationSession,
+  interfaceId: string = 'default'
 ): StateMutation => {
-  return _patchSession(sessionPatch);
+  return getOrCreateConversationActions(interfaceId).patchSession(sessionPatch);
 };
 
-export const setError = (error: string | null): StateMutation => {
-  return _setError(error);
+export const setError = (
+  error: string | null,
+  interfaceId: string = 'default'
+): StateMutation => {
+  return getOrCreateConversationActions(interfaceId).setError(error);
 };
 
-export const setStreamingConnected = (isConnected: boolean): StateMutation => {
-  return _setStreamingConnected(isConnected);
+export const setStreamingConnected = (
+  isConnected: boolean,
+  interfaceId: string = 'default'
+): StateMutation => {
+  return getOrCreateConversationActions(interfaceId).setStreamingConnected(
+    isConnected
+  );
 };

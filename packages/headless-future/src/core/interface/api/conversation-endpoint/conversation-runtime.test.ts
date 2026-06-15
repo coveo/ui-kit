@@ -6,15 +6,12 @@ import {
   type ConversationRuntimeStatePort,
 } from './conversation-runtime.js';
 
-const {
-  mockCallEndpoint,
-  mockReadConversationEventStream,
-  mockLoadConversationEndpoint,
-} = vi.hoisted(() => {
+const TEST_ID = 'test-id';
+
+const {mockCallEndpoint, mockReadConversationEventStream} = vi.hoisted(() => {
   return {
     mockCallEndpoint: vi.fn(),
     mockReadConversationEventStream: vi.fn(),
-    mockLoadConversationEndpoint: vi.fn(),
   };
 });
 
@@ -37,15 +34,10 @@ vi.mock(
   }
 );
 
-vi.mock('./conversation-endpoint-loader.js', () => {
-  return {
-    loadConversationEndpoint: mockLoadConversationEndpoint,
-  };
-});
-
 type MockEngine = FullEngine & {
   mutate: ReturnType<typeof vi.fn>;
   read: ReturnType<typeof vi.fn>;
+  adoptSlice: ReturnType<typeof vi.fn>;
 };
 
 const createMockEngine = (
@@ -55,11 +47,12 @@ const createMockEngine = (
     mutate: vi.fn(),
     read: vi.fn((selector) =>
       selector({
-        conversation: {
+        [`${TEST_ID}/conversation`]: {
           session,
         },
       })
     ),
+    adoptSlice: vi.fn(),
   } as unknown as MockEngine;
 };
 
@@ -83,52 +76,52 @@ const createConversationStatePort = (
 ): ConversationRuntimeStatePort => {
   return {
     readSession: () =>
-      engine.read((state) => state.conversation?.session ?? {}),
+      engine.read((state) => state[`${TEST_ID}/conversation`]?.session ?? {}),
     setSession: (session) => {
       engine.mutate({
-        type: 'conversation/setSession',
+        type: `${TEST_ID}/conversation/setSession`,
         payload: session,
       });
     },
     patchSession: (sessionPatch) => {
       engine.mutate({
-        type: 'conversation/patchSession',
+        type: `${TEST_ID}/conversation/patchSession`,
         payload: sessionPatch,
       });
     },
     setError: (error) => {
       engine.mutate({
-        type: 'conversation/setError',
+        type: `${TEST_ID}/conversation/setError`,
         payload: error,
       });
     },
     startTurn: (payload) => {
       engine.mutate({
-        type: 'conversation/startTurn',
+        type: `${TEST_ID}/conversation/startTurn`,
         payload,
       });
     },
     abortTurn: (payload) => {
       engine.mutate({
-        type: 'conversation/abortTurn',
+        type: `${TEST_ID}/conversation/abortTurn`,
         payload,
       });
     },
     appendAgentChunk: (payload) => {
       engine.mutate({
-        type: 'conversation/appendAgentChunk',
+        type: `${TEST_ID}/conversation/appendAgentChunk`,
         payload,
       });
     },
     completeTurn: (payload) => {
       engine.mutate({
-        type: 'conversation/completeTurn',
+        type: `${TEST_ID}/conversation/completeTurn`,
         payload,
       });
     },
     failTurn: (payload) => {
       engine.mutate({
-        type: 'conversation/failTurn',
+        type: `${TEST_ID}/conversation/failTurn`,
         payload,
       });
     },
@@ -141,26 +134,28 @@ describe('ConversationRuntime', () => {
     mockReadConversationEventStream.mockResolvedValue(undefined);
   });
 
-  it('returns the same runtime instance for the same engine', () => {
+  it('returns the same runtime instance for the same engine and interfaceId', () => {
     const engine = createMockEngine();
 
     const first = ConversationRuntime.getInstance(
       engine,
+      TEST_ID,
       createConversationStatePort(engine)
     );
     const second = ConversationRuntime.getInstance(
       engine,
+      TEST_ID,
       createConversationStatePort(engine)
     );
 
     expect(first).toBe(second);
-    expect(mockLoadConversationEndpoint).toHaveBeenCalledTimes(1);
   });
 
   it('starts turn and calls endpoint with an abort signal', async () => {
     const engine = createMockEngine();
     const runtime = ConversationRuntime.getInstance(
       engine,
+      TEST_ID,
       createConversationStatePort(engine)
     );
     const stream = {} as ReadableStream<Uint8Array>;
@@ -187,7 +182,7 @@ describe('ConversationRuntime', () => {
 
     const mutations = getMutations(engine);
     expect(mutations).toContainEqual({
-      type: 'conversation/startTurn',
+      type: `${TEST_ID}/conversation/startTurn`,
       payload: expect.objectContaining({
         input: 'hello',
       }),
@@ -201,6 +196,7 @@ describe('ConversationRuntime', () => {
     });
     const runtime = ConversationRuntime.getInstance(
       engine,
+      TEST_ID,
       createConversationStatePort(engine)
     );
     const stream = {} as ReadableStream<Uint8Array>;
@@ -222,7 +218,7 @@ describe('ConversationRuntime', () => {
     });
 
     expect(engine.mutate).toHaveBeenCalledWith({
-      type: 'conversation/setSession',
+      type: `${TEST_ID}/conversation/setSession`,
       payload: {
         conversationSessionId: 'seed-session',
       },
@@ -234,6 +230,7 @@ describe('ConversationRuntime', () => {
     const engine = createMockEngine();
     const runtime = ConversationRuntime.getInstance(
       engine,
+      TEST_ID,
       createConversationStatePort(engine)
     );
     const callDeferred = deferred<ConversationEndpointCallResult>();
@@ -246,7 +243,7 @@ describe('ConversationRuntime', () => {
 
     expect(mockCallEndpoint).toHaveBeenCalledTimes(1);
     expect(engine.mutate).toHaveBeenCalledWith({
-      type: 'conversation/setError',
+      type: `${TEST_ID}/conversation/setError`,
       payload:
         'A conversation turn is already in progress. Please wait for completion before submitting another turn.',
     });
@@ -259,6 +256,7 @@ describe('ConversationRuntime', () => {
     const engine = createMockEngine();
     const runtime = ConversationRuntime.getInstance(
       engine,
+      TEST_ID,
       createConversationStatePort(engine)
     );
     const callDeferred = deferred<ConversationEndpointCallResult>();
@@ -278,17 +276,17 @@ describe('ConversationRuntime', () => {
 
     expect(capturedSignal?.aborted).toBe(true);
     expect(engine.mutate).toHaveBeenCalledWith({
-      type: 'conversation/abortTurn',
+      type: `${TEST_ID}/conversation/abortTurn`,
       payload: expect.objectContaining({
         turnId: expect.any(String),
       }),
     });
     expect(engine.mutate).toHaveBeenCalledWith({
-      type: 'conversationEndpoint/setStatus',
+      type: `${TEST_ID}/conversationEndpoint/setStatus`,
       payload: 'idle',
     });
     expect(engine.mutate).toHaveBeenCalledWith({
-      type: 'conversationEndpoint/setStreamingConnected',
+      type: `${TEST_ID}/conversationEndpoint/setStreamingConnected`,
       payload: false,
     });
 
@@ -300,6 +298,7 @@ describe('ConversationRuntime', () => {
     const engine = createMockEngine();
     const runtime = ConversationRuntime.getInstance(
       engine,
+      TEST_ID,
       createConversationStatePort(engine)
     );
     const stream = {} as ReadableStream<Uint8Array>;
@@ -323,21 +322,21 @@ describe('ConversationRuntime', () => {
     await runtime.submitTurn('hello');
 
     expect(engine.mutate).toHaveBeenCalledWith({
-      type: 'conversationEndpoint/setStreamingConnected',
+      type: `${TEST_ID}/conversationEndpoint/setStreamingConnected`,
       payload: true,
     });
     expect(engine.mutate).toHaveBeenCalledWith({
-      type: 'conversationEndpoint/setStatus',
+      type: `${TEST_ID}/conversationEndpoint/setStatus`,
       payload: 'streaming',
     });
     expect(engine.mutate).toHaveBeenCalledWith({
-      type: 'conversation/appendAgentChunk',
+      type: `${TEST_ID}/conversation/appendAgentChunk`,
       payload: expect.objectContaining({
         chunk: 'hello',
       }),
     });
     expect(engine.mutate).toHaveBeenCalledWith({
-      type: 'conversation/completeTurn',
+      type: `${TEST_ID}/conversation/completeTurn`,
       payload: expect.objectContaining({
         turnId: expect.any(String),
       }),
@@ -348,6 +347,7 @@ describe('ConversationRuntime', () => {
     const engine = createMockEngine();
     const runtime = ConversationRuntime.getInstance(
       engine,
+      TEST_ID,
       createConversationStatePort(engine)
     );
     const stream = {} as ReadableStream<Uint8Array>;
@@ -363,7 +363,7 @@ describe('ConversationRuntime', () => {
     await runtime.submitTurn('hello');
 
     expect(engine.mutate).toHaveBeenCalledWith({
-      type: 'conversation/failTurn',
+      type: `${TEST_ID}/conversation/failTurn`,
       payload: expect.objectContaining({
         reason: 'stream_interrupted',
       }),
@@ -374,6 +374,7 @@ describe('ConversationRuntime', () => {
     const engine = createMockEngine();
     const runtime = ConversationRuntime.getInstance(
       engine,
+      TEST_ID,
       createConversationStatePort(engine)
     );
     const stream = {} as ReadableStream<Uint8Array>;
@@ -397,12 +398,12 @@ describe('ConversationRuntime', () => {
     await runtime.submitTurn('hello');
 
     expect(engine.mutate).toHaveBeenCalledWith({
-      type: 'conversationEndpoint/setError',
+      type: `${TEST_ID}/conversationEndpoint/setError`,
       payload:
         'Conversation stream warning: unsupported event "mystery_event".',
     });
     expect(engine.mutate).toHaveBeenCalledWith({
-      type: 'conversation/completeTurn',
+      type: `${TEST_ID}/conversation/completeTurn`,
       payload: expect.objectContaining({
         turnId: expect.any(String),
       }),
@@ -413,6 +414,7 @@ describe('ConversationRuntime', () => {
     const engine = createMockEngine();
     const runtime = ConversationRuntime.getInstance(
       engine,
+      TEST_ID,
       createConversationStatePort(engine)
     );
     const callDeferred = deferred<ConversationEndpointCallResult>();
@@ -429,10 +431,10 @@ describe('ConversationRuntime', () => {
 
     const mutations = getMutations(engine);
     const abortCount = mutations.filter(
-      (mutation) => mutation.type === 'conversation/abortTurn'
+      (mutation) => mutation.type === `${TEST_ID}/conversation/abortTurn`
     ).length;
     const failCount = mutations.filter(
-      (mutation) => mutation.type === 'conversation/failTurn'
+      (mutation) => mutation.type === `${TEST_ID}/conversation/failTurn`
     ).length;
 
     expect(abortCount).toBe(1);
@@ -443,6 +445,7 @@ describe('ConversationRuntime', () => {
     const engine = createMockEngine();
     const runtime = ConversationRuntime.getInstance(
       engine,
+      TEST_ID,
       createConversationStatePort(engine)
     );
 

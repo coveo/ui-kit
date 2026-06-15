@@ -11,9 +11,10 @@ export interface CoveoSearchEndpointRequest {
 
 export interface CoveoFacetRequest {
   facetId: string;
-  field: string;
+  field?: string;
   type?: 'specific' | 'date' | 'numeric';
   numberOfValues?: number;
+  selectedValues?: string[];
   currentValues?: Array<{value: string; state: 'selected' | 'idle'}>;
 }
 

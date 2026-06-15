@@ -1,15 +1,9 @@
 import {describe, expect, it} from 'vitest';
 import type {ConversationState} from './conversation-types.js';
-import {
-  activeTurnId,
-  activeTurnUserMessage,
-  error,
-  isLoading,
-  messages,
-  session,
-  streaming,
-  turns,
-} from './conversation-selectors.js';
+import {createConversationSelectors} from './conversation-selectors.js';
+
+const TEST_ID = 'test';
+const selectors = createConversationSelectors(TEST_ID);
 
 describe('conversation selectors', () => {
   const initialConversationState: ConversationState = {
@@ -55,37 +49,39 @@ describe('conversation selectors', () => {
     streaming: {isConnected: true},
   };
 
-  const initialState = {conversation: initialConversationState};
-  const populatedState = {conversation: populatedConversationState};
+  const initialState = {[`${TEST_ID}/conversation`]: initialConversationState};
+  const populatedState = {
+    [`${TEST_ID}/conversation`]: populatedConversationState,
+  };
 
   it('should expose the initial conversation state', () => {
-    expect(messages(initialState)).toEqual([]);
-    expect(turns(initialState)).toEqual([]);
-    expect(activeTurnId(initialState)).toBeNull();
-    expect(activeTurnUserMessage(initialState)).toBeUndefined();
-    expect(session(initialState)).toEqual({});
-    expect(isLoading(initialState)).toBe(false);
-    expect(error(initialState)).toBeNull();
-    expect(streaming(initialState)).toEqual({isConnected: false});
+    expect(selectors.getMessages(initialState)).toEqual([]);
+    expect(selectors.getTurns(initialState)).toEqual([]);
+    expect(selectors.getActiveTurnId(initialState)).toBeNull();
+    expect(selectors.getActiveTurnUserMessage(initialState)).toBeUndefined();
+    expect(selectors.getSession(initialState)).toEqual({});
+    expect(selectors.getIsLoading(initialState)).toBe(false);
+    expect(selectors.getError(initialState)).toBeNull();
+    expect(selectors.getStreaming(initialState)).toEqual({isConnected: false});
   });
 
   it('should expose a populated conversation state', () => {
-    expect(messages(populatedState)).toHaveLength(2);
-    expect(turns(populatedState)).toHaveLength(1);
-    expect(activeTurnId(populatedState)).toBe('turn-1');
-    expect(activeTurnUserMessage(populatedState)).toBe('Hello');
-    expect(session(populatedState)).toEqual({
+    expect(selectors.getMessages(populatedState)).toHaveLength(2);
+    expect(selectors.getTurns(populatedState)).toHaveLength(1);
+    expect(selectors.getActiveTurnId(populatedState)).toBe('turn-1');
+    expect(selectors.getActiveTurnUserMessage(populatedState)).toBe('Hello');
+    expect(selectors.getSession(populatedState)).toEqual({
       conversationSessionId: 'session-1',
       conversationToken: 'token-1',
     });
-    expect(isLoading(populatedState)).toBe(true);
-    expect(error(populatedState)).toBeNull();
-    expect(streaming(populatedState)).toEqual({isConnected: true});
+    expect(selectors.getIsLoading(populatedState)).toBe(true);
+    expect(selectors.getError(populatedState)).toBeNull();
+    expect(selectors.getStreaming(populatedState)).toEqual({isConnected: true});
   });
 
   it('should return undefined when the active turn has no user message', () => {
     const stateWithoutUserMessage = {
-      conversation: {
+      [`${TEST_ID}/conversation`]: {
         ...populatedConversationState,
         messages: [
           {
@@ -98,6 +94,8 @@ describe('conversation selectors', () => {
       },
     };
 
-    expect(activeTurnUserMessage(stateWithoutUserMessage)).toBeUndefined();
+    expect(
+      selectors.getActiveTurnUserMessage(stateWithoutUserMessage)
+    ).toBeUndefined();
   });
 });

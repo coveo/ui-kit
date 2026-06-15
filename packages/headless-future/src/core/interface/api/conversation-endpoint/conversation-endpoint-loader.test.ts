@@ -1,9 +1,11 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import type {FullEngine} from '@/src/core/interface/engine/engine.js';
-import {conversationEndpointSlice} from '@/src/core/internal/api/conversation-endpoint/conversation-endpoint-slice.js';
+import {getOrCreateConversationEndpointSlice} from '@/src/core/internal/api/conversation-endpoint/conversation-endpoint-slice.js';
 import {getEndpointContributorRegistry} from '@/src/core/internal/api/base-facade/endpoint-contributor-registry.js';
 import {conversationEndpointKey} from '@/src/core/internal/api/base-facade/endpoint-keys.js';
 import {loadConversationEndpoint} from './conversation-endpoint-loader.js';
+
+const TEST_ID = 'test';
 
 type MockEngine = FullEngine & {
   adoptSlice: ReturnType<typeof vi.fn>;
@@ -27,11 +29,13 @@ describe('loadConversationEndpoint', () => {
   it('adopts only conversation endpoint slice and registers providers once', () => {
     const engine = createMockEngine();
 
-    loadConversationEndpoint(engine);
-    loadConversationEndpoint(engine);
+    loadConversationEndpoint(engine, TEST_ID);
+    loadConversationEndpoint(engine, TEST_ID);
 
     expect(engine.adoptSlice).toHaveBeenCalledTimes(1);
-    expect(engine.adoptSlice).toHaveBeenCalledWith(conversationEndpointSlice);
+    expect(engine.adoptSlice).toHaveBeenCalledWith(
+      getOrCreateConversationEndpointSlice(TEST_ID)
+    );
 
     const registry = getEndpointContributorRegistry(engine);
     expect(
@@ -43,8 +47,8 @@ describe('loadConversationEndpoint', () => {
     const firstEngine = createMockEngine();
     const secondEngine = createMockEngine();
 
-    loadConversationEndpoint(firstEngine);
-    loadConversationEndpoint(secondEngine);
+    loadConversationEndpoint(firstEngine, TEST_ID);
+    loadConversationEndpoint(secondEngine, TEST_ID);
 
     expect(firstEngine.adoptSlice).toHaveBeenCalledTimes(1);
     expect(secondEngine.adoptSlice).toHaveBeenCalledTimes(1);

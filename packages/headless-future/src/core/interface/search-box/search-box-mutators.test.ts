@@ -6,7 +6,7 @@ import {describe, it, expect, beforeEach} from 'vitest';
 import {setQuery} from './search-box-mutators.js';
 import {createTestEngine} from '@/src/test/test-utils.js';
 import {getQuery} from './search-box-selectors.js';
-import {searchBoxSlice} from '@/src/core/internal/search-box/search-box-slice.js';
+import {getOrCreateSearchBoxSlice} from '@/src/core/internal/search-box/search-box-slice.js';
 import {FullEngine, getFullEngine} from '@/src/core/interface/engine/engine.js';
 
 describe('searchBoxMutations', () => {
@@ -14,7 +14,7 @@ describe('searchBoxMutations', () => {
 
   beforeEach(() => {
     engine = getFullEngine(createTestEngine());
-    engine.adoptSlice(searchBoxSlice);
+    engine.adoptSlice(getOrCreateSearchBoxSlice('default'));
   });
 
   describe('setQuery()', () => {
@@ -22,7 +22,7 @@ describe('searchBoxMutations', () => {
       const mutation = setQuery('laptops');
 
       expect(mutation).toEqual({
-        type: 'searchBox/setQuery',
+        type: 'default/searchBox/setQuery',
         payload: 'laptops',
       });
     });

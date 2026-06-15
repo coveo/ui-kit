@@ -1,5 +1,5 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {createTestEngine} from '@/src/test/test-utils.js';
+import {createTestEngine, createTestInterface} from '@/src/test/test-utils.js';
 import {
   type Engine,
   type FullEngine,
@@ -17,6 +17,9 @@ import {
 } from '@/src/core/interface/api/conversation-endpoint/conversation-endpoint-mutators.js';
 import type {ConversationControllerSubmitTurnOptions} from './conversation-controller.js';
 import {buildConversationController} from './conversation-controller.js';
+import type {Requires} from '@/src/core/interface/utils/interface-types.js';
+
+const TEST_ID = 'test';
 
 const mockSubmitTurn =
   vi.fn<
@@ -42,8 +45,10 @@ vi.mock(
 describe('buildConversationController', () => {
   let engine: Engine;
   let fullEngine: FullEngine;
+  let conversationInterface: Requires<'conversation'>;
 
-  const buildController = () => buildConversationController({engine});
+  const buildController = () =>
+    buildConversationController({interface: conversationInterface});
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -52,6 +57,9 @@ describe('buildConversationController', () => {
     mockSubmitTurn.mockResolvedValue();
     engine = createTestEngine();
     fullEngine = getFullEngine(engine);
+    conversationInterface = createTestInterface(engine, {
+      conversation: [],
+    });
   });
 
   describe('state', () => {
@@ -73,29 +81,38 @@ describe('buildConversationController', () => {
       const controller = buildController();
 
       fullEngine.mutate(
-        startTurn({
-          turnId: 'turn-1',
-          userMessageId: 'user-1',
-          agentMessageId: 'agent-1',
-          input: 'hello',
-          createdAt: 111,
-        })
+        startTurn(
+          {
+            turnId: 'turn-1',
+            userMessageId: 'user-1',
+            agentMessageId: 'agent-1',
+            input: 'hello',
+            createdAt: 111,
+          },
+          TEST_ID
+        )
       );
       fullEngine.mutate(
-        appendAgentChunk({
-          turnId: 'turn-1',
-          chunk: 'Hi there',
-        })
+        appendAgentChunk(
+          {
+            turnId: 'turn-1',
+            chunk: 'Hi there',
+          },
+          TEST_ID
+        )
       );
       fullEngine.mutate(
-        setSession({
-          conversationSessionId: 'conversation-1',
-          conversationToken: 'token-1',
-        })
+        setSession(
+          {
+            conversationSessionId: 'conversation-1',
+            conversationToken: 'token-1',
+          },
+          TEST_ID
+        )
       );
-      fullEngine.mutate(setStatus('streaming'));
-      fullEngine.mutate(setError('endpoint error'));
-      fullEngine.mutate(setStreamingConnected(true));
+      fullEngine.mutate(setStatus('streaming', TEST_ID));
+      fullEngine.mutate(setError('endpoint error', TEST_ID));
+      fullEngine.mutate(setStreamingConnected(true, TEST_ID));
 
       expect(controller.state).toEqual({
         messages: [
@@ -175,13 +192,16 @@ describe('buildConversationController', () => {
 
       controller.subscribe(callback);
       fullEngine.mutate(
-        startTurn({
-          turnId: 'turn-1',
-          userMessageId: 'user-1',
-          agentMessageId: 'agent-1',
-          input: 'hello',
-          createdAt: 111,
-        })
+        startTurn(
+          {
+            turnId: 'turn-1',
+            userMessageId: 'user-1',
+            agentMessageId: 'agent-1',
+            input: 'hello',
+            createdAt: 111,
+          },
+          TEST_ID
+        )
       );
 
       expect(callback).toHaveBeenCalledTimes(1);
@@ -192,7 +212,7 @@ describe('buildConversationController', () => {
       const callback = vi.fn();
 
       controller.subscribe(callback);
-      fullEngine.mutate(setStatus('pending'));
+      fullEngine.mutate(setStatus('pending', TEST_ID));
 
       expect(callback).toHaveBeenCalledTimes(1);
     });

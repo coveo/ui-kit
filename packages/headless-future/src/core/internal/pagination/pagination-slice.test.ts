@@ -1,255 +1,201 @@
-/**
- * Pagination Slice Tests
- */
-
 import {describe, it, expect} from 'vitest';
-import {paginationSlice, initialPaginationState} from './pagination-slice.js';
 import {
-  nextPage,
-  previousPage,
-  resetToFirstPage,
-  setPage,
-  setPageSize,
-  setTotalCount,
+  createPaginationSlice,
+  getOrCreatePaginationSlice,
+  initialPaginationState,
+} from './pagination-slice.js';
+import {
+  createPaginationActions,
+  getOrCreatePaginationActions,
 } from './pagination-actions.js';
+import {
+  createPaginationSelectors,
+  getOrCreatePaginationSelectors,
+} from './pagination-selectors.js';
 
-describe('paginationSlice: initialState', () => {
-  it('should have correct initial state', () => {
+describe('createPaginationActions', () => {
+  it('should create actions scoped to the interface ID', () => {
+    const actions = createPaginationActions('search-1');
+
+    expect(actions.setFirstResult.type).toBe(
+      'search-1/pagination/setFirstResult'
+    );
+    expect(actions.setPageSize.type).toBe('search-1/pagination/setPageSize');
+    expect(actions.setTotalCount.type).toBe(
+      'search-1/pagination/setTotalCount'
+    );
+  });
+
+  it('should create distinct actions for different interface IDs', () => {
+    const actionsA = createPaginationActions('interface-a');
+    const actionsB = createPaginationActions('interface-b');
+
+    expect(actionsA.setFirstResult.type).not.toBe(actionsB.setFirstResult.type);
+  });
+});
+
+describe('getOrCreatePaginationActions', () => {
+  it('should return the same instance for the same interface ID', () => {
+    const a = getOrCreatePaginationActions('cached-actions-test');
+    const b = getOrCreatePaginationActions('cached-actions-test');
+
+    expect(a).toBe(b);
+  });
+
+  it('should return different instances for different interface IDs', () => {
+    const a = getOrCreatePaginationActions('cache-a');
+    const b = getOrCreatePaginationActions('cache-b');
+
+    expect(a).not.toBe(b);
+  });
+});
+
+describe('createPaginationSlice', () => {
+  it('should have the correct initial state', () => {
     expect(initialPaginationState).toEqual({
-      currentPage: 1,
+      firstResult: 0,
       pageSize: 10,
       totalCount: 0,
     });
   });
-});
 
-describe('paginationSlice: setPage', () => {
-  it('should update current page', () => {
-    const state = paginationSlice.reducer(initialPaginationState, setPage(3));
+  it('should create a slice with scoped name', () => {
+    const slice = createPaginationSlice('search-1');
 
-    expect(state.currentPage).toBe(3);
+    expect(slice.name).toBe('search-1/pagination');
   });
 
-  it('should not affect other fields', () => {
-    const state = paginationSlice.reducer(
-      {...initialPaginationState, pageSize: 20, totalCount: 100},
-      setPage(5)
+  it('should handle setFirstResult', () => {
+    const slice = createPaginationSlice('test-1');
+    const actions = getOrCreatePaginationActions('test-1');
+
+    const state = slice.reducer(
+      initialPaginationState,
+      actions.setFirstResult(20)
     );
 
-    expect(state.currentPage).toBe(5);
-    expect(state.pageSize).toBe(20);
+    expect(state.firstResult).toBe(20);
+    expect(state.pageSize).toBe(10);
+    expect(state.totalCount).toBe(0);
+  });
+
+  it('should handle setPageSize', () => {
+    const slice = createPaginationSlice('test-2');
+    const actions = getOrCreatePaginationActions('test-2');
+
+    const state = slice.reducer(
+      initialPaginationState,
+      actions.setPageSize(25)
+    );
+
+    expect(state.pageSize).toBe(25);
+    expect(state.firstResult).toBe(0);
+    expect(state.totalCount).toBe(0);
+  });
+
+  it('should handle setTotalCount', () => {
+    const slice = createPaginationSlice('test-3');
+    const actions = getOrCreatePaginationActions('test-3');
+
+    const state = slice.reducer(
+      initialPaginationState,
+      actions.setTotalCount(100)
+    );
+
     expect(state.totalCount).toBe(100);
+    expect(state.firstResult).toBe(0);
+    expect(state.pageSize).toBe(10);
+  });
+
+  it('should not respond to actions from a different interface', () => {
+    const slice = createPaginationSlice('iface-x');
+    const otherActions = getOrCreatePaginationActions('iface-y');
+
+    const state = slice.reducer(
+      initialPaginationState,
+      otherActions.setFirstResult(50)
+    );
+
+    expect(state.firstResult).toBe(0);
   });
 
   it('should maintain state immutability', () => {
+    const slice = createPaginationSlice('immut-test');
+    const actions = getOrCreatePaginationActions('immut-test');
     const original = {...initialPaginationState};
-    paginationSlice.reducer(original, setPage(2));
 
-    expect(original.currentPage).toBe(1);
+    slice.reducer(original, actions.setFirstResult(30));
+
+    expect(original.firstResult).toBe(0);
   });
 });
 
-describe('paginationSlice: setPageSize', () => {
-  it('should update page size', () => {
-    const state = paginationSlice.reducer(
-      initialPaginationState,
-      setPageSize(25)
-    );
+describe('getOrCreatePaginationSlice', () => {
+  it('should return the same slice instance for the same interface ID', () => {
+    const a = getOrCreatePaginationSlice('cached-slice-test');
+    const b = getOrCreatePaginationSlice('cached-slice-test');
 
-    expect(state.pageSize).toBe(25);
+    expect(a).toBe(b);
   });
 
-  it('should reset to first page when page size changes', () => {
-    const currentState = {
-      currentPage: 5,
-      pageSize: 10,
-      totalCount: 100,
+  it('should return different instances for different interface IDs', () => {
+    const a = getOrCreatePaginationSlice('slice-a');
+    const b = getOrCreatePaginationSlice('slice-b');
+
+    expect(a).not.toBe(b);
+  });
+});
+
+describe('createPaginationSelectors', () => {
+  it('should read firstResult from scoped state', () => {
+    const selectors = createPaginationSelectors('sel-test');
+    const state = {
+      'sel-test/pagination': {firstResult: 30, pageSize: 10, totalCount: 100},
     };
 
-    const state = paginationSlice.reducer(currentState, setPageSize(20));
-
-    expect(state.pageSize).toBe(20);
-    expect(state.currentPage).toBe(1);
+    expect(selectors.getFirstResult(state)).toBe(30);
   });
 
-  it('should not affect total count', () => {
-    const state = paginationSlice.reducer(
-      {...initialPaginationState, totalCount: 150},
-      setPageSize(50)
-    );
+  it('should read pageSize from scoped state', () => {
+    const selectors = createPaginationSelectors('sel-test-2');
+    const state = {
+      'sel-test-2/pagination': {firstResult: 0, pageSize: 25, totalCount: 50},
+    };
 
-    expect(state.totalCount).toBe(150);
-  });
-});
-
-describe('paginationSlice: setTotalCount', () => {
-  it('should update total count', () => {
-    const state = paginationSlice.reducer(
-      initialPaginationState,
-      setTotalCount(100)
-    );
-
-    expect(state.totalCount).toBe(100);
+    expect(selectors.getPageSize(state)).toBe(25);
   });
 
-  it('should not affect other fields', () => {
-    const state = paginationSlice.reducer(
-      {currentPage: 3, pageSize: 20, totalCount: 0},
-      setTotalCount(200)
-    );
+  it('should read totalCount from scoped state', () => {
+    const selectors = createPaginationSelectors('sel-test-3');
+    const state = {
+      'sel-test-3/pagination': {firstResult: 0, pageSize: 10, totalCount: 200},
+    };
 
-    expect(state.totalCount).toBe(200);
-    expect(state.currentPage).toBe(3);
-    expect(state.pageSize).toBe(20);
+    expect(selectors.getTotalCount(state)).toBe(200);
+  });
+
+  it('should fall back to initial state when slice is not present', () => {
+    const selectors = createPaginationSelectors('missing-slice');
+    const state = {};
+
+    expect(selectors.getFirstResult(state)).toBe(0);
+    expect(selectors.getPageSize(state)).toBe(10);
+    expect(selectors.getTotalCount(state)).toBe(0);
   });
 });
 
-describe('paginationSlice: nextPage', () => {
-  it('should increment current page when not on last page', () => {
-    const state = paginationSlice.reducer(
-      {currentPage: 2, pageSize: 10, totalCount: 100},
-      nextPage()
-    );
+describe('getOrCreatePaginationSelectors', () => {
+  it('should return the same instance for the same interface ID', () => {
+    const a = getOrCreatePaginationSelectors('cached-sel-test');
+    const b = getOrCreatePaginationSelectors('cached-sel-test');
 
-    expect(state.currentPage).toBe(3);
+    expect(a).toBe(b);
   });
 
-  it('should not exceed total pages', () => {
-    // 100 total, 10 per page = 10 pages
-    const state = paginationSlice.reducer(
-      {currentPage: 10, pageSize: 10, totalCount: 100},
-      nextPage()
-    );
+  it('should return different instances for different interface IDs', () => {
+    const a = getOrCreatePaginationSelectors('sel-a');
+    const b = getOrCreatePaginationSelectors('sel-b');
 
-    expect(state.currentPage).toBe(10); // Should stay on page 10
-  });
-
-  it('should handle edge case with 0 total count', () => {
-    const state = paginationSlice.reducer(
-      {currentPage: 1, pageSize: 10, totalCount: 0},
-      nextPage()
-    );
-
-    expect(state.currentPage).toBe(1); // Can't go beyond page 1
-  });
-
-  it('should calculate total pages correctly', () => {
-    // 95 total, 10 per page = 10 pages (ceiling)
-    const state = paginationSlice.reducer(
-      {currentPage: 9, pageSize: 10, totalCount: 95},
-      nextPage()
-    );
-
-    expect(state.currentPage).toBe(10);
-  });
-});
-
-describe('paginationSlice: previousPage', () => {
-  it('should decrement current page when not on first page', () => {
-    const state = paginationSlice.reducer(
-      {currentPage: 3, pageSize: 10, totalCount: 100},
-      previousPage()
-    );
-
-    expect(state.currentPage).toBe(2);
-  });
-
-  it('should not go below page 1', () => {
-    const state = paginationSlice.reducer(
-      {currentPage: 1, pageSize: 10, totalCount: 100},
-      previousPage()
-    );
-
-    expect(state.currentPage).toBe(1);
-  });
-
-  it('should work when on page 2', () => {
-    const state = paginationSlice.reducer(
-      {currentPage: 2, pageSize: 10, totalCount: 100},
-      previousPage()
-    );
-
-    expect(state.currentPage).toBe(1);
-  });
-});
-
-describe('paginationSlice: resetToFirstPage', () => {
-  it('should reset to page 1', () => {
-    const state = paginationSlice.reducer(
-      {currentPage: 5, pageSize: 10, totalCount: 100},
-      resetToFirstPage()
-    );
-
-    expect(state.currentPage).toBe(1);
-  });
-
-  it('should not affect other fields', () => {
-    const state = paginationSlice.reducer(
-      {currentPage: 10, pageSize: 25, totalCount: 200},
-      resetToFirstPage()
-    );
-
-    expect(state.currentPage).toBe(1);
-    expect(state.pageSize).toBe(25);
-    expect(state.totalCount).toBe(200);
-  });
-
-  it('should work when already on first page', () => {
-    const state = paginationSlice.reducer(
-      initialPaginationState,
-      resetToFirstPage()
-    );
-
-    expect(state.currentPage).toBe(1);
-  });
-});
-
-describe('paginationSlice: pagination flow', () => {
-  it('should handle sequential navigation', () => {
-    let state = {currentPage: 1, pageSize: 10, totalCount: 100};
-
-    // Go to page 5
-    state = paginationSlice.reducer(state, setPage(5));
-    expect(state.currentPage).toBe(5);
-
-    // Next page
-    state = paginationSlice.reducer(state, nextPage());
-    expect(state.currentPage).toBe(6);
-
-    // Previous page
-    state = paginationSlice.reducer(state, previousPage());
-    expect(state.currentPage).toBe(5);
-
-    // Reset
-    state = paginationSlice.reducer(state, resetToFirstPage());
-    expect(state.currentPage).toBe(1);
-  });
-
-  it('should handle page size change flow', () => {
-    let state = {currentPage: 5, pageSize: 10, totalCount: 100};
-
-    // Change page size (should reset to page 1)
-    state = paginationSlice.reducer(state, setPageSize(25));
-    expect(state.currentPage).toBe(1);
-    expect(state.pageSize).toBe(25);
-
-    // Go to page 2
-    state = paginationSlice.reducer(state, setPage(2));
-    expect(state.currentPage).toBe(2);
-  });
-});
-
-describe('paginationSlice: state immutability', () => {
-  it('should not mutate original state for any action', () => {
-    const original = {...initialPaginationState};
-
-    paginationSlice.reducer(original, setPage(5));
-    expect(original.currentPage).toBe(1);
-
-    paginationSlice.reducer(original, setPageSize(20));
-    expect(original.pageSize).toBe(10);
-
-    paginationSlice.reducer(original, nextPage());
-    expect(original.currentPage).toBe(1);
+    expect(a).not.toBe(b);
   });
 });

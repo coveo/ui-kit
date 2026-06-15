@@ -1,13 +1,18 @@
 import {State} from '@/src/core/interface/engine/engine-types.js';
 import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
-import {initialPaginationState} from '@/src/core/internal/pagination/pagination-slice.js';
+import {
+  initialPaginationState,
+  type PaginationState,
+} from '@/src/core/internal/pagination/pagination-slice.js';
 
 const getPaginationState = (state: State) =>
-  state.pagination ?? initialPaginationState;
+  ((state as Record<string, unknown>)[
+    'default/pagination'
+  ] as PaginationState) ?? initialPaginationState;
 
-export const getCurrentPage = createMemoizedStateSelector(
+export const getFirstResult = createMemoizedStateSelector(
   getPaginationState,
-  (pagination) => pagination.currentPage
+  (pagination) => pagination.firstResult
 );
 
 export const getPageSize = createMemoizedStateSelector(
@@ -15,31 +20,7 @@ export const getPageSize = createMemoizedStateSelector(
   (pagination) => pagination.pageSize
 );
 
-export const getFirstResult = createMemoizedStateSelector(
-  getCurrentPage,
-  getPageSize,
-  (currentPage, pageSize) => (currentPage - 1) * pageSize
-);
-
 export const getTotalCount = createMemoizedStateSelector(
   getPaginationState,
   (pagination) => pagination.totalCount
-);
-
-export const getTotalPages = createMemoizedStateSelector(
-  getPaginationState,
-  (pagination) => {
-    return Math.ceil(pagination.totalCount / pagination.pageSize);
-  }
-);
-
-export const getIsFirstPage = createMemoizedStateSelector(
-  getPaginationState,
-  (pagination) => pagination.currentPage === 1
-);
-
-export const getIsLastPage = createMemoizedStateSelector(
-  getPaginationState,
-  getTotalPages,
-  (pagination, total) => pagination.currentPage === total
 );

@@ -6,35 +6,37 @@ import {
   setStreamingConnected,
 } from './conversation-endpoint-mutators.js';
 
+const TEST_ID = 'test';
+
 describe('conversation endpoint mutators', () => {
   it('setStatus returns expected mutation', () => {
-    expect(setStatus('streaming')).toEqual({
-      type: 'conversationEndpoint/setStatus',
+    expect(setStatus('streaming', TEST_ID)).toEqual({
+      type: `${TEST_ID}/conversationEndpoint/setStatus`,
       payload: 'streaming',
     });
   });
 
   it('setError returns expected mutation', () => {
-    expect(setError('boom')).toEqual({
-      type: 'conversationEndpoint/setError',
+    expect(setError('boom', TEST_ID)).toEqual({
+      type: `${TEST_ID}/conversationEndpoint/setError`,
       payload: 'boom',
     });
-    expect(setError(null)).toEqual({
-      type: 'conversationEndpoint/setError',
+    expect(setError(null, TEST_ID)).toEqual({
+      type: `${TEST_ID}/conversationEndpoint/setError`,
       payload: null,
     });
   });
 
   it('setConfiguration returns expected mutation', () => {
-    expect(setConfiguration({language: 'en'})).toEqual({
-      type: 'conversationEndpoint/setConfiguration',
+    expect(setConfiguration({language: 'en'}, TEST_ID)).toEqual({
+      type: `${TEST_ID}/conversationEndpoint/setConfiguration`,
       payload: {language: 'en'},
     });
   });
 
   it('setStreamingConnected returns expected mutation', () => {
-    expect(setStreamingConnected(true)).toEqual({
-      type: 'conversationEndpoint/setStreamingConnected',
+    expect(setStreamingConnected(true, TEST_ID)).toEqual({
+      type: `${TEST_ID}/conversationEndpoint/setStreamingConnected`,
       payload: true,
     });
   });

@@ -4,8 +4,8 @@ import {buildSearchEndpointRequest} from './search-endpoint-selectors.js';
 describe('buildSearchEndpointRequest', () => {
   it('builds request from state', () => {
     const state = {
-      searchBox: {query: 'hello'},
-      pagination: {currentPage: 2, pageSize: 20, totalCount: 100},
+      'default/searchBox': {query: 'hello'},
+      'default/pagination': {firstResult: 20, pageSize: 20, totalCount: 100},
       facets: {},
     };
 
@@ -21,8 +21,8 @@ describe('buildSearchEndpointRequest', () => {
 
   it('includes facets when present', () => {
     const state = {
-      searchBox: {query: ''},
-      pagination: {currentPage: 1, pageSize: 10, totalCount: 0},
+      'default/searchBox': {query: ''},
+      'default/pagination': {firstResult: 0, pageSize: 10, totalCount: 0},
       facets: {
         category: {
           id: 'category',

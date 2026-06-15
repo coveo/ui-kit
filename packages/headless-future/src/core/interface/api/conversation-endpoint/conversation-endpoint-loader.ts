@@ -1,20 +1,27 @@
-import {conversationEndpointSlice} from '@/src/core/internal/api/conversation-endpoint/conversation-endpoint-slice.js';
+import {getOrCreateConversationEndpointSlice} from '@/src/core/internal/api/conversation-endpoint/conversation-endpoint-slice.js';
 import {getEndpointContributorRegistry} from '@/src/core/internal/api/base-facade/endpoint-contributor-registry.js';
 import {conversationEndpointKey} from '@/src/core/internal/api/base-facade/endpoint-keys.js';
 import {readConversationRequestDefaults} from '@/src/core/internal/configuration/configuration-reader.js';
 import {FullEngine} from '@/src/core/interface/engine/engine.js';
 
-const conversationEndpointLoadedEngines = new WeakSet<FullEngine>();
+const conversationEndpointLoadedKeys = new WeakMap<FullEngine, Set<string>>();
 
-export const loadConversationEndpoint = (engine: FullEngine) => {
-  if (conversationEndpointLoadedEngines.has(engine)) {
+export const loadConversationEndpoint = (
+  engine: FullEngine,
+  interfaceId: string = 'default'
+) => {
+  if (!conversationEndpointLoadedKeys.has(engine)) {
+    conversationEndpointLoadedKeys.set(engine, new Set());
+  }
+
+  const loadedIds = conversationEndpointLoadedKeys.get(engine)!;
+  if (loadedIds.has(interfaceId)) {
     return;
   }
 
-  engine.adoptSlice(conversationEndpointSlice);
-
+  engine.adoptSlice(getOrCreateConversationEndpointSlice(interfaceId));
   registerDefaultRequestContributors(engine);
-  conversationEndpointLoadedEngines.add(engine);
+  loadedIds.add(interfaceId);
 };
 
 const registerDefaultRequestContributors = (engine: FullEngine) => {

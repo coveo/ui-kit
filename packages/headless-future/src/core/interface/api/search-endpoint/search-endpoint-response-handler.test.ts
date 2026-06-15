@@ -27,16 +27,19 @@ describe('handleSearchEndpointResponse', () => {
     expect(engine.mutate).toHaveBeenCalledTimes(3);
     expect(engine.mutate).toHaveBeenCalledWith(
       expect.objectContaining({
-        type: 'results/setResultsFromResponse',
+        type: 'default/results/setResultsFromResponse',
         payload: response.results,
       })
     );
     expect(engine.mutate).toHaveBeenCalledWith(
-      expect.objectContaining({type: 'pagination/setTotalCount', payload: 42})
+      expect.objectContaining({
+        type: 'default/pagination/setTotalCount',
+        payload: 42,
+      })
     );
     expect(engine.mutate).toHaveBeenCalledWith(
       expect.objectContaining({
-        type: 'facets/updateFromResponse',
+        type: 'default/facets/updateFromResponse',
         payload: response.facets,
       })
     );

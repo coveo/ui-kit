@@ -7,6 +7,8 @@ import {
 import {loadConversation} from '@/src/core/interface/conversation/conversation-loader.js';
 import {ConversationEndpointFacade} from './conversation-endpoint-facade.js';
 
+const TEST_ID = 'test';
+
 const mockClientCall = vi.fn();
 
 vi.mock(
@@ -54,7 +56,7 @@ const createMockEngine = (): MockEngine => {
         },
       ],
     },
-    conversation: {
+    [`${TEST_ID}/conversation`]: {
       messages: [
         {
           id: 'user-message-1',
@@ -130,7 +132,7 @@ describe('ConversationEndpointFacade', () => {
 
   it('composes base request from state and passes configuration to the client', async () => {
     const engine = createMockEngine();
-    loadConversation(engine);
+    loadConversation(engine, TEST_ID);
     engine.getNavigatorContextProvider.mockReturnValue(() => ({
       clientId: 'client-123',
       location: 'https://example.com/page',
@@ -206,7 +208,7 @@ describe('ConversationEndpointFacade', () => {
 
   it('continues without navigator context provider and without session values', async () => {
     const engine = createMockEngine();
-    loadConversation(engine);
+    loadConversation(engine, TEST_ID);
     engine.getNavigatorContextProvider.mockReturnValue(undefined);
     engine.read.mockImplementation((selector) =>
       selector({
@@ -222,7 +224,7 @@ describe('ConversationEndpointFacade', () => {
         cart: {
           items: [],
         },
-        conversation: {
+        [`${TEST_ID}/conversation`]: {
           messages: [
             {
               id: 'user-message-1',
@@ -326,19 +328,19 @@ describe('ConversationEndpointFacade', () => {
     await facade.callEndpoint();
 
     expect(engine.mutate).toHaveBeenCalledWith({
-      type: 'conversationEndpoint/setStatus',
+      type: 'default/conversationEndpoint/setStatus',
       payload: 'pending',
     });
     expect(engine.mutate).toHaveBeenCalledWith({
-      type: 'conversationEndpoint/setError',
+      type: 'default/conversationEndpoint/setError',
       payload: null,
     });
     expect(engine.mutate).not.toHaveBeenCalledWith({
-      type: 'conversationEndpoint/setStatus',
+      type: 'default/conversationEndpoint/setStatus',
       payload: 'streaming',
     });
     expect(engine.mutate).not.toHaveBeenCalledWith({
-      type: 'conversationEndpoint/setStreamingConnected',
+      type: 'default/conversationEndpoint/setStreamingConnected',
       payload: true,
     });
   });
@@ -354,15 +356,15 @@ describe('ConversationEndpointFacade', () => {
     await facade.callEndpoint();
 
     expect(engine.mutate).toHaveBeenCalledWith({
-      type: 'conversationEndpoint/setError',
+      type: 'default/conversationEndpoint/setError',
       payload: 'network down',
     });
     expect(engine.mutate).toHaveBeenCalledWith({
-      type: 'conversationEndpoint/setStatus',
+      type: 'default/conversationEndpoint/setStatus',
       payload: 'idle',
     });
     expect(engine.mutate).toHaveBeenCalledWith({
-      type: 'conversationEndpoint/setStreamingConnected',
+      type: 'default/conversationEndpoint/setStreamingConnected',
       payload: false,
     });
   });
@@ -379,15 +381,15 @@ describe('ConversationEndpointFacade', () => {
       error: 'unexpected boom',
     });
     expect(engine.mutate).toHaveBeenCalledWith({
-      type: 'conversationEndpoint/setError',
+      type: 'default/conversationEndpoint/setError',
       payload: 'unexpected boom',
     });
     expect(engine.mutate).toHaveBeenCalledWith({
-      type: 'conversationEndpoint/setStatus',
+      type: 'default/conversationEndpoint/setStatus',
       payload: 'idle',
     });
     expect(engine.mutate).toHaveBeenCalledWith({
-      type: 'conversationEndpoint/setStreamingConnected',
+      type: 'default/conversationEndpoint/setStreamingConnected',
       payload: false,
     });
   });

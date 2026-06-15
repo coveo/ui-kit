@@ -1,9 +1,13 @@
 import {describe, expect, it} from 'vitest';
 import {
-  conversationSlice,
+  createConversationSlice,
   initialConversationState,
 } from './conversation-slice.js';
-import {
+import {getOrCreateConversationActions} from './conversation-actions.js';
+
+const TEST_ID = 'test';
+const conversationSlice = createConversationSlice(TEST_ID);
+const {
   abortTurn,
   appendAgentChunk,
   completeTurn,
@@ -13,7 +17,7 @@ import {
   setSession,
   setStreamingConnected,
   startTurn,
-} from './conversation-actions.js';
+} = getOrCreateConversationActions(TEST_ID);
 
 describe('conversationSlice: initialState', () => {
   it('should have the correct initial state', () => {
@@ -275,7 +279,6 @@ describe('conversationSlice: turn lifecycle', () => {
       createdAt: 200,
     };
 
-    // Start and complete first turn
     let state = conversationSlice.reducer(
       initialConversationState,
       startTurn(turn1Payload)
@@ -288,20 +291,16 @@ describe('conversationSlice: turn lifecycle', () => {
       })
     );
 
-    // Start second turn
     state = conversationSlice.reducer(state, startTurn(turn2Payload));
 
-    // Verify both turns accumulated
     expect(state.turns).toHaveLength(2);
     expect(state.messages).toHaveLength(4);
     expect(state.turns[0].status).toEqual({type: 'completed'});
     expect(state.turns[1].status).toEqual({type: 'pending'});
 
-    // Verify second turn is active
     expect(state.activeTurnId).toBe('turn-2');
     expect(state.isLoading).toBe(true);
 
-    // Verify messages belong to correct turns
     expect(state.turns[0].messageIds).toEqual(['msg-user-1', 'msg-agent-1']);
     expect(state.turns[1].messageIds).toEqual(['msg-user-2', 'msg-agent-2']);
   });

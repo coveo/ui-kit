@@ -5,10 +5,10 @@ import {configurationSlice} from '@/src/core/internal/configuration/configuratio
 import {setConfiguration} from '@/src/core/internal/configuration/configuration-actions.js';
 import type {NavigatorContextProvider} from '@/src/core/interface/navigator-context/navigator-context-types.js';
 import {
+  Dispatchable,
   EngineOptions,
   State,
   StateChangeCallback,
-  StateMutation,
   StateSelector,
   Unsubscribe,
 } from './engine-types.js';
@@ -16,7 +16,7 @@ import {
 export type FullEngine = Engine & {
   adoptSlice(slice: Slice): Promise<void>;
   getNavigatorContextProvider(): NavigatorContextProvider | undefined;
-  mutate(mutation: StateMutation): void;
+  mutate(mutation: Dispatchable): unknown;
   read<T>(selector: StateSelector<T>): T;
   subscribe<T>(
     selector: StateSelector<T>,
@@ -60,7 +60,7 @@ export class Engine {
         adoptSlice: (slice: Slice) => engine.#adoptSlice(slice),
         getNavigatorContextProvider: () =>
           engine.#getNavigatorContextProvider(),
-        mutate: (mutation: StateMutation) => engine.#mutate(mutation),
+        mutate: (mutation: Dispatchable) => engine.#mutate(mutation),
         read: <T>(selector: StateSelector<T>) => engine.#read(selector),
         subscribe: <T>(
           selector: StateSelector<T>,
@@ -101,8 +101,10 @@ export class Engine {
     return this.#navigatorContextProvider;
   }
 
-  #mutate(mutation: StateMutation): void {
-    this.#_getStore().dispatch(mutation);
+  #mutate(mutation: Dispatchable): unknown {
+    return this.#_getStore().dispatch(
+      mutation as Parameters<ReturnType<typeof configureStore>['dispatch']>[0]
+    );
   }
 
   #read<T>(selector: StateSelector<T>): T {

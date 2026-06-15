@@ -19,6 +19,7 @@ export interface State {
   results?: ResultListState;
   searchEndpoint?: SearchEndpointState;
   searchBox?: SearchBoxState;
+  [key: string]: unknown;
 }
 
 /**
@@ -44,6 +45,12 @@ export interface StateMutation {
   /** Optional mutation payload */
   payload?: unknown;
 }
+
+/**
+ * A dispatchable value — either a plain mutation or an async thunk action.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type Dispatchable = StateMutation | ((...args: any[]) => any);
 
 /**
  * Function to unsubscribe from state changes

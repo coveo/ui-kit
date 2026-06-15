@@ -1,5 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {setQuery} from './search-box-actions.js';
+import {getOrCreateSearchBoxActions} from './search-box-actions.js';
 
 export interface SearchBoxState {
   query: string;
@@ -9,16 +9,24 @@ export const initialSearchBoxState: SearchBoxState = {
   query: '',
 };
 
-export const searchBoxSlice = createSlice({
-  name: 'searchBox',
-  initialState: initialSearchBoxState,
-  reducers: {},
-  extraReducers: (builder) => {
-    builder.addCase(setQuery, (state, action) => {
-      state.query = action.payload;
-    });
-  },
-  selectors: {
-    query: (state) => state.query,
-  },
-});
+export function createSearchBoxSlice(interfaceId: string) {
+  const actions = getOrCreateSearchBoxActions(interfaceId);
+  return createSlice({
+    name: `${interfaceId}/searchBox`,
+    initialState: initialSearchBoxState,
+    reducers: {},
+    extraReducers: (builder) => {
+      builder.addCase(actions.setQuery, (state, action) => {
+        state.query = action.payload;
+      });
+    },
+  });
+}
+
+const sliceCache = new Map<string, ReturnType<typeof createSearchBoxSlice>>();
+export function getOrCreateSearchBoxSlice(interfaceId: string) {
+  if (!sliceCache.has(interfaceId)) {
+    sliceCache.set(interfaceId, createSearchBoxSlice(interfaceId));
+  }
+  return sliceCache.get(interfaceId)!;
+}
