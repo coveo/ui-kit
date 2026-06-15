@@ -27,11 +27,10 @@ export default {
     },
     'packages/headless': {
       entry: ['src/*index.ts', 'ponyfills/*.js'],
-      ignoreDependencies: ['reselect', 'node-fetch', 'jsdom'],
+      ignoreDependencies: ['reselect', 'node-fetch'],
     },
     'packages/atomic-hosted-page': {
       entry: ['src/atomic-hosted-page.esm.ts', 'dev/vite.config.ts'],
-      ignoreDependencies: ['local-web-server'],
     },
     'packages/atomic-angular': {
       ignoreDependencies: [
@@ -52,7 +51,7 @@ export default {
       ],
     },
     'packages/headless-react': {
-      ignoreDependencies: ['@types/react-dom', '@types/react', 'jsdom'],
+      ignoreDependencies: ['@types/react-dom', '@types/react'],
     },
     'packages/auth': {
       entry: ['src/auth.ts'],
@@ -67,14 +66,12 @@ export default {
     'samples/headless/commerce-react': {
       // Can be removed once the deprecated controller is removed from headless. https://coveord.atlassian.net/browse/KIT-5551
       ignore: ['src/components/legacy-field-suggestions/**'],
-      ignoreDependencies: ['jsdom'],
     },
     'samples/headless-ssr/commerce-express': {
       entry: ['src/server.ts'],
     },
     'samples/headless/search-react': {
       entry: ['server/server.tsx'],
-      ignoreDependencies: ['jsdom'],
       ignore: [
         'src/pages/AtomicReactPage.css', // TODO: Reassess if we can remove the file.
       ],
@@ -82,9 +79,7 @@ export default {
     'samples/headless-ssr/commerce-nextjs': {},
     'samples/headless-ssr/commerce-nextjs-v4': {},
     'utils/ci': {},
-    'utils/cdn': {
-      ignoreDependencies: ['local-web-server'],
-    },
+    'utils/cdn': {},
 
     // Projects to enable rule by rule.
     'packages/atomic': {
@@ -102,9 +97,6 @@ export default {
         // into section components and other web components naturally.
         'src/components/*/index.ts',
         // Test fixture utilities consumed by spec files via @/ path alias.
-        // Knip cannot resolve the @/ → ./ tsconfig path mapping, so it
-        // cannot trace spec → fixture imports. Declaring them as entry
-        // points preserves their exports from false-positive removal.
         'vitest-utils/**/*.ts',
         // Interactive a11y Storybook helpers — will be consumed by stories
         // in an upcoming PR. Knip cannot trace them yet.
@@ -122,13 +114,11 @@ export default {
         // Knip cannot trace CSS imports inside template literal strings.
         'src/**/*.css',
       ],
-      ignoreDependencies: [
-        // local-web-server provides the `ws` binary invoked as `pnpm exec ws`
-        // in playwright.config.ts webServer. Knip cannot trace CLI binary usage.
-        'local-web-server',
-      ],
     },
     'packages/atomic-legacy': {},
+    'packages/atomic-a11y': {
+      ignoreBinaries: ['gh'],
+    },
     'packages/create-atomic': {
       ignore: ['**/*'],
     },
