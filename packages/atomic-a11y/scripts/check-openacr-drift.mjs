@@ -38,15 +38,14 @@ await transformJsonToOpenAcr({
 // json-to-openacr), otherwise the comparison would flag formatting differences.
 formatWithOxfmt(GENERATED_OPENACR);
 
-// `report_date` and `last_modified_date` are regenerated to the current date on
-// every run, so a raw comparison would fail daily even with no conformance
-// change. Neutralize those volatile fields (value and quote style) before
-// comparing so the check only reacts to real conformance/coverage changes.
-const VOLATILE_FIELDS = ['report_date', 'last_modified_date'];
+const VOLATILE_PATTERNS = [
+  /^(\s*report_date:).*$/m,
+  /^(\s*last_modified_date:).*$/m,
+  /^(\s+version:).*$/m,
+];
 function normalize(yaml) {
-  return VOLATILE_FIELDS.reduce(
-    (acc, field) =>
-      acc.replace(new RegExp(`^(\\s*${field}:).*$`, 'm'), '$1 <normalized>'),
+  return VOLATILE_PATTERNS.reduce(
+    (acc, pattern) => acc.replace(pattern, '$1 <normalized>'),
     yaml
   );
 }
