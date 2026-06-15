@@ -33,3 +33,9 @@ packages/atomic/custom-elements.json
 samples/headless/headless-rga-angular/.angular
 *.tsbuildinfo
 packages/atomic/reports/
+
+# next.js
+.next/
+
+# coverage
+coverage
