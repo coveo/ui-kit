@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import meta, { Default } from './atomic-commerce-load-more-products.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
-
+import UsageContent from './atomic-commerce-load-more-products.usage.mdx';
 
 <Meta of={meta} />
 
@@ -11,28 +11,5 @@ import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-te
   tagName="atomic-commerce-load-more-products"
   className="AtomicCommerceLoadMoreProducts"
 >
-
-This component is typically placed within the "pagination" section of the layout.
-
-**Note:** Use either `atomic-commerce-load-more-products` OR `atomic-commerce-pager` for pagination, but not both. These components provide alternative pagination approaches:
-- `atomic-commerce-pager`: Provides traditional page-based navigation with numbered pages. It is often used along with the `atomic-commerce-products-per-page` component.
-- `atomic-commerce-load-more-products`: Allows users to incrementally load additional products with a "Load More" button.
-
-```html
-<atomic-commerce-interface>
-  ...
-  <atomic-commerce-layout>
-    ...
-    <atomic-layout-section section="main">
-      ...
-      <atomic-layout-section section="pagination">
-        
-        <atomic-commerce-load-more-products></atomic-commerce-load-more-products>
-
-      </atomic-layout-section>
-    </atomic-layout-section>
-  </atomic-commerce-layout>
-</atomic-commerce-interface>
-```
-
+<UsageContent />
 </AtomicDocTemplate>

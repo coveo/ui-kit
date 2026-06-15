@@ -1,0 +1,19 @@
+
+The `atomic-result-timespan` component renders a numeric result field value as a formatted duration.
+
+This component is used within `atomic-result-template` components inside the result list:
+
+```html
+<atomic-search-interface>
+  ...
+  <atomic-result-list>
+    <atomic-result-template>
+      <template>
+        <atomic-result-timespan field="duration" unit="ms"></atomic-result-timespan>
+        <atomic-result-timespan field="videolength" unit="s"></atomic-result-timespan>
+      </template>
+    </atomic-result-template>
+  </atomic-result-list>
+  ...
+</atomic-search-interface>
+```

@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import meta, { Default } from './atomic-commerce-refine-toggle.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
-
+import UsageContent from './atomic-commerce-refine-toggle.usage.mdx';
 
 <Meta of={meta} name="Docs toggle"/>
 
@@ -11,23 +11,5 @@ import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-te
   tagName="atomic-commerce-refine-toggle"
   className="AtomicCommerceRefineToggle"
 >
-
-This component is typically placed within the "status" section of the layout.
-```html
-<atomic-commerce-interface>
-  ...
-  <atomic-commerce-layout>
-    ...
-    <atomic-layout-section section="main">
-      ...
-     <atomic-layout-section section="status">
-
-       <atomic-commerce-refine-toggle></atomic-commerce-refine-toggle>
-
-      </atomic-layout-section>
-    </atomic-layout-section>
-  </atomic-commerce-layout>
-</atomic-commerce-interface>
-```
-
+<UsageContent />
 </AtomicDocTemplate>

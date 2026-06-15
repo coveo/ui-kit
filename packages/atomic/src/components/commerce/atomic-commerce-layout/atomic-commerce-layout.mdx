@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import meta, { Default } from './atomic-commerce-layout.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
-
+import UsageContent from './atomic-commerce-layout.usage.mdx';
 
 <Meta of={meta} />
 
@@ -11,16 +11,5 @@ import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-te
   tagName="atomic-commerce-layout"
   className="AtomicCommerceLayout"
 >
-
-This component organizes the commerce page layout. 
-Use `atomic-layout-section` to define the different sections of the page, such as **search**, **facets**, and **main**.
-
-```html
-<atomic-commerce-layout>
-  <atomic-layout-section section="search"></atomic-layout-section>
-  <atomic-layout-section section="facets"></atomic-layout-section>
-  <atomic-layout-section section="main"></atomic-layout-section>
-</atomic-commerce-layout>
-```
-
+<UsageContent />
 </AtomicDocTemplate>

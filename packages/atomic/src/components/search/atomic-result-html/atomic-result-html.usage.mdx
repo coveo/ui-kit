@@ -1,0 +1,13 @@
+
+This component is typically used within result templates to display HTML content from result fields:
+
+**Important:** This component must be a child of an `atomic-result` element or any result-related element to function properly.
+
+```html
+<atomic-result-template>
+  <template>
+    <atomic-result-html field="title"></atomic-result-html>
+    <atomic-result-html field="excerpt" sanitize="false"></atomic-result-html>
+  </template>
+</atomic-result-template>
+```

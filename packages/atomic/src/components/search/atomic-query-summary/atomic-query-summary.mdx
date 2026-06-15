@@ -1,6 +1,7 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import meta, { Default } from './atomic-query-summary.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+import UsageContent from './atomic-query-summary.usage.mdx';
 
 <Meta of={meta} />
 
@@ -10,25 +11,5 @@ import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-te
   tagName="atomic-query-summary"
   className="AtomicQuerySummary"
 >
-
-This component is typically placed within the "status" section of the layout.
-
-```html
-<atomic-search-interface>
-  ...
-  <atomic-search-layout>
-    ...
-    <atomic-layout-section section="main">
-      ...
-      <atomic-layout-section section="status">
-
-        <atomic-query-summary></atomic-query-summary>
-        
-      </atomic-layout-section>
-      ...
-    </atomic-layout-section>
-  </atomic-search-layout>
-</atomic-search-interface>
-```
-
+  <UsageContent />
 </AtomicDocTemplate>

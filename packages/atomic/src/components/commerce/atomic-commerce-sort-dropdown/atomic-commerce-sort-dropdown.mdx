@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import meta, { Default } from './atomic-commerce-sort-dropdown.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
-
+import UsageContent from './atomic-commerce-sort-dropdown.usage.mdx';
 
 <Meta of={meta} />
 
@@ -11,23 +11,5 @@ import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-te
   tagName="atomic-commerce-sort-dropdown"
   className="AtomicCommerceSortDropdown"
 >
-
-This component is typically placed within the "status" section of the layout.
-
-```html
-<atomic-commerce-interface>
-  ...
-  <atomic-commerce-layout>
-    ...
-    <atomic-layout-section section="main">
-      ...
-      <atomic-layout-section section="status">
-
-        <atomic-commerce-sort-dropdown></atomic-commerce-sort-dropdown>
-
-      </atomic-layout-section>
-    </atomic-layout-section>
-  </atomic-commerce-layout>
-</atomic-commerce-interface>
-```
+<UsageContent />
 </AtomicDocTemplate>

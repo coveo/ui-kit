@@ -1,0 +1,23 @@
+
+This component should not be used directly. It is internally used by the `atomic-quickview` component to display the document preview modal.
+To use the quickview modal, you should use the `atomic-quickview` component instead. It usually is placed within a result template.
+```html
+<atomic-search-interface>
+  ...
+  <atomic-result-list>
+    <atomic-result-template>
+      <template>
+        <atomic-result-section-visual>
+          <atomic-quickview></atomic-quickview>
+        </atomic-result-section-visual>
+      </template>
+    </atomic-result-template>
+  </atomic-result-list>
+</atomic-search-interface>
+```
+
+## Related Components
+
+- `atomic-quickview`: The button that opens the quickview modal
+- `atomic-result-list`: The list component that contains results with quickview buttons
+- `atomic-result-template`: Template for customizing result display including quickview placement
