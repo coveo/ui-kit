@@ -1,8 +1,8 @@
 import type {
   DidYouMean,
+  DidYouMeanOptions,
   DidYouMeanState,
 } from '../../../../controllers/commerce/search/did-you-mean/headless-did-you-mean.js';
-import type {DidYouMeanOptions} from '../../../../controllers/commerce/search/did-you-mean/headless-did-you-mean.js';
 import {buildSearch} from '../../../../controllers/commerce/search/headless-search.js';
 import type {SearchOnlyControllerDefinitionWithoutProps} from '../../types/controller-definitions.js';
 
