@@ -105,13 +105,13 @@ Automated tests can't cover every WCAG criterion. For the rest, record results p
        "2.4.7-focus-visible": "pass",
        "1.4.3-contrast-minimum": {
          "conformance": "fail",
-         "remarks": "Chrome 124, dark theme: focus ring 2.1:1 vs surface (needs 3:1). Repro: Tab to a facet checkbox."
+         "remarks": "Facet checkbox focus rings do not meet the 3:1 contrast minimum against the surrounding surface, so the focused control is hard to see for low-vision users."
        }
      }
    }
    ```
 
-   - Result is `pass` | `fail` | `partial` | `not-applicable`, or `{conformance, remarks}` to add a note (the remark shows in the VPAT). Put the **AT + browser** you used and a **repro for any fail** in `remarks`.
+   - Result is `pass` | `fail` | `partial` | `not-applicable`, or `{conformance, remarks}` to add a note (the remark becomes the ACR's _Remarks and Explanations_ text). Write remarks as plain-language ACR notes — what/where/impact in 1–3 sentences; keep selectors, code, ticket IDs, and repro out of them (those go in the linked ticket; AT/browser/OS go in the report's evaluation methods). See [Writing ACR-grade remarks](docs/manual-audit-guide.md#writing-acr-grade-remarks).
    - Key is `{wcag-id}-{slug}`; the id must be a real WCAG 2.2 A/AA criterion. List only what you tested — omitted criteria stay _Does Not Support [manual audit required]_.
 
 3. **Run `pnpm a11y:vpat`** — regenerates the VPAT and warns on invalid keys.

@@ -53,16 +53,42 @@ Keys follow `{numeric-id}-{slug}`. Only the numeric id is parsed (regex `/^(\d+(
 
 ### Result values
 
-| Value            | OpenACR Conformance | Meaning                                      |
-| ---------------- | ------------------- | -------------------------------------------- |
-| `pass`           | Supports            | The surface meets this criterion.            |
-| `fail`           | Does Not Support    | The surface fails this criterion.            |
-| `partial`        | Partially Supports  | Met in some scenarios but not all.           |
-| `not-applicable` | Not Applicable      | The criterion doesn't apply to this surface. |
+| Value            | OpenACR Conformance | Meaning (ITI / Section 508 definition)                         | Remark       |
+| ---------------- | ------------------- | -------------------------------------------------------------- | ------------ |
+| `pass`           | Supports            | At least one method meets the criterion with no known defects. | Encouraged   |
+| `partial`        | Partially Supports  | Some functionality meets the criterion; some does not.         | **Required** |
+| `fail`           | Does Not Support    | The majority of functionality does not meet the criterion.     | **Required** |
+| `not-applicable` | Not Applicable      | The criterion is not relevant to the surface.                  | Brief reason |
 
-Use the object form `{ "conformance", "remarks" }` to document _why_; the remark is carried into the VPAT notes. **List only the criteria you tested** — omitted criteria stay _Does Not Support [manual audit required]_ until audited.
+Use the object form `{ "conformance", "remarks" }` to add a remark; it becomes the criterion's **Remarks and Explanations** text in the VPAT/ACR. **List only the criteria you tested** — omitted criteria stay _Does Not Support [manual audit required]_ until audited.
 
-Put the **test conditions in `remarks`**: the assistive tech + version and browser you used for any criterion that depends on them (screen readers, focus, name/role/value), and a short **repro** for every `fail`/`partial`. A bare `pass` is fine for clearly-visual checks; an AT-dependent `pass`/`fail` without conditions isn't verifiable.
+Remarks are read by procurement, legal, and accessibility reviewers — not engineers. Write them to the ACR standard described in [Writing ACR-grade remarks](#writing-acr-grade-remarks).
+
+### Writing ACR-grade remarks
+
+The `remarks` field is the customer-facing **Remarks and Explanations** column of the Accessibility Conformance Report (ACR). Per the [ITI VPAT instructions](https://www.itic.org/policy/accessibility/vpat) and [Section 508 guidance](https://www.section508.gov/sell/how-to-create-acr-with-vpat/), a remark is **required** for `partial` and `fail`, **encouraged** for `pass`, and a **brief reason** for `not-applicable`.
+
+A good remark answers three questions in **1–3 plain-language sentences**:
+
+1. **What** does the surface do, or fail to do, for this criterion?
+2. **Where** does it occur — in user-facing terms (which surface / feature)?
+3. For `fail` / `partial`, **what is the impact** on the user?
+
+Rules:
+
+- **Write for a non-technical reader.** A procurement or legal reviewer must understand it without opening the product or reading code.
+- **Keep bug-ticket detail out of the remark.** Element selectors, code identifiers (e.g. "scope property undefined"), internal ticket IDs (e.g. `KIT-5811`), step-by-step repro, and severity belong in the linked defect/PR — not the ACR. Rule of thumb: _if it reads like a bug ticket it's too detailed; if it reads like marketing ("fully accessible") it's not detailed enough._
+- **Record test method and environment once, at the report level.** The assistive tech + versions, browsers, OS, and tools used belong in the report's evaluation methods (`evaluation_methods_used`) and the PR description — not repeated in every remark.
+- **Be honest and specific.** Disclose known issues even without a fix date ("under review" / "prioritized for an upcoming release"). Don't reuse identical boilerplate across criteria — reviewers read that as a non-rigorous evaluation and reject the ACR.
+
+Examples:
+
+- **Supports** — `Headings follow a logical hierarchy, and facet, sort, and pager controls have descriptive labels across the search interface.`
+- **Partially Supports** — `Most interactive controls show a visible focus indicator; facet checkboxes in the refine modal do not, so keyboard users can lose track of focus there.`
+- **Does Not Support** — `When the refine modal is open, keyboard focus can move to a control hidden behind the modal, so a keyboard user cannot see what is focused.`
+- **Not Applicable** — `The search interface contains no prerecorded audio or video content.`
+
+Too detailed (belongs in the ticket, not the ACR): `Refine-modal atomic-modal focus trap inactive — scope property undefined at runtime (KIT-5811); focus escapes to elements behind the backdrop.`
 
 ## How conformance is resolved
 
@@ -112,9 +138,10 @@ Paste this into the description of any manual-audit PR so a reviewer can trust t
 - **Method:** keyboard / screen reader / zoom-reflow / visual (delete what doesn't apply)
 - **Environment:** <e.g. NVDA 2024.1 + Chrome 124; VoiceOver + Safari 17; macOS 14>
 - **Criteria audited:** <list the WCAG ids, e.g. 1.3.1, 2.1.1, 4.1.2>
-- **Fails/partials:** repro steps captured in each criterion's `remarks`
-- [ ] `pnpm a11y:vpat` run; no "Unknown WCAG criterion" warnings
-- [ ] AT + browser recorded in `remarks` for AT-dependent criteria
+- **Fails/partials:** cause + repro recorded in the linked ticket (not in the ACR remark)
+- [ ] `pnpm exec turbo run a11y:vpat --filter=@coveo/atomic-a11y` run; no "Unknown WCAG criterion" warnings
+- [ ] Remarks are plain-language ACR notes (status / behavior / location / impact) — no selectors, code, ticket IDs, or repro steps
+- [ ] Test environment (AT + versions, browser, OS) recorded above
 - [ ] Reviewed by an accessibility owner
 ```
 
