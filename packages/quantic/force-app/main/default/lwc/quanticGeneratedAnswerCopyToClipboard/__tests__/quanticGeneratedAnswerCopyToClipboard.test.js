@@ -34,6 +34,7 @@ const selectors = {
 
 const defaultOptions = {
   answer: 'Example generated answer',
+  answerId: 'example-answer-id',
   size: defaultSize,
 };
 
@@ -109,7 +110,7 @@ describe('c-quantic-generated-answer-copy-to-clipboard', () => {
     expect(copyButton.iconSize).toBe(defaultSize);
   });
 
-  it('should copy the answer and dispatch the #quantic__generatedanswercopy event', async () => {
+  it('should copy the answer and dispatch the #quantic__generatedanswercopy event with the answerId ', async () => {
     const element = createTestComponent();
     const handler = jest.fn();
     element.addEventListener('quantic__generatedanswercopy', handler);
@@ -121,5 +122,8 @@ describe('c-quantic-generated-answer-copy-to-clipboard', () => {
 
     expect(copyToClipboard).toHaveBeenCalledWith(defaultOptions.answer);
     expect(handler).toHaveBeenCalledTimes(1);
+    expect(handler.mock.calls[0][0].detail).toEqual({
+      answerId: defaultOptions.answerId,
+    });
   });
 });
