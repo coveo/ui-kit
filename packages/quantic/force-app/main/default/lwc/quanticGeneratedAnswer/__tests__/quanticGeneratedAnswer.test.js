@@ -22,6 +22,8 @@ const exampleCitations = [
     uri: 'https://example.com/2',
   },
 ];
+const exampleEngineId = 'example engine id';
+const exampleAnswerId = 'example answer id';
 jest.mock('c/quanticHeadlessLoader');
 jest.mock('c/quanticUtils', () => ({
   AriaLiveRegion: jest.fn(() => ({
@@ -50,6 +52,7 @@ jest.mock(
 
 /** @type {Object} */
 const defaultOptions = {
+  engineId: exampleEngineId,
   fieldsToIncludeInCitations: 'sfid,sfkbid,sfkavid,filetype',
   answerConfigurationId: undefined,
   withToggle: false,
@@ -348,6 +351,7 @@ describe('c-quantic-generated-answer', () => {
           isStreaming: true,
           answer: exampleAnswer,
           answerContentFormat: exampleAnswerContentFormat,
+          answerId: exampleAnswerId,
         };
         mockSuccessfulHeadlessInitialization();
         prepareHeadlessState();
@@ -461,6 +465,8 @@ describe('c-quantic-generated-answer', () => {
         expect(generatedAnswerContent.answerContentFormat).toBe(
           exampleAnswerContentFormat
         );
+        expect(generatedAnswerContent.engineId).toBe(exampleEngineId);
+        expect(generatedAnswerContent.answerId).toBe(exampleAnswerId);
       });
 
       it('should not display the generated answer actions', async () => {

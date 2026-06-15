@@ -3,6 +3,10 @@
   "tasks": {
     "build": {
       "outputs": ["dist/**"]
+    },
+    "a11y:vpat-pdf": {
+      "dependsOn": ["build", "@coveo/atomic#build:cdn"],
+      "outputs": []
     }
   }
 }

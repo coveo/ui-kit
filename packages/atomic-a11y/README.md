@@ -50,19 +50,76 @@ pnpm build                # Generate WCAG data + compile TypeScript
 pnpm test                 # Run unit tests
 pnpm a11y:merge-shards    # Merge shard reports from parallel CI runs
 pnpm a11y:vpat            # Generate OpenACR YAML + VPAT markdown
+pnpm a11y:vpat-pdf        # Generate VPAT PDF for CDN (reads committed openacr.yaml)
+pnpm a11y:update-openacr  # Download a11y report from CI and regenerate openacr.yaml
 ```
 
-## Manual audits
+## Updating openacr.yaml
 
-Automated testing covers ~30-40% of WCAG criteria. The rest requires human review. QA creates JSON baseline files that feed into the OpenACR pipeline alongside automated results.
+The file `reports/openacr.yaml` is committed to the repo and represents the current WCAG conformance baseline. A CI check compares the committed version against what the latest test results would produce. If they differ, the CI fails.
 
-**→ [Manual Audit Guide](docs/manual-audit-guide.md)**
+**Why?** This ensures conformance changes are explicit and reviewed. If a PR introduces a new axe-core violation or fixes one, the openacr will drift and the check catches it.
 
-## Accessibility strategy
+**How to fix a failing check:**
 
-WCAG 2.2 A/AA criteria with no automated, interactive, or manual coverage are emitted as **Does Not Support** with a `[Manual audit required]` remark in the OpenACR/VPAT output. Contributors can mark criteria as `not-applicable` in `a11y/a11y-overrides.json` for criteria that genuinely do not apply, or provide manual audit results in `a11y/reports/manual-audit-*.json` as components are reviewed. This prevents blanket CI failures and allows teams to address accessibility debt incrementally.
+You have two options:
 
-**→ See [WCAG Rule Blacklist Strategy](docs/manual-audit-guide.md#wcag-rule-blacklist-strategy) for contributor workflow**
+### Option 1: Download from CI (recommended)
+
+This avoids running the full Storybook test suite locally. The CI already ran the tests and produced the report — you just download it:
+
+```bash
+pnpm --filter @coveo/atomic-a11y a11y:update-openacr --run-id=<RUN_ID>
+```
+
+Replace `<RUN_ID>` with the GitHub Actions run ID from the failing check (shown in the error message). This uses the `gh` CLI to download the `a11y-report.json` artifact and regenerates `openacr.yaml`.
+
+> Requires the [GitHub CLI](https://cli.github.com/) (`gh`) to be installed and authenticated.
+
+### Option 2: Run tests locally
+
+If you prefer to regenerate from scratch:
+
+```bash
+cd packages/atomic
+pnpm test:storybook          # generates a11y-report.json in packages/atomic/reports/
+cd ../atomic-a11y
+pnpm a11y:vpat               # regenerates openacr.yaml from the report
+```
+
+---
+
+After either option, review the changes to `reports/openacr.yaml` and commit the updated file. The diff shows which WCAG criteria changed conformance level — make sure the changes are intentional.
+
+## Manual audits (QA)
+
+Automated tests can't cover every WCAG criterion. For the rest, record results per **surface** — an experience audited as a whole (search, commerce, insight, …), not per component.
+
+1. **Open or create the surface file** — `a11y/reports/manual-audit-{surface}.json`. The `{surface}` label is just how you split the work into manageable files; the VPAT doesn't attach meaning to it.
+2. **Add the rules you tested** as `criterion → result`:
+
+   ```json
+   {
+     "surface": "commerce",
+     "wcag22Criteria": {
+       "2.4.7-focus-visible": "pass",
+       "1.4.3-contrast-minimum": {
+         "conformance": "fail",
+         "remarks": "Chrome 124, dark theme: focus ring 2.1:1 vs surface (needs 3:1). Repro: Tab to a facet checkbox."
+       }
+     }
+   }
+   ```
+
+   - Result is `pass` | `fail` | `partial` | `not-applicable`, or `{conformance, remarks}` to add a note (the remark shows in the VPAT). Put the **AT + browser** you used and a **repro for any fail** in `remarks`.
+   - Key is `{wcag-id}-{slug}`; the id must be a real WCAG 2.2 A/AA criterion. List only what you tested — omitted criteria stay _Does Not Support [manual audit required]_.
+
+3. **Run `pnpm a11y:vpat`** — regenerates the VPAT and warns on invalid keys.
+4. **Open a PR** using the [manual-audit PR checklist](docs/manual-audit-guide.md#pr-checklist) (method, environment, criteria audited) and commit the file + regenerated VPAT.
+
+Each criterion's VPAT verdict is the **worst** result across all surface files plus the automated and interactive signals (`fail > partial > pass > not-applicable`). So a manual `fail` surfaces even if axe was clean, and a manual `pass` can't hide a real axe violation. For permanent, by-design exceptions, use `a11y/a11y-overrides.json` (authoritative — it wins outright).
+
+Full reference: [Manual Audit Guide](docs/manual-audit-guide.md).
 
 ## Structure
 

@@ -121,7 +121,13 @@ export async function transformJsonToOpenAcr(
   const manualAggregates = await loadManualAuditData(manualAuditDir);
 
   const openAcrReport = buildOpenAcrReport(report, overrides, manualAggregates);
-  const serialized = stringify(openAcrReport, {version: '1.1'});
+  // `singleQuote: true` keeps the output consistent with the committed
+  // openacr.yaml baseline (single-quoted scalars), so regenerating produces a
+  // minimal diff limited to real conformance changes rather than quote churn.
+  const serialized = stringify(openAcrReport, {
+    version: '1.1',
+    singleQuote: true,
+  });
 
   await mkdir(path.dirname(outputFile), {recursive: true});
   await writeFile(outputFile, serialized, 'utf8');

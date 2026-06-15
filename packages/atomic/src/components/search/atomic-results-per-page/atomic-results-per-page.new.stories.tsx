@@ -2,6 +2,7 @@ import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
+import {testRadioGroupA11y} from '@/storybook-utils/a11y/radiogroup.js';
 import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
@@ -74,5 +75,14 @@ export const A11yStatusMessage: Story = {
       expectedText: 'Results loaded. Results 1-25 of 120',
       timeout: 5000,
     });
+  },
+};
+
+export const A11yRadioGroup: Story = {
+  name: 'A11y Radio Group',
+  tags: ['a11y', 'test', '!dev'],
+  play: async (context) => {
+    await play(context);
+    await testRadioGroupA11y(context);
   },
 };
