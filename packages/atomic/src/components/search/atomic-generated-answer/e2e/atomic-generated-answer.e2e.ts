@@ -344,101 +344,114 @@ test.describe('atomic-generated-answer', () => {
   test.describe('search agent follow-up experience', () => {
     const streamingTimeoutMs = 15000;
 
-    test.beforeEach(async ({generatedAnswer}) => {
-      await generatedAnswer.load({story: 'with-agent-id'});
-      await expect(generatedAnswer.followUpSubmitButton).toBeEnabled({
-        timeout: streamingTimeoutMs,
+    test.describe('while streaming', () => {
+      test('should disable the follow-up submit button', async ({
+        generatedAnswer,
+      }) => {
+        await generatedAnswer.load({story: 'with-agent-id'});
+        await expect(generatedAnswer.followUpSubmitButton).toBeDisabled({
+          timeout: streamingTimeoutMs,
+        });
       });
     });
 
-    test('should render a second thread item after submitting a follow-up question', async ({
-      generatedAnswer,
-    }) => {
-      await generatedAnswer.followUpInput.fill('What else should I try?');
-      await generatedAnswer.followUpSubmitButton.click();
-
-      await expect(generatedAnswer.threadItems).toHaveCount(2, {
-        timeout: streamingTimeoutMs,
-      });
-      await expect(generatedAnswer.generatedTexts).toHaveCount(2);
-      await expect(generatedAnswer.generatedTexts.last()).toBeVisible();
-    });
-
-    test('should only show collapse controls on previous thread items, not the latest', async ({
-      generatedAnswer,
-    }) => {
-      await generatedAnswer.followUpInput.fill('What else should I try?');
-      await generatedAnswer.followUpSubmitButton.click();
-
-      await expect(generatedAnswer.threadItems).toHaveCount(2, {
-        timeout: streamingTimeoutMs,
-      });
-      await expect(
-        generatedAnswer.threadItems.first().locator('button[aria-expanded]')
-      ).toHaveCount(1);
-      await expect(
-        generatedAnswer.threadItems.last().locator('button[aria-expanded]')
-      ).toHaveCount(0);
-    });
-
-    test('should hide content when collapsing a previous thread item', async ({
-      generatedAnswer,
-    }) => {
-      await generatedAnswer.followUpInput.fill('What else should I try?');
-      await generatedAnswer.followUpSubmitButton.click();
-
-      await expect(generatedAnswer.threadItems).toHaveCount(2, {
-        timeout: streamingTimeoutMs,
+    test.describe('after streaming', () => {
+      test.beforeEach(async ({generatedAnswer}) => {
+        await generatedAnswer.load({story: 'with-agent-id'});
+        await expect(generatedAnswer.followUpSubmitButton).toBeEnabled({
+          timeout: streamingTimeoutMs,
+        });
       });
 
-      const collapseButton = generatedAnswer.threadItems
-        .first()
-        .locator('button[aria-expanded]');
+      test('should render a second thread item after submitting a follow-up question', async ({
+        generatedAnswer,
+      }) => {
+        await generatedAnswer.followUpInput.fill('What else should I try?');
+        await generatedAnswer.followUpSubmitButton.click();
 
-      await expect(collapseButton).toHaveAttribute('aria-expanded', 'false');
-      await collapseButton.click();
-      await expect(collapseButton).toHaveAttribute('aria-expanded', 'true');
-      await collapseButton.click();
-      await expect(collapseButton).toHaveAttribute('aria-expanded', 'false');
-      await expect(
-        generatedAnswer.threadItems.first().locator('[hidden]')
-      ).toHaveCount(1);
-    });
-
-    test('should send a streamEnd analytics event after receiving the generated answer', async ({
-      generatedAnswer,
-    }) => {
-      const streamEndPromise =
-        generatedAnswer.waitForStreamEndAnalyticsRequest();
-
-      await generatedAnswer.load({story: 'with-agent-id'});
-
-      const streamEndRequest = await streamEndPromise;
-      const body = streamEndRequest.postDataJSON();
-
-      expect(body.eventType).toBe('generatedAnswer');
-      expect(body.eventValue).toBe('generatedAnswerStreamEnd');
-    });
-
-    test('should automatically collapse previous questions when a third question is asked', async ({
-      generatedAnswer,
-    }) => {
-      await generatedAnswer.followUpInput.fill('First follow-up');
-      await generatedAnswer.followUpSubmitButton.click();
-      await expect(generatedAnswer.threadItems).toHaveCount(2, {
-        timeout: streamingTimeoutMs,
+        await expect(generatedAnswer.threadItems).toHaveCount(2, {
+          timeout: streamingTimeoutMs,
+        });
+        await expect(generatedAnswer.generatedTexts).toHaveCount(2);
+        await expect(generatedAnswer.generatedTexts.last()).toBeVisible();
       });
 
-      await expect(generatedAnswer.followUpSubmitButton).toBeEnabled({
-        timeout: streamingTimeoutMs,
-      });
-      await generatedAnswer.followUpInput.fill('Second follow-up');
-      await generatedAnswer.followUpSubmitButton.click();
+      test('should only show collapse controls on previous thread items, not the latest', async ({
+        generatedAnswer,
+      }) => {
+        await generatedAnswer.followUpInput.fill('What else should I try?');
+        await generatedAnswer.followUpSubmitButton.click();
 
-      await expect(generatedAnswer.threadItems).toHaveCount(1, {
-        timeout: streamingTimeoutMs,
+        await expect(generatedAnswer.threadItems).toHaveCount(2, {
+          timeout: streamingTimeoutMs,
+        });
+        await expect(
+          generatedAnswer.threadItems.first().locator('button[aria-expanded]')
+        ).toHaveCount(1);
+        await expect(
+          generatedAnswer.threadItems.last().locator('button[aria-expanded]')
+        ).toHaveCount(0);
       });
-      await expect(generatedAnswer.showPreviousButton).toBeVisible();
+
+      test('should hide content when collapsing a previous thread item', async ({
+        generatedAnswer,
+      }) => {
+        await generatedAnswer.followUpInput.fill('What else should I try?');
+        await generatedAnswer.followUpSubmitButton.click();
+
+        await expect(generatedAnswer.threadItems).toHaveCount(2, {
+          timeout: streamingTimeoutMs,
+        });
+
+        const collapseButton = generatedAnswer.threadItems
+          .first()
+          .locator('button[aria-expanded]');
+
+        await expect(collapseButton).toHaveAttribute('aria-expanded', 'false');
+        await collapseButton.click();
+        await expect(collapseButton).toHaveAttribute('aria-expanded', 'true');
+        await collapseButton.click();
+        await expect(collapseButton).toHaveAttribute('aria-expanded', 'false');
+        await expect(
+          generatedAnswer.threadItems.first().locator('[hidden]')
+        ).toHaveCount(1);
+      });
+
+      test('should send a streamEnd analytics event after receiving the generated answer', async ({
+        generatedAnswer,
+      }) => {
+        const streamEndPromise =
+          generatedAnswer.waitForStreamEndAnalyticsRequest();
+
+        await generatedAnswer.load({story: 'with-agent-id'});
+
+        const streamEndRequest = await streamEndPromise;
+        const body = streamEndRequest.postDataJSON();
+
+        expect(body.eventType).toBe('generatedAnswer');
+        expect(body.eventValue).toBe('generatedAnswerStreamEnd');
+      });
+
+      test('should automatically collapse previous questions when a third question is asked', async ({
+        generatedAnswer,
+      }) => {
+        await generatedAnswer.followUpInput.fill('First follow-up');
+        await generatedAnswer.followUpSubmitButton.click();
+        await expect(generatedAnswer.threadItems).toHaveCount(2, {
+          timeout: streamingTimeoutMs,
+        });
+
+        await expect(generatedAnswer.followUpSubmitButton).toBeEnabled({
+          timeout: streamingTimeoutMs,
+        });
+        await generatedAnswer.followUpInput.fill('Second follow-up');
+        await generatedAnswer.followUpSubmitButton.click();
+
+        await expect(generatedAnswer.threadItems).toHaveCount(1, {
+          timeout: streamingTimeoutMs,
+        });
+        await expect(generatedAnswer.showPreviousButton).toBeVisible();
+      });
     });
   });
 });
