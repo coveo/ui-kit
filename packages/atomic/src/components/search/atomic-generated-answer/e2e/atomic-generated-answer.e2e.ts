@@ -1,9 +1,7 @@
 import {expect, test} from './fixture';
-import type {GeneratedAnswerPageObject} from './page-object';
 
 const closePopoverDebounceMs = 100;
 const pollTimeoutMs = 5000;
-const streamingTimeoutMs = 15000;
 
 test.describe('atomic-generated-answer', () => {
   test.describe('citations', () => {
@@ -344,26 +342,20 @@ test.describe('atomic-generated-answer', () => {
   });
 
   test.describe('search agent follow-up experience', () => {
-    async function loadStory(generatedAnswer: GeneratedAnswerPageObject) {
+    const streamingTimeoutMs = 15000;
+
+    test.beforeEach(async ({generatedAnswer}) => {
       await generatedAnswer.load({story: 'with-agent-id'});
       await expect(generatedAnswer.followUpSubmitButton).toBeEnabled({
         timeout: streamingTimeoutMs,
       });
-    }
-
-    async function submitFollowUp(
-      generatedAnswer: GeneratedAnswerPageObject,
-      question: string
-    ) {
-      await generatedAnswer.followUpInput.fill(question);
-      await generatedAnswer.followUpSubmitButton.click();
-    }
+    });
 
     test('should render a second thread item after submitting a follow-up question', async ({
       generatedAnswer,
     }) => {
-      await loadStory(generatedAnswer);
-      await submitFollowUp(generatedAnswer, 'What else should I try?');
+      await generatedAnswer.followUpInput.fill('What else should I try?');
+      await generatedAnswer.followUpSubmitButton.click();
 
       await expect(generatedAnswer.threadItems).toHaveCount(2, {
         timeout: streamingTimeoutMs,
@@ -375,8 +367,8 @@ test.describe('atomic-generated-answer', () => {
     test('should only show collapse controls on previous thread items, not the latest', async ({
       generatedAnswer,
     }) => {
-      await loadStory(generatedAnswer);
-      await submitFollowUp(generatedAnswer, 'What else should I try?');
+      await generatedAnswer.followUpInput.fill('What else should I try?');
+      await generatedAnswer.followUpSubmitButton.click();
 
       await expect(generatedAnswer.threadItems).toHaveCount(2, {
         timeout: streamingTimeoutMs,
@@ -392,8 +384,8 @@ test.describe('atomic-generated-answer', () => {
     test('should hide content when collapsing a previous thread item', async ({
       generatedAnswer,
     }) => {
-      await loadStory(generatedAnswer);
-      await submitFollowUp(generatedAnswer, 'What else should I try?');
+      await generatedAnswer.followUpInput.fill('What else should I try?');
+      await generatedAnswer.followUpSubmitButton.click();
 
       await expect(generatedAnswer.threadItems).toHaveCount(2, {
         timeout: streamingTimeoutMs,
@@ -431,9 +423,8 @@ test.describe('atomic-generated-answer', () => {
     test('should automatically collapse previous questions when a third question is asked', async ({
       generatedAnswer,
     }) => {
-      await loadStory(generatedAnswer);
-
-      await submitFollowUp(generatedAnswer, 'First follow-up');
+      await generatedAnswer.followUpInput.fill('First follow-up');
+      await generatedAnswer.followUpSubmitButton.click();
       await expect(generatedAnswer.threadItems).toHaveCount(2, {
         timeout: streamingTimeoutMs,
       });
@@ -441,7 +432,8 @@ test.describe('atomic-generated-answer', () => {
       await expect(generatedAnswer.followUpSubmitButton).toBeEnabled({
         timeout: streamingTimeoutMs,
       });
-      await submitFollowUp(generatedAnswer, 'Second follow-up');
+      await generatedAnswer.followUpInput.fill('Second follow-up');
+      await generatedAnswer.followUpSubmitButton.click();
 
       await expect(generatedAnswer.threadItems).toHaveCount(1, {
         timeout: streamingTimeoutMs,
