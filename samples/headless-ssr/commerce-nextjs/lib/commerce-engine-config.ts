@@ -50,7 +50,9 @@ export default {
     cart: defineCart(),
     searchBox: defineSearchBox({options: {enableResults: true}}),
     context: defineContext(),
-    recentQueriesList: defineRecentQueriesList(),
+    recentQueriesList: defineRecentQueriesList({
+      options: {enableResults: true},
+    }),
     notifyTrigger: defineNotifyTrigger(),
     queryTrigger: defineQueryTrigger(),
     redirectionTrigger: defineRedirectionTrigger(),

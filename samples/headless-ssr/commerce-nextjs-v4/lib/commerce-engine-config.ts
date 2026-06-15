@@ -45,7 +45,9 @@ export default {
       },
     }),
     searchBox: defineSearchBox({options: {enableResults: true}}),
-    recentQueriesList: defineRecentQueriesList(),
+    recentQueriesList: defineRecentQueriesList({
+      options: {enableResults: true},
+    }),
     notifyTrigger: defineNotifyTrigger(),
     queryTrigger: defineQueryTrigger(),
     redirectionTrigger: defineRedirectionTrigger(),
