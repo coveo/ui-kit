@@ -1,0 +1,8 @@
+{
+  "surface": "search",
+  "wcag22Criteria": {
+    "3.3.3-error-suggestion": {
+      "conformance": "pass"
+    }
+  }
+}
