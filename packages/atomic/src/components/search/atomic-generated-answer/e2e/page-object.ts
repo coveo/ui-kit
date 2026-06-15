@@ -75,6 +75,26 @@ export class GeneratedAnswerPageObject extends BasePageObject {
     return this.page.getByRole('button', {name: /^not helpful$/i});
   }
 
+  get followUpSubmitButton() {
+    return this.page.getByRole('button', {name: /submit follow-up/i});
+  }
+
+  get followUpInput() {
+    return this.page.getByRole('textbox', {name: /ask follow-up/i});
+  }
+
+  get threadItems() {
+    return this.page.locator('atomic-generated-answer-thread-item');
+  }
+
+  get generatedTexts() {
+    return this.page.locator('[part="generated-text"]');
+  }
+
+  get showPreviousButton() {
+    return this.page.getByRole('button', {name: /show.*previous/i});
+  }
+
   get feedbackModal() {
     return this.page.locator('atomic-generated-answer-feedback-modal');
   }

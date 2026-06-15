@@ -1,9 +1,9 @@
-import type {Page} from '@playwright/test';
 import {expect, test} from './fixture';
 import type {GeneratedAnswerPageObject} from './page-object';
 
 const closePopoverDebounceMs = 100;
 const pollTimeoutMs = 5000;
+const streamingTimeoutMs = 15000;
 
 test.describe('atomic-generated-answer', () => {
   test.describe('citations', () => {
@@ -344,60 +344,48 @@ test.describe('atomic-generated-answer', () => {
   });
 
   test.describe('search agent follow-up experience', () => {
-    const streamingTimeoutMs = 15000;
-
-    const Selectors = {
-      submitButton: (page: Page) =>
-        page.getByRole('button', {name: /submit follow-up/i}),
-      followUpInput: (page: Page) =>
-        page.getByRole('textbox', {name: /ask follow-up/i}),
-      threadItems: (page: Page) =>
-        page.locator('atomic-generated-answer-thread-item'),
-      generatedTexts: (page: Page) => page.locator('[part="generated-text"]'),
-      showPreviousButton: (page: Page) =>
-        page.getByRole('button', {name: /show.*previous/i}),
-    };
-
     async function loadStory(generatedAnswer: GeneratedAnswerPageObject) {
       await generatedAnswer.load({story: 'with-agent-id'});
-      await expect(Selectors.submitButton(generatedAnswer.page)).toBeEnabled({
+      await expect(generatedAnswer.followUpSubmitButton).toBeEnabled({
         timeout: streamingTimeoutMs,
       });
     }
 
-    async function submitFollowUp(page: Page, question: string) {
-      await Selectors.followUpInput(page).fill(question);
-      await Selectors.submitButton(page).click();
+    async function submitFollowUp(
+      generatedAnswer: GeneratedAnswerPageObject,
+      question: string
+    ) {
+      await generatedAnswer.followUpInput.fill(question);
+      await generatedAnswer.followUpSubmitButton.click();
     }
 
     test('should render a second thread item after submitting a follow-up question', async ({
       generatedAnswer,
     }) => {
       await loadStory(generatedAnswer);
-      await submitFollowUp(generatedAnswer.page, 'What else should I try?');
+      await submitFollowUp(generatedAnswer, 'What else should I try?');
 
-      const threadItems = Selectors.threadItems(generatedAnswer.page);
-      await expect(threadItems).toHaveCount(2, {timeout: streamingTimeoutMs});
-
-      const generatedTexts = Selectors.generatedTexts(generatedAnswer.page);
-      await expect(generatedTexts).toHaveCount(2);
-      await expect(generatedTexts.last()).toBeVisible();
+      await expect(generatedAnswer.threadItems).toHaveCount(2, {
+        timeout: streamingTimeoutMs,
+      });
+      await expect(generatedAnswer.generatedTexts).toHaveCount(2);
+      await expect(generatedAnswer.generatedTexts.last()).toBeVisible();
     });
 
     test('should only show collapse controls on previous thread items, not the latest', async ({
       generatedAnswer,
     }) => {
       await loadStory(generatedAnswer);
-      await submitFollowUp(generatedAnswer.page, 'What else should I try?');
+      await submitFollowUp(generatedAnswer, 'What else should I try?');
 
-      const threadItems = Selectors.threadItems(generatedAnswer.page);
-      await expect(threadItems).toHaveCount(2, {timeout: streamingTimeoutMs});
-
+      await expect(generatedAnswer.threadItems).toHaveCount(2, {
+        timeout: streamingTimeoutMs,
+      });
       await expect(
-        threadItems.first().locator('button[aria-expanded]')
+        generatedAnswer.threadItems.first().locator('button[aria-expanded]')
       ).toHaveCount(1);
       await expect(
-        threadItems.last().locator('button[aria-expanded]')
+        generatedAnswer.threadItems.last().locator('button[aria-expanded]')
       ).toHaveCount(0);
     });
 
@@ -405,12 +393,13 @@ test.describe('atomic-generated-answer', () => {
       generatedAnswer,
     }) => {
       await loadStory(generatedAnswer);
-      await submitFollowUp(generatedAnswer.page, 'What else should I try?');
+      await submitFollowUp(generatedAnswer, 'What else should I try?');
 
-      const threadItems = Selectors.threadItems(generatedAnswer.page);
-      await expect(threadItems).toHaveCount(2, {timeout: streamingTimeoutMs});
+      await expect(generatedAnswer.threadItems).toHaveCount(2, {
+        timeout: streamingTimeoutMs,
+      });
 
-      const collapseButton = threadItems
+      const collapseButton = generatedAnswer.threadItems
         .first()
         .locator('button[aria-expanded]');
 
@@ -419,7 +408,9 @@ test.describe('atomic-generated-answer', () => {
       await expect(collapseButton).toHaveAttribute('aria-expanded', 'true');
       await collapseButton.click();
       await expect(collapseButton).toHaveAttribute('aria-expanded', 'false');
-      await expect(threadItems.first().locator('[hidden]')).toHaveCount(1);
+      await expect(
+        generatedAnswer.threadItems.first().locator('[hidden]')
+      ).toHaveCount(1);
     });
 
     test('should send a streamEnd analytics event after receiving the generated answer', async ({
@@ -442,20 +433,20 @@ test.describe('atomic-generated-answer', () => {
     }) => {
       await loadStory(generatedAnswer);
 
-      const threadItems = Selectors.threadItems(generatedAnswer.page);
-
-      await submitFollowUp(generatedAnswer.page, 'First follow-up');
-      await expect(threadItems).toHaveCount(2, {timeout: streamingTimeoutMs});
-
-      await expect(Selectors.submitButton(generatedAnswer.page)).toBeEnabled({
+      await submitFollowUp(generatedAnswer, 'First follow-up');
+      await expect(generatedAnswer.threadItems).toHaveCount(2, {
         timeout: streamingTimeoutMs,
       });
-      await submitFollowUp(generatedAnswer.page, 'Second follow-up');
 
-      await expect(threadItems).toHaveCount(1, {timeout: streamingTimeoutMs});
-      await expect(
-        Selectors.showPreviousButton(generatedAnswer.page)
-      ).toBeVisible();
+      await expect(generatedAnswer.followUpSubmitButton).toBeEnabled({
+        timeout: streamingTimeoutMs,
+      });
+      await submitFollowUp(generatedAnswer, 'Second follow-up');
+
+      await expect(generatedAnswer.threadItems).toHaveCount(1, {
+        timeout: streamingTimeoutMs,
+      });
+      await expect(generatedAnswer.showPreviousButton).toBeVisible();
     });
   });
 });
