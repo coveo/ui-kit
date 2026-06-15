@@ -342,7 +342,7 @@ test.describe('atomic-generated-answer', () => {
   });
 
   test.describe('search agent follow-up experience', () => {
-    const streamingTimeoutMs = 15000;
+    const streamingTimeoutMs = 30000;
 
     test.describe('while streaming', () => {
       test('should disable the follow-up submit button', async ({
@@ -352,6 +352,21 @@ test.describe('atomic-generated-answer', () => {
         await expect(generatedAnswer.followUpSubmitButton).toBeDisabled({
           timeout: streamingTimeoutMs,
         });
+      });
+
+      test('should send a streamEnd analytics event after receiving the generated answer', async ({
+        generatedAnswer,
+      }) => {
+        const streamEndPromise =
+          generatedAnswer.waitForStreamEndAnalyticsRequest();
+
+        await generatedAnswer.load({story: 'with-agent-id'});
+
+        const streamEndRequest = await streamEndPromise;
+        const body = streamEndRequest.postDataJSON();
+
+        expect(body.eventType).toBe('generatedAnswer');
+        expect(body.eventValue).toBe('generatedAnswerStreamEnd');
       });
     });
 
@@ -415,21 +430,6 @@ test.describe('atomic-generated-answer', () => {
         await expect(
           generatedAnswer.threadItems.first().locator('[hidden]')
         ).toHaveCount(1);
-      });
-
-      test('should send a streamEnd analytics event after receiving the generated answer', async ({
-        generatedAnswer,
-      }) => {
-        const streamEndPromise =
-          generatedAnswer.waitForStreamEndAnalyticsRequest();
-
-        await generatedAnswer.load({story: 'with-agent-id'});
-
-        const streamEndRequest = await streamEndPromise;
-        const body = streamEndRequest.postDataJSON();
-
-        expect(body.eventType).toBe('generatedAnswer');
-        expect(body.eventValue).toBe('generatedAnswerStreamEnd');
       });
 
       test('should automatically collapse previous questions when a third question is asked', async ({

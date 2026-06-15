@@ -219,7 +219,10 @@ export class GeneratedAnswerPageObject extends BasePageObject {
         /\/rest\/v15\/analytics\/custom/.test(request.url())
       ) {
         const body = request.postDataJSON();
-        return body?.eventValue === 'generatedAnswerStreamEnd';
+        return (
+          body?.eventType === 'generatedAnswer' &&
+          body?.eventValue === 'generatedAnswerStreamEnd'
+        );
       }
       return false;
     });
