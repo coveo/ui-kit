@@ -63,7 +63,7 @@ export default {
     pagination: definePagination({options: {pageSize: 9}}),
     sort: defineSort(),
     productView: defineProductView(),
-    didYouMean: defineDidYouMean(),
+    didYouMean: defineDidYouMean({enableResults: true}),
     parameterManager: defineParameterManager(),
     facetGenerator: defineFacetGenerator(),
     breadcrumbManager: defineBreadcrumbManager(),
