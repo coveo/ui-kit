@@ -37,9 +37,18 @@ jobs:
         shell: bash
         run: npm run npm:tag:latest
 
+      - name: Create GitHub App token for docs dispatch
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ secrets.DOC_APP_ID }}
+          private-key: ${{ secrets.DOC_APP_PRIVATE_KEY }}
+          owner: coveo
+          repositories: doc_jekyll-public-site
+
       - name: Notify docs
         env:
-          GITHUB_TOKEN: ${{ secrets.COMMIT_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
         shell: bash
         run: |
           pnpm i @octokit/rest --filter @coveo/relay
