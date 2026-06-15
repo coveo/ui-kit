@@ -1715,4 +1715,18 @@
     <protected>false</protected>
     <shortDescription>Answer generated</shortDescription>
   </labels>
+  <labels>
+    <fullName>quantic_Like</fullName>
+    <value>Like</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Like</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_Dislike</fullName>
+    <value>Dislike</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Dislike</shortDescription>
+  </labels>
 </CustomLabels>
