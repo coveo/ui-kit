@@ -4,7 +4,8 @@ import {
   citationDocumentIdentifier,
   type LegacySearchAction,
   makeAnalyticsAction,
-  partialCitationInformation,
+  partialDocumentInformationFromCitation,
+  partialFollowupCitationInformation,
 } from '../analytics/analytics-utils.js';
 import {SearchPageEvents} from '../analytics/search-action-cause.js';
 import type {SearchAction} from '../search/search-actions.js';
@@ -68,7 +69,7 @@ export function logOpenGeneratedAnswerSource(
       const conversationId = selectFollowUpAnswersConversationId(state);
 
       return client.makeGeneratedAnswerCitationClick(
-        partialCitationInformation(citation, state),
+        partialDocumentInformationFromCitation(citation, state),
         {
           generativeQuestionAnsweringId: resolvedAnswerId,
           citationId: citation.id,
@@ -456,6 +457,34 @@ export function logCopyGeneratedAnswer(answerId?: string): CustomAction {
   });
 }
 
+export function logOpenGeneratedAnswerFollowUpSource(
+  citationId: string,
+  answerId: string
+): CustomAction {
+  return makeAnalyticsAction({
+    prefix: 'analytics/generatedAnswer/openFollowUpAnswerSource',
+    __legacy__getBuilder: (client, state) => {
+      const citation = citationSourceSelector(state, citationId);
+      if (!citation) {
+        return null;
+      }
+      const conversationId = selectFollowUpAnswersConversationId(state);
+
+      if (!conversationId) {
+        return null;
+      }
+
+      return client.makeGeneratedAnswerFollowupOpenSource({
+        ...partialFollowupCitationInformation(citation, state),
+        generativeQuestionAnsweringId: answerId,
+        citationId: citation.id,
+        permanentId: citation.permanentid,
+        conversationId,
+      });
+    },
+  });
+}
+
 export const retryGeneratedAnswer = (): SearchAction => ({
   actionCause: SearchPageEvents.retryGeneratedAnswer,
 });
@@ -471,6 +500,7 @@ export const generatedAnswerAnalyticsClient = {
   logGeneratedAnswerOpenInlineLink,
   logHoverCitation,
   logOpenGeneratedAnswerSource,
+  logOpenGeneratedAnswerFollowUpSource,
   logRetryGeneratedAnswer,
   logGeneratedAnswerExpand,
   logGeneratedAnswerCollapse,
