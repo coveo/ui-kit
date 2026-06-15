@@ -3,6 +3,7 @@ packages:
   - packages/auth
   - packages/headless
   - packages/headless-future
+  - packages/mock-converse-api
   - packages/quantic
   - packages/headless-react
   - packages/atomic-hosted-page

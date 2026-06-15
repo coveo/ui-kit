@@ -4,11 +4,12 @@
   "cache": {
     "useCache": true
   },
-  "ignorePaths": ["CHANGELOG.md"],
+  "ignorePaths": ["CHANGELOG.md", "packages/mock-converse-api/templates/**"],
   "import": ["@cspell/dict-fr-fr/cspell-ext.json"],
   "words": [
     "adjustednumberoflikes",
     "agentic",
+    "AGUI",
     "allo",
     "angular",
     "Animalia",
@@ -121,9 +122,9 @@
     "Numberof",
     "nusse",
     "omnibox",
-    "openacr",
     "ondeselect",
     "onhighlightchange",
+    "onquantic",
     "onsuggestionselected",
     "ontryitnow",
     "OOXML",
@@ -316,7 +317,6 @@
     "Unsubscribers",
     "uparrow",
     "upvoted",
-    "VPAT",
     "visi",
     "visio",
     "Vite",
@@ -330,7 +330,6 @@
     "ytvideoid",
     "ytviewcount",
     "γίγγλυμος",
-    "στόμα",
-    "onquantic"
+    "στόμα"
   ]
 }
