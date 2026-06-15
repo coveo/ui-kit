@@ -345,6 +345,11 @@ test.describe('atomic-generated-answer', () => {
     const streamingTimeoutMs = 30000;
 
     test.describe('while streaming', () => {
+      test.beforeEach(async ({generatedAnswer}) => {
+        await generatedAnswer.load({story: 'default'});
+        await generatedAnswer.page.waitForLoadState('networkidle');
+      });
+
       test('should disable the follow-up submit button', async ({
         generatedAnswer,
       }) => {
@@ -373,6 +378,7 @@ test.describe('atomic-generated-answer', () => {
     test.describe('after streaming', () => {
       test.beforeEach(async ({generatedAnswer}) => {
         await generatedAnswer.load({story: 'with-agent-id'});
+        await generatedAnswer.page.waitForLoadState('networkidle');
         await expect(generatedAnswer.followUpSubmitButton).toBeEnabled({
           timeout: streamingTimeoutMs,
         });
