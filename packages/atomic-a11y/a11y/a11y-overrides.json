@@ -104,6 +104,11 @@
       "reason": "Consistent help placement across pages is a host application concern; Atomic components do not control page-level layout or ordering of help mechanisms."
     },
     {
+      "criterion": "3.3.4",
+      "conformance": "not-applicable",
+      "reason": "Atomic does not itself complete legal commitments or financial transactions. Any persistent data changes (e.g., attaching a result to a case) are handled by the host application via cancelable events; the built-in attach-to-case callback is reversible through detach. Feedback modals submit anonymous analytics (not user-viewable data)."
+    },
+    {
       "criterion": "3.3.7",
       "conformance": "not-applicable",
       "reason": "Atomic does not include multi-step forms that require redundant data entry."

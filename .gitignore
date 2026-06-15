@@ -33,3 +33,4 @@ packages/atomic/custom-elements.json
 samples/headless/headless-rga-angular/.angular
 *.tsbuildinfo
 packages/atomic/reports/
+packages/atomic-a11y/reports/vpat-2.5-coveo-atomic.md
