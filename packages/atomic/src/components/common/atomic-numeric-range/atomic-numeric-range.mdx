@@ -1,0 +1,22 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import meta, { Default } from './atomic-numeric-range.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={meta} />
+
+<AtomicDocTemplate
+  stories={{ Default }}
+  githubPath="common/atomic-numeric-range/atomic-numeric-range.ts"
+  tagName="atomic-numeric-range"
+  className="AtomicNumericRange"
+>
+
+The `atomic-numeric-range` component defines a range within an `atomic-numeric-facet`, specifying the start and end values for a numeric filter option.
+
+```html
+<atomic-numeric-facet field="price">
+  <atomic-numeric-range start="0" end="100"></atomic-numeric-range>
+</atomic-numeric-facet>
+```
+
+</AtomicDocTemplate>
