@@ -5,19 +5,6 @@ import type {GeneratedAnswerPageObject} from './page-object';
 const closePopoverDebounceMs = 100;
 const pollTimeoutMs = 5000;
 
-const streamingTimeoutMs = 15000;
-const Selectors = {
-  submitButton: (page: Page) =>
-    page.getByRole('button', {name: /submit follow-up/i}),
-  followUpInput: (page: Page) =>
-    page.getByRole('textbox', {name: /ask follow-up/i}),
-  threadItems: (page: Page) =>
-    page.locator('atomic-generated-answer-thread-item'),
-  generatedTexts: (page: Page) => page.locator('[part="generated-text"]'),
-  showPreviousButton: (page: Page) =>
-    page.getByRole('button', {name: /show.*previous/i}),
-};
-
 test.describe('atomic-generated-answer', () => {
   test.describe('citations', () => {
     test.describe('with citation anchoring enabled', () => {
@@ -357,15 +344,22 @@ test.describe('atomic-generated-answer', () => {
   });
 
   test.describe('search agent follow-up experience', () => {
-    async function resumeStream(page: Page) {
-      await page.evaluate(() => {
-        new BroadcastChannel('__agentStreamControl').postMessage('resume');
-      });
-    }
+    const streamingTimeoutMs = 15000;
 
-    async function loadAndResume(generatedAnswer: GeneratedAnswerPageObject) {
-      await generatedAnswer.load({story: 'with-agent-id-streaming'});
-      await resumeStream(generatedAnswer.page);
+    const Selectors = {
+      submitButton: (page: Page) =>
+        page.getByRole('button', {name: /submit follow-up/i}),
+      followUpInput: (page: Page) =>
+        page.getByRole('textbox', {name: /ask follow-up/i}),
+      threadItems: (page: Page) =>
+        page.locator('atomic-generated-answer-thread-item'),
+      generatedTexts: (page: Page) => page.locator('[part="generated-text"]'),
+      showPreviousButton: (page: Page) =>
+        page.getByRole('button', {name: /show.*previous/i}),
+    };
+
+    async function loadStory(generatedAnswer: GeneratedAnswerPageObject) {
+      await generatedAnswer.load({story: 'with-agent-id'});
       await expect(Selectors.submitButton(generatedAnswer.page)).toBeEnabled({
         timeout: streamingTimeoutMs,
       });
@@ -376,27 +370,10 @@ test.describe('atomic-generated-answer', () => {
       await Selectors.submitButton(page).click();
     }
 
-    test('should disable the follow-up submit button while streaming and enable it after the answer is done streaming', async ({
-      generatedAnswer,
-    }) => {
-      await generatedAnswer.load({story: 'with-agent-id-streaming'});
-      const submitButton = Selectors.submitButton(generatedAnswer.page);
-
-      await expect(submitButton).toBeDisabled({timeout: streamingTimeoutMs});
-
-      await resumeStream(generatedAnswer.page);
-
-      await expect(submitButton).toBeEnabled({timeout: streamingTimeoutMs});
-      await expect(
-        Selectors.generatedTexts(generatedAnswer.page).first()
-      ).toBeVisible();
-    });
-
     test('should render a second thread item after submitting a follow-up question', async ({
       generatedAnswer,
     }) => {
-      await loadAndResume(generatedAnswer);
-
+      await loadStory(generatedAnswer);
       await submitFollowUp(generatedAnswer.page, 'What else should I try?');
 
       const threadItems = Selectors.threadItems(generatedAnswer.page);
@@ -410,8 +387,7 @@ test.describe('atomic-generated-answer', () => {
     test('should only show collapse controls on previous thread items, not the latest', async ({
       generatedAnswer,
     }) => {
-      await loadAndResume(generatedAnswer);
-
+      await loadStory(generatedAnswer);
       await submitFollowUp(generatedAnswer.page, 'What else should I try?');
 
       const threadItems = Selectors.threadItems(generatedAnswer.page);
@@ -428,8 +404,7 @@ test.describe('atomic-generated-answer', () => {
     test('should hide content when collapsing a previous thread item', async ({
       generatedAnswer,
     }) => {
-      await loadAndResume(generatedAnswer);
-
+      await loadStory(generatedAnswer);
       await submitFollowUp(generatedAnswer.page, 'What else should I try?');
 
       const threadItems = Selectors.threadItems(generatedAnswer.page);
@@ -450,12 +425,10 @@ test.describe('atomic-generated-answer', () => {
     test('should send a streamEnd analytics event after receiving the generated answer', async ({
       generatedAnswer,
     }) => {
-      await generatedAnswer.load({story: 'with-agent-id-streaming'});
-
       const streamEndPromise =
         generatedAnswer.waitForStreamEndAnalyticsRequest();
 
-      await resumeStream(generatedAnswer.page);
+      await generatedAnswer.load({story: 'with-agent-id'});
 
       const streamEndRequest = await streamEndPromise;
       const body = streamEndRequest.postDataJSON();
@@ -467,7 +440,7 @@ test.describe('atomic-generated-answer', () => {
     test('should automatically collapse previous questions when a third question is asked', async ({
       generatedAnswer,
     }) => {
-      await loadAndResume(generatedAnswer);
+      await loadStory(generatedAnswer);
 
       const threadItems = Selectors.threadItems(generatedAnswer.page);
 

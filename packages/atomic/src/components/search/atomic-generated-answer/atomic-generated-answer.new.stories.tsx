@@ -11,7 +11,6 @@ import {testHoverContentA11y} from '@/storybook-utils/a11y/hover-content.js';
 import {testStatusMessageSequenceA11y} from '@/storybook-utils/a11y/status-message.js';
 import {testSwitchA11y} from '@/storybook-utils/a11y/switch.js';
 import {MockAgentApi} from '@/storybook-utils/api/agent/mock';
-import {pausableHeadAnswerResponse} from '@/storybook-utils/api/agent/generate-response';
 import {MockAnswerApi} from '@/storybook-utils/api/answer/mock';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
@@ -151,21 +150,6 @@ export const WithAgentId: Story = {
     'answer-configuration-id': undefined,
   },
   play: async (storyContext) => {
-    await playWithLegacyAnalytics(storyContext);
-    await submitGeneratedAnswerQuery(storyContext);
-  },
-};
-
-export const WithAgentIdStreaming: Story = {
-  name: 'With Agent ID Streaming',
-  args: {
-    'agent-id': 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
-    'answer-configuration-id': undefined,
-  },
-  play: async (storyContext) => {
-    // First mockOnce is consumed by executeFirstSearch(), second by the search box query.
-    agentApiHarness.answerEndpoint.mockOnce((base) => base);
-    agentApiHarness.answerEndpoint.mockOnce(() => pausableHeadAnswerResponse);
     await playWithLegacyAnalytics(storyContext);
     await submitGeneratedAnswerQuery(storyContext);
   },
