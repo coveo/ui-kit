@@ -456,10 +456,14 @@ chapters:
         components:
           - name: web
             adherence:
-              level: does-not-support
+              level: not-applicable
               notes:
-                'WCAG 3.3.4: no automated, interactive, or manual coverage. [Manual audit
-                required]'
+                Atomic does not itself complete legal commitments or financial
+                transactions. Any persistent data changes (e.g., attaching a
+                result to a case) are handled by the host application via
+                cancelable events; the built-in attach-to-case callback is
+                reversible through detach. Feedback modals submit anonymous
+                analytics (not user-viewable data).
       - num: 3.3.8
         components:
           - name: web
