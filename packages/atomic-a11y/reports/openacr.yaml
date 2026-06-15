@@ -36,7 +36,7 @@ chapters:
             adherence:
               level: supports
               notes:
-                Supports — automated axe-core found no violations across 172
+                Supports — automated axe-core found no violations across 173
                 component(s).
       - num: 1.2.1
         components:
@@ -64,7 +64,7 @@ chapters:
             adherence:
               level: supports
               notes:
-                Supports — automated axe-core found no violations across 172
+                Supports — automated axe-core found no violations across 173
                 component(s); interactive keyboard testing passed across 2
                 component(s).
       - num: 1.3.2
@@ -89,7 +89,7 @@ chapters:
             adherence:
               level: supports
               notes:
-                Supports — automated axe-core found no violations across 172
+                Supports — automated axe-core found no violations across 173
                 component(s).
       - num: 1.4.2
         components:
@@ -103,7 +103,7 @@ chapters:
             adherence:
               level: supports
               notes:
-                Supports — automated axe-core found no violations across 174
+                Supports — automated axe-core found no violations across 175
                 component(s); interactive keyboard testing passed across 34
                 component(s).
       - num: 2.1.2
@@ -175,7 +175,7 @@ chapters:
             adherence:
               level: supports
               notes:
-                Supports — automated axe-core found no violations across 172
+                Supports — automated axe-core found no violations across 173
                 component(s).
       - num: 2.5.1
         components:
@@ -257,7 +257,7 @@ chapters:
             adherence:
               level: supports
               notes:
-                Supports — automated axe-core found no violations across 172
+                Supports — automated axe-core found no violations across 173
                 component(s).
       - num: 3.3.7
         components:
@@ -273,7 +273,7 @@ chapters:
             adherence:
               level: supports
               notes:
-                Supports — automated axe-core found no violations across 172
+                Supports — automated axe-core found no violations across 173
                 component(s); interactive keyboard testing passed across 4
                 component(s).
   success_criteria_level_aa:
@@ -309,7 +309,7 @@ chapters:
             adherence:
               level: supports
               notes:
-                Supports — automated axe-core found no violations across 172
+                Supports — automated axe-core found no violations across 173
                 component(s).
       - num: 1.4.3
         components:
@@ -317,7 +317,7 @@ chapters:
             adherence:
               level: supports
               notes:
-                Supports — automated axe-core found no violations across 172
+                Supports — automated axe-core found no violations across 173
                 component(s).
       - num: 1.4.4
         components:
@@ -325,7 +325,7 @@ chapters:
             adherence:
               level: supports
               notes:
-                Supports — automated axe-core found no violations across 172
+                Supports — automated axe-core found no violations across 173
                 component(s).
       - num: 1.4.5
         components:
@@ -359,7 +359,7 @@ chapters:
             adherence:
               level: supports
               notes:
-                Supports — automated axe-core found no violations across 172
+                Supports — automated axe-core found no violations across 173
                 component(s).
       - num: 1.4.13
         components:
@@ -418,7 +418,7 @@ chapters:
             adherence:
               level: supports
               notes:
-                Supports — automated axe-core found no violations across 172
+                Supports — automated axe-core found no violations across 173
                 component(s).
       - num: 3.1.2
         components:
@@ -426,7 +426,7 @@ chapters:
             adherence:
               level: supports
               notes:
-                Supports — automated axe-core found no violations across 172
+                Supports — automated axe-core found no violations across 173
                 component(s).
       - num: 3.2.3
         components:
