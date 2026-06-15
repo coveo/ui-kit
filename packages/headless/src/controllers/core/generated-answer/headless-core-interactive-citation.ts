@@ -34,17 +34,15 @@ export interface InteractiveCitationProps extends InteractiveResultCoreProps {
  */
 export interface InteractiveCitation extends InteractiveResultCore {}
 
-interface InteractiveCitationAnalyticsClient {
-  logOpenGeneratedAnswerSource(
-    citationId: string,
-    answerId?: string
-  ): CustomAction;
+export interface InteractiveCitationAnalyticsClient {
+  logCitationOpen(citationId: string, answerId?: string): CustomAction;
 }
 
 /**
  * Creates a core `InteractiveCitation` controller instance.
  *
  * @param engine - The headless engine.
+ * @param analyticsClient - The analytics client responsible for logging citation open events.
  * @param props - The configurable `InteractiveCitation` properties.
  * @returns An `InteractiveCitation` controller instance.
  */
@@ -61,7 +59,7 @@ export function buildInteractiveCitationCore(
     }
     wasOpened = true;
     engine.dispatch(
-      analyticsClient.logOpenGeneratedAnswerSource(
+      analyticsClient.logCitationOpen(
         props.options.citation.id,
         props.options.answerId
       )
