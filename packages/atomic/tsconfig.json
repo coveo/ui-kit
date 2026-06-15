@@ -32,5 +32,5 @@
     }
   },
   "exclude": ["node_modules", "src/external-builds"],
-  "include": ["src", "vitest-utils", "storybook-pages"]
+  "include": ["src", "vitest-utils", "storybook-pages", "storybook-utils"]
 }
