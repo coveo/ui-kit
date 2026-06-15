@@ -168,7 +168,7 @@ describe('did you mean', () => {
       expect(updateQuery).toHaveBeenCalledWith({query: 'corrected query'});
     });
 
-    it('dispatches executeSearch', () => {
+    it('dispatches executeSearch with enableResults false by default', () => {
       engine[stateKey].didYouMean = {
         originalQuery: '',
         wasCorrectedTo: '',
@@ -180,7 +180,25 @@ describe('did you mean', () => {
 
       didYouMean.applyCorrection();
 
-      expect(executeSearch).toHaveBeenCalled();
+      expect(executeSearch).toHaveBeenCalledWith({enableResults: false});
+    });
+
+    it('dispatches executeSearch with enableResults from options', () => {
+      engine[stateKey].didYouMean = {
+        originalQuery: '',
+        wasCorrectedTo: '',
+        queryCorrection: {
+          correctedQuery: 'corrected query',
+          wordCorrections: [],
+        },
+      };
+
+      const didYouMeanWithResults = buildDidYouMean(engine, {
+        enableResults: true,
+      });
+      didYouMeanWithResults.applyCorrection();
+
+      expect(executeSearch).toHaveBeenCalledWith({enableResults: true});
     });
   });
 });
