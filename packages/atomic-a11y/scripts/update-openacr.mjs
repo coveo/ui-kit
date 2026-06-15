@@ -2,7 +2,6 @@
  * update-openacr.mjs
  *
  * Downloads the a11y-report.json from a CI run and regenerates openacr.yaml.
- * Usage: node scripts/update-openacr.mjs --run-id=<GITHUB_RUN_ID>
  */
 import {execFileSync} from 'node:child_process';
 import {rmSync} from 'node:fs';
