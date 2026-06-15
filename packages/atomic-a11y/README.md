@@ -54,7 +54,7 @@ The `a11y:*` tasks are run through turbo so their `build` dependency runs first
 (and is cached — no redundant rebuilds):
 
 ```bash
-pnpm exec turbo run a11y:merge-shards   --filter=@coveo/atomic-a11y   # Merge shard reports from parallel CI runs
+pnpm exec turbo run a11y:merge-shards   --filter=@coveo/atomic-a11y -- ../atomic/reports/a11y-report.json   # Merge shard reports from parallel CI runs
 pnpm exec turbo run a11y:vpat           --filter=@coveo/atomic-a11y   # Generate OpenACR YAML + VPAT markdown
 pnpm exec turbo run a11y:vpat-pdf       --filter=@coveo/atomic-a11y   # Generate VPAT PDF for CDN (reads committed openacr.yaml)
 pnpm exec turbo run a11y:update-openacr --filter=@coveo/atomic-a11y   # Download a11y report from CI and regenerate openacr.yaml
