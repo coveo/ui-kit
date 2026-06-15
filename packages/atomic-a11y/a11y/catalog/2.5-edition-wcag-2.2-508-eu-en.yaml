@@ -10,7 +10,7 @@ standards:
       - success_criteria_level_a
       - success_criteria_level_aa
       - success_criteria_level_aaa
-  - id: "508"
+  - id: '508'
     label: >-
       Revised Section 508 standards published January 18, 2017 and corrected
       January 22, 2018
@@ -41,7 +41,7 @@ standards:
       - en_301_549_ict_providing_relay_or_emergency_service_access
 chapters:
   - id: success_criteria_level_a
-    label: "Table 1: Success Criteria, Level A"
+    label: 'Table 1: Success Criteria, Level A'
     short_label: A
     order: 1
     criteria:
@@ -302,7 +302,7 @@ chapters:
           - software
           - authoring-tool
   - id: success_criteria_level_aa
-    label: "Table 2: Success Criteria, Level AA"
+    label: 'Table 2: Success Criteria, Level AA'
     short_label: AA
     order: 2
     criteria:
@@ -499,7 +499,7 @@ chapters:
           - software
           - authoring-tool
   - id: success_criteria_level_aaa
-    label: "Table 3: Success Criteria, Level AAA"
+    label: 'Table 3: Success Criteria, Level AAA'
     short_label: AAA
     order: 3
     criteria:
@@ -752,57 +752,57 @@ chapters:
           - software
           - authoring-tool
   - id: functional_performance_criteria
-    label: "Chapter 3: Functional Performance Criteria (FPC)"
+    label: 'Chapter 3: Functional Performance Criteria (FPC)'
     short_label: FPC
     order: 3
     criteria:
-      - id: "302.1"
+      - id: '302.1'
         handle: Without Vision
-        alt_id: "302.1"
+        alt_id: '302.1'
         components:
           - none
-      - id: "302.2"
+      - id: '302.2'
         handle: With Limited Vision
-        alt_id: "302.2"
+        alt_id: '302.2'
         components:
           - none
-      - id: "302.3"
+      - id: '302.3'
         handle: Without Perception of Color
-        alt_id: "302.3"
+        alt_id: '302.3'
         components:
           - none
-      - id: "302.4"
+      - id: '302.4'
         handle: Without Hearing
-        alt_id: "302.4"
+        alt_id: '302.4'
         components:
           - none
-      - id: "302.5"
+      - id: '302.5'
         handle: With Limited Hearing
-        alt_id: "302.5"
+        alt_id: '302.5'
         components:
           - none
-      - id: "302.6"
+      - id: '302.6'
         handle: Without Speech
-        alt_id: "302.6"
+        alt_id: '302.6'
         components:
           - none
-      - id: "302.7"
+      - id: '302.7'
         handle: With Limited Manipulation
-        alt_id: "302.7"
+        alt_id: '302.7'
         components:
           - none
-      - id: "302.8"
+      - id: '302.8'
         handle: With Limited Reach and Strength
-        alt_id: "302.8"
+        alt_id: '302.8'
         components:
           - none
-      - id: "302.9"
+      - id: '302.9'
         handle: With Limited Language, Cognitive, and Learning Abilities
-        alt_id: "302.9"
+        alt_id: '302.9'
         components:
           - none
   - id: hardware
-    label: "Chapter 4: Hardware"
+    label: 'Chapter 4: Hardware'
     short_label: Hardware
     order: 4
     criteria:
@@ -841,39 +841,39 @@ chapters:
         alt_id: 402.3.2
         components:
           - none
-      - id: "402.4"
+      - id: '402.4'
         handle: Characters on Display Screens
-        alt_id: "402.4"
+        alt_id: '402.4'
         components:
           - none
-      - id: "402.5"
+      - id: '402.5'
         handle: Characters on Variable Message Signs
-        alt_id: "402.5"
+        alt_id: '402.5'
         components:
           - none
-      - id: "403.1"
+      - id: '403.1'
         handle: General (Biometrics)
-        alt_id: "403.1"
+        alt_id: '403.1'
         components:
           - none
-      - id: "404.1"
+      - id: '404.1'
         handle: General (Preservation of Information Provided for Accessibility)
-        alt_id: "404.1"
+        alt_id: '404.1'
         components:
           - none
-      - id: "405.1"
+      - id: '405.1'
         handle: General (Privacy)
-        alt_id: "405.1"
+        alt_id: '405.1'
         components:
           - none
-      - id: "406.1"
+      - id: '406.1'
         handle: General (Standard Connections)
-        alt_id: "406.1"
+        alt_id: '406.1'
         components:
           - none
-      - id: "407.2"
+      - id: '407.2'
         handle: Contrast (Operable Parts)
-        alt_id: "407.2"
+        alt_id: '407.2'
         components:
           - none
       - id: 407.3.1
@@ -891,24 +891,24 @@ chapters:
         alt_id: 407.3.3
         components:
           - none
-      - id: "407.4"
+      - id: '407.4'
         handle: Key Repeat
-        alt_id: "407.4"
+        alt_id: '407.4'
         components:
           - none
-      - id: "407.5"
+      - id: '407.5'
         handle: Timed Response
-        alt_id: "407.5"
+        alt_id: '407.5'
         components:
           - none
-      - id: "407.6"
+      - id: '407.6'
         handle: Operation
-        alt_id: "407.6"
+        alt_id: '407.6'
         components:
           - none
-      - id: "407.7"
+      - id: '407.7'
         handle: Tickets, Fare Cards, and Keycards
-        alt_id: "407.7"
+        alt_id: '407.7'
         components:
           - none
       - id: 407.8.1
@@ -966,29 +966,29 @@ chapters:
         alt_id: 407.8.3.2.2
         components:
           - none
-      - id: "408.2"
+      - id: '408.2'
         handle: Visibility
-        alt_id: "408.2"
+        alt_id: '408.2'
         components:
           - none
-      - id: "408.3"
+      - id: '408.3'
         handle: Flashing
-        alt_id: "408.3"
+        alt_id: '408.3'
         components:
           - none
-      - id: "409.1"
+      - id: '409.1'
         handle: General (Status Indicators)
-        alt_id: "409.1"
+        alt_id: '409.1'
         components:
           - none
-      - id: "410.1"
+      - id: '410.1'
         handle: General (Color Coding)
-        alt_id: "410.1"
+        alt_id: '410.1'
         components:
           - none
-      - id: "411.1"
+      - id: '411.1'
         handle: General (Audible Signals)
-        alt_id: "411.1"
+        alt_id: '411.1'
         components:
           - none
       - id: 412.2.1
@@ -1011,24 +1011,24 @@ chapters:
         alt_id: 412.3.2
         components:
           - none
-      - id: "412.4"
+      - id: '412.4'
         handle: Digital Encoding of Speech
-        alt_id: "412.4"
+        alt_id: '412.4'
         components:
           - none
-      - id: "412.5"
+      - id: '412.5'
         handle: Real-Time Text Functionality
-        alt_id: "412.5"
+        alt_id: '412.5'
         components:
           - none
-      - id: "412.6"
+      - id: '412.6'
         handle: Caller ID
-        alt_id: "412.6"
+        alt_id: '412.6'
         components:
           - none
-      - id: "412.7"
+      - id: '412.7'
         handle: Video Communication
-        alt_id: "412.7"
+        alt_id: '412.7'
         components:
           - none
       - id: 412.8.1
@@ -1082,7 +1082,7 @@ chapters:
         components:
           - none
   - id: software
-    label: "Chapter 5: Software"
+    label: 'Chapter 5: Software'
     short_label: Software
     order: 5
     criteria:
@@ -1166,19 +1166,19 @@ chapters:
         alt_id: 502.3.14
         components:
           - none
-      - id: "502.4"
+      - id: '502.4'
         handle: Platform Accessibility Features
-        alt_id: "502.4"
+        alt_id: '502.4'
         components:
           - none
-      - id: "503.2"
+      - id: '503.2'
         handle: User Preferences
-        alt_id: "503.2"
+        alt_id: '503.2'
         components:
           - none
-      - id: "503.3"
+      - id: '503.3'
         handle: Alternative User Interfaces
-        alt_id: "503.3"
+        alt_id: '503.3'
         components:
           - none
       - id: 503.4.1
@@ -1191,9 +1191,9 @@ chapters:
         alt_id: 503.4.2
         components:
           - none
-      - id: "504.2"
+      - id: '504.2'
         handle: Content Creation or Editing
-        alt_id: "504.2"
+        alt_id: '504.2'
         components:
           - none
       - id: 504.2.1
@@ -1208,48 +1208,48 @@ chapters:
         alt_id: 504.2.2
         components:
           - none
-      - id: "504.3"
+      - id: '504.3'
         handle: Prompts
-        alt_id: "504.3"
+        alt_id: '504.3'
         components:
           - none
-      - id: "504.4"
+      - id: '504.4'
         handle: Templates
-        alt_id: "504.4"
+        alt_id: '504.4'
         components:
           - none
   - id: support_documentation_and_services
-    label: "Chapter 6: Support Documentation and Services"
+    label: 'Chapter 6: Support Documentation and Services'
     short_label: Documentation
     order: 6
     criteria:
-      - id: "602.2"
+      - id: '602.2'
         handle: Accessibility and Compatibility Features
-        alt_id: "602.2"
+        alt_id: '602.2'
         components:
           - none
-      - id: "602.3"
+      - id: '602.3'
         handle: Electronic Support Documentation
-        alt_id: "602.3"
+        alt_id: '602.3'
         components:
           - none
-      - id: "602.4"
+      - id: '602.4'
         handle: Alternate Formats for Non-Electronic Support Documentation
-        alt_id: "602.4"
+        alt_id: '602.4'
         components:
           - none
-      - id: "603.2"
+      - id: '603.2'
         handle: Information on Accessibility and Compatibility Features
-        alt_id: "603.2"
+        alt_id: '603.2'
         components:
           - none
-      - id: "603.3"
+      - id: '603.3'
         handle: Accommodation of Communication Needs
-        alt_id: "603.3"
+        alt_id: '603.3'
         components:
           - none
   - id: en_301_549_functional_performance
-    label: "Chapter 4: Functional Performance Statements"
+    label: 'Chapter 4: Functional Performance Statements'
     short_label: functional-performance
     order: 8
     criteria:
@@ -1309,11 +1309,11 @@ chapters:
         components:
           - none
   - id: en_301_549_generic_requirements
-    label: "Chapter 5: Generic Requirements"
+    label: 'Chapter 5: Generic Requirements'
     short_label: generic-requirements
     order: 9
     criteria:
-      - id: "5.1"
+      - id: '5.1'
         handle: Closed functionality
         alt_id: closed-functionality
         components:
@@ -1448,22 +1448,22 @@ chapters:
         alt_id: access-without-speech
         components:
           - none
-      - id: "5.2"
+      - id: '5.2'
         handle: Activation of accessibility features
         alt_id: activation-of-accessibility-features
         components:
           - none
-      - id: "5.3"
+      - id: '5.3'
         handle: Biometrics
         alt_id: biometrics
         components:
           - none
-      - id: "5.4"
+      - id: '5.4'
         handle: Preservation of accessibility information during conversion
         alt_id: preservation-of-accessibility-information-during-conversion
         components:
           - none
-      - id: "5.5"
+      - id: '5.5'
         handle: Operable parts
         alt_id: operable-parts
         components:
@@ -1478,7 +1478,7 @@ chapters:
         alt_id: operable-parts-discernibility
         components:
           - none
-      - id: "5.6"
+      - id: '5.6'
         handle: Locking or toggle controls
         alt_id: locking-or-toggle-controls
         components:
@@ -1493,32 +1493,32 @@ chapters:
         alt_id: visual-status
         components:
           - none
-      - id: "5.7"
+      - id: '5.7'
         handle: Key repeat
         alt_id: key-repeat
         components:
           - none
-      - id: "5.8"
+      - id: '5.8'
         handle: Double-strike key acceptance
         alt_id: double-strike-key-acceptance
         components:
           - none
-      - id: "5.9"
+      - id: '5.9'
         handle: Simultaneous user actions
         alt_id: simultaneous-user-actions
         components:
           - none
   - id: en_301_549_ict_with_two-way_voice
-    label: "Chapter 6: ICT with Two-Way Voice Communication"
+    label: 'Chapter 6: ICT with Two-Way Voice Communication'
     short_label: itc-two-way
     order: 10
     criteria:
-      - id: "6.1"
+      - id: '6.1'
         handle: Audio bandwidth for speech
         alt_id: audio-bandwidth-for-speech
         components:
           - none
-      - id: "6.2"
+      - id: '6.2'
         handle: Real-time text (RTT) functionality
         alt_id: real-time-text-rtt-functionality
         components:
@@ -1563,17 +1563,17 @@ chapters:
         alt_id: rtt-responsiveness
         components:
           - none
-      - id: "6.3"
+      - id: '6.3'
         handle: Caller ID
         alt_id: caller-id
         components:
           - none
-      - id: "6.4"
+      - id: '6.4'
         handle: Alternatives to voice-based services
         alt_id: alternatives-to-voice-based-services
         components:
           - none
-      - id: "6.5"
+      - id: '6.5'
         handle: Video communication
         alt_id: video-communication
         components:
@@ -1608,17 +1608,17 @@ chapters:
         alt_id: speaker-identification-with-video-sign-language-communication
         components:
           - none
-      - id: "6.6"
+      - id: '6.6'
         handle: Alternatives to video-based services (advisory only)
         alt_id: alternatives-to-video-based-services-advisory-only
         components:
           - none
   - id: en_301_549_ict_with_video
-    label: "Chapter 7: ICT with Video Capabilities"
+    label: 'Chapter 7: ICT with Video Capabilities'
     short_label: itc-video
     order: 11
     criteria:
-      - id: "7.1"
+      - id: '7.1'
         handle: Caption processing technology
         alt_id: caption-processing-technology
         components:
@@ -1663,13 +1663,13 @@ chapters:
         alt_id: preservation-of-audio-description
         components:
           - none
-      - id: "7.3"
+      - id: '7.3'
         handle: User controls for captions and audio description
         alt_id: user-controls-for-captions-and-audio-description
         components:
           - none
   - id: en_301_549_hardware
-    label: "Chapter 8: Hardware"
+    label: 'Chapter 8: Hardware'
     short_label: hardware
     order: 12
     criteria:
@@ -1688,7 +1688,7 @@ chapters:
         alt_id: colour
         components:
           - none
-      - id: "8.2"
+      - id: '8.2'
         handle: Hardware products with speech output
         alt_id: hardware-products-with-speech-output
         components:
@@ -1713,7 +1713,7 @@ chapters:
         alt_id: wireless-communication-devices
         components:
           - none
-      - id: "8.3"
+      - id: '8.3'
         handle: Stationary ICT
         alt_id: stationary-ict
         components:
@@ -1808,7 +1808,7 @@ chapters:
         alt_id: installation-instructions
         components:
           - none
-      - id: "8.4"
+      - id: '8.4'
         handle: Mechanically Operable parts
         alt_id: mechanically-operable-parts
         components:
@@ -1833,46 +1833,46 @@ chapters:
         alt_id: keys-tickets-and-fare-cards
         components:
           - none
-      - id: "8.5"
+      - id: '8.5'
         handle: Tactile indication of speech mode
         alt_id: tactile-indication-of-speech-mode
         components:
           - none
   - id: en_301_549_web
-    label: "Chapter 9: Web"
+    label: 'Chapter 9: Web'
     short_label: web
     order: 13
   - id: en_301_549_non-web-documents
-    label: "Chapter 10: Non-Web Documents"
+    label: 'Chapter 10: Non-Web Documents'
     short_label: non-web-documents
     order: 14
     criteria:
-      - id: "10.0"
+      - id: '10.0'
         handle: General (informative)
         alt_id: general-informative
         components:
           - none
-      - id: "10.5"
+      - id: '10.5'
         handle: Caption positioning
         alt_id: caption-positioning
         components:
           - none
-      - id: "10.6"
+      - id: '10.6'
         handle: Audio description timing
         alt_id: audio-description-timing
         components:
           - none
   - id: en_301_549_software
-    label: "Chapter 11: Software"
+    label: 'Chapter 11: Software'
     short_label: software
     order: 15
     criteria:
-      - id: "11.0"
+      - id: '11.0'
         handle: General (informative)
         alt_id: general-informative
         components:
           - none
-      - id: "11.5"
+      - id: '11.5'
         handle: Interoperability with assistive technology
         alt_id: interoperability-with-assistive-technology
         components:
@@ -1975,7 +1975,7 @@ chapters:
         alt_id: modifications-of-values-and-text
         components:
           - none
-      - id: "11.6"
+      - id: '11.6'
         handle: Documented accessibility usage
         alt_id: documented-accessibility-usage
         components:
@@ -1990,12 +1990,12 @@ chapters:
         alt_id: no-disruption-of-accessibility-features
         components:
           - none
-      - id: "11.7"
+      - id: '11.7'
         handle: User preferences
         alt_id: user-preferences
         components:
           - none
-      - id: "11.8"
+      - id: '11.8'
         handle: Authoring tools
         alt_id: authoring-tools
         components:
@@ -2026,11 +2026,11 @@ chapters:
         components:
           - none
   - id: en_301_549_documentation_and_support_services
-    label: "Chapter 12: Documentation and Support Services"
+    label: 'Chapter 12: Documentation and Support Services'
     short_label: documentation-and-support-services
     order: 16
     criteria:
-      - id: "12.1"
+      - id: '12.1'
         handle: Product documentation
         alt_id: product-documentation
         components:
@@ -2045,7 +2045,7 @@ chapters:
         alt_id: accessible-documentation
         components:
           - none
-      - id: "12.2"
+      - id: '12.2'
         handle: Support services
         alt_id: support-services
         components:
@@ -2066,11 +2066,11 @@ chapters:
         components:
           - none
   - id: en_301_549_ict_providing_relay_or_emergency_service_access
-    label: "Chapter 13: ICT Providing Relay or Emergency Service Access"
+    label: 'Chapter 13: ICT Providing Relay or Emergency Service Access'
     short_label: itc-providing-relay-or-emergency-service-access
     order: 17
     criteria:
-      - id: "13.1"
+      - id: '13.1'
         handle: Relay services requirements
         alt_id: relay-services-requirements
         components:
@@ -2100,12 +2100,12 @@ chapters:
         alt_id: speech-to-speech-relay-services
         components:
           - none
-      - id: "13.2"
+      - id: '13.2'
         handle: Access to relay services
         alt_id: access-to-relay-services
         components:
           - none
-      - id: "13.3"
+      - id: '13.3'
         handle: Access to emergency services
         alt_id: access-to-emergency-services
         components:
@@ -2120,7 +2120,7 @@ components:
   - id: authoring-tool
     label: Authoring Tool
   - id: none
-    label: ""
+    label: ''
 terms:
   - id: supports
     label: Supports
