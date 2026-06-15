@@ -17,6 +17,7 @@ import {
   logDislikeGeneratedAnswer,
   logHoverCitation,
   logLikeGeneratedAnswer,
+  logOpenGeneratedAnswerFollowUpSource,
   logOpenGeneratedAnswerSource,
 } from '../../../features/generated-answer/generated-answer-analytics-actions.js';
 import {getGeneratedAnswerInitialState} from '../../../features/generated-answer/generated-answer-state.js';
@@ -559,43 +560,51 @@ describe('GeneratedAnswerWithFollowUps', () => {
           answerId: 'head-id',
         },
       });
+      engine.state.configuration.knowledge.agentId = 'some-agent-id';
     });
 
-    it('should delegate to core logCitationClick when no answerId is provided', () => {
+    it('should dispatch logOpenGeneratedAnswerSource when no answerId is provided', () => {
       const controller = createGeneratedAnswerWithFollowUps();
 
       controller.logCitationClick(citationId);
 
-      expect(mockCoreCitationClick).toHaveBeenCalledWith(citationId);
-      expect(logOpenGeneratedAnswerSource).not.toHaveBeenCalled();
+      expect(logOpenGeneratedAnswerSource).toHaveBeenCalledWith(
+        citationId,
+        undefined
+      );
+      expect(logOpenGeneratedAnswerFollowUpSource).not.toHaveBeenCalled();
     });
 
-    it('should delegate to core logCitationClick when answerId matches head answer', () => {
+    it('should dispatch logOpenGeneratedAnswerSource when answerId matches head answer', () => {
       engine = buildEngineWithGeneratedAnswer({
         generatedAnswer: {
           ...getGeneratedAnswerInitialState(),
           answerId: headAnswerId,
         },
       });
+      engine.state.configuration.knowledge.agentId = 'some-agent-id';
 
       const controller = createGeneratedAnswerWithFollowUps();
 
       controller.logCitationClick(citationId, headAnswerId);
 
-      expect(mockCoreCitationClick).toHaveBeenCalledWith(citationId);
-      expect(logOpenGeneratedAnswerSource).not.toHaveBeenCalled();
+      expect(logOpenGeneratedAnswerSource).toHaveBeenCalledWith(
+        citationId,
+        headAnswerId
+      );
+      expect(logOpenGeneratedAnswerFollowUpSource).not.toHaveBeenCalled();
     });
 
-    it('should dispatch citation click analytics when answerId targets a follow-up answer', () => {
+    it('should dispatch logOpenGeneratedAnswerFollowUpSource when answerId targets a follow-up answer', () => {
       const controller = createGeneratedAnswerWithFollowUps();
 
       controller.logCitationClick(citationId, followUpAnswerId);
 
-      expect(logOpenGeneratedAnswerSource).toHaveBeenCalledWith(
+      expect(logOpenGeneratedAnswerFollowUpSource).toHaveBeenCalledWith(
         citationId,
         followUpAnswerId
       );
-      expect(mockCoreCitationClick).not.toHaveBeenCalled();
+      expect(logOpenGeneratedAnswerSource).not.toHaveBeenCalled();
     });
   });
 

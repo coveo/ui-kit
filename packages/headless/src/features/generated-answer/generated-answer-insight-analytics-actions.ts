@@ -3,7 +3,7 @@ import {
   citationDocumentIdentifier,
   type InsightAction,
   makeInsightAnalyticsActionFactory,
-  partialCitationInformation,
+  partialDocumentInformationFromCitation,
 } from '../analytics/analytics-utils.js';
 import {SearchPageEvents} from '../analytics/search-action-cause.js';
 import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state.js';
@@ -41,7 +41,7 @@ export const logOpenGeneratedAnswerSource = (
           return null;
         }
         return client.logGeneratedAnswerCitationClick(
-          partialCitationInformation(citation, state),
+          partialDocumentInformationFromCitation(citation, state),
           {
             generativeQuestionAnsweringId,
             citationId: citation.id,

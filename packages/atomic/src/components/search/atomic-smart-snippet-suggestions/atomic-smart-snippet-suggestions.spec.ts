@@ -522,7 +522,7 @@ describe('atomic-smart-snippet-suggestions', () => {
 
       const sourceEl = locators.smartSnippetSource();
       sourceEl?.dispatchEvent(
-        new CustomEvent('selectSource', {bubbles: true, composed: true})
+        new CustomEvent('select-source', {bubbles: true, composed: true})
       );
 
       expect(selectSource).toHaveBeenCalledWith('q1');
