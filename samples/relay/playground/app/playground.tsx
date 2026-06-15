@@ -1,29 +1,29 @@
-"use client";
+'use client';
 
-import { AppShell, Burger, Flex, NavLink, Text } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import { usePathname } from "next/navigation";
-import Link from "next/link";
+import {AppShell, Burger, Flex, NavLink, Text} from '@mantine/core';
+import {useDisclosure} from '@mantine/hooks';
+import {usePathname} from 'next/navigation';
+import Link from 'next/link';
 
 export function Playground(props: React.PropsWithChildren) {
-  const { children } = props;
-  const navLinks = ["Sandbox", "CDN", "GTM", "SSR"] as const;
+  const {children} = props;
+  const navLinks = ['Sandbox', 'CDN', 'GTM', 'SSR'] as const;
   const pathName = usePathname();
-  const [opened, { toggle }] = useDisclosure();
+  const [opened, {toggle}] = useDisclosure();
 
   function isActiveNavLink(index: number, slug: string) {
-    const isDefault = index === 0 && pathName === "/";
-    const lastSegment = pathName.split("/").at(-1) || "";
+    const isDefault = index === 0 && pathName === '/';
+    const lastSegment = pathName.split('/').at(-1) || '';
     return isDefault || lastSegment.startsWith(slug);
   }
 
   return (
     <AppShell
-      header={{ height: 60 }}
+      header={{height: 60}}
       navbar={{
         width: 240,
-        breakpoint: "sm",
-        collapsed: { mobile: !opened },
+        breakpoint: 'sm',
+        collapsed: {mobile: !opened},
       }}
       padding="md"
     >
@@ -38,11 +38,11 @@ export function Playground(props: React.PropsWithChildren) {
 
       <AppShell.Navbar p="md">
         {navLinks.map((navLink, i) => {
-          const isDev = process.env["NODE_ENV"] === "development";
+          const isDev = process.env['NODE_ENV'] === 'development';
           const slug = navLink.toLowerCase();
           const href =
-            navLink === "SSR"
-              ? "/api/ssr"
+            navLink === 'SSR'
+              ? '/api/ssr'
               : isDev
                 ? `/${slug}`
                 : `/relay/playground/${slug}.html`;

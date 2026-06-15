@@ -1,8 +1,8 @@
-import { vi } from "vitest";
-import { ListenerManager } from "../listener/listener.js";
+import {vi} from 'vitest';
+import {ListenerManager} from '../listener/listener.js';
 
 export function createMockListenerManager(
-  config: Partial<ListenerManager> = {},
+  config: Partial<ListenerManager> = {}
 ): ListenerManager {
   return {
     add: vi.fn(),

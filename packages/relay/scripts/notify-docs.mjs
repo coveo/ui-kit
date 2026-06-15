@@ -1,16 +1,16 @@
-import { Octokit } from "@octokit/rest";
-import fs from "fs";
-import path from "path";
+import {Octokit} from '@octokit/rest';
+import fs from 'fs';
+import path from 'path';
 
-const github = new Octokit({ auth: process.env.GITHUB_TOKEN });
+const github = new Octokit({auth: process.env.GITHUB_TOKEN});
 
-const owner = "coveo";
-const repo = "doc_jekyll-public-site";
-const event_type = "published_relay_to_npm";
+const owner = 'coveo';
+const repo = 'doc_jekyll-public-site';
+const event_type = 'published_relay_to_npm';
 
 async function notify() {
   const relay_version = getRelayPackageVersion();
-  const client_payload = { relay_version };
+  const client_payload = {relay_version};
 
   return github.repos.createDispatchEvent({
     owner,
@@ -21,8 +21,8 @@ async function notify() {
 }
 
 function getRelayPackageVersion() {
-  const packagePath = path.join("packages", "relay", "package.json");
-  const packageFile = fs.readFileSync(packagePath, "utf8");
+  const packagePath = path.join('packages', 'relay', 'package.json');
+  const packageFile = fs.readFileSync(packagePath, 'utf8');
   const packageJson = JSON.parse(packageFile);
   return packageJson.version;
 }
@@ -30,10 +30,10 @@ function getRelayPackageVersion() {
 async function main() {
   try {
     await notify();
-    console.log("notification sent to docs repo");
+    console.log('notification sent to docs repo');
   } catch (e) {
-    const { status, message, request } = e;
-    console.error("notification failed to send to docs repo", status, message);
+    const {status, message, request} = e;
+    console.error('notification failed to send to docs repo', status, message);
     console.log(request);
     process.exit(1);
   }

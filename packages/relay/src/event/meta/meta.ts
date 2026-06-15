@@ -1,7 +1,7 @@
-import type { Environment } from "../../environment/environment.js";
-import type { RelayConfig } from "../../config/config.js";
-import { version } from "../../version.js";
-import { truncateUrl } from "../../utils/url-shortener.js";
+import type {Environment} from '../../environment/environment.js';
+import type {RelayConfig} from '../../config/config.js';
+import {version} from '../../version.js';
+import {truncateUrl} from '../../utils/url-shortener.js';
 
 /**
  * The `EventConfig` object provides additional information for the configuration associated with the event.
@@ -60,8 +60,8 @@ export interface Meta {
 }
 
 function getEventConfig(config: RelayConfig): EventConfig {
-  const { trackingId } = config;
-  return { trackingId };
+  const {trackingId} = config;
+  return {trackingId};
 }
 
 function getSource(config: RelayConfig): string[] {
@@ -71,9 +71,9 @@ function getSource(config: RelayConfig): string[] {
 export function createMeta(
   type: string,
   config: RelayConfig,
-  environment: Environment,
+  environment: Environment
 ): Readonly<Meta> {
-  const { getReferrer, getLocation, getUserAgent } = environment;
+  const {getReferrer, getLocation, getUserAgent} = environment;
   const eventConfig = getEventConfig(config);
   const clientId = environment.getClientId();
 

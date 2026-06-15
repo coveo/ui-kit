@@ -1,8 +1,8 @@
-"use client";
-import { Editor } from "@monaco-editor/react";
-import { useState } from "react";
-import { EventDropdown } from "./validator/event-dropdown";
-import { events } from "./events";
+'use client';
+import {Editor} from '@monaco-editor/react';
+import {useState} from 'react';
+import {EventDropdown} from './validator/event-dropdown';
+import {events} from './events';
 import {
   Anchor,
   Box,
@@ -12,8 +12,8 @@ import {
   List,
   Space,
   Title,
-} from "@mantine/core";
-import { relay } from "../relay";
+} from '@mantine/core';
+import {relay} from '../relay';
 
 export default function Page() {
   function prettify(obj: object) {
@@ -69,7 +69,7 @@ export default function Page() {
             language="json"
             theme="vs-dark"
             value={payload}
-            options={{ minimap: { enabled: false }, contextmenu: false }}
+            options={{minimap: {enabled: false}, contextmenu: false}}
             onChange={(value) => value && setPayload(value)}
           />
         </Box>
@@ -81,10 +81,10 @@ export default function Page() {
         <Space h="md" />
         <List type="ordered">
           <List.Item>
-            Install the extension{" "}
+            Install the extension{' '}
             <Anchor
               href={
-                "https://chromewebstore.google.com/detail/coveo-explorer/akkdleiokjfjokbaglggbmikofodocik"
+                'https://chromewebstore.google.com/detail/coveo-explorer/akkdleiokjfjokbaglggbmikofodocik'
               }
               target="_blank"
             >

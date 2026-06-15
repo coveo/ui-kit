@@ -11,7 +11,7 @@ export const versionCompare = (version1, version2) => {
 };
 
 const parseVersion = (version) => {
-  return version.split(".").map((num) => parseInt(num, 10));
+  return version.split('.').map((num) => parseInt(num, 10));
 };
 
 const recursiveVersionCompare = (version1, version2, i) => {

@@ -1,14 +1,14 @@
-import { createExplorerMessenger } from "@coveo/explorer-messenger";
-import type { Environment } from "../environment.js";
-import { createBrowserStorage } from "./storage/storage.js";
-import type { RelayEvent } from "../../event/relay-event.js";
-import { v4 as uuidv4, validate } from "uuid";
-import { clientIdKey } from "../../constants.js";
+import {createExplorerMessenger} from '@coveo/explorer-messenger';
+import type {Environment} from '../environment.js';
+import {createBrowserStorage} from './storage/storage.js';
+import type {RelayEvent} from '../../event/relay-event.js';
+import {v4 as uuidv4, validate} from 'uuid';
+import {clientIdKey} from '../../constants.js';
 
 function getReferrer(): string | null {
   const referrer = document.referrer;
 
-  return referrer === "" ? null : referrer;
+  return referrer === '' ? null : referrer;
 }
 
 type EventServiceResponseModel = {
@@ -23,25 +23,25 @@ export function buildBrowserEnvironment(): Environment {
   const storage = createBrowserStorage();
 
   return {
-    runtime: "browser",
+    runtime: 'browser',
     send: async (url: string, token: string, event: RelayEvent) => {
       const fetchPromise = fetch(url, {
-        method: "POST",
+        method: 'POST',
         body: JSON.stringify([event]),
         keepalive: true,
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
       });
 
       const messenger = createExplorerMessenger();
-      messenger.sendMessage({ kind: "EVENT_PROTOCOL", event, url, token });
+      messenger.sendMessage({kind: 'EVENT_PROTOCOL', event, url, token});
 
       const fetchResponse = await fetchPromise;
       if (!fetchResponse?.ok) {
         throw new Error(
-          `Error ${fetchResponse.status}: Failed to send the event(s).`,
+          `Error ${fetchResponse.status}: Failed to send the event(s).`
         );
       } else {
         let response: EventServiceResponseModel;
@@ -53,7 +53,7 @@ export function buildBrowserEnvironment(): Environment {
         for (const eventResponse of response.events) {
           if (!eventResponse.accepted) {
             throw new Error(
-              `Received event was rejected for processing: ${eventResponse.errorMessage}`,
+              `Received event was rejected for processing: ${eventResponse.errorMessage}`
             );
           }
         }

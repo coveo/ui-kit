@@ -1,4 +1,4 @@
-import { defineConfig } from "vitest/config";
+import {defineConfig} from 'vitest/config';
 
 export default defineConfig({
   test: {
@@ -6,19 +6,19 @@ export default defineConfig({
     projects: [
       {
         test: {
-          name: "node",
+          name: 'node',
           globals: true,
-          include: ["**/*.test.ts"],
-          exclude: ["**/*.jsdom.test.ts", "**/functional.test.ts"],
-          environment: "node",
+          include: ['**/*.test.ts'],
+          exclude: ['**/*.jsdom.test.ts', '**/functional.test.ts'],
+          environment: 'node',
         },
       },
       {
         test: {
-          name: "jsdom",
+          name: 'jsdom',
           globals: true,
-          include: ["**/*.jsdom.test.ts"],
-          environment: "jsdom",
+          include: ['**/*.jsdom.test.ts'],
+          environment: 'jsdom',
         },
       },
     ],
