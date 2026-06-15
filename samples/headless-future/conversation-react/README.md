@@ -62,8 +62,35 @@ When `VITE_COVEO_USE_VITE_PROXY=true`, the sample sends requests to the local Vi
 ## Scripts
 
 - pnpm dev
+- pnpm dev:mock — run against the local mock server (no credentials needed)
 - pnpm build
 - pnpm preview
 - pnpm test
 - pnpm e2e
 - pnpm e2e:watch
+
+## Running with the Mock Server
+
+To run against the mock converse API (no live backend or credentials needed):
+
+1. Start the mock server:
+
+```bash
+cd packages/mock-converse-api && pnpm start
+```
+
+2. Start the sample in mock mode:
+
+```bash
+cd samples/headless-future/conversation-react && pnpm dev:mock
+```
+
+This loads `.env.mock` which points `VITE_COVEO_ENDPOINT` to `http://localhost:3000`. The Vite proxy forwards `/rest/*` requests to the mock server.
+
+Supported prompts in mock mode:
+
+- "Build a beginner surfing kit with budget, mid-range, and premium options"
+- "What should I pack for a snorkeling trip?"
+- "kayaks"
+- "wetsuits"
+- Any other text (returns a fallback response)
