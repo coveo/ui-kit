@@ -191,4 +191,19 @@ export class GeneratedAnswerPageObject extends BasePageObject {
 
     return legacyAnalyticsRequest;
   }
+
+  async waitForStreamEndAnalyticsRequest() {
+    const streamEndRequest = await this.page.waitForRequest((request) => {
+      if (
+        request.method() === 'POST' &&
+        /\/rest\/v15\/analytics\/custom/.test(request.url())
+      ) {
+        const body = request.postDataJSON();
+        return body?.eventValue === 'generatedAnswerStreamEnd';
+      }
+      return false;
+    });
+
+    return streamEndRequest;
+  }
 }

@@ -260,18 +260,19 @@ const headAnswerResponse = () =>
     delayBetweenMessages: 'real',
   });
 
-declare global {
-  interface Window {
-    __resumeAgentStream?: () => void;
-  }
-}
-
 /**
- * Builds a streaming response that pauses indefinitely after the first message
- * until `window.__resumeAgentStream()` is called.
+ * Builds a streaming response using `delayBetweenMessages: 'infinite'`.
+ * The first two messages (RUN_STARTED, header) have `delayMs: 0` so the
+ * component enables follow-ups and renders the input in disabled state.
+ * The stream resumes when a 'resume' message is posted to the
+ * '__agentStreamControl' BroadcastChannel.
  */
 const pausableHeadAnswerResponse = () => {
-  const responseMessages = cloneMessagesForResponse(headAnswerMessages);
+  const messagesWithEarlyDelivery = headAnswerMessages.map((msg, i) =>
+    i < 2 ? {...msg, delayMs: 0} : msg
+  );
+
+  const responseMessages = cloneMessagesForResponse(messagesWithEarlyDelivery);
 
   const stream = new ReadableStream({
     start(controller) {
@@ -289,19 +290,25 @@ const pausableHeadAnswerResponse = () => {
 
   let resumed = false;
   const resumePromise = new Promise<void>((resolve) => {
-    window.__resumeAgentStream = () => {
-      resumed = true;
-      resolve();
+    const channel = new BroadcastChannel('__agentStreamControl');
+    channel.onmessage = (event) => {
+      if (event.data === 'resume') {
+        resumed = true;
+        channel.close();
+        resolve();
+      }
     };
   });
 
   let messageIndex = 0;
   const latencyStream = new TransformStream({
     async transform(chunk, controller) {
-      if (messageIndex === 1 && !resumed) {
+      const message = responseMessages[messageIndex];
+      const delayMs = message?.delayMs ?? Number.POSITIVE_INFINITY;
+      if (delayMs === Number.POSITIVE_INFINITY && !resumed) {
         await resumePromise;
-      } else if (messageIndex > 0) {
-        await delay(50);
+      } else if (delayMs > 0) {
+        await delay(delayMs);
       }
       messageIndex++;
       controller.enqueue(chunk);

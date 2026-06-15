@@ -163,6 +163,8 @@ export const WithAgentIdStreaming: Story = {
     'answer-configuration-id': undefined,
   },
   play: async (storyContext) => {
+    // First mockOnce is consumed by executeFirstSearch(), second by the search box query.
+    agentApiHarness.answerEndpoint.mockOnce((base) => base);
     agentApiHarness.answerEndpoint.mockOnce(() => pausableHeadAnswerResponse);
     await playWithLegacyAnalytics(storyContext);
     await submitGeneratedAnswerQuery(storyContext);
