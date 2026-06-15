@@ -17,11 +17,28 @@ export function normalizeGenerationStepName(name: string): GenerationStepName {
   return name.toLowerCase() as GenerationStepName;
 }
 
+export interface ToolCallArgsGeneric {
+  raw: string;
+}
+
+export interface ToolCallArgsSearch {
+  q: string;
+}
+
+export interface GenerationToolCall {
+  toolCallName: string;
+  toolCallId: string;
+  startedAt: number;
+  finishedAt?: number;
+  toolCallArgs?: Array<ToolCallArgsSearch | ToolCallArgsGeneric>;
+}
+
 export interface GenerationStep {
   name: GenerationStepName;
   status: GenerationStepStatus;
   startedAt: number;
   finishedAt?: number;
+  toolCalls?: Array<GenerationToolCall>;
 }
 
 /**

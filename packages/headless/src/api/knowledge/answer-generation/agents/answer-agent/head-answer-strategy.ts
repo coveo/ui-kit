@@ -8,6 +8,7 @@ import {
 } from '../../../../../features/follow-up-answers/follow-up-answers-actions.js';
 import {
   finishStep,
+  finishToolCall,
   setAnswerContentFormat,
   setAnswerId,
   setCannotAnswer,
@@ -15,6 +16,8 @@ import {
   setIsLoading,
   setIsStreaming,
   startStep,
+  startToolCall,
+  toolCallArgs,
   updateCitations,
   updateError,
   updateMessage,
@@ -23,7 +26,11 @@ import {
   logGeneratedAnswerResponseLinked,
   logGeneratedAnswerStreamEnd,
 } from '../../../../../features/generated-answer/generated-answer-analytics-actions.js';
-import type {GenerationStepName} from '../../../../../features/generated-answer/generated-answer-state.js';
+import type {
+  GenerationStepName,
+  ToolCallArgsGeneric,
+  ToolCallArgsSearch,
+} from '../../../../../features/generated-answer/generated-answer-state.js';
 import {mapRunErrorCode} from '../../../../../features/generated-answer/sse-generated-answer-errors.js';
 
 /**
@@ -60,6 +67,38 @@ export const createHeadAnswerStrategy = (
           finishedAt: event.timestamp ?? Date.now(),
         })
       );
+    },
+    onToolCallStartEvent: ({event}) => {
+      const {toolCallName, toolCallId, timestamp} = event;
+      dispatch(
+        startToolCall({
+          toolCallId,
+          toolCallName,
+          startedAt: timestamp ?? Date.now(),
+        })
+      );
+    },
+    onToolCallEndEvent: ({event}) => {
+      const {toolCallId, timestamp} = event;
+      dispatch(
+        finishToolCall({
+          toolCallId,
+          finishedAt: timestamp ?? Date.now(),
+        })
+      );
+    },
+    onToolCallArgsEvent: ({event}) => {
+      const {toolCallId, delta} = event;
+      try {
+        // In AG-UI protocol, a tool call can stream a delta (a partial object) of tool call args, but we're enforcing that the delta
+        // is a complete JSON object representing the tool call args for simplicity and ease of use in the UI.
+        const parsedArgs = JSON.parse(delta);
+        const args: ToolCallArgsSearch | ToolCallArgsGeneric =
+          typeof parsedArgs?.q === 'string' ? parsedArgs : {raw: delta};
+        dispatch(toolCallArgs({toolCallId, args}));
+      } catch {
+        dispatch(toolCallArgs({toolCallId, args: {raw: delta}}));
+      }
     },
     onTextMessageContentEvent: ({event}) => {
       if (event.delta.length > 0) {

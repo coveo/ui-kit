@@ -19,6 +19,8 @@ import {
   GENERATION_STEP_NAMES,
   type GenerationStepName,
   normalizeGenerationStepName,
+  ToolCallArgsGeneric,
+  ToolCallArgsSearch,
 } from '../generated-answer/generated-answer-state.js';
 import type {GeneratedContentFormat} from '../generated-answer/generated-response-format.js';
 
@@ -190,5 +192,45 @@ export const followUpStepFinished = createAction(
       answerId: requiredNonEmptyString,
       name: generationStepNameValue,
       finishedAt: new NumberValue({min: 0, required: true}),
+    })
+);
+
+export const followUpToolCallStarted = createAction(
+  'followUpAnswers/startToolCall',
+  (payload: {
+    answerId: string;
+    toolCallName: string;
+    startedAt: number;
+    toolCallId: string;
+  }) =>
+    validatePayload(payload, {
+      answerId: requiredNonEmptyString,
+      toolCallName: requiredNonEmptyString,
+      startedAt: new NumberValue({min: 0, required: true}),
+      toolCallId: requiredNonEmptyString,
+    })
+);
+
+export const followUpToolCallFinished = createAction(
+  'followUpAnswers/finishToolCall',
+  (payload: {answerId: string; finishedAt: number; toolCallId: string}) =>
+    validatePayload(payload, {
+      answerId: requiredNonEmptyString,
+      finishedAt: new NumberValue({min: 0, required: true}),
+      toolCallId: requiredNonEmptyString,
+    })
+);
+
+export const followUpToolCallArgs = createAction(
+  'followUpAnswers/toolCallArgs',
+  (payload: {
+    answerId: string;
+    toolCallId: string;
+    args: ToolCallArgsSearch | ToolCallArgsGeneric;
+  }) =>
+    validatePayload(payload, {
+      answerId: requiredNonEmptyString,
+      toolCallId: requiredNonEmptyString,
+      args: new RecordValue({options: {required: true}}),
     })
 );

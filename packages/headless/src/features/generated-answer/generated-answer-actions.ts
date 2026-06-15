@@ -44,6 +44,8 @@ import {
   GENERATION_STEP_NAMES,
   type GenerationStepName,
   normalizeGenerationStepName,
+  ToolCallArgsGeneric,
+  ToolCallArgsSearch,
 } from './generated-answer-state.js';
 import {
   type GeneratedContentFormat,
@@ -248,6 +250,37 @@ export const finishStep = createAction(
     validatePayload(normalizeGenerationStepPayload(payload), {
       name: generationStepNameValue,
       finishedAt: new NumberValue({min: 0, required: true}),
+    })
+);
+
+export const startToolCall = createAction(
+  'generatedAnswer/startToolCall',
+  (payload: {toolCallName: string; startedAt: number; toolCallId: string}) =>
+    validatePayload(payload, {
+      toolCallName: new StringValue({required: true}),
+      startedAt: new NumberValue({min: 0, required: true}),
+      toolCallId: new StringValue({required: true}),
+    })
+);
+
+export const finishToolCall = createAction(
+  'generatedAnswer/finishToolCall',
+  (payload: {finishedAt: number; toolCallId: string}) =>
+    validatePayload(payload, {
+      finishedAt: new NumberValue({min: 0, required: true}),
+      toolCallId: new StringValue({required: true}),
+    })
+);
+
+export const toolCallArgs = createAction(
+  'generatedAnswer/toolCallArgs',
+  (payload: {
+    toolCallId: string;
+    args: ToolCallArgsSearch | ToolCallArgsGeneric;
+  }) =>
+    validatePayload(payload, {
+      toolCallId: new StringValue({required: true}),
+      args: new RecordValue({options: {required: true}}),
     })
 );
 

@@ -7,6 +7,7 @@ import {
   dislikeGeneratedAnswer,
   expandGeneratedAnswer,
   finishStep,
+  finishToolCall,
   likeGeneratedAnswer,
   openGeneratedAnswerFeedbackModal,
   registerFieldsToIncludeInCitations,
@@ -24,6 +25,8 @@ import {
   setIsStreaming,
   setIsVisible,
   startStep,
+  startToolCall,
+  toolCallArgs,
   updateAnswerConfigurationId,
   updateCitations,
   updateError,
@@ -164,6 +167,45 @@ export const generatedAnswerReducer = createReducer(
         if (step) {
           step.status = 'completed';
           step.finishedAt = payload.finishedAt;
+        }
+      })
+      .addCase(startToolCall, (state, {payload}) => {
+        const {toolCallName, toolCallId, startedAt} = payload;
+        const currentActiveStep = state.generationSteps.findLast(
+          (step) => step.status === 'active'
+        );
+        if (currentActiveStep) {
+          currentActiveStep.toolCalls = currentActiveStep.toolCalls || [];
+          currentActiveStep.toolCalls.push({
+            toolCallName,
+            toolCallId,
+            startedAt,
+          });
+        }
+      })
+      .addCase(toolCallArgs, (state, {payload}) => {
+        const {toolCallId, args} = payload;
+        const currentActiveStep = state.generationSteps.findLast(
+          (step) => step.status === 'active'
+        );
+        const toolCall = currentActiveStep?.toolCalls?.find(
+          (call) => call.toolCallId === toolCallId
+        );
+        if (toolCall) {
+          toolCall.toolCallArgs = toolCall.toolCallArgs || [];
+          toolCall.toolCallArgs.push(args);
+        }
+      })
+      .addCase(finishToolCall, (state, {payload}) => {
+        const {toolCallId, finishedAt} = payload;
+        const currentActiveStep = state.generationSteps.findLast(
+          (step) => step.status === 'active'
+        );
+        const toolCall = currentActiveStep?.toolCalls?.find(
+          (call) => call.toolCallId === toolCallId
+        );
+        if (toolCall) {
+          toolCall.finishedAt = finishedAt;
         }
       })
 );

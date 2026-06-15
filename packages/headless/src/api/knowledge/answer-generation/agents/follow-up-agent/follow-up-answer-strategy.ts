@@ -7,6 +7,9 @@ import {
   followUpMessageChunkReceived,
   followUpStepFinished,
   followUpStepStarted,
+  followUpToolCallFinished,
+  followUpToolCallStarted,
+  followUpToolCallArgs,
   setActiveFollowUpAnswerId,
   setFollowUpAnswerContentFormat,
   setFollowUpIsLoading,
@@ -16,7 +19,11 @@ import {
   logGeneratedAnswerResponseLinked,
   logGeneratedAnswerStreamEnd,
 } from '../../../../../features/generated-answer/generated-answer-analytics-actions.js';
-import type {GenerationStepName} from '../../../../../features/generated-answer/generated-answer-state.js';
+import type {
+  GenerationStepName,
+  ToolCallArgsGeneric,
+  ToolCallArgsSearch,
+} from '../../../../../features/generated-answer/generated-answer-state.js';
 import {mapRunErrorCode} from '../../../../../features/generated-answer/sse-generated-answer-errors.js';
 
 /**
@@ -53,6 +60,46 @@ export const createFollowUpStrategy = (
           answerId: runId,
         })
       );
+    },
+    onToolCallStartEvent: ({event}) => {
+      const {toolCallName, toolCallId, timestamp} = event;
+      dispatch(
+        followUpToolCallStarted({
+          answerId: runId,
+          toolCallId,
+          toolCallName,
+          startedAt: timestamp ?? Date.now(),
+        })
+      );
+    },
+    onToolCallEndEvent: ({event}) => {
+      const {toolCallId, timestamp} = event;
+      dispatch(
+        followUpToolCallFinished({
+          answerId: runId,
+          toolCallId,
+          finishedAt: timestamp ?? Date.now(),
+        })
+      );
+    },
+    onToolCallArgsEvent: ({event}) => {
+      const {toolCallId, delta} = event;
+      try {
+        // In AG-UI protocol, a tool call can stream a delta (a partial object) of tool call args, but we're enforcing that the delta
+        // is a complete JSON object representing the tool call args for simplicity and ease of use in the UI.
+        const parsedArgs = JSON.parse(delta);
+        const args: ToolCallArgsSearch | ToolCallArgsGeneric =
+          typeof parsedArgs?.q === 'string' ? parsedArgs : {raw: delta};
+        dispatch(followUpToolCallArgs({answerId: runId, toolCallId, args}));
+      } catch {
+        dispatch(
+          followUpToolCallArgs({
+            answerId: runId,
+            toolCallId,
+            args: {raw: delta},
+          })
+        );
+      }
     },
     onTextMessageContentEvent: ({event}) => {
       if (event.delta.length > 0) {

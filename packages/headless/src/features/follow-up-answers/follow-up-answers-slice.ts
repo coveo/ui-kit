@@ -11,6 +11,9 @@ import {
   followUpMessageChunkReceived,
   followUpStepFinished,
   followUpStepStarted,
+  followUpToolCallArgs,
+  followUpToolCallFinished,
+  followUpToolCallStarted,
   likeFollowUp,
   resetFollowUpAnswers,
   setActiveFollowUpAnswerId,
@@ -217,5 +220,59 @@ export const followUpAnswersReducer = createReducer(
         state.conversationId = '';
         state.conversationToken = '';
         state.isEnabled = false;
+      })
+      .addCase(followUpToolCallStarted, (state, {payload}) => {
+        const followUpAnswer = getFollowUpByAnswerId(state, payload.answerId);
+        if (!followUpAnswer) {
+          return;
+        }
+
+        const {toolCallName, toolCallId, startedAt} = payload;
+        const currentActiveStep = followUpAnswer.generationSteps.findLast(
+          (step) => step.status === 'active'
+        );
+        if (currentActiveStep) {
+          currentActiveStep.toolCalls = currentActiveStep.toolCalls || [];
+          currentActiveStep.toolCalls.push({
+            toolCallName,
+            toolCallId,
+            startedAt,
+          });
+        }
+      })
+      .addCase(followUpToolCallArgs, (state, {payload}) => {
+        const {toolCallId, args} = payload;
+        const followUpAnswer = getFollowUpByAnswerId(state, payload.answerId);
+        if (!followUpAnswer) {
+          return;
+        }
+
+        const currentActiveStep = followUpAnswer.generationSteps.findLast(
+          (step) => step.status === 'active'
+        );
+        const toolCall = currentActiveStep?.toolCalls?.find(
+          (call) => call.toolCallId === toolCallId
+        );
+        if (toolCall) {
+          toolCall.toolCallArgs = toolCall.toolCallArgs || [];
+          toolCall.toolCallArgs.push(args);
+        }
+      })
+      .addCase(followUpToolCallFinished, (state, {payload}) => {
+        const {toolCallId, finishedAt} = payload;
+        const followUpAnswer = getFollowUpByAnswerId(state, payload.answerId);
+        if (!followUpAnswer) {
+          return;
+        }
+
+        const currentActiveStep = followUpAnswer.generationSteps.findLast(
+          (step) => step.status === 'active'
+        );
+        const toolCall = currentActiveStep?.toolCalls?.find(
+          (call) => call.toolCallId === toolCallId
+        );
+        if (toolCall) {
+          toolCall.finishedAt = finishedAt;
+        }
       })
 );

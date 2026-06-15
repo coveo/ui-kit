@@ -10,6 +10,9 @@ import {
   followUpMessageChunkReceived,
   followUpStepFinished,
   followUpStepStarted,
+  followUpToolCallArgs,
+  followUpToolCallFinished,
+  followUpToolCallStarted,
   likeFollowUp,
   resetFollowUpAnswers,
   setActiveFollowUpAnswerId,
@@ -1060,6 +1063,293 @@ describe('follow-up answers slice', () => {
       expect(finalState.followUpAnswers[0].generationSteps).toEqual(
         state.followUpAnswers[0].generationSteps
       );
+    });
+  });
+
+  describe('#followUpToolCallStarted', () => {
+    it('should add a tool call to the last active step', () => {
+      state.followUpAnswers = [
+        {
+          ...createInitialFollowUpAnswer('Question?'),
+          answerId: 'answer-123',
+          generationSteps: [
+            {name: 'searching', status: 'active', startedAt: 1},
+          ],
+        },
+      ];
+
+      const finalState = followUpAnswersReducer(
+        state,
+        followUpToolCallStarted({
+          answerId: 'answer-123',
+          toolCallName: 'search',
+          toolCallId: 'tc-1',
+          startedAt: 100,
+        })
+      );
+
+      expect(
+        finalState.followUpAnswers[0].generationSteps[0].toolCalls
+      ).toEqual([{toolCallName: 'search', toolCallId: 'tc-1', startedAt: 100}]);
+    });
+
+    it('should not modify state when answerId does not match', () => {
+      state.followUpAnswers = [
+        {
+          ...createInitialFollowUpAnswer('Question?'),
+          answerId: 'answer-123',
+          generationSteps: [
+            {name: 'searching', status: 'active', startedAt: 1},
+          ],
+        },
+      ];
+
+      const finalState = followUpAnswersReducer(
+        state,
+        followUpToolCallStarted({
+          answerId: 'no-match',
+          toolCallName: 'search',
+          toolCallId: 'tc-1',
+          startedAt: 100,
+        })
+      );
+
+      expect(
+        finalState.followUpAnswers[0].generationSteps[0].toolCalls
+      ).toBeUndefined();
+    });
+
+    it('should not modify state when no active step exists', () => {
+      state.followUpAnswers = [
+        {
+          ...createInitialFollowUpAnswer('Question?'),
+          answerId: 'answer-123',
+          generationSteps: [
+            {
+              name: 'searching',
+              status: 'completed',
+              startedAt: 1,
+              finishedAt: 2,
+            },
+          ],
+        },
+      ];
+
+      const finalState = followUpAnswersReducer(
+        state,
+        followUpToolCallStarted({
+          answerId: 'answer-123',
+          toolCallName: 'search',
+          toolCallId: 'tc-1',
+          startedAt: 100,
+        })
+      );
+
+      expect(
+        finalState.followUpAnswers[0].generationSteps[0].toolCalls
+      ).toBeUndefined();
+    });
+  });
+
+  describe('#followUpToolCallArgs', () => {
+    it('should push args onto the matching tool call', () => {
+      state.followUpAnswers = [
+        {
+          ...createInitialFollowUpAnswer('Question?'),
+          answerId: 'answer-123',
+          generationSteps: [
+            {
+              name: 'searching',
+              status: 'active',
+              startedAt: 1,
+              toolCalls: [
+                {toolCallName: 'search', toolCallId: 'tc-1', startedAt: 10},
+              ],
+            },
+          ],
+        },
+      ];
+
+      const finalState = followUpAnswersReducer(
+        state,
+        followUpToolCallArgs({
+          answerId: 'answer-123',
+          toolCallId: 'tc-1',
+          args: {q: 'test query'},
+        })
+      );
+
+      expect(
+        finalState.followUpAnswers[0].generationSteps[0].toolCalls![0]
+          .toolCallArgs
+      ).toEqual([{q: 'test query'}]);
+    });
+
+    it('should not modify state when answerId does not match', () => {
+      state.followUpAnswers = [
+        {
+          ...createInitialFollowUpAnswer('Question?'),
+          answerId: 'answer-123',
+          generationSteps: [
+            {
+              name: 'searching',
+              status: 'active',
+              startedAt: 1,
+              toolCalls: [
+                {toolCallName: 'search', toolCallId: 'tc-1', startedAt: 10},
+              ],
+            },
+          ],
+        },
+      ];
+
+      const finalState = followUpAnswersReducer(
+        state,
+        followUpToolCallArgs({
+          answerId: 'no-match',
+          toolCallId: 'tc-1',
+          args: {q: 'test'},
+        })
+      );
+
+      expect(
+        finalState.followUpAnswers[0].generationSteps[0].toolCalls![0]
+          .toolCallArgs
+      ).toBeUndefined();
+    });
+
+    it('should not modify state when toolCallId does not match', () => {
+      state.followUpAnswers = [
+        {
+          ...createInitialFollowUpAnswer('Question?'),
+          answerId: 'answer-123',
+          generationSteps: [
+            {
+              name: 'searching',
+              status: 'active',
+              startedAt: 1,
+              toolCalls: [
+                {toolCallName: 'search', toolCallId: 'tc-1', startedAt: 10},
+              ],
+            },
+          ],
+        },
+      ];
+
+      const finalState = followUpAnswersReducer(
+        state,
+        followUpToolCallArgs({
+          answerId: 'answer-123',
+          toolCallId: 'tc-999',
+          args: {q: 'test'},
+        })
+      );
+
+      expect(
+        finalState.followUpAnswers[0].generationSteps[0].toolCalls![0]
+          .toolCallArgs
+      ).toBeUndefined();
+    });
+  });
+
+  describe('#followUpToolCallFinished', () => {
+    it('should set finishedAt on the matching tool call', () => {
+      state.followUpAnswers = [
+        {
+          ...createInitialFollowUpAnswer('Question?'),
+          answerId: 'answer-123',
+          generationSteps: [
+            {
+              name: 'searching',
+              status: 'active',
+              startedAt: 1,
+              toolCalls: [
+                {toolCallName: 'search', toolCallId: 'tc-1', startedAt: 10},
+              ],
+            },
+          ],
+        },
+      ];
+
+      const finalState = followUpAnswersReducer(
+        state,
+        followUpToolCallFinished({
+          answerId: 'answer-123',
+          toolCallId: 'tc-1',
+          finishedAt: 200,
+        })
+      );
+
+      expect(
+        finalState.followUpAnswers[0].generationSteps[0].toolCalls![0]
+          .finishedAt
+      ).toBe(200);
+    });
+
+    it('should not modify state when answerId does not match', () => {
+      state.followUpAnswers = [
+        {
+          ...createInitialFollowUpAnswer('Question?'),
+          answerId: 'answer-123',
+          generationSteps: [
+            {
+              name: 'searching',
+              status: 'active',
+              startedAt: 1,
+              toolCalls: [
+                {toolCallName: 'search', toolCallId: 'tc-1', startedAt: 10},
+              ],
+            },
+          ],
+        },
+      ];
+
+      const finalState = followUpAnswersReducer(
+        state,
+        followUpToolCallFinished({
+          answerId: 'no-match',
+          toolCallId: 'tc-1',
+          finishedAt: 200,
+        })
+      );
+
+      expect(
+        finalState.followUpAnswers[0].generationSteps[0].toolCalls![0]
+          .finishedAt
+      ).toBeUndefined();
+    });
+
+    it('should not modify state when toolCallId does not match', () => {
+      state.followUpAnswers = [
+        {
+          ...createInitialFollowUpAnswer('Question?'),
+          answerId: 'answer-123',
+          generationSteps: [
+            {
+              name: 'searching',
+              status: 'active',
+              startedAt: 1,
+              toolCalls: [
+                {toolCallName: 'search', toolCallId: 'tc-1', startedAt: 10},
+              ],
+            },
+          ],
+        },
+      ];
+
+      const finalState = followUpAnswersReducer(
+        state,
+        followUpToolCallFinished({
+          answerId: 'answer-123',
+          toolCallId: 'tc-999',
+          finishedAt: 200,
+        })
+      );
+
+      expect(
+        finalState.followUpAnswers[0].generationSteps[0].toolCalls![0]
+          .finishedAt
+      ).toBeUndefined();
     });
   });
 });
