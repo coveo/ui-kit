@@ -7,8 +7,9 @@
  */
 import {existsSync, readFileSync} from 'node:fs';
 import {resolve} from 'node:path';
+import {isDeepStrictEqual} from 'node:util';
+import {parse} from 'yaml';
 import {transformJsonToOpenAcr} from '../dist/index.js';
-import {formatWithOxfmt} from './format-with-oxfmt.mjs';
 
 const PKG_ROOT = resolve(import.meta.dirname, '..');
 const REPO_ROOT = resolve(PKG_ROOT, '../..');
@@ -34,26 +35,29 @@ await transformJsonToOpenAcr({
   inputFile: INPUT_REPORT,
   outputFile: GENERATED_OPENACR,
 });
-// Format the same way the committed file is formatted (see update-openacr /
-// json-to-openacr), otherwise the comparison would flag formatting differences.
-formatWithOxfmt(GENERATED_OPENACR);
 
-const VOLATILE_PATTERNS = [
-  /^(\s*report_date:).*$/m,
-  /^(\s*last_modified_date:).*$/m,
-  /^(\s+version:).*$/m,
-];
-function normalize(yaml) {
-  return VOLATILE_PATTERNS.reduce(
-    (acc, pattern) => acc.replace(pattern, '$1 <normalized>'),
-    yaml
-  );
+// Compare the parsed documents, not the serialized text, so formatting (quote
+// style, line wrapping, key order) is irrelevant. Some fields are regenerated
+// from the environment rather than from a11y results and must be ignored:
+//   - report_date / last_modified_date -> change every day
+//   - product.version                  -> changes on every Atomic release
+function stripVolatile(report) {
+  delete report.report_date;
+  delete report.last_modified_date;
+  if (report.product) {
+    delete report.product.version;
+  }
+  return report;
 }
 
-const committed = readFileSync(COMMITTED_OPENACR, 'utf-8');
-const generated = readFileSync(GENERATED_OPENACR, 'utf-8');
+const committed = stripVolatile(
+  parse(readFileSync(COMMITTED_OPENACR, 'utf-8'))
+);
+const generated = stripVolatile(
+  parse(readFileSync(GENERATED_OPENACR, 'utf-8'))
+);
 
-if (normalize(committed) === normalize(generated)) {
+if (isDeepStrictEqual(committed, generated)) {
   console.log('✅ openacr.yaml is up to date.');
   process.exit(0);
 }
@@ -70,7 +74,7 @@ conformance, or component coverage changed.
 
 To update, run:
 
-  pnpm --filter @coveo/atomic-a11y a11y:update-openacr --run-id=${runId}
+  pnpm exec turbo run a11y:update-openacr --filter=@coveo/atomic-a11y -- --run-id=${runId}
 
 Then review the changes and commit the updated openacr.yaml.
 
