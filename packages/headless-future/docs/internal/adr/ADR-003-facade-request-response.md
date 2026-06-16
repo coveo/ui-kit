@@ -95,7 +95,6 @@ Map this decision to headless-future's Architecture Decision Charter requirement
   ```
 
   **Key implementation details:**
-
   - **Memoized caching** — `getOrCreate*` factories (e.g., `getOrCreateSearchBoxSelectors(interfaceId)`) are memoized per interfaceId. Multiple callers (facade, controller) sharing the same interfaceId get the same instance. This ensures selector referential equality for memoization and avoids redundant object creation.
   - **Composed selector memoization** — `createMemoizedStateSelector` produces a selector that only recomputes when its input selectors return new values. The facade can call `engine.read(this.#buildRequest)` on every tick without performance cost — if no input state changed, the cached request object is returned.
   - **Non-adopted slice safety** — selectors from `getOrCreate*` fall back to `initialState` when a slice is not adopted. Actions dispatched to non-adopted slices are no-ops (no reducer to handle them). This makes the pattern completely safe and aligned with lazy loading of feature states: the facade always produces a valid request and can always dispatch response actions, regardless of which controllers have been instantiated.
@@ -140,7 +139,11 @@ Map this decision to headless-future's Architecture Decision Charter requirement
 
     const facade = SearchEndpointFacade.getInstance(engine, interfaceId);
     facade.onResponse((response) => {
-      engine.mutate(getOrCreateResultsActions(interfaceId).setResultsFromResponse(response.results));
+      engine.mutate(
+        getOrCreateResultsActions(interfaceId).setResultsFromResponse(
+          response.results
+        )
+      );
     });
   };
   ```
@@ -181,7 +184,11 @@ Map this decision to headless-future's Architecture Decision Charter requirement
 
     const facade = SearchEndpointFacade.getInstance(engine, interfaceId);
     facade.onResponse((response) => {
-      engine.mutate(getOrCreatePaginationActions(interfaceId).setTotalCount(response.totalCount));
+      engine.mutate(
+        getOrCreatePaginationActions(interfaceId).setTotalCount(
+          response.totalCount
+        )
+      );
     });
   };
   ```
