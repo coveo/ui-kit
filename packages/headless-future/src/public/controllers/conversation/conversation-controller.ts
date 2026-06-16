@@ -18,68 +18,6 @@ import {getOrCreateConversationSelectors} from '@/src/core/internal/conversation
 import {getOrCreateConversationEndpointSelectors} from '@/src/core/internal/api/conversation-endpoint/conversation-endpoint-selectors.js';
 import {Controller} from '../controller-types.js';
 
-/**
- * Conversation Controller
- *
- * Manages conversational turn submission, abortion, state access, and
- * subscriptions.
- */
-export interface ConversationController extends Controller {
-  /**
-   * Submit a user message and stream the assistant response.
-   *
-   * @param input The user's message text.
-   * @param options Optional continuity fields to force into the request before
-   * the turn starts (useful for the first request when resuming a conversation).
-   * @returns A promise that resolves when the turn lifecycle completes.
-   */
-  submitTurn(
-    input: string,
-    options?: ConversationControllerSubmitTurnOptions
-  ): Promise<void>;
-
-  /**
-   * Abort the currently active turn.
-   * Silent no-op if no turn is active.
-   */
-  abortTurn(): void;
-
-  readonly state: ConversationControllerState;
-}
-
-export type ConversationControllerMessage = ConversationMessage;
-export type ConversationControllerTurn = ConversationTurn;
-export type ConversationControllerSession = ConversationSession;
-export type ConversationControllerStreaming = ConversationStreaming;
-
-export interface ConversationControllerState {
-  messages: ConversationControllerMessage[];
-  turns: ConversationControllerTurn[];
-  activeTurnId: string | null;
-  session: ConversationControllerSession;
-  isLoading: boolean;
-  error: string | null;
-  streaming: ConversationControllerStreaming;
-}
-
-export interface ConversationControllerOptions {
-  interface: Interface<'conversation'> & Requires<'conversation'>;
-}
-
-export interface ConversationControllerSubmitTurnOptions {
-  /**
-   * Optional explicit session id for the upcoming request.
-   * Pass null to clear a previously stored value.
-   */
-  conversationSessionId?: string | null;
-
-  /**
-   * Optional explicit conversation token for the upcoming request.
-   * Pass null to clear a previously stored value.
-   */
-  conversationToken?: string | null;
-}
-
 export const buildConversationController: (
   options: ConversationControllerOptions
 ) => ConversationController = (options) => {
@@ -165,3 +103,65 @@ export const buildConversationController: (
     },
   };
 };
+
+/**
+ * Conversation Controller
+ *
+ * Manages conversational turn submission, abortion, state access, and
+ * subscriptions.
+ */
+export interface ConversationController extends Controller {
+  /**
+   * Submit a user message and stream the assistant response.
+   *
+   * @param input The user's message text.
+   * @param options Optional continuity fields to force into the request before
+   * the turn starts (useful for the first request when resuming a conversation).
+   * @returns A promise that resolves when the turn lifecycle completes.
+   */
+  submitTurn(
+    input: string,
+    options?: ConversationControllerSubmitTurnOptions
+  ): Promise<void>;
+
+  /**
+   * Abort the currently active turn.
+   * Silent no-op if no turn is active.
+   */
+  abortTurn(): void;
+
+  readonly state: ConversationControllerState;
+}
+
+export type ConversationControllerMessage = ConversationMessage;
+export type ConversationControllerTurn = ConversationTurn;
+export type ConversationControllerSession = ConversationSession;
+export type ConversationControllerStreaming = ConversationStreaming;
+
+export interface ConversationControllerState {
+  messages: ConversationControllerMessage[];
+  turns: ConversationControllerTurn[];
+  activeTurnId: string | null;
+  session: ConversationControllerSession;
+  isLoading: boolean;
+  error: string | null;
+  streaming: ConversationControllerStreaming;
+}
+
+export interface ConversationControllerOptions {
+  interface: Interface<'conversation'> & Requires<'conversation'>;
+}
+
+export interface ConversationControllerSubmitTurnOptions {
+  /**
+   * Optional explicit session id for the upcoming request.
+   * Pass null to clear a previously stored value.
+   */
+  conversationSessionId?: string | null;
+
+  /**
+   * Optional explicit conversation token for the upcoming request.
+   * Pass null to clear a previously stored value.
+   */
+  conversationToken?: string | null;
+}

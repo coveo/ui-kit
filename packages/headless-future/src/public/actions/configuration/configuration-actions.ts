@@ -9,6 +9,7 @@ import {
   setEndpoint,
   setConfiguration,
 } from '@/src/core/interface/configuration/configuration-mutators.js';
+import type * as ConfigurationMutators from '@/src/core/interface/configuration/configuration-mutators.js';
 import {configurationSlice} from '@/src/core/internal/configuration/configuration-slice.js';
 import type {ConfigurationState} from '@/src/core/interface/configuration/configuration-types.js';
 
@@ -34,9 +35,7 @@ const ensureLoaded = (engine: Engine) => {
 
 export const loadConfigurationActions = (
   engine: Engine
-): MutatorsToActions<
-  typeof import('@/src/core/interface/configuration/configuration-mutators.js')
-> => {
+): MutatorsToActions<typeof ConfigurationMutators> => {
   ensureLoaded(engine);
   const fullEngine = getFullEngine(engine);
 
