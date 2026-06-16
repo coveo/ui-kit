@@ -201,9 +201,16 @@ chapters:
           - name: web
             adherence:
               level: does-not-support
-              notes:
-                'WCAG 2.5.3: no automated, interactive, or manual coverage. [Manual audit
-                required]'
+              notes: 'Does Not Support — manual audit found Does Not Support
+                (atomic-commerce-breadbox: the show-more button displays visible
+                text "+ N" but has accessible name "Show N more filters". Voice
+                control users saying "click plus 3" will not activate the button
+                because the visible text is not contained in the accessible
+                name.; atomic-breadbox: the show-more button displays visible
+                text "+ N" but has accessible name "Show N more filters". Voice
+                control users saying "click plus 3" will not activate the button
+                because the visible text is not contained in the accessible
+                name.).'
       - num: 2.5.4
         components:
           - name: web

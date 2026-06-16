@@ -4,6 +4,7 @@
     "2.4.6-headings-and-labels": {
       "conformance": "pass"
     },
-    "1.4.11-non-text-contrast": "pass"
+    "1.4.11-non-text-contrast": "pass",
+    "2.5.3-label-in-name": "pass"
   }
 }
