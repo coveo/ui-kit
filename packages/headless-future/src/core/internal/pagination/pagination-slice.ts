@@ -1,5 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {getOrCreatePaginationActions} from './pagination-actions.js';
+import {getOrCreateHydrateFromSnapshotAction} from '@/src/core/interface/generative/generative-hydration.js';
 
 export interface PaginationState {
   firstResult: number;
@@ -15,6 +16,8 @@ export const initialPaginationState: PaginationState = {
 
 export function createPaginationSlice(interfaceId: string) {
   const actions = getOrCreatePaginationActions(interfaceId);
+  const hydrateAction = getOrCreateHydrateFromSnapshotAction(interfaceId);
+
   return createSlice({
     name: `${interfaceId}/pagination`,
     initialState: initialPaginationState,
@@ -28,6 +31,22 @@ export function createPaginationSlice(interfaceId: string) {
       });
       builder.addCase(actions.setTotalCount, (state, action) => {
         state.totalCount = action.payload;
+      });
+      builder.addCase(hydrateAction, (state, action) => {
+        const payload = action.payload as Record<string, unknown> | null;
+        if (!payload) {
+          return;
+        }
+        if (typeof payload.totalCount === 'number') {
+          state.totalCount = payload.totalCount;
+          return;
+        }
+        const pagination = payload.pagination as
+          | Record<string, unknown>
+          | undefined;
+        if (typeof pagination?.totalEntries === 'number') {
+          state.totalCount = pagination.totalEntries;
+        }
       });
     },
   });

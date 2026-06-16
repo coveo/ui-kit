@@ -1,4 +1,4 @@
-import type {Controller} from '@/src/public/controllers/controller-types.js';
+import type {Controller} from '../controller-types.js';
 import type {
   Interface,
   Requires,

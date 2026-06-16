@@ -13,6 +13,7 @@ export interface Operations {
   search: 'search' | 'suggestions';
   commerce: 'search' | 'suggestions';
   conversation: 'conversation' | 'search' | 'suggestions';
+  generative: 'conversation';
 }
 
 export type EndpointThunk = AsyncThunk<void, {engine: FullEngine}, {}>;

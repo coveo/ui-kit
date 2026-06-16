@@ -112,3 +112,33 @@ export type {ConfigurationState} from './interface/configuration/configuration-t
 export * as configurationMutations from './interface/configuration/configuration-mutators.js';
 
 export * as configurationSelectors from './interface/configuration/configuration-selectors.js';
+
+// ============================================================================
+// Generative Interface
+// ============================================================================
+
+export type {
+  Turn,
+  TurnStatus,
+  RoutedInterface,
+  AgentResponse,
+  AgentMessage,
+  A2UISurface,
+  GenerativeState,
+  ControllerBuilder,
+  GenerativeInterfaceOptions,
+} from './interface/generative/generative-types.js';
+
+export {GenerativeRuntime} from './interface/api/generative-endpoint/generative-runtime.js';
+
+export type {
+  GenerativeStatePort,
+  GenerativeRuntimeConfig,
+  HydrateSubInterface,
+} from './interface/api/generative-endpoint/generative-runtime.js';
+
+export {
+  ACTIVITY_TYPE_TO_USE_CASE,
+  createHydrateSubInterface,
+  getOrCreateHydrateFromSnapshotAction,
+} from './interface/generative/generative-hydration.js';
