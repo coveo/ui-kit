@@ -1,0 +1,15 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import meta, { Default } from './atomic-table-element.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+import UsageContent from './atomic-table-element.usage.mdx';
+
+<Meta of={meta} />
+
+<AtomicDocTemplate
+  stories={{ Default }}
+  githubPath="search/atomic-table-element/atomic-table-element.ts"
+  tagName="atomic-table-element"
+  className="AtomicTableElement"
+>
+<UsageContent />
+</AtomicDocTemplate>

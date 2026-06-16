@@ -1,3 +1,11 @@
+## 3.51.5
+
+### Patch Changes
+
+- [#7794](https://github.com/coveo/ui-kit/pull/7794) [`a25786a`](https://github.com/coveo/ui-kit/commit/a25786abf99c9cd1168e193bd0c6ef5b296f22e9) - feat(headless): change search agent follow-up citations clicks events to custom event
+
+- [#7788](https://github.com/coveo/ui-kit/pull/7788) [`fe7ee7d`](https://github.com/coveo/ui-kit/commit/fe7ee7db35b0cb8f36f08a6e0660a43940f402aa) - fix(headless): correct totalSpotlightContent field name in pagination response COMHUB2-2093
+
 ## 3.51.4
 
 ### Patch Changes

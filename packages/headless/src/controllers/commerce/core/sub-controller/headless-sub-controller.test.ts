@@ -106,7 +106,9 @@ describe('sub-controllers', () => {
       const didYouMean = subControllers.didYouMean();
 
       expect(didYouMean).toEqual(buildDidYouMean.mock.results[0].value);
-      expect(buildDidYouMean).toHaveBeenCalledWith(engine);
+      expect(buildDidYouMean).toHaveBeenCalledWith(engine, {
+        enableResults: undefined,
+      });
     });
 
     it('#interactiveSpotlightContent builds interactive spotlight content controller', () => {

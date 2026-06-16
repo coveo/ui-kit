@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import meta, { Default, WithMaxValuesToDisplaySetToMinimum, WithMaxValuesToDisplaySetToTotalNumberOfValues } from './atomic-product-multi-value-text.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
-
+import UsageContent from './atomic-product-multi-value-text.usage.mdx';
 
 <Meta of={meta} />
 
@@ -11,24 +11,5 @@ import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-te
   tagName="atomic-product-multi-value-text"
   className="AtomicProductMultiValueText"
 >
-
-The `atomic-product-multi-value-text` component displays multiple values for a specific field of a product, such as sizes or colors. It is typically used within `atomic-product-template` components to show product attributes that can have multiple values.
-
-It is typically used within `atomic-product-template` components to display product attributes that can have multiple values, such as sizes or colors.
-
-```html
-<atomic-commerce-interface>
-  ...
-  <atomic-commerce-product-list>
-    <atomic-product-template>
-      <template>
-        ...
-          <atomic-product-multi-value-text field="cat_available_sizes"></atomic-product-multi-value-text>
-
-      </template>
-    </atomic-product-template>
-  </atomic-commerce-product-list>
-</atomic-commerce-interface>
-```
-
+<UsageContent />
 </AtomicDocTemplate>

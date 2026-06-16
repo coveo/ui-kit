@@ -130,6 +130,7 @@ export {defineContext} from './ssr-next/commerce/controllers/context/headless-co
 export type {
   DidYouMean,
   DidYouMeanDefinition,
+  DidYouMeanOptions,
   DidYouMeanState,
 } from './ssr-next/commerce/controllers/did-you-mean/headless-did-you-mean.ssr.js';
 export {defineDidYouMean} from './ssr-next/commerce/controllers/did-you-mean/headless-did-you-mean.ssr.js';

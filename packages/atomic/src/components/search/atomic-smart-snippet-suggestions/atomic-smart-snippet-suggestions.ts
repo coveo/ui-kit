@@ -238,15 +238,15 @@ export class AtomicSmartSnippetSuggestions
           this,
           'source-anchor-attributes'
         )}
-        @beginDelayedSelectSource=${() =>
+        @begin-delayed-select-source=${() =>
           this.smartSnippetQuestionsList.beginDelayedSelectSource(
             questionAnswerId
           )}
-        @cancelPendingSelectSource=${() =>
+        @cancel-pending-select-source=${() =>
           this.smartSnippetQuestionsList.cancelPendingSelectSource(
             questionAnswerId
           )}
-        @selectSource=${() =>
+        @select-source=${() =>
           this.smartSnippetQuestionsList.selectSource(questionAnswerId)}
         .source=${source}
       ></atomic-smart-snippet-source>

@@ -123,6 +123,7 @@ export type {
 export {defineContext} from './ssr/commerce/controllers/context/headless-context.ssr.js';
 export type {
   DidYouMean,
+  DidYouMeanOptions,
   DidYouMeanState,
 } from './ssr/commerce/controllers/did-you-mean/headless-did-you-mean.ssr.js';
 export {defineDidYouMean} from './ssr/commerce/controllers/did-you-mean/headless-did-you-mean.ssr.js';

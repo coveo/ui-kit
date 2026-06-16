@@ -21,6 +21,7 @@ import type {AnalyticsClient} from 'coveo.analytics/dist/definitions/client/anal
 import type {SearchEventResponse} from 'coveo.analytics/dist/definitions/events.js';
 import type {
   DocumentIdentifier,
+  PartialCitationInformation,
   PartialDocumentInformation,
 } from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents.js';
 import type {Logger} from 'pino';
@@ -627,13 +628,26 @@ export const partialRecommendationInformation = (
   return buildPartialDocumentInformation(result, resultIndex, state);
 };
 
-export const partialCitationInformation = (
+export const partialDocumentInformationFromCitation = (
   citation: GeneratedAnswerCitation,
   state: Partial<SearchAppState>
 ): PartialDocumentInformation => {
   return {
     sourceName: getCitationSourceName(citation),
     documentPosition: 1,
+    documentTitle: citation.title,
+    documentUri: citation.uri,
+    documentUrl: citation.clickUri,
+    queryPipeline: state.pipeline || getPipelineInitialState(),
+  };
+};
+
+export const partialFollowupCitationInformation = (
+  citation: GeneratedAnswerCitation,
+  state: Partial<SearchAppState>
+): PartialCitationInformation => {
+  return {
+    sourceName: getCitationSourceName(citation),
     documentTitle: citation.title,
     documentUri: citation.uri,
     documentUrl: citation.clickUri,
@@ -820,7 +834,7 @@ export const analyticsEventItemMetadataForCitations = (
   state: Partial<SearchAppState>
 ): ItemMetaData => {
   const identifier = citationDocumentIdentifier(citation);
-  const information = partialCitationInformation(citation, state);
+  const information = partialDocumentInformationFromCitation(citation, state);
   return {
     uniqueFieldName: identifier.contentIdKey,
     uniqueFieldValue: identifier.contentIdValue,

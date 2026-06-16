@@ -2,6 +2,7 @@ import { Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle } from '@
 import meta, { Default } from './atomic-commerce-did-you-mean.new.stories';
 import { CanvasWithGithub } from '../../../../storybook-utils/documentation/canvas-with-github';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+import UsageContent from './atomic-commerce-did-you-mean.usage.mdx';
 
 <Meta of={meta} />
 
@@ -11,23 +12,5 @@ import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-te
   tagName="atomic-commerce-did-you-mean"
   className="AtomicCommerceDidYouMean"
 >
-
-This component is typically placed within the "status" section of the layout.
-```html
-<atomic-commerce-interface>
-  ...
-  <atomic-commerce-layout>
-    ...
-    <atomic-layout-section section="main">
-      ...
-      <atomic-layout-section section="status">
-        
-        <atomic-commerce-did-you-mean></atomic-commerce-did-you-mean>
-
-      </atomic-layout-section>
-    </atomic-layout-section>
-  </atomic-commerce-layout>
-</atomic-commerce-interface>
-```
+<UsageContent />
 </AtomicDocTemplate>
-

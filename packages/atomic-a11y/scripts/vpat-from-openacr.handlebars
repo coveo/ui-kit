@@ -1,50 +1,56 @@
-# VPAT® 2.5 - {{product.name}}
+# {{author.company_name}} Accessibility Conformance Report
 
-## Name of Product/Version
-{{product.name}}{{#if product.version}} {{product.version}}{{/if}}
+International Edition
 
-## Report Dates and Version
-- Report Date: {{report_date}}
-- Last Modified Date: {{last_modified_date}}
-- Version: {{product.name}}-{{product.version}}-{{version}}
+(Based on VPAT® Version 2.5Rev)
 
-## Product Description
-{{product.description}}
+**Name of Product/Version:** {{product.name}}{{#if product.version}} {{product.version}}{{/if}}
 
-## Contact Information
-- Name: {{author.name}}
-- Company: {{author.company_name}}
-- Email: {{author.email}}
-- Website: {{author.website}}
+**Report Date:** {{report_date}}
 
-## Notes
-{{notes}}
+**Product Description:** {{product.description}}
 
-## Evaluation Methods Used
-{{evaluation_methods_used}}
+**Contact Information:** {{author.email}}
+
+**Notes:** {{notes}}
+
+**Evaluation Methods Used:** {{evaluation_methods_used}}
 
 ## Applicable Standards/Guidelines
+
 This report covers the degree of conformance for the following accessibility standard/guidelines:
 
-- Web Content Accessibility Guidelines 2.2 Level A
-- Web Content Accessibility Guidelines 2.2 Level AA
+| Standard/Guideline | Included In Report | Notes |
+| --- | --- | --- |
+{{#with (lookup catalog.standards 0) as |wcag-standard|}}
+| {{wcag-standard.label}} | {{#each wcag-standard.chapters as |ch|}}{{#with (catalogChapter ch) as |chapter|}}{{#with (lookup ../../../chapters chapter.id) as |ch-data|}}Level {{chapter.short_label}} ({{#if ch-data.disabled}}No{{else}}Yes{{/if}}){{#unless @last}}, {{/unless}}{{/with}}{{/with}}{{/each}} | |
+{{/with}}
+| [Revised Section 508 standards (36 CFR 1194)](https://www.access-board.gov/guidelines-and-standards/communications-and-it/about-the-ict-refresh/final-rule/text-of-the-standards-and-guidelines) | Yes | See Section 508 tables below |
+| [EN 301 549 v3.2.1 (2021-03)](https://www.etsi.org/deliver/etsi_en/301500_301599/301549/03.02.01_60/en_301549v030201p.pdf) | Yes | See EN 301 549 tables below |
 
 ## Terms
+
 The terms used in the Conformance Level information are defined as follows:
 
- {{#each catalog.terms as |term|}}
- - {{term.label}}: {{term.description}}
- {{/each}}
+{{#each catalog.terms as |term|}}
+- **{{term.label}}:** {{term.description}}
+{{/each}}
 
-## WCAG 2.2 AA Conformance Table
+## WCAG 2.x Report
 
-| Criteria | Conformance Level | Remarks and Explanations |
-| --- | --- | --- |
+Note: When reporting on conformance with the WCAG 2.x Success Criteria, they are scoped for full pages, complete processes, and programming units, respectively.
+
 {{#each catalog.standards as |catalog-standard|}}
 {{#each catalog-standard.chapters as |catalog-standard-chapter|}}
 {{#with (catalogChapter catalog-standard-chapter) as |catalog-chapter|}}
 {{#with (lookup ../../../chapters catalog-chapter.id) as |data-category|}}
 {{#unless data-category.disabled}}
+### {{catalog-chapter.label}}
+
+Notes: {{data-category.notes}}
+
+| Criteria | Conformance Level | Remarks and Explanations |
+| --- | --- | --- |
 {{#each data-category.criteria as |data-criteria|}}
 | {{data-criteria.num}} {{catalogCriteriaLabel catalog-chapter.id data-criteria.num}} | {{#each data-criteria.components as |data-components|}}{{levelLabel data-components.adherence.level}}{{/each}} | {{#each data-criteria.components as |data-components|}}{{data-components.adherence.notes}}{{/each}} |
 {{/each}}
@@ -53,3 +59,121 @@ The terms used in the Conformance Level information are defined as follows:
 {{/with}}
 {{/each}}
 {{/each}}
+
+## Revised Section 508 Report
+
+### Chapter 3: Functional Performance Criteria
+
+| Criteria | Conformance Level | Remarks and Explanations |
+| --- | --- | --- |
+| 302.1 Without Vision | See WCAG 2.x tables above | Covered by WCAG criteria for text alternatives, structure, and screen reader support. |
+| 302.2 With Limited Vision | See WCAG 2.x tables above | Covered by WCAG criteria for contrast, resize, reflow, and spacing. |
+| 302.3 Without Perception of Color | See WCAG 2.x tables above | Covered by WCAG 1.4.1 Use of Color. |
+| 302.4 Without Hearing | Not Applicable | {{product.name}} does not produce audio output. |
+| 302.5 With Limited Hearing | Not Applicable | {{product.name}} does not produce audio output. |
+| 302.6 Without Speech | Not Applicable | {{product.name}} does not require speech input. |
+| 302.7 With Limited Manipulation | See WCAG 2.x tables above | Covered by WCAG criteria for keyboard access and pointer input. |
+| 302.8 With Limited Reach and Strength | Not Applicable | {{product.name}} is not hardware and does not require physical reach. |
+| 302.9 With Limited Language, Cognitive, and Learning Abilities | See WCAG 2.x tables above | Covered by WCAG criteria for labels, error handling, and consistent navigation. |
+
+### Chapter 4: Hardware
+
+| Criteria | Conformance Level | Remarks and Explanations |
+| --- | --- | --- |
+| 402–415 (all hardware criteria) | Not Applicable | {{product.name}} is a web component library; it is not hardware. |
+
+### Chapter 5: Software
+
+| Criteria | Conformance Level | Remarks and Explanations |
+| --- | --- | --- |
+| 501.1 Scope | See WCAG 2.x tables above | {{product.name}} renders in a web browser; web content criteria apply. |
+| 502 Interoperability with Assistive Technology | See WCAG 2.x tables above | Accessibility semantics exposed via standard HTML and ARIA; see WCAG 4.1.2. |
+| 503 Applications | See WCAG 2.x tables above | User preferences for color, contrast, font size, and focus are supported via standard browser and OS settings. |
+| 504 Authoring Tools | Not Applicable | {{product.name}} is not an authoring tool; it does not enable users to create or edit web content for publication. |
+
+### Chapter 6: Support Documentation and Services
+
+| Criteria | Conformance Level | Remarks and Explanations |
+| --- | --- | --- |
+| 602.2 Accessibility and Compatibility Features | Not Applicable | {{product.name}} is a component library; end-user support documentation is the host application's responsibility. Developer docs available at docs.coveo.com. |
+| 602.3 Electronic Support Documentation | Not Applicable | See above. |
+| 602.4 Alternate Formats for Non-Electronic Support Documentation | Not Applicable | {{author.company_name}} does not provide print support documentation for {{product.name}}. |
+| 603.2 Information on Accessibility and Compatibility Features | Not Applicable | See above. |
+| 603.3 Accommodation of Communication Needs | Not Applicable | Support is provided via web and email; accessible formats available on request. |
+
+## EN 301 549 Report
+
+### Chapter 4: Functional Performance Statements
+
+| Criteria | Conformance Level | Remarks and Explanations |
+| --- | --- | --- |
+| 4.2.1 Usage without vision | See WCAG 2.x tables above | Covered by WCAG criteria for text alternatives, structure, and screen reader support. |
+| 4.2.2 Usage with limited vision | See WCAG 2.x tables above | Covered by WCAG criteria for contrast, resize, reflow, and spacing. |
+| 4.2.3 Usage without perception of colour | See WCAG 2.x tables above | Covered by WCAG 1.4.1 Use of Color. |
+| 4.2.4 Usage without hearing | Not Applicable | {{product.name}} does not produce audio output. |
+| 4.2.5 Usage with limited hearing | Not Applicable | {{product.name}} does not produce audio output. |
+| 4.2.6 Usage with no or limited vocal capability | Not Applicable | {{product.name}} does not require speech input. |
+| 4.2.7 Usage with limited manipulation or strength | See WCAG 2.x tables above | Covered by WCAG criteria for keyboard access and pointer input. |
+| 4.2.8 Usage with limited reach | Not Applicable | {{product.name}} is not hardware. |
+| 4.2.9 Minimize photosensitive seizure triggers | See WCAG 2.x tables above | See WCAG 2.3.1 Three Flashes or Below Threshold. |
+| 4.2.10 Usage with limited cognition, language or learning | See WCAG 2.x tables above | Covered by WCAG criteria for labels, error handling, and consistent navigation. |
+| 4.2.11 Privacy | Not Applicable | {{product.name}} does not collect or process personal data independently. |
+
+### Chapter 5: Generic Requirements
+
+| Criteria | Conformance Level | Remarks and Explanations |
+| --- | --- | --- |
+| 5.2–5.9 (all) | Not Applicable | {{product.name}} runs in standard web browsers that provide platform accessibility services. It is not closed-functionality software. |
+
+### Chapter 6: ICT with Two-Way Voice Communication
+
+| Criteria | Conformance Level | Remarks and Explanations |
+| --- | --- | --- |
+| 6.1–6.6 (all) | Not Applicable | {{product.name}} does not provide two-way voice communication. |
+
+### Chapter 7: ICT with Video Capabilities
+
+| Criteria | Conformance Level | Remarks and Explanations |
+| --- | --- | --- |
+| 7.1–7.3 (all) | Not Applicable | {{product.name}} does not include video playback or capture. |
+
+### Chapter 8: Hardware
+
+| Criteria | Conformance Level | Remarks and Explanations |
+| --- | --- | --- |
+| 8.1–8.5 (all) | Not Applicable | {{product.name}} is not hardware. |
+
+### Chapter 9: Web
+
+| Criteria | Conformance Level | Remarks and Explanations |
+| --- | --- | --- |
+| 9.1–9.4 (all web content criteria) | See WCAG 2.x tables above | EN 301 549 Chapter 9 maps to WCAG 2.1 Level A and AA. See WCAG 2.x tables above for full results. |
+
+### Chapter 10: Non-Web Documents
+
+| Criteria | Conformance Level | Remarks and Explanations |
+| --- | --- | --- |
+| 10.1–10.6 (all) | Not Applicable | {{product.name}} does not produce non-web documents. |
+
+### Chapter 11: Software
+
+| Criteria | Conformance Level | Remarks and Explanations |
+| --- | --- | --- |
+| 11.1–11.8 (all) | See WCAG 2.x tables above | {{product.name}} renders as web content in a user agent. See WCAG 2.x tables above. |
+
+### Chapter 12: Documentation and Support Services
+
+| Criteria | Conformance Level | Remarks and Explanations |
+| --- | --- | --- |
+| 12.1 Product documentation | Not Applicable | Developer documentation is available at docs.coveo.com in accessible HTML format. |
+| 12.2 Support services | Not Applicable | Support is provided via web and email; accessible formats available on request. |
+
+### Chapter 13: ICT Providing Relay or Emergency Service Access
+
+| Criteria | Conformance Level | Remarks and Explanations |
+| --- | --- | --- |
+| 13.1–13.3 (all) | Not Applicable | {{product.name}} does not provide relay or emergency services. |
+
+## Legal Disclaimer ({{author.company_name}})
+
+This document is provided for informational purposes only and the contents hereof are subject to change without notice. {{author.company_name}} does not warrant that this document is error free, nor does it provide any other warranties or conditions, whether expressed orally or implied in law, including implied warranties and conditions of merchantability or fitness for a particular purpose.

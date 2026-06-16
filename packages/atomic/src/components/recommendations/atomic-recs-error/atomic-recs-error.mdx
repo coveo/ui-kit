@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import meta, { Default, WithDisconnected, WithOrganizationPaused } from './atomic-recs-error.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
-
+import UsageContent from './atomic-recs-error.usage.mdx';
 
 <Meta of={meta} />
 
@@ -11,15 +11,5 @@ import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-te
   tagName="atomic-recs-error"
   className="AtomicRecsError"
 >
-
-This component is typically placed within the recommendation interface, often alongside the recommendation list.
-
-```html
-<atomic-recs-interface>
-  ...
-  <atomic-recs-error></atomic-recs-error>
-  <atomic-recs-list></atomic-recs-list>
-</atomic-recs-interface>
-```
-
+  <UsageContent />
 </AtomicDocTemplate>

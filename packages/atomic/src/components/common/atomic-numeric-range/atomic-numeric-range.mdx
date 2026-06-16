@@ -1,0 +1,15 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import meta, { Default } from './atomic-numeric-range.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+import UsageContent from './atomic-numeric-range.usage.mdx';
+
+<Meta of={meta} />
+
+<AtomicDocTemplate
+  stories={{ Default }}
+  githubPath="common/atomic-numeric-range/atomic-numeric-range.ts"
+  tagName="atomic-numeric-range"
+  className="AtomicNumericRange"
+>
+<UsageContent />
+</AtomicDocTemplate>

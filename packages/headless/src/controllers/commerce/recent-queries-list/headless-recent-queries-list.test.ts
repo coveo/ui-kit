@@ -6,6 +6,7 @@ import {
 } from '../../../features/commerce/recent-queries/recent-queries-actions.js';
 import {recentQueriesReducer as recentQueries} from '../../../features/commerce/recent-queries/recent-queries-slice.js';
 import {prepareForSearchWithQuery} from '../../../features/commerce/search/search-actions.js';
+import {executeSearch} from '../../../features/commerce/search/search-actions.js';
 import {commerceSearchReducer as search} from '../../../features/commerce/search/search-slice.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {
@@ -118,6 +119,22 @@ describe('recent queries list', () => {
       });
       recentQueriesList.executeRecentQuery(0);
       expect(clearAllCoreFacets).not.toHaveBeenCalled();
+    });
+
+    it('#executeRecentQuery should dispatch #executeSearch with enableResults from options', () => {
+      engine[stateKey].recentQueries = {...testInitialState, ...testOptions};
+      recentQueriesList = buildRecentQueriesList(engine, {
+        ...testProps,
+        options: {...testOptions, enableResults: true},
+      });
+      recentQueriesList.executeRecentQuery(0);
+      expect(executeSearch).toHaveBeenCalledWith({enableResults: true});
+    });
+
+    it('#executeRecentQuery should dispatch #executeSearch with enableResults false by default', () => {
+      engine[stateKey].recentQueries = {...testInitialState, ...testOptions};
+      recentQueriesList.executeRecentQuery(0);
+      expect(executeSearch).toHaveBeenCalledWith({enableResults: false});
     });
   });
 

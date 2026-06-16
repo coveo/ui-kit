@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import meta, { Default, WithCustomChoicesDisplayed } from './atomic-commerce-products-per-page.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
-
+import UsageContent from './atomic-commerce-products-per-page.usage.mdx';
 
 <Meta of={meta} />
 
@@ -11,22 +11,5 @@ import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-te
   tagName="atomic-commerce-products-per-page"
   className="AtomicCommerceProductsPerPage"
 >
-
-This component is typically placed within the "pagination" section of the layout.
-```html
-<atomic-commerce-interface>
-  ...
-  <atomic-commerce-layout>
-    ...
-    <atomic-layout-section section="main">
-      ...
-      <atomic-layout-section section="pagination">
-        
-        <atomic-commerce-products-per-page></atomic-commerce-products-per-page>
-
-      </atomic-layout-section>
-    </atomic-layout-section>
-  </atomic-commerce-layout>
-</atomic-commerce-interface>
-```
+<UsageContent />
 </AtomicDocTemplate>

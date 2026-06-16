@@ -1,0 +1,65 @@
+<template>
+  <template lwc:if={hasSteps}>
+    <div class="slds-grid slds-grid_vertical">
+      <template for:each={stepsToDisplay} for:item="step">
+        <div
+          key={step.key}
+          data-testid="step-item"
+          data-step-name={step.name}
+          class="slds-grid slds-grid_vertical-align-center slds-m-vertical_xxx-small"
+        >
+          <template lwc:if={step.isActive}>
+            <span
+              class="slds-is-relative slds-m-right_x-small slds-grid slds-grid_align-center stream-of-thought__spinner-container"
+              aria-hidden="true"
+              data-testid="spinner"
+            >
+              <lightning-spinner
+                alternative-text={labels.loading}
+                size="xx-small"
+              ></lightning-spinner>
+            </span>
+          </template>
+          <template lwc:else>
+            <span
+              class="slds-m-right_x-small slds-grid slds-grid_align-center"
+              data-testid="checkmark"
+            >
+              <lightning-icon
+                icon-name="utility:check"
+                size="xx-small"
+                variant="success"
+                aria-hidden="true"
+              ></lightning-icon>
+            </span>
+          </template>
+          <span
+            class="slds-text-body_small slds-text-color_weak"
+            data-testid="step-label"
+            >{step.label}</span
+          >
+        </div>
+      </template>
+      <template lwc:if={shouldShowCollapseButton}>
+        <button
+          data-testid="collapse-button"
+          class="stream-of-thought__collapse-button slds-grid slds-grid_vertical-align-center slds-p-around_none"
+          type="button"
+          aria-expanded={_expanded}
+          onclick={handleToggle}
+        >
+          <span
+            class="slds-text-body_small slds-text-color_weak slds-m-right_xx-small"
+            >{labels.collapse}</span
+          >
+          <lightning-icon
+            data-testid="chevron-up"
+            icon-name="utility:chevronup"
+            size="xx-small"
+            aria-hidden="true"
+          ></lightning-icon>
+        </button>
+      </template>
+    </div>
+  </template>
+</template>

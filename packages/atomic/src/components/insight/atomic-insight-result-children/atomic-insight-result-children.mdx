@@ -1,6 +1,7 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import meta, { Default, WithBeforeChildrenSlot, WithAfterChildrenSlot, WithBothSlots } from './atomic-insight-result-children.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+import UsageContent from './atomic-insight-result-children.usage.mdx';
 
 <Meta of={meta} />
 
@@ -11,44 +12,5 @@ import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-te
   tagName="atomic-insight-result-children"
   className="AtomicInsightResultChildren"
 >
-
-This component is typically used within `atomic-insight-folded-result-list` to render hierarchical result structures.
-
-```html
-<atomic-insight-result-template>
-  <template>
-    <atomic-result-section-children>
-      <atomic-insight-result-children image-size="icon">
-        <atomic-insight-result-children-template>
-          <template>
-            <atomic-result-section-title>
-              <atomic-result-link></atomic-result-link>
-            </atomic-result-section-title>
-            <atomic-result-section-excerpt>
-              <atomic-result-text field="excerpt"></atomic-result-text>
-            </atomic-result-section-excerpt>
-          </template>
-        </atomic-insight-result-children-template>
-      </atomic-insight-result-children>
-    </atomic-result-section-children>
-  </template>
-</atomic-insight-result-template>
-```
-
-## Using slots
-
-The component provides slots for adding custom content before or after the children:
-
-```html
-<atomic-insight-result-children image-size="icon">
-  <div slot="before-children">Content before children</div>
-  <atomic-insight-result-children-template>
-    <template>
-      <!-- Child template -->
-    </template>
-  </atomic-insight-result-children-template>
-  <div slot="after-children">Content after children</div>
-</atomic-insight-result-children>
-```
-
+<UsageContent />
 </AtomicDocTemplate>

@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import meta, { Default, Collapsible } from './atomic-product-excerpt.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
-
+import UsageContent from './atomic-product-excerpt.usage.mdx';
 
 <Meta of={meta} />
 
@@ -11,25 +11,5 @@ import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-te
   tagName="atomic-product-excerpt"
   className="AtomicProductExcerpt"
 >
-
-The `atomic-product-excerpt` component is used to display a brief summary of a product.
-
-It is typically used within `atomic-product-template` components to display product information in a concise format.
-
-```html
-<atomic-commerce-interface>
-  ...
-  <atomic-commerce-product-list>
-    <atomic-product-template>
-      <template>
-        ...
-        <atomic-product-section-description>
-          <atomic-product-excerpt></atomic-product-excerpt>
-        </atomic-product-section-description>
-
-      </template>
-    </atomic-product-template>
-  </atomic-commerce-product-list>
-</atomic-commerce-interface>
-```
+<UsageContent />
 </AtomicDocTemplate>

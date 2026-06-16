@@ -1,0 +1,15 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import meta, { Default } from './atomic-result-icon.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+import UsageContent from './atomic-result-icon.usage.mdx';
+
+<Meta of={meta} />
+
+<AtomicDocTemplate
+  stories={{ Default }}
+  githubPath="search/atomic-result-icon/atomic-result-icon.ts"
+  tagName="atomic-result-icon"
+  className="AtomicResultIcon"
+>
+<UsageContent />
+</AtomicDocTemplate>

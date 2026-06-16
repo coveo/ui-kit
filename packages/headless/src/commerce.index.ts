@@ -259,6 +259,7 @@ export {buildRecommendations} from './controllers/commerce/recommendations/headl
 export type {RecommendationsSummaryState} from './controllers/commerce/recommendations/summary/headless-recommendations-summary.js';
 export type {
   DidYouMean,
+  DidYouMeanOptions,
   DidYouMeanState,
   QueryCorrection,
   WordCorrection,

@@ -1,3 +1,27 @@
+## 3.59.6
+
+### Patch Changes
+
+- [#7764](https://github.com/coveo/ui-kit/pull/7764) [`043b310`](https://github.com/coveo/ui-kit/commit/043b31022692d059ac61c8ad1cedb1db164105fd) - Removed `aria-expanded` from the expandable text "Show more" button when it is a one-way reveal (non-collapsible). The attribute is preserved when `isCollapsible` is true, since that follows the disclosure pattern.
+
+- Updated dependencies [[`a25786a`](https://github.com/coveo/ui-kit/commit/a25786abf99c9cd1168e193bd0c6ef5b296f22e9), [`fe7ee7d`](https://github.com/coveo/ui-kit/commit/fe7ee7db35b0cb8f36f08a6e0660a43940f402aa)]:
+  - @coveo/headless@3.51.5
+  - @coveo/atomic-legacy@0.0.21
+
+## 3.59.5
+
+### Patch Changes
+
+- [#7712](https://github.com/coveo/ui-kit/pull/7712) [`9381bed`](https://github.com/coveo/ui-kit/commit/9381bed3f7fcc4612492fc88f82a3beea255c4c0) - Added `aria-expanded` to expandable text buttons, smart snippet show more/less buttons, and the generated answer show more/less button to implement the WAI-ARIA disclosure pattern.
+
+- [#7742](https://github.com/coveo/ui-kit/pull/7742) [`9d0beef`](https://github.com/coveo/ui-kit/commit/9d0beefbdafbd482407461d1d9bf2a3419372732) - Fixed facet search to announce its result count through an ARIA live region when a query returns no matches (WCAG 4.1.3 Status Messages). Previously the "no matches found" state was only conveyed visually and was never announced to assistive technologies, since the announcer only fired when results were found.
+
+- [#7723](https://github.com/coveo/ui-kit/pull/7723) [`7912a7b`](https://github.com/coveo/ui-kit/commit/7912a7b849d869a48c97a185695ff52adfecb037) - Ensure atomic-numeric-facet honour conditions properly
+
+- [#7743](https://github.com/coveo/ui-kit/pull/7743) [`1524af9`](https://github.com/coveo/ui-kit/commit/1524af93f0ae325bc17d1daf88c77fca10fad655) - Fix status-message accessibility coverage by asserting exact live-region announcement strings in result-control Storybook tests, and fix pager i18n interpolation for the `pager-page-loaded` message.
+
+- [#7749](https://github.com/coveo/ui-kit/pull/7749) [`16cebd8`](https://github.com/coveo/ui-kit/commit/16cebd8861d71aba8e809aac672817c3bd6f0173) - Wire `HiddenStateController` to selected search components so hosts collapse when empty and no longer introduce layout gaps.
+
 ## 3.59.4
 
 ### Patch Changes

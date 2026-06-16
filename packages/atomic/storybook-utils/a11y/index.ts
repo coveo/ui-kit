@@ -48,3 +48,8 @@ export {
   testCheckboxA11y,
   type CheckboxA11yOptions,
 } from './checkbox.js';
+export {
+  COVERED_CRITERIA as SWITCH_COVERED_CRITERIA,
+  testSwitchA11y,
+  type SwitchA11yOptions,
+} from './switch.js';

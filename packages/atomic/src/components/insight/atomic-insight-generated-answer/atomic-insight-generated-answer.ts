@@ -35,7 +35,6 @@ import atomicInsightGeneratedAnswerStyles from './atomic-insight-generated-answe
 
 /**
  * The `atomic-insight-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
- * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
  *
  * @slot no-answer-message - Lets you pass a custom sorry message when no answer is generated.
  *

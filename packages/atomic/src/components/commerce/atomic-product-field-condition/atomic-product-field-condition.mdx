@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import meta, { Default } from './atomic-product-field-condition.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
-
+import UsageContent from './atomic-product-field-condition.usage.mdx';
 
 <Meta of={meta} />
 
@@ -11,23 +11,5 @@ import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-te
   tagName="atomic-product-field-condition"
   className="AtomicProductFieldCondition"
 >
-
-`atomic-product-field-condition` conditionally renders its content based on product attributes.
-This component can verify whether specified fields are defined, not defined, match specific values, or do not match specific values.
-
-It is typically used within `atomic-product-template`.
-
-```html
-<atomic-product-template>
-  ... 
-
-  <atomic-product-field-condition
-    if-defined="ec_name"
- 
-  >
-  <span>Render me if <strong>ec_name</strong> is defined.</span>
-  </atomic-product-field-condition>
-  
-</atomic-product-template>
-```
+<UsageContent />
 </AtomicDocTemplate>

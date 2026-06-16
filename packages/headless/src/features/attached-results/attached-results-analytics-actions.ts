@@ -7,7 +7,7 @@ import {
   citationDocumentIdentifier,
   documentIdentifier,
   makeInsightAnalyticsActionFactory,
-  partialCitationInformation,
+  partialDocumentInformationFromCitation,
   partialDocumentInformation,
   validateResultPayload,
 } from '../analytics/analytics-utils.js';
@@ -83,7 +83,7 @@ export const logCitationDocumentAttach = (citation: GeneratedAnswerCitation) =>
         documentId: citationDocumentIdentifier(citation),
       };
       return client.logGeneratedAnswerCitationDocumentAttach(
-        partialCitationInformation(citation, state),
+        partialDocumentInformationFromCitation(citation, state),
         citationPayload,
         metadata
       );

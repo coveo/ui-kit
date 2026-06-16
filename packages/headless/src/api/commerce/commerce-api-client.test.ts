@@ -369,7 +369,7 @@ describe('commerce api client', () => {
         totalEntries: 0,
         totalPages: 0,
         totalProducts: 0,
-        totalSpotlights: 0,
+        totalSpotlightContent: 0,
       },
       responseId: '',
       sort: {
