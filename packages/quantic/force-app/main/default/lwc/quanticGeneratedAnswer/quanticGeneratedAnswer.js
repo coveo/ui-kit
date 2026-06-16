@@ -183,10 +183,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   hasInitializationError = false;
   /** @type {boolean} */
   _exceedsMaximumHeight = false;
-  /** @type {boolean} */
-  _liked = false;
-  /** @type {boolean} */
-  _disliked = false;
   /** @type {number} */
   _maxCollapsedHeight = DEFAULT_COLLAPSED_HEIGHT;
 
@@ -338,11 +334,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    */
   async handleLike(event) {
     event.stopPropagation();
-    if (!this._liked) {
-      this._liked = true;
-      this._disliked = false;
-      this.generatedAnswer.like?.(event.detail?.answerId);
-    }
+    this.generatedAnswer.like?.(event.detail?.answerId);
     if (!this.feedbackSubmitted && !this.areFollowUpsEnabled) {
       // @ts-ignore
       await FeedbackModalQna.open({
@@ -376,11 +368,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    */
   async handleDislike(event) {
     event.stopPropagation();
-    if (!this._disliked) {
-      this._disliked = true;
-      this._liked = false;
-      this.generatedAnswer.dislike?.(event.detail?.answerId);
-    }
+    this.generatedAnswer.dislike?.(event.detail?.answerId);
     if (!this.feedbackSubmitted && !this.areFollowUpsEnabled) {
       // @ts-ignore
       await FeedbackModalQna.open({
