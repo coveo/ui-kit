@@ -40,6 +40,7 @@ import conversationTemplate from './templates/conversation.html';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").GeneratedAnswer} GeneratedAnswer */
+/** @typedef {import("coveo").GeneratedAnswerWithFollowUps} GeneratedAnswerWithFollowUps */
 /** @typedef {import("coveo").GeneratedAnswerState} GeneratedAnswerState */
 /** @typedef {import("coveo").GeneratedAnswerCitation} GeneratedAnswerCitation */
 /** @typedef { 'neutral' | 'liked' | 'disliked'} FeedbackState */
@@ -164,7 +165,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     noGeneratedAnswer,
   };
 
-  /** @type {GeneratedAnswer} */
+  /** @type { GeneratedAnswer | GeneratedAnswerWithFollowUps} */
   generatedAnswer;
   /** @type {GeneratedAnswerState} */
   state;
@@ -516,15 +517,23 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     return this.state.isVisible;
   }
 
-  get areFollowUpsEnabled() {
+  /**
+   * Returns the generated answer controller narrowed to `GeneratedAnswerWithFollowUps`, or `null` if follow-ups are not available.
+   * @returns {GeneratedAnswerWithFollowUps | null}
+   */
+  get generateAnswerWithFollowUps() {
     if (
       !this.agentId ||
       !this.generatedAnswer ||
       !('askFollowUp' in this.generatedAnswer)
     ) {
-      return false;
+      return null;
     }
-    return this.generatedAnswer.state.followUpAnswers?.isEnabled === true;
+    return /** @type {GeneratedAnswerWithFollowUps} */ (this.generatedAnswer);
+  }
+
+  get areFollowUpsEnabled() {
+    return this.generateAnswerWithFollowUps?.state.followUpAnswers?.isEnabled === true;
   }
 
   get allGeneratedAnswers() {
@@ -533,7 +542,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
       question: this.engine?.state.query?.q ?? '',
     };
     const followUpAnswers =
-      this.generatedAnswer?.state.followUpAnswers?.followUpAnswers ?? [];
+      this.generateAnswerWithFollowUps?.state.followUpAnswers?.followUpAnswers ?? [];
     return [initialAnswer, ...followUpAnswers];
   }
 
@@ -658,7 +667,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   get isAnswerGenerationOngoing() {
     const initialAnswerPending = this.isStreaming || this.isLoading;
     const followUpAnswers =
-      this.generatedAnswer?.state?.followUpAnswers?.followUpAnswers ?? [];
+      this.generateAnswerWithFollowUps?.state?.followUpAnswers?.followUpAnswers ?? [];
     return (
       initialAnswerPending ||
       followUpAnswers.some((answer) => answer.isStreaming || answer.isLoading)
@@ -682,9 +691,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    * @returns {void}
    */
   handleFollowUpSubmit = (event) => {
-    if (this.areFollowUpsEnabled) {
-      this.generatedAnswer.askFollowUp(event.detail.value);
-    }
+    this.generateAnswerWithFollowUps?.askFollowUp(event.detail.value);
   };
 
   render() {
