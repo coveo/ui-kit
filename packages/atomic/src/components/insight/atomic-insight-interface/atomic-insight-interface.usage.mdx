@@ -1,0 +1,14 @@
+The `atomic-insight-interface` component is the root element for an Insight Panel. It initializes the headless insight engine and provides localization context to all child components.
+
+```html
+<atomic-insight-interface>
+  <atomic-insight-layout>
+    <atomic-layout-section section="search">
+      <atomic-insight-search-box></atomic-insight-search-box>
+    </atomic-layout-section>
+    <atomic-layout-section section="main">
+      <atomic-insight-result-list></atomic-insight-result-list>
+    </atomic-layout-section>
+  </atomic-insight-layout>
+</atomic-insight-interface>
+```

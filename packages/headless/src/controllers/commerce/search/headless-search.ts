@@ -129,25 +129,29 @@ export function buildSearch(
   const controller = buildController(engine);
   const {dispatch} = engine;
   const getState = () => engine[stateKey];
-  const subControllers = buildSearchSubControllers(engine, {
-    responseIdSelector,
-    fetchProductsActionCreator: () => executeSearch({enableResults}),
-    fetchMoreProductsActionCreator: () => fetchMoreProducts({enableResults}),
-    facetResponseSelector,
-    isFacetLoadingResponseSelector,
-    requestIdSelector,
-    serializer: searchSerializer,
-    parametersDefinition: searchParametersDefinition,
-    restoreActionCreator: restoreSearchParameters,
-    activeParametersSelector,
-    isLoadingSelector,
-    errorSelector,
-    pageSelector: pagePrincipalSelector,
-    perPageSelector: perPagePrincipalSelector,
-    totalEntriesSelector: totalEntriesPrincipalSelector,
-    numberOfProductsSelector,
-    enrichSummary: enrichedSummarySelector,
-  });
+  const subControllers = buildSearchSubControllers(
+    engine,
+    {
+      responseIdSelector,
+      fetchProductsActionCreator: () => executeSearch({enableResults}),
+      fetchMoreProductsActionCreator: () => fetchMoreProducts({enableResults}),
+      facetResponseSelector,
+      isFacetLoadingResponseSelector,
+      requestIdSelector,
+      serializer: searchSerializer,
+      parametersDefinition: searchParametersDefinition,
+      restoreActionCreator: restoreSearchParameters,
+      activeParametersSelector,
+      isLoadingSelector,
+      errorSelector,
+      pageSelector: pagePrincipalSelector,
+      perPageSelector: perPagePrincipalSelector,
+      totalEntriesSelector: totalEntriesPrincipalSelector,
+      numberOfProductsSelector,
+      enrichSummary: enrichedSummarySelector,
+    },
+    {enableResults}
+  );
 
   return {
     ...controller,

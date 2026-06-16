@@ -141,7 +141,7 @@ const config: StorybookConfig = {
     './Introduction.mdx',
     './Crawling.stories.tsx',
     '../src/**/*.new.stories.tsx',
-    '../src/**/*.mdx',
+    '../src/**/!(*.usage).mdx',
     '../storybook-pages/**/*.new.stories.tsx',
     '../storybook-pages/**/*.mdx',
   ],

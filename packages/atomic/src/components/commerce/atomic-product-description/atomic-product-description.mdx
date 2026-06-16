@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import meta, { Default, Collapsible, UsingECDescription } from './atomic-product-description.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
-
+import UsageContent from './atomic-product-description.usage.mdx';
 
 <Meta of={meta} />
 
@@ -11,25 +11,5 @@ import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-te
   tagName="atomic-product-description"
   className="AtomicProductDescription"
 >
-The `atomic-product-description` component is used to display a detailed description of a product.
-It uses the `ec_shortdesc` property by default but you can change it to `ec_description` with the field attribute.
-
-It is typically used within `atomic-product-template` components to display product information in a concise format.
-
-```html
-<atomic-commerce-interface>
-  ...
-  <atomic-commerce-product-list>
-    <atomic-product-template>
-      <template>
-        ...
-        <atomic-product-section-description>
-          <atomic-product-description field="ec_description"></atomic-product-description>
-        </atomic-product-section-description>
-
-      </template>
-    </atomic-product-template>
-  </atomic-commerce-product-list>
-</atomic-commerce-interface>
-```
+<UsageContent />
 </AtomicDocTemplate>

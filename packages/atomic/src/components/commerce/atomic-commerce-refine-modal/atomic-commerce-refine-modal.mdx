@@ -1,8 +1,7 @@
-
 import { Meta } from '@storybook/addon-docs/blocks';
 import meta, { DefaultModal } from './atomic-commerce-refine-modal.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
-
+import UsageContent from './atomic-commerce-refine-modal.usage.mdx';
 
 <Meta of={meta} />
 
@@ -13,23 +12,5 @@ import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-te
   className="AtomicCommerceRefineModal"
   defaultStory="DefaultModal"
 >
-
-This component should not be used directly. It is internally used by the `atomic-commerce-refine-toggle` component to display the refine modal.
-To use the refine modal, you should use the `atomic-commerce-refine-toggle` component instead. It usually is placed within the "status" section of the layout.
-```html
-<atomic-commerce-interface>
-  ...
-  <atomic-commerce-layout>
-    ...
-    <atomic-layout-section section="main">
-      ...
-      <atomic-layout-section section="status">
-
-            <atomic-commerce-refine-toggle></atomic-commerce-refine-toggle>
-
-      </atomic-layout-section>
-    </atomic-layout-section>
-  </atomic-commerce-layout>
-</atomic-commerce-interface>
-```
+<UsageContent />
 </AtomicDocTemplate>

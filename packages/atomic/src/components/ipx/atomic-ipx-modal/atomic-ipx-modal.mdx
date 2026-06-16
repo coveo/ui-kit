@@ -1,6 +1,7 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import meta, { Default, WithoutFooter, Closed } from './atomic-ipx-modal.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+import UsageContent from './atomic-ipx-modal.usage.mdx';
 
 <Meta of={meta} />
 
@@ -11,26 +12,5 @@ import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-te
   className="AtomicIpxModal"
   defaultStory="Default"
 >
-
-The modal can be controlled programmatically by setting the `is-open` property:
-
-```html
-<atomic-search-interface>
-  <atomic-ipx-modal is-open="false">
-    <div slot="header">
-      <h2>Modal Title</h2>
-      <button onclick="this.closest('atomic-ipx-modal').isOpen = false">
-        Close
-      </button>
-    </div>
-    <div slot="body">
-      <p>Modal content goes here.</p>
-    </div>
-    <div slot="footer">
-      <button>Action</button>
-    </div>
-  </atomic-ipx-modal>
-</atomic-search-interface>
-```
-
+  <UsageContent />
 </AtomicDocTemplate>

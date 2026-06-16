@@ -114,7 +114,7 @@ Consequences:
 
 ## Validation
 
-When `pnpm a11y:vpat` runs, the loader warns and skips:
+When `pnpm exec turbo run a11y:vpat --filter=@coveo/atomic-a11y` runs, the loader warns and skips:
 
 - a file that isn't an object with a `wcag22Criteria` map (e.g. the old per-component array shape),
 - a criterion key whose id isn't a recognized WCAG 2.2 A/AA criterion,
@@ -124,7 +124,7 @@ When `pnpm a11y:vpat` runs, the loader warns and skips:
 
 1. Pick a surface and open/create `a11y/reports/manual-audit-{surface}.json`.
 2. Add `criterion → result` entries for what you tested.
-3. Run `pnpm a11y:vpat` and check the `[json-to-openacr]` output for warnings.
+3. Run `pnpm exec turbo run a11y:vpat --filter=@coveo/atomic-a11y` and check the `[json-to-openacr]` output for warnings.
 4. Commit the file (and the regenerated VPAT markdown).
 
 ## PR checklist

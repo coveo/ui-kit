@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import meta, { Default, WithInvalidToken, WithDisconnected, WithOrganizationPaused } from './atomic-insight-query-error.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
-
+import UsageContent from './atomic-insight-query-error.usage.mdx';
 
 <Meta of={meta} />
 
@@ -11,20 +11,5 @@ import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-te
   tagName="atomic-insight-query-error"
   className="AtomicInsightQueryError"
 >
-
-This component is typically placed within the "main" section of the layout, often alongside other components that display insight results.
-
-```html
-<atomic-insight-interface>
-  ...
-  <atomic-insight-layout>
-    ...
-    <atomic-layout-section section="main">
-      ...
-      <atomic-insight-query-error></atomic-insight-query-error>
-    </atomic-layout-section>
-  </atomic-insight-layout>
-</atomic-insight-interface>
-```
-
+<UsageContent />
 </AtomicDocTemplate>

@@ -1,0 +1,8 @@
+{
+  "surface": "recommendations",
+  "wcag22Criteria": {
+    "2.4.6-headings-and-labels": {
+      "conformance": "pass"
+    }
+  }
+}

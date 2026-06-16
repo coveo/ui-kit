@@ -1,0 +1,22 @@
+
+The `atomic-table-element` component defines a column in a result list displayed as a table. Each `atomic-table-element` represents one column, with the `label` property used as the column header.
+
+This component must be used inside an `atomic-result-template` when the parent `atomic-result-list` has `display="table"`.
+
+```html
+<atomic-result-list display="table">
+  <atomic-result-template>
+    <template>
+      <atomic-table-element label="Title">
+        <atomic-result-link></atomic-result-link>
+      </atomic-table-element>
+      <atomic-table-element label="Source">
+        <atomic-result-text field="source"></atomic-result-text>
+      </atomic-table-element>
+      <atomic-table-element label="Date">
+        <atomic-result-date field="date"></atomic-result-date>
+      </atomic-table-element>
+    </template>
+  </atomic-result-template>
+</atomic-result-list>
+```

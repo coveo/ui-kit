@@ -2,7 +2,6 @@
  * update-openacr.mjs
  *
  * Downloads the a11y-report.json from a CI run and regenerates openacr.yaml.
- * Usage: node scripts/update-openacr.mjs --run-id=<GITHUB_RUN_ID>
  */
 import {execFileSync} from 'node:child_process';
 import {rmSync} from 'node:fs';
@@ -22,7 +21,7 @@ const runId = process.argv
   ?.split('=')[1];
 if (!runId) {
   console.error(
-    'Usage: pnpm --filter @coveo/atomic-a11y a11y:update-openacr --run-id=<RUN_ID>'
+    'Usage: pnpm exec turbo run a11y:update-openacr --filter=@coveo/atomic-a11y -- --run-id=<RUN_ID>'
   );
   process.exit(1);
 }
