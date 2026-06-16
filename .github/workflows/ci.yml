@@ -471,8 +471,7 @@ jobs:
           path: packages/atomic/reports
           merge-multiple: true
       - name: 'Merge a11y shard reports'
-        run: pnpm run a11y:merge-shards ../atomic/reports/a11y-report.json
-        working-directory: packages/atomic-a11y
+        run: pnpm exec turbo run a11y:merge-shards --filter=@coveo/atomic-a11y -- ../atomic/reports/a11y-report.json
       - name: 'Upload merged a11y report'
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
