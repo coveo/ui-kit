@@ -110,7 +110,7 @@ describe('c-quantic-generated-answer-copy-to-clipboard', () => {
     expect(copyButton.iconSize).toBe(defaultSize);
   });
 
-  it('should copy the answer and dispatch the #quantic__generatedanswercopy event with the answerId ', async () => {
+  it('should copy the answer and dispatch the #quantic__generatedanswercopy event with the answerId', async () => {
     const element = createTestComponent();
     const handler = jest.fn();
     element.addEventListener('quantic__generatedanswercopy', handler);
