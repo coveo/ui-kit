@@ -44,8 +44,8 @@ import {
   GENERATION_STEP_NAMES,
   type GenerationStepName,
   normalizeGenerationStepName,
-  ToolCallArgsGeneric,
-  ToolCallArgsSearch,
+  type ToolCallArgsGeneric,
+  type ToolCallArgsSearch,
 } from './generated-answer-state.js';
 import {
   type GeneratedContentFormat,
@@ -257,9 +257,9 @@ export const startToolCall = createAction(
   'generatedAnswer/startToolCall',
   (payload: {toolCallName: string; startedAt: number; toolCallId: string}) =>
     validatePayload(payload, {
-      toolCallName: new StringValue({required: true}),
+      toolCallName: requiredNonEmptyString,
       startedAt: new NumberValue({min: 0, required: true}),
-      toolCallId: new StringValue({required: true}),
+      toolCallId: requiredNonEmptyString,
     })
 );
 
@@ -268,7 +268,7 @@ export const finishToolCall = createAction(
   (payload: {finishedAt: number; toolCallId: string}) =>
     validatePayload(payload, {
       finishedAt: new NumberValue({min: 0, required: true}),
-      toolCallId: new StringValue({required: true}),
+      toolCallId: requiredNonEmptyString,
     })
 );
 
@@ -279,7 +279,7 @@ export const toolCallArgs = createAction(
     args: ToolCallArgsSearch | ToolCallArgsGeneric;
   }) =>
     validatePayload(payload, {
-      toolCallId: new StringValue({required: true}),
+      toolCallId: requiredNonEmptyString,
       args: new RecordValue({options: {required: true}}),
     })
 );

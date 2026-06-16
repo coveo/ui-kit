@@ -19,8 +19,8 @@ import {
   GENERATION_STEP_NAMES,
   type GenerationStepName,
   normalizeGenerationStepName,
-  ToolCallArgsGeneric,
-  ToolCallArgsSearch,
+  type ToolCallArgsGeneric,
+  type ToolCallArgsSearch,
 } from '../generated-answer/generated-answer-state.js';
 import type {GeneratedContentFormat} from '../generated-answer/generated-response-format.js';
 
