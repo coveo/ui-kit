@@ -13,6 +13,9 @@
     "1.4.11-non-text-contrast": {
       "conformance": "partial",
       "remarks": "Numeric facet input border uses border-neutral (#e5e8e8) at 1.23:1 contrast against white, failing the 3:1 requirement. Rating stars (active #f6ce3c at 1.52:1, inactive #e5e8e8 at 1.23:1) also fail — stars are the only way sighted users identify the rating value. Users with low vision cannot perceive these UI boundaries and graphical indicators, making it difficult to identify form fields or understand rating values."
+    },
+    "3.3.1-error-identification": {
+      "conformance": "pass"
     }
   }
 }
