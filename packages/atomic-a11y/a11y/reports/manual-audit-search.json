@@ -17,6 +17,10 @@
     },
     "3.3.1-error-identification": {
       "conformance": "pass"
+    },
+    "2.4.11-focus-not-obscured-minimum": {
+      "conformance": "fail",
+      "remarks": "When a modal dialog (refine-modal, quickview, or feedback modal) is open, pressing Tab repeatedly causes focus to escape the focus trap and land on elements behind the modal backdrop. The user cannot see the focused element and loses their place in the navigation sequence."
     }
   }
 }
