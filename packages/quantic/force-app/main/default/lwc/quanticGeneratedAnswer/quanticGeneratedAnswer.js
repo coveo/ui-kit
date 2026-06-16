@@ -533,7 +533,10 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   get areFollowUpsEnabled() {
-    return this.generateAnswerWithFollowUps?.state.followUpAnswers?.isEnabled === true;
+    return (
+      this.generateAnswerWithFollowUps?.state.followUpAnswers?.isEnabled ===
+      true
+    );
   }
 
   get allGeneratedAnswers() {
@@ -542,7 +545,8 @@ export default class QuanticGeneratedAnswer extends LightningElement {
       question: this.engine?.state.query?.q ?? '',
     };
     const followUpAnswers =
-      this.generateAnswerWithFollowUps?.state.followUpAnswers?.followUpAnswers ?? [];
+      this.generateAnswerWithFollowUps?.state.followUpAnswers
+        ?.followUpAnswers ?? [];
     return [initialAnswer, ...followUpAnswers];
   }
 
@@ -667,7 +671,8 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   get isAnswerGenerationOngoing() {
     const initialAnswerPending = this.isStreaming || this.isLoading;
     const followUpAnswers =
-      this.generateAnswerWithFollowUps?.state?.followUpAnswers?.followUpAnswers ?? [];
+      this.generateAnswerWithFollowUps?.state?.followUpAnswers
+        ?.followUpAnswers ?? [];
     return (
       initialAnswerPending ||
       followUpAnswers.some((answer) => answer.isStreaming || answer.isLoading)
