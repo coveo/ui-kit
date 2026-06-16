@@ -1,8 +1,6 @@
 import couldNotGenerateAnAnswer from '@salesforce/label/c.quantic_CouldNotGenerateAnAnswer';
 import generatedAnswerErrorTurnLimitReached from '@salesforce/label/c.quantic_GeneratedAnswerErrorTurnLimitReached';
 import genericErrorTitle from '@salesforce/label/c.quantic_GenericErrorTitle';
-import thisAnswerWasHelpful from '@salesforce/label/c.quantic_ThisAnswerWasHelpful';
-import thisAnswerWasNotHelpful from '@salesforce/label/c.quantic_ThisAnswerWasNotHelpful';
 import like from '@salesforce/label/c.quantic_Like';
 import dislike from '@salesforce/label/c.quantic_Dislike';
 import {LightningElement, api} from 'lwc';
@@ -51,8 +49,6 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
     couldNotGenerateAnAnswer,
     generatedAnswerErrorTurnLimitReached,
     genericErrorTitle,
-    thisAnswerWasHelpful,
-    thisAnswerWasNotHelpful,
     like,
     dislike,
   };
