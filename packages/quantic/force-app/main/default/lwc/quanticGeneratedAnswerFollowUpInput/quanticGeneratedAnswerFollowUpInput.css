@@ -1,17 +1,69 @@
-:host {
-  --slds-c-input-shadow: none;
+/* Container: pin single-line height so layout doesn't jump when expander goes absolute */
+.follow-up-input__container {
+  min-height: calc(2.5rem + 2px);
 }
 
-.follow-up-input__input {
-  border: none;
-  box-shadow: none;
-  outline: none;
-  width: 100%;
-  --slds-c-input-color-border: transparent;
-  --slds-c-input-shadow-focus: transparent;
-  --slds-c-input-spacing-border: 0px;
-}
-
-.follow-up-input__input-container.follow-up-input__input-container--focused {
+.follow-up-input__container--focused {
   border-color: var(--lwc-brandAccessible, #0176d3);
+}
+
+/* Expander: CSS grid trick — textarea and ::after share the same cell */
+.follow-up-input__expander {
+  display: grid;
+  overflow: hidden;
+  margin-right: 2.5rem;
+}
+
+.follow-up-input__expander::after {
+  content: attr(data-replicated-value) ' ';
+  visibility: hidden;
+}
+
+.follow-up-input__expander::after,
+.follow-up-input__textarea {
+  grid-area: 1 / 1 / 2 / 2;
+  resize: none;
+  overflow: hidden;
+  white-space: nowrap;
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 0.5rem 0.75rem;
+  font: inherit;
+  min-height: 2.5rem;
+}
+
+/* Expanded: absolute, anchored at bottom so it grows upward */
+.follow-up-input__expander--expanded {
+  position: absolute;
+  bottom: -1px;
+  left: -1px;
+  right: -1px;
+  z-index: 10;
+  overflow: visible;
+  margin-right: 0;
+  background-color: var(--lwc-colorBackground, #fff);
+  border: 1px solid var(--lwc-brandAccessible, #0176d3);
+  border-radius: 0.25rem;
+}
+
+.follow-up-input__expander--expanded::after,
+.follow-up-input__expander--expanded .follow-up-input__textarea {
+  white-space: pre-wrap;
+  overflow-y: auto;
+  max-height: 8rem;
+  padding-right: 2.5rem;
+  scrollbar-width: none;
+}
+
+.follow-up-input__expander--expanded .follow-up-input__textarea::-webkit-scrollbar {
+  display: none;
+}
+
+/* Submit button: stays above the expander overlay */
+.follow-up-input__submit-button {
+  position: absolute;
+  right: 0.25rem;
+  bottom: 0.25rem;
+  z-index: 11;
 }
