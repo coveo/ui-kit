@@ -125,8 +125,6 @@ export type {
   AgentMessage,
   A2UISurface,
   GenerativeState,
-  ControllerBuilder,
-  GenerativeInterfaceOptions,
 } from './interface/generative/generative-types.js';
 
 export {GenerativeRuntime} from './interface/api/generative-endpoint/generative-runtime.js';
@@ -138,7 +136,6 @@ export type {
 } from './interface/api/generative-endpoint/generative-runtime.js';
 
 export {
-  ACTIVITY_TYPE_TO_USE_CASE,
   createHydrateSubInterface,
   getOrCreateHydrateFromSnapshotAction,
 } from './interface/generative/generative-hydration.js';

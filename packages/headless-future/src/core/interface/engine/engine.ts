@@ -4,6 +4,7 @@ import type {ConfigurationState} from '@/src/core/interface/configuration/config
 import {configurationSlice} from '@/src/core/internal/configuration/configuration-slice.js';
 import {setConfiguration} from '@/src/core/internal/configuration/configuration-actions.js';
 import type {NavigatorContextProvider} from '@/src/core/interface/navigator-context/navigator-context-types.js';
+import {getOrCreateHydrateFromSnapshotAction} from '@/src/core/interface/generative/generative-hydration.js';
 import {
   Dispatchable,
   EngineOptions,
@@ -18,6 +19,10 @@ export type FullEngine = Engine & {
   getNavigatorContextProvider(): NavigatorContextProvider | undefined;
   mutate(mutation: Dispatchable): unknown;
   read<T>(selector: StateSelector<T>): T;
+  storeHydrationSnapshot(
+    interfaceId: string,
+    content: Record<string, unknown>
+  ): void;
   subscribe<T>(
     selector: StateSelector<T>,
     callback: StateChangeCallback<T>
@@ -40,6 +45,7 @@ export class Engine {
   #rootReducer = combineSlices({});
   #navigatorContextProvider: NavigatorContextProvider | undefined;
   #didWarnMissingNavigatorContextProvider = false;
+  #hydrationSnapshots = new Map<string, Record<string, unknown>>();
 
   constructor(options?: EngineOptions) {
     this.#adoptedSlices = new WeakSet<Slice>();
@@ -62,6 +68,10 @@ export class Engine {
           engine.#getNavigatorContextProvider(),
         mutate: (mutation: Dispatchable) => engine.#mutate(mutation),
         read: <T>(selector: StateSelector<T>) => engine.#read(selector),
+        storeHydrationSnapshot: (
+          interfaceId: string,
+          content: Record<string, unknown>
+        ) => engine.#storeHydrationSnapshot(interfaceId, content),
         subscribe: <T>(
           selector: StateSelector<T>,
           callback: StateChangeCallback<T>
@@ -85,6 +95,23 @@ export class Engine {
     this.#adoptedSlices.add(slice);
     this.#rootReducer.inject(slice);
     this.#mutate({type: '@@engine/ADOPT_SLICE'});
+
+    const separatorIndex = slice.name.lastIndexOf('/');
+    if (separatorIndex > 0) {
+      const interfaceId = slice.name.substring(0, separatorIndex);
+      if (this.#hydrationSnapshots.has(interfaceId)) {
+        const content = this.#hydrationSnapshots.get(interfaceId)!;
+        const hydrateAction = getOrCreateHydrateFromSnapshotAction(interfaceId);
+        this.#mutate(hydrateAction(content));
+      }
+    }
+  }
+
+  #storeHydrationSnapshot(
+    interfaceId: string,
+    content: Record<string, unknown>
+  ) {
+    this.#hydrationSnapshots.set(interfaceId, content);
   }
 
   #getNavigatorContextProvider(): NavigatorContextProvider | undefined {

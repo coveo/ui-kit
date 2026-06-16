@@ -6,7 +6,6 @@ import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-s
 import {
   ENGINE,
   STATE_ID,
-  BUILDER_REGISTRY,
   SOURCE_ENGINE,
 } from '@/src/core/interface/utils/symbols.js';
 import {getOrCreateGenerativeActions} from '@/src/core/internal/generative/generative-actions.js';
@@ -38,7 +37,6 @@ export const buildConverseController = (
 ): ConverseController => {
   const fullEngine = options.interface[ENGINE];
   const stateId = options.interface[STATE_ID];
-  const builderRegistry = options.interface[BUILDER_REGISTRY];
   const sourceEngine = options.interface[SOURCE_ENGINE];
 
   loadGenerative(fullEngine, stateId);
@@ -96,10 +94,7 @@ export const buildConverseController = (
         fullEngine.mutate(actions.clearTurnResponse({turnId}));
       },
     },
-    hydrateSubInterface: createHydrateSubInterface(
-      sourceEngine,
-      builderRegistry
-    ),
+    hydrateSubInterface: createHydrateSubInterface(sourceEngine),
   });
 
   const controllerState = createMemoizedStateSelector(

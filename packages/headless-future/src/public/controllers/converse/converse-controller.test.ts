@@ -8,7 +8,6 @@ import {
 import {
   ENGINE,
   STATE_ID,
-  BUILDER_REGISTRY,
   SOURCE_ENGINE,
   KIND,
   THUNK_FACTORIES,
@@ -49,10 +48,6 @@ function createTestGenerativeInterface(engine: Engine): GenerativeInterface {
     [STATE_ID]: TEST_ID,
     [ENGINE]: fullEngine,
     [SOURCE_ENGINE]: engine,
-    [BUILDER_REGISTRY]: {
-      commerceSearchControllers: [],
-      searchControllers: [],
-    },
     [THUNK_FACTORIES]: {conversation: []},
     [THUNKS]: {conversation: []},
   }) as unknown as GenerativeInterface;

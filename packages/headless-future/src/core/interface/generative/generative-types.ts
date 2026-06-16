@@ -1,5 +1,4 @@
 import type {Interface} from '@/src/core/interface/utils/interface-types.js';
-import type {Controller} from '@/src/public/controllers/controller-types.js';
 
 /**
  * ============================================================================
@@ -41,18 +40,17 @@ export interface Turn {
   error?: string;
 }
 
-export interface RoutedInterface {
-  /**
-   * The developer-facing use-case key (matches the registration key).
-   * e.g., 'commerceSearch' or 'search'
-   */
-  useCase: RoutedUseCase;
+export type UseCaseInterfaceMap = {
+  commerceSearch: Interface<'commerce'>;
+  search: Interface<'search'>;
+};
 
-  /**
-   * The hydrated sub-interface for this routed turn.
-   */
-  interface: Interface<any>;
-}
+export type RoutedInterface = {
+  [K in RoutedUseCase]: {
+    useCase: K;
+    interface: UseCaseInterfaceMap[K];
+  };
+}[RoutedUseCase];
 
 export type RoutedUseCase = 'commerceSearch' | 'search';
 
@@ -129,26 +127,4 @@ export interface GenerativeState {
    * The id of the currently active turn, or undefined when no turns exist.
    */
   activeTurnId: string | undefined;
-}
-
-/**
- * ============================================================================
- * Configuration types
- * ============================================================================
- */
-
-export type ControllerBuilder = (options: {
-  interface: Interface<any>;
-}) => Controller;
-
-export interface GenerativeInterfaceOptions {
-  /**
-   * Controller builders to instantiate when hydrating a commerce search sub-interface.
-   */
-  commerceSearchControllers?: ControllerBuilder[];
-
-  /**
-   * Controller builders to instantiate when hydrating a search sub-interface.
-   */
-  searchControllers?: ControllerBuilder[];
 }

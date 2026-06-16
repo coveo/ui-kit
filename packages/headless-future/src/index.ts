@@ -13,7 +13,6 @@ export {buildGenerativeInterface} from './public/interfaces/generative.js';
 export type {
   BuildGenerativeInterfaceOptions,
   GenerativeInterface,
-  BuilderRegistry,
 } from './public/interfaces/generative.js';
 export type {
   Turn,
@@ -25,13 +24,9 @@ export type {
   ToolCallStatus,
   RoutedInterface,
   RoutedUseCase,
-  ControllerBuilder,
-  GenerativeInterfaceOptions,
 } from './core/interface/generative/generative-types.js';
 export type {
   Interface,
   ComposedInterface,
   Requires,
-  Operations,
-  EndpointStateScope,
 } from './core/interface/utils/interface-types.js';

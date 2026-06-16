@@ -5,4 +5,3 @@ export const SOURCE_ENGINE: unique symbol = Symbol('sourceEngine');
 export const THUNKS: unique symbol = Symbol('thunks');
 export const THUNK_FACTORIES: unique symbol = Symbol('thunkFactories');
 export const INTERFACES: unique symbol = Symbol('interfaces');
-export const BUILDER_REGISTRY: unique symbol = Symbol('builderRegistry');
