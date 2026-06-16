@@ -1,4 +1,3 @@
-/* Container: pin single-line height so layout doesn't jump when expander goes absolute */
 .follow-up-input__container {
   min-height: calc(2.5rem + 2px);
 }
@@ -7,7 +6,6 @@
   border-color: var(--lwc-brandAccessible, #0176d3);
 }
 
-/* Expander: CSS grid trick — textarea and ::after share the same cell */
 .follow-up-input__expander {
   display: grid;
   overflow: hidden;
@@ -33,7 +31,6 @@
   min-height: 2.5rem;
 }
 
-/* Expanded: absolute, anchored at bottom so it grows upward */
 .follow-up-input__expander--expanded {
   position: absolute;
   bottom: -1px;
@@ -60,7 +57,6 @@
   display: none;
 }
 
-/* Submit button: stays above the expander overlay */
 .follow-up-input__submit-button {
   position: absolute;
   right: 0.25rem;
