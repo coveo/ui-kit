@@ -79,27 +79,38 @@ ACTIVITY_SNAPSHOT {activityType: "commerce-search-api-response", content: {...}}
 ┌───────────────────────────────────────────────────────────┐
 │              createHydrateSubInterface                     │
 │                                                           │
-│  1. Map activityType → use-case key                       │
-│     "commerce-search-api-response" → commerceSearchCtrl   │
+│  1. Map activityType → routed use-case                    │
+│     "commerce-search-api-response" → commerceSearch       │
+│     "search-api-response" → search                        │
 │                                                           │
 │  2. Build a sub-interface                                 │
-│     buildCommerceInterface({engine})                       │
+│     buildCommerceInterface({engine}) or                   │
+│     buildSearchInterface({engine})                        │
 │                                                           │
-│  3. Invoke registered controller builders                 │
-│     Each builder adopts its own slice:                    │
-│     buildProductListController → adopts product-list slice│
+│  3. Store snapshot in engine cache                        │
+│     engine.storeHydrationSnapshot(subId, content)         │
 │                                                           │
 │  4. Dispatch hydrateFromSnapshot action                   │
-│     Each adopted slice extracts what it needs:            │
+│     Any already-adopted slices extract what they need:    │
 │     • product-list slice reads content.products           │
-│     • pagination slice reads content.pagination           │
-│     • facets slice reads content.facets                   │
+│     • result-list slice reads content.results             │
 │                                                           │
-│  5. Return {useCase, interface} as RoutedInterface          │
+│  5. Return {useCase, interface} as RoutedInterface        │
+│                                                           │
+│  ── Later, in a React component ──                        │
+│                                                           │
+│  6. Developer builds controller lazily                    │
+│     buildProductListController({interface: subInterface}) │
+│     → adopts slice → engine re-dispatches snapshot        │
+│       from cache → slice state is hydrated                │
 └───────────────────────────────────────────────────────────┘
 ```
 
-**Key design principle**: The hydration module does NOT eagerly import feature slices. Each controller builder brings its own slice — this preserves tree-shaking. If you don't register `buildProductListController`, the product-list slice code is never bundled.
+**Key design principles**:
+
+- The hydration module does NOT eagerly import feature slices — tree-shaking is preserved.
+- Controllers are built **lazily** in components, not registered upfront.
+- The Engine caches hydration snapshots per sub-interface. When a slice is adopted later (via a controller builder), the Engine automatically re-dispatches the `hydrateFromSnapshot` action so the new slice receives the data — this makes hydration **order-independent**.
 
 ---
 
@@ -108,10 +119,15 @@ ACTIVITY_SNAPSHOT {activityType: "commerce-search-api-response", content: {...}}
 ```
 Engine (Redux store)
 ├── {interfaceId}/generative          ← generative slice (turns, activeTurnId)
-├── {subInterfaceId}/products         ← product-list slice (adopted by builder)
-├── {subInterfaceId}/pagination       ← pagination slice (adopted by builder)
-├── {subInterfaceId}/facets           ← facets slice (adopted by builder)
+├── {subInterfaceId}/products         ← product-list slice (adopted lazily by controller)
+├── {subInterfaceId}/results          ← result-list slice (adopted lazily by controller)
 └── configuration                     ← shared engine config
+
+Engine (internal)
+├── #hydrationSnapshots: Map<subInterfaceId, snapshotContent>
+│   └── used by #adoptSlice to re-dispatch hydrate action for late-adopted slices
+└── #adoptedSlices: WeakSet<Slice>
+    └── ensures idempotent adoption (duplicate calls are no-ops)
 ```
 
 Each sub-interface gets its own `STATE_ID`, so slices from different turns never collide.
@@ -149,16 +165,16 @@ Each sub-interface gets its own `STATE_ID`, so slices from different turns never
 
 ## How the Pieces Connect
 
-| Layer                    | Responsibility                                                                 | Key File                                              |
-| ------------------------ | ------------------------------------------------------------------------------ | ----------------------------------------------------- |
-| **Engine**               | Redux store wrapper, slice adoption, pub/sub                                   | `engine.ts`                                           |
-| **Generative Interface** | Created by developer, holds builder registry + SOURCE_ENGINE                   | `generative.ts`                                       |
-| **Converse Controller**  | Public API for the view layer (submit/selectTurn/retry/state/subscribe)        | `converse-controller.ts`                              |
-| **Generative Runtime**   | SSE stream consumer, event dispatch, singleton per engine                      | `generative-runtime.ts`                               |
-| **Endpoint Facade**      | HTTP request building via contributor registry                                 | `conversation-endpoint-facade.ts`                     |
-| **Generative Loader**    | Adopts generative slice, registers message contributor                         | `generative-loader.ts`                                |
-| **Hydration**            | Maps activityType → sub-interface, invokes builders, dispatches hydrate action | `generative-hydration.ts`                             |
-| **Feature Slices**       | Each responds to `hydrateFromSnapshot` action, extracts its own data           | `product-list-slice.ts`, `result-list-slice.ts`, etc. |
+| Layer                    | Responsibility                                                          | Key File                          |
+| ------------------------ | ----------------------------------------------------------------------- | --------------------------------- |
+| **Engine**               | Redux store wrapper, slice adoption, pub/sub, hydration snapshot cache  | `engine.ts`                       |
+| **Generative Interface** | Created by developer, holds SOURCE_ENGINE reference                     | `generative.ts`                   |
+| **Converse Controller**  | Public API for the view layer (submit/selectTurn/retry/state/subscribe) | `converse-controller.ts`          |
+| **Generative Runtime**   | SSE stream consumer, event dispatch, singleton per engine               | `generative-runtime.ts`           |
+| **Endpoint Facade**      | HTTP request building via contributor registry                          | `conversation-endpoint-facade.ts` |
+| **Generative Loader**    | Adopts generative slice, registers message contributor                  | `generative-loader.ts`            |
+| **Hydration**            | Maps activityType → sub-interface, stores snapshot, dispatches hydrate  | `generative-hydration.ts`         |
+| **Feature Slices**       | Each responds to `hydrateFromSnapshot` action, extracts its own data    | `product-list-slice.ts`, etc.     |
 
 ---
 
@@ -172,8 +188,6 @@ import {
   Engine,
   buildGenerativeInterface,
   buildConverseController,
-  buildProductListController,
-  buildResultListController,
 } from '@coveo/headless-future';
 
 const engine = new Engine({
@@ -186,15 +200,7 @@ const engine = new Engine({
   }),
 });
 
-const generativeInterface = buildGenerativeInterface({
-  engine,
-  options: {
-    // Register what controllers you want for each use-case.
-    // Only registered controllers get bundled & hydrated.
-    commerceSearchControllers: [buildProductListController],
-    searchControllers: [buildResultListController],
-  },
-});
+const generativeInterface = buildGenerativeInterface({engine});
 
 export const converseController = buildConverseController({
   interface: generativeInterface,
@@ -237,35 +243,35 @@ export function ConversePage() {
 
       {activeTurn?.agentResponse && (
         <>
-          {/* Messages */}
           {activeTurn.agentResponse.messages.map((msg, i) => (
             <p key={i}>{msg.content}</p>
           ))}
 
-          {/* Tool calls (thinking steps) */}
           {activeTurn.agentResponse.toolCalls.map((tc) => (
             <div key={tc.id}>
               {tc.status === 'calling' ? '⏳' : '✓'} {tc.name}
             </div>
           ))}
 
-          {/* A2UI surfaces (opaque pass-through) */}
           {activeTurn.agentResponse.surfaces.map((surface, i) => (
             <pre key={i}>{JSON.stringify(surface, null, 2)}</pre>
           ))}
         </>
       )}
 
-      {/* Routed commerce results */}
       {activeTurn?.routedInterface?.useCase === 'commerceSearch' && (
         <ProductList interface={activeTurn.routedInterface.interface} />
+      )}
+
+      {activeTurn?.routedInterface?.useCase === 'search' && (
+        <ResultList interface={activeTurn.routedInterface.interface} />
       )}
     </div>
   );
 }
 ```
 
-### 3. Product List (routed sub-interface)
+### 3. Product List (routed sub-interface, lazy controller)
 
 ```tsx
 // ProductList.tsx
@@ -289,6 +295,8 @@ export function ProductList({interface: subInterface}) {
   );
 }
 ```
+
+The controller is built **lazily** when the component mounts. The Engine's snapshot cache ensures the slice receives hydrated data even though it's adopted after the `hydrateFromSnapshot` action was originally dispatched.
 
 ---
 
@@ -318,35 +326,57 @@ export function ProductList({interface: subInterface}) {
 
 The generative hydration module imports **zero feature slices** at the top level. The mechanism:
 
-1. Developer registers builders: `commerceSearchControllers: [buildProductListController]`
-2. At hydration time, `createHydrateSubInterface` calls each builder against the sub-interface
-3. Each builder internally calls `engine.adoptSlice(getOrCreateProductListSlice(stateId))`
-4. After all builders have adopted their slices, the hydration dispatches a single `hydrateFromSnapshot` action
-5. Each adopted slice responds to this action in its `extraReducers`, extracting only the fields it cares about
+1. At hydration time, `createHydrateSubInterface` builds a sub-interface and stores the snapshot content in the Engine's cache
+2. The hydration dispatches `hydrateFromSnapshot` — any slices already adopted will process it immediately
+3. When a developer later builds a controller (e.g., `buildProductListController({interface: subInterface})`), the controller calls `engine.adoptSlice(slice)`
+4. The Engine detects the slice belongs to a cached sub-interface (by extracting the interface ID prefix from the slice name) and automatically re-dispatches the `hydrateFromSnapshot` action
+5. The newly-adopted slice receives the snapshot data in its `extraReducers` handler
 
-If you never register `buildProductListController`, the product-list slice module is never imported by bundler-reachable code → tree-shaken out.
+If you never import `buildProductListController`, the product-list slice module is never imported by bundler-reachable code → tree-shaken out. The hydration module only imports `buildCommerceInterface` and `buildSearchInterface`, never the feature slices.
 
 ---
 
 ## Key Symbols
 
-| Symbol             | Purpose                                                        |
-| ------------------ | -------------------------------------------------------------- |
-| `ENGINE`           | Stores the FullEngine (internal API) on an interface           |
-| `SOURCE_ENGINE`    | Stores the original public Engine (for sub-interface creation) |
-| `STATE_ID`         | Unique slice namespace per interface instance                  |
-| `BUILDER_REGISTRY` | The registered controller builders on the generative interface |
-| `KIND`             | Discriminator ('interface' vs 'composed')                      |
+| Symbol          | Purpose                                                        |
+| --------------- | -------------------------------------------------------------- |
+| `ENGINE`        | Stores the FullEngine (internal API) on an interface           |
+| `SOURCE_ENGINE` | Stores the original public Engine (for sub-interface creation) |
+| `STATE_ID`      | Unique slice namespace per interface instance                  |
+| `KIND`          | Discriminator ('interface' vs 'composed')                      |
+
+---
+
+## RoutedInterface Type (Discriminated Union)
+
+The `RoutedInterface` type is a discriminated union. Narrowing on `useCase` also narrows the `interface` field to the correct concrete type:
+
+```ts
+type RoutedInterface =
+  | {useCase: 'commerceSearch'; interface: Interface<'commerce'>}
+  | {useCase: 'search'; interface: Interface<'search'>};
+```
+
+This gives compile-time safety when building controllers:
+
+```ts
+if (turn.routedInterface?.useCase === 'commerceSearch') {
+  // turn.routedInterface.interface is narrowed to Interface<'commerce'>
+  buildProductListController({interface: turn.routedInterface.interface}); // ✓ type-safe
+}
+```
 
 ---
 
 ## Error Handling
 
-| Scenario                | Behavior                                         |
-| ----------------------- | ------------------------------------------------ |
-| Network failure         | Turn → error status, error message stored        |
-| Stream interruption     | Partial agentResponse preserved, turn → error    |
-| Empty/whitespace prompt | submit() is a no-op                              |
-| Submit while streaming  | submit() is a no-op                              |
-| Retry on non-error turn | retry() is a no-op                               |
-| Retry on errored turn   | Clears partial response, re-submits, → streaming |
+| Scenario                          | Behavior                                         |
+| --------------------------------- | ------------------------------------------------ |
+| Network failure                   | Turn → error status, error message stored        |
+| Stream interruption               | Partial agentResponse preserved, turn → error    |
+| Empty/whitespace prompt           | submit() is a no-op                              |
+| Submit while streaming            | submit() is a no-op                              |
+| Retry on non-error turn           | retry() is a no-op                               |
+| Retry on errored turn             | Clears partial response, re-submits, → streaming |
+| Duplicate slice adopt             | No-op — existing slice state preserved           |
+| Snapshot for unknown slice fields | Slice initializes with defaults, no error        |
