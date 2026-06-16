@@ -95,7 +95,7 @@ ACTIVITY_SNAPSHOT {activityType: "commerce-search-api-response", content: {...}}
 │     • pagination slice reads content.pagination           │
 │     • facets slice reads content.facets                   │
 │                                                           │
-│  5. Return {type, interface} as RoutedInterface           │
+│  5. Return {useCase, interface} as RoutedInterface          │
 └───────────────────────────────────────────────────────────┘
 ```
 
@@ -135,13 +135,14 @@ Each sub-interface gets its own `STATE_ID`, so slices from different turns never
     Routing Mode    Agent Mode          Error
          │               │                   │
          ▼               ▼                   ▼
-  ┌─────────────┐ ┌─────────────┐   ┌─────────────┐
-  │ routedIface │ │ agentResp   │   │ status:error│
-  │ status:done │ │ messages[]  │   │ error: msg  │
-  └─────────────┘ │ toolCalls[] │   └─────────────┘
-                  │ surfaces[]  │
-                  │ status:done │
-                  └─────────────┘
+  ┌─────────────┐ ┌──────────────┐   ┌─────────────┐
+  │ routedIface │ │ agentResp    │   │ status:error│
+  │ status:     │ │ messages[]   │   │ error: msg  │
+  │  complete   │ │ toolCalls[]  │   └─────────────┘
+  └─────────────┘ │ surfaces[]   │
+                  │ status:      │
+                  │  complete    │
+                  └──────────────┘
 ```
 
 ---
