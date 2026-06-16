@@ -198,7 +198,8 @@ export function buildSearchSubControllers(
       SearchSummaryState
     >,
     'facetSearchType'
-  >
+  >,
+  options?: {enableResults?: boolean}
 ): SearchSubControllers {
   return {
     ...buildSearchAndListingsSubControllers(engine, {
@@ -206,7 +207,7 @@ export function buildSearchSubControllers(
       facetSearchType: 'SEARCH',
     }),
     didYouMean() {
-      return buildDidYouMean(engine);
+      return buildDidYouMean(engine, {enableResults: options?.enableResults});
     },
   };
 }

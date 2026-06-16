@@ -31,15 +31,27 @@ import {
 } from '../../controller/headless-controller.js';
 import type {
   RecentQueriesListInitialState,
-  RecentQueriesListOptions,
-  RecentQueriesListProps,
+  RecentQueriesListOptions as CoreRecentQueriesListOptions,
+  RecentQueriesListProps as CoreRecentQueriesListProps,
 } from '../../recent-queries-list/headless-recent-queries-list.js';
 
-export type {
-  RecentQueriesListInitialState,
-  RecentQueriesListOptions,
-  RecentQueriesListProps,
+export type {RecentQueriesListInitialState};
+
+export type RecentQueriesListOptions = Partial<CoreRecentQueriesListOptions> & {
+  /**
+   * When set to true, fills the `results` field rather than the `products` field
+   * in the response. It may also include Spotlight Content in the results.
+   * @default false
+   */
+  enableResults?: boolean;
 };
+
+export interface RecentQueriesListProps extends Omit<
+  CoreRecentQueriesListProps,
+  'options'
+> {
+  options?: RecentQueriesListOptions;
+}
 
 const defaultRecentQueriesState: Required<RecentQueriesListInitialState> = {
   queries: [],
@@ -48,6 +60,7 @@ const defaultRecentQueriesState: Required<RecentQueriesListInitialState> = {
 const defaultRecentQueriesOptions: Required<RecentQueriesListOptions> = {
   maxLength: 10,
   clearFilters: true,
+  enableResults: false,
 };
 
 const initialStateSchema = new Schema<RecentQueriesListInitialState>({
@@ -57,6 +70,7 @@ const initialStateSchema = new Schema<RecentQueriesListInitialState>({
 const optionsSchema = new Schema<RecentQueriesListOptions>({
   maxLength: new NumberValue({required: true, min: 1}),
   clearFilters: new BooleanValue(),
+  enableResults: new BooleanValue(),
 });
 
 /**
@@ -221,7 +235,9 @@ export function buildRecentQueriesList(
       };
 
       dispatch(prepareForSearchWithQuery(queryOptions));
-      dispatch(executeSearch());
+      dispatch(
+        executeSearch({enableResults: registrationOptions.enableResults})
+      );
     },
   };
 }
