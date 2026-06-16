@@ -4,6 +4,7 @@
     "2.4.6-headings-and-labels": {
       "conformance": "pass"
     },
-    "2.5.2-pointer-cancellation": "pass"
+    "2.5.2-pointer-cancellation": "pass",
+    "1.4.11-non-text-contrast": "pass"
   }
 }

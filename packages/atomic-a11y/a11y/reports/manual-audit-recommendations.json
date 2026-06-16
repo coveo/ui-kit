@@ -6,6 +6,7 @@
     },
     "2.5.2-pointer-cancellation": {
       "conformance": "pass"
-    }
+    },
+    "1.4.11-non-text-contrast": "pass"
   }
 }
