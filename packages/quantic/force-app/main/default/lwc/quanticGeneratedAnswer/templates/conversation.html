@@ -1,0 +1,63 @@
+<template>
+  <template lwc:if={shouldDisplayGeneratedAnswer}>
+    <div
+      data-testid="generated-answer__card"
+      class="slds-box slds-p-around_none"
+    >
+      <header
+        data-testid="generated-answer__header"
+        class={generatedAnswerHeaderClass}
+      >
+        <div
+          class="generated-answer__header-title slds-grid slds-grid_vertical-align-center"
+        >
+          <lightning-icon
+            icon-name="utility:sparkles"
+            size="x-small"
+            alternative-text={labels.generatedAnswerForYou}
+            class="slds-current-color slds-var-m-right_x-small"
+          ></lightning-icon>
+          <span
+            data-testid="generated-answer__header-title"
+            class="slds-text-title_bold slds-p-vertical_x-small"
+            >{labels.generatedAnswerForYou}</span
+          >
+        </div>
+        <template lwc:if={withToggle}>
+          <c-quantic-generated-answer-toggle
+            is-generated-answer-visible={isVisible}
+          ></c-quantic-generated-answer-toggle>
+        </template>
+      </header>
+      <template lwc:if={isVisible}>
+        <div
+          class="slds-p-horizontal_large slds-p-top_medium generated-answer__content--scrollable"
+        >
+          <c-quantic-generated-answer-thread
+            engine-id={engineId}
+            onquantic__generatedanswerlike={handleLike}
+            onquantic__generatedanswerdislike={handleDislike}
+            onquantic__citationhover={handleCitationHover}
+            generated-answers={allGeneratedAnswers}
+            disable-citation-anchoring={disableCitationAnchoring}
+          >
+          </c-quantic-generated-answer-thread>
+        </div>
+        <div class="slds-p-horizontal_large slds-p-vertical_medium">
+          <c-quantic-generated-answer-follow-up-input
+            onquantic__submitfollowup={handleFollowUpSubmit}
+            submit-button-disabled={isAnswerGenerationOngoing}
+          ></c-quantic-generated-answer-follow-up-input>
+          <footer
+            data-testid="generated-answer__footer"
+            class="generated-answer__disclaimer slds-grid slds-grid_vertical-align-center slds-grid_align-end slds-text-color_weak slds-text-body_small"
+          >
+            <div data-testid="generated-answer__disclaimer">
+              <slot name="disclaimer">{labels.rgaDisclaimer}</slot>
+            </div>
+          </footer>
+        </div>
+      </template>
+    </div>
+  </template>
+</template>
