@@ -9,6 +9,7 @@
     "2.4.11-focus-not-obscured-minimum": {
       "conformance": "fail",
       "remarks": "When the refine-modal is open inside IPX, pressing Tab repeatedly causes focus to escape the modal and land on elements behind the backdrop. The user loses track of their keyboard position and cannot see which element is focused, breaking their navigation flow."
-    }
+    },
+    "2.5.3-label-in-name": "pass"
   }
 }
