@@ -1,9 +1,6 @@
 {
-  "surface": "commerce",
+  "surface": "recommendations",
   "wcag22Criteria": {
-    "3.3.3-error-suggestion": {
-      "conformance": "pass"
-    },
     "2.4.6-headings-and-labels": {
       "conformance": "pass"
     },

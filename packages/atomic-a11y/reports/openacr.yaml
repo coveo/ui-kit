@@ -13,8 +13,8 @@ vendor:
   company_name: Coveo
   email: support@coveo.com
   website: https://www.coveo.com
-report_date: '2026-06-15'
-last_modified_date: '2026-06-15'
+report_date: '2026-06-16'
+last_modified_date: '2026-06-16'
 version: 1
 notes: Generated from a11y/reports/a11y-report.json. Conformance is derived from
   axe-core results, interactive keyboard tests, and manual audits. Rows marked
@@ -192,10 +192,8 @@ chapters:
         components:
           - name: web
             adherence:
-              level: does-not-support
-              notes:
-                'WCAG 2.5.2: no automated, interactive, or manual coverage. [Manual audit
-                required]'
+              level: supports
+              notes: Supports — manual audit found Supports.
       - num: 2.5.3
         components:
           - name: web
@@ -382,9 +380,13 @@ chapters:
           - name: web
             adherence:
               level: does-not-support
-              notes:
-                'WCAG 2.4.6: no automated, interactive, or manual coverage. [Manual audit
-                required]'
+              notes: Does Not Support — manual audit found Does Not Support
+                (atomic-tab-manager renders a tablist with aria-label="tab-area"
+                — a non-descriptive technical placeholder. Screen reader users
+                navigating by landmark or tab group hear "tab-area" instead of a
+                meaningful description of the tab purpose (e.g., "Content type
+                tabs"), making it difficult to understand the interface
+                structure.).
       - num: 2.4.7
         components:
           - name: web
