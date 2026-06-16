@@ -418,8 +418,24 @@ chapters:
             adherence:
               level: does-not-support
               notes:
-                'WCAG 2.4.11: no automated, interactive, or manual coverage. [Manual
-                audit required]'
+                Does Not Support — manual audit found Does Not Support (When the
+                refine-modal is open, pressing Tab repeatedly causes focus to
+                escape the focus trap and land on elements behind the modal
+                backdrop. The user cannot see the focused element and loses
+                their place in the navigation sequence.; When the refine-modal
+                is open, pressing Tab repeatedly causes focus to escape the
+                focus trap and land on elements behind the modal backdrop. The
+                user cannot see the focused element and loses their place in the
+                navigation sequence.; When the refine-modal is open inside IPX,
+                pressing Tab repeatedly causes focus to escape the modal and
+                land on elements behind the backdrop. The user loses track of
+                their keyboard position and cannot see which element is focused,
+                breaking their navigation flow.; When a modal dialog
+                (refine-modal, quickview, or feedback modal) is open, pressing
+                Tab repeatedly causes focus to escape the focus trap and land on
+                elements behind the modal backdrop. The user cannot see the
+                focused element and loses their place in the navigation
+                sequence.).
       - num: 2.5.7
         components:
           - name: web
