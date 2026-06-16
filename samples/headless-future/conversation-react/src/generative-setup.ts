@@ -1,8 +1,6 @@
 import {
   buildConverseController,
   buildGenerativeInterface,
-  buildProductListController,
-  buildResultListController,
   Engine,
 } from '@coveo/headless-future';
 import {getSampleConfiguration} from './env.js';
@@ -33,13 +31,7 @@ const engine = new Engine({
   navigatorContextProvider: getNavigatorContext,
 });
 
-const generativeInterface = buildGenerativeInterface({
-  engine,
-  options: {
-    commerceSearchControllers: [buildProductListController],
-    searchControllers: [buildResultListController],
-  },
-});
+const generativeInterface = buildGenerativeInterface({engine});
 
 export const converseController = buildConverseController({
   interface: generativeInterface,
