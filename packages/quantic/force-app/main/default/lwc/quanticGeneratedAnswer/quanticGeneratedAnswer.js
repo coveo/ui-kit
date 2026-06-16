@@ -35,6 +35,8 @@ import generatedAnswerTemplate from './templates/generatedAnswer.html';
 import loadingTemplate from './templates/loading.html';
 // @ts-ignore
 import retryPromptTemplate from './templates/retryPrompt.html';
+// @ts-ignore
+import conversationTemplate from './templates/conversation.html';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").GeneratedAnswer} GeneratedAnswer */
@@ -100,6 +102,13 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    * @default {undefined}
    */
   @api answerConfigurationId;
+  /**
+   * The unique identifier of the agent to use to generate the answer.
+   * @api
+   * @type {string}
+   * @default {undefined}
+   */
+  @api agentId;
   /**
    * The maximum height (in px units) of the generated answer when it is collapsed.
    * @api
@@ -172,8 +181,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   /** @type {boolean} */
   hasInitializationError = false;
   /** @type {boolean} */
-  _areFollowUpsEnabled = false;
-  /** @type {boolean} */
   _exceedsMaximumHeight = false;
   /** @type {boolean} */
   _liked = false;
@@ -207,6 +214,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
+    this.engine = engine;
     this.ariaLiveMessage = AriaLiveRegion('GeneratedAnswer', this);
     this.headless = getHeadlessBundle(this.engineId);
     this.generatedAnswer = this.buildHeadlessGeneratedAnswerController(engine);
@@ -237,6 +245,9 @@ export default class QuanticGeneratedAnswer extends LightningElement {
       },
       ...(this.answerConfigurationId && {
         answerConfigurationId: this.answerConfigurationId,
+      }),
+      ...(this.agentId && {
+        agentId: this.agentId,
       }),
       fieldsToIncludeInCitations: this.citationFields,
     });
@@ -316,7 +327,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    * @param {string} id
    * @param {number} citationHoverTimeMs
    */
-  handleCitationHover = (id, citationHoverTimeMs) => {
+  logCitationHover = (id, citationHoverTimeMs) => {
     this.generatedAnswer.logCitationHover(id, citationHoverTimeMs);
   };
 
@@ -329,9 +340,9 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     if (!this._liked) {
       this._liked = true;
       this._disliked = false;
-      this.generatedAnswer.like?.();
+      this.generatedAnswer.like?.(event.detail?.answerId);
     }
-    if (!this.feedbackSubmitted) {
+    if (!this.feedbackSubmitted && !this.areFollowUpsEnabled) {
       // @ts-ignore
       await FeedbackModalQna.open({
         size: 'small',
@@ -345,6 +356,20 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   /**
+   * handles hovering over a citation.
+   * @param {CustomEvent} event
+   */
+  handleCitationHover(event) {
+    event.stopPropagation();
+    const {citationId, citationHoverTimeMs, answerId} = event.detail;
+    this.generatedAnswer.logCitationHover(
+      citationId,
+      citationHoverTimeMs,
+      answerId
+    );
+  }
+
+  /**
    * handles disliking the generated answer.
    * @param {CustomEvent} event
    */
@@ -353,9 +378,9 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     if (!this._disliked) {
       this._disliked = true;
       this._liked = false;
-      this.generatedAnswer.dislike?.();
+      this.generatedAnswer.dislike?.(event.detail?.answerId);
     }
-    if (!this.feedbackSubmitted) {
+    if (!this.feedbackSubmitted && !this.areFollowUpsEnabled) {
       // @ts-ignore
       await FeedbackModalQna.open({
         size: 'small',
@@ -381,9 +406,13 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     this.generatedAnswer.retry();
   }
 
+  /**
+   * handles copying the generated answer to the clipboard.
+   * @param {CustomEvent} event
+   */
   handleGeneratedAnswerCopyToClipboard = (event) => {
     event.stopPropagation();
-    this.generatedAnswer.logCopyToClipboard();
+    this.generatedAnswer.logCopyToClipboard(event.detail?.answerId);
   };
 
   handleGeneratedAnswerToggle = (event) => {
@@ -488,8 +517,24 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   get areFollowUpsEnabled() {
-    // TODO SFINT-6786: Modify this getter to return the actual value from the state for follow-up enabled/agentId.
-    return this._areFollowUpsEnabled;
+    if (
+      !this.agentId ||
+      !this.generatedAnswer ||
+      !('askFollowUp' in this.generatedAnswer)
+    ) {
+      return false;
+    }
+    return this.generatedAnswer.state.followUpAnswers?.isEnabled === true;
+  }
+
+  get allGeneratedAnswers() {
+    const initialAnswer = {
+      ...this.state,
+      question: this.engine?.state.query?.q ?? '',
+    };
+    const followUpAnswers =
+      this.generatedAnswer?.state.followUpAnswers?.followUpAnswers ?? [];
+    return [initialAnswer, ...followUpAnswers];
   }
 
   get isCollapsibleEnabled() {
@@ -514,14 +559,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
         : 'generated-answer__answer--collapsed';
     }
     return `generated-answer__answer ${collapsedStateClass}`;
-  }
-
-  get contentSectionClass() {
-    const baseClass =
-      'generated-answer__content slds-p-top_medium slds-p-horizontal_large';
-    return this.areFollowUpsEnabled
-      ? `${baseClass} generated-answer__content--scrollable`
-      : baseClass;
   }
 
   get hasRetryableError() {
@@ -618,6 +655,16 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     return this.state?.isLoading;
   }
 
+  get isAnswerGenerationOngoing() {
+    const initialAnswerPending = this.isStreaming || this.isLoading;
+    const followUpAnswers =
+      this.generatedAnswer?.state?.followUpAnswers?.followUpAnswers ?? [];
+    return (
+      initialAnswerPending ||
+      followUpAnswers.some((answer) => answer.isStreaming || answer.isLoading)
+    );
+  }
+
   get isManualAnswerGeneration() {
     return this.state?.answerGenerationMode === 'manual';
   }
@@ -628,6 +675,17 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   setInitializationError() {
     this.hasInitializationError = true;
   }
+
+  /**
+   * Handles the submission of a follow-up question from the `QuanticGeneratedAnswerFollowUpInput` component.
+   * @param {CustomEvent} event - The custom event containing the follow-up question details.
+   * @returns {void}
+   */
+  handleFollowUpSubmit = (event) => {
+    if (this.areFollowUpsEnabled) {
+      this.generatedAnswer.askFollowUp(event.detail.value);
+    }
+  };
 
   render() {
     if (this.hasInitializationError) {
@@ -642,6 +700,9 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     }
     if (this.hasRetryableError) {
       return retryPromptTemplate;
+    }
+    if (this.areFollowUpsEnabled) {
+      return conversationTemplate;
     }
     return generatedAnswerTemplate;
   }
