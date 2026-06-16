@@ -12,7 +12,7 @@ jest.mock(
   {virtual: true}
 );
 jest.mock('c/quanticUtils', () => ({
-  keys: {ENTER: 'Enter'},
+  keys: {ENTER: 'Enter', ESC: 'Escape'},
 }));
 
 const selectors = {
@@ -214,6 +214,21 @@ describe('c-quantic-generated-answer-follow-up-input', () => {
       await flushPromises();
 
       expect(expander.dataset.replicatedValue).toBeUndefined();
+    });
+
+    it('should collapse the textarea when the Escape key is pressed', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      const textarea = element.shadowRoot.querySelector(selectors.textarea);
+      textarea.blur = jest.fn();
+      textarea.dispatchEvent(new CustomEvent('focus'));
+      await flushPromises();
+
+      textarea.dispatchEvent(new KeyboardEvent('keydown', {key: 'Escape'}));
+      await flushPromises();
+
+      expect(textarea.blur).toHaveBeenCalled();
     });
   });
 });
