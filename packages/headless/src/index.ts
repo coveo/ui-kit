@@ -230,6 +230,9 @@ export type {
   GeneratedResponseFormat,
   GenerationStep,
   GenerationStepName,
+  GenerationToolCall,
+  ToolCallArgsSearch,
+  ToolCallArgsGeneric,
 } from './controllers/generated-answer/headless-generated-answer.js';
 export {buildGeneratedAnswer} from './controllers/generated-answer/headless-generated-answer.js';
 export type {

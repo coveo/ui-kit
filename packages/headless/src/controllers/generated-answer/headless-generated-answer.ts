@@ -7,6 +7,9 @@ import type {
   GeneratedAnswerState,
   GenerationStep,
   GenerationStepName,
+  GenerationToolCall,
+  ToolCallArgsGeneric,
+  ToolCallArgsSearch,
 } from '../../features/generated-answer/generated-answer-state.js';
 import type {GeneratedResponseFormat} from '../../features/generated-answer/generated-response-format.js';
 import type {
@@ -34,6 +37,9 @@ export type {
   GeneratedResponseFormat,
   GenerationStep,
   GenerationStepName,
+  GenerationToolCall,
+  ToolCallArgsSearch,
+  ToolCallArgsGeneric,
 };
 
 /**
