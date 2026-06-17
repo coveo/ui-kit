@@ -1,7 +1,10 @@
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useRef} from 'react';
 import {
   buildProductListController,
+  buildPaginationController,
   type ProductListControllerState,
+  type PaginationControllerState,
+  type PaginationController,
 } from '@coveo/headless-future';
 
 interface RoutedCommerceResultsProps {
@@ -13,6 +16,16 @@ export function RoutedCommerceResults(props: RoutedCommerceResultsProps) {
     products: [],
   });
 
+  const [paginationState, setPaginationState] =
+    useState<PaginationControllerState>({
+      page: 0,
+      pageSize: 10,
+      totalCount: 0,
+      totalPages: 0,
+    });
+
+  const paginationRef = useRef<PaginationController | null>(null);
+
   useEffect(() => {
     const controller = buildProductListController({
       interface: props.interface as Parameters<
@@ -20,63 +33,97 @@ export function RoutedCommerceResults(props: RoutedCommerceResultsProps) {
       >[0]['interface'],
     });
 
-    setState({...controller.state});
+    const paginationCtrl = buildPaginationController({
+      interface: props.interface as Parameters<
+        typeof buildPaginationController
+      >[0]['interface'],
+    });
 
-    const unsubscribe = controller.subscribe(() => {
+    paginationRef.current = paginationCtrl;
+
+    setState({...controller.state});
+    setPaginationState({...paginationCtrl.state});
+
+    const unsubscribeProducts = controller.subscribe(() => {
       setState({...controller.state});
     });
 
-    return unsubscribe;
+    const unsubscribePagination = paginationCtrl.subscribe(() => {
+      setPaginationState({...paginationCtrl.state});
+    });
+
+    return () => {
+      unsubscribeProducts();
+      unsubscribePagination();
+    };
   }, [props.interface]);
 
   return (
-    <div
-      style={{
-        padding: '12px',
-        background: '#f0f5ff',
-        border: '1px solid #adc6ff',
-        borderRadius: '4px',
-      }}
-    >
-      <h3 style={{margin: '0 0 12px', fontSize: '16px'}}>
-        Commerce Results ({state.products.length})
-      </h3>
-      {state.products.length === 0 && (
-        <p style={{color: '#888', fontSize: '14px'}}>No products found.</p>
-      )}
-      <ul style={{listStyle: 'none', padding: 0, margin: 0}}>
+    <div>
+      <h3>Commerce Results ({state.products.length})</h3>
+      {state.products.length === 0 && <p>No products found.</p>}
+      <ul style={{listStyle: 'none', padding: 0}}>
         {state.products.map((product) => (
           <li
             key={product.permanentid}
-            style={{
-              padding: '10px',
-              marginBottom: '8px',
-              background: '#fff',
-              border: '1px solid #e8e8e8',
-              borderRadius: '4px',
-            }}
+            style={{padding: '8px', borderBottom: '1px solid #eee'}}
           >
-            <div style={{fontWeight: 600, marginBottom: '4px'}}>
-              {product.ec_name}
-            </div>
+            <strong>{product.ec_name}</strong>
             {product.ec_price !== undefined && (
-              <div style={{fontSize: '13px', color: '#389e0d'}}>
-                {'$' + product.ec_price.toFixed(2)}
-              </div>
+              <span style={{marginLeft: '8px'}}>
+                ${product.ec_price.toFixed(2)}
+              </span>
             )}
             {product.ec_brand && (
-              <div style={{fontSize: '12px', color: '#666'}}>
+              <span style={{marginLeft: '8px', color: '#666'}}>
                 {product.ec_brand}
-              </div>
-            )}
-            {product.clickUri && (
-              <div style={{fontSize: '11px', color: '#999', marginTop: '4px'}}>
-                {product.clickUri}
-              </div>
+              </span>
             )}
           </li>
         ))}
       </ul>
+      {paginationState.totalPages > 1 && (
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            marginTop: '8px',
+          }}
+        >
+          <button
+            disabled={paginationState.page === 0}
+            onClick={() =>
+              paginationRef.current?.selectPage(paginationState.page - 1)
+            }
+          >
+            ← Previous
+          </button>
+          <span>
+            Page {paginationState.page + 1} of {paginationState.totalPages}
+          </span>
+          <button
+            disabled={paginationState.page >= paginationState.totalPages - 1}
+            onClick={() =>
+              paginationRef.current?.selectPage(paginationState.page + 1)
+            }
+          >
+            Next →
+          </button>
+          <select
+            value={paginationState.pageSize}
+            onChange={(e) =>
+              paginationRef.current?.setPageSize(Number(e.target.value))
+            }
+            style={{marginLeft: 'auto'}}
+          >
+            <option value={5}>5 per page</option>
+            <option value={10}>10 per page</option>
+            <option value={20}>20 per page</option>
+            <option value={50}>50 per page</option>
+          </select>
+        </div>
+      )}
     </div>
   );
 }
