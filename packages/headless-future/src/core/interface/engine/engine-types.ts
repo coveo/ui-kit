@@ -1,5 +1,4 @@
 import {SearchBoxState} from '../../internal/search-box/search-box-slice.js';
-import {SearchEndpointState} from '../api/search-endpoint/search-endpoint-types.js';
 import {ConversationEndpointState} from '../api/conversation-endpoint/conversation-endpoint-types.js';
 import {CartState} from '../cart/cart-types.js';
 import {ConfigurationState} from '../configuration/configuration-types.js';
@@ -15,7 +14,6 @@ export interface State {
   facets?: Record<string, FacetState>;
   pagination?: PaginationState;
   results?: ResultListState;
-  searchEndpoint?: SearchEndpointState;
   searchBox?: SearchBoxState;
   [key: string]: unknown;
 }

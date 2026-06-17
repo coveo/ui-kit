@@ -12,14 +12,14 @@ export type {
   ResultListControllerOptions,
   ResultListControllerResult,
   ResultListControllerState,
-} from './result-list/result-list-controller-types.js';
+} from './result-list/result-list-controller.js';
 export {buildCartController} from './cart/cart-controller.js';
 export type {
   CartController,
   CartControllerOptions,
   CartControllerItem,
   CartControllerState,
-} from './cart/cart-controller-types.js';
+} from './cart/cart-controller.js';
 export {buildConverseController} from './converse/converse-controller.js';
 export type {
   ConverseController,
@@ -30,12 +30,12 @@ export {buildProductListController} from './product-list/product-list-controller
 export type {
   ProductListController,
   ProductListControllerOptions,
+  ProductListControllerProduct,
   ProductListControllerState,
-} from './product-list/product-list-controller-types.js';
-export type {Product} from '@/src/core/interface/product-list/product-list-types.js';
+} from './product-list/product-list-controller.js';
 export {buildPaginationController} from './pagination/pagination-controller.js';
 export type {
   PaginationController,
   PaginationControllerOptions,
   PaginationControllerState,
-} from './pagination/pagination-controller-types.js';
+} from './pagination/pagination-controller.js';

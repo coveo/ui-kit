@@ -1,13 +1,14 @@
+import type {Controller} from '../controller-types.js';
+import type {
+  Interface,
+  Requires,
+} from '@/src/core/interface/utils/interface-types.js';
 import {getOrCreatePaginationActions} from '@/src/core/internal/pagination/pagination-actions.js';
 import {getOrCreatePaginationSelectors} from '@/src/core/internal/pagination/pagination-selectors.js';
 import {getOrCreatePaginationSlice} from '@/src/core/internal/pagination/pagination-slice.js';
 import type {Dispatchable} from '@/src/core/interface/engine/engine-types.js';
 import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
 import {ENGINE, STATE_ID, THUNKS} from '@/src/core/interface/utils/symbols.js';
-import type {
-  PaginationController,
-  PaginationControllerOptions,
-} from './pagination-controller-types.js';
 
 export const buildPaginationController = (
   options: PaginationControllerOptions
@@ -74,3 +75,20 @@ export const buildPaginationController = (
     },
   };
 };
+
+export interface PaginationControllerState {
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  totalPages: number;
+}
+
+export interface PaginationController extends Controller {
+  readonly state: PaginationControllerState;
+  selectPage(page: number): void;
+  setPageSize(pageSize: number): void;
+}
+
+export interface PaginationControllerOptions {
+  interface: Interface & Requires<'search'>;
+}

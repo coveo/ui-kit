@@ -8,14 +8,12 @@ import {describe, it, expect, beforeEach, vi} from 'vitest';
 import {createTestEngine} from '@/src/test/test-utils.js';
 import {getQuery} from '@/src/core/interface/search-box/search-box-selectors.js';
 import {setQuery} from '@/src/core/interface/search-box/search-box-mutators.js';
-import {setStatus} from '@/src/core/interface/api/search-endpoint/search-endpoint-mutators.js';
-import {isLoading} from '@/src/core/interface/api/search-endpoint/search-endpoint-selectors.js';
+import {clearResults} from '@/src/core/interface/result-list/result-list-mutators.js';
 import {Engine, FullEngine, getFullEngine} from './engine.js';
 import {getOrCreateSearchBoxSlice} from '@/src/core/internal/search-box/search-box-slice.js';
 import {resultsSlice} from '@/src/core/internal/result-list/result-list-slice.js';
-import {searchEndpointSlice} from '@/src/core/internal/api/search-endpoint/search-endpoint-slice.js';
 import type {NavigatorContextProvider} from '@/src/core/interface/navigator-context/navigator-context-types.js';
-import {EngineOptions, State} from './engine-types.js';
+import {EngineOptions} from './engine-types.js';
 import {ConfigurationState} from '../configuration/configuration-types.js';
 
 describe('Engine: read()', () => {
@@ -25,7 +23,6 @@ describe('Engine: read()', () => {
     engine = getFullEngine(createTestEngine());
     engine.adoptSlice(getOrCreateSearchBoxSlice('default'));
     engine.adoptSlice(resultsSlice);
-    engine.adoptSlice(searchEndpointSlice);
   });
 
   it('should read values from state using a selector', () => {
@@ -92,7 +89,7 @@ describe('Engine: subscribe()', () => {
 
     engine.subscribe(getQuery, callback);
 
-    engine.mutate(setStatus('pending'));
+    engine.mutate(clearResults());
 
     expect(callback).not.toHaveBeenCalled();
   });
@@ -156,7 +153,6 @@ describe('Engine: mutate()', () => {
     engine = getFullEngine(createTestEngine());
     engine.adoptSlice(getOrCreateSearchBoxSlice('default'));
     engine.adoptSlice(resultsSlice);
-    engine.adoptSlice(searchEndpointSlice);
   });
 
   it('should update state correctly', () => {
@@ -167,10 +163,8 @@ describe('Engine: mutate()', () => {
 
   it('should handle multiple mutations in sequence', () => {
     engine.mutate(setQuery('laptops'));
-    engine.mutate(setStatus('pending'));
 
     expect(engine.read(getQuery)).toBe('laptops');
-    expect(engine.read(isLoading)).toBe(true);
   });
 
   it('should accept library-agnostic StateMutation objects', () => {

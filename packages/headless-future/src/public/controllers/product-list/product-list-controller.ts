@@ -1,11 +1,13 @@
+import type {Controller} from '../controller-types.js';
+import type {
+  Interface,
+  Requires,
+} from '@/src/core/interface/utils/interface-types.js';
+import type {Product} from '@/src/core/interface/product-list/product-list-types.js';
 import {getOrCreateProductListSelectors} from '@/src/core/internal/product-list/product-list-selectors.js';
 import {getOrCreateProductListSlice} from '@/src/core/internal/product-list/product-list-slice.js';
 import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
 import {ENGINE, STATE_ID} from '@/src/core/interface/utils/symbols.js';
-import type {
-  ProductListController,
-  ProductListControllerOptions,
-} from './product-list-controller-types.js';
 
 export const buildProductListController = (
   options: ProductListControllerOptions
@@ -31,3 +33,17 @@ export const buildProductListController = (
     },
   };
 };
+
+export type ProductListControllerProduct = Product;
+
+export interface ProductListControllerState {
+  products: ProductListControllerProduct[];
+}
+
+export interface ProductListController extends Controller {
+  readonly state: ProductListControllerState;
+}
+
+export interface ProductListControllerOptions {
+  interface: Interface & Requires<'search'>;
+}

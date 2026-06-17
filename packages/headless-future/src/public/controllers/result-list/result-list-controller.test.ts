@@ -8,8 +8,6 @@ import {
   createMockSearchResults,
 } from '@/src/test/test-utils.js';
 import {Engine, getFullEngine} from '@/src/core/interface/engine/engine.js';
-import {searchEndpointSlice} from '@/src/core/internal/api/search-endpoint/search-endpoint-slice.js';
-import {setStatus} from '@/src/core/internal/api/search-endpoint/search-endpoint-actions.js';
 import {getOrCreateResultsActions} from '@/src/core/internal/result-list/result-list-actions.js';
 import {buildResultListController} from './result-list-controller.js';
 import {buildSearchInterface} from '@/src/public/interfaces/search.js';
@@ -102,15 +100,19 @@ describe('buildResultListController', () => {
 
     it('should not invoke callback when unrelated state changes', async () => {
       const fullEngine = getFullEngine(engine);
-      await fullEngine.adoptSlice(searchEndpointSlice);
       const controller = buildResultListController({
         interface: searchInterface,
       });
       const callback = vi.fn();
 
       controller.subscribe(callback);
-      fullEngine.mutate(setStatus('pending'));
-      fullEngine.mutate(setStatus('idle'));
+
+      // Mutate a different slice (searchBox) — should not trigger result-list callback
+      const {getOrCreateSearchBoxActions} =
+        await import('@/src/core/internal/search-box/search-box-actions.js');
+      const stateId = searchInterface[STATE_ID];
+      const searchBoxActions = getOrCreateSearchBoxActions(stateId);
+      fullEngine.mutate(searchBoxActions.setQuery('unrelated change'));
 
       expect(callback).not.toHaveBeenCalled();
     });
