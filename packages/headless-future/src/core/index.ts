@@ -58,26 +58,6 @@ export {loadSearchEndpoint} from './interface/api/search-endpoint/search-endpoin
 
 export {SearchEndpointFacade} from './interface/api/search-endpoint/search-endpoint-facade.js';
 
-export {ConversationRuntime} from './interface/api/conversation-endpoint/conversation-runtime.js';
-
-// ============================================================================
-// Conversation Feature
-// ============================================================================
-
-export type {
-  ConversationMessage,
-  ConversationSession,
-  ConversationState,
-  ConversationStreaming,
-  ConversationTurn,
-} from './interface/conversation/conversation-types.js';
-
-export * as conversationMutators from './interface/conversation/conversation-mutators.js';
-
-export * as conversationSelectors from './interface/conversation/conversation-selectors.js';
-
-export {loadConversation} from './interface/conversation/conversation-loader.js';
-
 export * as conversationEndpointMutators from './interface/api/conversation-endpoint/conversation-endpoint-mutators.js';
 
 export * as conversationEndpointSelectors from './interface/api/conversation-endpoint/conversation-endpoint-selectors.js';

@@ -4,10 +4,7 @@ import {
   createConversationEndpointClient,
   type ConversationEndpointClientResult,
 } from '@/src/api/interface/conversation-endpoint/conversation-endpoint-client.js';
-import {loadConversation} from '@/src/core/interface/conversation/conversation-loader.js';
 import {ConversationEndpointFacade} from './conversation-endpoint-facade.js';
-
-const TEST_ID = 'test';
 
 const mockClientCall = vi.fn();
 
@@ -56,38 +53,6 @@ const createMockEngine = (): MockEngine => {
         },
       ],
     },
-    [`${TEST_ID}/conversation`]: {
-      messages: [
-        {
-          id: 'user-message-1',
-          role: 'user',
-          content: 'Hello there',
-          createdAt: 111,
-        },
-        {
-          id: 'agent-message-1',
-          role: 'agent',
-          content: '',
-          createdAt: 111,
-        },
-      ],
-      turns: [
-        {
-          id: 'turn-1',
-          status: {type: 'pending'},
-          messageIds: ['user-message-1', 'agent-message-1'],
-          createdAt: 111,
-        },
-      ],
-      activeTurnId: 'turn-1',
-      session: {
-        conversationSessionId: 'session-1',
-        conversationToken: 'token-1',
-      },
-      isLoading: true,
-      error: null,
-      streaming: {isConnected: false},
-    },
   };
 
   return {
@@ -132,7 +97,6 @@ describe('ConversationEndpointFacade', () => {
 
   it('composes base request from state and passes configuration to the client', async () => {
     const engine = createMockEngine();
-    loadConversation(engine, TEST_ID);
     engine.getNavigatorContextProvider.mockReturnValue(() => ({
       clientId: 'client-123',
       location: 'https://example.com/page',
@@ -141,6 +105,11 @@ describe('ConversationEndpointFacade', () => {
     }));
 
     const facade = ConversationEndpointFacade.getInstance(engine);
+    facade.onRequest(() => ({
+      message: 'Hello there',
+      conversationSessionId: 'session-1',
+      conversationToken: 'token-1',
+    }));
     const clientResult: ConversationEndpointClientResult = {
       success: false,
       error: 'failed',
@@ -208,55 +177,12 @@ describe('ConversationEndpointFacade', () => {
 
   it('continues without navigator context provider and without session values', async () => {
     const engine = createMockEngine();
-    loadConversation(engine, TEST_ID);
     engine.getNavigatorContextProvider.mockReturnValue(undefined);
-    engine.read.mockImplementation((selector) =>
-      selector({
-        configuration: {
-          organizationId: 'test-org-id',
-          accessToken: 'test-token',
-          endpoint: 'https://platform.cloud.coveo.com',
-          trackingId: 'tracking-id',
-          language: 'en',
-          country: 'US',
-          currency: 'USD',
-        },
-        cart: {
-          items: [],
-        },
-        [`${TEST_ID}/conversation`]: {
-          messages: [
-            {
-              id: 'user-message-1',
-              role: 'user',
-              content: 'Hello there',
-              createdAt: 111,
-            },
-            {
-              id: 'agent-message-1',
-              role: 'agent',
-              content: '',
-              createdAt: 111,
-            },
-          ],
-          turns: [
-            {
-              id: 'turn-1',
-              status: {type: 'pending'},
-              messageIds: ['user-message-1', 'agent-message-1'],
-              createdAt: 111,
-            },
-          ],
-          activeTurnId: 'turn-1',
-          session: {},
-          isLoading: true,
-          error: null,
-          streaming: {isConnected: false},
-        },
-      })
-    );
 
     const facade = ConversationEndpointFacade.getInstance(engine);
+    facade.onRequest(() => ({
+      message: 'Hello there',
+    }));
     mockClientCall.mockResolvedValue({success: true, data: {stream: null}});
 
     await facade.callEndpoint();
