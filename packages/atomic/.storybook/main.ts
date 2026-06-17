@@ -194,6 +194,7 @@ const config: StorybookConfig = {
         ],
       },
       optimizeDeps: {
+        exclude: ['@ag-ui/client'],
         include: [
           'dayjs',
           'dayjs/plugin/quarterOfYear.js',

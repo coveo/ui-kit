@@ -151,17 +151,6 @@ export const WithAgentId: Story = {
   },
   play: async (storyContext) => {
     await playWithLegacyAnalytics(storyContext);
-    await waitFor(
-      () => {
-        const genAnswer = storyContext.canvasElement.querySelector(
-          'atomic-generated-answer'
-        );
-        if (!genAnswer?.['generatedAnswer']) {
-          throw new Error('atomic-generated-answer not yet initialized');
-        }
-      },
-      {timeout: 10000}
-    );
     await submitGeneratedAnswerQuery(storyContext);
   },
 };
