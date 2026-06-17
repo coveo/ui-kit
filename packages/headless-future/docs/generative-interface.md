@@ -94,15 +94,30 @@ ACTIVITY_SNAPSHOT {activityType: "commerce-search-api-response", content: {...}}
 │     Any already-adopted slices extract what they need:    │
 │     • product-list slice reads content.products           │
 │     • result-list slice reads content.results             │
+│     • pagination slice reads content.pagination           │
+│       (totalEntries, perPage, page)                       │
+│     • search-box slice receives the effective query       │
+│       (correctedQuery from response, or the user prompt)  │
 │                                                           │
-│  5. Return {useCase, interface} as RoutedInterface        │
+│  5. Seed search-box state with effective query            │
+│     effectiveQuery = queryCorrection.correctedQuery       │
+│                      ?? prompt from runtime               │
+│     Adopts search-box slice, dispatches setQuery          │
+│                                                           │
+│  6. Return {useCase, interface} as RoutedInterface        │
 │                                                           │
 │  ── Later, in a React component ──                        │
 │                                                           │
-│  6. Developer builds controller lazily                    │
+│  7. Developer builds controller lazily                    │
 │     buildProductListController({interface: subInterface}) │
 │     → adopts slice → engine re-dispatches snapshot        │
 │       from cache → slice state is hydrated                │
+│                                                           │
+│  8. Developer builds pagination controller (optional)     │
+│     buildPaginationController({interface: subInterface})  │
+│     → adopts pagination slice → hydrated with perPage,   │
+│       page, totalEntries from the original response       │
+│     → selectPage(n) / setPageSize(n) trigger search      │
 └───────────────────────────────────────────────────────────┘
 ```
 
@@ -121,6 +136,8 @@ Engine (Redux store)
 ├── {interfaceId}/generative          ← generative slice (turns, activeTurnId)
 ├── {subInterfaceId}/products         ← product-list slice (adopted lazily by controller)
 ├── {subInterfaceId}/results          ← result-list slice (adopted lazily by controller)
+├── {subInterfaceId}/pagination       ← pagination slice (adopted lazily by controller)
+├── {subInterfaceId}/searchBox        ← search-box slice (adopted at hydration time)
 └── configuration                     ← shared engine config
 
 Engine (internal)
@@ -165,16 +182,17 @@ Each sub-interface gets its own `STATE_ID`, so slices from different turns never
 
 ## How the Pieces Connect
 
-| Layer                    | Responsibility                                                          | Key File                          |
-| ------------------------ | ----------------------------------------------------------------------- | --------------------------------- |
-| **Engine**               | Redux store wrapper, slice adoption, pub/sub, hydration snapshot cache  | `engine.ts`                       |
-| **Generative Interface** | Created by developer, holds SOURCE_ENGINE reference                     | `generative.ts`                   |
-| **Converse Controller**  | Public API for the view layer (submit/selectTurn/retry/state/subscribe) | `converse-controller.ts`          |
-| **Generative Runtime**   | SSE stream consumer, event dispatch, singleton per engine               | `generative-runtime.ts`           |
-| **Endpoint Facade**      | HTTP request building via contributor registry                          | `conversation-endpoint-facade.ts` |
-| **Generative Loader**    | Adopts generative slice, registers message contributor                  | `generative-loader.ts`            |
-| **Hydration**            | Maps activityType → sub-interface, stores snapshot, dispatches hydrate  | `generative-hydration.ts`         |
-| **Feature Slices**       | Each responds to `hydrateFromSnapshot` action, extracts its own data    | `product-list-slice.ts`, etc.     |
+| Layer                     | Responsibility                                                          | Key File                          |
+| ------------------------- | ----------------------------------------------------------------------- | --------------------------------- |
+| **Engine**                | Redux store wrapper, slice adoption, pub/sub, hydration snapshot cache  | `engine.ts`                       |
+| **Generative Interface**  | Created by developer, holds SOURCE_ENGINE reference                     | `generative.ts`                   |
+| **Converse Controller**   | Public API for the view layer (submit/selectTurn/retry/state/subscribe) | `converse-controller.ts`          |
+| **Generative Runtime**    | SSE stream consumer, event dispatch, singleton per engine               | `generative-runtime.ts`           |
+| **Endpoint Facade**       | HTTP request building via contributor registry                          | `conversation-endpoint-facade.ts` |
+| **Generative Loader**     | Adopts generative slice, registers message contributor                  | `generative-loader.ts`            |
+| **Hydration**             | Maps activityType → sub-interface, stores snapshot, dispatches hydrate  | `generative-hydration.ts`         |
+| **Feature Slices**        | Each responds to `hydrateFromSnapshot` action, extracts its own data    | `product-list-slice.ts`, etc.     |
+| **Pagination Controller** | Public controller for page navigation and page size changes             | `pagination-controller.ts`        |
 
 ---
 
@@ -271,27 +289,77 @@ export function ConversePage() {
 }
 ```
 
-### 3. Product List (routed sub-interface, lazy controller)
+### 3. Product List with Pagination (routed sub-interface, lazy controllers)
 
 ```tsx
 // ProductList.tsx
-import {useState, useEffect} from 'react';
-import {buildProductListController} from '@coveo/headless-future';
+import {useState, useEffect, useRef} from 'react';
+import {
+  buildProductListController,
+  buildPaginationController,
+} from '@coveo/headless-future';
 
 export function ProductList({interface: subInterface}) {
   const controller = buildProductListController({interface: subInterface});
-  const [state, setState] = useState(controller.state);
+  const paginationCtrl = buildPaginationController({interface: subInterface});
+  const paginationRef = useRef(paginationCtrl);
 
-  useEffect(() => controller.subscribe(() => setState(controller.state)), []);
+  const [state, setState] = useState(controller.state);
+  const [pagination, setPagination] = useState(paginationCtrl.state);
+
+  useEffect(() => {
+    const unsub1 = controller.subscribe(() => setState(controller.state));
+    const unsub2 = paginationCtrl.subscribe(() =>
+      setPagination(paginationCtrl.state)
+    );
+    return () => {
+      unsub1();
+      unsub2();
+    };
+  }, []);
 
   return (
-    <ul>
-      {state.products.map((p) => (
-        <li key={p.permanentid}>
-          {p.ec_name} — ${p.ec_price}
-        </li>
-      ))}
-    </ul>
+    <div>
+      <ul>
+        {state.products.map((p) => (
+          <li key={p.permanentid}>
+            {p.ec_name} — ${p.ec_price}
+          </li>
+        ))}
+      </ul>
+      {pagination.totalPages > 1 && (
+        <div>
+          <button
+            disabled={pagination.page === 0}
+            onClick={() =>
+              paginationRef.current.selectPage(pagination.page - 1)
+            }
+          >
+            Previous
+          </button>
+          <span>
+            Page {pagination.page + 1} of {pagination.totalPages}
+          </span>
+          <button
+            disabled={pagination.page >= pagination.totalPages - 1}
+            onClick={() =>
+              paginationRef.current.selectPage(pagination.page + 1)
+            }
+          >
+            Next
+          </button>
+          <select
+            value={pagination.pageSize}
+            onChange={(e) =>
+              paginationRef.current.setPageSize(Number(e.target.value))
+            }
+          >
+            <option value={10}>10 per page</option>
+            <option value={20}>20 per page</option>
+          </select>
+        </div>
+      )}
+    </div>
   );
 }
 ```
@@ -324,15 +392,15 @@ The controller is built **lazily** when the component mounts. The Engine's snaps
 
 ## Tree-Shaking & Lazy Loading
 
-The generative hydration module imports **zero feature slices** at the top level. The mechanism:
+The generative hydration module imports **zero feature slices** at the top level (except the search-box slice, which is always seeded with the query). The mechanism:
 
-1. At hydration time, `createHydrateSubInterface` builds a sub-interface and stores the snapshot content in the Engine's cache
+1. At hydration time, `createHydrateSubInterface` builds a sub-interface, stores the snapshot content in the Engine's cache, and seeds the search-box slice with the effective query (correctedQuery from the API response, or the user's prompt as fallback)
 2. The hydration dispatches `hydrateFromSnapshot` — any slices already adopted will process it immediately
-3. When a developer later builds a controller (e.g., `buildProductListController({interface: subInterface})`), the controller calls `engine.adoptSlice(slice)`
+3. When a developer later builds a controller (e.g., `buildProductListController` or `buildPaginationController`), the controller calls `engine.adoptSlice(slice)`
 4. The Engine detects the slice belongs to a cached sub-interface (by extracting the interface ID prefix from the slice name) and automatically re-dispatches the `hydrateFromSnapshot` action
-5. The newly-adopted slice receives the snapshot data in its `extraReducers` handler
+5. The newly-adopted slice receives the snapshot data in its `extraReducers` handler (e.g., pagination slice reads `perPage`, `page`, `totalEntries`)
 
-If you never import `buildProductListController`, the product-list slice module is never imported by bundler-reachable code → tree-shaken out. The hydration module only imports `buildCommerceInterface` and `buildSearchInterface`, never the feature slices.
+If you never import `buildProductListController` or `buildPaginationController`, those slice modules are never imported by bundler-reachable code → tree-shaken out. The hydration module only imports `buildCommerceInterface`, `buildSearchInterface`, and the search-box actions/slice.
 
 ---
 
