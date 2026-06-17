@@ -47,6 +47,16 @@ export function createPaginationSlice(interfaceId: string) {
         if (typeof pagination?.totalEntries === 'number') {
           state.totalCount = pagination.totalEntries;
         }
+        if (typeof pagination?.perPage === 'number' && pagination.perPage > 0) {
+          state.pageSize = pagination.perPage;
+        }
+        if (
+          typeof pagination?.page === 'number' &&
+          typeof pagination?.perPage === 'number' &&
+          pagination.perPage > 0
+        ) {
+          state.firstResult = pagination.page * pagination.perPage;
+        }
       });
     },
   });

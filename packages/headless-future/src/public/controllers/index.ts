@@ -44,3 +44,9 @@ export type {
   ProductListControllerState,
 } from './product-list/product-list-controller-types.js';
 export type {Product} from '@/src/core/interface/product-list/product-list-types.js';
+export {buildPaginationController} from './pagination/pagination-controller.js';
+export type {
+  PaginationController,
+  PaginationControllerOptions,
+  PaginationControllerState,
+} from './pagination/pagination-controller-types.js';
