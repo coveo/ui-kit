@@ -1,7 +1,7 @@
 {
   "$schema": "#a11y-overrides",
   "description": "Human-authored overrides for WCAG 2.2 AA conformance. These override automated axe-core results in the OpenACR YAML report. Each entry must include a reason explaining the decision.",
-  "lastUpdated": "2026-06-09",
+  "lastUpdated": "2026-06-17",
   "overrides": [
     {
       "criterion": "2.4.7",
