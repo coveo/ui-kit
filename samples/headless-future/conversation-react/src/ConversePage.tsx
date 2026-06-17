@@ -209,7 +209,11 @@ export function ConversePage() {
                         style={{fontSize: '12px', marginTop: '4px'}}
                       >
                         <summary>
-                          {tc.status === 'calling' ? '⏳' : '✓'} {tc.name}
+                          {tc.status === 'calling' &&
+                          activeTurn.status === 'streaming'
+                            ? '⏳'
+                            : '✓'}{' '}
+                          {tc.name}
                         </summary>
                         {tc.args && <pre>{tc.args}</pre>}
                         {tc.result && (
