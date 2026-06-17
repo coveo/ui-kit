@@ -222,12 +222,12 @@ export const followUpAnswersReducer = createReducer(
         state.isEnabled = false;
       })
       .addCase(followUpToolCallStarted, (state, {payload}) => {
-        const followUpAnswer = getFollowUpByAnswerId(state, payload.answerId);
+        const {toolCallName, toolCallId, startedAt, answerId} = payload;
+        const followUpAnswer = getFollowUpByAnswerId(state, answerId);
         if (!followUpAnswer) {
           return;
         }
 
-        const {toolCallName, toolCallId, startedAt} = payload;
         const currentActiveStep = followUpAnswer.generationSteps.findLast(
           (step) => step.status === 'active'
         );
@@ -237,12 +237,13 @@ export const followUpAnswersReducer = createReducer(
             toolCallName,
             toolCallId,
             startedAt,
+            status: 'active',
           });
         }
       })
       .addCase(followUpToolCallArgs, (state, {payload}) => {
-        const {toolCallId, args} = payload;
-        const followUpAnswer = getFollowUpByAnswerId(state, payload.answerId);
+        const {toolCallId, args, answerId, type} = payload;
+        const followUpAnswer = getFollowUpByAnswerId(state, answerId);
         if (!followUpAnswer) {
           return;
         }
@@ -254,13 +255,13 @@ export const followUpAnswersReducer = createReducer(
           (call) => call.toolCallId === toolCallId
         );
         if (toolCall) {
-          toolCall.toolCallArgs = toolCall.toolCallArgs || [];
-          toolCall.toolCallArgs.push(args);
+          toolCall.toolCallArgs = args;
+          toolCall.type = type === 'search' ? 'search' : 'generic';
         }
       })
       .addCase(followUpToolCallFinished, (state, {payload}) => {
-        const {toolCallId, finishedAt} = payload;
-        const followUpAnswer = getFollowUpByAnswerId(state, payload.answerId);
+        const {toolCallId, finishedAt, answerId} = payload;
+        const followUpAnswer = getFollowUpByAnswerId(state, answerId);
         if (!followUpAnswer) {
           return;
         }
@@ -273,6 +274,7 @@ export const followUpAnswersReducer = createReducer(
         );
         if (toolCall) {
           toolCall.finishedAt = finishedAt;
+          toolCall.status = 'completed';
         }
       })
 );

@@ -88,15 +88,35 @@ export const createFollowUpStrategy = (
         // In AG-UI protocol, a tool call can stream a delta (a partial object) of tool call args, but we're enforcing that the delta
         // is a complete JSON object representing the tool call args for simplicity and ease of use in the UI.
         const parsedArgs = JSON.parse(delta);
-        const args: ToolCallArgsSearch | ToolCallArgsGeneric =
-          typeof parsedArgs?.q === 'string' ? parsedArgs : {raw: delta};
-        dispatch(followUpToolCallArgs({answerId: runId, toolCallId, args}));
+        if (typeof parsedArgs?.q === 'string') {
+          dispatch(
+            followUpToolCallArgs({
+              answerId: runId,
+              toolCallId,
+              args: parsedArgs as ToolCallArgsSearch,
+              type: 'search',
+            })
+          );
+        } else {
+          dispatch(
+            followUpToolCallArgs({
+              answerId: runId,
+              toolCallId,
+              args: {raw: delta},
+              type: 'generic',
+            })
+          );
+        }
       } catch {
+        console.warn(
+          `Failed to parse tool call args delta as JSON. Using raw string instead. Delta: ${delta}`
+        );
         dispatch(
           followUpToolCallArgs({
             answerId: runId,
             toolCallId,
             args: {raw: delta},
+            type: 'generic',
           })
         );
       }

@@ -93,11 +93,30 @@ export const createHeadAnswerStrategy = (
         // In AG-UI protocol, a tool call can stream a delta (a partial object) of tool call args, but we're enforcing that the delta
         // is a complete JSON object representing the tool call args for simplicity and ease of use in the UI.
         const parsedArgs = JSON.parse(delta);
-        const args: ToolCallArgsSearch | ToolCallArgsGeneric =
-          typeof parsedArgs?.q === 'string' ? parsedArgs : {raw: delta};
-        dispatch(toolCallArgs({toolCallId, args}));
+        if (typeof parsedArgs?.q === 'string') {
+          dispatch(
+            toolCallArgs({
+              toolCallId,
+              args: parsedArgs as ToolCallArgsSearch,
+              type: 'search',
+            })
+          );
+        } else {
+          dispatch(
+            toolCallArgs({
+              toolCallId,
+              args: {raw: delta} as ToolCallArgsGeneric,
+              type: 'generic',
+            })
+          );
+        }
       } catch {
-        dispatch(toolCallArgs({toolCallId, args: {raw: delta}}));
+        console.warn(
+          `Failed to parse tool call args delta as JSON. Using raw string instead. Delta: ${delta}`
+        );
+        dispatch(
+          toolCallArgs({toolCallId, args: {raw: delta}, type: 'generic'})
+        );
       }
     },
     onTextMessageContentEvent: ({event}) => {

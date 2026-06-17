@@ -277,10 +277,12 @@ export const toolCallArgs = createAction(
   (payload: {
     toolCallId: string;
     args: ToolCallArgsSearch | ToolCallArgsGeneric;
+    type: string;
   }) =>
     validatePayload(payload, {
       toolCallId: requiredNonEmptyString,
       args: new RecordValue({options: {required: true}}),
+      type: requiredNonEmptyString,
     })
 );
 

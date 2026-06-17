@@ -180,11 +180,12 @@ export const generatedAnswerReducer = createReducer(
             toolCallName,
             toolCallId,
             startedAt,
+            status: 'active',
           });
         }
       })
       .addCase(toolCallArgs, (state, {payload}) => {
-        const {toolCallId, args} = payload;
+        const {toolCallId, args, type} = payload;
         const currentActiveStep = state.generationSteps.findLast(
           (step) => step.status === 'active'
         );
@@ -192,8 +193,8 @@ export const generatedAnswerReducer = createReducer(
           (call) => call.toolCallId === toolCallId
         );
         if (toolCall) {
-          toolCall.toolCallArgs = toolCall.toolCallArgs || [];
-          toolCall.toolCallArgs.push(args);
+          toolCall.toolCallArgs = args;
+          toolCall.type = type === 'search' ? 'search' : 'generic';
         }
       })
       .addCase(finishToolCall, (state, {payload}) => {
@@ -206,6 +207,7 @@ export const generatedAnswerReducer = createReducer(
         );
         if (toolCall) {
           toolCall.finishedAt = finishedAt;
+          toolCall.status = 'completed';
         }
       })
 );

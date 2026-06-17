@@ -227,10 +227,12 @@ export const followUpToolCallArgs = createAction(
     answerId: string;
     toolCallId: string;
     args: ToolCallArgsSearch | ToolCallArgsGeneric;
+    type: string;
   }) =>
     validatePayload(payload, {
       answerId: requiredNonEmptyString,
       toolCallId: requiredNonEmptyString,
       args: new RecordValue({options: {required: true}}),
+      type: requiredNonEmptyString,
     })
 );

@@ -561,6 +561,9 @@ describe('generated answer slice', () => {
     const newAnswerApiQueryParams: AnswerApiQueryParams = {
       q: 'example query',
       fieldsToInclude: ['foo', 'bar'],
+      tab: '',
+      referrer: null,
+      timezone: '',
     };
     const finalState = generatedAnswerReducer(
       {
@@ -568,6 +571,9 @@ describe('generated answer slice', () => {
         answerApiQueryParams: {
           q: 'example query',
           fieldsToInclude: ['foo', 'bar'],
+          tab: '',
+          referrer: null,
+          timezone: '',
         },
       },
       setAnswerApiQueryParams(newAnswerApiQueryParams)
@@ -730,7 +736,12 @@ describe('generated answer slice', () => {
       );
 
       expect(finalState.generationSteps[0].toolCalls).toEqual([
-        {toolCallName: 'search', toolCallId: 'tc-1', startedAt: 100},
+        {
+          toolCallName: 'search',
+          toolCallId: 'tc-1',
+          startedAt: 100,
+          status: 'active',
+        },
       ]);
     });
 
@@ -761,7 +772,7 @@ describe('generated answer slice', () => {
   });
 
   describe('#toolCallArgs', () => {
-    it('should push args onto the matching tool call', () => {
+    it('should assign args to the matching tool call', () => {
       const initialState = {
         ...baseState,
         generationSteps: [
@@ -770,7 +781,12 @@ describe('generated answer slice', () => {
             status: 'active' as const,
             startedAt: 1,
             toolCalls: [
-              {toolCallName: 'search', toolCallId: 'tc-1', startedAt: 10},
+              {
+                toolCallName: 'search',
+                toolCallId: 'tc-1',
+                startedAt: 10,
+                status: 'active',
+              },
             ],
           },
         ],
@@ -778,12 +794,16 @@ describe('generated answer slice', () => {
 
       const finalState = generatedAnswerReducer(
         initialState,
-        toolCallArgs({toolCallId: 'tc-1', args: {q: 'test query'}})
+        toolCallArgs({
+          toolCallId: 'tc-1',
+          args: {q: 'test query'},
+          type: 'search',
+        })
       );
 
-      expect(finalState.generationSteps[0].toolCalls![0].toolCallArgs).toEqual([
-        {q: 'test query'},
-      ]);
+      expect(finalState.generationSteps[0].toolCalls![0].toolCallArgs).toEqual({
+        q: 'test query',
+      });
     });
 
     it('should not modify state when no active step exists', () => {
@@ -804,7 +824,7 @@ describe('generated answer slice', () => {
 
       const finalState = generatedAnswerReducer(
         initialState,
-        toolCallArgs({toolCallId: 'tc-1', args: {q: 'test'}})
+        toolCallArgs({toolCallId: 'tc-1', args: {q: 'test'}, type: 'search'})
       );
 
       expect(
@@ -829,7 +849,7 @@ describe('generated answer slice', () => {
 
       const finalState = generatedAnswerReducer(
         initialState,
-        toolCallArgs({toolCallId: 'tc-999', args: {q: 'test'}})
+        toolCallArgs({toolCallId: 'tc-999', args: {q: 'test'}, type: 'search'})
       );
 
       expect(

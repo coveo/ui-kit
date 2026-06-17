@@ -1090,7 +1090,14 @@ describe('follow-up answers slice', () => {
 
       expect(
         finalState.followUpAnswers[0].generationSteps[0].toolCalls
-      ).toEqual([{toolCallName: 'search', toolCallId: 'tc-1', startedAt: 100}]);
+      ).toEqual([
+        {
+          toolCallName: 'search',
+          toolCallId: 'tc-1',
+          startedAt: 100,
+          status: 'active',
+        },
+      ]);
     });
 
     it('should not modify state when answerId does not match', () => {
@@ -1152,7 +1159,7 @@ describe('follow-up answers slice', () => {
   });
 
   describe('#followUpToolCallArgs', () => {
-    it('should push args onto the matching tool call', () => {
+    it('should assign args to the matching tool call', () => {
       state.followUpAnswers = [
         {
           ...createInitialFollowUpAnswer('Question?'),
@@ -1163,7 +1170,12 @@ describe('follow-up answers slice', () => {
               status: 'active',
               startedAt: 1,
               toolCalls: [
-                {toolCallName: 'search', toolCallId: 'tc-1', startedAt: 10},
+                {
+                  toolCallName: 'search',
+                  toolCallId: 'tc-1',
+                  startedAt: 10,
+                  status: 'active',
+                },
               ],
             },
           ],
@@ -1176,13 +1188,14 @@ describe('follow-up answers slice', () => {
           answerId: 'answer-123',
           toolCallId: 'tc-1',
           args: {q: 'test query'},
+          type: 'search',
         })
       );
 
       expect(
         finalState.followUpAnswers[0].generationSteps[0].toolCalls![0]
           .toolCallArgs
-      ).toEqual([{q: 'test query'}]);
+      ).toEqual({q: 'test query'});
     });
 
     it('should not modify state when answerId does not match', () => {
@@ -1196,7 +1209,12 @@ describe('follow-up answers slice', () => {
               status: 'active',
               startedAt: 1,
               toolCalls: [
-                {toolCallName: 'search', toolCallId: 'tc-1', startedAt: 10},
+                {
+                  toolCallName: 'search',
+                  toolCallId: 'tc-1',
+                  startedAt: 10,
+                  status: 'active',
+                },
               ],
             },
           ],
@@ -1209,6 +1227,7 @@ describe('follow-up answers slice', () => {
           answerId: 'no-match',
           toolCallId: 'tc-1',
           args: {q: 'test'},
+          type: 'search',
         })
       );
 
@@ -1229,7 +1248,12 @@ describe('follow-up answers slice', () => {
               status: 'active',
               startedAt: 1,
               toolCalls: [
-                {toolCallName: 'search', toolCallId: 'tc-1', startedAt: 10},
+                {
+                  toolCallName: 'search',
+                  toolCallId: 'tc-1',
+                  startedAt: 10,
+                  status: 'active',
+                },
               ],
             },
           ],
@@ -1242,6 +1266,7 @@ describe('follow-up answers slice', () => {
           answerId: 'answer-123',
           toolCallId: 'tc-999',
           args: {q: 'test'},
+          type: 'search',
         })
       );
 
@@ -1264,7 +1289,12 @@ describe('follow-up answers slice', () => {
               status: 'active',
               startedAt: 1,
               toolCalls: [
-                {toolCallName: 'search', toolCallId: 'tc-1', startedAt: 10},
+                {
+                  toolCallName: 'search',
+                  toolCallId: 'tc-1',
+                  startedAt: 10,
+                  status: 'active',
+                },
               ],
             },
           ],
@@ -1297,7 +1327,12 @@ describe('follow-up answers slice', () => {
               status: 'active',
               startedAt: 1,
               toolCalls: [
-                {toolCallName: 'search', toolCallId: 'tc-1', startedAt: 10},
+                {
+                  toolCallName: 'search',
+                  toolCallId: 'tc-1',
+                  startedAt: 10,
+                  status: 'active',
+                },
               ],
             },
           ],
@@ -1330,7 +1365,12 @@ describe('follow-up answers slice', () => {
               status: 'active',
               startedAt: 1,
               toolCalls: [
-                {toolCallName: 'search', toolCallId: 'tc-1', startedAt: 10},
+                {
+                  toolCallName: 'search',
+                  toolCallId: 'tc-1',
+                  startedAt: 10,
+                  status: 'active',
+                },
               ],
             },
           ],
