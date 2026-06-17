@@ -42,21 +42,17 @@ export * as resultsSelectors from './interface/result-list/result-list-selectors
 export {loadResultList} from './interface/result-list/result-list-loader.js';
 
 // ============================================================================
-// Search API Feature (request status, error, configuration)
+// Search API Feature (request types)
 // ============================================================================
 
 export type {
-  SearchEndpointState,
-  SearchEndpointStatus,
+  CoveoSearchEndpointRequest,
+  CoveoSearchEndpointResponse,
+  CoveoFacetRequest,
+  CoveoFacetResponse,
+  CoveoFacetValue,
+  CoveoSearchResult,
 } from './interface/api/search-endpoint/search-endpoint-types.js';
-
-export * as searchEndpointMutators from './interface/api/search-endpoint/search-endpoint-mutators.js';
-
-export * as searchEndpointSelectors from './interface/api/search-endpoint/search-endpoint-selectors.js';
-
-export {loadSearchEndpoint} from './interface/api/search-endpoint/search-endpoint-loader.js';
-
-export {SearchEndpointFacade} from './interface/api/search-endpoint/search-endpoint-facade.js';
 
 export {ConversationRuntime} from './interface/api/conversation-endpoint/conversation-runtime.js';
 
