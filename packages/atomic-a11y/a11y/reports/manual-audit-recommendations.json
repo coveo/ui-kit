@@ -12,6 +12,9 @@
     "1.4.10-reflow": {
       "conformance": "pass"
     },
-    "2.4.3-focus-order": "pass"
+    "2.4.3-focus-order": "pass",
+    "2.1.2-no-keyboard-trap": {
+      "conformance": "pass"
+    }
   }
 }
