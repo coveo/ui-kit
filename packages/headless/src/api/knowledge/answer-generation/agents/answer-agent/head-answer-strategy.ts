@@ -46,7 +46,7 @@ export const createHeadAnswerStrategy = (
       dispatch(clearFollowUpAnswersConversationToken());
     },
     onStepStartedEvent: ({event, agent}) => {
-      if (!agent.isRunning) {
+      if (agent.isRunning === false) {
         return;
       }
       dispatch(
@@ -57,7 +57,7 @@ export const createHeadAnswerStrategy = (
       );
     },
     onStepFinishedEvent: ({event, agent}) => {
-      if (!agent.isRunning) {
+      if (agent.isRunning === false) {
         return;
       }
       dispatch(
@@ -68,7 +68,7 @@ export const createHeadAnswerStrategy = (
       );
     },
     onTextMessageContentEvent: ({event, agent}) => {
-      if (!agent.isRunning) {
+      if (agent.isRunning === false) {
         return;
       }
       if (event.delta.length > 0) {
@@ -77,7 +77,7 @@ export const createHeadAnswerStrategy = (
       dispatch(updateMessage({textDelta: event.delta}));
     },
     onCustomEvent: ({event, agent}) => {
-      if (!agent.isRunning) {
+      if (agent.isRunning === false) {
         return;
       }
       const {name, value} = event;
@@ -103,7 +103,7 @@ export const createHeadAnswerStrategy = (
       }
     },
     onRunErrorEvent: ({event, agent}) => {
-      if (!agent.isRunning) {
+      if (agent.isRunning === false) {
         return;
       }
       const mappedCode = mapRunErrorCode(event.code);
@@ -115,7 +115,7 @@ export const createHeadAnswerStrategy = (
       );
     },
     onRunFinishedEvent: ({event, agent}) => {
-      if (!agent.isRunning) {
+      if (agent.isRunning === false) {
         return;
       }
       const answerGenerated = event.result?.completionReason === 'ANSWERED';
