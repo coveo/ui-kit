@@ -29,7 +29,10 @@ export const createAnswerRunner = () => {
   let currentAgent: AnswerAgent | undefined;
 
   const abortRun = () => {
-    currentAgent?.abortRun();
+    if (currentAgent) {
+      currentAgent.isRunning = false;
+      currentAgent.abortRun();
+    }
     currentAgent = undefined;
   };
 
