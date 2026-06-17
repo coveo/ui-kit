@@ -6,6 +6,9 @@ export function createFacetsActions(interfaceId: string) {
     updateFromResponse: createAction<CoveoFacetResponse[] | undefined>(
       `${interfaceId}/facets/updateFromResponse`
     ),
+    hydrateFromSnapshot: createAction<CoveoFacetResponse[] | undefined>(
+      `${interfaceId}/facets/hydrateFromSnapshot`
+    ),
   };
 }
 

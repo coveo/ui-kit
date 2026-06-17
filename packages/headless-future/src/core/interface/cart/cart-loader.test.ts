@@ -1,19 +1,15 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import type {FullEngine} from '@/src/core/interface/engine/engine.js';
 import {getOrCreateCartSlice} from '@/src/core/internal/cart/cart-slice.js';
-import {getEndpointContributorRegistry} from '@/src/core/internal/api/base-facade/endpoint-contributor-registry.js';
-import {conversationEndpointKey} from '@/src/core/internal/api/base-facade/endpoint-keys.js';
 import {loadCart} from './cart-loader.js';
 
 type MockEngine = FullEngine & {
   adoptSlice: ReturnType<typeof vi.fn>;
-  read: ReturnType<typeof vi.fn>;
 };
 
 const createMockEngine = (): MockEngine => {
   return {
     adoptSlice: vi.fn(async () => undefined),
-    read: vi.fn(() => []),
   } as unknown as MockEngine;
 };
 
@@ -24,7 +20,7 @@ describe('loadCart', () => {
     vi.clearAllMocks();
   });
 
-  it('adopts cart slice and registers cart provider once per engine', () => {
+  it('adopts cart slice once per interface id', () => {
     const engine = createMockEngine();
 
     loadCart(engine, TEST_ID);
@@ -34,20 +30,14 @@ describe('loadCart', () => {
     expect(engine.adoptSlice).toHaveBeenCalledWith(
       getOrCreateCartSlice(TEST_ID)
     );
+  });
 
-    const registry = getEndpointContributorRegistry(engine);
-    expect(
-      registry.getRegisteredContributorCount(conversationEndpointKey)
-    ).toBe(1);
+  it('adopts independently for different interface ids', () => {
+    const engine = createMockEngine();
 
-    const contributors = registry.getOrderedContributors(
-      conversationEndpointKey
-    );
-    expect(contributors).toHaveLength(1);
-    expect(contributors[0]()).toEqual({
-      context: {
-        cart: [],
-      },
-    });
+    loadCart(engine, 'id-a');
+    loadCart(engine, 'id-b');
+
+    expect(engine.adoptSlice).toHaveBeenCalledTimes(2);
   });
 });

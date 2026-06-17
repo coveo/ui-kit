@@ -5,13 +5,29 @@ import {
   setResults,
   clearResults,
 } from './result-list-actions.js';
+import {getOrCreateHydrateFromSnapshotAction} from '@/src/core/interface/generative/generative-hydration.js';
 
 export const initialResultListState: ResultListState = {
   results: [],
 };
 
+function mapResult(result: Record<string, unknown>) {
+  return {
+    uniqueId: result.uniqueId as string,
+    title: result.title as string,
+    uri: result.uri as string,
+    excerpt: result.excerpt as string | undefined,
+    printableUri: result.printableUri as string,
+    clickUri: result.clickUri as string,
+    raw: (result.raw as Record<string, unknown>) ?? {},
+    score: (result.score as number) ?? 0,
+  };
+}
+
 export function createResultsSlice(interfaceId: string) {
   const actions = getOrCreateResultsActions(interfaceId);
+  const hydrateAction = getOrCreateHydrateFromSnapshotAction(interfaceId);
+
   return createSlice({
     name: `${interfaceId}/results`,
     initialState: initialResultListState,
@@ -28,6 +44,15 @@ export function createResultsSlice(interfaceId: string) {
           raw: result.raw,
           score: result.score,
         }));
+      });
+      builder.addCase(hydrateAction, (state, action) => {
+        const payload = action.payload as Record<string, unknown> | null;
+        if (!payload || !Array.isArray(payload.results)) {
+          return;
+        }
+        state.results = payload.results.map((r: unknown) =>
+          mapResult(r as Record<string, unknown>)
+        );
       });
     },
   });

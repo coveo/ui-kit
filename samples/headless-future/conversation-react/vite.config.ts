@@ -54,27 +54,37 @@ function getOrganizationAdminEndpoint(
   return `https://${organizationId}.admin.org${environmentSuffix}.coveo.com`;
 }
 
-function getProxyTarget(mode: string) {
+function getOrganizationPlatformEndpoint(
+  organizationId: string,
+  environment: PlatformEnvironment
+): string {
+  const environmentSuffix = environment === 'prod' ? '' : environment;
+  return `https://${organizationId}.org${environmentSuffix}.coveo.com`;
+}
+
+function getProxyTargets(mode: string) {
   const env = loadEnv(mode, process.cwd(), '');
   const organizationId = env.VITE_COVEO_ORGANIZATION_ID?.trim();
   const endpointOverride = env.VITE_COVEO_ENDPOINT?.trim();
   const environment = resolveEnvironment(env.VITE_COVEO_PLATFORM_ENVIRONMENT);
 
-  if (endpointOverride) {
-    return endpointOverride;
-  }
-
   if (!organizationId) {
     return undefined;
   }
 
-  return getOrganizationAdminEndpoint(organizationId, environment);
+  const platform = getOrganizationPlatformEndpoint(organizationId, environment);
+  const admin = endpointOverride
+    ? endpointOverride
+    : getOrganizationAdminEndpoint(organizationId, environment);
+
+  return {admin, platform};
 }
 
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, process.cwd(), '');
   const useProxy = parseBoolean(env.VITE_COVEO_USE_VITE_PROXY) ?? true;
-  const target = getProxyTarget(mode);
+  const targets = getProxyTargets(mode);
+  const orgId = env.VITE_COVEO_ORGANIZATION_ID?.trim();
 
   return {
     plugins: [react()],
@@ -86,11 +96,16 @@ export default defineConfig(({mode}) => {
     },
     server: {
       open: true,
-      ...(useProxy && target
+      ...(useProxy && targets
         ? {
             proxy: {
+              [`/rest/organizations/${orgId}/commerce/unstable/agentic`]: {
+                target: targets.admin,
+                changeOrigin: true,
+                secure: true,
+              },
               '/rest': {
-                target,
+                target: targets.platform,
                 changeOrigin: true,
                 secure: true,
               },

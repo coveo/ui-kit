@@ -9,10 +9,24 @@ export * from './public/controllers/index.js';
 export {composeInterfaces} from './public/interfaces/compose.js';
 export {buildConversationInterface} from './public/interfaces/conversation.js';
 export type {BuildConversationInterfaceOptions} from './public/interfaces/conversation.js';
+export {buildGenerativeInterface} from './public/interfaces/generative.js';
+export type {
+  BuildGenerativeInterfaceOptions,
+  GenerativeInterface,
+} from './public/interfaces/generative.js';
+export type {
+  Turn,
+  TurnStatus,
+  AgentResponse,
+  AgentMessage,
+  A2UISurface,
+  ToolCall,
+  ToolCallStatus,
+  RoutedInterface,
+  RoutedUseCase,
+} from './core/interface/generative/generative-types.js';
 export type {
   Interface,
   ComposedInterface,
   Requires,
-  Operations,
-  EndpointStateScope,
 } from './core/interface/utils/interface-types.js';

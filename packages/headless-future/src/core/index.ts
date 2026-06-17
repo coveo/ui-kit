@@ -54,31 +54,6 @@ export type {
   CoveoSearchResult,
 } from './interface/api/search-endpoint/search-endpoint-types.js';
 
-export {ConversationRuntime} from './interface/api/conversation-endpoint/conversation-runtime.js';
-
-// ============================================================================
-// Conversation Feature
-// ============================================================================
-
-export type {
-  ConversationMessage,
-  ConversationSession,
-  ConversationState,
-  ConversationStreaming,
-  ConversationTurn,
-} from './interface/conversation/conversation-types.js';
-
-export * as conversationMutators from './interface/conversation/conversation-mutators.js';
-
-export * as conversationSelectors from './interface/conversation/conversation-selectors.js';
-
-export {loadConversation} from './interface/conversation/conversation-loader.js';
-
-export * as conversationEndpointMutators from './interface/api/conversation-endpoint/conversation-endpoint-mutators.js';
-
-export * as conversationEndpointSelectors from './interface/api/conversation-endpoint/conversation-endpoint-selectors.js';
-
-export {loadConversationEndpoint} from './interface/api/conversation-endpoint/conversation-endpoint-loader.js';
 // ============================================================================
 // Facets Feature
 // ============================================================================
@@ -108,3 +83,30 @@ export type {ConfigurationState} from './interface/configuration/configuration-t
 export * as configurationMutations from './interface/configuration/configuration-mutators.js';
 
 export * as configurationSelectors from './interface/configuration/configuration-selectors.js';
+
+// ============================================================================
+// Generative Interface
+// ============================================================================
+
+export type {
+  Turn,
+  TurnStatus,
+  RoutedInterface,
+  AgentResponse,
+  AgentMessage,
+  A2UISurface,
+  GenerativeState,
+} from './interface/generative/generative-types.js';
+
+export {GenerativeRuntime} from './interface/api/generative-endpoint/generative-runtime.js';
+
+export type {
+  GenerativeStatePort,
+  GenerativeRuntimeConfig,
+  HydrateSubInterface,
+} from './interface/api/generative-endpoint/generative-runtime.js';
+
+export {
+  createHydrateSubInterface,
+  getOrCreateHydrateFromSnapshotAction,
+} from './interface/generative/generative-hydration.js';

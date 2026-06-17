@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "node --experimental-strip-types src/server.ts",
+    "start": "node dist/server.js",
     "build": "tsc",
     "test": "vitest run"
   },
