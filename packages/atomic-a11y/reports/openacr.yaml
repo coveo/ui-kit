@@ -344,10 +344,8 @@ chapters:
         components:
           - name: web
             adherence:
-              level: does-not-support
-              notes:
-                'WCAG 1.4.10: no automated, interactive, or manual coverage. [Manual
-                audit required]'
+              level: supports
+              notes: Supports — manual audit found Supports.
       - num: 1.4.11
         components:
           - name: web
