@@ -21,6 +21,9 @@ export function createPaginationSelectors(interfaceId: string) {
       sliceSelector,
       (state) => state.totalCount
     ),
+    getPage: createMemoizedStateSelector(sliceSelector, (state) =>
+      state.pageSize > 0 ? Math.floor(state.firstResult / state.pageSize) : 0
+    ),
   };
 }
 

@@ -4,7 +4,7 @@ import {getOrCreateSearchBoxSelectors} from '@/src/core/internal/search-box/sear
 import {getOrCreatePaginationSelectors} from '@/src/core/internal/pagination/pagination-selectors.js';
 import {getOrCreateFacetsSelectors} from '@/src/core/internal/facets/facets-selectors.js';
 import {getOrCreateSortSelectors} from '@/src/core/internal/sort/sort-selectors.js';
-import {initialConfigurationState} from '@/src/core/internal/configuration/configuration-slice.js';
+import {getOrCreateConfigurationSelectors} from '@/src/core/internal/configuration/configuration-selectors.js';
 import type {CommerceSearchSortCriterion} from '@/src/api/interface/commerce-search-endpoint/commerce-search-endpoint-types.js';
 
 export interface CommerceSearchEndpointRequest {
@@ -25,34 +25,19 @@ export function createCommerceSearchEndpointRequestSelector(
 ) {
   const sharableInterfaceId = scope.composedInterfaceId ?? scope.interfaceId;
 
+  const configuration = getOrCreateConfigurationSelectors();
   const searchBox = getOrCreateSearchBoxSelectors(sharableInterfaceId);
   const pagination = getOrCreatePaginationSelectors(scope.interfaceId);
   const facets = getOrCreateFacetsSelectors(scope.interfaceId);
   const sort = getOrCreateSortSelectors(scope.interfaceId);
 
-  const getTrackingId = (state: Record<string, unknown>) =>
-    (state['configuration'] as typeof initialConfigurationState | undefined)
-      ?.trackingId ?? '';
-
-  const getLanguage = (state: Record<string, unknown>) =>
-    (state['configuration'] as typeof initialConfigurationState | undefined)
-      ?.language ?? '';
-
-  const getCountry = (state: Record<string, unknown>) =>
-    (state['configuration'] as typeof initialConfigurationState | undefined)
-      ?.country ?? '';
-
-  const getCurrency = (state: Record<string, unknown>) =>
-    (state['configuration'] as typeof initialConfigurationState | undefined)
-      ?.currency ?? '';
-
   return createMemoizedStateSelector(
-    getTrackingId,
-    getLanguage,
-    getCountry,
-    getCurrency,
+    configuration.getTrackingId,
+    configuration.getLanguage,
+    configuration.getCountry,
+    configuration.getCurrency,
     searchBox.getQuery,
-    pagination.getFirstResult,
+    pagination.getPage,
     pagination.getPageSize,
     facets.buildFacetsRequest,
     sort.buildSortRequest,
@@ -62,8 +47,8 @@ export function createCommerceSearchEndpointRequestSelector(
       country,
       currency,
       query,
-      firstResult,
-      pageSize,
+      page,
+      perPage,
       facets,
       sort
     ): CommerceSearchEndpointRequest => ({
@@ -72,8 +57,8 @@ export function createCommerceSearchEndpointRequestSelector(
       country,
       currency,
       query,
-      page: pageSize > 0 ? Math.floor(firstResult / pageSize) : 0,
-      perPage: pageSize,
+      page,
+      perPage,
       facets,
       sort,
       context: {view: {url: ''}},
