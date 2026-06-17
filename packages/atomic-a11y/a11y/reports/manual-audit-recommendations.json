@@ -18,6 +18,9 @@
     },
     "3.2.1-on-focus": {
       "conformance": "pass"
+    },
+    "1.3.2-meaningful-sequence": {
+      "conformance": "pass"
     }
   }
 }
