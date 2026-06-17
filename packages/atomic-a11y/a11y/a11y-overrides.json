@@ -132,6 +132,11 @@
       "criterion": "1.3.3",
       "conformance": "not-applicable",
       "reason": "Atomic is a component library that renders interactive UI widgets, not instructional content. Components do not provide textual instructions that reference shape, color, size, visual location, or sound. All controls use programmatic accessible names (aria-label, text content, input labels)."
+    },
+    {
+      "criterion": "2.1.4",
+      "conformance": "not-applicable",
+      "reason": "No Atomic component implements character-only keyboard shortcuts. All keyboard handlers respond exclusively to standard navigation keys (Escape, Enter, Tab, Arrow keys, Home, End, Space) which are exempt from this criterion."
     }
   ]
 }
