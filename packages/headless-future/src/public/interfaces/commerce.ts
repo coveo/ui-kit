@@ -18,20 +18,12 @@ import type {
   EndpointStateScope,
 } from '@/src/core/interface/utils/interface-types.js';
 import {generateId} from '@/src/core/interface/utils/id-generator.js';
+import {createCommerceSearchEndpointThunk} from '@/src/core/internal/api/commerce-search-endpoint/commerce-search-endpoint-thunk.js';
 
 export interface BuildCommerceInterfaceOptions {
   engine: Engine;
   id?: string;
 }
-
-const createCommerceSearchThunk: EndpointThunkFactory = (_engine, scope) => {
-  return createAsyncThunk<void, {engine: FullEngine}>(
-    `${scope.composedInterfaceId ?? scope.interfaceId}/commerceSearch/execute`,
-    async () => {
-      /* TODO: implement commerce search endpoint */
-    }
-  );
-};
 
 const createCommerceSuggestionsThunk: EndpointThunkFactory = (
   _engine,
@@ -53,7 +45,7 @@ export function buildCommerceInterface(
   const scope: EndpointStateScope = {interfaceId};
 
   const factories: Record<Operations['commerce'], EndpointThunkFactory[]> = {
-    search: [createCommerceSearchThunk],
+    search: [createCommerceSearchEndpointThunk],
     suggestions: [createCommerceSuggestionsThunk],
   };
 
