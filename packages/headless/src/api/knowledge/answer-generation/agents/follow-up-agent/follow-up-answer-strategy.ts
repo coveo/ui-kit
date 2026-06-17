@@ -102,7 +102,7 @@ export const createFollowUpStrategy = (
             followUpToolCallArgs({
               answerId: runId,
               toolCallId,
-              args: {raw: delta},
+              args: {raw: delta} as ToolCallArgsGeneric,
               type: 'generic',
             })
           );
@@ -115,7 +115,7 @@ export const createFollowUpStrategy = (
           followUpToolCallArgs({
             answerId: runId,
             toolCallId,
-            args: {raw: delta},
+            args: {raw: delta} as ToolCallArgsGeneric,
             type: 'generic',
           })
         );
