@@ -19,8 +19,8 @@ import {
   GENERATION_STEP_NAMES,
   type GenerationStepName,
   normalizeGenerationStepName,
-  type ToolCallArgsGeneric,
-  type ToolCallArgsSearch,
+  type GenerationToolCallArgsGeneric,
+  type GenerationToolCallArgsSearch,
 } from '../generated-answer/generated-answer-state.js';
 import type {GeneratedContentFormat} from '../generated-answer/generated-response-format.js';
 
@@ -226,7 +226,7 @@ export const followUpToolCallArgs = createAction(
   (payload: {
     answerId: string;
     toolCallId: string;
-    args: ToolCallArgsSearch | ToolCallArgsGeneric;
+    args: GenerationToolCallArgsSearch | GenerationToolCallArgsGeneric;
     type: string;
   }) =>
     validatePayload(payload, {

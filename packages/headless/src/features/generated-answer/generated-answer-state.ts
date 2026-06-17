@@ -19,11 +19,12 @@ export function normalizeGenerationStepName(name: string): GenerationStepName {
 
 type GenerationToolCallStatus = 'active' | 'completed';
 export type GenerationToolCallType = 'search' | 'generic';
-export interface ToolCallArgsGeneric {
+
+export interface GenerationToolCallArgsGeneric {
   raw: string;
 }
 
-export interface ToolCallArgsSearch {
+export interface GenerationToolCallArgsSearch {
   q: string;
 }
 
@@ -34,7 +35,7 @@ export interface GenerationToolCall {
   finishedAt?: number;
   status: GenerationToolCallStatus;
   type?: GenerationToolCallType;
-  toolCallArgs?: ToolCallArgsSearch | ToolCallArgsGeneric;
+  toolCallArgs?: GenerationToolCallArgsSearch | GenerationToolCallArgsGeneric;
 }
 
 export interface GenerationStep {

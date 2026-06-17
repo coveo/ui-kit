@@ -231,8 +231,9 @@ export type {
   GenerationStep,
   GenerationStepName,
   GenerationToolCall,
-  ToolCallArgsSearch,
-  ToolCallArgsGeneric,
+  GenerationToolCallArgsSearch,
+  GenerationToolCallArgsGeneric,
+  GenerationToolCallType,
 } from './controllers/generated-answer/headless-generated-answer.js';
 export {buildGeneratedAnswer} from './controllers/generated-answer/headless-generated-answer.js';
 export type {

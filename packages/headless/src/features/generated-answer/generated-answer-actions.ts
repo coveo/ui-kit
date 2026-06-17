@@ -44,8 +44,8 @@ import {
   GENERATION_STEP_NAMES,
   type GenerationStepName,
   normalizeGenerationStepName,
-  type ToolCallArgsGeneric,
-  type ToolCallArgsSearch,
+  type GenerationToolCallArgsGeneric,
+  type GenerationToolCallArgsSearch,
 } from './generated-answer-state.js';
 import {
   type GeneratedContentFormat,
@@ -276,7 +276,7 @@ export const toolCallArgs = createAction(
   'generatedAnswer/toolCallArgs',
   (payload: {
     toolCallId: string;
-    args: ToolCallArgsSearch | ToolCallArgsGeneric;
+    args: GenerationToolCallArgsSearch | GenerationToolCallArgsGeneric;
     type: string;
   }) =>
     validatePayload(payload, {

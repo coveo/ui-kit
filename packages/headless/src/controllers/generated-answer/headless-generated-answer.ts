@@ -8,8 +8,9 @@ import type {
   GenerationStep,
   GenerationStepName,
   GenerationToolCall,
-  ToolCallArgsGeneric,
-  ToolCallArgsSearch,
+  GenerationToolCallType,
+  GenerationToolCallArgsGeneric,
+  GenerationToolCallArgsSearch,
 } from '../../features/generated-answer/generated-answer-state.js';
 import type {GeneratedResponseFormat} from '../../features/generated-answer/generated-response-format.js';
 import type {
@@ -38,8 +39,9 @@ export type {
   GenerationStep,
   GenerationStepName,
   GenerationToolCall,
-  ToolCallArgsSearch,
-  ToolCallArgsGeneric,
+  GenerationToolCallArgsSearch,
+  GenerationToolCallArgsGeneric,
+  GenerationToolCallType,
 };
 
 /**

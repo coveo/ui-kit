@@ -28,8 +28,8 @@ import {
 } from '../../../../../features/generated-answer/generated-answer-analytics-actions.js';
 import type {
   GenerationStepName,
-  ToolCallArgsGeneric,
-  ToolCallArgsSearch,
+  GenerationToolCallArgsGeneric,
+  GenerationToolCallArgsSearch,
 } from '../../../../../features/generated-answer/generated-answer-state.js';
 import {mapRunErrorCode} from '../../../../../features/generated-answer/sse-generated-answer-errors.js';
 
@@ -97,7 +97,7 @@ export const createHeadAnswerStrategy = (
           dispatch(
             toolCallArgs({
               toolCallId,
-              args: parsedArgs as ToolCallArgsSearch,
+              args: parsedArgs as GenerationToolCallArgsSearch,
               type: 'search',
             })
           );
@@ -105,7 +105,7 @@ export const createHeadAnswerStrategy = (
           dispatch(
             toolCallArgs({
               toolCallId,
-              args: {raw: delta} as ToolCallArgsGeneric,
+              args: {raw: delta} as GenerationToolCallArgsGeneric,
               type: 'generic',
             })
           );

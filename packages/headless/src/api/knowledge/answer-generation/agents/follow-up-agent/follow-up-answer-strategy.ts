@@ -21,8 +21,8 @@ import {
 } from '../../../../../features/generated-answer/generated-answer-analytics-actions.js';
 import type {
   GenerationStepName,
-  ToolCallArgsGeneric,
-  ToolCallArgsSearch,
+  GenerationToolCallArgsGeneric,
+  GenerationToolCallArgsSearch,
 } from '../../../../../features/generated-answer/generated-answer-state.js';
 import {mapRunErrorCode} from '../../../../../features/generated-answer/sse-generated-answer-errors.js';
 
@@ -93,7 +93,7 @@ export const createFollowUpStrategy = (
             followUpToolCallArgs({
               answerId: runId,
               toolCallId,
-              args: parsedArgs as ToolCallArgsSearch,
+              args: parsedArgs as GenerationToolCallArgsSearch,
               type: 'search',
             })
           );
@@ -102,7 +102,7 @@ export const createFollowUpStrategy = (
             followUpToolCallArgs({
               answerId: runId,
               toolCallId,
-              args: {raw: delta} as ToolCallArgsGeneric,
+              args: {raw: delta} as GenerationToolCallArgsGeneric,
               type: 'generic',
             })
           );
@@ -115,7 +115,7 @@ export const createFollowUpStrategy = (
           followUpToolCallArgs({
             answerId: runId,
             toolCallId,
-            args: {raw: delta} as ToolCallArgsGeneric,
+            args: {raw: delta} as GenerationToolCallArgsGeneric,
             type: 'generic',
           })
         );
