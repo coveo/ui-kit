@@ -35,6 +35,9 @@
     },
     "2.1.2-no-keyboard-trap": {
       "conformance": "pass"
+    },
+    "3.2.1-on-focus": {
+      "conformance": "pass"
     }
   }
 }
