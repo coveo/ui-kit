@@ -27,6 +27,10 @@
     },
     "1.4.10-reflow": {
       "conformance": "pass"
+    },
+    "2.4.3-focus-order": {
+      "conformance": "fail",
+      "remarks": "Focus escapes commerce refine-modal when tabbing, due to broken focus trap. See KIT-5811. All non-modal components pass (search box, facets, breadbox, pager, sort dropdown, products-per-page, product list, load-more)."
     }
   }
 }
