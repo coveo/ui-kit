@@ -19,6 +19,16 @@ export function createGenerativeSelectors(interfaceId: string) {
       sliceSelector,
       (state): string | undefined => state.activeTurnId
     ),
+    getActiveMessage: createMemoizedStateSelector(
+      sliceSelector,
+      (state): string => {
+        if (!state.activeTurnId) {
+          return '';
+        }
+        const turn = state.turns.find((t) => t.id === state.activeTurnId);
+        return turn?.prompt ?? '';
+      }
+    ),
   };
 }
 

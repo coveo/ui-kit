@@ -1,9 +1,12 @@
 import {
   readConversationEventStream,
   type ConversationStreamEvent,
+  createConversationEndpointClient,
+  type CoveoConversationEndpointRequest,
 } from '@/src/api/index.js';
 import type {FullEngine} from '@/src/core/interface/engine/engine.js';
-import {ConversationEndpointFacade} from '@/src/core/interface/api/conversation-endpoint/conversation-endpoint-facade.js';
+import {createConversationEndpointRequestSelector} from '@/src/core/internal/api/conversation-endpoint/conversation-endpoint-request-selector.js';
+import {readEndpointClientConfiguration} from '@/src/core/internal/configuration/configuration-reader.js';
 import {generateId} from '@/src/core/interface/utils/id-generator.js';
 import type {
   AgentMessage,
@@ -37,6 +40,8 @@ export type HydrateSubInterface = (
 export interface GenerativeRuntimeConfig {
   statePort: GenerativeStatePort;
   hydrateSubInterface: HydrateSubInterface;
+  generativeInterfaceId: string;
+  cartInterfaceId: string;
 }
 
 export class GenerativeRuntime {
@@ -45,20 +50,27 @@ export class GenerativeRuntime {
     Map<string, GenerativeRuntime>
   >();
 
-  private endpointFacade: ConversationEndpointFacade;
+  private engine: FullEngine;
   private statePort: GenerativeStatePort;
   private hydrateSubInterface: HydrateSubInterface;
   private agentResponseInitialized = new Set<string>();
   private currentPrompt: string | undefined;
+  private buildRequest: ReturnType<
+    typeof createConversationEndpointRequestSelector
+  >;
 
   private constructor(
     engine: FullEngine,
     _interfaceId: string,
     config: GenerativeRuntimeConfig
   ) {
+    this.engine = engine;
     this.statePort = config.statePort;
     this.hydrateSubInterface = config.hydrateSubInterface;
-    this.endpointFacade = ConversationEndpointFacade.getInstance(engine);
+    this.buildRequest = createConversationEndpointRequestSelector(
+      config.generativeInterfaceId,
+      config.cartInterfaceId
+    );
   }
 
   static getInstance(
@@ -102,7 +114,34 @@ export class GenerativeRuntime {
 
   private async executeStream(turnId: string): Promise<void> {
     try {
-      const result = await this.endpointFacade.callEndpoint();
+      const requestFromState = this.engine.read(this.buildRequest);
+      const navigatorContext = this.engine.getNavigatorContextProvider()?.();
+      const clientConfig = readEndpointClientConfiguration(this.engine);
+
+      const request: CoveoConversationEndpointRequest = {
+        trackingId: requestFromState.trackingId,
+        language: requestFromState.language,
+        country: requestFromState.country,
+        currency: requestFromState.currency,
+        message: requestFromState.message,
+        clientId: navigatorContext?.clientId ?? undefined,
+        context: {
+          user: {
+            userAgent: navigatorContext?.userAgent ?? null,
+          },
+          view: {
+            url: navigatorContext?.location ?? null,
+            referrer: navigatorContext?.referrer ?? null,
+          },
+          ...(requestFromState.cart.length > 0
+            ? {cart: requestFromState.cart}
+            : {}),
+        },
+        targetEngine: 'AGENT_CORE',
+      };
+
+      const client = createConversationEndpointClient();
+      const result = await client.call(request, clientConfig);
 
       if (!result.success) {
         this.statePort.failTurn(turnId, result.error);

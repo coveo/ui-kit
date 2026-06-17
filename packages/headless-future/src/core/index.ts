@@ -58,10 +58,6 @@ export {loadSearchEndpoint} from './interface/api/search-endpoint/search-endpoin
 
 export {SearchEndpointFacade} from './interface/api/search-endpoint/search-endpoint-facade.js';
 
-export * as conversationEndpointMutators from './interface/api/conversation-endpoint/conversation-endpoint-mutators.js';
-
-export * as conversationEndpointSelectors from './interface/api/conversation-endpoint/conversation-endpoint-selectors.js';
-
 export {loadConversationEndpoint} from './interface/api/conversation-endpoint/conversation-endpoint-loader.js';
 // ============================================================================
 // Facets Feature

@@ -45,6 +45,8 @@ export const buildConverseController = (
   const selectors = getOrCreateGenerativeSelectors(stateId);
 
   const runtime = GenerativeRuntime.getInstance(fullEngine, stateId, {
+    generativeInterfaceId: stateId,
+    cartInterfaceId: stateId,
     statePort: {
       createTurn(payload) {
         fullEngine.mutate(actions.createTurn(payload));

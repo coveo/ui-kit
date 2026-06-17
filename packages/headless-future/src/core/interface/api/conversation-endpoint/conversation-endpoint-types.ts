@@ -1,8 +1,3 @@
-import type {
-  ConversationEndpointClientResult,
-  CoveoConversationEndpointRequest,
-} from '@/src/api/index.js';
-
 export type ConversationEndpointStatus = 'idle' | 'pending' | 'streaming';
 
 export interface ConversationEndpointStreaming {
@@ -15,8 +10,3 @@ export interface ConversationEndpointState {
   error: string | null;
   streaming: ConversationEndpointStreaming;
 }
-
-export type CoveoConversationEndpointRequestContributor =
-  () => Partial<CoveoConversationEndpointRequest>;
-
-export type ConversationEndpointCallResult = ConversationEndpointClientResult;
