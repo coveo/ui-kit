@@ -54,6 +54,7 @@ describe('createHeadAnswerStrategy', () => {
   it('dispatches a new generation step start when a step starts', () => {
     strategy.onStepStartedEvent!({
       event: {stepName: 'searching', timestamp: 123},
+      agent: {isRunning: true},
     } as any);
 
     expect(dispatch).toHaveBeenCalledWith(
@@ -66,6 +67,7 @@ describe('createHeadAnswerStrategy', () => {
 
     strategy.onStepFinishedEvent!({
       event: {stepName: 'answering'},
+      agent: {isRunning: true},
     } as any);
 
     expect(dispatch).toHaveBeenCalledWith(
@@ -76,7 +78,10 @@ describe('createHeadAnswerStrategy', () => {
   });
 
   it('appends incoming text deltas to the answer message', () => {
-    strategy.onTextMessageContentEvent!({event: {delta: 'Hello'}} as any);
+    strategy.onTextMessageContentEvent!({
+      event: {delta: 'Hello'},
+      agent: {isRunning: true},
+    } as any);
 
     expect(dispatch).toHaveBeenCalledWith(updateMessage({textDelta: 'Hello'}));
   });
@@ -91,6 +96,7 @@ describe('createHeadAnswerStrategy', () => {
           conversationToken: 'token-123',
         },
       },
+      agent: {isRunning: true},
     } as any);
 
     expect(dispatch).toHaveBeenCalledWith(
@@ -119,6 +125,7 @@ describe('createHeadAnswerStrategy', () => {
         name: 'citations',
         value: {citations},
       },
+      agent: {isRunning: true},
     } as any);
 
     expect(dispatch).toHaveBeenCalledWith(updateCitations({citations}));
@@ -130,6 +137,7 @@ describe('createHeadAnswerStrategy', () => {
         message: 'Something went wrong',
         code: 'KNOWLEDGE:SSE_MAX_DURATION_EXCEEDED',
       },
+      agent: {isRunning: true},
     } as any);
 
     expect(dispatch).toHaveBeenCalledWith(
@@ -163,6 +171,7 @@ describe('createHeadAnswerStrategy', () => {
         },
         threadId: 'thread-007',
       },
+      agent: {isRunning: true},
     } as any);
 
     expect(dispatch).toHaveBeenNthCalledWith(1, setIsAnswerGenerated(true));
@@ -196,6 +205,7 @@ describe('createHeadAnswerStrategy', () => {
         },
         threadId: 'thread-007',
       },
+      agent: {isRunning: true},
     } as any);
 
     expect(dispatch).toHaveBeenNthCalledWith(1, setIsAnswerGenerated(false));
@@ -204,5 +214,72 @@ describe('createHeadAnswerStrategy', () => {
     expect(streamEndSpy).toHaveBeenCalledWith(false, 'run-001', undefined);
     expect(dispatch).toHaveBeenNthCalledWith(4, streamEndAction);
     expect(dispatch).toHaveBeenNthCalledWith(5, responseLinkedAction);
+  });
+
+  describe('when agent.isRunning is false', () => {
+    const stoppedAgent = {isRunning: false};
+
+    it('does not dispatch on step started', () => {
+      strategy.onStepStartedEvent!({
+        event: {stepName: 'searching', timestamp: 123},
+        agent: stoppedAgent,
+      } as any);
+
+      expect(dispatch).not.toHaveBeenCalled();
+    });
+
+    it('does not dispatch on step finished', () => {
+      strategy.onStepFinishedEvent!({
+        event: {stepName: 'answering', timestamp: 456},
+        agent: stoppedAgent,
+      } as any);
+
+      expect(dispatch).not.toHaveBeenCalled();
+    });
+
+    it('does not dispatch on text message content', () => {
+      strategy.onTextMessageContentEvent!({
+        event: {delta: 'Hello'},
+        agent: stoppedAgent,
+      } as any);
+
+      expect(dispatch).not.toHaveBeenCalled();
+    });
+
+    it('does not dispatch on custom event', () => {
+      strategy.onCustomEvent!({
+        event: {
+          name: 'header',
+          value: {contentFormat: 'text/markdown'},
+        },
+        agent: stoppedAgent,
+      } as any);
+
+      expect(dispatch).not.toHaveBeenCalled();
+    });
+
+    it('does not dispatch on run error', () => {
+      strategy.onRunErrorEvent!({
+        event: {
+          message: 'Something went wrong',
+          code: 'KNOWLEDGE:SSE_MAX_DURATION_EXCEEDED',
+        },
+        agent: stoppedAgent,
+      } as any);
+
+      expect(dispatch).not.toHaveBeenCalled();
+    });
+
+    it('does not dispatch on run finished', () => {
+      strategy.onRunFinishedEvent!({
+        event: {
+          result: {completionReason: 'ANSWERED'},
+          threadId: 'thread-007',
+        },
+        agent: stoppedAgent,
+      } as any);
+
+      expect(dispatch).not.toHaveBeenCalled();
+    });
   });
 });
