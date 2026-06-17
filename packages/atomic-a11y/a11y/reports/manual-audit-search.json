@@ -41,6 +41,9 @@
     },
     "1.3.2-meaningful-sequence": {
       "conformance": "pass"
+    },
+    "3.2.2-on-input": {
+      "conformance": "pass"
     }
   }
 }
