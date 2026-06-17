@@ -32,7 +32,8 @@ export function createCommerceSearchEndpointThunk(
         query: request.query,
         page: request.page,
         perPage: request.perPage,
-        sort: request.sort,
+        ...(request.sort.length > 0 ? {sort: request.sort} : {}),
+        clientId: navigatorContext?.clientId ?? undefined,
         context: {view: {url: navigatorContext?.location ?? ''}},
       };
 
