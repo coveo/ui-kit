@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "dev:mock": "vite --mode mock",
+    "dev:mock": "VITE_COVEO_ENDPOINT=http://localhost:3456 vite",
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run",
