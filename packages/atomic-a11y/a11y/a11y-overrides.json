@@ -122,6 +122,11 @@
       "criterion": "2.5.7",
       "conformance": "not-applicable",
       "reason": "No Atomic component implements custom dragging movements. Scrollable containers use native CSS overflow (user-agent scrolling, exempt per 2.5.7) with arrow button alternatives. Modal touchmove listeners only prevent background scrolling."
+    },
+    {
+      "criterion": "2.4.1",
+      "conformance": "not-applicable",
+      "reason": "Bypass blocks is a page-level concern for the consuming application. Atomic is a component library providing individual widgets, not complete web pages with repeated navigation blocks. Components provide proper semantic structure (nav landmarks, aside, header/footer, role=region) that enables consuming apps to satisfy this criterion."
     }
   ]
 }
