@@ -483,10 +483,9 @@ jobs:
       - name: 'Check openacr.yaml is up to date'
         run: node scripts/check-openacr-drift.mjs
         working-directory: packages/atomic-a11y
-  playwright-atomic-search-commerce-react-test:
-    name: 'Run e2e tests on Atomic Search Commerce React'
-    needs: affected
-    if: contains(needs.affected.outputs.projects, '@samples/atomic-search-commerce-react')
+  samples-e2e:
+    name: 'Run e2e tests on samples'
+    needs: build
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.60.0-noble
@@ -498,42 +497,30 @@ jobs:
           egress-policy: audit
 
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
-      - uses: ./.github/actions/setup
-      - uses: ./.github/actions/playwright-atomic-search-commerce-react
-  playwright-atomic-search-commerce-angular-test:
-    name: 'Run e2e tests on Atomic Search Commerce Angular'
-    needs: affected
-    if: contains(needs.affected.outputs.projects, '@samples/atomic-search-commerce-angular')
-    runs-on: ubuntu-latest
-    container:
-      image: mcr.microsoft.com/playwright:v1.60.0-noble
-      options: --user 1001
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
         with:
-          egress-policy: audit
-
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+          fetch-depth: 0
+          filter: blob:none
+      - run: git branch ${GITHUB_EVENT_PULL_REQUEST_BASE_REF} origin/${GITHUB_EVENT_PULL_REQUEST_BASE_REF}
+        if: ${{ github.event_name == 'pull_request' }}
+        env:
+          GITHUB_EVENT_PULL_REQUEST_BASE_REF: ${{ github.event.pull_request.base.ref }}
+      - run: git branch main origin/main
+        if: ${{ github.event_name != 'pull_request' }}
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/playwright-atomic-search-commerce-angular
-  playwright-atomic-search-vuejs-test:
-    name: 'Run e2e tests on Atomic Search Vue'
-    needs: affected
-    if: contains(needs.affected.outputs.projects, '@samples/atomic-search-vuejs') || contains(needs.affected.outputs.projects, '@coveo/atomic')
-    runs-on: ubuntu-latest
-    container:
-      image: mcr.microsoft.com/playwright:v1.60.0-noble
-      options: --user 1001
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
+      # Runs `e2e` for every affected sample. A sample that depends on @coveo/headless or
+      # @coveo/atomic is automatically affected when those libraries change, so no per-sample
+      # job is needed and adding a new sample requires no CI edit.
+      # --concurrency=1: samples share webServer ports (e.g. Vite on 5173), so run serially.
+      - run: pnpm exec turbo run e2e --affected --concurrency=1
+      - name: Upload Playwright reports
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
-          egress-policy: audit
-
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
-      - uses: ./.github/actions/setup
-      - uses: ./.github/actions/playwright-atomic-search-vuejs
+          name: samples-playwright-reports
+          path: |
+            samples/**/playwright-report
+          retention-days: 7
+          if-no-files-found: ignore
   playwright-pkg-new-template-test:
     name: 'Run smoke tests on pkg-new-template'
     needs: affected
@@ -586,40 +573,6 @@ jobs:
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/playwright-headless-ssr-commerce-nextjs
 
-  playwright-headless-search-react-test:
-    name: 'Run e2e tests on Headless Search React'
-    needs: affected
-    if: contains(needs.affected.outputs.projects, '@samples/headless-search-react') || contains(needs.affected.outputs.projects, '@coveo/headless')
-    runs-on: ubuntu-latest
-    container:
-      image: mcr.microsoft.com/playwright:v1.60.0-noble
-      options: --user 1001
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
-        with:
-          egress-policy: audit
-
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
-      - uses: ./.github/actions/setup
-      - uses: ./.github/actions/playwright-headless-search-react
-  playwright-headless-ssr-search-nextjs-test:
-    name: 'Run e2e tests on Headless SSR Search NextJS'
-    needs: affected
-    if: contains(needs.affected.outputs.projects, '@samples/headless-ssr-search-nextjs')
-    runs-on: ubuntu-latest
-    container:
-      image: mcr.microsoft.com/playwright:v1.60.0-noble
-      options: --user 1001
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
-        with:
-          egress-policy: audit
-
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
-      - uses: ./.github/actions/setup
-      - uses: ./.github/actions/playwright-headless-ssr-search-nextjs
   e2e-quantic:
     name: 'Run Quantic E2E tests'
     needs: affected
@@ -683,12 +636,8 @@ jobs:
       - 'playwright-headless-ssr-commerce-nextjs-test'
       - 'puppeteer-atomic-csp'
       - 'e2e-quantic'
-      - 'playwright-atomic-search-commerce-react-test'
-      - 'playwright-atomic-search-commerce-angular-test'
-      - 'playwright-atomic-search-vuejs-test'
+      - 'samples-e2e'
       - 'playwright-pkg-new-template-test'
-      - 'playwright-headless-search-react-test'
-      - 'playwright-headless-ssr-search-nextjs-test'
       - 'publish-preview'
     runs-on: ubuntu-latest
     steps:
@@ -721,12 +670,8 @@ jobs:
       - 'playwright-atomic-hosted-page-test'
       - 'playwright-headless-ssr-commerce-nextjs-test'
       - 'e2e-quantic'
-      - 'playwright-atomic-search-commerce-react-test'
-      - 'playwright-atomic-search-commerce-angular-test'
-      - 'playwright-atomic-search-vuejs-test'
+      - 'samples-e2e'
       - 'playwright-pkg-new-template-test'
-      - 'playwright-headless-search-react-test'
-      - 'playwright-headless-ssr-search-nextjs-test'
       - 'changeset-merge-guard'
     runs-on: ubuntu-latest
     steps:
