@@ -94,6 +94,7 @@ catalog:
 minimumReleaseAge: 10080
 
 minimumReleaseAgeExclude:
+  - '@ag-ui/*'
   - '@coveo/*'
   - coveo.analytics
   - '@vitest/*'
