@@ -798,6 +798,12 @@ importers:
       minimist:
         specifier: 1.2.8
         version: 1.2.8
+      tar:
+        specifier: 7.5.16
+        version: 7.5.16
+      yaml:
+        specifier: 'catalog:'
+        version: 2.9.0
     devDependencies:
       '@types/minimist':
         specifier: 1.2.5
@@ -14220,8 +14226,8 @@ packages:
   tar-stream@3.2.0:
     resolution: {integrity: sha512-ojzvCvVaNp6aOTFmG7jaRD0meowIAuPc3cMMhSgKiVWws1GyHbGd/xvnyuRKcKlMpt3qvxx6r0hreCNITP9hIg==}
 
-  tar@7.5.15:
-    resolution: {integrity: sha512-dzGK0boVlC4W5QFuQN1EFSl3bIDYsk7Tj40U6eIBnK2k/8ml7TZ5agbI5j5+qnoVcAA+rNtBml8SEiLxZpNqRQ==}
+  tar@7.5.16:
+    resolution: {integrity: sha512-56adEpPMouktRlBLXiaYFFzZ/3+JXa8P9n7WbR+ibIjtviN55mEaOkiysCnPnWm+7kkui1Dn8J9l+g6zV8731w==}
     engines: {node: '>=18'}
 
   teex@1.0.1:
@@ -28310,7 +28316,7 @@ snapshots:
       nopt: 9.0.0
       proc-log: 6.1.0
       semver: 7.8.2
-      tar: 7.5.15
+      tar: 7.5.16
       tinyglobby: 0.2.17
       undici: 6.26.0
       which: 6.0.1
@@ -28807,7 +28813,7 @@ snapshots:
       promise-retry: 2.0.1
       sigstore: 4.1.1
       ssri: 13.0.1
-      tar: 7.5.15
+      tar: 7.5.16
     transitivePeerDependencies:
       - supports-color
 
@@ -30723,7 +30729,7 @@ snapshots:
       - bare-buffer
       - react-native-b4a
 
-  tar@7.5.15:
+  tar@7.5.16:
     dependencies:
       '@isaacs/fs-minipass': 4.0.1
       chownr: 3.0.0
