@@ -1,0 +1,53 @@
+{
+  "name": "@coveo/create-ui",
+  "version": "0.0.0",
+  "description": "Scaffold a Coveo UI project (Atomic or Headless) from the official samples.",
+  "keywords": [
+    "atomic",
+    "coveo",
+    "create",
+    "headless",
+    "scaffold",
+    "template"
+  ],
+  "license": "Apache-2.0",
+  "author": "Coveo",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coveo/ui-kit.git",
+    "directory": "packages/create-ui"
+  },
+  "bin": {
+    "create-ui": "./dist/index.js"
+  },
+  "files": [
+    "dist/"
+  ],
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node ./dist/index.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "clean": "node ../../utils/ci/rm-rf.mjs dist",
+    "lint": "prettier --check ."
+  },
+  "dependencies": {
+    "@inquirer/prompts": "8.5.2",
+    "minimist": "1.2.8",
+    "tar": "7.5.16",
+    "yaml": "catalog:"
+  },
+  "devDependencies": {
+    "@types/minimist": "1.2.5",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "engines": {
+    "node": "^20.9.0 || ^22.11.0 || ^24.11.0"
+  }
+}
