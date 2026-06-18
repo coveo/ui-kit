@@ -17,6 +17,9 @@ export interface TurnsMenuProps {
 export function TurnsMenu({turns, activeTurnId, onSelectTurn}: TurnsMenuProps) {
   return (
     <nav className={styles.nav} aria-label="Conversation turns">
+      {turns.length === 0 && (
+        <p className={styles.empty}>No conversation turns yet</p>
+      )}
       {turns.length > 0 && (
         <ul className={styles.list}>
           {turns.map((turn) => {
