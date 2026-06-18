@@ -21,6 +21,14 @@ export const PROMPT_TEMPLATE_MAP: ReadonlyArray<{
     prompt: 'wetsuits',
     templateId: 'response4',
   },
+  {
+    prompt: 'surfboard care',
+    templateId: 'response6',
+  },
+  {
+    prompt: 'boating safety',
+    templateId: 'response7',
+  },
 ];
 
 export const FALLBACK_TEMPLATE_ID: TemplateId = 'response5';
