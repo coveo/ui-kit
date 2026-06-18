@@ -39,6 +39,8 @@ export default class QuanticGeneratedAnswerFollowUpInput extends LightningElemen
     }
 
     if (event.key === keys.ESC) {
+      event.stopPropagation();
+      event.preventDefault();
       this.refs.askFollowUpInput.blur();
     }
   }
