@@ -10,6 +10,7 @@ const PROMPT_SUGGESTIONS = [
   'wetsuits',
   'surfboard care',
   'boating safety',
+  'I like cold-water surfing. Compare wetsuits for it',
 ];
 
 interface Turn {
