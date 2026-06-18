@@ -15,6 +15,7 @@ import type {
 import {generateId} from '@/src/core/interface/utils/id-generator.js';
 import {createSearchEndpointThunk} from '@/src/core/internal/api/search-endpoint/search-endpoint-thunk.js';
 import {createQuerySuggestThunk} from '@/src/core/internal/api/query-suggest/query-suggest-thunk.js';
+import {getOrCreateSearchParametersSlice} from '@/src/core/internal/search-parameters/search-parameters-slice.js';
 
 export interface BuildSearchInterfaceOptions {
   engine: Engine;
@@ -27,6 +28,8 @@ export function buildSearchInterface(
   const fullEngine = getFullEngine(options.engine);
   const interfaceId = options.id ?? generateId();
   const scope: EndpointStateScope = {interfaceId};
+
+  fullEngine.adoptSlice(getOrCreateSearchParametersSlice(interfaceId));
 
   const factories: Record<Operations['search'], EndpointThunkFactory[]> = {
     search: [createSearchEndpointThunk],
