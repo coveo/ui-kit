@@ -46,7 +46,7 @@ import {
   normalizeGenerationStepName,
   type GenerationToolCallArgsGeneric,
   type GenerationToolCallArgsSearch,
-  GenerationToolCallType,
+  type GenerationToolCallType,
   GENERATION_TOOL_CALL_TYPES,
 } from './generated-answer-state.js';
 import {

@@ -21,7 +21,7 @@ import {
   normalizeGenerationStepName,
   type GenerationToolCallArgsGeneric,
   type GenerationToolCallArgsSearch,
-  GenerationToolCallType,
+  type GenerationToolCallType,
   GENERATION_TOOL_CALL_TYPES,
 } from '../generated-answer/generated-answer-state.js';
 import type {GeneratedContentFormat} from '../generated-answer/generated-response-format.js';
