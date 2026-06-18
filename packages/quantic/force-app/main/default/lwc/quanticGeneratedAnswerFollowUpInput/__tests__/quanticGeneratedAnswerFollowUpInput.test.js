@@ -12,14 +12,17 @@ jest.mock(
   {virtual: true}
 );
 jest.mock('c/quanticUtils', () => ({
-  keys: {ENTER: 'Enter'},
+  keys: {ENTER: 'Enter', ESC: 'Escape'},
 }));
 
 const selectors = {
-  input: 'lightning-input',
+  textarea: 'textarea',
   submitButton: 'lightning-button-icon',
-  inputContainer: '.follow-up-input__input-container',
+  container: '.follow-up-input__container',
+  expander: '.follow-up-input__expander',
 };
+
+const expandedClass = 'follow-up-input__expander--expanded';
 
 const createTestComponent = buildCreateTestComponent(
   QuanticGeneratedAnswerFollowUpInput,
@@ -31,17 +34,14 @@ describe('c-quantic-generated-answer-follow-up-input', () => {
     cleanup();
   });
 
-  it('should render the input and submit button', async () => {
+  it('should render the textarea and submit button', async () => {
     const element = createTestComponent();
     await flushPromises();
 
-    const input = element.shadowRoot.querySelector(selectors.input);
-    const submitButton = element.shadowRoot.querySelector(
-      selectors.submitButton
-    );
-
-    expect(input).not.toBeNull();
-    expect(submitButton).not.toBeNull();
+    expect(element.shadowRoot.querySelector(selectors.textarea)).not.toBeNull();
+    expect(
+      element.shadowRoot.querySelector(selectors.submitButton)
+    ).not.toBeNull();
   });
 
   describe('submitting a follow up', () => {
@@ -52,9 +52,9 @@ describe('c-quantic-generated-answer-follow-up-input', () => {
       const handler = jest.fn();
       element.addEventListener('quantic__submitfollowup', handler);
 
-      const input = element.shadowRoot.querySelector(selectors.input);
-      input.value = 'follow up question';
-      input.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter'}));
+      const textarea = element.shadowRoot.querySelector(selectors.textarea);
+      textarea.value = 'follow up question';
+      textarea.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter'}));
 
       expect(handler).toHaveBeenCalledTimes(1);
       expect(handler.mock.calls[0][0].detail.value).toBe('follow up question');
@@ -67,29 +67,40 @@ describe('c-quantic-generated-answer-follow-up-input', () => {
       const handler = jest.fn();
       element.addEventListener('quantic__submitfollowup', handler);
 
-      const input = element.shadowRoot.querySelector(selectors.input);
-      input.value = 'another question';
+      const textarea = element.shadowRoot.querySelector(selectors.textarea);
+      textarea.value = 'another question';
 
-      const submitButton = element.shadowRoot.querySelector(
-        selectors.submitButton
-      );
-      submitButton.click();
+      element.shadowRoot.querySelector(selectors.submitButton).click();
 
       expect(handler).toHaveBeenCalledTimes(1);
       expect(handler.mock.calls[0][0].detail.value).toBe('another question');
     });
 
-    it('should clear the input and blur it after a successful submit', async () => {
+    it('should clear the textarea after a successful submit', async () => {
       const element = createTestComponent();
       await flushPromises();
 
-      const input = element.shadowRoot.querySelector(selectors.input);
-      input.value = 'a question';
-      input.blur = jest.fn();
+      const textarea = element.shadowRoot.querySelector(selectors.textarea);
+      textarea.value = 'a question';
+      textarea.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter'}));
 
-      input.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter'}));
+      expect(textarea.value).toBe('');
+    });
 
-      expect(input.value).toBe('');
+    it('should collapse after a successful submit', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      const textarea = element.shadowRoot.querySelector(selectors.textarea);
+      textarea.dispatchEvent(new CustomEvent('focus'));
+      await flushPromises();
+
+      textarea.value = 'a question';
+      textarea.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter'}));
+      await flushPromises();
+
+      const expander = element.shadowRoot.querySelector(selectors.expander);
+      expect(expander.classList).not.toContain(expandedClass);
     });
   });
 
@@ -101,9 +112,9 @@ describe('c-quantic-generated-answer-follow-up-input', () => {
       const handler = jest.fn();
       element.addEventListener('quantic__submitfollowup', handler);
 
-      const input = element.shadowRoot.querySelector(selectors.input);
-      input.value = 'a question';
-      input.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter'}));
+      const textarea = element.shadowRoot.querySelector(selectors.textarea);
+      textarea.value = 'a question';
+      textarea.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter'}));
 
       expect(handler).not.toHaveBeenCalled();
     });
@@ -115,9 +126,9 @@ describe('c-quantic-generated-answer-follow-up-input', () => {
       const handler = jest.fn();
       element.addEventListener('quantic__submitfollowup', handler);
 
-      const input = element.shadowRoot.querySelector(selectors.input);
-      input.value = '   ';
-      input.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter'}));
+      const textarea = element.shadowRoot.querySelector(selectors.textarea);
+      textarea.value = '   ';
+      textarea.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter'}));
 
       expect(handler).not.toHaveBeenCalled();
     });
@@ -129,52 +140,95 @@ describe('c-quantic-generated-answer-follow-up-input', () => {
       const handler = jest.fn();
       element.addEventListener('quantic__submitfollowup', handler);
 
-      const input = element.shadowRoot.querySelector(selectors.input);
-      input.value = '';
-
-      const submitButton = element.shadowRoot.querySelector(
-        selectors.submitButton
-      );
-      submitButton.click();
+      const textarea = element.shadowRoot.querySelector(selectors.textarea);
+      textarea.value = '';
+      element.shadowRoot.querySelector(selectors.submitButton).click();
 
       expect(handler).not.toHaveBeenCalled();
     });
   });
 
-  describe('focus and blur CSS class toggling', () => {
-    it('should add the focused class when the input is focused', async () => {
+  describe('expandable input behaviour', () => {
+    it('should expand and add focused class on focus', async () => {
       const element = createTestComponent();
       await flushPromises();
 
-      const input = element.shadowRoot.querySelector(selectors.input);
-      input.dispatchEvent(new CustomEvent('focus'));
+      const textarea = element.shadowRoot.querySelector(selectors.textarea);
+      textarea.dispatchEvent(new CustomEvent('focus'));
       await flushPromises();
 
-      const container = element.shadowRoot.querySelector(
-        selectors.inputContainer
-      );
+      const expander = element.shadowRoot.querySelector(selectors.expander);
+      const container = element.shadowRoot.querySelector(selectors.container);
+      expect(expander.classList).toContain(expandedClass);
       expect(container.classList).toContain(
-        'follow-up-input__input-container--focused'
+        'follow-up-input__container--focused'
       );
     });
 
-    it('should remove the focused class when the input is blurred', async () => {
+    it('should collapse and remove focused class on blur', async () => {
       const element = createTestComponent();
       await flushPromises();
 
-      const input = element.shadowRoot.querySelector(selectors.input);
-      input.dispatchEvent(new CustomEvent('focus'));
+      const textarea = element.shadowRoot.querySelector(selectors.textarea);
+      textarea.dispatchEvent(new CustomEvent('focus'));
       await flushPromises();
 
-      input.dispatchEvent(new CustomEvent('blur'));
+      textarea.dispatchEvent(new CustomEvent('blur'));
       await flushPromises();
 
-      const container = element.shadowRoot.querySelector(
-        selectors.inputContainer
-      );
+      const expander = element.shadowRoot.querySelector(selectors.expander);
+      const container = element.shadowRoot.querySelector(selectors.container);
+      expect(expander.classList).not.toContain(expandedClass);
       expect(container.classList).not.toContain(
-        'follow-up-input__input-container--focused'
+        'follow-up-input__container--focused'
       );
+    });
+
+    it('should sync replica text on input', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      const textarea = element.shadowRoot.querySelector(selectors.textarea);
+      const expander = element.shadowRoot.querySelector(selectors.expander);
+
+      textarea.value = 'multi\nline\ntext';
+      textarea.dispatchEvent(new CustomEvent('input'));
+      await flushPromises();
+
+      expect(expander.dataset.replicatedValue).toBe('multi\nline\ntext');
+    });
+
+    it('should clear replica text after submit', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      const textarea = element.shadowRoot.querySelector(selectors.textarea);
+      const expander = element.shadowRoot.querySelector(selectors.expander);
+
+      textarea.value = 'some text';
+      textarea.dispatchEvent(new CustomEvent('input'));
+      await flushPromises();
+      expect(expander.dataset.replicatedValue).toBe('some text');
+
+      textarea.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter'}));
+      await flushPromises();
+
+      expect(expander.dataset.replicatedValue).toBeUndefined();
+    });
+
+    it('should collapse the textarea when the Escape key is pressed', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      const textarea = element.shadowRoot.querySelector(selectors.textarea);
+      textarea.blur = jest.fn();
+      textarea.dispatchEvent(new CustomEvent('focus'));
+      await flushPromises();
+
+      textarea.dispatchEvent(new KeyboardEvent('keydown', {key: 'Escape'}));
+      await flushPromises();
+
+      expect(textarea.blur).toHaveBeenCalled();
     });
   });
 });

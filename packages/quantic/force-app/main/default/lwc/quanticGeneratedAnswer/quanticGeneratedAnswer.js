@@ -35,9 +35,12 @@ import generatedAnswerTemplate from './templates/generatedAnswer.html';
 import loadingTemplate from './templates/loading.html';
 // @ts-ignore
 import retryPromptTemplate from './templates/retryPrompt.html';
+// @ts-ignore
+import conversationTemplate from './templates/conversation.html';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").GeneratedAnswer} GeneratedAnswer */
+/** @typedef {import("coveo").GeneratedAnswerWithFollowUps} GeneratedAnswerWithFollowUps */
 /** @typedef {import("coveo").GeneratedAnswerState} GeneratedAnswerState */
 /** @typedef {import("coveo").GeneratedAnswerCitation} GeneratedAnswerCitation */
 /** @typedef { 'neutral' | 'liked' | 'disliked'} FeedbackState */
@@ -101,6 +104,13 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    */
   @api answerConfigurationId;
   /**
+   * The unique identifier of the agent to use to generate the answer.
+   * @api
+   * @type {string}
+   * @default {undefined}
+   */
+  @api agentId;
+  /**
    * The maximum height (in px units) of the generated answer when it is collapsed.
    * @api
    * @type {number}
@@ -155,7 +165,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     noGeneratedAnswer,
   };
 
-  /** @type {GeneratedAnswer} */
+  /** @type { GeneratedAnswer | GeneratedAnswerWithFollowUps} */
   generatedAnswer;
   /** @type {GeneratedAnswerState} */
   state;
@@ -172,13 +182,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   /** @type {boolean} */
   hasInitializationError = false;
   /** @type {boolean} */
-  _areFollowUpsEnabled = false;
-  /** @type {boolean} */
   _exceedsMaximumHeight = false;
-  /** @type {boolean} */
-  _liked = false;
-  /** @type {boolean} */
-  _disliked = false;
   /** @type {number} */
   _maxCollapsedHeight = DEFAULT_COLLAPSED_HEIGHT;
 
@@ -207,6 +211,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
+    this.engine = engine;
     this.ariaLiveMessage = AriaLiveRegion('GeneratedAnswer', this);
     this.headless = getHeadlessBundle(this.engineId);
     this.generatedAnswer = this.buildHeadlessGeneratedAnswerController(engine);
@@ -237,6 +242,9 @@ export default class QuanticGeneratedAnswer extends LightningElement {
       },
       ...(this.answerConfigurationId && {
         answerConfigurationId: this.answerConfigurationId,
+      }),
+      ...(this.agentId?.trim() && {
+        agentId: this.agentId.trim(),
       }),
       fieldsToIncludeInCitations: this.citationFields,
     });
@@ -316,7 +324,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    * @param {string} id
    * @param {number} citationHoverTimeMs
    */
-  handleCitationHover = (id, citationHoverTimeMs) => {
+  logCitationHover = (id, citationHoverTimeMs) => {
     this.generatedAnswer.logCitationHover(id, citationHoverTimeMs);
   };
 
@@ -326,12 +334,8 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    */
   async handleLike(event) {
     event.stopPropagation();
-    if (!this._liked) {
-      this._liked = true;
-      this._disliked = false;
-      this.generatedAnswer.like?.();
-    }
-    if (!this.feedbackSubmitted) {
+    this.generatedAnswer.like?.(event.detail?.answerId);
+    if (!this.feedbackSubmitted && !this.areFollowUpsEnabled) {
       // @ts-ignore
       await FeedbackModalQna.open({
         size: 'small',
@@ -345,17 +349,27 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   /**
+   * handles hovering over a citation.
+   * @param {CustomEvent} event
+   */
+  handleCitationHover(event) {
+    event.stopPropagation();
+    const {citationId, citationHoverTimeMs, answerId} = event.detail;
+    this.generatedAnswer.logCitationHover(
+      citationId,
+      citationHoverTimeMs,
+      answerId
+    );
+  }
+
+  /**
    * handles disliking the generated answer.
    * @param {CustomEvent} event
    */
   async handleDislike(event) {
     event.stopPropagation();
-    if (!this._disliked) {
-      this._disliked = true;
-      this._liked = false;
-      this.generatedAnswer.dislike?.();
-    }
-    if (!this.feedbackSubmitted) {
+    this.generatedAnswer.dislike?.(event.detail?.answerId);
+    if (!this.feedbackSubmitted && !this.areFollowUpsEnabled) {
       // @ts-ignore
       await FeedbackModalQna.open({
         size: 'small',
@@ -381,9 +395,13 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     this.generatedAnswer.retry();
   }
 
+  /**
+   * handles copying the generated answer to the clipboard.
+   * @param {CustomEvent} event
+   */
   handleGeneratedAnswerCopyToClipboard = (event) => {
     event.stopPropagation();
-    this.generatedAnswer.logCopyToClipboard();
+    this.generatedAnswer.logCopyToClipboard(event.detail?.answerId);
   };
 
   handleGeneratedAnswerToggle = (event) => {
@@ -487,9 +505,37 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     return this.state.isVisible;
   }
 
+  /**
+   * Returns the generated answer controller narrowed to `GeneratedAnswerWithFollowUps`, or `null` if follow-ups are not available.
+   * @returns {GeneratedAnswerWithFollowUps | null}
+   */
+  get generateAnswerWithFollowUps() {
+    if (
+      !this.agentId ||
+      !this.generatedAnswer ||
+      !('askFollowUp' in this.generatedAnswer)
+    ) {
+      return null;
+    }
+    return /** @type {GeneratedAnswerWithFollowUps} */ (this.generatedAnswer);
+  }
+
   get areFollowUpsEnabled() {
-    // TODO SFINT-6786: Modify this getter to return the actual value from the state for follow-up enabled/agentId.
-    return this._areFollowUpsEnabled;
+    return (
+      this.generateAnswerWithFollowUps?.state.followUpAnswers?.isEnabled ===
+      true
+    );
+  }
+
+  get allGeneratedAnswers() {
+    const initialAnswer = {
+      ...this.state,
+      question: this.engine?.state.query?.q ?? '',
+    };
+    const followUpAnswers =
+      this.generateAnswerWithFollowUps?.state.followUpAnswers
+        ?.followUpAnswers ?? [];
+    return [initialAnswer, ...followUpAnswers];
   }
 
   get isCollapsibleEnabled() {
@@ -514,14 +560,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
         : 'generated-answer__answer--collapsed';
     }
     return `generated-answer__answer ${collapsedStateClass}`;
-  }
-
-  get contentSectionClass() {
-    const baseClass =
-      'generated-answer__content slds-p-top_medium slds-p-horizontal_large';
-    return this.areFollowUpsEnabled
-      ? `${baseClass} generated-answer__content--scrollable`
-      : baseClass;
   }
 
   get hasRetryableError() {
@@ -618,6 +656,17 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     return this.state?.isLoading;
   }
 
+  get isAnswerGenerationOngoing() {
+    const initialAnswerPending = this.isStreaming || this.isLoading;
+    const followUpAnswers =
+      this.generateAnswerWithFollowUps?.state?.followUpAnswers
+        ?.followUpAnswers ?? [];
+    return (
+      initialAnswerPending ||
+      followUpAnswers.some((answer) => answer.isStreaming || answer.isLoading)
+    );
+  }
+
   get isManualAnswerGeneration() {
     return this.state?.answerGenerationMode === 'manual';
   }
@@ -628,6 +677,15 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   setInitializationError() {
     this.hasInitializationError = true;
   }
+
+  /**
+   * Handles the submission of a follow-up question from the `QuanticGeneratedAnswerFollowUpInput` component.
+   * @param {CustomEvent} event - The custom event containing the follow-up question details.
+   * @returns {void}
+   */
+  handleFollowUpSubmit = (event) => {
+    this.generateAnswerWithFollowUps?.askFollowUp(event.detail.value);
+  };
 
   render() {
     if (this.hasInitializationError) {
@@ -642,6 +700,9 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     }
     if (this.hasRetryableError) {
       return retryPromptTemplate;
+    }
+    if (this.areFollowUpsEnabled) {
+      return conversationTemplate;
     }
     return generatedAnswerTemplate;
   }

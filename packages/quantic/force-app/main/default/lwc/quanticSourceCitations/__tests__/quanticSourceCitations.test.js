@@ -7,13 +7,17 @@ import QuanticSourceCitations from '../quanticSourceCitations';
 jest.mock('c/quanticHeadlessLoader');
 
 let isInitialized = false;
+const mockBuildInteractiveCitation = jest.fn(
+  (engine, {options}) => options.citation
+);
+const mockEngine = {};
 
 // @ts-ignore
 mockHeadlessLoader.initializeWithHeadless = (element, engineId, initialize) => {
   if (element instanceof QuanticSourceCitations) {
     if (!isInitialized) {
       isInitialized = true;
-      initialize();
+      initialize(mockEngine);
     }
   }
 };
@@ -21,7 +25,7 @@ mockHeadlessLoader.initializeWithHeadless = (element, engineId, initialize) => {
 // @ts-ignore
 mockHeadlessLoader.getHeadlessBundle = () => {
   return {
-    buildInteractiveCitation: jest.fn((engine, {options}) => options.citation),
+    buildInteractiveCitation: mockBuildInteractiveCitation,
   };
 };
 
@@ -43,9 +47,11 @@ const mockCitations = [
     text: 'text 02',
   },
 ];
+const mockAnswerId = 'test-answer-id';
 
 const defaultOptions = {
   citations: mockCitations,
+  answerId: mockAnswerId,
 };
 
 const selectors = {
@@ -101,6 +107,20 @@ describe('c-quantic-source-citations', () => {
         expect(citationElement.interactiveCitation).toEqual(
           mockCitations[index]
         );
+      });
+    });
+
+    it('should call buildInteractiveCitation for each citation with the correct parameters', async () => {
+      createTestComponent();
+      await flushPromises();
+
+      expect(mockBuildInteractiveCitation).toHaveBeenCalledTimes(
+        mockCitations.length
+      );
+      mockCitations.forEach((citation) => {
+        expect(mockBuildInteractiveCitation).toHaveBeenCalledWith(mockEngine, {
+          options: {citation, answerId: mockAnswerId},
+        });
       });
     });
 

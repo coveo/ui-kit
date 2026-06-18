@@ -52,7 +52,10 @@ export const createHeadAnswerStrategy = (
       dispatch(setFollowUpAnswersConversationId(event.threadId));
       dispatch(clearFollowUpAnswersConversationToken());
     },
-    onStepStartedEvent: ({event}) => {
+    onStepStartedEvent: ({event, agent}) => {
+      if (agent.isRunning === false) {
+        return;
+      }
       dispatch(
         startStep({
           name: event.stepName as GenerationStepName,
@@ -60,7 +63,10 @@ export const createHeadAnswerStrategy = (
         })
       );
     },
-    onStepFinishedEvent: ({event}) => {
+    onStepFinishedEvent: ({event, agent}) => {
+      if (agent.isRunning === false) {
+        return;
+      }
       dispatch(
         finishStep({
           name: event.stepName as GenerationStepName,
@@ -68,7 +74,10 @@ export const createHeadAnswerStrategy = (
         })
       );
     },
-    onToolCallStartEvent: ({event}) => {
+    onToolCallStartEvent: ({event, agent}) => {
+      if (agent.isRunning === false) {
+        return;
+      }
       const {toolCallName, toolCallId, timestamp} = event;
       dispatch(
         startToolCall({
@@ -78,7 +87,10 @@ export const createHeadAnswerStrategy = (
         })
       );
     },
-    onToolCallEndEvent: ({event}) => {
+    onToolCallEndEvent: ({event, agent}) => {
+      if (agent.isRunning === false) {
+        return;
+      }
       const {toolCallId, timestamp} = event;
       dispatch(
         finishToolCall({
@@ -87,7 +99,10 @@ export const createHeadAnswerStrategy = (
         })
       );
     },
-    onToolCallArgsEvent: ({event}) => {
+    onToolCallArgsEvent: ({event, agent}) => {
+      if (agent.isRunning === false) {
+        return;
+      }
       const {toolCallId, delta} = event;
       try {
         // In AG-UI protocol, a tool call can stream a delta (a partial object) of tool call args, but we're enforcing
@@ -119,13 +134,19 @@ export const createHeadAnswerStrategy = (
         );
       }
     },
-    onTextMessageContentEvent: ({event}) => {
+    onTextMessageContentEvent: ({event, agent}) => {
+      if (agent.isRunning === false) {
+        return;
+      }
       if (event.delta.length > 0) {
         answerHasText = true;
       }
       dispatch(updateMessage({textDelta: event.delta}));
     },
-    onCustomEvent: ({event}) => {
+    onCustomEvent: ({event, agent}) => {
+      if (agent.isRunning === false) {
+        return;
+      }
       const {name, value} = event;
       switch (name) {
         case 'header': {
@@ -148,7 +169,10 @@ export const createHeadAnswerStrategy = (
         }
       }
     },
-    onRunErrorEvent: ({event}) => {
+    onRunErrorEvent: ({event, agent}) => {
+      if (agent.isRunning === false) {
+        return;
+      }
       const mappedCode = mapRunErrorCode(event.code);
       dispatch(
         updateError({
@@ -157,7 +181,10 @@ export const createHeadAnswerStrategy = (
         })
       );
     },
-    onRunFinishedEvent: ({event}) => {
+    onRunFinishedEvent: ({event, agent}) => {
+      if (agent.isRunning === false) {
+        return;
+      }
       const answerGenerated = event.result?.completionReason === 'ANSWERED';
       const answerTextIsEmpty = answerGenerated ? !answerHasText : undefined;
       dispatch(setIsAnswerGenerated(answerGenerated));

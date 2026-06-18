@@ -33,9 +33,15 @@ export default class QuanticGeneratedAnswerFollowUpInput extends LightningElemen
       return;
     }
 
-    if (event.key === keys.ENTER) {
+    if (event.key === keys.ENTER && !event.shiftKey) {
       event.preventDefault();
       this.handleSubmitFollowUp();
+    }
+
+    if (event.key === keys.ESC) {
+      event.stopPropagation();
+      event.preventDefault();
+      this.refs.askFollowUpInput.blur();
     }
   }
 
@@ -48,14 +54,46 @@ export default class QuanticGeneratedAnswerFollowUpInput extends LightningElemen
     }
     this.sendSubmitFollowUpEvent();
     this.refs.askFollowUpInput.value = '';
+    this.syncTextWithReplica();
+    this.collapse();
   }
 
   handleFocus() {
     this._focused = true;
+    this.syncTextWithReplica();
+    this.expand();
   }
 
   handleBlur() {
     this._focused = false;
+    this.collapse();
+  }
+
+  handleInput() {
+    this.expand();
+    this.syncTextWithReplica();
+  }
+
+  /**
+   * Syncs the textarea value with the expander's replicated value for seamless CSS transitions.
+   */
+  syncTextWithReplica() {
+    const expander = this.refs.expander;
+    if (expander) {
+      expander.dataset.replicatedValue = this.refs.askFollowUpInput.value;
+    }
+  }
+
+  expand() {
+    this.refs.expander?.classList.add('follow-up-input__expander--expanded');
+  }
+
+  collapse() {
+    const expander = this.refs.expander;
+    if (expander) {
+      expander.classList.remove('follow-up-input__expander--expanded');
+      delete expander.dataset.replicatedValue;
+    }
   }
 
   /**
@@ -74,6 +112,6 @@ export default class QuanticGeneratedAnswerFollowUpInput extends LightningElemen
   }
 
   get inputContainerClasses() {
-    return `follow-up-input__input-container slds-box slds-grid slds-box_xx-small ${this._focused ? 'follow-up-input__input-container--focused' : ''}`;
+    return `follow-up-input__container slds-is-relative slds-grid slds-box slds-p-around_none ${this._focused ? 'follow-up-input__container--focused' : ''}`;
   }
 }
