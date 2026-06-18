@@ -23,6 +23,8 @@ The mock matches the `message` field from the request body (case-insensitive) an
 | `What should I pack for a snorkeling trip?`                                | response2.txt | Product carousels by category                      |
 | `kayaks`                                                                   | response3.txt | Commerce search results for kayaks                 |
 | `wetsuits`                                                                 | response4.txt | Commerce search results for wetsuits               |
+| `surfboard care`                                                           | response6.txt | Search API results for surfboard care              |
+| `boating safety`                                                           | response7.txt | Search API results for boating safety              |
 | _(anything else)_                                                          | response5.txt | Fallback response                                  |
 
 ## Route Matching

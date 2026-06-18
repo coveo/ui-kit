@@ -21,6 +21,18 @@ export const PROMPT_TEMPLATE_MAP: ReadonlyArray<{
     prompt: 'wetsuits',
     templateId: 'response4',
   },
+  {
+    prompt: 'surfboard care',
+    templateId: 'response6',
+  },
+  {
+    prompt: 'boating safety',
+    templateId: 'response7',
+  },
+  {
+    prompt: 'i like cold-water surfing. compare wetsuits for it',
+    templateId: 'response8',
+  },
 ];
 
 export const FALLBACK_TEMPLATE_ID: TemplateId = 'response5';

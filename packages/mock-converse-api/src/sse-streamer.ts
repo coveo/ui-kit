@@ -1,6 +1,8 @@
 import type http from 'node:http';
 import {setCorsHeaders} from './cors.js';
 
+const DEFAULT_DELAY_MS = 25;
+
 export function streamSSEResponse(
   res: http.ServerResponse,
   content: string
@@ -20,7 +22,7 @@ export function streamSSEResponse(
     if (index < events.length) {
       res.write(events[index]);
       index++;
-      setTimeout(writeNext, 25);
+      setTimeout(writeNext, DEFAULT_DELAY_MS);
     } else {
       res.end();
     }

@@ -65,8 +65,11 @@ export const buildConverseController = (
       initAgentResponse(turnId) {
         fullEngine.mutate(actions.initAgentResponse({turnId}));
       },
-      appendMessage(turnId, message) {
-        fullEngine.mutate(actions.appendMessage({turnId, message}));
+      startMessage(turnId, role) {
+        fullEngine.mutate(actions.startMessage({turnId, role}));
+      },
+      appendMessageDelta(turnId, delta) {
+        fullEngine.mutate(actions.appendMessageDelta({turnId, delta}));
       },
       appendSurface(turnId, surface) {
         fullEngine.mutate(actions.appendSurface({turnId, surface}));
