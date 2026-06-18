@@ -785,7 +785,7 @@ describe('generated answer slice', () => {
                 toolCallName: 'search',
                 toolCallId: 'tc-1',
                 startedAt: 10,
-                status: 'active',
+                status: 'active' as const,
               },
             ],
           },
@@ -816,7 +816,12 @@ describe('generated answer slice', () => {
             startedAt: 1,
             finishedAt: 2,
             toolCalls: [
-              {toolCallName: 'search', toolCallId: 'tc-1', startedAt: 10},
+              {
+                toolCallName: 'search',
+                toolCallId: 'tc-1',
+                startedAt: 10,
+                status: 'completed' as const,
+              },
             ],
           },
         ],
@@ -841,7 +846,12 @@ describe('generated answer slice', () => {
             status: 'active' as const,
             startedAt: 1,
             toolCalls: [
-              {toolCallName: 'search', toolCallId: 'tc-1', startedAt: 10},
+              {
+                toolCallName: 'search',
+                toolCallId: 'tc-1',
+                startedAt: 10,
+                status: 'active' as const,
+              },
             ],
           },
         ],
@@ -868,7 +878,12 @@ describe('generated answer slice', () => {
             status: 'active' as const,
             startedAt: 1,
             toolCalls: [
-              {toolCallName: 'search', toolCallId: 'tc-1', startedAt: 10},
+              {
+                toolCallName: 'search',
+                toolCallId: 'tc-1',
+                startedAt: 10,
+                status: 'active' as const,
+              },
             ],
           },
         ],
@@ -880,6 +895,9 @@ describe('generated answer slice', () => {
       );
 
       expect(finalState.generationSteps[0].toolCalls![0].finishedAt).toBe(200);
+      expect(finalState.generationSteps[0].toolCalls![0].status).toBe(
+        'completed'
+      );
     });
 
     it('should not modify state when no active step exists', () => {
@@ -892,7 +910,12 @@ describe('generated answer slice', () => {
             startedAt: 1,
             finishedAt: 2,
             toolCalls: [
-              {toolCallName: 'search', toolCallId: 'tc-1', startedAt: 10},
+              {
+                toolCallName: 'search',
+                toolCallId: 'tc-1',
+                startedAt: 10,
+                status: 'completed' as const,
+              },
             ],
           },
         ],
@@ -906,6 +929,9 @@ describe('generated answer slice', () => {
       expect(
         finalState.generationSteps[0].toolCalls![0].finishedAt
       ).toBeUndefined();
+      expect(finalState.generationSteps[0].toolCalls![0].status).toBe(
+        'completed'
+      );
     });
 
     it('should not modify state when toolCallId does not match', () => {
@@ -917,7 +943,12 @@ describe('generated answer slice', () => {
             status: 'active' as const,
             startedAt: 1,
             toolCalls: [
-              {toolCallName: 'search', toolCallId: 'tc-1', startedAt: 10},
+              {
+                toolCallName: 'search',
+                toolCallId: 'tc-1',
+                startedAt: 10,
+                status: 'active' as const,
+              },
             ],
           },
         ],
@@ -931,6 +962,7 @@ describe('generated answer slice', () => {
       expect(
         finalState.generationSteps[0].toolCalls![0].finishedAt
       ).toBeUndefined();
+      expect(finalState.generationSteps[0].toolCalls![0].status).toBe('active');
     });
   });
 });

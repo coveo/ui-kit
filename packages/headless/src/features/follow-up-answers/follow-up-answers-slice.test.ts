@@ -1278,7 +1278,7 @@ describe('follow-up answers slice', () => {
   });
 
   describe('#followUpToolCallFinished', () => {
-    it('should set finishedAt on the matching tool call', () => {
+    it('should set finishedAt and set status to "completed" on the matching tool call', () => {
       state.followUpAnswers = [
         {
           ...createInitialFollowUpAnswer('Question?'),
@@ -1314,6 +1314,9 @@ describe('follow-up answers slice', () => {
         finalState.followUpAnswers[0].generationSteps[0].toolCalls![0]
           .finishedAt
       ).toBe(200);
+      expect(
+        finalState.followUpAnswers[0].generationSteps[0].toolCalls![0].status
+      ).toBe('completed');
     });
 
     it('should not modify state when answerId does not match', () => {

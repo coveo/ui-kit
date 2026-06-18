@@ -18,7 +18,9 @@ export function normalizeGenerationStepName(name: string): GenerationStepName {
 }
 
 type GenerationToolCallStatus = 'active' | 'completed';
-export type GenerationToolCallType = 'search' | 'generic';
+export type GenerationToolCallType =
+  (typeof GENERATION_TOOL_CALL_TYPES)[number];
+export const GENERATION_TOOL_CALL_TYPES = ['search', 'generic'] as const;
 
 export interface GenerationToolCallArgsGeneric {
   raw: string;

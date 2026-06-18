@@ -46,6 +46,8 @@ import {
   normalizeGenerationStepName,
   type GenerationToolCallArgsGeneric,
   type GenerationToolCallArgsSearch,
+  GenerationToolCallType,
+  GENERATION_TOOL_CALL_TYPES,
 } from './generated-answer-state.js';
 import {
   type GeneratedContentFormat,
@@ -277,12 +279,15 @@ export const toolCallArgs = createAction(
   (payload: {
     toolCallId: string;
     args: GenerationToolCallArgsSearch | GenerationToolCallArgsGeneric;
-    type: string;
+    type: GenerationToolCallType;
   }) =>
     validatePayload(payload, {
       toolCallId: requiredNonEmptyString,
       args: new RecordValue({options: {required: true}}),
-      type: requiredNonEmptyString,
+      type: new StringValue({
+        required: true,
+        constrainTo: GENERATION_TOOL_CALL_TYPES,
+      }),
     })
 );
 

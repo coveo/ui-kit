@@ -85,8 +85,8 @@ export const createFollowUpStrategy = (
     onToolCallArgsEvent: ({event}) => {
       const {toolCallId, delta} = event;
       try {
-        // In AG-UI protocol, a tool call can stream a delta (a partial object) of tool call args, but we're enforcing that the delta
-        // is a complete JSON object representing the tool call args for simplicity and ease of use in the UI.
+        // In AG-UI protocol, a tool call can stream a delta (a partial object) of tool call args, but we're enforcing
+        // in the back-end that the delta is a complete JSON object representing the tool call args for simplicity and ease of use in the UI.
         const parsedArgs = JSON.parse(delta);
         if (typeof parsedArgs?.q === 'string') {
           dispatch(
