@@ -223,6 +223,7 @@ describe('createHeadAnswerStrategy', () => {
     it('dispatches startToolCall when a tool call starts', () => {
       strategy.onToolCallStartEvent!({
         event: {toolCallName: 'search', toolCallId: 'tc-1', timestamp: 100},
+        agent: {isRunning: true},
       } as any);
 
       expect(dispatch).toHaveBeenCalledWith(
@@ -239,6 +240,7 @@ describe('createHeadAnswerStrategy', () => {
 
       strategy.onToolCallStartEvent!({
         event: {toolCallName: 'search', toolCallId: 'tc-2'},
+        agent: {isRunning: true},
       } as any);
 
       expect(dispatch).toHaveBeenCalledWith(
@@ -255,6 +257,7 @@ describe('createHeadAnswerStrategy', () => {
     it('dispatches finishToolCall when a tool call ends', () => {
       strategy.onToolCallEndEvent!({
         event: {toolCallId: 'tc-1', timestamp: 200},
+        agent: {isRunning: true},
       } as any);
 
       expect(dispatch).toHaveBeenCalledWith(
@@ -267,6 +270,7 @@ describe('createHeadAnswerStrategy', () => {
 
       strategy.onToolCallEndEvent!({
         event: {toolCallId: 'tc-1'},
+        agent: {isRunning: true},
       } as any);
 
       expect(dispatch).toHaveBeenCalledWith(
@@ -279,6 +283,7 @@ describe('createHeadAnswerStrategy', () => {
     it('dispatches toolCallArgs with type "search" when delta contains a q field', () => {
       strategy.onToolCallArgsEvent!({
         event: {toolCallId: 'tc-1', delta: '{"q":"test query"}'},
+        agent: {isRunning: true},
       } as any);
 
       expect(dispatch).toHaveBeenCalledWith(
@@ -293,6 +298,7 @@ describe('createHeadAnswerStrategy', () => {
     it('dispatches toolCallArgs with type "generic" when delta has no q field', () => {
       strategy.onToolCallArgsEvent!({
         event: {toolCallId: 'tc-1', delta: '{"foo":"bar"}'},
+        agent: {isRunning: true},
       } as any);
 
       expect(dispatch).toHaveBeenCalledWith(
@@ -309,6 +315,7 @@ describe('createHeadAnswerStrategy', () => {
 
       strategy.onToolCallArgsEvent!({
         event: {toolCallId: 'tc-1', delta: 'not-json'},
+        agent: {isRunning: true},
       } as any);
 
       expect(dispatch).toHaveBeenCalledWith(
