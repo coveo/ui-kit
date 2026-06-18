@@ -2,6 +2,7 @@
 // @ts-ignore
 import {createElement} from 'lwc';
 import QuanticGeneratedAnswer from 'c/quanticGeneratedAnswer';
+import FeedbackModalQna from 'c/quanticFeedbackModalQna';
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
 
 let mockAnswerHeight = 250;
@@ -25,6 +26,12 @@ const exampleCitations = [
 const exampleEngineId = 'example engine id';
 const exampleAnswerId = 'example answer id';
 jest.mock('c/quanticHeadlessLoader');
+jest.mock('c/quanticFeedbackModalQna', () => ({
+  __esModule: true,
+  default: {
+    open: jest.fn(() => Promise.resolve()),
+  },
+}));
 jest.mock('c/quanticUtils', () => ({
   AriaLiveRegion: jest.fn(() => ({
     dispatchMessage: jest.fn(),
@@ -95,6 +102,9 @@ const selectors = {
   generatedAnswerNoAnswerMessage:
     '[data-testid="generated-answer__no-answer-message"]',
   generatedAnswerCitations: 'c-quantic-source-citations',
+  generatedAnswerThread: 'c-quantic-generated-answer-thread',
+  generatedAnswerFollowUpInput: 'c-quantic-generated-answer-follow-up-input',
+  generatedAnswerFeedback: 'c-quantic-feedback',
   loadingSpinner: 'lightning-spinner',
 };
 
@@ -103,7 +113,10 @@ const initialSearchStatusState = {
 };
 let searchStatusState = initialSearchStatusState;
 
-const initialGeneratedAnswerState = {isVisible: true, cannotAnswer: false};
+const initialGeneratedAnswerState = {
+  isVisible: true,
+  cannotAnswer: false,
+};
 let generatedAnswerState = initialGeneratedAnswerState;
 
 const functionsMocks = {
@@ -111,6 +124,10 @@ const functionsMocks = {
     state: generatedAnswerState,
     subscribe: functionsMocks.generatedAnswerStateSubscriber,
     retry: functionsMocks.retry,
+    askFollowUp: functionsMocks.askFollowUp,
+    like: functionsMocks.like,
+    dislike: functionsMocks.dislike,
+    closeFeedbackModal: functionsMocks.closeFeedbackModal,
   })),
   buildSearchStatus: jest.fn(() => ({
     state: searchStatusState,
@@ -127,6 +144,10 @@ const functionsMocks = {
   generatedAnswerStateUnsubscriber: jest.fn(),
   searchStatusStateUnsubscriber: jest.fn(),
   retry: jest.fn(),
+  askFollowUp: jest.fn(),
+  like: jest.fn(),
+  dislike: jest.fn(),
+  closeFeedbackModal: jest.fn(),
 };
 
 /**
@@ -145,8 +166,10 @@ function flushPromises() {
   return new Promise((resolve) => setTimeout(resolve, 0));
 }
 
+const exampleQuery = 'example query';
 const exampleEngine = {
   id: 'dummy engine',
+  state: {query: {q: exampleQuery}},
 };
 let isInitialized = false;
 const defaultAnswerHeight = 250;
@@ -336,6 +359,36 @@ describe('c-quantic-generated-answer', () => {
           expect.not.objectContaining({
             answerConfigurationId: expect.any(String),
           })
+        );
+      });
+    });
+
+    describe('when the agent id property is passed to the component', () => {
+      it('should initialize the controller with the correct agent id value', async () => {
+        const exampleAgentId = 'example agent id';
+        createTestComponent({
+          ...defaultOptions,
+          agentId: exampleAgentId,
+        });
+        await flushPromises();
+
+        expect(functionsMocks.buildGeneratedAnswer).toHaveBeenCalledTimes(1);
+        expect(functionsMocks.buildGeneratedAnswer).toHaveBeenCalledWith(
+          exampleEngine,
+          expect.objectContaining({agentId: exampleAgentId})
+        );
+      });
+    });
+
+    describe('when the agent id property is not passed to the component', () => {
+      it('should initialize the controller without the agent id value', async () => {
+        createTestComponent();
+        await flushPromises();
+
+        expect(functionsMocks.buildGeneratedAnswer).toHaveBeenCalledTimes(1);
+        expect(functionsMocks.buildGeneratedAnswer).toHaveBeenCalledWith(
+          exampleEngine,
+          expect.not.objectContaining({agentId: expect.any(String)})
         );
       });
     });
@@ -792,25 +845,119 @@ describe('c-quantic-generated-answer', () => {
       });
 
       describe('when follow-ups are enabled', () => {
-        // TODO SFINT-6786: Add test cases to cover the behavior of the component when follow-ups are enabled based on the actual implementation of the follow-up feature in the state.
-        it.skip('should render the content section with the scrollable class and ignore the collapsible feature', async () => {
-          mockAnswerHeight = defaultAnswerHeight + 100;
-          const element = createTestComponent({
-            ...defaultOptions,
-            collapsible: true,
-          });
+        const exampleAgentId = 'example agent id';
+        const exampleFollowUpAnswers = [
+          {
+            answer: 'follow-up answer',
+            answerId: 'answer-id-2',
+            question: 'follow-up question',
+          },
+        ];
+        const followUpOptions = {...defaultOptions, agentId: exampleAgentId};
+
+        beforeEach(() => {
+          generatedAnswerState = {
+            ...initialGeneratedAnswerState,
+            answer: exampleAnswer,
+            answerId: 'answer-id-1',
+            followUpAnswers: {
+              isEnabled: true,
+              followUpAnswers: exampleFollowUpAnswers,
+            },
+          };
+        });
+
+        it('should render the conversation thread and follow-up input instead of the single answer body', async () => {
+          const element = createTestComponent(followUpOptions);
           await flushPromises();
 
-          const generatedAnswerBody = element.shadowRoot.querySelector(
+          const thread = element.shadowRoot.querySelector(
+            selectors.generatedAnswerThread
+          );
+          const followUpInput = element.shadowRoot.querySelector(
+            selectors.generatedAnswerFollowUpInput
+          );
+          const singleAnswerBody = element.shadowRoot.querySelector(
             selectors.generatedAnswerBody
           );
 
-          expect(generatedAnswerBody).not.toBeNull();
-          expect(
-            generatedAnswerBody.classList.contains(
-              'generated-answer__content--scrollable'
-            )
-          ).toBe(true);
+          expect(thread).not.toBeNull();
+          expect(followUpInput).not.toBeNull();
+          expect(singleAnswerBody).toBeNull();
+        });
+
+        it('should display the scrollable container', async () => {
+          const element = createTestComponent(followUpOptions);
+          await flushPromises();
+
+          const scrollableContainer = element.shadowRoot.querySelector(
+            '.generated-answer__content--scrollable'
+          );
+
+          expect(scrollableContainer).not.toBeNull();
+        });
+
+        it('should pass the engine, citation anchoring and the combined initial and follow-up answers to the thread', async () => {
+          const element = createTestComponent({
+            ...followUpOptions,
+            disableCitationAnchoring: true,
+          });
+          await flushPromises();
+
+          const thread = element.shadowRoot.querySelector(
+            selectors.generatedAnswerThread
+          );
+
+          expect(thread.engineId).toBe(exampleEngineId);
+          expect(thread.disableCitationAnchoring).toBe(true);
+          expect(thread.generatedAnswers).toEqual([
+            expect.objectContaining({
+              answer: exampleAnswer,
+              question: exampleQuery,
+            }),
+            ...exampleFollowUpAnswers,
+          ]);
+        });
+
+        it('should ask a follow-up question when the follow-up input emits a submit event', async () => {
+          const element = createTestComponent(followUpOptions);
+          await flushPromises();
+
+          const followUpInput = element.shadowRoot.querySelector(
+            selectors.generatedAnswerFollowUpInput
+          );
+          const exampleFollowUpQuestion = 'example follow-up question';
+          followUpInput.dispatchEvent(
+            new CustomEvent('quantic__submitfollowup', {
+              detail: {value: exampleFollowUpQuestion},
+            })
+          );
+
+          expect(functionsMocks.askFollowUp).toHaveBeenCalledTimes(1);
+          expect(functionsMocks.askFollowUp).toHaveBeenCalledWith(
+            exampleFollowUpQuestion
+          );
+        });
+
+        it('should disable the follow-up submit button while an answer is being generated', async () => {
+          generatedAnswerState = {...generatedAnswerState, isStreaming: true};
+          const element = createTestComponent(followUpOptions);
+          await flushPromises();
+
+          const followUpInput = element.shadowRoot.querySelector(
+            selectors.generatedAnswerFollowUpInput
+          );
+
+          expect(followUpInput.submitButtonDisabled).toBe(true);
+        });
+
+        it('should ignore the collapsible feature and not render the single answer collapse toggle', async () => {
+          mockAnswerHeight = defaultAnswerHeight + 100;
+          const element = createTestComponent({
+            ...followUpOptions,
+            collapsible: true,
+          });
+          await flushPromises();
 
           const generatedAnswerCollapseToggle =
             element.shadowRoot.querySelector(
@@ -822,20 +969,19 @@ describe('c-quantic-generated-answer', () => {
       });
 
       describe('when follow-ups are not enabled', () => {
-        it('should not render the content section with the scrollable class', async () => {
+        it('should render the single answer body instead of the conversation thread', async () => {
           const element = createTestComponent();
           await flushPromises();
 
-          const generatedAnswerBody = element.shadowRoot.querySelector(
+          const singleAnswerBody = element.shadowRoot.querySelector(
             selectors.generatedAnswerBody
           );
+          const thread = element.shadowRoot.querySelector(
+            selectors.generatedAnswerThread
+          );
 
-          expect(generatedAnswerBody).not.toBeNull();
-          expect(
-            generatedAnswerBody.classList.contains(
-              'generated-answer__content--scrollable'
-            )
-          ).toBe(false);
+          expect(singleAnswerBody).not.toBeNull();
+          expect(thread).toBeNull();
         });
       });
     });
@@ -1237,5 +1383,108 @@ describe('c-quantic-generated-answer', () => {
         });
       });
     });
+  });
+
+  describe('the generated answer feedback', () => {
+    const exampleAnswer = 'answer generated successfully';
+    const exampleAgentId = 'example agent id';
+
+    describe.each([
+      {
+        action: 'like',
+        feedbackEvent: 'quantic__like',
+        threadEvent: 'quantic__generatedanswerlike',
+        controllerMethod: 'like',
+      },
+      {
+        action: 'dislike',
+        feedbackEvent: 'quantic__dislike',
+        threadEvent: 'quantic__generatedanswerdislike',
+        controllerMethod: 'dislike',
+      },
+    ])(
+      'when the user clicks the $action button',
+      ({feedbackEvent, threadEvent, controllerMethod}) => {
+        describe('when follow-ups are not enabled', () => {
+          beforeEach(() => {
+            generatedAnswerState = {
+              ...initialGeneratedAnswerState,
+              isStreaming: false,
+              answer: exampleAnswer,
+              answerContentFormat: 'text/markdown',
+              answerId: exampleAnswerId,
+              citations: exampleCitations,
+            };
+            mockSuccessfulHeadlessInitialization();
+            prepareHeadlessState();
+          });
+
+          afterAll(() => {
+            generatedAnswerState = initialGeneratedAnswerState;
+          });
+
+          it('should call the controller and open the feedback modal', async () => {
+            const element = createTestComponent();
+            await flushPromises();
+
+            const feedback = element.shadowRoot.querySelector(
+              selectors.generatedAnswerFeedback
+            );
+            feedback.dispatchEvent(
+              new CustomEvent(feedbackEvent, {
+                detail: {answerId: exampleAnswerId},
+              })
+            );
+            await flushPromises();
+
+            expect(functionsMocks[controllerMethod]).toHaveBeenCalledTimes(1);
+            expect(functionsMocks[controllerMethod]).toHaveBeenCalledWith(
+              exampleAnswerId
+            );
+            expect(FeedbackModalQna.open).toHaveBeenCalledTimes(1);
+          });
+        });
+
+        describe('when follow-ups are enabled', () => {
+          beforeEach(() => {
+            generatedAnswerState = {
+              ...initialGeneratedAnswerState,
+              answer: exampleAnswer,
+              followUpAnswers: {isEnabled: true, followUpAnswers: []},
+            };
+            mockSuccessfulHeadlessInitialization();
+            prepareHeadlessState();
+          });
+
+          afterAll(() => {
+            generatedAnswerState = initialGeneratedAnswerState;
+          });
+
+          it('should call the controller without opening the feedback modal', async () => {
+            const element = createTestComponent({
+              ...defaultOptions,
+              agentId: exampleAgentId,
+            });
+            await flushPromises();
+
+            const thread = element.shadowRoot.querySelector(
+              selectors.generatedAnswerThread
+            );
+            thread.dispatchEvent(
+              new CustomEvent(threadEvent, {
+                detail: {answerId: exampleAnswerId},
+              })
+            );
+            await flushPromises();
+
+            expect(functionsMocks[controllerMethod]).toHaveBeenCalledTimes(1);
+            expect(functionsMocks[controllerMethod]).toHaveBeenCalledWith(
+              exampleAnswerId
+            );
+            expect(FeedbackModalQna.open).not.toHaveBeenCalled();
+          });
+        });
+      }
+    );
   });
 });

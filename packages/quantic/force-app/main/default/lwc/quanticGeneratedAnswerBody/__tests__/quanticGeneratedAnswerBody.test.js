@@ -67,6 +67,7 @@ const selectors = {
   error: '[data-testid="generated-answer-body__error"]',
   noAnswer: '[data-testid="generated-answer-body__no-answer-message"]',
   content: 'c-quantic-generated-answer-content',
+  streamOfThought: 'c-quantic-generated-answer-stream-of-thought',
 };
 
 const createTestComponent = buildCreateTestComponent(
@@ -80,7 +81,7 @@ describe('c-quantic-generated-answer-body', () => {
     cleanup();
   });
 
-  it('should pass answer and answerContentFormat to the QuanticGeneratedAnswerContent component', async () => {
+  it('should pass the answer, answerContentFormat, engineId, and answerId properties to the QuanticGeneratedAnswerContent component', async () => {
     const element = createTestComponent();
     await flushPromises();
 
@@ -90,6 +91,42 @@ describe('c-quantic-generated-answer-body', () => {
     expect(content.answerContentFormat).toBe(
       defaultOptions.generatedAnswer.answerContentFormat
     );
+    expect(content.engineId).toBe(defaultOptions.engineId);
+    expect(content.answerId).toBe(defaultOptions.generatedAnswer.answerId);
+  });
+
+  it('should pass agentSteps and isStreaming to the QuanticGeneratedAnswerStreamOfThought component', async () => {
+    const generationSteps = [{id: 'step-1'}, {id: 'step-2'}];
+    const element = createTestComponent({
+      ...defaultOptions,
+      generatedAnswer: {
+        ...defaultOptions.generatedAnswer,
+        // @ts-ignore
+        generationSteps,
+        isStreaming: true,
+      },
+    });
+    await flushPromises();
+
+    const streamOfThought = element.shadowRoot.querySelector(
+      selectors.streamOfThought
+    );
+
+    expect(streamOfThought).not.toBeNull();
+    expect(streamOfThought.agentSteps).toEqual(generationSteps);
+    expect(streamOfThought.isStreaming).toBe(true);
+  });
+
+  it('should pass an empty agentSteps array to QuanticGeneratedAnswerStreamOfThought when generationSteps is undefined', async () => {
+    const element = createTestComponent();
+    await flushPromises();
+
+    const streamOfThought = element.shadowRoot.querySelector(
+      selectors.streamOfThought
+    );
+
+    expect(streamOfThought).not.toBeNull();
+    expect(streamOfThought.agentSteps).toEqual([]);
   });
 
   it('should send the answerId within event details when dispatching the #quantic__generatedanswerlike event', async () => {
@@ -290,6 +327,7 @@ describe('c-quantic-generated-answer-body', () => {
       const citations = element.shadowRoot.querySelector(selectors.citations);
 
       expect(citations).not.toBeNull();
+      expect(citations.answerId).toBe(defaultOptions.generatedAnswer.answerId);
     });
 
     it('should not display citations when citations are empty', async () => {
