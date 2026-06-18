@@ -155,6 +155,16 @@ describe('createAnswerRunner', () => {
     expect(abortRunMock).toHaveBeenCalledTimes(1);
   });
 
+  it('sets isRunning to false on the agent when abortRun is called', async () => {
+    const runner = buildRunner();
+
+    await runner.run(state, dispatch, navigatorProvider);
+    mockAgent.isRunning = true;
+    runner.abortRun();
+
+    expect(mockAgent.isRunning).toBe(false);
+  });
+
   it('dispatches the loading state when a run starts', async () => {
     const runner = buildRunner();
 
