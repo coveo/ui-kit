@@ -9,11 +9,6 @@
   word-wrap: break-word;
 }
 
-.generated-answer__content--scrollable {
-  overflow-y: auto;
-  height: var(--quantic-generated-answer-content-fixed-height, 50vh);
-}
-
 .generated-answer__footer {
   gap: 1rem;
 }
@@ -58,10 +53,4 @@
   clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0% 100%);
   opacity: 0.2;
   visibility: hidden;
-}
-
-@keyframes cursor-blink {
-  100% {
-    visibility: hidden;
-  }
 }

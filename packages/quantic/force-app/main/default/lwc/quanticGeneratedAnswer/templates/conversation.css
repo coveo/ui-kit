@@ -1,0 +1,7 @@
+@import '../quanticGeneratedAnswer.css';
+
+.generated-answer__content--scrollable {
+  overflow-y: auto;
+  height: var(--quantic-generated-answer-content-fixed-height, 50vh);
+  overflow-x: hidden;
+}

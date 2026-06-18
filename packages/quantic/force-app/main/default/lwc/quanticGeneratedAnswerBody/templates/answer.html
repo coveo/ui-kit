@@ -1,9 +1,14 @@
 <template>
-  <section
-    data-testid="generated-answer-body"
-    class="generated-answer__body"
-  >
+  <section data-testid="generated-answer-body" class="generated-answer__body">
+    <div class="slds-var-m-bottom_small">
+      <c-quantic-generated-answer-stream-of-thought
+        agent-steps={agentSteps}
+        is-streaming={isStreaming}
+      ></c-quantic-generated-answer-stream-of-thought>
+    </div>
     <c-quantic-generated-answer-content
+      engine-id={engineId}
+      answer-id={answerId}
       answer-content-format={answerContentFormat}
       answer={answer}
       is-streaming={isStreaming}
@@ -18,6 +23,7 @@
             citations={citations}
             citation-hover-handler={handleCitationHover}
             disable-citation-anchoring={disableCitationAnchoring}
+            answer-id={answerId}
           ></c-quantic-source-citations>
         </div>
       </template>
@@ -26,26 +32,26 @@
           data-testid="generated-answer-body__actions"
           class="slds-size_1-of-1 slds-grid slds-grid_vertical-align-center slds-var-m-top_x-small slds-grid_align-start"
         >
-            <c-quantic-feedback
-              state={computedFeedbackState}
-              onquantic__like={handleLike}
-              onquantic__dislike={handleDislike}
-              like-icon-name="utility:like"
-              like-label={labels.thisAnswerWasHelpful}
-              dislike-icon-name="utility:dislike"
-              dislike-label={labels.thisAnswerWasNotHelpful}
-              size="x-small"
-              question=""
-              hide-explain-why-button
-              hide-labels
-            ></c-quantic-feedback>
-            <c-quantic-generated-answer-copy-to-clipboard
-              data-testid="generated-answer-body__copy-to-clipboard"
-              answer={answer}
-              answer-id={answerId}
-              size="x-small"
-              class="slds-var-m-horizontal_xx-small"
-            ></c-quantic-generated-answer-copy-to-clipboard>
+          <c-quantic-feedback
+            state={computedFeedbackState}
+            onquantic__like={handleLike}
+            onquantic__dislike={handleDislike}
+            like-icon-name="utility:like"
+            like-label={labels.like}
+            dislike-icon-name="utility:dislike"
+            dislike-label={labels.dislike}
+            size="x-small"
+            question=""
+            hide-explain-why-button
+            hide-labels
+          ></c-quantic-feedback>
+          <c-quantic-generated-answer-copy-to-clipboard
+            data-testid="generated-answer-body__copy-to-clipboard"
+            answer={answer}
+            answer-id={answerId}
+            size="x-small"
+            class="slds-var-m-horizontal_xx-small"
+          ></c-quantic-generated-answer-copy-to-clipboard>
         </div>
       </template>
     </div>
