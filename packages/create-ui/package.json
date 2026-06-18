@@ -36,6 +36,7 @@
     "clean": "node ../../utils/ci/rm-rf.mjs dist"
   },
   "dependencies": {
+    "@inquirer/prompts": "8.5.2",
     "commander": "15.0.0",
     "pacote": "21.5.1"
   },

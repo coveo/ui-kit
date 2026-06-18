@@ -6,7 +6,7 @@
  * registry and extracts it to scaffold a project.
  */
 
-type Library = 'atomic' | 'headless';
+export type Library = 'atomic' | 'headless';
 
 export interface Template {
   /** CLI-facing template name passed to `--template`. */
