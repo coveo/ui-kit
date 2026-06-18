@@ -23,11 +23,11 @@ samples/
 
 A sample is identified by three dimensions: **library**, **use case**, and **framework**.
 
-| Dimension | Allowed values                                                          |
-| --------- | ----------------------------------------------------------------------- |
-| Library   | `atomic`, `headless`                                                    |
-| Use case  | `search`, `commerce`, `insight`, `recommendation`                       |
-| Framework | `vite` (vanilla), `react`, `angular`, `vuejs`, `nextjs`, `react-router` |
+| Dimension | Allowed values                                          |
+| --------- | ------------------------------------------------------- |
+| Library   | `atomic`, `headless`                                    |
+| Use case  | `search`, `commerce`, `insight`, `recommendation`       |
+| Framework | `vite` (vanilla), `react`, `angular`, `vuejs`, `nextjs` |
 
 > **Vanilla / no framework:** use the `vite` token (the build tool), e.g. `search-vite`. Never
 > use a bare `search`/`commerce` folder — the framework token must always be explicit.
