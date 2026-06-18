@@ -48,10 +48,17 @@ export function createGenerativeSlice(interfaceId: string) {
             turn.agentResponse = {messages: [], surfaces: [], toolCalls: []};
           }
         })
-        .addCase(actions.appendMessage, (state, {payload}) => {
+        .addCase(actions.startMessage, (state, {payload}) => {
           const turn = state.turns.find((t) => t.id === payload.turnId);
           if (turn?.agentResponse) {
-            turn.agentResponse.messages.push(payload.message);
+            turn.agentResponse.messages.push({content: '', role: payload.role});
+          }
+        })
+        .addCase(actions.appendMessageDelta, (state, {payload}) => {
+          const turn = state.turns.find((t) => t.id === payload.turnId);
+          const messages = turn?.agentResponse?.messages;
+          if (messages && messages.length > 0) {
+            messages[messages.length - 1].content += payload.delta;
           }
         })
         .addCase(actions.appendSurface, (state, {payload}) => {
