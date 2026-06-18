@@ -12,18 +12,9 @@ interface RoutedCommerceResultsProps {
 }
 
 export function RoutedCommerceResults(props: RoutedCommerceResultsProps) {
-  const [state, setState] = useState<ProductListControllerState>({
-    products: [],
-  });
-
+  const [state, setState] = useState<ProductListControllerState | null>(null);
   const [paginationState, setPaginationState] =
-    useState<PaginationControllerState>({
-      page: 0,
-      pageSize: 10,
-      totalCount: 0,
-      totalPages: 0,
-    });
-
+    useState<PaginationControllerState | null>(null);
   const paginationRef = useRef<PaginationController | null>(null);
 
   useEffect(() => {
@@ -58,6 +49,10 @@ export function RoutedCommerceResults(props: RoutedCommerceResultsProps) {
     };
   }, [props.interface]);
 
+  if (!state || !paginationState) {
+    return null;
+  }
+
   return (
     <div>
       <h3>Commerce Results ({state.products.length})</h3>
@@ -82,48 +77,46 @@ export function RoutedCommerceResults(props: RoutedCommerceResultsProps) {
           </li>
         ))}
       </ul>
-      {paginationState.totalPages > 1 && (
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            marginTop: '8px',
-          }}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          marginTop: '8px',
+        }}
+      >
+        <button
+          disabled={paginationState.page === 0}
+          onClick={() =>
+            paginationRef.current?.selectPage(paginationState.page - 1)
+          }
         >
-          <button
-            disabled={paginationState.page === 0}
-            onClick={() =>
-              paginationRef.current?.selectPage(paginationState.page - 1)
-            }
-          >
-            ← Previous
-          </button>
-          <span>
-            Page {paginationState.page + 1} of {paginationState.totalPages}
-          </span>
-          <button
-            disabled={paginationState.page >= paginationState.totalPages - 1}
-            onClick={() =>
-              paginationRef.current?.selectPage(paginationState.page + 1)
-            }
-          >
-            Next →
-          </button>
-          <select
-            value={paginationState.pageSize}
-            onChange={(e) =>
-              paginationRef.current?.setPageSize(Number(e.target.value))
-            }
-            style={{marginLeft: 'auto'}}
-          >
-            <option value={5}>5 per page</option>
-            <option value={10}>10 per page</option>
-            <option value={20}>20 per page</option>
-            <option value={50}>50 per page</option>
-          </select>
-        </div>
-      )}
+          ← Previous
+        </button>
+        <span>
+          Page {paginationState.page + 1} of {paginationState.totalPages}
+        </span>
+        <button
+          disabled={paginationState.page >= paginationState.totalPages - 1}
+          onClick={() =>
+            paginationRef.current?.selectPage(paginationState.page + 1)
+          }
+        >
+          Next →
+        </button>
+        <select
+          value={paginationState.pageSize}
+          onChange={(e) =>
+            paginationRef.current?.setPageSize(Number(e.target.value))
+          }
+          style={{marginLeft: 'auto'}}
+        >
+          <option value={5}>5 per page</option>
+          <option value={10}>10 per page</option>
+          <option value={20}>20 per page</option>
+          <option value={50}>50 per page</option>
+        </select>
+      </div>
     </div>
   );
 }
