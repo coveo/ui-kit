@@ -1,7 +1,11 @@
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useRef} from 'react';
 import {
   buildResultListController,
+  buildPaginationController,
+  loadSearchParametersActions,
   type ResultListControllerState,
+  type PaginationControllerState,
+  type PaginationController,
 } from '@coveo/headless-future';
 
 interface RoutedSearchResultsProps {
@@ -9,7 +13,10 @@ interface RoutedSearchResultsProps {
 }
 
 export function RoutedSearchResults(props: RoutedSearchResultsProps) {
-  const [state, setState] = useState<ResultListControllerState>({results: []});
+  const [state, setState] = useState<ResultListControllerState | null>(null);
+  const [paginationState, setPaginationState] =
+    useState<PaginationControllerState | null>(null);
+  const paginationRef = useRef<PaginationController | null>(null);
 
   useEffect(() => {
     const controller = buildResultListController({
@@ -18,14 +25,44 @@ export function RoutedSearchResults(props: RoutedSearchResultsProps) {
       >[0]['interface'],
     });
 
-    setState({...controller.state});
+    const paginationCtrl = buildPaginationController({
+      interface: props.interface as Parameters<
+        typeof buildPaginationController
+      >[0]['interface'],
+    });
 
-    const unsubscribe = controller.subscribe(() => {
+    const searchParams = loadSearchParametersActions({
+      interface: props.interface as Parameters<
+        typeof loadSearchParametersActions
+      >[0]['interface'],
+    });
+
+    // Temporary hack: all information should be retrieved from the activity
+    searchParams.setPipeline('');
+    searchParams.setConstantQuery('@source==("Sports - Blog")');
+
+    paginationRef.current = paginationCtrl;
+
+    setState({...controller.state});
+    setPaginationState({...paginationCtrl.state});
+
+    const unsubscribeResults = controller.subscribe(() => {
       setState({...controller.state});
     });
 
-    return unsubscribe;
+    const unsubscribePagination = paginationCtrl.subscribe(() => {
+      setPaginationState({...paginationCtrl.state});
+    });
+
+    return () => {
+      unsubscribeResults();
+      unsubscribePagination();
+    };
   }, [props.interface]);
+
+  if (!state || !paginationState) {
+    return null;
+  }
 
   return (
     <div
@@ -37,7 +74,7 @@ export function RoutedSearchResults(props: RoutedSearchResultsProps) {
       }}
     >
       <h3 style={{margin: '0 0 12px', fontSize: '16px'}}>
-        Search Results ({state.results.length})
+        Showing {state.results.length} of {paginationState.totalCount} results
       </h3>
       {state.results.length === 0 && (
         <p style={{color: '#888', fontSize: '14px'}}>No results found.</p>
@@ -69,12 +106,57 @@ export function RoutedSearchResults(props: RoutedSearchResultsProps) {
                 {result.excerpt}
               </p>
             )}
-            <div style={{fontSize: '11px', color: '#999', marginTop: '4px'}}>
-              {result.uri}
-            </div>
+            <a
+              href={result.clickUri}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{fontSize: '11px', color: '#1890ff', marginTop: '4px'}}
+            >
+              {result.clickUri}
+            </a>
           </li>
         ))}
       </ul>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          marginTop: '8px',
+        }}
+      >
+        <button
+          disabled={paginationState.page === 0}
+          onClick={() =>
+            paginationRef.current?.selectPage(paginationState.page - 1)
+          }
+        >
+          ← Previous
+        </button>
+        <span>
+          Page {paginationState.page + 1} of {paginationState.totalPages}
+        </span>
+        <button
+          disabled={paginationState.page >= paginationState.totalPages - 1}
+          onClick={() =>
+            paginationRef.current?.selectPage(paginationState.page + 1)
+          }
+        >
+          Next →
+        </button>
+        <select
+          value={paginationState.pageSize}
+          onChange={(e) =>
+            paginationRef.current?.setPageSize(Number(e.target.value))
+          }
+          style={{marginLeft: 'auto'}}
+        >
+          <option value={5}>5 per page</option>
+          <option value={10}>10 per page</option>
+          <option value={20}>20 per page</option>
+          <option value={50}>50 per page</option>
+        </select>
+      </div>
     </div>
   );
 }

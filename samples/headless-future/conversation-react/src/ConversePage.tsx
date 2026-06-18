@@ -8,6 +8,8 @@ const PROMPT_SUGGESTIONS = [
   'what should i pack for a snorkeling trip?',
   'kayaks',
   'wetsuits',
+  'surfboard care',
+  'boating safety',
 ];
 
 interface Turn {
