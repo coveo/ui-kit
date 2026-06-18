@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The generative interface is a new interface type within the headless-future multi-interface architecture (ADR-002). It provides a conversational layer that talks to a `/converse` endpoint, owns turn history, and spawns fully interactive sub-interfaces when the endpoint routes a prompt to a real API (e.g., commerce search, search). It supports both a "routing mode" (instant API delegation) and an "agent mode" (progressive streaming with messages, tool calls, and opaque A2UI surfaces).
+The generative interface is a new interface type within the thermidor multi-interface architecture (ADR-002). It provides a conversational layer that talks to a `/converse` endpoint, owns turn history, and spawns fully interactive sub-interfaces when the endpoint routes a prompt to a real API (e.g., commerce search, search). It supports both a "routing mode" (instant API delegation) and an "agent mode" (progressive streaming with messages, tool calls, and opaque A2UI surfaces).
 
 ## Glossary
 

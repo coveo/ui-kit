@@ -9,7 +9,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const headlessFutureRoot = path.resolve(
   __dirname,
-  '../../../packages/headless-future'
+  '../../../packages/thermidor'
 );
 const headlessFutureSourceEntry = path.resolve(
   headlessFutureRoot,
@@ -90,7 +90,7 @@ export default defineConfig(({mode}) => {
     plugins: [react()],
     resolve: {
       alias: {
-        '@coveo/headless-future': headlessFutureSourceEntry,
+        '@coveo/thermidor': headlessFutureSourceEntry,
         '@': headlessFutureRoot,
       },
     },

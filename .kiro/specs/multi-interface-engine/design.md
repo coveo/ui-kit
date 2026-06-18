@@ -2,7 +2,7 @@
 
 ## Overview
 
-This design introduces a multi-interface architecture for `headless-future`, enabling a single `Engine` instance to support multiple use cases (search, commerce, conversation) simultaneously. The architecture follows **Mediator + Command + Strategy**: the Engine mediates all state flow, endpoint thunks encapsulate operations behind a dispatchable command interface, and interface factories inject interchangeable endpoint strategies per use case.
+This design introduces a multi-interface architecture for `thermidor`, enabling a single `Engine` instance to support multiple use cases (search, commerce, conversation) simultaneously. The architecture follows **Mediator + Command + Strategy**: the Engine mediates all state flow, endpoint thunks encapsulate operations behind a dispatchable command interface, and interface factories inject interchangeable endpoint strategies per use case.
 
 ## Architecture
 
@@ -200,7 +200,7 @@ export function buildSearchInterface(
 }
 ```
 
-**Subpath export:** `@coveo/headless-future/interfaces/search` — unused interface types are dead-code eliminated.
+**Subpath export:** `@coveo/thermidor/interfaces/search` — unused interface types are dead-code eliminated.
 
 ---
 
@@ -729,10 +729,10 @@ import {
   Engine,
   buildSearchBoxController,
   buildResultListController,
-} from '@coveo/headless-future';
-import {buildSearchInterface} from '@coveo/headless-future/interfaces/search';
-import {buildCommerceInterface} from '@coveo/headless-future/interfaces/commerce';
-import {composeInterfaces} from '@coveo/headless-future';
+} from '@coveo/thermidor';
+import {buildSearchInterface} from '@coveo/thermidor/interfaces/search';
+import {buildCommerceInterface} from '@coveo/thermidor/interfaces/commerce';
+import {composeInterfaces} from '@coveo/thermidor';
 
 const engine = new Engine({
   configuration: {

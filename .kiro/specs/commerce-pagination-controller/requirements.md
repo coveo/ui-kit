@@ -2,7 +2,7 @@
 
 ## Introduction
 
-A pagination controller for the commerce search endpoint in `packages/headless-future`. The controller adopts the existing pagination slice, exposes pagination state (current page, page size, total count, total pages), and provides navigation methods (nextPage, previousPage, selectPage) that update pagination state and re-execute the commerce search thunk. It follows the same controller pattern as the existing product-list controller.
+A pagination controller for the commerce search endpoint in `packages/thermidor`. The controller adopts the existing pagination slice, exposes pagination state (current page, page size, total count, total pages), and provides navigation methods (nextPage, previousPage, selectPage) that update pagination state and re-execute the commerce search thunk. It follows the same controller pattern as the existing product-list controller.
 
 Additionally, the pagination controller is integrated into the `conversation-react` sample app so that when a generative response spawns a commerce search sub-interface, that sub-interface renders both a product list and pagination controls. This demonstrates per-sub-interface context isolation: paginating within one sub-interface only affects that sub-interface's state.
 
@@ -14,7 +14,7 @@ Additionally, the pagination controller is integrated into the `conversation-rea
 - **Interface**: The commerce interface object created by `buildCommerceInterface()`, providing engine access and search thunks.
 - **Page**: A zero-indexed page number derived from `firstResult / pageSize`.
 - **Total_Pages**: The total number of pages derived from `Math.ceil(totalCount / pageSize)`.
-- **Conversation_React_Sample**: The sample application at `samples/headless-future/conversation-react/` that demonstrates generative interfaces with routed sub-interfaces.
+- **Conversation_React_Sample**: The sample application at `samples/thermidor/conversation-react/` that demonstrates generative interfaces with routed sub-interfaces.
 - **RoutedCommerceResults**: The React component in the sample that renders a commerce search sub-interface's product list (and now, pagination controls).
 
 ## Requirements
@@ -76,9 +76,9 @@ Additionally, the pagination controller is integrated into the `conversation-rea
 
 ### Requirement 6: Export Pagination Controller from Package
 
-**User Story:** As a developer, I want to import the pagination controller from the `@coveo/headless-future` package, so that I can use it in my application.
+**User Story:** As a developer, I want to import the pagination controller from the `@coveo/thermidor` package, so that I can use it in my application.
 
 #### Acceptance Criteria
 
-1. THE `@coveo/headless-future` package SHALL export `buildPaginationController` from its public controllers index.
-2. THE `@coveo/headless-future` package SHALL export the `PaginationController` type and `PaginationControllerState` type from its public controllers index.
+1. THE `@coveo/thermidor` package SHALL export `buildPaginationController` from its public controllers index.
+2. THE `@coveo/thermidor` package SHALL export the `PaginationController` type and `PaginationControllerState` type from its public controllers index.

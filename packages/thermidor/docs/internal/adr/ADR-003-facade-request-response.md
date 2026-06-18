@@ -17,7 +17,7 @@ Endpoint facades should use symmetric centralized patterns for both request buil
 
 ## 3. Requirements & Considerations Mapping
 
-Map this decision to headless-future's Architecture Decision Charter requirements.
+Map this decision to thermidor's Architecture Decision Charter requirements.
 
 ### MUST
 
@@ -41,7 +41,7 @@ Map this decision to headless-future's Architecture Decision Charter requirement
 
 2. **Requirement**: Migration simplicity
    - **Impact**: None
-   - **How addressed (or why deferred)**: This is an internal architectural pattern with no effect on the public API surface; consumers migrating from headless to headless-future are unaffected by how request composition is wired internally.
+   - **How addressed (or why deferred)**: This is an internal architectural pattern with no effect on the public API surface; consumers migrating from headless to thermidor are unaffected by how request composition is wired internally.
 
 3. **Requirement**: External contribution readiness
    - **Impact**: Positive
@@ -233,6 +233,6 @@ Endpoint request schemas are finite, well-known, and defined at design time. The
 ## 8. Migration and Rollout Plan
 
 - **Consumer migration impact**: None — this is an internal architectural decision
-- **Rollout strategy (flagged, phased, big-bang)**: Big-bang (internal to headless-future)
+- **Rollout strategy (flagged, phased, big-bang)**: Big-bang (internal to thermidor)
 - **Rollback strategy**: Revert to contributor-based wiring
 - **Communication plan**: None required (internal decision, no public API impact)

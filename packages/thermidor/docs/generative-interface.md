@@ -2,7 +2,7 @@
 
 ## Overview
 
-The **Generative Interface** is a conversational layer in headless-future that talks to a `/converse` SSE endpoint, manages turn history, and dynamically spawns interactive sub-interfaces when the endpoint routes a prompt to a known API (e.g., commerce search).
+The **Generative Interface** is a conversational layer in thermidor that talks to a `/converse` SSE endpoint, manages turn history, and dynamically spawns interactive sub-interfaces when the endpoint routes a prompt to a known API (e.g., commerce search).
 
 It supports two operational modes:
 
@@ -206,7 +206,7 @@ import {
   Engine,
   buildGenerativeInterface,
   buildConverseController,
-} from '@coveo/headless-future';
+} from '@coveo/thermidor';
 
 const engine = new Engine({
   configuration: {organizationId: '...', accessToken: '...'},
@@ -297,7 +297,7 @@ import {useState, useEffect, useRef} from 'react';
 import {
   buildProductListController,
   buildPaginationController,
-} from '@coveo/headless-future';
+} from '@coveo/thermidor';
 
 export function ProductList({interface: subInterface}) {
   const controller = buildProductListController({interface: subInterface});

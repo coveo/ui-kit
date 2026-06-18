@@ -2,7 +2,7 @@
 
 ## Overview
 
-This plan transforms the existing POC in `packages/headless-future/src/` into the multi-interface architecture defined in the design. The work progresses through logical phases: core type system → scoped state infrastructure → endpoint thunks → interface factories → composition → controllers → public API (state getters & action loaders). Each phase builds on the previous, ensuring no orphaned code.
+This plan transforms the existing POC in `packages/thermidor/src/` into the multi-interface architecture defined in the design. The work progresses through logical phases: core type system → scoped state infrastructure → endpoint thunks → interface factories → composition → controllers → public API (state getters & action loaders). Each phase builds on the previous, ensuring no orphaned code.
 
 ## Tasks
 

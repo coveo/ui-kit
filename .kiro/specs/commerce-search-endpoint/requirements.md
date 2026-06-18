@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This feature adds a full Commerce Search API client layer to the `headless-future` package. It mirrors the existing search endpoint architecture (client → types → request selector → response handler → thunk slice → thunk → interface wiring) but targets the Commerce Search v2 API at `/rest/organizations/{organizationId}/commerce/v2/search`. The commerce interface already exists with stub thunks containing TODO comments; this feature replaces those stubs with a production-ready implementation.
+This feature adds a full Commerce Search API client layer to the `thermidor` package. It mirrors the existing search endpoint architecture (client → types → request selector → response handler → thunk slice → thunk → interface wiring) but targets the Commerce Search v2 API at `/rest/organizations/{organizationId}/commerce/v2/search`. The commerce interface already exists with stub thunks containing TODO comments; this feature replaces those stubs with a production-ready implementation.
 
 ## Glossary
 

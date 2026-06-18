@@ -5,7 +5,7 @@
 
 ## 1. Context
 
-- **Business/context drivers**: The headless-future architecture MUST ensure public API independence, therefore it should isolate external concepts and types from the public API surface.
+- **Business/context drivers**: The thermidor architecture MUST ensure public API independence, therefore it should isolate external concepts and types from the public API surface.
 - **Technical constraints**: None
 - **Known assumptions**: The anti-corruption layer pattern seems well-adapted to fulfill this goal
 
@@ -15,7 +15,7 @@ Implement an anti-corruption layer to isolate the public API surface from the Co
 
 ## 3. Requirements & Considerations Mapping
 
-Map this decision to headless-future's Architecture Decision Charter requirements.
+Map this decision to thermidor's Architecture Decision Charter requirements.
 
 ### MUST
 
@@ -39,7 +39,7 @@ Map this decision to headless-future's Architecture Decision Charter requirement
 
 2. **Consideration**: Migration simplicity
    - **Impact**: Negative
-   - **How addressed (or why deferred)**: Right now in Headless, Redux and Coveo REST API types and concepts leak directly into the public API surface, preventing public API independence altogether. We established public independence as a MUST of headless-future, which almost unavoidably implies introducing breaking changes. The anti-corruption layer does not cause that (the overall architectural decision does), but it confirms it.
+   - **How addressed (or why deferred)**: Right now in Headless, Redux and Coveo REST API types and concepts leak directly into the public API surface, preventing public API independence altogether. We established public independence as a MUST of thermidor, which almost unavoidably implies introducing breaking changes. The anti-corruption layer does not cause that (the overall architectural decision does), but it confirms it.
 
 3. **Consideration**: External contribution readiness
    - **Impact**: Negative
@@ -81,7 +81,7 @@ Map this decision to headless-future's Architecture Decision Charter requirement
 
 - **Public API changes**: Yes, from current major of headless
 - **Backward compatibility impact**: Yes, breaking from current major of headless
-- **Deprecations required**: Yes, every external concept / type leaked directly into the public API surface that will not be carried over 1-to-1 into headless-future's public API surface
+- **Deprecations required**: Yes, every external concept / type leaked directly into the public API surface that will not be carried over 1-to-1 into thermidor's public API surface
 - **Type/contract stability notes**: Yes, positive impact
 - **Non-leakage check (implementation details not exposed)**: Pass
 
@@ -98,4 +98,4 @@ Map this decision to headless-future's Architecture Decision Charter requirement
 - **Consumer migration impact**: Yes, no more external concepts / types in the public API surface; this is a breaking change
 - **Rollout strategy (flagged, phased, big-bang)**: Big-bang
 - **Rollback strategy**: None
-- **Communication plan**: Deprecation notices in current version of headless once the headless-future public API contract is deemed stable enough
+- **Communication plan**: Deprecation notices in current version of headless once the thermidor public API contract is deemed stable enough

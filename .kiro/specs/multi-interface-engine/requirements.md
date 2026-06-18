@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The Multi-Interface Engine feature enables a single `Engine` instance in `headless-future` to support multiple use cases simultaneously. Today, an engine supports either a search context or a commerce context, but not both. This feature introduces per-type `build*Interface` functions (e.g., `buildSearchInterface`, `buildCommerceSearchInterface`) that return typed, independently stateful execution contexts with built-in API facade code. Controllers and action loaders bind to a single `interface` parameter. For multi-interface scenarios, `composeInterfaces` merges configured interfaces into a composite that cross-interface controllers can bind to.
+The Multi-Interface Engine feature enables a single `Engine` instance in `thermidor` to support multiple use cases simultaneously. Today, an engine supports either a search context or a commerce context, but not both. This feature introduces per-type `build*Interface` functions (e.g., `buildSearchInterface`, `buildCommerceSearchInterface`) that return typed, independently stateful execution contexts with built-in API facade code. Controllers and action loaders bind to a single `interface` parameter. For multi-interface scenarios, `composeInterfaces` merges configured interfaces into a composite that cross-interface controllers can bind to.
 
 ## Glossary
 

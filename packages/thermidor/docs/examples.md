@@ -1,13 +1,13 @@
 # Usage Examples
 
-Concrete TypeScript examples showing how you'd consume the `@coveo/headless-future` library. These demonstrate the **consumer's perspective** — what a developer building a UI would write.
+Concrete TypeScript examples showing how you'd consume the `@coveo/thermidor` library. These demonstrate the **consumer's perspective** — what a developer building a UI would write.
 
 ## Setup
 
 All examples start with creating and configuring an `Engine`:
 
 ```typescript
-import {Engine} from '@coveo/headless-future';
+import {Engine} from '@coveo/thermidor';
 
 // Create an engine (store starts empty)
 const engine = new Engine();
@@ -26,7 +26,7 @@ import {
   Engine,
   buildSearchBoxController,
   buildResultListController,
-} from '@coveo/headless-future';
+} from '@coveo/thermidor';
 
 // 1. Create the engine
 const engine = new Engine();
@@ -71,7 +71,7 @@ For power users who need fine-grained control without controller orchestration.
 ### Using `loadSearchBoxActions`
 
 ```typescript
-import {Engine, loadSearchBoxActions} from '@coveo/headless-future';
+import {Engine, loadSearchBoxActions} from '@coveo/thermidor';
 
 const engine = new Engine();
 
@@ -89,7 +89,7 @@ console.log(query); // 'advanced search'
 ### Using individual action functions
 
 ```typescript
-import {Engine, setQuery} from '@coveo/headless-future';
+import {Engine, setQuery} from '@coveo/thermidor';
 
 const engine = new Engine();
 
@@ -122,7 +122,7 @@ actions.setQuery('custom workflow');
 Subscribe to specific parts of state. Callbacks only fire when the selected value actually changes.
 
 ```typescript
-import {Engine, buildSearchBoxController} from '@coveo/headless-future';
+import {Engine, buildSearchBoxController} from '@coveo/thermidor';
 
 const engine = new Engine();
 const searchBox = buildSearchBoxController(engine);
@@ -156,12 +156,8 @@ For when you need to work with the Engine directly (e.g., writing tests, buildin
 ### Reading state
 
 ```typescript
-import {
-  Engine,
-  searchBoxSelectors,
-  searchBoxMutations,
-} from '@coveo/headless-future';
-import {searchBoxSlice} from '@coveo/headless-future/core/internal/searchBox/slice';
+import {Engine, searchBoxSelectors, searchBoxMutations} from '@coveo/thermidor';
+import {searchBoxSlice} from '@coveo/thermidor/core/internal/searchBox/slice';
 
 const engine = new Engine();
 await engine.adoptSlice(searchBoxSlice);
@@ -209,7 +205,7 @@ import {
   Engine,
   buildSearchBoxController,
   buildResultListController,
-} from '@coveo/headless-future';
+} from '@coveo/thermidor';
 
 const engine = new Engine();
 
@@ -235,10 +231,10 @@ How tests work in this codebase (useful if you're extending the PoC).
 
 ```typescript
 import {describe, it, expect} from 'vitest';
-import {createTestEngine} from '@coveo/headless-future/core/test-utils';
-import {searchBoxSlice} from '@coveo/headless-future/core/internal/searchBox/slice';
-import * as searchBoxMutations from '@coveo/headless-future/core/interface/search-box/mutate';
-import * as searchBoxSelectors from '@coveo/headless-future/core/interface/search-box/selectors';
+import {createTestEngine} from '@coveo/thermidor/core/test-utils';
+import {searchBoxSlice} from '@coveo/thermidor/core/internal/searchBox/slice';
+import * as searchBoxMutations from '@coveo/thermidor/core/interface/search-box/mutate';
+import * as searchBoxSelectors from '@coveo/thermidor/core/interface/search-box/selectors';
 
 describe('searchBox', () => {
   it('should update the query', async () => {
@@ -303,10 +299,10 @@ const good = engine.read((state) => state.searchBox?.query ?? '');
 
 ```typescript
 // BAD: Bypassing the interface layer
-import {searchBoxSlice} from '@coveo/headless-future/core/internal/searchBox/slice';
+import {searchBoxSlice} from '@coveo/thermidor/core/internal/searchBox/slice';
 
 // GOOD: Use controllers or actions that handle adoption for you
-import {buildSearchBoxController} from '@coveo/headless-future';
+import {buildSearchBoxController} from '@coveo/thermidor';
 ```
 
 _(The internal imports in examples 4 and 6 above are for library developers/testers, not consumers.)_

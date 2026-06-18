@@ -31,7 +31,7 @@ Simplify `buildGenerativeInterface` to accept only `{engine, id?}` by removing t
 
 - [x] 2. Type system changes — Remove BuilderRegistry, update RoutedInterface
   - [x] 2.1 Remove `BUILDER_REGISTRY` symbol from `symbols.ts`
-    - Delete the `BUILDER_REGISTRY` export from `packages/headless-future/src/core/interface/utils/symbols.ts`
+    - Delete the `BUILDER_REGISTRY` export from `packages/thermidor/src/core/interface/utils/symbols.ts`
     - _Requirements: 7.1_
 
   - [x] 2.2 Update `RoutedInterface` to discriminated union in `generative-types.ts`

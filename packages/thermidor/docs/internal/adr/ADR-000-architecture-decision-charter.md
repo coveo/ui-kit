@@ -1,6 +1,6 @@
 ## 1. Purpose
 
-This charter defines the criteria used to evaluate architecture and design decisions for headless-future.
+This charter defines the criteria used to evaluate architecture and design decisions for thermidor.
 
 A decision is acceptable only if it satisfies all **MUST** requirements and clearly addresses **SHOULD** requirements (see https://www.rfc-editor.org/rfc/rfc2119.html).
 

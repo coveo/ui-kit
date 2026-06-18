@@ -2,7 +2,7 @@
 
 ## Overview
 
-This feature adds a production-ready Commerce Search API client layer to `packages/headless-future`, replacing the existing stub thunks in `src/public/interfaces/commerce.ts`. The implementation mirrors the proven search endpoint architecture already in place for the generic search use case:
+This feature adds a production-ready Commerce Search API client layer to `packages/thermidor`, replacing the existing stub thunks in `src/public/interfaces/commerce.ts`. The implementation mirrors the proven search endpoint architecture already in place for the generic search use case:
 
 **Client → Types → Request Selector → Response Handler → Thunk Slice → Thunk → Interface Wiring**
 
@@ -74,7 +74,7 @@ graph TD
 ### File Layout
 
 ```
-packages/headless-future/src/
+packages/thermidor/src/
 ├── api/interface/commerce-search-endpoint/
 │   ├── commerce-search-endpoint-client.ts       # HTTP client
 │   └── commerce-search-endpoint-types.ts        # Request/Response interfaces

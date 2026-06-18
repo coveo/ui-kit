@@ -7,7 +7,7 @@
 
 - **Business/context drivers**: Real-world implementations combine search, commerce, and conversation from a single page with shared UI (e.g., one search box driving both search and commerce endpoints). Today, an engine supports only one execution context.
 - **Technical constraints**: Must preserve TypeScript type safety, tree-shaking, and state isolation. Must not preclude future SSR. Must maintain lazy loading of feature state.
-- **Known assumptions**: headless-future is a POC. No backward compatibility constraint. SSR is aspirational. Interface types are compatibility constraints, not feature manifests.
+- **Known assumptions**: thermidor is a POC. No backward compatibility constraint. SSR is aspirational. Interface types are compatibility constraints, not feature manifests.
 
 ## 2. Decision Statement
 
@@ -122,5 +122,5 @@ Option A: per-type functions give full type inference and discoverability. `comp
 ## 8. Migration and Rollout Plan
 
 - **Impact**: Breaking. Call `build*Interface`, pass to controllers. Multi-interface uses `composeInterfaces`.
-- **Strategy**: Big-bang with headless-future major.
+- **Strategy**: Big-bang with thermidor major.
 - **Communication**: Migration guide with before/after examples.

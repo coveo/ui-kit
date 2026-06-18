@@ -2,7 +2,7 @@ import {
   buildConverseController,
   buildGenerativeInterface,
   Engine,
-} from '@coveo/headless-future';
+} from '@coveo/thermidor';
 import {getSampleConfiguration} from './env.js';
 
 function getClientId() {

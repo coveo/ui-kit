@@ -2,12 +2,12 @@
 
 ## Introduction
 
-A polished, stakeholder-ready conversation sample application (`shiny-conversation-react`) that demonstrates the headless-future DX and implementation patterns. The application renders an agentic conversational experience with streaming message assembly, collapsible tool-use blocks, AGUI surface rendering with loading skeletons, and visually appealing product/article cards. All styles live in separate CSS files to preserve code readability.
+A polished, stakeholder-ready conversation sample application (`shiny-conversation-react`) that demonstrates the thermidor DX and implementation patterns. The application renders an agentic conversational experience with streaming message assembly, collapsible tool-use blocks, AGUI surface rendering with loading skeletons, and visually appealing product/article cards. All styles live in separate CSS files to preserve code readability.
 
 ## Glossary
 
-- **Sample_App**: The `shiny-conversation-react` React application located at `samples/headless-future/shiny-conversation-react`
-- **Converse_Controller**: The headless-future `buildConverseController` instance that manages conversation turns, streaming, and state
+- **Sample_App**: The `shiny-conversation-react` React application located at `samples/thermidor/shiny-conversation-react`
+- **Converse_Controller**: The thermidor `buildConverseController` instance that manages conversation turns, streaming, and state
 - **Turn**: A single user prompt submission and its associated agent response lifecycle (streaming → complete | error)
 - **Agent_Message**: A text message streamed from the agent during a turn, composed of incremental deltas
 - **Tool_Call**: An invocation made by the agent during processing, with a name, arguments, and an eventual result
@@ -115,9 +115,9 @@ A polished, stakeholder-ready conversation sample application (`shiny-conversati
 4. THE Turns_Menu SHALL truncate Turn prompt text exceeding 40 characters by cutting at the 40th character and appending an ellipsis character so that all entries occupy a single line
 5. IF the Converse_Controller state contains zero Turn entries, THEN THE Turns_Menu SHALL render as an empty sidebar with no turn list items
 
-### Requirement 9: Headless-Future DX Demonstration
+### Requirement 9: thermidor DX Demonstration
 
-**User Story:** As a developer evaluating the headless-future library, I want the sample to clearly demonstrate the controller pattern, subscription model, and state management approach, so that I understand how to build with headless-future.
+**User Story:** As a developer evaluating the thermidor library, I want the sample to clearly demonstrate the controller pattern, subscription model, and state management approach, so that I understand how to build with thermidor.
 
 #### Acceptance Criteria
 

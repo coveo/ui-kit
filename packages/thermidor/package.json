@@ -1,5 +1,5 @@
 {
-  "name": "@coveo/headless-future",
+  "name": "@coveo/thermidor",
   "version": "0.1.0",
   "private": true,
   "description": "Unified framework-agnostic headless engine for search and conversational experiences",
@@ -8,7 +8,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/coveo/ui-kit.git",
-    "directory": "packages/headless-future"
+    "directory": "packages/thermidor"
   },
   "files": [
     "dist"

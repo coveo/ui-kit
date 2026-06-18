@@ -1,5 +1,5 @@
 {
-  "name": "@samples/headless-future-shiny-conversation-react",
+  "name": "@samples/thermidor-shiny-conversation-react",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -13,7 +13,7 @@
     "e2e:watch": "playwright test --ui"
   },
   "dependencies": {
-    "@coveo/headless-future": "workspace:*",
+    "@coveo/thermidor": "workspace:*",
     "marked": "^15.0.0",
     "react": "catalog:",
     "react-dom": "catalog:"

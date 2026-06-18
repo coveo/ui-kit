@@ -2,7 +2,7 @@
 
 ## Overview
 
-This plan implements end-to-end support for the `search-api-response` activity type across `mock-converse-api` and `conversation-react`. The headless-future layer already fully supports this activity type — no changes needed there. Work is split into: (1) registering new prompt/template mappings in the mock server, (2) updating the conversation-react sample with new suggestions and enhanced search result rendering with pagination.
+This plan implements end-to-end support for the `search-api-response` activity type across `mock-converse-api` and `conversation-react`. The thermidor layer already fully supports this activity type — no changes needed there. Work is split into: (1) registering new prompt/template mappings in the mock server, (2) updating the conversation-react sample with new suggestions and enhanced search result rendering with pagination.
 
 ## Tasks
 
@@ -44,12 +44,12 @@ This plan implements end-to-end support for the `search-api-response` activity t
   - Ensure all tests pass, ask the user if questions arise.
 
 - [x] 3. Add suggestions and enhance RoutedSearchResults in conversation-react
-  - [x] 3.1 Add new prompts to `PROMPT_SUGGESTIONS` in `samples/headless-future/conversation-react/src/ConversePage.tsx`
+  - [x] 3.1 Add new prompts to `PROMPT_SUGGESTIONS` in `samples/thermidor/conversation-react/src/ConversePage.tsx`
     - Add `'surfboard care'` and `'boating safety'` to the `PROMPT_SUGGESTIONS` array
     - _Requirements: 4.1, 4.2_
 
-  - [x] 3.2 Extend `RoutedSearchResults` with pagination controller and enhanced rendering in `samples/headless-future/conversation-react/src/RoutedSearchResults.tsx`
-    - Import `buildPaginationController`, `PaginationControllerState`, and `PaginationController` from `@coveo/headless-future`
+  - [x] 3.2 Extend `RoutedSearchResults` with pagination controller and enhanced rendering in `samples/thermidor/conversation-react/src/RoutedSearchResults.tsx`
+    - Import `buildPaginationController`, `PaginationControllerState`, and `PaginationController` from `@coveo/thermidor`
     - Add pagination state and controller ref (follow same pattern as `RoutedCommerceResults.tsx`)
     - Render result count: "Showing {results.length} of {totalCount} results"
     - Render each result's `clickUri` as an `<a>` element with `target="_blank"` and `rel="noopener noreferrer"`
@@ -103,7 +103,7 @@ This plan implements end-to-end support for the `search-api-response` activity t
 - Each task references specific requirements for traceability
 - Checkpoints ensure incremental validation
 - Property tests use fast-check with minimum 100 iterations per property
-- The headless-future package requires NO changes — existing hydration and controllers already handle `search-api-response`
+- The thermidor package requires NO changes — existing hydration and controllers already handle `search-api-response`
 - The `RoutedCommerceResults.tsx` component serves as the reference pattern for pagination integration
 - Facets are explicitly out of scope
 

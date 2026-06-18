@@ -2,13 +2,13 @@
 
 ## Overview
 
-Build a polished React sample application at `samples/headless-future/shiny-conversation-react` that demonstrates headless-future DX patterns in a conversational UI. The implementation reuses the controller-based architecture from the existing `conversation-react` sample but replaces all inline styles with CSS modules, adds streaming assembly, collapsible thinking blocks, AGUI surface rendering with loading skeletons, product/article cards, and a turns navigation menu.
+Build a polished React sample application at `samples/thermidor/shiny-conversation-react` that demonstrates thermidor DX patterns in a conversational UI. The implementation reuses the controller-based architecture from the existing `conversation-react` sample but replaces all inline styles with CSS modules, adds streaming assembly, collapsible thinking blocks, AGUI surface rendering with loading skeletons, product/article cards, and a turns navigation menu.
 
 ## Tasks
 
 - [x] 1. Set up project structure and configuration
   - [x] 1.1 Scaffold the project directory and configuration files
-    - Create `samples/headless-future/shiny-conversation-react/` directory
+    - Create `samples/thermidor/shiny-conversation-react/` directory
     - Create `package.json` mirroring `conversation-react` dependencies (add `fast-check` as devDependency for property tests)
     - Create `tsconfig.json`, `vite.config.ts`, `vitest.config.ts`, `playwright.config.ts` from existing sample
     - Create `.env.example`, `.env.e2e`, `.gitignore`, `index.html`
@@ -191,7 +191,7 @@ Build a polished React sample application at `samples/headless-future/shiny-conv
 - Unit tests validate specific examples and edge cases
 - The implementation language is TypeScript with React (matching the existing conversation-react sample)
 - All CSS must use CSS modules (`.module.css`) — zero inline styles allowed
-- The sample is a read-only consumer of headless-future controllers; no library code is modified
+- The sample is a read-only consumer of thermidor controllers; no library code is modified
 
 ## Task Dependency Graph
 

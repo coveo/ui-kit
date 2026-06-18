@@ -1,13 +1,13 @@
 # Conversational POC — Overarching Plan
 
 > Branch: `add-conversational-support` → PR #7540
-> Repo: `coveo/ui-kit` → `packages/headless-future`
+> Repo: `coveo/ui-kit` → `packages/thermidor`
 
 ## Goal
 
 Deliver an end-to-end agentic conversation flow in three phases, each built bottom-up with unit tests before wiring.
 
-**Cadence:** Every sub-phase = ~1 PR on a dedicated branch, merged into `add-conversational-support`. Build + tests must pass on every PR. Sample at `samples/headless-future/` updated every sub-phase.
+**Cadence:** Every sub-phase = ~1 PR on a dedicated branch, merged into `add-conversational-support`. Build + tests must pass on every PR. Sample at `samples/thermidor/` updated every sub-phase.
 
 ---
 
@@ -23,12 +23,12 @@ Deliver an end-to-end agentic conversation flow in three phases, each built bott
 
 ## Architecture Quick Reference
 
-- **packages/headless-future**: Four-layer architecture: Layer 0 (Engine/Redux hidden), Layer 1 (API clients, internal), Layer 2 (controllers, public factory functions), Layer 3 (actions, public escape hatch)
+- **packages/thermidor**: Four-layer architecture: Layer 0 (Engine/Redux hidden), Layer 1 (API clients, internal), Layer 2 (controllers, public factory functions), Layer 3 (actions, public escape hatch)
 - **Engine**: `new Engine(options?: EngineOptions)` — `EngineOptions = { configuration?: ConfigurationState; navigatorContextProvider?: () => NavigatorContext }`
 - **Navigator context**: Provider called lazily per turn (NOT stored in state slice)
 - **Converse endpoint**: `{endpoint}/rest/organizations/{orgId}/commerce/unstable/agentic/converse`
 - **Controller shape**: Factory function + plain object (modeled on `buildSearchBoxController`)
-- **Test runner**: Vitest — `pnpm --filter @coveo/headless-future test`
+- **Test runner**: Vitest — `pnpm --filter @coveo/thermidor test`
 
 ---
 
@@ -78,26 +78,26 @@ Completed checklist:
 - [x] Deleted targeted Layer 0 domains under `core/internal/` and `core/interface/` for conversation, surfaces, orchestration, context-bridge, and navigator-context
 - [x] Deleted targeted Layer 2/3 modules: conversation/surface/orchestration/context-bridge controllers and navigator-context actions
 - [x] Updated exports and references in `src/index.ts`, `src/api/index.ts`, `core/interface/interface-types.ts`, `public/controllers/index.ts`, and `public/actions/index.ts`
-- [x] Deleted obsolete doc `packages/headless-future/docs/unified-interface-example.md`
+- [x] Deleted obsolete doc `packages/thermidor/docs/unified-interface-example.md`
 - [x] Updated conversational POC plan trackers (`.github/prompts/conversational-poc-plan.md` and `/memories/repo/conversational-poc-plan.md`) with Phase 0 completion details
-- [x] Verified package health with `pnpm --filter @coveo/headless-future test && pnpm --filter @coveo/headless-future build`
+- [x] Verified package health with `pnpm --filter @coveo/thermidor test && pnpm --filter @coveo/thermidor build`
 
 ### Phase 0.5 — Sample Bootstrap
 
-Create `samples/headless-future/` — Vite + React + TypeScript. Engine instantiated from env vars. Listed in `pnpm-workspace.yaml`.
+Create `samples/thermidor/` — Vite + React + TypeScript. Engine instantiated from env vars. Listed in `pnpm-workspace.yaml`.
 
 Completed checklist:
 
-- [x] Created new sample app at `samples/headless-future/conversation-react` (Vite + React + TypeScript scaffold)
-- [x] Added sample package scripts and workspace wiring (`dev`, `build`, `preview`, `test`, `e2e`, `e2e:watch`) and included `samples/headless-future/*` in `pnpm-workspace.yaml`
+- [x] Created new sample app at `samples/thermidor/conversation-react` (Vite + React + TypeScript scaffold)
+- [x] Added sample package scripts and workspace wiring (`dev`, `build`, `preview`, `test`, `e2e`, `e2e:watch`) and included `samples/thermidor/*` in `pnpm-workspace.yaml`
 - [x] Added environment bootstrap files (`.env.example`, `.env.e2e`) and runtime env loader enforcing required Coveo vars
 - [x] Initialized Headless Future engine from sample env-backed configuration in sample runtime
 - [x] Added minimal sample UI shell rendering initialized configuration metadata
 - [x] Added sample unit smoke test (Vitest) and browser smoke test (Playwright) for app-load validation
-- [x] Added sample test config split (`vite.config.ts` + `vitest.config.ts`) with alias resolution needed by `@coveo/headless-future`
+- [x] Added sample test config split (`vite.config.ts` + `vitest.config.ts`) with alias resolution needed by `@coveo/thermidor`
 - [x] Updated sample documentation (`samples/README.md` and sample-local README) to include the new Headless Future category and setup
-- [x] Verified sample health with `pnpm --filter @samples/headless-future-conversation-react test` and `pnpm --filter @samples/headless-future-conversation-react e2e`
-- [x] Verified package health with `pnpm --filter @coveo/headless-future test && pnpm --filter @coveo/headless-future build`
+- [x] Verified sample health with `pnpm --filter @samples/thermidor-conversation-react test` and `pnpm --filter @samples/thermidor-conversation-react e2e`
+- [x] Verified package health with `pnpm --filter @coveo/thermidor test && pnpm --filter @coveo/thermidor build`
 
 ### Phase 1 — Basic Conversation Flow
 
@@ -121,7 +121,7 @@ Completed checklist for 1.0:
 - [x] Kept the public contract minimal for Phase 1.0: `submitTurn(input)`, `abortTurn()`, `state`, and `subscribe(callback)`
 - [x] Refined the conversation domain shape during Phase 1.0 review: roles are `user | agent`, `TurnStatus` is a discriminated union derived from a `TurnStatusMap`, turns use ordered `messageIds`, and session continuity includes optional `conversationToken`
 - [x] Added a shell test file placeholder for future controller implementation tests in Phase 1.8
-- [x] Verified package health with `pnpm --filter @coveo/headless-future test && pnpm --filter @coveo/headless-future build`
+- [x] Verified package health with `pnpm --filter @coveo/thermidor test && pnpm --filter @coveo/thermidor build`
 
 Completed checklist for 1.1:
 
@@ -133,7 +133,7 @@ Completed checklist for 1.1:
 - [x] Added reducer and engine-backed selector/mutator coverage for the conversation state domain
 - [x] Documented public operation payload types and normalized JSDoc formatting in `src/core/interface/conversation/conversation-types.ts`
 - [x] Strengthened slice test coverage: added high-priority test cases for fail/abort no-ops, fail-after-streaming, and multi-turn accumulation (16 tests total)
-- [x] Verified package health with `pnpm --filter @coveo/headless-future test && pnpm --filter @coveo/headless-future build`
+- [x] Verified package health with `pnpm --filter @coveo/thermidor test && pnpm --filter @coveo/thermidor build`
 
 Completed checklist for 1.2:
 
@@ -144,7 +144,7 @@ Completed checklist for 1.2:
 - [x] Restored planned missing-provider behavior: warn and continue when no `navigatorContextProvider` is configured (warn-on-first-use)
 - [x] Updated `Engine` constructor tests to cover options-based configuration, provider wiring, and missing-provider warning behavior
 - [x] Exported `EngineOptions`, `NavigatorContext`, and `NavigatorContextProvider` via `src/core/index.ts` and package root `src/index.ts`
-- [x] Verified package health with `pnpm --filter @coveo/headless-future test && pnpm --filter @coveo/headless-future build`
+- [x] Verified package health with `pnpm --filter @coveo/thermidor test && pnpm --filter @coveo/thermidor build`
 - [x] Post-Phase-1.2 refinement: moved `getNavigatorContextProvider()` from public `Engine` to internal `FullEngine` type to minimize public API surface
 
 Completed checklist for 1.3:
@@ -160,7 +160,7 @@ Completed checklist for 1.3:
 - [x] Added/updated cart domain coverage: selector unit tests (pure fixtures), mutator shape tests, controller tests, and action wiring tests
 - [x] Refined cart controller tests to a hybrid strategy: public behavior coverage (including explicit `state` getter assertions) plus minimal isolated wiring checks
 - [x] Added JSDoc for cart controller and cart actions public contracts
-- [x] Verified package health with `pnpm --filter @coveo/headless-future test && pnpm --filter @coveo/headless-future build`
+- [x] Verified package health with `pnpm --filter @coveo/thermidor test && pnpm --filter @coveo/thermidor build`
 
 Completed checklist for 1.4:
 
@@ -169,7 +169,7 @@ Completed checklist for 1.4:
 - [x] Updated Layer 1 exports in `src/api/index.ts` and migrated search API wiring to import HTTP utility from `src/api/shared/http.ts`
 - [x] Added HTTP utility unit coverage in `src/api/shared/http.test.ts`
 - [x] Added stream utility unit coverage in `src/api/shared/stream.test.ts`
-- [x] Verified package health with `pnpm --filter @coveo/headless-future test && pnpm --filter @coveo/headless-future build`
+- [x] Verified package health with `pnpm --filter @coveo/thermidor test && pnpm --filter @coveo/thermidor build`
 
 Completed checklist for 1.5:
 
@@ -194,7 +194,7 @@ Completed checklist for 1.5:
 - [x] Removed pure-indirection `endpoint-client-configuration` wrapper in favor of direct usage of internal `configuration-reader` helpers
 - [x] Added/updated unit coverage for new loaders, registry, request-builder behavior, and conversation endpoint facade behavior
 - [x] Exported conversation endpoint facade/contracts through `src/core/index.ts` and `src/api/index.ts`
-- [x] Verified package health with `pnpm --filter @coveo/headless-future test && pnpm --filter @coveo/headless-future build`
+- [x] Verified package health with `pnpm --filter @coveo/thermidor test && pnpm --filter @coveo/thermidor build`
 
 Carry-forward checklist (to avoid losing architectural intent in 1.6/1.7/1.8):
 
@@ -214,7 +214,7 @@ Completed checklist for 1.6:
 - [x] Updated conversation endpoint facade to keep lifecycle in `pending` after successful call and defer `streaming` promotion to stream lifecycle/dispatcher flow
 - [x] Added unit coverage for lifecycle helpers, event dispatcher, and updated facade lifecycle behavior
 - [x] Hardened conversation endpoint facade error handling to normalize unexpected thrown errors into failure results and reset endpoint lifecycle (`status: idle`, `streaming.isConnected: false`) to avoid pending-state leaks
-- [x] Verified package health with `pnpm --filter @coveo/headless-future test && pnpm --filter @coveo/headless-future build`
+- [x] Verified package health with `pnpm --filter @coveo/thermidor test && pnpm --filter @coveo/thermidor build`
 
 Completed checklist for 1.7:
 
@@ -228,7 +228,7 @@ Completed checklist for 1.7:
 - [x] Added runtime-level guards so late async settlements (post-abort/post-replacement) cannot overwrite active lifecycle state
 - [x] Added focused runtime unit coverage in `src/core/interface/api/conversation-endpoint/conversation-runtime.test.ts` for singleton behavior, submit flow, overlap rejection, abort flow, stream lifecycle, warning preservation, and late-settlement race protection
 - [x] Exported `ConversationRuntime` through `src/core/index.ts` for controller wiring in Phase 1.8
-- [x] Verified package health with `pnpm --filter @coveo/headless-future test && pnpm --filter @coveo/headless-future build`
+- [x] Verified package health with `pnpm --filter @coveo/thermidor test && pnpm --filter @coveo/thermidor build`
 
 Completed checklist for 1.8:
 
@@ -240,11 +240,11 @@ Completed checklist for 1.8:
 - [x] Added a reusable framework-agnostic selector helper (`createMemoizedStateSelector`) under `src/core/interface/utils/` and reused it in the conversation controller state composition
 - [x] Updated conversation controller core imports to come through the `src/core/index.ts` barrel and expanded barrel exports for conversation feature selectors/loaders
 - [x] Added public-behavior controller tests in `src/public/controllers/conversation/conversation-controller.test.ts` covering state composition, delegation, lifecycle visibility, and cross-slice subscription triggers
-- [x] Verified package health with `pnpm --filter @coveo/headless-future test && pnpm --filter @coveo/headless-future build`
+- [x] Verified package health with `pnpm --filter @coveo/thermidor test && pnpm --filter @coveo/thermidor build`
 
 Completed checklist for 1.9:
 
-- [x] Wired `samples/headless-future/conversation-react` to `buildConversationController` for real converse endpoint usage
+- [x] Wired `samples/thermidor/conversation-react` to `buildConversationController` for real converse endpoint usage
 - [x] Updated sample engine initialization to `EngineOptions` style with `navigatorContextProvider` built from browser context
 - [x] Initialized cart contribution with an explicit empty cart payload for request composition continuity
 - [x] Implemented sample submit UX as single-line Enter-to-submit input
@@ -254,7 +254,7 @@ Completed checklist for 1.9:
 - [x] Added inline error banner rendering from conversation controller error state
 - [x] Added unit coverage for submit/abort UI behavior in `src/App.test.tsx`
 - [x] Added deterministic mocked-stream e2e coverage in `tests/smoke.spec.ts` to validate end-to-end submit/stream rendering
-- [x] Verified package health with `pnpm --filter @coveo/headless-future test && pnpm --filter @coveo/headless-future build`
+- [x] Verified package health with `pnpm --filter @coveo/thermidor test && pnpm --filter @coveo/thermidor build`
 
 Completed hardening pass after 1.9 (same branch scope, before Phase 2):
 
@@ -266,8 +266,8 @@ Completed hardening pass after 1.9 (same branch scope, before Phase 2):
 - [x] Removed the thin `conversation-turn-lifecycle` indirection module and inlined endpoint stop/failure transitions in runtime
 - [x] Removed conversation slice loading from `conversation-endpoint-facade`; conversation loading is now explicit at controller/test integration points
 - [x] Refactored sample app composition into focused components/hooks (`src/components/*`, `src/hooks/use-conversation-event-log.ts`, `src/hooks/use-conversation-composer.ts`) while preserving submit/abort behavior
-- [x] Added sample-local controller bootstrap helper at `samples/headless-future/conversation-react/src/conversation-controller.ts` to isolate singleton wiring from UI components
-- [x] Stabilized sample resolution by aliasing `@coveo/headless-future` to source entry in sample Vite config to avoid stale `dist/` behavior during local dev/e2e
+- [x] Added sample-local controller bootstrap helper at `samples/thermidor/conversation-react/src/conversation-controller.ts` to isolate singleton wiring from UI components
+- [x] Stabilized sample resolution by aliasing `@coveo/thermidor` to source entry in sample Vite config to avoid stale `dist/` behavior during local dev/e2e
 - [x] Hardened smoke e2e assertions with scoped locators for streamed text and raw event log checks
 
 ### Phase 2 — A2UI Surface Parsing
@@ -285,7 +285,7 @@ Completed checklist for 2.0:
 - [x] Extended `turn_complete` protocol typing to optionally carry session continuity fields (`conversationSessionId`, `conversationToken`)
 - [x] Updated dispatcher behavior to patch session continuity from `turn_complete` before terminal completion
 - [x] Added dispatcher test coverage for `turn_complete` alignment and no-op handling for `STATE_SNAPSHOT`/`ACTIVITY_SNAPSHOT` without warnings
-- [x] Verified package health with `pnpm --filter @coveo/headless-future test && pnpm --filter @coveo/headless-future build`
+- [x] Verified package health with `pnpm --filter @coveo/thermidor test && pnpm --filter @coveo/thermidor build`
 
 ### Phase 3 — Orchestration
 

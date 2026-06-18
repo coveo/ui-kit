@@ -6,7 +6,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const headlessFutureRoot = path.resolve(
   __dirname,
-  '../../../packages/headless-future'
+  '../../../packages/thermidor'
 );
 
 export default defineConfig({

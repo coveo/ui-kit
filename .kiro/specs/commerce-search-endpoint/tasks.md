@@ -2,7 +2,7 @@
 
 ## Overview
 
-This plan implements the Commerce Search v2 API client layer in `packages/headless-future`, following the proven layered architecture: Types → Client → Request Selector → Response Handler → Thunk Slice → Thunk → Interface Wiring. New domain slices (sort, triggers, query correction) are created as needed. Each task builds incrementally, wiring components together as they become available.
+This plan implements the Commerce Search v2 API client layer in `packages/thermidor`, following the proven layered architecture: Types → Client → Request Selector → Response Handler → Thunk Slice → Thunk → Interface Wiring. New domain slices (sort, triggers, query correction) are created as needed. Each task builds incrementally, wiring components together as they become available.
 
 ## Tasks
 

@@ -2,7 +2,7 @@
 
 ## Overview
 
-Add a results-per-page `<select>` control to the `RoutedSearchResults` component in the `conversation-react` sample app, mirroring the existing pattern in `RoutedCommerceResults`. No headless-future package changes are needed — the existing `buildPaginationController` and search endpoint request selector already support search interfaces with pagination.
+Add a results-per-page `<select>` control to the `RoutedSearchResults` component in the `conversation-react` sample app, mirroring the existing pattern in `RoutedCommerceResults`. No thermidor package changes are needed — the existing `buildPaginationController` and search endpoint request selector already support search interfaces with pagination.
 
 ## Tasks
 
@@ -58,9 +58,9 @@ Add a results-per-page `<select>` control to the `RoutedSearchResults` component
 ## Notes
 
 - Tasks marked with `*` are optional and can be skipped for faster MVP
-- The only code change required is in `samples/headless-future/conversation-react/src/RoutedSearchResults.tsx`
+- The only code change required is in `samples/thermidor/conversation-react/src/RoutedSearchResults.tsx`
 - The implementation mirrors `RoutedCommerceResults.tsx` which already has the same pagination select pattern
-- No headless-future package changes needed — controller and selector already support search interfaces
+- No thermidor package changes needed — controller and selector already support search interfaces
 - Property tests validate the existing pagination controller and selector behavior (regression safety)
 - Each task references specific requirements for traceability
 

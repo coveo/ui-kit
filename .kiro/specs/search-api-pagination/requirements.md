@@ -2,16 +2,16 @@
 
 ## Introduction
 
-This feature adds pagination controls (page navigation and results-per-page selection) for search API response sub-interfaces in the `conversation-react` sample application. The existing `buildPaginationController` in `headless-future` is reused — it already works for both commerce and search interfaces because both share the same pagination slice (`firstResult`, `pageSize`, `totalCount`). The search endpoint request selector already maps `firstResult` and `pageSize` to the Search API's `firstResult` and `numberOfResults` request body fields. The work here is extending the `RoutedSearchResults` component with a results-per-page selector and verifying that the pagination controller's `selectPage` and `setPageSize` methods correctly trigger re-fetches against the search endpoint.
+This feature adds pagination controls (page navigation and results-per-page selection) for search API response sub-interfaces in the `conversation-react` sample application. The existing `buildPaginationController` in `thermidor` is reused — it already works for both commerce and search interfaces because both share the same pagination slice (`firstResult`, `pageSize`, `totalCount`). The search endpoint request selector already maps `firstResult` and `pageSize` to the Search API's `firstResult` and `numberOfResults` request body fields. The work here is extending the `RoutedSearchResults` component with a results-per-page selector and verifying that the pagination controller's `selectPage` and `setPageSize` methods correctly trigger re-fetches against the search endpoint.
 
 ## Glossary
 
-- **Pagination_Controller**: The existing `headless-future` controller (`buildPaginationController`) that exposes pagination state and navigation methods for any interface that has a `search` thunk.
+- **Pagination_Controller**: The existing `thermidor` controller (`buildPaginationController`) that exposes pagination state and navigation methods for any interface that has a `search` thunk.
 - **Search_Interface**: A sub-interface built by `buildSearchInterface` that dispatches against the Coveo Search API endpoint using `firstResult` and `numberOfResults` request body parameters.
 - **Commerce_Interface**: A sub-interface built by `buildCommerceInterface` that dispatches against the Commerce Search API endpoint using `page` and `perPage` request body parameters.
 - **Search_Endpoint_Request_Selector**: The selector in `search-endpoint-request-selector.ts` that derives the Search API request body from pagination slice state, mapping `firstResult` → `firstResult` and `pageSize` → `numberOfResults`.
 - **RoutedSearchResults**: The React component in `conversation-react` that renders search results and pagination controls for a routed search sub-interface.
-- **Conversation_React_Sample**: The sample application at `samples/headless-future/conversation-react/` that demonstrates generative interfaces with routed sub-interfaces.
+- **Conversation_React_Sample**: The sample application at `samples/thermidor/conversation-react/` that demonstrates generative interfaces with routed sub-interfaces.
 - **Page_Size**: The number of results requested per page, controlled by `setPageSize` on the Pagination_Controller. Default is 10.
 - **First_Result**: The zero-indexed offset of the first result to return, derived from `page * pageSize`.
 

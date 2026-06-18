@@ -5,7 +5,7 @@ import {
   type ProductListControllerState,
   type PaginationControllerState,
   type PaginationController,
-} from '@coveo/headless-future';
+} from '@coveo/thermidor';
 import {ProductCard} from '../ProductCard/ProductCard.js';
 import {Pagination} from '../Pagination/Pagination.js';
 import styles from './RoutedCommerceResults.module.css';

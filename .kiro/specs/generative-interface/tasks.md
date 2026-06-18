@@ -2,7 +2,7 @@
 
 ## Overview
 
-Implement the generative interface for headless-future: a conversational layer that talks to `/converse`, manages turn history, and spawns interactive sub-interfaces when the endpoint routes to a known API. Includes a minimal React sample app demonstrating the full flow.
+Implement the generative interface for thermidor: a conversational layer that talks to `/converse`, manages turn history, and spawns interactive sub-interfaces when the endpoint routes to a known API. Includes a minimal React sample app demonstrating the full flow.
 
 ## Tasks
 
@@ -39,7 +39,7 @@ Implement the generative interface for headless-future: a conversational layer t
     - _Requirements: 2, 6, 8, 9_
 
 - [x] 7. Create React sample setup
-  - [x] 7.1 Create `samples/headless-future/conversation-react/src/generative-setup.ts`: build engine, create generative interface with `commerceSearchControllers` and `searchControllers` arrays, build and export converse controller.
+  - [x] 7.1 Create `samples/thermidor/conversation-react/src/generative-setup.ts`: build engine, create generative interface with `commerceSearchControllers` and `searchControllers` arrays, build and export converse controller.
     - _Requirements: 1, 9_
 
 - [x] 8. Create React sample conversational UI
@@ -77,5 +77,5 @@ Implement the generative interface for headless-future: a conversational layer t
 
 - This is a PoC — no backward compatibility concerns.
 - The existing `ConversationRuntime` and `ConversationEndpointFacade` provide a reference implementation for streaming patterns.
-- The sample app already has a working Vite + React setup with `@coveo/headless-future` as a workspace dependency.
+- The sample app already has a working Vite + React setup with `@coveo/thermidor` as a workspace dependency.
 - Sub-interface hydration reuses existing `buildCommerceInterface` / `buildSearchInterface` factories — no new interface types needed.

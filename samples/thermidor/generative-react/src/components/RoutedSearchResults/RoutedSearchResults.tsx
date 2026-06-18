@@ -6,7 +6,7 @@ import {
   type ResultListControllerState,
   type PaginationControllerState,
   type PaginationController,
-} from '@coveo/headless-future';
+} from '@coveo/thermidor';
 import {ArticleCard} from '../ArticleCard/ArticleCard.js';
 import {Pagination} from '../Pagination/Pagination.js';
 import styles from './RoutedSearchResults.module.css';

@@ -2,7 +2,7 @@
 
 ## Overview
 
-This feature introduces a `PaginationController` for commerce search interfaces in `packages/headless-future`. The controller follows the established controller pattern (adopt slice → selectors → expose state + subscribe + methods) used by the existing `ProductListController`. It reads from the existing pagination slice, derives user-friendly page state, and provides a `selectPage(page)` method that updates pagination state and re-executes the commerce search thunk.
+This feature introduces a `PaginationController` for commerce search interfaces in `packages/thermidor`. The controller follows the established controller pattern (adopt slice → selectors → expose state + subscribe + methods) used by the existing `ProductListController`. It reads from the existing pagination slice, derives user-friendly page state, and provides a `selectPage(page)` method that updates pagination state and re-executes the commerce search thunk.
 
 The controller is additionally integrated into the `conversation-react` sample app's `RoutedCommerceResults` component to demonstrate per-sub-interface pagination with proper state isolation.
 

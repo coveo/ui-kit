@@ -2,16 +2,16 @@
 
 ## Overview
 
-This feature adds end-to-end support for the `search-api-response` activity type across three packages: `mock-converse-api`, `headless-future`, and the `conversation-react` sample. The primary new work is:
+This feature adds end-to-end support for the `search-api-response` activity type across three packages: `mock-converse-api`, `thermidor`, and the `conversation-react` sample. The primary new work is:
 
 1. **mock-converse-api**: Two new prompt/template mappings ("surfboard care" → `response6.txt`, "boating safety" → `response7.txt`) and a README update.
 2. **conversation-react**: New suggestion entries, a search result list with clickable links, result count, empty-state message, and pagination controls.
 
-The headless-future layer already fully supports `search-api-response` routing via `generative-hydration.ts` (which maps it to the `'search'` use case), `buildResultListController`, and `buildPaginationController`. No headless-future code changes are required.
+The thermidor layer already fully supports `search-api-response` routing via `generative-hydration.ts` (which maps it to the `'search'` use case), `buildResultListController`, and `buildPaginationController`. No thermidor code changes are required.
 
 ### Design Decisions
 
-- **No headless-future changes**: The `ACTIVITY_TYPE_TO_ROUTED_USE_CASE` map already contains `'search-api-response': 'search'`, and the `buildSearchInterface` + hydration pipeline already parses results and pagination from the response content. The existing `RoutedSearchResults` component already demonstrates the pattern. The work is extending it with pagination support.
+- **No thermidor changes**: The `ACTIVITY_TYPE_TO_ROUTED_USE_CASE` map already contains `'search-api-response': 'search'`, and the `buildSearchInterface` + hydration pipeline already parses results and pagination from the response content. The existing `RoutedSearchResults` component already demonstrates the pattern. The work is extending it with pagination support.
 - **Pagination in RoutedSearchResults**: Follow the same pattern as `RoutedCommerceResults` which already integrates `buildPaginationController`.
 - **Facets out of scope**: Only result list and pagination are rendered. Facet data in the response payload is ignored by the UI.
 
@@ -62,7 +62,7 @@ The existing `prompt-matcher.ts` already trims and lowercases the input before c
 
 The existing `template-loader.ts` already throws a fatal error with the file path if a template file is missing on disk (requirement 1.5 is already satisfied by the current implementation).
 
-### headless-future (No Changes Required)
+### thermidor (No Changes Required)
 
 The following existing code already satisfies Requirement 3:
 

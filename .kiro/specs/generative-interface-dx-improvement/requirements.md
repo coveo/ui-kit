@@ -89,7 +89,7 @@ This feature removes the need for developers to pass controller builders (e.g., 
 
 ### Requirement 7: Removal of Builder Registry
 
-**User Story:** As a developer maintaining the headless-future package, I want to remove the Builder_Registry concept from the codebase, so that the architecture is simpler and has fewer indirection layers.
+**User Story:** As a developer maintaining the thermidor package, I want to remove the Builder_Registry concept from the codebase, so that the architecture is simpler and has fewer indirection layers.
 
 #### Acceptance Criteria
 
@@ -112,7 +112,7 @@ This feature removes the need for developers to pass controller builders (e.g., 
 
 ### Requirement 9: Public API Surface Encapsulation
 
-**User Story:** As a developer consuming headless-future, I want the public type surface to only expose types I need to interact with, so that internal implementation details do not leak into my application's type dependencies.
+**User Story:** As a developer consuming thermidor, I want the public type surface to only expose types I need to interact with, so that internal implementation details do not leak into my application's type dependencies.
 
 #### Acceptance Criteria
 

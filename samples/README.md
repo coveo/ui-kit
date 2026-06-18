@@ -26,13 +26,13 @@ Samples using `@coveo/headless` controllers to build fully custom search and com
 | [commerce-react](./headless/commerce-react/) | Custom commerce interface using Headless commerce controllers | React     | Commerce |
 | [search-react](./headless/search-react/)     | Custom search interface using Headless search controllers     | React     | Search   |
 
-### [Headless Future Samples](./headless-future/)
+### [Headless Future Samples](./thermidor/)
 
-Samples using `@coveo/headless-future` for upcoming conversational and search experiences.
+Samples using `@coveo/thermidor` for upcoming conversational and search experiences.
 
-| Sample                                                      | Description                                                           | Framework    | Use Case     |
-| ----------------------------------------------------------- | --------------------------------------------------------------------- | ------------ | ------------ |
-| [conversation-react](./headless-future/conversation-react/) | React + Vite bootstrap for Headless Future conversational integration | React + Vite | Conversation |
+| Sample                                                | Description                                                           | Framework    | Use Case     |
+| ----------------------------------------------------- | --------------------------------------------------------------------- | ------------ | ------------ |
+| [conversation-react](./thermidor/conversation-react/) | React + Vite bootstrap for Headless Future conversational integration | React + Vite | Conversation |
 
 ### [Headless SSR Samples](./headless-ssr/)
 
@@ -87,7 +87,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines on creating and maintain
 
 **Use Headless Future samples when:**
 
-- You are evaluating or prototyping with `@coveo/headless-future`
+- You are evaluating or prototyping with `@coveo/thermidor`
 - You want to build conversational experiences on the upcoming architecture
 
 **Use Headless SSR samples when:**

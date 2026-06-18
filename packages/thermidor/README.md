@@ -1,6 +1,6 @@
 # Coveo Headless Future
 
-`@coveo/headless-future` is the experimental unified interaction engine package for traditional search and conversational/agentic flows.
+`@coveo/thermidor` is the experimental unified interaction engine package for traditional search and conversational/agentic flows.
 
 ## Scope
 
@@ -11,6 +11,6 @@
 ## Development
 
 ```bash
-pnpm --filter @coveo/headless-future build
-pnpm --filter @coveo/headless-future test
+pnpm --filter @coveo/thermidor build
+pnpm --filter @coveo/thermidor test
 ```

@@ -2,7 +2,7 @@
 
 ## Overview
 
-This feature adds results-per-page controls to the `RoutedSearchResults` component in the `conversation-react` sample, completing its pagination UI to match the existing `RoutedCommerceResults` pattern. The key architectural insight is that no headless-future controller or slice changes are needed — `buildPaginationController` already provides `selectPage` and `setPageSize` for any interface with a `search` thunk, and the `search-endpoint-request-selector` already maps `firstResult` and `pageSize` to the Search API's `firstResult` and `numberOfResults` body parameters.
+This feature adds results-per-page controls to the `RoutedSearchResults` component in the `conversation-react` sample, completing its pagination UI to match the existing `RoutedCommerceResults` pattern. The key architectural insight is that no thermidor controller or slice changes are needed — `buildPaginationController` already provides `selectPage` and `setPageSize` for any interface with a `search` thunk, and the `search-endpoint-request-selector` already maps `firstResult` and `pageSize` to the Search API's `firstResult` and `numberOfResults` body parameters.
 
 ### Design Decisions
 
@@ -10,7 +10,7 @@ This feature adds results-per-page controls to the `RoutedSearchResults` compone
 | ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Reuse existing `buildPaginationController`        | Controller already supports both commerce and search interfaces via the shared pagination slice and `THUNKS.search` symbol. No new controller needed.                      |
 | Mirror `RoutedCommerceResults` pagination pattern | Consistent UX between commerce and search results. Same page sizes (5, 10, 20, 50), same Previous/Next + select layout.                                                    |
-| No headless-future code changes                   | The search endpoint request selector already maps `pageSize → numberOfResults` and `firstResult → firstResult`. The pagination slice and controller are endpoint-agnostic. |
+| No thermidor code changes                         | The search endpoint request selector already maps `pageSize → numberOfResults` and `firstResult → firstResult`. The pagination slice and controller are endpoint-agnostic. |
 | Page size options: 5, 10, 20, 50                  | Matches the commerce results component. These are typical API-friendly sizes that align with Coveo Search API limits.                                                      |
 | `<select>` element for results-per-page           | Simple, accessible native control. Matches the commerce pattern and avoids custom dropdown complexity in a sample app.                                                     |
 
@@ -106,12 +106,12 @@ The component already has Previous/Next buttons and the `buildPaginationControll
 
 ### Existing Interfaces (Unchanged)
 
-| Interface                             | Location                                                                                    | Role                                                           |
-| ------------------------------------- | ------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
-| `PaginationController`                | `headless-future/src/public/controllers/pagination/pagination-controller.ts`                | Exposes `state`, `selectPage()`, `setPageSize()`               |
-| `PaginationControllerState`           | Same file                                                                                   | `{page, pageSize, totalCount, totalPages}`                     |
-| `PaginationControllerOptions`         | Same file                                                                                   | `{interface: Interface & Requires<'search'>}`                  |
-| `createSearchEndpointRequestSelector` | `headless-future/src/core/internal/api/search-endpoint/search-endpoint-request-selector.ts` | Maps `firstResult → firstResult`, `pageSize → numberOfResults` |
+| Interface                             | Location                                                                              | Role                                                           |
+| ------------------------------------- | ------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| `PaginationController`                | `thermidor/src/public/controllers/pagination/pagination-controller.ts`                | Exposes `state`, `selectPage()`, `setPageSize()`               |
+| `PaginationControllerState`           | Same file                                                                             | `{page, pageSize, totalCount, totalPages}`                     |
+| `PaginationControllerOptions`         | Same file                                                                             | `{interface: Interface & Requires<'search'>}`                  |
+| `createSearchEndpointRequestSelector` | `thermidor/src/core/internal/api/search-endpoint/search-endpoint-request-selector.ts` | Maps `firstResult → firstResult`, `pageSize → numberOfResults` |
 
 ### Component Props (Unchanged)
 

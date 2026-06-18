@@ -4,11 +4,11 @@ description: Kick off a sub-phase of the conversational POC. Use at the start of
 agent: agent
 ---
 
-You are starting a new sub-phase of the headless-future conversational POC.
+You are starting a new sub-phase of the thermidor conversational POC.
 
 ## Step 1 — Load context
 
-Read the overarching plan from `/memories/repo/conversational-poc-plan.md`. Also read `/memories/repo/headless-future-streaming-refactor-notes.md` if it exists. This gives you the full picture of what's been decided and what's been done.
+Read the overarching plan from `/memories/repo/conversational-poc-plan.md`. Also read `/memories/repo/thermidor-streaming-refactor-notes.md` if it exists. This gives you the full picture of what's been decided and what's been done.
 
 ## Step 2 — Confirm the sub-phase
 
@@ -20,7 +20,7 @@ Run a focused design interview for **only** that sub-phase. Do not re-litigate d
 
 ## Step 4 — Implement
 
-Once the interview is complete and all questions are resolved, switch to implementation mode. Follow test-first discipline: unit tests before wiring. Verify with `pnpm --filter @coveo/headless-future test && pnpm --filter @coveo/headless-future build`.
+Once the interview is complete and all questions are resolved, switch to implementation mode. Follow test-first discipline: unit tests before wiring. Verify with `pnpm --filter @coveo/thermidor test && pnpm --filter @coveo/thermidor build`.
 
 ## Step 5 — Update the plan
 

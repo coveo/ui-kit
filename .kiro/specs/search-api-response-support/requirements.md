@@ -2,17 +2,17 @@
 
 ## Introduction
 
-This feature adds end-to-end support for the `search-api-response` activity type across the mock-converse-api, headless-future, and conversation-react packages. Two new prompts ("surfboard care" and "boating safety") are introduced in the mock server, and the conversation-react sample is updated to expose these prompts and render search results with pagination when the response is received.
+This feature adds end-to-end support for the `search-api-response` activity type across the mock-converse-api, thermidor, and conversation-react packages. Two new prompts ("surfboard care" and "boating safety") are introduced in the mock server, and the conversation-react sample is updated to expose these prompts and render search results with pagination when the response is received.
 
 ## Glossary
 
 - **Mock_Converse_API**: The lightweight Node.js HTTP server (`packages/mock-converse-api`) that replays pre-recorded SSE responses to simulate the Coveo `/converse` endpoint.
-- **Headless_Future**: The Redux-based headless library (`packages/headless-future`) that processes converse API streams and exposes controllers for UI consumption.
-- **Conversation_React_Sample**: The React sample application (`samples/headless-future/conversation-react`) that demonstrates conversational search flows.
+- **Headless_Future**: The Redux-based headless library (`packages/thermidor`) that processes converse API streams and exposes controllers for UI consumption.
+- **Conversation_React_Sample**: The React sample application (`samples/thermidor/conversation-react`) that demonstrates conversational search flows.
 - **Search_API_Response**: An activity type (`search-api-response`) in the converse API stream that carries a Coveo Search API payload including results, facets, and pagination metadata.
 - **Prompt_Template_Map**: The lookup table in `mock-converse-api/src/constants.ts` that maps user prompt strings to pre-recorded response template identifiers.
-- **Result_List_Controller**: The headless-future controller that exposes parsed search results from a routed search interface.
-- **Pagination_Controller**: The headless-future controller that exposes pagination state (total count, current page, page size) from a routed search interface.
+- **Result_List_Controller**: The thermidor controller that exposes parsed search results from a routed search interface.
+- **Pagination_Controller**: The thermidor controller that exposes pagination state (total count, current page, page size) from a routed search interface.
 
 ## Requirements
 
@@ -41,7 +41,7 @@ This feature adds end-to-end support for the `search-api-response` activity type
 
 ### Requirement 3: Parse Search API Response Activity
 
-**User Story:** As a UI developer, I want headless-future to parse the `search-api-response` activity type into structured result, facet, and pagination state, so that I can build search UIs on top of conversational flows.
+**User Story:** As a UI developer, I want thermidor to parse the `search-api-response` activity type into structured result, facet, and pagination state, so that I can build search UIs on top of conversational flows.
 
 #### Acceptance Criteria
 

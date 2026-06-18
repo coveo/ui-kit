@@ -8,7 +8,7 @@ Implement a `PaginationController` for commerce search interfaces following the 
 
 - [x] 1. Create pagination controller types and implementation
   - [x] 1.1 Create pagination controller types file
-    - Create `packages/headless-future/src/public/controllers/pagination/pagination-controller-types.ts`
+    - Create `packages/thermidor/src/public/controllers/pagination/pagination-controller-types.ts`
     - Define `PaginationControllerState` interface with `page`, `pageSize`, `totalCount`, `totalPages`
     - Define `PaginationController` interface extending `Controller` with `readonly state` and `selectPage(page: number): void`
     - Define `PaginationControllerOptions` interface with `interface: Interface & Requires<'search'>`
@@ -16,7 +16,7 @@ Implement a `PaginationController` for commerce search interfaces following the 
     - _Requirements: 1.2, 2.1, 2.2, 2.3, 2.4, 3.1_
 
   - [x] 1.2 Create pagination controller implementation
-    - Create `packages/headless-future/src/public/controllers/pagination/pagination-controller.ts`
+    - Create `packages/thermidor/src/public/controllers/pagination/pagination-controller.ts`
     - Implement `buildPaginationController` function that:
       - Extracts `engine` and `stateId` from `options.interface` via `ENGINE` and `STATE_ID` symbols
       - Adopts the pagination slice via `engine.adoptSlice(getOrCreatePaginationSlice(stateId))`
@@ -34,7 +34,7 @@ Implement a `PaginationController` for commerce search interfaces following the 
     - _Requirements: 1.1, 1.2, 1.3, 3.1, 3.2, 3.3, 3.4, 4.1, 4.2_
 
   - [ ]\* 1.3 Write property tests for pagination controller
-    - Create `packages/headless-future/src/public/controllers/pagination/pagination-controller.test.ts`
+    - Create `packages/thermidor/src/public/controllers/pagination/pagination-controller.test.ts`
     - Use fast-check with Vitest
     - **Property 1: Derived state correctness** — For any valid pagination slice state where pageSize > 0, verify `state.page === Math.floor(firstResult / pageSize)` and `state.totalPages === Math.ceil(totalCount / pageSize)`
     - **Validates: Requirements 2.1, 2.4**
@@ -57,7 +57,7 @@ Implement a `PaginationController` for commerce search interfaces following the 
 
 - [x] 2. Export pagination controller from package
   - [x] 2.1 Update public controllers index
-    - Modify `packages/headless-future/src/public/controllers/index.ts`
+    - Modify `packages/thermidor/src/public/controllers/index.ts`
     - Add export for `buildPaginationController` from `./pagination/pagination-controller.js`
     - Add type exports for `PaginationController`, `PaginationControllerOptions`, `PaginationControllerState` from `./pagination/pagination-controller-types.js`
     - _Requirements: 6.1, 6.2_
@@ -67,8 +67,8 @@ Implement a `PaginationController` for commerce search interfaces following the 
 
 - [x] 4. Integrate pagination into sample app
   - [x] 4.1 Update RoutedCommerceResults component with pagination controls
-    - Modify `samples/headless-future/conversation-react/src/RoutedCommerceResults.tsx`
-    - Import `buildPaginationController` and `PaginationControllerState` from `@coveo/headless-future`
+    - Modify `samples/thermidor/conversation-react/src/RoutedCommerceResults.tsx`
+    - Import `buildPaginationController` and `PaginationControllerState` from `@coveo/thermidor`
     - In the `useEffect`, build a second controller: `buildPaginationController({ interface: props.interface })`
     - Add local React state for `PaginationControllerState`
     - Subscribe to pagination controller state changes

@@ -2,9 +2,9 @@
 
 ## Overview
 
-The `shiny-conversation-react` sample is a polished React application demonstrating headless-future DX patterns in a conversational UI. It reuses the same controller-based architecture as the existing `conversation-react` sample but upgrades the visual presentation to stakeholder-ready quality with CSS modules, streaming assembly, collapsible thinking blocks, AGUI surface rendering with loading skeletons, product/article cards, and a turns navigation menu.
+The `shiny-conversation-react` sample is a polished React application demonstrating thermidor DX patterns in a conversational UI. It reuses the same controller-based architecture as the existing `conversation-react` sample but upgrades the visual presentation to stakeholder-ready quality with CSS modules, streaming assembly, collapsible thinking blocks, AGUI surface rendering with loading skeletons, product/article cards, and a turns navigation menu.
 
-The application is a **read-only consumer** of the headless-future public API. It introduces no new library code — only React components and CSS modules that demonstrate correct usage of `buildConverseController`, `buildProductListController`, `buildResultListController`, and `buildPaginationController`.
+The application is a **read-only consumer** of the thermidor public API. It introduces no new library code — only React components and CSS modules that demonstrate correct usage of `buildConverseController`, `buildProductListController`, `buildResultListController`, and `buildPaginationController`.
 
 ### Key Design Decisions
 
@@ -192,7 +192,7 @@ function formatPrice(price: number): string;
 
 ## Data Models
 
-The sample consumes state from headless-future controllers. No custom data storage is introduced.
+The sample consumes state from thermidor controllers. No custom data storage is introduced.
 
 ### Controller State Shapes (consumed)
 
@@ -224,7 +224,7 @@ interface PaginationControllerState {
 }
 ```
 
-### Key Type Definitions (from headless-future)
+### Key Type Definitions (from thermidor)
 
 ```typescript
 interface Turn {

@@ -2,7 +2,7 @@
 
 ## Overview
 
-This design introduces a `buildGenerativeInterface` function and `buildConverseController` into the headless-future multi-interface architecture. The generative interface acts as a conversation orchestrator: it talks to `/converse`, manages turn history, and spawns fully interactive sub-interfaces when the endpoint routes to a known API. It follows the existing patterns (symbol-based opaque interfaces, lazy slice adoption, memoized selectors, runtime classes for streaming) while introducing a new concept of dynamically spawned child interfaces.
+This design introduces a `buildGenerativeInterface` function and `buildConverseController` into the thermidor multi-interface architecture. The generative interface acts as a conversation orchestrator: it talks to `/converse`, manages turn history, and spawns fully interactive sub-interfaces when the endpoint routes to a known API. It follows the existing patterns (symbol-based opaque interfaces, lazy slice adoption, memoized selectors, runtime classes for streaming) while introducing a new concept of dynamically spawned child interfaces.
 
 ## Architecture
 
