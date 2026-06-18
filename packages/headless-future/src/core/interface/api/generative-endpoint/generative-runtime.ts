@@ -9,7 +9,6 @@ import {createConversationEndpointRequestSelector} from '@/src/core/internal/api
 import {readEndpointClientConfiguration} from '@/src/core/internal/configuration/configuration-reader.js';
 import {generateId} from '@/src/core/interface/utils/id-generator.js';
 import type {
-  AgentMessage,
   A2UISurface,
   RoutedInterface,
   TurnStatus,
@@ -21,7 +20,8 @@ export interface GenerativeStatePort {
   replaceTurnId(oldId: string, newId: string): void;
   setRoutedInterface(turnId: string, routedInterface: RoutedInterface): void;
   initAgentResponse(turnId: string): void;
-  appendMessage(turnId: string, message: AgentMessage): void;
+  startMessage(turnId: string, role: string): void;
+  appendMessageDelta(turnId: string, delta: string): void;
   appendSurface(turnId: string, surface: A2UISurface): void;
   startToolCall(turnId: string, toolCallId: string, toolName: string): void;
   appendToolCallArgs(turnId: string, toolCallId: string, delta: string): void;
@@ -197,15 +197,13 @@ export class GenerativeRuntime {
 
       case 'TEXT_MESSAGE_START': {
         this.ensureAgentResponse(turnId);
+        this.statePort.startMessage(turnId, event.role ?? 'assistant');
         return {turnId, isTerminal: false};
       }
 
       case 'TEXT_MESSAGE_CONTENT': {
         this.ensureAgentResponse(turnId);
-        this.statePort.appendMessage(turnId, {
-          content: event.delta,
-          role: 'assistant',
-        });
+        this.statePort.appendMessageDelta(turnId, event.delta);
         return {turnId, isTerminal: false};
       }
 

@@ -1,7 +1,6 @@
 import {createAction} from '@reduxjs/toolkit';
 import type {
   A2UISurface,
-  AgentMessage,
   RoutedInterface,
   TurnStatus,
 } from '@/src/core/interface/generative/generative-types.js';
@@ -23,8 +22,11 @@ export function createGenerativeActions(interfaceId: string) {
     initAgentResponse: createAction<{turnId: string}>(
       `${prefix}/initAgentResponse`
     ),
-    appendMessage: createAction<{turnId: string; message: AgentMessage}>(
-      `${prefix}/appendMessage`
+    startMessage: createAction<{turnId: string; role: string}>(
+      `${prefix}/startMessage`
+    ),
+    appendMessageDelta: createAction<{turnId: string; delta: string}>(
+      `${prefix}/appendMessageDelta`
     ),
     appendSurface: createAction<{turnId: string; surface: A2UISurface}>(
       `${prefix}/appendSurface`

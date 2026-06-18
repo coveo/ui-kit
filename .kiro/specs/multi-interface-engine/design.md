@@ -13,6 +13,7 @@ This design introduces a multi-interface architecture for `headless-future`, ena
 - **Strategy** — Interface factories inject interchangeable endpoint strategies. Controllers remain agnostic to the underlying API implementation (Search, Commerce, Mock, etc.).
 
 Supporting patterns:
+
 - **Factory Method** — `build*Interface` functions and `getOrCreate*` caches produce scoped instances per interface.
 
 ### Benefits of Command-Based Endpoint Architecture
@@ -68,6 +69,7 @@ Flat keys: `"{interfaceId}/{featureName}"`. Global state (configuration) is unsc
 ### Component 1: Engine (unchanged)
 
 No changes to public API. Internally exposes `FullEngine` via `getFullEngine()`:
+
 - `adoptSlice(slice)` — lazy slice injection
 - `read(selector)` — state read
 - `mutate(action)` — dispatch
@@ -105,7 +107,10 @@ export interface Operations {
 // ─── Endpoint Thunk ────────────────────────────────────────────────────
 
 export type EndpointThunk = AsyncThunk<void, {engine: FullEngine}, {}>;
-export type EndpointThunkFactory = (engine: FullEngine, scope: EndpointStateScope) => EndpointThunk;
+export type EndpointThunkFactory = (
+  engine: FullEngine,
+  scope: EndpointStateScope
+) => EndpointThunk;
 
 // ─── Interface Handles ─────────────────────────────────────────────────
 
@@ -117,7 +122,9 @@ export interface Interface<T extends keyof Operations = keyof Operations> {
   readonly [THUNKS]: Record<Operations[T], EndpointThunk[]>;
 }
 
-export interface ComposedInterface<T extends keyof Operations = keyof Operations> {
+export interface ComposedInterface<
+  T extends keyof Operations = keyof Operations,
+> {
   readonly [KIND]: 'composed';
   readonly [STATE_ID]: string;
   readonly [ENGINE]: FullEngine;
@@ -137,22 +144,22 @@ export type Requires<T extends Operations[keyof Operations]> = {
 // ─── Endpoint State Scope ──────────────────────────────────────────────
 
 export interface EndpointStateScope {
-  interfaceId: string;            // the interface this thunk belongs to
-  composedInterfaceId?: string;   // present only when part of a composition
+  interfaceId: string; // the interface this thunk belongs to
+  composedInterfaceId?: string; // present only when part of a composition
 }
 ```
 
 **What the type system enforces:**
 
-| Concern | Mechanism |
-|---------|-----------|
-| Factory must populate all declared operations | Return type `Interface<'search'>` requires `Record<Operations['search'], ...>` on both `[THUNK_FACTORIES]` and `[THUNKS]` |
-| Adding an operation to a type forces factory update | `Operations['search']` widens → factory body incomplete → build error |
-| Controller rejects incompatible interfaces | `Requires<'search'>` structural check via symbol-keyed `[THUNKS]` |
-| Single-interface controller rejects composed | `Interface` via `[KIND]: 'interface'` discriminator |
-| Different types can have different operations | `conversation` only requires `'conversation'`, not `'search'` |
-| Consumers cannot access internal fields | Symbol keys are not exported from public entry points |
-| Composition re-uses correct thunk creators | `[THUNK_FACTORIES]` stores the creator functions; `composeInterfaces` calls them with composed scope |
+| Concern                                             | Mechanism                                                                                                                 |
+| --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| Factory must populate all declared operations       | Return type `Interface<'search'>` requires `Record<Operations['search'], ...>` on both `[THUNK_FACTORIES]` and `[THUNKS]` |
+| Adding an operation to a type forces factory update | `Operations['search']` widens → factory body incomplete → build error                                                     |
+| Controller rejects incompatible interfaces          | `Requires<'search'>` structural check via symbol-keyed `[THUNKS]`                                                         |
+| Single-interface controller rejects composed        | `Interface` via `[KIND]: 'interface'` discriminator                                                                       |
+| Different types can have different operations       | `conversation` only requires `'conversation'`, not `'search'`                                                             |
+| Consumers cannot access internal fields             | Symbol keys are not exported from public entry points                                                                     |
+| Composition re-uses correct thunk creators          | `[THUNK_FACTORIES]` stores the creator functions; `composeInterfaces` calls them with composed scope                      |
 
 ---
 
@@ -166,7 +173,9 @@ export interface BuildSearchInterfaceOptions {
   id?: string;
 }
 
-export function buildSearchInterface(options: BuildSearchInterfaceOptions): Interface<'search'> {
+export function buildSearchInterface(
+  options: BuildSearchInterfaceOptions
+): Interface<'search'> {
   const fullEngine = getFullEngine(options.engine);
   const interfaceId = options.id ?? generateId();
   const scope: EndpointStateScope = {interfaceId};
@@ -183,7 +192,9 @@ export function buildSearchInterface(options: BuildSearchInterfaceOptions): Inte
     [THUNK_FACTORIES]: factories,
     [THUNKS]: {
       search: factories.search.map((factory) => factory(fullEngine, scope)),
-      suggestions: factories.suggestions.map((factory) => factory(fullEngine, scope)),
+      suggestions: factories.suggestions.map((factory) =>
+        factory(fullEngine, scope)
+      ),
     },
   });
 }
@@ -198,27 +209,32 @@ export function buildSearchInterface(options: BuildSearchInterfaceOptions): Inte
 **Purpose:** Combines multiple interfaces into a composite with its own state partition for shared features (query, status). Each thunk reads shared features from the composed partition and reads/writes local features from its sub-interface's partition. The composed interface dispatches thunks to all sub-interfaces in parallel.
 
 ```typescript
-export function composeInterfaces<T extends keyof Operations>(
-  options: {interfaces: Interface<T>[]}
-): ComposedInterface<T> {
+export function composeInterfaces<T extends keyof Operations>(options: {
+  interfaces: Interface<T>[];
+}): ComposedInterface<T> {
   const composedId = generateId();
   const engine = options.interfaces[0][ENGINE];
 
   // For each sub-interface, re-create its thunks scoped to the composed partition
-  const composedThunks = options.interfaces.reduce((acc, iface) => {
-    const scope: EndpointStateScope = {
-      interfaceId: iface[STATE_ID],
-      composedInterfaceId: composedId,
-    };
+  const composedThunks = options.interfaces.reduce(
+    (acc, iface) => {
+      const scope: EndpointStateScope = {
+        interfaceId: iface[STATE_ID],
+        composedInterfaceId: composedId,
+      };
 
-    for (const [operation, factories] of Object.entries(iface[THUNK_FACTORIES])) {
-      const key = operation as Operations[T];
-      acc[key] ??= [];
-      acc[key].push(...factories.map((factory) => factory(engine, scope)));
-    }
+      for (const [operation, factories] of Object.entries(
+        iface[THUNK_FACTORIES]
+      )) {
+        const key = operation as Operations[T];
+        acc[key] ??= [];
+        acc[key].push(...factories.map((factory) => factory(engine, scope)));
+      }
 
-    return acc;
-  }, {} as Record<Operations[T], EndpointThunk[]>);
+      return acc;
+    },
+    {} as Record<Operations[T], EndpointThunk[]>
+  );
 
   return Object.freeze({
     [KIND]: 'composed',
@@ -241,6 +257,7 @@ Each feature (searchBox, results, pagination, facets) provides three independent
 **Key principle (ADR-003):** Non-adopted slices are safe no-ops — selectors fall back to initial state, dispatched actions are ignored when no reducer is injected.
 
 **Actions** — standalone, dispatchable without adoption:
+
 ```typescript
 export function createSearchBoxActions(interfaceId: string) {
   return {
@@ -250,16 +267,25 @@ export function createSearchBoxActions(interfaceId: string) {
 ```
 
 **Selectors** — standalone, return initial state if slice not adopted:
+
 ```typescript
 export function createSearchBoxSelectors(interfaceId: string) {
-  const sliceSelector = createSelectSlice(interfaceId, 'searchBox', initialSearchBoxState);
+  const sliceSelector = createSelectSlice(
+    interfaceId,
+    'searchBox',
+    initialSearchBoxState
+  );
   return {
-    getQuery: createMemoizedStateSelector(sliceSelector, (state) => state.query),
+    getQuery: createMemoizedStateSelector(
+      sliceSelector,
+      (state) => state.query
+    ),
   };
 }
 ```
 
 **Slices** — adopted lazily by controllers:
+
 ```typescript
 export function createSearchBoxSlice(interfaceId: string) {
   const actions = getOrCreateSearchBoxActions(interfaceId);
@@ -276,6 +302,7 @@ export function createSearchBoxSlice(interfaceId: string) {
 ```
 
 **Memoized caches** — one instance per feature per interface:
+
 ```typescript
 const cache = new Map<string, ReturnType<typeof createSearchBoxActions>>();
 export function getOrCreateSearchBoxActions(interfaceId: string) {
@@ -299,7 +326,10 @@ export function getOrCreateSearchBoxActions(interfaceId: string) {
 ```typescript
 import {createAsyncThunk} from '@reduxjs/toolkit';
 
-export function createSearchEndpointThunk(engine: FullEngine, scope: EndpointStateScope): EndpointThunk {
+export function createSearchEndpointThunk(
+  engine: FullEngine,
+  scope: EndpointStateScope
+): EndpointThunk {
   const sharableInterfaceId = scope.composedInterfaceId ?? scope.interfaceId;
 
   // Adopt endpoint slice at creation time (before thunk is ever dispatched)
@@ -357,9 +387,9 @@ function createSearchEndpointSlice(interfaceId: string, thunk: EndpointThunk) {
 function createSearchEndpointRequestSelector(scope: EndpointStateScope) {
   const sharableInterfaceId = scope.composedInterfaceId ?? scope.interfaceId;
 
-  const searchBox = getOrCreateSearchBoxSelectors(sharableInterfaceId);     // query from composed (or self)
+  const searchBox = getOrCreateSearchBoxSelectors(sharableInterfaceId); // query from composed (or self)
   const pagination = getOrCreatePaginationSelectors(scope.interfaceId); // pagination from own interface
-  const facets = getOrCreateFacetsSelectors(scope.interfaceId);         // facets from own interface
+  const facets = getOrCreateFacetsSelectors(scope.interfaceId); // facets from own interface
 
   return createMemoizedStateSelector(
     searchBox.getQuery,
@@ -394,13 +424,13 @@ function createSearchEndpointResponseHandler(interfaceId: string) {
 
 **Data flow summary:**
 
-| Feature | Single Interface | Composed Interface |
-|---------|-----------------|-------------------|
-| Query (read/write) | `interfaceId` | `composedInterfaceId` |
-| Pagination (read) | `interfaceId` | `interfaceId` (sub-interface) |
-| Facets (read) | `interfaceId` | `interfaceId` (sub-interface) |
-| Results (write) | `interfaceId` | `interfaceId` (sub-interface) |
-| Status (read/write) | `interfaceId` | `composedInterfaceId` |
+| Feature             | Single Interface | Composed Interface            |
+| ------------------- | ---------------- | ----------------------------- |
+| Query (read/write)  | `interfaceId`    | `composedInterfaceId`         |
+| Pagination (read)   | `interfaceId`    | `interfaceId` (sub-interface) |
+| Facets (read)       | `interfaceId`    | `interfaceId` (sub-interface) |
+| Results (write)     | `interfaceId`    | `interfaceId` (sub-interface) |
+| Status (read/write) | `interfaceId`    | `composedInterfaceId`         |
 
 ---
 
@@ -415,7 +445,9 @@ export interface SearchBoxControllerOptions {
   interface: Requires<'search'>;
 }
 
-export function buildSearchBoxController(options: SearchBoxControllerOptions): SearchBoxController {
+export function buildSearchBoxController(
+  options: SearchBoxControllerOptions
+): SearchBoxController {
   const engine = options.interface[ENGINE];
   const stateId = options.interface[STATE_ID];
   const thunks = options.interface[THUNKS].search;
@@ -434,7 +466,7 @@ export function buildSearchBoxController(options: SearchBoxControllerOptions): S
       query,
       isLoading: status === 'pending',
       error,
-    }),
+    })
   );
 
   return {
@@ -442,9 +474,7 @@ export function buildSearchBoxController(options: SearchBoxControllerOptions): S
       engine.mutate(actions.setQuery(query));
     },
     submit() {
-      return Promise.all(
-        thunks.map((thunk) => engine.mutate(thunk({engine})))
-      );
+      return Promise.all(thunks.map((thunk) => engine.mutate(thunk({engine}))));
     },
     get state() {
       return engine.read(controllerState);
@@ -463,7 +493,9 @@ export interface ResultListControllerOptions {
   interface: Interface & Requires<'search'>;
 }
 
-export function buildResultListController(options: ResultListControllerOptions): ResultListController {
+export function buildResultListController(
+  options: ResultListControllerOptions
+): ResultListController {
   const engine = options.interface[ENGINE];
   const stateId = options.interface[STATE_ID];
 
@@ -473,7 +505,7 @@ export function buildResultListController(options: ResultListControllerOptions):
 
   const controllerState = createMemoizedStateSelector(
     selectors.getResults,
-    (results) => ({results}),
+    (results) => ({results})
   );
 
   return {
@@ -508,7 +540,7 @@ export function getSearchBoxState(options: GetSearchBoxStateOptions) {
 
   const stateSelector = createMemoizedStateSelector(
     selectors.getQuery,
-    (query) => ({query}),
+    (query) => ({query})
   );
 
   return {
@@ -541,9 +573,7 @@ export function loadSearchBoxActions(options: LoadSearchBoxActionsOptions) {
       engine.mutate(actions.setQuery(query));
     },
     submit() {
-      return Promise.all(
-        thunks.map((thunk) => engine.mutate(thunk({engine})))
-      );
+      return Promise.all(thunks.map((thunk) => engine.mutate(thunk({engine}))));
     },
   };
 }
@@ -589,8 +619,8 @@ interface SearchEndpointState {
 
 ```typescript
 interface EndpointStateScope {
-  interfaceId: string;            // the interface this thunk targets
-  composedInterfaceId?: string;   // present only when part of a composition
+  interfaceId: string; // the interface this thunk targets
+  composedInterfaceId?: string; // present only when part of a composition
 }
 ```
 
@@ -615,41 +645,41 @@ interface CoveoSearchEndpointResponse {
 
 ## Correctness Properties
 
-*A property is a characteristic or behavior that should hold true across all valid executions of a system — essentially, a formal statement about what the system should do. Properties serve as the bridge between human-readable specifications and machine-verifiable correctness guarantees.*
+_A property is a characteristic or behavior that should hold true across all valid executions of a system — essentially, a formal statement about what the system should do. Properties serve as the bridge between human-readable specifications and machine-verifiable correctness guarantees._
 
 ### Property 1: State Isolation
 
-*For any* two interfaces A and B built on the same engine, dispatching any mutation (including thunk-generated actions) scoped to Interface A SHALL NOT alter state partitions belonging to Interface B, and SHALL NOT trigger state change notifications for Interface B subscribers.
+_For any_ two interfaces A and B built on the same engine, dispatching any mutation (including thunk-generated actions) scoped to Interface A SHALL NOT alter state partitions belonging to Interface B, and SHALL NOT trigger state change notifications for Interface B subscribers.
 
 **Validates: Requirements 6.1, 6.2, 6.3, 3.1, 3.2**
 
 ### Property 2: Non-Adopted Slice Safety (Two-Tier Selectors)
 
-*For any* interface and any feature that has not been adopted, selectors reading from that feature's slice SHALL return deterministic initial state values. Actions dispatched targeting that slice SHALL be no-ops. Once the feature self-registers (via controller or action loader), selectors SHALL switch to reading live state.
+_For any_ interface and any feature that has not been adopted, selectors reading from that feature's slice SHALL return deterministic initial state values. Actions dispatched targeting that slice SHALL be no-ops. Once the feature self-registers (via controller or action loader), selectors SHALL switch to reading live state.
 
 **Validates: Requirements 8.1, 8.3, 9.1, 9.2, 9.3**
 
 ### Property 3: Composed Query Propagation
 
-*For any* composed interface with N sub-interfaces, when a controller bound to the composed interface sets a query and dispatches the search thunk, all N endpoint thunks SHALL read that same query value when building their request.
+_For any_ composed interface with N sub-interfaces, when a controller bound to the composed interface sets a query and dispatches the search thunk, all N endpoint thunks SHALL read that same query value when building their request.
 
 **Validates: Requirements 4.4, 7.1**
 
 ### Property 4: Parallel Independence
 
-*For any* composed interface with N sub-interfaces, if one sub-interface's endpoint thunk rejects, the remaining thunks SHALL complete independently and update their respective state partitions without waiting.
+_For any_ composed interface with N sub-interfaces, if one sub-interface's endpoint thunk rejects, the remaining thunks SHALL complete independently and update their respective state partitions without waiting.
 
 **Validates: Requirements 7.2, 7.3**
 
 ### Property 5: Idempotent Adoption
 
-*For any* interface and any feature slice, calling `adoptSlice` multiple times with the same slice SHALL have no effect beyond the first call — state and behavior are identical whether adopted once or N times.
+_For any_ interface and any feature slice, calling `adoptSlice` multiple times with the same slice SHALL have no effect beyond the first call — state and behavior are identical whether adopted once or N times.
 
 **Validates: Requirements 8.2, 9.4**
 
 ### Property 6: Type-Safe Operation Enforcement
 
-*For any* interface without a required operation, passing it to a controller or action loader that requires that operation SHALL produce a compile-time error. Verified via type-level tests (expect-error assertions).
+_For any_ interface without a required operation, passing it to a controller or action loader that requires that operation SHALL produce a compile-time error. Verified via type-level tests (expect-error assertions).
 
 **Validates: Requirements 2.2, 2.3, 2.4**
 
@@ -677,31 +707,39 @@ interface CoveoSearchEndpointResponse {
 
 ## Key Design Decisions
 
-| # | Decision | Rationale |
-|---|----------|-----------|
-| 1 | Interface factories as tree-shaking boundary | Simple DX; per-capability granularity deferred as additive future option |
-| 2 | Flat keyed state (`interfaceId/feature`) | Works natively with RTK `combineSlices().inject()`; O(1) lookup |
-| 3 | Uniform singular `interface` parameter | Eliminates `interface` vs `interfaces` inconsistency |
-| 4 | Centralized request/response (ADR-003) | Type-safe, debuggable, single-file traceability; non-adopted slices make it safe |
-| 5 | `[KIND]` discriminator | Compile-time enforcement that single-interface controllers reject composed; widenable later |
-| 6 | `Operations` interface + `Requires<T>` | `Operations` forces factory completeness per interface type; `Requires` lets controllers declare needs; zero runtime cost |
-| 7 | `EndpointStateScope { interfaceId, composedInterfaceId? }` | Clean separation: thunk always knows its interface; composition is an optional overlay |
-| 8 | Endpoint thunks over facade classes | First-class Redux operations: visible in DevTools, standard async lifecycle (pending/fulfilled/rejected), tree-shakable, pure payload creators, eliminates imperative orchestration |
-| 9 | Thunks dispatched in parallel for composed interfaces | `Promise.all(thunks.map(...))` preserves parallel independence; each thunk handles its own errors |
-| 10 | Unexported symbols for internal fields | Consumers cannot access `[ENGINE]`, `[THUNKS]`, `[STATE_ID]` — symbols not re-exported from public entry points. Eliminates "used private API" support burden |
+| #   | Decision                                                   | Rationale                                                                                                                                                                           |
+| --- | ---------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | Interface factories as tree-shaking boundary               | Simple DX; per-capability granularity deferred as additive future option                                                                                                            |
+| 2   | Flat keyed state (`interfaceId/feature`)                   | Works natively with RTK `combineSlices().inject()`; O(1) lookup                                                                                                                     |
+| 3   | Uniform singular `interface` parameter                     | Eliminates `interface` vs `interfaces` inconsistency                                                                                                                                |
+| 4   | Centralized request/response (ADR-003)                     | Type-safe, debuggable, single-file traceability; non-adopted slices make it safe                                                                                                    |
+| 5   | `[KIND]` discriminator                                     | Compile-time enforcement that single-interface controllers reject composed; widenable later                                                                                         |
+| 6   | `Operations` interface + `Requires<T>`                     | `Operations` forces factory completeness per interface type; `Requires` lets controllers declare needs; zero runtime cost                                                           |
+| 7   | `EndpointStateScope { interfaceId, composedInterfaceId? }` | Clean separation: thunk always knows its interface; composition is an optional overlay                                                                                              |
+| 8   | Endpoint thunks over facade classes                        | First-class Redux operations: visible in DevTools, standard async lifecycle (pending/fulfilled/rejected), tree-shakable, pure payload creators, eliminates imperative orchestration |
+| 9   | Thunks dispatched in parallel for composed interfaces      | `Promise.all(thunks.map(...))` preserves parallel independence; each thunk handles its own errors                                                                                   |
+| 10  | Unexported symbols for internal fields                     | Consumers cannot access `[ENGINE]`, `[THUNKS]`, `[STATE_ID]` — symbols not re-exported from public entry points. Eliminates "used private API" support burden                       |
 
 ---
 
 ## Consumer API
 
 ```typescript
-import {Engine, buildSearchBoxController, buildResultListController} from '@coveo/headless-future';
+import {
+  Engine,
+  buildSearchBoxController,
+  buildResultListController,
+} from '@coveo/headless-future';
 import {buildSearchInterface} from '@coveo/headless-future/interfaces/search';
 import {buildCommerceInterface} from '@coveo/headless-future/interfaces/commerce';
 import {composeInterfaces} from '@coveo/headless-future';
 
 const engine = new Engine({
-  configuration: {organizationId: 'myorg', accessToken: 'token', trackingId: 'sports'},
+  configuration: {
+    organizationId: 'myorg',
+    accessToken: 'token',
+    trackingId: 'sports',
+  },
 });
 
 const search = buildSearchInterface({engine});
@@ -716,7 +754,7 @@ searchBox.setQuery({query: 'laptops'});
 await searchBox.submit(); // parallel: search + commerce
 
 searchBox.state.isLoading; // true while any request is in flight
-searchBox.state.error;     // first error, or null
+searchBox.state.error; // first error, or null
 ```
 
 ---
@@ -778,21 +816,21 @@ src/
 
 ## Requirement Mapping
 
-| Requirement | How Satisfied |
-|---|---|
-| R1: Build an Interface | Per-type build functions return typed Interface with auto-generated or explicit ID |
-| R2: Interface Type Safety | `[KIND]` discriminator + `Operations` interface + `Requires<T>` enforce compile-time compatibility |
-| R3: Controller Binding | Single `interface` param; state read/write scoped to `[STATE_ID]` |
-| R4: Interface Composition | `composeInterfaces` returns generic `ComposedInterface` with own state partition; parallel thunk dispatch |
+| Requirement                     | How Satisfied                                                                                                           |
+| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| R1: Build an Interface          | Per-type build functions return typed Interface with auto-generated or explicit ID                                      |
+| R2: Interface Type Safety       | `[KIND]` discriminator + `Operations` interface + `Requires<T>` enforce compile-time compatibility                      |
+| R3: Controller Binding          | Single `interface` param; state read/write scoped to `[STATE_ID]`                                                       |
+| R4: Interface Composition       | `composeInterfaces` returns generic `ComposedInterface` with own state partition; parallel thunk dispatch               |
 | R5: Actions Scoped to Interface | Action loaders bound to interface's `[STATE_ID]`; can dispatch endpoint thunks directly; type-checked via `Requires<T>` |
-| R6: Interface State Isolation | Flat `interfaceId/feature` keys; mutations target single partition |
-| R7: Parallel Endpoint Requests | `Promise.all(thunks.map(t => engine.mutate(t({engine}))))` — each thunk dispatched independently |
-| R8: Feature Self-Registration | Controllers call `engine.adoptSlice()` on first use; idempotent |
-| R9: Two-Tier Request Selectors | `createSelectSlice` falls back to initialState; operational once adopted |
+| R6: Interface State Isolation   | Flat `interfaceId/feature` keys; mutations target single partition                                                      |
+| R7: Parallel Endpoint Requests  | `Promise.all(thunks.map(t => engine.mutate(t({engine}))))` — each thunk dispatched independently                        |
+| R8: Feature Self-Registration   | Controllers call `engine.adoptSlice()` on first use; idempotent                                                         |
+| R9: Two-Tier Request Selectors  | `createSelectSlice` falls back to initialState; operational once adopted                                                |
 
 ## Constraints Satisfied
 
-| Constraint | How |
-|---|---|
+| Constraint         | How                                                                                                                                                 |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Serializable state | Plain data in Redux store; no closures or class instances in state. Thunks are action creators stored on the interface object (not in Redux state). |
-| Opaque Engine | No new public methods; interface factories use `getFullEngine()` internally |
+| Opaque Engine      | No new public methods; interface factories use `getFullEngine()` internally                                                                         |
