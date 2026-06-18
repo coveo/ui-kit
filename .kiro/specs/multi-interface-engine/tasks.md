@@ -27,7 +27,7 @@ This plan transforms the existing POC in `packages/headless-future/src/` into th
     - Create `src/core/interface/utils/id-generator.ts` with a `generateId()` function returning unique string identifiers for interfaces
     - _Requirements: 1.1, 1.4_
 
-  - [x]* 1.4 Write type-level tests for interface type safety
+  - [x]\* 1.4 Write type-level tests for interface type safety
     - Create `src/core/interface/utils/interface-types.test-d.ts` using `// @ts-expect-error` assertions:
       - **Property 6: Type-Safe Operation Enforcement**
       - Verify `Requires<'search'>` rejects an interface missing search thunks
@@ -75,7 +75,7 @@ This plan transforms the existing POC in `packages/headless-future/src/` into th
     - Add `getOrCreate*` memoized caches
     - _Requirements: 6.1, 8.1_
 
-  - [x]* 2.6 Write unit tests for scoped state factories
+  - [x]\* 2.6 Write unit tests for scoped state factories
     - Test that `createSearchBoxActions` with different IDs produces independent action creators
     - Test that `createSearchBoxSelectors` returns initial state when slice is not adopted
     - Test `getOrCreate*` cache returns same reference on repeated calls
@@ -115,7 +115,7 @@ This plan transforms the existing POC in `packages/headless-future/src/` into th
       - `createSearchEndpointResponseHandler(interfaceId: string)` returning a function that dispatches results, pagination totalCount, and facet updates to the specified interface's partitions
     - _Requirements: 6.1, 6.2_
 
-  - [x]* 4.5 Write unit tests for search endpoint thunk
+  - [x]\* 4.5 Write unit tests for search endpoint thunk
     - Test thunk dispatches pending → fulfilled lifecycle on success
     - Test thunk dispatches pending → rejected lifecycle on failure
     - Test request selector reads query from `composedInterfaceId` when present
@@ -151,7 +151,7 @@ This plan transforms the existing POC in `packages/headless-future/src/` into th
       - Runtime validation: throw on empty array or mismatched engines
     - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.7_
 
-  - [ ]* 5.4 Write unit tests for interface factories and composition
+  - [ ]\* 5.4 Write unit tests for interface factories and composition
     - Test `buildSearchInterface` returns frozen object with correct symbol keys
     - Test explicit `id` parameter is used as `[STATE_ID]`
     - Test `composeInterfaces` re-creates thunks with composed scope
@@ -186,7 +186,7 @@ This plan transforms the existing POC in `packages/headless-future/src/` into th
       - Replace with `interface: Requires<...>` per-controller pattern (or remove shared `ControllerOptions` if each controller defines its own)
     - _Requirements: 3.5_
 
-  - [ ]* 7.4 Write unit tests for controllers
+  - [ ]\* 7.4 Write unit tests for controllers
     - Test `buildSearchBoxController` dispatches all thunks on `submit()`
     - Test `buildResultListController` rejects composed interface at compile time (type test)
     - Test controller state is reactive via subscribe
@@ -207,7 +207,7 @@ This plan transforms the existing POC in `packages/headless-future/src/` into th
       - Return `{setQuery, submit}` where `submit` dispatches all thunks from `[THUNKS].search`
     - _Requirements: 5.1, 5.2, 5.3, 5.4_
 
-  - [ ]* 8.3 Write unit tests for state getters and action loaders
+  - [ ]\* 8.3 Write unit tests for state getters and action loaders
     - Test `getSearchBoxState` returns current query and subscribes to changes
     - Test `loadSearchBoxActions.submit()` dispatches thunks in parallel
     - Test type-level: incompatible interface produces compile error
@@ -227,19 +227,19 @@ This plan transforms the existing POC in `packages/headless-future/src/` into th
     - _Requirements: 1.2, 1.3, 2.1_
 
 - [ ] 10. Integration tests
-  - [ ]* 10.1 Write integration test for full single-interface flow
+  - [ ]\* 10.1 Write integration test for full single-interface flow
     - Build engine → build search interface → build search-box controller → set query → submit → assert state updates
     - Verify thunk lifecycle: state transitions from idle → pending → idle
     - **Property 2: Non-Adopted Slice Safety** (end-to-end)
     - **Validates: Requirements 1.1, 3.1, 8.1, 9.1**
 
-  - [ ]* 10.2 Write integration test for composed interface flow
+  - [ ]\* 10.2 Write integration test for composed interface flow
     - Build engine → build two search interfaces → compose → build search-box controller on composed → set query → submit → verify both sub-interfaces receive results
     - **Property 3: Composed Query Propagation**
     - **Property 4: Parallel Independence**
     - **Validates: Requirements 4.1, 4.4, 7.1, 7.2, 7.3**
 
-  - [ ]* 10.3 Write property test for state isolation
+  - [ ]\* 10.3 Write property test for state isolation
     - For any two interfaces on the same engine, mutations on one SHALL NOT alter state of the other or trigger notifications on the other's subscribers
     - **Property 1: State Isolation**
     - **Validates: Requirements 6.1, 6.2, 6.3**
@@ -262,16 +262,16 @@ This plan transforms the existing POC in `packages/headless-future/src/` into th
 ```json
 {
   "waves": [
-    { "id": 0, "tasks": ["1.1", "1.3", "2.2"] },
-    { "id": 1, "tasks": ["1.2", "2.1", "2.3", "2.4", "2.5"] },
-    { "id": 2, "tasks": ["1.4", "2.6", "4.3", "4.4"] },
-    { "id": 3, "tasks": ["4.2", "4.1"] },
-    { "id": 4, "tasks": ["4.5", "5.1", "5.2"] },
-    { "id": 5, "tasks": ["5.3", "7.3"] },
-    { "id": 6, "tasks": ["5.4", "7.1", "7.2"] },
-    { "id": 7, "tasks": ["7.4", "8.1", "8.2"] },
-    { "id": 8, "tasks": ["8.3", "9.1", "9.2"] },
-    { "id": 9, "tasks": ["10.1", "10.2", "10.3"] }
+    {"id": 0, "tasks": ["1.1", "1.3", "2.2"]},
+    {"id": 1, "tasks": ["1.2", "2.1", "2.3", "2.4", "2.5"]},
+    {"id": 2, "tasks": ["1.4", "2.6", "4.3", "4.4"]},
+    {"id": 3, "tasks": ["4.2", "4.1"]},
+    {"id": 4, "tasks": ["4.5", "5.1", "5.2"]},
+    {"id": 5, "tasks": ["5.3", "7.3"]},
+    {"id": 6, "tasks": ["5.4", "7.1", "7.2"]},
+    {"id": 7, "tasks": ["7.4", "8.1", "8.2"]},
+    {"id": 8, "tasks": ["8.3", "9.1", "9.2"]},
+    {"id": 9, "tasks": ["10.1", "10.2", "10.3"]}
   ]
 }
 ```
