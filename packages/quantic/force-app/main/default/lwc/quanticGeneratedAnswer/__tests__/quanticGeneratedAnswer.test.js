@@ -886,6 +886,17 @@ describe('c-quantic-generated-answer', () => {
           expect(singleAnswerBody).toBeNull();
         });
 
+        it('should display the scrollable container', async () => {
+          const element = createTestComponent(followUpOptions);
+          await flushPromises();
+
+          const scrollableContainer = element.shadowRoot.querySelector(
+            '.generated-answer__content--scrollable'
+          );
+
+          expect(scrollableContainer).not.toBeNull();
+        });
+
         it('should pass the engine, citation anchoring and the combined initial and follow-up answers to the thread', async () => {
           const element = createTestComponent({
             ...followUpOptions,

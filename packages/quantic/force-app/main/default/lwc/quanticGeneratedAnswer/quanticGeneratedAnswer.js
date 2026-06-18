@@ -243,8 +243,8 @@ export default class QuanticGeneratedAnswer extends LightningElement {
       ...(this.answerConfigurationId && {
         answerConfigurationId: this.answerConfigurationId,
       }),
-      ...(this.agentId && {
-        agentId: this.agentId,
+      ...(this.agentId?.trim() && {
+        agentId: this.agentId.trim(),
       }),
       fieldsToIncludeInCitations: this.citationFields,
     });
