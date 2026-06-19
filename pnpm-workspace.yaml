@@ -16,6 +16,7 @@ packages:
   - packages/shopify
   - packages/create-atomic-template
   - packages/create-atomic
+  - packages/create-ui
   - packages/create-atomic-component
   - packages/create-atomic-component/template/src/components/sample-component
   - packages/create-atomic-component-project
