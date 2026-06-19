@@ -5,8 +5,11 @@ import {tmpdir} from 'node:os';
 import {join, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {argv} from 'node:process';
-import {getTemplate, getTemplates} from './templates.js';
-import {log} from './utils.js';
+import {downloadTemplate} from './download.js';
+import {resolveSampleDependencies} from './resolve-deps.js';
+import {finalizeProject, installDependencies} from './setup.js';
+import {getTemplate, getTemplates, type Template} from './templates.js';
+import {detectPackageManager, log} from './utils.js';
 
 const HELP = `
 Usage: npm create @coveo/ui <project-name> --template <name>
@@ -59,6 +62,57 @@ export function parseArgs(rawArgs: string[]): CliArgs {
   };
 }
 
+async function isEmptyOrMissing(dir: string): Promise<boolean> {
+  try {
+    await access(dir);
+  } catch {
+    return true; // missing
+  }
+  const entries = await readdir(dir);
+  return entries.length === 0;
+}
+
+/** Downloads, resolves, finalizes, and installs the chosen template. */
+export async function scaffold(
+  template: Template,
+  projectName: string
+): Promise<void> {
+  const targetDir = resolve(process.cwd(), projectName);
+  const tempDir = await mkdtemp(join(tmpdir(), 'create-ui-'));
+
+  try {
+    log.step(`Downloading the "${template.name}" template…`);
+    const sampleDir = await downloadTemplate({
+      samplePath: template.path,
+      destDir: tempDir,
+    });
+
+    log.step('Resolving dependencies…');
+    await resolveSampleDependencies({sampleDir, treeRoot: tempDir});
+
+    log.step(`Creating project in ${targetDir}…`);
+    await finalizeProject({sampleDir, targetDir, projectName});
+  } catch (error) {
+    // Remove any partially-created target directory (it was empty/missing
+    // before scaffolding started, so this is safe).
+    await rm(targetDir, {recursive: true, force: true});
+    throw error;
+  } finally {
+    await rm(tempDir, {recursive: true, force: true});
+  }
+
+  const pm = detectPackageManager();
+  log.step(`Installing dependencies with ${pm}…`);
+  const installed = installDependencies(targetDir, pm);
+
+  log.step('Done!');
+  log.info(`\n  cd ${projectName}`);
+  if (!installed) {
+    log.warn(`Dependency installation failed — run "${pm} install" manually.`);
+  }
+  log.info(`  ${pm} run dev\n`);
+}
+
 export async function main(rawArgs: string[]): Promise<number> {
   const args = parseArgs(rawArgs);
 
@@ -72,19 +126,38 @@ export async function main(rawArgs: string[]): Promise<number> {
     return 0;
   }
 
-  // A `--template` value, when provided, must reference a known, available
-  // template. Scaffolding itself is wired in a follow-up PR.
-  if (args.template !== undefined) {
-    const template = getTemplate(args.template);
-    if (!template) {
-      log.error(`Unknown template "${args.template}".`);
-      log.info(
-        `\nAvailable templates:\n${getTemplates()
-          .map((t) => `  ${t.name}`)
-          .join('\n')}`
-      );
-      return 1;
-    }
+  // Interactive selection is added in a follow-up PR; for now --template and a
+  // project name are required.
+  if (args.template === undefined) {
+    log.error('Please provide a template with --template.');
+    log.info(HELP);
+    return 1;
+  }
+
+  const template = getTemplate(args.template);
+  if (!template) {
+    log.error(`Unknown template "${args.template}".`);
+    log.info(
+      `\nAvailable templates:\n${getTemplates()
+        .map((t) => `  ${t.name}`)
+        .join('\n')}`
+    );
+    return 1;
+  }
+  if (!args.projectName) {
+    log.error('Please provide a project name.');
+    log.info(
+      `\nExample: npm create @coveo/ui my-app --template ${template.name}`
+    );
+    return 1;
+  }
+
+  const targetDir = resolve(process.cwd(), args.projectName);
+  if (!(await isEmptyOrMissing(targetDir))) {
+    log.error(
+      `Target directory "${args.projectName}" already exists and is not empty.`
+    );
+    return 1;
   }
 
   await scaffold(template, args.projectName);
