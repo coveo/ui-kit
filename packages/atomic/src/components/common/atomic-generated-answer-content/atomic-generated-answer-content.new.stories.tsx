@@ -71,16 +71,18 @@ const sampleCitations: GeneratedAnswerCitation[] = [
 const renderCitations = (citations: GeneratedAnswerCitation[]) =>
   html`${citations.map(
     (citation, index) =>
-      html`<atomic-citation
-        .citation=${citation}
-        .index=${index}
-        .sendHoverEndEvent=${() => {}}
-        .interactiveCitation=${{
-          select: () => {},
-          beginDelayedSelect: () => {},
-          cancelPendingSelect: () => {},
-        } as InteractiveCitation}
-      ></atomic-citation>`
+      html`<li class="max-w-full">
+        <atomic-citation
+          .citation=${citation}
+          .index=${index}
+          .sendHoverEndEvent=${() => {}}
+          .interactiveCitation=${{
+            select: () => {},
+            beginDelayedSelect: () => {},
+            cancelPendingSelect: () => {},
+          } as InteractiveCitation}
+        ></atomic-citation>
+      </li>`
   )}`;
 
 const meta: Meta = {
