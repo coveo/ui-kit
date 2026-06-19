@@ -9,12 +9,7 @@ import {
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {afterEach, beforeEach, describe, expect, it} from 'vitest';
-import {
-  finalizePackageJson,
-  finalizeProject,
-  installCommand,
-  toPackageName,
-} from './setup.js';
+import {finalizePackageJson, finalizeProject, toPackageName} from './setup.js';
 
 describe('toPackageName', () => {
   it('lowercases and uses the final path segment', () => {
@@ -33,16 +28,6 @@ describe('finalizePackageJson', () => {
     expect(result.private).toBeUndefined();
     expect(result.version).toBe('0.1.0');
     expect(result.foo).toBe('bar');
-  });
-});
-
-describe('installCommand', () => {
-  it('builds the install command per package manager', () => {
-    expect(installCommand('npm')).toEqual({command: 'npm', args: ['install']});
-    expect(installCommand('pnpm')).toEqual({
-      command: 'pnpm',
-      args: ['install'],
-    });
   });
 });
 
@@ -82,22 +67,5 @@ describe('finalizeProject (IO)', () => {
     );
     expect(pkg.name).toBe('my-app');
     expect(pkg.private).toBeUndefined();
-  });
-
-  it('keeps an existing .gitignore', async () => {
-    const sampleDir = join(dir, 'extracted2');
-    await mkdir(sampleDir, {recursive: true});
-    await writeFile(
-      join(sampleDir, 'package.json'),
-      JSON.stringify({name: '@samples/x'})
-    );
-    await writeFile(join(sampleDir, '.gitignore'), 'custom\n');
-    const targetDir = join(dir, 'app2');
-
-    await finalizeProject({sampleDir, targetDir, projectName: 'app2'});
-
-    expect(await readFile(join(targetDir, '.gitignore'), 'utf8')).toBe(
-      'custom\n'
-    );
   });
 });

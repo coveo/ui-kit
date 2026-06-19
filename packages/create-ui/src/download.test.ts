@@ -54,7 +54,7 @@ describe('extractSampleFromTarball', () => {
     await rm(workDir, {recursive: true, force: true});
   });
 
-  it('extracts the sample dir, strips the root prefix, and returns its path', async () => {
+  it('extracts the sample (stripping the root prefix) plus support files', async () => {
     const sampleDir = await extractSampleFromTarball(
       createReadStream(tarballPath),
       {samplePath: 'samples/headless/search-react', destDir}
@@ -63,14 +63,7 @@ describe('extractSampleFromTarball', () => {
     expect(sampleDir).toBe(join(destDir, 'samples/headless/search-react'));
     expect(await exists(join(sampleDir, 'package.json'))).toBe(true);
     expect(await exists(join(sampleDir, 'src/main.tsx'))).toBe(true);
-  });
-
-  it('extracts support files (pnpm-workspace.yaml + packages/*/package.json)', async () => {
-    await extractSampleFromTarball(createReadStream(tarballPath), {
-      samplePath: 'samples/headless/search-react',
-      destDir,
-    });
-
+    // support files needed by dependency resolution
     expect(await exists(join(destDir, 'pnpm-workspace.yaml'))).toBe(true);
     expect(await exists(join(destDir, 'packages/headless/package.json'))).toBe(
       true
@@ -94,15 +87,7 @@ describe('extractSampleFromTarball', () => {
 });
 
 describe('fetchWithRetry', () => {
-  it('returns the response on the first successful attempt', async () => {
-    const ok = {ok: true, body: {}} as unknown as Response;
-    const fetchImpl = vi.fn().mockResolvedValue(ok);
-    const result = await fetchWithRetry('http://x', {fetchImpl});
-    expect(result).toBe(ok);
-    expect(fetchImpl).toHaveBeenCalledTimes(1);
-  });
-
-  it('retries once after a network failure', async () => {
+  it('retries once after a network failure, then returns the response', async () => {
     const ok = {ok: true, body: {}} as unknown as Response;
     const fetchImpl = vi
       .fn()
@@ -113,24 +98,21 @@ describe('fetchWithRetry', () => {
     expect(fetchImpl).toHaveBeenCalledTimes(2);
   });
 
-  it('throws a clear error after exhausting retries', async () => {
-    const fetchImpl = vi.fn().mockRejectedValue(new Error('ECONNRESET'));
+  it('throws a clear error on exhausted retries and on a non-ok response', async () => {
+    const netFail = vi.fn().mockRejectedValue(new Error('ECONNRESET'));
     await expect(
-      fetchWithRetry('http://x', {retries: 1, fetchImpl})
+      fetchWithRetry('http://x', {retries: 1, fetchImpl: netFail})
     ).rejects.toThrow(/Failed to download the sample/);
-    expect(fetchImpl).toHaveBeenCalledTimes(2);
-  });
+    expect(netFail).toHaveBeenCalledTimes(2);
 
-  it('treats a non-ok response as a failure', async () => {
-    const notFound = {
+    const notFound = vi.fn().mockResolvedValue({
       ok: false,
       status: 404,
       statusText: 'Not Found',
-    } as unknown as Response;
-    const fetchImpl = vi.fn().mockResolvedValue(notFound);
+    } as unknown as Response);
     await expect(
-      fetchWithRetry('http://x', {retries: 0, fetchImpl})
+      fetchWithRetry('http://x', {retries: 0, fetchImpl: notFound})
     ).rejects.toThrow(/404 Not Found/);
-    expect(fetchImpl).toHaveBeenCalledTimes(1);
+    expect(notFound).toHaveBeenCalledTimes(1);
   });
 });

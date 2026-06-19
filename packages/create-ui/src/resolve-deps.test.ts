@@ -20,7 +20,7 @@ const ctx: ResolutionContext = {
 };
 
 describe('parseCatalogs', () => {
-  it('parses the default catalog and named catalogs', () => {
+  it('parses default and named catalogs, defaulting to empty objects', () => {
     const yaml = [
       'catalog:',
       '  vite: 8.0.14',
@@ -32,9 +32,6 @@ describe('parseCatalogs', () => {
     const {catalog, catalogs} = parseCatalogs(yaml);
     expect(catalog.vite).toBe('8.0.14');
     expect(catalogs.react18.react).toBe('18.3.1');
-  });
-
-  it('returns empty objects when no catalog is present', () => {
     expect(parseCatalogs('packages:\n  - a\n')).toEqual({
       catalog: {},
       catalogs: {},
@@ -43,40 +40,31 @@ describe('parseCatalogs', () => {
 });
 
 describe('resolveDependencyMap', () => {
-  it('resolves catalog: to a caret range from the default catalog', () => {
+  it('resolves catalog references (default and named) to caret ranges', () => {
     expect(resolveDependencyMap({vite: 'catalog:'}, ctx)).toEqual({
       vite: '^8.0.14',
     });
-  });
-
-  it('resolves catalog:<name> from a named catalog', () => {
     expect(resolveDependencyMap({react: 'catalog:react18'}, ctx)).toEqual({
       react: '^18.3.1',
     });
   });
 
-  it('resolves workspace: protocols to a caret range from the package version', () => {
+  it('resolves workspace protocols and leaves concrete versions untouched', () => {
     expect(
       resolveDependencyMap(
         {'@coveo/headless': 'workspace:*', '@coveo/auth': 'workspace:^'},
         ctx
       )
     ).toEqual({'@coveo/headless': '^3.40.0', '@coveo/auth': '^2.1.9'});
-  });
-
-  it('leaves concrete versions untouched', () => {
     expect(resolveDependencyMap({express: '5.2.1'}, ctx)).toEqual({
       express: '5.2.1',
     });
   });
 
-  it('throws when a catalog reference cannot be resolved', () => {
+  it('throws when a catalog or workspace reference cannot be resolved', () => {
     expect(() => resolveDependencyMap({unknown: 'catalog:'}, ctx)).toThrow(
       /Cannot resolve "unknown"/
     );
-  });
-
-  it('throws when a workspace dependency has no known version', () => {
     expect(() =>
       resolveDependencyMap({'@coveo/missing': 'workspace:*'}, ctx)
     ).toThrow(/Cannot resolve "@coveo\/missing"/);
