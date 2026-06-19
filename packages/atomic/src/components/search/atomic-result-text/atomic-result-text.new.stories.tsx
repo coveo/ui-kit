@@ -4,7 +4,33 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInResultList} from '@/storybook-utils/search/result-list-wrapper';
 import {wrapInResultTemplate} from '@/storybook-utils/search/result-template-wrapper';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import '@/src/components/search/atomic-result-text/atomic-result-text.js';
+
+const searchApiHarness = new MockSearchApi();
+
+searchApiHarness.searchEndpoint.mock((response) => ({
+  ...response,
+  results: response.results.slice(0, 1).map((r) => ({
+    ...r,
+    excerpt: 'Bonobo the great ape',
+    title: 'Bonobo the great ape',
+    firstSentences: 'Bonobo the great ape',
+    printableUri: 'https://example.com/bonobo',
+    raw: {
+      ...r.raw,
+      author: 'Bonobo',
+      summary: 'Bonobo the great ape',
+    },
+    excerptHighlights: [{offset: 0, length: 6}],
+    titleHighlights: [{offset: 0, length: 6}],
+    firstSentencesHighlights: [{offset: 0, length: 6}],
+    printableUriHighlights: [{offset: 20, length: 6}],
+    summaryHighlights: [{offset: 0, length: 6}],
+  })),
+  totalCount: 1,
+  totalCountFiltered: 1,
+}));
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-result-text',
@@ -12,32 +38,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 );
 
 const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
-  config: {
-    preprocessRequest: (request) => {
-      const parsed = JSON.parse(request.body as string);
-      parsed.numberOfResults = 1;
-      request.body = JSON.stringify(parsed);
-      return request;
-    },
-    search: {
-      preprocessSearchResponseMiddleware: (res) => {
-        res.body.results.forEach((r) => {
-          r.excerpt = 'Bonobo the great ape';
-          r.title = 'Bonobo the great ape';
-          r.firstSentences = 'Bonobo the great ape';
-          r.printableUri = 'https://example.com/bonobo';
-          r.raw.author = 'Bonobo';
-          r.raw.summary = 'Bonobo the great ape';
-          r.excerptHighlights = [{offset: 0, length: 6}];
-          r.titleHighlights = [{offset: 0, length: 6}];
-          r.firstSentencesHighlights = [{offset: 0, length: 6}];
-          r.printableUriHighlights = [{offset: 20, length: 6}];
-          r.summaryHighlights = [{offset: 0, length: 6}];
-        });
-        return res;
-      },
-    },
-  },
+  includeCodeRoot: false,
 });
 
 const {decorator: resultListDecorator} = wrapInResultList(undefined, false);
@@ -56,12 +57,18 @@ const meta: Meta = {
   parameters: {
     ...parameters,
     chromatic: {disableSnapshot: true},
+    msw: {
+      handlers: [...searchApiHarness.handlers],
+    },
     actions: {
       handles: events,
     },
   },
   args,
   argTypes,
+  beforeEach: async () => {
+    searchApiHarness.clearAll();
+  },
 
   play,
 };
