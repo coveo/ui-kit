@@ -18,7 +18,7 @@ Options:
 
 Available templates:
 ${getTemplates()
-  .map((t) => `  ${t.name.padEnd(26)} ${t.description}`)
+  .map((t) => `  ${t.name.padEnd(28)} ${t.description}`)
   .join('\n')}
 
 Example:

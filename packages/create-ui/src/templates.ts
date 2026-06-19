@@ -13,7 +13,7 @@
  * See `samples/CONTRIBUTING.md` for the naming convention.
  */
 
-type Library = 'atomic' | 'headless';
+type Library = 'atomic' | 'headless' | 'headless-ssr';
 
 export interface Template {
   /** CLI-facing template name passed to `--template`. */
