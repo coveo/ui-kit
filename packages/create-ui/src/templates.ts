@@ -26,7 +26,7 @@ export interface Template {
   path: string;
 }
 
-export const templates: Template[] = [
+const templates: Template[] = [
   // TODO: uncomment when template is available
   // {
   //   name: 'atomic-search',
