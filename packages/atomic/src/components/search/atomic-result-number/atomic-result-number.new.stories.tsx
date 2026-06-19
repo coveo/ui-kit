@@ -6,10 +6,26 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInResultList} from '@/storybook-utils/search/result-list-wrapper';
 import {wrapInResultTemplate} from '@/storybook-utils/search/result-template-wrapper';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import '@/src/components/search/atomic-format-currency/atomic-format-currency.js';
 import '@/src/components/search/atomic-format-number/atomic-format-number.js';
 import '@/src/components/search/atomic-format-unit/atomic-format-unit.js';
 import '@/src/components/search/atomic-result-number/atomic-result-number.js';
+
+const searchApiHarness = new MockSearchApi();
+
+searchApiHarness.searchEndpoint.mock((response) => ({
+  ...response,
+  results: response.results.slice(0, 1).map((r) => ({
+    ...r,
+    raw: {
+      ...r.raw,
+      size: 1234567,
+    },
+  })),
+  totalCount: 1,
+  totalCountFiltered: 1,
+}));
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-result-number',
@@ -17,15 +33,6 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 );
 
 const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
-  config: {
-    preprocessRequest: (request) => {
-      const parsed = JSON.parse(request.body as string);
-      parsed.fieldsToInclude = [...parsed.fieldsToInclude, 'size'];
-      parsed.numberOfResults = 1;
-      request.body = JSON.stringify(parsed);
-      return request;
-    },
-  },
   includeCodeRoot: false,
 });
 const {decorator: resultListDecorator} = wrapInResultList('list', false);
@@ -44,12 +51,18 @@ const meta: Meta = {
   parameters: {
     ...parameters,
     chromatic: {disableSnapshot: true},
+    msw: {
+      handlers: [...searchApiHarness.handlers],
+    },
     actions: {
       handles: events,
     },
   },
   args,
   argTypes,
+  beforeEach: async () => {
+    searchApiHarness.clearAll();
+  },
   play,
 };
 
