@@ -1,5 +1,5 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {resultsSlice} from '@/src/core/internal/result-list/result-list-slice.js';
+import {getOrCreateResultsSlice} from '@/src/core/internal/result-list/result-list-slice.js';
 import {loadResultList} from './result-list-loader.js';
 import type {FullEngine} from '@/src/core/interface/engine/engine.js';
 
@@ -17,20 +17,22 @@ describe('loadResultList', () => {
     vi.clearAllMocks();
   });
 
-  it('adopts result list slice on first load', () => {
+  it('adopts scoped result list slice on first load', () => {
     const engine = createMockEngine();
 
-    loadResultList(engine);
+    loadResultList(engine, 'test-interface');
 
     expect(engine.adoptSlice).toHaveBeenCalledTimes(1);
-    expect(engine.adoptSlice).toHaveBeenCalledWith(resultsSlice);
+    expect(engine.adoptSlice).toHaveBeenCalledWith(
+      getOrCreateResultsSlice('test-interface')
+    );
   });
 
   it('does not initialize twice for the same engine', () => {
     const engine = createMockEngine();
 
-    loadResultList(engine);
-    loadResultList(engine);
+    loadResultList(engine, 'test-interface');
+    loadResultList(engine, 'test-interface');
 
     expect(engine.adoptSlice).toHaveBeenCalledTimes(1);
   });
@@ -39,10 +41,20 @@ describe('loadResultList', () => {
     const firstEngine = createMockEngine();
     const secondEngine = createMockEngine();
 
-    loadResultList(firstEngine);
-    loadResultList(secondEngine);
+    loadResultList(firstEngine, 'iface-1');
+    loadResultList(secondEngine, 'iface-1');
 
     expect(firstEngine.adoptSlice).toHaveBeenCalledTimes(1);
     expect(secondEngine.adoptSlice).toHaveBeenCalledTimes(1);
+  });
+
+  it('defaults to "default" interfaceId', () => {
+    const engine = createMockEngine();
+
+    loadResultList(engine);
+
+    expect(engine.adoptSlice).toHaveBeenCalledWith(
+      getOrCreateResultsSlice('default')
+    );
   });
 });

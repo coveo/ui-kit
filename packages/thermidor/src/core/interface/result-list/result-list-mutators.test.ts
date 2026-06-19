@@ -3,13 +3,13 @@
  */
 
 import {describe, it, expect, beforeEach} from 'vitest';
-import {clearResults, setResults} from './result-list-mutators.js';
+import {setResultsFromResponse} from './result-list-mutators.js';
 import {
   createTestEngine,
   createMockSearchResults,
 } from '@/src/test/test-utils.js';
-import {results as selectResults} from './result-list-selectors.js';
-import {resultsSlice} from '@/src/core/internal/result-list/result-list-slice.js';
+import {getResults} from './result-list-selectors.js';
+import {getOrCreateResultsSlice} from '@/src/core/internal/result-list/result-list-slice.js';
 import {FullEngine, getFullEngine} from '@/src/core/interface/engine/engine.js';
 
 describe('resultsMutations', () => {
@@ -17,16 +17,16 @@ describe('resultsMutations', () => {
 
   beforeEach(() => {
     engine = getFullEngine(createTestEngine());
-    engine.adoptSlice(resultsSlice);
+    engine.adoptSlice(getOrCreateResultsSlice('default'));
   });
 
-  describe('setResults()', () => {
+  describe('setResultsFromResponse()', () => {
     it('should return StateMutation object', () => {
       const results = createMockSearchResults(2);
-      const mutation = setResults(results);
+      const mutation = setResultsFromResponse(results);
 
       expect(mutation).toEqual({
-        type: 'results/setResults',
+        type: 'default/results/setResultsFromResponse',
         payload: results,
       });
     });
@@ -34,40 +34,29 @@ describe('resultsMutations', () => {
     it('should update state when used with mutate()', () => {
       const mockResults = createMockSearchResults(3);
 
-      engine.mutate(setResults(mockResults));
+      engine.mutate(setResultsFromResponse(mockResults));
 
-      expect(engine.read(selectResults)).toEqual(mockResults);
+      const selectResults = getResults();
+      expect(engine.read(selectResults)).toHaveLength(3);
+      expect(engine.read(selectResults)[0].uniqueId).toBe(
+        mockResults[0].uniqueId
+      );
     });
 
     it('should accept empty array', () => {
-      engine.mutate(setResults([]));
+      engine.mutate(setResultsFromResponse([]));
 
-      expect(engine.read(selectResults)).toEqual([]);
-    });
-  });
-
-  describe('clearResults()', () => {
-    it('should return StateMutation object without payload', () => {
-      const mutation = clearResults();
-
-      expect(mutation).toEqual({
-        type: 'results/clearResults',
-      });
-    });
-
-    it('should clear results when used with mutate()', () => {
-      engine.mutate(setResults(createMockSearchResults(5)));
-      engine.mutate(clearResults());
-
+      const selectResults = getResults();
       expect(engine.read(selectResults)).toEqual([]);
     });
   });
 
   describe('Integration: multiple mutations', () => {
     it('should work correctly in sequence', () => {
-      engine.mutate(setResults(createMockSearchResults(3)));
-      engine.mutate(clearResults());
+      engine.mutate(setResultsFromResponse(createMockSearchResults(3)));
+      engine.mutate(setResultsFromResponse([]));
 
+      const selectResults = getResults();
       expect(engine.read(selectResults)).toEqual([]);
     });
   });

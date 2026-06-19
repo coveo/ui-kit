@@ -7,48 +7,34 @@ import {
   createTestEngine,
   createMockSearchResults,
 } from '@/src/test/test-utils.js';
-import {
-  hasSearchResults,
-  results as selectResults,
-} from './result-list-selectors.js';
-import {setResults} from './result-list-mutators.js';
+import {getResults} from './result-list-selectors.js';
+import {setResultsFromResponse} from './result-list-mutators.js';
 import {FullEngine, getFullEngine} from '@/src/core/interface/engine/engine.js';
-import {resultsSlice} from '@/src/core/internal/result-list/result-list-slice.js';
+import {getOrCreateResultsSlice} from '@/src/core/internal/result-list/result-list-slice.js';
 
 describe('results selectors', () => {
   let engine: FullEngine;
 
   beforeEach(() => {
     engine = getFullEngine(createTestEngine());
-    engine.adoptSlice(resultsSlice);
+    engine.adoptSlice(getOrCreateResultsSlice('default'));
   });
 
-  describe('results selector', () => {
+  describe('getResults selector', () => {
     it('should return empty array initially', () => {
+      const selectResults = getResults();
       const results = engine.read(selectResults);
       expect(results).toEqual([]);
     });
 
     it('should return updated results after mutation', () => {
       const mockResults = createMockSearchResults(3);
-      engine.mutate(setResults(mockResults));
+      engine.mutate(setResultsFromResponse(mockResults));
 
+      const selectResults = getResults();
       const results = engine.read(selectResults);
-      expect(results).toEqual(mockResults);
-      expect(results.length).toBe(3);
-    });
-  });
-
-  describe('hasSearchResults selector', () => {
-    it('should return false when no results', () => {
-      const hasResults = engine.read(hasSearchResults);
-      expect(hasResults).toBe(false);
-    });
-
-    it('should return true when results are present', () => {
-      engine.mutate(setResults(createMockSearchResults(2)));
-      const hasResults = engine.read(hasSearchResults);
-      expect(hasResults).toBe(true);
+      expect(results).toHaveLength(3);
+      expect(results[0].uniqueId).toBe(mockResults[0].uniqueId);
     });
   });
 });

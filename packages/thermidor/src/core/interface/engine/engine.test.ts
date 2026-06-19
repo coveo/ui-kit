@@ -8,10 +8,10 @@ import {describe, it, expect, beforeEach, vi} from 'vitest';
 import {createTestEngine} from '@/src/test/test-utils.js';
 import {getQuery} from '@/src/core/interface/search-box/search-box-selectors.js';
 import {setQuery} from '@/src/core/interface/search-box/search-box-mutators.js';
-import {clearResults} from '@/src/core/interface/result-list/result-list-mutators.js';
+import {setResultsFromResponse} from '@/src/core/interface/result-list/result-list-mutators.js';
 import {Engine, FullEngine, getFullEngine} from './engine.js';
 import {getOrCreateSearchBoxSlice} from '@/src/core/internal/search-box/search-box-slice.js';
-import {resultsSlice} from '@/src/core/internal/result-list/result-list-slice.js';
+import {getOrCreateResultsSlice} from '@/src/core/internal/result-list/result-list-slice.js';
 import type {NavigatorContextProvider} from '@/src/core/interface/navigator-context/navigator-context-types.js';
 import {EngineOptions} from './engine-types.js';
 import {ConfigurationState} from '../configuration/configuration-types.js';
@@ -22,7 +22,7 @@ describe('Engine: read()', () => {
   beforeEach(() => {
     engine = getFullEngine(createTestEngine());
     engine.adoptSlice(getOrCreateSearchBoxSlice('default'));
-    engine.adoptSlice(resultsSlice);
+    engine.adoptSlice(getOrCreateResultsSlice('default'));
   });
 
   it('should read values from state using a selector', () => {
@@ -56,7 +56,7 @@ describe('Engine: subscribe()', () => {
   beforeEach(() => {
     engine = getFullEngine(createTestEngine());
     engine.adoptSlice(getOrCreateSearchBoxSlice('default'));
-    engine.adoptSlice(resultsSlice);
+    engine.adoptSlice(getOrCreateResultsSlice('default'));
   });
 
   it('should trigger callback when subscribed value changes', () => {
@@ -89,7 +89,7 @@ describe('Engine: subscribe()', () => {
 
     engine.subscribe(getQuery, callback);
 
-    engine.mutate(clearResults());
+    engine.mutate(setResultsFromResponse([]));
 
     expect(callback).not.toHaveBeenCalled();
   });
@@ -152,7 +152,7 @@ describe('Engine: mutate()', () => {
   beforeEach(() => {
     engine = getFullEngine(createTestEngine());
     engine.adoptSlice(getOrCreateSearchBoxSlice('default'));
-    engine.adoptSlice(resultsSlice);
+    engine.adoptSlice(getOrCreateResultsSlice('default'));
   });
 
   it('should update state correctly', () => {
