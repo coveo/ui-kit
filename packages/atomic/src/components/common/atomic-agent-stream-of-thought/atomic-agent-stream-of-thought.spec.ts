@@ -358,9 +358,10 @@ describe('atomic-agent-stream-of-thought', () => {
       });
 
       expect(steps[0].textContent).toContain(
-        i18n.t('agent-generation-step-searched-for')
+        i18n.t('agent-generation-step-searched-for', {
+          query: 'how to reset password',
+        })
       );
-      expect(steps[0].textContent).toContain('how to reset password');
     });
 
     it('should show a checkmark for completed searching step with query', async () => {
@@ -411,9 +412,10 @@ describe('atomic-agent-stream-of-thought', () => {
 
       expect(spinners.length).toBe(1);
       expect(steps[0].textContent).toContain(
-        i18n.t('agent-generation-step-searching-for')
+        i18n.t('agent-generation-step-searching-for', {
+          query: 'how to reset password',
+        })
       );
-      expect(steps[0].textContent).toContain('how to reset password');
     });
 
     it('should not display query text when toolCalls is absent', async () => {
