@@ -8,7 +8,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
   use: {
-    baseURL: 'http://localhost:3000',
+    baseURL: 'http://localhost:4173',
     trace: 'on-first-retry',
   },
   projects: [
@@ -16,18 +16,10 @@ export default defineConfig({
       name: 'chromium',
       use: {...devices['Desktop Chrome']},
     },
-    {
-      name: 'firefox',
-      use: {...devices['Desktop Firefox']},
-    },
-    {
-      name: 'webkit',
-      use: {...devices['Desktop Safari']},
-    },
   ],
   webServer: {
-    command: 'npx ws -d dist -p 3000',
-    port: 3000,
+    command: 'pnpm preview --port 4173',
+    port: 4173,
     reuseExistingServer: !process.env.CI,
   },
 });

@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "vitest run"
+    "test": "vitest run",
+    "e2e": "playwright test"
   },
   "dependencies": {
     "@coveo/headless": "workspace:*",
@@ -15,10 +16,13 @@
     "react-dom": "catalog:"
   },
   "devDependencies": {
+    "@coveo/platform-mock-api": "workspace:*",
+    "@msw/playwright": "0.6.7",
     "@playwright/test": "catalog:",
     "@testing-library/jest-dom": "6.9.1",
     "@testing-library/react": "catalog:",
     "@vitejs/plugin-react": "catalog:",
+    "msw": "catalog:",
     "vite": "catalog:",
     "vite-plugin-static-copy": "3.4.0",
     "vitest": "catalog:"
