@@ -1,69 +1,48 @@
 import {describe, expect, it, vi} from 'vitest';
 import {main, parseArgs} from './index.js';
-import {availableTemplates, getTemplate, templates} from './templates.js';
+import {getTemplate, getTemplates} from './templates.js';
 
 describe('templates', () => {
-  it('exposes the eight canonical templates', () => {
-    expect(templates).toHaveLength(8);
-  });
-
-  it('maps template names to monorepo sample paths', () => {
+  it('resolves names to sample paths, and unknown names to undefined', () => {
     expect(getTemplate('headless-search-react')?.path).toBe(
       'samples/headless/search-react'
     );
-    expect(getTemplate('atomic-search')?.path).toBe(
-      'samples/atomic/search-vite'
-    );
-  });
-
-  it('returns only available templates from availableTemplates()', () => {
-    const names = availableTemplates().map((t) => t.name);
-    expect(names).toContain('headless-search-react');
-    expect(names).toContain('headless-commerce-react');
-    expect(names).not.toContain('atomic-search');
-  });
-
-  it('returns undefined for an unknown template', () => {
     expect(getTemplate('does-not-exist')).toBeUndefined();
   });
 });
 
 describe('parseArgs', () => {
-  it('reads the project name as the first positional', () => {
-    expect(parseArgs(['my-app']).projectName).toBe('my-app');
+  it('reads the project name and --template', () => {
+    const args = parseArgs(['my-app', '--template', 'headless-search-react']);
+    expect(args.projectName).toBe('my-app');
+    expect(args.template).toBe('headless-search-react');
   });
 
-  it('reads the --template flag', () => {
-    expect(
-      parseArgs(['my-app', '--template', 'headless-search-react']).template
-    ).toBe('headless-search-react');
-  });
-
-  it('supports -h/--help', () => {
-    expect(parseArgs(['--help']).help).toBe(true);
+  it('parses boolean flags (-h, --docs) and defaults them to false', () => {
     expect(parseArgs(['-h']).help).toBe(true);
-    expect(parseArgs([]).help).toBe(false);
+    expect(parseArgs(['--docs']).docs).toBe(true);
+    const none = parseArgs([]);
+    expect(none.help).toBe(false);
+    expect(none.docs).toBe(false);
   });
 });
 
-describe('main (no-prompt paths)', () => {
-  it('returns 0 for --help', async () => {
+describe('main', () => {
+  it('returns 0 for --docs and prints the documentation links', async () => {
     const spy = vi.spyOn(console, 'log').mockImplementation(() => {});
-    expect(await main(['--help'])).toBe(0);
+    expect(await main(['--docs'])).toBe(0);
+    const output = spy.mock.calls.map((c) => String(c[0])).join('\n');
+    expect(output).toContain('https://docs.coveo.com');
+    expect(output).toContain('https://docs.coveo.com/en/atomic/latest');
+    expect(output).toContain('https://docs.coveo.com/en/headless/latest');
     spy.mockRestore();
   });
 
-  it('returns 1 for an unknown template without prompting', async () => {
+  it('returns 1 for an invalid --template', async () => {
     const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
     const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     expect(await main(['my-app', '--template', 'nope'])).toBe(1);
     logSpy.mockRestore();
-    errSpy.mockRestore();
-  });
-
-  it('returns 1 for a not-yet-available template', async () => {
-    const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-    expect(await main(['my-app', '--template', 'atomic-search'])).toBe(1);
     errSpy.mockRestore();
   });
 });

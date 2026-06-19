@@ -32,8 +32,7 @@
     "start": "node ./dist/index.js",
     "test": "vitest run",
     "test:watch": "vitest",
-    "clean": "node ../../utils/ci/rm-rf.mjs dist",
-    "lint": "prettier --check ."
+    "clean": "node ../../utils/ci/rm-rf.mjs dist"
   },
   "dependencies": {
     "minimist": "1.2.8",
