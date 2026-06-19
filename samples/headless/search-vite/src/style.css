@@ -1,0 +1,89 @@
+body {
+  font-family: system-ui, sans-serif;
+  margin: 1rem;
+}
+
+.layout {
+  display: flex;
+  gap: 2rem;
+}
+
+aside {
+  min-width: 200px;
+}
+
+main {
+  flex: 1;
+}
+
+#search-box {
+  margin-bottom: 1rem;
+}
+
+#search-box input {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+#search-box ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.25rem 0 0;
+  border: 1px solid #ccc;
+}
+
+#search-box ul:empty {
+  display: none;
+}
+
+#search-box li {
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+}
+
+#search-box li:hover {
+  background: #eee;
+}
+
+.result-item {
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.result-item a {
+  font-size: 1.1rem;
+}
+
+.facet {
+  margin-bottom: 1.5rem;
+}
+
+.facet h3 {
+  margin: 0 0 0.5rem;
+}
+
+.facet ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.facet li {
+  cursor: pointer;
+  padding: 0.2rem 0;
+}
+
+.facet li.selected {
+  font-weight: bold;
+}
+
+#pager {
+  margin-top: 1rem;
+}
+
+#pager button {
+  margin-right: 0.25rem;
+}
