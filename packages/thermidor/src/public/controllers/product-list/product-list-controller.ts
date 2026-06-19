@@ -1,8 +1,5 @@
 import type {Controller} from '../controller-types.js';
-import type {
-  Interface,
-  Requires,
-} from '@/src/core/interface/utils/interface-types.js';
+import type {Requires} from '@/src/core/interface/utils/interface-types.js';
 import type {Product} from '@/src/core/interface/product-list/product-list-types.js';
 import {getOrCreateProductListSelectors} from '@/src/core/internal/product-list/product-list-selectors.js';
 import {getOrCreateProductListSlice} from '@/src/core/internal/product-list/product-list-slice.js';
@@ -28,7 +25,7 @@ export const buildProductListController = (
     get state() {
       return engine.read(controllerState);
     },
-    subscribe(callback: () => void) {
+    subscribe(callback) {
       return engine.subscribe(controllerState, callback);
     },
   };
@@ -40,10 +37,8 @@ export interface ProductListControllerState {
   products: ProductListControllerProduct[];
 }
 
-export interface ProductListController extends Controller {
-  readonly state: ProductListControllerState;
-}
+export interface ProductListController extends Controller<ProductListControllerState> {}
 
 export interface ProductListControllerOptions {
-  interface: Interface & Requires<'search'>;
+  interface: Requires<'search'>;
 }

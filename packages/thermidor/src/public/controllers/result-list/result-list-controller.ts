@@ -1,8 +1,5 @@
 import type {Controller} from '../controller-types.js';
-import type {
-  Interface,
-  Requires,
-} from '@/src/core/interface/utils/interface-types.js';
+import type {Requires} from '@/src/core/interface/utils/interface-types.js';
 import {getOrCreateResultsSelectors} from '@/src/core/internal/result-list/result-list-selectors.js';
 import {getOrCreateResultsSlice} from '@/src/core/internal/result-list/result-list-slice.js';
 import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
@@ -38,7 +35,7 @@ export const buildResultListController = (
     get state() {
       return engine.read(controllerState);
     },
-    subscribe(callback: () => void) {
+    subscribe(callback) {
       return engine.subscribe(controllerState, callback);
     },
   };
@@ -59,10 +56,8 @@ export interface ResultListControllerState {
   results: ResultListControllerResult[];
 }
 
-export interface ResultListController extends Controller {
-  readonly state: ResultListControllerState;
-}
+export interface ResultListController extends Controller<ResultListControllerState> {}
 
 export interface ResultListControllerOptions {
-  interface: Interface & Requires<'search'>;
+  interface: Requires<'search'>;
 }

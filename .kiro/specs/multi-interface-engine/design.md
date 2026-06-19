@@ -2,7 +2,7 @@
 
 ## Overview
 
-This design introduces a multi-interface architecture for `thermidor`, enabling a single `Engine` instance to support multiple use cases (search, commerce, conversation) simultaneously. The architecture follows **Mediator + Command + Strategy**: the Engine mediates all state flow, endpoint thunks encapsulate operations behind a dispatchable command interface, and interface factories inject interchangeable endpoint strategies per use case.
+This design introduces a multi-interface architecture for `thermidor`, enabling a single `Engine` instance to support multiple use cases (search, commerce, generative) simultaneously. The architecture follows **Mediator + Command + Strategy**: the Engine mediates all state flow, endpoint thunks encapsulate operations behind a dispatchable command interface, and interface factories inject interchangeable endpoint strategies per use case.
 
 ## Architecture
 
@@ -101,7 +101,7 @@ export const INTERFACES: unique symbol = Symbol('interfaces');
 export interface Operations {
   search: 'search' | 'suggestions';
   commerce: 'search' | 'suggestions';
-  conversation: 'conversation';
+  generative: 'conversation';
 }
 
 // ─── Endpoint Thunk ────────────────────────────────────────────────────
@@ -157,7 +157,7 @@ export interface EndpointStateScope {
 | Adding an operation to a type forces factory update | `Operations['search']` widens → factory body incomplete → build error                                                     |
 | Controller rejects incompatible interfaces          | `Requires<'search'>` structural check via symbol-keyed `[THUNKS]`                                                         |
 | Single-interface controller rejects composed        | `Interface` via `[KIND]: 'interface'` discriminator                                                                       |
-| Different types can have different operations       | `conversation` only requires `'conversation'`, not `'search'`                                                             |
+| Different types can have different operations       | `generative` only requires `'conversation'`, not `'search'`                                                             |
 | Consumers cannot access internal fields             | Symbol keys are not exported from public entry points                                                                     |
 | Composition re-uses correct thunk creators          | `[THUNK_FACTORIES]` stores the creator functions; `composeInterfaces` calls them with composed scope                      |
 
@@ -479,7 +479,7 @@ export function buildSearchBoxController(
     get state() {
       return engine.read(controllerState);
     },
-    subscribe(callback: () => void) {
+    subscribe(callback) {
       return engine.subscribe(controllerState, callback);
     },
   };
@@ -490,7 +490,7 @@ export function buildSearchBoxController(
 
 ```typescript
 export interface ResultListControllerOptions {
-  interface: Interface & Requires<'search'>;
+  interface: Requires<'search'>;
 }
 
 export function buildResultListController(
@@ -512,7 +512,7 @@ export function buildResultListController(
     get state() {
       return engine.read(controllerState);
     },
-    subscribe(callback: () => void) {
+    subscribe(callback) {
       return engine.subscribe(controllerState, callback);
     },
   };

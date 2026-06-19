@@ -27,10 +27,15 @@
       "import": "./dist/public/interfaces/commerce.js",
       "default": "./dist/public/interfaces/commerce.js"
     },
-    "./interfaces/conversation": {
-      "types": "./dist/public/interfaces/conversation.d.ts",
-      "import": "./dist/public/interfaces/conversation.js",
-      "default": "./dist/public/interfaces/conversation.js"
+    "./interfaces/compose": {
+      "types": "./dist/public/interfaces/compose.d.ts",
+      "import": "./dist/public/interfaces/compose.js",
+      "default": "./dist/public/interfaces/compose.js"
+    },
+    "./interfaces/generative": {
+      "types": "./dist/public/interfaces/generative.d.ts",
+      "import": "./dist/public/interfaces/generative.js",
+      "default": "./dist/public/interfaces/generative.js"
     },
     "./interfaces/search": {
       "types": "./dist/public/interfaces/search.d.ts",

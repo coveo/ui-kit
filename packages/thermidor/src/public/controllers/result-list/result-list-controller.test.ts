@@ -1,7 +1,3 @@
-/**
- * ResultList Controller Tests
- */
-
 import {describe, it, expect, beforeEach, vi} from 'vitest';
 import {
   createTestEngine,

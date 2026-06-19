@@ -125,7 +125,7 @@ export interface GenerativeInterfaceOptions {
 
 ### `buildGenerativeInterface`
 
-Follows the same pattern as `buildSearchInterface` / `buildConversationInterface`:
+Follows the same pattern as `buildSearchInterface`:
 
 ```ts
 // src/public/interfaces/generative.ts

@@ -13,12 +13,10 @@ import {getOrCreateGenerativeSelectors} from '@/src/core/internal/generative/gen
 import type {GenerativeInterface} from '@/src/public/interfaces/generative.js';
 import type {Controller} from '../controller-types.js';
 
-export interface ConverseController extends Controller {
+export interface ConverseController extends Controller<ConverseControllerState> {
   submit(options: {prompt: string}): void;
   selectTurn(options: {id: string}): void;
   retry(options: {id: string}): void;
-  readonly state: ConverseControllerState;
-  subscribe(callback: (state: ConverseControllerState) => void): () => void;
 }
 
 export interface ConverseControllerState {

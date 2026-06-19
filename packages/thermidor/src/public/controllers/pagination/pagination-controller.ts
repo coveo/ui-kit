@@ -1,8 +1,5 @@
 import type {Controller} from '../controller-types.js';
-import type {
-  Interface,
-  Requires,
-} from '@/src/core/interface/utils/interface-types.js';
+import type {Requires} from '@/src/core/interface/utils/interface-types.js';
 import {getOrCreatePaginationActions} from '@/src/core/internal/pagination/pagination-actions.js';
 import {getOrCreatePaginationSelectors} from '@/src/core/internal/pagination/pagination-selectors.js';
 import {getOrCreatePaginationSlice} from '@/src/core/internal/pagination/pagination-slice.js';
@@ -37,7 +34,7 @@ export const buildPaginationController = (
     get state() {
       return engine.read(controllerState);
     },
-    subscribe(callback: () => void) {
+    subscribe(callback) {
       return engine.subscribe(controllerState, callback);
     },
     selectPage(page: number) {
@@ -83,12 +80,11 @@ export interface PaginationControllerState {
   totalPages: number;
 }
 
-export interface PaginationController extends Controller {
-  readonly state: PaginationControllerState;
+export interface PaginationController extends Controller<PaginationControllerState> {
   selectPage(page: number): void;
   setPageSize(pageSize: number): void;
 }
 
 export interface PaginationControllerOptions {
-  interface: Interface & Requires<'search'>;
+  interface: Requires<'search'>;
 }

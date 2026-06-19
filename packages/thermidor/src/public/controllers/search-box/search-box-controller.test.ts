@@ -13,7 +13,6 @@ import {getQuery} from '@/src/core/interface/search-box/search-box-selectors.js'
 import {buildSearchBoxController} from './search-box-controller.js';
 import {buildSearchInterface} from '@/src/public/interfaces/search.js';
 import type {Interface} from '@/src/core/interface/utils/interface-types.js';
-import {ENGINE} from '@/src/core/interface/utils/symbols.js';
 
 describe('buildSearchBoxController', () => {
   let engine: Engine;

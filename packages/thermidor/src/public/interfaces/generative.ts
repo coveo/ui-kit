@@ -21,10 +21,10 @@ export interface BuildGenerativeInterfaceOptions {
 }
 
 export function buildGenerativeInterface(
-  opts: BuildGenerativeInterfaceOptions
+  options: BuildGenerativeInterfaceOptions
 ): GenerativeInterface {
-  const fullEngine = getFullEngine(opts.engine);
-  const interfaceId = opts.id ?? generateId();
+  const fullEngine = getFullEngine(options.engine);
+  const interfaceId = options.id ?? generateId();
 
   loadGenerative(fullEngine, interfaceId);
 
@@ -32,7 +32,7 @@ export function buildGenerativeInterface(
     [KIND]: 'interface' as const,
     [STATE_ID]: interfaceId,
     [ENGINE]: fullEngine,
-    [SOURCE_ENGINE]: opts.engine,
+    [SOURCE_ENGINE]: options.engine,
     [THUNK_FACTORIES]: {conversation: []},
     [THUNKS]: {conversation: []},
   });

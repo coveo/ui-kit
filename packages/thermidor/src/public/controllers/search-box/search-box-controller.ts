@@ -46,7 +46,7 @@ export const buildSearchBoxController: (
     get state() {
       return engine.read(controllerState);
     },
-    subscribe(callback: () => void) {
+    subscribe(callback) {
       return engine.subscribe(controllerState, callback);
     },
   };
@@ -56,7 +56,7 @@ export interface SearchBoxControllerOptions {
   interface: Requires<'search'>;
 }
 
-export interface SearchBoxController extends Controller {
+export interface SearchBoxController extends Controller<SearchBoxControllerState> {
   /**
    * Updates the search query.
    *
@@ -68,8 +68,6 @@ export interface SearchBoxController extends Controller {
    * Executes the search query.
    */
   submit(): Promise<unknown[]>;
-
-  readonly state: SearchBoxControllerState;
 }
 
 export interface SearchBoxControllerSetQueryOptions {

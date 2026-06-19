@@ -12,7 +12,6 @@ import {
 export interface Operations {
   search: 'search' | 'suggestions';
   commerce: 'search' | 'suggestions';
-  conversation: 'conversation' | 'search' | 'suggestions';
   generative: 'conversation';
 }
 

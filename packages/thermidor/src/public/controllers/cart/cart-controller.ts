@@ -48,7 +48,7 @@ export const buildCartController = (
   };
 };
 
-export interface CartController extends Controller {
+export interface CartController extends Controller<CartControllerState> {
   /**
    * Replaces the current cart items.
    *
@@ -62,8 +62,6 @@ export interface CartController extends Controller {
    * @param payload - The item with updated quantity.
    */
   updateItemQuantity(payload: UpdateItemQuantityPayload): void;
-
-  readonly state: CartControllerState;
 }
 
 export interface CartControllerOptions {
