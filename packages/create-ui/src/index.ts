@@ -30,8 +30,8 @@ export interface CliArgs {
   help: boolean;
 }
 
-export function parseArgs(argv: string[]): CliArgs {
-  const parsed = minimist(argv, {
+export function parseArgs(rawArgs: string[]): CliArgs {
+  const parsed = minimist(rawArgs, {
     string: ['template'],
     boolean: ['help'],
     alias: {h: 'help'},
@@ -43,8 +43,8 @@ export function parseArgs(argv: string[]): CliArgs {
   };
 }
 
-export async function main(argv: string[]): Promise<number> {
-  const args = parseArgs(argv);
+export async function main(rawArgs: string[]): Promise<number> {
+  const args = parseArgs(rawArgs);
 
   if (args.help) {
     log.info(HELP);
