@@ -76,6 +76,37 @@ const templates: Template[] = [
     description: 'Headless commerce UI (React)',
     path: 'samples/headless/commerce-react',
   },
+  {
+    name: 'headless-ssr-search-nextjs',
+    library: 'headless-ssr',
+    description: 'Headless search SSR (Next.js App Router)',
+    path: 'samples/headless-ssr/search-nextjs',
+  },
+  {
+    name: 'headless-ssr-commerce-nextjs',
+    library: 'headless-ssr',
+    description: 'Headless commerce SSR (Next.js App Router)',
+    path: 'samples/headless-ssr/commerce-nextjs',
+  },
+  {
+    name: 'headless-ssr-commerce-nextjs-v4',
+    library: 'headless-ssr',
+    description:
+      'Headless commerce SSR (Next.js App Router, Headless V4 preview)',
+    path: 'samples/headless-ssr/commerce-nextjs-v4',
+  },
+  {
+    name: 'headless-ssr-commerce-react-router',
+    library: 'headless-ssr',
+    description: 'Headless commerce SSR (React Router)',
+    path: 'samples/headless-ssr/commerce-react-router',
+  },
+  {
+    name: 'headless-ssr-commerce-express',
+    library: 'headless-ssr',
+    description: 'Headless commerce SSR (Express)',
+    path: 'samples/headless-ssr/commerce-express',
+  },
 ];
 
 export function getTemplate(name: string): Template | undefined {
