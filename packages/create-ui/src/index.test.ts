@@ -1,6 +1,6 @@
 import {describe, expect, it, vi} from 'vitest';
 import {main, parseArgs} from './index.js';
-import {getTemplate, getTemplates} from './templates.js';
+import {getTemplate} from './templates.js';
 
 describe('templates', () => {
   it('resolves names to sample paths, and unknown names to undefined', () => {
