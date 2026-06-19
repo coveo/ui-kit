@@ -10,12 +10,14 @@ import styles from './atomic-agent-stream-of-thought.tw.css.js';
 type ResolvedStepType =
   | 'thinking-before-search'
   | 'searching'
+  | 'searching-with-query'
   | 'thinking-after-search'
   | 'answering';
 
 interface ResolvedStep {
   type: ResolvedStepType;
   status: 'active' | 'completed';
+  searchQuery?: string;
 }
 
 const stepLabelKeys: Record<
@@ -29,6 +31,10 @@ const stepLabelKeys: Record<
   searching: {
     active: 'agent-generation-step-search',
     completed: 'agent-generation-step-search-completed',
+  },
+  'searching-with-query': {
+    active: 'agent-generation-step-searching-for',
+    completed: 'agent-generation-step-searched-for',
   },
   'thinking-after-search': {
     active: 'agent-generation-step-analyzing-results',
@@ -106,7 +112,9 @@ export class AtomicAgentStreamOfThought extends LitElement {
       step.status === 'active'
         ? stepLabelKeys[step.type].active
         : stepLabelKeys[step.type].completed;
-    const label = this.i18n.t(labelKey);
+    const label = step.searchQuery
+      ? this.i18n.t(labelKey, {query: step.searchQuery})
+      : this.i18n.t(labelKey);
 
     return html`
       <div class="step">
@@ -218,6 +226,18 @@ export function resolveSteps(steps: GenerationStep[]): ResolvedStep[] {
     let type: ResolvedStepType;
     if (step.name === 'searching') {
       searchWasPerformed = true;
+      const searchToolCall = step.toolCalls?.find((tc) => tc.type === 'search');
+      const searchQuery =
+        searchToolCall?.toolCallArgs && 'q' in searchToolCall.toolCallArgs
+          ? searchToolCall.toolCallArgs.q
+          : undefined;
+      if (searchQuery) {
+        return {
+          type: 'searching-with-query' as const,
+          status: step.status,
+          searchQuery,
+        };
+      }
       type = 'searching';
     } else if (step.name === 'answering') {
       type = 'answering';
