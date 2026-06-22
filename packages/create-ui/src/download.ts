@@ -42,7 +42,6 @@ export async function fetchWithRetry(
   const fetchImpl = options.fetchImpl ?? fetch;
   let lastError: unknown;
 
-  // TODO: add exponential backoff
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
       const response = await fetchImpl(url, {
@@ -80,6 +79,14 @@ function isSupportFile(relPath: string): boolean {
 }
 
 /**
+ * Strips the top-level `ui-kit-<sha>/` prefix that GitHub adds to every
+ * tarball entry, returning the repo-relative path.
+ */
+function stripTarballPrefix(entryPath: string): string {
+  return entryPath.slice(entryPath.indexOf('/') + 1).replace(/\/$/, '');
+}
+
+/**
  * Extracts the sample (and support files) from a gzipped tar stream into
  * `destDir`. The GitHub tarball wraps everything in a top-level
  * `ui-kit-<sha>/` directory, which is stripped. Returns the absolute path to
@@ -94,17 +101,12 @@ export async function extractSampleFromTarball(
 
   const extractor = extract({
     cwd: destDir,
-    // Drop the leading `ui-kit-<sha>/` path component.
     strip: 1,
     filter: (path: string) => {
-      // `path` is the original archive path, e.g.
-      // `ui-kit-<sha>/samples/headless/search-react/package.json`.
-      // TODO: revisit that!!
-      const rel = path.split('/').slice(1).join('/').replace(/\/$/, '');
+      const rel = stripTarballPrefix(path);
       if (!rel) {
         return false;
       }
-      // TODO: revisit that as well.
       if (isSupportFile(rel)) {
         return true;
       }
