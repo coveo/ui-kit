@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 import minimist from 'minimist';
-import {mkdtemp, rm, readdir, stat} from 'node:fs/promises';
+import {mkdtemp, rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {argv} from 'node:process';
 import {downloadTemplate} from './download.js';
+import {dirExists, isEmptyOrMissing} from './fs-utils.js';
 import {resolveSampleDependencies} from './resolve-deps.js';
 import {finalizeProject, installDependencies} from './setup.js';
 import {getTemplate, getTemplates, type Template} from './templates.js';
@@ -60,23 +61,6 @@ export function parseArgs(rawArgs: string[]): CliArgs {
     help: Boolean(parsed.help),
     docs: Boolean(parsed.docs),
   };
-}
-
-async function dirExists(dir: string): Promise<boolean> {
-  try {
-    return (await stat(dir)).isDirectory();
-  } catch {
-    return false;
-  }
-}
-
-async function isEmptyOrMissing(dir: string): Promise<boolean> {
-  try {
-    const entries = await readdir(dir);
-    return entries.length === 0;
-  } catch {
-    return true;
-  }
 }
 
 /** Downloads, resolves, finalizes, and installs the chosen template. */
