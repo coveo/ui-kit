@@ -113,7 +113,17 @@ export class AsyncInsightSearchThunkProcessor<RejectionType> {
     const {enableDidYouMean, automaticallyCorrectQuery} = state.didYouMean;
     const {results, queryCorrections, queryCorrection} = successResponse;
 
-    if (!enableDidYouMean || !automaticallyCorrectQuery) {
+    if (!enableDidYouMean) {
+      return null;
+    }
+
+    if (!automaticallyCorrectQuery) {
+      if (
+        !isNullOrUndefined(queryCorrection) &&
+        !isNullOrUndefined(queryCorrection.correctedQuery)
+      ) {
+        return this.processNextDidYouMeanAutoCorrection(fetched);
+      }
       return null;
     }
 

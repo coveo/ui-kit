@@ -13,8 +13,8 @@ vendor:
   company_name: Coveo
   email: support@coveo.com
   website: https://www.coveo.com
-report_date: '2026-06-19'
-last_modified_date: '2026-06-19'
+report_date: '2026-06-22'
+last_modified_date: '2026-06-22'
 version: 1
 notes: Generated from a11y/reports/a11y-report.json. Conformance is derived from
   axe-core results, interactive keyboard tests, and manual audits. Rows marked
@@ -71,18 +71,19 @@ chapters:
         components:
           - name: web
             adherence:
-              level: does-not-support
-              notes:
-                'WCAG 1.3.2: no automated, interactive, or manual coverage. [Manual audit
-                required]'
+              level: supports
+              notes: Supports — manual audit found Supports.
       - num: 1.3.3
         components:
           - name: web
             adherence:
-              level: does-not-support
+              level: not-applicable
               notes:
-                'WCAG 1.3.3: no automated, interactive, or manual coverage. [Manual audit
-                required]'
+                Atomic is a component library that renders interactive UI widgets, not
+                instructional content. Components do not provide textual
+                instructions that reference shape, color, size, visual location,
+                or sound. All controls use programmatic accessible names
+                (aria-label, text content, input labels).
       - num: 1.4.1
         components:
           - name: web
@@ -112,16 +113,19 @@ chapters:
             adherence:
               level: supports
               notes:
-                Supports — automated axe-core found no violations across 9 component(s);
-                interactive keyboard testing passed across 9 component(s).
+                Supports — manual audit found Supports; automated axe-core found no
+                violations across 9 component(s); interactive keyboard testing
+                passed across 9 component(s).
       - num: 2.1.4
         components:
           - name: web
             adherence:
-              level: does-not-support
+              level: not-applicable
               notes:
-                'WCAG 2.1.4: no automated, interactive, or manual coverage. [Manual audit
-                required]'
+                No Atomic component implements character-only keyboard shortcuts. All
+                keyboard handlers respond exclusively to standard navigation
+                keys (Escape, Enter, Tab, Arrow keys, Home, End, Space) which
+                are exempt from this criterion.
       - num: 2.2.1
         components:
           - name: web
@@ -149,10 +153,14 @@ chapters:
         components:
           - name: web
             adherence:
-              level: does-not-support
+              level: not-applicable
               notes:
-                'WCAG 2.4.1: no automated, interactive, or manual coverage. [Manual audit
-                required]'
+                Bypass blocks is a page-level concern for the consuming application.
+                Atomic is a component library providing individual widgets, not
+                complete web pages with repeated navigation blocks. Components
+                provide proper semantic structure (nav landmarks, aside,
+                header/footer, role=region) that enables consuming apps to
+                satisfy this criterion.
       - num: 2.4.2
         components:
           - name: web
@@ -167,8 +175,22 @@ chapters:
             adherence:
               level: does-not-support
               notes:
-                'WCAG 2.4.3: no automated, interactive, or manual coverage. [Manual audit
-                required]'
+                Does Not Support — manual audit found Does Not Support (Focus escapes
+                commerce refine-modal when tabbing, due to broken focus trap.
+                See KIT-5811. All non-modal components pass (search box, facets,
+                breadbox, pager, sort dropdown, products-per-page, product list,
+                load-more).; Focus escapes insight refine-modal and
+                smart-snippet-feedback-modal when tabbing, due to broken focus
+                trap. See KIT-5811. All non-modal components pass (search box,
+                facets, pager, tabs).; Focus escapes ipx-modal and
+                ipx-refine-modal when tabbing, due to broken focus trap. See
+                KIT-5811. Tab component passes.; Focus escapes modal dialogs
+                (refine-modal, quickview-modal, smart-snippet-feedback-modal)
+                and popover when tabbing, due to broken focus trap (undefined
+                scope in atomic-focus-trap). See KIT-5811. All non-modal
+                components pass (search box, facets, pager, sort dropdown,
+                results-per-page, tabs, segmented facet, result list, load-more,
+                smart snippet).).
       - num: 2.4.4
         components:
           - name: web
@@ -199,9 +221,16 @@ chapters:
           - name: web
             adherence:
               level: does-not-support
-              notes:
-                'WCAG 2.5.3: no automated, interactive, or manual coverage. [Manual audit
-                required]'
+              notes: 'Does Not Support — manual audit found Does Not Support
+                (atomic-commerce-breadbox: the show-more button displays visible
+                text "+ N" but has accessible name "Show N more filters". Voice
+                control users saying "click plus 3" will not activate the button
+                because the visible text is not contained in the accessible
+                name.; atomic-breadbox: the show-more button displays visible
+                text "+ N" but has accessible name "Show N more filters". Voice
+                control users saying "click plus 3" will not activate the button
+                because the visible text is not contained in the accessible
+                name.).'
       - num: 2.5.4
         components:
           - name: web
@@ -220,18 +249,14 @@ chapters:
         components:
           - name: web
             adherence:
-              level: does-not-support
-              notes:
-                'WCAG 3.2.1: no automated, interactive, or manual coverage. [Manual audit
-                required]'
+              level: supports
+              notes: Supports — manual audit found Supports.
       - num: 3.2.2
         components:
           - name: web
             adherence:
-              level: does-not-support
-              notes:
-                'WCAG 3.2.2: no automated, interactive, or manual coverage. [Manual audit
-                required]'
+              level: supports
+              notes: Supports — manual audit found Supports.
       - num: 3.2.6
         components:
           - name: web
@@ -245,10 +270,8 @@ chapters:
         components:
           - name: web
             adherence:
-              level: does-not-support
-              notes:
-                'WCAG 3.3.1: no automated, interactive, or manual coverage. [Manual audit
-                required]'
+              level: supports
+              notes: Supports — manual audit found Supports.
       - num: 3.3.2
         components:
           - name: web
@@ -339,18 +362,34 @@ chapters:
         components:
           - name: web
             adherence:
-              level: does-not-support
-              notes:
-                'WCAG 1.4.10: no automated, interactive, or manual coverage. [Manual
-                audit required]'
+              level: supports
+              notes: Supports — manual audit found Supports.
       - num: 1.4.11
         components:
           - name: web
             adherence:
-              level: does-not-support
+              level: partially-supports
               notes:
-                'WCAG 1.4.11: no automated, interactive, or manual coverage. [Manual
-                audit required]'
+                'Partially Supports — manual audit found Partially Supports (Numeric
+                facet input border uses border-neutral (#e5e8e8) at 1.23:1
+                contrast against white, failing the 3:1 requirement. Rating
+                stars (active #f6ce3c at 1.52:1, inactive #e5e8e8 at 1.23:1)
+                also fail — stars are the only way sighted users identify the
+                rating value. Users with low vision cannot perceive these UI
+                boundaries and graphical indicators, making it difficult to
+                identify form fields or understand rating values.; Numeric facet
+                input border uses border-neutral (#e5e8e8) at 1.23:1 contrast
+                against white, failing the 3:1 requirement. Users with low
+                vision cannot perceive the input field boundaries, making it
+                difficult to identify where to enter values.; Numeric facet
+                input border uses border-neutral (#e5e8e8) at 1.23:1 contrast
+                against white, failing the 3:1 requirement. Rating stars (active
+                #f6ce3c at 1.52:1, inactive #e5e8e8 at 1.23:1) also fail — stars
+                are the only way sighted users identify the rating value.
+                Refine-toggle switch OFF state track uses bg-neutral at 1.23:1.
+                Users with low vision cannot perceive these UI boundaries and
+                graphical indicators, making it difficult to identify form
+                fields, understand rating values, or determine toggle state.).'
       - num: 1.4.12
         components:
           - name: web
@@ -402,8 +441,24 @@ chapters:
             adherence:
               level: does-not-support
               notes:
-                'WCAG 2.4.11: no automated, interactive, or manual coverage. [Manual
-                audit required]'
+                Does Not Support — manual audit found Does Not Support (When the
+                refine-modal is open, pressing Tab repeatedly causes focus to
+                escape the focus trap and land on elements behind the modal
+                backdrop. The user cannot see the focused element and loses
+                their place in the navigation sequence.; When the refine-modal
+                is open, pressing Tab repeatedly causes focus to escape the
+                focus trap and land on elements behind the modal backdrop. The
+                user cannot see the focused element and loses their place in the
+                navigation sequence.; When the refine-modal is open inside IPX,
+                pressing Tab repeatedly causes focus to escape the modal and
+                land on elements behind the backdrop. The user loses track of
+                their keyboard position and cannot see which element is focused,
+                breaking their navigation flow.; When a modal dialog
+                (refine-modal, quickview, or feedback modal) is open, pressing
+                Tab repeatedly causes focus to escape the focus trap and land on
+                elements behind the modal backdrop. The user cannot see the
+                focused element and loses their place in the navigation
+                sequence.).
       - num: 2.5.7
         components:
           - name: web
@@ -476,7 +531,7 @@ chapters:
             adherence:
               level: supports
               notes:
-                Supports — automated axe-core found no violations across 18 component(s);
-                interactive keyboard testing passed across 18 component(s).
+                Supports — automated axe-core found no violations across 24 component(s);
+                interactive keyboard testing passed across 24 component(s).
   success_criteria_level_aaa:
     disabled: true
