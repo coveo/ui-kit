@@ -91,11 +91,6 @@ export async function extractSampleFromTarball(
 ): Promise<string> {
   const {samplePath, destDir} = options;
   await mkdir(destDir, {recursive: true});
-  console.log('extractSampleFromTarball------');
-  console.log({
-    samplePath: options.samplePath,
-    destDir: options.destDir,
-  });
 
   const extractor = extract({
     cwd: destDir,
@@ -106,9 +101,6 @@ export async function extractSampleFromTarball(
       // `ui-kit-<sha>/samples/headless/search-react/package.json`.
       // TODO: revisit that!!
       const rel = path.split('/').slice(1).join('/').replace(/\/$/, '');
-      console.log('rel-path', path, rel);
-      console.log('isSupportFile', isSupportFile(rel));
-      console.log('samplePath', samplePath);
       if (!rel) {
         return false;
       }
