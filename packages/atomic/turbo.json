@@ -30,7 +30,7 @@
     "build:storybook": {
       "dependsOn": ["^build", "pre:storybook"],
       "outputs": ["./dist-storybook/**"],
-      "env": ["STORYBOOK_INVOKED_BY"]
+      "env": ["STORYBOOK_INVOKED_BY", "CHROMATIC_ALL"]
     },
     "chromatic": {
       "dependsOn": [],
