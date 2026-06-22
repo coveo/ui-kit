@@ -16,12 +16,6 @@
 
 import {USER_AGENT, fetchWithRetry} from './http.js';
 
-/** Owner of the monorepo that hosts the sample templates. */
-export const REPO_OWNER = 'coveo';
-
-/** Name of the monorepo that hosts the sample templates. */
-export const REPO_NAME = 'ui-kit';
-
 /** Default git ref (branch, tag, or commit SHA) to pull templates from. */
 export const DEFAULT_REF = 'main';
 
