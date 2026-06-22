@@ -2,24 +2,17 @@
  * Shared helpers: logging and package-manager detection.
  */
 
-export type PackageManager = 'npm' | 'pnpm';
+export const appendCmdIfWindows = (cmd: string) =>
+  `${cmd}${process.platform === 'win32' ? '.ps1' : ''}`;
 
-/**
- * Detects the package manager the user invoked `create` with, via the
- * `npm_config_user_agent` environment variable that npm/pnpm/yarn set.
- * Only npm and pnpm are supported; anything else falls back to npm.
- */
-export function detectPackageManager(
-  userAgent: string | undefined = process.env.npm_config_user_agent
-): PackageManager {
-  if (!userAgent) {
-    log.warn(
-      'Could not detect package manager from user agent; defaulting to npm.'
-    );
-    return 'npm';
-  }
-  const name = userAgent.split(' ')[0]?.split('/')[0];
-  return name === 'pnpm' ? 'pnpm' : 'npm';
+const DEFAULT_PACKAGE_MANAGER = 'npm';
+
+export function getPackageManager(noCmd = false) {
+  const firstUserAgent = /^\w+(?=\/)/;
+  const packageManager =
+    process.env.npm_config_user_agent?.match(firstUserAgent)?.[0] ??
+    DEFAULT_PACKAGE_MANAGER;
+  return noCmd ? packageManager : appendCmdIfWindows(packageManager);
 }
 
 export const log = {
