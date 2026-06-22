@@ -1,13 +1,15 @@
 {
-  "extends": "../../../tsconfig.json",
   "compilerOptions": {
     "jsx": "react-jsx",
     "esModuleInterop": true,
+    "skipLibCheck": true,
+    "target": "ES2022",
     "lib": ["dom", "dom.iterable", "esnext"],
     "module": "esnext",
     "moduleResolution": "node",
     "noEmit": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "strict": true
   },
   "include": ["src", "server"]
 }
