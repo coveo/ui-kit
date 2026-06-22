@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import meta, { Default } from './atomic-result-localized-text.new.stories';
 import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
-
+import UsageContent from './atomic-result-localized-text.usage.mdx';
 
 <Meta of={meta} />
 
@@ -11,26 +11,5 @@ import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/ato
   tagName="atomic-result-localized-text"
   className="AtomicResultLocalizedText"
 >
-
-The `atomic-result-localized-text` component renders a localized i18n string using values from result fields.
-
-This component is used within `atomic-result-template` components inside the result list to display dynamic, translated content:
-
-```html
-<atomic-search-interface>
-  ...
-  <atomic-result-list>
-    <atomic-result-template>
-      <template>
-        <atomic-result-localized-text 
-          locale-key="book_by_author" 
-          field-author="name">
-        </atomic-result-localized-text>
-      </template>
-    </atomic-result-template>
-  </atomic-result-list>
-  ...
-</atomic-search-interface>
-```
-
+  <UsageContent />
 </AtomicDocTemplate>

@@ -1,0 +1,55 @@
+/**
+ * update-openacr.mjs
+ *
+ * Downloads the a11y-report.json from a CI run and regenerates openacr.yaml.
+ */
+import {execFileSync} from 'node:child_process';
+import {rmSync} from 'node:fs';
+import {resolve} from 'node:path';
+import {transformJsonToOpenAcr} from '../dist/index.js';
+import {formatWithOxfmt} from './format-with-oxfmt.mjs';
+
+const PKG_ROOT = resolve(import.meta.dirname, '..');
+const REPO_ROOT = resolve(PKG_ROOT, '../..');
+const REPORT_PATH = resolve(
+  REPO_ROOT,
+  'packages/atomic/reports/a11y-report.json'
+);
+
+const runId = process.argv
+  .find((a) => a.startsWith('--run-id='))
+  ?.split('=')[1];
+if (!runId) {
+  console.error(
+    'Usage: pnpm exec turbo run a11y:update-openacr --filter=@coveo/atomic-a11y -- --run-id=<RUN_ID>'
+  );
+  process.exit(1);
+}
+
+console.log(`[update-openacr] Downloading a11y report from run ${runId}...`);
+rmSync(REPORT_PATH, {force: true});
+execFileSync(
+  'gh',
+  [
+    'run',
+    'download',
+    runId,
+    '-n',
+    'atomic-storybook-a11y-report',
+    '-D',
+    'packages/atomic/reports',
+  ],
+  {cwd: REPO_ROOT, stdio: 'inherit'}
+);
+
+console.log('[update-openacr] Regenerating openacr.yaml...');
+const OPENACR_PATH = resolve(PKG_ROOT, 'reports/openacr.yaml');
+await transformJsonToOpenAcr({
+  inputFile: REPORT_PATH,
+  outputFile: OPENACR_PATH,
+});
+formatWithOxfmt(OPENACR_PATH);
+
+console.log(
+  '[update-openacr] ✓ Done. Review and commit packages/atomic-a11y/reports/openacr.yaml'
+);

@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import meta, { Default } from './atomic-commerce-no-products.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
-
+import UsageContent from './atomic-commerce-no-products.usage.mdx';
 
 <Meta of={meta} />
 
@@ -11,23 +11,5 @@ import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-te
   tagName="atomic-commerce-no-products"
   className="AtomicCommerceNoProducts"
 >
-
-This component is typically placed within the "products" section of the layout.
-```html
-<atomic-commerce-interface>
-  ...
-  <atomic-commerce-layout>
-    ...
-    <atomic-layout-section section="main">
-      ...
-      <atomic-layout-section section="products">
-
-        <atomic-commerce-no-products></atomic-commerce-no-products>
-
-      </atomic-layout-section>
-    </atomic-layout-section>
-  </atomic-commerce-layout>
-</atomic-commerce-interface>
-```
-
+<UsageContent />
 </AtomicDocTemplate>

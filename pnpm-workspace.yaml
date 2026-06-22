@@ -13,10 +13,12 @@ packages:
   - packages/atomic-angular/projects/*
   - packages/atomic
   - packages/atomic-a11y
+  - packages/platform-mock-api
   - packages/atomic-legacy
   - packages/shopify
   - packages/create-atomic-template
   - packages/create-atomic
+  - packages/create-ui
   - packages/create-atomic-component
   - packages/create-atomic-component/template/src/components/sample-component
   - packages/create-atomic-component-project
@@ -33,19 +35,20 @@ packages:
   - utils/ci
 
 catalog:
-  '@angular-devkit/build-angular': 21.2.13
-  '@angular/animations': 21.2.14
-  '@angular/build': 21.2.13
-  '@angular/cli': 21.2.13
-  '@angular/common': 21.2.14
-  '@angular/compiler': 21.2.14
-  '@angular/compiler-cli': 21.2.14
-  '@angular/core': 21.2.14
-  '@angular/forms': 21.2.14
-  '@angular/platform-browser': 21.2.14
-  '@angular/platform-browser-dynamic': 21.2.14
-  '@angular/platform-server': 21.2.14
-  '@angular/router': 21.2.14
+  msw: 2.14.6
+  '@angular-devkit/build-angular': 21.2.14
+  '@angular/animations': 21.2.17
+  '@angular/build': 21.2.14
+  '@angular/cli': 21.2.14
+  '@angular/common': 21.2.17
+  '@angular/compiler': 21.2.17
+  '@angular/compiler-cli': 21.2.17
+  '@angular/core': 21.2.17
+  '@angular/forms': 21.2.17
+  '@angular/platform-browser': 21.2.17
+  '@angular/platform-browser-dynamic': 21.2.17
+  '@angular/platform-server': 21.2.17
+  '@angular/router': 21.2.17
   '@coveo/relay': 2.1.1
   '@coveo/relay-event-types': 19.13.0
   '@playwright/mcp': 0.0.75
@@ -62,7 +65,7 @@ catalog:
   '@testing-library/react': 16.3.2
   '@types/jest': 30.0.0
   '@types/node': 24.12.4
-  '@types/react': 19.2.15
+  '@types/react': 19.2.17
   '@types/react-dom': 19.2.3
   '@vitejs/plugin-react': 6.0.2
   '@vitest/browser-playwright': 4.1.7
@@ -74,12 +77,12 @@ catalog:
   jest: 30.3.0
   jest-cli: 30.3.0
   local-web-server: 5.4.0
-  next: 16.2.6
+  next: 16.2.7
   prettier: 3.8.3
   puppeteer: 24.43.1
   playwright: 1.60.0
-  react: 19.2.6
-  react-dom: 19.2.6
+  react: 19.2.7
+  react-dom: 19.2.7
   rollup-plugin-string: 3.0.0
   rollup-plugin-node-polyfills: 0.2.1
   typedoc: 0.28.19

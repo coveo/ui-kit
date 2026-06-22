@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import meta, { Default, WithSlotsAttributes, WithAlternativeContent, WithHrefTemplate } from './atomic-product-link.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
-
+import UsageContent from './atomic-product-link.usage.mdx';
 
 <Meta of={meta} />
 
@@ -11,19 +11,5 @@ import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-te
   tagName="atomic-product-link"
   className="AtomicProductLink"
 >
-
-
-The `atomic-product-link` component renders a product **ec_name**  a clickable link. This component is used within `atomic-product-template` components inside the product list:
-
-```html
-<atomic-commerce-interface>
-  ...
-  <atomic-commerce-product-list>
-    <atomic-product-template>
-      <atomic-product-link></atomic-product-link>
-    </atomic-product-template>
-  </atomic-commerce-product-list>
-</atomic-commerce-interface>
-```
-
+<UsageContent />
 </AtomicDocTemplate>

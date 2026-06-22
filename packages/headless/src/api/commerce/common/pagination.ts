@@ -7,5 +7,5 @@ export interface Pagination {
 
 export interface PaginationWithResultTypeCounts extends Pagination {
   totalProducts: number;
-  totalSpotlights: number;
+  totalSpotlightContent: number;
 }

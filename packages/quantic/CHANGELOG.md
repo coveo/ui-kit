@@ -1,3 +1,18 @@
+## 3.41.0
+
+### Minor Changes
+
+- [#7661](https://github.com/coveo/ui-kit/pull/7661) [`2352be8`](https://github.com/coveo/ui-kit/commit/2352be8292cd2f00aec221264f006a6256910610) - Creation of the new QuanticGeneratedAnswerThread component
+
+- [#7645](https://github.com/coveo/ui-kit/pull/7645) [`55a25ae`](https://github.com/coveo/ui-kit/commit/55a25aeb34dfaf4d4cf869651609bc525b5b678d) - Extracting the generated answer body into a reusable Quantic component that emits answerId-scoped interactions for generated-answer content, citations, and actions.
+
+- [#7753](https://github.com/coveo/ui-kit/pull/7753) [`c4b2224`](https://github.com/coveo/ui-kit/commit/c4b22243d002177188732a7949ffad96fab78076) - Creation of the new QuanticGeneratedAnswerStreamOfThought component
+
+### Patch Changes
+
+- Updated dependencies [[`a25786a`](https://github.com/coveo/ui-kit/commit/a25786abf99c9cd1168e193bd0c6ef5b296f22e9), [`fe7ee7d`](https://github.com/coveo/ui-kit/commit/fe7ee7db35b0cb8f36f08a6e0660a43940f402aa)]:
+  - @coveo/headless@3.51.5
+
 ## 3.40.0
 
 ### Minor Changes

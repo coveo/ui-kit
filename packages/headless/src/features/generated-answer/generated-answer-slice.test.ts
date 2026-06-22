@@ -7,6 +7,7 @@ import {
   dislikeGeneratedAnswer,
   expandGeneratedAnswer,
   finishStep,
+  finishToolCall,
   likeGeneratedAnswer,
   openGeneratedAnswerFeedbackModal,
   registerFieldsToIncludeInCitations,
@@ -23,6 +24,8 @@ import {
   setIsStreaming,
   setIsVisible,
   startStep,
+  startToolCall,
+  toolCallArgs,
   updateCitations,
   updateError,
   updateMessage,
@@ -558,6 +561,9 @@ describe('generated answer slice', () => {
     const newAnswerApiQueryParams: AnswerApiQueryParams = {
       q: 'example query',
       fieldsToInclude: ['foo', 'bar'],
+      tab: '',
+      referrer: null,
+      timezone: '',
     };
     const finalState = generatedAnswerReducer(
       {
@@ -565,6 +571,9 @@ describe('generated answer slice', () => {
         answerApiQueryParams: {
           q: 'example query',
           fieldsToInclude: ['foo', 'bar'],
+          tab: '',
+          referrer: null,
+          timezone: '',
         },
       },
       setAnswerApiQueryParams(newAnswerApiQueryParams)
@@ -701,6 +710,259 @@ describe('generated answer slice', () => {
       );
 
       expect(finalState.generationSteps).toEqual(initialState.generationSteps);
+    });
+  });
+
+  describe('#startToolCall', () => {
+    it('should add a tool call to the last active step', () => {
+      const initialState = {
+        ...baseState,
+        generationSteps: [
+          {
+            name: 'searching' as const,
+            status: 'active' as const,
+            startedAt: 1,
+          },
+        ],
+      };
+
+      const finalState = generatedAnswerReducer(
+        initialState,
+        startToolCall({
+          toolCallName: 'search',
+          toolCallId: 'tc-1',
+          startedAt: 100,
+        })
+      );
+
+      expect(finalState.generationSteps[0].toolCalls).toEqual([
+        {
+          toolCallName: 'search',
+          toolCallId: 'tc-1',
+          startedAt: 100,
+          status: 'active',
+        },
+      ]);
+    });
+
+    it('should not modify state when no active step exists', () => {
+      const initialState = {
+        ...baseState,
+        generationSteps: [
+          {
+            name: 'searching' as const,
+            status: 'completed' as const,
+            startedAt: 1,
+            finishedAt: 2,
+          },
+        ],
+      };
+
+      const finalState = generatedAnswerReducer(
+        initialState,
+        startToolCall({
+          toolCallName: 'search',
+          toolCallId: 'tc-1',
+          startedAt: 100,
+        })
+      );
+
+      expect(finalState.generationSteps).toEqual(initialState.generationSteps);
+    });
+  });
+
+  describe('#toolCallArgs', () => {
+    it('should assign args to the matching tool call', () => {
+      const initialState = {
+        ...baseState,
+        generationSteps: [
+          {
+            name: 'searching' as const,
+            status: 'active' as const,
+            startedAt: 1,
+            toolCalls: [
+              {
+                toolCallName: 'search',
+                toolCallId: 'tc-1',
+                startedAt: 10,
+                status: 'active' as const,
+              },
+            ],
+          },
+        ],
+      };
+
+      const finalState = generatedAnswerReducer(
+        initialState,
+        toolCallArgs({
+          toolCallId: 'tc-1',
+          args: {q: 'test query'},
+          type: 'search',
+        })
+      );
+
+      expect(finalState.generationSteps[0].toolCalls![0].toolCallArgs).toEqual({
+        q: 'test query',
+      });
+    });
+
+    it('should not modify state when no active step exists', () => {
+      const initialState = {
+        ...baseState,
+        generationSteps: [
+          {
+            name: 'searching' as const,
+            status: 'completed' as const,
+            startedAt: 1,
+            finishedAt: 2,
+            toolCalls: [
+              {
+                toolCallName: 'search',
+                toolCallId: 'tc-1',
+                startedAt: 10,
+                status: 'completed' as const,
+              },
+            ],
+          },
+        ],
+      };
+
+      const finalState = generatedAnswerReducer(
+        initialState,
+        toolCallArgs({toolCallId: 'tc-1', args: {q: 'test'}, type: 'search'})
+      );
+
+      expect(
+        finalState.generationSteps[0].toolCalls![0].toolCallArgs
+      ).toBeUndefined();
+    });
+
+    it('should not modify state when toolCallId does not match', () => {
+      const initialState = {
+        ...baseState,
+        generationSteps: [
+          {
+            name: 'searching' as const,
+            status: 'active' as const,
+            startedAt: 1,
+            toolCalls: [
+              {
+                toolCallName: 'search',
+                toolCallId: 'tc-1',
+                startedAt: 10,
+                status: 'active' as const,
+              },
+            ],
+          },
+        ],
+      };
+
+      const finalState = generatedAnswerReducer(
+        initialState,
+        toolCallArgs({toolCallId: 'tc-999', args: {q: 'test'}, type: 'search'})
+      );
+
+      expect(
+        finalState.generationSteps[0].toolCalls![0].toolCallArgs
+      ).toBeUndefined();
+    });
+  });
+
+  describe('#finishToolCall', () => {
+    it('should set finishedAt on the matching tool call', () => {
+      const initialState = {
+        ...baseState,
+        generationSteps: [
+          {
+            name: 'searching' as const,
+            status: 'active' as const,
+            startedAt: 1,
+            toolCalls: [
+              {
+                toolCallName: 'search',
+                toolCallId: 'tc-1',
+                startedAt: 10,
+                status: 'active' as const,
+              },
+            ],
+          },
+        ],
+      };
+
+      const finalState = generatedAnswerReducer(
+        initialState,
+        finishToolCall({toolCallId: 'tc-1', finishedAt: 200})
+      );
+
+      expect(finalState.generationSteps[0].toolCalls![0].finishedAt).toBe(200);
+      expect(finalState.generationSteps[0].toolCalls![0].status).toBe(
+        'completed'
+      );
+    });
+
+    it('should not modify state when no active step exists', () => {
+      const initialState = {
+        ...baseState,
+        generationSteps: [
+          {
+            name: 'searching' as const,
+            status: 'completed' as const,
+            startedAt: 1,
+            finishedAt: 2,
+            toolCalls: [
+              {
+                toolCallName: 'search',
+                toolCallId: 'tc-1',
+                startedAt: 10,
+                status: 'completed' as const,
+              },
+            ],
+          },
+        ],
+      };
+
+      const finalState = generatedAnswerReducer(
+        initialState,
+        finishToolCall({toolCallId: 'tc-1', finishedAt: 200})
+      );
+
+      expect(
+        finalState.generationSteps[0].toolCalls![0].finishedAt
+      ).toBeUndefined();
+      expect(finalState.generationSteps[0].toolCalls![0].status).toBe(
+        'completed'
+      );
+    });
+
+    it('should not modify state when toolCallId does not match', () => {
+      const initialState = {
+        ...baseState,
+        generationSteps: [
+          {
+            name: 'searching' as const,
+            status: 'active' as const,
+            startedAt: 1,
+            toolCalls: [
+              {
+                toolCallName: 'search',
+                toolCallId: 'tc-1',
+                startedAt: 10,
+                status: 'active' as const,
+              },
+            ],
+          },
+        ],
+      };
+
+      const finalState = generatedAnswerReducer(
+        initialState,
+        finishToolCall({toolCallId: 'tc-999', finishedAt: 200})
+      );
+
+      expect(
+        finalState.generationSteps[0].toolCalls![0].finishedAt
+      ).toBeUndefined();
+      expect(finalState.generationSteps[0].toolCalls![0].status).toBe('active');
     });
   });
 });

@@ -1,6 +1,7 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import meta, { Default } from './atomic-external.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+import UsageContent from './atomic-external.usage.mdx';
 
 <Meta of={meta} />
 
@@ -10,22 +11,5 @@ import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-te
   tagName="atomic-external"
   className="AtomicExternal"
 >
-
-The atomic-external component allows components defined outside of an Atomic search interface to initialize with it.
-
-```html
-
-<atomic-external>
-  <atomic-search-box></atomic-search-box>
-</atomic-external>
- 
-<!-- ... -->
- 
-<atomic-search-interface>
-  <atomic-result-list>
-    <!-- ... -->
-  </atomic-result-list>
-</atomic-search-interface>
-```
-
+  <UsageContent />
 </AtomicDocTemplate>

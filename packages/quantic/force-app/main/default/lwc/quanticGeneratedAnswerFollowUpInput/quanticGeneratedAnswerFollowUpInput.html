@@ -1,23 +1,24 @@
 <template>
   <div class={inputContainerClasses}>
-    <lightning-input
-      class="slds-col slds-grow follow-up-input__input"
-      type="text" 
-      variant="label-hidden" 
-      label={labels.askFollowUp}
-      placeholder={labels.askFollowUp}
-      name="ask-followup"
-      lwc:ref="askFollowUpInput"
-      onfocus={handleFocus}
-      onblur={handleBlur}
-      onkeydown={handleKeyDown}
-    ></lightning-input>
+    <div class="follow-up-input__expander slds-grow" lwc:ref="expander">
+      <textarea
+        class="follow-up-input__textarea"
+        lwc:ref="askFollowUpInput"
+        rows="1"
+        placeholder={labels.askFollowUp}
+        aria-label={labels.askFollowUp}
+        onfocus={handleFocus}
+        onblur={handleBlur}
+        oninput={handleInput}
+        onkeydown={handleKeyDown}
+      ></textarea>
+    </div>
     <lightning-button-icon
       disabled={submitButtonDisabled}
       onclick={handleSubmitFollowUp}
       icon-name="utility:arrowup"
       variant="brand"
-      class="slds-col slds-grow-none slds-align_absolute-center"
+      class="follow-up-input__submit-button"
       name="submit-follow-up"
       title={labels.submitFollowUp}
       aria-label={labels.submitFollowUp}

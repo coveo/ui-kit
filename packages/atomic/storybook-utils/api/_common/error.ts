@@ -1,7 +1,1 @@
-export interface APIErrorWithStatusCode {
-  ok: boolean;
-  status: number;
-  statusCode: number;
-  message: string;
-  type: string;
-}
+export * from '@coveo/platform-mock-api/_common/error';

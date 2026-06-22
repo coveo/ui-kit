@@ -940,4 +940,12 @@
     <name>quantic_AgentGenerationStepAnsweringCompleted</name>
     <label>Respuesta generada</label>
   </customLabels>
+  <customLabels>
+    <label>Me gusta</label>
+    <name>quantic_Like</name>
+  </customLabels>
+  <customLabels>
+    <label>No me gusta</label>
+    <name>quantic_Dislike</name>
+  </customLabels>
 </Translations>

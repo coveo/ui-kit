@@ -1,4 +1,4 @@
-# Coveo Headless Future
+# Coveo Thermidor
 
 `@coveo/thermidor` is the experimental unified interaction engine package for traditional search and conversational/agentic flows.
 

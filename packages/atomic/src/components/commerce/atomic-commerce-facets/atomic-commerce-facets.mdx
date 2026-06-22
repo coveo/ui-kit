@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import meta, { Default, LoadingState } from './atomic-commerce-facets.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
-
+import UsageContent from './atomic-commerce-facets.usage.mdx';
 
 <Meta of={meta} />
 
@@ -11,17 +11,5 @@ import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-te
   tagName="atomic-commerce-facets"
   className="AtomicCommerceFacets"
 >
-
-This component is typically placed within the "facets" section of the layout.
-```html
-<atomic-commerce-interface>
-  ...
-  <atomic-commerce-layout>
-    ...
-    <atomic-layout-section section="facets">
-      <atomic-commerce-facets></atomic-commerce-facets>
-    </atomic-layout-section>
-  </atomic-commerce-layout>
-</atomic-commerce-interface>
-```
+<UsageContent />
 </AtomicDocTemplate>
