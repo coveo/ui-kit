@@ -62,7 +62,7 @@ async function exists(path: string): Promise<boolean> {
 }
 
 /** Returns the install command for the detected package manager. */
-export function installCommand(pm: PackageManager): {
+function installCommand(pm: PackageManager): {
   command: string;
   args: string[];
 } {

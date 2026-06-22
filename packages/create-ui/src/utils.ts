@@ -13,6 +13,9 @@ export function detectPackageManager(
   userAgent: string | undefined = process.env.npm_config_user_agent
 ): PackageManager {
   if (!userAgent) {
+    log.warn(
+      'Could not detect package manager from user agent; defaulting to npm.'
+    );
     return 'npm';
   }
   const name = userAgent.split(' ')[0]?.split('/')[0];
