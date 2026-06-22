@@ -31,6 +31,7 @@ export async function fetchWithRetry(
   const fetchImpl = options.fetchImpl ?? fetch;
   let lastError: unknown;
 
+  // TODO: add exponential backoff
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
       const response = await fetchImpl(url);
@@ -72,6 +73,11 @@ export async function extractSampleFromTarball(
 ): Promise<string> {
   const {samplePath, destDir} = options;
   await mkdir(destDir, {recursive: true});
+  console.log('extractSampleFromTarball------');
+  console.log({
+    samplePath: options.samplePath,
+    destDir: options.destDir,
+  });
 
   const extractor = extract({
     cwd: destDir,
@@ -80,10 +86,15 @@ export async function extractSampleFromTarball(
     filter: (path: string) => {
       // `path` is the original archive path, e.g.
       // `ui-kit-<sha>/samples/headless/search-react/package.json`.
+      // TODO: revisit that!!
       const rel = path.split('/').slice(1).join('/').replace(/\/$/, '');
+      console.log('rel-path', path, rel);
+      console.log('isSupportFile', isSupportFile(rel));
+      console.log('samplePath', samplePath);
       if (!rel) {
         return false;
       }
+      // TODO: revisit that as well.
       if (isSupportFile(rel)) {
         return true;
       }
@@ -101,10 +112,11 @@ export async function extractSampleFromTarball(
 export async function downloadTemplate(options: {
   samplePath: string;
   destDir: string;
-  ref?: string;
 }): Promise<string> {
-  const ref = options.ref ?? 'main';
+  const ref = 'main';
   const url = `${TARBALL_BASE}/${ref}`;
+  console.log('downloadTemplate------');
+  console.log('url', url);
 
   const response = await fetchWithRetry(url);
 

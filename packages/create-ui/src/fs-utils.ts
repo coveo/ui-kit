@@ -2,15 +2,7 @@
  * Small filesystem predicates shared across the scaffolding steps.
  */
 
-import {readdir, stat} from 'node:fs/promises';
-
-export async function dirExists(dir: string): Promise<boolean> {
-  try {
-    return (await stat(dir)).isDirectory();
-  } catch {
-    return false;
-  }
-}
+import {readdir} from 'node:fs/promises';
 
 export async function isEmptyOrMissing(dir: string): Promise<boolean> {
   try {
