@@ -15,16 +15,7 @@
 import {readdir, readFile, writeFile} from 'node:fs/promises';
 import {join} from 'node:path';
 import {parse as parseYaml} from 'yaml';
-
-interface PackageJson {
-  name?: string;
-  version?: string;
-  dependencies?: Record<string, string>;
-  devDependencies?: Record<string, string>;
-  peerDependencies?: Record<string, string>;
-  optionalDependencies?: Record<string, string>;
-  [key: string]: unknown;
-}
+import type {PackageJson} from './types.js';
 
 export interface ResolutionContext {
   /** Default catalog: dependency name -> version. */
