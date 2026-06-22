@@ -85,7 +85,7 @@ function resolveWorkspaceReference(
   return toCaretRange(version);
 }
 
-/** Pure: resolves all protocol references in a single dependency map. */
+/** Resolves all protocol references in a single dependency map. */
 export function resolveDependencyMap(
   deps: Record<string, string>,
   ctx: ResolutionContext
@@ -103,7 +103,7 @@ export function resolveDependencyMap(
   return resolved;
 }
 
-/** Pure: returns a new package.json with all protocol references resolved. */
+/** Returns a new package.json with all protocol references resolved. */
 export function resolvePackageJson(
   pkg: PackageJson,
   ctx: ResolutionContext

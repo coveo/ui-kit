@@ -34,7 +34,7 @@ export function toPackageName(projectName: string): string {
 }
 
 /**
- * Pure: returns a new package.json renamed for the user's project, with the
+ * Returns a new package.json renamed for the user's project, with the
  * monorepo-only `private` flag removed and the version reset.
  */
 export function finalizePackageJson(
