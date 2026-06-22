@@ -22,11 +22,14 @@ const DEFAULT_GITIGNORE = ['node_modules', 'dist', '.DS_Store', ''].join('\n');
  * spaces collapsed to dashes). Uses the final path segment.
  */
 export function toPackageName(projectName: string): string {
-  return basename(projectName)
-    .trim()
-    .toLowerCase()
-    .replace(/\s+/g, '-')
-    .replace(/[^a-z0-9._-]/g, '');
+  const defaultName = 'my-app';
+  return (
+    basename(projectName)
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, '-')
+      .replace(/[^a-z0-9._-]/g, '') || defaultName
+  );
 }
 
 /**
