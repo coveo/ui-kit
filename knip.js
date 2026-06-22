@@ -143,5 +143,11 @@ export default {
     'packages/platform-mock-api': {
       entry: ['src/index.ts'],
     },
+    'packages/thermidor': {
+      ignore: ['**/*'],
+    },
+    'samples/thermidor/generative-react': {
+      ignore: ['**/*'],
+    },
   },
 };

@@ -33,6 +33,14 @@ Fully custom UIs built with `@coveo/headless` controllers (client-side rendering
 | [search-react](./headless/search-react/)     | Custom search interface with React   | React (Vite) | Search   |
 | [commerce-react](./headless/commerce-react/) | Custom commerce interface with React | React (Vite) | Commerce |
 
+### [Headless Future Samples](./thermidor/)
+
+Samples using `@coveo/thermidor` for upcoming conversational and search experiences.
+
+| Sample                                                | Description                                                           | Framework    | Use Case     |
+| ----------------------------------------------------- | --------------------------------------------------------------------- | ------------ | ------------ |
+| [conversation-react](./thermidor/conversation-react/) | React + Vite bootstrap for Headless Future conversational integration | React + Vite | Conversation |
+
 ### [Headless SSR Samples](./headless-ssr/)
 
 Server-side rendering with Headless controllers for improved performance and SEO.

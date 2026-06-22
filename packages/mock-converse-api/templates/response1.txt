@@ -1,0 +1,501 @@
+event:turn_started
+data:{"conversationSessionId":"1df9f18c-785d-4ace-9642-678a7fd9fc5a","conversationToken":"b6fec897-550c-4b9b-90b0-71adcc7abe9f"}
+
+event:message
+data:{"type": "RUN_STARTED", "threadId": "1df9f18c-785d-4ace-9642-678a7fd9fc5a", "runId": "4957b383-5e5f-4587-b40f-b442e4db48a3"}
+
+event:message
+data:{"type": "STATE_SNAPSHOT", "snapshot": {}}
+
+event:message
+data:{"type": "TEXT_MESSAGE_START", "messageId": "7eea018b-9980-4104-b6bf-8e01ead080e7", "role": "assistant"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "7eea018b-9980-4104-b6bf-8e01ead080e7", "delta": "I'll build"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "7eea018b-9980-4104-b6bf-8e01ead080e7", "delta": " you"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "7eea018b-9980-4104-b6bf-8e01ead080e7", "delta": " a complete"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "7eea018b-9980-4104-b6bf-8e01ead080e7", "delta": " beginner surfing kit with three"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "7eea018b-9980-4104-b6bf-8e01ead080e7", "delta": " tiers."}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "7eea018b-9980-4104-b6bf-8e01ead080e7", "delta": " Let me search"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "7eea018b-9980-4104-b6bf-8e01ead080e7", "delta": " for the essential"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "7eea018b-9980-4104-b6bf-8e01ead080e7", "delta": " categories"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "7eea018b-9980-4104-b6bf-8e01ead080e7", "delta": ":"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "7eea018b-9980-4104-b6bf-8e01ead080e7", "delta": " surf"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "7eea018b-9980-4104-b6bf-8e01ead080e7", "delta": "board"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "7eea018b-9980-4104-b6bf-8e01ead080e7", "delta": ", wetsuit, le"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "7eea018b-9980-4104-b6bf-8e01ead080e7", "delta": "ash, and w"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "7eea018b-9980-4104-b6bf-8e01ead080e7", "delta": "ax."}
+
+event:message
+data:{"type": "TEXT_MESSAGE_END", "messageId": "7eea018b-9980-4104-b6bf-8e01ead080e7"}
+
+event:message
+data:{"type": "TOOL_CALL_START", "toolCallId": "tooluse_yv2pQe2GYLRekYmWcbu6eT", "toolCallName": "coveo_commerce_search", "parentMessageId": "1e5c9f32-c1e4-4268-94dc-17cbc321d179"}
+
+event:message
+data:{"type": "TOOL_CALL_ARGS", "toolCallId": "tooluse_yv2pQe2GYLRekYmWcbu6eT", "delta": "{\"query\": \"beginner surfboard\", \"listing_surface_id\": \"surfboard\", \"perPage\": 10}"}
+
+event:message
+data:{"type": "TOOL_CALL_END", "toolCallId": "tooluse_yv2pQe2GYLRekYmWcbu6eT"}
+
+event:message
+data:{"type": "TOOL_CALL_START", "toolCallId": "tooluse_4B2uOffB9CJ1gC3o5kTXi4", "toolCallName": "coveo_commerce_search", "parentMessageId": "1e5c9f32-c1e4-4268-94dc-17cbc321d179"}
+
+event:message
+data:{"type": "TOOL_CALL_ARGS", "toolCallId": "tooluse_4B2uOffB9CJ1gC3o5kTXi4", "delta": "{\"query\": \"wetsuit\", \"listing_surface_id\": \"wetsuit\", \"perPage\": 10}"}
+
+event:message
+data:{"type": "TOOL_CALL_END", "toolCallId": "tooluse_4B2uOffB9CJ1gC3o5kTXi4"}
+
+event:message
+data:{"type": "TOOL_CALL_START", "toolCallId": "tooluse_RsS4KXaXPgx8cgdBSaff8j", "toolCallName": "coveo_commerce_search", "parentMessageId": "1e5c9f32-c1e4-4268-94dc-17cbc321d179"}
+
+event:message
+data:{"type": "TOOL_CALL_ARGS", "toolCallId": "tooluse_RsS4KXaXPgx8cgdBSaff8j", "delta": "{\"query\": \"surf leash\", \"listing_surface_id\": \"leash\", \"perPage\": 10}"}
+
+event:message
+data:{"type": "TOOL_CALL_END", "toolCallId": "tooluse_RsS4KXaXPgx8cgdBSaff8j"}
+
+event:message
+data:{"type": "TOOL_CALL_START", "toolCallId": "tooluse_cyFjeocyd3Jc4iylDLGLlA", "toolCallName": "coveo_commerce_search", "parentMessageId": "1e5c9f32-c1e4-4268-94dc-17cbc321d179"}
+
+event:message
+data:{"type": "TOOL_CALL_ARGS", "toolCallId": "tooluse_cyFjeocyd3Jc4iylDLGLlA", "delta": "{\"query\": \"surf wax\", \"listing_surface_id\": \"wax\", \"perPage\": 10}"}
+
+event:message
+data:{"type": "TOOL_CALL_END", "toolCallId": "tooluse_cyFjeocyd3Jc4iylDLGLlA"}
+
+event:message
+data:{"type": "TOOL_CALL_RESULT", "messageId": "27206c4a-4f86-44b9-83b5-7c943fd67f44", "toolCallId": "tooluse_yv2pQe2GYLRekYmWcbu6eT", "content": "\"id|name|brand|price|promo|category|rating|description|image|url\\ngid://shopify/ProductVariant/50674988548370|Wave Rider Kids Soft Top - Red|Storm Blade|199.99|199.99|Surfboards||Introducing the Wave Rider Kids Soft Top, the perfect beginner surfboard for young aspiring surfers. Designed specifically for kids, this 6'0'' surfboard offers a high rocker shape and is crafted from durable polyethylene material to ensure both flexibility and impact resistance. Available in vibrant red and yellow colors, the Wave Rider promises a fun and safe surfing experience with smooth edges and a round tail shape. Equipped with an easy-to-carry handle, a twin fin system, and essential items like a leash and wax kit, this surfboard is ideal for newcomers to the waves. Manufactured with low emissions and T\\u00dcV-approved durability, the Wave Rider prioritizes eco-consciousness without compromising on quality. Let your little one catch their first wave confidently with the Wave Rider Kids Soft Top, backed by a 1-year limited warranty for your peace of mind.SBST_173A|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/8f733582382a_bottom_right_c2b6748c-af4a-4c57-a032-8501dcd7873c.webp?v=1766163591|https://barca-sports.myshopify.com/products/sbst_173a\\ngid://shopify/ProductVariant/50676921794834|Surf Glide - Black|South Bay Board Co.|199.99|199.99|Surfboards|3.0|Embark on your surfing journey with Surf Glide, the ultimate beginner-friendly surfboard. Designed with a foam core and coated with eco-friendly biodegradable materials, Surf Glide offers a perfect blend of durability and environmental consciousness. Featuring a high rocker and smooth edges, this board ensures enhanced safety and excellent performance on the waves. Its lightweight, scratch-resistant construction and compact design make it effortlessly portable. The adjustable fin setup allows for personalized control, while the inclusivity of a wax kit means you're ready to hit the water from day one. Choose between vibrant green or sleek black and dive into the surf with confidence. Certified for quality and durability, and backed by a comprehensive replacement guarantee, Surf Glide is your ideal companion for mastering the waves with style and ease.SBBST_4B2B|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/8a0762a91f5c_bottom_right_70ec9dff-c6cf-4307-9553-5e527911b52c.webp?v=1766163595|https://barca-sports.myshopify.com/products/sbbst_4b2b\\ngid://shopify/ProductVariant/50676926218514|Wave Rider - Yellow|Storm Blade|199.99|199.99|Surfboards||Introducing the Wave Rider, the ultimate surfboard designed specifically for beginner surfers. Engineered with a durable soft top, this surfboard provides added safety and comfort, making your first surfing experience unforgettable. Available in vibrant Blue and Yellow colors, each board is ISO Certified and CE Compliant, ensuring top-notch quality and reliability. The Wave Rider features a compact and waterproof design, with a length of 7'0'', width of 22 inches, and thickness of 2.5 inches, making it easy to handle and transport. Its low rocker and single fin system provide excellent stability, while the protective foam layer offers enhanced safety. Manufactured with low emissions to minimize environmental impact, this board also includes a leash, instruction manual, and repair kit. With its sturdy polyethylene material and square tail shape, the Wave Rider is the perfect choice for those new to surfing. Enjoy peace of mind with a 1-year limited warranty, and embark on your surfing adventure with confidence!SBST_362C|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/5c90e8c207ad_top_right_bf93d45c-1753-4be3-86b4-66e9a51c5a41.webp?v=1766163600|https://barca-sports.myshopify.com/products/sbst_362c\\ngid://shopify/ProductVariant/50676912128274|Wave Rider 10'0'' Hybrid - Yellow|Walden Surfboards|899.99|899.99|Longboard Surfboards||Catch your first waves with confidence on the Wave Rider 10'0'' Hybrid. Perfect for beginner surfers, this composite longboard by Walden Surfboards is designed with a classic rocker and a pin tail for stable and smooth rides. Made with recyclable components, this board is scratch-resistant and protected with a UV-resistant coating, ensuring durability under various conditions. The adjustable fin system and wide design offer great maneuverability and control, especially in small waves. Plus, it comes with a single fin, a leash, and a carry bag for easy transport with its convenient carry handle. Enjoy the ocean with the peace of mind knowing your board includes a 5-year structural warranty and is built to last. Ride the waves effortlessly with the Wave Rider 10'0'' Hybrid!WSLB_CF04|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/1fb58980f000_bottom_left_a7b34258-935a-4ea3-98ab-9db8a717fa20.webp?v=1766163586|https://barca-sports.myshopify.com/products/wslb_cf04\\ngid://shopify/ProductVariant/50676927463698|SurfPro Schooler - Black|Odysea|349.99|349.99|Surfboards||Get ready to catch waves with the SurfPro Schooler, the ideal surfboard designed specifically for surf schools and training beginners. Crafted from durable, impact-resistant composite material and boasting ISO and Marine Safety certifications, this board stands out in both quality and safety. The SurfPro Schooler features an ergonomic, sleek design with a moderate rocker, ensuring stability and a smooth ride for any skill level. Available in bold red and timeless black, each board is equipped with a tri-fin system, leash, fin set, and carry bag for easy travel and storage. Environmentally conscious manufacturing processes coupled with a 3-year structural warranty make this 8'0'' soft top longboard both sustainable and reliable. With an adjustable width and 3.5-inch thickness, and weighing just 12 lbs, the SurfPro Schooler is the perfect companion for your surfing journey.ODST_2E0C|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/49eee557c7c5_top_right_f2f8e365-62ea-48d7-a73b-082e6b4ef99d.webp?v=1766163601|https://barca-sports.myshopify.com/products/odst_2e0c\\ngid://shopify/ProductVariant/50670405058834|Surf Repair Magic|WaxIt|40.0|40.0|Surfing|3.6|Surf Repair Magic is the ultimate solution for quick and seamless board fixes on the go. Crafted with both epoxy and polyester materials, this versatile kit ensures your surfboard is always in top shape, no matter the damage. Ideal for all surfers, from beginners to pros, Surf Repair Magic is compact, easy to use, and designed to handle any challenge the ocean throws your way. Get back to riding the waves in no time with the reliability and efficiency of Surf Repair Magic.WIPK_A9C2|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/c17515c67a2a_bottom_right_f2bfba7c-b157-4562-a1bd-628ffd9195f1.webp?v=1766164010|https://barca-sports.myshopify.com/products/wipk_a9c2\\ngid://shopify/ProductVariant/50676924973330|Wave Cruiser Hybrid Board - Green|Wavestorm|299.99|299.99|Surfboards||Experience the thrill of surfing with the Wave Cruiser Hybrid Board, designed for casual beachgoers looking for a fun, easy, and safe surfing experience. With its 7'0'' length and 22-inch width, this hybrid soft top surfboard is perfect for beginner and intermediate surfers. Crafted with a soft skin deck and soft rails for added safety, it features a scratch-resistant and recyclable foam material to withstand your surfing adventures. Choose between sleek white or vibrant green colors, and enjoy the convenience of the adjustable fin setup, wax kit, and repair kit included. The classic rocker and pin tail design provide a smooth ride on the waves, while the easy-to-carry handle ensures portability. Certified CE compliant and durability tested, the Wave Cruiser Hybrid Board is backed by a 6-month defect warranty, offering peace of mind as you carve through the surf.WVST_E47D|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/d22368dfb336_bottom_right.webp?v=1766163599|https://barca-sports.myshopify.com/products/wvst_e47d\\ngid://shopify/ProductVariant/50675038880018|WaveFix Polyester Repair Kit - Blue|WaxIt|40.0|40.0|Surfing|4.1|Introducing the WaveFix Polyester Repair Kit, your essential companion for surfboard maintenance. Made from high-quality polyester material, this eco-friendly and ISO certified kit includes everything you need to keep your surfboard in top condition: resin, sandpaper, and fiberglass cloth. Available in striking blue and red options, the WaveFix kit ensures you can confidently tackle any repair with ease and style. Whether you're a seasoned surfer or a beginner, trust the WaveFix Polyester Repair Kit to keep you riding the waves smoothly.WIPK_8AE9|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/88444cf8ddda_bottom_left_1c541927-9b58-4b71-a0ad-c646f1a6cb1c.webp?v=1766163993|https://barca-sports.myshopify.com/products/wipk_8ae9\\ngid://shopify/ProductVariant/50676905705746|Wave Rider Longboard - Yellow|Walden Surfboards|499.99|499.99|Longboard Surfboards||Experience the thrill of surfing with the Wave Rider Longboard, perfect for beginner surfers. This soft top longboard comes in striking blue and yellow, designed for durability with UV-resistant and eco-friendly materials. It's lightweight yet sturdy with a moderate rocker and a squash tail, ensuring excellent maneuverability in the water. The anti-slip deck and single fin system provide a safe and smooth ride as you carve through the waves. Each board includes a leash and wax kit for your convenience. Measuring 9'0'' in length, 22 inches in width, and 3 inches in thickness, this epoxy board guarantees a stable and enjoyable surfing experience. Enjoy peace of mind with its 1-year limited warranty. Dive into recreational surfing with the Wave Rider Longboard!WSLB_9FB5|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/2b656e67d7b2_bottom_left_b9630d9e-3d2b-4736-a449-0d7591fbd967.webp?v=1766163580|https://barca-sports.myshopify.com/products/wslb_9fb5\""}
+
+event:message
+data:{"type": "TOOL_CALL_RESULT", "messageId": "f1358933-d091-4d7d-a563-d633a1a5bc1b", "toolCallId": "tooluse_RsS4KXaXPgx8cgdBSaff8j", "content": "\"id|name|brand|price|promo|category|rating|description|image|url\\ngid://shopify/ProductVariant/50676927463698|SurfPro Schooler - Black|Odysea|349.99|349.99|Surfboards||Get ready to catch waves with the SurfPro Schooler, the ideal surfboard designed specifically for surf schools and training beginners. Crafted from durable, impact-resistant composite material and boasting ISO and Marine Safety certifications, this board stands out in both quality and safety. The SurfPro Schooler features an ergonomic, sleek design with a moderate rocker, ensuring stability and a smooth ride for any skill level. Available in bold red and timeless black, each board is equipped with a tri-fin system, leash, fin set, and carry bag for easy travel and storage. Environmentally conscious manufacturing processes coupled with a 3-year structural warranty make this 8'0'' soft top longboard both sustainable and reliable. With an adjustable width and 3.5-inch thickness, and weighing just 12 lbs, the SurfPro Schooler is the perfect companion for your surfing journey.ODST_2E0C|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/49eee557c7c5_top_right_f2f8e365-62ea-48d7-a73b-082e6b4ef99d.webp?v=1766163601|https://barca-sports.myshopify.com/products/odst_2e0c\\ngid://shopify/ProductVariant/50675334119698|ProWave Shortboard - White|Firewire|699.99|699.99|Shortboard Surfboards|3.7|Experience the ultimate wave-riding performance with the ProWave Shortboard. Tailored for competitive surfers, this high-performance shortboard features a 5'8'' epoxy construction, delivering exceptional durability and impact resistance. Enjoy the thrill with its moderate rocker and squash tail design, perfect for executing high-performance tricks. Available in striking white and red, the ProWave Shortboard combines an anti-slip deck for added safety with a thruster fin system for superior control. Lightweight and eco-friendly, it includes a fin set and leash, making it ready for your next surf session. Dive into the waves with confidence, backed by a 5-year structural warranty.FWSB_89FA|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/a88c4e280f5f_top_left_f77d2805-ff58-46b2-bbd2-9ef7b9e99482.webp?v=1766165454|https://barca-sports.myshopify.com/products/fwsb_89fa\\ngid://shopify/ProductVariant/50676920418578|Beach Glide Soft Top Surfboard - White|Wavestorm|299.99|299.99|Surfboards|4.4|Experience effortless beach fun with our Beach Glide Soft Top Surfboard. Designed for casual beachgoers, this performance soft top surfboard offers a perfect blend of durability and ease. Featuring a UV-resistant, soft skin deck and a recyclable foam core, this surfboard ensures an environmentally friendly ride. It's equipped with molded fins, a foldable fin setup for convenient portability, and a classic rocker for smooth gliding on waves. The swallow tail and soft rails provide additional safety and control. Measuring 7'0'' in length, 24 inches in width, and an ultra-light construction with a thickness of 3 inches, the Beach Glide promises a comfortable and enjoyable surf experience. Included in the package are a leash and an instruction manual, plus a 6-month defect warranty for peace of mind. Get ready to glide effortlessly and enjoy the beach like never before!WVST_328E|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/2846b37194a9_top_right_dab2fadc-5607-47d4-b32b-883676df4ae1.webp?v=1766163594|https://barca-sports.myshopify.com/products/wvst_328e\\ngid://shopify/ProductVariant/50674988024082|Classic Wave Rider - Red|Takayama|1199.99|1199.99|Longboard Surfboards||Embrace the classic surf experience with the Classic Wave Rider. Designed for the true surf enthusiast, this classic longboard is available in sleek red or black. Each board features a continuous rocker and narrow profile for optimal performance on every wave. Crafted with a PU foam core and built to withstand all weather conditions, the Classic Wave Rider ensures longevity and sustainability with ISO certification and marine safety rating. It's lightweight and travel-friendly, making it perfect for your next surf adventure. The ergonomic design provides safety and comfort, while the included fin system, leash, and repair kit give you all you need to catch wave after wave. Available in a custom length with a classic tail and 3-inch thickness, the Classic Wave Rider is your go-to board for timeless style and unbeatable performance. Enjoy peace of mind with a 6-month defect warranty.TKYLB_9C3A|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/6be79afedfc7_bottom_right.webp?v=1766163588|https://barca-sports.myshopify.com/products/tkylb_9c3a\\ngid://shopify/ProductVariant/50674988974354|Sun Splash Soft Top Surfboard - Red|Catch Surf|349.99|349.99|Surfboards||Dive into fun with the Sun Splash Soft Top Surfboard, designed for family-friendly surfing adventures. Available in vibrant Red, Yellow, and Blue colors, this all-around soft top board is perfect for users of all ages and skill levels. Crafted with eco-friendly materials and a durable HDPE bottom, it offers UV resistance and a waterproof structure. The lightweight design and wide shape ensure stability and easy transport. Features include an anti-slip deck for enhanced safety, a tri-fin system for better maneuverability, and a low rocker for smooth rides. The 8'0'' length, 3-inch thickness, and square tail make it ideal for family surfing. Each board comes complete with a leash and carry bag, backed by a 2-year material warranty. Make every wave an adventure with the Sun Splash Soft Top Surfboard!CSST_DF3B|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/f7180257eadd_top_left.webp?v=1766163596|https://barca-sports.myshopify.com/products/csst_df3b\\ngid://shopify/ProductVariant/50676926218514|Wave Rider - Yellow|Storm Blade|199.99|199.99|Surfboards||Introducing the Wave Rider, the ultimate surfboard designed specifically for beginner surfers. Engineered with a durable soft top, this surfboard provides added safety and comfort, making your first surfing experience unforgettable. Available in vibrant Blue and Yellow colors, each board is ISO Certified and CE Compliant, ensuring top-notch quality and reliability. The Wave Rider features a compact and waterproof design, with a length of 7'0'', width of 22 inches, and thickness of 2.5 inches, making it easy to handle and transport. Its low rocker and single fin system provide excellent stability, while the protective foam layer offers enhanced safety. Manufactured with low emissions to minimize environmental impact, this board also includes a leash, instruction manual, and repair kit. With its sturdy polyethylene material and square tail shape, the Wave Rider is the perfect choice for those new to surfing. Enjoy peace of mind with a 1-year limited warranty, and embark on your surfing adventure with confidence!SBST_362C|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/5c90e8c207ad_top_right_bf93d45c-1753-4be3-86b4-66e9a51c5a41.webp?v=1766163600|https://barca-sports.myshopify.com/products/sbst_362c\\ngid://shopify/ProductVariant/50677303312658|Black Wave Shredder - Black|Lost Surfboards|699.99|699.99|Shortboard Surfboards|4.2|Master the waves with the Black Wave Shredder, an advanced fish shortboard designed for high-performance tricks and optimal maneuverability. Crafted with eco-friendly epoxy material, this waterproof and CE compliant surfboard ensures durability and long-term use. The quad fin system and high rocker provide excellent stability and control, while the reinforced fins offer added safety. Included with a leash and wax kit, this 6'0'' board with a 20-inch width and 3-inch thickness is perfect for advanced riders looking to take their surf skills to the next level. Embrace the challenge and shred the waves with confidence, backed by a 5-year structural warranty.LSSB_4F37|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/11d1b071d272_bottom_left.webp?v=1766165474|https://barca-sports.myshopify.com/products/lssb_4f37\\ngid://shopify/ProductVariant/50676907671826|Endless Glide - White|Takayama|1199.99|1199.99|Longboard Surfboards||Experience the thrill of classic surfing with Endless Glide, the ultimate longboard surfboard designed for classic surf enthusiasts. With a length of 10'0'' and a width of 24 inches, this board is crafted from durable polyurethane and features a classic rocker for smooth rides. The reinforced single fin and square tail design provide impeccable stability and control. Available in sleek black and pristine white, Endless Glide combines style with performance. It's built with sustainable production methods and includes essential accessories like a fin set, leash, and repair kit. Enjoy the convenience of an easy carry handle and the assurance of a lifetime warranty. Whether you're chasing waves or enjoying calm waters, Endless Glide promises an unforgettable surfing experience.TKYLB_FCED|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/9c3073520a57_bottom_left.webp?v=1766163582|https://barca-sports.myshopify.com/products/tkylb_fced\\ngid://shopify/ProductVariant/50675334218002|Adventurer's Thrill Shortboard - Blue|Lost Surfboards|599.99|599.99|Shortboard Surfboards|4.2|Experience the ultimate adventure on waves with the Adventurer's Thrill Shortboard. Designed for passionate thrill-seekers, this thruster shortboard comes in vibrant colors - blue, black, and yellow - to match your style. Crafted from durable polyurethane, it boasts a high rocker, pin tail shape, and a thickness of 3 inches, offering superior performance. Environmentally conscious surfers will appreciate our sustainable production methods. Travel-friendly and lightweight at just 6'0'' long and 20 inches wide, it's easy to carry along with the included leash, carry bag, and wax kit. Featuring detachable fins and a quick-release safety mechanism, it's CE compliant and durability tested for your peace of mind. Backed by a 1-year limited warranty, this board is your perfect companion for all adventure surfing activities.LSSB_8F0B|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/c73753fa5015_top_right_39a34302-c2ed-4f6d-bbd5-e681ec0f5930.webp?v=1766165463|https://barca-sports.myshopify.com/products/lssb_8f0b\""}
+
+event:message
+data:{"type": "TOOL_CALL_RESULT", "messageId": "a31953e1-02eb-48a5-945c-0fbcfd6aece5", "toolCallId": "tooluse_cyFjeocyd3Jc4iylDLGLlA", "content": "\"id|name|brand|price|promo|category|rating|description|image|url\\ngid://shopify/ProductVariant/50670409482514|Ultimate Epoxy Surf Wax|WaxIt|35.0|35.0|Surfboard Wax|3.0|Experience peak performance on the waves with Ultimate Epoxy Surf Wax. Expertly formulated with high-quality epoxy material to provide superior grip and durability. Perfect for all your surfing adventures, this premium wax ensures long-lasting traction even in the toughest conditions. Ride the waves with confidence and elevate your surfing experience with Ultimate Epoxy Surf Wax.WIWX_B051|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/5d2beb19c452_bottom_left_68a9434b-8067-4453-8159-f5e91cfb9922.jpg?v=1766164024|https://barca-sports.myshopify.com/products/wiwx_b051\\ngid://shopify/ProductVariant/50670410367250|Poly Glide Surf Wax|Surf and Co|35.0|35.0|Surfboard Wax|4.4|Introducing Poly Glide Surf Wax, your ultimate companion for smooth and effortless rides on the waves. Crafted with high-quality polyester, this surf wax ensures superior grip and durability. Whether you're a seasoned surfer or just catching your first waves, Poly Glide Surf Wax from Surf and Co. provides the reliability and performance you need. Elevate your surfing experience with this premium accessory, designed to keep you gliding through every surf session. Available now at an unbeatable price of $35. Dive in and experience the difference today!SCWX_1304|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/70f266360cdc_bottom_right_763363ea-c95a-4f29-b513-6df78530c0b6.webp?v=1766164028|https://barca-sports.myshopify.com/products/scwx_1304\\ngid://shopify/ProductVariant/50670410924306|Wave Master Surf Wax|WaxIt|35.0|35.0|Surfboard Wax|3.0|Take your surfing to the next level with Wave Master Surf Wax. Engineered from premium polyester, this wax offers superior grip and a smooth glide to keep you in command on any wave. Designed for both seasoned pros and beginners, Wave Master ensures optimal performance and confidence in all surf conditions. Elevate your surfing experience and make Wave Master your reliable companion for every adventure at sea.WIWX_2D90|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/d5ab761f07c3_bottom_right.webp?v=1766164031|https://barca-sports.myshopify.com/products/wiwx_2d90\\ngid://shopify/ProductVariant/50670409842962|Dual Blend Surf Wax|Surf and Co|35.0|35.0|Surfboard Wax|4.4|Experience the ultimate glide with Dual Blend Surf Wax, crafted from both epoxy and polyester materials. This versatile surf accessory ensures superior performance on any board type, giving you the perfect balance of grip and speed. Whether you're hitting the waves on an epoxy or polyester board, Dual Blend Surf Wax offers optimal traction and an exhilarating surf experience. Elevate your surf game with this essential addition to your gear.SCWX_EC77|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/70f266360cdc_top_right_31f15645-b5be-4c51-bc00-09049bf2cda2.webp?v=1766164026|https://barca-sports.myshopify.com/products/scwx_ec77\\ngid://shopify/ProductVariant/50670411088146|Ultimate Glide Surf Wax|Wax and More|35.0|35.0|Surfboard Wax|4.0|Experience unmatched performance with the Ultimate Glide Surf Wax. Crafted with both epoxy and polyester materials, this versatile wax package is designed to enhance your surfing adventures. Enjoy optimal grip and smooth gliding across all wave conditions. Elevate your surf game with unrivaled durability and efficiency. Get ready to ride the waves like never before!WMWX_F12B|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/60a0ffb77280_top_right_6f6ebc3b-5500-45c5-92aa-ffc2d7e0043f.webp?v=1766164032|https://barca-sports.myshopify.com/products/wmwx_f12b\\ngid://shopify/ProductVariant/50670410629394|All-Weather Surf Wax|WaxIt|35.0|35.0|Surfboard Wax|3.0|Experience optimal performance on the waves with the All-Weather Surf Wax. Specifically designed to cater to both epoxy and polyester surfaces, this versatile wax package delivers superior grip and durability. Elevate your surfing experience with a product that ensures you stay on top, regardless of weather conditions. Priced at just $35.0, it's the ultimate accessory for any committed surfer.WIWX_E0A1|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/5d2beb19c452_top_right.jpg?v=1766164029|https://barca-sports.myshopify.com/products/wiwx_e0a1\\ngid://shopify/ProductVariant/50670410039570|Ultimate Epoxy Surf Wax Pack|Wax and More|35.0|35.0|Surfboard Wax|4.0|Experience top-notch performance on the waves with the Ultimate Epoxy Surf Wax Pack. Crafted from high-quality epoxy material, this surf wax ensures exceptional durability and grip. Perfectly designed for all surf enthusiasts, it helps you maintain maximum control and speed on every ride. Get ready to conquer any wave with confidence and style.WMWX_BEA2|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/d5ab761f07c3_bottom_left.webp?v=1766164027|https://barca-sports.myshopify.com/products/wmwx_bea2\\ngid://shopify/ProductVariant/50670410760466|Epoxy Glide Wax|Surf and Co|35.0|35.0|Surfboard Wax|4.4|Epoxy Glide Wax is your ultimate accessory for a smoother, faster surf experience. Crafted from high-quality epoxy material, this innovative wax is designed to provide superior glide and durability, ensuring peak performance on the waves. Perfectly suited for all your surf needs, this wax from Surf and Co delivers unparalleled results every time. Elevate your surfing with the Epoxy Glide Wax and enjoy the thrill of seamless rides at an affordable price of $35.SCWX_E542|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/70f266360cdc_top_left_4b231524-4e3e-4a9a-84a8-4a678c25e47e.webp?v=1766164030|https://barca-sports.myshopify.com/products/scwx_e542\\ngid://shopify/ProductVariant/50676921794834|Surf Glide - Black|South Bay Board Co.|199.99|199.99|Surfboards|3.0|Embark on your surfing journey with Surf Glide, the ultimate beginner-friendly surfboard. Designed with a foam core and coated with eco-friendly biodegradable materials, Surf Glide offers a perfect blend of durability and environmental consciousness. Featuring a high rocker and smooth edges, this board ensures enhanced safety and excellent performance on the waves. Its lightweight, scratch-resistant construction and compact design make it effortlessly portable. The adjustable fin setup allows for personalized control, while the inclusivity of a wax kit means you're ready to hit the water from day one. Choose between vibrant green or sleek black and dive into the surf with confidence. Certified for quality and durability, and backed by a comprehensive replacement guarantee, Surf Glide is your ideal companion for mastering the waves with style and ease.SBBST_4B2B|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/8a0762a91f5c_bottom_right_70ec9dff-c6cf-4307-9553-5e527911b52c.webp?v=1766163595|https://barca-sports.myshopify.com/products/sbbst_4b2b\""}
+
+event:message
+data:{"type": "TOOL_CALL_RESULT", "messageId": "829db0c5-0887-4c68-9469-bd6a12294433", "toolCallId": "tooluse_4B2uOffB9CJ1gC3o5kTXi4", "content": "\"id|name|brand|price|promo|category|rating|description|image|url\\ngid://shopify/ProductVariant/50674589237522|HydroLite Sleeveless Wetsuit - Black / XL|Billabong|99.99|99.99|Wetsuits|4.4|Dive into your next swimming adventure with the HydroLite Sleeveless Wetsuit. Designed specifically for men, this wetsuit caters to swimmers with its stretch fabric and lightweight insulation, ensuring both flexibility and comfort. Available in sleek black and vibrant green, it features high-visibility panels for added safety. The wetsuit is crafted from recyclable neoprene, boasting weatherproof durability and reinforced flex zones. Its compact storage and front zip make it extremely portable, while the welded seams and 2mm thickness provide maximum protection and performance. Certified T\\u00dcV approved and UV-resistant, it comes with a lifetime seam warranty. Perfect for recreational swimming, the HydroLite Sleeveless Wetsuit promises unmatched quality and sustainability. Includes a convenient storage strap for easy transport.BGWETS_272D|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/9544b604673a_top_left.webp?v=1766163798|https://barca-sports.myshopify.com/products/bgwets_272d\\ngid://shopify/ProductVariant/50674626461970|EcoWave Performance Wetsuit - Yellow / XL|Billabong|199.99|199.99|Wetsuits|3.0|Dive into your aquatic adventures with the EcoWave Performance Wetsuit, designed for men who demand excellence in the water. Crafted from eco-friendly stretch fabric with a multi-directional stretch for unmatched flexibility, this wetsuit features a front zip for easy access and optimal comfort. Available in vibrant blue and yellow, the high-visibility panels ensure safety during open water swims. Enjoy superior UV resistance, temperature control, and taped seams for enhanced durability. The EcoWave Performance Wetsuit, certified CE compliant, comes with a storage strap for convenient portability. Experience top-tier performance and eco-conscious design with the EcoWave Performance Wetsuit, backed by a 1-year limited warranty.BGWETF_DC19|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/f3c1a327fd8f_top_left.webp?v=1766164203|https://barca-sports.myshopify.com/products/bgwetf_dc19\\ngid://shopify/ProductVariant/50674588090642|PaddlePro Sleeveless Wetsuit - Yellow / XL|Quiksilver|99.99|99.99|Wetsuits||Introducing the PaddlePro Sleeveless Wetsuit, the ultimate gear for women paddleboarders who value performance and comfort. Engineered with UV-resistant and biodegradable coatings, this Nylon wetsuit promises superior durability and minimal environmental impact. The lightweight insulation and variable thickness ensure you stay warm without sacrificing flexibility, thanks to the flatlock seams and minimal resistance material. Available in vibrant Green and Yellow colors, it features high-visibility panels for enhanced safety on the water. Travel-friendly with a side zip design, each wetsuit comes complete with a hanger and carry bag for your convenience. Make a smart investment in your paddleboarding adventures with the PaddlePro, backed by a 6-month defect warranty.QSWETS_5BB5|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/f3f5c43dc038_bottom_left_b53a6afc-3363-4f2c-b378-d82bf966320a.webp?v=1766163794|https://barca-sports.myshopify.com/products/qswets_5bb5\\ngid://shopify/ProductVariant/50674590613778|WaveRider Shorty Wetsuit - Blue / M|O'Neill|129.99|129.99|Wetsuits|3.0|Experience the perfect blend of comfort, durability, and performance with the WaveRider Shorty Wetsuit. Ideal for women surfers, this premium wetsuit is crafted from eco-friendly Limestone Neoprene, offering exceptional flexibility and a comfortable fit. Designed for warm water surfing, the 4mm thickness and heat-retaining lining keep you warm and focused on your ride. Features like tear-resistant material, reinforced seams, and UV-resistant certification ensure longevity and safety. The side zip design and smooth stitching add convenience and comfort, while the compact and foldable nature makes it perfect for travel. Available in vibrant Blue and Green, the WaveRider Shorty Wetsuit is your go-to gear for an exceptional surfing experience. Comes with a repair patch, instruction manual, and a 3-year performance warranty for added peace of mind.ONWETS_ED9F|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/92e2a0512087_top_right_92b11609-1991-4483-8164-34bffd0558ee.webp?v=1766163803|https://barca-sports.myshopify.com/products/onwets_ed9f\\ngid://shopify/ProductVariant/50674626887954|EcoFlex Paddleboard Wetsuit - Green / XL|Xcel|149.99|149.99|Wetsuits|4.3|Introducing the EcoFlex Paddleboard Wetsuit, a perfect fusion of comfort, functionality, and eco-friendliness designed especially for women paddleboarders. Crafted from recyclable nylon and featuring abrasion-resistant durability, this 4mm thick beginner full suit ensures thermal insulation for optimal warmth. The wetsuit, available in striking red and green colors, boasts a no-zip design for ease of wear, complemented by flatlock seams for enhanced flexibility and a comfortable fit. Certified to ISO standards and made from eco-friendly materials, it includes an emergency whistle attachment for added safety. Lightweight and easy to pack, the EcoFlex Paddleboard Wetsuit comes with an instruction manual and a repair patch, backed by a 2-year material warranty. Embrace your paddleboarding adventures with confidence and style.XCWETF_48C3|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/7627aa438509_top_left_ca565086-9a18-409f-8c26-15a15d591dad.webp?v=1766164206|https://barca-sports.myshopify.com/products/xcwetf_48c3\\ngid://shopify/ProductVariant/50674633900306|ThermoFlex Winter Wetsuit - Red / M|Rip Curl|399.99|399.99|Wetsuits|3.6|Conquer cold waters with the ThermoFlex Winter Wetsuit, designed specifically for paddleboarders who demand peak performance in frigid conditions. Crafted from high-quality nylon with a 7mm thickness, this wetsuit ensures optimal thermal insulation and long-lasting durability. Featuring ergonomic panels for unmatched flexibility and a sealed zip for extra protection, the ThermoFlex guarantees a snug fit and protects you against the elements. Enjoy peace of mind with its protective coating, double-lined seams, and low carbon manufacturing process. Certified as CE Compliant and T\\u00dcV Approved, this winter full suit promises safety and reliability, backed by a 3-year performance warranty. Whether you're tackling winter waves or enjoying chilly paddles, the ThermoFlex Winter Wetsuit delivers outstanding warmth and comfort every time. Available in bold red, this wetsuit combines style with high performance. Make every adventure count with the ThermoFlex Winter Wetsuit.RCWETF_D8E3|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/8c6d80ac5b9b_bottom_left_852e0a5c-9b08-43bd-a6e5-67ec90d5d6f2.webp?v=1766164226|https://barca-sports.myshopify.com/products/rcwetf_d8e3\\ngid://shopify/ProductVariant/50674627608850|Sunray Winter Wetsuit - Yellow / S|Patagonia|399.99|399.99|Wetsuits|3.6|Introducing the Sunray Winter Wetsuit, the perfect accessory for triathletes who brave the icy waters. Designed for women, this wetsuit features a sleek yellow color with reinforced seams and high-visibility panels for added safety. The horizontal zip ensures easy wear and removal, while the 7mm rubberized coating, fleece lining, and reinforced flex zones provide unmatched thermal insulation and flexibility. Certified by T\\u00dcV and ISO, this durable and weatherproof suit is environmentally friendly with minimal waste, and includes a repair patch and storage strap for compact portability. Whether you're training or competing, the Sunray Winter Wetsuit ensures you stay warm, comfortable, and visible. Backed by a replacement guarantee, this wetsuit is your reliable companion for winter activities.PTWETF_8BC7|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/3c3ed4331536_bottom_right_568955bd-7ae8-4d6d-996c-9ba8e519af5e.webp?v=1766164209|https://barca-sports.myshopify.com/products/ptwetf_8bc7\\ngid://shopify/ProductVariant/50674591301906|WaveFlex Sleeveless Wetsuit - Gray / M|Billabong|99.99|99.99|Wetsuits|3.5|Experience the ultimate comfort and performance with the WaveFlex Sleeveless Wetsuit, designed specifically for female swimmers. Crafted from high-stretch, recyclable neoprene and durable nylon, this wetsuit offers exceptional flexibility and long-lasting durability. The front zip allows for easy wearing, while the flatlock seams and protective coating ensure safety and minimal thermal resistance during recreational swimming. Lightweight and easy to pack, the WaveFlex comes with a hanger for convenient storage. Dive into the water confidently with CE Compliant and ISO Certified assurance, backed by a 2-year material warranty.BGWETS_A679|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/761ea741a719_bottom_right.webp?v=1766163805|https://barca-sports.myshopify.com/products/bgwets_a679\\ngid://shopify/ProductVariant/50674591039762|PaddleFlex Performance Wetsuit - Yellow / XS|Rip Curl|199.99|199.99|Wetsuits|3.0|Introducing the PaddleFlex Performance Wetsuit, designed specifically for male paddleboarders seeking durability, flexibility, and comfort. Crafted with premium stretch fabric and reinforced flex zones, this wetsuit offers exceptional mobility on the water. The high-visibility yellow panels enhance safety, while the windproof panels and 3mm thickness provide superior thermal insulation. Its blindstitched seams and abrasion-resistant material ensure long-lasting performance, backed by a lifetime seam warranty. Lightweight at just 1.5 lbs and travel-friendly, the PaddleFlex comes with a carry bag and storage strap for convenience. Embrace sustainable production with ISO certified standards, and enjoy your paddleboarding experience like never before with the PaddleFlex Performance Wetsuit.RCWETS_68F7|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/b378df752c1c_top_left_82730556-fd0f-4b05-8b8f-ffe6f0523aa3.webp?v=1766163804|https://barca-sports.myshopify.com/products/rcwets_68f7\""}
+
+event:message
+data:{"type": "TEXT_MESSAGE_START", "messageId": "1e5c9f32-c1e4-4268-94dc-17cbc321d179", "role": "assistant"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "1e5c9f32-c1e4-4268-94dc-17cbc321d179", "delta": "Perfect"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "1e5c9f32-c1e4-4268-94dc-17cbc321d179", "delta": "! Now"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "1e5c9f32-c1e4-4268-94dc-17cbc321d179", "delta": " I'll search for surf"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "1e5c9f32-c1e4-4268-94dc-17cbc321d179", "delta": " le"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "1e5c9f32-c1e4-4268-94dc-17cbc321d179", "delta": "ashes"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "1e5c9f32-c1e4-4268-94dc-17cbc321d179", "delta": " since"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "1e5c9f32-c1e4-4268-94dc-17cbc321d179", "delta": " the le"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "1e5c9f32-c1e4-4268-94dc-17cbc321d179", "delta": "ash results"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "1e5c9f32-c1e4-4268-94dc-17cbc321d179", "delta": " weren"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "1e5c9f32-c1e4-4268-94dc-17cbc321d179", "delta": "'t specific:"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_END", "messageId": "1e5c9f32-c1e4-4268-94dc-17cbc321d179"}
+
+event:message
+data:{"type": "TOOL_CALL_START", "toolCallId": "tooluse_g3Bo2i73OfM0MirRAYb9aD", "toolCallName": "coveo_commerce_search", "parentMessageId": "2216bcf5-3793-4ee7-b9ba-d17ee96c0c02"}
+
+event:message
+data:{"type": "TOOL_CALL_ARGS", "toolCallId": "tooluse_g3Bo2i73OfM0MirRAYb9aD", "delta": "{\"listing_surface_id\": \"leash\", \"perPage\": 10, \"query\": \"surfboard leash\"}"}
+
+event:message
+data:{"type": "TOOL_CALL_END", "toolCallId": "tooluse_g3Bo2i73OfM0MirRAYb9aD"}
+
+event:message
+data:{"type": "TOOL_CALL_RESULT", "messageId": "3068a975-5a78-44be-bb14-6102990083dd", "toolCallId": "tooluse_g3Bo2i73OfM0MirRAYb9aD", "content": "\"id|name|brand|price|promo|category|rating|description|image|url\\ngid://shopify/ProductVariant/50675335627026|Adventure Thruster Surfboard - Yellow|Channel Islands|899.99|899.99|Shortboard Surfboards|4.0|Embark on your next surfing adventure with the Adventure Thruster Surfboard. Tailored for adventure seekers, this thruster shortboard offers a perfect blend of performance and durability with a scratch-resistant polyurethane material and a minimalist environmental impact. The ergonomic design and continuous rocker ensure a smooth ride, while the bat tail shape and slim profile enhance maneuverability. Available in vibrant colors like yellow and green, this compact board is easy to travel with. Each surfboard comes with an adjustable fin system, a leash, and a repair kit, making it a versatile choice for surfers of all levels. Certified by T\\u00dcV and designed with durability in mind, this surfboard also features a lifetime warranty for peace of mind. Get ready to ride the waves and embrace the thrill with the Adventure Thruster Surfboard.CISB_B3E8|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/0541376350e1_top_right_876d522d-c82d-4422-a981-0d4b0fe4e16d.webp?v=1766165470|https://barca-sports.myshopify.com/products/cisb_b3e8\\ngid://shopify/ProductVariant/50674988220690|WaveRider Soft Top Surfboard - Blue|Catch Surf|249.99|249.99|Surfboards||Ride the waves with ease and style with the WaveRider Soft Top Surfboard. Designed for recreational riders, this lightweight and durable surfboard features an all-around soft top made from eco-friendly materials. Available in vibrant blue or sleek white, the 8'0'' WaveRider offers a moderate rocker for smooth performance and an anti-slip deck for enhanced safety. The tri-fin system ensures excellent stability and maneuverability, while the squash tail provides balanced control. Complete with a leash and fin set, the WaveRider is ready for endless beach fun. ISO certified and CE compliant, it includes a 2-year material warranty. Ideal for catching waves and making memories, the WaveRider Soft Top Surfboard is your ultimate companion for surf adventures.CSST_E72C|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/9fd143c362c5_bottom_left.webp?v=1766163590|https://barca-sports.myshopify.com/products/csst_e72c\\ngid://shopify/ProductVariant/50674988974354|Sun Splash Soft Top Surfboard - Red|Catch Surf|349.99|349.99|Surfboards||Dive into fun with the Sun Splash Soft Top Surfboard, designed for family-friendly surfing adventures. Available in vibrant Red, Yellow, and Blue colors, this all-around soft top board is perfect for users of all ages and skill levels. Crafted with eco-friendly materials and a durable HDPE bottom, it offers UV resistance and a waterproof structure. The lightweight design and wide shape ensure stability and easy transport. Features include an anti-slip deck for enhanced safety, a tri-fin system for better maneuverability, and a low rocker for smooth rides. The 8'0'' length, 3-inch thickness, and square tail make it ideal for family surfing. Each board comes complete with a leash and carry bag, backed by a 2-year material warranty. Make every wave an adventure with the Sun Splash Soft Top Surfboard!CSST_DF3B|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/f7180257eadd_top_left.webp?v=1766163596|https://barca-sports.myshopify.com/products/csst_df3b\\ngid://shopify/ProductVariant/50676920418578|Beach Glide Soft Top Surfboard - White|Wavestorm|299.99|299.99|Surfboards|4.4|Experience effortless beach fun with our Beach Glide Soft Top Surfboard. Designed for casual beachgoers, this performance soft top surfboard offers a perfect blend of durability and ease. Featuring a UV-resistant, soft skin deck and a recyclable foam core, this surfboard ensures an environmentally friendly ride. It's equipped with molded fins, a foldable fin setup for convenient portability, and a classic rocker for smooth gliding on waves. The swallow tail and soft rails provide additional safety and control. Measuring 7'0'' in length, 24 inches in width, and an ultra-light construction with a thickness of 3 inches, the Beach Glide promises a comfortable and enjoyable surf experience. Included in the package are a leash and an instruction manual, plus a 6-month defect warranty for peace of mind. Get ready to glide effortlessly and enjoy the beach like never before!WVST_328E|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/2846b37194a9_top_right_dab2fadc-5607-47d4-b32b-883676df4ae1.webp?v=1766163594|https://barca-sports.myshopify.com/products/wvst_328e\\ngid://shopify/ProductVariant/50674988548370|Wave Rider Kids Soft Top - Red|Storm Blade|199.99|199.99|Surfboards||Introducing the Wave Rider Kids Soft Top, the perfect beginner surfboard for young aspiring surfers. Designed specifically for kids, this 6'0'' surfboard offers a high rocker shape and is crafted from durable polyethylene material to ensure both flexibility and impact resistance. Available in vibrant red and yellow colors, the Wave Rider promises a fun and safe surfing experience with smooth edges and a round tail shape. Equipped with an easy-to-carry handle, a twin fin system, and essential items like a leash and wax kit, this surfboard is ideal for newcomers to the waves. Manufactured with low emissions and T\\u00dcV-approved durability, the Wave Rider prioritizes eco-consciousness without compromising on quality. Let your little one catch their first wave confidently with the Wave Rider Kids Soft Top, backed by a 1-year limited warranty for your peace of mind.SBST_173A|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/8f733582382a_bottom_right_c2b6748c-af4a-4c57-a032-8501dcd7873c.webp?v=1766163591|https://barca-sports.myshopify.com/products/sbst_173a\\ngid://shopify/ProductVariant/50676908884242|WaveMaster Hybrid Longboard - Blue|Creative Army|899.99|899.99|Longboard Surfboards||Introducing the WaveMaster Hybrid Longboard, designed for advanced riders seeking the ultimate surfing experience. Built with a high rocker and a slim profile, this 9'0'' surfboard is crafted from carbon fiber reinforced material, ensuring impact resistance and durability. The WaveMaster's thruster fin system and swallow tail shape provide superior control and maneuverability, perfect for freestyle longboarding. Available in striking red and blue colors, this board is not only travel-friendly but also boasts low carbon manufacturing. Inclusive of a leash, wax kit, and repair kit, along with a quick-release safety mechanism, this surfboard guarantees both performance and safety. Enjoy peace of mind with a 5-year structural warranty on this ISO Certified product. Embark on your next wave adventure with the WaveMaster Hybrid Longboard.CALB_A02C|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/ac4222736e92_bottom_right_b8138eb9-b63a-4048-be0d-8dc702a9d0e4.webp?v=1766163583|https://barca-sports.myshopify.com/products/calb_a02c\\ngid://shopify/ProductVariant/50677303312658|Black Wave Shredder - Black|Lost Surfboards|699.99|699.99|Shortboard Surfboards|4.2|Master the waves with the Black Wave Shredder, an advanced fish shortboard designed for high-performance tricks and optimal maneuverability. Crafted with eco-friendly epoxy material, this waterproof and CE compliant surfboard ensures durability and long-term use. The quad fin system and high rocker provide excellent stability and control, while the reinforced fins offer added safety. Included with a leash and wax kit, this 6'0'' board with a 20-inch width and 3-inch thickness is perfect for advanced riders looking to take their surf skills to the next level. Embrace the challenge and shred the waves with confidence, backed by a 5-year structural warranty.LSSB_4F37|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/11d1b071d272_bottom_left.webp?v=1766165474|https://barca-sports.myshopify.com/products/lssb_4f37\\ngid://shopify/ProductVariant/50676912128274|Wave Rider 10'0'' Hybrid - Yellow|Walden Surfboards|899.99|899.99|Longboard Surfboards||Catch your first waves with confidence on the Wave Rider 10'0'' Hybrid. Perfect for beginner surfers, this composite longboard by Walden Surfboards is designed with a classic rocker and a pin tail for stable and smooth rides. Made with recyclable components, this board is scratch-resistant and protected with a UV-resistant coating, ensuring durability under various conditions. The adjustable fin system and wide design offer great maneuverability and control, especially in small waves. Plus, it comes with a single fin, a leash, and a carry bag for easy transport with its convenient carry handle. Enjoy the ocean with the peace of mind knowing your board includes a 5-year structural warranty and is built to last. Ride the waves effortlessly with the Wave Rider 10'0'' Hybrid!WSLB_CF04|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/1fb58980f000_bottom_left_a7b34258-935a-4ea3-98ab-9db8a717fa20.webp?v=1766163586|https://barca-sports.myshopify.com/products/wslb_cf04\\ngid://shopify/ProductVariant/50674985894162|Nose Glide - Blue|Firewire|899.99|899.99|Longboard Surfboards||Experience the ultimate ride with Nose Glide, the perfect longboard surfboard for advanced riders. This noserider longboard is T\\u00dcV Approved and UV-Resistant, ensuring durability and weatherproof performance. With sustainable production, a classic rocker, and pin tail shape, it promises smooth noserides every time. Available in stunning blue and red colors, it comes equipped with a thruster fin system, leash, carry bag, and wax kit. Travel-friendly and light at 15 lbs, Nose Glide's polyurethane material and reinforced fins provide unmatched safety and portability. Measuring 9'6'' in length, 23 inches in width, and 3 inches in thickness, it is designed to excel in any noseriding adventure. Backed by a lifetime warranty, Nose Glide is your perfect companion for unforgettable surf experiences.FWLB_1394|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/e594380956db_top_right_02107c2c-5fd6-4c11-a060-6e072a224350.webp?v=1766163573|https://barca-sports.myshopify.com/products/fwlb_1394\""}
+
+event:message
+data:{"type": "TEXT_MESSAGE_START", "messageId": "2216bcf5-3793-4ee7-b9ba-d17ee96c0c02", "role": "assistant"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "2216bcf5-3793-4ee7-b9ba-d17ee96c0c02", "delta": "The"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "2216bcf5-3793-4ee7-b9ba-d17ee96c0c02", "delta": " le"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "2216bcf5-3793-4ee7-b9ba-d17ee96c0c02", "delta": "ash search"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "2216bcf5-3793-4ee7-b9ba-d17ee96c0c02", "delta": " still"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "2216bcf5-3793-4ee7-b9ba-d17ee96c0c02", "delta": " returned"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "2216bcf5-3793-4ee7-b9ba-d17ee96c0c02", "delta": " surf"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "2216bcf5-3793-4ee7-b9ba-d17ee96c0c02", "delta": "boards"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "2216bcf5-3793-4ee7-b9ba-d17ee96c0c02", "delta": ". Let me try a"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "2216bcf5-3793-4ee7-b9ba-d17ee96c0c02", "delta": " more direct"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "2216bcf5-3793-4ee7-b9ba-d17ee96c0c02", "delta": " search:"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_END", "messageId": "2216bcf5-3793-4ee7-b9ba-d17ee96c0c02"}
+
+event:message
+data:{"type": "TOOL_CALL_START", "toolCallId": "tooluse_QYEuo0EixPmmrGo6a3khej", "toolCallName": "coveo_commerce_search", "parentMessageId": "74757c0b-d509-4135-96ca-3ec3cc183060"}
+
+event:message
+data:{"type": "TOOL_CALL_ARGS", "toolCallId": "tooluse_QYEuo0EixPmmrGo6a3khej", "delta": "{\"listing_surface_id\": \"leash\", \"perPage\": 10, \"query\": \"leash ankle\"}"}
+
+event:message
+data:{"type": "TOOL_CALL_END", "toolCallId": "tooluse_QYEuo0EixPmmrGo6a3khej"}
+
+event:message
+data:{"type": "TOOL_CALL_RESULT", "messageId": "ac77efa0-cd4a-4c13-8b40-7036ff54ced4", "toolCallId": "tooluse_QYEuo0EixPmmrGo6a3khej", "content": "\"No products found.\""}
+
+event:message
+data:{"type": "TEXT_MESSAGE_START", "messageId": "74757c0b-d509-4135-96ca-3ec3cc183060", "role": "assistant"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "74757c0b-d509-4135-96ca-3ec3cc183060", "delta": "I"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "74757c0b-d509-4135-96ca-3ec3cc183060", "delta": " see"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "74757c0b-d509-4135-96ca-3ec3cc183060", "delta": " that"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "74757c0b-d509-4135-96ca-3ec3cc183060", "delta": " le"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "74757c0b-d509-4135-96ca-3ec3cc183060", "delta": "ashes"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "74757c0b-d509-4135-96ca-3ec3cc183060", "delta": " aren"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "74757c0b-d509-4135-96ca-3ec3cc183060", "delta": "'t available"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "74757c0b-d509-4135-96ca-3ec3cc183060", "delta": " as"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "74757c0b-d509-4135-96ca-3ec3cc183060", "delta": " separate"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "74757c0b-d509-4135-96ca-3ec3cc183060", "delta": " products"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "74757c0b-d509-4135-96ca-3ec3cc183060", "delta": " ("}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "74757c0b-d509-4135-96ca-3ec3cc183060", "delta": "they're included"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "74757c0b-d509-4135-96ca-3ec3cc183060", "delta": " with boards). Let me now"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "74757c0b-d509-4135-96ca-3ec3cc183060", "delta": " build"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "74757c0b-d509-4135-96ca-3ec3cc183060", "delta": " the bundle"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "74757c0b-d509-4135-96ca-3ec3cc183060", "delta": " with"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "74757c0b-d509-4135-96ca-3ec3cc183060", "delta": " the"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "74757c0b-d509-4135-96ca-3ec3cc183060", "delta": " available"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "74757c0b-d509-4135-96ca-3ec3cc183060", "delta": " categories"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "74757c0b-d509-4135-96ca-3ec3cc183060", "delta": ":"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "74757c0b-d509-4135-96ca-3ec3cc183060", "delta": " surf"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "74757c0b-d509-4135-96ca-3ec3cc183060", "delta": "board"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "74757c0b-d509-4135-96ca-3ec3cc183060", "delta": ", wet"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "74757c0b-d509-4135-96ca-3ec3cc183060", "delta": "suit, and"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "74757c0b-d509-4135-96ca-3ec3cc183060", "delta": " w"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "74757c0b-d509-4135-96ca-3ec3cc183060", "delta": "ax."}
+
+event:message
+data:{"type": "TEXT_MESSAGE_END", "messageId": "74757c0b-d509-4135-96ca-3ec3cc183060"}
+
+event:message
+data:{"type": "TOOL_CALL_START", "toolCallId": "tooluse_bfujweOcUVBGn7biGAqrze", "toolCallName": "render_bundle_slot", "parentMessageId": "a9b4c65c-fd75-4f69-b29f-ee9debc49b09"}
+
+event:message
+data:{"type": "TOOL_CALL_ARGS", "toolCallId": "tooluse_bfujweOcUVBGn7biGAqrze", "delta": "{\"surface_id\": \"bundle-surface-budget-0\", \"tier\": \"budget\", \"slot_index\": 0, \"heading\": \"Surfboard\", \"ec_product_id\": \"gid://shopify/ProductVariant/50674988548370\", \"search_surface_id\": \"surfboard\"}"}
+
+event:message
+data:{"type": "TOOL_CALL_END", "toolCallId": "tooluse_bfujweOcUVBGn7biGAqrze"}
+
+event:message
+data:{"type": "TOOL_CALL_START", "toolCallId": "tooluse_CRVTYh4kaE2Dt1dLRvZLUe", "toolCallName": "render_bundle_slot", "parentMessageId": "a9b4c65c-fd75-4f69-b29f-ee9debc49b09"}
+
+event:message
+data:{"type": "TOOL_CALL_ARGS", "toolCallId": "tooluse_CRVTYh4kaE2Dt1dLRvZLUe", "delta": "{\"surface_id\": \"bundle-surface-premium-0\", \"tier\": \"premium\", \"slot_index\": 0, \"heading\": \"Surfboard\", \"ec_product_id\": \"gid://shopify/ProductVariant/50674988024082\", \"search_surface_id\": \"surfboard\"}"}
+
+event:message
+data:{"type": "TOOL_CALL_END", "toolCallId": "tooluse_CRVTYh4kaE2Dt1dLRvZLUe"}
+
+event:message
+data:{"type": "TOOL_CALL_START", "toolCallId": "tooluse_XlqJolMBsanqbApSwux9zZ", "toolCallName": "render_bundle_slot", "parentMessageId": "a9b4c65c-fd75-4f69-b29f-ee9debc49b09"}
+
+event:message
+data:{"type": "TOOL_CALL_ARGS", "toolCallId": "tooluse_XlqJolMBsanqbApSwux9zZ", "delta": "{\"surface_id\": \"bundle-surface-budget-1\", \"tier\": \"budget\", \"slot_index\": 1, \"heading\": \"Wetsuit\", \"ec_product_id\": \"gid://shopify/ProductVariant/50674589237522\", \"search_surface_id\": \"wetsuit\"}"}
+
+event:message
+data:{"type": "TOOL_CALL_END", "toolCallId": "tooluse_XlqJolMBsanqbApSwux9zZ"}
+
+event:message
+data:{"type": "TOOL_CALL_START", "toolCallId": "tooluse_cv2uhOrZZT2vKwjs2wxlx3", "toolCallName": "render_bundle_slot", "parentMessageId": "a9b4c65c-fd75-4f69-b29f-ee9debc49b09"}
+
+event:message
+data:{"type": "TOOL_CALL_ARGS", "toolCallId": "tooluse_cv2uhOrZZT2vKwjs2wxlx3", "delta": "{\"surface_id\": \"bundle-surface-premium-1\", \"tier\": \"premium\", \"slot_index\": 1, \"heading\": \"Wetsuit\", \"ec_product_id\": \"gid://shopify/ProductVariant/50674633900306\", \"search_surface_id\": \"wetsuit\"}"}
+
+event:message
+data:{"type": "TOOL_CALL_END", "toolCallId": "tooluse_cv2uhOrZZT2vKwjs2wxlx3"}
+
+event:message
+data:{"type": "TOOL_CALL_START", "toolCallId": "tooluse_ZRsJ8gI8J6jL2BPvJk1eVy", "toolCallName": "render_bundle_slot", "parentMessageId": "a9b4c65c-fd75-4f69-b29f-ee9debc49b09"}
+
+event:message
+data:{"type": "TOOL_CALL_ARGS", "toolCallId": "tooluse_ZRsJ8gI8J6jL2BPvJk1eVy", "delta": "{\"surface_id\": \"bundle-surface-budget-2\", \"tier\": \"budget\", \"slot_index\": 2, \"heading\": \"Surf Wax\", \"ec_product_id\": \"gid://shopify/ProductVariant/50670409482514\", \"search_surface_id\": \"wax\"}"}
+
+event:message
+data:{"type": "TOOL_CALL_END", "toolCallId": "tooluse_ZRsJ8gI8J6jL2BPvJk1eVy"}
+
+event:message
+data:{"type": "TOOL_CALL_START", "toolCallId": "tooluse_nuthMxisa1gps9I9nOOgNh", "toolCallName": "render_bundle_slot", "parentMessageId": "a9b4c65c-fd75-4f69-b29f-ee9debc49b09"}
+
+event:message
+data:{"type": "TOOL_CALL_ARGS", "toolCallId": "tooluse_nuthMxisa1gps9I9nOOgNh", "delta": "{\"surface_id\": \"bundle-surface-premium-2\", \"tier\": \"premium\", \"slot_index\": 2, \"heading\": \"Surf Wax\", \"ec_product_id\": \"gid://shopify/ProductVariant/50670409482514\", \"search_surface_id\": \"wax\"}"}
+
+event:message
+data:{"type": "TOOL_CALL_END", "toolCallId": "tooluse_nuthMxisa1gps9I9nOOgNh"}
+
+event:message
+data:{"type": "TOOL_CALL_START", "toolCallId": "tooluse_GMtTRsTXxAnFtHVEci8IwV", "toolCallName": "render_bundle_slot", "parentMessageId": "a9b4c65c-fd75-4f69-b29f-ee9debc49b09"}
+
+event:message
+data:{"type": "TOOL_CALL_ARGS", "toolCallId": "tooluse_GMtTRsTXxAnFtHVEci8IwV", "delta": "{\"surface_id\": \"bundle-surface-midrange-0\", \"tier\": \"midrange\", \"slot_index\": 0, \"heading\": \"Surfboard\", \"ec_product_id\": \"gid://shopify/ProductVariant/50676927463698\", \"search_surface_id\": \"surfboard\"}"}
+
+event:message
+data:{"type": "TOOL_CALL_END", "toolCallId": "tooluse_GMtTRsTXxAnFtHVEci8IwV"}
+
+event:message
+data:{"type": "TOOL_CALL_START", "toolCallId": "tooluse_0KgUFPmsZ6xgULrvZHJAA2", "toolCallName": "render_bundle_slot", "parentMessageId": "a9b4c65c-fd75-4f69-b29f-ee9debc49b09"}
+
+event:message
+data:{"type": "TOOL_CALL_ARGS", "toolCallId": "tooluse_0KgUFPmsZ6xgULrvZHJAA2", "delta": "{\"surface_id\": \"bundle-surface-midrange-1\", \"tier\": \"midrange\", \"slot_index\": 1, \"heading\": \"Wetsuit\", \"ec_product_id\": \"gid://shopify/ProductVariant/50674590613778\", \"search_surface_id\": \"wetsuit\"}"}
+
+event:message
+data:{"type": "TOOL_CALL_END", "toolCallId": "tooluse_0KgUFPmsZ6xgULrvZHJAA2"}
+
+event:message
+data:{"type": "TOOL_CALL_START", "toolCallId": "tooluse_Z9LL8iAbupBQStN5qQPOgE", "toolCallName": "render_bundle_slot", "parentMessageId": "a9b4c65c-fd75-4f69-b29f-ee9debc49b09"}
+
+event:message
+data:{"type": "TOOL_CALL_ARGS", "toolCallId": "tooluse_Z9LL8iAbupBQStN5qQPOgE", "delta": "{\"surface_id\": \"bundle-surface-midrange-2\", \"tier\": \"midrange\", \"slot_index\": 2, \"heading\": \"Surf Wax\", \"ec_product_id\": \"gid://shopify/ProductVariant/50670409482514\", \"search_surface_id\": \"wax\"}"}
+
+event:message
+data:{"type": "TOOL_CALL_END", "toolCallId": "tooluse_Z9LL8iAbupBQStN5qQPOgE"}
+
+event:message
+data:{"type": "TOOL_CALL_RESULT", "messageId": "c49a55ac-4335-4066-90f4-1754d3b25d01", "toolCallId": "tooluse_bfujweOcUVBGn7biGAqrze", "content": "\"Bundle slot 'Surfboard' (tier='budget', slot=0) queued on surface 'bundle-surface-budget-0' with product 'gid://shopify/ProductVariant/50674988548370'.\""}
+
+event:message
+data:{"type": "ACTIVITY_SNAPSHOT", "timestamp": 1781292096749, "messageId": "activity-fee112ab330048739b7c13d4d2a51bc8", "activityType": "a2ui-surface", "content": {"operations": [{"beginRendering": {"surfaceId": "bundle-surface-budget-0", "root": "root-bundle-surface-budget-0"}}, {"surfaceUpdate": {"surfaceId": "bundle-surface-budget-0", "components": [{"id": "root-bundle-surface-budget-0", "component": {"ProductCard": {"ec_product_id": {"path": "ec_product_id"}, "ec_name": {"path": "ec_name"}, "ec_brand": {"path": "ec_brand"}, "ec_image": {"path": "ec_image"}, "ec_price": {"path": "ec_price"}, "ec_promo_price": {"path": "ec_promo_price"}}}}]}}, {"beginRendering": {"surfaceId": "bundle-surface-premium-0", "root": "root-bundle-surface-premium-0"}}, {"surfaceUpdate": {"surfaceId": "bundle-surface-premium-0", "components": [{"id": "root-bundle-surface-premium-0", "component": {"ProductCard": {"ec_product_id": {"path": "ec_product_id"}, "ec_name": {"path": "ec_name"}, "ec_brand": {"path": "ec_brand"}, "ec_image": {"path": "ec_image"}, "ec_price": {"path": "ec_price"}, "ec_promo_price": {"path": "ec_promo_price"}}}}]}}, {"beginRendering": {"surfaceId": "bundle-surface-budget-1", "root": "root-bundle-surface-budget-1"}}, {"surfaceUpdate": {"surfaceId": "bundle-surface-budget-1", "components": [{"id": "root-bundle-surface-budget-1", "component": {"ProductCard": {"ec_product_id": {"path": "ec_product_id"}, "ec_name": {"path": "ec_name"}, "ec_brand": {"path": "ec_brand"}, "ec_image": {"path": "ec_image"}, "ec_price": {"path": "ec_price"}, "ec_promo_price": {"path": "ec_promo_price"}}}}]}}, {"beginRendering": {"surfaceId": "bundle-surface-premium-1", "root": "root-bundle-surface-premium-1"}}, {"surfaceUpdate": {"surfaceId": "bundle-surface-premium-1", "components": [{"id": "root-bundle-surface-premium-1", "component": {"ProductCard": {"ec_product_id": {"path": "ec_product_id"}, "ec_name": {"path": "ec_name"}, "ec_brand": {"path": "ec_brand"}, "ec_image": {"path": "ec_image"}, "ec_price": {"path": "ec_price"}, "ec_promo_price": {"path": "ec_promo_price"}}}}]}}, {"beginRendering": {"surfaceId": "bundle-surface-budget-2", "root": "root-bundle-surface-budget-2"}}, {"surfaceUpdate": {"surfaceId": "bundle-surface-budget-2", "components": [{"id": "root-bundle-surface-budget-2", "component": {"ProductCard": {"ec_product_id": {"path": "ec_product_id"}, "ec_name": {"path": "ec_name"}, "ec_brand": {"path": "ec_brand"}, "ec_image": {"path": "ec_image"}, "ec_price": {"path": "ec_price"}, "ec_promo_price": {"path": "ec_promo_price"}}}}]}}, {"beginRendering": {"surfaceId": "bundle-surface-premium-2", "root": "root-bundle-surface-premium-2"}}, {"surfaceUpdate": {"surfaceId": "bundle-surface-premium-2", "components": [{"id": "root-bundle-surface-premium-2", "component": {"ProductCard": {"ec_product_id": {"path": "ec_product_id"}, "ec_name": {"path": "ec_name"}, "ec_brand": {"path": "ec_brand"}, "ec_image": {"path": "ec_image"}, "ec_price": {"path": "ec_price"}, "ec_promo_price": {"path": "ec_promo_price"}}}}]}}, {"beginRendering": {"surfaceId": "bundle-surface-midrange-0", "root": "root-bundle-surface-midrange-0"}}, {"surfaceUpdate": {"surfaceId": "bundle-surface-midrange-0", "components": [{"id": "root-bundle-surface-midrange-0", "component": {"ProductCard": {"ec_product_id": {"path": "ec_product_id"}, "ec_name": {"path": "ec_name"}, "ec_brand": {"path": "ec_brand"}, "ec_image": {"path": "ec_image"}, "ec_price": {"path": "ec_price"}, "ec_promo_price": {"path": "ec_promo_price"}}}}]}}, {"beginRendering": {"surfaceId": "bundle-surface-midrange-1", "root": "root-bundle-surface-midrange-1"}}, {"surfaceUpdate": {"surfaceId": "bundle-surface-midrange-1", "components": [{"id": "root-bundle-surface-midrange-1", "component": {"ProductCard": {"ec_product_id": {"path": "ec_product_id"}, "ec_name": {"path": "ec_name"}, "ec_brand": {"path": "ec_brand"}, "ec_image": {"path": "ec_image"}, "ec_price": {"path": "ec_price"}, "ec_promo_price": {"path": "ec_promo_price"}}}}]}}, {"beginRendering": {"surfaceId": "bundle-surface-midrange-2", "root": "root-bundle-surface-midrange-2"}}, {"surfaceUpdate": {"surfaceId": "bundle-surface-midrange-2", "components": [{"id": "root-bundle-surface-midrange-2", "component": {"ProductCard": {"ec_product_id": {"path": "ec_product_id"}, "ec_name": {"path": "ec_name"}, "ec_brand": {"path": "ec_brand"}, "ec_image": {"path": "ec_image"}, "ec_price": {"path": "ec_price"}, "ec_promo_price": {"path": "ec_promo_price"}}}}]}}, {"dataModelUpdate": {"surfaceId": "bundle-surface-budget-0", "contents": [{"key": "items", "valueMap": [{"valueMap": [{"key": "ec_name", "valueString": "Wave Rider Kids Soft Top - Red"}, {"key": "ec_brand", "valueString": "Storm Blade"}, {"key": "ec_price", "valueNumber": 199.99}, {"key": "ec_promo_price", "valueNumber": 199.99}, {"key": "ec_image", "valueString": "https://cdn.shopify.com/s/files/1/0910/6502/4786/files/8f733582382a_bottom_right_c2b6748c-af4a-4c57-a032-8501dcd7873c.webp?v=1766163591"}, {"key": "ec_product_id", "valueString": "gid://shopify/ProductVariant/50674988548370"}, {"key": "ec_description", "valueString": "Introducing the Wave Rider Kids Soft Top, the perfect beginner surfboard for young aspiring surfers. Designed specifically for kids, this 6'0'' surfboard offers a high rocker shape and is crafted from durable polyethylene material to ensure both flexibility and impact resistance. Available in vibrant red and yellow colors, the Wave Rider promises a fun and safe surfing experience with smooth edges and a round tail shape. Equipped with an easy-to-carry handle, a twin fin system, and essential items like a leash and wax kit, this surfboard is ideal for newcomers to the waves. Manufactured with low emissions and TÃœV-approved durability, the Wave Rider prioritizes eco-consciousness without compromising on quality. Let your little one catch their first wave confidently with the Wave Rider Kids Soft Top, backed by a 1-year limited warranty for your peace of mind.SBST_173A"}, {"key": "ec_category", "valueString": "Surfboards"}, {"key": "clickUri", "valueString": "/products/sbst_173a"}]}]}]}}, {"dataModelUpdate": {"surfaceId": "bundle-surface-premium-0", "contents": [{"key": "items", "valueMap": [{"valueMap": [{"key": "ec_name", "valueString": "Wave Rider 10'0'' Hybrid - Yellow"}, {"key": "ec_brand", "valueString": "Walden Surfboards"}, {"key": "ec_price", "valueNumber": 899.99}, {"key": "ec_promo_price", "valueNumber": 899.99}, {"key": "ec_image", "valueString": "https://cdn.shopify.com/s/files/1/0910/6502/4786/files/1fb58980f000_bottom_left_a7b34258-935a-4ea3-98ab-9db8a717fa20.webp?v=1766163586"}, {"key": "ec_product_id", "valueString": "gid://shopify/ProductVariant/50676912128274"}, {"key": "ec_description", "valueString": "Catch your first waves with confidence on the Wave Rider 10'0'' Hybrid. Perfect for beginner surfers, this composite longboard by Walden Surfboards is designed with a classic rocker and a pin tail for stable and smooth rides. Made with recyclable components, this board is scratch-resistant and protected with a UV-resistant coating, ensuring durability under various conditions. The adjustable fin system and wide design offer great maneuverability and control, especially in small waves. Plus, it comes with a single fin, a leash, and a carry bag for easy transport with its convenient carry handle. Enjoy the ocean with the peace of mind knowing your board includes a 5-year structural warranty and is built to last. Ride the waves effortlessly with the Wave Rider 10'0'' Hybrid!WSLB_CF04"}, {"key": "ec_category", "valueString": "Longboard Surfboards"}, {"key": "clickUri", "valueString": "/products/wslb_cf04"}]}]}]}}, {"dataModelUpdate": {"surfaceId": "bundle-surface-budget-1", "contents": [{"key": "items", "valueMap": [{"valueMap": [{"key": "ec_name", "valueString": "HydroLite Sleeveless Wetsuit - Black / XL"}, {"key": "ec_brand", "valueString": "Billabong"}, {"key": "ec_price", "valueNumber": 99.99}, {"key": "ec_promo_price", "valueNumber": 99.99}, {"key": "ec_image", "valueString": "https://cdn.shopify.com/s/files/1/0910/6502/4786/files/9544b604673a_top_left.webp?v=1766163798"}, {"key": "ec_product_id", "valueString": "gid://shopify/ProductVariant/50674589237522"}, {"key": "ec_description", "valueString": "Dive into your next swimming adventure with the HydroLite Sleeveless Wetsuit. Designed specifically for men, this wetsuit caters to swimmers with its stretch fabric and lightweight insulation, ensuring both flexibility and comfort. Available in sleek black and vibrant green, it features high-visibility panels for added safety. The wetsuit is crafted from recyclable neoprene, boasting weatherproof durability and reinforced flex zones. Its compact storage and front zip make it extremely portable, while the welded seams and 2mm thickness provide maximum protection and performance. Certified TÃœV approved and UV-resistant, it comes with a lifetime seam warranty. Perfect for recreational swimming, the HydroLite Sleeveless Wetsuit promises unmatched quality and sustainability. Includes a convenient storage strap for easy transport.BGWETS_272D"}, {"key": "ec_category", "valueString": "Wetsuits"}, {"key": "ec_rating", "valueNumber": 4.4}, {"key": "clickUri", "valueString": "/products/bgwets_272d"}]}]}]}}, {"dataModelUpdate": {"surfaceId": "bundle-surface-premium-1", "contents": [{"key": "items", "valueMap": [{"valueMap": [{"key": "ec_name", "valueString": "ThermoFlex Winter Wetsuit - Red / M"}, {"key": "ec_brand", "valueString": "Rip Curl"}, {"key": "ec_price", "valueNumber": 399.99}, {"key": "ec_promo_price", "valueNumber": 399.99}, {"key": "ec_image", "valueString": "https://cdn.shopify.com/s/files/1/0910/6502/4786/files/8c6d80ac5b9b_bottom_left_852e0a5c-9b08-43bd-a6e5-67ec90d5d6f2.webp?v=1766164226"}, {"key": "ec_product_id", "valueString": "gid://shopify/ProductVariant/50674633900306"}, {"key": "ec_description", "valueString": "Conquer cold waters with the ThermoFlex Winter Wetsuit, designed specifically for paddleboarders who demand peak performance in frigid conditions. Crafted from high-quality nylon with a 7mm thickness, this wetsuit ensures optimal thermal insulation and long-lasting durability. Featuring ergonomic panels for unmatched flexibility and a sealed zip for extra protection, the ThermoFlex guarantees a snug fit and protects you against the elements. Enjoy peace of mind with its protective coating, double-lined seams, and low carbon manufacturing process. Certified as CE Compliant and TÃœV Approved, this winter full suit promises safety and reliability, backed by a 3-year performance warranty. Whether you're tackling winter waves or enjoying chilly paddles, the ThermoFlex Winter Wetsuit delivers outstanding warmth and comfort every time. Available in bold red, this wetsuit combines style with high performance. Make every adventure count with the ThermoFlex Winter Wetsuit.RCWETF_D8E3"}, {"key": "ec_category", "valueString": "Wetsuits"}, {"key": "ec_rating", "valueNumber": 3.6}, {"key": "clickUri", "valueString": "/products/rcwetf_d8e3"}]}]}]}}, {"dataModelUpdate": {"surfaceId": "bundle-surface-budget-2", "contents": [{"key": "items", "valueMap": [{"valueMap": [{"key": "ec_name", "valueString": "Ultimate Epoxy Surf Wax"}, {"key": "ec_brand", "valueString": "WaxIt"}, {"key": "ec_price", "valueNumber": 35.0}, {"key": "ec_promo_price", "valueNumber": 35.0}, {"key": "ec_image", "valueString": "https://cdn.shopify.com/s/files/1/0910/6502/4786/files/5d2beb19c452_bottom_left_68a9434b-8067-4453-8159-f5e91cfb9922.jpg?v=1766164024"}, {"key": "ec_product_id", "valueString": "gid://shopify/ProductVariant/50670409482514"}, {"key": "ec_description", "valueString": "Experience peak performance on the waves with Ultimate Epoxy Surf Wax. Expertly formulated with high-quality epoxy material to provide superior grip and durability. Perfect for all your surfing adventures, this premium wax ensures long-lasting traction even in the toughest conditions. Ride the waves with confidence and elevate your surfing experience with Ultimate Epoxy Surf Wax.WIWX_B051"}, {"key": "ec_category", "valueString": "Surfboard Wax"}, {"key": "ec_rating", "valueNumber": 3.0}, {"key": "clickUri", "valueString": "/products/wiwx_b051"}]}]}]}}, {"dataModelUpdate": {"surfaceId": "bundle-surface-premium-2", "contents": [{"key": "items", "valueMap": [{"valueMap": [{"key": "ec_name", "valueString": "Epoxy Glide Wax"}, {"key": "ec_brand", "valueString": "Surf and Co"}, {"key": "ec_price", "valueNumber": 35.0}, {"key": "ec_promo_price", "valueNumber": 35.0}, {"key": "ec_image", "valueString": "https://cdn.shopify.com/s/files/1/0910/6502/4786/files/70f266360cdc_top_left_4b231524-4e3e-4a9a-84a8-4a678c25e47e.webp?v=1766164030"}, {"key": "ec_product_id", "valueString": "gid://shopify/ProductVariant/50670410760466"}, {"key": "ec_description", "valueString": "Epoxy Glide Wax is your ultimate accessory for a smoother, faster surf experience. Crafted from high-quality epoxy material, this innovative wax is designed to provide superior glide and durability, ensuring peak performance on the waves. Perfectly suited for all your surf needs, this wax from Surf and Co delivers unparalleled results every time. Elevate your surfing with the Epoxy Glide Wax and enjoy the thrill of seamless rides at an affordable price of $35.SCWX_E542"}, {"key": "ec_category", "valueString": "Surfboard Wax"}, {"key": "ec_rating", "valueNumber": 4.4}, {"key": "clickUri", "valueString": "/products/scwx_e542"}]}]}]}}, {"dataModelUpdate": {"surfaceId": "bundle-surface-midrange-0", "contents": [{"key": "items", "valueMap": [{"valueMap": [{"key": "ec_name", "valueString": "SurfPro Schooler - Black"}, {"key": "ec_brand", "valueString": "Odysea"}, {"key": "ec_price", "valueNumber": 349.99}, {"key": "ec_promo_price", "valueNumber": 349.99}, {"key": "ec_image", "valueString": "https://cdn.shopify.com/s/files/1/0910/6502/4786/files/49eee557c7c5_top_right_f2f8e365-62ea-48d7-a73b-082e6b4ef99d.webp?v=1766163601"}, {"key": "ec_product_id", "valueString": "gid://shopify/ProductVariant/50676927463698"}, {"key": "ec_description", "valueString": "Get ready to catch waves with the SurfPro Schooler, the ideal surfboard designed specifically for surf schools and training beginners. Crafted from durable, impact-resistant composite material and boasting ISO and Marine Safety certifications, this board stands out in both quality and safety. The SurfPro Schooler features an ergonomic, sleek design with a moderate rocker, ensuring stability and a smooth ride for any skill level. Available in bold red and timeless black, each board is equipped with a tri-fin system, leash, fin set, and carry bag for easy travel and storage. Environmentally conscious manufacturing processes coupled with a 3-year structural warranty make this 8'0'' soft top longboard both sustainable and reliable. With an adjustable width and 3.5-inch thickness, and weighing just 12 lbs, the SurfPro Schooler is the perfect companion for your surfing journey.ODST_2E0C"}, {"key": "ec_category", "valueString": "Surfboards"}, {"key": "clickUri", "valueString": "/products/odst_2e0c"}]}]}]}}, {"dataModelUpdate": {"surfaceId": "bundle-surface-midrange-1", "contents": [{"key": "items", "valueMap": [{"valueMap": [{"key": "ec_name", "valueString": "WaveRider Shorty Wetsuit - Blue / M"}, {"key": "ec_brand", "valueString": "O'Neill"}, {"key": "ec_price", "valueNumber": 129.99}, {"key": "ec_promo_price", "valueNumber": 129.99}, {"key": "ec_image", "valueString": "https://cdn.shopify.com/s/files/1/0910/6502/4786/files/92e2a0512087_top_right_92b11609-1991-4483-8164-34bffd0558ee.webp?v=1766163803"}, {"key": "ec_product_id", "valueString": "gid://shopify/ProductVariant/50674590613778"}, {"key": "ec_description", "valueString": "Experience the perfect blend of comfort, durability, and performance with the WaveRider Shorty Wetsuit. Ideal for women surfers, this premium wetsuit is crafted from eco-friendly Limestone Neoprene, offering exceptional flexibility and a comfortable fit. Designed for warm water surfing, the 4mm thickness and heat-retaining lining keep you warm and focused on your ride. Features like tear-resistant material, reinforced seams, and UV-resistant certification ensure longevity and safety. The side zip design and smooth stitching add convenience and comfort, while the compact and foldable nature makes it perfect for travel. Available in vibrant Blue and Green, the WaveRider Shorty Wetsuit is your go-to gear for an exceptional surfing experience. Comes with a repair patch, instruction manual, and a 3-year performance warranty for added peace of mind.ONWETS_ED9F"}, {"key": "ec_category", "valueString": "Wetsuits"}, {"key": "ec_rating", "valueNumber": 3.0}, {"key": "clickUri", "valueString": "/products/onwets_ed9f"}]}]}]}}, {"dataModelUpdate": {"surfaceId": "bundle-surface-midrange-2", "contents": [{"key": "items", "valueMap": [{"valueMap": [{"key": "ec_name", "valueString": "Epoxy Glide Wax"}, {"key": "ec_brand", "valueString": "Surf and Co"}, {"key": "ec_price", "valueNumber": 35.0}, {"key": "ec_promo_price", "valueNumber": 35.0}, {"key": "ec_image", "valueString": "https://cdn.shopify.com/s/files/1/0910/6502/4786/files/70f266360cdc_top_left_4b231524-4e3e-4a9a-84a8-4a678c25e47e.webp?v=1766164030"}, {"key": "ec_product_id", "valueString": "gid://shopify/ProductVariant/50670410760466"}, {"key": "ec_description", "valueString": "Epoxy Glide Wax is your ultimate accessory for a smoother, faster surf experience. Crafted from high-quality epoxy material, this innovative wax is designed to provide superior glide and durability, ensuring peak performance on the waves. Perfectly suited for all your surf needs, this wax from Surf and Co delivers unparalleled results every time. Elevate your surfing with the Epoxy Glide Wax and enjoy the thrill of seamless rides at an affordable price of $35.SCWX_E542"}, {"key": "ec_category", "valueString": "Surfboard Wax"}, {"key": "ec_rating", "valueNumber": 4.4}, {"key": "clickUri", "valueString": "/products/scwx_e542"}]}]}]}}]}, "replace": true}
+
+event:message
+data:{"type": "TOOL_CALL_RESULT", "messageId": "3a04d766-ad59-4eff-8c5f-d426b9734791", "toolCallId": "tooluse_ZRsJ8gI8J6jL2BPvJk1eVy", "content": "\"Bundle slot 'Surf Wax' (tier='budget', slot=2) queued on surface 'bundle-surface-budget-2' with product 'gid://shopify/ProductVariant/50670409482514'.\""}
+
+event:message
+data:{"type": "TOOL_CALL_RESULT", "messageId": "c374e75f-ff73-4ec3-aed0-b43fcb5a89ec", "toolCallId": "tooluse_CRVTYh4kaE2Dt1dLRvZLUe", "content": "\"Bundle slot 'Surfboard' (tier='premium', slot=0) queued on surface 'bundle-surface-premium-0' with product 'gid://shopify/ProductVariant/50674988024082'.\""}
+
+event:message
+data:{"type": "TOOL_CALL_RESULT", "messageId": "e1946788-695a-4b6a-ba8c-15b8f3441112", "toolCallId": "tooluse_cv2uhOrZZT2vKwjs2wxlx3", "content": "\"Bundle slot 'Wetsuit' (tier='premium', slot=1) queued on surface 'bundle-surface-premium-1' with product 'gid://shopify/ProductVariant/50674633900306'.\""}
+
+event:message
+data:{"type": "TOOL_CALL_RESULT", "messageId": "3c6f9902-f357-4de7-974b-1a3f71ff2fd8", "toolCallId": "tooluse_XlqJolMBsanqbApSwux9zZ", "content": "\"Bundle slot 'Wetsuit' (tier='budget', slot=1) queued on surface 'bundle-surface-budget-1' with product 'gid://shopify/ProductVariant/50674589237522'.\""}
+
+event:message
+data:{"type": "TOOL_CALL_RESULT", "messageId": "f832a575-0f23-41e0-8bc7-f59dda9fca7e", "toolCallId": "tooluse_nuthMxisa1gps9I9nOOgNh", "content": "\"Bundle slot 'Surf Wax' (tier='premium', slot=2) queued on surface 'bundle-surface-premium-2' with product 'gid://shopify/ProductVariant/50670409482514'.\""}
+
+event:message
+data:{"type": "TOOL_CALL_RESULT", "messageId": "71ae0b7e-6b83-4ba0-92a2-17aa3ebe2786", "toolCallId": "tooluse_GMtTRsTXxAnFtHVEci8IwV", "content": "\"Bundle slot 'Surfboard' (tier='midrange', slot=0) queued on surface 'bundle-surface-midrange-0' with product 'gid://shopify/ProductVariant/50676927463698'.\""}
+
+event:message
+data:{"type": "TOOL_CALL_RESULT", "messageId": "d3ab9eb6-e84a-42f7-87d1-97c3626ea2de", "toolCallId": "tooluse_0KgUFPmsZ6xgULrvZHJAA2", "content": "\"Bundle slot 'Wetsuit' (tier='midrange', slot=1) queued on surface 'bundle-surface-midrange-1' with product 'gid://shopify/ProductVariant/50674590613778'.\""}
+
+event:message
+data:{"type": "TOOL_CALL_RESULT", "messageId": "2cc13774-98fd-4793-b34d-22a771e9465d", "toolCallId": "tooluse_Z9LL8iAbupBQStN5qQPOgE", "content": "\"Bundle slot 'Surf Wax' (tier='midrange', slot=2) queued on surface 'bundle-surface-midrange-2' with product 'gid://shopify/ProductVariant/50670409482514'.\""}
+
+event:message
+data:{"type": "TOOL_CALL_START", "toolCallId": "tooluse_tJQiPKdv5BEKqK9L3wszTk", "toolCallName": "render_bundle_display", "parentMessageId": "a9b4c65c-fd75-4f69-b29f-ee9debc49b09"}
+
+event:message
+data:{"type": "ACTIVITY_SNAPSHOT", "timestamp": 1781292103014, "messageId": "activity-0552ae5b9dae41939e999c1a3ba902c8", "activityType": "a2ui-surface", "content": {"operations": [{"beginRendering": {"surfaceId": "skeleton-surface-bundle-display", "root": "skeleton-root-bundle-display", "catalogId": "a2ui-surface"}}, {"surfaceUpdate": {"surfaceId": "skeleton-surface-bundle-display", "components": [{"id": "skeleton-root-bundle-display", "component": {"BundleDisplay": {"isLoading": true}}}]}}]}, "replace": true}
+
+event:message
+data:{"type": "TOOL_CALL_ARGS", "toolCallId": "tooluse_tJQiPKdv5BEKqK9L3wszTk", "delta": "{\"title\": \"Beginner Surf Kit\", \"bundles\": [{\"bundleId\": \"budget\", \"label\": \"Budget\", \"description\": \"Essential starter gear to get you on the waves without breaking the bank.\", \"slots\": [{\"categoryLabel\": \"Surfboard\", \"surfaceRef\": \"bundle-surface-budget-0\"}, {\"categoryLabel\": \"Wetsuit\", \"surfaceRef\": \"bundle-surface-budget-1\"}, {\"categoryLabel\": \"Surf Wax\", \"surfaceRef\": \"bundle-surface-budget-2\"}]}, {\"bundleId\": \"midrange\", \"label\": \"Mid-Range\", \"description\": \"Step up your surf game with quality gear designed for beginner progression.\", \"slots\": [{\"categoryLabel\": \"Surfboard\", \"surfaceRef\": \"bundle-surface-midrange-0\"}, {\"categoryLabel\": \"Wetsuit\", \"surfaceRef\": \"bundle-surface-midrange-1\"}, {\"categoryLabel\": \"Surf Wax\", \"surfaceRef\": \"bundle-surface-midrange-2\"}]}, {\"bundleId\": \"premium\", \"label\": \"Premium\", \"description\": \"Top-tier equipment for beginners who want the best performance and durability.\", \"slots\": [{\"categoryLabel\": \"Surfboard\", \"surfaceRef\": \"bundle-surface-premium-0\"}, {\"categoryLabel\": \"Wetsuit\", \"surfaceRef\": \"bundle-surface-premium-1\"}, {\"categoryLabel\": \"Surf Wax\", \"surfaceRef\": \"bundle-surface-premium-2\"}]}]}"}
+
+event:message
+data:{"type": "TOOL_CALL_END", "toolCallId": "tooluse_tJQiPKdv5BEKqK9L3wszTk"}
+
+event:message
+data:{"type": "TOOL_CALL_RESULT", "messageId": "89d8ef1d-bb83-40bc-89ba-9386145af94e", "toolCallId": "tooluse_tJQiPKdv5BEKqK9L3wszTk", "content": "\"BundleDisplay assembly queued on surface 'bundle-display-surface' with 3 tier(s): ['Budget', 'Mid-Range', 'Premium'].\""}
+
+event:message
+data:{"type": "ACTIVITY_SNAPSHOT", "timestamp": 1781292103466, "messageId": "activity-0552ae5b9dae41939e999c1a3ba902c8", "activityType": "a2ui-surface", "content": {"operations": [{"beginRendering": {"surfaceId": "bundle-display-surface", "root": "root-bundle-display-surface"}}, {"surfaceUpdate": {"surfaceId": "bundle-display-surface", "components": [{"id": "root-bundle-display-surface", "component": {"BundleDisplay": {"title": {"literalString": "Beginner Surf Kit"}, "bundles": [{"bundleId": "budget", "label": "Budget", "description": "Essential starter gear to get you on the waves without breaking the bank.", "slots": [{"categoryLabel": "Surfboard", "surfaceRef": "bundle-surface-budget-0"}, {"categoryLabel": "Wetsuit", "surfaceRef": "bundle-surface-budget-1"}, {"categoryLabel": "Surf Wax", "surfaceRef": "bundle-surface-budget-2"}]}, {"bundleId": "midrange", "label": "Mid-Range", "description": "Step up your surf game with quality gear designed for beginner progression.", "slots": [{"categoryLabel": "Surfboard", "surfaceRef": "bundle-surface-midrange-0"}, {"categoryLabel": "Wetsuit", "surfaceRef": "bundle-surface-midrange-1"}, {"categoryLabel": "Surf Wax", "surfaceRef": "bundle-surface-midrange-2"}]}, {"bundleId": "premium", "label": "Premium", "description": "Top-tier equipment for beginners who want the best performance and durability.", "slots": [{"categoryLabel": "Surfboard", "surfaceRef": "bundle-surface-premium-0"}, {"categoryLabel": "Wetsuit", "surfaceRef": "bundle-surface-premium-1"}, {"categoryLabel": "Surf Wax", "surfaceRef": "bundle-surface-premium-2"}]}]}}}]}}]}, "replace": true}
+
+event:message
+data:{"type": "TOOL_CALL_START", "toolCallId": "tooluse_Ile1JLyf9FulHTSzBzeOSr", "toolCallName": "render_next_actions", "parentMessageId": "a9b4c65c-fd75-4f69-b29f-ee9debc49b09"}
+
+event:message
+data:{"type": "ACTIVITY_SNAPSHOT", "timestamp": 1781292106671, "messageId": "activity-4c4e4d8487fa49b6b250700347303d32", "activityType": "a2ui-surface", "content": {"operations": [{"beginRendering": {"surfaceId": "skeleton-surface-next-actions", "root": "skeleton-root-next-actions", "catalogId": "a2ui-surface"}}, {"surfaceUpdate": {"surfaceId": "skeleton-surface-next-actions", "components": [{"id": "skeleton-root-next-actions", "component": {"NextActionsBar": {"isLoading": true}}}]}}]}, "replace": true}
+
+event:message
+data:{"type": "TOOL_CALL_ARGS", "toolCallId": "tooluse_Ile1JLyf9FulHTSzBzeOSr", "delta": "{\"actions\": [{\"text\": \"Compare budget vs premium surfboards\", \"type\": \"followup\"}, {\"text\": \"Show me beginner surf tips\", \"type\": \"followup\"}, {\"text\": \"paddleboards\", \"type\": \"search\"}]}"}
+
+event:message
+data:{"type": "TOOL_CALL_END", "toolCallId": "tooluse_Ile1JLyf9FulHTSzBzeOSr"}
+
+event:message
+data:{"type": "TOOL_CALL_RESULT", "messageId": "d3b5ebdc-d63d-4593-9bdd-e5459aba05c6", "toolCallId": "tooluse_Ile1JLyf9FulHTSzBzeOSr", "content": "\"NextActionsBar queued on surface 'next-actions-surface' with 3 action(s).\""}
+
+event:message
+data:{"type": "ACTIVITY_SNAPSHOT", "timestamp": 1781292107094, "messageId": "activity-4c4e4d8487fa49b6b250700347303d32", "activityType": "a2ui-surface", "content": {"operations": [{"beginRendering": {"surfaceId": "next-actions-surface", "root": "root-next-actions-surface"}}, {"surfaceUpdate": {"surfaceId": "next-actions-surface", "components": [{"id": "root-next-actions-surface", "component": {"NextActionsBar": {"actions": {"componentId": "button-next-actions-surface", "dataBinding": "/actions"}}}}]}}, {"dataModelUpdate": {"surfaceId": "next-actions-surface", "contents": [{"key": "actions", "valueMap": [{"valueMap": [{"key": "text", "valueString": "Compare budget vs premium surfboards"}, {"key": "type", "valueString": "followup"}]}, {"valueMap": [{"key": "text", "valueString": "Show me beginner surf tips"}, {"key": "type", "valueString": "followup"}]}, {"valueMap": [{"key": "text", "valueString": "paddleboards"}, {"key": "type", "valueString": "search"}]}]}]}}]}, "replace": true}
+
+event:message
+data:{"type": "TEXT_MESSAGE_START", "messageId": "a9b4c65c-fd75-4f69-b29f-ee9debc49b09", "role": "assistant"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "a9b4c65c-fd75-4f69-b29f-ee9debc49b09", "delta": "##"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "a9b4c65c-fd75-4f69-b29f-ee9debc49b09", "delta": " Beg"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "a9b4c65c-fd75-4f69-b29f-ee9debc49b09", "delta": "inner Surf Kit"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "a9b4c65c-fd75-4f69-b29f-ee9debc49b09", "delta": "\n\nHere"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "a9b4c65c-fd75-4f69-b29f-ee9debc49b09", "delta": "'s your complete beginner surf"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "a9b4c65c-fd75-4f69-b29f-ee9debc49b09", "delta": "ing"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "a9b4c65c-fd75-4f69-b29f-ee9debc49b09", "delta": " setup"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "a9b4c65c-fd75-4f69-b29f-ee9debc49b09", "delta": " across"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "a9b4c65c-fd75-4f69-b29f-ee9debc49b09", "delta": " three"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "a9b4c65c-fd75-4f69-b29f-ee9debc49b09", "delta": " tiers."}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "a9b4c65c-fd75-4f69-b29f-ee9debc49b09", "delta": " Each"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "a9b4c65c-fd75-4f69-b29f-ee9debc49b09", "delta": " includes"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "a9b4c65c-fd75-4f69-b29f-ee9debc49b09", "delta": " a"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "a9b4c65c-fd75-4f69-b29f-ee9debc49b09", "delta": " beg"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "a9b4c65c-fd75-4f69-b29f-ee9debc49b09", "delta": "inner-friendly surf"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "a9b4c65c-fd75-4f69-b29f-ee9debc49b09", "delta": "board, wetsuit, and surf w"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "a9b4c65c-fd75-4f69-b29f-ee9debc49b09", "delta": "ax to"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "a9b4c65c-fd75-4f69-b29f-ee9debc49b09", "delta": " get you started."}
+
+event:message
+data:{"type": "TEXT_MESSAGE_END", "messageId": "a9b4c65c-fd75-4f69-b29f-ee9debc49b09"}
+
+event:message
+data:{"type": "STATE_SNAPSHOT", "snapshot": {}}
+
+event:message
+data:{"type": "RUN_FINISHED", "threadId": "1df9f18c-785d-4ace-9642-678a7fd9fc5a", "runId": "4957b383-5e5f-4587-b40f-b442e4db48a3"}
+
+event:turn_complete
+data:{"conversationSessionId":"1df9f18c-785d-4ace-9642-678a7fd9fc5a","conversationToken":"b6fec897-550c-4b9b-90b0-71adcc7abe9f"}
+
