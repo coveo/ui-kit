@@ -456,6 +456,13 @@
     <shortDescription>Collapse [component label]</shortDescription>
   </labels>
   <labels>
+    <fullName>quantic_CollapseButton</fullName>
+    <value>Collapse</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Collapse</shortDescription>
+  </labels>
+  <labels>
     <fullName>quantic_Expand</fullName>
     <value>Expand {{0}}</value>
     <language>en_US</language>
@@ -1289,6 +1296,13 @@
     <shortDescription>Something went wrong and we couldn't generate an answer.</shortDescription>
   </labels>
   <labels>
+    <fullName>quantic_GeneratedAnswerErrorTurnLimitReached</fullName>
+    <value>Conversation turn limit reached. Please start a new conversation.</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Generated answer conversation turn limit reached error.</shortDescription>
+  </labels>
+  <labels>
     <fullName>quantic_ShowingResultsFor</fullName>
     <value>Showing results for {{0}}</value>
     <language>en_US</language>
@@ -1637,5 +1651,82 @@
     <language>en_US</language>
     <protected>false</protected>
     <shortDescription>Submit follow-up</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_ShowPreviousQuestions_plural</fullName>
+    <value>Show {{0}} previous questions</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Show previous questions (plural)</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_AgentGenerationStepAnalyzingQuestion</fullName>
+    <value>Analyzing your question…</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Analyzing your question</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_AgentGenerationStepAnalyzingQuestionCompleted</fullName>
+    <value>Question analyzed</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Question analyzed</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_AgentGenerationStepSearch</fullName>
+    <value>Searching knowledge base…</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Searching knowledge base…</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_AgentGenerationStepSearchCompleted</fullName>
+    <value>Knowledge base searched</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Knowledge base searched</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_AgentGenerationStepAnalyzingResults</fullName>
+    <value>Analyzing results…</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Analyzing results…</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_AgentGenerationStepAnalyzingResultsCompleted</fullName>
+    <value>Results analyzed</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Results analyzed</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_AgentGenerationStepAnswering</fullName>
+    <value>Generating answer…</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Generating answer…</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_AgentGenerationStepAnsweringCompleted</fullName>
+    <value>Answer generated</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Answer generated</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_Like</fullName>
+    <value>Like</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Like</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_Dislike</fullName>
+    <value>Dislike</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Dislike</shortDescription>
   </labels>
 </CustomLabels>

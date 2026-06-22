@@ -27,57 +27,50 @@ describe('loadManualAuditData', () => {
     await rm(dir, {recursive: true, force: true});
   });
 
-  const writeBaseline = (name: string, data: unknown) =>
+  const writeAudit = (name: string, data: unknown) =>
     writeFile(path.join(dir, name), JSON.stringify(data), 'utf8');
 
-  it('parses a known criterion key from a complete entry', async () => {
-    await writeBaseline('manual-audit-search.json', [
-      {
-        name: 'atomic-search-box',
-        category: 'search',
-        manual: {
-          status: 'complete',
-          wcag22Criteria: {'2.4.7-focus-visible': 'pass'},
+  it('parses audited criteria from a surface file, keyed by criterion id', async () => {
+    await writeAudit('manual-audit-search.json', {
+      surface: 'search',
+      wcag22Criteria: {
+        '2.4.7-focus-visible': 'pass',
+        '1.4.3-contrast-minimum': {
+          conformance: 'fail',
+          remarks: 'Low contrast on dark theme.',
         },
       },
-    ]);
+    });
 
     const aggregates = await loadManualAuditData(dir);
 
-    expect(aggregates.get('atomic-search-box:2.4.7')).toEqual([
+    expect(aggregates.get('2.4.7')).toEqual([
+      {criterionId: '2.4.7', conformance: 'supports'},
+    ]);
+    expect(aggregates.get('1.4.3')).toEqual([
       {
-        componentName: 'atomic-search-box',
-        criterionId: '2.4.7',
-        conformance: 'supports',
+        criterionId: '1.4.3',
+        conformance: 'does-not-support',
+        remarks: 'Low contrast on dark theme.',
       },
     ]);
-  });
-
-  it('skips entries whose status is not complete', async () => {
-    await writeBaseline('manual-audit-search.json', [
-      {
-        name: 'atomic-search-box',
-        category: 'search',
-        manual: {
-          status: 'pending',
-          wcag22Criteria: {'2.4.7-focus-visible': 'pass'},
-        },
-      },
-    ]);
-
-    expect((await loadManualAuditData(dir)).size).toBe(0);
   });
 
   it('warns and excludes unknown WCAG criterion keys', async () => {
-    await writeBaseline('manual-audit-search.json', [
-      {
-        name: 'atomic-search-box',
-        category: 'search',
-        manual: {
-          status: 'complete',
-          wcag22Criteria: {'9.9.9-fake': 'pass'},
-        },
-      },
+    await writeAudit('manual-audit-search.json', {
+      surface: 'search',
+      wcag22Criteria: {'9.9.9-fake': 'pass'},
+    });
+
+    const aggregates = await loadManualAuditData(dir);
+
+    expect(aggregates.size).toBe(0);
+    expect(warnSpy).toHaveBeenCalled();
+  });
+
+  it('skips files that are not a valid audit object (e.g. the legacy array shape)', async () => {
+    await writeAudit('manual-audit-legacy.json', [
+      {name: 'atomic-search-box', manual: {status: 'complete'}},
     ]);
 
     const aggregates = await loadManualAuditData(dir);
@@ -85,18 +78,32 @@ describe('loadManualAuditData', () => {
     expect(aggregates.size).toBe(0);
     expect(warnSpy).toHaveBeenCalled();
   });
+
+  it('merges the same criterion across multiple surface files', async () => {
+    await writeAudit('manual-audit-commerce.json', {
+      surface: 'commerce',
+      wcag22Criteria: {'2.1.4-character-key-shortcuts': 'pass'},
+    });
+    await writeAudit('manual-audit-insight.json', {
+      surface: 'insight',
+      wcag22Criteria: {'2.1.4-character-key-shortcuts': 'fail'},
+    });
+
+    const aggregates = await loadManualAuditData(dir);
+
+    expect(aggregates.get('2.1.4')).toHaveLength(2);
+    expect(resolveManualConformance(aggregates.get('2.1.4'))).toBe(
+      'does-not-support'
+    );
+  });
 });
 
 describe('resolveManualConformance', () => {
   const aggregate = (
     conformance: OpenAcrConformance
-  ): ManualAuditAggregate => ({
-    componentName: 'c',
-    criterionId: '1.1.1',
-    conformance,
-  });
+  ): ManualAuditAggregate => ({criterionId: '1.1.1', conformance});
 
-  it('applies worst-wins precedence (fail > partial > pass > not-applicable)', () => {
+  it('applies worst-wins (does-not-support > partially-supports > supports > not-applicable)', () => {
     expect(
       resolveManualConformance([
         aggregate('supports'),
@@ -113,7 +120,12 @@ describe('resolveManualConformance', () => {
       ])
     ).toBe('partially-supports');
 
-    expect(resolveManualConformance([aggregate('supports')])).toBe('supports');
+    expect(
+      resolveManualConformance([
+        aggregate('supports'),
+        aggregate('not-applicable'),
+      ])
+    ).toBe('supports');
 
     expect(resolveManualConformance([aggregate('not-applicable')])).toBe(
       'not-applicable'

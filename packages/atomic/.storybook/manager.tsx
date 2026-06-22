@@ -161,6 +161,7 @@ const coveoTheme = create({
 
 addons.setConfig({
   theme: coveoTheme,
+  enableShortcuts: false,
 });
 
 addons.register('SELECT-FIRST-STORY-BY-DEFAULT-ONCE', (api) => {

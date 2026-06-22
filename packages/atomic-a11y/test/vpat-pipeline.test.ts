@@ -5,6 +5,8 @@ import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 
 import {transformJsonToOpenAcr} from '../src/openacr/json-to-openacr.js';
 
+// atomic-search-box: 2.4.7 covered+clean (supports), 1.4.3 covered+violation
+// (does-not-support). 2.1.4 is absent → not covered by automation.
 const report = {
   report: {
     product: 'Coveo Atomic',
@@ -20,16 +22,15 @@ const report = {
       name: 'atomic-search-box',
       storyCount: 1,
       automated: {
-        violations: 0,
+        violations: 1,
         passes: 1,
         incomplete: 0,
         inapplicable: 0,
-        criteriaCovered: ['2.4.7'],
-        criteriaViolated: [],
+        criteriaCovered: ['2.4.7', '1.4.3'],
+        criteriaViolated: ['1.4.3'],
         criteriaPassed: ['2.4.7'],
         incompleteDetails: [],
       },
-      interactive: {criteriaCovered: ['2.1.1'], testCount: 1, passedCount: 1},
     },
   ],
   criteria: [
@@ -45,20 +46,21 @@ const report = {
       coveredComponents: ['atomic-search-box'],
       violatingComponents: [],
     },
+    {
+      id: '1.4.3',
+      name: 'Contrast (Minimum)',
+      level: 'AA',
+      wcagVersion: '2.0',
+      conformance: 'doesNotSupport',
+      automatedCoverage: true,
+      interactiveCoverage: false,
+      manualVerified: false,
+      coveredComponents: ['atomic-search-box'],
+      violatingComponents: ['atomic-search-box'],
+    },
   ],
   summary: {},
 };
-
-const manualBaseline = [
-  {
-    name: 'atomic-search-box',
-    category: 'search',
-    manual: {
-      status: 'complete',
-      wcag22Criteria: {'2.4.7-focus-visible': 'fail', '9.9.9-fake': 'pass'},
-    },
-  },
-];
 
 describe('transformJsonToOpenAcr (integration)', () => {
   let dir: string;
@@ -74,38 +76,80 @@ describe('transformJsonToOpenAcr (integration)', () => {
     await rm(dir, {recursive: true, force: true});
   });
 
-  it('manual fail overrides automated pass, reflects interactive coverage, and excludes unknown keys', async () => {
-    const inputFile = path.join(dir, 'a11y-report.json');
-    await writeFile(inputFile, JSON.stringify(report), 'utf8');
+  const writeInput = () =>
+    writeFile(path.join(dir, 'a11y-report.json'), JSON.stringify(report));
+
+  const levelOf = (
+    criteria: {num: string; components: {adherence: {level: string}}[]}[],
+    num: string
+  ) => criteria.find((c) => c.num === num)?.components[0].adherence.level;
+
+  it('resolves each criterion as worst-wins across automated + manual signals', async () => {
+    await writeInput();
     await writeFile(
       path.join(dir, 'manual-audit-search.json'),
-      JSON.stringify(manualBaseline),
-      'utf8'
+      JSON.stringify({
+        surface: 'search',
+        wcag22Criteria: {
+          '2.4.7-focus-visible': 'fail',
+          '1.4.3-contrast-minimum': 'pass',
+          '2.1.4-character-key-shortcuts': 'pass',
+        },
+      })
     );
 
     const result = await transformJsonToOpenAcr({
-      inputFile,
+      inputFile: path.join(dir, 'a11y-report.json'),
       outputFile: path.join(dir, 'openacr.yaml'),
       overridesFile: path.join(dir, 'no-overrides.json'),
       manualAuditDir: dir,
     });
 
-    const levelA = result.chapters.success_criteria_level_a.criteria;
-    const levelAA = result.chapters.success_criteria_level_aa.criteria;
+    const a = result.chapters.success_criteria_level_a.criteria;
+    const aa = result.chapters.success_criteria_level_aa.criteria;
 
-    const focusVisible = levelAA.find((c) => c.num === '2.4.7');
-    expect(focusVisible?.components[0].adherence.level).toBe(
-      'does-not-support'
-    );
+    // manual fail beats an axe-clean criterion
+    expect(levelOf(aa, '2.4.7')).toBe('does-not-support');
+    // a real axe violation can't be masked by a manual pass
+    expect(levelOf(aa, '1.4.3')).toBe('does-not-support');
+    // manual fills a criterion axe doesn't cover
+    expect(levelOf(a, '2.1.4')).toBe('supports');
+
+    const focusVisible = aa.find((c) => c.num === '2.4.7');
     expect(focusVisible?.components[0].adherence.notes).toContain(
-      'Manual audit'
+      'manual audit found Does Not Support'
+    );
+  });
+
+  it('lets an engineering override win over all signals', async () => {
+    await writeInput();
+    const overridesFile = path.join(dir, 'overrides.json');
+    await writeFile(
+      overridesFile,
+      JSON.stringify({
+        overrides: [
+          {
+            criterion: '1.4.3',
+            conformance: 'supports',
+            reason:
+              'Design tokens meet AA; the axe finding is a false positive.',
+          },
+        ],
+      })
     );
 
-    const keyboard = levelA.find((c) => c.num === '2.1.1');
-    expect(keyboard?.components[0].adherence.level).toBe('supports');
-    expect(keyboard?.components[0].adherence.notes).toContain('Interactive');
+    const result = await transformJsonToOpenAcr({
+      inputFile: path.join(dir, 'a11y-report.json'),
+      outputFile: path.join(dir, 'openacr.yaml'),
+      overridesFile,
+      manualAuditDir: path.join(dir, 'no-manual'),
+    });
 
-    expect(levelA.find((c) => c.num === '9.9.9')).toBeUndefined();
-    expect(levelAA.find((c) => c.num === '9.9.9')).toBeUndefined();
+    const aa = result.chapters.success_criteria_level_aa.criteria;
+    const row = aa.find((c) => c.num === '1.4.3');
+    expect(row?.components[0].adherence.level).toBe('supports');
+    expect(row?.components[0].adherence.notes).toContain(
+      'Design tokens meet AA'
+    );
   });
 });

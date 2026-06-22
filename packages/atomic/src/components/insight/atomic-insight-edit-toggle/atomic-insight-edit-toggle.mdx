@@ -1,6 +1,7 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import meta, { Default, WithTooltip } from './atomic-insight-edit-toggle.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+import UsageContent from './atomic-insight-edit-toggle.usage.mdx';
 
 <Meta of={meta} />
 
@@ -10,17 +11,5 @@ import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-te
   tagName="atomic-insight-edit-toggle"
   className="AtomicInsightEditToggle"
 >
-
-The `atomic-insight-edit-toggle` component provides an edit button for insight interfaces. This is an internal component typically used within other Insight components to provide editing functionality.
-
-The component can be configured with a callback function and optional tooltip.
-
-## Styling
-
-The component uses the following part attributes for styling:
-
-- `insight-edit-toggle-container`: The container wrapper
-- `insight-edit-toggle-button`: The button element
-- `insight-edit-toggle-icon`: The edit icon
-
+<UsageContent />
 </AtomicDocTemplate>

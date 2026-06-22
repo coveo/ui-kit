@@ -343,10 +343,10 @@ export class AtomicSmartSnippet
                   this,
                   'source-anchor-attributes'
                 )}
-                @selectSource=${this.smartSnippet.selectSource}
-                @beginDelayedSelectSource=${this.smartSnippet
+                @select-source=${this.smartSnippet.selectSource}
+                @begin-delayed-select-source=${this.smartSnippet
                   .beginDelayedSelectSource}
-                @cancelPendingSelectSource=${this.smartSnippet
+                @cancel-pending-select-source=${this.smartSnippet
                   .cancelPendingSelectSource}
               ></atomic-smart-snippet-source>
             `

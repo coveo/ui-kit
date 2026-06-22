@@ -44,6 +44,12 @@ export default class QuanticSourceCitations extends LightningElement {
    * @default false
    */
   @api disableCitationAnchoring = false;
+  /**
+   * The unique identifier of the generated answer.
+   * @api
+   * @type {string}
+   */
+  @api answerId;
 
   /** @type {AnyHeadless} */
   headless;
@@ -79,6 +85,7 @@ export default class QuanticSourceCitations extends LightningElement {
         {
           options: {
             citation,
+            answerId: this.answerId,
           },
         }
       ),

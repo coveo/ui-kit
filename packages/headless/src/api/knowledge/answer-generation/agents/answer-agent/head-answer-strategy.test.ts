@@ -10,6 +10,7 @@ import {
 } from '../../../../../features/follow-up-answers/follow-up-answers-actions.js';
 import {
   finishStep,
+  finishToolCall,
   setAnswerContentFormat,
   setAnswerId,
   setCannotAnswer,
@@ -17,6 +18,8 @@ import {
   setIsLoading,
   setIsStreaming,
   startStep,
+  startToolCall,
+  toolCallArgs,
   updateCitations,
   updateError,
   updateMessage,
@@ -54,6 +57,7 @@ describe('createHeadAnswerStrategy', () => {
   it('dispatches a new generation step start when a step starts', () => {
     strategy.onStepStartedEvent!({
       event: {stepName: 'searching', timestamp: 123},
+      agent: {isRunning: true},
     } as any);
 
     expect(dispatch).toHaveBeenCalledWith(
@@ -66,6 +70,7 @@ describe('createHeadAnswerStrategy', () => {
 
     strategy.onStepFinishedEvent!({
       event: {stepName: 'answering'},
+      agent: {isRunning: true},
     } as any);
 
     expect(dispatch).toHaveBeenCalledWith(
@@ -76,7 +81,10 @@ describe('createHeadAnswerStrategy', () => {
   });
 
   it('appends incoming text deltas to the answer message', () => {
-    strategy.onTextMessageContentEvent!({event: {delta: 'Hello'}} as any);
+    strategy.onTextMessageContentEvent!({
+      event: {delta: 'Hello'},
+      agent: {isRunning: true},
+    } as any);
 
     expect(dispatch).toHaveBeenCalledWith(updateMessage({textDelta: 'Hello'}));
   });
@@ -91,6 +99,7 @@ describe('createHeadAnswerStrategy', () => {
           conversationToken: 'token-123',
         },
       },
+      agent: {isRunning: true},
     } as any);
 
     expect(dispatch).toHaveBeenCalledWith(
@@ -119,6 +128,7 @@ describe('createHeadAnswerStrategy', () => {
         name: 'citations',
         value: {citations},
       },
+      agent: {isRunning: true},
     } as any);
 
     expect(dispatch).toHaveBeenCalledWith(updateCitations({citations}));
@@ -130,6 +140,7 @@ describe('createHeadAnswerStrategy', () => {
         message: 'Something went wrong',
         code: 'KNOWLEDGE:SSE_MAX_DURATION_EXCEEDED',
       },
+      agent: {isRunning: true},
     } as any);
 
     expect(dispatch).toHaveBeenCalledWith(
@@ -163,6 +174,7 @@ describe('createHeadAnswerStrategy', () => {
         },
         threadId: 'thread-007',
       },
+      agent: {isRunning: true},
     } as any);
 
     expect(dispatch).toHaveBeenNthCalledWith(1, setIsAnswerGenerated(true));
@@ -196,6 +208,7 @@ describe('createHeadAnswerStrategy', () => {
         },
         threadId: 'thread-007',
       },
+      agent: {isRunning: true},
     } as any);
 
     expect(dispatch).toHaveBeenNthCalledWith(1, setIsAnswerGenerated(false));
@@ -204,5 +217,183 @@ describe('createHeadAnswerStrategy', () => {
     expect(streamEndSpy).toHaveBeenCalledWith(false, 'run-001', undefined);
     expect(dispatch).toHaveBeenNthCalledWith(4, streamEndAction);
     expect(dispatch).toHaveBeenNthCalledWith(5, responseLinkedAction);
+  });
+
+  describe('tool call handlers', () => {
+    it('dispatches startToolCall when a tool call starts', () => {
+      strategy.onToolCallStartEvent!({
+        event: {toolCallName: 'search', toolCallId: 'tc-1', timestamp: 100},
+        agent: {isRunning: true},
+      } as any);
+
+      expect(dispatch).toHaveBeenCalledWith(
+        startToolCall({
+          toolCallName: 'search',
+          toolCallId: 'tc-1',
+          startedAt: 100,
+        })
+      );
+    });
+
+    it('dispatches startToolCall with Date.now() when timestamp is missing', () => {
+      const nowSpy = vi.spyOn(Date, 'now').mockReturnValue(999);
+
+      strategy.onToolCallStartEvent!({
+        event: {toolCallName: 'search', toolCallId: 'tc-2'},
+        agent: {isRunning: true},
+      } as any);
+
+      expect(dispatch).toHaveBeenCalledWith(
+        startToolCall({
+          toolCallName: 'search',
+          toolCallId: 'tc-2',
+          startedAt: 999,
+        })
+      );
+
+      nowSpy.mockRestore();
+    });
+
+    it('dispatches finishToolCall when a tool call ends', () => {
+      strategy.onToolCallEndEvent!({
+        event: {toolCallId: 'tc-1', timestamp: 200},
+        agent: {isRunning: true},
+      } as any);
+
+      expect(dispatch).toHaveBeenCalledWith(
+        finishToolCall({toolCallId: 'tc-1', finishedAt: 200})
+      );
+    });
+
+    it('dispatches finishToolCall with Date.now() when timestamp is missing', () => {
+      const nowSpy = vi.spyOn(Date, 'now').mockReturnValue(888);
+
+      strategy.onToolCallEndEvent!({
+        event: {toolCallId: 'tc-1'},
+        agent: {isRunning: true},
+      } as any);
+
+      expect(dispatch).toHaveBeenCalledWith(
+        finishToolCall({toolCallId: 'tc-1', finishedAt: 888})
+      );
+
+      nowSpy.mockRestore();
+    });
+
+    it('dispatches toolCallArgs with type "search" when delta contains a q field', () => {
+      strategy.onToolCallArgsEvent!({
+        event: {toolCallId: 'tc-1', delta: '{"q":"test query"}'},
+        agent: {isRunning: true},
+      } as any);
+
+      expect(dispatch).toHaveBeenCalledWith(
+        toolCallArgs({
+          toolCallId: 'tc-1',
+          args: {q: 'test query'},
+          type: 'search',
+        })
+      );
+    });
+
+    it('dispatches toolCallArgs with type "generic" when delta has no q field', () => {
+      strategy.onToolCallArgsEvent!({
+        event: {toolCallId: 'tc-1', delta: '{"foo":"bar"}'},
+        agent: {isRunning: true},
+      } as any);
+
+      expect(dispatch).toHaveBeenCalledWith(
+        toolCallArgs({
+          toolCallId: 'tc-1',
+          args: {raw: '{"foo":"bar"}'},
+          type: 'generic',
+        })
+      );
+    });
+
+    it('dispatches toolCallArgs with type "generic" when delta is not valid JSON', () => {
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+      strategy.onToolCallArgsEvent!({
+        event: {toolCallId: 'tc-1', delta: 'not-json'},
+        agent: {isRunning: true},
+      } as any);
+
+      expect(dispatch).toHaveBeenCalledWith(
+        toolCallArgs({
+          toolCallId: 'tc-1',
+          args: {raw: 'not-json'},
+          type: 'generic',
+        })
+      );
+
+      warnSpy.mockRestore();
+    });
+  });
+
+  describe('when agent.isRunning is false', () => {
+    const stoppedAgent = {isRunning: false};
+
+    it('does not dispatch on step started', () => {
+      strategy.onStepStartedEvent!({
+        event: {stepName: 'searching', timestamp: 123},
+        agent: stoppedAgent,
+      } as any);
+
+      expect(dispatch).not.toHaveBeenCalled();
+    });
+
+    it('does not dispatch on step finished', () => {
+      strategy.onStepFinishedEvent!({
+        event: {stepName: 'answering', timestamp: 456},
+        agent: stoppedAgent,
+      } as any);
+
+      expect(dispatch).not.toHaveBeenCalled();
+    });
+
+    it('does not dispatch on text message content', () => {
+      strategy.onTextMessageContentEvent!({
+        event: {delta: 'Hello'},
+        agent: stoppedAgent,
+      } as any);
+
+      expect(dispatch).not.toHaveBeenCalled();
+    });
+
+    it('does not dispatch on custom event', () => {
+      strategy.onCustomEvent!({
+        event: {
+          name: 'header',
+          value: {contentFormat: 'text/markdown'},
+        },
+        agent: stoppedAgent,
+      } as any);
+
+      expect(dispatch).not.toHaveBeenCalled();
+    });
+
+    it('does not dispatch on run error', () => {
+      strategy.onRunErrorEvent!({
+        event: {
+          message: 'Something went wrong',
+          code: 'KNOWLEDGE:SSE_MAX_DURATION_EXCEEDED',
+        },
+        agent: stoppedAgent,
+      } as any);
+
+      expect(dispatch).not.toHaveBeenCalled();
+    });
+
+    it('does not dispatch on run finished', () => {
+      strategy.onRunFinishedEvent!({
+        event: {
+          result: {completionReason: 'ANSWERED'},
+          threadId: 'thread-007',
+        },
+        agent: stoppedAgent,
+      } as any);
+
+      expect(dispatch).not.toHaveBeenCalled();
+    });
   });
 });

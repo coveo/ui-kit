@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import meta, { Default } from './atomic-commerce-search-box-query-suggestions.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
-
+import UsageContent from './atomic-commerce-search-box-query-suggestions.usage.mdx';
 
 <Meta of={meta} />
 
@@ -11,14 +11,5 @@ import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-te
   tagName="atomic-commerce-search-box-query-suggestions"
   className="AtomicCommerceSearchBoxQuerySuggestions"
 >
-
-This component is placed inside the [atomic-commerce-search-box](/docs/atomic-commerce-search-box--docs) to display query suggestions as the user types.
-
-By default, atomic-commerce-search-box-query-suggestions is already included.
-You can add it manually to customize its properties.
-```html
-<atomic-commerce-search-box>
-  <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
-</atomic-commerce-search-box>
-```
+<UsageContent />
 </AtomicDocTemplate>

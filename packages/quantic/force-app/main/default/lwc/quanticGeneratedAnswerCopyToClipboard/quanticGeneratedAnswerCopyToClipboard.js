@@ -15,6 +15,12 @@ export default class QuanticGeneratedAnswerCopyToClipboard extends LightningElem
    * @type {string}
    */
   @api answer = '';
+  /**
+   * The unique identifier of the generated answer.
+   * @api
+   * @type {string}
+   */
+  @api answerId;
 
   /**
    * The size of the copy icon.
@@ -41,11 +47,12 @@ export default class QuanticGeneratedAnswerCopyToClipboard extends LightningElem
   isSelected = false;
   tooltip = this.labels.copy;
 
-  dispatchCopyToClipboardEvent(option) {
+  dispatchCopyToClipboardEvent() {
     this.dispatchEvent(
       new CustomEvent('quantic__generatedanswercopy', {
-        detail: option,
+        detail: {answerId: this.answerId},
         bubbles: true,
+        composed: true,
       })
     );
   }

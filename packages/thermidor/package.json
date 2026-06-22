@@ -1,0 +1,16 @@
+{
+  "name": "@coveo/thermidor",
+  "version": "0.0.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coveo/ui-kit.git",
+    "directory": "packages/thermidor"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "echo 'TODO: implement build'",
+    "test": "echo 'TODO: implement test'"
+  }
+}

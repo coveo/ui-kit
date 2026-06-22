@@ -38,20 +38,34 @@ export interface DidYouMean extends Controller {
   state: DidYouMeanState;
 }
 
+export interface DidYouMeanOptions {
+  /**
+   * When set to true, fills the `results` field rather than the `products` field
+   * in the response. It may also include Spotlight Content in the results.
+   * @default false
+   */
+  enableResults?: boolean;
+}
+
 /**
  * The `DidYouMean` controller is responsible for handling query corrections.
  *
  * @param engine - The commerce engine.
+ * @param options - The configurable `DidYouMean` options.
  * @returns A `DidYouMean` controller.
  *
  * @group Sub-controllers
  * @category DidYouMean
  */
-export function buildDidYouMean(engine: CommerceEngine): DidYouMean {
+export function buildDidYouMean(
+  engine: CommerceEngine,
+  options: DidYouMeanOptions = {}
+): DidYouMean {
   if (!loadDidYouMeanReducers(engine)) {
     throw loadReducerError;
   }
 
+  const {enableResults = false} = options;
   const controller = buildController(engine);
   const getState = () => engine[stateKey].didYouMean;
 
@@ -62,7 +76,7 @@ export function buildDidYouMean(engine: CommerceEngine): DidYouMean {
       engine.dispatch(
         updateQuery({query: this.state.queryCorrection.correctedQuery})
       );
-      engine.dispatch(executeSearch());
+      engine.dispatch(executeSearch({enableResults}));
     },
 
     get state() {

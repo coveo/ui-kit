@@ -1,3 +1,28 @@
+## 3.41.0
+
+### Minor Changes
+
+- [#7661](https://github.com/coveo/ui-kit/pull/7661) [`2352be8`](https://github.com/coveo/ui-kit/commit/2352be8292cd2f00aec221264f006a6256910610) - Creation of the new QuanticGeneratedAnswerThread component
+
+- [#7645](https://github.com/coveo/ui-kit/pull/7645) [`55a25ae`](https://github.com/coveo/ui-kit/commit/55a25aeb34dfaf4d4cf869651609bc525b5b678d) - Extracting the generated answer body into a reusable Quantic component that emits answerId-scoped interactions for generated-answer content, citations, and actions.
+
+- [#7753](https://github.com/coveo/ui-kit/pull/7753) [`c4b2224`](https://github.com/coveo/ui-kit/commit/c4b22243d002177188732a7949ffad96fab78076) - Creation of the new QuanticGeneratedAnswerStreamOfThought component
+
+### Patch Changes
+
+- Updated dependencies [[`a25786a`](https://github.com/coveo/ui-kit/commit/a25786abf99c9cd1168e193bd0c6ef5b296f22e9), [`fe7ee7d`](https://github.com/coveo/ui-kit/commit/fe7ee7db35b0cb8f36f08a6e0660a43940f402aa)]:
+  - @coveo/headless@3.51.5
+
+## 3.40.0
+
+### Minor Changes
+
+- [#7718](https://github.com/coveo/ui-kit/pull/7718) [`b19e6c9`](https://github.com/coveo/ui-kit/commit/b19e6c986da6ed10fb723a43434636b7805bca6d) - Started supporting inline links with analytics in generated answers
+
+### Patch Changes
+
+- [#7758](https://github.com/coveo/ui-kit/pull/7758) [`c3ad452`](https://github.com/coveo/ui-kit/commit/c3ad452a63b2c0f76258df3932559d738d1d1cd1) - Made the quanticGeneratedAnswer content scrollable
+
 ## 3.39.1
 
 ### Patch Changes

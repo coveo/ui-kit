@@ -1,10 +1,10 @@
 # Manual Audit Guide
 
-This guide explains how to create manual audit baseline files for the Coveo Atomic accessibility pipeline. These files capture human-reviewed WCAG conformance results that feed into the final VPAT (Voluntary Product Accessibility Template) report.
+How to record manual accessibility results for the Coveo Atomic VPAT pipeline. Manual results capture human-reviewed WCAG conformance that automated tooling can't determine on its own.
 
 ## Why manual audits?
 
-Automated testing (axe-core) can only verify ~30-40% of WCAG success criteria. The remaining criteria require human judgment — keyboard navigation, screen reader behavior, cognitive load, etc. Manual audit baselines fill that gap.
+Automated testing (axe-core) verifies only ~30–40% of WCAG success criteria. The rest — keyboard flows, screen-reader behavior, cognitive load, content that only makes sense in combination — needs human review. Components are audited **as part of a surface**, never in isolation, because they only behave meaningfully when composed together.
 
 ## Where the files go
 
@@ -12,257 +12,114 @@ Automated testing (axe-core) can only verify ~30-40% of WCAG success criteria. T
 packages/atomic-a11y/
 └── a11y/
     └── reports/
-        ├── manual-audit-search.json        ← one file per category
+        ├── manual-audit-search.json
         ├── manual-audit-commerce.json
-        ├── manual-audit-common.json
-        └── ...
+        ├── manual-audit-insight.json
+        └── …
 ```
 
-**Default directory**: `a11y/reports`
+One file per **surface**. The `{surface}` label is only a way to split the work into manageable files — the pipeline attaches no meaning to it and it never appears in the VPAT. Use whatever split keeps diffs small and ownership clear (by experience is the obvious one).
 
-## Source of truth
-
-The `manual-audit-*.json` baseline files in `a11y/reports` are the single source of truth for manual audits.
-
-Auditors edit these baseline files directly — there is no separate merge or delta step. Editing a file and running `pnpm a11y:vpat` is the entire workflow.
-
-## File naming
-
-Files **must** match this pattern:
-
-```
-manual-audit-{category}.json
-```
-
-| ✅ Valid                     | ❌ Invalid (skipped silently)                                  |
-| ---------------------------- | -------------------------------------------------------------- |
-| `manual-audit-search.json`   | `manual-audit-search-violations.json` (contains `-violations`) |
-| `manual-audit-commerce.json` | `audit-search.json` (missing `manual-audit-` prefix)           |
-| `manual-audit-common.json`   | `manual-audit-search.yaml` (wrong extension)                   |
-
-The `-violations` exclusion is intentional — files with that suffix are reserved for automated violation logs and are filtered out.
+`manual-audit-example.json` and any `*-violations*` file are ignored.
 
 ## File format
 
-Each file is a **JSON array** of component entries:
-
-```json
-[
-  {
-    "name": "atomic-search-box",
-    "category": "search",
-    "manual": {
-      "status": "complete",
-      "wcag22Criteria": {
-        "1.1.1-non-text-content": "pass",
-        "1.3.1-info-and-relationships": "partial",
-        "1.4.3-contrast-minimum": "fail",
-        "2.4.1-bypass-blocks": "not-applicable"
-      }
-    }
-  },
-  {
-    "name": "atomic-search-box-instant-results",
-    "category": "search",
-    "manual": {
-      "status": "complete",
-      "wcag22Criteria": {
-        "1.1.1-non-text-content": "pass",
-        "2.1.1-keyboard": "pass"
-      }
-    }
-  }
-]
-```
-
-### Field reference
-
-| Field                   | Type   | Required | Description                                                                                                                                                         |
-| ----------------------- | ------ | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `name`                  | string | **Yes**  | Component name, must be non-empty. Use the `atomic-*` name as it appears in the automated report (e.g., `atomic-search-box`, `atomic-facet`, `atomic-result-list`). |
-| `category`              | string | **Yes**  | One of: `search`, `commerce`, `insight`, `ipx`, `common`, `recommendations`.                                                                                        |
-| `manual.status`         | string | **Yes**  | Must be `"complete"` for the entry to be processed. Use `"pending"` for work-in-progress entries — they are silently skipped.                                       |
-| `manual.wcag22Criteria` | object | **Yes**  | Map of criterion keys to status values. Only criteria you've actually tested need to be included.                                                                   |
-
-### Criterion key format
-
-Keys in `wcag22Criteria` must follow this pattern:
-
-```
-{numeric-id}-{slug}
-```
-
-The system extracts the numeric ID using the regex `/^(\d+(?:\.\d+)+)-/`, so what follows the first hyphen can be anything descriptive. Convention is to use the WCAG criterion handle in lowercase kebab-case.
-
-**Examples:**
-
-| Key                            | Extracted ID |
-| ------------------------------ | ------------ |
-| `1.1.1-non-text-content`       | `1.1.1`      |
-| `1.4.3-contrast-minimum`       | `1.4.3`      |
-| `2.4.1-bypass-blocks`          | `2.4.1`      |
-| `3.3.2-labels-or-instructions` | `3.3.2`      |
-
-### Status values
-
-| Status           | OpenACR Conformance | Meaning                                                                                              |
-| ---------------- | ------------------- | ---------------------------------------------------------------------------------------------------- |
-| `pass`           | Supports            | The component fully meets this criterion.                                                            |
-| `fail`           | Does Not Support    | The component fails this criterion.                                                                  |
-| `partial`        | Partially Supports  | The component meets this criterion in some but not all scenarios.                                    |
-| `not-applicable` | Not Applicable      | This criterion does not apply to this component (e.g., no audio content for audio-related criteria). |
-
-Any other status value is logged as a warning and skipped.
-
-### Adding remarks (optional)
-
-For each criterion, you can optionally provide `remarks` to document **why** you assigned that status. This helps engineers understand the auditor's reasoning and makes it easier to track remediation efforts.
-
-**Two formats are supported:**
-
-**Simple format** (no remarks):
-
-```json
-"1.1.1-non-text-content": "pass"
-```
-
-**Object format** (with remarks):
-
-```json
-"1.1.1-non-text-content": {
-  "conformance": "pass",
-  "remarks": "All images have meaningful alt text"
-}
-```
-
-**Complete example:**
+Each file is a **single object**: a `surface` label plus the criteria you audited.
 
 ```json
 {
-  "name": "atomic-search-box",
-  "category": "search",
-  "manual": {
-    "status": "complete",
-    "wcag22Criteria": {
-      "1.1.1-non-text-content": {
-        "conformance": "pass",
-        "remarks": "All images have alt text; icons use aria-label"
-      },
-      "1.4.3-contrast-minimum": {
-        "conformance": "partial",
-        "remarks": "Pass ratio meets AA standards. Focus indicators on dark backgrounds need refinement."
-      },
-      "2.4.1-bypass-blocks": {
-        "conformance": "fail",
-        "remarks": "No skip-to-main-content link. Keyboard users must tab through search filters."
-      },
-      "2.1.1-keyboard": "pass"
+  "surface": "commerce",
+  "wcag22Criteria": {
+    "2.4.7-focus-visible": "pass",
+    "1.4.3-contrast-minimum": {
+      "conformance": "fail",
+      "remarks": "Chrome 124, dark theme: focus ring measures 2.1:1 vs surface (needs 3:1). Repro: Tab to any facet checkbox."
     }
   }
 }
 ```
 
-Remarks are included in the OpenACR report and help reviewers understand which criteria need attention or may require follow-up testing.
+There is **no per-component dimension** — you audit the surface as a whole.
+
+### Criterion key format
+
+Keys follow `{numeric-id}-{slug}`. Only the numeric id is parsed (regex `/^(\d+(?:\.\d+)+)-/`); the slug is free text for readability. The id **must** be a real WCAG 2.2 A/AA criterion (validated against `src/data/wcag-criteria.ts`).
+
+| Key                             | Criterion |
+| ------------------------------- | --------- |
+| `2.4.7-focus-visible`           | `2.4.7`   |
+| `1.4.3-contrast-minimum`        | `1.4.3`   |
+| `2.1.4-character-key-shortcuts` | `2.1.4`   |
+
+### Result values
+
+| Value            | OpenACR Conformance | Meaning                                      |
+| ---------------- | ------------------- | -------------------------------------------- |
+| `pass`           | Supports            | The surface meets this criterion.            |
+| `fail`           | Does Not Support    | The surface fails this criterion.            |
+| `partial`        | Partially Supports  | Met in some scenarios but not all.           |
+| `not-applicable` | Not Applicable      | The criterion doesn't apply to this surface. |
+
+Use the object form `{ "conformance", "remarks" }` to document _why_; the remark is carried into the VPAT notes. **List only the criteria you tested** — omitted criteria stay _Does Not Support [manual audit required]_ until audited.
+
+Put the **test conditions in `remarks`**: the assistive tech + version and browser you used for any criterion that depends on them (screen readers, focus, name/role/value), and a short **repro** for every `fail`/`partial`. A bare `pass` is fine for clearly-visual checks; an AT-dependent `pass`/`fail` without conditions isn't verifiable.
 
 ## How conformance is resolved
 
-When multiple components report on the same criterion, the system applies **worst-wins** precedence:
+Each criterion gets **one product-level verdict**. An engineering override is authoritative; otherwise the verdict is the **worst** of the real signals present:
 
 ```
-fail > partial > pass > not-applicable
+fail (does-not-support) > partial > pass (supports) > not-applicable
 ```
 
-For example, if `atomic-search-box` reports `pass` and `atomic-result-list` reports `fail` for criterion `1.1.1`, the final conformance for `1.1.1` is `does-not-support`.
+Signals:
 
-### Priority chain across data sources
+1. **Overrides** (`a11y/a11y-overrides.json`) — permanent, by-design exceptions set by engineering. Authoritative: they win outright and bypass worst-wins.
+2. **Manual audits** — every result across **all** surface files. The same criterion audited in several files contributes several results; the worst wins.
+3. **Interactive** — Storybook keyboard `play()` tests.
+4. **Automated** — axe-core, **only for criteria it actually covers**. A criterion axe doesn't cover contributes _no_ signal (not a failure), so manual audits can fill those gaps.
 
-Manual audits are one of four conformance sources. The full priority chain (highest to lowest):
+Consequences:
 
-1. **Overrides** (`a11y/a11y-overrides.json`) — explicit exceptions set by engineering
-2. **Manual audits** — your baseline files (as described in this guide)
-3. **Existing report conformance** — previously computed values in the JSON report
-4. **Automated results** — derived from axe-core pass/fail counts
+- A manual `fail` surfaces even if axe was clean.
+- A manual `pass` **cannot** hide a real axe violation — the violation still wins. Fix the code or add a documented override instead.
+- A criterion axe can't test (e.g. `2.1.4`) is driven entirely by your manual result.
+- A criterion with no signal at all is _Does Not Support [manual audit required]_.
 
-This means manual audit results **override** automated findings, but are themselves overridden by explicit overrides.
+## Validation
 
-## Complete example
+When `pnpm exec turbo run a11y:vpat --filter=@coveo/atomic-a11y` runs, the loader warns and skips:
 
-A minimal but complete baseline file for search components (`manual-audit-search.json`):
-
-```json
-[
-  {
-    "name": "atomic-search-box",
-    "category": "search",
-    "manual": {
-      "status": "complete",
-      "wcag22Criteria": {
-        "1.1.1-non-text-content": "pass",
-        "1.3.1-info-and-relationships": "pass",
-        "1.3.2-meaningful-sequence": "pass",
-        "2.1.1-keyboard": "pass",
-        "2.4.3-focus-order": "pass",
-        "2.4.7-focus-visible": "pass",
-        "3.2.1-on-focus": "pass",
-        "3.2.2-on-input": "pass",
-        "3.3.2-labels-or-instructions": "pass",
-        "4.1.2-name-role-value": "partial"
-      }
-    }
-  },
-  {
-    "name": "atomic-search-box-instant-results",
-    "category": "search",
-    "manual": {
-      "status": "pending",
-      "wcag22Criteria": {}
-    }
-  }
-]
-```
-
-In this example:
-
-- `atomic-search-box` is fully audited — all 10 tested criteria will appear in the VPAT
-- `atomic-search-box-instant-results` is pending — it will be **silently skipped** until `status` is changed to `"complete"`
-
-## Validation rules
-
-The system validates each entry before processing. An entry is **skipped with a warning** if:
-
-- `name` is missing or empty
-- `manual` is missing or not an object
-- `manual.status` is missing
-- `manual.wcag22Criteria` is missing or not an object
-
-Additionally, individual criterion entries within `wcag22Criteria` are skipped if:
-
-- The value is neither a string nor an object with string `conformance`
-- The key doesn't match the `{numeric-id}-{slug}` pattern
-- The numeric ID is not a recognized WCAG 2.2 A/AA success criterion (validated against the WCAG catalog in `src/data/wcag-criteria.ts`)
-- The status value is not one of `pass`, `fail`, `partial`, `not-applicable`
+- a file that isn't an object with a `wcag22Criteria` map (e.g. the old per-component array shape),
+- a criterion key whose id isn't a recognized WCAG 2.2 A/AA criterion,
+- a result that isn't `pass` / `fail` / `partial` / `not-applicable` (or `{conformance, remarks}`).
 
 ## Workflow
 
-1. Pick a component category (search, commerce, etc.)
-2. Create or edit `a11y/reports/manual-audit-{category}.json`
-3. For each component you've audited:
-   a. Set "status": "complete"
-   b. Add criterion results to wcag22Criteria
-4. Commit the file
-5. The CI pipeline runs:
+1. Pick a surface and open/create `a11y/reports/manual-audit-{surface}.json`.
+2. Add `criterion → result` entries for what you tested.
+3. Run `pnpm exec turbo run a11y:vpat --filter=@coveo/atomic-a11y` and check the `[json-to-openacr]` output for warnings.
+4. Commit the file (and the regenerated VPAT markdown).
 
-```
-   pnpm a11y:vpat
-     → reads a11y-report.json (automated)
-     → reads manual-audit-*.json (your files)
-     → merges both → OpenACR YAML → VPAT markdown
+## PR checklist
+
+Paste this into the description of any manual-audit PR so a reviewer can trust the results:
+
+```markdown
+### Manual audit
+
+- **Surface(s):** <search / commerce / …>
+- **Method:** keyboard / screen reader / zoom-reflow / visual (delete what doesn't apply)
+- **Environment:** <e.g. NVDA 2024.1 + Chrome 124; VoiceOver + Safari 17; macOS 14>
+- **Criteria audited:** <list the WCAG ids, e.g. 1.3.1, 2.1.1, 4.1.2>
+- **Fails/partials:** repro steps captured in each criterion's `remarks`
+- [ ] `pnpm exec turbo run a11y:vpat --filter=@coveo/atomic-a11y` run; no "Unknown WCAG criterion" warnings
+- [ ] AT + browser recorded in `remarks` for AT-dependent criteria
+- [ ] Reviewed by an accessibility owner
 ```
 
 ## Tips
 
-- **Start with `"pending"`** — set `status` to `"pending"` while auditing, then flip to `"complete"` when done. Pending entries are safely ignored.
-- **One file per category** — keeps diffs small and ownership clear.
-- **You don't need every criterion** — only include criteria you've actually tested. Untested A/AA criteria are automatically emitted as **Does Not Support** with a `[Manual audit required]` remark in the VPAT, so they remain visible as pending work until audited.
-- **Component names must match** — use the exact `atomic-*` name from the automated `a11y-report.json`. Open that file to see the list of detected components and their names.
-- **Criteria keys are flexible** — only the numeric prefix matters (`1.1.1-`). The slug after the hyphen is for human readability.
+- **Split by surface, not component.** Keeps diffs small; the VPAT merges everything anyway.
+- **Only list what you tested.** Untested criteria remain visible as _[manual audit required]_.
+- **Don't paper over real failures.** A manual `pass` won't clear an axe violation — that's intentional. Use an override (with a reason) only for genuine by-design exceptions.

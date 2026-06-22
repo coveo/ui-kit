@@ -213,6 +213,10 @@
     <name>quantic_Collapse</name>
   </customLabels>
   <customLabels>
+    <label>Contraer</label>
+    <name>quantic_CollapseButton</name>
+  </customLabels>
+  <customLabels>
     <label>Expandir {{0}}</label>
     <name>quantic_Expand</name>
   </customLabels>
@@ -689,6 +693,10 @@
     <name>quantic_GeneratedAnswerForYou</name>
   </customLabels>
   <customLabels>
+    <label>Se alcanzó el límite de turnos de conversación. Por favor, inicie una nueva conversación.</label>
+    <name>quantic_GeneratedAnswerErrorTurnLimitReached</name>
+  </customLabels>
+  <customLabels>
     <label>Esta respuesta no fue útil</label>
     <name>quantic_ThisAnswerWasNotHelpful</name>
   </customLabels>
@@ -895,5 +903,49 @@
   <customLabels>
     <name>quantic_SubmitFollowUp</name>
     <label>Enviar seguimiento</label>
+  </customLabels>
+  <customLabels>
+    <label>Mostrar {{0}} preguntas anteriores</label>
+    <name>quantic_ShowPreviousQuestions_plural</name>
+  </customLabels>
+  <customLabels>
+    <name>quantic_AgentGenerationStepAnalyzingQuestion</name>
+    <label>Analizando tu pregunta…</label>
+  </customLabels>
+  <customLabels>
+    <name>quantic_AgentGenerationStepAnalyzingQuestionCompleted</name>
+    <label>Pregunta analizada</label>
+  </customLabels>
+  <customLabels>
+    <name>quantic_AgentGenerationStepSearch</name>
+    <label>Buscando en la base de conocimiento…</label>
+  </customLabels>
+  <customLabels>
+    <name>quantic_AgentGenerationStepSearchCompleted</name>
+    <label>Base de conocimiento consultada</label>
+  </customLabels>
+  <customLabels>
+    <name>quantic_AgentGenerationStepAnalyzingResults</name>
+    <label>Analizando resultados…</label>
+  </customLabels>
+  <customLabels>
+    <name>quantic_AgentGenerationStepAnalyzingResultsCompleted</name>
+    <label>Resultados analizados</label>
+  </customLabels>
+  <customLabels>
+    <name>quantic_AgentGenerationStepAnswering</name>
+    <label>Generando respuesta…</label>
+  </customLabels>
+  <customLabels>
+    <name>quantic_AgentGenerationStepAnsweringCompleted</name>
+    <label>Respuesta generada</label>
+  </customLabels>
+  <customLabels>
+    <label>Me gusta</label>
+    <name>quantic_Like</name>
+  </customLabels>
+  <customLabels>
+    <label>No me gusta</label>
+    <name>quantic_Dislike</name>
   </customLabels>
 </Translations>
