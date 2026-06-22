@@ -1,0 +1,21 @@
+{
+  "name": "@coveo/platform-mock-api",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Coveo Platform API mock layer for testing (search, commerce, insight, recommendations)",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*.ts"
+  },
+  "devDependencies": {
+    "@ag-ui/client": "0.0.57",
+    "@coveo/headless": "workspace:*",
+    "msw": "catalog:",
+    "natural-orderby": "5.0.0",
+    "typescript": "catalog:"
+  },
+  "peerDependencies": {
+    "msw": "catalog:"
+  }
+}
