@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import minimist from 'minimist';
-import {mkdtemp, rm, readdir, access} from 'node:fs/promises';
+import {mkdtemp, rm, readdir, stat} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -62,14 +62,21 @@ export function parseArgs(rawArgs: string[]): CliArgs {
   };
 }
 
+async function dirExists(dir: string): Promise<boolean> {
+  try {
+    return (await stat(dir)).isDirectory();
+  } catch {
+    return false;
+  }
+}
+
 async function isEmptyOrMissing(dir: string): Promise<boolean> {
   try {
-    await access(dir);
+    const entries = await readdir(dir);
+    return entries.length === 0;
   } catch {
-    return true; // missing
+    return true;
   }
-  const entries = await readdir(dir);
-  return entries.length === 0;
 }
 
 /** Downloads, resolves, finalizes, and installs the chosen template. */
@@ -78,6 +85,7 @@ export async function scaffold(
   projectName: string
 ): Promise<void> {
   const targetDir = resolve(process.cwd(), projectName);
+  const dirExisted = await dirExists(targetDir);
   const tempDir = await mkdtemp(join(tmpdir(), 'create-ui-'));
 
   try {
@@ -93,9 +101,9 @@ export async function scaffold(
     log.step(`Creating project in ${targetDir}…`);
     await finalizeProject({sampleDir, targetDir, projectName});
   } catch (error) {
-    // Remove any partially-created target directory (it was empty/missing
-    // before scaffolding started, so this is safe).
-    await rm(targetDir, {recursive: true, force: true});
+    if (!dirExisted) {
+      await rm(targetDir, {recursive: true, force: true});
+    }
     throw error;
   } finally {
     await rm(tempDir, {recursive: true, force: true});
