@@ -49,7 +49,7 @@ describe('finalizeProject (IO)', () => {
     }
   }
 
-  it('rewrites package.json and moves to the target', async () => {
+  it('rewrites package.json, adds .gitignore, and moves to the target', async () => {
     const sampleDir = join(dir, 'extracted');
     await mkdir(sampleDir, {recursive: true});
     await writeFile(
@@ -61,6 +61,7 @@ describe('finalizeProject (IO)', () => {
     await finalizeProject({sampleDir, targetDir, projectName: 'my-app'});
 
     expect(await exists(sampleDir)).toBe(false);
+    expect(await exists(join(targetDir, '.gitignore'))).toBe(true);
     const pkg = JSON.parse(
       await readFile(join(targetDir, 'package.json'), 'utf8')
     );
