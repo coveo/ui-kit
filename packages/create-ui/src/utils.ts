@@ -1,6 +1,17 @@
 /**
- * Shared helpers: logging and package-manager detection.
+ * Shared helpers: logging, error formatting, and package-manager detection.
  */
+
+/** Extracts a clean user-facing message from any thrown value. Never returns a stack trace. */
+export function formatError(error: unknown): string {
+  if (error instanceof Error) {
+    return error.message || 'An unexpected error occurred.';
+  }
+  if (typeof error === 'string' && error.length > 0) {
+    return error;
+  }
+  return 'An unexpected error occurred.';
+}
 
 const appendCmdIfWindows = (cmd: string) =>
   `${cmd}${process.platform === 'win32' ? '.ps1' : ''}`;

@@ -10,7 +10,7 @@ import {dirExists, isEmptyOrMissing} from './fs-utils.js';
 import {resolveSampleDependencies} from './resolve-deps.js';
 import {finalizeProject, installDependencies} from './setup.js';
 import {getTemplate, getTemplates, type Template} from './templates.js';
-import {getPackageManager, log} from './utils.js';
+import {formatError, getPackageManager, log} from './utils.js';
 
 const HELP = `
 Usage: npm create @coveo/ui <project-name> --template <name>
@@ -160,10 +160,19 @@ const isDirectRun =
   argv[1] !== undefined && fileURLToPath(import.meta.url) === argv[1];
 
 if (isDirectRun) {
+  process.on('uncaughtException', (err) => {
+    log.error(formatError(err));
+    process.exit(1);
+  });
+  process.on('unhandledRejection', (reason) => {
+    log.error(formatError(reason));
+    process.exit(1);
+  });
+
   main(argv.slice(2)).then(
     (code) => process.exit(code),
     (error) => {
-      log.error(error instanceof Error ? error.message : String(error));
+      log.error(formatError(error));
       process.exit(1);
     }
   );

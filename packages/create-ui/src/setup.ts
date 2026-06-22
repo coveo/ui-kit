@@ -26,7 +26,6 @@ export function toPackageName(projectName: string): string {
       .replace(/[^a-z0-9._-]/g, '') || defaultName;
 
   if (!name) {
-    // TODO: gracefully handle thrown errors in the CLI and print user-friendly messages.
     throw new Error(`Invalid project name "${projectName}".`);
   }
 
