@@ -4,7 +4,8 @@ import {tmpdir} from 'node:os';
 import {dirname, join} from 'node:path';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {create} from 'tar';
-import {extractSampleFromTarball, fetchWithRetry} from './download.js';
+import {extractSampleFromTarball} from './download.js';
+import {fetchWithRetry} from './http.js';
 
 const ROOT = 'ui-kit-deadbeef';
 
@@ -84,6 +85,15 @@ describe('extractSampleFromTarball', () => {
     );
     expect(await exists(join(destDir, 'packages/atomic/src'))).toBe(false);
   });
+
+  it('throws an actionable error when the sample path is absent from the archive', async () => {
+    await expect(
+      extractSampleFromTarball(createReadStream(tarballPath), {
+        samplePath: 'samples/headless/does-not-exist',
+        destDir,
+      })
+    ).rejects.toThrow(/was not found in the downloaded archive/);
+  });
 });
 
 describe('fetchWithRetry', () => {
@@ -102,7 +112,7 @@ describe('fetchWithRetry', () => {
     const netFail = vi.fn().mockRejectedValue(new Error('ECONNRESET'));
     await expect(
       fetchWithRetry('http://x', {retries: 1, fetchImpl: netFail})
-    ).rejects.toThrow(/Failed to download the sample/);
+    ).rejects.toThrow(/Failed to fetch/);
     expect(netFail).toHaveBeenCalledTimes(2);
 
     const notFound = vi.fn().mockResolvedValue({

@@ -13,8 +13,9 @@
  *   - `workspace:*` / `workspace:^` references → resolved by reading the
  *     `version` field from the corresponding `packages/<name>/package.json`.
  *
- * The whole-monorepo tarball is large; v1 streams it and extracts selectively.
- * Optimizing the download size is a known follow-up.
+ * The CLI streams the whole-monorepo tarball (~4.5 MB at a release commit) and
+ * extracts selectively. See docs/adr/001 for why this is preferred over a
+ * narrower per-file download.
  */
 
 import {mkdir} from 'node:fs/promises';
@@ -22,49 +23,9 @@ import {join} from 'node:path';
 import {Readable} from 'node:stream';
 import {pipeline} from 'node:stream/promises';
 import {extract} from 'tar';
-import {getTarballUrl} from './tarball.js';
-
-type FetchImpl = typeof fetch;
-
-/**
- * Fetches a URL with one retry on failure, throwing a single clear error if all
- * attempts fail. `fetchImpl` is injectable for testing.
- */
-export async function fetchWithRetry(
-  url: string,
-  options: {
-    retries?: number;
-    fetchImpl?: FetchImpl;
-    headers?: Record<string, string>;
-  } = {}
-): Promise<Response> {
-  const retries = options.retries ?? 1;
-  const fetchImpl = options.fetchImpl ?? fetch;
-  let lastError: unknown;
-
-  for (let attempt = 0; attempt <= retries; attempt++) {
-    try {
-      const response = await fetchImpl(url, {
-        headers: options.headers,
-        redirect: 'follow',
-      });
-      if (response.ok && response.body) {
-        return response;
-      }
-      // Drain the body to free resources before retrying.
-      await response.body?.cancel();
-      lastError = new Error(`${response.status} ${response.statusText}`);
-    } catch (error) {
-      lastError = error;
-    }
-  }
-
-  const reason =
-    lastError instanceof Error ? lastError.message : String(lastError);
-  throw new Error(
-    `Failed to download the sample from ${url} (${reason}). Check your network connection and try again.`
-  );
-}
+import {pathExists} from './fs-utils.js';
+import {USER_AGENT, fetchWithRetry} from './http.js';
+import {getTarballUrl, resolveLatestReleaseTarballUrl} from './tarball.js';
 
 /**
  * Files outside the sample dir that the future dependency-resolution step
@@ -115,15 +76,26 @@ export async function extractSampleFromTarball(
   });
 
   await pipeline(source, extractor);
-  return join(destDir, samplePath);
+
+  const sampleDir = join(destDir, samplePath);
+  if (!(await pathExists(sampleDir))) {
+    throw new Error(
+      `The selected template was not found in the downloaded archive ` +
+        `(expected "${samplePath}"). It may not be available in the targeted ` +
+        `release — update @coveo/create-ui, or pass --ref to a branch, tag, or ` +
+        `commit that contains it.`
+    );
+  }
+  return sampleDir;
 }
 
 /**
- * Downloads the given ref's tarball and extracts the sample into `destDir`.
+ * Resolves the template's tarball URL and extracts the sample into `destDir`.
  *
- * Uses the documented GitHub REST API endpoint which returns a 302 redirect.
- * A `User-Agent` header is required by the GitHub API. When `ref` is omitted,
- * `getTarballUrl` falls back to its default ref.
+ * With `--ref`, downloads that exact ref; otherwise resolves the repository's
+ * latest published release (see `resolveLatestReleaseTarballUrl`). Uses the
+ * documented GitHub REST API endpoint, which returns a 302 redirect; a
+ * `User-Agent` header is required by the API.
  *
  * @see https://docs.github.com/en/rest/repos/contents#download-a-repository-archive-tar
  */
@@ -132,11 +104,15 @@ export async function downloadTemplate(options: {
   destDir: string;
   ref?: string;
 }): Promise<string> {
-  const url = getTarballUrl(options.ref);
+  // An explicit --ref overrides resolution; otherwise pull the latest release
+  // (ADR 001, #3).
+  const url = options.ref
+    ? getTarballUrl(options.ref)
+    : await resolveLatestReleaseTarballUrl();
 
   const response = await fetchWithRetry(url, {
     headers: {
-      'User-Agent': 'coveo-create-ui',
+      'User-Agent': USER_AGENT,
       Accept: 'application/vnd.github+json',
     },
   });
