@@ -46,16 +46,15 @@ Use `GET https://api.github.com/repos/{owner}/{repo}/tarball/{ref}`, send a `Use
 - **Important nuance:** GitHub still *serves the bytes from codeload* — the `302` points there with a short-lived signed token. We are not avoiding codeload's servers; we are avoiding **hardcoding its URL**. We discover that URL dynamically from the redirect every request, so if GitHub changes codeload's topology we keep working. Same bytes, supported contract.
 - Unauthenticated rate limit is 60 requests/hour/IP — ample for scaffolding.
 
-### 3. Download from the latest in-major **release**, not from `main`
+### 3. Download from the latest **release**, not from `main`
 
-The ref is resolved to the **latest release within the major this CLI targets**, per library. `main` is never used as the default.
+The ref is resolved to the **latest published release** of the repository — **not** pinned to a major. `main` is never used as the default.
 
 - **Why not `main`:** samples reference `@coveo/headless`/`@coveo/auth` via `workspace:*`. The dependency-resolution step rewrites those to the version found in `packages/<name>/package.json` **at the downloaded ref**. On `main` that file can hold an in-development or just-bumped version that is **not yet on npm**, producing a project that cannot `install`. `main` can also carry unreleased or broken samples.
 - **Why a release ref is safe:** `ui-kit` releases with changesets, which tags every published package on a single "Version Packages" commit. We verified this: `@coveo/shopify@1.9.35`, `@coveo/headless@3.51.5`, `@coveo/atomic@3.59.6`, and `@coveo/quantic@3.41.0` all resolve to the **same commit** (`80cb575…`). Any release commit is therefore a fully-published, workspace-consistent snapshot — every `workspace:*` resolves to a version that exists on npm. This also retroactively de-risks KIT-5842.
-- **Why pin to the major (option B, not unbounded "latest"):** `templates.ts` hardcodes sample **paths** (e.g. `samples/headless/search-react`). An unbounded "latest release" would instantly serve templates from a future `@coveo/headless@4` / restructured `samples/` layout and silently break resolution for end users with no CLI change. Pinning makes adopting a new major a **deliberate, reviewable** CLI change.
-- **Majors are per-library, not global.** In the release data, `@coveo/headless` is `3.x` while `@coveo/headless-react` is `2.x` and `@coveo/shopify` is `1.x`. So the target major is a per-library constant keyed to each library's flagship package, e.g. `TARGET_MAJORS = { headless: 3, atomic: 3 }`, versioned with the CLI and bumped manually to adopt a new major.
-- **Resolution mechanism:** `GET /repos/{owner}/{repo}/releases?per_page=100` (returns newest-first), take the first `tag_name` matching `@coveo/<library>@<major>.`, and download the release's `tarball_url` **verbatim** (so the `@`/`/` in the tag are never hand-encoded). For a single package's major line, newest-by-date is the highest version, so the first match is the latest in-major release.
-- **Safety net:** after extraction, if the expected `template.path` is absent (a future major moved things), fail with a clear *"this template isn't available in the latest release; please update @coveo/create-ui"* rather than a cryptic `tar`/`ENOENT` error.
+- **Why latest, not pinned to a major:** the earlier draft pinned to a per-library target major (a `TARGET_MAJORS` constant) so that adopting a new major was a deliberate, reviewable CLI change. We reversed this in favour of the simplest rule — **always the latest release** — for two reasons. **(1) Less code:** no `TARGET_MAJORS` constant, no per-library major filtering, and no manual bump-and-release ritual to adopt a major; one lookup serves every template. **(2) A new major is the behaviour we *want*:** serving `@coveo/headless@4`'s samples the moment they ship is exactly the freshness goal, and because it is still a release commit it remains a fully-published, installable snapshot. The one residual risk is a `samples/` **path restructure** that invalidates the hardcoded paths in `templates.ts`; we accept it because (a) the post-extraction safety net below turns it into a clear *"update the CLI"* error rather than a cryptic failure, and (b) we assume `ui-kit` will not restructure samples without updating them in the same coordinated release.
+- **Resolution mechanism:** `GET /repos/{owner}/{repo}/releases/latest` returns the most recent non-prerelease, non-draft release (sorted by the release commit's date); download its `tarball_url` **verbatim** (so the `@`/`/` in the tag are never hand-encoded). No pagination, no tag matching, no major arithmetic. This also **excludes prereleases/drafts**, directly serving the *Stability* criterion. Because changesets tags every package of a release on one "Version Packages" commit (the `80cb575…` example above), every per-package release tag on that commit points at the same commit — hence byte-identical archive content — so it does not matter which tag GitHub labels "latest".
+- **Safety net (now the primary guard):** with no major pin, a future release is served immediately, so post-extraction validation is what protects end users. After extraction, if the expected `template.path` is absent (a release moved or renamed things), fail with a clear *"this template isn't available in the latest release; please update @coveo/create-ui"* rather than a cryptic `tar`/`ENOENT` error.
 - **Escape hatch:** a `--ref <branch|tag|sha>` flag overrides resolution for internal testing (e.g. validating an unreleased sample on `main` or a feature branch). End users get the safe, guaranteed-installable default.
 
 ### 4. Accept downloading the **entire** `coveo/ui-kit` tarball
@@ -75,7 +74,7 @@ We considered having the release workflow build a purpose-made archive (samples 
 - **As a download-size optimization: rejected.** It optimizes a non-problem (see decision 4 — 4.5 MB / 1.3 s) while adding machinery to the **shared** release pipeline that, if it breaks or is skipped, breaks the CLI.
 - **The compelling version — pre-resolving dependencies at release time** (shipping samples with `catalog:`/`workspace:*` already rewritten, which would let KIT-5842's runtime logic disappear) — was also **deferred**, because it collides with decisions already made:
   - The `--ref` escape hatch (decision 3) points at arbitrary refs that have **no** prebuilt asset, so the source-tarball + runtime-resolution path must still exist. We would then maintain **two** code paths — *more* maintenance, not less.
-  - The asset only exists on releases produced after the pipeline change, so "latest in-major release" becomes "latest release *that has the asset*" — extra resolution logic.
+  - The asset only exists on releases produced after the pipeline change, so "latest release" becomes "latest release *that has the asset*" — extra resolution logic.
 - **Revisit when:** KIT-5842's *runtime* resolution proves genuinely painful or unreliable. At that point relocating resolution to release-time (using pnpm's own tooling in CI) becomes worth the pipeline change, and we would commit to asset-only and drop or restrict `--ref`. Until then, the single uniform download path wins.
 
 ### 6. CLI argument parsing: `commander`
@@ -104,17 +103,17 @@ The interactive selection flow (when `--template` is omitted) is the next design
 
 - **Runtime dependencies:** `commander` + `tar` (`fetch` is native). `minimist` and `@types/minimist` are removed.
 - **New CLI logic to implement** (follows approval of this ADR):
-  - A release-resolution module: `TARGET_MAJORS` constant → `/releases` lookup → matching `tarball_url`.
+  - A release-resolution module: `GET /releases/latest` → `tarball_url` (no `TARGET_MAJORS` constant, no tag matching).
   - The `--ref` override flag.
   - Post-extraction validation of `template.path`.
   - Migration of `index.ts` argument parsing from `minimist` to `commander`, removing the hand-written help/validation.
   - Remove the misleading "the whole-monorepo tarball is large / optimizing the download size is a known follow-up" comment in `download.ts` — measurement (decision 4) disproves the premise.
-- **Adopting a future major** (e.g. `@coveo/headless@4`) is an explicit, reviewed change: bump `TARGET_MAJORS` and cut a CLI release.
+- **Adopting a future major** (e.g. `@coveo/headless@4`) requires **no** CLI change — the next release's samples are served automatically. The only thing that can force a CLI change is a `samples/` **path restructure**, which the post-extraction safety net surfaces as a clear *"update the CLI"* error.
 - **A known, accepted trade-off:** we download the entire `ui-kit` repository (~4.5 MB) to extract ~50 KB. This is intentional — it is fast, and every alternative is either worse (rate limits), heavier (a `git` dependency), or higher-maintenance (a dual-path release asset).
 
 ## Related Links
 
 - [GitHub REST API — Download a repository archive (tar)](https://docs.github.com/en/rest/repos/contents#download-a-repository-archive-tar)
-- [GitHub REST API — List releases](https://docs.github.com/en/rest/releases/releases#list-releases)
+- [GitHub REST API — Get the latest release](https://docs.github.com/en/rest/releases/releases#get-the-latest-release)
 - KIT-5842 — resolve monorepo-only dependency protocols (`catalog:`, `workspace:*`) so samples install standalone
 - KIT-5833 — link to the "How to use @coveo/create-ui" guide (pending)
