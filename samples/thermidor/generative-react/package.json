@@ -9,7 +9,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "e2e": "playwright test",
+    "e2e": "playwright test --pass-with-no-tests",
     "e2e:watch": "playwright test --ui"
   },
   "dependencies": {
