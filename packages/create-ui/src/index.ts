@@ -1,13 +1,12 @@
 #!/usr/bin/env node
 import minimist from 'minimist';
-import {mkdtemp, rm} from 'node:fs/promises';
+import {mkdir, mkdtemp, rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {argv} from 'node:process';
 import {downloadTemplate} from './download.js';
-import {dirExists, isEmptyOrMissing} from './fs-utils.js';
-import {resolveSampleDependencies} from './resolve-deps.js';
+import {isEmptyOrMissing} from './fs-utils.js';
 import {finalizeProject, installDependencies} from './setup.js';
 import {getTemplate, getTemplates, type Template} from './templates.js';
 import {formatError, getPackageManager, log} from './utils.js';
@@ -63,14 +62,33 @@ export function parseArgs(rawArgs: string[]): CliArgs {
   };
 }
 
+/**
+ * Atomically claims the target directory. Returns true if this call created it
+ * (so it is safe to remove on failure), or false if it already existed and is
+ * empty (pre-existing — must not be deleted). Throws if it exists and is not
+ * empty. A single `mkdir` avoids the check-then-create TOCTOU race.
+ */
+async function claimTargetDir(targetDir: string): Promise<boolean> {
+  const firstCreated = await mkdir(targetDir, {recursive: true});
+  if (firstCreated !== undefined) {
+    return true;
+  }
+  if (!(await isEmptyOrMissing(targetDir))) {
+    throw new Error(
+      `Target directory "${targetDir}" already exists and is not empty.`
+    );
+  }
+  return false;
+}
+
 /** Downloads, resolves, finalizes, and installs the chosen template. */
 export async function scaffold(
   template: Template,
   projectName: string
 ): Promise<void> {
   const targetDir = resolve(process.cwd(), projectName);
-  const dirExisted = await dirExists(targetDir);
   const tempDir = await mkdtemp(join(tmpdir(), 'create-ui-'));
+  let createdTargetDir = false;
 
   try {
     log.step(`Downloading the "${template.name}" template…`);
@@ -79,13 +97,16 @@ export async function scaffold(
       destDir: tempDir,
     });
 
-    log.step('Resolving dependencies…');
-    await resolveSampleDependencies({sampleDir, treeRoot: tempDir});
+    // TODO: (KIT-5842): resolve monorepo-only dependency protocols (catalog:,
+    // workspace:*) in the sample's package.json so it installs standalone.
+    // The download step already extracts the support files resolution needs.
+    // https://coveord.atlassian.net/browse/KIT-5842
 
     log.step(`Creating project in ${targetDir}…`);
+    createdTargetDir = await claimTargetDir(targetDir);
     await finalizeProject({sampleDir, targetDir, projectName});
   } catch (error) {
-    if (!dirExisted) {
+    if (createdTargetDir) {
       await rm(targetDir, {recursive: true, force: true});
     }
     throw error;
