@@ -10,7 +10,7 @@ import {dirExists, isEmptyOrMissing} from './fs-utils.js';
 import {resolveSampleDependencies} from './resolve-deps.js';
 import {finalizeProject, installDependencies} from './setup.js';
 import {getTemplate, getTemplates, type Template} from './templates.js';
-import {detectPackageManager, log} from './utils.js';
+import {getPackageManager, log} from './utils.js';
 
 const HELP = `
 Usage: npm create @coveo/ui <project-name> --template <name>
@@ -93,9 +93,9 @@ export async function scaffold(
     await rm(tempDir, {recursive: true, force: true});
   }
 
-  const pm = detectPackageManager();
+  const pm = getPackageManager(true);
   log.step(`Installing dependencies with ${pm}…`);
-  const installed = installDependencies(targetDir, pm);
+  const installed = installDependencies(targetDir);
 
   log.step('Done!');
   log.info(`\n  cd ${projectName}`);

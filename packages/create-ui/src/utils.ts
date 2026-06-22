@@ -2,7 +2,7 @@
  * Shared helpers: logging and package-manager detection.
  */
 
-export const appendCmdIfWindows = (cmd: string) =>
+const appendCmdIfWindows = (cmd: string) =>
   `${cmd}${process.platform === 'win32' ? '.ps1' : ''}`;
 
 const DEFAULT_PACKAGE_MANAGER = 'npm';

@@ -4,16 +4,11 @@
  */
 
 import {spawnSync} from 'node:child_process';
-import {cp, readFile, rm, writeFile, access} from 'node:fs/promises';
+import {cp, readFile, rm, writeFile} from 'node:fs/promises';
 import {basename, join} from 'node:path';
-import type {PackageManager} from './utils.js';
-
-interface PackageJson {
-  name?: string;
-  private?: boolean;
-  version?: string;
-  [key: string]: unknown;
-}
+import {pathExists} from './fs-utils.js';
+import type {PackageJson} from './types.js';
+import {getPackageManager} from './utils.js';
 
 const DEFAULT_GITIGNORE = ['node_modules', 'dist', '.DS_Store'].join('\n');
 
@@ -48,25 +43,7 @@ export function finalizePackageJson(
 ): PackageJson {
   const next: PackageJson = {...pkg, name: toPackageName(projectName)};
   delete next.private;
-  next.version = '0.1.0';
   return next;
-}
-
-async function exists(path: string): Promise<boolean> {
-  try {
-    await access(path);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-/** Returns the install command for the detected package manager. */
-function installCommand(pm: PackageManager): {
-  command: string;
-  args: string[];
-} {
-  return {command: pm, args: ['install']};
 }
 
 /**
@@ -87,7 +64,7 @@ export async function finalizeProject(options: {
     `${JSON.stringify(finalizePackageJson(pkg, projectName), null, 2)}\n`
   );
 
-  if (!(await exists(join(sampleDir, '.gitignore')))) {
+  if (!(await pathExists(join(sampleDir, '.gitignore')))) {
     await writeFile(join(sampleDir, '.gitignore'), `${DEFAULT_GITIGNORE}\n`);
   }
 
@@ -98,13 +75,9 @@ export async function finalizeProject(options: {
   }
 }
 
-/** Runs `<pm> install` in the target directory. Returns true on success. */
-export function installDependencies(
-  targetDir: string,
-  pm: PackageManager
-): boolean {
-  const {command, args} = installCommand(pm);
-  const result = spawnSync(command, args, {
+/** Runs the detected package manager's install in `targetDir`. Returns true on success. */
+export function installDependencies(targetDir: string): boolean {
+  const result = spawnSync(getPackageManager(), ['install'], {
     cwd: targetDir,
     stdio: 'inherit',
     shell: process.platform === 'win32',
