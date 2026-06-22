@@ -43,6 +43,7 @@ export function finalizePackageJson(
 ): PackageJson {
   const next: PackageJson = {...pkg, name: toPackageName(projectName)};
   delete next.private;
+  next.version = '0.1.0';
   return next;
 }
 
