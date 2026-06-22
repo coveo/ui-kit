@@ -37,6 +37,8 @@ export async function fetchWithRetry(
       if (response.ok && response.body) {
         return response;
       }
+      // Drain the body to free resources before retrying.
+      await response.body?.cancel();
       lastError = new Error(`${response.status} ${response.statusText}`);
     } catch (error) {
       lastError = error;
