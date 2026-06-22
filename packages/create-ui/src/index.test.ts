@@ -18,16 +18,35 @@ describe('parseArgs', () => {
     expect(args.template).toBe('headless-search-react');
   });
 
-  it('parses boolean flags (-h, --docs) and defaults them to false', () => {
-    expect(parseArgs(['-h']).help).toBe(true);
+  it('reads the advanced --ref flag', () => {
+    const args = parseArgs([
+      'my-app',
+      '--template',
+      'headless-search-react',
+      '--ref',
+      'my-feature-branch',
+    ]);
+    expect(args.ref).toBe('my-feature-branch');
+  });
+
+  it('parses --docs and leaves optional flags undefined/false by default', () => {
     expect(parseArgs(['--docs']).docs).toBe(true);
     const none = parseArgs([]);
-    expect(none.help).toBe(false);
     expect(none.docs).toBe(false);
+    expect(none.ref).toBeUndefined();
+    expect(none.template).toBeUndefined();
   });
 });
 
 describe('main', () => {
+  it('returns 0 for --help (commander prints the usage)', async () => {
+    const out = vi
+      .spyOn(process.stdout, 'write')
+      .mockImplementation(() => true);
+    expect(await main(['--help'])).toBe(0);
+    out.mockRestore();
+  });
+
   it('returns 0 for --docs and prints the documentation links', async () => {
     const spy = vi.spyOn(console, 'log').mockImplementation(() => {});
     expect(await main(['--docs'])).toBe(0);

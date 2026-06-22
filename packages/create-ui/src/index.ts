@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import minimist from 'minimist';
+import {Command, CommanderError} from 'commander';
 import {mkdir, mkdtemp, rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join, resolve} from 'node:path';
@@ -10,26 +10,6 @@ import {isEmptyOrMissing} from './fs-utils.js';
 import {finalizeProject, installDependencies} from './setup.js';
 import {getTemplate, getTemplates, type Template} from './templates.js';
 import {formatError, getPackageManager, log} from './utils.js';
-
-const HELP = `
-Usage: npm create @coveo/ui <project-name> --template <name>
-
-Scaffold a Coveo UI project from the official samples. Runs with zero
-configuration against the sample organization — no credentials required.
-
-Options:
-  --template <name>   Template to scaffold (skips the interactive prompt)
-  --docs              Print links to the Coveo documentation
-  -h, --help          Show this help
-
-Available templates:
-${getTemplates()
-  .map((t) => `  ${t.name.padEnd(26)} ${t.description}`)
-  .join('\n')}
-
-Example:
-  npm create @coveo/ui my-app --template headless-search-react
-`;
 
 // TODO: (KIT-5833): add a link to the "How to use @coveo/create-ui" guide here
 // once that documentation page is published.
@@ -44,21 +24,60 @@ Coveo documentation:
 export interface CliArgs {
   projectName?: string;
   template?: string;
-  help: boolean;
+  /** Advanced: branch, tag, or commit SHA to pull templates from. */
+  ref?: string;
   docs: boolean;
 }
 
+/**
+ * Builds the commander program. `commander` owns usage/`--help` generation,
+ * option parsing, and unknown-option errors; domain validation (known
+ * template, project name) stays in `main`. `exitOverride` turns commander's
+ * `process.exit` into a thrown `CommanderError` so the CLI stays testable.
+ */
+function buildProgram(): Command {
+  return new Command()
+    .name('create-ui')
+    .usage('<project-name> --template <name>')
+    .description(
+      'Scaffold a Coveo UI project from the official samples. Runs with zero ' +
+        'configuration against the sample organization — no credentials required.'
+    )
+    .argument('[project-name]', 'name (and directory) of the project to create')
+    .option(
+      '--template <name>',
+      'template to scaffold (skips the interactive prompt)'
+    )
+    .option(
+      '--ref <ref>',
+      'advanced: branch, tag, or commit SHA to pull templates from'
+    )
+    .option('--docs', 'print links to the Coveo documentation')
+    .addHelpText(
+      'after',
+      `\nAvailable templates:\n${getTemplates()
+        .map((t) => `  ${t.name.padEnd(26)} ${t.description}`)
+        .join(
+          '\n'
+        )}\n\nExample:\n  $ npm create @coveo/ui my-app --template headless-search-react`
+    )
+    .showHelpAfterError()
+    .exitOverride();
+}
+
 export function parseArgs(rawArgs: string[]): CliArgs {
-  const parsed = minimist(rawArgs, {
-    string: ['template'],
-    boolean: ['help', 'docs'],
-    alias: {h: 'help'},
-  });
+  const program = buildProgram();
+  program.parse(rawArgs, {from: 'user'});
+  const opts = program.opts<{
+    template?: string;
+    ref?: string;
+    docs?: boolean;
+  }>();
   return {
-    projectName: parsed._[0],
-    template: parsed.template,
-    help: Boolean(parsed.help),
-    docs: Boolean(parsed.docs),
+    projectName: program.args[0],
+    template: opts.template,
+    ref: opts.ref,
+    docs: Boolean(opts.docs),
   };
 }
 
@@ -84,7 +103,8 @@ async function claimTargetDir(targetDir: string): Promise<boolean> {
 /** Downloads, resolves, finalizes, and installs the chosen template. */
 export async function scaffold(
   template: Template,
-  projectName: string
+  projectName: string,
+  ref?: string
 ): Promise<void> {
   const targetDir = resolve(process.cwd(), projectName);
   const tempDir = await mkdtemp(join(tmpdir(), 'create-ui-'));
@@ -95,6 +115,7 @@ export async function scaffold(
     const sampleDir = await downloadTemplate({
       samplePath: template.path,
       destDir: tempDir,
+      ref,
     });
 
     // TODO: (KIT-5842): resolve monorepo-only dependency protocols (catalog:,
@@ -127,11 +148,17 @@ export async function scaffold(
 }
 
 export async function main(rawArgs: string[]): Promise<number> {
-  const args = parseArgs(rawArgs);
-
-  if (args.help) {
-    log.info(HELP);
-    return 0;
+  let args: CliArgs;
+  try {
+    args = parseArgs(rawArgs);
+  } catch (error) {
+    // `exitOverride` makes commander throw instead of calling process.exit.
+    // `--help` exits 0 (commander already printed help); parse errors exit
+    // non-zero (commander already printed the message + usage).
+    if (error instanceof CommanderError) {
+      return error.exitCode;
+    }
+    throw error;
   }
 
   if (args.docs) {
@@ -142,8 +169,12 @@ export async function main(rawArgs: string[]): Promise<number> {
   // Interactive selection is added in a follow-up PR; for now --template and a
   // project name are required.
   if (args.template === undefined) {
-    log.error('Please provide a template with --template.');
-    log.info(HELP);
+    log.error('Please provide a template with --template (or run --help).');
+    log.info(
+      `\nAvailable templates:\n${getTemplates()
+        .map((t) => `  ${t.name}`)
+        .join('\n')}`
+    );
     return 1;
   }
 
@@ -173,7 +204,7 @@ export async function main(rawArgs: string[]): Promise<number> {
     return 1;
   }
 
-  await scaffold(template, args.projectName);
+  await scaffold(template, args.projectName, args.ref);
   return 0;
 }
 

@@ -35,11 +35,10 @@
     "clean": "node ../../utils/ci/rm-rf.mjs dist"
   },
   "dependencies": {
-    "minimist": "1.2.8",
+    "commander": "15.0.0",
     "tar": "7.5.16"
   },
   "devDependencies": {
-    "@types/minimist": "1.2.5",
     "@types/node": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"

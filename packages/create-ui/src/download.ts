@@ -122,15 +122,17 @@ export async function extractSampleFromTarball(
  * Downloads the given ref's tarball and extracts the sample into `destDir`.
  *
  * Uses the documented GitHub REST API endpoint which returns a 302 redirect.
- * A `User-Agent` header is required by the GitHub API.
+ * A `User-Agent` header is required by the GitHub API. When `ref` is omitted,
+ * `getTarballUrl` falls back to its default ref.
  *
  * @see https://docs.github.com/en/rest/repos/contents#download-a-repository-archive-tar
  */
 export async function downloadTemplate(options: {
   samplePath: string;
   destDir: string;
+  ref?: string;
 }): Promise<string> {
-  const url = getTarballUrl();
+  const url = getTarballUrl(options.ref);
 
   const response = await fetchWithRetry(url, {
     headers: {
