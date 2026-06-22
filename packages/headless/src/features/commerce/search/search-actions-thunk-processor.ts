@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import type {UnknownAction} from '@reduxjs/toolkit';
 import type {ThunkDispatch} from 'redux-thunk';
 import {
@@ -126,8 +125,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     const {queryCorrection} = successResponse;
 
     const shouldExecuteQueryCorrection =
-      !isNullOrUndefined(queryCorrection) &&
-      !isNullOrUndefined(queryCorrection.correctedQuery);
+      queryCorrection != null && queryCorrection.correctedQuery != null;
 
     if (!shouldExecuteQueryCorrection) {
       return null;

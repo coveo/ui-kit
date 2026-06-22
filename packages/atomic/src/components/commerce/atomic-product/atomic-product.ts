@@ -78,8 +78,7 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
    *
    * @default - An `atomic-product-link` without any customization.
    */
-  @property({type: Object, attribute: 'link-content'}) linkContent: ParentNode =
-    new DocumentFragment();
+  @property({type: Object}) linkContent: ParentNode = new DocumentFragment();
 
   /**
    * How products should be displayed.
@@ -253,7 +252,7 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
   }
 
   private getLinkHTML() {
-    return parentNodeToString(this.linkContent ?? new HTMLElement());
+    return this.linkContent ? parentNodeToString(this.linkContent) : '';
   }
 
   public render() {

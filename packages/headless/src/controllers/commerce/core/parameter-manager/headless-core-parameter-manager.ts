@@ -1,4 +1,4 @@
-import {RecordValue, Schema, type SchemaDefinition} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import type {UnknownAction} from '@reduxjs/toolkit';
 import type {
   CommerceEngine,
@@ -36,9 +36,9 @@ export interface CoreParameterManagerProps<
   T extends Parameters,
 > extends ParameterManagerProps<T> {
   /**
-   * The definition of the parameters.
+   * The Zod schema for validating the parameters.
    */
-  parametersDefinition: SchemaDefinition<Required<T>>;
+  parametersDefinition: z.ZodMiniType<Required<T>>;
 
   /**
    * The selector to retrieve the active parameters from the state.
@@ -64,13 +64,10 @@ export interface ParameterManagerInitialState<T> {
 }
 
 const initialStateSchema = <T extends Parameters>(
-  parametersDefinition: SchemaDefinition<Required<T>>
+  parametersDefinition: z.ZodMiniType<Required<T>>
 ) =>
-  new Schema<Required<ParameterManagerInitialState<T>>>({
-    parameters: new RecordValue({
-      options: {required: true},
-      values: parametersDefinition as SchemaDefinition<Record<string, object>>,
-    }),
+  z.object({
+    parameters: parametersDefinition,
   });
 
 /**

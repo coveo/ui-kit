@@ -1,4 +1,4 @@
-import type {SchemaDefinition} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import type {Parameters} from '../../../../features/commerce/parameters/parameters-actions.js';
 import type {CommerceSearchParameters} from '../../../../features/commerce/search-parameters/search-parameters-actions.js';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state.js';
@@ -43,7 +43,7 @@ describe('sub-controllers', () => {
   const mockFacetResponseSelector = vi.fn();
   const mockIsFacetLoadingResponseSelector = vi.fn();
   const mockRequestIdSelector = vi.fn();
-  const mockParametersDefinition = {};
+  const mockParametersDefinition = z.object({});
   const mockActiveParametersSelector = vi.fn();
   const mockRestoreActionCreator = vi.fn();
   const mockSerializer = {
@@ -78,7 +78,7 @@ describe('sub-controllers', () => {
         isFacetLoadingResponseSelector: mockIsFacetLoadingResponseSelector,
         requestIdSelector: mockRequestIdSelector,
         serializer: mockSerializer,
-        parametersDefinition: mockParametersDefinition as SchemaDefinition<
+        parametersDefinition: mockParametersDefinition as z.ZodMiniType<
           Required<CommerceSearchParameters>
         >,
         activeParametersSelector: mockActiveParametersSelector,
@@ -159,7 +159,7 @@ describe('sub-controllers', () => {
         isFacetLoadingResponseSelector: mockIsFacetLoadingResponseSelector,
         requestIdSelector: mockRequestIdSelector,
         serializer: mockSerializer,
-        parametersDefinition: mockParametersDefinition as SchemaDefinition<
+        parametersDefinition: mockParametersDefinition as z.ZodMiniType<
           Required<Parameters>
         >,
         activeParametersSelector: mockActiveParametersSelector,
@@ -235,7 +235,7 @@ describe('sub-controllers', () => {
         isFacetLoadingResponseSelector: mockIsFacetLoadingResponseSelector,
         requestIdSelector: mockRequestIdSelector,
         serializer: mockSerializer,
-        parametersDefinition: mockParametersDefinition as SchemaDefinition<
+        parametersDefinition: mockParametersDefinition as z.ZodMiniType<
           Required<Parameters>
         >,
         activeParametersSelector: mockActiveParametersSelector,
@@ -321,7 +321,7 @@ describe('sub-controllers', () => {
       );
       expect(buildCoreParameterManager).toHaveBeenCalledWith(engine, {
         ...props,
-        parametersDefinition: mockParametersDefinition as SchemaDefinition<
+        parametersDefinition: mockParametersDefinition as z.ZodMiniType<
           Required<Parameters>
         >,
         activeParametersSelector: mockActiveParametersSelector,

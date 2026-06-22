@@ -1,12 +1,9 @@
-import {Schema, StringValue} from '@coveo/bueno';
-import type {RecommendationsOptions} from '../../../controllers/commerce/recommendations/headless-recommendations.js';
+import * as z from '@coveo/bueno/zod';
 import {requiredNonEmptyString} from '../../../utils/validate-payload.js';
 
-export const recommendationsSlotDefinition = {
+export const recommendationsSlotDefinition = z.object({
   slotId: requiredNonEmptyString,
-  productId: new StringValue({required: false, emptyAllowed: false}),
-};
+  productId: z.optional(z.string().check(z.minLength(1))),
+});
 
-export const recommendationsOptionsSchema = new Schema<RecommendationsOptions>(
-  recommendationsSlotDefinition
-);
+export const recommendationsOptionsSchema = recommendationsSlotDefinition;

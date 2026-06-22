@@ -1,3 +1,4 @@
+import * as z from '@coveo/bueno/zod';
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import HistoryStore from '../../api/analytics/coveo.analytics/history-store.js';
 import {
@@ -244,9 +245,12 @@ export const fetchQuerySuggestions = createAsyncThunk<
     payload: {id: string},
     {getState, rejectWithValue, extra: {apiClient, validatePayload}}
   ) => {
-    validatePayload(payload, {
-      id: requiredNonEmptyString,
-    });
+    validatePayload(
+      payload,
+      z.object({
+        id: requiredNonEmptyString,
+      })
+    );
     const id = payload.id;
     const request = await buildInsightQuerySuggestRequest(id, getState());
     const response = await apiClient.querySuggest(request);

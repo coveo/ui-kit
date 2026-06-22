@@ -1,6 +1,12 @@
-import {ArrayValue, RecordValue, Schema, StringValue} from '@coveo/bueno';
-import {facetResultsMustMatch} from '../../../../features/facets/facet-api/request.js';
-import {facetSortCriteria} from '../../../../features/facets/facet-set/interfaces/request.js';
+import * as z from '@coveo/bueno/zod';
+import {
+  type FacetResultsMustMatch,
+  facetResultsMustMatch,
+} from '../../../../features/facets/facet-api/request.js';
+import {
+  type FacetSortCriterion,
+  facetSortCriteria,
+} from '../../../../features/facets/facet-set/interfaces/request.js';
 import {
   allowedValues,
   customSort,
@@ -43,23 +49,29 @@ export interface FacetOptions extends CoreFacetOptions {
   customSort?: string[];
 }
 
-export const facetOptionsSchema = new Schema<Required<FacetOptions>>({
+export const facetOptionsSchema = z.object({
   facetId,
   field,
-  tabs: new RecordValue({
-    options: {
-      required: false,
-    },
-    values: {
-      included: new ArrayValue({each: new StringValue()}),
-      excluded: new ArrayValue({each: new StringValue()}),
-    },
-  }),
+  tabs: z.optional(
+    z.object({
+      included: z.optional(z.array(z.string())),
+      excluded: z.optional(z.array(z.string())),
+    })
+  ),
   filterFacetCount,
   injectionDepth,
   numberOfValues,
-  sortCriteria: new StringValue({constrainTo: facetSortCriteria}),
-  resultsMustMatch: new StringValue({constrainTo: facetResultsMustMatch}),
+  sortCriteria: z.optional(
+    z.enum(facetSortCriteria as [FacetSortCriterion, ...FacetSortCriterion[]])
+  ),
+  resultsMustMatch: z.optional(
+    z.enum(
+      facetResultsMustMatch as [
+        FacetResultsMustMatch,
+        ...FacetResultsMustMatch[],
+      ]
+    )
+  ),
   facetSearch,
   allowedValues,
   customSort,

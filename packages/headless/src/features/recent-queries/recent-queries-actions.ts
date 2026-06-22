@@ -1,4 +1,4 @@
-import {ArrayValue, NumberValue, StringValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {createAction} from '@reduxjs/toolkit';
 import {validatePayload} from '../../utils/validate-payload.js';
 
@@ -13,13 +13,10 @@ export interface RegisterRecentQueriesCreatorPayload {
   maxLength: number;
 }
 
-export const registerRecentQueriesPayloadDefinition = {
-  queries: new ArrayValue({
-    required: true,
-    each: new StringValue({emptyAllowed: false}),
-  }),
-  maxLength: new NumberValue({required: true, min: 1, default: 10}),
-};
+export const registerRecentQueriesPayloadDefinition = z.object({
+  queries: z.array(z.string().check(z.minLength(1))),
+  maxLength: z.number().check(z.minimum(1)),
+});
 
 export const registerRecentQueries = createAction(
   'recentQueries/registerRecentQueries',

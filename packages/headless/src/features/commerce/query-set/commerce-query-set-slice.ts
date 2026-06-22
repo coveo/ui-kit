@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import {createReducer} from '@reduxjs/toolkit';
 import {
   getQuerySetInitialState,
@@ -45,7 +44,7 @@ function handleRestoreSearchParameters(
     payload: CommerceSearchParameters;
   }
 ) {
-  if (!isNullOrUndefined(action.payload.q)) {
+  if (action.payload.q != null) {
     updateAllQuerySetQuery(state, action.payload.q);
   }
 }

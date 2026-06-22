@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import {createReducer} from '@reduxjs/toolkit';
 import {change} from '../history/history-actions.js';
 import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions.js';
@@ -55,7 +54,7 @@ function handleRestoreSearchParameters(
     payload: SearchParameters;
   }
 ) {
-  if (!isNullOrUndefined(action.payload.q)) {
+  if (action.payload.q != null) {
     updateAllQuerySetQuery(state, action.payload.q);
   }
 }

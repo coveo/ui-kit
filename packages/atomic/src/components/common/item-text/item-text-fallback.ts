@@ -1,4 +1,3 @@
-import {isUndefined} from '@coveo/bueno';
 import {html, nothing} from 'lit';
 import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils.js';
 import {possiblyWarnOnBadFieldType} from './field-warning.js';
@@ -21,7 +20,7 @@ export const renderItemTextFallback: FunctionalComponentWithChildren<
     const raw = getProperty(item, field);
     possiblyWarnOnBadFieldType(field, raw, host, logger);
 
-    if (isUndefined(defaultValue)) {
+    if (defaultValue === undefined) {
       host.remove();
       return nothing;
     } else {

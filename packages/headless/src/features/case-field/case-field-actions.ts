@@ -1,3 +1,4 @@
+import * as z from '@coveo/bueno/zod';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {getVisitorID} from '../../api/analytics/coveo-analytics-utils.js';
 import {getOrganizationEndpoint} from '../../api/platform-client.js';
@@ -33,19 +34,25 @@ export interface SetCaseFieldActionCreatorPayload {
 export const registerCaseField = createAction(
   'caseAssist/caseField/register',
   (payload: SetCaseFieldActionCreatorPayload) =>
-    validatePayload(payload, {
-      fieldName: requiredNonEmptyString,
-      fieldValue: requiredEmptyAllowedString,
-    })
+    validatePayload(
+      payload,
+      z.object({
+        fieldName: requiredNonEmptyString,
+        fieldValue: requiredEmptyAllowedString,
+      })
+    )
 );
 
 export const updateCaseField = createAction(
   'caseAssist/caseField/update',
   (payload: SetCaseFieldActionCreatorPayload) =>
-    validatePayload(payload, {
-      fieldName: requiredNonEmptyString,
-      fieldValue: requiredEmptyAllowedString,
-    })
+    validatePayload(
+      payload,
+      z.object({
+        fieldName: requiredNonEmptyString,
+        fieldValue: requiredEmptyAllowedString,
+      })
+    )
 );
 
 export interface FetchClassificationsThunkReturn {

@@ -1,10 +1,4 @@
-import {
-  ArrayValue,
-  BooleanValue,
-  NumberValue,
-  Schema,
-  StringValue,
-} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../app/state-key.js';
 import type {UpdateQueryPayload} from '../../../features/commerce/query/query-actions.js';
@@ -63,14 +57,14 @@ const defaultRecentQueriesOptions: Required<RecentQueriesListOptions> = {
   enableResults: false,
 };
 
-const initialStateSchema = new Schema<RecentQueriesListInitialState>({
-  queries: new ArrayValue({required: true}),
+const initialStateSchema = z.object({
+  queries: z.array(z.unknown()),
 });
 
-const optionsSchema = new Schema<RecentQueriesListOptions>({
-  maxLength: new NumberValue({required: true, min: 1}),
-  clearFilters: new BooleanValue(),
-  enableResults: new BooleanValue(),
+const optionsSchema = z.object({
+  maxLength: z.number().check(z.minimum(1)),
+  clearFilters: z.optional(z.boolean()),
+  enableResults: z.optional(z.boolean()),
 });
 
 /**
@@ -201,13 +195,10 @@ export function buildRecentQueriesList(
     },
 
     updateRecentQueries(queries: string[]) {
-      const errorMessage = new ArrayValue({
-        required: true,
-        each: new StringValue({required: true}),
-        min: 1,
-      }).validate(queries);
-      if (errorMessage) {
-        throw new Error(errorMessage);
+      const queriesSchema = z.array(z.string()).check(z.minLength(1));
+      const result = queriesSchema.safeParse(queries);
+      if (!result.success) {
+        throw new Error(result.error.message);
       }
 
       dispatch(
@@ -219,13 +210,12 @@ export function buildRecentQueriesList(
     },
 
     executeRecentQuery(index: number) {
-      const errorMessage = new NumberValue({
-        required: true,
-        min: 0,
-        max: this.state.queries.length,
-      }).validate(index);
-      if (errorMessage) {
-        throw new Error(errorMessage);
+      const indexSchema = z
+        .number()
+        .check(z.minimum(0), z.maximum(this.state.queries.length));
+      const result = indexSchema.safeParse(index);
+      if (!result.success) {
+        throw new Error(result.error.message);
       }
 
       const queryOptions: UpdateQueryPayload &

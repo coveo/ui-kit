@@ -1,4 +1,4 @@
-import {RecordValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {
   requiredEmptyAllowedString,
   requiredNonEmptyString,
@@ -15,20 +15,14 @@ export interface QuestionAnsweringInlineLinkActionCreatorPayload {
 }
 
 export const uniqueIdentifierPayloadDefinition = () =>
-  new RecordValue({
-    values: {
-      questionAnswerId: requiredNonEmptyString,
-    },
-    options: {required: true},
+  z.object({
+    questionAnswerId: requiredNonEmptyString,
   });
 
 export const inlineLinkPayloadDefinition = () =>
-  new RecordValue({
-    values: {
-      linkText: requiredEmptyAllowedString,
-      linkURL: requiredEmptyAllowedString,
-    },
-    options: {required: true},
+  z.object({
+    linkText: requiredEmptyAllowedString,
+    linkURL: requiredEmptyAllowedString,
   });
 
 export function validateQuestionAnsweringActionCreatorPayload(

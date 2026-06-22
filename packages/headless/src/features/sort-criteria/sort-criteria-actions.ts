@@ -1,11 +1,17 @@
-import {EnumValue, isArray, type SchemaDefinition} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {createAction} from '@reduxjs/toolkit';
 import {validatePayload} from '../../utils/validate-payload.js';
 import {SortBy, type SortCriterion} from './criteria.js';
 
-const criterionDefinition = {
-  by: new EnumValue<SortBy>({enum: SortBy, required: true}),
-} as SchemaDefinition<SortCriterion>;
+const criterionDefinition = z.object({
+  by: z.enum([
+    SortBy.Relevancy,
+    SortBy.QRE,
+    SortBy.Date,
+    SortBy.Field,
+    SortBy.NoSort,
+  ]),
+});
 
 export const registerSortCriterion = createAction(
   'sortCriteria/register',
@@ -18,7 +24,7 @@ export const updateSortCriterion = createAction(
 );
 
 const validate = (payload: SortCriterion | SortCriterion[]) => {
-  if (isArray(payload)) {
+  if (Array.isArray(payload)) {
     payload.forEach((p) => validatePayload(p, criterionDefinition));
     return {payload};
   }

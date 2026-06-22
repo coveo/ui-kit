@@ -1,4 +1,3 @@
-import {isUndefined} from '@coveo/bueno';
 import type {NumericFacet} from '@coveo/headless/commerce';
 import {css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
@@ -102,11 +101,11 @@ export class AtomicCommerceFacetNumberInput
   }
 
   private get minimumInputValue(): number {
-    return isUndefined(this.start) ? this.absoluteMinimum : this.start!;
+    return this.start === undefined ? this.absoluteMinimum : this.start!;
   }
 
   private get maximumInputValue() {
-    return isUndefined(this.end) ? Number.MAX_SAFE_INTEGER : this.end!;
+    return this.end === undefined ? Number.MAX_SAFE_INTEGER : this.end!;
   }
 
   private get startValue() {

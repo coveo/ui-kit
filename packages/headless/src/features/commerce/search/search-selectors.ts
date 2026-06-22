@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import {createSelector} from '@reduxjs/toolkit';
 import type {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response.js';
 import type {
@@ -47,7 +46,7 @@ export const moreProductsAvailableSelector = createSelector(
 
 export const isLoadingSelector = (state: Partial<CommerceSearchSection>) => {
   const isLoading = state.commerceSearch?.isLoading;
-  return isNullOrUndefined(isLoading) ? false : isLoading;
+  return isLoading == null ? false : isLoading;
 };
 
 export const errorSelector = (state: Partial<CommerceSearchSection>) =>
@@ -63,7 +62,7 @@ export const queryExecutedFromResponseSelector = (
   state: CommerceQuerySection,
   response: SearchCommerceSuccessResponse
 ) => {
-  if (!isNullOrUndefined(response.queryCorrection?.correctedQuery)) {
+  if (response.queryCorrection?.correctedQuery != null) {
     return response.queryCorrection.correctedQuery;
   }
 

@@ -1,4 +1,4 @@
-import {ArrayValue, RecordValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {createAction} from '@reduxjs/toolkit';
 import {
   requiredEmptyAllowedString,
@@ -9,7 +9,7 @@ import type {DictionaryFieldContextPayload} from './dictionary-field-context-sta
 export const setContext = createAction(
   'dictionaryFieldContext/set',
   (payload: DictionaryFieldContextPayload) => {
-    const objSchema = new RecordValue({options: {required: true}});
+    const objSchema = z.record(z.string(), z.string());
     const objError = validatePayload(payload, objSchema).error;
 
     if (objError) {
@@ -17,7 +17,7 @@ export const setContext = createAction(
     }
 
     const values = Object.values(payload);
-    const valueSchema = new ArrayValue({each: requiredEmptyAllowedString});
+    const valueSchema = z.array(requiredEmptyAllowedString);
     const valuesError = validatePayload(values, valueSchema).error;
 
     if (valuesError) {
@@ -43,12 +43,9 @@ export interface AddDictionaryFieldContextActionCreatorPayload {
 export const addContext = createAction(
   'dictionaryFieldContext/add',
   (payload: AddDictionaryFieldContextActionCreatorPayload) => {
-    const schema = new RecordValue({
-      options: {required: true},
-      values: {
-        field: requiredEmptyAllowedString,
-        key: requiredEmptyAllowedString,
-      },
+    const schema = z.object({
+      field: requiredEmptyAllowedString,
+      key: requiredEmptyAllowedString,
     });
 
     return validatePayload<AddDictionaryFieldContextActionCreatorPayload>(

@@ -1,4 +1,3 @@
-import {isString} from '@coveo/bueno';
 import {
   API_DATE_FORMAT,
   isSearchApiDate,
@@ -359,7 +358,9 @@ export function castUnknownObject(value: string) {
   const ret: UnknownObject = {};
   Object.entries(jsonParsed).forEach((entry) => {
     const [id, values] = entry;
-    ret[id] = values.map((v) => (isString(v) ? decodeURIComponent(v) : v));
+    ret[id] = values.map((v) =>
+      typeof v === 'string' ? decodeURIComponent(v) : v
+    );
   });
 
   return ret;

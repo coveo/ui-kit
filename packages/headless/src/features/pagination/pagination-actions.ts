@@ -1,8 +1,8 @@
-import {NumberValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {createAction} from '@reduxjs/toolkit';
 import {validatePayload} from '../../utils/validate-payload.js';
 
-const numberValue = new NumberValue({required: true, min: 0});
+const numberValue = z.number().check(z.minimum(0));
 
 export const registerNumberOfResults = createAction(
   'pagination/registerNumberOfResults',

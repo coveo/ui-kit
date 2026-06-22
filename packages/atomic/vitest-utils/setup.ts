@@ -5,7 +5,7 @@ import {fixtureCleanup} from './testing-helpers/fixture-wrapper.js';
 
 vi.mock('@coveo/headless', {spy: true});
 vi.mock('@coveo/headless/commerce', {spy: true});
-vi.mock('@coveo/bueno', {spy: true});
+vi.mock('@coveo/bueno/zod', {spy: true});
 
 // Suppress Lit dev mode warning during tests
 (window.litIssuedWarnings as unknown) ??= new Set();

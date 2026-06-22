@@ -1,11 +1,4 @@
-import {
-  ArrayValue,
-  BooleanValue,
-  NumberValue,
-  RecordValue,
-  StringValue,
-  Value,
-} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {createAction} from '@reduxjs/toolkit';
 import {
   allowedValues,
@@ -116,27 +109,26 @@ export interface RegisterFacetActionCreatorPayload {
   resultsMustMatch?: FacetResultsMustMatch;
 }
 
-const facetRegistrationOptionsDefinition = {
+const facetRegistrationOptionsDefinition = z.object({
   facetId: facetIdDefinition,
-  field: new StringValue({required: true, emptyAllowed: true}),
-  tabs: new RecordValue({
-    options: {
-      required: false,
-    },
-    values: {
-      included: new ArrayValue({each: new StringValue()}),
-      excluded: new ArrayValue({each: new StringValue()}),
-    },
-  }),
-  activeTab: new StringValue({required: false}),
-  filterFacetCount: new BooleanValue({required: false}),
-  injectionDepth: new NumberValue({required: false, min: 0}),
-  numberOfValues: new NumberValue({required: false, min: 1}),
-  sortCriteria: new Value<FacetSortCriterion>({required: false}),
-  resultsMustMatch: new Value<FacetResultsMustMatch>({required: false}),
+  field: z.string(),
+  tabs: z.optional(
+    z.object({
+      included: z.optional(z.array(z.string())),
+      excluded: z.optional(z.array(z.string())),
+    })
+  ),
+  activeTab: z.optional(z.string()),
+  filterFacetCount: z.optional(z.boolean()),
+  injectionDepth: z.optional(z.number().check(z.minimum(0))),
+  numberOfValues: z.optional(z.number().check(z.minimum(1))),
+  sortCriteria: z.optional(z.unknown() as z.ZodMiniType<FacetSortCriterion>),
+  resultsMustMatch: z.optional(
+    z.unknown() as z.ZodMiniType<FacetResultsMustMatch>
+  ),
   allowedValues: allowedValues,
   customSort: customSort,
-};
+}) as z.ZodMiniType<RegisterFacetActionCreatorPayload>;
 
 export const registerFacet = createAction(
   'facet/register',
@@ -159,19 +151,25 @@ export interface ToggleSelectFacetValueActionCreatorPayload {
 export const toggleSelectFacetValue = createAction(
   'facet/toggleSelectValue',
   (payload: ToggleSelectFacetValueActionCreatorPayload) =>
-    validatePayload(payload, {
-      facetId: facetIdDefinition,
-      selection: new RecordValue({values: facetValueDefinition}),
-    })
+    validatePayload(
+      payload,
+      z.object({
+        facetId: facetIdDefinition,
+        selection: facetValueDefinition,
+      }) as z.ZodMiniType<ToggleSelectFacetValueActionCreatorPayload>
+    )
 );
 
 export const toggleExcludeFacetValue = createAction(
   'facet/toggleExcludeValue',
   (payload: ToggleSelectFacetValueActionCreatorPayload) =>
-    validatePayload(payload, {
-      facetId: facetIdDefinition,
-      selection: new RecordValue({values: facetValueDefinition}),
-    })
+    validatePayload(
+      payload,
+      z.object({
+        facetId: facetIdDefinition,
+        selection: facetValueDefinition,
+      }) as z.ZodMiniType<ToggleSelectFacetValueActionCreatorPayload>
+    )
 );
 
 export const deselectAllFacetValues = createAction(
@@ -194,10 +192,13 @@ export interface UpdateFacetSortCriterionActionCreatorPayload {
 export const updateFacetSortCriterion = createAction(
   'facet/updateSortCriterion',
   (payload: UpdateFacetSortCriterionActionCreatorPayload) =>
-    validatePayload(payload, {
-      facetId: facetIdDefinition,
-      criterion: new Value<FacetSortCriterion>({required: true}),
-    })
+    validatePayload(
+      payload,
+      z.object({
+        facetId: facetIdDefinition,
+        criterion: z.unknown() as z.ZodMiniType<FacetSortCriterion>,
+      }) as z.ZodMiniType<UpdateFacetSortCriterionActionCreatorPayload>
+    )
 );
 
 export interface UpdateFacetNumberOfValuesActionCreatorPayload {
@@ -215,10 +216,13 @@ export interface UpdateFacetNumberOfValuesActionCreatorPayload {
 export const updateFacetNumberOfValues = createAction(
   'facet/updateNumberOfValues',
   (payload: UpdateFacetNumberOfValuesActionCreatorPayload) =>
-    validatePayload(payload, {
-      facetId: facetIdDefinition,
-      numberOfValues: new NumberValue({required: true, min: 1}),
-    })
+    validatePayload(
+      payload,
+      z.object({
+        facetId: facetIdDefinition,
+        numberOfValues: z.number().check(z.minimum(1)),
+      }) as z.ZodMiniType<UpdateFacetNumberOfValuesActionCreatorPayload>
+    )
 );
 
 export interface UpdateFacetIsFieldExpandedActionCreatorPayload {
@@ -236,10 +240,13 @@ export interface UpdateFacetIsFieldExpandedActionCreatorPayload {
 export const updateFacetIsFieldExpanded = createAction(
   'facet/updateIsFieldExpanded',
   (payload: UpdateFacetIsFieldExpandedActionCreatorPayload) =>
-    validatePayload(payload, {
-      facetId: facetIdDefinition,
-      isFieldExpanded: new BooleanValue({required: true}),
-    })
+    validatePayload(
+      payload,
+      z.object({
+        facetId: facetIdDefinition,
+        isFieldExpanded: z.boolean(),
+      }) as z.ZodMiniType<UpdateFacetIsFieldExpandedActionCreatorPayload>
+    )
 );
 
 export interface UpdateFreezeCurrentValuesActionCreatorPayload {
@@ -257,8 +264,11 @@ export interface UpdateFreezeCurrentValuesActionCreatorPayload {
 export const updateFreezeCurrentValues = createAction(
   'facet/updateFreezeCurrentValues',
   (payload: UpdateFreezeCurrentValuesActionCreatorPayload) =>
-    validatePayload(payload, {
-      facetId: facetIdDefinition,
-      freezeCurrentValues: new BooleanValue({required: true}),
-    })
+    validatePayload(
+      payload,
+      z.object({
+        facetId: facetIdDefinition,
+        freezeCurrentValues: z.boolean(),
+      }) as z.ZodMiniType<UpdateFreezeCurrentValuesActionCreatorPayload>
+    )
 );

@@ -1,4 +1,4 @@
-import {SchemaValidationError} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import type {Logger} from 'pino';
 import {serializeSchemaValidationError} from '../utils/validate-payload.js';
 import {
@@ -35,6 +35,14 @@ const createLogActionMiddleware = () => {
   return {store, next, invoke, logger};
 };
 
+function createZodValidationError(): z.core.$ZodError {
+  const result = z.string().safeParse(123);
+  if (!result.success) {
+    return result.error;
+  }
+  throw new Error('Expected validation to fail');
+}
+
 describe('logActionErrorMiddleware', () => {
   beforeEach(() => {
     vi.resetAllMocks();
@@ -47,20 +55,18 @@ describe('logActionErrorMiddleware', () => {
     expect(logger.error).not.toHaveBeenCalled();
   });
 
-  it(`when a action has a serialized SchemaValidationError
+  it(`when a action has a serialized Zod validation error
   it should not pass through the middleware`, () => {
     const {next, logger, invoke} = createLogActionErrorMiddleware();
     invoke({
       type: 'foo',
-      error: serializeSchemaValidationError(
-        new SchemaValidationError('no bueno')
-      ),
+      error: serializeSchemaValidationError(createZodValidationError()),
     });
     expect(next).not.toHaveBeenCalled();
     expect(logger.error).toHaveBeenCalled();
   });
 
-  it(`when a action has a serialized Error of any type but SchemaValidationError
+  it(`when a action has a serialized Error of any type but a validation error
   it should pass through the middleware`, () => {
     const {next, logger, invoke} = createLogActionErrorMiddleware();
     invoke({
@@ -76,9 +82,7 @@ describe('logActionErrorMiddleware', () => {
 
   it(`when a action has an error parameter
   it should log an error`, () => {
-    const error = serializeSchemaValidationError(
-      new SchemaValidationError('no bueno')
-    );
+    const error = serializeSchemaValidationError(createZodValidationError());
     const action = {
       type: 'foo',
       error,

@@ -1,11 +1,15 @@
-import {RecordValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {createAction} from '@reduxjs/toolkit';
 import {
   requiredNonEmptyString,
   validatePayload,
 } from '../../../../utils/validate-payload.js';
-import {facetValueDefinition} from '../../../facets/facet-set/facet-set-validate-payload.js';
 import type {LocationFacetValue} from '../facet-set/interfaces/response.js';
+
+const locationFacetValueDefinition = z.object({
+  value: requiredNonEmptyString,
+  state: z.enum(['idle', 'selected', 'excluded']),
+});
 
 export interface ToggleSelectLocationFacetValuePayload {
   /**
@@ -22,8 +26,11 @@ export interface ToggleSelectLocationFacetValuePayload {
 export const toggleSelectLocationFacetValue = createAction(
   'commerce/facets/locationFacet/toggleSelectValue',
   (payload: ToggleSelectLocationFacetValuePayload) =>
-    validatePayload(payload, {
-      facetId: requiredNonEmptyString,
-      selection: new RecordValue({values: facetValueDefinition}),
-    })
+    validatePayload(
+      payload,
+      z.object({
+        facetId: requiredNonEmptyString,
+        selection: locationFacetValueDefinition,
+      })
+    )
 );

@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import DOMPurify from 'dompurify';
 import type {LitElement} from 'lit';
 import {debounce} from '../../../utils/debounce-utils';
@@ -124,10 +123,7 @@ export class SuggestionManager<SearchBoxController> {
   }
 
   public isRightPanelInFocus() {
-    if (
-      isNullOrUndefined(this.panelInFocus) ||
-      isNullOrUndefined(this.rightPanel)
-    ) {
+    if (this.panelInFocus == null || this.rightPanel == null) {
       return false;
     }
 
@@ -421,7 +417,7 @@ export class SuggestionManager<SearchBoxController> {
     const filterOnDuplicate = new Set();
 
     const out = suggestionElements.filter((suggestionElement) => {
-      if (isNullOrUndefined(suggestionElement.query)) {
+      if (suggestionElement.query == null) {
         return true;
       }
       if (filterOnDuplicate.has(suggestionElement.query)) {

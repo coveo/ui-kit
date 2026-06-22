@@ -63,8 +63,38 @@ function browserUmd() {
   });
 }
 
+function nodeZodEsm() {
+  return build({
+    entryPoints: ['src/zod.ts'],
+    bundle: true,
+    banner: {js: apacheLicense()},
+    platform: 'node',
+    external: ['zod', 'zod/*'],
+    outfile: 'dist/zod.esm.js',
+    format: 'esm',
+  });
+}
+
+function browserZodEsm() {
+  return build({
+    entryPoints: ['src/zod.ts'],
+    bundle: true,
+    banner: {js: apacheLicense()},
+    platform: 'browser',
+    outfile: 'cdn/zod.esm.js',
+    format: 'esm',
+  });
+}
+
 async function main() {
-  await Promise.all([nodeCjs(), nodeEsm(), browserEsm(), browserUmd()]);
+  await Promise.all([
+    nodeCjs(),
+    nodeEsm(),
+    browserEsm(),
+    browserUmd(),
+    nodeZodEsm(),
+    browserZodEsm(),
+  ]);
 }
 
 main();

@@ -1,4 +1,4 @@
-import {NumberValue, Schema, StringValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {type Result, ResultTemplatesHelpers} from '@coveo/headless';
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
@@ -37,13 +37,9 @@ export class AtomicResultRating
 {
   static styles = ratingStyles;
 
-  private static readonly propsSchema = new Schema({
-    field: new StringValue({required: true, emptyAllowed: false}),
-    maxValueInIndex: new NumberValue({
-      default: 5,
-      min: 1,
-      required: false,
-    }),
+  private static readonly propsSchema = z.object({
+    field: z.string().check(z.minLength(1)),
+    maxValueInIndex: z.optional(z.number().check(z.minimum(1))),
   });
 
   /**

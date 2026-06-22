@@ -1,6 +1,5 @@
-import {StringValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {createAction} from '@reduxjs/toolkit';
-import type {PlatformEnvironment} from '../../../utils/url-utils.js';
 import {
   nonEmptyString,
   requiredTrackingId,
@@ -18,14 +17,14 @@ export type UpdateBasicConfigurationPayload =
 export const updateBasicConfiguration = createAction(
   'commerce/configuration/updateBasicConfiguration',
   (payload: UpdateBasicConfigurationPayload) =>
-    validatePayload(payload, {
-      accessToken: nonEmptyString,
-      environment: new StringValue<PlatformEnvironment>({
-        required: false,
-        constrainTo: ['prod', 'hipaa', 'stg', 'dev'],
-      }),
-      organizationId: nonEmptyString,
-    })
+    validatePayload(
+      payload,
+      z.object({
+        accessToken: nonEmptyString,
+        environment: z.optional(z.enum(['prod', 'hipaa', 'stg', 'dev'])),
+        organizationId: nonEmptyString,
+      })
+    )
 );
 
 export type UpdateProxyBaseUrlPayload = {
@@ -43,9 +42,12 @@ export type UpdateProxyBaseUrlPayload = {
 export const updateProxyBaseUrl = createAction(
   'commerce/configuration/updateProxyBaseUrl',
   (payload: UpdateProxyBaseUrlPayload) =>
-    validatePayload(payload, {
-      proxyBaseUrl: new StringValue({required: false, url: true}),
-    })
+    validatePayload(
+      payload,
+      z.object({
+        proxyBaseUrl: z.optional(z.string()),
+      })
+    )
 );
 
 export type UpdateAnalyticsConfigurationPayload = Pick<
@@ -56,12 +58,15 @@ export type UpdateAnalyticsConfigurationPayload = Pick<
 export const updateAnalyticsConfiguration = createAction(
   'commerce/configuration/updateAnalyticsConfiguration',
   (payload: UpdateAnalyticsConfigurationPayload) => {
-    return validatePayload(payload, {
-      enabled: analyticsConfigurationSchema.enabled,
-      proxyBaseUrl: analyticsConfigurationSchema.proxyBaseUrl,
-      source: analyticsConfigurationSchema.source,
-      trackingId: requiredTrackingId,
-    });
+    return validatePayload(
+      payload,
+      z.object({
+        enabled: analyticsConfigurationSchema.shape.enabled,
+        proxyBaseUrl: analyticsConfigurationSchema.shape.proxyBaseUrl,
+        source: analyticsConfigurationSchema.shape.source,
+        trackingId: requiredTrackingId,
+      })
+    );
   }
 );
 

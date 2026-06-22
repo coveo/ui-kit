@@ -28,7 +28,7 @@ export const logActionErrorMiddleware: (logger: Logger) => Middleware =
     }
 
     // Validation errors should prevent further dispatching
-    if (unknownAction.error.name === 'SchemaValidationError') {
+    if (unknownAction.error.name === '$ZodError') {
       return;
     }
 

@@ -1,4 +1,4 @@
-import {Schema, StringValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import type {FoldedResult, InteractiveResult, Result} from '@coveo/headless';
 import {type CSSResultGroup, css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
@@ -45,14 +45,10 @@ export class AtomicResult extends ChildrenUpdateCompleteMixin(LitElement) {
     }
   `;
 
-  private static readonly propsSchema = new Schema({
-    display: new StringValue({constrainTo: ['grid', 'list', 'table']}),
-    density: new StringValue({
-      constrainTo: ['normal', 'comfortable', 'compact'],
-    }),
-    imageSize: new StringValue({
-      constrainTo: ['small', 'large', 'icon', 'none'],
-    }),
+  private static readonly propsSchema = z.object({
+    display: z.optional(z.enum(['grid', 'list', 'table'])),
+    density: z.optional(z.enum(['normal', 'comfortable', 'compact'])),
+    imageSize: z.optional(z.enum(['small', 'large', 'icon', 'none'])),
   });
 
   @state()
@@ -282,7 +278,7 @@ export class AtomicResult extends ChildrenUpdateCompleteMixin(LitElement) {
   }
 
   private getLinkHTML() {
-    return parentNodeToString(this.linkContent ?? new HTMLElement());
+    return this.linkContent ? parentNodeToString(this.linkContent) : '';
   }
 
   public render() {

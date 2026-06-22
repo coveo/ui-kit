@@ -1,4 +1,3 @@
-import {SchemaValidationError} from '@coveo/bueno';
 import type {Mock} from 'vitest';
 import {configuration} from '../../../app/common-reducers.js';
 import {registerFieldsToInclude} from '../../../features/fields/fields-actions.js';
@@ -66,7 +65,7 @@ describe('CoreResultList', () => {
       buildCoreResultList(engine, {
         options: {fieldsToInclude: [1 as unknown as string]},
       })
-    ).toThrow(SchemaValidationError);
+    ).toThrow('Check the options of buildCoreResultList');
   });
 
   it('fetchMoreResults should dispatch a fetchMoreResults action', () => {

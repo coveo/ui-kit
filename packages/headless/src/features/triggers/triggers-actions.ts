@@ -1,4 +1,4 @@
-import {RecordValue, StringValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {createAction} from '@reduxjs/toolkit';
 import {nonEmptyString, validatePayload} from '../../utils/validate-payload.js';
 
@@ -9,8 +9,7 @@ export interface ApplyQueryTriggerModificationPayload {
 
 export const updateIgnoreQueryTrigger = createAction(
   'trigger/query/ignore',
-  (q: string) =>
-    validatePayload(q, new StringValue({emptyAllowed: true, required: true}))
+  (q: string) => validatePayload(q, z.string())
 );
 
 export const applyQueryTriggerModification = createAction(
@@ -18,8 +17,9 @@ export const applyQueryTriggerModification = createAction(
   (payload: ApplyQueryTriggerModificationPayload) =>
     validatePayload<ApplyQueryTriggerModificationPayload>(
       payload,
-      new RecordValue({
-        values: {originalQuery: nonEmptyString, modification: nonEmptyString},
+      z.object({
+        originalQuery: nonEmptyString,
+        modification: nonEmptyString,
       })
     )
 );

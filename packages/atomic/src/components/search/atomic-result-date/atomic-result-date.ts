@@ -1,4 +1,4 @@
-import {Schema, StringValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {type Result, ResultTemplatesHelpers} from '@coveo/headless';
 import dayjs from 'dayjs';
 import calendar from 'dayjs/plugin/calendar';
@@ -28,9 +28,9 @@ export class AtomicResultDate
   extends LightDomMixin(LitElement)
   implements InitializableComponent<Bindings>
 {
-  private static readonly propsSchema = new Schema({
-    field: new StringValue({required: true, emptyAllowed: false}),
-    format: new StringValue({required: false, emptyAllowed: false}),
+  private static readonly propsSchema = z.object({
+    field: z.string().check(z.minLength(1)),
+    format: z.optional(z.string().check(z.minLength(1))),
   });
 
   /**

@@ -1,4 +1,4 @@
-import {isNullOrUndefined, RecordValue, Schema} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import type {CoreEngine} from '../../../app/engine.js';
 import {isFacetVisibleOnTab} from '../../../features/facet-options/facet-options-utils.js';
 import type {AutomaticFacetResponse} from '../../../features/facets/automatic-facet-set/interfaces/response.js';
@@ -45,13 +45,8 @@ export interface SearchParameterManagerInitialState {
   parameters: SearchParameters;
 }
 
-const initialStateSchema = new Schema<
-  Required<SearchParameterManagerInitialState>
->({
-  parameters: new RecordValue({
-    options: {required: true},
-    values: searchParametersDefinition,
-  }),
+const initialStateSchema = z.object({
+  parameters: searchParametersDefinition,
 });
 
 /**
@@ -172,7 +167,7 @@ function ensureTabIsValid(
   tabSet: TabSetState | undefined,
   parameters: SearchParameters
 ): SearchParameters {
-  if (isNullOrUndefined(parameters.tab) || !tabSet) {
+  if (parameters.tab == null || !tabSet) {
     return parameters;
   }
 

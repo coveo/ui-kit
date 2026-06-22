@@ -1,3 +1,4 @@
+import * as z from '@coveo/bueno/zod';
 import {createAction} from '@reduxjs/toolkit';
 import {validatePayload} from '../../utils/validate-payload.js';
 import {
@@ -26,10 +27,10 @@ export interface RegisterStaticFilterActionCreatorPayload {
 export const registerStaticFilter = createAction(
   'staticFilter/register',
   (payload: RegisterStaticFilterActionCreatorPayload) => {
-    const schema = {
+    const schema = z.object({
       id: staticFilterIdSchema,
       values: staticFilterValuesSchema,
-    };
+    });
 
     return validatePayload(payload, schema);
   }
@@ -50,10 +51,10 @@ export interface ToggleSelectStaticFilterValueActionCreatorPayload {
 export const toggleSelectStaticFilterValue = createAction(
   'staticFilter/toggleSelect',
   (payload: ToggleSelectStaticFilterValueActionCreatorPayload) => {
-    const schema = {
+    const schema = z.object({
       id: staticFilterIdSchema,
       value: staticFilterValueSchema,
-    };
+    });
 
     return validatePayload(payload, schema);
   }
@@ -62,10 +63,10 @@ export const toggleSelectStaticFilterValue = createAction(
 export const toggleExcludeStaticFilterValue = createAction(
   'staticFilter/toggleExclude',
   (payload: ToggleSelectStaticFilterValueActionCreatorPayload) => {
-    const schema = {
+    const schema = z.object({
       id: staticFilterIdSchema,
       value: staticFilterValueSchema,
-    };
+    });
 
     return validatePayload(payload, schema);
   }

@@ -1,4 +1,4 @@
-import {RecordValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {createAction} from '@reduxjs/toolkit';
 import {
   requiredNonEmptyString,
@@ -13,10 +13,13 @@ export type ToggleExcludeFacetValuePayload =
 export const toggleExcludeFacetValue = createAction(
   'commerce/facets/regularFacet/toggleExcludeValue',
   (payload: ToggleExcludeFacetValuePayload) =>
-    validatePayload(payload, {
-      facetId: requiredNonEmptyString,
-      selection: new RecordValue({values: facetValueDefinition}),
-    })
+    validatePayload(
+      payload,
+      z.object({
+        facetId: requiredNonEmptyString,
+        selection: facetValueDefinition,
+      })
+    )
 );
 
 export type ToggleSelectFacetValuePayload =
@@ -25,8 +28,11 @@ export type ToggleSelectFacetValuePayload =
 export const toggleSelectFacetValue = createAction(
   'commerce/facets/regularFacet/toggleSelectValue',
   (payload: ToggleSelectFacetValuePayload) =>
-    validatePayload(payload, {
-      facetId: requiredNonEmptyString,
-      selection: new RecordValue({values: facetValueDefinition}),
-    })
+    validatePayload(
+      payload,
+      z.object({
+        facetId: requiredNonEmptyString,
+        selection: facetValueDefinition,
+      })
+    )
 );

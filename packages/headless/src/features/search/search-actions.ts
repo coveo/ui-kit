@@ -1,4 +1,4 @@
-import {BooleanValue, NumberValue, StringValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import type {EventDescription} from 'coveo.analytics';
 import HistoryStore from '../../api/analytics/coveo.analytics/history-store.js';
@@ -77,11 +77,14 @@ export const prepareForSearchWithQuery = createAsyncThunk<
   AsyncThunkOptions<StateNeededByExecuteSearch>
 >('search/prepareForSearchWithQuery', (payload, thunk) => {
   const {dispatch} = thunk;
-  validatePayload(payload, {
-    q: new StringValue(),
-    enableQuerySyntax: new BooleanValue(),
-    clearFilters: new BooleanValue(),
-  });
+  validatePayload(
+    payload,
+    z.object({
+      q: z.optional(z.string()),
+      enableQuerySyntax: z.optional(z.boolean()),
+      clearFilters: z.optional(z.boolean()),
+    })
+  );
 
   if (payload.clearFilters) {
     dispatch(deselectAllBreadcrumbs());
@@ -241,15 +244,15 @@ export const fetchInstantResults = createAsyncThunk<
     if (state.configuration.analytics.analyticsMode === 'legacy') {
       return legacyFetchInstantResults(payload, config);
     }
-    validatePayload(payload, {
-      id: requiredNonEmptyString,
-      q: requiredNonEmptyString,
-      maxResultsPerQuery: new NumberValue({
-        required: true,
-        min: 1,
-      }),
-      cacheTimeout: new NumberValue(),
-    });
+    validatePayload(
+      payload,
+      z.object({
+        id: requiredNonEmptyString,
+        q: requiredNonEmptyString,
+        maxResultsPerQuery: z.number().check(z.minimum(1)),
+        cacheTimeout: z.optional(z.number()),
+      })
+    );
     const {q, maxResultsPerQuery} = payload;
 
     const analyticsAction = buildSearchReduxAction(searchboxAsYouType());

@@ -1,4 +1,4 @@
-import {BooleanValue, StringValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {createAction} from '@reduxjs/toolkit';
 import {validatePayload} from '../../utils/validate-payload.js';
 
@@ -17,8 +17,11 @@ export interface UpdateQueryActionCreatorPayload {
 export const updateQuery = createAction(
   'query/updateQuery',
   (payload: UpdateQueryActionCreatorPayload) =>
-    validatePayload(payload, {
-      q: new StringValue(),
-      enableQuerySyntax: new BooleanValue(),
-    })
+    validatePayload(
+      payload,
+      z.object({
+        q: z.optional(z.string()),
+        enableQuerySyntax: z.optional(z.boolean()),
+      })
+    )
 );

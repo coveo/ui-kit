@@ -1,4 +1,4 @@
-import {NumberValue, RecordValue, Schema, StringValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {
   buildFacetConditionsManager,
   buildNumericFacet,
@@ -78,13 +78,13 @@ export class AtomicRatingRangeFacet
   extends LitElement
   implements InitializableComponent<Bindings>
 {
-  private static readonly propsSchema = new Schema({
-    field: new StringValue({required: true, emptyAllowed: false}),
-    numberOfIntervals: new NumberValue({min: 1}),
-    maxValueInIndex: new NumberValue({min: 0, required: false}),
-    minValueInIndex: new NumberValue({min: 0}),
-    injectionDepth: new NumberValue({min: 0}),
-    dependsOn: new RecordValue({options: {required: false}}),
+  private static readonly propsSchema = z.object({
+    field: z.string().check(z.minLength(1)),
+    numberOfIntervals: z.optional(z.number().check(z.minimum(1))),
+    maxValueInIndex: z.optional(z.number().check(z.minimum(0))),
+    minValueInIndex: z.optional(z.number().check(z.minimum(0))),
+    injectionDepth: z.optional(z.number().check(z.minimum(0))),
+    dependsOn: z.optional(z.record(z.string(), z.string())),
   });
 
   static styles = [

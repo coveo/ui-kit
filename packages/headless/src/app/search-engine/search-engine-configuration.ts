@@ -1,4 +1,4 @@
-import {ArrayValue, RecordValue, Schema, StringValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import type {
   PostprocessFacetSearchResponseMiddleware,
   PostprocessQuerySuggestResponseMiddleware,
@@ -38,7 +38,7 @@ export interface SearchConfigurationOptions {
    */
   searchHub?: string;
   /**
-   * The locale of the current user. Must comply with IETF’s BCP 47 definition: https://www.rfc-editor.org/info/bcp47.
+   * The locale of the current user. Must comply with IETF's BCP 47 definition: https://www.rfc-editor.org/info/bcp47.
    *
    * Notes:
    *  Coveo Machine Learning models use this information to provide contextually relevant output.
@@ -82,26 +82,19 @@ export interface SearchConfigurationOptions {
   proxyBaseUrl?: string;
 }
 
-export const searchEngineConfigurationSchema =
-  new Schema<SearchEngineConfiguration>({
-    ...engineConfigurationDefinitions,
-    search: new RecordValue({
-      options: {
-        required: false,
-      },
-      values: {
-        pipeline: new StringValue({required: false, emptyAllowed: true}),
-        searchHub: nonEmptyString,
-        locale: nonEmptyString,
-        timezone: nonEmptyString,
-        authenticationProviders: new ArrayValue({
-          required: false,
-          each: requiredNonEmptyString,
-        }),
-        proxyBaseUrl: new StringValue({required: false, url: true}),
-      },
-    }),
-  });
+export const searchEngineConfigurationSchema = z.object({
+  ...engineConfigurationDefinitions,
+  search: z.optional(
+    z.object({
+      pipeline: z.optional(z.string()),
+      searchHub: nonEmptyString,
+      locale: nonEmptyString,
+      timezone: nonEmptyString,
+      authenticationProviders: z.optional(z.array(requiredNonEmptyString)),
+      proxyBaseUrl: z.optional(z.url()),
+    })
+  ),
+});
 
 /**
  * Creates a sample search engine configuration.

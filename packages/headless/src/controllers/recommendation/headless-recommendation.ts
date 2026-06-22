@@ -1,4 +1,4 @@
-import {NumberValue, Schema, StringValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import type {Result} from '../../api/search/search/result.js';
 import {configuration} from '../../app/common-reducers.js';
 import type {RecommendationEngine} from '../../app/recommendation-engine/recommendation-engine.js';
@@ -16,13 +16,9 @@ import {
   type Controller,
 } from '../controller/headless-controller.js';
 
-const optionsSchema = new Schema<RecommendationListOptions>({
-  id: new StringValue<string>({
-    emptyAllowed: true,
-    required: false,
-    default: '',
-  }),
-  numberOfRecommendations: new NumberValue({min: 0}),
+const optionsSchema = z.object({
+  id: z.optional(z.string()),
+  numberOfRecommendations: z.optional(z.number().check(z.minimum(0))),
 });
 
 export interface RecommendationListOptions {
@@ -109,14 +105,14 @@ export function buildRecommendationList(
   const {dispatch} = engine;
   const getState = () => engine.state;
 
-  const options = validateOptions(
+  const options = (validateOptions(
     engine,
     optionsSchema,
     props.options,
     'buildRecommendationList'
-  ) as Required<RecommendationListOptions>;
+  ) ?? {}) as Required<RecommendationListOptions>;
 
-  if (options.id !== '') {
+  if (options.id && options.id !== '') {
     dispatch(setRecommendationId({id: options.id}));
   }
 

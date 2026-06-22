@@ -1,4 +1,4 @@
-import {ArrayValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import type {CategoryFacetMetadata} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents.js';
 import type {InsightAppState} from '../../../state/insight-app-state.js';
 import {
@@ -14,13 +14,10 @@ import {getCaseContextAnalyticsMetadata} from '../../case-context/case-context-s
 import {facetIdDefinition} from '../generic/facet-actions-validation.js';
 import type {LogCategoryFacetBreadcrumbActionCreatorPayload} from './category-facet-set-analytics-actions.js';
 
-const categoryFacetBreadcrumbPayloadDefinition = {
+const categoryFacetBreadcrumbPayloadDefinition = z.object({
   categoryFacetId: facetIdDefinition,
-  categoryFacetPath: new ArrayValue({
-    required: true,
-    each: requiredNonEmptyString,
-  }),
-};
+  categoryFacetPath: z.array(requiredNonEmptyString),
+});
 
 const getCategoryFacetMetadata = (
   state: Partial<InsightAppState>,

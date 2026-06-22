@@ -1,4 +1,4 @@
-import {ArrayValue, NumberValue, Schema, StringValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {
   buildFoldedResultList,
   buildInteractiveResult,
@@ -70,20 +70,12 @@ export class AtomicFoldedResultList
 {
   static styles: CSSResultGroup = [placeholderStyles, listDisplayStyles];
 
-  private static readonly propsSchema = new Schema({
-    density: new StringValue({
-      constrainTo: ['normal', 'comfortable', 'compact'],
-    }),
-    imageSize: new StringValue({
-      constrainTo: ['small', 'large', 'icon', 'none'],
-    }),
-    tabsIncluded: new ArrayValue({
-      each: new StringValue({}),
-    }),
-    tabsExcluded: new ArrayValue({
-      each: new StringValue({}),
-    }),
-    numberOfFoldedResults: new NumberValue({min: 0}),
+  private static readonly propsSchema = z.object({
+    density: z.optional(z.enum(['normal', 'comfortable', 'compact'])),
+    imageSize: z.optional(z.enum(['small', 'large', 'icon', 'none'])),
+    tabsIncluded: z.optional(z.array(z.string())),
+    tabsExcluded: z.optional(z.array(z.string())),
+    numberOfFoldedResults: z.optional(z.number().check(z.minimum(0))),
   });
 
   public foldedResultList!: FoldedResultList;

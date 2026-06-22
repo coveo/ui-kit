@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import type {
   DateRangeRequest,
   NumericRangeRequest,
@@ -113,7 +112,7 @@ function applyToUrlSearchParam(
   previousState: FacetValueSearchParam,
   pair: [CommerceSearchParametersKey, unknown]
 ) {
-  if (isNullOrUndefined(pair[1])) {
+  if (pair[1] == null) {
     return;
   }
 
@@ -214,7 +213,7 @@ function extendSearchParams(
   key: string,
   value: CommerceSearchParamValue
 ): void {
-  if (isNullOrUndefined(value)) {
+  if (value == null) {
     return;
   }
   if (key === 'sortCriteria') {

@@ -1,4 +1,4 @@
-import {Schema, StringValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import type {Result} from '@coveo/headless';
 import {ResultTemplatesHelpers} from '@coveo/headless';
 import {css, html, LitElement, nothing} from 'lit';
@@ -39,8 +39,8 @@ export class AtomicResultImage
     }
   `;
 
-  private static readonly propsSchema = new Schema({
-    field: new StringValue({required: true, emptyAllowed: false}),
+  private static readonly propsSchema = z.object({
+    field: z.string().check(z.minLength(1)),
   });
 
   /**

@@ -33,6 +33,7 @@ const buenoBase = commitSha
 const packageMappings = {
   '@coveo/headless': `${headlessBase}/headless.esm.js`,
   '@coveo/bueno': `${buenoBase}/bueno.esm.js`,
+  '@coveo/bueno/zod': `${buenoBase}/zod.esm.js`,
 };
 
 const externalizeDependenciesPlugin = {

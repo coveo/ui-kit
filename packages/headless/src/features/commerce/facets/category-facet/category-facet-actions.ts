@@ -1,4 +1,4 @@
-import {NumberValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {createAction} from '@reduxjs/toolkit';
 import {
   requiredNonEmptyString,
@@ -18,10 +18,13 @@ export type UpdateCategoryFacetNumberOfValuesPayload =
 export const updateCategoryFacetNumberOfValues = createAction(
   'commerce/facets/categoryFacet/updateNumberOfValues',
   (payload: UpdateCategoryFacetNumberOfValuesPayload) =>
-    validatePayload(payload, {
-      facetId: requiredNonEmptyString,
-      numberOfValues: new NumberValue({required: false, min: 1}),
-    })
+    validatePayload(
+      payload,
+      z.object({
+        facetId: requiredNonEmptyString,
+        numberOfValues: z.optional(z.number().check(z.minimum(1))),
+      })
+    )
 );
 
 // TODO - KIT-4347 remove the retrieveCount property from the action payload.

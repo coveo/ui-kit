@@ -1,11 +1,4 @@
-import {
-  ArrayValue,
-  BooleanValue,
-  RecordValue,
-  type SchemaDefinition,
-  StringValue,
-  Value,
-} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {createAction} from '@reduxjs/toolkit';
 import type {IRuntimeEnvironment} from 'coveo.analytics';
 import type {PlatformEnvironment} from '../../utils/url-utils.js';
@@ -44,14 +37,14 @@ export interface UpdateBasicConfigurationActionCreatorPayload {
 export const updateBasicConfiguration = createAction(
   'configuration/updateBasicConfiguration',
   (payload: UpdateBasicConfigurationActionCreatorPayload) =>
-    validatePayload(payload, {
-      accessToken: nonEmptyString,
-      environment: new StringValue<PlatformEnvironment>({
-        required: false,
-        constrainTo: ['prod', 'hipaa', 'stg', 'dev'],
-      }),
-      organizationId: nonEmptyString,
-    })
+    validatePayload(
+      payload,
+      z.object({
+        accessToken: nonEmptyString,
+        environment: z.optional(z.enum(['prod', 'hipaa', 'stg', 'dev'])),
+        organizationId: nonEmptyString,
+      })
+    )
 );
 
 export interface UpdateSearchConfigurationActionCreatorPayload {
@@ -76,7 +69,7 @@ export interface UpdateSearchConfigurationActionCreatorPayload {
   searchHub?: string;
 
   /**
-   * The locale of the current user. Must comply with IETF’s BCP 47 definition: https://www.rfc-editor.org/info/bcp47.
+   * The locale of the current user. Must comply with IETF's BCP 47 definition: https://www.rfc-editor.org/info/bcp47.
    */
   locale?: string;
 
@@ -95,17 +88,17 @@ export interface UpdateSearchConfigurationActionCreatorPayload {
 export const updateSearchConfiguration = createAction(
   'configuration/updateSearchConfiguration',
   (payload: UpdateSearchConfigurationActionCreatorPayload) => {
-    return validatePayload(payload, {
-      proxyBaseUrl: new StringValue({required: false, url: true}),
-      pipeline: new StringValue({required: false, emptyAllowed: true}),
-      searchHub: nonEmptyString,
-      timezone: nonEmptyString,
-      locale: nonEmptyString,
-      authenticationProviders: new ArrayValue({
-        required: false,
-        each: requiredNonEmptyString,
-      }),
-    });
+    return validatePayload(
+      payload,
+      z.object({
+        proxyBaseUrl: z.optional(z.url()),
+        pipeline: z.optional(z.string()),
+        searchHub: nonEmptyString,
+        timezone: nonEmptyString,
+        locale: nonEmptyString,
+        authenticationProviders: z.optional(z.array(requiredNonEmptyString)),
+      })
+    );
   }
 );
 
@@ -129,7 +122,7 @@ export interface UpdateAnalyticsConfigurationActionCreatorPayload {
   originLevel2?: string;
 
   /**
-   * The origin level 3 usage analytics event metadata whose value should typically be the URL of the page that linked to the search interface that’s making the request (for example, `https://connect.coveo.com/s/`).
+   * The origin level 3 usage analytics event metadata whose value should typically be the URL of the page that linked to the search interface that's making the request (for example, `https://connect.coveo.com/s/`).
    */
   originLevel3?: string;
 
@@ -185,36 +178,31 @@ export interface UpdateAnalyticsConfigurationActionCreatorPayload {
 
 export type AnalyticsRuntimeEnvironment = IRuntimeEnvironment;
 
-export const analyticsConfigurationSchema: SchemaDefinition<
-  Required<UpdateAnalyticsConfigurationActionCreatorPayload>
-> = {
-  enabled: new BooleanValue({default: true}),
+export const analyticsConfigurationSchema = z.object({
+  enabled: z.optional(z.boolean()),
   originContext: originSchemaOnConfigUpdate(),
   originLevel2: originSchemaOnConfigUpdate(),
   originLevel3: originSchemaOnConfigUpdate(),
-  proxyBaseUrl: new StringValue({required: false, url: true}),
-  runtimeEnvironment: new Value(),
-  anonymous: new BooleanValue({default: false}),
+  proxyBaseUrl: z.optional(z.url()),
+  runtimeEnvironment: z.optional(z.unknown()),
+  anonymous: z.optional(z.boolean()),
   deviceId: nonEmptyString,
   userDisplayName: nonEmptyString,
   documentLocation: nonEmptyString,
   trackingId: optionalTrackingId,
-  analyticsMode: new StringValue<'legacy' | 'next'>({
-    constrainTo: ['legacy', 'next'],
-    required: false,
-    default: 'next',
-  }),
-  source: new RecordValue({
-    options: {required: false},
-    values: COVEO_FRAMEWORK.reduce(
-      (acc, framework) => {
-        acc[framework] = optionalNonEmptyVersionString;
-        return acc;
-      },
-      {} as Record<CoveoFramework, StringValue>
-    ),
-  }),
-};
+  analyticsMode: z.optional(z.enum(['legacy', 'next'])),
+  source: z.optional(
+    z.object(
+      COVEO_FRAMEWORK.reduce(
+        (acc, framework) => {
+          acc[framework] = optionalNonEmptyVersionString;
+          return acc;
+        },
+        {} as Record<CoveoFramework, typeof optionalNonEmptyVersionString>
+      )
+    )
+  ),
+});
 
 export const updateAnalyticsConfiguration = createAction(
   'configuration/updateAnalyticsConfiguration',
@@ -236,7 +224,7 @@ export interface SetOriginLevel2ActionCreatorPayload {
 export const setOriginLevel2 = createAction(
   'configuration/analytics/originlevel2',
   (payload: SetOriginLevel2ActionCreatorPayload) =>
-    validatePayload(payload, {originLevel2: originSchemaOnUpdate()})
+    validatePayload(payload, z.object({originLevel2: originSchemaOnUpdate()}))
 );
 
 export interface SetOriginLevel3ActionCreatorPayload {
@@ -249,11 +237,10 @@ export interface SetOriginLevel3ActionCreatorPayload {
 export const setOriginLevel3 = createAction(
   'configuration/analytics/originlevel3',
   (payload: SetOriginLevel3ActionCreatorPayload) =>
-    validatePayload(payload, {originLevel3: originSchemaOnUpdate()})
+    validatePayload(payload, z.object({originLevel3: originSchemaOnUpdate()}))
 );
 
 export const setAgentId = createAction(
   'knowledge/setAgentId',
-  (payload: string) =>
-    validatePayload(payload, new StringValue({required: true}))
+  (payload: string) => validatePayload(payload, z.string())
 );

@@ -1,10 +1,4 @@
-import {
-  ArrayValue,
-  BooleanValue,
-  NumberValue,
-  RecordValue,
-  StringValue,
-} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import type {AsyncThunkGeneratedAnswerOptions} from '../../api/generated-answer/generated-answer-client.js';
 import type {
@@ -60,27 +54,20 @@ type StateNeededByGeneratedAnswerStream = ConfigurationSection &
   GeneratedAnswerSection &
   DebugSection;
 
-const stringValue = new StringValue({required: true});
-const optionalStringValue = new StringValue();
-const booleanValue = new BooleanValue({required: true});
-export const citationSchema = {
+const stringValue = z.string();
+const optionalStringValue = z.optional(z.string());
+const booleanValue = z.boolean();
+export const citationSchema = z.object({
   id: stringValue,
   title: stringValue,
   uri: stringValue,
   permanentid: stringValue,
   clickUri: optionalStringValue,
-};
-
-export const answerContentFormatSchema =
-  new StringValue<GeneratedContentFormat>({
-    required: true,
-    constrainTo: generatedContentFormat,
-  });
-
-const generationStepNameValue = new StringValue<GenerationStepName>({
-  required: true,
-  constrainTo: GENERATION_STEP_NAMES,
 });
+
+export const answerContentFormatSchema = z.enum(generatedContentFormat);
+
+const generationStepNameValue = z.enum(GENERATION_STEP_NAMES);
 
 const normalizeGenerationStepPayload = <T extends {name: string}>(
   payload: T
@@ -107,14 +94,7 @@ export const setAnswerId = createAction(
 export const setAnswerGenerationMode = createAction(
   'generatedAnswer/setAnswerGenerationMode',
   (payload: 'automatic' | 'manual') =>
-    validatePayload(
-      payload,
-      new StringValue<'automatic' | 'manual'>({
-        constrainTo: ['automatic', 'manual'],
-        required: false,
-        default: 'automatic',
-      })
-    )
+    validatePayload(payload, z.enum(['automatic', 'manual']))
 );
 
 export const setIsEnabled = createAction(
@@ -125,31 +105,35 @@ export const setIsEnabled = createAction(
 export const updateMessage = createAction(
   'generatedAnswer/updateMessage',
   (payload: GeneratedAnswerMessagePayload) =>
-    validatePayload(payload, {
-      textDelta: stringValue,
-    })
+    validatePayload(
+      payload,
+      z.object({
+        textDelta: stringValue,
+      })
+    )
 );
 
 export const updateCitations = createAction(
   'generatedAnswer/updateCitations',
   (payload: GeneratedAnswerCitationsPayload) =>
-    validatePayload(payload, {
-      citations: new ArrayValue({
-        required: true,
-        each: new RecordValue({
-          values: citationSchema,
-        }),
-      }),
-    })
+    validatePayload(
+      payload,
+      z.object({
+        citations: z.array(citationSchema),
+      })
+    )
 );
 
 export const updateError = createAction(
   'generatedAnswer/updateError',
   (payload: GeneratedAnswerErrorPayload) =>
-    validatePayload(payload, {
-      message: optionalStringValue,
-      code: new NumberValue({min: 0}),
-    })
+    validatePayload(
+      payload,
+      z.object({
+        message: optionalStringValue,
+        code: z.optional(z.number().check(z.minimum(0))),
+      })
+    )
 );
 
 export const resetAnswer = createAction('generatedAnswer/resetAnswer');
@@ -169,11 +153,12 @@ export const collapseGeneratedAnswer = createAction('generatedAnswer/collapse');
 export const setId = createAction(
   'generatedAnswer/setId',
   (payload: {id: string}) =>
-    validatePayload(payload, {
-      id: new StringValue({
-        required: true,
-      }),
-    })
+    validatePayload(
+      payload,
+      z.object({
+        id: z.string(),
+      })
+    )
 );
 
 export const closeGeneratedAnswerFeedbackModal = createAction(
@@ -203,12 +188,12 @@ export const setAnswerContentFormat = createAction(
 export const updateResponseFormat = createAction(
   'generatedAnswer/updateResponseFormat',
   (payload: GeneratedResponseFormat) =>
-    validatePayload(payload, {
-      contentFormat: new ArrayValue<GeneratedContentFormat>({
-        each: answerContentFormatSchema,
-        default: ['text/plain'],
-      }),
-    })
+    validatePayload(
+      payload,
+      z.object({
+        contentFormat: z.optional(z.array(answerContentFormatSchema)),
+      })
+    )
 );
 
 export const updateAnswerConfigurationId = createAction(
@@ -234,25 +219,31 @@ export const setCannotAnswer = createAction(
 export const setAnswerApiQueryParams = createAction(
   'generatedAnswer/setAnswerApiQueryParams',
   (payload: Partial<AnswerApiQueryParams>) =>
-    validatePayload(payload, new RecordValue({}))
+    validatePayload(payload, z.object({}))
 );
 
 export const startStep = createAction(
   'generatedAnswer/startStep',
   (payload: {name: string; startedAt: number}) =>
-    validatePayload(normalizeGenerationStepPayload(payload), {
-      name: generationStepNameValue,
-      startedAt: new NumberValue({min: 0, required: true}),
-    })
+    validatePayload(
+      normalizeGenerationStepPayload(payload),
+      z.object({
+        name: generationStepNameValue,
+        startedAt: z.number().check(z.minimum(0)),
+      })
+    )
 );
 
 export const finishStep = createAction(
   'generatedAnswer/finishStep',
   (payload: {name: string; finishedAt: number}) =>
-    validatePayload(normalizeGenerationStepPayload(payload), {
-      name: generationStepNameValue,
-      finishedAt: new NumberValue({min: 0, required: true}),
-    })
+    validatePayload(
+      normalizeGenerationStepPayload(payload),
+      z.object({
+        name: generationStepNameValue,
+        finishedAt: z.number().check(z.minimum(0)),
+      })
+    )
 );
 
 export const startToolCall = createAction(

@@ -1,10 +1,4 @@
-import {
-  ArrayValue,
-  BooleanValue,
-  isNullOrUndefined,
-  RecordValue,
-  SchemaValidationError,
-} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {createAction} from '@reduxjs/toolkit';
 import {
   nonEmptyString,
@@ -26,41 +20,31 @@ export interface SetAttachedResultsActionCreatorPayload {
   loading?: boolean;
 }
 
-const attachedResultPayloadDefinition = {
+const attachedResultPayloadDefinition = z.object({
   articleLanguage: nonEmptyString,
   articlePublishStatus: nonEmptyString,
   articleVersionNumber: nonEmptyString,
   caseId: requiredNonEmptyString,
   knowledgeArticleId: nonEmptyString,
-  name: nonEmptyString,
   permanentId: nonEmptyString,
-  resultUrl: nonEmptyString,
+  resultUrl: requiredNonEmptyString,
   source: nonEmptyString,
   title: requiredNonEmptyString,
   uriHash: nonEmptyString,
-  isAttachedFromCitation: new BooleanValue({required: false, default: false}),
-};
-
-const RequiredAttachedResultRecord = new RecordValue({
-  options: {
-    required: true,
-  },
-  values: attachedResultPayloadDefinition,
+  isAttachedFromCitation: z.optional(z.boolean()),
 });
 
 //TODO: SFINT-6621 - Change type from insight/attachToCase... to insight/attachedResults...
 export const setAttachedResults = createAction(
   'insight/attachToCase/setAttachedResults',
   (payload: SetAttachedResultsActionCreatorPayload) =>
-    validatePayload(payload, {
-      results: new ArrayValue({
-        each: RequiredAttachedResultRecord,
-      }),
-      loading: new BooleanValue({
-        required: false,
-        default: false,
-      }),
-    })
+    validatePayload(
+      payload,
+      z.object({
+        results: z.array(attachedResultPayloadDefinition),
+        loading: z.optional(z.boolean()),
+      })
+    )
 );
 
 //TODO: SFINT-6621 - Change type from insight/attachToCase/ to insight/attachedResults/
@@ -76,16 +60,11 @@ export const detachResult = createAction(
 );
 
 const validatePayloadAndPermanentIdOrUriHash = (payload: AttachedResult) => {
-  if (
-    isNullOrUndefined(payload.permanentId) &&
-    isNullOrUndefined(payload.uriHash)
-  ) {
+  if (payload.permanentId == null && payload.uriHash == null) {
     return {
       payload,
       error: serializeSchemaValidationError(
-        new SchemaValidationError(
-          'Either permanentId or uriHash is required'
-        ) as Error
+        new Error('Either permanentId or uriHash is required')
       ),
     };
   }

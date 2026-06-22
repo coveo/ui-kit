@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import type {UnknownAction} from '@reduxjs/toolkit';
 import type {ThunkDispatch} from 'redux-thunk';
 import type {SearchRequest} from '../../api/search/search/search-request.js';
@@ -180,8 +179,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       results.length === 0 && queryCorrections && queryCorrections.length !== 0;
 
     const shouldExecuteModernDidYouMeanAutoCorrection =
-      !isNullOrUndefined(queryCorrection) &&
-      !isNullOrUndefined(queryCorrection.correctedQuery);
+      queryCorrection != null && queryCorrection.correctedQuery != null;
 
     const shouldExitWithNoAutoCorrection =
       !shouldExecuteClassicDidYouMeanAutoCorrection &&

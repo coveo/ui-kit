@@ -1,4 +1,3 @@
-import {isUndefined} from '@coveo/bueno';
 import type {InteractiveProduct, Product} from '@coveo/headless/commerce';
 import {type CSSResultGroup, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
@@ -112,13 +111,14 @@ export class AtomicProductLink
       const product = this.product!;
       const interactiveProduct = this.interactiveProduct!;
 
-      const href = isUndefined(this.hrefTemplate)
-        ? product.clickUri
-        : buildStringTemplateFromProduct(
-            this.hrefTemplate,
-            product,
-            this.bindings
-          );
+      const href =
+        this.hrefTemplate === undefined
+          ? product.clickUri
+          : buildStringTemplateFromProduct(
+              this.hrefTemplate,
+              product,
+              this.bindings
+            );
 
       const {warningMessage} = interactiveProduct;
 

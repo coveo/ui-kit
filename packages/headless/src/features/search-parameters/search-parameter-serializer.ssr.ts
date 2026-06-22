@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import {arrayEqualStrictlyDifferentOrder} from '../../utils/compare-utils.js';
 import type {SearchParameters} from './search-parameter-actions.js';
 import {
@@ -86,7 +85,7 @@ function applyToUrlSearchParam(
   previousState: FacetValueSearchParam,
   pair: [SearchParameterKey, unknown]
 ) {
-  if (isNullOrUndefined(pair[1])) {
+  if (pair[1] == null) {
     return;
   }
 

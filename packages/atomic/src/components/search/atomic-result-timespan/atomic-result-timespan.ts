@@ -1,4 +1,4 @@
-import {Schema, StringValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {type Result, ResultTemplatesHelpers} from '@coveo/headless';
 import dayjs from 'dayjs';
 import type {DurationUnitType} from 'dayjs/plugin/duration';
@@ -26,10 +26,10 @@ export class AtomicResultTimespan
   extends LightDomMixin(InitializeBindingsMixin(LitElement))
   implements InitializableComponent<Bindings>
 {
-  private static readonly propsSchema = new Schema({
-    field: new StringValue({required: true, emptyAllowed: false}),
-    unit: new StringValue({
-      constrainTo: [
+  private static readonly propsSchema = z.object({
+    field: z.string().check(z.minLength(1)),
+    unit: z.optional(
+      z.enum([
         'milliseconds',
         'ms',
         'seconds',
@@ -46,9 +46,9 @@ export class AtomicResultTimespan
         'M',
         'years',
         'y',
-      ],
-    }),
-    format: new StringValue({required: false, emptyAllowed: false}),
+      ])
+    ),
+    format: z.optional(z.string().check(z.minLength(1))),
   });
 
   /**

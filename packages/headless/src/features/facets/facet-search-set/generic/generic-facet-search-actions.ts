@@ -8,6 +8,7 @@ import type {FacetSearchResponse} from '../../../../api/search/facet-search/face
 import type {SpecificFacetSearchRequest} from '../../../../api/search/facet-search/specific-facet-search/specific-facet-search-request.js';
 import type {FacetSearchAPIClient} from '../../../../api/search/search-api-client.js';
 import type {AsyncThunkOptions} from '../../../../app/async-thunk-options.js';
+import * as z from '@coveo/bueno/zod';
 import type {ClientThunkExtraArguments} from '../../../../app/thunk-extra-arguments.js';
 import {
   requiredNonEmptyString,
@@ -89,7 +90,7 @@ export const executeFieldSuggest = createAsyncThunk<
 export const clearFacetSearch = createAction(
   'facetSearch/clearResults',
   (payload: {facetId: string}) =>
-    validatePayload(payload, {facetId: facetIdDefinition})
+    validatePayload(payload, z.object({facetId: facetIdDefinition}))
 );
 
 const isSpecificFacetSearchState = (

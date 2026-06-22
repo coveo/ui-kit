@@ -1,10 +1,4 @@
-import {
-  ArrayValue,
-  BooleanValue,
-  NumberValue,
-  RecordValue,
-  StringValue,
-} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {createAction} from '@reduxjs/toolkit';
 import type {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload.js';
 import {
@@ -26,11 +20,8 @@ import {
 } from '../generated-answer/generated-answer-state.js';
 import type {GeneratedContentFormat} from '../generated-answer/generated-response-format.js';
 
-const stringValue = new StringValue({required: true});
-const generationStepNameValue = new StringValue<GenerationStepName>({
-  required: true,
-  constrainTo: GENERATION_STEP_NAMES,
-});
+const stringValue = z.string();
+const generationStepNameValue = z.enum(GENERATION_STEP_NAMES);
 
 const normalizeGenerationStepPayload = <T extends {name: string}>(
   payload: T
@@ -41,8 +32,7 @@ const normalizeGenerationStepPayload = <T extends {name: string}>(
 
 export const setIsEnabled = createAction(
   'followUpAnswers/setIsEnabled',
-  (payload: boolean) =>
-    validatePayload(payload, new BooleanValue({required: true}))
+  (payload: boolean) => validatePayload(payload, z.boolean())
 );
 
 export const setFollowUpAnswersConversationId = createAction(
@@ -62,9 +52,12 @@ export const clearFollowUpAnswersConversationToken = createAction(
 export const createFollowUpAnswer = createAction(
   'followUpAnswers/createFollowUpAnswer',
   (payload: {question: string}) =>
-    validatePayload(payload, {
-      question: requiredNonEmptyString,
-    })
+    validatePayload(
+      payload,
+      z.object({
+        question: requiredNonEmptyString,
+      })
+    )
 );
 
 export const setActiveFollowUpAnswerId = createAction(
@@ -75,102 +68,130 @@ export const setActiveFollowUpAnswerId = createAction(
 export const setFollowUpAnswerContentFormat = createAction(
   'followUpAnswers/setFollowUpAnswerContentFormat',
   (payload: {answerId: string; contentFormat: GeneratedContentFormat}) =>
-    validatePayload(payload, {
-      contentFormat: answerContentFormatSchema,
-      answerId: requiredNonEmptyString,
-    })
+    validatePayload(
+      payload,
+      z.object({
+        contentFormat: answerContentFormatSchema,
+        answerId: requiredNonEmptyString,
+      })
+    )
 );
 
 export const setFollowUpIsLoading = createAction(
   'followUpAnswers/setFollowUpIsLoading',
   (payload: {answerId: string; isLoading: boolean}) =>
-    validatePayload(payload, {
-      isLoading: new BooleanValue({required: true}),
-      answerId: requiredNonEmptyString,
-    })
+    validatePayload(
+      payload,
+      z.object({
+        isLoading: z.boolean(),
+        answerId: requiredNonEmptyString,
+      })
+    )
 );
 
 export const setFollowUpIsStreaming = createAction(
   'followUpAnswers/setFollowUpIsStreaming',
   (payload: {answerId: string; isStreaming: boolean}) =>
-    validatePayload(payload, {
-      isStreaming: new BooleanValue({required: true}),
-      answerId: requiredNonEmptyString,
-    })
+    validatePayload(
+      payload,
+      z.object({
+        isStreaming: z.boolean(),
+        answerId: requiredNonEmptyString,
+      })
+    )
 );
 
 export const followUpMessageChunkReceived = createAction(
   'followUpAnswers/followUpMessageChunkReceived',
   (payload: {answerId: string; textDelta: string}) =>
-    validatePayload(payload, {
-      textDelta: stringValue,
-      answerId: requiredNonEmptyString,
-    })
+    validatePayload(
+      payload,
+      z.object({
+        textDelta: stringValue,
+        answerId: requiredNonEmptyString,
+      })
+    )
 );
 
 export const followUpCitationsReceived = createAction(
   'followUpAnswers/followUpCitationsReceived',
   (payload: {answerId: string; citations: GeneratedAnswerCitation[]}) =>
-    validatePayload(payload, {
-      citations: new ArrayValue({
-        required: true,
-        each: new RecordValue({
-          values: citationSchema,
-        }),
-      }),
-      answerId: requiredNonEmptyString,
-    })
+    validatePayload(
+      payload,
+      z.object({
+        citations: z.array(citationSchema),
+        answerId: requiredNonEmptyString,
+      })
+    )
 );
 
 export const followUpCompleted = createAction(
   'followUpAnswers/followUpCompleted',
   (payload: {answerId: string; cannotAnswer?: boolean}) =>
-    validatePayload(payload, {
-      answerId: requiredNonEmptyString,
-      cannotAnswer: new BooleanValue({required: false}),
-    })
+    validatePayload(
+      payload,
+      z.object({
+        answerId: requiredNonEmptyString,
+        cannotAnswer: z.optional(z.boolean()),
+      })
+    )
 );
 
 export const followUpFailed = createAction(
   'followUpAnswers/followUpFailed',
   (payload: {answerId: string; message?: string; code?: number}) =>
-    validatePayload(payload, {
-      message: new StringValue(),
-      code: new NumberValue({min: 0}),
-      answerId: requiredNonEmptyString,
-    })
+    validatePayload(
+      payload,
+      z.object({
+        message: z.optional(z.string()),
+        code: z.optional(z.number().check(z.minimum(0))),
+        answerId: requiredNonEmptyString,
+      })
+    )
 );
 
 export const activeFollowUpStartFailed = createAction(
   'followUpAnswers/activeFollowUpStartFailed',
   (payload: {message?: string}) =>
-    validatePayload(payload, {
-      message: new StringValue(),
-    })
+    validatePayload(
+      payload,
+      z.object({
+        message: z.optional(z.string()),
+      })
+    )
 );
 
 export const likeFollowUp = createAction(
   'followUpAnswers/likeFollowUp',
   (payload: {answerId: string}) =>
-    validatePayload(payload, {
-      answerId: requiredNonEmptyString,
-    })
+    validatePayload(
+      payload,
+      z.object({
+        answerId: requiredNonEmptyString,
+      })
+    )
 );
 
 export const dislikeFollowUp = createAction(
   'followUpAnswers/dislikeFollowUp',
   (payload: {answerId: string}) =>
-    validatePayload(payload, {
-      answerId: requiredNonEmptyString,
-    })
+    validatePayload(
+      payload,
+      z.object({
+        answerId: requiredNonEmptyString,
+      })
+    )
 );
 
 export const submitFollowUpFeedback = createAction(
   'followUpAnswers/submitFollowUpFeedback',
   (payload: {answerId: string}) =>
-    validatePayload(payload, {
-      answerId: requiredNonEmptyString,
-    })
+    validatePayload(
+      payload,
+      z.object({
+        answerId: requiredNonEmptyString,
+      })
+    )
 );
 
 export const resetFollowUpAnswers = createAction(
@@ -180,21 +201,27 @@ export const resetFollowUpAnswers = createAction(
 export const followUpStepStarted = createAction(
   'followUpAnswers/stepStarted',
   (payload: {answerId: string; name: string; startedAt: number}) =>
-    validatePayload(normalizeGenerationStepPayload(payload), {
-      answerId: requiredNonEmptyString,
-      name: generationStepNameValue,
-      startedAt: new NumberValue({min: 0, required: true}),
-    })
+    validatePayload(
+      normalizeGenerationStepPayload(payload),
+      z.object({
+        answerId: requiredNonEmptyString,
+        name: generationStepNameValue,
+        startedAt: z.number().check(z.minimum(0)),
+      })
+    )
 );
 
 export const followUpStepFinished = createAction(
   'followUpAnswers/stepFinished',
   (payload: {answerId: string; name: string; finishedAt: number}) =>
-    validatePayload(normalizeGenerationStepPayload(payload), {
-      answerId: requiredNonEmptyString,
-      name: generationStepNameValue,
-      finishedAt: new NumberValue({min: 0, required: true}),
-    })
+    validatePayload(
+      normalizeGenerationStepPayload(payload),
+      z.object({
+        answerId: requiredNonEmptyString,
+        name: generationStepNameValue,
+        finishedAt: z.number().check(z.minimum(0)),
+      })
+    )
 );
 
 export const followUpToolCallStarted = createAction(

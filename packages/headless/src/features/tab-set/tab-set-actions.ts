@@ -1,4 +1,4 @@
-import {RecordValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {createAction} from '@reduxjs/toolkit';
 import {
   requiredEmptyAllowedString,
@@ -21,11 +21,9 @@ export interface RegisterTabActionCreatorPayload {
 export const registerTab = createAction(
   'tab/register',
   (payload: RegisterTabActionCreatorPayload) => {
-    const schema = new RecordValue({
-      values: {
-        id: requiredNonEmptyString,
-        expression: requiredEmptyAllowedString,
-      },
+    const schema = z.object({
+      id: requiredNonEmptyString,
+      expression: requiredEmptyAllowedString,
     });
 
     return validatePayload<RegisterTabActionCreatorPayload>(payload, schema);

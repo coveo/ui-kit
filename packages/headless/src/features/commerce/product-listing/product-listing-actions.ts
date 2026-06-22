@@ -1,4 +1,4 @@
-import {RecordValue, StringValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   type AsyncThunkCommerceOptions,
@@ -101,14 +101,11 @@ export interface PromoteChildToParentPayload {
   child: ChildProduct;
 }
 
-const promoteChildToParentDefinition = {
-  child: new RecordValue({
-    options: {required: true},
-    values: {
-      permanentid: new StringValue({required: true}),
-    },
+const promoteChildToParentDefinition = z.object({
+  child: z.object({
+    permanentid: z.string(),
   }),
-};
+});
 
 export const promoteChildToParent = createAction(
   'commerce/productListing/promoteChildToParent',

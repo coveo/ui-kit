@@ -1,9 +1,9 @@
-import {NumberValue, RecordValue, StringValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {facetIdDefinition} from '../../generic/facet-actions-validation.js';
 
-export const facetSearchOptionsDefinition = {
+export const facetSearchOptionsDefinition = z.object({
   facetId: facetIdDefinition,
-  captions: new RecordValue({options: {required: false}}),
-  numberOfValues: new NumberValue({required: false, min: 1}),
-  query: new StringValue({required: false, emptyAllowed: true}),
-};
+  captions: z.optional(z.record(z.string(), z.string())),
+  numberOfValues: z.optional(z.number().check(z.minimum(1))),
+  query: z.optional(z.string()),
+});

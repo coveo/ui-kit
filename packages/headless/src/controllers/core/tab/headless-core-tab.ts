@@ -1,4 +1,4 @@
-import {BooleanValue, Schema} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {configuration} from '../../../app/common-reducers.js';
 import type {CoreEngine} from '../../../app/engine.js';
 import {getConfigurationInitialState} from '../../../features/configuration/configuration-state.js';
@@ -53,14 +53,14 @@ export interface TabInitialState {
   isActive: boolean;
 }
 
-const optionsSchema = new Schema<Required<TabOptions>>({
+const optionsSchema = z.object({
   expression: requiredEmptyAllowedString,
   id: requiredNonEmptyString,
-  clearFiltersOnTabChange: new BooleanValue(),
+  clearFiltersOnTabChange: z.optional(z.boolean()),
 });
 
-const initialStateSchema = new Schema({
-  isActive: new BooleanValue(),
+const initialStateSchema = z.object({
+  isActive: z.optional(z.boolean()),
 });
 
 export interface TabProps {
@@ -123,12 +123,13 @@ export function buildCoreTab(engine: CoreEngine, props: TabProps): Tab {
   const controller = buildController(engine);
   const {dispatch} = engine;
   validateOptions(engine, optionsSchema, props.options, 'buildTab');
-  const initialState = validateInitialState(
-    engine,
-    initialStateSchema,
-    props.initialState,
-    'buildTab'
-  );
+  const initialState =
+    validateInitialState(
+      engine,
+      initialStateSchema,
+      props.initialState,
+      'buildTab'
+    ) ?? ({} as TabInitialState);
 
   const {id, expression} = props.options;
   dispatch(registerTab({id, expression}));

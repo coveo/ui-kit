@@ -1,18 +1,14 @@
-import {ArrayValue, Schema} from '@coveo/bueno';
-import type {ProductEnrichmentOptions} from '../../../controllers/commerce/product-enrichment/headless-product-enrichment.js';
+import * as z from '@coveo/bueno/zod';
 import {
   nonEmptyString,
   requiredNonEmptyString,
 } from '../../../utils/validate-payload.js';
 
-export const productEnrichmentDefinition = {
-  placementIds: new ArrayValue({
-    required: false,
-    min: 1,
-    each: requiredNonEmptyString,
-  }),
+export const productEnrichmentDefinition = z.object({
+  placementIds: z.optional(
+    z.array(requiredNonEmptyString).check(z.minLength(1))
+  ),
   productId: nonEmptyString,
-};
+});
 
-export const productEnrichmentOptionsSchema =
-  new Schema<ProductEnrichmentOptions>(productEnrichmentDefinition);
+export const productEnrichmentOptionsSchema = productEnrichmentDefinition;

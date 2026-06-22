@@ -1,4 +1,4 @@
-import {Schema, StringValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {
   buildInteractiveResult as buildInsightInteractiveResult,
   buildResultList as buildInsightResultList,
@@ -62,13 +62,9 @@ export class AtomicInsightResultList
 {
   static styles: CSSResultGroup = [placeholderStyles, listDisplayStyles];
 
-  private static readonly propsSchema = new Schema({
-    density: new StringValue({
-      constrainTo: ['normal', 'comfortable', 'compact'],
-    }),
-    imageSize: new StringValue({
-      constrainTo: ['small', 'large', 'icon', 'none'],
-    }),
+  private static readonly propsSchema = z.object({
+    density: z.optional(z.enum(['normal', 'comfortable', 'compact'])),
+    imageSize: z.optional(z.enum(['small', 'large', 'icon', 'none'])),
   });
 
   public resultList!: InsightResultList;

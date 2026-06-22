@@ -1,4 +1,4 @@
-import {NumberValue, RecordValue, Schema, StringValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import {
   buildFacetConditionsManager,
   buildNumericFacet,
@@ -80,15 +80,15 @@ export class AtomicRatingFacet
   extends LitElement
   implements InitializableComponent<Bindings>
 {
-  private static readonly propsSchema = new Schema({
-    field: new StringValue({required: true, emptyAllowed: false}),
-    numberOfIntervals: new NumberValue({min: 1}),
-    maxValueInIndex: new NumberValue({min: 0, required: false}),
-    minValueInIndex: new NumberValue({min: 0}),
-    displayValuesAs: new StringValue({constrainTo: ['checkbox', 'link']}),
-    injectionDepth: new NumberValue({min: 0, required: false}),
-    dependsOn: new RecordValue({options: {required: false}}),
-    headingLevel: new NumberValue({min: 0, max: 6, required: false}),
+  private static readonly propsSchema = z.object({
+    field: z.string().check(z.minLength(1)),
+    numberOfIntervals: z.optional(z.number().check(z.minimum(1))),
+    maxValueInIndex: z.optional(z.number().check(z.minimum(0))),
+    minValueInIndex: z.optional(z.number().check(z.minimum(0))),
+    displayValuesAs: z.optional(z.enum(['checkbox', 'link'])),
+    injectionDepth: z.optional(z.number().check(z.minimum(0))),
+    dependsOn: z.optional(z.record(z.string(), z.string())),
+    headingLevel: z.optional(z.number().check(z.minimum(0), z.maximum(6))),
   });
 
   static styles = [

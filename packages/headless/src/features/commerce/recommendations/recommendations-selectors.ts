@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import {createSelector} from '@reduxjs/toolkit';
 import type {
   CommercePaginationSection,
@@ -32,5 +31,5 @@ export const isLoadingSelector = (
   const isLoading = state.recommendations
     ? state.recommendations[slotId]?.isLoading
     : false;
-  return isNullOrUndefined(isLoading) ? false : isLoading;
+  return isLoading == null ? false : isLoading;
 };

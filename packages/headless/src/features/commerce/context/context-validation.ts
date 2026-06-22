@@ -1,51 +1,33 @@
-import {NumberValue, RecordValue, Schema, StringValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import type {CurrencyCodeISO4217} from '@coveo/relay-event-types';
 import {requiredNonEmptyString} from '../../../utils/validate-payload.js';
 
 const currencies = Intl.supportedValuesOf('currency') as CurrencyCodeISO4217[];
 
-const currencyDefinition = new StringValue<CurrencyCodeISO4217>({
-  required: true,
-  emptyAllowed: false,
-  constrainTo: currencies,
+const currencyDefinition = z.enum(
+  currencies as unknown as [CurrencyCodeISO4217, ...CurrencyCodeISO4217[]]
+);
+
+export const viewDefinition = z.object({
+  url: requiredNonEmptyString,
 });
 
-export const viewDefinition = {
-  url: requiredNonEmptyString,
-};
+export const locationDefinition = z.object({
+  latitude: z.number().check(z.minimum(-90), z.maximum(90)),
+  longitude: z.number().check(z.minimum(-180), z.maximum(180)),
+});
 
-export const locationDefinition = {
-  latitude: new NumberValue({min: -90, max: 90, required: true}),
-  longitude: new NumberValue({min: -180, max: 180, required: true}),
-};
+export const customDefinition = z.object({
+  custom: z.optional(z.record(z.string(), z.unknown())),
+});
 
-/**
- * Custom context for passing additional JSON-serializable data.
- * Values should be primitives (string, number, boolean, null) or nested objects/arrays.
- * Pass undefined to clear custom context.
- * Detailed validation is performed by the backend.
- */
-export const customDefinition = {
-  custom: new RecordValue({
-    options: {required: false},
-  }),
-};
-
-export const contextDefinition = {
+export const contextDefinition = z.object({
   language: requiredNonEmptyString,
   country: requiredNonEmptyString,
   currency: currencyDefinition,
-  view: new RecordValue({
-    options: {required: true},
-    values: viewDefinition,
-  }),
-  location: new RecordValue({
-    options: {required: false},
-    values: locationDefinition,
-  }),
-  custom: new RecordValue({
-    options: {required: false},
-  }),
-};
+  view: viewDefinition,
+  location: z.optional(locationDefinition),
+  custom: z.optional(z.record(z.string(), z.unknown())),
+});
 
-export const contextSchema = new Schema(contextDefinition);
+export const contextSchema = contextDefinition;

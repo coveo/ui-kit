@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import type {Middleware, UnknownAction} from '@reduxjs/toolkit';
 
 type UnknownActionWithAnalyticsPayload = UnknownAction & {
@@ -11,7 +10,7 @@ function isAnalyticsAction(
   const analytics = (action as UnknownActionWithAnalyticsPayload).payload
     ?.analyticsAction;
 
-  return isActionWithType(action) && !isNullOrUndefined(analytics);
+  return isActionWithType(action) && analytics != null;
 }
 
 function isActionWithType(action: unknown): action is UnknownAction {

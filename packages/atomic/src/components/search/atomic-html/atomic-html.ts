@@ -1,4 +1,4 @@
-import {Schema, StringValue} from '@coveo/bueno';
+import * as z from '@coveo/bueno/zod';
 import DOMPurify from 'dompurify';
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
@@ -46,11 +46,17 @@ export class AtomicHtml
   }
 
   private validateProps() {
-    new Schema({
-      value: new StringValue({emptyAllowed: false}),
-    }).validate({
+    const schema = z.object({
+      value: z.optional(z.string().check(z.minLength(1))),
+    });
+    const result = schema.safeParse({
       value: this.value,
     });
+    if (!result.success) {
+      throw new Error(
+        result.error.issues.map((issue) => issue.message).join('; ')
+      );
+    }
   }
 }
 
