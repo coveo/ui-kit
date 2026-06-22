@@ -13,8 +13,8 @@ vendor:
   company_name: Coveo
   email: support@coveo.com
   website: https://www.coveo.com
-report_date: '2026-06-19'
-last_modified_date: '2026-06-19'
+report_date: '2026-06-22'
+last_modified_date: '2026-06-22'
 version: 1
 notes: Generated from a11y/reports/a11y-report.json. Conformance is derived from
   axe-core results, interactive keyboard tests, and manual audits. Rows marked
@@ -531,7 +531,7 @@ chapters:
             adherence:
               level: supports
               notes:
-                Supports — automated axe-core found no violations across 18 component(s);
-                interactive keyboard testing passed across 18 component(s).
+                Supports — automated axe-core found no violations across 24 component(s);
+                interactive keyboard testing passed across 24 component(s).
   success_criteria_level_aaa:
     disabled: true
