@@ -1,16 +1,13 @@
 /**
  * Finalizes a scaffolded project: renames the package, removes monorepo-only
- * fields, ensures a .gitignore, moves it into place, and installs dependencies.
+ * fields, moves it into place, and installs dependencies.
  */
 
 import {spawnSync} from 'node:child_process';
 import {cp, readFile, rm, writeFile} from 'node:fs/promises';
 import {basename, join} from 'node:path';
-import {pathExists} from './fs-utils.js';
 import type {PackageJson} from './types.js';
 import {getPackageManager} from './utils.js';
-
-const DEFAULT_GITIGNORE = ['node_modules', 'dist', '.DS_Store'].join('\n');
 
 /**
  * Turns a project name or path into a valid npm package name (lowercase,
@@ -48,7 +45,7 @@ export function finalizePackageJson(
 
 /**
  * Finalizes the extracted sample into the target project directory:
- * rewrites package.json, ensures a .gitignore, and copies it into place.
+ * rewrites package.json and copies it into place.
  */
 export async function finalizeProject(options: {
   sampleDir: string;
@@ -63,10 +60,6 @@ export async function finalizeProject(options: {
     pkgPath,
     `${JSON.stringify(finalizePackageJson(pkg, projectName), null, 2)}\n`
   );
-
-  if (!(await pathExists(join(sampleDir, '.gitignore')))) {
-    await writeFile(join(sampleDir, '.gitignore'), `${DEFAULT_GITIGNORE}\n`);
-  }
 
   // Copy out of the temp extraction tree into the user's target directory.
   if (sampleDir !== targetDir) {
