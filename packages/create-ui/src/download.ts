@@ -21,19 +21,31 @@ type FetchImpl = typeof fetch;
 
 /**
  * Fetches a URL with one retry on failure, throwing a single clear error if all
- * attempts fail. `fetchImpl` is injectable for testing.
+ * attempts fail. A 30s connect-phase timeout prevents the CLI from hanging
+ * forever on unreachable servers; it is cleared once response headers arrive,
+ * leaving large/slow body transfers uncapped.
+ * `fetchImpl` is injectable for testing.
  */
 export async function fetchWithRetry(
   url: string,
-  options: {retries?: number; fetchImpl?: FetchImpl} = {}
+  options: {
+    retries?: number;
+    fetchImpl?: FetchImpl;
+    connectTimeoutMs?: number;
+  } = {}
 ): Promise<Response> {
   const retries = options.retries ?? 1;
   const fetchImpl = options.fetchImpl ?? fetch;
+  const connectTimeoutMs = options.connectTimeoutMs ?? 30_000;
   let lastError: unknown;
 
   for (let attempt = 0; attempt <= retries; attempt++) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), connectTimeoutMs);
+    timer.unref?.();
     try {
-      const response = await fetchImpl(url);
+      const response = await fetchImpl(url, {signal: controller.signal});
+      clearTimeout(timer);
       if (response.ok && response.body) {
         return response;
       }
@@ -41,6 +53,7 @@ export async function fetchWithRetry(
       await response.body?.cancel();
       lastError = new Error(`${response.status} ${response.statusText}`);
     } catch (error) {
+      clearTimeout(timer);
       lastError = error;
     }
   }
