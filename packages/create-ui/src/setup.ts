@@ -15,7 +15,7 @@ interface PackageJson {
   [key: string]: unknown;
 }
 
-const DEFAULT_GITIGNORE = ['node_modules', 'dist', '.DS_Store', ''].join('\n');
+const DEFAULT_GITIGNORE = ['node_modules', 'dist', '.DS_Store'].join('\n');
 
 /**
  * Turns a project name or path into a valid npm package name (lowercase,
@@ -23,13 +23,19 @@ const DEFAULT_GITIGNORE = ['node_modules', 'dist', '.DS_Store', ''].join('\n');
  */
 export function toPackageName(projectName: string): string {
   const defaultName = 'my-app';
-  return (
+  const name =
     basename(projectName)
       .trim()
       .toLowerCase()
       .replace(/\s+/g, '-')
-      .replace(/[^a-z0-9._-]/g, '') || defaultName
-  );
+      .replace(/[^a-z0-9._-]/g, '') || defaultName;
+
+  if (!name) {
+    // TODO: gracefully handle thrown errors in the CLI and print user-friendly messages.
+    throw new Error(`Invalid project name "${projectName}".`);
+  }
+
+  return name;
 }
 
 /**
