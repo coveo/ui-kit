@@ -7,6 +7,7 @@ import {fileURLToPath} from 'node:url';
 import {argv} from 'node:process';
 import {downloadTemplate} from './download.js';
 import {dirExists, isEmptyOrMissing} from './fs-utils.js';
+import {resolveSampleDependencies} from './resolve-deps.js';
 import {finalizeProject, installDependencies} from './setup.js';
 import {getTemplate, getTemplates, type Template} from './templates.js';
 import {formatError, getPackageManager, log} from './utils.js';
@@ -62,7 +63,7 @@ export function parseArgs(rawArgs: string[]): CliArgs {
   };
 }
 
-/** Downloads, finalizes, and installs the chosen template. */
+/** Downloads, resolves, finalizes, and installs the chosen template. */
 export async function scaffold(
   template: Template,
   projectName: string
@@ -78,10 +79,8 @@ export async function scaffold(
       destDir: tempDir,
     });
 
-    // TODO: (KIT-5842): resolve monorepo-only dependency protocols (catalog:,
-    // workspace:*) in the sample's package.json so it installs standalone.
-    // The download step already extracts the support files resolution needs.
-    // https://coveord.atlassian.net/browse/KIT-5842
+    log.step('Resolving dependencies…');
+    await resolveSampleDependencies({sampleDir, treeRoot: tempDir});
 
     log.step(`Creating project in ${targetDir}…`);
     await finalizeProject({sampleDir, targetDir, projectName});

@@ -804,6 +804,9 @@ importers:
       tar:
         specifier: 7.5.16
         version: 7.5.16
+      yaml:
+        specifier: 'catalog:'
+        version: 2.9.0
     devDependencies:
       '@types/minimist':
         specifier: 1.2.5

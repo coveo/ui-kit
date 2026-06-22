@@ -36,7 +36,8 @@
   },
   "dependencies": {
     "minimist": "1.2.8",
-    "tar": "7.5.16"
+    "tar": "7.5.16",
+    "yaml": "catalog:"
   },
   "devDependencies": {
     "@types/minimist": "1.2.5",
