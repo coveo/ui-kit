@@ -5,8 +5,7 @@
       "conformance": "pass"
     },
     "2.4.6-headings-and-labels": {
-      "conformance": "fail",
-      "remarks": "atomic-tab-manager renders a tablist with aria-label=\"tab-area\" \u2014 a non-descriptive technical placeholder. Screen reader users navigating by landmark or tab group hear \"tab-area\" instead of a meaningful description of the tab purpose (e.g., \"Content type tabs\"), making it difficult to understand the interface structure."
+      "conformance": "pass"
     },
     "2.5.2-pointer-cancellation": {
       "conformance": "pass"
