@@ -8,9 +8,11 @@ import {
   type RenderCardHeaderProps,
   renderCardHeader,
 } from './render-card-header';
+import {renderConversationDebugHeader} from './render-conversation-debug-header';
 
 vi.mock('@/src/components/common/heading', {spy: true});
 vi.mock('@/src/components/common/switch', {spy: true});
+vi.mock('./render-conversation-debug-header', {spy: true});
 
 describe('#renderCardHeader', () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;
@@ -162,6 +164,34 @@ describe('#renderCardHeader', () => {
           onToggle,
         }),
       });
+    });
+  });
+
+  describe('renderConversationDebugHeader', () => {
+    it('should call renderConversationDebugHeader with conversationId when withDebug is true and conversationId is defined', async () => {
+      await renderComponent({withDebug: true, conversationId: 'conv-123'});
+
+      expect(renderConversationDebugHeader).toHaveBeenCalledWith({
+        props: {conversationId: 'conv-123'},
+      });
+    });
+
+    it('should not call renderConversationDebugHeader when withDebug is false', async () => {
+      await renderComponent({withDebug: false, conversationId: 'conv-123'});
+
+      expect(renderConversationDebugHeader).not.toHaveBeenCalled();
+    });
+
+    it('should not call renderConversationDebugHeader when conversationId is undefined', async () => {
+      await renderComponent({withDebug: true, conversationId: undefined});
+
+      expect(renderConversationDebugHeader).not.toHaveBeenCalled();
+    });
+
+    it('should not call renderConversationDebugHeader when both withDebug is false and conversationId is undefined', async () => {
+      await renderComponent({withDebug: false, conversationId: undefined});
+
+      expect(renderConversationDebugHeader).not.toHaveBeenCalled();
     });
   });
 });

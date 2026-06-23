@@ -1,5 +1,5 @@
 import {html} from 'lit';
-import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {beforeEach, afterEach, describe, expect, it, vi} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {
   type RenderConversationDebugHeaderProps,
@@ -15,9 +15,13 @@ describe('#renderConversationDebugHeader', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    Object.assign(navigator, {
+    vi.stubGlobal('navigator', {
       clipboard: {writeText: mockWriteText},
     });
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
   });
 
   const renderComponent = async (
