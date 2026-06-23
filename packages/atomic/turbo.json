@@ -39,7 +39,8 @@
         "CHROMATIC_PROJECT_TOKEN",
         "CHROMATIC_SHA",
         "CHROMATIC_BRANCH",
-        "CHROMATIC_SLUG"
+        "CHROMATIC_SLUG",
+        "CHROMATIC_ALL"
       ]
     },
     "build:cem": {
