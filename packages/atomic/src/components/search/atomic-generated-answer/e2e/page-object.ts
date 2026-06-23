@@ -95,6 +95,14 @@ export class GeneratedAnswerPageObject extends BasePageObject {
     return this.page.getByRole('button', {name: /show.*previous/i});
   }
 
+  get streamOfThought() {
+    return this.page.locator('atomic-agent-stream-of-thought');
+  }
+
+  get copyToClipboardButton() {
+    return this.page.locator('[part="copy-button"]');
+  }
+
   get feedbackModal() {
     return this.page.locator('atomic-generated-answer-feedback-modal');
   }

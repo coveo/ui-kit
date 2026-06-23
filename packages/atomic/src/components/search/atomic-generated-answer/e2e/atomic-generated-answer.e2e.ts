@@ -342,48 +342,56 @@ test.describe('atomic-generated-answer', () => {
   });
 
   test.describe('search agent follow-up experience', () => {
+    test.describe.configure({mode: 'serial'});
     const streamingTimeoutMs = 30000;
 
-    test.describe('while streaming', () => {
-      test('should disable the follow-up submit button', async ({
-        generatedAnswer,
-      }) => {
-        await generatedAnswer.load({story: 'with-agent-id'});
+    test('when the user triggers the initial head answer', async ({
+      generatedAnswer,
+    }) => {
+      const streamEndPromise =
+        generatedAnswer.waitForStreamEndAnalyticsRequest();
+
+      await generatedAnswer.load({story: 'with-agent-id'});
+
+      await test.step('it should display the stream of thought component', async () => {
+        await expect(generatedAnswer.streamOfThought).toBeVisible({
+          timeout: streamingTimeoutMs,
+        });
+      });
+
+      await test.step('it should display the follow-up input with button disabled', async () => {
         await expect(generatedAnswer.followUpSubmitButton).toBeDisabled({
           timeout: streamingTimeoutMs,
         });
       });
 
-      test('should send a streamEnd analytics event after receiving the generated answer', async ({
-        generatedAnswer,
-      }) => {
-        const streamEndPromise =
-          generatedAnswer.waitForStreamEndAnalyticsRequest();
+      await test.step('it should display the answer and enable the submit button', async () => {
+        await expect(generatedAnswer.followUpSubmitButton).toBeEnabled({
+          timeout: streamingTimeoutMs,
+        });
+        await expect(generatedAnswer.generatedTexts.first()).toBeVisible();
+      });
 
-        await generatedAnswer.load({story: 'with-agent-id'});
-
+      await test.step('it should send a streamEnd analytics event', async () => {
         const streamEndRequest = await streamEndPromise;
         const body = streamEndRequest.postDataJSON();
-
         expect(body.eventType).toBe('generatedAnswer');
         expect(body.eventValue).toBe('generatedAnswerStreamEnd');
       });
     });
 
-    test.describe('after streaming', () => {
-      test.beforeEach(async ({generatedAnswer}) => {
-        await generatedAnswer.load({story: 'with-agent-id'});
-        await expect(generatedAnswer.followUpSubmitButton).toBeEnabled({
-          timeout: streamingTimeoutMs,
-        });
+    test('when the user asks a follow-up question', async ({
+      generatedAnswer,
+    }) => {
+      await generatedAnswer.load({story: 'with-agent-id'});
+      await expect(generatedAnswer.followUpSubmitButton).toBeEnabled({
+        timeout: streamingTimeoutMs,
       });
 
-      test('should render a second thread item after submitting a follow-up question', async ({
-        generatedAnswer,
-      }) => {
-        await generatedAnswer.followUpInput.fill('What else should I try?');
-        await generatedAnswer.followUpSubmitButton.click();
+      await generatedAnswer.followUpInput.fill('What else should I try?');
+      await generatedAnswer.followUpSubmitButton.click();
 
+      await test.step('it should render the follow-up answer in a thread item and collapse the previous ones', async () => {
         await expect(generatedAnswer.threadItems).toHaveCount(2, {
           timeout: streamingTimeoutMs,
         });
@@ -391,33 +399,33 @@ test.describe('atomic-generated-answer', () => {
         await expect(generatedAnswer.generatedTexts.last()).toBeVisible();
       });
 
-      test('should only show collapse controls on previous thread items, not the latest', async ({
-        generatedAnswer,
-      }) => {
-        await generatedAnswer.followUpInput.fill('What else should I try?');
-        await generatedAnswer.followUpSubmitButton.click();
+      await test.step('it should allow the user to copy the follow-up answer to clipboard', async () => {
+        await generatedAnswer.page
+          .context()
+          .grantPermissions(['clipboard-read', 'clipboard-write']);
 
-        await expect(generatedAnswer.threadItems).toHaveCount(2, {
-          timeout: streamingTimeoutMs,
-        });
-        await expect(
-          generatedAnswer.threadItems.first().locator('button[aria-expanded]')
-        ).toHaveCount(1);
-        await expect(
-          generatedAnswer.threadItems.last().locator('button[aria-expanded]')
-        ).toHaveCount(0);
+        const answerText = await generatedAnswer.generatedTexts
+          .last()
+          .textContent();
+
+        const copyButton = generatedAnswer.threadItems
+          .last()
+          .locator('[part="copy-button"]');
+        await expect(copyButton).toBeVisible();
+        await copyButton.click();
+
+        const clipboardContent = await generatedAnswer.page.evaluate(() =>
+          navigator.clipboard.readText()
+        );
+        expect(clipboardContent).toBe(answerText);
       });
 
-      test('should hide content when collapsing a previous thread item', async ({
-        generatedAnswer,
-      }) => {
-        await generatedAnswer.followUpInput.fill('What else should I try?');
-        await generatedAnswer.followUpSubmitButton.click();
+      await test.step('it should allow the user to like or dislike the follow-up answer', async () => {
+        await expect(generatedAnswer.likeButton.last()).toBeVisible();
+        await expect(generatedAnswer.dislikeButton.last()).toBeVisible();
+      });
 
-        await expect(generatedAnswer.threadItems).toHaveCount(2, {
-          timeout: streamingTimeoutMs,
-        });
-
+      await test.step('it should allow the user to collapse/expand the thread items', async () => {
         const collapseButton = generatedAnswer.threadItems
           .first()
           .locator('button[aria-expanded]');
@@ -431,22 +439,27 @@ test.describe('atomic-generated-answer', () => {
           generatedAnswer.threadItems.first().locator('[hidden]')
         ).toHaveCount(1);
       });
+    });
 
-      test('should automatically collapse previous questions when a third question is asked', async ({
-        generatedAnswer,
-      }) => {
-        await generatedAnswer.followUpInput.fill('First follow-up');
-        await generatedAnswer.followUpSubmitButton.click();
-        await expect(generatedAnswer.threadItems).toHaveCount(2, {
-          timeout: streamingTimeoutMs,
-        });
+    test('when the user asks a third question', async ({generatedAnswer}) => {
+      await generatedAnswer.load({story: 'with-agent-id'});
+      await expect(generatedAnswer.followUpSubmitButton).toBeEnabled({
+        timeout: streamingTimeoutMs,
+      });
 
-        await expect(generatedAnswer.followUpSubmitButton).toBeEnabled({
-          timeout: streamingTimeoutMs,
-        });
-        await generatedAnswer.followUpInput.fill('Second follow-up');
-        await generatedAnswer.followUpSubmitButton.click();
+      await generatedAnswer.followUpInput.fill('First follow-up');
+      await generatedAnswer.followUpSubmitButton.click();
+      await expect(generatedAnswer.threadItems).toHaveCount(2, {
+        timeout: streamingTimeoutMs,
+      });
+      await expect(generatedAnswer.followUpSubmitButton).toBeEnabled({
+        timeout: streamingTimeoutMs,
+      });
 
+      await generatedAnswer.followUpInput.fill('Second follow-up');
+      await generatedAnswer.followUpSubmitButton.click();
+
+      await test.step('it should collapse the previous questions', async () => {
         await expect(generatedAnswer.threadItems).toHaveCount(1, {
           timeout: streamingTimeoutMs,
         });
