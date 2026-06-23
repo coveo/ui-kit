@@ -175,7 +175,9 @@ export class AtomicModal
               .source=${this.source}
               .container=${this.container ?? this}
               ${ref(this.focusTrap)}
-              .scope=${this.scope}
+              .scope=${this.scope ??
+              this.bindings?.interfaceElement ??
+              document.body}
             >
               ${this.renderContent()}
             </atomic-focus-trap>
