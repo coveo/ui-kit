@@ -16,15 +16,8 @@
 
 import {USER_AGENT, fetchWithRetry} from './http.js';
 
-/** Default git ref (branch, tag, or commit SHA) to pull templates from. */
-export const DEFAULT_REF = 'main';
-
-/**
- * Build the documented GitHub REST API URL for the repository tarball at `ref`.
- */
-export function getTarballUrl(ref: string = DEFAULT_REF): string {
-  return `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/tarball/${ref}`;
-}
+const REPO_OWNER = 'coveo';
+const REPO_NAME = 'ui-kit';
 
 /** The subset of the GitHub release object we rely on. */
 interface GitHubRelease {
@@ -40,8 +33,7 @@ interface GitHubRelease {
  * resolves to a version on npm. And because the samples live in the monorepo
  * and are exercised by CI, a change that breaks them fails CI and never ships a
  * release, so "latest" is always a working state. (`extractSampleFromTarball`
- * still validates the sample path after extraction as a runtime safety net, and
- * `--ref` overrides this entirely.)
+ * still validates the sample path after extraction as a runtime safety net.)
  *
  * Uses GitHub's documented "latest release" endpoint and returns its
  * `tarball_url` verbatim. Throws a clear, actionable error if it can't be
@@ -62,7 +54,7 @@ export async function resolveLatestReleaseTarballUrl(
   if (typeof release?.tarball_url !== 'string') {
     throw new Error(
       'Could not determine the latest release to scaffold from. ' +
-        'Try again later, or pass --ref to target a specific branch, tag, or commit.'
+        'Try again later, or update @coveo/create-ui to the latest version.'
     );
   }
 

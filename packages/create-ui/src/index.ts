@@ -24,8 +24,6 @@ Coveo documentation:
 export interface CliArgs {
   projectName?: string;
   template?: string;
-  /** Advanced: branch, tag, or commit SHA to pull templates from. */
-  ref?: string;
   docs: boolean;
 }
 
@@ -48,10 +46,6 @@ function buildProgram(): Command {
       '--template <name>',
       'template to scaffold (skips the interactive prompt)'
     )
-    .option(
-      '--ref <ref>',
-      'advanced: branch, tag, or commit SHA to pull templates from'
-    )
     .option('--docs', 'print links to the Coveo documentation')
     .addHelpText(
       'after',
@@ -70,13 +64,11 @@ export function parseArgs(rawArgs: string[]): CliArgs {
   program.parse(rawArgs, {from: 'user'});
   const opts = program.opts<{
     template?: string;
-    ref?: string;
     docs?: boolean;
   }>();
   return {
     projectName: program.args[0],
     template: opts.template,
-    ref: opts.ref,
     docs: Boolean(opts.docs),
   };
 }
@@ -103,8 +95,7 @@ async function claimTargetDir(targetDir: string): Promise<boolean> {
 /** Downloads, resolves, finalizes, and installs the chosen template. */
 export async function scaffold(
   template: Template,
-  projectName: string,
-  ref?: string
+  projectName: string
 ): Promise<void> {
   const targetDir = resolve(process.cwd(), projectName);
   const tempDir = await mkdtemp(join(tmpdir(), 'create-ui-'));
@@ -115,7 +106,6 @@ export async function scaffold(
     const sampleDir = await downloadTemplate({
       samplePath: template.path,
       destDir: tempDir,
-      ref,
     });
 
     // TODO: (KIT-5842): resolve monorepo-only dependency protocols (catalog:,
@@ -204,7 +194,7 @@ export async function main(rawArgs: string[]): Promise<number> {
     return 1;
   }
 
-  await scaffold(template, args.projectName, args.ref);
+  await scaffold(template, args.projectName);
   return 0;
 }
 

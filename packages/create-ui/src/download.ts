@@ -25,7 +25,7 @@ import {pipeline} from 'node:stream/promises';
 import {extract} from 'tar';
 import {pathExists} from './fs-utils.js';
 import {USER_AGENT, fetchWithRetry} from './http.js';
-import {getTarballUrl, resolveLatestReleaseTarballUrl} from './tarball.js';
+import {resolveLatestReleaseTarballUrl} from './tarball.js';
 
 /**
  * Files outside the sample dir that the future dependency-resolution step
@@ -81,9 +81,8 @@ export async function extractSampleFromTarball(
   if (!(await pathExists(sampleDir))) {
     throw new Error(
       `The selected template was not found in the downloaded archive ` +
-        `(expected "${samplePath}"). It may not be available in the targeted ` +
-        `release — update @coveo/create-ui, or pass --ref to a branch, tag, or ` +
-        `commit that contains it.`
+        `(expected "${samplePath}"). It may not be available in the latest ` +
+        `release — update @coveo/create-ui to the latest version and try again.`
     );
   }
   return sampleDir;
@@ -92,23 +91,18 @@ export async function extractSampleFromTarball(
 /**
  * Resolves the template's tarball URL and extracts the sample into `destDir`.
  *
- * With `--ref`, downloads that exact ref; otherwise resolves the repository's
- * latest published release (see `resolveLatestReleaseTarballUrl`). Uses the
- * documented GitHub REST API endpoint, which returns a 302 redirect; a
- * `User-Agent` header is required by the API.
+ * Resolves the repository's latest published release (see
+ * `resolveLatestReleaseTarballUrl`). Uses the documented GitHub REST API
+ * endpoint, which returns a 302 redirect; a `User-Agent` header is required by
+ * the API.
  *
  * @see https://docs.github.com/en/rest/repos/contents#download-a-repository-archive-tar
  */
 export async function downloadTemplate(options: {
   samplePath: string;
   destDir: string;
-  ref?: string;
 }): Promise<string> {
-  // An explicit --ref overrides resolution; otherwise pull the latest release
-  // (ADR 001, #3).
-  const url = options.ref
-    ? getTarballUrl(options.ref)
-    : await resolveLatestReleaseTarballUrl();
+  const url = await resolveLatestReleaseTarballUrl();
 
   const response = await fetchWithRetry(url, {
     headers: {

@@ -18,22 +18,16 @@ describe('parseArgs', () => {
     expect(args.template).toBe('headless-search-react');
   });
 
-  it('reads the advanced --ref flag', () => {
-    const args = parseArgs([
-      'my-app',
-      '--template',
-      'headless-search-react',
-      '--ref',
-      'my-feature-branch',
-    ]);
-    expect(args.ref).toBe('my-feature-branch');
+  it('rejects the removed --ref flag as an unknown option', () => {
+    expect(() =>
+      parseArgs(['my-app', '--template', 'headless-search-react', '--ref', 'x'])
+    ).toThrow();
   });
 
   it('parses --docs and leaves optional flags undefined/false by default', () => {
     expect(parseArgs(['--docs']).docs).toBe(true);
     const none = parseArgs([]);
     expect(none.docs).toBe(false);
-    expect(none.ref).toBeUndefined();
     expect(none.template).toBeUndefined();
   });
 });
