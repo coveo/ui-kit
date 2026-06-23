@@ -50,7 +50,7 @@ export const ipxPage = pageHtml(`
         </atomic-layout-section>
       </div>
       <div slot="footer">
-        <a href="https://coveo.com" target="_blank" style="color: var(--atomic-primary); text-decoration: none;">Powered by Coveo</a>
+        <a href="https://coveo.com" target="_blank" rel="noopener noreferrer" style="color: var(--atomic-primary); text-decoration: none;">Powered by Coveo</a>
       </div>
     </atomic-ipx-modal>
     <atomic-ipx-button label="Help"></atomic-ipx-button>

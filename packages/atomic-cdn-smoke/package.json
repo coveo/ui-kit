@@ -5,7 +5,7 @@
   "description": "CDN visual smoke tests for Atomic components using Playwright + Chromatic",
   "type": "module",
   "scripts": {
-    "e2e": "playwright test",
+    "cdn-smoke": "playwright test",
     "chromatic": "chromatic --playwright"
   },
   "devDependencies": {
@@ -15,6 +15,6 @@
     "@playwright/test": "catalog:",
     "chromatic": "15.3.1",
     "msw": "2.14.6",
-    "typescript": "5.8.3"
+    "typescript": "catalog:"
   }
 }

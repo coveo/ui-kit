@@ -7,10 +7,12 @@ import {
 } from '@coveo/platform-mock-api';
 import type {HttpHandler} from 'msw';
 
-const ATOMIC_URL =
-  process.env.ATOMIC_URL ||
-  'https://static.cloud.coveo.com/atomic/preview/v3/atomic.esm.js';
-const THEME_URL = 'https://static.cloud.coveo.com/atomic/v3/themes/coveo.css';
+const COMMIT_SHA = process.env.COMMIT_SHA;
+const BASE_URL = COMMIT_SHA
+  ? `https://static.cloud.coveo.com/atomic/commit/${COMMIT_SHA}/v3`
+  : 'https://static.cloud.coveo.com/atomic/v3';
+const ATOMIC_URL = `${BASE_URL}/atomic.esm.js`;
+const THEME_URL = `${BASE_URL}/themes/coveo.css`;
 
 export {expect};
 
