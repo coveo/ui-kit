@@ -13,17 +13,18 @@ export function formatError(error: unknown): string {
   return 'An unexpected error occurred.';
 }
 
-const appendCmdIfWindows = (cmd: string) =>
-  `${cmd}${process.platform === 'win32' ? '.ps1' : ''}`;
-
 const DEFAULT_PACKAGE_MANAGER = 'npm';
 
-export function getPackageManager(noCmd = false) {
+/**
+ * Detects the package manager that invoked the CLI (from `npm_config_user_agent`),
+ * falling back to npm. Returns the bare command name on every platform.
+ */
+export function getPackageManager(): string {
   const firstUserAgent = /^\w+(?=\/)/;
-  const packageManager =
+  return (
     process.env.npm_config_user_agent?.match(firstUserAgent)?.[0] ??
-    DEFAULT_PACKAGE_MANAGER;
-  return noCmd ? packageManager : appendCmdIfWindows(packageManager);
+    DEFAULT_PACKAGE_MANAGER
+  );
 }
 
 export const log = {

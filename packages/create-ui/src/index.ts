@@ -125,7 +125,7 @@ export async function scaffold(
     await rm(tempDir, {recursive: true, force: true});
   }
 
-  const pm = getPackageManager(true);
+  const pm = getPackageManager();
   log.step(`Installing dependencies with ${pm}…`);
   const installed = installDependencies(targetDir);
 

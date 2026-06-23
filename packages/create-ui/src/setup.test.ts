@@ -8,8 +8,16 @@ import {
 } from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
-import {afterEach, beforeEach, describe, expect, it} from 'vitest';
-import {finalizePackageJson, finalizeProject, toPackageName} from './setup.js';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
+import {
+  finalizePackageJson,
+  finalizeProject,
+  installDependencies,
+  toPackageName,
+} from './setup.js';
+
+const {spawnSyncMock} = vi.hoisted(() => ({spawnSyncMock: vi.fn()}));
+vi.mock('node:child_process', () => ({spawnSync: spawnSyncMock}));
 
 describe('toPackageName', () => {
   it('lowercases and uses the final path segment', () => {
@@ -66,5 +74,59 @@ describe('finalizeProject (IO)', () => {
     );
     expect(pkg.name).toBe('my-app');
     expect(pkg.private).toBeUndefined();
+  });
+});
+
+describe('installDependencies', () => {
+  const originalPlatform = process.platform;
+  const originalUserAgent = process.env.npm_config_user_agent;
+
+  function setPlatform(platform: NodeJS.Platform): void {
+    Object.defineProperty(process, 'platform', {
+      value: platform,
+      configurable: true,
+    });
+  }
+
+  afterEach(() => {
+    setPlatform(originalPlatform);
+    if (originalUserAgent === undefined) {
+      delete process.env.npm_config_user_agent;
+    } else {
+      process.env.npm_config_user_agent = originalUserAgent;
+    }
+    spawnSyncMock.mockReset();
+  });
+
+  it('spawns the bare package-manager command through a shell on Windows', () => {
+    setPlatform('win32');
+    delete process.env.npm_config_user_agent;
+    spawnSyncMock.mockReturnValue({status: 0});
+
+    expect(installDependencies('/target dir')).toBe(true);
+
+    const [command, args, options] = spawnSyncMock.mock.calls[0];
+    // Bare name (not "npm.ps1"): cmd.exe resolves the .cmd/.exe shim via PATHEXT.
+    expect(command).toBe('npm');
+    expect(args).toEqual(['install']);
+    expect(options).toMatchObject({cwd: '/target dir', shell: true});
+  });
+
+  it('runs the binary directly without a shell on POSIX', () => {
+    setPlatform('linux');
+    process.env.npm_config_user_agent = 'pnpm/9.0.0 node/v20.0.0';
+    spawnSyncMock.mockReturnValue({status: 0});
+
+    installDependencies('/target');
+
+    const [command, , options] = spawnSyncMock.mock.calls[0];
+    expect(command).toBe('pnpm');
+    expect(options).toMatchObject({shell: false});
+  });
+
+  it('returns false when the package manager exits non-zero', () => {
+    setPlatform('linux');
+    spawnSyncMock.mockReturnValue({status: 1});
+    expect(installDependencies('/target')).toBe(false);
   });
 });
