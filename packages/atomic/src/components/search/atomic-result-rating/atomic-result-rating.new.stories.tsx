@@ -6,21 +6,9 @@ import {wrapInResultTemplate} from '@/storybook-utils/search/result-template-wra
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import '@/src/components/search/atomic-result-rating/atomic-result-rating.js';
+import {SearchResponse} from '@coveo/platform-mock-api/search/search-response';
 
 const searchApiHarness = new MockSearchApi();
-
-searchApiHarness.searchEndpoint.mock((response) => ({
-  ...response,
-  results: response.results.slice(0, 1).map((r) => ({
-    ...r,
-    raw: {
-      ...r.raw,
-      snrating: 3.5,
-    },
-  })),
-  totalCount: 1,
-  totalCountFiltered: 1,
-}));
 
 const CircleIcon =
   '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="currentColor"/></svg>';
@@ -60,7 +48,21 @@ const meta: Meta = {
   args,
   argTypes,
   beforeEach: async () => {
-    searchApiHarness.clearAll();
+    searchApiHarness.searchEndpoint.clear();
+    searchApiHarness.searchEndpoint.mockOnce((response) => ({
+      ...response,
+      results: (response as SearchResponse).results
+        .slice(0, 1)
+        .map((r: any) => ({
+          ...r,
+          raw: {
+            ...r.raw,
+            snrating: 3.5,
+          },
+        })),
+      totalCount: 1,
+      totalCountFiltered: 1,
+    }));
   },
 
   play,

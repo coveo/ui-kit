@@ -6,23 +6,9 @@ import {wrapInResultTemplate} from '@/storybook-utils/search/result-template-wra
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import '@/src/components/search/atomic-result-html/atomic-result-html.js';
+import {SearchResponse} from '@coveo/platform-mock-api/search/search-response';
 
 const searchApiHarness = new MockSearchApi();
-
-searchApiHarness.searchEndpoint.mock((response) => ({
-  ...response,
-  results: response.results.slice(0, 1).map((r) => ({
-    ...r,
-    excerpt: '<div>Some <b>HTML</b> content</div>',
-    title: '<h2>HTML Title <em>with emphasis</em></h2>',
-    raw: {
-      ...r.raw,
-      custom_html_field: '<p>Custom <strong>HTML</strong> field</p>',
-    },
-  })),
-  totalCount: 1,
-  totalCountFiltered: 1,
-}));
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-result-html',
@@ -59,7 +45,23 @@ const meta: Meta = {
   args,
   argTypes,
   beforeEach: async () => {
-    searchApiHarness.clearAll();
+    searchApiHarness.searchEndpoint.clear();
+    searchApiHarness.searchEndpoint.mockOnce((response) => ({
+      ...response,
+      results: (response as SearchResponse).results
+        .slice(0, 1)
+        .map((r: any) => ({
+          ...r,
+          excerpt: '<div>Some <b>HTML</b> content</div>',
+          title: '<h2>HTML Title <em>with emphasis</em></h2>',
+          raw: {
+            ...r.raw,
+            custom_html_field: '<p>Custom <strong>HTML</strong> field</p>',
+          },
+        })),
+      totalCount: 1,
+      totalCountFiltered: 1,
+    }));
   },
 
   play,

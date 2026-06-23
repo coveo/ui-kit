@@ -6,31 +6,9 @@ import {wrapInResultTemplate} from '@/storybook-utils/search/result-template-wra
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import '@/src/components/search/atomic-result-text/atomic-result-text.js';
+import {SearchResponse} from '@coveo/platform-mock-api/search/search-response';
 
 const searchApiHarness = new MockSearchApi();
-
-searchApiHarness.searchEndpoint.mock((response) => ({
-  ...response,
-  results: response.results.slice(0, 1).map((r) => ({
-    ...r,
-    excerpt: 'Bonobo the great ape',
-    title: 'Bonobo the great ape',
-    firstSentences: 'Bonobo the great ape',
-    printableUri: 'https://example.com/bonobo',
-    raw: {
-      ...r.raw,
-      author: 'Bonobo',
-      summary: 'Bonobo the great ape',
-    },
-    excerptHighlights: [{offset: 0, length: 6}],
-    titleHighlights: [{offset: 0, length: 6}],
-    firstSentencesHighlights: [{offset: 0, length: 6}],
-    printableUriHighlights: [{offset: 20, length: 6}],
-    summaryHighlights: [{offset: 0, length: 6}],
-  })),
-  totalCount: 1,
-  totalCountFiltered: 1,
-}));
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-result-text',
@@ -67,7 +45,31 @@ const meta: Meta = {
   args,
   argTypes,
   beforeEach: async () => {
-    searchApiHarness.clearAll();
+    searchApiHarness.searchEndpoint.clear();
+    searchApiHarness.searchEndpoint.mockOnce((response) => ({
+      ...response,
+      results: (response as SearchResponse).results
+        .slice(0, 1)
+        .map((r: any) => ({
+          ...r,
+          excerpt: 'Bonobo the great ape',
+          title: 'Bonobo the great ape',
+          firstSentences: 'Bonobo the great ape',
+          printableUri: 'https://example.com/bonobo',
+          raw: {
+            ...r.raw,
+            author: 'Bonobo',
+            summary: 'Bonobo the great ape',
+          },
+          excerptHighlights: [{offset: 0, length: 6}],
+          titleHighlights: [{offset: 0, length: 6}],
+          firstSentencesHighlights: [{offset: 0, length: 6}],
+          printableUriHighlights: [{offset: 20, length: 6}],
+          summaryHighlights: [{offset: 0, length: 6}],
+        })),
+      totalCount: 1,
+      totalCountFiltered: 1,
+    }));
   },
 
   play,
