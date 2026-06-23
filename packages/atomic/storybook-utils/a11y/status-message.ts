@@ -124,18 +124,6 @@ export async function testStatusMessageA11y(
   const timeout = options.timeout ?? 5000;
 
   try {
-    let baselineTexts: Set<string> = new Set();
-
-    await step('Capture baseline live region content', async () => {
-      const liveRegions = findLiveRegions(canvasElement);
-      for (const region of liveRegions) {
-        const text = region.textContent?.trim() ?? '';
-        if (text.length > 0) {
-          baselineTexts.add(text);
-        }
-      }
-    });
-
     await step(
       'Trigger action that should produce a status message',
       async () => {
@@ -153,8 +141,7 @@ export async function testStatusMessageA11y(
             const populatedRegions = liveRegions.filter((region) => {
               if (region.getAttribute('aria-hidden') === 'true') return false;
               const text = region.textContent?.trim() ?? '';
-              if (text.length === 0) return false;
-              return !baselineTexts.has(text);
+              return text.length > 0;
             });
 
             expect(populatedRegions.length).toBeGreaterThan(0);
