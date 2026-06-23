@@ -33,8 +33,8 @@ export const renderRefineModal: FunctionalComponentWithChildren<
 
     const renderHeader = () => {
       return html`
-        <div slot="header" class="contents">
-          <h1 part="title" class="truncate">${props.title}</h1>
+        <h1 part="title" slot="header" class="truncate">${props.title}</h1>
+        <div slot="header-actions" class="contents">
           ${renderButton({
             props: {
               style: 'text-transparent',
