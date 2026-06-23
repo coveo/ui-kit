@@ -2,10 +2,7 @@ import {buildQuerySummary, buildResultList} from '@coveo/headless';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, type Mock, vi} from 'vitest';
 import {page} from 'vitest/browser';
-import {
-  createAppLoadedListener,
-  type ResultListInfo,
-} from '@/src/components/common/interface/store';
+import {createAppLoadedListener} from '@/src/components/common/interface/store';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
 import {buildFakeResult} from '@/vitest-utils/testing-helpers/fixtures/headless/search/result';
