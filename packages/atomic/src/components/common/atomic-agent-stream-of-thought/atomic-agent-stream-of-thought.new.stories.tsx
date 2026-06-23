@@ -196,3 +196,41 @@ export const MultipleSearchesWithQueries: Story = {
     isStreaming: true,
   },
 };
+
+export const MultipleSearchQueriesInOneStep: Story = {
+  name: 'Multiple search queries in one step',
+  args: {
+    agentSteps: [
+      {name: 'thinking', status: 'completed', startedAt: 0, finishedAt: 100},
+      {
+        name: 'searching',
+        status: 'completed',
+        startedAt: 100,
+        finishedAt: 300,
+        toolCalls: [
+          {
+            toolCallName: 'search',
+            toolCallId: 'tc-1',
+            startedAt: 100,
+            finishedAt: 200,
+            status: 'completed',
+            type: 'search',
+            toolCallArgs: {q: 'What is Quantic'},
+          },
+          {
+            toolCallName: 'search',
+            toolCallId: 'tc-2',
+            startedAt: 200,
+            finishedAt: 300,
+            status: 'completed',
+            type: 'search',
+            toolCallArgs: {q: 'What is Atomic'},
+          },
+        ],
+      },
+      {name: 'thinking', status: 'completed', startedAt: 300, finishedAt: 400},
+      {name: 'answering', status: 'active', startedAt: Date.now()},
+    ] as GenerationStep[],
+    isStreaming: true,
+  },
+};

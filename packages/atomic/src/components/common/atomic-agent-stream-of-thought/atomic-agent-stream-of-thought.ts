@@ -112,9 +112,7 @@ export class AtomicAgentStreamOfThought extends LitElement {
       step.status === 'active'
         ? stepLabelKeys[step.type].active
         : stepLabelKeys[step.type].completed;
-    const label = step.searchQuery
-      ? this.i18n.t(labelKey, {query: step.searchQuery})
-      : this.i18n.t(labelKey);
+    const label = this.i18n.t(labelKey, {query: step.searchQuery});
 
     return html`
       <div class="step">
@@ -134,7 +132,7 @@ export class AtomicAgentStreamOfThought extends LitElement {
 
     const step = resolvedSteps[resolvedSteps.length - 1];
     const labelKey = stepLabelKeys[step.type].completed;
-    const label = this.i18n.t(labelKey);
+    const label = this.i18n.t(labelKey, {query: step.searchQuery});
 
     return html`
       <button
@@ -222,30 +220,36 @@ export class AtomicAgentStreamOfThought extends LitElement {
 
 export function resolveSteps(steps: GenerationStep[]): ResolvedStep[] {
   let searchWasPerformed = false;
-  return steps.map((step) => {
-    let type: ResolvedStepType;
+  return steps.flatMap((step) => {
     if (step.name === 'searching') {
       searchWasPerformed = true;
-      const searchToolCall = step.toolCalls?.find((tc) => tc.type === 'search');
-      const searchQuery =
-        searchToolCall?.toolCallArgs && 'q' in searchToolCall.toolCallArgs
-          ? searchToolCall.toolCallArgs.q
-          : undefined;
-      if (searchQuery) {
-        return {
-          type: 'searching-with-query' as const,
-          status: step.status,
-          searchQuery,
-        };
+      const searchToolCalls = step.toolCalls?.filter(
+        (tc) => tc.type === 'search'
+      );
+      if (searchToolCalls?.length) {
+        return searchToolCalls.map((tc) => {
+          const searchQuery =
+            tc.toolCallArgs && 'q' in tc.toolCallArgs
+              ? tc.toolCallArgs.q
+              : undefined;
+          if (searchQuery) {
+            return {
+              type: 'searching-with-query' as const,
+              status: tc.status,
+              searchQuery,
+            };
+          }
+          return {type: 'searching' as const, status: tc.status};
+        });
       }
-      type = 'searching';
+      return {type: 'searching' as const, status: step.status};
     } else if (step.name === 'answering') {
-      type = 'answering';
+      return {type: 'answering' as const, status: step.status};
     } else {
-      type = searchWasPerformed
+      const type = searchWasPerformed
         ? 'thinking-after-search'
         : 'thinking-before-search';
+      return {type, status: step.status} as ResolvedStep;
     }
-    return {type, status: step.status};
   });
 }
