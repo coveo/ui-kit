@@ -420,9 +420,46 @@ test.describe('atomic-generated-answer', () => {
         expect(clipboardContent).toBe(answerText);
       });
 
-      await test.step('it should allow the user to like or dislike the follow-up answer', async () => {
-        await expect(generatedAnswer.likeButton.last()).toBeVisible();
-        await expect(generatedAnswer.dislikeButton.last()).toBeVisible();
+      await test.step('it should allow the user to like the follow-up answer', async () => {
+        const likeButton = generatedAnswer.threadItems
+          .last()
+          .getByRole('button', {name: /^helpful$/i});
+        await expect(likeButton).toBeVisible();
+        await likeButton.click();
+        await expect(likeButton).toHaveAttribute('aria-pressed', 'true');
+      });
+
+      await test.step('it should allow the user to dislike the follow-up answer', async () => {
+        const dislikeButton = generatedAnswer.threadItems
+          .last()
+          .getByRole('button', {name: /^not helpful$/i});
+        await expect(dislikeButton).toBeVisible();
+        await dislikeButton.click();
+        await expect(dislikeButton).toHaveAttribute('aria-pressed', 'true');
+      });
+
+      await test.step('it should allow the user to hover a citation and see the popover', async () => {
+        const citation = generatedAnswer.threadItems
+          .last()
+          .locator('[part="citation"]')
+          .first();
+        await expect(citation).toBeVisible();
+        await citation.hover();
+
+        const popover = generatedAnswer.threadItems
+          .last()
+          .locator('[part="citation-popover"]')
+          .first();
+        await expect(popover).toBeVisible();
+      });
+
+      await test.step('it should allow the user to click a citation', async () => {
+        const citation = generatedAnswer.threadItems
+          .last()
+          .locator('[part="citation"]')
+          .first();
+        const href = await citation.getAttribute('href');
+        expect(href).toBeTruthy();
       });
 
       await test.step('it should allow the user to collapse/expand the thread items', async () => {
