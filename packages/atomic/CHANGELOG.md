@@ -1,3 +1,9 @@
+## 3.59.8
+
+### Patch Changes
+
+- [#7769](https://github.com/coveo/ui-kit/pull/7769) [`79b8306`](https://github.com/coveo/ui-kit/commit/79b8306c985418ad6be3b771e5e1de1028001df0) - A11y: Fix atomic-tab-manager tablist aria-label
+
 ## 3.59.7
 
 ### Patch Changes
