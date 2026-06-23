@@ -105,10 +105,7 @@ export class AtomicLoadMoreResults
   }
 
   private async onClick() {
-    // TODO KIT-4227: Once the focus mess is resolved, ensure that:
-    // The focus is set on the next new result after loading more results **without scrolling**.
-    //this.bindings.store.state.resultList?.focusOnNextNewResult();
-    (document.activeElement as HTMLElement)?.blur(); // Blur the active element to avoid focus issues, remove when focus mess is resolved.
+    this.bindings.store.state.resultList?.focusOnNextNewResult();
     this.resultList.fetchMoreResults();
   }
 
