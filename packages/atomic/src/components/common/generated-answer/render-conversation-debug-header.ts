@@ -22,7 +22,7 @@ export const renderConversationDebugHeader: FunctionalComponent<
       style="background-color:var(--atomic-success); width: 8px; height: 8px; border-radius: 50%;"
     ></div>
     <div style="color: var(--atomic-neutral-dark);" class="flex items-center">
-      Conversation ID:
+      Conversation ID:&nbsp;
       <div style="color: var(--atomic-on-background);">${conversationId}</div>
       ${hasClipboardSupport()
         ? renderButton({
