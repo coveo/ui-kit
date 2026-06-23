@@ -2,7 +2,11 @@ import {buildQuerySummary, buildResultList} from '@coveo/headless';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, type Mock, vi} from 'vitest';
 import {page} from 'vitest/browser';
-import {createAppLoadedListener} from '@/src/components/common/interface/store';
+import {
+  createAppLoadedListener,
+  type ResultListInfo,
+} from '@/src/components/common/interface/store';
+import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
 import {buildFakeResult} from '@/vitest-utils/testing-helpers/fixtures/headless/search/result';
@@ -257,6 +261,55 @@ describe('atomic-load-more-results', () => {
 
         expect(blurSpy).toHaveBeenCalledOnce();
       });
+    });
+  });
+
+  describe('when the last available batch of results is loaded', () => {
+    it('should announce that all results are loaded', async () => {
+      const messageSetterSpy = vi.spyOn(
+        AriaLiveRegionController.prototype,
+        'message',
+        'set'
+      );
+      const {element} = await renderLoadMoreResults({
+        props: {moreResultsAvailable: true},
+      });
+
+      // oxlint-disable-next-line dot-notation -- <accessing private property for testing>
+      const previousState = element['resultListState'];
+      // oxlint-disable-next-line dot-notation -- <accessing private property for testing>
+      element['resultListState'] = {
+        ...previousState,
+        moreResultsAvailable: false,
+      };
+      await element.updateComplete;
+
+      expect(messageSetterSpy).toHaveBeenCalledWith('All results are loaded.');
+    });
+
+    it('should not announce when a new search returns all results at once', async () => {
+      const messageSetterSpy = vi.spyOn(
+        AriaLiveRegionController.prototype,
+        'message',
+        'set'
+      );
+      const {element} = await renderLoadMoreResults({
+        props: {moreResultsAvailable: true},
+      });
+
+      // A new search changes the search response id, so this is not the user
+      // loading the last batch of the current result set.
+      // oxlint-disable-next-line dot-notation -- <accessing private property for testing>
+      const previousState = element['resultListState'];
+      // oxlint-disable-next-line dot-notation -- <accessing private property for testing>
+      element['resultListState'] = {
+        ...previousState,
+        moreResultsAvailable: false,
+        searchResponseId: 'a-different-search-response-id',
+      };
+      await element.updateComplete;
+
+      expect(messageSetterSpy).not.toHaveBeenCalled();
     });
   });
 });
