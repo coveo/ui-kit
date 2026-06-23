@@ -1,6 +1,7 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {createTestEngine} from '@/src/test/test-utils.js';
 import {createAsyncThunk} from '@reduxjs/toolkit';
+import type {EndpointStateScope} from '@/src/core/interface/utils/interface-types.js';
 import {
   type Engine,
   type FullEngine,
@@ -56,7 +57,7 @@ function createTestGenerativeInterface(engine: Engine): GenerativeInterface {
     [ENGINE]: fullEngine,
     [SOURCE_ENGINE]: engine,
     [FACADE_RESOLVERS]: {
-      conversation: (_scope: any) => noopThunk,
+      conversation: (_scope: EndpointStateScope) => noopThunk,
     },
   }) as unknown as GenerativeInterface;
 }

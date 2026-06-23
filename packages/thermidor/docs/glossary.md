@@ -301,7 +301,10 @@ interface SearchBoxControllerOptions {
 A factory function that creates a closure-based cache for facade resolution. Takes an engine and a thunk factory; returns a `FacadeResolver` backed by an internal `Map<string, EndpointThunk>`.
 
 ```typescript
-function createFacadeCache<T>(engine: FullEngine, factory: FacadeFactory<T>): (scope) => T
+function createFacadeCache<T>(
+  engine: FullEngine,
+  factory: FacadeFactory<T>
+): (scope) => T;
 ```
 
 The cache key is `scope.composedInterfaceId ?? scope.interfaceId`. GC is natural — when the interface is GC'd, the closure and its Map are collected with it.
@@ -318,7 +321,10 @@ A utility that resolves all thunks for a given facade name from an interface (si
 - **Composed interface**: iterates sub-interfaces, builds scoped per sub-interface with `composedInterfaceId`, returns all resolved thunks
 
 ```typescript
-function resolveAllThunks(iface: Supports<'search'>, facade: Facades['search']): EndpointThunk[]
+function resolveAllThunks(
+  iface: Supports<'search'>,
+  facade: Facades['search']
+): EndpointThunk[];
 ```
 
 **File**: [`src/core/interface/utils/resolve-all-thunks.ts`](../src/core/interface/utils/resolve-all-thunks.ts)

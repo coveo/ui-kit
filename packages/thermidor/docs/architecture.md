@@ -233,7 +233,9 @@ Key files:
 Controllers are **factory functions** that take an interface handle and return a plain object:
 
 ```typescript
-export const buildSearchBoxController = (options: {interface: Supports<'search'>}) => {
+export const buildSearchBoxController = (options: {
+  interface: Supports<'search'>;
+}) => {
   const engine = options.interface[ENGINE];
   const stateId = options.interface[STATE_ID];
 
@@ -246,7 +248,7 @@ export const buildSearchBoxController = (options: {interface: Supports<'search'>
       engine.mutate(actions.setQuery(query));
     },
     submit() {
-      return Promise.all(thunks.map(thunk => engine.mutate(thunk({engine}))));
+      return Promise.all(thunks.map((thunk) => engine.mutate(thunk({engine}))));
     },
     get state() {
       return engine.read(controllerState);
