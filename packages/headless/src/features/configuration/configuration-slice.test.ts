@@ -18,8 +18,16 @@ import {
   type ConfigurationState,
   getConfigurationInitialState,
 } from './configuration-state.js';
+import {getSearchAgentDebugMagicCookie} from './magic-cookie.js';
 
 vi.mock('../../api/analytics/coveo-analytics-utils');
+vi.mock('./magic-cookie.js', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('./magic-cookie.js')>();
+  return {
+    ...actual,
+    getSearchAgentDebugMagicCookie: vi.fn(() => false),
+  };
+});
 
 describe('configuration slice', () => {
   const initialState = getConfigurationInitialState();
@@ -326,6 +334,24 @@ describe('configuration slice', () => {
       const finalState = configurationReducer(state, setAgentId(newAgentId));
 
       expect(finalState.knowledge.agentId).toBe(newAgentId);
+    });
+
+    it('should set debugAgentSession to true when the debug cookie is set', () => {
+      vi.mocked(getSearchAgentDebugMagicCookie).mockReturnValueOnce(true);
+      const state = getConfigurationInitialState();
+
+      const finalState = configurationReducer(state, setAgentId('agent-123'));
+
+      expect(finalState.knowledge.debugAgentSession).toBe(true);
+    });
+
+    it('should not set debugAgentSession when the debug cookie is not set', () => {
+      vi.mocked(getSearchAgentDebugMagicCookie).mockReturnValueOnce(false);
+      const state = getConfigurationInitialState();
+
+      const finalState = configurationReducer(state, setAgentId('agent-123'));
+
+      expect(finalState.knowledge.debugAgentSession).toBeUndefined();
     });
   });
 });

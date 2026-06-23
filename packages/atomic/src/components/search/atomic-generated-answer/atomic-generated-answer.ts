@@ -529,6 +529,14 @@ export class AtomicGeneratedAnswer
     return getNamedSlotContent(this, 'no-answer-message').length > 0;
   }
 
+  private get isConversationDebugEnabled() {
+    return this.bindings.engine.state.configuration.knowledge.debugAgentSession;
+  }
+
+  private get followUpConversationId() {
+    return this.controller.followUpConversationId;
+  }
+
   private async copyToClipboard(answer: string) {
     await this.controller.copyToClipboard(
       answer,
@@ -796,6 +804,8 @@ export class AtomicGeneratedAnswer
         isAnswerVisible: this.isAnswerVisible,
         toggleTooltip: this.toggleTooltip,
         withToggle: this.withToggle,
+        withDebug: this.isConversationDebugEnabled,
+        conversationId: this.followUpConversationId,
         onToggle: (checked: boolean) => {
           checked ? this.generatedAnswer?.show() : this.generatedAnswer?.hide();
         },
