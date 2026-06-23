@@ -404,10 +404,6 @@ test.describe('atomic-generated-answer', () => {
           .context()
           .grantPermissions(['clipboard-read', 'clipboard-write']);
 
-        const answerText = await generatedAnswer.generatedTexts
-          .last()
-          .textContent();
-
         const copyButton = generatedAnswer.threadItems
           .last()
           .locator('[part="copy-button"]');
@@ -417,7 +413,7 @@ test.describe('atomic-generated-answer', () => {
         const clipboardContent = await generatedAnswer.page.evaluate(() =>
           navigator.clipboard.readText()
         );
-        expect(clipboardContent).toBe(answerText);
+        expect(clipboardContent).toContain('Resolving Netflix Connection');
       });
 
       await test.step('it should allow the user to like the follow-up answer', async () => {

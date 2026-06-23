@@ -311,9 +311,6 @@ importers:
         specifier: 12.0.2
         version: 12.0.2
     devDependencies:
-      '@ag-ui/client':
-        specifier: 'catalog:'
-        version: 0.0.57
       '@coveo/atomic-a11y':
         specifier: workspace:*
         version: link:../atomic-a11y
