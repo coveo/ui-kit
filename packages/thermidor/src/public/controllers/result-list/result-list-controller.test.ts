@@ -12,7 +12,7 @@ import {STATE_ID} from '@/src/core/interface/utils/symbols.js';
 
 describe('buildResultListController', () => {
   let engine: Engine;
-  let searchInterface: Interface<'search'>;
+  let searchInterface: Interface;
 
   beforeEach(() => {
     engine = createTestEngine();

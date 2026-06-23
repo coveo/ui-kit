@@ -1,5 +1,5 @@
 import type {Controller} from '../controller-types.js';
-import type {Requires} from '@/src/core/interface/utils/interface-types.js';
+import type {Supports} from '@/src/core/interface/utils/interface-types.js';
 import {getOrCreateResultsSelectors} from '@/src/core/internal/result-list/result-list-selectors.js';
 import {getOrCreateResultsSlice} from '@/src/core/internal/result-list/result-list-slice.js';
 import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
@@ -59,5 +59,5 @@ export interface ResultListControllerState {
 export interface ResultListController extends Controller<ResultListControllerState> {}
 
 export interface ResultListControllerOptions {
-  interface: Requires<'search'>;
+  interface: Supports<'search'>;
 }

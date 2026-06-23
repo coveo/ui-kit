@@ -1,10 +1,10 @@
-import type {Requires} from '@/src/core/interface/utils/interface-types.js';
+import type {Supports} from '@/src/core/interface/utils/interface-types.js';
 import {ENGINE, STATE_ID} from '@/src/core/interface/utils/symbols.js';
 import {getOrCreateSearchParametersActions} from '@/src/core/internal/search-parameters/search-parameters-actions.js';
 import {getOrCreateSearchParametersSlice} from '@/src/core/internal/search-parameters/search-parameters-slice.js';
 
 export interface LoadSearchParametersActionsOptions {
-  interface: Requires<'search'>;
+  interface: Supports<'search'>;
 }
 
 /**

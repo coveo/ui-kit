@@ -1,4 +1,4 @@
-import type {Requires} from '@/src/core/interface/utils/interface-types.js';
+import type {Supports} from '@/src/core/interface/utils/interface-types.js';
 import {ENGINE, STATE_ID} from '@/src/core/interface/utils/symbols.js';
 import {getOrCreateCartActions} from '@/src/core/internal/cart/cart-actions.js';
 import {getOrCreateCartSlice} from '@/src/core/internal/cart/cart-slice.js';
@@ -8,7 +8,7 @@ import type {
 } from '@/src/core/interface/cart/cart-types.js';
 
 export interface LoadCartActionsOptions {
-  interface: Requires<'search'>;
+  interface: Supports<'search'>;
 }
 
 /**

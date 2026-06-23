@@ -9,7 +9,7 @@ import {loadCartActions} from './cart-actions.js';
 
 describe('cart actions', () => {
   let engine: Engine;
-  let searchInterface: Interface<'search'>;
+  let searchInterface: Interface;
 
   beforeEach(() => {
     engine = createTestEngine();

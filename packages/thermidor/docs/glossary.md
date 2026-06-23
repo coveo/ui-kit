@@ -220,3 +220,105 @@ This means once the engine is configured, all API calls are automatically authen
 ### Hub-and-Spoke Model
 
 The architectural pattern where Layer 0 (Core State) is the "hub" and all other layers are "spokes" radiating from it. Every layer communicates through state — no direct inter-layer communication except the explicit Layer 2 → Layer 1 dependency for API calls.
+
+---
+
+### Facade
+
+A lazy-loaded async thunk responsible for an endpoint lifecycle (build request → call API → handle response). Each facade is scoped to an interface and instantiated on first access via a `FacadeResolver`.
+
+Facades are named by the operation they perform: `'search'`, `'suggestions'`, `'conversation'`.
+
+**File**: [`src/core/interface/loaders/`](../src/core/interface/loaders/)
+
+---
+
+### FacadeResolver
+
+A function `(scope: EndpointStateScope) => EndpointThunk` that lazily creates and caches a facade thunk. Backed by `createFacadeCache`, which holds an internal `Map<string, thunk>` in a closure.
+
+```typescript
+type FacadeResolver = (scope: EndpointStateScope) => EndpointThunk;
+```
+
+**File**: [`src/core/interface/utils/interface-types.ts`](../src/core/interface/utils/interface-types.ts)
+
+---
+
+### Facades (type)
+
+A type registry mapping each interface type to its declared facade names. Used to enforce at compile time that every interface provides resolvers for all its facades.
+
+```typescript
+interface Facades {
+  search: 'search' | 'suggestions';
+  commerce: 'search' | 'suggestions';
+  generative: 'conversation';
+}
+```
+
+**File**: [`src/core/interface/utils/interface-types.ts`](../src/core/interface/utils/interface-types.ts)
+
+---
+
+### `[FACADE_RESOLVERS]` Symbol
+
+A Symbol-keyed property on Interface and ComposedInterface objects. Holds `Record<Facades[T], FacadeResolver>` — the dispatch table of lazy facade resolvers. Not exported publicly; only accessible to internal code (controllers, compose).
+
+**File**: [`src/core/interface/utils/symbols.ts`](../src/core/interface/utils/symbols.ts)
+
+---
+
+### `[TYPE]` Symbol
+
+A Symbol-keyed discriminant on Interface objects. Values: `'search' | 'commerce' | 'generative'`. Provides structural type safety — prevents passing a generative interface to a controller that expects `Supports<'search'>`.
+
+**File**: [`src/core/interface/utils/symbols.ts`](../src/core/interface/utils/symbols.ts)
+
+---
+
+### Supports\<F\>
+
+A generic utility type that accepts any interface (simple or composed) whose `[TYPE]` corresponds to an interface type that declares facade `F`. Automatically derived from the `Facades` registry — no manual maintenance needed.
+
+```typescript
+type Supports<F extends Facades[InterfaceType]> =
+  | Interface<InterfaceTypesWith<F>>
+  | ComposedInterface<InterfaceTypesWith<F>>;
+
+// Usage:
+interface SearchBoxControllerOptions {
+  interface: Supports<'search'>;
+}
+```
+
+**File**: [`src/core/interface/utils/interface-types.ts`](../src/core/interface/utils/interface-types.ts)
+
+---
+
+### createFacadeCache
+
+A factory function that creates a closure-based cache for facade resolution. Takes an engine and a thunk factory; returns a `FacadeResolver` backed by an internal `Map<string, EndpointThunk>`.
+
+```typescript
+function createFacadeCache<T>(engine: FullEngine, factory: FacadeFactory<T>): (scope) => T
+```
+
+The cache key is `scope.composedInterfaceId ?? scope.interfaceId`. GC is natural — when the interface is GC'd, the closure and its Map are collected with it.
+
+**File**: [`src/core/interface/utils/facade-cache.ts`](../src/core/interface/utils/facade-cache.ts)
+
+---
+
+### resolveAllThunks
+
+A utility that resolves all thunks for a given facade name from an interface (simple or composed). Handles scope construction for both cases.
+
+- **Simple interface**: returns `[iface[FACADE_RESOLVERS][facade](scope)]`
+- **Composed interface**: iterates sub-interfaces, builds scoped per sub-interface with `composedInterfaceId`, returns all resolved thunks
+
+```typescript
+function resolveAllThunks(iface: Supports<'search'>, facade: Facades['search']): EndpointThunk[]
+```
+
+**File**: [`src/core/interface/utils/resolve-all-thunks.ts`](../src/core/interface/utils/resolve-all-thunks.ts)

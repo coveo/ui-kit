@@ -230,26 +230,29 @@ Key files:
 
 ### The Factory Function Pattern
 
-Controllers are **factory functions** that take an `Engine` and return a plain object:
+Controllers are **factory functions** that take an interface handle and return a plain object:
 
 ```typescript
-export const buildSearchBoxController = (engine: Engine) => {
-  engine.adoptSlice(searchBoxSlice); // Ensure the slice is loaded
+export const buildSearchBoxController = (options: {interface: Supports<'search'>}) => {
+  const engine = options.interface[ENGINE];
+  const stateId = options.interface[STATE_ID];
+
+  engine.adoptSlice(getOrCreateSearchBoxSlice(stateId));
+
+  const thunks = resolveAllThunks(options.interface, 'search');
+
   return {
-    updateQuery: (query: string) => {
-      engine.mutate(searchBoxMutators.setQuery(query));
+    setQuery({query}) {
+      engine.mutate(actions.setQuery(query));
     },
-    submit: () => {
-      executeSearchAPI(engine);
+    submit() {
+      return Promise.all(thunks.map(thunk => engine.mutate(thunk({engine}))));
     },
     get state() {
-      return engine.read(stateSelect);
+      return engine.read(controllerState);
     },
-    get query() {
-      return engine.read(searchBoxSelectors.query);
-    },
-    subscribe(callback: () => void) {
-      engine.subscribe(stateSelect, callback);
+    subscribe(callback) {
+      return engine.subscribe(controllerState, callback);
     },
   };
 };
@@ -257,15 +260,27 @@ export const buildSearchBoxController = (engine: Engine) => {
 
 The returned object has:
 
-- **Methods** for user actions (`updateQuery`, `submit`)
-- **`get state()`** accessor for reading current state (memoized via `createSelector`)
+- **Methods** for user actions (`setQuery`, `submit`)
+- **`get state()`** accessor for reading current state (memoized via `createMemoizedStateSelector`)
 - **`subscribe()`** for reactive updates
+
+### Interface and Facade Resolution
+
+Controllers receive an **interface handle** (not a raw engine). The interface carries:
+
+- `[ENGINE]` — the underlying engine for state operations
+- `[STATE_ID]` — the scoped identifier for this interface instance
+- `[TYPE]` — discriminant (`'search' | 'commerce' | 'generative'`) for type safety
+- `[FACADE_RESOLVERS]` — a Record of lazy facade resolvers (Symbol-keyed, hidden from consumers)
+
+Controllers use `resolveAllThunks(iface, 'search')` to obtain the correct thunks. This works identically for search interfaces, commerce interfaces, and composed interfaces — the controller is fully decoupled from the concrete implementation.
 
 ### What Controllers Do at Initialization
 
-1. **Adopt slices** — `engine.adoptSlice(searchBoxSlice)` ensures the slice is in the store before any reads/writes.
-2. **Create memoized selectors** — `createSelector` from RTK composes individual selectors into a combined state object.
-3. **Return the API object** — A plain object with methods bound to the engine.
+1. **Adopt slices** — `engine.adoptSlice(...)` ensures required slices are in the store
+2. **Resolve facades** — `resolveAllThunks(iface, 'search')` lazily instantiates the needed thunks
+3. **Create memoized selectors** — compose individual selectors into a combined state object
+4. **Return the API object** — a plain object with methods bound to the engine
 
 ### Available Controllers
 
