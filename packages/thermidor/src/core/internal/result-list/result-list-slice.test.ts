@@ -12,7 +12,7 @@ import {
   createResultsSelectors,
   getOrCreateResultsSelectors,
 } from './result-list-selectors.js';
-import type {CoveoSearchResult} from '@/src/core/interface/api/search-endpoint/search-endpoint-types.js';
+import type {CoveoSearchResult} from '@/src/core/interface/api/search/search-types.js';
 
 const mockCoveoResult = (
   overrides: Partial<CoveoSearchResult> = {}

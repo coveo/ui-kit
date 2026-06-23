@@ -1,5 +1,5 @@
 import {createAction} from '@reduxjs/toolkit';
-import type {CoveoFacetResponse} from '@/src/core/interface/api/search-endpoint/search-endpoint-types.js';
+import type {CoveoFacetResponse} from '@/src/core/interface/api/search/search-types.js';
 
 export function createFacetsActions(interfaceId: string) {
   return {

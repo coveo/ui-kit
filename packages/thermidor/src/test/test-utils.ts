@@ -7,11 +7,17 @@
 import {Engine, getFullEngine} from '@/src/core/index.js';
 import type {SearchResult, FacetValue} from '@/src/core/index.js';
 import type {
-  EndpointThunk,
-  Operations,
-  Requires,
+  EndpointStateScope,
+  Supports,
+  FacadeResolver,
 } from '@/src/core/interface/utils/interface-types.js';
-import {STATE_ID, ENGINE, THUNKS} from '@/src/core/interface/utils/symbols.js';
+import {
+  STATE_ID,
+  ENGINE,
+  KIND,
+  TYPE,
+  FACADE_RESOLVERS,
+} from '@/src/core/interface/utils/symbols.js';
 
 /**
  * Create a fresh engine instance for testing
@@ -21,21 +27,30 @@ export function createTestEngine(): Engine {
   return new Engine();
 }
 
+const noopResolver: FacadeResolver = (_scope: EndpointStateScope) => {
+  throw new Error('No thunk registered for this facade in test');
+};
+
 /**
- * Create a mock interface handle for testing controllers that require an interface.
- * The stateId defaults to 'test' and thunks default to empty arrays.
+ * Create a mock interface handle for testing controllers that require a search-capable interface.
+ * The stateId defaults to 'test'. Resolvers default to noop.
  */
-export function createTestInterface<T extends Operations[keyof Operations]>(
+export function createTestInterface(
   engine: Engine,
-  operations: Record<T, EndpointThunk[]> = {} as Record<T, EndpointThunk[]>,
-  stateId = 'test'
-): Requires<T> {
+  stateId = 'test',
+  resolvers?: {search?: FacadeResolver; suggestions?: FacadeResolver}
+): Supports<'search'> {
   const fullEngine = getFullEngine(engine);
   return {
+    [KIND]: 'interface' as const,
+    [TYPE]: 'search' as const,
     [STATE_ID]: stateId,
     [ENGINE]: fullEngine,
-    [THUNKS]: operations,
-  } as Requires<T>;
+    [FACADE_RESOLVERS]: {
+      search: resolvers?.search ?? noopResolver,
+      suggestions: resolvers?.suggestions ?? noopResolver,
+    },
+  };
 }
 
 /**
