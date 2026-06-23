@@ -19,7 +19,7 @@ export function resolveFacades<T extends InterfaceType>(
         interfaceId: sub[STATE_ID],
         composedInterfaceId: composedId,
       };
-      return sub[FACADE_RESOLVERS][facade](scope);
+      return iface[FACADE_RESOLVERS][facade](scope);
     });
   }
 

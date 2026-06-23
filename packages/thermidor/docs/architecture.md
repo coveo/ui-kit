@@ -241,7 +241,7 @@ export const buildSearchBoxController = (options: {
 
   engine.adoptSlice(getOrCreateSearchBoxSlice(stateId));
 
-  const thunks = resolveAllThunks(options.interface, 'search');
+  const thunks = resolveFacades(options.interface, 'search');
 
   return {
     setQuery({query}) {
@@ -275,12 +275,12 @@ Controllers receive an **interface handle** (not a raw engine). The interface ca
 - `[TYPE]` — discriminant (`'search' | 'commerce' | 'generative'`) for type safety
 - `[FACADE_RESOLVERS]` — a Record of lazy facade resolvers (Symbol-keyed, hidden from consumers)
 
-Controllers use `resolveAllThunks(iface, 'search')` to obtain the correct thunks. This works identically for search interfaces, commerce interfaces, and composed interfaces — the controller is fully decoupled from the concrete implementation.
+Controllers use `resolveFacades(iface, 'search')` to obtain the correct thunks. This works identically for search interfaces, commerce interfaces, and composed interfaces — the controller is fully decoupled from the concrete implementation.
 
 ### What Controllers Do at Initialization
 
 1. **Adopt slices** — `engine.adoptSlice(...)` ensures required slices are in the store
-2. **Resolve facades** — `resolveAllThunks(iface, 'search')` lazily instantiates the needed thunks
+2. **Resolve facades** — `resolveFacades(iface, 'search')` lazily instantiates the needed thunks
 3. **Create memoized selectors** — compose individual selectors into a combined state object
 4. **Return the API object** — a plain object with methods bound to the engine
 

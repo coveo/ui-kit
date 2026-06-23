@@ -17,7 +17,7 @@ import type {Interface} from '@/src/core/interface/utils/interface-types.js';
 describe('buildSearchBoxController', () => {
   let engine: Engine;
   let fullEngine: FullEngine;
-  let searchInterface: Interface;
+  let searchInterface: Interface<'search'>;
 
   const buildController = () =>
     buildSearchBoxController({interface: searchInterface});

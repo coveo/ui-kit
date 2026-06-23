@@ -21,7 +21,7 @@ Replace eager thunk instantiation with lazy facade resolvers stored as a typed `
 
 1. **Requirement**: Full use-case support
    - **Impact**: Positive
-   - **How satisfied**: Controllers call `resolveAllThunks(iface, 'search')` which works identically for search, commerce, and composed interfaces. Each interface's `[FACADE_RESOLVERS]` record provides the correct resolver for each operation.
+   - **How satisfied**: Controllers call `resolveFacades(iface, 'search')` which works identically for search, commerce, and composed interfaces. Each interface's `[FACADE_RESOLVERS]` record provides the correct resolver for each operation.
 
 2. **Requirement**: Public API independence
    - **Impact**: Positive
@@ -69,15 +69,15 @@ Replace eager thunk instantiation with lazy facade resolvers stored as a typed `
   - **Lazy**: facades instantiated only when a controller requests them
   - **No global state**: cache lives in the closure, owned by the interface object
   - **Natural GC**: interface GC'd → closure GC'd → cache GC'd
-  - **Controller decoupled**: `resolveAllThunks(iface, 'search')` works for any interface type
+  - **Controller decoupled**: `resolveFacades(iface, 'search')` works for any interface type
   - **Type-safe**: `Facades` Record enforces completeness; `[TYPE]` discriminant prevents wrong-interface assignment
   - **Compose is trivial**: delegates to matching sub-interface resolver
   - **Hidden from consumer**: `[FACADE_RESOLVERS]` is Symbol-keyed, not in public API
 - **Cons**:
-  - More files than original (4 loaders + facade-cache + resolve-all-thunks)
+  - More files than original (4 loaders + facade-cache + resolve-facades)
   - One level of indirection vs reading `[THUNKS]` directly
 - **Risks**:
-  - Facade names are string literals in `Facades` type — typos in `resolveAllThunks` calls caught at compile time but not in ad-hoc string usage
+  - Facade names are string literals in `Facades` type — typos in `resolveFacades` calls caught at compile time but not in ad-hoc string usage
 
 ## 5. Decision Rationale
 

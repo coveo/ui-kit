@@ -229,7 +229,7 @@ A lazy-loaded async thunk responsible for an endpoint lifecycle (build request â
 
 Facades are named by the operation they perform: `'search'`, `'suggestions'`, `'conversation'`.
 
-**File**: [`src/core/interface/loaders/`](../src/core/interface/loaders/)
+**File**: [`src/core/interface/api/`](../src/core/interface/api/)
 
 ---
 
@@ -313,18 +313,18 @@ The cache key is `scope.composedInterfaceId ?? scope.interfaceId`. GC is natural
 
 ---
 
-### resolveAllThunks
+### resolveFacades
 
-A utility that resolves all thunks for a given facade name from an interface (simple or composed). Handles scope construction for both cases.
+A utility that resolves all facade thunks for a given facade name from an interface (simple or composed). Handles scope construction for both cases.
 
 - **Simple interface**: returns `[iface[FACADE_RESOLVERS][facade](scope)]`
-- **Composed interface**: iterates sub-interfaces, builds scoped per sub-interface with `composedInterfaceId`, returns all resolved thunks
+- **Composed interface**: iterates sub-interfaces, builds scoped per sub-interface with `composedInterfaceId`, delegates through the composed interface's resolver
 
 ```typescript
-function resolveAllThunks(
-  iface: Supports<'search'>,
-  facade: Facades['search']
+function resolveFacades<T extends InterfaceType>(
+  iface: Interface<T> | ComposedInterface<T>,
+  facade: Facades[T]
 ): EndpointThunk[];
 ```
 
-**File**: [`src/core/interface/utils/resolve-all-thunks.ts`](../src/core/interface/utils/resolve-all-thunks.ts)
+**File**: [`src/core/interface/utils/resolve-facades.ts`](../src/core/interface/utils/resolve-facades.ts)

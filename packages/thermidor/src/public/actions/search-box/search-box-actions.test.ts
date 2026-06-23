@@ -18,7 +18,7 @@ import {loadSearchBoxActions} from './search-box-actions.js';
 describe('search-box actions', () => {
   let engine: Engine;
   let fullEngine: FullEngine;
-  let searchInterface: Interface;
+  let searchInterface: Interface<'search'>;
 
   beforeEach(() => {
     engine = createTestEngine();

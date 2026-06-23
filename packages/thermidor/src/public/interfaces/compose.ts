@@ -29,6 +29,11 @@ export function composeInterfaces<T extends InterfaceType>(options: {
     if (iface[ENGINE] !== engine) {
       throw new Error('All interfaces must share the same engine.');
     }
+    if (iface[TYPE] !== type) {
+      throw new Error(
+        `All interfaces must share the same type. Expected '${type}', got '${iface[TYPE]}'.`
+      );
+    }
   }
 
   const composedId = generateId();
@@ -48,7 +53,11 @@ export function composeInterfaces<T extends InterfaceType>(options: {
       name,
       ((scope) => {
         const sub = subMap.get(scope.interfaceId);
-        if (!sub) return undefined as never;
+        if (!sub) {
+          throw new Error(
+            `No sub-interface found for scope interfaceId '${scope.interfaceId}' in composed interface '${composedId}'.`
+          );
+        }
         return sub[FACADE_RESOLVERS][name](scope);
       }) satisfies FacadeResolver,
     ])
