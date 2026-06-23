@@ -18,17 +18,19 @@ export class InsightPagerPageObject extends BasePageObject {
 
   pageButton(pageNumber: number): Locator {
     return this.page.locator(
-      `atomic-insight-pager input[type="radio"][aria-label="Page ${pageNumber}"]`
+      `atomic-insight-pager button[aria-label="Page ${pageNumber}"]`
     );
   }
 
   get currentPageButton(): Locator {
     return this.page.locator(
-      'atomic-insight-pager input[type="radio"][checked]'
+      'atomic-insight-pager button[aria-current="page"]'
     );
   }
 
   get pageButtons(): Locator {
-    return this.page.locator('atomic-insight-pager input[type="radio"]');
+    return this.page.locator(
+      'atomic-insight-pager button[part~="page-button"]'
+    );
   }
 }
