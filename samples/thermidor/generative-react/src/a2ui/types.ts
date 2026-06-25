@@ -61,6 +61,7 @@ export interface ParsedSurface {
   rootId: string;
   componentType: string;
   componentProps: Record<string, unknown>;
+  components: ComponentEntry[];
   data: Record<string, unknown>;
 }
 
@@ -81,6 +82,7 @@ export function parseSurfaceSnapshot(
       rootId: string;
       componentType: string;
       componentProps: Record<string, unknown>;
+      components: ComponentEntry[];
       data: Record<string, unknown>;
     }
   >();
@@ -93,6 +95,7 @@ export function parseSurfaceSnapshot(
           rootId: root,
           componentType: '',
           componentProps: {},
+          components: [],
           data: {},
         });
       }
@@ -101,14 +104,17 @@ export function parseSurfaceSnapshot(
     if ('surfaceUpdate' in op) {
       const {surfaceId, components} = op.surfaceUpdate;
       const entry = surfaces.get(surfaceId);
-      if (entry && components.length > 0) {
-        const rootComponent = components[0].component;
-        const [type, props] = Object.entries(rootComponent)[0] ?? [
-          'Unknown',
-          {},
-        ];
-        entry.componentType = type;
-        entry.componentProps = props as Record<string, unknown>;
+      if (entry) {
+        entry.components = components;
+        if (components.length > 0) {
+          const rootComponent = components[0].component;
+          const [type, props] = Object.entries(rootComponent)[0] ?? [
+            'Unknown',
+            {},
+          ];
+          entry.componentType = type;
+          entry.componentProps = props as Record<string, unknown>;
+        }
       }
     }
 
@@ -128,6 +134,7 @@ export function parseSurfaceSnapshot(
     rootId: entry.rootId,
     componentType: entry.componentType,
     componentProps: entry.componentProps,
+    components: entry.components,
     data: entry.data,
   }));
 }

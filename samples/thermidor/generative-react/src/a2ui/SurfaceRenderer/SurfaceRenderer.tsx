@@ -1,4 +1,5 @@
 import {useMemo} from 'react';
+import {A2UIViewer, type A2UIActionEvent} from '@a2ui/react/v0_8';
 import {A2UIProductCarousel} from '../ProductCarousel/ProductCarousel.js';
 import {A2UIBundleDisplay} from '../BundleDisplay/BundleDisplay.js';
 import {A2UINextActionsBar} from '../NextActionsBar/NextActionsBar.js';
@@ -10,7 +11,7 @@ import styles from './SurfaceRenderer.module.css';
 
 type A2UISurface = Record<string, unknown>;
 
-const KNOWN_COMPONENTS = new Set([
+const CUSTOM_COMPONENTS = new Set([
   'ProductCarousel',
   'BundleDisplay',
   'NextActionsBar',
@@ -23,19 +24,6 @@ export interface SurfaceRendererProps {
   onAction?: (text: string, type: string) => void;
 }
 
-interface RenderEntry {
-  type: 'real';
-  surface: ParsedSurface;
-}
-
-interface SkeletonEntry {
-  type: 'skeleton';
-  surfaceId: string;
-  componentType: string;
-}
-
-type RenderItem = RenderEntry | SkeletonEntry;
-
 export function SurfaceRenderer({surfaces, onAction}: SurfaceRendererProps) {
   const allParsed = useMemo(() => {
     const result: ParsedSurface[] = [];
@@ -45,93 +33,92 @@ export function SurfaceRenderer({surfaces, onAction}: SurfaceRendererProps) {
     return result;
   }, [surfaces]);
 
-  const renderItems = useMemo(() => {
-    const known = allParsed.filter((s) =>
-      KNOWN_COMPONENTS.has(s.componentType)
-    );
+  const {customSurfaces, standardSurfaces, skeletons} = useMemo(() => {
+    const custom: ParsedSurface[] = [];
+    const standard: ParsedSurface[] = [];
+    const skel: ParsedSurface[] = [];
 
-    const skeletons: ParsedSurface[] = [];
-    const real: ParsedSurface[] = [];
-
-    for (const s of known) {
+    for (const s of allParsed) {
       const props = s.componentProps as Record<string, unknown>;
-      if (s.surfaceId.startsWith('skeleton-') || props.isLoading === true) {
-        skeletons.push(s);
-      } else {
-        real.push(s);
+      const isLoading =
+        s.surfaceId.startsWith('skeleton-') || props.isLoading === true;
+
+      if (isLoading && CUSTOM_COMPONENTS.has(s.componentType)) {
+        skel.push(s);
+      } else if (CUSTOM_COMPONENTS.has(s.componentType)) {
+        custom.push(s);
+      } else if (s.componentType) {
+        standard.push(s);
       }
     }
 
-    const dedupedIds = new Set<string>();
-    const dedupedReal: ParsedSurface[] = [];
-    for (const s of real) {
-      if (dedupedIds.has(s.surfaceId)) continue;
-      dedupedIds.add(s.surfaceId);
-      dedupedReal.push(s);
-    }
-
-    const realComponentTypes = new Set(dedupedReal.map((s) => s.componentType));
-
-    const items: RenderItem[] = [];
-
-    const dedupedSkeletonTypes = new Set<string>();
-    for (const s of skeletons) {
-      if (realComponentTypes.has(s.componentType)) continue;
-      if (dedupedSkeletonTypes.has(s.componentType)) continue;
-      dedupedSkeletonTypes.add(s.componentType);
-      items.push({
-        type: 'skeleton',
-        surfaceId: s.surfaceId,
-        componentType: s.componentType,
-      });
-    }
-
-    for (const s of dedupedReal) {
-      items.push({type: 'real', surface: s});
-    }
-
-    return items;
+    return {
+      customSurfaces: custom,
+      standardSurfaces: standard,
+      skeletons: skel,
+    };
   }, [allParsed]);
 
-  if (renderItems.length === 0) {
+  if (
+    customSurfaces.length === 0 &&
+    standardSurfaces.length === 0 &&
+    skeletons.length === 0
+  ) {
     return null;
   }
 
+  const realComponentTypes = new Set(
+    customSurfaces.map((s) => s.componentType)
+  );
+
+  const handleA2UIAction = onAction
+    ? (event: A2UIActionEvent) => {
+        const text = (event.context?.text as string) ?? event.actionName ?? '';
+        const type =
+          (event.context?.type as string) ?? event.actionName ?? 'action';
+        onAction(text, type);
+      }
+    : undefined;
+
   return (
     <div className={styles.container}>
-      {renderItems.map((item) => {
-        if (item.type === 'skeleton') {
-          return (
-            <A2UISkeleton
-              key={item.surfaceId}
-              componentType={item.componentType}
-            />
-          );
-        }
-        return (
-          <A2UISurfaceComponent
-            key={item.surface.surfaceId}
-            surface={item.surface}
-            allSurfaces={allParsed}
-            onAction={onAction}
-          />
-        );
-      })}
+      {skeletons
+        .filter((s) => !realComponentTypes.has(s.componentType))
+        .map((s) => (
+          <A2UISkeleton key={s.surfaceId} componentType={s.componentType} />
+        ))}
+      {customSurfaces.map((surface) => (
+        <CustomSurfaceComponent
+          key={surface.surfaceId}
+          surface={surface}
+          allSurfaces={allParsed}
+          onAction={onAction}
+        />
+      ))}
+      {standardSurfaces.map((surface) => (
+        <A2UIViewer
+          key={surface.surfaceId}
+          root={surface.rootId}
+          components={surface.components}
+          data={surface.data}
+          onAction={handleA2UIAction}
+        />
+      ))}
     </div>
   );
 }
 
-interface A2UISurfaceComponentProps {
+interface CustomSurfaceComponentProps {
   surface: ParsedSurface;
   allSurfaces: ParsedSurface[];
   onAction?: (text: string, type: string) => void;
 }
 
-function A2UISurfaceComponent({
+function CustomSurfaceComponent({
   surface,
   allSurfaces,
   onAction,
-}: A2UISurfaceComponentProps) {
+}: CustomSurfaceComponentProps) {
   switch (surface.componentType) {
     case 'ProductCarousel':
       return <A2UIProductCarousel surface={surface} />;

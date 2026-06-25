@@ -13,6 +13,8 @@
     "e2e:watch": "playwright test --ui"
   },
   "dependencies": {
+    "@a2ui/react": "^0.10.1",
+    "@a2ui/web_core": "^0.10.1",
     "@coveo/thermidor": "workspace:*",
     "marked": "^15.0.0",
     "react": "catalog:",
