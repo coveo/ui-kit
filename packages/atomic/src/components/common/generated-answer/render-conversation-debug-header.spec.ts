@@ -62,7 +62,11 @@ describe('#renderConversationDebugHeader', () => {
     expect(element.textContent).toContain(
       i18n.t('generated-answer-debug-mode-on')
     );
-    expect(element.textContent).toContain('my-conv-456');
+    expect(element.textContent).toContain(
+      i18n.t('generated-answer-conversation-id', {
+        conversationId: 'my-conv-456',
+      })
+    );
   });
 
   describe('the copy button', () => {
