@@ -1,6 +1,6 @@
 import type {FullEngine} from '@/src/core/interface/engine/engine.js';
 import type {CommerceSearchResponse} from '@/src/api/interface/commerce-search-endpoint/commerce-search-endpoint-types.js';
-import type {CoveoFacetResponse} from '@/src/core/interface/api/search-endpoint/search-endpoint-types.js';
+import type {CoveoFacetResponse} from '@/src/core/interface/api/search/search-types.js';
 import {getOrCreateProductListActions} from '@/src/core/internal/product-list/product-list-actions.js';
 import {getOrCreatePaginationActions} from '@/src/core/internal/pagination/pagination-actions.js';
 import {getOrCreateFacetsActions} from '@/src/core/internal/facets/facets-actions.js';

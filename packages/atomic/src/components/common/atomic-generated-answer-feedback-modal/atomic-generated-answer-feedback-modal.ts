@@ -256,19 +256,13 @@ export class AtomicGeneratedAnswerFeedbackModal
 
   private renderHeader() {
     return html`
-      <div
-        slot="header"
-        part="modal-header"
-        class=${multiClassMap({
-          'flex w-full items-center justify-between': true,
-        })}
-      >
-        <h1>
-          <span>${this.bindings.i18n.t('feedback-modal-title')}</span>
-          <span class=${multiClassMap({'hide ml-0.5': true})}>
-            ${this.bindings.i18n.t('additional-feedback')}
-          </span>
-        </h1>
+      <h1 slot="header" part="modal-header">
+        <span>${this.bindings.i18n.t('feedback-modal-title')}</span>
+        <span class=${multiClassMap({'hide ml-0.5': true})}>
+          ${this.bindings.i18n.t('additional-feedback')}
+        </span>
+      </h1>
+      <div slot="header-actions" class="contents">
         ${renderIconButton({
           props: {
             style: 'text-transparent',

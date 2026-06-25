@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      body {
+        margin: 0;
+        font-family: system-ui, sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <atomic-search-interface>
+      <atomic-search-layout>
+        <atomic-layout-section section="search">
+          <atomic-search-box>
+            <atomic-search-box-query-suggestions></atomic-search-box-query-suggestions>
+          </atomic-search-box>
+        </atomic-layout-section>
+        <atomic-layout-section section="facets">
+          <atomic-facet-manager>
+            <atomic-facet field="filetype" label="File Type"></atomic-facet>
+            <atomic-facet field="author" label="Author"></atomic-facet>
+            <atomic-facet field="source" label="Source"></atomic-facet>
+          </atomic-facet-manager>
+        </atomic-layout-section>
+        <atomic-layout-section section="main">
+          <atomic-layout-section section="status">
+            <atomic-breadbox></atomic-breadbox>
+            <atomic-query-summary></atomic-query-summary>
+            <atomic-sort-dropdown>
+              <atomic-sort-expression
+                label="Relevance"
+                expression="relevancy"
+              ></atomic-sort-expression>
+              <atomic-sort-expression
+                label="Date (Newest)"
+                expression="date descending"
+              ></atomic-sort-expression>
+            </atomic-sort-dropdown>
+            <atomic-did-you-mean></atomic-did-you-mean>
+            <atomic-refine-toggle></atomic-refine-toggle>
+          </atomic-layout-section>
+          <atomic-layout-section section="results">
+            <atomic-result-list>
+              <atomic-result-template>
+                <template>
+                  <atomic-result-section-title>
+                    <atomic-result-link></atomic-result-link>
+                  </atomic-result-section-title>
+                  <atomic-result-section-excerpt>
+                    <atomic-result-text field="excerpt"></atomic-result-text>
+                  </atomic-result-section-excerpt>
+                  <atomic-result-section-bottom-metadata>
+                    <atomic-result-fields-list>
+                      <atomic-field-condition if-defined="source">
+                        <atomic-result-text field="source"></atomic-result-text>
+                      </atomic-field-condition>
+                      <atomic-field-condition if-defined="filetype">
+                        <atomic-result-badge
+                          field="filetype"
+                        ></atomic-result-badge>
+                      </atomic-field-condition>
+                    </atomic-result-fields-list>
+                  </atomic-result-section-bottom-metadata>
+                </template>
+              </atomic-result-template>
+            </atomic-result-list>
+          </atomic-layout-section>
+          <atomic-layout-section section="pagination">
+            <atomic-pager></atomic-pager>
+            <atomic-results-per-page></atomic-results-per-page>
+          </atomic-layout-section>
+        </atomic-layout-section>
+      </atomic-search-layout>
+    </atomic-search-interface>
+  </body>
+</html>

@@ -1,5 +1,7 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {createTestEngine} from '@/src/test/test-utils.js';
+import {createAsyncThunk} from '@reduxjs/toolkit';
+import type {EndpointStateScope} from '@/src/core/interface/utils/interface-types.js';
 import {
   type Engine,
   type FullEngine,
@@ -10,8 +12,8 @@ import {
   STATE_ID,
   SOURCE_ENGINE,
   KIND,
-  THUNK_FACTORIES,
-  THUNKS,
+  TYPE,
+  FACADE_RESOLVERS,
 } from '@/src/core/interface/utils/symbols.js';
 import {getOrCreateGenerativeActions} from '@/src/core/internal/generative/generative-actions.js';
 import {loadGenerative} from '@/src/core/interface/generative/generative-loader.js';
@@ -19,6 +21,11 @@ import type {GenerativeInterface} from '@/src/public/interfaces/generative.js';
 import {buildConverseController} from './converse-controller.js';
 
 const TEST_ID = 'test-generative';
+
+const noopThunk = createAsyncThunk<void, {engine: FullEngine}>(
+  'generative/noop',
+  async () => {}
+);
 
 const mockSubmit = vi.fn<(prompt: string) => Promise<void>>();
 const mockResubmit = vi.fn<(turnId: string, prompt: string) => Promise<void>>();
@@ -45,11 +52,13 @@ function createTestGenerativeInterface(engine: Engine): GenerativeInterface {
 
   return Object.freeze({
     [KIND]: 'interface' as const,
+    [TYPE]: 'generative' as const,
     [STATE_ID]: TEST_ID,
     [ENGINE]: fullEngine,
     [SOURCE_ENGINE]: engine,
-    [THUNK_FACTORIES]: {conversation: []},
-    [THUNKS]: {conversation: []},
+    [FACADE_RESOLVERS]: {
+      conversation: (_scope: EndpointStateScope) => noopThunk,
+    },
   }) as unknown as GenerativeInterface;
 }
 

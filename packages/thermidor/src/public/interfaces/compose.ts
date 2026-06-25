@@ -1,22 +1,21 @@
 import {
   KIND,
+  TYPE,
   STATE_ID,
   ENGINE,
-  THUNK_FACTORIES,
-  THUNKS,
   INTERFACES,
+  FACADE_RESOLVERS,
 } from '@/src/core/interface/utils/symbols.js';
 import type {
   Interface,
+  InterfaceType,
   ComposedInterface,
-  Operations,
-  EndpointStateScope,
-  EndpointThunk,
-  EndpointThunkFactory,
+  Facades,
+  FacadeResolver,
 } from '@/src/core/interface/utils/interface-types.js';
 import {generateId} from '@/src/core/interface/utils/id-generator.js';
 
-export function composeInterfaces<T extends keyof Operations>(options: {
+export function composeInterfaces<T extends InterfaceType>(options: {
   interfaces: Interface<T>[];
 }): ComposedInterface<T> {
   if (options.interfaces.length === 0) {
@@ -24,44 +23,52 @@ export function composeInterfaces<T extends keyof Operations>(options: {
   }
 
   const engine = options.interfaces[0][ENGINE];
+  const type = options.interfaces[0][TYPE];
 
   for (const iface of options.interfaces) {
     if (iface[ENGINE] !== engine) {
       throw new Error('All interfaces must share the same engine.');
     }
+    if (iface[TYPE] !== type) {
+      throw new Error(
+        `All interfaces must share the same type. Expected '${type}', got '${iface[TYPE]}'.`
+      );
+    }
   }
 
   const composedId = generateId();
+  const interfaces = options.interfaces;
 
-  const composedThunks = options.interfaces.reduce(
-    (acc, iface) => {
-      const scope: EndpointStateScope = {
-        interfaceId: iface[STATE_ID],
-        composedInterfaceId: composedId,
-      };
+  const subMap = new Map(interfaces.map((i) => [i[STATE_ID], i]));
 
-      for (const [operation, factories] of Object.entries(
-        iface[THUNK_FACTORIES]
-      )) {
-        const key = operation as Operations[T];
-        acc[key] ??= [];
-        acc[key].push(
-          ...(factories as EndpointThunkFactory[]).map((factory) =>
-            factory(engine, scope)
-          )
-        );
-      }
+  if (subMap.size !== interfaces.length) {
+    throw new Error('Composed interfaces must have unique ids.');
+  }
 
-      return acc;
-    },
-    {} as Record<Operations[T], EndpointThunk[]>
-  );
+  const facadeNames = Object.keys(interfaces[0][FACADE_RESOLVERS]) as Array<
+    Facades[T]
+  >;
+  const resolvers = Object.fromEntries(
+    facadeNames.map((name) => [
+      name,
+      ((scope) => {
+        const sub = subMap.get(scope.interfaceId);
+        if (!sub) {
+          throw new Error(
+            `No sub-interface found for scope interfaceId '${scope.interfaceId}' in composed interface '${composedId}'.`
+          );
+        }
+        return sub[FACADE_RESOLVERS][name](scope);
+      }) satisfies FacadeResolver,
+    ])
+  ) as Record<Facades[T], FacadeResolver>;
 
   return Object.freeze({
     [KIND]: 'composed' as const,
+    [TYPE]: type,
     [STATE_ID]: composedId,
     [ENGINE]: engine,
-    [INTERFACES]: options.interfaces as Interface[],
-    [THUNKS]: composedThunks,
+    [INTERFACES]: interfaces,
+    [FACADE_RESOLVERS]: resolvers,
   });
 }

@@ -140,6 +140,40 @@ describe('ItemListCommon', () => {
       expect(getFirstFocusableDescendantMock).not.toHaveBeenCalled();
     });
 
+    it('should defer and set focus target after getUpdateComplete resolves when element initially has no children', async () => {
+      const setTarget = vi.fn();
+      const nextNewItemTarget = {
+        ...baseNextNewItemTarget,
+        setTarget,
+      } as unknown as FocusTargetController;
+      const getCurrentNumberOfItems = vi.fn(() => 0);
+      const itemListCommon = itemListCommonFixture({
+        getCurrentNumberOfItems,
+        nextNewItemTarget,
+      });
+
+      itemListCommon.focusOnNextNewResult();
+
+      const element = document.createElement('div') as HTMLElement & {
+        getUpdateComplete: () => Promise<boolean>;
+      };
+      let resolveUpdate!: (value: boolean) => void;
+      element.getUpdateComplete = () =>
+        new Promise((resolve) => {
+          resolveUpdate = resolve;
+        });
+
+      itemListCommon.setNewResultRef(element, 0);
+
+      expect(setTarget).not.toHaveBeenCalled();
+
+      element.appendChild(document.createElement('button'));
+      resolveUpdate(true);
+      await Promise.resolve();
+
+      expect(setTarget).toHaveBeenCalledOnce();
+    });
+
     describe('when #element has children and #resultIndex is the index of the result to focus', () => {
       let itemListCommon: ItemListCommon;
 

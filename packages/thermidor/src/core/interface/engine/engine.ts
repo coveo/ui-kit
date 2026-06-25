@@ -79,6 +79,7 @@ export class Engine {
       } as FullEngine;
 
       fullEngineWrappers.set(engine, wrapper);
+
       return wrapper;
     };
   }
