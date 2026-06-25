@@ -273,9 +273,9 @@ describe('atomic-insight-pager', () => {
   it('should render the proper value on the page buttons', async () => {
     await renderPager();
 
-    await expect.element(locators.page1).toHaveAttribute('value', '1');
-    await expect.element(locators.page2).toHaveAttribute('value', '2');
-    await expect.element(locators.page3).toHaveAttribute('value', '3');
+    await expect.element(locators.page1).toHaveTextContent('1');
+    await expect.element(locators.page2).toHaveTextContent('2');
+    await expect.element(locators.page3).toHaveTextContent('3');
   });
 
   it('should have the selected button as active', async () => {
@@ -294,7 +294,7 @@ describe('atomic-insight-pager', () => {
       element.shadowRoot?.querySelector('[part*="buttons"]')
     ).toBeDefined();
     expect(
-      element.shadowRoot?.querySelector('[part*="page-button"]')
+      element.shadowRoot?.querySelector('button[part~="page-button"]')
     ).toBeDefined();
     expect(
       element.shadowRoot?.querySelector('[part*="previous-button"]')
@@ -399,9 +399,9 @@ describe('atomic-insight-pager', () => {
       pagerState: {currentPages: [3, 4, 5, 6, 7]},
     });
 
-    await expect.element(locators.page3).toHaveAttribute('value', '3');
-    await expect.element(locators.page4).toHaveAttribute('value', '4');
-    await expect.element(locators.page5).toHaveAttribute('value', '5');
+    await expect.element(locators.page3).toHaveTextContent('3');
+    await expect.element(locators.page4).toHaveTextContent('4');
+    await expect.element(locators.page5).toHaveTextContent('5');
   });
 
   describe('accessibility', () => {
@@ -411,16 +411,16 @@ describe('atomic-insight-pager', () => {
       element = await renderPager({pagerState: {currentPage: 2, maxPage: 10}});
     });
 
-    const retrieveButtons = () => {
+    const retrievePageButtons = () => {
       return Array.from(
-        element.shadowRoot?.querySelectorAll<HTMLInputElement>(
-          'input[type="radio"]'
+        element.shadowRoot?.querySelectorAll<HTMLButtonElement>(
+          'button[part~="page-button"]'
         ) || []
       );
     };
 
-    it('should render radio buttons for page navigation', async () => {
-      const buttons = retrieveButtons();
+    it('should render page buttons', async () => {
+      const buttons = retrievePageButtons();
       expect(buttons.length).toBeGreaterThan(0);
     });
 
@@ -434,73 +434,12 @@ describe('atomic-insight-pager', () => {
         .toHaveAttribute('aria-label', 'Page 1');
     });
 
-    it('should have proper radio button grouping', async () => {
-      const buttons = retrieveButtons();
-      const firstButton = buttons[0];
-      const groupName = firstButton?.getAttribute('name');
-
-      expect(groupName).toBeDefined();
-      buttons.forEach((button) => {
-        expect(button.getAttribute('name')).toBe(groupName);
-      });
-    });
-
-    it('should support keyboard navigation between page buttons', async () => {
-      const buttons = retrieveButtons();
-      expect(buttons.length).toBeGreaterThan(1);
-
-      const groupNames = buttons.map((btn) => btn.getAttribute('name'));
-      const uniqueNames = new Set(groupNames);
-      expect(uniqueNames.size).toBe(1);
-
-      buttons.forEach((button) => {
-        expect(button.type).toBe('radio');
-        expect(button.getAttribute('aria-label')).toBeDefined();
-      });
-    });
-
-    it('should handle arrow key navigation focus management', async () => {
-      const buttons = retrieveButtons();
-      const previousBtn = element.shadowRoot?.querySelector(
-        '[part*="previous-button"]'
-      ) as HTMLElement;
-      const nextBtn = element.shadowRoot?.querySelector(
-        '[part*="next-button"]'
-      ) as HTMLElement;
-
-      expect(buttons.length).toBeGreaterThan(0);
-      expect(previousBtn).toBeDefined();
-      expect(nextBtn).toBeDefined();
-
-      expect(previousBtn?.getAttribute('aria-label')).toBe('Previous');
-      expect(nextBtn?.getAttribute('aria-label')).toBe('Next');
-
-      expect(previousBtn?.tabIndex).toBeDefined();
-      expect(nextBtn?.tabIndex).toBeDefined();
-    });
-
-    it('should manage focus correctly for screen reader navigation', async () => {
-      const buttons = retrieveButtons();
-
-      buttons.forEach((button) => {
-        expect(button.type).toBe('radio');
-        expect(button.getAttribute('aria-label')).toBeDefined();
-        expect(button.getAttribute('name')).toBeDefined();
-      });
-
-      await expect
-        .element(locators.previous)
-        .toHaveAttribute('aria-label', 'Previous');
-      await expect.element(locators.next).toHaveAttribute('aria-label', 'Next');
-
-      const prevElement = element.shadowRoot?.querySelector(
-        '[part*="previous-button"]'
+    it('should set aria-current=page on the active page button', async () => {
+      const buttons = retrievePageButtons();
+      const activeButton = buttons.find(
+        (btn) => btn.getAttribute('aria-current') === 'page'
       );
-      const nextElement = element.shadowRoot?.querySelector(
-        '[part*="next-button"]'
-      );
-      expect(prevElement).toBeDefined();
-      expect(nextElement).toBeDefined();
+      expect(activeButton).toBeDefined();
     });
   });
 });

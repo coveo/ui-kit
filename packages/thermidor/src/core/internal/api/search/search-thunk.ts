@@ -1,11 +1,11 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import type {EndpointStateScope} from '@/src/core/interface/utils/interface-types.js';
 import type {FullEngine} from '@/src/core/interface/engine/engine.js';
-import {createSearchEndpointRequestSelector} from './search-endpoint-request-selector.js';
-import {createSearchEndpointResponseHandler} from './search-endpoint-response-handler.js';
+import {createSearchEndpointRequestSelector} from './search-request-selector.js';
+import {createSearchEndpointResponseHandler} from './search-response-handler.js';
 import {readEndpointClientConfiguration} from '@/src/core/internal/configuration/configuration-reader.js';
 import {createSearchEndpointClient} from '@/src/api/interface/search-endpoint/search-endpoint-client.js';
-import {getOrCreateSearchEndpointSlice} from './search-endpoint-thunk-slice.js';
+import {getOrCreateSearchEndpointSlice} from './search-thunk-slice.js';
 
 export function createSearchEndpointThunk(
   engine: FullEngine,

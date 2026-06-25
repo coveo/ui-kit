@@ -52,7 +52,7 @@ export type {
   CoveoFacetResponse,
   CoveoFacetValue,
   CoveoSearchResult,
-} from './interface/api/search-endpoint/search-endpoint-types.js';
+} from './interface/api/search/search-types.js';
 
 // ============================================================================
 // Facets Feature

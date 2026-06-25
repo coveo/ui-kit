@@ -34,7 +34,6 @@ import {
   FocusTargetController,
 } from '@/src/utils/accessibility-utils';
 import {buildCustomEvent} from '@/src/utils/event-utils';
-import {randomID} from '@/src/utils/utils';
 import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
 import ArrowRightIcon from '../../../images/arrow-right-rounded.svg';
 
@@ -111,8 +110,6 @@ export class AtomicPager
 
   protected ariaMessage = new AriaLiveRegionController(this, 'atomic-pager');
 
-  private radioGroupName = randomID('atomic-pager-');
-
   private previousButton!: FocusTargetController;
   private nextButton!: FocusTargetController;
 
@@ -142,8 +139,6 @@ export class AtomicPager
   @bindingGuard()
   @errorGuard()
   render() {
-    const currentGroupName = `${this.radioGroupName}-${this.pagerState.currentPages.join('-')}`;
-
     const pagesRange = getCurrentPagesRange(
       this.pagerState.currentPage - 1,
       this.numberOfPages,
@@ -189,11 +184,9 @@ export class AtomicPager
                       await this.focusOnFirstResultAndScrollToTop();
                     },
                     page: pageNumber,
-                    groupName: currentGroupName,
                     text: (pageNumber + 1).toLocaleString(
                       this.bindings.i18n.language
                     ),
-                    onFocusCallback: this.handleFocus,
                   },
                 })
               )
@@ -223,23 +216,6 @@ export class AtomicPager
       this.nextButton = new FocusTargetController(this, this.bindings);
     }
   }
-
-  private handleFocus = async (
-    elements: HTMLInputElement[],
-    currentFocus: HTMLInputElement,
-    newFocus: HTMLInputElement
-  ) => {
-    const currentIndex = elements.indexOf(currentFocus);
-    const newIndex = elements.indexOf(newFocus);
-
-    if (currentIndex === elements.length - 1 && newIndex === 0) {
-      await this.nextButton.focus();
-    } else if (currentIndex === 0 && newIndex === elements.length - 1) {
-      await this.previousButton.focus();
-    } else {
-      newFocus.focus();
-    }
-  };
 
   private async focusOnFirstResultAndScrollToTop() {
     await this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch();

@@ -15,7 +15,7 @@ export class AtomicCommercePagerLocators extends BasePageObject {
   }
 
   numericButton(pageNumber: number) {
-    return this.page.locator(`[value="${pageNumber}"]`);
+    return this.page.getByLabel(`Page ${pageNumber}`);
   }
 
   get previousButton() {

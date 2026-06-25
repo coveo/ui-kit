@@ -1,64 +1,37 @@
-import {createAsyncThunk} from '@reduxjs/toolkit';
-import {
-  Engine,
-  getFullEngine,
-  type FullEngine,
-} from '@/src/core/interface/engine/engine.js';
+import {Engine, getFullEngine} from '@/src/core/interface/engine/engine.js';
 import {
   KIND,
+  TYPE,
   STATE_ID,
   ENGINE,
-  THUNK_FACTORIES,
-  THUNKS,
+  FACADE_RESOLVERS,
 } from '@/src/core/interface/utils/symbols.js';
-import type {
-  Interface,
-  Operations,
-  EndpointThunkFactory,
-  EndpointStateScope,
-} from '@/src/core/interface/utils/interface-types.js';
+import type {Interface} from '@/src/core/interface/utils/interface-types.js';
 import {generateId} from '@/src/core/interface/utils/id-generator.js';
-import {createCommerceSearchEndpointThunk} from '@/src/core/internal/api/commerce-search-endpoint/commerce-search-endpoint-thunk.js';
+import {createCommerceSearchFacadeResolver} from '@/src/core/interface/api/commerce-search/commerce-search-facade.js';
+import {createCommerceSuggestionsFacadeResolver} from '@/src/core/interface/api/commerce-query-suggest/commerce-query-suggest-facade.js';
+
+export type CommerceInterface = Interface<'commerce'>;
 
 export interface BuildCommerceInterfaceOptions {
   engine: Engine;
   id?: string;
 }
 
-const createCommerceSuggestionsThunk: EndpointThunkFactory = (
-  _engine,
-  scope
-) => {
-  return createAsyncThunk<void, {engine: FullEngine}>(
-    `${scope.composedInterfaceId ?? scope.interfaceId}/commerceSuggestions/execute`,
-    async () => {
-      /* TODO: implement commerce suggestions endpoint */
-    }
-  );
-};
-
 export function buildCommerceInterface(
   options: BuildCommerceInterfaceOptions
-): Interface<'commerce'> {
+): CommerceInterface {
   const fullEngine = getFullEngine(options.engine);
   const interfaceId = options.id ?? generateId();
-  const scope: EndpointStateScope = {interfaceId};
-
-  const factories: Record<Operations['commerce'], EndpointThunkFactory[]> = {
-    search: [createCommerceSearchEndpointThunk],
-    suggestions: [createCommerceSuggestionsThunk],
-  };
 
   return Object.freeze({
     [KIND]: 'interface' as const,
+    [TYPE]: 'commerce' as const,
     [STATE_ID]: interfaceId,
     [ENGINE]: fullEngine,
-    [THUNK_FACTORIES]: factories,
-    [THUNKS]: {
-      search: factories.search.map((factory) => factory(fullEngine, scope)),
-      suggestions: factories.suggestions.map((factory) =>
-        factory(fullEngine, scope)
-      ),
+    [FACADE_RESOLVERS]: {
+      search: createCommerceSearchFacadeResolver(fullEngine),
+      suggestions: createCommerceSuggestionsFacadeResolver(fullEngine),
     },
   });
 }

@@ -2,11 +2,11 @@ import {createAsyncThunk} from '@reduxjs/toolkit';
 import type {EndpointStateScope} from '@/src/core/interface/utils/interface-types.js';
 import type {FullEngine} from '@/src/core/interface/engine/engine.js';
 import type {CommerceSearchRequest} from '@/src/api/interface/commerce-search-endpoint/commerce-search-endpoint-types.js';
-import {createCommerceSearchEndpointRequestSelector} from './commerce-search-endpoint-request-selector.js';
-import {createCommerceSearchEndpointResponseHandler} from './commerce-search-endpoint-response-handler.js';
+import {createCommerceSearchEndpointRequestSelector} from './commerce-search-request-selector.js';
+import {createCommerceSearchEndpointResponseHandler} from './commerce-search-response-handler.js';
 import {readEndpointClientConfiguration} from '@/src/core/internal/configuration/configuration-reader.js';
 import {createCommerceSearchEndpointClient} from '@/src/api/interface/commerce-search-endpoint/commerce-search-endpoint-client.js';
-import {getOrCreateCommerceSearchEndpointSlice} from './commerce-search-endpoint-thunk-slice.js';
+import {getOrCreateCommerceSearchEndpointSlice} from './commerce-search-thunk-slice.js';
 
 export function createCommerceSearchEndpointThunk(
   engine: FullEngine,
