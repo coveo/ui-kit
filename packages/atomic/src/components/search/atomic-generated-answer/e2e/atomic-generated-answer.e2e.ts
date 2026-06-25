@@ -397,6 +397,16 @@ test.describe('atomic-generated-answer', () => {
         });
         await expect(generatedAnswer.generatedTexts).toHaveCount(2);
         await expect(generatedAnswer.generatedTexts.last()).toBeVisible();
+
+        const previousItemCollapseButton = generatedAnswer.threadItems
+          .first()
+          .locator('button', {
+            has: generatedAnswer.page.locator('[part="thread-item-title"]'),
+          });
+        await expect(previousItemCollapseButton).toHaveAttribute(
+          'aria-expanded',
+          'false'
+        );
       });
 
       await test.step('it should allow the user to copy the follow-up answer to clipboard', async () => {
@@ -407,7 +417,6 @@ test.describe('atomic-generated-answer', () => {
         const copyButton = generatedAnswer.threadItems
           .last()
           .locator('[part="copy-button"]');
-        await expect(copyButton).toBeVisible();
         await copyButton.click();
 
         const clipboardContent = await generatedAnswer.page.evaluate(() =>
@@ -420,7 +429,6 @@ test.describe('atomic-generated-answer', () => {
         const likeButton = generatedAnswer.threadItems
           .last()
           .getByRole('button', {name: /^helpful$/i});
-        await expect(likeButton).toBeVisible();
         await likeButton.click();
         await expect(likeButton).toHaveAttribute('aria-pressed', 'true');
       });
@@ -429,9 +437,12 @@ test.describe('atomic-generated-answer', () => {
         const dislikeButton = generatedAnswer.threadItems
           .last()
           .getByRole('button', {name: /^not helpful$/i});
-        await expect(dislikeButton).toBeVisible();
         await dislikeButton.click();
+        const likeButton = generatedAnswer.threadItems
+          .last()
+          .getByRole('button', {name: /^helpful$/i});
         await expect(dislikeButton).toHaveAttribute('aria-pressed', 'true');
+        await expect(likeButton).toHaveAttribute('aria-pressed', 'false');
       });
 
       await test.step('it should allow the user to hover a citation and see the popover', async () => {
@@ -439,7 +450,6 @@ test.describe('atomic-generated-answer', () => {
           .last()
           .locator('[part="citation"]')
           .first();
-        await expect(citation).toBeVisible();
         await citation.hover();
 
         const popover = generatedAnswer.threadItems
@@ -449,19 +459,20 @@ test.describe('atomic-generated-answer', () => {
         await expect(popover).toBeVisible();
       });
 
-      await test.step('it should allow the user to click a citation', async () => {
-        const citation = generatedAnswer.threadItems
+      await test.step('it should render the citation as a clickable link', async () => {
+        const citationLink = generatedAnswer.threadItems
           .last()
-          .locator('[part="citation"]')
+          .getByRole('link')
           .first();
-        const href = await citation.getAttribute('href');
-        expect(href).toBeTruthy();
+        await expect(citationLink).toHaveAttribute('href', /^https?:\/\//);
       });
 
       await test.step('it should allow the user to collapse/expand the thread items', async () => {
         const collapseButton = generatedAnswer.threadItems
           .first()
-          .locator('button[aria-expanded]');
+          .locator('button', {
+            has: generatedAnswer.page.locator('[part="thread-item-title"]'),
+          });
 
         await expect(collapseButton).toHaveAttribute('aria-expanded', 'false');
         await collapseButton.click();
