@@ -122,7 +122,7 @@ export class AtomicTabManager
       >
         <div
           role="tablist"
-          aria-label="tab-area"
+          aria-label=${this.bindings.i18n.t('tab-list')}
           part="tab-area"
           class="border-neutral mb-2 flex w-full flex-row border-b"
           @keydown=${this.handleTablistKeydown}

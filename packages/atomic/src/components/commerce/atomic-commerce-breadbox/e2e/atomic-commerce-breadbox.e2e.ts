@@ -407,7 +407,9 @@ test.describe('atomic-commerce-breadbox', () => {
 
       await page.setViewportSize({width: 240, height: 480});
       await breadbox.getBreadcrumbButtons().first().waitFor({state: 'hidden'});
-      await expect(breadbox.getShowMorebutton()).toContainText('+ 6');
+      await expect(breadbox.getShowMorebutton()).toContainText(
+        'Show 6 more filters'
+      );
 
       await page.setViewportSize({width: 1920, height: 480});
       await breadbox.getBreadcrumbButtons().first().waitFor({state: 'visible'});
@@ -443,7 +445,9 @@ test.describe('atomic-commerce-breadbox', () => {
       });
 
       test('should update the "Show More" button count', async ({breadbox}) => {
-        await expect(breadbox.getShowMorebutton()).toContainText('+ 5');
+        await expect(breadbox.getShowMorebutton()).toContainText(
+          'Show 5 more filters'
+        );
       });
     });
 
@@ -490,6 +494,8 @@ test.describe('atomic-commerce-breadbox', () => {
     }
 
     await expect(breadbox.getShowMorebutton()).toBeVisible();
-    await expect(breadbox.getShowMorebutton()).toContainText('+ 1');
+    await expect(breadbox.getShowMorebutton()).toContainText(
+      'Show 1 more filters'
+    );
   });
 });

@@ -3,6 +3,7 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
+import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
@@ -11,6 +12,7 @@ import '@/src/components/search/atomic-did-you-mean/atomic-did-you-mean.js';
 const searchApiHarness = new MockSearchApi();
 
 const {decorator, play} = wrapInSearchInterface();
+const {play: playInitOnly} = wrapInSearchInterface({skipFirstSearch: true});
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-did-you-mean',
   {excludeCategories: ['methods']}
@@ -78,5 +80,33 @@ export const WithoutAutomaticQueryCorrection: Story = {
         ],
       },
     }));
+  },
+};
+
+export const A11yStatusMessage: Story = {
+  name: 'A11y Status Message',
+  tags: ['a11y', 'test', '!dev'],
+  beforeEach: async () => {
+    searchApiHarness.searchEndpoint.mockOnce((response) => ({
+      ...response,
+      queryCorrection: {
+        correctedQuery: 'coveo',
+        originalQuery: 'coveoo',
+        corrections: [],
+      },
+    }));
+  },
+  play: async (context) => {
+    await playInitOnly(context);
+    await testStatusMessageA11y(context, {
+      triggerAction: async (canvasElement) => {
+        const searchInterface = canvasElement.querySelector(
+          'atomic-search-interface'
+        )!;
+        await (searchInterface as any).executeFirstSearch();
+      },
+      expectedText: 'Query was automatically corrected to coveo',
+      timeout: 5000,
+    });
   },
 };

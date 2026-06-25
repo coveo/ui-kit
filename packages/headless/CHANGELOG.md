@@ -1,3 +1,19 @@
+## 3.52.0
+
+### Minor Changes
+
+- [#7817](https://github.com/coveo/ui-kit/pull/7817) [`2da911b`](https://github.com/coveo/ui-kit/commit/2da911b4ef71004d9d78b73d0797f1357bad333a) - feat(headless): added support for toolCallStart, End and Args in generated-answer implementation of AG-UI protocol
+
+### Patch Changes
+
+- [#7810](https://github.com/coveo/ui-kit/pull/7810) [`e870314`](https://github.com/coveo/ui-kit/commit/e8703145ba2a9b6fb10b3d3e00720e5cd37d376f) - fix(headless): pass enableResults option through RecentQueriesList and DidYouMean
+
+- [#7828](https://github.com/coveo/ui-kit/pull/7828) [`ddaf248`](https://github.com/coveo/ui-kit/commit/ddaf2489a8899ffb97516429007a7b1f0318683d) - Acknowledge server-side query correction when `automaticallyCorrectQuery` is disabled.
+
+  When a search pipeline overrides `automaticallyCorrect` to `whenNoResults` but the client sets `automaticallyCorrectQuery: false`, headless now correctly updates `state.query.q` to the corrected query returned by the server. This ensures subsequent requests (e.g., facet "Show More") use the corrected query instead of the original uncorrected one, which previously caused facet values to disappear.
+
+- [#7836](https://github.com/coveo/ui-kit/pull/7836) [`b5730e5`](https://github.com/coveo/ui-kit/commit/b5730e5415e424d1926533ba08cadbeb4b137781) - added guard to prevent reacting to events from aborted agents
+
 ## 3.51.5
 
 ### Patch Changes

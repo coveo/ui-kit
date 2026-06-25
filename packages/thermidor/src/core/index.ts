@@ -1,0 +1,112 @@
+export {
+  Engine,
+  type FullEngine,
+  getFullEngine,
+} from '@/src/core/interface/engine/engine.js';
+export {getSampleEngineConfiguration} from '@/src/core/interface/engine/engine-configuration.js';
+export type {
+  NavigatorContext,
+  NavigatorContextProvider,
+} from './interface/navigator-context/navigator-context-types.js';
+
+export type {
+  EngineOptions,
+  Unsubscribe,
+} from '@/src/core/interface/engine/engine-types.js';
+
+export {createMemoizedStateSelector} from './interface/utils/memoized-state-selector.js';
+
+// ============================================================================
+// SearchBox Feature
+// ============================================================================
+
+export * as searchBoxMutators from './interface/search-box/search-box-mutators.js';
+
+export * as searchBoxSelectors from './interface/search-box/search-box-selectors.js';
+
+export {loadSearchBox} from './interface/search-box/search-box-loader.js';
+
+// ============================================================================
+// Results Feature (Collection — result list data)
+// ============================================================================
+
+export type {
+  ResultListState as ResultsState,
+  SearchResult,
+} from './interface/result-list/result-list-types.js';
+
+export * as resultsMutations from './interface/result-list/result-list-mutators.js';
+
+export * as resultsSelectors from './interface/result-list/result-list-selectors.js';
+
+export {loadResultList} from './interface/result-list/result-list-loader.js';
+
+// ============================================================================
+// Search API Feature (request types)
+// ============================================================================
+
+export type {
+  CoveoSearchEndpointRequest,
+  CoveoSearchEndpointResponse,
+  CoveoFacetRequest,
+  CoveoFacetResponse,
+  CoveoFacetValue,
+  CoveoSearchResult,
+} from './interface/api/search/search-types.js';
+
+// ============================================================================
+// Facets Feature
+// ============================================================================
+
+export type {FacetState, FacetValue} from './interface/facets/facets-types.js';
+
+export * as facetMutations from './interface/facets/facets-mutators.js';
+
+export * as facetSelectors from './interface/facets/facets-selectors.js';
+
+// ============================================================================
+// Pagination Feature
+// ============================================================================
+
+export type {PaginationState} from './interface/pagination/pagination-types.js';
+
+export * as paginationMutations from './interface/pagination/pagination-mutators.js';
+
+export * as paginationSelectors from './interface/pagination/pagination-selectors.js';
+
+// ============================================================================
+// Configuration Feature
+// ============================================================================
+
+export type {ConfigurationState} from './interface/configuration/configuration-types.js';
+
+export * as configurationMutations from './interface/configuration/configuration-mutators.js';
+
+export * as configurationSelectors from './interface/configuration/configuration-selectors.js';
+
+// ============================================================================
+// Generative Interface
+// ============================================================================
+
+export type {
+  Turn,
+  TurnStatus,
+  RoutedInterface,
+  AgentResponse,
+  AgentMessage,
+  A2UISurface,
+  GenerativeState,
+} from './interface/generative/generative-types.js';
+
+export {GenerativeRuntime} from './interface/api/generative-endpoint/generative-runtime.js';
+
+export type {
+  GenerativeStatePort,
+  GenerativeRuntimeConfig,
+  HydrateSubInterface,
+} from './interface/api/generative-endpoint/generative-runtime.js';
+
+export {
+  createHydrateSubInterface,
+  getOrCreateHydrateFromSnapshotAction,
+} from './interface/generative/generative-hydration.js';

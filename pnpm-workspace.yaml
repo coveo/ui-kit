@@ -2,6 +2,8 @@ packages:
   - packages/bueno
   - packages/auth
   - packages/headless
+  - packages/thermidor
+  - packages/mock-converse-api
   - packages/quantic
   - packages/headless-react
   - packages/atomic-hosted-page
@@ -12,6 +14,7 @@ packages:
   - packages/atomic
   - packages/atomic-a11y
   - packages/platform-mock-api
+  - packages/atomic-cdn-smoke
   - packages/atomic-legacy
   - packages/shopify
   - packages/create-atomic-template
@@ -26,6 +29,7 @@ packages:
   - packages/create-atomic-result-component/template/src/components/sample-result-component
   - samples/atomic/*
   - samples/headless/*
+  - samples/thermidor/*
   - samples/headless-ssr/*
   - packages/pkg-new-template
   - utils/cdn
@@ -54,6 +58,7 @@ catalog:
   '@react-router/fs-routes': 7.14.2
   '@react-router/node': 7.14.2
   '@react-router/serve': 7.14.2
+  '@reduxjs/toolkit': 2.11.2
   'react-router': 7.14.2
   '@rollup/plugin-replace': 6.0.3
   '@rollup/plugin-url': 8.0.2
@@ -69,10 +74,11 @@ catalog:
   dayjs: 1.11.21
   esbuild: 0.28.0
   exponential-backoff: 3.1.3
+  idb: 8.0.3
   jest: 30.3.0
   jest-cli: 30.3.0
   local-web-server: 5.4.0
-  next: 16.2.7
+  next: 16.2.9
   prettier: 3.8.3
   puppeteer: 24.43.1
   playwright: 1.60.0

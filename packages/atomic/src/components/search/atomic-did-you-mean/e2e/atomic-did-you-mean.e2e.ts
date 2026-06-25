@@ -18,9 +18,9 @@ test.describe('atomic-did-you-mean', () => {
 
     test('should display the auto corrected', async ({page}) => {
       await expect(
-        page.getByText(
-          `Query was automatically corrected to ${CORRECTED_QUERY}`
-        )
+        page
+          .locator('atomic-did-you-mean')
+          .getByText(`Query was automatically corrected to ${CORRECTED_QUERY}`)
       ).toBeVisible();
     });
   });
@@ -34,7 +34,7 @@ test.describe('atomic-did-you-mean', () => {
 
     test('should show did you mean text', async ({page}) => {
       await expect(
-        page.getByText(`Did you mean: ${CORRECTED_QUERY}`)
+        page.locator('atomic-did-you-mean [part="did-you-mean"]')
       ).toBeVisible();
     });
 

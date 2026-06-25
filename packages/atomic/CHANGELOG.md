@@ -1,3 +1,19 @@
+## 3.59.8
+
+### Patch Changes
+
+- [#7769](https://github.com/coveo/ui-kit/pull/7769) [`79b8306`](https://github.com/coveo/ui-kit/commit/79b8306c985418ad6be3b771e5e1de1028001df0) - A11y: Fix atomic-tab-manager tablist aria-label
+
+## 3.59.7
+
+### Patch Changes
+
+- [#7739](https://github.com/coveo/ui-kit/pull/7739) [`a86044b`](https://github.com/coveo/ui-kit/commit/a86044b2ff7bd975e599ad4545f22219507c9e3e) - Improve accessibility of `atomic-did-you-mean` to comply with WCAG 4.1.3 (Status Messages). Query corrections are now announced by assistive technologies without requiring focus.
+
+- Updated dependencies [[`2da911b`](https://github.com/coveo/ui-kit/commit/2da911b4ef71004d9d78b73d0797f1357bad333a), [`e870314`](https://github.com/coveo/ui-kit/commit/e8703145ba2a9b6fb10b3d3e00720e5cd37d376f), [`ddaf248`](https://github.com/coveo/ui-kit/commit/ddaf2489a8899ffb97516429007a7b1f0318683d), [`b5730e5`](https://github.com/coveo/ui-kit/commit/b5730e5415e424d1926533ba08cadbeb4b137781)]:
+  - @coveo/headless@3.52.0
+  - @coveo/atomic-legacy@0.0.22
+
 ## 3.59.6
 
 ### Patch Changes

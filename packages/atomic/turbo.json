@@ -30,7 +30,7 @@
     "build:storybook": {
       "dependsOn": ["^build", "pre:storybook"],
       "outputs": ["./dist-storybook/**"],
-      "env": ["STORYBOOK_INVOKED_BY"]
+      "env": ["STORYBOOK_INVOKED_BY", "CHROMATIC_ALL"]
     },
     "chromatic": {
       "dependsOn": [],
@@ -39,7 +39,8 @@
         "CHROMATIC_PROJECT_TOKEN",
         "CHROMATIC_SHA",
         "CHROMATIC_BRANCH",
-        "CHROMATIC_SLUG"
+        "CHROMATIC_SLUG",
+        "CHROMATIC_ALL"
       ]
     },
     "build:cem": {

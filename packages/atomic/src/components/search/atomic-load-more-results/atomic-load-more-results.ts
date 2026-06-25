@@ -6,7 +6,7 @@ import {
   type ResultList,
   type ResultListState,
 } from '@coveo/headless';
-import {html, LitElement} from 'lit';
+import {html, LitElement, type PropertyValues} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {createAppLoadedListener} from '@/src/components/common/interface/store';
@@ -20,6 +20,7 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
+import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
@@ -60,6 +61,8 @@ export class AtomicLoadMoreResults
   @bindStateToController('resultList')
   @state()
   private resultListState!: ResultListState;
+
+  private ariaMessage = new AriaLiveRegionController(this, 'load-more-results');
 
   public initialize() {
     this.querySummary = buildQuerySummary(this.bindings.engine);
@@ -104,12 +107,43 @@ export class AtomicLoadMoreResults
     )}`;
   }
 
+  protected updated(changedProperties: PropertyValues): void {
+    super.updated(changedProperties);
+    this.announceWhenAllResultsAreLoaded(changedProperties);
+  }
+
   private async onClick() {
-    // TODO KIT-4227: Once the focus mess is resolved, ensure that:
-    // The focus is set on the next new result after loading more results **without scrolling**.
-    //this.bindings.store.state.resultList?.focusOnNextNewResult();
-    (document.activeElement as HTMLElement)?.blur(); // Blur the active element to avoid focus issues, remove when focus mess is resolved.
+    this.bindings.store.state.resultList?.focusOnNextNewResult();
     this.resultList.fetchMoreResults();
+  }
+
+  /**
+   * Announces, through an `aria-live` region, that the last available batch of
+   * results has been loaded.
+   *
+   * Fetching more results keeps the same `searchResponseId`, which lets us
+   * distinguish loading the last batch from a brand new search that happens to
+   * have no more results available.
+   */
+  private announceWhenAllResultsAreLoaded(
+    changedProperties: PropertyValues
+  ): void {
+    if (!changedProperties.has('resultListState') || !this.resultListState) {
+      return;
+    }
+
+    const previousState = changedProperties.get('resultListState') as
+      | ResultListState
+      | undefined;
+
+    const justLoadedLastBatch =
+      previousState?.moreResultsAvailable === true &&
+      !this.resultListState.moreResultsAvailable &&
+      previousState.searchResponseId === this.resultListState.searchResponseId;
+
+    if (justLoadedLastBatch) {
+      this.ariaMessage.message = this.bindings.i18n.t('all-results-loaded');
+    }
   }
 
   private get shouldRender() {
