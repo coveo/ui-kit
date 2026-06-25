@@ -2,9 +2,8 @@
  * Canonical scaffolding templates.
  *
  * Each template maps a CLI-facing name to the npm package the sample is
- * published as (see `docs/adr/002-sample-publishing.md`). The CLI resolves that
- * package's `latest` release from the registry and extracts it to scaffold a
- * project.
+ * published as. The CLI resolves that package's `latest` release from the
+ * registry and extracts it to scaffold a project.
  */
 
 type Library = 'atomic' | 'headless';

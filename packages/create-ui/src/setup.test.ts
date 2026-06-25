@@ -10,9 +10,10 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {
-  finalizePackageJson,
-  finalizeProject,
   installDependencies,
+  moveToTarget,
+  rewritePackageJson,
+  stripMonorepoFields,
   toPackageName,
 } from './setup.js';
 
@@ -26,9 +27,9 @@ describe('toPackageName', () => {
   });
 });
 
-describe('finalizePackageJson', () => {
+describe('stripMonorepoFields', () => {
   it('renames the package and strips the private flag', () => {
-    const result = finalizePackageJson(
+    const result = stripMonorepoFields(
       {name: '@samples/headless-search-react', private: true, foo: 'bar'},
       'my-app'
     );
@@ -39,7 +40,30 @@ describe('finalizePackageJson', () => {
   });
 });
 
-describe('finalizeProject (IO)', () => {
+describe('rewritePackageJson', () => {
+  let dir: string;
+  beforeEach(async () => {
+    dir = await mkdtemp(join(tmpdir(), 'create-ui-setup-'));
+  });
+  afterEach(async () => {
+    await rm(dir, {recursive: true, force: true});
+  });
+
+  it('rewrites the package.json in place with the project name', async () => {
+    await writeFile(
+      join(dir, 'package.json'),
+      JSON.stringify({name: '@coveo/sample-x', private: true})
+    );
+    await rewritePackageJson(dir, 'my-app');
+
+    const pkg = JSON.parse(await readFile(join(dir, 'package.json'), 'utf8'));
+    expect(pkg.name).toBe('my-app');
+    expect(pkg.private).toBeUndefined();
+    expect(pkg.version).toBe('0.1.0');
+  });
+});
+
+describe('moveToTarget', () => {
   let dir: string;
   beforeEach(async () => {
     dir = await mkdtemp(join(tmpdir(), 'create-ui-setup-'));
@@ -57,23 +81,16 @@ describe('finalizeProject (IO)', () => {
     }
   }
 
-  it('rewrites package.json and moves to the target', async () => {
-    const sampleDir = join(dir, 'extracted');
-    await mkdir(sampleDir, {recursive: true});
-    await writeFile(
-      join(sampleDir, 'package.json'),
-      JSON.stringify({name: '@samples/x', private: true})
-    );
+  it('copies the source into the target and removes the source', async () => {
+    const sourceDir = join(dir, 'extracted');
+    await mkdir(sourceDir, {recursive: true});
+    await writeFile(join(sourceDir, 'package.json'), '{}');
     const targetDir = join(dir, 'my-app');
 
-    await finalizeProject({sampleDir, targetDir, projectName: 'my-app'});
+    await moveToTarget(sourceDir, targetDir);
 
-    expect(await exists(sampleDir)).toBe(false);
-    const pkg = JSON.parse(
-      await readFile(join(targetDir, 'package.json'), 'utf8')
-    );
-    expect(pkg.name).toBe('my-app');
-    expect(pkg.private).toBeUndefined();
+    expect(await exists(sourceDir)).toBe(false);
+    expect(await exists(join(targetDir, 'package.json'))).toBe(true);
   });
 });
 

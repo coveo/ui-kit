@@ -7,7 +7,11 @@ import {fileURLToPath} from 'node:url';
 import {argv} from 'node:process';
 import {downloadTemplate} from './download.js';
 import {isEmptyOrMissing} from './fs-utils.js';
-import {finalizeProject, installDependencies} from './setup.js';
+import {
+  installDependencies,
+  moveToTarget,
+  rewritePackageJson,
+} from './setup.js';
 import {getTemplate, getTemplates, type Template} from './templates.js';
 import {formatError, getPackageManager, log} from './utils.js';
 
@@ -110,7 +114,8 @@ export async function scaffold(
 
     log.step(`Creating project in ${targetDir}…`);
     createdTargetDir = await claimTargetDir(targetDir);
-    await finalizeProject({sampleDir, targetDir, projectName});
+    await rewritePackageJson(sampleDir, projectName);
+    await moveToTarget(sampleDir, targetDir);
   } catch (error) {
     if (createdTargetDir) {
       await rm(targetDir, {recursive: true, force: true});

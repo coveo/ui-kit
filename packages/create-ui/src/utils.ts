@@ -1,8 +1,3 @@
-/**
- * Shared helpers: logging, error formatting, and package-manager detection.
- */
-
-/** Extracts a clean user-facing message from any thrown value. Never returns a stack trace. */
 export function formatError(error: unknown): string {
   if (error instanceof Error) {
     return error.message || 'An unexpected error occurred.';
