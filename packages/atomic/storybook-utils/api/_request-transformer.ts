@@ -1,4 +1,1 @@
-export type RequestTransformer<TResponse> = (
-  body: unknown,
-  response: TResponse
-) => TResponse;
+export * from '@coveo/platform-mock-api/_request-transformer';

@@ -17,11 +17,35 @@ export function normalizeGenerationStepName(name: string): GenerationStepName {
   return name.toLowerCase() as GenerationStepName;
 }
 
+type GenerationToolCallStatus = 'active' | 'completed';
+export type GenerationToolCallType =
+  (typeof GENERATION_TOOL_CALL_TYPES)[number];
+export const GENERATION_TOOL_CALL_TYPES = ['search', 'generic'] as const;
+
+export interface GenerationToolCallArgsGeneric {
+  raw: string;
+}
+
+export interface GenerationToolCallArgsSearch {
+  q: string;
+}
+
+export interface GenerationToolCall {
+  toolCallName: string;
+  toolCallId: string;
+  startedAt: number;
+  finishedAt?: number;
+  status: GenerationToolCallStatus;
+  type?: GenerationToolCallType;
+  toolCallArgs?: GenerationToolCallArgsSearch | GenerationToolCallArgsGeneric;
+}
+
 export interface GenerationStep {
   name: GenerationStepName;
   status: GenerationStepStatus;
   startedAt: number;
   finishedAt?: number;
+  toolCalls?: Array<GenerationToolCall>;
 }
 
 /**

@@ -113,6 +113,9 @@ export default {
         // CSS files referenced via @import/@reference inside CSS tagged template literals.
         // Knip cannot trace CSS imports inside template literal strings.
         'src/**/*.css',
+        // Re-export shims for @coveo/platform-mock-api backward compat.
+        // Consumed by stories via @/ alias; knip can't trace through the workspace re-exports.
+        'storybook-utils/api/**/*.ts',
       ],
     },
     'packages/atomic-legacy': {},
@@ -136,6 +139,15 @@ export default {
     },
     'packages/create-atomic-result-component': {
       ignore: ['template/**/*'],
+    },
+    'packages/platform-mock-api': {
+      entry: ['src/index.ts'],
+    },
+    'packages/thermidor': {
+      ignore: ['**/*'],
+    },
+    'samples/thermidor/generative-react': {
+      ignore: ['**/*'],
     },
   },
 };

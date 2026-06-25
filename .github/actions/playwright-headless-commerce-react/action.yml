@@ -1,9 +1,0 @@
-name: 'Playwright Headless Commerce React'
-description: 'Run Playwright tests for Headless Commerce React'
-runs:
-  using: composite
-  steps:
-    - name: Run Playwright tests
-      run: pnpm exec playwright test
-      working-directory: packages/samples/headless-commerce-react
-      shell: bash

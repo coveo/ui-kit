@@ -4,6 +4,25 @@
     "2.4.6-headings-and-labels": {
       "conformance": "pass"
     },
-    "2.5.2-pointer-cancellation": "pass"
+    "2.5.2-pointer-cancellation": "pass",
+    "1.4.11-non-text-contrast": "pass",
+    "2.4.11-focus-not-obscured-minimum": "pass",
+    "2.5.3-label-in-name": "pass",
+    "1.4.10-reflow": {
+      "conformance": "pass"
+    },
+    "2.4.3-focus-order": "pass",
+    "2.1.2-no-keyboard-trap": {
+      "conformance": "pass"
+    },
+    "3.2.1-on-focus": {
+      "conformance": "pass"
+    },
+    "1.3.2-meaningful-sequence": {
+      "conformance": "pass"
+    },
+    "3.2.2-on-input": {
+      "conformance": "pass"
+    }
   }
 }

@@ -1,5 +1,6 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
@@ -59,5 +60,20 @@ export const CustomIcon: Story = {
   name: 'With a custom icon',
   args: {
     icon: 'https://raw.githubusercontent.com/coveo/ui-kit/main/packages/atomic/src/images/arrow-top-rounded.svg',
+  },
+};
+
+export const A11yStatusMessage: Story = {
+  name: 'A11y Status Message',
+  tags: ['a11y', 'test', '!dev'],
+  play: async (context) => {
+    await play(context);
+    await testStatusMessageA11y(context, {
+      triggerAction: async () => {
+        // Notifications are rendered on first search via the mock trigger.
+      },
+      expectedText: /notification/i,
+      timeout: 10000,
+    });
   },
 };

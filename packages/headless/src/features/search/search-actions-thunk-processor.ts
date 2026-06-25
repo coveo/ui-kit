@@ -172,7 +172,21 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     const {enableDidYouMean, automaticallyCorrectQuery} = state.didYouMean;
     const {results, queryCorrections, queryCorrection} = successResponse;
 
-    if (!enableDidYouMean || !automaticallyCorrectQuery) {
+    if (!enableDidYouMean) {
+      return null;
+    }
+
+    // When the server applied a correction (via pipeline override) but the
+    // client did not request auto-correction, we still need to acknowledge
+    // the corrected query so subsequent requests (e.g., facet Show More)
+    // use the right query.
+    if (!automaticallyCorrectQuery) {
+      if (
+        !isNullOrUndefined(queryCorrection) &&
+        !isNullOrUndefined(queryCorrection.correctedQuery)
+      ) {
+        return this.processModernDidYouMeanAutoCorrection(fetched);
+      }
       return null;
     }
 

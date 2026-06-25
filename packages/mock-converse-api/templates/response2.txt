@@ -1,0 +1,408 @@
+event:turn_started
+data:{"conversationSessionId":"1df9f18c-785d-4ace-9642-678a7fd9fc5a","conversationToken":"b6fec897-550c-4b9b-90b0-71adcc7abe9f"}
+
+event:message
+data:{"type": "RUN_STARTED", "threadId": "1df9f18c-785d-4ace-9642-678a7fd9fc5a", "runId": "c5ce77d3-21f5-4838-b637-334ca32dbc45"}
+
+event:message
+data:{"type": "STATE_SNAPSHOT", "snapshot": {}}
+
+event:message
+data:{"type": "TEXT_MESSAGE_START", "messageId": "8234169e-55a7-45a9-b4ee-2facfbd3c937", "role": "assistant"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "8234169e-55a7-45a9-b4ee-2facfbd3c937", "delta": "I"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "8234169e-55a7-45a9-b4ee-2facfbd3c937", "delta": "'ll help you find"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "8234169e-55a7-45a9-b4ee-2facfbd3c937", "delta": " the essential"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "8234169e-55a7-45a9-b4ee-2facfbd3c937", "delta": " gear"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "8234169e-55a7-45a9-b4ee-2facfbd3c937", "delta": " for a great"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "8234169e-55a7-45a9-b4ee-2facfbd3c937", "delta": " snorkeling trip."}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "8234169e-55a7-45a9-b4ee-2facfbd3c937", "delta": " Let"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "8234169e-55a7-45a9-b4ee-2facfbd3c937", "delta": " me search for the key"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "8234169e-55a7-45a9-b4ee-2facfbd3c937", "delta": " categories"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "8234169e-55a7-45a9-b4ee-2facfbd3c937", "delta": " you'll need."}
+
+event:message
+data:{"type": "TEXT_MESSAGE_END", "messageId": "8234169e-55a7-45a9-b4ee-2facfbd3c937"}
+
+event:message
+data:{"type": "TOOL_CALL_START", "toolCallId": "tooluse_vAN65ziAo5QHhzBNCPHyXJ", "toolCallName": "coveo_commerce_search", "parentMessageId": "d50b2472-d0c7-4c5f-9fb8-03ee506b0733"}
+
+event:message
+data:{"type": "TOOL_CALL_ARGS", "toolCallId": "tooluse_vAN65ziAo5QHhzBNCPHyXJ", "delta": "{\"query\": \"snorkel mask\", \"perPage\": 5, \"surface_id\": \"product-surface-masks\"}"}
+
+event:message
+data:{"type": "TOOL_CALL_END", "toolCallId": "tooluse_vAN65ziAo5QHhzBNCPHyXJ"}
+
+event:message
+data:{"type": "TOOL_CALL_START", "toolCallId": "tooluse_Ur4HQSo5ogmFPtdjnuHTec", "toolCallName": "coveo_commerce_search", "parentMessageId": "d50b2472-d0c7-4c5f-9fb8-03ee506b0733"}
+
+event:message
+data:{"type": "TOOL_CALL_ARGS", "toolCallId": "tooluse_Ur4HQSo5ogmFPtdjnuHTec", "delta": "{\"query\": \"snorkel fins\", \"perPage\": 5, \"surface_id\": \"product-surface-fins\"}"}
+
+event:message
+data:{"type": "TOOL_CALL_END", "toolCallId": "tooluse_Ur4HQSo5ogmFPtdjnuHTec"}
+
+event:message
+data:{"type": "TOOL_CALL_START", "toolCallId": "tooluse_fAAXtaCFPl9qaKxMl06e1M", "toolCallName": "coveo_commerce_search", "parentMessageId": "d50b2472-d0c7-4c5f-9fb8-03ee506b0733"}
+
+event:message
+data:{"type": "TOOL_CALL_ARGS", "toolCallId": "tooluse_fAAXtaCFPl9qaKxMl06e1M", "delta": "{\"query\": \"snorkel tube\", \"perPage\": 5, \"surface_id\": \"product-surface-tubes\"}"}
+
+event:message
+data:{"type": "TOOL_CALL_END", "toolCallId": "tooluse_fAAXtaCFPl9qaKxMl06e1M"}
+
+event:message
+data:{"type": "TOOL_CALL_START", "toolCallId": "tooluse_fBDfFBWGAmZ52XG0gPHvNE", "toolCallName": "coveo_commerce_search", "parentMessageId": "d50b2472-d0c7-4c5f-9fb8-03ee506b0733"}
+
+event:message
+data:{"type": "TOOL_CALL_ARGS", "toolCallId": "tooluse_fBDfFBWGAmZ52XG0gPHvNE", "delta": "{\"query\": \"wetsuit snorkeling\", \"perPage\": 5, \"surface_id\": \"product-surface-wetsuits\"}"}
+
+event:message
+data:{"type": "TOOL_CALL_END", "toolCallId": "tooluse_fBDfFBWGAmZ52XG0gPHvNE"}
+
+event:message
+data:{"type": "TOOL_CALL_START", "toolCallId": "tooluse_sRtoWzkW244xnOS74b0SK8", "toolCallName": "coveo_commerce_search", "parentMessageId": "d50b2472-d0c7-4c5f-9fb8-03ee506b0733"}
+
+event:message
+data:{"type": "TOOL_CALL_ARGS", "toolCallId": "tooluse_sRtoWzkW244xnOS74b0SK8", "delta": "{\"query\": \"waterproof bag dry bag\", \"perPage\": 5, \"surface_id\": \"product-surface-bags\"}"}
+
+event:message
+data:{"type": "TOOL_CALL_END", "toolCallId": "tooluse_sRtoWzkW244xnOS74b0SK8"}
+
+event:message
+data:{"type": "TOOL_CALL_RESULT", "messageId": "7cd04a47-a389-404a-a7c7-02194269c885", "toolCallId": "tooluse_sRtoWzkW244xnOS74b0SK8", "content": "\"id|name|brand|price|promo|category|rating|description|image|url\\ngid://shopify/ProductVariant/50675066994962|AquaGuard Waterproof Drybag - Yellow|O'Brien|59.99|59.99|Canoe Storage Bags||Introducing the AquaGuard Waterproof Drybag, the ultimate accessory for water skiers seeking reliable protection and style. Crafted from high-quality polyester, this travel-friendly drybag comes in vibrant yellow and crisp white variants, ensuring your gear stays dry and secure with marine safety-rated and CE compliant protection. The reinforced loops and rubber grip handle offer exceptional durability and ease of use, while the low carbon manufacturing process emphasizes environmental responsibility. With a strength of 2,000 lbs and a thickness of 12mm, this drybag is designed to withstand the toughest conditions. Included are a convenient storage bag and carabiner for effortless portability. Backed by a lifetime defect warranty, the AquaGuard Waterproof Drybag is your trustworthy companion for all water skiing adventures.OBDB_6136|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/52bdd9fe408a_top_left.webp?v=1766164324|https://barca-sports.myshopify.com/products/obdb_6136\\ngid://shopify/ProductVariant/50677148057874|Nylon DryBag with Tow Rope - Black|Hyperlite|49.99|49.99|Canoe Storage Bags|3.0|Introducing the Nylon DryBag with Tow Rope\\u2014perfect for towable enthusiasts! Engineered with tear-resistant and recyclable nylon, this drybag ensures durability and environmental consciousness. The included 75 ft ultra-durable and floating tow rope, featuring a wide anti-slip handle, provides superior safety and performance for towing tubes. CE Compliant and T\\u00dcV Approved, this versatile accessory can be easily folded into the included storage bag for ultimate portability. Backed by a 3-year durability warranty, this product is designed to meet the highest standards for both leisure and professional use.HYDB_CCF3|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/e7739a20f141_bottom_left.webp?v=1766164329|https://barca-sports.myshopify.com/products/hydb_ccf3\\ngid://shopify/ProductVariant/50681973375250|SunStripe Quick-Dry Towel - Pink / Large|Utopia Towels|29.99|29.99|Beach Towels|5.0|SunStripe Quick-Dry TowelIntroducing the SunStripe Quick-Dry Towel, the ultimate beach companion designed for all your sun-soaked adventures. Crafted with high-quality cotton and featuring vibrant yellow and pink striped designs, this towel is perfect for beachgoers who appreciate both style and functionality. With its medium absorbency and advanced Airflow Technology, it ensures you stay dry and comfortable throughout your beach day.Our SunStripe Quick-Dry Towel boasts several standout features: it is tear-resistant, thick, and heavy-duty, providing you with durability you can rely on. The eco-friendly materials used in its construction, along with ISO and GOTS certifications, make it an environmentally responsible choice. The towel also includes a reusable storage bag, making it lightweight and highly portable.The SunStripe Quick-Dry Towel is designed for maximum convenience with its quick-drying capabilities and comes with a double-stitched edge design for added durability. Whether you're lounging on the sand or drying off after a refreshing swim, the large size and luxurious feel of this towel ensure you have a comfortable and enjoyable experience. Plus, with a lifetime quality guarantee, you can trust in the long-lasting performance of your new favorite beach accessory.UTBT_504D|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/953579276996_bottom_right_62f4d480-1e5e-48f0-9da0-567a109149c4.webp?v=1766164645|https://barca-sports.myshopify.com/products/utbt_504d\\ngid://shopify/ProductVariant/50681972228370|GreenTrail Quick-Dry Towel - Green / Small|Utopia Towels|9.99|9.99|Beach Towels|5.0|GreenTrail Quick-Dry TowelThe perfect companion for all your camping trips, the GreenTrail Quick-Dry Towel is designed with the adventurer in mind. This highly absorbent, lightweight towel is fashioned from premium microfiber material, ensuring a quick-drying experience. Its ventilated design and hemmed edges offer maximum breathability and durability, while the towel's eco-friendly, recyclable components make it a sustainable choice for the environment-conscious camper.The GreenTrail Quick-Dry Towel comes with a handy hanging loop and a reusable storage bag, making it ideal for easy transport and convenience on the go. Certified by GOTS, this tear-resistant towel guarantees quality and long-lasting use, supported by a 2-year fabric warranty. Ideal for minimalist travelers, the towel's sleek, thin profile doesn't compromise on performance, providing you with excellent absorbency and quick drying features.Whether you're braving the outdoors or simply seeking a reliable towel for travel, the GreenTrail Quick-Dry Towel ensures you stay dry and comfortable throughout your adventures. Available in a vibrant green color, it's ready to be part of your essential camping gear!UTBT_0418|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/a7b95575dfbe_top_left.webp?v=1766164637|https://barca-sports.myshopify.com/products/utbt_0418\\ngid://shopify/ProductVariant/50674839814418|HydroSwift Quick-Dry Shoes - Gray / 9|Ryka|59.99|59.99|Boating & Water Sport Apparel||Experience Unmatched Comfort and PerformanceThe HydroSwift Quick-Dry Shoes are designed specifically for women who love paddleboarding and water activities. These shoes feature a lightweight, breathable design with quick-dry polyester material, ensuring your feet stay comfortable and dry all day long. The velcro closure offers adjustability for a perfect fit, while the specialized drainage sole and drain holes enhance water flow and maintain stability.With safety as a top priority, the HydroSwift shoes come with an anti-slip sole and padded toe area for added protection. The non-toxic coatings and waterproof durability guarantee a long-lasting and environmentally-friendly product. Available in sleek black and gray, these modern-style water shoes cater to all your aquatic needs.Key Features: Quick-Dry Polyester Material Anti-Slip and Non-Slip Sole Drain Holes with Drainage Sole Adjustable Velcro Closure Padded Toe Area for Protection Lightweight and Breathable Get your pair of HydroSwift Quick-Dry Shoes today and enjoy a hassle-free and comfortable paddleboarding experience. Satisfaction guaranteed!RYWSW_B9B6|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/9280463d157b_bottom_right.webp?v=1766165316|https://barca-sports.myshopify.com/products/rywsw_b9b6\""}
+
+event:message
+data:{"type": "TOOL_CALL_RESULT", "messageId": "60139a32-aa9e-4708-817a-db61efeaaa77", "toolCallId": "tooluse_fBDfFBWGAmZ52XG0gPHvNE", "content": "\"id|name|brand|price|promo|category|rating|description|image|url\\ngid://shopify/ProductVariant/50674590384402|EcoFlex Wetsuit for Women - Red / M|Patagonia|49.99|49.99|Wetsuits|4.9|Dive into your aquatic adventures with the EcoFlex Wetsuit for Women. Designed for recreational water users, this beginner partial suit boasts multi-directional stretch and ultra-lightweight materials for maximum flexibility and comfort. Crafted from eco-friendly, biodegradable materials, and featuring CE compliance, it ensures durability and safety with anti-slip panels and double-lined seams. Experience optimal temperature control while snorkeling, thanks to its rubberized coating and minimal bulk design. The wetsuit comes in a vibrant red color and includes a hanger for easy storage. Enjoy peace of mind with a 2-year material warranty. Get ready to explore the water with the EcoFlex Wetsuit!PTWETS_7E95|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/e49456af9869_top_right_4e211c6c-d13b-40be-95c1-6be80d462a0b.webp?v=1766163802|https://barca-sports.myshopify.com/products/ptwets_7e95\\ngid://shopify/ProductVariant/50674582290706|Green Wave Glide Wetsuit - Green / L|Patagonia|129.99|129.99|Wetsuits|4.9|Dive into your next adventure with the Green Wave Glide Wetsuit, specially designed for women who love recreational water sports. Perfect for snorkeling, this beginner partial suit boasts a durable rubberized coating and a heat-retaining lining to keep you comfortable in cool waters. The multi-directional stretch ensures freedom of movement, while the anti-slip panels provide added safety. With CE compliance and UV-resistant features, this wetsuit is both safe and environmentally friendly, incorporating biodegradable coatings. Lightweight and weatherproof, it also includes a convenient carry bag and instruction manual. Plus, enjoy peace of mind with the replacement guarantee. Make a splash with unmatched style and practicality at an unbeatable price.PTWETS_7689|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/76060f11c60d_top_left.webp?v=1766163776|https://barca-sports.myshopify.com/products/ptwets_7689\\ngid://shopify/ProductVariant/50674586222866|AquaGuard Beginner Swim Suit - Black / XS|O'Neill|199.99|199.99|Wetsuits|3.8|Introducing the AquaGuard Beginner Swim Suit, designed specifically for recreational water users seeking comfort, durability, and protection. Available in chic Black, sleek Gray, and vibrant Blue, this wetsuit for women features a lightweight design, double-lined seams, and a unique rubberized coating for superior weatherproof performance. Certified ISO and UV-resistant, AquaGuard offers cold-water protection with its 5mm thickness, making it perfect for snorkeling adventures. The suit also includes an emergency whistle attachment for added safety, and comes with a carry bag and repair patch for convenience. Enjoy unrivaled flexibility with multi-directional stretch material, while contributing to environmental sustainability with our recyclable neoprene. Experience the perfect blend of innovation and style, backed by a lifetime seam warranty. Dive into your aquatic adventures with confidence and ease, with AquaGuard!ONWETS_B83D|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/53e74969e881_bottom_left_f07f405d-7483-4da2-8e9d-d188d14b63b1.webp?v=1766163789|https://barca-sports.myshopify.com/products/onwets_b83d\""}
+
+event:message
+data:{"type": "TOOL_CALL_RESULT", "messageId": "8aed834b-2f56-4ca8-adaf-a65e4f0bae7b", "toolCallId": "tooluse_Ur4HQSo5ogmFPtdjnuHTec", "content": "\"id|name|brand|price|promo|category|rating|description|image|url\\ngid://shopify/ProductVariant/50674637111570|SnorkelSurge Fin - Black / L|Cressi|49.99|49.99|Diving & Snorkeling Fins|4.9|SnorkelSurge FinThe SnorkelSurge Fin is your ultimate underwater companion, engineered for the avid snorkeler. Available in sleek Black or Blue, these full foot fins are not only visually appealing but also packed with advanced features to enhance your snorkel adventures. Quick-Release Straps: Adjust your fins with ease using our innovative quick-release strap system. Flexible Blade Angle: Designed to adapt to your natural kicking motion, ensuring maximum propulsion with minimal effort. Soft-Foot Pocket: Experience unparalleled comfort with a soft-foot pocket that perfectly contours to your feet. Abrasion-Resistant and Durable: Built to withstand the rigors of the underwater environment, ensuring long-lasting use. Eco-Friendly Materials: Crafted from non-toxic, eco-friendly materials that are safe for both you and the environment. Anti-Slip Sole: Provides enhanced grip on wet surfaces, making your transitions in and out of the water smooth and safe. Lightweight Construction: Easy to carry, making them perfect for travel. In addition to their exceptional design, the SnorkelSurge Fins come with a 1-year limited warranty, offering peace of mind for your purchase.Discover the joy of efficient and comfortable underwater exploration with the SnorkelSurge Fin - where performance meets comfort.CRSDF_9836|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/13eb26a5786e_top_left.webp?v=1766164255|https://barca-sports.myshopify.com/products/crsdf_9836\\ngid://shopify/ProductVariant/50674638749970|RedWave Travel Fin - Red / M|TUSA|49.99|49.99|Diving & Snorkeling Fins|3.0|Experience the perfect blend of performance and portability with the RedWave Travel Fin. Designed specifically for snorkelers, these lightweight fins feature Quick-Release Straps for easy adjustability and a Closed Foot Pocket for a secure fit. The Split Blade design and Soft-Tip Blade provide exceptional kick efficiency and low resistance, making your underwater adventures effortless and enjoyable.Crafted from durable, weatherproof neoprene, the RedWave Travel Fin is built to withstand various environmental conditions while maintaining minimal waste impact. The Stretchable Straps ensure flexibility and comfort during your dives.Included with your fins are an Instruction Manual and a convenient Travel Bag for easy transportation. With a compact design that's perfect for travel, these fins are certified Dive Tested and come with a 2-year material warranty for peace of mind. Whether you're exploring coral reefs or swimming through clear blue waters, the RedWave Travel Fin channels your energy efficiently for a smooth and powerful glide.Get ready to elevate your snorkeling experience with the RedWave Travel Fin \\u2013 your ultimate companion for underwater adventures.TSUDF_9811|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/e9b361da3e8b_top_right.webp?v=1766164262|https://barca-sports.myshopify.com/products/tsudf_9811\\ngid://shopify/ProductVariant/50674638029074|HydroBlade Fin - Yellow / M|Cressi|79.99|79.99|Diving & Snorkeling Fins|4.8|HydroBlade FinExperience the ultimate in underwater adventure with the HydroBlade Fin. Designed for beginner divers, this fin offers optimal performance and comfort. The adjustable heel pocket and ergonomic foot pocket ensure a secure and tailored fit, while the channel-thrust blade provides exceptional kick efficiency and energy savings. Dive with confidence knowing your fins are crafted from eco-friendly, UV-resistant, and durable thermoplastic rubber.Available in vibrant blue and yellow, the HydroBlade Fin not only looks great but also stands up to the demands of any snorkeling or scuba diving expedition. The quick-release buckle system makes adjustments a breeze, and the included travel bag ensures your fins are ready to go wherever the ocean takes you. ISO certified and dive tested, these abrasion-resistant fins are designed for long-lasting performance.Upgrade your diving experience with the HydroBlade Fin \\u2013 the perfect blend of flexibility, efficiency, and sustainability. Full Foot Fins Adjustable Heel Pocket Channel-Thrust Blade Ergonomic Foot Pocket Quick-Release Buckle Energy Efficient Kick Medium Flexibility Medium Blade Length Eco-Friendly Materials UV-Resistant Abrasion-Resistant Includes Fin Straps and Travel Bag 1-Year Limited Warranty CRSDF_8C24|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/74a0b7f6578e_top_left_4c062588-51ab-4a50-939e-f02e754a841a.webp?v=1766164259|https://barca-sports.myshopify.com/products/crsdf_8c24\\ngid://shopify/ProductVariant/50674636194066|AquaVoyage Fin - Blue / M|Oceanic|99.99|99.99|Diving & Snorkeling Fins|5.0|Discover the underwater world with the AquaVoyage Fin, the ultimate travel companion for snorkelers. Designed with Rotational Pivot Adjustability and a Multi-Size Foot Pocket, these fins ensure a perfect fit for all. The Vented Blade enhances kick efficiency, reducing resistance for a smooth and effortless glide. Crafted from durable, UV-resistant neoprene, these fins promise longevity and reliable performance.Featuring a compact design for easy storage and portability, the AquaVoyage Fin includes a convenient travel bag, making it easy to carry on all your adventures. The Fin Strap System offers secure, adjustable wear, and the high-visibility colors ensure you stay easily seen in the water. With a commitment to minimal environmental impact, these fins are both CE Certified and Safety Rated, guaranteeing peace of mind during every dive. Embrace the ocean with confidence and style, and explore like never before with the AquaVoyage Fin.Key Features: Rotational Pivot Adjustability Vented Blade for Low Resistance Multi-Size Foot Pocket UV-Resistant Neoprene Material Compact Design for Easy Storage Includes Travel Bag High-Visibility Colors CE Certified and Safety Rated Ready for your next underwater adventure? Dive in with the AquaVoyage Fin!OCDF_3221|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/02b2b43ec8e8_bottom_right.webp?v=1766164252|https://barca-sports.myshopify.com/products/ocdf_3221\\ngid://shopify/ProductVariant/50674642452754|AquaTrek Snap Fin - Blue / XL|TUSA|99.99|99.99|Diving & Snorkeling Fins|3.0|Explore the Depths with AquaTrek Snap FinDive into your underwater adventures with the versatile and travel-friendly AquaTrek Snap Fin. Designed for the avid underwater photographer and snorkeling enthusiast, these fins feature a Multi-Size Fit and come in vibrant Blue and Red variants. The Channel-Thrust Blade ensures optimal kick efficiency, while the Comfort Fit Buckle and Closed Foot Pocket provide a secure and comfortable fit.Key Features: Compact Design: Easy to pack and carry, perfect for travel. Lightweight Construction: Built for maximum portability without compromising performance. Eco-Friendly Materials: Made with non-toxic coatings and UV-resistant neoprene. Energy Efficient: Engineered to enhance your swimming power with minimal effort. Durability: UV-resistant materials ensure long-lasting performance. Each pair of AquaTrek Snap Fins comes with a convenient Travel Bag and an Instruction Manual. Enjoy peace of mind with a 6-month defect warranty. Dive deeper and explore farther with the confidence that AquaTrek Snap Fin brings to every underwater journey.TSUDF_765F|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/8464f8b21245_top_left.webp?v=1766164289|https://barca-sports.myshopify.com/products/tsudf_765f\""}
+
+event:message
+data:{"type": "TOOL_CALL_RESULT", "messageId": "bf5d44ae-ce91-45a9-b003-43d40b8d5c54", "toolCallId": "tooluse_fAAXtaCFPl9qaKxMl06e1M", "content": "\"No products found.\""}
+
+event:message
+data:{"type": "TOOL_CALL_RESULT", "messageId": "a99de021-054b-40d6-893d-067d1966feae", "toolCallId": "tooluse_vAN65ziAo5QHhzBNCPHyXJ", "content": "\"id|name|brand|price|promo|category|rating|description|image|url\\ngid://shopify/ProductVariant/50675057066258|AquaGlide Mask - Black|Cressi|69.99|69.99|Diving & Snorkeling Masks|3.0|AquaGlide MaskDiscover a new level of underwater adventure with the AquaGlide Mask. Designed for optimal snorkeling, this full-face mask offers a panoramic view and is ISO and CE certified to ensure safety and performance. Available in both Black and Clear variants, its double feathered edge skirt seal provides a secure and comfortable fit.The anti-fog lens and anti-fog coating keep your visibility crystal clear, while the polycarbonate frame ensures durability. The mask features a lightweight design and comes with a protective case for convenient portability. Adjust it easily with the nose pocket fit and split strap to suit your face, and benefit from the included anti-fog spray to maintain superior clarity underwater.Made from eco-friendly materials, the AquaGlide Mask is perfect for responsible snorkelers looking for reliable gear. Backed by a 1-year limited warranty, this mask ensures you enjoy your underwater explorations with peace of mind.Join the snorkeling community and experience the underwater world like never before with the AquaGlide Mask. Priced at $69.99, it's a must-have for both beginners and seasoned snorkelers.CRSDM_717B|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/f5300324fe51_top_right_ac8c4d30-be3c-435c-8ee0-15dfae866eca.webp?v=1766164238|https://barca-sports.myshopify.com/products/crsdm_717b\\ngid://shopify/ProductVariant/50677132624146|AquaVivid Mask - Multi-Colored|Cressi|49.99|49.99|Diving & Snorkeling Masks|3.0|Introducing the AquaVivid Mask - the perfect companion for all your snorkeling adventures. Designed with snorkelers in mind, this multi-colored full-face mask offers a clear, unobstructed view of the underwater world. Crafted with a polycarbonate frame and a double-feathered edge skirt seal, it ensures a comfortable and secure fit.The AquaVivid Mask features an adjustable buckle system and a neoprene strap cover for added convenience and comfort. Its lightweight and compact design make it travel-friendly, perfect for your next beach vacation.Equipped with UV-protection clear lenses, the AquaVivid Mask safeguards your eyes while providing excellent visibility. Certified with T\\u00dcV approval and safety ratings, you can snorkel with peace of mind.The non-toxic coatings and high-volume breathing chamber of this mask ensure an eco-friendly and enhanced underwater experience. Backed by a 1-year limited warranty, the AquaVivid Mask is your reliable and stylish snorkeling partner.CRSDM_3695|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/ce2d9ca86ee1_top_right.webp?v=1766164244|https://barca-sports.myshopify.com/products/crsdm_3695\\ngid://shopify/ProductVariant/50677131247890|AquaRadiance Mask - Green|TUSA|69.99|69.99|Diving & Snorkeling Masks|4.1|AquaRadiance MaskEmbark on your underwater adventures with the AquaRadiance Mask, meticulously designed for recreational divers seeking comfort and clarity. Featuring a Single Lens Mask with an ultra-wide visibility range, this mask ensures you never miss a single marvel of the ocean. The Polycarbonate Frame and Double Feathered Edge Skirt Seal provide a secure and comfortable fit, while the Nose Pocket Fit adjustability caters to all face shapes.Available in Blue and Green high-visibility colors, each mask comes with a mirrored, corrective lens coating that enhances your vision beneath the sea. It's certified with both ISO and CE standards, ensuring the highest quality and safety.Designed with a Compact and portable structure, AquaRadiance is perfect for travelling divers. Completed with a lens cleaner and a defect warranty of 6 months, this mask promises lasting use and performance. Experience the brilliance of underwater exploration with the AquaRadiance Mask, where innovation meets unparalleled diving comfort.TSUDM_9C67|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/9c756302f4eb_bottom_left.webp?v=1766164237|https://barca-sports.myshopify.com/products/tsudm_9c67\\ngid://shopify/ProductVariant/50677132853522|SeaClear Pro Mask - Green|Scubapro|89.99|89.99|Diving & Snorkeling Masks|3.0|Dive into the depths with the SeaClear Pro Mask, a top-tier choice for underwater photographers and enthusiasts. Designed to offer an unparalleled panoramic view, this mask features an ultra-clear, polarized lens that ensures crystal-clear visuals while reducing glare and offering UV protection. The Nose Pocket Fit adjustability ensures a snug and comfortable fit, while the soft neoprene strap keeps the mask secured during your dives.Crafted with tempered glass and eco-friendly materials, the SeaClear Pro Mask is both durable and environmentally responsible. Its recyclable components add to its eco-friendly design, and it comes with a protective travel case for convenience. The package includes an anti-fog spray to maintain clear vision underwater.With a comfort seal skirt and adjustable volume, it guarantees a leak-free experience and easy pressure adjustments. The lifetime lens warranty ensures that your investment is protected. Discover the beauty of the underwater world like never before with the SeaClear Pro Mask.SPDM_03D6|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/c23fe94bbae7_bottom_right.webp?v=1766164245|https://barca-sports.myshopify.com/products/spdm_03d6\\ngid://shopify/ProductVariant/50675056378130|NeptuneView - Green|Aqualung|89.99|89.99|Diving & Snorkeling Masks|4.0|NeptuneView Full-Face Snorkeling MaskExperience the underwater world like never before with the NeptuneView Full-Face Snorkeling Mask. Designed for snorkelers, this innovative mask features a Multi-Size Skirt for a customized fit and a Full-Face Skirt Seal for unmatched comfort and security. Available in vibrant Green and Yellow high-visibility colors, the NeptuneView ensures you'll always stand out in crystal-clear waters.Equipped with a Mirrored Corrective Lens that enhances your vision and a Panoramic View for an immersive underwater experience, the NeptuneView is perfect for exploring vibrant marine life. The Neoprene Strap ensures durability while the adjustable volume feature offers a seamless diving experience.This mask is CE Certified and Safety Rated, ensuring a safe and worry-free adventure. With sustainable production practices, the NeptuneView not only provides exceptional performance but also cares for the environment. Each mask comes with a Protective Storage Case for easy portability and protection.Supported by a 6-month defect warranty, the NeptuneView Mask makes your snorkeling adventures more enjoyable with its superior design and unparalleled comfort. Dive into an extraordinary experience with NeptuneView!AQLDM_9478|https://cdn.shopify.com/s/files/1/0910/6502/4786/files/c23fe94bbae7_top_right_41c57413-1ebb-4400-b14d-b3947c212037.webp?v=1766164232|https://barca-sports.myshopify.com/products/aqldm_9478\""}
+
+event:message
+data:{"type": "TEXT_MESSAGE_START", "messageId": "d50b2472-d0c7-4c5f-9fb8-03ee506b0733", "role": "assistant"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "d50b2472-d0c7-4c5f-9fb8-03ee506b0733", "delta": "Perfect"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "d50b2472-d0c7-4c5f-9fb8-03ee506b0733", "delta": "! Here"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "d50b2472-d0c7-4c5f-9fb8-03ee506b0733", "delta": "'s"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "d50b2472-d0c7-4c5f-9fb8-03ee506b0733", "delta": " everything"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "d50b2472-d0c7-4c5f-9fb8-03ee506b0733", "delta": " you need for"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "d50b2472-d0c7-4c5f-9fb8-03ee506b0733", "delta": " a"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "d50b2472-d0c7-4c5f-9fb8-03ee506b0733", "delta": " successful sn"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "d50b2472-d0c7-4c5f-9fb8-03ee506b0733", "delta": "orkeling trip,"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "d50b2472-d0c7-4c5f-9fb8-03ee506b0733", "delta": " organized"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "d50b2472-d0c7-4c5f-9fb8-03ee506b0733", "delta": " by essential"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "d50b2472-d0c7-4c5f-9fb8-03ee506b0733", "delta": " categories"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "d50b2472-d0c7-4c5f-9fb8-03ee506b0733", "delta": ":\n\n##"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "d50b2472-d0c7-4c5f-9fb8-03ee506b0733", "delta": " Snor"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "d50b2472-d0c7-4c5f-9fb8-03ee506b0733", "delta": "kel"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "d50b2472-d0c7-4c5f-9fb8-03ee506b0733", "delta": " Masks"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "d50b2472-d0c7-4c5f-9fb8-03ee506b0733", "delta": "\nClear"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "d50b2472-d0c7-4c5f-9fb8-03ee506b0733", "delta": " vision"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "d50b2472-d0c7-4c5f-9fb8-03ee506b0733", "delta": " and"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "d50b2472-d0c7-4c5f-9fb8-03ee506b0733", "delta": " comfort underwater"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "d50b2472-d0c7-4c5f-9fb8-03ee506b0733", "delta": "â€”"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "d50b2472-d0c7-4c5f-9fb8-03ee506b0733", "delta": "all with"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "d50b2472-d0c7-4c5f-9fb8-03ee506b0733", "delta": " panor"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "d50b2472-d0c7-4c5f-9fb8-03ee506b0733", "delta": "amic views and"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "d50b2472-d0c7-4c5f-9fb8-03ee506b0733", "delta": " anti-fog protection"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "d50b2472-d0c7-4c5f-9fb8-03ee506b0733", "delta": "."}
+
+event:message
+data:{"type": "TEXT_MESSAGE_END", "messageId": "d50b2472-d0c7-4c5f-9fb8-03ee506b0733"}
+
+event:message
+data:{"type": "TOOL_CALL_START", "toolCallId": "tooluse_ty0NyoxBeLZFRJjb2WbisJ", "toolCallName": "render_product_carousel", "parentMessageId": "138ce14f-37b6-4c7e-a8de-d46293ac061b"}
+
+event:message
+data:{"type": "ACTIVITY_SNAPSHOT", "timestamp": 1781292159863, "messageId": "activity-0a75df98796f42cbba13116094320af3", "activityType": "a2ui-surface", "content": {"operations": [{"beginRendering": {"surfaceId": "skeleton-surface-default", "root": "skeleton-root-default", "catalogId": "a2ui-surface"}}, {"surfaceUpdate": {"surfaceId": "skeleton-surface-default", "components": [{"id": "skeleton-root-default", "component": {"ProductCarousel": {"isLoading": true}}}]}}]}, "replace": true}
+
+event:message
+data:{"type": "TOOL_CALL_ARGS", "toolCallId": "tooluse_ty0NyoxBeLZFRJjb2WbisJ", "delta": "{\"surface_id\": \"product-surface-masks\", \"heading\": \"Snorkel Masks\"}"}
+
+event:message
+data:{"type": "TOOL_CALL_END", "toolCallId": "tooluse_ty0NyoxBeLZFRJjb2WbisJ"}
+
+event:message
+data:{"type": "TOOL_CALL_RESULT", "messageId": "02253e7d-936e-497d-9334-4f66f8e39d7f", "toolCallId": "tooluse_ty0NyoxBeLZFRJjb2WbisJ", "content": "\"ProductCarousel 'Snorkel Masks' queued on surface 'product-surface-masks'.\""}
+
+event:message
+data:{"type": "ACTIVITY_SNAPSHOT", "timestamp": 1781292160315, "messageId": "activity-0a75df98796f42cbba13116094320af3", "activityType": "a2ui-surface", "content": {"operations": [{"beginRendering": {"surfaceId": "product-surface-masks", "root": "root-product-surface-masks"}}, {"surfaceUpdate": {"surfaceId": "product-surface-masks", "components": [{"id": "root-product-surface-masks", "component": {"ProductCarousel": {"heading": {"literalString": "Snorkel Masks"}, "products": {"componentId": "product-card-product-surface-masks", "dataBinding": "/items"}}}}]}}, {"dataModelUpdate": {"surfaceId": "product-surface-masks", "contents": [{"key": "items", "valueMap": [{"valueMap": [{"key": "ec_name", "valueString": "AquaGlide Mask - Black"}, {"key": "ec_brand", "valueString": "Cressi"}, {"key": "ec_price", "valueNumber": 69.99}, {"key": "ec_promo_price", "valueNumber": 69.99}, {"key": "ec_image", "valueString": "https://cdn.shopify.com/s/files/1/0910/6502/4786/files/f5300324fe51_top_right_ac8c4d30-be3c-435c-8ee0-15dfae866eca.webp?v=1766164238"}, {"key": "ec_product_id", "valueString": "gid://shopify/ProductVariant/50675057066258"}, {"key": "ec_description", "valueString": "AquaGlide MaskDiscover a new level of underwater adventure with the AquaGlide Mask. Designed for optimal snorkeling, this full-face mask offers a panoramic view and is ISO and CE certified to ensure safety and performance. Available in both Black and Clear variants, its double feathered edge skirt seal provides a secure and comfortable fit.The anti-fog lens and anti-fog coating keep your visibility crystal clear, while the polycarbonate frame ensures durability. The mask features a lightweight design and comes with a protective case for convenient portability. Adjust it easily with the nose pocket fit and split strap to suit your face, and benefit from the included anti-fog spray to maintain superior clarity underwater.Made from eco-friendly materials, the AquaGlide Mask is perfect for responsible snorkelers looking for reliable gear. Backed by a 1-year limited warranty, this mask ensures you enjoy your underwater explorations with peace of mind.Join the snorkeling community and experience the underwater world like never before with the AquaGlide Mask. Priced at $69.99, it's a must-have for both beginners and seasoned snorkelers.CRSDM_717B"}, {"key": "ec_category", "valueString": "Diving & Snorkeling Masks"}, {"key": "ec_rating", "valueNumber": 3.0}, {"key": "clickUri", "valueString": "/products/crsdm_717b"}]}, {"valueMap": [{"key": "ec_name", "valueString": "AquaVivid Mask - Multi-Colored"}, {"key": "ec_brand", "valueString": "Cressi"}, {"key": "ec_price", "valueNumber": 49.99}, {"key": "ec_promo_price", "valueNumber": 49.99}, {"key": "ec_image", "valueString": "https://cdn.shopify.com/s/files/1/0910/6502/4786/files/ce2d9ca86ee1_top_right.webp?v=1766164244"}, {"key": "ec_product_id", "valueString": "gid://shopify/ProductVariant/50677132624146"}, {"key": "ec_description", "valueString": "Introducing the AquaVivid Mask - the perfect companion for all your snorkeling adventures. Designed with snorkelers in mind, this multi-colored full-face mask offers a clear, unobstructed view of the underwater world. Crafted with a polycarbonate frame and a double-feathered edge skirt seal, it ensures a comfortable and secure fit.The AquaVivid Mask features an adjustable buckle system and a neoprene strap cover for added convenience and comfort. Its lightweight and compact design make it travel-friendly, perfect for your next beach vacation.Equipped with UV-protection clear lenses, the AquaVivid Mask safeguards your eyes while providing excellent visibility. Certified with TÃœV approval and safety ratings, you can snorkel with peace of mind.The non-toxic coatings and high-volume breathing chamber of this mask ensure an eco-friendly and enhanced underwater experience. Backed by a 1-year limited warranty, the AquaVivid Mask is your reliable and stylish snorkeling partner.CRSDM_3695"}, {"key": "ec_category", "valueString": "Diving & Snorkeling Masks"}, {"key": "ec_rating", "valueNumber": 3.0}, {"key": "clickUri", "valueString": "/products/crsdm_3695"}]}, {"valueMap": [{"key": "ec_name", "valueString": "AquaRadiance Mask - Green"}, {"key": "ec_brand", "valueString": "TUSA"}, {"key": "ec_price", "valueNumber": 69.99}, {"key": "ec_promo_price", "valueNumber": 69.99}, {"key": "ec_image", "valueString": "https://cdn.shopify.com/s/files/1/0910/6502/4786/files/9c756302f4eb_bottom_left.webp?v=1766164237"}, {"key": "ec_product_id", "valueString": "gid://shopify/ProductVariant/50677131247890"}, {"key": "ec_description", "valueString": "AquaRadiance MaskEmbark on your underwater adventures with the AquaRadiance Mask, meticulously designed for recreational divers seeking comfort and clarity. Featuring a Single Lens Mask with an ultra-wide visibility range, this mask ensures you never miss a single marvel of the ocean. The Polycarbonate Frame and Double Feathered Edge Skirt Seal provide a secure and comfortable fit, while the Nose Pocket Fit adjustability caters to all face shapes.Available in Blue and Green high-visibility colors, each mask comes with a mirrored, corrective lens coating that enhances your vision beneath the sea. It's certified with both ISO and CE standards, ensuring the highest quality and safety.Designed with a Compact and portable structure, AquaRadiance is perfect for travelling divers. Completed with a lens cleaner and a defect warranty of 6 months, this mask promises lasting use and performance. Experience the brilliance of underwater exploration with the AquaRadiance Mask, where innovation meets unparalleled diving comfort.TSUDM_9C67"}, {"key": "ec_category", "valueString": "Diving & Snorkeling Masks"}, {"key": "ec_rating", "valueNumber": 4.1}, {"key": "clickUri", "valueString": "/products/tsudm_9c67"}]}, {"valueMap": [{"key": "ec_name", "valueString": "SeaClear Pro Mask - Green"}, {"key": "ec_brand", "valueString": "Scubapro"}, {"key": "ec_price", "valueNumber": 89.99}, {"key": "ec_promo_price", "valueNumber": 89.99}, {"key": "ec_image", "valueString": "https://cdn.shopify.com/s/files/1/0910/6502/4786/files/c23fe94bbae7_bottom_right.webp?v=1766164245"}, {"key": "ec_product_id", "valueString": "gid://shopify/ProductVariant/50677132853522"}, {"key": "ec_description", "valueString": "Dive into the depths with the SeaClear Pro Mask, a top-tier choice for underwater photographers and enthusiasts. Designed to offer an unparalleled panoramic view, this mask features an ultra-clear, polarized lens that ensures crystal-clear visuals while reducing glare and offering UV protection. The Nose Pocket Fit adjustability ensures a snug and comfortable fit, while the soft neoprene strap keeps the mask secured during your dives.Crafted with tempered glass and eco-friendly materials, the SeaClear Pro Mask is both durable and environmentally responsible. Its recyclable components add to its eco-friendly design, and it comes with a protective travel case for convenience. The package includes an anti-fog spray to maintain clear vision underwater.With a comfort seal skirt and adjustable volume, it guarantees a leak-free experience and easy pressure adjustments. The lifetime lens warranty ensures that your investment is protected. Discover the beauty of the underwater world like never before with the SeaClear Pro Mask.SPDM_03D6"}, {"key": "ec_category", "valueString": "Diving & Snorkeling Masks"}, {"key": "ec_rating", "valueNumber": 3.0}, {"key": "clickUri", "valueString": "/products/spdm_03d6"}]}, {"valueMap": [{"key": "ec_name", "valueString": "NeptuneView - Green"}, {"key": "ec_brand", "valueString": "Aqualung"}, {"key": "ec_price", "valueNumber": 89.99}, {"key": "ec_promo_price", "valueNumber": 89.99}, {"key": "ec_image", "valueString": "https://cdn.shopify.com/s/files/1/0910/6502/4786/files/c23fe94bbae7_top_right_41c57413-1ebb-4400-b14d-b3947c212037.webp?v=1766164232"}, {"key": "ec_product_id", "valueString": "gid://shopify/ProductVariant/50675056378130"}, {"key": "ec_description", "valueString": "NeptuneView Full-Face Snorkeling MaskExperience the underwater world like never before with the NeptuneView Full-Face Snorkeling Mask. Designed for snorkelers, this innovative mask features a Multi-Size Skirt for a customized fit and a Full-Face Skirt Seal for unmatched comfort and security. Available in vibrant Green and Yellow high-visibility colors, the NeptuneView ensures you'll always stand out in crystal-clear waters.Equipped with a Mirrored Corrective Lens that enhances your vision and a Panoramic View for an immersive underwater experience, the NeptuneView is perfect for exploring vibrant marine life. The Neoprene Strap ensures durability while the adjustable volume feature offers a seamless diving experience.This mask is CE Certified and Safety Rated, ensuring a safe and worry-free adventure. With sustainable production practices, the NeptuneView not only provides exceptional performance but also cares for the environment. Each mask comes with a Protective Storage Case for easy portability and protection.Supported by a 6-month defect warranty, the NeptuneView Mask makes your snorkeling adventures more enjoyable with its superior design and unparalleled comfort. Dive into an extraordinary experience with NeptuneView!AQLDM_9478"}, {"key": "ec_category", "valueString": "Diving & Snorkeling Masks"}, {"key": "ec_rating", "valueNumber": 4.0}, {"key": "clickUri", "valueString": "/products/aqldm_9478"}]}]}]}}]}, "replace": true}
+
+event:message
+data:{"type": "TEXT_MESSAGE_START", "messageId": "138ce14f-37b6-4c7e-a8de-d46293ac061b", "role": "assistant"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "138ce14f-37b6-4c7e-a8de-d46293ac061b", "delta": "##"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "138ce14f-37b6-4c7e-a8de-d46293ac061b", "delta": " Snorkel Fins"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "138ce14f-37b6-4c7e-a8de-d46293ac061b", "delta": "\nEssential"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "138ce14f-37b6-4c7e-a8de-d46293ac061b", "delta": " for efficient"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "138ce14f-37b6-4c7e-a8de-d46293ac061b", "delta": " prop"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "138ce14f-37b6-4c7e-a8de-d46293ac061b", "delta": "ulsion and energy"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "138ce14f-37b6-4c7e-a8de-d46293ac061b", "delta": " savings"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "138ce14f-37b6-4c7e-a8de-d46293ac061b", "delta": "â€”"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "138ce14f-37b6-4c7e-a8de-d46293ac061b", "delta": "with comfortable"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "138ce14f-37b6-4c7e-a8de-d46293ac061b", "delta": " foot"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "138ce14f-37b6-4c7e-a8de-d46293ac061b", "delta": " pockets and quick"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "138ce14f-37b6-4c7e-a8de-d46293ac061b", "delta": "-release str"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "138ce14f-37b6-4c7e-a8de-d46293ac061b", "delta": "aps."}
+
+event:message
+data:{"type": "TEXT_MESSAGE_END", "messageId": "138ce14f-37b6-4c7e-a8de-d46293ac061b"}
+
+event:message
+data:{"type": "TOOL_CALL_START", "toolCallId": "tooluse_G0ZU5nPeakDXGW7crUgHBZ", "toolCallName": "render_product_carousel", "parentMessageId": "9d6aa6b6-c86c-472c-8678-6dac0cfdec01"}
+
+event:message
+data:{"type": "ACTIVITY_SNAPSHOT", "timestamp": 1781292162801, "messageId": "activity-4b27ecc9ebbb4530a811e431034d1a4f", "activityType": "a2ui-surface", "content": {"operations": [{"beginRendering": {"surfaceId": "skeleton-surface-default", "root": "skeleton-root-default", "catalogId": "a2ui-surface"}}, {"surfaceUpdate": {"surfaceId": "skeleton-surface-default", "components": [{"id": "skeleton-root-default", "component": {"ProductCarousel": {"isLoading": true}}}]}}]}, "replace": true}
+
+event:message
+data:{"type": "TOOL_CALL_ARGS", "toolCallId": "tooluse_G0ZU5nPeakDXGW7crUgHBZ", "delta": "{\"heading\": \"Snorkel Fins\", \"surface_id\": \"product-surface-fins\"}"}
+
+event:message
+data:{"type": "TOOL_CALL_END", "toolCallId": "tooluse_G0ZU5nPeakDXGW7crUgHBZ"}
+
+event:message
+data:{"type": "TOOL_CALL_RESULT", "messageId": "118eb8fe-2111-41c1-b6bd-cb9dceaff120", "toolCallId": "tooluse_G0ZU5nPeakDXGW7crUgHBZ", "content": "\"ProductCarousel 'Snorkel Fins' queued on surface 'product-surface-fins'.\""}
+
+event:message
+data:{"type": "ACTIVITY_SNAPSHOT", "timestamp": 1781292163258, "messageId": "activity-4b27ecc9ebbb4530a811e431034d1a4f", "activityType": "a2ui-surface", "content": {"operations": [{"beginRendering": {"surfaceId": "product-surface-fins", "root": "root-product-surface-fins"}}, {"surfaceUpdate": {"surfaceId": "product-surface-fins", "components": [{"id": "root-product-surface-fins", "component": {"ProductCarousel": {"heading": {"literalString": "Snorkel Fins"}, "products": {"componentId": "product-card-product-surface-fins", "dataBinding": "/items"}}}}]}}, {"dataModelUpdate": {"surfaceId": "product-surface-fins", "contents": [{"key": "items", "valueMap": [{"valueMap": [{"key": "ec_name", "valueString": "SnorkelSurge Fin - Black / L"}, {"key": "ec_brand", "valueString": "Cressi"}, {"key": "ec_price", "valueNumber": 49.99}, {"key": "ec_promo_price", "valueNumber": 49.99}, {"key": "ec_image", "valueString": "https://cdn.shopify.com/s/files/1/0910/6502/4786/files/13eb26a5786e_top_left.webp?v=1766164255"}, {"key": "ec_product_id", "valueString": "gid://shopify/ProductVariant/50674637111570"}, {"key": "ec_description", "valueString": "SnorkelSurge FinThe SnorkelSurge Fin is your ultimate underwater companion, engineered for the avid snorkeler. Available in sleek Black or Blue, these full foot fins are not only visually appealing but also packed with advanced features to enhance your snorkel adventures. Quick-Release Straps: Adjust your fins with ease using our innovative quick-release strap system. Flexible Blade Angle: Designed to adapt to your natural kicking motion, ensuring maximum propulsion with minimal effort. Soft-Foot Pocket: Experience unparalleled comfort with a soft-foot pocket that perfectly contours to your feet. Abrasion-Resistant and Durable: Built to withstand the rigors of the underwater environment, ensuring long-lasting use. Eco-Friendly Materials: Crafted from non-toxic, eco-friendly materials that are safe for both you and the environment. Anti-Slip Sole: Provides enhanced grip on wet surfaces, making your transitions in and out of the water smooth and safe. Lightweight Construction: Easy to carry, making them perfect for travel. In addition to their exceptional design, the SnorkelSurge Fins come with a 1-year limited warranty, offering peace of mind for your purchase.Discover the joy of efficient and comfortable underwater exploration with the SnorkelSurge Fin - where performance meets comfort.CRSDF_9836"}, {"key": "ec_category", "valueString": "Diving & Snorkeling Fins"}, {"key": "ec_rating", "valueNumber": 4.9}, {"key": "clickUri", "valueString": "/products/crsdf_9836"}]}, {"valueMap": [{"key": "ec_name", "valueString": "RedWave Travel Fin - Red / M"}, {"key": "ec_brand", "valueString": "TUSA"}, {"key": "ec_price", "valueNumber": 49.99}, {"key": "ec_promo_price", "valueNumber": 49.99}, {"key": "ec_image", "valueString": "https://cdn.shopify.com/s/files/1/0910/6502/4786/files/e9b361da3e8b_top_right.webp?v=1766164262"}, {"key": "ec_product_id", "valueString": "gid://shopify/ProductVariant/50674638749970"}, {"key": "ec_description", "valueString": "Experience the perfect blend of performance and portability with the RedWave Travel Fin. Designed specifically for snorkelers, these lightweight fins feature Quick-Release Straps for easy adjustability and a Closed Foot Pocket for a secure fit. The Split Blade design and Soft-Tip Blade provide exceptional kick efficiency and low resistance, making your underwater adventures effortless and enjoyable.Crafted from durable, weatherproof neoprene, the RedWave Travel Fin is built to withstand various environmental conditions while maintaining minimal waste impact. The Stretchable Straps ensure flexibility and comfort during your dives.Included with your fins are an Instruction Manual and a convenient Travel Bag for easy transportation. With a compact design that's perfect for travel, these fins are certified Dive Tested and come with a 2-year material warranty for peace of mind. Whether you're exploring coral reefs or swimming through clear blue waters, the RedWave Travel Fin channels your energy efficiently for a smooth and powerful glide.Get ready to elevate your snorkeling experience with the RedWave Travel Fin â€“ your ultimate companion for underwater adventures.TSUDF_9811"}, {"key": "ec_category", "valueString": "Diving & Snorkeling Fins"}, {"key": "ec_rating", "valueNumber": 3.0}, {"key": "clickUri", "valueString": "/products/tsudf_9811"}]}, {"valueMap": [{"key": "ec_name", "valueString": "HydroBlade Fin - Yellow / M"}, {"key": "ec_brand", "valueString": "Cressi"}, {"key": "ec_price", "valueNumber": 79.99}, {"key": "ec_promo_price", "valueNumber": 79.99}, {"key": "ec_image", "valueString": "https://cdn.shopify.com/s/files/1/0910/6502/4786/files/74a0b7f6578e_top_left_4c062588-51ab-4a50-939e-f02e754a841a.webp?v=1766164259"}, {"key": "ec_product_id", "valueString": "gid://shopify/ProductVariant/50674638029074"}, {"key": "ec_description", "valueString": "HydroBlade FinExperience the ultimate in underwater adventure with the HydroBlade Fin. Designed for beginner divers, this fin offers optimal performance and comfort. The adjustable heel pocket and ergonomic foot pocket ensure a secure and tailored fit, while the channel-thrust blade provides exceptional kick efficiency and energy savings. Dive with confidence knowing your fins are crafted from eco-friendly, UV-resistant, and durable thermoplastic rubber.Available in vibrant blue and yellow, the HydroBlade Fin not only looks great but also stands up to the demands of any snorkeling or scuba diving expedition. The quick-release buckle system makes adjustments a breeze, and the included travel bag ensures your fins are ready to go wherever the ocean takes you. ISO certified and dive tested, these abrasion-resistant fins are designed for long-lasting performance.Upgrade your diving experience with the HydroBlade Fin â€“ the perfect blend of flexibility, efficiency, and sustainability. Full Foot Fins Adjustable Heel Pocket Channel-Thrust Blade Ergonomic Foot Pocket Quick-Release Buckle Energy Efficient Kick Medium Flexibility Medium Blade Length Eco-Friendly Materials UV-Resistant Abrasion-Resistant Includes Fin Straps and Travel Bag 1-Year Limited Warranty CRSDF_8C24"}, {"key": "ec_category", "valueString": "Diving & Snorkeling Fins"}, {"key": "ec_rating", "valueNumber": 4.8}, {"key": "clickUri", "valueString": "/products/crsdf_8c24"}]}, {"valueMap": [{"key": "ec_name", "valueString": "AquaVoyage Fin - Blue / M"}, {"key": "ec_brand", "valueString": "Oceanic"}, {"key": "ec_price", "valueNumber": 99.99}, {"key": "ec_promo_price", "valueNumber": 99.99}, {"key": "ec_image", "valueString": "https://cdn.shopify.com/s/files/1/0910/6502/4786/files/02b2b43ec8e8_bottom_right.webp?v=1766164252"}, {"key": "ec_product_id", "valueString": "gid://shopify/ProductVariant/50674636194066"}, {"key": "ec_description", "valueString": "Discover the underwater world with the AquaVoyage Fin, the ultimate travel companion for snorkelers. Designed with Rotational Pivot Adjustability and a Multi-Size Foot Pocket, these fins ensure a perfect fit for all. The Vented Blade enhances kick efficiency, reducing resistance for a smooth and effortless glide. Crafted from durable, UV-resistant neoprene, these fins promise longevity and reliable performance.Featuring a compact design for easy storage and portability, the AquaVoyage Fin includes a convenient travel bag, making it easy to carry on all your adventures. The Fin Strap System offers secure, adjustable wear, and the high-visibility colors ensure you stay easily seen in the water. With a commitment to minimal environmental impact, these fins are both CE Certified and Safety Rated, guaranteeing peace of mind during every dive. Embrace the ocean with confidence and style, and explore like never before with the AquaVoyage Fin.Key Features: Rotational Pivot Adjustability Vented Blade for Low Resistance Multi-Size Foot Pocket UV-Resistant Neoprene Material Compact Design for Easy Storage Includes Travel Bag High-Visibility Colors CE Certified and Safety Rated Ready for your next underwater adventure? Dive in with the AquaVoyage Fin!OCDF_3221"}, {"key": "ec_category", "valueString": "Diving & Snorkeling Fins"}, {"key": "ec_rating", "valueNumber": 5.0}, {"key": "clickUri", "valueString": "/products/ocdf_3221"}]}, {"valueMap": [{"key": "ec_name", "valueString": "AquaTrek Snap Fin - Blue / XL"}, {"key": "ec_brand", "valueString": "TUSA"}, {"key": "ec_price", "valueNumber": 99.99}, {"key": "ec_promo_price", "valueNumber": 99.99}, {"key": "ec_image", "valueString": "https://cdn.shopify.com/s/files/1/0910/6502/4786/files/8464f8b21245_top_left.webp?v=1766164289"}, {"key": "ec_product_id", "valueString": "gid://shopify/ProductVariant/50674642452754"}, {"key": "ec_description", "valueString": "Explore the Depths with AquaTrek Snap FinDive into your underwater adventures with the versatile and travel-friendly AquaTrek Snap Fin. Designed for the avid underwater photographer and snorkeling enthusiast, these fins feature a Multi-Size Fit and come in vibrant Blue and Red variants. The Channel-Thrust Blade ensures optimal kick efficiency, while the Comfort Fit Buckle and Closed Foot Pocket provide a secure and comfortable fit.Key Features: Compact Design: Easy to pack and carry, perfect for travel. Lightweight Construction: Built for maximum portability without compromising performance. Eco-Friendly Materials: Made with non-toxic coatings and UV-resistant neoprene. Energy Efficient: Engineered to enhance your swimming power with minimal effort. Durability: UV-resistant materials ensure long-lasting performance. Each pair of AquaTrek Snap Fins comes with a convenient Travel Bag and an Instruction Manual. Enjoy peace of mind with a 6-month defect warranty. Dive deeper and explore farther with the confidence that AquaTrek Snap Fin brings to every underwater journey.TSUDF_765F"}, {"key": "ec_category", "valueString": "Diving & Snorkeling Fins"}, {"key": "ec_rating", "valueNumber": 3.0}, {"key": "clickUri", "valueString": "/products/tsudf_765f"}]}]}]}}]}, "replace": true}
+
+event:message
+data:{"type": "TEXT_MESSAGE_START", "messageId": "9d6aa6b6-c86c-472c-8678-6dac0cfdec01", "role": "assistant"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "9d6aa6b6-c86c-472c-8678-6dac0cfdec01", "delta": "## W"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "9d6aa6b6-c86c-472c-8678-6dac0cfdec01", "delta": "etsuits\nProtection"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "9d6aa6b6-c86c-472c-8678-6dac0cfdec01", "delta": " and"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "9d6aa6b6-c86c-472c-8678-6dac0cfdec01", "delta": " warm"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "9d6aa6b6-c86c-472c-8678-6dac0cfdec01", "delta": "th in coo"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "9d6aa6b6-c86c-472c-8678-6dac0cfdec01", "delta": "ler watersâ€”lightweight"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "9d6aa6b6-c86c-472c-8678-6dac0cfdec01", "delta": ", eco"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "9d6aa6b6-c86c-472c-8678-6dac0cfdec01", "delta": "-friendly, and designed"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "9d6aa6b6-c86c-472c-8678-6dac0cfdec01", "delta": " for mobility"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "9d6aa6b6-c86c-472c-8678-6dac0cfdec01", "delta": "."}
+
+event:message
+data:{"type": "TEXT_MESSAGE_END", "messageId": "9d6aa6b6-c86c-472c-8678-6dac0cfdec01"}
+
+event:message
+data:{"type": "TOOL_CALL_START", "toolCallId": "tooluse_XYEju3TVwSinb9ryG3K8BG", "toolCallName": "render_product_carousel", "parentMessageId": "21832286-acd0-40a6-969d-c6752478fba0"}
+
+event:message
+data:{"type": "ACTIVITY_SNAPSHOT", "timestamp": 1781292170537, "messageId": "activity-5c1608009ad54fe9bd9a19f0fd65f9f7", "activityType": "a2ui-surface", "content": {"operations": [{"beginRendering": {"surfaceId": "skeleton-surface-default", "root": "skeleton-root-default", "catalogId": "a2ui-surface"}}, {"surfaceUpdate": {"surfaceId": "skeleton-surface-default", "components": [{"id": "skeleton-root-default", "component": {"ProductCarousel": {"isLoading": true}}}]}}]}, "replace": true}
+
+event:message
+data:{"type": "TOOL_CALL_ARGS", "toolCallId": "tooluse_XYEju3TVwSinb9ryG3K8BG", "delta": "{\"heading\": \"Wetsuits\", \"surface_id\": \"product-surface-wetsuits\"}"}
+
+event:message
+data:{"type": "TOOL_CALL_END", "toolCallId": "tooluse_XYEju3TVwSinb9ryG3K8BG"}
+
+event:message
+data:{"type": "TOOL_CALL_RESULT", "messageId": "8a65ac64-0a96-405f-adec-50c39f4c61f9", "toolCallId": "tooluse_XYEju3TVwSinb9ryG3K8BG", "content": "\"ProductCarousel 'Wetsuits' queued on surface 'product-surface-wetsuits'.\""}
+
+event:message
+data:{"type": "ACTIVITY_SNAPSHOT", "timestamp": 1781292170983, "messageId": "activity-5c1608009ad54fe9bd9a19f0fd65f9f7", "activityType": "a2ui-surface", "content": {"operations": [{"beginRendering": {"surfaceId": "product-surface-wetsuits", "root": "root-product-surface-wetsuits"}}, {"surfaceUpdate": {"surfaceId": "product-surface-wetsuits", "components": [{"id": "root-product-surface-wetsuits", "component": {"ProductCarousel": {"heading": {"literalString": "Wetsuits"}, "products": {"componentId": "product-card-product-surface-wetsuits", "dataBinding": "/items"}}}}]}}, {"dataModelUpdate": {"surfaceId": "product-surface-wetsuits", "contents": [{"key": "items", "valueMap": [{"valueMap": [{"key": "ec_name", "valueString": "EcoFlex Wetsuit for Women - Red / M"}, {"key": "ec_brand", "valueString": "Patagonia"}, {"key": "ec_price", "valueNumber": 49.99}, {"key": "ec_promo_price", "valueNumber": 49.99}, {"key": "ec_image", "valueString": "https://cdn.shopify.com/s/files/1/0910/6502/4786/files/e49456af9869_top_right_4e211c6c-d13b-40be-95c1-6be80d462a0b.webp?v=1766163802"}, {"key": "ec_product_id", "valueString": "gid://shopify/ProductVariant/50674590384402"}, {"key": "ec_description", "valueString": "Dive into your aquatic adventures with the EcoFlex Wetsuit for Women. Designed for recreational water users, this beginner partial suit boasts multi-directional stretch and ultra-lightweight materials for maximum flexibility and comfort. Crafted from eco-friendly, biodegradable materials, and featuring CE compliance, it ensures durability and safety with anti-slip panels and double-lined seams. Experience optimal temperature control while snorkeling, thanks to its rubberized coating and minimal bulk design. The wetsuit comes in a vibrant red color and includes a hanger for easy storage. Enjoy peace of mind with a 2-year material warranty. Get ready to explore the water with the EcoFlex Wetsuit!PTWETS_7E95"}, {"key": "ec_category", "valueString": "Wetsuits"}, {"key": "ec_rating", "valueNumber": 4.9}, {"key": "clickUri", "valueString": "/products/ptwets_7e95"}]}, {"valueMap": [{"key": "ec_name", "valueString": "Green Wave Glide Wetsuit - Green / L"}, {"key": "ec_brand", "valueString": "Patagonia"}, {"key": "ec_price", "valueNumber": 129.99}, {"key": "ec_promo_price", "valueNumber": 129.99}, {"key": "ec_image", "valueString": "https://cdn.shopify.com/s/files/1/0910/6502/4786/files/76060f11c60d_top_left.webp?v=1766163776"}, {"key": "ec_product_id", "valueString": "gid://shopify/ProductVariant/50674582290706"}, {"key": "ec_description", "valueString": "Dive into your next adventure with the Green Wave Glide Wetsuit, specially designed for women who love recreational water sports. Perfect for snorkeling, this beginner partial suit boasts a durable rubberized coating and a heat-retaining lining to keep you comfortable in cool waters. The multi-directional stretch ensures freedom of movement, while the anti-slip panels provide added safety. With CE compliance and UV-resistant features, this wetsuit is both safe and environmentally friendly, incorporating biodegradable coatings. Lightweight and weatherproof, it also includes a convenient carry bag and instruction manual. Plus, enjoy peace of mind with the replacement guarantee. Make a splash with unmatched style and practicality at an unbeatable price.PTWETS_7689"}, {"key": "ec_category", "valueString": "Wetsuits"}, {"key": "ec_rating", "valueNumber": 4.9}, {"key": "clickUri", "valueString": "/products/ptwets_7689"}]}, {"valueMap": [{"key": "ec_name", "valueString": "AquaGuard Beginner Swim Suit - Black / XS"}, {"key": "ec_brand", "valueString": "O'Neill"}, {"key": "ec_price", "valueNumber": 199.99}, {"key": "ec_promo_price", "valueNumber": 199.99}, {"key": "ec_image", "valueString": "https://cdn.shopify.com/s/files/1/0910/6502/4786/files/53e74969e881_bottom_left_f07f405d-7483-4da2-8e9d-d188d14b63b1.webp?v=1766163789"}, {"key": "ec_product_id", "valueString": "gid://shopify/ProductVariant/50674586222866"}, {"key": "ec_description", "valueString": "Introducing the AquaGuard Beginner Swim Suit, designed specifically for recreational water users seeking comfort, durability, and protection. Available in chic Black, sleek Gray, and vibrant Blue, this wetsuit for women features a lightweight design, double-lined seams, and a unique rubberized coating for superior weatherproof performance. Certified ISO and UV-resistant, AquaGuard offers cold-water protection with its 5mm thickness, making it perfect for snorkeling adventures. The suit also includes an emergency whistle attachment for added safety, and comes with a carry bag and repair patch for convenience. Enjoy unrivaled flexibility with multi-directional stretch material, while contributing to environmental sustainability with our recyclable neoprene. Experience the perfect blend of innovation and style, backed by a lifetime seam warranty. Dive into your aquatic adventures with confidence and ease, with AquaGuard!ONWETS_B83D"}, {"key": "ec_category", "valueString": "Wetsuits"}, {"key": "ec_rating", "valueNumber": 3.8}, {"key": "clickUri", "valueString": "/products/onwets_b83d"}]}]}]}}]}, "replace": true}
+
+event:message
+data:{"type": "TEXT_MESSAGE_START", "messageId": "21832286-acd0-40a6-969d-c6752478fba0", "role": "assistant"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "21832286-acd0-40a6-969d-c6752478fba0", "delta": "## Water"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "21832286-acd0-40a6-969d-c6752478fba0", "delta": "proof Bags"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "21832286-acd0-40a6-969d-c6752478fba0", "delta": "\nKeep"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "21832286-acd0-40a6-969d-c6752478fba0", "delta": " your"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "21832286-acd0-40a6-969d-c6752478fba0", "delta": " valu"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "21832286-acd0-40a6-969d-c6752478fba0", "delta": "ables safe and dryâ€”d"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "21832286-acd0-40a6-969d-c6752478fba0", "delta": "urable, marine"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "21832286-acd0-40a6-969d-c6752478fba0", "delta": "-rated"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "21832286-acd0-40a6-969d-c6752478fba0", "delta": " dr"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "21832286-acd0-40a6-969d-c6752478fba0", "delta": "ybags with reinfor"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "21832286-acd0-40a6-969d-c6752478fba0", "delta": "ced construction"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "21832286-acd0-40a6-969d-c6752478fba0", "delta": "."}
+
+event:message
+data:{"type": "TEXT_MESSAGE_END", "messageId": "21832286-acd0-40a6-969d-c6752478fba0"}
+
+event:message
+data:{"type": "TOOL_CALL_START", "toolCallId": "tooluse_bLBQWuyPnasPRNgyUfx9sm", "toolCallName": "render_product_carousel", "parentMessageId": "1d86afaa-805c-4835-8e72-334a4d07edcb"}
+
+event:message
+data:{"type": "ACTIVITY_SNAPSHOT", "timestamp": 1781292173379, "messageId": "activity-87659f8b24d9476cb567143eda45aa75", "activityType": "a2ui-surface", "content": {"operations": [{"beginRendering": {"surfaceId": "skeleton-surface-default", "root": "skeleton-root-default", "catalogId": "a2ui-surface"}}, {"surfaceUpdate": {"surfaceId": "skeleton-surface-default", "components": [{"id": "skeleton-root-default", "component": {"ProductCarousel": {"isLoading": true}}}]}}]}, "replace": true}
+
+event:message
+data:{"type": "TOOL_CALL_ARGS", "toolCallId": "tooluse_bLBQWuyPnasPRNgyUfx9sm", "delta": "{\"heading\": \"Waterproof Bags\", \"surface_id\": \"product-surface-bags\"}"}
+
+event:message
+data:{"type": "TOOL_CALL_END", "toolCallId": "tooluse_bLBQWuyPnasPRNgyUfx9sm"}
+
+event:message
+data:{"type": "TOOL_CALL_RESULT", "messageId": "f106d851-8985-4790-82c0-cb688d6f7427", "toolCallId": "tooluse_bLBQWuyPnasPRNgyUfx9sm", "content": "\"ProductCarousel 'Waterproof Bags' queued on surface 'product-surface-bags'.\""}
+
+event:message
+data:{"type": "ACTIVITY_SNAPSHOT", "timestamp": 1781292173833, "messageId": "activity-87659f8b24d9476cb567143eda45aa75", "activityType": "a2ui-surface", "content": {"operations": [{"beginRendering": {"surfaceId": "product-surface-bags", "root": "root-product-surface-bags"}}, {"surfaceUpdate": {"surfaceId": "product-surface-bags", "components": [{"id": "root-product-surface-bags", "component": {"ProductCarousel": {"heading": {"literalString": "Waterproof Bags"}, "products": {"componentId": "product-card-product-surface-bags", "dataBinding": "/items"}}}}]}}, {"dataModelUpdate": {"surfaceId": "product-surface-bags", "contents": [{"key": "items", "valueMap": [{"valueMap": [{"key": "ec_name", "valueString": "AquaGuard Waterproof Drybag - Yellow"}, {"key": "ec_brand", "valueString": "O'Brien"}, {"key": "ec_price", "valueNumber": 59.99}, {"key": "ec_promo_price", "valueNumber": 59.99}, {"key": "ec_image", "valueString": "https://cdn.shopify.com/s/files/1/0910/6502/4786/files/52bdd9fe408a_top_left.webp?v=1766164324"}, {"key": "ec_product_id", "valueString": "gid://shopify/ProductVariant/50675066994962"}, {"key": "ec_description", "valueString": "Introducing the AquaGuard Waterproof Drybag, the ultimate accessory for water skiers seeking reliable protection and style. Crafted from high-quality polyester, this travel-friendly drybag comes in vibrant yellow and crisp white variants, ensuring your gear stays dry and secure with marine safety-rated and CE compliant protection. The reinforced loops and rubber grip handle offer exceptional durability and ease of use, while the low carbon manufacturing process emphasizes environmental responsibility. With a strength of 2,000 lbs and a thickness of 12mm, this drybag is designed to withstand the toughest conditions. Included are a convenient storage bag and carabiner for effortless portability. Backed by a lifetime defect warranty, the AquaGuard Waterproof Drybag is your trustworthy companion for all water skiing adventures.OBDB_6136"}, {"key": "ec_category", "valueString": "Canoe Storage Bags"}, {"key": "clickUri", "valueString": "/products/obdb_6136"}]}, {"valueMap": [{"key": "ec_name", "valueString": "Nylon DryBag with Tow Rope - Black"}, {"key": "ec_brand", "valueString": "Hyperlite"}, {"key": "ec_price", "valueNumber": 49.99}, {"key": "ec_promo_price", "valueNumber": 49.99}, {"key": "ec_image", "valueString": "https://cdn.shopify.com/s/files/1/0910/6502/4786/files/e7739a20f141_bottom_left.webp?v=1766164329"}, {"key": "ec_product_id", "valueString": "gid://shopify/ProductVariant/50677148057874"}, {"key": "ec_description", "valueString": "Introducing the Nylon DryBag with Tow Ropeâ€”perfect for towable enthusiasts! Engineered with tear-resistant and recyclable nylon, this drybag ensures durability and environmental consciousness. The included 75 ft ultra-durable and floating tow rope, featuring a wide anti-slip handle, provides superior safety and performance for towing tubes. CE Compliant and TÃœV Approved, this versatile accessory can be easily folded into the included storage bag for ultimate portability. Backed by a 3-year durability warranty, this product is designed to meet the highest standards for both leisure and professional use.HYDB_CCF3"}, {"key": "ec_category", "valueString": "Canoe Storage Bags"}, {"key": "ec_rating", "valueNumber": 3.0}, {"key": "clickUri", "valueString": "/products/hydb_ccf3"}]}]}]}}]}, "replace": true}
+
+event:message
+data:{"type": "TOOL_CALL_START", "toolCallId": "tooluse_4KwZHmjY8YXakBOjbDxPg6", "toolCallName": "render_next_actions", "parentMessageId": "1d86afaa-805c-4835-8e72-334a4d07edcb"}
+
+event:message
+data:{"type": "ACTIVITY_SNAPSHOT", "timestamp": 1781292176829, "messageId": "activity-19df6185e4ea485ab7195de8a7366be0", "activityType": "a2ui-surface", "content": {"operations": [{"beginRendering": {"surfaceId": "skeleton-surface-next-actions", "root": "skeleton-root-next-actions", "catalogId": "a2ui-surface"}}, {"surfaceUpdate": {"surfaceId": "skeleton-surface-next-actions", "components": [{"id": "skeleton-root-next-actions", "component": {"NextActionsBar": {"isLoading": true}}}]}}]}, "replace": true}
+
+event:message
+data:{"type": "TOOL_CALL_ARGS", "toolCallId": "tooluse_4KwZHmjY8YXakBOjbDxPg6", "delta": "{\"actions\": [{\"text\": \"Build me a complete snorkeling bundle\", \"type\": \"followup\"}, {\"text\": \"Show me beginner-friendly options\", \"type\": \"followup\"}, {\"text\": \"reef-safe sunscreen\", \"type\": \"search\"}]}"}
+
+event:message
+data:{"type": "TOOL_CALL_END", "toolCallId": "tooluse_4KwZHmjY8YXakBOjbDxPg6"}
+
+event:message
+data:{"type": "TOOL_CALL_RESULT", "messageId": "ccc308bf-0a70-41cb-bc22-9d952b064f23", "toolCallId": "tooluse_4KwZHmjY8YXakBOjbDxPg6", "content": "\"NextActionsBar queued on surface 'next-actions-surface' with 3 action(s).\""}
+
+event:message
+data:{"type": "ACTIVITY_SNAPSHOT", "timestamp": 1781292177278, "messageId": "activity-19df6185e4ea485ab7195de8a7366be0", "activityType": "a2ui-surface", "content": {"operations": [{"beginRendering": {"surfaceId": "next-actions-surface", "root": "root-next-actions-surface"}}, {"surfaceUpdate": {"surfaceId": "next-actions-surface", "components": [{"id": "root-next-actions-surface", "component": {"NextActionsBar": {"actions": {"componentId": "button-next-actions-surface", "dataBinding": "/actions"}}}}]}}, {"dataModelUpdate": {"surfaceId": "next-actions-surface", "contents": [{"key": "actions", "valueMap": [{"valueMap": [{"key": "text", "valueString": "Build me a complete snorkeling bundle"}, {"key": "type", "valueString": "followup"}]}, {"valueMap": [{"key": "text", "valueString": "Show me beginner-friendly options"}, {"key": "type", "valueString": "followup"}]}, {"valueMap": [{"key": "text", "valueString": "reef-safe sunscreen"}, {"key": "type", "valueString": "search"}]}]}]}}]}, "replace": true}
+
+event:message
+data:{"type": "STATE_SNAPSHOT", "snapshot": {}}
+
+event:message
+data:{"type": "RUN_FINISHED", "threadId": "1df9f18c-785d-4ace-9642-678a7fd9fc5a", "runId": "c5ce77d3-21f5-4838-b637-334ca32dbc45"}
+
+event:turn_complete
+data:{"conversationSessionId":"1df9f18c-785d-4ace-9642-678a7fd9fc5a","conversationToken":"b6fec897-550c-4b9b-90b0-71adcc7abe9f"}
+
