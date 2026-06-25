@@ -15,7 +15,6 @@ function createMockStatePort(): GenerativeStatePort {
     createTurn: vi.fn(),
     setActiveTurnId: vi.fn(),
     replaceTurnId: vi.fn(),
-    setRoutedInterface: vi.fn(),
     initAgentResponse: vi.fn(),
     startMessage: vi.fn(),
     appendMessageDelta: vi.fn(),
@@ -64,7 +63,6 @@ describe('GenerativeRuntime.dispatchEvent — CUSTOM events', () => {
       generativeInterfaceId: 'test-runtime',
       cartInterfaceId: 'test-runtime',
       statePort,
-      hydrateSubInterface: vi.fn(() => null),
     });
 
     dispatchEvent = (runtime as any).dispatchEvent.bind(runtime);

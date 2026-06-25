@@ -45,10 +45,6 @@ vi.mock(
   })
 );
 
-vi.mock('@/src/core/interface/generative/generative-hydration.js', () => ({
-  createHydrateSubInterface: vi.fn(() => vi.fn()),
-}));
-
 function createTestGenerativeInterface(engine: Engine): GenerativeInterface {
   const fullEngine = getFullEngine(engine);
   loadGenerative(fullEngine, TEST_ID);

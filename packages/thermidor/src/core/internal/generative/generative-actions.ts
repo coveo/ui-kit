@@ -1,7 +1,6 @@
 import {createAction} from '@reduxjs/toolkit';
 import type {
   A2UISurface,
-  RoutedInterface,
   TurnStatus,
 } from '@/src/core/interface/generative/generative-types.js';
 
@@ -15,10 +14,6 @@ export function createGenerativeActions(interfaceId: string) {
     replaceTurnId: createAction<{oldId: string; newId: string}>(
       `${prefix}/replaceTurnId`
     ),
-    setRoutedInterface: createAction<{
-      turnId: string;
-      routedInterface: RoutedInterface;
-    }>(`${prefix}/setRoutedInterface`),
     initAgentResponse: createAction<{turnId: string}>(
       `${prefix}/initAgentResponse`
     ),

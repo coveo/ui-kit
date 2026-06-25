@@ -20,8 +20,6 @@ export type {
   A2UISurface,
   ToolCall,
   ToolCallStatus,
-  RoutedInterface,
-  RoutedUseCase,
 } from './core/interface/generative/generative-types.js';
 export type {
   Interface,

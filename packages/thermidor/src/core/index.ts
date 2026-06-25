@@ -91,7 +91,6 @@ export * as configurationSelectors from './interface/configuration/configuration
 export type {
   Turn,
   TurnStatus,
-  RoutedInterface,
   AgentResponse,
   AgentMessage,
   A2UISurface,
@@ -103,10 +102,4 @@ export {GenerativeRuntime} from './interface/api/generative-endpoint/generative-
 export type {
   GenerativeStatePort,
   GenerativeRuntimeConfig,
-  HydrateSubInterface,
 } from './interface/api/generative-endpoint/generative-runtime.js';
-
-export {
-  createHydrateSubInterface,
-  getOrCreateHydrateFromSnapshotAction,
-} from './interface/generative/generative-hydration.js';

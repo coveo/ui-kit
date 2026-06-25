@@ -10,7 +10,6 @@ import {readEndpointClientConfiguration} from '@/src/core/internal/configuration
 import {generateId} from '@/src/core/interface/utils/id-generator.js';
 import type {
   A2UISurface,
-  RoutedInterface,
   TurnStatus,
 } from '@/src/core/interface/generative/generative-types.js';
 
@@ -18,7 +17,6 @@ export interface GenerativeStatePort {
   createTurn(payload: {id: string; prompt: string; status: TurnStatus}): void;
   setActiveTurnId(id: string): void;
   replaceTurnId(oldId: string, newId: string): void;
-  setRoutedInterface(turnId: string, routedInterface: RoutedInterface): void;
   initAgentResponse(turnId: string): void;
   startMessage(turnId: string, role: string): void;
   appendMessageDelta(turnId: string, delta: string): void;
@@ -46,15 +44,8 @@ export interface GenerativeStatePort {
   ): void;
 }
 
-export type HydrateSubInterface = (
-  activityType: string,
-  content: unknown,
-  query?: string
-) => RoutedInterface | null;
-
 export interface GenerativeRuntimeConfig {
   statePort: GenerativeStatePort;
-  hydrateSubInterface: HydrateSubInterface;
   generativeInterfaceId: string;
   cartInterfaceId: string;
 }
@@ -67,7 +58,6 @@ export class GenerativeRuntime {
 
   private engine: FullEngine;
   private statePort: GenerativeStatePort;
-  private hydrateSubInterface: HydrateSubInterface;
   private agentResponseInitialized = new Set<string>();
   private currentPrompt: string | undefined;
   private buildRequest: ReturnType<
@@ -81,7 +71,6 @@ export class GenerativeRuntime {
   ) {
     this.engine = engine;
     this.statePort = config.statePort;
-    this.hydrateSubInterface = config.hydrateSubInterface;
     this.buildRequest = createConversationEndpointRequestSelector(
       config.generativeInterfaceId,
       config.cartInterfaceId
@@ -347,27 +336,6 @@ export class GenerativeRuntime {
           default:
             return {turnId, isTerminal: false};
         }
-      }
-
-      case 'ACTIVITY_SNAPSHOT': {
-        const routedInterface = this.hydrateSubInterface(
-          event.activityType,
-          event.content,
-          this.currentPrompt
-        );
-
-        if (routedInterface) {
-          this.statePort.setRoutedInterface(turnId, routedInterface);
-          this.statePort.completeTurn(turnId);
-          return {turnId, isTerminal: true};
-        }
-
-        this.ensureAgentResponse(turnId);
-        this.statePort.appendSurface(
-          turnId,
-          event.content as Record<string, unknown>
-        );
-        return {turnId, isTerminal: false};
       }
 
       case 'turn_complete': {

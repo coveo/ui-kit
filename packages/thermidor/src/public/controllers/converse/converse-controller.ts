@@ -1,13 +1,8 @@
 import type {Turn} from '@/src/core/interface/generative/generative-types.js';
 import {GenerativeRuntime} from '@/src/core/interface/api/generative-endpoint/generative-runtime.js';
-import {createHydrateSubInterface} from '@/src/core/interface/generative/generative-hydration.js';
 import {loadGenerative} from '@/src/core/interface/generative/generative-loader.js';
 import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
-import {
-  ENGINE,
-  STATE_ID,
-  SOURCE_ENGINE,
-} from '@/src/core/interface/utils/symbols.js';
+import {ENGINE, STATE_ID} from '@/src/core/interface/utils/symbols.js';
 import {getOrCreateGenerativeActions} from '@/src/core/internal/generative/generative-actions.js';
 import {getOrCreateGenerativeSelectors} from '@/src/core/internal/generative/generative-selectors.js';
 import {getOrCreateBackendInterfacesActions} from '@/src/core/internal/backend-interfaces/backend-interfaces-actions.js';
@@ -76,7 +71,6 @@ export const buildConverseController = (
 ): ConverseController => {
   const fullEngine = options.interface[ENGINE];
   const stateId = options.interface[STATE_ID];
-  const sourceEngine = options.interface[SOURCE_ENGINE];
 
   loadGenerative(fullEngine, stateId);
   fullEngine.adoptSlice(getOrCreateBackendInterfacesSlice(stateId));
@@ -97,11 +91,6 @@ export const buildConverseController = (
       },
       replaceTurnId(oldId, newId) {
         fullEngine.mutate(actions.replaceTurnId({oldId, newId}));
-      },
-      setRoutedInterface(turnId, routedInterface) {
-        fullEngine.mutate(
-          actions.setRoutedInterface({turnId, routedInterface})
-        );
       },
       initAgentResponse(turnId) {
         fullEngine.mutate(actions.initAgentResponse({turnId}));
@@ -167,7 +156,6 @@ export const buildConverseController = (
         );
       },
     },
-    hydrateSubInterface: createHydrateSubInterface(sourceEngine),
   });
 
   const controllerState = createMemoizedStateSelector(
