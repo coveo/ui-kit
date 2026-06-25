@@ -399,7 +399,7 @@ describe('atomic-agent-stream-of-thought', () => {
       });
 
       expect(steps[0].textContent).toContain(
-        i18n.t('agent-generation-step-searched-for', {
+        i18n.t('agent-generation-step-search-query-completed', {
           query: 'how to reset password',
         })
       );
@@ -453,7 +453,7 @@ describe('atomic-agent-stream-of-thought', () => {
 
       expect(spinners.length).toBe(1);
       expect(steps[0].textContent).toContain(
-        i18n.t('agent-generation-step-searching-for', {
+        i18n.t('agent-generation-step-search-query', {
           query: 'how to reset password',
         })
       );
@@ -466,10 +466,10 @@ describe('atomic-agent-stream-of-thought', () => {
       });
 
       expect(steps[0].textContent).not.toContain(
-        i18n.t('agent-generation-step-searched-for')
+        i18n.t('agent-generation-step-search-query-completed')
       );
       expect(steps[0].textContent).not.toContain(
-        i18n.t('agent-generation-step-searching-for')
+        i18n.t('agent-generation-step-search-query')
       );
     });
   });

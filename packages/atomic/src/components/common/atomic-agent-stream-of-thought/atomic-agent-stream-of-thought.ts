@@ -33,8 +33,8 @@ const stepLabelKeys: Record<
     completed: 'agent-generation-step-search-completed',
   },
   'searching-with-query': {
-    active: 'agent-generation-step-searching-for',
-    completed: 'agent-generation-step-searched-for',
+    active: 'agent-generation-step-search-query',
+    completed: 'agent-generation-step-search-query-completed',
   },
   'thinking-after-search': {
     active: 'agent-generation-step-analyzing-results',
@@ -112,7 +112,10 @@ export class AtomicAgentStreamOfThought extends LitElement {
       step.status === 'active'
         ? stepLabelKeys[step.type].active
         : stepLabelKeys[step.type].completed;
-    const label = this.i18n.t(labelKey, {query: step.searchQuery});
+    const label =
+      step.type === 'searching-with-query'
+        ? this.i18n.t(labelKey, {query: step.searchQuery})
+        : this.i18n.t(labelKey);
 
     return html`
       <div class="step">
@@ -132,7 +135,10 @@ export class AtomicAgentStreamOfThought extends LitElement {
 
     const step = resolvedSteps[resolvedSteps.length - 1];
     const labelKey = stepLabelKeys[step.type].completed;
-    const label = this.i18n.t(labelKey, {query: step.searchQuery});
+    const label =
+      step.type === 'searching-with-query'
+        ? this.i18n.t(labelKey, {query: step.searchQuery})
+        : this.i18n.t(labelKey);
 
     return html`
       <button
