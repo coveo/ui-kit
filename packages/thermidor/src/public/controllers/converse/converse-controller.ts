@@ -10,11 +10,52 @@ import {
 } from '@/src/core/interface/utils/symbols.js';
 import {getOrCreateGenerativeActions} from '@/src/core/internal/generative/generative-actions.js';
 import {getOrCreateGenerativeSelectors} from '@/src/core/internal/generative/generative-selectors.js';
+import {getOrCreateBackendInterfacesActions} from '@/src/core/internal/backend-interfaces/backend-interfaces-actions.js';
+import {getOrCreateBackendInterfacesSlice} from '@/src/core/internal/backend-interfaces/backend-interfaces-slice.js';
+import type {BackendSuggestionsEntry} from '@/src/core/internal/backend-interfaces/backend-interfaces-actions.js';
 import type {GenerativeInterface} from '@/src/public/interfaces/generative.js';
 import type {Controller} from '../controller-types.js';
 
+export type BackendInterfaceAction =
+  | {type: 'execute_search'; query: string}
+  | {type: 'toggle_facet'; interfaceId: string; facetId: string; value: string}
+  | {
+      type: 'toggle_exclude_facet';
+      interfaceId: string;
+      facetId: string;
+      value: string;
+    }
+  | {type: 'deselect_all_facets'; interfaceId: string; facetId: string}
+  | {type: 'select_page'; interfaceId: string; page: number}
+  | {type: 'set_page_size'; interfaceId: string; pageSize: number}
+  | {
+      type: 'set_sort';
+      interfaceId: string;
+      sortCriteria: string;
+      fields?: Array<{field: string; direction: string}>;
+    }
+  | {type: 'fetch_suggestions'; interfaceId: string; query: string}
+  | {
+      type: 'restore_state';
+      interfaceId: string;
+      query?: string;
+      facets?: unknown[];
+      page?: number;
+      pageSize?: number;
+      sort?: unknown;
+    }
+  | {
+      type: 'cart_action';
+      productId: string;
+      name: string;
+      price: number;
+      quantity: number;
+      action: 'add' | 'remove';
+    };
+
 export interface ConverseController extends Controller<ConverseControllerState> {
   submit(options: {prompt: string}): void;
+  sendAction(action: BackendInterfaceAction): void;
   selectTurn(options: {id: string}): void;
   retry(options: {id: string}): void;
 }
@@ -38,9 +79,11 @@ export const buildConverseController = (
   const sourceEngine = options.interface[SOURCE_ENGINE];
 
   loadGenerative(fullEngine, stateId);
+  fullEngine.adoptSlice(getOrCreateBackendInterfacesSlice(stateId));
 
   const actions = getOrCreateGenerativeActions(stateId);
   const selectors = getOrCreateGenerativeSelectors(stateId);
+  const biActions = getOrCreateBackendInterfacesActions(stateId);
 
   const runtime = GenerativeRuntime.getInstance(fullEngine, stateId, {
     generativeInterfaceId: stateId,
@@ -96,6 +139,33 @@ export const buildConverseController = (
       clearTurnResponse(turnId) {
         fullEngine.mutate(actions.clearTurnResponse({turnId}));
       },
+      createBackendInterface(interfaceId, type, display, state) {
+        fullEngine.mutate(
+          biActions.createInterface({
+            interfaceId,
+            type,
+            display: display as 'main' | 'inline',
+            state,
+          })
+        );
+      },
+      updateBackendInterfaceState(interfaceId, state, display) {
+        fullEngine.mutate(
+          biActions.updateInterfaceState({
+            interfaceId,
+            state,
+            display: display as 'main' | 'inline' | undefined,
+          })
+        );
+      },
+      updateSuggestions(interfaceId, suggestions) {
+        fullEngine.mutate(
+          biActions.setSuggestions({
+            interfaceId,
+            suggestions: suggestions as BackendSuggestionsEntry,
+          })
+        );
+      },
     },
     hydrateSubInterface: createHydrateSubInterface(sourceEngine),
   });
@@ -123,6 +193,14 @@ export const buildConverseController = (
         return;
       }
       runtime.submit(prompt);
+    },
+
+    sendAction(action) {
+      const currentState = fullEngine.read(controllerState);
+      if (currentState.isStreaming) {
+        return;
+      }
+      runtime.submitAction(action as unknown as Record<string, unknown>);
     },
 
     selectTurn({id}) {

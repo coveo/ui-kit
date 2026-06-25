@@ -29,6 +29,8 @@ const noopThunk = createAsyncThunk<void, {engine: FullEngine}>(
 
 const mockSubmit = vi.fn<(prompt: string) => Promise<void>>();
 const mockResubmit = vi.fn<(turnId: string, prompt: string) => Promise<void>>();
+const mockSubmitAction =
+  vi.fn<(action: Record<string, unknown>) => Promise<void>>();
 
 vi.mock(
   '@/src/core/interface/api/generative-endpoint/generative-runtime.js',
@@ -37,6 +39,7 @@ vi.mock(
       getInstance: vi.fn(() => ({
         submit: mockSubmit,
         resubmit: mockResubmit,
+        submitAction: mockSubmitAction,
       })),
     },
   })
@@ -74,8 +77,10 @@ describe('buildConverseController', () => {
     vi.clearAllMocks();
     mockSubmit.mockReset();
     mockResubmit.mockReset();
+    mockSubmitAction.mockReset();
     mockSubmit.mockResolvedValue();
     mockResubmit.mockResolvedValue();
+    mockSubmitAction.mockResolvedValue();
     engine = createTestEngine();
     fullEngine = getFullEngine(engine);
     generativeInterface = createTestGenerativeInterface(engine);
@@ -195,6 +200,43 @@ describe('buildConverseController', () => {
       controller.submit({prompt: 'new prompt'});
 
       expect(mockSubmit).toHaveBeenCalledWith('new prompt');
+    });
+  });
+
+  describe('sendAction()', () => {
+    it('delegates to runtime.submitAction', () => {
+      const controller = buildController();
+
+      controller.sendAction({
+        type: 'toggle_facet',
+        interfaceId: 'ui-1',
+        facetId: 'brand',
+        value: 'Nike',
+      });
+
+      expect(mockSubmitAction).toHaveBeenCalledWith({
+        type: 'toggle_facet',
+        interfaceId: 'ui-1',
+        facetId: 'brand',
+        value: 'Nike',
+      });
+    });
+
+    it('does not send action when a turn is streaming', () => {
+      const controller = buildController();
+      const actions = getOrCreateGenerativeActions(TEST_ID);
+
+      fullEngine.mutate(
+        actions.createTurn({id: 'turn-1', prompt: 'hi', status: 'streaming'})
+      );
+
+      controller.sendAction({
+        type: 'select_page',
+        interfaceId: 'ui-1',
+        page: 2,
+      });
+
+      expect(mockSubmitAction).not.toHaveBeenCalled();
     });
   });
 

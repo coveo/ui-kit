@@ -11,7 +11,8 @@ export interface CoveoConversationEndpointRequest {
   country?: string;
   currency?: string;
   clientId?: string;
-  message: string;
+  message?: string;
+  action?: Record<string, unknown>;
   context: {
     user: {
       userAgent?: string | null;

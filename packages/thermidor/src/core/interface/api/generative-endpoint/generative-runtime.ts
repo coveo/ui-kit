@@ -29,6 +29,21 @@ export interface GenerativeStatePort {
   completeTurn(turnId: string): void;
   failTurn(turnId: string, error: string): void;
   clearTurnResponse(turnId: string): void;
+  createBackendInterface(
+    interfaceId: string,
+    type: string,
+    display: string,
+    state: Record<string, unknown>
+  ): void;
+  updateBackendInterfaceState(
+    interfaceId: string,
+    state: Record<string, unknown>,
+    display?: string
+  ): void;
+  updateSuggestions(
+    interfaceId: string,
+    suggestions: Record<string, unknown>
+  ): void;
 }
 
 export type HydrateSubInterface = (
@@ -112,6 +127,16 @@ export class GenerativeRuntime {
     await this.executeStream(turnId);
   }
 
+  async submitAction(action: Record<string, unknown>): Promise<void> {
+    const tempId = generateId();
+    const prompt = `[action:${(action as {type?: string}).type ?? 'unknown'}]`;
+
+    this.statePort.createTurn({id: tempId, prompt, status: 'streaming'});
+    this.statePort.setActiveTurnId(tempId);
+
+    await this.executeActionStream(tempId, action);
+  }
+
   private async executeStream(turnId: string): Promise<void> {
     try {
       const requestFromState = this.engine.read(this.buildRequest);
@@ -125,6 +150,51 @@ export class GenerativeRuntime {
         currency: requestFromState.currency,
         message: requestFromState.message,
         clientId: navigatorContext?.clientId ?? undefined,
+        context: {
+          user: {
+            userAgent: navigatorContext?.userAgent ?? null,
+          },
+          view: {
+            url: navigatorContext?.location ?? null,
+            referrer: navigatorContext?.referrer ?? null,
+          },
+          ...(requestFromState.cart.length > 0
+            ? {cart: requestFromState.cart}
+            : {}),
+        },
+        targetEngine: 'AGENT_CORE',
+      };
+
+      const client = createConversationEndpointClient();
+      const result = await client.call(request, clientConfig);
+
+      if (!result.success) {
+        this.statePort.failTurn(turnId, result.error);
+        return;
+      }
+
+      await this.consumeStream(turnId, result.data.stream);
+    } catch (error) {
+      this.statePort.failTurn(turnId, getErrorMessage(error));
+    }
+  }
+
+  private async executeActionStream(
+    turnId: string,
+    action: Record<string, unknown>
+  ): Promise<void> {
+    try {
+      const requestFromState = this.engine.read(this.buildRequest);
+      const navigatorContext = this.engine.getNavigatorContextProvider()?.();
+      const clientConfig = readEndpointClientConfiguration(this.engine);
+
+      const request: CoveoConversationEndpointRequest = {
+        trackingId: requestFromState.trackingId,
+        language: requestFromState.language,
+        country: requestFromState.country,
+        currency: requestFromState.currency,
+        clientId: navigatorContext?.clientId ?? undefined,
+        action,
         context: {
           user: {
             userAgent: navigatorContext?.userAgent ?? null,
@@ -241,6 +311,42 @@ export class GenerativeRuntime {
           event.content
         );
         return {turnId, isTerminal: false};
+      }
+
+      case 'CUSTOM': {
+        const value = event.value as Record<string, unknown> | undefined;
+        if (!value) {
+          return {turnId, isTerminal: false};
+        }
+        switch (event.name) {
+          case 'coveo.interfaceCreated': {
+            this.statePort.createBackendInterface(
+              value.interfaceId as string,
+              value.type as string,
+              value.display as string,
+              value.state as Record<string, unknown>
+            );
+            return {turnId, isTerminal: false};
+          }
+          case 'coveo.stateUpdate': {
+            this.statePort.updateBackendInterfaceState(
+              value.interfaceId as string,
+              value.state as Record<string, unknown>,
+              value.display as string | undefined
+            );
+            return {turnId, isTerminal: false};
+          }
+          case 'coveo.suggestions': {
+            const {interfaceId, ...suggestions} = value;
+            this.statePort.updateSuggestions(
+              interfaceId as string,
+              suggestions
+            );
+            return {turnId, isTerminal: false};
+          }
+          default:
+            return {turnId, isTerminal: false};
+        }
       }
 
       case 'ACTIVITY_SNAPSHOT': {

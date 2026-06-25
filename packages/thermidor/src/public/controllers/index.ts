@@ -39,3 +39,29 @@ export type {
   PaginationControllerOptions,
   PaginationControllerState,
 } from './pagination/pagination-controller.js';
+export type {BackendInterfaceAction} from './converse/converse-controller.js';
+export {buildBackendProductListController} from './backend-product-list/backend-product-list-controller.js';
+export type {
+  BackendProductListController,
+  BackendProductListControllerOptions,
+  BackendProductListControllerState,
+} from './backend-product-list/backend-product-list-controller.js';
+export {buildBackendPaginationController} from './backend-pagination/backend-pagination-controller.js';
+export type {
+  BackendPaginationController,
+  BackendPaginationControllerOptions,
+  BackendPaginationControllerState,
+} from './backend-pagination/backend-pagination-controller.js';
+export {buildBackendSearchBoxController} from './backend-search-box/backend-search-box-controller.js';
+export type {
+  BackendSearchBoxController,
+  BackendSearchBoxControllerOptions,
+  BackendSearchBoxControllerState,
+} from './backend-search-box/backend-search-box-controller.js';
+export {buildBackendCartController} from './backend-cart/backend-cart-controller.js';
+export type {
+  BackendCartController,
+  BackendCartControllerOptions,
+  BackendCartControllerState,
+  BackendCartItem,
+} from './backend-cart/backend-cart-controller.js';
