@@ -1,9 +1,8 @@
 import {test, expect, searchApi} from '../fixtures.js';
-import {ipxPage} from '../pages/ipx.js';
 
-test('IPX modal renders results', async ({page, useHandlers}) => {
+test('IPX modal renders results', async ({page, openPage, useHandlers}) => {
   await useHandlers(searchApi.handlers);
-  await page.setContent(ipxPage);
+  await openPage('ipx.html');
   await page.waitForFunction(() =>
     customElements.get('atomic-search-interface')
   );

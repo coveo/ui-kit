@@ -525,7 +525,7 @@ importers:
         specifier: 15.3.1
         version: 15.3.1(@chromatic-com/playwright@0.9.0(@playwright/test@1.60.0)(@types/react@19.2.17)(encoding@0.1.13)(esbuild@0.25.12)(postcss@8.5.15)(prettier@3.8.3)(typescript@6.0.3))
       msw:
-        specifier: 2.14.6
+        specifier: 'catalog:'
         version: 2.14.6(@types/node@25.9.2)(typescript@6.0.3)
       typescript:
         specifier: 6.0.3

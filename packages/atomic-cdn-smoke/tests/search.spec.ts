@@ -1,9 +1,8 @@
 import {test, expect, searchApi} from '../fixtures.js';
-import {searchPage} from '../pages/search.js';
 
-test('Search page renders results', async ({page, useHandlers}) => {
+test('Search page renders results', async ({page, openPage, useHandlers}) => {
   await useHandlers(searchApi.handlers);
-  await page.setContent(searchPage);
+  await openPage('search.html');
   await page.waitForFunction(() =>
     customElements.get('atomic-search-interface')
   );

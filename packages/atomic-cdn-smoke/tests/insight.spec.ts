@@ -1,15 +1,8 @@
 import {test, expect, insightApi} from '../fixtures.js';
-import {insightPage} from '../pages/insight.js';
-import {http, HttpResponse} from 'msw';
 
-const interfaceConfigHandler = http.get(
-  'https://:orgId.org.coveo.com/rest/organizations/:orgId/insight/v1/configs/:insightId/interface',
-  () => HttpResponse.json({})
-);
-
-test('Insight page renders results', async ({page, useHandlers}) => {
-  await useHandlers([interfaceConfigHandler, ...insightApi.handlers]);
-  await page.setContent(insightPage);
+test('Insight page renders results', async ({page, openPage, useHandlers}) => {
+  await useHandlers(insightApi.handlers);
+  await openPage('insight.html');
   await page.waitForFunction(() =>
     customElements.get('atomic-insight-interface')
   );

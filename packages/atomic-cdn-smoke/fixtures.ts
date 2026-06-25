@@ -1,3 +1,4 @@
+import path from 'node:path';
 import {test as base, expect} from '@chromatic-com/playwright';
 import {defineNetworkFixture, type NetworkFixture} from '@msw/playwright';
 import {
@@ -23,6 +24,7 @@ export const insightApi = new MockInsightApi();
 interface Fixtures {
   network: NetworkFixture;
   useHandlers: (handlers: HttpHandler[]) => Promise<void>;
+  openPage: (name: string) => Promise<void>;
 }
 
 export const test = base.extend<Fixtures>({
@@ -43,18 +45,12 @@ export const test = base.extend<Fixtures>({
       network.use(...handlers);
     });
   },
+  openPage: async ({page}, use) => {
+    await use(async (name: string) => {
+      const filePath = path.resolve(import.meta.dirname, 'pages', name);
+      await page.goto(`file://${filePath}`);
+      await page.addStyleTag({url: THEME_URL});
+      await page.addScriptTag({url: ATOMIC_URL, type: 'module'});
+    });
+  },
 });
-
-export function pageHtml(body: string): string {
-  return `<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="${THEME_URL}">
-  <script type="module" src="${ATOMIC_URL}"></script>
-  <style>body { margin: 0; font-family: system-ui, sans-serif; }</style>
-</head>
-<body>${body}</body>
-</html>`;
-}

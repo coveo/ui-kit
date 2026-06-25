@@ -14,7 +14,7 @@
     "@msw/playwright": "0.6.7",
     "@playwright/test": "catalog:",
     "chromatic": "15.3.1",
-    "msw": "2.14.6",
+    "msw": "catalog:",
     "typescript": "catalog:"
   }
 }

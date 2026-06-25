@@ -1,9 +1,12 @@
 import {test, expect, commerceApi} from '../fixtures.js';
-import {commercePage} from '../pages/commerce.js';
 
-test('Commerce page renders products', async ({page, useHandlers}) => {
+test('Commerce page renders products', async ({
+  page,
+  openPage,
+  useHandlers,
+}) => {
   await useHandlers(commerceApi.handlers);
-  await page.setContent(commercePage);
+  await openPage('commerce.html');
   await page.waitForFunction(() =>
     customElements.get('atomic-commerce-interface')
   );
