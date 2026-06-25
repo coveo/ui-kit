@@ -104,14 +104,9 @@ export async function scaffold(
   try {
     log.step(`Downloading the "${template.name}" template…`);
     const sampleDir = await downloadTemplate({
-      samplePath: template.path,
+      packageName: template.packageName,
       destDir: tempDir,
     });
-
-    // TODO: (KIT-5842): resolve monorepo-only dependency protocols (catalog:,
-    // workspace:*) in the sample's package.json so it installs standalone.
-    // The download step already extracts the support files resolution needs.
-    // https://coveord.atlassian.net/browse/KIT-5842
 
     log.step(`Creating project in ${targetDir}…`);
     createdTargetDir = await claimTargetDir(targetDir);

@@ -1,27 +1,14 @@
 import {createReadStream} from 'node:fs';
-import {mkdir, mkdtemp, rm, writeFile, access} from 'node:fs/promises';
+import {access, mkdir, mkdtemp, rm, writeFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {dirname, join} from 'node:path';
-import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it} from 'vitest';
 import {create} from 'tar';
-import {extractSampleFromTarball} from './download.js';
-import {fetchWithRetry} from './http.js';
+import {extractPackage} from './download.js';
 
-const ROOT = 'ui-kit-deadbeef';
-
-/** Files placed inside the fixture tarball (paths relative to the repo root). */
-const FIXTURE_FILES = [
-  'pnpm-workspace.yaml',
-  'packages/headless/package.json',
-  'packages/atomic/package.json',
-  // unrelated package file that must NOT be extracted (only package.json)
-  'packages/atomic/src/index.ts',
-  // the target sample
-  'samples/headless/search-react/package.json',
-  'samples/headless/search-react/src/main.tsx',
-  // a different sample that must NOT be extracted
-  'samples/headless/commerce-react/package.json',
-];
+// npm tarballs wrap every entry under a top-level `package/` directory.
+const PKG_ROOT = 'package';
+const FIXTURE_FILES = ['package.json', 'src/main.tsx', 'README.md'];
 
 async function exists(path: string): Promise<boolean> {
   try {
@@ -32,22 +19,28 @@ async function exists(path: string): Promise<boolean> {
   }
 }
 
-describe('extractSampleFromTarball', () => {
+async function makeTarball(
+  workDir: string,
+  entries: string[],
+  name = 'fixture.tgz'
+): Promise<string> {
+  const srcDir = join(workDir, name.replace('.tgz', ''));
+  for (const file of entries) {
+    const full = join(srcDir, PKG_ROOT, file);
+    await mkdir(dirname(full), {recursive: true});
+    await writeFile(full, `// ${file}\n`);
+  }
+  const tarballPath = join(workDir, name);
+  await create({gzip: true, cwd: srcDir, file: tarballPath}, [PKG_ROOT]);
+  return tarballPath;
+}
+
+describe('extractPackage', () => {
   let workDir: string;
-  let tarballPath: string;
   let destDir: string;
 
   beforeEach(async () => {
     workDir = await mkdtemp(join(tmpdir(), 'create-ui-test-'));
-    const srcDir = join(workDir, 'src');
-    // Build the fixture tree under `<srcDir>/ui-kit-deadbeef/...`
-    for (const file of FIXTURE_FILES) {
-      const full = join(srcDir, ROOT, file);
-      await mkdir(dirname(full), {recursive: true});
-      await writeFile(full, `// ${file}\n`);
-    }
-    tarballPath = join(workDir, 'fixture.tar.gz');
-    await create({gzip: true, cwd: srcDir, file: tarballPath}, [ROOT]);
     destDir = join(workDir, 'out');
   });
 
@@ -55,74 +48,21 @@ describe('extractSampleFromTarball', () => {
     await rm(workDir, {recursive: true, force: true});
   });
 
-  it('extracts the sample (stripping the root prefix) plus support files', async () => {
-    const sampleDir = await extractSampleFromTarball(
-      createReadStream(tarballPath),
-      {samplePath: 'samples/headless/search-react', destDir}
-    );
+  it('extracts the package contents, stripping the package/ prefix', async () => {
+    const tarball = await makeTarball(workDir, FIXTURE_FILES);
+    await extractPackage(createReadStream(tarball), destDir);
 
-    expect(sampleDir).toBe(join(destDir, 'samples/headless/search-react'));
-    expect(await exists(join(sampleDir, 'package.json'))).toBe(true);
-    expect(await exists(join(sampleDir, 'src/main.tsx'))).toBe(true);
-    // support files needed by dependency resolution
-    expect(await exists(join(destDir, 'pnpm-workspace.yaml'))).toBe(true);
-    expect(await exists(join(destDir, 'packages/headless/package.json'))).toBe(
-      true
-    );
-    expect(await exists(join(destDir, 'packages/atomic/package.json'))).toBe(
-      true
-    );
+    expect(await exists(join(destDir, 'package.json'))).toBe(true);
+    expect(await exists(join(destDir, 'src/main.tsx'))).toBe(true);
+    expect(await exists(join(destDir, 'README.md'))).toBe(true);
+    // the `package/` wrapper is stripped, not nested under destDir
+    expect(await exists(join(destDir, 'package'))).toBe(false);
   });
 
-  it('does not extract other samples or non-package files', async () => {
-    await extractSampleFromTarball(createReadStream(tarballPath), {
-      samplePath: 'samples/headless/search-react',
-      destDir,
-    });
-
-    expect(await exists(join(destDir, 'samples/headless/commerce-react'))).toBe(
-      false
-    );
-    expect(await exists(join(destDir, 'packages/atomic/src'))).toBe(false);
-  });
-
-  it('throws an actionable error when the sample path is absent from the archive', async () => {
+  it('throws when the archive has no package.json', async () => {
+    const tarball = await makeTarball(workDir, ['src/main.tsx'], 'nopkg.tgz');
     await expect(
-      extractSampleFromTarball(createReadStream(tarballPath), {
-        samplePath: 'samples/headless/does-not-exist',
-        destDir,
-      })
-    ).rejects.toThrow(/was not found in the downloaded archive/);
-  });
-});
-
-describe('fetchWithRetry', () => {
-  it('retries once after a network failure, then returns the response', async () => {
-    const ok = {ok: true, body: {}} as unknown as Response;
-    const fetchImpl = vi
-      .fn()
-      .mockRejectedValueOnce(new Error('ECONNRESET'))
-      .mockResolvedValueOnce(ok);
-    const result = await fetchWithRetry('http://x', {fetchImpl});
-    expect(result).toBe(ok);
-    expect(fetchImpl).toHaveBeenCalledTimes(2);
-  });
-
-  it('throws a clear error on exhausted retries and on a non-ok response', async () => {
-    const netFail = vi.fn().mockRejectedValue(new Error('ECONNRESET'));
-    await expect(
-      fetchWithRetry('http://x', {retries: 1, fetchImpl: netFail})
-    ).rejects.toThrow(/Failed to fetch/);
-    expect(netFail).toHaveBeenCalledTimes(2);
-
-    const notFound = vi.fn().mockResolvedValue({
-      ok: false,
-      status: 404,
-      statusText: 'Not Found',
-    } as unknown as Response);
-    await expect(
-      fetchWithRetry('http://x', {retries: 0, fetchImpl: notFound})
-    ).rejects.toThrow(/404 Not Found/);
-    expect(notFound).toHaveBeenCalledTimes(1);
+      extractPackage(createReadStream(tarball), destDir)
+    ).rejects.toThrow(/not a valid package/);
   });
 });

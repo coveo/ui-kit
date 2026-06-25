@@ -3,9 +3,9 @@ import {main, parseArgs} from './index.js';
 import {getTemplate} from './templates.js';
 
 describe('templates', () => {
-  it('resolves names to sample paths, and unknown names to undefined', () => {
-    expect(getTemplate('headless-search-react')?.path).toBe(
-      'samples/headless/search-react'
+  it('resolves names to package names, and unknown names to undefined', () => {
+    expect(getTemplate('headless-search-react')?.packageName).toBe(
+      '@coveo/sample-headless-search-react'
     );
     expect(getTemplate('does-not-exist')).toBeUndefined();
   });
