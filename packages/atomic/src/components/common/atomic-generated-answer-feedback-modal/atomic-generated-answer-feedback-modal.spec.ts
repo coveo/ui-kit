@@ -119,6 +119,18 @@ describe('atomic-generated-answer-feedback-modal', () => {
       await expect.element(parts.modalHeader).toBeInTheDocument();
     });
 
+    it('should slot the title into the header and place the close button in header-actions', async () => {
+      const {element, parts} = await renderFeedbackModal();
+
+      expect(parts.modalHeader).toHaveAttribute('slot', 'header');
+
+      const closeButton = element.shadowRoot?.querySelector(
+        '[part="close-button"]'
+      );
+      expect(closeButton?.closest('[slot="header-actions"]')).not.toBeNull();
+      expect(closeButton?.closest('[slot="header"]')).toBeNull();
+    });
+
     it('should render the feedback form when not submitted', async () => {
       const {parts} = await renderFeedbackModal({isOpen: true});
       await expect.element(parts.form).toBeInTheDocument();

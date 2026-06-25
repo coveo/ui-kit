@@ -14,6 +14,14 @@ test.describe('atomic-refine-modal', () => {
     await expect(refineModal.title).toHaveText('Sort & Filter');
   });
 
+  test('should expose the dialog with an accessible name of only the title', async ({
+    refineModal,
+  }) => {
+    // The `modal` locator matches role=dialog with the exact name 'Sort & Filter'.
+    // It would not match if the close button text ("Close") were part of the name.
+    await expect(refineModal.modal).toBeVisible();
+  });
+
   test('should render the sort section', async ({refineModal}) => {
     await expect(refineModal.sortTitle).toBeVisible();
     await expect(refineModal.sortTitle).toHaveText('Sort');
