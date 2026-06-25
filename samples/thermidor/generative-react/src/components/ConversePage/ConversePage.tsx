@@ -3,6 +3,7 @@ import {converseController} from '../../generative-setup.js';
 import {TurnsMenu} from '../TurnsMenu/TurnsMenu.js';
 import {ConversationArea} from '../ConversationArea/ConversationArea.js';
 import {PromptInput} from '../PromptInput/PromptInput.js';
+import {BackendResults} from '../BackendResults/BackendResults.js';
 import styles from './ConversePage.module.css';
 
 const PROMPT_SUGGESTIONS = [
@@ -19,7 +20,6 @@ interface Turn {
   id: string;
   prompt: string;
   status: 'streaming' | 'complete' | 'error';
-  routedInterface?: {useCase: string; interface: unknown};
   agentResponse?: {
     messages: {content: string; role: string}[];
     surfaces: Record<string, unknown>[];
@@ -189,6 +189,7 @@ export function ConversePage() {
           />
         </div>
       </main>
+      <BackendResults />
     </div>
   );
 }

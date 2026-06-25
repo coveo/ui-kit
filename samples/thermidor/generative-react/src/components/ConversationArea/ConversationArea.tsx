@@ -1,14 +1,11 @@
 import {UserPrompt} from '../UserPrompt/UserPrompt.js';
 import {AgentResponse} from '../AgentResponse/AgentResponse.js';
-import {RoutedCommerceResults} from '../RoutedCommerceResults/RoutedCommerceResults.js';
-import {RoutedSearchResults} from '../RoutedSearchResults/RoutedSearchResults.js';
 import styles from './ConversationArea.module.css';
 
 interface Turn {
   id: string;
   prompt: string;
   status: 'streaming' | 'complete' | 'error';
-  routedInterface?: {useCase: string; interface: unknown};
   agentResponse?: {
     messages: {content: string; role: string}[];
     surfaces: Record<string, unknown>[];
@@ -68,12 +65,6 @@ export function ConversationArea({
             </button>
           )}
         </div>
-      )}
-      {turn.routedInterface?.useCase === 'commerceSearch' && (
-        <RoutedCommerceResults interface={turn.routedInterface.interface} />
-      )}
-      {turn.routedInterface?.useCase === 'search' && (
-        <RoutedSearchResults interface={turn.routedInterface.interface} />
       )}
     </div>
   );
