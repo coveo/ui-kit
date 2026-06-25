@@ -1,0 +1,20 @@
+{
+  "name": "@coveo/atomic-cdn-smoke",
+  "version": "0.0.0",
+  "private": true,
+  "description": "CDN visual smoke tests for Atomic components using Playwright + Chromatic",
+  "type": "module",
+  "scripts": {
+    "cdn-smoke": "playwright test",
+    "chromatic": "chromatic --playwright"
+  },
+  "devDependencies": {
+    "@chromatic-com/playwright": "0.9.0",
+    "@coveo/platform-mock-api": "workspace:*",
+    "@msw/playwright": "0.6.7",
+    "@playwright/test": "catalog:",
+    "chromatic": "15.3.1",
+    "msw": "catalog:",
+    "typescript": "catalog:"
+  }
+}
