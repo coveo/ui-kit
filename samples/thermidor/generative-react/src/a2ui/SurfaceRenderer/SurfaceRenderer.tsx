@@ -24,6 +24,19 @@ export interface SurfaceRendererProps {
   onAction?: (text: string, type: string) => void;
 }
 
+interface RealEntry {
+  type: 'real';
+  surface: ParsedSurface;
+}
+
+interface SkeletonEntry {
+  type: 'skeleton';
+  surfaceId: string;
+  componentType: string;
+}
+
+type RenderItem = RealEntry | SkeletonEntry;
+
 export function SurfaceRenderer({surfaces, onAction}: SurfaceRendererProps) {
   const allParsed = useMemo(() => {
     const result: ParsedSurface[] = [];
@@ -33,43 +46,57 @@ export function SurfaceRenderer({surfaces, onAction}: SurfaceRendererProps) {
     return result;
   }, [surfaces]);
 
-  const {customSurfaces, standardSurfaces, skeletons} = useMemo(() => {
-    const custom: ParsedSurface[] = [];
-    const standard: ParsedSurface[] = [];
-    const skel: ParsedSurface[] = [];
+  const renderItems = useMemo(() => {
+    const skeletons: ParsedSurface[] = [];
+    const real: ParsedSurface[] = [];
 
     for (const s of allParsed) {
       const props = s.componentProps as Record<string, unknown>;
-      const isLoading =
-        s.surfaceId.startsWith('skeleton-') || props.isLoading === true;
-
-      if (isLoading && CUSTOM_COMPONENTS.has(s.componentType)) {
-        skel.push(s);
-      } else if (CUSTOM_COMPONENTS.has(s.componentType)) {
-        custom.push(s);
+      if (s.surfaceId.startsWith('skeleton-') || props.isLoading === true) {
+        skeletons.push(s);
       } else if (s.componentType) {
-        standard.push(s);
+        real.push(s);
       }
     }
 
-    return {
-      customSurfaces: custom,
-      standardSurfaces: standard,
-      skeletons: skel,
-    };
+    const dedupedIds = new Set<string>();
+    const dedupedReal: ParsedSurface[] = [];
+    for (const s of real) {
+      if (!dedupedIds.has(s.surfaceId)) {
+        dedupedIds.add(s.surfaceId);
+        dedupedReal.push(s);
+      }
+    }
+
+    const realComponentTypes = new Set(dedupedReal.map((s) => s.componentType));
+
+    const items: RenderItem[] = [];
+
+    const dedupedSkeletonTypes = new Set<string>();
+    for (const s of skeletons) {
+      if (
+        !realComponentTypes.has(s.componentType) &&
+        !dedupedSkeletonTypes.has(s.componentType)
+      ) {
+        dedupedSkeletonTypes.add(s.componentType);
+        items.push({
+          type: 'skeleton',
+          surfaceId: s.surfaceId,
+          componentType: s.componentType,
+        });
+      }
+    }
+
+    for (const s of dedupedReal) {
+      items.push({type: 'real', surface: s});
+    }
+
+    return items;
   }, [allParsed]);
 
-  if (
-    customSurfaces.length === 0 &&
-    standardSurfaces.length === 0 &&
-    skeletons.length === 0
-  ) {
+  if (renderItems.length === 0) {
     return null;
   }
-
-  const realComponentTypes = new Set(
-    customSurfaces.map((s) => s.componentType)
-  );
 
   const handleA2UIAction = onAction
     ? (event: A2UIActionEvent) => {
@@ -82,28 +109,37 @@ export function SurfaceRenderer({surfaces, onAction}: SurfaceRendererProps) {
 
   return (
     <div className={styles.container}>
-      {skeletons
-        .filter((s) => !realComponentTypes.has(s.componentType))
-        .map((s) => (
-          <A2UISkeleton key={s.surfaceId} componentType={s.componentType} />
-        ))}
-      {customSurfaces.map((surface) => (
-        <CustomSurfaceComponent
-          key={surface.surfaceId}
-          surface={surface}
-          allSurfaces={allParsed}
-          onAction={onAction}
-        />
-      ))}
-      {standardSurfaces.map((surface) => (
-        <A2UIViewer
-          key={surface.surfaceId}
-          root={surface.rootId}
-          components={surface.components}
-          data={surface.data}
-          onAction={handleA2UIAction}
-        />
-      ))}
+      {renderItems.map((item) => {
+        if (item.type === 'skeleton') {
+          return (
+            <A2UISkeleton
+              key={item.surfaceId}
+              componentType={item.componentType}
+            />
+          );
+        }
+
+        if (CUSTOM_COMPONENTS.has(item.surface.componentType)) {
+          return (
+            <CustomSurfaceComponent
+              key={item.surface.surfaceId}
+              surface={item.surface}
+              allSurfaces={allParsed}
+              onAction={onAction}
+            />
+          );
+        }
+
+        return (
+          <A2UIViewer
+            key={item.surface.surfaceId}
+            root={item.surface.rootId}
+            components={item.surface.components}
+            data={item.surface.data}
+            onAction={handleA2UIAction}
+          />
+        );
+      })}
     </div>
   );
 }
