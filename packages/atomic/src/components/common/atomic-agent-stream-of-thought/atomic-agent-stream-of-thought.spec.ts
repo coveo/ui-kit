@@ -157,6 +157,81 @@ describe('atomic-agent-stream-of-thought', () => {
         {type: 'thinking-after-search', status: 'active'},
       ]);
     });
+
+    it('should pass through the query field for searching steps', () => {
+      const steps = [
+        buildStep({
+          name: 'searching',
+          status: 'active',
+          toolCalls: [
+            {
+              toolCallName: 'search',
+              toolCallId: 'tc-1',
+              startedAt: 0,
+              status: 'active' as const,
+              type: 'search' as const,
+              toolCallArgs: {q: 'how to reset password'},
+            },
+          ],
+        }),
+      ];
+      expect(resolveSteps(steps)).toEqual([
+        {
+          type: 'searching-with-query',
+          status: 'active',
+          searchQuery: 'how to reset password',
+        },
+      ]);
+    });
+
+    it('should not include searchQuery when toolCalls is absent', () => {
+      const steps = [buildStep({name: 'searching', status: 'active'})];
+      expect(resolveSteps(steps)[0]).toEqual({
+        type: 'searching',
+        status: 'active',
+      });
+    });
+
+    it('should expand multiple search toolCalls into separate resolved steps', () => {
+      const steps = [
+        buildStep({
+          name: 'searching',
+          status: 'completed',
+          toolCalls: [
+            {
+              toolCallName: 'search',
+              toolCallId: 'tc-1',
+              startedAt: 0,
+              finishedAt: 1,
+              status: 'completed' as const,
+              type: 'search' as const,
+              toolCallArgs: {q: 'What is Quantic'},
+            },
+            {
+              toolCallName: 'search',
+              toolCallId: 'tc-2',
+              startedAt: 1,
+              finishedAt: 2,
+              status: 'completed' as const,
+              type: 'search' as const,
+              toolCallArgs: {q: 'What is Atomic'},
+            },
+          ],
+        }),
+      ];
+      expect(resolveSteps(steps)).toEqual([
+        {
+          type: 'searching-with-query',
+          status: 'completed',
+          searchQuery: 'What is Quantic',
+        },
+        {
+          type: 'searching-with-query',
+          status: 'completed',
+          searchQuery: 'What is Atomic',
+        },
+      ]);
+    });
   });
 
   describe('during streaming', () => {
@@ -298,6 +373,103 @@ describe('atomic-agent-stream-of-thought', () => {
 
       expect(steps[0].textContent).toContain(
         i18n.t('agent-generation-step-analyzing-question-completed')
+      );
+    });
+
+    it('should display the search query when available on a searching step', async () => {
+      const {steps} = await renderComponent({
+        agentSteps: [
+          buildStep({
+            name: 'searching',
+            status: 'completed',
+            toolCalls: [
+              {
+                toolCallName: 'search',
+                toolCallId: 'tc-1',
+                startedAt: 0,
+                finishedAt: 1,
+                status: 'completed' as const,
+                type: 'search' as const,
+                toolCallArgs: {q: 'how to reset password'},
+              },
+            ],
+          }),
+        ],
+        isStreaming: true,
+      });
+
+      expect(steps[0].textContent).toContain(
+        i18n.t('agent-generation-step-search-query-completed', {
+          query: 'how to reset password',
+        })
+      );
+    });
+
+    it('should show a checkmark for completed searching step with query', async () => {
+      const {checkmarks} = await renderComponent({
+        agentSteps: [
+          buildStep({
+            name: 'searching',
+            status: 'completed',
+            toolCalls: [
+              {
+                toolCallName: 'search',
+                toolCallId: 'tc-1',
+                startedAt: 0,
+                finishedAt: 1,
+                status: 'completed' as const,
+                type: 'search' as const,
+                toolCallArgs: {q: 'how to reset password'},
+              },
+            ],
+          }),
+        ],
+        isStreaming: true,
+      });
+
+      expect(checkmarks.length).toBe(1);
+    });
+
+    it('should show spinner and "Searching for" when step is active with query', async () => {
+      const {steps, spinners} = await renderComponent({
+        agentSteps: [
+          buildStep({
+            name: 'searching',
+            status: 'active',
+            toolCalls: [
+              {
+                toolCallName: 'search',
+                toolCallId: 'tc-1',
+                startedAt: 0,
+                status: 'active' as const,
+                type: 'search' as const,
+                toolCallArgs: {q: 'how to reset password'},
+              },
+            ],
+          }),
+        ],
+        isStreaming: true,
+      });
+
+      expect(spinners.length).toBe(1);
+      expect(steps[0].textContent).toContain(
+        i18n.t('agent-generation-step-search-query', {
+          query: 'how to reset password',
+        })
+      );
+    });
+
+    it('should not display query text when toolCalls is absent', async () => {
+      const {steps} = await renderComponent({
+        agentSteps: [buildStep({name: 'searching', status: 'active'})],
+        isStreaming: true,
+      });
+
+      expect(steps[0].textContent).not.toContain(
+        i18n.t('agent-generation-step-search-query-completed')
+      );
+      expect(steps[0].textContent).not.toContain(
+        i18n.t('agent-generation-step-search-query')
       );
     });
   });

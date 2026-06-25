@@ -62,10 +62,23 @@ describe('#renderRefineModal', () => {
     expect(title).toHaveTextContent('Test Modal');
   });
 
+  it('should slot the title into the header slot', async () => {
+    const {title} = await renderComponent();
+
+    expect(title).toHaveAttribute('slot', 'header');
+  });
+
   it('should render the close button with correct part', async () => {
     const {closeButton} = await renderComponent();
 
     expect(closeButton).toHaveAttribute('part', 'close-button');
+  });
+
+  it('should slot the close button into the header-actions slot, separate from the title', async () => {
+    const {closeButton} = await renderComponent();
+
+    expect(closeButton?.closest('[slot="header-actions"]')).not.toBeNull();
+    expect(closeButton?.closest('[slot="header"]')).toBeNull();
   });
 
   it('should render the close icon with correct part and classes', async () => {

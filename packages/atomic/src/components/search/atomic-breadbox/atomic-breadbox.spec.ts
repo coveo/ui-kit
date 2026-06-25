@@ -83,7 +83,7 @@ describe('atomic-breadbox', () => {
     return {
       element,
       label: () => page.getByText('Filters:'),
-      showMore: () => page.getByLabelText(/Show \+ \d+ more filters/),
+      showMore: () => page.getByLabelText(/Show \d+ more filters/),
       showLess: () => page.getByText('Show less'),
       clearAll: () => page.getByLabelText('Clear All Filters'),
       parts: (element: AtomicBreadbox) => {

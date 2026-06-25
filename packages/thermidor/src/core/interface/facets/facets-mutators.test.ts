@@ -12,7 +12,7 @@ import type {FacetState} from './facets-types.js';
 import {FullEngine, getFullEngine} from '@/src/core/interface/engine/engine.js';
 import {getOrCreateFacetsSlice} from '@/src/core/internal/facets/facets-slice.js';
 import {getOrCreateFacetsActions} from '@/src/core/internal/facets/facets-actions.js';
-import type {CoveoFacetResponse} from '@/src/core/interface/api/search-endpoint/search-endpoint-types.js';
+import type {CoveoFacetResponse} from '@/src/core/interface/api/search/search-types.js';
 
 describe('facetMutations', () => {
   let engine: FullEngine;

@@ -26,5 +26,5 @@ export type {
 export type {
   Interface,
   ComposedInterface,
-  Requires,
+  Supports,
 } from './core/interface/utils/interface-types.js';

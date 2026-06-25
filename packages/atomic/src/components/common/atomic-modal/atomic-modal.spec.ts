@@ -1,6 +1,6 @@
-import {html} from 'lit';
+import {html, nothing} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {userEvent} from 'vitest/browser';
+import {page, userEvent} from 'vitest/browser';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
@@ -63,6 +63,7 @@ describe('atomic-modal', () => {
       bodyContent?: string;
       footerContent?: string;
       close?: () => void;
+      withCloseButton?: boolean;
     } = {}
   ) => {
     const {element} = await renderInAtomicSearchInterface<AtomicModal>({
@@ -76,6 +77,11 @@ describe('atomic-modal', () => {
         .close=${options.close}
       >
         <div slot="header">${options.headerContent ?? 'Modal Header'}</div>
+        ${options.withCloseButton
+          ? html`<button slot="header-actions" aria-label="Close">
+              Close
+            </button>`
+          : nothing}
         <div slot="body">${options.bodyContent ?? 'Modal Body Content'}</div>
         <div slot="footer">${options.footerContent ?? 'Modal Footer'}</div>
       </atomic-modal>`,
@@ -91,6 +97,9 @@ describe('atomic-modal', () => {
       parts: (element: AtomicModal) => {
         const qs = (part: string) =>
           element?.shadowRoot?.querySelector(`[part="${part}"]`);
+        const focusTrap =
+          element?.shadowRoot?.querySelector('atomic-focus-trap');
+        const labelledById = focusTrap?.getAttribute('aria-labelledby');
         return {
           backdrop: qs('backdrop'),
           container: qs('container'),
@@ -101,6 +110,17 @@ describe('atomic-modal', () => {
           body: qs('body'),
           footerWrapper: qs('footer-wrapper'),
           footer: qs('footer'),
+          headerSlot: element?.shadowRoot?.querySelector<HTMLSlotElement>(
+            'slot[name="header"]'
+          ),
+          headerActionsSlot:
+            element?.shadowRoot?.querySelector<HTMLSlotElement>(
+              'slot[name="header-actions"]'
+            ),
+          labelledByTarget:
+            labelledById && element?.shadowRoot
+              ? element.shadowRoot.getElementById(labelledById)
+              : null,
         };
       },
     };
@@ -277,6 +297,45 @@ describe('atomic-modal', () => {
         expect(focusTrap?.getAttribute('aria-labelledby')).toContain(
           'atomic-modal-header-'
         );
+      });
+
+      it('should point aria-labelledby to an element that wraps only the header slot', async () => {
+        const {element, parts} = await renderModal({isOpen: true});
+
+        const {labelledByTarget} = parts(element);
+        expect(labelledByTarget).toBeTruthy();
+        expect(
+          labelledByTarget?.querySelector('slot[name="header"]')
+        ).toBeTruthy();
+        expect(
+          labelledByTarget?.querySelector('slot[name="header-actions"]')
+        ).toBeFalsy();
+      });
+
+      it('should render a header-actions slot in the header but outside the aria-labelledby target', async () => {
+        const {element, parts} = await renderModal({isOpen: true});
+
+        const {header, headerActionsSlot, labelledByTarget} = parts(element);
+        expect(headerActionsSlot).toBeTruthy();
+        expect(header?.contains(headerActionsSlot!)).toBe(true);
+        expect(labelledByTarget?.contains(headerActionsSlot!)).toBe(false);
+      });
+
+      it('should compute the dialog accessible name from the title only, excluding header-actions content', async () => {
+        await renderModal({
+          isOpen: true,
+          headerContent: 'Sort & Filter',
+          withCloseButton: true,
+        });
+
+        await expect
+          .element(
+            page.getByRole('dialog', {name: 'Sort & Filter', exact: true})
+          )
+          .toBeInTheDocument();
+        await expect
+          .element(page.getByRole('button', {name: 'Close'}))
+          .toBeInTheDocument();
       });
 
       it('should render atomic-focus-trap with the correct source when specified', async () => {

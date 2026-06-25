@@ -1,11 +1,12 @@
 import type {Controller} from '../controller-types.js';
-import type {Requires} from '@/src/core/interface/utils/interface-types.js';
+import type {Supports} from '@/src/core/interface/utils/interface-types.js';
 import {getOrCreatePaginationActions} from '@/src/core/internal/pagination/pagination-actions.js';
 import {getOrCreatePaginationSelectors} from '@/src/core/internal/pagination/pagination-selectors.js';
 import {getOrCreatePaginationSlice} from '@/src/core/internal/pagination/pagination-slice.js';
 import type {Dispatchable} from '@/src/core/interface/engine/engine-types.js';
 import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
-import {ENGINE, STATE_ID, THUNKS} from '@/src/core/interface/utils/symbols.js';
+import {ENGINE, STATE_ID} from '@/src/core/interface/utils/symbols.js';
+import {resolveFacades} from '@/src/core/interface/utils/resolve-facades.js';
 
 export const buildPaginationController = (
   options: PaginationControllerOptions
@@ -14,6 +15,8 @@ export const buildPaginationController = (
   const stateId = options.interface[STATE_ID];
 
   engine.adoptSlice(getOrCreatePaginationSlice(stateId));
+
+  const thunks = resolveFacades(options.interface, 'search');
 
   const selectors = getOrCreatePaginationSelectors(stateId);
   const actions = getOrCreatePaginationActions(stateId);
@@ -54,7 +57,7 @@ export const buildPaginationController = (
 
       engine.mutate(actions.setFirstResult(page * pageSize));
 
-      for (const thunk of options.interface[THUNKS].search) {
+      for (const thunk of thunks) {
         engine.mutate(thunk({engine}) as Dispatchable);
       }
     },
@@ -66,7 +69,7 @@ export const buildPaginationController = (
       engine.mutate(actions.setFirstResult(0));
       engine.mutate(actions.setPageSize(pageSize));
 
-      for (const thunk of options.interface[THUNKS].search) {
+      for (const thunk of thunks) {
         engine.mutate(thunk({engine}) as Dispatchable);
       }
     },
@@ -86,5 +89,5 @@ export interface PaginationController extends Controller<PaginationControllerSta
 }
 
 export interface PaginationControllerOptions {
-  interface: Requires<'search'>;
+  interface: Supports<'search'>;
 }

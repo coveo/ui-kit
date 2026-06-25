@@ -1,10 +1,11 @@
-import type {Requires} from '@/src/core/interface/utils/interface-types.js';
+import type {Supports} from '@/src/core/interface/utils/interface-types.js';
 import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
-import {ENGINE, STATE_ID, THUNKS} from '@/src/core/interface/utils/symbols.js';
+import {ENGINE, STATE_ID} from '@/src/core/interface/utils/symbols.js';
+import {resolveFacades} from '@/src/core/interface/utils/resolve-facades.js';
 import {getOrCreateSearchBoxActions} from '@/src/core/internal/search-box/search-box-actions.js';
 import {getOrCreateSearchBoxSelectors} from '@/src/core/internal/search-box/search-box-selectors.js';
 import {getOrCreateSearchBoxSlice} from '@/src/core/internal/search-box/search-box-slice.js';
-import {getOrCreateSearchEndpointSelectors} from '@/src/core/internal/api/search-endpoint/search-endpoint-thunk-slice.js';
+import {getOrCreateSearchEndpointSelectors} from '@/src/core/internal/api/search/search-thunk-slice.js';
 import type {Controller} from '@/src/public/controllers/controller-types.js';
 
 /**
@@ -17,9 +18,10 @@ export const buildSearchBoxController: (
 ) => SearchBoxController = (options) => {
   const engine = options.interface[ENGINE];
   const stateId = options.interface[STATE_ID];
-  const thunks = options.interface[THUNKS].search;
 
   engine.adoptSlice(getOrCreateSearchBoxSlice(stateId));
+
+  const thunks = resolveFacades(options.interface, 'search');
 
   const actions = getOrCreateSearchBoxActions(stateId);
   const selectors = getOrCreateSearchBoxSelectors(stateId);
@@ -53,7 +55,7 @@ export const buildSearchBoxController: (
 };
 
 export interface SearchBoxControllerOptions {
-  interface: Requires<'search'>;
+  interface: Supports<'search'>;
 }
 
 export interface SearchBoxController extends Controller<SearchBoxControllerState> {
