@@ -1,3 +1,4 @@
+import type {i18n} from 'i18next';
 import {html, nothing} from 'lit';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import '@/src/components/common/atomic-icon/atomic-icon';
@@ -6,30 +7,25 @@ import {hasClipboardSupport} from './generated-answer-utils';
 import CopyIcon from '../../../images/copy.svg';
 
 export interface RenderConversationDebugHeaderProps {
+  i18n: i18n;
   conversationId: string;
 }
 
 export const renderConversationDebugHeader: FunctionalComponent<
   RenderConversationDebugHeaderProps
 > = ({props}) => {
-  const {conversationId} = props;
-  return html`<div
-    class="flex h-9 gap-1.5 items-center"
-    style="color: var(--atomic-neutral-dark);"
-  >
-    Debug mode ON
-    <div
-      style="background-color:var(--atomic-success); width: 8px; height: 8px; border-radius: 50%;"
-    ></div>
-    <div style="color: var(--atomic-neutral-dark);" class="flex items-center">
-      Conversation ID:&nbsp;
-      <div style="color: var(--atomic-on-background);">${conversationId}</div>
+  const {i18n, conversationId} = props;
+  return html`<div class="flex h-9 gap-1.5 items-center text-neutral-dark">
+    ${i18n.t('generated-answer-debug-mode-on')}
+    <div class="bg-success h-2 w-2 rounded-full"></div>
+    <div class="flex items-center text-neutral-dark">
+      ${i18n.t('generated-answer-conversation-id', {conversationId})}
       ${hasClipboardSupport()
         ? renderButton({
             props: {
               style: 'text-transparent',
-              class: 'rounded-md p-2',
-              title: 'Copy conversation ID',
+              class: 'p-2 flex items-center',
+              title: i18n.t('generated-answer-copy-conversation-id'),
               onClick: () => {
                 navigator.clipboard.writeText(conversationId).catch(() => {});
               },

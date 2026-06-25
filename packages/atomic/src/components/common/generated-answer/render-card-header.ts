@@ -53,7 +53,7 @@ export const renderCardHeader: FunctionalComponent<RenderCardHeaderProps> = ({
     })(html`${i18n.t('generated-answer-title')}`)}
     <div class="ml-auto flex h-9 items-center gap-1.5">
       ${withDebug && conversationId
-        ? renderConversationDebugHeader({props: {conversationId}})
+        ? renderConversationDebugHeader({props: {i18n, conversationId}})
         : nothing}
       ${renderSwitch({
         props: {

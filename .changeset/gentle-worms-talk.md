@@ -1,6 +1,6 @@
 ---
 "@coveo/headless": patch
-"@coveo/atomic": feat
+"@coveo/atomic": patch
 ---
 
 chore(SFINT-6808): create visible debug header when debug mode is enabled for agent in atomic-generated-answer

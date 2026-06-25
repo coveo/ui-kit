@@ -172,7 +172,7 @@ describe('#renderCardHeader', () => {
       await renderComponent({withDebug: true, conversationId: 'conv-123'});
 
       expect(renderConversationDebugHeader).toHaveBeenCalledWith({
-        props: {conversationId: 'conv-123'},
+        props: {i18n, conversationId: 'conv-123'},
       });
     });
 

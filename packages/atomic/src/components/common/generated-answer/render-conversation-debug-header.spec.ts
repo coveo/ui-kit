@@ -1,6 +1,15 @@
 import {html} from 'lit';
-import {beforeEach, afterEach, describe, expect, it, vi} from 'vitest';
+import {
+  beforeAll,
+  beforeEach,
+  afterEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
+import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {
   type RenderConversationDebugHeaderProps,
   renderConversationDebugHeader,
@@ -11,7 +20,12 @@ vi.mock('./generated-answer-utils', () => ({
 }));
 
 describe('#renderConversationDebugHeader', () => {
+  let i18n: Awaited<ReturnType<typeof createTestI18n>>;
   const mockWriteText = vi.fn(() => Promise.resolve());
+
+  beforeAll(async () => {
+    i18n = await createTestI18n();
+  });
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -28,6 +42,7 @@ describe('#renderConversationDebugHeader', () => {
     overrides: Partial<RenderConversationDebugHeaderProps> = {}
   ) => {
     const defaultProps: RenderConversationDebugHeaderProps = {
+      i18n,
       conversationId: 'test-conversation-123',
       ...overrides,
     };
@@ -44,8 +59,9 @@ describe('#renderConversationDebugHeader', () => {
       conversationId: 'my-conv-456',
     });
 
-    expect(element.textContent).toContain('Debug mode ON');
-    expect(element.textContent).toContain('Conversation ID:');
+    expect(element.textContent).toContain(
+      i18n.t('generated-answer-debug-mode-on')
+    );
     expect(element.textContent).toContain('my-conv-456');
   });
 
@@ -55,7 +71,10 @@ describe('#renderConversationDebugHeader', () => {
 
       const button = element.querySelector('button');
       expect(button).toBeInTheDocument();
-      expect(button).toHaveAttribute('title', 'Copy conversation ID');
+      expect(button).toHaveAttribute(
+        'title',
+        i18n.t('generated-answer-copy-conversation-id')
+      );
     });
 
     it('should copy the conversation ID to the clipboard on button click', async () => {
