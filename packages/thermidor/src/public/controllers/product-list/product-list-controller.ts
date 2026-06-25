@@ -1,5 +1,5 @@
 import type {Controller} from '../controller-types.js';
-import type {Requires} from '@/src/core/interface/utils/interface-types.js';
+import type {Supports} from '@/src/core/interface/utils/interface-types.js';
 import type {Product} from '@/src/core/interface/product-list/product-list-types.js';
 import {getOrCreateProductListSelectors} from '@/src/core/internal/product-list/product-list-selectors.js';
 import {getOrCreateProductListSlice} from '@/src/core/internal/product-list/product-list-slice.js';
@@ -40,5 +40,5 @@ export interface ProductListControllerState {
 export interface ProductListController extends Controller<ProductListControllerState> {}
 
 export interface ProductListControllerOptions {
-  interface: Requires<'search'>;
+  interface: Supports<'search'>;
 }

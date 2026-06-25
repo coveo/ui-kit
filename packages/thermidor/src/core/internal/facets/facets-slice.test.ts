@@ -17,7 +17,7 @@ import {
   getOrCreateFacetsSelectors,
 } from './facets-selectors.js';
 import type {FacetsState} from '@/src/core/interface/facets/facets-types.js';
-import type {CoveoFacetResponse} from '@/src/core/interface/api/search-endpoint/search-endpoint-types.js';
+import type {CoveoFacetResponse} from '@/src/core/interface/api/search/search-types.js';
 
 describe('createFacetsActions', () => {
   it('should create actions scoped to the interfaceId', () => {

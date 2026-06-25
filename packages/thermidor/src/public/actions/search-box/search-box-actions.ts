@@ -1,10 +1,11 @@
-import type {Requires} from '@/src/core/interface/utils/interface-types.js';
-import {ENGINE, STATE_ID, THUNKS} from '@/src/core/interface/utils/symbols.js';
+import type {Supports} from '@/src/core/interface/utils/interface-types.js';
+import {ENGINE, STATE_ID} from '@/src/core/interface/utils/symbols.js';
+import {resolveFacades} from '@/src/core/interface/utils/resolve-facades.js';
 import {getOrCreateSearchBoxActions} from '@/src/core/internal/search-box/search-box-actions.js';
 import {getOrCreateSearchBoxSlice} from '@/src/core/internal/search-box/search-box-slice.js';
 
 export interface LoadSearchBoxActionsOptions {
-  interface: Requires<'search'>;
+  interface: Supports<'search'>;
 }
 
 /**
@@ -15,9 +16,10 @@ export interface LoadSearchBoxActionsOptions {
 export function loadSearchBoxActions(options: LoadSearchBoxActionsOptions) {
   const engine = options.interface[ENGINE];
   const stateId = options.interface[STATE_ID];
-  const thunks = options.interface[THUNKS].search;
 
   engine.adoptSlice(getOrCreateSearchBoxSlice(stateId));
+
+  const thunks = resolveFacades(options.interface, 'search');
 
   const actions = getOrCreateSearchBoxActions(stateId);
 

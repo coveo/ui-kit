@@ -1,7 +1,7 @@
 title: Coveo Accessibility Conformance Report
 product:
   name: Coveo Atomic
-  version: 3.59.7
+  version: 3.59.8
   description: Coveo Atomic is a web component library for building search and
     commerce interfaces.
 author:
@@ -173,24 +173,8 @@ chapters:
         components:
           - name: web
             adherence:
-              level: does-not-support
-              notes:
-                Does Not Support — manual audit found Does Not Support (Focus escapes
-                commerce refine-modal when tabbing, due to broken focus trap.
-                See KIT-5811. All non-modal components pass (search box, facets,
-                breadbox, pager, sort dropdown, products-per-page, product list,
-                load-more).; Focus escapes insight refine-modal and
-                smart-snippet-feedback-modal when tabbing, due to broken focus
-                trap. See KIT-5811. All non-modal components pass (search box,
-                facets, pager, tabs).; Focus escapes ipx-modal and
-                ipx-refine-modal when tabbing, due to broken focus trap. See
-                KIT-5811. Tab component passes.; Focus escapes modal dialogs
-                (refine-modal, quickview-modal, smart-snippet-feedback-modal)
-                and popover when tabbing, due to broken focus trap (undefined
-                scope in atomic-focus-trap). See KIT-5811. All non-modal
-                components pass (search box, facets, pager, sort dropdown,
-                results-per-page, tabs, segmented facet, result list, load-more,
-                smart snippet).).
+              level: supports
+              notes: Supports — manual audit found Supports.
       - num: 2.4.4
         components:
           - name: web
@@ -220,17 +204,8 @@ chapters:
         components:
           - name: web
             adherence:
-              level: does-not-support
-              notes: 'Does Not Support — manual audit found Does Not Support
-                (atomic-commerce-breadbox: the show-more button displays visible
-                text "+ N" but has accessible name "Show N more filters". Voice
-                control users saying "click plus 3" will not activate the button
-                because the visible text is not contained in the accessible
-                name.; atomic-breadbox: the show-more button displays visible
-                text "+ N" but has accessible name "Show N more filters". Voice
-                control users saying "click plus 3" will not activate the button
-                because the visible text is not contained in the accessible
-                name.).'
+              level: supports
+              notes: Supports — manual audit found Supports.
       - num: 2.5.4
         components:
           - name: web
@@ -368,28 +343,8 @@ chapters:
         components:
           - name: web
             adherence:
-              level: partially-supports
-              notes:
-                'Partially Supports — manual audit found Partially Supports (Numeric
-                facet input border uses border-neutral (#e5e8e8) at 1.23:1
-                contrast against white, failing the 3:1 requirement. Rating
-                stars (active #f6ce3c at 1.52:1, inactive #e5e8e8 at 1.23:1)
-                also fail — stars are the only way sighted users identify the
-                rating value. Users with low vision cannot perceive these UI
-                boundaries and graphical indicators, making it difficult to
-                identify form fields or understand rating values.; Numeric facet
-                input border uses border-neutral (#e5e8e8) at 1.23:1 contrast
-                against white, failing the 3:1 requirement. Users with low
-                vision cannot perceive the input field boundaries, making it
-                difficult to identify where to enter values.; Numeric facet
-                input border uses border-neutral (#e5e8e8) at 1.23:1 contrast
-                against white, failing the 3:1 requirement. Rating stars (active
-                #f6ce3c at 1.52:1, inactive #e5e8e8 at 1.23:1) also fail — stars
-                are the only way sighted users identify the rating value.
-                Refine-toggle switch OFF state track uses bg-neutral at 1.23:1.
-                Users with low vision cannot perceive these UI boundaries and
-                graphical indicators, making it difficult to identify form
-                fields, understand rating values, or determine toggle state.).'
+              level: supports
+              notes: Supports — manual audit found Supports.
       - num: 1.4.12
         components:
           - name: web
@@ -433,26 +388,8 @@ chapters:
         components:
           - name: web
             adherence:
-              level: does-not-support
-              notes:
-                Does Not Support — manual audit found Does Not Support (When the
-                refine-modal is open, pressing Tab repeatedly causes focus to
-                escape the focus trap and land on elements behind the modal
-                backdrop. The user cannot see the focused element and loses
-                their place in the navigation sequence.; When the refine-modal
-                is open, pressing Tab repeatedly causes focus to escape the
-                focus trap and land on elements behind the modal backdrop. The
-                user cannot see the focused element and loses their place in the
-                navigation sequence.; When the refine-modal is open inside IPX,
-                pressing Tab repeatedly causes focus to escape the modal and
-                land on elements behind the backdrop. The user loses track of
-                their keyboard position and cannot see which element is focused,
-                breaking their navigation flow.; When a modal dialog
-                (refine-modal, quickview, or feedback modal) is open, pressing
-                Tab repeatedly causes focus to escape the focus trap and land on
-                elements behind the modal backdrop. The user cannot see the
-                focused element and loses their place in the navigation
-                sequence.).
+              level: supports
+              notes: Supports — manual audit found Supports.
       - num: 2.5.7
         components:
           - name: web

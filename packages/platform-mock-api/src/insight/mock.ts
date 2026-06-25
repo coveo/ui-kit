@@ -12,6 +12,7 @@ import {
 export class MockInsightApi implements MockApi {
   readonly searchEndpoint;
   readonly querySuggestEndpoint;
+  readonly interfaceConfigEndpoint;
 
   constructor(basePath: string = 'https://:orgId.org.coveo.com') {
     this.searchEndpoint = new EndpointHarness<
@@ -26,18 +27,25 @@ export class MockInsightApi implements MockApi {
       `${basePath}/rest/organizations/:orgId/insight/v1/configs/:insightId/querySuggest`,
       baseQuerySuggestResponse
     );
+    this.interfaceConfigEndpoint = new EndpointHarness(
+      'GET',
+      `${basePath}/rest/organizations/:orgId/insight/v1/configs/:insightId/interface`,
+      {} as Record<string, never>
+    );
   }
 
   get handlers(): HttpHandler[] {
     return [
       this.searchEndpoint.generateHandler(),
       this.querySuggestEndpoint.generateHandler(),
+      this.interfaceConfigEndpoint.generateHandler(),
     ];
   }
 
   clearAll(): void {
     this.searchEndpoint.clear();
     this.querySuggestEndpoint.clear();
+    this.interfaceConfigEndpoint.clear();
   }
 }
 

@@ -42,6 +42,8 @@ describe('atomic-load-more-results', () => {
       isAppLoaded = true,
     } = props;
 
+    const focusOnNextNewResultSpy = vi.fn();
+
     const fakeResults = Array.from({length: numberOfResults}, (_, i) =>
       buildFakeResult({uniqueId: `result-${i}`})
     );
@@ -75,6 +77,9 @@ describe('atomic-load-more-results', () => {
         selector: 'atomic-load-more-results',
         bindings: (bindings) => {
           bindings.engine = mockedEngine;
+          bindings.store.state.resultList = {
+            focusOnNextNewResult: focusOnNextNewResultSpy,
+          } as unknown as (typeof bindings.store.state)['resultList'];
           bindings.store.state.loadingFlags = isAppLoaded
             ? []
             : ['app-loading'];
@@ -86,6 +91,7 @@ describe('atomic-load-more-results', () => {
 
     return {
       element,
+      focusOnNextNewResultSpy,
       get loadMoreButton() {
         return page.getByRole('button');
       },
@@ -241,21 +247,13 @@ describe('atomic-load-more-results', () => {
         expect(fetchMoreResultsSpy).toHaveBeenCalledOnce();
       });
 
-      it('should blur the active element', async () => {
-        const {loadMoreButton} = await renderLoadMoreResults();
-        const blurSpy = vi.fn();
-
-        // Create a fake active element with a blur method
-        const fakeActiveElement = document.createElement('button');
-        fakeActiveElement.blur = blurSpy;
-        Object.defineProperty(document, 'activeElement', {
-          configurable: true,
-          get: () => fakeActiveElement,
-        });
+      it('should call #focusOnNextNewResult', async () => {
+        const {loadMoreButton, focusOnNextNewResultSpy} =
+          await renderLoadMoreResults();
 
         await loadMoreButton.click();
 
-        expect(blurSpy).toHaveBeenCalledOnce();
+        expect(focusOnNextNewResultSpy).toHaveBeenCalledOnce();
       });
     });
   });

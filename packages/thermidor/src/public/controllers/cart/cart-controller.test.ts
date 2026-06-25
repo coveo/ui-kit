@@ -10,20 +10,17 @@ import {getOrCreateSearchBoxActions} from '@/src/core/internal/search-box/search
 import {getOrCreateCartSlice} from '@/src/core/internal/cart/cart-slice.js';
 import {getOrCreateCartActions} from '@/src/core/internal/cart/cart-actions.js';
 import {ENGINE, STATE_ID} from '@/src/core/interface/utils/symbols.js';
-import type {Requires} from '@/src/core/interface/utils/interface-types.js';
+import type {Supports} from '@/src/core/interface/utils/interface-types.js';
 import {buildCartController} from './cart-controller.js';
 
 describe('buildCartController', () => {
   describe('behavior', () => {
     let engine: Engine;
-    let cartInterface: Requires<'search'>;
+    let cartInterface: Supports<'search'>;
 
     beforeEach(() => {
       engine = createTestEngine();
-      cartInterface = createTestInterface(engine, {
-        search: [],
-        suggestions: [],
-      });
+      cartInterface = createTestInterface(engine);
     });
 
     describe('subscribe()', () => {
@@ -95,7 +92,7 @@ describe('buildCartController', () => {
 
   describe('wiring', () => {
     let fullEngine: FullEngine;
-    let cartInterface: Requires<'search'>;
+    let cartInterface: Supports<'search'>;
     const TEST_ID = 'wiring-test';
 
     beforeEach(() => {
@@ -109,7 +106,7 @@ describe('buildCartController', () => {
       cartInterface = {
         [ENGINE]: fullEngine,
         [STATE_ID]: TEST_ID,
-      } as unknown as Requires<'search'>;
+      } as unknown as Supports<'search'>;
     });
 
     it('adopts the scoped cart slice on construction', () => {

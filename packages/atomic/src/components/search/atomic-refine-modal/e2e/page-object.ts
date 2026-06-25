@@ -7,7 +7,7 @@ export class RefineModalPageObject extends BasePageObject {
   }
 
   get modal() {
-    return this.page.getByRole('dialog', {name: 'Sort & Filter'});
+    return this.page.getByRole('dialog', {name: 'Sort & Filter', exact: true});
   }
   get title() {
     return this.page.getByRole('heading', {name: 'Sort & Filter'});
