@@ -5,7 +5,7 @@
 
 ## 1. Context
 
-- **Business/context drivers**: The thermidor package (`@coveo/thermidor`) must be distributed on NPM for use in diverse consumer environments (e.g., SSR frameworks, standard frontend bundlers, Node.js backends). Eventually, it may also need to be distributed on a CDN for direct browser consumption.
+- **Business/context drivers**: The Thermidor package (`@coveo/thermidor`) must be distributed on npm for use in diverse consumer environments (e.g., SSR frameworks, standard frontend bundlers, Node.js backends). Eventually, it may also need to be distributed on a CDN for direct browser consumption.
 - **Technical constraints**: The build system must preserve clean tree-shaking, support subpath exports (such as `@coveo/thermidor/interfaces/commerce`), and keep maintenance overhead minimal.
 - **Known assumptions**: Modern JavaScript ecosystems are rapidly converging on ESM-only, but historically CJS compatibility was required to prevent blocking non-ESM consumers.
 
@@ -13,7 +13,7 @@
 
 We will build and distribute `@coveo/thermidor` **exclusively as a pure ES Module (ESM)**.
 
-We will use the standard TypeScript compiler (`tsc`) to perform multi-file transpilation into `dist/` with ES2022 syntax and ESM imports/exports. We will not ship a CommonJS version to NPM.
+We will use the standard TypeScript compiler (`tsc`) to perform multi-file transpilation into `dist/` with ES2022 syntax and ESM imports/exports. We will not ship a CommonJS version to npm.
 
 ## 3. Requirements & Considerations Mapping
 
@@ -39,7 +39,7 @@ We will use the standard TypeScript compiler (`tsc`) to perform multi-file trans
 
 2. **Consideration**: Migration simplicity
    - **Impact**: Neutral/Negative
-   - **How addressed**: Consumers still running older Node.js versions without native ESM support or native `require(esm)` (older than v20.17.0) will have to use dynamic `import()` or upgrade. However, given that Thermidor is a new, experimental library, we can afford to target modern LTS runtimes.
+   - **How addressed**: Consumers still running older Node.js versions without native ESM support or native `require(esm)` (older than v20.17.0), or versions where synchronous `require(esm)` still requires `--experimental-require-module` (v20.17.0 through v22.11.x), will have to use dynamic `import()`, enable the flag, or upgrade. However, given that Thermidor is a new, experimental library, we can afford to target modern LTS runtimes.
 
 3. **Requirement**: External contribution readiness
    - **Impact**: Positive
@@ -54,7 +54,7 @@ We will use the standard TypeScript compiler (`tsc`) to perform multi-file trans
   - **No Dual-Package Hazard**: Avoids the classic issue where both CJS and ESM versions of a library are loaded, leading to duplicate singleton instances and memory overhead.
   - **Simplicity**: No complex bundling tools or dual configurations to maintain.
   - **Modern Alignment**: Fully aligns with the future of the JS ecosystem.
-  - **require(esm) compatibility**: Modern Node.js versions can load this module synchronously using `require()`.
+  - **require(esm) compatibility**: Modern Node.js versions can load this module synchronously using `require()` (in v20.17.0 through v22.11.x this requires `--experimental-require-module`).
 - **Cons**:
   - Requires consumers on older Node.js versions to upgrade or use dynamic `import()`.
   - Disallows the use of top-level `await` (since synchronous `require()` will reject it).
@@ -70,14 +70,14 @@ We will use the standard TypeScript compiler (`tsc`) to perform multi-file trans
 
 ## 5. Decision Rationale
 
-With the introduction of native support for loading ES Modules via `require()` in Node.js (v22.0.0+ and backported to v20.17.0+), the need for dual-packaging has diminished. If a library contains no top-level `await`, it can be imported via both `import` and `require()` seamlessly in modern Node.js environments.
+With the introduction of support for loading ES Modules via `require()` in Node.js (v22.0.0+ and backported to v20.17.0+), the need for dual-packaging has diminished. In Node.js v20.17.0 through v22.11.x, synchronous `require(esm)` requires `--experimental-require-module`; in newer Node.js minors it is enabled by default. If a library contains no top-level `await`, it can be imported via both `import` and `require()` in supported Node.js environments.
 
-Selecting Option A allows us to keep the build process extremely lean, eliminate the dual-package hazard entirely, and ensure excellent tree-shaking, while still supporting CJS consumers on supported Node.js LTS versions.
+Selecting Option A allows us to keep the build process extremely lean, eliminate the dual-package hazard entirely, and ensure excellent tree-shaking, while still supporting CJS consumers on supported Node.js LTS versions (with `--experimental-require-module` where required).
 
 ## 6. Public API and Contract Impact
 
 - **Public API changes**: None
-- **Backward compatibility impact**: Requires Node.js >= 20.17.0 for CJS `require()` consumers.
+- **Backward compatibility impact**: Requires Node.js >= 20.17.0 for CJS `require()` consumers, and `--experimental-require-module` for Node.js v20.17.0 through v22.11.x.
 - **Deprecations required**: None
 - **Type/contract stability notes**: Types are compiled to `dist/` alongside `.js` files.
 - **Non-leakage check**: Pass
@@ -93,5 +93,5 @@ Selecting Option A allows us to keep the build process extremely lean, eliminate
 
 ## 8. Migration and Rollout Plan
 
-- **Consumer migration impact**: Minimal for new projects. Existing legacy projects using older Node versions will need to run Node.js >= 20.17.0 or load `@coveo/thermidor` asynchronously via dynamic `import()`.
+- **Consumer migration impact**: Minimal for new projects. Existing legacy projects using older Node versions will need to run Node.js >= 20.17.0; CJS consumers on Node.js v20.17.0 through v22.11.x must also enable `--experimental-require-module`, or load `@coveo/thermidor` asynchronously via dynamic `import()`.
 - **Rollout strategy**: Release as standard pure-ESM npm package.
