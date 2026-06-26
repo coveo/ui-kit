@@ -1,4 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
+import {SingletonFactory} from '@/src/core/internal/singleton-factory/singleton-factory.js';
 import type {GenerativeState} from '@/src/core/interface/generative/generative-types.js';
 import {getOrCreateGenerativeActions} from './generative-actions.js';
 
@@ -122,11 +123,6 @@ export function createGenerativeSlice(interfaceId: string) {
   });
 }
 
-const sliceCache = new Map<string, ReturnType<typeof createGenerativeSlice>>();
-
-export function getOrCreateGenerativeSlice(interfaceId: string) {
-  if (!sliceCache.has(interfaceId)) {
-    sliceCache.set(interfaceId, createGenerativeSlice(interfaceId));
-  }
-  return sliceCache.get(interfaceId)!;
-}
+export const getOrCreateGenerativeSlice = SingletonFactory(
+  createGenerativeSlice
+);

@@ -1,5 +1,6 @@
 import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
 import {createSelectSlice} from '@/src/core/interface/utils/select-slice.js';
+import {SingletonFactory} from '@/src/core/internal/singleton-factory/singleton-factory.js';
 import {initialSearchParametersState} from './search-parameters-slice.js';
 
 export function createSearchParametersSelectors(interfaceId: string) {
@@ -20,16 +21,6 @@ export function createSearchParametersSelectors(interfaceId: string) {
   };
 }
 
-const selectorsCache = new Map<
-  string,
-  ReturnType<typeof createSearchParametersSelectors>
->();
-export function getOrCreateSearchParametersSelectors(interfaceId: string) {
-  if (!selectorsCache.has(interfaceId)) {
-    selectorsCache.set(
-      interfaceId,
-      createSearchParametersSelectors(interfaceId)
-    );
-  }
-  return selectorsCache.get(interfaceId)!;
-}
+export const getOrCreateSearchParametersSelectors = SingletonFactory(
+  createSearchParametersSelectors
+);

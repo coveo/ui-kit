@@ -1,5 +1,6 @@
 import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
 import {createSelectSlice} from '@/src/core/interface/utils/select-slice.js';
+import {SingletonFactory} from '@/src/core/internal/singleton-factory/singleton-factory.js';
 import {initialSearchBoxState} from './search-box-slice.js';
 
 export function createSearchBoxSelectors(interfaceId: string) {
@@ -16,13 +17,6 @@ export function createSearchBoxSelectors(interfaceId: string) {
   };
 }
 
-const selectorsCache = new Map<
-  string,
-  ReturnType<typeof createSearchBoxSelectors>
->();
-export function getOrCreateSearchBoxSelectors(interfaceId: string) {
-  if (!selectorsCache.has(interfaceId)) {
-    selectorsCache.set(interfaceId, createSearchBoxSelectors(interfaceId));
-  }
-  return selectorsCache.get(interfaceId)!;
-}
+export const getOrCreateSearchBoxSelectors = SingletonFactory(
+  createSearchBoxSelectors
+);

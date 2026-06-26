@@ -1,4 +1,5 @@
 import {createAction} from '@reduxjs/toolkit';
+import {SingletonFactory} from '@/src/core/internal/singleton-factory/singleton-factory.js';
 import type {CoveoFacetResponse} from '@/src/core/interface/api/search/search-types.js';
 
 export function createFacetsActions(interfaceId: string) {
@@ -12,10 +13,4 @@ export function createFacetsActions(interfaceId: string) {
   };
 }
 
-const actionsCache = new Map<string, ReturnType<typeof createFacetsActions>>();
-export function getOrCreateFacetsActions(interfaceId: string) {
-  if (!actionsCache.has(interfaceId)) {
-    actionsCache.set(interfaceId, createFacetsActions(interfaceId));
-  }
-  return actionsCache.get(interfaceId)!;
-}
+export const getOrCreateFacetsActions = SingletonFactory(createFacetsActions);

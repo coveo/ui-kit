@@ -1,5 +1,6 @@
 import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
 import {createSelectSlice} from '@/src/core/interface/utils/select-slice.js';
+import {SingletonFactory} from '@/src/core/internal/singleton-factory/singleton-factory.js';
 import {initialSortState} from './sort-slice.js';
 import type {SortState} from './sort-slice.js';
 
@@ -31,13 +32,4 @@ export function createSortSelectors(interfaceId: string) {
   };
 }
 
-const selectorsCache = new Map<
-  string,
-  ReturnType<typeof createSortSelectors>
->();
-export function getOrCreateSortSelectors(interfaceId: string) {
-  if (!selectorsCache.has(interfaceId)) {
-    selectorsCache.set(interfaceId, createSortSelectors(interfaceId));
-  }
-  return selectorsCache.get(interfaceId)!;
-}
+export const getOrCreateSortSelectors = SingletonFactory(createSortSelectors);

@@ -1,4 +1,5 @@
 import {createAction} from '@reduxjs/toolkit';
+import {SingletonFactory} from '@/src/core/internal/singleton-factory/singleton-factory.js';
 import type {CartItem} from '@/src/core/interface/cart/cart-types.js';
 
 export function createCartActions(interfaceId: string) {
@@ -10,10 +11,4 @@ export function createCartActions(interfaceId: string) {
   };
 }
 
-const actionsCache = new Map<string, ReturnType<typeof createCartActions>>();
-export function getOrCreateCartActions(interfaceId: string) {
-  if (!actionsCache.has(interfaceId)) {
-    actionsCache.set(interfaceId, createCartActions(interfaceId));
-  }
-  return actionsCache.get(interfaceId)!;
-}
+export const getOrCreateCartActions = SingletonFactory(createCartActions);

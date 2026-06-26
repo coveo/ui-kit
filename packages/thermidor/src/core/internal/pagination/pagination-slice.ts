@@ -1,4 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
+import {SingletonFactory} from '@/src/core/internal/singleton-factory/singleton-factory.js';
 import {getOrCreatePaginationActions} from './pagination-actions.js';
 import {getOrCreateHydrateFromSnapshotAction} from '@/src/core/interface/generative/generative-hydration.js';
 
@@ -62,10 +63,6 @@ export function createPaginationSlice(interfaceId: string) {
   });
 }
 
-const sliceCache = new Map<string, ReturnType<typeof createPaginationSlice>>();
-export function getOrCreatePaginationSlice(interfaceId: string) {
-  if (!sliceCache.has(interfaceId)) {
-    sliceCache.set(interfaceId, createPaginationSlice(interfaceId));
-  }
-  return sliceCache.get(interfaceId)!;
-}
+export const getOrCreatePaginationSlice = SingletonFactory(
+  createPaginationSlice
+);

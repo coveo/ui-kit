@@ -1,4 +1,5 @@
 import {createAction} from '@reduxjs/toolkit';
+import {SingletonFactory} from '@/src/core/internal/singleton-factory/singleton-factory.js';
 
 export function createSearchParametersActions(interfaceId: string) {
   return {
@@ -11,13 +12,6 @@ export function createSearchParametersActions(interfaceId: string) {
   };
 }
 
-const actionsCache = new Map<
-  string,
-  ReturnType<typeof createSearchParametersActions>
->();
-export function getOrCreateSearchParametersActions(interfaceId: string) {
-  if (!actionsCache.has(interfaceId)) {
-    actionsCache.set(interfaceId, createSearchParametersActions(interfaceId));
-  }
-  return actionsCache.get(interfaceId)!;
-}
+export const getOrCreateSearchParametersActions = SingletonFactory(
+  createSearchParametersActions
+);

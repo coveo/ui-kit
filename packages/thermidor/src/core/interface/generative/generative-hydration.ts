@@ -1,4 +1,5 @@
 import {createAction} from '@reduxjs/toolkit';
+import {SingletonFactory} from '@/src/core/internal/singleton-factory/singleton-factory.js';
 import {Engine, getFullEngine} from '@/src/core/interface/engine/engine.js';
 import {STATE_ID} from '@/src/core/interface/utils/symbols.js';
 import type {
@@ -16,23 +17,14 @@ const ACTIVITY_TYPE_TO_ROUTED_USE_CASE: Record<string, RoutedUseCase> = {
   'search-api-response': 'search',
 };
 
-const hydrateActionCache = new Map<
-  string,
-  ReturnType<typeof createHydrateAction>
->();
-
 function createHydrateAction(interfaceId: string) {
   return createAction<Record<string, unknown>>(
     `${interfaceId}/hydrateFromSnapshot`
   );
 }
 
-export function getOrCreateHydrateFromSnapshotAction(interfaceId: string) {
-  if (!hydrateActionCache.has(interfaceId)) {
-    hydrateActionCache.set(interfaceId, createHydrateAction(interfaceId));
-  }
-  return hydrateActionCache.get(interfaceId)!;
-}
+export const getOrCreateHydrateFromSnapshotAction =
+  SingletonFactory(createHydrateAction);
 
 export function createHydrateSubInterface(engine: Engine): HydrateSubInterface {
   const fullEngine = getFullEngine(engine);

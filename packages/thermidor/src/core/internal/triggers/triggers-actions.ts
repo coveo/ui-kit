@@ -1,4 +1,5 @@
 import {createAction} from '@reduxjs/toolkit';
+import {SingletonFactory} from '@/src/core/internal/singleton-factory/singleton-factory.js';
 
 export interface Trigger {
   type: string;
@@ -11,13 +12,6 @@ export function createTriggersActions(interfaceId: string) {
   };
 }
 
-const actionsCache = new Map<
-  string,
-  ReturnType<typeof createTriggersActions>
->();
-export function getOrCreateTriggersActions(interfaceId: string) {
-  if (!actionsCache.has(interfaceId)) {
-    actionsCache.set(interfaceId, createTriggersActions(interfaceId));
-  }
-  return actionsCache.get(interfaceId)!;
-}
+export const getOrCreateTriggersActions = SingletonFactory(
+  createTriggersActions
+);

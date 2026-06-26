@@ -1,4 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
+import {SingletonFactory} from '@/src/core/internal/singleton-factory/singleton-factory.js';
 import {getOrCreateTriggersActions, type Trigger} from './triggers-actions.js';
 
 export interface TriggersState {
@@ -21,10 +22,4 @@ export function createTriggersSlice(interfaceId: string) {
   });
 }
 
-const sliceCache = new Map<string, ReturnType<typeof createTriggersSlice>>();
-export function getOrCreateTriggersSlice(interfaceId: string) {
-  if (!sliceCache.has(interfaceId)) {
-    sliceCache.set(interfaceId, createTriggersSlice(interfaceId));
-  }
-  return sliceCache.get(interfaceId)!;
-}
+export const getOrCreateTriggersSlice = SingletonFactory(createTriggersSlice);

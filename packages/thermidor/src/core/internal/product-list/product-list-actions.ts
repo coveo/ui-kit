@@ -1,4 +1,5 @@
 import {createAction} from '@reduxjs/toolkit';
+import {SingletonFactory} from '@/src/core/internal/singleton-factory/singleton-factory.js';
 
 export function createProductListActions(interfaceId: string) {
   return {
@@ -8,13 +9,6 @@ export function createProductListActions(interfaceId: string) {
   };
 }
 
-const actionsCache = new Map<
-  string,
-  ReturnType<typeof createProductListActions>
->();
-export function getOrCreateProductListActions(interfaceId: string) {
-  if (!actionsCache.has(interfaceId)) {
-    actionsCache.set(interfaceId, createProductListActions(interfaceId));
-  }
-  return actionsCache.get(interfaceId)!;
-}
+export const getOrCreateProductListActions = SingletonFactory(
+  createProductListActions
+);

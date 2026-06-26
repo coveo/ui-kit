@@ -1,4 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
+import {SingletonFactory} from '@/src/core/internal/singleton-factory/singleton-factory.js';
 import type {CommerceSearchSortCriterion} from '@/src/api/interface/commerce-search-endpoint/commerce-search-endpoint-types.js';
 import {getOrCreateSortActions} from './sort-actions.js';
 
@@ -32,10 +33,4 @@ export function createSortSlice(interfaceId: string) {
   });
 }
 
-const sliceCache = new Map<string, ReturnType<typeof createSortSlice>>();
-export function getOrCreateSortSlice(interfaceId: string) {
-  if (!sliceCache.has(interfaceId)) {
-    sliceCache.set(interfaceId, createSortSlice(interfaceId));
-  }
-  return sliceCache.get(interfaceId)!;
-}
+export const getOrCreateSortSlice = SingletonFactory(createSortSlice);

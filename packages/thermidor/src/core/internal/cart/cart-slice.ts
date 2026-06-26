@@ -3,6 +3,7 @@ import type {
   CartItem,
   CartState,
 } from '@/src/core/interface/cart/cart-types.js';
+import {SingletonFactory} from '@/src/core/internal/singleton-factory/singleton-factory.js';
 import {getOrCreateCartActions} from './cart-actions.js';
 
 export const initialCartState: CartState = {
@@ -45,10 +46,4 @@ export function createCartSlice(interfaceId: string) {
   });
 }
 
-const sliceCache = new Map<string, ReturnType<typeof createCartSlice>>();
-export function getOrCreateCartSlice(interfaceId: string) {
-  if (!sliceCache.has(interfaceId)) {
-    sliceCache.set(interfaceId, createCartSlice(interfaceId));
-  }
-  return sliceCache.get(interfaceId)!;
-}
+export const getOrCreateCartSlice = SingletonFactory(createCartSlice);

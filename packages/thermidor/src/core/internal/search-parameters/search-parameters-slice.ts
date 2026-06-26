@@ -1,4 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
+import {SingletonFactory} from '@/src/core/internal/singleton-factory/singleton-factory.js';
 import {getOrCreateSearchParametersActions} from './search-parameters-actions.js';
 
 export interface SearchParametersState {
@@ -28,13 +29,6 @@ export function createSearchParametersSlice(interfaceId: string) {
   });
 }
 
-const sliceCache = new Map<
-  string,
-  ReturnType<typeof createSearchParametersSlice>
->();
-export function getOrCreateSearchParametersSlice(interfaceId: string) {
-  if (!sliceCache.has(interfaceId)) {
-    sliceCache.set(interfaceId, createSearchParametersSlice(interfaceId));
-  }
-  return sliceCache.get(interfaceId)!;
-}
+export const getOrCreateSearchParametersSlice = SingletonFactory(
+  createSearchParametersSlice
+);
