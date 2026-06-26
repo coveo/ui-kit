@@ -16,7 +16,7 @@ import {pipeline} from 'node:stream/promises';
 import {extract} from 'tar';
 import {pathExists} from './fs-utils.js';
 import {fetchWithRetry} from './http.js';
-import {resolveTarballUrl} from './registry.js';
+import {resolveTarballUrlFromNpm} from './registry.js';
 
 /**
  * Extracts an npm package tarball into `destDir`. npm wraps every entry under a
@@ -47,7 +47,7 @@ export async function downloadTemplate(options: {
   packageName: string;
   destDir: string;
 }): Promise<string> {
-  const url = await resolveTarballUrl(options.packageName);
+  const url = await resolveTarballUrlFromNpm(options.packageName);
   const response = await fetchWithRetry(url);
 
   const nodeStream = Readable.fromWeb(
