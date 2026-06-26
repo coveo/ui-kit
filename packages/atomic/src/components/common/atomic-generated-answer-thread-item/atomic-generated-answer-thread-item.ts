@@ -69,6 +69,11 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
   @property({type: Boolean, attribute: 'show-timeline-dot'})
   public showTimelineDot = true;
 
+  public override connectedCallback() {
+    super.connectedCallback();
+    this.setAttribute('role', 'listitem');
+  }
+
   protected willUpdate() {
     if (!this.hasUpdated) {
       this.isExpanded = !this.disableCollapse ? this.isExpanded : true;
@@ -160,7 +165,7 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
       "relative h-full w-px bg-neutral transition-colors duration-150 group-hover:bg-neutral-dark before:absolute before:left-0 before:top-[-8px] before:h-[8px] before:w-px before:bg-neutral before:transition-colors before:duration-150 group-hover:before:bg-neutral-dark before:content-[''] after:absolute after:bottom-[-8px] after:left-0 after:h-[8px] after:w-px after:bg-neutral after:transition-colors after:duration-150 group-hover:after:bg-neutral-dark after:content-['']";
 
     return html`
-      <li class="grid min-w-0">
+      <div class="grid min-w-0">
         <div class="flex min-w-0 items-center gap-3">
           <div class=${timelineDotToggleClasses}>
             ${when(
@@ -219,7 +224,7 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
             </div>
           </div>
         </div>
-      </li>
+      </div>
     `;
   }
 }
