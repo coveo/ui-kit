@@ -21,7 +21,7 @@ import {
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
-import {userEvent} from 'vitest/browser';
+import {page, userEvent} from 'vitest/browser';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeBreadcrumbManager} from '@/vitest-utils/testing-helpers/fixtures/headless/search/breadcrumb-manager';
 import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
@@ -190,6 +190,17 @@ describe('atomic-refine-modal', () => {
       ),
     };
   };
+
+  it('should give the dialog an accessible name of only the title, excluding the close button', async () => {
+    await renderRefineModal({isOpen: true});
+
+    await expect
+      .element(page.getByRole('dialog', {name: 'Sort & Filter', exact: true}))
+      .toBeInTheDocument();
+    await expect
+      .element(page.getByRole('button', {name: 'Close'}))
+      .toBeInTheDocument();
+  });
 
   it('should build breadcrumb manager with engine', async () => {
     const {element} = await renderRefineModal();

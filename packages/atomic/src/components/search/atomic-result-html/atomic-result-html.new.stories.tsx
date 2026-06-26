@@ -4,7 +4,11 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInResultList} from '@/storybook-utils/search/result-list-wrapper';
 import {wrapInResultTemplate} from '@/storybook-utils/search/result-template-wrapper';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import '@/src/components/search/atomic-result-html/atomic-result-html.js';
+import {SearchResponse} from '@coveo/platform-mock-api/search/search-response';
+
+const searchApiHarness = new MockSearchApi();
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-result-html',
@@ -12,24 +16,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 );
 
 const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
-  config: {
-    preprocessRequest: (request) => {
-      const parsed = JSON.parse(request.body as string);
-      parsed.numberOfResults = 1;
-      request.body = JSON.stringify(parsed);
-      return request;
-    },
-    search: {
-      preprocessSearchResponseMiddleware: (res) => {
-        res.body.results.forEach((r) => {
-          r.excerpt = '<div>Some <b>HTML</b> content</div>';
-          r.title = '<h2>HTML Title <em>with emphasis</em></h2>';
-          r.raw.custom_html_field = '<p>Custom <strong>HTML</strong> field</p>';
-        });
-        return res;
-      },
-    },
-  },
+  includeCodeRoot: false,
 });
 
 const {decorator: resultListDecorator} = wrapInResultList(undefined, false);
@@ -48,12 +35,34 @@ const meta: Meta = {
   parameters: {
     ...parameters,
     chromatic: {disableSnapshot: true},
+    msw: {
+      handlers: [...searchApiHarness.handlers],
+    },
     actions: {
       handles: events,
     },
   },
   args,
   argTypes,
+  beforeEach: async () => {
+    searchApiHarness.searchEndpoint.clear();
+    searchApiHarness.searchEndpoint.mockOnce((response) => ({
+      ...response,
+      results: (response as SearchResponse).results
+        .slice(0, 1)
+        .map((r: any) => ({
+          ...r,
+          excerpt: '<div>Some <b>HTML</b> content</div>',
+          title: '<h2>HTML Title <em>with emphasis</em></h2>',
+          raw: {
+            ...r.raw,
+            custom_html_field: '<p>Custom <strong>HTML</strong> field</p>',
+          },
+        })),
+      totalCount: 1,
+      totalCountFiltered: 1,
+    }));
+  },
 
   play,
 };

@@ -124,3 +124,113 @@ export const CompleteExpanded: Story = {
     }
   },
 };
+
+export const SearchingWithQuery: Story = {
+  name: 'Searching with generated query',
+  args: {
+    agentSteps: [
+      {name: 'thinking', status: 'completed', startedAt: 0, finishedAt: 100},
+      {
+        name: 'searching',
+        status: 'active',
+        startedAt: Date.now(),
+        toolCalls: [
+          {
+            toolCallName: 'search',
+            toolCallId: 'tc-1',
+            startedAt: Date.now(),
+            status: 'active',
+            type: 'search',
+            toolCallArgs: {q: 'how to reset password in admin portal'},
+          },
+        ],
+      },
+    ] as GenerationStep[],
+    isStreaming: true,
+  },
+};
+
+export const MultipleSearchesWithQueries: Story = {
+  name: 'Multiple searches with queries',
+  args: {
+    agentSteps: [
+      {name: 'thinking', status: 'completed', startedAt: 0, finishedAt: 100},
+      {
+        name: 'searching',
+        status: 'completed',
+        startedAt: 100,
+        finishedAt: 200,
+        toolCalls: [
+          {
+            toolCallName: 'search',
+            toolCallId: 'tc-1',
+            startedAt: 100,
+            finishedAt: 200,
+            status: 'completed',
+            type: 'search',
+            toolCallArgs: {q: 'password reset steps'},
+          },
+        ],
+      },
+      {name: 'thinking', status: 'completed', startedAt: 200, finishedAt: 300},
+      {
+        name: 'searching',
+        status: 'completed',
+        startedAt: 300,
+        finishedAt: 400,
+        toolCalls: [
+          {
+            toolCallName: 'search',
+            toolCallId: 'tc-2',
+            startedAt: 300,
+            finishedAt: 400,
+            status: 'completed',
+            type: 'search',
+            toolCallArgs: {q: 'admin portal account recovery'},
+          },
+        ],
+      },
+      {name: 'thinking', status: 'completed', startedAt: 400, finishedAt: 500},
+      {name: 'answering', status: 'active', startedAt: Date.now()},
+    ] as GenerationStep[],
+    isStreaming: true,
+  },
+};
+
+export const MultipleSearchQueriesInOneStep: Story = {
+  name: 'Multiple search queries in one step',
+  args: {
+    agentSteps: [
+      {name: 'thinking', status: 'completed', startedAt: 0, finishedAt: 100},
+      {
+        name: 'searching',
+        status: 'completed',
+        startedAt: 100,
+        finishedAt: 300,
+        toolCalls: [
+          {
+            toolCallName: 'search',
+            toolCallId: 'tc-1',
+            startedAt: 100,
+            finishedAt: 200,
+            status: 'completed',
+            type: 'search',
+            toolCallArgs: {q: 'What is Quantic'},
+          },
+          {
+            toolCallName: 'search',
+            toolCallId: 'tc-2',
+            startedAt: 200,
+            finishedAt: 300,
+            status: 'completed',
+            type: 'search',
+            toolCallArgs: {q: 'What is Atomic'},
+          },
+        ],
+      },
+      {name: 'thinking', status: 'completed', startedAt: 300, finishedAt: 400},
+      {name: 'answering', status: 'active', startedAt: Date.now()},
+    ] as GenerationStep[],
+    isStreaming: true,
+  },
+};

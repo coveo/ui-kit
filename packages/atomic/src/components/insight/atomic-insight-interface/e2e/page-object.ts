@@ -37,7 +37,7 @@ export class InsightInterfacePageObject extends BasePageObject {
   }
 
   get insightPagerButtons() {
-    return this.insightPager.getByRole('radio');
+    return this.insightPager.getByRole('button');
   }
 
   get insightResults() {

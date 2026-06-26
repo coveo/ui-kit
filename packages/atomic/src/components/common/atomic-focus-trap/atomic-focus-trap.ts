@@ -145,23 +145,13 @@ export class AtomicFocusTrap extends LightDomMixin(LitElement) {
   }
 
   private onFocusChanged = (e: FocusEvent) => {
-    const elementIsPartOfHost = (focusedElement: Element | ShadowRoot) =>
-      isAncestorOf(this, focusedElement);
-
-    const elementIsPartOfScope = (focusedElement: Element | ShadowRoot) =>
-      isAncestorOf(this.scope, focusedElement);
-
     if (!e.target || !this.active) {
       return;
     }
 
     const focusedElement = getFocusedElement();
 
-    if (
-      focusedElement &&
-      (elementIsPartOfHost(focusedElement) ||
-        !elementIsPartOfScope(focusedElement))
-    ) {
+    if (focusedElement && isAncestorOf(this, focusedElement)) {
       return;
     }
 

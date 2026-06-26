@@ -10,12 +10,14 @@ import styles from './atomic-agent-stream-of-thought.tw.css.js';
 type ResolvedStepType =
   | 'thinking-before-search'
   | 'searching'
+  | 'searching-with-query'
   | 'thinking-after-search'
   | 'answering';
 
 interface ResolvedStep {
   type: ResolvedStepType;
   status: 'active' | 'completed';
+  searchQuery?: string;
 }
 
 const stepLabelKeys: Record<
@@ -29,6 +31,10 @@ const stepLabelKeys: Record<
   searching: {
     active: 'agent-generation-step-search',
     completed: 'agent-generation-step-search-completed',
+  },
+  'searching-with-query': {
+    active: 'agent-generation-step-search-query',
+    completed: 'agent-generation-step-search-query-completed',
   },
   'thinking-after-search': {
     active: 'agent-generation-step-analyzing-results',
@@ -106,7 +112,10 @@ export class AtomicAgentStreamOfThought extends LitElement {
       step.status === 'active'
         ? stepLabelKeys[step.type].active
         : stepLabelKeys[step.type].completed;
-    const label = this.i18n.t(labelKey);
+    const label =
+      step.type === 'searching-with-query'
+        ? this.i18n.t(labelKey, {query: step.searchQuery})
+        : this.i18n.t(labelKey);
 
     return html`
       <div class="step">
@@ -126,7 +135,10 @@ export class AtomicAgentStreamOfThought extends LitElement {
 
     const step = resolvedSteps[resolvedSteps.length - 1];
     const labelKey = stepLabelKeys[step.type].completed;
-    const label = this.i18n.t(labelKey);
+    const label =
+      step.type === 'searching-with-query'
+        ? this.i18n.t(labelKey, {query: step.searchQuery})
+        : this.i18n.t(labelKey);
 
     return html`
       <button
@@ -214,18 +226,36 @@ export class AtomicAgentStreamOfThought extends LitElement {
 
 export function resolveSteps(steps: GenerationStep[]): ResolvedStep[] {
   let searchWasPerformed = false;
-  return steps.map((step) => {
-    let type: ResolvedStepType;
+  return steps.flatMap((step) => {
     if (step.name === 'searching') {
       searchWasPerformed = true;
-      type = 'searching';
+      const searchToolCalls = step.toolCalls?.filter(
+        (tc) => tc.type === 'search'
+      );
+      if (searchToolCalls?.length) {
+        return searchToolCalls.map((tc) => {
+          const searchQuery =
+            tc.toolCallArgs && 'q' in tc.toolCallArgs
+              ? tc.toolCallArgs.q
+              : undefined;
+          if (searchQuery) {
+            return {
+              type: 'searching-with-query' as const,
+              status: tc.status,
+              searchQuery,
+            };
+          }
+          return {type: 'searching' as const, status: tc.status};
+        });
+      }
+      return {type: 'searching' as const, status: step.status};
     } else if (step.name === 'answering') {
-      type = 'answering';
+      return {type: 'answering' as const, status: step.status};
     } else {
-      type = searchWasPerformed
+      const type = searchWasPerformed
         ? 'thinking-after-search'
         : 'thinking-before-search';
+      return {type, status: step.status} as ResolvedStep;
     }
-    return {type, status: step.status};
   });
 }
