@@ -1,6 +1,6 @@
 import {createAction} from '@reduxjs/toolkit';
 import {Engine, getFullEngine} from '@/src/core/interface/engine/engine.js';
-import {STATE_ID} from '@/src/core/interface/utils/symbols.js';
+import {getInterfaceInternals} from '@/src/core/interface/base-interface.js';
 import type {
   RoutedInterface,
   RoutedUseCase,
@@ -52,7 +52,7 @@ export function createHydrateSubInterface(engine: Engine): HydrateSubInterface {
 
     if (routedUseCase === 'commerceSearch') {
       const subInterface = buildCommerceInterface({engine});
-      const subId = subInterface[STATE_ID];
+      const {stateId: subId} = getInterfaceInternals(subInterface);
       fullEngine.storeHydrationSnapshot(subId, contentRecord);
       const hydrateAction = getOrCreateHydrateFromSnapshotAction(subId);
       fullEngine.mutate(hydrateAction(contentRecord));
@@ -65,7 +65,7 @@ export function createHydrateSubInterface(engine: Engine): HydrateSubInterface {
     }
 
     const subInterface = buildSearchInterface({engine});
-    const subId = subInterface[STATE_ID];
+    const {stateId: subId} = getInterfaceInternals(subInterface);
     fullEngine.storeHydrationSnapshot(subId, contentRecord);
     const hydrateAction = getOrCreateHydrateFromSnapshotAction(subId);
     fullEngine.mutate(hydrateAction(contentRecord));

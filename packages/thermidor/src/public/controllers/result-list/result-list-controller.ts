@@ -1,15 +1,14 @@
 import {BaseController} from '@/src/core/interface/base-controller.js';
 import type {Supports} from '@/src/core/interface/utils/interface-types.js';
 import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
-import {ENGINE, STATE_ID} from '@/src/core/interface/utils/symbols.js';
+import {getHandleInternals} from '@/src/core/interface/utils/get-handle-internals.js';
 import {getOrCreateResultsSelectors} from '@/src/core/internal/result-list/result-list-selectors.js';
 import {getOrCreateResultsSlice} from '@/src/core/internal/result-list/result-list-slice.js';
 import type {Controller} from '@/src/public/controllers/controller-types.js';
 
 class ResultListControllerImpl extends BaseController<ResultListControllerState> {
   constructor(options: ResultListControllerOptions) {
-    const engine = options.interface[ENGINE];
-    const stateId = options.interface[STATE_ID];
+    const {engine, stateId} = getHandleInternals(options.interface);
 
     engine.adoptSlice(getOrCreateResultsSlice(stateId));
 

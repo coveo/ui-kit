@@ -6,20 +6,36 @@ import type {
   Facades,
   InterfaceType,
 } from './utils/interface-types.js';
-import {ENGINE, STATE_ID, TYPE} from './utils/symbols.js';
+
+export interface InterfaceInternals<T extends InterfaceType = InterfaceType> {
+  engine: FullEngine;
+  stateId: string;
+  type: T;
+}
+
+export let getInterfaceInternals: <T extends InterfaceType>(
+  iface: BaseInterface<T>
+) => InterfaceInternals<T>;
 
 export abstract class BaseInterface<T extends InterfaceType> {
-  readonly [ENGINE]: FullEngine;
-  readonly [STATE_ID]: string;
-  readonly [TYPE]: T;
-
   get disposed(): boolean {
     return this.#disposed;
   }
 
+  #engine: FullEngine;
+  #stateId: string;
+  #type: T;
   #resolvers: Record<Facades[T], FacadeResolverFactory>;
   #facadeCache = new Map<string, EndpointThunk>();
   #disposed = false;
+
+  static {
+    getInterfaceInternals = (iface) => ({
+      engine: iface.#engine,
+      stateId: iface.#stateId,
+      type: iface.#type,
+    });
+  }
 
   constructor(
     engine: FullEngine,
@@ -27,9 +43,9 @@ export abstract class BaseInterface<T extends InterfaceType> {
     type: T,
     resolvers: Record<Facades[T], FacadeResolverFactory>
   ) {
-    this[ENGINE] = engine;
-    this[STATE_ID] = stateId;
-    this[TYPE] = type;
+    this.#engine = engine;
+    this.#stateId = stateId;
+    this.#type = type;
     this.#resolvers = resolvers;
   }
 
@@ -42,14 +58,14 @@ export abstract class BaseInterface<T extends InterfaceType> {
     }
 
     const scope: EndpointStateScope = {
-      interfaceId: this[STATE_ID],
+      interfaceId: this.#stateId,
       composedInterfaceId,
     };
-    const cacheKey = `${String(facade)}:${composedInterfaceId ?? this[STATE_ID]}`;
+    const cacheKey = `${String(facade)}:${composedInterfaceId ?? this.#stateId}`;
 
     if (!this.#facadeCache.has(cacheKey)) {
       const resolver = this.#resolvers[facade];
-      const thunk = resolver(this[ENGINE])(scope);
+      const thunk = resolver(this.#engine)(scope);
       this.#facadeCache.set(cacheKey, thunk);
     }
 

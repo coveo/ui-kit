@@ -1,7 +1,5 @@
 import type {AsyncThunk} from '@reduxjs/toolkit';
 import type {FullEngine} from '../engine/engine.js';
-import type {BaseInterface} from '../base-interface.js';
-import type {ComposedInterface} from '@/src/public/interfaces/compose.js';
 
 export type EndpointThunk = AsyncThunk<void, {engine: FullEngine}, {}>;
 
@@ -22,10 +20,7 @@ export interface Facades {
 
 export type InterfaceType = keyof Facades;
 
-type InterfaceTypesWith<F extends Facades[InterfaceType]> = {
-  [K in InterfaceType]: F extends Facades[K] ? K : never;
-}[InterfaceType];
-
-export type Supports<F extends Facades[InterfaceType]> =
-  | BaseInterface<InterfaceTypesWith<F>>
-  | ComposedInterface<InterfaceTypesWith<F>>;
+export type Supports<F extends Facades[InterfaceType]> = {
+  resolveFacades(facade: F, composedInterfaceId?: string): EndpointThunk[];
+  dispose(): void;
+};

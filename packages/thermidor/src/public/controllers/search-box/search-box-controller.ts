@@ -5,7 +5,7 @@ import type {
 } from '@/src/core/interface/utils/interface-types.js';
 import type {Dispatchable} from '@/src/core/interface/engine/engine-types.js';
 import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
-import {ENGINE, STATE_ID} from '@/src/core/interface/utils/symbols.js';
+import {getHandleInternals} from '@/src/core/interface/utils/get-handle-internals.js';
 import {getOrCreateSearchBoxActions} from '@/src/core/internal/search-box/search-box-actions.js';
 import {getOrCreateSearchBoxSelectors} from '@/src/core/internal/search-box/search-box-selectors.js';
 import {getOrCreateSearchBoxSlice} from '@/src/core/internal/search-box/search-box-slice.js';
@@ -17,8 +17,7 @@ class SearchBoxControllerImpl extends BaseController<SearchBoxControllerState> {
   #actions: ReturnType<typeof getOrCreateSearchBoxActions>;
 
   constructor(options: SearchBoxControllerOptions) {
-    const engine = options.interface[ENGINE];
-    const stateId = options.interface[STATE_ID];
+    const {engine, stateId} = getHandleInternals(options.interface);
 
     engine.adoptSlice(getOrCreateSearchBoxSlice(stateId));
 
@@ -64,39 +63,16 @@ export interface SearchBoxControllerOptions {
 }
 
 export interface SearchBoxController extends Controller<SearchBoxControllerState> {
-  /**
-   * Updates the search query.
-   *
-   * @param options - The options for setting the query.
-   */
   setQuery(options: SearchBoxControllerSetQueryOptions): void;
-
-  /**
-   * Executes the search query.
-   */
   submit(): Promise<unknown[]>;
 }
 
 export interface SearchBoxControllerSetQueryOptions {
-  /**
-   * The new search query.
-   */
   query: string;
 }
 
 export interface SearchBoxControllerState {
-  /**
-   * The current search query.
-   */
   query: string;
-
-  /**
-   * Whether a search request is currently in flight.
-   */
   isLoading: boolean;
-
-  /**
-   * The error message from the last failed search request, or null.
-   */
   error: string | null;
 }

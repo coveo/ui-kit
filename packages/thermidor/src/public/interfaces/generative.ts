@@ -9,7 +9,6 @@ import type {
   FacadeResolverFactory,
   Facades,
 } from '@/src/core/interface/utils/interface-types.js';
-import {SOURCE_ENGINE} from '@/src/core/interface/utils/symbols.js';
 import {generateId} from '@/src/core/interface/utils/id-generator.js';
 import {loadGenerative} from '@/src/core/interface/generative/generative-loader.js';
 
@@ -26,12 +25,18 @@ const resolverFactories: Record<Facades['generative'], FacadeResolverFactory> =
     conversation: noopResolverFactory,
   };
 
+export let getGenerativeSourceEngine: (iface: GenerativeInterface) => Engine;
+
 export class GenerativeInterface extends BaseInterface<'generative'> {
-  readonly [SOURCE_ENGINE]: Engine;
+  #sourceEngine: Engine;
+
+  static {
+    getGenerativeSourceEngine = (iface) => iface.#sourceEngine;
+  }
 
   constructor(engine: FullEngine, stateId: string, sourceEngine: Engine) {
     super(engine, stateId, 'generative', resolverFactories);
-    this[SOURCE_ENGINE] = sourceEngine;
+    this.#sourceEngine = sourceEngine;
   }
 }
 

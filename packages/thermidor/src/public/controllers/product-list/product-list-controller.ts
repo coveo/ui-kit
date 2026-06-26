@@ -4,13 +4,12 @@ import type {Product} from '@/src/core/interface/product-list/product-list-types
 import {getOrCreateProductListSelectors} from '@/src/core/internal/product-list/product-list-selectors.js';
 import {getOrCreateProductListSlice} from '@/src/core/internal/product-list/product-list-slice.js';
 import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
-import {ENGINE, STATE_ID} from '@/src/core/interface/utils/symbols.js';
+import {getHandleInternals} from '@/src/core/interface/utils/get-handle-internals.js';
 import type {Controller} from '../controller-types.js';
 
 class ProductListControllerImpl extends BaseController<ProductListControllerState> {
   constructor(options: ProductListControllerOptions) {
-    const engine = options.interface[ENGINE];
-    const stateId = options.interface[STATE_ID];
+    const {engine, stateId} = getHandleInternals(options.interface);
 
     engine.adoptSlice(getOrCreateProductListSlice(stateId));
 

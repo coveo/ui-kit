@@ -8,7 +8,7 @@ import type {
   StateSelector,
 } from '@/src/core/interface/engine/engine-types.js';
 import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
-import {ENGINE, STATE_ID} from '@/src/core/interface/utils/symbols.js';
+import {getHandleInternals} from '@/src/core/interface/utils/get-handle-internals.js';
 import {getOrCreatePaginationActions} from '@/src/core/internal/pagination/pagination-actions.js';
 import {getOrCreatePaginationSelectors} from '@/src/core/internal/pagination/pagination-selectors.js';
 import {getOrCreatePaginationSlice} from '@/src/core/internal/pagination/pagination-slice.js';
@@ -20,8 +20,7 @@ class PaginationControllerImpl extends BaseController<PaginationControllerState>
   #controllerState: StateSelector<PaginationControllerState>;
 
   constructor(options: PaginationControllerOptions) {
-    const engine = options.interface[ENGINE];
-    const stateId = options.interface[STATE_ID];
+    const {engine, stateId} = getHandleInternals(options.interface);
 
     engine.adoptSlice(getOrCreatePaginationSlice(stateId));
 

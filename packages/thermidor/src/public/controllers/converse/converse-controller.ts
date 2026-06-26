@@ -4,11 +4,8 @@ import {createHydrateSubInterface} from '@/src/core/interface/generative/generat
 import {loadGenerative} from '@/src/core/interface/generative/generative-loader.js';
 import {BaseController} from '@/src/core/interface/base-controller.js';
 import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
-import {
-  ENGINE,
-  STATE_ID,
-  SOURCE_ENGINE,
-} from '@/src/core/interface/utils/symbols.js';
+import {getInterfaceInternals} from '@/src/core/interface/base-interface.js';
+import {getGenerativeSourceEngine} from '@/src/public/interfaces/generative.js';
 import {getOrCreateGenerativeActions} from '@/src/core/internal/generative/generative-actions.js';
 import {getOrCreateGenerativeSelectors} from '@/src/core/internal/generative/generative-selectors.js';
 import type {GenerativeInterface} from '@/src/public/interfaces/generative.js';
@@ -20,9 +17,10 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
   #selectors: ReturnType<typeof getOrCreateGenerativeSelectors>;
 
   constructor(options: ConverseControllerOptions) {
-    const fullEngine = options.interface[ENGINE];
-    const stateId = options.interface[STATE_ID];
-    const sourceEngine = options.interface[SOURCE_ENGINE];
+    const {engine: fullEngine, stateId} = getInterfaceInternals(
+      options.interface
+    );
+    const sourceEngine = getGenerativeSourceEngine(options.interface);
 
     loadGenerative(fullEngine, stateId);
 

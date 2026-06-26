@@ -1,5 +1,5 @@
 import type {Supports} from '@/src/core/interface/utils/interface-types.js';
-import {ENGINE, STATE_ID} from '@/src/core/interface/utils/symbols.js';
+import {getHandleInternals} from '@/src/core/interface/utils/get-handle-internals.js';
 import {getOrCreateCartActions} from '@/src/core/internal/cart/cart-actions.js';
 import {getOrCreateCartSlice} from '@/src/core/internal/cart/cart-slice.js';
 import type {
@@ -11,14 +11,8 @@ export interface LoadCartActionsOptions {
   interface: Supports<'search'>;
 }
 
-/**
- * Loads the cart actions for the given interface.
- * @param options - The options containing the interface handle.
- * @returns The cart actions: `setItems` and `updateItemQuantity`.
- */
 export function loadCartActions(options: LoadCartActionsOptions) {
-  const engine = options.interface[ENGINE];
-  const stateId = options.interface[STATE_ID];
+  const {engine, stateId} = getHandleInternals(options.interface);
 
   engine.adoptSlice(getOrCreateCartSlice(stateId));
 

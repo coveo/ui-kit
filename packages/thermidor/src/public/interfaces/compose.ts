@@ -1,26 +1,40 @@
-import {ENGINE, STATE_ID, TYPE} from '@/src/core/interface/utils/symbols.js';
+import {
+  getInterfaceInternals,
+  type BaseInterface,
+} from '@/src/core/interface/base-interface.js';
 import type {FullEngine} from '@/src/core/interface/engine/engine.js';
 import type {
   EndpointThunk,
   Facades,
   InterfaceType,
 } from '@/src/core/interface/utils/interface-types.js';
-import {BaseInterface} from '@/src/core/interface/base-interface.js';
 import {generateId} from '@/src/core/interface/utils/id-generator.js';
 
-export class ComposedInterface<T extends InterfaceType> {
-  readonly [ENGINE]: FullEngine;
-  readonly [STATE_ID]: string;
+export interface ComposedInternals {
+  engine: FullEngine;
+  stateId: string;
+}
 
+export let getComposedInternals: <T extends InterfaceType>(
+  composed: ComposedInterface<T>
+) => ComposedInternals;
+
+export class ComposedInterface<T extends InterfaceType> {
+  #engine: FullEngine;
+  #stateId: string;
   #interfaces: BaseInterface<T>[];
 
-  constructor(
-    interfaces: BaseInterface<T>[],
-    composedId: string,
-    engine: FullEngine
-  ) {
-    this[ENGINE] = engine;
-    this[STATE_ID] = composedId;
+  static {
+    getComposedInternals = (composed) => ({
+      engine: composed.#engine,
+      stateId: composed.#stateId,
+    });
+  }
+
+  constructor(interfaces: BaseInterface<T>[], composedId: string) {
+    const {engine} = getInterfaceInternals(interfaces[0]);
+    this.#engine = engine;
+    this.#stateId = composedId;
     this.#interfaces = interfaces;
   }
 
@@ -28,7 +42,7 @@ export class ComposedInterface<T extends InterfaceType> {
     facade: Facades[T],
     composedInterfaceId?: string
   ): EndpointThunk[] {
-    const id = composedInterfaceId ?? this[STATE_ID];
+    const id = composedInterfaceId ?? this.#stateId;
     return this.#interfaces.flatMap((sub) => sub.resolveFacades(facade, id));
   }
 
@@ -44,19 +58,19 @@ export function composeInterfaces<T extends InterfaceType>(options: {
     throw new Error('composeInterfaces requires at least one interface.');
   }
 
-  const engine = options.interfaces[0][ENGINE];
-  const type = options.interfaces[0][TYPE];
+  const first = getInterfaceInternals(options.interfaces[0]);
 
   for (const iface of options.interfaces) {
-    if (iface[ENGINE] !== engine) {
+    const internals = getInterfaceInternals(iface);
+    if (internals.engine !== first.engine) {
       throw new Error('All interfaces must share the same engine.');
     }
-    if (iface[TYPE] !== type) {
+    if (internals.type !== first.type) {
       throw new Error(
-        `All interfaces must share the same type. Expected '${type}', got '${iface[TYPE]}'.`
+        `All interfaces must share the same type. Expected '${first.type}', got '${internals.type}'.`
       );
     }
   }
 
-  return new ComposedInterface(options.interfaces, generateId(), engine);
+  return new ComposedInterface(options.interfaces, generateId());
 }

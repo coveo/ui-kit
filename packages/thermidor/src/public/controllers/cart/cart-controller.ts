@@ -6,7 +6,7 @@ import {loadCart} from '@/src/core/interface/cart/cart-loader.js';
 import {BaseController} from '@/src/core/interface/base-controller.js';
 import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
 import type {Supports} from '@/src/core/interface/utils/interface-types.js';
-import {ENGINE, STATE_ID} from '@/src/core/interface/utils/symbols.js';
+import {getHandleInternals} from '@/src/core/interface/utils/get-handle-internals.js';
 import {getOrCreateCartActions} from '@/src/core/internal/cart/cart-actions.js';
 import {getOrCreateCartSelectors} from '@/src/core/internal/cart/cart-selectors.js';
 import type {Controller} from '@/src/public/controllers/controller-types.js';
@@ -15,8 +15,7 @@ class CartControllerImpl extends BaseController<CartControllerState> {
   #actions: ReturnType<typeof getOrCreateCartActions>;
 
   constructor(options: CartControllerOptions) {
-    const engine = options.interface[ENGINE];
-    const stateId = options.interface[STATE_ID];
+    const {engine, stateId} = getHandleInternals(options.interface);
 
     loadCart(engine, stateId);
 
@@ -39,12 +38,6 @@ class CartControllerImpl extends BaseController<CartControllerState> {
   }
 }
 
-/**
- * Creates a cart controller bound to an interface instance.
- *
- * @param options - The controller creation options.
- * @returns A cart controller.
- */
 export const buildCartController = (
   options: CartControllerOptions
 ): CartController => new CartControllerImpl(options);
