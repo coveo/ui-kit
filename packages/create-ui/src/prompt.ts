@@ -1,22 +1,32 @@
 import {cancel, isCancel, select, text} from '@clack/prompts';
-import {getTemplates, type Template} from './templates.js';
+import {
+  getTemplates,
+  LIBRARIES,
+  LIBRARY_ORDER,
+  type Library,
+  type Template,
+} from './templates.js';
 
-export interface TemplateChoice {
+export interface Choice<Value extends string = string> {
   label: string;
-  value: string;
+  value: Value;
+  hint?: string;
 }
 
-/**
- * Pure: builds the select options from the available templates, prefixing each
- * with its library label so options read e.g. "Headless — search (React)".
- */
-export function buildTemplateChoices(
+export function buildLibraryChoices(
   templates: Template[] = getTemplates()
-): TemplateChoice[] {
-  return templates.map((t) => ({
-    label: t.description,
-    value: t.name,
+): Choice<Library>[] {
+  return LIBRARY_ORDER.filter((library) =>
+    templates.some((t) => t.library === library)
+  ).map((library) => ({
+    value: library,
+    label: LIBRARIES[library].label,
+    hint: LIBRARIES[library].hint,
   }));
+}
+
+export function buildTemplateChoices(templates: Template[]): Choice[] {
+  return templates.map((t) => ({value: t.name, label: t.label}));
 }
 
 function handleCancel(value: unknown): asserts value is string {
@@ -26,14 +36,37 @@ function handleCancel(value: unknown): asserts value is string {
   }
 }
 
-/** Prompts the user to pick a template from the available list. */
-export async function selectTemplate(): Promise<Template> {
+async function selectLibrary(templates: Template[]): Promise<Library> {
+  const choices = buildLibraryChoices(templates);
+  if (choices.length === 1) {
+    return choices[0].value;
+  }
   const value = await select({
-    message: 'Which template would you like to use?',
-    options: buildTemplateChoices(),
+    message: 'Which Coveo library would you like to use?',
+    options: choices,
+    initialValue: choices[0]?.value,
   });
   handleCancel(value);
-  return getTemplates().find((t) => t.name === value)!;
+  return value as Library;
+}
+
+export async function selectTemplate(): Promise<Template> {
+  const templates = getTemplates();
+  const library = await selectLibrary(templates);
+
+  const inLibrary = templates.filter((t) => t.library === library);
+  const value = await select({
+    message: `Which ${LIBRARIES[library].label} template would you like to use?`,
+    options: buildTemplateChoices(inLibrary),
+    initialValue: inLibrary[0]?.name,
+  });
+  handleCancel(value);
+
+  const template = templates.find((t) => t.name === value);
+  if (!template) {
+    throw new Error(`No template matches the selected value "${value}".`);
+  }
+  return template;
 }
 
 /** Prompts for a project name, defaulting to a sensible value. */

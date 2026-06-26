@@ -1,6 +1,6 @@
 import {describe, expect, it, vi} from 'vitest';
 import {main, parseArgs} from './index.js';
-import {getTemplate} from './templates.js';
+import {describeTemplate, getTemplate} from './templates.js';
 
 describe('templates', () => {
   it('resolves names to package names, and unknown names to undefined', () => {
@@ -8,6 +8,12 @@ describe('templates', () => {
       '@coveo/sample-headless-search-react'
     );
     expect(getTemplate('does-not-exist')).toBeUndefined();
+  });
+
+  it('describes a template with its library, without the "UI" suffix', () => {
+    const template = getTemplate('atomic-search')!;
+    expect(describeTemplate(template)).toBe('Atomic Search (vanilla + Vite)');
+    expect(describeTemplate(template)).not.toContain('UI');
   });
 });
 
@@ -33,12 +39,18 @@ describe('parseArgs', () => {
 });
 
 describe('main', () => {
-  it('returns 0 for --help (commander prints the usage)', async () => {
-    const out = vi
-      .spyOn(process.stdout, 'write')
-      .mockImplementation(() => true);
+  it('returns 0 for --help and lists templates without the "UI" suffix', async () => {
+    const chunks: string[] = [];
+    const out = vi.spyOn(process.stdout, 'write').mockImplementation((c) => {
+      chunks.push(String(c));
+      return true;
+    });
     expect(await main(['--help'])).toBe(0);
     out.mockRestore();
+    const help = chunks.join('');
+    expect(help).toContain('Atomic Search (vanilla + Vite)');
+    // The redundant "<use case> UI (" suffix must be gone from every template.
+    expect(help).not.toContain('UI (');
   });
 
   it('returns 0 for --docs and prints the documentation links', async () => {

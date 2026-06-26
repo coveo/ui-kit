@@ -14,7 +14,12 @@ import {
   moveToTarget,
   rewritePackageJson,
 } from './setup.js';
-import {getTemplate, getTemplates, type Template} from './templates.js';
+import {
+  describeTemplate,
+  getTemplate,
+  getTemplates,
+  type Template,
+} from './templates.js';
 import {formatError, getPackageManager, log} from './utils.js';
 
 function isPackageNotFound(error: unknown): boolean {
@@ -60,7 +65,7 @@ function buildProgram(): Command {
     .addHelpText(
       'after',
       `\nAvailable templates:\n${getTemplates()
-        .map((t) => `  ${t.name.padEnd(26)} ${t.description}`)
+        .map((t) => `  ${t.name.padEnd(26)} ${describeTemplate(t)}`)
         .join(
           '\n'
         )}\n\nExample:\n  $ npm create @coveo/ui my-app --template headless-search-react`
