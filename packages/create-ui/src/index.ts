@@ -206,6 +206,11 @@ if (isDirectRun) {
   main(argv.slice(2)).then(
     (code) => process.exit(code),
     (error) => {
+      // A user pressing Ctrl-C during a prompt should exit quietly.
+      if (error instanceof Error && error.name === 'ExitPromptError') {
+        log.info('\nAborted.');
+        process.exit(130);
+      }
       log.error(formatError(error));
       process.exit(1);
     }

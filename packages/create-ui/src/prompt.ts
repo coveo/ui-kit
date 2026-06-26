@@ -1,8 +1,3 @@
-/**
- * Interactive prompts shown when arguments are omitted. The choice-building
- * logic is kept pure so it can be unit-tested without a TTY.
- */
-
 import {cancel, isCancel, select, text} from '@clack/prompts';
 import {getTemplates, type Library, type Template} from './templates.js';
 
