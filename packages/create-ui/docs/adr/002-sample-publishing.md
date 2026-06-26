@@ -35,13 +35,15 @@ To make a sample publishable:
 
 - Remove `"private": true`
 - Add `"name": "@coveo/sample-<name>"`, `publishConfig.access: "public"`, `files` allowlist
-- Include it in changesets
 
 Same "Version Packages" → publish flow as the libraries. No second pipeline.
 
+### 4. Use `pacote` to fetch published samples at scaffold time
+
+[`pacote`](https://www.npmjs.com/package/pacote) is the npm client's own library for resolving and fetching packages from a registry. `@coveo/create-ui` will use it to download and extract the `@coveo/sample-*` tarballs during scaffolding. It handles dist-tags, version ranges, authentication, and corporate registry mirrors out of the box.
+
 ## Consequences
 
-- The release pipeline publishes additional `@coveo/sample-*` packages. Adding/removing a sample is a changeset-bearing change.
 - KIT-5842 (run-time protocol resolution) is eliminated — resolved at publish time by pnpm.
 - Samples become public API surface; a broken sample fails at publish/install time, not silently at scaffold time.
 <!-- - Internal testing uses `--version ` instead of the old `--ref <branch>`. -->

@@ -24,20 +24,21 @@ The CLI resolves the sample package from the npm registry directly (not GitHub).
 | Download size     | ~50 KB (just the sample)                            | ~4.5 MB (whole monorepo)         |
 | Corporate proxies | Respects `.npmrc` registry config                   | Requires GitHub access           |
 
-Resolution: `GET https://registry.npmjs.org/@coveo/sample-<name>/latest` → use `dist.tarball` and `dist.integrity` from the response.
+Resolution: `pacote.extract('@coveo/sample-<name>@latest', dest)` resolves the package from the registry, downloads, verifies integrity, and extracts in one step.
 
 Rejected alternatives:
 
 - **Shell out to `npm pack`** — heavier, requires `npm` on PATH.
 - **GitHub release asset** — mutable, not registry-versioned, requires custom resolution logic.
+- **Manual `fetch` + `tar`** — reimplements what `pacote` already does; misses `.npmrc` auth handling.
 
 ### 3. Resolve the `latest` dist-tag
 
 Always fetch `latest`. No major pinning, no version arithmetic. A sample update reaches users immediately once published.
 
-### 4. Verify integrity before extracting (TBD)
+### 4. Integrity verification handled by `pacote`
 
-Check the tarball's SHA-512 against `dist.integrity` from the registry manifest using Node's built-in `crypto`. Fail loudly on mismatch.
+`pacote` verifies the tarball's SHA-512 against `dist.integrity` from the registry manifest automatically. No custom `crypto` code needed — a checksum mismatch throws by default.
 
 ### 5. Use `commander` for CLI parsing
 
@@ -45,13 +46,11 @@ Provides `--help`, validation, and error messages out of the box with zero runti
 
 ### 6. Supporting stack
 
-| Concern         | Choice                 | Rationale                                                             |
-| --------------- | ---------------------- | --------------------------------------------------------------------- |
-| Tar extraction  | `tar` (npm)            | Streaming extract with `strip: 1` for npm tarball's `package/` prefix |
-| HTTP            | Node built-in `fetch`  | Two requests total (metadata + tarball); no third-party client needed |
-| Integrity (TBD) | Node built-in `crypto` | Standard library, no dependency                                       |
-| Tests           | `vitest`               | Monorepo standard                                                     |
-| Build           | `tsc`                  | Node CLI; bundler adds nothing                                        |
+| Concern                              | Choice                                                    | Rationale                                                                                                  |
+| ------------------------------------ | --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Registry resolve, fetch & extraction | [`pacote`](https://www.npmjs.com/package/pacote)          | npm's own package fetcher — resolves dist-tags, downloads tarballs, verifies integrity, and extracts in one call. Replaces manual `fetch` + `tar` + `crypto` with a single `pacote.extract(spec, dest)` invocation. Respects `.npmrc` for auth and corporate registry mirrors. |
+| Tests                                | `vitest`                                                  | Monorepo standard                                                                                          |
+| Build                                | `tsc`                                                     | Node CLI; bundler adds nothing                                                                             |
 
 ### 7. Interactive selection: `@clack/prompts` (planned)
 
@@ -59,7 +58,7 @@ When `--template` is omitted. Not yet implemented.
 
 ## Consequences
 
-- Runtime deps: `commander` + `tar`. Remove `minimist`.
+- Runtime deps: `commander` + `pacote`. Remove `minimist` and `tar`.
 - `templates.ts` maps template name → npm package name (`@coveo/sample-<name>`). Monorepo paths removed.
 - No run-time dependency-protocol resolution (KIT-5842 eliminated by publish-time resolution in ADR 002).
 - Download is proportional to the sample, not the monorepo.
