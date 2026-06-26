@@ -7,6 +7,7 @@ import {fileURLToPath} from 'node:url';
 import {argv} from 'node:process';
 import {downloadTemplate} from './download.js';
 import {isEmptyOrMissing} from './fs-utils.js';
+import {promptProjectName, selectTemplate} from './prompt.js';
 import {
   installDependencies,
   moveToTarget,
@@ -156,45 +157,36 @@ export async function main(rawArgs: string[]): Promise<number> {
     return 0;
   }
 
-  // Interactive selection is added in a follow-up PR; for now --template and a
-  // project name are required.
-  if (args.template === undefined) {
-    log.error('Please provide a template with --template (or run --help).');
-    log.info(
-      `\nAvailable templates:\n${getTemplates()
-        .map((t) => `  ${t.name}`)
-        .join('\n')}`
-    );
-    return 1;
+  // Resolve the template: explicit --template (validated) or interactive select.
+  let template: Template;
+  if (args.template !== undefined) {
+    const found = getTemplate(args.template);
+    if (!found) {
+      log.error(`Unknown template "${args.template}".`);
+      log.info(
+        `\nAvailable templates:\n${getTemplates()
+          .map((t) => `  ${t.name}`)
+          .join('\n')}`
+      );
+      return 1;
+    }
+    template = found;
+  } else {
+    template = await selectTemplate();
   }
 
-  const template = getTemplate(args.template);
-  if (!template) {
-    log.error(`Unknown template "${args.template}".`);
-    log.info(
-      `\nAvailable templates:\n${getTemplates()
-        .map((t) => `  ${t.name}`)
-        .join('\n')}`
-    );
-    return 1;
-  }
-  if (!args.projectName) {
-    log.error('Please provide a project name.');
-    log.info(
-      `\nExample: npm create @coveo/ui my-app --template ${template.name}`
-    );
-    return 1;
-  }
+  // Resolve the project name: positional arg or interactive input.
+  const projectName = args.projectName ?? (await promptProjectName());
 
-  const targetDir = resolve(process.cwd(), args.projectName);
+  const targetDir = resolve(process.cwd(), projectName);
   if (!(await isEmptyOrMissing(targetDir))) {
     log.error(
-      `Target directory "${args.projectName}" already exists and is not empty.`
+      `Target directory "${projectName}" already exists and is not empty.`
     );
     return 1;
   }
 
-  await scaffold(template, args.projectName);
+  await scaffold(template, projectName);
   return 0;
 }
 
