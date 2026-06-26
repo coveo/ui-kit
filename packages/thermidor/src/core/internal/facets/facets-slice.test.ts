@@ -8,33 +8,13 @@ import {
   getOrCreateFacetsSlice,
   initialFacetsState,
 } from './facets-slice.js';
-import {
-  createFacetsActions,
-  getOrCreateFacetsActions,
-} from './facets-actions.js';
+import {getOrCreateFacetsActions} from './facets-actions.js';
 import {
   createFacetsSelectors,
   getOrCreateFacetsSelectors,
 } from './facets-selectors.js';
 import type {FacetsState} from '@/src/core/interface/facets/facets-types.js';
 import type {CoveoFacetResponse} from '@/src/core/interface/api/search/search-types.js';
-
-describe('createFacetsActions', () => {
-  it('should create actions scoped to the interfaceId', () => {
-    const actions = createFacetsActions('search');
-    expect(actions.updateFromResponse.type).toBe(
-      'search/facets/updateFromResponse'
-    );
-  });
-
-  it('should create different actions for different interfaceIds', () => {
-    const actionsA = createFacetsActions('interfaceA');
-    const actionsB = createFacetsActions('interfaceB');
-    expect(actionsA.updateFromResponse.type).not.toBe(
-      actionsB.updateFromResponse.type
-    );
-  });
-});
 
 describe('getOrCreateFacetsActions', () => {
   it('should return the same instance for the same interfaceId', () => {

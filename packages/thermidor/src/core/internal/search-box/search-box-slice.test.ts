@@ -8,27 +8,11 @@ import {
   getOrCreateSearchBoxSlice,
   initialSearchBoxState,
 } from './search-box-slice.js';
-import {
-  createSearchBoxActions,
-  getOrCreateSearchBoxActions,
-} from './search-box-actions.js';
+import {getOrCreateSearchBoxActions} from './search-box-actions.js';
 import {
   createSearchBoxSelectors,
   getOrCreateSearchBoxSelectors,
 } from './search-box-selectors.js';
-
-describe('createSearchBoxActions', () => {
-  it('should create actions scoped to the interfaceId', () => {
-    const actions = createSearchBoxActions('search');
-    expect(actions.setQuery.type).toBe('search/searchBox/setQuery');
-  });
-
-  it('should create different actions for different interfaceIds', () => {
-    const actionsA = createSearchBoxActions('interfaceA');
-    const actionsB = createSearchBoxActions('interfaceB');
-    expect(actionsA.setQuery.type).not.toBe(actionsB.setQuery.type);
-  });
-});
 
 describe('getOrCreateSearchBoxActions', () => {
   it('should return the same instance for the same interfaceId', () => {

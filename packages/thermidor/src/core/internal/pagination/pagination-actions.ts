@@ -1,6 +1,6 @@
 import {createAction} from '@reduxjs/toolkit';
 
-export function createPaginationActions(interfaceId: string) {
+function createPaginationActions(interfaceId: string) {
   return {
     setFirstResult: createAction<number>(
       `${interfaceId}/pagination/setFirstResult`

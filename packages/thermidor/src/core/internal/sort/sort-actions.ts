@@ -1,7 +1,7 @@
 import {createAction} from '@reduxjs/toolkit';
 import type {CommerceSearchSort} from '@/src/api/interface/commerce-search-endpoint/commerce-search-endpoint-types.js';
 
-export function createSortActions(interfaceId: string) {
+function createSortActions(interfaceId: string) {
   return {
     updateFromResponse: createAction<CommerceSearchSort | undefined>(
       `${interfaceId}/sort/updateFromResponse`

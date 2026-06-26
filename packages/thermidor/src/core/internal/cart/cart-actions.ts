@@ -1,7 +1,7 @@
 import {createAction} from '@reduxjs/toolkit';
 import type {CartItem} from '@/src/core/interface/cart/cart-types.js';
 
-export function createCartActions(interfaceId: string) {
+function createCartActions(interfaceId: string) {
   return {
     setItems: createAction<CartItem[]>(`${interfaceId}/cart/setItems`),
     updateItemQuantity: createAction<CartItem>(

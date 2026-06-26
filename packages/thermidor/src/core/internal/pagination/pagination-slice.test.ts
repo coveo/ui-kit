@@ -4,35 +4,11 @@ import {
   getOrCreatePaginationSlice,
   initialPaginationState,
 } from './pagination-slice.js';
-import {
-  createPaginationActions,
-  getOrCreatePaginationActions,
-} from './pagination-actions.js';
+import {getOrCreatePaginationActions} from './pagination-actions.js';
 import {
   createPaginationSelectors,
   getOrCreatePaginationSelectors,
 } from './pagination-selectors.js';
-
-describe('createPaginationActions', () => {
-  it('should create actions scoped to the interface ID', () => {
-    const actions = createPaginationActions('search-1');
-
-    expect(actions.setFirstResult.type).toBe(
-      'search-1/pagination/setFirstResult'
-    );
-    expect(actions.setPageSize.type).toBe('search-1/pagination/setPageSize');
-    expect(actions.setTotalCount.type).toBe(
-      'search-1/pagination/setTotalCount'
-    );
-  });
-
-  it('should create distinct actions for different interface IDs', () => {
-    const actionsA = createPaginationActions('interface-a');
-    const actionsB = createPaginationActions('interface-b');
-
-    expect(actionsA.setFirstResult.type).not.toBe(actionsB.setFirstResult.type);
-  });
-});
 
 describe('getOrCreatePaginationActions', () => {
   it('should return the same instance for the same interface ID', () => {

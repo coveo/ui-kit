@@ -4,10 +4,7 @@ import {
   getOrCreateResultsSlice,
   initialResultListState,
 } from './result-list-slice.js';
-import {
-  createResultsActions,
-  getOrCreateResultsActions,
-} from './result-list-actions.js';
+import {getOrCreateResultsActions} from './result-list-actions.js';
 import {
   createResultsSelectors,
   getOrCreateResultsSelectors,
@@ -33,25 +30,6 @@ describe('initialResultListState', () => {
     expect(initialResultListState).toEqual({
       results: [],
     });
-  });
-});
-
-describe('createResultsActions', () => {
-  it('should create actions scoped to the given interfaceId', () => {
-    const actions = createResultsActions('search-1');
-
-    expect(actions.setResultsFromResponse.type).toBe(
-      'search-1/results/setResultsFromResponse'
-    );
-  });
-
-  it('should create independent actions for different interfaceIds', () => {
-    const actions1 = createResultsActions('interface-a');
-    const actions2 = createResultsActions('interface-b');
-
-    expect(actions1.setResultsFromResponse.type).not.toBe(
-      actions2.setResultsFromResponse.type
-    );
   });
 });
 

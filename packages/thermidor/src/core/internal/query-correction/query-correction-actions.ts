@@ -5,7 +5,7 @@ export interface QueryCorrection {
   originalQuery: string;
 }
 
-export function createQueryCorrectionActions(interfaceId: string) {
+function createQueryCorrectionActions(interfaceId: string) {
   return {
     setQueryCorrection: createAction<QueryCorrection | null>(
       `${interfaceId}/queryCorrection/setQueryCorrection`
