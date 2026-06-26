@@ -8,10 +8,7 @@ import {
   initialSearchBoxState,
 } from './search-box-slice.js';
 import {getOrCreateSearchBoxActions} from './search-box-actions.js';
-import {
-  createSearchBoxSelectors,
-  getOrCreateSearchBoxSelectors,
-} from './search-box-selectors.js';
+import {getOrCreateSearchBoxSelectors} from './search-box-selectors.js';
 
 describe('getOrCreateSearchBoxActions', () => {
   it('should return the same instance for the same interfaceId', () => {
@@ -78,21 +75,19 @@ describe('getOrCreateSearchBoxSlice', () => {
   });
 });
 
-describe('createSearchBoxSelectors', () => {
+describe('getOrCreateSearchBoxSelectors', () => {
   it('should return getQuery selector scoped to the interfaceId', () => {
-    const selectors = createSearchBoxSelectors('mySearch');
+    const selectors = getOrCreateSearchBoxSelectors('mySearch');
     const state = {'mySearch/searchBox': {query: 'hello'}};
     expect(selectors.getQuery(state)).toBe('hello');
   });
 
   it('should return initial state when slice is not present', () => {
-    const selectors = createSearchBoxSelectors('missing');
+    const selectors = getOrCreateSearchBoxSelectors('missing');
     const state = {};
     expect(selectors.getQuery(state)).toBe('');
   });
-});
 
-describe('getOrCreateSearchBoxSelectors', () => {
   it('should return the same instance for the same interfaceId', () => {
     const a = getOrCreateSearchBoxSelectors('cached-sel');
     const b = getOrCreateSearchBoxSelectors('cached-sel');

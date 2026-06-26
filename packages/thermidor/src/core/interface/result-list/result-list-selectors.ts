@@ -10,7 +10,4 @@ export const getResults = (interfaceId: string = 'default') => {
   return getOrCreateResultsSelectors(interfaceId).getResults;
 };
 
-export {
-  createResultsSelectors,
-  getOrCreateResultsSelectors,
-} from '@/src/core/internal/result-list/result-list-selectors.js';
+export {getOrCreateResultsSelectors} from '@/src/core/internal/result-list/result-list-selectors.js';

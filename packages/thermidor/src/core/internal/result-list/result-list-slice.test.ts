@@ -4,10 +4,7 @@ import {
   initialResultListState,
 } from './result-list-slice.js';
 import {getOrCreateResultsActions} from './result-list-actions.js';
-import {
-  createResultsSelectors,
-  getOrCreateResultsSelectors,
-} from './result-list-selectors.js';
+import {getOrCreateResultsSelectors} from './result-list-selectors.js';
 import type {CoveoSearchResult} from '@/src/core/interface/api/search/search-types.js';
 
 const mockCoveoResult = (
@@ -165,9 +162,9 @@ describe('getOrCreateResultsSlice', () => {
   });
 });
 
-describe('createResultsSelectors', () => {
+describe('getOrCreateResultsSelectors', () => {
   it('should return initial results when slice is not in state', () => {
-    const selectors = createResultsSelectors('sel-test');
+    const selectors = getOrCreateResultsSelectors('sel-test');
     const state = {};
 
     const results = selectors.getResults(state);
@@ -176,7 +173,7 @@ describe('createResultsSelectors', () => {
   });
 
   it('should return results from scoped state', () => {
-    const selectors = createResultsSelectors('sel-test-2');
+    const selectors = getOrCreateResultsSelectors('sel-test-2');
     const mockResults = [
       {
         uniqueId: '1',
@@ -195,9 +192,7 @@ describe('createResultsSelectors', () => {
 
     expect(results).toEqual(mockResults);
   });
-});
 
-describe('getOrCreateResultsSelectors', () => {
   it('should return the same reference for the same interfaceId', () => {
     const first = getOrCreateResultsSelectors('cached-sel');
     const second = getOrCreateResultsSelectors('cached-sel');

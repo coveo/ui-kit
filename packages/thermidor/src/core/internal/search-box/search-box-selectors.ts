@@ -2,7 +2,7 @@ import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-s
 import {createSelectSlice} from '@/src/core/interface/utils/select-slice.js';
 import {initialSearchBoxState} from './search-box-slice.js';
 
-export function createSearchBoxSelectors(interfaceId: string) {
+function createSearchBoxSelectors(interfaceId: string) {
   const sliceSelector = createSelectSlice(
     interfaceId,
     'searchBox',

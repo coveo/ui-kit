@@ -1,10 +1,10 @@
 import {describe, expect, it} from 'vitest';
-import {createCartSelectors} from '@/src/core/internal/cart/cart-selectors.js';
+import {getOrCreateCartSelectors} from '@/src/core/internal/cart/cart-selectors.js';
 
 const TEST_ID = 'test-interface';
 
-describe('cart selectors', () => {
-  const selectors = createCartSelectors(TEST_ID);
+describe('getOrCreateCartSelectors', () => {
+  const selectors = getOrCreateCartSelectors(TEST_ID);
 
   it('should return empty items when slice is not adopted', () => {
     const state = {};

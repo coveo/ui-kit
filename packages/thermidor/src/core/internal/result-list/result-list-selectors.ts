@@ -2,7 +2,7 @@ import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-s
 import {createSelectSlice} from '@/src/core/interface/utils/select-slice.js';
 import {initialResultListState} from './result-list-slice.js';
 
-export function createResultsSelectors(interfaceId: string) {
+function createResultsSelectors(interfaceId: string) {
   const sliceSelector = createSelectSlice(
     interfaceId,
     'results',
