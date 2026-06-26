@@ -343,7 +343,7 @@ test.describe('atomic-generated-answer', () => {
 
   test.describe('search agent follow-up experience', () => {
     test.describe.configure({mode: 'serial'});
-    const streamingTimeoutMs = 30000;
+    const streamingTimeoutMs = 5000;
 
     test('when the user triggers the initial head answer', async ({
       generatedAnswer,
