@@ -80,6 +80,9 @@ const FOLLOW_UP_INPUT_EXPORT_PARTS = [
   'input-field',
   'submit-button',
   'submit-icon',
+  'input-footer',
+  'validation-message',
+  'character-counter',
 ].join(',');
 
 /**
