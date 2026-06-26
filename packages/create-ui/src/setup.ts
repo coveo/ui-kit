@@ -6,18 +6,13 @@ import {getPackageManager} from './utils.js';
 
 export function toPackageName(projectName: string): string {
   const defaultName = 'my-app';
-  const name =
+  return (
     basename(projectName)
       .trim()
       .toLowerCase()
       .replace(/\s+/g, '-')
-      .replace(/[^a-z0-9._-]/g, '') || defaultName;
-
-  if (!name) {
-    throw new Error(`Invalid project name "${projectName}".`);
-  }
-
-  return name;
+      .replace(/[^a-z0-9._-]/g, '') || defaultName
+  );
 }
 
 export function stripMonorepoFields(
