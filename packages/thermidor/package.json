@@ -1,7 +1,6 @@
 {
   "name": "@coveo/thermidor",
   "version": "0.0.0",
-  "private": true,
   "description": "Experimental package for a unified, framework-agnostic headless engine for search and conversational experiences",
   "license": "Apache-2.0",
   "repository": {
@@ -42,6 +41,9 @@
       "default": "./dist/public/interfaces/search.js"
     },
     "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "build": "tsc --project ./tsconfig.build.json",
