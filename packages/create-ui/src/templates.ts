@@ -7,7 +7,7 @@
  */
 
 // TODO: add ssr library #7854
-export type Library = 'atomic' | 'headless';
+type Library = 'atomic' | 'headless';
 
 export interface Template {
   /** CLI-facing template name passed to `--template`. */
