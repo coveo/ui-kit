@@ -342,10 +342,9 @@ test.describe('atomic-generated-answer', () => {
   });
 
   test.describe('search agent follow-up experience', () => {
-    test.describe.configure({mode: 'serial'});
     const streamingTimeoutMs = 10000;
 
-    test('when the user triggers the initial head answer', async ({
+    test('happy path: head answer, follow-up, and second follow-up', async ({
       generatedAnswer,
     }) => {
       const streamEndPromise =
@@ -353,40 +352,24 @@ test.describe('atomic-generated-answer', () => {
 
       await generatedAnswer.load({story: 'with-agent-id'});
 
-      await test.step('render stream of thought component', async () => {
+      await test.step('generate head answer', async () => {
         await expect(generatedAnswer.streamOfThought).toBeVisible({
           timeout: streamingTimeoutMs,
         });
-      });
-
-      await test.step('render follow-up input with disabled submit button', async () => {
         await expect(generatedAnswer.followUpSubmitButton).toBeDisabled({
           timeout: streamingTimeoutMs,
         });
-      });
-
-      await test.step('render answer and enable submit button', async () => {
         await expect(generatedAnswer.followUpSubmitButton).toBeEnabled({
           timeout: streamingTimeoutMs,
         });
         await expect(generatedAnswer.generatedTexts.first()).toBeVisible();
+        await streamEndPromise;
       });
 
-      await streamEndPromise;
-    });
+      await test.step('generate first follow-up', async () => {
+        await generatedAnswer.followUpInput.fill('What else should I try?');
+        await generatedAnswer.followUpSubmitButton.click();
 
-    test('when the user asks a follow-up question', async ({
-      generatedAnswer,
-    }) => {
-      await generatedAnswer.load({story: 'with-agent-id'});
-      await expect(generatedAnswer.followUpSubmitButton).toBeEnabled({
-        timeout: streamingTimeoutMs,
-      });
-
-      await generatedAnswer.followUpInput.fill('What else should I try?');
-      await generatedAnswer.followUpSubmitButton.click();
-
-      await test.step('render follow-up answer in thread and collapse previous items', async () => {
         await expect(generatedAnswer.threadItems).toHaveCount(2, {
           timeout: streamingTimeoutMs,
         });
@@ -478,31 +461,38 @@ test.describe('atomic-generated-answer', () => {
           generatedAnswer.threadItems.first().locator('[hidden]')
         ).toHaveCount(1);
       });
-    });
 
-    test('when the user asks a third question', async ({generatedAnswer}) => {
-      await generatedAnswer.load({story: 'with-agent-id'});
-      await expect(generatedAnswer.followUpSubmitButton).toBeEnabled({
-        timeout: streamingTimeoutMs,
-      });
+      await test.step('generate second follow-up', async () => {
+        await expect(generatedAnswer.followUpSubmitButton).toBeEnabled({
+          timeout: streamingTimeoutMs,
+        });
+        await generatedAnswer.followUpInput.fill('Second follow-up');
+        await generatedAnswer.followUpSubmitButton.click();
 
-      await generatedAnswer.followUpInput.fill('First follow-up');
-      await generatedAnswer.followUpSubmitButton.click();
-      await expect(generatedAnswer.threadItems).toHaveCount(2, {
-        timeout: streamingTimeoutMs,
-      });
-      await expect(generatedAnswer.followUpSubmitButton).toBeEnabled({
-        timeout: streamingTimeoutMs,
-      });
-
-      await generatedAnswer.followUpInput.fill('Second follow-up');
-      await generatedAnswer.followUpSubmitButton.click();
-
-      await test.step('collapse previous questions and show previous button', async () => {
         await expect(generatedAnswer.threadItems).toHaveCount(1, {
           timeout: streamingTimeoutMs,
         });
         await expect(generatedAnswer.showPreviousButton).toBeVisible();
+      });
+
+      await test.step('like third answer and verify first answer is unaffected', async () => {
+        const thirdAnswerLikeButton = generatedAnswer.threadItems
+          .last()
+          .getByRole('button', {name: /^helpful$/i});
+        await thirdAnswerLikeButton.click();
+        await expect(thirdAnswerLikeButton).toHaveAttribute(
+          'aria-pressed',
+          'true'
+        );
+
+        await generatedAnswer.showPreviousButton.click();
+        const firstAnswerLikeButton = generatedAnswer.threadItems
+          .first()
+          .getByRole('button', {name: /^helpful$/i});
+        await expect(firstAnswerLikeButton).toHaveAttribute(
+          'aria-pressed',
+          'false'
+        );
       });
     });
   });
