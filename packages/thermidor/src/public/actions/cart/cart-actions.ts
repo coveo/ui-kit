@@ -11,6 +11,11 @@ export interface LoadCartActionsOptions {
   interface: Supports<'search'>;
 }
 
+/**
+ * Loads the cart actions for the given interface.
+ * @param options - The options containing the interface handle.
+ * @returns The cart actions: `setItems` and `updateItemQuantity`.
+ */
 export function loadCartActions(options: LoadCartActionsOptions) {
   const {engine, stateId} = getHandleInternals(options.interface);
 

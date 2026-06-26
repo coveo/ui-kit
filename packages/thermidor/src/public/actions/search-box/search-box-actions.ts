@@ -7,6 +7,11 @@ export interface LoadSearchBoxActionsOptions {
   interface: Supports<'search'>;
 }
 
+/**
+ * Loads the search box actions for the given interface.
+ * @param options - The options containing the interface handle.
+ * @returns The search box actions: `setQuery` and `submit`.
+ */
 export function loadSearchBoxActions(options: LoadSearchBoxActionsOptions) {
   const {engine, stateId} = getHandleInternals(options.interface);
 

@@ -63,16 +63,39 @@ export interface SearchBoxControllerOptions {
 }
 
 export interface SearchBoxController extends Controller<SearchBoxControllerState> {
+  /**
+   * Updates the search query.
+   *
+   * @param options - The options for setting the query.
+   */
   setQuery(options: SearchBoxControllerSetQueryOptions): void;
+
+  /**
+   * Executes the search query.
+   */
   submit(): Promise<unknown[]>;
 }
 
 export interface SearchBoxControllerSetQueryOptions {
+  /**
+   * The new search query.
+   */
   query: string;
 }
 
 export interface SearchBoxControllerState {
+  /**
+   * The current search query.
+   */
   query: string;
+
+  /**
+   * Whether a search request is currently in flight.
+   */
   isLoading: boolean;
+
+  /**
+   * The error message from the last failed search request, or null.
+   */
   error: string | null;
 }

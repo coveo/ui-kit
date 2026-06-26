@@ -38,6 +38,12 @@ class CartControllerImpl extends BaseController<CartControllerState> {
   }
 }
 
+/**
+ * Creates a cart controller bound to an interface instance.
+ *
+ * @param options - The controller creation options.
+ * @returns A cart controller.
+ */
 export const buildCartController = (
   options: CartControllerOptions
 ): CartController => new CartControllerImpl(options);

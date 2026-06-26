@@ -7,6 +7,11 @@ export interface LoadSearchParametersActionsOptions {
   interface: Supports<'search'>;
 }
 
+/**
+ * Loads the search parameters actions for the given interface.
+ * @param options - The options containing the interface handle.
+ * @returns The search parameters actions: `setPipeline` and `setConstantQuery`.
+ */
 export function loadSearchParametersActions(
   options: LoadSearchParametersActionsOptions
 ) {
