@@ -12,7 +12,7 @@ export const initialCartState: CartState = {
 const cartKey = (item: CartItem) =>
   `${item.productId},${item.name},${item.price}`;
 
-export function createCartSlice(interfaceId: string) {
+function createCartSlice(interfaceId: string) {
   const actions = getOrCreateCartActions(interfaceId);
   return createSlice({
     name: `${interfaceId}/cart`,

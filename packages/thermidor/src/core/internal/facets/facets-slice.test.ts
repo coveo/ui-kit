@@ -3,11 +3,7 @@
  */
 
 import {describe, it, expect} from 'vitest';
-import {
-  createFacetsSlice,
-  getOrCreateFacetsSlice,
-  initialFacetsState,
-} from './facets-slice.js';
+import {getOrCreateFacetsSlice, initialFacetsState} from './facets-slice.js';
 import {getOrCreateFacetsActions} from './facets-actions.js';
 import {
   createFacetsSelectors,
@@ -30,19 +26,19 @@ describe('getOrCreateFacetsActions', () => {
   });
 });
 
-describe('createFacetsSlice', () => {
+describe('getOrCreateFacetsSlice', () => {
   it('should have empty object as initial state', () => {
     expect(initialFacetsState).toEqual({});
   });
 
   it('should create a slice with scoped name', () => {
-    const slice = createFacetsSlice('myInterface');
+    const slice = getOrCreateFacetsSlice('myInterface');
     expect(slice.name).toBe('myInterface/facets');
   });
 
   it('should update facet values from response', () => {
     const actions = getOrCreateFacetsActions('test-response');
-    const slice = createFacetsSlice('test-response');
+    const slice = getOrCreateFacetsSlice('test-response');
 
     const stateWithFacet: FacetsState = {
       category: {
@@ -77,7 +73,7 @@ describe('createFacetsSlice', () => {
 
   it('should not modify state when response is undefined', () => {
     const actions = getOrCreateFacetsActions('test-undefined');
-    const slice = createFacetsSlice('test-undefined');
+    const slice = getOrCreateFacetsSlice('test-undefined');
 
     const stateWithFacet: FacetsState = {
       category: {
@@ -98,7 +94,7 @@ describe('createFacetsSlice', () => {
 
   it('should ignore response facets that do not exist in state', () => {
     const actions = getOrCreateFacetsActions('test-missing');
-    const slice = createFacetsSlice('test-missing');
+    const slice = getOrCreateFacetsSlice('test-missing');
 
     const response: CoveoFacetResponse[] = [
       {
@@ -118,7 +114,7 @@ describe('createFacetsSlice', () => {
 
   it('should maintain state immutability', () => {
     const actions = getOrCreateFacetsActions('test-immutable');
-    const slice = createFacetsSlice('test-immutable');
+    const slice = getOrCreateFacetsSlice('test-immutable');
 
     const original: FacetsState = {
       category: {
@@ -140,9 +136,7 @@ describe('createFacetsSlice', () => {
     slice.reducer(original, actions.updateFromResponse(response));
     expect(original.category.values).toEqual([]);
   });
-});
 
-describe('getOrCreateFacetsSlice', () => {
   it('should return the same instance for the same interfaceId', () => {
     const a = getOrCreateFacetsSlice('cached-facet-slice');
     const b = getOrCreateFacetsSlice('cached-facet-slice');
@@ -156,7 +150,7 @@ describe('getOrCreateFacetsSlice', () => {
   });
 });
 
-describe('createFacetsSelectors', () => {
+describe('getOrCreateFacetsSelectors', () => {
   it('should build facets request from state', () => {
     const selectors = createFacetsSelectors('myFacets');
     const state = {
@@ -194,9 +188,7 @@ describe('createFacetsSelectors', () => {
     const state = {};
     expect(selectors.buildFacetsRequest(state)).toEqual([]);
   });
-});
 
-describe('getOrCreateFacetsSelectors', () => {
   it('should return the same instance for the same interfaceId', () => {
     const a = getOrCreateFacetsSelectors('cached-facet-sel');
     const b = getOrCreateFacetsSelectors('cached-facet-sel');

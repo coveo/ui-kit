@@ -10,7 +10,7 @@ export const initialQueryCorrectionState: QueryCorrectionState = {
   correction: null,
 };
 
-export function createQueryCorrectionSlice(interfaceId: string) {
+function createQueryCorrectionSlice(interfaceId: string) {
   const actions = getOrCreateQueryCorrectionActions(interfaceId);
 
   return createSlice({

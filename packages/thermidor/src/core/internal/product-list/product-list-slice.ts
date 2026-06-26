@@ -41,7 +41,7 @@ function mapProduct(raw: Record<string, unknown>): Product {
   };
 }
 
-export function createProductListSlice(interfaceId: string) {
+function createProductListSlice(interfaceId: string) {
   const actions = getOrCreateProductListActions(interfaceId);
   const hydrateAction = getOrCreateHydrateFromSnapshotAction(interfaceId);
 

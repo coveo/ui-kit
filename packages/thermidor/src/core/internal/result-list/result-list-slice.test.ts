@@ -1,6 +1,5 @@
 import {describe, it, expect} from 'vitest';
 import {
-  createResultsSlice,
   getOrCreateResultsSlice,
   initialResultListState,
 } from './result-list-slice.js';
@@ -49,15 +48,15 @@ describe('getOrCreateResultsActions', () => {
   });
 });
 
-describe('createResultsSlice', () => {
+describe('getOrCreateResultsSlice', () => {
   it('should create a slice scoped to the interfaceId', () => {
-    const slice = createResultsSlice('my-interface');
+    const slice = getOrCreateResultsSlice('my-interface');
 
     expect(slice.name).toBe('my-interface/results');
   });
 
   it('should handle setResultsFromResponse action', () => {
-    const slice = createResultsSlice('test');
+    const slice = getOrCreateResultsSlice('test');
     const actions = getOrCreateResultsActions('test');
 
     const coveoResults: CoveoSearchResult[] = [
@@ -78,7 +77,7 @@ describe('createResultsSlice', () => {
   });
 
   it('should map CoveoSearchResult fields correctly', () => {
-    const slice = createResultsSlice('map-test');
+    const slice = getOrCreateResultsSlice('map-test');
     const actions = getOrCreateResultsActions('map-test');
 
     const coveoResult = mockCoveoResult({
@@ -110,7 +109,7 @@ describe('createResultsSlice', () => {
   });
 
   it('should replace previous results completely', () => {
-    const slice = createResultsSlice('replace-test');
+    const slice = getOrCreateResultsSlice('replace-test');
     const actions = getOrCreateResultsActions('replace-test');
 
     const oldState = {
@@ -140,7 +139,7 @@ describe('createResultsSlice', () => {
   });
 
   it('should not respond to actions from a different interfaceId', () => {
-    const slice = createResultsSlice('slice-a');
+    const slice = getOrCreateResultsSlice('slice-a');
     const actionsB = getOrCreateResultsActions('slice-b');
 
     const state = slice.reducer(
@@ -150,9 +149,7 @@ describe('createResultsSlice', () => {
 
     expect(state.results).toEqual([]);
   });
-});
 
-describe('getOrCreateResultsSlice', () => {
   it('should return the same reference for the same interfaceId', () => {
     const first = getOrCreateResultsSlice('cached-slice');
     const second = getOrCreateResultsSlice('cached-slice');
