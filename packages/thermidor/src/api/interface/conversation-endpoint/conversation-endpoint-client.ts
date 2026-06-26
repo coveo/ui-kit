@@ -20,7 +20,8 @@ const createCallConversationEndpoint =
       options?: ConversationEndpointCallOptions
     ): Promise<ConversationEndpointClientResult> => {
       try {
-        const {organizationId, accessToken, endpoint} = configuration;
+        const {organizationId, accessToken, endpoint, a2uiVersion} =
+          configuration;
 
         if (!organizationId) {
           return {
@@ -42,11 +43,15 @@ const createCallConversationEndpoint =
           endpoint,
           endpointType: 'admin',
         });
-        const url =
+        let url =
           `${organizationEndpoint}` +
           '/rest/organizations/' +
           `${organizationId}` +
           '/commerce/unstable/agentic/converse';
+
+        if (a2uiVersion) {
+          url += `?a2uiVersion=${a2uiVersion}`;
+        }
 
         const response = await fetch(url, {
           method: 'POST',
@@ -100,6 +105,7 @@ export interface ConversationEndpointClientConfiguration {
   organizationId?: string;
   accessToken?: string;
   endpoint?: string;
+  a2uiVersion?: '0.8' | '0.9';
 }
 
 export interface ConversationEndpointCallOptions {

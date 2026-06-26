@@ -132,4 +132,75 @@ describe('streamSSEResponse', () => {
 
     expect(res.ended).toBe(true);
   });
+
+  describe('v0.9 dynamic translation', () => {
+    it('does not translate when version is not 0.9', () => {
+      const res = createMockResponse();
+      const content =
+        'event:message\ndata: {"type": "ACTIVITY_SNAPSHOT", "content": {"operations": [{"beginRendering": {"surfaceId": "s1", "root": "r1"}}]}}\n\n';
+      streamSSEResponse(res, content, '0.8');
+
+      vi.runAllTimers();
+      expect(res.chunks[0]).toBe(content);
+    });
+
+    it('translates beginRendering to createSurface when version is 0.9', () => {
+      const res = createMockResponse();
+      const content =
+        'event:message\ndata: {"type": "ACTIVITY_SNAPSHOT", "content": {"operations": [{"beginRendering": {"surfaceId": "s1", "root": "r1", "catalogId": "cat1"}}]}}\n\n';
+      streamSSEResponse(res, content, '0.9');
+
+      vi.runAllTimers();
+      const parsed = JSON.parse(
+        res.chunks[0].replace('event:message\ndata: ', '').trim()
+      );
+      expect(parsed.content.operations[0]).toEqual({
+        createSurface: {
+          surfaceId: 's1',
+          catalogId: 'cat1',
+          version: '0.9',
+        },
+      });
+    });
+
+    it('translates surfaceUpdate to updateComponents when version is 0.9', () => {
+      const res = createMockResponse();
+      const content =
+        'event:message\ndata: {"type": "ACTIVITY_SNAPSHOT", "content": {"operations": [{"surfaceUpdate": {"surfaceId": "s1", "components": []}}]}}\n\n';
+      streamSSEResponse(res, content, '0.9');
+
+      vi.runAllTimers();
+      const parsed = JSON.parse(
+        res.chunks[0].replace('event:message\ndata: ', '').trim()
+      );
+      expect(parsed.content.operations[0]).toEqual({
+        updateComponents: {
+          surfaceId: 's1',
+          components: [],
+        },
+      });
+    });
+
+    it('translates dataModelUpdate to updateDataModel when version is 0.9', () => {
+      const res = createMockResponse();
+      const content =
+        'event:message\ndata: {"type": "ACTIVITY_SNAPSHOT", "content": {"operations": [{"dataModelUpdate": {"surfaceId": "s1", "contents": [{"key": "k1", "valueString": "v1"}, {"key": "k2", "valueMap": [{"valueMap": [{"key": "subKey", "valueNumber": 123}]}]}]}}]}}\n\n';
+      streamSSEResponse(res, content, '0.9');
+
+      vi.runAllTimers();
+      const parsed = JSON.parse(
+        res.chunks[0].replace('event:message\ndata: ', '').trim()
+      );
+      expect(parsed.content.operations[0]).toEqual({
+        updateDataModel: {
+          surfaceId: 's1',
+          path: '/',
+          value: {
+            k1: 'v1',
+            k2: [{subKey: 123}],
+          },
+        },
+      });
+    });
+  });
 });

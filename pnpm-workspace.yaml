@@ -36,6 +36,9 @@ packages:
   - utils/ci
 
 catalog:
+  '@a2ui/react': 0.10.1
+  '@a2ui/web_core': 0.10.1
+  zod: 3.25.76
   msw: 2.14.6
   '@angular-devkit/build-angular': 21.2.14
   '@angular/animations': 21.2.17

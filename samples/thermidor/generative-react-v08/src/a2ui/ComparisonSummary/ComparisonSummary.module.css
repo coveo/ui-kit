@@ -1,0 +1,13 @@
+.container {
+  padding: var(--space-4);
+  border-left: 3px solid var(--color-border-active);
+  background: var(--color-bg-secondary);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+
+.text {
+  margin: 0;
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
