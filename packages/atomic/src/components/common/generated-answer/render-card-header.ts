@@ -34,38 +34,41 @@ export const renderCardHeader: FunctionalComponent<RenderCardHeaderProps> = ({
 
   return html` <div
     part="header"
-    class="flex items-center ${isAnswerVisible
-      ? 'border-b-1 border-gray-200'
-      : ''} px-6 py-3"
+    class="flex ${isAnswerVisible ? 'border-b border-gray-200' : ''} px-6 py-3"
   >
-    <atomic-icon
-      part="header-icon"
-      class="text-primary h-4 w-4 fill-current"
-      .icon=${'assets://sparkles.svg'}
-    >
-    </atomic-icon>
-    ${renderHeading({
-      props: {
-        level: 0,
-        part: 'header-label',
-        class: 'text-primary inline-block rounded-md px-2.5 py-2 font-medium',
-      },
-    })(html`${i18n.t('generated-answer-title')}`)}
-    <div class="ml-auto flex h-9 items-center gap-1.5">
+    <div class="flex items-center flex-wrap grow">
+      <atomic-icon
+        part="header-icon"
+        class="text-primary h-4 w-4 fill-current"
+        .icon=${'assets://sparkles.svg'}
+      >
+      </atomic-icon>
+      ${renderHeading({
+        props: {
+          level: 0,
+          part: 'header-label',
+          class:
+            'text-primary inline-block rounded-md px-2.5 py-2 font-medium mr-auto shrink-0',
+        },
+      })(html`${i18n.t('generated-answer-title')}`)}
       ${withDebug && conversationId
         ? renderConversationDebugHeader({props: {i18n, conversationId}})
         : nothing}
-      ${renderSwitch({
-        props: {
-          part: 'toggle',
-          checked: isAnswerVisible,
-          onToggle,
-          ariaLabel: i18n.t('generated-answer-title'),
-          title: toggleTooltip,
-          withToggle,
-          tabIndex: 0,
-        },
-      })}
     </div>
+    ${withToggle
+      ? html`<div class="ml-auto flex h-9 items-center gap-1.5">
+          ${renderSwitch({
+            props: {
+              part: 'toggle',
+              checked: isAnswerVisible,
+              onToggle,
+              ariaLabel: i18n.t('generated-answer-title'),
+              title: toggleTooltip,
+              withToggle,
+              tabIndex: 0,
+            },
+          })}
+        </div>`
+      : nothing}
   </div>`;
 };

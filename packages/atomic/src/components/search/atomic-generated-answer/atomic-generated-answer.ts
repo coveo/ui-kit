@@ -530,7 +530,10 @@ export class AtomicGeneratedAnswer
   }
 
   private get isConversationDebugEnabled() {
-    return this.bindings.engine.state.configuration.knowledge.debugAgentSession;
+    return (
+      this.bindings.engine?.state?.configuration?.knowledge
+        ?.debugAgentSession ?? false
+    );
   }
 
   private get followUpConversationId() {
