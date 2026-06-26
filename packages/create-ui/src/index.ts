@@ -176,7 +176,7 @@ export async function main(rawArgs: string[]): Promise<number> {
   }
 
   // Resolve the project name: positional arg or interactive input.
-  const projectName = args.projectName ?? (await promptProjectName());
+  const projectName = (args.projectName ?? (await promptProjectName())).trim();
 
   const targetDir = resolve(process.cwd(), projectName);
   if (!(await isEmptyOrMissing(targetDir))) {
