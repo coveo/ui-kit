@@ -63,7 +63,8 @@ describe('#renderCardHeader', () => {
       props: expect.objectContaining({
         level: 0,
         part: 'header-label',
-        class: 'text-primary inline-block rounded-md px-2.5 py-2 font-medium',
+        class:
+          'text-primary inline-block rounded-md px-2.5 py-2 font-medium mr-auto shrink-0',
       }),
     });
   });
@@ -87,7 +88,7 @@ describe('#renderCardHeader', () => {
     it('should apply border bottom to the header', async () => {
       const {header} = await renderComponent({isAnswerVisible: true});
 
-      expect(header).toHaveClass('border-b-1', 'border-gray-200');
+      expect(header).toHaveClass('border-b', 'border-gray-200');
     });
   });
 
@@ -95,7 +96,7 @@ describe('#renderCardHeader', () => {
     it('should not apply border bottom to the header', async () => {
       const {header} = await renderComponent({isAnswerVisible: false});
 
-      expect(header).not.toHaveClass('border-b-1', 'border-gray-200');
+      expect(header).not.toHaveClass('border-b', 'border-gray-200');
     });
   });
 
@@ -135,11 +136,11 @@ describe('#renderCardHeader', () => {
     });
 
     it('should pass withToggle prop to renderSwitch', async () => {
-      await renderComponent({withToggle: false});
+      await renderComponent({withToggle: true});
 
       expect(renderSwitch).toHaveBeenCalledWith({
         props: expect.objectContaining({
-          withToggle: false,
+          withToggle: true,
         }),
       });
     });
