@@ -6,6 +6,7 @@
  * registry and extracts it to scaffold a project.
  */
 
+// TODO: add ssr library #7854
 export type Library = 'atomic' | 'headless';
 
 export interface Template {
@@ -20,43 +21,42 @@ export interface Template {
 }
 
 const templates: Template[] = [
-  // TODO: uncomment when the package is published
-  // {
-  //   name: 'atomic-search',
-  //   library: 'atomic',
-  //   description: 'Atomic search UI (vanilla + Vite)',
-  //   packageName: '@coveo/sample-atomic-search',
-  // },
-  // {
-  //   name: 'atomic-commerce',
-  //   library: 'atomic',
-  //   description: 'Atomic commerce UI (vanilla + Vite)',
-  //   packageName: '@coveo/sample-atomic-commerce',
-  // },
-  // {
-  //   name: 'atomic-search-react',
-  //   library: 'atomic',
-  //   description: 'Atomic search UI (React)',
-  //   packageName: '@coveo/sample-atomic-search-react',
-  // },
-  // {
-  //   name: 'atomic-commerce-react',
-  //   library: 'atomic',
-  //   description: 'Atomic commerce UI (React)',
-  //   packageName: '@coveo/sample-atomic-commerce-react',
-  // },
-  // {
-  //   name: 'headless-search',
-  //   library: 'headless',
-  //   description: 'Headless search UI (vanilla + Vite)',
-  //   packageName: '@coveo/sample-headless-search',
-  // },
-  // {
-  //   name: 'headless-commerce',
-  //   library: 'headless',
-  //   description: 'Headless commerce UI (vanilla + Vite)',
-  //   packageName: '@coveo/sample-headless-commerce',
-  // },
+  {
+    name: 'atomic-search',
+    library: 'atomic',
+    description: 'Atomic search UI (vanilla + Vite)',
+    packageName: '@coveo/sample-atomic-search',
+  },
+  {
+    name: 'atomic-commerce',
+    library: 'atomic',
+    description: 'Atomic commerce UI (vanilla + Vite)',
+    packageName: '@coveo/sample-atomic-commerce',
+  },
+  {
+    name: 'atomic-search-react',
+    library: 'atomic',
+    description: 'Atomic search UI (React)',
+    packageName: '@coveo/sample-atomic-search-react',
+  },
+  {
+    name: 'atomic-commerce-react',
+    library: 'atomic',
+    description: 'Atomic commerce UI (React)',
+    packageName: '@coveo/sample-atomic-commerce-react',
+  },
+  {
+    name: 'headless-search',
+    library: 'headless',
+    description: 'Headless search UI (vanilla + Vite)',
+    packageName: '@coveo/sample-headless-search',
+  },
+  {
+    name: 'headless-commerce',
+    library: 'headless',
+    description: 'Headless commerce UI (vanilla + Vite)',
+    packageName: '@coveo/sample-headless-commerce',
+  },
   {
     name: 'headless-search-react',
     library: 'headless',

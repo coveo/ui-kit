@@ -1,15 +1,9 @@
 import {cancel, isCancel, select, text} from '@clack/prompts';
-import {getTemplates, type Library, type Template} from './templates.js';
-
-const LIBRARY_LABELS: Record<Library, string> = {
-  atomic: 'Atomic',
-  headless: 'Headless',
-};
+import {getTemplates, type Template} from './templates.js';
 
 export interface TemplateChoice {
   label: string;
   value: string;
-  hint?: string;
 }
 
 /**
@@ -20,9 +14,8 @@ export function buildTemplateChoices(
   templates: Template[] = getTemplates()
 ): TemplateChoice[] {
   return templates.map((t) => ({
-    label: `${LIBRARY_LABELS[t.library]} — ${t.description}`,
+    label: t.description,
     value: t.name,
-    hint: t.description,
   }));
 }
 

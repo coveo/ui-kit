@@ -22,14 +22,12 @@ describe('buildTemplateChoices', () => {
     const choices = buildTemplateChoices(sample);
     expect(choices).toEqual([
       {
-        label: 'Headless — Headless search UI (React)',
+        label: 'Headless search UI (React)',
         value: 'headless-search-react',
-        hint: 'Headless search UI (React)',
       },
       {
-        label: 'Atomic — Atomic search UI (vanilla + Vite)',
+        label: 'Atomic search UI (vanilla + Vite)',
         value: 'atomic-search',
-        hint: 'Atomic search UI (vanilla + Vite)',
       },
     ]);
   });
