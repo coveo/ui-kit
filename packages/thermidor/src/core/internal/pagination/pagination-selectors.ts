@@ -2,7 +2,7 @@ import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-s
 import {createSelectSlice} from '@/src/core/interface/utils/select-slice.js';
 import {initialPaginationState} from './pagination-slice.js';
 
-export function createPaginationSelectors(interfaceId: string) {
+function createPaginationSelectors(interfaceId: string) {
   const sliceSelector = createSelectSlice(
     interfaceId,
     'pagination',

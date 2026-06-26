@@ -4,10 +4,7 @@ import {
   initialPaginationState,
 } from './pagination-slice.js';
 import {getOrCreatePaginationActions} from './pagination-actions.js';
-import {
-  createPaginationSelectors,
-  getOrCreatePaginationSelectors,
-} from './pagination-selectors.js';
+import {getOrCreatePaginationSelectors} from './pagination-selectors.js';
 
 describe('getOrCreatePaginationActions', () => {
   it('should return the same instance for the same interface ID', () => {
@@ -121,7 +118,7 @@ describe('getOrCreatePaginationSlice', () => {
 
 describe('getOrCreatePaginationSelectors', () => {
   it('should read firstResult from scoped state', () => {
-    const selectors = createPaginationSelectors('sel-test');
+    const selectors = getOrCreatePaginationSelectors('sel-test');
     const state = {
       'sel-test/pagination': {firstResult: 30, pageSize: 10, totalCount: 100},
     };
@@ -130,7 +127,7 @@ describe('getOrCreatePaginationSelectors', () => {
   });
 
   it('should read pageSize from scoped state', () => {
-    const selectors = createPaginationSelectors('sel-test-2');
+    const selectors = getOrCreatePaginationSelectors('sel-test-2');
     const state = {
       'sel-test-2/pagination': {firstResult: 0, pageSize: 25, totalCount: 50},
     };
@@ -139,7 +136,7 @@ describe('getOrCreatePaginationSelectors', () => {
   });
 
   it('should read totalCount from scoped state', () => {
-    const selectors = createPaginationSelectors('sel-test-3');
+    const selectors = getOrCreatePaginationSelectors('sel-test-3');
     const state = {
       'sel-test-3/pagination': {firstResult: 0, pageSize: 10, totalCount: 200},
     };
@@ -148,7 +145,7 @@ describe('getOrCreatePaginationSelectors', () => {
   });
 
   it('should fall back to initial state when slice is not present', () => {
-    const selectors = createPaginationSelectors('missing-slice');
+    const selectors = getOrCreatePaginationSelectors('missing-slice');
     const state = {};
 
     expect(selectors.getFirstResult(state)).toBe(0);

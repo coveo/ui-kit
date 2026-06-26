@@ -52,7 +52,7 @@ export function getOrCreateSearchEndpointSlice(
   return sliceCache.get(interfaceId)!;
 }
 
-export function createSearchEndpointSelectors(interfaceId: string) {
+function createSearchEndpointSelectors(interfaceId: string) {
   const sliceSelector = createSelectSlice(
     interfaceId,
     'searchEndpoint',

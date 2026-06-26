@@ -5,10 +5,7 @@
 import {describe, it, expect} from 'vitest';
 import {getOrCreateFacetsSlice, initialFacetsState} from './facets-slice.js';
 import {getOrCreateFacetsActions} from './facets-actions.js';
-import {
-  createFacetsSelectors,
-  getOrCreateFacetsSelectors,
-} from './facets-selectors.js';
+import {getOrCreateFacetsSelectors} from './facets-selectors.js';
 import type {FacetsState} from '@/src/core/interface/facets/facets-types.js';
 import type {CoveoFacetResponse} from '@/src/core/interface/api/search/search-types.js';
 
@@ -152,7 +149,7 @@ describe('getOrCreateFacetsSlice', () => {
 
 describe('getOrCreateFacetsSelectors', () => {
   it('should build facets request from state', () => {
-    const selectors = createFacetsSelectors('myFacets');
+    const selectors = getOrCreateFacetsSelectors('myFacets');
     const state = {
       'myFacets/facets': {
         category: {
@@ -178,13 +175,13 @@ describe('getOrCreateFacetsSelectors', () => {
   });
 
   it('should return empty array when no facets exist', () => {
-    const selectors = createFacetsSelectors('emptyFacets');
+    const selectors = getOrCreateFacetsSelectors('emptyFacets');
     const state = {'emptyFacets/facets': {} as FacetsState};
     expect(selectors.buildFacetsRequest(state)).toEqual([]);
   });
 
   it('should return initial state when slice is not present', () => {
-    const selectors = createFacetsSelectors('missing');
+    const selectors = getOrCreateFacetsSelectors('missing');
     const state = {};
     expect(selectors.buildFacetsRequest(state)).toEqual([]);
   });

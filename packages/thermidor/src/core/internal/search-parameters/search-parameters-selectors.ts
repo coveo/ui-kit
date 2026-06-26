@@ -2,7 +2,7 @@ import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-s
 import {createSelectSlice} from '@/src/core/interface/utils/select-slice.js';
 import {initialSearchParametersState} from './search-parameters-slice.js';
 
-export function createSearchParametersSelectors(interfaceId: string) {
+function createSearchParametersSelectors(interfaceId: string) {
   const sliceSelector = createSelectSlice(
     interfaceId,
     'searchParameters',
