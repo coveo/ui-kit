@@ -39,8 +39,6 @@ Atomic and vanilla templates are added as their samples become scaffold-ready.
 
 ## How it works
 
-The CLI downloads the matching sample directory from the `coveo/ui-kit` `main`
-branch (via GitHub tarball), rewrites the sample's `package.json` so its
-monorepo-only `catalog:` and `workspace:*` dependencies resolve to concrete
-published versions, renames the project, and installs dependencies with the
-package manager you invoked it with.
+The CLI downloads the matching sample package from npm (via
+[pacote](https://github.com/npm/pacote)), renames the project, and installs
+dependencies with the package manager you invoked it with.
