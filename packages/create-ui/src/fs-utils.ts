@@ -7,8 +7,11 @@ import {access, readdir} from 'node:fs/promises';
 export async function isEmptyOrMissing(dir: string): Promise<boolean> {
   try {
     return (await readdir(dir)).length === 0;
-  } catch {
-    return true;
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+      return true;
+    }
+    throw error;
   }
 }
 
