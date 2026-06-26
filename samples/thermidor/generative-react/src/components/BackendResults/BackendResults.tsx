@@ -43,7 +43,9 @@ export function BackendResults() {
     });
   }, [engine, stateId]);
 
-  const firstInterfaceId = Object.keys(interfaces)[0];
+  const firstInterfaceId = Object.keys(interfaces).find(
+    (id) => interfaces[id]?.display === 'main'
+  );
 
   useEffect(() => {
     if (

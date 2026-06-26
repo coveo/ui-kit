@@ -23,4 +23,8 @@ export interface ConfigurationState {
   currency: string;
   /** Optional API endpoint URL */
   endpoint?: string;
+  /** Optional agent runtime name override */
+  agentRuntimeName?: string;
+  /** Optional agent runtime qualifier override */
+  agentRuntimeQualifier?: string;
 }

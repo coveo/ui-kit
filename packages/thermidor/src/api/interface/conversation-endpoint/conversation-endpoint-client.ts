@@ -57,6 +57,15 @@ const createCallConversationEndpoint =
             Accept: 'text/event-stream',
             Authorization: `Bearer ${accessToken}`,
             'X-Coveo-Feature-Flags-Overrides': featureFlagOverridesHeaderValue,
+            ...(configuration.agentRuntimeName
+              ? {'x-coveo-agent-runtime-name': configuration.agentRuntimeName}
+              : {}),
+            ...(configuration.agentRuntimeQualifier
+              ? {
+                  'x-coveo-agent-runtime-qualifier':
+                    configuration.agentRuntimeQualifier,
+                }
+              : {}),
           },
         });
 
@@ -100,6 +109,8 @@ export interface ConversationEndpointClientConfiguration {
   organizationId?: string;
   accessToken?: string;
   endpoint?: string;
+  agentRuntimeName?: string;
+  agentRuntimeQualifier?: string;
 }
 
 export interface ConversationEndpointCallOptions {

@@ -39,6 +39,14 @@ export const readEndpointClientConfiguration = (
       reader,
       configurationSlice.selectors.endpoint
     ),
+    agentRuntimeName: readConfigurationSelector(
+      reader,
+      configurationSlice.selectors.agentRuntimeName
+    ),
+    agentRuntimeQualifier: readConfigurationSelector(
+      reader,
+      configurationSlice.selectors.agentRuntimeQualifier
+    ),
   };
 };
 

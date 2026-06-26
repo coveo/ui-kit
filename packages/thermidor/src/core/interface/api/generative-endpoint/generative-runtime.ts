@@ -60,6 +60,8 @@ export class GenerativeRuntime {
   private statePort: GenerativeStatePort;
   private agentResponseInitialized = new Set<string>();
   private currentPrompt: string | undefined;
+  private conversationSessionId: string | undefined;
+  private conversationToken: string | undefined;
   private buildRequest: ReturnType<
     typeof createConversationEndpointRequestSelector
   >;
@@ -139,6 +141,8 @@ export class GenerativeRuntime {
         currency: requestFromState.currency,
         message: requestFromState.message,
         clientId: navigatorContext?.clientId ?? undefined,
+        conversationSessionId: this.conversationSessionId,
+        conversationToken: this.conversationToken,
         context: {
           user: {
             userAgent: navigatorContext?.userAgent ?? null,
@@ -183,6 +187,8 @@ export class GenerativeRuntime {
         country: requestFromState.country,
         currency: requestFromState.currency,
         clientId: navigatorContext?.clientId ?? undefined,
+        conversationSessionId: this.conversationSessionId,
+        conversationToken: this.conversationToken,
         action,
         context: {
           user: {
@@ -251,6 +257,12 @@ export class GenerativeRuntime {
   ): {turnId: string; isTerminal: boolean} {
     switch (event.type) {
       case 'turn_started': {
+        if (event.conversationSessionId) {
+          this.conversationSessionId = event.conversationSessionId;
+        }
+        if (event.conversationToken) {
+          this.conversationToken = event.conversationToken;
+        }
         return {turnId, isTerminal: false};
       }
 
