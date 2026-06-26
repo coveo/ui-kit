@@ -6,17 +6,8 @@
  * registry and extracts it to scaffold a project.
  */
 
-/**
- * Coveo UI library a template is built on. The interactive prompt first asks
- * for a library, then for a template within it.
- *
- * `headless-ssr` is reserved for the upcoming server-side-rendering samples
- * (#7854): its metadata and ordering are already wired up, so shipping them
- * later only requires adding entries to `templates` below.
- */
 export type Library = 'atomic' | 'headless' | 'headless-ssr';
 
-/** Display metadata for a library, shown when picking one in the prompt. */
 export interface LibraryInfo {
   /** Human-readable name, e.g. "Atomic". */
   label: string;
@@ -24,7 +15,6 @@ export interface LibraryInfo {
   hint: string;
 }
 
-/** Per-library display metadata, keyed by {@link Library}. */
 export const LIBRARIES: Record<Library, LibraryInfo> = {
   atomic: {
     label: 'Atomic',
@@ -40,7 +30,6 @@ export const LIBRARIES: Record<Library, LibraryInfo> = {
   },
 };
 
-/** Order in which libraries are offered. */
 export const LIBRARY_ORDER: readonly Library[] = [
   'atomic',
   'headless',

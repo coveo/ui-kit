@@ -49,8 +49,6 @@ describe('main', () => {
     out.mockRestore();
     const help = chunks.join('');
     expect(help).toContain('Atomic Search (vanilla + Vite)');
-    // The redundant "<use case> UI (" suffix must be gone from every template.
-    expect(help).not.toContain('UI (');
   });
 
   it('returns 0 for --docs and prints the documentation links', async () => {

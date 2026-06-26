@@ -69,7 +69,6 @@ export async function selectTemplate(): Promise<Template> {
   return template;
 }
 
-/** Prompts for a project name, defaulting to a sensible value. */
 export async function promptProjectName(
   defaultName = 'my-coveo-app'
 ): Promise<string> {
