@@ -292,9 +292,11 @@ describe('atomic-generated-answer', () => {
     const renderGeneratedAnswerWithCustomMessage = async ({
       props = {},
       generatedAnswerState = {},
+      searchStatusState = {},
     }: {
       props?: Partial<AtomicGeneratedAnswer>;
       generatedAnswerState?: Partial<GeneratedAnswerState>;
+      searchStatusState?: {hasError?: boolean; firstSearchExecuted?: boolean};
     } = {}) => {
       mockedGeneratedAnswer = buildFakeGeneratedAnswer({
         answer: undefined,
@@ -309,6 +311,7 @@ describe('atomic-generated-answer', () => {
         firstSearchExecuted: true,
         isLoading: false,
         hasResults: true,
+        ...searchStatusState,
       });
 
       mockedTabManager = buildFakeTabManager({
@@ -460,6 +463,13 @@ describe('atomic-generated-answer', () => {
       expect(generatedContainer).toContainElement(
         customMessageSlot as HTMLElement
       );
+    });
+
+    it('should not render the custom no-answer message before first search is executed', async () => {
+      const {container} = await renderGeneratedAnswerWithCustomMessage({
+        searchStatusState: {firstSearchExecuted: false},
+      });
+      expect(container).not.toBeInTheDocument();
     });
   });
 

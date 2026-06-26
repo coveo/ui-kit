@@ -419,6 +419,7 @@ export class AtomicGeneratedAnswer
 
     if (this.hasNoAnswerGenerated) {
       if (
+        this.searchStatusState?.firstSearchExecuted &&
         this.generatedAnswerState?.cannotAnswer &&
         this.hasCustomNoAnswerMessage
       ) {
