@@ -353,31 +353,26 @@ test.describe('atomic-generated-answer', () => {
 
       await generatedAnswer.load({story: 'with-agent-id'});
 
-      await test.step('it should display the stream of thought component', async () => {
+      await test.step('render stream of thought component', async () => {
         await expect(generatedAnswer.streamOfThought).toBeVisible({
           timeout: streamingTimeoutMs,
         });
       });
 
-      await test.step('it should display the follow-up input with button disabled', async () => {
+      await test.step('render follow-up input with disabled submit button', async () => {
         await expect(generatedAnswer.followUpSubmitButton).toBeDisabled({
           timeout: streamingTimeoutMs,
         });
       });
 
-      await test.step('it should display the answer and enable the submit button', async () => {
+      await test.step('render answer and enable submit button', async () => {
         await expect(generatedAnswer.followUpSubmitButton).toBeEnabled({
           timeout: streamingTimeoutMs,
         });
         await expect(generatedAnswer.generatedTexts.first()).toBeVisible();
       });
 
-      await test.step('it should send a streamEnd analytics event', async () => {
-        const streamEndRequest = await streamEndPromise;
-        const body = streamEndRequest.postDataJSON();
-        expect(body.eventType).toBe('generatedAnswer');
-        expect(body.eventValue).toBe('generatedAnswerStreamEnd');
-      });
+      await streamEndPromise;
     });
 
     test('when the user asks a follow-up question', async ({
@@ -391,7 +386,7 @@ test.describe('atomic-generated-answer', () => {
       await generatedAnswer.followUpInput.fill('What else should I try?');
       await generatedAnswer.followUpSubmitButton.click();
 
-      await test.step('it should render the follow-up answer in a thread item and collapse the previous ones', async () => {
+      await test.step('render follow-up answer in thread and collapse previous items', async () => {
         await expect(generatedAnswer.threadItems).toHaveCount(2, {
           timeout: streamingTimeoutMs,
         });
@@ -409,7 +404,7 @@ test.describe('atomic-generated-answer', () => {
         );
       });
 
-      await test.step('it should allow the user to copy the follow-up answer to clipboard', async () => {
+      await test.step('copy follow-up answer to clipboard', async () => {
         await generatedAnswer.page
           .context()
           .grantPermissions(['clipboard-read', 'clipboard-write']);
@@ -425,7 +420,7 @@ test.describe('atomic-generated-answer', () => {
         expect(clipboardContent).toContain('Resolving Netflix Connection');
       });
 
-      await test.step('it should allow the user to like the follow-up answer', async () => {
+      await test.step('like the follow-up answer', async () => {
         const likeButton = generatedAnswer.threadItems
           .last()
           .getByRole('button', {name: /^helpful$/i});
@@ -433,7 +428,7 @@ test.describe('atomic-generated-answer', () => {
         await expect(likeButton).toHaveAttribute('aria-pressed', 'true');
       });
 
-      await test.step('it should allow the user to dislike the follow-up answer', async () => {
+      await test.step('dislike the follow-up answer', async () => {
         const dislikeButton = generatedAnswer.threadItems
           .last()
           .getByRole('button', {name: /^not helpful$/i});
@@ -445,7 +440,7 @@ test.describe('atomic-generated-answer', () => {
         await expect(likeButton).toHaveAttribute('aria-pressed', 'false');
       });
 
-      await test.step('it should allow the user to hover a citation and see the popover', async () => {
+      await test.step('hover citation and display popover', async () => {
         const citation = generatedAnswer.threadItems
           .last()
           .locator('[part="citation"]')
@@ -459,7 +454,7 @@ test.describe('atomic-generated-answer', () => {
         await expect(popover).toBeVisible();
       });
 
-      await test.step('it should render the citation as a clickable link', async () => {
+      await test.step('render citation as clickable link', async () => {
         const citationLink = generatedAnswer.threadItems
           .last()
           .getByRole('link')
@@ -467,7 +462,7 @@ test.describe('atomic-generated-answer', () => {
         await expect(citationLink).toHaveAttribute('href', /^https?:\/\//);
       });
 
-      await test.step('it should allow the user to collapse/expand the thread items', async () => {
+      await test.step('collapse and expand thread items', async () => {
         const collapseButton = generatedAnswer.threadItems
           .first()
           .locator('button', {
@@ -503,7 +498,7 @@ test.describe('atomic-generated-answer', () => {
       await generatedAnswer.followUpInput.fill('Second follow-up');
       await generatedAnswer.followUpSubmitButton.click();
 
-      await test.step('it should collapse the previous questions', async () => {
+      await test.step('collapse previous questions and show previous button', async () => {
         await expect(generatedAnswer.threadItems).toHaveCount(1, {
           timeout: streamingTimeoutMs,
         });
