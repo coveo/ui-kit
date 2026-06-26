@@ -10,6 +10,7 @@ Samples live in the `coveo/ui-kit` monorepo and use `workspace:*` / `catalog:` p
 The previous design downloaded the monorepo source tarball from GitHub and resolved protocols at run time on the user's machine. The team reversed this: **publish samples to npm at release time**.
 
 Why:
+
 - **Immutable.** npm versions cannot be re-published. Git tags can be force-moved.
 - **No rate limiting.** npm is CDN-backed. GitHub REST API caps at 60 req/hr/IP unauthenticated.
 - **Smaller download.** One sample package (~50 KB) vs. the entire monorepo tarball (~4.5 MB).
@@ -31,6 +32,7 @@ Samples are published from a release commit — a workspace-consistent snapshot 
 ### 3. Reuse the existing changesets release pipeline
 
 To make a sample publishable:
+
 - Remove `"private": true`
 - Add `"name": "@coveo/sample-<name>"`, `publishConfig.access: "public"`, `files` allowlist
 - Include it in changesets

@@ -17,16 +17,17 @@ Templates update without a CLI release. Bundling couples them.
 
 The CLI resolves the sample package from the npm registry directly (not GitHub).
 
-| Criterion | npm | GitHub source tarball (rejected) |
-|-----------|-----|----------------------------------|
-| Immutability | Published versions are immutable + integrity-hashed | Git tags are mutable |
-| Rate limiting | None (CDN-backed) | 60 req/hr/IP unauthenticated |
-| Download size | ~50 KB (just the sample) | ~4.5 MB (whole monorepo) |
-| Corporate proxies | Respects `.npmrc` registry config | Requires GitHub access |
+| Criterion         | npm                                                 | GitHub source tarball (rejected) |
+| ----------------- | --------------------------------------------------- | -------------------------------- |
+| Immutability      | Published versions are immutable + integrity-hashed | Git tags are mutable             |
+| Rate limiting     | None (CDN-backed)                                   | 60 req/hr/IP unauthenticated     |
+| Download size     | ~50 KB (just the sample)                            | ~4.5 MB (whole monorepo)         |
+| Corporate proxies | Respects `.npmrc` registry config                   | Requires GitHub access           |
 
 Resolution: `GET https://registry.npmjs.org/@coveo/sample-<name>/latest` → use `dist.tarball` and `dist.integrity` from the response.
 
 Rejected alternatives:
+
 - **Shell out to `npm pack`** — heavier, requires `npm` on PATH.
 - **GitHub release asset** — mutable, not registry-versioned, requires custom resolution logic.
 
@@ -44,13 +45,13 @@ Provides `--help`, validation, and error messages out of the box with zero runti
 
 ### 6. Supporting stack
 
-| Concern | Choice | Rationale |
-|---------|--------|-----------|
-| Tar extraction | `tar` (npm) | Streaming extract with `strip: 1` for npm tarball's `package/` prefix |
-| HTTP | Node built-in `fetch` | Two requests total (metadata + tarball); no third-party client needed |
-| Integrity (TBD) | Node built-in `crypto` | Standard library, no dependency |
-| Tests | `vitest` | Monorepo standard |
-| Build | `tsc` | Node CLI; bundler adds nothing |
+| Concern         | Choice                 | Rationale                                                             |
+| --------------- | ---------------------- | --------------------------------------------------------------------- |
+| Tar extraction  | `tar` (npm)            | Streaming extract with `strip: 1` for npm tarball's `package/` prefix |
+| HTTP            | Node built-in `fetch`  | Two requests total (metadata + tarball); no third-party client needed |
+| Integrity (TBD) | Node built-in `crypto` | Standard library, no dependency                                       |
+| Tests           | `vitest`               | Monorepo standard                                                     |
+| Build           | `tsc`                  | Node CLI; bundler adds nothing                                        |
 
 ### 7. Interactive selection: `@clack/prompts` (planned)
 
