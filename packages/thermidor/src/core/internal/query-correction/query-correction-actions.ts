@@ -1,4 +1,5 @@
 import {createAction} from '@reduxjs/toolkit';
+import {SingletonFactory} from '@/src/core/internal/singleton-factory/singleton-factory.js';
 
 export interface QueryCorrection {
   correctedQuery: string;
@@ -13,13 +14,6 @@ export function createQueryCorrectionActions(interfaceId: string) {
   };
 }
 
-const actionsCache = new Map<
-  string,
-  ReturnType<typeof createQueryCorrectionActions>
->();
-export function getOrCreateQueryCorrectionActions(interfaceId: string) {
-  if (!actionsCache.has(interfaceId)) {
-    actionsCache.set(interfaceId, createQueryCorrectionActions(interfaceId));
-  }
-  return actionsCache.get(interfaceId)!;
-}
+export const getOrCreateQueryCorrectionActions = SingletonFactory(
+  createQueryCorrectionActions
+);

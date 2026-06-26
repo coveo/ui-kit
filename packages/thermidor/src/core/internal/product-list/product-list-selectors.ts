@@ -1,5 +1,6 @@
 import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
 import {createSelectSlice} from '@/src/core/interface/utils/select-slice.js';
+import {SingletonFactory} from '@/src/core/internal/singleton-factory/singleton-factory.js';
 import {initialProductListState} from './product-list-slice.js';
 import type {Product} from '@/src/core/interface/product-list/product-list-types.js';
 
@@ -18,14 +19,6 @@ export function createProductListSelectors(interfaceId: string) {
   };
 }
 
-const selectorsCache = new Map<
-  string,
-  ReturnType<typeof createProductListSelectors>
->();
-
-export function getOrCreateProductListSelectors(interfaceId: string) {
-  if (!selectorsCache.has(interfaceId)) {
-    selectorsCache.set(interfaceId, createProductListSelectors(interfaceId));
-  }
-  return selectorsCache.get(interfaceId)!;
-}
+export const getOrCreateProductListSelectors = SingletonFactory(
+  createProductListSelectors
+);

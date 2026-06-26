@@ -1,6 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
 import {createSelectSlice} from '@/src/core/interface/utils/select-slice.js';
+import {SingletonFactory} from '@/src/core/internal/singleton-factory/singleton-factory.js';
 import type {EndpointThunk} from '@/src/core/interface/utils/interface-types.js';
 
 export interface CommerceSearchEndpointThunkState {
@@ -74,18 +75,6 @@ export function createCommerceSearchEndpointSelectors(interfaceId: string) {
   };
 }
 
-const selectorsCache = new Map<
-  string,
-  ReturnType<typeof createCommerceSearchEndpointSelectors>
->();
-export function getOrCreateCommerceSearchEndpointSelectors(
-  interfaceId: string
-) {
-  if (!selectorsCache.has(interfaceId)) {
-    selectorsCache.set(
-      interfaceId,
-      createCommerceSearchEndpointSelectors(interfaceId)
-    );
-  }
-  return selectorsCache.get(interfaceId)!;
-}
+export const getOrCreateCommerceSearchEndpointSelectors = SingletonFactory(
+  createCommerceSearchEndpointSelectors
+);

@@ -1,4 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
+import {SingletonFactory} from '@/src/core/internal/singleton-factory/singleton-factory.js';
 import {getOrCreateQueryCorrectionActions} from './query-correction-actions.js';
 import type {QueryCorrection} from './query-correction-actions.js';
 
@@ -25,13 +26,6 @@ export function createQueryCorrectionSlice(interfaceId: string) {
   });
 }
 
-const sliceCache = new Map<
-  string,
-  ReturnType<typeof createQueryCorrectionSlice>
->();
-export function getOrCreateQueryCorrectionSlice(interfaceId: string) {
-  if (!sliceCache.has(interfaceId)) {
-    sliceCache.set(interfaceId, createQueryCorrectionSlice(interfaceId));
-  }
-  return sliceCache.get(interfaceId)!;
-}
+export const getOrCreateQueryCorrectionSlice = SingletonFactory(
+  createQueryCorrectionSlice
+);

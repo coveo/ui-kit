@@ -1,4 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
+import {SingletonFactory} from '@/src/core/internal/singleton-factory/singleton-factory.js';
 import type {FacetsState} from '@/src/core/interface/facets/facets-types.js';
 import {getOrCreateFacetsActions} from './facets-actions.js';
 import {getOrCreateHydrateFromSnapshotAction} from '@/src/core/interface/generative/generative-hydration.js';
@@ -83,10 +84,4 @@ export function createFacetsSlice(interfaceId: string) {
   });
 }
 
-const sliceCache = new Map<string, ReturnType<typeof createFacetsSlice>>();
-export function getOrCreateFacetsSlice(interfaceId: string) {
-  if (!sliceCache.has(interfaceId)) {
-    sliceCache.set(interfaceId, createFacetsSlice(interfaceId));
-  }
-  return sliceCache.get(interfaceId)!;
-}
+export const getOrCreateFacetsSlice = SingletonFactory(createFacetsSlice);

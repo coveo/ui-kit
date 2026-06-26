@@ -1,4 +1,5 @@
 import {createAction} from '@reduxjs/toolkit';
+import {SingletonFactory} from '@/src/core/internal/singleton-factory/singleton-factory.js';
 import type {
   A2UISurface,
   RoutedInterface,
@@ -56,14 +57,6 @@ export function createGenerativeActions(interfaceId: string) {
   };
 }
 
-const actionsCache = new Map<
-  string,
-  ReturnType<typeof createGenerativeActions>
->();
-
-export function getOrCreateGenerativeActions(interfaceId: string) {
-  if (!actionsCache.has(interfaceId)) {
-    actionsCache.set(interfaceId, createGenerativeActions(interfaceId));
-  }
-  return actionsCache.get(interfaceId)!;
-}
+export const getOrCreateGenerativeActions = SingletonFactory(
+  createGenerativeActions
+);

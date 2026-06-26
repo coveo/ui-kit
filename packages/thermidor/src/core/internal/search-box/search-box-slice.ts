@@ -1,4 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
+import {SingletonFactory} from '@/src/core/internal/singleton-factory/singleton-factory.js';
 import {getOrCreateSearchBoxActions} from './search-box-actions.js';
 
 export interface SearchBoxState {
@@ -23,10 +24,4 @@ export function createSearchBoxSlice(interfaceId: string) {
   });
 }
 
-const sliceCache = new Map<string, ReturnType<typeof createSearchBoxSlice>>();
-export function getOrCreateSearchBoxSlice(interfaceId: string) {
-  if (!sliceCache.has(interfaceId)) {
-    sliceCache.set(interfaceId, createSearchBoxSlice(interfaceId));
-  }
-  return sliceCache.get(interfaceId)!;
-}
+export const getOrCreateSearchBoxSlice = SingletonFactory(createSearchBoxSlice);

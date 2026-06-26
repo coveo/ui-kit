@@ -1,4 +1,5 @@
 import {createAction} from '@reduxjs/toolkit';
+import {SingletonFactory} from '@/src/core/internal/singleton-factory/singleton-factory.js';
 
 export function createPaginationActions(interfaceId: string) {
   return {
@@ -12,13 +13,6 @@ export function createPaginationActions(interfaceId: string) {
   };
 }
 
-const actionsCache = new Map<
-  string,
-  ReturnType<typeof createPaginationActions>
->();
-export function getOrCreatePaginationActions(interfaceId: string) {
-  if (!actionsCache.has(interfaceId)) {
-    actionsCache.set(interfaceId, createPaginationActions(interfaceId));
-  }
-  return actionsCache.get(interfaceId)!;
-}
+export const getOrCreatePaginationActions = SingletonFactory(
+  createPaginationActions
+);

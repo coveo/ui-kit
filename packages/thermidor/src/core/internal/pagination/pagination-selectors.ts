@@ -1,5 +1,6 @@
 import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
 import {createSelectSlice} from '@/src/core/interface/utils/select-slice.js';
+import {SingletonFactory} from '@/src/core/internal/singleton-factory/singleton-factory.js';
 import {initialPaginationState} from './pagination-slice.js';
 
 export function createPaginationSelectors(interfaceId: string) {
@@ -27,13 +28,6 @@ export function createPaginationSelectors(interfaceId: string) {
   };
 }
 
-const selectorsCache = new Map<
-  string,
-  ReturnType<typeof createPaginationSelectors>
->();
-export function getOrCreatePaginationSelectors(interfaceId: string) {
-  if (!selectorsCache.has(interfaceId)) {
-    selectorsCache.set(interfaceId, createPaginationSelectors(interfaceId));
-  }
-  return selectorsCache.get(interfaceId)!;
-}
+export const getOrCreatePaginationSelectors = SingletonFactory(
+  createPaginationSelectors
+);

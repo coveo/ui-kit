@@ -3,6 +3,7 @@ import type {
   Product,
   ProductListState,
 } from '@/src/core/interface/product-list/product-list-types.js';
+import {SingletonFactory} from '@/src/core/internal/singleton-factory/singleton-factory.js';
 import {getOrCreateProductListActions} from './product-list-actions.js';
 import {getOrCreateHydrateFromSnapshotAction} from '@/src/core/interface/generative/generative-hydration.js';
 
@@ -68,10 +69,6 @@ export function createProductListSlice(interfaceId: string) {
   });
 }
 
-const sliceCache = new Map<string, ReturnType<typeof createProductListSlice>>();
-export function getOrCreateProductListSlice(interfaceId: string) {
-  if (!sliceCache.has(interfaceId)) {
-    sliceCache.set(interfaceId, createProductListSlice(interfaceId));
-  }
-  return sliceCache.get(interfaceId)!;
-}
+export const getOrCreateProductListSlice = SingletonFactory(
+  createProductListSlice
+);

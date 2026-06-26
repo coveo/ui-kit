@@ -1,5 +1,6 @@
 import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
 import {createSelectSlice} from '@/src/core/interface/utils/select-slice.js';
+import {SingletonFactory} from '@/src/core/internal/singleton-factory/singleton-factory.js';
 import {initialFacetsState} from './facets-slice.js';
 import type {FacetsState} from '@/src/core/interface/facets/facets-types.js';
 
@@ -22,13 +23,6 @@ export function createFacetsSelectors(interfaceId: string) {
   };
 }
 
-const selectorsCache = new Map<
-  string,
-  ReturnType<typeof createFacetsSelectors>
->();
-export function getOrCreateFacetsSelectors(interfaceId: string) {
-  if (!selectorsCache.has(interfaceId)) {
-    selectorsCache.set(interfaceId, createFacetsSelectors(interfaceId));
-  }
-  return selectorsCache.get(interfaceId)!;
-}
+export const getOrCreateFacetsSelectors = SingletonFactory(
+  createFacetsSelectors
+);
