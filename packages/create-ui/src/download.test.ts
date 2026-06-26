@@ -1,68 +1,54 @@
-import {createReadStream} from 'node:fs';
-import {access, mkdir, mkdtemp, rm, writeFile} from 'node:fs/promises';
+import {mkdtemp, rm, mkdir, writeFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
-import {dirname, join} from 'node:path';
-import {afterEach, beforeEach, describe, expect, it} from 'vitest';
-import {create} from 'tar';
-import {extractPackage} from './download.js';
+import {join} from 'node:path';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 
-// npm tarballs wrap every entry under a top-level `package/` directory.
-const PKG_ROOT = 'package';
-const FIXTURE_FILES = ['package.json', 'src/main.tsx', 'README.md'];
+vi.mock('pacote', () => ({
+  default: {
+    extract: vi.fn(),
+  },
+}));
 
-async function exists(path: string): Promise<boolean> {
-  try {
-    await access(path);
-    return true;
-  } catch {
-    return false;
-  }
-}
+import pacote from 'pacote';
+import {downloadTemplate} from './download.js';
 
-async function makeTarball(
-  workDir: string,
-  entries: string[],
-  name = 'fixture.tgz'
-): Promise<string> {
-  const srcDir = join(workDir, name.replace('.tgz', ''));
-  for (const file of entries) {
-    const full = join(srcDir, PKG_ROOT, file);
-    await mkdir(dirname(full), {recursive: true});
-    await writeFile(full, `// ${file}\n`);
-  }
-  const tarballPath = join(workDir, name);
-  await create({gzip: true, cwd: srcDir, file: tarballPath}, [PKG_ROOT]);
-  return tarballPath;
-}
-
-describe('extractPackage', () => {
-  let workDir: string;
+describe('downloadTemplate', () => {
   let destDir: string;
 
   beforeEach(async () => {
-    workDir = await mkdtemp(join(tmpdir(), 'create-ui-test-'));
-    destDir = join(workDir, 'out');
+    destDir = await mkdtemp(join(tmpdir(), 'create-ui-test-'));
   });
 
   afterEach(async () => {
-    await rm(workDir, {recursive: true, force: true});
+    vi.restoreAllMocks();
+    await rm(destDir, {recursive: true, force: true});
   });
 
-  it('extracts the package contents, stripping the package/ prefix', async () => {
-    const tarball = await makeTarball(workDir, FIXTURE_FILES);
-    await extractPackage(createReadStream(tarball), destDir);
+  it('calls pacote.extract with the package name and dest', async () => {
+    vi.mocked(pacote.extract).mockImplementation(async (_spec, dest) => {
+      await mkdir(dest as string, {recursive: true});
+      await writeFile(join(dest as string, 'package.json'), '{}');
+      return {from: '', resolved: '', integrity: ''} as any;
+    });
 
-    expect(await exists(join(destDir, 'package.json'))).toBe(true);
-    expect(await exists(join(destDir, 'src/main.tsx'))).toBe(true);
-    expect(await exists(join(destDir, 'README.md'))).toBe(true);
-    // the `package/` wrapper is stripped, not nested under destDir
-    expect(await exists(join(destDir, 'package'))).toBe(false);
+    const result = await downloadTemplate({
+      packageName: '@coveo/sample-x',
+      destDir,
+    });
+
+    expect(pacote.extract).toHaveBeenCalledWith('@coveo/sample-x', destDir);
+    expect(result).toBe(destDir);
   });
 
-  it('throws when the archive has no package.json', async () => {
-    const tarball = await makeTarball(workDir, ['src/main.tsx'], 'nopkg.tgz');
+  it('throws when extracted package has no package.json', async () => {
+    vi.mocked(pacote.extract).mockResolvedValue({
+      from: '',
+      resolved: '',
+      integrity: '',
+    } as any);
+
     await expect(
-      extractPackage(createReadStream(tarball), destDir)
+      downloadTemplate({packageName: '@coveo/sample-x', destDir})
     ).rejects.toThrow(/not a valid package/);
   });
 });
