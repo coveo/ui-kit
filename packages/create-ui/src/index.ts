@@ -7,6 +7,7 @@ import {fileURLToPath} from 'node:url';
 import {argv} from 'node:process';
 import {downloadTemplate} from './download.js';
 import {isEmptyOrMissing} from './fs-utils.js';
+import {note} from '@clack/prompts';
 import {promptProjectName, selectTemplate} from './prompt.js';
 import {
   installDependencies,
@@ -15,6 +16,10 @@ import {
 } from './setup.js';
 import {getTemplate, getTemplates, type Template} from './templates.js';
 import {formatError, getPackageManager, log} from './utils.js';
+
+function isPackageNotFound(error: unknown): boolean {
+  return error instanceof Error && /404/i.test(error.message);
+}
 
 // TODO: (KIT-5833): add a link to the "How to use @coveo/create-ui" guide here
 // once that documentation page is published.
@@ -121,6 +126,15 @@ export async function scaffold(
     if (createdTargetDir) {
       await rm(targetDir, {recursive: true, force: true});
     }
+    if (isPackageNotFound(error)) {
+      note(
+        `Check available templates:  npm create @coveo/ui -- --help\n` +
+          `Open an issue:              https://github.com/coveo/ui-kit/issues\n` +
+          `Coveo community:            https://connect.coveo.com`,
+        'Need help?'
+      );
+      throw new Error(`Template "${template.name}" is not available.`);
+    }
     throw error;
   } finally {
     await rm(tempDir, {recursive: true, force: true});
@@ -168,6 +182,11 @@ export async function main(rawArgs: string[]): Promise<number> {
           .map((t) => `  ${t.name}`)
           .join('\n')}`
       );
+      note(
+        `Run with --help to see all templates:\n` +
+          `  npm create @coveo/ui -- --help`,
+        'Tip'
+      );
       return 1;
     }
     template = found;
@@ -182,6 +201,11 @@ export async function main(rawArgs: string[]): Promise<number> {
   if (!(await isEmptyOrMissing(targetDir))) {
     log.error(
       `Target directory "${projectName}" already exists and is not empty.`
+    );
+    note(
+      `Pick a different name, or remove the directory:\n` +
+        `  rm -rf ${projectName}`,
+      'Tip'
     );
     return 1;
   }
