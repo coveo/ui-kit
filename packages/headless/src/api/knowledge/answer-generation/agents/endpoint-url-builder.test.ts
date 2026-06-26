@@ -33,7 +33,7 @@ describe('buildBaseAnswerGenerationUrl', () => {
     );
 
     expect(url).toBe(
-      `https://my-test-org.org.coveo.com/api/preview/organizations/${organizationId}/agents/${agentId}`
+      `https://my-test-org.org.coveo.com/api/v1/organizations/${organizationId}/agents/${agentId}`
     );
     expect(mockedGetOrganizationEndpoint).toHaveBeenCalledWith(
       organizationId,
