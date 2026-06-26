@@ -18,6 +18,13 @@ import {HttpError, fetchWithRetry} from './http.js';
 
 const DEFAULT_REGISTRY = 'https://registry.npmjs.org';
 
+/**
+ * The dist field is part of the npm registry API JSON response. The registry response always includes:
+ * "dist": {
+ *   "tarball": "https://registry.npmjs.org/ssri/-/ssri-14.0.0.tgz",
+ *    // ...
+ *  }
+ */
 interface PackageManifest {
   dist?: {tarball?: string};
 }
