@@ -19,6 +19,7 @@ export const initialConfigurationState: ConfigurationState = {
   country: '',
   currency: '',
   endpoint: undefined,
+  a2uiVersion: undefined,
 };
 
 export const configurationSlice = createSlice({
@@ -59,5 +60,6 @@ export const configurationSlice = createSlice({
     country: (state) => state.country,
     currency: (state) => state.currency,
     endpoint: (state) => state.endpoint,
+    a2uiVersion: (state) => state.a2uiVersion,
   },
 });

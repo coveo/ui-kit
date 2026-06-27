@@ -62,7 +62,11 @@ async function handlePost(
     throw err;
   }
 
+  const url = req.url ?? '/';
+  const urlObj = new URL(url, 'http://localhost');
+  const a2uiVersion = urlObj.searchParams.get('a2uiVersion') ?? '0.8';
+
   const templateId = matchPrompt(parsed.message);
   const template = await loadTemplate(templateId);
-  streamSSEResponse(res, template);
+  streamSSEResponse(res, template, a2uiVersion);
 }

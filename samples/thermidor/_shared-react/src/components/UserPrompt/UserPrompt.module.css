@@ -1,0 +1,12 @@
+.bubble {
+  background: var(--color-bg-user-prompt);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg);
+  margin-left: auto;
+  max-width: 80%;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-size: var(--font-size-base);
+  line-height: 1.5;
+  color: var(--color-text-primary);
+}

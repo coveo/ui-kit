@@ -1,0 +1,150 @@
+.skeleton {
+  border-radius: 8px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid #eee;
+}
+
+/* ProductCarousel skeleton */
+.carouselHeading {
+  width: 140px;
+  height: 20px;
+}
+
+.carouselTrack {
+  display: flex;
+  gap: 12px;
+}
+
+.carouselCard {
+  flex: 0 0 180px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.carouselImage {
+  width: 180px;
+  height: 180px;
+  border-radius: 8px;
+}
+
+.carouselName {
+  width: 140px;
+  height: 14px;
+}
+
+.carouselPrice {
+  width: 60px;
+  height: 14px;
+}
+
+/* BundleDisplay skeleton */
+.bundleHeading {
+  width: 160px;
+  height: 20px;
+}
+
+.bundleTabs {
+  display: flex;
+  gap: 8px;
+}
+
+.bundleTab {
+  width: 80px;
+  height: 32px;
+  border-radius: 6px;
+}
+
+.bundleSlots {
+  display: flex;
+  gap: 12px;
+}
+
+.bundleSlot {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bundleSlotLabel {
+  width: 80px;
+  height: 14px;
+}
+
+.bundleSlotCard {
+  height: 200px;
+  border-radius: 8px;
+}
+
+/* ComparisonTable skeleton */
+.comparisonHeading {
+  width: 120px;
+  height: 20px;
+}
+
+.comparisonGrid {
+  display: flex;
+  gap: 16px;
+}
+
+.comparisonColumn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.comparisonImage {
+  width: 100%;
+  height: 160px;
+  border-radius: 8px;
+}
+
+.comparisonAttr {
+  width: 100%;
+  height: 14px;
+}
+
+/* NextActionsBar skeleton */
+.actionsContainer {
+  display: flex;
+  gap: 8px;
+  padding: 8px 0;
+}
+
+.actionButton {
+  width: 180px;
+  height: 36px;
+  border-radius: 18px;
+}
+
+/* ComparisonSummary skeleton */
+.summaryLine {
+  width: 100%;
+  height: 14px;
+}
+
+.summaryLineShort {
+  width: 70%;
+  height: 14px;
+}

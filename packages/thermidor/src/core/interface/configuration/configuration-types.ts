@@ -23,4 +23,6 @@ export interface ConfigurationState {
   currency: string;
   /** Optional API endpoint URL */
   endpoint?: string;
+  /** Optional A2UI spec version to request ('0.8' | '0.9') */
+  a2uiVersion?: '0.8' | '0.9';
 }

@@ -39,6 +39,10 @@ export const readEndpointClientConfiguration = (
       reader,
       configurationSlice.selectors.endpoint
     ),
+    a2uiVersion: readConfigurationSelector(
+      reader,
+      configurationSlice.selectors.a2uiVersion
+    ),
   };
 };
 
