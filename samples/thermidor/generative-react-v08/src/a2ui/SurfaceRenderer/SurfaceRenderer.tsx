@@ -1,9 +1,8 @@
 import {useEffect} from 'react';
 import {A2UIProvider, useA2UI, A2UIRenderer} from '@a2ui/react/v0_8';
 import {registerA2UIV08Catalog} from '../a2ui-catalog.js';
-import styles from './SurfaceRenderer.module.css';
+import styles from '@samples/thermidor-shared-react/src/a2ui/SurfaceRenderer/SurfaceRenderer.module.css';
 
-// Register the custom catalog components once
 registerA2UIV08Catalog();
 
 export interface SurfaceRendererProps {

@@ -1,5 +1,9 @@
+import {type ComponentType} from 'react';
 import {UserPrompt} from '../UserPrompt/UserPrompt.js';
-import {AgentResponse} from '../AgentResponse/AgentResponse.js';
+import {
+  AgentResponse,
+  type SurfaceRendererProps,
+} from '../AgentResponse/AgentResponse.js';
 import {RoutedCommerceResults} from '../RoutedCommerceResults/RoutedCommerceResults.js';
 import {RoutedSearchResults} from '../RoutedSearchResults/RoutedSearchResults.js';
 import styles from './ConversationArea.module.css';
@@ -28,6 +32,7 @@ export interface ConversationAreaProps {
   isStreaming: boolean;
   onRetry?: (id: string) => void;
   onAction?: (text: string, type: string) => void;
+  SurfaceRenderer: ComponentType<SurfaceRendererProps>;
 }
 
 export function ConversationArea({
@@ -35,6 +40,7 @@ export function ConversationArea({
   isStreaming,
   onRetry,
   onAction,
+  SurfaceRenderer,
 }: ConversationAreaProps) {
   if (!turn) {
     return (
@@ -52,6 +58,7 @@ export function ConversationArea({
           agentResponse={turn.agentResponse}
           isStreaming={isStreaming}
           onAction={onAction}
+          SurfaceRenderer={SurfaceRenderer}
         />
       )}
       {turn.status === 'error' && (

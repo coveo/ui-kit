@@ -2,7 +2,7 @@ import {useState, useEffect, useMemo, createContext} from 'react';
 import {MessageProcessor, SurfaceGroupModel} from '@a2ui/web_core/v0_9';
 import {A2uiSurface} from '@a2ui/react/v0_9';
 import {customCatalog} from '../a2ui-catalog.js';
-import styles from './SurfaceRenderer.module.css';
+import styles from '@samples/thermidor-shared-react/src/a2ui/SurfaceRenderer/SurfaceRenderer.module.css';
 
 export interface SurfaceRendererProps {
   surfaces: Record<string, unknown>[];
@@ -49,7 +49,6 @@ export function SurfaceRenderer({surfaces, onAction}: SurfaceRendererProps) {
     }
   }, [surfaces, processor]);
 
-  // Exclude sub-surfaces that are rendered inline within BundleDisplay slots
   const rootSurfaces = useMemo(() => {
     return activeSurfaces.filter((s) => !s.id.startsWith('bundle-surface-'));
   }, [activeSurfaces]);

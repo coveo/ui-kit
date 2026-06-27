@@ -4,16 +4,13 @@ import {
   ComponentRegistry,
   A2UIRenderer,
 } from '@a2ui/react/v0_8';
-import {A2UIProductCard} from './ProductCard/ProductCard.js';
-import {A2UIProductCarousel} from './ProductCarousel/ProductCarousel.js';
-import {A2UIBundleDisplay} from './BundleDisplay/BundleDisplay.js';
-import {A2UINextActionsBar} from './NextActionsBar/NextActionsBar.js';
-import {A2UIComparisonTable} from './ComparisonTable/ComparisonTable.js';
-import {A2UIComparisonSummary} from './ComparisonSummary/ComparisonSummary.js';
+import {A2UIProductCard} from '@samples/thermidor-shared-react/src/a2ui/ProductCard/ProductCard.js';
+import {A2UIProductCarousel} from '@samples/thermidor-shared-react/src/a2ui/ProductCarousel/ProductCarousel.js';
+import {A2UIBundleDisplay} from '@samples/thermidor-shared-react/src/a2ui/BundleDisplay/BundleDisplay.js';
+import {A2UINextActionsBar} from '@samples/thermidor-shared-react/src/a2ui/NextActionsBar/NextActionsBar.js';
+import {A2UIComparisonTable} from '@samples/thermidor-shared-react/src/a2ui/ComparisonTable/ComparisonTable.js';
+import {A2UIComparisonSummary} from '@samples/thermidor-shared-react/src/a2ui/ComparisonSummary/ComparisonSummary.js';
 
-// ============================================================================
-// Helper to safely resolve properties with path resolution fallback
-// ============================================================================
 function usePropResolver(node: any, surfaceId: string) {
   const {resolveString, resolveNumber, getValue} = useA2UIComponent(
     node,
@@ -29,12 +26,10 @@ function usePropResolver(node: any, surfaceId: string) {
       if (propVal.literalString !== undefined) return propVal.literalString;
       if (propVal.literalNumber !== undefined) return propVal.literalNumber;
       if (propVal.path) {
-        // Standard path resolution
         const resolved =
           type === 'string' ? resolveString(propVal) : resolveNumber(propVal);
         if (resolved !== null && resolved !== undefined) return resolved;
 
-        // Standalone fallback: read from /items/0/path
         const items = getValue('/items') as any[];
         if (items && items[0]) {
           return items[0][propVal.path];
@@ -47,28 +42,17 @@ function usePropResolver(node: any, surfaceId: string) {
   return {resolveProp, getValue};
 }
 
-// ============================================================================
-// Component Node Wrappers
-// ============================================================================
-
 export function A2UIProductCardNode({node, surfaceId}: A2UIComponentProps) {
   const {resolveProp} = usePropResolver(node, surfaceId);
 
-  const ec_name = resolveProp('ec_name') as string | undefined;
-  const ec_brand = resolveProp('ec_brand') as string | undefined;
-  const ec_price = resolveProp('ec_price', 'number') as number | undefined;
-  const ec_image = resolveProp('ec_image') as string | undefined;
-  const ec_product_id = resolveProp('ec_product_id') as string | undefined;
-  const clickUri = resolveProp('clickUri') as string | undefined;
-
   return (
     <A2UIProductCard
-      ec_name={ec_name}
-      ec_brand={ec_brand}
-      ec_price={ec_price}
-      ec_image={ec_image}
-      ec_product_id={ec_product_id}
-      clickUri={clickUri}
+      ec_name={resolveProp('ec_name') as string | undefined}
+      ec_brand={resolveProp('ec_brand') as string | undefined}
+      ec_price={resolveProp('ec_price', 'number') as number | undefined}
+      ec_image={resolveProp('ec_image') as string | undefined}
+      ec_product_id={resolveProp('ec_product_id') as string | undefined}
+      clickUri={resolveProp('clickUri') as string | undefined}
     />
   );
 }
@@ -148,10 +132,6 @@ export function A2UIComparisonSummaryNode({
 
   return <A2UIComparisonSummary text={text} />;
 }
-
-// ============================================================================
-// Catalog Registration
-// ============================================================================
 
 export function registerA2UIV08Catalog() {
   const registry = ComponentRegistry.getInstance();

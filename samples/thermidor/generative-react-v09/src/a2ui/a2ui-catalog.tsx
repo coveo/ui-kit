@@ -2,17 +2,13 @@ import {z} from 'zod';
 import {useContext} from 'react';
 import {CommonSchemas, Catalog} from '@a2ui/web_core/v0_9';
 import {createComponentImplementation, A2uiSurface} from '@a2ui/react/v0_9';
-import {A2UIProductCard} from './ProductCard/ProductCard.js';
-import {A2UIProductCarousel} from './ProductCarousel/ProductCarousel.js';
-import {A2UIBundleDisplay} from './BundleDisplay/BundleDisplay.js';
-import {A2UINextActionsBar} from './NextActionsBar/NextActionsBar.js';
-import {A2UIComparisonTable} from './ComparisonTable/ComparisonTable.js';
-import {A2UIComparisonSummary} from './ComparisonSummary/ComparisonSummary.js';
+import {A2UIProductCard} from '@samples/thermidor-shared-react/src/a2ui/ProductCard/ProductCard.js';
+import {A2UIProductCarousel} from '@samples/thermidor-shared-react/src/a2ui/ProductCarousel/ProductCarousel.js';
+import {A2UIBundleDisplay} from '@samples/thermidor-shared-react/src/a2ui/BundleDisplay/BundleDisplay.js';
+import {A2UINextActionsBar} from '@samples/thermidor-shared-react/src/a2ui/NextActionsBar/NextActionsBar.js';
+import {A2UIComparisonTable} from '@samples/thermidor-shared-react/src/a2ui/ComparisonTable/ComparisonTable.js';
+import {A2UIComparisonSummary} from '@samples/thermidor-shared-react/src/a2ui/ComparisonSummary/ComparisonSummary.js';
 import {SurfaceGroupContext} from './SurfaceRenderer/SurfaceRenderer.js';
-
-// ============================================================================
-// Component APIs (Zod Schemas)
-// ============================================================================
 
 export const ProductCardApi = {
   name: 'ProductCard',
@@ -65,14 +61,9 @@ export const ComparisonSummaryApi = {
   }),
 };
 
-// ============================================================================
-// Component Implementations
-// ============================================================================
-
 export const ProductCardNode = createComponentImplementation(
   ProductCardApi,
   ({props, context}) => {
-    // Resolve properties with standalone fallback
     const resolveProp = (propName: string, propVal: any) => {
       if (propVal !== undefined && propVal !== null) {
         return propVal;
@@ -84,31 +75,18 @@ export const ProductCardNode = createComponentImplementation(
       return undefined;
     };
 
-    const ec_name = resolveProp('ec_name', props.ec_name) as string | undefined;
-    const ec_brand = resolveProp('ec_brand', props.ec_brand) as
-      | string
-      | undefined;
-    const ec_price = resolveProp('ec_price', props.ec_price) as
-      | number
-      | undefined;
-    const ec_image = resolveProp('ec_image', props.ec_image) as
-      | string
-      | undefined;
-    const ec_product_id = resolveProp('ec_product_id', props.ec_product_id) as
-      | string
-      | undefined;
-    const clickUri = resolveProp('clickUri', props.clickUri) as
-      | string
-      | undefined;
-
     return (
       <A2UIProductCard
-        ec_name={ec_name}
-        ec_brand={ec_brand}
-        ec_price={ec_price}
-        ec_image={ec_image}
-        ec_product_id={ec_product_id}
-        clickUri={clickUri}
+        ec_name={resolveProp('ec_name', props.ec_name) as string | undefined}
+        ec_brand={resolveProp('ec_brand', props.ec_brand) as string | undefined}
+        ec_price={resolveProp('ec_price', props.ec_price) as number | undefined}
+        ec_image={resolveProp('ec_image', props.ec_image) as string | undefined}
+        ec_product_id={
+          resolveProp('ec_product_id', props.ec_product_id) as
+            | string
+            | undefined
+        }
+        clickUri={resolveProp('clickUri', props.clickUri) as string | undefined}
       />
     );
   }
@@ -211,10 +189,6 @@ export const ComparisonSummaryNode = createComponentImplementation(
     return <A2UIComparisonSummary text={text} />;
   }
 );
-
-// ============================================================================
-// Catalog Instance
-// ============================================================================
 
 export const customCatalog = new Catalog('a2ui-surface', [
   ProductCardNode,

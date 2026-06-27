@@ -1,6 +1,6 @@
+import {type ComponentType} from 'react';
 import {StreamingMessage} from '../StreamingMessage/StreamingMessage.js';
 import {ThinkingBlock} from '../ThinkingBlock/ThinkingBlock.js';
-import {SurfaceRenderer} from '../../a2ui/SurfaceRenderer/SurfaceRenderer.js';
 import styles from './AgentResponse.module.css';
 
 interface AgentResponseData {
@@ -15,16 +15,23 @@ interface AgentResponseData {
   }[];
 }
 
+export interface SurfaceRendererProps {
+  surfaces: Record<string, unknown>[];
+  onAction?: (text: string, type: string) => void;
+}
+
 export interface AgentResponseProps {
   agentResponse: AgentResponseData;
   isStreaming: boolean;
   onAction?: (text: string, type: string) => void;
+  SurfaceRenderer: ComponentType<SurfaceRendererProps>;
 }
 
 export function AgentResponse({
   agentResponse,
   isStreaming,
   onAction,
+  SurfaceRenderer,
 }: AgentResponseProps) {
   const {messages, toolCalls, surfaces} = agentResponse;
 

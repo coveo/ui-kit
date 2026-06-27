@@ -16,6 +16,7 @@
     "@a2ui/react": "catalog:",
     "@a2ui/web_core": "catalog:",
     "@coveo/thermidor": "workspace:*",
+    "@samples/thermidor-shared-react": "workspace:*",
     "marked": "^15.0.0",
     "react": "catalog:",
     "react-dom": "catalog:",

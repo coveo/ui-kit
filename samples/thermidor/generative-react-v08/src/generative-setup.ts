@@ -3,7 +3,7 @@ import {
   buildGenerativeInterface,
   Engine,
 } from '@coveo/thermidor';
-import {getSampleConfiguration} from './env.js';
+import {getSampleConfiguration} from '@samples/thermidor-shared-react/src/env.js';
 
 function getClientId() {
   const stored = sessionStorage.getItem('generative-client-id');

@@ -1,8 +1,14 @@
-import {useState, useEffect, useRef, useCallback} from 'react';
-import {converseController} from '../../generative-setup.js';
+import {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  type ComponentType,
+} from 'react';
 import {TurnsMenu} from '../TurnsMenu/TurnsMenu.js';
 import {ConversationArea} from '../ConversationArea/ConversationArea.js';
 import {PromptInput} from '../PromptInput/PromptInput.js';
+import type {SurfaceRendererProps} from '../AgentResponse/AgentResponse.js';
 import styles from './ConversePage.module.css';
 
 const PROMPT_SUGGESTIONS = [
@@ -41,12 +47,25 @@ interface ConverseState {
   isStreaming: boolean;
 }
 
-export function ConversePage() {
-  const [state, setState] = useState<ConverseState>(converseController.state);
+interface ConverseController {
+  state: ConverseState;
+  subscribe: (cb: () => void) => () => void;
+  submit: (opts: {prompt: string}) => void;
+  selectTurn: (opts: {id: string}) => void;
+  retry: (opts: {id: string}) => void;
+}
+
+export interface ConversePageProps {
+  controller: ConverseController;
+  SurfaceRenderer: ComponentType<SurfaceRendererProps>;
+}
+
+export function ConversePage({controller, SurfaceRenderer}: ConversePageProps) {
+  const [state, setState] = useState<ConverseState>(controller.state);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
   const scrollCooldownRef = useRef(false);
-  const prevTurnCountRef = useRef(converseController.state.turns.length);
+  const prevTurnCountRef = useRef(controller.state.turns.length);
   const overscrollAccumRef = useRef(0);
   const overscrollResetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
     null
@@ -57,13 +76,13 @@ export function ConversePage() {
   const OVERSCROLL_THRESHOLD = 150;
 
   useEffect(() => {
-    const unsubscribe = converseController.subscribe(() => {
-      const newState = converseController.state;
+    const unsubscribe = controller.subscribe(() => {
+      const newState = controller.state;
 
       if (newState.turns.length > prevTurnCountRef.current) {
         const newestTurn = newState.turns[newState.turns.length - 1];
         if (newestTurn && newState.activeTurnId !== newestTurn.id) {
-          converseController.selectTurn({id: newestTurn.id});
+          controller.selectTurn({id: newestTurn.id});
         }
       }
       prevTurnCountRef.current = newState.turns.length;
@@ -71,26 +90,29 @@ export function ConversePage() {
       setState(newState);
     });
     return unsubscribe;
-  }, []);
+  }, [controller]);
 
-  const navigateToTurn = useCallback((direction: 'prev' | 'next') => {
-    if (scrollCooldownRef.current) return;
-    const {turns, activeTurnId} = stateRef.current;
-    const currentIndex = turns.findIndex((t) => t.id === activeTurnId);
-    if (currentIndex < 0) return;
+  const navigateToTurn = useCallback(
+    (direction: 'prev' | 'next') => {
+      if (scrollCooldownRef.current) return;
+      const {turns, activeTurnId} = stateRef.current;
+      const currentIndex = turns.findIndex((t) => t.id === activeTurnId);
+      if (currentIndex < 0) return;
 
-    const targetIndex =
-      direction === 'prev' ? currentIndex - 1 : currentIndex + 1;
-    if (targetIndex < 0 || targetIndex >= turns.length) return;
+      const targetIndex =
+        direction === 'prev' ? currentIndex - 1 : currentIndex + 1;
+      if (targetIndex < 0 || targetIndex >= turns.length) return;
 
-    scrollCooldownRef.current = true;
-    overscrollAccumRef.current = 0;
-    converseController.selectTurn({id: turns[targetIndex].id});
+      scrollCooldownRef.current = true;
+      overscrollAccumRef.current = 0;
+      controller.selectTurn({id: turns[targetIndex].id});
 
-    setTimeout(() => {
-      scrollCooldownRef.current = false;
-    }, 600);
-  }, []);
+      setTimeout(() => {
+        scrollCooldownRef.current = false;
+      }, 600);
+    },
+    [controller]
+  );
 
   useEffect(() => {
     const el = contentRef.current;
@@ -132,17 +154,26 @@ export function ConversePage() {
     return () => el.removeEventListener('wheel', handleWheel);
   }, [navigateToTurn]);
 
-  const handleSubmit = useCallback((prompt: string) => {
-    converseController.submit({prompt});
-  }, []);
+  const handleSubmit = useCallback(
+    (prompt: string) => {
+      controller.submit({prompt});
+    },
+    [controller]
+  );
 
-  const handleSelectTurn = useCallback((id: string) => {
-    converseController.selectTurn({id});
-  }, []);
+  const handleSelectTurn = useCallback(
+    (id: string) => {
+      controller.selectTurn({id});
+    },
+    [controller]
+  );
 
-  const handleRetry = useCallback((id: string) => {
-    converseController.retry({id});
-  }, []);
+  const handleRetry = useCallback(
+    (id: string) => {
+      controller.retry({id});
+    },
+    [controller]
+  );
 
   const handleAction = useCallback(
     (text: string, _type: string) => {
@@ -186,6 +217,7 @@ export function ConversePage() {
             isStreaming={state.isStreaming}
             onRetry={handleRetry}
             onAction={handleAction}
+            SurfaceRenderer={SurfaceRenderer}
           />
         </div>
       </main>
