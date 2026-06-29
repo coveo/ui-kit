@@ -1,18 +1,16 @@
-import {
-  buildSearchEngine,
-  getSampleSearchEngineConfiguration,
-} from '@coveo/headless';
+import {buildSearchEngine} from '@coveo/headless';
 import {useMemo} from 'react';
 import {StandaloneSearchBox} from '../components/standalone-search-box/standalone-search-box.class';
 import {StandaloneSearchBox as StandaloneSearchBoxFn} from '../components/standalone-search-box/standalone-search-box.fn';
 import {AppContext} from '../context/engine';
+import {getEngineConfiguration} from '../context/engine-configuration';
 import {Section} from '../layout/section';
 
 export function StandaloneSearchBoxPage() {
   const engine = useMemo(
     () =>
       buildSearchEngine({
-        configuration: getSampleSearchEngineConfiguration(),
+        configuration: getEngineConfiguration(),
       }),
     []
   );

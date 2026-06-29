@@ -1,11 +1,11 @@
 import {
   buildFacet,
   buildSearchEngine,
-  getSampleSearchEngineConfiguration,
   type Facet as HeadlessFacet,
   type SearchEngine,
 } from '@coveo/headless';
 import {Component} from 'react';
+import {getEngineConfiguration} from '../context/engine-configuration';
 import {MultilevelDependentFacet} from '../components/dependent-facet/multi-level-dependent-facet';
 import {SingleParentMultipleDependentFacet} from '../components/dependent-facet/single-parent-multiple-dependent.fn';
 import {SingleParentSingleDependentFacet} from '../components/dependent-facet/single-parent-single-dependent.fn';
@@ -50,7 +50,7 @@ export class DependentFacetPage extends Component<
     super(props);
 
     this.engine = buildSearchEngine({
-      configuration: getSampleSearchEngineConfiguration(),
+      configuration: getEngineConfiguration(),
     });
 
     this.authorFacet = buildFacet(this.engine, {options: {field: 'author'}});

@@ -38,7 +38,6 @@ import {
   buildSort,
   buildStaticFilterValue,
   buildTab,
-  getSampleSearchEngineConfiguration,
   type AutomaticFacetGenerator as HeadlessAutomaticFacetGenerator,
   type BreadcrumbManager as HeadlessBreadcrumbManager,
   type CategoryFacet as HeadlessCategoryFacet,
@@ -159,6 +158,7 @@ import {RedirectionTrigger} from '../components/triggers/redirection-trigger.cla
 import {RedirectionTrigger as RedirectionTriggerFn} from '../components/triggers/redirection-trigger.fn';
 import {bindUrlManager} from '../components/url-manager/url-manager';
 import {AppContext} from '../context/engine';
+import {getEngineConfiguration} from '../context/engine-configuration';
 import {Section} from '../layout/section';
 
 declare global {
@@ -225,8 +225,10 @@ export class SearchPage extends Component {
   private readonly resultList: HeadlessResultList;
   private readonly foldedResultList: HeadlessFoldedResultList;
   private readonly facetManager: HeadlessFacetManager;
-  private readonly geographyFacet: HeadlessCategoryFacet;
-  private readonly objectTypeFacet: HeadlessFacet;
+  private readonly categoryFacet: HeadlessCategoryFacet;
+  private readonly articleTypeFacet: HeadlessFacet;
+  private readonly robotSeriesFacet: HeadlessFacet;
+  private readonly difficultyFacet: HeadlessFacet;
   private readonly fileSizeAutomaticNumericFacet: HeadlessNumericFacet;
   private readonly fileSizeManualNumericFacet: HeadlessNumericFacet;
   private readonly fileSizeNumericFilter: HeadlessNumericFilter;
@@ -305,14 +307,21 @@ export class SearchPage extends Component {
       },
     });
 
-    this.geographyFacet = buildCategoryFacet(this.engine, {
+    this.categoryFacet = buildCategoryFacet(this.engine, {
       options: {
-        field: 'geographicalhierarchy',
-        facetId: 'geographicalhierarchy-2',
+        field: 'ec_category',
+        facetId: 'ec_category-2',
+        delimitingCharacter: '|',
       },
     });
-    this.objectTypeFacet = buildFacet(this.engine, {
-      options: {field: 'objecttype', facetId: 'objecttype-2'},
+    this.articleTypeFacet = buildFacet(this.engine, {
+      options: {field: 'article_type', facetId: 'article_type-2'},
+    });
+    this.robotSeriesFacet = buildFacet(this.engine, {
+      options: {field: 'robot_series', facetId: 'robot_series-2'},
+    });
+    this.difficultyFacet = buildFacet(this.engine, {
+      options: {field: 'difficulty_level', facetId: 'difficulty_level-2'},
     });
 
     this.fileSizeAutomaticNumericFacet = buildNumericFacet(this.engine, {
@@ -406,8 +415,9 @@ export class SearchPage extends Component {
     this.categoryFieldSuggestions = buildCategoryFieldSuggestions(this.engine, {
       options: {
         facet: {
-          field: 'geographicalhierarchy',
-          facetId: 'geographicalhierarchy-3',
+          field: 'ec_category',
+          facetId: 'ec_category-3',
+          delimitingCharacter: '|',
         },
       },
     });
@@ -438,7 +448,7 @@ export class SearchPage extends Component {
     }
 
     this.engine = buildSearchEngine({
-      configuration: getSampleSearchEngineConfiguration(),
+      configuration: getEngineConfiguration(),
       preloadedState: window.HEADLESS_STATE,
     });
   }
@@ -591,8 +601,9 @@ export class SearchPage extends Component {
           </Section>
           <Section title="category-field-suggestions">
             <CategoryFieldSuggestions
-              field="geographicalhierarchy"
-              facetId="geographicalhierarchy-4"
+              field="ec_category"
+              facetId="ec_category-4"
+              delimitingCharacter="|"
             />
             <CategorySuggestionsFn controller={this.categoryFieldSuggestions} />
           </Section>
@@ -620,9 +631,13 @@ export class SearchPage extends Component {
             <AutomaticFacetGenerator desiredCount={5}></AutomaticFacetGenerator>
             <FacetManager>
               <CategoryFacet
-                field="geographicalhierarchy"
-                facetId="geographicalhierarchy-1"
+                field="ec_category"
+                facetId="ec_category-1"
+                delimitingCharacter="|"
               />
+              <Facet field="article_type" facetId="article_type-1" />
+              <Facet field="robot_series" facetId="robot_series-1" />
+              <Facet field="difficulty_level" facetId="difficulty_level-1" />
               <Facet field="author" facetId="author-1" />
               <NumericFacet
                 format={(bytes) => formatFileSize(bytes)}
@@ -665,8 +680,10 @@ export class SearchPage extends Component {
               controller={this.automaticFacetGenerator}
             ></AutomaticFacetGeneratorFn>
             <FacetManagerFn controller={this.facetManager}>
-              <CategoryFacetFn controller={this.geographyFacet} />
-              <FacetFn controller={this.objectTypeFacet} />
+              <CategoryFacetFn controller={this.categoryFacet} />
+              <FacetFn controller={this.articleTypeFacet} />
+              <FacetFn controller={this.robotSeriesFacet} />
+              <FacetFn controller={this.difficultyFacet} />
               <NumericFacetFn
                 controller={this.fileSizeAutomaticNumericFacet}
                 format={(bytes) => formatFileSize(bytes)}

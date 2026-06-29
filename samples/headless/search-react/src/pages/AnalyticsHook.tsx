@@ -1,11 +1,11 @@
 import {
   buildSearchBox,
   buildSearchEngine,
-  getSampleSearchEngineConfiguration,
   type SearchBox as HeadlessSearchBox,
   type SearchEngine,
 } from '@coveo/headless';
 import {Component} from 'react';
+import {getEngineConfiguration} from '../context/engine-configuration';
 import {SearchBox} from '../components/search-box/search-box.fn';
 
 declare global {
@@ -39,7 +39,7 @@ export class AnalyticsHook extends Component<
   constructor(props: AnalyticsHooksProps) {
     super(props);
     this.state = {analyticsPayload: {}};
-    const sampleConfig = getSampleSearchEngineConfiguration();
+    const sampleConfig = getEngineConfiguration();
     this.engine = buildSearchEngine({
       configuration: {
         ...sampleConfig,
