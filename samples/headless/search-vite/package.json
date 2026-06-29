@@ -1,5 +1,5 @@
 {
-  "name": "@samples/headless-search-vite",
+  "name": "@coveo/sample-headless-search-vite",
   "private": true,
   "type": "module",
   "scripts": {
