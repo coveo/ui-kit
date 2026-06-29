@@ -486,6 +486,14 @@ test.describe('atomic-generated-answer', () => {
         );
 
         await generatedAnswer.showPreviousButton.click();
+
+        const firstItemCollapseButton = generatedAnswer.threadItems
+          .first()
+          .locator('button', {
+            has: generatedAnswer.page.locator('[part="thread-item-title"]'),
+          });
+        await firstItemCollapseButton.click();
+
         const firstAnswerLikeButton = generatedAnswer.threadItems
           .first()
           .getByRole('button', {name: /^helpful$/i});
