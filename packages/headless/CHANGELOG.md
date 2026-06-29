@@ -1,3 +1,14 @@
+## 3.53.0
+
+### Minor Changes
+
+- [#7885](https://github.com/coveo/ui-kit/pull/7885) [`87bd287`](https://github.com/coveo/ui-kit/commit/87bd2875ae3fbfc2377e10d6a95f5a8b3c68516f) - Point the agent answer and follow-up endpoints to the `v1` API instead of `preview` for the GA release.
+
+### Patch Changes
+
+- [#7871](https://github.com/coveo/ui-kit/pull/7871) [`50a5c0a`](https://github.com/coveo/ui-kit/commit/50a5c0aa676f602ac3419f03042c4fc4ad8aa8f1) - chore(SFINT-6808): create visible debug header when debug mode is enabled for agent in atomic-generated-answer
+  chore(SFINT-6808): fix the check if the debug mode is enabled for search agent
+
 ## 3.52.0
 
 ### Minor Changes
