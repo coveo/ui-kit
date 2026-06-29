@@ -8,7 +8,7 @@ import {
  * The search hub identifying the interface queries originate from. It selects
  * the query pipeline and ML models, and is logged as `originLevel1` in analytics.
  */
-export const searchHub = 'BarcaKnowledge';
+const searchHub = 'BarcaKnowledge';
 
 /**
  * Builds a search engine pointed at the public sample organization and the

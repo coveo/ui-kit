@@ -70,12 +70,6 @@ export default {
     'samples/headless-ssr/commerce-express': {
       entry: ['src/server.ts'],
     },
-    'samples/headless/search-react': {
-      entry: ['server/server.tsx'],
-      ignore: [
-        'src/pages/AtomicReactPage.css', // TODO: Reassess if we can remove the file.
-      ],
-    },
     'samples/headless-ssr/commerce-nextjs': {},
     'samples/headless-ssr/commerce-nextjs-v4': {},
     'utils/ci': {},
