@@ -406,7 +406,7 @@ describe('atomic-ask-follow-up-input', () => {
       expect(parts().characterCounter?.textContent?.trim()).toBe('326 / 300');
     });
 
-    it('should put the the input container and the counter in an error state when over the limit', async () => {
+    it('should put the input container and the counter in an error state when over the limit', async () => {
       const {input, parts} = await renderComponent();
 
       await input.fill('a'.repeat(MAX_LENGTH + 1));
