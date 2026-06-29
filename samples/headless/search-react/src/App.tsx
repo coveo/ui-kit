@@ -1,4 +1,5 @@
 import {
+  buildCategoryFacet,
   buildDateSortCriterion,
   buildFacet,
   buildPager,
@@ -11,6 +12,7 @@ import {
   SortOrder,
 } from '@coveo/headless';
 import {useEffect, useMemo} from 'react';
+import {CategoryFacet} from './components/category-facet';
 import {Facet} from './components/facet';
 import {Pager} from './components/pager';
 import {QuerySummary} from './components/query-summary';
@@ -40,6 +42,9 @@ function App({engine: providedEngine}: AppProps) {
       resultList: buildResultList(engine),
       pager: buildPager(engine, {options: {numberOfPages: 5}}),
       facets: {
+        category: buildCategoryFacet(engine, {
+          options: {field: 'ec_category', delimitingCharacter: '|'},
+        }),
         articleType: buildFacet(engine, {options: {field: 'article_type'}}),
         robotSeries: buildFacet(engine, {options: {field: 'robot_series'}}),
         difficulty: buildFacet(engine, {options: {field: 'difficulty_level'}}),
@@ -83,6 +88,10 @@ function App({engine: providedEngine}: AppProps) {
 
       <div className="search-layout">
         <aside className="facets">
+          <CategoryFacet
+            controller={controllers.facets.category}
+            title="Category"
+          />
           <Facet
             controller={controllers.facets.articleType}
             title="Article type"
