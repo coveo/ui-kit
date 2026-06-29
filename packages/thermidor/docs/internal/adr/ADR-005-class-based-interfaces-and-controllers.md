@@ -142,8 +142,14 @@ class SearchBoxControllerImpl extends BaseController<SearchBoxControllerState> {
     this.#thunks = options.interface.resolveFacades('search');
   }
 
-  setQuery({query}) { this.engine.mutate(this.#actions.setQuery(query)); }
-  submit() { return Promise.all(this.#thunks.map(t => this.engine.mutate(t({engine: this.engine})))); }
+  setQuery({query}) {
+    this.engine.mutate(this.#actions.setQuery(query));
+  }
+  submit() {
+    return Promise.all(
+      this.#thunks.map((t) => this.engine.mutate(t({engine: this.engine})))
+    );
+  }
 }
 ```
 
