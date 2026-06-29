@@ -12,6 +12,7 @@ This document captures the **revised direction (v2)** that keeps classes for the
 ## 2. Revised Decision Statement
 
 Implement a class-based architecture using:
+
 - **Symbols (non-exported)** for internal property access — not `#private` + friend pattern
 - **`BaseInterface<T>`** abstract class with `protected` methods and abstract `resolvers` Record
 - **`BaseController<TState>`** abstract class with `protected engine`
@@ -93,7 +94,9 @@ const resolverFactories: Record<Facades['search'], FacadeResolverFactory> = {
 };
 
 export class SearchInterface extends BaseInterface<'search'> {
-  get resolvers() { return resolverFactories; }
+  get resolvers() {
+    return resolverFactories;
+  }
 
   constructor(engine: FullEngine, stateId: string) {
     super(engine, stateId, 'search');
@@ -112,9 +115,11 @@ export function composeInterfaces<T extends InterfaceType>(options: {
   return {
     [STATE_ID]: composedId,
     resolveThunks(facade) {
-      return interfaces.flatMap(sub => sub.resolveThunks(facade, composedId));
+      return interfaces.flatMap((sub) => sub.resolveThunks(facade, composedId));
     },
-    dispose() { /* no-op */ },
+    dispose() {
+      /* no-op */
+    },
   };
 }
 ```
@@ -165,21 +170,22 @@ export type Supports<F extends Facades[InterfaceType]> = {
 
 ## 5. What Changed from v1 (Original Implementation)
 
-| v1 (#private + friends) | v2 (symbols + protected) |
-|---|---|
-| 8 friend functions | 0 friend functions |
-| WeakMap + registerFacadeResolver | Abstract `resolvers` Record |
-| `static {}` blocks | Standard constructors |
-| `controllerMutate(this, action)` | `this.engine.mutate(action)` |
-| `getInterfaceInternals(iface).stateId` | `iface[STATE_ID]` |
-| `resolveInterfaceFacades(iface, 'search')` | `iface.resolveThunks('search')` |
-| ComposedInterface extends BaseInterface | ComposedInterface = plain object |
-| 2 methods (resolveFacades + resolveFacadeForScope) | 1 method (resolveThunks) |
-| ~85 lines boilerplate in base-interface.ts | ~35 lines |
+| v1 (#private + friends)                            | v2 (symbols + protected)         |
+| -------------------------------------------------- | -------------------------------- |
+| 8 friend functions                                 | 0 friend functions               |
+| WeakMap + registerFacadeResolver                   | Abstract `resolvers` Record      |
+| `static {}` blocks                                 | Standard constructors            |
+| `controllerMutate(this, action)`                   | `this.engine.mutate(action)`     |
+| `getInterfaceInternals(iface).stateId`             | `iface[STATE_ID]`                |
+| `resolveInterfaceFacades(iface, 'search')`         | `iface.resolveThunks('search')`  |
+| ComposedInterface extends BaseInterface            | ComposedInterface = plain object |
+| 2 methods (resolveFacades + resolveFacadeForScope) | 1 method (resolveThunks)         |
+| ~85 lines boilerplate in base-interface.ts         | ~35 lines                        |
 
 ## 6. Why Symbols Are Sufficient (from ADR-004)
 
 ADR-004 explicitly validates:
+
 > "Non-leakage check: Pass — consumers cannot access `[FACADE_RESOLVERS]` without the unexported Symbol."
 
 The architecture decision charter's leakage gate requires that "implementation concepts not be exposed in the public contract." Symbols that are not re-exported from `src/index.ts` satisfy this gate. `#private` fields provide additional runtime protection against `Object.getOwnPropertySymbols` enumeration, but this threat is not in the ADR charter's requirements.
@@ -201,8 +207,10 @@ The architecture decision charter's leakage gate requires that "implementation c
 ## 8. Files
 
 ### Spec
+
 - `.kiro/specs/class-based-interfaces-and-controllers/design.md` (to be rewritten)
 - `.kiro/specs/class-based-interfaces-and-controllers/tasks.md` (to be regenerated)
 
 ### Previous implementation (stashed)
+
 The v1 implementation (#private + friends) is stashed in git for reference.

@@ -34,7 +34,6 @@ BaseController<TState>                     (abstract — protected engine, DRY s
 3. **Standalone class for composition** — `ComposedInterface` implements `Supports<F>` directly without inheriting from `BaseInterface`.
 4. **Factory functions remain public API** — Classes are never exposed to consumers.
 
-
 ## Components
 
 ### 1. Symbols Module (Revised)
@@ -84,7 +83,6 @@ export type Supports<F extends Facades[InterfaceType]> = {
   dispose(): void;
 };
 ```
-
 
 The key change: `Supports<F>` is now a structural type with a `resolveFacades` method and `dispose`, rather than relying on symbol-keyed `FACADE_RESOLVERS` data property + external `resolveFacades()` utility. The old `Interface<T>` and `ComposedInterface<T>` types become type aliases for `BaseInterface<T>` instances and the `ComposedInterface<T>` class instance, both satisfying `Supports<F>`.
 
@@ -153,7 +151,6 @@ export abstract class BaseInterface<T extends InterfaceType> {
 }
 ```
 
-
 ### 4. Concrete Interface Classes
 
 #### SearchInterface
@@ -163,7 +160,10 @@ export abstract class BaseInterface<T extends InterfaceType> {
 ```typescript
 import {BaseInterface} from '@/src/core/interface/base-interface.js';
 import {Engine, getFullEngine} from '@/src/core/interface/engine/engine.js';
-import type {FacadeResolverFactory, Facades} from '@/src/core/interface/utils/interface-types.js';
+import type {
+  FacadeResolverFactory,
+  Facades,
+} from '@/src/core/interface/utils/interface-types.js';
 import {generateId} from '@/src/core/interface/utils/id-generator.js';
 import {getOrCreateSearchParametersSlice} from '@/src/core/internal/search-parameters/search-parameters-slice.js';
 import {createSearchFacadeResolver} from '@/src/core/interface/api/search/search-facade.js';
@@ -179,7 +179,10 @@ export class SearchInterface extends BaseInterface<'search'> {
     return resolverFactories;
   }
 
-  constructor(engine: import('@/src/core/interface/engine/engine.js').FullEngine, stateId: string) {
+  constructor(
+    engine: import('@/src/core/interface/engine/engine.js').FullEngine,
+    stateId: string
+  ) {
     super(engine, stateId, 'search');
   }
 }
@@ -206,7 +209,10 @@ export function buildSearchInterface(
 ```typescript
 import {BaseInterface} from '@/src/core/interface/base-interface.js';
 import {Engine, getFullEngine} from '@/src/core/interface/engine/engine.js';
-import type {FacadeResolverFactory, Facades} from '@/src/core/interface/utils/interface-types.js';
+import type {
+  FacadeResolverFactory,
+  Facades,
+} from '@/src/core/interface/utils/interface-types.js';
 import {generateId} from '@/src/core/interface/utils/id-generator.js';
 import {createCommerceSearchFacadeResolver} from '@/src/core/interface/api/commerce-search/commerce-search-facade.js';
 import {createCommerceSuggestionsFacadeResolver} from '@/src/core/interface/api/commerce-query-suggest/commerce-query-suggest-facade.js';
@@ -221,7 +227,10 @@ export class CommerceInterface extends BaseInterface<'commerce'> {
     return resolverFactories;
   }
 
-  constructor(engine: import('@/src/core/interface/engine/engine.js').FullEngine, stateId: string) {
+  constructor(
+    engine: import('@/src/core/interface/engine/engine.js').FullEngine,
+    stateId: string
+  ) {
     super(engine, stateId, 'commerce');
   }
 }
@@ -240,7 +249,6 @@ export function buildCommerceInterface(
 }
 ```
 
-
 #### GenerativeInterface
 
 **File:** `src/public/interfaces/generative.ts`
@@ -248,8 +256,16 @@ export function buildCommerceInterface(
 ```typescript
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {BaseInterface} from '@/src/core/interface/base-interface.js';
-import {Engine, getFullEngine, type FullEngine} from '@/src/core/interface/engine/engine.js';
-import type {FacadeResolverFactory, Facades, EndpointStateScope} from '@/src/core/interface/utils/interface-types.js';
+import {
+  Engine,
+  getFullEngine,
+  type FullEngine,
+} from '@/src/core/interface/engine/engine.js';
+import type {
+  FacadeResolverFactory,
+  Facades,
+  EndpointStateScope,
+} from '@/src/core/interface/utils/interface-types.js';
 import {SOURCE_ENGINE} from '@/src/core/interface/utils/symbols.js';
 import {generateId} from '@/src/core/interface/utils/id-generator.js';
 import {loadGenerative} from '@/src/core/interface/generative/generative-loader.js';
@@ -259,11 +275,13 @@ const noopThunk = createAsyncThunk<void, {engine: FullEngine}>(
   async () => {}
 );
 
-const noopResolverFactory: FacadeResolverFactory = (_engine) => (_scope) => noopThunk;
+const noopResolverFactory: FacadeResolverFactory = (_engine) => (_scope) =>
+  noopThunk;
 
-const resolverFactories: Record<Facades['generative'], FacadeResolverFactory> = {
-  conversation: noopResolverFactory,
-};
+const resolverFactories: Record<Facades['generative'], FacadeResolverFactory> =
+  {
+    conversation: noopResolverFactory,
+  };
 
 export class GenerativeInterface extends BaseInterface<'generative'> {
   readonly [SOURCE_ENGINE]: Engine;
@@ -293,7 +311,6 @@ export function buildGenerativeInterface(
 }
 ```
 
-
 ### 5. ComposedInterface (Standalone Class)
 
 **File:** `src/public/interfaces/compose.ts`
@@ -309,7 +326,9 @@ import type {
 import {BaseInterface} from '@/src/core/interface/base-interface.js';
 import {generateId} from '@/src/core/interface/utils/id-generator.js';
 
-export class ComposedInterface<T extends InterfaceType> implements Supports<Facades[T]> {
+export class ComposedInterface<T extends InterfaceType> implements Supports<
+  Facades[T]
+> {
   readonly [STATE_ID]: string;
 
   #interfaces: BaseInterface<T>[];
@@ -319,7 +338,10 @@ export class ComposedInterface<T extends InterfaceType> implements Supports<Faca
     this.#interfaces = interfaces;
   }
 
-  resolveFacades(facade: Facades[T], composedInterfaceId?: string): EndpointThunk[] {
+  resolveFacades(
+    facade: Facades[T],
+    composedInterfaceId?: string
+  ): EndpointThunk[] {
     const id = composedInterfaceId ?? this[STATE_ID];
     return this.#interfaces.flatMap((sub) => sub.resolveFacades(facade, id));
   }
@@ -356,14 +378,17 @@ export function composeInterfaces<T extends InterfaceType>(options: {
 
 `ComposedInterface<T>` is a standalone class that directly implements `Supports<Facades[T]>`. It does not extend `BaseInterface` — it has no engine reference, no facade cache, and no disposal state of its own. It delegates `resolveFacades` to its sub-interfaces. The `composeInterfaces()` factory validates inputs (non-empty, same engine, same type) then instantiates the class.
 
-
 ### 6. BaseController Abstract Class
 
 **File:** `src/core/interface/base-controller.ts`
 
 ```typescript
 import type {FullEngine} from './engine/engine.js';
-import type {StateSelector, StateChangeCallback, Unsubscribe} from './engine/engine-types.js';
+import type {
+  StateSelector,
+  StateChangeCallback,
+  Unsubscribe,
+} from './engine/engine-types.js';
 import type {Controller} from '@/src/public/controllers/controller-types.js';
 
 export abstract class BaseController<TState> implements Controller<TState> {
@@ -396,7 +421,10 @@ Each controller extends `BaseController` and uses `interface.resolveFacades(faca
 
 ```typescript
 import {BaseController} from '@/src/core/interface/base-controller.js';
-import type {Supports, EndpointThunk} from '@/src/core/interface/utils/interface-types.js';
+import type {
+  Supports,
+  EndpointThunk,
+} from '@/src/core/interface/utils/interface-types.js';
 import type {Dispatchable} from '@/src/core/interface/engine/engine-types.js';
 import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
 import {ENGINE, STATE_ID} from '@/src/core/interface/utils/symbols.js';
@@ -473,14 +501,16 @@ export interface SearchBoxControllerState {
 }
 ```
 
-
 #### PaginationControllerImpl
 
 **File:** `src/public/controllers/pagination/pagination-controller.ts`
 
 ```typescript
 import {BaseController} from '@/src/core/interface/base-controller.js';
-import type {Supports, EndpointThunk} from '@/src/core/interface/utils/interface-types.js';
+import type {
+  Supports,
+  EndpointThunk,
+} from '@/src/core/interface/utils/interface-types.js';
 import type {Dispatchable} from '@/src/core/interface/engine/engine-types.js';
 import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
 import {ENGINE, STATE_ID} from '@/src/core/interface/utils/symbols.js';
@@ -571,7 +601,6 @@ export interface PaginationControllerOptions {
 }
 ```
 
-
 #### ResultListControllerImpl / ProductListControllerImpl
 
 These follow the same pattern — extend `BaseController`, construct the memoized selector, and delegate `state`/`subscribe` to the base class. No domain-specific actions are needed since they are read-only controllers.
@@ -649,7 +678,6 @@ export class Engine {
 }
 ```
 
-
 ### 9. FacadeResolverFactory Signature Change
 
 The current facade resolvers (`createSearchFacadeResolver`, etc.) take a `FullEngine` and return a `FacadeResolver` (via `createFacadeCache`). With `BaseInterface` owning the caching logic, these factories are simplified:
@@ -666,7 +694,8 @@ export function createSearchFacadeResolver(engine: FullEngine) {
 
 // After (FacadeResolverFactory):
 export const createSearchFacadeResolver: FacadeResolverFactory =
-  (engine) => (scope) => createSearchEndpointThunk(engine, scope);
+  (engine) => (scope) =>
+    createSearchEndpointThunk(engine, scope);
 ```
 
 ### 10. Public API Surface (src/index.ts)
@@ -675,22 +704,43 @@ export const createSearchFacadeResolver: FacadeResolverFactory =
 
 ```typescript
 export {Engine, getSampleEngineConfiguration} from './core/index.js';
-export type {EngineOptions, NavigatorContext, NavigatorContextProvider} from './core/index.js';
+export type {
+  EngineOptions,
+  NavigatorContext,
+  NavigatorContextProvider,
+} from './core/index.js';
 export * from './public/actions/index.js';
 export * from './public/controllers/index.js';
 export {composeInterfaces} from './public/interfaces/compose.js';
 export {buildGenerativeInterface} from './public/interfaces/generative.js';
 export {buildSearchInterface} from './public/interfaces/search.js';
 export {buildCommerceInterface} from './public/interfaces/commerce.js';
-export type {BuildGenerativeInterfaceOptions, GenerativeInterface} from './public/interfaces/generative.js';
-export type {BuildSearchInterfaceOptions, SearchInterface} from './public/interfaces/search.js';
-export type {BuildCommerceInterfaceOptions, CommerceInterface} from './public/interfaces/commerce.js';
+export type {
+  BuildGenerativeInterfaceOptions,
+  GenerativeInterface,
+} from './public/interfaces/generative.js';
+export type {
+  BuildSearchInterfaceOptions,
+  SearchInterface,
+} from './public/interfaces/search.js';
+export type {
+  BuildCommerceInterfaceOptions,
+  CommerceInterface,
+} from './public/interfaces/commerce.js';
 export type {ComposedInterface} from './public/interfaces/compose.js';
-export type {Supports, InterfaceType} from './core/interface/utils/interface-types.js';
-export type {Turn, TurnStatus, AgentResponse, /* ... */} from './core/interface/generative/generative-types.js';
+export type {
+  Supports,
+  InterfaceType,
+} from './core/interface/utils/interface-types.js';
+export type {
+  Turn,
+  TurnStatus,
+  AgentResponse /* ... */,
+} from './core/interface/generative/generative-types.js';
 ```
 
 Key constraints:
+
 - Symbols (`ENGINE`, `STATE_ID`, `TYPE`, `SOURCE_ENGINE`) are NOT re-exported
 - `BaseInterface` and `BaseController` are NOT re-exported
 - Only factory functions, TypeScript interfaces/types, and the `Engine` class are public
@@ -711,7 +761,6 @@ Key constraints:
 ```
 
 All `./interfaces/*` sub-path exports are removed. Consumers use the single entry point.
-
 
 ## Data Flow
 
@@ -761,13 +810,13 @@ Consumer calls engine.dispose()
 
 ## Error Handling
 
-| Scenario | Behavior |
-|----------|----------|
-| `resolveFacades` on disposed interface | Throws `"Cannot resolve thunks on a disposed interface."` |
-| `mutate/read/subscribe/adoptSlice` on disposed engine | Throws `"Cannot operate on a disposed Engine."` |
-| `composeInterfaces` with empty array | Throws `"composeInterfaces requires at least one interface."` |
-| `composeInterfaces` with mismatched engines | Throws `"All interfaces must share the same engine."` |
-| `composeInterfaces` with mismatched types | Throws with expected/got type names |
+| Scenario                                              | Behavior                                                      |
+| ----------------------------------------------------- | ------------------------------------------------------------- |
+| `resolveFacades` on disposed interface                | Throws `"Cannot resolve thunks on a disposed interface."`     |
+| `mutate/read/subscribe/adoptSlice` on disposed engine | Throws `"Cannot operate on a disposed Engine."`               |
+| `composeInterfaces` with empty array                  | Throws `"composeInterfaces requires at least one interface."` |
+| `composeInterfaces` with mismatched engines           | Throws `"All interfaces must share the same engine."`         |
+| `composeInterfaces` with mismatched types             | Throws with expected/got type names                           |
 
 ## File Structure (After Migration)
 
@@ -813,55 +862,54 @@ DELETED:
 └── src/core/interface/utils/resolve-facades.ts
 ```
 
-
 ## Correctness Properties
 
-*A property is a characteristic or behavior that should hold true across all valid executions of a system — essentially, a formal statement about what the system should do. Properties serve as the bridge between human-readable specifications and machine-verifiable correctness guarantees.*
+_A property is a characteristic or behavior that should hold true across all valid executions of a system — essentially, a formal statement about what the system should do. Properties serve as the bridge between human-readable specifications and machine-verifiable correctness guarantees._
 
 ### Property 1: Symbol-keyed properties reflect constructor arguments
 
-*For any* valid `(engine, stateId, type)` triple, a `BaseInterface` subclass instance constructed with those arguments SHALL have `instance[ENGINE] === engine`, `instance[STATE_ID] === stateId`, and `instance[TYPE] === type`.
+_For any_ valid `(engine, stateId, type)` triple, a `BaseInterface` subclass instance constructed with those arguments SHALL have `instance[ENGINE] === engine`, `instance[STATE_ID] === stateId`, and `instance[TYPE] === type`.
 
 **Validates: Requirements 1.1**
 
 ### Property 2: resolveFacades returns consistent cached references (idempotence)
 
-*For any* `BaseInterface` instance and *for any* valid facade name and optional composedInterfaceId, calling `resolveFacades(facade, composedInterfaceId)` N times (N ≥ 1) SHALL always return an array containing the same object reference, and the underlying `FacadeResolverFactory` SHALL be invoked at most once for that (facade, scope) pair.
+_For any_ `BaseInterface` instance and _for any_ valid facade name and optional composedInterfaceId, calling `resolveFacades(facade, composedInterfaceId)` N times (N ≥ 1) SHALL always return an array containing the same object reference, and the underlying `FacadeResolverFactory` SHALL be invoked at most once for that (facade, scope) pair.
 
 **Validates: Requirements 1.3, 1.4**
 
 ### Property 3: Disposed interface rejects all thunk resolution
 
-*For any* `BaseInterface` instance that has had `dispose()` called, and *for any* valid facade name, calling `resolveFacades(facade)` SHALL throw an error.
+_For any_ `BaseInterface` instance that has had `dispose()` called, and _for any_ valid facade name, calling `resolveFacades(facade)` SHALL throw an error.
 
 **Validates: Requirements 1.5, 1.6, 1.7**
 
 ### Property 4: ComposedInterface delegates to all sub-interfaces
 
-*For any* set of N (N ≥ 1) `BaseInterface<T>` instances sharing the same engine and type, and *for any* valid facade name, calling `resolveFacades(facade)` on the `ComposedInterface<T>` class instance returned by `composeInterfaces` SHALL return exactly N EndpointThunk values — one from each sub-interface's `resolveFacades` invocation with the composed ID.
+_For any_ set of N (N ≥ 1) `BaseInterface<T>` instances sharing the same engine and type, and _for any_ valid facade name, calling `resolveFacades(facade)` on the `ComposedInterface<T>` class instance returned by `composeInterfaces` SHALL return exactly N EndpointThunk values — one from each sub-interface's `resolveFacades` invocation with the composed ID.
 
 **Validates: Requirements 3.1, 3.2**
 
 ### Property 5: Supports<F> structural compatibility
 
-*For any* `BaseInterface` subclass instance and *for any* `ComposedInterface` class instance, both SHALL satisfy the `Supports<F>` structural type — meaning a controller constructor accepting `Supports<F>` compiles and operates correctly with either.
+_For any_ `BaseInterface` subclass instance and _for any_ `ComposedInterface` class instance, both SHALL satisfy the `Supports<F>` structural type — meaning a controller constructor accepting `Supports<F>` compiles and operates correctly with either.
 
 **Validates: Requirements 4.1, 4.2, 4.3, 4.4**
 
 ### Property 6: BaseController delegates state access to engine
 
-*For any* `BaseController` subclass constructed with a `(engine, stateSelector)` pair, accessing `.state` SHALL return `engine.read(stateSelector)`, and calling `.subscribe(cb)` SHALL register via `engine.subscribe(stateSelector, cb)` and return a valid unsubscribe function.
+_For any_ `BaseController` subclass constructed with a `(engine, stateSelector)` pair, accessing `.state` SHALL return `engine.read(stateSelector)`, and calling `.subscribe(cb)` SHALL register via `engine.subscribe(stateSelector, cb)` and return a valid unsubscribe function.
 
 **Validates: Requirements 5.1, 5.2, 5.3, 5.4**
 
 ### Property 7: Disposed engine rejects all operations
 
-*For any* `Engine` instance that has had `dispose()` called, calling any of `mutate`, `read`, `subscribe`, or `adoptSlice` on its `FullEngine` projection SHALL throw an error.
+_For any_ `Engine` instance that has had `dispose()` called, calling any of `mutate`, `read`, `subscribe`, or `adoptSlice` on its `FullEngine` projection SHALL throw an error.
 
 **Validates: Requirements 7.1, 7.2, 7.3, 7.4, 7.5, 7.6**
 
 ### Property 8: composeInterfaces validates homogeneity
 
-*For any* array of interfaces where at least two interfaces differ in their engine reference OR their type, `composeInterfaces` SHALL throw an error. *For any* empty array, `composeInterfaces` SHALL throw an error.
+_For any_ array of interfaces where at least two interfaces differ in their engine reference OR their type, `composeInterfaces` SHALL throw an error. _For any_ empty array, `composeInterfaces` SHALL throw an error.
 
 **Validates: Requirements 3.4, 3.5, 3.6**

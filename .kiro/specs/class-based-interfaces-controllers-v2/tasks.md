@@ -38,13 +38,13 @@ Migrate the thermidor package from factory-function frozen object literals to a 
     - Implement `subscribe(callback)` delegating to `engine.subscribe(stateSelector, callback)`
     - _Requirements: 5.1, 5.2, 5.3, 5.4_
 
-  - [x]* 1.5 Write unit tests for `BaseInterface`
+  - [x]\* 1.5 Write unit tests for `BaseInterface`
     - **Property 1: Symbol-keyed properties reflect constructor arguments**
     - **Property 2: resolveFacades returns consistent cached references (idempotence)**
     - **Property 3: Disposed interface rejects all thunk resolution**
     - **Validates: Requirements 1.1, 1.3, 1.4, 1.5, 1.6, 1.7**
 
-  - [x]* 1.6 Write unit tests for `BaseController`
+  - [x]\* 1.6 Write unit tests for `BaseController`
     - **Property 6: BaseController delegates state access to engine**
     - **Validates: Requirements 5.1, 5.2, 5.3, 5.4**
 
@@ -86,7 +86,7 @@ Migrate the thermidor package from factory-function frozen object literals to a 
     - Export `ComposedInterface<T>` class
     - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6_
 
-  - [x]* 2.6 Write unit tests for `ComposedInterface`
+  - [x]\* 2.6 Write unit tests for `ComposedInterface`
     - **Property 4: ComposedInterface delegates to all sub-interfaces**
     - **Property 8: composeInterfaces validates homogeneity**
     - **Validates: Requirements 3.1, 3.2, 3.4, 3.5, 3.6**
@@ -134,7 +134,7 @@ Migrate the thermidor package from factory-function frozen object literals to a 
     - Access `[SOURCE_ENGINE]` from GenerativeInterface for hydration
     - _Requirements: 6.6, 6.7_
 
-  - [x]* 4.7 Write unit tests for migrated controllers
+  - [x]\* 4.7 Write unit tests for migrated controllers
     - **Property 5: Supports<F> structural compatibility** — verify controllers accept both class instances and composed objects
     - Test SearchBoxController `setQuery`/`submit` behavior
     - Test PaginationController `selectPage`/`setPageSize` behavior
@@ -151,7 +151,7 @@ Migrate the thermidor package from factory-function frozen object literals to a 
     - In `dispose()`: nullify store, rootReducer, adoptedSlices, clear hydration snapshots, delete from `fullEngineWrappers`
     - _Requirements: 7.1, 7.2, 7.3, 7.4, 7.5, 7.6_
 
-  - [x]* 6.2 Write unit tests for `Engine.dispose()`
+  - [x]\* 6.2 Write unit tests for `Engine.dispose()`
     - **Property 7: Disposed engine rejects all operations**
     - Test that `mutate`, `read`, `subscribe`, `adoptSlice` all throw after `dispose()`
     - Test that `disposed` getter returns correct state
@@ -195,15 +195,15 @@ Migrate the thermidor package from factory-function frozen object literals to a 
 ```json
 {
   "waves": [
-    { "id": 0, "tasks": ["1.1", "1.2"] },
-    { "id": 1, "tasks": ["1.3", "1.4"] },
-    { "id": 2, "tasks": ["1.5", "1.6", "2.1"] },
-    { "id": 3, "tasks": ["2.2", "2.3", "2.4"] },
-    { "id": 4, "tasks": ["2.5"] },
-    { "id": 5, "tasks": ["2.6", "4.1", "4.2", "4.3", "4.4", "4.5", "4.6"] },
-    { "id": 6, "tasks": ["4.7"] },
-    { "id": 7, "tasks": ["6.1", "6.3"] },
-    { "id": 8, "tasks": ["6.2", "6.4", "6.5"] }
+    {"id": 0, "tasks": ["1.1", "1.2"]},
+    {"id": 1, "tasks": ["1.3", "1.4"]},
+    {"id": 2, "tasks": ["1.5", "1.6", "2.1"]},
+    {"id": 3, "tasks": ["2.2", "2.3", "2.4"]},
+    {"id": 4, "tasks": ["2.5"]},
+    {"id": 5, "tasks": ["2.6", "4.1", "4.2", "4.3", "4.4", "4.5", "4.6"]},
+    {"id": 6, "tasks": ["4.7"]},
+    {"id": 7, "tasks": ["6.1", "6.3"]},
+    {"id": 8, "tasks": ["6.2", "6.4", "6.5"]}
   ]
 }
 ```
