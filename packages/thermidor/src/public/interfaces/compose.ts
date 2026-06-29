@@ -1,74 +1,80 @@
 import {
-  KIND,
-  TYPE,
-  STATE_ID,
-  ENGINE,
-  INTERFACES,
-  FACADE_RESOLVERS,
-} from '@/src/core/interface/utils/symbols.js';
+  getInterfaceInternals,
+  type BaseInterface,
+} from '@/src/core/interface/base-interface.js';
+import type {FullEngine} from '@/src/core/interface/engine/engine.js';
 import type {
-  Interface,
-  InterfaceType,
-  ComposedInterface,
+  EndpointThunk,
   Facades,
-  FacadeResolver,
+  InterfaceType,
 } from '@/src/core/interface/utils/interface-types.js';
 import {generateId} from '@/src/core/interface/utils/id-generator.js';
 
+export interface ComposedInternals {
+  engine: FullEngine;
+  stateId: string;
+}
+
+export let getComposedInternals: <T extends InterfaceType>(
+  composed: ComposedInterface<T>
+) => ComposedInternals;
+
+export class ComposedInterface<T extends InterfaceType> {
+  #engine: FullEngine;
+  #stateId: string;
+  #interfaces: BaseInterface<T>[];
+
+  static {
+    getComposedInternals = <typeof getComposedInternals>((composed) => ({
+      engine: composed.#engine,
+      stateId: composed.#stateId,
+    }));
+  }
+
+  constructor(interfaces: BaseInterface<T>[], composedId: string) {
+    if (interfaces.length === 0) {
+      throw new Error('ComposedInterface requires at least one interface.');
+    }
+
+    const {engine} = getInterfaceInternals(interfaces[0]);
+    this.#engine = engine;
+    this.#stateId = composedId;
+    this.#interfaces = interfaces;
+  }
+
+  resolveFacades(
+    facade: Facades[T],
+    composedInterfaceId?: string
+  ): EndpointThunk[] {
+    const id = composedInterfaceId ?? this.#stateId;
+    return this.#interfaces.flatMap((sub) => sub.resolveFacades(facade, id));
+  }
+
+  dispose(): void {
+    // No-op: composed interface does not own sub-interface lifecycle
+  }
+}
+
 export function composeInterfaces<T extends InterfaceType>(options: {
-  interfaces: Interface<T>[];
+  interfaces: BaseInterface<T>[];
 }): ComposedInterface<T> {
   if (options.interfaces.length === 0) {
     throw new Error('composeInterfaces requires at least one interface.');
   }
 
-  const engine = options.interfaces[0][ENGINE];
-  const type = options.interfaces[0][TYPE];
+  const first = getInterfaceInternals(options.interfaces[0]);
 
   for (const iface of options.interfaces) {
-    if (iface[ENGINE] !== engine) {
+    const internals = getInterfaceInternals(iface);
+    if (internals.engine !== first.engine) {
       throw new Error('All interfaces must share the same engine.');
     }
-    if (iface[TYPE] !== type) {
+    if (internals.type !== first.type) {
       throw new Error(
-        `All interfaces must share the same type. Expected '${type}', got '${iface[TYPE]}'.`
+        `All interfaces must share the same type. Expected '${first.type}', got '${internals.type}'.`
       );
     }
   }
 
-  const composedId = generateId();
-  const interfaces = options.interfaces;
-
-  const subMap = new Map(interfaces.map((i) => [i[STATE_ID], i]));
-
-  if (subMap.size !== interfaces.length) {
-    throw new Error('Composed interfaces must have unique ids.');
-  }
-
-  const facadeNames = Object.keys(interfaces[0][FACADE_RESOLVERS]) as Array<
-    Facades[T]
-  >;
-  const resolvers = Object.fromEntries(
-    facadeNames.map((name) => [
-      name,
-      ((scope) => {
-        const sub = subMap.get(scope.interfaceId);
-        if (!sub) {
-          throw new Error(
-            `No sub-interface found for scope interfaceId '${scope.interfaceId}' in composed interface '${composedId}'.`
-          );
-        }
-        return sub[FACADE_RESOLVERS][name](scope);
-      }) satisfies FacadeResolver,
-    ])
-  ) as Record<Facades[T], FacadeResolver>;
-
-  return Object.freeze({
-    [KIND]: 'composed' as const,
-    [TYPE]: type,
-    [STATE_ID]: composedId,
-    [ENGINE]: engine,
-    [INTERFACES]: interfaces,
-    [FACADE_RESOLVERS]: resolvers,
-  });
+  return new ComposedInterface(options.interfaces, generateId());
 }

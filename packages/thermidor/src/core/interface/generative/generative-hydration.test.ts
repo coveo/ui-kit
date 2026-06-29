@@ -1,10 +1,10 @@
 import {describe, it, expect, beforeEach} from 'vitest';
 import {Engine, getFullEngine} from '@/src/core/interface/engine/engine.js';
+import {getInterfaceInternals} from '@/src/core/interface/base-interface.js';
 import {
   createHydrateSubInterface,
   getOrCreateHydrateFromSnapshotAction,
 } from './generative-hydration.js';
-import {STATE_ID} from '@/src/core/interface/utils/symbols.js';
 import {getOrCreateProductListSlice} from '@/src/core/internal/product-list/product-list-slice.js';
 import {getOrCreateResultsSlice} from '@/src/core/internal/result-list/result-list-slice.js';
 
@@ -72,7 +72,8 @@ describe('createHydrateSubInterface', () => {
     expect(result).not.toBeNull();
     expect(result!.useCase).toBe('commerceSearch');
     expect(result!.interface).toBeDefined();
-    expect(result!.interface[STATE_ID]).toBeDefined();
+    const {stateId} = getInterfaceInternals(result!.interface);
+    expect(stateId).toBeDefined();
   });
 
   it('returns a RoutedInterface for search-api-response', () => {
@@ -115,7 +116,7 @@ describe('createHydrateSubInterface', () => {
     };
 
     const result = hydrate('commerce-search-api-response', content);
-    const subId = result!.interface[STATE_ID];
+    const {stateId: subId} = getInterfaceInternals(result!.interface);
     const fullEngine = getFullEngine(engine);
 
     const productSlice = getOrCreateProductListSlice(subId);
@@ -150,7 +151,7 @@ describe('createHydrateSubInterface', () => {
     };
 
     const result = hydrate('search-api-response', content);
-    const subId = result!.interface[STATE_ID];
+    const {stateId: subId} = getInterfaceInternals(result!.interface);
     const fullEngine = getFullEngine(engine);
 
     const resultsSlice = getOrCreateResultsSlice(subId);

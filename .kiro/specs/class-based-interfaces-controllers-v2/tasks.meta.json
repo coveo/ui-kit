@@ -1,0 +1,471 @@
+{
+  "pbtResults": {
+    "1.6 Write unit tests for `BaseController`": {
+      "status": "passed",
+      "lastRunTimestamp": 1782495332258
+    },
+    "1.5 Write unit tests for `BaseInterface`": {
+      "status": "passed",
+      "lastRunTimestamp": 1782495365284
+    }
+  },
+  "executionHistory": {
+    "1.1 Update symbols module — remove `KIND`, `INTERFACES`, `FACADE_RESOLVERS` exports; retain `ENGINE`, `STATE_ID`, `TYPE`, `SOURCE_ENGINE`": [
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782488401322
+      },
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782488410174
+      },
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782488532673
+      }
+    ],
+    "1.2 Update type definitions — replace old `Interface`, `ComposedInterface`, `Supports` types with new structural `Supports<F>` type and `FacadeResolverFactory`": [
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782488401351
+      },
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782488411146
+      },
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782488533667
+      }
+    ],
+    "1.3 Create `BaseInterface<T>` abstract class": [
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782488401377
+      },
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782488537923
+      },
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782488654598
+      }
+    ],
+    "1.4 Create `BaseController<TState>` abstract class": [
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782488401403
+      },
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782488538859
+      },
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782488655315
+      }
+    ],
+    "2.1 Update facade resolver factories to match `FacadeResolverFactory` signature": [
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782488401428
+      },
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782488659553
+      },
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782488800031
+      }
+    ],
+    "2.2 Rewrite `SearchInterface` as a class extending `BaseInterface<'search'>`": [
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782488401454
+      },
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782488812392
+      },
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782488998385
+      }
+    ],
+    "2.3 Rewrite `CommerceInterface` as a class extending `BaseInterface<'commerce'>`": [
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782488401495
+      },
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782488813251
+      },
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782488999281
+      }
+    ],
+    "2.4 Rewrite `GenerativeInterface` as a class extending `BaseInterface<'generative'>`": [
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782488401538
+      },
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782488814153
+      },
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782489000191
+      }
+    ],
+    "2.5 Rewrite `ComposedInterface` as a standalone class implementing `Supports<F>`": [
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782488401568
+      },
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782489015294
+      },
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782489158291
+      }
+    ],
+    "3. Checkpoint": [
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782488401594
+      },
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782489171359
+      },
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782489172104
+      }
+    ],
+    "4.1 Migrate `SearchBoxControllerImpl` to extend `BaseController`": [
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782488401619
+      },
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782489185303
+      },
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782494710468
+      }
+    ],
+    "4.2 Migrate `ResultListControllerImpl` to extend `BaseController`": [
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782488401644
+      },
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782489186076
+      },
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782494711322
+      }
+    ],
+    "4.3 Migrate `ProductListControllerImpl` to extend `BaseController`": [
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782488401667
+      },
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782489187002
+      },
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782494712255
+      }
+    ],
+    "4.4 Migrate `PaginationControllerImpl` to extend `BaseController`": [
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782488401695
+      },
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782489187831
+      },
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782494713060
+      }
+    ],
+    "4.5 Migrate `CartControllerImpl` to extend `BaseController`": [
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782488401718
+      },
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782489188669
+      },
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782494713853
+      }
+    ],
+    "4.6 Migrate `ConverseControllerImpl` to extend `BaseController`": [
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782488401754
+      },
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782489189485
+      },
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782494714781
+      }
+    ],
+    "5. Checkpoint": [
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782488401778
+      },
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782494720348
+      },
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782494721168
+      }
+    ],
+    "6.1 Add `dispose()` method to `Engine` class": [
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782488401805
+      },
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782494727115
+      },
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782494868292
+      }
+    ],
+    "6.3 Delete dead code files": [
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782488401828
+      },
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782494728148
+      },
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782494869001
+      }
+    ],
+    "6.4 Remove sub-path exports from `package.json`": [
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782488401854
+      },
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782494728957
+      },
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782494869776
+      }
+    ],
+    "6.5 Update `src/index.ts` public API exports": [
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782488401877
+      },
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782494730035
+      },
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782494870598
+      }
+    ],
+    "7. Final checkpoint": [
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782488401905
+      },
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782494874998
+      }
+    ],
+    "1. Create base classes and update core types": [
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782488655342
+      }
+    ],
+    "2. Migrate concrete interface classes": [
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782489158354
+      }
+    ],
+    "4. Migrate controllers to extend BaseController": [
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782494714824
+      }
+    ],
+    "6. Add Engine.dispose() and cleanup": [
+      {
+        "executionId": "9fd1d23e-641a-45bf-a566-52c3a7e2c67f",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782494870638
+      }
+    ],
+    "1.5 Write unit tests for `BaseInterface`": [
+      {
+        "executionId": "7a700deb-2d49-4317-b7ba-34116369f411",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782495217630
+      },
+      {
+        "executionId": "7a700deb-2d49-4317-b7ba-34116369f411",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782495575939
+      }
+    ],
+    "1.6 Write unit tests for `BaseController`": [
+      {
+        "executionId": "7a700deb-2d49-4317-b7ba-34116369f411",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782495218418
+      },
+      {
+        "executionId": "7a700deb-2d49-4317-b7ba-34116369f411",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782495575965
+      }
+    ],
+    "2.6 Write unit tests for `ComposedInterface`": [
+      {
+        "executionId": "7a700deb-2d49-4317-b7ba-34116369f411",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782495219250
+      },
+      {
+        "executionId": "7a700deb-2d49-4317-b7ba-34116369f411",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782495576893
+      }
+    ],
+    "4.7 Write unit tests for migrated controllers": [
+      {
+        "executionId": "7a700deb-2d49-4317-b7ba-34116369f411",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782495219990
+      },
+      {
+        "executionId": "7a700deb-2d49-4317-b7ba-34116369f411",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782495577780
+      }
+    ],
+    "6.2 Write unit tests for `Engine.dispose()`": [
+      {
+        "executionId": "7a700deb-2d49-4317-b7ba-34116369f411",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782495220937
+      },
+      {
+        "executionId": "7a700deb-2d49-4317-b7ba-34116369f411",
+        "chatSessionId": "sess_9594c133-de2d-4bc2-bd4a-e5a53b9bd77f",
+        "timestamp": 1782495578631
+      }
+    ]
+  }
+}

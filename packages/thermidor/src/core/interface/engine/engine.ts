@@ -40,6 +40,11 @@ const fullEngineWrappers = new WeakMap<Engine, FullEngine>();
  * Supports multi-engine paradigm - multiple independent engine instances can coexist
  */
 export class Engine {
+  get disposed(): boolean {
+    return this.#disposed;
+  }
+
+  #disposed = false;
   #store: ReturnType<typeof configureStore>;
   #adoptedSlices: WeakSet<Slice>;
   #rootReducer = combineSlices({});
@@ -56,7 +61,7 @@ export class Engine {
   }
 
   static {
-    getFullEngine = (engine: Engine) => {
+    getFullEngine = <typeof getFullEngine>((engine: Engine) => {
       const existingWrapper = fullEngineWrappers.get(engine);
       if (existingWrapper) {
         return existingWrapper;
@@ -81,10 +86,22 @@ export class Engine {
       fullEngineWrappers.set(engine, wrapper);
 
       return wrapper;
-    };
+    });
+  }
+
+  dispose(): void {
+    this.#disposed = true;
+    this.#store = null!;
+    this.#rootReducer = null!;
+    this.#adoptedSlices = null!;
+    this.#hydrationSnapshots.clear();
+    this.#navigatorContextProvider = undefined;
+    fullEngineWrappers.delete(this);
   }
 
   async #adoptSlice(slice: Slice) {
+    this.#assertNotDisposed();
+
     if (!this.#store) {
       throw new Error('Cannot adopt slice before store is initialized');
     }
@@ -112,10 +129,13 @@ export class Engine {
     interfaceId: string,
     content: Record<string, unknown>
   ) {
+    this.#assertNotDisposed();
     this.#hydrationSnapshots.set(interfaceId, content);
   }
 
   #getNavigatorContextProvider(): NavigatorContextProvider | undefined {
+    this.#assertNotDisposed();
+
     if (
       !this.#navigatorContextProvider &&
       !this.#didWarnMissingNavigatorContextProvider
@@ -130,12 +150,14 @@ export class Engine {
   }
 
   #mutate(mutation: Dispatchable): unknown {
+    this.#assertNotDisposed();
     return this.#_getStore().dispatch(
       mutation as Parameters<ReturnType<typeof configureStore>['dispatch']>[0]
     );
   }
 
   #read<T>(selector: StateSelector<T>): T {
+    this.#assertNotDisposed();
     return selector(this.#_getState());
   }
 
@@ -143,6 +165,8 @@ export class Engine {
     selector: StateSelector<T>,
     callback: StateChangeCallback<T>
   ): Unsubscribe {
+    this.#assertNotDisposed();
+
     // Track previous value to detect changes
     let previousValue = selector(this.#_getState());
 
@@ -158,6 +182,12 @@ export class Engine {
     });
 
     return unsubscribe;
+  }
+
+  #assertNotDisposed(): void {
+    if (this.#disposed) {
+      throw new Error('Cannot operate on a disposed Engine.');
+    }
   }
 
   #_getStore() {
