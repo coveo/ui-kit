@@ -61,7 +61,7 @@ export class Engine {
   }
 
   static {
-    getFullEngine = (engine: Engine) => {
+    getFullEngine = <typeof getFullEngine>((engine: Engine) => {
       const existingWrapper = fullEngineWrappers.get(engine);
       if (existingWrapper) {
         return existingWrapper;
@@ -86,7 +86,7 @@ export class Engine {
       fullEngineWrappers.set(engine, wrapper);
 
       return wrapper;
-    };
+    });
   }
 
   dispose(): void {

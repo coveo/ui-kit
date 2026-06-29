@@ -25,10 +25,10 @@ export class ComposedInterface<T extends InterfaceType> {
   #interfaces: BaseInterface<T>[];
 
   static {
-    getComposedInternals = (composed) => ({
+    getComposedInternals = <typeof getComposedInternals>((composed) => ({
       engine: composed.#engine,
       stateId: composed.#stateId,
-    });
+    }));
   }
 
   constructor(interfaces: BaseInterface<T>[], composedId: string) {

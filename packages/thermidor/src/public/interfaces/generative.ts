@@ -31,7 +31,9 @@ export class GenerativeInterface extends BaseInterface<'generative'> {
   #sourceEngine: Engine;
 
   static {
-    getGenerativeSourceEngine = (iface) => iface.#sourceEngine;
+    getGenerativeSourceEngine = <typeof getGenerativeSourceEngine>(
+      ((iface) => iface.#sourceEngine)
+    );
   }
 
   constructor(engine: FullEngine, stateId: string, sourceEngine: Engine) {
