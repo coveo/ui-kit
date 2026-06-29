@@ -1,5 +1,5 @@
 {
-  "name": "@samples/headless-commerce-vite",
+  "name": "@coveo/sample-headless-commerce-vite",
   "private": true,
   "type": "module",
   "scripts": {
