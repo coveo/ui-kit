@@ -1,31 +1,18 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {createTestEngine} from '@/src/test/test-utils.js';
-import {createAsyncThunk} from '@reduxjs/toolkit';
-import type {EndpointStateScope} from '@/src/core/interface/utils/interface-types.js';
 import {
   type Engine,
   type FullEngine,
   getFullEngine,
 } from '@/src/core/interface/engine/engine.js';
-import {
-  ENGINE,
-  STATE_ID,
-  SOURCE_ENGINE,
-  KIND,
-  TYPE,
-  FACADE_RESOLVERS,
-} from '@/src/core/interface/utils/symbols.js';
 import {getOrCreateGenerativeActions} from '@/src/core/internal/generative/generative-actions.js';
-import {loadGenerative} from '@/src/core/interface/generative/generative-loader.js';
-import type {GenerativeInterface} from '@/src/public/interfaces/generative.js';
+import {
+  buildGenerativeInterface,
+  type GenerativeInterface,
+} from '@/src/public/interfaces/generative.js';
 import {buildConverseController} from './converse-controller.js';
 
 const TEST_ID = 'test-generative';
-
-const noopThunk = createAsyncThunk<void, {engine: FullEngine}>(
-  'generative/noop',
-  async () => {}
-);
 
 const mockSubmit = vi.fn<(prompt: string) => Promise<void>>();
 const mockResubmit = vi.fn<(turnId: string, prompt: string) => Promise<void>>();
@@ -46,22 +33,6 @@ vi.mock('@/src/core/interface/generative/generative-hydration.js', () => ({
   createHydrateSubInterface: vi.fn(() => vi.fn()),
 }));
 
-function createTestGenerativeInterface(engine: Engine): GenerativeInterface {
-  const fullEngine = getFullEngine(engine);
-  loadGenerative(fullEngine, TEST_ID);
-
-  return Object.freeze({
-    [KIND]: 'interface' as const,
-    [TYPE]: 'generative' as const,
-    [STATE_ID]: TEST_ID,
-    [ENGINE]: fullEngine,
-    [SOURCE_ENGINE]: engine,
-    [FACADE_RESOLVERS]: {
-      conversation: (_scope: EndpointStateScope) => noopThunk,
-    },
-  }) as unknown as GenerativeInterface;
-}
-
 describe('buildConverseController', () => {
   let engine: Engine;
   let fullEngine: FullEngine;
@@ -78,7 +49,7 @@ describe('buildConverseController', () => {
     mockResubmit.mockResolvedValue();
     engine = createTestEngine();
     fullEngine = getFullEngine(engine);
-    generativeInterface = createTestGenerativeInterface(engine);
+    generativeInterface = buildGenerativeInterface({engine, id: TEST_ID});
   });
 
   describe('state', () => {

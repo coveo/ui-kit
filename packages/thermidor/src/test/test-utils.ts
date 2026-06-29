@@ -4,20 +4,12 @@
  * Common helpers and mock data builders for unit tests
  */
 
-import {Engine, getFullEngine} from '@/src/core/index.js';
+import {Engine} from '@/src/core/index.js';
 import type {SearchResult, FacetValue} from '@/src/core/index.js';
-import type {
-  EndpointStateScope,
-  Supports,
-  FacadeResolver,
-} from '@/src/core/interface/utils/interface-types.js';
 import {
-  STATE_ID,
-  ENGINE,
-  KIND,
-  TYPE,
-  FACADE_RESOLVERS,
-} from '@/src/core/interface/utils/symbols.js';
+  buildSearchInterface,
+  type SearchInterface,
+} from '@/src/public/interfaces/search.js';
 
 /**
  * Create a fresh engine instance for testing
@@ -27,30 +19,15 @@ export function createTestEngine(): Engine {
   return new Engine();
 }
 
-const noopResolver: FacadeResolver = (_scope: EndpointStateScope) => {
-  throw new Error('No thunk registered for this facade in test');
-};
-
 /**
  * Create a mock interface handle for testing controllers that require a search-capable interface.
- * The stateId defaults to 'test'. Resolvers default to noop.
+ * The stateId defaults to 'test'.
  */
 export function createTestInterface(
   engine: Engine,
-  stateId = 'test',
-  resolvers?: {search?: FacadeResolver; suggestions?: FacadeResolver}
-): Supports<'search'> {
-  const fullEngine = getFullEngine(engine);
-  return {
-    [KIND]: 'interface' as const,
-    [TYPE]: 'search' as const,
-    [STATE_ID]: stateId,
-    [ENGINE]: fullEngine,
-    [FACADE_RESOLVERS]: {
-      search: resolvers?.search ?? noopResolver,
-      suggestions: resolvers?.suggestions ?? noopResolver,
-    },
-  };
+  stateId = 'test'
+): SearchInterface {
+  return buildSearchInterface({engine, id: stateId});
 }
 
 /**

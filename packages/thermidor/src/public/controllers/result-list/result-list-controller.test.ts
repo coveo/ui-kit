@@ -4,15 +4,14 @@ import {
   createMockSearchResults,
 } from '@/src/test/test-utils.js';
 import {Engine, getFullEngine} from '@/src/core/interface/engine/engine.js';
+import {getInterfaceInternals} from '@/src/core/interface/base-interface.js';
 import {getOrCreateResultsActions} from '@/src/core/internal/result-list/result-list-actions.js';
 import {buildResultListController} from './result-list-controller.js';
 import {buildSearchInterface} from '@/src/public/interfaces/search.js';
-import type {Interface} from '@/src/core/interface/utils/interface-types.js';
-import {STATE_ID} from '@/src/core/interface/utils/symbols.js';
 
 describe('buildResultListController', () => {
   let engine: Engine;
-  let searchInterface: Interface<'search'>;
+  let searchInterface: ReturnType<typeof buildSearchInterface>;
 
   beforeEach(() => {
     engine = createTestEngine();
@@ -38,7 +37,7 @@ describe('buildResultListController', () => {
         interface: searchInterface,
       });
 
-      const stateId = searchInterface[STATE_ID];
+      const {stateId} = getInterfaceInternals(searchInterface);
       const actions = getOrCreateResultsActions(stateId);
       const fullEngine = getFullEngine(engine);
 
@@ -60,7 +59,7 @@ describe('buildResultListController', () => {
       });
       const callback = vi.fn();
 
-      const stateId = searchInterface[STATE_ID];
+      const {stateId} = getInterfaceInternals(searchInterface);
       const actions = getOrCreateResultsActions(stateId);
       const fullEngine = getFullEngine(engine);
 
@@ -78,7 +77,7 @@ describe('buildResultListController', () => {
       });
       const callback = vi.fn();
 
-      const stateId = searchInterface[STATE_ID];
+      const {stateId} = getInterfaceInternals(searchInterface);
       const actions = getOrCreateResultsActions(stateId);
       const fullEngine = getFullEngine(engine);
 
@@ -103,10 +102,9 @@ describe('buildResultListController', () => {
 
       controller.subscribe(callback);
 
-      // Mutate a different slice (searchBox) — should not trigger result-list callback
       const {getOrCreateSearchBoxActions} =
         await import('@/src/core/internal/search-box/search-box-actions.js');
-      const stateId = searchInterface[STATE_ID];
+      const {stateId} = getInterfaceInternals(searchInterface);
       const searchBoxActions = getOrCreateSearchBoxActions(stateId);
       fullEngine.mutate(searchBoxActions.setQuery('unrelated change'));
 
