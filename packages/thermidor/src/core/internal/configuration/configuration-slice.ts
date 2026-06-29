@@ -59,5 +59,7 @@ export const configurationSlice = createSlice({
     country: (state) => state.country,
     currency: (state) => state.currency,
     endpoint: (state) => state.endpoint,
+    agentRuntimeName: (state) => state.agentRuntimeName,
+    agentRuntimeQualifier: (state) => state.agentRuntimeQualifier,
   },
 });

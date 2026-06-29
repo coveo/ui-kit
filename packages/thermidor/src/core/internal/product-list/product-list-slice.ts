@@ -4,7 +4,6 @@ import type {
   ProductListState,
 } from '@/src/core/interface/product-list/product-list-types.js';
 import {getOrCreateProductListActions} from './product-list-actions.js';
-import {getOrCreateHydrateFromSnapshotAction} from '@/src/core/interface/generative/generative-hydration.js';
 
 export const initialProductListState: ProductListState = {
   products: [],
@@ -43,7 +42,6 @@ function mapProduct(raw: Record<string, unknown>): Product {
 
 export function createProductListSlice(interfaceId: string) {
   const actions = getOrCreateProductListActions(interfaceId);
-  const hydrateAction = getOrCreateHydrateFromSnapshotAction(interfaceId);
 
   return createSlice({
     name: `${interfaceId}/products`,
@@ -52,15 +50,6 @@ export function createProductListSlice(interfaceId: string) {
     extraReducers: (builder) => {
       builder.addCase(actions.setProductsFromResponse, (state, action) => {
         state.products = action.payload.map((p) =>
-          mapProduct(p as Record<string, unknown>)
-        );
-      });
-      builder.addCase(hydrateAction, (state, action) => {
-        const payload = action.payload as Record<string, unknown> | null;
-        if (!payload || !Array.isArray(payload.products)) {
-          return;
-        }
-        state.products = payload.products.map((p: unknown) =>
           mapProduct(p as Record<string, unknown>)
         );
       });

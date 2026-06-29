@@ -33,6 +33,8 @@ const engine = new Engine({
 
 const generativeInterface = buildGenerativeInterface({engine});
 
+export {generativeInterface};
+
 export const converseController = buildConverseController({
   interface: generativeInterface,
 });

@@ -1,5 +1,3 @@
-import type {Interface} from '@/src/core/interface/utils/interface-types.js';
-
 /**
  * ============================================================================
  * Domain types (for state / selectors)
@@ -25,11 +23,6 @@ export interface Turn {
   status: TurnStatus;
 
   /**
-   * Present when the turn resulted in routing mode.
-   */
-  routedInterface?: RoutedInterface;
-
-  /**
    * Present when the turn resulted in agent mode.
    */
   agentResponse?: AgentResponse;
@@ -39,20 +32,6 @@ export interface Turn {
    */
   error?: string;
 }
-
-export type UseCaseInterfaceMap = {
-  commerceSearch: Interface<'commerce'>;
-  search: Interface<'search'>;
-};
-
-export type RoutedInterface = {
-  [K in RoutedUseCase]: {
-    useCase: K;
-    interface: UseCaseInterfaceMap[K];
-  };
-}[RoutedUseCase];
-
-export type RoutedUseCase = 'commerceSearch' | 'search';
 
 export interface AgentResponse {
   /**

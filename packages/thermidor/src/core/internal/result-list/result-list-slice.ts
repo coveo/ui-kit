@@ -1,7 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import type {ResultListState} from '@/src/core/interface/result-list/result-list-types.js';
 import {getOrCreateResultsActions} from './result-list-actions.js';
-import {getOrCreateHydrateFromSnapshotAction} from '@/src/core/interface/generative/generative-hydration.js';
 
 export const initialResultListState: ResultListState = {
   results: [],
@@ -22,7 +21,6 @@ function mapResult(result: Record<string, unknown>) {
 
 export function createResultsSlice(interfaceId: string) {
   const actions = getOrCreateResultsActions(interfaceId);
-  const hydrateAction = getOrCreateHydrateFromSnapshotAction(interfaceId);
 
   return createSlice({
     name: `${interfaceId}/results`,
@@ -40,15 +38,6 @@ export function createResultsSlice(interfaceId: string) {
           raw: result.raw,
           score: result.score,
         }));
-      });
-      builder.addCase(hydrateAction, (state, action) => {
-        const payload = action.payload as Record<string, unknown> | null;
-        if (!payload || !Array.isArray(payload.results)) {
-          return;
-        }
-        state.results = payload.results.map((r: unknown) =>
-          mapResult(r as Record<string, unknown>)
-        );
       });
     },
   });

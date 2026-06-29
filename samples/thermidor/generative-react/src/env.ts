@@ -101,5 +101,9 @@ export function getSampleConfiguration() {
     country: getRequiredEnvValue('VITE_COVEO_COUNTRY'),
     currency: getRequiredEnvValue('VITE_COVEO_CURRENCY'),
     endpoint,
+    agentRuntimeName: getOptionalEnvValue('VITE_COVEO_AGENT_RUNTIME_NAME'),
+    agentRuntimeQualifier: getOptionalEnvValue(
+      'VITE_COVEO_AGENT_RUNTIME_QUALIFIER'
+    ),
   };
 }

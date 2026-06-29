@@ -10,7 +10,6 @@ import {readEndpointClientConfiguration} from '@/src/core/internal/configuration
 import {generateId} from '@/src/core/interface/utils/id-generator.js';
 import type {
   A2UISurface,
-  RoutedInterface,
   TurnStatus,
 } from '@/src/core/interface/generative/generative-types.js';
 
@@ -18,7 +17,6 @@ export interface GenerativeStatePort {
   createTurn(payload: {id: string; prompt: string; status: TurnStatus}): void;
   setActiveTurnId(id: string): void;
   replaceTurnId(oldId: string, newId: string): void;
-  setRoutedInterface(turnId: string, routedInterface: RoutedInterface): void;
   initAgentResponse(turnId: string): void;
   startMessage(turnId: string, role: string): void;
   appendMessageDelta(turnId: string, delta: string): void;
@@ -29,17 +27,25 @@ export interface GenerativeStatePort {
   completeTurn(turnId: string): void;
   failTurn(turnId: string, error: string): void;
   clearTurnResponse(turnId: string): void;
+  createBackendInterface(
+    interfaceId: string,
+    type: string,
+    display: string,
+    state: Record<string, unknown>
+  ): void;
+  updateBackendInterfaceState(
+    interfaceId: string,
+    state: Record<string, unknown>,
+    display?: string
+  ): void;
+  updateSuggestions(
+    interfaceId: string,
+    suggestions: Record<string, unknown>
+  ): void;
 }
-
-export type HydrateSubInterface = (
-  activityType: string,
-  content: unknown,
-  query?: string
-) => RoutedInterface | null;
 
 export interface GenerativeRuntimeConfig {
   statePort: GenerativeStatePort;
-  hydrateSubInterface: HydrateSubInterface;
   generativeInterfaceId: string;
   cartInterfaceId: string;
 }
@@ -52,9 +58,10 @@ export class GenerativeRuntime {
 
   private engine: FullEngine;
   private statePort: GenerativeStatePort;
-  private hydrateSubInterface: HydrateSubInterface;
   private agentResponseInitialized = new Set<string>();
   private currentPrompt: string | undefined;
+  private conversationSessionId: string | undefined;
+  private conversationToken: string | undefined;
   private buildRequest: ReturnType<
     typeof createConversationEndpointRequestSelector
   >;
@@ -66,7 +73,6 @@ export class GenerativeRuntime {
   ) {
     this.engine = engine;
     this.statePort = config.statePort;
-    this.hydrateSubInterface = config.hydrateSubInterface;
     this.buildRequest = createConversationEndpointRequestSelector(
       config.generativeInterfaceId,
       config.cartInterfaceId
@@ -112,6 +118,16 @@ export class GenerativeRuntime {
     await this.executeStream(turnId);
   }
 
+  async submitAction(action: Record<string, unknown>): Promise<void> {
+    const tempId = generateId();
+    const prompt = `[action:${(action as {type?: string}).type ?? 'unknown'}]`;
+
+    this.statePort.createTurn({id: tempId, prompt, status: 'streaming'});
+    this.statePort.setActiveTurnId(tempId);
+
+    await this.executeActionStream(tempId, action);
+  }
+
   private async executeStream(turnId: string): Promise<void> {
     try {
       const requestFromState = this.engine.read(this.buildRequest);
@@ -125,6 +141,55 @@ export class GenerativeRuntime {
         currency: requestFromState.currency,
         message: requestFromState.message,
         clientId: navigatorContext?.clientId ?? undefined,
+        conversationSessionId: this.conversationSessionId,
+        conversationToken: this.conversationToken,
+        context: {
+          user: {
+            userAgent: navigatorContext?.userAgent ?? null,
+          },
+          view: {
+            url: navigatorContext?.location ?? null,
+            referrer: navigatorContext?.referrer ?? null,
+          },
+          ...(requestFromState.cart.length > 0
+            ? {cart: requestFromState.cart}
+            : {}),
+        },
+        targetEngine: 'AGENT_CORE',
+      };
+
+      const client = createConversationEndpointClient();
+      const result = await client.call(request, clientConfig);
+
+      if (!result.success) {
+        this.statePort.failTurn(turnId, result.error);
+        return;
+      }
+
+      await this.consumeStream(turnId, result.data.stream);
+    } catch (error) {
+      this.statePort.failTurn(turnId, getErrorMessage(error));
+    }
+  }
+
+  private async executeActionStream(
+    turnId: string,
+    action: Record<string, unknown>
+  ): Promise<void> {
+    try {
+      const requestFromState = this.engine.read(this.buildRequest);
+      const navigatorContext = this.engine.getNavigatorContextProvider()?.();
+      const clientConfig = readEndpointClientConfiguration(this.engine);
+
+      const request: CoveoConversationEndpointRequest = {
+        trackingId: requestFromState.trackingId,
+        language: requestFromState.language,
+        country: requestFromState.country,
+        currency: requestFromState.currency,
+        clientId: navigatorContext?.clientId ?? undefined,
+        conversationSessionId: this.conversationSessionId,
+        conversationToken: this.conversationToken,
+        action,
         context: {
           user: {
             userAgent: navigatorContext?.userAgent ?? null,
@@ -192,6 +257,12 @@ export class GenerativeRuntime {
   ): {turnId: string; isTerminal: boolean} {
     switch (event.type) {
       case 'turn_started': {
+        if (event.conversationSessionId) {
+          this.conversationSessionId = event.conversationSessionId;
+        }
+        if (event.conversationToken) {
+          this.conversationToken = event.conversationToken;
+        }
         return {turnId, isTerminal: false};
       }
 
@@ -243,25 +314,40 @@ export class GenerativeRuntime {
         return {turnId, isTerminal: false};
       }
 
-      case 'ACTIVITY_SNAPSHOT': {
-        const routedInterface = this.hydrateSubInterface(
-          event.activityType,
-          event.content,
-          this.currentPrompt
-        );
-
-        if (routedInterface) {
-          this.statePort.setRoutedInterface(turnId, routedInterface);
-          this.statePort.completeTurn(turnId);
-          return {turnId, isTerminal: true};
+      case 'CUSTOM': {
+        const value = event.value as Record<string, unknown> | undefined;
+        if (!value) {
+          return {turnId, isTerminal: false};
         }
-
-        this.ensureAgentResponse(turnId);
-        this.statePort.appendSurface(
-          turnId,
-          event.content as Record<string, unknown>
-        );
-        return {turnId, isTerminal: false};
+        switch (event.name) {
+          case 'coveo.interfaceCreated': {
+            this.statePort.createBackendInterface(
+              value.interfaceId as string,
+              value.type as string,
+              value.display as string,
+              value.state as Record<string, unknown>
+            );
+            return {turnId, isTerminal: false};
+          }
+          case 'coveo.stateUpdate': {
+            this.statePort.updateBackendInterfaceState(
+              value.interfaceId as string,
+              value.state as Record<string, unknown>,
+              value.display as string | undefined
+            );
+            return {turnId, isTerminal: false};
+          }
+          case 'coveo.suggestions': {
+            const {interfaceId, ...suggestions} = value;
+            this.statePort.updateSuggestions(
+              interfaceId as string,
+              suggestions
+            );
+            return {turnId, isTerminal: false};
+          }
+          default:
+            return {turnId, isTerminal: false};
+        }
       }
 
       case 'turn_complete': {
