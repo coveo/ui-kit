@@ -6,9 +6,9 @@ interface SectionProps extends PropsWithChildren {
 
 export const Section: FunctionComponent<SectionProps> = (props) => {
   return (
-    <div>
-      <p>{props.title}</p>
+    <section className="section-card">
+      <h2 className="section-title">{props.title}</h2>
       {props.children}
-    </div>
+    </section>
   );
 };

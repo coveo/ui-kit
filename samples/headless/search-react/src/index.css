@@ -1,0 +1,234 @@
+/*
+ * Global styling for the Headless search-react sample.
+ * Colors are taken from the official Coveo Atomic theme
+ * (packages/atomic/src/themes/coveo.css).
+ */
+
+:root {
+  /* Coveo brand palette */
+  --coveo-coral: #de5e4e;
+  --coveo-blue: #4cabf8;
+  --coveo-yellow: #fbe44c;
+  --coveo-mint: #6fe8d0;
+
+  /* Primary (brand blue; -dark is a darkened, AA-readable blue used for text/links) */
+  --coveo-primary: var(--coveo-blue);
+  --coveo-primary-light: #8fc9fb;
+  --coveo-primary-dark: #1c84db;
+  --coveo-accent: var(--coveo-coral);
+  --coveo-on-primary: #ffffff;
+  --coveo-primary-background: #eef7ff;
+  --coveo-ring-primary: rgba(76, 171, 248, 0.45);
+
+  /* Neutrals */
+  --coveo-neutral-dark: #626971;
+  --coveo-neutral-dim: #bfc4c8;
+  --coveo-neutral: #e5e8e8;
+  --coveo-neutral-light: #f6f7f9;
+  --coveo-neutral-lighter: #f9fafb;
+
+  /* Semantic */
+  --coveo-background: #ffffff;
+  --coveo-on-background: #282829;
+  --coveo-success: #12a244;
+  --coveo-error: #ce3f00;
+  --coveo-visited: #752e9c;
+
+  /* Radius / elevation */
+  --coveo-radius: 0.25rem;
+  --coveo-radius-md: 0.5rem;
+  --coveo-radius-lg: 0.75rem;
+  --coveo-shadow:
+    0 1px 2px rgba(40, 40, 41, 0.06), 0 10px 30px rgba(40, 40, 41, 0.06);
+
+  --coveo-font-family:
+    -apple-system, BlinkMacSystemFont, 'avenir next', avenir, 'segoe ui',
+    'helvetica neue', helvetica, Ubuntu, roboto, noto, arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--coveo-font-family);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--coveo-on-background);
+  background-color: var(--coveo-neutral-light);
+  background-image: radial-gradient(
+    1200px 600px at 50% -200px,
+    var(--coveo-primary-background),
+    transparent
+  );
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--coveo-primary-dark);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* ---------- App shell ---------- */
+.App {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 1.5rem 4rem;
+}
+
+/* ---------- Header ---------- */
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 1.75rem 0 1rem;
+}
+
+.app-header__logo {
+  height: 2.25rem;
+  width: auto;
+  display: block;
+}
+
+.app-header__text {
+  padding-left: 0.9rem;
+  border-left: 1px solid var(--coveo-neutral);
+}
+
+.app-header__title {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.app-header__subtitle {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--coveo-neutral-dark);
+}
+
+/* ---------- Navigation ---------- */
+.app-nav {
+  position: sticky;
+  top: 0.75rem;
+  z-index: 20;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  padding: 0.55rem;
+  margin-bottom: 1.5rem;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--coveo-neutral);
+  border-radius: var(--coveo-radius-lg);
+  box-shadow: var(--coveo-shadow);
+}
+
+.nav-link {
+  display: inline-block;
+  padding: 0.45rem 0.85rem;
+  border-radius: var(--coveo-radius-md);
+  color: var(--coveo-neutral-dark);
+  font-weight: 600;
+  white-space: nowrap;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.nav-link:hover {
+  background: var(--coveo-neutral-light);
+  color: var(--coveo-primary-dark);
+  text-decoration: none;
+}
+
+.nav-link.active {
+  background: var(--coveo-accent);
+  color: var(--coveo-on-primary);
+}
+
+/* ---------- Section cards ---------- */
+.section-card {
+  background: var(--coveo-background);
+  border: 1px solid var(--coveo-neutral);
+  border-radius: var(--coveo-radius-lg);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1rem;
+  box-shadow: var(--coveo-shadow);
+}
+
+.section-title {
+  margin: 0 0 1rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--coveo-primary-dark);
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--coveo-neutral);
+}
+
+/* ---------- Content elements ---------- */
+.App button {
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.4rem 0.8rem;
+  margin: 0.15rem 0.25rem 0.15rem 0;
+  border-radius: var(--coveo-radius);
+  border: 1px solid var(--coveo-neutral-dim);
+  background: var(--coveo-background);
+  color: var(--coveo-on-background);
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.App button:hover {
+  border-color: var(--coveo-primary);
+  color: var(--coveo-primary-dark);
+  background: var(--coveo-primary-background);
+}
+
+.App input,
+.App select {
+  font-family: inherit;
+  font-size: 0.85rem;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid var(--coveo-neutral-dim);
+  border-radius: var(--coveo-radius);
+  background: var(--coveo-background);
+  color: var(--coveo-on-background);
+  outline: none;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.App input:focus,
+.App select:focus {
+  border-color: var(--coveo-primary);
+  box-shadow: 0 0 0 3px var(--coveo-ring-primary);
+}
+
+.section-card ul {
+  list-style: none;
+  margin: 0.25rem 0;
+  padding: 0;
+}
+
+.section-card li {
+  padding: 0.15rem 0;
+}

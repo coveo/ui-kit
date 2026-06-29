@@ -1,4 +1,3 @@
-import type React from 'react';
 import {BrowserRouter, NavLink, Route, Routes} from 'react-router';
 import {AboutPage} from './pages/AboutPage';
 import {AnalyticsHook} from './pages/AnalyticsHook';
@@ -8,70 +7,42 @@ import {SamlPage} from './pages/SamlPage';
 import {SearchPage, type SearchPageProps} from './pages/SearchPage';
 import {StandaloneSearchBoxPage} from './pages/StandaloneSearchBoxPage';
 
-function App(props: SearchPageProps) {
-  const activeNavLink: React.CSSProperties = {color: 'red'};
+const navLinkClassName = ({isActive}: {isActive: boolean}) =>
+  isActive ? 'nav-link active' : 'nav-link';
 
+function App(props: SearchPageProps) {
   return (
     <BrowserRouter>
       <main className="App">
-        <nav>
-          <button>
-            <NavLink
-              end
-              to="/"
-              style={({isActive}) => (isActive ? activeNavLink : {})}
-            >
-              Search
-            </NavLink>
-          </button>
-          <button>
-            <NavLink
-              to="/recommendation"
-              style={({isActive}) => (isActive ? activeNavLink : {})}
-            >
-              Recommendation
-            </NavLink>
-          </button>
-          <button>
-            <NavLink
-              to="/standalone-search-box"
-              style={({isActive}) => (isActive ? activeNavLink : {})}
-            >
-              Standalone Search Box
-            </NavLink>
-          </button>
-          <button>
-            <NavLink
-              to="/about"
-              style={({isActive}) => (isActive ? activeNavLink : {})}
-            >
-              About
-            </NavLink>
-          </button>
-          <button>
-            <NavLink
-              to="/saml"
-              style={({isActive}) => (isActive ? activeNavLink : {})}
-            >
-              Saml
-            </NavLink>
-          </button>
-          <button>
-            <NavLink
-              to="/dependent-facet"
-              style={({isActive}) => (isActive ? activeNavLink : {})}
-            >
-              Dependent facet
-            </NavLink>
-          </button>
-          <button>
-            <NavLink
-              to="/analyticshooks"
-              style={({isActive}) => (isActive ? activeNavLink : {})}
-            >
-              Analytics hook (Google Tag Manager)
-            </NavLink>
-          </button>
+        <header className="app-header">
+          <img className="app-header__logo" src="/coveo-logo.svg" alt="Coveo" />
+          <div className="app-header__text">
+            <h1 className="app-header__title">Headless React</h1>
+            <p className="app-header__subtitle">BarcaKnowledge sample</p>
+          </div>
+        </header>
+        <nav className="app-nav">
+          <NavLink end to="/" className={navLinkClassName}>
+            Search
+          </NavLink>
+          <NavLink to="/recommendation" className={navLinkClassName}>
+            Recommendation
+          </NavLink>
+          <NavLink to="/standalone-search-box" className={navLinkClassName}>
+            Standalone Search Box
+          </NavLink>
+          <NavLink to="/about" className={navLinkClassName}>
+            About
+          </NavLink>
+          <NavLink to="/saml" className={navLinkClassName}>
+            Saml
+          </NavLink>
+          <NavLink to="/dependent-facet" className={navLinkClassName}>
+            Dependent facet
+          </NavLink>
+          <NavLink to="/analyticshooks" className={navLinkClassName}>
+            Analytics hook (Google Tag Manager)
+          </NavLink>
         </nav>
         <Routes>
           <Route path="/recommendation" element={<RecommendationPage />} />
