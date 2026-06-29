@@ -30,11 +30,11 @@ export abstract class BaseInterface<T extends InterfaceType> {
   #disposed = false;
 
   static {
-    getInterfaceInternals = (iface) => ({
+    getInterfaceInternals = <typeof getInterfaceInternals>((iface) => ({
       engine: iface.#engine,
       stateId: iface.#stateId,
       type: iface.#type,
-    });
+    }));
   }
 
   constructor(
