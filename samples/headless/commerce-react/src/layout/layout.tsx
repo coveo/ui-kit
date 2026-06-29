@@ -24,7 +24,10 @@ export default function Layout(props: ILayoutProps) {
   return (
     <div className="Layout">
       <section className="Header">
-        <h1 className="AppTitle">Coveo Headless Commerce + React</h1>
+        <div className="HeaderBrand">
+          <img className="HeaderLogo" src="/coveo-logo.svg" alt="Coveo" />
+          <h1 className="AppTitle">Headless Commerce + React</h1>
+        </div>
         <div className="Tabs">
           <span>
             <input
