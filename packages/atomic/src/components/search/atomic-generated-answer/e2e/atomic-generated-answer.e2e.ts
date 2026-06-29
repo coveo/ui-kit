@@ -530,6 +530,12 @@ test.describe('atomic-generated-answer', () => {
       await generatedAnswer.showPreviousButton.click();
       const secondAnswerItem = generatedAnswer.threadItems.nth(1);
 
+      // Expand the 2nd thread item (collapsed by default after 'show previous')
+      const expandButton = secondAnswerItem.getByRole('button', {
+        name: /first follow-up/i,
+      });
+      await expandButton.click();
+
       await test.step('like 2nd answer', async () => {
         const likePromise = generatedAnswer.waitForCustomAnalyticsEvent(
           'likeGeneratedAnswer'
@@ -580,6 +586,8 @@ test.describe('atomic-generated-answer', () => {
         );
         const citation = secondAnswerItem.locator('[part="citation"]').first();
         await citation.hover();
+        // Wait longer than the popover debounce (200ms) + hover analytics threshold (1000ms)
+        await generatedAnswer.page.waitForTimeout(1500);
         await generatedAnswer.page.mouse.move(0, 0);
         const request = await hoverPromise;
         const body = request.postDataJSON();
@@ -589,7 +597,7 @@ test.describe('atomic-generated-answer', () => {
 
       await test.step('click citation on 2nd answer', async () => {
         const clickPromise = generatedAnswer.waitForCustomAnalyticsEvent(
-          'openGeneratedAnswerSource'
+          'generatedAnswerFollowupOpenSource'
         );
         const citationLink = secondAnswerItem
           .locator('[part="citation"]')
