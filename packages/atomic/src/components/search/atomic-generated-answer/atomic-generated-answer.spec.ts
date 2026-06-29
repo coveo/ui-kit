@@ -484,7 +484,7 @@ describe('atomic-generated-answer', () => {
     const {toggle} = await renderGeneratedAnswer({
       props: {withToggle: false},
     });
-    expect(toggle).toHaveClass('hidden');
+    expect(toggle).toBeNull();
   });
 
   describe('when answer is visible', () => {

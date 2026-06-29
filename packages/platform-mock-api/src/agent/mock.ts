@@ -14,7 +14,7 @@ export class MockAgentApi implements MockApi {
       () => HttpResponse<DefaultBodyType>
     >(
       'POST',
-      `${basePath}/api/preview/organizations/:orgId/agents/:agentId/answer`,
+      `${basePath}/api/v1/organizations/:orgId/agents/:agentId/answer`,
       headAnswerResponse,
       (response) => response()
     );
@@ -23,7 +23,7 @@ export class MockAgentApi implements MockApi {
       () => HttpResponse<DefaultBodyType>
     >(
       'POST',
-      `${basePath}/api/preview/organizations/:orgId/agents/:agentId/follow-up`,
+      `${basePath}/api/v1/organizations/:orgId/agents/:agentId/follow-up`,
       followUpAnswerResponse,
       (response) => response()
     );
