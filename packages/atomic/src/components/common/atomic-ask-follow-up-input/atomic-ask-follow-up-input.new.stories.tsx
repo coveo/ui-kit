@@ -78,3 +78,16 @@ export const ExpandedWithText: Story = {
     }
   },
 };
+
+export const OverCharacterLimit: Story = {
+  name: 'Over Character Limit',
+  play: async ({canvasElement}) => {
+    await customElements.whenDefined('atomic-ask-follow-up-input');
+    const element = canvasElement.querySelector('atomic-ask-follow-up-input');
+    const textarea =
+      element?.shadowRoot?.querySelector<HTMLTextAreaElement>('textarea');
+    if (textarea) {
+      await userEvent.type(textarea, 'abc '.repeat(100));
+    }
+  },
+};

@@ -80,6 +80,9 @@ const FOLLOW_UP_INPUT_EXPORT_PARTS = [
   'input-field',
   'submit-button',
   'submit-icon',
+  'input-footer',
+  'validation-message',
+  'character-counter',
 ].join(',');
 
 /**
@@ -131,6 +134,9 @@ const FOLLOW_UP_INPUT_EXPORT_PARTS = [
  * @part input-field - The follow-up textarea input field.
  * @part submit-button - The follow-up submit button.
  * @part submit-icon - The icon displayed in the follow-up submit button.
+ * @part input-footer - The container below the follow-up input that holds the validation message and character counter.
+ * @part validation-message - The validation message shown when the follow-up question exceeds the character limit.
+ * @part character-counter - The live character counter displaying the current count out of the maximum allowed.
  */
 @customElement('atomic-generated-answer')
 @bindings()
