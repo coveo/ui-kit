@@ -232,3 +232,62 @@ a:hover {
 .section-card li {
   padding: 0.15rem 0;
 }
+
+/* ---------- Search layout (Atomic-style) ---------- */
+.search-grid {
+  display: grid;
+  grid-template-columns: 290px minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .search-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.search-sidebar,
+.search-main {
+  min-width: 0;
+}
+
+.search-footer {
+  margin-top: 0.25rem;
+}
+
+.search-footer .section-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.more-demos {
+  margin-top: 2rem;
+  background: var(--coveo-neutral-lighter);
+  border: 1px solid var(--coveo-neutral);
+  border-radius: var(--coveo-radius-lg);
+  padding: 0.25rem 1rem 1rem;
+}
+
+.more-demos > summary {
+  cursor: pointer;
+  list-style: none;
+  font-weight: 700;
+  color: var(--coveo-primary-dark);
+  padding: 0.85rem 0.25rem;
+}
+
+.more-demos > summary::-webkit-details-marker {
+  display: none;
+}
+
+.more-demos > summary::before {
+  content: '▸';
+  display: inline-block;
+  margin-right: 0.5rem;
+}
+
+.more-demos[open] > summary::before {
+  content: '▾';
+}

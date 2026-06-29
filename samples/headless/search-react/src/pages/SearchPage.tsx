@@ -569,6 +569,19 @@ export class SearchPage extends Component {
         <AppContext.Provider value={{engine: this.engine}}>
           <Context />
           <DictionaryFieldContext />
+          {/* Search bar on top */}
+          <div className="search-topbar">
+            <Section title="search-box">
+              <SearchBox />
+              <SearchBoxFn controller={this.searchBox} />
+            </Section>
+            <Section title="did-you-mean">
+              <DidYouMean />
+              <DidYouMeanFn controller={this.didYouMean} />
+            </Section>
+          </div>
+
+          {/* Tabs */}
           <Section title="tabs">
             <nav>
               <Tab id="all" expression="" active>
@@ -587,192 +600,218 @@ export class SearchPage extends Component {
               <TabFn controller={this.tabs.confluence}>Confluence</TabFn>
             </nav>
           </Section>
-          <Section title="breadcrumb-manager">
-            <BreadcrumbManager />
-            <BreadcrumbManagerFn controller={this.breadcrumbManager} />
-          </Section>
-          <Section title="search-box">
-            <SearchBox />
-            <SearchBoxFn controller={this.searchBox} />
-          </Section>
-          <Section title="field-suggestions">
-            <FieldSuggestions field="author" facetId="author-1" />
-            <FieldSuggestionsFn controller={this.fieldSuggestionsAuthor} />
-          </Section>
-          <Section title="category-field-suggestions">
-            <CategoryFieldSuggestions
-              field="ec_category"
-              facetId="ec_category-4"
-              delimitingCharacter="|"
-            />
-            <CategorySuggestionsFn controller={this.categoryFieldSuggestions} />
-          </Section>
-          <Section title="did-you-mean">
-            <DidYouMean />
-            <DidYouMeanFn controller={this.didYouMean} />
-          </Section>
-          <Section title="search-status">
-            <SearchStatus />
-            <SearchStatusFn controller={this.searchStatus} />
-          </Section>
-          <Section title="query-error">
-            <QueryError />
-            <QueryErrorFn controller={this.queryError} />
-          </Section>
-          <Section title="query-summary">
-            <QuerySummary />
-            <QuerySummaryFn controller={this.querySummary} />
-          </Section>
-          <Section title="static filter">
-            <StaticFilter id="filetypes-a" values={this.staticFilterValues} />
-            <StaticFilterFn id="filetypes-b" values={this.staticFilterValues} />
-          </Section>
-          <Section title="facet">
-            <AutomaticFacetGenerator desiredCount={5}></AutomaticFacetGenerator>
-            <FacetManager>
-              <CategoryFacet
+
+          {/* Facets on the left, results in the middle/right */}
+          <div className="search-grid">
+            <aside className="search-sidebar">
+              <Section title="static filter">
+                <StaticFilter
+                  id="filetypes-a"
+                  values={this.staticFilterValues}
+                />
+                <StaticFilterFn
+                  id="filetypes-b"
+                  values={this.staticFilterValues}
+                />
+              </Section>
+              <Section title="facet">
+                <AutomaticFacetGenerator
+                  desiredCount={5}
+                ></AutomaticFacetGenerator>
+                <FacetManager>
+                  <CategoryFacet
+                    field="ec_category"
+                    facetId="ec_category-1"
+                    delimitingCharacter="|"
+                  />
+                  <Facet field="article_type" facetId="article_type-1" />
+                  <Facet field="robot_series" facetId="robot_series-1" />
+                  <Facet
+                    field="difficulty_level"
+                    facetId="difficulty_level-1"
+                  />
+                  <Facet field="author" facetId="author-1" />
+                  <NumericFacet
+                    format={(bytes) => formatFileSize(bytes)}
+                    field="size"
+                    facetId="size-1"
+                    generateAutomaticRanges={true}
+                  />
+                  <NumericFacet
+                    format={(bytes) => formatFileSize(bytes)}
+                    field="size"
+                    facetId="size-2"
+                    generateAutomaticRanges={false}
+                    currentValues={[
+                      buildNumericRange({start: 0, end: 5 * KB}),
+                      buildNumericRange({start: 5 * KB, end: 5 * MB}),
+                      buildNumericRange({start: 5 * MB, end: 5 * GB}),
+                    ]}
+                  />
+                  <NumericFilter field="size" facetId="size-5" />
+                  <DateFacet
+                    field="date"
+                    facetId="date-1"
+                    generateAutomaticRanges={true}
+                  />
+                  <DateFacet
+                    field="date"
+                    facetId="date-2"
+                    generateAutomaticRanges={false}
+                    currentValues={dateRanges}
+                  />
+                  <RelativeDateFacet
+                    field="date"
+                    facetId="date-6"
+                    generateAutomaticRanges={false}
+                    currentValues={relativeDateRanges}
+                  />
+                  <DateFilter field="date" facetId="date-3" />
+                </FacetManager>
+                <AutomaticFacetGeneratorFn
+                  controller={this.automaticFacetGenerator}
+                ></AutomaticFacetGeneratorFn>
+                <FacetManagerFn controller={this.facetManager}>
+                  <CategoryFacetFn controller={this.categoryFacet} />
+                  <FacetFn controller={this.articleTypeFacet} />
+                  <FacetFn controller={this.robotSeriesFacet} />
+                  <FacetFn controller={this.difficultyFacet} />
+                  <NumericFacetFn
+                    controller={this.fileSizeAutomaticNumericFacet}
+                    format={(bytes) => formatFileSize(bytes)}
+                  />
+                  <NumericFacetFn
+                    controller={this.fileSizeManualNumericFacet}
+                    format={(bytes) => formatFileSize(bytes)}
+                  />
+                  <NumericFilterFn controller={this.fileSizeNumericFilter} />
+                  <DateFacetFn controller={this.dateAutomaticDateFacet} />
+                  <DateFacetFn controller={this.dateManualDateFacet} />
+                  <RelativeDateFacetFn
+                    controller={this.dateRelativeDateFacet}
+                  />
+                  <DateFilterFn controller={this.dateFilter} />
+                </FacetManagerFn>
+              </Section>
+            </aside>
+
+            <div className="search-main">
+              <Section title="query-summary">
+                <QuerySummary />
+                <QuerySummaryFn controller={this.querySummary} />
+              </Section>
+              <Section title="sort">
+                <Sort criteria={criteria} initialCriterion={initialCriterion} />
+                <SortFn controller={this.sort} criteria={criteria} />
+              </Section>
+              <Section title="search-status">
+                <SearchStatus />
+                <SearchStatusFn controller={this.searchStatus} />
+              </Section>
+              <Section title="query-error">
+                <QueryError />
+                <QueryErrorFn controller={this.queryError} />
+              </Section>
+              <Section title="smart-snippet">
+                <SmartSnippet />
+                <SmartSnippetFn controller={this.smartSnippet} />
+              </Section>
+              <Section title="result-list">
+                <ResultList />
+                <ResultListFn controller={this.resultList} />
+              </Section>
+              <Section title="folded-result-list">
+                <FoldedResultList />
+                <FoldedResultListFn controller={this.foldedResultList} />
+              </Section>
+              <Section title="results-per-page">
+                <ResultsPerPage options={resultsPerPageOptions} />
+                <ResultsPerPageFn
+                  controller={this.resultsPerPage}
+                  options={resultsPerPageOptions}
+                />
+              </Section>
+            </div>
+          </div>
+
+          {/* Pager below */}
+          <div className="search-footer">
+            <Section title="pager">
+              <Pager />
+              <PagerFn controller={this.pager} />
+            </Section>
+          </div>
+
+          {/* Additional component demonstrations */}
+          <details className="more-demos">
+            <summary>More Headless component demos</summary>
+            <Section title="breadcrumb-manager">
+              <BreadcrumbManager />
+              <BreadcrumbManagerFn controller={this.breadcrumbManager} />
+            </Section>
+            <Section title="field-suggestions">
+              <FieldSuggestions field="author" facetId="author-1" />
+              <FieldSuggestionsFn controller={this.fieldSuggestionsAuthor} />
+            </Section>
+            <Section title="category-field-suggestions">
+              <CategoryFieldSuggestions
                 field="ec_category"
-                facetId="ec_category-1"
+                facetId="ec_category-4"
                 delimitingCharacter="|"
               />
-              <Facet field="article_type" facetId="article_type-1" />
-              <Facet field="robot_series" facetId="robot_series-1" />
-              <Facet field="difficulty_level" facetId="difficulty_level-1" />
-              <Facet field="author" facetId="author-1" />
-              <NumericFacet
-                format={(bytes) => formatFileSize(bytes)}
-                field="size"
-                facetId="size-1"
-                generateAutomaticRanges={true}
+              <CategorySuggestionsFn
+                controller={this.categoryFieldSuggestions}
               />
-              <NumericFacet
-                format={(bytes) => formatFileSize(bytes)}
-                field="size"
-                facetId="size-2"
-                generateAutomaticRanges={false}
-                currentValues={[
-                  buildNumericRange({start: 0, end: 5 * KB}),
-                  buildNumericRange({start: 5 * KB, end: 5 * MB}),
-                  buildNumericRange({start: 5 * MB, end: 5 * GB}),
-                ]}
+            </Section>
+            <Section title="smart-snippet-questions-list">
+              <SmartSnippetQuestionsList />
+              <SmartSnippetQuestionsListFn
+                controller={this.smartSnippetQuestionsList}
               />
-              <NumericFilter field="size" facetId="size-5" />
-              <DateFacet
-                field="date"
-                facetId="date-1"
-                generateAutomaticRanges={true}
+            </Section>
+            <Section title="history-manager">
+              <HistoryManager />
+              <HistoryManagerFn controller={this.historyManager} />
+            </Section>
+            <Section title="relevance-inspector">
+              <RelevanceInspector />
+              <RelevanceInspectorFn controller={this.relevanceInspector} />
+            </Section>
+            <Section title="redirection-trigger">
+              <RedirectionTrigger></RedirectionTrigger>
+              <RedirectionTriggerFn
+                controller={this.redirectionTrigger}
+              ></RedirectionTriggerFn>
+            </Section>
+            <Section title="query-trigger">
+              <QueryTrigger></QueryTrigger>
+              <QueryTriggerFn controller={this.queryTrigger}></QueryTriggerFn>
+            </Section>
+            <Section title="execute-trigger">
+              <ExecuteTrigger></ExecuteTrigger>
+            </Section>
+            <Section title="notify-trigger">
+              <NotifyTrigger></NotifyTrigger>
+              <NotifyTriggerFn
+                controller={this.notifyTrigger}
+              ></NotifyTriggerFn>
+            </Section>
+            <Section title="recent-queries-list">
+              <RecentQueriesList maxLength={10} />
+              <RecentQueriesListFn controller={this.recentQueriesList} />
+            </Section>
+            <Section title="recent-results-list">
+              <RecentResultsList maxLength={10} />
+              <RecentResultsListFn controller={this.recentResultsList} />
+            </Section>
+            <Section title="instant-results-list">
+              <InstantResults />
+              <InstantResultsFn
+                controllerInstantResults={this.instantResults}
+                controllerSearchbox={this.searchboxInstantResults}
               />
-              <DateFacet
-                field="date"
-                facetId="date-2"
-                generateAutomaticRanges={false}
-                currentValues={dateRanges}
-              />
-              <RelativeDateFacet
-                field="date"
-                facetId="date-6"
-                generateAutomaticRanges={false}
-                currentValues={relativeDateRanges}
-              />
-              <DateFilter field="date" facetId="date-3" />
-            </FacetManager>
-            <AutomaticFacetGeneratorFn
-              controller={this.automaticFacetGenerator}
-            ></AutomaticFacetGeneratorFn>
-            <FacetManagerFn controller={this.facetManager}>
-              <CategoryFacetFn controller={this.categoryFacet} />
-              <FacetFn controller={this.articleTypeFacet} />
-              <FacetFn controller={this.robotSeriesFacet} />
-              <FacetFn controller={this.difficultyFacet} />
-              <NumericFacetFn
-                controller={this.fileSizeAutomaticNumericFacet}
-                format={(bytes) => formatFileSize(bytes)}
-              />
-              <NumericFacetFn
-                controller={this.fileSizeManualNumericFacet}
-                format={(bytes) => formatFileSize(bytes)}
-              />
-              <NumericFilterFn controller={this.fileSizeNumericFilter} />
-              <DateFacetFn controller={this.dateAutomaticDateFacet} />
-              <DateFacetFn controller={this.dateManualDateFacet} />
-              <RelativeDateFacetFn controller={this.dateRelativeDateFacet} />
-              <DateFilterFn controller={this.dateFilter} />
-            </FacetManagerFn>
-          </Section>
-          <Section title="sort">
-            <Sort criteria={criteria} initialCriterion={initialCriterion} />
-            <SortFn controller={this.sort} criteria={criteria} />
-          </Section>
-          <Section title="result-list">
-            <ResultList />
-            <ResultListFn controller={this.resultList} />
-          </Section>
-          <Section title="smart-snippet">
-            <SmartSnippet />
-            <SmartSnippetFn controller={this.smartSnippet} />
-          </Section>
-          <Section title="smart-snippet-questions-list">
-            <SmartSnippetQuestionsList />
-            <SmartSnippetQuestionsListFn
-              controller={this.smartSnippetQuestionsList}
-            />
-          </Section>
-
-          <Section title="folded-result-list">
-            <FoldedResultList />
-            <FoldedResultListFn controller={this.foldedResultList} />
-          </Section>
-          <Section title="results-per-page">
-            <ResultsPerPage options={resultsPerPageOptions} />
-            <ResultsPerPageFn
-              controller={this.resultsPerPage}
-              options={resultsPerPageOptions}
-            />
-          </Section>
-          <Section title="pager">
-            <Pager />
-            <PagerFn controller={this.pager} />
-          </Section>
-          <Section title="history-manager">
-            <HistoryManager />
-            <HistoryManagerFn controller={this.historyManager} />
-          </Section>
-          <Section title="relevance-inspector">
-            <RelevanceInspector />
-            <RelevanceInspectorFn controller={this.relevanceInspector} />
-          </Section>
-          <Section title="redirection-trigger">
-            <RedirectionTrigger></RedirectionTrigger>
-            <RedirectionTriggerFn
-              controller={this.redirectionTrigger}
-            ></RedirectionTriggerFn>
-          </Section>
-          <Section title="query-trigger">
-            <QueryTrigger></QueryTrigger>
-            <QueryTriggerFn controller={this.queryTrigger}></QueryTriggerFn>
-          </Section>
-          <Section title="execute-trigger">
-            <ExecuteTrigger></ExecuteTrigger>
-          </Section>
-          <Section title="notify-trigger">
-            <NotifyTrigger></NotifyTrigger>
-            <NotifyTriggerFn controller={this.notifyTrigger}></NotifyTriggerFn>
-          </Section>
-          <Section title="recent-queries-list">
-            <RecentQueriesList maxLength={10} />
-            <RecentQueriesListFn controller={this.recentQueriesList} />
-          </Section>
-          <Section title="recent-results-list">
-            <RecentResultsList maxLength={10} />
-            <RecentResultsListFn controller={this.recentResultsList} />
-          </Section>
-          <Section title="instant-results-list">
-            <InstantResults />
-            <InstantResultsFn
-              controllerInstantResults={this.instantResults}
-              controllerSearchbox={this.searchboxInstantResults}
-            />
-          </Section>
+            </Section>
+          </details>
         </AppContext.Provider>
       </div>
     );
