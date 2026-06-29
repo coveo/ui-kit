@@ -495,5 +495,112 @@ test.describe('atomic-generated-answer', () => {
         );
       });
     });
+
+    test('interactions with 2nd answer send correct conversationId and answerId', async ({
+      generatedAnswer,
+    }) => {
+      await generatedAnswer.load({story: 'with-agent-id'});
+      await expect(generatedAnswer.followUpSubmitButton).toBeEnabled({
+        timeout: streamingTimeoutMs,
+      });
+
+      await generatedAnswer.followUpInput.fill('First follow-up');
+      await generatedAnswer.followUpSubmitButton.click();
+      await expect(generatedAnswer.threadItems).toHaveCount(2, {
+        timeout: streamingTimeoutMs,
+      });
+      await expect(generatedAnswer.followUpSubmitButton).toBeEnabled({
+        timeout: streamingTimeoutMs,
+      });
+
+      await generatedAnswer.followUpInput.fill('Second follow-up');
+      await generatedAnswer.followUpSubmitButton.click();
+      await expect(generatedAnswer.showPreviousButton).toBeVisible({
+        timeout: streamingTimeoutMs,
+      });
+
+      await generatedAnswer.showPreviousButton.click();
+      const secondAnswerItem = generatedAnswer.threadItems.nth(1);
+
+      await test.step('like 2nd answer', async () => {
+        const likePromise = generatedAnswer.waitForCustomAnalyticsEvent(
+          'likeGeneratedAnswer'
+        );
+        const likeButton = secondAnswerItem.getByRole('button', {
+          name: /^helpful$/i,
+        });
+        await likeButton.click();
+        const request = await likePromise;
+        const body = request.postDataJSON();
+        expect(body.customData.generativeQuestionAnsweringId).toBeTruthy();
+        expect(body.customData.conversationId).toBe('thread-1');
+      });
+
+      await test.step('dislike 2nd answer', async () => {
+        const dislikePromise = generatedAnswer.waitForCustomAnalyticsEvent(
+          'dislikeGeneratedAnswer'
+        );
+        const dislikeButton = secondAnswerItem.getByRole('button', {
+          name: /^not helpful$/i,
+        });
+        await dislikeButton.click();
+        const request = await dislikePromise;
+        const body = request.postDataJSON();
+        expect(body.customData.generativeQuestionAnsweringId).toBeTruthy();
+        expect(body.customData.conversationId).toBe('thread-1');
+      });
+
+      await test.step('copy 2nd answer to clipboard', async () => {
+        await generatedAnswer.page
+          .context()
+          .grantPermissions(['clipboard-read', 'clipboard-write']);
+
+        const copyPromise = generatedAnswer.waitForCustomAnalyticsEvent(
+          'generatedAnswerCopyToClipboard'
+        );
+        const copyButton = secondAnswerItem.locator('[part="copy-button"]');
+        await copyButton.click();
+        const request = await copyPromise;
+        const body = request.postDataJSON();
+        expect(body.customData.generativeQuestionAnsweringId).toBeTruthy();
+        expect(body.customData.conversationId).toBe('thread-1');
+      });
+
+      await test.step('hover citation on 2nd answer', async () => {
+        const hoverPromise = generatedAnswer.waitForCustomAnalyticsEvent(
+          'generatedAnswerSourceHover'
+        );
+        const citation = secondAnswerItem.locator('[part="citation"]').first();
+        await citation.hover();
+        await generatedAnswer.page.mouse.move(0, 0);
+        const request = await hoverPromise;
+        const body = request.postDataJSON();
+        expect(body.customData.generativeQuestionAnsweringId).toBeTruthy();
+        expect(body.customData.conversationId).toBe('thread-1');
+      });
+
+      await test.step('click citation on 2nd answer', async () => {
+        const clickPromise = generatedAnswer.waitForCustomAnalyticsEvent(
+          'openGeneratedAnswerSource'
+        );
+        const citationLink = secondAnswerItem
+          .locator('[part="citation"]')
+          .first();
+        await citationLink.click();
+        const request = await clickPromise;
+        const body = request.postDataJSON();
+        expect(body.customData.generativeQuestionAnsweringId).toBeTruthy();
+        expect(body.customData.conversationId).toBe('thread-1');
+      });
+
+      await test.step('submit follow-up from 2nd answer', async () => {
+        const followUpPromise = generatedAnswer.waitForFollowUpRequest();
+        await generatedAnswer.followUpInput.fill('Follow-up from 2nd');
+        await generatedAnswer.followUpSubmitButton.click();
+        const request = await followUpPromise;
+        const body = request.postDataJSON();
+        expect(body.conversationId).toBe('thread-1');
+      });
+    });
   });
 });
