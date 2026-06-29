@@ -392,6 +392,8 @@ test.describe('atomic-generated-answer', () => {
         );
       });
 
+      let firstFollowUpAnswerId: string;
+
       await test.step('copy follow-up answer to clipboard', async () => {
         await generatedAnswer.page
           .context()
@@ -412,7 +414,9 @@ test.describe('atomic-generated-answer', () => {
 
         const copyRequest = await copyPromise;
         const copyBody = copyRequest.postDataJSON();
-        expect(copyBody.customData.generativeQuestionAnsweringId).toBeTruthy();
+        firstFollowUpAnswerId =
+          copyBody.customData.generativeQuestionAnsweringId;
+        expect(firstFollowUpAnswerId).toBeTruthy();
         expect(copyBody.customData.conversationId).toBe('thread-1');
       });
 
@@ -428,7 +432,9 @@ test.describe('atomic-generated-answer', () => {
 
         const likeRequest = await likePromise;
         const likeBody = likeRequest.postDataJSON();
-        expect(likeBody.customData.generativeQuestionAnsweringId).toBeTruthy();
+        expect(likeBody.customData.generativeQuestionAnsweringId).toBe(
+          firstFollowUpAnswerId
+        );
         expect(likeBody.customData.conversationId).toBe('thread-1');
       });
 
@@ -448,9 +454,9 @@ test.describe('atomic-generated-answer', () => {
 
         const dislikeRequest = await dislikePromise;
         const dislikeBody = dislikeRequest.postDataJSON();
-        expect(
-          dislikeBody.customData.generativeQuestionAnsweringId
-        ).toBeTruthy();
+        expect(dislikeBody.customData.generativeQuestionAnsweringId).toBe(
+          firstFollowUpAnswerId
+        );
         expect(dislikeBody.customData.conversationId).toBe('thread-1');
       });
 
@@ -476,7 +482,9 @@ test.describe('atomic-generated-answer', () => {
 
         const hoverRequest = await hoverPromise;
         const hoverBody = hoverRequest.postDataJSON();
-        expect(hoverBody.customData.generativeQuestionAnsweringId).toBeTruthy();
+        expect(hoverBody.customData.generativeQuestionAnsweringId).toBe(
+          firstFollowUpAnswerId
+        );
         expect(hoverBody.customData.conversationId).toBe('thread-1');
       });
 
@@ -493,7 +501,9 @@ test.describe('atomic-generated-answer', () => {
 
         const clickRequest = await clickPromise;
         const clickBody = clickRequest.postDataJSON();
-        expect(clickBody.customData.generativeQuestionAnsweringId).toBeTruthy();
+        expect(clickBody.customData.generativeQuestionAnsweringId).toBe(
+          firstFollowUpAnswerId
+        );
         expect(clickBody.customData.conversationId).toBe('thread-1');
       });
 
@@ -555,7 +565,7 @@ test.describe('atomic-generated-answer', () => {
         );
       });
 
-      await test.step('interact with 2nd answer after show previous', async () => {
+      await test.step('interacting with 2nd answer after triggering a 3rd answer', async () => {
         const secondAnswerItem = generatedAnswer.threadItems.nth(1);
 
         // Expand the 2nd thread item (collapsed by default after 'show previous')
@@ -563,6 +573,8 @@ test.describe('atomic-generated-answer', () => {
           name: /what else should i try/i,
         });
         await expandButton.click();
+
+        let secondAnswerId: string;
 
         const likePromise = generatedAnswer.waitForCustomAnalyticsEvent(
           'likeGeneratedAnswer'
@@ -573,7 +585,9 @@ test.describe('atomic-generated-answer', () => {
         await likeButton.click();
         const likeRequest = await likePromise;
         const likeBody = likeRequest.postDataJSON();
-        expect(likeBody.customData.generativeQuestionAnsweringId).toBeTruthy();
+        secondAnswerId = likeBody.customData.generativeQuestionAnsweringId;
+        expect(secondAnswerId).toBeTruthy();
+        expect(secondAnswerId).toBe(firstFollowUpAnswerId);
         expect(likeBody.customData.conversationId).toBe('thread-1');
 
         const dislikePromise = generatedAnswer.waitForCustomAnalyticsEvent(
@@ -585,9 +599,9 @@ test.describe('atomic-generated-answer', () => {
         await dislikeButton.click();
         const dislikeRequest = await dislikePromise;
         const dislikeBody = dislikeRequest.postDataJSON();
-        expect(
-          dislikeBody.customData.generativeQuestionAnsweringId
-        ).toBeTruthy();
+        expect(dislikeBody.customData.generativeQuestionAnsweringId).toBe(
+          secondAnswerId
+        );
         expect(dislikeBody.customData.conversationId).toBe('thread-1');
 
         const copyPromise = generatedAnswer.waitForCustomAnalyticsEvent(
@@ -597,7 +611,9 @@ test.describe('atomic-generated-answer', () => {
         await copyButton.click();
         const copyRequest = await copyPromise;
         const copyBody = copyRequest.postDataJSON();
-        expect(copyBody.customData.generativeQuestionAnsweringId).toBeTruthy();
+        expect(copyBody.customData.generativeQuestionAnsweringId).toBe(
+          secondAnswerId
+        );
         expect(copyBody.customData.conversationId).toBe('thread-1');
 
         const hoverPromise = generatedAnswer.waitForCustomAnalyticsEvent(
@@ -609,7 +625,9 @@ test.describe('atomic-generated-answer', () => {
         await generatedAnswer.page.mouse.move(0, 0);
         const hoverRequest = await hoverPromise;
         const hoverBody = hoverRequest.postDataJSON();
-        expect(hoverBody.customData.generativeQuestionAnsweringId).toBeTruthy();
+        expect(hoverBody.customData.generativeQuestionAnsweringId).toBe(
+          secondAnswerId
+        );
         expect(hoverBody.customData.conversationId).toBe('thread-1');
 
         const citationClickPromise =
@@ -622,9 +640,9 @@ test.describe('atomic-generated-answer', () => {
         await citationLink.click();
         const citationClickRequest = await citationClickPromise;
         const citationClickBody = citationClickRequest.postDataJSON();
-        expect(
-          citationClickBody.customData.generativeQuestionAnsweringId
-        ).toBeTruthy();
+        expect(citationClickBody.customData.generativeQuestionAnsweringId).toBe(
+          secondAnswerId
+        );
         expect(citationClickBody.customData.conversationId).toBe('thread-1');
       });
     });
