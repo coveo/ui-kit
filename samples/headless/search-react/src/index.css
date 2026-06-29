@@ -167,6 +167,13 @@ body {
   gap: 1.5rem;
 }
 
+.facet {
+  border: 1px solid var(--coveo-border);
+  border-radius: var(--coveo-radius);
+  padding: 0.85rem 1rem;
+  background: var(--coveo-surface);
+}
+
 .facet__title {
   margin: 0 0 0.5rem;
   font-size: 0.75rem;

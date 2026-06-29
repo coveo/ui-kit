@@ -1,5 +1,7 @@
 import {
   buildCategoryFacet,
+  buildDateFacet,
+  buildDateRange,
   buildDateSortCriterion,
   buildFacet,
   buildPager,
@@ -13,6 +15,7 @@ import {
 } from '@coveo/headless';
 import {useEffect, useMemo} from 'react';
 import {CategoryFacet} from './components/category-facet';
+import {DateFacet} from './components/date-facet';
 import {Facet} from './components/facet';
 import {Pager} from './components/pager';
 import {QuerySummary} from './components/query-summary';
@@ -20,6 +23,25 @@ import {ResultList} from './components/result-list';
 import {Sort, type SortOption} from './components/sort';
 import {SearchBox} from './components/search-box';
 import {buildEngine} from './engine';
+
+const dateRanges = [
+  buildDateRange({
+    start: {period: 'past', unit: 'week', amount: 1},
+    end: {period: 'now'},
+  }),
+  buildDateRange({
+    start: {period: 'past', unit: 'month', amount: 1},
+    end: {period: 'now'},
+  }),
+  buildDateRange({
+    start: {period: 'past', unit: 'quarter', amount: 1},
+    end: {period: 'now'},
+  }),
+  buildDateRange({
+    start: {period: 'past', unit: 'year', amount: 1},
+    end: {period: 'now'},
+  }),
+];
 
 interface AppProps {
   /** Inject an engine for testing or SSR; defaults to a BarcaKnowledge engine. */
@@ -48,6 +70,13 @@ function App({engine: providedEngine}: AppProps) {
         articleType: buildFacet(engine, {options: {field: 'article_type'}}),
         robotSeries: buildFacet(engine, {options: {field: 'robot_series'}}),
         difficulty: buildFacet(engine, {options: {field: 'difficulty_level'}}),
+        date: buildDateFacet(engine, {
+          options: {
+            field: 'date',
+            currentValues: dateRanges,
+            generateAutomaticRanges: false,
+          },
+        }),
         author: buildFacet(engine, {options: {field: 'author'}}),
       },
     };
@@ -104,6 +133,7 @@ function App({engine: providedEngine}: AppProps) {
             controller={controllers.facets.difficulty}
             title="Difficulty"
           />
+          <DateFacet controller={controllers.facets.date} title="Date" />
           <Facet controller={controllers.facets.author} title="Author" />
         </aside>
 
