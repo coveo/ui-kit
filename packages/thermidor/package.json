@@ -1,6 +1,6 @@
 {
   "name": "@coveo/thermidor",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Experimental package for a unified, framework-agnostic headless engine for search and conversational experiences",
   "license": "Apache-2.0",
   "repository": {
