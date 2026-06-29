@@ -6,6 +6,9 @@ settings:
 
 catalogs:
   default:
+    '@ag-ui/client':
+      specifier: 0.0.57
+      version: 0.0.57
     '@angular-devkit/build-angular':
       specifier: 21.2.14
       version: 21.2.14
@@ -860,8 +863,8 @@ importers:
   packages/headless:
     dependencies:
       '@ag-ui/client':
-        specifier: 0.0.53
-        version: 0.0.53
+        specifier: 'catalog:'
+        version: 0.0.57
       '@coveo/bueno':
         specifier: workspace:*
         version: link:../bueno
@@ -998,7 +1001,7 @@ importers:
   packages/platform-mock-api:
     devDependencies:
       '@ag-ui/client':
-        specifier: 0.0.57
+        specifier: 'catalog:'
         version: 0.0.57
       '@coveo/headless':
         specifier: workspace:*
@@ -1733,9 +1736,6 @@ packages:
   '@adobe/css-tools@4.5.0':
     resolution: {integrity: sha512-6OzddxPio9UiWTCemp4N8cYLV2ZN1ncRnV1cVGtve7dhPOtRkleRyx32GQCYSwDYgaHU3USMm84tNsvKzRCa1Q==}
 
-  '@ag-ui/client@0.0.53':
-    resolution: {integrity: sha512-Mkup36KUp0KXy9v89QtAOWDUoh8H1s1Vgl4zvQv9HqXuAK1TkbtpXJHpbgZJXIxTqd54KT6yCurmC2UkOP7FDQ==}
-
   '@ag-ui/client@0.0.57':
     resolution: {integrity: sha512-Xap2alG9Z0/j5kb3x4D7oTpe2sw1dfrC9rgJJr2NZu5vKcm8dzIPNd31mF2B4zS3BKqYIu245yxKPhEtT30MHw==}
 
@@ -1745,14 +1745,8 @@ packages:
   '@ag-ui/core@0.0.57':
     resolution: {integrity: sha512-gho1OWjNE6E3Rl7ZEZ1wr2CEpUHjLFU0FqzCZZk439TicLu+BfLCMkMokB07bMGlRmbJ60hM6LW60iOVauCx+Q==}
 
-  '@ag-ui/encoder@0.0.53':
-    resolution: {integrity: sha512-bAOcfVdm6U4H6G6tW+DZfwPEQm1w/snVBTwaFn9nJcEMW69M7/HZuwvEc/7Zo0rK1jRL32N/j60PwTAeky19fw==}
-
   '@ag-ui/encoder@0.0.57':
     resolution: {integrity: sha512-ifD9NctR4xyPDR58xF9GK1bj/S8oECFkTeDfuYD8tXdbcOstIJ2TOqU2zhiCKnw7Vw+zR9Qv3TbsM9E7Gi9X3Q==}
-
-  '@ag-ui/proto@0.0.53':
-    resolution: {integrity: sha512-swjz22xWT8YUZt5OhmUwkARDQdwt8XM1hmGZbQrhRnNPXKwrKJX9ELlbnQ4iFUQIKkMWpphzE3vA3yNKs2bbKw==}
 
   '@ag-ui/proto@0.0.57':
     resolution: {integrity: sha512-pPENOZt0P6ibH8sCTgq05wLYXi5t3P9B5r/1bWYehXjUxtyOdnukSlWM++SsCIwUXsQdm/b3aBgGjEeTF7RenA==}
@@ -16298,19 +16292,6 @@ snapshots:
 
   '@adobe/css-tools@4.5.0': {}
 
-  '@ag-ui/client@0.0.53':
-    dependencies:
-      '@ag-ui/core': 0.0.53
-      '@ag-ui/encoder': 0.0.53
-      '@ag-ui/proto': 0.0.53
-      '@types/uuid': 10.0.0
-      compare-versions: 6.1.1
-      fast-json-patch: 3.1.1
-      rxjs: 7.8.1
-      untruncate-json: 0.0.1
-      uuid: 11.1.1
-      zod: 3.25.76
-
   '@ag-ui/client@0.0.57':
     dependencies:
       '@ag-ui/core': 0.0.57
@@ -16332,21 +16313,10 @@ snapshots:
     dependencies:
       zod: 3.25.76
 
-  '@ag-ui/encoder@0.0.53':
-    dependencies:
-      '@ag-ui/core': 0.0.53
-      '@ag-ui/proto': 0.0.53
-
   '@ag-ui/encoder@0.0.57':
     dependencies:
       '@ag-ui/core': 0.0.57
       '@ag-ui/proto': 0.0.57
-
-  '@ag-ui/proto@0.0.53':
-    dependencies:
-      '@ag-ui/core': 0.0.53
-      '@bufbuild/protobuf': 2.12.0
-      '@protobuf-ts/protoc': 2.11.1
 
   '@ag-ui/proto@0.0.57':
     dependencies:

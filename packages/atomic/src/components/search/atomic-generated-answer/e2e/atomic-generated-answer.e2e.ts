@@ -340,4 +340,168 @@ test.describe('atomic-generated-answer', () => {
       expect(requestBody.actionCause).toBe('searchboxSubmit');
     });
   });
+
+  test.describe('search agent follow-up experience', () => {
+    const streamingTimeoutMs = 10000;
+
+    test('happy path: head answer, follow-up, and second follow-up', async ({
+      generatedAnswer,
+    }) => {
+      const streamEndPromise =
+        generatedAnswer.waitForStreamEndAnalyticsRequest();
+
+      await generatedAnswer.load({story: 'with-agent-id'});
+
+      await test.step('generate head answer', async () => {
+        await expect(generatedAnswer.streamOfThought).toBeVisible({
+          timeout: streamingTimeoutMs,
+        });
+        await expect(generatedAnswer.followUpSubmitButton).toBeDisabled({
+          timeout: streamingTimeoutMs,
+        });
+        await expect(generatedAnswer.followUpSubmitButton).toBeEnabled({
+          timeout: streamingTimeoutMs,
+        });
+        await expect(generatedAnswer.generatedTexts.first()).toBeVisible();
+        await streamEndPromise;
+      });
+
+      await test.step('generate first follow-up', async () => {
+        await generatedAnswer.followUpInput.fill('What else should I try?');
+        await generatedAnswer.followUpSubmitButton.click();
+
+        await expect(generatedAnswer.threadItems).toHaveCount(2, {
+          timeout: streamingTimeoutMs,
+        });
+        await expect(generatedAnswer.generatedTexts).toHaveCount(2);
+        await expect(generatedAnswer.generatedTexts.last()).toBeVisible();
+
+        const previousItemCollapseButton = generatedAnswer.threadItems
+          .first()
+          .locator('button', {
+            has: generatedAnswer.page.locator('[part="thread-item-title"]'),
+          });
+        await expect(previousItemCollapseButton).toHaveAttribute(
+          'aria-expanded',
+          'false'
+        );
+      });
+
+      await test.step('copy follow-up answer to clipboard', async () => {
+        await generatedAnswer.page
+          .context()
+          .grantPermissions(['clipboard-read', 'clipboard-write']);
+
+        const copyButton = generatedAnswer.threadItems
+          .last()
+          .locator('[part="copy-button"]');
+        await copyButton.click();
+
+        const clipboardContent = await generatedAnswer.page.evaluate(() =>
+          navigator.clipboard.readText()
+        );
+        expect(clipboardContent).toContain('Resolving Netflix Connection');
+      });
+
+      await test.step('like the follow-up answer', async () => {
+        const likeButton = generatedAnswer.threadItems
+          .last()
+          .getByRole('button', {name: /^helpful$/i});
+        await likeButton.click();
+        await expect(likeButton).toHaveAttribute('aria-pressed', 'true');
+      });
+
+      await test.step('dislike the follow-up answer', async () => {
+        const dislikeButton = generatedAnswer.threadItems
+          .last()
+          .getByRole('button', {name: /^not helpful$/i});
+        await dislikeButton.click();
+        const likeButton = generatedAnswer.threadItems
+          .last()
+          .getByRole('button', {name: /^helpful$/i});
+        await expect(dislikeButton).toHaveAttribute('aria-pressed', 'true');
+        await expect(likeButton).toHaveAttribute('aria-pressed', 'false');
+      });
+
+      await test.step('hover citation and display popover', async () => {
+        const citation = generatedAnswer.threadItems
+          .last()
+          .locator('[part="citation"]')
+          .first();
+        await citation.hover();
+
+        const popover = generatedAnswer.threadItems
+          .last()
+          .locator('[part="citation-popover"]')
+          .first();
+        await expect(popover).toBeVisible();
+      });
+
+      await test.step('render citation as clickable link', async () => {
+        const citationLink = generatedAnswer.threadItems
+          .last()
+          .getByRole('link')
+          .first();
+        await expect(citationLink).toHaveAttribute('href', /^https?:\/\//);
+      });
+
+      await test.step('collapse and expand thread items', async () => {
+        const collapseButton = generatedAnswer.threadItems
+          .first()
+          .locator('button', {
+            has: generatedAnswer.page.locator('[part="thread-item-title"]'),
+          });
+
+        await expect(collapseButton).toHaveAttribute('aria-expanded', 'false');
+        await collapseButton.click();
+        await expect(collapseButton).toHaveAttribute('aria-expanded', 'true');
+        await collapseButton.click();
+        await expect(collapseButton).toHaveAttribute('aria-expanded', 'false');
+        await expect(
+          generatedAnswer.threadItems.first().locator('[hidden]')
+        ).toHaveCount(1);
+      });
+
+      await test.step('generate second follow-up', async () => {
+        await expect(generatedAnswer.followUpSubmitButton).toBeEnabled({
+          timeout: streamingTimeoutMs,
+        });
+        await generatedAnswer.followUpInput.fill('Second follow-up');
+        await generatedAnswer.followUpSubmitButton.click();
+
+        await expect(generatedAnswer.threadItems).toHaveCount(1, {
+          timeout: streamingTimeoutMs,
+        });
+        await expect(generatedAnswer.showPreviousButton).toBeVisible();
+      });
+
+      await test.step('like third answer and verify first answer is unaffected', async () => {
+        const thirdAnswerLikeButton = generatedAnswer.threadItems
+          .last()
+          .getByRole('button', {name: /^helpful$/i});
+        await thirdAnswerLikeButton.click();
+        await expect(thirdAnswerLikeButton).toHaveAttribute(
+          'aria-pressed',
+          'true'
+        );
+
+        await generatedAnswer.showPreviousButton.click();
+
+        const firstItemCollapseButton = generatedAnswer.threadItems
+          .first()
+          .locator('button', {
+            has: generatedAnswer.page.locator('[part="thread-item-title"]'),
+          });
+        await firstItemCollapseButton.click();
+
+        const firstAnswerLikeButton = generatedAnswer.threadItems
+          .first()
+          .getByRole('button', {name: /^helpful$/i});
+        await expect(firstAnswerLikeButton).toHaveAttribute(
+          'aria-pressed',
+          'false'
+        );
+      });
+    });
+  });
 });
