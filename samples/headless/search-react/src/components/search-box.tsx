@@ -13,7 +13,7 @@ export function SearchBox({controller}: SearchBoxProps) {
       <input
         type="search"
         value={value}
-        placeholder="Search the knowledge base…"
+        placeholder="Search..."
         aria-label="Search"
         onChange={(e) => controller.updateText(e.target.value)}
         onKeyDown={(e) => {

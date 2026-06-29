@@ -66,12 +66,6 @@ body {
   font-size: 1.25rem;
 }
 
-.app-header__subtitle {
-  margin: 0;
-  font-size: 0.8rem;
-  color: var(--coveo-muted);
-}
-
 /* Search box */
 .search-box {
   position: relative;

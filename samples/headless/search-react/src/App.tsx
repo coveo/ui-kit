@@ -104,7 +104,6 @@ function App({engine: providedEngine}: AppProps) {
         <img className="app-header__logo" src="/coveo-logo.svg" alt="Coveo" />
         <div className="app-header__text">
           <h1 className="app-header__title">Headless React</h1>
-          <p className="app-header__subtitle">BarcaKnowledge sample</p>
         </div>
       </header>
 
