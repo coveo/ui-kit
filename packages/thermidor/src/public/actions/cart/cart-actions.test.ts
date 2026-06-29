@@ -1,15 +1,14 @@
-import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {beforeEach, describe, expect, it} from 'vitest';
 import {Engine, getFullEngine} from '@/src/core/interface/engine/engine.js';
 import {createTestEngine} from '@/src/test/test-utils.js';
 import {buildSearchInterface} from '@/src/public/interfaces/search.js';
-import type {Interface} from '@/src/core/interface/utils/interface-types.js';
-import {STATE_ID} from '@/src/core/interface/utils/symbols.js';
+import {getInterfaceInternals} from '@/src/core/interface/base-interface.js';
 import {getOrCreateCartSelectors} from '@/src/core/internal/cart/cart-selectors.js';
 import {loadCartActions} from './cart-actions.js';
 
 describe('cart actions', () => {
   let engine: Engine;
-  let searchInterface: Interface<'search'>;
+  let searchInterface: ReturnType<typeof buildSearchInterface>;
 
   beforeEach(() => {
     engine = createTestEngine();
@@ -18,7 +17,7 @@ describe('cart actions', () => {
 
   it('should adopt the cart slice on the engine', () => {
     loadCartActions({interface: searchInterface});
-    const stateId = searchInterface[STATE_ID];
+    const {stateId} = getInterfaceInternals(searchInterface);
     const selectors = getOrCreateCartSelectors(stateId);
     const fullEngine = getFullEngine(engine);
     expect(fullEngine.read(selectors.getItems)).toEqual([]);
@@ -34,7 +33,7 @@ describe('cart actions', () => {
 
   it('should update state when setItems is called', () => {
     const actions = loadCartActions({interface: searchInterface});
-    const stateId = searchInterface[STATE_ID];
+    const {stateId} = getInterfaceInternals(searchInterface);
     const selectors = getOrCreateCartSelectors(stateId);
     const fullEngine = getFullEngine(engine);
 
@@ -46,7 +45,7 @@ describe('cart actions', () => {
 
   it('should update state when updateItemQuantity is called', () => {
     const actions = loadCartActions({interface: searchInterface});
-    const stateId = searchInterface[STATE_ID];
+    const {stateId} = getInterfaceInternals(searchInterface);
     const selectors = getOrCreateCartSelectors(stateId);
     const fullEngine = getFullEngine(engine);
 

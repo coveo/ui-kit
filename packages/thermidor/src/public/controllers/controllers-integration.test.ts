@@ -1,19 +1,14 @@
 import {describe, it, expect, beforeEach} from 'vitest';
 import {Engine, getFullEngine} from '@/src/core/interface/engine/engine.js';
 import {buildSearchInterface} from '@/src/public/interfaces/search.js';
-import {composeInterfaces} from '@/src/public/interfaces/compose.js';
+import {
+  composeInterfaces,
+  getComposedInternals,
+} from '@/src/public/interfaces/compose.js';
 import {buildSearchBoxController} from './search-box/search-box-controller.js';
 import {buildPaginationController} from './pagination/pagination-controller.js';
 import {getOrCreatePaginationActions} from '@/src/core/internal/pagination/pagination-actions.js';
-import {STATE_ID} from '@/src/core/interface/utils/symbols.js';
 
-/**
- * Property 5: Supports<F> structural compatibility
- * Validates: Requirements 4.4, 6.1, 6.4
- *
- * Verifies that controllers accept both class instances (SearchInterface)
- * and composed objects (ComposedInterface) through the Supports<F> structural type.
- */
 describe('Supports<F> structural compatibility', () => {
   let engine: Engine;
 
@@ -158,7 +153,7 @@ describe('Supports<F> structural compatibility', () => {
       const controller = buildPaginationController({interface: composed});
 
       const fullEngine = getFullEngine(engine);
-      const composedId = composed[STATE_ID];
+      const composedId = getComposedInternals(composed).stateId;
       const actions = getOrCreatePaginationActions(composedId);
       fullEngine.mutate(actions.setTotalCount(50));
 

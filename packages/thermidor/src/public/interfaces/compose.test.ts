@@ -1,13 +1,16 @@
 import {describe, it, expect, vi} from 'vitest';
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {ComposedInterface, composeInterfaces} from './compose.js';
+import {
+  ComposedInterface,
+  composeInterfaces,
+  getComposedInternals,
+} from './compose.js';
 import {BaseInterface} from '@/src/core/interface/base-interface.js';
 import {
   Engine,
   getFullEngine,
   type FullEngine,
 } from '@/src/core/interface/engine/engine.js';
-import {STATE_ID} from '@/src/core/interface/utils/symbols.js';
 
 function createMockThunk(label: string) {
   return createAsyncThunk<void, {engine: FullEngine}>(
@@ -79,14 +82,15 @@ describe('composeInterfaces', () => {
     expect(composed).toBeInstanceOf(ComposedInterface);
   });
 
-  it('assigns a unique [STATE_ID] to the composed interface', () => {
+  it('assigns a unique stateId to the composed interface', () => {
     const engine = getFullEngine(new Engine());
     const ifaceA = new TestSearchInterface(engine, 'a');
 
     const composed = composeInterfaces({interfaces: [ifaceA]});
+    const {stateId} = getComposedInternals(composed);
 
-    expect(typeof composed[STATE_ID]).toBe('string');
-    expect(composed[STATE_ID].length).toBeGreaterThan(0);
+    expect(typeof stateId).toBe('string');
+    expect(stateId.length).toBeGreaterThan(0);
   });
 });
 
@@ -117,7 +121,7 @@ describe('ComposedInterface', () => {
     expect(spyB).toHaveBeenCalledWith('search', 'composed-1');
   });
 
-  it('resolveFacades uses the [STATE_ID] when no composedInterfaceId is passed', () => {
+  it('resolveFacades uses the stateId when no composedInterfaceId is passed', () => {
     const engine = getFullEngine(new Engine());
     const ifaceA = new TestSearchInterface(engine, 'a');
 
@@ -150,12 +154,13 @@ describe('ComposedInterface', () => {
     expect(() => composed.dispose()).not.toThrow();
   });
 
-  it('[STATE_ID] is set to the composed ID', () => {
+  it('stateId is set to the composed ID via getComposedInternals', () => {
     const engine = getFullEngine(new Engine());
     const ifaceA = new TestSearchInterface(engine, 'a');
 
     const composed = new ComposedInterface([ifaceA], 'test-composed-id');
+    const {stateId} = getComposedInternals(composed);
 
-    expect(composed[STATE_ID]).toBe('test-composed-id');
+    expect(stateId).toBe('test-composed-id');
   });
 });

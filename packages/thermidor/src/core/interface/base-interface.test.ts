@@ -1,5 +1,5 @@
 import {describe, it, expect, vi} from 'vitest';
-import {BaseInterface} from './base-interface.js';
+import {BaseInterface, getInterfaceInternals} from './base-interface.js';
 import type {FullEngine} from './engine/engine.js';
 import type {
   FacadeResolverFactory,
@@ -7,7 +7,6 @@ import type {
   EndpointThunk,
   EndpointStateScope,
 } from './utils/interface-types.js';
-import {ENGINE, STATE_ID, TYPE} from './utils/symbols.js';
 
 function createMockEngine(): FullEngine {
   return {
@@ -61,19 +60,19 @@ function createTestSubject(options?: {
 
 describe('BaseInterface', () => {
   describe('constructor', () => {
-    it('sets [ENGINE] to the provided engine', () => {
+    it('stores the engine accessible via getInterfaceInternals', () => {
       const {instance, engine} = createTestSubject();
-      expect(instance[ENGINE]).toBe(engine);
+      expect(getInterfaceInternals(instance).engine).toBe(engine);
     });
 
-    it('sets [STATE_ID] to the provided stateId', () => {
+    it('stores the stateId accessible via getInterfaceInternals', () => {
       const {instance} = createTestSubject({stateId: 'my-interface-42'});
-      expect(instance[STATE_ID]).toBe('my-interface-42');
+      expect(getInterfaceInternals(instance).stateId).toBe('my-interface-42');
     });
 
-    it('sets [TYPE] to the provided type', () => {
+    it('stores the type accessible via getInterfaceInternals', () => {
       const {instance} = createTestSubject();
-      expect(instance[TYPE]).toBe('search');
+      expect(getInterfaceInternals(instance).type).toBe('search');
     });
   });
 
