@@ -6,8 +6,10 @@
 
 import {Engine} from '@/src/core/index.js';
 import type {SearchResult, FacetValue} from '@/src/core/index.js';
-import type {Supports} from '@/src/core/interface/utils/interface-types.js';
-import {buildSearchInterface} from '@/src/public/interfaces/search.js';
+import {
+  buildSearchInterface,
+  type SearchInterface,
+} from '@/src/public/interfaces/search.js';
 
 /**
  * Create a fresh engine instance for testing
@@ -24,7 +26,7 @@ export function createTestEngine(): Engine {
 export function createTestInterface(
   engine: Engine,
   stateId = 'test'
-): Supports<'search'> {
+): SearchInterface {
   return buildSearchInterface({engine, id: stateId});
 }
 

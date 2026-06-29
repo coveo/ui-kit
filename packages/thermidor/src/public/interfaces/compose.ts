@@ -32,6 +32,10 @@ export class ComposedInterface<T extends InterfaceType> {
   }
 
   constructor(interfaces: BaseInterface<T>[], composedId: string) {
+    if (interfaces.length === 0) {
+      throw new Error('ComposedInterface requires at least one interface.');
+    }
+
     const {engine} = getInterfaceInternals(interfaces[0]);
     this.#engine = engine;
     this.#stateId = composedId;

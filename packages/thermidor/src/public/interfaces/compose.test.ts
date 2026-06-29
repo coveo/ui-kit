@@ -95,6 +95,12 @@ describe('composeInterfaces', () => {
 });
 
 describe('ComposedInterface', () => {
+  it('throws when constructed with an empty array', () => {
+    expect(() => new ComposedInterface([], 'composed-empty')).toThrow(
+      'ComposedInterface requires at least one interface.'
+    );
+  });
+
   it('resolveFacades returns thunks from all sub-interfaces (flat-mapped)', () => {
     const engine = getFullEngine(new Engine());
     const ifaceA = new TestSearchInterface(engine, 'a');

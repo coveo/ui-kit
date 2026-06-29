@@ -129,10 +129,13 @@ export class Engine {
     interfaceId: string,
     content: Record<string, unknown>
   ) {
+    this.#assertNotDisposed();
     this.#hydrationSnapshots.set(interfaceId, content);
   }
 
   #getNavigatorContextProvider(): NavigatorContextProvider | undefined {
+    this.#assertNotDisposed();
+
     if (
       !this.#navigatorContextProvider &&
       !this.#didWarnMissingNavigatorContextProvider

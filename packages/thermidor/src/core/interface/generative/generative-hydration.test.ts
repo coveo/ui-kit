@@ -72,7 +72,7 @@ describe('createHydrateSubInterface', () => {
     expect(result).not.toBeNull();
     expect(result!.useCase).toBe('commerceSearch');
     expect(result!.interface).toBeDefined();
-    const {stateId} = getInterfaceInternals(result!.interface as any);
+    const {stateId} = getInterfaceInternals(result!.interface);
     expect(stateId).toBeDefined();
   });
 
@@ -116,7 +116,7 @@ describe('createHydrateSubInterface', () => {
     };
 
     const result = hydrate('commerce-search-api-response', content);
-    const {stateId: subId} = getInterfaceInternals(result!.interface as any);
+    const {stateId: subId} = getInterfaceInternals(result!.interface);
     const fullEngine = getFullEngine(engine);
 
     const productSlice = getOrCreateProductListSlice(subId);
@@ -151,7 +151,7 @@ describe('createHydrateSubInterface', () => {
     };
 
     const result = hydrate('search-api-response', content);
-    const {stateId: subId} = getInterfaceInternals(result!.interface as any);
+    const {stateId: subId} = getInterfaceInternals(result!.interface);
     const fullEngine = getFullEngine(engine);
 
     const resultsSlice = getOrCreateResultsSlice(subId);

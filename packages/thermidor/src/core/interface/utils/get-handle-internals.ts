@@ -1,4 +1,5 @@
 import type {FullEngine} from '../engine/engine.js';
+import type {Facades, InterfaceType, Supports} from './interface-types.js';
 import {BaseInterface, getInterfaceInternals} from '../base-interface.js';
 import {
   ComposedInterface,
@@ -10,10 +11,9 @@ export interface HandleInternals {
   stateId: string;
 }
 
-export function getHandleInternals(handle: {
-  resolveFacades: unknown;
-  dispose: unknown;
-}): HandleInternals {
+export function getHandleInternals<F extends Facades[InterfaceType]>(
+  handle: Supports<F>
+): HandleInternals {
   if (handle instanceof BaseInterface) {
     const {engine, stateId} = getInterfaceInternals(handle);
     return {engine, stateId};

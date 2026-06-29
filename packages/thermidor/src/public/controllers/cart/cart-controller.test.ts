@@ -9,13 +9,12 @@ import {getOrCreateSearchBoxSlice} from '@/src/core/internal/search-box/search-b
 import {getOrCreateSearchBoxActions} from '@/src/core/internal/search-box/search-box-actions.js';
 import {getOrCreateCartSlice} from '@/src/core/internal/cart/cart-slice.js';
 import {getOrCreateCartActions} from '@/src/core/internal/cart/cart-actions.js';
-import type {Supports} from '@/src/core/interface/utils/interface-types.js';
 import {buildCartController} from './cart-controller.js';
 
 describe('buildCartController', () => {
   describe('behavior', () => {
     let engine: Engine;
-    let cartInterface: Supports<'search'>;
+    let cartInterface: ReturnType<typeof createTestInterface>;
 
     beforeEach(() => {
       engine = createTestEngine();
@@ -39,7 +38,7 @@ describe('buildCartController', () => {
         const controller = buildCartController({interface: cartInterface});
         const callback = vi.fn();
         const fullEngine = getFullEngine(engine);
-        const {stateId} = getInterfaceInternals(cartInterface as any);
+        const {stateId} = getInterfaceInternals(cartInterface);
 
         const searchBoxSlice = getOrCreateSearchBoxSlice(stateId);
         const {setQuery} = getOrCreateSearchBoxActions(stateId);
@@ -92,7 +91,7 @@ describe('buildCartController', () => {
 
   describe('wiring', () => {
     let engine: Engine;
-    let cartInterface: Supports<'search'>;
+    let cartInterface: ReturnType<typeof createTestInterface>;
     const TEST_ID = 'wiring-test';
 
     beforeEach(() => {
