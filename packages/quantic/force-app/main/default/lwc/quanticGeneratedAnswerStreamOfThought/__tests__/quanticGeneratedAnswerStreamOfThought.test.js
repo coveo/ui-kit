@@ -2,6 +2,21 @@ import {resolveSteps} from '../quanticGeneratedAnswerStreamOfThought.js';
 import {buildCreateTestComponent, cleanup, flushPromises} from 'c/testUtils';
 import QuanticGeneratedAnswerStreamOfThought from '../quanticGeneratedAnswerStreamOfThought';
 
+jest.mock(
+  '@salesforce/label/c.quantic_AgentGenerationStepSearchQuery',
+  () => ({default: 'Searching for {{0}}.'}),
+  {
+    virtual: true,
+  }
+);
+jest.mock(
+  '@salesforce/label/c.quantic_AgentGenerationStepSearchQueryCompleted',
+  () => ({default: 'Searched for {{0}}'}),
+  {
+    virtual: true,
+  }
+);
+
 const selectors = {
   stepItem: '[data-testid="step-item"]',
   spinner: '[data-testid="spinner"]',
@@ -257,6 +272,9 @@ describe('quantic generated answer stream of thought component', () => {
       expect(stepItem.getAttribute('data-step-name')).toBe(
         'searching-with-query'
       );
+
+      const stepLabel = element.shadowRoot.querySelector(selectors.stepLabel);
+      expect(stepLabel.textContent).toContain('how to reset password');
     });
 
     it('should expand multiple search toolCalls into separate step items', async () => {
@@ -297,6 +315,14 @@ describe('quantic generated answer stream of thought component', () => {
       stepItems.forEach((item) =>
         expect(item.getAttribute('data-step-name')).toBe('searching-with-query')
       );
+
+      const stepLabelsText = Array.from(
+        element.shadowRoot.querySelectorAll(selectors.stepLabel)
+      )
+        .map((el) => el.textContent ?? '')
+        .join(' ');
+      expect(stepLabelsText).toContain('What is Quantic');
+      expect(stepLabelsText).toContain('What is Atomic');
     });
   });
 
