@@ -56,6 +56,16 @@ describe('atomic-ask-follow-up-input', () => {
       get submitIcon() {
         return element.shadowRoot?.querySelector('[part="submit-icon"]');
       },
+      get characterCounter() {
+        return element.shadowRoot?.querySelector(
+          '[part="character-counter"]'
+        ) as HTMLElement | null;
+      },
+      get validationMessage() {
+        return element.shadowRoot?.querySelector(
+          '[part="validation-message"]'
+        ) as HTMLElement | null;
+      },
     });
 
     return {
@@ -195,7 +205,9 @@ describe('atomic-ask-follow-up-input', () => {
 
     it('should clear the replica text after successful submission', async () => {
       const askFollowUp = vi.fn().mockResolvedValue(undefined);
-      const {input, submitButton, parts} = await renderComponent({askFollowUp});
+      const {input, submitButton, parts} = await renderComponent({
+        askFollowUp,
+      });
 
       await input.fill('test question');
       expect(parts().textareaExpander?.dataset.replicatedValue).toBe(
@@ -328,7 +340,9 @@ describe('atomic-ask-follow-up-input', () => {
 
     it('should collapse textarea after successful submission', async () => {
       const askFollowUp = vi.fn().mockResolvedValue(undefined);
-      const {input, submitButton, parts} = await renderComponent({askFollowUp});
+      const {input, submitButton, parts} = await renderComponent({
+        askFollowUp,
+      });
 
       const inputElement = input.element() as HTMLTextAreaElement;
       inputElement.focus();
@@ -355,6 +369,176 @@ describe('atomic-ask-follow-up-input', () => {
       expect(parts().textareaExpander?.classList.contains('expanded')).toBe(
         true
       );
+    });
+  });
+
+  describe('character limit validation', () => {
+    const MAX_LENGTH = 300;
+
+    it('should display the character counter starting at 0 / 300', async () => {
+      const {parts} = await renderComponent();
+      expect(parts().characterCounter?.textContent?.trim()).toBe('0 / 300');
+    });
+
+    it('should update the character counter as the user types', async () => {
+      const {input, parts} = await renderComponent();
+
+      await input.fill('hello');
+
+      expect(parts().characterCounter?.textContent?.trim()).toBe('5 / 300');
+    });
+
+    it('should allow typing more than the limit', async () => {
+      const {input} = await renderComponent();
+      const value = 'a'.repeat(MAX_LENGTH + 1);
+
+      await input.fill(value);
+
+      const inputElement = input.element() as HTMLTextAreaElement;
+      expect(inputElement.value.length).toBe(MAX_LENGTH + 1);
+    });
+
+    it('should show the exceeded count when over the limit', async () => {
+      const {input, parts} = await renderComponent();
+
+      await input.fill('a'.repeat(MAX_LENGTH + 26));
+
+      expect(parts().characterCounter?.textContent?.trim()).toBe('326 / 300');
+    });
+
+    it('should put the input container and the counter in an error state when over the limit', async () => {
+      const {input, parts} = await renderComponent();
+
+      await input.fill('a'.repeat(MAX_LENGTH + 1));
+
+      expect(parts().characterCounter?.classList.contains('text-error')).toBe(
+        true
+      );
+      expect(parts().inputContainer?.classList.contains('border-error')).toBe(
+        true
+      );
+    });
+
+    it('should display a validation message when over the limit', async () => {
+      const {input, parts} = await renderComponent();
+
+      await input.fill('a'.repeat(MAX_LENGTH + 1));
+
+      expect(parts().validationMessage?.textContent?.trim()).not.toBe('');
+    });
+
+    it('should not display a validation message when within the limit', async () => {
+      const {input, parts} = await renderComponent();
+
+      await input.fill('a'.repeat(MAX_LENGTH));
+
+      expect(parts().validationMessage?.textContent?.trim()).toBe('');
+    });
+
+    it('should disable the submit button when over the limit', async () => {
+      const {input, submitButton} = await renderComponent();
+
+      await input.fill('a'.repeat(MAX_LENGTH + 1));
+
+      await expect.element(submitButton).toBeDisabled();
+    });
+
+    it('should not call askFollowUp when over the limit', async () => {
+      const askFollowUp = vi.fn().mockResolvedValue(undefined);
+      const {input} = await renderComponent({askFollowUp});
+
+      await input.fill('a'.repeat(MAX_LENGTH + 1));
+      await userEvent.keyboard('{Enter}');
+
+      expect(askFollowUp).not.toHaveBeenCalled();
+    });
+
+    it('should enable the submit button at exactly the limit', async () => {
+      const {input, submitButton} = await renderComponent();
+
+      await input.fill('a'.repeat(MAX_LENGTH));
+
+      await expect.element(submitButton).toBeEnabled();
+    });
+
+    it('should clear the error state once the value is back within the limit', async () => {
+      const {input, parts} = await renderComponent();
+
+      await input.fill('a'.repeat(MAX_LENGTH + 1));
+      expect(parts().inputContainer?.classList.contains('border-error')).toBe(
+        true
+      );
+
+      await input.fill('a'.repeat(MAX_LENGTH));
+      expect(parts().inputContainer?.classList.contains('border-error')).toBe(
+        false
+      );
+      expect(parts().characterCounter?.classList.contains('text-error')).toBe(
+        false
+      );
+    });
+
+    it('should reset the character counter after a successful submission', async () => {
+      const askFollowUp = vi.fn().mockResolvedValue(undefined);
+      const {input, submitButton, parts} = await renderComponent({
+        askFollowUp,
+      });
+
+      await input.fill('test question');
+      await submitButton.click();
+
+      await vi.waitFor(() => {
+        expect(parts().characterCounter?.textContent?.trim()).toBe('0 / 300');
+      });
+    });
+
+    it('should not count surrounding whitespace toward the limit', async () => {
+      const {input, parts} = await renderComponent();
+
+      await input.fill(`  ${'a'.repeat(MAX_LENGTH)}  `);
+
+      expect(parts().characterCounter?.textContent?.trim()).toBe('300 / 300');
+      expect(parts().inputContainer?.classList.contains('border-error')).toBe(
+        false
+      );
+    });
+
+    it('should not be over the limit when only surrounding whitespace exceeds it', async () => {
+      const {input, submitButton} = await renderComponent();
+
+      await input.fill(`${'a'.repeat(MAX_LENGTH)}     `);
+
+      await expect.element(submitButton).toBeEnabled();
+    });
+  });
+
+  describe('accessibility', () => {
+    const MAX_LENGTH = 300;
+
+    it('should mark the input as invalid when over the limit', async () => {
+      const {input, parts} = await renderComponent();
+
+      await input.fill('a'.repeat(MAX_LENGTH + 1));
+
+      expect(parts().inputField?.getAttribute('aria-invalid')).toBe('true');
+    });
+
+    it('should associate the validation message with the input when over the limit', async () => {
+      const {input, parts} = await renderComponent();
+
+      await input.fill('a'.repeat(MAX_LENGTH + 1));
+
+      const describedBy = parts().inputField?.getAttribute('aria-describedby');
+      expect(describedBy).toBeTruthy();
+      expect(parts().validationMessage?.id).toBe(describedBy);
+    });
+
+    it('should not associate a validation message with the input when within the limit', async () => {
+      const {input, parts} = await renderComponent();
+
+      await input.fill('a'.repeat(MAX_LENGTH));
+
+      expect(parts().inputField?.getAttribute('aria-describedby')).toBeNull();
     });
   });
 });

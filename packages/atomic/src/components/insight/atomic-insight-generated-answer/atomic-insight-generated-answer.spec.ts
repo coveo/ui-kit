@@ -199,11 +199,11 @@ describe('atomic-insight-generated-answer', () => {
     });
   });
 
-  it('should hide the toggle button when withToggle is false', async () => {
+  it('should not have a toggle button when withToggle is false', async () => {
     const {toggle} = await renderGeneratedAnswer({
       props: {withToggle: false},
     });
-    expect(toggle).toHaveClass('hidden');
+    expect(toggle).toBeNull();
   });
 
   describe('when answer is visible', () => {

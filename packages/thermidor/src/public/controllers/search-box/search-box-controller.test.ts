@@ -12,12 +12,12 @@ import {
 import {getQuery} from '@/src/core/interface/search-box/search-box-selectors.js';
 import {buildSearchBoxController} from './search-box-controller.js';
 import {buildSearchInterface} from '@/src/public/interfaces/search.js';
-import type {Interface} from '@/src/core/interface/utils/interface-types.js';
+import type {SearchInterface} from '@/src/public/interfaces/search.js';
 
 describe('buildSearchBoxController', () => {
   let engine: Engine;
   let fullEngine: FullEngine;
-  let searchInterface: Interface<'search'>;
+  let searchInterface: SearchInterface;
 
   const buildController = () =>
     buildSearchBoxController({interface: searchInterface});
