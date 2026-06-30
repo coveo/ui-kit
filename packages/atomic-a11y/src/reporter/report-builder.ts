@@ -44,10 +44,13 @@ export function buildA11yReport(
       standard: 'WCAG 2.2 AA',
       reportDate: formatDate(new Date()),
       evaluationMethods: [
-        `axe-core ${axeCoreVersion}`,
-        'Storybook addon-a11y',
-        ...(hasInteractiveData ? ['Storybook interactive play() tests'] : []),
-        'Manual audit',
+        `Automated: axe-core ${axeCoreVersion} via Storybook addon-a11y`,
+        ...(hasInteractiveData
+          ? [
+              'Interactive: Storybook interactive tests for keyboard navigation and focus management',
+            ]
+          : []),
+        'Manual: keyboard-only testing; screen reader testing; visual inspection at 200% and 400% zoom; reflow verification at 320 CSS px viewport width; non-text contrast verification.',
       ],
       axeCoreVersion,
       storybookVersion,
