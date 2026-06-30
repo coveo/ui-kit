@@ -11,6 +11,11 @@ import {testHoverContentA11y} from '@/storybook-utils/a11y/hover-content.js';
 import {testStatusMessageSequenceA11y} from '@/storybook-utils/a11y/status-message.js';
 import {testSwitchA11y} from '@/storybook-utils/a11y/switch.js';
 import {MockAgentApi} from '@/storybook-utils/api/agent/mock';
+import {
+  followUpTurnLimitErrorResponse,
+  followUpGenericErrorResponse,
+  followUpNetworkErrorResponse,
+} from '@/storybook-utils/api/agent/generate-response';
 import {MockAnswerApi} from '@/storybook-utils/api/answer/mock';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
@@ -237,5 +242,44 @@ export const A11ySwitch: Story = {
     await play(context);
     await submitGeneratedAnswerQuery(context);
     await testSwitchA11y(context);
+  },
+};
+
+export const FollowUpNetworkError: Story = {
+  name: 'Follow-Up Network Error',
+  args: {
+    'agent-id': 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
+    'answer-configuration-id': undefined,
+  },
+  play: async (storyContext) => {
+    agentApiHarness.followUpEndpoint.mock(() => followUpNetworkErrorResponse);
+    await playWithLegacyAnalytics(storyContext);
+    await submitGeneratedAnswerQuery(storyContext);
+  },
+};
+
+export const FollowUpTurnLimitError: Story = {
+  name: 'Follow-Up Turn Limit Error',
+  args: {
+    'agent-id': 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
+    'answer-configuration-id': undefined,
+  },
+  play: async (storyContext) => {
+    agentApiHarness.followUpEndpoint.mock(() => followUpTurnLimitErrorResponse);
+    await playWithLegacyAnalytics(storyContext);
+    await submitGeneratedAnswerQuery(storyContext);
+  },
+};
+
+export const FollowUpGenericError: Story = {
+  name: 'Follow-Up Generic Error',
+  args: {
+    'agent-id': 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
+    'answer-configuration-id': undefined,
+  },
+  play: async (storyContext) => {
+    agentApiHarness.followUpEndpoint.mock(() => followUpGenericErrorResponse);
+    await playWithLegacyAnalytics(storyContext);
+    await submitGeneratedAnswerQuery(storyContext);
   },
 };

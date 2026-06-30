@@ -249,4 +249,51 @@ const headAnswerResponse = () =>
     delayBetweenMessages: 'real',
   });
 
-export {headAnswerResponse, followUpAnswerResponse};
+const buildErrorStreamingResponse = (errorCode: string, message: string) => {
+  const stream = new ReadableStream({
+    start(controller) {
+      const errorEvent = {
+        type: EventType.RUN_ERROR,
+        threadId: THREAD_ID,
+        runId: `${RUN_ID}-error`,
+        timestamp: Date.now(),
+        code: errorCode,
+        message,
+      };
+      controller.enqueue(
+        new TextEncoder().encode(
+          `event: message\ndata: ${JSON.stringify(errorEvent)}\nretry: 10000\n\n`
+        )
+      );
+      controller.close();
+    },
+  });
+
+  return new HttpResponse(stream, {
+    headers: {
+      'Content-Type': 'text/event-stream',
+    },
+  });
+};
+
+const followUpTurnLimitErrorResponse = () =>
+  buildErrorStreamingResponse(
+    'KNOWLEDGE:SSE_TURN_LIMIT_REACHED',
+    'Turn limit reached'
+  );
+
+const followUpGenericErrorResponse = () =>
+  buildErrorStreamingResponse(
+    'KNOWLEDGE:SSE_INTERNAL_ERROR',
+    'An internal error occurred'
+  );
+
+const followUpNetworkErrorResponse = () => HttpResponse.error();
+
+export {
+  headAnswerResponse,
+  followUpAnswerResponse,
+  followUpTurnLimitErrorResponse,
+  followUpGenericErrorResponse,
+  followUpNetworkErrorResponse,
+};
