@@ -217,7 +217,7 @@ export class GeneratedAnswerPageObject extends BasePageObject {
   }
 
   async waitForFollowUpRequest() {
-    return this.page.waitForRequest((request) => {
+    const followUpRequest = await this.page.waitForRequest((request) => {
       if (
         request.method() === 'POST' &&
         /\/agents\/.*\/follow-up/.test(request.url())
@@ -226,10 +226,12 @@ export class GeneratedAnswerPageObject extends BasePageObject {
       }
       return false;
     });
+
+    return followUpRequest;
   }
 
   async waitForCustomAnalyticsEvent(eventValue: string) {
-    return this.page.waitForRequest((request) => {
+    const analyticsRequest = await this.page.waitForRequest((request) => {
       if (
         request.method() === 'POST' &&
         /\/rest\/v15\/analytics\/custom/.test(request.url())
@@ -239,6 +241,8 @@ export class GeneratedAnswerPageObject extends BasePageObject {
       }
       return false;
     });
+
+    return analyticsRequest;
   }
 
   async waitForStreamEndAnalyticsRequest() {
