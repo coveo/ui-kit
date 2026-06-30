@@ -9,9 +9,6 @@ import {
 import type {HttpHandler} from 'msw';
 
 const COMMIT_SHA = process.env.COMMIT_SHA;
-// Commit builds are published under `atomic/commits/<sha>` (no version segment),
-// while the rolling release lives under `atomic/v3`. The previous commit URL
-// (`atomic/commit/<sha>/v3`) returned 403, causing addStyleTag/addScriptTag to fail.
 const BASE_URL = COMMIT_SHA
   ? `https://static.cloud.coveo.com/atomic/commits/${COMMIT_SHA}`
   : 'https://static.cloud.coveo.com/atomic/v3';
