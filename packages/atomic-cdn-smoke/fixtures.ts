@@ -10,7 +10,7 @@ import type {HttpHandler} from 'msw';
 
 const COMMIT_SHA = process.env.COMMIT_SHA;
 const BASE_URL = COMMIT_SHA
-  ? `https://static.cloud.coveo.com/atomic/commit/${COMMIT_SHA}/v3`
+  ? `https://static.cloud.coveo.com/atomic/commits/${COMMIT_SHA}`
   : 'https://static.cloud.coveo.com/atomic/v3';
 const ATOMIC_URL = `${BASE_URL}/atomic.esm.js`;
 const THEME_URL = `${BASE_URL}/themes/coveo.css`;
