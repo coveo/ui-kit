@@ -57,8 +57,7 @@ export default class QuanticGeneratedAnswerFollowUpInput extends LightningElemen
 
   handleSubmitFollowUp() {
     if (
-      this.submitButtonDisabled ||
-      this.isOverCharacterLimit ||
+      this.isSubmitPrevented ||
       this.refs.askFollowUpInput.value.trim() === ''
     ) {
       return;
@@ -132,7 +131,7 @@ export default class QuanticGeneratedAnswerFollowUpInput extends LightningElemen
     return this.characterCount > MAX_FOLLOW_UP_QUESTION_LENGTH;
   }
 
-  get isSubmitDisabled() {
+  get isSubmitPrevented() {
     return this.submitButtonDisabled || this.isOverCharacterLimit;
   }
 
