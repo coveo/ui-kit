@@ -367,8 +367,13 @@ test.describe('atomic-generated-answer', () => {
       });
 
       await test.step('generate first follow-up', async () => {
+        const followUpPromise = generatedAnswer.waitForFollowUpRequest();
         await generatedAnswer.followUpInput.fill('What else should I try?');
         await generatedAnswer.followUpSubmitButton.click();
+
+        const followUpRequest = await followUpPromise;
+        const followUpBody = followUpRequest.postDataJSON();
+        expect(followUpBody.conversationId).toBe('thread-1');
 
         await expect(generatedAnswer.threadItems).toHaveCount(2, {
           timeout: streamingTimeoutMs,
@@ -387,11 +392,16 @@ test.describe('atomic-generated-answer', () => {
         );
       });
 
+      let firstFollowUpAnswerId: string;
+
       await test.step('copy follow-up answer to clipboard', async () => {
         await generatedAnswer.page
           .context()
           .grantPermissions(['clipboard-read', 'clipboard-write']);
 
+        const copyPromise = generatedAnswer.waitForCustomAnalyticsEvent(
+          'generatedAnswerCopyToClipboard'
+        );
         const copyButton = generatedAnswer.threadItems
           .last()
           .locator('[part="copy-button"]');
@@ -401,17 +411,37 @@ test.describe('atomic-generated-answer', () => {
           navigator.clipboard.readText()
         );
         expect(clipboardContent).toContain('Resolving Netflix Connection');
+
+        const copyRequest = await copyPromise;
+        const copyBody = copyRequest.postDataJSON();
+        firstFollowUpAnswerId =
+          copyBody.customData.generativeQuestionAnsweringId;
+        expect(firstFollowUpAnswerId).toBeTruthy();
+        expect(copyBody.customData.conversationId).toBe('thread-1');
       });
 
       await test.step('like the follow-up answer', async () => {
+        const likePromise = generatedAnswer.waitForCustomAnalyticsEvent(
+          'likeGeneratedAnswer'
+        );
         const likeButton = generatedAnswer.threadItems
           .last()
           .getByRole('button', {name: /^helpful$/i});
         await likeButton.click();
         await expect(likeButton).toHaveAttribute('aria-pressed', 'true');
+
+        const likeRequest = await likePromise;
+        const likeBody = likeRequest.postDataJSON();
+        expect(likeBody.customData.generativeQuestionAnsweringId).toBe(
+          firstFollowUpAnswerId
+        );
+        expect(likeBody.customData.conversationId).toBe('thread-1');
       });
 
       await test.step('dislike the follow-up answer', async () => {
+        const dislikePromise = generatedAnswer.waitForCustomAnalyticsEvent(
+          'dislikeGeneratedAnswer'
+        );
         const dislikeButton = generatedAnswer.threadItems
           .last()
           .getByRole('button', {name: /^not helpful$/i});
@@ -421,9 +451,19 @@ test.describe('atomic-generated-answer', () => {
           .getByRole('button', {name: /^helpful$/i});
         await expect(dislikeButton).toHaveAttribute('aria-pressed', 'true');
         await expect(likeButton).toHaveAttribute('aria-pressed', 'false');
+
+        const dislikeRequest = await dislikePromise;
+        const dislikeBody = dislikeRequest.postDataJSON();
+        expect(dislikeBody.customData.generativeQuestionAnsweringId).toBe(
+          firstFollowUpAnswerId
+        );
+        expect(dislikeBody.customData.conversationId).toBe('thread-1');
       });
 
       await test.step('hover citation and display popover', async () => {
+        const hoverPromise = generatedAnswer.waitForCustomAnalyticsEvent(
+          'generatedAnswerSourceHover'
+        );
         const citation = generatedAnswer.threadItems
           .last()
           .locator('[part="citation"]')
@@ -435,14 +475,36 @@ test.describe('atomic-generated-answer', () => {
           .locator('[part="citation-popover"]')
           .first();
         await expect(popover).toBeVisible();
+
+        // Wait longer than the popover debounce (200ms) + hover analytics threshold (1000ms)
+        await generatedAnswer.page.waitForTimeout(1500);
+        await generatedAnswer.page.mouse.move(0, 0);
+
+        const hoverRequest = await hoverPromise;
+        const hoverBody = hoverRequest.postDataJSON();
+        expect(hoverBody.customData.generativeQuestionAnsweringId).toBe(
+          firstFollowUpAnswerId
+        );
+        expect(hoverBody.customData.conversationId).toBe('thread-1');
       });
 
-      await test.step('render citation as clickable link', async () => {
+      await test.step('click citation on follow-up answer', async () => {
+        const clickPromise = generatedAnswer.waitForCustomAnalyticsEvent(
+          'generatedAnswerFollowupOpenSource'
+        );
         const citationLink = generatedAnswer.threadItems
           .last()
-          .getByRole('link')
+          .locator('[part="citation"]')
           .first();
         await expect(citationLink).toHaveAttribute('href', /^https?:\/\//);
+        await citationLink.click();
+
+        const clickRequest = await clickPromise;
+        const clickBody = clickRequest.postDataJSON();
+        expect(clickBody.customData.generativeQuestionAnsweringId).toBe(
+          firstFollowUpAnswerId
+        );
+        expect(clickBody.customData.conversationId).toBe('thread-1');
       });
 
       await test.step('collapse and expand thread items', async () => {
@@ -501,6 +563,87 @@ test.describe('atomic-generated-answer', () => {
           'aria-pressed',
           'false'
         );
+      });
+
+      await test.step('interacting with 2nd answer after triggering a 3rd answer', async () => {
+        const secondAnswerItem = generatedAnswer.threadItems.nth(1);
+
+        // Expand the 2nd thread item (collapsed by default after 'show previous')
+        const expandButton = secondAnswerItem.getByRole('button', {
+          name: /what else should i try/i,
+        });
+        await expandButton.click();
+
+        let secondAnswerId: string;
+
+        const likePromise = generatedAnswer.waitForCustomAnalyticsEvent(
+          'likeGeneratedAnswer'
+        );
+        const likeButton = secondAnswerItem.getByRole('button', {
+          name: /^helpful$/i,
+        });
+        await likeButton.click();
+        const likeRequest = await likePromise;
+        const likeBody = likeRequest.postDataJSON();
+        secondAnswerId = likeBody.customData.generativeQuestionAnsweringId;
+        expect(secondAnswerId).toBeTruthy();
+        expect(secondAnswerId).toBe(firstFollowUpAnswerId);
+        expect(likeBody.customData.conversationId).toBe('thread-1');
+
+        const dislikePromise = generatedAnswer.waitForCustomAnalyticsEvent(
+          'dislikeGeneratedAnswer'
+        );
+        const dislikeButton = secondAnswerItem.getByRole('button', {
+          name: /^not helpful$/i,
+        });
+        await dislikeButton.click();
+        const dislikeRequest = await dislikePromise;
+        const dislikeBody = dislikeRequest.postDataJSON();
+        expect(dislikeBody.customData.generativeQuestionAnsweringId).toBe(
+          secondAnswerId
+        );
+        expect(dislikeBody.customData.conversationId).toBe('thread-1');
+
+        const copyPromise = generatedAnswer.waitForCustomAnalyticsEvent(
+          'generatedAnswerCopyToClipboard'
+        );
+        const copyButton = secondAnswerItem.locator('[part="copy-button"]');
+        await copyButton.click();
+        const copyRequest = await copyPromise;
+        const copyBody = copyRequest.postDataJSON();
+        expect(copyBody.customData.generativeQuestionAnsweringId).toBe(
+          secondAnswerId
+        );
+        expect(copyBody.customData.conversationId).toBe('thread-1');
+
+        const hoverPromise = generatedAnswer.waitForCustomAnalyticsEvent(
+          'generatedAnswerSourceHover'
+        );
+        const citation = secondAnswerItem.locator('[part="citation"]').first();
+        await citation.hover();
+        await generatedAnswer.page.waitForTimeout(1500);
+        await generatedAnswer.page.mouse.move(0, 0);
+        const hoverRequest = await hoverPromise;
+        const hoverBody = hoverRequest.postDataJSON();
+        expect(hoverBody.customData.generativeQuestionAnsweringId).toBe(
+          secondAnswerId
+        );
+        expect(hoverBody.customData.conversationId).toBe('thread-1');
+
+        const citationClickPromise =
+          generatedAnswer.waitForCustomAnalyticsEvent(
+            'generatedAnswerFollowupOpenSource'
+          );
+        const citationLink = secondAnswerItem
+          .locator('[part="citation"]')
+          .first();
+        await citationLink.click();
+        const citationClickRequest = await citationClickPromise;
+        const citationClickBody = citationClickRequest.postDataJSON();
+        expect(citationClickBody.customData.generativeQuestionAnsweringId).toBe(
+          secondAnswerId
+        );
+        expect(citationClickBody.customData.conversationId).toBe('thread-1');
       });
     });
   });

@@ -216,6 +216,35 @@ export class GeneratedAnswerPageObject extends BasePageObject {
     return legacyAnalyticsRequest;
   }
 
+  async waitForFollowUpRequest() {
+    const followUpRequest = await this.page.waitForRequest((request) => {
+      if (
+        request.method() === 'POST' &&
+        /\/agents\/.*\/follow-up/.test(request.url())
+      ) {
+        return true;
+      }
+      return false;
+    });
+
+    return followUpRequest;
+  }
+
+  async waitForCustomAnalyticsEvent(eventValue: string) {
+    const analyticsRequest = await this.page.waitForRequest((request) => {
+      if (
+        request.method() === 'POST' &&
+        /\/rest\/v15\/analytics\/custom/.test(request.url())
+      ) {
+        const body = request.postDataJSON();
+        return body?.eventValue === eventValue;
+      }
+      return false;
+    });
+
+    return analyticsRequest;
+  }
+
   async waitForStreamEndAnalyticsRequest() {
     const streamEndRequest = await this.page.waitForRequest((request) => {
       if (
