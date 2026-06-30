@@ -1,6 +1,6 @@
 import {createAction} from '@reduxjs/toolkit';
 
-export function createSearchParametersActions(interfaceId: string) {
+function createSearchParametersActions(interfaceId: string) {
   return {
     setPipeline: createAction<string>(
       `${interfaceId}/searchParameters/setPipeline`

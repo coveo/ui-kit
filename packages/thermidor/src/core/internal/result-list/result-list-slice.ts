@@ -20,7 +20,7 @@ function mapResult(result: Record<string, unknown>) {
   };
 }
 
-export function createResultsSlice(interfaceId: string) {
+function createResultsSlice(interfaceId: string) {
   const actions = getOrCreateResultsActions(interfaceId);
   const hydrateAction = getOrCreateHydrateFromSnapshotAction(interfaceId);
 

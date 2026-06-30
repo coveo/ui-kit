@@ -3,7 +3,7 @@ import {createSelectSlice} from '@/src/core/interface/utils/select-slice.js';
 import {initialGenerativeState} from './generative-slice.js';
 import type {Turn} from '@/src/core/interface/generative/generative-types.js';
 
-export function createGenerativeSelectors(interfaceId: string) {
+function createGenerativeSelectors(interfaceId: string) {
   const sliceSelector = createSelectSlice(
     interfaceId,
     'generative',

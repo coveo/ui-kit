@@ -1,6 +1,6 @@
 import {createAction} from '@reduxjs/toolkit';
 
-export function createSearchBoxActions(interfaceId: string) {
+function createSearchBoxActions(interfaceId: string) {
   return {
     setQuery: createAction<string>(`${interfaceId}/searchBox/setQuery`),
   };

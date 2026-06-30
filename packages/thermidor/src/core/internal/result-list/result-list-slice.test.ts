@@ -1,17 +1,10 @@
 import {describe, it, expect} from 'vitest';
 import {
-  createResultsSlice,
   getOrCreateResultsSlice,
   initialResultListState,
 } from './result-list-slice.js';
-import {
-  createResultsActions,
-  getOrCreateResultsActions,
-} from './result-list-actions.js';
-import {
-  createResultsSelectors,
-  getOrCreateResultsSelectors,
-} from './result-list-selectors.js';
+import {getOrCreateResultsActions} from './result-list-actions.js';
+import {getOrCreateResultsSelectors} from './result-list-selectors.js';
 import type {CoveoSearchResult} from '@/src/core/interface/api/search/search-types.js';
 
 const mockCoveoResult = (
@@ -36,25 +29,6 @@ describe('initialResultListState', () => {
   });
 });
 
-describe('createResultsActions', () => {
-  it('should create actions scoped to the given interfaceId', () => {
-    const actions = createResultsActions('search-1');
-
-    expect(actions.setResultsFromResponse.type).toBe(
-      'search-1/results/setResultsFromResponse'
-    );
-  });
-
-  it('should create independent actions for different interfaceIds', () => {
-    const actions1 = createResultsActions('interface-a');
-    const actions2 = createResultsActions('interface-b');
-
-    expect(actions1.setResultsFromResponse.type).not.toBe(
-      actions2.setResultsFromResponse.type
-    );
-  });
-});
-
 describe('getOrCreateResultsActions', () => {
   it('should return the same reference for the same interfaceId', () => {
     const first = getOrCreateResultsActions('cached-id');
@@ -71,15 +45,15 @@ describe('getOrCreateResultsActions', () => {
   });
 });
 
-describe('createResultsSlice', () => {
+describe('getOrCreateResultsSlice', () => {
   it('should create a slice scoped to the interfaceId', () => {
-    const slice = createResultsSlice('my-interface');
+    const slice = getOrCreateResultsSlice('my-interface');
 
     expect(slice.name).toBe('my-interface/results');
   });
 
   it('should handle setResultsFromResponse action', () => {
-    const slice = createResultsSlice('test');
+    const slice = getOrCreateResultsSlice('test');
     const actions = getOrCreateResultsActions('test');
 
     const coveoResults: CoveoSearchResult[] = [
@@ -100,7 +74,7 @@ describe('createResultsSlice', () => {
   });
 
   it('should map CoveoSearchResult fields correctly', () => {
-    const slice = createResultsSlice('map-test');
+    const slice = getOrCreateResultsSlice('map-test');
     const actions = getOrCreateResultsActions('map-test');
 
     const coveoResult = mockCoveoResult({
@@ -132,7 +106,7 @@ describe('createResultsSlice', () => {
   });
 
   it('should replace previous results completely', () => {
-    const slice = createResultsSlice('replace-test');
+    const slice = getOrCreateResultsSlice('replace-test');
     const actions = getOrCreateResultsActions('replace-test');
 
     const oldState = {
@@ -162,7 +136,7 @@ describe('createResultsSlice', () => {
   });
 
   it('should not respond to actions from a different interfaceId', () => {
-    const slice = createResultsSlice('slice-a');
+    const slice = getOrCreateResultsSlice('slice-a');
     const actionsB = getOrCreateResultsActions('slice-b');
 
     const state = slice.reducer(
@@ -172,9 +146,7 @@ describe('createResultsSlice', () => {
 
     expect(state.results).toEqual([]);
   });
-});
 
-describe('getOrCreateResultsSlice', () => {
   it('should return the same reference for the same interfaceId', () => {
     const first = getOrCreateResultsSlice('cached-slice');
     const second = getOrCreateResultsSlice('cached-slice');
@@ -190,9 +162,9 @@ describe('getOrCreateResultsSlice', () => {
   });
 });
 
-describe('createResultsSelectors', () => {
+describe('getOrCreateResultsSelectors', () => {
   it('should return initial results when slice is not in state', () => {
-    const selectors = createResultsSelectors('sel-test');
+    const selectors = getOrCreateResultsSelectors('sel-test');
     const state = {};
 
     const results = selectors.getResults(state);
@@ -201,7 +173,7 @@ describe('createResultsSelectors', () => {
   });
 
   it('should return results from scoped state', () => {
-    const selectors = createResultsSelectors('sel-test-2');
+    const selectors = getOrCreateResultsSelectors('sel-test-2');
     const mockResults = [
       {
         uniqueId: '1',
@@ -220,9 +192,7 @@ describe('createResultsSelectors', () => {
 
     expect(results).toEqual(mockResults);
   });
-});
 
-describe('getOrCreateResultsSelectors', () => {
   it('should return the same reference for the same interfaceId', () => {
     const first = getOrCreateResultsSelectors('cached-sel');
     const second = getOrCreateResultsSelectors('cached-sel');

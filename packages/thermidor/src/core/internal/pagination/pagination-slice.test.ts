@@ -1,38 +1,10 @@
 import {describe, it, expect} from 'vitest';
 import {
-  createPaginationSlice,
   getOrCreatePaginationSlice,
   initialPaginationState,
 } from './pagination-slice.js';
-import {
-  createPaginationActions,
-  getOrCreatePaginationActions,
-} from './pagination-actions.js';
-import {
-  createPaginationSelectors,
-  getOrCreatePaginationSelectors,
-} from './pagination-selectors.js';
-
-describe('createPaginationActions', () => {
-  it('should create actions scoped to the interface ID', () => {
-    const actions = createPaginationActions('search-1');
-
-    expect(actions.setFirstResult.type).toBe(
-      'search-1/pagination/setFirstResult'
-    );
-    expect(actions.setPageSize.type).toBe('search-1/pagination/setPageSize');
-    expect(actions.setTotalCount.type).toBe(
-      'search-1/pagination/setTotalCount'
-    );
-  });
-
-  it('should create distinct actions for different interface IDs', () => {
-    const actionsA = createPaginationActions('interface-a');
-    const actionsB = createPaginationActions('interface-b');
-
-    expect(actionsA.setFirstResult.type).not.toBe(actionsB.setFirstResult.type);
-  });
-});
+import {getOrCreatePaginationActions} from './pagination-actions.js';
+import {getOrCreatePaginationSelectors} from './pagination-selectors.js';
 
 describe('getOrCreatePaginationActions', () => {
   it('should return the same instance for the same interface ID', () => {
@@ -50,7 +22,7 @@ describe('getOrCreatePaginationActions', () => {
   });
 });
 
-describe('createPaginationSlice', () => {
+describe('getOrCreatePaginationSlice', () => {
   it('should have the correct initial state', () => {
     expect(initialPaginationState).toEqual({
       firstResult: 0,
@@ -60,13 +32,13 @@ describe('createPaginationSlice', () => {
   });
 
   it('should create a slice with scoped name', () => {
-    const slice = createPaginationSlice('search-1');
+    const slice = getOrCreatePaginationSlice('search-1');
 
     expect(slice.name).toBe('search-1/pagination');
   });
 
   it('should handle setFirstResult', () => {
-    const slice = createPaginationSlice('test-1');
+    const slice = getOrCreatePaginationSlice('test-1');
     const actions = getOrCreatePaginationActions('test-1');
 
     const state = slice.reducer(
@@ -80,7 +52,7 @@ describe('createPaginationSlice', () => {
   });
 
   it('should handle setPageSize', () => {
-    const slice = createPaginationSlice('test-2');
+    const slice = getOrCreatePaginationSlice('test-2');
     const actions = getOrCreatePaginationActions('test-2');
 
     const state = slice.reducer(
@@ -94,7 +66,7 @@ describe('createPaginationSlice', () => {
   });
 
   it('should handle setTotalCount', () => {
-    const slice = createPaginationSlice('test-3');
+    const slice = getOrCreatePaginationSlice('test-3');
     const actions = getOrCreatePaginationActions('test-3');
 
     const state = slice.reducer(
@@ -108,7 +80,7 @@ describe('createPaginationSlice', () => {
   });
 
   it('should not respond to actions from a different interface', () => {
-    const slice = createPaginationSlice('iface-x');
+    const slice = getOrCreatePaginationSlice('iface-x');
     const otherActions = getOrCreatePaginationActions('iface-y');
 
     const state = slice.reducer(
@@ -120,7 +92,7 @@ describe('createPaginationSlice', () => {
   });
 
   it('should maintain state immutability', () => {
-    const slice = createPaginationSlice('immut-test');
+    const slice = getOrCreatePaginationSlice('immut-test');
     const actions = getOrCreatePaginationActions('immut-test');
     const original = {...initialPaginationState};
 
@@ -128,9 +100,7 @@ describe('createPaginationSlice', () => {
 
     expect(original.firstResult).toBe(0);
   });
-});
 
-describe('getOrCreatePaginationSlice', () => {
   it('should return the same slice instance for the same interface ID', () => {
     const a = getOrCreatePaginationSlice('cached-slice-test');
     const b = getOrCreatePaginationSlice('cached-slice-test');
@@ -146,9 +116,9 @@ describe('getOrCreatePaginationSlice', () => {
   });
 });
 
-describe('createPaginationSelectors', () => {
+describe('getOrCreatePaginationSelectors', () => {
   it('should read firstResult from scoped state', () => {
-    const selectors = createPaginationSelectors('sel-test');
+    const selectors = getOrCreatePaginationSelectors('sel-test');
     const state = {
       'sel-test/pagination': {firstResult: 30, pageSize: 10, totalCount: 100},
     };
@@ -157,7 +127,7 @@ describe('createPaginationSelectors', () => {
   });
 
   it('should read pageSize from scoped state', () => {
-    const selectors = createPaginationSelectors('sel-test-2');
+    const selectors = getOrCreatePaginationSelectors('sel-test-2');
     const state = {
       'sel-test-2/pagination': {firstResult: 0, pageSize: 25, totalCount: 50},
     };
@@ -166,7 +136,7 @@ describe('createPaginationSelectors', () => {
   });
 
   it('should read totalCount from scoped state', () => {
-    const selectors = createPaginationSelectors('sel-test-3');
+    const selectors = getOrCreatePaginationSelectors('sel-test-3');
     const state = {
       'sel-test-3/pagination': {firstResult: 0, pageSize: 10, totalCount: 200},
     };
@@ -175,16 +145,14 @@ describe('createPaginationSelectors', () => {
   });
 
   it('should fall back to initial state when slice is not present', () => {
-    const selectors = createPaginationSelectors('missing-slice');
+    const selectors = getOrCreatePaginationSelectors('missing-slice');
     const state = {};
 
     expect(selectors.getFirstResult(state)).toBe(0);
     expect(selectors.getPageSize(state)).toBe(10);
     expect(selectors.getTotalCount(state)).toBe(0);
   });
-});
 
-describe('getOrCreatePaginationSelectors', () => {
   it('should return the same instance for the same interface ID', () => {
     const a = getOrCreatePaginationSelectors('cached-sel-test');
     const b = getOrCreatePaginationSelectors('cached-sel-test');

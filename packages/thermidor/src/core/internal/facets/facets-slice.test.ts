@@ -3,38 +3,11 @@
  */
 
 import {describe, it, expect} from 'vitest';
-import {
-  createFacetsSlice,
-  getOrCreateFacetsSlice,
-  initialFacetsState,
-} from './facets-slice.js';
-import {
-  createFacetsActions,
-  getOrCreateFacetsActions,
-} from './facets-actions.js';
-import {
-  createFacetsSelectors,
-  getOrCreateFacetsSelectors,
-} from './facets-selectors.js';
+import {getOrCreateFacetsSlice, initialFacetsState} from './facets-slice.js';
+import {getOrCreateFacetsActions} from './facets-actions.js';
+import {getOrCreateFacetsSelectors} from './facets-selectors.js';
 import type {FacetsState} from '@/src/core/interface/facets/facets-types.js';
 import type {CoveoFacetResponse} from '@/src/core/interface/api/search/search-types.js';
-
-describe('createFacetsActions', () => {
-  it('should create actions scoped to the interfaceId', () => {
-    const actions = createFacetsActions('search');
-    expect(actions.updateFromResponse.type).toBe(
-      'search/facets/updateFromResponse'
-    );
-  });
-
-  it('should create different actions for different interfaceIds', () => {
-    const actionsA = createFacetsActions('interfaceA');
-    const actionsB = createFacetsActions('interfaceB');
-    expect(actionsA.updateFromResponse.type).not.toBe(
-      actionsB.updateFromResponse.type
-    );
-  });
-});
 
 describe('getOrCreateFacetsActions', () => {
   it('should return the same instance for the same interfaceId', () => {
@@ -50,19 +23,19 @@ describe('getOrCreateFacetsActions', () => {
   });
 });
 
-describe('createFacetsSlice', () => {
+describe('getOrCreateFacetsSlice', () => {
   it('should have empty object as initial state', () => {
     expect(initialFacetsState).toEqual({});
   });
 
   it('should create a slice with scoped name', () => {
-    const slice = createFacetsSlice('myInterface');
+    const slice = getOrCreateFacetsSlice('myInterface');
     expect(slice.name).toBe('myInterface/facets');
   });
 
   it('should update facet values from response', () => {
     const actions = getOrCreateFacetsActions('test-response');
-    const slice = createFacetsSlice('test-response');
+    const slice = getOrCreateFacetsSlice('test-response');
 
     const stateWithFacet: FacetsState = {
       category: {
@@ -97,7 +70,7 @@ describe('createFacetsSlice', () => {
 
   it('should not modify state when response is undefined', () => {
     const actions = getOrCreateFacetsActions('test-undefined');
-    const slice = createFacetsSlice('test-undefined');
+    const slice = getOrCreateFacetsSlice('test-undefined');
 
     const stateWithFacet: FacetsState = {
       category: {
@@ -118,7 +91,7 @@ describe('createFacetsSlice', () => {
 
   it('should ignore response facets that do not exist in state', () => {
     const actions = getOrCreateFacetsActions('test-missing');
-    const slice = createFacetsSlice('test-missing');
+    const slice = getOrCreateFacetsSlice('test-missing');
 
     const response: CoveoFacetResponse[] = [
       {
@@ -138,7 +111,7 @@ describe('createFacetsSlice', () => {
 
   it('should maintain state immutability', () => {
     const actions = getOrCreateFacetsActions('test-immutable');
-    const slice = createFacetsSlice('test-immutable');
+    const slice = getOrCreateFacetsSlice('test-immutable');
 
     const original: FacetsState = {
       category: {
@@ -160,9 +133,7 @@ describe('createFacetsSlice', () => {
     slice.reducer(original, actions.updateFromResponse(response));
     expect(original.category.values).toEqual([]);
   });
-});
 
-describe('getOrCreateFacetsSlice', () => {
   it('should return the same instance for the same interfaceId', () => {
     const a = getOrCreateFacetsSlice('cached-facet-slice');
     const b = getOrCreateFacetsSlice('cached-facet-slice');
@@ -176,9 +147,9 @@ describe('getOrCreateFacetsSlice', () => {
   });
 });
 
-describe('createFacetsSelectors', () => {
+describe('getOrCreateFacetsSelectors', () => {
   it('should build facets request from state', () => {
-    const selectors = createFacetsSelectors('myFacets');
+    const selectors = getOrCreateFacetsSelectors('myFacets');
     const state = {
       'myFacets/facets': {
         category: {
@@ -204,19 +175,17 @@ describe('createFacetsSelectors', () => {
   });
 
   it('should return empty array when no facets exist', () => {
-    const selectors = createFacetsSelectors('emptyFacets');
+    const selectors = getOrCreateFacetsSelectors('emptyFacets');
     const state = {'emptyFacets/facets': {} as FacetsState};
     expect(selectors.buildFacetsRequest(state)).toEqual([]);
   });
 
   it('should return initial state when slice is not present', () => {
-    const selectors = createFacetsSelectors('missing');
+    const selectors = getOrCreateFacetsSelectors('missing');
     const state = {};
     expect(selectors.buildFacetsRequest(state)).toEqual([]);
   });
-});
 
-describe('getOrCreateFacetsSelectors', () => {
   it('should return the same instance for the same interfaceId', () => {
     const a = getOrCreateFacetsSelectors('cached-facet-sel');
     const b = getOrCreateFacetsSelectors('cached-facet-sel');

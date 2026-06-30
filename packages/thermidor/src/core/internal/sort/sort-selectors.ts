@@ -3,7 +3,7 @@ import {createSelectSlice} from '@/src/core/interface/utils/select-slice.js';
 import {initialSortState} from './sort-slice.js';
 import type {SortState} from './sort-slice.js';
 
-export function createSortSelectors(interfaceId: string) {
+function createSortSelectors(interfaceId: string) {
   const sliceSelector = createSelectSlice(
     interfaceId,
     'sort',

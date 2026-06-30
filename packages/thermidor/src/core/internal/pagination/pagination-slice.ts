@@ -14,7 +14,7 @@ export const initialPaginationState: PaginationState = {
   totalCount: 0,
 };
 
-export function createPaginationSlice(interfaceId: string) {
+function createPaginationSlice(interfaceId: string) {
   const actions = getOrCreatePaginationActions(interfaceId);
   const hydrateAction = getOrCreateHydrateFromSnapshotAction(interfaceId);
 

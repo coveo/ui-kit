@@ -5,7 +5,7 @@ export interface Trigger {
   content: string;
 }
 
-export function createTriggersActions(interfaceId: string) {
+function createTriggersActions(interfaceId: string) {
   return {
     setTriggers: createAction<Trigger[]>(`${interfaceId}/triggers/setTriggers`),
   };

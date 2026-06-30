@@ -5,7 +5,7 @@ import type {
   TurnStatus,
 } from '@/src/core/interface/generative/generative-types.js';
 
-export function createGenerativeActions(interfaceId: string) {
+function createGenerativeActions(interfaceId: string) {
   const prefix = `${interfaceId}/generative`;
   return {
     createTurn: createAction<{id: string; prompt: string; status: TurnStatus}>(

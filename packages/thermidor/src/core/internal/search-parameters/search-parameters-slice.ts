@@ -11,7 +11,7 @@ export const initialSearchParametersState: SearchParametersState = {
   cq: '',
 };
 
-export function createSearchParametersSlice(interfaceId: string) {
+function createSearchParametersSlice(interfaceId: string) {
   const actions = getOrCreateSearchParametersActions(interfaceId);
   return createSlice({
     name: `${interfaceId}/searchParameters`,

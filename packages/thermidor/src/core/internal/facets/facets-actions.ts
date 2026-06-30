@@ -1,7 +1,7 @@
 import {createAction} from '@reduxjs/toolkit';
 import type {CoveoFacetResponse} from '@/src/core/interface/api/search/search-types.js';
 
-export function createFacetsActions(interfaceId: string) {
+function createFacetsActions(interfaceId: string) {
   return {
     updateFromResponse: createAction<CoveoFacetResponse[] | undefined>(
       `${interfaceId}/facets/updateFromResponse`

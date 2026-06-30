@@ -9,7 +9,7 @@ export const initialSearchBoxState: SearchBoxState = {
   query: '',
 };
 
-export function createSearchBoxSlice(interfaceId: string) {
+function createSearchBoxSlice(interfaceId: string) {
   const actions = getOrCreateSearchBoxActions(interfaceId);
   return createSlice({
     name: `${interfaceId}/searchBox`,

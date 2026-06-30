@@ -5,7 +5,7 @@ import {getOrCreateHydrateFromSnapshotAction} from '@/src/core/interface/generat
 
 export const initialFacetsState: FacetsState = {};
 
-export function createFacetsSlice(interfaceId: string) {
+function createFacetsSlice(interfaceId: string) {
   const actions = getOrCreateFacetsActions(interfaceId);
   const hydrateAction = getOrCreateHydrateFromSnapshotAction(interfaceId);
 

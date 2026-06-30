@@ -3,7 +3,7 @@ import {createSelectSlice} from '@/src/core/interface/utils/select-slice.js';
 import {initialFacetsState} from './facets-slice.js';
 import type {FacetsState} from '@/src/core/interface/facets/facets-types.js';
 
-export function createFacetsSelectors(interfaceId: string) {
+function createFacetsSelectors(interfaceId: string) {
   const sliceSelector = createSelectSlice(
     interfaceId,
     'facets',

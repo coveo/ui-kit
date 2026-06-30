@@ -1,7 +1,7 @@
 import {createAction} from '@reduxjs/toolkit';
 import type {CoveoSearchResult} from '@/src/core/interface/api/search/search-types.js';
 
-export function createResultsActions(interfaceId: string) {
+function createResultsActions(interfaceId: string) {
   return {
     setResultsFromResponse: createAction<CoveoSearchResult[]>(
       `${interfaceId}/results/setResultsFromResponse`

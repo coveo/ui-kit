@@ -12,7 +12,7 @@ export const initialSortState: SortState = {
   availableSorts: [],
 };
 
-export function createSortSlice(interfaceId: string) {
+function createSortSlice(interfaceId: string) {
   const actions = getOrCreateSortActions(interfaceId);
 
   return createSlice({

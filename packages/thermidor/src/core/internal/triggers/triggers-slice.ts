@@ -7,7 +7,7 @@ export interface TriggersState {
 
 export const initialTriggersState: TriggersState = {triggers: []};
 
-export function createTriggersSlice(interfaceId: string) {
+function createTriggersSlice(interfaceId: string) {
   const actions = getOrCreateTriggersActions(interfaceId);
   return createSlice({
     name: `${interfaceId}/triggers`,

@@ -7,7 +7,7 @@ export const initialGenerativeState: GenerativeState = {
   activeTurnId: undefined,
 };
 
-export function createGenerativeSlice(interfaceId: string) {
+function createGenerativeSlice(interfaceId: string) {
   const actions = getOrCreateGenerativeActions(interfaceId);
 
   return createSlice({

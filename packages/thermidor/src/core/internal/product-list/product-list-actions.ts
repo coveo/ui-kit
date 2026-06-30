@@ -1,6 +1,6 @@
 import {createAction} from '@reduxjs/toolkit';
 
-export function createProductListActions(interfaceId: string) {
+function createProductListActions(interfaceId: string) {
   return {
     setProductsFromResponse: createAction<unknown[]>(
       `${interfaceId}/products/setProductsFromResponse`

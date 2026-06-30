@@ -14,7 +14,4 @@ export const getQuery = createMemoizedStateSelector(
   (searchBox) => searchBox.query
 );
 
-export {
-  createSearchBoxSelectors,
-  getOrCreateSearchBoxSelectors,
-} from '@/src/core/internal/search-box/search-box-selectors.js';
+export {getOrCreateSearchBoxSelectors} from '@/src/core/internal/search-box/search-box-selectors.js';

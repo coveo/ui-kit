@@ -1,5 +1,5 @@
 import {describe, it, expect} from 'vitest';
-import {createCartSlice, initialCartState} from './cart-slice.js';
+import {getOrCreateCartSlice, initialCartState} from './cart-slice.js';
 import {getOrCreateCartActions} from './cart-actions.js';
 import type {CartItem} from '@/src/core/interface/cart/cart-types.js';
 
@@ -14,7 +14,7 @@ const item = (overrides: Partial<CartItem> = {}): CartItem => ({
 });
 
 describe('cartSlice', () => {
-  const slice = createCartSlice(TEST_ID);
+  const slice = getOrCreateCartSlice(TEST_ID);
   const actions = getOrCreateCartActions(TEST_ID);
 
   describe('setItems', () => {
