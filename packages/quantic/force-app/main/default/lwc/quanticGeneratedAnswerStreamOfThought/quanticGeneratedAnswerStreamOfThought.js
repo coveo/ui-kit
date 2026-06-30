@@ -2,12 +2,15 @@ import analyzingQuestion from '@salesforce/label/c.quantic_AgentGenerationStepAn
 import analyzingQuestionCompleted from '@salesforce/label/c.quantic_AgentGenerationStepAnalyzingQuestionCompleted';
 import search from '@salesforce/label/c.quantic_AgentGenerationStepSearch';
 import searchCompleted from '@salesforce/label/c.quantic_AgentGenerationStepSearchCompleted';
+import searchQuery from '@salesforce/label/c.quantic_AgentGenerationStepSearchQuery';
+import searchQueryCompleted from '@salesforce/label/c.quantic_AgentGenerationStepSearchQueryCompleted';
 import analyzingResults from '@salesforce/label/c.quantic_AgentGenerationStepAnalyzingResults';
 import analyzingResultsCompleted from '@salesforce/label/c.quantic_AgentGenerationStepAnalyzingResultsCompleted';
 import answering from '@salesforce/label/c.quantic_AgentGenerationStepAnswering';
 import answeringCompleted from '@salesforce/label/c.quantic_AgentGenerationStepAnsweringCompleted';
 import collapseButton from '@salesforce/label/c.quantic_CollapseButton';
 import loadingLabel from '@salesforce/label/c.quantic_Loading';
+import {I18nUtils} from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
 // @ts-ignore
 import streamOfThoughtTemplate from './templates/streamOfThought.html';
@@ -15,11 +18,12 @@ import streamOfThoughtTemplate from './templates/streamOfThought.html';
 import collapsedSummaryTemplate from './templates/collapsedSummary.html';
 
 /** @typedef {import("coveo").GenerationStep} GenerationStep */
-/** @typedef {'thinking-before-search'|'searching'|'thinking-after-search'|'answering'} ResolvedStepName */
+/** @typedef {'thinking-before-search'|'searching'|'searching-with-query'|'thinking-after-search'|'answering'} ResolvedStepName */
 /**
  * @typedef {Object} ResolvedStep
  * @property {ResolvedStepName} name
  * @property {'active'|'completed'} status
+ * @property {string} [searchQuery]
  */
 
 /** @type {Record<string, {active: string, completed: string}>} */
@@ -31,6 +35,10 @@ const STEP_LABEL_KEYS = {
   searching: {
     active: search,
     completed: searchCompleted,
+  },
+  'searching-with-query': {
+    active: searchQuery,
+    completed: searchQueryCompleted,
   },
   'thinking-after-search': {
     active: analyzingResults,
@@ -49,21 +57,55 @@ const STEP_LABEL_KEYS = {
  */
 export function resolveSteps(steps) {
   let searchWasPerformed = false;
-  return steps.map((step) => {
-    /** @type {ResolvedStepName} */
-    let name;
-    if (step.name === 'searching') {
-      searchWasPerformed = true;
-      name = 'searching';
-    } else if (step.name === 'answering') {
-      name = 'answering';
-    } else {
-      name = searchWasPerformed
-        ? 'thinking-after-search'
-        : 'thinking-before-search';
+  return steps.flatMap(
+    /** @returns {ResolvedStep | ResolvedStep[]} */ (step) => {
+      if (step.name === 'searching') {
+        searchWasPerformed = true;
+        return resolveSearchingStep(step);
+      }
+      if (step.name === 'answering') {
+        return {name: 'answering', status: step.status};
+      }
+      return {
+        name: searchWasPerformed
+          ? 'thinking-after-search'
+          : 'thinking-before-search',
+        status: step.status,
+      };
     }
-    return {name, status: step.status};
-  });
+  );
+}
+
+/**
+ * Resolves a searching step, expanding individual tool calls when present.
+ * @param {GenerationStep} step
+ * @returns {ResolvedStep[]}
+ */
+function resolveSearchingStep(step) {
+  const searchToolCalls = step.toolCalls?.filter((tc) => tc.type === 'search');
+  if (searchToolCalls?.length) {
+    return searchToolCalls.map(resolveSearchToolCall);
+  }
+  return [{name: 'searching', status: step.status}];
+}
+
+/**
+ * Resolves a single search tool call into a ResolvedStep.
+ * @param {import("coveo").GenerationToolCall} toolCall
+ * @returns {ResolvedStep}
+ */
+function resolveSearchToolCall(toolCall) {
+  const query =
+    toolCall.toolCallArgs && 'q' in toolCall.toolCallArgs
+      ? toolCall.toolCallArgs.q
+      : undefined;
+  return query
+    ? {
+        name: 'searching-with-query',
+        status: toolCall.status,
+        searchQuery: query,
+      }
+    : {name: 'searching', status: toolCall.status};
 }
 
 /**
@@ -111,15 +153,19 @@ export default class QuanticGeneratedAnswerStreamOfThought extends LightningElem
     this._expanded = !this._expanded;
   };
 
-  /** @returns {Array<{key: number, isActive: boolean, label: string}>} */
+  /** @returns {Array<{key: number, name: ResolvedStepName, isActive: boolean, label: string}>} */
   get stepsToDisplay() {
     return this.steps.map((step, index) => {
-      const labelKey = STEP_LABEL_KEYS[step.name][step.status];
+      const rawLabel = STEP_LABEL_KEYS[step.name][step.status];
+      const label =
+        step.name === 'searching-with-query'
+          ? I18nUtils.format(rawLabel, step.searchQuery)
+          : rawLabel;
       return {
         key: index,
         name: step.name,
         isActive: step.status === 'active',
-        label: labelKey,
+        label,
       };
     });
   }
@@ -152,8 +198,10 @@ export default class QuanticGeneratedAnswerStreamOfThought extends LightningElem
   /** @returns {string} */
   get collapsedSummaryLabel() {
     const lastStep = this.steps[this.steps.length - 1];
-    const labelKey = STEP_LABEL_KEYS[lastStep.name].completed;
-    return labelKey;
+    const rawLabel = STEP_LABEL_KEYS[lastStep.name].completed;
+    return lastStep.name === 'searching-with-query'
+      ? I18nUtils.format(rawLabel, lastStep.searchQuery)
+      : rawLabel;
   }
 
   render() {

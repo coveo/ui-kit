@@ -2,6 +2,21 @@ import {resolveSteps} from '../quanticGeneratedAnswerStreamOfThought.js';
 import {buildCreateTestComponent, cleanup, flushPromises} from 'c/testUtils';
 import QuanticGeneratedAnswerStreamOfThought from '../quanticGeneratedAnswerStreamOfThought';
 
+jest.mock(
+  '@salesforce/label/c.quantic_AgentGenerationStepSearchQuery',
+  () => ({default: 'Searching for {{0}}.'}),
+  {
+    virtual: true,
+  }
+);
+jest.mock(
+  '@salesforce/label/c.quantic_AgentGenerationStepSearchQueryCompleted',
+  () => ({default: 'Searched for {{0}}'}),
+  {
+    virtual: true,
+  }
+);
+
 const selectors = {
   stepItem: '[data-testid="step-item"]',
   spinner: '[data-testid="spinner"]',
@@ -57,6 +72,83 @@ describe('#resolveSteps', () => {
       {name: 'searching', status: 'completed'},
       {name: 'thinking-after-search', status: 'active'},
     ]);
+  });
+
+  it('should resolve searching step with toolCall query to searching-with-query', () => {
+    expect(
+      resolveSteps([
+        {
+          name: 'searching',
+          status: 'active',
+          startedAt: 0,
+          toolCalls: [
+            {
+              toolCallName: 'search',
+              toolCallId: 'tc-1',
+              startedAt: 0,
+              status: 'active',
+              type: 'search',
+              toolCallArgs: {q: 'how to reset password'},
+            },
+          ],
+        },
+      ])
+    ).toEqual([
+      {
+        name: 'searching-with-query',
+        status: 'active',
+        searchQuery: 'how to reset password',
+      },
+    ]);
+  });
+
+  it('should expand multiple search toolCalls into separate resolved steps', () => {
+    expect(
+      resolveSteps([
+        {
+          name: 'searching',
+          status: 'completed',
+          startedAt: 0,
+          toolCalls: [
+            {
+              toolCallName: 'search',
+              toolCallId: 'tc-1',
+              startedAt: 0,
+              finishedAt: 1,
+              status: 'completed',
+              type: 'search',
+              toolCallArgs: {q: 'What is Quantic'},
+            },
+            {
+              toolCallName: 'search',
+              toolCallId: 'tc-2',
+              startedAt: 1,
+              finishedAt: 2,
+              status: 'completed',
+              type: 'search',
+              toolCallArgs: {q: 'What is Atomic'},
+            },
+          ],
+        },
+      ])
+    ).toEqual([
+      {
+        name: 'searching-with-query',
+        status: 'completed',
+        searchQuery: 'What is Quantic',
+      },
+      {
+        name: 'searching-with-query',
+        status: 'completed',
+        searchQuery: 'What is Atomic',
+      },
+    ]);
+  });
+
+  it('should fall back to searching when toolCalls is absent', () => {
+    expect(
+      resolveSteps([{name: 'searching', status: 'active', startedAt: 0}])
+    ).toEqual([{name: 'searching', status: 'active'}]);
   });
 });
 
@@ -151,6 +243,86 @@ describe('quantic generated answer stream of thought component', () => {
 
       expect(collapseButton).toBeNull();
       expect(collapsedSummary).toBeNull();
+    });
+
+    it('should render a searching-with-query step when toolCall has a query', async () => {
+      const element = createTestComponent({
+        agentSteps: [
+          {
+            name: 'searching',
+            status: 'active',
+            startedAt: 0,
+            toolCalls: [
+              {
+                toolCallName: 'search',
+                toolCallId: 'tc-1',
+                startedAt: 0,
+                status: 'active',
+                type: 'search',
+                toolCallArgs: {q: 'how to reset password'},
+              },
+            ],
+          },
+        ],
+        isStreaming: true,
+      });
+      await flushPromises();
+
+      const stepItem = element.shadowRoot.querySelector(selectors.stepItem);
+      expect(stepItem.getAttribute('data-step-name')).toBe(
+        'searching-with-query'
+      );
+
+      const stepLabel = element.shadowRoot.querySelector(selectors.stepLabel);
+      expect(stepLabel.textContent).toContain('how to reset password');
+    });
+
+    it('should expand multiple search toolCalls into separate step items', async () => {
+      const element = createTestComponent({
+        agentSteps: [
+          {
+            name: 'searching',
+            status: 'completed',
+            startedAt: 0,
+            toolCalls: [
+              {
+                toolCallName: 'search',
+                toolCallId: 'tc-1',
+                startedAt: 0,
+                finishedAt: 1,
+                status: 'completed',
+                type: 'search',
+                toolCallArgs: {q: 'What is Quantic'},
+              },
+              {
+                toolCallName: 'search',
+                toolCallId: 'tc-2',
+                startedAt: 1,
+                finishedAt: 2,
+                status: 'completed',
+                type: 'search',
+                toolCallArgs: {q: 'What is Atomic'},
+              },
+            ],
+          },
+        ],
+        isStreaming: true,
+      });
+      await flushPromises();
+
+      const stepItems = element.shadowRoot.querySelectorAll(selectors.stepItem);
+      expect(stepItems).toHaveLength(2);
+      stepItems.forEach((item) =>
+        expect(item.getAttribute('data-step-name')).toBe('searching-with-query')
+      );
+
+      const stepLabelsText = Array.from(
+        element.shadowRoot.querySelectorAll(selectors.stepLabel)
+      )
+        .map((el) => el.textContent ?? '')
+        .join(' ');
+      expect(stepLabelsText).toContain('What is Quantic');
+      expect(stepLabelsText).toContain('What is Atomic');
     });
   });
 

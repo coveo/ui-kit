@@ -925,6 +925,14 @@
     <label>Base de conocimiento consultada</label>
   </customLabels>
   <customLabels>
+    <name>quantic_AgentGenerationStepSearchQuery</name>
+    <label>Buscando {{0}}…</label>
+  </customLabels>
+  <customLabels>
+    <name>quantic_AgentGenerationStepSearchQueryCompleted</name>
+    <label>Buscado {{0}}</label>
+  </customLabels>
+  <customLabels>
     <name>quantic_AgentGenerationStepAnalyzingResults</name>
     <label>Analizando resultados…</label>
   </customLabels>
