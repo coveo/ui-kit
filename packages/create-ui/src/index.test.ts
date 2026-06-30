@@ -7,6 +7,9 @@ describe('templates', () => {
     expect(getTemplate('headless-search-react')?.path).toBe(
       'samples/headless/search-react'
     );
+    expect(getTemplate('headless-ssr-commerce-react-router')?.path).toBe(
+      'samples/headless-ssr/commerce-react-router'
+    );
     expect(getTemplate('does-not-exist')).toBeUndefined();
   });
 });

@@ -15,7 +15,7 @@ import {
 } from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {defaultContext} from '@/utils/context';
-import type {ContextOptions} from '../../../../../../packages/headless/dist/definitions/controllers/commerce/context/headless-context';
+import type {ContextOptions} from '@coveo/headless-react/ssr-commerce-next';
 
 export default async function ProductDescriptionPage({
   params,
