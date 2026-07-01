@@ -96,7 +96,7 @@ describe('backendInterfacesSlice', () => {
       expect(getState(store).interfaces['ui-1'].display).toBe('main');
     });
 
-    it('does not modify non-existent interfaces', () => {
+    it('creates interface when updating non-existent entry (upsert)', () => {
       const store = createStore();
       const actions = getOrCreateBackendInterfacesActions(INTERFACE_ID);
 
@@ -107,7 +107,11 @@ describe('backendInterfacesSlice', () => {
         })
       );
 
-      expect(getState(store).interfaces['non-existent']).toBeUndefined();
+      expect(getState(store).interfaces['non-existent']).toEqual({
+        type: 'product_search',
+        display: 'main',
+        state: {query: 'hello'},
+      });
     });
   });
 

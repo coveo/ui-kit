@@ -48,6 +48,12 @@ export function createGenerativeActions(interfaceId: string) {
     clearTurnResponse: createAction<{turnId: string}>(
       `${prefix}/clearTurnResponse`
     ),
+    setConversationSessionId: createAction<string>(
+      `${prefix}/setConversationSessionId`
+    ),
+    setConversationToken: createAction<string>(
+      `${prefix}/setConversationToken`
+    ),
   };
 }
 

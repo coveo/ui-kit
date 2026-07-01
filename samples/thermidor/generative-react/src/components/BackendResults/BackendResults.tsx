@@ -13,6 +13,11 @@ import {getOrCreateBackendInterfacesSelectors} from '@/src/core/internal/backend
 import {ENGINE, STATE_ID} from '@/src/core/interface/utils/symbols.js';
 import {FacetPanel} from '../FacetPanel/FacetPanel.js';
 import {SortDropdown} from '../SortDropdown/SortDropdown.js';
+import {
+  useUrlManager,
+  useSessionTokenPersistence,
+  useInitialUrlRestore,
+} from '../../hooks/useUrlManager.js';
 import styles from './BackendResults.module.css';
 
 export function BackendResults() {
@@ -38,6 +43,9 @@ export function BackendResults() {
   const engine = generativeInterface[ENGINE];
   const stateId = generativeInterface[STATE_ID];
 
+  useSessionTokenPersistence();
+  useInitialUrlRestore();
+
   useEffect(() => {
     const selectors = getOrCreateBackendInterfacesSelectors(stateId);
     return engine.subscribe(selectors.getInterfaces, (newInterfaces) => {
@@ -48,6 +56,8 @@ export function BackendResults() {
   const firstInterfaceId = Object.keys(interfaces).find(
     (id) => interfaces[id]?.display === 'main'
   );
+
+  useUrlManager(firstInterfaceId);
 
   useEffect(() => {
     if (

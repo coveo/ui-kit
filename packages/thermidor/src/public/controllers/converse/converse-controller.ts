@@ -53,6 +53,7 @@ export interface ConverseController extends Controller<ConverseControllerState> 
   sendAction(action: BackendInterfaceAction): void;
   selectTurn(options: {id: string}): void;
   retry(options: {id: string}): void;
+  restoreSession(sessionId: string, token: string): void;
 }
 
 export interface ConverseControllerState {
@@ -60,6 +61,8 @@ export interface ConverseControllerState {
   activeTurnId: string | undefined;
   activeTurn: Turn | undefined;
   isStreaming: boolean;
+  conversationSessionId: string | undefined;
+  conversationToken: string | undefined;
 }
 
 export interface ConverseControllerOptions {
@@ -155,19 +158,34 @@ export const buildConverseController = (
           })
         );
       },
+      setConversationSessionId(sessionId) {
+        fullEngine.mutate(actions.setConversationSessionId(sessionId));
+      },
+      setConversationToken(token) {
+        fullEngine.mutate(actions.setConversationToken(token));
+      },
     },
   });
 
   const controllerState = createMemoizedStateSelector(
     selectors.getTurns,
     selectors.getActiveTurnId,
-    (turns, activeTurnId): ConverseControllerState => ({
+    selectors.getConversationSessionId,
+    selectors.getConversationToken,
+    (
+      turns,
+      activeTurnId,
+      conversationSessionId,
+      conversationToken
+    ): ConverseControllerState => ({
       turns,
       activeTurnId,
       activeTurn: activeTurnId
         ? turns.find((t) => t.id === activeTurnId)
         : undefined,
       isStreaming: turns.some((t) => t.status === 'streaming'),
+      conversationSessionId,
+      conversationToken,
     })
   );
 
@@ -205,6 +223,10 @@ export const buildConverseController = (
         return;
       }
       runtime.resubmit(id, turn.prompt);
+    },
+
+    restoreSession(sessionId, token) {
+      runtime.restoreSession(sessionId, token);
     },
 
     get state() {

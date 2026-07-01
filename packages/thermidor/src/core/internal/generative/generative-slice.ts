@@ -5,6 +5,8 @@ import {getOrCreateGenerativeActions} from './generative-actions.js';
 export const initialGenerativeState: GenerativeState = {
   turns: [],
   activeTurnId: undefined,
+  conversationSessionId: undefined,
+  conversationToken: undefined,
 };
 
 export function createGenerativeSlice(interfaceId: string) {
@@ -109,6 +111,12 @@ export function createGenerativeSlice(interfaceId: string) {
             delete turn.agentResponse;
             delete turn.error;
           }
+        })
+        .addCase(actions.setConversationSessionId, (state, {payload}) => {
+          state.conversationSessionId = payload;
+        })
+        .addCase(actions.setConversationToken, (state, {payload}) => {
+          state.conversationToken = payload;
         });
     },
   });

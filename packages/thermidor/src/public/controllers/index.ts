@@ -79,3 +79,13 @@ export type {
   BackendSortControllerState,
   BackendSortCriterion,
 } from './backend-sort/backend-sort-controller.js';
+export {buildBackendUrlManagerController} from './backend-url-manager/backend-url-manager-controller.js';
+export type {
+  BackendUrlManagerController,
+  BackendUrlManagerControllerOptions,
+  BackendUrlManagerControllerState,
+} from './backend-url-manager/backend-url-manager-controller.js';
+export {
+  serializeInterfaceState,
+  deserializeFragment,
+} from './backend-url-manager/backend-url-manager-controller.js';

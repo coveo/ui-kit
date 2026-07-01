@@ -42,6 +42,8 @@ export interface GenerativeStatePort {
     interfaceId: string,
     suggestions: Record<string, unknown>
   ): void;
+  setConversationSessionId(sessionId: string): void;
+  setConversationToken(token: string): void;
 }
 
 export interface GenerativeRuntimeConfig {
@@ -126,6 +128,13 @@ export class GenerativeRuntime {
     this.statePort.setActiveTurnId(tempId);
 
     await this.executeActionStream(tempId, action);
+  }
+
+  restoreSession(sessionId: string, token: string): void {
+    this.conversationSessionId = sessionId;
+    this.conversationToken = token;
+    this.statePort.setConversationSessionId(sessionId);
+    this.statePort.setConversationToken(token);
   }
 
   private async executeStream(turnId: string): Promise<void> {
@@ -259,9 +268,11 @@ export class GenerativeRuntime {
       case 'turn_started': {
         if (event.conversationSessionId) {
           this.conversationSessionId = event.conversationSessionId;
+          this.statePort.setConversationSessionId(event.conversationSessionId);
         }
         if (event.conversationToken) {
           this.conversationToken = event.conversationToken;
+          this.statePort.setConversationToken(event.conversationToken);
         }
         return {turnId, isTerminal: false};
       }

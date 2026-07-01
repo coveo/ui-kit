@@ -106,4 +106,14 @@ export interface GenerativeState {
    * The id of the currently active turn, or undefined when no turns exist.
    */
   activeTurnId: string | undefined;
+
+  /**
+   * The server-assigned conversation session ID, available after the first turn completes.
+   */
+  conversationSessionId: string | undefined;
+
+  /**
+   * The server-assigned conversation token for session authentication.
+   */
+  conversationToken: string | undefined;
 }

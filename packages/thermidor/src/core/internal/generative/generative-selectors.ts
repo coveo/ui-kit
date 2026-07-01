@@ -19,6 +19,14 @@ export function createGenerativeSelectors(interfaceId: string) {
       sliceSelector,
       (state): string | undefined => state.activeTurnId
     ),
+    getConversationSessionId: createMemoizedStateSelector(
+      sliceSelector,
+      (state): string | undefined => state.conversationSessionId
+    ),
+    getConversationToken: createMemoizedStateSelector(
+      sliceSelector,
+      (state): string | undefined => state.conversationToken
+    ),
     getActiveMessage: createMemoizedStateSelector(
       sliceSelector,
       (state): string => {

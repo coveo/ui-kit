@@ -37,6 +37,12 @@ export function createBackendInterfacesSlice(interfaceId: string) {
             if (payload.display) {
               entry.display = payload.display;
             }
+          } else {
+            state.interfaces[payload.interfaceId] = {
+              type: 'product_search',
+              display: payload.display ?? 'main',
+              state: payload.state,
+            };
           }
         })
         .addCase(actions.setSuggestions, (state, {payload}) => {
