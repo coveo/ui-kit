@@ -82,6 +82,13 @@ export type {
   BackendSortControllerState,
   BackendSortCriterion,
 } from './backend-sort/backend-sort-controller.js';
+export {buildBackendNumericFacetController} from './backend-numeric-facet/backend-numeric-facet-controller.js';
+export type {
+  BackendNumericFacetController,
+  BackendNumericFacetControllerOptions,
+  BackendNumericFacetControllerState,
+  NumericFacetValue,
+} from './backend-numeric-facet/backend-numeric-facet-controller.js';
 export {buildBackendUrlManagerController} from './backend-url-manager/backend-url-manager-controller.js';
 export type {
   BackendUrlManagerController,

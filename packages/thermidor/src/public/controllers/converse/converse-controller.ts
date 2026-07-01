@@ -35,6 +35,22 @@ export type BackendInterfaceAction =
   | {type: 'fetch_suggestions'; interfaceId: string; query: string}
   | {type: 'facet_search'; interfaceId: string; facetId: string; query: string}
   | {
+      type: 'toggle_numeric_facet';
+      interfaceId: string;
+      facetId: string;
+      start: number;
+      end: number;
+      endInclusive: boolean;
+    }
+  | {
+      type: 'set_numeric_facet_range';
+      interfaceId: string;
+      facetId: string;
+      start: number;
+      end: number;
+      endInclusive: boolean;
+    }
+  | {
       type: 'restore_state';
       interfaceId: string;
       query?: string;

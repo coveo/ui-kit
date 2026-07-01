@@ -1,9 +1,12 @@
 import {useState, useEffect, useRef, useCallback} from 'react';
 import {
   buildBackendFacetController,
+  buildBackendNumericFacetController,
   type BackendFacetController,
   type BackendFacetControllerState,
   type BackendFacetSearchState,
+  type BackendNumericFacetController,
+  type BackendNumericFacetControllerState,
 } from '@coveo/thermidor';
 import {
   converseController,
@@ -34,13 +37,21 @@ export function FacetPanel({interfaceId, facets}: FacetPanelProps) {
 
   return (
     <div className={styles.container}>
-      {facets.map((facet) => (
-        <FacetGroup
-          key={facet.facetId}
-          interfaceId={interfaceId}
-          facetId={facet.facetId}
-        />
-      ))}
+      {facets.map((facet) =>
+        facet.type === 'numericalRange' ? (
+          <NumericFacetGroup
+            key={facet.facetId}
+            interfaceId={interfaceId}
+            facetId={facet.facetId}
+          />
+        ) : (
+          <FacetGroup
+            key={facet.facetId}
+            interfaceId={interfaceId}
+            facetId={facet.facetId}
+          />
+        )
+      )}
     </div>
   );
 }
@@ -183,6 +194,114 @@ function FacetGroup({interfaceId, facetId}: FacetGroupProps) {
             </li>
           ))}
         </ul>
+      )}
+    </div>
+  );
+}
+
+function NumericFacetGroup({interfaceId, facetId}: FacetGroupProps) {
+  const [state, setState] = useState<BackendNumericFacetControllerState>({
+    facetId,
+    field: '',
+    displayName: '',
+    values: [],
+    hasActiveValues: false,
+    domain: undefined,
+    interval: '',
+  });
+  const [minInput, setMinInput] = useState('');
+  const [maxInput, setMaxInput] = useState('');
+  const controllerRef = useRef<BackendNumericFacetController | null>(null);
+
+  useEffect(() => {
+    const controller = buildBackendNumericFacetController({
+      interface: generativeInterface,
+      converseController,
+      interfaceId,
+      facetId,
+    });
+
+    controllerRef.current = controller;
+    setState(controller.state);
+
+    return controller.subscribe(() => setState(controller.state));
+  }, [interfaceId, facetId]);
+
+  if (!state.values.length && !state.domain) return null;
+
+  const formatRange = (start: number, end: number) =>
+    `$${Math.round(start)} - $${Math.round(end)}`;
+
+  const handleManualRange = (e: React.FormEvent) => {
+    e.preventDefault();
+    const min = parseFloat(minInput);
+    const max = parseFloat(maxInput);
+    if (!isNaN(min) && !isNaN(max) && min < max) {
+      controllerRef.current?.setRange({
+        start: min,
+        end: max,
+        endInclusive: true,
+      });
+      setMinInput('');
+      setMaxInput('');
+    }
+  };
+
+  return (
+    <div className={styles.facet}>
+      <div className={styles.facetHeader}>
+        <h4 className={styles.facetTitle}>{state.displayName || facetId}</h4>
+        {state.hasActiveValues && (
+          <button
+            className={styles.clearButton}
+            onClick={() => controllerRef.current?.deselectAll()}
+          >
+            Clear
+          </button>
+        )}
+      </div>
+      <ul className={styles.valueList}>
+        {state.values.map((rangeValue) => (
+          <li
+            key={`${rangeValue.start}-${rangeValue.end}`}
+            className={styles.valueItem}
+          >
+            <input
+              type="checkbox"
+              className={styles.checkbox}
+              checked={rangeValue.state === 'selected'}
+              onChange={() => controllerRef.current?.toggleSelect(rangeValue)}
+            />
+            <span className={styles.valueLabel}>
+              {formatRange(rangeValue.start, rangeValue.end)}
+            </span>
+            <span className={styles.valueCount}>
+              {rangeValue.numberOfResults}
+            </span>
+          </li>
+        ))}
+      </ul>
+      {state.domain && (
+        <form className={styles.rangeForm} onSubmit={handleManualRange}>
+          <input
+            type="number"
+            className={styles.rangeInput}
+            placeholder={String(state.domain.min)}
+            value={minInput}
+            onChange={(e) => setMinInput(e.target.value)}
+          />
+          <span className={styles.rangeSeparator}>–</span>
+          <input
+            type="number"
+            className={styles.rangeInput}
+            placeholder={String(state.domain.max)}
+            value={maxInput}
+            onChange={(e) => setMaxInput(e.target.value)}
+          />
+          <button type="submit" className={styles.rangeButton}>
+            Go
+          </button>
+        </form>
       )}
     </div>
   );
