@@ -1,8 +1,44 @@
+/*
+ * Coveo branding/layout styling for the Headless commerce-react sample.
+ * Mirrors the look of the Headless search samples. Colors come from the
+ * official Coveo brand palette. Styling only -- no engine/controller logic
+ * is affected.
+ */
+
+:root {
+  --coveo-coral: #de5e4e;
+  --coveo-blue: #4cabf8;
+  --coveo-yellow: #fbe44c;
+  --coveo-mint: #6fe8d0;
+
+  /* A darkened blue keeps text/links AA-readable on white. */
+  --coveo-primary: #1c84db;
+  --coveo-primary-hover: #1a50ad;
+  --coveo-on-primary: #ffffff;
+  --coveo-ink: #282829;
+  --coveo-muted: #626971;
+  --coveo-border: #e5e8e8;
+  --coveo-surface: #ffffff;
+  --coveo-background: #f6f7f9;
+
+  --coveo-radius: 0.5rem;
+  --coveo-ring: rgba(76, 171, 248, 0.45);
+  --coveo-shadow: 0 1px 3px rgba(40, 40, 41, 0.08);
+  --coveo-font:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
+    sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 body {
-  margin: 1rem;
-  font-family:
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
-    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  margin: 0;
+  font-family: var(--coveo-font);
+  color: var(--coveo-ink);
+  background: var(--coveo-background);
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -10,4 +46,1006 @@ body {
 code {
   font-family:
     source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+/* ------------------------------------------------------------------ */
+/* Layout shell                                                       */
+/* ------------------------------------------------------------------ */
+.Layout {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.5rem 1.5rem 4rem;
+}
+
+.Layout > main {
+  display: block;
+}
+
+/* ------------------------------------------------------------------ */
+/* Header                                                             */
+/* ------------------------------------------------------------------ */
+.Header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.HeaderBrand {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.HeaderLogo {
+  height: 2.25rem;
+  width: auto;
+  display: block;
+}
+
+.AppTitle {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  padding-left: 0.9rem;
+  border-left: 1px solid var(--coveo-border);
+}
+
+/* Tabs (radio-based navigation) */
+.Tabs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  margin-left: auto;
+}
+
+.Tabs input[type='radio'] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.Tabs label {
+  display: inline-block;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid var(--coveo-border);
+  border-radius: 999px;
+  background: var(--coveo-surface);
+  color: var(--coveo-ink);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    color 0.15s;
+}
+
+.Tabs label:hover {
+  border-color: var(--coveo-blue);
+  color: var(--coveo-primary);
+}
+
+.Tabs input[type='radio']:checked + label {
+  background: var(--coveo-primary);
+  border-color: var(--coveo-primary);
+  color: var(--coveo-on-primary);
+}
+
+.Tabs input[type='radio']:focus-visible + label {
+  outline: 2px solid var(--coveo-primary);
+  outline-offset: 2px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Search box                                                         */
+/* ------------------------------------------------------------------ */
+.Searchbox {
+  position: relative;
+  flex: 1 1 100%;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.SearchBoxInput {
+  flex: 1;
+  min-width: 0;
+  padding: 0.75rem 1rem;
+  font: inherit;
+  font-size: 1rem;
+  border: 1px solid var(--coveo-border);
+  border-radius: var(--coveo-radius);
+  background: var(--coveo-surface);
+  box-shadow: var(--coveo-shadow);
+  outline: none;
+}
+
+.SearchBoxInput:focus {
+  border-color: var(--coveo-blue);
+  box-shadow: 0 0 0 3px var(--coveo-ring);
+}
+
+.SearchBoxClear,
+.SearchBoxSubmit {
+  padding: 0.5rem 1rem;
+  font: inherit;
+  border: 1px solid var(--coveo-border);
+  border-radius: var(--coveo-radius);
+  background: var(--coveo-surface);
+  color: var(--coveo-ink);
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
+}
+
+.SearchBoxSubmit {
+  background: var(--coveo-primary);
+  border-color: var(--coveo-primary);
+  color: var(--coveo-on-primary);
+}
+
+.SearchBoxSubmit:hover:not(:disabled) {
+  background: var(--coveo-primary-hover);
+  border-color: var(--coveo-primary-hover);
+}
+
+.SearchBoxClear:hover:not(:disabled) {
+  border-color: var(--coveo-blue);
+  color: var(--coveo-primary);
+}
+
+.SearchBoxClear:disabled,
+.SearchBoxSubmit:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* Search box dropdown */
+.SearchBoxDropdown {
+  position: absolute;
+  top: calc(100% + 0.35rem);
+  left: 0;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--coveo-surface);
+  border: 1px solid var(--coveo-border);
+  border-radius: var(--coveo-radius);
+  box-shadow: 0 10px 30px rgba(40, 40, 41, 0.12);
+}
+
+.SearchBoxDropdown .column {
+  float: none;
+  flex: 1 1 0;
+  min-width: 180px;
+  width: auto;
+}
+
+.SearchBoxDropdown p {
+  margin: 0 0 0.5rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--coveo-muted);
+}
+
+.SearchBoxDropdown ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.SearchBoxDropdown li button {
+  width: 100%;
+  text-align: left;
+  padding: 0.4rem 0.55rem;
+  border: 0;
+  background: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font: inherit;
+  color: var(--coveo-ink);
+}
+
+.SearchBoxDropdown li button:hover {
+  background: var(--coveo-background);
+  color: var(--coveo-primary);
+}
+
+/* ------------------------------------------------------------------ */
+/* Page titles                                                        */
+/* ------------------------------------------------------------------ */
+.PageTitle {
+  margin: 0 0 1rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.SearchPage > .Searchbox {
+  display: flex;
+  margin-bottom: 1rem;
+}
+
+/* ------------------------------------------------------------------ */
+/* Search & listing interface: facets left, products right           */
+/* ------------------------------------------------------------------ */
+.SearchAndListingInterface {
+  display: grid;
+  grid-template-columns: 270px minmax(0, 1fr);
+  grid-template-areas:
+    'toolbar toolbar'
+    'facets  content';
+  gap: 1.5rem 2rem;
+  align-items: start;
+}
+
+/* Override the legacy float-based grid for interface children. */
+.SearchAndListingInterface > .row,
+.SearchAndListingInterface > .column.small,
+.SearchAndListingInterface > .column.medium {
+  float: none;
+  width: auto;
+}
+
+/* Top toolbar: Sort + Summary */
+.SearchAndListingInterface > .row {
+  grid-area: toolbar;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--coveo-border);
+}
+
+.SearchAndListingInterface > .column.small {
+  grid-area: facets;
+}
+
+.SearchAndListingInterface > .column.medium {
+  grid-area: content;
+}
+
+@media (max-width: 860px) {
+  .SearchAndListingInterface {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'toolbar'
+      'facets'
+      'content';
+  }
+}
+
+/* Sort & Summary */
+.Sort label {
+  color: var(--coveo-muted);
+  font-size: 0.85rem;
+}
+
+.Sort select {
+  font: inherit;
+  padding: 0.4rem 0.5rem;
+  border: 1px solid var(--coveo-border);
+  border-radius: 0.25rem;
+  background: var(--coveo-surface);
+}
+
+.Summary {
+  color: var(--coveo-muted);
+  font-size: 0.9rem;
+}
+
+/* ------------------------------------------------------------------ */
+/* Facets                                                             */
+/* ------------------------------------------------------------------ */
+.Facets {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.RegularFacet,
+.NumericFacet,
+.DateFacet,
+.CategoryFacet {
+  margin: 0;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--coveo-border);
+  border-radius: var(--coveo-radius);
+  background: var(--coveo-surface);
+  box-shadow: var(--coveo-shadow);
+}
+
+.FacetDisplayName {
+  display: block;
+  width: 100%;
+  margin: 0 0 0.5rem;
+  padding: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--coveo-primary);
+}
+
+/* Facet value lists */
+.FacetValues,
+.FacetValuesControls,
+.RootFacetValues,
+.ActiveFacetValueTree,
+.ActiveFacetValueChildren {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.FacetValuesControls .FacetValues,
+.NumericFacet .FacetValues ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.FacetValue,
+.AncestryFacetValue,
+.FacetValueChild {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.2rem 0;
+  font-size: 0.9rem;
+}
+
+.FacetValueCheckbox,
+.FacetSearchResultCheckbox {
+  accent-color: var(--coveo-primary);
+  cursor: pointer;
+}
+
+.FacetValueLabel {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.FacetValueLabel:hover {
+  color: var(--coveo-primary);
+}
+
+.FacetValueName {
+  flex: 1;
+}
+
+.FacetValueNumberOfProducts,
+.FacetValueNumberOfResults,
+.FacetSearchResultNumberOfProducts {
+  color: var(--coveo-muted);
+  font-size: 0.8rem;
+}
+
+.ActiveFacetValueChildren {
+  margin-left: 1rem;
+  border-left: 1px solid var(--coveo-border);
+  padding-left: 0.5rem;
+}
+
+/* Facet search */
+.FacetSearch {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 0.5rem;
+}
+
+.FacetSearchLabel {
+  font-size: 0.8rem;
+  color: var(--coveo-muted);
+}
+
+.FacetSearchInput {
+  flex: 1;
+  min-width: 0;
+  padding: 0.35rem 0.5rem;
+  font: inherit;
+  font-size: 0.85rem;
+  border: 1px solid var(--coveo-border);
+  border-radius: 0.25rem;
+  background: var(--coveo-surface);
+}
+
+.FacetSearchInput:focus {
+  outline: none;
+  border-color: var(--coveo-blue);
+  box-shadow: 0 0 0 2px var(--coveo-ring);
+}
+
+.FacetSearchResults {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.FacetSearchResult {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.FacetSearchResult:hover {
+  color: var(--coveo-primary);
+}
+
+.FacetSearchResult mark {
+  background: var(--coveo-yellow);
+  color: inherit;
+}
+
+.FacetSearchNoResults,
+.FacetSearchLoading,
+.FacetLoading {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--coveo-muted);
+}
+
+.FacetSearchResultCategory small {
+  color: var(--coveo-muted);
+}
+
+/* Facet action buttons */
+.FacetClear,
+.FacetClearSelected,
+.FacetShowMore,
+.FacetShowLess,
+.ManualRangeSelect {
+  min-width: 1.75rem;
+  margin: 0.4rem 0.25rem 0 0;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid var(--coveo-border);
+  border-radius: 0.25rem;
+  background: var(--coveo-surface);
+  color: var(--coveo-ink);
+  cursor: pointer;
+  font: inherit;
+  line-height: 1;
+}
+
+.FacetClear:hover:not(:disabled),
+.FacetClearSelected:hover:not(:disabled),
+.FacetShowMore:hover:not(:disabled),
+.FacetShowLess:hover:not(:disabled),
+.ManualRangeSelect:hover:not(:disabled) {
+  border-color: var(--coveo-blue);
+  color: var(--coveo-primary);
+}
+
+.FacetClear:disabled,
+.FacetClearSelected:disabled,
+.FacetShowMore:disabled,
+.FacetShowLess:disabled,
+.ManualRangeSelect:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* Numeric facet manual range */
+.ManualRangeControls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.ManualRangeStartInput,
+.ManualRangeEndInput {
+  width: 4.5rem;
+  padding: 0.3rem 0.4rem;
+  font: inherit;
+  font-size: 0.85rem;
+  border: 1px solid var(--coveo-border);
+  border-radius: 0.25rem;
+  background: var(--coveo-surface);
+}
+
+.ManualRangeStartLabel,
+.ManualRangeEndLabel {
+  color: var(--coveo-muted);
+}
+
+/* ------------------------------------------------------------------ */
+/* Breadcrumbs                                                        */
+/* ------------------------------------------------------------------ */
+.BreadcrumbManager {
+  margin-bottom: 1rem;
+}
+
+.BreadcrumbManager hr {
+  display: none;
+}
+
+.ClearAllBreadcrumbs button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--coveo-primary);
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.Breadcrumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+}
+
+.FacetBreadcrumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.BreadcrumbValue {
+  padding: 0.3rem 0.6rem;
+  font-size: 0.8rem;
+  border: 1px solid var(--coveo-border);
+  border-radius: 999px;
+  background: var(--coveo-surface);
+  color: var(--coveo-ink);
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
+}
+
+.BreadcrumbValue:hover {
+  background: var(--coveo-background);
+  border-color: var(--coveo-coral);
+  color: var(--coveo-coral);
+}
+
+/* ------------------------------------------------------------------ */
+/* Products / results                                                 */
+/* ------------------------------------------------------------------ */
+.ResultList,
+.ProductList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.Result,
+.ProductList > .Product {
+  margin: 0;
+  padding: 0;
+}
+
+.InteractiveProduct {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1rem;
+  border: 1px solid var(--coveo-border);
+  border-radius: var(--coveo-radius);
+  background: var(--coveo-surface);
+  box-shadow: var(--coveo-shadow);
+}
+
+.InteractiveProduct hr {
+  display: none;
+}
+
+.ProductLink {
+  padding: 0;
+  border: 0;
+  background: none;
+  text-align: left;
+  font: inherit;
+  font-size: 1.02rem;
+  font-weight: 600;
+  color: var(--coveo-primary);
+  cursor: pointer;
+}
+
+.ProductLink:hover {
+  text-decoration: underline;
+}
+
+.ProductImageWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0.6rem 0;
+}
+
+.ProductImageWrapper img {
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.InteractiveProductPrice s {
+  color: var(--coveo-muted);
+  margin-right: 0.35rem;
+}
+
+.InteractiveProductPrice span {
+  color: var(--coveo-coral);
+  font-weight: 600;
+}
+
+.ProductDescription {
+  color: var(--coveo-muted);
+  font-size: 0.85rem;
+}
+
+.ProductDescription p {
+  margin: 0.35rem 0 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Cart controls within a product card */
+.ProductCartControls {
+  margin-top: auto;
+  padding-top: 0.6rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.CartCurrentQuantity {
+  width: 100%;
+  margin: 0 0 0.25rem;
+  font-size: 0.8rem;
+  color: var(--coveo-muted);
+}
+
+.ProductCartControls button,
+.Cart button,
+.ProductDescriptionPage button {
+  padding: 0.4rem 0.7rem;
+  font: inherit;
+  font-size: 0.82rem;
+  border: 1px solid var(--coveo-border);
+  border-radius: 0.25rem;
+  background: var(--coveo-surface);
+  color: var(--coveo-ink);
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    color 0.15s;
+}
+
+.CartAddOne {
+  border-color: var(--coveo-primary) !important;
+  color: var(--coveo-primary) !important;
+}
+
+.ProductCartControls button:hover:not(:disabled),
+.Cart button:hover:not(:disabled),
+.ProductDescriptionPage button:hover:not(:disabled) {
+  border-color: var(--coveo-blue);
+  color: var(--coveo-primary);
+}
+
+.ProductCartControls button:disabled,
+.Cart button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* Child / variant swatch buttons */
+.InteractiveProduct > button {
+  padding: 0.15rem;
+  margin: 0.15rem 0.15rem 0 0;
+  border: 1px solid var(--coveo-border);
+  border-radius: 0.25rem;
+  background: var(--coveo-surface);
+  cursor: pointer;
+}
+
+/* ------------------------------------------------------------------ */
+/* Products per page & show more                                      */
+/* ------------------------------------------------------------------ */
+.ProductsPerPage {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 1.25rem;
+  font-size: 0.85rem;
+}
+
+.ProductsPerPageLabel {
+  color: var(--coveo-muted);
+}
+
+.ProductsPerPage input[type='radio'] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.ProductsPerPageOption {
+  display: inline-block;
+  min-width: 2rem;
+  padding: 0.3rem 0.55rem;
+  text-align: center;
+  border: 1px solid var(--coveo-border);
+  border-radius: 0.25rem;
+  background: var(--coveo-surface);
+  cursor: pointer;
+}
+
+.ProductsPerPage input[type='radio']:checked + .ProductsPerPageOption {
+  border-color: var(--coveo-primary);
+  color: var(--coveo-primary);
+  font-weight: 600;
+}
+
+.ShowMore {
+  display: block;
+  margin: 1rem auto 0;
+  padding: 0.5rem 1.25rem;
+  font: inherit;
+  font-size: 0.85rem;
+  border: 1px solid var(--coveo-border);
+  border-radius: var(--coveo-radius);
+  background: var(--coveo-surface);
+  color: var(--coveo-primary);
+  cursor: pointer;
+}
+
+.ShowMore:hover:not(:disabled) {
+  border-color: var(--coveo-blue);
+}
+
+.ShowMore:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* ------------------------------------------------------------------ */
+/* Pagination                                                         */
+/* ------------------------------------------------------------------ */
+.Pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-top: 1.5rem;
+}
+
+.Pagination .PreviousPage,
+.Pagination .NextPage {
+  min-width: 2.25rem;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--coveo-border);
+  border-radius: 0.25rem;
+  background: var(--coveo-surface);
+  color: var(--coveo-ink);
+  cursor: pointer;
+  font: inherit;
+}
+
+.Pagination .PreviousPage:hover:not(:disabled),
+.Pagination .NextPage:hover:not(:disabled) {
+  border-color: var(--coveo-blue);
+  color: var(--coveo-primary);
+}
+
+.Pagination .PreviousPage:disabled,
+.Pagination .NextPage:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.PageRadioButton {
+  position: relative;
+  display: inline-flex;
+}
+
+.PageRadioButton input[type='radio'] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.SelectPage {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.25rem;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--coveo-border);
+  border-radius: 0.25rem;
+  background: var(--coveo-surface);
+  color: var(--coveo-ink);
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    color 0.15s;
+}
+
+.SelectPage:hover {
+  border-color: var(--coveo-blue);
+  color: var(--coveo-primary);
+}
+
+.PageRadioButton input[type='radio']:checked + .SelectPage {
+  background: var(--coveo-coral);
+  border-color: var(--coveo-coral);
+  color: var(--coveo-on-primary);
+}
+
+.PageRadioButton input[type='radio']:focus-visible + .SelectPage {
+  outline: 2px solid var(--coveo-primary);
+  outline-offset: 2px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Cart page                                                          */
+/* ------------------------------------------------------------------ */
+.Cart {
+  background: var(--coveo-surface);
+  border: 1px solid var(--coveo-border);
+  border-radius: var(--coveo-radius);
+  padding: 1.25rem 1.5rem;
+  box-shadow: var(--coveo-shadow);
+}
+
+.Cart hr {
+  display: none;
+}
+
+.Cart > ul {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+}
+
+.Cart > ul > li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--coveo-border);
+}
+
+.Cart > ul > li p {
+  margin: 0.1rem 0;
+  font-size: 0.9rem;
+}
+
+.Cart > ul > li button {
+  margin: 0.5rem 0.35rem 0 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* Recommendations                                                    */
+/* ------------------------------------------------------------------ */
+.RecommendationsInterface {
+  margin-top: 2rem;
+}
+
+.RecommendationsHeadline {
+  margin: 0 0 0.75rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--coveo-primary);
+}
+
+/* ------------------------------------------------------------------ */
+/* Instant products & filter suggestions                              */
+/* ------------------------------------------------------------------ */
+.InstantProducts .Product button {
+  width: 100%;
+  text-align: left;
+  padding: 0.4rem 0.55rem;
+  border: 0;
+  background: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font: inherit;
+  color: var(--coveo-ink);
+}
+
+.InstantProducts .Product button:hover {
+  background: var(--coveo-background);
+  color: var(--coveo-primary);
+}
+
+.NoInstantProducts {
+  color: var(--coveo-muted);
+  font-size: 0.85rem;
+}
+
+.FilterSuggestions ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.FilterSuggestions li button {
+  width: 100%;
+  text-align: left;
+  padding: 0.4rem 0.55rem;
+  border: 0;
+  background: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.85rem;
+  color: var(--coveo-ink);
+}
+
+.FilterSuggestions li button:hover {
+  background: var(--coveo-background);
+  color: var(--coveo-primary);
+}
+
+/* ------------------------------------------------------------------ */
+/* Product description page                                           */
+/* ------------------------------------------------------------------ */
+.ProductDescriptionPage > hr {
+  display: none;
+}
+
+.ProductDescriptionPage .ProductPrice {
+  font-size: 1.05rem;
+}
+
+.ProductDescriptionPage .ProductPrice span {
+  color: var(--coveo-coral);
+  font-weight: 600;
+}
+
+.ProductBadges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.5rem;
 }

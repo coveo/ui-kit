@@ -1,5 +1,8 @@
 # Headless Commerce with React
 
+> **Scaffold template**: `headless-commerce-react`
+> This sample serves as the scaffold template for creating new Coveo Headless commerce projects with React.
+
 This sample demonstrates how to build a custom commerce interface using `@coveo/headless/commerce` controllers with React. It shows how to create a fully customized e-commerce search and product listing experience.
 
 ## Features
