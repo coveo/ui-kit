@@ -71,6 +71,9 @@ export type {
   BackendFacetControllerOptions,
   BackendFacetControllerState,
   BackendFacetValue,
+  BackendFacetSearch,
+  BackendFacetSearchState,
+  BackendFacetSearchValue,
 } from './backend-facet/backend-facet-controller.js';
 export {buildBackendSortController} from './backend-sort/backend-sort-controller.js';
 export type {

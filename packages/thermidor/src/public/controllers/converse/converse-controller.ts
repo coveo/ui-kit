@@ -7,7 +7,10 @@ import {getOrCreateGenerativeActions} from '@/src/core/internal/generative/gener
 import {getOrCreateGenerativeSelectors} from '@/src/core/internal/generative/generative-selectors.js';
 import {getOrCreateBackendInterfacesActions} from '@/src/core/internal/backend-interfaces/backend-interfaces-actions.js';
 import {getOrCreateBackendInterfacesSlice} from '@/src/core/internal/backend-interfaces/backend-interfaces-slice.js';
-import type {BackendSuggestionsEntry} from '@/src/core/internal/backend-interfaces/backend-interfaces-actions.js';
+import type {
+  BackendSuggestionsEntry,
+  BackendFacetSearchEntry,
+} from '@/src/core/internal/backend-interfaces/backend-interfaces-actions.js';
 import type {GenerativeInterface} from '@/src/public/interfaces/generative.js';
 import type {Controller} from '../controller-types.js';
 
@@ -30,6 +33,7 @@ export type BackendInterfaceAction =
       fields?: Array<{field: string; direction: string}>;
     }
   | {type: 'fetch_suggestions'; interfaceId: string; query: string}
+  | {type: 'facet_search'; interfaceId: string; facetId: string; query: string}
   | {
       type: 'restore_state';
       interfaceId: string;
@@ -163,6 +167,14 @@ export const buildConverseController = (
       },
       setConversationToken(token) {
         fullEngine.mutate(actions.setConversationToken(token));
+      },
+      updateFacetSearchResults(interfaceId, results) {
+        fullEngine.mutate(
+          biActions.setFacetSearchResults({
+            interfaceId,
+            results: results as unknown as BackendFacetSearchEntry,
+          })
+        );
       },
     },
   });

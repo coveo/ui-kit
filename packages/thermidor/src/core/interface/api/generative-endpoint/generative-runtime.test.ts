@@ -28,6 +28,9 @@ function createMockStatePort(): GenerativeStatePort {
     createBackendInterface: vi.fn(),
     updateBackendInterfaceState: vi.fn(),
     updateSuggestions: vi.fn(),
+    setConversationSessionId: vi.fn(),
+    setConversationToken: vi.fn(),
+    updateFacetSearchResults: vi.fn(),
   };
 }
 
@@ -124,6 +127,29 @@ describe('GenerativeRuntime.dispatchEvent — CUSTOM events', () => {
       query: 'red',
       completions: [{expression: 'red shirt', highlighted: 'red shirt'}],
       products: [],
+    });
+    expect(result.isTerminal).toBe(false);
+  });
+
+  it('handles coveo.facetSearchResults', () => {
+    const result = dispatchEvent('turn-1', {
+      type: 'CUSTOM',
+      name: 'coveo.facetSearchResults',
+      value: {
+        interfaceId: 'ui-1',
+        facetId: 'brand',
+        query: 'Ni',
+        values: [{displayValue: 'Nike', rawValue: 'Nike', count: 42}],
+        moreValuesAvailable: false,
+      },
+    });
+
+    expect(statePort.updateFacetSearchResults).toHaveBeenCalledWith('ui-1', {
+      interfaceId: 'ui-1',
+      facetId: 'brand',
+      query: 'Ni',
+      values: [{displayValue: 'Nike', rawValue: 'Nike', count: 42}],
+      moreValuesAvailable: false,
     });
     expect(result.isTerminal).toBe(false);
   });

@@ -218,4 +218,98 @@ describe('buildBackendFacetController', () => {
       facetId: 'brand',
     });
   });
+
+  describe('facetSearch', () => {
+    it('search sends facet_search action', () => {
+      const controller = buildBackendFacetController({
+        interface: generativeInterface,
+        converseController,
+        interfaceId: 'ui-1',
+        facetId: 'brand',
+      });
+
+      controller.facetSearch.updateText('Ni');
+      controller.facetSearch.search();
+
+      expect(converseController.sendAction).toHaveBeenCalledWith({
+        type: 'facet_search',
+        interfaceId: 'ui-1',
+        facetId: 'brand',
+        query: 'Ni',
+      });
+    });
+
+    it('select sends toggle_facet action with rawValue', () => {
+      const controller = buildBackendFacetController({
+        interface: generativeInterface,
+        converseController,
+        interfaceId: 'ui-1',
+        facetId: 'brand',
+      });
+
+      controller.facetSearch.select({
+        displayValue: 'Nike',
+        rawValue: 'Nike',
+        count: 42,
+      });
+
+      expect(converseController.sendAction).toHaveBeenCalledWith({
+        type: 'toggle_facet',
+        interfaceId: 'ui-1',
+        facetId: 'brand',
+        value: 'Nike',
+      });
+    });
+
+    it('state reads from facetSearchResults in slice', () => {
+      const fullEngine = getFullEngine(engine);
+      const actions = getOrCreateBackendInterfacesActions(TEST_ID);
+
+      fullEngine.mutate(
+        actions.setFacetSearchResults({
+          interfaceId: 'ui-1',
+          results: {
+            facetId: 'brand',
+            query: 'Ni',
+            values: [
+              {displayValue: 'Nike', rawValue: 'Nike', count: 42},
+              {displayValue: 'Nine West', rawValue: 'Nine West', count: 8},
+            ],
+            moreValuesAvailable: true,
+          },
+        })
+      );
+
+      const controller = buildBackendFacetController({
+        interface: generativeInterface,
+        converseController,
+        interfaceId: 'ui-1',
+        facetId: 'brand',
+      });
+
+      expect(controller.facetSearch.state).toEqual({
+        query: 'Ni',
+        values: [
+          {displayValue: 'Nike', rawValue: 'Nike', count: 42},
+          {displayValue: 'Nine West', rawValue: 'Nine West', count: 8},
+        ],
+        moreValuesAvailable: true,
+      });
+    });
+
+    it('state returns empty values when no results exist', () => {
+      const controller = buildBackendFacetController({
+        interface: generativeInterface,
+        converseController,
+        interfaceId: 'ui-1',
+        facetId: 'brand',
+      });
+
+      expect(controller.facetSearch.state).toEqual({
+        query: '',
+        values: [],
+        moreValuesAvailable: false,
+      });
+    });
+  });
 });

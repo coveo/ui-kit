@@ -3,16 +3,19 @@ import {
   getOrCreateBackendInterfacesActions,
   type BackendInterfaceEntry,
   type BackendSuggestionsEntry,
+  type BackendFacetSearchEntry,
 } from './backend-interfaces-actions.js';
 
 export interface BackendInterfacesState {
   interfaces: Record<string, BackendInterfaceEntry>;
   suggestions: Record<string, BackendSuggestionsEntry>;
+  facetSearchResults: Record<string, BackendFacetSearchEntry>;
 }
 
 export const initialBackendInterfacesState: BackendInterfacesState = {
   interfaces: {},
   suggestions: {},
+  facetSearchResults: {},
 };
 
 export function createBackendInterfacesSlice(interfaceId: string) {
@@ -44,9 +47,16 @@ export function createBackendInterfacesSlice(interfaceId: string) {
               state: payload.state,
             };
           }
+          state.facetSearchResults = {};
         })
         .addCase(actions.setSuggestions, (state, {payload}) => {
           state.suggestions[payload.interfaceId] = payload.suggestions;
+        })
+        .addCase(actions.setFacetSearchResults, (state, {payload}) => {
+          state.facetSearchResults[payload.results.facetId] = payload.results;
+        })
+        .addCase(actions.clearFacetSearchResults, (state) => {
+          state.facetSearchResults = {};
         });
     },
   });

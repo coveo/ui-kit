@@ -4,6 +4,7 @@ import {initialBackendInterfacesState} from './backend-interfaces-slice.js';
 import type {
   BackendInterfaceEntry,
   BackendSuggestionsEntry,
+  BackendFacetSearchEntry,
 } from './backend-interfaces-actions.js';
 
 export function createBackendInterfacesSelectors(interfaceId: string) {
@@ -28,6 +29,12 @@ export function createBackendInterfacesSelectors(interfaceId: string) {
         sliceSelector,
         (state): BackendSuggestionsEntry | undefined =>
           state.suggestions[targetId]
+      ),
+    getFacetSearchResults: (facetId: string) =>
+      createMemoizedStateSelector(
+        sliceSelector,
+        (state): BackendFacetSearchEntry | undefined =>
+          state.facetSearchResults[facetId]
       ),
   };
 }

@@ -142,4 +142,77 @@ describe('backendInterfacesSlice', () => {
       });
     });
   });
+
+  describe('facetSearchResults', () => {
+    it('setFacetSearchResults stores results keyed by facetId', () => {
+      const store = createStore();
+      const actions = getOrCreateBackendInterfacesActions(INTERFACE_ID);
+
+      store.dispatch(
+        actions.setFacetSearchResults({
+          interfaceId: 'ui-1',
+          results: {
+            facetId: 'brand',
+            query: 'Ni',
+            values: [{displayValue: 'Nike', rawValue: 'Nike', count: 42}],
+            moreValuesAvailable: false,
+          },
+        })
+      );
+
+      expect(getState(store).facetSearchResults['brand']).toEqual({
+        facetId: 'brand',
+        query: 'Ni',
+        values: [{displayValue: 'Nike', rawValue: 'Nike', count: 42}],
+        moreValuesAvailable: false,
+      });
+    });
+
+    it('updateInterfaceState clears all facetSearchResults', () => {
+      const store = createStore();
+      const actions = getOrCreateBackendInterfacesActions(INTERFACE_ID);
+
+      store.dispatch(
+        actions.setFacetSearchResults({
+          interfaceId: 'ui-1',
+          results: {
+            facetId: 'brand',
+            query: 'Ni',
+            values: [{displayValue: 'Nike', rawValue: 'Nike', count: 42}],
+            moreValuesAvailable: false,
+          },
+        })
+      );
+
+      store.dispatch(
+        actions.updateInterfaceState({
+          interfaceId: 'ui-1',
+          state: {query: 'shoes', products: []},
+        })
+      );
+
+      expect(getState(store).facetSearchResults).toEqual({});
+    });
+
+    it('clearFacetSearchResults resets to empty', () => {
+      const store = createStore();
+      const actions = getOrCreateBackendInterfacesActions(INTERFACE_ID);
+
+      store.dispatch(
+        actions.setFacetSearchResults({
+          interfaceId: 'ui-1',
+          results: {
+            facetId: 'brand',
+            query: 'Ni',
+            values: [{displayValue: 'Nike', rawValue: 'Nike', count: 42}],
+            moreValuesAvailable: false,
+          },
+        })
+      );
+
+      store.dispatch(actions.clearFacetSearchResults({interfaceId: 'ui-1'}));
+
+      expect(getState(store).facetSearchResults).toEqual({});
+    });
+  });
 });

@@ -12,6 +12,13 @@ export interface BackendSuggestionsEntry {
   products: Array<Record<string, unknown>>;
 }
 
+export interface BackendFacetSearchEntry {
+  facetId: string;
+  query: string;
+  values: Array<{displayValue: string; rawValue: string; count: number}>;
+  moreValuesAvailable: boolean;
+}
+
 export function createBackendInterfacesActions(interfaceId: string) {
   const prefix = `${interfaceId}/backendInterfaces`;
   return {
@@ -30,6 +37,13 @@ export function createBackendInterfacesActions(interfaceId: string) {
       interfaceId: string;
       suggestions: BackendSuggestionsEntry;
     }>(`${prefix}/setSuggestions`),
+    setFacetSearchResults: createAction<{
+      interfaceId: string;
+      results: BackendFacetSearchEntry;
+    }>(`${prefix}/setFacetSearchResults`),
+    clearFacetSearchResults: createAction<{
+      interfaceId: string;
+    }>(`${prefix}/clearFacetSearchResults`),
   };
 }
 

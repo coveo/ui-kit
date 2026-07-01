@@ -1,6 +1,7 @@
 import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
 import {ENGINE, STATE_ID} from '@/src/core/interface/utils/symbols.js';
 import {getOrCreateBackendInterfacesSelectors} from '@/src/core/internal/backend-interfaces/backend-interfaces-selectors.js';
+import type {BackendFacetSearchEntry} from '@/src/core/internal/backend-interfaces/backend-interfaces-actions.js';
 import type {GenerativeInterface} from '@/src/public/interfaces/generative.js';
 import type {
   ConverseController,
@@ -14,10 +15,32 @@ export interface BackendFacetValue {
   numberOfResults: number;
 }
 
+export interface BackendFacetSearchValue {
+  displayValue: string;
+  rawValue: string;
+  count: number;
+}
+
+export interface BackendFacetSearchState {
+  query: string;
+  values: BackendFacetSearchValue[];
+  moreValuesAvailable: boolean;
+}
+
+export interface BackendFacetSearch {
+  updateText(query: string): void;
+  search(): void;
+  clear(): void;
+  select(value: BackendFacetSearchValue): void;
+  get state(): BackendFacetSearchState;
+  subscribe(callback: () => void): () => void;
+}
+
 export interface BackendFacetController extends Controller<BackendFacetControllerState> {
   toggleSelect(value: string): void;
   toggleExclude(value: string): void;
   deselectAll(): void;
+  facetSearch: BackendFacetSearch;
 }
 
 export interface BackendFacetControllerState {
@@ -43,6 +66,11 @@ export const buildBackendFacetController = (
   const stateId = options.interface[STATE_ID];
   const selectors = getOrCreateBackendInterfacesSelectors(stateId);
   const getInterface = selectors.getInterface(options.interfaceId);
+  const getFacetSearchResults = selectors.getFacetSearchResults(
+    options.facetId
+  );
+
+  let facetSearchQuery = '';
 
   const controllerState = createMemoizedStateSelector(
     getInterface,
@@ -85,6 +113,50 @@ export const buildBackendFacetController = (
     }
   );
 
+  const facetSearchState = createMemoizedStateSelector(
+    getFacetSearchResults,
+    (results): BackendFacetSearchState => ({
+      query: results?.query ?? facetSearchQuery,
+      values: results?.values ?? [],
+      moreValuesAvailable: results?.moreValuesAvailable ?? false,
+    })
+  );
+
+  const facetSearch: BackendFacetSearch = {
+    updateText(query: string) {
+      facetSearchQuery = query;
+    },
+    search() {
+      if (!facetSearchQuery) return;
+      const action: BackendInterfaceAction = {
+        type: 'facet_search',
+        interfaceId: options.interfaceId,
+        facetId: options.facetId,
+        query: facetSearchQuery,
+      };
+      options.converseController.sendAction(action);
+    },
+    clear() {
+      facetSearchQuery = '';
+    },
+    select(value: BackendFacetSearchValue) {
+      facetSearchQuery = '';
+      const action: BackendInterfaceAction = {
+        type: 'toggle_facet',
+        interfaceId: options.interfaceId,
+        facetId: options.facetId,
+        value: value.rawValue,
+      };
+      options.converseController.sendAction(action);
+    },
+    get state() {
+      return engine.read(facetSearchState);
+    },
+    subscribe(callback) {
+      return engine.subscribe(facetSearchState, callback);
+    },
+  };
+
   return {
     get state() {
       return engine.read(controllerState);
@@ -118,5 +190,6 @@ export const buildBackendFacetController = (
       };
       options.converseController.sendAction(action);
     },
+    facetSearch,
   };
 };

@@ -44,6 +44,10 @@ export interface GenerativeStatePort {
   ): void;
   setConversationSessionId(sessionId: string): void;
   setConversationToken(token: string): void;
+  updateFacetSearchResults(
+    interfaceId: string,
+    results: Record<string, unknown>
+  ): void;
 }
 
 export interface GenerativeRuntimeConfig {
@@ -353,6 +357,13 @@ export class GenerativeRuntime {
             this.statePort.updateSuggestions(
               interfaceId as string,
               suggestions
+            );
+            return {turnId, isTerminal: false};
+          }
+          case 'coveo.facetSearchResults': {
+            this.statePort.updateFacetSearchResults(
+              value.interfaceId as string,
+              value as Record<string, unknown>
             );
             return {turnId, isTerminal: false};
           }
