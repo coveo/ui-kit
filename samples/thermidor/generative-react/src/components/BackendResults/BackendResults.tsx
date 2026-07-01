@@ -11,6 +11,8 @@ import {
 } from '../../generative-setup.js';
 import {getOrCreateBackendInterfacesSelectors} from '@/src/core/internal/backend-interfaces/backend-interfaces-selectors.js';
 import {ENGINE, STATE_ID} from '@/src/core/interface/utils/symbols.js';
+import {FacetPanel} from '../FacetPanel/FacetPanel.js';
+import {SortDropdown} from '../SortDropdown/SortDropdown.js';
 import styles from './BackendResults.module.css';
 
 export function BackendResults() {
@@ -91,7 +93,20 @@ export function BackendResults() {
     };
   }, [firstInterfaceId]);
 
-  const query = (interfaces[firstInterfaceId]?.state?.query as string) ?? '';
+  const query = (interfaces[firstInterfaceId!]?.state?.query as string) ?? '';
+  const facets =
+    (interfaces[firstInterfaceId!]?.state?.facets as Array<{
+      facetId: string;
+      field: string;
+      displayName: string;
+      type: string;
+      values: Array<{
+        value: string;
+        state: 'idle' | 'selected' | 'excluded';
+        numberOfResults: number;
+      }>;
+      moreValuesAvailable: boolean;
+    }>) ?? [];
   const [queryInput, setQueryInput] = useState(query);
 
   useEffect(() => {
@@ -126,40 +141,49 @@ export function BackendResults() {
           Search
         </button>
       </form>
-      <div className={styles.meta}>
-        {pagination.totalCount} results — Page {pagination.page + 1} of{' '}
-        {pagination.totalPages}
+      <div className={styles.toolbar}>
+        <div className={styles.meta}>
+          {pagination.totalCount} results — Page {pagination.page + 1} of{' '}
+          {pagination.totalPages}
+        </div>
+        <SortDropdown interfaceId={firstInterfaceId} />
       </div>
-      <div className={styles.grid}>
-        {products.map((product, i) => (
-          <div key={(product as any).permanentid ?? i} className={styles.card}>
-            {(product as any).ec_thumbnails?.[0] && (
-              <img
-                src={(product as any).ec_thumbnails[0]}
-                alt=""
-                className={styles.thumb}
-              />
-            )}
-            <div className={styles.name}>
-              {(product as any).ec_name ?? 'Untitled'}
-            </div>
-            <div className={styles.price}>
-              {(product as any).ec_promo_price != null &&
-              (product as any).ec_promo_price < (product as any).ec_price ? (
-                <>
-                  <span className={styles.promo}>
-                    ${(product as any).ec_promo_price}
-                  </span>{' '}
-                  <span className={styles.original}>
-                    ${(product as any).ec_price}
-                  </span>
-                </>
-              ) : (
-                `$${(product as any).ec_price ?? '—'}`
+      <div className={styles.body}>
+        <FacetPanel interfaceId={firstInterfaceId} facets={facets} />
+        <div className={styles.grid}>
+          {products.map((product, i) => (
+            <div
+              key={(product as any).permanentid ?? i}
+              className={styles.card}
+            >
+              {(product as any).ec_thumbnails?.[0] && (
+                <img
+                  src={(product as any).ec_thumbnails[0]}
+                  alt=""
+                  className={styles.thumb}
+                />
               )}
+              <div className={styles.name}>
+                {(product as any).ec_name ?? 'Untitled'}
+              </div>
+              <div className={styles.price}>
+                {(product as any).ec_promo_price != null &&
+                (product as any).ec_promo_price < (product as any).ec_price ? (
+                  <>
+                    <span className={styles.promo}>
+                      ${(product as any).ec_promo_price}
+                    </span>{' '}
+                    <span className={styles.original}>
+                      ${(product as any).ec_price}
+                    </span>
+                  </>
+                ) : (
+                  `$${(product as any).ec_price ?? '—'}`
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
       {pagination.totalPages > 1 && (
         <div className={styles.paginationBar}>

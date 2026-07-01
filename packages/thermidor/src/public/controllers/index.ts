@@ -65,3 +65,17 @@ export type {
   BackendCartControllerState,
   BackendCartItem,
 } from './backend-cart/backend-cart-controller.js';
+export {buildBackendFacetController} from './backend-facet/backend-facet-controller.js';
+export type {
+  BackendFacetController,
+  BackendFacetControllerOptions,
+  BackendFacetControllerState,
+  BackendFacetValue,
+} from './backend-facet/backend-facet-controller.js';
+export {buildBackendSortController} from './backend-sort/backend-sort-controller.js';
+export type {
+  BackendSortController,
+  BackendSortControllerOptions,
+  BackendSortControllerState,
+  BackendSortCriterion,
+} from './backend-sort/backend-sort-controller.js';
