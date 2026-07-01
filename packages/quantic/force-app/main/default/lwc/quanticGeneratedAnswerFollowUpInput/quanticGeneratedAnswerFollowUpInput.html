@@ -7,6 +7,8 @@
         rows="1"
         placeholder={labels.askFollowUp}
         aria-label={labels.askFollowUp}
+        aria-invalid={textareaAriaInvalid}
+        aria-describedby={textareaAriaDescribedBy}
         onfocus={handleFocus}
         onblur={handleBlur}
         oninput={handleInput}
@@ -14,7 +16,7 @@
       ></textarea>
     </div>
     <lightning-button-icon
-      disabled={submitButtonDisabled}
+      disabled={isSubmitPrevented}
       onclick={handleSubmitFollowUp}
       icon-name="utility:arrowup"
       variant="brand"
@@ -26,5 +28,18 @@
     >
       <label>{labels.submitFollowUp}</label>
     </lightning-button-icon>
+  </div>
+  <div
+    class="follow-up-input__footer slds-grid slds-p-horizontal_x-small slds-p-top_xx-small"
+  >
+    <template lwc:if={isOverCharacterLimit}>
+      <span
+        id="follow-up-validation-message"
+        class="slds-text-body_small slds-text-color_error"
+        role="alert"
+        >{validationMessage}
+      </span>
+    </template>
+    <span class={characterCounterClasses}>{characterCounterText}</span>
   </div>
 </template>

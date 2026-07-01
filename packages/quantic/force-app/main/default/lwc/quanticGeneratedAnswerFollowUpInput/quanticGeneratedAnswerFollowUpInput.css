@@ -6,6 +6,10 @@
   border-color: var(--lwc-brandAccessible, #0176d3);
 }
 
+.follow-up-input__container--error {
+  border-color: var(--lwc-colorBorderError, #ea001e);
+}
+
 .follow-up-input__expander {
   display: grid;
   overflow: hidden;
