@@ -1,0 +1,21 @@
+{
+  "name": "@coveo/sample-headless-search-vite",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "e2e": "playwright test"
+  },
+  "dependencies": {
+    "@coveo/headless": "workspace:*"
+  },
+  "devDependencies": {
+    "@coveo/platform-mock-api": "workspace:*",
+    "@msw/playwright": "0.6.7",
+    "@playwright/test": "catalog:",
+    "msw": "catalog:",
+    "vite": "catalog:"
+  }
+}
