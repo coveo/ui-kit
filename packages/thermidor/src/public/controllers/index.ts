@@ -89,6 +89,11 @@ export type {
   BackendNumericFacetControllerState,
   NumericFacetValue,
 } from './backend-numeric-facet/backend-numeric-facet-controller.js';
+export {buildBackendInteractiveProductController} from './backend-interactive-product/backend-interactive-product-controller.js';
+export type {
+  BackendInteractiveProductController,
+  BackendInteractiveProductControllerOptions,
+} from './backend-interactive-product/backend-interactive-product-controller.js';
 export {buildBackendUrlManagerController} from './backend-url-manager/backend-url-manager-controller.js';
 export type {
   BackendUrlManagerController,

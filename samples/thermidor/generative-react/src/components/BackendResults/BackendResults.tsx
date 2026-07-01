@@ -2,6 +2,7 @@ import {useState, useEffect, useRef} from 'react';
 import {
   buildBackendProductListController,
   buildBackendPaginationController,
+  buildBackendInteractiveProductController,
   type BackendProductListController,
   type BackendPaginationController,
 } from '@coveo/thermidor';
@@ -161,38 +162,56 @@ export function BackendResults() {
       <div className={styles.body}>
         <FacetPanel interfaceId={firstInterfaceId} facets={facets} />
         <div className={styles.grid}>
-          {products.map((product, i) => (
-            <div
-              key={(product as any).permanentid ?? i}
-              className={styles.card}
-            >
-              {(product as any).ec_thumbnails?.[0] && (
-                <img
-                  src={(product as any).ec_thumbnails[0]}
-                  alt=""
-                  className={styles.thumb}
-                />
-              )}
-              <div className={styles.name}>
-                {(product as any).ec_name ?? 'Untitled'}
-              </div>
-              <div className={styles.price}>
-                {(product as any).ec_promo_price != null &&
-                (product as any).ec_promo_price < (product as any).ec_price ? (
-                  <>
-                    <span className={styles.promo}>
-                      ${(product as any).ec_promo_price}
-                    </span>{' '}
-                    <span className={styles.original}>
-                      ${(product as any).ec_price}
-                    </span>
-                  </>
-                ) : (
-                  `$${(product as any).ec_price ?? '—'}`
+          {products.map((product, i) => {
+            const p = product as any;
+            const position = pagination.page * pagination.pageSize + i + 1;
+            return (
+              <div
+                key={p.permanentid ?? i}
+                className={styles.card}
+                onClick={() => {
+                  const interactive = buildBackendInteractiveProductController({
+                    interface: generativeInterface,
+                    converseController,
+                    interfaceId: firstInterfaceId,
+                    product: {
+                      productId: p.permanentid ?? '',
+                      name: p.ec_name ?? '',
+                      price: p.ec_promo_price ?? p.ec_price ?? 0,
+                    },
+                    position,
+                  });
+                  interactive.select();
+                }}
+              >
+                {p.ec_thumbnails?.[0] && (
+                  <img
+                    src={p.ec_thumbnails[0]}
+                    alt=""
+                    className={styles.thumb}
+                  />
                 )}
+                <div className={styles.name}>
+                  {p.ec_name ?? 'Untitled'}
+                </div>
+                <div className={styles.price}>
+                  {p.ec_promo_price != null &&
+                  p.ec_promo_price < p.ec_price ? (
+                    <>
+                      <span className={styles.promo}>
+                        ${p.ec_promo_price}
+                      </span>{' '}
+                      <span className={styles.original}>
+                        ${p.ec_price}
+                      </span>
+                    </>
+                  ) : (
+                    `$${p.ec_price ?? '—'}`
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
       {pagination.totalPages > 1 && (

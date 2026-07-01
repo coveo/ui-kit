@@ -51,6 +51,20 @@ export type BackendInterfaceAction =
       endInclusive: boolean;
     }
   | {
+      type: 'product_click';
+      interfaceId: string;
+      productId: string;
+      name: string;
+      price: number;
+      position: number;
+    }
+  | {type: 'product_view'; interfaceId: string; productId: string; name: string; price: number}
+  | {
+      type: 'purchase';
+      products: Array<{productId: string; name: string; price: number; quantity: number}>;
+      transaction: {id: string; revenue: number};
+    }
+  | {
       type: 'restore_state';
       interfaceId: string;
       query?: string;
