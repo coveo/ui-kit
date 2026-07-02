@@ -29,7 +29,7 @@ export abstract class BaseInterface<T extends InterfaceType> {
   #stateId: string;
   #type: T;
   #facadeResolvers: Record<Facades[T], FacadeResolverFactory>;
-  #facadeCache = new Map<InterfaceHandle, Map<Facades[T], EndpointThunk>>();
+  #facadeCache = new WeakMap<InterfaceHandle, Map<Facades[T], EndpointThunk>>();
   #cacheRegistry = new InterfaceCacheRegistry();
   #disposed = false;
 
@@ -87,7 +87,6 @@ export abstract class BaseInterface<T extends InterfaceType> {
     }
     this.#disposed = true;
     this.#cacheRegistry.dispose();
-    this.#facadeCache.clear();
     this.#engine.removeInterface(this);
   }
 
