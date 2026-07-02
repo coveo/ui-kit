@@ -29,7 +29,7 @@ export abstract class BaseInterface<T extends InterfaceType> {
   #stateId: string;
   #type: T;
   #facadeResolvers: Record<Facades[T], FacadeResolverFactory>;
-  #facadeCache = new Map<string, EndpointThunk>();
+  #facadeCache = new Map<InterfaceHandle, Map<Facades[T], EndpointThunk>>();
   #cacheRegistry = new InterfaceCacheRegistry();
   #disposed = false;
 
@@ -63,18 +63,19 @@ export abstract class BaseInterface<T extends InterfaceType> {
     this.#assertNotDisposed();
 
     const scopeInterface = composedInterface ?? this;
-    const scope: EndpointStateScope = {
-      baseInterface: this,
-      scopeInterface,
-    };
 
-    const cacheKey = `${String(facade)}:${composedInterface ? 'composed' : this.#stateId}`;
+    let scopeCache = this.#facadeCache.get(scopeInterface);
+    if (!scopeCache) {
+      scopeCache = new Map();
+      this.#facadeCache.set(scopeInterface, scopeCache);
+    }
 
-    let thunk = this.#facadeCache.get(cacheKey);
+    let thunk = scopeCache.get(facade);
     if (!thunk) {
+      const scope: EndpointStateScope = {baseInterface: this, scopeInterface};
       const resolver = this.#facadeResolvers[facade];
       thunk = resolver(this.#engine)(scope);
-      this.#facadeCache.set(cacheKey, thunk);
+      scopeCache.set(facade, thunk);
     }
 
     return [thunk];
