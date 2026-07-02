@@ -3,7 +3,6 @@ import {createTestEngine, createTestInterface} from '@/src/test/test-utils.js';
 import {setItems, updateItemQuantity} from './cart-mutators.js';
 import {FullEngine, getFullEngine} from '@/src/core/interface/engine/engine.js';
 import {getOrCreateCartSlice} from '@/src/core/internal/cart/cart-slice.js';
-import {getOrCreateCartSelectors} from '@/src/core/internal/cart/cart-selectors.js';
 import type {SearchInterface} from '@/src/public/interfaces/search.js';
 
 describe('cart mutators', () => {

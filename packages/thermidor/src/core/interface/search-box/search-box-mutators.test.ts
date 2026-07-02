@@ -9,7 +9,6 @@ import {getQuery} from './search-box-selectors.js';
 import {getOrCreateSearchBoxSlice} from '@/src/core/internal/search-box/search-box-slice.js';
 import {FullEngine, getFullEngine} from '@/src/core/interface/engine/engine.js';
 import type {SearchInterface} from '@/src/public/interfaces/search.js';
-import {Engine} from '@/src/core/interface/engine/engine.js';
 
 describe('searchBoxMutations', () => {
   let engine: FullEngine;
