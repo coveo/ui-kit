@@ -17,20 +17,16 @@ describe('cart mutators', () => {
   });
 
   it('setItems returns expected mutation', () => {
-    const mutation = setItems(
-      {items: [{productId: 'p1', name: 'A', price: 1, quantity: 2}]},
-      iface
-    );
-    expect(mutation).toHaveProperty('type');
-    expect(mutation).toHaveProperty('payload');
+    const items = [{productId: 'p1', name: 'A', price: 1, quantity: 2}];
+    const mutation = setItems({items}, iface);
+    expect(mutation.type).toBe('default/cart/setItems');
+    expect(mutation.payload).toEqual(items);
   });
 
   it('updateItemQuantity returns expected mutation', () => {
-    const mutation = updateItemQuantity(
-      {item: {productId: 'p1', name: 'A', price: 1, quantity: 3}},
-      iface
-    );
-    expect(mutation).toHaveProperty('type');
-    expect(mutation).toHaveProperty('payload');
+    const item = {productId: 'p1', name: 'A', price: 1, quantity: 3};
+    const mutation = updateItemQuantity({item}, iface);
+    expect(mutation.type).toBe('default/cart/updateItemQuantity');
+    expect(mutation.payload).toEqual(item);
   });
 });
