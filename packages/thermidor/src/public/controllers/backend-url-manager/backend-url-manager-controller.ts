@@ -50,16 +50,28 @@ export function serializeInterfaceState(
     | Array<{
         facetId: string;
         field: string;
-        values: Array<{value: string; state: string}>;
+        type?: string;
+        values: Array<{
+          value?: string;
+          start?: number;
+          end?: number;
+          state: string;
+        }>;
       }>
     | undefined;
   if (facets) {
     for (const facet of facets) {
-      const selected = facet.values
-        .filter((v) => v.state === 'selected')
-        .map((v) => v.value);
-      if (selected.length) {
-        params.set(`f-${facet.field}`, selected.join(','));
+      const selected = facet.values.filter((v) => v.state === 'selected');
+      if (!selected.length) continue;
+
+      if (selected[0].start !== undefined && selected[0].end !== undefined) {
+        const rangeStrings = selected.map((v) => `${v.start}..${v.end}`);
+        params.set(`f-${facet.field}`, rangeStrings.join(','));
+      } else {
+        const values = selected.map((v) => v.value).filter(Boolean);
+        if (values.length) {
+          params.set(`f-${facet.field}`, values.join(','));
+        }
       }
     }
   }
@@ -137,7 +149,8 @@ export function deserializeFragment(fragment: string): {
   for (const [key, value] of params.entries()) {
     if (key.startsWith('f-')) {
       const field = key.slice(2);
-      facets.push({facetId: field, field, values: value.split(',')});
+      const values = value.split(',').filter(Boolean);
+      facets.push({facetId: field, field, values});
     }
   }
   if (facets.length) result.facets = facets;
@@ -256,14 +269,49 @@ export const buildBackendUrlManagerController = (
 
       const interfaceId = parsed.interfaceId ?? options.interfaceId;
 
+      const facets: {
+        facetId: string;
+        values?: string[];
+        numericRanges?: {start: number; end: number; endInclusive: boolean}[];
+      }[] = [];
+
+      if (parsed.facets) {
+        for (const f of parsed.facets) {
+          const numericRanges: {
+            start: number;
+            end: number;
+            endInclusive: boolean;
+          }[] = [];
+          const stringValues: string[] = [];
+
+          for (const v of f.values) {
+            const rangeMatch = v.match(/^(\d+(?:\.\d+)?)\.\.(\d+(?:\.\d+)?)$/);
+            if (rangeMatch) {
+              numericRanges.push({
+                start: parseFloat(rangeMatch[1]),
+                end: parseFloat(rangeMatch[2]),
+                endInclusive: true,
+              });
+            } else {
+              stringValues.push(v);
+            }
+          }
+
+          if (stringValues.length || numericRanges.length) {
+            facets.push({
+              facetId: f.facetId,
+              ...(stringValues.length ? {values: stringValues} : {}),
+              ...(numericRanges.length ? {numericRanges} : {}),
+            });
+          }
+        }
+      }
+
       const action: BackendInterfaceAction = {
         type: 'restore_state',
         interfaceId,
         query: parsed.query,
-        facets: parsed.facets?.map((f) => ({
-          facetId: f.facetId,
-          values: f.values,
-        })),
+        facets: facets.length ? facets : undefined,
         page: parsed.page ?? 0,
         sort: parsed.sort,
       };

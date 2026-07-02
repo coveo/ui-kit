@@ -47,14 +47,49 @@ export function useInitialUrlRestore() {
 
     const interfaceId = parsed.interfaceId ?? 'ui-1';
 
+    const facets: {
+      facetId: string;
+      values?: string[];
+      numericRanges?: {start: number; end: number; endInclusive: boolean}[];
+    }[] = [];
+
+    if (parsed.facets) {
+      for (const f of parsed.facets) {
+        const numericRanges: {
+          start: number;
+          end: number;
+          endInclusive: boolean;
+        }[] = [];
+        const stringValues: string[] = [];
+
+        for (const v of f.values) {
+          const rangeMatch = v.match(/^(\d+(?:\.\d+)?)\.\.(\d+(?:\.\d+)?)$/);
+          if (rangeMatch) {
+            numericRanges.push({
+              start: parseFloat(rangeMatch[1]),
+              end: parseFloat(rangeMatch[2]),
+              endInclusive: true,
+            });
+          } else {
+            stringValues.push(v);
+          }
+        }
+
+        if (stringValues.length || numericRanges.length) {
+          facets.push({
+            facetId: f.facetId,
+            ...(stringValues.length ? {values: stringValues} : {}),
+            ...(numericRanges.length ? {numericRanges} : {}),
+          });
+        }
+      }
+    }
+
     converseController.sendAction({
       type: 'restore_state',
       interfaceId,
       query: parsed.query,
-      facets: parsed.facets?.map((f) => ({
-        facetId: f.facetId,
-        values: f.values,
-      })),
+      facets: facets.length ? facets : undefined,
       page: parsed.page ?? 0,
       sort: parsed.sort,
     });

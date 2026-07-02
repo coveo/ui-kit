@@ -229,6 +229,10 @@ function NumericFacetGroup({interfaceId, facetId}: FacetGroupProps) {
     interval: '',
   });
   const [rangeValue, setRangeValue] = useState<[number, number]>([0, 100]);
+  const [fullDomain, setFullDomain] = useState<{
+    min: number;
+    max: number;
+  } | null>(null);
   const controllerRef = useRef<BackendNumericFacetController | null>(null);
 
   useEffect(() => {
@@ -242,24 +246,71 @@ function NumericFacetGroup({interfaceId, facetId}: FacetGroupProps) {
     controllerRef.current = controller;
     setState(controller.state);
 
-    if (controller.state.domain) {
-      setRangeValue([controller.state.domain.min, controller.state.domain.max]);
+    const getDomain = (s: BackendNumericFacetControllerState) =>
+      s.domain ??
+      (s.values.length > 0
+        ? {min: s.values[0].start, max: s.values[s.values.length - 1].end}
+        : null);
+
+    const getSelectedRange = (
+      s: BackendNumericFacetControllerState
+    ): [number, number] | null => {
+      const selected = s.values.filter((v: any) => v.state === 'selected');
+      if (selected.length > 0) {
+        return [selected[0].start, selected[selected.length - 1].end];
+      }
+      return null;
+    };
+
+    const initDomain = (
+      d: {min: number; max: number} | null,
+      sel: [number, number] | null
+    ) => {
+      if (!d) return;
+      setFullDomain((prev) => {
+        if (!prev) return d;
+        return {
+          min: Math.min(prev.min, d.min, ...(sel ? [sel[0]] : [])),
+          max: Math.max(prev.max, d.max, ...(sel ? [sel[1]] : [])),
+        };
+      });
+    };
+
+    const d = getDomain(controller.state);
+    const selected = getSelectedRange(controller.state);
+    initDomain(d, selected);
+
+    if (selected) {
+      setRangeValue(selected);
+    } else if (d) {
+      setRangeValue([d.min, d.max]);
     }
 
     return controller.subscribe(() => {
       setState(controller.state);
-      if (controller.state.domain) {
-        setRangeValue([
-          controller.state.domain.min,
-          controller.state.domain.max,
-        ]);
+      const updated = getDomain(controller.state);
+      const sel = getSelectedRange(controller.state);
+      initDomain(updated, sel);
+
+      if (sel) {
+        setRangeValue(sel);
       }
     });
   }, [interfaceId, facetId]);
 
   if (!state.values.length && !state.domain) return null;
 
-  const handleRangeChangeEnd = (value: [number, number]) => {
+  const domain =
+    fullDomain ??
+    state.domain ??
+    (state.values.length > 0
+      ? {
+          min: state.values[0].start,
+          max: state.values[state.values.length - 1].end,
+        }
+      : null);
+
+  const commitRange = (value: [number, number]) => {
     controllerRef.current?.setRange({
       start: value[0],
       end: value[1],
@@ -282,47 +333,72 @@ function NumericFacetGroup({interfaceId, facetId}: FacetGroupProps) {
         )}
       </Group>
 
-      {state.domain && (
+      {domain && (
         <>
-          <Text size="xs" c="dimmed" mb={4}>
-            ${Math.round(rangeValue[0])} – ${Math.round(rangeValue[1])}
+          <Text size="sm" c="dimmed" mb={8}>
+            ${Math.round(rangeValue[0]).toLocaleString()} – $
+            {Math.round(rangeValue[1]).toLocaleString()}
           </Text>
-          <RangeSlider
-            min={state.domain.min}
-            max={state.domain.max}
+          <DebouncedRangeSlider
+            min={domain.min}
+            max={domain.max}
             value={rangeValue}
             onChange={setRangeValue}
-            onChangeEnd={handleRangeChangeEnd}
-            size="sm"
-            mb="xs"
-            label={(val) => `$${Math.round(val)}`}
+            onCommit={commitRange}
+            color="dark"
+            size="lg"
+            label={null}
+            thumbSize={20}
+            styles={{
+              thumb: {
+                backgroundColor: 'white',
+                borderWidth: 3,
+                borderColor: 'var(--mantine-color-dark-9)',
+              },
+            }}
           />
         </>
       )}
-
-      {state.values.length > 0 && (
-        <Stack gap={2}>
-          {state.values.map((rangeValue) => (
-            <Group
-              key={`${rangeValue.start}-${rangeValue.end}`}
-              justify="space-between"
-              wrap="nowrap"
-              gap="xs"
-            >
-              <Checkbox
-                size="xs"
-                label={`$${Math.round(rangeValue.start)} – $${Math.round(rangeValue.end)}`}
-                checked={rangeValue.state === 'selected'}
-                onChange={() => controllerRef.current?.toggleSelect(rangeValue)}
-                styles={{label: {fontSize: 13}}}
-              />
-              <Text size="xs" c="dimmed">
-                {rangeValue.numberOfResults}
-              </Text>
-            </Group>
-          ))}
-        </Stack>
-      )}
     </Box>
+  );
+}
+
+function DebouncedRangeSlider({
+  onChange,
+  onCommit,
+  ...props
+}: Omit<
+  React.ComponentProps<typeof RangeSlider>,
+  'onChange' | 'onChangeEnd'
+> & {
+  onChange: (value: [number, number]) => void;
+  onCommit: (value: [number, number]) => void;
+}) {
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleChange = (value: [number, number]) => {
+    onChange(value);
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+    timerRef.current = setTimeout(() => {
+      onCommit(value);
+    }, 500);
+  };
+
+  const handleChangeEnd = (value: [number, number]) => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+    onCommit(value);
+  };
+
+  return (
+    <RangeSlider
+      {...props}
+      onChange={handleChange}
+      onChangeEnd={handleChangeEnd}
+    />
   );
 }
