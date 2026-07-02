@@ -51,7 +51,7 @@ A new class responsible for storing and clearing per-interface caches.
 
 ```typescript
 // Branded symbol type for type-safe registry access
-export type CacheKey<T> = symbol & { __type: T };
+export type CacheKey<T> = symbol & {__type: T};
 
 export function createCacheKey<T>(description: string): CacheKey<T> {
   return Symbol(description) as CacheKey<T>;
@@ -124,6 +124,7 @@ export class InterfaceCacheRegistry {
 ```
 
 **Key decisions:**
+
 - Uses `CacheKey<T>` (branded symbol) for type-safe retrieval without casts at call-sites.
 - `#entries` is a `Map<symbol, unknown>` internally — the branding is compile-time only.
 - Each feature module declares its own `CacheKey<T>` constant co-located with the factory function.
@@ -143,7 +144,7 @@ export interface InterfaceInternals<T extends InterfaceType = InterfaceType> {
   engine: FullEngine;
   stateId: string;
   type: T;
-  cacheRegistry: InterfaceCacheRegistry;  // NEW
+  cacheRegistry: InterfaceCacheRegistry; // NEW
 }
 
 export abstract class BaseInterface<T extends InterfaceType> {
@@ -152,7 +153,7 @@ export abstract class BaseInterface<T extends InterfaceType> {
   #type: T;
   #resolvers: Record<Facades[T], FacadeResolverFactory>;
   #facadeCache = new Map<string, EndpointThunk>();
-  #cacheRegistry: InterfaceCacheRegistry;  // NEW
+  #cacheRegistry: InterfaceCacheRegistry; // NEW
   #disposed = false;
 
   static {
@@ -160,7 +161,7 @@ export abstract class BaseInterface<T extends InterfaceType> {
       engine: iface.#engine,
       stateId: iface.#stateId,
       type: iface.#type,
-      cacheRegistry: iface.#cacheRegistry,  // NEW
+      cacheRegistry: iface.#cacheRegistry, // NEW
     });
   }
 
@@ -174,20 +175,20 @@ export abstract class BaseInterface<T extends InterfaceType> {
     this.#stateId = stateId;
     this.#type = type;
     this.#resolvers = resolvers;
-    this.#cacheRegistry = new InterfaceCacheRegistry();  // NEW
+    this.#cacheRegistry = new InterfaceCacheRegistry(); // NEW
 
     // Register with engine for cascade dispose
-    engine.addInterface(this);  // NEW
+    engine.addInterface(this); // NEW
   }
 
   dispose(): void {
     if (this.#disposed) {
-      return;  // Idempotent
+      return; // Idempotent
     }
     this.#disposed = true;
-    this.#cacheRegistry.dispose();  // NEW: dispose registry first
+    this.#cacheRegistry.dispose(); // NEW: dispose registry first
     this.#facadeCache.clear();
-    this.#engine.removeInterface(this);  // NEW: deregister from engine
+    this.#engine.removeInterface(this); // NEW: deregister from engine
   }
   // ... rest unchanged
 }
@@ -200,7 +201,7 @@ export abstract class BaseInterface<T extends InterfaceType> {
 New internal `Set` tracking registered interfaces, new methods on `FullEngine`:
 
 ```typescript
-type EngineTrackedInterface = { disposed: boolean; dispose(): void };
+type EngineTrackedInterface = {disposed: boolean; dispose(): void};
 
 export type FullEngine = Engine & {
   adoptSlice(slice: Slice): Promise<void>;
@@ -209,13 +210,19 @@ export type FullEngine = Engine & {
   read<T>(selector: StateSelector<T>): T;
   addInterface(iface: EngineTrackedInterface): void;
   removeInterface(iface: EngineTrackedInterface): void;
-  storeHydrationSnapshot(interfaceId: string, content: Record<string, unknown>): void;
-  subscribe<T>(selector: StateSelector<T>, callback: StateChangeCallback<T>): Unsubscribe;
+  storeHydrationSnapshot(
+    interfaceId: string,
+    content: Record<string, unknown>
+  ): void;
+  subscribe<T>(
+    selector: StateSelector<T>,
+    callback: StateChangeCallback<T>
+  ): Unsubscribe;
 };
 
 export class Engine {
   // ...existing fields...
-  #interfaces = new Set<EngineTrackedInterface>();  // NEW
+  #interfaces = new Set<EngineTrackedInterface>(); // NEW
 
   static {
     getFullEngine = (engine: Engine) => {
@@ -223,9 +230,9 @@ export class Engine {
       const wrapper = {
         // ...existing methods...
         addInterface: (iface: EngineTrackedInterface) =>
-          engine.#addInterface(iface),                // NEW
+          engine.#addInterface(iface), // NEW
         removeInterface: (iface: EngineTrackedInterface) =>
-          engine.#removeInterface(iface),              // NEW
+          engine.#removeInterface(iface), // NEW
       } as FullEngine;
       // ...
     };
@@ -266,6 +273,7 @@ export class Engine {
 ```
 
 **Key decisions:**
+
 - `#interfaces` (Set) for O(1) add/remove/membership testing.
 - `removeInterface` does not assert not-disposed — it's called during the cascade.
 - Idempotent `dispose()` via early return when already disposed.
@@ -278,7 +286,10 @@ Each feature module's `getOrCreate*` function changes from using a module-level 
 **Before (e.g., `search-box-actions.ts`):**
 
 ```typescript
-const actionsCache = new Map<string, ReturnType<typeof createSearchBoxActions>>();
+const actionsCache = new Map<
+  string,
+  ReturnType<typeof createSearchBoxActions>
+>();
 
 export function getOrCreateSearchBoxActions(interfaceId: string) {
   if (!actionsCache.has(interfaceId)) {
@@ -291,21 +302,30 @@ export function getOrCreateSearchBoxActions(interfaceId: string) {
 **After:**
 
 ```typescript
-import {type CacheKey, createCacheKey} from '@/src/core/interface/cache/interface-cache-registry.js';
+import {
+  type CacheKey,
+  createCacheKey,
+} from '@/src/core/interface/cache/interface-cache-registry.js';
 import {getHandleInternals} from '@/src/core/interface/utils/get-handle-internals.js';
 import type {Supports} from '@/src/core/interface/utils/interface-types.js';
 
 type SearchBoxActions = ReturnType<typeof createSearchBoxActions>;
 
-const CACHE_KEY: CacheKey<SearchBoxActions> = createCacheKey<SearchBoxActions>('searchBox/actions');
+const CACHE_KEY: CacheKey<SearchBoxActions> =
+  createCacheKey<SearchBoxActions>('searchBox/actions');
 
-export function getOrCreateSearchBoxActions(iface: Supports<Facades[InterfaceType]>): SearchBoxActions {
+export function getOrCreateSearchBoxActions(
+  iface: Supports<Facades[InterfaceType]>
+): SearchBoxActions {
   const {stateId, cacheRegistry} = getHandleInternals(iface);
-  return cacheRegistry.getOrCreate(CACHE_KEY, () => createSearchBoxActions(stateId));
+  return cacheRegistry.getOrCreate(CACHE_KEY, () =>
+    createSearchBoxActions(stateId)
+  );
 }
 ```
 
 **Key points:**
+
 - **No registry in the signature** — factories accept the interface handle (same type controllers use) and extract internals via `getHandleInternals`. Works for both `BaseInterface` and `ComposedInterface`.
 - **No cast needed** — `registry.getOrCreate(CACHE_KEY, factory)` returns `SearchBoxActions` directly via `CacheKey<T>` inference.
 - **Type-safe** — the factory return type must match `CacheKey<T>`'s type parameter.
@@ -317,16 +337,22 @@ export function getOrCreateSearchBoxActions(iface: Supports<Facades[InterfaceTyp
 
 ```typescript
 // search-box-slice.ts
-import {type CacheKey, createCacheKey} from '@/src/core/interface/cache/interface-cache-registry.js';
+import {
+  type CacheKey,
+  createCacheKey,
+} from '@/src/core/interface/cache/interface-cache-registry.js';
 import {getHandleInternals} from '@/src/core/interface/utils/get-handle-internals.js';
 import type {Supports} from '@/src/core/interface/utils/interface-types.js';
 import {getOrCreateSearchBoxActions} from './search-box-actions.js';
 
 type SearchBoxSlice = ReturnType<typeof createSearchBoxSlice>;
 
-const CACHE_KEY: CacheKey<SearchBoxSlice> = createCacheKey<SearchBoxSlice>('searchBox/slice');
+const CACHE_KEY: CacheKey<SearchBoxSlice> =
+  createCacheKey<SearchBoxSlice>('searchBox/slice');
 
-export function getOrCreateSearchBoxSlice(iface: Supports<Facades[InterfaceType]>): SearchBoxSlice {
+export function getOrCreateSearchBoxSlice(
+  iface: Supports<Facades[InterfaceType]>
+): SearchBoxSlice {
   const {stateId, cacheRegistry} = getHandleInternals(iface);
   return cacheRegistry.getOrCreate(CACHE_KEY, () => {
     const actions = getOrCreateSearchBoxActions(iface);
@@ -336,6 +362,7 @@ export function getOrCreateSearchBoxSlice(iface: Supports<Facades[InterfaceType]
 ```
 
 **Pattern applied uniformly to:**
+
 - `*-actions.ts` — `getOrCreateXxxActions(iface: Supports<Facades[InterfaceType]>)`
 - `*-slice.ts` — `getOrCreateXxxSlice(iface: Supports<Facades[InterfaceType]>)`
 - `*-selectors.ts` — `getOrCreateXxxSelectors(iface: Supports<Facades[InterfaceType]>)`
@@ -413,21 +440,21 @@ export class ComposedInterface<T extends InterfaceType> {
   #engine: FullEngine;
   #stateId: string;
   #interfaces: BaseInterface<T>[];
-  #cacheRegistry: InterfaceCacheRegistry;  // NEW
-  #disposed = false;  // NEW
+  #cacheRegistry: InterfaceCacheRegistry; // NEW
+  #disposed = false; // NEW
 
   static {
     getComposedInternals = (composed) => ({
       engine: composed.#engine,
       stateId: composed.#stateId,
-      cacheRegistry: composed.#cacheRegistry,  // NEW
+      cacheRegistry: composed.#cacheRegistry, // NEW
     });
   }
 
   constructor(interfaces: BaseInterface<T>[], composedId: string) {
     // ... existing setup ...
-    this.#cacheRegistry = new InterfaceCacheRegistry();  // NEW
-    this.#engine.addInterface(this);  // NEW
+    this.#cacheRegistry = new InterfaceCacheRegistry(); // NEW
+    this.#engine.addInterface(this); // NEW
   }
 
   dispose(): void {
@@ -435,7 +462,7 @@ export class ComposedInterface<T extends InterfaceType> {
       return;
     }
     this.#disposed = true;
-    this.#cacheRegistry.dispose();  // Disposes shared caches only
+    this.#cacheRegistry.dispose(); // Disposes shared caches only
     this.#engine.removeInterface(this);
     // Does NOT dispose sub-interfaces
   }
@@ -449,7 +476,8 @@ export class ComposedInterface<T extends InterfaceType> {
 ```
 
 **Key decisions:**
-- ComposedInterface owns a registry for *shared* caches (selectors/thunks scoped to `composedInterfaceId`).
+
+- ComposedInterface owns a registry for _shared_ caches (selectors/thunks scoped to `composedInterfaceId`).
 - Registers with Engine → cascade dispose cleans up shared caches.
 - `dispose()` does NOT cascade to sub-interfaces — their lifecycle is independent.
 - Disposing a sub-interface individually does NOT affect the ComposedInterface's registry.
@@ -516,16 +544,16 @@ engine.dispose()
 
 ## Error Handling
 
-| Scenario | Behavior |
-|----------|----------|
-| `registry.get(key)` on disposed registry | Throws: "Cannot access InterfaceCacheRegistry: the owning interface has been disposed." |
-| `registry.set(key, value)` on disposed registry | Throws: same message |
-| `getOrCreate*` with disposed registry | Throws via registry's `#assertNotDisposed()` |
-| `interface.dispose()` called twice | No-op (idempotent) |
-| `engine.dispose()` called twice | No-op (idempotent) |
-| `composed.dispose()` called twice | No-op (idempotent) |
-| Engine cascade encounters already-disposed interface | Skips (checks `iface.disposed` before calling) |
-| `engine.addInterface()` on disposed engine | Throws: "Cannot operate on a disposed Engine." |
+| Scenario                                             | Behavior                                                                                |
+| ---------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `registry.get(key)` on disposed registry             | Throws: "Cannot access InterfaceCacheRegistry: the owning interface has been disposed." |
+| `registry.set(key, value)` on disposed registry      | Throws: same message                                                                    |
+| `getOrCreate*` with disposed registry                | Throws via registry's `#assertNotDisposed()`                                            |
+| `interface.dispose()` called twice                   | No-op (idempotent)                                                                      |
+| `engine.dispose()` called twice                      | No-op (idempotent)                                                                      |
+| `composed.dispose()` called twice                    | No-op (idempotent)                                                                      |
+| Engine cascade encounters already-disposed interface | Skips (checks `iface.disposed` before calling)                                          |
+| `engine.addInterface()` on disposed engine           | Throws: "Cannot operate on a disposed Engine."                                          |
 
 ## Interfaces
 
@@ -559,14 +587,14 @@ interface InterfaceInternals<T extends InterfaceType = InterfaceType> {
 interface ComposedInternals {
   engine: FullEngine;
   stateId: string;
-  cacheRegistry: InterfaceCacheRegistry;  // NEW
+  cacheRegistry: InterfaceCacheRegistry; // NEW
 }
 ```
 
 ### Updated FullEngine
 
 ```typescript
-type EngineTrackedInterface = { disposed: boolean; dispose(): void };
+type EngineTrackedInterface = {disposed: boolean; dispose(): void};
 
 type FullEngine = Engine & {
   adoptSlice(slice: Slice): Promise<void>;
@@ -575,8 +603,14 @@ type FullEngine = Engine & {
   read<T>(selector: StateSelector<T>): T;
   addInterface(iface: EngineTrackedInterface): void;
   removeInterface(iface: EngineTrackedInterface): void;
-  storeHydrationSnapshot(interfaceId: string, content: Record<string, unknown>): void;
-  subscribe<T>(selector: StateSelector<T>, callback: StateChangeCallback<T>): Unsubscribe;
+  storeHydrationSnapshot(
+    interfaceId: string,
+    content: Record<string, unknown>
+  ): void;
+  subscribe<T>(
+    selector: StateSelector<T>,
+    callback: StateChangeCallback<T>
+  ): Unsubscribe;
 };
 ```
 
@@ -613,89 +647,89 @@ export function getHandleInternals(handle: Supports<Facades[InterfaceType]>): {
 
 ## File Changes Summary
 
-| File | Change |
-|------|--------|
-| `src/core/interface/cache/interface-cache-registry.ts` | **New** — InterfaceCacheRegistry class, `CacheKey<T>` type, and `createCacheKey<T>()` helper |
-| `src/core/interface/base-interface.ts` | Add `#cacheRegistry`, expose in internals, dispose cascade, engine registration |
-| `src/core/interface/engine/engine.ts` | Add `#interfaces`, `addInterface`, `removeInterface`, idempotent dispose, cascade logic |
-| `src/core/internal/search-box/search-box-actions.ts` | Remove module Map, accept registry param |
-| `src/core/internal/search-box/search-box-slice.ts` | Remove module Map, accept registry param |
-| `src/core/internal/search-box/search-box-selectors.ts` | Remove module Map, accept registry param |
-| `src/core/internal/search-parameters/*` | Same pattern |
-| `src/core/internal/pagination/*` | Same pattern |
-| `src/core/internal/cart/*` | Same pattern |
-| `src/core/internal/facets/*` | Same pattern |
-| `src/core/internal/result-list/*` | Same pattern |
-| `src/core/internal/product-list/*` | Same pattern |
-| `src/core/internal/sort/*` | Same pattern |
-| `src/core/internal/query-correction/*` | Same pattern |
-| `src/core/internal/generative/*` | Same pattern |
-| `src/core/internal/triggers/*` | Same pattern |
-| `src/public/interfaces/search.ts` | Pass registry to factory calls |
-| `src/public/interfaces/commerce.ts` | Pass registry to factory calls |
-| `src/public/interfaces/generative.ts` | Pass registry to factory calls |
-| `src/public/interfaces/compose.ts` | Add `#cacheRegistry`, `#disposed`, expose in `getComposedInternals`, register/unregister with Engine, implement `dispose()` |
+| File                                                   | Change                                                                                                                      |
+| ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------- |
+| `src/core/interface/cache/interface-cache-registry.ts` | **New** — InterfaceCacheRegistry class, `CacheKey<T>` type, and `createCacheKey<T>()` helper                                |
+| `src/core/interface/base-interface.ts`                 | Add `#cacheRegistry`, expose in internals, dispose cascade, engine registration                                             |
+| `src/core/interface/engine/engine.ts`                  | Add `#interfaces`, `addInterface`, `removeInterface`, idempotent dispose, cascade logic                                     |
+| `src/core/internal/search-box/search-box-actions.ts`   | Remove module Map, accept registry param                                                                                    |
+| `src/core/internal/search-box/search-box-slice.ts`     | Remove module Map, accept registry param                                                                                    |
+| `src/core/internal/search-box/search-box-selectors.ts` | Remove module Map, accept registry param                                                                                    |
+| `src/core/internal/search-parameters/*`                | Same pattern                                                                                                                |
+| `src/core/internal/pagination/*`                       | Same pattern                                                                                                                |
+| `src/core/internal/cart/*`                             | Same pattern                                                                                                                |
+| `src/core/internal/facets/*`                           | Same pattern                                                                                                                |
+| `src/core/internal/result-list/*`                      | Same pattern                                                                                                                |
+| `src/core/internal/product-list/*`                     | Same pattern                                                                                                                |
+| `src/core/internal/sort/*`                             | Same pattern                                                                                                                |
+| `src/core/internal/query-correction/*`                 | Same pattern                                                                                                                |
+| `src/core/internal/generative/*`                       | Same pattern                                                                                                                |
+| `src/core/internal/triggers/*`                         | Same pattern                                                                                                                |
+| `src/public/interfaces/search.ts`                      | Pass registry to factory calls                                                                                              |
+| `src/public/interfaces/commerce.ts`                    | Pass registry to factory calls                                                                                              |
+| `src/public/interfaces/generative.ts`                  | Pass registry to factory calls                                                                                              |
+| `src/public/interfaces/compose.ts`                     | Add `#cacheRegistry`, `#disposed`, expose in `getComposedInternals`, register/unregister with Engine, implement `dispose()` |
 
 ## Correctness Properties
 
-*A property is a characteristic or behavior that should hold true across all valid executions of a system — essentially, a formal statement about what the system should do. Properties serve as the bridge between human-readable specifications and machine-verifiable correctness guarantees.*
+_A property is a characteristic or behavior that should hold true across all valid executions of a system — essentially, a formal statement about what the system should do. Properties serve as the bridge between human-readable specifications and machine-verifiable correctness guarantees._
 
 ### Property 1: Registry store/retrieve round-trip
 
-*For any* `CacheKey<T>` and any value of type `T`, registering the entry via `registry.set(key, value)` and then calling `registry.get(key)` SHALL return the same value with the correct type `T | undefined`, and calling `registry.get(otherKey)` for any `CacheKey` that was never registered SHALL return `undefined`.
+_For any_ `CacheKey<T>` and any value of type `T`, registering the entry via `registry.set(key, value)` and then calling `registry.get(key)` SHALL return the same value with the correct type `T | undefined`, and calling `registry.get(otherKey)` for any `CacheKey` that was never registered SHALL return `undefined`.
 
 **Validates: Requirements 1.1, 1.2, 1.5**
 
 ### Property 2: Registry dispose clears all entries
 
-*For any* set of N registered entries in an InterfaceCacheRegistry, calling `dispose()` SHALL result in all subsequent `get(key)` calls throwing a disposed error, and the internal map SHALL be empty.
+_For any_ set of N registered entries in an InterfaceCacheRegistry, calling `dispose()` SHALL result in all subsequent `get(key)` calls throwing a disposed error, and the internal map SHALL be empty.
 
 **Validates: Requirements 1.3**
 
 ### Property 3: BaseInterface dispose cascades to registry
 
-*For any* BaseInterface instance with N entries registered in its InterfaceCacheRegistry, calling `interface.dispose()` SHALL result in the owned registry being disposed (i.e., `registry.disposed === true`).
+_For any_ BaseInterface instance with N entries registered in its InterfaceCacheRegistry, calling `interface.dispose()` SHALL result in the owned registry being disposed (i.e., `registry.disposed === true`).
 
 **Validates: Requirements 2.3**
 
 ### Property 4: Factory idempotence via registry
 
-*For any* interface ID and InterfaceCacheRegistry, calling a `getOrCreate*` factory function twice with the same arguments SHALL return the same object reference on both calls, and the registry SHALL contain exactly one entry for that cache key.
+_For any_ interface ID and InterfaceCacheRegistry, calling a `getOrCreate*` factory function twice with the same arguments SHALL return the same object reference on both calls, and the registry SHALL contain exactly one entry for that cache key.
 
 **Validates: Requirements 3.1, 3.2**
 
 ### Property 5: Engine registration invariant
 
-*For any* sequence of N interface constructions against an engine, the engine SHALL track exactly N interfaces. *For any* subset of those interfaces that are subsequently disposed, the engine SHALL track exactly (N - disposed count) interfaces.
+_For any_ sequence of N interface constructions against an engine, the engine SHALL track exactly N interfaces. _For any_ subset of those interfaces that are subsequently disposed, the engine SHALL track exactly (N - disposed count) interfaces.
 
 **Validates: Requirements 4.1, 4.2, 4.3**
 
 ### Property 6: Engine cascade dispose
 
-*For any* engine with N registered interfaces, calling `engine.dispose()` SHALL invoke `dispose()` on each non-already-disposed interface, and the engine's interface Set SHALL be empty afterward.
+_For any_ engine with N registered interfaces, calling `engine.dispose()` SHALL invoke `dispose()` on each non-already-disposed interface, and the engine's interface Set SHALL be empty afterward.
 
 **Validates: Requirements 5.1, 5.2**
 
 ### Property 7: Disposed registry throws on access
 
-*For any* InterfaceCacheRegistry that has been disposed, calling `set()`, `get()`, or `has()` SHALL throw an error indicating the interface has been disposed.
+_For any_ InterfaceCacheRegistry that has been disposed, calling `set()`, `get()`, or `has()` SHALL throw an error indicating the interface has been disposed.
 
 **Validates: Requirements 7.1**
 
 ### Property 8: Dispose idempotence
 
-*For any* disposable object (BaseInterface or Engine), calling `dispose()` N times (where N >= 1) SHALL be equivalent to calling it exactly once — no errors are thrown and the final state is identical.
+_For any_ disposable object (BaseInterface or Engine), calling `dispose()` N times (where N >= 1) SHALL be equivalent to calling it exactly once — no errors are thrown and the final state is identical.
 
 **Validates: Requirements 7.2, 7.3**
 
 ### Property 9: Engine cascade skips pre-disposed interfaces
 
-*For any* engine with registered interfaces where a subset have been manually disposed before `engine.dispose()` is called, the engine SHALL skip those pre-disposed interfaces without error, and the remaining interfaces SHALL be disposed normally.
+_For any_ engine with registered interfaces where a subset have been manually disposed before `engine.dispose()` is called, the engine SHALL skip those pre-disposed interfaces without error, and the remaining interfaces SHALL be disposed normally.
 
 **Validates: Requirements 5.3**
 
 ### Property 10: ComposedInterface dispose independence
 
-*For any* ComposedInterface with N sub-interfaces, calling `composed.dispose()` SHALL dispose the ComposedInterface's own registry without invoking `dispose()` on any sub-interface. Conversely, disposing a sub-interface SHALL NOT affect the ComposedInterface's registry.
+_For any_ ComposedInterface with N sub-interfaces, calling `composed.dispose()` SHALL dispose the ComposedInterface's own registry without invoking `dispose()` on any sub-interface. Conversely, disposing a sub-interface SHALL NOT affect the ComposedInterface's registry.
 
 **Validates: Requirements 6.4, 6.5, 6.6**

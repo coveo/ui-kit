@@ -18,14 +18,14 @@ Migrate 37 module-level `Map` caches from global scope to interface-level owners
     - All `if` statements must have braces
     - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5_
 
-  - [ ]* 1.2 Write property tests for InterfaceCacheRegistry
+  - [ ]\* 1.2 Write property tests for InterfaceCacheRegistry
     - **Property 1: Registry store/retrieve round-trip**
     - **Property 2: Registry dispose clears all entries**
     - **Property 7: Disposed registry throws on access**
     - **Property 8: Dispose idempotence (registry)**
     - **Validates: Requirements 1.1, 1.2, 1.3, 7.1, 7.2**
 
-  - [ ]* 1.3 Write unit tests for InterfaceCacheRegistry
+  - [ ]\* 1.3 Write unit tests for InterfaceCacheRegistry
     - Test `set`/`get`/`has` with heterogeneous value types via typed CacheKey<T>
     - Test `getOrCreate` lazy factory invocation (factory called only once)
     - Test `getOrCreate` returns existing value without calling factory on second call
@@ -45,12 +45,12 @@ Migrate 37 module-level `Map` caches from global scope to interface-level owners
     - All `if` statements must have braces
     - _Requirements: 2.1, 2.2, 2.3, 2.4, 4.1, 4.3, 7.2_
 
-  - [ ]* 2.2 Write property test for BaseInterface dispose cascade
+  - [ ]\* 2.2 Write property test for BaseInterface dispose cascade
     - **Property 3: BaseInterface dispose cascades to registry**
     - **Property 8: Dispose idempotence (BaseInterface)**
     - **Validates: Requirements 2.3, 7.2**
 
-  - [ ]* 2.3 Write unit tests for BaseInterface changes
+  - [ ]\* 2.3 Write unit tests for BaseInterface changes
     - Test that constructing a BaseInterface creates a registry accessible via `getInterfaceInternals`
     - Test that constructing a BaseInterface calls `engine.addInterface`
     - Test that `dispose()` calls `engine.removeInterface`
@@ -71,13 +71,13 @@ Migrate 37 module-level `Map` caches from global scope to interface-level owners
     - All `if` statements must have braces
     - _Requirements: 4.1, 4.2, 4.3, 4.4, 5.1, 5.2, 5.3, 7.3_
 
-  - [ ]* 3.2 Write property tests for Engine registration and cascade dispose
+  - [ ]\* 3.2 Write property tests for Engine registration and cascade dispose
     - **Property 5: Engine registration invariant**
     - **Property 6: Engine cascade dispose**
     - **Property 9: Engine cascade skips pre-disposed interfaces**
     - **Validates: Requirements 4.1, 4.2, 4.3, 5.1, 5.2, 5.3**
 
-  - [ ]* 3.3 Write unit tests for Engine interface tracking
+  - [ ]\* 3.3 Write unit tests for Engine interface tracking
     - Test `addInterface` / `removeInterface` membership (Set size)
     - Test cascade dispose disposes all registered interfaces
     - Test idempotent engine dispose
@@ -114,7 +114,7 @@ Migrate 37 module-level `Map` caches from global scope to interface-level owners
     - Use `cacheRegistry.getOrCreate(CACHE_KEY, () => createSearchBoxSelectors(stateId))`
     - _Requirements: 3.1, 3.2, 3.3, 3.4_
 
-  - [ ]* 5.4 Write property test for search-box factory idempotence
+  - [ ]\* 5.4 Write property test for search-box factory idempotence
     - **Property 4: Factory idempotence via registry**
     - Test that calling `getOrCreateSearchBoxActions(iface)` twice returns same reference
     - **Validates: Requirements 3.1, 3.2**
@@ -347,7 +347,7 @@ Migrate 37 module-level `Map` caches from global scope to interface-level owners
     - All `if` statements must have braces
     - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 6.7_
 
-  - [ ]* 21.2 Write unit tests for ComposedInterface registry
+  - [ ]\* 21.2 Write unit tests for ComposedInterface registry
     - Test that ComposedInterface creates a registry
     - Test that ComposedInterface registers with engine
     - Test that dispose() clears registry but not sub-interfaces
