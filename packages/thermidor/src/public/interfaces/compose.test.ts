@@ -155,7 +155,7 @@ describe('ComposedInterface', () => {
     expect(spyA).toHaveBeenCalledWith('search', overrideInterface);
   });
 
-  it('dispose does not throw and is a no-op', () => {
+  it('dispose does not throw', () => {
     const engine = getFullEngine(new Engine());
     const ifaceA = new TestSearchInterface(engine, 'a');
 
