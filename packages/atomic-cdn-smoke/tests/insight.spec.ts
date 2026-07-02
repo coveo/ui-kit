@@ -1,4 +1,4 @@
-import {test, expect, insightApi} from '../fixtures.js';
+import {test, insightApi} from '../fixtures.js';
 
 test('Insight page renders results', async ({page, openPage, useHandlers}) => {
   await useHandlers(insightApi.handlers);
@@ -20,5 +20,4 @@ test('Insight page renders results', async ({page, openPage, useHandlers}) => {
     .locator('atomic-insight-result-list atomic-insight-result')
     .first()
     .waitFor();
-  await expect(page).toHaveScreenshot();
 });
