@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "@coveo/platform-mock-api": "workspace:*",
-    "@msw/playwright": "0.6.7",
+    "@msw/playwright": "catalog:",
     "@playwright/test": "catalog:",
     "@testing-library/jest-dom": "6.9.1",
     "@testing-library/react": "catalog:",
