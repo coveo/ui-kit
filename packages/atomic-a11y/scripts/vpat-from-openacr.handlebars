@@ -20,6 +20,23 @@ International Edition
 
 **Evaluation Methods Used:** {{evaluation_methods_used}}
 
+## Executive Summary
+
+{{#with (conformanceSummary chapters)}}
+| Conformance Level | Criteria Count |
+| --- | --- |
+| Supports | {{supports}} |
+| Partially Supports | {{partiallySupports}} |
+| Does Not Support | {{doesNotSupport}} |
+| Not Applicable | {{notApplicable}} |
+| **Total** | **{{total}}** |
+{{/with}}
+
+## Testing Methodology
+
+Conformance is determined using automated scanning, interactive keyboard testing, and manual review. Each criterion is tested only against components where it applies, the component count shown per row reflects this scope.
+
+
 ## Applicable Standards/Guidelines
 
 This report covers the degree of conformance for the following accessibility standard/guidelines:
