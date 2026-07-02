@@ -18,9 +18,10 @@ describe('facetMutations', () => {
 
   describe('updateFromResponse()', () => {
     it('should return StateMutation object', () => {
-      const mutation = updateFromResponse(undefined, iface);
-      expect(mutation).toHaveProperty('type');
-      expect(mutation).toHaveProperty('payload');
+      const facets = [{facetId: 'cat', field: 'cat', values: []}];
+      const mutation = updateFromResponse(facets, iface);
+      expect(mutation.type).toBe('default/facets/updateFromResponse');
+      expect(mutation.payload).toEqual(facets);
     });
 
     it('should update facet values when used with mutate()', () => {
