@@ -55,14 +55,14 @@ const templates: Template[] = [
   {
     name: 'atomic-search',
     library: 'atomic',
-    label: 'Search (vanilla + Vite)',
-    packageName: '@coveo/sample-atomic-search',
+    label: 'Search (Vite)',
+    packageName: '@coveo/sample-atomic-search-vite',
   },
   {
     name: 'atomic-commerce',
     library: 'atomic',
-    label: 'Commerce (vanilla + Vite)',
-    packageName: '@coveo/sample-atomic-commerce',
+    label: 'Commerce (Vite)',
+    packageName: '@coveo/sample-atomic-commerce-vite',
   },
   {
     name: 'atomic-search-react',
@@ -79,14 +79,14 @@ const templates: Template[] = [
   {
     name: 'headless-search',
     library: 'headless',
-    label: 'Search (vanilla + Vite)',
-    packageName: '@coveo/sample-headless-search',
+    label: 'Search (Vite)',
+    packageName: '@coveo/sample-headless-search-vite',
   },
   {
     name: 'headless-commerce',
     library: 'headless',
-    label: 'Commerce (vanilla + Vite)',
-    packageName: '@coveo/sample-headless-commerce',
+    label: 'Commerce (Vite)',
+    packageName: '@coveo/sample-headless-commerce-vite',
   },
   {
     name: 'headless-search-react',
