@@ -1,5 +1,15 @@
 import {useState, useEffect, useRef} from 'react';
 import {
+  SimpleGrid,
+  Card,
+  Image,
+  Text,
+  Group,
+  Select,
+  Box,
+  Stack,
+} from '@mantine/core';
+import {
   buildBackendProductListController,
   buildBackendPaginationController,
   buildBackendInteractiveProductController,
@@ -21,6 +31,8 @@ import {
 } from '../../hooks/useUrlManager.js';
 import styles from './BackendResults.module.css';
 
+const PAGE_SIZE_OPTIONS = ['10', '25', '50'];
+
 export function BackendResults() {
   const [interfaces, setInterfaces] = useState<
     Record<
@@ -31,7 +43,7 @@ export function BackendResults() {
   const [products, setProducts] = useState<Record<string, unknown>[]>([]);
   const [pagination, setPagination] = useState({
     page: 0,
-    pageSize: 0,
+    pageSize: 25,
     totalCount: 0,
     totalPages: 0,
   });
@@ -118,57 +130,62 @@ export function BackendResults() {
       }>;
       moreValuesAvailable: boolean;
     }>) ?? [];
-  const [queryInput, setQueryInput] = useState(query);
-
-  useEffect(() => {
-    setQueryInput(query);
-  }, [query]);
 
   if (!firstInterfaceId) {
     return null;
   }
 
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (queryInput.trim()) {
-      converseController.sendAction({
-        type: 'execute_search',
-        query: queryInput.trim(),
-      });
-    }
-  };
-
   return (
-    <aside className={styles.panel}>
-      <form className={styles.searchForm} onSubmit={handleSearchSubmit}>
-        <input
-          className={styles.searchInput}
-          type="text"
-          value={queryInput}
-          onChange={(e) => setQueryInput(e.target.value)}
-          placeholder="Search products..."
-        />
-        <button type="submit" className={styles.searchButton}>
-          Search
-        </button>
-      </form>
-      <div className={styles.toolbar}>
-        <div className={styles.meta}>
-          {pagination.totalCount} results — Page {pagination.page + 1} of{' '}
-          {pagination.totalPages}
-        </div>
-        <SortDropdown interfaceId={firstInterfaceId} />
-      </div>
-      <div className={styles.body}>
+    <div className={styles.layout}>
+      <aside className={styles.sidebar}>
         <FacetPanel interfaceId={firstInterfaceId} facets={facets} />
-        <div className={styles.grid}>
+      </aside>
+
+      <div className={styles.content}>
+        {query && (
+          <Text size="sm" mb="xs">
+            Showing results for{' '}
+            <Text span fw={700}>
+              "{query}"
+            </Text>
+          </Text>
+        )}
+
+        <Group justify="space-between" align="center" mb="md">
+          <Text size="sm" c="dimmed">
+            {pagination.totalCount} results · Page {pagination.page + 1} of{' '}
+            {pagination.totalPages}
+          </Text>
+          <Group gap="sm">
+            <Group gap={4} align="center">
+              <Text size="xs" c="dimmed">
+                Per page
+              </Text>
+              <Select
+                size="xs"
+                w={70}
+                data={PAGE_SIZE_OPTIONS}
+                value={String(pagination.pageSize)}
+                onChange={(val) => {
+                  if (val) {
+                    controllersRef.current.pagination?.setPageSize(Number(val));
+                  }
+                }}
+                allowDeselect={false}
+              />
+            </Group>
+            <SortDropdown interfaceId={firstInterfaceId} />
+          </Group>
+        </Group>
+
+        <SimpleGrid cols={5} spacing="md">
           {products.map((product, i) => {
             const p = product as any;
             const position = pagination.page * pagination.pageSize + i + 1;
             return (
-              <div
+              <ProductCard
                 key={p.permanentid ?? i}
-                className={styles.card}
+                product={p}
                 onClick={() => {
                   const interactive = buildBackendInteractiveProductController({
                     interface: generativeInterface,
@@ -183,57 +200,97 @@ export function BackendResults() {
                   });
                   interactive.select();
                 }}
-              >
-                {p.ec_thumbnails?.[0] && (
-                  <img
-                    src={p.ec_thumbnails[0]}
-                    alt=""
-                    className={styles.thumb}
-                  />
-                )}
-                <div className={styles.name}>
-                  {p.ec_name ?? 'Untitled'}
-                </div>
-                <div className={styles.price}>
-                  {p.ec_promo_price != null &&
-                  p.ec_promo_price < p.ec_price ? (
-                    <>
-                      <span className={styles.promo}>
-                        ${p.ec_promo_price}
-                      </span>{' '}
-                      <span className={styles.original}>
-                        ${p.ec_price}
-                      </span>
-                    </>
-                  ) : (
-                    `$${p.ec_price ?? '—'}`
-                  )}
-                </div>
-              </div>
+              />
             );
           })}
-        </div>
+        </SimpleGrid>
+
+        {pagination.totalPages > 1 && (
+          <Group justify="center" mt="lg" gap="sm">
+            <button
+              className={styles.pageButton}
+              disabled={pagination.page === 0}
+              onClick={() =>
+                controllersRef.current.pagination?.selectPage(
+                  pagination.page - 1
+                )
+              }
+            >
+              ← Prev
+            </button>
+            <Text size="sm" c="dimmed">
+              Page {pagination.page + 1} of {pagination.totalPages}
+            </Text>
+            <button
+              className={styles.pageButton}
+              disabled={pagination.page >= pagination.totalPages - 1}
+              onClick={() =>
+                controllersRef.current.pagination?.selectPage(
+                  pagination.page + 1
+                )
+              }
+            >
+              Next →
+            </button>
+          </Group>
+        )}
       </div>
-      {pagination.totalPages > 1 && (
-        <div className={styles.paginationBar}>
-          <button
-            disabled={pagination.page === 0}
-            onClick={() =>
-              controllersRef.current.pagination?.selectPage(pagination.page - 1)
-            }
-          >
-            ← Prev
-          </button>
-          <button
-            disabled={pagination.page >= pagination.totalPages - 1}
-            onClick={() =>
-              controllersRef.current.pagination?.selectPage(pagination.page + 1)
-            }
-          >
-            Next →
-          </button>
-        </div>
-      )}
-    </aside>
+    </div>
+  );
+}
+
+interface ProductCardProps {
+  product: any;
+  onClick: () => void;
+}
+
+function ProductCard({product, onClick}: ProductCardProps) {
+  const imageUrl = product.ec_thumbnails?.[0];
+  const name = product.ec_name ?? 'Untitled';
+  const price = product.ec_promo_price ?? product.ec_price;
+  const originalPrice =
+    product.ec_promo_price != null && product.ec_promo_price < product.ec_price
+      ? product.ec_price
+      : null;
+
+  return (
+    <Card
+      padding="sm"
+      radius="md"
+      withBorder
+      className={styles.card}
+      onClick={onClick}
+    >
+      <Card.Section>
+        {imageUrl ? (
+          <Image
+            src={imageUrl}
+            alt={name}
+            h={140}
+            fit="contain"
+            bg="gray.0"
+            p="xs"
+          />
+        ) : (
+          <Box h={140} bg="gray.1" />
+        )}
+      </Card.Section>
+
+      <Stack gap={4} mt="sm">
+        <Text size="sm" fw={500} lineClamp={2} lh={1.3}>
+          {name}
+        </Text>
+        <Group gap={6} align="baseline">
+          <Text fw={700} size="md">
+            ${price ?? '—'}
+          </Text>
+          {originalPrice && (
+            <Text size="xs" td="line-through" c="dimmed">
+              ${originalPrice}
+            </Text>
+          )}
+        </Group>
+      </Stack>
+    </Card>
   );
 }

@@ -1,0 +1,44 @@
+.widget {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 380px;
+  height: 340px;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  overflow: hidden;
+  transition: all 200ms ease;
+}
+
+.widget.collapsed {
+  height: auto;
+}
+
+.widget.expanded {
+  position: relative;
+  bottom: auto;
+  right: auto;
+  width: 100%;
+  height: calc(100vh - 60px - 2 * var(--mantine-spacing-md, 16px));
+  border-radius: 16px;
+  background: var(--mantine-color-gray-0);
+}
+
+.header {
+  border-bottom: 1px solid var(--mantine-color-gray-2);
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.messages {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.inputArea {
+  flex: 0 0 auto;
+  padding-top: 8px;
+  border-top: 1px solid var(--mantine-color-gray-2);
+}

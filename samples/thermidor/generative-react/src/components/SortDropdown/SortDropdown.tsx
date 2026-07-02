@@ -1,4 +1,5 @@
 import {useState, useEffect, useRef} from 'react';
+import {Select} from '@mantine/core';
 import {
   buildBackendSortController,
   type BackendSortController,
@@ -9,7 +10,6 @@ import {
   converseController,
   generativeInterface,
 } from '../../generative-setup.js';
-import styles from './SortDropdown.module.css';
 
 interface SortDropdownProps {
   interfaceId: string;
@@ -61,9 +61,15 @@ export function SortDropdown({interfaceId}: SortDropdownProps) {
     ? serializeSort(state.appliedSort)
     : '';
 
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const data = state.availableSorts.map((sort) => ({
+    value: serializeSort(sort),
+    label: getSortLabel(sort),
+  }));
+
+  const handleChange = (value: string | null) => {
+    if (!value) return;
     const selected = state.availableSorts.find(
-      (s) => serializeSort(s) === e.target.value
+      (s) => serializeSort(s) === value
     );
     if (selected) {
       controllerRef.current?.sortBy(selected);
@@ -71,19 +77,13 @@ export function SortDropdown({interfaceId}: SortDropdownProps) {
   };
 
   return (
-    <div className={styles.container}>
-      <span className={styles.label}>Sort by:</span>
-      <select
-        className={styles.select}
-        value={currentValue}
-        onChange={handleChange}
-      >
-        {state.availableSorts.map((sort) => (
-          <option key={serializeSort(sort)} value={serializeSort(sort)}>
-            {getSortLabel(sort)}
-          </option>
-        ))}
-      </select>
-    </div>
+    <Select
+      size="xs"
+      w={140}
+      data={data}
+      value={currentValue}
+      onChange={handleChange}
+      allowDeselect={false}
+    />
   );
 }

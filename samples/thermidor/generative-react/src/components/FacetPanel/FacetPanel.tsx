@@ -1,5 +1,15 @@
 import {useState, useEffect, useRef, useCallback} from 'react';
 import {
+  Stack,
+  Text,
+  Checkbox,
+  Group,
+  TextInput,
+  UnstyledButton,
+  RangeSlider,
+  Box,
+} from '@mantine/core';
+import {
   buildBackendFacetController,
   buildBackendNumericFacetController,
   type BackendFacetController,
@@ -12,7 +22,6 @@ import {
   converseController,
   generativeInterface,
 } from '../../generative-setup.js';
-import styles from './FacetPanel.module.css';
 
 interface FacetData {
   facetId: string;
@@ -36,7 +45,7 @@ export function FacetPanel({interfaceId, facets}: FacetPanelProps) {
   if (!facets.length) return null;
 
   return (
-    <div className={styles.container}>
+    <Stack gap="lg">
       {facets.map((facet) =>
         facet.type === 'numericalRange' ? (
           <NumericFacetGroup
@@ -52,7 +61,7 @@ export function FacetPanel({interfaceId, facets}: FacetPanelProps) {
           />
         )
       )}
-    </div>
+    </Stack>
   );
 }
 
@@ -102,28 +111,24 @@ function FacetGroup({interfaceId, facetId}: FacetGroupProps) {
     };
   }, [interfaceId, facetId]);
 
-  const handleSearchInput = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const value = e.target.value;
-      setSearchInput(value);
+  const handleSearchInput = useCallback((val: string) => {
+    setSearchInput(val);
 
-      if (debounceRef.current) {
-        clearTimeout(debounceRef.current);
-      }
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
 
-      if (!value) {
-        controllerRef.current?.facetSearch.clear();
-        setSearchState({query: '', values: [], moreValuesAvailable: false});
-        return;
-      }
+    if (!val) {
+      controllerRef.current?.facetSearch.clear();
+      setSearchState({query: '', values: [], moreValuesAvailable: false});
+      return;
+    }
 
-      debounceRef.current = setTimeout(() => {
-        controllerRef.current?.facetSearch.updateText(value);
-        controllerRef.current?.facetSearch.search();
-      }, 100);
-    },
-    []
-  );
+    debounceRef.current = setTimeout(() => {
+      controllerRef.current?.facetSearch.updateText(val);
+      controllerRef.current?.facetSearch.search();
+    }, 100);
+  }, []);
 
   if (!state.values.length) return null;
 
@@ -131,33 +136,35 @@ function FacetGroup({interfaceId, facetId}: FacetGroupProps) {
     searchInput.length > 0 && searchState.values.length > 0;
 
   return (
-    <div className={styles.facet}>
-      <div className={styles.facetHeader}>
-        <h4 className={styles.facetTitle}>{state.displayName || facetId}</h4>
+    <Box>
+      <Group justify="space-between" mb={4}>
+        <Text fw={700} size="sm">
+          {state.displayName || facetId}
+        </Text>
         {state.hasActiveValues && (
-          <button
-            className={styles.clearButton}
-            onClick={() => controllerRef.current?.deselectAll()}
-          >
-            Clear
-          </button>
+          <UnstyledButton onClick={() => controllerRef.current?.deselectAll()}>
+            <Text size="xs" c="dimmed" td="underline">
+              Clear
+            </Text>
+          </UnstyledButton>
         )}
-      </div>
+      </Group>
+
       {state.moreValuesAvailable && (
-        <input
-          type="text"
-          className={styles.searchInput}
+        <TextInput
+          size="xs"
           placeholder={`Search ${state.displayName || facetId}...`}
           value={searchInput}
-          onChange={handleSearchInput}
+          onChange={(e) => handleSearchInput(e.currentTarget.value)}
+          mb={4}
         />
       )}
+
       {showSearchResults ? (
-        <ul className={styles.valueList}>
+        <Stack gap={2}>
           {searchState.values.map((searchValue) => (
-            <li
+            <UnstyledButton
               key={searchValue.rawValue}
-              className={styles.valueItem}
               onClick={() => {
                 controllerRef.current?.facetSearch.select(searchValue);
                 setSearchInput('');
@@ -167,35 +174,47 @@ function FacetGroup({interfaceId, facetId}: FacetGroupProps) {
                   moreValuesAvailable: false,
                 });
               }}
+              py={2}
+              px={4}
+              style={{borderRadius: 4}}
             >
-              <span className={styles.valueLabel}>
-                {searchValue.displayValue}
-              </span>
-              <span className={styles.valueCount}>{searchValue.count}</span>
-            </li>
+              <Group justify="space-between" wrap="nowrap">
+                <Text size="xs" truncate>
+                  {searchValue.displayValue}
+                </Text>
+                <Text size="xs" c="dimmed">
+                  {searchValue.count}
+                </Text>
+              </Group>
+            </UnstyledButton>
           ))}
-        </ul>
+        </Stack>
       ) : (
-        <ul className={styles.valueList}>
+        <Stack gap={2}>
           {state.values.map((facetValue) => (
-            <li key={facetValue.value} className={styles.valueItem}>
-              <input
-                type="checkbox"
-                className={styles.checkbox}
+            <Group
+              key={facetValue.value}
+              justify="space-between"
+              wrap="nowrap"
+              gap="xs"
+            >
+              <Checkbox
+                size="xs"
+                label={facetValue.value}
                 checked={facetValue.state === 'selected'}
                 onChange={() =>
                   controllerRef.current?.toggleSelect(facetValue.value)
                 }
+                styles={{label: {fontSize: 13}}}
               />
-              <span className={styles.valueLabel}>{facetValue.value}</span>
-              <span className={styles.valueCount}>
+              <Text size="xs" c="dimmed">
                 {facetValue.numberOfResults}
-              </span>
-            </li>
+              </Text>
+            </Group>
           ))}
-        </ul>
+        </Stack>
       )}
-    </div>
+    </Box>
   );
 }
 
@@ -209,8 +228,7 @@ function NumericFacetGroup({interfaceId, facetId}: FacetGroupProps) {
     domain: undefined,
     interval: '',
   });
-  const [minInput, setMinInput] = useState('');
-  const [maxInput, setMaxInput] = useState('');
+  const [rangeValue, setRangeValue] = useState<[number, number]>([0, 100]);
   const controllerRef = useRef<BackendNumericFacetController | null>(null);
 
   useEffect(() => {
@@ -224,85 +242,87 @@ function NumericFacetGroup({interfaceId, facetId}: FacetGroupProps) {
     controllerRef.current = controller;
     setState(controller.state);
 
-    return controller.subscribe(() => setState(controller.state));
+    if (controller.state.domain) {
+      setRangeValue([controller.state.domain.min, controller.state.domain.max]);
+    }
+
+    return controller.subscribe(() => {
+      setState(controller.state);
+      if (controller.state.domain) {
+        setRangeValue([
+          controller.state.domain.min,
+          controller.state.domain.max,
+        ]);
+      }
+    });
   }, [interfaceId, facetId]);
 
   if (!state.values.length && !state.domain) return null;
 
-  const formatRange = (start: number, end: number) =>
-    `$${Math.round(start)} - $${Math.round(end)}`;
-
-  const handleManualRange = (e: React.FormEvent) => {
-    e.preventDefault();
-    const min = parseFloat(minInput);
-    const max = parseFloat(maxInput);
-    if (!isNaN(min) && !isNaN(max) && min < max) {
-      controllerRef.current?.setRange({
-        start: min,
-        end: max,
-        endInclusive: true,
-      });
-      setMinInput('');
-      setMaxInput('');
-    }
+  const handleRangeChangeEnd = (value: [number, number]) => {
+    controllerRef.current?.setRange({
+      start: value[0],
+      end: value[1],
+      endInclusive: true,
+    });
   };
 
   return (
-    <div className={styles.facet}>
-      <div className={styles.facetHeader}>
-        <h4 className={styles.facetTitle}>{state.displayName || facetId}</h4>
+    <Box>
+      <Group justify="space-between" mb={4}>
+        <Text fw={700} size="sm">
+          {state.displayName || facetId}
+        </Text>
         {state.hasActiveValues && (
-          <button
-            className={styles.clearButton}
-            onClick={() => controllerRef.current?.deselectAll()}
-          >
-            Clear
-          </button>
+          <UnstyledButton onClick={() => controllerRef.current?.deselectAll()}>
+            <Text size="xs" c="dimmed" td="underline">
+              Clear
+            </Text>
+          </UnstyledButton>
         )}
-      </div>
-      <ul className={styles.valueList}>
-        {state.values.map((rangeValue) => (
-          <li
-            key={`${rangeValue.start}-${rangeValue.end}`}
-            className={styles.valueItem}
-          >
-            <input
-              type="checkbox"
-              className={styles.checkbox}
-              checked={rangeValue.state === 'selected'}
-              onChange={() => controllerRef.current?.toggleSelect(rangeValue)}
-            />
-            <span className={styles.valueLabel}>
-              {formatRange(rangeValue.start, rangeValue.end)}
-            </span>
-            <span className={styles.valueCount}>
-              {rangeValue.numberOfResults}
-            </span>
-          </li>
-        ))}
-      </ul>
+      </Group>
+
       {state.domain && (
-        <form className={styles.rangeForm} onSubmit={handleManualRange}>
-          <input
-            type="number"
-            className={styles.rangeInput}
-            placeholder={String(state.domain.min)}
-            value={minInput}
-            onChange={(e) => setMinInput(e.target.value)}
+        <>
+          <Text size="xs" c="dimmed" mb={4}>
+            ${Math.round(rangeValue[0])} – ${Math.round(rangeValue[1])}
+          </Text>
+          <RangeSlider
+            min={state.domain.min}
+            max={state.domain.max}
+            value={rangeValue}
+            onChange={setRangeValue}
+            onChangeEnd={handleRangeChangeEnd}
+            size="sm"
+            mb="xs"
+            label={(val) => `$${Math.round(val)}`}
           />
-          <span className={styles.rangeSeparator}>–</span>
-          <input
-            type="number"
-            className={styles.rangeInput}
-            placeholder={String(state.domain.max)}
-            value={maxInput}
-            onChange={(e) => setMaxInput(e.target.value)}
-          />
-          <button type="submit" className={styles.rangeButton}>
-            Go
-          </button>
-        </form>
+        </>
       )}
-    </div>
+
+      {state.values.length > 0 && (
+        <Stack gap={2}>
+          {state.values.map((rangeValue) => (
+            <Group
+              key={`${rangeValue.start}-${rangeValue.end}`}
+              justify="space-between"
+              wrap="nowrap"
+              gap="xs"
+            >
+              <Checkbox
+                size="xs"
+                label={`$${Math.round(rangeValue.start)} – $${Math.round(rangeValue.end)}`}
+                checked={rangeValue.state === 'selected'}
+                onChange={() => controllerRef.current?.toggleSelect(rangeValue)}
+                styles={{label: {fontSize: 13}}}
+              />
+              <Text size="xs" c="dimmed">
+                {rangeValue.numberOfResults}
+              </Text>
+            </Group>
+          ))}
+        </Stack>
+      )}
+    </Box>
   );
 }
