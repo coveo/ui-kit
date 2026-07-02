@@ -50,7 +50,7 @@ export function buildA11yReport(
               'Interactive: Storybook interactive tests for keyboard navigation and focus management',
             ]
           : []),
-        'Manual: keyboard-only testing; screen reader testing; visual inspection at 200% and 400% zoom; reflow verification at 320 CSS px viewport width; non-text contrast verification.',
+        'Manual audit: keyboard-only testing; screen reader testing; visual inspection at 200% and 400% zoom; reflow verification at 320 CSS px viewport width; non-text contrast verification.',
       ],
       axeCoreVersion,
       storybookVersion,
