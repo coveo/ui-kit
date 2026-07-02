@@ -23,9 +23,10 @@ describe('resultsMutations', () => {
 
   describe('setResultsFromResponse()', () => {
     it('should return StateMutation object', () => {
-      const mutation = setResultsFromResponse([], iface);
-      expect(mutation).toHaveProperty('type');
-      expect(mutation).toHaveProperty('payload');
+      const results = [createMockSearchResult()];
+      const mutation = setResultsFromResponse(results, iface);
+      expect(mutation.type).toBe('default/results/setResultsFromResponse');
+      expect(mutation.payload).toEqual(results);
     });
     it('should update state when used with mutate()', () => {
       const results = [createMockSearchResult()];
