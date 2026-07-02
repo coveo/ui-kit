@@ -90,6 +90,16 @@ export function renderVpat(
     }
   );
 
+  instance.registerHelper('dateFormat', (dateStr: string, format: string) => {
+    const date = new Date(dateStr + 'T00:00:00');
+    if (isNaN(date.getTime())) return dateStr;
+    if (format === 'Month YYYY') {
+      const month = date.toLocaleString('en-US', {month: 'long'});
+      return `${month} ${date.getFullYear()}`;
+    }
+    return dateStr;
+  });
+
   const data = {...report, catalog};
   const template = instance.compile(templateSource, {noEscape: true});
   return template(data);

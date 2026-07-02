@@ -1,6 +1,5 @@
 import type {Supports} from '@/src/core/interface/utils/interface-types.js';
-import {ENGINE, STATE_ID} from '@/src/core/interface/utils/symbols.js';
-import {resolveFacades} from '@/src/core/interface/utils/resolve-facades.js';
+import {getHandleInternals} from '@/src/core/interface/utils/get-handle-internals.js';
 import {getOrCreateSearchBoxActions} from '@/src/core/internal/search-box/search-box-actions.js';
 import {getOrCreateSearchBoxSlice} from '@/src/core/internal/search-box/search-box-slice.js';
 
@@ -14,12 +13,11 @@ export interface LoadSearchBoxActionsOptions {
  * @returns The search box actions: `setQuery` and `submit`.
  */
 export function loadSearchBoxActions(options: LoadSearchBoxActionsOptions) {
-  const engine = options.interface[ENGINE];
-  const stateId = options.interface[STATE_ID];
+  const {engine, stateId} = getHandleInternals(options.interface);
 
   engine.adoptSlice(getOrCreateSearchBoxSlice(stateId));
 
-  const thunks = resolveFacades(options.interface, 'search');
+  const thunks = options.interface.resolveFacades('search');
 
   const actions = getOrCreateSearchBoxActions(stateId);
 

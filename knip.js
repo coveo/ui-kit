@@ -83,6 +83,14 @@ export default {
 
     // Projects to enable rule by rule.
     'packages/atomic': {
+      // The `@/*` path alias is declared in packages/atomic/tsconfig.json, but
+      // oxc-resolver >=11.21 only applies a tsconfig's `paths` to files that the
+      // tsconfig "owns" (its `include` globs cover only .ts/.tsx). Imports from
+      // .mdx Storybook docs pages are therefore not aliased, so we declare the
+      // alias explicitly here for Knip's resolver.
+      paths: {
+        '@/*': ['./*'],
+      },
       entry: [
         'src/loader.ts',
         'src/cdn.ts',

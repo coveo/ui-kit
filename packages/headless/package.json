@@ -1,6 +1,6 @@
 {
   "name": "@coveo/headless",
-  "version": "3.52.0",
+  "version": "3.53.0",
   "homepage": "https://docs.coveo.com/en/headless/latest/",
   "license": "Apache-2.0",
   "repository": {
@@ -96,7 +96,7 @@
     "serve:typedoc": "live-server ./docs"
   },
   "dependencies": {
-    "@ag-ui/client": "0.0.53",
+    "@ag-ui/client": "catalog:",
     "@coveo/bueno": "workspace:*",
     "@coveo/relay": "catalog:",
     "@coveo/relay-event-types": "catalog:",

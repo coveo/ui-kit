@@ -137,7 +137,7 @@ export function buildRemarks(context: RemarksContext): string {
   }
 
   if (evidence.length === 0) {
-    return `WCAG ${context.criterionId}: no automated, interactive, or manual coverage. [Manual audit required]`;
+    return `WCAG ${context.criterionId}: no automated, interactive, or manual coverage.`;
   }
 
   return `${openAcrConformanceLabel[context.conformance]} — ${evidence.join('; ')}.`;

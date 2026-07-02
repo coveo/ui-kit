@@ -60,7 +60,7 @@ Keys follow `{numeric-id}-{slug}`. Only the numeric id is parsed (regex `/^(\d+(
 | `fail`           | Does Not Support    | The majority of functionality does not meet the criterion.     | **Required** |
 | `not-applicable` | Not Applicable      | The criterion is not relevant to the surface.                  | Brief reason |
 
-Use the object form `{ "conformance", "remarks" }` to add a remark; it becomes the criterion's **Remarks and Explanations** text in the VPAT/ACR. **List only the criteria you tested** — omitted criteria stay _Does Not Support [manual audit required]_ until audited.
+Use the object form `{ "conformance", "remarks" }` to add a remark; it becomes the criterion's **Remarks and Explanations** text in the VPAT/ACR. **List only the criteria you tested** — omitted criteria stay _Does Not Support_ until audited.
 
 Remarks are read by procurement, legal, and accessibility reviewers — not engineers. Write them to the ACR standard described in [Writing ACR-grade remarks](#writing-acr-grade-remarks).
 
@@ -110,7 +110,7 @@ Consequences:
 - A manual `fail` surfaces even if axe was clean.
 - A manual `pass` **cannot** hide a real axe violation — the violation still wins. Fix the code or add a documented override instead.
 - A criterion axe can't test (e.g. `2.1.4`) is driven entirely by your manual result.
-- A criterion with no signal at all is _Does Not Support [manual audit required]_.
+- A criterion with no signal at all is _Does Not Support_.
 
 ## Validation
 
@@ -148,5 +148,4 @@ Paste this into the description of any manual-audit PR so a reviewer can trust t
 ## Tips
 
 - **Split by surface, not component.** Keeps diffs small; the VPAT merges everything anyway.
-- **Only list what you tested.** Untested criteria remain visible as _[manual audit required]_.
 - **Don't paper over real failures.** A manual `pass` won't clear an axe violation — that's intentional. Use an override (with a reason) only for genuine by-design exceptions.

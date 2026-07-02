@@ -118,7 +118,7 @@ Automated tests can't cover every WCAG criterion. For the rest, record results p
    ```
 
    - Result is `pass` | `fail` | `partial` | `not-applicable`, or `{conformance, remarks}` to add a note (the remark becomes the ACR's _Remarks and Explanations_ text). Write remarks as plain-language ACR notes — what/where/impact in 1–3 sentences; keep selectors, code, ticket IDs, and repro out of them (those go in the linked ticket; AT/browser/OS go in the report's evaluation methods). See [Writing ACR-grade remarks](docs/manual-audit-guide.md#writing-acr-grade-remarks).
-   - Key is `{wcag-id}-{slug}`; the id must be a real WCAG 2.2 A/AA criterion. List only what you tested — omitted criteria stay _Does Not Support [manual audit required]_.
+   - Key is `{wcag-id}-{slug}`; the id must be a real WCAG 2.2 A/AA criterion. List only what you tested — omitted criteria stay _Does Not Support_.
 
 3. **Run `pnpm exec turbo run a11y:vpat --filter=@coveo/atomic-a11y`** — regenerates the VPAT and warns on invalid keys.
 4. **Open a PR** using the [manual-audit PR checklist](docs/manual-audit-guide.md#pr-checklist) (method, environment, criteria audited) and commit the file + regenerated VPAT.

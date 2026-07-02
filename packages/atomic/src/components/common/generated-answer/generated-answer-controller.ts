@@ -1,6 +1,7 @@
 import type {
   GeneratedAnswer,
   GeneratedAnswerState,
+  GeneratedAnswerWithFollowUpsState,
   SearchStatusState,
 } from '@coveo/headless';
 import type {ReactiveController, ReactiveControllerHost} from 'lit';
@@ -153,6 +154,12 @@ export class GeneratedAnswerController implements ReactiveController {
    */
   public get isAnswerVisible(): boolean {
     return !!this.options.getGeneratedAnswerState()?.isVisible;
+  }
+
+  public get followUpConversationId(): string | undefined {
+    return (
+      this.options.getGeneratedAnswerState() as GeneratedAnswerWithFollowUpsState
+    )?.followUpAnswers?.conversationId;
   }
 
   /**
