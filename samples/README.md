@@ -5,7 +5,7 @@ This directory contains code samples demonstrating how to use Coveo's UI-Kit lib
 **These samples serve a dual purpose:**
 
 1. **Samples** — Living documentation showing how to use Coveo libraries correctly.
-2. **Scaffolding starters** — The source templates for `npm create @coveo/ui`, giving developers a working project in seconds.
+2. **Scaffolding starters** — The source templates for `npm create @coveo/ui`. Each sample is published to npm as `@coveo/ui-kit-sample-<name>` and fetched by the CLI to give developers a working project in seconds.
 
 Because of this dual role, every sample must be **self-contained, runnable out of the box, and tested**. See [CONTRIBUTING.md](./CONTRIBUTING.md) for the full requirements.
 
