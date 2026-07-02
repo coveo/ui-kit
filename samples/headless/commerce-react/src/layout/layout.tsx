@@ -25,10 +25,14 @@ export default function Layout(props: ILayoutProps) {
     <div className="Layout">
       <section className="Header">
         <div className="HeaderBrand">
-          <img className="HeaderLogo" src="/coveo-logo.svg" alt="Coveo" />
+          <img
+            className="HeaderLogo"
+            src={`${import.meta.env.BASE_URL}coveo-logo.svg`}
+            alt="Coveo"
+          />
           <h1 className="AppTitle">Headless Commerce + React</h1>
         </div>
-        <div className="Tabs">
+        <nav className="Tabs" aria-label="Primary">
           <span>
             <input
               type="radio"
@@ -93,7 +97,7 @@ export default function Layout(props: ILayoutProps) {
             controller={buildCart(engine)}
             onChange={() => navigate('/cart')}
           ></CartTab>
-        </div>
+        </nav>
         {!(window.location.pathname === '/search') && (
           <StandaloneSearchBox
             navigate={navigate}
