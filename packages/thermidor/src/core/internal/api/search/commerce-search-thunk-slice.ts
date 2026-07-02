@@ -1,7 +1,15 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
 import {createSelectSlice} from '@/src/core/interface/utils/select-slice.js';
-import type {EndpointThunk} from '@/src/core/interface/utils/interface-types.js';
+import type {
+  EndpointThunk,
+  InterfaceHandle,
+} from '@/src/core/interface/utils/interface-types.js';
+import {
+  type CacheKey,
+  createCacheKey,
+} from '@/src/core/interface/cache/interface-cache-registry.js';
+import {getHandleInternals} from '@/src/core/interface/utils/get-handle-internals.js';
 
 export interface CommerceSearchEndpointThunkState {
   status: 'idle' | 'pending';
@@ -13,6 +21,15 @@ export const initialCommerceSearchEndpointThunkState: CommerceSearchEndpointThun
     status: 'idle',
     error: null,
   };
+
+type CommerceSearchEndpointSlice = ReturnType<
+  typeof createCommerceSearchEndpointSlice
+>;
+
+const SLICE_CACHE_KEY: CacheKey<CommerceSearchEndpointSlice> =
+  createCacheKey<CommerceSearchEndpointSlice>(
+    'api/commerceSearch/endpointSlice'
+  );
 
 export function createCommerceSearchEndpointSlice(
   interfaceId: string,
@@ -39,22 +56,24 @@ export function createCommerceSearchEndpointSlice(
   });
 }
 
-const sliceCache = new Map<
-  string,
-  ReturnType<typeof createCommerceSearchEndpointSlice>
->();
 export function getOrCreateCommerceSearchEndpointSlice(
-  interfaceId: string,
+  iface: InterfaceHandle,
   thunk: EndpointThunk
 ) {
-  if (!sliceCache.has(interfaceId)) {
-    sliceCache.set(
-      interfaceId,
-      createCommerceSearchEndpointSlice(interfaceId, thunk)
-    );
-  }
-  return sliceCache.get(interfaceId)!;
+  const {stateId, cacheRegistry} = getHandleInternals(iface);
+  return cacheRegistry.getOrCreate(SLICE_CACHE_KEY, () =>
+    createCommerceSearchEndpointSlice(stateId, thunk)
+  );
 }
+
+type CommerceSearchEndpointSelectors = ReturnType<
+  typeof createCommerceSearchEndpointSelectors
+>;
+
+const SELECTORS_CACHE_KEY: CacheKey<CommerceSearchEndpointSelectors> =
+  createCacheKey<CommerceSearchEndpointSelectors>(
+    'api/commerceSearch/endpointSelectors'
+  );
 
 export function createCommerceSearchEndpointSelectors(interfaceId: string) {
   const sliceSelector = createSelectSlice(
@@ -74,18 +93,11 @@ export function createCommerceSearchEndpointSelectors(interfaceId: string) {
   };
 }
 
-const selectorsCache = new Map<
-  string,
-  ReturnType<typeof createCommerceSearchEndpointSelectors>
->();
 export function getOrCreateCommerceSearchEndpointSelectors(
-  interfaceId: string
+  iface: InterfaceHandle
 ) {
-  if (!selectorsCache.has(interfaceId)) {
-    selectorsCache.set(
-      interfaceId,
-      createCommerceSearchEndpointSelectors(interfaceId)
-    );
-  }
-  return selectorsCache.get(interfaceId)!;
+  const {stateId, cacheRegistry} = getHandleInternals(iface);
+  return cacheRegistry.getOrCreate(SELECTORS_CACHE_KEY, () =>
+    createCommerceSearchEndpointSelectors(stateId)
+  );
 }

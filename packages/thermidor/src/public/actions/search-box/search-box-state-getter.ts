@@ -9,11 +9,11 @@ export interface GetSearchBoxStateOptions {
 }
 
 export function getSearchBoxState(options: GetSearchBoxStateOptions) {
-  const {engine, stateId} = getHandleInternals(options.interface);
+  const {engine} = getHandleInternals(options.interface);
 
-  engine.adoptSlice(getOrCreateSearchBoxSlice(stateId));
+  engine.adoptSlice(getOrCreateSearchBoxSlice(options.interface));
 
-  const selectors = getOrCreateSearchBoxSelectors(stateId);
+  const selectors = getOrCreateSearchBoxSelectors(options.interface);
 
   const stateSelector = createMemoizedStateSelector(
     selectors.getQuery,

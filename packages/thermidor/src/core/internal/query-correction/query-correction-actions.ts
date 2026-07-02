@@ -1,9 +1,20 @@
 import {createAction} from '@reduxjs/toolkit';
+import {
+  type CacheKey,
+  createCacheKey,
+} from '@/src/core/interface/cache/interface-cache-registry.js';
+import {getHandleInternals} from '@/src/core/interface/utils/get-handle-internals.js';
+import type {InterfaceHandle} from '@/src/core/interface/utils/interface-types.js';
 
 export interface QueryCorrection {
   correctedQuery: string;
   originalQuery: string;
 }
+
+type QueryCorrectionActions = ReturnType<typeof createQueryCorrectionActions>;
+
+const CACHE_KEY: CacheKey<QueryCorrectionActions> =
+  createCacheKey<QueryCorrectionActions>('queryCorrection/actions');
 
 export function createQueryCorrectionActions(interfaceId: string) {
   return {
@@ -13,13 +24,9 @@ export function createQueryCorrectionActions(interfaceId: string) {
   };
 }
 
-const actionsCache = new Map<
-  string,
-  ReturnType<typeof createQueryCorrectionActions>
->();
-export function getOrCreateQueryCorrectionActions(interfaceId: string) {
-  if (!actionsCache.has(interfaceId)) {
-    actionsCache.set(interfaceId, createQueryCorrectionActions(interfaceId));
-  }
-  return actionsCache.get(interfaceId)!;
+export function getOrCreateQueryCorrectionActions(iface: InterfaceHandle) {
+  const {stateId, cacheRegistry} = getHandleInternals(iface);
+  return cacheRegistry.getOrCreate(CACHE_KEY, () =>
+    createQueryCorrectionActions(stateId)
+  );
 }

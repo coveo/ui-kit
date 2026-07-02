@@ -2,6 +2,7 @@ import {createAsyncThunk} from '@reduxjs/toolkit';
 import type {EndpointStateScope} from '@/src/core/interface/utils/interface-types.js';
 import type {FullEngine} from '@/src/core/interface/engine/engine.js';
 import type {CommerceSearchRequest} from '@/src/api/interface/commerce-search-endpoint/commerce-search-endpoint-types.js';
+import {getHandleInternals} from '@/src/core/interface/utils/get-handle-internals.js';
 import {createCommerceSearchEndpointRequestSelector} from './commerce-search-request-selector.js';
 import {createCommerceSearchEndpointResponseHandler} from './commerce-search-response-handler.js';
 import {readEndpointClientConfiguration} from '@/src/core/internal/configuration/configuration-reader.js';
@@ -12,15 +13,14 @@ export function createCommerceSearchEndpointThunk(
   engine: FullEngine,
   scope: EndpointStateScope
 ) {
-  const sharableInterfaceId = scope.composedInterfaceId ?? scope.interfaceId;
-
+  const {stateId} = getHandleInternals(scope.scopeInterface);
   const buildRequest = createCommerceSearchEndpointRequestSelector(scope);
   const handleResponse = createCommerceSearchEndpointResponseHandler(
-    scope.interfaceId
+    scope.baseInterface
   );
 
   const thunk = createAsyncThunk<void, {engine: FullEngine}>(
-    `${sharableInterfaceId}/commerceSearchEndpoint/execute`,
+    `${stateId}/commerceSearchEndpoint/execute`,
     async ({engine}) => {
       const request = engine.read(buildRequest);
       const navigatorContext = engine.getNavigatorContextProvider()?.();
@@ -53,7 +53,7 @@ export function createCommerceSearchEndpointThunk(
   );
 
   engine.adoptSlice(
-    getOrCreateCommerceSearchEndpointSlice(sharableInterfaceId, thunk)
+    getOrCreateCommerceSearchEndpointSlice(scope.scopeInterface, thunk)
   );
 
   return thunk;

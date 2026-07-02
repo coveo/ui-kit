@@ -1,4 +1,1 @@
-export {
-  createCartSelectors,
-  getOrCreateCartSelectors,
-} from '@/src/core/internal/cart/cart-selectors.js';
+export {getOrCreateCartSelectors} from '@/src/core/internal/cart/cart-selectors.js';

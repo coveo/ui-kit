@@ -1,6 +1,7 @@
 import type {FullEngine} from '@/src/core/interface/engine/engine.js';
 import type {CommerceSearchResponse} from '@/src/api/interface/commerce-search-endpoint/commerce-search-endpoint-types.js';
 import type {CoveoFacetResponse} from '@/src/core/interface/api/search/search-types.js';
+import type {InterfaceHandle} from '@/src/core/interface/utils/interface-types.js';
 import {getOrCreateProductListActions} from '@/src/core/internal/product-list/product-list-actions.js';
 import {getOrCreatePaginationActions} from '@/src/core/internal/pagination/pagination-actions.js';
 import {getOrCreateFacetsActions} from '@/src/core/internal/facets/facets-actions.js';
@@ -9,14 +10,14 @@ import {getOrCreateTriggersActions} from '@/src/core/internal/triggers/triggers-
 import {getOrCreateQueryCorrectionActions} from '@/src/core/internal/query-correction/query-correction-actions.js';
 
 export function createCommerceSearchEndpointResponseHandler(
-  interfaceId: string
+  iface: InterfaceHandle
 ) {
-  const productListActions = getOrCreateProductListActions(interfaceId);
-  const paginationActions = getOrCreatePaginationActions(interfaceId);
-  const facetActions = getOrCreateFacetsActions(interfaceId);
-  const sortActions = getOrCreateSortActions(interfaceId);
-  const triggersActions = getOrCreateTriggersActions(interfaceId);
-  const queryCorrectionActions = getOrCreateQueryCorrectionActions(interfaceId);
+  const productListActions = getOrCreateProductListActions(iface);
+  const paginationActions = getOrCreatePaginationActions(iface);
+  const facetActions = getOrCreateFacetsActions(iface);
+  const sortActions = getOrCreateSortActions(iface);
+  const triggersActions = getOrCreateTriggersActions(iface);
+  const queryCorrectionActions = getOrCreateQueryCorrectionActions(iface);
 
   return (engine: FullEngine, response: CommerceSearchResponse) => {
     engine.mutate(

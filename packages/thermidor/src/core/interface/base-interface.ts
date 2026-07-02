@@ -1,9 +1,11 @@
+import {InterfaceCacheRegistry} from './cache/interface-cache-registry.js';
 import type {FullEngine} from './engine/engine.js';
 import type {
   EndpointThunk,
   EndpointStateScope,
   FacadeResolverFactory,
   Facades,
+  InterfaceHandle,
   InterfaceType,
 } from './utils/interface-types.js';
 
@@ -11,6 +13,7 @@ export interface InterfaceInternals<T extends InterfaceType = InterfaceType> {
   engine: FullEngine;
   stateId: string;
   type: T;
+  cacheRegistry: InterfaceCacheRegistry;
 }
 
 export let getInterfaceInternals: <T extends InterfaceType>(
@@ -25,8 +28,9 @@ export abstract class BaseInterface<T extends InterfaceType> {
   #engine: FullEngine;
   #stateId: string;
   #type: T;
-  #resolvers: Record<Facades[T], FacadeResolverFactory>;
+  #facadeResolvers: Record<Facades[T], FacadeResolverFactory>;
   #facadeCache = new Map<string, EndpointThunk>();
+  #cacheRegistry = new InterfaceCacheRegistry();
   #disposed = false;
 
   static {
@@ -34,6 +38,7 @@ export abstract class BaseInterface<T extends InterfaceType> {
       engine: iface.#engine,
       stateId: iface.#stateId,
       type: iface.#type,
+      cacheRegistry: iface.#cacheRegistry,
     }));
   }
 
@@ -46,34 +51,48 @@ export abstract class BaseInterface<T extends InterfaceType> {
     this.#engine = engine;
     this.#stateId = stateId;
     this.#type = type;
-    this.#resolvers = resolvers;
+    this.#facadeResolvers = resolvers;
+
+    engine.addInterface(this);
   }
 
   resolveFacades(
     facade: Facades[T],
-    composedInterfaceId?: string
+    composedInterface?: InterfaceHandle
   ): EndpointThunk[] {
-    if (this.#disposed) {
-      throw new Error('Cannot resolve thunks on a disposed interface.');
-    }
+    this.#assertNotDisposed();
 
+    const scopeInterface = composedInterface ?? this;
     const scope: EndpointStateScope = {
-      interfaceId: this.#stateId,
-      composedInterfaceId,
+      baseInterface: this,
+      scopeInterface,
     };
-    const cacheKey = `${String(facade)}:${composedInterfaceId ?? this.#stateId}`;
 
-    if (!this.#facadeCache.has(cacheKey)) {
-      const resolver = this.#resolvers[facade];
-      const thunk = resolver(this.#engine)(scope);
+    const cacheKey = `${String(facade)}:${composedInterface ? 'composed' : this.#stateId}`;
+
+    let thunk = this.#facadeCache.get(cacheKey);
+    if (!thunk) {
+      const resolver = this.#facadeResolvers[facade];
+      thunk = resolver(this.#engine)(scope);
       this.#facadeCache.set(cacheKey, thunk);
     }
 
-    return [this.#facadeCache.get(cacheKey)!];
+    return [thunk];
   }
 
   dispose(): void {
+    if (this.#disposed) {
+      return;
+    }
     this.#disposed = true;
+    this.#cacheRegistry.dispose();
     this.#facadeCache.clear();
+    this.#engine.removeInterface(this);
+  }
+
+  #assertNotDisposed(): void {
+    if (this.#disposed) {
+      throw new Error('Cannot operate on a disposed interface.');
+    }
   }
 }

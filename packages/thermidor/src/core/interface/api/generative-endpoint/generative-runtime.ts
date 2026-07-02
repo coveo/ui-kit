@@ -5,6 +5,7 @@ import {
   type CoveoConversationEndpointRequest,
 } from '@/src/api/index.js';
 import type {FullEngine} from '@/src/core/interface/engine/engine.js';
+import type {InterfaceHandle} from '@/src/core/interface/utils/interface-types.js';
 import {createConversationEndpointRequestSelector} from '@/src/core/internal/api/conversation-endpoint/conversation-endpoint-request-selector.js';
 import {readEndpointClientConfiguration} from '@/src/core/internal/configuration/configuration-reader.js';
 import {generateId} from '@/src/core/interface/utils/id-generator.js';
@@ -40,8 +41,8 @@ export type HydrateSubInterface = (
 export interface GenerativeRuntimeConfig {
   statePort: GenerativeStatePort;
   hydrateSubInterface: HydrateSubInterface;
-  generativeInterfaceId: string;
-  cartInterfaceId: string;
+  generativeInterface: InterfaceHandle;
+  cartInterface: InterfaceHandle;
 }
 
 export class GenerativeRuntime {
@@ -68,8 +69,8 @@ export class GenerativeRuntime {
     this.statePort = config.statePort;
     this.hydrateSubInterface = config.hydrateSubInterface;
     this.buildRequest = createConversationEndpointRequestSelector(
-      config.generativeInterfaceId,
-      config.cartInterfaceId
+      config.generativeInterface,
+      config.cartInterface
     );
   }
 

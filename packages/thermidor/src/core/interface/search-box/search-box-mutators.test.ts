@@ -4,22 +4,27 @@
 
 import {describe, it, expect, beforeEach} from 'vitest';
 import {setQuery} from './search-box-mutators.js';
-import {createTestEngine} from '@/src/test/test-utils.js';
+import {createTestEngine, createTestInterface} from '@/src/test/test-utils.js';
 import {getQuery} from './search-box-selectors.js';
 import {getOrCreateSearchBoxSlice} from '@/src/core/internal/search-box/search-box-slice.js';
 import {FullEngine, getFullEngine} from '@/src/core/interface/engine/engine.js';
+import type {SearchInterface} from '@/src/public/interfaces/search.js';
+import {Engine} from '@/src/core/interface/engine/engine.js';
 
 describe('searchBoxMutations', () => {
   let engine: FullEngine;
+  let iface: SearchInterface;
 
   beforeEach(() => {
-    engine = getFullEngine(createTestEngine());
-    engine.adoptSlice(getOrCreateSearchBoxSlice('default'));
+    const rawEngine = createTestEngine();
+    engine = getFullEngine(rawEngine);
+    iface = createTestInterface(rawEngine, 'default');
+    engine.adoptSlice(getOrCreateSearchBoxSlice(iface));
   });
 
   describe('setQuery()', () => {
     it('should return StateMutation object', () => {
-      const mutation = setQuery('laptops');
+      const mutation = setQuery('laptops', iface);
 
       expect(mutation).toEqual({
         type: 'default/searchBox/setQuery',
@@ -28,15 +33,15 @@ describe('searchBoxMutations', () => {
     });
 
     it('should update state when used with mutate()', () => {
-      engine.mutate(setQuery('test query'));
+      engine.mutate(setQuery('test query', iface));
 
-      expect(engine.read(getQuery)).toBe('test query');
+      expect(engine.read(getQuery(iface))).toBe('test query');
     });
 
     it('should accept empty string', () => {
-      engine.mutate(setQuery(''));
+      engine.mutate(setQuery('', iface));
 
-      expect(engine.read(getQuery)).toBe('');
+      expect(engine.read(getQuery(iface))).toBe('');
     });
   });
 });
