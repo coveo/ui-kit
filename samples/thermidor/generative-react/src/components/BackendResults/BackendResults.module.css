@@ -17,11 +17,18 @@
 
 .card {
   cursor: pointer;
-  transition: box-shadow 150ms ease;
+  transition:
+    box-shadow 150ms ease,
+    border-color 150ms ease;
 }
 
 .card:hover {
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.cardSelected {
+  border-color: var(--mantine-color-blue-4);
+  background: var(--mantine-color-blue-0);
 }
 
 .pageButton {

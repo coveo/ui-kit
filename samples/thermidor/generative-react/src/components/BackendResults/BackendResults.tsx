@@ -1,4 +1,4 @@
-import {useState, useEffect, useRef} from 'react';
+import {useState, useEffect, useRef, useCallback} from 'react';
 import {
   SimpleGrid,
   Card,
@@ -8,6 +8,9 @@ import {
   Select,
   Box,
   Stack,
+  Checkbox,
+  Badge,
+  UnstyledButton,
 } from '@mantine/core';
 import {
   buildBackendProductListController,
@@ -47,6 +50,7 @@ export function BackendResults() {
     totalCount: 0,
     totalPages: 0,
   });
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const controllersRef = useRef<{
     productList?: BackendProductListController;
     pagination?: BackendPaginationController;
@@ -131,6 +135,39 @@ export function BackendResults() {
       moreValuesAvailable: boolean;
     }>) ?? [];
 
+  const toggleSelection = useCallback(
+    (productId: string) => {
+      setSelectedIds((prev) => {
+        const next = new Set(prev);
+        if (next.has(productId)) {
+          next.delete(productId);
+        } else {
+          next.add(productId);
+        }
+        if (firstInterfaceId) {
+          converseController.sendAction({
+            type: 'select_products',
+            interfaceId: firstInterfaceId,
+            productIds: [...next],
+          });
+        }
+        return next;
+      });
+    },
+    [firstInterfaceId]
+  );
+
+  const clearSelection = useCallback(() => {
+    setSelectedIds(new Set());
+    if (firstInterfaceId) {
+      converseController.sendAction({
+        type: 'select_products',
+        interfaceId: firstInterfaceId,
+        productIds: [],
+      });
+    }
+  }, [firstInterfaceId]);
+
   if (!firstInterfaceId) {
     return null;
   }
@@ -152,10 +189,24 @@ export function BackendResults() {
         )}
 
         <Group justify="space-between" align="center" mb="md">
-          <Text size="sm" c="dimmed">
-            {pagination.totalCount} results · Page {pagination.page + 1} of{' '}
-            {pagination.totalPages}
-          </Text>
+          <Group gap="sm">
+            <Text size="sm" c="dimmed">
+              {pagination.totalCount} results · Page {pagination.page + 1} of{' '}
+              {pagination.totalPages}
+            </Text>
+            {selectedIds.size > 0 && (
+              <Group gap={4}>
+                <Badge size="sm" variant="light">
+                  {selectedIds.size} selected
+                </Badge>
+                <UnstyledButton onClick={clearSelection}>
+                  <Text size="xs" c="dimmed" td="underline">
+                    Clear
+                  </Text>
+                </UnstyledButton>
+              </Group>
+            )}
+          </Group>
           <Group gap="sm">
             <Group gap={4} align="center">
               <Text size="xs" c="dimmed">
@@ -181,18 +232,21 @@ export function BackendResults() {
         <SimpleGrid cols={5} spacing="md">
           {products.map((product, i) => {
             const p = product as any;
+            const productId = p.permanentid ?? '';
             const position = pagination.page * pagination.pageSize + i + 1;
             return (
               <ProductCard
-                key={p.permanentid ?? i}
+                key={productId || i}
                 product={p}
+                selected={selectedIds.has(productId)}
+                onToggleSelect={() => toggleSelection(productId)}
                 onClick={() => {
                   const interactive = buildBackendInteractiveProductController({
                     interface: generativeInterface,
                     converseController,
                     interfaceId: firstInterfaceId,
                     product: {
-                      productId: p.permanentid ?? '',
+                      productId,
                       name: p.ec_name ?? '',
                       price: p.ec_promo_price ?? p.ec_price ?? 0,
                     },
@@ -241,10 +295,17 @@ export function BackendResults() {
 
 interface ProductCardProps {
   product: any;
+  selected: boolean;
+  onToggleSelect: () => void;
   onClick: () => void;
 }
 
-function ProductCard({product, onClick}: ProductCardProps) {
+function ProductCard({
+  product,
+  selected,
+  onToggleSelect,
+  onClick,
+}: ProductCardProps) {
   const imageUrl = product.ec_thumbnails?.[0];
   const name = product.ec_name ?? 'Untitled';
   const price = product.ec_promo_price ?? product.ec_price;
@@ -258,22 +319,35 @@ function ProductCard({product, onClick}: ProductCardProps) {
       padding="sm"
       radius="md"
       withBorder
-      className={styles.card}
+      className={`${styles.card} ${selected ? styles.cardSelected : ''}`}
       onClick={onClick}
     >
-      <Card.Section>
+      <Card.Section pos="relative">
         {imageUrl ? (
           <Image
             src={imageUrl}
             alt={name}
             h={140}
             fit="contain"
-            bg="gray.0"
+            bg={selected ? 'blue.0' : 'gray.0'}
             p="xs"
           />
         ) : (
-          <Box h={140} bg="gray.1" />
+          <Box h={140} bg={selected ? 'blue.0' : 'gray.1'} />
         )}
+        <Checkbox
+          size="xs"
+          checked={selected}
+          onChange={(e) => {
+            e.stopPropagation();
+            onToggleSelect();
+          }}
+          onClick={(e) => e.stopPropagation()}
+          pos="absolute"
+          top={8}
+          right={8}
+          styles={{input: {cursor: 'pointer'}}}
+        />
       </Card.Section>
 
       <Stack gap={4} mt="sm">

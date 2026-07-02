@@ -58,10 +58,21 @@ export type BackendInterfaceAction =
       price: number;
       position: number;
     }
-  | {type: 'product_view'; interfaceId: string; productId: string; name: string; price: number}
+  | {
+      type: 'product_view';
+      interfaceId: string;
+      productId: string;
+      name: string;
+      price: number;
+    }
   | {
       type: 'purchase';
-      products: Array<{productId: string; name: string; price: number; quantity: number}>;
+      products: Array<{
+        productId: string;
+        name: string;
+        price: number;
+        quantity: number;
+      }>;
       transaction: {id: string; revenue: number};
     }
   | {
@@ -80,7 +91,8 @@ export type BackendInterfaceAction =
       price: number;
       quantity: number;
       action: 'add' | 'remove';
-    };
+    }
+  | {type: 'select_products'; interfaceId: string; productIds: string[]};
 
 export interface ConverseController extends Controller<ConverseControllerState> {
   submit(options: {prompt: string}): void;
