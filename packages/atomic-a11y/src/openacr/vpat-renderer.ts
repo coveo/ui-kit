@@ -56,6 +56,40 @@ export function renderVpat(
     return term?.label ?? 'Not Applicable';
   });
 
+  // Counts every Level A/AA criterion by its resolved conformance, for the
+  // Executive Summary. Computed from the rendered rows so it can never drift
+  // from the tables below.
+  instance.registerHelper(
+    'conformanceSummary',
+    (chapters: OpenAcrReport['chapters']) => {
+      const counts = {
+        supports: 0,
+        partiallySupports: 0,
+        doesNotSupport: 0,
+        notApplicable: 0,
+        total: 0,
+      };
+      const byLevel: Record<string, keyof typeof counts> = {
+        supports: 'supports',
+        'partially-supports': 'partiallySupports',
+        'does-not-support': 'doesNotSupport',
+        'not-applicable': 'notApplicable',
+      };
+      for (const chapter of Object.values(chapters ?? {})) {
+        if (!chapter || !('criteria' in chapter)) continue;
+        for (const criterion of chapter.criteria) {
+          const level = criterion.components?.[0]?.adherence?.level;
+          const key = level ? byLevel[level] : undefined;
+          if (key) {
+            counts[key] += 1;
+            counts.total += 1;
+          }
+        }
+      }
+      return counts;
+    }
+  );
+
   const data = {...report, catalog};
   const template = instance.compile(templateSource, {noEscape: true});
   return template(data);
