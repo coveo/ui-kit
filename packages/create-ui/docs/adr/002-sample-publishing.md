@@ -19,9 +19,9 @@ Why:
 
 ## Decisions
 
-### 1. One npm package per sample: `@coveo/sample-<template-name>`
+### 1. One npm package per sample: `@coveo/ui-kit-sample-<template-name>`
 
-Example: `samples/headless/search-react` → `@coveo/sample-headless-search-react`.
+Example: `samples/headless/search-react` → `@coveo/ui-kit-sample-headless-search-react`.
 
 1:1 mapping with the `--template` name in the CLI. Each sample versions and deprecates independently.
 
@@ -34,13 +34,13 @@ Samples are published from a release commit — a workspace-consistent snapshot 
 To make a sample publishable:
 
 - Remove `"private": true`
-- Add `"name": "@coveo/sample-<name>"`, `publishConfig.access: "public"`, `files` allowlist
+- Add `"name": "@coveo/ui-kit-sample-<name>"`, `publishConfig.access: "public"`, `files` allowlist
 
 Same "Version Packages" → publish flow as the libraries. No second pipeline.
 
 ### 4. Use `pacote` to fetch published samples at scaffold time
 
-[`pacote`](https://www.npmjs.com/package/pacote) is the npm client's own library for resolving and fetching packages from a registry. `@coveo/create-ui` will use it to download and extract the `@coveo/sample-*` tarballs during scaffolding. It handles dist-tags, version ranges, authentication, and corporate registry mirrors out of the box.
+[`pacote`](https://www.npmjs.com/package/pacote) is the npm client's own library for resolving and fetching packages from a registry. `@coveo/create-ui` will use it to download and extract the `@coveo/ui-kit-sample-*` tarballs during scaffolding. It handles dist-tags, version ranges, authentication, and corporate registry mirrors out of the box.
 
 ## Consequences
 

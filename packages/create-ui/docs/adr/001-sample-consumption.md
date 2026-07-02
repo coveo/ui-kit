@@ -24,7 +24,7 @@ The CLI resolves the sample package from the npm registry directly (not GitHub).
 | Download size     | ~50 KB (just the sample)                            | ~4.5 MB (whole monorepo)         |
 | Corporate proxies | Respects `.npmrc` registry config                   | Requires GitHub access           |
 
-Resolution: `pacote.extract('@coveo/sample-<name>@latest', dest)` resolves the package from the registry, downloads, verifies integrity, and extracts in one step.
+Resolution: `pacote.extract('@coveo/ui-kit-sample-<name>@latest', dest)` resolves the package from the registry, downloads, verifies integrity, and extracts in one step.
 
 Rejected alternatives:
 
@@ -46,11 +46,11 @@ Provides `--help`, validation, and error messages out of the box with zero runti
 
 ### 6. Supporting stack
 
-| Concern                              | Choice                                                    | Rationale                                                                                                  |
-| ------------------------------------ | --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| Registry resolve, fetch & extraction | [`pacote`](https://www.npmjs.com/package/pacote)          | npm's own package fetcher — resolves dist-tags, downloads tarballs, verifies integrity, and extracts in one call. Replaces manual `fetch` + `tar` + `crypto` with a single `pacote.extract(spec, dest)` invocation. Respects `.npmrc` for auth and corporate registry mirrors. |
-| Tests                                | `vitest`                                                  | Monorepo standard                                                                                          |
-| Build                                | `tsc`                                                     | Node CLI; bundler adds nothing                                                                             |
+| Concern                              | Choice                                           | Rationale                                                                                                                                                                                                                                                                      |
+| ------------------------------------ | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Registry resolve, fetch & extraction | [`pacote`](https://www.npmjs.com/package/pacote) | npm's own package fetcher — resolves dist-tags, downloads tarballs, verifies integrity, and extracts in one call. Replaces manual `fetch` + `tar` + `crypto` with a single `pacote.extract(spec, dest)` invocation. Respects `.npmrc` for auth and corporate registry mirrors. |
+| Tests                                | `vitest`                                         | Monorepo standard                                                                                                                                                                                                                                                              |
+| Build                                | `tsc`                                            | Node CLI; bundler adds nothing                                                                                                                                                                                                                                                 |
 
 ### 7. Interactive selection: `@clack/prompts` (planned)
 
@@ -59,6 +59,6 @@ When `--template` is omitted. Not yet implemented.
 ## Consequences
 
 - Runtime deps: `commander` + `pacote`. Remove `minimist` and `tar`.
-- `templates.ts` maps template name → npm package name (`@coveo/sample-<name>`). Monorepo paths removed.
+- `templates.ts` maps template name → npm package name (`@coveo/ui-kit-sample-<name>`). Monorepo paths removed.
 - No run-time dependency-protocol resolution (KIT-5842 eliminated by publish-time resolution in ADR 002).
 - Download is proportional to the sample, not the monorepo.
