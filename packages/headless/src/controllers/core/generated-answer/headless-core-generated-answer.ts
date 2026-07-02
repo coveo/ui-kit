@@ -237,6 +237,10 @@ export function buildCoreGeneratedAnswer(
   if (isVisible !== undefined) {
     dispatch(setIsVisible(isVisible));
   }
+  const isEnabled = props.initialState?.isEnabled;
+  if (isEnabled !== undefined) {
+    dispatch(setIsEnabled(isEnabled));
+  }
   const initialResponseFormat = props.initialState?.responseFormat;
   if (initialResponseFormat) {
     dispatch(updateResponseFormat(initialResponseFormat));

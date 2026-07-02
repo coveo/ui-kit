@@ -983,6 +983,50 @@ describe('atomic-generated-answer', () => {
     });
   });
 
+  describe('initial enabled state based on the active tab', () => {
+    it('should initialize as enabled when the active tab is allowed', async () => {
+      await renderGeneratedAnswer({
+        props: {tabsIncluded: ['IncludedTab']},
+        tabManagerState: {activeTab: 'IncludedTab'},
+      });
+
+      expect(buildGeneratedAnswer).toHaveBeenCalledWith(
+        mockedEngine,
+        expect.objectContaining({
+          initialState: expect.objectContaining({isEnabled: true}),
+        })
+      );
+    });
+
+    it('should initialize as disabled when the active tab is excluded', async () => {
+      await renderGeneratedAnswer({
+        props: {tabsExcluded: ['ExcludedTab']},
+        tabManagerState: {activeTab: 'ExcludedTab'},
+      });
+
+      expect(buildGeneratedAnswer).toHaveBeenCalledWith(
+        mockedEngine,
+        expect.objectContaining({
+          initialState: expect.objectContaining({isEnabled: false}),
+        })
+      );
+    });
+
+    it('should initialize as disabled when the active tab is not in tabsIncluded', async () => {
+      await renderGeneratedAnswer({
+        props: {tabsIncluded: ['IncludedTab']},
+        tabManagerState: {activeTab: 'OtherTab'},
+      });
+
+      expect(buildGeneratedAnswer).toHaveBeenCalledWith(
+        mockedEngine,
+        expect.objectContaining({
+          initialState: expect.objectContaining({isEnabled: false}),
+        })
+      );
+    });
+  });
+
   describe('follow up capability', () => {
     it('should render a scrollable content container when agentId is provided', async () => {
       const {scrollableContainer} = await renderGeneratedAnswer({
