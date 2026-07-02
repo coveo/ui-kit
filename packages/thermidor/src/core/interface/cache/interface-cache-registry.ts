@@ -1,6 +1,8 @@
-export type CacheKey<T> = symbol & {__type: T};
+export type CacheKey<T extends NonNullable<unknown>> = symbol & {__type: T};
 
-export function createCacheKey<T>(description: string): CacheKey<T> {
+export function createCacheKey<T extends NonNullable<unknown>>(
+  description: string
+): CacheKey<T> {
   return Symbol(description) as CacheKey<T>;
 }
 
@@ -28,22 +30,25 @@ export class InterfaceCacheRegistry {
     }));
   }
 
-  set<T>(key: CacheKey<T>, value: T): void {
+  set<T extends NonNullable<unknown>>(key: CacheKey<T>, value: T): void {
     this.#assertNotDisposed();
     this.#entries.set(key, value);
   }
 
-  get<T>(key: CacheKey<T>): T | undefined {
+  get<T extends NonNullable<unknown>>(key: CacheKey<T>): T | undefined {
     this.#assertNotDisposed();
     return this.#entries.get(key) as T | undefined;
   }
 
-  has(key: CacheKey<unknown>): boolean {
+  has(key: CacheKey<NonNullable<unknown>>): boolean {
     this.#assertNotDisposed();
     return this.#entries.has(key);
   }
 
-  getOrCreate<T>(key: CacheKey<T>, factory: () => T): T {
+  getOrCreate<T extends NonNullable<unknown>>(
+    key: CacheKey<T>,
+    factory: () => T
+  ): T {
     this.#assertNotDisposed();
     const existing = this.#entries.get(key);
     if (existing !== undefined) {
