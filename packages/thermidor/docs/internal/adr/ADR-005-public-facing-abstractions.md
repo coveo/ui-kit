@@ -213,7 +213,7 @@ A single abstraction cannot serve both UI builders (who want orchestrated, high-
 
 ## Annex: Abstraction Relationships
 
-![Abstraction relationships diagram](./ADR-005-public-facing-abstractions.mermaid)
+[Abstraction relationships diagram (Mermaid source)](./ADR-005-public-facing-abstractions.mermaid)
 
 **Cardinality notes:**
 
