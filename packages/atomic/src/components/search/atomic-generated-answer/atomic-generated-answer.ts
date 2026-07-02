@@ -323,6 +323,12 @@ export class AtomicGeneratedAnswer
       getBindings: () => this.bindings,
     });
 
+    if (this.agentId && this.answerConfigurationId) {
+      console.warn(
+        'Both "agent-id" and "answer-configuration-id" properties were provided. The "agent-id" will take precedence and the "answer-configuration-id" will be ignored. Please set only one of these properties to avoid confusion.'
+      );
+    }
+
     this.generatedAnswer = buildGeneratedAnswer(this.bindings.engine, {
       initialState: {
         isVisible: this.controller.data.isVisible,
