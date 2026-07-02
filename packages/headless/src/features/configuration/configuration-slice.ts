@@ -158,8 +158,7 @@ function handleUpdateAnalyticsConfiguration(
 function handleUpdateAgentId(state: ConfigurationState, payload: string) {
   state.knowledge.agentId = payload;
   try {
-    const searchAgentDebugMagicCookie = getSearchAgentDebugMagicCookie();
-    if (!isNullOrUndefined(searchAgentDebugMagicCookie)) {
+    if (getSearchAgentDebugMagicCookie()) {
       state.knowledge.debugAgentSession = true;
     }
   } catch (_) {}

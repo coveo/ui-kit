@@ -9,7 +9,7 @@
     "./*": "./src/*.ts"
   },
   "devDependencies": {
-    "@ag-ui/client": "0.0.57",
+    "@ag-ui/client": "catalog:",
     "@coveo/headless": "workspace:*",
     "msw": "catalog:",
     "natural-orderby": "5.0.0",

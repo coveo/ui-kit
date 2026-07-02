@@ -1,6 +1,6 @@
 {
   "name": "@coveo/thermidor",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Experimental package for a unified, framework-agnostic headless engine for search and conversational experiences",
   "license": "Apache-2.0",
   "repository": {
@@ -20,26 +20,6 @@
       "import": "./dist/index.js",
       "default": "./dist/index.js"
     },
-    "./interfaces/commerce": {
-      "types": "./dist/public/interfaces/commerce.d.ts",
-      "import": "./dist/public/interfaces/commerce.js",
-      "default": "./dist/public/interfaces/commerce.js"
-    },
-    "./interfaces/compose": {
-      "types": "./dist/public/interfaces/compose.d.ts",
-      "import": "./dist/public/interfaces/compose.js",
-      "default": "./dist/public/interfaces/compose.js"
-    },
-    "./interfaces/generative": {
-      "types": "./dist/public/interfaces/generative.d.ts",
-      "import": "./dist/public/interfaces/generative.js",
-      "default": "./dist/public/interfaces/generative.js"
-    },
-    "./interfaces/search": {
-      "types": "./dist/public/interfaces/search.d.ts",
-      "import": "./dist/public/interfaces/search.js",
-      "default": "./dist/public/interfaces/search.js"
-    },
     "./package.json": "./package.json"
   },
   "publishConfig": {
@@ -52,7 +32,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@ag-ui/core": "0.0.53",
+    "@ag-ui/core": "0.0.57",
     "@reduxjs/toolkit": "catalog:",
     "idb": "catalog:"
   },
@@ -61,6 +41,6 @@
     "vitest": "catalog:"
   },
   "engines": {
-    "node": "^20.9.0 || ^22.11.0 || ^24.11.0"
+    "node": "^22.11.0 || ^24.11.0"
   }
 }
