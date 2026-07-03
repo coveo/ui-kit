@@ -311,6 +311,7 @@ A `@coveo/thermidor-react` package would build on top of the core primitives. Th
 function useController<T extends Controller<any>>(controller: T) {
   const state = useSyncExternalStore(
     (cb) => controller.subscribe(cb),
+    () => controller.state,
     () => controller.state
   );
   const { state: _, subscribe: __, ...rest } = controller;
