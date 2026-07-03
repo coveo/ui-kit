@@ -3,6 +3,12 @@ import type {
   Product,
   ProductListState,
 } from '@/src/core/interface/product-list/product-list-types.js';
+import {
+  type CacheKey,
+  createCacheKey,
+} from '@/src/core/interface/cache/interface-cache-registry.js';
+import {getHandleInternals} from '@/src/core/interface/utils/get-handle-internals.js';
+import type {InterfaceHandle} from '@/src/core/interface/utils/interface-types.js';
 import {getOrCreateProductListActions} from './product-list-actions.js';
 import {getOrCreateHydrateFromSnapshotAction} from '@/src/core/interface/generative/generative-hydration.js';
 
@@ -41,10 +47,16 @@ function mapProduct(raw: Record<string, unknown>): Product {
   };
 }
 
-export function createProductListSlice(interfaceId: string) {
-  const actions = getOrCreateProductListActions(interfaceId);
-  const hydrateAction = getOrCreateHydrateFromSnapshotAction(interfaceId);
+type ProductListSlice = ReturnType<typeof createProductListSlice>;
 
+const CACHE_KEY: CacheKey<ProductListSlice> =
+  createCacheKey<ProductListSlice>('productList/slice');
+
+export function createProductListSlice(
+  interfaceId: string,
+  actions: ReturnType<typeof getOrCreateProductListActions>,
+  hydrateAction: ReturnType<typeof getOrCreateHydrateFromSnapshotAction>
+) {
   return createSlice({
     name: `${interfaceId}/products`,
     initialState: initialProductListState,
@@ -68,10 +80,11 @@ export function createProductListSlice(interfaceId: string) {
   });
 }
 
-const sliceCache = new Map<string, ReturnType<typeof createProductListSlice>>();
-export function getOrCreateProductListSlice(interfaceId: string) {
-  if (!sliceCache.has(interfaceId)) {
-    sliceCache.set(interfaceId, createProductListSlice(interfaceId));
-  }
-  return sliceCache.get(interfaceId)!;
+export function getOrCreateProductListSlice(iface: InterfaceHandle) {
+  const {stateId, cacheRegistry} = getHandleInternals(iface);
+  return cacheRegistry.getOrCreate(CACHE_KEY, () => {
+    const actions = getOrCreateProductListActions(iface);
+    const hydrateAction = getOrCreateHydrateFromSnapshotAction(iface);
+    return createProductListSlice(stateId, actions, hydrateAction);
+  });
 }

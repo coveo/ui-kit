@@ -52,16 +52,10 @@ samples/
 **Package name in `package.json`:**
 
 ```
-@samples/<category>-<use-case>[-<framework>][-<variant>]
-```
-
-**Published package name** (npm, consumed by `npm create @coveo/ui` for scaffolding):
-
-```
 @coveo/ui-kit-sample-<category>-<use-case>[-<framework>][-<variant>]
 ```
 
-Samples are `private` in the workspace under the `@samples/` scope. When a sample is made publishable, it is renamed to `@coveo/ui-kit-sample-<name>` — matching its `--template` name — and published to npm. For example, `samples/headless/search-react` (`@samples/headless-search-react`) is published as `@coveo/ui-kit-sample-headless-search-react`. See [ADR 002](../packages/create-ui/docs/adr/002-sample-publishing.md).
+Samples carry the `@coveo/ui-kit-sample-*` name from the start (matching the `--template` name used by `npm create @coveo/ui`) and stay `private: true` in the workspace. For example, `samples/headless/search-react` is named `@coveo/ui-kit-sample-headless-search-react`. When a sample is ready to publish, we simply flip it from private to public — remove `private: true` (and add `publishConfig.access: "public"` / a `files` allowlist). The package name never changes. See [ADR 002](../packages/create-ui/docs/adr/002-sample-publishing.md).
 
 ### Guidelines
 

@@ -1,4 +1,15 @@
 import {createAction} from '@reduxjs/toolkit';
+import {
+  type CacheKey,
+  createCacheKey,
+} from '@/src/core/interface/cache/interface-cache-registry.js';
+import {getHandleInternals} from '@/src/core/interface/utils/get-handle-internals.js';
+import type {InterfaceHandle} from '@/src/core/interface/utils/interface-types.js';
+
+type PaginationActions = ReturnType<typeof createPaginationActions>;
+
+const CACHE_KEY: CacheKey<PaginationActions> =
+  createCacheKey<PaginationActions>('pagination/actions');
 
 export function createPaginationActions(interfaceId: string) {
   return {
@@ -12,13 +23,9 @@ export function createPaginationActions(interfaceId: string) {
   };
 }
 
-const actionsCache = new Map<
-  string,
-  ReturnType<typeof createPaginationActions>
->();
-export function getOrCreatePaginationActions(interfaceId: string) {
-  if (!actionsCache.has(interfaceId)) {
-    actionsCache.set(interfaceId, createPaginationActions(interfaceId));
-  }
-  return actionsCache.get(interfaceId)!;
+export function getOrCreatePaginationActions(iface: InterfaceHandle) {
+  const {stateId, cacheRegistry} = getHandleInternals(iface);
+  return cacheRegistry.getOrCreate(CACHE_KEY, () =>
+    createPaginationActions(stateId)
+  );
 }

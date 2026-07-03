@@ -5,9 +5,10 @@
  */
 
 import {getOrCreateResultsSelectors} from '@/src/core/internal/result-list/result-list-selectors.js';
+import type {InterfaceHandle} from '@/src/core/interface/utils/interface-types.js';
 
-export const getResults = (interfaceId: string = 'default') => {
-  return getOrCreateResultsSelectors(interfaceId).getResults;
+export const getResults = (iface: InterfaceHandle) => {
+  return getOrCreateResultsSelectors(iface).getResults;
 };
 
 export {

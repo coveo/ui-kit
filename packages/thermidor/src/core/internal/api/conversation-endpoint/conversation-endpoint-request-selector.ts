@@ -2,6 +2,7 @@ import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-s
 import {getOrCreateConfigurationSelectors} from '@/src/core/internal/configuration/configuration-selectors.js';
 import {getOrCreateGenerativeSelectors} from '@/src/core/internal/generative/generative-selectors.js';
 import {getOrCreateCartSelectors} from '@/src/core/internal/cart/cart-selectors.js';
+import type {InterfaceHandle} from '@/src/core/interface/utils/interface-types.js';
 import type {CoveoConversationCartItem} from '@/src/api/interface/conversation-endpoint/conversation-endpoint-types.js';
 
 export interface ConversationEndpointRequestFromState {
@@ -14,12 +15,12 @@ export interface ConversationEndpointRequestFromState {
 }
 
 export function createConversationEndpointRequestSelector(
-  generativeInterfaceId: string,
-  cartInterfaceId: string
+  generativeInterface: InterfaceHandle,
+  cartInterface: InterfaceHandle
 ) {
   const configuration = getOrCreateConfigurationSelectors();
-  const generative = getOrCreateGenerativeSelectors(generativeInterfaceId);
-  const cart = getOrCreateCartSelectors(cartInterfaceId);
+  const generative = getOrCreateGenerativeSelectors(generativeInterface);
+  const cart = getOrCreateCartSelectors(cartInterface);
 
   return createMemoizedStateSelector(
     configuration.getTrackingId,

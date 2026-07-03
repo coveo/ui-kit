@@ -3,10 +3,7 @@ import type {
   Supports,
   EndpointThunk,
 } from '@/src/core/interface/utils/interface-types.js';
-import type {
-  Dispatchable,
-  StateSelector,
-} from '@/src/core/interface/engine/engine-types.js';
+import type {StateSelector} from '@/src/core/interface/engine/engine-types.js';
 import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
 import {getHandleInternals} from '@/src/core/interface/utils/get-handle-internals.js';
 import {getOrCreatePaginationActions} from '@/src/core/internal/pagination/pagination-actions.js';
@@ -20,12 +17,12 @@ class PaginationControllerImpl extends BaseController<PaginationControllerState>
   #controllerState: StateSelector<PaginationControllerState>;
 
   constructor(options: PaginationControllerOptions) {
-    const {engine, stateId} = getHandleInternals(options.interface);
+    const {engine} = getHandleInternals(options.interface);
 
-    engine.adoptSlice(getOrCreatePaginationSlice(stateId));
+    engine.adoptSlice(getOrCreatePaginationSlice(options.interface));
 
-    const selectors = getOrCreatePaginationSelectors(stateId);
-    const actions = getOrCreatePaginationActions(stateId);
+    const selectors = getOrCreatePaginationSelectors(options.interface);
+    const actions = getOrCreatePaginationActions(options.interface);
 
     const controllerState = createMemoizedStateSelector(
       selectors.getFirstResult,
@@ -57,7 +54,7 @@ class PaginationControllerImpl extends BaseController<PaginationControllerState>
 
     this.engine.mutate(this.#actions.setFirstResult(page * pageSize));
     for (const thunk of this.#thunks) {
-      this.engine.mutate(thunk({engine: this.engine}) as Dispatchable);
+      this.engine.mutate(thunk({engine: this.engine}));
     }
   }
 
@@ -69,7 +66,7 @@ class PaginationControllerImpl extends BaseController<PaginationControllerState>
     this.engine.mutate(this.#actions.setFirstResult(0));
     this.engine.mutate(this.#actions.setPageSize(pageSize));
     for (const thunk of this.#thunks) {
-      this.engine.mutate(thunk({engine: this.engine}) as Dispatchable);
+      this.engine.mutate(thunk({engine: this.engine}));
     }
   }
 }

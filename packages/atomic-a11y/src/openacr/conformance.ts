@@ -125,7 +125,7 @@ export function buildRemarks(context: RemarksContext): string {
   if (covered > 0) {
     evidence.push(
       violating === 0
-        ? `automated axe-core found no violations across ${covered} component(s)`
+        ? `automated axe-core found no violations across applicable component(s) (${covered})`
         : `automated axe-core found violations in ${violating} of ${covered} component(s)`
     );
   }
