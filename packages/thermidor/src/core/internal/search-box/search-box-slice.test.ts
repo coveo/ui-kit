@@ -16,6 +16,7 @@ import {
   createSearchBoxSelectors,
   getOrCreateSearchBoxSelectors,
 } from './search-box-selectors.js';
+import {createTestEngine, createTestInterface} from '@/src/test/test-utils.js';
 
 describe('createSearchBoxActions', () => {
   it('should create actions scoped to the interfaceId', () => {
@@ -31,15 +32,20 @@ describe('createSearchBoxActions', () => {
 });
 
 describe('getOrCreateSearchBoxActions', () => {
-  it('should return the same instance for the same interfaceId', () => {
-    const a = getOrCreateSearchBoxActions('cached-actions');
-    const b = getOrCreateSearchBoxActions('cached-actions');
+  it('should return the same instance for the same interface', () => {
+    const engine = createTestEngine();
+    const iface = createTestInterface(engine, 'cached-actions');
+    const a = getOrCreateSearchBoxActions(iface);
+    const b = getOrCreateSearchBoxActions(iface);
     expect(a).toBe(b);
   });
 
-  it('should return different instances for different interfaceIds', () => {
-    const a = getOrCreateSearchBoxActions('actions-x');
-    const b = getOrCreateSearchBoxActions('actions-y');
+  it('should return different instances for different interfaces', () => {
+    const engine = createTestEngine();
+    const ifaceA = createTestInterface(engine, 'actions-x');
+    const ifaceB = createTestInterface(engine, 'actions-y');
+    const a = getOrCreateSearchBoxActions(ifaceA);
+    const b = getOrCreateSearchBoxActions(ifaceB);
     expect(a).not.toBe(b);
   });
 });
@@ -50,13 +56,18 @@ describe('createSearchBoxSlice', () => {
   });
 
   it('should create a slice with scoped name', () => {
-    const slice = createSearchBoxSlice('myInterface');
+    const engine = createTestEngine();
+    const iface = createTestInterface(engine, 'myInterface');
+    const actions = getOrCreateSearchBoxActions(iface);
+    const slice = createSearchBoxSlice('myInterface', actions);
     expect(slice.name).toBe('myInterface/searchBox');
   });
 
   it('should update query via scoped setQuery action', () => {
-    const actions = getOrCreateSearchBoxActions('test');
-    const slice = createSearchBoxSlice('test');
+    const engine = createTestEngine();
+    const iface = createTestInterface(engine, 'test');
+    const actions = getOrCreateSearchBoxActions(iface);
+    const slice = createSearchBoxSlice('test', actions);
 
     const state = slice.reducer(
       initialSearchBoxState,
@@ -66,16 +77,20 @@ describe('createSearchBoxSlice', () => {
   });
 
   it('should accept empty string', () => {
-    const actions = getOrCreateSearchBoxActions('test2');
-    const slice = createSearchBoxSlice('test2');
+    const engine = createTestEngine();
+    const iface = createTestInterface(engine, 'test2');
+    const actions = getOrCreateSearchBoxActions(iface);
+    const slice = createSearchBoxSlice('test2', actions);
 
     const state = slice.reducer({query: 'existing'}, actions.setQuery(''));
     expect(state.query).toBe('');
   });
 
   it('should maintain state immutability', () => {
-    const actions = getOrCreateSearchBoxActions('test3');
-    const slice = createSearchBoxSlice('test3');
+    const engine = createTestEngine();
+    const iface = createTestInterface(engine, 'test3');
+    const actions = getOrCreateSearchBoxActions(iface);
+    const slice = createSearchBoxSlice('test3', actions);
 
     const original = {...initialSearchBoxState};
     slice.reducer(original, actions.setQuery('test'));
@@ -84,15 +99,20 @@ describe('createSearchBoxSlice', () => {
 });
 
 describe('getOrCreateSearchBoxSlice', () => {
-  it('should return the same instance for the same interfaceId', () => {
-    const a = getOrCreateSearchBoxSlice('cached-slice');
-    const b = getOrCreateSearchBoxSlice('cached-slice');
+  it('should return the same instance for the same interface', () => {
+    const engine = createTestEngine();
+    const iface = createTestInterface(engine, 'cached-slice');
+    const a = getOrCreateSearchBoxSlice(iface);
+    const b = getOrCreateSearchBoxSlice(iface);
     expect(a).toBe(b);
   });
 
-  it('should return different instances for different interfaceIds', () => {
-    const a = getOrCreateSearchBoxSlice('slice-x');
-    const b = getOrCreateSearchBoxSlice('slice-y');
+  it('should return different instances for different interfaces', () => {
+    const engine = createTestEngine();
+    const ifaceA = createTestInterface(engine, 'slice-x');
+    const ifaceB = createTestInterface(engine, 'slice-y');
+    const a = getOrCreateSearchBoxSlice(ifaceA);
+    const b = getOrCreateSearchBoxSlice(ifaceB);
     expect(a).not.toBe(b);
   });
 });
@@ -112,15 +132,20 @@ describe('createSearchBoxSelectors', () => {
 });
 
 describe('getOrCreateSearchBoxSelectors', () => {
-  it('should return the same instance for the same interfaceId', () => {
-    const a = getOrCreateSearchBoxSelectors('cached-sel');
-    const b = getOrCreateSearchBoxSelectors('cached-sel');
+  it('should return the same instance for the same interface', () => {
+    const engine = createTestEngine();
+    const iface = createTestInterface(engine, 'cached-sel');
+    const a = getOrCreateSearchBoxSelectors(iface);
+    const b = getOrCreateSearchBoxSelectors(iface);
     expect(a).toBe(b);
   });
 
-  it('should return different instances for different interfaceIds', () => {
-    const a = getOrCreateSearchBoxSelectors('sel-x');
-    const b = getOrCreateSearchBoxSelectors('sel-y');
+  it('should return different instances for different interfaces', () => {
+    const engine = createTestEngine();
+    const ifaceA = createTestInterface(engine, 'sel-x');
+    const ifaceB = createTestInterface(engine, 'sel-y');
+    const a = getOrCreateSearchBoxSelectors(ifaceA);
+    const b = getOrCreateSearchBoxSelectors(ifaceB);
     expect(a).not.toBe(b);
   });
 });

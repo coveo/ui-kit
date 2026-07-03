@@ -13,6 +13,17 @@ import {
   getOrCreateResultsSelectors,
 } from './result-list-selectors.js';
 import type {CoveoSearchResult} from '@/src/core/interface/api/search/search-types.js';
+import {createTestEngine, createTestInterface} from '@/src/test/test-utils.js';
+import {getOrCreateHydrateFromSnapshotAction} from '@/src/core/interface/generative/generative-hydration.js';
+
+const sharedEngine = createTestEngine();
+const ifaceCache = new Map<string, ReturnType<typeof createTestInterface>>();
+function iface(id: string) {
+  if (!ifaceCache.has(id)) {
+    ifaceCache.set(id, createTestInterface(sharedEngine, id));
+  }
+  return ifaceCache.get(id)!;
+}
 
 const mockCoveoResult = (
   overrides: Partial<CoveoSearchResult> = {}
@@ -57,15 +68,16 @@ describe('createResultsActions', () => {
 
 describe('getOrCreateResultsActions', () => {
   it('should return the same reference for the same interfaceId', () => {
-    const first = getOrCreateResultsActions('cached-id');
-    const second = getOrCreateResultsActions('cached-id');
+    const testInterface = iface('cached-results-actions');
+    const first = getOrCreateResultsActions(testInterface);
+    const second = getOrCreateResultsActions(testInterface);
 
     expect(first).toBe(second);
   });
 
   it('should return different references for different interfaceIds', () => {
-    const a = getOrCreateResultsActions('id-a');
-    const b = getOrCreateResultsActions('id-b');
+    const a = getOrCreateResultsActions(iface('results-actions-x'));
+    const b = getOrCreateResultsActions(iface('results-actions-y'));
 
     expect(a).not.toBe(b);
   });
@@ -73,14 +85,19 @@ describe('getOrCreateResultsActions', () => {
 
 describe('createResultsSlice', () => {
   it('should create a slice scoped to the interfaceId', () => {
-    const slice = createResultsSlice('my-interface');
+    const testInterface = iface('my-interface');
+    const actions = getOrCreateResultsActions(testInterface);
+    const hydrateAction = getOrCreateHydrateFromSnapshotAction(testInterface);
+    const slice = createResultsSlice('my-interface', actions, hydrateAction);
 
     expect(slice.name).toBe('my-interface/results');
   });
 
   it('should handle setResultsFromResponse action', () => {
-    const slice = createResultsSlice('test');
-    const actions = getOrCreateResultsActions('test');
+    const testInterface = iface('test-handle');
+    const actions = getOrCreateResultsActions(testInterface);
+    const hydrateAction = getOrCreateHydrateFromSnapshotAction(testInterface);
+    const slice = createResultsSlice('test-handle', actions, hydrateAction);
 
     const coveoResults: CoveoSearchResult[] = [
       mockCoveoResult({uniqueId: '1', title: 'Result 1'}),
@@ -100,8 +117,10 @@ describe('createResultsSlice', () => {
   });
 
   it('should map CoveoSearchResult fields correctly', () => {
-    const slice = createResultsSlice('map-test');
-    const actions = getOrCreateResultsActions('map-test');
+    const testInterface = iface('map-test');
+    const actions = getOrCreateResultsActions(testInterface);
+    const hydrateAction = getOrCreateHydrateFromSnapshotAction(testInterface);
+    const slice = createResultsSlice('map-test', actions, hydrateAction);
 
     const coveoResult = mockCoveoResult({
       uniqueId: 'abc',
@@ -132,8 +151,10 @@ describe('createResultsSlice', () => {
   });
 
   it('should replace previous results completely', () => {
-    const slice = createResultsSlice('replace-test');
-    const actions = getOrCreateResultsActions('replace-test');
+    const testInterface = iface('replace-test');
+    const actions = getOrCreateResultsActions(testInterface);
+    const hydrateAction = getOrCreateHydrateFromSnapshotAction(testInterface);
+    const slice = createResultsSlice('replace-test', actions, hydrateAction);
 
     const oldState = {
       results: [
@@ -162,8 +183,12 @@ describe('createResultsSlice', () => {
   });
 
   it('should not respond to actions from a different interfaceId', () => {
-    const slice = createResultsSlice('slice-a');
-    const actionsB = getOrCreateResultsActions('slice-b');
+    const testIfaceA = iface('slice-a');
+    const testIfaceB = iface('slice-b');
+    const actionsA = getOrCreateResultsActions(testIfaceA);
+    const hydrateActionA = getOrCreateHydrateFromSnapshotAction(testIfaceA);
+    const slice = createResultsSlice('slice-a', actionsA, hydrateActionA);
+    const actionsB = getOrCreateResultsActions(testIfaceB);
 
     const state = slice.reducer(
       initialResultListState,
@@ -176,15 +201,15 @@ describe('createResultsSlice', () => {
 
 describe('getOrCreateResultsSlice', () => {
   it('should return the same reference for the same interfaceId', () => {
-    const first = getOrCreateResultsSlice('cached-slice');
-    const second = getOrCreateResultsSlice('cached-slice');
+    const first = getOrCreateResultsSlice(iface('cached-slice'));
+    const second = getOrCreateResultsSlice(iface('cached-slice'));
 
     expect(first).toBe(second);
   });
 
   it('should return different references for different interfaceIds', () => {
-    const a = getOrCreateResultsSlice('slice-x');
-    const b = getOrCreateResultsSlice('slice-y');
+    const a = getOrCreateResultsSlice(iface('slice-x'));
+    const b = getOrCreateResultsSlice(iface('slice-y'));
 
     expect(a).not.toBe(b);
   });
@@ -224,15 +249,15 @@ describe('createResultsSelectors', () => {
 
 describe('getOrCreateResultsSelectors', () => {
   it('should return the same reference for the same interfaceId', () => {
-    const first = getOrCreateResultsSelectors('cached-sel');
-    const second = getOrCreateResultsSelectors('cached-sel');
+    const first = getOrCreateResultsSelectors(iface('cached-sel'));
+    const second = getOrCreateResultsSelectors(iface('cached-sel'));
 
     expect(first).toBe(second);
   });
 
   it('should return different references for different interfaceIds', () => {
-    const a = getOrCreateResultsSelectors('sel-a');
-    const b = getOrCreateResultsSelectors('sel-b');
+    const a = getOrCreateResultsSelectors(iface('sel-a'));
+    const b = getOrCreateResultsSelectors(iface('sel-b'));
 
     expect(a).not.toBe(b);
   });

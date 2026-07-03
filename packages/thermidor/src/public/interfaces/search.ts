@@ -32,7 +32,9 @@ export function buildSearchInterface(
   const fullEngine = getFullEngine(options.engine);
   const interfaceId = options.id ?? generateId();
 
-  fullEngine.adoptSlice(getOrCreateSearchParametersSlice(interfaceId));
+  const iface = new SearchInterface(fullEngine, interfaceId);
 
-  return new SearchInterface(fullEngine, interfaceId);
+  fullEngine.adoptSlice(getOrCreateSearchParametersSlice(iface));
+
+  return iface;
 }

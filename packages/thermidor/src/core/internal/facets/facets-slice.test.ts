@@ -18,6 +18,17 @@ import {
 } from './facets-selectors.js';
 import type {FacetsState} from '@/src/core/interface/facets/facets-types.js';
 import type {CoveoFacetResponse} from '@/src/core/interface/api/search/search-types.js';
+import {createTestEngine, createTestInterface} from '@/src/test/test-utils.js';
+import {getOrCreateHydrateFromSnapshotAction} from '@/src/core/interface/generative/generative-hydration.js';
+
+const sharedEngine = createTestEngine();
+const ifaceCache = new Map<string, ReturnType<typeof createTestInterface>>();
+function iface(id: string) {
+  if (!ifaceCache.has(id)) {
+    ifaceCache.set(id, createTestInterface(sharedEngine, id));
+  }
+  return ifaceCache.get(id)!;
+}
 
 describe('createFacetsActions', () => {
   it('should create actions scoped to the interfaceId', () => {
@@ -38,14 +49,14 @@ describe('createFacetsActions', () => {
 
 describe('getOrCreateFacetsActions', () => {
   it('should return the same instance for the same interfaceId', () => {
-    const a = getOrCreateFacetsActions('cached-facet-actions');
-    const b = getOrCreateFacetsActions('cached-facet-actions');
+    const a = getOrCreateFacetsActions(iface('cached-facet-actions'));
+    const b = getOrCreateFacetsActions(iface('cached-facet-actions'));
     expect(a).toBe(b);
   });
 
   it('should return different instances for different interfaceIds', () => {
-    const a = getOrCreateFacetsActions('facet-actions-x');
-    const b = getOrCreateFacetsActions('facet-actions-y');
+    const a = getOrCreateFacetsActions(iface('facet-actions-x'));
+    const b = getOrCreateFacetsActions(iface('facet-actions-y'));
     expect(a).not.toBe(b);
   });
 });
@@ -56,13 +67,18 @@ describe('createFacetsSlice', () => {
   });
 
   it('should create a slice with scoped name', () => {
-    const slice = createFacetsSlice('myInterface');
+    const testInterface = iface('myInterface');
+    const actions = getOrCreateFacetsActions(testInterface);
+    const hydrateAction = getOrCreateHydrateFromSnapshotAction(testInterface);
+    const slice = createFacetsSlice('myInterface', actions, hydrateAction);
     expect(slice.name).toBe('myInterface/facets');
   });
 
   it('should update facet values from response', () => {
-    const actions = getOrCreateFacetsActions('test-response');
-    const slice = createFacetsSlice('test-response');
+    const testInterface = iface('test-response');
+    const actions = getOrCreateFacetsActions(testInterface);
+    const hydrateAction = getOrCreateHydrateFromSnapshotAction(testInterface);
+    const slice = createFacetsSlice('test-response', actions, hydrateAction);
 
     const stateWithFacet: FacetsState = {
       category: {
@@ -96,8 +112,10 @@ describe('createFacetsSlice', () => {
   });
 
   it('should not modify state when response is undefined', () => {
-    const actions = getOrCreateFacetsActions('test-undefined');
-    const slice = createFacetsSlice('test-undefined');
+    const testInterface = iface('test-undefined');
+    const actions = getOrCreateFacetsActions(testInterface);
+    const hydrateAction = getOrCreateHydrateFromSnapshotAction(testInterface);
+    const slice = createFacetsSlice('test-undefined', actions, hydrateAction);
 
     const stateWithFacet: FacetsState = {
       category: {
@@ -117,8 +135,10 @@ describe('createFacetsSlice', () => {
   });
 
   it('should ignore response facets that do not exist in state', () => {
-    const actions = getOrCreateFacetsActions('test-missing');
-    const slice = createFacetsSlice('test-missing');
+    const testInterface = iface('test-missing');
+    const actions = getOrCreateFacetsActions(testInterface);
+    const hydrateAction = getOrCreateHydrateFromSnapshotAction(testInterface);
+    const slice = createFacetsSlice('test-missing', actions, hydrateAction);
 
     const response: CoveoFacetResponse[] = [
       {
@@ -137,8 +157,10 @@ describe('createFacetsSlice', () => {
   });
 
   it('should maintain state immutability', () => {
-    const actions = getOrCreateFacetsActions('test-immutable');
-    const slice = createFacetsSlice('test-immutable');
+    const testInterface = iface('test-immutable');
+    const actions = getOrCreateFacetsActions(testInterface);
+    const hydrateAction = getOrCreateHydrateFromSnapshotAction(testInterface);
+    const slice = createFacetsSlice('test-immutable', actions, hydrateAction);
 
     const original: FacetsState = {
       category: {
@@ -164,14 +186,14 @@ describe('createFacetsSlice', () => {
 
 describe('getOrCreateFacetsSlice', () => {
   it('should return the same instance for the same interfaceId', () => {
-    const a = getOrCreateFacetsSlice('cached-facet-slice');
-    const b = getOrCreateFacetsSlice('cached-facet-slice');
+    const a = getOrCreateFacetsSlice(iface('cached-facet-slice'));
+    const b = getOrCreateFacetsSlice(iface('cached-facet-slice'));
     expect(a).toBe(b);
   });
 
   it('should return different instances for different interfaceIds', () => {
-    const a = getOrCreateFacetsSlice('facet-slice-x');
-    const b = getOrCreateFacetsSlice('facet-slice-y');
+    const a = getOrCreateFacetsSlice(iface('facet-slice-x'));
+    const b = getOrCreateFacetsSlice(iface('facet-slice-y'));
     expect(a).not.toBe(b);
   });
 });
@@ -218,14 +240,14 @@ describe('createFacetsSelectors', () => {
 
 describe('getOrCreateFacetsSelectors', () => {
   it('should return the same instance for the same interfaceId', () => {
-    const a = getOrCreateFacetsSelectors('cached-facet-sel');
-    const b = getOrCreateFacetsSelectors('cached-facet-sel');
+    const a = getOrCreateFacetsSelectors(iface('cached-facet-sel'));
+    const b = getOrCreateFacetsSelectors(iface('cached-facet-sel'));
     expect(a).toBe(b);
   });
 
   it('should return different instances for different interfaceIds', () => {
-    const a = getOrCreateFacetsSelectors('facet-sel-x');
-    const b = getOrCreateFacetsSelectors('facet-sel-y');
+    const a = getOrCreateFacetsSelectors(iface('facet-sel-x'));
+    const b = getOrCreateFacetsSelectors(iface('facet-sel-y'));
     expect(a).not.toBe(b);
   });
 });

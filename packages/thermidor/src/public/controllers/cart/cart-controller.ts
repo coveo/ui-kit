@@ -2,7 +2,7 @@ import {
   SetCartItemsPayload,
   UpdateItemQuantityPayload,
 } from '@/src/core/interface/cart/cart-types.js';
-import {loadCart} from '@/src/core/interface/cart/cart-loader.js';
+import {getOrCreateCartSlice} from '@/src/core/internal/cart/cart-slice.js';
 import {BaseController} from '@/src/core/interface/base-controller.js';
 import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
 import type {Supports} from '@/src/core/interface/utils/interface-types.js';
@@ -15,18 +15,18 @@ class CartControllerImpl extends BaseController<CartControllerState> {
   #actions: ReturnType<typeof getOrCreateCartActions>;
 
   constructor(options: CartControllerOptions) {
-    const {engine, stateId} = getHandleInternals(options.interface);
+    const {engine} = getHandleInternals(options.interface);
 
-    loadCart(engine, stateId);
+    engine.adoptSlice(getOrCreateCartSlice(options.interface));
 
-    const selectors = getOrCreateCartSelectors(stateId);
+    const selectors = getOrCreateCartSelectors(options.interface);
     const controllerState = createMemoizedStateSelector(
       selectors.getItems,
       (items) => ({items})
     );
 
     super(engine, controllerState);
-    this.#actions = getOrCreateCartActions(stateId);
+    this.#actions = getOrCreateCartActions(options.interface);
   }
 
   setItems(payload: SetCartItemsPayload): void {

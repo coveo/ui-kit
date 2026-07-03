@@ -5,7 +5,7 @@
  */
 
 import {describe, it, expect, beforeEach, vi} from 'vitest';
-import {createTestEngine} from '@/src/test/test-utils.js';
+import {createTestEngine, createTestInterface} from '@/src/test/test-utils.js';
 import {getQuery} from '@/src/core/interface/search-box/search-box-selectors.js';
 import {setQuery} from '@/src/core/interface/search-box/search-box-mutators.js';
 import {setResultsFromResponse} from '@/src/core/interface/result-list/result-list-mutators.js';
@@ -15,31 +15,35 @@ import {getOrCreateResultsSlice} from '@/src/core/internal/result-list/result-li
 import type {NavigatorContextProvider} from '@/src/core/interface/navigator-context/navigator-context-types.js';
 import {EngineOptions} from './engine-types.js';
 import {ConfigurationState} from '../configuration/configuration-types.js';
+import type {SearchInterface} from '@/src/public/interfaces/search.js';
 
 describe('Engine: read()', () => {
   let engine: FullEngine;
+  let iface: SearchInterface;
 
   beforeEach(() => {
-    engine = getFullEngine(createTestEngine());
-    engine.adoptSlice(getOrCreateSearchBoxSlice('default'));
-    engine.adoptSlice(getOrCreateResultsSlice('default'));
+    const rawEngine = createTestEngine();
+    engine = getFullEngine(rawEngine);
+    iface = createTestInterface(rawEngine, 'default');
+    engine.adoptSlice(getOrCreateSearchBoxSlice(iface));
+    engine.adoptSlice(getOrCreateResultsSlice(iface));
   });
 
   it('should read values from state using a selector', () => {
-    const query = engine.read(getQuery);
+    const query = engine.read(getQuery(iface));
 
     expect(query).toBe('');
   });
 
   it('should return updated values after mutations', () => {
-    engine.mutate(setQuery('laptops'));
-    const query = engine.read(getQuery);
+    engine.mutate(setQuery('laptops', iface));
+    const query = engine.read(getQuery(iface));
 
     expect(query).toBe('laptops');
   });
 
   it('should work with inline selector functions', () => {
-    engine.mutate(setQuery('test'));
+    engine.mutate(setQuery('test', iface));
 
     const query = engine.read(
       (state: Record<string, any>) =>
@@ -52,18 +56,21 @@ describe('Engine: read()', () => {
 
 describe('Engine: subscribe()', () => {
   let engine: FullEngine;
+  let iface: SearchInterface;
 
   beforeEach(() => {
-    engine = getFullEngine(createTestEngine());
-    engine.adoptSlice(getOrCreateSearchBoxSlice('default'));
-    engine.adoptSlice(getOrCreateResultsSlice('default'));
+    const rawEngine = createTestEngine();
+    engine = getFullEngine(rawEngine);
+    iface = createTestInterface(rawEngine, 'default');
+    engine.adoptSlice(getOrCreateSearchBoxSlice(iface));
+    engine.adoptSlice(getOrCreateResultsSlice(iface));
   });
 
   it('should trigger callback when subscribed value changes', () => {
     const callback = vi.fn();
 
-    engine.subscribe(getQuery, callback);
-    engine.mutate(setQuery('laptops'));
+    engine.subscribe(getQuery(iface), callback);
+    engine.mutate(setQuery('laptops', iface));
 
     expect(callback).toHaveBeenCalledWith('laptops');
     expect(callback).toHaveBeenCalledTimes(1);
@@ -72,14 +79,11 @@ describe('Engine: subscribe()', () => {
   it('should not trigger callback when value does not change', () => {
     const callback = vi.fn();
 
-    // Set initial value
-    engine.mutate(setQuery('test'));
+    engine.mutate(setQuery('test', iface));
 
-    // Subscribe after value is set
-    engine.subscribe(getQuery, callback);
+    engine.subscribe(getQuery(iface), callback);
 
-    // Set to same value
-    engine.mutate(setQuery('test'));
+    engine.mutate(setQuery('test', iface));
 
     expect(callback).not.toHaveBeenCalled();
   });
@@ -87,9 +91,9 @@ describe('Engine: subscribe()', () => {
   it('should not trigger callback when unrelated state changes', () => {
     const callback = vi.fn();
 
-    engine.subscribe(getQuery, callback);
+    engine.subscribe(getQuery(iface), callback);
 
-    engine.mutate(setResultsFromResponse([]));
+    engine.mutate(setResultsFromResponse([], iface));
 
     expect(callback).not.toHaveBeenCalled();
   });
@@ -97,11 +101,11 @@ describe('Engine: subscribe()', () => {
   it('should trigger callback for each distinct change', () => {
     const callback = vi.fn();
 
-    engine.subscribe(getQuery, callback);
+    engine.subscribe(getQuery(iface), callback);
 
-    engine.mutate(setQuery('first'));
-    engine.mutate(setQuery('second'));
-    engine.mutate(setQuery('third'));
+    engine.mutate(setQuery('first', iface));
+    engine.mutate(setQuery('second', iface));
+    engine.mutate(setQuery('third', iface));
 
     expect(callback).toHaveBeenCalledTimes(3);
     expect(callback).toHaveBeenNthCalledWith(1, 'first');
@@ -110,7 +114,7 @@ describe('Engine: subscribe()', () => {
   });
 
   it('should return an unsubscribe function', () => {
-    const unsubscribe = engine.subscribe(getQuery, vi.fn());
+    const unsubscribe = engine.subscribe(getQuery(iface), vi.fn());
 
     expect(typeof unsubscribe).toBe('function');
   });
@@ -118,17 +122,14 @@ describe('Engine: subscribe()', () => {
   it('should stop triggering callback after unsubscribe', () => {
     const callback = vi.fn();
 
-    const unsubscribe = engine.subscribe(getQuery, callback);
+    const unsubscribe = engine.subscribe(getQuery(iface), callback);
 
-    // Should trigger
-    engine.mutate(setQuery('first'));
+    engine.mutate(setQuery('first', iface));
     expect(callback).toHaveBeenCalledTimes(1);
 
-    // Unsubscribe
     unsubscribe();
 
-    // Should not trigger
-    engine.mutate(setQuery('second'));
+    engine.mutate(setQuery('second', iface));
     expect(callback).toHaveBeenCalledTimes(1);
   });
 
@@ -136,10 +137,10 @@ describe('Engine: subscribe()', () => {
     const callback1 = vi.fn();
     const callback2 = vi.fn();
 
-    engine.subscribe(getQuery, callback1);
-    engine.subscribe(getQuery, callback2);
+    engine.subscribe(getQuery(iface), callback1);
+    engine.subscribe(getQuery(iface), callback2);
 
-    engine.mutate(setQuery('test'));
+    engine.mutate(setQuery('test', iface));
 
     expect(callback1).toHaveBeenCalledWith('test');
     expect(callback2).toHaveBeenCalledWith('test');
@@ -148,32 +149,34 @@ describe('Engine: subscribe()', () => {
 
 describe('Engine: mutate()', () => {
   let engine: FullEngine;
+  let iface: SearchInterface;
 
   beforeEach(() => {
-    engine = getFullEngine(createTestEngine());
-    engine.adoptSlice(getOrCreateSearchBoxSlice('default'));
-    engine.adoptSlice(getOrCreateResultsSlice('default'));
+    const rawEngine = createTestEngine();
+    engine = getFullEngine(rawEngine);
+    iface = createTestInterface(rawEngine, 'default');
+    engine.adoptSlice(getOrCreateSearchBoxSlice(iface));
+    engine.adoptSlice(getOrCreateResultsSlice(iface));
   });
 
   it('should update state correctly', () => {
-    engine.mutate(setQuery('test query'));
+    engine.mutate(setQuery('test query', iface));
 
-    expect(engine.read(getQuery)).toBe('test query');
+    expect(engine.read(getQuery(iface))).toBe('test query');
   });
 
   it('should handle multiple mutations in sequence', () => {
-    engine.mutate(setQuery('laptops'));
+    engine.mutate(setQuery('laptops', iface));
 
-    expect(engine.read(getQuery)).toBe('laptops');
+    expect(engine.read(getQuery(iface))).toBe('laptops');
   });
 
   it('should accept library-agnostic StateMutation objects', () => {
-    // Ensure slice is adopted first
-    engine.read(getQuery);
+    engine.read(getQuery(iface));
 
     engine.mutate({type: 'default/searchBox/setQuery', payload: 'test'});
 
-    expect(engine.read(getQuery)).toBe('test');
+    expect(engine.read(getQuery(iface))).toBe('test');
   });
 });
 
@@ -278,7 +281,6 @@ describe('Engine: constructor()', () => {
     };
     const fullEngine = getFullEngine(new Engine(options));
 
-    // Verify provider can be retrieved and called
     const provider = fullEngine.getNavigatorContextProvider();
     expect(provider).toBe(mockProvider);
     expect(provider?.()).toEqual({
@@ -339,5 +341,66 @@ describe('Engine: constructor()', () => {
       fullEngine.read((state) => state.configuration?.organizationId)
     ).toBe('my-org');
     expect(fullEngine.getNavigatorContextProvider()).toBe(mockProvider);
+  });
+});
+
+describe('Engine.dispose()', () => {
+  let engine: Engine;
+  let fullEngine: FullEngine;
+  let iface: SearchInterface;
+
+  beforeEach(() => {
+    engine = createTestEngine();
+    fullEngine = getFullEngine(engine);
+    iface = createTestInterface(engine, 'default');
+  });
+
+  it('disposed returns false before dispose', () => {
+    expect(engine.disposed).toBe(false);
+  });
+
+  it('disposed returns true after dispose', () => {
+    engine.dispose();
+
+    expect(engine.disposed).toBe(true);
+  });
+
+  it('mutate throws after dispose', () => {
+    engine.dispose();
+
+    expect(() => fullEngine.mutate(setQuery('test', iface))).toThrow();
+  });
+
+  it('read throws after dispose', () => {
+    engine.dispose();
+
+    expect(() => fullEngine.read(getQuery(iface))).toThrow();
+  });
+
+  it('subscribe throws after dispose', () => {
+    engine.dispose();
+
+    expect(() => fullEngine.subscribe(getQuery(iface), () => {})).toThrow();
+  });
+
+  it('adoptSlice throws after dispose', async () => {
+    const slice = getOrCreateSearchBoxSlice(iface);
+    engine.dispose();
+
+    await expect(fullEngine.adoptSlice(slice)).rejects.toThrow(
+      'Cannot operate on a disposed Engine.'
+    );
+  });
+
+  it('all operations work normally before dispose', async () => {
+    await fullEngine.adoptSlice(getOrCreateSearchBoxSlice(iface));
+    fullEngine.mutate(setQuery('hello', iface));
+    const query = fullEngine.read(getQuery(iface));
+    const unsubscribe = fullEngine.subscribe(getQuery(iface), () => {});
+
+    expect(query).toBe('hello');
+    expect(typeof unsubscribe).toBe('function');
+
+    unsubscribe();
   });
 });

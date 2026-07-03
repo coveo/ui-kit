@@ -1,5 +1,6 @@
 import {getOrCreateCartActions} from '@/src/core/internal/cart/cart-actions.js';
 import type {StateMutation} from '@/src/core/interface/engine/engine-types.js';
+import type {InterfaceHandle} from '@/src/core/interface/utils/interface-types.js';
 import type {
   SetCartItemsPayload,
   UpdateItemQuantityPayload,
@@ -7,16 +8,16 @@ import type {
 
 export const setItems = (
   payload: SetCartItemsPayload,
-  interfaceId: string = 'default'
+  iface: InterfaceHandle
 ): StateMutation => {
-  const actions = getOrCreateCartActions(interfaceId);
+  const actions = getOrCreateCartActions(iface);
   return actions.setItems(payload.items);
 };
 
 export const updateItemQuantity = (
   payload: UpdateItemQuantityPayload,
-  interfaceId: string = 'default'
+  iface: InterfaceHandle
 ): StateMutation => {
-  const actions = getOrCreateCartActions(interfaceId);
+  const actions = getOrCreateCartActions(iface);
   return actions.updateItemQuantity(payload.item);
 };
