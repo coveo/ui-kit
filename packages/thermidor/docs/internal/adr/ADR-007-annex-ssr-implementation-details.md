@@ -76,7 +76,7 @@ buildSearchInterface({ engine, id: 'main-search', initialState: { query: 'laptop
 ├─ 2. Calls engine.storeHydrationSnapshot('main-search', translatedState)
 │     (stores the full blob — optimistic, cheap)
 │
-└─ 3. Returns the interface (no slices adopted yet, no controllers exist, no side effects)
+└─ 3. Returns the interface (no controllers exist, no side effects; internal support slices may be adopted)
 ```
 
 ```
