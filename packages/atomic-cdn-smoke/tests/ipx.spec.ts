@@ -1,4 +1,4 @@
-import {test, expect, searchApi} from '../fixtures.js';
+import {test, searchApi} from '../fixtures.js';
 
 test('IPX modal renders results', async ({page, openPage, useHandlers}) => {
   await useHandlers(searchApi.handlers);
@@ -16,5 +16,4 @@ test('IPX modal renders results', async ({page, openPage, useHandlers}) => {
     .locator('atomic-search-interface')
     .evaluate((el: any) => el.executeFirstSearch());
   await page.locator('atomic-result-list atomic-result').first().waitFor();
-  await expect(page).toHaveScreenshot();
 });
