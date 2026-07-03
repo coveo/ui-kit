@@ -12,6 +12,7 @@ metadata:
 ## When to Apply
 
 Apply this ordering convention when:
+
 - Creating a new TypeScript class in `packages/thermidor/src/`
 - Refactoring or reviewing an existing class in the thermidor package
 - Adding new members to an existing class
