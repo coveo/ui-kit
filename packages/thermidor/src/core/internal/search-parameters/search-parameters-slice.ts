@@ -1,4 +1,10 @@
 import {createSlice} from '@reduxjs/toolkit';
+import {
+  type CacheKey,
+  createCacheKey,
+} from '@/src/core/interface/cache/interface-cache-registry.js';
+import {getHandleInternals} from '@/src/core/interface/utils/get-handle-internals.js';
+import type {InterfaceHandle} from '@/src/core/interface/utils/interface-types.js';
 import {getOrCreateSearchParametersActions} from './search-parameters-actions.js';
 
 export interface SearchParametersState {
@@ -11,8 +17,15 @@ export const initialSearchParametersState: SearchParametersState = {
   cq: '',
 };
 
-export function createSearchParametersSlice(interfaceId: string) {
-  const actions = getOrCreateSearchParametersActions(interfaceId);
+type SearchParametersSlice = ReturnType<typeof createSearchParametersSlice>;
+
+const CACHE_KEY: CacheKey<SearchParametersSlice> =
+  createCacheKey<SearchParametersSlice>('searchParameters/slice');
+
+export function createSearchParametersSlice(
+  interfaceId: string,
+  actions: ReturnType<typeof getOrCreateSearchParametersActions>
+) {
   return createSlice({
     name: `${interfaceId}/searchParameters`,
     initialState: initialSearchParametersState,
@@ -28,13 +41,10 @@ export function createSearchParametersSlice(interfaceId: string) {
   });
 }
 
-const sliceCache = new Map<
-  string,
-  ReturnType<typeof createSearchParametersSlice>
->();
-export function getOrCreateSearchParametersSlice(interfaceId: string) {
-  if (!sliceCache.has(interfaceId)) {
-    sliceCache.set(interfaceId, createSearchParametersSlice(interfaceId));
-  }
-  return sliceCache.get(interfaceId)!;
+export function getOrCreateSearchParametersSlice(iface: InterfaceHandle) {
+  const {stateId, cacheRegistry} = getHandleInternals(iface);
+  return cacheRegistry.getOrCreate(CACHE_KEY, () => {
+    const actions = getOrCreateSearchParametersActions(iface);
+    return createSearchParametersSlice(stateId, actions);
+  });
 }

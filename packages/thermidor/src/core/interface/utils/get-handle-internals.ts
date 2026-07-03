@@ -1,5 +1,6 @@
+import type {InterfaceCacheRegistry} from '../cache/interface-cache-registry.js';
 import type {FullEngine} from '../engine/engine.js';
-import type {Facades, InterfaceType, Supports} from './interface-types.js';
+import type {InterfaceHandle} from './interface-types.js';
 import {BaseInterface, getInterfaceInternals} from '../base-interface.js';
 import {
   ComposedInterface,
@@ -9,14 +10,13 @@ import {
 export interface HandleInternals {
   engine: FullEngine;
   stateId: string;
+  cacheRegistry: InterfaceCacheRegistry;
 }
 
-export function getHandleInternals<F extends Facades[InterfaceType]>(
-  handle: Supports<F>
-): HandleInternals {
+export function getHandleInternals(handle: InterfaceHandle): HandleInternals {
   if (handle instanceof BaseInterface) {
-    const {engine, stateId} = getInterfaceInternals(handle);
-    return {engine, stateId};
+    const {engine, stateId, cacheRegistry} = getInterfaceInternals(handle);
+    return {engine, stateId, cacheRegistry};
   }
   if (handle instanceof ComposedInterface) {
     return getComposedInternals(handle);

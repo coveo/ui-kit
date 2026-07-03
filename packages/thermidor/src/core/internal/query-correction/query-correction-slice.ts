@@ -1,4 +1,10 @@
 import {createSlice} from '@reduxjs/toolkit';
+import {
+  type CacheKey,
+  createCacheKey,
+} from '@/src/core/interface/cache/interface-cache-registry.js';
+import {getHandleInternals} from '@/src/core/interface/utils/get-handle-internals.js';
+import type {InterfaceHandle} from '@/src/core/interface/utils/interface-types.js';
 import {getOrCreateQueryCorrectionActions} from './query-correction-actions.js';
 import type {QueryCorrection} from './query-correction-actions.js';
 
@@ -10,9 +16,15 @@ export const initialQueryCorrectionState: QueryCorrectionState = {
   correction: null,
 };
 
-export function createQueryCorrectionSlice(interfaceId: string) {
-  const actions = getOrCreateQueryCorrectionActions(interfaceId);
+type QueryCorrectionSlice = ReturnType<typeof createQueryCorrectionSlice>;
 
+const CACHE_KEY: CacheKey<QueryCorrectionSlice> =
+  createCacheKey<QueryCorrectionSlice>('queryCorrection/slice');
+
+export function createQueryCorrectionSlice(
+  interfaceId: string,
+  actions: ReturnType<typeof getOrCreateQueryCorrectionActions>
+) {
   return createSlice({
     name: `${interfaceId}/queryCorrection`,
     initialState: initialQueryCorrectionState,
@@ -25,13 +37,10 @@ export function createQueryCorrectionSlice(interfaceId: string) {
   });
 }
 
-const sliceCache = new Map<
-  string,
-  ReturnType<typeof createQueryCorrectionSlice>
->();
-export function getOrCreateQueryCorrectionSlice(interfaceId: string) {
-  if (!sliceCache.has(interfaceId)) {
-    sliceCache.set(interfaceId, createQueryCorrectionSlice(interfaceId));
-  }
-  return sliceCache.get(interfaceId)!;
+export function getOrCreateQueryCorrectionSlice(iface: InterfaceHandle) {
+  const {stateId, cacheRegistry} = getHandleInternals(iface);
+  return cacheRegistry.getOrCreate(CACHE_KEY, () => {
+    const actions = getOrCreateQueryCorrectionActions(iface);
+    return createQueryCorrectionSlice(stateId, actions);
+  });
 }

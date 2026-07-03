@@ -24,8 +24,6 @@ export * as searchBoxMutators from './interface/search-box/search-box-mutators.j
 
 export * as searchBoxSelectors from './interface/search-box/search-box-selectors.js';
 
-export {loadSearchBox} from './interface/search-box/search-box-loader.js';
-
 // ============================================================================
 // Results Feature (Collection — result list data)
 // ============================================================================
@@ -38,8 +36,6 @@ export type {
 export * as resultsMutations from './interface/result-list/result-list-mutators.js';
 
 export * as resultsSelectors from './interface/result-list/result-list-selectors.js';
-
-export {loadResultList} from './interface/result-list/result-list-loader.js';
 
 // ============================================================================
 // Search API Feature (request types)

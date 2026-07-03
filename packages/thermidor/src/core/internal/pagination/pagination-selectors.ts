@@ -1,6 +1,17 @@
+import {
+  type CacheKey,
+  createCacheKey,
+} from '@/src/core/interface/cache/interface-cache-registry.js';
+import {getHandleInternals} from '@/src/core/interface/utils/get-handle-internals.js';
+import type {InterfaceHandle} from '@/src/core/interface/utils/interface-types.js';
 import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
 import {createSelectSlice} from '@/src/core/interface/utils/select-slice.js';
 import {initialPaginationState} from './pagination-slice.js';
+
+type PaginationSelectors = ReturnType<typeof createPaginationSelectors>;
+
+const CACHE_KEY: CacheKey<PaginationSelectors> =
+  createCacheKey<PaginationSelectors>('pagination/selectors');
 
 export function createPaginationSelectors(interfaceId: string) {
   const sliceSelector = createSelectSlice(
@@ -27,13 +38,9 @@ export function createPaginationSelectors(interfaceId: string) {
   };
 }
 
-const selectorsCache = new Map<
-  string,
-  ReturnType<typeof createPaginationSelectors>
->();
-export function getOrCreatePaginationSelectors(interfaceId: string) {
-  if (!selectorsCache.has(interfaceId)) {
-    selectorsCache.set(interfaceId, createPaginationSelectors(interfaceId));
-  }
-  return selectorsCache.get(interfaceId)!;
+export function getOrCreatePaginationSelectors(iface: InterfaceHandle) {
+  const {stateId, cacheRegistry} = getHandleInternals(iface);
+  return cacheRegistry.getOrCreate(CACHE_KEY, () =>
+    createPaginationSelectors(stateId)
+  );
 }

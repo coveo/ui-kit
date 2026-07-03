@@ -7,6 +7,7 @@ import {
 } from './generative-hydration.js';
 import {getOrCreateProductListSlice} from '@/src/core/internal/product-list/product-list-slice.js';
 import {getOrCreateResultsSlice} from '@/src/core/internal/result-list/result-list-slice.js';
+import {buildSearchInterface} from '@/src/public/interfaces/search.js';
 
 function createTestEngine() {
   return new Engine({
@@ -23,19 +24,26 @@ function createTestEngine() {
 
 describe('getOrCreateHydrateFromSnapshotAction', () => {
   it('returns the same action for the same interfaceId', () => {
-    const action1 = getOrCreateHydrateFromSnapshotAction('test-id');
-    const action2 = getOrCreateHydrateFromSnapshotAction('test-id');
+    const engine = createTestEngine();
+    const iface = buildSearchInterface({engine, id: 'test-id'});
+    const action1 = getOrCreateHydrateFromSnapshotAction(iface);
+    const action2 = getOrCreateHydrateFromSnapshotAction(iface);
     expect(action1).toBe(action2);
   });
 
   it('returns different actions for different interfaceIds', () => {
-    const action1 = getOrCreateHydrateFromSnapshotAction('id-a');
-    const action2 = getOrCreateHydrateFromSnapshotAction('id-b');
+    const engine = createTestEngine();
+    const ifaceA = buildSearchInterface({engine, id: 'id-a'});
+    const ifaceB = buildSearchInterface({engine, id: 'id-b'});
+    const action1 = getOrCreateHydrateFromSnapshotAction(ifaceA);
+    const action2 = getOrCreateHydrateFromSnapshotAction(ifaceB);
     expect(action1).not.toBe(action2);
   });
 
   it('creates an action with the correct type pattern', () => {
-    const action = getOrCreateHydrateFromSnapshotAction('my-interface');
+    const engine = createTestEngine();
+    const iface = buildSearchInterface({engine, id: 'my-interface'});
+    const action = getOrCreateHydrateFromSnapshotAction(iface);
     expect(action.type).toBe('my-interface/hydrateFromSnapshot');
   });
 });
@@ -116,10 +124,10 @@ describe('createHydrateSubInterface', () => {
     };
 
     const result = hydrate('commerce-search-api-response', content);
-    const {stateId: subId} = getInterfaceInternals(result!.interface);
+    const subInterface = result!.interface;
     const fullEngine = getFullEngine(engine);
 
-    const productSlice = getOrCreateProductListSlice(subId);
+    const productSlice = getOrCreateProductListSlice(subInterface);
     await fullEngine.adoptSlice(productSlice);
     const productState = fullEngine.read(
       (state: Record<string, unknown>) =>
@@ -151,10 +159,10 @@ describe('createHydrateSubInterface', () => {
     };
 
     const result = hydrate('search-api-response', content);
-    const {stateId: subId} = getInterfaceInternals(result!.interface);
+    const subInterface = result!.interface;
     const fullEngine = getFullEngine(engine);
 
-    const resultsSlice = getOrCreateResultsSlice(subId);
+    const resultsSlice = getOrCreateResultsSlice(subInterface);
     await fullEngine.adoptSlice(resultsSlice);
     const resultState = fullEngine.read(
       (state: Record<string, unknown>) =>
