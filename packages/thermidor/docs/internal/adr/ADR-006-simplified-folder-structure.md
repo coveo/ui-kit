@@ -5,11 +5,11 @@
 
 ## 1. Context
 
-The current `src/` directory uses a three-layer structure (`api/`, `core/`, `public/`), each subdivided into `interface/` and `internal/`. This creates up to six locations per domain feature and introduces indirection layers (mutators, loaders, re-exported selectors) whose sole purpose is to bridge `interface/` and `internal/` within the same layer.
+The current `src/` directory uses a three-layer structure (`api/`, `core/`, `public/`), each subdivided into `interface/` and `internal/`. This creates up to six locations per domain feature and introduces indirection layers (mutators, re-exported selectors) whose sole purpose is to bridge `interface/` and `internal/` within the same layer.
 
 - **Business/context drivers**: Thermidor is still early-stage. The internal structure must be easy to navigate for contributors, both core and external. The current layout creates confusion about where new code belongs and duplicates concepts across boundaries.
 - **Technical constraints**: The anti-corruption boundary between `public/` and implementation details (Redux, Coveo API types) must be preserved (ADR-001). The simplification must not alter the public API surface.
-- **Known assumptions**: The `core/interface/` mutators, loaders, and re-exported selectors are largely mechanical indirection. Controllers already import directly from `core/internal/` in most cases, bypassing the `core/interface/` layer.
+- **Known assumptions**: The `core/interface/` mutators and re-exported selectors are largely mechanical indirection. Controllers already import directly from `core/internal/` in most cases, bypassing the `core/interface/` layer.
 
 ## 2. Decision Statement
 
@@ -67,7 +67,7 @@ See [Annex B](./ADR-006-annex-b-removed-indirection.md) for the list of concepts
 - **Summary**: One `internal/` directory containing `features/`, `api/`, `engine/`, and `utils/`. Each sub-module has a barrel `index.ts`. A lint rule restricts `public/` to importing from barrels only.
 - **Pros**:
   - Minimal cognitive overhead: two directories, one rule
-  - Eliminates ~30 indirection files (mutators, loaders, re-exported selectors)
+  - Eliminates ~30 indirection files (mutators and re-exported selectors)
   - Single canonical location per concept
   - The lint rule is enforceable in CI and produces clear error messages
   - Scales well as features are added
@@ -96,7 +96,7 @@ See [Annex B](./ADR-006-annex-b-removed-indirection.md) for the list of concepts
   - No file moves required
 - **Cons**:
   - Does not address the navigation complexity or concept duplication
-  - Mutators and loaders remain as dead-weight indirection
+  - Mutators remain as dead-weight indirection
   - Still six locations per feature
 - **Risks**:
   - Contributor confusion persists
@@ -105,7 +105,7 @@ See [Annex B](./ADR-006-annex-b-removed-indirection.md) for the list of concepts
 
 Option A provides the simplest mental model: one directory for what consumers see (`public/`), one for everything else (`internal/`). The anti-corruption boundary from ADR-001 is preserved and strengthened through tooling rather than directory nesting.
 
-The current structure's `core/interface/` layer was designed as a boundary between "what the rest of the package can use" and "raw implementation." In practice, this layer has become mechanical indirection: mutators that wrap actions, selectors that re-export from `internal/`, loaders that just call `adoptSlice`. Controllers already reach past it. Option A acknowledges this reality and replaces the structural boundary with a tooling boundary (barrel + lint), which is both more enforceable and less costly.
+The current structure's `core/interface/` layer was designed as a boundary between "what the rest of the package can use" and "raw implementation." In practice, this layer has become mechanical indirection: mutators that wrap actions and selectors that re-export from `internal/`. Controllers already reach past it. Option A acknowledges this reality and replaces the structural boundary with a tooling boundary (barrel + lint), which is both more enforceable and less costly.
 
 Option B was rejected because it reintroduces the three-layer problem. Option C was rejected because it preserves the structural overhead without solving the contributor experience problem.
 
@@ -143,5 +143,7 @@ Option B was rejected because it reintroduces the three-layer problem. Option C 
 7. Write barrel `index.ts` for each sub-module
 8. Update all imports in `public/` to use barrel paths
 9. Add ESLint `no-restricted-imports` rule
-10. Delete empty `core/` and top-level `api/` directories
-11. Verify all tests pass
+10. Add an **API snapshot gate** that snapshots the public API and flags leaked RTK/Immer symbols or types
+11. Add a **`.d.ts` validation gate** that checks generated declarations for leaked RTK/Immer types/imports
+12. Delete empty `core/` and top-level `api/` directories
+13. Verify all tests pass
