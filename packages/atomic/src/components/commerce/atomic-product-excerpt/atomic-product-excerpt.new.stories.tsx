@@ -5,7 +5,7 @@ import type {
 } from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
-import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
+import {MockCommerceApi} from '@coveo/platform-mock-api/commerce/mock';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {wrapInCommerceProductList} from '@/storybook-utils/commerce/commerce-product-list-wrapper';
 import {wrapInProductTemplate} from '@/storybook-utils/commerce/commerce-product-template-wrapper';

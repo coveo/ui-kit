@@ -5,7 +5,7 @@ import type {
 } from '@storybook/web-components-vite';
 import {html} from 'lit';
 import {testCheckboxA11y} from '@/storybook-utils/a11y/checkbox.js';
-import {MockSearchApi} from '@/storybook-utils/api/search/mock';
+import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-automatic-facet/atomic-automatic-facet.js';
