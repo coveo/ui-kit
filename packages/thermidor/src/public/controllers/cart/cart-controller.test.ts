@@ -40,8 +40,8 @@ describe('buildCartController', () => {
         const fullEngine = getFullEngine(engine);
         const {stateId} = getInterfaceInternals(cartInterface);
 
-        const searchBoxSlice = getOrCreateSearchBoxSlice(stateId);
-        const {setQuery} = getOrCreateSearchBoxActions(stateId);
+        const searchBoxSlice = getOrCreateSearchBoxSlice(cartInterface);
+        const {setQuery} = getOrCreateSearchBoxActions(cartInterface);
         fullEngine.adoptSlice(searchBoxSlice);
         controller.subscribe(callback);
         fullEngine.mutate(setQuery('q'));
@@ -105,7 +105,9 @@ describe('buildCartController', () => {
 
       buildCartController({interface: cartInterface});
 
-      expect(adoptSpy).toHaveBeenCalledWith(getOrCreateCartSlice(TEST_ID));
+      expect(adoptSpy).toHaveBeenCalledWith(
+        getOrCreateCartSlice(cartInterface)
+      );
     });
 
     it('setItems() dispatches the scoped setItems action', () => {
@@ -117,7 +119,7 @@ describe('buildCartController', () => {
 
       controller.setItems({items});
 
-      const actions = getOrCreateCartActions(TEST_ID);
+      const actions = getOrCreateCartActions(cartInterface);
       expect(mutateSpy).toHaveBeenCalledWith(actions.setItems(items));
     });
 
@@ -130,7 +132,7 @@ describe('buildCartController', () => {
 
       controller.updateItemQuantity({item});
 
-      const actions = getOrCreateCartActions(TEST_ID);
+      const actions = getOrCreateCartActions(cartInterface);
       expect(mutateSpy).toHaveBeenCalledWith(actions.updateItemQuantity(item));
     });
   });

@@ -8,11 +8,11 @@ import type {Controller} from '@/src/public/controllers/controller-types.js';
 
 class ResultListControllerImpl extends BaseController<ResultListControllerState> {
   constructor(options: ResultListControllerOptions) {
-    const {engine, stateId} = getHandleInternals(options.interface);
+    const {engine} = getHandleInternals(options.interface);
 
-    engine.adoptSlice(getOrCreateResultsSlice(stateId));
+    engine.adoptSlice(getOrCreateResultsSlice(options.interface));
 
-    const selectors = getOrCreateResultsSelectors(stateId);
+    const selectors = getOrCreateResultsSelectors(options.interface);
 
     const controllerState = createMemoizedStateSelector(
       selectors.getResults,

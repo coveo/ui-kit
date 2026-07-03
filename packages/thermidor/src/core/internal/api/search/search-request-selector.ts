@@ -6,12 +6,12 @@ import {getOrCreateFacetsSelectors} from '@/src/core/internal/facets/facets-sele
 import {getOrCreateSearchParametersSelectors} from '@/src/core/internal/search-parameters/search-parameters-selectors.js';
 
 export function createSearchEndpointRequestSelector(scope: EndpointStateScope) {
-  const sharableInterfaceId = scope.composedInterfaceId ?? scope.interfaceId;
-
-  const searchBox = getOrCreateSearchBoxSelectors(sharableInterfaceId);
-  const pagination = getOrCreatePaginationSelectors(scope.interfaceId);
-  const facets = getOrCreateFacetsSelectors(scope.interfaceId);
-  const searchParams = getOrCreateSearchParametersSelectors(scope.interfaceId);
+  const searchBox = getOrCreateSearchBoxSelectors(scope.scopeInterface);
+  const pagination = getOrCreatePaginationSelectors(scope.baseInterface);
+  const facets = getOrCreateFacetsSelectors(scope.baseInterface);
+  const searchParams = getOrCreateSearchParametersSelectors(
+    scope.baseInterface
+  );
 
   return createMemoizedStateSelector(
     searchBox.getQuery,

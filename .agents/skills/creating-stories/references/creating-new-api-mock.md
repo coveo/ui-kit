@@ -1,14 +1,14 @@
 # Creating a New API Mock
 
-Only create a new mock if the API domain you need does not already exist under `packages/atomic/storybook-utils/api/`.
+Only create a new mock if the API domain you need does not already exist under `packages/platform-mock-api/src/`.
 
 ## 1) Create a new domain directory
 
-Create `packages/atomic/storybook-utils/api/<api-domain>/`.
+Create `packages/platform-mock-api/src/<api-domain>/`.
 
 ## 2) Create a base response file
 
-Create `packages/atomic/storybook-utils/api/<api-domain>/<endpoint>-response.ts`:
+Create `packages/platform-mock-api/src/<api-domain>/<endpoint>-response.ts`:
 
 ```ts
 export const baseResponse = {
@@ -18,7 +18,7 @@ export const baseResponse = {
 
 ## 3) Create the mock harness class
 
-Create `packages/atomic/storybook-utils/api/<api-domain>/mock.ts`:
+Create `packages/platform-mock-api/src/<api-domain>/mock.ts`:
 
 ```ts
 import type {HttpHandler} from 'msw';

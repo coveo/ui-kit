@@ -1,16 +1,27 @@
 import {getOrCreatePaginationActions} from '@/src/core/internal/pagination/pagination-actions.js';
 import type {StateMutation} from '@/src/core/interface/engine/engine-types.js';
+import type {InterfaceHandle} from '@/src/core/interface/utils/interface-types.js';
 
-const defaultActions = getOrCreatePaginationActions('default');
-
-export const setFirstResult = (firstResult: number): StateMutation => {
-  return defaultActions.setFirstResult(firstResult);
+export const setFirstResult = (
+  firstResult: number,
+  iface: InterfaceHandle
+): StateMutation => {
+  const actions = getOrCreatePaginationActions(iface);
+  return actions.setFirstResult(firstResult);
 };
 
-export const setPageSize = (pageSize: number): StateMutation => {
-  return defaultActions.setPageSize(pageSize);
+export const setPageSize = (
+  pageSize: number,
+  iface: InterfaceHandle
+): StateMutation => {
+  const actions = getOrCreatePaginationActions(iface);
+  return actions.setPageSize(pageSize);
 };
 
-export const setTotalCount = (totalCount: number): StateMutation => {
-  return defaultActions.setTotalCount(totalCount);
+export const setTotalCount = (
+  totalCount: number,
+  iface: InterfaceHandle
+): StateMutation => {
+  const actions = getOrCreatePaginationActions(iface);
+  return actions.setTotalCount(totalCount);
 };

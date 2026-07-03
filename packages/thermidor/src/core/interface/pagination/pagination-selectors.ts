@@ -1,26 +1,14 @@
-import {State} from '@/src/core/interface/engine/engine-types.js';
-import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
-import {
-  initialPaginationState,
-  type PaginationState,
-} from '@/src/core/internal/pagination/pagination-slice.js';
+import {getOrCreatePaginationSelectors} from '@/src/core/internal/pagination/pagination-selectors.js';
+import type {InterfaceHandle} from '@/src/core/interface/utils/interface-types.js';
 
-const getPaginationState = (state: State) =>
-  ((state as Record<string, unknown>)[
-    'default/pagination'
-  ] as PaginationState) ?? initialPaginationState;
+export const getFirstResult = (iface: InterfaceHandle) => {
+  return getOrCreatePaginationSelectors(iface).getFirstResult;
+};
 
-export const getFirstResult = createMemoizedStateSelector(
-  getPaginationState,
-  (pagination) => pagination.firstResult
-);
+export const getPageSize = (iface: InterfaceHandle) => {
+  return getOrCreatePaginationSelectors(iface).getPageSize;
+};
 
-export const getPageSize = createMemoizedStateSelector(
-  getPaginationState,
-  (pagination) => pagination.pageSize
-);
-
-export const getTotalCount = createMemoizedStateSelector(
-  getPaginationState,
-  (pagination) => pagination.totalCount
-);
+export const getTotalCount = (iface: InterfaceHandle) => {
+  return getOrCreatePaginationSelectors(iface).getTotalCount;
+};

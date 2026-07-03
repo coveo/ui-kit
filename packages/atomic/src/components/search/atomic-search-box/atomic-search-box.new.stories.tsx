@@ -8,7 +8,7 @@ import {html} from 'lit';
 import {userEvent} from 'storybook/test';
 import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
 import {testComboboxA11y} from '@/storybook-utils/a11y/combobox.js';
-import {MockSearchApi} from '@/storybook-utils/api/search/mock';
+import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-search-box/atomic-search-box.js';

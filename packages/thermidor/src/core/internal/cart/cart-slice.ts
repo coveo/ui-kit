@@ -3,6 +3,12 @@ import type {
   CartItem,
   CartState,
 } from '@/src/core/interface/cart/cart-types.js';
+import {
+  type CacheKey,
+  createCacheKey,
+} from '@/src/core/interface/cache/interface-cache-registry.js';
+import {getHandleInternals} from '@/src/core/interface/utils/get-handle-internals.js';
+import type {InterfaceHandle} from '@/src/core/interface/utils/interface-types.js';
 import {getOrCreateCartActions} from './cart-actions.js';
 
 export const initialCartState: CartState = {
@@ -12,8 +18,14 @@ export const initialCartState: CartState = {
 const cartKey = (item: CartItem) =>
   `${item.productId},${item.name},${item.price}`;
 
-export function createCartSlice(interfaceId: string) {
-  const actions = getOrCreateCartActions(interfaceId);
+type CartSlice = ReturnType<typeof createCartSlice>;
+
+const CACHE_KEY: CacheKey<CartSlice> = createCacheKey<CartSlice>('cart/slice');
+
+export function createCartSlice(
+  interfaceId: string,
+  actions: ReturnType<typeof getOrCreateCartActions>
+) {
   return createSlice({
     name: `${interfaceId}/cart`,
     initialState: initialCartState,
@@ -45,10 +57,10 @@ export function createCartSlice(interfaceId: string) {
   });
 }
 
-const sliceCache = new Map<string, ReturnType<typeof createCartSlice>>();
-export function getOrCreateCartSlice(interfaceId: string) {
-  if (!sliceCache.has(interfaceId)) {
-    sliceCache.set(interfaceId, createCartSlice(interfaceId));
-  }
-  return sliceCache.get(interfaceId)!;
+export function getOrCreateCartSlice(iface: InterfaceHandle) {
+  const {stateId, cacheRegistry} = getHandleInternals(iface);
+  return cacheRegistry.getOrCreate(CACHE_KEY, () => {
+    const actions = getOrCreateCartActions(iface);
+    return createCartSlice(stateId, actions);
+  });
 }

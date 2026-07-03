@@ -3,11 +3,11 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {userEvent} from 'storybook/test';
 import {parameters} from '@/storybook-utils/common/search-box-suggestions-parameters';
 import {wrapInSearchBox} from '@/storybook-utils/search/search-box-wrapper';
-import {MockSearchApi} from '@/storybook-utils/api/search/mock';
+import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
 import {
   searchFacetTransformer,
   searchFacetSearchTransformer,
-} from '@/storybook-utils/api/search/facet-transformer';
+} from '@coveo/platform-mock-api/search/facet-transformer';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-search-box-recent-queries/atomic-search-box-recent-queries.js';
 

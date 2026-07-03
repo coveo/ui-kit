@@ -61,6 +61,16 @@
         '/^@lwc/compiler$/',
       ],
     },
+    {
+      groupName: 'Playwright',
+      groupSlug: 'playwright',
+      description: 'Keep the Playwright CI container image (mcr.microsoft.com/playwright) in lockstep with the playwright/@playwright/test packages so browser binaries always match the installed version',
+      matchPackageNames: [
+        'mcr.microsoft.com/playwright',
+        'playwright',
+        '@playwright/test',
+      ],
+    },
   ],
   lockFileMaintenance: {
     enabled: true,
