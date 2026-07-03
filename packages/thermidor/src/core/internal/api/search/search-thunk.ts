@@ -1,6 +1,7 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import type {EndpointStateScope} from '@/src/core/interface/utils/interface-types.js';
 import type {FullEngine} from '@/src/core/interface/engine/engine.js';
+import {getHandleInternals} from '@/src/core/interface/utils/get-handle-internals.js';
 import {createSearchEndpointRequestSelector} from './search-request-selector.js';
 import {createSearchEndpointResponseHandler} from './search-response-handler.js';
 import {readEndpointClientConfiguration} from '@/src/core/internal/configuration/configuration-reader.js';
@@ -11,13 +12,14 @@ export function createSearchEndpointThunk(
   engine: FullEngine,
   scope: EndpointStateScope
 ) {
-  const sharableInterfaceId = scope.composedInterfaceId ?? scope.interfaceId;
-
+  const {stateId} = getHandleInternals(scope.scopeInterface);
   const buildRequest = createSearchEndpointRequestSelector(scope);
-  const handleResponse = createSearchEndpointResponseHandler(scope.interfaceId);
+  const handleResponse = createSearchEndpointResponseHandler(
+    scope.baseInterface
+  );
 
   const thunk = createAsyncThunk<void, {engine: FullEngine}>(
-    `${sharableInterfaceId}/searchEndpoint/execute`,
+    `${stateId}/searchEndpoint/execute`,
     async ({engine}) => {
       const request = engine.read(buildRequest);
       const config = readEndpointClientConfiguration(engine);
@@ -32,7 +34,9 @@ export function createSearchEndpointThunk(
     }
   );
 
-  engine.adoptSlice(getOrCreateSearchEndpointSlice(sharableInterfaceId, thunk));
+  engine.adoptSlice(
+    getOrCreateSearchEndpointSlice(scope.scopeInterface, thunk)
+  );
 
   return thunk;
 }

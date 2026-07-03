@@ -1,6 +1,11 @@
 import {createAction} from '@reduxjs/toolkit';
+import {
+  type CacheKey,
+  createCacheKey,
+} from '@/src/core/interface/cache/interface-cache-registry.js';
+import {getHandleInternals} from '@/src/core/interface/utils/get-handle-internals.js';
+import type {InterfaceHandle} from '@/src/core/interface/utils/interface-types.js';
 import {Engine, getFullEngine} from '@/src/core/interface/engine/engine.js';
-import {getInterfaceInternals} from '@/src/core/interface/base-interface.js';
 import type {
   RoutedInterface,
   RoutedUseCase,
@@ -16,10 +21,11 @@ const ACTIVITY_TYPE_TO_ROUTED_USE_CASE: Record<string, RoutedUseCase> = {
   'search-api-response': 'search',
 };
 
-const hydrateActionCache = new Map<
-  string,
-  ReturnType<typeof createHydrateAction>
->();
+type HydrateAction = ReturnType<typeof createHydrateAction>;
+
+const CACHE_KEY: CacheKey<HydrateAction> = createCacheKey<HydrateAction>(
+  'generative/hydrateAction'
+);
 
 function createHydrateAction(interfaceId: string) {
   return createAction<Record<string, unknown>>(
@@ -27,11 +33,11 @@ function createHydrateAction(interfaceId: string) {
   );
 }
 
-export function getOrCreateHydrateFromSnapshotAction(interfaceId: string) {
-  if (!hydrateActionCache.has(interfaceId)) {
-    hydrateActionCache.set(interfaceId, createHydrateAction(interfaceId));
-  }
-  return hydrateActionCache.get(interfaceId)!;
+export function getOrCreateHydrateFromSnapshotAction(iface: InterfaceHandle) {
+  const {stateId, cacheRegistry} = getHandleInternals(iface);
+  return cacheRegistry.getOrCreate(CACHE_KEY, () =>
+    createHydrateAction(stateId)
+  );
 }
 
 export function createHydrateSubInterface(engine: Engine): HydrateSubInterface {
@@ -52,26 +58,24 @@ export function createHydrateSubInterface(engine: Engine): HydrateSubInterface {
 
     if (routedUseCase === 'commerceSearch') {
       const subInterface = buildCommerceInterface({engine});
-      const {stateId: subId} = getInterfaceInternals(subInterface);
-      fullEngine.storeHydrationSnapshot(subId, contentRecord);
-      const hydrateAction = getOrCreateHydrateFromSnapshotAction(subId);
+      fullEngine.storeHydrationSnapshot(contentRecord, subInterface);
+      const hydrateAction = getOrCreateHydrateFromSnapshotAction(subInterface);
       fullEngine.mutate(hydrateAction(contentRecord));
       if (effectiveQuery) {
-        fullEngine.adoptSlice(getOrCreateSearchBoxSlice(subId));
-        const searchBoxActions = getOrCreateSearchBoxActions(subId);
+        fullEngine.adoptSlice(getOrCreateSearchBoxSlice(subInterface));
+        const searchBoxActions = getOrCreateSearchBoxActions(subInterface);
         fullEngine.mutate(searchBoxActions.setQuery(effectiveQuery));
       }
       return {useCase: 'commerceSearch' as const, interface: subInterface};
     }
 
     const subInterface = buildSearchInterface({engine});
-    const {stateId: subId} = getInterfaceInternals(subInterface);
-    fullEngine.storeHydrationSnapshot(subId, contentRecord);
-    const hydrateAction = getOrCreateHydrateFromSnapshotAction(subId);
+    fullEngine.storeHydrationSnapshot(contentRecord, subInterface);
+    const hydrateAction = getOrCreateHydrateFromSnapshotAction(subInterface);
     fullEngine.mutate(hydrateAction(contentRecord));
     if (effectiveQuery) {
-      fullEngine.adoptSlice(getOrCreateSearchBoxSlice(subId));
-      const searchBoxActions = getOrCreateSearchBoxActions(subId);
+      fullEngine.adoptSlice(getOrCreateSearchBoxSlice(subInterface));
+      const searchBoxActions = getOrCreateSearchBoxActions(subInterface);
       fullEngine.mutate(searchBoxActions.setQuery(effectiveQuery));
     }
     return {useCase: 'search' as const, interface: subInterface};

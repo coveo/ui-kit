@@ -17,11 +17,11 @@ export interface LoadCartActionsOptions {
  * @returns The cart actions: `setItems` and `updateItemQuantity`.
  */
 export function loadCartActions(options: LoadCartActionsOptions) {
-  const {engine, stateId} = getHandleInternals(options.interface);
+  const {engine} = getHandleInternals(options.interface);
 
-  engine.adoptSlice(getOrCreateCartSlice(stateId));
+  engine.adoptSlice(getOrCreateCartSlice(options.interface));
 
-  const actions = getOrCreateCartActions(stateId);
+  const actions = getOrCreateCartActions(options.interface);
 
   return {
     setItems(payload: SetCartItemsPayload) {

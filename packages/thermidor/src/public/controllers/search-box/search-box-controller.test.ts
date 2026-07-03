@@ -32,7 +32,7 @@ describe('buildSearchBoxController', () => {
   it('should adopt the searchBox slice', () => {
     buildController();
 
-    expect(fullEngine.read(getQuery)).toBe('');
+    expect(fullEngine.read(getQuery(searchInterface))).toBe('');
   });
 
   describe('setQuery()', () => {
@@ -41,7 +41,7 @@ describe('buildSearchBoxController', () => {
 
       controller.setQuery({query: 'laptops'});
 
-      expect(fullEngine.read(getQuery)).toBe('');
+      expect(fullEngine.read(getQuery(searchInterface))).toBe('laptops');
     });
 
     it('should reset the query with an empty string', () => {

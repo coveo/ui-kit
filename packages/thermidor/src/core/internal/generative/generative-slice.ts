@@ -1,5 +1,11 @@
 import {createSlice} from '@reduxjs/toolkit';
 import type {GenerativeState} from '@/src/core/interface/generative/generative-types.js';
+import {
+  type CacheKey,
+  createCacheKey,
+} from '@/src/core/interface/cache/interface-cache-registry.js';
+import {getHandleInternals} from '@/src/core/interface/utils/get-handle-internals.js';
+import type {InterfaceHandle} from '@/src/core/interface/utils/interface-types.js';
 import {getOrCreateGenerativeActions} from './generative-actions.js';
 
 export const initialGenerativeState: GenerativeState = {
@@ -7,9 +13,15 @@ export const initialGenerativeState: GenerativeState = {
   activeTurnId: undefined,
 };
 
-export function createGenerativeSlice(interfaceId: string) {
-  const actions = getOrCreateGenerativeActions(interfaceId);
+type GenerativeSlice = ReturnType<typeof createGenerativeSlice>;
 
+const CACHE_KEY: CacheKey<GenerativeSlice> =
+  createCacheKey<GenerativeSlice>('generative/slice');
+
+export function createGenerativeSlice(
+  interfaceId: string,
+  actions: ReturnType<typeof getOrCreateGenerativeActions>
+) {
   return createSlice({
     name: `${interfaceId}/generative`,
     initialState: initialGenerativeState,
@@ -122,11 +134,10 @@ export function createGenerativeSlice(interfaceId: string) {
   });
 }
 
-const sliceCache = new Map<string, ReturnType<typeof createGenerativeSlice>>();
-
-export function getOrCreateGenerativeSlice(interfaceId: string) {
-  if (!sliceCache.has(interfaceId)) {
-    sliceCache.set(interfaceId, createGenerativeSlice(interfaceId));
-  }
-  return sliceCache.get(interfaceId)!;
+export function getOrCreateGenerativeSlice(iface: InterfaceHandle) {
+  const {stateId, cacheRegistry} = getHandleInternals(iface);
+  return cacheRegistry.getOrCreate(CACHE_KEY, () => {
+    const actions = getOrCreateGenerativeActions(iface);
+    return createGenerativeSlice(stateId, actions);
+  });
 }
