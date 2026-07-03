@@ -107,7 +107,7 @@ describe('Supports<F> structural compatibility', () => {
       });
 
       const fullEngine = getFullEngine(engine);
-      const actions = getOrCreatePaginationActions('pag-test');
+      const actions = getOrCreatePaginationActions(searchInterface);
       fullEngine.mutate(actions.setTotalCount(100));
 
       controller.setPageSize(20);
@@ -122,7 +122,7 @@ describe('Supports<F> structural compatibility', () => {
       });
 
       const fullEngine = getFullEngine(engine);
-      const actions = getOrCreatePaginationActions('pag-nav');
+      const actions = getOrCreatePaginationActions(searchInterface);
       fullEngine.mutate(actions.setTotalCount(100));
 
       controller.selectPage(2);
@@ -153,8 +153,7 @@ describe('Supports<F> structural compatibility', () => {
       const controller = buildPaginationController({interface: composed});
 
       const fullEngine = getFullEngine(engine);
-      const composedId = getComposedInternals(composed).stateId;
-      const actions = getOrCreatePaginationActions(composedId);
+      const actions = getOrCreatePaginationActions(composed);
       fullEngine.mutate(actions.setTotalCount(50));
 
       controller.setPageSize(25);

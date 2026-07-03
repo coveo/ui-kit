@@ -1,4 +1,10 @@
 import {createSlice} from '@reduxjs/toolkit';
+import {
+  type CacheKey,
+  createCacheKey,
+} from '@/src/core/interface/cache/interface-cache-registry.js';
+import {getHandleInternals} from '@/src/core/interface/utils/get-handle-internals.js';
+import type {InterfaceHandle} from '@/src/core/interface/utils/interface-types.js';
 import {getOrCreateTriggersActions, type Trigger} from './triggers-actions.js';
 
 export interface TriggersState {
@@ -7,8 +13,15 @@ export interface TriggersState {
 
 export const initialTriggersState: TriggersState = {triggers: []};
 
-export function createTriggersSlice(interfaceId: string) {
-  const actions = getOrCreateTriggersActions(interfaceId);
+type TriggersSlice = ReturnType<typeof createTriggersSlice>;
+
+const CACHE_KEY: CacheKey<TriggersSlice> =
+  createCacheKey<TriggersSlice>('triggers/slice');
+
+export function createTriggersSlice(
+  interfaceId: string,
+  actions: ReturnType<typeof getOrCreateTriggersActions>
+) {
   return createSlice({
     name: `${interfaceId}/triggers`,
     initialState: initialTriggersState,
@@ -21,10 +34,10 @@ export function createTriggersSlice(interfaceId: string) {
   });
 }
 
-const sliceCache = new Map<string, ReturnType<typeof createTriggersSlice>>();
-export function getOrCreateTriggersSlice(interfaceId: string) {
-  if (!sliceCache.has(interfaceId)) {
-    sliceCache.set(interfaceId, createTriggersSlice(interfaceId));
-  }
-  return sliceCache.get(interfaceId)!;
+export function getOrCreateTriggersSlice(iface: InterfaceHandle) {
+  const {stateId, cacheRegistry} = getHandleInternals(iface);
+  return cacheRegistry.getOrCreate(CACHE_KEY, () => {
+    const actions = getOrCreateTriggersActions(iface);
+    return createTriggersSlice(stateId, actions);
+  });
 }

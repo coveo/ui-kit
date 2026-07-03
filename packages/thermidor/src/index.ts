@@ -25,6 +25,7 @@ export type {
 export type {ComposedInterface} from './public/interfaces/compose.js';
 export type {
   Supports,
+  InterfaceHandle,
   InterfaceType,
 } from './core/interface/utils/interface-types.js';
 export type {

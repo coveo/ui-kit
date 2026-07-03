@@ -65,7 +65,7 @@ describe('buildConverseController', () => {
 
     it('reflects turns added to the store', () => {
       const controller = buildController();
-      const actions = getOrCreateGenerativeActions(TEST_ID);
+      const actions = getOrCreateGenerativeActions(generativeInterface);
 
       fullEngine.mutate(
         actions.createTurn({id: 'turn-1', prompt: 'hello', status: 'streaming'})
@@ -81,7 +81,7 @@ describe('buildConverseController', () => {
 
     it('computes isStreaming as true when any turn is streaming', () => {
       const controller = buildController();
-      const actions = getOrCreateGenerativeActions(TEST_ID);
+      const actions = getOrCreateGenerativeActions(generativeInterface);
 
       fullEngine.mutate(
         actions.createTurn({id: 'turn-1', prompt: 'hello', status: 'streaming'})
@@ -92,7 +92,7 @@ describe('buildConverseController', () => {
 
     it('computes isStreaming as false when no turns are streaming', () => {
       const controller = buildController();
-      const actions = getOrCreateGenerativeActions(TEST_ID);
+      const actions = getOrCreateGenerativeActions(generativeInterface);
 
       fullEngine.mutate(
         actions.createTurn({id: 'turn-1', prompt: 'hello', status: 'streaming'})
@@ -104,7 +104,7 @@ describe('buildConverseController', () => {
 
     it('reflects activeTurnId changes', () => {
       const controller = buildController();
-      const actions = getOrCreateGenerativeActions(TEST_ID);
+      const actions = getOrCreateGenerativeActions(generativeInterface);
 
       fullEngine.mutate(
         actions.createTurn({id: 'turn-1', prompt: 'hello', status: 'complete'})
@@ -143,7 +143,7 @@ describe('buildConverseController', () => {
 
     it('does not submit when a turn is currently streaming', () => {
       const controller = buildController();
-      const actions = getOrCreateGenerativeActions(TEST_ID);
+      const actions = getOrCreateGenerativeActions(generativeInterface);
 
       fullEngine.mutate(
         actions.createTurn({id: 'turn-1', prompt: 'hi', status: 'streaming'})
@@ -156,7 +156,7 @@ describe('buildConverseController', () => {
 
     it('submits when all existing turns are complete', () => {
       const controller = buildController();
-      const actions = getOrCreateGenerativeActions(TEST_ID);
+      const actions = getOrCreateGenerativeActions(generativeInterface);
 
       fullEngine.mutate(
         actions.createTurn({id: 'turn-1', prompt: 'hi', status: 'streaming'})
@@ -172,7 +172,7 @@ describe('buildConverseController', () => {
   describe('selectTurn()', () => {
     it('sets activeTurnId when the turn exists', () => {
       const controller = buildController();
-      const actions = getOrCreateGenerativeActions(TEST_ID);
+      const actions = getOrCreateGenerativeActions(generativeInterface);
 
       fullEngine.mutate(
         actions.createTurn({id: 'turn-1', prompt: 'hello', status: 'complete'})
@@ -188,7 +188,7 @@ describe('buildConverseController', () => {
 
     it('does not modify activeTurnId when the turn does not exist', () => {
       const controller = buildController();
-      const actions = getOrCreateGenerativeActions(TEST_ID);
+      const actions = getOrCreateGenerativeActions(generativeInterface);
 
       fullEngine.mutate(
         actions.createTurn({id: 'turn-1', prompt: 'hello', status: 'complete'})
@@ -204,7 +204,7 @@ describe('buildConverseController', () => {
   describe('retry()', () => {
     it('calls runtime.resubmit when the turn exists and has error status', () => {
       const controller = buildController();
-      const actions = getOrCreateGenerativeActions(TEST_ID);
+      const actions = getOrCreateGenerativeActions(generativeInterface);
 
       fullEngine.mutate(
         actions.createTurn({id: 'turn-1', prompt: 'hello', status: 'streaming'})
@@ -228,7 +228,7 @@ describe('buildConverseController', () => {
 
     it('does not retry when the turn is not in error status', () => {
       const controller = buildController();
-      const actions = getOrCreateGenerativeActions(TEST_ID);
+      const actions = getOrCreateGenerativeActions(generativeInterface);
 
       fullEngine.mutate(
         actions.createTurn({id: 'turn-1', prompt: 'hello', status: 'streaming'})
@@ -242,7 +242,7 @@ describe('buildConverseController', () => {
 
     it('does not retry when the turn is still streaming', () => {
       const controller = buildController();
-      const actions = getOrCreateGenerativeActions(TEST_ID);
+      const actions = getOrCreateGenerativeActions(generativeInterface);
 
       fullEngine.mutate(
         actions.createTurn({id: 'turn-1', prompt: 'hello', status: 'streaming'})
@@ -258,7 +258,7 @@ describe('buildConverseController', () => {
     it('invokes the callback when the generative state changes', () => {
       const controller = buildController();
       const callback = vi.fn();
-      const actions = getOrCreateGenerativeActions(TEST_ID);
+      const actions = getOrCreateGenerativeActions(generativeInterface);
 
       controller.subscribe(callback);
       fullEngine.mutate(
@@ -281,7 +281,7 @@ describe('buildConverseController', () => {
     it('returns an unsubscribe function that stops notifications', () => {
       const controller = buildController();
       const callback = vi.fn();
-      const actions = getOrCreateGenerativeActions(TEST_ID);
+      const actions = getOrCreateGenerativeActions(generativeInterface);
 
       const unsubscribe = controller.subscribe(callback);
       unsubscribe();

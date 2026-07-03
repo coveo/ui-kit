@@ -1,7 +1,7 @@
 import type {Turn} from '@/src/core/interface/generative/generative-types.js';
 import {GenerativeRuntime} from '@/src/core/interface/api/generative-endpoint/generative-runtime.js';
 import {createHydrateSubInterface} from '@/src/core/interface/generative/generative-hydration.js';
-import {loadGenerative} from '@/src/core/interface/generative/generative-loader.js';
+import {getOrCreateGenerativeSlice} from '@/src/core/internal/generative/generative-slice.js';
 import {BaseController} from '@/src/core/interface/base-controller.js';
 import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
 import {getInterfaceInternals} from '@/src/core/interface/base-interface.js';
@@ -17,15 +17,15 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
   #selectors: ReturnType<typeof getOrCreateGenerativeSelectors>;
 
   constructor(options: ConverseControllerOptions) {
-    const {engine: fullEngine, stateId} = getInterfaceInternals(
-      options.interface
-    );
+    const {engine: fullEngine} = getInterfaceInternals(options.interface);
     const sourceEngine = getGenerativeSourceEngine(options.interface);
 
-    loadGenerative(fullEngine, stateId);
+    fullEngine.adoptSlice(getOrCreateGenerativeSlice(options.interface));
 
-    const actions = getOrCreateGenerativeActions(stateId);
-    const selectors = getOrCreateGenerativeSelectors(stateId);
+    const actions = getOrCreateGenerativeActions(options.interface);
+    const selectors = getOrCreateGenerativeSelectors(options.interface);
+
+    const {stateId} = getInterfaceInternals(options.interface);
 
     const controllerState = createMemoizedStateSelector(
       selectors.getTurns,
@@ -45,8 +45,8 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
     this.#actions = actions;
     this.#selectors = selectors;
     this.#runtime = GenerativeRuntime.getInstance(fullEngine, stateId, {
-      generativeInterfaceId: stateId,
-      cartInterfaceId: stateId,
+      generativeInterface: options.interface,
+      cartInterface: options.interface,
       statePort: {
         createTurn: (payload) => {
           this.engine.mutate(this.#actions.createTurn(payload));
