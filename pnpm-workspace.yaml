@@ -89,7 +89,7 @@ catalog:
   rollup-plugin-node-polyfills: 0.2.1
   typedoc: 0.28.19
   typescript: 6.0.3
-  vite: 8.1.0
+  vite: 8.0.14
   vitest: 4.1.9
   yaml: 2.9.0
 
