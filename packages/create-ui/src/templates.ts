@@ -43,7 +43,7 @@ export interface Template {
   library: Library;
   /**
    * Use case and framework, shown beneath the library group header in the
-   * interactive prompt, e.g. "Search (vanilla + Vite)". The library is
+   * interactive prompt, e.g. "Search (Vite)". The library is
    * intentionally omitted here because the group header already states it.
    */
   label: string;

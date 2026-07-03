@@ -7,19 +7,19 @@ const sample: Template[] = [
     name: 'headless-search-react',
     library: 'headless',
     label: 'Search (React)',
-    packageName: '@coveo/sample-headless-search-react',
+    packageName: '@coveo/ui-kit-sample-headless-search-react',
   },
   {
     name: 'atomic-search',
     library: 'atomic',
-    label: 'Search (vanilla + Vite)',
-    packageName: '@coveo/sample-atomic-search',
+    label: 'Search (Vite)',
+    packageName: '@coveo/ui-kit-sample-atomic-search',
   },
   {
     name: 'atomic-commerce',
     library: 'atomic',
-    label: 'Commerce (vanilla + Vite)',
-    packageName: '@coveo/sample-atomic-commerce',
+    label: 'Commerce (Vite)',
+    packageName: '@coveo/ui-kit-sample-atomic-commerce',
   },
 ];
 
@@ -54,8 +54,8 @@ describe('buildTemplateChoices', () => {
   it('maps templates to flat label/value choices', () => {
     const atomic = sample.filter((t) => t.library === 'atomic');
     expect(buildTemplateChoices(atomic)).toEqual([
-      {value: 'atomic-search', label: 'Search (vanilla + Vite)'},
-      {value: 'atomic-commerce', label: 'Commerce (vanilla + Vite)'},
+      {value: 'atomic-search', label: 'Search (Vite)'},
+      {value: 'atomic-commerce', label: 'Commerce (Vite)'},
     ]);
   });
 
