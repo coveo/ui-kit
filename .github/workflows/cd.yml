@@ -47,7 +47,7 @@ jobs:
           cache-retention-days: 7
       - name: Create release PR or publish
         id: changesets
-        uses: step-security/changeset-action@f91317e5de6c66a97b3bc6ea42b61636059bac21 # v1.8.0
+        uses: step-security/changeset-action@4ec991f6d4d311458205f6954cf513f63efe15a3 # v1.7.0
         with:
           version: pnpm changeset version
           publish: pnpm run release
