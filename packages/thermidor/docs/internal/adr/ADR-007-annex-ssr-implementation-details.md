@@ -51,6 +51,7 @@ export interface ComposeInterfacesOptions<T extends InterfaceType> {
   interfaces: BaseInterface<T>[];
   id?: string;
   initialState?: { query?: string };
+  fromSnapshot?: InterfaceSnapshot;
 }
 ```
 
