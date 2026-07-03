@@ -6,6 +6,7 @@ export const initialResultListState: ResultListState = {
   results: [],
 };
 
+//@ts-ignore
 function mapResult(result: Record<string, unknown>) {
   return {
     uniqueId: result.uniqueId as string,

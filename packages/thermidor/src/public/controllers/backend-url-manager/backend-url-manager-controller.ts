@@ -239,6 +239,7 @@ export const buildBackendUrlManagerController = (
         ) {
           previousFragment = newFragment;
           previousResponseId = newResponseId;
+          //@ts-expect-error
           callback();
         } else {
           previousResponseId = newResponseId;

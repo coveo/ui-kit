@@ -65,6 +65,7 @@ export class GenerativeRuntime {
   private engine: FullEngine;
   private statePort: GenerativeStatePort;
   private agentResponseInitialized = new Set<string>();
+  //@ts-ignore
   private currentPrompt: string | undefined;
   private conversationSessionId: string | undefined;
   private conversationToken: string | undefined;

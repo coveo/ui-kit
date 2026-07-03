@@ -1,7 +1,6 @@
 import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
 import {ENGINE, STATE_ID} from '@/src/core/interface/utils/symbols.js';
 import {getOrCreateBackendInterfacesSelectors} from '@/src/core/internal/backend-interfaces/backend-interfaces-selectors.js';
-import type {BackendFacetSearchEntry} from '@/src/core/internal/backend-interfaces/backend-interfaces-actions.js';
 import type {GenerativeInterface} from '@/src/public/interfaces/generative.js';
 import type {
   ConverseController,
