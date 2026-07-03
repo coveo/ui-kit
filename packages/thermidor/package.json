@@ -28,6 +28,7 @@
   "scripts": {
     "build": "tsc --project ./tsconfig.build.json",
     "clean": "node ../../utils/ci/rm-rf.mjs dist",
+    "lint:check": "oxlint --deny-warnings .",
     "test": "vitest run",
     "test:watch": "vitest"
   },

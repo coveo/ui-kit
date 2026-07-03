@@ -1,0 +1,45 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`API Snapshot Gate > public API surface stability > exports exactly the expected set of symbols 1`] = `
+[
+  "Engine",
+  "buildCartController",
+  "buildCommerceInterface",
+  "buildConverseController",
+  "buildGenerativeInterface",
+  "buildPaginationController",
+  "buildProductListController",
+  "buildResultListController",
+  "buildSearchBoxController",
+  "buildSearchInterface",
+  "composeInterfaces",
+  "getSampleEngineConfiguration",
+  "getSearchBoxState",
+  "loadCartActions",
+  "loadConfigurationActions",
+  "loadSearchBoxActions",
+  "loadSearchParametersActions",
+]
+`;
+
+exports[`API Snapshot Gate > public API surface stability > has not added or removed any exports 1`] = `
+[
+  "Engine",
+  "buildCartController",
+  "buildCommerceInterface",
+  "buildConverseController",
+  "buildGenerativeInterface",
+  "buildPaginationController",
+  "buildProductListController",
+  "buildResultListController",
+  "buildSearchBoxController",
+  "buildSearchInterface",
+  "composeInterfaces",
+  "getSampleEngineConfiguration",
+  "getSearchBoxState",
+  "loadCartActions",
+  "loadConfigurationActions",
+  "loadSearchBoxActions",
+  "loadSearchParametersActions",
+]
+`;

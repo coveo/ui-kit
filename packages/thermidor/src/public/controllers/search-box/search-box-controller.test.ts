@@ -8,8 +8,8 @@ import {
   Engine,
   FullEngine,
   getFullEngine,
-} from '@/src/core/interface/engine/engine.js';
-import {getQuery} from '@/src/core/interface/search-box/search-box-selectors.js';
+} from '@/src/internal/engine/index.js';
+import {getQuery} from '@/src/internal/features/search-box/index.js';
 import {buildSearchBoxController} from './search-box-controller.js';
 import {buildSearchInterface} from '@/src/public/interfaces/search.js';
 import type {SearchInterface} from '@/src/public/interfaces/search.js';

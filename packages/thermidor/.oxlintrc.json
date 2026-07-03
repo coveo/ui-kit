@@ -1,0 +1,34 @@
+{
+  "extends": ["../../.oxlintrc.json"],
+  "overrides": [
+    {
+      "files": ["src/public/**"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["@reduxjs/toolkit", "@reduxjs/toolkit/*", "immer"],
+                "message": "Public layer must not depend on Redux or Immer directly."
+              },
+              {
+                "group": [
+                  "@/src/internal/features/*/*",
+                  "!@/src/internal/features/*/index.js",
+                  "@/src/internal/api/*/*",
+                  "!@/src/internal/api/*/index.js",
+                  "@/src/internal/engine/*",
+                  "!@/src/internal/engine/index.js",
+                  "@/src/internal/utils/*",
+                  "!@/src/internal/utils/index.js"
+                ],
+                "message": "Import from the barrel (index.ts), not deep paths. Use @/src/internal/features/<name> or @/src/internal/api/<name>."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
