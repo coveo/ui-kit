@@ -109,9 +109,6 @@ export default {
         // Interactive a11y Storybook helpers — will be consumed by stories
         // in an upcoming PR. Knip cannot trace them yet.
         'storybook-utils/a11y/**/*.ts',
-        // Request transformer modules for interactive MSW stories.
-        // Wired by stories via addRequestTransformer().
-        'storybook-utils/api/**/*-transformer.ts',
       ],
       ignore: [
         // Ambient type declaration file, not an ES module
@@ -121,9 +118,6 @@ export default {
         // CSS files referenced via @import/@reference inside CSS tagged template literals.
         // Knip cannot trace CSS imports inside template literal strings.
         'src/**/*.css',
-        // Re-export shims for @coveo/platform-mock-api backward compat.
-        // Consumed by stories via @/ alias; knip can't trace through the workspace re-exports.
-        'storybook-utils/api/**/*.ts',
       ],
     },
     'packages/atomic-legacy': {},
