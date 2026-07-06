@@ -52,15 +52,6 @@ export default function InteractiveProduct(props: IInteractiveProductProps) {
     });
   };
 
-  const removeFromCart = () => {
-    cartController.updateItemQuantity({
-      name: product.ec_name ?? product.permanentid,
-      price: product.ec_promo_price ?? product.ec_price ?? NaN,
-      productId: product.ec_product_id ?? product.permanentid,
-      quantity: 0,
-    });
-  };
-
   const renderProductCartControls = () => {
     return (
       <div className="ProductCartControls">
@@ -81,14 +72,6 @@ export default function InteractiveProduct(props: IInteractiveProductProps) {
           onClick={() => adjustQuantity(-1)}
         >
           Remove one
-        </button>
-        <button
-          type="button"
-          className="CartRemoveAll"
-          disabled={!isInCart()}
-          onClick={removeFromCart}
-        >
-          Remove all
         </button>
       </div>
     );

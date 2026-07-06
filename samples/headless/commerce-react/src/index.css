@@ -377,9 +377,28 @@ main {
   gap: 1.25rem;
 }
 
+.Facets {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Each facet is a <fieldset>; strip the default chrome */
+.RegularFacet,
+.NumericFacet,
+.CategoryFacet,
+.DateFacet {
+  border: none;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+
 .FacetDisplayName {
+  padding: 0;
+  margin: 0 0 0.6rem;
   font-weight: 600;
-  margin: 0 0 0.5rem;
+  font-size: 0.95rem;
 }
 
 .FacetValues,
@@ -389,15 +408,137 @@ main {
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0.3rem;
 }
 
-.FacetValue {
+.FacetValue,
+.FacetSearchResult {
   display: flex;
   align-items: center;
-  gap: 0.45rem;
-  color: var(--text-muted);
+  gap: 0.5rem;
+}
+
+.FacetValueCheckbox,
+.FacetSearchResultCheckbox {
+  flex: none;
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.FacetValueLabel,
+.FacetSearchResultLabel {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  gap: 0.4rem;
+  justify-content: space-between;
+  align-items: baseline;
+  cursor: pointer;
   font-size: 0.9rem;
+  color: var(--text);
+}
+
+.FacetValueName,
+.FacetSearchResultName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.FacetValueNumberOfProducts,
+.FacetSearchResultNumberOfProducts {
+  flex: none;
+  color: var(--text-muted);
+}
+
+/* Facet search input */
+.FacetSearch {
+  margin-bottom: 0.6rem;
+}
+
+.FacetSearchLabel {
+  display: none;
+}
+
+.FacetSearchInput {
+  width: 100%;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+}
+
+.FacetSearchNoResults {
+  display: block;
+  margin-top: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* Facet action buttons (show more/less, clear) */
+.FacetShowMore,
+.FacetShowLess,
+.FacetClear,
+.FacetClearSelected,
+.FacetSearchClear {
+  margin-top: 0.5rem;
+  margin-right: 0.4rem;
+  min-width: 1.7rem;
+  padding: 0.15rem 0.45rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.FacetShowMore:hover:not(:disabled),
+.FacetShowLess:hover:not(:disabled),
+.FacetClear:hover:not(:disabled),
+.FacetClearSelected:hover:not(:disabled),
+.FacetSearchClear:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Hide clear/paging buttons when there is nothing to do (removes empty boxes) */
+.FacetShowMore:disabled,
+.FacetShowLess:disabled,
+.FacetClear:disabled,
+.FacetClearSelected:disabled,
+.FacetSearchClear:disabled {
+  display: none;
+}
+
+/* Numeric facet manual range */
+.ManualRangeControls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.6rem;
+}
+
+.ManualRangeStartLabel,
+.ManualRangeEndLabel {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.ManualRangeStartInput,
+.ManualRangeEndInput {
+  width: 4.5rem;
+  padding: 0.3rem 0.4rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+}
+
+.ManualRangeSelect {
+  padding: 0.3rem 0.55rem;
 }
 
 /* Toolbar controls */
