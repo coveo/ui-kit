@@ -1131,9 +1131,6 @@ importers:
       '@reduxjs/toolkit':
         specifier: 'catalog:'
         version: 2.12.0(react@19.2.7)
-      idb:
-        specifier: 'catalog:'
-        version: 8.0.3
     devDependencies:
       typescript:
         specifier: 6.0.3
