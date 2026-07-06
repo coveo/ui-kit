@@ -4,7 +4,7 @@ import {html} from 'lit';
 import {
   baseFoldedResponse,
   MockInsightApi,
-} from '@/storybook-utils/api/insight/mock';
+} from '@coveo/platform-mock-api/insight/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 import {wrapInInsightFoldedResultList} from '@/storybook-utils/insight/insight-result-list-wrapper';

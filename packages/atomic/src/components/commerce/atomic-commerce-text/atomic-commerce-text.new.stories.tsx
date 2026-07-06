@@ -4,7 +4,7 @@ import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-inter
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import type {AtomicCommerceInterface} from '../atomic-commerce-interface/atomic-commerce-interface';
 import '@/src/components/commerce/atomic-commerce-text/atomic-commerce-text.js';
-import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
+import {MockCommerceApi} from '@coveo/platform-mock-api/commerce/mock';
 
 const commerceApiHarness = new MockCommerceApi();
 

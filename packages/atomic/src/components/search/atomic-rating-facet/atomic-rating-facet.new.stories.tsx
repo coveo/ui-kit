@@ -6,12 +6,12 @@ import {testCheckboxA11y} from '@/storybook-utils/a11y/checkbox.js';
 import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {facetDecorator} from '@/storybook-utils/common/facets-decorator';
-import {MockSearchApi} from '@/storybook-utils/api/search/mock';
-import {buildSearchResponseWithResults} from '@/storybook-utils/api/search/search-response-mocks.js';
+import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
+import {buildSearchResponseWithResults} from '@coveo/platform-mock-api/search/search-response-mocks';
 import {
   searchFacetTransformer,
   searchFacetSearchTransformer,
-} from '@/storybook-utils/api/search/facet-transformer';
+} from '@coveo/platform-mock-api/search/facet-transformer';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-rating-facet/atomic-rating-facet.js';
 import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
