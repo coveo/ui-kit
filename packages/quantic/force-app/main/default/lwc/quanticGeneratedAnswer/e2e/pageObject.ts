@@ -5,6 +5,7 @@ import {
 } from '../../../../../../playwright/utils/analyticsMode';
 import {AnalyticsObject} from '../../../../../../playwright/page-object/analytics';
 import {isRgaEvaluationRequest} from '../../../../../../playwright/utils/requests';
+import {AgentMessage} from './agentData';
 
 const minimumCitationTooltipDisplayDurationMs = 1500;
 const removeUnknownFields = (object: Record<string, unknown>) => {
@@ -24,24 +25,37 @@ const facetElementsSelectors = {
   },
 };
 
+export interface GeneratedAnswerObjectConfig {
+  answerApiEnabled?: boolean;
+  generateRequestRegex?: RegExp;
+  agentAnswerRequestRegex?: RegExp;
+  agentFollowUpRequestRegex?: RegExp;
+  withFacets?: boolean;
+}
+
 export class GeneratedAnswerObject {
   private analyticsMode: AnalyticsMode;
+  private answerApiEnabled: boolean;
+  private generateRequestRegex?: RegExp;
+  private agentAnswerRequestRegex?: RegExp;
+  private agentFollowUpRequestRegex?: RegExp;
+  private withFacets: boolean;
 
   constructor(
     private page: Page,
     private streamId: string,
     private analytics: AnalyticsObject,
-    private answerApiEnabled: boolean,
-    private generateRequestRegex: RegExp,
-    private withFacets: boolean
+    config: GeneratedAnswerObjectConfig = {}
   ) {
     this.page = page;
     this.streamId = streamId;
     this.analytics = analytics;
     this.analyticsMode = this.analytics.analyticsMode;
-    this.answerApiEnabled = answerApiEnabled;
-    this.generateRequestRegex = generateRequestRegex;
-    this.withFacets = withFacets;
+    this.answerApiEnabled = config.answerApiEnabled ?? false;
+    this.generateRequestRegex = config.generateRequestRegex;
+    this.agentAnswerRequestRegex = config.agentAnswerRequestRegex;
+    this.agentFollowUpRequestRegex = config.agentFollowUpRequestRegex;
+    this.withFacets = config.withFacets ?? false;
   }
 
   get likeButton(): Locator {
@@ -179,11 +193,29 @@ export class GeneratedAnswerObject {
   }
 
   async waitForGenerateRequest(): Promise<Request> {
+    if (!this.generateRequestRegex) {
+      throw new Error('generateRequestRegex is not configured');
+    }
     return this.page.waitForRequest(this.generateRequestRegex);
+  }
+
+  async waitForAgentAnswerRequest(): Promise<Request> {
+    if (!this.agentAnswerRequestRegex) {
+      throw new Error('agentAnswerRequestRegex is not configured');
+    }
+    return this.page.waitForRequest(this.agentAnswerRequestRegex);
+  }
+
+  async waitForAgentFollowUpRequest(): Promise<Request> {
+    if (!this.agentFollowUpRequestRegex) {
+      throw new Error('agentFollowUpRequestRegex is not configured');
+    }
+    return this.page.waitForRequest(this.agentFollowUpRequestRegex);
   }
 
   async waitForStreamEndAnalytics(): Promise<Request | boolean> {
     if (this.analyticsMode === AnalyticsModeEnum.legacy) {
+      console.log('Waiting for stream end analytics (legacy mode) ', this.streamId);
       return this.analytics.waitForCustomUaAnalytics(
         {
           eventType: 'generatedAnswer',
@@ -444,6 +476,80 @@ export class GeneratedAnswerObject {
         },
       });
     });
+  }
+
+  async mockAgentAnswerResponse(
+    body: Array<AgentMessage>
+  ) {
+    await this.page.route('**/agents/*/answer', (route) => {
+      if (route.request().url().includes('/follow-up')) {
+        return route.fallback();
+      }
+      let bodyText = '';
+      body.forEach((data) => {
+        bodyText += `data: ${JSON.stringify(data)} \n\n`;
+      });
+      route.fulfill({
+        status: 200,
+        body: bodyText,
+        headers: {'content-type': 'text/event-stream'},
+      });
+    });
+  }
+
+  async mockAgentFollowUpResponse(
+    body: Array<AgentMessage>
+  ) {
+    await this.page.route('**/agents/*/answer/follow-up', (route) => {
+      let bodyText = '';
+      body.forEach((data) => {
+        bodyText += `data: ${JSON.stringify(data)} \n\n`;
+      });
+      route.fulfill({
+        status: 200,
+        body: bodyText,
+        headers: {'content-type': 'text/event-stream'},
+      });
+    });
+  }
+
+  get followUpInput(): Locator {
+    return this.page.locator(
+      'c-quantic-generated-answer-follow-up-input textarea'
+    );
+  }
+
+  get followUpSubmitButton(): Locator {
+    return this.page.locator(
+      'c-quantic-generated-answer-follow-up-input lightning-button-icon[name="submit-follow-up"]'
+    );
+  }
+
+  async typeFollowUpQuestion(question: string): Promise<void> {
+    await this.followUpInput.fill(question);
+  }
+
+  async submitFollowUp(): Promise<void> {
+    await this.followUpSubmitButton.click();
+  }
+
+  async waitForFollowUpStreamEndAnalytics(
+    followUpAnswerId: string
+  ): Promise<Request | boolean> {
+    if (this.analyticsMode === AnalyticsModeEnum.legacy) {
+      return this.analytics.waitForCustomUaAnalytics(
+        {
+          eventType: 'generatedAnswer',
+          eventValue: 'generatedAnswerStreamEnd',
+        },
+        (event) =>
+          event?.customData?.generativeQuestionAnsweringId === followUpAnswerId
+      );
+    }
+    return this.analytics.waitForEventProtocolAnalytics(
+      'Rga.AnswerReceived',
+      (event) => event.answerGenerated === true
+    );
   }
 
   streamEndAnalyticRequestPromise!: Promise<boolean | Request>;

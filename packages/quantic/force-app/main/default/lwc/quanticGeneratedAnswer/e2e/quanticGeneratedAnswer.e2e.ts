@@ -14,10 +14,6 @@ useCaseTestCases.forEach((useCase) => {
   let test = fixtures[useCase.value];
 
   test.describe(`quantic generated answer ${useCase.label}`, () => {
-    test.use({
-      genQaData,
-    });
-
     analyticsModeTest.forEach((analytics) => {
       test.describe(analytics.label, () => {
         test.use({
