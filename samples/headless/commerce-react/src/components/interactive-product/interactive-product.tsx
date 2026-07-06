@@ -13,12 +13,10 @@ interface IInteractiveProductProps {
   controller: HeadlessInteractiveProduct;
   cartController: Cart;
   promoteChildToParent: (product: ChildProduct) => void;
-  navigate: (pathName: string) => void;
 }
 
 export default function InteractiveProduct(props: IInteractiveProductProps) {
-  const {product, controller, cartController, promoteChildToParent, navigate} =
-    props;
+  const {product, controller, cartController, promoteChildToParent} = props;
 
   const [cartState, setCartState] = useState(cartController.state);
 
@@ -99,17 +97,7 @@ export default function InteractiveProduct(props: IInteractiveProductProps) {
 
   const clickProduct = () => {
     controller.select();
-
-    // Normally here, you would simply navigate to product.clickUri.
-    const productId = product.ec_product_id ?? product.permanentid;
-    const productName = product.ec_name ?? product.permanentid;
-    const productPrice = product.ec_promo_price ?? product.ec_price ?? NaN;
-    navigate(`/product/${productId}/${productName}/${productPrice}`);
-    // In this sample project, we navigate to a custom URL because the app doesn't have access to a commerce backend
-    // service to retrieve detailed product information from for the purpose of rendering a product description page
-    // (PDP).
-    // Therefore, we encode bare-minimum product information in the URL, and use it to render the PDP.
-    // This is by no means a realistic scenario.
+    window.open(product.clickUri, '_blank', 'noopener,noreferrer');
   };
 
   return (

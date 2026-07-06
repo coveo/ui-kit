@@ -22,11 +22,10 @@ interface ISearchProps {
   cartController: Cart;
   contextController: Context;
   url: string;
-  navigate: (pathName: string) => void;
 }
 
 export default function Search(props: ISearchProps) {
-  const {engine, cartController, contextController, url, navigate} = props;
+  const {engine, cartController, contextController, url} = props;
 
   contextController.setView({url});
   const searchController = buildSearch(engine, {
@@ -104,10 +103,6 @@ export default function Search(props: ISearchProps) {
         filterSuggestionsGeneratorController={buildFilterSuggestionsGenerator(
           engine
         )}
-        /* Uncomment the `legacyFieldSUggestionsGeneratorController` prop below and comment out the
-           `filterSuggestionsGeneratorController` prop above if using legacy field suggestions */
-        //legacyFieldSuggestionsGeneratorController={buildFieldSuggestionsGenerator(engine)}
-        navigate={navigate}
       />
       <h2 className="PageTitle">Search</h2>
       <NotifyTrigger controller={buildNotifyTrigger(engine)}></NotifyTrigger>
@@ -118,7 +113,6 @@ export default function Search(props: ISearchProps) {
       <SearchAndListingInterface
         searchOrListingController={searchController}
         cartController={cartController}
-        navigate={navigate}
       />
     </div>
   );

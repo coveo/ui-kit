@@ -69,30 +69,6 @@ export default function Layout(props: ILayoutProps) {
             <label htmlFor="surf-accessories">Surf Accessories</label>
           </span>
 
-          <span>
-            <input
-              type="radio"
-              id="pants"
-              name="pants"
-              value="/listing/pants"
-              checked={window.location.pathname === '/listing/pants'}
-              onChange={() => navigate('/listing/pants')}
-            />
-            <label htmlFor="pants">Pants</label>
-          </span>
-
-          <span>
-            <input
-              type="radio"
-              id="towels"
-              name="towels"
-              value="/listing/towels"
-              checked={window.location.pathname === '/listing/towels'}
-              onChange={() => navigate('/listing/towels')}
-            />
-            <label htmlFor="towels">Towels</label>
-          </span>
-
           <CartTab
             controller={buildCart(engine)}
             onChange={() => navigate('/cart')}

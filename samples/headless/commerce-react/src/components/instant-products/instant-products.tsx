@@ -5,11 +5,10 @@ import {onClickProduct} from './actions/on-click-product.js';
 
 interface IInstantProductProps {
   controller: HeadlessInstantProducts;
-  navigate: (pathName: string) => void;
 }
 
 export default function InstantProducts(props: IInstantProductProps) {
-  const {controller, navigate} = props;
+  const {controller} = props;
   const [state, setState] = useState(controller.state);
 
   useEffect(
@@ -32,7 +31,7 @@ export default function InstantProducts(props: IInstantProductProps) {
               <button
                 type="button"
                 className="InstantProduct"
-                onClick={() => onClickProduct(product, controller, navigate)}
+                onClick={() => onClickProduct(product, controller)}
               >
                 <img
                   className="InstantProductImage"

@@ -15,12 +15,10 @@ interface IProductListingPageProps {
   contextController: Context;
   url: string;
   pageName: string;
-  navigate: (pathName: string) => void;
 }
 
 export default function ProductListingPage(props: IProductListingPageProps) {
-  const {engine, cartController, contextController, url, pageName, navigate} =
-    props;
+  const {engine, cartController, contextController, url, pageName} = props;
 
   const productListingController = buildProductListing(engine, {
     enableResults: true,
@@ -89,7 +87,6 @@ export default function ProductListingPage(props: IProductListingPageProps) {
       <SearchAndListingInterface
         searchOrListingController={productListingController}
         cartController={cartController}
-        navigate={navigate}
       />
     </div>
   );

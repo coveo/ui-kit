@@ -18,13 +18,12 @@ import ShowMore from '../../show-more/show-more.js';
 interface ISearchAndListingInterface {
   searchOrListingController: HeadlessSearch | ProductListing;
   cartController: Cart;
-  navigate: (pathName: string) => void;
 }
 
 export default function SearchAndListingInterface(
   props: ISearchAndListingInterface
 ) {
-  const {searchOrListingController, cartController, navigate} = props;
+  const {searchOrListingController, cartController} = props;
 
   const [searchOrListingState, setSearchOrListingState] = useState(
     searchOrListingController.state
@@ -67,7 +66,6 @@ export default function SearchAndListingInterface(
           promoteChildToParent={(child: ChildProduct) =>
             searchOrListingController.promoteChildToParent(child)
           }
-          navigate={navigate}
         />
         <ProductsPerPage controller={paginationController} />
         <ShowMore
