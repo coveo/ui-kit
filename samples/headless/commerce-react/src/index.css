@@ -734,6 +734,59 @@ main {
   outline-offset: 2px;
 }
 
+/* Products per page */
+.ProductsPerPage {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.75rem;
+}
+
+.ProductsPerPageLabel {
+  margin-right: 0.25rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.ProductsPerPage input[type='radio'] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ProductsPerPageOption {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  height: 2rem;
+  padding: 0 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  cursor: pointer;
+}
+
+.ProductsPerPageOption:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.ProductsPerPage input:checked + .ProductsPerPageOption {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-contrast);
+  font-weight: 600;
+}
+
+.ProductsPerPage input:focus-visible + .ProductsPerPageOption {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
 /* Breadcrumbs */
 .BreadcrumbManager,
 .Breadcrumbs {

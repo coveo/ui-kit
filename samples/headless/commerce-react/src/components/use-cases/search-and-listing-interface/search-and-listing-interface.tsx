@@ -8,7 +8,7 @@ import {useEffect, useState} from 'react';
 import BreadcrumbManager from '../../breadcrumb-manager/breadcrumb-manager.js';
 import FacetGenerator from '../../facets/facet-generator/facet-generator.js';
 import Pagination from '../../pagination/pagination.js';
-import ProductsPerPage from '../../products-per-page/products-per-page.js';
+// import ProductsPerPage from '../../products-per-page/products-per-page.js'; // temporarily hidden
 import ResultList from '../../result-list/result-list.js';
 import Sort from '../../sort/sort.js';
 import Summary from '../../summary/summary.js';
@@ -67,7 +67,8 @@ export default function SearchAndListingInterface(
             searchOrListingController.promoteChildToParent(child)
           }
         />
-        <ProductsPerPage controller={paginationController} />
+        {/* Products per page is temporarily hidden.
+        <ProductsPerPage controller={paginationController} /> */}
         {/* Show more is temporarily hidden.
         <ShowMore
           controller={paginationController}
