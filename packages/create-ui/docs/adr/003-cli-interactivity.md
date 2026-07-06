@@ -1,6 +1,7 @@
 # 003 - CLI Interactivity
 
-**Status:** Proposed
+**Status:** Proposed  
+**Date:** 2026-07-06
 
 ## Context
 
