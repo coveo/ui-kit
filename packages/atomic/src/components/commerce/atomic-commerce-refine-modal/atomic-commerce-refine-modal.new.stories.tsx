@@ -4,7 +4,7 @@ import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
 import {expect} from 'storybook/test';
 import {testDialogA11y} from '@/storybook-utils/a11y/dialog.js';
-import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
+import {MockCommerceApi} from '@coveo/platform-mock-api/commerce/mock';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters as commonParameters} from '@/storybook-utils/common/common-meta-parameters';
 import '@/src/components/commerce/atomic-commerce-refine-modal/atomic-commerce-refine-modal.js';

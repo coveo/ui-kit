@@ -6,8 +6,8 @@ import type {
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
 import {testSwitchA11y} from '@/storybook-utils/a11y/switch.js';
-import {MockAnswerApi} from '@/storybook-utils/api/answer/mock';
-import {MockInsightApi} from '@/storybook-utils/api/insight/mock';
+import {MockAnswerApi} from '@coveo/platform-mock-api/answer/mock';
+import {MockInsightApi} from '@coveo/platform-mock-api/insight/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 import '@/src/components/insight/atomic-insight-generated-answer/atomic-insight-generated-answer.js';
