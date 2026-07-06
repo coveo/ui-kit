@@ -77,7 +77,7 @@ export async function promptProjectName(
     placeholder: defaultName,
     defaultValue: defaultName,
     validate: (v) =>
-      (v ?? '').trim().length > 0 ? undefined : 'Please enter a project name.',
+      !v || v.trim().length > 0 ? undefined : 'Please enter a project name.',
   });
   handleCancel(value);
   return value.trim();
