@@ -4,7 +4,11 @@ import {delay, HttpResponse} from 'msw';
 const THREAD_ID = 'thread-1';
 const RUN_ID = 'run-1';
 const CONVERSATION_TOKEN = 'conv-token-1';
-let responseSequence = 0;
+
+const HEAD_ANSWER_ID = `${RUN_ID}-head`;
+
+const getFollowUpAnswerId = (followUpAnswerIndex: number) =>
+  `${RUN_ID}-follow-up-${followUpAnswerIndex}`;
 
 interface AgentEvent {
   type: EventType;
@@ -189,33 +193,29 @@ const headAnswerMessages = agentMessages.filter(
     )
 );
 
-const cloneMessagesForResponse = (messages: AgentEvent[]) => {
-  responseSequence += 1;
-
-  const runId = `${RUN_ID}-${responseSequence}`;
-
+const cloneMessagesForResponse = (messages: AgentEvent[], answerId: string) => {
   return messages.map((message) => ({
     ...message,
-    ...(message.runId && {runId}),
+    ...(message.runId && {runId: answerId}),
   }));
 };
 
-const buildAnsweringStreamingResponse = (
-  {
-    messages = agentMessages,
-    delayBetweenMessages = 'real',
-  }: {
-    messages?: AgentEvent[];
-    delayBetweenMessages?: number | 'real' | 'infinite';
-  } = {messages: agentMessages, delayBetweenMessages: 'real'}
-) => {
+const buildAnsweringStreamingResponse = ({
+  messages = agentMessages,
+  delayBetweenMessages = 'real',
+  answerId,
+}: {
+  messages?: AgentEvent[];
+  delayBetweenMessages?: number | 'real' | 'infinite';
+  answerId: string;
+}) => {
   const defaultDelay =
     delayBetweenMessages === 'real'
       ? 100
       : delayBetweenMessages === 'infinite'
         ? Number.POSITIVE_INFINITY
         : delayBetweenMessages;
-  const responseMessages = cloneMessagesForResponse(messages);
+  const responseMessages = cloneMessagesForResponse(messages, answerId);
 
   const stream = new ReadableStream({
     async start(controller) {
@@ -241,12 +241,21 @@ const buildAnsweringStreamingResponse = (
   });
 };
 
-const followUpAnswerResponse = () =>
-  buildAnsweringStreamingResponse({delayBetweenMessages: 'real'});
+const followUpAnswerResponse = (followUpAnswerIndex: number) =>
+  buildAnsweringStreamingResponse({
+    delayBetweenMessages: 'real',
+    answerId: getFollowUpAnswerId(followUpAnswerIndex),
+  });
 const headAnswerResponse = () =>
   buildAnsweringStreamingResponse({
     messages: headAnswerMessages,
     delayBetweenMessages: 'real',
+    answerId: HEAD_ANSWER_ID,
   });
 
-export {headAnswerResponse, followUpAnswerResponse};
+export {
+  headAnswerResponse,
+  followUpAnswerResponse,
+  HEAD_ANSWER_ID,
+  getFollowUpAnswerId,
+};
