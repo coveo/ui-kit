@@ -1,8 +1,6 @@
 import {
   buildFilterSuggestionsGenerator,
   buildInstantProducts,
-  buildNotifyTrigger,
-  buildQueryTrigger,
   buildSearch,
   buildSearchBox,
   type Cart,
@@ -12,8 +10,6 @@ import {
 import {useCallback, useEffect} from 'react';
 import DidYouMean from '../components/did-you-mean/did-you-mean.js';
 import SearchBox from '../components/search-box/search-box.js';
-import NotifyTrigger from '../components/triggers/notify-trigger.js';
-import QueryTrigger from '../components/triggers/query-trigger.js';
 import SearchAndListingInterface from '../components/use-cases/search-and-listing-interface/search-and-listing-interface.js';
 import {highlightOptions} from '../utils/highlight-options.js';
 
@@ -105,10 +101,6 @@ export default function Search(props: ISearchProps) {
         )}
       />
       <h2 className="PageTitle">Search</h2>
-      <NotifyTrigger controller={buildNotifyTrigger(engine)}></NotifyTrigger>
-      <QueryTrigger
-        controller={buildQueryTrigger(engine, {enableResults: true})}
-      />
       <DidYouMean controller={searchController.didYouMean()} />
       <SearchAndListingInterface
         searchOrListingController={searchController}
