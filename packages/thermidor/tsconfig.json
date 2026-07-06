@@ -16,7 +16,7 @@
     "module": "NodeNext",
     "target": "ES2022",
     "lib": ["DOM", "ES2023"],
-    "types": ["vitest/globals", "node"],
+    "types": [],
     "paths": {
       "@/*": ["./*"]
     }
