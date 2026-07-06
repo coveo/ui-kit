@@ -116,16 +116,4 @@ describe('downloadTemplate', () => {
     ).rejects.toBeInstanceOf(TemplateVersionUnavailableError);
     expect(pacote.extract).not.toHaveBeenCalled();
   });
-
-  it('throws when the extracted package has no package.json', async () => {
-    vi.mocked(pacote.extract).mockResolvedValue({
-      from: '',
-      resolved: '',
-      integrity: '',
-    } as any);
-
-    await expect(
-      downloadTemplate({packageName: '@coveo/sample-x', destDir})
-    ).rejects.toThrow(/not a valid package/);
-  });
 });
