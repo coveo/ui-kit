@@ -8,64 +8,64 @@ We are folding `@coveo/relay` and `coveo.analytics.js` into the `ui-kit` monorep
 Each source repo has hundreds of commits (relay ~300+). We must decide what happens
 to that history once the code lands in ui-kit.
 
-- **Drivers**: keep ui-kit's `main` history clean and readable; preserve full
-  authorship/`git blame` for the imported code; minimize process friction (ui-kit
-  is squash-merge only).
+- **Drivers**: keep ui-kit's `main` history clean and readable; keep the original
+  history available _somewhere_ for the rare deep dive; minimize process friction
+  and long-term complexity (ui-kit is squash-merge only).
 - **Constraints**: ui-kit branch protection currently allows **squash merges only**.
   Source repos are archived after the move.
 - **Assumptions**: an uncluttered `main` history (not buried under hundreds of
   imported commits) keeps everyday `git log`, bisect, and release tooling readable;
-  deep blame on imported code is valuable but occasional.
+  deep `git blame` on the folded libs is rare (near-zero over the last ~2 years),
+  so "good enough" access to old history is acceptable.
 
 ## 2. Decision Statement
 
-**Adopt Option A: squash-merge the integration PR for a clean `main`, preserve the
-full path-rewritten history as a permanent `archive/<lib>-history` branch, and
-publish a `git replace` graft so any developer can opt into deep `git blame`/`git log`
-on demand.**
+**Adopt Option B: squash-merge the integration PR for a clean `main`, and preserve
+history by keeping the original `relay` and `coveo.analytics.js` repos archived
+(read-only) on GitHub — not imported into ui-kit.**
 
-This is the only option that keeps `main` at a single commit per integration **and**
-keeps the full history (with original authors) reachable from inside ui-kit, without
-weakening ui-kit's squash-only merge policy.
+This keeps `main` at a single commit per integration and avoids introducing any new,
+long-term git constructs. The accepted trade-off: in-repo `git blame` on the folded
+code stops at the squash commit; deep history remains available in the archived repos.
 
 ## 3. Options Considered
 
 "Commits on `main`" = how many commits appear in GitHub's commit list / default
 `git log` (not just `--first-parent`).
 
-|                           | A — Squash + archive ref + graft _(Selected)_ | B — Squash + archive old repo | C — Merge commit        |
-| ------------------------- | --------------------------------------------- | ----------------------------- | ----------------------- |
-| Commits on `main`         | 🟢 1                                          | 🟢 1                          | 🔴 300+ (relay)         |
-| History & blame in ui-kit | 🟢 Preserved, on-demand                       | 🔴 Old repo only              | 🟢 Automatic            |
-| Keeps squash-only policy  | 🟢 Yes                                        | 🟢 Yes                        | 🔴 No (needs exception) |
-| One-time setup            | 🟡 push archive ref + graft                   | 🟢 None                       | 🟢 None                 |
+|                           | A — Squash + archive ref + graft | B — Squash + archive old repo _(Selected)_ | C — Merge commit        |
+| ------------------------- | -------------------------------- | ------------------------------------------ | ----------------------- |
+| Commits on `main`         | 🟢 1                             | 🟢 1                                       | 🔴 300+ (relay)         |
+| History & blame in ui-kit | 🟢 Preserved, on-demand          | 🟡 Old repo only                           | 🟢 Automatic            |
+| Keeps squash-only policy  | 🟢 Yes                           | 🟢 Yes                                     | 🔴 No (needs exception) |
+| Long-term complexity      | 🟡 new `archive/*` ref + graft   | 🟢 None                                    | 🟢 None                 |
 
-### Option A (Selected): Squash + permanent `archive/*` history ref + published graft
+### Option B (Selected): Squash, keep history in the archived source repo
 
-- **Summary**: Squash-merge for a clean `main`. Publish the full path-rewritten
-  history as a permanent `archive/<lib>-history` branch, plus a `git replace` graft
-  (`refs/replace/*`) that stitches it under the squash commit. Developers opt into
-  deep blame with one `git fetch`.
-- **Pros**: `main` stays at **1 commit per integration**; full history (original
-  authors) is **preserved inside ui-kit**; **respects the squash-only merge policy**
-  (no exception); deep blame is one `git fetch` away; uses the modern, supported
-  `git replace --graft`.
-- **Cons**: Blame is opt-in (replace refs aren't fetched on clone); the active graft
-  makes the local view diverge from CI/GitHub; the graft dangles if the `archive/*` branch
-  is deleted.
-- **Risks & mitigations**: Default state is graft-off, so CI/tooling are unaffected;
-  history is always present via `archive/*` even without the graft; protect the
-  `archive/*` branch from cleanup. The tooling is standard/supported (`git replace`),
-  but the composition is uncommon, so it's documented here + in a runbook.
+- **Summary**: Squash-merge the integration PR; rely on the archived (read-only)
+  GitHub repos for the original history.
+- **Pros**: `main` gets **1 clean commit** per integration; no branch-protection
+  exception; **no new long-term git concepts** to learn or maintain (KISS); history
+  is not lost — it stays in the archived repos.
+- **Cons & mitigations**: In-repo `git blame` dead-ends at the squash commit — for
+  deep history you go to the archived repo. Mitigated by the fact that deep blame on
+  these libs is rare; when it's needed, the archived repo is good enough (and quickly
+  becomes "too old to care" anyway).
+- **Risks**: Minimal. Requires keeping the archived repos reachable (read-only, not deleted).
 
-### Option B: Squash, keep history in the archived source repo
+### Option A: Squash + permanent `archive/*` history ref + published graft
 
-- **Summary**: Squash-merge; rely on the archived GitHub repo for old history.
-- **Pros**: `main` gets 1 clean commit; no policy exception; nothing extra to set up.
-- **Cons**: **No history or `git blame` for imported code inside ui-kit** — you must
-  leave the repo and dig in the archived one. In practice this is "out of sight, out
-  of mind"; blame dead-ends at the squash commit.
-- **Risks**: History effectively abandoned from a day-to-day standpoint.
+- **Summary**: Squash-merge for a clean `main`, but also publish the full history as
+  a permanent `archive/<lib>-history` branch plus a `git replace` graft so developers
+  can opt into in-repo deep blame with one `git fetch`.
+- **Pros**: Clean `main` **and** history reachable from inside ui-kit; deep blame is
+  one `git fetch` away; uses the modern, supported `git replace --graft`.
+- **Cons**: Blame is opt-in (replace refs aren't fetched on clone) and must be toggled
+  off before making changes — in practice this is close to B for daily work. Adds a new
+  long-term `archive/*` ref + published graft (a non-standard, if supported, composition).
+- **Why not chosen**: The extra long-term git surface isn't justified given how rarely
+  deep blame on these libs is needed; B reaches the same clean `main` with less to
+  explain and maintain.
 
 ### Option C: Merge commit (`git merge --allow-unrelated-histories`)
 
@@ -76,44 +76,36 @@ weakening ui-kit's squash-only merge policy.
   (GitHub/GUIs walk all ancestry); only `git log --first-parent` stays clean. Requires
   **relaxing ui-kit's squash-only branch protection** for the PR — a standing policy
   exception and a foot-gun (wrong merge button drops or stacks history).
-- **Risks**: Permanent history-view noise; ancestry/merge-base side effects for every
-  contributor, forever — not just on demand.
+- **Why not chosen**: Permanent history-view noise and ancestry/merge-base side effects
+  for every contributor, forever.
   - _Example_: `git bisect` on `main` traverses the imported commits, which don't
     build at their old paths/deps — so bisecting a regression hits unbuildable
     revisions. Also skews `git describe`, commit counts, and `shortlog` author lists.
 
 ## 4. Decision Rationale
 
-An uncluttered `main` history keeps everyday `git log`, bisect, and release tooling
-readable; automatic-but-noisy history (Option C) imposes a permanent cost on everyone
-to serve an occasional need. Option A inverts that correctly: pay the cost (a `git fetch`) only
-when you actually need deep blame, and keep `main` pristine the rest of the time.
+Keep it simple. All three options can keep `main` clean; the real question is how much
+long-term machinery we take on to preserve history _inside_ ui-kit — and the team's
+read is that deep blame on relay/`coveo.analytics.js` is rare enough that it isn't worth much.
 
-A dominates B because it keeps the same clean `main` **without** abandoning history —
-the full record stays inside ui-kit, one `git fetch` from full blame, instead of
-requiring a trip to an archived repo. A beats C because it preserves history **without**
-carving a permanent exception into ui-kit's squash-only merge policy and **without**
-dumping 300+ commits into everyone's history view.
+- **B over A**: A's opt-in graft is, for day-to-day work, barely different from B (you
+  must deactivate it to make changes; it's just a quick IDE peek). It isn't worth a new
+  long-term `archive/*` ref + published graft. Fewer permanent git references is better;
+  when someone genuinely needs old blame, the archived repo covers it.
+- **B over C**: C dumps 300+ commits into `main` forever and requires carving a
+  permanent exception into the squash-only merge policy, for a benefit (automatic blame)
+  we rarely use.
 
-The trade-offs are real but bounded and one-time/opt-in, and the
-tooling is modern and supported (`git replace --graft`). The result is the best
-clean-trunk-to-history-preserved ratio of the three.
+History is preserved (archived repos), `main` stays clean, and we add zero new git
+concepts. Best simplicity-to-value trade-off.
 
 ## 5. Operational & Rollout Impact
 
-- **Migration** (per the technical draft + Option A's additions):
+- **Migration** (per the technical draft):
   1. Final release + freeze the source repo; `git-filter-repo` path rewrite.
-  2. Publish history: `git push origin archive/<lib>-history` (never merged into `main`).
-  3. Open the integration PR; **squash-merge** it.
-  4. Publish the graft:
-     ```sh
-     SQUASH=$(git rev-parse HEAD)
-     git replace --graft "$SQUASH" "$SQUASH^" origin/archive/<lib>-history
-     git push origin 'refs/replace/*'
-     ```
-  5. Protect the `archive/*` branch from cleanup; archive the source repo.
-- **Developer runbook** (separate doc): activate `git fetch origin 'refs/replace/*:refs/replace/*'`,
-  deactivate `git replace -d "$(git replace -l)"`.
-- **CI**: unaffected — default state is graft-off; keep authoritative tooling on the
-  real `main` (`--no-replace-objects` if ever needed).
+  2. Open the integration PR; **squash-merge** it.
+  3. Update NPM Trusted Publisher settings to publish from `coveo/ui-kit`.
+  4. **Archive** the source repo read-only on GitHub (add a README pointer to ui-kit).
+- **CI**: no special handling; standard squash merge.
+- **Deep history**: available in the archived source repos on GitHub.
 - **Rollback**: fully revertable before the source repo is archived.
