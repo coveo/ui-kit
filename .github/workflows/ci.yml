@@ -191,7 +191,7 @@ jobs:
       DEPLOYMENT_ENVIRONMENT: CDN
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.61.1-noble
+      image: mcr.microsoft.com/playwright:v1.60.0-noble
       options: --user 1001
     steps:
       - name: Harden Runner
@@ -248,7 +248,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.61.1-noble
+      image: mcr.microsoft.com/playwright:v1.60.0-noble
       options: --user 1001
     timeout-minutes: ${{ github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'long-test') && 120 || 15 }}
     steps:
@@ -356,7 +356,7 @@ jobs:
     if: contains(needs.affected.outputs.projects, '@coveo/atomic')
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.61.1-noble
+      image: mcr.microsoft.com/playwright:v1.60.0-noble
       options: --user 1001
     strategy:
       fail-fast: ${{ github.event_name == 'merge_group' }}
@@ -402,7 +402,7 @@ jobs:
     if: contains(needs.affected.outputs.projects, '@coveo/atomic')
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.61.1-noble
+      image: mcr.microsoft.com/playwright:v1.60.0-noble
       options: --user 1001
     steps:
       - name: Harden Runner
@@ -419,7 +419,7 @@ jobs:
     if: contains(needs.affected.outputs.projects, '@coveo/atomic')
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.61.1-noble
+      image: mcr.microsoft.com/playwright:v1.60.0-noble
       options: --user 1001
     strategy:
       fail-fast: ${{ github.event_name == 'merge_group' }}
@@ -532,7 +532,7 @@ jobs:
     if: ${{ needs.samples-e2e-matrix.outputs.samples != '[]' }}
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.61.1-noble
+      image: mcr.microsoft.com/playwright:v1.60.0-noble
       options: --user 1001
     strategy:
       fail-fast: false
@@ -561,7 +561,7 @@ jobs:
     if: contains(needs.affected.outputs.projects, '@coveo/pkg-new-template')
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.61.1-noble
+      image: mcr.microsoft.com/playwright:v1.60.0-noble
       options: --user 1001
     steps:
       - name: Harden Runner
@@ -578,7 +578,7 @@ jobs:
     if: contains(needs.affected.outputs.projects, '@coveo/atomic-hosted-page')
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.61.1-noble
+      image: mcr.microsoft.com/playwright:v1.60.0-noble
       options: --user 1001
     steps:
       - name: Harden Runner
@@ -595,7 +595,7 @@ jobs:
     if: contains(needs.affected.outputs.projects, '@samples/headless-ssr-commerce-nextjs')
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.61.1-noble
+      image: mcr.microsoft.com/playwright:v1.60.0-noble
       options: --user 1001
     steps:
       - name: Harden Runner

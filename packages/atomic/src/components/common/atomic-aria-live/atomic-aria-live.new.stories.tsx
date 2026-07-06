@@ -2,7 +2,7 @@ import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
-import {MockSearchApi} from '@/storybook-utils/api/search/mock';
+import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/common/atomic-aria-live/atomic-aria-live.js';

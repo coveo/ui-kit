@@ -10,13 +10,13 @@ import {
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import '@/src/components/commerce/atomic-commerce-facet/atomic-commerce-facet.js';
 import '@/src/components/commerce/atomic-commerce-facets/atomic-commerce-facets.js';
-import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
+import {MockCommerceApi} from '@coveo/platform-mock-api/commerce/mock';
 import {
   commerceFacetTransformer,
   createFacetSearchTransformer,
-} from '@/storybook-utils/api/commerce/facet-transformer';
-import {commercePaginationTransformer} from '@/storybook-utils/api/commerce/pagination-transformer';
-import {richResponse as baseSearchResponse} from '@/storybook-utils/api/commerce/search-response';
+} from '@coveo/platform-mock-api/commerce/facet-transformer';
+import {commercePaginationTransformer} from '@coveo/platform-mock-api/commerce/pagination-transformer';
+import {richResponse as baseSearchResponse} from '@coveo/platform-mock-api/commerce/search-response';
 
 const commerceApiHarness = new MockCommerceApi();
 commerceApiHarness.searchEndpoint.addRequestTransformer(
