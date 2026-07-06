@@ -52,8 +52,10 @@ samples/
 **Package name in `package.json`:**
 
 ```
-@samples/<category>-<use-case>[-<framework>][-<variant>]
+@coveo/ui-kit-sample-<category>-<use-case>[-<framework>][-<variant>]
 ```
+
+Samples carry the `@coveo/ui-kit-sample-*` name from the start (matching the `--template` name used by `npm create @coveo/ui`) and stay `private: true` in the workspace. For example, `samples/headless/search-react` is named `@coveo/ui-kit-sample-headless-search-react`. When a sample is ready to publish, we simply flip it from private to public — remove `private: true` (and add `publishConfig.access: "public"` / a `files` allowlist). The package name never changes. See [ADR 002](../packages/create-ui/docs/adr/002-sample-publishing.md).
 
 ### Guidelines
 
@@ -199,7 +201,7 @@ When a developer runs:
 npm create @coveo/ui my-project -- --template headless-search
 ```
 
-The CLI clones the corresponding sample as their project starter. This is why samples must be:
+The CLI downloads and extracts the corresponding published `@coveo/ui-kit-sample-<name>` package as their project starter. This is why samples must be:
 
 - **Zero-config** — Works immediately after `npm install`
 - **Self-contained** — No dependencies on the monorepo structure at runtime

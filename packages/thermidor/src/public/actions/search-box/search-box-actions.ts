@@ -13,13 +13,13 @@ export interface LoadSearchBoxActionsOptions {
  * @returns The search box actions: `setQuery` and `submit`.
  */
 export function loadSearchBoxActions(options: LoadSearchBoxActionsOptions) {
-  const {engine, stateId} = getHandleInternals(options.interface);
+  const {engine} = getHandleInternals(options.interface);
 
-  engine.adoptSlice(getOrCreateSearchBoxSlice(stateId));
+  engine.adoptSlice(getOrCreateSearchBoxSlice(options.interface));
 
   const thunks = options.interface.resolveFacades('search');
 
-  const actions = getOrCreateSearchBoxActions(stateId);
+  const actions = getOrCreateSearchBoxActions(options.interface);
 
   return {
     setQuery(payload: {query: string}) {

@@ -1,4 +1,10 @@
 import {createSlice} from '@reduxjs/toolkit';
+import {
+  type CacheKey,
+  createCacheKey,
+} from '@/src/core/interface/cache/interface-cache-registry.js';
+import {getHandleInternals} from '@/src/core/interface/utils/get-handle-internals.js';
+import type {InterfaceHandle} from '@/src/core/interface/utils/interface-types.js';
 import {getOrCreateSearchBoxActions} from './search-box-actions.js';
 
 export interface SearchBoxState {
@@ -9,8 +15,15 @@ export const initialSearchBoxState: SearchBoxState = {
   query: '',
 };
 
-export function createSearchBoxSlice(interfaceId: string) {
-  const actions = getOrCreateSearchBoxActions(interfaceId);
+type SearchBoxSlice = ReturnType<typeof createSearchBoxSlice>;
+
+const CACHE_KEY: CacheKey<SearchBoxSlice> =
+  createCacheKey<SearchBoxSlice>('searchBox/slice');
+
+export function createSearchBoxSlice(
+  interfaceId: string,
+  actions: ReturnType<typeof getOrCreateSearchBoxActions>
+) {
   return createSlice({
     name: `${interfaceId}/searchBox`,
     initialState: initialSearchBoxState,
@@ -23,10 +36,10 @@ export function createSearchBoxSlice(interfaceId: string) {
   });
 }
 
-const sliceCache = new Map<string, ReturnType<typeof createSearchBoxSlice>>();
-export function getOrCreateSearchBoxSlice(interfaceId: string) {
-  if (!sliceCache.has(interfaceId)) {
-    sliceCache.set(interfaceId, createSearchBoxSlice(interfaceId));
-  }
-  return sliceCache.get(interfaceId)!;
+export function getOrCreateSearchBoxSlice(iface: InterfaceHandle) {
+  const {stateId, cacheRegistry} = getHandleInternals(iface);
+  return cacheRegistry.getOrCreate(CACHE_KEY, () => {
+    const actions = getOrCreateSearchBoxActions(iface);
+    return createSearchBoxSlice(stateId, actions);
+  });
 }

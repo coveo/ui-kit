@@ -2,7 +2,7 @@ import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
-import {MockRecommendationApi} from '@/storybook-utils/api/recommendation/mock';
+import {MockRecommendationApi} from '@coveo/platform-mock-api/recommendation/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInRecommendationInterface} from '@/storybook-utils/search/recs-interface-wrapper';
 import '@/src/components/search/atomic-field-condition/atomic-field-condition.js';

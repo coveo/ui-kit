@@ -9,11 +9,11 @@ import type {Controller} from '../controller-types.js';
 
 class ProductListControllerImpl extends BaseController<ProductListControllerState> {
   constructor(options: ProductListControllerOptions) {
-    const {engine, stateId} = getHandleInternals(options.interface);
+    const {engine} = getHandleInternals(options.interface);
 
-    engine.adoptSlice(getOrCreateProductListSlice(stateId));
+    engine.adoptSlice(getOrCreateProductListSlice(options.interface));
 
-    const selectors = getOrCreateProductListSelectors(stateId);
+    const selectors = getOrCreateProductListSelectors(options.interface);
 
     const controllerState = createMemoizedStateSelector(
       selectors.getProducts,

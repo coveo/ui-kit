@@ -1,11 +1,11 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
-import {MockInsightApi} from '@/storybook-utils/api/insight/mock.js';
+import {MockInsightApi} from '@coveo/platform-mock-api/insight/mock';
 import {
   type baseResponse,
   richResponse,
-} from '@/storybook-utils/api/insight/search-response';
+} from '@coveo/platform-mock-api/insight/search-response';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 import '@/src/components/insight/atomic-insight-facet/atomic-insight-facet.js';

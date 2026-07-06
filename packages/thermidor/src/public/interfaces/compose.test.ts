@@ -60,12 +60,15 @@ describe('composeInterfaces', () => {
 
   it('throws when interfaces have different types', () => {
     const engine = getFullEngine(new Engine());
-    const searchIface = new TestSearchInterface(engine, 'a');
-    const commerceIface = new TestCommerceInterface(engine, 'b');
+    const searchInterface = new TestSearchInterface(engine, 'a');
+    const commerceInterface = new TestCommerceInterface(engine, 'b');
 
     expect(() =>
       composeInterfaces({
-        interfaces: [searchIface, commerceIface] as BaseInterface<'search'>[],
+        interfaces: [
+          searchInterface,
+          commerceInterface,
+        ] as BaseInterface<'search'>[],
       })
     ).toThrow(
       "All interfaces must share the same type. Expected 'search', got 'commerce'."
@@ -123,8 +126,8 @@ describe('ComposedInterface', () => {
     const composed = new ComposedInterface([ifaceA, ifaceB], 'composed-1');
     composed.resolveFacades('search');
 
-    expect(spyA).toHaveBeenCalledWith('search', 'composed-1');
-    expect(spyB).toHaveBeenCalledWith('search', 'composed-1');
+    expect(spyA).toHaveBeenCalledWith('search', composed);
+    expect(spyB).toHaveBeenCalledWith('search', composed);
   });
 
   it('resolveFacades uses the stateId when no composedInterfaceId is passed', () => {
@@ -136,22 +139,23 @@ describe('ComposedInterface', () => {
     const composed = new ComposedInterface([ifaceA], 'my-composed-id');
     composed.resolveFacades('search');
 
-    expect(spyA).toHaveBeenCalledWith('search', 'my-composed-id');
+    expect(spyA).toHaveBeenCalledWith('search', composed);
   });
 
-  it('resolveFacades respects an explicit composedInterfaceId', () => {
+  it('resolveFacades respects an explicit composedInterface', () => {
     const engine = getFullEngine(new Engine());
     const ifaceA = new TestSearchInterface(engine, 'a');
+    const overrideInterface = new TestSearchInterface(engine, 'override-id');
 
     const spyA = vi.spyOn(ifaceA, 'resolveFacades');
 
     const composed = new ComposedInterface([ifaceA], 'my-composed-id');
-    composed.resolveFacades('search', 'override-id');
+    composed.resolveFacades('search', overrideInterface);
 
-    expect(spyA).toHaveBeenCalledWith('search', 'override-id');
+    expect(spyA).toHaveBeenCalledWith('search', overrideInterface);
   });
 
-  it('dispose does not throw and is a no-op', () => {
+  it('dispose does not throw', () => {
     const engine = getFullEngine(new Engine());
     const ifaceA = new TestSearchInterface(engine, 'a');
 

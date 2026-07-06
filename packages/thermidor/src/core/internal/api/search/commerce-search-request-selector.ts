@@ -23,13 +23,11 @@ export interface CommerceSearchEndpointRequest {
 export function createCommerceSearchEndpointRequestSelector(
   scope: EndpointStateScope
 ) {
-  const sharableInterfaceId = scope.composedInterfaceId ?? scope.interfaceId;
-
   const configuration = getOrCreateConfigurationSelectors();
-  const searchBox = getOrCreateSearchBoxSelectors(sharableInterfaceId);
-  const pagination = getOrCreatePaginationSelectors(scope.interfaceId);
-  const facets = getOrCreateFacetsSelectors(scope.interfaceId);
-  const sort = getOrCreateSortSelectors(scope.interfaceId);
+  const searchBox = getOrCreateSearchBoxSelectors(scope.scopeInterface);
+  const pagination = getOrCreatePaginationSelectors(scope.baseInterface);
+  const facets = getOrCreateFacetsSelectors(scope.baseInterface);
+  const sort = getOrCreateSortSelectors(scope.baseInterface);
 
   return createMemoizedStateSelector(
     configuration.getTrackingId,

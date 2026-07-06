@@ -1,9 +1,20 @@
 import {createAction} from '@reduxjs/toolkit';
+import {
+  type CacheKey,
+  createCacheKey,
+} from '@/src/core/interface/cache/interface-cache-registry.js';
+import {getHandleInternals} from '@/src/core/interface/utils/get-handle-internals.js';
+import type {InterfaceHandle} from '@/src/core/interface/utils/interface-types.js';
 import type {
   A2UISurface,
   RoutedInterface,
   TurnStatus,
 } from '@/src/core/interface/generative/generative-types.js';
+
+type GenerativeActions = ReturnType<typeof createGenerativeActions>;
+
+const CACHE_KEY: CacheKey<GenerativeActions> =
+  createCacheKey<GenerativeActions>('generative/actions');
 
 export function createGenerativeActions(interfaceId: string) {
   const prefix = `${interfaceId}/generative`;
@@ -56,14 +67,9 @@ export function createGenerativeActions(interfaceId: string) {
   };
 }
 
-const actionsCache = new Map<
-  string,
-  ReturnType<typeof createGenerativeActions>
->();
-
-export function getOrCreateGenerativeActions(interfaceId: string) {
-  if (!actionsCache.has(interfaceId)) {
-    actionsCache.set(interfaceId, createGenerativeActions(interfaceId));
-  }
-  return actionsCache.get(interfaceId)!;
+export function getOrCreateGenerativeActions(iface: InterfaceHandle) {
+  const {stateId, cacheRegistry} = getHandleInternals(iface);
+  return cacheRegistry.getOrCreate(CACHE_KEY, () =>
+    createGenerativeActions(stateId)
+  );
 }

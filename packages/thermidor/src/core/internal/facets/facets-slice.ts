@@ -1,14 +1,26 @@
 import {createSlice} from '@reduxjs/toolkit';
 import type {FacetsState} from '@/src/core/interface/facets/facets-types.js';
+import {
+  type CacheKey,
+  createCacheKey,
+} from '@/src/core/interface/cache/interface-cache-registry.js';
+import {getHandleInternals} from '@/src/core/interface/utils/get-handle-internals.js';
+import type {InterfaceHandle} from '@/src/core/interface/utils/interface-types.js';
 import {getOrCreateFacetsActions} from './facets-actions.js';
 import {getOrCreateHydrateFromSnapshotAction} from '@/src/core/interface/generative/generative-hydration.js';
 
 export const initialFacetsState: FacetsState = {};
 
-export function createFacetsSlice(interfaceId: string) {
-  const actions = getOrCreateFacetsActions(interfaceId);
-  const hydrateAction = getOrCreateHydrateFromSnapshotAction(interfaceId);
+type FacetsSlice = ReturnType<typeof createFacetsSlice>;
 
+const CACHE_KEY: CacheKey<FacetsSlice> =
+  createCacheKey<FacetsSlice>('facets/slice');
+
+export function createFacetsSlice(
+  interfaceId: string,
+  actions: ReturnType<typeof getOrCreateFacetsActions>,
+  hydrateAction: ReturnType<typeof getOrCreateHydrateFromSnapshotAction>
+) {
   return createSlice({
     name: `${interfaceId}/facets`,
     initialState: initialFacetsState,
@@ -83,10 +95,11 @@ export function createFacetsSlice(interfaceId: string) {
   });
 }
 
-const sliceCache = new Map<string, ReturnType<typeof createFacetsSlice>>();
-export function getOrCreateFacetsSlice(interfaceId: string) {
-  if (!sliceCache.has(interfaceId)) {
-    sliceCache.set(interfaceId, createFacetsSlice(interfaceId));
-  }
-  return sliceCache.get(interfaceId)!;
+export function getOrCreateFacetsSlice(iface: InterfaceHandle) {
+  const {stateId, cacheRegistry} = getHandleInternals(iface);
+  return cacheRegistry.getOrCreate(CACHE_KEY, () => {
+    const actions = getOrCreateFacetsActions(iface);
+    const hydrateAction = getOrCreateHydrateFromSnapshotAction(iface);
+    return createFacetsSlice(stateId, actions, hydrateAction);
+  });
 }

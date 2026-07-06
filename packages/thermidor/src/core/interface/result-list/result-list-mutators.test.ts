@@ -1,63 +1,49 @@
-/**
- * Results Mutations Tests
- */
-
 import {describe, it, expect, beforeEach} from 'vitest';
-import {setResultsFromResponse} from './result-list-mutators.js';
 import {
   createTestEngine,
-  createMockSearchResults,
+  createTestInterface,
+  createMockSearchResult,
 } from '@/src/test/test-utils.js';
+import {setResultsFromResponse} from './result-list-mutators.js';
 import {getResults} from './result-list-selectors.js';
-import {getOrCreateResultsSlice} from '@/src/core/internal/result-list/result-list-slice.js';
 import {FullEngine, getFullEngine} from '@/src/core/interface/engine/engine.js';
+import {getOrCreateResultsSlice} from '@/src/core/internal/result-list/result-list-slice.js';
+import type {SearchInterface} from '@/src/public/interfaces/search.js';
 
 describe('resultsMutations', () => {
   let engine: FullEngine;
+  let iface: SearchInterface;
 
   beforeEach(() => {
-    engine = getFullEngine(createTestEngine());
-    engine.adoptSlice(getOrCreateResultsSlice('default'));
+    const rawEngine = createTestEngine();
+    engine = getFullEngine(rawEngine);
+    iface = createTestInterface(rawEngine, 'default');
+    engine.adoptSlice(getOrCreateResultsSlice(iface));
   });
 
   describe('setResultsFromResponse()', () => {
     it('should return StateMutation object', () => {
-      const results = createMockSearchResults(2);
-      const mutation = setResultsFromResponse(results);
-
-      expect(mutation).toEqual({
-        type: 'default/results/setResultsFromResponse',
-        payload: results,
-      });
+      const results = [createMockSearchResult()];
+      const mutation = setResultsFromResponse(results, iface);
+      expect(mutation.type).toBe('default/results/setResultsFromResponse');
+      expect(mutation.payload).toEqual(results);
     });
-
     it('should update state when used with mutate()', () => {
-      const mockResults = createMockSearchResults(3);
-
-      engine.mutate(setResultsFromResponse(mockResults));
-
-      const selectResults = getResults();
-      expect(engine.read(selectResults)).toHaveLength(3);
-      expect(engine.read(selectResults)[0].uniqueId).toBe(
-        mockResults[0].uniqueId
-      );
+      const results = [createMockSearchResult()];
+      engine.mutate(setResultsFromResponse(results, iface));
+      expect(engine.read(getResults(iface))).toHaveLength(1);
     });
-
     it('should accept empty array', () => {
-      engine.mutate(setResultsFromResponse([]));
-
-      const selectResults = getResults();
-      expect(engine.read(selectResults)).toEqual([]);
+      engine.mutate(setResultsFromResponse([], iface));
+      expect(engine.read(getResults(iface))).toEqual([]);
     });
   });
 
   describe('Integration: multiple mutations', () => {
     it('should work correctly in sequence', () => {
-      engine.mutate(setResultsFromResponse(createMockSearchResults(3)));
-      engine.mutate(setResultsFromResponse([]));
-
-      const selectResults = getResults();
-      expect(engine.read(selectResults)).toEqual([]);
+      engine.mutate(setResultsFromResponse([createMockSearchResult()], iface));
+      engine.mutate(setResultsFromResponse([], iface));
+      expect(engine.read(getResults(iface))).toEqual([]);
     });
   });
 });

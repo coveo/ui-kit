@@ -10,14 +10,14 @@ import {userEvent, waitFor} from 'storybook/test';
 import {testHoverContentA11y} from '@/storybook-utils/a11y/hover-content.js';
 import {testStatusMessageSequenceA11y} from '@/storybook-utils/a11y/status-message.js';
 import {testSwitchA11y} from '@/storybook-utils/a11y/switch.js';
-import {MockAgentApi} from '@/storybook-utils/api/agent/mock';
+import {MockAgentApi} from '@coveo/platform-mock-api/agent/mock';
 import {
   followUpTurnLimitErrorResponse,
   followUpGenericErrorResponse,
   followUpNetworkErrorResponse,
-} from '@/storybook-utils/api/agent/generate-response';
-import {MockAnswerApi} from '@/storybook-utils/api/answer/mock';
-import {MockSearchApi} from '@/storybook-utils/api/search/mock';
+} from '@coveo/platform-mock-api/agent/generate-response';
+import {MockAnswerApi} from '@coveo/platform-mock-api/answer/mock';
+import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-generated-answer/atomic-generated-answer.js';

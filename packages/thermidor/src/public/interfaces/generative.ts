@@ -10,7 +10,7 @@ import type {
   Facades,
 } from '@/src/core/interface/utils/interface-types.js';
 import {generateId} from '@/src/core/interface/utils/id-generator.js';
-import {loadGenerative} from '@/src/core/interface/generative/generative-loader.js';
+import {getOrCreateGenerativeSlice} from '@/src/core/internal/generative/generative-slice.js';
 
 const noopThunk = createAsyncThunk<void, {engine: FullEngine}>(
   'generative/noop',
@@ -53,7 +53,13 @@ export function buildGenerativeInterface(
   const fullEngine = getFullEngine(options.engine);
   const interfaceId = options.id ?? generateId();
 
-  loadGenerative(fullEngine, interfaceId);
+  const iface = new GenerativeInterface(
+    fullEngine,
+    interfaceId,
+    options.engine
+  );
 
-  return new GenerativeInterface(fullEngine, interfaceId, options.engine);
+  fullEngine.adoptSlice(getOrCreateGenerativeSlice(iface));
+
+  return iface;
 }

@@ -1,5 +1,11 @@
 import {createSlice} from '@reduxjs/toolkit';
 import type {CommerceSearchSortCriterion} from '@/src/api/interface/commerce-search-endpoint/commerce-search-endpoint-types.js';
+import {
+  type CacheKey,
+  createCacheKey,
+} from '@/src/core/interface/cache/interface-cache-registry.js';
+import {getHandleInternals} from '@/src/core/interface/utils/get-handle-internals.js';
+import type {InterfaceHandle} from '@/src/core/interface/utils/interface-types.js';
 import {getOrCreateSortActions} from './sort-actions.js';
 
 export interface SortState {
@@ -12,9 +18,14 @@ export const initialSortState: SortState = {
   availableSorts: [],
 };
 
-export function createSortSlice(interfaceId: string) {
-  const actions = getOrCreateSortActions(interfaceId);
+type SortSlice = ReturnType<typeof createSortSlice>;
 
+const CACHE_KEY: CacheKey<SortSlice> = createCacheKey<SortSlice>('sort/slice');
+
+export function createSortSlice(
+  interfaceId: string,
+  actions: ReturnType<typeof getOrCreateSortActions>
+) {
   return createSlice({
     name: `${interfaceId}/sort`,
     initialState: initialSortState,
@@ -32,10 +43,10 @@ export function createSortSlice(interfaceId: string) {
   });
 }
 
-const sliceCache = new Map<string, ReturnType<typeof createSortSlice>>();
-export function getOrCreateSortSlice(interfaceId: string) {
-  if (!sliceCache.has(interfaceId)) {
-    sliceCache.set(interfaceId, createSortSlice(interfaceId));
-  }
-  return sliceCache.get(interfaceId)!;
+export function getOrCreateSortSlice(iface: InterfaceHandle) {
+  const {stateId, cacheRegistry} = getHandleInternals(iface);
+  return cacheRegistry.getOrCreate(CACHE_KEY, () => {
+    const actions = getOrCreateSortActions(iface);
+    return createSortSlice(stateId, actions);
+  });
 }

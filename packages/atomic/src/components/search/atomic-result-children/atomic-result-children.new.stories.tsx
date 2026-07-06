@@ -4,7 +4,7 @@ import {
   baseFoldedResponse,
   MockSearchApi,
   nestedFoldedResponse,
-} from '@/storybook-utils/api/search/mock';
+} from '@coveo/platform-mock-api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-folded-result-list/atomic-folded-result-list.js';

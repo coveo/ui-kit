@@ -7,8 +7,8 @@ import {html} from 'lit';
 import {
   type baseResponse,
   richResponse,
-} from '@/storybook-utils/api/commerce/listing-response';
-import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock.js';
+} from '@coveo/platform-mock-api/commerce/listing-response';
+import {MockCommerceApi} from '@coveo/platform-mock-api/commerce/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters.js';
 import {isTestMode} from '@/storybook-utils/common/is-test-mode';
 import '@/src/components/commerce/atomic-commerce-breadbox/atomic-commerce-breadbox.js';

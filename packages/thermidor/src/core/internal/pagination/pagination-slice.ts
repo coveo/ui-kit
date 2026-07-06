@@ -1,4 +1,10 @@
 import {createSlice} from '@reduxjs/toolkit';
+import {
+  type CacheKey,
+  createCacheKey,
+} from '@/src/core/interface/cache/interface-cache-registry.js';
+import {getHandleInternals} from '@/src/core/interface/utils/get-handle-internals.js';
+import type {InterfaceHandle} from '@/src/core/interface/utils/interface-types.js';
 import {getOrCreatePaginationActions} from './pagination-actions.js';
 import {getOrCreateHydrateFromSnapshotAction} from '@/src/core/interface/generative/generative-hydration.js';
 
@@ -14,10 +20,16 @@ export const initialPaginationState: PaginationState = {
   totalCount: 0,
 };
 
-export function createPaginationSlice(interfaceId: string) {
-  const actions = getOrCreatePaginationActions(interfaceId);
-  const hydrateAction = getOrCreateHydrateFromSnapshotAction(interfaceId);
+type PaginationSlice = ReturnType<typeof createPaginationSlice>;
 
+const CACHE_KEY: CacheKey<PaginationSlice> =
+  createCacheKey<PaginationSlice>('pagination/slice');
+
+export function createPaginationSlice(
+  interfaceId: string,
+  actions: ReturnType<typeof getOrCreatePaginationActions>,
+  hydrateAction: ReturnType<typeof getOrCreateHydrateFromSnapshotAction>
+) {
   return createSlice({
     name: `${interfaceId}/pagination`,
     initialState: initialPaginationState,
@@ -62,10 +74,11 @@ export function createPaginationSlice(interfaceId: string) {
   });
 }
 
-const sliceCache = new Map<string, ReturnType<typeof createPaginationSlice>>();
-export function getOrCreatePaginationSlice(interfaceId: string) {
-  if (!sliceCache.has(interfaceId)) {
-    sliceCache.set(interfaceId, createPaginationSlice(interfaceId));
-  }
-  return sliceCache.get(interfaceId)!;
+export function getOrCreatePaginationSlice(iface: InterfaceHandle) {
+  const {stateId, cacheRegistry} = getHandleInternals(iface);
+  return cacheRegistry.getOrCreate(CACHE_KEY, () => {
+    const actions = getOrCreatePaginationActions(iface);
+    const hydrateAction = getOrCreateHydrateFromSnapshotAction(iface);
+    return createPaginationSlice(stateId, actions, hydrateAction);
+  });
 }

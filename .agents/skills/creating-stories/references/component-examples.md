@@ -9,7 +9,7 @@ Full example showing all required parts:
 ```typescript
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
-import {MockSearchApi} from '@/storybook-utils/api/search/mock';
+import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
@@ -125,7 +125,7 @@ const meta: Meta = {
 **Key difference:** Use `MockCommerceApi` and `wrapInCommerceInterface`.
 
 ```typescript
-import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
+import {MockCommerceApi} from '@coveo/platform-mock-api/commerce/mock';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 
 const commerceApiHarness = new MockCommerceApi();
@@ -141,7 +141,7 @@ const meta: Meta = {
 **Key difference:** Use `MockInsightApi` and `wrapInInsightInterface`.
 
 ```typescript
-import {MockInsightApi} from '@/storybook-utils/api/insight/mock';
+import {MockInsightApi} from '@coveo/platform-mock-api/insight/mock';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 
 const insightApiHarness = new MockInsightApi();
