@@ -10,8 +10,6 @@ import {execSync} from 'node:child_process';
  * do not contain import statements or type references to @reduxjs/toolkit or immer.
  * This enforces the anti-corruption boundary at the type level — consumers of this
  * package should never need RTK or Immer as peer dependencies.
- *
- * Validates: Requirements 11.1, 11.2, 11.3
  */
 
 const PACKAGE_ROOT = resolve(import.meta.dirname, '../..');
