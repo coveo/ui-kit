@@ -52,6 +52,6 @@ Worked example: a target directory that already exists and is non-empty is a **h
 
 ## Consequences
 
-- scaffold, download, and setup are pure functions of the options object. They are tested by passing an object and asserting the result — no prompt mocking, no simulated terminal.
+- `scaffold` and its helpers are driven solely by the resolved options object (no interactive calls). They are tested by passing an object and asserting the result — no prompt mocking, no simulated terminal.
 - The CLI is fully scriptable: every interactive choice has a flag, so a non-interactive invocation reproduces any interactive run.
 - Cancelling a prompt (Ctrl-C) aborts before any side effect — there is nothing to roll back — because all prompts precede execution.
