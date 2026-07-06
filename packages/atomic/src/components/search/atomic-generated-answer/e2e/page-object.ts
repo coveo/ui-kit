@@ -240,13 +240,9 @@ export class GeneratedAnswerPageObject extends BasePageObject {
         if (body?.eventValue !== eventValue) {
           return false;
         }
-        if (
-          answerId !== undefined &&
-          body?.customData?.generativeQuestionAnsweringId !== answerId
-        ) {
-          return false;
-        }
-        return true;
+        return answerId
+          ? body?.customData?.generativeQuestionAnsweringId === answerId
+          : true;
       }
       return false;
     });
