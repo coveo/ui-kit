@@ -974,6 +974,16 @@ importers:
         version: 4.1.9(@types/node@26.0.1)(@vitest/browser-playwright@4.1.9)(jsdom@20.0.3)(msw@2.14.6(@types/node@26.0.1)(typescript@6.0.3))(vite@8.1.0(@types/node@26.0.1)(esbuild@0.28.1)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))
 
   packages/mock-converse-api:
+    dependencies:
+      '@coveo/platform-mock-api':
+        specifier: workspace:*
+        version: link:../platform-mock-api
+      '@mswjs/http-middleware':
+        specifier: ^0.10.3
+        version: 0.10.3(msw@2.14.6(@types/node@24.12.4)(typescript@6.0.3))
+      msw:
+        specifier: 'catalog:'
+        version: 2.14.6(@types/node@24.12.4)(typescript@6.0.3)
     devDependencies:
       '@types/node':
         specifier: 'catalog:'
@@ -4611,6 +4621,12 @@ packages:
     engines: {node: '>=20.0.0'}
     peerDependencies:
       msw: ^2.12.10
+
+  '@mswjs/http-middleware@0.10.3':
+    resolution: {integrity: sha512-6CoX9IivDF7hggORdA4vX6uz+pkY1urGQMhmviHmYya/0b4EXwmhaXlGLQG3G29heqb3qdjp61V0+E2xRtyR5A==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      msw: '>=2.0.0'
 
   '@mswjs/interceptors@0.41.9':
     resolution: {integrity: sha512-VVPPgHyQ6ShqnrmDWuxjmUIsO9gWyOZFmuOfLd9LfBGQJwZfy0gvv9pbHSJuoFNIYC7ZDX9aoFwowjcdSC4E8w==}
@@ -19273,6 +19289,14 @@ snapshots:
       '@mswjs/interceptors': 0.41.9
       msw: 2.14.6(@types/node@26.0.1)(typescript@6.0.3)
       outvariant: 1.4.3
+
+  '@mswjs/http-middleware@0.10.3(msw@2.14.6(@types/node@24.12.4)(typescript@6.0.3))':
+    dependencies:
+      express: 4.22.2
+      msw: 2.14.6(@types/node@24.12.4)(typescript@6.0.3)
+      strict-event-emitter: 0.5.1
+    transitivePeerDependencies:
+      - supports-color
 
   '@mswjs/interceptors@0.41.9':
     dependencies:
