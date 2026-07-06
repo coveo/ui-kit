@@ -18,10 +18,16 @@ const FORBIDDEN_PATTERNS = [
   /from\s+['"]@reduxjs\/toolkit['"]/,
   /from\s+['"]@reduxjs\/toolkit\/[^'"]*['"]/,
   /from\s+['"]immer['"]/,
+  /from\s+['"]redux-thunk['"]/,
+  /from\s+['"]reselect['"]/,
   /import\s*\(?\s*['"]@reduxjs\/toolkit['"]\s*\)?/,
   /import\s*\(?\s*['"]immer['"]\s*\)?/,
+  /import\s*\(?\s*['"]redux-thunk['"]\s*\)?/,
+  /import\s*\(?\s*['"]reselect['"]\s*\)?/,
   /\/\/\/\s*<reference\s+types=["']@reduxjs\/toolkit["']/,
   /\/\/\/\s*<reference\s+types=["']immer["']/,
+  /\/\/\/\s*<reference\s+types=["']redux-thunk["']/,
+  /\/\/\/\s*<reference\s+types=["']reselect["']/,
 ];
 
 function findDtsFiles(dir: string, ignore?: string[]): string[] {
@@ -100,7 +106,7 @@ function formatViolationReport(
 }
 
 describe('.d.ts Validation Gate', () => {
-  it('should not contain @reduxjs/toolkit or immer references in public-facing declarations', () => {
+  it('should not contain forbidden dependency references in public-facing declarations', () => {
     ensureBuildExists();
 
     const publicDtsFiles = [
@@ -128,14 +134,14 @@ describe('.d.ts Validation Gate', () => {
     if (allViolations.length > 0) {
       const report = formatViolationReport(allViolations);
       expect.fail(
-        `Declaration files contain references to @reduxjs/toolkit or immer.\n` +
-          `These implementation dependencies must not leak into consumer-facing type declarations.\n\n` +
+        `Declaration files contain references to forbidden implementation dependencies.\n` +
+          `These must not leak into consumer-facing type declarations.\n\n` +
           `Offending files:\n${report}`
       );
     }
   });
 
-  it('should not contain @reduxjs/toolkit or immer references in any non-internal .d.ts files after clean build', () => {
+  it('should not contain forbidden dependency references in any non-internal .d.ts files after clean build', () => {
     cleanAndBuild();
 
     const allDtsFiles = findDtsFiles(DIST_DIR, ['internal']);
@@ -160,8 +166,8 @@ describe('.d.ts Validation Gate', () => {
     if (allViolations.length > 0) {
       const report = formatViolationReport(allViolations);
       expect.fail(
-        `Declaration files outside internal/ contain references to @reduxjs/toolkit or immer.\n` +
-          `These implementation dependencies must not leak into non-internal type declarations.\n\n` +
+        `Declaration files outside internal/ contain references to forbidden implementation dependencies.\n` +
+          `These must not leak into non-internal type declarations.\n\n` +
           `Offending files:\n${report}`
       );
     }

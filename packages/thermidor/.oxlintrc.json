@@ -9,8 +9,14 @@
           {
             "patterns": [
               {
-                "group": ["@reduxjs/toolkit", "@reduxjs/toolkit/*", "immer"],
-                "message": "Public layer must not depend on Redux or Immer directly."
+                "group": [
+                  "@reduxjs/toolkit",
+                  "@reduxjs/toolkit/*",
+                  "immer",
+                  "redux-thunk",
+                  "reselect"
+                ],
+                "message": "Public layer must not depend on Redux, Immer, or related ecosystem packages directly."
               },
               {
                 "group": [
