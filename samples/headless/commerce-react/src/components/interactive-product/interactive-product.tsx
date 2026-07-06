@@ -136,7 +136,7 @@ export default function InteractiveProduct(props: IInteractiveProductProps) {
       </button>
       <div className="ProductImageWrapper">
         <img
-          src={product.ec_images[0]}
+          src={product.ec_images?.[0] ?? ''}
           alt={product.permanentid}
           height={100}
         ></img>
@@ -156,7 +156,7 @@ export default function InteractiveProduct(props: IInteractiveProductProps) {
             <img
               alt={child.ec_name!}
               height="25px"
-              src={child.ec_images[0]}
+              src={child.ec_images?.[0] ?? ''}
             ></img>
           </button>
         ) : null;
