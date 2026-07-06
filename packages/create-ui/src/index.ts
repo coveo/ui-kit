@@ -5,7 +5,7 @@ import {tmpdir} from 'node:os';
 import {join, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {argv} from 'node:process';
-import {downloadTemplate} from './download.js';
+import {downloadTemplate, TemplateVersionUnavailableError} from './download.js';
 import {isEmptyOrMissing} from './fs-utils.js';
 import {note} from '@clack/prompts';
 import {promptProjectName, selectTemplate} from './prompt.js';
@@ -22,8 +22,13 @@ import {
 } from './templates.js';
 import {formatError, getPackageManager, log} from './utils.js';
 
-function isPackageNotFound(error: unknown): boolean {
-  return error instanceof Error && /404/i.test(error.message);
+export function unavailableTemplateMessage(
+  templateName: string,
+  version?: string
+): string {
+  return version
+    ? `Template "${templateName}" version "${version}" is not available.`
+    : `Template "${templateName}" is not available.`;
 }
 
 // TODO: (KIT-5833): add a link to the "How to use @coveo/create-ui" guide here
@@ -39,6 +44,7 @@ Coveo documentation:
 export interface CliArgs {
   projectName?: string;
   template?: string;
+  templateVersion?: string;
   docs: boolean;
 }
 
@@ -61,6 +67,10 @@ function buildProgram(): Command {
       '--template <name>',
       'template to scaffold (skips the interactive prompt)'
     )
+    .option(
+      '--template-version <version>',
+      'sample version or npm dist-tag to scaffold (defaults to latest)'
+    )
     .option('--docs', 'print links to the Coveo documentation')
     .addHelpText(
       'after',
@@ -68,7 +78,7 @@ function buildProgram(): Command {
         .map((t) => `  ${t.name.padEnd(26)} ${describeTemplate(t)}`)
         .join(
           '\n'
-        )}\n\nExample:\n  $ npm create @coveo/ui my-app --template headless-search-react`
+        )}\n\nExamples:\n  $ npm create @coveo/ui my-app --template headless-search-react\n  $ npm create @coveo/ui my-app --template headless-search-react --template-version 3.2.1`
     )
     .showHelpAfterError()
     .exitOverride();
@@ -79,11 +89,17 @@ export function parseArgs(rawArgs: string[]): CliArgs {
   program.parse(rawArgs, {from: 'user'});
   const opts = program.opts<{
     template?: string;
+    templateVersion?: string;
     docs?: boolean;
   }>();
+  const templateVersion = opts.templateVersion?.trim();
   return {
     projectName: program.args[0],
     template: opts.template,
+    templateVersion:
+      templateVersion !== undefined && templateVersion.length > 0
+        ? templateVersion
+        : undefined,
     docs: Boolean(opts.docs),
   };
 }
@@ -110,17 +126,20 @@ async function claimTargetDir(targetDir: string): Promise<boolean> {
 /** Downloads, resolves, finalizes, and installs the chosen template. */
 export async function scaffold(
   template: Template,
-  projectName: string
+  projectName: string,
+  version?: string
 ): Promise<void> {
   const targetDir = resolve(process.cwd(), projectName);
   const tempDir = await mkdtemp(join(tmpdir(), 'create-ui-'));
   let createdTargetDir = false;
 
   try {
-    log.step(`Downloading the "${template.name}" template…`);
+    const versionSuffix = version ? ` (${version})` : '';
+    log.step(`Downloading the "${template.name}" template${versionSuffix}…`);
     const sampleDir = await downloadTemplate({
       packageName: template.packageName,
       destDir: tempDir,
+      version,
     });
 
     log.step(`Creating project in ${targetDir}…`);
@@ -131,14 +150,14 @@ export async function scaffold(
     if (createdTargetDir) {
       await rm(targetDir, {recursive: true, force: true});
     }
-    if (isPackageNotFound(error)) {
+    if (error instanceof TemplateVersionUnavailableError) {
       note(
         `Check available templates:  npm create @coveo/ui -- --help\n` +
           `Open an issue:              https://github.com/coveo/ui-kit/issues\n` +
           `Coveo community:            https://connect.coveo.com`,
         'Need help?'
       );
-      throw new Error(`Template "${template.name}" is not available.`);
+      throw new Error(unavailableTemplateMessage(template.name, error.version));
     }
     throw error;
   } finally {
@@ -215,7 +234,7 @@ export async function main(rawArgs: string[]): Promise<number> {
     return 1;
   }
 
-  await scaffold(template, projectName);
+  await scaffold(template, projectName, args.templateVersion);
   return 0;
 }
 

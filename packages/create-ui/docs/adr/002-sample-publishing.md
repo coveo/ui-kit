@@ -46,4 +46,4 @@ Same "Version Packages" → publish flow as the libraries. No second pipeline.
 
 - KIT-5842 (run-time protocol resolution) is eliminated — resolved at publish time by pnpm.
 - Samples become public API surface; a broken sample fails at publish/install time, not silently at scaffold time.
-<!-- - Internal testing uses `--version ` instead of the old `--ref <branch>`. -->
+- Pinning a specific sample version is supported via `--template-version <version>` (a semver or npm dist-tag), which replaces the old `--ref <branch>` and defaults to `latest` (see [ADR 001](./001-sample-consumption.md) decision #3).
