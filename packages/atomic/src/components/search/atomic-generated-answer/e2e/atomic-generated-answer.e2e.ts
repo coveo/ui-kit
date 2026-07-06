@@ -1,4 +1,4 @@
-import {getExpectedFollowUpAnswerId} from '@/storybook-utils/api/agent/generate-response';
+import {getExpectedFollowUpAnswerId} from '@coveo/platform-mock-api/agent/generate-response';
 import {expect, test} from './fixture';
 
 const closePopoverDebounceMs = 100;
