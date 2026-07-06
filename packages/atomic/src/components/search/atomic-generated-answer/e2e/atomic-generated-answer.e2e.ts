@@ -1,7 +1,8 @@
-import {getExpectedFollowUpAnswerId} from '@coveo/platform-mock-api/agent/generate-response';
+import {getFollowUpAnswerId} from '@coveo/platform-mock-api/agent/generate-response';
 import {expect, test} from './fixture';
 
 const closePopoverDebounceMs = 100;
+const hoverAnalyticsDelayMs = 1200;
 const pollTimeoutMs = 5000;
 
 test.describe('atomic-generated-answer', () => {
@@ -414,7 +415,7 @@ test.describe('atomic-generated-answer', () => {
         const copyRequest = await copyPromise;
         const copyBody = copyRequest.postDataJSON();
         expect(copyBody.customData.generativeQuestionAnsweringId).toBe(
-          getExpectedFollowUpAnswerId(1)
+          getFollowUpAnswerId(1)
         );
         expect(copyBody.customData.conversationId).toBe('thread-1');
       });
@@ -432,7 +433,7 @@ test.describe('atomic-generated-answer', () => {
         const likeRequest = await likePromise;
         const likeBody = likeRequest.postDataJSON();
         expect(likeBody.customData.generativeQuestionAnsweringId).toBe(
-          getExpectedFollowUpAnswerId(1)
+          getFollowUpAnswerId(1)
         );
         expect(likeBody.customData.conversationId).toBe('thread-1');
       });
@@ -454,7 +455,7 @@ test.describe('atomic-generated-answer', () => {
         const dislikeRequest = await dislikePromise;
         const dislikeBody = dislikeRequest.postDataJSON();
         expect(dislikeBody.customData.generativeQuestionAnsweringId).toBe(
-          getExpectedFollowUpAnswerId(1)
+          getFollowUpAnswerId(1)
         );
         expect(dislikeBody.customData.conversationId).toBe('thread-1');
       });
@@ -475,14 +476,13 @@ test.describe('atomic-generated-answer', () => {
           .first();
         await expect(popover).toBeVisible();
 
-        // Wait for the hover analytics threshold (1000ms)
-        await generatedAnswer.page.waitForTimeout(1000);
+        await generatedAnswer.page.waitForTimeout(hoverAnalyticsDelayMs);
         await generatedAnswer.page.mouse.move(0, 0);
 
         const hoverRequest = await hoverPromise;
         const hoverBody = hoverRequest.postDataJSON();
         expect(hoverBody.customData.generativeQuestionAnsweringId).toBe(
-          getExpectedFollowUpAnswerId(1)
+          getFollowUpAnswerId(1)
         );
         expect(hoverBody.customData.conversationId).toBe('thread-1');
       });
@@ -501,7 +501,7 @@ test.describe('atomic-generated-answer', () => {
         const clickRequest = await clickPromise;
         const clickBody = clickRequest.postDataJSON();
         expect(clickBody.customData.generativeQuestionAnsweringId).toBe(
-          getExpectedFollowUpAnswerId(1)
+          getFollowUpAnswerId(1)
         );
         expect(clickBody.customData.conversationId).toBe('thread-1');
       });
@@ -537,6 +537,11 @@ test.describe('atomic-generated-answer', () => {
       });
 
       await test.step('like third answer and verify first answer is unaffected', async () => {
+        const likePromise = generatedAnswer.waitForCustomAnalyticsEvent(
+          'likeGeneratedAnswer',
+          getFollowUpAnswerId(2)
+        );
+
         const thirdAnswerLikeButton = generatedAnswer.threadItems
           .last()
           .getByRole('button', {name: /^helpful$/i});
@@ -544,6 +549,12 @@ test.describe('atomic-generated-answer', () => {
         await expect(thirdAnswerLikeButton).toHaveAttribute(
           'aria-pressed',
           'true'
+        );
+
+        const likeRequest = await likePromise;
+        const likeBody = likeRequest.postDataJSON();
+        expect(likeBody.customData.generativeQuestionAnsweringId).toBe(
+          getFollowUpAnswerId(2)
         );
 
         await generatedAnswer.showPreviousButton.click();
@@ -583,7 +594,7 @@ test.describe('atomic-generated-answer', () => {
         const likeRequest = await likePromise;
         const likeBody = likeRequest.postDataJSON();
         expect(likeBody.customData.generativeQuestionAnsweringId).toBe(
-          getExpectedFollowUpAnswerId(1)
+          getFollowUpAnswerId(1)
         );
         expect(likeBody.customData.conversationId).toBe('thread-1');
       });

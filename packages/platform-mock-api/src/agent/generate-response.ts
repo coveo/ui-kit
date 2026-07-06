@@ -7,17 +7,8 @@ const CONVERSATION_TOKEN = 'conv-token-1';
 
 const HEAD_ANSWER_ID = `${RUN_ID}-head`;
 
-let followUpSequence = 0;
-const getNextFollowUpAnswerId = () => {
-  followUpSequence += 1;
-  return `${RUN_ID}-follow-up-${followUpSequence}`;
-};
-
-/**
- * Returns the expected answer ID for the Nth follow-up response (1-indexed).
- * Use this in tests to assert against a known source of truth.
- */
-const getExpectedFollowUpAnswerId = (n: number) => `${RUN_ID}-follow-up-${n}`;
+const getFollowUpAnswerId = (followUpAnswerIndex: number) =>
+  `${RUN_ID}-follow-up-${followUpAnswerIndex}`;
 
 interface AgentEvent {
   type: EventType;
@@ -250,10 +241,10 @@ const buildAnsweringStreamingResponse = ({
   });
 };
 
-const followUpAnswerResponse = () =>
+const followUpAnswerResponse = (followUpAnswerIndex: number) =>
   buildAnsweringStreamingResponse({
     delayBetweenMessages: 'real',
-    answerId: getNextFollowUpAnswerId(),
+    answerId: getFollowUpAnswerId(followUpAnswerIndex),
   });
 const headAnswerResponse = () =>
   buildAnsweringStreamingResponse({
@@ -266,5 +257,5 @@ export {
   headAnswerResponse,
   followUpAnswerResponse,
   HEAD_ANSWER_ID,
-  getExpectedFollowUpAnswerId,
+  getFollowUpAnswerId,
 };
