@@ -209,17 +209,17 @@ src/
 
 ```ts
 // What public/ is allowed to import
-export { getOrCreatePaginationSlice } from './pagination-slice.js';
-export { getOrCreatePaginationActions } from './pagination-actions.js';
-export { getOrCreatePaginationSelectors } from './pagination-selectors.js';
-export type { PaginationState } from './pagination-types.js';
+export {getOrCreatePaginationSlice} from './pagination-slice.js';
+export {getOrCreatePaginationActions} from './pagination-actions.js';
+export {getOrCreatePaginationSelectors} from './pagination-selectors.js';
+export type {PaginationState} from './pagination-types.js';
 ```
 
 ## Barrel example: `internal/api/search/index.ts`
 
 ```ts
 // Client factory + types (needed by configuration-actions and potentially external consumers)
-export { createSearchEndpointClient } from './search-endpoint-client.js';
+export {createSearchEndpointClient} from './search-endpoint-client.js';
 export type {
   SearchEndpointClient,
   SearchEndpointClientConfiguration,
@@ -236,10 +236,10 @@ export type {
 } from './search-endpoint-types.js';
 
 // Facade resolver (needed by interface builders)
-export { createSearchFacadeResolver } from './search-facade.js';
+export {createSearchFacadeResolver} from './search-facade.js';
 
 // Thunk factory (needed by facade resolver, not typically by public/)
-export { createSearchEndpointThunk } from './search-thunk.js';
+export {createSearchEndpointThunk} from './search-thunk.js';
 ```
 
 ## ESLint rule
@@ -267,17 +267,17 @@ export { createSearchEndpointThunk } from './search-thunk.js';
 
 ## Import path mapping (before → after)
 
-| Before | After |
-|--------|-------|
-| `@/src/core/internal/pagination/pagination-actions.js` | `@/src/internal/features/pagination` |
-| `@/src/core/internal/pagination/pagination-selectors.js` | `@/src/internal/features/pagination` |
-| `@/src/core/internal/pagination/pagination-slice.js` | `@/src/internal/features/pagination` |
-| `@/src/core/interface/utils/memoized-state-selector.js` | `@/src/internal/utils` |
-| `@/src/core/interface/utils/interface-types.js` | `@/src/internal/utils` |
-| `@/src/core/interface/utils/symbols.js` | `@/src/internal/utils` |
-| `@/src/core/interface/utils/resolve-facades.js` | `@/src/internal/utils` |
-| `@/src/core/interface/engine/engine.js` | `@/src/internal/engine` |
-| `@/src/core/interface/engine/engine-types.js` | `@/src/internal/engine` |
-| `@/src/api/interface/search-endpoint/search-endpoint-client.js` | `@/src/internal/api/search` |
-| `@/src/core/internal/api/search/search-thunk.js` | `@/src/internal/api/search` |
+| Before                                                               | After                                |
+| -------------------------------------------------------------------- | ------------------------------------ |
+| `@/src/core/internal/pagination/pagination-actions.js`               | `@/src/internal/features/pagination` |
+| `@/src/core/internal/pagination/pagination-selectors.js`             | `@/src/internal/features/pagination` |
+| `@/src/core/internal/pagination/pagination-slice.js`                 | `@/src/internal/features/pagination` |
+| `@/src/core/interface/utils/memoized-state-selector.js`              | `@/src/internal/utils`               |
+| `@/src/core/interface/utils/interface-types.js`                      | `@/src/internal/utils`               |
+| `@/src/core/interface/utils/symbols.js`                              | `@/src/internal/utils`               |
+| `@/src/core/interface/utils/resolve-facades.js`                      | `@/src/internal/utils`               |
+| `@/src/core/interface/engine/engine.js`                              | `@/src/internal/engine`              |
+| `@/src/core/interface/engine/engine-types.js`                        | `@/src/internal/engine`              |
+| `@/src/api/interface/search-endpoint/search-endpoint-client.js`      | `@/src/internal/api/search`          |
+| `@/src/core/internal/api/search/search-thunk.js`                     | `@/src/internal/api/search`          |
 | `@/src/core/interface/api/commerce-search/commerce-search-facade.js` | `@/src/internal/api/commerce-search` |
