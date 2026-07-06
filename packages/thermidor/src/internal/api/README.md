@@ -2,20 +2,6 @@
 
 All HTTP client logic, endpoint thunks, response handlers, and facades live here, organized by domain.
 
-## Domain Sub-Modules
-
-| Directory                 | Purpose                                     |
-| ------------------------- | ------------------------------------------- |
-| `protocol/`               | Transport layer (http, stream, SSE, buffer) |
-| `search/`                 | Search endpoint client, thunk, facade       |
-| `commerce-search/`        | Commerce search endpoint client, thunk      |
-| `conversation/`           | Conversation endpoint, event stream         |
-| `query-suggest/`          | Query suggest thunk and facade              |
-| `commerce-query-suggest/` | Commerce query suggest thunk and facade     |
-| `generative/`             | Generative runtime endpoint                 |
-
-Root-level files (e.g., `organization-endpoint.ts`) serve cross-domain concerns.
-
 ## Structure
 
 Each domain sub-module has its own barrel `index.ts` that exports client factories, types, thunks, and facades. The top-level `api/index.ts` re-exports from all domain barrels.

@@ -2,10 +2,6 @@
 
 Each sub-directory here represents a single domain feature — the canonical location for its slice definition, action creators, selectors, and types.
 
-## Current Features
-
-`pagination`, `facets`, `result-list`, `product-list`, `search-box`, `cart`, `configuration`, `generative`, `sort`, `search-parameters`, `query-correction`, `triggers`
-
 ## Naming Conventions
 
 - Directory: kebab-case matching the domain name (e.g., `search-box/`)
