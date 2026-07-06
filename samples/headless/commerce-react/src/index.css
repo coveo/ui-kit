@@ -380,7 +380,13 @@ main {
 .Facets {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.25rem;
+}
+
+/* Separate each facet group with a divider line */
+.Facets > *:not(:last-child) {
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border);
 }
 
 /* Each facet is a <fieldset>; strip the default chrome */
