@@ -20,14 +20,18 @@ const FORBIDDEN_PATTERNS = [
   /from\s+['"]immer['"]/,
   /from\s+['"]redux-thunk['"]/,
   /from\s+['"]reselect['"]/,
+  /from\s+['"]@ag-ui\/core['"]/,
+  /from\s+['"]@ag-ui\/core\/[^'"]*['"]/,
   /import\s*\(?\s*['"]@reduxjs\/toolkit['"]\s*\)?/,
   /import\s*\(?\s*['"]immer['"]\s*\)?/,
   /import\s*\(?\s*['"]redux-thunk['"]\s*\)?/,
   /import\s*\(?\s*['"]reselect['"]\s*\)?/,
+  /import\s*\(?\s*['"]@ag-ui\/core['"]\s*\)?/,
   /\/\/\/\s*<reference\s+types=["']@reduxjs\/toolkit["']/,
   /\/\/\/\s*<reference\s+types=["']immer["']/,
   /\/\/\/\s*<reference\s+types=["']redux-thunk["']/,
   /\/\/\/\s*<reference\s+types=["']reselect["']/,
+  /\/\/\/\s*<reference\s+types=["']@ag-ui\/core["']/,
 ];
 
 function findDtsFiles(dir: string, ignore?: string[]): string[] {

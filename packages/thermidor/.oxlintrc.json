@@ -14,9 +14,11 @@
                   "@reduxjs/toolkit/*",
                   "immer",
                   "redux-thunk",
-                  "reselect"
+                  "reselect",
+                  "@ag-ui/core",
+                  "@ag-ui/core/*"
                 ],
-                "message": "Public layer must not depend on Redux, Immer, or related ecosystem packages directly."
+                "message": "Public layer must not depend on Redux, Immer, AG-UI, or related ecosystem packages directly."
               },
               {
                 "group": [
