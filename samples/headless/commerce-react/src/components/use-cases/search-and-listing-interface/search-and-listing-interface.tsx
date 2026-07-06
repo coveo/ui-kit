@@ -13,7 +13,7 @@ import ResultList from '../../result-list/result-list.js';
 import Sort from '../../sort/sort.js';
 import Summary from '../../summary/summary.js';
 import './search-and-listing-interface.css';
-import ShowMore from '../../show-more/show-more.js';
+// import ShowMore from '../../show-more/show-more.js'; // temporarily hidden
 
 interface ISearchAndListingInterface {
   searchOrListingController: HeadlessSearch | ProductListing;
@@ -68,10 +68,11 @@ export default function SearchAndListingInterface(
           }
         />
         <ProductsPerPage controller={paginationController} />
+        {/* Show more is temporarily hidden.
         <ShowMore
           controller={paginationController}
           summaryController={summaryController}
-        />
+        /> */}
         <Pagination controller={paginationController} />
       </div>
     </div>

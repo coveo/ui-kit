@@ -685,7 +685,53 @@ main {
   gap: 0.35rem;
   align-items: center;
   justify-content: center;
-  margin-top: 0.5rem;
+  margin-top: 1rem;
+}
+
+.Pagination button,
+.PageRadioButton .SelectPage {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  height: 2rem;
+  padding: 0 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.Pagination button:hover:not(:disabled),
+.PageRadioButton .SelectPage:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.PageRadioButton {
+  display: inline-flex;
+}
+
+/* Hide the radio inputs; their labels act as page buttons */
+.PageRadioButton input[type='radio'] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.PageRadioButton input:checked + .SelectPage {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-contrast);
+  font-weight: 600;
+}
+
+.PageRadioButton input:focus-visible + .SelectPage {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 /* Breadcrumbs */
