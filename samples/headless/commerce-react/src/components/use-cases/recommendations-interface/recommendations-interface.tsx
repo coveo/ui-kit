@@ -8,13 +8,12 @@ import Summary from '../../summary/summary.js';
 interface IRecommendationsInterfaceProps {
   recommendationsController: Recommendations;
   cartController: Cart;
-  navigate: (pathName: string) => void;
 }
 
 export default function RecommendationsInterface(
   props: IRecommendationsInterfaceProps
 ) {
-  const {recommendationsController, cartController, navigate} = props;
+  const {recommendationsController, cartController} = props;
 
   const [recommendationsState, setRecommendationsState] = useState(
     recommendationsController.state
@@ -41,7 +40,6 @@ export default function RecommendationsInterface(
         promoteChildToParent={(child) =>
           recommendationsController.promoteChildToParent(child)
         }
-        navigate={navigate}
       />
     </div>
   );

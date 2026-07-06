@@ -11,7 +11,6 @@ export default {
     'samples/headless/rga-react/src/components/Quickstart.tsx',
     'samples/headless/rga-react/src/components/Citation.tsx',
     'samples/headless/rga-react/src/components/CitationsList.tsx',
-    'samples/headless/commerce-react/src/components/instant-products/actions/on-delayed-select-product.ts',
     'packages/pkg-new-template/**',
   ],
   compilers: {
@@ -64,8 +63,12 @@ export default {
       ],
     },
     'samples/headless/commerce-react': {
-      // Can be removed once the deprecated controller is removed from headless. https://coveord.atlassian.net/browse/KIT-5551
-      ignore: ['src/components/legacy-field-suggestions/**'],
+      // ShowMore and ProductsPerPage are kept as reference examples but are not
+      // wired into the UI, so Knip should not flag them as unused files.
+      ignore: [
+        'src/components/show-more/**',
+        'src/components/products-per-page/**',
+      ],
     },
     'samples/headless-ssr/commerce-express': {
       entry: ['src/server.ts'],
