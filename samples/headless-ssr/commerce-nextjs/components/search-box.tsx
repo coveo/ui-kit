@@ -7,11 +7,12 @@ import {
   useRecentQueriesList,
   useSearchBox,
 } from '@/lib/commerce-engine';
-import InstantProducts from './instant-product';
-import RecentQueries from './recent-queries';
+import SearchBoxSuggestions, {
+  suggestionOptionId,
+  suggestionsListId,
+} from './search-box-suggestions';
 
-const SUGGESTIONS_ID = 'search-box-suggestions';
-const optionId = (index: number) => `search-box-suggestion-${index}`;
+const ID_PREFIX = 'search-box';
 
 export default function SearchBox() {
   const {state, methods} = useSearchBox();
@@ -52,9 +53,11 @@ export default function SearchBox() {
           type="search"
           aria-label="Search"
           aria-expanded={showDropdown}
-          aria-controls={SUGGESTIONS_ID}
+          aria-controls={suggestionsListId(ID_PREFIX)}
           aria-activedescendant={
-            nav.activeIndex >= 0 ? optionId(nav.activeIndex) : undefined
+            nav.activeIndex >= 0
+              ? suggestionOptionId(ID_PREFIX, nav.activeIndex)
+              : undefined
           }
           aria-autocomplete="list"
           placeholder="Search"
@@ -89,44 +92,18 @@ export default function SearchBox() {
       </button>
 
       {showDropdown && (
-        <div className="SearchBoxDropdown">
-          {recentQueriesState.queries.length > 0 && <RecentQueries />}
-          {state.suggestions.length > 0 && (
-            <>
-              <h4>Suggestions</h4>
-              <ul className="Suggestions" id={SUGGESTIONS_ID} role="listbox">
-                {state.suggestions.map((suggestion, index) => (
-                  <li key={suggestion.rawValue} role="presentation">
-                    <button
-                      type="button"
-                      id={optionId(index)}
-                      role="option"
-                      aria-selected={index === nav.activeIndex}
-                      data-suggestion-index={index}
-                      className={
-                        index === nav.activeIndex ? 'active' : undefined
-                      }
-                      onMouseEnter={() => nav.highlight(index)}
-                      onClick={() => {
-                        methods?.selectSuggestion(suggestion.rawValue);
-                        nav.close();
-                      }}
-                      dangerouslySetInnerHTML={{
-                        __html: suggestion.highlightedValue,
-                      }}
-                    />
-                  </li>
-                ))}
-              </ul>
-            </>
-          )}
-          {instantProductsState.products.length > 0 && (
-            <>
-              <h4>Instant products</h4>
-              <InstantProducts />
-            </>
-          )}
-        </div>
+        <SearchBoxSuggestions
+          idPrefix={ID_PREFIX}
+          suggestions={state.suggestions}
+          activeIndex={nav.activeIndex}
+          showRecentQueries={recentQueriesState.queries.length > 0}
+          showInstantProducts={instantProductsState.products.length > 0}
+          onHighlightSuggestion={nav.highlight}
+          onSelectSuggestion={(rawValue) => {
+            methods?.selectSuggestion(rawValue);
+            nav.close();
+          }}
+        />
       )}
     </div>
   );

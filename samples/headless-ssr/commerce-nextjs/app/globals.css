@@ -297,7 +297,7 @@ input[type='radio'] {
   position: relative;
   display: flex;
   gap: 10px;
-  max-width: 680px;
+  max-width: 760px;
   margin: 0 auto 32px;
 }
 
@@ -393,9 +393,27 @@ input[type='radio'] {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow-md);
-  padding: 10px;
+  padding: 16px 20px;
   max-height: 460px;
   overflow: auto;
+}
+
+/* Two-column dropdown: query suggestions on the left, instant products on the
+   right. With flex, a single present column simply grows to full width. */
+.SearchBoxDropdownColumns {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+}
+
+.SearchBoxDropdownMain {
+  flex: 1 1 42%;
+  min-width: 0;
+}
+
+.SearchBoxDropdownAside {
+  flex: 1 1 58%;
+  min-width: 0;
 }
 
 .SearchBoxDropdown h4 {
@@ -405,7 +423,12 @@ input[type='radio'] {
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--faint);
-  margin: 12px 8px 6px;
+  margin: 14px 10px 8px;
+}
+
+.SearchBoxDropdownMain > h4:first-child,
+.SearchBoxDropdownAside > h4:first-child {
+  margin-top: 0;
 }
 
 .Suggestions,
@@ -436,6 +459,13 @@ input[type='radio'] {
   background: var(--brand-soft);
 }
 
+/* The matched portion of a query suggestion is wrapped in <strong> (see the
+   engine config's highlightOptions) so it reads as bold within the suggestion. */
+.Suggestions button strong {
+  font-weight: 700;
+  color: var(--text);
+}
+
 .Suggestions mark,
 .RecentQueries mark {
   background: transparent;
@@ -443,42 +473,65 @@ input[type='radio'] {
   font-weight: 600;
 }
 
-/* The instant-products group sits on a quiet tinted panel to separate it from
-   the query suggestions above it. */
+/* Instant products: a compact thumbnail + name + price row per product. */
 .InstantProducts {
   list-style: none;
-  margin: 8px -10px -10px;
-  padding: 10px;
-  border-top: 1px solid var(--border);
-  background: var(--tile);
-  border-radius: 0 0 var(--radius) var(--radius);
-}
-
-.InstantProduct {
+  margin: 0;
+  padding: 0;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 6px 8px;
-  border-radius: var(--radius-sm);
-}
-
-.InstantProduct:hover {
-  background: rgba(255, 255, 255, 0.7);
+  flex-direction: column;
+  gap: 2px;
 }
 
 .InstantProductLink {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
   border: none;
   background: transparent;
   text-align: left;
   color: var(--text);
-  font-size: 0.95rem;
-  flex: 1;
-  padding: 0;
+  padding: 8px;
+  border-radius: var(--radius-sm);
+  transition: background 0.12s ease;
 }
 
 .InstantProductLink:hover {
+  background: var(--brand-soft);
+}
+
+.InstantProductImage {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  background: var(--tile);
+  border-radius: var(--radius-sm);
+  padding: 4px;
+  flex-shrink: 0;
+}
+
+.InstantProductInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.InstantProductName {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+.InstantProductLink:hover .InstantProductName {
   color: var(--accent);
+}
+
+.InstantProductPrice {
+  font-size: 0.85rem;
+  color: var(--muted);
 }
 
 /* ---------- Facets ---------- */
@@ -492,7 +545,11 @@ input[type='radio'] {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow-sm);
-  padding: 4px 20px;
+  padding: 14px 20px;
+}
+
+.Facets > fieldset {
+  margin-bottom: 20px;
 }
 
 .RegularFacet,
@@ -502,7 +559,7 @@ input[type='radio'] {
   border: none;
   border-bottom: 1px solid var(--border);
   margin: 0;
-  padding: 28px 0 22px;
+  padding: 20px 0 8px;
   min-inline-size: 0; /* let fieldset shrink in the grid */
 }
 
@@ -519,7 +576,7 @@ input[type='radio'] {
   gap: 8px;
   width: 100%;
   padding: 0;
-  margin-bottom: 12px;
+  margin-bottom: 0;
 }
 
 .FacetDisplayName {
@@ -535,7 +592,7 @@ input[type='radio'] {
   display: flex;
   align-items: center;
   gap: 6px;
-  margin: 10px 0;
+  margin: 0px 0 8px;
 }
 
 .FacetSearchLabel {
@@ -592,7 +649,7 @@ input[type='radio'] {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 5px 0;
+  padding: 1px 0;
 }
 
 .FacetValueLabel {
@@ -631,7 +688,7 @@ input[type='radio'] {
   flex-wrap: wrap;
   align-items: center;
   gap: 6px;
-  margin: 10px 0;
+  margin: 4px 0 8px;
   font-size: 0.82rem;
   color: var(--muted);
 }
@@ -694,7 +751,7 @@ input[type='radio'] {
    height and never shifts when the controls toggle. */
 .FacetShowMore,
 .FacetShowLess {
-  margin-top: 14px;
+  margin-top: 4px;
 }
 
 .FacetShowLess {

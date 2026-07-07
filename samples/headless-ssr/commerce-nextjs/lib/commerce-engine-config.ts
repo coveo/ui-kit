@@ -39,13 +39,25 @@ export default {
       },
     }),
     cart: defineCart(),
-    searchBox: defineSearchBox({options: {enableResults: true}}),
+    searchBox: defineSearchBox({
+      options: {
+        enableResults: true,
+        highlightOptions: {
+          exactMatchDelimiters: {open: '<strong>', close: '</strong>'},
+        },
+      },
+    }),
     context: defineContext(),
     recentQueriesList: defineRecentQueriesList({
       options: {enableResults: true},
     }),
     standaloneSearchBox: defineStandaloneSearchBox({
-      options: {redirectionUrl: '/search'},
+      options: {
+        redirectionUrl: '/search',
+        highlightOptions: {
+          exactMatchDelimiters: {open: '<strong>', close: '</strong>'},
+        },
+      },
     }),
     instantProducts: defineInstantProducts(),
     pagination: definePagination({options: {pageSize: 9}}),
