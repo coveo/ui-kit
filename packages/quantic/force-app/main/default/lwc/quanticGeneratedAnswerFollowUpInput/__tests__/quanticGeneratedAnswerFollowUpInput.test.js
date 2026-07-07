@@ -179,7 +179,7 @@ describe('c-quantic-generated-answer-follow-up-input', () => {
   });
 
   describe('expandable input behaviour', () => {
-    it('should expand and add focused class on focus', async () => {
+    it('should expand on focus', async () => {
       const element = createTestComponent();
       await flushPromises();
 
@@ -188,14 +188,10 @@ describe('c-quantic-generated-answer-follow-up-input', () => {
       await flushPromises();
 
       const expander = element.shadowRoot.querySelector(selectors.expander);
-      const container = element.shadowRoot.querySelector(selectors.container);
       expect(expander.classList).toContain(expandedClass);
-      expect(container.classList).toContain(
-        'follow-up-input__container--focused'
-      );
     });
 
-    it('should collapse and remove focused class on blur', async () => {
+    it('should collapse on blur', async () => {
       const element = createTestComponent();
       await flushPromises();
 
@@ -207,11 +203,7 @@ describe('c-quantic-generated-answer-follow-up-input', () => {
       await flushPromises();
 
       const expander = element.shadowRoot.querySelector(selectors.expander);
-      const container = element.shadowRoot.querySelector(selectors.container);
       expect(expander.classList).not.toContain(expandedClass);
-      expect(container.classList).not.toContain(
-        'follow-up-input__container--focused'
-      );
     });
 
     it('should sync replica text on input', async () => {

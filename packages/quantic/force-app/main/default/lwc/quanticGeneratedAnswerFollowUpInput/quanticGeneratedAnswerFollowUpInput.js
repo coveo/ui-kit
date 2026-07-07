@@ -124,7 +124,7 @@ export default class QuanticGeneratedAnswerFollowUpInput extends LightningElemen
   }
 
   get inputContainerClasses() {
-    return `follow-up-input__container slds-is-relative slds-grid slds-box slds-p-around_none ${this._focused ? 'follow-up-input__container--focused' : ''} ${this.isOverCharacterLimit ? 'follow-up-input__container--error' : ''}`;
+    return `follow-up-input__container slds-is-relative slds-grid slds-box slds-p-around_none ${this.isOverCharacterLimit ? 'follow-up-input__container--error' : ''}`;
   }
 
   get isOverCharacterLimit() {
