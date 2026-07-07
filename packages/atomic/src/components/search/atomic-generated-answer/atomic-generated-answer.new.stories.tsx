@@ -252,7 +252,9 @@ export const FollowUpNetworkError: Story = {
     'answer-configuration-id': undefined,
   },
   play: async (storyContext) => {
-    agentApiHarness.followUpEndpoint.mock(() => followUpNetworkErrorResponse);
+    agentApiHarness.followUpEndpoint.mockOnce(
+      () => followUpNetworkErrorResponse
+    );
     await playWithLegacyAnalytics(storyContext);
     await submitGeneratedAnswerQuery(storyContext);
   },
@@ -265,7 +267,9 @@ export const FollowUpTurnLimitError: Story = {
     'answer-configuration-id': undefined,
   },
   play: async (storyContext) => {
-    agentApiHarness.followUpEndpoint.mock(() => followUpTurnLimitErrorResponse);
+    agentApiHarness.followUpEndpoint.mockOnce(
+      () => followUpTurnLimitErrorResponse
+    );
     await playWithLegacyAnalytics(storyContext);
     await submitGeneratedAnswerQuery(storyContext);
   },
@@ -278,7 +282,9 @@ export const FollowUpGenericError: Story = {
     'answer-configuration-id': undefined,
   },
   play: async (storyContext) => {
-    agentApiHarness.followUpEndpoint.mock(() => followUpGenericErrorResponse);
+    agentApiHarness.followUpEndpoint.mockOnce(
+      () => followUpGenericErrorResponse
+    );
     await playWithLegacyAnalytics(storyContext);
     await submitGeneratedAnswerQuery(storyContext);
   },
