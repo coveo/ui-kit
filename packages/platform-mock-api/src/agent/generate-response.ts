@@ -254,18 +254,25 @@ const headAnswerResponse = () =>
   });
 
 const buildErrorStreamingResponse = (errorCode: string, message: string) => {
-  const errorMessages: AgentEvent[] = [
-    buildMessage({type: EventType.RUN_STARTED}),
-    buildMessage({type: EventType.RUN_ERROR, name: errorCode, value: message}),
-  ];
+  const runStarted = {
+    type: EventType.RUN_STARTED,
+    threadId: THREAD_ID,
+    runId: RUN_ID,
+    timestamp: Date.now(),
+  };
+
+  const runError = {
+    type: EventType.RUN_ERROR,
+    threadId: THREAD_ID,
+    runId: RUN_ID,
+    timestamp: Date.now(),
+    message,
+    code: errorCode,
+  };
 
   const stream = new ReadableStream({
     async start(controller) {
-      for (const msg of errorMessages) {
-        const event =
-          msg.type === EventType.RUN_ERROR
-            ? {type: msg.type, message: msg.value, code: msg.name}
-            : msg;
+      for (const event of [runStarted, runError]) {
         controller.enqueue(
           new TextEncoder().encode(
             `event: message\ndata: ${JSON.stringify(event)}\nretry: 10000\n\n`
@@ -281,17 +288,20 @@ const buildErrorStreamingResponse = (errorCode: string, message: string) => {
   });
 };
 
-const followUpNetworkErrorResponse = new HttpResponse(null, {status: 500});
+const followUpNetworkErrorResponse = () =>
+  new HttpResponse(null, {status: 500});
 
-const followUpTurnLimitErrorResponse = buildErrorStreamingResponse(
-  'KNOWLEDGE:SSE_TURN_LIMIT_REACHED',
-  'The conversation turn limit has been reached.'
-);
+const followUpTurnLimitErrorResponse = () =>
+  buildErrorStreamingResponse(
+    'KNOWLEDGE:SSE_TURN_LIMIT_REACHED',
+    'The conversation turn limit has been reached.'
+  );
 
-const followUpGenericErrorResponse = buildErrorStreamingResponse(
-  'KNOWLEDGE:SSE_INTERNAL_ERROR',
-  'An unexpected error occurred.'
-);
+const followUpGenericErrorResponse = () =>
+  buildErrorStreamingResponse(
+    'KNOWLEDGE:SSE_INTERNAL_ERROR',
+    'An unexpected error occurred.'
+  );
 
 export {
   headAnswerResponse,
