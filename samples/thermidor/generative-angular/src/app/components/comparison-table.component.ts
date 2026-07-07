@@ -15,9 +15,24 @@ import {ComparisonTableSurface} from '../models';
       } @else {
         <div class="product-strip">
           @for (product of surface().products; track product.ec_product_id) {
-            <article class="product-pill">
-              <span>{{ product.ec_brand }}</span>
-              <strong>{{ product.ec_name }}</strong>
+            <article class="product-card">
+              @if (product.ec_image) {
+                <img
+                  class="product-image"
+                  [src]="product.ec_image"
+                  [alt]="product.ec_name"
+                  loading="lazy"
+                />
+              } @else {
+                <div class="product-image-placeholder"></div>
+              }
+              <div class="product-info">
+                <span class="product-brand">{{ product.ec_brand }}</span>
+                <strong class="product-name">{{ product.ec_name }}</strong>
+                <span class="product-price">{{
+                  formatPrice(product.ec_promo_price ?? product.ec_price)
+                }}</span>
+              </div>
             </article>
           }
         </div>
@@ -104,25 +119,57 @@ import {ComparisonTableSurface} from '../models';
       }
 
       .product-strip {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: 10px;
+        display: flex;
+        gap: 14px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        padding-bottom: 8px;
       }
 
-      .product-pill {
-        padding: 12px 14px;
+      .product-card {
+        flex: 0 0 200px;
+        scroll-snap-align: start;
         border-radius: 18px;
-        background: rgba(246, 242, 232, 0.92);
+        background: rgba(255, 255, 255, 0.8);
         border: 1px solid rgba(17, 35, 31, 0.08);
+        overflow: hidden;
       }
 
-      .product-pill span {
-        display: block;
-        margin-bottom: 6px;
+      .product-image {
+        width: 100%;
+        height: 130px;
+        object-fit: cover;
+        background: #f0ece4;
+      }
+
+      .product-image-placeholder {
+        width: 100%;
+        height: 130px;
+        background: linear-gradient(135deg, #e7d8c8, #c6a889);
+      }
+
+      .product-info {
+        padding: 12px 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .product-brand {
         text-transform: uppercase;
         letter-spacing: 0.08em;
         font-size: 0.7rem;
         color: #516661;
+      }
+
+      .product-name {
+        font-size: 0.88rem;
+      }
+
+      .product-price {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #204f46;
       }
 
       .loading-table {
