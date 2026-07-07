@@ -4,13 +4,26 @@ import {
   computed,
   input,
   output,
+  Pipe,
+  PipeTransform,
 } from '@angular/core';
+import {marked} from 'marked';
 import type {RenderableCommerceSurface, ToolCall, Turn} from '../models';
 import {SurfaceOutletComponent} from './surface-outlet.component';
 
+marked.setOptions({breaks: true, gfm: true});
+
+@Pipe({name: 'markdown', standalone: true})
+export class MarkdownPipe implements PipeTransform {
+  transform(value: string): string {
+    if (!value) return '';
+    return marked.parse(value) as string;
+  }
+}
+
 @Component({
   selector: 'app-transcript-panel',
-  imports: [SurfaceOutletComponent],
+  imports: [SurfaceOutletComponent, MarkdownPipe],
   template: `
     <header class="panel-header">
       <div>
@@ -46,7 +59,10 @@ import {SurfaceOutletComponent} from './surface-outlet.component';
         @for (msg of turn.agentResponse?.messages ?? []; track $index) {
           <article class="bubble assistant-bubble">
             <p class="bubble-role">Assistant</p>
-            <p class="bubble-text">{{ msg.content }}</p>
+            <div
+              class="bubble-text markdown-content"
+              [innerHTML]="msg.content | markdown"
+            ></div>
           </article>
         }
       }
