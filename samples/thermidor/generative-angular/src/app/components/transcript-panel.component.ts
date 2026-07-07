@@ -22,7 +22,7 @@ import {SurfaceOutletComponent} from './surface-outlet.component';
         type="button"
         (click)="resetConversation.emit()"
       >
-        New conversation
+        Reset
       </button>
     </header>
 
