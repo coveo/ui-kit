@@ -4,8 +4,8 @@ This directory contains code samples demonstrating how to use Coveo's UI-Kit lib
 
 **These samples serve a dual purpose:**
 
-1. **Samples** — Living documentation showing how to use Coveo libraries correctly.
-2. **Scaffolding starters** — The source templates for `npm create @coveo/ui`, giving developers a working project in seconds.
+1. **Samples**: Living documentation showing how to use Coveo libraries correctly.
+2. **Scaffolding starters**: The source templates for `npm create @coveo/ui`. Each sample is published to npm as `@coveo/ui-kit-sample-<name>` and fetched by the CLI to give developers a working project in seconds.
 
 Because of this dual role, every sample must be **self-contained, runnable out of the box, and tested**. See [CONTRIBUTING.md](./CONTRIBUTING.md) for the full requirements.
 
@@ -63,15 +63,25 @@ pnpm install
 pnpm dev  # or check the sample's README for the correct start command
 ```
 
-No platform credentials are needed — all samples use the `searchuisamples` demo organization with a pre-configured public access token.
+No platform credentials are needed. All samples use the `searchuisamples` demo organization with a pre-configured public access token.
+
+## 🧪 Using a sample as a minimal reproducible example (MRE)
+
+These samples double as **MREs** for troubleshooting. To reproduce an issue:
+
+1. Scaffold or copy the sample closest to the customer's setup.
+2. Point it at the relevant configuration (organization ID, access token, search hub, pipeline). Each sample's README has a **"Using this sample as an MRE"** section that says exactly where to change these and which files are safe to modify.
+3. To reproduce against a specific UI Kit version, install it after scaffolding, for example `pnpm add @coveo/headless@<version>` (or the relevant `@coveo/*` package).
+
+The embedded credentials are the **public** `searchuisamples` sample credentials, so the generated projects are safe to share with customers or partners. They contain no Coveo-internal assumptions.
 
 ## 💡 Choosing the Right Approach
 
-**Atomic** — Use when you want pre-built, customizable components with minimal code. Best for rapid implementation.
+**Atomic**: Use when you want pre-built, customizable components with minimal code. Best for rapid implementation.
 
-**Headless** — Use when you need full control over the UI or are integrating with an existing design system.
+**Headless**: Use when you need full control over the UI or are integrating with an existing design system.
 
-**Headless SSR** — Use when SEO or initial page load performance is a priority.
+**Headless SSR**: Use when SEO or initial page load performance is a priority.
 
 ## 📖 Documentation
 

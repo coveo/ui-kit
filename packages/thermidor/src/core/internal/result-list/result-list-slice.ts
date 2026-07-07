@@ -1,5 +1,11 @@
 import {createSlice} from '@reduxjs/toolkit';
 import type {ResultListState} from '@/src/core/interface/result-list/result-list-types.js';
+import {
+  type CacheKey,
+  createCacheKey,
+} from '@/src/core/interface/cache/interface-cache-registry.js';
+import {getHandleInternals} from '@/src/core/interface/utils/get-handle-internals.js';
+import type {InterfaceHandle} from '@/src/core/interface/utils/interface-types.js';
 import {getOrCreateResultsActions} from './result-list-actions.js';
 import {getOrCreateHydrateFromSnapshotAction} from '@/src/core/interface/generative/generative-hydration.js';
 
@@ -20,10 +26,16 @@ function mapResult(result: Record<string, unknown>) {
   };
 }
 
-export function createResultsSlice(interfaceId: string) {
-  const actions = getOrCreateResultsActions(interfaceId);
-  const hydrateAction = getOrCreateHydrateFromSnapshotAction(interfaceId);
+type ResultsSlice = ReturnType<typeof createResultsSlice>;
 
+const CACHE_KEY: CacheKey<ResultsSlice> =
+  createCacheKey<ResultsSlice>('resultList/slice');
+
+export function createResultsSlice(
+  interfaceId: string,
+  actions: ReturnType<typeof getOrCreateResultsActions>,
+  hydrateAction: ReturnType<typeof getOrCreateHydrateFromSnapshotAction>
+) {
   return createSlice({
     name: `${interfaceId}/results`,
     initialState: initialResultListState,
@@ -54,10 +66,11 @@ export function createResultsSlice(interfaceId: string) {
   });
 }
 
-const sliceCache = new Map<string, ReturnType<typeof createResultsSlice>>();
-export function getOrCreateResultsSlice(interfaceId: string) {
-  if (!sliceCache.has(interfaceId)) {
-    sliceCache.set(interfaceId, createResultsSlice(interfaceId));
-  }
-  return sliceCache.get(interfaceId)!;
+export function getOrCreateResultsSlice(iface: InterfaceHandle) {
+  const {stateId, cacheRegistry} = getHandleInternals(iface);
+  return cacheRegistry.getOrCreate(CACHE_KEY, () => {
+    const actions = getOrCreateResultsActions(iface);
+    const hydrateAction = getOrCreateHydrateFromSnapshotAction(iface);
+    return createResultsSlice(stateId, actions, hydrateAction);
+  });
 }

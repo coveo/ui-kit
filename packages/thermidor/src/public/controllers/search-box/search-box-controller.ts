@@ -3,7 +3,6 @@ import type {
   Supports,
   EndpointThunk,
 } from '@/src/core/interface/utils/interface-types.js';
-import type {Dispatchable} from '@/src/core/interface/engine/engine-types.js';
 import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
 import {getHandleInternals} from '@/src/core/interface/utils/get-handle-internals.js';
 import {getOrCreateSearchBoxActions} from '@/src/core/internal/search-box/search-box-actions.js';
@@ -17,12 +16,14 @@ class SearchBoxControllerImpl extends BaseController<SearchBoxControllerState> {
   #actions: ReturnType<typeof getOrCreateSearchBoxActions>;
 
   constructor(options: SearchBoxControllerOptions) {
-    const {engine, stateId} = getHandleInternals(options.interface);
+    const {engine} = getHandleInternals(options.interface);
 
-    engine.adoptSlice(getOrCreateSearchBoxSlice(stateId));
+    engine.adoptSlice(getOrCreateSearchBoxSlice(options.interface));
 
-    const selectors = getOrCreateSearchBoxSelectors(stateId);
-    const endpointSelectors = getOrCreateSearchEndpointSelectors(stateId);
+    const selectors = getOrCreateSearchBoxSelectors(options.interface);
+    const endpointSelectors = getOrCreateSearchEndpointSelectors(
+      options.interface
+    );
 
     const controllerState = createMemoizedStateSelector(
       selectors.getQuery,
@@ -38,7 +39,7 @@ class SearchBoxControllerImpl extends BaseController<SearchBoxControllerState> {
     super(engine, controllerState);
 
     this.#thunks = options.interface.resolveFacades('search');
-    this.#actions = getOrCreateSearchBoxActions(stateId);
+    this.#actions = getOrCreateSearchBoxActions(options.interface);
   }
 
   setQuery({query}: SearchBoxControllerSetQueryOptions): void {
@@ -48,7 +49,7 @@ class SearchBoxControllerImpl extends BaseController<SearchBoxControllerState> {
   submit(): Promise<unknown[]> {
     return Promise.all(
       this.#thunks.map((thunk) =>
-        this.engine.mutate(thunk({engine: this.engine}) as Dispatchable)
+        this.engine.mutate(thunk({engine: this.engine}))
       )
     );
   }

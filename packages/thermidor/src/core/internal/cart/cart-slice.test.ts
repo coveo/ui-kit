@@ -2,6 +2,7 @@ import {describe, it, expect} from 'vitest';
 import {createCartSlice, initialCartState} from './cart-slice.js';
 import {getOrCreateCartActions} from './cart-actions.js';
 import type {CartItem} from '@/src/core/interface/cart/cart-types.js';
+import {createTestEngine, createTestInterface} from '@/src/test/test-utils.js';
 
 const TEST_ID = 'test-cart';
 
@@ -14,8 +15,10 @@ const item = (overrides: Partial<CartItem> = {}): CartItem => ({
 });
 
 describe('cartSlice', () => {
-  const slice = createCartSlice(TEST_ID);
-  const actions = getOrCreateCartActions(TEST_ID);
+  const engine = createTestEngine();
+  const iface = createTestInterface(engine, TEST_ID);
+  const actions = getOrCreateCartActions(iface);
+  const slice = createCartSlice(TEST_ID, actions);
 
   describe('setItems', () => {
     it('sets items', () => {

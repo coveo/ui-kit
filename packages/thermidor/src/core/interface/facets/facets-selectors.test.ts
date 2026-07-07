@@ -1,55 +1,44 @@
-/**
- * Facets Selectors Tests
- */
-
 import {describe, it, expect, beforeEach} from 'vitest';
-import {
-  createTestEngine,
-  createMockFacetValues,
-} from '@/src/test/test-utils.js';
-import {
-  all as selectAll,
-  allSelectedValues,
-  byId,
-  selectedValues,
-} from './facets-selectors.js';
+import {createTestEngine, createTestInterface} from '@/src/test/test-utils.js';
+import * as facetsSelectors from './facets-selectors.js';
 import {FullEngine, getFullEngine} from '@/src/core/interface/engine/engine.js';
 import {getOrCreateFacetsSlice} from '@/src/core/internal/facets/facets-slice.js';
-import type {FacetState} from './facets-types.js';
+import type {SearchInterface} from '@/src/public/interfaces/search.js';
 
 describe('createFacetsSelectors()', () => {
   let engine: FullEngine;
+  let iface: SearchInterface;
 
   beforeEach(() => {
-    engine = getFullEngine(createTestEngine());
-    engine.adoptSlice(getOrCreateFacetsSlice('default'));
+    const rawEngine = createTestEngine();
+    engine = getFullEngine(rawEngine);
+    iface = createTestInterface(rawEngine, 'default');
+    engine.adoptSlice(getOrCreateFacetsSlice(iface));
   });
 
   describe('all selector', () => {
     it('should return empty object initially', () => {
-      const all = engine.read(selectAll);
-      expect(all).toEqual({});
+      expect(engine.read(facetsSelectors.all)).toEqual({});
     });
   });
 
   describe('byId selector', () => {
     it('should return undefined for non-existent facet', () => {
-      const facet = engine.read(byId('category'));
-      expect(facet).toBeUndefined();
+      expect(engine.read(facetsSelectors.byId('nonexistent'))).toBeUndefined();
     });
   });
 
   describe('selectedValues selector', () => {
     it('should return empty array for non-existent facet', () => {
-      const selected = engine.read(selectedValues('category'));
-      expect(selected).toEqual([]);
+      expect(
+        engine.read(facetsSelectors.selectedValues('nonexistent'))
+      ).toEqual([]);
     });
   });
 
   describe('allSelectedValues selector', () => {
     it('should return empty array when no facets', () => {
-      const all = engine.read(allSelectedValues);
-      expect(all).toEqual([]);
+      expect(engine.read(facetsSelectors.allSelectedValues)).toEqual([]);
     });
   });
 });

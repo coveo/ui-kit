@@ -15,11 +15,11 @@ export interface LoadSearchParametersActionsOptions {
 export function loadSearchParametersActions(
   options: LoadSearchParametersActionsOptions
 ) {
-  const {engine, stateId} = getHandleInternals(options.interface);
+  const {engine} = getHandleInternals(options.interface);
 
-  engine.adoptSlice(getOrCreateSearchParametersSlice(stateId));
+  engine.adoptSlice(getOrCreateSearchParametersSlice(options.interface));
 
-  const actions = getOrCreateSearchParametersActions(stateId);
+  const actions = getOrCreateSearchParametersActions(options.interface);
 
   return {
     setPipeline(pipeline: string) {

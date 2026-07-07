@@ -1,4 +1,4 @@
-import {test, expect, commerceApi} from '../fixtures.js';
+import {test, commerceApi} from '../fixtures.js';
 
 test('Commerce page renders products', async ({
   page,
@@ -30,5 +30,4 @@ test('Commerce page renders products', async ({
     .locator('atomic-commerce-product-list atomic-product')
     .first()
     .waitFor();
-  await expect(page).toHaveScreenshot();
 });

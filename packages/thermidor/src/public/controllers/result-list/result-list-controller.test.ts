@@ -38,7 +38,7 @@ describe('buildResultListController', () => {
       });
 
       const {stateId} = getInterfaceInternals(searchInterface);
-      const actions = getOrCreateResultsActions(stateId);
+      const actions = getOrCreateResultsActions(searchInterface);
       const fullEngine = getFullEngine(engine);
 
       const mockResults = createMockSearchResults(3);
@@ -60,7 +60,7 @@ describe('buildResultListController', () => {
       const callback = vi.fn();
 
       const {stateId} = getInterfaceInternals(searchInterface);
-      const actions = getOrCreateResultsActions(stateId);
+      const actions = getOrCreateResultsActions(searchInterface);
       const fullEngine = getFullEngine(engine);
 
       controller.subscribe(callback);
@@ -78,7 +78,7 @@ describe('buildResultListController', () => {
       const callback = vi.fn();
 
       const {stateId} = getInterfaceInternals(searchInterface);
-      const actions = getOrCreateResultsActions(stateId);
+      const actions = getOrCreateResultsActions(searchInterface);
       const fullEngine = getFullEngine(engine);
 
       controller.subscribe(callback);
@@ -105,7 +105,7 @@ describe('buildResultListController', () => {
       const {getOrCreateSearchBoxActions} =
         await import('@/src/core/internal/search-box/search-box-actions.js');
       const {stateId} = getInterfaceInternals(searchInterface);
-      const searchBoxActions = getOrCreateSearchBoxActions(stateId);
+      const searchBoxActions = getOrCreateSearchBoxActions(searchInterface);
       fullEngine.mutate(searchBoxActions.setQuery('unrelated change'));
 
       expect(callback).not.toHaveBeenCalled();
