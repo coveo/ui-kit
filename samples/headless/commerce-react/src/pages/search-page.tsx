@@ -1,8 +1,6 @@
 import {
   buildFilterSuggestionsGenerator,
   buildInstantProducts,
-  buildNotifyTrigger,
-  buildQueryTrigger,
   buildSearch,
   buildSearchBox,
   type Cart,
@@ -12,8 +10,6 @@ import {
 import {useCallback, useEffect} from 'react';
 import DidYouMean from '../components/did-you-mean/did-you-mean.js';
 import SearchBox from '../components/search-box/search-box.js';
-import NotifyTrigger from '../components/triggers/notify-trigger.js';
-import QueryTrigger from '../components/triggers/query-trigger.js';
 import SearchAndListingInterface from '../components/use-cases/search-and-listing-interface/search-and-listing-interface.js';
 import {highlightOptions} from '../utils/highlight-options.js';
 
@@ -22,11 +18,10 @@ interface ISearchProps {
   cartController: Cart;
   contextController: Context;
   url: string;
-  navigate: (pathName: string) => void;
 }
 
 export default function Search(props: ISearchProps) {
-  const {engine, cartController, contextController, url, navigate} = props;
+  const {engine, cartController, contextController, url} = props;
 
   contextController.setView({url});
   const searchController = buildSearch(engine, {
@@ -104,21 +99,12 @@ export default function Search(props: ISearchProps) {
         filterSuggestionsGeneratorController={buildFilterSuggestionsGenerator(
           engine
         )}
-        /* Uncomment the `legacyFieldSUggestionsGeneratorController` prop below and comment out the
-           `filterSuggestionsGeneratorController` prop above if using legacy field suggestions */
-        //legacyFieldSuggestionsGeneratorController={buildFieldSuggestionsGenerator(engine)}
-        navigate={navigate}
       />
       <h2 className="PageTitle">Search</h2>
-      <NotifyTrigger controller={buildNotifyTrigger(engine)}></NotifyTrigger>
-      <QueryTrigger
-        controller={buildQueryTrigger(engine, {enableResults: true})}
-      />
       <DidYouMean controller={searchController.didYouMean()} />
       <SearchAndListingInterface
         searchOrListingController={searchController}
         cartController={cartController}
-        navigate={navigate}
       />
     </div>
   );
