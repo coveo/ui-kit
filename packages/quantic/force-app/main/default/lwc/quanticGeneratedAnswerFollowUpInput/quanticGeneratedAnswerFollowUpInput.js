@@ -117,7 +117,7 @@ export default class QuanticGeneratedAnswerFollowUpInput extends LightningElemen
         bubbles: true,
         composed: true,
         detail: {
-          value: this.refs.askFollowUpInput.value,
+          value: this.refs.askFollowUpInput.value.trim(),
         },
       })
     );

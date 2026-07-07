@@ -91,6 +91,21 @@ describe('c-quantic-generated-answer-follow-up-input', () => {
       expect(handler.mock.calls[0][0].detail.value).toBe('another question');
     });
 
+    it('should dispatch the trimmed value when the input has leading and trailing spaces', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      const handler = jest.fn();
+      element.addEventListener('quantic__submitfollowup', handler);
+
+      const textarea = element.shadowRoot.querySelector(selectors.textarea);
+      textarea.value = '  another question  ';
+      element.shadowRoot.querySelector(selectors.submitButton).click();
+
+      expect(handler).toHaveBeenCalledTimes(1);
+      expect(handler.mock.calls[0][0].detail.value).toBe('another question');
+    });
+
     it('should clear the textarea after a successful submit', async () => {
       const element = createTestComponent();
       await flushPromises();
