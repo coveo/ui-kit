@@ -30,6 +30,7 @@ export function createGenerativeSlice(
             id: payload.id,
             prompt: payload.prompt,
             status: 'streaming',
+            stateSnapshot: null,
           });
         })
         .addCase(actions.setActiveTurnId, (state, {payload}) => {
@@ -54,7 +55,12 @@ export function createGenerativeSlice(
         .addCase(actions.initAgentResponse, (state, {payload}) => {
           const turn = state.turns.find((t) => t.id === payload.turnId);
           if (turn) {
-            turn.agentResponse = {messages: [], surfaces: [], toolCalls: []};
+            turn.agentResponse = {
+              messages: [],
+              surfaces: [],
+              toolCalls: [],
+              reasoningContent: '',
+            };
           }
         })
         .addCase(actions.startMessage, (state, {payload}) => {
@@ -110,6 +116,7 @@ export function createGenerativeSlice(
           const turn = state.turns.find((t) => t.id === payload.turnId);
           if (turn) {
             turn.status = 'complete';
+            turn.stateSnapshot = null;
           }
         })
         .addCase(actions.failTurn, (state, {payload}) => {
@@ -126,6 +133,27 @@ export function createGenerativeSlice(
             delete turn.agentResponse;
             delete turn.error;
           }
+        })
+        .addCase(actions.startReasoning, (_state, _action) => {
+          // No-op: reasoning start is a lifecycle signal only.
+        })
+        .addCase(actions.appendReasoningDelta, (state, {payload}) => {
+          const turn = state.turns.find((t) => t.id === payload.turnId);
+          if (turn?.agentResponse) {
+            turn.agentResponse.reasoningContent += payload.delta;
+          }
+        })
+        .addCase(actions.endReasoning, (_state, _action) => {
+          // No-op: reasoning end is a lifecycle signal only.
+        })
+        .addCase(actions.setStateSnapshot, (state, {payload}) => {
+          const turn = state.turns.find((t) => t.id === payload.turnId);
+          if (turn) {
+            turn.stateSnapshot = payload.snapshot;
+          }
+        })
+        .addCase(actions.hydrateState, (_state, {payload}) => {
+          return payload;
         });
     },
   });

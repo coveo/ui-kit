@@ -38,6 +38,12 @@ export interface Turn {
    * A human-readable error message when the turn is in error status.
    */
   error?: string;
+
+  /**
+   * The most recent state snapshot payload for the turn, representing transient
+   * execution progress. Set to `null` when the turn completes.
+   */
+  stateSnapshot: Record<string, unknown> | null;
 }
 
 export type UseCaseInterfaceMap = {
@@ -69,6 +75,11 @@ export interface AgentResponse {
    * Tool calls made by the agent during the turn, in order of invocation.
    */
   toolCalls: ToolCall[];
+
+  /**
+   * Accumulated reasoning/thinking text received during the turn.
+   */
+  reasoningContent: string;
 }
 
 export type ToolCallStatus = 'calling' | 'completed';

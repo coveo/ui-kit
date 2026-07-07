@@ -1,4 +1,7 @@
-import type {Turn} from '@/src/internal/features/generative/index.js';
+import type {
+  GenerativeState,
+  Turn,
+} from '@/src/internal/features/generative/index.js';
 import {GenerativeRuntime} from '@/src/internal/api/generative/index.js';
 import {createHydrateSubInterface} from '@/src/internal/features/generative/index.js';
 import {getOrCreateGenerativeSlice} from '@/src/internal/features/generative/index.js';
@@ -10,6 +13,10 @@ import {getOrCreateGenerativeActions} from '@/src/internal/features/generative/i
 import {getOrCreateGenerativeSelectors} from '@/src/internal/features/generative/index.js';
 import type {GenerativeInterface} from '@/src/public/interfaces/generative.js';
 import type {Controller} from '../controller-types.js';
+import type {
+  SerializedConverseState,
+  SerializedTurn,
+} from './converse-controller-serialization.js';
 
 class ConverseControllerImpl extends BaseController<ConverseControllerState> {
   #runtime: GenerativeRuntime;
@@ -24,6 +31,11 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
 
     const actions = getOrCreateGenerativeActions(options.interface);
     const selectors = getOrCreateGenerativeSelectors(options.interface);
+
+    if (options.initialState) {
+      const hydratedState = hydrateFromSerializedState(options.initialState);
+      fullEngine.mutate(actions.hydrateState(hydratedState));
+    }
 
     const {stateId} = getHandleInternals(options.interface);
 
@@ -89,6 +101,11 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
             this.#actions.completeToolCall({turnId, toolCallId, result})
           );
         },
+        setStateSnapshot: (turnId, snapshot) => {
+          this.engine.mutate(
+            this.#actions.setStateSnapshot({turnId, snapshot})
+          );
+        },
         completeTurn: (turnId) => {
           this.engine.mutate(this.#actions.completeTurn({turnId}));
         },
@@ -98,9 +115,38 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
         clearTurnResponse: (turnId) => {
           this.engine.mutate(this.#actions.clearTurnResponse({turnId}));
         },
+        startReasoning: (turnId) => {
+          this.engine.mutate(this.#actions.startReasoning({turnId}));
+        },
+        appendReasoningDelta: (turnId, delta) => {
+          this.engine.mutate(
+            this.#actions.appendReasoningDelta({turnId, delta})
+          );
+        },
+        endReasoning: (turnId) => {
+          this.engine.mutate(this.#actions.endReasoning({turnId}));
+        },
       },
       hydrateSubInterface: createHydrateSubInterface(sourceEngine),
     });
+  }
+
+  serialize(): SerializedConverseState {
+    const {turns, activeTurnId} = this.state;
+
+    const serializedTurns: SerializedTurn[] = turns.map((turn) => {
+      const {routedInterface, ...rest} = turn;
+      const serialized: SerializedTurn = {...rest};
+      if (routedInterface) {
+        serialized.routedInterface = {useCase: routedInterface.useCase};
+      }
+      return serialized;
+    });
+
+    return {
+      turns: serializedTurns,
+      activeTurnId,
+    };
   }
 
   submit({prompt}: {prompt: string}): void {
@@ -135,6 +181,7 @@ export const buildConverseController = (
 ): ConverseController => new ConverseControllerImpl(options);
 
 export interface ConverseController extends Controller<ConverseControllerState> {
+  serialize(): SerializedConverseState;
   submit(options: {prompt: string}): void;
   selectTurn(options: {id: string}): void;
   retry(options: {id: string}): void;
@@ -149,4 +196,26 @@ export interface ConverseControllerState {
 
 export interface ConverseControllerOptions {
   interface: GenerativeInterface;
+  initialState?: SerializedConverseState;
+}
+
+function hydrateFromSerializedState(
+  serialized: SerializedConverseState
+): GenerativeState {
+  const turns: Turn[] = serialized.turns.map((serializedTurn) => {
+    const {routedInterface, ...rest} = serializedTurn;
+    const turn: Turn = {...rest};
+
+    if (turn.status === 'streaming') {
+      turn.status = 'error';
+      turn.error = 'Stream was interrupted';
+    }
+
+    return turn;
+  });
+
+  return {
+    turns,
+    activeTurnId: serialized.activeTurnId,
+  };
 }
