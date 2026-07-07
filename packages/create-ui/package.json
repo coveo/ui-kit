@@ -36,6 +36,7 @@
     "clean": "node ../../utils/ci/rm-rf.mjs dist"
   },
   "dependencies": {
+    "@clack/prompts": "1.6.0",
     "commander": "15.0.0",
     "pacote": "21.5.1"
   },

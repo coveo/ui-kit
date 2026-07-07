@@ -173,7 +173,7 @@ export function buildOpenAcrReport(
     last_modified_date: DEFAULT_REPORT_DATE,
     version: 1,
     notes:
-      'Generated from a11y/reports/a11y-report.json. Conformance is derived from axe-core results, interactive keyboard tests, and manual audits. Rows marked [Manual audit required] have no automated or interactive coverage and are reported as Does Not Support pending manual verification.',
+      'Generated from a11y/reports/a11y-report.json. Conformance is derived from axe-core results, interactive keyboard tests, and manual audits.',
     evaluation_methods_used: evaluationMethods,
     repository: 'https://github.com/coveo/ui-kit',
     feedback: 'https://github.com/coveo/ui-kit/issues',

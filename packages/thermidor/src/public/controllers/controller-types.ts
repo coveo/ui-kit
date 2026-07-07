@@ -1,4 +1,4 @@
-import {Unsubscribe} from '@/src/core/index.js';
+import {Unsubscribe} from '@/src/internal/engine/index.js';
 
 export interface Controller<T = unknown> {
   /**

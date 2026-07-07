@@ -933,6 +933,14 @@
     <name>quantic_AgentGenerationStepSearchCompleted</name>
   </customLabels>
   <customLabels>
+    <label>Recherche de {{0}}…</label>
+    <name>quantic_AgentGenerationStepSearchQuery</name>
+  </customLabels>
+  <customLabels>
+    <label>Recherche effectuée pour {{0}}</label>
+    <name>quantic_AgentGenerationStepSearchQueryCompleted</name>
+  </customLabels>
+  <customLabels>
     <label>Analyse des résultats…</label>
     <name>quantic_AgentGenerationStepAnalyzingResults</name>
   </customLabels>

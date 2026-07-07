@@ -10,7 +10,7 @@ import '@/src/components/commerce/atomic-commerce-layout/atomic-commerce-layout.
 import '@/src/components/commerce/atomic-commerce-no-products/atomic-commerce-no-products.js';
 import '@/src/components/commerce/atomic-commerce-search-box/atomic-commerce-search-box.js';
 import '@/src/components/common/atomic-layout-section/atomic-layout-section.js';
-import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
+import {MockCommerceApi} from '@coveo/platform-mock-api/commerce/mock';
 
 const commerceApiHarness = new MockCommerceApi();
 

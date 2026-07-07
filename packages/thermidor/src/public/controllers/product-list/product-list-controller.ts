@@ -1,19 +1,19 @@
-import {BaseController} from '@/src/core/interface/base-controller.js';
-import type {Supports} from '@/src/core/interface/utils/interface-types.js';
-import type {Product} from '@/src/core/interface/product-list/product-list-types.js';
-import {getOrCreateProductListSelectors} from '@/src/core/internal/product-list/product-list-selectors.js';
-import {getOrCreateProductListSlice} from '@/src/core/internal/product-list/product-list-slice.js';
-import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
-import {getHandleInternals} from '@/src/core/interface/utils/get-handle-internals.js';
+import {BaseController} from '@/src/internal/utils/index.js';
+import type {Supports} from '@/src/internal/utils/index.js';
+import type {Product} from '@/src/internal/features/product-list/index.js';
+import {getOrCreateProductListSelectors} from '@/src/internal/features/product-list/index.js';
+import {getOrCreateProductListSlice} from '@/src/internal/features/product-list/index.js';
+import {createMemoizedStateSelector} from '@/src/internal/utils/index.js';
+import {getHandleInternals} from '@/src/internal/utils/index.js';
 import type {Controller} from '../controller-types.js';
 
 class ProductListControllerImpl extends BaseController<ProductListControllerState> {
   constructor(options: ProductListControllerOptions) {
-    const {engine, stateId} = getHandleInternals(options.interface);
+    const {engine} = getHandleInternals(options.interface);
 
-    engine.adoptSlice(getOrCreateProductListSlice(stateId));
+    engine.adoptSlice(getOrCreateProductListSlice(options.interface));
 
-    const selectors = getOrCreateProductListSelectors(stateId);
+    const selectors = getOrCreateProductListSelectors(options.interface);
 
     const controllerState = createMemoizedStateSelector(
       selectors.getProducts,

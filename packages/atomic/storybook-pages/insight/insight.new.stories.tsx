@@ -1,11 +1,11 @@
 import {getSampleInsightEngineConfiguration} from '@coveo/headless/insight';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {html} from 'lit';
-import {MockInsightApi} from '@/storybook-utils/api/insight/mock.js';
+import {MockInsightApi} from '@coveo/platform-mock-api/insight/mock';
 import {
   type baseResponse,
   richResponse,
-} from '@/storybook-utils/api/insight/search-response';
+} from '@coveo/platform-mock-api/insight/search-response';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters.js';
 import {isTestMode} from '@/storybook-utils/common/is-test-mode';
 import '@/src/components/search/atomic-facet-manager/atomic-facet-manager.js';

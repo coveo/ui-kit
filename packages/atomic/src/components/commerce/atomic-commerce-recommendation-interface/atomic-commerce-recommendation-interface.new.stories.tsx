@@ -24,8 +24,8 @@ import '@/src/components/commerce/atomic-product-section-name/atomic-product-sec
 import '@/src/components/commerce/atomic-product-section-visual/atomic-product-section-visual.js';
 import '@/src/components/commerce/atomic-product-template/atomic-product-template.js';
 import '@/src/components/commerce/atomic-product-text/atomic-product-text.js';
-import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
-import {richResponse as richRecommendationResponse} from '@/storybook-utils/api/commerce/recommendation-response';
+import {MockCommerceApi} from '@coveo/platform-mock-api/commerce/mock';
+import {richResponse as richRecommendationResponse} from '@coveo/platform-mock-api/commerce/recommendation-response';
 
 const commerceApiHarness = new MockCommerceApi();
 

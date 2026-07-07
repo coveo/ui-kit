@@ -1,18 +1,21 @@
 import {
   getInterfaceInternals,
   type BaseInterface,
-} from '@/src/core/interface/base-interface.js';
-import type {FullEngine} from '@/src/core/interface/engine/engine.js';
+} from '@/src/internal/utils/index.js';
+import {InterfaceCacheRegistry} from '@/src/internal/utils/index.js';
+import type {FullEngine} from '@/src/internal/engine/index.js';
 import type {
   EndpointThunk,
   Facades,
+  InterfaceHandle,
   InterfaceType,
-} from '@/src/core/interface/utils/interface-types.js';
-import {generateId} from '@/src/core/interface/utils/id-generator.js';
+} from '@/src/internal/utils/index.js';
+import {generateId} from '@/src/internal/utils/index.js';
 
 export interface ComposedInternals {
   engine: FullEngine;
   stateId: string;
+  cacheRegistry: InterfaceCacheRegistry;
 }
 
 export let getComposedInternals: <T extends InterfaceType>(
@@ -20,14 +23,21 @@ export let getComposedInternals: <T extends InterfaceType>(
 ) => ComposedInternals;
 
 export class ComposedInterface<T extends InterfaceType> {
+  get disposed(): boolean {
+    return this.#disposed;
+  }
+
   #engine: FullEngine;
   #stateId: string;
   #interfaces: BaseInterface<T>[];
+  #cacheRegistry = new InterfaceCacheRegistry();
+  #disposed = false;
 
   static {
     getComposedInternals = <typeof getComposedInternals>((composed) => ({
       engine: composed.#engine,
       stateId: composed.#stateId,
+      cacheRegistry: composed.#cacheRegistry,
     }));
   }
 
@@ -40,18 +50,34 @@ export class ComposedInterface<T extends InterfaceType> {
     this.#engine = engine;
     this.#stateId = composedId;
     this.#interfaces = interfaces;
+
+    engine.addInterface(this);
   }
 
   resolveFacades(
     facade: Facades[T],
-    composedInterfaceId?: string
+    composedInterface?: InterfaceHandle
   ): EndpointThunk[] {
-    const id = composedInterfaceId ?? this.#stateId;
-    return this.#interfaces.flatMap((sub) => sub.resolveFacades(facade, id));
+    this.#assertNotDisposed();
+    const target = composedInterface ?? this;
+    return this.#interfaces.flatMap((sub) =>
+      sub.resolveFacades(facade, target)
+    );
   }
 
   dispose(): void {
-    // No-op: composed interface does not own sub-interface lifecycle
+    if (this.#disposed) {
+      return;
+    }
+    this.#disposed = true;
+    this.#cacheRegistry.dispose();
+    this.#engine.removeInterface(this);
+  }
+
+  #assertNotDisposed(): void {
+    if (this.#disposed) {
+      throw new Error('Cannot operate on a disposed composed interface.');
+    }
   }
 }
 

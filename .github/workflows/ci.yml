@@ -186,7 +186,7 @@ jobs:
   cdn-checks:
     name: 'CDN Checks'
     needs: [affected, build-cdn]
-    if: contains(needs.affected.outputs.projects, '@coveo/atomic') || contains(needs.affected.outputs.projects, '@samples/headless-commerce-react') || contains(needs.affected.outputs.projects, '@coveo/atomic-hosted-page')
+    if: contains(needs.affected.outputs.projects, '@coveo/atomic') || contains(needs.affected.outputs.projects, '@coveo/ui-kit-sample-headless-commerce-react') || contains(needs.affected.outputs.projects, '@coveo/atomic-hosted-page')
     env:
       DEPLOYMENT_ENVIRONMENT: CDN
     runs-on: ubuntu-latest
@@ -518,7 +518,7 @@ jobs:
             try { d = JSON.parse(require('fs').readFileSync('turbo-e2e.json','utf8')); } catch (e) { d = {}; }
             const tasks = Array.isArray(d.tasks) ? d.tasks : [];
             const pkgs = tasks
-              .filter(t => t.taskId && t.taskId.endsWith('#e2e') && t.command && t.command !== '<NONEXISTENT>' && t.package && t.package.startsWith('@samples'))
+              .filter(t => t.taskId && t.taskId.endsWith('#e2e') && t.command && t.command !== '<NONEXISTENT>' && t.package && (t.package.startsWith('@samples') || t.package.startsWith('@coveo/ui-kit-sample')))
               .map(t => t.package);
             console.log(JSON.stringify(pkgs));
           " || echo '[]')

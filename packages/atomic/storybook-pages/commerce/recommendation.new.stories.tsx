@@ -4,11 +4,11 @@ import {
 } from '@coveo/headless/commerce';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {html} from 'lit';
-import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock.js';
+import {MockCommerceApi} from '@coveo/platform-mock-api/commerce/mock';
 import {
   type baseResponse,
   richResponse,
-} from '@/storybook-utils/api/commerce/recommendation-response';
+} from '@coveo/platform-mock-api/commerce/recommendation-response';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters.js';
 import {isTestMode} from '@/storybook-utils/common/is-test-mode';
 import '@/src/components/commerce/atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface.js';

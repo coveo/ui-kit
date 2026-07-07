@@ -1,89 +1,53 @@
 # Headless Commerce with React
 
-This sample demonstrates how to build a custom commerce interface using `@coveo/headless/commerce` controllers with React. It shows how to create a fully customized e-commerce search and product listing experience.
+> **Scaffold template**: `headless-commerce-react`
+> This sample is the scaffold template used by `npm create @coveo/ui` to bootstrap a Coveo Headless commerce project with React.
 
-## Features
+A custom commerce interface built with [`@coveo/headless/commerce`](https://docs.coveo.com/en/headless/latest/usage/commerce/) controllers and React. It runs against the public `searchuisamples` organization with no configuration required.
 
-- Custom commerce search interface with Headless controllers
-- Product listing pages
-- Faceted navigation
-- Custom product cards and result templates
-- State management using Headless commerce engine
+## What it shows
 
-## Technology Stack
+- A commerce `search` page (search box, facets, sort, pagination) and product `listing` pages
+- Product `recommendations` on the home page
+- A cart and a product description page (PDP)
+- Product-click analytics via `interactiveProduct.select()`
 
-- **React**: UI framework
+## Technology stack
+
+- **React** + **TypeScript**
 - **@coveo/headless/commerce**: Coveo's headless commerce library
-- **TypeScript**: Type-safe JavaScript
-- **Vite**: Fast build tool and development server
+- **Vite**: dev server and build
+- **Vitest** + **Playwright**: unit and end-to-end tests
 
-## Prerequisites
-
-- Node.js 18+ (LTS recommended)
-- npm 9+
-
-## Getting Started
-
-1. Install dependencies:
-
-   ```bash
-   npm install
-   ```
-
-2. Build the project:
-
-   ```bash
-   npm run build
-   ```
-
-3. Start the development server:
-
-   ```bash
-   npm run dev
-   ```
-
-4. Open your browser to `http://localhost:3000`
-
-## Available Scripts
+## Getting started
 
 ```bash
-npm run dev       # Start development server
-npm run build     # Build for production
+pnpm install
+pnpm dev      # start the dev server (http://localhost:5173)
+pnpm build    # production build
+pnpm preview  # preview the production build (http://localhost:4173)
+pnpm test     # unit tests (Vitest)
+pnpm e2e      # end-to-end tests (Playwright)
 ```
 
-## Key Implementation Details
+## Using this sample as an MRE
 
-### Headless Commerce Controllers
+This sample doubles as a minimal reproducible example for troubleshooting.
 
-This sample demonstrates how to:
+- **Where to change the configuration**: everything lives in `src/context/engine.ts`. Replace `organizationId`, `accessToken`, and the `context` (language, country, currency, view) with the values that reproduce your issue. The cart and analytics `trackingId` are set here too.
+- **Safe to modify**: `src/context/engine.ts` (configuration), and any component under `src/components` or page under `src/pages` to reproduce a specific UI scenario.
+- **Scaffolding you can usually ignore**: `vite.config.js`, `playwright.config.ts`, `e2e/`, and `src/setupTests.ts`.
+- **Credentials**: the `accessToken` and `organizationId` in `engine.ts` are **public `searchuisamples` sample credentials**, safe to share with customers or partners. They are not internal credentials.
 
-- Initialize a Headless commerce engine
-- Use commerce-specific controllers (product listing, search, recommendations)
-- Implement product facets and filters
-- Handle product search and discovery
-- Create custom product result templates
+## Reproducing against a specific version
 
-### Custom Commerce UI
+To reproduce an issue against a specific Coveo UI Kit version, install it after scaffolding:
 
-This sample provides complete control over your commerce interface:
+```bash
+npm install @coveo/headless@<version>
+```
 
-- Custom product card layouts
-- Branded search experience
-- Tailored filtering and sorting options
-- Integration with your e-commerce design system
+## Learn more
 
-### State Management
-
-The sample uses Headless controllers to manage:
-
-- Product search state
-- Facet selections
-- Pagination
-- Sort order
-- Search query
-
-## Learn More
-
-- [Coveo Headless Commerce Documentation](https://docs.coveo.com/en/headless/latest/usage/commerce/)
+- [Coveo Headless Commerce documentation](https://docs.coveo.com/en/headless/latest/usage/commerce/)
 - [Coveo for Commerce](https://docs.coveo.com/en/coveo-for-commerce/)
-- [React Documentation](https://reactjs.org/)

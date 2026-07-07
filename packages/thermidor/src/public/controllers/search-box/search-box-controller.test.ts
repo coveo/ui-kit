@@ -8,8 +8,8 @@ import {
   Engine,
   FullEngine,
   getFullEngine,
-} from '@/src/core/interface/engine/engine.js';
-import {getQuery} from '@/src/core/interface/search-box/search-box-selectors.js';
+} from '@/src/internal/engine/index.js';
+import {getQuery} from '@/src/internal/features/search-box/index.js';
 import {buildSearchBoxController} from './search-box-controller.js';
 import {buildSearchInterface} from '@/src/public/interfaces/search.js';
 import type {SearchInterface} from '@/src/public/interfaces/search.js';
@@ -32,7 +32,7 @@ describe('buildSearchBoxController', () => {
   it('should adopt the searchBox slice', () => {
     buildController();
 
-    expect(fullEngine.read(getQuery)).toBe('');
+    expect(fullEngine.read(getQuery(searchInterface))).toBe('');
   });
 
   describe('setQuery()', () => {
@@ -41,7 +41,7 @@ describe('buildSearchBoxController', () => {
 
       controller.setQuery({query: 'laptops'});
 
-      expect(fullEngine.read(getQuery)).toBe('');
+      expect(fullEngine.read(getQuery(searchInterface))).toBe('laptops');
     });
 
     it('should reset the query with an empty string', () => {
