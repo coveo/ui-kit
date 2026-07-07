@@ -260,13 +260,14 @@ describe('c-quantic-generated-answer-follow-up-input', () => {
       const element = createTestComponent();
       await flushPromises();
 
+      const textTest = 'hello';
       const textarea = element.shadowRoot.querySelector(selectors.textarea);
-      textarea.value = 'hello';
+      textarea.value = textTest;
       textarea.dispatchEvent(new CustomEvent('input'));
       await flushPromises();
 
       const counter = element.shadowRoot.querySelector(selectors.counter);
-      expect(counter.textContent.trim()).toBe('5 / 300');
+      expect(counter.textContent.trim()).toBe(`${textTest.length} / 300`);
     });
 
     it('should not count leading and trailing spaces in the character counter', async () => {
