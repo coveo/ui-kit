@@ -1,7 +1,7 @@
-import type {Supports} from '@/src/core/interface/utils/interface-types.js';
-import {getHandleInternals} from '@/src/core/interface/utils/get-handle-internals.js';
-import {getOrCreateSearchBoxActions} from '@/src/core/internal/search-box/search-box-actions.js';
-import {getOrCreateSearchBoxSlice} from '@/src/core/internal/search-box/search-box-slice.js';
+import type {Supports} from '@/src/internal/utils/index.js';
+import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getOrCreateSearchBoxActions} from '@/src/internal/features/search-box/index.js';
+import {getOrCreateSearchBoxSlice} from '@/src/internal/features/search-box/index.js';
 
 export interface LoadSearchBoxActionsOptions {
   interface: Supports<'search'>;

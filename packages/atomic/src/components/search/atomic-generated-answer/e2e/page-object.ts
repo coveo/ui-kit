@@ -230,14 +230,19 @@ export class GeneratedAnswerPageObject extends BasePageObject {
     return followUpRequest;
   }
 
-  async waitForCustomAnalyticsEvent(eventValue: string) {
+  async waitForCustomAnalyticsEvent(eventValue: string, answerId?: string) {
     const analyticsRequest = await this.page.waitForRequest((request) => {
       if (
         request.method() === 'POST' &&
         /\/rest\/v15\/analytics\/custom/.test(request.url())
       ) {
         const body = request.postDataJSON();
-        return body?.eventValue === eventValue;
+        if (body?.eventValue !== eventValue) {
+          return false;
+        }
+        return answerId
+          ? body?.customData?.generativeQuestionAnsweringId === answerId
+          : true;
       }
       return false;
     });

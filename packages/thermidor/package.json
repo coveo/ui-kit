@@ -33,8 +33,7 @@
   },
   "dependencies": {
     "@ag-ui/core": "0.0.57",
-    "@reduxjs/toolkit": "catalog:",
-    "idb": "catalog:"
+    "@reduxjs/toolkit": "catalog:"
   },
   "devDependencies": {
     "typescript": "catalog:",
