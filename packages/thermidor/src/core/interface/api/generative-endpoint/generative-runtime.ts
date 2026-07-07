@@ -27,9 +27,13 @@ export interface GenerativeStatePort {
   startToolCall(turnId: string, toolCallId: string, toolName: string): void;
   appendToolCallArgs(turnId: string, toolCallId: string, delta: string): void;
   completeToolCall(turnId: string, toolCallId: string, result: string): void;
+  setStateSnapshot(turnId: string, snapshot: Record<string, unknown>): void;
   completeTurn(turnId: string): void;
   failTurn(turnId: string, error: string): void;
   clearTurnResponse(turnId: string): void;
+  startReasoning(turnId: string): void;
+  appendReasoningDelta(turnId: string, delta: string): void;
+  endReasoning(turnId: string): void;
 }
 
 export type HydrateSubInterface = (
@@ -212,6 +216,21 @@ export class GenerativeRuntime {
         return {turnId, isTerminal: false};
       }
 
+      case 'REASONING_MESSAGE_START': {
+        this.statePort.startReasoning(turnId);
+        return {turnId, isTerminal: false};
+      }
+
+      case 'REASONING_MESSAGE_CONTENT': {
+        this.statePort.appendReasoningDelta(turnId, event.delta);
+        return {turnId, isTerminal: false};
+      }
+
+      case 'REASONING_MESSAGE_END': {
+        this.statePort.endReasoning(turnId);
+        return {turnId, isTerminal: false};
+      }
+
       case 'TOOL_CALL_START': {
         this.ensureAgentResponse(turnId);
         this.statePort.startToolCall(
@@ -241,6 +260,11 @@ export class GenerativeRuntime {
           event.toolCallId,
           event.content
         );
+        return {turnId, isTerminal: false};
+      }
+
+      case 'STATE_SNAPSHOT': {
+        this.statePort.setStateSnapshot(turnId, event.snapshot);
         return {turnId, isTerminal: false};
       }
 
