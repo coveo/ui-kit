@@ -1,13 +1,10 @@
 import {describe, it, expect, beforeEach} from 'vitest';
-import {Engine, getFullEngine} from '@/src/core/interface/engine/engine.js';
+import {Engine, getFullEngine} from '@/src/internal/engine/index.js';
 import {buildSearchInterface} from '@/src/public/interfaces/search.js';
-import {
-  composeInterfaces,
-  getComposedInternals,
-} from '@/src/public/interfaces/compose.js';
+import {composeInterfaces} from '@/src/public/interfaces/compose.js';
 import {buildSearchBoxController} from './search-box/search-box-controller.js';
 import {buildPaginationController} from './pagination/pagination-controller.js';
-import {getOrCreatePaginationActions} from '@/src/core/internal/pagination/pagination-actions.js';
+import {getOrCreatePaginationActions} from '@/src/internal/features/pagination/index.js';
 
 describe('Supports<F> structural compatibility', () => {
   let engine: Engine;

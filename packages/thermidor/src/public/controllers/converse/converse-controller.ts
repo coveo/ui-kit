@@ -1,13 +1,13 @@
-import type {Turn} from '@/src/core/interface/generative/generative-types.js';
-import {GenerativeRuntime} from '@/src/core/interface/api/generative-endpoint/generative-runtime.js';
-import {createHydrateSubInterface} from '@/src/core/interface/generative/generative-hydration.js';
-import {getOrCreateGenerativeSlice} from '@/src/core/internal/generative/generative-slice.js';
-import {BaseController} from '@/src/core/interface/base-controller.js';
-import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
-import {getInterfaceInternals} from '@/src/core/interface/base-interface.js';
+import type {Turn} from '@/src/internal/features/generative/index.js';
+import {GenerativeRuntime} from '@/src/internal/api/generative/index.js';
+import {createHydrateSubInterface} from '@/src/internal/features/generative/index.js';
+import {getOrCreateGenerativeSlice} from '@/src/internal/features/generative/index.js';
+import {BaseController} from '@/src/internal/utils/index.js';
+import {createMemoizedStateSelector} from '@/src/internal/utils/index.js';
+import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import {getGenerativeSourceEngine} from '@/src/public/interfaces/generative.js';
-import {getOrCreateGenerativeActions} from '@/src/core/internal/generative/generative-actions.js';
-import {getOrCreateGenerativeSelectors} from '@/src/core/internal/generative/generative-selectors.js';
+import {getOrCreateGenerativeActions} from '@/src/internal/features/generative/index.js';
+import {getOrCreateGenerativeSelectors} from '@/src/internal/features/generative/index.js';
 import type {GenerativeInterface} from '@/src/public/interfaces/generative.js';
 import type {Controller} from '../controller-types.js';
 

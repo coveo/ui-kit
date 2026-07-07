@@ -3,11 +3,10 @@ import {
   Engine,
   FullEngine,
   getFullEngine,
-} from '@/src/core/interface/engine/engine.js';
+} from '@/src/internal/engine/index.js';
 import {createTestEngine} from '@/src/test/test-utils.js';
-import {getOrCreateSearchBoxSelectors} from '@/src/core/internal/search-box/search-box-selectors.js';
+import {getOrCreateSearchBoxSelectors} from '@/src/internal/features/search-box/index.js';
 import {buildSearchInterface} from '@/src/public/interfaces/search.js';
-import {getInterfaceInternals} from '@/src/core/interface/base-interface.js';
 import {loadSearchBoxActions} from './search-box-actions.js';
 
 describe('search-box actions', () => {

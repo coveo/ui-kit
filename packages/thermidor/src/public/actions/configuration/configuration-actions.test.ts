@@ -4,7 +4,7 @@ import {
   Engine,
   FullEngine,
   getFullEngine,
-} from '@/src/core/interface/engine/engine.js';
+} from '@/src/internal/engine/index.js';
 import {
   accessToken,
   country,
@@ -13,7 +13,7 @@ import {
   language,
   organizationId,
   trackingId,
-} from '@/src/core/interface/configuration/configuration-selectors.js';
+} from '@/src/internal/features/configuration/index.js';
 import {loadConfigurationActions} from './configuration-actions.js';
 
 describe('configuration actions', () => {
