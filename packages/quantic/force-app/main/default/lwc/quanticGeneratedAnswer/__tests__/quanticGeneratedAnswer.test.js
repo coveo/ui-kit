@@ -125,6 +125,7 @@ const functionsMocks = {
     like: functionsMocks.like,
     dislike: functionsMocks.dislike,
     closeFeedbackModal: functionsMocks.closeFeedbackModal,
+    logCitationHover: functionsMocks.logCitationHover,
   })),
   buildSearchStatus: jest.fn(() => ({
     state: searchStatusState,
@@ -145,6 +146,7 @@ const functionsMocks = {
   like: jest.fn(),
   dislike: jest.fn(),
   closeFeedbackModal: jest.fn(),
+  logCitationHover: jest.fn(),
 };
 
 /**
@@ -1369,6 +1371,103 @@ describe('c-quantic-generated-answer', () => {
             expect(generatedAnswerCardNoAnswer).toBeNull();
           });
         });
+      });
+    });
+  });
+
+  describe('the citation hover event', () => {
+    const exampleAnswer = 'answer generated successfully';
+    const exampleAgentId = 'example agent id';
+    const exampleCitationId = 'citation-id-1';
+    const exampleCitationHoverTimeMs = 1500;
+
+    describe('when follow-ups are not enabled', () => {
+      beforeEach(() => {
+        generatedAnswerState = {
+          ...initialGeneratedAnswerState,
+          isStreaming: false,
+          answer: exampleAnswer,
+          answerContentFormat: 'text/markdown',
+          answerId: exampleAnswerId,
+          citations: exampleCitations,
+        };
+        mockSuccessfulHeadlessInitialization();
+        prepareHeadlessState();
+      });
+
+      afterAll(() => {
+        generatedAnswerState = initialGeneratedAnswerState;
+      });
+
+      it('should call logCitationHover on the controller with the correct parameters', async () => {
+        const element = createTestComponent();
+        await flushPromises();
+
+        const generatedAnswerBody = element.shadowRoot.querySelector(
+          selectors.generatedAnswerBodyComponent
+        );
+        generatedAnswerBody.dispatchEvent(
+          new CustomEvent('quantic__citationhover', {
+            detail: {
+              citationId: exampleCitationId,
+              citationHoverTimeMs: exampleCitationHoverTimeMs,
+              answerId: exampleAnswerId,
+            },
+          })
+        );
+        await flushPromises();
+
+        expect(functionsMocks.logCitationHover).toHaveBeenCalledTimes(1);
+        expect(functionsMocks.logCitationHover).toHaveBeenCalledWith(
+          exampleCitationId,
+          exampleCitationHoverTimeMs,
+          exampleAnswerId
+        );
+      });
+    });
+
+    describe('when follow-ups are enabled', () => {
+      beforeEach(() => {
+        generatedAnswerState = {
+          ...initialGeneratedAnswerState,
+          answer: exampleAnswer,
+          followUpAnswers: {isEnabled: true, followUpAnswers: []},
+        };
+        mockSuccessfulHeadlessInitialization();
+        prepareHeadlessState();
+      });
+
+      afterAll(() => {
+        generatedAnswerState = initialGeneratedAnswerState;
+      });
+
+      it('should call logCitationHover on the controller with the correct parameters', async () => {
+        const element = createTestComponent({
+          ...defaultOptions,
+          agentId: exampleAgentId,
+        });
+        await flushPromises();
+
+        const thread = element.shadowRoot.querySelector(
+          selectors.generatedAnswerThread
+        );
+        thread.dispatchEvent(
+          new CustomEvent('quantic__citationhover', {
+            detail: {
+              citationId: exampleCitationId,
+              citationHoverTimeMs: exampleCitationHoverTimeMs,
+              answerId: exampleAnswerId,
+            },
+          })
+        );
+        await flushPromises();
+
+        expect(functionsMocks.logCitationHover).toHaveBeenCalledTimes(1);
+        expect(functionsMocks.logCitationHover).toHaveBeenCalledWith(
+          exampleCitationId,
+          exampleCitationHoverTimeMs,
+          exampleAnswerId
+        );
       });
     });
   });
