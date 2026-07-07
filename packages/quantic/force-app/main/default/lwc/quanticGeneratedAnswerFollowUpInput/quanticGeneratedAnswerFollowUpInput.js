@@ -136,7 +136,7 @@ export default class QuanticGeneratedAnswerFollowUpInput extends LightningElemen
   }
 
   get textareaAriaInvalid() {
-    return this.isOverCharacterLimit ? 'true' : 'false';
+    return this.isOverCharacterLimit ? 'true' : null;
   }
 
   get textareaAriaDescribedBy() {
