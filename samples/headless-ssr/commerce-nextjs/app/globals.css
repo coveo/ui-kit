@@ -1,22 +1,65 @@
 /*
- * Minimal, unbranded stylesheet for the Headless Commerce SSR sample.
- * The goal is a clean, functional look comparable to a default Atomic
- * experience — neutral surfaces, white panels, and a single accent color —
- * not a themed or branded design.
+ * Stylesheet for the Headless Commerce SSR sample.
+ *
+ * The goal is an elegant, professional storefront that reuses Coveo's brand
+ * language. ALL visual styling lives here and is keyed off the semantic class
+ * names the components already render, so the component/business logic stays
+ * completely free of styling concerns.
+ *
+ * Brand tokens are derived from the Coveo logo and website
+ * (https://www.coveo.com/en/company/brand):
+ *   - Coveo Navy  #333357  → primary surfaces of emphasis, buttons, active states
+ *   - Coveo Coral #F05245  → the signature accent (prices, links, active filters)
+ *   - Coveo's web typeface is Gibson (Adobe Fonts); it is referenced first in the
+ *     font stack and falls back to the closest free faces (Plus Jakarta Sans / Inter).
  */
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
+
 :root {
-  --surface: #f4f5f7;
-  --panel: #ffffff;
-  --border: #e2e5e9;
-  --text: #1b1c1d;
-  --muted: #6b7280;
-  --accent: #2f6fed;
-  --accent-contrast: #ffffff;
-  --radius: 8px;
+  /* Brand */
+  --brand: #333357; /* Coveo navy */
+  --brand-strong: #29293f;
+  --accent: #f05245; /* Coveo coral */
+  --accent-strong: #d83f34;
+  --on-brand: #ffffff;
+
+  /* Neutrals */
+  --surface: #f6f7fb; /* page background */
+  --panel: #ffffff; /* cards / raised surfaces */
+  --tile: #f1f2f8; /* product image tiles, quiet fills */
+  --border: #e6e7ef; /* hairline */
+  --border-strong: #d7d9e6;
+
+  /* Text */
+  --text: #2b2c3a;
+  --muted: #5f6377;
+  --faint: #9498aa; /* counts, captions */
+
+  /* Tints */
+  --brand-soft: rgba(51, 51, 87, 0.06);
+  --accent-soft: rgba(240, 82, 69, 0.1);
+
+  /* Shape */
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-pill: 999px;
+
+  /* Elevation */
+  --shadow-sm: 0 1px 2px rgba(20, 22, 43, 0.05);
+  --shadow: 0 4px 20px rgba(20, 22, 43, 0.06);
+  --shadow-md: 0 10px 30px rgba(20, 22, 43, 0.1);
+
   --gap: 16px;
-  --font:
-    system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+  /* Gibson is Coveo's brand face (Adobe Fonts). We reference it first, then
+     fall back to close free equivalents so the sample works with no license. */
+  --font-body:
+    'canada-type-gibson', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto,
+    Helvetica, Arial, sans-serif;
+  --font-head:
+    'canada-type-gibson', 'Plus Jakarta Sans', 'Inter', system-ui,
+    -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
 * {
@@ -30,23 +73,32 @@ body {
 }
 
 body {
-  font-family: var(--font);
+  font-family: var(--font-body);
   color: var(--text);
   background: var(--surface);
-  line-height: 1.5;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 h1,
 h2,
 h3,
 h4 {
+  font-family: var(--font-head);
   margin: 0 0 0.5em;
   line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--brand);
 }
 
 a {
   color: var(--accent);
   text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
 }
 
 button {
@@ -56,7 +108,26 @@ button {
 
 button:disabled {
   cursor: not-allowed;
-  opacity: 0.5;
+  opacity: 0.45;
+}
+
+/* A single, consistent brand focus ring for keyboard users. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Brand-tint the native checkboxes / radios used throughout the facets. */
+input[type='checkbox'],
+input[type='radio'] {
+  accent-color: var(--brand);
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+::selection {
+  background: var(--accent-soft);
 }
 
 /* ---------- Layout & header ---------- */
@@ -73,73 +144,87 @@ button:disabled {
   align-items: center;
   justify-content: space-between;
   gap: var(--gap);
-  padding: 12px 24px;
+  padding: 16px 32px;
   background: var(--panel);
   border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 50;
 }
 
 .HeaderBrand {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 .HeaderLogo {
-  height: 28px;
+  height: 30px;
   width: auto;
 }
 
 .AppTitle {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   font-weight: 600;
+  letter-spacing: 0.02em;
   color: var(--muted);
+  padding-left: 12px;
+  border-left: 1px solid var(--border);
 }
 
 .Tabs {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 4px;
 }
 
 .Tab {
-  padding: 6px 14px;
-  border-radius: 999px;
-  color: var(--text);
+  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+  color: var(--muted);
   border: 1px solid transparent;
   font-size: 0.9rem;
+  font-weight: 500;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
 }
 
 .Tab:hover {
-  background: var(--surface);
+  background: var(--brand-soft);
+  color: var(--brand);
+  text-decoration: none;
 }
 
-.TabActive {
-  background: var(--accent);
-  color: var(--accent-contrast);
+.TabActive,
+.TabActive:hover {
+  background: var(--brand);
+  color: var(--on-brand);
 }
 
 .Page {
   flex: 1;
   width: 100%;
-  max-width: 1200px;
+  max-width: 1240px;
   margin: 0 auto;
-  padding: 24px;
+  padding: 32px 24px 48px;
 }
 
 .Page h2 {
-  font-size: 1.25rem;
+  font-size: 1.3rem;
+  font-weight: 700;
 }
 
 /* ---------- Search + results grid ---------- */
 
 .PageLayout {
   display: grid;
-  grid-template-columns: 260px 1fr;
-  gap: 24px;
+  grid-template-columns: 280px 1fr;
+  gap: 32px;
   align-items: start;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 900px) {
   .PageLayout {
     grid-template-columns: 1fr;
   }
@@ -159,8 +244,8 @@ button:disabled {
   align-items: center;
   justify-content: space-between;
   gap: var(--gap);
-  padding-bottom: 12px;
-  margin-bottom: 12px;
+  padding-bottom: 16px;
+  margin-bottom: 20px;
   border-bottom: 1px solid var(--border);
 }
 
@@ -173,18 +258,37 @@ button:disabled {
   margin: 0;
 }
 
+.Summary b {
+  color: var(--text);
+  font-weight: 600;
+}
+
 .Sort {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   font-size: 0.9rem;
+  color: var(--muted);
 }
 
 .Sort select {
-  padding: 6px 8px;
+  padding: 9px 34px 9px 12px;
   border: 1px solid var(--border);
-  border-radius: 6px;
-  background: var(--panel);
+  border-radius: var(--radius-sm);
+  background-color: var(--panel);
+  color: var(--text);
+  font-weight: 500;
+  cursor: pointer;
+  /* Custom chevron so the native select matches the design. */
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235f6377' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+
+.Sort select:hover {
+  border-color: var(--border-strong);
 }
 
 /* ---------- Search box ---------- */
@@ -192,62 +296,116 @@ button:disabled {
 .SearchBox {
   position: relative;
   display: flex;
-  gap: 8px;
-  max-width: 640px;
-  margin: 0 auto 20px;
+  gap: 10px;
+  max-width: 680px;
+  margin: 0 auto 32px;
+}
+
+/* The field itself is the pill: white surface, hairline, soft shadow, and a
+   leading magnifier icon rendered as a background image. */
+.SearchBoxField {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-sm);
+  padding-left: 46px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%239498aa' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 16px center;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.SearchBoxField:focus-within {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 4px var(--brand-soft);
 }
 
 .SearchBoxInput {
-  flex: 1;
-  padding: 10px 14px;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: var(--panel);
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 13px 40px 13px 0;
   font-size: 1rem;
+  color: var(--text);
 }
 
 .SearchBoxInput:focus {
-  outline: 2px solid var(--accent);
-  outline-offset: 1px;
+  outline: none;
+}
+
+/* Hide the browser's native search clear so only our styled clear shows. */
+.SearchBoxInput::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .SearchBoxSubmit {
-  padding: 10px 18px;
+  padding: 0 24px;
   border: none;
-  border-radius: 999px;
-  background: var(--accent);
-  color: var(--accent-contrast);
+  border-radius: var(--radius-pill);
+  background: var(--brand);
+  color: var(--on-brand);
   font-weight: 600;
+  transition:
+    background 0.15s ease,
+    transform 0.05s ease;
+}
+
+.SearchBoxSubmit:hover {
+  background: var(--brand-strong);
+}
+
+.SearchBoxSubmit:active {
+  transform: translateY(1px);
 }
 
 .SearchBoxClear {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
   border: none;
   background: transparent;
-  color: var(--muted);
-  padding: 0 6px;
+  color: var(--faint);
+  padding: 4px;
+  line-height: 1;
+  font-size: 0.8rem;
+  border-radius: var(--radius-pill);
+}
+
+.SearchBoxClear:hover {
+  color: var(--text);
 }
 
 .SearchBoxDropdown {
   position: absolute;
-  top: calc(100% + 6px);
+  top: calc(100% + 10px);
   left: 0;
   right: 0;
-  z-index: 10;
+  z-index: 20;
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  padding: 8px;
-  max-height: 420px;
+  box-shadow: var(--shadow-md);
+  padding: 10px;
+  max-height: 460px;
   overflow: auto;
 }
 
 .SearchBoxDropdown h4 {
-  font-size: 0.75rem;
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--muted);
-  margin: 8px 6px 4px;
+  letter-spacing: 0.06em;
+  color: var(--faint);
+  margin: 12px 8px 6px;
 }
 
 .Suggestions,
@@ -264,23 +422,34 @@ button:disabled {
   text-align: left;
   border: none;
   background: transparent;
-  padding: 6px 8px;
-  border-radius: 6px;
+  padding: 9px 10px;
+  border-radius: var(--radius-sm);
   color: var(--text);
+  font-size: 0.95rem;
+  transition: background 0.12s ease;
 }
 
 .Suggestions button:hover,
 .RecentQueries button:hover {
-  background: var(--surface);
+  background: var(--brand-soft);
 }
 
+.Suggestions mark,
+.RecentQueries mark {
+  background: transparent;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* The instant-products group sits on a quiet tinted panel to separate it from
+   the query suggestions above it. */
 .InstantProducts {
   list-style: none;
-  margin: 0;
-  padding: 0;
+  margin: 8px -10px -10px;
+  padding: 10px;
   border-top: 1px solid var(--border);
-  margin-top: 6px;
-  padding-top: 6px;
+  background: var(--tile);
+  border-radius: 0 0 var(--radius) var(--radius);
 }
 
 .InstantProduct {
@@ -288,7 +457,12 @@ button:disabled {
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  padding: 4px 8px;
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+}
+
+.InstantProduct:hover {
+  background: rgba(255, 255, 255, 0.7);
 }
 
 .InstantProductLink {
@@ -296,7 +470,9 @@ button:disabled {
   background: transparent;
   text-align: left;
   color: var(--text);
+  font-size: 0.95rem;
   flex: 1;
+  padding: 0;
 }
 
 .InstantProductLink:hover {
@@ -305,10 +481,16 @@ button:disabled {
 
 /* ---------- Facets ---------- */
 
+/* The whole facet rail is a single elevated panel; each facet is a section
+   inside it, divided by hairlines. */
 .Facets {
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  padding: 4px 20px;
 }
 
 .RegularFacet,
@@ -318,7 +500,13 @@ button:disabled {
   border: none;
   border-bottom: 1px solid var(--border);
   margin: 0;
-  padding: 18px 0;
+  padding: 28px 0 22px;
+  min-inline-size: 0; /* let fieldset shrink in the grid */
+}
+
+/* Last facet section shouldn't carry a divider. */
+.Facets > *:last-child {
+  border-bottom: none;
 }
 
 /* Facet header: display name on the left, Clear action on the right. */
@@ -329,28 +517,55 @@ button:disabled {
   gap: 8px;
   width: 100%;
   padding: 0;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 }
 
 .FacetDisplayName {
+  font-family: var(--font-body);
   font-weight: 600;
-  font-size: 0.95rem;
-  padding: 0;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text);
 }
 
 .FacetSearch {
   display: flex;
   align-items: center;
-  gap: 4px;
-  margin: 8px 0;
+  gap: 6px;
+  margin: 10px 0;
+}
+
+.FacetSearchLabel {
+  /* The visible "Search:" text is redundant with the input; hide it but keep
+     it available to assistive tech. */
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
 }
 
 .FacetSearchInput {
   flex: 1;
-  padding: 5px 8px;
+  padding: 8px 10px;
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
+  background: var(--panel);
   min-width: 0;
+  font-size: 0.9rem;
+}
+
+.FacetSearchInput:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px var(--brand-soft);
+}
+
+.FacetSearchLoading {
+  font-size: 0.8rem;
+  color: var(--faint);
 }
 
 .FacetValues,
@@ -365,7 +580,7 @@ button:disabled {
 }
 
 .ActiveFacetValueChildren {
-  padding-left: 18px;
+  padding-left: 20px;
 }
 
 .FacetValue,
@@ -374,8 +589,8 @@ button:disabled {
 .RootFacetValues li {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 3px 0;
+  gap: 8px;
+  padding: 5px 0;
 }
 
 .FacetValueLabel {
@@ -385,6 +600,14 @@ button:disabled {
   gap: 8px;
   font-size: 0.9rem;
   cursor: pointer;
+  min-width: 0;
+}
+
+.FacetValueName {
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .RootFacetValues .FacetValueName {
@@ -395,45 +618,81 @@ button:disabled {
 
 .FacetValueNumberOfProducts,
 .FacetValueNumberOfResults {
-  color: var(--muted);
-  font-size: 0.85rem;
+  color: var(--faint);
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
 }
 
 .ManualRangeControls {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 4px;
-  margin: 8px 0;
-  font-size: 0.85rem;
+  gap: 6px;
+  margin: 10px 0;
+  font-size: 0.82rem;
+  color: var(--muted);
 }
 
 .ManualRangeControls input {
-  width: 70px;
-  padding: 4px 6px;
+  width: 68px;
+  padding: 7px 8px;
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+}
+
+.ManualRangeControls input:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px var(--brand-soft);
 }
 
 /* Small, quiet facet control buttons. */
 .FacetShowMore,
 .FacetShowLess,
-.FacetClear,
-.FacetSearchClear,
 .ManualRangeSelect {
   border: 1px solid var(--border);
   background: var(--panel);
-  border-radius: 6px;
-  padding: 2px 10px;
+  border-radius: var(--radius-sm);
+  padding: 5px 12px;
   color: var(--text);
   font-size: 0.8rem;
+  font-weight: 500;
+  transition:
+    background 0.12s ease,
+    border-color 0.12s ease;
+}
+
+.FacetShowMore:hover:not(:disabled),
+.FacetShowLess:hover:not(:disabled),
+.ManualRangeSelect:hover:not(:disabled) {
+  background: var(--brand-soft);
+  border-color: var(--border-strong);
+}
+
+/* "Clear" and the facet-search clear read as quiet coral text links. */
+.FacetClear,
+.FacetSearchClear {
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  padding: 2px 4px;
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.FacetClear:hover:not(:disabled),
+.FacetSearchClear:hover:not(:disabled) {
+  text-decoration: underline;
 }
 
 /* Show more / less sit in a reserved footer row so the facet keeps a constant
    height and never shifts when the controls toggle. */
 .FacetShowMore,
 .FacetShowLess {
-  margin-top: 12px;
+  margin-top: 14px;
 }
 
 .FacetShowLess {
@@ -455,41 +714,90 @@ button:disabled {
 
 .FacetSearchResults {
   list-style: none;
-  margin: 6px 0;
+  margin: 8px 0;
   padding: 0;
 }
 
 .FacetSearchResult {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 3px 0;
+  gap: 8px;
+  padding: 5px 0;
   font-size: 0.9rem;
   cursor: pointer;
 }
 
-/* ---------- Breadcrumbs ---------- */
+.FacetSearchResultLabel {
+  cursor: pointer;
+}
+
+.FacetSearchResultCategory {
+  color: var(--faint);
+}
+
+.FacetSearchResultNumberOfProducts {
+  color: var(--faint);
+  font-size: 0.82rem;
+}
+
+.FacetSearchNoResults {
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+/* Highlight matches with the brand accent instead of the default yellow. */
+mark {
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  border-radius: 3px;
+  padding: 0 1px;
+}
+
+/* ---------- Breadcrumbs / active filters ---------- */
 
 .Breadcrumbs {
-  margin-bottom: 12px;
+  margin-bottom: 20px;
+}
+
+.Breadcrumbs > div button {
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0;
+}
+
+.Breadcrumbs > div button:hover {
+  color: var(--accent);
 }
 
 .Breadcrumbs ul {
   list-style: none;
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin: 8px 0 0;
+  gap: 8px;
+  margin: 10px 0 0;
   padding: 0;
 }
 
-.Breadcrumbs button {
-  border: 1px solid var(--border);
-  background: var(--panel);
-  border-radius: 999px;
-  padding: 3px 10px;
-  font-size: 0.85rem;
-  color: var(--text);
+/* Active-filter chips: pill with a soft coral tint. */
+.Breadcrumbs ul button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid transparent;
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  border-radius: var(--radius-pill);
+  padding: 5px 12px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  transition: background 0.12s ease;
+}
+
+.Breadcrumbs ul button:hover {
+  background: rgba(240, 82, 69, 0.16);
 }
 
 /* ---------- Product grid & cards ---------- */
@@ -499,72 +807,107 @@ button:disabled {
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: var(--gap);
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
 }
 
 .ProductCard {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 12px;
+  padding: 14px;
+  box-shadow: var(--shadow-sm);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.ProductCard:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow);
+  border-color: var(--border-strong);
+}
+
+/* Spotlight items get a subtle coral cue so they read as promoted. */
+.SpotlightContent {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent-soft);
 }
 
 .ProductLink {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 8px;
+  align-items: stretch;
+  gap: 12px;
+  width: 100%;
   border: none;
   background: transparent;
-  text-align: center;
+  text-align: left;
   color: var(--text);
   padding: 0;
 }
 
+/* The image fills its dedicated area on a plain white background so product
+   photos (which ship on white) sit flush with the card. */
 .ProductImage {
   width: 100%;
-  height: 150px;
+  height: 220px;
   object-fit: contain;
+  background: var(--panel);
+  border-radius: var(--radius-sm);
+  padding: 0;
 }
 
+/* Only the empty-state placeholder keeps a soft tile so a missing image still
+   reads as an image slot. */
 .ProductImagePlaceholder {
   display: block;
-  background: var(--surface);
-  border-radius: 6px;
+  height: 220px;
+  background: var(--tile);
+  border-radius: var(--radius-sm);
 }
 
 .ProductName {
-  font-size: 0.9rem;
-  font-weight: 500;
+  font-family: var(--font-head);
+  font-size: 0.98rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--text);
+  transition: color 0.12s ease;
 }
 
 .ProductLink:hover .ProductName {
   color: var(--accent);
 }
 
+/* The price is the one place we let the coral accent carry real weight. */
 .ProductPrice {
-  font-weight: 600;
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--brand);
 }
 
 .AddToCart {
   margin-top: auto;
-  border: 1px solid var(--accent);
-  background: var(--accent);
-  color: var(--accent-contrast);
-  border-radius: 6px;
-  padding: 8px 10px;
+  border: none;
+  background: var(--brand);
+  color: var(--on-brand);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
   font-size: 0.9rem;
+  font-weight: 600;
   transition:
-    filter 0.15s ease,
+    background 0.15s ease,
     transform 0.05s ease;
 }
 
 .AddToCart:hover {
-  filter: brightness(0.94);
+  background: var(--brand-strong);
 }
 
 .AddToCart:active {
@@ -577,27 +920,40 @@ button:disabled {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 6px;
-  margin-top: 20px;
+  gap: 8px;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
 }
 
 .Pagination > div:first-child {
   margin-right: auto;
   color: var(--muted);
-  font-size: 0.9rem;
+  font-size: 0.88rem;
 }
 
 .SelectPage {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 32px;
-  height: 32px;
+  min-width: 40px;
+  height: 40px;
   padding: 0 8px;
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   background: var(--panel);
   font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text);
+  cursor: pointer;
+  transition:
+    background 0.12s ease,
+    border-color 0.12s ease;
+}
+
+.SelectPage:hover {
+  background: var(--brand-soft);
+  border-color: var(--border-strong);
 }
 
 /* Hide the raw radio inputs; the labels act as page buttons. */
@@ -609,18 +965,28 @@ button:disabled {
 }
 
 .SelectPage:has(input:checked) {
-  background: var(--accent);
-  color: var(--accent-contrast);
-  border-color: var(--accent);
+  background: var(--brand);
+  color: var(--on-brand);
+  border-color: var(--brand);
 }
 
 .PreviousPage,
 .NextPage {
-  min-width: 32px;
-  height: 32px;
+  min-width: 40px;
+  height: 40px;
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   background: var(--panel);
+  color: var(--text);
+  transition:
+    background 0.12s ease,
+    border-color 0.12s ease;
+}
+
+.PreviousPage:hover:not(:disabled),
+.NextPage:hover:not(:disabled) {
+  background: var(--brand-soft);
+  border-color: var(--border-strong);
 }
 
 /* ---------- Cart ---------- */
@@ -638,48 +1004,74 @@ button:disabled {
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 12px;
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
 }
 
 .Cart button {
   border: 1px solid var(--border);
   background: var(--panel);
-  border-radius: 6px;
-  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  padding: 7px 12px;
   margin-right: 6px;
   font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text);
+  transition:
+    background 0.12s ease,
+    border-color 0.12s ease;
+}
+
+.Cart button:hover {
+  background: var(--brand-soft);
+  border-color: var(--border-strong);
 }
 
 /* ---------- Recommendations ---------- */
 
 .Recommendations {
-  margin-top: 32px;
-  padding-top: 16px;
+  margin-top: 40px;
+  padding-top: 24px;
   border-top: 1px solid var(--border);
 }
 
 .Recommendations ul {
   list-style: none;
   display: flex;
-  gap: var(--gap);
+  gap: 20px;
   overflow-x: auto;
   margin: 0 0 24px;
-  padding: 0 0 8px;
+  padding: 4px 0 12px;
 }
 
 .Recommendations li {
-  flex: 0 0 160px;
+  flex: 0 0 180px;
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 10px;
+  padding: 14px;
+  box-shadow: var(--shadow-sm);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-/* Generic clickable, link-like button used in a few spots. */
+.Recommendations li:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow);
+}
+
+/* Generic clickable, link-like button used in a few spots (e.g. the instant
+   product "Add to cart"). */
 .LinkButton {
   border: none;
   background: transparent;
   color: var(--accent);
   padding: 0;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.LinkButton:hover {
+  text-decoration: underline;
 }

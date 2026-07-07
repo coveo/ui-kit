@@ -51,27 +51,29 @@ export default function SearchBox() {
 
   return (
     <div className="SearchBox">
-      <input
-        className="SearchBoxInput"
-        type="search"
-        aria-label="Search"
-        placeholder="Search"
-        value={state.value}
-        onChange={onSearchBoxInputChange}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-        onKeyDown={handleKeyDown}
-      />
-      {state.value !== '' && (
-        <button
-          type="button"
-          className="SearchBoxClear"
-          aria-label="Clear"
-          onClick={methods?.clear}
-        >
-          ✕
-        </button>
-      )}
+      <div className="SearchBoxField">
+        <input
+          className="SearchBoxInput"
+          type="search"
+          aria-label="Search"
+          placeholder="Search"
+          value={state.value}
+          onChange={onSearchBoxInputChange}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          onKeyDown={handleKeyDown}
+        />
+        {state.value !== '' && (
+          <button
+            type="button"
+            className="SearchBoxClear"
+            aria-label="Clear"
+            onClick={methods?.clear}
+          >
+            ✕
+          </button>
+        )}
+      </div>
       <button
         type="button"
         className="SearchBoxSubmit"

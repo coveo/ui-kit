@@ -12,6 +12,11 @@ import {useBreadcrumbManager} from '@/lib/commerce-engine';
 export default function BreadcrumbManager() {
   const {state, methods} = useBreadcrumbManager();
 
+  // Only render the breadcrumbs (and "Clear all filters") when filters are applied.
+  if (state.facetBreadcrumbs.length === 0) {
+    return null;
+  }
+
   const renderBreadcrumbValue = (
     value:
       | CategoryFacetValue
