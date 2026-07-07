@@ -430,6 +430,8 @@ input[type='radio'] {
 }
 
 .Suggestions button:hover,
+.Suggestions button.active,
+.Suggestions button[aria-selected='true'],
 .RecentQueries button:hover {
   background: var(--brand-soft);
 }
