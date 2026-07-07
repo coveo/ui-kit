@@ -38,7 +38,9 @@ export default function SearchAndListingInterface(
   }, [searchOrListingController]);
 
   const summaryController = searchOrListingController.summary();
-  const paginationController = searchOrListingController.pagination();
+  const paginationController = searchOrListingController.pagination({
+    options: {pageSize: 12},
+  });
 
   return (
     <div className="SearchAndListingInterface row">

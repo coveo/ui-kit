@@ -28,6 +28,7 @@ export default function StandaloneSearchBox(props: IStandaloneSearchBoxProps) {
 
   const [state, setState] = useState(controller.state);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+  const [activeSuggestion, setActiveSuggestion] = useState(-1);
 
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -71,6 +72,7 @@ export default function StandaloneSearchBox(props: IStandaloneSearchBoxProps) {
   };
 
   const onSearchBoxInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setActiveSuggestion(-1);
     if (e.target.value === '') {
       hideDropdown();
       controller.clear();
@@ -100,9 +102,36 @@ export default function StandaloneSearchBox(props: IStandaloneSearchBoxProps) {
           break;
         }
         break;
+      case 'ArrowDown': {
+        if (state.suggestions.length === 0) {
+          break;
+        }
+        e.preventDefault();
+        const next = (activeSuggestion + 1) % state.suggestions.length;
+        setActiveSuggestion(next);
+        onFocusSuggestion(state.suggestions[next]);
+        showDropdown();
+        break;
+      }
+      case 'ArrowUp': {
+        if (state.suggestions.length === 0) {
+          break;
+        }
+        e.preventDefault();
+        const next =
+          (activeSuggestion - 1 + state.suggestions.length) %
+          state.suggestions.length;
+        setActiveSuggestion(next);
+        onFocusSuggestion(state.suggestions[next]);
+        break;
+      }
       case 'Enter':
-        hideDropdown();
-        controller.submit();
+        if (activeSuggestion >= 0 && state.suggestions[activeSuggestion]) {
+          onSelectSuggestion(state.suggestions[activeSuggestion]);
+        } else {
+          hideDropdown();
+          controller.submit();
+        }
         break;
       default:
         break;
@@ -131,22 +160,28 @@ export default function StandaloneSearchBox(props: IStandaloneSearchBoxProps) {
   const onSelectSuggestion = (suggestion: Suggestion) => {
     controller.selectSuggestion(suggestion.rawValue);
     hideDropdown();
+    setActiveSuggestion(-1);
   };
 
   const renderDropdown = () => {
     return (
-      <div className="SearchBoxDropdown row">
+      <div
+        className="SearchBoxDropdown row"
+        onMouseDown={(e) => e.preventDefault()}
+      >
         {state.suggestions.length > 0 && (
           <div className="QuerySuggestion column small">
             <p>Query suggestions</p>
             <ul>
-              {state.suggestions.map((suggestion) => (
+              {state.suggestions.map((suggestion, i) => (
                 <li
                   key={`${suggestion.rawValue}-suggestion`}
                   className="QuerySuggestion"
                 >
                   <button
                     type="button"
+                    className={i === activeSuggestion ? 'active' : undefined}
+                    aria-selected={i === activeSuggestion}
                     onMouseOver={() => onFocusSuggestion(suggestion)}
                     onFocus={() => onFocusSuggestion(suggestion)}
                     onClick={() => onSelectSuggestion(suggestion)}
@@ -196,6 +231,12 @@ export default function StandaloneSearchBox(props: IStandaloneSearchBoxProps) {
         id="search-box"
         onChange={onSearchBoxInputChange}
         onKeyDown={onSearchBoxInputKeyDown}
+        onFocus={() => {
+          if (state.value !== '') {
+            showDropdown();
+          }
+        }}
+        onBlur={() => hideDropdown()}
         ref={searchInputRef}
         value={state.value}
       />
