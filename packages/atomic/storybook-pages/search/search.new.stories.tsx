@@ -1,11 +1,11 @@
 import {getSampleSearchEngineConfiguration} from '@coveo/headless';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {html} from 'lit';
-import {MockSearchApi} from '@/storybook-utils/api/search/mock';
+import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
 import {
   type baseResponse,
   richResponse,
-} from '@/storybook-utils/api/search/search-response';
+} from '@coveo/platform-mock-api/search/search-response';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters.js';
 import {isTestMode} from '@/storybook-utils/common/is-test-mode';
 import '@/src/components/search/atomic-automatic-facet-generator/atomic-automatic-facet-generator.js';

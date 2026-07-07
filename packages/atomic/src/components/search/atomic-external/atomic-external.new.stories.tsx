@@ -11,7 +11,7 @@ import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
 import '@/src/components/search/atomic-result-list/atomic-result-list.js';
 import '@/src/components/search/atomic-search-box/atomic-search-box.js';
 import '@/src/components/search/atomic-search-interface/atomic-search-interface.js';
-import {MockSearchApi} from '@/storybook-utils/api/search/mock';
+import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-external',

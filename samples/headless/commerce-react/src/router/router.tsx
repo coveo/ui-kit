@@ -7,7 +7,6 @@ import {useEffect, useState, useTransition} from 'react';
 import Layout from '../layout/layout.js';
 import CartPage from '../pages/cart-page.js';
 import HomePage from '../pages/home-page.js';
-import ProductDescriptionPage from '../pages/product-description-page.js';
 import ProductListingPage from '../pages/product-listing-page.js';
 import SearchPage from '../pages/search-page.js';
 
@@ -62,29 +61,6 @@ export default function Router(props: IRouterProps) {
         contextController={contextController}
         url="https://sports.barca.group/browse/promotions/surf-accessories"
         pageName="Surf Accessories"
-        navigate={navigate}
-      />
-    );
-  } else if (/\/listing\/pants/.test(page)) {
-    content = (
-      <ProductListingPage
-        engine={engine}
-        cartController={cartController}
-        contextController={contextController}
-        url="https://sports.barca.group/browse/promotions/clothing/pants"
-        pageName="Pants"
-        navigate={navigate}
-      />
-    );
-  } else if (/\/listing\/towels/.test(page)) {
-    content = (
-      <ProductListingPage
-        engine={engine}
-        cartController={cartController}
-        contextController={contextController}
-        url="https://sports.barca.group/browse/promotions/accessories/towels"
-        pageName="Towels"
-        navigate={navigate}
       />
     );
   } else if (/\/search/.test(page)) {
@@ -94,7 +70,6 @@ export default function Router(props: IRouterProps) {
         cartController={cartController}
         contextController={contextController}
         url="https://sports.barca.group/search"
-        navigate={navigate}
       />
     );
   } else if (/\/cart/.test(page)) {
@@ -104,19 +79,7 @@ export default function Router(props: IRouterProps) {
         cartController={cartController}
         contextController={contextController}
         url="https://sports.barca.group/cart"
-        navigate={navigate}
       />
-    );
-  } else if (/\/product/.test(page)) {
-    const productId = page.split('/')[2];
-    content = (
-      <ProductDescriptionPage
-        engine={engine}
-        cartController={cartController}
-        contextController={contextController}
-        url={`https://sports.barca.group/pdp/${productId}`}
-        navigate={navigate}
-      ></ProductDescriptionPage>
     );
   } else {
     content = (
@@ -125,7 +88,6 @@ export default function Router(props: IRouterProps) {
         cartController={cartController}
         contextController={contextController}
         url="https://sports.barca.group"
-        navigate={navigate}
       />
     );
   }

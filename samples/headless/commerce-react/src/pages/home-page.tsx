@@ -12,11 +12,10 @@ interface IHomePageProps {
   cartController: Cart;
   contextController: Context;
   url: string;
-  navigate: (pathName: string) => void;
 }
 
 export default function HomePage(props: IHomePageProps) {
-  const {engine, cartController, contextController, url, navigate} = props;
+  const {engine, cartController, contextController, url} = props;
 
   const recommendationsController = buildRecommendations(engine, {
     options: {slotId: 'af4fb7ba-6641-4b67-9cf9-be67e9f30174'},
@@ -44,7 +43,6 @@ export default function HomePage(props: IHomePageProps) {
       <RecommendationsInterface
         recommendationsController={recommendationsController}
         cartController={cartController}
-        navigate={navigate}
       />
     </div>
   );

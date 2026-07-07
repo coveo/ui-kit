@@ -4,11 +4,11 @@ import {html} from 'lit';
 import {userEvent} from 'storybook/test';
 import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {MockSearchApi} from '@/storybook-utils/api/search/mock';
+import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
 import {
   searchFacetTransformer,
   searchFacetSearchTransformer,
-} from '@/storybook-utils/api/search/facet-transformer';
+} from '@coveo/platform-mock-api/search/facet-transformer';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-search-box/atomic-search-box.js';
 import '@/src/components/search/atomic-search-box-query-suggestions/atomic-search-box-query-suggestions.js';

@@ -32,9 +32,8 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@ag-ui/core": "0.0.53",
-    "@reduxjs/toolkit": "catalog:",
-    "idb": "catalog:"
+    "@ag-ui/core": "0.0.57",
+    "@reduxjs/toolkit": "catalog:"
   },
   "devDependencies": {
     "typescript": "catalog:",

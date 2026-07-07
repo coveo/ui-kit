@@ -1695,6 +1695,20 @@
     <shortDescription>Knowledge base searched</shortDescription>
   </labels>
   <labels>
+    <fullName>quantic_AgentGenerationStepSearchQuery</fullName>
+    <value>Searching for {{0}}…</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Searching for query</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_AgentGenerationStepSearchQueryCompleted</fullName>
+    <value>Searched for {{0}}</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Searched for query</shortDescription>
+  </labels>
+  <labels>
     <fullName>quantic_AgentGenerationStepAnalyzingResults</fullName>
     <value>Analyzing results…</value>
     <language>en_US</language>

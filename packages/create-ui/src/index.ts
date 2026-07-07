@@ -7,13 +7,24 @@ import {fileURLToPath} from 'node:url';
 import {argv} from 'node:process';
 import {downloadTemplate} from './download.js';
 import {isEmptyOrMissing} from './fs-utils.js';
+import {note} from '@clack/prompts';
+import {promptProjectName, selectTemplate} from './prompt.js';
 import {
   installDependencies,
   moveToTarget,
   rewritePackageJson,
 } from './setup.js';
-import {getTemplate, getTemplates, type Template} from './templates.js';
+import {
+  describeTemplate,
+  getTemplate,
+  getTemplates,
+  type Template,
+} from './templates.js';
 import {formatError, getPackageManager, log} from './utils.js';
+
+function isPackageNotFound(error: unknown): boolean {
+  return error instanceof Error && /404/i.test(error.message);
+}
 
 // TODO: (KIT-5833): add a link to the "How to use @coveo/create-ui" guide here
 // once that documentation page is published.
@@ -54,7 +65,7 @@ function buildProgram(): Command {
     .addHelpText(
       'after',
       `\nAvailable templates:\n${getTemplates()
-        .map((t) => `  ${t.name.padEnd(26)} ${t.description}`)
+        .map((t) => `  ${t.name.padEnd(26)} ${describeTemplate(t)}`)
         .join(
           '\n'
         )}\n\nExample:\n  $ npm create @coveo/ui my-app --template headless-search-react`
@@ -120,6 +131,15 @@ export async function scaffold(
     if (createdTargetDir) {
       await rm(targetDir, {recursive: true, force: true});
     }
+    if (isPackageNotFound(error)) {
+      note(
+        `Check available templates:  npm create @coveo/ui -- --help\n` +
+          `Open an issue:              https://github.com/coveo/ui-kit/issues\n` +
+          `Coveo community:            https://connect.coveo.com`,
+        'Need help?'
+      );
+      throw new Error(`Template "${template.name}" is not available.`);
+    }
     throw error;
   } finally {
     await rm(tempDir, {recursive: true, force: true});
@@ -156,45 +176,46 @@ export async function main(rawArgs: string[]): Promise<number> {
     return 0;
   }
 
-  // Interactive selection is added in a follow-up PR; for now --template and a
-  // project name are required.
-  if (args.template === undefined) {
-    log.error('Please provide a template with --template (or run --help).');
-    log.info(
-      `\nAvailable templates:\n${getTemplates()
-        .map((t) => `  ${t.name}`)
-        .join('\n')}`
-    );
-    return 1;
+  // Resolve the template: explicit --template (validated) or interactive select.
+  let template: Template;
+  if (args.template !== undefined) {
+    const found = getTemplate(args.template);
+    if (!found) {
+      log.error(`Unknown template "${args.template}".`);
+      log.info(
+        `\nAvailable templates:\n${getTemplates()
+          .map((t) => `  ${t.name}`)
+          .join('\n')}`
+      );
+      note(
+        `Run with --help to see all templates:\n` +
+          `  npm create @coveo/ui -- --help`,
+        'Tip'
+      );
+      return 1;
+    }
+    template = found;
+  } else {
+    template = await selectTemplate();
   }
 
-  const template = getTemplate(args.template);
-  if (!template) {
-    log.error(`Unknown template "${args.template}".`);
-    log.info(
-      `\nAvailable templates:\n${getTemplates()
-        .map((t) => `  ${t.name}`)
-        .join('\n')}`
-    );
-    return 1;
-  }
-  if (!args.projectName) {
-    log.error('Please provide a project name.');
-    log.info(
-      `\nExample: npm create @coveo/ui my-app --template ${template.name}`
-    );
-    return 1;
-  }
+  // Resolve the project name: positional arg or interactive input.
+  const projectName = args.projectName ?? (await promptProjectName());
 
-  const targetDir = resolve(process.cwd(), args.projectName);
+  const targetDir = resolve(process.cwd(), projectName);
   if (!(await isEmptyOrMissing(targetDir))) {
     log.error(
-      `Target directory "${args.projectName}" already exists and is not empty.`
+      `Target directory "${projectName}" already exists and is not empty.`
+    );
+    note(
+      `Pick a different name, or remove the directory:\n` +
+        `  rm -rf ${projectName}`,
+      'Tip'
     );
     return 1;
   }
 
-  await scaffold(template, args.projectName);
+  await scaffold(template, projectName);
   return 0;
 }
 
@@ -214,6 +235,11 @@ if (isDirectRun) {
   main(argv.slice(2)).then(
     (code) => process.exit(code),
     (error) => {
+      // A user pressing Ctrl-C during a prompt should exit quietly.
+      if (error instanceof Error && error.name === 'ExitPromptError') {
+        log.info('\nAborted.');
+        process.exit(130);
+      }
       log.error(formatError(error));
       process.exit(1);
     }

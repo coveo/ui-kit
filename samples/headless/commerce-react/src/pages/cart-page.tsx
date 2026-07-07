@@ -13,11 +13,10 @@ interface ICartPageProps {
   cartController: HeadlessCart;
   contextController: Context;
   url: string;
-  navigate: (pathName: string) => void;
 }
 
 export default function CartPage(props: ICartPageProps) {
-  const {engine, cartController, contextController, url, navigate} = props;
+  const {engine, cartController, contextController, url} = props;
 
   const recommendationsController = buildRecommendations(engine, {
     options: {slotId: 'd8118c04-ff59-4f03-baca-2fc5f3b81221'},
@@ -46,7 +45,6 @@ export default function CartPage(props: ICartPageProps) {
       <RecommendationsInterface
         recommendationsController={recommendationsController}
         cartController={cartController}
-        navigate={navigate}
       />
     </div>
   );
