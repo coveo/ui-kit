@@ -1,0 +1,685 @@
+/*
+ * Minimal, unbranded stylesheet for the Headless Commerce SSR sample.
+ * The goal is a clean, functional look comparable to a default Atomic
+ * experience — neutral surfaces, white panels, and a single accent color —
+ * not a themed or branded design.
+ */
+
+:root {
+  --surface: #f4f5f7;
+  --panel: #ffffff;
+  --border: #e2e5e9;
+  --text: #1b1c1d;
+  --muted: #6b7280;
+  --accent: #2f6fed;
+  --accent-contrast: #ffffff;
+  --radius: 8px;
+  --gap: 16px;
+  --font:
+    system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font);
+  color: var(--text);
+  background: var(--surface);
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0 0 0.5em;
+  line-height: 1.25;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* ---------- Layout & header ---------- */
+
+.Layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.Header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap);
+  padding: 12px 24px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+}
+
+.HeaderBrand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.HeaderLogo {
+  height: 28px;
+  width: auto;
+}
+
+.AppTitle {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.Tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.Tab {
+  padding: 6px 14px;
+  border-radius: 999px;
+  color: var(--text);
+  border: 1px solid transparent;
+  font-size: 0.9rem;
+}
+
+.Tab:hover {
+  background: var(--surface);
+}
+
+.TabActive {
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+
+.Page {
+  flex: 1;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.Page h2 {
+  font-size: 1.25rem;
+}
+
+/* ---------- Search + results grid ---------- */
+
+.PageLayout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 800px) {
+  .PageLayout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.Sidebar {
+  min-width: 0;
+}
+
+.Results {
+  min-width: 0;
+}
+
+.Toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap);
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.Summary {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.Summary p {
+  margin: 0;
+}
+
+.Sort {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9rem;
+}
+
+.Sort select {
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--panel);
+}
+
+/* ---------- Search box ---------- */
+
+.SearchBox {
+  position: relative;
+  display: flex;
+  gap: 8px;
+  max-width: 640px;
+  margin: 0 auto 20px;
+}
+
+.SearchBoxInput {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--panel);
+  font-size: 1rem;
+}
+
+.SearchBoxInput:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.SearchBoxSubmit {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-contrast);
+  font-weight: 600;
+}
+
+.SearchBoxClear {
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  padding: 0 6px;
+}
+
+.SearchBoxDropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  padding: 8px;
+  max-height: 420px;
+  overflow: auto;
+}
+
+.SearchBoxDropdown h4 {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  margin: 8px 6px 4px;
+}
+
+.Suggestions,
+.RecentQueries {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.Suggestions button,
+.RecentQueries button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: transparent;
+  padding: 6px 8px;
+  border-radius: 6px;
+  color: var(--text);
+}
+
+.Suggestions button:hover,
+.RecentQueries button:hover {
+  background: var(--surface);
+}
+
+.InstantProducts {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--border);
+  margin-top: 6px;
+  padding-top: 6px;
+}
+
+.InstantProduct {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 4px 8px;
+}
+
+.InstantProductLink {
+  border: none;
+  background: transparent;
+  text-align: left;
+  color: var(--text);
+  flex: 1;
+}
+
+.InstantProductLink:hover {
+  color: var(--accent);
+}
+
+/* ---------- Facets ---------- */
+
+.Facets {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.RegularFacet,
+.NumericFacet,
+.CategoryFacet,
+.DateFacet {
+  border: none;
+  border-bottom: 1px solid var(--border);
+  margin: 0;
+  padding: 18px 0;
+}
+
+/* Facet header: display name on the left, Clear action on the right. */
+.FacetHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  padding: 0;
+  margin-bottom: 8px;
+}
+
+.FacetDisplayName {
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0;
+}
+
+.FacetSearch {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 8px 0;
+}
+
+.FacetSearchInput {
+  flex: 1;
+  padding: 5px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  min-width: 0;
+}
+
+.FacetValues,
+.FacetValuesControls,
+.RootFacetValues,
+.ActiveFacetValueTree,
+.ActiveFacetValueChildren,
+.NumericFacet ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ActiveFacetValueChildren {
+  padding-left: 18px;
+}
+
+.FacetValue,
+.AncestryFacetValue,
+.FacetValueChild,
+.RootFacetValues li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 0;
+}
+
+.FacetValueLabel {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.RootFacetValues .FacetValueName {
+  flex: 1;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.FacetValueNumberOfProducts,
+.FacetValueNumberOfResults {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.ManualRangeControls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  margin: 8px 0;
+  font-size: 0.85rem;
+}
+
+.ManualRangeControls input {
+  width: 70px;
+  padding: 4px 6px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+/* Small, quiet facet control buttons. */
+.FacetShowMore,
+.FacetShowLess,
+.FacetClear,
+.FacetSearchClear,
+.ManualRangeSelect {
+  border: 1px solid var(--border);
+  background: var(--panel);
+  border-radius: 6px;
+  padding: 2px 10px;
+  color: var(--text);
+  font-size: 0.8rem;
+}
+
+/* Show more / less sit in a reserved footer row so the facet keeps a constant
+   height and never shifts when the controls toggle. */
+.FacetShowMore,
+.FacetShowLess {
+  margin-top: 12px;
+}
+
+.FacetShowLess {
+  margin-left: 6px;
+}
+
+/* The header Clear and the show more/less buttons keep their space when
+   inactive (visibility), so toggling them never shifts the facet layout. */
+.FacetClear:disabled,
+.FacetShowMore:disabled,
+.FacetShowLess:disabled {
+  visibility: hidden;
+}
+
+/* The facet-search clear collapses when there's nothing to clear. */
+.FacetSearchClear:disabled {
+  display: none;
+}
+
+.FacetSearchResults {
+  list-style: none;
+  margin: 6px 0;
+  padding: 0;
+}
+
+.FacetSearchResult {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 0;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+/* ---------- Breadcrumbs ---------- */
+
+.Breadcrumbs {
+  margin-bottom: 12px;
+}
+
+.Breadcrumbs ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 8px 0 0;
+  padding: 0;
+}
+
+.Breadcrumbs button {
+  border: 1px solid var(--border);
+  background: var(--panel);
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 0.85rem;
+  color: var(--text);
+}
+
+/* ---------- Product grid & cards ---------- */
+
+.ProductList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--gap);
+}
+
+.ProductCard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px;
+}
+
+.ProductLink {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  background: transparent;
+  text-align: center;
+  color: var(--text);
+  padding: 0;
+}
+
+.ProductImage {
+  width: 100%;
+  height: 150px;
+  object-fit: contain;
+}
+
+.ProductImagePlaceholder {
+  display: block;
+  background: var(--surface);
+  border-radius: 6px;
+}
+
+.ProductName {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.ProductLink:hover .ProductName {
+  color: var(--accent);
+}
+
+.ProductPrice {
+  font-weight: 600;
+}
+
+.AddToCart {
+  margin-top: auto;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--accent-contrast);
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 0.9rem;
+  transition:
+    filter 0.15s ease,
+    transform 0.05s ease;
+}
+
+.AddToCart:hover {
+  filter: brightness(0.94);
+}
+
+.AddToCart:active {
+  transform: translateY(1px);
+}
+
+/* ---------- Pagination ---------- */
+
+.Pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 20px;
+}
+
+.Pagination > div:first-child {
+  margin-right: auto;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.SelectPage {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--panel);
+  font-size: 0.9rem;
+}
+
+/* Hide the raw radio inputs; the labels act as page buttons. */
+.SelectPage input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.SelectPage:has(input:checked) {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  border-color: var(--accent);
+}
+
+.PreviousPage,
+.NextPage {
+  min-width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--panel);
+}
+
+/* ---------- Cart ---------- */
+
+.Cart ul {
+  list-style: none;
+  margin: 0 0 16px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.Cart li {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px;
+}
+
+.Cart button {
+  border: 1px solid var(--border);
+  background: var(--panel);
+  border-radius: 6px;
+  padding: 6px 10px;
+  margin-right: 6px;
+  font-size: 0.9rem;
+}
+
+/* ---------- Recommendations ---------- */
+
+.Recommendations {
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.Recommendations ul {
+  list-style: none;
+  display: flex;
+  gap: var(--gap);
+  overflow-x: auto;
+  margin: 0 0 24px;
+  padding: 0 0 8px;
+}
+
+.Recommendations li {
+  flex: 0 0 160px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px;
+}
+
+/* Generic clickable, link-like button used in a few spots. */
+.LinkButton {
+  border: none;
+  background: transparent;
+  color: var(--accent);
+  padding: 0;
+  font-size: 0.85rem;
+}

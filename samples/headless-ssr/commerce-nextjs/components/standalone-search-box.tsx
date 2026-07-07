@@ -27,7 +27,7 @@ export default function StandaloneSearchBox() {
       router.push(url, {scroll: false});
       methods?.afterRedirection();
     } else if (state.redirectTo !== '') {
-      // This handles query pipeline redirect triggers.
+      // Handles query pipeline redirect triggers.
       window.location.replace(state.redirectTo);
     }
   }, [state.redirectTo, state.value, router, methods]);
@@ -38,9 +38,7 @@ export default function StandaloneSearchBox() {
     instantProductsController?.updateQuery(e.target.value);
   };
 
-  const handleFocus = () => {
-    setIsInputFocused(true);
-  };
+  const handleFocus = () => setIsInputFocused(true);
 
   const handleBlur = () => {
     if (!isSelectingSuggestion) {
@@ -48,56 +46,77 @@ export default function StandaloneSearchBox() {
     }
   };
 
+  const showDropdown =
+    isInputFocused &&
+    (recentQueriesState.queries.length > 0 ||
+      state.suggestions.length > 0 ||
+      instantProductsState.products.length > 0);
+
   return (
-    <div>
+    <div className="SearchBox">
       <input
+        className="SearchBoxInput"
         type="search"
-        aria-label="searchbox"
-        placeholder="search"
+        aria-label="Search"
+        placeholder="Search"
         value={state.value}
-        onChange={(e) => onSearchBoxInputChange(e)}
+        onChange={onSearchBoxInputChange}
         onFocus={handleFocus}
         onBlur={handleBlur}
-      ></input>
+      />
       {state.value !== '' && (
-        <span>
-          <button type="button" onClick={methods?.clear}>
-            X
-          </button>
-        </span>
+        <button
+          type="button"
+          className="SearchBoxClear"
+          aria-label="Clear"
+          onClick={methods?.clear}
+        >
+          ✕
+        </button>
       )}
-      <button type="button" onClick={() => methods?.submit()}>
+      <button
+        type="button"
+        className="SearchBoxSubmit"
+        onClick={() => methods?.submit()}
+      >
         Search
       </button>
 
-      {isInputFocused && (
-        <>
+      {showDropdown && (
+        <div className="SearchBoxDropdown">
           {recentQueriesState.queries.length > 0 && <RecentQueries />}
           {state.suggestions.length > 0 && (
-            <ul>
-              Suggestions :
-              {state.suggestions.map((suggestion) => (
-                <li key={suggestion.rawValue}>
-                  <button
-                    type="button"
-                    onMouseEnter={() =>
-                      instantProductsController?.updateQuery(
-                        suggestion.rawValue
-                      )
-                    }
-                    onClick={() =>
-                      methods?.selectSuggestion(suggestion.rawValue)
-                    }
-                    dangerouslySetInnerHTML={{
-                      __html: suggestion.highlightedValue,
-                    }}
-                  ></button>
-                </li>
-              ))}
-            </ul>
+            <>
+              <h4>Suggestions</h4>
+              <ul className="Suggestions">
+                {state.suggestions.map((suggestion) => (
+                  <li key={suggestion.rawValue}>
+                    <button
+                      type="button"
+                      onMouseEnter={() =>
+                        instantProductsController?.updateQuery(
+                          suggestion.rawValue
+                        )
+                      }
+                      onClick={() =>
+                        methods?.selectSuggestion(suggestion.rawValue)
+                      }
+                      dangerouslySetInnerHTML={{
+                        __html: suggestion.highlightedValue,
+                      }}
+                    />
+                  </li>
+                ))}
+              </ul>
+            </>
           )}
-          {instantProductsState.products.length > 0 && <InstantProducts />}
-        </>
+          {instantProductsState.products.length > 0 && (
+            <>
+              <h4>Instant products</h4>
+              <InstantProducts />
+            </>
+          )}
+        </div>
       )}
     </div>
   );

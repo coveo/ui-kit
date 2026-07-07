@@ -99,27 +99,33 @@ export default function NumericFacet(props: INumericFacetProps) {
   const renderManualRangeControls = () => {
     return (
       <div className="ManualRangeControls">
-        <label className="ManualRangeStartLabel" htmlFor="manualRangeStart">
+        <label
+          className="ManualRangeStartLabel"
+          htmlFor={`${state.facetId}-range-start`}
+        >
           From:{' '}
         </label>
         <input
           aria-label="Manual range start"
           className="ManualRangeStartInput"
           disabled={!controller}
-          id="manualRangeStart"
+          id={`${state.facetId}-range-start`}
           onChange={onChangeManualRangeStart}
           ref={manualRangeStartInputRef}
           type="number"
           value={currentManualRange.start}
         />
-        <label className="ManualRangeEndLabel" htmlFor="manualRangeEnd">
+        <label
+          className="ManualRangeEndLabel"
+          htmlFor={`${state.facetId}-range-end`}
+        >
           To:{' '}
         </label>
         <input
           aria-label="Manual range end"
           className="ManualRangeEndInput"
           disabled={!controller}
-          id="manualRangeEnd"
+          id={`${state.facetId}-range-end`}
           onChange={onChangeManualRangeEnd}
           type="number"
           value={currentManualRange.end}
@@ -140,17 +146,6 @@ export default function NumericFacet(props: INumericFacetProps) {
   const renderFacetValues = () => {
     return (
       <div className="FacetValues">
-        <button
-          aria-label="Clear selected facet values"
-          className="FacetClear"
-          disabled={!controller || state.isLoading || !state.hasActiveValues}
-          onClick={onClickClearSelectedFacetValues}
-          title="Clear selected facet values"
-          type="reset"
-        >
-          X
-        </button>
-        {state.isLoading && <span> Facet is loading...</span>}
         <ul>
           {state.values.map((value) => {
             const checkboxId = `${value.start}-${value.end}-${value.endInclusive}`;
@@ -166,7 +161,8 @@ export default function NumericFacet(props: INumericFacetProps) {
                 ></input>
                 <label className="FacetValueLabel" htmlFor={checkboxId}>
                   <span className="FacetValueName">
-                    {value.start} to {value.end}
+                    {Math.round(value.start * 100) / 100} to{' '}
+                    {Math.round(value.end * 100) / 100}
                   </span>
                   <span className="FacetValueNumberOfProducts">
                     {' '}
@@ -185,7 +181,7 @@ export default function NumericFacet(props: INumericFacetProps) {
           onClick={controller?.showMoreValues}
           title="Show more facet values"
         >
-          +
+          Show more
         </button>
         <button
           type="button"
@@ -195,7 +191,7 @@ export default function NumericFacet(props: INumericFacetProps) {
           onClick={controller?.showLessValues}
           title="Show less facet values"
         >
-          -
+          Show less
         </button>
       </div>
     );
@@ -203,8 +199,19 @@ export default function NumericFacet(props: INumericFacetProps) {
 
   return (
     <fieldset className="NumericFacet">
-      <legend className="FacetDisplayName">
-        {state.displayName ?? state.facetId}
+      <legend className="FacetHeader">
+        <span className="FacetDisplayName">
+          {state.displayName ?? state.facetId}
+        </span>
+        <button
+          type="button"
+          className="FacetClear"
+          aria-label={`Clear ${state.displayName ?? state.facetId} filter`}
+          disabled={!controller || !state.hasActiveValues}
+          onClick={onClickClearSelectedFacetValues}
+        >
+          Clear
+        </button>
       </legend>
       {renderManualRangeControls()}
       {renderFacetValues()}

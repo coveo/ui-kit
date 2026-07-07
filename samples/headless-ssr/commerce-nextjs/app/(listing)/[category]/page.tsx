@@ -3,13 +3,10 @@ import {headers} from 'next/headers';
 import {notFound} from 'next/navigation';
 import * as externalCartAPI from '@/actions/external-cart-api';
 import BreadcrumbManager from '@/components/breadcrumb-manager';
-import Cart from '@/components/cart';
-import ContextDropdown from '@/components/context-dropdown';
 import FacetGenerator from '@/components/facets/facet-generator';
 import Pagination from '@/components/pagination';
 import ParameterManager from '@/components/parameter-manager';
 import ProductList from '@/components/product-list';
-import ProductsPerPage from '@/components/products-per-page';
 import {
   ListingProvider,
   RecommendationProvider,
@@ -19,7 +16,6 @@ import PopularViewed from '@/components/recommendations/popular-viewed';
 import Sort from '@/components/sort';
 import StandaloneSearchBox from '@/components/standalone-search-box';
 import Summary from '@/components/summary';
-import NotifyTrigger from '@/components/triggers/notify-trigger';
 import {
   listingEngineDefinition,
   recommendationEngineDefinition,
@@ -27,13 +23,10 @@ import {
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {defaultContext} from '@/utils/context';
 
-// This is a hardcoded list of categories that are available in my coveo merchandising hub.
+// Categories available in the sample merchandising hub. In a real storefront
+// these would come from your catalog rather than a hardcoded list.
 const categoryList = ['surf-accessories', 'paddleboards', 'toys'];
-/**
- * This file defines a List component that uses the Coveo Headless SSR commerce library to manage its state.
- *
- * The Listing function is the entry point for server-side rendering (SSR).
- */
+
 export default async function Listing({
   params,
   searchParams,
@@ -43,23 +36,20 @@ export default async function Listing({
 }) {
   const {category} = await params;
 
-  const isCategoryMatched = categoryList.includes(category);
-
-  if (!isCategoryMatched) {
+  if (!categoryList.includes(category)) {
     notFound();
   }
 
-  // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
+  // Set the navigator context provider before fetching the app static state.
   const navigatorContext = new NextJsNavigatorContext(await headers());
   listingEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
 
   const {deserialize} = buildParameterSerializer();
   const parameters = deserialize(await searchParams);
 
-  // Fetches the cart items from an external service
+  // Fetch the cart items from the external service.
   const items = await externalCartAPI.getCart();
 
-  // Fetches the static state of the app with initial state (when applicable)
   const staticState = await listingEngineDefinition.fetchStaticState({
     controllers: {
       cart: {initialState: {items}},
@@ -70,7 +60,6 @@ export default async function Listing({
         view: {
           url: `https://sports.barca.group/browse/promotions/${category}`,
         },
-        custom: defaultContext.custom,
       },
       parameterManager: {initialState: {parameters}},
     },
@@ -100,44 +89,36 @@ export default async function Listing({
       navigatorContext={navigatorContext.marshal}
     >
       <ParameterManager url={navigatorContext.location} />
-      <NotifyTrigger />
-      <ContextDropdown useCase="listing" />
-      <div style={{display: 'flex', flexDirection: 'row'}}>
-        <div style={{flex: 1}}>
+      <StandaloneSearchBox />
+      <div className="PageLayout">
+        <aside className="Sidebar">
           <FacetGenerator />
-        </div>
-
-        <div style={{flex: 2}}>
-          <StandaloneSearchBox />
+        </aside>
+        <div className="Results">
+          <div className="Toolbar">
+            <Summary />
+            <Sort />
+          </div>
           <BreadcrumbManager />
-          <Summary />
-          <Sort />
           <ProductList />
-          {/* The ShowMore and Pagination components showcase two frequent ways to implement pagination. */}
           <Pagination />
-          <ProductsPerPage />
-          {/* <ShowMore
-            staticState={staticState.controllers.pagination.state}
-            controller={hydratedState?.controllers.pagination}
-            summaryController={hydratedState?.controllers.summary}
-          /> */}
-        </div>
-
-        <div style={{flex: 3}}>
-          <h3>My Cart</h3>
-          <Cart />
-        </div>
-
-        <div style={{flex: 4}}>
-          <RecommendationProvider
-            staticState={recsStaticState}
-            navigatorContext={navigatorContext.marshal}
-          >
-            <PopularBought />
-            <PopularViewed />
-          </RecommendationProvider>
+          {/*
+            ProductsPerPage demonstrates changing the page size. It is kept as a
+            reference example (components/products-per-page.tsx) but left out of
+            the rendered UI to keep the sample focused.
+            <ProductsPerPage />
+          */}
         </div>
       </div>
+      <RecommendationProvider
+        staticState={recsStaticState}
+        navigatorContext={navigatorContext.marshal}
+      >
+        <section className="Recommendations">
+          <PopularBought />
+          <PopularViewed />
+        </section>
+      </RecommendationProvider>
     </ListingProvider>
   );
 }

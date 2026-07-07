@@ -518,7 +518,7 @@ jobs:
             try { d = JSON.parse(require('fs').readFileSync('turbo-e2e.json','utf8')); } catch (e) { d = {}; }
             const tasks = Array.isArray(d.tasks) ? d.tasks : [];
             const pkgs = tasks
-              .filter(t => t.taskId && t.taskId.endsWith('#e2e') && t.command && t.command !== '<NONEXISTENT>' && t.package && t.package.startsWith('@samples'))
+              .filter(t => t.taskId && t.taskId.endsWith('#e2e') && t.command && t.command !== '<NONEXISTENT>' && t.package && (t.package.startsWith('@samples') || t.package.startsWith('@coveo/ui-kit-sample')))
               .map(t => t.package);
             console.log(JSON.stringify(pkgs));
           " || echo '[]')
@@ -589,24 +589,6 @@ jobs:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/playwright-atomic-hosted-pages
-  playwright-headless-ssr-commerce-nextjs-test:
-    name: 'Run e2e tests on Headless SSR Commerce NextJS'
-    needs: affected
-    if: contains(needs.affected.outputs.projects, '@samples/headless-ssr-commerce-nextjs')
-    runs-on: ubuntu-latest
-    container:
-      image: mcr.microsoft.com/playwright:v1.60.0-noble
-      options: --user 1001
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
-        with:
-          egress-policy: audit
-
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
-      - uses: ./.github/actions/setup
-      - uses: ./.github/actions/playwright-headless-ssr-commerce-nextjs
-
   e2e-quantic:
     name: 'Run Quantic E2E tests'
     needs: affected
@@ -667,7 +649,6 @@ jobs:
       - 'playwright-atomic'
       - 'playwright-atomic-theming'
       - 'playwright-atomic-hosted-page-test'
-      - 'playwright-headless-ssr-commerce-nextjs-test'
       - 'puppeteer-atomic-csp'
       - 'e2e-quantic'
       - 'samples-e2e-matrix'
@@ -703,7 +684,6 @@ jobs:
       - 'playwright-atomic'
       - 'playwright-atomic-theming'
       - 'playwright-atomic-hosted-page-test'
-      - 'playwright-headless-ssr-commerce-nextjs-test'
       - 'e2e-quantic'
       - 'samples-e2e-matrix'
       - 'samples-e2e'

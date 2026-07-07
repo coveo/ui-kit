@@ -45,7 +45,7 @@ export default function BreadcrumbManager() {
   };
 
   return (
-    <div>
+    <div className="Breadcrumbs">
       <div>
         <button type="button" onClick={methods?.deselectAll}>
           Clear all filters

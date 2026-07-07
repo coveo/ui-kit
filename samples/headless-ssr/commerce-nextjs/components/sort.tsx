@@ -41,7 +41,7 @@ export default function Sort() {
 
   return (
     <div className="Sort">
-      <label htmlFor="sport-select">Sort by: </label>
+      <label htmlFor="sorts-select">Sort by: </label>
       <select
         name="sorts"
         id="sorts-select"

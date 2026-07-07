@@ -4,22 +4,25 @@ export default function RecentQueries() {
   const {state, methods} = useRecentQueriesList();
   const {methods: instantProductsController} = useInstantProducts();
 
+  if (state.queries.length === 0) {
+    return null;
+  }
+
   return (
-    <div>
-      <ul>
-        Recent Queries :
+    <>
+      <h4>Recent queries</h4>
+      <ul className="RecentQueries">
         {state.queries.map((query, index) => (
           <li key={query}>
-            {query}
             <button
               type="button"
               onMouseEnter={() => instantProductsController?.updateQuery(query)}
               onClick={() => methods?.executeRecentQuery(index)}
               dangerouslySetInnerHTML={{__html: query}}
-            ></button>
+            />
           </li>
         ))}
       </ul>
-    </div>
+    </>
   );
 }

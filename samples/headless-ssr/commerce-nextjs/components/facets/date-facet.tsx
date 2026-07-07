@@ -53,20 +53,20 @@ export default function DateFacet(props: IDateFacetProps) {
 
   return (
     <fieldset className="DateFacet">
-      <legend className="FacetDisplayName">
-        {state.displayName ?? state.facetId}
+      <legend className="FacetHeader">
+        <span className="FacetDisplayName">
+          {state.displayName ?? state.facetId}
+        </span>
+        <button
+          type="button"
+          className="FacetClear"
+          aria-label={`Clear ${state.displayName ?? state.facetId} filter`}
+          disabled={!controller || !state.hasActiveValues}
+          onClick={controller?.deselectAll}
+        >
+          Clear
+        </button>
       </legend>
-      <button
-        type="button"
-        className="FacetClear"
-        disabled={!controller || !state.hasActiveValues}
-        onClick={controller?.deselectAll}
-      >
-        X
-      </button>
-      {state.isLoading && (
-        <span className="FacetLoading"> Facet is loading...</span>
-      )}
       {renderFacetValues()}
       <button
         type="button"
@@ -74,7 +74,7 @@ export default function DateFacet(props: IDateFacetProps) {
         disabled={!controller || !state.canShowMoreValues}
         onClick={controller?.showMoreValues}
       >
-        +
+        Show more
       </button>
       <button
         type="button"
@@ -82,7 +82,7 @@ export default function DateFacet(props: IDateFacetProps) {
         disabled={!controller || !state.canShowLessValues}
         onClick={controller?.showLessValues}
       >
-        -
+        Show less
       </button>
     </fieldset>
   );

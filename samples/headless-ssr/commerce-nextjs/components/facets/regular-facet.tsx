@@ -75,14 +75,17 @@ export default function RegularFacet(props: IRegularFacetProps) {
   const renderFacetSearchControls = () => {
     return (
       <search className="FacetSearch">
-        <label className="FacetSearchLabel" htmlFor="facetSearchInput">
+        <label
+          className="FacetSearchLabel"
+          htmlFor={`${state.facetId}-facet-search`}
+        >
           Search:{' '}
         </label>
         <input
           aria-label={`Search in facet '${state.displayName ?? state.facetId}'`}
           className="FacetSearchInput"
           disabled={!controller}
-          id="facetSearchInput"
+          id={`${state.facetId}-facet-search`}
           onChange={onChangeFacetSearchInput}
           ref={facetSearchInputRef}
           value={state.facetSearch.query}
@@ -157,18 +160,6 @@ export default function RegularFacet(props: IRegularFacetProps) {
   const renderFacetValues = () => {
     return (
       <div className="FacetValuesControls">
-        <button
-          aria-label="Clear selected facet values"
-          className="FacetClearSelected"
-          disabled={!controller || state.isLoading || !state.hasActiveValues}
-          onClick={onClickClearSelectedFacetValues}
-          type="reset"
-        >
-          X
-        </button>
-        {state.isLoading && (
-          <span className="FacetLoading"> Facet is loading...</span>
-        )}
         <ul className="FacetValues">
           {state.values.map((value) => (
             <li className="FacetValue" key={value.value}>
@@ -198,7 +189,7 @@ export default function RegularFacet(props: IRegularFacetProps) {
           disabled={!controller || state.isLoading || !state.canShowMoreValues}
           onClick={controller?.showMoreValues}
         >
-          +
+          Show more
         </button>
         <button
           type="button"
@@ -207,7 +198,7 @@ export default function RegularFacet(props: IRegularFacetProps) {
           disabled={!controller || state.isLoading || !state.canShowLessValues}
           onClick={controller?.showLessValues}
         >
-          -
+          Show less
         </button>
       </div>
     );
@@ -215,8 +206,19 @@ export default function RegularFacet(props: IRegularFacetProps) {
 
   return (
     <fieldset className="RegularFacet">
-      <legend className="FacetDisplayName">
-        {state.displayName ?? state.facetId}
+      <legend className="FacetHeader">
+        <span className="FacetDisplayName">
+          {state.displayName ?? state.facetId}
+        </span>
+        <button
+          type="button"
+          className="FacetClear"
+          aria-label={`Clear ${state.displayName ?? state.facetId} filter`}
+          disabled={!controller || !state.hasActiveValues}
+          onClick={onClickClearSelectedFacetValues}
+        >
+          Clear
+        </button>
       </legend>
       {renderFacetSearchControls()}
       {showFacetSearchResults
