@@ -1,8 +1,5 @@
 import type {FacetGenerator as HeadlessFacetGenerator} from '@coveo/headless/commerce';
 import {useEffect, useState} from 'react';
-import CategoryFacet from '../category-facet/category-facet.js';
-import DateFacet from '../date-facet/date-facet.js';
-import NumericFacet from '../numeric-facet/numeric-facet.js';
 import RegularFacet from '../regular-facet/regular-facet.js';
 
 interface IFacetGeneratorProps {
@@ -20,46 +17,19 @@ export default function FacetGenerator(props: IFacetGeneratorProps) {
     });
   }, [controller]);
 
-  if (facetState.length === 0) {
+  // To keep the sample simple and focused, only regular (checkbox) facets are
+  // rendered. Numeric, date, and hierarchical facets each need their own UI.
+  if (!facetState.some((facet) => facet.type === 'regular')) {
     return null;
   }
 
   return (
     <nav className="Facets">
-      {facetState.map((facet) => {
-        switch (facet.type) {
-          case 'regular':
-            return (
-              <RegularFacet
-                key={facet.state.facetId}
-                controller={facet}
-              ></RegularFacet>
-            );
-          case 'numericalRange':
-            return (
-              <NumericFacet
-                key={facet.state.facetId}
-                controller={facet}
-              ></NumericFacet>
-            );
-          case 'dateRange':
-            return (
-              <DateFacet
-                key={facet.state.facetId}
-                controller={facet}
-              ></DateFacet>
-            );
-          case 'hierarchical':
-            return (
-              <CategoryFacet
-                key={facet.state.facetId}
-                controller={facet}
-              ></CategoryFacet>
-            );
-          default:
-            return null;
-        }
-      })}
+      {facetState.map((facet) =>
+        facet.type === 'regular' ? (
+          <RegularFacet key={facet.state.facetId} controller={facet} />
+        ) : null
+      )}
     </nav>
   );
 }

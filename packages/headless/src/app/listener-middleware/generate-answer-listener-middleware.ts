@@ -31,6 +31,10 @@ export const createGenerateAnswerListener = (extra: {
       listenerApi.dispatch(resetAnswer());
       listenerApi.dispatch(resetFollowUpAnswers());
 
+      if (state.generatedAnswer.isEnabled === false) {
+        return;
+      }
+
       const q = selectQuery(state)?.q;
       const queryIsEmpty = !q || q.trim() === '';
       if (queryIsEmpty) {

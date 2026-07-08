@@ -11,6 +11,7 @@
 ## Development
 
 ```bash
-pnpm --filter @coveo/thermidor build
-pnpm --filter @coveo/thermidor test
+pnpm --filter @coveo/thermidor build      # build project
+pnpm --filter @coveo/thermidor test       # run unit tests
+pnpm --filter @coveo/thermidor test:dts   # validate public API surface
 ```
