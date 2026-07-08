@@ -1,0 +1,32 @@
+event:turn_started
+data:{"conversationSessionId":"a2ui-v09-compare-session","conversationToken":"a2ui-v09-compare-token"}
+
+event:message
+data:{"type": "RUN_STARTED", "threadId": "a2ui-v09-compare-session", "runId": "v09-run-002"}
+
+event:message
+data:{"type": "STATE_SNAPSHOT", "snapshot": {}}
+
+event:message
+data:{"type": "TEXT_MESSAGE_START", "messageId": "v09-msg-002", "role": "assistant"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "v09-msg-002", "delta": "Here's a comparison of popular wetsuits for cold-water surfing:"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_END", "messageId": "v09-msg-002"}
+
+event:message
+data:{"type": "ACTIVITY_SNAPSHOT", "timestamp": 1781293060000, "messageId": "activity-v09-compare-001", "activityType": "a2ui-surface", "content": {"operations": [{"version": "v0.9", "createSurface": {"surfaceId": "comparison-table-surface", "catalogId": "commerce"}}, {"version": "v0.9", "updateComponents": {"surfaceId": "comparison-table-surface", "components": [{"component": "ComparisonTable", "id": "root", "heading": "Cold-Water Wetsuits Comparison", "isLoading": false, "attributes": ["thickness", "material", "water_temp_range"], "products": {"path": "/products"}}]}}, {"version": "v0.9", "updateDataModel": {"surfaceId": "comparison-table-surface", "path": "/products", "value": [{"ec_product_id": "ws-001", "ec_name": "Arctic Shield 5/4mm", "ec_brand": "O'Neill", "ec_price": 349.99, "ec_image": "https://cdn.shopify.com/s/files/1/0910/6502/4786/files/8f733582382a_bottom_right_c2b6748c-af4a-4c57-a032-8501dcd7873c.webp?v=1766163591", "clickUri": "#", "thickness": "5/4mm", "material": "Neoprene + Drylock", "water_temp_range": "40-50°F"}, {"ec_product_id": "ws-002", "ec_name": "Polar Flex 6/5mm", "ec_brand": "Rip Curl", "ec_price": 429.99, "ec_image": "https://cdn.shopify.com/s/files/1/0910/6502/4786/files/8a0762a91f5c_bottom_right_70ec9dff-c6cf-4307-9553-5e527911b52c.webp?v=1766163595", "clickUri": "#", "thickness": "6/5mm", "material": "E7 Flash Lining", "water_temp_range": "35-45°F"}, {"ec_product_id": "ws-003", "ec_name": "Hooded Storm 5/4mm", "ec_brand": "Xcel", "ec_price": 399.99, "ec_image": "https://cdn.shopify.com/s/files/1/0910/6502/4786/files/d22368dfb336_bottom_right.webp?v=1766163599", "clickUri": "#", "thickness": "5/4mm", "material": "TDC Thermo Dry", "water_temp_range": "38-48°F"}]}}]}}
+
+event:message
+data:{"type": "ACTIVITY_SNAPSHOT", "timestamp": 1781293061000, "messageId": "activity-v09-compare-002", "activityType": "a2ui-surface", "content": {"operations": [{"version": "v0.9", "createSurface": {"surfaceId": "comparison-summary-surface", "catalogId": "commerce"}}, {"version": "v0.9", "updateComponents": {"surfaceId": "comparison-summary-surface", "components": [{"component": "ComparisonSummary", "id": "root", "text": "For cold-water surfing below 45°F, the Rip Curl Polar Flex 6/5mm offers the best warmth with its E7 Flash Lining technology. If you prefer more flexibility with slightly less insulation, the O'Neill Arctic Shield 5/4mm strikes a great balance. The Xcel Hooded Storm is ideal if you want an integrated hood for extreme conditions."}]}}]}}
+
+event:message
+data:{"type": "ACTIVITY_SNAPSHOT", "timestamp": 1781293062000, "messageId": "activity-v09-compare-003", "activityType": "a2ui-surface", "content": {"operations": [{"version": "v0.9", "createSurface": {"surfaceId": "compare-next-actions", "catalogId": "commerce"}}, {"version": "v0.9", "updateComponents": {"surfaceId": "compare-next-actions", "components": [{"component": "NextActionsBar", "id": "root", "isLoading": false, "actions": {"path": "/actions"}}]}}, {"version": "v0.9", "updateDataModel": {"surfaceId": "compare-next-actions", "path": "/actions", "value": [{"text": "Show me booties and gloves", "type": "followup"}, {"text": "Which is best for beginners?", "type": "followup"}]}}]}}
+
+event:message
+data:{"type": "RUN_FINISHED", "threadId": "a2ui-v09-compare-session", "runId": "v09-run-002"}
+
+event:done
+data:{}

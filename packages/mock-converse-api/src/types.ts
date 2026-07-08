@@ -6,7 +6,10 @@ export type TemplateId =
   | 'response5'
   | 'response6'
   | 'response7'
-  | 'response8';
+  | 'response8'
+  | 'response9'
+  | 'response10'
+  | 'response11';
 
 export interface ParsedRequest {
   message: string;

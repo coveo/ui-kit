@@ -1,0 +1,29 @@
+event:turn_started
+data:{"conversationSessionId":"a2ui-v09-demo-session","conversationToken":"a2ui-v09-demo-token"}
+
+event:message
+data:{"type": "RUN_STARTED", "threadId": "a2ui-v09-demo-session", "runId": "v09-run-001"}
+
+event:message
+data:{"type": "STATE_SNAPSHOT", "snapshot": {}}
+
+event:message
+data:{"type": "TEXT_MESSAGE_START", "messageId": "v09-msg-001", "role": "assistant"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "v09-msg-001", "delta": "Here are some popular surfboards for you:"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_END", "messageId": "v09-msg-001"}
+
+event:message
+data:{"type": "ACTIVITY_SNAPSHOT", "timestamp": 1781293057366, "messageId": "activity-v09-surface-001", "activityType": "a2ui-surface", "content": {"operations": [{"version": "v0.9", "createSurface": {"surfaceId": "product-carousel-surface", "catalogId": "commerce"}}, {"version": "v0.9", "updateComponents": {"surfaceId": "product-carousel-surface", "components": [{"component": "ProductCarousel", "id": "root", "heading": "Top Surfboards", "isLoading": false, "products": {"path": "/products"}}]}}, {"version": "v0.9", "updateDataModel": {"surfaceId": "product-carousel-surface", "path": "/products", "value": [{"ec_product_id": "sb-001", "ec_name": "Wave Rider Kids Soft Top", "ec_brand": "Storm Blade", "ec_price": 199.99, "ec_image": "https://cdn.shopify.com/s/files/1/0910/6502/4786/files/8f733582382a_bottom_right_c2b6748c-af4a-4c57-a032-8501dcd7873c.webp?v=1766163591", "clickUri": "https://barca-sports.myshopify.com/products/sbst_173a", "description": "Perfect beginner surfboard for young aspiring surfers"}, {"ec_product_id": "sb-002", "ec_name": "Surf Glide", "ec_brand": "South Bay Board Co.", "ec_price": 199.99, "ec_image": "https://cdn.shopify.com/s/files/1/0910/6502/4786/files/8a0762a91f5c_bottom_right_70ec9dff-c6cf-4307-9553-5e527911b52c.webp?v=1766163595", "clickUri": "https://barca-sports.myshopify.com/products/sbbst_4b2b", "description": "Ultimate beginner-friendly surfboard"}, {"ec_product_id": "sb-003", "ec_name": "Wave Cruiser Hybrid Board", "ec_brand": "Wavestorm", "ec_price": 299.99, "ec_image": "https://cdn.shopify.com/s/files/1/0910/6502/4786/files/d22368dfb336_bottom_right.webp?v=1766163599", "clickUri": "https://barca-sports.myshopify.com/products/wvst_e47d", "description": "Fun, easy, and safe surfing experience"}]}}]}}
+
+event:message
+data:{"type": "ACTIVITY_SNAPSHOT", "timestamp": 1781293058000, "messageId": "activity-v09-surface-002", "activityType": "a2ui-surface", "content": {"operations": [{"version": "v0.9", "createSurface": {"surfaceId": "next-actions-surface", "catalogId": "commerce"}}, {"version": "v0.9", "updateComponents": {"surfaceId": "next-actions-surface", "components": [{"component": "NextActionsBar", "id": "root", "isLoading": false, "actions": {"path": "/actions"}}]}}, {"version": "v0.9", "updateDataModel": {"surfaceId": "next-actions-surface", "path": "/actions", "value": [{"text": "Compare these surfboards", "type": "followup"}, {"text": "Show me wetsuits", "type": "search"}, {"text": "Budget options only", "type": "followup"}]}}]}}
+
+event:message
+data:{"type": "RUN_FINISHED", "threadId": "a2ui-v09-demo-session", "runId": "v09-run-001"}
+
+event:done
+data:{}
