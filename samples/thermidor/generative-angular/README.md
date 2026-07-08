@@ -91,6 +91,16 @@ This sample uses the official `@a2ui/angular` v0.9 renderer to render surfaces. 
 - **Custom Catalog** (`custom-catalog.ts`) — registers commerce components (ProductCarousel, ComparisonTable, ComparisonSummary, BundleDisplay, NextActionsBar) with the A2UI renderer.
 - **`SurfaceComponent`** (`<a2ui-v09-surface>`) — the standard A2UI component host that dynamically instantiates the correct component for each surface.
 
+```mermaid
+graph TD
+    Backend[Converse API] -->|SSE stream| Thermidor[ConverseController]
+    Thermidor -->|onSurfaceOperation| Adapter[A2uiAdapterService]
+    Adapter -->|processMessages| Renderer[A2uiRendererService]
+    Renderer -->|surfaceIds signal| Template[TranscriptPanel]
+    Template -->|a2ui-v09-surface| Host[ComponentHost]
+    Host -->|catalog lookup| Components[Commerce Components]
+```
+
 ### Commerce Components
 
 Standalone Angular components (all using `OnPush` change detection) implement the A2UI `CatalogComponentInstance` interface. They receive a `props` signal input from the renderer and derive display values using the `prop()` utility from `a2ui/prop-reader.ts`.
