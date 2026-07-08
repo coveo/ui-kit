@@ -113,7 +113,7 @@ describe('main', () => {
 
     await expect(
       main([
-        '__ct-thread-pinned__',
+        'my-app',
         '--template',
         'headless-search-react',
         '--template-version',
@@ -139,7 +139,7 @@ describe('main', () => {
     const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
     await expect(
-      main(['__ct-thread-latest__', '--template', 'headless-search-react'])
+      main(['my-app', '--template', 'headless-search-react'])
     ).rejects.toThrow();
 
     expect(downloadTemplate).toHaveBeenCalledWith(
@@ -161,7 +161,7 @@ describe('main', () => {
 
     await expect(
       main([
-        '__ct-unavailable__',
+        'my-app',
         '--template',
         'headless-search-react',
         '--template-version',
