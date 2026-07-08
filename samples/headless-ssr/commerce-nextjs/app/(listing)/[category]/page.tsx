@@ -102,12 +102,6 @@ export default async function Listing({
           <BreadcrumbManager />
           <ProductList />
           <Pagination />
-          {/*
-            ProductsPerPage demonstrates changing the page size. It is kept as a
-            reference example (components/products-per-page.tsx) but left out of
-            the rendered UI to keep the sample focused.
-            <ProductsPerPage />
-          */}
         </div>
       </div>
       <RecommendationProvider
