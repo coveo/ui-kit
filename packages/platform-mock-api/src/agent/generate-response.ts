@@ -23,6 +23,8 @@ interface AgentEvent {
   stepName?: string;
   messageId?: string;
   delta?: string;
+  message?: string;
+  code?: string;
   delayMs?: number; // Internal property for mock delays, stripped before sending
 }
 
@@ -35,6 +37,8 @@ const buildMessage = (
     messageId,
     delta,
     result,
+    message,
+    code,
   }: Omit<AgentEvent, 'threadId' | 'runId' | 'timestamp' | 'delayMs'>,
   delayMs?: number
 ): AgentEvent => {
@@ -49,6 +53,8 @@ const buildMessage = (
     ...(stepName !== undefined && {stepName}),
     ...(messageId !== undefined && {messageId}),
     ...(delta !== undefined && {delta}),
+    ...(message !== undefined && {message}),
+    ...(code !== undefined && {code}),
     ...(delayMs !== undefined && {delayMs}),
   };
 };
@@ -253,55 +259,34 @@ const headAnswerResponse = () =>
     answerId: HEAD_ANSWER_ID,
   });
 
-const buildErrorStreamingResponse = (errorCode: string, message: string) => {
-  const runStarted = {
-    type: EventType.RUN_STARTED,
-    threadId: THREAD_ID,
-    runId: RUN_ID,
-    timestamp: Date.now(),
-  };
-
-  const runError = {
-    type: EventType.RUN_ERROR,
-    threadId: THREAD_ID,
-    runId: RUN_ID,
-    timestamp: Date.now(),
-    message,
-    code: errorCode,
-  };
-
-  const stream = new ReadableStream({
-    async start(controller) {
-      for (const event of [runStarted, runError]) {
-        controller.enqueue(
-          new TextEncoder().encode(
-            `event: message\ndata: ${JSON.stringify(event)}\nretry: 10000\n\n`
-          )
-        );
-      }
-      controller.close();
-    },
-  });
-
-  return new HttpResponse(stream, {
-    headers: {'Content-Type': 'text/event-stream'},
-  });
-};
-
 const followUpNetworkErrorResponse = () =>
   new HttpResponse(null, {status: 500});
 
 const followUpTurnLimitErrorResponse = () =>
-  buildErrorStreamingResponse(
-    'KNOWLEDGE:SSE_TURN_LIMIT_REACHED',
-    'The conversation turn limit has been reached.'
-  );
+  buildAnsweringStreamingResponse({
+    messages: [
+      buildMessage({type: EventType.RUN_STARTED}),
+      buildMessage({
+        type: EventType.RUN_ERROR,
+        message: 'The conversation turn limit has been reached.',
+        code: 'KNOWLEDGE:SSE_TURN_LIMIT_REACHED',
+      }),
+    ],
+    answerId: 'error',
+  });
 
 const followUpGenericErrorResponse = () =>
-  buildErrorStreamingResponse(
-    'KNOWLEDGE:SSE_INTERNAL_ERROR',
-    'An unexpected error occurred.'
-  );
+  buildAnsweringStreamingResponse({
+    messages: [
+      buildMessage({type: EventType.RUN_STARTED}),
+      buildMessage({
+        type: EventType.RUN_ERROR,
+        message: 'An unexpected error occurred.',
+        code: 'KNOWLEDGE:SSE_INTERNAL_ERROR',
+      }),
+    ],
+    answerId: 'error',
+  });
 
 export {
   headAnswerResponse,
