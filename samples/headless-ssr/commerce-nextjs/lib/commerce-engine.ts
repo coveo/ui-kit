@@ -19,7 +19,6 @@ export const {
   usePagination,
   usePopularBought,
   usePopularViewed,
-  useRecentQueriesList,
   useSearchBox,
   useSort,
   useStandaloneSearchBox,

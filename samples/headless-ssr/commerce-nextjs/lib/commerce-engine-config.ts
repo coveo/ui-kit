@@ -9,7 +9,6 @@ import {
   definePagination,
   defineParameterManager,
   defineProductList,
-  defineRecentQueriesList,
   defineRecommendations,
   defineSearchBox,
   defineSort,
@@ -48,7 +47,6 @@ export default {
       },
     }),
     context: defineContext(),
-    recentQueriesList: defineRecentQueriesList({options: {maxLength: 3}}),
     standaloneSearchBox: defineStandaloneSearchBox({
       options: {
         redirectionUrl: '/search',

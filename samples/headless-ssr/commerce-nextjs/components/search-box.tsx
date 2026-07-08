@@ -1,12 +1,7 @@
 'use client';
 
-import {useInitializeRecentQueries} from '@/hooks/use-recent-queries';
 import {useSearchBoxSuggestions} from '@/hooks/use-search-box-suggestions';
-import {
-  useInstantProducts,
-  useRecentQueriesList,
-  useSearchBox,
-} from '@/lib/commerce-engine';
+import {useInstantProducts, useSearchBox} from '@/lib/commerce-engine';
 import SearchBoxSuggestions, {
   suggestionOptionId,
   suggestionsListId,
@@ -16,13 +11,8 @@ const ID_PREFIX = 'search-box';
 
 export default function SearchBox() {
   const {state, methods} = useSearchBox();
-  const {state: recentQueriesState, methods: recentQueriesController} =
-    useRecentQueriesList();
   const {state: instantProductsState, methods: instantProductsController} =
     useInstantProducts();
-
-  // Sync recent queries from localStorage when the component loads.
-  useInitializeRecentQueries(recentQueriesController?.updateRecentQueries);
 
   // Keyboard navigation, Enter/Escape and click-outside handling live in the
   // shared hook; this component only wires it to the Coveo controllers.
@@ -41,9 +31,7 @@ export default function SearchBox() {
 
   const showDropdown =
     nav.isOpen &&
-    (recentQueriesState.queries.length > 0 ||
-      state.suggestions.length > 0 ||
-      instantProductsState.products.length > 0);
+    (state.suggestions.length > 0 || instantProductsState.products.length > 0);
 
   return (
     <div className="SearchBox" ref={nav.rootRef}>
@@ -96,7 +84,6 @@ export default function SearchBox() {
           idPrefix={ID_PREFIX}
           suggestions={state.suggestions}
           activeIndex={nav.activeIndex}
-          showRecentQueries={recentQueriesState.queries.length > 0}
           showInstantProducts={instantProductsState.products.length > 0}
           onHighlightSuggestion={nav.highlight}
           onSelectSuggestion={(rawValue) => {

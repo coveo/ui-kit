@@ -5,7 +5,6 @@ import {useEffect} from 'react';
 import {useSearchBoxSuggestions} from '@/hooks/use-search-box-suggestions';
 import {
   useInstantProducts,
-  useRecentQueriesList,
   useStandaloneSearchBox,
 } from '@/lib/commerce-engine';
 import SearchBoxSuggestions, {
@@ -17,7 +16,6 @@ const ID_PREFIX = 'standalone-search-box';
 
 export default function StandaloneSearchBox() {
   const {state, methods} = useStandaloneSearchBox();
-  const {state: recentQueriesState} = useRecentQueriesList();
   const {state: instantProductsState, methods: instantProductsController} =
     useInstantProducts();
 
@@ -51,9 +49,7 @@ export default function StandaloneSearchBox() {
 
   const showDropdown =
     nav.isOpen &&
-    (recentQueriesState.queries.length > 0 ||
-      state.suggestions.length > 0 ||
-      instantProductsState.products.length > 0);
+    (state.suggestions.length > 0 || instantProductsState.products.length > 0);
 
   return (
     <div className="SearchBox" ref={nav.rootRef}>
@@ -106,7 +102,6 @@ export default function StandaloneSearchBox() {
           idPrefix={ID_PREFIX}
           suggestions={state.suggestions}
           activeIndex={nav.activeIndex}
-          showRecentQueries={recentQueriesState.queries.length > 0}
           showInstantProducts={instantProductsState.products.length > 0}
           onHighlightSuggestion={nav.highlight}
           onSelectSuggestion={(rawValue) => {

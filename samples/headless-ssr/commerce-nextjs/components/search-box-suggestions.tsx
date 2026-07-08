@@ -1,5 +1,4 @@
 import InstantProducts from './instant-product';
-import RecentQueries from './recent-queries';
 
 interface Suggestion {
   rawValue: string;
@@ -12,7 +11,6 @@ interface SearchBoxSuggestionsProps {
   suggestions: Suggestion[];
   /** Index of the keyboard-highlighted suggestion, or -1 when none. */
   activeIndex: number;
-  showRecentQueries: boolean;
   showInstantProducts: boolean;
   onHighlightSuggestion: (index: number) => void;
   onSelectSuggestion: (rawValue: string) => void;
@@ -32,20 +30,18 @@ export default function SearchBoxSuggestions({
   idPrefix,
   suggestions,
   activeIndex,
-  showRecentQueries,
   showInstantProducts,
   onHighlightSuggestion,
   onSelectSuggestion,
 }: SearchBoxSuggestionsProps) {
   const hasSuggestions = suggestions.length > 0;
-  const showMainColumn = showRecentQueries || hasSuggestions;
+  const showMainColumn = hasSuggestions;
 
   return (
     <div className="SearchBoxDropdown">
       <div className="SearchBoxDropdownColumns">
         {showMainColumn && (
           <div className="SearchBoxDropdownMain">
-            {showRecentQueries && <RecentQueries />}
             {hasSuggestions && (
               <>
                 <h4>Query suggestions</h4>
