@@ -80,6 +80,7 @@ Selecting Option A allows us to keep the build process extremely lean, eliminate
 - **Backward compatibility impact**: Requires Node.js >= 20.17.0 for CJS `require()` consumers, and `--experimental-require-module` for Node.js v20.17.0 through v22.11.x.
 - **Deprecations required**: None
 - **Type/contract stability notes**: Types are compiled to `dist/` alongside `.js` files.
+- **Source maps**: Included in the published package to improve stack traces and debugging for consumers.
 - **Non-leakage check**: Pass
 - **Top-Level Await Constraint**: The library's public API and internal implementations must not use top-level `await` in order to preserve compatibility with `require()`.
 
