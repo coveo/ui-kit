@@ -9,7 +9,7 @@ import {
 import {EngineService} from './engine.service';
 import {A2uiAdapterService} from './a2ui-adapter.service';
 import {CONVERSATION_STORAGE_KEY} from '../constants';
-import type {A2UISurface, ToolCall, Turn} from '../models';
+import type {ToolCall, Turn} from '../models';
 
 @Injectable({providedIn: 'root'})
 export class ConversationService {
@@ -31,7 +31,10 @@ export class ConversationService {
     this.controller = buildConverseController({
       interface: generativeInterface,
       initialState: this.loadPersistedState(),
-    } as Parameters<typeof buildConverseController>[0]);
+      onSurfaceOperation: (operations) => {
+        this.adapter.processOperations(operations);
+      },
+    });
 
     this.applyState(this.controller.state);
     this.controller.subscribe((state) => {
@@ -42,6 +45,7 @@ export class ConversationService {
 
   submit(prompt: string): void {
     if (prompt) {
+      this.adapter.reset();
       this.controller.submit({prompt});
     }
   }
@@ -60,7 +64,6 @@ export class ConversationService {
 
     this.busy.set(isStreaming);
     this.turns.set(turns);
-    this.adapter.processSurfaces(this.collectSurfaces(state.turns));
 
     if (activeTurn) {
       this.reasoningText.set(
@@ -77,15 +80,6 @@ export class ConversationService {
       this.activeTurnError.set('');
       this.toolActivity.set([]);
     }
-  }
-
-  private collectSurfaces(turns: Turn[]): A2UISurface[] {
-    for (let i = turns.length - 1; i >= 0; i--) {
-      if (turns[i].agentResponse?.surfaces?.length) {
-        return turns[i].agentResponse!.surfaces;
-      }
-    }
-    return [];
   }
 
   private loadPersistedState(): SerializedConverseState | undefined {
