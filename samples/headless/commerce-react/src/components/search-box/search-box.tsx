@@ -111,6 +111,7 @@ export default function SearchBox(props: ISearchBoxProps) {
           state.suggestions.length;
         setActiveSuggestion(next);
         onFocusSuggestion(state.suggestions[next]);
+        showDropdown();
         break;
       }
       case 'Enter':
@@ -160,18 +161,26 @@ export default function SearchBox(props: ISearchBoxProps) {
         {state.suggestions.length > 0 && (
           <div className="QuerySuggestion column small">
             <p>Query suggestions</p>
-            <ul>
+            <ul role="listbox">
               {state.suggestions.map((suggestion, i) => (
                 <li
                   key={`${suggestion.rawValue}-suggestion`}
                   className="QuerySuggestion"
+                  role="presentation"
                 >
                   <button
                     type="button"
+                    role="option"
                     className={i === activeSuggestion ? 'active' : undefined}
                     aria-selected={i === activeSuggestion}
-                    onMouseOver={() => onFocusSuggestion(suggestion)}
-                    onFocus={() => onFocusSuggestion(suggestion)}
+                    onMouseOver={() => {
+                      setActiveSuggestion(i);
+                      onFocusSuggestion(suggestion);
+                    }}
+                    onFocus={() => {
+                      setActiveSuggestion(i);
+                      onFocusSuggestion(suggestion);
+                    }}
                     onClick={() => onSelectSuggestion(suggestion)}
                     dangerouslySetInnerHTML={{
                       __html: suggestion.highlightedValue,
