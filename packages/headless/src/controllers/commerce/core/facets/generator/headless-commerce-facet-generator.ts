@@ -153,11 +153,12 @@ export function buildFacetGenerator(
   );
 
   const createFacetController = createSelector(
-    (commerceFacetSet: CommerceFacetSetState, facetId: string) =>
-      commerceFacetSet[facetId].request.type,
-    (_commerceFacetSet: CommerceFacetSetState, facetId: string) => facetId,
+    (commerceFacetSet: CommerceFacetSetState, facetId: string) => ({
+      facetId,
+      type: commerceFacetSet[facetId].request.type,
+    }),
 
-    (type, facetId) => {
+    ({type, facetId}) => {
       switch (type) {
         case 'dateRange':
           return options.buildDateFacet(engine, {facetId});
