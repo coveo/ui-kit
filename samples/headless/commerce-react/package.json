@@ -1,14 +1,26 @@
 {
   "name": "@coveo/ui-kit-sample-headless-commerce-react",
   "version": "0.1.0",
-  "private": true,
+  "files": [
+    "src",
+    "public",
+    "index.html",
+    "vite.config.js",
+    "tsconfig.json",
+    "README.md"
+  ],
   "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "prepack": "node ../../../scripts/strip-sample-dev-tooling.mjs strip",
+    "postpack": "node ../../../scripts/strip-sample-dev-tooling.mjs restore"
   },
   "dependencies": {
     "@coveo/headless": "workspace:*",
