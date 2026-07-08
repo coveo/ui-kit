@@ -69,9 +69,6 @@ export default function SearchAndListingInterface(
           productControllerBuilder={
             searchOrListingController.interactiveProduct
           }
-          spotlightContentControllerBuilder={
-            searchOrListingController.interactiveSpotlightContent
-          }
           cartController={cartController}
           promoteChildToParent={(child: ChildProduct) =>
             searchOrListingController.promoteChildToParent(child)
