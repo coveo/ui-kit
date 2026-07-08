@@ -1,4 +1,4 @@
-import {Injectable, inject} from '@angular/core';
+import {Injectable, inject, signal} from '@angular/core';
 import {A2uiRendererService} from '@a2ui/angular/v0_9';
 import type {A2uiMessage} from '@a2ui/web_core/v0_9';
 import type {A2UISurface} from '@coveo/thermidor';
@@ -8,6 +8,8 @@ export class A2uiAdapterService {
   private readonly renderer = inject(A2uiRendererService);
   private activeSurfaceIds: string[] = [];
 
+  readonly surfaceIds = signal<string[]>([]);
+
   processSurfaces(surfaces: A2UISurface[]): void {
     this.reset();
     for (const surface of surfaces) {
@@ -16,6 +18,7 @@ export class A2uiAdapterService {
       this.renderer.processMessages(ops as A2uiMessage[]);
     }
     this.activeSurfaceIds = [...this.renderer.surfaceGroup.surfacesMap.keys()];
+    this.surfaceIds.set(this.activeSurfaceIds);
   }
 
   reset(): void {
@@ -26,5 +29,6 @@ export class A2uiAdapterService {
     }));
     this.renderer.processMessages(deletes);
     this.activeSurfaceIds = [];
+    this.surfaceIds.set([]);
   }
 }

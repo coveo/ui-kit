@@ -2,17 +2,16 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  DestroyRef,
   inject,
   input,
   output,
   Pipe,
   PipeTransform,
-  signal,
 } from '@angular/core';
-import {A2uiRendererService, SurfaceComponent} from '@a2ui/angular/v0_9';
+import {SurfaceComponent} from '@a2ui/angular/v0_9';
 import {marked} from 'marked';
 import type {ToolCall, Turn} from '../models';
+import {A2uiAdapterService} from '../services/a2ui-adapter.service';
 
 marked.setOptions({breaks: true, gfm: true});
 
@@ -147,29 +146,8 @@ export class TranscriptPanelComponent {
   readonly resetConversation = output<void>();
   readonly retryTurn = output<string>();
 
-  private readonly renderer = inject(A2uiRendererService);
-  private readonly destroyRef = inject(DestroyRef);
-  private readonly surfaceIdsSignal = signal<string[]>([]);
-  protected readonly rendererSurfaces = this.surfaceIdsSignal.asReadonly();
-
-  constructor() {
-    const group = this.renderer.surfaceGroup;
-    const updateSurfaceIds = () => {
-      this.surfaceIdsSignal.set([...group.surfacesMap.keys()]);
-    };
-
-    const createdSub = group.onSurfaceCreated.subscribe(() =>
-      updateSurfaceIds()
-    );
-    const deletedSub = group.onSurfaceDeleted.subscribe(() =>
-      updateSurfaceIds()
-    );
-
-    this.destroyRef.onDestroy(() => {
-      createdSub.unsubscribe();
-      deletedSub.unsubscribe();
-    });
-  }
+  private readonly adapter = inject(A2uiAdapterService);
+  protected readonly rendererSurfaces = this.adapter.surfaceIds;
 
   protected readonly hasProgress = computed(
     () => this.toolActivity().length > 0 || this.reasoningText().length > 0
