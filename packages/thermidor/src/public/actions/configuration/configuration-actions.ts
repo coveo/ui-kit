@@ -12,7 +12,7 @@ import {
 } from '@/src/internal/features/configuration/index.js';
 import type {ConfigurationState} from '@/src/internal/features/configuration/index.js';
 
-interface ConfigurationActions {
+export interface ConfigurationActions {
   setOrganizationId: (organizationId: string) => void;
   setAccessToken: (accessToken: string) => void;
   setTrackingId: (trackingId: string) => void;
