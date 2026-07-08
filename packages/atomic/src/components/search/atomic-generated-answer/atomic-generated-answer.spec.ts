@@ -983,6 +983,102 @@ describe('atomic-generated-answer', () => {
     });
   });
 
+  describe('initial enabled state based on the active tab', () => {
+    it('should initialize as enabled when no tabs configuration is provided', async () => {
+      await renderGeneratedAnswer();
+
+      expect(buildGeneratedAnswer).toHaveBeenCalledWith(
+        mockedEngine,
+        expect.objectContaining({
+          initialState: expect.objectContaining({isEnabled: true}),
+        })
+      );
+    });
+
+    it('should initialize as enabled when the active tab is allowed', async () => {
+      await renderGeneratedAnswer({
+        props: {tabsIncluded: ['IncludedTab']},
+        tabManagerState: {activeTab: 'IncludedTab'},
+      });
+
+      expect(buildGeneratedAnswer).toHaveBeenCalledWith(
+        mockedEngine,
+        expect.objectContaining({
+          initialState: expect.objectContaining({isEnabled: true}),
+        })
+      );
+    });
+
+    it('should initialize as disabled when the active tab is excluded', async () => {
+      await renderGeneratedAnswer({
+        props: {tabsExcluded: ['ExcludedTab']},
+        tabManagerState: {activeTab: 'ExcludedTab'},
+      });
+
+      expect(buildGeneratedAnswer).toHaveBeenCalledWith(
+        mockedEngine,
+        expect.objectContaining({
+          initialState: expect.objectContaining({isEnabled: false}),
+        })
+      );
+    });
+
+    it('should initialize as disabled when the active tab is not in tabsIncluded', async () => {
+      await renderGeneratedAnswer({
+        props: {tabsIncluded: ['IncludedTab']},
+        tabManagerState: {activeTab: 'OtherTab'},
+      });
+
+      expect(buildGeneratedAnswer).toHaveBeenCalledWith(
+        mockedEngine,
+        expect.objectContaining({
+          initialState: expect.objectContaining({isEnabled: false}),
+        })
+      );
+    });
+  });
+
+  describe('reactivity to active tab changes', () => {
+    it('should disable the generated answer when switching to an excluded tab', async () => {
+      const {element} = await renderGeneratedAnswer({
+        props: {tabsExcluded: ['ExcludedTab']},
+        tabManagerState: {activeTab: 'All'},
+      });
+
+      element.tabManagerState = {activeTab: 'ExcludedTab'};
+      await element.updateComplete;
+
+      expect(mockedGeneratedAnswer.disable).toHaveBeenCalled();
+      expect(mockedGeneratedAnswer.enable).not.toHaveBeenCalled();
+    });
+
+    it('should enable the generated answer when switching back to an allowed tab', async () => {
+      const {element} = await renderGeneratedAnswer({
+        props: {tabsIncluded: ['IncludedTab']},
+        tabManagerState: {activeTab: 'OtherTab'},
+      });
+
+      element.tabManagerState = {activeTab: 'IncludedTab'};
+      await element.updateComplete;
+
+      expect(mockedGeneratedAnswer.enable).toHaveBeenCalled();
+      expect(mockedGeneratedAnswer.disable).not.toHaveBeenCalled();
+    });
+
+    it('should not toggle the enabled state when the active tab is unchanged', async () => {
+      const {element} = await renderGeneratedAnswer({
+        props: {tabsExcluded: ['ExcludedTab']},
+        tabManagerState: {activeTab: 'All'},
+      });
+
+      element.tabManagerState = {activeTab: 'All'};
+      await element.updateComplete;
+
+      expect(mockedGeneratedAnswer.enable).not.toHaveBeenCalled();
+      expect(mockedGeneratedAnswer.disable).not.toHaveBeenCalled();
+    });
+  });
+
   describe('follow up capability', () => {
     it('should render a scrollable content container when agentId is provided', async () => {
       const {scrollableContainer} = await renderGeneratedAnswer({

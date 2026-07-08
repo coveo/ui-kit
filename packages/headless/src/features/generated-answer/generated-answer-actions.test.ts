@@ -223,5 +223,45 @@ describe('generated answer', () => {
         )
       );
     });
+
+    describe('when the generated answer is disabled', () => {
+      const mockGetDisabledState = vi.fn(
+        () =>
+          ({
+            generatedAnswer: {
+              answerConfigurationId: 'test-config-id',
+              isEnabled: false,
+            },
+            searchHub: 'default',
+            pipeline: 'default',
+          }) as any
+      );
+
+      it('should reset the answer but not fetch a new one', async () => {
+        const thunk = generateAnswer();
+        await thunk(mockDispatch, mockGetDisabledState, mockExtra);
+
+        const resetAnswerCall = mockDispatch.mock.calls.find(
+          (call) => call[0]?.type === 'generatedAnswer/resetAnswer'
+        );
+        expect(resetAnswerCall).toBeDefined();
+
+        const setAnswerApiQueryParamsCall = mockDispatch.mock.calls.find(
+          (call) => call[0]?.type === 'generatedAnswer/setAnswerApiQueryParams'
+        );
+        expect(setAnswerApiQueryParamsCall).toBeUndefined();
+      });
+
+      it('should log a warning', async () => {
+        const thunk = generateAnswer();
+        await thunk(mockDispatch, mockGetDisabledState, mockExtra);
+
+        expect(mockLogger.warn).toHaveBeenCalledWith(
+          expect.stringContaining(
+            'generateAnswer action was dispatched while the generated answer is disabled'
+          )
+        );
+      });
+    });
   });
 });

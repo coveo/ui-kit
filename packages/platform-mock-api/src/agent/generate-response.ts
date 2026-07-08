@@ -23,6 +23,8 @@ interface AgentEvent {
   stepName?: string;
   messageId?: string;
   delta?: string;
+  message?: string;
+  code?: string;
   delayMs?: number; // Internal property for mock delays, stripped before sending
 }
 
@@ -35,6 +37,8 @@ const buildMessage = (
     messageId,
     delta,
     result,
+    message,
+    code,
   }: Omit<AgentEvent, 'threadId' | 'runId' | 'timestamp' | 'delayMs'>,
   delayMs?: number
 ): AgentEvent => {
@@ -49,6 +53,8 @@ const buildMessage = (
     ...(stepName !== undefined && {stepName}),
     ...(messageId !== undefined && {messageId}),
     ...(delta !== undefined && {delta}),
+    ...(message !== undefined && {message}),
+    ...(code !== undefined && {code}),
     ...(delayMs !== undefined && {delayMs}),
   };
 };
@@ -253,9 +259,41 @@ const headAnswerResponse = () =>
     answerId: HEAD_ANSWER_ID,
   });
 
+const followUpNetworkErrorResponse = () =>
+  new HttpResponse(null, {status: 500});
+
+const followUpTurnLimitErrorResponse = () =>
+  buildAnsweringStreamingResponse({
+    messages: [
+      buildMessage({type: EventType.RUN_STARTED}),
+      buildMessage({
+        type: EventType.RUN_ERROR,
+        message: 'The conversation turn limit has been reached.',
+        code: 'KNOWLEDGE:SSE_TURN_LIMIT_REACHED',
+      }),
+    ],
+    answerId: 'error',
+  });
+
+const followUpGenericErrorResponse = () =>
+  buildAnsweringStreamingResponse({
+    messages: [
+      buildMessage({type: EventType.RUN_STARTED}),
+      buildMessage({
+        type: EventType.RUN_ERROR,
+        message: 'An unexpected error occurred.',
+        code: 'KNOWLEDGE:SSE_INTERNAL_ERROR',
+      }),
+    ],
+    answerId: 'error',
+  });
+
 export {
   headAnswerResponse,
   followUpAnswerResponse,
+  followUpNetworkErrorResponse,
+  followUpTurnLimitErrorResponse,
+  followUpGenericErrorResponse,
   HEAD_ANSWER_ID,
   getFollowUpAnswerId,
 };
