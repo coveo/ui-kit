@@ -1,4 +1,8 @@
-import {getHeadlessBundle} from 'c/quanticHeadlessLoader';
+import {
+  getHeadlessBundle,
+  registerComponentForInit,
+  initializeWithHeadless,
+} from 'c/quanticHeadlessLoader';
 import {api, LightningElement} from 'lwc';
 
 export default class ActionPerformSearch extends LightningElement {
@@ -7,39 +11,27 @@ export default class ActionPerformSearch extends LightningElement {
   @api withInput = false;
 
   searchBox;
-  input;
-  headless;
+
+  connectedCallback() {
+    registerComponentForInit(this, this.engineId);
+  }
+
+  renderedCallback() {
+    initializeWithHeadless(this, this.engineId, this.initialize);
+  }
+
+  initialize = (engine) => {
+    const headless = getHeadlessBundle(this.engineId);
+    this.searchBox = headless.buildSearchBox(engine, {
+      options: {
+        numberOfSuggestions: 0,
+      },
+    });
+  };
 
   handlePerformSearch() {
-    if (!this.input && this.withInput) {
-      this.input = this.template.querySelector('lightning-input');
-    }
-    if (this.searchBox) {
-      this.triggerSearch(this.searchBox);
-    } else {
-      this.resolveSearchBoxController().then((controller) => {
-        this.searchBox = controller;
-        this.triggerSearch(this.searchBox);
-      });
-    }
-  }
-
-  triggerSearch(controller) {
-    const query = this.input ? this.input.value : '';
-    controller.updateText(query);
-    controller.submit();
-  }
-
-  resolveSearchBoxController() {
-    this.headless = getHeadlessBundle(this.engineId);
-    return window.coveoHeadless?.[this.engineId]?.enginePromise.then(
-      (engine) => {
-        return this.headless.buildSearchBox(engine, {
-          options: {
-            numberOfSuggestions: 0,
-          },
-        });
-      }
-    );
+    const query = this.refs.input?.value ?? '';
+    this.searchBox.updateText(query);
+    this.searchBox.submit();
   }
 }
