@@ -7,25 +7,20 @@ import {
   type SerializedConverseState,
 } from '@coveo/thermidor';
 import {EngineService} from './engine.service';
-import {parseSurfaces} from '../a2ui-parser';
+import {A2uiAdapterService} from './a2ui-adapter.service';
 import {CONVERSATION_STORAGE_KEY} from '../constants';
-import type {
-  A2UISurface,
-  RenderableCommerceSurface,
-  ToolCall,
-  Turn,
-} from '../models';
+import type {ToolCall, Turn} from '../models';
 
 @Injectable({providedIn: 'root'})
 export class ConversationService {
   private readonly engineService = inject(EngineService);
+  private readonly adapter = inject(A2uiAdapterService);
   private readonly controller: ConverseController;
 
   readonly busy = signal(false);
   readonly turns = signal<Turn[]>([]);
   readonly reasoningText = signal('');
   readonly toolActivity = signal<ToolCall[]>([]);
-  readonly surfaces = signal<RenderableCommerceSurface[]>([]);
   readonly activeTurnError = signal('');
 
   constructor() {
@@ -36,7 +31,10 @@ export class ConversationService {
     this.controller = buildConverseController({
       interface: generativeInterface,
       initialState: this.loadPersistedState(),
-    } as Parameters<typeof buildConverseController>[0]);
+      onSurfaceOperation: (operations) => {
+        this.adapter.processOperations(operations);
+      },
+    });
 
     this.applyState(this.controller.state);
     this.controller.subscribe((state) => {
@@ -47,6 +45,7 @@ export class ConversationService {
 
   submit(prompt: string): void {
     if (prompt) {
+      this.adapter.reset();
       this.controller.submit({prompt});
     }
   }
@@ -65,7 +64,6 @@ export class ConversationService {
 
     this.busy.set(isStreaming);
     this.turns.set(turns);
-    this.surfaces.set(this.buildSurfaces(turns));
 
     if (activeTurn) {
       this.reasoningText.set(
@@ -82,20 +80,6 @@ export class ConversationService {
       this.activeTurnError.set('');
       this.toolActivity.set([]);
     }
-  }
-
-  private buildSurfaces(turns: Turn[]): RenderableCommerceSurface[] {
-    let latestSurfaces: A2UISurface[] | undefined;
-    let turnComplete = true;
-
-    for (const turn of turns) {
-      if (turn.agentResponse?.surfaces?.length) {
-        latestSurfaces = turn.agentResponse.surfaces;
-        turnComplete = turn.status !== 'streaming';
-      }
-    }
-
-    return parseSurfaces(latestSurfaces, {turnComplete});
   }
 
   private loadPersistedState(): SerializedConverseState | undefined {

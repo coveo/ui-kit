@@ -2,14 +2,16 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  inject,
   input,
   output,
   Pipe,
   PipeTransform,
 } from '@angular/core';
+import {SurfaceComponent} from '@a2ui/angular/v0_9';
 import {marked} from 'marked';
-import type {RenderableCommerceSurface, ToolCall, Turn} from '../models';
-import {SurfaceOutletComponent} from './surface-outlet.component';
+import type {ToolCall, Turn} from '../models';
+import {A2uiAdapterService} from '../services/a2ui-adapter.service';
 
 marked.setOptions({breaks: true, gfm: true});
 
@@ -23,7 +25,7 @@ export class MarkdownPipe implements PipeTransform {
 
 @Component({
   selector: 'app-transcript-panel',
-  imports: [SurfaceOutletComponent, MarkdownPipe],
+  imports: [SurfaceComponent, MarkdownPipe],
   template: `
     <header class="panel-header">
       <div>
@@ -116,7 +118,7 @@ export class MarkdownPipe implements PipeTransform {
         </details>
       }
 
-      @if (surfaces().length > 0) {
+      @if (rendererSurfaces().length > 0) {
         <article class="inline-surfaces">
           <div class="inline-surfaces-head">
             <p class="bubble-role">Assistant</p>
@@ -124,11 +126,8 @@ export class MarkdownPipe implements PipeTransform {
           </div>
 
           <div class="surface-stack">
-            @for (surface of surfaces(); track surface.surfaceId) {
-              <app-surface-outlet
-                [surface]="surface"
-                (quickAction)="quickAction.emit($event)"
-              />
+            @for (surfaceId of rendererSurfaces(); track surfaceId) {
+              <a2ui-v09-surface [surfaceId]="surfaceId" />
             }
           </div>
         </article>
@@ -141,13 +140,14 @@ export class TranscriptPanelComponent {
   readonly turns = input<Turn[]>([]);
   readonly reasoningText = input('');
   readonly toolActivity = input<ToolCall[]>([]);
-  readonly surfaces = input<RenderableCommerceSurface[]>([]);
   readonly isStreaming = input(false);
   readonly errorMessage = input('');
   readonly turnId = input('');
   readonly resetConversation = output<void>();
-  readonly quickAction = output<string>();
   readonly retryTurn = output<string>();
+
+  private readonly adapter = inject(A2uiAdapterService);
+  protected readonly rendererSurfaces = this.adapter.surfaceIds;
 
   protected readonly hasProgress = computed(
     () => this.toolActivity().length > 0 || this.reasoningText().length > 0

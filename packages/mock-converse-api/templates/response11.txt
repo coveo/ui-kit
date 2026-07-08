@@ -1,0 +1,29 @@
+event:turn_started
+data:{"conversationSessionId":"a2ui-v09-bundle-session","conversationToken":"a2ui-v09-bundle-token"}
+
+event:message
+data:{"type": "RUN_STARTED", "threadId": "a2ui-v09-bundle-session", "runId": "v09-run-003"}
+
+event:message
+data:{"type": "STATE_SNAPSHOT", "snapshot": {}}
+
+event:message
+data:{"type": "TEXT_MESSAGE_START", "messageId": "v09-msg-003", "role": "assistant"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_CONTENT", "messageId": "v09-msg-003", "delta": "Here's a beginner surfing bundle with budget and premium tiers:"}
+
+event:message
+data:{"type": "TEXT_MESSAGE_END", "messageId": "v09-msg-003"}
+
+event:message
+data:{"type": "ACTIVITY_SNAPSHOT", "timestamp": 1781293070000, "messageId": "activity-v09-bundle-001", "activityType": "a2ui-surface", "content": {"operations": [{"version": "v0.9", "createSurface": {"surfaceId": "bundle-display-surface", "catalogId": "commerce"}}, {"version": "v0.9", "updateComponents": {"surfaceId": "bundle-display-surface", "components": [{"component": "BundleDisplay", "id": "root", "title": "Beginner Surfing Kit", "isLoading": false, "bundles": {"path": "/bundles"}}]}}, {"version": "v0.9", "updateDataModel": {"surfaceId": "bundle-display-surface", "path": "/bundles", "value": [{"bundleId": "budget", "label": "Budget", "description": "Everything you need to get started without breaking the bank.", "slots": [{"categoryLabel": "Surfboard", "surfaceRef": "budget-board", "product": {"ec_product_id": "sb-001", "ec_name": "Wave Rider Kids Soft Top", "ec_brand": "Storm Blade", "ec_price": 199.99, "ec_image": "https://cdn.shopify.com/s/files/1/0910/6502/4786/files/8f733582382a_bottom_right_c2b6748c-af4a-4c57-a032-8501dcd7873c.webp?v=1766163591"}}, {"categoryLabel": "Wetsuit", "surfaceRef": "budget-wetsuit", "product": {"ec_product_id": "ws-budget", "ec_name": "Basic Spring Suit", "ec_brand": "Wavestorm", "ec_price": 89.99, "ec_image": "https://cdn.shopify.com/s/files/1/0910/6502/4786/files/8a0762a91f5c_bottom_right_70ec9dff-c6cf-4307-9553-5e527911b52c.webp?v=1766163595"}}, {"categoryLabel": "Wax", "surfaceRef": "budget-wax", "product": {"ec_product_id": "wx-budget", "ec_name": "Wave Master Surf Wax", "ec_brand": "WaxIt", "ec_price": 35.0, "ec_image": "https://cdn.shopify.com/s/files/1/0910/6502/4786/files/d5ab761f07c3_bottom_right.webp?v=1766164031"}}]}, {"bundleId": "premium", "label": "Premium", "description": "Top-tier gear for the surfer who wants the best experience from day one.", "slots": [{"categoryLabel": "Surfboard", "surfaceRef": "premium-board", "product": {"ec_product_id": "sb-premium", "ec_name": "SurfPro Schooler", "ec_brand": "Odysea", "ec_price": 349.99, "ec_image": "https://cdn.shopify.com/s/files/1/0910/6502/4786/files/49eee557c7c5_top_right_f2f8e365-62ea-48d7-a73b-082e6b4ef99d.webp?v=1766163601"}}, {"categoryLabel": "Wetsuit", "surfaceRef": "premium-wetsuit", "product": {"ec_product_id": "ws-premium", "ec_name": "Arctic Shield 5/4mm", "ec_brand": "O'Neill", "ec_price": 349.99, "ec_image": "https://cdn.shopify.com/s/files/1/0910/6502/4786/files/8f733582382a_bottom_right_c2b6748c-af4a-4c57-a032-8501dcd7873c.webp?v=1766163591"}}, {"categoryLabel": "Wax", "surfaceRef": "premium-wax", "product": {"ec_product_id": "wx-premium", "ec_name": "Ultimate Glide Surf Wax", "ec_brand": "Wax and More", "ec_price": 35.0, "ec_image": "https://cdn.shopify.com/s/files/1/0910/6502/4786/files/60a0ffb77280_top_right_6f6ebc3b-5500-45c5-92aa-ffc2d7e0043f.webp?v=1766164032"}}]}]}}]}}
+
+event:message
+data:{"type": "ACTIVITY_SNAPSHOT", "timestamp": 1781293071000, "messageId": "activity-v09-bundle-002", "activityType": "a2ui-surface", "content": {"operations": [{"version": "v0.9", "createSurface": {"surfaceId": "bundle-next-actions", "catalogId": "commerce"}}, {"version": "v0.9", "updateComponents": {"surfaceId": "bundle-next-actions", "components": [{"component": "NextActionsBar", "id": "root", "isLoading": false, "actions": {"path": "/actions"}}]}}, {"version": "v0.9", "updateDataModel": {"surfaceId": "bundle-next-actions", "path": "/actions", "value": [{"text": "Add a leash to each bundle", "type": "followup"}, {"text": "Show me mid-range options", "type": "followup"}]}}]}}
+
+event:message
+data:{"type": "RUN_FINISHED", "threadId": "a2ui-v09-bundle-session", "runId": "v09-run-003"}
+
+event:done
+data:{}

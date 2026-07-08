@@ -1,7 +1,7 @@
 import type http from 'node:http';
 import {setCorsHeaders} from './cors.js';
 
-const DEFAULT_DELAY_MS = 25;
+const DEFAULT_DELAY_MS = 60;
 
 export function streamSSEResponse(
   res: http.ServerResponse,

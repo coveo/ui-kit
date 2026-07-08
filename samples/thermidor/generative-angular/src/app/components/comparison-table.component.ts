@@ -1,5 +1,7 @@
 import {ChangeDetectionStrategy, Component, input} from '@angular/core';
-import {ComparisonTableSurface} from '../models';
+import type {BoundProperty} from '@a2ui/angular/v0_9';
+import {prop} from '../a2ui/prop-reader';
+import type {ProductRecord} from '../models';
 
 @Component({
   selector: 'app-comparison-table',
@@ -7,14 +9,14 @@ import {ComparisonTableSurface} from '../models';
     <section class="surface">
       <header class="surface-header">
         <p class="surface-kicker">Comparison Table</p>
-        <h3>{{ surface().heading }}</h3>
+        <h3>{{ heading() }}</h3>
       </header>
 
-      @if (surface().isLoading || surface().products.length === 0) {
+      @if (isLoading() || products().length === 0) {
         <div class="loading-table"></div>
       } @else {
         <div class="product-strip">
-          @for (product of surface().products; track product.ec_product_id) {
+          @for (product of products(); track product.ec_product_id) {
             <article class="product-card">
               @if (product.ec_image) {
                 <img
@@ -42,23 +44,20 @@ import {ComparisonTableSurface} from '../models';
             <thead>
               <tr>
                 <th>Product</th>
-                @for (attribute of surface().attributes; track attribute) {
+                @for (attribute of attributes(); track attribute) {
                   <th>{{ formatLabel(attribute) }}</th>
                 }
                 <th>Price</th>
               </tr>
             </thead>
             <tbody>
-              @for (
-                product of surface().products;
-                track product.ec_product_id
-              ) {
+              @for (product of products(); track product.ec_product_id) {
                 <tr>
                   <td>
                     <strong>{{ product.ec_name }}</strong>
                     <span>{{ product.ec_brand }}</span>
                   </td>
-                  @for (attribute of surface().attributes; track attribute) {
+                  @for (attribute of attributes(); track attribute) {
                     <td>{{ product[attribute] || '—' }}</td>
                   }
                   <td>
@@ -198,7 +197,23 @@ import {ComparisonTableSurface} from '../models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ComparisonTableComponent {
-  readonly surface = input.required<ComparisonTableSurface>();
+  readonly props = input<Record<string, BoundProperty>>({});
+  readonly surfaceId = input<string>('');
+  readonly componentId = input<string>('');
+  readonly dataContextPath = input<string>('');
+
+  protected readonly heading = prop(this.props, 'heading', '');
+  protected readonly attributes = prop(
+    this.props,
+    'attributes',
+    [] as string[]
+  );
+  protected readonly products = prop(
+    this.props,
+    'products',
+    [] as ProductRecord[]
+  );
+  protected readonly isLoading = prop(this.props, 'isLoading', false);
 
   protected formatLabel(value: string): string {
     return value.replace(/_/g, ' ');

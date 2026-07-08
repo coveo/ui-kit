@@ -40,8 +40,4 @@ export class App {
   protected setDraft(value: string): void {
     this.draft.set(value);
   }
-
-  protected useQuickAction(prompt: string): void {
-    this.conversation.submit(prompt);
-  }
 }

@@ -9,12 +9,10 @@
       [turns]="conversation.turns()"
       [reasoningText]="conversation.reasoningText()"
       [toolActivity]="conversation.toolActivity()"
-      [surfaces]="conversation.surfaces()"
       [isStreaming]="conversation.busy()"
       [errorMessage]="conversation.activeTurnError()"
       [turnId]="lastTurnId()"
       (resetConversation)="conversation.resetConversation()"
-      (quickAction)="useQuickAction($event)"
       (retryTurn)="conversation.retry($event)"
     />
 

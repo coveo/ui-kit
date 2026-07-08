@@ -1,5 +1,7 @@
 import {ChangeDetectionStrategy, Component, input} from '@angular/core';
-import {ProductCarouselSurface} from '../models';
+import type {BoundProperty} from '@a2ui/angular/v0_9';
+import {prop} from '../a2ui/prop-reader';
+import type {ProductRecord} from '../models';
 
 @Component({
   selector: 'app-product-carousel',
@@ -7,10 +9,10 @@ import {ProductCarouselSurface} from '../models';
     <section class="surface">
       <header class="surface-header">
         <p class="surface-kicker">Product Carousel</p>
-        <h3>{{ surface().heading }}</h3>
+        <h3>{{ heading() }}</h3>
       </header>
 
-      @if (surface().isLoading || surface().products.length === 0) {
+      @if (isLoading() || products().length === 0) {
         <div class="loading-grid">
           @for (item of placeholders; track $index) {
             <div class="loading-card"></div>
@@ -18,7 +20,7 @@ import {ProductCarouselSurface} from '../models';
         </div>
       } @else {
         <div class="carousel">
-          @for (item of surface().products; track item.ec_product_id) {
+          @for (item of products(); track item.ec_product_id) {
             <article class="card">
               @if (item.ec_image) {
                 <img
@@ -160,7 +162,19 @@ import {ProductCarouselSurface} from '../models';
 })
 export class ProductCarouselComponent {
   protected readonly placeholders = Array.from({length: 3});
-  readonly surface = input.required<ProductCarouselSurface>();
+
+  readonly props = input<Record<string, BoundProperty>>({});
+  readonly surfaceId = input<string>('');
+  readonly componentId = input<string>('');
+  readonly dataContextPath = input<string>('');
+
+  protected readonly heading = prop(this.props, 'heading', '');
+  protected readonly products = prop(
+    this.props,
+    'products',
+    [] as ProductRecord[]
+  );
+  protected readonly isLoading = prop(this.props, 'isLoading', false);
 
   protected formatPrice(value: number): string {
     return new Intl.NumberFormat('en-US', {
