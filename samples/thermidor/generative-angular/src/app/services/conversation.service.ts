@@ -7,25 +7,20 @@ import {
   type SerializedConverseState,
 } from '@coveo/thermidor';
 import {EngineService} from './engine.service';
-import {parseSurfaces} from '../a2ui-parser';
+import {A2uiAdapterService} from './a2ui-adapter.service';
 import {CONVERSATION_STORAGE_KEY} from '../constants';
-import type {
-  A2UISurface,
-  RenderableCommerceSurface,
-  ToolCall,
-  Turn,
-} from '../models';
+import type {A2UISurface, ToolCall, Turn} from '../models';
 
 @Injectable({providedIn: 'root'})
 export class ConversationService {
   private readonly engineService = inject(EngineService);
+  private readonly adapter = inject(A2uiAdapterService);
   private readonly controller: ConverseController;
 
   readonly busy = signal(false);
   readonly turns = signal<Turn[]>([]);
   readonly reasoningText = signal('');
   readonly toolActivity = signal<ToolCall[]>([]);
-  readonly surfaces = signal<RenderableCommerceSurface[]>([]);
   readonly activeTurnError = signal('');
 
   constructor() {
@@ -65,7 +60,7 @@ export class ConversationService {
 
     this.busy.set(isStreaming);
     this.turns.set(turns);
-    this.surfaces.set(this.buildSurfaces(turns));
+    this.adapter.processSurfaces(this.collectSurfaces(state.turns));
 
     if (activeTurn) {
       this.reasoningText.set(
@@ -84,18 +79,13 @@ export class ConversationService {
     }
   }
 
-  private buildSurfaces(turns: Turn[]): RenderableCommerceSurface[] {
-    let latestSurfaces: A2UISurface[] | undefined;
-    let turnComplete = true;
-
-    for (const turn of turns) {
-      if (turn.agentResponse?.surfaces?.length) {
-        latestSurfaces = turn.agentResponse.surfaces;
-        turnComplete = turn.status !== 'streaming';
+  private collectSurfaces(turns: Turn[]): A2UISurface[] {
+    for (let i = turns.length - 1; i >= 0; i--) {
+      if (turns[i].agentResponse?.surfaces?.length) {
+        return turns[i].agentResponse!.surfaces;
       }
     }
-
-    return parseSurfaces(latestSurfaces, {turnComplete});
+    return [];
   }
 
   private loadPersistedState(): SerializedConverseState | undefined {

@@ -1,5 +1,8 @@
-import {ChangeDetectionStrategy, Component, input} from '@angular/core';
-import {NextActionsBarSurface} from '../models';
+import {ChangeDetectionStrategy, Component, inject, input} from '@angular/core';
+import type {BoundProperty} from '@a2ui/angular/v0_9';
+import {prop} from '../a2ui/prop-reader';
+import {ConversationService} from '../services/conversation.service';
+import type {NextAction} from '../models';
 
 @Component({
   selector: 'app-next-actions-bar',
@@ -10,12 +13,9 @@ import {NextActionsBarSurface} from '../models';
         <h3>Suggested next steps</h3>
       </header>
 
-      @if (!surface().isLoading) {
+      @if (!isLoading()) {
         <div class="actions">
-          @for (
-            action of surface().actions;
-            track action.text + ':' + action.type
-          ) {
+          @for (action of actions(); track action.text + ':' + action.type) {
             <button type="button" (click)="handleAction(action.text)">
               {{ action.text }}
             </button>
@@ -98,10 +98,18 @@ import {NextActionsBarSurface} from '../models';
 })
 export class NextActionsBarComponent {
   protected readonly placeholders = Array.from({length: 3});
-  readonly surface = input.required<NextActionsBarSurface>();
-  readonly onSelectAction = input<(action: string) => void>(() => {});
+
+  readonly props = input<Record<string, BoundProperty>>({});
+  readonly surfaceId = input<string>('');
+  readonly componentId = input<string>('');
+  readonly dataContextPath = input<string>('');
+
+  protected readonly actions = prop(this.props, 'actions', [] as NextAction[]);
+  protected readonly isLoading = prop(this.props, 'isLoading', false);
+
+  private readonly conversation = inject(ConversationService);
 
   protected handleAction(action: string): void {
-    this.onSelectAction()(action);
+    this.conversation.submit(action);
   }
 }

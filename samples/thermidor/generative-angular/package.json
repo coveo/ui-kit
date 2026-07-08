@@ -6,9 +6,12 @@
     "prebuild": "node scripts/generate-env.js",
     "build": "ng build",
     "predev": "node scripts/generate-env.js",
-    "dev": "ng serve --configuration development"
+    "dev": "ng serve --configuration development",
+    "dev:mock": "COVEO_USE_MOCK=true ng serve --configuration development"
   },
   "dependencies": {
+    "@a2ui/angular": "^0.10.2",
+    "@a2ui/web_core": "^0.10.3",
     "@ag-ui/core": "0.0.57",
     "@angular/common": "catalog:",
     "@angular/compiler": "catalog:",

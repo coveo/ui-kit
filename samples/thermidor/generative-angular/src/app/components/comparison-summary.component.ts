@@ -1,5 +1,6 @@
 import {ChangeDetectionStrategy, Component, input} from '@angular/core';
-import {ComparisonSummarySurface} from '../models';
+import type {BoundProperty} from '@a2ui/angular/v0_9';
+import {prop} from '../a2ui/prop-reader';
 
 @Component({
   selector: 'app-comparison-summary',
@@ -9,7 +10,7 @@ import {ComparisonSummarySurface} from '../models';
         <p class="surface-kicker">Comparison Summary</p>
         <span>Assistant recommendation</span>
       </div>
-      <p class="summary-text">{{ surface().text }}</p>
+      <p class="summary-text">{{ text() }}</p>
     </section>
   `,
   styles: [
@@ -52,5 +53,10 @@ import {ComparisonSummarySurface} from '../models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ComparisonSummaryComponent {
-  readonly surface = input.required<ComparisonSummarySurface>();
+  readonly props = input<Record<string, BoundProperty>>({});
+  readonly surfaceId = input<string>('');
+  readonly componentId = input<string>('');
+  readonly dataContextPath = input<string>('');
+
+  protected readonly text = prop(this.props, 'text', '');
 }

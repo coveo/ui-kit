@@ -13,7 +13,7 @@ import {ChangeDetectionStrategy, Component, input, output} from '@angular/core';
         rows="3"
         [value]="draft()"
         [disabled]="busy()"
-        placeholder="Show me surfboards"
+        placeholder="Try: surfboards v09, compare wetsuits v09, surfing bundle v09"
         (input)="draftChange.emit(draftInput.value)"
       ></textarea>
 

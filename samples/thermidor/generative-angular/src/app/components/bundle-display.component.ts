@@ -5,7 +5,9 @@ import {
   signal,
   computed,
 } from '@angular/core';
-import {BundleDisplaySurface} from '../models';
+import type {BoundProperty} from '@a2ui/angular/v0_9';
+import {prop} from '../a2ui/prop-reader';
+import type {BundleDisplayTier} from '../models';
 
 @Component({
   selector: 'app-bundle-display',
@@ -13,10 +15,10 @@ import {BundleDisplaySurface} from '../models';
     <section class="surface">
       <header class="surface-header">
         <p class="surface-kicker">Bundle Display</p>
-        <h3>{{ surface().title }}</h3>
+        <h3>{{ title() }}</h3>
       </header>
 
-      @if (surface().isLoading || surface().bundles.length === 0) {
+      @if (isLoading() || bundles().length === 0) {
         <div class="loading-grid">
           @for (item of placeholders; track $index) {
             <div class="loading-card"></div>
@@ -24,7 +26,7 @@ import {BundleDisplaySurface} from '../models';
         </div>
       } @else {
         <nav class="tier-tabs" role="tablist">
-          @for (bundle of surface().bundles; track bundle.bundleId) {
+          @for (bundle of bundles(); track bundle.bundleId) {
             <button
               class="tier-tab"
               [class.active]="isActive(bundle.bundleId)"
@@ -225,12 +227,24 @@ import {BundleDisplaySurface} from '../models';
 })
 export class BundleDisplayComponent {
   protected readonly placeholders = Array.from({length: 1});
-  readonly surface = input.required<BundleDisplaySurface>();
+
+  readonly props = input<Record<string, BoundProperty>>({});
+  readonly surfaceId = input<string>('');
+  readonly componentId = input<string>('');
+  readonly dataContextPath = input<string>('');
+
+  protected readonly title = prop(this.props, 'title', '');
+  protected readonly bundles = prop(
+    this.props,
+    'bundles',
+    [] as BundleDisplayTier[]
+  );
+  protected readonly isLoading = prop(this.props, 'isLoading', false);
 
   protected readonly activeTierId = signal('');
 
   protected readonly activeTier = computed(() => {
-    const bundles = this.surface().bundles;
+    const bundles = this.bundles();
     if (bundles.length === 0) return null;
 
     const id = this.activeTierId();
