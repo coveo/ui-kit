@@ -38,7 +38,15 @@ export default function SearchAndListingInterface(
   }, [searchOrListingController]);
 
   const summaryController = searchOrListingController.summary();
-  const paginationController = searchOrListingController.pagination();
+  // Build the pagination controller once. Passing `options` dispatches
+  // `setPageSize`, which resets the current page to 0. Rebuilding it on every
+  // render would therefore reset the page each time the state changes (e.g.
+  // right after selecting a page), so we keep a single stable instance.
+  const [paginationController] = useState(() =>
+    searchOrListingController.pagination({
+      options: {pageSize: 12},
+    })
+  );
 
   return (
     <div className="SearchAndListingInterface row">
@@ -60,9 +68,6 @@ export default function SearchAndListingInterface(
           results={searchOrListingState.results}
           productControllerBuilder={
             searchOrListingController.interactiveProduct
-          }
-          spotlightContentControllerBuilder={
-            searchOrListingController.interactiveSpotlightContent
           }
           cartController={cartController}
           promoteChildToParent={(child: ChildProduct) =>
