@@ -50,7 +50,7 @@ catalogs:
       version: 19.22.0
     '@msw/playwright':
       specifier: 0.6.7
-      version: 0.6.7
+      version: 0.6.7(msw@2.14.6(@types/node@26.0.1)(typescript@6.0.3))
     '@playwright/mcp':
       specifier: 0.0.76
       version: 0.0.76
@@ -114,9 +114,6 @@ catalogs:
     exponential-backoff:
       specifier: 3.1.3
       version: 3.1.3
-    idb:
-      specifier: 8.0.3
-      version: 8.0.3
     jest:
       specifier: 30.3.0
       version: 30.3.0
@@ -1137,9 +1134,6 @@ importers:
       '@reduxjs/toolkit':
         specifier: 'catalog:'
         version: 2.12.0(react@19.2.7)
-      idb:
-        specifier: 'catalog:'
-        version: 8.0.3
     devDependencies:
       typescript:
         specifier: 6.0.3
@@ -1490,6 +1484,12 @@ importers:
         specifier: 19.2.7
         version: 19.2.7(react@19.2.7)
     devDependencies:
+      '@coveo/platform-mock-api':
+        specifier: workspace:*
+        version: link:../../../packages/platform-mock-api
+      '@msw/playwright':
+        specifier: 'catalog:'
+        version: 0.6.7(msw@2.14.6(@types/node@26.0.1)(typescript@6.0.3))
       '@playwright/test':
         specifier: 'catalog:'
         version: 1.60.0
@@ -1501,7 +1501,10 @@ importers:
         version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@vitejs/plugin-react':
         specifier: 'catalog:'
-        version: 6.0.3(vite@8.0.14(@types/node@26.0.1)(esbuild@0.28.1)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))
+        version: 6.0.3(vite@8.0.14(@types/node@26.0.1)(esbuild@0.28.1)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))
+      msw:
+        specifier: 'catalog:'
+        version: 2.14.6(@types/node@26.0.1)(typescript@6.0.3)
       vite:
         specifier: 'catalog:'
         version: 8.0.14(@types/node@26.0.1)(esbuild@0.28.1)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0)
@@ -10422,9 +10425,6 @@ packages:
     engines: {node: ^10 || ^12 || >= 14}
     peerDependencies:
       postcss: ^8.1.0
-
-  idb@8.0.3:
-    resolution: {integrity: sha512-LtwtVyVYO5BqRvcsKuB2iUMnHwPVByPCXFXOpuU96IZPPoPN6xjOGxZQ74pgSVVLQWtUOYgyeL4GE98BY5D3wg==}
 
   ieee754@1.2.1:
     resolution: {integrity: sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==}
@@ -25453,8 +25453,6 @@ snapshots:
   icss-utils@5.1.0(postcss@8.5.15):
     dependencies:
       postcss: 8.5.15
-
-  idb@8.0.3: {}
 
   ieee754@1.2.1: {}
 

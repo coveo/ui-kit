@@ -21,7 +21,6 @@ interface IResultListProps {
   ) => HeadlessInteractiveSpotlightContent;
   cartController: Cart;
   promoteChildToParent: (product: ChildProduct) => void;
-  navigate: (pathName: string) => void;
 }
 
 export default function ResultList(props: IResultListProps) {
@@ -31,7 +30,6 @@ export default function ResultList(props: IResultListProps) {
     spotlightContentControllerBuilder,
     cartController,
     promoteChildToParent,
-    navigate,
   } = props;
 
   if (results.length === 0) {
@@ -60,7 +58,6 @@ export default function ResultList(props: IResultListProps) {
                 options: {product: result},
               })}
               cartController={cartController}
-              navigate={navigate}
               promoteChildToParent={promoteChildToParent}
             />
           </li>

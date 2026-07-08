@@ -5,6 +5,10 @@ interface INumericFacetProps {
   controller: HeadlessNumericFacet;
 }
 
+// Round to at most 2 decimals so auto-generated ranges don't show float noise
+// (for example 26.400000000000002).
+const round = (value: number) => Math.round(value * 100) / 100;
+
 export default function NumericFacet(props: INumericFacetProps) {
   const {controller} = props;
 
@@ -105,7 +109,7 @@ export default function NumericFacet(props: INumericFacetProps) {
           id={manualRangeStartId}
           ref={manualRangeStartInputRef}
           type="number"
-          value={currentManualRange.start}
+          value={round(currentManualRange.start)}
           onChange={onChangeManualRangeStart}
         />
         <label className="ManualRangeEndLabel" htmlFor={manualRangeEndId}>
@@ -117,7 +121,7 @@ export default function NumericFacet(props: INumericFacetProps) {
           disabled={state.isLoading}
           id={manualRangeEndId}
           type="number"
-          value={currentManualRange.end}
+          value={round(currentManualRange.end)}
           onChange={onChangeManualRangeEnd}
         />
         <button
@@ -161,7 +165,7 @@ export default function NumericFacet(props: INumericFacetProps) {
                 ></input>
                 <label className="FacetValueLabel" htmlFor={id}>
                   <span className="FacetValueName">
-                    {value.start} to {value.end}
+                    {round(value.start)} to {round(value.end)}
                   </span>
                   <span className="FacetValueNumberOfProducts">
                     {' '}

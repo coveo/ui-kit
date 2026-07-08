@@ -1,14 +1,11 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {
-  type Engine,
-  getFullEngine,
-} from '@/src/core/interface/engine/engine.js';
+import {type Engine, getFullEngine} from '@/src/internal/engine/index.js';
 import {createTestEngine, createTestInterface} from '@/src/test/test-utils.js';
-import {getInterfaceInternals} from '@/src/core/interface/base-interface.js';
-import {getOrCreateSearchBoxSlice} from '@/src/core/internal/search-box/search-box-slice.js';
-import {getOrCreateSearchBoxActions} from '@/src/core/internal/search-box/search-box-actions.js';
-import {getOrCreateCartSlice} from '@/src/core/internal/cart/cart-slice.js';
-import {getOrCreateCartActions} from '@/src/core/internal/cart/cart-actions.js';
+import {getInterfaceInternals} from '@/src/internal/utils/index.js';
+import {getOrCreateSearchBoxSlice} from '@/src/internal/features/search-box/index.js';
+import {getOrCreateSearchBoxActions} from '@/src/internal/features/search-box/index.js';
+import {getOrCreateCartSlice} from '@/src/internal/features/cart/index.js';
+import {getOrCreateCartActions} from '@/src/internal/features/cart/index.js';
 import {buildCartController} from './cart-controller.js';
 
 describe('buildCartController', () => {
@@ -38,7 +35,7 @@ describe('buildCartController', () => {
         const controller = buildCartController({interface: cartInterface});
         const callback = vi.fn();
         const fullEngine = getFullEngine(engine);
-        const {stateId} = getInterfaceInternals(cartInterface);
+        getInterfaceInternals(cartInterface);
 
         const searchBoxSlice = getOrCreateSearchBoxSlice(cartInterface);
         const {setQuery} = getOrCreateSearchBoxActions(cartInterface);

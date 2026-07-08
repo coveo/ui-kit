@@ -1,9 +1,8 @@
 import {beforeEach, describe, expect, it} from 'vitest';
-import {Engine, getFullEngine} from '@/src/core/interface/engine/engine.js';
+import {Engine, getFullEngine} from '@/src/internal/engine/index.js';
 import {createTestEngine} from '@/src/test/test-utils.js';
 import {buildSearchInterface} from '@/src/public/interfaces/search.js';
-import {getInterfaceInternals} from '@/src/core/interface/base-interface.js';
-import {getOrCreateCartSelectors} from '@/src/core/internal/cart/cart-selectors.js';
+import {getOrCreateCartSelectors} from '@/src/internal/features/cart/index.js';
 import {loadCartActions} from './cart-actions.js';
 
 describe('cart actions', () => {

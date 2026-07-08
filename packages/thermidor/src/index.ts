@@ -1,9 +1,12 @@
-export {Engine, getSampleEngineConfiguration} from './core/index.js';
+export {
+  Engine,
+  getSampleEngineConfiguration,
+} from '@/src/internal/engine/index.js';
+export type {EngineOptions} from '@/src/internal/engine/index.js';
 export type {
-  EngineOptions,
   NavigatorContext,
   NavigatorContextProvider,
-} from './core/index.js';
+} from '@/src/internal/utils/index.js';
 export * from './public/actions/index.js';
 export * from './public/controllers/index.js';
 export {composeInterfaces} from './public/interfaces/compose.js';
@@ -27,7 +30,7 @@ export type {
   Supports,
   InterfaceHandle,
   InterfaceType,
-} from './core/interface/utils/interface-types.js';
+} from '@/src/internal/utils/index.js';
 export type {
   Turn,
   TurnStatus,
@@ -38,4 +41,4 @@ export type {
   ToolCallStatus,
   RoutedInterface,
   RoutedUseCase,
-} from './core/interface/generative/generative-types.js';
+} from '@/src/internal/features/generative/index.js';
