@@ -85,6 +85,10 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
         },
         appendSurface: (turnId, surface) => {
           this.engine.mutate(this.#actions.appendSurface({turnId, surface}));
+          const ops = (surface as {operations?: unknown[]}).operations;
+          if (Array.isArray(ops)) {
+            options.onSurfaceOperation?.(ops);
+          }
         },
         startToolCall: (turnId, toolCallId, toolName) => {
           this.engine.mutate(
@@ -228,6 +232,7 @@ export interface ConverseControllerState {
 export interface ConverseControllerOptions {
   interface: GenerativeInterface;
   initialState?: SerializedConverseState;
+  onSurfaceOperation?: (operations: unknown[]) => void;
 }
 
 function hydrateFromSerializedState(
