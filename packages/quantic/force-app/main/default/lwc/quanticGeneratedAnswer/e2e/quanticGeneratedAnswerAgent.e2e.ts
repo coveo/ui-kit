@@ -30,7 +30,7 @@ analyticsModeTest.forEach((analytics) => {
         );
 
         await testAgent.step(
-          'should send like analytics event when liking the answer',
+          'should send like analytics event when liking the first answer',
           async () => {
             const likeAnalyticRequestPromise =
               generatedAnswer.waitForLikeGeneratedAnswerAnalytics();
@@ -40,7 +40,7 @@ analyticsModeTest.forEach((analytics) => {
         );
 
         await testAgent.step(
-          'should send dislike analytics event when disliking the answer',
+          'should send dislike analytics event when disliking the first answer',
           async () => {
             const dislikeAnalyticRequestPromise =
               generatedAnswer.waitForDislikeGeneratedAnswerAnalytics();
@@ -50,7 +50,7 @@ analyticsModeTest.forEach((analytics) => {
         );
 
         await testAgent.step(
-          'should send a copy to clipboard analytics event and update the clipboard with the answer content',
+          'should send a copy to clipboard analytics event and update the clipboard with the first answer content',
           async () => {
             const analyticRequestPromise =
               generatedAnswer.waitForCopyToClipboardAnalytics();
@@ -65,7 +65,7 @@ analyticsModeTest.forEach((analytics) => {
         );
 
         await testAgent.step(
-          'should log citation hover analytics when hovering over a citation',
+          'should log citation hover analytics when hovering over a citation from the first answer',
           async () => {
             const citationIndex = 0;
             const {id, permanentid} = agentData.citations[citationIndex];
@@ -81,7 +81,7 @@ analyticsModeTest.forEach((analytics) => {
         );
 
         await testAgent.step(
-          'should log citation click analytics when clicking on a citation',
+          'should log citation click analytics when clicking on a citation from the first answer',
           async () => {
             const citationIndex = 0;
             const {id, title, source, uri, clickUri, permanentid} =

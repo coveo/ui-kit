@@ -44,15 +44,6 @@ type AgentTextMessageType = {
   delta: string;
 };
 
-type AgentCitationType = {
-  type: 'CUSTOM';
-  timestamp: number;
-  name: 'citations';
-  value: {
-    citations: Array<AgentCitation>;
-  };
-};
-
 export type AgentCitation = {
   id: string;
   title: string;
@@ -66,20 +57,29 @@ export type AgentCitation = {
   fields: Record<string, any>;
 };
 
+type AgentCitationType = {
+  type: 'CUSTOM';
+  timestamp: number;
+  name: 'citations';
+  value: {
+    citations: Array<AgentCitation>;
+  };
+};
+
 const STREAM_ID = 'conv_1';
 const ANSWER_ID_1 = 'conv_1_0001';
 const ANSWER_ID_2 = 'conv_1_0002';
 const ANSWER_ID_3 = 'conv_1_0003';
 const CONVERSATION_TOKEN = 'conv_1_token';
 
-const runStartStream: (answerId: string) => AgentRunType = (answerId) => ({
+const runStartStream = (answerId: string): AgentRunType => ({
   type: 'RUN_STARTED',
   timestamp: new Date().valueOf(),
   threadId: STREAM_ID,
   runId: answerId,
 });
 
-const customInitialHeadersStream: (followUpEnabled: boolean) => AgentCustomType = (followUpEnabled) => ({
+const customInitialHeadersStream = (followUpEnabled: boolean): AgentCustomType => ({
   type: 'CUSTOM',
   timestamp: new Date().valueOf(),
   name: 'header',
@@ -91,19 +91,19 @@ const customInitialHeadersStream: (followUpEnabled: boolean) => AgentCustomType 
   },
 });
 
-const stepStartedStream: (stepName: string) => AgentStepType = (stepName) => ({
+const stepStartedStream = (stepName: string): AgentStepType => ({
   type: 'STEP_STARTED',
   timestamp: new Date().valueOf(),
   stepName,
 });
 
-const stepFinishedStream: (stepName: string) => AgentStepType = (stepName) => ({
+const stepFinishedStream = (stepName: string): AgentStepType => ({
   type: 'STEP_FINISHED',
   timestamp: new Date().valueOf(),
   stepName,
 });
 
-const toolCallStartStream: (toolCallName: string) => AgentToolCallType = (toolCallName) => ({
+const toolCallStartStream = (toolCallName: string): AgentToolCallType => ({
   type: 'TOOL_CALL_START',
   timestamp: new Date().valueOf(),
   toolCallId: 'tool_call_1',
@@ -111,7 +111,7 @@ const toolCallStartStream: (toolCallName: string) => AgentToolCallType = (toolCa
   parentMessageId: 'message_1',
 });
 
-const searchQueryToolCallArgsStream: (q: string) => AgentToolCallArgsType = (q) => ({
+const searchQueryToolCallArgsStream = (q: string): AgentToolCallArgsType => ({
   type: 'TOOL_CALL_ARGS',
   timestamp: new Date().valueOf(),
   toolCallId: 'tool_call_1',
@@ -120,7 +120,7 @@ const searchQueryToolCallArgsStream: (q: string) => AgentToolCallArgsType = (q) 
   }),
 });
 
-const toolCallEndStream: (toolCallName: string) => AgentToolCallType = (toolCallName) => ({
+const toolCallEndStream = (toolCallName: string): AgentToolCallType => ({
   type: 'TOOL_CALL_END',
   timestamp: new Date().valueOf(),
   toolCallId: 'tool_call_1',
@@ -128,7 +128,7 @@ const toolCallEndStream: (toolCallName: string) => AgentToolCallType = (toolCall
   parentMessageId: 'message_1',
 });
 
-const textMessageStream: (delta: string) => AgentTextMessageType = (delta) => ({
+const textMessageStream = (delta: string): AgentTextMessageType => ({
   type: 'TEXT_MESSAGE_CHUNK',
   timestamp: new Date().valueOf(),
   messageId: 'message_2',
@@ -158,7 +158,7 @@ const citationStream: AgentCitationType = {
   },
 };
 
-const runFinishedStream: (answerId: string) => AgentRunType = (answerId) => ({
+const runFinishedStream = (answerId: string): AgentRunType => ({
   type: 'RUN_FINISHED',
   timestamp: new Date().valueOf(),
   threadId: STREAM_ID,
