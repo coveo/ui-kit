@@ -839,6 +839,99 @@ input[type='radio'] {
   color: var(--brand);
 }
 
+/* When a promo price applies, the adjusted price leads and the original base
+   price trails it, struck through. */
+.ProductPrice--discounted {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.ProductPriceOriginal {
+  color: var(--faint);
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-decoration: line-through;
+}
+
+.ProductPriceUnavailable {
+  color: var(--muted);
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+/* Product description: a few quiet lines, clamped so cards stay tidy. */
+.ProductDescription {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Variants: "Also available in:" followed by a wrapping row of thumbnails. */
+.ProductVariants {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ProductVariantsLabel {
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+.ProductVariantsList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.ProductVariant {
+  display: block;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--panel);
+  cursor: pointer;
+  transition:
+    border-color 0.12s ease,
+    box-shadow 0.12s ease;
+}
+
+.ProductVariant:hover:not(:disabled) {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px var(--brand-soft);
+}
+
+.ProductVariant:disabled {
+  cursor: default;
+}
+
+.ProductVariantImage {
+  display: block;
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  border-radius: calc(var(--radius-sm) - 2px);
+}
+
+.ProductVariantsMore {
+  color: var(--muted);
+  font-size: 0.9rem;
+  padding-left: 2px;
+}
+
 .AddToCart {
   margin-top: auto;
   border: none;

@@ -3,8 +3,9 @@
 import {ResultType} from '@coveo/headless-react/ssr-commerce';
 import {useCart, useContext, useProductList} from '@/lib/commerce-engine';
 import {addToCart} from '@/utils/cart';
-import {formatCurrency} from '@/utils/format-currency';
 import ProductButtonWithImage from './product-button-with-image';
+import ProductPrice from './product-price';
+import ProductVariants from './product-variants';
 import SpotlightContentButton from './spotlight-content-button';
 
 export default function ProductList() {
@@ -36,15 +37,15 @@ export default function ProductList() {
         return (
           <li key={item.ec_product_id} className="ProductCard">
             <ProductButtonWithImage methods={methods} product={item} />
-            {item.ec_price != null && (
-              <span className="ProductPrice">
-                {formatCurrency(
-                  item.ec_price,
-                  contextState.language,
-                  contextState.currency
-                )}
-              </span>
+            <ProductPrice
+              product={item}
+              language={contextState.language}
+              currency={contextState.currency}
+            />
+            {item.ec_description && (
+              <p className="ProductDescription">{item.ec_description}</p>
             )}
+            <ProductVariants methods={methods} product={item} />
             <button
               type="button"
               className="AddToCart"
