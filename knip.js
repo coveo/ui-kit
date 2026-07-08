@@ -83,11 +83,6 @@ export default {
       // `mocks/register.ts` is preloaded into the Next.js server via NODE_OPTIONS
       // for e2e (see playwright.config.ts), so Knip cannot trace it as an entry.
       entry: ['mocks/register.ts'],
-      ignore: [
-        // Kept as reference examples but intentionally not wired into the UI.
-        'components/show-more.tsx',
-        'components/products-per-page.tsx',
-      ],
       // `tsx` is invoked through NODE_OPTIONS (a CLI string), not imported.
       ignoreDependencies: ['tsx'],
     },

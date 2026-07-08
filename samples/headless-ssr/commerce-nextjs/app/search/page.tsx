@@ -66,12 +66,6 @@ export default async function Search({
           <BreadcrumbManager />
           <ProductList />
           <Pagination />
-          {/*
-            ShowMore demonstrates an alternative, "load more" pagination pattern.
-            It is kept as a reference example (components/show-more.tsx) but left
-            out of the rendered UI to keep the sample focused.
-            <ShowMore />
-          */}
         </div>
       </div>
     </SearchProvider>
