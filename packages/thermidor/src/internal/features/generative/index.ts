@@ -2,18 +2,19 @@ export {getOrCreateGenerativeSlice} from './generative-slice.js';
 export {getOrCreateGenerativeActions} from './generative-actions.js';
 export {getOrCreateGenerativeSelectors} from './generative-selectors.js';
 export {
-  getOrCreateHydrateFromSnapshotAction,
   createHydrateSubInterface,
+  getOrCreateHydrateFromSnapshotAction,
 } from './generative-hydration.js';
 export type {
+  A2UISurface,
+  AgentMessage,
+  AgentResponse,
   GenerativeState,
-  Turn,
-  TurnStatus,
   RoutedInterface,
   RoutedUseCase,
-  AgentResponse,
-  AgentMessage,
-  A2UISurface,
   ToolCall,
   ToolCallStatus,
+  Turn,
+  TurnStatus,
+  UseCaseInterfaceMap,
 } from './generative-types.js';
