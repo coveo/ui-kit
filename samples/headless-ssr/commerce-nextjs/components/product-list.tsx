@@ -1,34 +1,19 @@
 'use client';
 
-import {ResultType} from '@coveo/headless-react/ssr-commerce';
 import {useCart, useContext, useProductList} from '@/lib/commerce-engine';
 import {addToCart} from '@/utils/cart';
 import ProductButtonWithImage from './product-button-with-image';
 import ProductPrice from './product-price';
 import ProductVariants from './product-variants';
-import SpotlightContentButton from './spotlight-content-button';
 
 export default function ProductList() {
   const {state, methods} = useProductList();
   const {state: cartState, methods: cartMethods} = useCart();
   const {state: contextState} = useContext();
 
-  const items = state.results.length > 0 ? state.results : state.products;
-
   return (
     <ul aria-label="Product List" className="ProductList">
-      {items.map((item) => {
-        if (item?.resultType === ResultType.SPOTLIGHT) {
-          return (
-            <li key={item.id} className="ProductCard SpotlightContent">
-              <SpotlightContentButton
-                methods={methods}
-                spotlightContent={item}
-              />
-            </li>
-          );
-        }
-
+      {state.products.map((item) => {
         const quantityInCart =
           cartState.items.find(
             (cartItem) => cartItem.productId === item.ec_product_id
