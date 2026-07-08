@@ -7,7 +7,7 @@ import {fileURLToPath} from 'node:url';
 import {argv} from 'node:process';
 import {downloadTemplate, TemplateVersionUnavailableError} from './download.js';
 import {isEmptyOrMissing} from './fs-utils.js';
-import {note} from '@clack/prompts';
+import {log} from './log.js';
 import {promptProjectName, selectTemplate} from './prompt.js';
 import {
   installDependencies,
@@ -20,7 +20,7 @@ import {
   getTemplates,
   type Template,
 } from './templates.js';
-import {formatError, getPackageManager, log} from './utils.js';
+import {formatError, getPackageManager} from './utils.js';
 
 export function unavailableTemplateMessage(
   templateName: string,
@@ -46,6 +46,12 @@ export interface CliArgs {
   template?: string;
   templateVersion?: string;
   docs: boolean;
+}
+
+export interface ScaffoldOptions {
+  template: Template;
+  projectName: string;
+  version?: string;
 }
 
 /**
@@ -124,11 +130,11 @@ async function claimTargetDir(targetDir: string): Promise<boolean> {
 }
 
 /** Downloads, resolves, finalizes, and installs the chosen template. */
-export async function scaffold(
-  template: Template,
-  projectName: string,
-  version?: string
-): Promise<void> {
+export async function scaffold({
+  template,
+  projectName,
+  version,
+}: ScaffoldOptions): Promise<void> {
   const targetDir = resolve(process.cwd(), projectName);
   const tempDir = await mkdtemp(join(tmpdir(), 'create-ui-'));
   let createdTargetDir = false;
@@ -151,7 +157,7 @@ export async function scaffold(
       await rm(targetDir, {recursive: true, force: true});
     }
     if (error instanceof TemplateVersionUnavailableError) {
-      note(
+      log.note(
         `Check available templates:  npm create @coveo/ui -- --help\n` +
           `Open an issue:              https://github.com/coveo/ui-kit/issues\n` +
           `Coveo community:            https://connect.coveo.com`,
@@ -176,6 +182,66 @@ export async function scaffold(
   log.info(`  ${pm} run dev\n`);
 }
 
+/**
+ * Resolves the template from an explicit `--template` value (validated) or,
+ * when omitted, the interactive selector. Returns null when an explicit value
+ * is unknown.
+ */
+async function resolveTemplate(
+  templateArg: string | undefined
+): Promise<Template | null> {
+  if (templateArg === undefined) {
+    return selectTemplate();
+  }
+  const found = getTemplate(templateArg);
+  if (found) {
+    return found;
+  }
+  log.error(`Unknown template "${templateArg}".`);
+  log.info(
+    `\nAvailable templates:\n${getTemplates()
+      .map((t) => `  ${t.name}`)
+      .join('\n')}`
+  );
+  log.note(
+    `Run with --help to see all templates:\n` +
+      `  npm create @coveo/ui -- --help`,
+    'Tip'
+  );
+  return null;
+}
+
+/**
+ * The single interactive phase: turns parsed args into a fully-resolved options
+ * object, validating flags and prompting for anything missing.
+ * Returns null when validation fails so the caller can exit non-zero.
+ */
+async function resolveInputs(args: CliArgs): Promise<ScaffoldOptions | null> {
+  const template = await resolveTemplate(args.template);
+  if (!template) {
+    return null;
+  }
+
+  const projectName = args.projectName ?? (await promptProjectName());
+
+  const targetDir = resolve(process.cwd(), projectName);
+  if (!(await isEmptyOrMissing(targetDir))) {
+    log.error(
+      `Target directory "${projectName}" already exists and is not empty.`
+    );
+    log.note(
+      `Pick a different name, or remove the directory:\n` +
+        `  rm -rf ${projectName}`,
+      'Tip'
+    );
+    return null;
+  }
+
+  const version = args.templateVersion;
+
+  return {template, projectName, version};
+}
+
 export async function main(rawArgs: string[]): Promise<number> {
   let args: CliArgs;
   try {
@@ -195,46 +261,12 @@ export async function main(rawArgs: string[]): Promise<number> {
     return 0;
   }
 
-  // Resolve the template: explicit --template (validated) or interactive select.
-  let template: Template;
-  if (args.template !== undefined) {
-    const found = getTemplate(args.template);
-    if (!found) {
-      log.error(`Unknown template "${args.template}".`);
-      log.info(
-        `\nAvailable templates:\n${getTemplates()
-          .map((t) => `  ${t.name}`)
-          .join('\n')}`
-      );
-      note(
-        `Run with --help to see all templates:\n` +
-          `  npm create @coveo/ui -- --help`,
-        'Tip'
-      );
-      return 1;
-    }
-    template = found;
-  } else {
-    template = await selectTemplate();
-  }
-
-  // Resolve the project name: positional arg or interactive input.
-  const projectName = args.projectName ?? (await promptProjectName());
-
-  const targetDir = resolve(process.cwd(), projectName);
-  if (!(await isEmptyOrMissing(targetDir))) {
-    log.error(
-      `Target directory "${projectName}" already exists and is not empty.`
-    );
-    note(
-      `Pick a different name, or remove the directory:\n` +
-        `  rm -rf ${projectName}`,
-      'Tip'
-    );
+  const options = await resolveInputs(args);
+  if (options === null) {
     return 1;
   }
 
-  await scaffold(template, projectName, args.templateVersion);
+  await scaffold(options);
   return 0;
 }
 

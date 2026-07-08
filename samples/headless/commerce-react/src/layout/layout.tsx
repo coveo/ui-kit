@@ -24,8 +24,15 @@ export default function Layout(props: ILayoutProps) {
   return (
     <div className="Layout">
       <section className="Header">
-        <h1 className="AppTitle">Coveo Headless Commerce + React</h1>
-        <div className="Tabs">
+        <div className="HeaderBrand">
+          <img
+            className="HeaderLogo"
+            src={`${import.meta.env.BASE_URL}coveo-logo.svg`}
+            alt="Coveo"
+          />
+          <h1 className="AppTitle">Headless Commerce + React</h1>
+        </div>
+        <nav className="Tabs" aria-label="Primary">
           <span>
             <input
               type="radio"
@@ -62,35 +69,11 @@ export default function Layout(props: ILayoutProps) {
             <label htmlFor="surf-accessories">Surf Accessories</label>
           </span>
 
-          <span>
-            <input
-              type="radio"
-              id="pants"
-              name="pants"
-              value="/listing/pants"
-              checked={window.location.pathname === '/listing/pants'}
-              onChange={() => navigate('/listing/pants')}
-            />
-            <label htmlFor="pants">Pants</label>
-          </span>
-
-          <span>
-            <input
-              type="radio"
-              id="towels"
-              name="towels"
-              value="/listing/towels"
-              checked={window.location.pathname === '/listing/towels'}
-              onChange={() => navigate('/listing/towels')}
-            />
-            <label htmlFor="towels">Towels</label>
-          </span>
-
           <CartTab
             controller={buildCart(engine)}
             onChange={() => navigate('/cart')}
           ></CartTab>
-        </div>
+        </nav>
         {!(window.location.pathname === '/search') && (
           <StandaloneSearchBox
             navigate={navigate}

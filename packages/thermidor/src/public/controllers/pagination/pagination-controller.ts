@@ -1,14 +1,11 @@
-import {BaseController} from '@/src/core/interface/base-controller.js';
-import type {
-  Supports,
-  EndpointThunk,
-} from '@/src/core/interface/utils/interface-types.js';
-import type {StateSelector} from '@/src/core/interface/engine/engine-types.js';
-import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
-import {getHandleInternals} from '@/src/core/interface/utils/get-handle-internals.js';
-import {getOrCreatePaginationActions} from '@/src/core/internal/pagination/pagination-actions.js';
-import {getOrCreatePaginationSelectors} from '@/src/core/internal/pagination/pagination-selectors.js';
-import {getOrCreatePaginationSlice} from '@/src/core/internal/pagination/pagination-slice.js';
+import {BaseController} from '@/src/internal/utils/index.js';
+import type {Supports, EndpointThunk} from '@/src/internal/utils/index.js';
+import type {StateSelector} from '@/src/internal/engine/index.js';
+import {createMemoizedStateSelector} from '@/src/internal/utils/index.js';
+import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getOrCreatePaginationActions} from '@/src/internal/features/pagination/index.js';
+import {getOrCreatePaginationSelectors} from '@/src/internal/features/pagination/index.js';
+import {getOrCreatePaginationSlice} from '@/src/internal/features/pagination/index.js';
 import type {Controller} from '@/src/public/controllers/controller-types.js';
 
 class PaginationControllerImpl extends BaseController<PaginationControllerState> {
