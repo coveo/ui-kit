@@ -8,7 +8,7 @@
     }
   ],
   "commit": false,
-  "fixed": [],
+  "fixed": [["@coveo/headless", "@coveo/ui-kit-sample-headless-*"]],
   "linked": [],
   "access": "public",
   "baseBranch": "main",
