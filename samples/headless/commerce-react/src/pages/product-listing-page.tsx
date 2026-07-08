@@ -1,12 +1,10 @@
 import {
-  buildNotifyTrigger,
   buildProductListing,
   type Cart,
   type CommerceEngine,
   type Context,
 } from '@coveo/headless/commerce';
 import {useCallback, useEffect} from 'react';
-import NotifyTrigger from '../components/triggers/notify-trigger.js';
 import SearchAndListingInterface from '../components/use-cases/search-and-listing-interface/search-and-listing-interface.js';
 
 interface IProductListingPageProps {
@@ -15,12 +13,10 @@ interface IProductListingPageProps {
   contextController: Context;
   url: string;
   pageName: string;
-  navigate: (pathName: string) => void;
 }
 
 export default function ProductListingPage(props: IProductListingPageProps) {
-  const {engine, cartController, contextController, url, pageName, navigate} =
-    props;
+  const {engine, cartController, contextController, url, pageName} = props;
 
   const productListingController = buildProductListing(engine, {
     enableResults: true,
@@ -85,11 +81,9 @@ export default function ProductListingPage(props: IProductListingPageProps) {
   return (
     <div className="ProductListingPage">
       <h2 className="PageTitle">{pageName}</h2>
-      <NotifyTrigger controller={buildNotifyTrigger(engine)} />
       <SearchAndListingInterface
         searchOrListingController={productListingController}
         cartController={cartController}
-        navigate={navigate}
       />
     </div>
   );

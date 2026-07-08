@@ -8,23 +8,24 @@ import {useEffect, useState} from 'react';
 import BreadcrumbManager from '../../breadcrumb-manager/breadcrumb-manager.js';
 import FacetGenerator from '../../facets/facet-generator/facet-generator.js';
 import Pagination from '../../pagination/pagination.js';
-import ProductsPerPage from '../../products-per-page/products-per-page.js';
+// ProductsPerPage is an optional page-size control, omitted to keep the sample focused:
+// import ProductsPerPage from '../../products-per-page/products-per-page.js';
 import ResultList from '../../result-list/result-list.js';
 import Sort from '../../sort/sort.js';
 import Summary from '../../summary/summary.js';
 import './search-and-listing-interface.css';
-import ShowMore from '../../show-more/show-more.js';
+// ShowMore is an alternative to the numbered Pager, omitted to keep the sample focused:
+// import ShowMore from '../../show-more/show-more.js';
 
 interface ISearchAndListingInterface {
   searchOrListingController: HeadlessSearch | ProductListing;
   cartController: Cart;
-  navigate: (pathName: string) => void;
 }
 
 export default function SearchAndListingInterface(
   props: ISearchAndListingInterface
 ) {
-  const {searchOrListingController, cartController, navigate} = props;
+  const {searchOrListingController, cartController} = props;
 
   const [searchOrListingState, setSearchOrListingState] = useState(
     searchOrListingController.state
@@ -67,13 +68,14 @@ export default function SearchAndListingInterface(
           promoteChildToParent={(child: ChildProduct) =>
             searchOrListingController.promoteChildToParent(child)
           }
-          navigate={navigate}
         />
-        <ProductsPerPage controller={paginationController} />
+        {/* ProductsPerPage is an optional page-size control, omitted here to keep the sample focused.
+        <ProductsPerPage controller={paginationController} /> */}
+        {/* ShowMore is an alternative to the numbered Pager below; omitted here to keep the sample focused on a single pagination pattern.
         <ShowMore
           controller={paginationController}
           summaryController={summaryController}
-        />
+        /> */}
         <Pagination controller={paginationController} />
       </div>
     </div>

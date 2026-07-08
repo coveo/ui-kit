@@ -1,22 +1,18 @@
 import {describe, it, expect, vi} from 'vitest';
-import {createAsyncThunk} from '@reduxjs/toolkit';
 import {
   ComposedInterface,
   composeInterfaces,
   getComposedInternals,
 } from './compose.js';
-import {BaseInterface} from '@/src/core/interface/base-interface.js';
+import {BaseInterface, createNoopThunk} from '@/src/internal/utils/index.js';
 import {
   Engine,
   getFullEngine,
   type FullEngine,
-} from '@/src/core/interface/engine/engine.js';
+} from '@/src/internal/engine/index.js';
 
 function createMockThunk(label: string) {
-  return createAsyncThunk<void, {engine: FullEngine}>(
-    `mock/${label}`,
-    async () => {}
-  );
+  return createNoopThunk(label);
 }
 
 const mockSearchThunk = createMockThunk('search');

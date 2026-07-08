@@ -1,7 +1,13 @@
 import submitFollowUp from '@salesforce/label/c.quantic_SubmitFollowUp';
 import askFollowUp from '@salesforce/label/c.quantic_AskFollowUp';
-import {keys} from 'c/quanticUtils';
+import followUpInputTooLong from '@salesforce/label/c.quantic_FollowUpInputTooLong';
+import {I18nUtils, keys} from 'c/quanticUtils';
 import {api, LightningElement} from 'lwc';
+
+/**
+ * Maximum number of characters allowed in a follow-up question.
+ */
+const MAX_FOLLOW_UP_QUESTION_LENGTH = 300;
 
 /**
  * The `QuanticGeneratedAnswerFollowUpInput` component allows users to submit follow-up questions related to a generated answer.
@@ -14,6 +20,7 @@ export default class QuanticGeneratedAnswerFollowUpInput extends LightningElemen
   labels = {
     submitFollowUp,
     askFollowUp,
+    followUpInputTooLong,
   };
 
   /**
@@ -26,6 +33,9 @@ export default class QuanticGeneratedAnswerFollowUpInput extends LightningElemen
 
   /** @type {boolean} */
   _focused = false;
+
+  /** @type {number} */
+  characterCount = 0;
 
   handleKeyDown(event) {
     // Let the browser commit IME text before handling shortcuts like Enter during composition.
@@ -47,13 +57,14 @@ export default class QuanticGeneratedAnswerFollowUpInput extends LightningElemen
 
   handleSubmitFollowUp() {
     if (
-      this.submitButtonDisabled ||
+      this.isSubmitPrevented ||
       this.refs.askFollowUpInput.value.trim() === ''
     ) {
       return;
     }
     this.sendSubmitFollowUpEvent();
     this.refs.askFollowUpInput.value = '';
+    this.characterCount = 0;
     this.syncTextWithReplica();
     this.collapse();
   }
@@ -70,6 +81,7 @@ export default class QuanticGeneratedAnswerFollowUpInput extends LightningElemen
   }
 
   handleInput() {
+    this.characterCount = this.refs.askFollowUpInput.value.trim().length;
     this.expand();
     this.syncTextWithReplica();
   }
@@ -105,13 +117,44 @@ export default class QuanticGeneratedAnswerFollowUpInput extends LightningElemen
         bubbles: true,
         composed: true,
         detail: {
-          value: this.refs.askFollowUpInput.value,
+          value: this.refs.askFollowUpInput.value.trim(),
         },
       })
     );
   }
 
   get inputContainerClasses() {
-    return `follow-up-input__container slds-is-relative slds-grid slds-box slds-p-around_none ${this._focused ? 'follow-up-input__container--focused' : ''}`;
+    return `follow-up-input__container slds-is-relative slds-grid slds-box slds-p-around_none ${this.isOverCharacterLimit ? 'follow-up-input__container--error' : ''}`;
+  }
+
+  get isOverCharacterLimit() {
+    return this.characterCount > MAX_FOLLOW_UP_QUESTION_LENGTH;
+  }
+
+  get isSubmitPrevented() {
+    return this.submitButtonDisabled || this.isOverCharacterLimit;
+  }
+
+  get textareaAriaInvalid() {
+    return this.isOverCharacterLimit ? 'true' : null;
+  }
+
+  get textareaAriaDescribedBy() {
+    return this.isOverCharacterLimit ? 'follow-up-validation-message' : null;
+  }
+
+  get characterCounterText() {
+    return `${this.characterCount} / ${MAX_FOLLOW_UP_QUESTION_LENGTH}`;
+  }
+
+  get characterCounterClasses() {
+    return `follow-up-input__counter slds-col_bump-left slds-text-body_small ${this.isOverCharacterLimit ? 'slds-text-color_error' : 'slds-text-color_weak'}`;
+  }
+
+  get validationMessage() {
+    return I18nUtils.format(
+      this.labels.followUpInputTooLong,
+      MAX_FOLLOW_UP_QUESTION_LENGTH
+    );
   }
 }
