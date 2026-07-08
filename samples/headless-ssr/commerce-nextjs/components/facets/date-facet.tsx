@@ -20,8 +20,23 @@ export default function DateFacet(props: IDateFacetProps) {
     controller?.subscribe(() => setState(controller.state));
   }, [controller]);
 
-  const renderFacetValues = () => {
-    return (
+  return (
+    <fieldset className="DateFacet">
+      <legend className="FacetHeader">
+        <span className="FacetDisplayName">
+          {state.displayName ?? state.facetId}
+        </span>
+        <button
+          type="button"
+          className="FacetClear"
+          aria-label={`Clear ${state.displayName ?? state.facetId} filter`}
+          disabled={!controller || !state.hasActiveValues}
+          onClick={() => controller?.deselectAll()}
+        >
+          Clear
+        </button>
+      </legend>
+
       <ul className="FacetValues">
         {state.values.map((value) => {
           const id = `${value.start}-${value.end}-${value.endInclusive}`;
@@ -34,13 +49,12 @@ export default function DateFacet(props: IDateFacetProps) {
                 id={id}
                 onChange={() => controller?.toggleSelect(value)}
                 type="checkbox"
-              ></input>
+              />
               <label className="FacetValueLabel" htmlFor={id}>
                 <span className="FacetValueName">
                   {value.start} to {value.end}
                 </span>
-                <span className="FacetValueNumberOfResults">
-                  {' '}
+                <span className="FacetValueCount">
                   ({value.numberOfResults})
                 </span>
               </label>
@@ -48,42 +62,27 @@ export default function DateFacet(props: IDateFacetProps) {
           );
         })}
       </ul>
-    );
-  };
 
-  return (
-    <fieldset className="DateFacet">
-      <legend className="FacetHeader">
-        <span className="FacetDisplayName">
-          {state.displayName ?? state.facetId}
-        </span>
+      <div className="FacetControls">
         <button
           type="button"
-          className="FacetClear"
-          aria-label={`Clear ${state.displayName ?? state.facetId} filter`}
-          disabled={!controller || !state.hasActiveValues}
-          onClick={controller?.deselectAll}
+          aria-label="Show more facet values"
+          className="FacetShowMore"
+          disabled={!controller || !state.canShowMoreValues}
+          onClick={() => controller?.showMoreValues()}
         >
-          Clear
+          Show more
         </button>
-      </legend>
-      {renderFacetValues()}
-      <button
-        type="button"
-        className="FacetShowMore"
-        disabled={!controller || !state.canShowMoreValues}
-        onClick={controller?.showMoreValues}
-      >
-        Show more
-      </button>
-      <button
-        type="button"
-        className="FacetShowLess"
-        disabled={!controller || !state.canShowLessValues}
-        onClick={controller?.showLessValues}
-      >
-        Show less
-      </button>
+        <button
+          type="button"
+          aria-label="Show less facet values"
+          className="FacetShowLess"
+          disabled={!controller || !state.canShowLessValues}
+          onClick={() => controller?.showLessValues()}
+        >
+          Show less
+        </button>
+      </div>
     </fieldset>
   );
 }

@@ -537,7 +537,7 @@ input[type='radio'] {
 /* ---------- Facets ---------- */
 
 /* The whole facet rail is a single elevated panel; each facet is a section
-   inside it, divided by hairlines. */
+   inside it, separated by hairlines. */
 .Facets {
   display: flex;
   flex-direction: column;
@@ -563,7 +563,7 @@ input[type='radio'] {
   min-inline-size: 0; /* let fieldset shrink in the grid */
 }
 
-/* Last facet section shouldn't carry a divider. */
+/* The last facet section shouldn't carry a divider. */
 .Facets > *:last-child {
   border-bottom: none;
 }
@@ -588,68 +588,57 @@ input[type='radio'] {
   color: var(--text);
 }
 
-.FacetSearch {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin: 0px 0 8px;
-}
-
-.FacetSearchLabel {
-  /* The visible "Search:" text is redundant with the input; hide it but keep
-     it available to assistive tech. */
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
-}
-
-.FacetSearchInput {
-  flex: 1;
-  padding: 8px 10px;
-  border: 1px solid var(--border);
+/* "Clear" reads as a quiet coral text link. */
+.FacetClear {
+  border: none;
+  background: transparent;
   border-radius: var(--radius-sm);
-  background: var(--panel);
-  min-width: 0;
-  font-size: 0.9rem;
+  padding: 2px 4px;
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 600;
 }
 
-.FacetSearchInput:focus {
-  outline: none;
-  border-color: var(--brand);
-  box-shadow: 0 0 0 3px var(--brand-soft);
+.FacetClear:hover:not(:disabled) {
+  text-decoration: underline;
 }
 
-.FacetSearchLoading {
-  font-size: 0.8rem;
-  color: var(--faint);
+/* Keep the Clear button's space when inactive so toggling never shifts the
+   facet layout. */
+.FacetClear:disabled {
+  visibility: hidden;
 }
 
-.FacetValues,
-.FacetValuesControls,
-.RootFacetValues,
-.ActiveFacetValueTree,
-.ActiveFacetValueChildren,
-.NumericFacet ul {
+/* Facet value list: a clean, single-column checkbox list. */
+.FacetValues {
   list-style: none;
   margin: 0;
   padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
-.ActiveFacetValueChildren {
-  padding-left: 20px;
-}
-
-.FacetValue,
-.AncestryFacetValue,
-.FacetValueChild,
-.RootFacetValues li {
+.FacetValue {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 1px 0;
+  gap: 10px;
+  padding: 5px 6px;
+  margin: 0 -6px;
+  border-radius: var(--radius-sm);
+}
+
+.FacetValue:hover {
+  background: var(--brand-soft);
+}
+
+/* Category children sit one level deeper than their selected parent. */
+.FacetValueChild {
+  padding-left: 22px;
+}
+
+.FacetValueCheckbox {
+  flex-shrink: 0;
 }
 
 .FacetValueLabel {
@@ -669,48 +658,23 @@ input[type='radio'] {
   white-space: nowrap;
 }
 
-.RootFacetValues .FacetValueName {
-  flex: 1;
-  font-size: 0.9rem;
-  cursor: pointer;
-}
-
-.FacetValueNumberOfProducts,
-.FacetValueNumberOfResults {
+.FacetValueCount {
   color: var(--faint);
   font-size: 0.82rem;
   font-variant-numeric: tabular-nums;
   flex-shrink: 0;
 }
 
-.ManualRangeControls {
+/* Show more / less sit in a reserved footer row so the facet keeps a constant
+   height and never shifts when the controls toggle. */
+.FacetControls {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-  margin: 4px 0 8px;
-  font-size: 0.82rem;
-  color: var(--muted);
+  gap: 8px;
+  margin-top: 12px;
 }
 
-.ManualRangeControls input {
-  width: 68px;
-  padding: 7px 8px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  font-size: 0.85rem;
-}
-
-.ManualRangeControls input:focus {
-  outline: none;
-  border-color: var(--brand);
-  box-shadow: 0 0 0 3px var(--brand-soft);
-}
-
-/* Small, quiet facet control buttons. */
 .FacetShowMore,
-.FacetShowLess,
-.ManualRangeSelect {
+.FacetShowLess {
   border: 1px solid var(--border);
   background: var(--panel);
   border-radius: var(--radius-sm);
@@ -724,92 +688,16 @@ input[type='radio'] {
 }
 
 .FacetShowMore:hover:not(:disabled),
-.FacetShowLess:hover:not(:disabled),
-.ManualRangeSelect:hover:not(:disabled) {
+.FacetShowLess:hover:not(:disabled) {
   background: var(--brand-soft);
   border-color: var(--border-strong);
 }
 
-/* "Clear" and the facet-search clear read as quiet coral text links. */
-.FacetClear,
-.FacetSearchClear {
-  border: none;
-  background: transparent;
-  border-radius: var(--radius-sm);
-  padding: 2px 4px;
-  color: var(--accent);
-  font-size: 0.78rem;
-  font-weight: 600;
-}
-
-.FacetClear:hover:not(:disabled),
-.FacetSearchClear:hover:not(:disabled) {
-  text-decoration: underline;
-}
-
-/* Show more / less sit in a reserved footer row so the facet keeps a constant
-   height and never shifts when the controls toggle. */
-.FacetShowMore,
-.FacetShowLess {
-  margin-top: 4px;
-}
-
-.FacetShowLess {
-  margin-left: 6px;
-}
-
-/* The header Clear and the show more/less buttons keep their space when
-   inactive (visibility), so toggling them never shifts the facet layout. */
-.FacetClear:disabled,
+/* Keep the show more/less buttons' space when inactive (visibility) so
+   toggling them never shifts the facet layout. */
 .FacetShowMore:disabled,
 .FacetShowLess:disabled {
   visibility: hidden;
-}
-
-/* The facet-search clear collapses when there's nothing to clear. */
-.FacetSearchClear:disabled {
-  display: none;
-}
-
-.FacetSearchResults {
-  list-style: none;
-  margin: 8px 0;
-  padding: 0;
-}
-
-.FacetSearchResult {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 5px 0;
-  font-size: 0.9rem;
-  cursor: pointer;
-}
-
-.FacetSearchResultLabel {
-  cursor: pointer;
-}
-
-.FacetSearchResultCategory {
-  color: var(--faint);
-}
-
-.FacetSearchResultNumberOfProducts {
-  color: var(--faint);
-  font-size: 0.82rem;
-}
-
-.FacetSearchNoResults {
-  font-size: 0.88rem;
-  color: var(--muted);
-}
-
-/* Highlight matches with the brand accent instead of the default yellow. */
-mark {
-  background: var(--accent-soft);
-  color: var(--accent-strong);
-  border-radius: 3px;
-  padding: 0 1px;
 }
 
 /* ---------- Breadcrumbs / active filters ---------- */

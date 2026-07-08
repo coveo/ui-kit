@@ -48,9 +48,7 @@ export default {
       },
     }),
     context: defineContext(),
-    recentQueriesList: defineRecentQueriesList({
-      options: {enableResults: true},
-    }),
+    recentQueriesList: defineRecentQueriesList({options: {maxLength: 3}}),
     standaloneSearchBox: defineStandaloneSearchBox({
       options: {
         redirectionUrl: '/search',
@@ -60,9 +58,9 @@ export default {
       },
     }),
     instantProducts: defineInstantProducts(),
-    pagination: definePagination({options: {pageSize: 9}}),
+    pagination: definePagination({options: {pageSize: 15}}),
     sort: defineSort(),
-    didYouMean: defineDidYouMean({enableResults: true}),
+    didYouMean: defineDidYouMean(),
     parameterManager: defineParameterManager(),
     facetGenerator: defineFacetGenerator(),
     breadcrumbManager: defineBreadcrumbManager(),
