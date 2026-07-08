@@ -75,7 +75,7 @@ function buildProgram(): Command {
     )
     .option(
       '--template-version <version>',
-      'sample version or npm dist-tag to scaffold (defaults to latest)'
+      'Headless/Atomic library version (or npm dist-tag) to scaffold (defaults to latest)'
     )
     .option('--docs', 'print links to the Coveo documentation')
     .addHelpText(

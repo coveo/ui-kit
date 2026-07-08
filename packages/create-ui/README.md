@@ -29,19 +29,23 @@ pnpm create @coveo/ui my-app --template headless-search-react
 | ------------------------------ | ------------------------------------------------------------------ |
 | `<project-name>`               | Directory to create the project in.                                |
 | `--template <id>`              | Template to scaffold (skips the interactive prompt).               |
-| `--template-version <version>` | Sample version or npm dist-tag to scaffold (defaults to `latest`). |
+| `--template-version <version>` | Headless/Atomic library version (or npm dist-tag) to scaffold (defaults to `latest`). |
 | `-h`, `--help`                 | Show usage and the list of available templates.                    |
 
 ### Pinning a template version
 
-By default the CLI scaffolds the `latest` published version of a sample. Pass
-`--template-version` to scaffold a specific version from npm instead:
+Samples are versioned in lockstep with the Coveo library they build on (Headless
+or Atomic), so a sample's version always matches its library's version. By
+default the CLI scaffolds the `latest` published version. Pass
+`--template-version` to scaffold the sample that matches a specific library
+version instead:
 
 ```sh
 npm create @coveo/ui@latest my-app --template headless-search-react --template-version 3.2.1
 ```
 
-Omitting `--template-version` keeps the current behavior (`latest`).
+The example above scaffolds the `headless-search-react` sample built against
+Headless `3.2.1`. Omitting `--template-version` keeps the default (`latest`).
 
 ## Templates
 

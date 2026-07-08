@@ -35,6 +35,7 @@ To make a sample publishable:
 
 - Remove `"private": true`
 - Add `"name": "@coveo/ui-kit-sample-<name>"`, `publishConfig.access: "public"`, `files` allowlist
+- Fix each sample to its library via changesets [fixed packages](https://github.com/changesets/changesets/blob/main/docs/fixed-packages.md), so the sample and its Headless/Atomic library are always bumped together — a sample's version always matches its library's.
 
 Same "Version Packages" → publish flow as the libraries. No second pipeline.
 
@@ -46,4 +47,4 @@ Same "Version Packages" → publish flow as the libraries. No second pipeline.
 
 - KIT-5842 (run-time protocol resolution) is eliminated — resolved at publish time by pnpm.
 - Samples become public API surface; a broken sample fails at publish/install time, not silently at scaffold time.
-- Pinning a specific sample version is supported via `--template-version <version>` (a semver or npm dist-tag), which replaces the old `--ref <branch>` and defaults to `latest` (see [ADR 001](./001-sample-consumption.md) decision #3).
+- Pinning a specific version is supported via `--template-version <version>`, which replaces the old `--ref <branch>` and defaults to `latest`. Because samples are fixed to their library (decision #3), the pinned value is the Headless/Atomic library version — a semver such as `3.2.1`, or an npm dist-tag (see [ADR 001](./001-sample-consumption.md) decision #3).
