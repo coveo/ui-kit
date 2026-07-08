@@ -46,6 +46,7 @@ export const testAgent =
         {
           agentAnswerRequestRegex,
           agentFollowUpRequestRegex,
+          isAgent: true,
         }
       );
 

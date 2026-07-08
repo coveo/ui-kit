@@ -30,6 +30,7 @@ export interface GeneratedAnswerObjectConfig {
   generateRequestRegex?: RegExp;
   agentAnswerRequestRegex?: RegExp;
   agentFollowUpRequestRegex?: RegExp;
+  isAgent?: boolean;
   withFacets?: boolean;
 }
 
@@ -40,6 +41,7 @@ export class GeneratedAnswerObject {
   private agentAnswerRequestRegex?: RegExp;
   private agentFollowUpRequestRegex?: RegExp;
   private withFacets: boolean;
+  private isAgent: boolean;
 
   constructor(
     private page: Page,
@@ -56,14 +58,15 @@ export class GeneratedAnswerObject {
     this.agentAnswerRequestRegex = config.agentAnswerRequestRegex;
     this.agentFollowUpRequestRegex = config.agentFollowUpRequestRegex;
     this.withFacets = config.withFacets ?? false;
+    this.isAgent = config.isAgent ?? false;
   }
 
   get likeButton(): Locator {
-    return this.page.getByRole('button', {name: 'This answer was helpful'});
+    return this.page.getByRole('button', {name: this.isAgent ? 'Like' : 'This answer was helpful', exact: true});
   }
 
   get dislikeButton(): Locator {
-    return this.page.getByRole('button', {name: 'This answer was not helpful'});
+    return this.page.getByRole('button', {name: this.isAgent ? 'Dislike' : 'This answer was not helpful', exact: true});
   }
 
   get copyToClipboardButton(): Locator {
@@ -132,12 +135,28 @@ export class GeneratedAnswerObject {
 
   get citationLink(): Locator {
     return this.page
-      .getByTestId('generated-answer__citations')
+      .getByTestId(this.isAgent ? 'generated-answer-body__citations' : 'generated-answer__citations')
       .locator('.citation__link');
   }
 
   get showMoreButton(): Locator {
     return this.page.getByTestId('generated-answer__answer-toggle');
+  }
+
+  get showPreviousAnswersButton(): Locator {
+    return this.page.getByTestId('show-previous-button');
+  }
+
+  get threadItems(): Locator {
+    return this.page.locator('c-quantic-thread-item');
+  }
+
+  get threadItemTitleButton(): Locator {
+    return this.threadItems.getByTestId('thread-item-title-button');
+  }
+
+  get generatedAnswerBody(): Locator {
+    return this.page.locator('c-quantic-generated-answer-body');
   }
 
   async hoverOverCitation(index: number): Promise<void> {
@@ -180,8 +199,16 @@ export class GeneratedAnswerObject {
     await this.likeButton.click();
   }
 
+  async clickNthLikeButton(answerIndex: number): Promise<void> {
+    await this.likeButton.nth(answerIndex).click();
+  }
+
   async clickDislikeButton(): Promise<void> {
     await this.dislikeButton.click();
+  }
+
+  async clickNthDislikeButton(answerIndex: number): Promise<void> {
+    await this.dislikeButton.nth(answerIndex).click();
   }
 
   async clickCopyToClipboardButton(): Promise<void> {
@@ -190,6 +217,14 @@ export class GeneratedAnswerObject {
 
   async clickToggleButton(): Promise<void> {
     await this.toggleButton.click();
+  }
+
+  async clickShowPreviousAnswersButton(): Promise<void> {
+    await this.showPreviousAnswersButton.click();
+  }
+
+  async clickNthThreadItem(index: number): Promise<void> {
+    await this.threadItemTitleButton.nth(index).click();
   }
 
   async waitForGenerateRequest(): Promise<Request> {
@@ -215,7 +250,6 @@ export class GeneratedAnswerObject {
 
   async waitForStreamEndAnalytics(): Promise<Request | boolean> {
     if (this.analyticsMode === AnalyticsModeEnum.legacy) {
-      console.log('Waiting for stream end analytics (legacy mode) ', this.streamId);
       return this.analytics.waitForCustomUaAnalytics(
         {
           eventType: 'generatedAnswer',
@@ -232,6 +266,12 @@ export class GeneratedAnswerObject {
   }
 
   async waitForLikeGeneratedAnswerAnalytics(): Promise<Request> {
+    return this.waitForLikeGeneratedAnswerAnalyticsForId(this.streamId);
+  }
+
+  async waitForLikeGeneratedAnswerAnalyticsForId(
+    answerId: string
+  ): Promise<Request> {
     if (this.analyticsMode === AnalyticsModeEnum.legacy) {
       return this.analytics.waitForCustomUaAnalytics(
         {
@@ -239,7 +279,7 @@ export class GeneratedAnswerObject {
           eventValue: 'likeGeneratedAnswer',
         },
         (event) =>
-          event?.customData?.generativeQuestionAnsweringId === this.streamId
+          event?.customData?.generativeQuestionAnsweringId === answerId
       );
     }
     return this.analytics.waitForEventProtocolAnalytics(
@@ -249,6 +289,12 @@ export class GeneratedAnswerObject {
   }
 
   async waitForDislikeGeneratedAnswerAnalytics(): Promise<Request> {
+    return this.waitForDislikeGeneratedAnswerAnalyticsForId(this.streamId);
+  }
+
+  async waitForDislikeGeneratedAnswerAnalyticsForId(
+    answerId: string
+  ): Promise<Request> {
     if (this.analyticsMode === AnalyticsModeEnum.legacy) {
       return this.analytics.waitForCustomUaAnalytics(
         {
@@ -256,7 +302,7 @@ export class GeneratedAnswerObject {
           eventValue: 'dislikeGeneratedAnswer',
         },
         (event) =>
-          event?.customData?.generativeQuestionAnsweringId === this.streamId
+          event?.customData?.generativeQuestionAnsweringId === answerId
       );
     }
     return this.analytics.waitForEventProtocolAnalytics(
@@ -482,12 +528,9 @@ export class GeneratedAnswerObject {
     body: Array<AgentMessage>
   ) {
     await this.page.route('**/agents/*/answer', (route) => {
-      if (route.request().url().includes('/follow-up')) {
-        return route.fallback();
-      }
       let bodyText = '';
       body.forEach((data) => {
-        bodyText += `data: ${JSON.stringify(data)} \n\n`;
+        bodyText += `data:${JSON.stringify(data)} \n\n`;
       });
       route.fulfill({
         status: 200,
@@ -498,12 +541,17 @@ export class GeneratedAnswerObject {
   }
 
   async mockAgentFollowUpResponse(
-    body: Array<AgentMessage>
+    bodies: Array<Array<AgentMessage>>
   ) {
-    await this.page.route('**/agents/*/answer/follow-up', (route) => {
+    let callCount = 0;
+    await this.page.route('**/agents/*/follow-up', (route) => {
+      // To make sure that we always return a mocked response. 
+      const streams = bodies[Math.min(callCount, bodies.length - 1)];
+      callCount++;
+
       let bodyText = '';
-      body.forEach((data) => {
-        bodyText += `data: ${JSON.stringify(data)} \n\n`;
+      streams.forEach((data) => {
+        bodyText += `data:${JSON.stringify(data)} \n\n`;
       });
       route.fulfill({
         status: 200,
@@ -520,9 +568,9 @@ export class GeneratedAnswerObject {
   }
 
   get followUpSubmitButton(): Locator {
-    return this.page.locator(
-      'c-quantic-generated-answer-follow-up-input lightning-button-icon[name="submit-follow-up"]'
-    );
+    return this.page
+      .locator('c-quantic-generated-answer-follow-up-input')
+      .getByRole('button', { name: 'Submit follow-up' });
   }
 
   async typeFollowUpQuestion(question: string): Promise<void> {

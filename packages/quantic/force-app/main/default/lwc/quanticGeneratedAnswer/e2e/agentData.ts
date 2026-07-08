@@ -12,7 +12,7 @@ type AgentCustomType = {
   type: 'CUSTOM';
   timestamp: number;
   name: string;
-  value: string;
+  value: any;
 };
 
 type AgentStepType = {
@@ -33,7 +33,7 @@ type AgentToolCallArgsType = {
   type: 'TOOL_CALL_ARGS';
   timestamp: number;
   toolCallId: string;
-  delta: string;
+  delta: any;
 };
 
 type AgentTextMessageType = {
@@ -69,77 +69,72 @@ export type AgentCitation = {
 const STREAM_ID = 'conv_1';
 const ANSWER_ID_1 = 'conv_1_0001';
 const ANSWER_ID_2 = 'conv_1_0002';
+const ANSWER_ID_3 = 'conv_1_0003';
 const CONVERSATION_TOKEN = 'conv_1_token';
 
-const runStartStream: AgentRunType = {
+const runStartStream: (answerId: string) => AgentRunType = (answerId) => ({
   type: 'RUN_STARTED',
   timestamp: new Date().valueOf(),
   threadId: STREAM_ID,
-  runId: ANSWER_ID_1,
-};
+  runId: answerId,
+});
 
-const customHeaderWithFollowUpStream: AgentCustomType = {
+const customInitialHeadersStream: (followUpEnabled: boolean) => AgentCustomType = (followUpEnabled) => ({
   type: 'CUSTOM',
   timestamp: new Date().valueOf(),
   name: 'header',
-  value: JSON.stringify({
+  value: {
     contentFormat: 'text/markdown',
     conversationId: STREAM_ID,
-    followUpEnabled: true,
+    followUpEnabled,
     conversationToken: CONVERSATION_TOKEN,
-  }),
-};
+  },
+});
 
-const searchStepStartedStream: AgentStepType = {
+const stepStartedStream: (stepName: string) => AgentStepType = (stepName) => ({
   type: 'STEP_STARTED',
   timestamp: new Date().valueOf(),
-  stepName: 'Searching',
-};
+  stepName,
+});
 
-const searchToolCallStartStream: AgentToolCallType = {
+const stepFinishedStream: (stepName: string) => AgentStepType = (stepName) => ({
+  type: 'STEP_FINISHED',
+  timestamp: new Date().valueOf(),
+  stepName,
+});
+
+const toolCallStartStream: (toolCallName: string) => AgentToolCallType = (toolCallName) => ({
   type: 'TOOL_CALL_START',
   timestamp: new Date().valueOf(),
   toolCallId: 'tool_call_1',
-  toolCallName: 'search',
+  toolCallName,
   parentMessageId: 'message_1',
-};
+});
 
-const searchQueryToolCallArgsStream: AgentToolCallArgsType = {
+const searchQueryToolCallArgsStream: (q: string) => AgentToolCallArgsType = (q) => ({
   type: 'TOOL_CALL_ARGS',
   timestamp: new Date().valueOf(),
   toolCallId: 'tool_call_1',
   delta: JSON.stringify({
-    q: 'test',
+    q,
   }),
-};
+});
 
-const searchToolCallEndStream: AgentToolCallType = {
+const toolCallEndStream: (toolCallName: string) => AgentToolCallType = (toolCallName) => ({
   type: 'TOOL_CALL_END',
   timestamp: new Date().valueOf(),
   toolCallId: 'tool_call_1',
-  toolCallName: 'search',
+  toolCallName,
   parentMessageId: 'message_1',
-};
+});
 
-const searchStepFinishedStream: AgentStepType = {
-  type: 'STEP_FINISHED',
-  timestamp: new Date().valueOf(),
-  stepName: 'Searching',
-};
-
-const answeringStepStartedStream: AgentStepType = {
-  type: 'STEP_STARTED',
-  timestamp: new Date().valueOf(),
-  stepName: 'Answering',
-};
-
-const textMessageStream: AgentTextMessageType = {
+const textMessageStream: (delta: string) => AgentTextMessageType = (delta) => ({
   type: 'TEXT_MESSAGE_CHUNK',
   timestamp: new Date().valueOf(),
-  messageId: 'message_1',
-  parentMessageId: 'message_0',
-  delta: '### Testing in Coveo\n\nclick **Edit components**.\n   - On the **A/B test** tab, click **Configure A/B test**.\n   - Set the traffic ratio and configure the **Test scenario**.\n   - Click **Start** to activate the A/B test.\n\n2. **Edit an A/B Test**\n   - Follow the same steps as creating an A/B test.\n   - Click **Edit A/B test** and adjust the traffic ratio.',
-};
+  messageId: 'message_2',
+  parentMessageId: 'message_1',
+  delta,
+});
 
 const exampleCitation: AgentCitation = {
   id: 'some-id-1',
@@ -163,81 +158,15 @@ const citationStream: AgentCitationType = {
   },
 };
 
-const answeringStepFinishedStream: AgentStepType = {
-  type: 'STEP_FINISHED',
-  timestamp: new Date().valueOf(),
-  stepName: 'Answering',
-};
-
-const runFinishedStream: AgentRunType = {
+const runFinishedStream: (answerId: string) => AgentRunType = (answerId) => ({
   type: 'RUN_FINISHED',
   timestamp: new Date().valueOf(),
   threadId: STREAM_ID,
-  runId: ANSWER_ID_1,
+  runId: answerId,
   result: {
-    completionReason: 'COMPLETED',
+    completionReason: 'ANSWERED',
   },
-};
-
-const followUpRunStartStream: AgentRunType = {
-  type: 'RUN_STARTED',
-  timestamp: new Date().valueOf(),
-  threadId: STREAM_ID,
-  runId: ANSWER_ID_2,
-};
-
-const followUpCustomHeaderWithFollowUpStream: AgentCustomType = {
-  type: 'CUSTOM',
-  timestamp: new Date().valueOf(),
-  name: 'header',
-  value: JSON.stringify({
-    contentFormat: 'text/markdown',
-    conversationId: STREAM_ID,
-    followUpEnabled: true,
-  }),
-};
-
-const followUpThinkingStepStartedStream: AgentStepType = {
-  type: 'STEP_STARTED',
-  timestamp: new Date().valueOf(),
-  stepName: 'Thinking',
-};
-
-const followUpThinkingStepFinishedStream: AgentStepType = {
-  type: 'STEP_FINISHED',
-  timestamp: new Date().valueOf(),
-  stepName: 'Thinking',
-};
-
-const followUpAnsweringStepStartedStream: AgentStepType = {
-  type: 'STEP_STARTED',
-  timestamp: new Date().valueOf(),
-  stepName: 'Answering',
-};
-
-const followUpTextMessageStream: AgentTextMessageType = {
-  type: 'TEXT_MESSAGE_CHUNK',
-  timestamp: new Date().valueOf(),
-  messageId: 'message_2',
-  parentMessageId: 'message_1',
-  delta: 'This is a follow-up answer.',
-};
-
-const followUpAnsweringStepFinishedStream: AgentStepType = {
-  type: 'STEP_FINISHED',
-  timestamp: new Date().valueOf(),
-  stepName: 'Answering',
-};
-
-const followUpRunFinishedStream: AgentRunType = {
-  type: 'RUN_FINISHED',
-  timestamp: new Date().valueOf(),
-  threadId: STREAM_ID,
-  runId: ANSWER_ID_2,
-  result: {
-    completionReason: 'COMPLETED',
-  },
-};
+});
 
 export type AgentMessage =
   | AgentRunType
@@ -250,42 +179,68 @@ export type AgentMessage =
 
 export type AgentData = {
   answerStreams: Array<AgentMessage>;
-  followUpStreams: Array<AgentMessage>;
+  followUpStreams: Array<Array<AgentMessage>>;
   conversationId: string;
   answerId1: string;
   answerId2: string;
+  answerId3: string;
   conversationToken: string;
   citations: Array<AgentCitation>;
 };
 
 const agentData: AgentData = {
   answerStreams: [
-    runStartStream,
-    customHeaderWithFollowUpStream,
-    searchStepStartedStream,
-    searchToolCallStartStream,
-    searchQueryToolCallArgsStream,
-    searchToolCallEndStream,
-    searchStepFinishedStream,
-    answeringStepStartedStream,
-    textMessageStream,
+    runStartStream(ANSWER_ID_1),
+    customInitialHeadersStream(true),
+    stepStartedStream('Searching'),
+    toolCallStartStream('search'),
+    searchQueryToolCallArgsStream('test'),
+    toolCallEndStream('search'),
+    stepFinishedStream('Searching'),
+    stepStartedStream('Answering'),
+    textMessageStream('### Testing in Coveo\n\nclick **Edit components**.\n   - On the **A/B test** tab, click **Configure A/B test**.\n   - Set the traffic ratio and configure the **Test scenario**.\n   - Click **Start** to activate the A/B test.\n\n2. **Edit an A/B Test**\n   - Follow the same steps as creating an A/B test.\n   - Click **Edit A/B test** and adjust the traffic ratio.'),
     citationStream,
-    answeringStepFinishedStream,
-    runFinishedStream,
+    stepFinishedStream('Answering'),
+    runFinishedStream(ANSWER_ID_1),
   ],
   followUpStreams: [
-    followUpRunStartStream,
-    followUpCustomHeaderWithFollowUpStream,
-    followUpThinkingStepStartedStream,
-    followUpThinkingStepFinishedStream,
-    followUpAnsweringStepStartedStream,
-    followUpTextMessageStream,
-    followUpAnsweringStepFinishedStream,
-    followUpRunFinishedStream,
+    [
+      runStartStream(ANSWER_ID_2),
+      customInitialHeadersStream(true),
+      stepStartedStream('Thinking'),
+      stepFinishedStream('Thinking'),
+      stepStartedStream('Searching'),
+      toolCallStartStream('search'),
+      searchQueryToolCallArgsStream('follow-up question'),
+      toolCallEndStream('search'),
+      stepFinishedStream('Searching'),
+      stepStartedStream('Answering'),
+      textMessageStream('This is a follow-up answer.'),
+      citationStream,
+      stepFinishedStream('Answering'),
+      runFinishedStream(ANSWER_ID_2),
+    ],
+    [
+      runStartStream(ANSWER_ID_3),
+      customInitialHeadersStream(true),
+      stepStartedStream('Thinking'),
+      stepFinishedStream('Thinking'),
+      stepStartedStream('Searching'),
+      toolCallStartStream('search'),
+      searchQueryToolCallArgsStream('third question'),
+      toolCallEndStream('search'),
+      stepFinishedStream('Searching'),
+      stepStartedStream('Answering'),
+      textMessageStream('This is the third answer.'),
+      citationStream,
+      stepFinishedStream('Answering'),
+      runFinishedStream(ANSWER_ID_3),
+    ],
   ],
   conversationId: STREAM_ID,
   answerId1: ANSWER_ID_1,
   answerId2: ANSWER_ID_2,
+  answerId3: ANSWER_ID_3,
   conversationToken: CONVERSATION_TOKEN,
   citations: [exampleCitation],
 };

@@ -75,13 +75,6 @@ export default class ExampleQuanticGeneratedAnswer extends LightningElement {
         'The unique identifier of the agent to use to generate the answer. Mutually exclusive with answerConfigurationId. If both are provided, agentId will be used.',
       defaultValue: '',
     },
-    {
-      attribute: 'agentId',
-      label: 'Agent Id',
-      description:
-        'The unique identifier of the agent to use to generate the answer. Required to enable conversational follow-up mode.',
-      defaultValue: '',
-    },
   ];
 
   handleTryItNow(evt) {
