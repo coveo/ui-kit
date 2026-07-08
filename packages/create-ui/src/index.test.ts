@@ -52,20 +52,24 @@ describe('main', () => {
   });
 
   it('returns 0 for --docs and prints the documentation links', async () => {
-    const spy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const chunks: string[] = [];
+    const out = vi.spyOn(process.stdout, 'write').mockImplementation((c) => {
+      chunks.push(String(c));
+      return true;
+    });
     expect(await main(['--docs'])).toBe(0);
-    const output = spy.mock.calls.map((c) => String(c[0])).join('\n');
+    out.mockRestore();
+    const output = chunks.join('');
     expect(output).toContain('https://docs.coveo.com');
     expect(output).toContain('https://docs.coveo.com/en/atomic/latest');
     expect(output).toContain('https://docs.coveo.com/en/headless/latest');
-    spy.mockRestore();
   });
 
   it('returns 1 for an invalid --template', async () => {
-    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
-    const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const out = vi
+      .spyOn(process.stdout, 'write')
+      .mockImplementation(() => true);
     expect(await main(['my-app', '--template', 'nope'])).toBe(1);
-    logSpy.mockRestore();
-    errSpy.mockRestore();
+    out.mockRestore();
   });
 });

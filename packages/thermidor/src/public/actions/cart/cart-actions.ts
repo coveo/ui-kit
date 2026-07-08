@@ -1,11 +1,11 @@
-import type {Supports} from '@/src/core/interface/utils/interface-types.js';
-import {getHandleInternals} from '@/src/core/interface/utils/get-handle-internals.js';
-import {getOrCreateCartActions} from '@/src/core/internal/cart/cart-actions.js';
-import {getOrCreateCartSlice} from '@/src/core/internal/cart/cart-slice.js';
+import type {Supports} from '@/src/internal/utils/index.js';
+import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getOrCreateCartActions} from '@/src/internal/features/cart/index.js';
+import {getOrCreateCartSlice} from '@/src/internal/features/cart/index.js';
 import type {
   SetCartItemsPayload,
   UpdateItemQuantityPayload,
-} from '@/src/core/interface/cart/cart-types.js';
+} from '@/src/internal/features/cart/index.js';
 
 export interface LoadCartActionsOptions {
   interface: Supports<'search'>;

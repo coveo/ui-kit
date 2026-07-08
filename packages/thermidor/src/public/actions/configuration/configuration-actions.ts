@@ -1,4 +1,4 @@
-import {Engine, getFullEngine} from '@/src/core/interface/engine/engine.js';
+import {Engine, getFullEngine} from '@/src/internal/engine/index.js';
 import {
   setOrganizationId,
   setAccessToken,
@@ -8,18 +8,20 @@ import {
   setCurrency,
   setEndpoint,
   setConfiguration,
-} from '@/src/core/interface/configuration/configuration-mutators.js';
-import type * as ConfigurationMutators from '@/src/core/interface/configuration/configuration-mutators.js';
-import {configurationSlice} from '@/src/core/internal/configuration/configuration-slice.js';
-import type {ConfigurationState} from '@/src/core/interface/configuration/configuration-types.js';
+  configurationSlice,
+} from '@/src/internal/features/configuration/index.js';
+import type {ConfigurationState} from '@/src/internal/features/configuration/index.js';
 
-type MutatorToAction<T> = T extends (...args: infer A) => any
-  ? (...args: A) => void
-  : never;
-
-type MutatorsToActions<T> = {
-  [K in keyof T]: MutatorToAction<T[K]>;
-};
+export interface ConfigurationActions {
+  setOrganizationId: (organizationId: string) => void;
+  setAccessToken: (accessToken: string) => void;
+  setTrackingId: (trackingId: string) => void;
+  setLanguage: (language: string) => void;
+  setCountry: (country: string) => void;
+  setCurrency: (currency: string) => void;
+  setEndpoint: (endpoint: string | undefined) => void;
+  setConfiguration: (config: ConfigurationState) => void;
+}
 
 const loadedEngine = new WeakSet<Engine>();
 
@@ -35,7 +37,7 @@ const ensureLoaded = (engine: Engine) => {
 
 export const loadConfigurationActions = (
   engine: Engine
-): MutatorsToActions<typeof ConfigurationMutators> => {
+): ConfigurationActions => {
   ensureLoaded(engine);
   const fullEngine = getFullEngine(engine);
 
