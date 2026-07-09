@@ -218,6 +218,11 @@ export function readCatalogInfo(directory) {
   if (!stats) {
     return undefined;
   }
+  if (!stats.isFile()) {
+    throw new Error(
+      `Failed to load ${relative(rootDir, catalogInfoPath)}: path is not a file`
+    );
+  }
 
   try {
     return JSON.parse(readFileSync(catalogInfoPath, 'utf-8'));

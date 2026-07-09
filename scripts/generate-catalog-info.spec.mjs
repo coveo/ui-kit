@@ -15,7 +15,8 @@ function makeTempDir() {
 }
 
 afterEach(() => {
-  for (const directory of tempDirs.splice(0)) {
+  while (tempDirs.length > 0) {
+    const directory = tempDirs.pop();
     rmSync(directory, {recursive: true, force: true});
   }
 });
