@@ -99,12 +99,20 @@ export class ConversationService {
   }
 
   private loadPersistedState(): SerializedConverseState | undefined {
-    const raw = localStorage.getItem(CONVERSATION_STORAGE_KEY);
-    return raw ? (JSON.parse(raw) as SerializedConverseState) : undefined;
+    try {
+      const raw = localStorage.getItem(CONVERSATION_STORAGE_KEY);
+      return raw ? (JSON.parse(raw) as SerializedConverseState) : undefined;
+    } catch {
+      return undefined;
+    }
   }
 
   private persistState(): void {
-    const serialized = this.controller.serialize();
-    localStorage.setItem(CONVERSATION_STORAGE_KEY, JSON.stringify(serialized));
+    try {
+      const serialized = this.controller.serialize();
+      localStorage.setItem(CONVERSATION_STORAGE_KEY, JSON.stringify(serialized));
+    } catch {
+      // Ignore persistence failures (e.g., storage disabled/quota exceeded).
+    }
   }
 }

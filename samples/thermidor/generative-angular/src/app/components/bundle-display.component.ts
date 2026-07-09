@@ -23,15 +23,14 @@ import {BundleDisplaySurface} from '../models';
           }
         </div>
       } @else {
-        <nav class="tier-tabs" role="tablist">
+        <nav class="tier-tabs" aria-label="Bundle tiers">
           @for (bundle of surface().bundles; track bundle.bundleId) {
             <button
               class="tier-tab"
               [class.active]="isActive(bundle.bundleId)"
               (click)="selectTier(bundle.bundleId)"
               type="button"
-              role="tab"
-              [attr.aria-selected]="isActive(bundle.bundleId)"
+              [attr.aria-pressed]="isActive(bundle.bundleId)"
             >
               {{ bundle.label }}
             </button>
