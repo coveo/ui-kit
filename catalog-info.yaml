@@ -8,12 +8,12 @@ spec:
   type: url
   targets:
     - ./catalog-info.ui-kit.yaml
-    - ./packages/atomic/catalog-info.yaml
-    - ./packages/atomic-react/catalog-info.yaml
-    - ./packages/headless/catalog-info.yaml
-    - ./packages/bueno/catalog-info.yaml
     - ./packages/atomic-hosted-page/catalog-info.yaml
+    - ./packages/atomic-react/catalog-info.yaml
+    - ./packages/atomic/catalog-info.yaml
+    - ./packages/bueno/catalog-info.yaml
     - ./packages/headless-react/catalog-info.yaml
+    - ./packages/headless/catalog-info.yaml
     - ./packages/quantic/catalog-info.yaml
     - ./packages/shopify/catalog-info.yaml
     - ./packages/thermidor/catalog-info.yaml
