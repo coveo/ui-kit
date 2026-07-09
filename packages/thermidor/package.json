@@ -39,6 +39,7 @@
   },
   "devDependencies": {
     "@microsoft/api-extractor": "7.58.9",
+    "fast-check": "^3.22.0",
     "typescript": "catalog:",
     "vitest": "catalog:"
   },
