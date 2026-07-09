@@ -17,13 +17,17 @@ export default defineConfig({
       use: {...devices['Desktop Chrome']},
     },
   ],
-  expect: {
-    timeout: 7 * 1000,
-  },
   webServer: {
-    command: 'npm run prod',
-    port: 3000,
-    timeout: 120 * 1000,
+    // Run the production server so tests exercise the same output users ship.
+    // `NODE_OPTIONS` preloads the MSW mock server (via tsx, which resolves the
+    // mock package's TypeScript sources) into the Next.js process, so the
+    // server-side static-state fetch is deterministic and never hits a live API.
+    command: 'pnpm start',
+    url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
+    timeout: 120 * 1000,
+    env: {
+      NODE_OPTIONS: '--import tsx --import ./mocks/register.ts',
+    },
   },
 });

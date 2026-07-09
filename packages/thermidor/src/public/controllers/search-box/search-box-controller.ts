@@ -13,7 +13,7 @@ class SearchBoxControllerImpl extends BaseController<SearchBoxControllerState> {
   #actions: ReturnType<typeof getOrCreateSearchBoxActions>;
 
   constructor(options: SearchBoxControllerOptions) {
-    const {engine} = getHandleInternals(options.interface);
+    const {engine, resolveFacades} = getHandleInternals(options.interface);
 
     engine.adoptSlice(getOrCreateSearchBoxSlice(options.interface));
 
@@ -35,7 +35,7 @@ class SearchBoxControllerImpl extends BaseController<SearchBoxControllerState> {
 
     super(engine, controllerState);
 
-    this.#thunks = options.interface.resolveFacades('search');
+    this.#thunks = resolveFacades('search');
     this.#actions = getOrCreateSearchBoxActions(options.interface);
   }
 
