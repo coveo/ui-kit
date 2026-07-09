@@ -234,5 +234,5 @@ The Angular sample currently implements its own AG-UI event parsing, A2UI surfac
 3. THE GenerativeStatePort SHALL expose a `setStateSnapshot(turnId: string, snapshot: Record<string, unknown>)` method that the GenerativeRuntime calls to update the turn's state snapshot.
 4. WHEN a turn completes (status transitions to `complete`), THE Turn's `stateSnapshot` field SHALL be set to `null`, since the snapshot represents transient execution progress.
 5. IF no `STATE_SNAPSHOT` events are received during a turn, THEN THE Turn's `stateSnapshot` field SHALL remain `null`.
-6. THE Angular_Sample SHALL read status information from `Turn.stateSnapshot` and display it as an execution progress label (e.g., "Searching products", "Building comparison") when the value is non-null and the turn is streaming.
-7. THE Angular_Sample SHALL remove its local state snapshot management logic and rely on the ConverseController state as the single source of truth for execution status.
+6. THE Angular_Sample MAY read status information from `Turn.stateSnapshot` and display it as an execution progress label (e.g., "Searching products", "Building comparison") when the value is non-null and the turn is streaming. When `stateSnapshot` is not available, the sample falls back to a heuristic label derived from tool call status.
+7. THE Angular_Sample SHALL rely on the ConverseController state as the single source of truth for turn and execution status.
