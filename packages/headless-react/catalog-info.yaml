@@ -10,5 +10,6 @@ spec:
   type: library
   lifecycle: production
   owner: dxui
+  system: ui-kit
   dependsOn:
     - headless

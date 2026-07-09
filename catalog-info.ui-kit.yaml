@@ -1,0 +1,10 @@
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: ui-kit
+  title: UI Kit
+  description: Monorepo for Coveo UI packages, shared tooling, and release workflows
+  annotations:
+    github.com/project-slug: coveo/ui-kit
+spec:
+  owner: dxui

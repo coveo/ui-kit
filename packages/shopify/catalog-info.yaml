@@ -10,5 +10,6 @@ spec:
   type: library
   lifecycle: production
   owner: group:default/commerce-shopify
+  system: ui-kit
   dependsOn:
     - headless

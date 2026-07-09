@@ -10,3 +10,4 @@ spec:
   type: library
   lifecycle: experimental
   owner: dxui
+  system: ui-kit
