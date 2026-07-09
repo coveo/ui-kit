@@ -21,13 +21,14 @@ export {BaseController} from './base-controller.js';
 export {BaseInterface, getInterfaceInternals} from './base-interface.js';
 export type {InterfaceInternals} from './base-interface.js';
 export type {
-  InterfaceHandle,
   EndpointStateScope,
   EndpointThunk,
   FacadeResolver,
   FacadeResolverFactory,
   Facades,
+  InterfaceHandle,
   InterfaceType,
   Supports,
+  SupportsBrand,
 } from './interface-types.js';
 export {createNoopThunk} from './noop-thunk.js';
