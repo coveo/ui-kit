@@ -1,0 +1,35 @@
+name: Catalog Info Check
+on:
+  pull_request:
+    paths:
+      - 'packages/*/package.json'
+      - 'packages/*/catalog-info.yaml'
+      - 'catalog-info.yaml'
+      - 'catalog-info.ui-kit.yaml'
+      - 'scripts/generate-catalog-info.mjs'
+  merge_group:
+
+permissions:
+  contents: read
+
+jobs:
+  check-catalog-info:
+    name: 'Verify catalog-info files are up to date'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version-file: '.nvmrc'
+      - run: node scripts/generate-catalog-info.mjs
+      - name: Check for uncommitted changes
+        run: |
+          if [ -n "$(git status --porcelain '**/catalog-info.yaml' 'catalog-info.ui-kit.yaml')" ]; then
+            echo "::error::catalog-info files are out of date. Run 'node scripts/generate-catalog-info.mjs' and commit the results."
+            git diff --stat
+            exit 1
+          fi

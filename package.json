@@ -2,6 +2,7 @@
   "name": "ui-kit",
   "version": "3.0.100",
   "private": true,
+  "description": "Monorepo for Coveo UI packages, shared tooling, and release workflows",
   "scripts": {
     "postinstall": "husky install",
     "reset:install": "git checkout origin/main pnpm-lock.yaml && pnpm install",
@@ -20,7 +21,8 @@
     "version-packages": "changeset version",
     "notify:docs": "node ./scripts/notify-docs/published-ui-kit.mjs",
     "release": "pnpm run build && changeset publish",
-    "knip": "knip"
+    "knip": "knip",
+    "generate:catalog-info": "node scripts/generate-catalog-info.mjs"
   },
   "devDependencies": {
     "@actions/github": "9.1.1",
@@ -68,5 +70,8 @@
       "@angular/core": "catalog:",
       "@angular/common": "catalog:"
     }
+  },
+  "catalog_info": {
+    "owner": "group:default/dxui"
   }
 }

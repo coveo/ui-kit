@@ -44,5 +44,9 @@
   },
   "engines": {
     "node": "^22.11.0 || ^24.11.0"
+  },
+  "catalog_info": {
+    "lifecycle": "experimental",
+    "owner": "group:default/dxui"
   }
 }
