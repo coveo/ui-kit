@@ -214,11 +214,19 @@ function getWorkspaceDependsOn(manifest, catalogComponents) {
  */
 function readCatalogInfo(directory) {
   const catalogInfoPath = resolve(directory, catalogInfoConfigFileName);
-  if (!statSync(catalogInfoPath, {throwIfNoEntry: false})) {
+  const stats = statSync(catalogInfoPath, {throwIfNoEntry: false});
+  if (!stats) {
     return undefined;
   }
 
-  return JSON.parse(readFileSync(catalogInfoPath, 'utf-8'));
+  try {
+    return JSON.parse(readFileSync(catalogInfoPath, 'utf-8'));
+  } catch (error) {
+    throw new Error(
+      `Failed to read ${relative(rootDir, catalogInfoPath)}: ${error.message}`,
+      {cause: error}
+    );
+  }
 }
 
 function main() {
