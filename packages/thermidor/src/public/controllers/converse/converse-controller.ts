@@ -127,6 +127,13 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
       },
       hydrateSubInterface: createHydrateSubInterface(sourceEngine),
     });
+
+    if (options.initialState) {
+      this.#runtime.setConversationSession(
+        options.initialState.conversationSessionId,
+        options.initialState.conversationToken
+      );
+    }
   }
 
   serialize(): SerializedConverseState {
@@ -141,10 +148,32 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
       return serialized;
     });
 
+    const firstPrompt = turns.length > 0 ? turns[0].prompt : '';
+
     return {
+      name: firstPrompt,
+      timestamp: Date.now(),
+      conversationSessionId: this.#runtime.getConversationSessionId(),
+      conversationToken: this.#runtime.getConversationToken(),
       turns: serializedTurns,
       activeTurnId,
     };
+  }
+
+  restore(state: SerializedConverseState): void {
+    const hydratedState = hydrateFromSerializedState(state);
+    this.engine.mutate(this.#actions.hydrateState(hydratedState));
+    this.#runtime.setConversationSession(
+      state.conversationSessionId,
+      state.conversationToken
+    );
+  }
+
+  clear(): void {
+    this.engine.mutate(
+      this.#actions.hydrateState({turns: [], activeTurnId: undefined})
+    );
+    this.#runtime.setConversationSession(undefined, undefined);
   }
 
   submit({prompt}: {prompt: string}): void {
@@ -180,6 +209,8 @@ export const buildConverseController = (
 
 export interface ConverseController extends Controller<ConverseControllerState> {
   serialize(): SerializedConverseState;
+  restore(state: SerializedConverseState): void;
+  clear(): void;
   submit(options: {prompt: string}): void;
   selectTurn(options: {id: string}): void;
   retry(options: {id: string}): void;
@@ -217,3 +248,6 @@ function hydrateFromSerializedState(
     activeTurnId: serialized.activeTurnId,
   };
 }
+const converse = buildConverseController();
+
+converse.serialize();
