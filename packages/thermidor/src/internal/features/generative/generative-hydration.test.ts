@@ -1,6 +1,8 @@
 import {describe, it, expect, beforeEach} from 'vitest';
+import * as fc from 'fast-check';
 import {Engine, getFullEngine} from '@/src/internal/engine/index.js';
 import {getInterfaceInternals} from '@/src/internal/utils/index.js';
+import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 import {
   createHydrateSubInterface,
   getOrCreateHydrateFromSnapshotAction,
@@ -8,6 +10,7 @@ import {
 import {getOrCreateProductListSlice} from '@/src/internal/features/product-list/index.js';
 import {getOrCreateResultsSlice} from '@/src/internal/features/result-list/index.js';
 import {buildSearchInterface} from '@/src/public/interfaces/search.js';
+import {getOrCreateSearchBoxSlice} from '@/src/internal/features/search-box/index.js';
 
 function createTestEngine() {
   return new Engine({
@@ -172,6 +175,187 @@ describe('createHydrateSubInterface', () => {
     expect(resultState.results[0]).toMatchObject({
       uniqueId: 'r1',
       title: 'Result 1',
+    });
+  });
+
+  describe('effective query resolution', () => {
+    function readSearchBoxQuery(subInterface: InterfaceHandle) {
+      const fullEngine = getFullEngine(engine);
+      const searchBoxSlice = getOrCreateSearchBoxSlice(subInterface);
+      const state = fullEngine.read(
+        (s: Record<string, unknown>) =>
+          s[searchBoxSlice.name] as {query: string} | undefined
+      );
+      return state;
+    }
+
+    function makeCommercePayload(queryCorrection?: {
+      correctedQuery?: string | null;
+    }) {
+      return {
+        products: [
+          {
+            permanentid: 'p1',
+            ec_name: 'Product',
+            ec_price: 10,
+            clickUri: 'https://example.com',
+          },
+        ],
+        pagination: {totalEntries: 1},
+        facets: [],
+        ...(queryCorrection !== undefined ? {queryCorrection} : {}),
+      };
+    }
+
+    /**
+     * Validates: Requirements 2.2, 2.3, 2.4
+     */
+    describe('Property 3: effective query uses correctedQuery when non-empty, otherwise falls back to user prompt', () => {
+      it('uses correctedQuery when non-empty (property test)', () => {
+        fc.assert(
+          fc.property(
+            fc.string({minLength: 1}).filter((s) => s.trim().length > 0),
+            fc.string({minLength: 1}),
+            (correctedQuery, prompt) => {
+              engine = createTestEngine();
+              const hydrate = createHydrateSubInterface(engine);
+              const content = makeCommercePayload({correctedQuery});
+
+              const result = hydrate(
+                'commerce-search-api-response',
+                content,
+                prompt
+              );
+              expect(result).not.toBeNull();
+
+              const searchBoxState = readSearchBoxQuery(result!.interface);
+              expect(searchBoxState?.query).toBe(correctedQuery);
+            }
+          ),
+          {numRuns: 100}
+        );
+      });
+
+      it('falls back to user prompt when correctedQuery is absent or empty (property test)', () => {
+        const emptyCorrectedQuery = fc.oneof(
+          fc.constant(
+            undefined as undefined | {correctedQuery?: string | null}
+          ),
+          fc.constant({correctedQuery: undefined} as {
+            correctedQuery?: string | null;
+          }),
+          fc.constant({correctedQuery: null} as {
+            correctedQuery?: string | null;
+          }),
+          fc.constant({correctedQuery: ''} as {correctedQuery?: string | null})
+        );
+
+        fc.assert(
+          fc.property(
+            emptyCorrectedQuery,
+            fc.string({minLength: 1}),
+            (queryCorrection, prompt) => {
+              engine = createTestEngine();
+              const hydrate = createHydrateSubInterface(engine);
+              const content = makeCommercePayload(queryCorrection);
+
+              const result = hydrate(
+                'commerce-search-api-response',
+                content,
+                prompt
+              );
+              expect(result).not.toBeNull();
+
+              const searchBoxState = readSearchBoxQuery(result!.interface);
+              expect(searchBoxState?.query).toBe(prompt);
+            }
+          ),
+          {numRuns: 100}
+        );
+      });
+
+      it('does not set query when neither correctedQuery nor prompt is provided (property test)', () => {
+        const emptyCorrectedQuery = fc.oneof(
+          fc.constant(
+            undefined as undefined | {correctedQuery?: string | null}
+          ),
+          fc.constant({correctedQuery: undefined} as {
+            correctedQuery?: string | null;
+          }),
+          fc.constant({correctedQuery: null} as {
+            correctedQuery?: string | null;
+          }),
+          fc.constant({correctedQuery: ''} as {correctedQuery?: string | null})
+        );
+
+        fc.assert(
+          fc.property(emptyCorrectedQuery, (queryCorrection) => {
+            engine = createTestEngine();
+            const hydrate = createHydrateSubInterface(engine);
+            const content = makeCommercePayload(queryCorrection);
+
+            const result = hydrate(
+              'commerce-search-api-response',
+              content,
+              undefined
+            );
+            expect(result).not.toBeNull();
+
+            const searchBoxState = readSearchBoxQuery(result!.interface);
+            expect(searchBoxState).toBeUndefined();
+          }),
+          {numRuns: 100}
+        );
+      });
+    });
+
+    describe('example-based tests', () => {
+      it('payload with queryCorrection.correctedQuery uses corrected query', () => {
+        const hydrate = createHydrateSubInterface(engine);
+        const content = makeCommercePayload({
+          correctedQuery: 'corrected shoes',
+        });
+
+        const result = hydrate(
+          'commerce-search-api-response',
+          content,
+          'shoes'
+        );
+        expect(result).not.toBeNull();
+
+        const searchBoxState = readSearchBoxQuery(result!.interface);
+        expect(searchBoxState?.query).toBe('corrected shoes');
+      });
+
+      it('payload without queryCorrection uses fallback prompt', () => {
+        const hydrate = createHydrateSubInterface(engine);
+        const content = makeCommercePayload();
+
+        const result = hydrate(
+          'commerce-search-api-response',
+          content,
+          'running shoes'
+        );
+        expect(result).not.toBeNull();
+
+        const searchBoxState = readSearchBoxQuery(result!.interface);
+        expect(searchBoxState?.query).toBe('running shoes');
+      });
+
+      it('payload without queryCorrection and no query does not set search box', () => {
+        const hydrate = createHydrateSubInterface(engine);
+        const content = makeCommercePayload();
+
+        const result = hydrate(
+          'commerce-search-api-response',
+          content,
+          undefined
+        );
+        expect(result).not.toBeNull();
+
+        const searchBoxState = readSearchBoxQuery(result!.interface);
+        expect(searchBoxState).toBeUndefined();
+      });
     });
   });
 });
