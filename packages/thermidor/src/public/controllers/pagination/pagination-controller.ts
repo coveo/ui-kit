@@ -14,7 +14,7 @@ class PaginationControllerImpl extends BaseController<PaginationControllerState>
   #controllerState: StateSelector<PaginationControllerState>;
 
   constructor(options: PaginationControllerOptions) {
-    const {engine} = getHandleInternals(options.interface);
+    const {engine, resolveFacades} = getHandleInternals(options.interface);
 
     engine.adoptSlice(getOrCreatePaginationSlice(options.interface));
 
@@ -35,7 +35,7 @@ class PaginationControllerImpl extends BaseController<PaginationControllerState>
 
     super(engine, controllerState);
 
-    this.#thunks = options.interface.resolveFacades('search');
+    this.#thunks = resolveFacades('search');
     this.#actions = actions;
     this.#controllerState = controllerState;
   }
