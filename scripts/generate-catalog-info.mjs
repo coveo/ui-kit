@@ -212,7 +212,7 @@ function getWorkspaceDependsOn(manifest, catalogComponents) {
  * @param {string} directory
  * @returns {CatalogInfo | undefined}
  */
-function readCatalogInfo(directory) {
+export function readCatalogInfo(directory) {
   const catalogInfoPath = resolve(directory, catalogInfoConfigFileName);
   const stats = statSync(catalogInfoPath, {throwIfNoEntry: false});
   if (!stats) {
@@ -222,9 +222,9 @@ function readCatalogInfo(directory) {
   try {
     return JSON.parse(readFileSync(catalogInfoPath, 'utf-8'));
   } catch (error) {
-    const reason = error instanceof SyntaxError ? 'parse' : 'read';
+    const operation = error instanceof SyntaxError ? 'parse' : 'load';
     throw new Error(
-      `Failed to ${reason} ${relative(rootDir, catalogInfoPath)}: ${error.message}`,
+      `Failed to ${operation} ${relative(rootDir, catalogInfoPath)}: ${error.message}`,
       {cause: error}
     );
   }
@@ -316,4 +316,6 @@ function main() {
   console.log(`\nDone. Generated ${generated} component files + 2 root files.`);
 }
 
-main();
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  main();
+}
