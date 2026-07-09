@@ -21,6 +21,7 @@ function createMockThunk(label: string) {
 
 const mockSearchThunk = createMockThunk('search');
 const mockSuggestionsThunk = createMockThunk('suggestions');
+const mockConversationThunk = createMockThunk('conversation');
 
 class TestSearchInterface extends BaseInterface<'search'> {
   constructor(engine: FullEngine, stateId: string) {
@@ -36,6 +37,14 @@ class TestCommerceInterface extends BaseInterface<'commerce'> {
     super(engine, stateId, 'commerce', {
       search: () => () => mockSearchThunk,
       suggestions: () => () => mockSuggestionsThunk,
+    });
+  }
+}
+
+class TestGenerativeInterface extends BaseInterface<'generative'> {
+  constructor(engine: FullEngine, stateId: string) {
+    super(engine, stateId, 'generative', {
+      conversation: () => () => mockConversationThunk,
     });
   }
 }
@@ -68,6 +77,20 @@ describe('composeInterfaces', () => {
     });
 
     expect(composed).toBeInstanceOf(ComposedInterface);
+  });
+
+  it('resolves facades only from sub-interfaces that support them', () => {
+    const engine = getFullEngine(new Engine());
+    const searchInterface = new TestSearchInterface(engine, 'a');
+    const generativeInterface = new TestGenerativeInterface(engine, 'b');
+
+    const composed = composeInterfaces({
+      interfaces: [searchInterface, generativeInterface],
+    });
+
+    const thunks = getComposedInternals(composed).resolveFacades('search');
+    expect(thunks).toHaveLength(1);
+    expect(thunks[0]).toBe(mockSearchThunk);
   });
 
   it('returns a ComposedInterface instance for valid inputs', () => {

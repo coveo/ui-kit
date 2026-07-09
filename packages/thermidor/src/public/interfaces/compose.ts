@@ -63,6 +63,15 @@ export class ComposedInterface<T extends InterfaceType> {
     engine.addInterface(this);
   }
 
+  dispose(): void {
+    if (this.#disposed) {
+      return;
+    }
+    this.#disposed = true;
+    this.#cacheRegistry.dispose();
+    this.#engine.removeInterface(this);
+  }
+
   #resolveFacades(
     facade: Facades[T],
     composedInterface?: InterfaceHandle
@@ -73,15 +82,6 @@ export class ComposedInterface<T extends InterfaceType> {
       const {resolveFacades} = getInterfaceInternals(sub);
       return resolveFacades(facade, target);
     });
-  }
-
-  dispose(): void {
-    if (this.#disposed) {
-      return;
-    }
-    this.#disposed = true;
-    this.#cacheRegistry.dispose();
-    this.#engine.removeInterface(this);
   }
 
   #assertNotDisposed(): void {

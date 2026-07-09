@@ -74,17 +74,16 @@ export abstract class BaseInterface<T extends InterfaceType> {
     this.#engine.removeInterface(this);
   }
 
-  #assertNotDisposed(): void {
-    if (this.#disposed) {
-      throw new Error('Cannot operate on a disposed interface.');
-    }
-  }
-
   #resolveFacades(
     facade: Facades[T],
     composedInterface?: InterfaceHandle
   ): EndpointThunk[] {
     this.#assertNotDisposed();
+
+    const resolver = this.#facadeResolvers[facade];
+    if (!resolver) {
+      return [];
+    }
 
     const scopeInterface = composedInterface ?? this;
 
@@ -97,11 +96,16 @@ export abstract class BaseInterface<T extends InterfaceType> {
     let thunk = scopeCache.get(facade);
     if (!thunk) {
       const scope: EndpointStateScope = {baseInterface: this, scopeInterface};
-      const resolver = this.#facadeResolvers[facade];
       thunk = resolver(this.#engine)(scope);
       scopeCache.set(facade, thunk);
     }
 
     return [thunk];
+  }
+
+  #assertNotDisposed(): void {
+    if (this.#disposed) {
+      throw new Error('Cannot operate on a disposed interface.');
+    }
   }
 }
