@@ -17,12 +17,19 @@ const TEST_ID = 'test-generative';
 
 const mockSubmit = vi.fn<(prompt: string) => Promise<void>>();
 const mockResubmit = vi.fn<(turnId: string, prompt: string) => Promise<void>>();
+const mockSetConversationSession =
+  vi.fn<(sessionId: string | undefined, token: string | undefined) => void>();
+const mockGetConversationSessionId = vi.fn<() => string | undefined>();
+const mockGetConversationToken = vi.fn<() => string | undefined>();
 
 vi.mock('@/src/internal/api/generative/index.js', () => ({
   GenerativeRuntime: {
     getInstance: vi.fn(() => ({
       submit: mockSubmit,
       resubmit: mockResubmit,
+      setConversationSession: mockSetConversationSession,
+      getConversationSessionId: mockGetConversationSessionId,
+      getConversationToken: mockGetConversationToken,
     })),
   },
 }));
@@ -53,8 +60,13 @@ describe('buildConverseController', () => {
     vi.clearAllMocks();
     mockSubmit.mockReset();
     mockResubmit.mockReset();
+    mockSetConversationSession.mockReset();
+    mockGetConversationSessionId.mockReset();
+    mockGetConversationToken.mockReset();
     mockSubmit.mockResolvedValue();
     mockResubmit.mockResolvedValue();
+    mockGetConversationSessionId.mockReturnValue(undefined);
+    mockGetConversationToken.mockReturnValue(undefined);
     engine = createTestEngine();
     fullEngine = getFullEngine(engine);
     generativeInterface = buildGenerativeInterface({engine, id: TEST_ID});
@@ -268,10 +280,14 @@ describe('buildConverseController', () => {
 
       const result = controller.serialize();
 
-      expect(result).toEqual({
+      expect(result).toMatchObject({
         turns: [],
         activeTurnId: undefined,
+        name: '',
+        conversationSessionId: undefined,
+        conversationToken: undefined,
       });
+      expect(result.timestamp).toEqual(expect.any(Number));
     });
 
     it('serializes turns with their data', () => {
@@ -405,6 +421,10 @@ describe('buildConverseController', () => {
   describe('initialState', () => {
     it('hydrates turns from serialized state', () => {
       const initialState: SerializedConverseState = {
+        name: 'hello',
+        timestamp: 1000,
+        conversationSessionId: 'session-1',
+        conversationToken: 'token-1',
         turns: [
           {
             id: 'turn-1',
@@ -438,6 +458,8 @@ describe('buildConverseController', () => {
 
     it('transitions streaming turns to error status', () => {
       const initialState: SerializedConverseState = {
+        name: 'hello',
+        timestamp: 1000,
         turns: [
           {
             id: 'turn-1',
@@ -460,6 +482,8 @@ describe('buildConverseController', () => {
 
     it('does not modify complete or error turns', () => {
       const initialState: SerializedConverseState = {
+        name: 'hello',
+        timestamp: 1000,
         turns: [
           {
             id: 'turn-1',
@@ -490,6 +514,8 @@ describe('buildConverseController', () => {
 
     it('sets activeTurnId from serialized state', () => {
       const initialState: SerializedConverseState = {
+        name: 'hello',
+        timestamp: 1000,
         turns: [
           {
             id: 'turn-1',
@@ -517,6 +543,8 @@ describe('buildConverseController', () => {
 
     it('first state read contains hydrated turns', () => {
       const initialState: SerializedConverseState = {
+        name: 'hello',
+        timestamp: 1000,
         turns: [
           {
             id: 'turn-1',
@@ -543,6 +571,8 @@ describe('buildConverseController', () => {
 
     it('computes isStreaming as false after streaming turns are transitioned to error', () => {
       const initialState: SerializedConverseState = {
+        name: 'hello',
+        timestamp: 1000,
         turns: [
           {
             id: 'turn-1',
