@@ -88,6 +88,20 @@ export type A2UIOperation =
     };
 
 // ============================================================================
+// Routed search events (Coveo converse wire format — named SSE events)
+// ============================================================================
+
+export type CommerceSearchApiResponseEvent = {
+  type: 'commerce-search-api-response';
+  [key: string]: unknown;
+};
+
+export type SearchApiResponseEvent = {
+  type: 'search-api-response';
+  [key: string]: unknown;
+};
+
+// ============================================================================
 // Unknown fallback (events not recognized by AG-UI or Coveo extensions)
 // ============================================================================
 
@@ -139,6 +153,8 @@ export type NormalizedStreamEvent =
   | StateSnapshotEvent
   | ActivitySnapshotEvent
   | CustomEvent
+  | CommerceSearchApiResponseEvent
+  | SearchApiResponseEvent
   | UnknownEvent;
 
 // ============================================================================
