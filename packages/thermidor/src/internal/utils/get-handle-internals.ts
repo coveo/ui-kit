@@ -1,6 +1,6 @@
 import type {InterfaceCacheRegistry} from './interface-cache-registry.js';
 import type {FullEngine} from '@/src/internal/engine/index.js';
-import type {InterfaceHandle} from './interface-types.js';
+import type {EndpointThunk, InterfaceHandle} from './interface-types.js';
 import {BaseInterface, getInterfaceInternals} from './base-interface.js';
 import {
   ComposedInterface,
@@ -11,12 +11,17 @@ export interface HandleInternals {
   engine: FullEngine;
   stateId: string;
   cacheRegistry: InterfaceCacheRegistry;
+  resolveFacades(
+    facade: string,
+    composedInterface?: InterfaceHandle
+  ): EndpointThunk[];
 }
 
 export function getHandleInternals(handle: InterfaceHandle): HandleInternals {
   if (handle instanceof BaseInterface) {
-    const {engine, stateId, cacheRegistry} = getInterfaceInternals(handle);
-    return {engine, stateId, cacheRegistry};
+    const {engine, stateId, cacheRegistry, resolveFacades} =
+      getInterfaceInternals(handle);
+    return {engine, stateId, cacheRegistry, resolveFacades};
   }
   if (handle instanceof ComposedInterface) {
     return getComposedInternals(handle);
