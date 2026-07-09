@@ -76,6 +76,7 @@
     "prettier": "catalog:",
     "prettier-plugin-apex": "2.2.6",
     "ts-node": "10.9.2",
+    "typescript": "catalog:",
     "wait-on": "9.0.10",
     "xml2js": "0.6.2"
   },

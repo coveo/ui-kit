@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "strict": false,
+    "skipLibCheck": true,
     "outDir": "dist",
     "rootDir": "lib",
     "jsx": "react",

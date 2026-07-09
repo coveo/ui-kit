@@ -55,7 +55,8 @@
     "react": "catalog:",
     "react-dom": "catalog:",
     "rollup": "4.62.2",
-    "rollup-plugin-polyfill-node": "^0.13.0"
+    "rollup-plugin-polyfill-node": "^0.13.0",
+    "typescript": "catalog:"
   },
   "peerDependencies": {
     "@coveo/headless": "workspace:^",

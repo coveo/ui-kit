@@ -2,7 +2,7 @@ import {readdirSync, readFileSync, writeFileSync} from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {dedent} from 'ts-dedent';
-import ts from 'typescript';
+import ts from 'typescript-legacy';
 import colors from '../../../utils/ci/colors.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));

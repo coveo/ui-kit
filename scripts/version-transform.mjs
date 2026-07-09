@@ -4,7 +4,7 @@ import {
   isPropertyAccessExpression,
   visitEachChild,
   visitNode,
-} from 'typescript';
+} from 'typescript-legacy';
 
 /**
  * Custom transformer to replace process.env.VERSION with the actual version from package.json.

@@ -16,7 +16,7 @@ import {
   SyntaxKind,
   visitEachChild,
   visitNode,
-} from 'typescript';
+} from 'typescript-legacy';
 
 /**
  * Custom transformer to replace `export * from 'module'` with `export { name1, name2, ... } from 'module'`.

@@ -10,7 +10,7 @@ import {
   parseJsonConfigFileContent,
   readConfigFile,
   sys,
-} from 'typescript';
+} from 'typescript-legacy';
 import colors from '../../../utils/ci/colors.mjs';
 
 import analyticsTransformer from './analytics-transform.mjs';

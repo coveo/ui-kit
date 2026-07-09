@@ -117,6 +117,8 @@
     "live-server": "1.2.2",
     "node-fetch": "3.3.2",
     "typedoc": "catalog:",
+    "typescript": "catalog:",
+    "typescript-legacy": "npm:typescript@6.0.3",
     "vitest": "catalog:"
   },
   "peerDependencies": {

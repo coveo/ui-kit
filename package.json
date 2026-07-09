@@ -46,6 +46,7 @@
     "semver": "7.8.5",
     "turbo": "2.10.2",
     "typescript": "catalog:",
+    "typescript-legacy": "npm:typescript@6.0.3",
     "vitest": "catalog:"
   },
   "engines": {
@@ -59,11 +60,36 @@
       "jest-environment-jsdom@29.7.0": "patches/jest-environment-jsdom+29.7.0.patch",
       "@wc-toolkit/storybook-helpers@10.3.0": "patches/@wc-toolkit__storybook-helpers@10.3.0.patch"
     },
+    "packageExtensions": {
+      "@typescript-eslint/eslint-plugin@4.33.0": {
+        "dependencies": {
+          "typescript": "6.0.3"
+        }
+      },
+      "@typescript-eslint/parser@4.33.0": {
+        "dependencies": {
+          "typescript": "6.0.3"
+        }
+      }
+    },
     "overrides": {
       "braces": "3.0.3",
       "react": "catalog:",
       "react-dom": "catalog:",
-      "typescript": "catalog:",
+      "@custom-elements-manifest/analyzer>typescript": "6.0.3",
+      "@coveo/headless>typescript": "6.0.3",
+      "@coveo/headless-react>typescript": "6.0.3",
+      "@coveo/documentation>typescript": "6.0.3",
+      "@coveo/atomic>typescript": "6.0.3",
+      "@coveo/atomic-react>typescript": "6.0.3",
+      "@coveo/quantic>typescript": "6.0.3",
+      "@samples/headless-rga-angular>typescript": "6.0.3",
+      "@samples/atomic-search-commerce-angular>typescript": "6.0.3",
+      "@coveo/atomic-angular-builder>typescript": "6.0.3",
+      "@samples/headless-ssr-commerce-nextjs>typescript": "6.0.3",
+      "@samples/headless-ssr-search-nextjs>typescript": "6.0.3",
+      "@samples/headless-ssr-commerce-nextjs-v4>typescript": "6.0.3",
+      "@samples/atomic-search-nextjs>typescript": "6.0.3",
       "html-minifier": "npm:html-minifier-terser@^7.2.0",
       "@angular/core": "catalog:",
       "@angular/common": "catalog:"

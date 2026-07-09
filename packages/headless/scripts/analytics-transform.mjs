@@ -5,7 +5,7 @@ import {
   isStringLiteral,
   visitEachChild,
   visitNode,
-} from 'typescript';
+} from 'typescript-legacy';
 
 const require = createRequire(import.meta.url);
 

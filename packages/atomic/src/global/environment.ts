@@ -3,14 +3,8 @@ interface AtomicEnvironment {
   headlessVersion: string;
 }
 
-declare global {
-  interface Window {
-    [anyGlobalVariable: string]: AtomicEnvironment;
-  }
-}
-
 function getWindow() {
-  return window;
+  return window as unknown as Record<string, AtomicEnvironment | undefined>;
 }
 
 export function getAtomicEnvironment(
