@@ -4,8 +4,10 @@ on:
     paths:
       - 'packages/*/package.json'
       - 'packages/*/catalog-info.yaml'
+      - 'packages/*/catalog-info.config.yaml'
       - 'catalog-info.yaml'
       - 'catalog-info.ui-kit.yaml'
+      - 'catalog-info.ui-kit.config.yaml'
       - 'scripts/generate-catalog-info.mjs'
   merge_group:
 

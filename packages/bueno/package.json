@@ -37,9 +37,5 @@
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0 || ^24.11.0"
-  },
-  "catalog_info": {
-    "lifecycle": "production",
-    "owner": "group:default/dxui"
   }
 }
