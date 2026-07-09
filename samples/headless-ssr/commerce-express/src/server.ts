@@ -18,6 +18,7 @@ import {
   searchEngineDefinition,
   listingEngineDefinition,
 } from './lib/engine-definition.js';
+import {LISTING_IDS} from './lib/listings.js';
 import {getNavigatorContext} from './lib/navigatorContext.js';
 import {middleware} from './middleware.js';
 
@@ -31,10 +32,6 @@ const DEFAULT_CONTEXT = {
   country: 'US',
   currency: 'USD',
 } as const;
-
-// Category listings available in the sample merchandising hub. In a real
-// storefront these would come from your catalog rather than a hardcoded list.
-const LISTINGS = new Set(['surf-accessories', 'paddleboards', 'toys']);
 
 const deserializeParameters = (req: Request) => {
   const {deserialize} = buildParameterSerializer();
@@ -71,14 +68,14 @@ app.get('/search', async (req, res) => {
       })
     );
   } catch (error) {
-    console.error('❌ Error fetching search static state:', error);
+    console.error('Error fetching search static state:', error);
     res.status(500).send('Internal Server Error');
   }
 });
 
 app.get('/listing/:listingId', async (req, res) => {
   const {listingId} = req.params;
-  if (!LISTINGS.has(listingId)) {
+  if (!LISTING_IDS.has(listingId)) {
     res.status(404).send('Listing not found');
     return;
   }
@@ -109,11 +106,11 @@ app.get('/listing/:listingId', async (req, res) => {
       })
     );
   } catch (error) {
-    console.error('❌ Error fetching listing static state:', error);
+    console.error('Error fetching listing static state:', error);
     res.status(500).send('Internal Server Error');
   }
 });
 
 app.listen(port, () => {
-  console.log(`🚀 Server running at http://localhost:${port}`);
+  console.log(`Server running at http://localhost:${port}`);
 });

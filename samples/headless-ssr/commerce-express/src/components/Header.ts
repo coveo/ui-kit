@@ -3,12 +3,11 @@
  * static asset pipeline) plus primary navigation tabs. Rendered on the server
  * for every page; the active tab is derived from the current path.
  */
+import {LISTINGS} from '../lib/listings.js';
 
 const TABS = [
   {href: '/search', label: 'Search'},
-  {href: '/listing/surf-accessories', label: 'Surf Accessories'},
-  {href: '/listing/paddleboards', label: 'Paddleboards'},
-  {href: '/listing/toys', label: 'Toys'},
+  ...LISTINGS.map(({id, label}) => ({href: `/listing/${id}`, label})),
 ];
 
 const COVEO_LOGO = `<svg class="HeaderLogo" viewBox="0 0 409.4 103.6" role="img" aria-label="Coveo" xmlns="http://www.w3.org/2000/svg">
