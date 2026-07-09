@@ -186,7 +186,7 @@ jobs:
   cdn-checks:
     name: 'CDN Checks'
     needs: [affected, build-cdn]
-    if: contains(needs.affected.outputs.projects, '@coveo/atomic') || contains(needs.affected.outputs.projects, '@coveo/ui-kit-sample-headless-commerce-react') || contains(needs.affected.outputs.projects, '@coveo/atomic-hosted-page')
+    if: contains(needs.affected.outputs.projects, '@coveo/atomic') || contains(needs.affected.outputs.projects, '@coveo/atomic-hosted-page')
     env:
       DEPLOYMENT_ENVIRONMENT: CDN
     runs-on: ubuntu-latest
