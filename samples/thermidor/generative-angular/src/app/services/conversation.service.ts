@@ -57,8 +57,8 @@ export class ConversationService {
   }
 
   resetConversation(): void {
+    this.controller.clear();
     localStorage.removeItem(CONVERSATION_STORAGE_KEY);
-    window.location.reload();
   }
 
   private applyState(state: ConverseControllerState): void {
@@ -112,7 +112,10 @@ export class ConversationService {
   private persistState(): void {
     try {
       const serialized = this.controller.serialize();
-      localStorage.setItem(CONVERSATION_STORAGE_KEY, JSON.stringify(serialized));
+      localStorage.setItem(
+        CONVERSATION_STORAGE_KEY,
+        JSON.stringify(serialized)
+      );
     } catch {
       // Ignore persistence failures (e.g., storage disabled/quota exceeded).
     }
