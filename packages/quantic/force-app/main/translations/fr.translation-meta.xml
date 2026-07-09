@@ -909,6 +909,10 @@
     <label>Soumettre un suivi</label>
   </customLabels>
   <customLabels>
+    <name>quantic_FollowUpInputTooLong</name>
+    <label>Votre question est trop longue. Veuillez utiliser {{0}} caractères ou moins.</label>
+  </customLabels>
+  <customLabels>
     <label>Afficher {{0}} questions précédentes</label>
     <name>quantic_ShowPreviousQuestions_plural</name>
   </customLabels>
@@ -927,6 +931,14 @@
   <customLabels>
     <label>Base de connaissances consultée</label>
     <name>quantic_AgentGenerationStepSearchCompleted</name>
+  </customLabels>
+  <customLabels>
+    <label>Recherche de {{0}}…</label>
+    <name>quantic_AgentGenerationStepSearchQuery</name>
+  </customLabels>
+  <customLabels>
+    <label>Recherche effectuée pour {{0}}</label>
+    <name>quantic_AgentGenerationStepSearchQueryCompleted</name>
   </customLabels>
   <customLabels>
     <label>Analyse des résultats…</label>

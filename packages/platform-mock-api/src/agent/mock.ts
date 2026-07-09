@@ -9,6 +9,8 @@ export class MockAgentApi implements MockApi {
   readonly answerEndpoint;
   readonly followUpEndpoint;
 
+  private followUpAnswerIndex = 0;
+
   constructor(basePath: string = 'https://:orgId.org.coveo.com') {
     this.answerEndpoint = new EndpointHarness<
       () => HttpResponse<DefaultBodyType>
@@ -24,7 +26,7 @@ export class MockAgentApi implements MockApi {
     >(
       'POST',
       `${basePath}/api/v1/organizations/:orgId/agents/:agentId/follow-up`,
-      followUpAnswerResponse,
+      () => followUpAnswerResponse(++this.followUpAnswerIndex),
       (response) => response()
     );
   }
@@ -39,5 +41,6 @@ export class MockAgentApi implements MockApi {
   clearAll(): void {
     this.answerEndpoint.clear();
     this.followUpEndpoint.clear();
+    this.followUpAnswerIndex = 0;
   }
 }

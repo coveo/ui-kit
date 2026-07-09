@@ -1,13 +1,18 @@
 {
-  "name": "@samples/headless-commerce-react",
+  "name": "@coveo/ui-kit-sample-headless-commerce-react",
   "version": "0.1.0",
-  "private": true,
   "type": "module",
+  "publishConfig": {
+    "access": "public",
+    "directory": "publish",
+    "linkDirectory": false
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "vitest run"
+    "e2e": "playwright test",
+    "prepack": "node ../../../scripts/build-sample-publish-dir.mjs"
   },
   "dependencies": {
     "@coveo/headless": "workspace:*",
@@ -15,13 +20,12 @@
     "react-dom": "catalog:"
   },
   "devDependencies": {
+    "@coveo/platform-mock-api": "workspace:*",
+    "@msw/playwright": "catalog:",
     "@playwright/test": "catalog:",
-    "@testing-library/jest-dom": "6.9.1",
-    "@testing-library/react": "catalog:",
     "@vitejs/plugin-react": "catalog:",
-    "vite": "catalog:",
-    "vite-plugin-static-copy": "3.4.0",
-    "vitest": "catalog:"
+    "msw": "catalog:",
+    "vite": "catalog:"
   },
   "browserslist": {
     "production": [

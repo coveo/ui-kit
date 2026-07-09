@@ -1,14 +1,14 @@
 import type {InstantProducts as HeadlessInstantProducts} from '@coveo/headless/commerce';
 import {useEffect, useState} from 'react';
+import {formatCurrency} from '../../utils/format-currency.js';
 import {onClickProduct} from './actions/on-click-product.js';
 
 interface IInstantProductProps {
   controller: HeadlessInstantProducts;
-  navigate: (pathName: string) => void;
 }
 
 export default function InstantProducts(props: IInstantProductProps) {
-  const {controller, navigate} = props;
+  const {controller} = props;
   const [state, setState] = useState(controller.state);
 
   useEffect(
@@ -22,29 +22,35 @@ export default function InstantProducts(props: IInstantProductProps) {
 
   return (
     <div className="InstantProducts">
-      {state.products.length === 0 ? (
-        <p className="NoInstantProducts">
-          No instant products for query <b>{state.query}</b>
-        </p>
-      ) : (
-        <>
-          <p>
-            Instant products for query <b>{state.query}</b>
-          </p>
-          <ul className="InstantProducts">
-            {state.products.map((product) => (
-              <li className="Product" key={product.permanentid}>
-                <button
-                  onClick={() => onClickProduct(product, controller, navigate)}
-                  type="button"
-                >
-                  {product.ec_name} ({product.ec_product_id})
-                </button>
-              </li>
-            ))}
-          </ul>
-        </>
-      )}
+      <p className="InstantProductsTitle">Instant products</p>
+      <ul className="InstantProductList">
+        {state.products.map((product) => {
+          const price = product.ec_promo_price ?? product.ec_price;
+          return (
+            <li key={product.permanentid}>
+              <button
+                type="button"
+                className="InstantProduct"
+                onClick={() => onClickProduct(product, controller)}
+              >
+                <img
+                  className="InstantProductImage"
+                  src={product.ec_images?.[0] ?? ''}
+                  alt={product.ec_name ?? product.permanentid}
+                />
+                <span className="InstantProductInfo">
+                  <span className="InstantProductName">{product.ec_name}</span>
+                  {price != null && (
+                    <span className="InstantProductPrice">
+                      {formatCurrency(price)}
+                    </span>
+                  )}
+                </span>
+              </button>
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 }

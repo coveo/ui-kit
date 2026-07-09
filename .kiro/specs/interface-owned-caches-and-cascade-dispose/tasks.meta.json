@@ -1,0 +1,679 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1.1 Create `src/core/interface/cache/interface-cache-registry.ts`": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836498918
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836511270
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836612115
+      }
+    ],
+    "2.1 Modify `src/core/interface/base-interface.ts`": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836498947
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836629419
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836635462
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836733369
+      }
+    ],
+    "3.1 Modify `src/core/interface/engine/engine.ts`": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836498977
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836739079
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836917638
+      }
+    ],
+    "4. Checkpoint - Core infrastructure tests pass": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836499008
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836927613
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836986505
+      }
+    ],
+    "5.1 Migrate `src/core/internal/search-box/search-box-actions.ts`": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836499040
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836992430
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782837146234
+      }
+    ],
+    "5.2 Migrate `src/core/internal/search-box/search-box-slice.ts`": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836499069
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782837251198
+      }
+    ],
+    "5.3 Migrate `src/core/internal/search-box/search-box-selectors.ts`": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836499094
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782837252036
+      }
+    ],
+    "6.1 Migrate `src/core/internal/search-parameters/search-parameters-actions.ts`": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836499124
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836993355
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782837147123
+      }
+    ],
+    "6.2 Migrate `src/core/internal/search-parameters/search-parameters-slice.ts`": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836499159
+      }
+    ],
+    "6.3 Migrate `src/core/internal/search-parameters/search-parameters-selectors.ts`": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836499189
+      }
+    ],
+    "7.1 Migrate `src/core/internal/cart/cart-actions.ts`": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836499214
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836994377
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782837148001
+      }
+    ],
+    "7.2 Migrate `src/core/internal/cart/cart-slice.ts`": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836499242
+      }
+    ],
+    "7.3 Migrate `src/core/internal/cart/cart-selectors.ts`": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836499280
+      }
+    ],
+    "8.1 Migrate `src/core/internal/pagination/pagination-actions.ts`": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836499325
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836995249
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782837148882
+      }
+    ],
+    "8.2 Migrate `src/core/internal/pagination/pagination-slice.ts`": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836499357
+      }
+    ],
+    "8.3 Migrate `src/core/internal/pagination/pagination-selectors.ts`": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836499387
+      }
+    ],
+    "9.1 Migrate `src/core/internal/facets/facets-actions.ts`": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836499416
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836996234
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782837150031
+      }
+    ],
+    "9.2 Migrate `src/core/internal/facets/facets-slice.ts`": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836499443
+      }
+    ],
+    "9.3 Migrate `src/core/internal/facets/facets-selectors.ts`": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836499471
+      }
+    ],
+    "10.1 Migrate `src/core/internal/result-list/result-list-actions.ts`": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836499507
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782837156732
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782837227171
+      }
+    ],
+    "10.2 Migrate `src/core/internal/result-list/result-list-slice.ts`": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836499536
+      }
+    ],
+    "10.3 Migrate `src/core/internal/result-list/result-list-selectors.ts`": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836499562
+      }
+    ],
+    "11.1 Migrate `src/core/internal/product-list/product-list-actions.ts`": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836499590
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782837160778
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782837228110
+      }
+    ],
+    "11.2 Migrate `src/core/internal/product-list/product-list-slice.ts`": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836499618
+      }
+    ],
+    "11.3 Migrate `src/core/internal/product-list/product-list-selectors.ts`": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836499646
+      }
+    ],
+    "12.1 Migrate `src/core/internal/sort/sort-actions.ts`": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836499674
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782837160830
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782837228967
+      }
+    ],
+    "12.2 Migrate `src/core/internal/sort/sort-slice.ts`": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836499704
+      }
+    ],
+    "12.3 Migrate `src/core/internal/sort/sort-selectors.ts`": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836499737
+      }
+    ],
+    "13.1 Migrate `src/core/internal/query-correction/query-correction-actions.ts`": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836499769
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782837160810
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782837229865
+      }
+    ],
+    "13.2 Migrate `src/core/internal/query-correction/query-correction-slice.ts`": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836499798
+      }
+    ],
+    "14.1 Migrate `src/core/internal/generative/generative-actions.ts`": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836499823
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782837160850
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782837230794
+      }
+    ],
+    "14.2 Migrate `src/core/internal/generative/generative-slice.ts`": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836499858
+      }
+    ],
+    "14.3 Migrate `src/core/internal/generative/generative-selectors.ts`": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836499887
+      }
+    ],
+    "15.1 Migrate `src/core/internal/triggers/triggers-actions.ts`": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836499914
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782837231742
+      }
+    ],
+    "15.2 Migrate `src/core/internal/triggers/triggers-slice.ts`": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836499943
+      }
+    ],
+    "16.1 Migrate `src/core/internal/api/search/search-thunk-slice.ts`": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836499972
+      }
+    ],
+    "16.2 Migrate `src/core/internal/api/search/commerce-search-thunk-slice.ts`": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836499999
+      }
+    ],
+    "17.1 Migrate `src/core/interface/generative/generative-hydration.ts`": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836500024
+      }
+    ],
+    "18. Checkpoint - Feature module migration tests pass": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836500064
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782837744068
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782841848251
+      }
+    ],
+    "19.1 Update build functions (interface constructors)": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836500109
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782837745106
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782841849183
+      }
+    ],
+    "19.2 Update controllers": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836500138
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782837745995
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782841849910
+      }
+    ],
+    "19.3 Update public action files": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836500167
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782837747135
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782841851021
+      }
+    ],
+    "19.4 Update loaders": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836500193
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782837747699
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782841851761
+      }
+    ],
+    "19.5 Update search thunk call-sites": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836500222
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782837748803
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782841856502
+      }
+    ],
+    "19.6 Update mutators": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836500251
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782837749556
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782841857254
+      }
+    ],
+    "19.7 Update generative-hydration call-site": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836500279
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782837750502
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782841858254
+      }
+    ],
+    "19.8 Update `src/core/interface/utils/get-handle-internals.ts`": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836500308
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782837150927
+      }
+    ],
+    "20.1 Update unit tests that call `getOrCreate*` factory functions": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836500340
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782841859311
+      }
+    ],
+    "20.2 Update loader and controller tests": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836500369
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782841860336
+      }
+    ],
+    "21.1 Modify `src/public/interfaces/compose.ts`": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836500398
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836740225
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836918490
+      }
+    ],
+    "22. Final checkpoint - Full integration": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836500425
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782841866063
+      },
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782841997465
+      }
+    ],
+    "1. Create InterfaceCacheRegistry with CacheKey<T> pattern": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836612145
+      }
+    ],
+    "2. Extend BaseInterface with InterfaceCacheRegistry ownership": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836629448
+      }
+    ],
+    "3. Extend Engine with interface tracking and cascade dispose": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836917670
+      }
+    ],
+    "21. Update ComposedInterface with registry and engine registration": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782836918526
+      }
+    ],
+    "19. Update all call-sites to pass `iface` instead of `stateId`": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782841858280
+      }
+    ],
+    "20. Update existing tests to use new signatures": [
+      {
+        "executionId": "00bb7696-a2fe-48c6-92fb-73c0fea5819f",
+        "chatSessionId": "sess_d27b0dd6-d9ab-44ec-bb39-ac2a36e2aea9",
+        "timestamp": 1782841860362
+      }
+    ]
+  }
+}

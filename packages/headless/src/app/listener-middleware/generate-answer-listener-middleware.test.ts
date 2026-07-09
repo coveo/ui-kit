@@ -162,6 +162,48 @@ describe('generateAnswerListener', () => {
       });
     });
 
+    describe('when the generated answer is disabled', () => {
+      beforeEach(() => {
+        store = configureStore({
+          reducer: {
+            generatedAnswer: (
+              state = {
+                ...getGeneratedAnswerInitialState(),
+                isEnabled: false,
+              }
+            ) => state,
+            answerGenerationApi: () => ({}),
+            configuration: (state = {knowledge: {agentId: 'some-agent-id'}}) =>
+              state,
+            query: (state = {q: 'test'}) => state,
+          },
+          middleware: (getDefaultMiddleware) =>
+            getDefaultMiddleware().prepend(
+              createGenerateAnswerListener({
+                getNavigatorContext: buildMockNavigatorContextProvider(),
+                // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- unit test
+              }).middleware as Middleware<{}, any>
+            ),
+        });
+      });
+
+      it('should reset the head and follow-up answers but not run the answer agent', async () => {
+        const searchAction = executeSearch.pending('requestId', {
+          legacy: logInsightInterfaceLoad(),
+          next: interfaceLoad(),
+        });
+
+        store.dispatch(searchAction);
+
+        await vi.waitFor(() => {
+          expect(resetAnswer).toHaveBeenCalled();
+          expect(resetFollowUpAnswers).toHaveBeenCalled();
+          expect(answerRunnerAbortRun).toHaveBeenCalled();
+        });
+        expect(answerRunnerRun).not.toHaveBeenCalled();
+      });
+    });
+
     describe('when agentId is not set', () => {
       beforeEach(() => {
         store = configureStore({

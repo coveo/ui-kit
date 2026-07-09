@@ -29,14 +29,16 @@
     "build": "tsc --project ./tsconfig.build.json",
     "clean": "node ../../utils/ci/rm-rf.mjs dist",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:dts": "api-extractor run --local",
+    "test:dts:ci": "api-extractor run"
   },
   "dependencies": {
     "@ag-ui/core": "0.0.57",
-    "@reduxjs/toolkit": "catalog:",
-    "idb": "catalog:"
+    "@reduxjs/toolkit": "catalog:"
   },
   "devDependencies": {
+    "@microsoft/api-extractor": "7.58.9",
     "typescript": "catalog:",
     "vitest": "catalog:"
   },

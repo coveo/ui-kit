@@ -2,8 +2,8 @@
   min-height: calc(2.5rem + 2px);
 }
 
-.follow-up-input__container--focused {
-  border-color: var(--lwc-brandAccessible, #0176d3);
+.follow-up-input__container--error {
+  border-color: var(--lwc-colorBorderError, #ea001e);
 }
 
 .follow-up-input__expander {

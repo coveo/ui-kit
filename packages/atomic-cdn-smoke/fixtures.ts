@@ -1,5 +1,5 @@
 import path from 'node:path';
-import {test as base, expect} from '@chromatic-com/playwright';
+import {test as base} from '@chromatic-com/playwright';
 import {defineNetworkFixture, type NetworkFixture} from '@msw/playwright';
 import {
   MockSearchApi,
@@ -14,8 +14,6 @@ const BASE_URL = COMMIT_SHA
   : 'https://static.cloud.coveo.com/atomic/v3';
 const ATOMIC_URL = `${BASE_URL}/atomic.esm.js`;
 const THEME_URL = `${BASE_URL}/themes/coveo.css`;
-
-export {expect};
 
 export const searchApi = new MockSearchApi();
 export const commerceApi = new MockCommerceApi();

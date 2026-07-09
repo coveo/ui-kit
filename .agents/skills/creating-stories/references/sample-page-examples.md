@@ -10,11 +10,11 @@ Complete example showing all required parts:
 import {getSampleSearchEngineConfiguration} from '@coveo/headless';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {html} from 'lit';
-import {MockSearchApi} from '@/storybook-utils/api/search/mock';
+import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
 import {
   richResponse,
   type baseResponse,
-} from '@/storybook-utils/api/search/search-response';
+} from '@coveo/platform-mock-api/search/search-response';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters.js';
 
 async function initializeSearchInterface(canvasElement: HTMLElement) {
@@ -104,11 +104,11 @@ export const Default: Story = {
 
 ```typescript
 import {getSampleCommerceEngineConfiguration} from '@coveo/headless/commerce';
-import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock.js';
+import {MockCommerceApi} from '@coveo/platform-mock-api/commerce/mock';
 import {
   richResponse,
   type baseResponse,
-} from '@/storybook-utils/api/commerce/search-response';
+} from '@coveo/platform-mock-api/commerce/search-response';
 
 const mockCommerceApi = new MockCommerceApi();
 
@@ -158,7 +158,7 @@ const meta: Meta = {
 
 ```typescript
 import {getSampleInsightEngineConfiguration} from '@coveo/headless/insight';
-import {MockInsightApi} from '@/storybook-utils/api/insight/mock.js';
+import {MockInsightApi} from '@coveo/platform-mock-api/insight/mock';
 
 const meta: Meta = {
   render: () => html`
@@ -185,7 +185,7 @@ const meta: Meta = {
 
 ```typescript
 import {getSampleRecommendationEngineConfiguration} from '@coveo/headless/recommendation';
-import {MockRecommendationApi} from '@/storybook-utils/api/recommendation/mock.js';
+import {MockRecommendationApi} from '@coveo/platform-mock-api/recommendation/mock';
 
 const meta: Meta = {
   render: () => html`

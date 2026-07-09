@@ -6,16 +6,10 @@ import {
   defineDidYouMean,
   defineFacetGenerator,
   defineInstantProducts,
-  defineNotifyTrigger,
   definePagination,
   defineParameterManager,
-  defineProductEnrichment,
   defineProductList,
-  defineProductView,
-  defineQueryTrigger,
-  defineRecentQueriesList,
   defineRecommendations,
-  defineRedirectionTrigger,
   defineSearchBox,
   defineSort,
   defineStandaloneSearchBox,
@@ -24,7 +18,8 @@ import {
 } from '@coveo/headless-react/ssr-commerce';
 
 export default {
-  // By default, the logger level is set to 'warn'. This level may not provide enough information for some server-side errors. To get more detailed error messages, set the logger level to a more verbose level, such as 'debug'.
+  // By default, the logger level is set to 'warn'. To get more detailed error
+  // messages while debugging, set it to a more verbose level such as 'debug'.
   // loggerOptions: {level: 'debug'},
   configuration: {
     ...getSampleCommerceEngineConfiguration(),
@@ -42,31 +37,30 @@ export default {
         slotId: 'af4fb7ba-6641-4b67-9cf9-be67e9f30174',
       },
     }),
-    viewedTogether: defineRecommendations({
+    cart: defineCart(),
+    searchBox: defineSearchBox({
       options: {
-        slotId: 'ff5d8804-d398-4dd5-b68c-6a729c66454b',
+        enableResults: true,
+        highlightOptions: {
+          exactMatchDelimiters: {open: '<strong>', close: '</strong>'},
+        },
       },
     }),
-    cart: defineCart(),
-    searchBox: defineSearchBox({options: {enableResults: true}}),
     context: defineContext(),
-    recentQueriesList: defineRecentQueriesList({
-      options: {enableResults: true},
-    }),
-    notifyTrigger: defineNotifyTrigger(),
-    queryTrigger: defineQueryTrigger(),
-    redirectionTrigger: defineRedirectionTrigger(),
     standaloneSearchBox: defineStandaloneSearchBox({
-      options: {redirectionUrl: '/search'},
+      options: {
+        redirectionUrl: '/search',
+        highlightOptions: {
+          exactMatchDelimiters: {open: '<strong>', close: '</strong>'},
+        },
+      },
     }),
     instantProducts: defineInstantProducts(),
-    pagination: definePagination({options: {pageSize: 9}}),
+    pagination: definePagination({options: {pageSize: 15}}),
     sort: defineSort(),
-    productView: defineProductView(),
-    didYouMean: defineDidYouMean({enableResults: true}),
+    didYouMean: defineDidYouMean(),
     parameterManager: defineParameterManager(),
     facetGenerator: defineFacetGenerator(),
     breadcrumbManager: defineBreadcrumbManager(),
-    productEnrichment: defineProductEnrichment(),
   },
 } satisfies CommerceEngineDefinitionOptions;

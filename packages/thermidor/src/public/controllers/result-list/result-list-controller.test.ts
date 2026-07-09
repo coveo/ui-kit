@@ -3,9 +3,9 @@ import {
   createTestEngine,
   createMockSearchResults,
 } from '@/src/test/test-utils.js';
-import {Engine, getFullEngine} from '@/src/core/interface/engine/engine.js';
-import {getInterfaceInternals} from '@/src/core/interface/base-interface.js';
-import {getOrCreateResultsActions} from '@/src/core/internal/result-list/result-list-actions.js';
+import {Engine, getFullEngine} from '@/src/internal/engine/index.js';
+import {getInterfaceInternals} from '@/src/internal/utils/index.js';
+import {getOrCreateResultsActions} from '@/src/internal/features/result-list/index.js';
 import {buildResultListController} from './result-list-controller.js';
 import {buildSearchInterface} from '@/src/public/interfaces/search.js';
 
@@ -37,8 +37,8 @@ describe('buildResultListController', () => {
         interface: searchInterface,
       });
 
-      const {stateId} = getInterfaceInternals(searchInterface);
-      const actions = getOrCreateResultsActions(stateId);
+      getInterfaceInternals(searchInterface);
+      const actions = getOrCreateResultsActions(searchInterface);
       const fullEngine = getFullEngine(engine);
 
       const mockResults = createMockSearchResults(3);
@@ -59,8 +59,8 @@ describe('buildResultListController', () => {
       });
       const callback = vi.fn();
 
-      const {stateId} = getInterfaceInternals(searchInterface);
-      const actions = getOrCreateResultsActions(stateId);
+      getInterfaceInternals(searchInterface);
+      const actions = getOrCreateResultsActions(searchInterface);
       const fullEngine = getFullEngine(engine);
 
       controller.subscribe(callback);
@@ -77,8 +77,8 @@ describe('buildResultListController', () => {
       });
       const callback = vi.fn();
 
-      const {stateId} = getInterfaceInternals(searchInterface);
-      const actions = getOrCreateResultsActions(stateId);
+      getInterfaceInternals(searchInterface);
+      const actions = getOrCreateResultsActions(searchInterface);
       const fullEngine = getFullEngine(engine);
 
       controller.subscribe(callback);
@@ -103,9 +103,9 @@ describe('buildResultListController', () => {
       controller.subscribe(callback);
 
       const {getOrCreateSearchBoxActions} =
-        await import('@/src/core/internal/search-box/search-box-actions.js');
-      const {stateId} = getInterfaceInternals(searchInterface);
-      const searchBoxActions = getOrCreateSearchBoxActions(stateId);
+        await import('@/src/internal/features/search-box/index.js');
+      getInterfaceInternals(searchInterface);
+      const searchBoxActions = getOrCreateSearchBoxActions(searchInterface);
       fullEngine.mutate(searchBoxActions.setQuery('unrelated change'));
 
       expect(callback).not.toHaveBeenCalled();

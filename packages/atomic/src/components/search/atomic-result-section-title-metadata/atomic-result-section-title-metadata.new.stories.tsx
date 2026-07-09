@@ -6,7 +6,7 @@ import {
   getResultSectionArgTypes,
   getResultSectionDecorators,
 } from '@/storybook-utils/search/result-section-story-utils';
-import {MockSearchApi} from '@/storybook-utils/api/search/mock';
+import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-result-section-title-metadata/atomic-result-section-title-metadata.js';
 
