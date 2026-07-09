@@ -146,7 +146,7 @@ const exampleCitation: AgentCitation = {
   source: 'Some source 1',
   filetype: 'pdf',
   fields: {},
-  primaryId: "primary-id-1"
+  primaryId: 'primary-id-1',
 };
 
 const citationStream: AgentCitationType = {

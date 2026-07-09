@@ -5,7 +5,7 @@ import {
 } from '../../../../../../playwright/utils/analyticsMode';
 import {AnalyticsObject} from '../../../../../../playwright/page-object/analytics';
 import {isRgaEvaluationRequest} from '../../../../../../playwright/utils/requests';
-import {AgentMessage} from './agentData';
+import type {AgentMessage} from './agentData';
 
 const minimumCitationTooltipDisplayDurationMs = 1500;
 const removeUnknownFields = (object: Record<string, unknown>) => {
@@ -545,7 +545,7 @@ export class GeneratedAnswerObject {
   ) {
     let callCount = 0;
     await this.page.route('**/agents/*/follow-up', (route) => {
-      // To make sure that we always return a mocked response. 
+      // To make sure that we always return a mocked response.
       const streams = bodies[Math.min(callCount, bodies.length - 1)];
       callCount++;
 
@@ -570,7 +570,7 @@ export class GeneratedAnswerObject {
   get followUpSubmitButton(): Locator {
     return this.page
       .locator('c-quantic-generated-answer-follow-up-input')
-      .getByRole('button', { name: 'Submit follow-up' });
+      .getByRole('button', {name: 'Submit follow-up'});
   }
 
   async typeFollowUpQuestion(question: string): Promise<void> {

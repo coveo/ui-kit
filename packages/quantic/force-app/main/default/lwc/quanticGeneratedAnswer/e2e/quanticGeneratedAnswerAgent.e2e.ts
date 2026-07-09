@@ -12,6 +12,7 @@ analyticsModeTest.forEach((analytics) => {
     testAgent.use({
       analyticsMode: analytics.mode,
       options: {agentId: exampleAgentId},
+      permissions: ['clipboard-read', 'clipboard-write'],
     });
 
     if (analytics.mode !== AnalyticsModeEnum.legacy) {
@@ -56,7 +57,7 @@ analyticsModeTest.forEach((analytics) => {
               generatedAnswer.waitForCopyToClipboardAnalytics();
             await generatedAnswer.clickCopyToClipboardButton();
             await analyticRequestPromise;
-
+            
             const clipboardContent = await page.evaluate(() =>
               navigator.clipboard.readText()
             );
