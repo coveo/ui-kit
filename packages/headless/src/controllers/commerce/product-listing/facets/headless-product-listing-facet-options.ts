@@ -7,16 +7,16 @@ import type {
 export const facetResponseSelector = createSelector(
   (state: ProductListingSection & CommerceFacetSetSection) =>
     state.productListing.facets,
-  (state: ProductListingSection & CommerceFacetSetSection) =>
-    state.commerceFacetSet,
+  (state: ProductListingSection & CommerceFacetSetSection, facetId: string) =>
+    facetId in state.commerceFacetSet,
   (_state: ProductListingSection & CommerceFacetSetSection, facetId: string) =>
     facetId,
 
-  (facets, commerceFacetSet, facetId) => {
+  (facets, isFacetIdInFacetSet, facetId) => {
     const facetResponse = facets.find(
       (facetResponse) => facetResponse.facetId === facetId
     );
-    if (facetResponse && facetResponse.facetId in commerceFacetSet) {
+    if (facetResponse && isFacetIdInFacetSet) {
       return facetResponse;
     }
 
