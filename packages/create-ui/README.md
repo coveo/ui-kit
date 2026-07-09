@@ -25,12 +25,12 @@ pnpm create @coveo/ui my-app --template headless-search-react
 
 ### Options
 
-| Option                         | Description                                                        |
-| ------------------------------ | ------------------------------------------------------------------ |
-| `<project-name>`               | Directory to create the project in.                                |
-| `--template <id>`              | Template to scaffold (skips the interactive prompt).               |
+| Option                         | Description                                                                           |
+| ------------------------------ | ------------------------------------------------------------------------------------- |
+| `<project-name>`               | Directory to create the project in.                                                   |
+| `--template <id>`              | Template to scaffold (skips the interactive prompt).                                  |
 | `--template-version <version>` | Headless/Atomic library version (or npm dist-tag) to scaffold (defaults to `latest`). |
-| `-h`, `--help`                 | Show usage and the list of available templates.                    |
+| `-h`, `--help`                 | Show usage and the list of available templates.                                       |
 
 ### Pinning a template version
 
