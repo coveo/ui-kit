@@ -1,3 +1,4 @@
 {
+  "lifecycle": "production",
   "owner": "group:default/commerce-shopify"
 }
