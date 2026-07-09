@@ -250,6 +250,3 @@ function hydrateFromSerializedState(
     activeTurnId: serialized.activeTurnId,
   };
 }
-const converse = buildConverseController();
-
-converse.serialize();
