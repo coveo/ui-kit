@@ -2,9 +2,18 @@
 
 ## Overview
 
-This design adds a `CUSTOM` event handler to `GenerativeRuntime.dispatchEvent` so that when the `/converse` backend routes a non-ambiguous commerce query directly to the commerce search API, the resulting `CustomEvent` (with name `commerce-search-api-response`) is processed through the existing `hydrateSubInterface` pipeline. The change is minimal and leverages the already-established hydration path used by `ACTIVITY_SNAPSHOT`, with no backward-compatibility concern.
+This design adds `case 'commerce-search-api-response':` and `case 'search-api-response':` handlers to `GenerativeRuntime.dispatchEvent` so that when the `/converse` backend routes a non-ambiguous query directly to a search API, the resulting named SSE event is processed through the existing `hydrateSubInterface` pipeline. Additionally, the hydration logic is removed from the `ACTIVITY_SNAPSHOT` case, which now only handles A2UI surface rendering.
 
-The key insight is that `CustomEvent` from AG-UI (`type: 'CUSTOM'`, `name: string`, `value: unknown`) maps directly onto the `hydrateSubInterface(activityType, content, query)` signature — `name` becomes the activity type, `value` becomes the content payload. The existing `ACTIVITY_TYPE_TO_ROUTED_USE_CASE` map in `generative-hydration.ts` already recognizes `commerce-search-api-response` and `search-api-response`, so no changes are needed in the hydration layer.
+The backend sends these as **named SSE events** — the wire format is:
+
+```
+event: commerce-search-api-response
+data: {"products": [...], "pagination": {...}, ...}
+```
+
+The SSE parser's `normalizeNamedEvent` function promotes the event name into the `type` field and spreads the parsed payload, producing `{type: 'commerce-search-api-response', products: [...], ...}`. This is the same mechanism used for `turn_started` and `turn_complete`.
+
+The existing `ACTIVITY_TYPE_TO_ROUTED_USE_CASE` map in `generative-hydration.ts` already recognizes `'commerce-search-api-response'` and `'search-api-response'`, so no changes are needed in the hydration layer.
 
 ## Architecture
 
@@ -16,15 +25,15 @@ sequenceDiagram
     participant Hydration as hydrateSubInterface
     participant State as GenerativeStatePort
 
-    Backend->>SSE: SSE frame {type:"CUSTOM", name:"commerce-search-api-response", value:{...}}
-    SSE->>Runtime: CustomEvent {type:"CUSTOM", name, value}
-    Runtime->>Hydration: hydrateSubInterface(event.name, event.value, currentPrompt)
+    Backend->>SSE: SSE frame (event: commerce-search-api-response, data: {...})
+    SSE->>Runtime: {type: 'commerce-search-api-response', products: [...], ...}
+    Runtime->>Hydration: hydrateSubInterface(event.type, event, currentPrompt)
     alt Hydration returns RoutedInterface
         Hydration-->>Runtime: RoutedInterface
         Runtime->>State: setRoutedInterface(turnId, routedInterface)
         Runtime->>State: completeTurn(turnId)
         Runtime-->>Runtime: return {isTerminal: true}
-    else Hydration returns null (unrecognized name)
+    else Hydration returns null
         Hydration-->>Runtime: null
         Runtime-->>Runtime: return {isTerminal: false}
     end
@@ -32,11 +41,13 @@ sequenceDiagram
 
 ### Design Decisions
 
-1. **Reuse existing hydration path**: Rather than introducing a separate handler for custom events, we funnel them through `hydrateSubInterface`. This means any future custom event whose name matches a key in `ACTIVITY_TYPE_TO_ROUTED_USE_CASE` will automatically be supported.
+1. **Named SSE events, not AG-UI CUSTOM**: The backend sends routed search results as named SSE events (`event: commerce-search-api-response`) rather than as AG-UI `CUSTOM` events. This follows the same pattern as `turn_started` and `turn_complete` — Coveo-specific wire format events that don't have AG-UI equivalents.
 
-2. **No `appendSurface` fallback for CUSTOM**: Unlike `ACTIVITY_SNAPSHOT` which falls back to `appendSurface` when hydration returns null, unrecognized `CUSTOM` events are silently ignored (return non-terminal). This is intentional — custom events with unknown names are future extensions and should not corrupt the agent response surface.
+2. **Reuse existing hydration path**: The named event handlers funnel through `hydrateSubInterface` using `event.type` as the activity type and the entire event object as the content. The `ACTIVITY_TYPE_TO_ROUTED_USE_CASE` map handles the lookup.
 
-3. **No backward compatibility with ACTIVITY_SNAPSHOT**: Per the requirements, we do not need to preserve the `ACTIVITY_SNAPSHOT` path for commerce search routing. The backend exclusively emits `CUSTOM` events for routed queries going forward. The `ACTIVITY_SNAPSHOT` case remains for other A2UI surface rendering.
+3. **ACTIVITY_SNAPSHOT simplified**: The `ACTIVITY_SNAPSHOT` case no longer calls `hydrateSubInterface`. Since the backend exclusively emits named SSE events for routed queries going forward, the hydration logic in `ACTIVITY_SNAPSHOT` was dead code. It now only handles `appendSurface` for A2UI rendering.
+
+4. **Type system extended**: `NormalizedStreamEvent` union includes `CommerceSearchApiResponseEvent` and `SearchApiResponseEvent` types so TypeScript narrowing works correctly in the switch.
 
 ## Components and Interfaces
 
@@ -44,13 +55,14 @@ sequenceDiagram
 
 **Location**: `packages/thermidor/src/internal/api/generative/generative-runtime.ts`
 
-Add a `case 'CUSTOM':` branch in the `switch (event.type)` statement:
+Added `case 'commerce-search-api-response':` and `case 'search-api-response':` branches:
 
 ```typescript
-case 'CUSTOM': {
+case 'commerce-search-api-response':
+case 'search-api-response': {
   const routedInterface = this.hydrateSubInterface(
-    event.name,
-    event.value,
+    event.type,
+    event,
     this.currentPrompt
   );
 
@@ -64,6 +76,37 @@ case 'CUSTOM': {
 }
 ```
 
+Simplified `ACTIVITY_SNAPSHOT` to only append surfaces:
+
+```typescript
+case 'ACTIVITY_SNAPSHOT': {
+  this.ensureAgentResponse(turnId);
+  this.statePort.appendSurface(
+    turnId,
+    event.content as Record<string, unknown>
+  );
+  return {turnId, isTerminal: false};
+}
+```
+
+### Modified: `NormalizedStreamEvent` / `ConversationStreamEvent`
+
+**Location**: `packages/thermidor/src/internal/api/protocol/stream-types.ts`
+
+Added two new event types to the union:
+
+```typescript
+export type CommerceSearchApiResponseEvent = {
+  type: 'commerce-search-api-response';
+  [key: string]: unknown;
+};
+
+export type SearchApiResponseEvent = {
+  type: 'search-api-response';
+  [key: string]: unknown;
+};
+```
+
 ### Unchanged: `createHydrateSubInterface`
 
 **Location**: `packages/thermidor/src/internal/features/generative/generative-hydration.ts`
@@ -74,34 +117,17 @@ No modifications needed. The `ACTIVITY_TYPE_TO_ROUTED_USE_CASE` map already cont
 
 **Location**: `packages/thermidor/src/internal/api/protocol/sse-parser.ts`
 
-No modifications needed. The parser already handles `CUSTOM` events:
-- Via AG-UI `EventSchemas.safeParse` for well-formed events
-- Via the fallback block for events that fail Zod validation (extracts `name` and `value` with defaults)
-
-### Unchanged: `NormalizedStreamEvent` / `ConversationStreamEvent`
-
-**Location**: `packages/thermidor/src/internal/api/protocol/stream-types.ts`
-
-`CustomEvent` from `@ag-ui/core` is already in the `NormalizedStreamEvent` union.
+No modifications needed. The `normalizeNamedEvent` function already handles named SSE events by promoting the event name into the `type` field and spreading object payloads.
 
 ## Data Models
 
-### `CustomEvent` (from `@ag-ui/core`)
+### `CommerceSearchApiResponseEvent`
+
+After SSE parsing, the event arrives as:
 
 ```typescript
-interface CustomEvent {
-  type: 'CUSTOM';
-  name: string;
-  value: unknown;
-}
-```
-
-### Commerce Search API Response Payload (event.value)
-
-The `value` field for `commerce-search-api-response` events contains the full commerce search API response body:
-
-```typescript
-interface CommerceSearchPayload {
+{
+  type: 'commerce-search-api-response';
   products: Array<{
     permanentid: string;
     ec_name: string;
@@ -130,26 +156,23 @@ interface CommerceSearchPayload {
 - `isTerminal: true` — turn is completed, no further events should be processed
 - `isTerminal: false` — continue processing stream events
 
-
 ## Correctness Properties
 
-*A property is a characteristic or behavior that should hold true across all valid executions of a system — essentially, a formal statement about what the system should do. Properties serve as the bridge between human-readable specifications and machine-verifiable correctness guarantees.*
+### Property 1: Recognized routed event produces terminal dispatch with routed interface
 
-### Property 1: Recognized CUSTOM event produces terminal dispatch with routed interface
-
-*For any* `CustomEvent` whose `name` matches an entry in the routing table (e.g., `"commerce-search-api-response"` or `"search-api-response"`), and for any `value` payload that causes `hydrateSubInterface` to return a non-null `RoutedInterface`, `dispatchEvent` SHALL:
-- call `hydrateSubInterface(event.name, event.value, currentPrompt)`,
+*For any* event whose `type` is `'commerce-search-api-response'` or `'search-api-response'`, and for any payload that causes `hydrateSubInterface` to return a non-null `RoutedInterface`, `dispatchEvent` SHALL:
+- call `hydrateSubInterface(event.type, event, currentPrompt)`,
 - call `statePort.setRoutedInterface(turnId, routedInterface)`,
 - call `statePort.completeTurn(turnId)`,
 - and return `{ isTerminal: true }`.
 
 **Validates: Requirements 1.1, 1.2, 1.3, 1.4, 2.1**
 
-### Property 2: Unrecognized CUSTOM event produces non-terminal dispatch with no state mutation
+### Property 2: Unrecognized event type falls through default with no state mutation
 
-*For any* `CustomEvent` whose `name` does NOT match any entry in the routing table (i.e., `hydrateSubInterface` returns null), `dispatchEvent` SHALL return `{ isTerminal: false }` and SHALL NOT invoke any method on the `GenerativeStatePort`.
+*For any* event whose `type` does NOT match any case in the `dispatchEvent` switch, the default branch SHALL return `{ isTerminal: false }` and SHALL NOT invoke any method on the `GenerativeStatePort`.
 
-**Validates: Requirements 1.5, 3.1, 3.2**
+**Validates: Requirements 1.5**
 
 ### Property 3: Effective query resolution uses correctedQuery when non-empty, otherwise falls back to user prompt
 
@@ -157,59 +180,36 @@ interface CommerceSearchPayload {
 
 **Validates: Requirements 2.2, 2.3, 2.4**
 
-### Property 4: SSE parser preserves CUSTOM event name (trimmed) and value (exact)
-
-*For any* well-formed SSE frame with `type: "CUSTOM"`, a non-empty `name` string (possibly padded with whitespace), and a `value` of any JSON-deserializable type, `parseSSEEvent` SHALL produce a `NormalizedStreamEvent` with `type === 'CUSTOM'`, `name` equal to the input name trimmed of leading/trailing whitespace, and `value` deeply equal to the original JSON-deserialized payload.
-
-**Validates: Requirements 4.1, 4.4**
-
-### Property 5: SSE parser fallback always produces a valid CustomEvent (never UnknownEvent)
-
-*For any* SSE frame with a JSON payload containing `type: "CUSTOM"` — regardless of whether the `name` is missing/null/whitespace-only, the `value` field is absent, or the payload fails AG-UI schema validation — `parseSSEEvent` SHALL produce a `NormalizedStreamEvent` with `type === 'CUSTOM'`. When `name` is missing or whitespace-only, it SHALL default to `"custom"`. When `value` is absent, it SHALL fall back to `payload` or the entire parsed object.
-
-**Validates: Requirements 4.2, 4.3, 4.5**
-
 ## Error Handling
 
 | Scenario | Behavior |
 |----------|----------|
-| `hydrateSubInterface` returns `null` for a recognized name | Not an error — may occur if the routing table is extended in the future with partial support. Returns non-terminal. |
-| Unrecognized CUSTOM event is the only event before stream closes | `consumeStream`'s `onDone` handler fires with `terminalEventReceived === false`, which calls `statePort.failTurn(turnId, 'Stream ended without a terminal event.')`. |
-| `event.value` is not a valid commerce search payload | `hydrateSubInterface` will still attempt hydration. If the content cannot be cast to `Record<string, unknown>`, the sub-interface will be created with an empty/malformed state. This is acceptable — the backend is trusted to send well-formed payloads. |
-| SSE frame with `type: "CUSTOM"` but malformed JSON | `parseSSEEvent` catches the JSON.parse failure and treats the raw string as the payload. Since it won't have `type` in the record, it falls through to the named-event or UnknownEvent path. |
+| `hydrateSubInterface` returns `null` for a routed event | Not an error — may occur if the routing table is extended in the future with partial support. Returns non-terminal. |
+| Routed event is the only event before stream closes with null hydration | `consumeStream`'s `onDone` handler fires with `terminalEventReceived === false`, which calls `statePort.failTurn(turnId, 'Stream ended without a terminal event.')`. |
+| Event payload is not a valid commerce search structure | `hydrateSubInterface` will still attempt hydration. If the content cannot be cast to `Record<string, unknown>`, the sub-interface will be created with an empty/malformed state. This is acceptable — the backend is trusted to send well-formed payloads. |
 
 ## Testing Strategy
 
 ### Unit Tests (Vitest)
 
 - **`generative-runtime.test.ts`** (new file): Test `dispatchEvent` with mocked `statePort` and `hydrateSubInterface`.
-  - Recognized CUSTOM event with successful hydration → verifies setRoutedInterface + completeTurn + isTerminal
-  - Unrecognized CUSTOM event → verifies no state port calls + non-terminal
-  - CUSTOM event when `currentPrompt` is set → verifies prompt forwarded to hydration
-  - Stream containing only an unrecognized CUSTOM event → verifies failTurn on stream end
+  - `commerce-search-api-response` event with successful hydration → verifies setRoutedInterface + completeTurn + isTerminal
+  - `search-api-response` event with successful hydration → same verification
+  - Routed event when hydration returns null → verifies no state port mutation + non-terminal
+  - Prompt forwarding → verifies prompt passed to hydration
+  - Routed event as only event before stream closes with null hydration → verifies failTurn
 
 - **`generative-hydration.test.ts`** (extend existing): Test `extractEffectiveQuery` behavior via `createHydrateSubInterface`.
   - Payload with `queryCorrection.correctedQuery` → search box uses corrected query
   - Payload without `queryCorrection` → search box uses fallback prompt
   - No query provided (undefined) → search box not set
 
-- **`sse-parser.test.ts`** (extend or create): Test `parseSSEEvent` for CUSTOM event variations.
-  - Well-formed CUSTOM → name trimmed, value preserved
-  - Name missing/whitespace → defaults to `"custom"`
-  - Value missing, payload present → uses payload
-  - Schema validation failure → still produces CustomEvent
-
 ### Property-Based Tests (fast-check + Vitest)
 
-**Library**: `fast-check` (already available in the workspace; to be added as a devDependency to `@coveo/thermidor`)
+**Library**: `fast-check` (devDependency of `@coveo/thermidor`)
 
 **Configuration**: Minimum 100 iterations per property test.
 
-Each property test references its design property with the tag format:
-`Feature: converse-routed-commerce-search, Property {N}: {title}`
-
-- **Property 1 test**: Generate random `CustomEvent` payloads with names from the routing table. Mock `hydrateSubInterface` to return a generated `RoutedInterface`. Assert terminal result and state port calls.
-- **Property 2 test**: Generate random `CustomEvent` payloads with names NOT in the routing table. Assert non-terminal result and zero state port interactions.
+- **Property 1 test**: Generate random payloads with recognized event types. Mock `hydrateSubInterface` to return a generated `RoutedInterface`. Assert terminal result and state port calls.
+- **Property 2 test**: Generate random event types NOT in the switch. Assert non-terminal result and zero state port interactions.
 - **Property 3 test**: Generate random commerce payloads with/without `queryCorrection.correctedQuery` and random prompt strings. Invoke `createHydrateSubInterface` and verify the search box state matches the expected effective query.
-- **Property 4 test**: Generate random non-empty strings (with whitespace padding) and random JSON-serializable values. Construct SSE frames and parse them. Assert name is trimmed and value is preserved.
-- **Property 5 test**: Generate CUSTOM SSE frames with missing/null/whitespace names, missing value fields, and extra fields that break schema validation. Assert the result is always `type: 'CUSTOM'` with appropriate defaults.
