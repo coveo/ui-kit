@@ -53,8 +53,8 @@ The Angular sample currently implements its own AG-UI event parsing, A2UI surfac
 4. THE Angular_Sample SHALL expose the ConverseController through an Angular injectable service so that any component in the application can inject it.
 5. THE Angular_Sample SHALL read configuration values from Angular environment files (`environment.ts` / `environment.development.ts`) rather than hard-coding them in application logic.
 6. THE Angular_Sample SHALL provide a `NavigatorContextProvider` function that returns an object with `clientId` (string), `location` (string), `referrer` (string or null), and `userAgent` (string or null).
-7. THE Angular_Sample SHALL generate a `clientId` using `crypto.randomUUID()` and persist it in `sessionStorage` so the same clientId is reused across page navigation events within a session.
-8. IF `sessionStorage` is unavailable or `crypto.randomUUID()` is unavailable, THEN THE Angular_Sample SHALL continue without a clientId by passing `undefined` to the NavigatorContextProvider without throwing an error.
+7. THE Angular_Sample SHALL generate a `clientId` using `crypto.randomUUID()` and persist it in a cookie so the same clientId is reused across sessions.
+8. IF cookie access is unavailable or `crypto.randomUUID()` is unsupported, THEN THE Angular_Sample SHALL fall back to an empty string for `clientId` without throwing an error, satisfying the required `string` type of `NavigatorContext.clientId`.
 
 ### Requirement 3: Replace Custom Transport with ConverseController
 
