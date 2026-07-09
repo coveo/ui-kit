@@ -9,5 +9,5 @@ metadata:
 spec:
   type: library
   lifecycle: experimental
-  owner: dxui
+  owner: group:default/dxui
   system: ui-kit

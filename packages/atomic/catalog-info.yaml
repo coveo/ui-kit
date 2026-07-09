@@ -9,7 +9,7 @@ metadata:
 spec:
   type: library
   lifecycle: production
-  owner: dxui
+  owner: group:default/dxui
   system: ui-kit
   dependsOn:
     - headless

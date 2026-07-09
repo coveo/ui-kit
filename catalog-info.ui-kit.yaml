@@ -7,4 +7,4 @@ metadata:
   annotations:
     github.com/project-slug: coveo/ui-kit
 spec:
-  owner: dxui
+  owner: group:default/dxui
