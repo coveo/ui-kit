@@ -1,0 +1,13 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: "@coveo/headless-react"
+  description: React utilities for SSR (Server Side Rendering) with headless
+  annotations:
+    github.com/project-slug: coveo/ui-kit
+spec:
+  type: library
+  lifecycle: production
+  owner: dxui
+  dependsOn:
+    - "@coveo/headless"

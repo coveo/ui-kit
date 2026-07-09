@@ -1,0 +1,16 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: "@coveo/bueno"
+  description: A simple validator
+  annotations:
+    github.com/project-slug: coveo/ui-kit
+spec:
+  type: library
+  lifecycle: production
+  owner: dxui
+  dependencyOf:
+    - "@coveo/headless"
+    - "@coveo/atomic"
+    - "@coveo/bueno"
+

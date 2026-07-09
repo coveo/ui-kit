@@ -1,0 +1,17 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: "@coveo/headless"
+  description: A web-component library for building modern UIs interfacing with the Coveo platform
+  annotations:
+    github.com/project-slug: coveo/ui-kit
+spec:
+  type: library
+  lifecycle: production
+  owner: dxui
+  dependsOn:
+    - "@coveo/bueno"
+  dependencyOf:
+    - "@coveo/atomic"
+    - "@coveo/quantic"
+
