@@ -1,7 +1,8 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: "@coveo/thermidor"
+  name: thermidor
+  title: "@coveo/thermidor"
   description: Experimental package for a unified, framework-agnostic headless engine for search and conversational experiences
   annotations:
     github.com/project-slug: coveo/ui-kit

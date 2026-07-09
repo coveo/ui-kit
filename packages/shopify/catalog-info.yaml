@@ -1,7 +1,8 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: "@coveo/shopify"
+  name: shopify
+  title: "@coveo/shopify"
   description: Utilities to integrate Shopify with Coveo's commerce engine
   annotations:
     github.com/project-slug: coveo/ui-kit
@@ -10,4 +11,4 @@ spec:
   lifecycle: production
   owner: group:default/commerce-shopify
   dependsOn:
-    - "@coveo/headless"
+    - headless

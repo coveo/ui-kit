@@ -1,7 +1,8 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: "@coveo/atomic"
+  name: atomic
+  title: "@coveo/atomic"
   description: A web-component library for building modern UIs interfacing with the Coveo platform
   annotations:
     github.com/project-slug: coveo/ui-kit
@@ -10,9 +11,9 @@ spec:
   lifecycle: production
   owner: dxui
   dependsOn:
-    - "@coveo/headless"
-    - "@coveo/bueno"
+    - headless
+    - bueno
   dependencyOf:
-    - "@coveo/atomic-react"
-    - "@coveo/atomic-angular"
+    - atomic-react
+    - atomic-angular
 
