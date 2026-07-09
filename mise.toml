@@ -1,7 +1,7 @@
 min_version = "2026.7.0"
 
 [tools]
-node = "24.17.0"
+node = "24.16.0"
 pnpm = "10.34.4"
 
 [tasks.install]
