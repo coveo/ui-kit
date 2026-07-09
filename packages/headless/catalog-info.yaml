@@ -2,8 +2,8 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: headless
-  title: "@coveo/headless"
-  description: A web-component library for building modern UIs interfacing with the Coveo platform
+  title: '@coveo/headless'
+  description: A headless library for building search experiences on the Coveo platform
   annotations:
     github.com/project-slug: coveo/ui-kit
 spec:
@@ -15,4 +15,3 @@ spec:
   dependencyOf:
     - atomic
     - quantic
-

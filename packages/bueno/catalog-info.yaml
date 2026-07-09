@@ -2,7 +2,7 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: bueno
-  title: "@coveo/bueno"
+  title: '@coveo/bueno'
   description: A simple validator
   annotations:
     github.com/project-slug: coveo/ui-kit
@@ -13,5 +13,3 @@ spec:
   dependencyOf:
     - headless
     - atomic
-    - bueno
-

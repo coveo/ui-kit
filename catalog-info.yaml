@@ -8,6 +8,7 @@ spec:
   type: url
   targets:
     - ./packages/atomic/catalog-info.yaml
+    - ./packages/atomic-react/catalog-info.yaml
     - ./packages/headless/catalog-info.yaml
     - ./packages/bueno/catalog-info.yaml
     - ./packages/atomic-hosted-page/catalog-info.yaml
