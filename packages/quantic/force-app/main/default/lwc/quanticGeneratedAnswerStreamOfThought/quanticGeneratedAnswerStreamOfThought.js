@@ -2,25 +2,25 @@ import analyzingQuestion from '@salesforce/label/c.quantic_AgentGenerationStepAn
 import analyzingQuestionCompleted from '@salesforce/label/c.quantic_AgentGenerationStepAnalyzingQuestionCompleted';
 import search from '@salesforce/label/c.quantic_AgentGenerationStepSearch';
 import searchCompleted from '@salesforce/label/c.quantic_AgentGenerationStepSearchCompleted';
+import searchQuery from '@salesforce/label/c.quantic_AgentGenerationStepSearchQuery';
+import searchQueryCompleted from '@salesforce/label/c.quantic_AgentGenerationStepSearchQueryCompleted';
 import analyzingResults from '@salesforce/label/c.quantic_AgentGenerationStepAnalyzingResults';
 import analyzingResultsCompleted from '@salesforce/label/c.quantic_AgentGenerationStepAnalyzingResultsCompleted';
 import answering from '@salesforce/label/c.quantic_AgentGenerationStepAnswering';
 import answeringCompleted from '@salesforce/label/c.quantic_AgentGenerationStepAnsweringCompleted';
 import collapseButton from '@salesforce/label/c.quantic_CollapseButton';
 import loadingLabel from '@salesforce/label/c.quantic_Loading';
+import {I18nUtils} from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
+import {resolveSteps} from './stepsUtils.js';
 // @ts-ignore
 import streamOfThoughtTemplate from './templates/streamOfThought.html';
 // @ts-ignore
 import collapsedSummaryTemplate from './templates/collapsedSummary.html';
 
 /** @typedef {import("coveo").GenerationStep} GenerationStep */
-/** @typedef {'thinking-before-search'|'searching'|'thinking-after-search'|'answering'} ResolvedStepName */
-/**
- * @typedef {Object} ResolvedStep
- * @property {ResolvedStepName} name
- * @property {'active'|'completed'} status
- */
+/** @typedef {import("./stepsUtils.js").ResolvedStepName} ResolvedStepName */
+/** @typedef {import("./stepsUtils.js").ResolvedStep} ResolvedStep */
 
 /** @type {Record<string, {active: string, completed: string}>} */
 const STEP_LABEL_KEYS = {
@@ -32,6 +32,10 @@ const STEP_LABEL_KEYS = {
     active: search,
     completed: searchCompleted,
   },
+  'searching-with-query': {
+    active: searchQuery,
+    completed: searchQueryCompleted,
+  },
   'thinking-after-search': {
     active: analyzingResults,
     completed: analyzingResultsCompleted,
@@ -41,30 +45,6 @@ const STEP_LABEL_KEYS = {
     completed: answeringCompleted,
   },
 };
-
-/**
- * Maps an array of raw generation steps to resolved steps with a normalized type.
- * @param {GenerationStep[]} steps
- * @returns {ResolvedStep[]}
- */
-export function resolveSteps(steps) {
-  let searchWasPerformed = false;
-  return steps.map((step) => {
-    /** @type {ResolvedStepName} */
-    let name;
-    if (step.name === 'searching') {
-      searchWasPerformed = true;
-      name = 'searching';
-    } else if (step.name === 'answering') {
-      name = 'answering';
-    } else {
-      name = searchWasPerformed
-        ? 'thinking-after-search'
-        : 'thinking-before-search';
-    }
-    return {name, status: step.status};
-  });
-}
 
 /**
  * The `QuanticGeneratedAnswerStreamOfThought` component displays a timeline of agent reasoning
@@ -111,15 +91,19 @@ export default class QuanticGeneratedAnswerStreamOfThought extends LightningElem
     this._expanded = !this._expanded;
   };
 
-  /** @returns {Array<{key: number, isActive: boolean, label: string}>} */
+  /** @returns {Array<{key: number, name: ResolvedStepName, isActive: boolean, label: string}>} */
   get stepsToDisplay() {
     return this.steps.map((step, index) => {
-      const labelKey = STEP_LABEL_KEYS[step.name][step.status];
+      const rawLabel = STEP_LABEL_KEYS[step.name][step.status];
+      const label =
+        step.name === 'searching-with-query'
+          ? I18nUtils.format(rawLabel, step.searchQuery)
+          : rawLabel;
       return {
         key: index,
         name: step.name,
         isActive: step.status === 'active',
-        label: labelKey,
+        label,
       };
     });
   }
@@ -152,8 +136,10 @@ export default class QuanticGeneratedAnswerStreamOfThought extends LightningElem
   /** @returns {string} */
   get collapsedSummaryLabel() {
     const lastStep = this.steps[this.steps.length - 1];
-    const labelKey = STEP_LABEL_KEYS[lastStep.name].completed;
-    return labelKey;
+    const rawLabel = STEP_LABEL_KEYS[lastStep.name].completed;
+    return lastStep.name === 'searching-with-query'
+      ? I18nUtils.format(rawLabel, lastStep.searchQuery)
+      : rawLabel;
   }
 
   render() {

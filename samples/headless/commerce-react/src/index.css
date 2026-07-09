@@ -275,7 +275,8 @@ main {
   color: var(--text);
 }
 
-.SearchBoxDropdown .QuerySuggestion.column button:hover {
+.SearchBoxDropdown .QuerySuggestion.column button:hover,
+.SearchBoxDropdown .QuerySuggestion.column button.active {
   background: var(--accent-soft);
 }
 

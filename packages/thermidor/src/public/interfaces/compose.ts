@@ -1,16 +1,16 @@
 import {
   getInterfaceInternals,
   type BaseInterface,
-} from '@/src/core/interface/base-interface.js';
-import {InterfaceCacheRegistry} from '@/src/core/interface/cache/interface-cache-registry.js';
-import type {FullEngine} from '@/src/core/interface/engine/engine.js';
+} from '@/src/internal/utils/index.js';
+import {InterfaceCacheRegistry} from '@/src/internal/utils/index.js';
+import type {FullEngine} from '@/src/internal/engine/index.js';
 import type {
   EndpointThunk,
   Facades,
   InterfaceHandle,
   InterfaceType,
-} from '@/src/core/interface/utils/interface-types.js';
-import {generateId} from '@/src/core/interface/utils/id-generator.js';
+} from '@/src/internal/utils/index.js';
+import {generateId} from '@/src/internal/utils/index.js';
 
 export interface ComposedInternals {
   engine: FullEngine;

@@ -32,9 +32,11 @@ Rejected alternatives:
 - **GitHub release asset** — mutable, not registry-versioned, requires custom resolution logic.
 - **Manual `fetch` + `tar`** — reimplements what `pacote` already does; misses `.npmrc` auth handling.
 
-### 3. Resolve the `latest` dist-tag
+### 3. Resolve the `latest` dist-tag by default
 
-Always fetch `latest`. No major pinning, no version arithmetic. A sample update reaches users immediately once published.
+Default to `latest` — a sample update reaches users immediately once published, with no major pinning or version arithmetic. An optional `--template-version <version>` (a semver such as `3.2.1`, or an npm dist-tag such as `latest`/`next`) overrides the default so Support/PS can reproduce and troubleshoot against a known-good version. Omitting it preserves the `latest` behavior.
+
+Sample versions are kept in lockstep with the Coveo library they build on (Headless or Atomic) via changesets [fixed packages](https://github.com/changesets/changesets/blob/main/docs/fixed-packages.md) (see [ADR 002](./002-sample-publishing.md) decision #3). A sample's version therefore always matches its library's, so `--template-version 3.2.1` scaffolds the sample built against Headless/Atomic `3.2.1`.
 
 ### 4. Integrity verification handled by `pacote`
 

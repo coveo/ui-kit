@@ -1,14 +1,14 @@
-import {
+import type {
   SetCartItemsPayload,
   UpdateItemQuantityPayload,
-} from '@/src/core/interface/cart/cart-types.js';
-import {getOrCreateCartSlice} from '@/src/core/internal/cart/cart-slice.js';
-import {BaseController} from '@/src/core/interface/base-controller.js';
-import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
-import type {Supports} from '@/src/core/interface/utils/interface-types.js';
-import {getHandleInternals} from '@/src/core/interface/utils/get-handle-internals.js';
-import {getOrCreateCartActions} from '@/src/core/internal/cart/cart-actions.js';
-import {getOrCreateCartSelectors} from '@/src/core/internal/cart/cart-selectors.js';
+} from '@/src/internal/features/cart/index.js';
+import {getOrCreateCartSlice} from '@/src/internal/features/cart/index.js';
+import {BaseController} from '@/src/internal/utils/index.js';
+import {createMemoizedStateSelector} from '@/src/internal/utils/index.js';
+import type {Supports} from '@/src/internal/utils/index.js';
+import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getOrCreateCartActions} from '@/src/internal/features/cart/index.js';
+import {getOrCreateCartSelectors} from '@/src/internal/features/cart/index.js';
 import type {Controller} from '@/src/public/controllers/controller-types.js';
 
 class CartControllerImpl extends BaseController<CartControllerState> {

@@ -186,7 +186,7 @@ jobs:
   cdn-checks:
     name: 'CDN Checks'
     needs: [affected, build-cdn]
-    if: contains(needs.affected.outputs.projects, '@coveo/atomic') || contains(needs.affected.outputs.projects, '@coveo/ui-kit-sample-headless-commerce-react') || contains(needs.affected.outputs.projects, '@coveo/atomic-hosted-page')
+    if: contains(needs.affected.outputs.projects, '@coveo/atomic') || contains(needs.affected.outputs.projects, '@coveo/atomic-hosted-page')
     env:
       DEPLOYMENT_ENVIRONMENT: CDN
     runs-on: ubuntu-latest
@@ -269,6 +269,28 @@ jobs:
         if: ${{ github.event_name != 'pull_request' }}
       - uses: ./.github/actions/setup
       - run: pnpm exec turbo test --affected
+  validate-dts:
+    name: 'Validate DTS API surface'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          fetch-depth: 0
+          filter: blob:none
+      - run: git branch ${GITHUB_EVENT_PULL_REQUEST_BASE_REF} origin/${GITHUB_EVENT_PULL_REQUEST_BASE_REF}
+        if: ${{ github.event_name == 'pull_request' }}
+        env:
+          GITHUB_EVENT_PULL_REQUEST_BASE_REF: ${{ github.event.pull_request.base.ref }}
+      - run: git branch main origin/main
+        if: ${{ github.event_name != 'pull_request' }}
+      - uses: ./.github/actions/setup
+      - run: pnpm exec turbo test:dts --affected
   package-compatibility:
     name: 'Verify compatibility of packages'
     needs: build

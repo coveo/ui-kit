@@ -145,9 +145,6 @@ export default {
     'packages/create-atomic-result-component': {
       ignore: ['template/**/*'],
     },
-    'packages/platform-mock-api': {
-      entry: ['src/index.ts'],
-    },
     'packages/thermidor': {
       ignore: ['**/*'],
     },

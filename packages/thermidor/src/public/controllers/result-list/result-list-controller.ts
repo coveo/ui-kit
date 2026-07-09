@@ -1,9 +1,9 @@
-import {BaseController} from '@/src/core/interface/base-controller.js';
-import type {Supports} from '@/src/core/interface/utils/interface-types.js';
-import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
-import {getHandleInternals} from '@/src/core/interface/utils/get-handle-internals.js';
-import {getOrCreateResultsSelectors} from '@/src/core/internal/result-list/result-list-selectors.js';
-import {getOrCreateResultsSlice} from '@/src/core/internal/result-list/result-list-slice.js';
+import {BaseController} from '@/src/internal/utils/index.js';
+import type {Supports} from '@/src/internal/utils/index.js';
+import {createMemoizedStateSelector} from '@/src/internal/utils/index.js';
+import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getOrCreateResultsSelectors} from '@/src/internal/features/result-list/index.js';
+import {getOrCreateResultsSlice} from '@/src/internal/features/result-list/index.js';
 import type {Controller} from '@/src/public/controllers/controller-types.js';
 
 class ResultListControllerImpl extends BaseController<ResultListControllerState> {

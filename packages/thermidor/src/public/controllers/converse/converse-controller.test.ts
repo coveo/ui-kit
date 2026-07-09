@@ -4,8 +4,8 @@ import {
   type Engine,
   type FullEngine,
   getFullEngine,
-} from '@/src/core/interface/engine/engine.js';
-import {getOrCreateGenerativeActions} from '@/src/core/internal/generative/generative-actions.js';
+} from '@/src/internal/engine/index.js';
+import {getOrCreateGenerativeActions} from '@/src/internal/features/generative/index.js';
 import {
   buildGenerativeInterface,
   type GenerativeInterface,
@@ -18,21 +18,28 @@ const TEST_ID = 'test-generative';
 const mockSubmit = vi.fn<(prompt: string) => Promise<void>>();
 const mockResubmit = vi.fn<(turnId: string, prompt: string) => Promise<void>>();
 
-vi.mock(
-  '@/src/core/interface/api/generative-endpoint/generative-runtime.js',
-  () => ({
-    GenerativeRuntime: {
-      getInstance: vi.fn(() => ({
-        submit: mockSubmit,
-        resubmit: mockResubmit,
-      })),
-    },
-  })
-);
-
-vi.mock('@/src/core/interface/generative/generative-hydration.js', () => ({
-  createHydrateSubInterface: vi.fn(() => vi.fn()),
+vi.mock('@/src/internal/api/generative/index.js', () => ({
+  GenerativeRuntime: {
+    getInstance: vi.fn(() => ({
+      submit: mockSubmit,
+      resubmit: mockResubmit,
+    })),
+  },
 }));
+
+vi.mock(
+  '@/src/internal/features/generative/index.js',
+  async (importOriginal) => {
+    const actual =
+      await importOriginal<
+        typeof import('@/src/internal/features/generative/index.js')
+      >();
+    return {
+      ...actual,
+      createHydrateSubInterface: vi.fn(() => vi.fn()),
+    };
+  }
+);
 
 describe('buildConverseController', () => {
   let engine: Engine;
