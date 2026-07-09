@@ -3,7 +3,9 @@ on:
   pull_request:
     paths:
       - 'packages/*/package.json'
+      - 'packages/*/catalog-info.config.json'
       - 'packages/*/catalog-info.yaml'
+      - 'catalog-info.config.json'
       - 'catalog-info.yaml'
       - 'catalog-info.ui-kit.yaml'
       - 'scripts/generate-catalog-info.mjs'

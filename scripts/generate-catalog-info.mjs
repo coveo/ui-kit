@@ -1,8 +1,9 @@
 /**
- * Generates Backstage catalog-info.yaml files from package.json metadata.
+ * Generates Backstage catalog-info.yaml files from package metadata.
  *
- * For each package that contains a "catalog_info" property in its package.json,
- * this script produces a catalog-info.yaml file in the package directory.
+ * For each package that contains a catalog-info.config.json file,
+ * this script combines that catalog metadata with package.json data
+ * and produces a catalog-info.yaml file in the package directory.
  *
  * It also generates:
  * - catalog-info.ui-kit.yaml (the System entity for the monorepo)
@@ -18,6 +19,7 @@ import {fileURLToPath} from 'node:url';
 
 const rootDir = resolve(fileURLToPath(import.meta.url), '..', '..');
 const packagesDir = resolve(rootDir, 'packages');
+const catalogInfoConfigFileName = 'catalog-info.config.json';
 
 /**
  * @typedef {object} CatalogInfo
@@ -30,7 +32,6 @@ const packagesDir = resolve(rootDir, 'packages');
  * @typedef {object} PackageManifest
  * @property {string} name
  * @property {string} [description]
- * @property {CatalogInfo} [catalog_info]
  * @property {Record<string, string>} [dependencies]
  * @property {{url?: string}} [repository]
  */
@@ -97,13 +98,12 @@ function toYaml(doc) {
 
 /**
  * Generates a catalog-info.yaml for a single package.
- * @param {string} packageDir
  * @param {PackageManifest} manifest
+ * @param {CatalogInfo} catalogInfo
  * @param {{dependsOn: string[], dependencyOf: string[]}} relations
  * @returns {string}
  */
-function generateComponentYaml(packageDir, manifest, relations) {
-  const catalogInfo = manifest.catalog_info || {};
+function generateComponentYaml(manifest, catalogInfo, relations) {
   const componentName = getComponentName(manifest.name);
 
   const doc = {
@@ -160,13 +160,13 @@ function generateLocationYaml(targetPaths) {
 }
 
 /**
- * Generates the System catalog-info.ui-kit.yaml from the root package.json.
+ * Generates the System catalog-info.ui-kit.yaml from the root package.json
+ * and catalog-info.config.json.
  * @param {PackageManifest} rootManifest
+ * @param {CatalogInfo} catalogInfo
  * @returns {string}
  */
-function generateSystemYaml(rootManifest) {
-  const catalogInfo = rootManifest.catalog_info || {};
-
+function generateSystemYaml(rootManifest, catalogInfo) {
   const doc = {
     apiVersion: 'backstage.io/v1alpha1',
     kind: 'System',
@@ -190,7 +190,7 @@ function generateSystemYaml(rootManifest) {
  * Extracts workspace dependency names (stripped of scope) from a manifest's dependencies and peerDependencies.
  * Only considers `dependencies` and `peerDependencies`, not `devDependencies`.
  * @param {PackageManifest} manifest
- * @param {Set<string>} catalogComponents - set of component names that have catalog_info
+ * @param {Set<string>} catalogComponents - set of component names that have catalog metadata
  * @returns {string[]}
  */
 function getWorkspaceDependsOn(manifest, catalogComponents) {
@@ -207,6 +207,20 @@ function getWorkspaceDependsOn(manifest, catalogComponents) {
   return result;
 }
 
+/**
+ * Reads catalog metadata from catalog-info.config.json when present.
+ * @param {string} directory
+ * @returns {CatalogInfo | undefined}
+ */
+function readCatalogInfo(directory) {
+  const catalogInfoPath = resolve(directory, catalogInfoConfigFileName);
+  if (!statSync(catalogInfoPath, {throwIfNoEntry: false})) {
+    return undefined;
+  }
+
+  return JSON.parse(readFileSync(catalogInfoPath, 'utf-8'));
+}
+
 function main() {
   const packageDirs = readdirSync(packagesDir).filter((dir) => {
     const fullPath = resolve(packagesDir, dir);
@@ -216,19 +230,23 @@ function main() {
     );
   });
 
-  /** @type {Map<string, PackageManifest>} */
+  /** @type {Map<string, {manifest: PackageManifest, catalogInfo: CatalogInfo}>} */
   const catalogPackages = new Map();
 
   for (const dir of packageDirs) {
-    const manifestPath = resolve(packagesDir, dir, 'package.json');
+    const packageDir = resolve(packagesDir, dir);
+    const manifestPath = resolve(packageDir, 'package.json');
     const manifest = JSON.parse(readFileSync(manifestPath, 'utf-8'));
-    if (manifest.catalog_info) {
-      catalogPackages.set(dir, manifest);
+    const catalogInfo = readCatalogInfo(packageDir);
+    if (catalogInfo) {
+      catalogPackages.set(dir, {manifest, catalogInfo});
     }
   }
 
   const catalogComponents = new Set(
-    [...catalogPackages.values()].map((m) => getComponentName(m.name))
+    [...catalogPackages.values()].map(({manifest}) =>
+      getComponentName(manifest.name)
+    )
   );
 
   /** @type {Map<string, string[]>} dependencyOf map: component -> list of components that depend on it */
@@ -237,7 +255,7 @@ function main() {
   /** @type {Map<string, string[]>} dependsOn map: component -> list of workspace deps */
   const dependsOnMap = new Map();
 
-  for (const [dir, manifest] of catalogPackages) {
+  for (const [, {manifest}] of catalogPackages) {
     const componentName = getComponentName(manifest.name);
     const dependsOn = getWorkspaceDependsOn(manifest, catalogComponents);
     dependsOnMap.set(componentName, dependsOn);
@@ -253,14 +271,14 @@ function main() {
   const targets = ['./catalog-info.ui-kit.yaml'];
   let generated = 0;
 
-  for (const [dir, manifest] of catalogPackages) {
+  for (const [dir, {manifest, catalogInfo}] of catalogPackages) {
     const componentName = getComponentName(manifest.name);
     const relations = {
       dependsOn: dependsOnMap.get(componentName) || [],
       dependencyOf: dependencyOfMap.get(componentName) || [],
     };
 
-    const yaml = generateComponentYaml(dir, manifest, relations);
+    const yaml = generateComponentYaml(manifest, catalogInfo, relations);
     const outputPath = resolve(packagesDir, dir, 'catalog-info.yaml');
     writeFileSync(outputPath, yaml);
 
@@ -275,7 +293,10 @@ function main() {
     readFileSync(resolve(rootDir, 'package.json'), 'utf-8')
   );
 
-  const systemYaml = generateSystemYaml(rootManifest);
+  const systemYaml = generateSystemYaml(
+    rootManifest,
+    readCatalogInfo(rootDir) || {}
+  );
   writeFileSync(resolve(rootDir, 'catalog-info.ui-kit.yaml'), systemYaml);
   console.log('Generated: ./catalog-info.ui-kit.yaml');
 

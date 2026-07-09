@@ -70,8 +70,5 @@
       "@angular/core": "catalog:",
       "@angular/common": "catalog:"
     }
-  },
-  "catalog_info": {
-    "owner": "group:default/dxui"
   }
 }
