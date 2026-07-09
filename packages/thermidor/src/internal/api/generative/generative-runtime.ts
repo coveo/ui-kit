@@ -100,6 +100,22 @@ export class GenerativeRuntime {
     return runtime;
   }
 
+  getConversationSessionId(): string | undefined {
+    return this.conversationSessionId;
+  }
+
+  getConversationToken(): string | undefined {
+    return this.conversationToken;
+  }
+
+  setConversationSession(
+    sessionId: string | undefined,
+    token: string | undefined
+  ): void {
+    this.conversationSessionId = sessionId;
+    this.conversationToken = token;
+  }
+
   async submit(prompt: string): Promise<void> {
     const tempId = generateId();
 
