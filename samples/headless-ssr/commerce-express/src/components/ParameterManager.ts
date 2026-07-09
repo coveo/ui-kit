@@ -12,11 +12,9 @@ import {
  * The server seeds the initial parameters by deserializing the request URL (see
  * `server.ts`); this hydrated counterpart maintains the URL from then on.
  */
-export function ParameterManager(
+export function hydrateParameterManager(
   parameterManager: ParameterManagerController<CommerceSearchParameters>
 ) {
-  if (!parameterManager) return;
-
   const {serialize, deserialize} = buildParameterSerializer();
   let previousUrl = location.href;
 

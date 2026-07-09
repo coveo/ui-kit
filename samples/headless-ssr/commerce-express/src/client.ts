@@ -1,118 +1,107 @@
 /**
- * Client-side hydration for Coveo Headless Commerce SSR sample.
+ * Client-side hydration for the Coveo Headless Commerce SSR sample.
  *
- * Client-side lifecycle:
- * 1. On page load, reads the SSR envelope injected by the server (see server.ts):
- *    `window.__SSR_STATE__ = {type, staticState}`.
- * 2. Hydrates the matching engine (search or listing). Controllers that require
- *    props at fetch time (context, parameterManager) receive the same props on
- *    the client so the hydrated state matches the server render.
- * 3. Initializes UI components with the hydrated controllers (the search box
- *    only exists on the search page).
- * 4. Handles errors gracefully if hydration fails.
+ * On load it:
+ * 1. Reads the SSR payload the server injected (`window.__SSR_STATE__`).
+ * 2. Hydrates the matching engine (search or listing), passing the same
+ *    fetch-time props (context, parameter manager) the server used so the
+ *    hydrated state matches the server render.
+ * 3. Wires each UI concern to its hydrated controller (the search box only
+ *    exists on the search page).
+ *
+ * See server.ts for the server side, and each components/*.ts for the render
+ * function paired with these hydrate functions.
  */
-import type {
-  CommerceSearchParameters,
-  FacetGenerator as FacetGeneratorController,
-  Pagination as PaginationController,
-  ParameterManager as ParameterManagerController,
-  ProductList,
-  SearchBox,
-  Sort as SortController,
-  Summary,
-} from '@coveo/headless/ssr-commerce';
 import {ErrorMessage} from './components/ErrorMessage.js';
-import {Facets} from './components/Facets.js';
-import {Pagination} from './components/Pagination.js';
-import {ParameterManager} from './components/ParameterManager.js';
-import {ProductGrid} from './components/ProductGrid.js';
-import {QuerySummary} from './components/QuerySummary.js';
-import {Search} from './components/Search.js';
-import {Sort} from './components/Sort.js';
+import {hydrateFacets} from './components/Facets.js';
+import {hydratePagination} from './components/Pagination.js';
+import {hydrateParameterManager} from './components/ParameterManager.js';
+import {hydrateProductGrid} from './components/ProductGrid.js';
+import {hydrateSummary} from './components/QuerySummary.js';
+import {hydrateSearch} from './components/Search.js';
+import {hydrateSort} from './components/Sort.js';
 import {
   listingEngineDefinition,
   searchEngineDefinition,
 } from './lib/engine-definition.js';
-
-// The controllers shared by the search and listing pages (the search box is
-// search-only).
-interface AppControllers {
-  searchBox?: SearchBox;
-  productList: ProductList;
-  summary: Summary;
-  facetGenerator: FacetGeneratorController;
-  sort: SortController;
-  pagination: PaginationController;
-  parameterManager: ParameterManagerController<CommerceSearchParameters>;
-}
+import type {AppControllers} from './common/types.js';
 
 function wireControllers(controllers: AppControllers) {
-  if (controllers.searchBox) {
-    Search(controllers.searchBox);
+  // The search box only exists on the search page.
+  if ('searchBox' in controllers) {
+    hydrateSearch(controllers.searchBox);
   }
-  ProductGrid(controllers.productList);
-  QuerySummary(controllers.summary);
-  Facets(controllers.facetGenerator);
-  Sort(controllers.sort);
-  Pagination(controllers.pagination);
-  ParameterManager(controllers.parameterManager);
+  hydrateProductGrid(controllers.productList);
+  hydrateSummary(controllers.summary);
+  hydrateFacets(controllers.facetGenerator);
+  hydrateSort(controllers.sort);
+  hydratePagination(controllers.pagination);
+  hydrateParameterManager(controllers.parameterManager);
 }
 
 async function initApp() {
-  try {
-    const ssr = window.__SSR_STATE__!;
-    const {staticState, navigatorContext} = ssr;
+  const ssr = window.__SSR_STATE__;
+  if (!ssr) return;
 
-    const hydrateOptions = {
-      searchActions: staticState.searchActions,
-      controllers: {
-        context: staticState.controllers.context.state,
-        parameterManager: {
-          initialState: {
-            parameters:
-              staticState.controllers.parameterManager.state.parameters,
-          },
-        },
-      },
-    };
+  try {
+    const {navigatorContext} = ssr;
+    let controllers: AppControllers;
 
     // Set the navigator context provider on the client (matching the server)
     // before hydrating, so client-side requests carry the same context.
-    let controllers;
     if (ssr.type === 'listing') {
+      const {staticState} = ssr;
       listingEngineDefinition.setNavigatorContextProvider(
         () => navigatorContext
       );
-      ({controllers} = await listingEngineDefinition.hydrateStaticState(
-        hydrateOptions as Parameters<
-          typeof listingEngineDefinition.hydrateStaticState
-        >[0]
-      ));
+      ({controllers} = await listingEngineDefinition.hydrateStaticState({
+        searchActions: staticState.searchActions,
+        controllers: {
+          context: staticState.controllers.context.state,
+          parameterManager: {
+            initialState: {
+              parameters:
+                staticState.controllers.parameterManager.state.parameters,
+            },
+          },
+        },
+      }));
     } else {
+      const {staticState} = ssr;
       searchEngineDefinition.setNavigatorContextProvider(
         () => navigatorContext
       );
-      ({controllers} = await searchEngineDefinition.hydrateStaticState(
-        hydrateOptions as Parameters<
-          typeof searchEngineDefinition.hydrateStaticState
-        >[0]
-      ));
+      ({controllers} = await searchEngineDefinition.hydrateStaticState({
+        searchActions: staticState.searchActions,
+        controllers: {
+          context: staticState.controllers.context.state,
+          parameterManager: {
+            initialState: {
+              parameters:
+                staticState.controllers.parameterManager.state.parameters,
+            },
+          },
+        },
+      }));
     }
 
-    wireControllers(controllers as unknown as AppControllers);
+    wireControllers(controllers);
   } catch (_error) {
-    const err = document.getElementById('query-error');
-    if (!err) {
-      const container = document.createElement('div');
-      container.innerHTML = ErrorMessage(
-        'Something went wrong. Please try again.'
-      );
-      document.body.appendChild(container.firstElementChild!);
-    }
+    showError();
   }
 }
 
-// ===== Boot =====
+/** Injects a generic error banner if hydration fails and none is shown yet. */
+function showError() {
+  if (document.getElementById('query-error')) return;
+  const container = document.createElement('div');
+  container.innerHTML = ErrorMessage('Something went wrong. Please try again.');
+  const node = container.firstElementChild;
+  if (node) {
+    document.body.appendChild(node);
+  }
+}
+
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initApp);
 } else {

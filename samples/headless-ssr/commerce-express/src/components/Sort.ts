@@ -7,8 +7,8 @@ import {escapeHtml, getElement} from '../common/utils.js';
 
 type SortState = SortController['state'];
 
-export function selectSort(sort: SortController): SortState {
-  return sort.state;
+function hasSorts(state: SortState): boolean {
+  return state.availableSorts.length > 0;
 }
 
 function getSortLabel(criterion: SortCriterion): string {
@@ -27,11 +27,8 @@ function getSortLabel(criterion: SortCriterion): string {
   }
 }
 
-export function renderSort(state: SortState): string {
-  if (state.availableSorts.length === 0) {
-    return '';
-  }
-
+/** The label + select. Assumes at least one available sort. */
+function renderSortControl(state: SortState): string {
   const appliedValue = JSON.stringify(state.appliedSort);
   const options = state.availableSorts
     .map((sort) => {
@@ -47,21 +44,25 @@ export function renderSort(state: SortState): string {
   `;
 }
 
-export function Sort(sort: SortController) {
-  if (!sort) return;
+export function renderSort(state: SortState): string {
+  const visible = hasSorts(state);
+  return `<div id="sort" class="Sort" style="display: ${visible ? 'flex' : 'none'};">${
+    visible ? renderSortControl(state) : ''
+  }</div>`;
+}
 
+export function hydrateSort(sort: SortController) {
   const container = getElement<HTMLElement>('sort');
   if (!container) return;
 
-  const render = () => {
-    const {state} = sort;
-    const hasSorts = state.availableSorts.length > 0;
-    container.style.display = hasSorts ? 'flex' : 'none';
-    container.innerHTML = hasSorts ? renderSort(state) : '';
+  const update = () => {
+    const visible = hasSorts(sort.state);
+    container.style.display = visible ? 'flex' : 'none';
+    container.innerHTML = visible ? renderSortControl(sort.state) : '';
   };
 
-  sort.subscribe(render);
-  render();
+  sort.subscribe(update);
+  update();
 
   container.addEventListener('change', (event) => {
     const target = event.target as HTMLSelectElement;

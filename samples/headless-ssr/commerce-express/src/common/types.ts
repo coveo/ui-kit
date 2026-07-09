@@ -1,4 +1,5 @@
 import type {
+  InferHydratedState,
   InferStaticState,
   NavigatorContext,
 } from '@coveo/headless/ssr-commerce';
@@ -7,20 +8,46 @@ import type {
   searchEngineDefinition,
 } from '../lib/engine-definition';
 
-type SearchStaticState = InferStaticState<typeof searchEngineDefinition>;
-type ListingStaticState = InferStaticState<typeof listingEngineDefinition>;
+/** Static state fetched on the server, per page type. */
+export type SearchStaticState = InferStaticState<typeof searchEngineDefinition>;
+export type ListingStaticState = InferStaticState<
+  typeof listingEngineDefinition
+>;
 
-/** A static state for either supported page type. */
+/** Static state for either supported page type. */
 export type AppStaticState = SearchStaticState | ListingStaticState;
+
+/**
+ * Hydrated controllers available on the client, derived from the engine
+ * definitions. The listing page omits the search box; every other concern is
+ * shared, so callers narrow with `'searchBox' in controllers`.
+ */
+export type SearchControllers = InferHydratedState<
+  typeof searchEngineDefinition
+>['controllers'];
+export type ListingControllers = InferHydratedState<
+  typeof listingEngineDefinition
+>['controllers'];
+export type AppControllers = SearchControllers | ListingControllers;
 
 export type PageType = 'search' | 'listing';
 
-/** The SSR payload the server injects for the client to hydrate from. */
-export interface SsrState {
-  type: PageType;
-  staticState: AppStaticState;
-  navigatorContext: NavigatorContext;
-}
+/**
+ * The SSR payload the server injects for the client to hydrate from. It is
+ * discriminated by `type`, so narrowing on `type` also narrows `staticState`
+ * to the matching page.
+ */
+export type SsrState =
+  | {
+      type: 'search';
+      staticState: SearchStaticState;
+      navigatorContext: NavigatorContext;
+    }
+  | {
+      type: 'listing';
+      staticState: ListingStaticState;
+      navigatorContext: NavigatorContext;
+    };
 
 declare global {
   interface Window {

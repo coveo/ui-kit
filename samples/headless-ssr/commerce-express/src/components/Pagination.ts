@@ -7,13 +7,12 @@ type PaginationState = PaginationController['state'];
 // the current page), so a large result set doesn't render hundreds of buttons.
 const MAX_PAGE_BUTTONS = 5;
 
-export function selectPagination(
-  pagination: PaginationController
-): PaginationState {
-  return pagination.state;
+function hasPages(state: PaginationState): boolean {
+  return state.totalPages > 1;
 }
 
-export function renderPagination(state: PaginationState): string {
+/** The page controls. Assumes more than one page. */
+function renderPageControls(state: PaginationState): string {
   const {page, totalPages} = state;
 
   const half = Math.floor(MAX_PAGE_BUTTONS / 2);
@@ -34,21 +33,25 @@ export function renderPagination(state: PaginationState): string {
   `;
 }
 
-export function Pagination(pagination: PaginationController) {
-  if (!pagination) return;
+export function renderPagination(state: PaginationState): string {
+  const visible = hasPages(state);
+  return `<nav id="pagination" class="Pagination" aria-label="Pagination" style="display: ${
+    visible ? 'flex' : 'none'
+  };">${visible ? renderPageControls(state) : ''}</nav>`;
+}
 
+export function hydratePagination(pagination: PaginationController) {
   const container = getElement<HTMLElement>('pagination');
   if (!container) return;
 
-  const render = () => {
-    const {state} = pagination;
-    const hasPages = state.totalPages > 1;
-    container.style.display = hasPages ? 'flex' : 'none';
-    container.innerHTML = hasPages ? renderPagination(state) : '';
+  const update = () => {
+    const visible = hasPages(pagination.state);
+    container.style.display = visible ? 'flex' : 'none';
+    container.innerHTML = visible ? renderPageControls(pagination.state) : '';
   };
 
-  pagination.subscribe(render);
-  render();
+  pagination.subscribe(update);
+  update();
 
   // Event delegation keeps the click handler stable across re-renders.
   container.addEventListener('click', (event) => {

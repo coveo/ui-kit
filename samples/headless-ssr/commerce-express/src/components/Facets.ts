@@ -29,12 +29,6 @@ const FACET_CLASS: Record<string, string> = {
   location: 'RegularFacet',
 };
 
-export function selectFacets(
-  facetGenerator: FacetGeneratorController
-): FacetStates {
-  return facetGenerator.state;
-}
-
 function hasVisibleFacets(states: FacetStates): boolean {
   return states.some(
     (facet) => !EXCLUDED_FACET_IDS.has(facet.facetId) && facet.values.length > 0
@@ -81,28 +75,33 @@ function renderFacet(facet: FacetState): string {
     </fieldset>`;
 }
 
-export function renderFacets(states: FacetStates): string {
+/** The visible facets. Assumes at least one is visible. */
+function renderFacetList(states: FacetStates): string {
   return states
     .filter((facet) => !EXCLUDED_FACET_IDS.has(facet.facetId))
     .map(renderFacet)
     .join('');
 }
 
-export function Facets(facetGenerator: FacetGeneratorController) {
-  if (!facetGenerator) return;
+export function renderFacets(states: FacetStates): string {
+  const visible = hasVisibleFacets(states);
+  return `<nav id="facets" class="Facets" aria-label="Filters" style="display: ${
+    visible ? 'flex' : 'none'
+  };">${visible ? renderFacetList(states) : ''}</nav>`;
+}
 
+export function hydrateFacets(facetGenerator: FacetGeneratorController) {
   const container = getElement<HTMLElement>('facets');
   if (!container) return;
 
-  const render = () => {
-    const states = facetGenerator.state;
-    const hasFacets = hasVisibleFacets(states);
-    container.style.display = hasFacets ? 'flex' : 'none';
-    container.innerHTML = hasFacets ? renderFacets(states) : '';
+  const update = () => {
+    const visible = hasVisibleFacets(facetGenerator.state);
+    container.style.display = visible ? 'flex' : 'none';
+    container.innerHTML = visible ? renderFacetList(facetGenerator.state) : '';
   };
 
-  facetGenerator.subscribe(render);
-  render();
+  facetGenerator.subscribe(update);
+  update();
 
   // Event delegation keeps the handler stable across re-renders.
   container.addEventListener('change', (event) => {

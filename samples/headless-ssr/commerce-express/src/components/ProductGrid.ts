@@ -1,26 +1,7 @@
 import type {Product, ProductList} from '@coveo/headless/ssr-commerce';
 import {escapeHtml, formatCurrency, getElement} from '../common/utils.js';
 
-export function ProductGrid(productList: ProductList) {
-  if (!productList) return;
-
-  const grid = getElement<HTMLUListElement>('product-grid');
-  const noProducts = getElement<HTMLDivElement>('no-products');
-  if (!grid) return;
-
-  const render = () => {
-    const products = selectProducts(productList);
-    const hasProducts = products.length > 0;
-
-    if (noProducts) {
-      noProducts.style.display = hasProducts ? 'none' : 'block';
-    }
-    grid.innerHTML = hasProducts ? renderProductGrid(products) : '';
-  };
-
-  productList.subscribe(render);
-  render();
-}
+type ProductListState = ProductList['state'];
 
 function renderProductCard(product: Product): string {
   const imageUrl = product.ec_thumbnails?.[0] ?? product.ec_images?.[0] ?? '';
@@ -53,10 +34,35 @@ function renderProductCard(product: Product): string {
   `;
 }
 
-export function renderProductGrid(products: Product[]): string {
+function renderProductCards(products: Product[]): string {
   return products.map(renderProductCard).join('');
 }
 
-export function selectProducts(productList: ProductList): Product[] {
-  return productList?.state?.products || [];
+export function renderProductGrid(state: ProductListState): string {
+  const {products} = state;
+  return `
+    <ul id="product-grid" class="ProductList" aria-label="Product List">${renderProductCards(products)}</ul>
+    <div id="no-products" class="NoProducts" style="display: ${products.length === 0 ? 'block' : 'none'};">
+      No products found. Try adjusting your search.
+    </div>
+  `;
+}
+
+export function hydrateProductGrid(productList: ProductList) {
+  const grid = getElement<HTMLUListElement>('product-grid');
+  const noProducts = getElement<HTMLDivElement>('no-products');
+  if (!grid) return;
+
+  const update = () => {
+    const {products} = productList.state;
+    const hasProducts = products.length > 0;
+
+    if (noProducts) {
+      noProducts.style.display = hasProducts ? 'none' : 'block';
+    }
+    grid.innerHTML = hasProducts ? renderProductCards(products) : '';
+  };
+
+  productList.subscribe(update);
+  update();
 }

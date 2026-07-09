@@ -1,33 +1,35 @@
-import type {SearchSummaryState, Summary} from '@coveo/headless/ssr-commerce';
+import type {Summary} from '@coveo/headless/ssr-commerce';
 import {escapeHtml, getElement} from '../common/utils.js';
 
-export function QuerySummary(summary: Summary) {
-  if (!summary) return;
+type SummaryState = Summary['state'];
 
-  const container = getElement<HTMLDivElement>('query-summary');
-  if (!container) return;
-
-  const render = () => {
-    container.innerHTML = formatQuerySummary(selectSummary(summary));
-  };
-
-  summary.subscribe(render);
-  render();
-}
-
-export function selectSummary(summary: Summary) {
-  return summary?.state as SearchSummaryState;
-}
-
-export function formatQuerySummary(summary: SearchSummaryState): string {
-  if (summary.isLoading) {
+/** Result count, plus the active query when there is one (search only). */
+function formatSummary(state: SummaryState): string {
+  if (state.isLoading) {
     return '<p>Loading…</p>';
   }
 
-  const total = summary.totalNumberOfProducts || 0;
-  const query = summary.query
-    ? ` for <b>“${escapeHtml(summary.query)}”</b>`
-    : '';
+  const total = state.totalNumberOfProducts || 0;
+  const query =
+    'query' in state && typeof state.query === 'string' && state.query
+      ? ` for <b>“${escapeHtml(state.query)}”</b>`
+      : '';
 
   return `<p><b>${total.toLocaleString('en-US')}</b> products${query}</p>`;
+}
+
+export function renderSummary(state: SummaryState): string {
+  return `<div id="query-summary" class="Summary">${formatSummary(state)}</div>`;
+}
+
+export function hydrateSummary(summary: Summary) {
+  const container = getElement<HTMLDivElement>('query-summary');
+  if (!container) return;
+
+  const update = () => {
+    container.innerHTML = formatSummary(summary.state);
+  };
+
+  summary.subscribe(update);
+  update();
 }
