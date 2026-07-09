@@ -239,7 +239,7 @@ function hydrateFromSerializedState(
   serialized: SerializedConverseState
 ): GenerativeState {
   const turns: Turn[] = serialized.turns.map((serializedTurn) => {
-    const {routedInterface, ...rest} = serializedTurn;
+    const {routedInterface: _routedInterface, ...rest} = serializedTurn;
     const turn: Turn = {...rest};
 
     if (turn.status === 'streaming') {

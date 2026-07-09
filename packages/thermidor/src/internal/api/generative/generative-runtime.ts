@@ -247,11 +247,13 @@ export class GenerativeRuntime {
       }
 
       case 'REASONING_MESSAGE_START': {
+        this.ensureAgentResponse(turnId);
         this.statePort.startReasoning(turnId);
         return {turnId, isTerminal: false};
       }
 
       case 'REASONING_MESSAGE_CONTENT': {
+        this.ensureAgentResponse(turnId);
         this.statePort.appendReasoningDelta(turnId, event.delta);
         return {turnId, isTerminal: false};
       }
