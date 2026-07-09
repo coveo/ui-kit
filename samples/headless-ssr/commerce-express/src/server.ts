@@ -1,20 +1,23 @@
 /**
  * Express server for Coveo Headless Commerce SSR sample.
  *
- * Server-side SSR lifecycle:
- * 1. Receives a request for the root route (for example, / or /?q=...)
- * 2. Sets up navigation context (user agent, referrer, etc.) for analytics/personalization
- * 3. Extracts the search query from the request
- * 4. Fetches static state from the Coveo engine using the query and context fields
- * 5. Renders the app HTML with the static state and injects it into the template
- * 6. Sends the fully rendered HTML to the client for fast, SEO-friendly delivery
+ * Server-side SSR lifecycle (per request):
+ * 1. Sets the navigator context provider (user agent, referrer, etc.) for analytics/personalization
+ * 2. Deserializes commerce parameters (query, facets, sort, pagination) from the URL
+ * 3. Fetches static state from the Coveo engine using those parameters and the context
+ * 4. Renders the app HTML with the static state and injects it (plus the navigator context) into the template
+ * 5. Sends the fully rendered HTML to the client for fast, SEO-friendly delivery
  *
  * See client.ts for client-side hydration details.
  */
-import express from 'express';
+import {buildParameterSerializer} from '@coveo/headless/ssr-commerce';
+import express, {type Request} from 'express';
 import {renderApp} from './common/renderApp.js';
 import {renderHtml} from './common/renderHtml.js';
-import {searchEngineDefinition} from './lib/engine-definition.js';
+import {
+  searchEngineDefinition,
+  listingEngineDefinition,
+} from './lib/engine-definition.js';
 import {getNavigatorContext} from './lib/navigatorContext.js';
 import {middleware} from './middleware.js';
 
@@ -23,30 +26,90 @@ const port = process.env.PORT || 3000;
 app.use(middleware);
 app.use(express.static('dist'));
 
-app.get('/', async (req, res) => {
+const DEFAULT_CONTEXT = {
+  language: 'en',
+  country: 'US',
+  currency: 'USD',
+} as const;
+
+// Category listings available in the sample merchandising hub. In a real
+// storefront these would come from your catalog rather than a hardcoded list.
+const LISTINGS = new Set(['surf-accessories', 'paddleboards', 'toys']);
+
+const deserializeParameters = (req: Request) => {
+  const {deserialize} = buildParameterSerializer();
+  const url = new URL(req.url, `http://${req.headers.host ?? 'localhost'}`);
+  return deserialize(url.searchParams);
+};
+
+app.get('/', (_req, res) => {
+  res.redirect('/search');
+});
+
+app.get('/search', async (req, res) => {
   try {
-    const queryFromRequest = typeof req.query.q === 'string' ? req.query.q : '';
+    const navigatorContext = getNavigatorContext(req);
+    searchEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
 
     const staticState = await searchEngineDefinition.fetchStaticState({
-      searchParams: {q: queryFromRequest},
-      navigatorContext: getNavigatorContext(req),
-      context: {
-        language: 'en',
-        country: 'US',
-        currency: 'USD',
-        view: {url: req.url},
-        custom: {
-          sampleKey: 'sampleValue',
+      controllers: {
+        context: {
+          ...DEFAULT_CONTEXT,
+          view: {url: 'https://sports.barca.group/search'},
+        },
+        parameterManager: {
+          initialState: {parameters: deserializeParameters(req)},
         },
       },
     });
 
-    const appHtml = renderApp(staticState);
-    const html = renderHtml(appHtml, staticState);
-
-    res.send(html);
+    res.send(
+      renderHtml(renderApp(staticState, '/search'), {
+        type: 'search',
+        staticState,
+        navigatorContext,
+      })
+    );
   } catch (error) {
-    console.error('❌ Error fetching static state:', error);
+    console.error('❌ Error fetching search static state:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+app.get('/listing/:listingId', async (req, res) => {
+  const {listingId} = req.params;
+  if (!LISTINGS.has(listingId)) {
+    res.status(404).send('Listing not found');
+    return;
+  }
+
+  try {
+    const navigatorContext = getNavigatorContext(req);
+    listingEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
+
+    const staticState = await listingEngineDefinition.fetchStaticState({
+      controllers: {
+        context: {
+          ...DEFAULT_CONTEXT,
+          view: {
+            url: `https://sports.barca.group/browse/promotions/${listingId}`,
+          },
+        },
+        parameterManager: {
+          initialState: {parameters: deserializeParameters(req)},
+        },
+      },
+    });
+
+    res.send(
+      renderHtml(renderApp(staticState, `/listing/${listingId}`), {
+        type: 'listing',
+        staticState,
+        navigatorContext,
+      })
+    );
+  } catch (error) {
+    console.error('❌ Error fetching listing static state:', error);
     res.status(500).send('Internal Server Error');
   }
 });

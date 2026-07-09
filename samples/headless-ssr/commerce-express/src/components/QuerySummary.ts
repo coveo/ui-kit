@@ -1,8 +1,5 @@
-import type {
-  SearchSummaryState,
-  Summary,
-} from '@coveo/headless/ssr-commerce-next';
-import {getElement} from '../common/utils.js';
+import type {SearchSummaryState, Summary} from '@coveo/headless/ssr-commerce';
+import {escapeHtml, getElement} from '../common/utils.js';
 
 export function QuerySummary(summary: Summary) {
   if (!summary) return;
@@ -11,8 +8,7 @@ export function QuerySummary(summary: Summary) {
   if (!container) return;
 
   const render = () => {
-    const sum = selectSummary(summary);
-    container.textContent = formatQuerySummary(sum);
+    container.innerHTML = formatQuerySummary(selectSummary(summary));
   };
 
   summary.subscribe(render);
@@ -24,8 +20,14 @@ export function selectSummary(summary: Summary) {
 }
 
 export function formatQuerySummary(summary: SearchSummaryState): string {
-  if (summary.isLoading) return 'Loading...';
-  const total = summary.totalNumberOfProducts || 0;
+  if (summary.isLoading) {
+    return '<p>Loading…</p>';
+  }
 
-  return `${total} products found${summary.query ? ` for "${summary.query}"` : ''}`;
+  const total = summary.totalNumberOfProducts || 0;
+  const query = summary.query
+    ? ` for <b>“${escapeHtml(summary.query)}”</b>`
+    : '';
+
+  return `<p><b>${total.toLocaleString('en-US')}</b> products${query}</p>`;
 }

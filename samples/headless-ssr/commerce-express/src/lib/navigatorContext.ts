@@ -1,4 +1,5 @@
 import {randomUUID} from 'node:crypto';
+import type {NavigatorContext} from '@coveo/headless/ssr-commerce';
 import type express from 'express';
 
 const getHeaderValue = (
@@ -10,7 +11,11 @@ const getHeaderValue = (
   return str ? str.trim() : undefined;
 };
 
-export function getNavigatorContext({headers, url, ip}: express.Request) {
+export function getNavigatorContext({
+  headers,
+  url,
+  ip,
+}: express.Request): NavigatorContext {
   return {
     clientId: getHeaderValue('x-coveo-client-id', headers) ?? randomUUID(),
     location: url ?? getHeaderValue('x-href', headers) ?? null,

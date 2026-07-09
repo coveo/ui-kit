@@ -1,5 +1,5 @@
-import type {SearchBox} from '@coveo/headless/ssr-commerce-next';
-import {getElement, updateQueryParam} from '../common/utils.js';
+import type {SearchBox} from '@coveo/headless/ssr-commerce';
+import {getElement} from '../common/utils.js';
 
 export function Search(searchBox: SearchBox) {
   if (!searchBox) return;
@@ -15,17 +15,14 @@ export function Search(searchBox: SearchBox) {
   searchBox.subscribe(render);
   render();
 
-  const handleSubmit = (event: Event) => {
+  // Submitting runs the query. The URL is kept in sync by the ParameterManager
+  // component (see components/ParameterManager.ts).
+  form.addEventListener('submit', (event) => {
     event.preventDefault();
     const query = input.value.trim();
-
-    updateQueryParam('q', query);
-
     searchBox.updateText(query);
     searchBox.submit();
-  };
-
-  form.addEventListener('submit', handleSubmit);
+  });
 }
 
 export function selectSearchValue(searchBox: SearchBox): string {

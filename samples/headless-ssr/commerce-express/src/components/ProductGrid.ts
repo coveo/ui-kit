@@ -1,10 +1,10 @@
-import type {Product, ProductList} from '@coveo/headless/ssr-commerce-next';
-import {getElement} from '../common/utils.js';
+import type {Product, ProductList} from '@coveo/headless/ssr-commerce';
+import {escapeHtml, formatCurrency, getElement} from '../common/utils.js';
 
 export function ProductGrid(productList: ProductList) {
   if (!productList) return;
 
-  const grid = getElement<HTMLDivElement>('product-grid');
+  const grid = getElement<HTMLUListElement>('product-grid');
   const noProducts = getElement<HTMLDivElement>('no-products');
   if (!grid) return;
 
@@ -24,19 +24,32 @@ export function ProductGrid(productList: ProductList) {
 
 function renderProductCard(product: Product): string {
   const imageUrl = product.ec_thumbnails?.[0] ?? product.ec_images?.[0] ?? '';
-  const name = product.ec_name ?? 'Unknown Product';
-  const brand = product.ec_brand ?? '';
-  const price = product.ec_price ?? product.ec_promo_price ?? '';
-  const rating = product.ec_rating ?? 0;
+  const name = product.ec_name ?? 'Unknown product';
+  const price = product.ec_promo_price ?? product.ec_price;
+  const clickUri = product.clickUri ?? '#';
+  const description = product.ec_description ?? '';
+
+  const image = imageUrl
+    ? `<img class="ProductImage" src="${escapeHtml(imageUrl)}" alt="${escapeHtml(name)}" loading="lazy" onerror="this.style.display='none'" />`
+    : '<span class="ProductImagePlaceholder"></span>';
 
   return `
-    <div class="product-card">
-      ${imageUrl ? `<img src="${imageUrl}" alt="${name}" class="product-image" onerror="this.style.display='none'" />` : ''}
-      <div class="product-name">${name}</div>
-      ${brand ? `<div class="product-brand">${brand}</div>` : ''}
-      ${price ? `<div class="product-price">$${typeof price === 'number' ? price.toFixed(2) : price}</div>` : ''}
-      ${rating ? `<div class="product-rating">${'★'.repeat(Math.floor(Number(rating)))} (${rating})</div>` : ''}
-    </div>
+    <li class="ProductCard">
+      <a class="ProductLink" href="${escapeHtml(clickUri)}" target="_blank" rel="noopener noreferrer">
+        ${image}
+        <span class="ProductName">${escapeHtml(name)}</span>
+      </a>
+      ${
+        typeof price === 'number'
+          ? `<div class="ProductPrice">${formatCurrency(price)}</div>`
+          : ''
+      }
+      ${
+        description
+          ? `<p class="ProductDescription">${escapeHtml(description)}</p>`
+          : ''
+      }
+    </li>
   `;
 }
 
