@@ -222,8 +222,9 @@ function readCatalogInfo(directory) {
   try {
     return JSON.parse(readFileSync(catalogInfoPath, 'utf-8'));
   } catch (error) {
+    const reason = error instanceof SyntaxError ? 'parse' : 'read';
     throw new Error(
-      `Failed to read ${relative(rootDir, catalogInfoPath)}: ${error.message}`,
+      `Failed to ${reason} ${relative(rootDir, catalogInfoPath)}: ${error.message}`,
       {cause: error}
     );
   }
