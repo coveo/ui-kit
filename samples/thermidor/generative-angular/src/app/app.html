@@ -12,7 +12,7 @@
       [surfaces]="conversation.surfaces()"
       [isStreaming]="conversation.busy()"
       [errorMessage]="conversation.activeTurnError()"
-      [turnId]="lastTurnId()"
+      [turnId]="conversation.activeTurnId() ?? ''"
       (resetConversation)="conversation.resetConversation()"
       (quickAction)="useQuickAction($event)"
       (retryTurn)="conversation.retry($event)"

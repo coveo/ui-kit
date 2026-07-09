@@ -26,6 +26,7 @@ export class ConversationService {
   readonly reasoningText = signal('');
   readonly toolActivity = signal<ToolCall[]>([]);
   readonly surfaces = signal<RenderableCommerceSurface[]>([]);
+  readonly activeTurnId = signal<string | undefined>(undefined);
   readonly activeTurnError = signal('');
 
   constructor() {
@@ -61,10 +62,11 @@ export class ConversationService {
   }
 
   private applyState(state: ConverseControllerState): void {
-    const {turns, activeTurn, isStreaming} = state;
+    const {turns, activeTurn, activeTurnId, isStreaming} = state;
 
     this.busy.set(isStreaming);
     this.turns.set(turns);
+    this.activeTurnId.set(activeTurnId);
     this.surfaces.set(this.buildSurfaces(turns));
 
     if (activeTurn) {

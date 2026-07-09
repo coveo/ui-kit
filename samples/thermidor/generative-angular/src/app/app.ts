@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   inject,
   signal,
 } from '@angular/core';
@@ -24,11 +23,6 @@ import {ConversationService} from './services/conversation.service';
 export class App {
   protected readonly conversation = inject(ConversationService);
   protected readonly draft = signal('');
-
-  protected readonly lastTurnId = computed(() => {
-    const turns = this.conversation.turns();
-    return turns.length > 0 ? turns[turns.length - 1].id : '';
-  });
 
   protected submitPrompt(): void {
     const prompt = this.draft().trim();
