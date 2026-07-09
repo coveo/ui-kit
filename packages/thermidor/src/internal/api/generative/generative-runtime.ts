@@ -60,6 +60,8 @@ export class GenerativeRuntime {
   private hydrateSubInterface: HydrateSubInterface;
   private agentResponseInitialized = new Set<string>();
   private currentPrompt: string | undefined;
+  private conversationSessionId: string | undefined;
+  private conversationToken: string | undefined;
   private buildRequest: ReturnType<
     typeof createConversationEndpointRequestSelector
   >;
@@ -142,6 +144,12 @@ export class GenerativeRuntime {
             ? {cart: requestFromState.cart}
             : {}),
         },
+        ...(this.conversationSessionId
+          ? {conversationSessionId: this.conversationSessionId}
+          : {}),
+        ...(this.conversationToken
+          ? {conversationToken: this.conversationToken}
+          : {}),
         targetEngine: 'AGENT_CORE',
       };
 
@@ -197,6 +205,12 @@ export class GenerativeRuntime {
   ): {turnId: string; isTerminal: boolean} {
     switch (event.type) {
       case 'turn_started': {
+        if (event.conversationSessionId) {
+          this.conversationSessionId = event.conversationSessionId;
+        }
+        if (event.conversationToken) {
+          this.conversationToken = event.conversationToken;
+        }
         return {turnId, isTerminal: false};
       }
 
@@ -290,6 +304,12 @@ export class GenerativeRuntime {
       }
 
       case 'turn_complete': {
+        if (event.conversationSessionId) {
+          this.conversationSessionId = event.conversationSessionId;
+        }
+        if (event.conversationToken) {
+          this.conversationToken = event.conversationToken;
+        }
         this.statePort.completeTurn(turnId);
         return {turnId, isTerminal: true};
       }
