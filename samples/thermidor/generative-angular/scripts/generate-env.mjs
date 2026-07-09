@@ -1,10 +1,12 @@
 /**
  * Reads .env (or OS environment variables) and generates src/environments/environment.ts.
- * Run before build: `node scripts/generate-env.js`
+ * Run before build: `node scripts/generate-env.mjs`
  */
-const {readFileSync, writeFileSync} = require('node:fs');
-const {resolve} = require('node:path');
+import {readFileSync, writeFileSync} from 'node:fs';
+import {resolve, dirname} from 'node:path';
+import {fileURLToPath} from 'node:url';
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..');
 const ENV_PATH = resolve(ROOT, '.env');
 const OUTPUT_PATH = resolve(ROOT, 'src/environments/environment.ts');
@@ -34,13 +36,13 @@ function get(key, fallback = '') {
 
 const output = `// Auto-generated from .env — do not edit manually.
 export const environment = {
-  organizationId: '${get('COVEO_ORGANIZATION_ID')}',
-  accessToken: '${get('COVEO_ACCESS_TOKEN')}',
-  trackingId: '${get('COVEO_TRACKING_ID')}',
-  language: '${get('COVEO_LANGUAGE', 'en')}',
-  country: '${get('COVEO_COUNTRY', 'US')}',
-  currency: '${get('COVEO_CURRENCY', 'USD')}',
-  endpoint: '${get('COVEO_ENDPOINT')}',
+  organizationId: ${JSON.stringify(get('COVEO_ORGANIZATION_ID'))},
+  accessToken: ${JSON.stringify(get('COVEO_ACCESS_TOKEN'))},
+  trackingId: ${JSON.stringify(get('COVEO_TRACKING_ID'))},
+  language: ${JSON.stringify(get('COVEO_LANGUAGE', 'en'))},
+  country: ${JSON.stringify(get('COVEO_COUNTRY', 'US'))},
+  currency: ${JSON.stringify(get('COVEO_CURRENCY', 'USD'))},
+  endpoint: ${JSON.stringify(get('COVEO_ENDPOINT'))},
 };
 `;
 

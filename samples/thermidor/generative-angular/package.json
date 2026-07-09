@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "prebuild": "node scripts/generate-env.js",
+    "prebuild": "node scripts/generate-env.mjs",
     "build": "ng build",
-    "predev": "node scripts/generate-env.js",
+    "predev": "node scripts/generate-env.mjs",
     "dev": "ng serve --configuration development"
   },
   "dependencies": {
