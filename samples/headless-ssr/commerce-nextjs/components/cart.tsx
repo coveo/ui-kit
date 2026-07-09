@@ -16,7 +16,7 @@ export default function Cart() {
   const currency = () => contextState.currency;
 
   return (
-    <div>
+    <div className="Cart">
       <ul id="cart">
         {state.items.map((item) => (
           <li key={item.productId}>
