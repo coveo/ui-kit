@@ -1,3 +1,4 @@
+import {renderCart, renderCartToggle} from '../components/Cart.js';
 import {ErrorMessage} from '../components/ErrorMessage.js';
 import {renderFacets} from '../components/Facets.js';
 import {renderHeader} from '../components/Header.js';
@@ -10,7 +11,8 @@ import type {AppStaticState} from './types.js';
 
 /**
  * Assembles the page from the server-fetched static state: header, search box,
- * and the results area (facets rail + toolbar + product grid + pagination).
+ * and the results area (facets rail + toolbar + product grid + pagination),
+ * plus the cart drawer.
  *
  * Each concern renders its own fragment — wrapper element, ids, and initial
  * visibility included — so this module owns only layout and placement. The
@@ -28,9 +30,12 @@ export const renderApp = (
   const searchValue =
     'searchBox' in controllers ? controllers.searchBox.state.value : '';
 
+  const cartState = controllers.cart.state;
+  const currency = controllers.context.state.currency ?? 'USD';
+
   return `
     <div class="Layout">
-      ${renderHeader(activePath)}
+      ${renderHeader(activePath, renderCartToggle(cartState.totalQuantity))}
 
       <main class="Page">
         ${renderSearch(searchValue)}
@@ -46,7 +51,7 @@ export const renderApp = (
               ${renderSort(controllers.sort.state)}
             </div>
 
-            ${renderProductGrid(controllers.productList.state)}
+            ${renderProductGrid(controllers.productList.state, cartState)}
 
             ${renderPagination(controllers.pagination.state)}
 
@@ -54,6 +59,8 @@ export const renderApp = (
           </section>
         </div>
       </main>
+
+      ${renderCart(cartState, currency)}
     </div>
   `;
 };

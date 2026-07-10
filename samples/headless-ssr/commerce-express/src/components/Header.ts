@@ -29,8 +29,10 @@ const COVEO_LOGO = `<svg class="HeaderLogo" viewBox="0 0 409.4 103.6" role="img"
 /**
  * Renders the site header. `activePath` is the current request path (for
  * example `/search` or `/listing/toys`) used to highlight the active tab.
+ * `cartToggle` is an optional HTML slot (the cart button) rendered in the
+ * header actions area, keeping the header decoupled from the cart itself.
  */
-export function renderHeader(activePath: string): string {
+export function renderHeader(activePath: string, cartToggle = ''): string {
   const tabs = TABS.map((tab) => {
     const isActive = activePath === tab.href;
     return `<a class="${isActive ? 'Tab TabActive' : 'Tab'}" href="${tab.href}"${
@@ -44,9 +46,12 @@ export function renderHeader(activePath: string): string {
         <a href="/search" aria-label="Coveo home">${COVEO_LOGO}</a>
         <span class="AppTitle">Commerce SSR · Express</span>
       </div>
-      <nav class="Tabs" aria-label="Primary">
-        ${tabs}
-      </nav>
+      <div class="HeaderActions">
+        <nav class="Tabs" aria-label="Primary">
+          ${tabs}
+        </nav>
+        ${cartToggle}
+      </div>
     </header>
   `;
 }

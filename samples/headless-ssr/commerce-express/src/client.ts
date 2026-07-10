@@ -12,6 +12,7 @@
  * See server.ts for the server side, and each components/*.ts for the render
  * function paired with these hydrate functions.
  */
+import {hydrateCart} from './components/Cart.js';
 import {ErrorMessage} from './components/ErrorMessage.js';
 import {hydrateFacets} from './components/Facets.js';
 import {hydratePagination} from './components/Pagination.js';
@@ -31,12 +32,13 @@ function wireControllers(controllers: AppControllers) {
   if ('searchBox' in controllers) {
     hydrateSearch(controllers.searchBox);
   }
-  hydrateProductGrid(controllers.productList);
+  hydrateProductGrid(controllers.productList, controllers.cart);
   hydrateSummary(controllers.summary);
   hydrateFacets(controllers.facetGenerator);
   hydrateSort(controllers.sort);
   hydratePagination(controllers.pagination);
   hydrateParameterManager(controllers.parameterManager);
+  hydrateCart(controllers.cart, controllers.context.state.currency ?? 'USD');
 }
 
 async function initApp() {
@@ -57,6 +59,9 @@ async function initApp() {
       ({controllers} = await listingEngineDefinition.hydrateStaticState({
         searchActions: staticState.searchActions,
         controllers: {
+          cart: {
+            initialState: {items: staticState.controllers.cart.state.items},
+          },
           context: staticState.controllers.context.state,
           parameterManager: {
             initialState: {
@@ -74,6 +79,9 @@ async function initApp() {
       ({controllers} = await searchEngineDefinition.hydrateStaticState({
         searchActions: staticState.searchActions,
         controllers: {
+          cart: {
+            initialState: {items: staticState.controllers.cart.state.items},
+          },
           context: staticState.controllers.context.state,
           parameterManager: {
             initialState: {

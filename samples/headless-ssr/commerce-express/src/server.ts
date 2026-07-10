@@ -14,6 +14,7 @@ import {buildParameterSerializer} from '@coveo/headless/ssr-commerce';
 import express, {type Request} from 'express';
 import {renderApp} from './common/renderApp.js';
 import {renderHtml} from './common/renderHtml.js';
+import {parseCartItems} from './lib/cart.js';
 import {
   searchEngineDefinition,
   listingEngineDefinition,
@@ -39,6 +40,10 @@ const deserializeParameters = (req: Request) => {
   return deserialize(url.searchParams);
 };
 
+// Restores the cart from the external cart system (a cookie in this sample; see
+// `lib/externalCartApi.ts`) so it survives navigation and reloads.
+const getCartItems = (req: Request) => parseCartItems(req.headers.cookie);
+
 app.get('/', (_req, res) => {
   res.redirect('/search');
 });
@@ -50,6 +55,7 @@ app.get('/search', async (req, res) => {
 
     const staticState = await searchEngineDefinition.fetchStaticState({
       controllers: {
+        cart: {initialState: {items: getCartItems(req)}},
         context: {
           ...DEFAULT_CONTEXT,
           view: {url: 'https://sports.barca.group/search'},
@@ -86,6 +92,7 @@ app.get('/listing/:listingId', async (req, res) => {
 
     const staticState = await listingEngineDefinition.fetchStaticState({
       controllers: {
+        cart: {initialState: {items: getCartItems(req)}},
         context: {
           ...DEFAULT_CONTEXT,
           view: {

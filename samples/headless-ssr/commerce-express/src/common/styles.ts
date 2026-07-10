@@ -448,5 +448,222 @@ export function getSharedStyles(): string {
       color: var(--muted);
       font-size: 1.05rem;
     }
+
+    /* ---------- Header actions & cart toggle ---------- */
+    .HeaderActions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+
+    .CartToggle {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-pill);
+      background: var(--panel);
+      color: var(--brand);
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: background 0.15s ease, border-color 0.15s ease;
+    }
+
+    .CartToggle:hover { background: var(--brand-soft); border-color: var(--border-strong); }
+    .CartToggleIcon { display: inline-flex; }
+
+    .CartBadge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 6px;
+      border-radius: var(--radius-pill);
+      background: var(--accent);
+      color: var(--on-brand);
+      font-size: 0.75rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .CartBadge[hidden] { display: none; }
+
+    /* ---------- Add to cart button ---------- */
+    .AddToCart {
+      margin-top: auto;
+      padding: 10px 16px;
+      border: none;
+      border-radius: var(--radius-sm);
+      background: var(--brand);
+      color: var(--on-brand);
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: background 0.15s ease, transform 0.05s ease;
+    }
+
+    .AddToCart:hover:not(:disabled) { background: var(--brand-strong); }
+    .AddToCart:active:not(:disabled) { transform: translateY(1px); }
+
+    /* ---------- Cart drawer ---------- */
+    .CartDrawer { position: fixed; inset: 0; z-index: 100; }
+    .CartDrawer[hidden] { display: none; }
+
+    .CartOverlay {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      padding: 0;
+      background: rgba(20, 22, 43, 0.45);
+      cursor: pointer;
+      animation: cart-fade 0.15s ease;
+    }
+
+    .CartPanel {
+      position: absolute;
+      top: 0;
+      right: 0;
+      display: flex;
+      flex-direction: column;
+      width: min(420px, 100%);
+      height: 100%;
+      background: var(--panel);
+      box-shadow: var(--shadow-md);
+      animation: cart-slide 0.2s ease;
+    }
+
+    @keyframes cart-fade { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes cart-slide { from { transform: translateX(100%); } to { transform: translateX(0); } }
+
+    @media (prefers-reduced-motion: reduce) {
+      .CartOverlay, .CartPanel { animation: none; }
+    }
+
+    .CartPanelHeader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .CartPanelTitle { margin: 0; font-size: 1.15rem; font-weight: 700; }
+
+    .CartClose {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border: none;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      color: var(--muted);
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+
+    .CartClose:hover { background: var(--brand-soft); color: var(--brand); }
+
+    .CartBody { flex: 1; overflow-y: auto; padding: 20px 24px; }
+
+    .CartEmpty { color: var(--muted); text-align: center; padding: 40px 0; }
+
+    .CartItems { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 16px; }
+
+    .CartItem {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      grid-template-areas: 'main total' 'controls total';
+      gap: 6px 12px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .CartItem:last-child { border-bottom: none; padding-bottom: 0; }
+
+    .CartItemMain { grid-area: main; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .CartItemName { font-weight: 600; color: var(--text); }
+    .CartItemPrice { font-size: 0.82rem; color: var(--muted); }
+
+    .CartItemControls { grid-area: controls; display: flex; align-items: center; gap: 8px; }
+
+    .CartQtyButton {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--panel);
+      color: var(--text);
+      font-size: 1rem;
+      line-height: 1;
+    }
+
+    .CartQtyButton:hover { background: var(--brand-soft); border-color: var(--border-strong); }
+
+    .CartItemQty { min-width: 20px; text-align: center; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+    .CartItemRemove {
+      margin-left: 4px;
+      border: none;
+      background: transparent;
+      color: var(--accent);
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .CartItemRemove:hover { text-decoration: underline; }
+
+    .CartItemTotal {
+      grid-area: total;
+      align-self: center;
+      font-family: var(--font-head);
+      font-weight: 700;
+      color: var(--brand);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .CartFooter { border-top: 1px solid var(--border); margin-top: 20px; padding-top: 20px; }
+
+    .CartTotalRow {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+
+    .CartTotalValue { font-family: var(--font-head); font-size: 1.3rem; font-weight: 800; color: var(--brand); font-variant-numeric: tabular-nums; }
+
+    .CartFooterActions { display: flex; gap: 12px; }
+
+    .CartPurchase {
+      flex: 1;
+      padding: 12px 16px;
+      border: none;
+      border-radius: var(--radius-sm);
+      background: var(--accent);
+      color: var(--on-brand);
+      font-weight: 700;
+      transition: background 0.15s ease;
+    }
+
+    .CartPurchase:hover:not(:disabled) { background: var(--accent-strong); }
+
+    .CartEmptyButton {
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--panel);
+      color: var(--text);
+      font-weight: 600;
+      transition: background 0.15s ease, border-color 0.15s ease;
+    }
+
+    .CartEmptyButton:hover:not(:disabled) { background: var(--brand-soft); border-color: var(--border-strong); }
   </style>`;
 }

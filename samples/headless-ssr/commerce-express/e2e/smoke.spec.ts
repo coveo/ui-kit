@@ -114,3 +114,86 @@ test.describe('product listing page', () => {
     expect(response?.status()).toBe(404);
   });
 });
+
+test.describe('cart', () => {
+  test.beforeEach(async ({page}) => {
+    // Start each test from a clean cart so runs are independent.
+    await page.context().clearCookies();
+    await page.goto('/search');
+    await expect(page.locator('.ProductCard').first()).toBeVisible();
+  });
+
+  test('shows the cart toggle with the badge hidden when empty', async ({
+    page,
+  }) => {
+    await expect(page.locator('#cart-toggle')).toBeVisible();
+    await expect(page.locator('#cart-count')).toBeHidden();
+    await expect(page.locator('#cart-drawer')).toBeHidden();
+  });
+
+  test('adds a product to the cart and updates the badge and button', async ({
+    page,
+  }) => {
+    const firstAddToCart = page.locator('.ProductCard .AddToCart').first();
+    await firstAddToCart.click();
+
+    await expect(page.locator('#cart-count')).toBeVisible();
+    await expect(page.locator('#cart-count')).toHaveText('1');
+    await expect(firstAddToCart).toContainText('(1)');
+  });
+
+  test('opens the drawer and lists the added item', async ({page}) => {
+    await page.locator('.ProductCard .AddToCart').first().click();
+    await page.locator('#cart-toggle').click();
+
+    await expect(page.locator('#cart-drawer')).toBeVisible();
+    await expect(page.locator('#cart-body .CartItem')).toHaveCount(1);
+    await expect(page.locator('#cart-purchase')).toBeVisible();
+    await expect(page.locator('#cart-empty')).toBeVisible();
+  });
+
+  test('adjusts item quantity from the drawer', async ({page}) => {
+    await page.locator('.ProductCard .AddToCart').first().click();
+    await page.locator('#cart-toggle').click();
+
+    const item = page.locator('#cart-body .CartItem').first();
+    await item.locator('.CartQtyButton[data-action="increment"]').click();
+    await expect(item.locator('.CartItemQty')).toHaveText('2');
+    await expect(page.locator('#cart-count')).toHaveText('2');
+
+    await item.locator('.CartQtyButton[data-action="decrement"]').click();
+    await expect(item.locator('.CartItemQty')).toHaveText('1');
+    await expect(page.locator('#cart-count')).toHaveText('1');
+  });
+
+  test('removes an item and empties the cart', async ({page}) => {
+    await page.locator('.ProductCard .AddToCart').first().click();
+    await page.locator('#cart-toggle').click();
+    await expect(page.locator('#cart-body .CartItem')).toHaveCount(1);
+
+    await page.locator('#cart-empty').click();
+
+    await expect(page.locator('#cart-body')).toContainText(
+      'Your cart is empty'
+    );
+    await expect(page.locator('#cart-count')).toBeHidden();
+  });
+
+  test('closes the drawer with the overlay', async ({page}) => {
+    await page.locator('#cart-toggle').click();
+    await expect(page.locator('#cart-drawer')).toBeVisible();
+
+    await page.locator('#cart-overlay').click({position: {x: 5, y: 5}});
+    await expect(page.locator('#cart-drawer')).toBeHidden();
+  });
+
+  test('persists the cart across navigation', async ({page}) => {
+    await page.locator('.ProductCard .AddToCart').first().click();
+    await expect(page.locator('#cart-count')).toHaveText('1');
+
+    // The cart is seeded from the cookie on the server for the next page.
+    await page.goto('/listing/surf-accessories');
+    await expect(page.locator('#cart-count')).toBeVisible();
+    await expect(page.locator('#cart-count')).toHaveText('1');
+  });
+});

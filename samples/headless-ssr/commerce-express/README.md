@@ -9,6 +9,8 @@ A commerce experience built with [`@coveo/headless/ssr-commerce`](https://docs.c
 
 - A commerce `search` page (search box, facets, sort, pagination)
 - Product `listing` pages served by a single dynamic `/listing/:listingId` route
+- Add-to-cart with a slide-in cart drawer (quantity controls, purchase, and empty), including the product-click event that must accompany cart events sent from a listing
+- A cart that persists across navigation and reloads via a simulated external cart system, seeded into the SSR initial state on each request
 - Server-side rendering of the initial state with client-side hydration (each component is a plain SSR render function paired with a hydration function)
 - URL deep-linking of the query, facets, sort, and pagination via the parameter manager
 
@@ -37,11 +39,15 @@ pnpm e2e      # end-to-end tests (Playwright, MSW-mocked)
 
 ## Project structure
 
-- `src/server.ts` — Express routes (`/search`, `/listing/:listingId`); fetches the static state and returns fully rendered HTML.
+- `src/server.ts` — Express routes (`/search`, `/listing/:listingId`); fetches the static state (seeding the cart from the request cookie) and returns fully rendered HTML.
 - `src/client.ts` — reads the injected SSR state and hydrates the matching engine (search or listing).
-- `src/lib/` — engine configuration (`engine-config.ts`), engine definitions (`engine-definition.ts`), and navigator context.
-- `src/components/` — one module per UI concern; each exposes an SSR render function and a client hydration function.
-- `src/common/` — the app shell (`renderApp.ts`), the HTML document (`renderHtml.ts`), styles, and helpers.
+- `src/lib/` — engine configuration (`engine-config.ts`), engine definitions (`engine-definition.ts`), navigator context, and the simulated external cart system (`cart.ts` cookie helpers + `externalCartApi.ts`).
+- `src/components/` — one module per UI concern (including `Cart.ts`); each exposes an SSR render function and a client hydration function.
+- `src/common/` — the app shell (`renderApp.ts`), the HTML document (`renderHtml.ts`), cart action helpers (`cart-actions.ts`), styles, and helpers.
+
+### How the cart works
+
+The cart uses the Coveo `cart` controller (`defineCart()`), which owns cart **analytics** (it emits `ec.cartAction` and `ec.purchase` events). The cart **contents** are owned by an external cart system, simulated here with a browser cookie (`src/lib/externalCartApi.ts`) — in a real storefront you would call your own service instead. Every cart mutation is applied to both: the controller (for analytics) and the external system (for persistence), which is why `src/common/cart-actions.ts` calls each in turn. On every request the server reads the cookie and seeds the cart's initial state so it survives navigation and reloads. Adding to cart from a product listing also sends the required accompanying product-click event.
 
 ## Using this sample as an MRE
 
