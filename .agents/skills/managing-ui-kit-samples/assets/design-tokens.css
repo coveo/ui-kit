@@ -1,0 +1,61 @@
+/*
+ * Shared design tokens for @coveo/ui-kit-sample-headless-* apps.
+ *
+ * Copy this :root block into a new/updated sample's src/index.css so the
+ * samples stay visually consistent: a clean, unbranded, Atomic-like look
+ * (neutral surface, white panels/cards, a single accent). Do not invent
+ * per-sample colors — extend these tokens instead.
+ */
+
+:root {
+  --bg: #f4f6f8;
+  --surface: #ffffff;
+  --text: #1c1c28;
+  --text-muted: #6b7280;
+  --border: #e4e8ec;
+  --accent: #1372ec;
+  --accent-hover: #0f5ec4;
+  --accent-soft: #e8f1fd;
+  --accent-contrast: #ffffff;
+  --radius: 10px;
+  --radius-sm: 6px;
+  --shadow-sm: 0 1px 2px rgba(20, 30, 45, 0.06);
+  --shadow: 0 6px 20px rgba(20, 30, 45, 0.1);
+
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    sans-serif;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+/* Baseline resets/affordances the samples share. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Always keep a visible keyboard focus indicator. */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
