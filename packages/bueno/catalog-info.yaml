@@ -12,5 +12,7 @@ spec:
   owner: group:default/dxui
   system: ui-kit
   dependencyOf:
-    - headless
     - atomic
+    - atomic-hosted-page
+    - headless
+    - quantic
