@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "description": "Commerce server-side rendering (SSR) with @coveo/headless-react/ssr-commerce and the Next.js App Router",
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
