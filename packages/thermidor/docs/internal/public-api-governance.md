@@ -8,11 +8,11 @@ Consumers of the package see only what's exported from `src/index.ts`. If intern
 
 ## Three layers of protection
 
-| Layer | Tool | What it catches | When it runs |
-|-------|------|-----------------|--------------|
-| Lint | oxlint `no-restricted-imports` | Direct imports of Redux/Immer/AG-UI in `src/index.ts` and `src/public/**` | On every lint pass |
-| DTS validation | api-extractor `ae-forgotten-export` | Internal types referenced in public signatures but not exported from the entry point | `pnpm run test:dts` (local) / `pnpm run test:dts:ci` (CI) |
-| API Report (snapshot) | api-extractor `apiReport` | Unintentional changes to the public API surface between versions | Not yet enabled — see below |
+| Layer                 | Tool                                | What it catches                                                                      | When it runs                                              |
+| --------------------- | ----------------------------------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------- |
+| Lint                  | oxlint `no-restricted-imports`      | Direct imports of Redux/Immer/AG-UI in `src/index.ts` and `src/public/**`            | On every lint pass                                        |
+| DTS validation        | api-extractor `ae-forgotten-export` | Internal types referenced in public signatures but not exported from the entry point | `pnpm run test:dts` (local) / `pnpm run test:dts:ci` (CI) |
+| API Report (snapshot) | api-extractor `apiReport`           | Unintentional changes to the public API surface between versions                     | Not yet enabled — see below                               |
 
 ## Lint: no-restricted-imports
 
@@ -22,7 +22,15 @@ Configured in `.oxlintrc.json`. Applies to `src/index.ts` and `src/public/**`:
 {
   "patterns": [
     {
-      "group": ["@reduxjs/toolkit", "@reduxjs/toolkit/*", "immer", "redux-thunk", "reselect", "@ag-ui/core", "@ag-ui/core/*"],
+      "group": [
+        "@reduxjs/toolkit",
+        "@reduxjs/toolkit/*",
+        "immer",
+        "redux-thunk",
+        "reselect",
+        "@ag-ui/core",
+        "@ag-ui/core/*"
+      ],
       "message": "Public surface must not depend on Redux, Immer, AG-UI, or related ecosystem packages directly."
     }
   ]
@@ -30,6 +38,8 @@ Configured in `.oxlintrc.json`. Applies to `src/index.ts` and `src/public/**`:
 ```
 
 This prevents any code in the public layer from importing third-party state management libraries. The entry point (`src/index.ts`) can only re-export from `src/public/` and `src/internal/utils/` barrels.
+
+**Limitation:** The lint rule only catches _direct_ imports of restricted packages. It does not catch _indirect_ leaks — for example, exporting an internal type that happens to reference `AsyncThunk` in its definition. That transitive case is caught by api-extractor (see below). The two tools are complementary: lint prevents the obvious mistakes, api-extractor catches the subtle ones.
 
 ## DTS validation: api-extractor
 
@@ -41,11 +51,11 @@ Api-extractor resolves all types reachable from the public entry point. If any t
 
 ### Key configuration choices
 
-| Setting | Value | Reason |
-|---------|-------|--------|
-| `bundledPackages` | `[]` (empty) | No third-party package gets a free pass. If a Redux type appears in the public surface, it's an error. |
-| `ae-forgotten-export` | `"logLevel": "error"` | Fail the build immediately on any leak — no warnings to ignore. |
-| `apiReport.enabled` | `false` | Disabled until the API stabilizes (see below). |
+| Setting               | Value                 | Reason                                                                                                 |
+| --------------------- | --------------------- | ------------------------------------------------------------------------------------------------------ |
+| `bundledPackages`     | `[]` (empty)          | No third-party package gets a free pass. If a Redux type appears in the public surface, it's an error. |
+| `ae-forgotten-export` | `"logLevel": "error"` | Fail the build immediately on any leak — no warnings to ignore.                                        |
+| `apiReport.enabled`   | `false`               | Disabled until the API stabilizes (see below).                                                         |
 
 ### Commands
 
