@@ -246,6 +246,127 @@ export function getSharedStyles(): string {
     .SearchBoxSubmit:hover { background: var(--brand-strong); }
     .SearchBoxSubmit:active { transform: translateY(1px); }
 
+    .SearchBoxClear {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      margin-right: 8px;
+      border: none;
+      border-radius: var(--radius-pill);
+      background: transparent;
+      color: var(--faint);
+      font-size: 0.8rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .SearchBoxClear:hover { background: var(--brand-soft); color: var(--brand); }
+    .SearchBoxClear[hidden] { display: none; }
+
+    /* ---------- Search box dropdown (suggestions + instant products) ---------- */
+    .SearchBoxDropdown {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      right: 0;
+      z-index: 60;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-md);
+      padding: 8px;
+    }
+
+    .SearchBoxDropdown[hidden] { display: none; }
+
+    .SearchBoxDropdownColumns { display: flex; gap: 8px; }
+
+    .SearchBoxDropdownMain, .SearchBoxDropdownAside { flex: 1 1 0; min-width: 0; }
+
+    .SearchBoxDropdownAside { border-left: 1px solid var(--border); }
+
+    @media (max-width: 640px) {
+      .SearchBoxDropdownColumns { flex-direction: column; }
+      .SearchBoxDropdownAside { border-left: none; border-top: 1px solid var(--border); }
+    }
+
+    .SearchBoxDropdown h4 {
+      font-family: var(--font-body);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--faint);
+      margin: 8px 8px 6px;
+    }
+
+    .Suggestions, .InstantProducts {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .Suggestion {
+      display: block;
+      width: 100%;
+      padding: 9px 12px;
+      border: none;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      color: var(--text);
+      font-size: 0.92rem;
+      text-align: left;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .Suggestion:hover, .Suggestion.active { background: var(--brand-soft); color: var(--brand); }
+    .Suggestion strong { font-weight: 700; color: var(--brand); }
+
+    .InstantProductLink {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 8px;
+      border: none;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      text-align: left;
+    }
+
+    .InstantProductLink:hover { background: var(--brand-soft); }
+
+    .InstantProductImage {
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+      border-radius: var(--radius-sm);
+      background: var(--tile);
+      flex-shrink: 0;
+    }
+
+    .InstantProductImagePlaceholder { display: block; }
+
+    .InstantProductInfo { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+
+    .InstantProductName {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .InstantProductPrice { font-size: 0.85rem; font-weight: 700; color: var(--brand); }
+
     /* ---------- Facets ---------- */
     .Facets {
       display: flex;

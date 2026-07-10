@@ -8,6 +8,7 @@ A commerce experience built with [`@coveo/headless/ssr-commerce`](https://docs.c
 ## What it shows
 
 - A commerce `search` page (search box, facets, sort, pagination)
+- A search box with **query suggestions** and **instant products**: as the user types, a dropdown previews matching query suggestions (left) and the best-matching products (right); arrow keys move through the suggestions (previewing instant products for the highlighted one), Enter selects, and Escape or a click outside dismisses it
 - Product `listing` pages served by a single dynamic `/listing/:listingId` route
 - Add-to-cart with a slide-in cart drawer (quantity controls, purchase, and empty), including the product-click event that must accompany cart events sent from a listing
 - A cart that persists across navigation and reloads via a simulated external cart system, seeded into the SSR initial state on each request

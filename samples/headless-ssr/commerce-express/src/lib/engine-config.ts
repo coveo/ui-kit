@@ -3,6 +3,7 @@ import {
   defineCart,
   defineContext,
   defineFacetGenerator,
+  defineInstantProducts,
   definePagination,
   defineParameterManager,
   defineProductList,
@@ -23,7 +24,20 @@ export const engineConfig = {
     // The cart's initial items are restored from the external cart system (a
     // cookie in this sample; see `lib/externalCartApi.ts`) on every request.
     cart: defineCart(),
-    searchBox: defineSearchBox(),
+    // The search box surfaces query suggestions as the user types. The
+    // `highlightOptions` wrap the part of each suggestion that matches the
+    // typed query in `<strong>` tags (see `components/Search.ts`).
+    searchBox: defineSearchBox({
+      options: {
+        highlightOptions: {
+          exactMatchDelimiters: {open: '<strong>', close: '</strong>'},
+        },
+      },
+    }),
+    // Instant products preview the best matches for the current query (or the
+    // highlighted suggestion) inside the search box dropdown. It is search-only
+    // in this sample since that is where the search box is hydrated.
+    instantProducts: defineInstantProducts(),
     summary: defineSummary(),
     productList: defineProductList(),
     facetGenerator: defineFacetGenerator(),

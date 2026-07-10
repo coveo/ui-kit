@@ -64,6 +64,105 @@ test.describe('commerce SSR search page', () => {
   });
 });
 
+test.describe('search box suggestions and instant products', () => {
+  test.beforeEach(async ({page}) => {
+    await page.goto('/search');
+    await expect(page.locator('#search-input')).toBeVisible();
+  });
+
+  // Note: query suggestions and instant products are fetched on the client as
+  // the user types. Like the Next.js reference sample, these assertions check
+  // structure and behavior rather than specific suggestion/product text.
+
+  test('shows query suggestions as the user types', async ({page}) => {
+    await page.locator('#search-input').fill('surf');
+
+    const dropdown = page.locator('#search-dropdown');
+    await expect(dropdown).toBeVisible();
+
+    const suggestions = dropdown.getByRole('option');
+    await expect(suggestions.first()).toBeVisible();
+    expect(await suggestions.count()).toBeGreaterThanOrEqual(1);
+  });
+
+  test('shows instant products alongside the suggestions', async ({page}) => {
+    await page.locator('#search-input').fill('surf');
+
+    const instantProducts = page.locator('.InstantProducts .InstantProduct');
+    await expect(instantProducts.first()).toBeVisible();
+    expect(await instantProducts.count()).toBeGreaterThanOrEqual(1);
+    // Each tile shows a product name.
+    await expect(page.locator('.InstantProductName').first()).not.toBeEmpty();
+  });
+
+  test('selects a suggestion to run a search', async ({page}) => {
+    await page.locator('#search-input').fill('surf');
+    const dropdown = page.locator('#search-dropdown');
+    await expect(dropdown.getByRole('option').first()).toBeVisible();
+
+    const firstSuggestion = dropdown.getByRole('option').first();
+    const suggestionText = ((await firstSuggestion.textContent()) ?? '').trim();
+    await firstSuggestion.click();
+
+    // Selecting a suggestion fills the box with it, runs a search, and closes.
+    await expect(page).toHaveURL(/[?&]q=/);
+    await expect(dropdown).toBeHidden();
+    await expect(page.locator('#search-input')).toHaveValue(suggestionText);
+  });
+
+  test('navigates suggestions with the keyboard and searches on Enter', async ({
+    page,
+  }) => {
+    const input = page.locator('#search-input');
+    await input.fill('surf');
+    await expect(
+      page.locator('#search-dropdown').getByRole('option').first()
+    ).toBeVisible();
+
+    await input.press('ArrowDown');
+    await expect(page.locator('.Suggestion[aria-selected="true"]')).toHaveCount(
+      1
+    );
+
+    await input.press('Enter');
+    await expect(page).toHaveURL(/[?&]q=/);
+    await expect(page.locator('#search-dropdown')).toBeHidden();
+  });
+
+  test('closes the dropdown on Escape', async ({page}) => {
+    const input = page.locator('#search-input');
+    await input.fill('surf');
+    await expect(page.locator('#search-dropdown')).toBeVisible();
+
+    await input.press('Escape');
+    await expect(page.locator('#search-dropdown')).toBeHidden();
+    // Escape keeps the typed query.
+    await expect(input).toHaveValue('surf');
+  });
+
+  test('closes the dropdown when clicking outside', async ({page}) => {
+    await page.locator('#search-input').fill('surf');
+    await expect(page.locator('#search-dropdown')).toBeVisible();
+
+    // The app title is a non-interactive element outside the search box.
+    await page.locator('.AppTitle').click();
+    await expect(page.locator('#search-dropdown')).toBeHidden();
+  });
+
+  test('clears the query with the clear button', async ({page}) => {
+    const input = page.locator('#search-input');
+    await input.fill('surf');
+
+    const clear = page.locator('#search-clear');
+    await expect(clear).toBeVisible();
+    await clear.click();
+
+    await expect(input).toHaveValue('');
+    await expect(page.locator('#search-dropdown')).toBeHidden();
+    await expect(clear).toBeHidden();
+  });
+});
+
 test.describe('URL deep-linking', () => {
   test('hydrates without uncaught client errors', async ({page}) => {
     const errors: string[] = [];

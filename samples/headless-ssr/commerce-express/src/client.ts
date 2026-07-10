@@ -28,9 +28,11 @@ import {
 import type {AppControllers} from './common/types.js';
 
 function wireControllers(controllers: AppControllers) {
-  // The search box only exists on the search page.
+  const currency = controllers.context.state.currency ?? 'USD';
+  // The search box (and its query suggestions / instant products) only exists
+  // on the search page.
   if ('searchBox' in controllers) {
-    hydrateSearch(controllers.searchBox);
+    hydrateSearch(controllers.searchBox, controllers.instantProducts, currency);
   }
   hydrateProductGrid(controllers.productList, controllers.cart);
   hydrateSummary(controllers.summary);
@@ -38,7 +40,7 @@ function wireControllers(controllers: AppControllers) {
   hydrateSort(controllers.sort);
   hydratePagination(controllers.pagination);
   hydrateParameterManager(controllers.parameterManager);
-  hydrateCart(controllers.cart, controllers.context.state.currency ?? 'USD');
+  hydrateCart(controllers.cart, currency);
 }
 
 async function initApp() {
