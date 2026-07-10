@@ -7,8 +7,11 @@ export {MockInsightApi} from './insight/mock.js';
 export {MockRecommendationApi} from './recommendation/mock.js';
 export {MockAgentApi} from './agent/mock.js';
 export {MockAnswerApi} from './answer/mock.js';
+export {MockConverseApi} from './converse/mock.js';
 export {MockMachineLearningApi} from './machinelearning/mock.js';
 
-export * as searchResponses from './search/search-response.js';
-export * as commerceResponses from './commerce/search-response.js';
-export * as insightResponses from './insight/search-response.js';
+import * as converseEvents from './converse/events.js';
+import * as searchResponses from './search/search-response.js';
+import * as commerceResponses from './commerce/search-response.js';
+import * as insightResponses from './insight/search-response.js';
+export {converseEvents, searchResponses, commerceResponses, insightResponses};

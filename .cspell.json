@@ -4,7 +4,11 @@
   "cache": {
     "useCache": true
   },
-  "ignorePaths": ["CHANGELOG.md", "packages/mock-converse-api/templates/**"],
+  "ignorePaths": [
+    "CHANGELOG.md",
+    "packages/mock-converse-api/templates/**",
+    "packages/platform-mock-api/src/converse/templates/**"
+  ],
   "import": ["@cspell/dict-fr-fr/cspell-ext.json"],
   "words": [
     "adjustednumberoflikes",
