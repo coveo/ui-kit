@@ -2,7 +2,7 @@ import express from 'express';
 import {createMiddleware} from '@mswjs/http-middleware';
 import {MockCommerceApi} from '@coveo/platform-mock-api';
 
-const port = 9090;
+const port = Number.parseInt(process.env.MOCK_API_PORT ?? '9090', 10);
 const baseUrl = `http://localhost:${port}`;
 
 const api = new MockCommerceApi(baseUrl);

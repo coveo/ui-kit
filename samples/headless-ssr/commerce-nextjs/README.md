@@ -18,7 +18,7 @@ A commerce experience built with [`@coveo/headless-react/ssr-commerce`](https://
 
 - **Next.js** (App Router) + **React** + **TypeScript**
 - **@coveo/headless-react/ssr-commerce**: Coveo's SSR commerce utilities
-- **Playwright** + **@coveo/platform-mock-api** + **MSW**: deterministic end-to-end tests
+- **Playwright** + **@coveo/platform-mock-api** + **@mswjs/http-middleware**: deterministic end-to-end tests
 
 ## Prerequisites
 
@@ -32,7 +32,7 @@ pnpm install
 pnpm dev      # start the dev server (http://localhost:3000)
 pnpm build    # production build
 pnpm start    # serve the production build (http://localhost:3000)
-pnpm e2e      # end-to-end tests (Playwright, MSW-mocked)
+pnpm e2e      # end-to-end tests (Playwright, deterministic mock server)
 ```
 
 `pnpm dev` redirects `/` to `/search`. No credentials are required — the sample uses the public `searchuisamples` organization.
@@ -58,7 +58,7 @@ pnpm add @coveo/headless-react@<version>
 
 ## How the tests stay deterministic
 
-The Playwright tests never call a live API. Client-side requests are mocked with [`@msw/playwright`](https://www.npmjs.com/package/@msw/playwright) (see `e2e/fixtures.ts`), and the server-side `fetchStaticState` calls are mocked by an MSW server that is preloaded into the Next.js process during `pnpm e2e` (see `mocks/` and the `webServer` config in `playwright.config.ts`). Both reuse the handlers from `@coveo/platform-mock-api`.
+The Playwright tests never call a live API. During `pnpm e2e`, Playwright starts a standalone Express server powered by [`@mswjs/http-middleware`](https://www.npmjs.com/package/@mswjs/http-middleware) (see `mocks/mock-server.mjs`) and passes its URL to the Next.js server through `NEXT_PUBLIC_MOCK_API_URL` (see `playwright.config.ts`). The commerce engine then uses `proxyBaseUrl` to route both the server-side `fetchStaticState` calls and the client-side hydration/interactions through that mock server (see `lib/commerce-engine-config.ts`). The mock server reuses the handlers from `@coveo/platform-mock-api`.
 
 ## Learn more
 
