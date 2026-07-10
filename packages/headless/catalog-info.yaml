@@ -15,4 +15,8 @@ spec:
     - bueno
   dependencyOf:
     - atomic
+    - atomic-hosted-page
+    - atomic-react
+    - headless-react
     - quantic
+    - shopify
