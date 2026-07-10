@@ -1,14 +1,14 @@
-import {
-  getInterfaceInternals,
-  type BaseInterface,
-} from '@/src/internal/utils/index.js';
 import {InterfaceCacheRegistry} from '@/src/internal/utils/index.js';
+import {getHandleInternals} from '@/src/internal/utils/index.js';
 import type {FullEngine} from '@/src/internal/engine/index.js';
 import type {
   EndpointThunk,
   Facades,
+  InferInterfaceType,
   InterfaceHandle,
   InterfaceType,
+  InterfaceTypeMap,
+  Supports,
   SupportsBrand,
 } from '@/src/internal/utils/index.js';
 import {generateId} from '@/src/internal/utils/index.js';
@@ -24,10 +24,16 @@ export interface ComposedInternals {
 }
 
 export let getComposedInternals: <T extends InterfaceType>(
-  composed: ComposedInterface<T>
+  composed: ComposedInterfaceImpl<T>
 ) => ComposedInternals;
 
-export class ComposedInterface<T extends InterfaceType> {
+export interface ComposedInterface<T extends InterfaceType> extends Supports<
+  Facades[T]
+> {}
+
+export class ComposedInterfaceImpl<
+  T extends InterfaceType,
+> implements ComposedInterface<T> {
   declare readonly [SupportsBrand]: {[K in Facades[T]]: true};
 
   get disposed(): boolean {
@@ -36,7 +42,7 @@ export class ComposedInterface<T extends InterfaceType> {
 
   #engine: FullEngine;
   #stateId: string;
-  #interfaces: BaseInterface<T>[];
+  #interfaces: InterfaceHandle[];
   #cacheRegistry = new InterfaceCacheRegistry();
   #disposed = false;
 
@@ -50,12 +56,12 @@ export class ComposedInterface<T extends InterfaceType> {
     }));
   }
 
-  constructor(interfaces: BaseInterface<T>[], composedId: string) {
+  constructor(interfaces: InterfaceHandle[], composedId: string) {
     if (interfaces.length === 0) {
       throw new Error('ComposedInterface requires at least one interface.');
     }
 
-    const {engine} = getInterfaceInternals(interfaces[0]);
+    const {engine} = getHandleInternals(interfaces[0]);
     this.#engine = engine;
     this.#stateId = composedId;
     this.#interfaces = interfaces;
@@ -79,7 +85,7 @@ export class ComposedInterface<T extends InterfaceType> {
     this.#assertNotDisposed();
     const target = composedInterface ?? this;
     return this.#interfaces.flatMap((sub) => {
-      const {resolveFacades} = getInterfaceInternals(sub);
+      const {resolveFacades} = getHandleInternals(sub);
       return resolveFacades(facade, target);
     });
   }
@@ -91,21 +97,24 @@ export class ComposedInterface<T extends InterfaceType> {
   }
 }
 
-export function composeInterfaces<T extends InterfaceType>(options: {
-  interfaces: BaseInterface<T>[];
-}): ComposedInterface<T> {
+export function composeInterfaces<
+  I extends InterfaceTypeMap[InterfaceType],
+>(options: {interfaces: I[]}): ComposedInterface<InferInterfaceType<I>> {
   if (options.interfaces.length === 0) {
     throw new Error('composeInterfaces requires at least one interface.');
   }
 
-  const first = getInterfaceInternals(options.interfaces[0]);
+  const first = getHandleInternals(options.interfaces[0]);
 
   for (const iface of options.interfaces) {
-    const internals = getInterfaceInternals(iface);
+    const internals = getHandleInternals(iface);
     if (internals.engine !== first.engine) {
       throw new Error('All interfaces must share the same engine.');
     }
   }
 
-  return new ComposedInterface(options.interfaces, generateId());
+  return new ComposedInterfaceImpl<InferInterfaceType<I>>(
+    options.interfaces,
+    generateId()
+  );
 }

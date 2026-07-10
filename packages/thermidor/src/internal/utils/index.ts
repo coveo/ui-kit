@@ -26,8 +26,11 @@ export type {
   FacadeResolver,
   FacadeResolverFactory,
   Facades,
+  InferInterfaceType,
   InterfaceHandle,
+  InterfaceRegistry,
   InterfaceType,
+  InterfaceTypeMap,
   Supports,
   SupportsBrand,
 } from './interface-types.js';

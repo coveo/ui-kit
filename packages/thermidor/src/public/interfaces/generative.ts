@@ -7,6 +7,7 @@ import {
 import type {
   FacadeResolverFactory,
   Facades,
+  Supports,
 } from '@/src/internal/utils/index.js';
 import {generateId, createNoopThunk} from '@/src/internal/utils/index.js';
 import {getOrCreateGenerativeSlice} from '@/src/internal/features/generative/index.js';
@@ -21,14 +22,19 @@ const resolverFactories: Record<Facades['generative'], FacadeResolverFactory> =
     conversation: noopResolverFactory,
   };
 
+export interface GenerativeInterface extends Supports<Facades['generative']> {}
+
 export let getGenerativeSourceEngine: (iface: GenerativeInterface) => Engine;
 
-export class GenerativeInterface extends BaseInterface<'generative'> {
+export class GenerativeInterfaceImpl
+  extends BaseInterface<'generative'>
+  implements GenerativeInterface
+{
   #sourceEngine: Engine;
 
   static {
     getGenerativeSourceEngine = <typeof getGenerativeSourceEngine>(
-      ((iface) => iface.#sourceEngine)
+      ((iface: GenerativeInterfaceImpl) => iface.#sourceEngine)
     );
   }
 
@@ -49,7 +55,7 @@ export function buildGenerativeInterface(
   const fullEngine = getFullEngine(options.engine);
   const interfaceId = options.id ?? generateId();
 
-  const iface = new GenerativeInterface(
+  const iface = new GenerativeInterfaceImpl(
     fullEngine,
     interfaceId,
     options.engine

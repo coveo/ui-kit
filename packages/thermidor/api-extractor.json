@@ -36,7 +36,7 @@
         "logLevel": "warning"
       },
       "ae-forgotten-export": {
-        "logLevel": "warning",
+        "logLevel": "error",
         "addToApiReportFile": true
       },
       "ae-incompatible-release-tags": {
