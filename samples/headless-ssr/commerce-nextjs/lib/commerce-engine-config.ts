@@ -23,6 +23,12 @@ export default {
   // loggerOptions: {level: 'debug'},
   configuration: {
     ...getSampleCommerceEngineConfiguration(),
+    // Used internally in https://github.com/coveo/ui-kit for testing purposes, not needed in your own implementation.
+    // When NEXT_PUBLIC_MOCK_API_URL is set (e.g. during e2e tests), route all API calls
+    // through the local @mswjs/http-middleware mock server.
+    ...(process.env.NEXT_PUBLIC_MOCK_API_URL && {
+      proxyBaseUrl: `${process.env.NEXT_PUBLIC_MOCK_API_URL}/rest/organizations/${getSampleCommerceEngineConfiguration().organizationId}/commerce/v2`,
+    }),
   },
   controllers: {
     summary: defineSummary(),

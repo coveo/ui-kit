@@ -1,5 +1,7 @@
 import {defineConfig, devices} from '@playwright/test';
 
+const MOCK_API_URL = 'http://localhost:9090';
+
 export default defineConfig({
   testDir: './e2e',
   fullyParallel: true,
@@ -9,7 +11,7 @@ export default defineConfig({
   reporter: 'html',
   use: {
     baseURL: 'http://localhost:3000',
-    trace: 'on-first-retry',
+    trace: 'on',
   },
   projects: [
     {
@@ -17,17 +19,24 @@ export default defineConfig({
       use: {...devices['Desktop Chrome']},
     },
   ],
-  webServer: {
-    // Run the production server so tests exercise the same output users ship.
-    // `NODE_OPTIONS` preloads the MSW mock server (via tsx, which resolves the
-    // mock package's TypeScript sources) into the Next.js process, so the
-    // server-side static-state fetch is deterministic and never hits a live API.
-    command: 'pnpm start',
-    url: 'http://localhost:3000',
-    reuseExistingServer: !process.env.CI,
-    timeout: 120 * 1000,
-    env: {
-      NODE_OPTIONS: '--import tsx --import ./mocks/register.ts',
+  webServer: [
+    {
+      // Standalone Express server powered by @mswjs/http-middleware.
+      // All Coveo Commerce API calls (SSR and client-side) are intercepted here
+      // because the Next.js server is started with MOCK_API_URL, which the
+      // headless engine uses as its proxyBaseUrl.
+      command: 'node mocks/mock-server.mjs',
+      url: `${MOCK_API_URL}/health`,
+      reuseExistingServer: !process.env.CI,
+      timeout: 30 * 1000,
     },
-  },
+    {
+      // Run the production build so tests exercise the same output users ship.
+      command: 'pnpm start',
+      url: 'http://localhost:3000',
+      reuseExistingServer: !process.env.CI,
+      timeout: 120 * 1000,
+      env: {NEXT_PUBLIC_MOCK_API_URL: MOCK_API_URL},
+    },
+  ],
 });

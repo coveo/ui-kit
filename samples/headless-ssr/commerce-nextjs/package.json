@@ -18,13 +18,13 @@
   },
   "devDependencies": {
     "@coveo/platform-mock-api": "workspace:*",
-    "@msw/playwright": "catalog:",
+    "@mswjs/http-middleware": "^0.10.3",
     "@playwright/test": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
+    "express": "^5.0.0",
     "msw": "catalog:",
-    "tsx": "4.22.4",
     "typescript": "catalog:"
   }
 }
