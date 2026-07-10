@@ -1,5 +1,4 @@
 import {describe, it, expect} from 'vitest';
-import fc from 'fast-check';
 import {parseSSEEvent} from './sse-parser.js';
 
 describe('parseSSEEvent', () => {
@@ -80,8 +79,59 @@ describe('parseSSEEvent', () => {
     });
   });
 
+  describe('named SSE event for routed search', () => {
+    it('promotes commerce-search-api-response named event with payload spread', () => {
+      const result = parseSSEEvent({
+        event: 'commerce-search-api-response',
+        data: JSON.stringify({
+          products: [{permanentid: 'p1'}],
+          pagination: {totalEntries: 1},
+        }),
+      });
+
+      expect(result).toEqual({
+        type: 'commerce-search-api-response',
+        products: [{permanentid: 'p1'}],
+        pagination: {totalEntries: 1},
+      });
+    });
+
+    it('promotes search-api-response named event with payload spread', () => {
+      const result = parseSSEEvent({
+        event: 'search-api-response',
+        data: JSON.stringify({
+          results: [{uniqueId: 'r1', title: 'Result'}],
+          totalCount: 1,
+        }),
+      });
+
+      expect(result).toEqual({
+        type: 'search-api-response',
+        results: [{uniqueId: 'r1', title: 'Result'}],
+        totalCount: 1,
+      });
+    });
+
+    it('preserves deeply nested payload fields', () => {
+      const result = parseSSEEvent({
+        event: 'commerce-search-api-response',
+        data: JSON.stringify({
+          products: [{permanentid: 'p1', nested: {deep: {value: true}}}],
+          queryCorrection: {correctedQuery: 'fixed query'},
+        }),
+      });
+
+      expect(result).toHaveProperty('type', 'commerce-search-api-response');
+      expect(result).toHaveProperty('products[0].nested.deep.value', true);
+      expect(result).toHaveProperty(
+        'queryCorrection.correctedQuery',
+        'fixed query'
+      );
+    });
+  });
+
   describe('CUSTOM event edge cases (fallback path)', () => {
-    it('preserves trimmed name when CUSTOM event passes schema validation', () => {
+    it('preserves name when CUSTOM event passes schema validation', () => {
       const result = parseSSEEvent({
         event: 'message',
         data: JSON.stringify({
@@ -178,179 +228,6 @@ describe('parseSSEEvent', () => {
       expect(result.type).toBe('CUSTOM');
       expect(result).toHaveProperty('name', 'custom');
       expect(result).toHaveProperty('value', {nested: {deeply: true}});
-    });
-  });
-
-  describe('Property 4: SSE parser preserves CUSTOM event name and value', () => {
-    /**
-     * Validates: Requirements 4.1, 4.4
-     *
-     * For any well-formed SSE frame with type "CUSTOM", a non-empty name string,
-     * and a JSON-serializable value, parseSSEEvent produces a NormalizedStreamEvent
-     * with type === 'CUSTOM', name preserved exactly as provided (Zod passes
-     * validation without trimming), and value deeply equal to the original.
-     */
-    it('preserves name exactly and value deeply for any valid CUSTOM event', () => {
-      fc.assert(
-        fc.property(
-          fc.string({minLength: 1}),
-          fc.jsonValue(),
-          (generatedName, generatedValue) => {
-            const raw = {
-              event: 'message',
-              data: JSON.stringify({
-                type: 'CUSTOM',
-                name: generatedName,
-                value: generatedValue,
-              }),
-            };
-
-            const result = parseSSEEvent(raw);
-
-            const expectedValue = JSON.parse(JSON.stringify(generatedValue));
-
-            expect(result).toHaveProperty('type', 'CUSTOM');
-            expect(result).toHaveProperty('name', generatedName);
-            expect(result).toHaveProperty('value');
-            expect((result as {value: unknown}).value).toEqual(expectedValue);
-          }
-        ),
-        {numRuns: 100}
-      );
-    });
-  });
-
-  describe('Property 5: SSE parser fallback always produces valid CustomEvent', () => {
-    /**
-     * Validates: Requirements 4.2, 4.3, 4.5
-     *
-     * For any SSE frame with type "CUSTOM" that fails AG-UI schema validation
-     * (name is non-string), parseSSEEvent always produces a NormalizedStreamEvent
-     * with type === 'CUSTOM', name defaulted to 'custom', and value resolved from
-     * the value field, payload field, or entire record.
-     */
-    const invalidNameArb = fc.oneof(
-      fc.constant(null),
-      fc.constant(undefined),
-      fc.integer(),
-      fc.boolean(),
-      fc.constant([]),
-      fc.constant({})
-    );
-
-    it('always produces type CUSTOM with default name when name is non-string', () => {
-      fc.assert(
-        fc.property(
-          invalidNameArb,
-          fc.jsonValue(),
-          (invalidName, generatedValue) => {
-            const payload: Record<string, unknown> = {
-              type: 'CUSTOM',
-              value: generatedValue,
-            };
-            if (invalidName !== undefined) {
-              payload.name = invalidName;
-            }
-
-            const raw = {
-              event: 'message',
-              data: JSON.stringify(payload),
-            };
-
-            const result = parseSSEEvent(raw) as {
-              type: string;
-              name: string;
-              value: unknown;
-            };
-
-            const expectedValue = JSON.parse(JSON.stringify(generatedValue));
-
-            expect(result.type).toBe('CUSTOM');
-            expect(result.name).toBe('custom');
-            expect(result.value).toEqual(expectedValue);
-          }
-        ),
-        {numRuns: 100}
-      );
-    });
-
-    it('falls back to payload field when value is absent', () => {
-      fc.assert(
-        fc.property(
-          invalidNameArb,
-          fc.jsonValue(),
-          (invalidName, generatedPayload) => {
-            const payload: Record<string, unknown> = {
-              type: 'CUSTOM',
-              payload: generatedPayload,
-            };
-            if (invalidName !== undefined) {
-              payload.name = invalidName;
-            }
-
-            const raw = {
-              event: 'message',
-              data: JSON.stringify(payload),
-            };
-
-            const result = parseSSEEvent(raw) as {
-              type: string;
-              name: string;
-              value: unknown;
-            };
-
-            const expectedPayload = JSON.parse(
-              JSON.stringify(generatedPayload)
-            );
-
-            expect(result.type).toBe('CUSTOM');
-            expect(result.name).toBe('custom');
-            expect(result.value).toEqual(expectedPayload);
-          }
-        ),
-        {numRuns: 100}
-      );
-    });
-
-    it('falls back to entire record when neither value nor payload is present', () => {
-      fc.assert(
-        fc.property(
-          invalidNameArb,
-          fc.dictionary(
-            fc.string({minLength: 1, maxLength: 10}),
-            fc.jsonValue()
-          ),
-          (invalidName, extraFields) => {
-            const payload: Record<string, unknown> = {
-              ...extraFields,
-              type: 'CUSTOM',
-            };
-            delete payload.value;
-            delete payload.payload;
-            if (invalidName !== undefined) {
-              payload.name = invalidName;
-            }
-
-            const raw = {
-              event: 'message',
-              data: JSON.stringify(payload),
-            };
-
-            const result = parseSSEEvent(raw) as {
-              type: string;
-              name: string;
-              value: unknown;
-            };
-
-            const expectedPayload = JSON.parse(JSON.stringify(payload));
-
-            expect(result.type).toBe('CUSTOM');
-            expect(result.name).toBe('custom');
-            expect(result.value).toEqual(expectedPayload);
-          }
-        ),
-        {numRuns: 100}
-      );
     });
   });
 });

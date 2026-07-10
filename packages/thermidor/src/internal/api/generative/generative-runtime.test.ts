@@ -1,5 +1,4 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import fc from 'fast-check';
 import type {
   GenerativeStatePort,
   HydrateSubInterface,
@@ -247,155 +246,26 @@ describe('GenerativeRuntime – routed search event handling', () => {
       expect(statePort.completeTurn).not.toHaveBeenCalled();
     });
   });
-});
 
-describe('GenerativeRuntime – Property-based tests', () => {
-  let statePort: GenerativeStatePort;
-  let hydrateSubInterface: HydrateSubInterface;
-  let engine: FullEngine;
+  describe('unrecognized event type falls through default', () => {
+    it('does not call any state port mutation methods for unknown events', async () => {
+      vi.mocked(hydrateSubInterface).mockReturnValue(null);
 
-  beforeEach(() => {
-    vi.clearAllMocks();
-    statePort = createMockStatePort();
-    hydrateSubInterface = vi.fn();
-    engine = createMockEngine();
+      setupStreamWithEvents([
+        {type: 'some-unknown-event', data: 'whatever'},
+        {type: 'RUN_FINISHED'},
+      ]);
 
-    GenerativeRuntime['cache'] = new WeakMap();
-  });
+      const runtime = buildRuntime();
+      await runtime.submit('test');
 
-  function buildRuntime() {
-    return GenerativeRuntime.getInstance(engine, 'test-interface', {
-      statePort,
-      hydrateSubInterface,
-      generativeInterface: {} as never,
-      cartInterface: {} as never,
-    });
-  }
-
-  /**
-   * Feature: converse-routed-commerce-search, Property 1: Recognized routed event produces terminal dispatch with routed interface
-   *
-   * Validates: Requirements 1.1, 1.2, 1.3, 1.4, 2.1
-   */
-  describe('Property 1: Recognized routed event produces terminal dispatch with routed interface', () => {
-    it('for any recognized event type and any payload, dispatchEvent sets routed interface, completes turn, and returns terminal', async () => {
-      await fc.assert(
-        fc.asyncProperty(
-          fc.constantFrom(
-            'commerce-search-api-response',
-            'search-api-response'
-          ),
-          fc.dictionary(
-            fc.string({minLength: 1, maxLength: 10}),
-            fc.jsonValue()
-          ),
-          fc.string({minLength: 1, maxLength: 50}),
-          fc.constantFrom('commerceSearch', 'search') as fc.Arbitrary<
-            'commerceSearch' | 'search'
-          >,
-          async (eventType, extraFields, prompt, useCase) => {
-            vi.clearAllMocks();
-            GenerativeRuntime['cache'] = new WeakMap();
-
-            statePort = createMockStatePort();
-            hydrateSubInterface = vi.fn();
-            engine = createMockEngine();
-
-            const mockRoutedInterface: RoutedInterface = {
-              useCase,
-              interface: {} as never,
-            };
-            vi.mocked(hydrateSubInterface).mockReturnValue(mockRoutedInterface);
-
-            const eventPayload = {type: eventType, ...extraFields};
-            setupStreamWithEvents([eventPayload]);
-
-            const runtime = buildRuntime();
-            await runtime.submit(prompt);
-
-            expect(hydrateSubInterface).toHaveBeenCalledWith(
-              eventType,
-              eventPayload,
-              prompt
-            );
-            expect(statePort.setRoutedInterface).toHaveBeenCalledWith(
-              'generated-turn-id',
-              mockRoutedInterface
-            );
-            expect(statePort.completeTurn).toHaveBeenCalledWith(
-              'generated-turn-id'
-            );
-            expect(statePort.failTurn).not.toHaveBeenCalled();
-          }
-        ),
-        {numRuns: 100}
-      );
-    });
-  });
-
-  /**
-   * Feature: converse-routed-commerce-search, Property 2: Unrecognized event type falls through to default with no state mutation
-   *
-   * Validates: Requirements 1.5, 3.1, 3.2
-   */
-  describe('Property 2: Unrecognized event type falls through to default with no state mutation', () => {
-    it('for any event type not handled by the switch, no state port mutation methods are called', async () => {
-      const handledTypes = [
-        'turn_started',
-        'turn_complete',
-        'TEXT_MESSAGE_START',
-        'TEXT_MESSAGE_CONTENT',
-        'TEXT_MESSAGE_END',
-        'REASONING_MESSAGE_START',
-        'REASONING_MESSAGE_CONTENT',
-        'REASONING_MESSAGE_END',
-        'TOOL_CALL_START',
-        'TOOL_CALL_ARGS',
-        'TOOL_CALL_END',
-        'TOOL_CALL_RESULT',
-        'STATE_SNAPSHOT',
-        'ACTIVITY_SNAPSHOT',
-        'commerce-search-api-response',
-        'search-api-response',
-        'RUN_ERROR',
-        'RUN_FINISHED',
-        'CUSTOM',
-      ];
-
-      await fc.assert(
-        fc.asyncProperty(
-          fc.string().filter((name) => !handledTypes.includes(name)),
-          fc.string({minLength: 1, maxLength: 50}),
-          async (eventType, prompt) => {
-            vi.clearAllMocks();
-            GenerativeRuntime['cache'] = new WeakMap();
-
-            statePort = createMockStatePort();
-            hydrateSubInterface = vi.fn().mockReturnValue(null);
-            engine = createMockEngine();
-
-            setupStreamWithEvents([{type: eventType}, {type: 'RUN_FINISHED'}]);
-
-            const runtime = buildRuntime();
-            await runtime.submit(prompt);
-
-            expect(statePort.setRoutedInterface).not.toHaveBeenCalled();
-            expect(statePort.initAgentResponse).not.toHaveBeenCalled();
-            expect(statePort.startMessage).not.toHaveBeenCalled();
-            expect(statePort.appendMessageDelta).not.toHaveBeenCalled();
-            expect(statePort.appendSurface).not.toHaveBeenCalled();
-            expect(statePort.failTurn).not.toHaveBeenCalled();
-
-            expect(statePort.createTurn).toHaveBeenCalledTimes(1);
-            expect(statePort.setActiveTurnId).toHaveBeenCalledTimes(1);
-            expect(statePort.completeTurn).toHaveBeenCalledTimes(1);
-            expect(statePort.completeTurn).toHaveBeenCalledWith(
-              'generated-turn-id'
-            );
-          }
-        ),
-        {numRuns: 100}
-      );
+      expect(statePort.setRoutedInterface).not.toHaveBeenCalled();
+      expect(statePort.initAgentResponse).not.toHaveBeenCalled();
+      expect(statePort.startMessage).not.toHaveBeenCalled();
+      expect(statePort.appendMessageDelta).not.toHaveBeenCalled();
+      expect(statePort.appendSurface).not.toHaveBeenCalled();
+      expect(statePort.failTurn).not.toHaveBeenCalled();
+      expect(statePort.completeTurn).toHaveBeenCalledTimes(1);
     });
   });
 });

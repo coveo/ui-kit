@@ -1138,9 +1138,6 @@ importers:
       '@microsoft/api-extractor':
         specifier: 7.58.9
         version: 7.58.9(@types/node@26.1.0)
-      fast-check:
-        specifier: ^3.22.0
-        version: 3.23.2
       typescript:
         specifier: 6.0.3
         version: 6.0.3

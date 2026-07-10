@@ -150,43 +150,22 @@ After SSE parsing, the event arrives as:
 ### `dispatchEvent` Return Shape
 
 ```typescript
-{ turnId: string; isTerminal: boolean }
+{
+  turnId: string;
+  isTerminal: boolean;
+}
 ```
 
 - `isTerminal: true` — turn is completed, no further events should be processed
 - `isTerminal: false` — continue processing stream events
 
-## Correctness Properties
-
-### Property 1: Recognized routed event produces terminal dispatch with routed interface
-
-*For any* event whose `type` is `'commerce-search-api-response'` or `'search-api-response'`, and for any payload that causes `hydrateSubInterface` to return a non-null `RoutedInterface`, `dispatchEvent` SHALL:
-- call `hydrateSubInterface(event.type, event, currentPrompt)`,
-- call `statePort.setRoutedInterface(turnId, routedInterface)`,
-- call `statePort.completeTurn(turnId)`,
-- and return `{ isTerminal: true }`.
-
-**Validates: Requirements 1.1, 1.2, 1.3, 1.4, 2.1**
-
-### Property 2: Unrecognized event type falls through default with no state mutation
-
-*For any* event whose `type` does NOT match any case in the `dispatchEvent` switch, the default branch SHALL return `{ isTerminal: false }` and SHALL NOT invoke any method on the `GenerativeStatePort`.
-
-**Validates: Requirements 1.5**
-
-### Property 3: Effective query resolution uses correctedQuery when non-empty, otherwise falls back to user prompt
-
-*For any* commerce search payload, if `payload.queryCorrection.correctedQuery` is a non-empty string, the routed sub-interface search box SHALL be set to that `correctedQuery`. Otherwise, if a user prompt is provided, the search box SHALL be set to the user prompt. If neither is available, no query SHALL be set.
-
-**Validates: Requirements 2.2, 2.3, 2.4**
-
 ## Error Handling
 
-| Scenario | Behavior |
-|----------|----------|
-| `hydrateSubInterface` returns `null` for a routed event | Not an error — may occur if the routing table is extended in the future with partial support. Returns non-terminal. |
-| Routed event is the only event before stream closes with null hydration | `consumeStream`'s `onDone` handler fires with `terminalEventReceived === false`, which calls `statePort.failTurn(turnId, 'Stream ended without a terminal event.')`. |
-| Event payload is not a valid commerce search structure | `hydrateSubInterface` will still attempt hydration. If the content cannot be cast to `Record<string, unknown>`, the sub-interface will be created with an empty/malformed state. This is acceptable — the backend is trusted to send well-formed payloads. |
+| Scenario                                                                | Behavior                                                                                                                                                                                                                                                   |
+| ----------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `hydrateSubInterface` returns `null` for a routed event                 | Not an error — may occur if the routing table is extended in the future with partial support. Returns non-terminal.                                                                                                                                        |
+| Routed event is the only event before stream closes with null hydration | `consumeStream`'s `onDone` handler fires with `terminalEventReceived === false`, which calls `statePort.failTurn(turnId, 'Stream ended without a terminal event.')`.                                                                                       |
+| Event payload is not a valid commerce search structure                  | `hydrateSubInterface` will still attempt hydration. If the content cannot be cast to `Record<string, unknown>`, the sub-interface will be created with an empty/malformed state. This is acceptable — the backend is trusted to send well-formed payloads. |
 
 ## Testing Strategy
 
@@ -198,18 +177,17 @@ After SSE parsing, the event arrives as:
   - Routed event when hydration returns null → verifies no state port mutation + non-terminal
   - Prompt forwarding → verifies prompt passed to hydration
   - Routed event as only event before stream closes with null hydration → verifies failTurn
+  - Unrecognized event type falls through default → verifies no state port mutation
 
 - **`generative-hydration.test.ts`** (extend existing): Test `extractEffectiveQuery` behavior via `createHydrateSubInterface`.
   - Payload with `queryCorrection.correctedQuery` → search box uses corrected query
+  - Payload with null/empty correctedQuery → search box uses fallback prompt
   - Payload without `queryCorrection` → search box uses fallback prompt
   - No query provided (undefined) → search box not set
 
-### Property-Based Tests (fast-check + Vitest)
-
-**Library**: `fast-check` (devDependency of `@coveo/thermidor`)
-
-**Configuration**: Minimum 100 iterations per property test.
-
-- **Property 1 test**: Generate random payloads with recognized event types. Mock `hydrateSubInterface` to return a generated `RoutedInterface`. Assert terminal result and state port calls.
-- **Property 2 test**: Generate random event types NOT in the switch. Assert non-terminal result and zero state port interactions.
-- **Property 3 test**: Generate random commerce payloads with/without `queryCorrection.correctedQuery` and random prompt strings. Invoke `createHydrateSubInterface` and verify the search box state matches the expected effective query.
+- **`sse-parser.test.ts`** (extend existing): Test `parseSSEEvent` for named event promotion and CUSTOM fallback.
+  - Named `commerce-search-api-response` event → type promoted, payload spread
+  - Named `search-api-response` event → type promoted, payload spread
+  - Deeply nested payloads preserved
+  - CUSTOM fallback: name defaulting when null/missing/non-string
+  - CUSTOM fallback: value resolution from `value`, `payload`, or entire record
