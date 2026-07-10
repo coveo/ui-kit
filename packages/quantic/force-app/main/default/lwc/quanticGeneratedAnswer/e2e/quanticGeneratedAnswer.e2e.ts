@@ -14,10 +14,6 @@ useCaseTestCases.forEach((useCase) => {
   let test = fixtures[useCase.value];
 
   test.describe(`quantic generated answer ${useCase.label}`, () => {
-    test.use({
-      genQaData,
-    });
-
     analyticsModeTest.forEach((analytics) => {
       test.describe(analytics.label, () => {
         test.use({
@@ -309,7 +305,7 @@ useCaseTestCases.forEach((useCase) => {
                   await generatedAnswer.streamEndAnalyticRequestPromise;
 
                   const generateRequestPromise =
-                    generatedAnswer.waitForGenerateRequest();
+                    generatedAnswer.waitForHeadAnswerRequest();
 
                   const streamEndAnalyticRequestPromise =
                     generatedAnswer.waitForStreamEndAnalytics();
