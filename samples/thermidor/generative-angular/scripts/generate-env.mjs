@@ -2,7 +2,7 @@
  * Reads .env (or OS environment variables) and generates src/environments/environment.ts.
  * Run before build: `node scripts/generate-env.mjs`
  */
-import {readFileSync, writeFileSync} from 'node:fs';
+import {readFileSync, writeFileSync, mkdirSync} from 'node:fs';
 import {resolve, dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 
@@ -46,5 +46,6 @@ export const environment = {
 };
 `;
 
+mkdirSync(dirname(OUTPUT_PATH), {recursive: true});
 writeFileSync(OUTPUT_PATH, output);
 console.log('Generated src/environments/environment.ts from .env');
