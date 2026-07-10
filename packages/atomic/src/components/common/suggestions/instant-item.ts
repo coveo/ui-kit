@@ -1,7 +1,6 @@
 import type {i18n} from 'i18next';
 import {html, render} from 'lit';
 import {encodeForDomAttribute} from '../../../utils/string-utils';
-import {getClassNameForButtonStyle} from '../button-style';
 import type {SearchBoxSuggestionElement} from './suggestions-types';
 
 type InstantItemSuggestionLabelKey =
@@ -48,7 +47,7 @@ export const renderInstantItemShowAllButton = ({
 }: InstantItemShowAllButtonProps): HTMLElement => {
   const template = html`<div
     part="instant-results-show-all-button"
-    class="pointer-events-none ${getClassNameForButtonStyle('text-primary')}"
+    class="text-primary pointer-events-none bg-transparent"
   >
     ${i18n.t(i18nKey)}
   </div>`;
