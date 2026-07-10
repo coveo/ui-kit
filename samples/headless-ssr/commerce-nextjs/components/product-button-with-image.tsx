@@ -4,7 +4,6 @@ import type {
   Recommendations,
 } from '@coveo/headless-react/ssr-commerce';
 import Image from 'next/image';
-import {useRouter} from 'next/navigation';
 
 interface ProductButtonWithImageProps {
   methods:
@@ -14,32 +13,43 @@ interface ProductButtonWithImageProps {
   product: Product;
 }
 
+/**
+ * Renders a product as a clickable image + name. Selecting it logs a product
+ * click event and opens the product's real page (`clickUri`).
+ */
 export default function ProductButtonWithImage({
   methods,
   product,
 }: ProductButtonWithImageProps) {
-  const router = useRouter();
-
-  const onProductClick = (product: Product) => {
+  const onProductClick = () => {
     methods?.interactiveProduct({options: {product}}).select();
-    router.push(
-      `/products/${product.ec_product_id}?name=${product.ec_name}&price=${product.ec_price}`
-    );
+    window.open(product.clickUri, '_blank', 'noopener,noreferrer');
   };
+
+  const image = product.ec_images?.[0];
 
   return (
     <button
       type="button"
+      className="ProductLink"
       disabled={!methods}
-      onClick={() => onProductClick(product)}
+      onClick={onProductClick}
     >
-      {product.ec_name}
-      <Image
-        src={product.ec_images[0]}
-        alt={product.ec_name!}
-        width={50}
-        height={50}
-      />
+      {image ? (
+        <Image
+          className="ProductImage"
+          src={image}
+          alt={product.ec_name ?? ''}
+          width={150}
+          height={150}
+        />
+      ) : (
+        <span
+          className="ProductImage ProductImagePlaceholder"
+          aria-hidden="true"
+        />
+      )}
+      <span className="ProductName">{product.ec_name}</span>
     </button>
   );
 }

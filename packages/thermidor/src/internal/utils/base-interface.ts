@@ -7,6 +7,7 @@ import type {
   Facades,
   InterfaceHandle,
   InterfaceType,
+  SupportsBrand,
 } from './interface-types.js';
 
 export interface InterfaceInternals<T extends InterfaceType = InterfaceType> {
@@ -14,6 +15,10 @@ export interface InterfaceInternals<T extends InterfaceType = InterfaceType> {
   stateId: string;
   type: T;
   cacheRegistry: InterfaceCacheRegistry;
+  resolveFacades(
+    facade: Facades[T],
+    composedInterface?: InterfaceHandle
+  ): EndpointThunk[];
 }
 
 export let getInterfaceInternals: <T extends InterfaceType>(
@@ -21,6 +26,8 @@ export let getInterfaceInternals: <T extends InterfaceType>(
 ) => InterfaceInternals<T>;
 
 export abstract class BaseInterface<T extends InterfaceType> {
+  declare readonly [SupportsBrand]: {[K in Facades[T]]: true};
+
   get disposed(): boolean {
     return this.#disposed;
   }
@@ -39,10 +46,12 @@ export abstract class BaseInterface<T extends InterfaceType> {
       stateId: iface.#stateId,
       type: iface.#type,
       cacheRegistry: iface.#cacheRegistry,
+      resolveFacades: (facade, composedInterface) =>
+        iface.#resolveFacades(facade, composedInterface),
     }));
   }
 
-  constructor(
+  protected constructor(
     engine: FullEngine,
     stateId: string,
     type: T,
@@ -56,11 +65,25 @@ export abstract class BaseInterface<T extends InterfaceType> {
     engine.addInterface(this);
   }
 
-  resolveFacades(
+  dispose(): void {
+    if (this.#disposed) {
+      return;
+    }
+    this.#disposed = true;
+    this.#cacheRegistry.dispose();
+    this.#engine.removeInterface(this);
+  }
+
+  #resolveFacades(
     facade: Facades[T],
     composedInterface?: InterfaceHandle
   ): EndpointThunk[] {
     this.#assertNotDisposed();
+
+    const resolver = this.#facadeResolvers[facade];
+    if (!resolver) {
+      return [];
+    }
 
     const scopeInterface = composedInterface ?? this;
 
@@ -73,21 +96,11 @@ export abstract class BaseInterface<T extends InterfaceType> {
     let thunk = scopeCache.get(facade);
     if (!thunk) {
       const scope: EndpointStateScope = {baseInterface: this, scopeInterface};
-      const resolver = this.#facadeResolvers[facade];
       thunk = resolver(this.#engine)(scope);
       scopeCache.set(facade, thunk);
     }
 
     return [thunk];
-  }
-
-  dispose(): void {
-    if (this.#disposed) {
-      return;
-    }
-    this.#disposed = true;
-    this.#cacheRegistry.dispose();
-    this.#engine.removeInterface(this);
   }
 
   #assertNotDisposed(): void {

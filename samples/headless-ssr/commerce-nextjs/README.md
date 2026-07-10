@@ -1,83 +1,67 @@
 # Headless Commerce SSR with Next.js
 
-This sample demonstrates server-side rendering (SSR) with Coveo Headless commerce controllers using Next.js App Router. It shows how to build a high-performance e-commerce search experience with improved SEO and initial load times.
+> **Scaffold template**: `headless-ssr-commerce-nextjs`
+> This sample is the scaffold template used by `npm create @coveo/ui` to bootstrap a Coveo Headless commerce project with server-side rendering (SSR) and the Next.js App Router.
 
-## Features
+A commerce experience built with [`@coveo/headless-react/ssr-commerce`](https://docs.coveo.com/en/headless/latest/usage/ssr/) and the Next.js App Router. Product data is fetched and rendered on the server, then hydrated on the client for interactivity. It runs against the public `searchuisamples` organization with no configuration required.
 
-- Server-side rendering for commerce search and product listings
-- Next.js App Router architecture
-- Headless commerce controllers for product search
-- Client-side hydration for interactive features
-- SEO-optimized product pages
+## What it shows
 
-## Technology Stack
+- A commerce `search` page (search box, facets, sort, pagination)
+- Product `listing` pages served by a single dynamic `[category]` route
+- A `cart` page backed by an external-cart abstraction (cookies)
+- Product `recommendations` (popular bought / popular viewed)
+- Server-side rendering of the initial state with client-side hydration
+- Product-click analytics via `interactiveProduct().select()` (clicks open the real `clickUri`)
 
-- **Next.js**: React framework with SSR (App Router)
-- **React**: UI framework
+## Technology stack
+
+- **Next.js** (App Router) + **React** + **TypeScript**
 - **@coveo/headless-react/ssr-commerce**: Coveo's SSR commerce utilities
-- **TypeScript**: Type-safe JavaScript
+- **Playwright** + **@coveo/platform-mock-api** + **MSW**: deterministic end-to-end tests
 
 ## Prerequisites
 
-- Node.js 18+ (LTS recommended)
-- npm 9+
+- Node.js 20+ (LTS recommended)
+- pnpm
 
-## Getting Started
-
-1. Install dependencies:
-
-   ```bash
-   npm install
-   ```
-
-2. Start the development server:
-
-   ```bash
-   npm run dev
-   ```
-
-3. Open your browser to `http://localhost:3000`
-
-## Available Scripts
+## Getting started
 
 ```bash
-npm run dev       # Start development server
-npm run build     # Build for production
-npm run prod      # Start production server (run after build)
+pnpm install
+pnpm dev      # start the dev server (http://localhost:3000)
+pnpm build    # production build
+pnpm start    # serve the production build (http://localhost:3000)
+pnpm e2e      # end-to-end tests (Playwright, MSW-mocked)
 ```
 
-## Key Implementation Details
+`pnpm dev` redirects `/` to `/search`. No credentials are required — the sample uses the public `searchuisamples` organization.
 
-### Server-Side Rendering
+## Using this sample as an MRE
 
-This sample demonstrates:
+This sample doubles as a minimal reproducible example for troubleshooting.
 
-- Rendering product listings on the server for improved initial page load
-- Hydrating Headless controllers on the client for interactivity
-- Using `@coveo/headless-react/ssr-commerce` utilities for SSR support
-- Managing search state across server and client
+- **Where to change the configuration**: the engine configuration lives in `lib/commerce-engine-config.ts`. It calls `getSampleCommerceEngineConfiguration()` for the public sample credentials. Replace `organizationId`, `accessToken`, and the `context` with the values that reproduce your issue.
+- **Context (language, country, currency, view)**: defaults are in `utils/context.ts`, and each page passes its own `view.url` when calling `fetchStaticState` (see `app/**/page.tsx`).
+- **Product images**: if you point the sample at your own catalog, add your image host to `images.remotePatterns` in `next.config.mjs`.
+- **Safe to modify**: `lib/commerce-engine-config.ts` and `utils/context.ts` (configuration), and any component in `components/` or page in `app/` to reproduce a specific UI scenario.
+- **Scaffolding you can usually ignore**: `playwright.config.ts`, `e2e/`, `mocks/`, and `proxy.ts` (the Next.js proxy/middleware that seeds the navigator context).
+- **Credentials**: the `accessToken` and `organizationId` are the **public `searchuisamples` sample credentials**, safe to share with customers or partners. They are not internal credentials.
 
-### Next.js App Router
+## Reproducing against a specific version
 
-The sample uses Next.js App Router features:
+To reproduce an issue against a specific Coveo UI Kit version, install it after scaffolding:
 
-- Server Components for initial rendering
-- Client Components for interactive features
-- React Server Components architecture
-- Streaming and progressive enhancement
+```bash
+pnpm add @coveo/headless-react@<version>
+```
 
-### Performance Benefits
+## How the tests stay deterministic
 
-SSR provides:
+The Playwright tests never call a live API. Client-side requests are mocked with [`@msw/playwright`](https://www.npmjs.com/package/@msw/playwright) (see `e2e/fixtures.ts`), and the server-side `fetchStaticState` calls are mocked by an MSW server that is preloaded into the Next.js process during `pnpm e2e` (see `mocks/` and the `webServer` config in `playwright.config.ts`). Both reuse the handlers from `@coveo/platform-mock-api`.
 
-- Faster initial page loads
-- Better SEO through pre-rendered content
-- Improved Core Web Vitals
-- Progressive enhancement
+## Learn more
 
-## Learn More
-
-- [Coveo Headless SSR Documentation](https://docs.coveo.com/en/headless/latest/usage/ssr/)
+- [Coveo Headless SSR documentation](https://docs.coveo.com/en/headless/latest/usage/ssr/)
 - [Coveo for Commerce](https://docs.coveo.com/en/coveo-for-commerce/)
-- [Next.js App Router Documentation](https://nextjs.org/docs/app)
-- [React Server Components](https://react.dev/reference/react/use-server)
+- [Next.js App Router](https://nextjs.org/docs/app)
