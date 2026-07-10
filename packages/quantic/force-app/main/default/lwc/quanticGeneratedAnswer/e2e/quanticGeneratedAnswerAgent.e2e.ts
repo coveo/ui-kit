@@ -103,7 +103,6 @@ analyticsModeTest.forEach((analytics) => {
           }
         );
 
-        // FIRST FOLLOW-UP
         await testAgent.step(
           'FIRST FOLLOW-UP: should send the follow-up request with the correct conversationId and conversationToken',
           async () => {
@@ -125,7 +124,7 @@ analyticsModeTest.forEach((analytics) => {
         );
 
         await testAgent.step(
-          'should send stream end analytics with the same conversationId but a different answerId for the follow-up',
+          'should send stream end analytics with the right answerId for the follow-up',
           async () => {
             const followUpStreamEndPromise =
               generatedAnswer.waitForFollowUpStreamEndAnalytics(
@@ -148,7 +147,6 @@ analyticsModeTest.forEach((analytics) => {
           }
         );
 
-        // SECOND FOLLOW-UP
         await testAgent.step(
           'SECOND FOLLOW-UP: should send the second follow-up request with the correct conversationId and conversationToken',
           async () => {
@@ -172,7 +170,7 @@ analyticsModeTest.forEach((analytics) => {
         );
 
         await testAgent.step(
-          'should send stream end analytics with the same conversationId but a different answerId for the second follow-up',
+          'should send stream end analytics with the right answerId for the second follow-up',
           async () => {
             const followUpStreamEndPromise =
               generatedAnswer.waitForFollowUpStreamEndAnalytics(
@@ -183,7 +181,7 @@ analyticsModeTest.forEach((analytics) => {
         );
 
         await testAgent.step(
-          'should send dislike analytics with the second follow-up answerId when disliking the second follow-up answer',
+          'should send dislike analytics with the right answerId for the second follow-up when disliking the second follow-up answer',
           async () => {
             const dislikeAnalyticRequestPromise =
               generatedAnswer.waitForDislikeGeneratedAnswerAnalyticsForId(

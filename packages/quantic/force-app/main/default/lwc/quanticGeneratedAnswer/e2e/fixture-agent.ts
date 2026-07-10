@@ -44,7 +44,7 @@ export const testAgent =
         data.answerId1,
         analytics,
         {
-          agentAnswerRequestRegex,
+          headAnswerRequestRegex: agentAnswerRequestRegex,
           agentFollowUpRequestRegex,
           isAgent: true,
         }
@@ -64,7 +64,7 @@ export const testAgent =
       generatedAnswerObject.streamEndAnalyticRequestPromise =
         generatedAnswerObject.waitForStreamEndAnalytics();
       generatedAnswerObject.generateRequestPromise =
-        generatedAnswerObject.waitForAgentAnswerRequest();
+        generatedAnswerObject.waitForHeadAnswerRequest();
 
       await search.fillSearchInput(exampleQuery);
       await search.performSearch();

@@ -305,7 +305,7 @@ useCaseTestCases.forEach((useCase) => {
                   await generatedAnswer.streamEndAnalyticRequestPromise;
 
                   const generateRequestPromise =
-                    generatedAnswer.waitForGenerateRequest();
+                    generatedAnswer.waitForHeadAnswerRequest();
 
                   const streamEndAnalyticRequestPromise =
                     generatedAnswer.waitForStreamEndAnalytics();

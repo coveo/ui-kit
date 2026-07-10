@@ -75,7 +75,7 @@ export const testSearch =
         analytics,
         {
           answerApiEnabled: !!options.answerConfigurationId,
-          generateRequestRegex: rgaGenerateRequestRegex,
+          headAnswerRequestRegex: rgaGenerateRequestRegex,
           withFacets,
         }
       );
@@ -101,7 +101,7 @@ export const testSearch =
 
       if (options.answerConfigurationId) {
         generatedAnswerObject.generateRequestPromise =
-          generatedAnswerObject.waitForGenerateRequest();
+          generatedAnswerObject.waitForHeadAnswerRequest();
       }
 
       await search.fillSearchInput(exampleQuery);
@@ -148,7 +148,7 @@ export const testInsight =
         analytics,
         {
           answerApiEnabled: !!options.answerConfigurationId,
-          generateRequestRegex: insightRgaGenerateRequestRegex,
+          headAnswerRequestRegex: insightRgaGenerateRequestRegex,
           withFacets,
         }
       );
@@ -177,7 +177,7 @@ export const testInsight =
         generatedAnswerObject.waitForStreamEndAnalytics();
       if (options.answerConfigurationId) {
         generatedAnswerObject.generateRequestPromise =
-          generatedAnswerObject.waitForGenerateRequest();
+          generatedAnswerObject.waitForHeadAnswerRequest();
       }
 
       await search.fillSearchInput(exampleQuery);

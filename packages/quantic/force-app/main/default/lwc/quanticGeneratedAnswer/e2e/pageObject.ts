@@ -27,8 +27,7 @@ const facetElementsSelectors = {
 
 export interface GeneratedAnswerObjectConfig {
   answerApiEnabled?: boolean;
-  generateRequestRegex?: RegExp;
-  agentAnswerRequestRegex?: RegExp;
+  headAnswerRequestRegex?: RegExp;
   agentFollowUpRequestRegex?: RegExp;
   isAgent?: boolean;
   withFacets?: boolean;
@@ -37,8 +36,7 @@ export interface GeneratedAnswerObjectConfig {
 export class GeneratedAnswerObject {
   private analyticsMode: AnalyticsMode;
   private answerApiEnabled: boolean;
-  private generateRequestRegex?: RegExp;
-  private agentAnswerRequestRegex?: RegExp;
+  private headAnswerRequestRegex?: RegExp;
   private agentFollowUpRequestRegex?: RegExp;
   private withFacets: boolean;
   private isAgent: boolean;
@@ -54,8 +52,7 @@ export class GeneratedAnswerObject {
     this.analytics = analytics;
     this.analyticsMode = this.analytics.analyticsMode;
     this.answerApiEnabled = config.answerApiEnabled ?? false;
-    this.generateRequestRegex = config.generateRequestRegex;
-    this.agentAnswerRequestRegex = config.agentAnswerRequestRegex;
+    this.headAnswerRequestRegex = config.headAnswerRequestRegex;
     this.agentFollowUpRequestRegex = config.agentFollowUpRequestRegex;
     this.withFacets = config.withFacets ?? false;
     this.isAgent = config.isAgent ?? false;
@@ -227,18 +224,11 @@ export class GeneratedAnswerObject {
     await this.threadItemTitleButton.nth(index).click();
   }
 
-  async waitForGenerateRequest(): Promise<Request> {
-    if (!this.generateRequestRegex) {
-      throw new Error('generateRequestRegex is not configured');
+  async waitForHeadAnswerRequest(): Promise<Request> {
+    if (!this.headAnswerRequestRegex) {
+      throw new Error('headAnswerRequestRegex is not configured');
     }
-    return this.page.waitForRequest(this.generateRequestRegex);
-  }
-
-  async waitForAgentAnswerRequest(): Promise<Request> {
-    if (!this.agentAnswerRequestRegex) {
-      throw new Error('agentAnswerRequestRegex is not configured');
-    }
-    return this.page.waitForRequest(this.agentAnswerRequestRegex);
+    return this.page.waitForRequest(this.headAnswerRequestRegex);
   }
 
   async waitForAgentFollowUpRequest(): Promise<Request> {
@@ -545,7 +535,8 @@ export class GeneratedAnswerObject {
   ) {
     let callCount = 0;
     await this.page.route('**/agents/*/follow-up', (route) => {
-      // To make sure that we always return a mocked response.
+      // After all provided response bodies are used, keep returning the last one
+      // so any additional intercepted follow-up requests still receive a mocked stream.
       const streams = bodies[Math.min(callCount, bodies.length - 1)];
       callCount++;
 
