@@ -28,6 +28,10 @@ export const rgaGenerateRequestRegex =
   /\/rest\/organizations\/.*\/answer\/v1\/configs\/.*\/generate/;
 export const insightRgaGenerateRequestRegex =
   /\/rest\/organizations\/.*\/insight\/v1\/configs\/.*\/generate/;
+export const agentAnswerRequestRegex =
+  /\/api\/v1\/organizations\/.*\/agents\/.*\/answer/;
+export const agentFollowUpRequestRegex =
+  /\/api\/v1\/organizations\/.*\/agents\/.*\/follow-up/;
 
 /**
  * Indicates whether the specified request corresponds to a Search Usage Analytics request.
