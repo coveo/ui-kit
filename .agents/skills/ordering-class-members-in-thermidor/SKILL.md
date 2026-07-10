@@ -41,14 +41,14 @@ All TypeScript classes in the thermidor package must follow this member ordering
 ### 2. Instance Properties
 
 ```
-├── public get/set
 ├── public readonly
+├── public get/set
 ├── public
-├── protected get/set
 ├── protected readonly
+├── protected get/set
 ├── protected
-├── private get/set
 ├── private readonly
+├── private get/set
 └── private
 ```
 
@@ -76,6 +76,9 @@ The `static {}` block initializes module-scoped accessor hooks (e.g., `getInterf
 
 ```typescript
 export abstract class BaseInterface<T extends InterfaceType> {
+  // 2. Instance Properties — public readonly (phantom brand)
+  declare readonly [SupportsBrand]: {[K in Facades[T]]: true};
+
   // 2. Instance Properties — public get/set
   get disposed(): boolean {
     return this.#disposed;
@@ -96,13 +99,13 @@ export abstract class BaseInterface<T extends InterfaceType> {
   }
 
   // 4. Constructor
-  constructor(...) { ... }
+  protected constructor(...) { ... }
 
   // 5. Methods — public
-  resolveFacades(...) { ... }
   dispose() { ... }
 
   // 5. Methods — private
+  #resolveFacades(...) { ... }
   #assertNotDisposed() { ... }
 }
 ```
@@ -110,5 +113,5 @@ export abstract class BaseInterface<T extends InterfaceType> {
 ## Notes
 
 - Within the same access level and category, group related members logically.
-- Private helper methods like `#assertNotDisposed()` always go at the end.
+- Private guard/validator helpers (e.g., `#assertNotDisposed()`) go at the end of the private methods section.
 - The `static {}` block is placed between properties and constructor because it initializes accessor hooks that reference private fields (which must be declared first).

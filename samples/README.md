@@ -28,10 +28,12 @@ Pre-built, customizable search and commerce components from `@coveo/atomic` and 
 
 Fully custom UIs built with `@coveo/headless` controllers (client-side rendering).
 
-| Sample                                       | Description                          | Framework    | Use Case |
-| -------------------------------------------- | ------------------------------------ | ------------ | -------- |
-| [search-react](./headless/search-react/)     | Custom search interface with React   | React (Vite) | Search   |
-| [commerce-react](./headless/commerce-react/) | Custom commerce interface with React | React (Vite) | Commerce |
+| Sample                                       | Description                             | Framework         | Use Case |
+| -------------------------------------------- | --------------------------------------- | ----------------- | -------- |
+| [search-react](./headless/search-react/)     | Custom search interface with React      | React (Vite)      | Search   |
+| [commerce-react](./headless/commerce-react/) | Custom commerce interface with React    | React (Vite)      | Commerce |
+| [search-vite](./headless/search-vite/)       | Custom search interface with vanilla JS | Vanilla JS (Vite) | Search   |
+| [commerce-vite](./headless/commerce-vite/)   | Custom commerce interface with Lit      | Lit (Vite)        | Commerce |
 
 ### [Headless Future Samples](./thermidor/)
 

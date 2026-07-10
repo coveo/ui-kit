@@ -7,27 +7,42 @@
  * integrity verification out of the box.
  */
 
-import {join} from 'node:path';
-import pacote from 'pacote';
-import {pathExists} from './fs-utils.js';
+import pacote, {type Packument} from 'pacote';
 
-/**
- * Resolves the template package's `latest` tarball on npm and extracts it into
- * `destDir`. Returns the path to the extracted project (`destDir`).
- */
+export class TemplateVersionUnavailableError extends Error {
+  constructor(readonly version: string) {
+    super(`Version "${version}" is not available on npm.`);
+    this.name = 'TemplateVersionUnavailableError';
+  }
+}
+
 export async function downloadTemplate(options: {
   packageName: string;
   destDir: string;
+  version?: string;
 }): Promise<string> {
-  await pacote.extract(options.packageName, options.destDir);
+  const {packageName, destDir, version} = options;
+  const pacoteOptions = {packumentCache: new Map<string, Packument>()};
 
-  if (!(await pathExists(join(options.destDir, 'package.json')))) {
-    throw new Error(
-      'The downloaded template archive is not a valid package (no ' +
-        'package.json). Try again, or update @coveo/create-ui to the latest ' +
-        'version.'
-    );
+  if (version !== undefined) {
+    await assertVersionPublished(packageName, version, pacoteOptions);
   }
 
-  return options.destDir;
+  const spec = version ? `${packageName}@${version}` : packageName;
+  await pacote.extract(spec, destDir, pacoteOptions);
+
+  return destDir;
+}
+
+async function assertVersionPublished(
+  packageName: string,
+  version: string,
+  pacoteOptions: {packumentCache: Map<string, Packument>}
+): Promise<void> {
+  const packument = await pacote.packument(packageName, pacoteOptions);
+  const distTags = packument['dist-tags'];
+  const versions = packument.versions;
+  if (!Object.hasOwn(distTags, version) && !Object.hasOwn(versions, version)) {
+    throw new TemplateVersionUnavailableError(version);
+  }
 }
