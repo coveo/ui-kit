@@ -92,7 +92,7 @@ export const testSearch =
         await generatedAnswerObject.clickAddFacetsButton();
       }
 
-      search.mockSearchWithBaseResponse();
+      await search.mockSearchWithBaseResponse();
       await configuration.configure(options);
       await search.waitForSearchResponse();
 
@@ -103,7 +103,7 @@ export const testSearch =
           generatedAnswerObject.waitForGenerateRequest();
       }
 
-      search.mockSearchWithGenerativeQuestionAnsweringId(data.streamId);
+      await search.mockSearchWithGenerativeQuestionAnsweringId(data.streamId);
       await search.fillSearchInput(exampleQuery);
       search.performSearch();
       await search.waitForSearchResponse();
@@ -174,7 +174,7 @@ export const testInsight =
           generatedAnswerObject.waitForGenerateRequest();
       }
 
-      search.mockSearchWithGenerativeQuestionAnsweringId(data.streamId);
+      await search.mockSearchWithGenerativeQuestionAnsweringId(data.streamId);
       await search.fillSearchInput(exampleQuery);
       search.performSearch();
       await search.waitForSearchResponse();
