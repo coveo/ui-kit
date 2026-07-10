@@ -10,6 +10,7 @@ import {
   cpSync,
   existsSync,
   mkdirSync,
+  readdirSync,
   readFileSync,
   rmSync,
   writeFileSync,
@@ -17,11 +18,12 @@ import {
 
 const OUT_DIR = 'publish';
 
-// Files that make up the runnable, scaffoldable app.
+// Files that make up the runnable, scaffoldable app. Every top-level `*.html`
+// entry point is shipped as well (multi-page samples have several), so this
+// list only names non-HTML paths.
 const SHIPPED_PATHS = [
   'src',
   'public',
-  'index.html',
   'vite.config.js',
   'tsconfig.json',
   'README.md',
@@ -49,6 +51,13 @@ for (const path of SHIPPED_PATHS) {
     recursive: true,
     filter: (source) => !isTestFile(source),
   });
+}
+
+// Ship every top-level HTML entry point (single- and multi-page samples).
+for (const entry of readdirSync('.', {withFileTypes: true})) {
+  if (entry.isFile() && entry.name.endsWith('.html')) {
+    cpSync(entry.name, `${OUT_DIR}/${entry.name}`);
+  }
 }
 
 const pkg = JSON.parse(readFileSync('package.json', 'utf8'));

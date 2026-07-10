@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="stylesheet" href="/src/style.css" />
+    <title>Atomic Commerce Sample — Home</title>
+  </head>
+  <body>
+    <header class="app-header">
+      <div class="brand">
+        <img src="/coveo-logo.svg" alt="Coveo" width="119" height="30" />
+        <h1>Atomic Commerce + Vite</h1>
+      </div>
+      <nav class="app-nav">
+        <a href="/index.html" aria-current="page">Home</a>
+        <a href="/search.html">Search</a>
+        <a href="/listing-surf-accessories.html">Surf Accessories</a>
+        <a href="/listing-toys.html">Toys</a>
+      </nav>
+    </header>
+
+    <main class="home">
+      <!-- Standalone search box: submitting a query redirects to the search page. -->
+      <section class="home-hero">
+        <atomic-commerce-interface type="search">
+          <atomic-layout-section section="search">
+            <atomic-commerce-search-box redirection-url="/search.html">
+              <atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>
+              <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
+            </atomic-commerce-search-box>
+          </atomic-layout-section>
+        </atomic-commerce-interface>
+      </section>
+
+      <section class="home-recs">
+        <atomic-commerce-recommendation-interface>
+          <atomic-commerce-recommendation-list
+            slot-id="af4fb7ba-6641-4b67-9cf9-be67e9f30174"
+            products-per-page="4"
+          >
+            <atomic-product-template>
+              <template>
+                <atomic-product-section-visual>
+                  <atomic-product-field-condition if-defined="ec_thumbnails">
+                    <atomic-product-image
+                      field="ec_thumbnails"
+                    ></atomic-product-image>
+                  </atomic-product-field-condition>
+                </atomic-product-section-visual>
+                <atomic-product-section-name>
+                  <atomic-product-link></atomic-product-link>
+                </atomic-product-section-name>
+                <atomic-product-section-emphasized>
+                  <atomic-product-price currency="USD"></atomic-product-price>
+                </atomic-product-section-emphasized>
+              </template>
+            </atomic-product-template>
+          </atomic-commerce-recommendation-list>
+
+          <atomic-commerce-recommendation-list
+            slot-id="d73afbd2-8521-4ee6-a9b8-31f064721e73"
+            products-per-page="4"
+          >
+            <atomic-product-template>
+              <template>
+                <atomic-product-section-visual>
+                  <atomic-product-field-condition if-defined="ec_thumbnails">
+                    <atomic-product-image
+                      field="ec_thumbnails"
+                    ></atomic-product-image>
+                  </atomic-product-field-condition>
+                </atomic-product-section-visual>
+                <atomic-product-section-name>
+                  <atomic-product-link></atomic-product-link>
+                </atomic-product-section-name>
+                <atomic-product-section-emphasized>
+                  <atomic-product-price currency="USD"></atomic-product-price>
+                </atomic-product-section-emphasized>
+              </template>
+            </atomic-product-template>
+          </atomic-commerce-recommendation-list>
+        </atomic-commerce-recommendation-interface>
+      </section>
+    </main>
+
+    <script type="module" src="/src/home-page.js"></script>
+  </body>
+</html>
