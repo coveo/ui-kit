@@ -17,17 +17,20 @@ import {
   getSampleCommerceEngineConfiguration,
 } from '@coveo/headless-react/ssr-commerce';
 
+const sampleCommerceEngineConfiguration =
+  getSampleCommerceEngineConfiguration();
+
 export default {
   // By default, the logger level is set to 'warn'. To get more detailed error
   // messages while debugging, set it to a more verbose level such as 'debug'.
   // loggerOptions: {level: 'debug'},
   configuration: {
-    ...getSampleCommerceEngineConfiguration(),
+    ...sampleCommerceEngineConfiguration,
     // Used internally in https://github.com/coveo/ui-kit for testing purposes, not needed in your own implementation.
     // When NEXT_PUBLIC_MOCK_API_URL is set (e.g. during e2e tests), route all API calls
     // through the local @mswjs/http-middleware mock server.
     ...(process.env.NEXT_PUBLIC_MOCK_API_URL && {
-      proxyBaseUrl: `${process.env.NEXT_PUBLIC_MOCK_API_URL}/rest/organizations/${getSampleCommerceEngineConfiguration().organizationId}/commerce/v2`,
+      proxyBaseUrl: `${process.env.NEXT_PUBLIC_MOCK_API_URL}/rest/organizations/${sampleCommerceEngineConfiguration.organizationId}/commerce/v2`,
     }),
   },
   controllers: {

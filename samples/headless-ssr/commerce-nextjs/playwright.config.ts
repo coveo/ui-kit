@@ -1,6 +1,7 @@
 import {defineConfig, devices} from '@playwright/test';
 
-const MOCK_API_URL = 'http://localhost:9090';
+const MOCK_API_PORT = process.env.MOCK_API_PORT ?? '9090';
+const MOCK_API_URL = `http://localhost:${MOCK_API_PORT}`;
 
 export default defineConfig({
   testDir: './e2e',
@@ -29,12 +30,13 @@ export default defineConfig({
       url: `${MOCK_API_URL}/health`,
       reuseExistingServer: !process.env.CI,
       timeout: 30 * 1000,
+      env: {MOCK_API_PORT},
     },
     {
       // Run the production build so tests exercise the same output users ship.
       command: 'pnpm start',
       url: 'http://localhost:3000',
-      reuseExistingServer: !process.env.CI,
+      reuseExistingServer: false,
       timeout: 120 * 1000,
       env: {NEXT_PUBLIC_MOCK_API_URL: MOCK_API_URL},
     },
