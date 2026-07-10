@@ -323,9 +323,17 @@ export class AtomicGeneratedAnswer
       getBindings: () => this.bindings,
     });
 
+    this.searchStatus = buildSearchStatus(this.bindings.engine);
+    this.tabManager = buildTabManager(this.bindings.engine);
+
     this.generatedAnswer = buildGeneratedAnswer(this.bindings.engine, {
       initialState: {
         isVisible: this.controller.data.isVisible,
+        isEnabled: shouldDisplayOnCurrentTab(
+          this.tabsIncluded,
+          this.tabsExcluded,
+          this.tabManager.state.activeTab
+        ),
         responseFormat: {
           contentFormat: ['text/markdown', 'text/plain'],
         },
@@ -338,8 +346,6 @@ export class AtomicGeneratedAnswer
       }),
       fieldsToIncludeInCitations: this.getCitationFields(),
     });
-    this.searchStatus = buildSearchStatus(this.bindings.engine);
-    this.tabManager = buildTabManager(this.bindings.engine);
 
     this.controller.insertFeedbackModal();
 

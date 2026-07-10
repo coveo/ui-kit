@@ -1,4 +1,4 @@
-import {expect, test} from '@playwright/test';
+import {test, expect} from './fixtures.js';
 
 test.describe('Home Page', () => {
   test('should load and display the search box', async ({page}) => {
@@ -24,7 +24,7 @@ test.describe('Home Page', () => {
     const searchBox = page.getByLabel('Enter query');
     await searchBox.press('Enter');
 
-    const facetsSection = page.getByLabel('Brand');
+    const facetsSection = page.getByRole('group', {name: 'Brand'});
     await expect(facetsSection).toBeVisible();
   });
 });

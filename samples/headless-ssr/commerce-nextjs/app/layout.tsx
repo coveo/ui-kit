@@ -1,23 +1,22 @@
-import Link from 'next/link';
+import type {ReactNode} from 'react';
+import Header from '@/components/header';
+import './globals.css';
 
 export const metadata = {
-  title: 'Headless SSR examples',
-  description: 'Examples of using @coveo/headless-react/ssr-commerce',
+  title: 'Coveo Headless Commerce SSR (Next.js)',
+  description:
+    'Commerce server-side rendering with @coveo/headless-react/ssr-commerce and the Next.js App Router',
+  icons: {icon: '/favicon.svg'},
 };
 
-export default function RootLayout({children}: {children: React.ReactNode}) {
+export default function RootLayout({children}: {children: ReactNode}) {
   return (
     <html lang="en">
       <body>
-        <h1>Coveo Headless Commerce Next.js</h1>
-        <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
-          <Link href={'/search'}>Search</Link>
-          <Link href={'/surf-accessories'}>Surf Accessories</Link>
-          <Link href={'/paddleboards'}>Paddleboards</Link>
-          <Link href={'/toys'}>Toys</Link>
-          <Link href={'/cart'}>Cart</Link>
+        <div className="Layout">
+          <Header />
+          <main className="Page">{children}</main>
         </div>
-        {children}
       </body>
     </html>
   );

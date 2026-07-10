@@ -1,6 +1,7 @@
 {
   "name": "@coveo/bueno",
   "version": "1.1.9",
+  "description": "A simple validator",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",

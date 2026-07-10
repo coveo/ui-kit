@@ -1,13 +1,13 @@
 {
-  "name": "@samples/headless-ssr-commerce-nextjs",
-  "version": "0.0.0",
+  "name": "@coveo/ui-kit-sample-headless-ssr-commerce-nextjs",
+  "version": "0.1.0",
   "private": true,
-  "description": "Examples of @coveo/headless-react/ssr-commerce utils using Next.js app router",
+  "description": "Commerce server-side rendering (SSR) with @coveo/headless-react/ssr-commerce and the Next.js App Router",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "prod": "next start",
-    "lint": "next lint"
+    "start": "next start",
+    "e2e": "playwright test"
   },
   "dependencies": {
     "@coveo/headless-react": "workspace:*",
@@ -16,10 +16,14 @@
     "react-dom": "catalog:"
   },
   "devDependencies": {
+    "@coveo/platform-mock-api": "workspace:*",
+    "@msw/playwright": "catalog:",
     "@playwright/test": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
+    "msw": "catalog:",
+    "tsx": "4.22.4",
     "typescript": "catalog:"
   }
 }

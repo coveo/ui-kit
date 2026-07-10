@@ -4,7 +4,11 @@ import {delay, HttpResponse} from 'msw';
 const THREAD_ID = 'thread-1';
 const RUN_ID = 'run-1';
 const CONVERSATION_TOKEN = 'conv-token-1';
-let responseSequence = 0;
+
+const HEAD_ANSWER_ID = `${RUN_ID}-head`;
+
+const getFollowUpAnswerId = (followUpAnswerIndex: number) =>
+  `${RUN_ID}-follow-up-${followUpAnswerIndex}`;
 
 interface AgentEvent {
   type: EventType;
@@ -19,6 +23,8 @@ interface AgentEvent {
   stepName?: string;
   messageId?: string;
   delta?: string;
+  message?: string;
+  code?: string;
   delayMs?: number; // Internal property for mock delays, stripped before sending
 }
 
@@ -31,6 +37,8 @@ const buildMessage = (
     messageId,
     delta,
     result,
+    message,
+    code,
   }: Omit<AgentEvent, 'threadId' | 'runId' | 'timestamp' | 'delayMs'>,
   delayMs?: number
 ): AgentEvent => {
@@ -45,6 +53,8 @@ const buildMessage = (
     ...(stepName !== undefined && {stepName}),
     ...(messageId !== undefined && {messageId}),
     ...(delta !== undefined && {delta}),
+    ...(message !== undefined && {message}),
+    ...(code !== undefined && {code}),
     ...(delayMs !== undefined && {delayMs}),
   };
 };
@@ -189,33 +199,29 @@ const headAnswerMessages = agentMessages.filter(
     )
 );
 
-const cloneMessagesForResponse = (messages: AgentEvent[]) => {
-  responseSequence += 1;
-
-  const runId = `${RUN_ID}-${responseSequence}`;
-
+const cloneMessagesForResponse = (messages: AgentEvent[], answerId: string) => {
   return messages.map((message) => ({
     ...message,
-    ...(message.runId && {runId}),
+    ...(message.runId && {runId: answerId}),
   }));
 };
 
-const buildAnsweringStreamingResponse = (
-  {
-    messages = agentMessages,
-    delayBetweenMessages = 'real',
-  }: {
-    messages?: AgentEvent[];
-    delayBetweenMessages?: number | 'real' | 'infinite';
-  } = {messages: agentMessages, delayBetweenMessages: 'real'}
-) => {
+const buildAnsweringStreamingResponse = ({
+  messages = agentMessages,
+  delayBetweenMessages = 'real',
+  answerId,
+}: {
+  messages?: AgentEvent[];
+  delayBetweenMessages?: number | 'real' | 'infinite';
+  answerId: string;
+}) => {
   const defaultDelay =
     delayBetweenMessages === 'real'
       ? 100
       : delayBetweenMessages === 'infinite'
         ? Number.POSITIVE_INFINITY
         : delayBetweenMessages;
-  const responseMessages = cloneMessagesForResponse(messages);
+  const responseMessages = cloneMessagesForResponse(messages, answerId);
 
   const stream = new ReadableStream({
     async start(controller) {
@@ -241,12 +247,53 @@ const buildAnsweringStreamingResponse = (
   });
 };
 
-const followUpAnswerResponse = () =>
-  buildAnsweringStreamingResponse({delayBetweenMessages: 'real'});
+const followUpAnswerResponse = (followUpAnswerIndex: number) =>
+  buildAnsweringStreamingResponse({
+    delayBetweenMessages: 'real',
+    answerId: getFollowUpAnswerId(followUpAnswerIndex),
+  });
 const headAnswerResponse = () =>
   buildAnsweringStreamingResponse({
     messages: headAnswerMessages,
     delayBetweenMessages: 'real',
+    answerId: HEAD_ANSWER_ID,
   });
 
-export {headAnswerResponse, followUpAnswerResponse};
+const followUpNetworkErrorResponse = () =>
+  new HttpResponse(null, {status: 500});
+
+const followUpTurnLimitErrorResponse = () =>
+  buildAnsweringStreamingResponse({
+    messages: [
+      buildMessage({type: EventType.RUN_STARTED}),
+      buildMessage({
+        type: EventType.RUN_ERROR,
+        message: 'The conversation turn limit has been reached.',
+        code: 'KNOWLEDGE:SSE_TURN_LIMIT_REACHED',
+      }),
+    ],
+    answerId: 'error',
+  });
+
+const followUpGenericErrorResponse = () =>
+  buildAnsweringStreamingResponse({
+    messages: [
+      buildMessage({type: EventType.RUN_STARTED}),
+      buildMessage({
+        type: EventType.RUN_ERROR,
+        message: 'An unexpected error occurred.',
+        code: 'KNOWLEDGE:SSE_INTERNAL_ERROR',
+      }),
+    ],
+    answerId: 'error',
+  });
+
+export {
+  headAnswerResponse,
+  followUpAnswerResponse,
+  followUpNetworkErrorResponse,
+  followUpTurnLimitErrorResponse,
+  followUpGenericErrorResponse,
+  HEAD_ANSWER_ID,
+  getFollowUpAnswerId,
+};

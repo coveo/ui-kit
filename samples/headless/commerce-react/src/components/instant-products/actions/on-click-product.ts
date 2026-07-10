@@ -1,16 +1,6 @@
 import type {InstantProducts, Product} from '@coveo/headless/commerce';
 
-export function onClickProduct(
-  product: Product,
-  controller: InstantProducts,
-  navigate: (pathName: string) => void
-) {
+export function onClickProduct(product: Product, controller: InstantProducts) {
   controller.interactiveProduct({options: {product}}).select();
-
-  const productId = product.ec_product_id ?? product.permanentid;
-  const productName = encodeURIComponent(
-    product.ec_name ?? product.permanentid
-  );
-  const productPrice = product.ec_promo_price ?? product.ec_price ?? NaN;
-  navigate(`/product/${productId}/${productName}/${productPrice}`);
+  window.open(product.clickUri, '_blank', 'noopener,noreferrer');
 }

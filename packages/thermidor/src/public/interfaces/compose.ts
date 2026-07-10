@@ -1,21 +1,26 @@
 import {
   getInterfaceInternals,
   type BaseInterface,
-} from '@/src/core/interface/base-interface.js';
-import {InterfaceCacheRegistry} from '@/src/core/interface/cache/interface-cache-registry.js';
-import type {FullEngine} from '@/src/core/interface/engine/engine.js';
+} from '@/src/internal/utils/index.js';
+import {InterfaceCacheRegistry} from '@/src/internal/utils/index.js';
+import type {FullEngine} from '@/src/internal/engine/index.js';
 import type {
   EndpointThunk,
   Facades,
   InterfaceHandle,
   InterfaceType,
-} from '@/src/core/interface/utils/interface-types.js';
-import {generateId} from '@/src/core/interface/utils/id-generator.js';
+  SupportsBrand,
+} from '@/src/internal/utils/index.js';
+import {generateId} from '@/src/internal/utils/index.js';
 
 export interface ComposedInternals {
   engine: FullEngine;
   stateId: string;
   cacheRegistry: InterfaceCacheRegistry;
+  resolveFacades(
+    facade: Facades[InterfaceType],
+    composedInterface?: InterfaceHandle
+  ): EndpointThunk[];
 }
 
 export let getComposedInternals: <T extends InterfaceType>(
@@ -23,6 +28,8 @@ export let getComposedInternals: <T extends InterfaceType>(
 ) => ComposedInternals;
 
 export class ComposedInterface<T extends InterfaceType> {
+  declare readonly [SupportsBrand]: {[K in Facades[T]]: true};
+
   get disposed(): boolean {
     return this.#disposed;
   }
@@ -38,6 +45,8 @@ export class ComposedInterface<T extends InterfaceType> {
       engine: composed.#engine,
       stateId: composed.#stateId,
       cacheRegistry: composed.#cacheRegistry,
+      resolveFacades: (facade: any, composedInterface?: InterfaceHandle) =>
+        composed.#resolveFacades(facade, composedInterface),
     }));
   }
 
@@ -54,17 +63,6 @@ export class ComposedInterface<T extends InterfaceType> {
     engine.addInterface(this);
   }
 
-  resolveFacades(
-    facade: Facades[T],
-    composedInterface?: InterfaceHandle
-  ): EndpointThunk[] {
-    this.#assertNotDisposed();
-    const target = composedInterface ?? this;
-    return this.#interfaces.flatMap((sub) =>
-      sub.resolveFacades(facade, target)
-    );
-  }
-
   dispose(): void {
     if (this.#disposed) {
       return;
@@ -72,6 +70,18 @@ export class ComposedInterface<T extends InterfaceType> {
     this.#disposed = true;
     this.#cacheRegistry.dispose();
     this.#engine.removeInterface(this);
+  }
+
+  #resolveFacades(
+    facade: Facades[T],
+    composedInterface?: InterfaceHandle
+  ): EndpointThunk[] {
+    this.#assertNotDisposed();
+    const target = composedInterface ?? this;
+    return this.#interfaces.flatMap((sub) => {
+      const {resolveFacades} = getInterfaceInternals(sub);
+      return resolveFacades(facade, target);
+    });
   }
 
   #assertNotDisposed(): void {
@@ -94,11 +104,6 @@ export function composeInterfaces<T extends InterfaceType>(options: {
     const internals = getInterfaceInternals(iface);
     if (internals.engine !== first.engine) {
       throw new Error('All interfaces must share the same engine.');
-    }
-    if (internals.type !== first.type) {
-      throw new Error(
-        `All interfaces must share the same type. Expected '${first.type}', got '${internals.type}'.`
-      );
     }
   }
 
