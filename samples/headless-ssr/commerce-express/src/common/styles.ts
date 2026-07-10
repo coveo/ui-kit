@@ -260,7 +260,7 @@ export function getSharedStyles(): string {
     .RegularFacet, .NumericFacet, .CategoryFacet, .DateFacet {
       border: none;
       border-bottom: 1px solid var(--border);
-      margin: 0;
+      margin: 15px 0 0 0;
       padding: 20px 0 8px;
       min-inline-size: 0;
     }
@@ -274,7 +274,7 @@ export function getSharedStyles(): string {
       gap: 8px;
       width: 100%;
       padding: 0;
-      margin-bottom: 12px;
+      margin-bottom: 0;
     }
 
     .FacetDisplayName {
