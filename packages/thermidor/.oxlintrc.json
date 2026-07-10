@@ -2,7 +2,7 @@
   "extends": ["../../.oxlintrc.json"],
   "overrides": [
     {
-      "files": ["src/public/**"],
+      "files": ["src/index.ts", "src/public/**"],
       "rules": {
         "no-restricted-imports": [
           "error",
@@ -10,15 +10,15 @@
             "patterns": [
               {
                 "group": [
+                  "@ag-ui/core",
+                  "@ag-ui/core/*",
                   "@reduxjs/toolkit",
                   "@reduxjs/toolkit/*",
                   "immer",
                   "redux-thunk",
-                  "reselect",
-                  "@ag-ui/core",
-                  "@ag-ui/core/*"
+                  "reselect"
                 ],
-                "message": "Public layer must not depend on Redux, Immer, AG-UI, or related ecosystem packages directly."
+                "message": "Public surface must not depend on Redux, Immer, AG-UI, or related ecosystem packages directly."
               },
               {
                 "group": [
