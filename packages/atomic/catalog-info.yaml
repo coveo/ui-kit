@@ -12,7 +12,5 @@ spec:
   owner: group:default/dxui
   system: ui-kit
   dependsOn:
-    - bueno
-    - headless
-  dependencyOf:
-    - atomic-react
+    - component:bueno
+    - component:headless

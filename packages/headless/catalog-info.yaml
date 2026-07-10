@@ -12,11 +12,4 @@ spec:
   owner: group:default/dxui
   system: ui-kit
   dependsOn:
-    - bueno
-  dependencyOf:
-    - atomic
-    - atomic-hosted-page
-    - atomic-react
-    - headless-react
-    - quantic
-    - shopify
+    - component:bueno

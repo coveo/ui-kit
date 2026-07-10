@@ -108,7 +108,7 @@ function toYaml(doc) {
  * Generates a catalog-info.yaml for a single package.
  * @param {object} manifest - parsed package.json
  * @param {Record<string, string>} config - parsed catalog-info.config.yaml
- * @param {{dependsOn: string[], dependencyOf: string[]}} relations
+ * @param {{dependsOn: string[]}} relations
  * @returns {string}
  */
 function generateComponentYaml(manifest, config, relations) {
@@ -136,10 +136,6 @@ function generateComponentYaml(manifest, config, relations) {
   if (relations.dependsOn.length) {
     doc.spec.dependsOn = [...relations.dependsOn].sort();
   }
-  if (relations.dependencyOf.length) {
-    doc.spec.dependencyOf = [...relations.dependencyOf].sort();
-  }
-
   return toYaml(doc);
 }
 
@@ -213,7 +209,7 @@ function getWorkspaceDependsOn(manifest, catalogComponents) {
     if (version.startsWith('workspace:')) {
       const componentName = getComponentName(name);
       if (catalogComponents.has(componentName)) {
-        result.push(componentName);
+        result.push(`component:${componentName}`);
       }
     }
   }
@@ -247,21 +243,12 @@ function main() {
   );
 
   /** @type {Map<string, string[]>} */
-  const dependencyOfMap = new Map();
-  /** @type {Map<string, string[]>} */
   const dependsOnMap = new Map();
 
   for (const [, {manifest}] of catalogPackages) {
     const componentName = getComponentName(manifest.name);
     const dependsOn = getWorkspaceDependsOn(manifest, catalogComponents);
     dependsOnMap.set(componentName, dependsOn);
-
-    for (const dep of dependsOn) {
-      if (!dependencyOfMap.has(dep)) {
-        dependencyOfMap.set(dep, []);
-      }
-      dependencyOfMap.get(dep).push(componentName);
-    }
   }
 
   const targets = ['./catalog-info.ui-kit.yaml'];
@@ -271,7 +258,6 @@ function main() {
     const componentName = getComponentName(manifest.name);
     const relations = {
       dependsOn: dependsOnMap.get(componentName) || [],
-      dependencyOf: dependencyOfMap.get(componentName) || [],
     };
 
     const yaml = generateComponentYaml(manifest, config, relations);
