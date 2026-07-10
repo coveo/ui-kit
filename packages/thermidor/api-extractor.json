@@ -3,7 +3,7 @@
 
   "mainEntryPointFilePath": "./dist/index.d.ts",
 
-  "bundledPackages": ["@reduxjs/toolkit"],
+  "bundledPackages": [],
 
   "compiler": {
     "tsconfigFilePath": "./tsconfig.api-extractor.json"
