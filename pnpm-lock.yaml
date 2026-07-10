@@ -1339,9 +1339,9 @@ importers:
       '@coveo/platform-mock-api':
         specifier: workspace:*
         version: link:../../../packages/platform-mock-api
-      '@msw/playwright':
-        specifier: 'catalog:'
-        version: 0.6.7(msw@2.14.6(@types/node@24.12.4)(typescript@6.0.3))
+      '@mswjs/http-middleware':
+        specifier: ^0.10.3
+        version: 0.10.3(msw@2.14.6(@types/node@24.12.4)(typescript@6.0.3))
       '@playwright/test':
         specifier: 'catalog:'
         version: 1.60.0
@@ -1354,12 +1354,12 @@ importers:
       '@types/react-dom':
         specifier: 'catalog:'
         version: 19.2.3(@types/react@19.2.17)
+      express:
+        specifier: ^5.0.0
+        version: 5.2.1
       msw:
         specifier: 'catalog:'
         version: 2.14.6(@types/node@24.12.4)(typescript@6.0.3)
-      tsx:
-        specifier: 4.22.4
-        version: 4.22.4
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -4660,6 +4660,12 @@ packages:
     engines: {node: '>=20.0.0'}
     peerDependencies:
       msw: ^2.12.10
+
+  '@mswjs/http-middleware@0.10.3':
+    resolution: {integrity: sha512-6CoX9IivDF7hggORdA4vX6uz+pkY1urGQMhmviHmYya/0b4EXwmhaXlGLQG3G29heqb3qdjp61V0+E2xRtyR5A==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      msw: '>=2.0.0'
 
   '@mswjs/interceptors@0.41.9':
     resolution: {integrity: sha512-VVPPgHyQ6ShqnrmDWuxjmUIsO9gWyOZFmuOfLd9LfBGQJwZfy0gvv9pbHSJuoFNIYC7ZDX9aoFwowjcdSC4E8w==}
@@ -19283,17 +19289,19 @@ snapshots:
   '@msgpackr-extract/msgpackr-extract-win32-x64@3.0.4':
     optional: true
 
-  '@msw/playwright@0.6.7(msw@2.14.6(@types/node@24.12.4)(typescript@6.0.3))':
-    dependencies:
-      '@mswjs/interceptors': 0.41.9
-      msw: 2.14.6(@types/node@24.12.4)(typescript@6.0.3)
-      outvariant: 1.4.3
-
   '@msw/playwright@0.6.7(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))':
     dependencies:
       '@mswjs/interceptors': 0.41.9
       msw: 2.14.6(@types/node@26.1.0)(typescript@6.0.3)
       outvariant: 1.4.3
+
+  '@mswjs/http-middleware@0.10.3(msw@2.14.6(@types/node@24.12.4)(typescript@6.0.3))':
+    dependencies:
+      express: 4.22.2
+      msw: 2.14.6(@types/node@24.12.4)(typescript@6.0.3)
+      strict-event-emitter: 0.5.1
+    transitivePeerDependencies:
+      - supports-color
 
   '@mswjs/interceptors@0.41.9':
     dependencies:
@@ -31041,6 +31049,7 @@ snapshots:
       esbuild: 0.28.1
     optionalDependencies:
       fsevents: 2.3.3
+    optional: true
 
   tsyringe@4.10.0:
     dependencies:
