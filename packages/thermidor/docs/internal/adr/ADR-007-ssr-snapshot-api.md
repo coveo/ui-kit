@@ -1,4 +1,4 @@
-# ADR-007: Per-Interface Snapshot API for Server-Side Rendering
+# ADR-007: Engine Snapshot API for Server-Side Rendering
 
 **Status**: `🟡 Proposed`  
 **Related docs**: [ADR-000](./ADR-000-architecture-decision-charter.md), [ADR-002](./ADR-002-multi-interface-engine.md), [ADR-003](./ADR-003-facade-request-response.md)  
@@ -8,29 +8,29 @@
 
 - **Business/context drivers**: SSR is a MUST (ADR-000). Modern frameworks (Next.js, Remix, Nuxt, SvelteKit) require server-side data fetching with client-side hydration without flash or double-fetch.
 - **Technical constraints**: State is scoped by interfaceId (`{interfaceId}/{feature}`). The engine already has `storeHydrationSnapshot` for generative sub-interfaces. Controllers are pure derivations — no server vs. client variants needed. Generative interfaces are excluded from SSR; only their routed sub-interfaces (search/commerce) are SSR-able.
-- **Known assumptions**: Consumers provide deterministic interface IDs for SSR (already supported via `id` on all `build*Interface`). `initialState` is not SSR-specific — it is the general-purpose mechanism for side-effect-free state seeding (e.g., URL restoration in SPAs). Non-adopted slices are safe no-ops in both directions (ADR-003).
+- **Known assumptions**: Consumers provide deterministic interface IDs for SSR (already supported via `id` on all `build*Interface`). `initialParameters` is not SSR-specific — it is the general-purpose mechanism for side-effect-free parameter seeding (e.g., URL restoration in SPAs). Non-adopted slices are safe no-ops in both directions (ADR-003).
 
 ## 2. Decision Statement
 
-Expose three primitives: (1) `initialState` on interface builders for side-effect-free state seeding before controllers exist, (2) `engine.getInterfaceSnapshot(interface)` to extract serializable per-interface state after request execution, and (3) `engine.restoreInterfaceSnapshot(snapshot)` to pre-load state on the client so controllers start hydrated. These are minimal, imperative, and framework-agnostic. Framework adapters may build declarative patterns on top.
+Expose three primitives: (1) `initialParameters` on interface builders for side-effect-free parameter seeding before controllers exist, (2) `getSSRSnapshot({ engine })` standalone function to extract a serializable engine-wide snapshot after request execution, and (3) `restoreSSRState({ engine, snapshot })` standalone function to pre-load state on the client so controllers start hydrated. Interfaces expose an `executeInitialRequest()` method to trigger the first backend call — it is type-aware (search vs. commerce), can only be called once (subsequent calls are no-ops), and eliminates the need to instantiate a controller solely to trigger a request on the server. The snapshot captures all interface state in one object; on the client, each interface self-hydrates by ID via the existing `adoptSlice` → `hydrateFromSnapshot` pipeline. These are minimal, imperative, and framework-agnostic. Framework adapters may build declarative patterns on top.
 
 ## 3. Requirements & Considerations Mapping
 
 - **Requirement**: Full use-case support
   - **Impact**: Positive
-  - **How satisfied**: Works for search, commerce, and composed interfaces. Per-interface snapshots. Routed sub-interfaces from generative turns are also supported.
+  - **How satisfied**: Works for search, commerce, and composed interfaces. A single snapshot captures all interfaces in the engine. Routed sub-interfaces from generative turns are also supported.
 
 - **Requirement**: Public API independence
   - **Impact**: Positive
-  - **How satisfied**: Snapshots are opaque (`Record<string, unknown>`). `initialState` uses domain vocabulary (query, page, facets). No Redux types, slice names, or action types exposed. Translation happens behind the anti-corruption layer.
+  - **How satisfied**: Snapshots are opaque (`Record<string, unknown>`). `initialParameters` uses domain vocabulary (query, page, facets). No Redux types, slice names, or action types exposed. Translation happens behind the anti-corruption layer.
 
 - **Requirement**: First-class SSR
   - **Impact**: Positive
-  - **How satisfied**: This is the SSR mechanism. `initialState` + explicit execution + snapshot extraction + snapshot restoration = complete server→client state transfer.
+  - **How satisfied**: This is the SSR mechanism. `initialParameters` + `executeInitialRequest()` + snapshot extraction + snapshot restoration = complete server→client state transfer.
 
 1. **Consideration**: Tree-shaking efficiency
-   - **Impact**: None
-   - **How addressed (or why deferred)**: Methods live on existing objects (engine, interface builders). No additional imports required.
+   - **Impact**: Positive
+   - **How addressed (or why deferred)**: `getSSRSnapshot` and `restoreSSRState` are standalone importable functions. Server-only code (`getSSRSnapshot`) is trivially eliminated from client bundles, and vice versa, without relying on bundlers to prove that a method on an imported class is never called.
 
 2. **Consideration**: Migration simplicity
    - **Impact**: Negative
@@ -38,27 +38,46 @@ Expose three primitives: (1) `initialState` on interface builders for side-effec
 
 3. **Consideration**: External contribution readiness
    - **Impact**: None
-   - **How addressed (or why deferred)**: Adding new features/slices requires adding a translation entry in the interface builder's `initialState` mapping. Snapshots automatically capture all slices scoped to the interfaceId.
+   - **How addressed (or why deferred)**: Adding new features/slices requires adding a translation entry in the interface builder's `initialParameters` mapping. Snapshots automatically capture all slices in the engine state.
 
 ## 4. Options Considered
 
-### Option A (Selected): Imperative snapshot primitives + `initialState` on builders
+### Option A (Selected): Standalone snapshot functions + `initialParameters` on builders
 
-- **Summary**: `initialState` seeds state at interface construction (side-effect-free). `getInterfaceSnapshot` extracts per-interface state. `restoreInterfaceSnapshot` pre-loads it on the client. Same `build*` calls on both server and client.
+- **Summary**: `initialParameters` seeds search/commerce parameters at interface construction (side-effect-free). `getSSRSnapshot({ engine })` extracts the full engine state as a single serializable snapshot. `restoreSSRState({ engine, snapshot })` pre-loads that state on the client; each interface then self-hydrates by ID when its slices are adopted. Same `build*` calls on both server and client.
 - **Pros**:
-  - Minimal API surface (two engine methods, one option per builder)
+  - Minimal API surface (two standalone functions, one option per builder)
   - Framework-agnostic — works in any server environment
   - No upfront controller definition map needed
-  - `initialState` doubles as general-purpose URL param restoration (not SSR-only)
+  - `initialParameters` doubles as general-purpose URL param restoration (not SSR-only)
   - Leverages existing `storeHydrationSnapshot` → `adoptSlice` auto-hydration pipeline
   - Non-adopted slices don't hydrate — enforces "load only what you use"
+  - Single snapshot object eliminates the multi-interface routing problem on the client: the consumer passes one blob, each interface self-serves by `id`
+  - Clean import separation: server imports `getSSRSnapshot`, client imports `restoreSSRState`
+  - Engine remains opaque (no public methods) — keeps the mental model simple
+  - Reversible: methods can be added to the engine later on top of these functions if desired; the reverse (removing methods) would be a breaking change
 - **Cons**:
   - Consumer must manually orchestrate server/client split
-  - Consumer must remember matching `id` on both sides
+  - Consumer must use matching `id` on both sides (same as any SSR approach)
 - **Risks**:
-  - Mismatched IDs between server and client (mitigated: snapshot carries `interfaceId`; `fromSnapshot` shorthand proposed below)
+  - Mismatched IDs between server and client (mitigated: same `id` option used on both sides, no new concept)
 
-### Option B: Engine definition pattern (like current headless)
+### Option B: Engine methods (per-interface)
+
+- **Summary**: `engine.getInterfaceSnapshot(interface)` extracts per-interface state. `engine.restoreInterfaceSnapshot(snapshot)` pre-loads it on the client. A `fromSnapshot` shorthand on builders eliminates ID matching.
+- **Pros**:
+  - Granular: extract/restore individual interfaces independently
+  - `fromSnapshot` eliminates ID-matching footgun
+  - Methods on the engine feel like a natural extension of its hydration role
+- **Cons**:
+  - Multi-interface pages require routing multiple snapshot objects to the correct builder call sites on the client — reusable components and dynamic layouts make this routing non-trivial
+  - Adds public methods to the currently opaque engine — cannot be removed without a breaking change
+  - No tree-shaking benefit: methods are always part of the engine class regardless of usage
+  - Bundlers must prove method is unused to eliminate SSR code from client bundles (unreliable)
+- **Risks**:
+  - Snapshot routing complexity in dynamic multi-interface pages
+
+### Option C: Engine definition pattern (like current headless)
 
 - **Summary**: A `defineSearchInterface` function declares controllers upfront, returns `fetchStaticState` / `hydrateStaticState`. Similar to current `@coveo/headless/ssr`.
 - **Pros**:
@@ -73,7 +92,7 @@ Expose three primitives: (1) `initialState` on interface builders for side-effec
 - **Risks**:
   - Over-engineering for thermidor's simpler architecture
 
-### Option C: Hybrid (core primitives + optional definition sugar in adapters)
+### Option D: Hybrid (core primitives + optional definition sugar in adapters)
 
 - **Summary**: Core exposes Option A. Framework adapters (e.g., `@coveo/thermidor-react`) optionally provide definition-style helpers on top.
 - **Pros**:
@@ -86,21 +105,29 @@ Expose three primitives: (1) `initialState` on interface builders for side-effec
 
 ## 5. Decision Rationale
 
-Option A provides the minimal set of primitives that satisfy SSR requirements without prescribing framework-specific patterns. The existing `storeHydrationSnapshot` → `adoptSlice` mechanism already handles hydration timing — making the implementation thin. `initialState` naturally solves URL param restoration in both SSR and SPA contexts with zero side effects, eliminating the need for workarounds like calling `setQuery` (which may trigger suggestions). Option B reintroduces complexity that thermidor's architecture was designed to avoid. Option C is compatible with Option A as an additive future layer — framework adapters can build it without core changes.
+Option A provides the minimal set of primitives that satisfy SSR requirements without prescribing framework-specific patterns. The existing `storeHydrationSnapshot` → `adoptSlice` mechanism already handles hydration timing — making the implementation thin.
+
+A single engine-wide snapshot eliminates the client-side routing problem that per-interface snapshots introduce. With per-interface snapshots (Option B), multi-interface pages require the consumer to explicitly route each snapshot object to the correct builder call — a burden that grows with dynamic layouts, reusable components, and pages with varying interface sets. A single snapshot sidesteps this entirely: the consumer restores one object, and each interface self-hydrates by its `id` through the existing `adoptSlice` pipeline.
+
+Standalone functions preserve the engine's opaque public API — currently, consumers create an engine, pass it to builders, and never call methods on it directly. This simplicity is worth preserving. Furthermore, standalone functions are a reversible choice: if demand arises, convenience methods can be added to the engine that delegate to these functions. The reverse (shipping methods first, then trying to remove them) would be a breaking change.
+
+The import-separation benefit is also concrete: `getSSRSnapshot` is server-only code and `restoreSSRState` is client-only code. Standalone functions make dead-code elimination trivial for any bundler, without relying on class method analysis.
+
+`initialParameters` naturally solves URL param restoration in both SSR and SPA contexts with zero side effects, eliminating the need for workarounds like calling `setQuery` (which may trigger suggestions). Option C reintroduces complexity that thermidor's architecture was designed to avoid. Option D is compatible with Option A as an additive future layer — framework adapters can build it without core changes.
 
 ## 6. Public API and Contract Impact
 
-- **Public API changes**: `initialState` option on `buildSearchInterface`, `buildCommerceInterface`, `composeInterfaces`. Two new engine methods. `InterfaceSnapshot` type. `deserializeSearchParameters` utility. `buildGenerativeInterface` explicitly excluded.
-- **Backward compatibility impact**: Additive only. No breaking changes.
+- **Public API changes**: `initialParameters` option on `buildSearchInterface`, `buildCommerceInterface`, `composeInterfaces`. `executeInitialRequest()` method on all interfaces (search, commerce, composed). Two new standalone functions (`getSSRSnapshot`, `restoreSSRState`). `SSRSnapshot` type. `deserializeSearchParameters` utility. `buildGenerativeInterface` explicitly excluded from `initialParameters` and `executeInitialRequest`.
+- **Backward compatibility impact**: Additive only. No breaking changes. Engine class unchanged.
 - **Deprecations required**: None.
-- **Type/contract stability notes**: `InterfaceSnapshot.state` is `Record<string, unknown>` (opaque). Internal structure may change; `version` field enables graceful handling.
+- **Type/contract stability notes**: `SSRSnapshot.state` is `Record<string, unknown>` (opaque). Internal structure may change; `version` field enables graceful handling.
 - **Non-leakage check (implementation details not exposed)**: Pass — no Redux types, slice names, or action types in the public contract.
 
 ## 7. Operational and Runtime Impact
 
-- **Performance impact**: Positive. The entire client-side hydration path is synchronous (`restoreInterfaceSnapshot` is a Map write, `adoptSlice` injects a reducer and dispatches synchronously). This eliminates the async TTI gap present in current headless SSR, where `hydrateStaticState()` must resolve before controllers become interactive. First paint is equivalent; time-to-interactive is improved. See [annex §12](./ADR-007-annex-ssr-implementation-details.md) for a detailed comparison.
+- **Performance impact**: Positive. The entire client-side hydration path is synchronous (`restoreSSRState({ engine, snapshot })` stores the snapshot in the engine's internal hydration map; each subsequent `adoptSlice` injects a reducer and dispatches `hydrateFromSnapshot` synchronously). This eliminates the async TTI gap present in current headless SSR, where `hydrateStaticState()` must resolve before controllers become interactive. First paint is equivalent; time-to-interactive is improved. See [annex §12](./ADR-007-annex-ssr-implementation-details.md) for a detailed comparison.
 - **Reliability impact**: Positive — deterministic hydration eliminates flash and double-fetch.
-- **Security/privacy impact**: Snapshots contain full interface state; consumers must not inadvertently expose sensitive data.
+- **Security/privacy impact**: Snapshots contain full engine state; consumers must not inadvertently expose sensitive data.
 - **SSR impact (if applicable)**: This is the SSR mechanism.
 - **Observability impact (logs/metrics/traces)**: None additional.
 
@@ -108,41 +135,50 @@ Option A provides the minimal set of primitives that satisfy SSR requirements wi
 
 - **Consumer migration impact**: Additive. Non-SSR consumers unaffected. SSR consumers adopt voluntarily.
 - **Rollout strategy (flagged, phased, big-bang)**: Ships with thermidor's initial release.
-- **Rollback strategy**: Methods can be removed without affecting non-SSR consumers.
+- **Rollback strategy**: Functions can be removed without affecting non-SSR consumers.
 - **Communication plan**: SSR guide with framework-specific examples (Next.js App Router, Remix loader, SvelteKit load, Nuxt useAsyncData).
 
 ## Appendix: Minimal DX Example
 
 ```ts
 // Server
-const params = deserializeSearchParameters(url.searchParams);
+import { Engine, buildSearchInterface, getSSRSnapshot, deserializeSearchParameters } from '@coveo/thermidor';
+
+const params = deserializeSearchParameters({ searchParams: url.searchParams });
 const engine = new Engine({ configuration: { organizationId: '...', accessToken: '...' } });
-const searchInterface = buildSearchInterface({ engine, id: 'main-search', initialState: params });
-const searchBox = buildSearchBoxController({ interface: searchInterface });
-await searchBox.submit();
-const snapshot = engine.getInterfaceSnapshot(searchInterface);
+const searchInterface = buildSearchInterface({ engine, id: 'main-search', initialParameters: params });
+await searchInterface.executeInitialRequest();
+const snapshot = getSSRSnapshot({ engine });
 engine.dispose();
 
 // Client
+import { Engine, buildSearchInterface, buildSearchBoxController, restoreSSRState } from '@coveo/thermidor';
+
 const engine = new Engine({ configuration: { organizationId: '...', accessToken: '...' } });
-engine.restoreInterfaceSnapshot(snapshot);
+restoreSSRState({ engine, snapshot });
 const searchInterface = buildSearchInterface({ engine, id: 'main-search' });
 const searchBox = buildSearchBoxController({ interface: searchInterface });
 // searchBox.state already reflects server state — no flash, no re-fetch.
 ```
 
-## Appendix: `fromSnapshot` Shorthand (Proposed)
+## Appendix: Multi-Interface Example
 
-To eliminate the ID-matching risk, interface builders could accept a `fromSnapshot` option that restores the snapshot and extracts the ID in one step:
+With a single engine snapshot, multi-interface pages require no snapshot routing on the client:
 
 ```ts
-// Instead of:
-engine.restoreInterfaceSnapshot(snapshot);
-const searchInterface = buildSearchInterface({ engine, id: snapshot.interfaceId });
+// Server
+const engine = new Engine({ configuration: { organizationId: '...', accessToken: '...' } });
+const search = buildSearchInterface({ engine, id: 'main-search', initialParameters: searchParams });
+const plp = buildCommerceInterface({ engine, id: 'sidebar-recs', initialParameters: recsParams });
+await search.executeInitialRequest();
+await plp.executeInitialRequest();
+const snapshot = getSSRSnapshot({ engine }); // captures all interfaces
+engine.dispose();
 
-// Consumer writes:
-const searchInterface = buildSearchInterface({ engine, fromSnapshot: snapshot });
-// Internally: restores snapshot + uses snapshot.interfaceId as the interface ID
+// Client — one restore, every interface self-hydrates by ID
+const engine = new Engine({ configuration: { organizationId: '...', accessToken: '...' } });
+restoreSSRState({ engine, snapshot });
+const search = buildSearchInterface({ engine, id: 'main-search' });
+const plp = buildCommerceInterface({ engine, id: 'sidebar-recs' });
+// Both interfaces are hydrated. No routing logic needed.
 ```
-
-The snapshot becomes the single source of truth on the client — no manual ID wiring, no mismatch possible. The explicit `id` + `restoreInterfaceSnapshot` path remains available for advanced cases (e.g., restoring multiple snapshots before building interfaces).
