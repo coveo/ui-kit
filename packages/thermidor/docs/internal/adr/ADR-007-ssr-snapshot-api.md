@@ -22,7 +22,7 @@ Expose three primitives: (1) `initialParameters` on interface builders for side-
 
 - **Requirement**: Public API independence
   - **Impact**: Positive
-  - **How satisfied**: Snapshots are opaque (`Record<string, unknown>`). `initialParameters` uses domain vocabulary (query, page, facets). No Redux types, slice names, or action types exposed. Translation happens behind the anti-corruption layer.
+  - **How satisfied**: Snapshots are opaque strings — no internal structure exposed. `initialParameters` uses domain vocabulary (query, page, facets). No Redux types, slice names, or action types exposed. Translation happens behind the anti-corruption layer.
 
 - **Requirement**: First-class SSR
   - **Impact**: Positive
@@ -117,15 +117,15 @@ The import-separation benefit is also concrete: `getSSRSnapshot` is server-only 
 
 ## 6. Public API and Contract Impact
 
-- **Public API changes**: `initialParameters` option on `buildSearchInterface`, `buildCommerceInterface`, `composeInterfaces`. `executeInitialRequest()` method on all interfaces (search, commerce, composed). Two new standalone functions (`getSSRSnapshot`, `restoreSSRState`). `SSRSnapshot` type. `deserializeSearchParameters` utility. `buildGenerativeInterface` explicitly excluded from `initialParameters` and `executeInitialRequest`.
+- **Public API changes**: `initialParameters` option on `buildSearchInterface`, `buildCommerceInterface`, `composeInterfaces`. `executeInitialRequest()` method on all interfaces (search, commerce, composed). Two new standalone functions (`getSSRSnapshot`, `restoreSSRState`). `SSRSnapshot` opaque type (branded string). `deserializeSearchParameters` utility. `buildGenerativeInterface` explicitly excluded from `initialParameters` and `executeInitialRequest`.
 - **Backward compatibility impact**: Additive only. No breaking changes. Engine class unchanged.
 - **Deprecations required**: None.
-- **Type/contract stability notes**: `SSRSnapshot.state` is `Record<string, unknown>` (opaque). Internal structure may change; `version` field enables graceful handling.
+- **Type/contract stability notes**: `SSRSnapshot` is an opaque branded string. Internal encoding may change between versions; consumers must not inspect, parse, or depend on its format.
 - **Non-leakage check (implementation details not exposed)**: Pass — no Redux types, slice names, or action types in the public contract.
 
 ## 7. Operational and Runtime Impact
 
-- **Performance impact**: Positive. The entire client-side hydration path is synchronous (`restoreSSRState({ engine, snapshot })` stores the snapshot in the engine's internal hydration map; each subsequent `adoptSlice` injects a reducer and dispatches `hydrateFromSnapshot` synchronously). This eliminates the async TTI gap present in current headless SSR, where `hydrateStaticState()` must resolve before controllers become interactive. First paint is equivalent; time-to-interactive is improved. See [annex §12](./ADR-007-annex-ssr-implementation-details.md) for a detailed comparison.
+- **Performance impact**: Positive. The entire client-side hydration path is synchronous (`restoreSSRState({ engine, snapshot })` decodes the snapshot and stores per-interface hydration entries; each subsequent `adoptSlice` injects a reducer and dispatches `hydrateFromSnapshot` synchronously). This eliminates the async TTI gap present in current headless SSR, where `hydrateStaticState()` must resolve before controllers become interactive. First paint is equivalent; time-to-interactive is improved. See [annex §12](./ADR-007-annex-ssr-implementation-details.md) for a detailed comparison.
 - **Reliability impact**: Positive — deterministic hydration eliminates flash and double-fetch.
 - **Security/privacy impact**: Snapshots contain full engine state; consumers must not inadvertently expose sensitive data.
 - **SSR impact (if applicable)**: This is the SSR mechanism.

@@ -23,10 +23,11 @@ export interface CommerceInterfaceInitialParameters {
   sort?: string;
 }
 
-export interface SSRSnapshot {
-  readonly state: Record<string, unknown>;
-  readonly version: number;
-}
+/**
+ * Opaque serialized snapshot of the engine state.
+ * Do not inspect, modify, or depend on its internal format.
+ */
+export type SSRSnapshot = string & { readonly __brand: 'SSRSnapshot' };
 ```
 
 ## 2. Interface Builder Options
@@ -116,11 +117,12 @@ export function getSSRSnapshot({ engine }: { engine: Engine }): SSRSnapshot {
   const fullEngine = getFullEngine(engine);
   const fullState = fullEngine.read((state) => state);
 
-  return { state: fullState, version: 1 };
+  const payload = JSON.stringify({ v: 1, state: fullState });
+  return btoa(payload) as SSRSnapshot;
 }
 ```
 
-The snapshot captures the entire engine state. On the client, each interface's slices self-hydrate by matching their `{interfaceId}/` prefix when adopted.
+The snapshot is an opaque string encoding the entire engine state. The internal format (version tag, encoding, potential future compression) is an implementation detail — consumers pass it through without inspection.
 
 ### `restoreSSRState`
 
@@ -129,11 +131,12 @@ import { getFullEngine } from '@/src/core/interface/engine/engine.js';
 
 export function restoreSSRState({ engine, snapshot }: { engine: Engine; snapshot: SSRSnapshot }): void {
   const fullEngine = getFullEngine(engine);
+  const { state } = JSON.parse(atob(snapshot));
 
-  // Extract all interface IDs from the state keys and store per-interface hydration snapshots
+  // Distribute state by interface ID into per-interface hydration snapshots
   const byInterface = new Map<string, Record<string, unknown>>();
 
-  for (const [key, value] of Object.entries(snapshot.state)) {
+  for (const [key, value] of Object.entries(state)) {
     const separatorIndex = key.lastIndexOf('/');
     if (separatorIndex > 0) {
       const interfaceId = key.substring(0, separatorIndex);
@@ -150,7 +153,7 @@ export function restoreSSRState({ engine, snapshot }: { engine: Engine; snapshot
 }
 ```
 
-This distributes the engine-wide snapshot into per-interface hydration entries internally. Each subsequent `adoptSlice` call (triggered by `buildSearchInterface` or controller construction) will find its matching hydration data and self-hydrate.
+This decodes the opaque snapshot, distributes the engine-wide state into per-interface hydration entries internally. Each subsequent `adoptSlice` call (triggered by `buildSearchInterface` or controller construction) will find its matching hydration data and self-hydrate.
 
 ### `initialParameters` translation in interface builder
 
@@ -491,7 +494,7 @@ Between steps 2 and 4, the UI is visible but interactions are dead or buffered. 
 2. Client: React hydrates the DOM
 3. Client: on first render (synchronous):
    - `new Engine(config)` — sync (configureStore)
-   - `restoreSSRState({ engine, snapshot })` — sync (distributes snapshot into hydration map)
+   - `restoreSSRState({ engine, snapshot })` — sync (decode + distribute into hydration map)
    - `buildSearchInterface({ engine, id })` — sync (adoptSlice + hydrate)
    - `buildSearchBoxController({ interface })` — sync (adopt slice, create selector)
 4. Controllers are live immediately. No async step.
@@ -508,7 +511,7 @@ Between steps 2 and 4, the UI is visible but interactions are dead or buffered. 
 Current headless's `hydrateStaticState` reconstructs the full engine from scratch — middleware setup, analytics initialization, controller re-registration — some of which involves async operations.
 
 Thermidor avoids this because:
-- `restoreSSRState` distributes snapshot data into the engine's internal hydration map (a series of Map writes)
+- `restoreSSRState` decodes the snapshot and distributes it into per-interface hydration entries (sync decode + Map writes)
 - `adoptSlice` is sync: inject reducer into `combineSlices`, dispatch `hydrateFromSnapshot`
 - No middleware ceremony or analytics bootstrap during hydration
 - The engine is fully operational immediately after construction
