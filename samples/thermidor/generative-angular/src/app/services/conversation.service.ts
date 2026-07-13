@@ -36,8 +36,8 @@ export class ConversationService {
 
     this.controller = buildConverseController({
       interface: generativeInterface,
-      initialState: this.loadPersistedState(),
-    } as Parameters<typeof buildConverseController>[0]);
+      conversationToRestore: this.loadPersistedState(),
+    });
 
     this.applyState(this.controller.state);
     this.controller.subscribe((state) => {
@@ -62,11 +62,11 @@ export class ConversationService {
   }
 
   private applyState(state: ConverseControllerState): void {
-    const {turns, activeTurn, activeTurnId, isStreaming} = state;
+    const {turns, activeTurn, isStreaming} = state;
 
     this.busy.set(isStreaming);
     this.turns.set(turns);
-    this.activeTurnId.set(activeTurnId);
+    this.activeTurnId.set(activeTurn?.id);
     this.surfaces.set(this.buildSurfaces(turns));
 
     if (activeTurn) {
