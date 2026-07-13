@@ -87,12 +87,11 @@ export const testSearch =
         data.streamId
       );
 
+      await search.mockSearchWithBaseResponse();
       await page.goto(pageUrl);
       if (withFacets) {
         await generatedAnswerObject.clickAddFacetsButton();
       }
-
-      await search.mockSearchWithBaseResponse();
       await configuration.configure(options);
       await search.waitForSearchResponse();
 
@@ -159,12 +158,12 @@ export const testInsight =
         data.streamId
       );
 
+      await search.mockSearchWithBaseResponse();
       await page.goto(pageUrl);
       if (withFacets) {
         await generatedAnswerObject.clickAddFacetsButton();
       }
       configuration.configure({...options, useCase: useCaseEnum.insight});
-
       await insightSetup.waitForInsightInterfaceInitialization();
 
       generatedAnswerObject.streamEndAnalyticRequestPromise =
