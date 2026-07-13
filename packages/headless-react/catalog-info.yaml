@@ -10,4 +10,4 @@ spec:
   owner: group:default/dxui
   system: ui-kit
   dependsOn:
-    - component:default/headless
+    - component:headless

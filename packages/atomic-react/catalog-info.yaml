@@ -10,5 +10,5 @@ spec:
   owner: group:default/dxui
   system: ui-kit
   dependsOn:
-    - component:default/atomic
-    - component:default/headless
+    - component:atomic
+    - component:headless

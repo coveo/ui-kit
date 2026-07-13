@@ -127,11 +127,8 @@ function generateComponentYaml(manifest, config, relations) {
   };
 
   if (relations.dependsOn.length) {
-    doc.spec.dependsOn = relations.dependsOn
-      .map((dep) => `component:default/${dep}`)
-      .toSorted();
+    doc.spec.dependsOn = [...relations.dependsOn].sort();
   }
-
   return toYaml(doc);
 }
 
@@ -199,7 +196,7 @@ function getWorkspaceDependsOn(manifest, catalogComponents) {
     if (version.startsWith('workspace:')) {
       const componentName = getComponentName(name);
       if (catalogComponents.has(componentName)) {
-        result.push(componentName);
+        result.push(`component:${componentName}`);
       }
     }
   }
