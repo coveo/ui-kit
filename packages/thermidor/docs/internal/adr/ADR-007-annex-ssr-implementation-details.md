@@ -4,6 +4,20 @@
 
 ## 1. Proposed Public Types
 
+### Stable
+
+```ts
+/**
+ * Opaque serialized snapshot of the engine state.
+ * Do not inspect, modify, or depend on its internal format.
+ */
+export type SSRSnapshot = string & { readonly __brand: 'SSRSnapshot' };
+```
+
+### Provisional — parameter seeding types
+
+> **⚠️ Provisional**: The types below support the `initialParameters` mechanism, which is subject to change. An alternative approach using dedicated URL parameter controllers is under active consideration. URL parameter management — including SSR seeding, SPA URL restoration, and bidirectional sync — will be refined in a dedicated upcoming ADR.
+
 ```ts
 export interface SearchInterfaceInitialParameters {
   query?: string;
@@ -11,11 +25,9 @@ export interface SearchInterfaceInitialParameters {
   pageSize?: number;
   facets?: Record<string, string[]>;
   sort?: string;
-  pipeline?: string;
-  constantQuery?: string;
 }
 
-export interface CommerceInterfaceInitialParameters {
+export interface CommerceSearchInterfaceInitialParameters {
   query?: string;
   page?: number;
   pageSize?: number;
@@ -23,11 +35,12 @@ export interface CommerceInterfaceInitialParameters {
   sort?: string;
 }
 
-/**
- * Opaque serialized snapshot of the engine state.
- * Do not inspect, modify, or depend on its internal format.
- */
-export type SSRSnapshot = string & { readonly __brand: 'SSRSnapshot' };
+export interface CommerceProductListingInterfaceInitialParameters {
+  page?: number;
+  pageSize?: number;
+  facets?: Record<string, string[]>;
+  sort?: string;
+}
 ```
 
 ## 2. Interface Builder Options
@@ -39,10 +52,16 @@ export interface BuildSearchInterfaceOptions {
   initialParameters?: SearchInterfaceInitialParameters;
 }
 
-export interface BuildCommerceInterfaceOptions {
+export interface BuildCommerceSearchInterfaceOptions {
   engine: Engine;
   id?: string;
-  initialParameters?: CommerceInterfaceInitialParameters;
+  initialParameters?: CommerceSearchInterfaceInitialParameters;
+}
+
+export interface BuildCommerceProductListingInterfaceOptions {
+  engine: Engine;
+  id?: string;
+  initialParameters?: CommerceProductListingInterfaceInitialParameters;
 }
 
 export interface ComposeInterfacesOptions<T extends InterfaceType> {
@@ -55,10 +74,10 @@ export interface ComposeInterfacesOptions<T extends InterfaceType> {
 ## 3. Standalone Functions
 
 ```ts
-import { getSSRSnapshot, restoreSSRState } from '@coveo/thermidor';
+import { getSSRSnapshot, restoreSSRSnapshot } from '@coveo/thermidor';
 
 function getSSRSnapshot(options: { engine: Engine }): SSRSnapshot;
-function restoreSSRState(options: { engine: Engine; snapshot: SSRSnapshot }): void;
+function restoreSSRSnapshot(options: { engine: Engine; snapshot: SSRSnapshot }): void;
 ```
 
 The engine class remains opaque — no public methods added.
@@ -117,21 +136,24 @@ export function getSSRSnapshot({ engine }: { engine: Engine }): SSRSnapshot {
   const fullEngine = getFullEngine(engine);
   const fullState = fullEngine.read((state) => state);
 
-  const payload = JSON.stringify({ v: 1, state: fullState });
-  return btoa(payload) as SSRSnapshot;
+  return JSON.stringify({ v: 1, state: fullState }) as SSRSnapshot;
 }
 ```
 
-The snapshot is an opaque string encoding the entire engine state. The internal format (version tag, encoding, potential future compression) is an implementation detail — consumers pass it through without inspection.
+The snapshot is a JSON string encoding the entire engine state. The internal format (version tag, potential future compression) is an implementation detail — consumers pass it through without inspection.
 
-### `restoreSSRState`
+We pass the snapshot as plain JSON rather than base64 for two reasons: (1) `btoa`/`atob` do not support non-ASCII characters (e.g., French, Japanese) and would throw on any unicode content in the state, and (2) base64 inflates the payload by ~33% for no benefit — SSR frameworks already provide their own mechanisms for safely passing JSON from server to client (e.g., `<script>` injection with proper escaping, loader data serialization).
+
+> **Future optimization note:** If snapshot payloads prove to be excessively large in practice, lossless compression (e.g., deflate before transfer, inflate on restore) could be introduced transparently behind the opaque `SSRSnapshot` type without changing the public API. This is premature today — JSON serialization is sufficient and avoids unnecessary complexity.
+
+### `restoreSSRSnapshot`
 
 ```ts
 import { getFullEngine } from '@/src/core/interface/engine/engine.js';
 
-export function restoreSSRState({ engine, snapshot }: { engine: Engine; snapshot: SSRSnapshot }): void {
+export function restoreSSRSnapshot({ engine, snapshot }: { engine: Engine; snapshot: SSRSnapshot }): void {
   const fullEngine = getFullEngine(engine);
-  const { state } = JSON.parse(atob(snapshot));
+  const { state } = JSON.parse(snapshot);
 
   // Distribute state by interface ID into per-interface hydration snapshots
   const byInterface = new Map<string, Record<string, unknown>>();
@@ -153,7 +175,7 @@ export function restoreSSRState({ engine, snapshot }: { engine: Engine; snapshot
 }
 ```
 
-This decodes the opaque snapshot, distributes the engine-wide state into per-interface hydration entries internally. Each subsequent `adoptSlice` call (triggered by `buildSearchInterface` or controller construction) will find its matching hydration data and self-hydrate.
+This parses the JSON snapshot and distributes the engine-wide state into per-interface hydration entries internally. Each subsequent `adoptSlice` call (triggered by `buildSearchInterface` or controller construction) will find its matching hydration data and self-hydrate.
 
 ### `initialParameters` translation in interface builder
 
@@ -239,7 +261,7 @@ import {
   buildSearchInterface,
   buildSearchBoxController,
   buildResultListController,
-  restoreSSRState,
+  restoreSSRSnapshot,
 } from '@coveo/thermidor';
 
 export function hydrateSearch(snapshot: SSRSnapshot) {
@@ -247,7 +269,7 @@ export function hydrateSearch(snapshot: SSRSnapshot) {
     configuration: { organizationId: 'myorg', accessToken: 'xxxx' },
   });
 
-  restoreSSRState({ engine, snapshot });
+  restoreSSRSnapshot({ engine, snapshot });
   const searchInterface = buildSearchInterface({ engine, id: 'main-search' });
   const searchBox = buildSearchBoxController({ interface: searchInterface });
   const resultList = buildResultListController({ interface: searchInterface });
@@ -290,10 +312,10 @@ return { snapshot };
 
 ```ts
 // Client — one restore, every interface self-hydrates by ID
-import { Engine, buildCommerceRecommendationInterface, restoreSSRState } from '@coveo/thermidor';
+import { Engine, buildCommerceRecommendationInterface, restoreSSRSnapshot } from '@coveo/thermidor';
 
 const engine = new Engine({ configuration: { organizationId: '...', accessToken: '...' } });
-restoreSSRState({ engine, snapshot });
+restoreSSRSnapshot({ engine, snapshot });
 
 const frequentlyBought = buildCommerceRecommendationInterface({ engine, id: 'frequently-bought', slotId: 'frequently-bought-together' });
 const similarProducts = buildCommerceRecommendationInterface({ engine, id: 'similar-products', slotId: 'similar-items' });
@@ -415,7 +437,7 @@ export default async function SearchPage({ searchParams }) {
 ```tsx
 // app/search/client-page.tsx (Client Component)
 'use client';
-import { Engine, buildSearchInterface, buildSearchBoxController, buildResultListController, restoreSSRState } from '@coveo/thermidor';
+import { Engine, buildSearchInterface, buildSearchBoxController, buildResultListController, restoreSSRSnapshot } from '@coveo/thermidor';
 import { useController } from '@coveo/thermidor-react';
 import { useRef } from 'react';
 
@@ -434,7 +456,7 @@ function useHydratedControllers(snapshot: SSRSnapshot) {
   const ref = useRef<{ searchBox: SearchBoxController; resultList: ResultListController }>();
   if (!ref.current) {
     const engine = new Engine({ configuration: { organizationId: '...', accessToken: '...' } });
-    restoreSSRState({ engine, snapshot });
+    restoreSSRSnapshot({ engine, snapshot });
     const searchInterface = buildSearchInterface({ engine, id: 'main-search' });
     ref.current = {
       searchBox: buildSearchBoxController({ interface: searchInterface }),
@@ -470,7 +492,7 @@ function ResultList({ controller }: { controller: ResultListController }) {
 | Parameter seeding (`initialParameters`) | Core | `buildSearchInterface({ initialParameters })` |
 | Initial request execution | Core | `searchInterface.executeInitialRequest()` |
 | Snapshot extraction | Core | `getSSRSnapshot({ engine })` |
-| Snapshot restoration | Core | `restoreSSRState({ engine, snapshot })` |
+| Snapshot restoration | Core | `restoreSSRSnapshot({ engine, snapshot })` |
 | Reactive state in React | React adapter | `useController(controller)` |
 | Context/Provider (optional) | React adapter | `ThermidorProvider` |
 | Named hooks (optional sugar) | React adapter | `useSearchBox()`, `useResultList()` |
@@ -494,7 +516,7 @@ Between steps 2 and 4, the UI is visible but interactions are dead or buffered. 
 2. Client: React hydrates the DOM
 3. Client: on first render (synchronous):
    - `new Engine(config)` — sync (configureStore)
-   - `restoreSSRState({ engine, snapshot })` — sync (decode + distribute into hydration map)
+   - `restoreSSRSnapshot({ engine, snapshot })` — sync (JSON.parse + distribute into hydration map)
    - `buildSearchInterface({ engine, id })` — sync (adoptSlice + hydrate)
    - `buildSearchBoxController({ interface })` — sync (adopt slice, create selector)
 4. Controllers are live immediately. No async step.
@@ -511,7 +533,7 @@ Between steps 2 and 4, the UI is visible but interactions are dead or buffered. 
 Current headless's `hydrateStaticState` reconstructs the full engine from scratch — middleware setup, analytics initialization, controller re-registration — some of which involves async operations.
 
 Thermidor avoids this because:
-- `restoreSSRState` decodes the snapshot and distributes it into per-interface hydration entries (sync decode + Map writes)
+- `restoreSSRSnapshot` parses the snapshot and distributes it into per-interface hydration entries (sync JSON.parse + Map writes)
 - `adoptSlice` is sync: inject reducer into `combineSlices`, dispatch `hydrateFromSnapshot`
 - No middleware ceremony or analytics bootstrap during hydration
 - The engine is fully operational immediately after construction
@@ -558,10 +580,10 @@ return { snapshot };
 
 ```ts
 // === Client ===
-import { Engine, buildCommerceInterface, buildProductListController, buildGenerativeInterface, buildConverseController, restoreSSRState } from '@coveo/thermidor';
+import { Engine, buildCommerceInterface, buildProductListController, buildGenerativeInterface, buildConverseController, restoreSSRSnapshot } from '@coveo/thermidor';
 
 const engine = new Engine({ configuration: { organizationId: '...', accessToken: '...' } });
-restoreSSRState({ engine, snapshot });
+restoreSSRSnapshot({ engine, snapshot });
 
 // Restore routed sub-interface (products render immediately)
 const commerceInterface = buildCommerceInterface({ engine, id: 'routed-products' });
