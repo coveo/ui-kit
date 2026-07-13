@@ -64,7 +64,7 @@ app.get('/search', async (req, res) => {
               `http://${req.headers.host ?? 'localhost'}`
             ).toString(),
           },
-        }
+        },
         parameterManager: {
           initialState: {parameters: deserializeParameters(req)},
         },
@@ -106,7 +106,7 @@ app.get('/listing/:listingId', async (req, res) => {
               `http://${req.headers.host ?? 'localhost'}`
             ).toString(),
           },
-        }
+        },
         parameterManager: {
           initialState: {parameters: deserializeParameters(req)},
         },
