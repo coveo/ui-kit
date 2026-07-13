@@ -21,6 +21,9 @@ export function createCartSelectors(interfaceId: string) {
       sliceSelector,
       (state) => state.items
     ),
+    getCartContext: createMemoizedStateSelector(sliceSelector, (state) =>
+      state.items.length > 0 ? state.items : undefined
+    ),
   };
 }
 
