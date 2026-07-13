@@ -1,8 +1,5 @@
 import type {AsyncThunk} from '@reduxjs/toolkit';
 import type {FullEngine} from '@/src/internal/engine/index.js';
-import type {SearchInterface} from '@/src/public/interfaces/search.js';
-import type {CommerceInterface} from '@/src/public/interfaces/commerce.js';
-import type {GenerativeInterface} from '@/src/public/interfaces/generative.js';
 
 export interface InterfaceHandle {
   readonly disposed: boolean;
@@ -43,3 +40,13 @@ export declare const SupportsBrand: unique symbol;
 export type Supports<F extends Facades[InterfaceType]> = InterfaceHandle & {
   readonly [SupportsBrand]: {[K in F]: true};
 };
+
+export interface SearchInterface extends Supports<Facades['search']> {}
+
+export interface CommerceInterface extends Supports<Facades['commerce']> {}
+
+export interface GenerativeInterface extends Supports<Facades['generative']> {}
+
+export interface ComposedInterface<T extends InterfaceType> extends Supports<
+  Facades[T]
+> {}
