@@ -36,7 +36,7 @@ export function addToCart(
   const quantity = existingItem ? existingItem.quantity + 1 : 1;
   const item: CartItem = {
     name: product.ec_name ?? 'Unknown product',
-    price: product.ec_price ?? 0,
+    price: product.ec_promo_price ?? product.ec_price ?? 0,
     productId: product.ec_product_id ?? '',
     quantity,
   };
