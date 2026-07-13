@@ -27,7 +27,6 @@ export interface GenerativeStatePort {
   startToolCall(turnId: string, toolCallId: string, toolName: string): void;
   appendToolCallArgs(turnId: string, toolCallId: string, delta: string): void;
   completeToolCall(turnId: string, toolCallId: string, result: string): void;
-  setStateSnapshot(turnId: string, snapshot: Record<string, unknown>): void;
   completeTurn(turnId: string): void;
   failTurn(turnId: string, error: string): void;
   clearTurnResponse(turnId: string): void;
@@ -296,7 +295,6 @@ export class GenerativeRuntime {
       }
 
       case 'STATE_SNAPSHOT': {
-        this.statePort.setStateSnapshot(turnId, event.snapshot);
         return {turnId, isTerminal: false};
       }
 
