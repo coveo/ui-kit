@@ -8,7 +8,31 @@
     }
   ],
   "commit": false,
-  "fixed": [["@coveo/headless", "@coveo/ui-kit-sample-headless-*"]],
+  "fixed": [
+    [
+      "@coveo/atomic",
+      "@coveo/ui-kit-sample-atomic-search-vite",
+      "@coveo/ui-kit-sample-atomic-commerce-vite"
+    ],
+    [
+      "@coveo/atomic-react",
+      "@coveo/ui-kit-sample-atomic-search-react",
+      "@coveo/ui-kit-sample-atomic-commerce-react"
+    ],
+    [
+      "@coveo/headless",
+      "@coveo/ui-kit-sample-headless-search-vite",
+      "@coveo/ui-kit-sample-headless-commerce-vite",
+      "@coveo/ui-kit-sample-headless-search-react",
+      "@coveo/ui-kit-sample-headless-commerce-react",
+      "@coveo/ui-kit-sample-headless-ssr-commerce-express"
+    ],
+    [
+      "@coveo/headless-react",
+      "@coveo/ui-kit-sample-headless-ssr-search-nextjs",
+      "@coveo/ui-kit-sample-headless-ssr-commerce-nextjs"
+    ]
+  ],
   "linked": [],
   "access": "public",
   "baseBranch": "main",
