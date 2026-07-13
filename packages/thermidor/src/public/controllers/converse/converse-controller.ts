@@ -32,8 +32,10 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
     const actions = getOrCreateGenerativeActions(options.interface);
     const selectors = getOrCreateGenerativeSelectors(options.interface);
 
-    if (options.initialState) {
-      const hydratedState = hydrateFromSerializedState(options.initialState);
+    if (options.conversationToRestore) {
+      const hydratedState = hydrateFromSerializedState(
+        options.conversationToRestore
+      );
       fullEngine.mutate(actions.hydrateState(hydratedState));
     }
 
@@ -129,10 +131,10 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
       hydrateSubInterface: createHydrateSubInterface(sourceEngine),
     });
 
-    if (options.initialState) {
+    if (options.conversationToRestore) {
       this.#runtime.setConversationSession(
-        options.initialState.conversationSessionId,
-        options.initialState.conversationToken
+        options.conversationToRestore.conversationSessionId,
+        options.conversationToRestore.conversationToken
       );
     }
   }
@@ -226,7 +228,7 @@ export interface ConverseControllerState {
 
 export interface ConverseControllerOptions {
   interface: GenerativeInterface;
-  initialState?: SerializedConverseState;
+  conversationToRestore?: SerializedConverseState;
   onSurfaceOperation?: (operations: unknown[]) => void;
 }
 

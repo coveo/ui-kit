@@ -418,9 +418,9 @@ describe('buildConverseController', () => {
     });
   });
 
-  describe('initialState', () => {
+  describe('conversationToRestore', () => {
     it('hydrates turns from serialized state', () => {
-      const initialState: SerializedConverseState = {
+      const conversationToRestore: SerializedConverseState = {
         name: 'hello',
         timestamp: 1000,
         conversationSessionId: 'session-1',
@@ -443,7 +443,7 @@ describe('buildConverseController', () => {
 
       const controller = buildConverseController({
         interface: generativeInterface,
-        initialState,
+        conversationToRestore,
       });
 
       expect(controller.state.turns).toHaveLength(1);
@@ -456,7 +456,7 @@ describe('buildConverseController', () => {
     });
 
     it('transitions streaming turns to error status', () => {
-      const initialState: SerializedConverseState = {
+      const conversationToRestore: SerializedConverseState = {
         name: 'hello',
         timestamp: 1000,
         turns: [
@@ -471,7 +471,7 @@ describe('buildConverseController', () => {
 
       const controller = buildConverseController({
         interface: generativeInterface,
-        initialState,
+        conversationToRestore,
       });
 
       expect(controller.state.turns[0].status).toBe('error');
@@ -479,7 +479,7 @@ describe('buildConverseController', () => {
     });
 
     it('does not modify complete or error turns', () => {
-      const initialState: SerializedConverseState = {
+      const conversationToRestore: SerializedConverseState = {
         name: 'hello',
         timestamp: 1000,
         turns: [
@@ -500,7 +500,7 @@ describe('buildConverseController', () => {
 
       const controller = buildConverseController({
         interface: generativeInterface,
-        initialState,
+        conversationToRestore,
       });
 
       expect(controller.state.turns[0].status).toBe('complete');
@@ -509,7 +509,7 @@ describe('buildConverseController', () => {
     });
 
     it('sets activeTurnId from serialized state', () => {
-      const initialState: SerializedConverseState = {
+      const conversationToRestore: SerializedConverseState = {
         name: 'hello',
         timestamp: 1000,
         turns: [
@@ -529,14 +529,14 @@ describe('buildConverseController', () => {
 
       const controller = buildConverseController({
         interface: generativeInterface,
-        initialState,
+        conversationToRestore,
       });
 
       expect(controller.state.activeTurnId).toBe('turn-2');
     });
 
     it('first state read contains hydrated turns', () => {
-      const initialState: SerializedConverseState = {
+      const conversationToRestore: SerializedConverseState = {
         name: 'hello',
         timestamp: 1000,
         turns: [
@@ -551,7 +551,7 @@ describe('buildConverseController', () => {
 
       const controller = buildConverseController({
         interface: generativeInterface,
-        initialState,
+        conversationToRestore,
       });
 
       expect(controller.state.turns).toHaveLength(1);
@@ -563,7 +563,7 @@ describe('buildConverseController', () => {
     });
 
     it('computes isStreaming as false after streaming turns are transitioned to error', () => {
-      const initialState: SerializedConverseState = {
+      const conversationToRestore: SerializedConverseState = {
         name: 'hello',
         timestamp: 1000,
         turns: [
@@ -578,13 +578,13 @@ describe('buildConverseController', () => {
 
       const controller = buildConverseController({
         interface: generativeInterface,
-        initialState,
+        conversationToRestore,
       });
 
       expect(controller.state.isStreaming).toBe(false);
     });
 
-    it('works without initialState (backwards compatible)', () => {
+    it('works without conversationToRestore', () => {
       const controller = buildController();
 
       expect(controller.state).toEqual({
