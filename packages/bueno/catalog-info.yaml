@@ -4,8 +4,6 @@ metadata:
   name: bueno
   title: '@coveo/bueno'
   description: A simple validator
-  annotations:
-    github.com/project-slug: coveo/ui-kit
 spec:
   type: library
   lifecycle: production
