@@ -37,6 +37,23 @@
           }
         ]
       }
+    },
+    {
+      "files": ["src/internal/**"],
+      "excludeFiles": ["**/*.test.ts", "**/*.test-d.ts"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["@/src/public/**"],
+                "message": "Internal modules must not import from the public surface. Move the shared code into src/internal/."
+              }
+            ]
+          }
+        ]
+      }
     }
   ]
 }

@@ -4,8 +4,6 @@ metadata:
   name: atomic
   title: '@coveo/atomic'
   description: A web-component library for building modern UIs interfacing with the Coveo platform
-  annotations:
-    github.com/project-slug: coveo/ui-kit
 spec:
   type: library
   lifecycle: production

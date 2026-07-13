@@ -2,8 +2,6 @@ apiVersion: backstage.io/v1alpha1
 kind: Location
 metadata:
   name: ui-kit-catalog
-  annotations:
-    github.com/project-slug: coveo/ui-kit
 spec:
   type: url
   targets:

@@ -4,8 +4,6 @@ metadata:
   name: headless
   title: '@coveo/headless'
   description: A headless library for building search experiences on the Coveo platform
-  annotations:
-    github.com/project-slug: coveo/ui-kit
 spec:
   type: library
   lifecycle: production

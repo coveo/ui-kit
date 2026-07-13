@@ -1,4 +1,5 @@
-import type {BaseInterface} from '@/src/internal/utils/index.js';
+import type {CommerceInterface} from '@/src/internal/utils/index.js';
+import type {SearchInterface} from '@/src/internal/utils/index.js';
 
 /**
  * ============================================================================
@@ -41,8 +42,8 @@ export interface Turn {
 }
 
 export type UseCaseInterfaceMap = {
-  commerceSearch: BaseInterface<'commerce'>;
-  search: BaseInterface<'search'>;
+  commerceSearch: CommerceInterface;
+  search: SearchInterface;
 };
 
 export type RoutedInterface = {
