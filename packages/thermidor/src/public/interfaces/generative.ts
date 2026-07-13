@@ -1,21 +1,18 @@
-import {createAsyncThunk} from '@reduxjs/toolkit';
-import {BaseInterface} from '@/src/core/interface/base-interface.js';
+import {BaseInterface} from '@/src/internal/utils/index.js';
 import {
   Engine,
   getFullEngine,
   type FullEngine,
-} from '@/src/core/interface/engine/engine.js';
+} from '@/src/internal/engine/index.js';
 import type {
   FacadeResolverFactory,
   Facades,
-} from '@/src/core/interface/utils/interface-types.js';
-import {generateId} from '@/src/core/interface/utils/id-generator.js';
-import {loadGenerative} from '@/src/core/interface/generative/generative-loader.js';
+  Supports,
+} from '@/src/internal/utils/index.js';
+import {generateId, createNoopThunk} from '@/src/internal/utils/index.js';
+import {getOrCreateGenerativeSlice} from '@/src/internal/features/generative/index.js';
 
-const noopThunk = createAsyncThunk<void, {engine: FullEngine}>(
-  'generative/noop',
-  async () => {}
-);
+const noopThunk = createNoopThunk('generative');
 
 const noopResolverFactory: FacadeResolverFactory = (_engine) => (_scope) =>
   noopThunk;
@@ -25,14 +22,19 @@ const resolverFactories: Record<Facades['generative'], FacadeResolverFactory> =
     conversation: noopResolverFactory,
   };
 
+export interface GenerativeInterface extends Supports<Facades['generative']> {}
+
 export let getGenerativeSourceEngine: (iface: GenerativeInterface) => Engine;
 
-export class GenerativeInterface extends BaseInterface<'generative'> {
+export class GenerativeInterfaceImpl
+  extends BaseInterface<'generative'>
+  implements GenerativeInterface
+{
   #sourceEngine: Engine;
 
   static {
     getGenerativeSourceEngine = <typeof getGenerativeSourceEngine>(
-      ((iface) => iface.#sourceEngine)
+      ((iface: GenerativeInterfaceImpl) => iface.#sourceEngine)
     );
   }
 
@@ -53,7 +55,13 @@ export function buildGenerativeInterface(
   const fullEngine = getFullEngine(options.engine);
   const interfaceId = options.id ?? generateId();
 
-  loadGenerative(fullEngine, interfaceId);
+  const iface = new GenerativeInterfaceImpl(
+    fullEngine,
+    interfaceId,
+    options.engine
+  );
 
-  return new GenerativeInterface(fullEngine, interfaceId, options.engine);
+  fullEngine.adoptSlice(getOrCreateGenerativeSlice(iface));
+
+  return iface;
 }

@@ -429,6 +429,14 @@ export const generateAnswer = createAsyncThunk<
     dispatch(resetAnswer());
 
     const state = getState() as StreamAnswerAPIState;
+    if (state.generatedAnswer.isEnabled === false) {
+      logger.warn(
+        '[WARNING] The generateAnswer action was dispatched while the generated answer is disabled. ' +
+          'No answer will be generated. Enable the generated answer before dispatching generateAnswer.'
+      );
+      return;
+    }
+
     if (state.generatedAnswer.answerConfigurationId) {
       const answerApiQueryParams = constructAnswerAPIQueryParams(
         state,

@@ -1,23 +1,29 @@
-import {BaseInterface} from '@/src/core/interface/base-interface.js';
+import {BaseInterface} from '@/src/internal/utils/index.js';
 import {
   Engine,
   getFullEngine,
   type FullEngine,
-} from '@/src/core/interface/engine/engine.js';
+} from '@/src/internal/engine/index.js';
 import type {
   FacadeResolverFactory,
   Facades,
-} from '@/src/core/interface/utils/interface-types.js';
-import {generateId} from '@/src/core/interface/utils/id-generator.js';
-import {createCommerceSearchFacadeResolver} from '@/src/core/interface/api/commerce-search/commerce-search-facade.js';
-import {createCommerceSuggestionsFacadeResolver} from '@/src/core/interface/api/commerce-query-suggest/commerce-query-suggest-facade.js';
+  Supports,
+} from '@/src/internal/utils/index.js';
+import {generateId} from '@/src/internal/utils/index.js';
+import {createCommerceSearchFacadeResolver} from '@/src/internal/api/commerce-search/index.js';
+import {createCommerceSuggestionsFacadeResolver} from '@/src/internal/api/commerce-query-suggest/index.js';
 
 const resolverFactories: Record<Facades['commerce'], FacadeResolverFactory> = {
   search: createCommerceSearchFacadeResolver,
   suggestions: createCommerceSuggestionsFacadeResolver,
 };
 
-export class CommerceInterface extends BaseInterface<'commerce'> {
+export interface CommerceInterface extends Supports<Facades['commerce']> {}
+
+export class CommerceInterfaceImpl
+  extends BaseInterface<'commerce'>
+  implements CommerceInterface
+{
   constructor(engine: FullEngine, stateId: string) {
     super(engine, stateId, 'commerce', resolverFactories);
   }
@@ -34,5 +40,5 @@ export function buildCommerceInterface(
   const fullEngine = getFullEngine(options.engine);
   const interfaceId = options.id ?? generateId();
 
-  return new CommerceInterface(fullEngine, interfaceId);
+  return new CommerceInterfaceImpl(fullEngine, interfaceId);
 }

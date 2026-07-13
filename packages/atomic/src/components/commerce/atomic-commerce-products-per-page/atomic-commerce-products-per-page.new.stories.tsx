@@ -4,9 +4,9 @@ import {testRadioGroupA11y} from '@/storybook-utils/a11y/radiogroup.js';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import '@/src/components/commerce/atomic-commerce-products-per-page/atomic-commerce-products-per-page.js';
-import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
-import {commerceFacetTransformer} from '@/storybook-utils/api/commerce/facet-transformer';
-import {commercePaginationTransformer} from '@/storybook-utils/api/commerce/pagination-transformer';
+import {MockCommerceApi} from '@coveo/platform-mock-api/commerce/mock';
+import {commerceFacetTransformer} from '@coveo/platform-mock-api/commerce/facet-transformer';
+import {commercePaginationTransformer} from '@coveo/platform-mock-api/commerce/pagination-transformer';
 
 const commerceApiHarness = new MockCommerceApi();
 commerceApiHarness.searchEndpoint.addRequestTransformer(

@@ -13,12 +13,10 @@ interface IInteractiveProductProps {
   controller: HeadlessInteractiveProduct;
   cartController: Cart;
   promoteChildToParent: (product: ChildProduct) => void;
-  navigate: (pathName: string) => void;
 }
 
 export default function InteractiveProduct(props: IInteractiveProductProps) {
-  const {product, controller, cartController, promoteChildToParent, navigate} =
-    props;
+  const {product, controller, cartController, promoteChildToParent} = props;
 
   const [cartState, setCartState] = useState(cartController.state);
 
@@ -52,44 +50,19 @@ export default function InteractiveProduct(props: IInteractiveProductProps) {
     });
   };
 
-  const removeFromCart = () => {
-    cartController.updateItemQuantity({
-      name: product.ec_name ?? product.permanentid,
-      price: product.ec_promo_price ?? product.ec_price ?? NaN,
-      productId: product.ec_product_id ?? product.permanentid,
-      quantity: 0,
-    });
-  };
-
   const renderProductCartControls = () => {
     return (
       <div className="ProductCartControls">
-        <p className="CartCurrentQuantity">
-          Currently in cart:<span> {numberInCart()}</span>
-        </p>
         <button
           type="button"
           className="CartAddOne"
           onClick={() => adjustQuantity(1)}
         >
-          Add one
+          Add to cart
         </button>
-        <button
-          type="button"
-          className="CartRemoveOne"
-          disabled={!isInCart()}
-          onClick={() => adjustQuantity(-1)}
-        >
-          Remove one
-        </button>
-        <button
-          type="button"
-          className="CartRemoveAll"
-          disabled={!isInCart()}
-          onClick={removeFromCart}
-        >
-          Remove all
-        </button>
+        {isInCart() && (
+          <p className="CartCurrentQuantity">In cart: {numberInCart()}</p>
+        )}
       </div>
     );
   };
@@ -116,17 +89,7 @@ export default function InteractiveProduct(props: IInteractiveProductProps) {
 
   const clickProduct = () => {
     controller.select();
-
-    // Normally here, you would simply navigate to product.clickUri.
-    const productId = product.ec_product_id ?? product.permanentid;
-    const productName = product.ec_name ?? product.permanentid;
-    const productPrice = product.ec_promo_price ?? product.ec_price ?? NaN;
-    navigate(`/product/${productId}/${productName}/${productPrice}`);
-    // In this sample project, we navigate to a custom URL because the app doesn't have access to a commerce backend
-    // service to retrieve detailed product information from for the purpose of rendering a product description page
-    // (PDP).
-    // Therefore, we encode bare-minimum product information in the URL, and use it to render the PDP.
-    // This is by no means a realistic scenario.
+    window.open(product.clickUri, '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -136,7 +99,7 @@ export default function InteractiveProduct(props: IInteractiveProductProps) {
       </button>
       <div className="ProductImageWrapper">
         <img
-          src={product.ec_images[0]}
+          src={product.ec_images?.[0] ?? ''}
           alt={product.permanentid}
           height={100}
         ></img>
@@ -156,7 +119,7 @@ export default function InteractiveProduct(props: IInteractiveProductProps) {
             <img
               alt={child.ec_name!}
               height="25px"
-              src={child.ec_images[0]}
+              src={child.ec_images?.[0] ?? ''}
             ></img>
           </button>
         ) : null;

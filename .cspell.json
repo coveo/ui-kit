@@ -4,7 +4,10 @@
   "cache": {
     "useCache": true
   },
-  "ignorePaths": ["CHANGELOG.md", "packages/mock-converse-api/templates/**"],
+  "ignorePaths": [
+    "CHANGELOG.md",
+    "packages/platform-mock-api/src/converse/templates/**"
+  ],
   "import": ["@cspell/dict-fr-fr/cspell-ext.json"],
   "words": [
     "adjustednumberoflikes",
@@ -75,6 +78,7 @@
     "inat",
     "initializable",
     "inlink",
+    "INTF",
     "isloading",
     "jiraissue",
     "jsui",
@@ -116,7 +120,9 @@
     "nocheck",
     "nofield",
     "nononono",
+    "noopener",
     "noprompt",
+    "noreferrer",
     "noresult",
     "noresults",
     "noresultsback",
@@ -138,6 +144,7 @@
     "oxfmtrc",
     "oxlint",
     "oxlintrc",
+    "packument",
     "pdfs",
     "permanentid",
     "pino",

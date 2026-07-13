@@ -11,7 +11,6 @@ export default {
     'samples/headless/rga-react/src/components/Quickstart.tsx',
     'samples/headless/rga-react/src/components/Citation.tsx',
     'samples/headless/rga-react/src/components/CitationsList.tsx',
-    'samples/headless/commerce-react/src/components/instant-products/actions/on-delayed-select-product.ts',
     'packages/pkg-new-template/**',
   ],
   compilers: {
@@ -64,8 +63,12 @@ export default {
       ],
     },
     'samples/headless/commerce-react': {
-      // Can be removed once the deprecated controller is removed from headless. https://coveord.atlassian.net/browse/KIT-5551
-      ignore: ['src/components/legacy-field-suggestions/**'],
+      // ShowMore and ProductsPerPage are kept as reference examples but are not
+      // wired into the UI, so Knip should not flag them as unused files.
+      ignore: [
+        'src/components/show-more/**',
+        'src/components/products-per-page/**',
+      ],
     },
     'samples/headless-ssr/commerce-express': {
       entry: ['src/server.ts'],
@@ -76,7 +79,10 @@ export default {
         'src/pages/AtomicReactPage.css', // TODO: Reassess if we can remove the file.
       ],
     },
-    'samples/headless-ssr/commerce-nextjs': {},
+    'samples/headless-ssr/commerce-nextjs': {
+      // `mock-server.mjs` is a test utility, not exported publicly nor imported internally, so Knip cannot trace it.
+      entry: ['mocks/mock-server.mjs'],
+    },
     'samples/headless-ssr/commerce-nextjs-v4': {},
     'utils/ci': {},
     'utils/cdn': {},
@@ -109,9 +115,6 @@ export default {
         // Interactive a11y Storybook helpers — will be consumed by stories
         // in an upcoming PR. Knip cannot trace them yet.
         'storybook-utils/a11y/**/*.ts',
-        // Request transformer modules for interactive MSW stories.
-        // Wired by stories via addRequestTransformer().
-        'storybook-utils/api/**/*-transformer.ts',
       ],
       ignore: [
         // Ambient type declaration file, not an ES module
@@ -121,9 +124,6 @@ export default {
         // CSS files referenced via @import/@reference inside CSS tagged template literals.
         // Knip cannot trace CSS imports inside template literal strings.
         'src/**/*.css',
-        // Re-export shims for @coveo/platform-mock-api backward compat.
-        // Consumed by stories via @/ alias; knip can't trace through the workspace re-exports.
-        'storybook-utils/api/**/*.ts',
       ],
     },
     'packages/atomic-legacy': {},
@@ -147,9 +147,6 @@ export default {
     },
     'packages/create-atomic-result-component': {
       ignore: ['template/**/*'],
-    },
-    'packages/platform-mock-api': {
-      entry: ['src/index.ts'],
     },
     'packages/thermidor': {
       ignore: ['**/*'],

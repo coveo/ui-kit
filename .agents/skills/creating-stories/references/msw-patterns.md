@@ -7,8 +7,8 @@ This document covers advanced patterns for MSW API mocking in Storybook stories.
 When a component uses multiple APIs, create harnesses for each:
 
 ```typescript
-import {MockSearchApi} from '@/storybook-utils/api/search/mock';
-import {MockAnswerApi} from '@/storybook-utils/api/answer/mock';
+import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
+import {MockAnswerApi} from '@coveo/platform-mock-api/answer/mock';
 
 const searchApiHarness = new MockSearchApi();
 const answerApiHarness = new MockAnswerApi();
@@ -87,7 +87,7 @@ const meta: Meta = {
 ### Product Recommendations
 
 ```typescript
-import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
+import {MockCommerceApi} from '@coveo/platform-mock-api/commerce/mock';
 
 const commerceApiHarness = new MockCommerceApi();
 
@@ -114,7 +114,7 @@ commerceApiHarness.productListingEndpoint.mock((response) => ({
 ## Insight API Mocking
 
 ```typescript
-import {MockInsightApi} from '@/storybook-utils/api/insight/mock';
+import {MockInsightApi} from '@coveo/platform-mock-api/insight/mock';
 
 const insightApiHarness = new MockInsightApi();
 
@@ -138,7 +138,7 @@ const meta: Meta = {
 For streaming answer components:
 
 ```typescript
-import {MockAnswerApi} from '@/storybook-utils/api/answer/mock';
+import {MockAnswerApi} from '@coveo/platform-mock-api/answer/mock';
 
 const answerApiHarness = new MockAnswerApi();
 
@@ -158,7 +158,7 @@ Note: Answer API uses streaming responses. The mock handles SSE (Server-Sent Eve
 For components that track user actions:
 
 ```typescript
-import {MockMachineLearningApi} from '@/storybook-utils/api/machinelearning/mock';
+import {MockMachineLearningApi} from '@coveo/platform-mock-api/machinelearning/mock';
 
 const mlApiHarness = new MockMachineLearningApi();
 
@@ -205,7 +205,7 @@ Use rich response data for more realistic testing:
 import {
   type baseResponse,
   richResponse,
-} from '@/storybook-utils/api/search/search-response';
+} from '@coveo/platform-mock-api/search/search-response';
 
 const meta: Meta = {
   beforeEach: () => {
