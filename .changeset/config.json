@@ -25,11 +25,11 @@
       "@coveo/ui-kit-sample-headless-commerce-vite",
       "@coveo/ui-kit-sample-headless-search-react",
       "@coveo/ui-kit-sample-headless-commerce-react",
-      "@coveo/ui-kit-sample-headless-ssr-search-nextjs",
       "@coveo/ui-kit-sample-headless-ssr-commerce-express"
     ],
     [
       "@coveo/headless-react",
+      "@coveo/ui-kit-sample-headless-ssr-search-nextjs",
       "@coveo/ui-kit-sample-headless-ssr-commerce-nextjs"
     ]
   ],
