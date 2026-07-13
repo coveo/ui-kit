@@ -96,9 +96,12 @@ app.get('/listing/:listingId', async (req, res) => {
         context: {
           ...DEFAULT_CONTEXT,
           view: {
-            url: `https://sports.barca.group/browse/promotions/${listingId}`,
+            url: new URL(
+              req.originalUrl ?? req.url,
+              `http://${req.headers.host ?? 'localhost'}`
+            ).toString(),
           },
-        },
+        }
         parameterManager: {
           initialState: {parameters: deserializeParameters(req)},
         },
