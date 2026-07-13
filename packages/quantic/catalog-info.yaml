@@ -12,5 +12,5 @@ spec:
   owner: group:default/knowledge-integrations
   system: ui-kit
   dependsOn:
-    - bueno
-    - headless
+    - component:bueno
+    - component:headless
