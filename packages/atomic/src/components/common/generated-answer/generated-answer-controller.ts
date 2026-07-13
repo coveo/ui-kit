@@ -13,6 +13,7 @@ import {
 } from '@/src/utils/local-storage-utils';
 import type {AtomicGeneratedAnswerFeedbackModal} from '../atomic-generated-answer-feedback-modal/atomic-generated-answer-feedback-modal';
 import '@/src/components/common/atomic-generated-answer-feedback-modal/atomic-generated-answer-feedback-modal';
+import {markdownToPlainText} from './generated-content/markdown-utils';
 
 export interface GeneratedAnswerControllerOptions {
   withToggle?: boolean;
@@ -114,17 +115,31 @@ export class GeneratedAnswerController implements ReactiveController {
       return bindings.i18n.t('generating-answer');
     }
 
+    if (hasNonEmptyAnswer) {
+      return bindings.i18n.t('answer-generated', {
+        answer: markdownToPlainText(state.answer!),
+      });
+    }
+
     if (hasError) {
       return bindings.i18n.t('answer-could-not-be-generated');
     }
 
-    if (hasNonEmptyAnswer) {
-      return bindings.i18n.t('answer-generated', {
-        answer: state.answer,
-      });
-    }
-
     return '';
+  }
+
+  /**
+   * Checks if the current status message should be announced assertively.
+   * Error states should interrupt any in-progress announcement (e.g. "Generating answer").
+   */
+  public isStatusAssertive(): boolean {
+    const state = this.options.getGeneratedAnswerState();
+    if (!state) return false;
+    const isHidden = !state.isVisible;
+    const isGenerating = !!state.isStreaming;
+    const hasNonEmptyAnswer = !!state.answer?.trim();
+    const hasError = !!state.error?.message;
+    return !isHidden && !isGenerating && !hasNonEmptyAnswer && hasError;
   }
 
   /**

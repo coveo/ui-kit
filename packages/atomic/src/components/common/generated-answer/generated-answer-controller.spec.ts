@@ -158,6 +158,20 @@ describe('GeneratedAnswerController', () => {
       );
     });
 
+    it('should strip markdown syntax from answer before announcing it', () => {
+      const controller = createController({
+        getGeneratedAnswerState: () => ({
+          isVisible: true,
+          isStreaming: false,
+          answer: '**Bold** and *italic* with `code`',
+        }),
+      });
+
+      expect(controller.getGeneratedAnswerStatus()).toBe(
+        'Generated answer: Bold and italic with code'
+      );
+    });
+
     it('should announce the answer when the error wrapper has no message (Answer API success)', () => {
       const controller = createController({
         getGeneratedAnswerState: () => ({
@@ -183,6 +197,209 @@ describe('GeneratedAnswerController', () => {
       });
 
       expect(controller.getGeneratedAnswerStatus()).toBe('');
+    });
+
+    describe('bug condition exploration: status precedence when a non-empty answer coexists with a (possibly stale) error', () => {
+      it('should return the answer message, not the error message, when both answer and error.message are set', () => {
+        const controller = createController({
+          getGeneratedAnswerState: () => ({
+            isVisible: true,
+            isStreaming: false,
+            answer: 'Test answer',
+            error: {message: 'some error', code: 500},
+          }),
+        });
+
+        expect(controller.getGeneratedAnswerStatus()).toBe(
+          'Generated answer: Test answer'
+        );
+      });
+
+      it('should always return the answer message, never "Answer could not be generated", for any non-empty answer crossed with any truthy error message', () => {
+        const answers = [
+          'Test answer',
+          'A',
+          'A much longer generated answer with several words in it.',
+          'Réponse générée avec des caractères accentués.',
+        ];
+        const errorMessages = [
+          'some error',
+          'Internal server error.',
+          'timeout',
+          'Unknown error occurred',
+        ];
+
+        for (const answer of answers) {
+          for (const errorMessage of errorMessages) {
+            const controller = createController({
+              getGeneratedAnswerState: () => ({
+                isVisible: true,
+                isStreaming: false,
+                answer,
+                error: {message: errorMessage, code: 500},
+              }),
+            });
+
+            const result = controller.getGeneratedAnswerStatus();
+
+            expect(result).not.toBe('Answer could not be generated');
+            expect(result).toBe(`Generated answer: ${answer}`);
+          }
+        }
+      });
+    });
+
+    describe('preservation: genuine failures and hidden/generating precedence are unaffected', () => {
+      it('should always return "Answer could not be generated" for any truthy error message crossed with any empty, undefined, or whitespace-only answer', () => {
+        const errorMessages = [
+          'some error',
+          'Internal server error.',
+          'timeout',
+          'Unknown error occurred',
+        ];
+        const emptyAnswers = [undefined, '', '   ', '\n\t', '\u00a0'];
+
+        for (const errorMessage of errorMessages) {
+          for (const answer of emptyAnswers) {
+            const controller = createController({
+              getGeneratedAnswerState: () => ({
+                isVisible: true,
+                isStreaming: false,
+                answer,
+                error: {message: errorMessage, code: 500},
+              }),
+            });
+
+            expect(controller.getGeneratedAnswerStatus()).toBe(
+              'Answer could not be generated'
+            );
+          }
+        }
+      });
+
+      it('should return the hidden status regardless of error/answer/generating combination', () => {
+        const combinations: Array<{
+          isStreaming?: boolean;
+          answer?: string;
+          error?: {message?: string; code?: number};
+        }> = [
+          {},
+          {isStreaming: true},
+          {answer: 'Test answer'},
+          {error: {message: 'some error', code: 500}},
+          {answer: 'Test answer', error: {message: 'some error', code: 500}},
+        ];
+
+        for (const combination of combinations) {
+          const controller = createController({
+            getGeneratedAnswerState: () => ({
+              isVisible: false,
+              ...combination,
+            }),
+          });
+
+          expect(controller.getGeneratedAnswerStatus()).toBe(
+            'Generated answer is hidden'
+          );
+        }
+      });
+
+      it('should return the generating status regardless of error/answer combination, as long as visible and streaming', () => {
+        const combinations: Array<{
+          answer?: string;
+          error?: {message?: string; code?: number};
+        }> = [
+          {},
+          {answer: 'Test answer'},
+          {error: {message: 'some error', code: 500}},
+          {answer: 'Test answer', error: {message: 'some error', code: 500}},
+        ];
+
+        for (const combination of combinations) {
+          const controller = createController({
+            getGeneratedAnswerState: () => ({
+              isVisible: true,
+              isStreaming: true,
+              ...combination,
+            }),
+          });
+
+          expect(controller.getGeneratedAnswerStatus()).toBe(
+            'Generating answer'
+          );
+        }
+      });
+    });
+  });
+
+  describe('#isStatusAssertive', () => {
+    it('should return true when there is an error and no answer', () => {
+      const controller = createController({
+        getGeneratedAnswerState: () => ({
+          isVisible: true,
+          isStreaming: false,
+          answer: '',
+          error: {message: 'some error', code: 500},
+        }),
+      });
+
+      expect(controller.isStatusAssertive()).toBe(true);
+    });
+
+    it('should return false when streaming (error may be stale)', () => {
+      const controller = createController({
+        getGeneratedAnswerState: () => ({
+          isVisible: true,
+          isStreaming: true,
+          error: {message: 'some error', code: 500},
+        }),
+      });
+
+      expect(controller.isStatusAssertive()).toBe(false);
+    });
+
+    it('should return false when non-empty answer is present alongside error', () => {
+      const controller = createController({
+        getGeneratedAnswerState: () => ({
+          isVisible: true,
+          isStreaming: false,
+          answer: 'Test answer',
+          error: {message: 'some error', code: 500},
+        }),
+      });
+
+      expect(controller.isStatusAssertive()).toBe(false);
+    });
+
+    it('should return false when hidden', () => {
+      const controller = createController({
+        getGeneratedAnswerState: () => ({
+          isVisible: false,
+          error: {message: 'some error', code: 500},
+        }),
+      });
+
+      expect(controller.isStatusAssertive()).toBe(false);
+    });
+
+    it('should return false when no error', () => {
+      const controller = createController({
+        getGeneratedAnswerState: () => ({
+          isVisible: true,
+          isStreaming: false,
+          answer: 'Test answer',
+        }),
+      });
+
+      expect(controller.isStatusAssertive()).toBe(false);
+    });
+
+    it('should return false when state is undefined', () => {
+      const controller = createController({
+        getGeneratedAnswerState: () => undefined,
+      });
+
+      expect(controller.isStatusAssertive()).toBe(false);
     });
   });
 

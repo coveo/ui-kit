@@ -144,3 +144,7 @@ const customRenderer = {
 export const transformMarkdownToHtml = (text: string): string => {
   return marked.use({renderer: customRenderer}).parse(text) as string;
 };
+
+export const markdownToPlainText = (text: string): string => {
+  return toInlinePlainText(transformMarkdownToHtml(text));
+};
