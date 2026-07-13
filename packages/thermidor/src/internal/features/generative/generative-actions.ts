@@ -62,16 +62,16 @@ export function createGenerativeActions(interfaceId: string) {
     clearTurnResponse: createAction<{turnId: string}>(
       `${prefix}/clearTurnResponse`
     ),
-    setStateSnapshot: createAction<{
-      turnId: string;
-      snapshot: Record<string, unknown>;
-    }>(`${prefix}/setStateSnapshot`),
     startReasoning: createAction<{turnId: string}>(`${prefix}/startReasoning`),
     appendReasoningDelta: createAction<{turnId: string; delta: string}>(
       `${prefix}/appendReasoningDelta`
     ),
     endReasoning: createAction<{turnId: string}>(`${prefix}/endReasoning`),
     hydrateState: createAction<GenerativeState>(`${prefix}/hydrateState`),
+    setConversationSession: createAction<{
+      sessionId: string | undefined;
+      token: string | undefined;
+    }>(`${prefix}/setConversationSession`),
   };
 }
 

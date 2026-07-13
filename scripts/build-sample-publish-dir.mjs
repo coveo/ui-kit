@@ -6,7 +6,14 @@
 // workspace packages such as `@coveo/platform-mock-api` — those are only needed
 // for the in-repo Playwright smoke test and would break `install` for a
 // scaffolded project.
-import {cpSync, mkdirSync, readFileSync, rmSync, writeFileSync} from 'node:fs';
+import {
+  cpSync,
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs';
 
 const OUT_DIR = 'publish';
 
@@ -35,6 +42,9 @@ const isTestFile = (path) => /\.(test|spec)\.[jt]sx?$/.test(path);
 rmSync(OUT_DIR, {recursive: true, force: true});
 mkdirSync(OUT_DIR, {recursive: true});
 for (const path of SHIPPED_PATHS) {
+  if (!existsSync(path)) {
+    continue;
+  }
   cpSync(path, `${OUT_DIR}/${path}`, {
     recursive: true,
     filter: (source) => !isTestFile(source),

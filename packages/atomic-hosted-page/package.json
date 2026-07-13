@@ -38,7 +38,7 @@
   "dependencies": {
     "@coveo/bueno": "workspace:*",
     "@coveo/headless": "workspace:*",
-    "lit": "3.3.3"
+    "lit": "catalog:"
   },
   "devDependencies": {
     "@playwright/test": "catalog:",

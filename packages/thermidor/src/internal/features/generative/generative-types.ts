@@ -1,4 +1,5 @@
-import type {BaseInterface} from '@/src/internal/utils/index.js';
+import type {CommerceInterface} from '@/src/internal/utils/index.js';
+import type {SearchInterface} from '@/src/internal/utils/index.js';
 
 /**
  * ============================================================================
@@ -38,17 +39,11 @@ export interface Turn {
    * A human-readable error message when the turn is in error status.
    */
   error?: string;
-
-  /**
-   * The most recent state snapshot payload for the turn, representing transient
-   * execution progress. Set to `null` when the turn completes.
-   */
-  stateSnapshot: Record<string, unknown> | null;
 }
 
 export type UseCaseInterfaceMap = {
-  commerceSearch: BaseInterface<'commerce'>;
-  search: BaseInterface<'search'>;
+  commerceSearch: CommerceInterface;
+  search: SearchInterface;
 };
 
 export type RoutedInterface = {
@@ -138,4 +133,15 @@ export interface GenerativeState {
    * The id of the currently active turn, or undefined when no turns exist.
    */
   activeTurnId: string | undefined;
+
+  /**
+   * The server-assigned conversation session identifier, used to continue
+   * multi-turn conversations.
+   */
+  conversationSessionId: string | undefined;
+
+  /**
+   * The server-assigned conversation token for request authentication continuity.
+   */
+  conversationToken: string | undefined;
 }

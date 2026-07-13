@@ -79,7 +79,10 @@ export default {
         'src/pages/AtomicReactPage.css', // TODO: Reassess if we can remove the file.
       ],
     },
-    'samples/headless-ssr/commerce-nextjs': {},
+    'samples/headless-ssr/commerce-nextjs': {
+      // `mock-server.mjs` is a test utility, not exported publicly nor imported internally, so Knip cannot trace it.
+      entry: ['mocks/mock-server.mjs'],
+    },
     'samples/headless-ssr/commerce-nextjs-v4': {},
     'utils/ci': {},
     'utils/cdn': {},

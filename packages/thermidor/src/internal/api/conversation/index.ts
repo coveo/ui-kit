@@ -15,4 +15,4 @@ export type {
   ConversationStreamEvent,
   ReadConversationEventStreamOptions,
 } from './conversation-event-stream.js';
-export {createConversationEndpointRequestSelector} from './conversation-endpoint-request-selector.js';
+export {createConversationEndpointRequestSelector} from './conversation-request-selector.js';

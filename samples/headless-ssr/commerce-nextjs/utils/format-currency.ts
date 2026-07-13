@@ -3,7 +3,7 @@ export function formatCurrency(
   language: string,
   currency: string
 ) {
-  return new Intl.NumberFormat(`${language}-${language}`, {
+  return new Intl.NumberFormat(language, {
     style: 'currency',
     currency: currency,
   }).format(price);

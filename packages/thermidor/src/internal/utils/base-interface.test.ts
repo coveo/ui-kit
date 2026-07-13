@@ -81,14 +81,14 @@ describe('BaseInterface', () => {
   describe('resolveFacades', () => {
     it('returns an array with one EndpointThunk', () => {
       const {instance} = createTestSubject();
-      const result = instance.resolveFacades('search');
+      const result = getInterfaceInternals(instance).resolveFacades('search');
       expect(result).toHaveLength(1);
     });
 
     it('returns the same cached thunk on repeated calls (caching)', () => {
       const {instance} = createTestSubject();
-      const first = instance.resolveFacades('search');
-      const second = instance.resolveFacades('search');
+      const first = getInterfaceInternals(instance).resolveFacades('search');
+      const second = getInterfaceInternals(instance).resolveFacades('search');
       expect(first[0]).toBe(second[0]);
     });
 
@@ -100,9 +100,9 @@ describe('BaseInterface', () => {
 
       const {instance} = createTestSubject({searchFactory: factorySpy});
 
-      instance.resolveFacades('search');
-      instance.resolveFacades('search');
-      instance.resolveFacades('search');
+      getInterfaceInternals(instance).resolveFacades('search');
+      getInterfaceInternals(instance).resolveFacades('search');
+      getInterfaceInternals(instance).resolveFacades('search');
 
       expect(factorySpy).toHaveBeenCalledTimes(1);
     });
@@ -110,10 +110,20 @@ describe('BaseInterface', () => {
     it('caches the thunk when composed', () => {
       const {instance} = createTestSubject();
 
-      const composedA = {resolveFacades: vi.fn(), dispose: vi.fn()} as any;
+      const composedA = {
+        supportedFacades: ['search', 'suggestions'],
+        disposed: false,
+        dispose: vi.fn(),
+      } as any;
 
-      const resultA = instance.resolveFacades('search', composedA);
-      const resultB = instance.resolveFacades('search', composedA);
+      const resultA = getInterfaceInternals(instance).resolveFacades(
+        'search',
+        composedA
+      );
+      const resultB = getInterfaceInternals(instance).resolveFacades(
+        'search',
+        composedA
+      );
 
       expect(resultA[0]).toBe(resultB[0]);
     });
@@ -130,10 +140,18 @@ describe('BaseInterface', () => {
 
       const {instance} = createTestSubject({searchFactory: factory});
 
-      const composedA = {resolveFacades: vi.fn(), dispose: vi.fn()} as any;
+      const composedA = {
+        supportedFacades: ['search', 'suggestions'],
+        disposed: false,
+        dispose: vi.fn(),
+      } as any;
 
-      const resultComposed = instance.resolveFacades('search', composedA);
-      const resultStandalone = instance.resolveFacades('search');
+      const resultComposed = getInterfaceInternals(instance).resolveFacades(
+        'search',
+        composedA
+      );
+      const resultStandalone =
+        getInterfaceInternals(instance).resolveFacades('search');
 
       expect(resultComposed[0]).toBe(thunkA);
       expect(resultStandalone[0]).toBe(thunkB);
@@ -141,9 +159,19 @@ describe('BaseInterface', () => {
 
     it('returns the cached thunk for the same composedInterface', () => {
       const {instance} = createTestSubject();
-      const composedX = {resolveFacades: vi.fn(), dispose: vi.fn()} as any;
-      const first = instance.resolveFacades('search', composedX);
-      const second = instance.resolveFacades('search', composedX);
+      const composedX = {
+        supportedFacades: ['search', 'suggestions'],
+        disposed: false,
+        dispose: vi.fn(),
+      } as any;
+      const first = getInterfaceInternals(instance).resolveFacades(
+        'search',
+        composedX
+      );
+      const second = getInterfaceInternals(instance).resolveFacades(
+        'search',
+        composedX
+      );
       expect(first[0]).toBe(second[0]);
     });
   });
@@ -163,9 +191,9 @@ describe('BaseInterface', () => {
     it('throws when resolveFacades is called after dispose', () => {
       const {instance} = createTestSubject();
       instance.dispose();
-      expect(() => instance.resolveFacades('search')).toThrow(
-        'Cannot operate on a disposed interface.'
-      );
+      expect(() =>
+        getInterfaceInternals(instance).resolveFacades('search')
+      ).toThrow('Cannot operate on a disposed interface.');
     });
   });
 });

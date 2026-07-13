@@ -2,7 +2,7 @@
   "extends": ["../../.oxlintrc.json"],
   "overrides": [
     {
-      "files": ["src/public/**"],
+      "files": ["src/index.ts", "src/public/**"],
       "rules": {
         "no-restricted-imports": [
           "error",
@@ -10,15 +10,15 @@
             "patterns": [
               {
                 "group": [
+                  "@ag-ui/core",
+                  "@ag-ui/core/*",
                   "@reduxjs/toolkit",
                   "@reduxjs/toolkit/*",
                   "immer",
                   "redux-thunk",
-                  "reselect",
-                  "@ag-ui/core",
-                  "@ag-ui/core/*"
+                  "reselect"
                 ],
-                "message": "Public layer must not depend on Redux, Immer, AG-UI, or related ecosystem packages directly."
+                "message": "Public surface must not depend on Redux, Immer, AG-UI, or related ecosystem packages directly."
               },
               {
                 "group": [
@@ -32,6 +32,23 @@
                   "!@/src/internal/utils/index.js"
                 ],
                 "message": "Import from the barrel (index.ts), not deep paths. Use @/src/internal/features/<name> or @/src/internal/api/<name>."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/internal/**"],
+      "excludeFiles": ["**/*.test.ts", "**/*.test-d.ts"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["@/src/public/**"],
+                "message": "Internal modules must not import from the public surface. Move the shared code into src/internal/."
               }
             ]
           }

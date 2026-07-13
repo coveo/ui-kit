@@ -1,12 +1,13 @@
 import {createAction} from '@reduxjs/toolkit';
 import {type CacheKey, createCacheKey} from '@/src/internal/utils/index.js';
 import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {generateId} from '@/src/internal/utils/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
-import {Engine, getFullEngine} from '@/src/internal/engine/index.js';
+import type {FullEngine} from '@/src/internal/engine/index.js';
 import type {RoutedInterface, RoutedUseCase} from './generative-types.js';
 import type {HydrateSubInterface} from '@/src/internal/api/generative/index.js';
-import {buildCommerceInterface} from '@/src/public/interfaces/commerce.js';
-import {buildSearchInterface} from '@/src/public/interfaces/search.js';
+import {CommerceInterfaceImpl} from '@/src/internal/interfaces/index.js';
+import {SearchInterfaceImpl} from '@/src/internal/interfaces/index.js';
 import {getOrCreateSearchBoxActions} from '@/src/internal/features/search-box/index.js';
 import {getOrCreateSearchBoxSlice} from '@/src/internal/features/search-box/index.js';
 
@@ -34,9 +35,9 @@ export function getOrCreateHydrateFromSnapshotAction(iface: InterfaceHandle) {
   );
 }
 
-export function createHydrateSubInterface(engine: Engine): HydrateSubInterface {
-  const fullEngine = getFullEngine(engine);
-
+export function createHydrateSubInterface(
+  fullEngine: FullEngine
+): HydrateSubInterface {
   return (
     activityType: string,
     content: unknown,
@@ -51,7 +52,7 @@ export function createHydrateSubInterface(engine: Engine): HydrateSubInterface {
     const effectiveQuery = extractEffectiveQuery(contentRecord, query);
 
     if (routedUseCase === 'commerceSearch') {
-      const subInterface = buildCommerceInterface({engine});
+      const subInterface = new CommerceInterfaceImpl(fullEngine, generateId());
       fullEngine.storeHydrationSnapshot(contentRecord, subInterface);
       const hydrateAction = getOrCreateHydrateFromSnapshotAction(subInterface);
       fullEngine.mutate(hydrateAction(contentRecord));
@@ -63,7 +64,7 @@ export function createHydrateSubInterface(engine: Engine): HydrateSubInterface {
       return {useCase: 'commerceSearch' as const, interface: subInterface};
     }
 
-    const subInterface = buildSearchInterface({engine});
+    const subInterface = new SearchInterfaceImpl(fullEngine, generateId());
     fullEngine.storeHydrationSnapshot(contentRecord, subInterface);
     const hydrateAction = getOrCreateHydrateFromSnapshotAction(subInterface);
     fullEngine.mutate(hydrateAction(contentRecord));
