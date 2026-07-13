@@ -5,7 +5,7 @@
   "description": "CDN visual smoke tests for Atomic components using Playwright + Chromatic",
   "type": "module",
   "scripts": {
-    "cdn-smoke": "playwright test",
+    "cdn-smoke": "pnpm --filter @coveo/platform-mock-api build && playwright test",
     "chromatic": "chromatic --playwright"
   },
   "devDependencies": {
