@@ -1,0 +1,40 @@
+/*
+ * Document-level styles for the Headless search-vite sample.
+ *
+ * Only the palette and the <body> live here; everything else is scoped to a
+ * component via its `static styles` (Shadow DOM). CSS custom properties and
+ * inherited properties (font, color) cross shadow boundaries, so the tokens
+ * defined here on :root are available to every component.
+ *
+ * Clean, Atomic-like and intentionally unbranded (matches the commerce-react
+ * sample; see samples/CONTRIBUTING.md).
+ */
+
+:root {
+  --bg: #f4f6f8;
+  --surface: #ffffff;
+  --text: #1c1c28;
+  --text-muted: #6b7280;
+  --border: #e4e8ec;
+  --accent: #1372ec;
+  --accent-hover: #0f5ec4;
+  --accent-soft: #e8f1fd;
+  --accent-contrast: #ffffff;
+  --radius: 10px;
+  --radius-sm: 6px;
+  --shadow-sm: 0 1px 2px rgba(20, 30, 45, 0.06);
+  --shadow: 0 6px 20px rgba(20, 30, 45, 0.1);
+
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    sans-serif;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+}
