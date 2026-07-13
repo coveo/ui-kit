@@ -45,10 +45,6 @@ function parseSimpleYaml(filePath) {
   return result;
 }
 
-function getProjectSlug() {
-  return 'coveo/ui-kit';
-}
-
 /**
  * Strips the npm scope from a package name.
  * @param {string} name
@@ -121,9 +117,6 @@ function generateComponentYaml(manifest, config, relations) {
       name: componentName,
       title: manifest.name,
       description: manifest.description,
-      annotations: {
-        'github.com/project-slug': getProjectSlug(),
-      },
     },
     spec: {
       type: config.type || 'library',
@@ -153,9 +146,6 @@ function generateLocationYaml(targetPaths) {
     kind: 'Location',
     metadata: {
       name: 'ui-kit-catalog',
-      annotations: {
-        'github.com/project-slug': getProjectSlug(),
-      },
     },
     spec: {
       type: 'url',
@@ -187,9 +177,6 @@ function generateSystemYaml(rootManifest, config) {
         )
         .join(' '),
       description: rootManifest.description,
-      annotations: {
-        'github.com/project-slug': getProjectSlug(),
-      },
     },
     spec: {
       owner: config.owner || 'group:default/dxui',
