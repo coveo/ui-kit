@@ -8,7 +8,7 @@ import type {
 } from './interface-types.js';
 import {BaseInterface, getInterfaceInternals} from './base-interface.js';
 import {
-  ComposedInterface,
+  ComposedInterfaceImpl,
   getComposedInternals,
 } from '@/src/public/interfaces/compose.js';
 
@@ -28,10 +28,10 @@ export function getHandleInternals(handle: InterfaceHandle): HandleInternals {
       getInterfaceInternals(handle);
     return {engine, stateId, cacheRegistry, resolveFacades};
   }
-  if (handle instanceof ComposedInterface) {
+  if (handle instanceof ComposedInterfaceImpl) {
     return getComposedInternals(handle);
   }
   throw new Error(
-    'Invalid interface handle: expected a BaseInterface or ComposedInterface instance.'
+    'Invalid interface handle: expected a BaseInterface or ComposedInterfaceImpl instance.'
   );
 }

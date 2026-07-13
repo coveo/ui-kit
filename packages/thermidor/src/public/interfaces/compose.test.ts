@@ -1,6 +1,6 @@
 import {describe, it, expect} from 'vitest';
 import {
-  ComposedInterface,
+  ComposedInterfaceImpl,
   composeInterfaces,
   getComposedInternals,
 } from './compose.js';
@@ -76,7 +76,7 @@ describe('composeInterfaces', () => {
       interfaces: [searchInterface, commerceInterface],
     });
 
-    expect(composed).toBeInstanceOf(ComposedInterface);
+    expect(composed).toBeInstanceOf(ComposedInterfaceImpl);
   });
 
   it('resolves facades only from sub-interfaces that support them', () => {
@@ -100,7 +100,7 @@ describe('composeInterfaces', () => {
 
     const composed = composeInterfaces({interfaces: [ifaceA, ifaceB]});
 
-    expect(composed).toBeInstanceOf(ComposedInterface);
+    expect(composed).toBeInstanceOf(ComposedInterfaceImpl);
   });
 
   it('assigns a unique stateId to the composed interface', () => {
@@ -115,9 +115,9 @@ describe('composeInterfaces', () => {
   });
 });
 
-describe('ComposedInterface', () => {
+describe('ComposedInterfaceImpl', () => {
   it('throws when constructed with an empty array', () => {
-    expect(() => new ComposedInterface([], 'composed-empty')).toThrow(
+    expect(() => new ComposedInterfaceImpl([], 'composed-empty')).toThrow(
       'ComposedInterface requires at least one interface.'
     );
   });
@@ -127,7 +127,7 @@ describe('ComposedInterface', () => {
     const ifaceA = new TestSearchInterface(engine, 'a');
     const ifaceB = new TestSearchInterface(engine, 'b');
 
-    const composed = new ComposedInterface([ifaceA, ifaceB], 'composed-1');
+    const composed = new ComposedInterfaceImpl([ifaceA, ifaceB], 'composed-1');
     const thunks = getComposedInternals(composed).resolveFacades('search');
 
     expect(thunks).toHaveLength(2);
@@ -138,7 +138,7 @@ describe('ComposedInterface', () => {
     const ifaceA = new TestSearchInterface(engine, 'a');
     const ifaceB = new TestSearchInterface(engine, 'b');
 
-    const composed = new ComposedInterface([ifaceA, ifaceB], 'composed-1');
+    const composed = new ComposedInterfaceImpl([ifaceA, ifaceB], 'composed-1');
 
     const thunksA = getInterfaceInternals(ifaceA).resolveFacades(
       'search',
@@ -160,7 +160,7 @@ describe('ComposedInterface', () => {
     const engine = getFullEngine(new Engine());
     const ifaceA = new TestSearchInterface(engine, 'a');
 
-    const composed = new ComposedInterface([ifaceA], 'my-composed-id');
+    const composed = new ComposedInterfaceImpl([ifaceA], 'my-composed-id');
     const thunks = getComposedInternals(composed).resolveFacades('search');
 
     const thunksViaInterface = getInterfaceInternals(ifaceA).resolveFacades(
@@ -175,7 +175,7 @@ describe('ComposedInterface', () => {
     const ifaceA = new TestSearchInterface(engine, 'a');
     const overrideInterface = new TestSearchInterface(engine, 'override-id');
 
-    const composed = new ComposedInterface([ifaceA], 'my-composed-id');
+    const composed = new ComposedInterfaceImpl([ifaceA], 'my-composed-id');
     const thunks = getComposedInternals(composed).resolveFacades(
       'search',
       overrideInterface
@@ -192,7 +192,7 @@ describe('ComposedInterface', () => {
     const engine = getFullEngine(new Engine());
     const ifaceA = new TestSearchInterface(engine, 'a');
 
-    const composed = new ComposedInterface([ifaceA], 'composed-1');
+    const composed = new ComposedInterfaceImpl([ifaceA], 'composed-1');
 
     expect(() => composed.dispose()).not.toThrow();
   });
@@ -201,7 +201,7 @@ describe('ComposedInterface', () => {
     const engine = getFullEngine(new Engine());
     const ifaceA = new TestSearchInterface(engine, 'a');
 
-    const composed = new ComposedInterface([ifaceA], 'test-composed-id');
+    const composed = new ComposedInterfaceImpl([ifaceA], 'test-composed-id');
     const {stateId} = getComposedInternals(composed);
 
     expect(stateId).toBe('test-composed-id');

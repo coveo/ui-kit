@@ -7,6 +7,7 @@ import {
 import type {
   FacadeResolverFactory,
   Facades,
+  Supports,
 } from '@/src/internal/utils/index.js';
 import {generateId} from '@/src/internal/utils/index.js';
 import {createCommerceSearchFacadeResolver} from '@/src/internal/api/commerce-search/index.js';
@@ -17,7 +18,12 @@ const resolverFactories: Record<Facades['commerce'], FacadeResolverFactory> = {
   suggestions: createCommerceSuggestionsFacadeResolver,
 };
 
-export class CommerceInterface extends BaseInterface<'commerce'> {
+export interface CommerceInterface extends Supports<Facades['commerce']> {}
+
+export class CommerceInterfaceImpl
+  extends BaseInterface<'commerce'>
+  implements CommerceInterface
+{
   constructor(engine: FullEngine, stateId: string) {
     super(engine, stateId, 'commerce', resolverFactories);
   }
@@ -34,5 +40,5 @@ export function buildCommerceInterface(
   const fullEngine = getFullEngine(options.engine);
   const interfaceId = options.id ?? generateId();
 
-  return new CommerceInterface(fullEngine, interfaceId);
+  return new CommerceInterfaceImpl(fullEngine, interfaceId);
 }

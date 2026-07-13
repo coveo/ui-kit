@@ -290,7 +290,7 @@ jobs:
       - run: git branch main origin/main
         if: ${{ github.event_name != 'pull_request' }}
       - uses: ./.github/actions/setup
-      - run: pnpm exec turbo test:dts --affected
+      - run: pnpm exec turbo test:dts:ci --affected
   package-compatibility:
     name: 'Verify compatibility of packages'
     needs: build

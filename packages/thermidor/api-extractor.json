@@ -3,7 +3,7 @@
 
   "mainEntryPointFilePath": "./dist/index.d.ts",
 
-  "bundledPackages": ["@reduxjs/toolkit"],
+  "bundledPackages": [],
 
   "compiler": {
     "tsconfigFilePath": "./tsconfig.api-extractor.json"
@@ -36,7 +36,7 @@
         "logLevel": "warning"
       },
       "ae-forgotten-export": {
-        "logLevel": "warning",
+        "logLevel": "error",
         "addToApiReportFile": true
       },
       "ae-incompatible-release-tags": {
@@ -52,7 +52,7 @@
         "logLevel": "none"
       },
       "ae-wrong-input-file-type": {
-        "logLevel": "warning"
+        "logLevel": "none"
       }
     },
     "tsdocMessageReporting": {
