@@ -15,6 +15,30 @@
   --sample-font: system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
 
+body {
+  margin: 0;
+}
+
+/* Accessible "skip to main content" link (WCAG 2.4.1): visually hidden until
+   focused, then revealed at the top-left. */
+.skip-link {
+  position: absolute;
+  left: 0.5rem;
+  top: -3rem;
+  z-index: 100;
+  padding: 0.6rem 1rem;
+  border-radius: 0 0 6px 6px;
+  background: var(--sample-accent);
+  color: var(--sample-accent-contrast);
+  font-family: var(--sample-font);
+  text-decoration: none;
+  transition: top 0.15s ease;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
 .app-header {
   display: flex;
   flex-wrap: wrap;
@@ -66,6 +90,11 @@
 .app-nav a:hover {
   background: var(--sample-accent-soft);
   color: var(--sample-accent);
+}
+
+.app-nav a:focus-visible {
+  outline: 2px solid var(--sample-accent);
+  outline-offset: 2px;
 }
 
 /* The current page is marked with aria-current="page" on its own link. */

@@ -8,6 +8,7 @@
     <title>Atomic Commerce Sample — Search</title>
   </head>
   <body>
+    <a class="skip-link" href="#maincontent">Skip to main content</a>
     <header class="app-header">
       <div class="brand">
         <img src="/coveo-logo.svg" alt="Coveo" width="119" height="30" />
@@ -21,90 +22,100 @@
       </nav>
     </header>
 
-    <atomic-commerce-interface
-      type="search"
-      data-view-url="https://sports.barca.group/commerce-search"
-    >
-      <atomic-commerce-layout>
-        <atomic-layout-section section="search">
-          <atomic-commerce-search-box>
-            <atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>
-            <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
-            <atomic-commerce-search-box-instant-products image-size="small">
-              <atomic-product-template>
-                <template>
-                  <atomic-product-section-visual>
-                    <atomic-product-field-condition if-defined="ec_thumbnails">
-                      <atomic-product-image
-                        field="ec_thumbnails"
-                      ></atomic-product-image>
-                    </atomic-product-field-condition>
-                  </atomic-product-section-visual>
-                  <atomic-product-section-name>
-                    <atomic-product-link></atomic-product-link>
-                  </atomic-product-section-name>
-                  <atomic-product-section-emphasized>
-                    <atomic-product-price currency="USD"></atomic-product-price>
-                  </atomic-product-section-emphasized>
-                </template>
-              </atomic-product-template>
-            </atomic-commerce-search-box-instant-products>
-          </atomic-commerce-search-box>
-        </atomic-layout-section>
-
-        <atomic-layout-section section="facets">
-          <atomic-commerce-facets></atomic-commerce-facets>
-        </atomic-layout-section>
-
-        <atomic-layout-section section="main">
-          <atomic-layout-section section="status">
-            <atomic-commerce-breadbox></atomic-commerce-breadbox>
-            <atomic-commerce-query-summary></atomic-commerce-query-summary>
-            <atomic-commerce-sort-dropdown></atomic-commerce-sort-dropdown>
+    <main id="maincontent">
+      <atomic-commerce-interface
+        type="search"
+        data-view-url="https://sports.barca.group/commerce-search"
+      >
+        <atomic-commerce-layout>
+          <atomic-layout-section section="search">
+            <atomic-commerce-search-box>
+              <atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>
+              <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
+              <atomic-commerce-search-box-instant-products image-size="small">
+                <atomic-product-template>
+                  <template>
+                    <atomic-product-section-visual>
+                      <atomic-product-field-condition
+                        if-defined="ec_thumbnails"
+                      >
+                        <atomic-product-image
+                          field="ec_thumbnails"
+                        ></atomic-product-image>
+                      </atomic-product-field-condition>
+                    </atomic-product-section-visual>
+                    <atomic-product-section-name>
+                      <atomic-product-link></atomic-product-link>
+                    </atomic-product-section-name>
+                    <atomic-product-section-emphasized>
+                      <atomic-product-price
+                        currency="USD"
+                      ></atomic-product-price>
+                    </atomic-product-section-emphasized>
+                  </template>
+                </atomic-product-template>
+              </atomic-commerce-search-box-instant-products>
+            </atomic-commerce-search-box>
           </atomic-layout-section>
 
-          <atomic-layout-section section="products">
-            <atomic-commerce-product-list
-              display="grid"
-              density="compact"
-              image-size="small"
-            >
-              <atomic-product-template>
-                <template>
-                  <atomic-product-section-visual>
-                    <atomic-product-field-condition if-defined="ec_thumbnails">
-                      <atomic-product-image
-                        field="ec_thumbnails"
-                      ></atomic-product-image>
-                    </atomic-product-field-condition>
-                  </atomic-product-section-visual>
-                  <atomic-product-section-name>
-                    <atomic-product-link></atomic-product-link>
-                  </atomic-product-section-name>
-                  <atomic-product-section-metadata>
-                    <atomic-product-field-condition if-defined="ec_brand">
-                      <atomic-product-text
-                        field="ec_brand"
-                      ></atomic-product-text>
-                    </atomic-product-field-condition>
-                    <atomic-product-rating
-                      field="ec_rating"
-                    ></atomic-product-rating>
-                  </atomic-product-section-metadata>
-                  <atomic-product-section-emphasized>
-                    <atomic-product-price currency="USD"></atomic-product-price>
-                  </atomic-product-section-emphasized>
-                </template>
-              </atomic-product-template>
-            </atomic-commerce-product-list>
+          <atomic-layout-section section="facets">
+            <atomic-commerce-facets></atomic-commerce-facets>
           </atomic-layout-section>
 
-          <atomic-layout-section section="pagination">
-            <atomic-commerce-pager></atomic-commerce-pager>
+          <atomic-layout-section section="main">
+            <atomic-layout-section section="status">
+              <atomic-commerce-breadbox></atomic-commerce-breadbox>
+              <atomic-commerce-query-summary></atomic-commerce-query-summary>
+              <atomic-commerce-sort-dropdown></atomic-commerce-sort-dropdown>
+            </atomic-layout-section>
+
+            <atomic-layout-section section="products">
+              <atomic-commerce-product-list
+                display="grid"
+                density="compact"
+                image-size="small"
+              >
+                <atomic-product-template>
+                  <template>
+                    <atomic-product-section-visual>
+                      <atomic-product-field-condition
+                        if-defined="ec_thumbnails"
+                      >
+                        <atomic-product-image
+                          field="ec_thumbnails"
+                        ></atomic-product-image>
+                      </atomic-product-field-condition>
+                    </atomic-product-section-visual>
+                    <atomic-product-section-name>
+                      <atomic-product-link></atomic-product-link>
+                    </atomic-product-section-name>
+                    <atomic-product-section-metadata>
+                      <atomic-product-field-condition if-defined="ec_brand">
+                        <atomic-product-text
+                          field="ec_brand"
+                        ></atomic-product-text>
+                      </atomic-product-field-condition>
+                      <atomic-product-rating
+                        field="ec_rating"
+                      ></atomic-product-rating>
+                    </atomic-product-section-metadata>
+                    <atomic-product-section-emphasized>
+                      <atomic-product-price
+                        currency="USD"
+                      ></atomic-product-price>
+                    </atomic-product-section-emphasized>
+                  </template>
+                </atomic-product-template>
+              </atomic-commerce-product-list>
+            </atomic-layout-section>
+
+            <atomic-layout-section section="pagination">
+              <atomic-commerce-pager></atomic-commerce-pager>
+            </atomic-layout-section>
           </atomic-layout-section>
-        </atomic-layout-section>
-      </atomic-commerce-layout>
-    </atomic-commerce-interface>
+        </atomic-commerce-layout>
+      </atomic-commerce-interface>
+    </main>
 
     <script type="module" src="/src/commerce-page.js"></script>
   </body>

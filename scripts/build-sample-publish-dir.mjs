@@ -24,6 +24,7 @@ const OUT_DIR = 'publish';
 const SHIPPED_PATHS = [
   'src',
   'public',
+  '.gitignore',
   'vite.config.js',
   'tsconfig.json',
   'README.md',
