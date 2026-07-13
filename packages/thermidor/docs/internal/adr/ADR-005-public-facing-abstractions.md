@@ -77,36 +77,36 @@ The design and contract of state readers will be discussed in a dedicated upcomi
   **Consumer code example (standard):**
 
   ```ts
-  const engine = new Engine({ configuration: { organizationId, accessToken } });
+  const engine = new Engine({configuration: {organizationId, accessToken}});
 
-  const search = buildSearchInterface({ engine });
+  const search = buildSearchInterface({engine});
 
-  const searchBox = buildSearchBoxController({ interface: search });
-  const resultList = buildResultListController({ interface: search });
+  const searchBox = buildSearchBoxController({interface: search});
+  const resultList = buildResultListController({interface: search});
 
   searchBox.subscribe((state) => renderSearchBox(state));
   resultList.subscribe((state) => renderResults(state));
 
-  searchBox.setQuery({ query: 'laptops' });
+  searchBox.setQuery({query: 'laptops'});
   searchBox.submit();
   ```
 
   **Consumer code example (power user):**
 
   ```ts
-  const actions = loadSearchBoxActions({ interface: search });
-  actions.setQuery({ query: 'laptops' });
+  const actions = loadSearchBoxActions({interface: search});
+  actions.setQuery({query: 'laptops'});
   actions.submit();
   ```
 
   **Consumer code example (hybrid):**
 
   ```ts
-  const search = buildSearchInterface({ engine });
-  const commerce = buildCommerceInterface({ engine });
-  const hybrid = composeInterfaces({ interfaces: [search, commerce] });
+  const search = buildSearchInterface({engine});
+  const commerce = buildCommerceInterface({engine});
+  const hybrid = composeInterfaces({interfaces: [search, commerce]});
 
-  const searchBox = buildSearchBoxController({ interface: hybrid });
+  const searchBox = buildSearchBoxController({interface: hybrid});
   // One search box, two endpoints
   ```
 
@@ -163,6 +163,7 @@ The selected model (Option A) satisfies all three MUST requirements simultaneous
 **Why the Interface layer is justified despite the added indirection:**
 
 The Interface is the architectural linchpin. It provides:
+
 - **Scoped identity**: multiple independent search interfaces on one page each have their own state partition.
 - **Type-safe facade resolution**: the interface carries its own facade resolvers (per ADR-004), ensuring that controllers call the correct API endpoints without runtime configuration.
 - **Composition target**: `composeInterfaces` works because interfaces are explicit objects with known capabilities — not implicit properties on the engine.
@@ -198,12 +199,12 @@ A single abstraction cannot serve both UI builders (who want orchestrated, high-
 
 - **Consumer migration impact**: High. All consumer code must be rewritten to use the new abstractions. Conceptual mapping:
 
-  | Current Headless | Thermidor |
-  |---|---|
-  | `buildSearchEngine(config)` | `new Engine(config)` + `buildSearchInterface({ engine })` |
-  | `buildSearchBox(engine)` | `buildSearchBoxController({ interface: searchInterface })` |
+  | Current Headless                    | Thermidor                                                        |
+  | ----------------------------------- | ---------------------------------------------------------------- |
+  | `buildSearchEngine(config)`         | `new Engine(config)` + `buildSearchInterface({ engine })`        |
+  | `buildSearchBox(engine)`            | `buildSearchBoxController({ interface: searchInterface })`       |
   | `engine.dispatch(updateQuery({q}))` | `searchBox.setQuery({ query })` or `actions.setQuery({ query })` |
-  | `engine.state.search.results` | `resultList.state.results` |
+  | `engine.state.search.results`       | `resultList.state.results`                                       |
 
 - **Rollout strategy (flagged, phased, big-bang)**: If adopted, big-bang with a new major version. No gradual migration path from current headless — the abstraction models are incompatible.
 - **Rollback strategy**: Consumers remain on current headless until Thermidor is validated and proven stable.
