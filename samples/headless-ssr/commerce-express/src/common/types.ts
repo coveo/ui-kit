@@ -9,10 +9,8 @@ import type {
 } from '../lib/engine-definition';
 
 /** Static state fetched on the server, per page type. */
-export type SearchStaticState = InferStaticState<typeof searchEngineDefinition>;
-export type ListingStaticState = InferStaticState<
-  typeof listingEngineDefinition
->;
+type SearchStaticState = InferStaticState<typeof searchEngineDefinition>;
+type ListingStaticState = InferStaticState<typeof listingEngineDefinition>;
 
 /** Static state for either supported page type. */
 export type AppStaticState = SearchStaticState | ListingStaticState;
@@ -22,15 +20,15 @@ export type AppStaticState = SearchStaticState | ListingStaticState;
  * definitions. The listing page omits the search box; every other concern is
  * shared, so callers narrow with `'searchBox' in controllers`.
  */
-export type SearchControllers = InferHydratedState<
+type SearchControllers = InferHydratedState<
   typeof searchEngineDefinition
 >['controllers'];
-export type ListingControllers = InferHydratedState<
+type ListingControllers = InferHydratedState<
   typeof listingEngineDefinition
 >['controllers'];
 export type AppControllers = SearchControllers | ListingControllers;
 
-export type PageType = 'search' | 'listing';
+type PageType = 'search' | 'listing';
 
 /**
  * The SSR payload the server injects for the client to hydrate from. It is
