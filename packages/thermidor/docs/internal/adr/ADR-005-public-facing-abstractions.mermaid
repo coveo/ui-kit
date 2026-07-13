@@ -1,0 +1,58 @@
+graph TB
+    %% Engine
+    Engine["<b>Engine</b><br/><i>Typically 1 per app<br/>(not a singleton)</i>"]
+
+    %% Interfaces
+    subgraph Interfaces["Interfaces (1 or more per Engine)"]
+        direction LR
+        SearchIface["SearchInterface"]
+        CommerceIface["CommerceInterface"]
+        GenIface["GenerativeInterface"]
+        MoreIface["..."]
+    end
+
+    %% Composed Interface
+    Composed["<b>ComposedInterface</b><br/><i>Merges 2+ interfaces<br/>(provisional concept)</i>"]
+
+    %% Controllers
+    subgraph Controllers["Controllers (1 or more per Interface)"]
+        direction LR
+        SBC["SearchBoxController"]
+        RLC["ResultListController"]
+        PC["PaginationController"]
+        CC["ConverseController"]
+        MoreC["..."]
+    end
+
+    %% Actions
+    Actions["<b>Actions</b><br/><i>À la carte state mutations<br/>for power users</i>"]
+
+    %% Consumer
+    Consumer["<b>Consumer Code</b>"]
+
+    %% Relationships
+    Engine -->|"owns state for"| Interfaces
+    SearchIface & CommerceIface -->|"can be merged into"| Composed
+    Interfaces -->|"scopes"| Controllers
+    Composed -->|"scopes (fan-out only,<br/>e.g., search box)"| Controllers
+    Controllers -.->|"use internally"| Actions
+    Interfaces -->|"scopes"| Actions
+    Consumer -->|"builds & configures"| Engine
+    Consumer -->|"creates via build*Interface()"| Interfaces
+    Consumer -->|"interacts primarily with"| Controllers
+    Consumer -.->|"calls à la carte"| Actions
+
+    %% Styling
+    style Engine fill:#4a9eff,color:#fff
+    style Composed fill:#9b59b6,color:#fff
+    style Actions fill:#fd7e14,color:#fff
+    style Consumer fill:#95a5a6,color:#fff
+    style SearchIface fill:#28a745,color:#fff
+    style CommerceIface fill:#28a745,color:#fff
+    style GenIface fill:#28a745,color:#fff
+    style MoreIface fill:#28a745,color:#fff
+    style SBC fill:#17a2b8,color:#fff
+    style RLC fill:#17a2b8,color:#fff
+    style PC fill:#17a2b8,color:#fff
+    style CC fill:#17a2b8,color:#fff
+    style MoreC fill:#17a2b8,color:#fff

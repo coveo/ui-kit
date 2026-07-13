@@ -4,6 +4,10 @@
     "test:dts": {
       "dependsOn": ["build"],
       "outputs": []
+    },
+    "test:dts:ci": {
+      "dependsOn": ["build"],
+      "outputs": []
     }
   }
 }

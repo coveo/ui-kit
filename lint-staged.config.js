@@ -67,4 +67,8 @@ module.exports = {
       ' '
     )}`;
   },
+  '{**/package.json,scripts/generate-catalog-info.mjs,**/catalog-info*.yaml}':
+    () => {
+      return 'node scripts/generate-catalog-info.mjs';
+    },
 };

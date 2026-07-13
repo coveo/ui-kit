@@ -9,7 +9,7 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "sourceMap": true,
-    "declaration": true,
+    "declaration": false,
     "rootDir": "src/",
     "outDir": "dist/",
     "moduleResolution": "NodeNext",

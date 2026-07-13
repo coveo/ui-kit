@@ -36,11 +36,13 @@ export type {
 } from './public/interfaces/commerce.js';
 export type {
   Facades,
+  InferInterfaceType,
   InterfaceHandle,
+  InterfaceRegistry,
   InterfaceType,
+  InterfaceTypeMap,
   Supports,
 } from '@/src/internal/utils/index.js';
-export type {BaseInterface} from '@/src/internal/utils/index.js';
 export type {
   A2UISurface,
   AgentMessage,

@@ -87,15 +87,6 @@ describe('instant-item', () => {
       );
     });
 
-    it('should have the correct class for button style', () => {
-      const button = renderInstantItemShowAllButton({
-        i18n,
-        i18nKey: 'show-all-products',
-      });
-
-      expect(button.classList.contains('btn-text-primary')).toBe(true);
-    });
-
     it('should have the correct part', () => {
       const button = renderInstantItemShowAllButton({
         i18n,

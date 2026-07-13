@@ -18,16 +18,25 @@ export type {
   NavigatorContextProvider,
 } from './navigator-context-types.js';
 export {BaseController} from './base-controller.js';
+export type {Controller} from './controller-types.js';
 export {BaseInterface, getInterfaceInternals} from './base-interface.js';
 export type {InterfaceInternals} from './base-interface.js';
 export type {
-  InterfaceHandle,
+  CommerceInterface,
+  ComposedInterface,
   EndpointStateScope,
   EndpointThunk,
   FacadeResolver,
   FacadeResolverFactory,
   Facades,
+  GenerativeInterface,
+  InferInterfaceType,
+  InterfaceHandle,
+  InterfaceRegistry,
   InterfaceType,
+  InterfaceTypeMap,
+  SearchInterface,
   Supports,
+  SupportsBrand,
 } from './interface-types.js';
 export {createNoopThunk} from './noop-thunk.js';

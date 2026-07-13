@@ -1,0 +1,11 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: thermidor
+  title: '@coveo/thermidor'
+  description: Experimental package for a unified, framework-agnostic headless engine for search and conversational experiences
+spec:
+  type: library
+  lifecycle: experimental
+  owner: group:default/dxui
+  system: ui-kit
