@@ -58,8 +58,13 @@ app.get('/search', async (req, res) => {
         cart: {initialState: {items: getCartItems(req)}},
         context: {
           ...DEFAULT_CONTEXT,
-          view: {url: 'https://sports.barca.group/search'},
-        },
+          view: {
+            url: new URL(
+              req.originalUrl ?? req.url,
+              `http://${req.headers.host ?? 'localhost'}`
+            ).toString(),
+          },
+        }
         parameterManager: {
           initialState: {parameters: deserializeParameters(req)},
         },
