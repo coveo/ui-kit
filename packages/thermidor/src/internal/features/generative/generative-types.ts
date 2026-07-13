@@ -1,5 +1,5 @@
-import type {CommerceInterface} from '@/src/public/interfaces/commerce.js';
-import type {SearchInterface} from '@/src/public/interfaces/search.js';
+import type {CommerceInterface} from '@/src/internal/utils/index.js';
+import type {SearchInterface} from '@/src/internal/utils/index.js';
 
 /**
  * ============================================================================
