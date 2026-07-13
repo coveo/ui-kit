@@ -222,3 +222,15 @@ A single abstraction cannot serve both UI builders (who want orchestrated, high-
 - **Composed Interface**: merges two or more interfaces for hybrid use cases (e.g., one search box driving both a search and a commerce endpoint). Provisional — may be superseded by a unified API.
 - **Controllers**: one or more per interface. Most controllers target a single interface. Only controllers whose semantics are "fan-out" (e.g., search box triggering queries on multiple endpoints) are meaningful on composed interfaces. Controllers that own per-interface state (result list, pagination, converse) must target a single interface — composing them would cause one interface's state to overwrite the other's.
 - **Actions**: used internally by controllers for state mutations, but also callable directly by consumers for custom workflows outside the controller pattern.
+
+## Annex: Abstraction Lifecycle
+
+Each abstraction follows a **create → use → dispose** lifecycle. Understanding this model clarifies ownership semantics and prevents resource leaks.
+
+- **Engine**: the root owner of all state, subscriptions, and in-flight requests. Calling `engine.dispose()` tears down these resources and severs internal references, making the engine — and everything it transitively owns — eligible for garbage collection. Primary use cases for disposal are SPA route transitions (where an engine is scoped to a view or micro-frontend being unmounted) and SSR (where the engine must be released after state serialization so the process does not accumulate memory across requests).
+
+- **Interface**: created from an engine, active for the lifetime of its use case. Disposing the engine cascades to all interfaces it owns. An interface can also be individually disposed (e.g., removing one search panel while keeping the engine alive for another) — this unsubscribes that interface's controllers and releases its resources without affecting sibling interfaces.
+
+- **Composed Interface**: a lightweight projection over its constituent interfaces. Calling `dispose()` on it releases the composition's own resources (cache registry) but does not dispose the underlying interfaces — those are disposed independently or via the engine.
+
+- **Controllers and Actions**: stateless by design. Controllers subscribe to interface state on creation and unsubscribe when their parent interface is disposed. They hold no resources that require independent cleanup. Actions are pure mutation functions with no lifecycle of their own.
