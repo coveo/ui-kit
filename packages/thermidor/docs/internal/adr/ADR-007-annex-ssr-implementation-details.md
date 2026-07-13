@@ -11,7 +11,7 @@
  * Opaque serialized snapshot of the engine state.
  * Do not inspect, modify, or depend on its internal format.
  */
-export type SSRSnapshot = string & { readonly __brand: 'SSRSnapshot' };
+export type SSRSnapshot = string & {readonly __brand: 'SSRSnapshot'};
 ```
 
 ### Provisional — parameter seeding types
@@ -67,17 +67,20 @@ export interface BuildCommerceProductListingInterfaceOptions {
 export interface ComposeInterfacesOptions<T extends InterfaceType> {
   interfaces: BaseInterface<T>[];
   id?: string;
-  initialParameters?: { query?: string };
+  initialParameters?: {query?: string};
 }
 ```
 
 ## 3. Standalone Functions
 
 ```ts
-import { getSSRSnapshot, restoreSSRSnapshot } from '@coveo/thermidor';
+import {getSSRSnapshot, restoreSSRSnapshot} from '@coveo/thermidor';
 
-function getSSRSnapshot(options: { engine: Engine }): SSRSnapshot;
-function restoreSSRSnapshot(options: { engine: Engine; snapshot: SSRSnapshot }): void;
+function getSSRSnapshot(options: {engine: Engine}): SSRSnapshot;
+function restoreSSRSnapshot(options: {
+  engine: Engine;
+  snapshot: SSRSnapshot;
+}): void;
 ```
 
 The engine class remains opaque — no public methods added.
@@ -120,6 +123,7 @@ If the URL has `?q=laptops&page=2&f[brand]=Apple` but the developer only builds 
 The request selector reads pagination/facets selectors, gets `initialParameters` defaults (page 1, no facets) because those slices were never injected.
 
 This is the "non-adopted slices are safe no-ops" principle from ADR-003 working in both directions:
+
 - **Forward**: Non-adopted slices produce safe defaults in request selectors
 - **Reverse**: Non-adopted slices don't hydrate from snapshots
 
@@ -130,13 +134,13 @@ The snapshot storage is optimistic (accepts all recognized params). The slice ad
 ### `getSSRSnapshot`
 
 ```ts
-import { getFullEngine } from '@/src/core/interface/engine/engine.js';
+import {getFullEngine} from '@/src/core/interface/engine/engine.js';
 
-export function getSSRSnapshot({ engine }: { engine: Engine }): SSRSnapshot {
+export function getSSRSnapshot({engine}: {engine: Engine}): SSRSnapshot {
   const fullEngine = getFullEngine(engine);
   const fullState = fullEngine.read((state) => state);
 
-  return JSON.stringify({ v: 1, state: fullState }) as SSRSnapshot;
+  return JSON.stringify({v: 1, state: fullState}) as SSRSnapshot;
 }
 ```
 
@@ -149,11 +153,17 @@ We pass the snapshot as plain JSON rather than base64 for two reasons: (1) `btoa
 ### `restoreSSRSnapshot`
 
 ```ts
-import { getFullEngine } from '@/src/core/interface/engine/engine.js';
+import {getFullEngine} from '@/src/core/interface/engine/engine.js';
 
-export function restoreSSRSnapshot({ engine, snapshot }: { engine: Engine; snapshot: SSRSnapshot }): void {
+export function restoreSSRSnapshot({
+  engine,
+  snapshot,
+}: {
+  engine: Engine;
+  snapshot: SSRSnapshot;
+}): void {
   const fullEngine = getFullEngine(engine);
-  const { state } = JSON.parse(snapshot);
+  const {state} = JSON.parse(snapshot);
 
   // Distribute state by interface ID into per-interface hydration snapshots
   const byInterface = new Map<string, Record<string, unknown>>();
@@ -180,12 +190,17 @@ This parses the JSON snapshot and distributes the engine-wide state into per-int
 ### `initialParameters` translation in interface builder
 
 ```ts
-export function buildSearchInterface(options: BuildSearchInterfaceOptions): SearchInterface {
+export function buildSearchInterface(
+  options: BuildSearchInterfaceOptions
+): SearchInterface {
   const fullEngine = getFullEngine(options.engine);
   const interfaceId = options.id ?? generateId();
 
   if (options.initialParameters) {
-    const translated = translateSearchInitialParameters(interfaceId, options.initialParameters);
+    const translated = translateSearchInitialParameters(
+      interfaceId,
+      options.initialParameters
+    );
     fullEngine.storeHydrationSnapshot(interfaceId, translated);
   }
 
@@ -200,12 +215,12 @@ function translateSearchInitialParameters(
   const state: Record<string, unknown> = {};
 
   if (params.query !== undefined) {
-    state[`${interfaceId}/searchBox`] = { query: params.query };
+    state[`${interfaceId}/searchBox`] = {query: params.query};
   }
   if (params.page !== undefined || params.pageSize !== undefined) {
     state[`${interfaceId}/pagination`] = {
-      ...(params.page !== undefined && { page: params.page }),
-      ...(params.pageSize !== undefined && { pageSize: params.pageSize }),
+      ...(params.page !== undefined && {page: params.page}),
+      ...(params.pageSize !== undefined && {pageSize: params.pageSize}),
     };
   }
   if (params.facets !== undefined) {
@@ -226,12 +241,12 @@ import {
   deserializeSearchParameters,
 } from '@coveo/thermidor';
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({request}: LoaderArgs) {
   const url = new URL(request.url);
-  const params = deserializeSearchParameters({ searchParams: url.searchParams });
+  const params = deserializeSearchParameters({searchParams: url.searchParams});
 
   const engine = new Engine({
-    configuration: { organizationId: 'myorg', accessToken: 'xxxx' },
+    configuration: {organizationId: 'myorg', accessToken: 'xxxx'},
     navigatorContextProvider: () => ({
       referrer: request.headers.get('referer') ?? '',
       userAgent: request.headers.get('user-agent') ?? '',
@@ -246,10 +261,10 @@ export async function loader({ request }: LoaderArgs) {
 
   await searchInterface.executeInitialRequest();
 
-  const snapshot = getSSRSnapshot({ engine });
+  const snapshot = getSSRSnapshot({engine});
   engine.dispose();
 
-  return { snapshot };
+  return {snapshot};
 }
 ```
 
@@ -266,16 +281,16 @@ import {
 
 export function hydrateSearch(snapshot: SSRSnapshot) {
   const engine = new Engine({
-    configuration: { organizationId: 'myorg', accessToken: 'xxxx' },
+    configuration: {organizationId: 'myorg', accessToken: 'xxxx'},
   });
 
-  restoreSSRSnapshot({ engine, snapshot });
-  const searchInterface = buildSearchInterface({ engine, id: 'main-search' });
-  const searchBox = buildSearchBoxController({ interface: searchInterface });
-  const resultList = buildResultListController({ interface: searchInterface });
+  restoreSSRSnapshot({engine, snapshot});
+  const searchInterface = buildSearchInterface({engine, id: 'main-search'});
+  const searchBox = buildSearchBoxController({interface: searchInterface});
+  const resultList = buildResultListController({interface: searchInterface});
 
   // No flash. No re-fetch. Controllers reflect server state immediately.
-  return { engine, searchBox, resultList };
+  return {engine, searchBox, resultList};
 }
 ```
 
@@ -285,9 +300,15 @@ For pages combining multiple interfaces, a single snapshot captures everything:
 
 ```ts
 // Server — product page with two recommendation carousels
-import { Engine, buildCommerceRecommendationInterface, getSSRSnapshot } from '@coveo/thermidor';
+import {
+  Engine,
+  buildCommerceRecommendationInterface,
+  getSSRSnapshot,
+} from '@coveo/thermidor';
 
-const engine = new Engine({ configuration: { organizationId: '...', accessToken: '...' } });
+const engine = new Engine({
+  configuration: {organizationId: '...', accessToken: '...'},
+});
 
 const frequentlyBought = buildCommerceRecommendationInterface({
   engine,
@@ -304,21 +325,35 @@ const similarProducts = buildCommerceRecommendationInterface({
 await frequentlyBought.executeInitialRequest();
 await similarProducts.executeInitialRequest();
 
-const snapshot = getSSRSnapshot({ engine }); // captures all interfaces in one object
+const snapshot = getSSRSnapshot({engine}); // captures all interfaces in one object
 engine.dispose();
 
-return { snapshot };
+return {snapshot};
 ```
 
 ```ts
 // Client — one restore, every interface self-hydrates by ID
-import { Engine, buildCommerceRecommendationInterface, restoreSSRSnapshot } from '@coveo/thermidor';
+import {
+  Engine,
+  buildCommerceRecommendationInterface,
+  restoreSSRSnapshot,
+} from '@coveo/thermidor';
 
-const engine = new Engine({ configuration: { organizationId: '...', accessToken: '...' } });
-restoreSSRSnapshot({ engine, snapshot });
+const engine = new Engine({
+  configuration: {organizationId: '...', accessToken: '...'},
+});
+restoreSSRSnapshot({engine, snapshot});
 
-const frequentlyBought = buildCommerceRecommendationInterface({ engine, id: 'frequently-bought', slotId: 'frequently-bought-together' });
-const similarProducts = buildCommerceRecommendationInterface({ engine, id: 'similar-products', slotId: 'similar-items' });
+const frequentlyBought = buildCommerceRecommendationInterface({
+  engine,
+  id: 'frequently-bought',
+  slotId: 'frequently-bought-together',
+});
+const similarProducts = buildCommerceRecommendationInterface({
+  engine,
+  id: 'similar-products',
+  slotId: 'similar-items',
+});
 // Both recommendation carousels are hydrated. No routing logic needed.
 ```
 
@@ -343,6 +378,7 @@ interface CommerceInterface {
 ```
 
 **Semantics:**
+
 - Assembles the request from the interface's scoped slices (query, pagination, facets, sort, etc.)
 - Calls the appropriate backend endpoint (search API for search interfaces, commerce API for commerce interfaces)
 - Populates response state (results, facets, pagination metadata, etc.) into the interface's slices
@@ -350,12 +386,14 @@ interface CommerceInterface {
 - Available on both server and client, but primarily designed for the server-side SSR flow
 
 **Why interface-level (not controller-level):**
+
 - The interface owns the request and knows its type — it calls the right endpoint without the consumer specifying it
 - Works for all interface types uniformly: search pages, product listing pages, recommendation panels
 - No need to instantiate a controller solely to trigger a fetch on the server (e.g., no `buildSearchBoxController` just to call `submit()`)
 - Clear separation: controllers handle user interactions, interfaces handle data lifecycle
 
 **Why once-only:**
+
 - Prevents accidental double-fetches on the server
 - Safe to call defensively in shared helpers without tracking whether it was already called
 - Communicates intent: this is initialization, not a general-purpose "re-fetch"
@@ -365,14 +403,16 @@ interface CommerceInterface {
 
 ```ts
 // Server — PLP needs no search box or query, just category parameters
-const engine = new Engine({ configuration: { organizationId: '...', accessToken: '...' } });
+const engine = new Engine({
+  configuration: {organizationId: '...', accessToken: '...'},
+});
 const plp = buildCommerceInterface({
   engine,
   id: 'plp',
-  initialParameters: { facets: { category: ['Electronics'] } },
+  initialParameters: {facets: {category: ['Electronics']}},
 });
 await plp.executeInitialRequest(); // calls commerce API
-const snapshot = getSSRSnapshot({ engine });
+const snapshot = getSSRSnapshot({engine});
 engine.dispose();
 ```
 
@@ -380,14 +420,16 @@ engine.dispose();
 
 ```ts
 // Server — search page with query from URL
-const engine = new Engine({ configuration: { organizationId: '...', accessToken: '...' } });
+const engine = new Engine({
+  configuration: {organizationId: '...', accessToken: '...'},
+});
 const search = buildSearchInterface({
   engine,
   id: 'main-search',
-  initialParameters: { query: 'laptops', page: 1 },
+  initialParameters: {query: 'laptops', page: 1},
 });
 await search.executeInitialRequest(); // calls search API
-const snapshot = getSSRSnapshot({ engine });
+const snapshot = getSSRSnapshot({engine});
 engine.dispose();
 ```
 
@@ -403,9 +445,9 @@ function useController<T extends Controller<any>>(controller: T) {
     () => controller.state,
     () => controller.state
   );
-  const { state: _, subscribe: __, ...rest } = controller;
+  const {state: _, subscribe: __, ...rest} = controller;
   const methods = useMemo(() => mapBindMethods(rest, controller), [controller]);
-  return { state, methods };
+  return {state, methods};
 }
 ```
 
@@ -420,14 +462,20 @@ import {
   deserializeSearchParameters,
 } from '@coveo/thermidor';
 
-export default async function SearchPage({ searchParams }) {
-  const params = deserializeSearchParameters({ searchParams });
-  const engine = new Engine({ configuration: { organizationId: '...', accessToken: '...' } });
-  const searchInterface = buildSearchInterface({ engine, id: 'main-search', initialParameters: params });
+export default async function SearchPage({searchParams}) {
+  const params = deserializeSearchParameters({searchParams});
+  const engine = new Engine({
+    configuration: {organizationId: '...', accessToken: '...'},
+  });
+  const searchInterface = buildSearchInterface({
+    engine,
+    id: 'main-search',
+    initialParameters: params,
+  });
 
   await searchInterface.executeInitialRequest();
 
-  const snapshot = getSSRSnapshot({ engine });
+  const snapshot = getSSRSnapshot({engine});
   engine.dispose();
 
   return <SearchClientPage snapshot={snapshot} />;
@@ -437,12 +485,18 @@ export default async function SearchPage({ searchParams }) {
 ```tsx
 // app/search/client-page.tsx (Client Component)
 'use client';
-import { Engine, buildSearchInterface, buildSearchBoxController, buildResultListController, restoreSSRSnapshot } from '@coveo/thermidor';
-import { useController } from '@coveo/thermidor-react';
-import { useRef } from 'react';
+import {
+  Engine,
+  buildSearchInterface,
+  buildSearchBoxController,
+  buildResultListController,
+  restoreSSRSnapshot,
+} from '@coveo/thermidor';
+import {useController} from '@coveo/thermidor-react';
+import {useRef} from 'react';
 
-export function SearchClientPage({ snapshot }: { snapshot: SSRSnapshot }) {
-  const { searchBox, resultList } = useHydratedControllers(snapshot);
+export function SearchClientPage({snapshot}: {snapshot: SSRSnapshot}) {
+  const {searchBox, resultList} = useHydratedControllers(snapshot);
 
   return (
     <>
@@ -453,33 +507,48 @@ export function SearchClientPage({ snapshot }: { snapshot: SSRSnapshot }) {
 }
 
 function useHydratedControllers(snapshot: SSRSnapshot) {
-  const ref = useRef<{ searchBox: SearchBoxController; resultList: ResultListController }>();
+  const ref = useRef<{
+    searchBox: SearchBoxController;
+    resultList: ResultListController;
+  }>();
   if (!ref.current) {
-    const engine = new Engine({ configuration: { organizationId: '...', accessToken: '...' } });
-    restoreSSRSnapshot({ engine, snapshot });
-    const searchInterface = buildSearchInterface({ engine, id: 'main-search' });
+    const engine = new Engine({
+      configuration: {organizationId: '...', accessToken: '...'},
+    });
+    restoreSSRSnapshot({engine, snapshot});
+    const searchInterface = buildSearchInterface({engine, id: 'main-search'});
     ref.current = {
-      searchBox: buildSearchBoxController({ interface: searchInterface }),
-      resultList: buildResultListController({ interface: searchInterface }),
+      searchBox: buildSearchBoxController({interface: searchInterface}),
+      resultList: buildResultListController({interface: searchInterface}),
     };
   }
   return ref.current;
 }
 
-function SearchBox({ controller }: { controller: SearchBoxController }) {
-  const { state, methods } = useController(controller);
+function SearchBox({controller}: {controller: SearchBoxController}) {
+  const {state, methods} = useController(controller);
   return (
-    <form onSubmit={(e) => { e.preventDefault(); methods.submit(); }}>
-      <input value={state.query} onChange={(e) => methods.setQuery({ query: e.target.value })} />
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        methods.submit();
+      }}
+    >
+      <input
+        value={state.query}
+        onChange={(e) => methods.setQuery({query: e.target.value})}
+      />
     </form>
   );
 }
 
-function ResultList({ controller }: { controller: ResultListController }) {
-  const { state } = useController(controller);
+function ResultList({controller}: {controller: ResultListController}) {
+  const {state} = useController(controller);
   return (
     <ul>
-      {state.results.map((r) => <li key={r.uniqueId}>{r.title}</li>)}
+      {state.results.map((r) => (
+        <li key={r.uniqueId}>{r.title}</li>
+      ))}
     </ul>
   );
 }
@@ -487,15 +556,15 @@ function ResultList({ controller }: { controller: ResultListController }) {
 
 ### What the React adapter provides vs. what thermidor core provides
 
-| Concern | Owned by | Surface |
-|---------|----------|---------|
-| Parameter seeding (`initialParameters`) | Core | `buildSearchInterface({ initialParameters })` |
-| Initial request execution | Core | `searchInterface.executeInitialRequest()` |
-| Snapshot extraction | Core | `getSSRSnapshot({ engine })` |
-| Snapshot restoration | Core | `restoreSSRSnapshot({ engine, snapshot })` |
-| Reactive state in React | React adapter | `useController(controller)` |
-| Context/Provider (optional) | React adapter | `ThermidorProvider` |
-| Named hooks (optional sugar) | React adapter | `useSearchBox()`, `useResultList()` |
+| Concern                                 | Owned by      | Surface                                       |
+| --------------------------------------- | ------------- | --------------------------------------------- |
+| Parameter seeding (`initialParameters`) | Core          | `buildSearchInterface({ initialParameters })` |
+| Initial request execution               | Core          | `searchInterface.executeInitialRequest()`     |
+| Snapshot extraction                     | Core          | `getSSRSnapshot({ engine })`                  |
+| Snapshot restoration                    | Core          | `restoreSSRSnapshot({ engine, snapshot })`    |
+| Reactive state in React                 | React adapter | `useController(controller)`                   |
+| Context/Provider (optional)             | React adapter | `ThermidorProvider`                           |
+| Named hooks (optional sugar)            | React adapter | `useSearchBox()`, `useResultList()`           |
 
 The core is framework-agnostic. The React adapter is thin — `useController` is ~10 lines. Everything else (providers, named hooks, definition helpers) is optional convenience.
 
@@ -522,6 +591,7 @@ Between steps 2 and 4, the UI is visible but interactions are dead or buffered. 
 4. Controllers are live immediately. No async step.
 
 ### Comparison
+
 |-------|-----------------|-----------|
 | First paint (HTML visible) | Same | Same |
 | React hydration (DOM attached) | Same | Same |
@@ -533,6 +603,7 @@ Between steps 2 and 4, the UI is visible but interactions are dead or buffered. 
 Current headless's `hydrateStaticState` reconstructs the full engine from scratch — middleware setup, analytics initialization, controller re-registration — some of which involves async operations.
 
 Thermidor avoids this because:
+
 - `restoreSSRSnapshot` parses the snapshot and distributes it into per-interface hydration entries (sync JSON.parse + Map writes)
 - `adoptSlice` is sync: inject reducer into `combineSlices`, dispatch `hydrateFromSnapshot`
 - No middleware ceremony or analytics bootstrap during hydration
@@ -547,6 +618,7 @@ Generative interfaces (`buildGenerativeInterface`) handle real-time conversation
 However, when a generative turn routes to a sub-interface (e.g., the agent surfaces search results), that routed interface is a standard `SearchInterface` or `CommerceInterface` and is fully SSR-able.
 
 **Excluded from `initialParameters`/snapshot:**
+
 - `buildGenerativeInterface` does NOT accept `initialParameters`
 - Generative interface state is not meaningful in SSR snapshots
 - Routed sub-interfaces are the SSR boundary for generative use cases
@@ -557,41 +629,64 @@ Scenario: a page needs to render products that were produced by a generative tur
 
 ```ts
 // === Server ===
-import { Engine, buildCommerceInterface, buildProductListController, getSSRSnapshot } from '@coveo/thermidor';
+import {
+  Engine,
+  buildCommerceInterface,
+  buildProductListController,
+  getSSRSnapshot,
+} from '@coveo/thermidor';
 
 // 1. Obtain the turn's routed content (however it was persisted/produced)
 const turnContent = await fetchTurnContent('abc123');
 // turnContent = { 'routed-products/productList': { products: [...], totalCount: 42 }, ... }
 
 // 2. Build the engine and restore the turn content as initial parameters
-const engine = new Engine({ configuration: { organizationId: '...', accessToken: '...' } });
-const commerceInterface = buildCommerceInterface({ engine, id: 'routed-products', initialParameters: turnContent });
+const engine = new Engine({
+  configuration: {organizationId: '...', accessToken: '...'},
+});
+const commerceInterface = buildCommerceInterface({
+  engine,
+  id: 'routed-products',
+  initialParameters: turnContent,
+});
 
 // 3. Build controllers — they hydrate from the restored parameters
-const productList = buildProductListController({ interface: commerceInterface });
+const productList = buildProductListController({interface: commerceInterface});
 // productList.state.products is already populated — no submit() needed
 
 // 4. Snapshot for client hydration
-const snapshot = getSSRSnapshot({ engine });
+const snapshot = getSSRSnapshot({engine});
 engine.dispose();
 
-return { snapshot };
+return {snapshot};
 ```
 
 ```ts
 // === Client ===
-import { Engine, buildCommerceInterface, buildProductListController, buildGenerativeInterface, buildConverseController, restoreSSRSnapshot } from '@coveo/thermidor';
+import {
+  Engine,
+  buildCommerceInterface,
+  buildProductListController,
+  buildGenerativeInterface,
+  buildConverseController,
+  restoreSSRSnapshot,
+} from '@coveo/thermidor';
 
-const engine = new Engine({ configuration: { organizationId: '...', accessToken: '...' } });
-restoreSSRSnapshot({ engine, snapshot });
+const engine = new Engine({
+  configuration: {organizationId: '...', accessToken: '...'},
+});
+restoreSSRSnapshot({engine, snapshot});
 
 // Restore routed sub-interface (products render immediately)
-const commerceInterface = buildCommerceInterface({ engine, id: 'routed-products' });
-const productList = buildProductListController({ interface: commerceInterface });
+const commerceInterface = buildCommerceInterface({
+  engine,
+  id: 'routed-products',
+});
+const productList = buildProductListController({interface: commerceInterface});
 
 // Optionally, build the generative interface separately for the chat experience
-const generativeInterface = buildGenerativeInterface({ engine });
-const converse = buildConverseController({ interface: generativeInterface });
+const generativeInterface = buildGenerativeInterface({engine});
+const converse = buildConverseController({interface: generativeInterface});
 // Chat history loads client-side independently of the already-rendered products.
 ```
 
@@ -599,6 +694,6 @@ const converse = buildConverseController({ interface: generativeInterface });
 
 Today, SSR of generative routed sub-interfaces is a niche scenario. Conversations are typically ephemeral and session-bound — the primary SSR benefits (SEO, first-paint performance) rarely apply to chat interfaces directly.
 
-However, the architecture keeps this door open for a potential **unified API** future where all queries route through a generative/conversational endpoint. In that model, a heuristic fast-paths non-ambiguous queries directly to results (no agent invoked, latency comparable to a REST endpoint), but the response still arrives as a routed sub-interface. In that world, SSR of routed sub-interfaces would be the *default* path — not a special case — because the first paint is always tied to the generative endpoint's output.
+However, the architecture keeps this door open for a potential **unified API** future where all queries route through a generative/conversational endpoint. In that model, a heuristic fast-paths non-ambiguous queries directly to results (no agent invoked, latency comparable to a REST endpoint), but the response still arrives as a routed sub-interface. In that world, SSR of routed sub-interfaces would be the _default_ path — not a special case — because the first paint is always tied to the generative endpoint's output.
 
 The snapshot mechanism supports this transparently: routed sub-interfaces are just search/commerce interfaces. No generative-specific SSR code is needed regardless of whether they were produced by a direct API call or by a conversational endpoint's heuristic fast-path.

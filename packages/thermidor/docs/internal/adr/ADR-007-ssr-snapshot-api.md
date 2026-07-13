@@ -146,22 +146,40 @@ The import-separation benefit is also concrete: `getSSRSnapshot` is server-only 
 
 ```ts
 // Server
-import { Engine, buildSearchInterface, getSSRSnapshot, deserializeSearchParameters } from '@coveo/thermidor';
+import {
+  Engine,
+  buildSearchInterface,
+  getSSRSnapshot,
+  deserializeSearchParameters,
+} from '@coveo/thermidor';
 
-const params = deserializeSearchParameters({ searchParams: url.searchParams });
-const engine = new Engine({ configuration: { organizationId: '...', accessToken: '...' } });
-const searchInterface = buildSearchInterface({ engine, id: 'main-search', initialParameters: params });
+const params = deserializeSearchParameters({searchParams: url.searchParams});
+const engine = new Engine({
+  configuration: {organizationId: '...', accessToken: '...'},
+});
+const searchInterface = buildSearchInterface({
+  engine,
+  id: 'main-search',
+  initialParameters: params,
+});
 await searchInterface.executeInitialRequest();
-const snapshot = getSSRSnapshot({ engine });
+const snapshot = getSSRSnapshot({engine});
 engine.dispose();
 
 // Client
-import { Engine, buildSearchInterface, buildSearchBoxController, restoreSSRSnapshot } from '@coveo/thermidor';
+import {
+  Engine,
+  buildSearchInterface,
+  buildSearchBoxController,
+  restoreSSRSnapshot,
+} from '@coveo/thermidor';
 
-const engine = new Engine({ configuration: { organizationId: '...', accessToken: '...' } });
-restoreSSRSnapshot({ engine, snapshot });
-const searchInterface = buildSearchInterface({ engine, id: 'main-search' });
-const searchBox = buildSearchBoxController({ interface: searchInterface });
+const engine = new Engine({
+  configuration: {organizationId: '...', accessToken: '...'},
+});
+restoreSSRSnapshot({engine, snapshot});
+const searchInterface = buildSearchInterface({engine, id: 'main-search'});
+const searchBox = buildSearchBoxController({interface: searchInterface});
 // searchBox.state already reflects server state — no flash, no re-fetch.
 ```
 
@@ -171,18 +189,30 @@ With a single engine snapshot, multi-interface pages require no snapshot routing
 
 ```ts
 // Server
-const engine = new Engine({ configuration: { organizationId: '...', accessToken: '...' } });
-const search = buildSearchInterface({ engine, id: 'main-search', initialParameters: searchParams });
-const plp = buildCommerceInterface({ engine, id: 'sidebar-recs', initialParameters: recsParams });
+const engine = new Engine({
+  configuration: {organizationId: '...', accessToken: '...'},
+});
+const search = buildSearchInterface({
+  engine,
+  id: 'main-search',
+  initialParameters: searchParams,
+});
+const plp = buildCommerceInterface({
+  engine,
+  id: 'sidebar-recs',
+  initialParameters: recsParams,
+});
 await search.executeInitialRequest();
 await plp.executeInitialRequest();
-const snapshot = getSSRSnapshot({ engine }); // captures all interfaces
+const snapshot = getSSRSnapshot({engine}); // captures all interfaces
 engine.dispose();
 
 // Client — one restore, every interface self-hydrates by ID
-const engine = new Engine({ configuration: { organizationId: '...', accessToken: '...' } });
-restoreSSRSnapshot({ engine, snapshot });
-const search = buildSearchInterface({ engine, id: 'main-search' });
-const plp = buildCommerceInterface({ engine, id: 'sidebar-recs' });
+const engine = new Engine({
+  configuration: {organizationId: '...', accessToken: '...'},
+});
+restoreSSRSnapshot({engine, snapshot});
+const search = buildSearchInterface({engine, id: 'main-search'});
+const plp = buildCommerceInterface({engine, id: 'sidebar-recs'});
 // Both interfaces are hydrated. No routing logic needed.
 ```
