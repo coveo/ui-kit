@@ -1,6 +1,7 @@
 {
   "name": "@coveo/headless",
   "version": "3.53.0",
+  "description": "A headless library for building search experiences on the Coveo platform",
   "homepage": "https://docs.coveo.com/en/headless/latest/",
   "license": "Apache-2.0",
   "repository": {

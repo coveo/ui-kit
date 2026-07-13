@@ -4,13 +4,11 @@ metadata:
   name: atomic-react
   title: '@coveo/atomic-react'
   description: React specific wrapper for the Atomic component library
-  annotations:
-    github.com/project-slug: coveo/ui-kit
 spec:
   type: library
   lifecycle: production
   owner: group:default/dxui
   system: ui-kit
   dependsOn:
-    - atomic
-    - headless
+    - component:atomic
+    - component:headless

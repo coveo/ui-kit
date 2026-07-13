@@ -4,13 +4,11 @@ metadata:
   name: quantic
   title: '@coveo/quantic'
   description: A Salesforce Lightning Web Component (LWC) library for building modern UIs interfacing with the Coveo platform
-  annotations:
-    github.com/project-slug: coveo/ui-kit
 spec:
   type: library
   lifecycle: production
   owner: group:default/knowledge-integrations
   system: ui-kit
   dependsOn:
-    - headless
-    - bueno
+    - component:bueno
+    - component:headless

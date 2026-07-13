@@ -4,12 +4,10 @@ metadata:
   name: shopify
   title: '@coveo/shopify'
   description: Utilities to integrate Shopify with Coveo's commerce engine
-  annotations:
-    github.com/project-slug: coveo/ui-kit
 spec:
   type: library
   lifecycle: production
   owner: group:default/commerce-shopify
   system: ui-kit
   dependsOn:
-    - headless
+    - component:headless

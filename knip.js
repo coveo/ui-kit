@@ -80,11 +80,8 @@ export default {
       ],
     },
     'samples/headless-ssr/commerce-nextjs': {
-      // `mocks/register.ts` is preloaded into the Next.js server via NODE_OPTIONS
-      // for e2e (see playwright.config.ts), so Knip cannot trace it as an entry.
-      entry: ['mocks/register.ts'],
-      // `tsx` is invoked through NODE_OPTIONS (a CLI string), not imported.
-      ignoreDependencies: ['tsx'],
+      // `mock-server.mjs` is a test utility, not exported publicly nor imported internally, so Knip cannot trace it.
+      entry: ['mocks/mock-server.mjs'],
     },
     'samples/headless-ssr/commerce-nextjs-v4': {},
     'utils/ci': {},

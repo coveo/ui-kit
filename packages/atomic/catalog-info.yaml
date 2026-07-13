@@ -4,15 +4,11 @@ metadata:
   name: atomic
   title: '@coveo/atomic'
   description: A web-component library for building modern UIs interfacing with the Coveo platform
-  annotations:
-    github.com/project-slug: coveo/ui-kit
 spec:
   type: library
   lifecycle: production
   owner: group:default/dxui
   system: ui-kit
   dependsOn:
-    - headless
-    - bueno
-  dependencyOf:
-    - atomic-react
+    - component:bueno
+    - component:headless

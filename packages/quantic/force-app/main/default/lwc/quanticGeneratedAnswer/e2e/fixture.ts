@@ -73,9 +73,11 @@ export const testSearch =
         page,
         data.streamId,
         analytics,
-        !!options.answerConfigurationId,
-        rgaGenerateRequestRegex,
-        withFacets
+        {
+          answerApiEnabled: !!options.answerConfigurationId,
+          headAnswerRequestRegex: rgaGenerateRequestRegex,
+          withFacets,
+        }
       );
 
       const streamingUrl = options.answerConfigurationId
@@ -97,9 +99,10 @@ export const testSearch =
 
       generatedAnswerObject.streamEndAnalyticRequestPromise =
         generatedAnswerObject.waitForStreamEndAnalytics();
+
       if (options.answerConfigurationId) {
         generatedAnswerObject.generateRequestPromise =
-          generatedAnswerObject.waitForGenerateRequest();
+          generatedAnswerObject.waitForHeadAnswerRequest();
       }
 
       await search.mockSearchWithGenerativeQuestionAnsweringId(data.streamId);
@@ -144,9 +147,11 @@ export const testInsight =
         page,
         data.streamId,
         analytics,
-        !!options.answerConfigurationId,
-        insightRgaGenerateRequestRegex,
-        withFacets
+        {
+          answerApiEnabled: !!options.answerConfigurationId,
+          headAnswerRequestRegex: insightRgaGenerateRequestRegex,
+          withFacets,
+        }
       );
 
       const streamingUrl = options.answerConfigurationId
@@ -170,7 +175,7 @@ export const testInsight =
         generatedAnswerObject.waitForStreamEndAnalytics();
       if (options.answerConfigurationId) {
         generatedAnswerObject.generateRequestPromise =
-          generatedAnswerObject.waitForGenerateRequest();
+          generatedAnswerObject.waitForHeadAnswerRequest();
       }
 
       await search.mockSearchWithGenerativeQuestionAnsweringId(data.streamId);

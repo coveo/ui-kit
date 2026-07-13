@@ -5,6 +5,7 @@ import {
 } from '../../../../../../playwright/utils/analyticsMode';
 import {AnalyticsObject} from '../../../../../../playwright/page-object/analytics';
 import {isRgaEvaluationRequest} from '../../../../../../playwright/utils/requests';
+import type {AgentMessage} from './agentData';
 
 const minimumCitationTooltipDisplayDurationMs = 1500;
 const removeUnknownFields = (object: Record<string, unknown>) => {
@@ -24,32 +25,45 @@ const facetElementsSelectors = {
   },
 };
 
+export interface GeneratedAnswerObjectConfig {
+  answerApiEnabled?: boolean;
+  headAnswerRequestRegex?: RegExp;
+  agentFollowUpRequestRegex?: RegExp;
+  isAgent?: boolean;
+  withFacets?: boolean;
+}
+
 export class GeneratedAnswerObject {
   private analyticsMode: AnalyticsMode;
+  private answerApiEnabled: boolean;
+  private headAnswerRequestRegex?: RegExp;
+  private agentFollowUpRequestRegex?: RegExp;
+  private withFacets: boolean;
+  private isAgent: boolean;
 
   constructor(
     private page: Page,
     private streamId: string,
     private analytics: AnalyticsObject,
-    private answerApiEnabled: boolean,
-    private generateRequestRegex: RegExp,
-    private withFacets: boolean
+    config: GeneratedAnswerObjectConfig = {}
   ) {
     this.page = page;
     this.streamId = streamId;
     this.analytics = analytics;
     this.analyticsMode = this.analytics.analyticsMode;
-    this.answerApiEnabled = answerApiEnabled;
-    this.generateRequestRegex = generateRequestRegex;
-    this.withFacets = withFacets;
+    this.answerApiEnabled = config.answerApiEnabled ?? false;
+    this.headAnswerRequestRegex = config.headAnswerRequestRegex;
+    this.agentFollowUpRequestRegex = config.agentFollowUpRequestRegex;
+    this.withFacets = config.withFacets ?? false;
+    this.isAgent = config.isAgent ?? false;
   }
 
   get likeButton(): Locator {
-    return this.page.getByRole('button', {name: 'This answer was helpful'});
+    return this.page.getByRole('button', {name: this.isAgent ? 'Like' : 'This answer was helpful', exact: true});
   }
 
   get dislikeButton(): Locator {
-    return this.page.getByRole('button', {name: 'This answer was not helpful'});
+    return this.page.getByRole('button', {name: this.isAgent ? 'Dislike' : 'This answer was not helpful', exact: true});
   }
 
   get copyToClipboardButton(): Locator {
@@ -118,12 +132,28 @@ export class GeneratedAnswerObject {
 
   get citationLink(): Locator {
     return this.page
-      .getByTestId('generated-answer__citations')
+      .getByTestId(this.isAgent ? 'generated-answer-body__citations' : 'generated-answer__citations')
       .locator('.citation__link');
   }
 
   get showMoreButton(): Locator {
     return this.page.getByTestId('generated-answer__answer-toggle');
+  }
+
+  get showPreviousAnswersButton(): Locator {
+    return this.page.getByTestId('show-previous-button');
+  }
+
+  get threadItems(): Locator {
+    return this.page.locator('c-quantic-thread-item');
+  }
+
+  get threadItemTitleButton(): Locator {
+    return this.threadItems.getByTestId('thread-item-title-button');
+  }
+
+  get generatedAnswerBody(): Locator {
+    return this.page.locator('c-quantic-generated-answer-body');
   }
 
   async hoverOverCitation(index: number): Promise<void> {
@@ -166,8 +196,16 @@ export class GeneratedAnswerObject {
     await this.likeButton.click();
   }
 
+  async clickNthLikeButton(answerIndex: number): Promise<void> {
+    await this.likeButton.nth(answerIndex).click();
+  }
+
   async clickDislikeButton(): Promise<void> {
     await this.dislikeButton.click();
+  }
+
+  async clickNthDislikeButton(answerIndex: number): Promise<void> {
+    await this.dislikeButton.nth(answerIndex).click();
   }
 
   async clickCopyToClipboardButton(): Promise<void> {
@@ -178,8 +216,26 @@ export class GeneratedAnswerObject {
     await this.toggleButton.click();
   }
 
-  async waitForGenerateRequest(): Promise<Request> {
-    return this.page.waitForRequest(this.generateRequestRegex);
+  async clickShowPreviousAnswersButton(): Promise<void> {
+    await this.showPreviousAnswersButton.click();
+  }
+
+  async clickNthThreadItem(index: number): Promise<void> {
+    await this.threadItemTitleButton.nth(index).click();
+  }
+
+  async waitForHeadAnswerRequest(): Promise<Request> {
+    if (!this.headAnswerRequestRegex) {
+      throw new Error('headAnswerRequestRegex is not configured');
+    }
+    return this.page.waitForRequest(this.headAnswerRequestRegex);
+  }
+
+  async waitForAgentFollowUpRequest(): Promise<Request> {
+    if (!this.agentFollowUpRequestRegex) {
+      throw new Error('agentFollowUpRequestRegex is not configured');
+    }
+    return this.page.waitForRequest(this.agentFollowUpRequestRegex);
   }
 
   async waitForStreamEndAnalytics(): Promise<Request | boolean> {
@@ -200,6 +256,12 @@ export class GeneratedAnswerObject {
   }
 
   async waitForLikeGeneratedAnswerAnalytics(): Promise<Request> {
+    return this.waitForLikeGeneratedAnswerAnalyticsForId(this.streamId);
+  }
+
+  async waitForLikeGeneratedAnswerAnalyticsForId(
+    answerId: string
+  ): Promise<Request> {
     if (this.analyticsMode === AnalyticsModeEnum.legacy) {
       return this.analytics.waitForCustomUaAnalytics(
         {
@@ -207,7 +269,7 @@ export class GeneratedAnswerObject {
           eventValue: 'likeGeneratedAnswer',
         },
         (event) =>
-          event?.customData?.generativeQuestionAnsweringId === this.streamId
+          event?.customData?.generativeQuestionAnsweringId === answerId
       );
     }
     return this.analytics.waitForEventProtocolAnalytics(
@@ -217,6 +279,12 @@ export class GeneratedAnswerObject {
   }
 
   async waitForDislikeGeneratedAnswerAnalytics(): Promise<Request> {
+    return this.waitForDislikeGeneratedAnswerAnalyticsForId(this.streamId);
+  }
+
+  async waitForDislikeGeneratedAnswerAnalyticsForId(
+    answerId: string
+  ): Promise<Request> {
     if (this.analyticsMode === AnalyticsModeEnum.legacy) {
       return this.analytics.waitForCustomUaAnalytics(
         {
@@ -224,7 +292,7 @@ export class GeneratedAnswerObject {
           eventValue: 'dislikeGeneratedAnswer',
         },
         (event) =>
-          event?.customData?.generativeQuestionAnsweringId === this.streamId
+          event?.customData?.generativeQuestionAnsweringId === answerId
       );
     }
     return this.analytics.waitForEventProtocolAnalytics(
@@ -444,6 +512,83 @@ export class GeneratedAnswerObject {
         },
       });
     });
+  }
+
+  async mockAgentAnswerResponse(
+    body: Array<AgentMessage>
+  ) {
+    await this.page.route('**/agents/*/answer', (route) => {
+      let bodyText = '';
+      body.forEach((data) => {
+        bodyText += `data:${JSON.stringify(data)} \n\n`;
+      });
+      route.fulfill({
+        status: 200,
+        body: bodyText,
+        headers: {'content-type': 'text/event-stream'},
+      });
+    });
+  }
+
+  async mockAgentFollowUpResponse(
+    bodies: Array<Array<AgentMessage>>
+  ) {
+    let callCount = 0;
+    await this.page.route('**/agents/*/follow-up', (route) => {
+      // After all provided response bodies are used, keep returning the last one
+      // so any additional intercepted follow-up requests still receive a mocked stream.
+      const streams = bodies[Math.min(callCount, bodies.length - 1)];
+      callCount++;
+
+      let bodyText = '';
+      streams.forEach((data) => {
+        bodyText += `data:${JSON.stringify(data)} \n\n`;
+      });
+      route.fulfill({
+        status: 200,
+        body: bodyText,
+        headers: {'content-type': 'text/event-stream'},
+      });
+    });
+  }
+
+  get followUpInput(): Locator {
+    return this.page.locator(
+      'c-quantic-generated-answer-follow-up-input textarea'
+    );
+  }
+
+  get followUpSubmitButton(): Locator {
+    return this.page
+      .locator('c-quantic-generated-answer-follow-up-input')
+      .getByRole('button', {name: 'Submit follow-up'});
+  }
+
+  async typeFollowUpQuestion(question: string): Promise<void> {
+    await this.followUpInput.fill(question);
+  }
+
+  async submitFollowUp(): Promise<void> {
+    await this.followUpSubmitButton.click();
+  }
+
+  async waitForFollowUpStreamEndAnalytics(
+    followUpAnswerId: string
+  ): Promise<Request | boolean> {
+    if (this.analyticsMode === AnalyticsModeEnum.legacy) {
+      return this.analytics.waitForCustomUaAnalytics(
+        {
+          eventType: 'generatedAnswer',
+          eventValue: 'generatedAnswerStreamEnd',
+        },
+        (event) =>
+          event?.customData?.generativeQuestionAnsweringId === followUpAnswerId
+      );
+    }
+    return this.analytics.waitForEventProtocolAnalytics(
+      'Rga.AnswerReceived',
+      (event) => event.answerGenerated === true
+    );
   }
 
   streamEndAnalyticRequestPromise!: Promise<boolean | Request>;
