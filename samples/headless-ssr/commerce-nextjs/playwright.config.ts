@@ -1,5 +1,8 @@
 import {defineConfig, devices} from '@playwright/test';
 
+const MOCK_API_PORT = process.env.MOCK_API_PORT ?? '9090';
+const MOCK_API_URL = `http://localhost:${MOCK_API_PORT}`;
+
 export default defineConfig({
   testDir: './e2e',
   fullyParallel: true,
@@ -17,13 +20,25 @@ export default defineConfig({
       use: {...devices['Desktop Chrome']},
     },
   ],
-  expect: {
-    timeout: 7 * 1000,
-  },
-  webServer: {
-    command: 'npm run prod',
-    port: 3000,
-    timeout: 120 * 1000,
-    reuseExistingServer: !process.env.CI,
-  },
+  webServer: [
+    {
+      // Standalone Express server powered by @mswjs/http-middleware.
+      // All Coveo Commerce API calls (SSR and client-side) are intercepted here
+      // because the Next.js server is started with MOCK_API_URL, which the
+      // headless engine uses as its proxyBaseUrl.
+      command: 'node mocks/mock-server.mjs',
+      url: `${MOCK_API_URL}/health`,
+      reuseExistingServer: !process.env.CI,
+      timeout: 30 * 1000,
+      env: {MOCK_API_PORT},
+    },
+    {
+      // Run the production build so tests exercise the same output users ship.
+      command: 'pnpm start',
+      url: 'http://localhost:3000',
+      reuseExistingServer: false,
+      timeout: 120 * 1000,
+      env: {NEXT_PUBLIC_MOCK_API_URL: MOCK_API_URL},
+    },
+  ],
 });

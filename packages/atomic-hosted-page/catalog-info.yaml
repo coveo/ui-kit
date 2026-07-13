@@ -1,0 +1,16 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: atomic-hosted-page
+  title: '@coveo/atomic-hosted-page'
+  description: Web Component used to inject a Coveo Hosted Search Page in the DOM.
+  annotations:
+    github.com/project-slug: coveo/ui-kit
+spec:
+  type: library
+  lifecycle: production
+  owner: group:default/dxui
+  system: ui-kit
+  dependsOn:
+    - component:bueno
+    - component:headless

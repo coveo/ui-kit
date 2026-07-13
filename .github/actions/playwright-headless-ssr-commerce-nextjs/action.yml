@@ -1,9 +1,0 @@
-name: 'Playwright Headless SSR Commerce'
-description: 'Run Playwright tests for Headless SSR Commerce'
-runs:
-  using: composite
-  steps:
-    - name: Run Playwright tests
-      run: pnpm exec playwright test
-      working-directory: samples/headless-ssr/commerce-nextjs
-      shell: bash

@@ -3,7 +3,6 @@
 import {buildParameterSerializer} from '@coveo/headless-react/ssr-commerce';
 import {useSearchParams} from 'next/navigation';
 import {useEffect, useMemo, useRef} from 'react';
-import {usePersistQuery} from '@/hooks/use-recent-queries';
 import {useParameterManager} from '@/lib/commerce-engine';
 
 export default function ParameterManager({url}: {url: string | null}) {
@@ -14,10 +13,6 @@ export default function ParameterManager({url}: {url: string | null}) {
   const initialUrl = useMemo(() => new URL(url ?? location.href), [url]);
   const previousUrl = useRef(initialUrl.href);
   const searchParams = useSearchParams();
-
-  // Sync the `q` parameter with recent queries in localStorage
-  const query = searchParams.get('q');
-  usePersistQuery(query);
 
   /**
    * This flag serves to ensure that history navigation between pages does not clear commerce parameters and result in
