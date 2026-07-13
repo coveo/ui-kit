@@ -70,6 +70,11 @@ export interface AgentResponse {
    * Tool calls made by the agent during the turn, in order of invocation.
    */
   toolCalls: ToolCall[];
+
+  /**
+   * Accumulated reasoning/thinking text received during the turn.
+   */
+  reasoningContent: string;
 }
 
 export type ToolCallStatus = 'calling' | 'completed';
@@ -128,4 +133,15 @@ export interface GenerativeState {
    * The id of the currently active turn, or undefined when no turns exist.
    */
   activeTurnId: string | undefined;
+
+  /**
+   * The server-assigned conversation session identifier, used to continue
+   * multi-turn conversations.
+   */
+  conversationSessionId: string | undefined;
+
+  /**
+   * The server-assigned conversation token for request authentication continuity.
+   */
+  conversationToken: string | undefined;
 }

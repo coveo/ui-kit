@@ -2,7 +2,6 @@ import {
   readConversationEventStream,
   type ConversationStreamEvent,
   createConversationEndpointClient,
-  type CoveoConversationEndpointRequest,
 } from '@/src/internal/api/conversation/index.js';
 import type {FullEngine} from '@/src/internal/engine/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
@@ -30,6 +29,13 @@ export interface GenerativeStatePort {
   completeTurn(turnId: string): void;
   failTurn(turnId: string, error: string): void;
   clearTurnResponse(turnId: string): void;
+  startReasoning(turnId: string): void;
+  appendReasoningDelta(turnId: string, delta: string): void;
+  endReasoning(turnId: string): void;
+  setConversationSession(
+    sessionId: string | undefined,
+    token: string | undefined
+  ): void;
 }
 
 export type HydrateSubInterface = (
@@ -115,16 +121,12 @@ export class GenerativeRuntime {
 
   private async executeStream(turnId: string): Promise<void> {
     try {
-      const requestFromState = this.engine.read(this.buildRequest);
+      const {cart, ...fromState} = this.engine.read(this.buildRequest);
       const navigatorContext = this.engine.getNavigatorContextProvider()?.();
       const clientConfig = readEndpointClientConfiguration(this.engine);
 
-      const request: CoveoConversationEndpointRequest = {
-        trackingId: requestFromState.trackingId,
-        language: requestFromState.language,
-        country: requestFromState.country,
-        currency: requestFromState.currency,
-        message: requestFromState.message,
+      const request = {
+        ...fromState,
         clientId: navigatorContext?.clientId ?? undefined,
         context: {
           user: {
@@ -134,11 +136,9 @@ export class GenerativeRuntime {
             url: navigatorContext?.location ?? null,
             referrer: navigatorContext?.referrer ?? null,
           },
-          ...(requestFromState.cart.length > 0
-            ? {cart: requestFromState.cart}
-            : {}),
+          ...(cart ? {cart} : {}),
         },
-        targetEngine: 'AGENT_CORE',
+        targetEngine: 'AGENT_CORE' as const,
       };
 
       const client = createConversationEndpointClient();
@@ -193,6 +193,12 @@ export class GenerativeRuntime {
   ): {turnId: string; isTerminal: boolean} {
     switch (event.type) {
       case 'turn_started': {
+        if (event.conversationSessionId || event.conversationToken) {
+          this.statePort.setConversationSession(
+            event.conversationSessionId,
+            event.conversationToken
+          );
+        }
         return {turnId, isTerminal: false};
       }
 
@@ -209,6 +215,23 @@ export class GenerativeRuntime {
       }
 
       case 'TEXT_MESSAGE_END': {
+        return {turnId, isTerminal: false};
+      }
+
+      case 'REASONING_MESSAGE_START': {
+        this.ensureAgentResponse(turnId);
+        this.statePort.startReasoning(turnId);
+        return {turnId, isTerminal: false};
+      }
+
+      case 'REASONING_MESSAGE_CONTENT': {
+        this.ensureAgentResponse(turnId);
+        this.statePort.appendReasoningDelta(turnId, event.delta);
+        return {turnId, isTerminal: false};
+      }
+
+      case 'REASONING_MESSAGE_END': {
+        this.statePort.endReasoning(turnId);
         return {turnId, isTerminal: false};
       }
 
@@ -244,6 +267,10 @@ export class GenerativeRuntime {
         return {turnId, isTerminal: false};
       }
 
+      case 'STATE_SNAPSHOT': {
+        return {turnId, isTerminal: false};
+      }
+
       case 'ACTIVITY_SNAPSHOT': {
         const routedInterface = this.hydrateSubInterface(
           event.activityType,
@@ -266,6 +293,12 @@ export class GenerativeRuntime {
       }
 
       case 'turn_complete': {
+        if (event.conversationSessionId || event.conversationToken) {
+          this.statePort.setConversationSession(
+            event.conversationSessionId,
+            event.conversationToken
+          );
+        }
         this.statePort.completeTurn(turnId);
         return {turnId, isTerminal: true};
       }

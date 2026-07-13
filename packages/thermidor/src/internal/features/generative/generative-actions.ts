@@ -4,6 +4,7 @@ import {getHandleInternals} from '@/src/internal/utils/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 import type {
   A2UISurface,
+  GenerativeState,
   RoutedInterface,
   TurnStatus,
 } from './generative-types.js';
@@ -61,6 +62,16 @@ export function createGenerativeActions(interfaceId: string) {
     clearTurnResponse: createAction<{turnId: string}>(
       `${prefix}/clearTurnResponse`
     ),
+    startReasoning: createAction<{turnId: string}>(`${prefix}/startReasoning`),
+    appendReasoningDelta: createAction<{turnId: string; delta: string}>(
+      `${prefix}/appendReasoningDelta`
+    ),
+    endReasoning: createAction<{turnId: string}>(`${prefix}/endReasoning`),
+    hydrateState: createAction<GenerativeState>(`${prefix}/hydrateState`),
+    setConversationSession: createAction<{
+      sessionId: string | undefined;
+      token: string | undefined;
+    }>(`${prefix}/setConversationSession`),
   };
 }
 
