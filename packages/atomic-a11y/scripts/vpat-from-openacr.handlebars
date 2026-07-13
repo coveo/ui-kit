@@ -2,9 +2,11 @@
 
 International Edition
 
-(Based on VPAT® Version 2.5Rev)
+(Based on VPAT® Version 2.5Rev - {{dateFormat report_date "Month YYYY"}})
 
 **Name of Product/Version:** {{product.name}}{{#if product.version}} {{product.version}}{{/if}}
+
+**Applicable standard:** WCAG 2.2 Level AA - https://www.w3.org/TR/WCAG22/
 
 **Report Date:** {{report_date}}
 
@@ -12,9 +14,28 @@ International Edition
 
 **Contact Information:** {{author.email}}
 
+**Report Currency:** This report reflects testing of {{product.name}}{{#if product.version}} {{product.version}}{{/if}} as of the date indicated above. Results may change with product updates.
+
 **Notes:** {{notes}}
 
 **Evaluation Methods Used:** {{evaluation_methods_used}}
+
+## Executive Summary
+
+{{#with (conformanceSummary chapters)}}
+| Conformance Level | Criteria Count |
+| --- | --- |
+| Supports | {{supports}} |
+| Partially Supports | {{partiallySupports}} |
+| Does Not Support | {{doesNotSupport}} |
+| Not Applicable | {{notApplicable}} |
+| **Total** | **{{total}}** |
+{{/with}}
+
+## Testing Methodology
+
+Conformance is determined using automated scanning, interactive keyboard testing, and manual review. Each criterion is tested only against components where it applies, the component count shown per row reflects this scope.
+
 
 ## Applicable Standards/Guidelines
 
@@ -173,7 +194,3 @@ Notes: {{data-category.notes}}
 | Criteria | Conformance Level | Remarks and Explanations |
 | --- | --- | --- |
 | 13.1–13.3 (all) | Not Applicable | {{product.name}} does not provide relay or emergency services. |
-
-## Legal Disclaimer ({{author.company_name}})
-
-This document is provided for informational purposes only and the contents hereof are subject to change without notice. {{author.company_name}} does not warrant that this document is error free, nor does it provide any other warranties or conditions, whether expressed orally or implied in law, including implied warranties and conditions of merchantability or fitness for a particular purpose.

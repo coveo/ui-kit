@@ -17,9 +17,6 @@ interface IStandaloneSearchBoxProps {
   controller: HeadlessStandaloneSearchBox;
   instantProductsController: HeadlessInstantProducts;
   filterSuggestionsGeneratorController: HeadlessFilterSuggestionsGenerator;
-  /* Uncomment the `legacyFieldSuggestionsGeneratorController property below and comment out the
-     `filterSuggestionsGeneratorController` property above if using legacy field suggestions */
-  //legacyFieldSuggestionsGeneratorController: FieldSuggestionsGenerator;
 }
 export default function StandaloneSearchBox(props: IStandaloneSearchBoxProps) {
   const {
@@ -27,13 +24,11 @@ export default function StandaloneSearchBox(props: IStandaloneSearchBoxProps) {
     controller,
     instantProductsController,
     filterSuggestionsGeneratorController,
-    /* Uncomment the `legacyFieldSuggestionsGeneratorController property below and comment out the
-     `filterSuggestionsGeneratorController` property above if using legacy field suggestions */
-    //legacyFieldSuggestionsGeneratorController,
   } = props;
 
   const [state, setState] = useState(controller.state);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+  const [activeSuggestion, setActiveSuggestion] = useState(-1);
 
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -58,29 +53,11 @@ export default function StandaloneSearchBox(props: IStandaloneSearchBoxProps) {
     }
   };
 
-  /* Uncomment the `fetchLegacyFieldSuggestions` function below and comment out the `fetchFilterSuggestions` function
-     above if using legacy field suggestions. */
-
-  // const fetchLegacyFieldSuggestions = (value: string) => {
-  //   for (const legacyFieldSuggestions of legacyFieldSuggestionsGeneratorController.fieldSuggestions) {
-  //     legacyFieldSuggestions.updateText(value);
-  //   }
-  // };
-
   const clearFilterSuggestions = () => {
     for (const filterSuggestions of filterSuggestionsGeneratorController.filterSuggestions) {
       filterSuggestions.clear();
     }
   };
-
-  /* Uncomment the `clearLegacyFieldSuggestions` function below and comment out `clearFilterSuggestions` function above
-     if using legacy field suggestions. */
-
-  // const clearLegacyFieldSuggestions = () => {
-  //   for (const legacyFieldSuggestions of legacyFieldSuggestionsGeneratorController.fieldSuggestions) {
-  //     legacyFieldSuggestions.clear();
-  //   }
-  // };
 
   const focusSearchBoxInput = () => {
     searchInputRef.current!.focus();
@@ -95,6 +72,7 @@ export default function StandaloneSearchBox(props: IStandaloneSearchBoxProps) {
   };
 
   const onSearchBoxInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setActiveSuggestion(-1);
     if (e.target.value === '') {
       hideDropdown();
       controller.clear();
@@ -124,9 +102,37 @@ export default function StandaloneSearchBox(props: IStandaloneSearchBoxProps) {
           break;
         }
         break;
+      case 'ArrowDown': {
+        if (state.suggestions.length === 0) {
+          break;
+        }
+        e.preventDefault();
+        const next = (activeSuggestion + 1) % state.suggestions.length;
+        setActiveSuggestion(next);
+        onFocusSuggestion(state.suggestions[next]);
+        showDropdown();
+        break;
+      }
+      case 'ArrowUp': {
+        if (state.suggestions.length === 0) {
+          break;
+        }
+        e.preventDefault();
+        const next =
+          (activeSuggestion - 1 + state.suggestions.length) %
+          state.suggestions.length;
+        setActiveSuggestion(next);
+        onFocusSuggestion(state.suggestions[next]);
+        showDropdown();
+        break;
+      }
       case 'Enter':
-        hideDropdown();
-        controller.submit();
+        if (activeSuggestion >= 0 && state.suggestions[activeSuggestion]) {
+          onSelectSuggestion(state.suggestions[activeSuggestion]);
+        } else {
+          hideDropdown();
+          controller.submit();
+        }
         break;
       default:
         break;
@@ -155,24 +161,38 @@ export default function StandaloneSearchBox(props: IStandaloneSearchBoxProps) {
   const onSelectSuggestion = (suggestion: Suggestion) => {
     controller.selectSuggestion(suggestion.rawValue);
     hideDropdown();
+    setActiveSuggestion(-1);
   };
 
   const renderDropdown = () => {
     return (
-      <div className="SearchBoxDropdown row">
+      <div
+        className="SearchBoxDropdown row"
+        onMouseDown={(e) => e.preventDefault()}
+      >
         {state.suggestions.length > 0 && (
           <div className="QuerySuggestion column small">
             <p>Query suggestions</p>
-            <ul>
-              {state.suggestions.map((suggestion) => (
+            <ul role="listbox">
+              {state.suggestions.map((suggestion, i) => (
                 <li
                   key={`${suggestion.rawValue}-suggestion`}
                   className="QuerySuggestion"
+                  role="presentation"
                 >
                   <button
                     type="button"
-                    onMouseOver={() => onFocusSuggestion(suggestion)}
-                    onFocus={() => onFocusSuggestion(suggestion)}
+                    role="option"
+                    className={i === activeSuggestion ? 'active' : undefined}
+                    aria-selected={i === activeSuggestion}
+                    onMouseOver={() => {
+                      setActiveSuggestion(i);
+                      onFocusSuggestion(suggestion);
+                    }}
+                    onFocus={() => {
+                      setActiveSuggestion(i);
+                      onFocusSuggestion(suggestion);
+                    }}
                     onClick={() => onSelectSuggestion(suggestion)}
                     dangerouslySetInnerHTML={{
                       __html: suggestion.highlightedValue,
@@ -185,10 +205,7 @@ export default function StandaloneSearchBox(props: IStandaloneSearchBoxProps) {
         )}
 
         <div className="InstantProducts column small">
-          <InstantProducts
-            controller={instantProductsController}
-            navigate={navigate}
-          />
+          <InstantProducts controller={instantProductsController} />
         </div>
 
         <div className="FilterSuggestions column small">
@@ -210,20 +227,6 @@ export default function StandaloneSearchBox(props: IStandaloneSearchBoxProps) {
               navigate(`/search#${parameters}`);
             }}
           />
-
-          {/* Uncomment the LegacyFieldSuggestionsGenerator component below and comment out the
-              FieldSuggestionsGenerator component above if using legacy field suggestions */}
-
-          {/* <LegacyFieldSuggestionsGenerator
-            controller={legacyFieldSuggestionsGeneratorController}
-            onClickLegacyFieldSuggestion={(
-              controller: CategoryFieldSuggestions,
-              value: CategoryFacetSearchResult
-            ) => {
-              hideDropdown();
-              navigate(`/search#cf-${controller.state.facetId}=${[...value.path, value.rawValue].join(',')}`);
-            }}
-          /> */}
         </div>
       </div>
     );
@@ -237,6 +240,12 @@ export default function StandaloneSearchBox(props: IStandaloneSearchBoxProps) {
         id="search-box"
         onChange={onSearchBoxInputChange}
         onKeyDown={onSearchBoxInputKeyDown}
+        onFocus={() => {
+          if (state.value !== '') {
+            showDropdown();
+          }
+        }}
+        onBlur={() => hideDropdown()}
         ref={searchInputRef}
         value={state.value}
       />

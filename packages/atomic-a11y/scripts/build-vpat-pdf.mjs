@@ -43,13 +43,12 @@ const body = await marked(markdown, {gfm: true});
 const html = `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><title>VPAT</title>
 <style>
-body{font-family:'Segoe UI',Arial,sans-serif;font-size:11pt;line-height:1.5;color:#1a1a1a;padding:40px;max-width:900px;margin:0 auto}
+body{font-family:'Segoe UI',Arial,sans-serif;font-size:11pt;line-height:1.5;color:#1a1a1a;max-width:900px;margin:0 auto}
 h1{font-size:18pt;margin:0 0 8px}h2{font-size:14pt;margin:28px 0 12px;border-bottom:2px solid #e0e0e0;padding-bottom:6px}
 table{width:100%;border-collapse:collapse;margin:12px 0 20px;page-break-inside:auto}
 th,td{border:1px solid #ccc;padding:8px 10px;text-align:left;vertical-align:top}
 th{background:#f5f5f5;font-weight:600}tr{page-break-inside:avoid}
 ul{margin:8px 0;padding-left:24px}li{margin:4px 0}p{margin:8px 0}
-@media print{body{padding:20px}}
 </style></head><body>${body}</body></html>`;
 
 // Step 3: Skip if content unchanged
@@ -66,7 +65,11 @@ console.log('[build-vpat-pdf] Generating PDF via Playwright...');
 const browser = await chromium.launch();
 const page = await browser.newPage();
 await page.setContent(html, {waitUntil: 'networkidle'});
-const pdfBuffer = await page.pdf({format: 'A4', printBackground: true});
+const pdfBuffer = await page.pdf({
+  format: 'A4',
+  printBackground: true,
+  margin: {top: '0.75in', bottom: '0.75in', left: '0.5in', right: '0.5in'},
+});
 await browser.close();
 
 mkdirSync(dirname(OUTPUT_PATH), {recursive: true});

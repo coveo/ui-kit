@@ -15,7 +15,7 @@ test.describe('smoke test', () => {
     await expect(page.locator('main.App')).toBeVisible();
 
     // Verify search box is present and perform a search
-    const searchBox = page.getByRole('textbox').first();
+    const searchBox = page.getByRole('searchbox').first();
     await expect(searchBox).toBeVisible();
     await searchBox.fill('test');
     await searchBox.press('Enter');

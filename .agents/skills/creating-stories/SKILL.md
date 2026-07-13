@@ -143,14 +143,14 @@ export const NoResults: Story = {
 
 ## Available API Mocks
 
-| Mock                     | Import                                       | Use Case           |
-| ------------------------ | -------------------------------------------- | ------------------ |
-| `MockSearchApi`          | `@/storybook-utils/api/search/mock`          | Search interface   |
-| `MockCommerceApi`        | `@/storybook-utils/api/commerce/mock`        | Commerce interface |
-| `MockInsightApi`         | `@/storybook-utils/api/insight/mock`         | Insight interface  |
-| `MockAnswerApi`          | `@/storybook-utils/api/answer/mock`          | Answer/RGA         |
-| `MockRecommendationApi`  | `@/storybook-utils/api/recommendation/mock`  | Recommendations    |
-| `MockMachineLearningApi` | `@/storybook-utils/api/machinelearning/mock` | ML/User Actions    |
+| Mock                     | Import                                          | Use Case           |
+| ------------------------ | ----------------------------------------------- | ------------------ |
+| `MockSearchApi`          | `@coveo/platform-mock-api/search/mock`          | Search interface   |
+| `MockCommerceApi`        | `@coveo/platform-mock-api/commerce/mock`        | Commerce interface |
+| `MockInsightApi`         | `@coveo/platform-mock-api/insight/mock`         | Insight interface  |
+| `MockAnswerApi`          | `@coveo/platform-mock-api/answer/mock`          | Answer/RGA         |
+| `MockRecommendationApi`  | `@coveo/platform-mock-api/recommendation/mock`  | Recommendations    |
+| `MockMachineLearningApi` | `@coveo/platform-mock-api/machinelearning/mock` | ML/User Actions    |
 
 ## Interface Wrappers
 

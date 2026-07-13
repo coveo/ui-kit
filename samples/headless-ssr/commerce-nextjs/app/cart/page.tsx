@@ -1,7 +1,6 @@
 import {headers} from 'next/headers';
 import * as externalCartAPI from '@/actions/external-cart-api';
 import Cart from '@/components/cart';
-import ContextDropdown from '@/components/context-dropdown';
 import {
   RecommendationProvider,
   StandaloneProvider,
@@ -15,17 +14,16 @@ import {
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {defaultContext} from '@/utils/context';
 
-export default async function Search() {
-  // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
+export default async function CartPage() {
+  // Set the navigator context provider before fetching the app static state.
   const navigatorContext = new NextJsNavigatorContext(await headers());
   standaloneEngineDefinition.setNavigatorContextProvider(
     () => navigatorContext
   );
 
-  // Fetches the cart items from an external service
+  // Fetch the cart items from the external service.
   const items = await externalCartAPI.getCart();
 
-  // Fetches the static state of the app with initial state (when applicable)
   const staticState = await standaloneEngineDefinition.fetchStaticState({
     controllers: {
       cart: {initialState: {items}},
@@ -36,12 +34,6 @@ export default async function Search() {
         view: {
           url: 'https://sports.barca.group/cart',
         },
-        custom: defaultContext.custom,
-      },
-      productEnrichment: {
-        options: {
-          placementIds: ['70b493b2-a1f1-4049-ad70-16695cef39cd'],
-        },
       },
     },
   });
@@ -50,7 +42,6 @@ export default async function Search() {
     {
       controllers: {
         popularBought: {enabled: true},
-        popularViewed: {enabled: true},
         cart: {initialState: {items}},
         context: {
           language: defaultContext.language,
@@ -63,22 +54,23 @@ export default async function Search() {
       },
     }
   );
+
   return (
     <StandaloneProvider
       staticState={staticState}
       navigatorContext={navigatorContext.marshal}
     >
-      <div style={{display: 'flex', flexDirection: 'column'}}>
-        <ContextDropdown />
-        <StandaloneSearchBox />
-        <Cart />
-        <RecommendationProvider
-          staticState={recsStaticState}
-          navigatorContext={navigatorContext.marshal}
-        >
+      <StandaloneSearchBox />
+      <h2>Cart</h2>
+      <Cart />
+      <RecommendationProvider
+        staticState={recsStaticState}
+        navigatorContext={navigatorContext.marshal}
+      >
+        <section className="Recommendations">
           <PopularBought />
-        </RecommendationProvider>
-      </div>
+        </section>
+      </RecommendationProvider>
     </StandaloneProvider>
   );
 }

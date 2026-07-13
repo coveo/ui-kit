@@ -8,6 +8,11 @@
     "build": "tsc",
     "test": "vitest run"
   },
+  "dependencies": {
+    "@coveo/platform-mock-api": "workspace:*",
+    "@mswjs/http-middleware": "^0.10.3",
+    "msw": "catalog:"
+  },
   "devDependencies": {
     "@types/node": "catalog:",
     "typescript": "catalog:",

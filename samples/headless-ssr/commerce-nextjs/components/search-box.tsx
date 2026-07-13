@@ -1,101 +1,96 @@
 'use client';
 
-import {useState} from 'react';
-import {useInitializeRecentQueries} from '@/hooks/use-recent-queries';
-import {
-  useInstantProducts,
-  useRecentQueriesList,
-  useSearchBox,
-} from '@/lib/commerce-engine';
-import InstantProducts from './instant-product';
-import RecentQueries from './recent-queries';
+import {useSearchBoxSuggestions} from '@/hooks/use-search-box-suggestions';
+import {useInstantProducts, useSearchBox} from '@/lib/commerce-engine';
+import SearchBoxSuggestions, {
+  suggestionOptionId,
+  suggestionsListId,
+} from './search-box-suggestions';
+
+const ID_PREFIX = 'search-box';
 
 export default function SearchBox() {
   const {state, methods} = useSearchBox();
-  const {state: recentQueriesState, methods: recentQueriesController} =
-    useRecentQueriesList();
   const {state: instantProductsState, methods: instantProductsController} =
     useInstantProducts();
 
-  const [isInputFocused, setIsInputFocused] = useState(false);
-  const [isSelectingSuggestion, setIsSelectingSuggestion] = useState(false);
+  // Keyboard navigation, Enter/Escape and click-outside handling live in the
+  // shared hook; this component only wires it to the Coveo controllers.
+  const nav = useSearchBoxSuggestions({
+    suggestions: state.suggestions,
+    onSubmit: () => methods?.submit(),
+    onSelect: (rawValue) => methods?.selectSuggestion(rawValue),
+    onHighlight: (rawValue) => instantProductsController?.updateQuery(rawValue),
+  });
 
-  // Sync recent queries from localStorage when the component loads
-  useInitializeRecentQueries(recentQueriesController?.updateRecentQueries);
-
-  const onSearchBoxInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsSelectingSuggestion(true);
+  const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     methods?.updateText(e.target.value);
     instantProductsController?.updateQuery(e.target.value);
+    nav.onInputChange();
   };
 
-  const handleFocus = () => {
-    setIsInputFocused(true);
-  };
-
-  const handleBlur = () => {
-    if (!isSelectingSuggestion) {
-      setIsInputFocused(false);
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      methods?.submit();
-    }
-  };
+  const showDropdown =
+    nav.isOpen &&
+    (state.suggestions.length > 0 || instantProductsState.products.length > 0);
 
   return (
-    <div>
-      <input
-        type="search"
-        aria-label="searchbox"
-        placeholder="search"
-        value={state.value}
-        onChange={(e) => onSearchBoxInputChange(e)}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-        onKeyDown={handleKeyDown}
-      ></input>
-      {state.value !== '' && (
-        <span>
-          <button type="button" onClick={methods?.clear}>
-            X
+    <div className="SearchBox" ref={nav.rootRef}>
+      <div className="SearchBoxField">
+        <input
+          className="SearchBoxInput"
+          type="search"
+          aria-label="Search"
+          aria-expanded={showDropdown}
+          aria-controls={suggestionsListId(ID_PREFIX)}
+          aria-activedescendant={
+            nav.activeIndex >= 0
+              ? suggestionOptionId(ID_PREFIX, nav.activeIndex)
+              : undefined
+          }
+          aria-autocomplete="list"
+          placeholder="Search"
+          value={state.value}
+          onChange={onInputChange}
+          onFocus={nav.open}
+          onKeyDown={nav.onKeyDown}
+        />
+        {state.value !== '' && (
+          <button
+            type="button"
+            className="SearchBoxClear"
+            aria-label="Clear"
+            onClick={() => {
+              methods?.clear();
+              nav.close();
+            }}
+          >
+            ✕
           </button>
-        </span>
-      )}
-      <button type="button" onClick={methods?.submit}>
+        )}
+      </div>
+      <button
+        type="button"
+        className="SearchBoxSubmit"
+        onClick={() => {
+          methods?.submit();
+          nav.close();
+        }}
+      >
         Search
       </button>
 
-      {isInputFocused && (
-        <>
-          {recentQueriesState.queries.length > 0 && <RecentQueries />}
-          {state.suggestions.length > 0 && (
-            <ul>
-              Suggestions :
-              {state.suggestions.map((suggestion) => (
-                <li key={suggestion.rawValue}>
-                  <button
-                    type="button"
-                    onMouseEnter={() =>
-                      instantProductsController?.updateQuery(
-                        suggestion.rawValue
-                      )
-                    }
-                    onClick={() =>
-                      methods?.selectSuggestion(suggestion.rawValue)
-                    }
-                    dangerouslySetInnerHTML={{
-                      __html: suggestion.highlightedValue,
-                    }}
-                  ></button>
-                </li>
-              ))}
-            </ul>
-          )}
-          {instantProductsState.products.length > 0 && <InstantProducts />}
-        </>
+      {showDropdown && (
+        <SearchBoxSuggestions
+          idPrefix={ID_PREFIX}
+          suggestions={state.suggestions}
+          activeIndex={nav.activeIndex}
+          showInstantProducts={instantProductsState.products.length > 0}
+          onHighlightSuggestion={nav.highlight}
+          onSelectSuggestion={(rawValue) => {
+            methods?.selectSuggestion(rawValue);
+            nav.close();
+          }}
+        />
       )}
     </div>
   );

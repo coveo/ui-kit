@@ -1653,6 +1653,13 @@
     <shortDescription>Submit follow-up</shortDescription>
   </labels>
   <labels>
+    <fullName>quantic_FollowUpInputTooLong</fullName>
+    <value>Your question is too long. Please use {{0}} characters or fewer.</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Follow-up question character limit exceeded</shortDescription>
+  </labels>
+  <labels>
     <fullName>quantic_ShowPreviousQuestions_plural</fullName>
     <value>Show {{0}} previous questions</value>
     <language>en_US</language>
@@ -1686,6 +1693,20 @@
     <language>en_US</language>
     <protected>false</protected>
     <shortDescription>Knowledge base searched</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_AgentGenerationStepSearchQuery</fullName>
+    <value>Searching for {{0}}…</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Searching for query</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_AgentGenerationStepSearchQueryCompleted</fullName>
+    <value>Searched for {{0}}</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Searched for query</shortDescription>
   </labels>
   <labels>
     <fullName>quantic_AgentGenerationStepAnalyzingResults</fullName>

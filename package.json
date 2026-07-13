@@ -2,6 +2,7 @@
   "name": "ui-kit",
   "version": "3.0.100",
   "private": true,
+  "description": "Monorepo for Coveo UI packages, shared tooling, and release workflows",
   "scripts": {
     "postinstall": "husky install",
     "reset:install": "git checkout origin/main pnpm-lock.yaml && pnpm install",
@@ -20,7 +21,8 @@
     "version-packages": "changeset version",
     "notify:docs": "node ./scripts/notify-docs/published-ui-kit.mjs",
     "release": "pnpm run build && changeset publish",
-    "knip": "knip"
+    "knip": "knip",
+    "generate:catalog-info": "node scripts/generate-catalog-info.mjs"
   },
   "devDependencies": {
     "@actions/github": "9.1.1",
@@ -37,14 +39,14 @@
     "esbuild-plugin-alias": "0.2.1",
     "esbuild-plugin-umd-wrapper": "3.0.0",
     "husky": "9.1.7",
-    "knip": "6.18.0",
+    "knip": "6.23.0",
     "lint-staged": "16.4.0",
-    "oxfmt": "0.56.0",
-    "oxlint": "1.71.0",
+    "oxfmt": "0.57.0",
+    "oxlint": "1.72.0",
     "playwright": "catalog:",
     "publint": "0.3.21",
     "semver": "7.8.5",
-    "turbo": "2.9.18",
+    "turbo": "2.10.2",
     "typescript": "catalog:",
     "vitest": "catalog:"
   },
@@ -52,7 +54,7 @@
     "node": "^22.14.0 || ^24.11.0",
     "pnpm": ">=10.0.0"
   },
-  "packageManager": "pnpm@10.33.4",
+  "packageManager": "pnpm@10.34.4",
   "pnpm": {
     "patchedDependencies": {
       "@stencil/core@4.20.0": "patches/@stencil+core+4.20.0.patch",

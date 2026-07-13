@@ -605,6 +605,32 @@ describe('knowledge-generated-answer', () => {
       });
     });
 
+    describe('when the generated answer is disabled', () => {
+      it('should reset the answer but not call generateAnswer', () => {
+        engine = buildEngineWithGeneratedAnswer({
+          generatedAnswer: {
+            ...getGeneratedAnswerInitialState(),
+            isEnabled: false,
+          },
+        });
+        createGeneratedAnswer();
+        const disabledListener = engine.subscribe.mock.calls[0][0];
+
+        mockSelectAnswerTriggerParams.mockReturnValue({
+          q: 'test query',
+          requestId: 'new-request',
+          cannotAnswer: false,
+          analyticsMode: 'legacy',
+          actionCause: 'searchboxSubmit',
+        });
+
+        disabledListener();
+
+        expect(mockResetAnswer).toHaveBeenCalledTimes(1);
+        expect(mockGenerateAnswer).not.toHaveBeenCalled();
+      });
+    });
+
     describe('user interaction scenarios', () => {
       describe('when the user clears their query', () => {
         it('should reset the answer and not generate a new one', () => {

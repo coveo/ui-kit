@@ -1,14 +1,11 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {
-  type Engine,
-  getFullEngine,
-} from '@/src/core/interface/engine/engine.js';
+import {type Engine, getFullEngine} from '@/src/internal/engine/index.js';
 import {createTestEngine, createTestInterface} from '@/src/test/test-utils.js';
-import {getInterfaceInternals} from '@/src/core/interface/base-interface.js';
-import {getOrCreateSearchBoxSlice} from '@/src/core/internal/search-box/search-box-slice.js';
-import {getOrCreateSearchBoxActions} from '@/src/core/internal/search-box/search-box-actions.js';
-import {getOrCreateCartSlice} from '@/src/core/internal/cart/cart-slice.js';
-import {getOrCreateCartActions} from '@/src/core/internal/cart/cart-actions.js';
+import {getInterfaceInternals} from '@/src/internal/utils/index.js';
+import {getOrCreateSearchBoxSlice} from '@/src/internal/features/search-box/index.js';
+import {getOrCreateSearchBoxActions} from '@/src/internal/features/search-box/index.js';
+import {getOrCreateCartSlice} from '@/src/internal/features/cart/index.js';
+import {getOrCreateCartActions} from '@/src/internal/features/cart/index.js';
 import {buildCartController} from './cart-controller.js';
 
 describe('buildCartController', () => {
@@ -38,10 +35,10 @@ describe('buildCartController', () => {
         const controller = buildCartController({interface: cartInterface});
         const callback = vi.fn();
         const fullEngine = getFullEngine(engine);
-        const {stateId} = getInterfaceInternals(cartInterface);
+        getInterfaceInternals(cartInterface);
 
-        const searchBoxSlice = getOrCreateSearchBoxSlice(stateId);
-        const {setQuery} = getOrCreateSearchBoxActions(stateId);
+        const searchBoxSlice = getOrCreateSearchBoxSlice(cartInterface);
+        const {setQuery} = getOrCreateSearchBoxActions(cartInterface);
         fullEngine.adoptSlice(searchBoxSlice);
         controller.subscribe(callback);
         fullEngine.mutate(setQuery('q'));
@@ -105,7 +102,9 @@ describe('buildCartController', () => {
 
       buildCartController({interface: cartInterface});
 
-      expect(adoptSpy).toHaveBeenCalledWith(getOrCreateCartSlice(TEST_ID));
+      expect(adoptSpy).toHaveBeenCalledWith(
+        getOrCreateCartSlice(cartInterface)
+      );
     });
 
     it('setItems() dispatches the scoped setItems action', () => {
@@ -117,7 +116,7 @@ describe('buildCartController', () => {
 
       controller.setItems({items});
 
-      const actions = getOrCreateCartActions(TEST_ID);
+      const actions = getOrCreateCartActions(cartInterface);
       expect(mutateSpy).toHaveBeenCalledWith(actions.setItems(items));
     });
 
@@ -130,7 +129,7 @@ describe('buildCartController', () => {
 
       controller.updateItemQuantity({item});
 
-      const actions = getOrCreateCartActions(TEST_ID);
+      const actions = getOrCreateCartActions(cartInterface);
       expect(mutateSpy).toHaveBeenCalledWith(actions.updateItemQuantity(item));
     });
   });

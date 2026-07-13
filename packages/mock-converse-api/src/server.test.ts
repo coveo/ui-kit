@@ -44,6 +44,14 @@ function makeRequest(
 describe('createMockConverseServer', () => {
   let server: http.Server;
 
+  const startServer = async () => {
+    const app = createMockConverseServer();
+    server = app.listen(0);
+    await new Promise<void>((resolve) =>
+      server.once('listening', () => resolve())
+    );
+  };
+
   afterEach(async () => {
     if (server?.listening) {
       await new Promise<void>((resolve) => server.close(() => resolve()));
@@ -51,8 +59,7 @@ describe('createMockConverseServer', () => {
   });
 
   it('creates an HTTP server that responds to requests', async () => {
-    server = createMockConverseServer();
-    await new Promise<void>((resolve) => server.listen(0, resolve));
+    await startServer();
 
     const res = await makeRequest(
       server,
@@ -69,8 +76,7 @@ describe('createMockConverseServer', () => {
   });
 
   it('returns 404 for non-matching routes', async () => {
-    server = createMockConverseServer();
-    await new Promise<void>((resolve) => server.listen(0, resolve));
+    await startServer();
 
     const res = await makeRequest(server, {
       method: 'GET',
@@ -81,8 +87,7 @@ describe('createMockConverseServer', () => {
   });
 
   it('returns 405 for wrong method on /converse', async () => {
-    server = createMockConverseServer();
-    await new Promise<void>((resolve) => server.listen(0, resolve));
+    await startServer();
 
     const res = await makeRequest(server, {
       method: 'GET',
@@ -93,8 +98,7 @@ describe('createMockConverseServer', () => {
   });
 
   it('handles OPTIONS preflight', async () => {
-    server = createMockConverseServer();
-    await new Promise<void>((resolve) => server.listen(0, resolve));
+    await startServer();
 
     const res = await makeRequest(server, {
       method: 'OPTIONS',
@@ -105,9 +109,80 @@ describe('createMockConverseServer', () => {
     expect(res.headers['access-control-allow-origin']).toBe('*');
   });
 
-  it('returns the server without starting it', () => {
-    server = createMockConverseServer();
-    expect(server).toBeInstanceOf(http.Server);
-    expect(server.listening).toBe(false);
+  it('returns an app-like server with listen()', () => {
+    const app = createMockConverseServer();
+    expect(typeof app.listen).toBe('function');
+  });
+
+  it('handles full converse API route', async () => {
+    await startServer();
+    const res = await makeRequest(
+      server,
+      {
+        method: 'POST',
+        path: '/rest/organizations/myorg/commerce/unstable/agentic/converse',
+        headers: {'Content-Type': 'application/json'},
+      },
+      JSON.stringify({message: 'kayaks'})
+    );
+
+    expect(res.statusCode).toBe(200);
+    expect(res.headers['content-type']).toBe('text/event-stream');
+  });
+
+  it('returns 400 for invalid JSON payload', async () => {
+    await startServer();
+    const res = await makeRequest(
+      server,
+      {
+        method: 'POST',
+        path: '/converse',
+        headers: {'Content-Type': 'application/json'},
+      },
+      '{bad'
+    );
+
+    expect(res.statusCode).toBe(400);
+    expect(JSON.parse(res.body)).toMatchObject({error: 'Invalid JSON'});
+  });
+
+  it('returns 400 when message is missing', async () => {
+    await startServer();
+    const res = await makeRequest(
+      server,
+      {
+        method: 'POST',
+        path: '/converse',
+        headers: {'Content-Type': 'application/json'},
+      },
+      JSON.stringify({trackingId: 'x'})
+    );
+
+    expect(res.statusCode).toBe(400);
+    expect(JSON.parse(res.body)).toEqual({
+      error: 'Missing required field: message',
+    });
+  });
+
+  it('sets CORS headers on non-POST converse route', async () => {
+    await startServer();
+    const res = await makeRequest(server, {
+      method: 'GET',
+      path: '/converse',
+    });
+
+    expect(res.statusCode).toBe(405);
+    expect(res.headers['access-control-allow-origin']).toBe('*');
+  });
+
+  it('sets CORS headers on unknown route', async () => {
+    await startServer();
+    const res = await makeRequest(server, {
+      method: 'GET',
+      path: '/unknown',
+    });
+
+    expect(res.statusCode).toBe(404);
+    expect(res.headers['access-control-allow-origin']).toBe('*');
   });
 });

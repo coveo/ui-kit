@@ -8,7 +8,6 @@ export const {
   searchEngineDefinition,
   recommendationEngineDefinition,
   standaloneEngineDefinition,
-  useEngine,
 } = engineDefinition;
 
 export const {
@@ -17,15 +16,9 @@ export const {
   useProductList,
   useDidYouMean,
   useInstantProducts,
-  useNotifyTrigger,
   usePagination,
   usePopularBought,
   usePopularViewed,
-  useViewedTogether,
-  useProductView,
-  useQueryTrigger,
-  useRecentQueriesList,
-
   useSearchBox,
   useSort,
   useStandaloneSearchBox,
@@ -33,5 +26,4 @@ export const {
   useFacetGenerator,
   useBreadcrumbManager,
   useParameterManager,
-  useProductEnrichment,
 } = engineDefinition.controllers;

@@ -2,7 +2,7 @@ import {getSampleCommerceEngineConfiguration} from '@coveo/headless/commerce';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
-import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
+import {MockCommerceApi} from '@coveo/platform-mock-api/commerce/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import '@/src/components/commerce/atomic-commerce-breadbox/atomic-commerce-breadbox.js';
 import '@/src/components/commerce/atomic-commerce-facets/atomic-commerce-facets.js';

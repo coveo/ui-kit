@@ -5,7 +5,7 @@ import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-inter
 import {wrapInCommerceSearchBox} from '@/storybook-utils/commerce/commerce-search-box-wrapper';
 import {parameters} from '@/storybook-utils/common/search-box-suggestions-parameters';
 import '@/src/components/commerce/atomic-commerce-search-box-query-suggestions/atomic-commerce-search-box-query-suggestions.js';
-import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
+import {MockCommerceApi} from '@coveo/platform-mock-api/commerce/mock';
 
 const commerceApiHarness = new MockCommerceApi();
 

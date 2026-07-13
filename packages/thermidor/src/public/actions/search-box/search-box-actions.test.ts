@@ -3,11 +3,10 @@ import {
   Engine,
   FullEngine,
   getFullEngine,
-} from '@/src/core/interface/engine/engine.js';
+} from '@/src/internal/engine/index.js';
 import {createTestEngine} from '@/src/test/test-utils.js';
-import {getOrCreateSearchBoxSelectors} from '@/src/core/internal/search-box/search-box-selectors.js';
+import {getOrCreateSearchBoxSelectors} from '@/src/internal/features/search-box/index.js';
 import {buildSearchInterface} from '@/src/public/interfaces/search.js';
-import {getInterfaceInternals} from '@/src/core/interface/base-interface.js';
 import {loadSearchBoxActions} from './search-box-actions.js';
 
 describe('search-box actions', () => {
@@ -24,8 +23,7 @@ describe('search-box actions', () => {
   describe('loadSearchBoxActions', () => {
     it('should adopt the searchBox slice on the engine', () => {
       loadSearchBoxActions({interface: searchInterface});
-      const {stateId} = getInterfaceInternals(searchInterface);
-      const selectors = getOrCreateSearchBoxSelectors(stateId);
+      const selectors = getOrCreateSearchBoxSelectors(searchInterface);
       expect(fullEngine.read(selectors.getQuery)).toBe('');
     });
 
@@ -39,8 +37,7 @@ describe('search-box actions', () => {
 
     it('should update state when setQuery action is called', () => {
       const actions = loadSearchBoxActions({interface: searchInterface});
-      const {stateId} = getInterfaceInternals(searchInterface);
-      const selectors = getOrCreateSearchBoxSelectors(stateId);
+      const selectors = getOrCreateSearchBoxSelectors(searchInterface);
 
       actions.setQuery({query: 'hello world'});
       expect(fullEngine.read(selectors.getQuery)).toBe('hello world');
@@ -48,8 +45,7 @@ describe('search-box actions', () => {
 
     it('should accept empty string via setQuery action', () => {
       const actions = loadSearchBoxActions({interface: searchInterface});
-      const {stateId} = getInterfaceInternals(searchInterface);
-      const selectors = getOrCreateSearchBoxSelectors(stateId);
+      const selectors = getOrCreateSearchBoxSelectors(searchInterface);
 
       actions.setQuery({query: 'something'});
       actions.setQuery({query: ''});
@@ -58,8 +54,7 @@ describe('search-box actions', () => {
 
     it('should handle multiple calls to setQuery', () => {
       const actions = loadSearchBoxActions({interface: searchInterface});
-      const {stateId} = getInterfaceInternals(searchInterface);
-      const selectors = getOrCreateSearchBoxSelectors(stateId);
+      const selectors = getOrCreateSearchBoxSelectors(searchInterface);
 
       actions.setQuery({query: 'first'});
       expect(fullEngine.read(selectors.getQuery)).toBe('first');

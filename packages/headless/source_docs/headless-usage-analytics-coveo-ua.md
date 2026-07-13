@@ -71,6 +71,7 @@ Click events are intended to record item view and preview actions, such as:
 
 <iframe src="https://stackblitz.com/github/coveo/headless-documentation-material-ui-react-codesandbox/tree/main?embed=1&view=split&file=src%2FComponents%2FResultLink.tsx&ctl=1"
      style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
+     credentialless
    ></iframe>
 
 To learn more about using the `InteractiveResult` component in your result list implementation, see [Lesson 3](https://levelup.coveo.com/learn/courses/headless-commerce-tutorial/lessons/lesson-3-usage-analytics#_click_events) of the Coveo Headless Tutorial.

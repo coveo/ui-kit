@@ -44,70 +44,74 @@ type QuanticGeneratedAnswerE2EInsightFixtures =
 
 export const exampleQuery = 'test';
 
-export const testSearch = quanticBase.extend<QuanticGeneratedAnswerE2ESearchFixtures>({
-  pageUrl,
-  genQaData,
-  options: {},
-  analyticsMode: AnalyticsModeEnum.legacy,
-  withFacets: false,
-  search: async ({page}, use) => {
-    await use(new SearchObject(page, searchRequestRegex));
-  },
-  baseFacet: async ({page}, use) => {
-    await use(new BaseFacetObject(page, searchRequestRegex));
-  },
-  generatedAnswer: async (
-    {
-      page,
-      options,
-      configuration,
-      search,
-      genQaData: data,
-      analytics,
-      withFacets,
+export const testSearch =
+  quanticBase.extend<QuanticGeneratedAnswerE2ESearchFixtures>({
+    pageUrl,
+    genQaData,
+    options: {},
+    analyticsMode: AnalyticsModeEnum.legacy,
+    withFacets: false,
+    search: async ({page}, use) => {
+      await use(new SearchObject(page, searchRequestRegex));
     },
-    use
-  ) => {
-    const generatedAnswerObject = new GeneratedAnswerObject(
-      page,
-      data.streamId,
-      analytics,
-      !!options.answerConfigurationId,
-      rgaGenerateRequestRegex,
-      withFacets,
-    );
+    baseFacet: async ({page}, use) => {
+      await use(new BaseFacetObject(page, searchRequestRegex));
+    },
+    generatedAnswer: async (
+      {
+        page,
+        options,
+        configuration,
+        search,
+        genQaData: data,
+        analytics,
+        withFacets,
+      },
+      use
+    ) => {
+      const generatedAnswerObject = new GeneratedAnswerObject(
+        page,
+        data.streamId,
+        analytics,
+        {
+          answerApiEnabled: !!options.answerConfigurationId,
+          headAnswerRequestRegex: rgaGenerateRequestRegex,
+          withFacets,
+        }
+      );
 
-    const streamingUrl = options.answerConfigurationId
-      ? ANSWER_API_URL
-      : `${MACHINE_LEARNING_API_URL}/${data.streamId}`;
-    await generatedAnswerObject.mockStreamResponse(
-      streamingUrl,
-      data.streams,
-      data.streamId
-    );
+      const streamingUrl = options.answerConfigurationId
+        ? ANSWER_API_URL
+        : `${MACHINE_LEARNING_API_URL}/${data.streamId}`;
+      await generatedAnswerObject.mockStreamResponse(
+        streamingUrl,
+        data.streams,
+        data.streamId
+      );
 
-    await page.goto(pageUrl);
-    if (withFacets) {
-      await generatedAnswerObject.clickAddFacetsButton();
-    }
-    await configuration.configure(options);
-    await search.waitForSearchResponse();
+      await page.goto(pageUrl);
+      if (withFacets) {
+        await generatedAnswerObject.clickAddFacetsButton();
+      }
+      await configuration.configure(options);
+      await search.waitForSearchResponse();
 
       generatedAnswerObject.streamEndAnalyticRequestPromise =
         generatedAnswerObject.waitForStreamEndAnalytics();
+
       if (options.answerConfigurationId) {
         generatedAnswerObject.generateRequestPromise =
-          generatedAnswerObject.waitForGenerateRequest();
+          generatedAnswerObject.waitForHeadAnswerRequest();
       }
 
-    await search.fillSearchInput(exampleQuery);
-    await search.mockSearchWithGenerativeQuestionAnsweringId(data.streamId);
-    await search.performSearch();
-    await search.waitForSearchResponse();
+      await search.fillSearchInput(exampleQuery);
+      await search.mockSearchWithGenerativeQuestionAnsweringId(data.streamId);
+      await search.performSearch();
+      await search.waitForSearchResponse();
 
-    await use(generatedAnswerObject);
-  },
-});
+      await use(generatedAnswerObject);
+    },
+  });
 
 export const testInsight =
   quanticBase.extend<QuanticGeneratedAnswerE2EInsightFixtures>({
@@ -142,9 +146,11 @@ export const testInsight =
         page,
         data.streamId,
         analytics,
-        !!options.answerConfigurationId,
-        insightRgaGenerateRequestRegex,
-        withFacets
+        {
+          answerApiEnabled: !!options.answerConfigurationId,
+          headAnswerRequestRegex: insightRgaGenerateRequestRegex,
+          withFacets,
+        }
       );
 
       const streamingUrl = options.answerConfigurationId
@@ -171,7 +177,7 @@ export const testInsight =
         generatedAnswerObject.waitForStreamEndAnalytics();
       if (options.answerConfigurationId) {
         generatedAnswerObject.generateRequestPromise =
-          generatedAnswerObject.waitForGenerateRequest();
+          generatedAnswerObject.waitForHeadAnswerRequest();
       }
 
       await search.fillSearchInput(exampleQuery);

@@ -5,16 +5,18 @@ import type {
 } from '../../../../state/state-sections.js';
 
 export const facetResponseSelector = createSelector(
-  (
-    state: CommerceSearchSection & CommerceFacetSetSection,
-    facetId: string
-  ) => ({state, facetId}),
+  (state: CommerceSearchSection & CommerceFacetSetSection) =>
+    state.commerceSearch.facets,
+  (state: CommerceSearchSection & CommerceFacetSetSection, facetId: string) =>
+    facetId in state.commerceFacetSet,
+  (_state: CommerceSearchSection & CommerceFacetSetSection, facetId: string) =>
+    facetId,
 
-  ({state, facetId}) => {
-    const facetResponse = state.commerceSearch.facets.find(
+  (facets, isFacetIdInFacetSet, facetId) => {
+    const facetResponse = facets.find(
       (facetResponse) => facetResponse.facetId === facetId
     );
-    if (facetResponse && facetResponse.facetId in state.commerceFacetSet) {
+    if (facetResponse && isFacetIdInFacetSet) {
       return facetResponse;
     }
 
@@ -22,8 +24,5 @@ export const facetResponseSelector = createSelector(
   }
 );
 
-export const isFacetLoadingResponseSelector = createSelector(
-  (state: CommerceSearchSection) => ({state}),
-
-  ({state}) => state.commerceSearch.isLoading
-);
+export const isFacetLoadingResponseSelector = (state: CommerceSearchSection) =>
+  state.commerceSearch.isLoading;
