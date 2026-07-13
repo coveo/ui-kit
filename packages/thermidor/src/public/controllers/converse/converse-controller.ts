@@ -1,15 +1,13 @@
 import type {Turn} from '@/src/internal/features/generative/index.js';
 import {GenerativeRuntime} from '@/src/internal/api/generative/index.js';
 import {createHydrateSubInterface} from '@/src/internal/features/generative/index.js';
-import {getOrCreateGenerativeSlice} from '@/src/internal/features/generative/index.js';
 import {BaseController} from '@/src/internal/utils/index.js';
 import {createMemoizedStateSelector} from '@/src/internal/utils/index.js';
 import {getHandleInternals} from '@/src/internal/utils/index.js';
-import {getGenerativeSourceEngine} from '@/src/public/interfaces/generative.js';
 import {getOrCreateGenerativeActions} from '@/src/internal/features/generative/index.js';
 import {getOrCreateGenerativeSelectors} from '@/src/internal/features/generative/index.js';
-import type {GenerativeInterface} from '@/src/public/interfaces/generative.js';
-import type {Controller} from '../controller-types.js';
+import type {GenerativeInterface} from '@/src/internal/utils/index.js';
+import type {Controller} from '@/src/internal/utils/index.js';
 
 class ConverseControllerImpl extends BaseController<ConverseControllerState> {
   #runtime: GenerativeRuntime;
@@ -18,9 +16,6 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
 
   constructor(options: ConverseControllerOptions) {
     const {engine: fullEngine} = getHandleInternals(options.interface);
-    const sourceEngine = getGenerativeSourceEngine(options.interface);
-
-    fullEngine.adoptSlice(getOrCreateGenerativeSlice(options.interface));
 
     const actions = getOrCreateGenerativeActions(options.interface);
     const selectors = getOrCreateGenerativeSelectors(options.interface);
@@ -99,7 +94,7 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
           this.engine.mutate(this.#actions.clearTurnResponse({turnId}));
         },
       },
-      hydrateSubInterface: createHydrateSubInterface(sourceEngine),
+      hydrateSubInterface: createHydrateSubInterface(fullEngine),
     });
   }
 

@@ -10,7 +10,7 @@ import {BaseInterface, getInterfaceInternals} from './base-interface.js';
 import {
   ComposedInterfaceImpl,
   getComposedInternals,
-} from '@/src/public/interfaces/compose.js';
+} from '@/src/internal/interfaces/compose.js';
 
 export interface HandleInternals {
   engine: FullEngine;
