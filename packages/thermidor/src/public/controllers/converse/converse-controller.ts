@@ -46,7 +46,6 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
       selectors.getActiveTurnId,
       (turns, activeTurnId): ConverseControllerState => ({
         turns,
-        activeTurnId,
         activeTurn: activeTurnId
           ? turns.find((t) => t.id === activeTurnId)
           : undefined,
@@ -140,7 +139,7 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
   }
 
   serialize(): SerializedConverseState {
-    const {turns, activeTurnId} = this.state;
+    const {turns, activeTurn} = this.state;
 
     const serializedTurns: SerializedTurn[] = turns.map((turn) => {
       const {routedInterface, ...rest} = turn;
@@ -159,7 +158,7 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
       conversationSessionId: this.#runtime.getConversationSessionId(),
       conversationToken: this.#runtime.getConversationToken(),
       turns: serializedTurns,
-      activeTurnId,
+      activeTurnId: activeTurn?.id,
     };
   }
 
@@ -221,7 +220,6 @@ export interface ConverseController extends Controller<ConverseControllerState> 
 
 export interface ConverseControllerState {
   turns: Turn[];
-  activeTurnId: string | undefined;
   activeTurn: Turn | undefined;
   isStreaming: boolean;
 }

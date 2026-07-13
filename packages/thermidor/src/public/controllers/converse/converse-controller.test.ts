@@ -78,7 +78,6 @@ describe('buildConverseController', () => {
 
       expect(controller.state).toEqual({
         turns: [],
-        activeTurnId: undefined,
         isStreaming: false,
       });
     });
@@ -131,7 +130,7 @@ describe('buildConverseController', () => {
       );
       fullEngine.mutate(actions.setActiveTurnId('turn-1'));
 
-      expect(controller.state.activeTurnId).toBe('turn-1');
+      expect(controller.state.activeTurn?.id).toBe('turn-1');
     });
   });
 
@@ -203,7 +202,7 @@ describe('buildConverseController', () => {
 
       controller.selectTurn({id: 'turn-1'});
 
-      expect(controller.state.activeTurnId).toBe('turn-1');
+      expect(controller.state.activeTurn?.id).toBe('turn-1');
     });
 
     it('does not modify activeTurnId when the turn does not exist', () => {
@@ -217,7 +216,7 @@ describe('buildConverseController', () => {
 
       controller.selectTurn({id: 'non-existent'});
 
-      expect(controller.state.activeTurnId).toBe('turn-1');
+      expect(controller.state.activeTurn?.id).toBe('turn-1');
     });
   });
 
@@ -452,7 +451,7 @@ describe('buildConverseController', () => {
         prompt: 'hello',
         status: 'complete',
       });
-      expect(controller.state.activeTurnId).toBe('turn-1');
+      expect(controller.state.activeTurn?.id).toBe('turn-1');
     });
 
     it('transitions streaming turns to error status', () => {
@@ -532,7 +531,7 @@ describe('buildConverseController', () => {
         conversationToRestore,
       });
 
-      expect(controller.state.activeTurnId).toBe('turn-2');
+      expect(controller.state.activeTurn?.id).toBe('turn-2');
     });
 
     it('first state read contains hydrated turns', () => {
@@ -555,7 +554,7 @@ describe('buildConverseController', () => {
       });
 
       expect(controller.state.turns).toHaveLength(1);
-      expect(controller.state.activeTurnId).toBe('turn-1');
+      expect(controller.state.activeTurn?.id).toBe('turn-1');
       expect(controller.state.activeTurn).toMatchObject({
         id: 'turn-1',
         prompt: 'hello',
@@ -589,7 +588,6 @@ describe('buildConverseController', () => {
 
       expect(controller.state).toEqual({
         turns: [],
-        activeTurnId: undefined,
         activeTurn: undefined,
         isStreaming: false,
       });
