@@ -126,16 +126,14 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
         endReasoning: (turnId) => {
           this.engine.mutate(this.#actions.endReasoning({turnId}));
         },
+        setConversationSession: (sessionId, token) => {
+          this.engine.mutate(
+            this.#actions.setConversationSession({sessionId, token})
+          );
+        },
       },
       hydrateSubInterface: createHydrateSubInterface(sourceEngine),
     });
-
-    if (options.conversationToRestore) {
-      this.#runtime.setConversationSession(
-        options.conversationToRestore.conversationSessionId,
-        options.conversationToRestore.conversationToken
-      );
-    }
   }
 
   serialize(): SerializedConverseState {
@@ -155,8 +153,10 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
     return {
       name: firstPrompt,
       timestamp: Date.now(),
-      conversationSessionId: this.#runtime.getConversationSessionId(),
-      conversationToken: this.#runtime.getConversationToken(),
+      conversationSessionId: this.engine.read(
+        this.#selectors.getConversationSessionId
+      ),
+      conversationToken: this.engine.read(this.#selectors.getConversationToken),
       turns: serializedTurns,
       activeTurnId: activeTurn?.id,
     };
@@ -165,17 +165,17 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
   restore(state: SerializedConverseState): void {
     const hydratedState = hydrateFromSerializedState(state);
     this.engine.mutate(this.#actions.hydrateState(hydratedState));
-    this.#runtime.setConversationSession(
-      state.conversationSessionId,
-      state.conversationToken
-    );
   }
 
   clear(): void {
     this.engine.mutate(
-      this.#actions.hydrateState({turns: [], activeTurnId: undefined})
+      this.#actions.hydrateState({
+        turns: [],
+        activeTurnId: undefined,
+        conversationSessionId: undefined,
+        conversationToken: undefined,
+      })
     );
-    this.#runtime.setConversationSession(undefined, undefined);
   }
 
   submit({prompt}: {prompt: string}): void {
@@ -248,5 +248,7 @@ function hydrateFromSerializedState(
   return {
     turns,
     activeTurnId: serialized.activeTurnId,
+    conversationSessionId: serialized.conversationSessionId,
+    conversationToken: serialized.conversationToken,
   };
 }

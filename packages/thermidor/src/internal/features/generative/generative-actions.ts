@@ -68,6 +68,10 @@ export function createGenerativeActions(interfaceId: string) {
     ),
     endReasoning: createAction<{turnId: string}>(`${prefix}/endReasoning`),
     hydrateState: createAction<GenerativeState>(`${prefix}/hydrateState`),
+    setConversationSession: createAction<{
+      sessionId: string | undefined;
+      token: string | undefined;
+    }>(`${prefix}/setConversationSession`),
   };
 }
 

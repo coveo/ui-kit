@@ -8,6 +8,8 @@ import {getOrCreateGenerativeActions} from './generative-actions.js';
 export const initialGenerativeState: GenerativeState = {
   turns: [],
   activeTurnId: undefined,
+  conversationSessionId: undefined,
+  conversationToken: undefined,
 };
 
 type GenerativeSlice = ReturnType<typeof createGenerativeSlice>;
@@ -146,6 +148,10 @@ export function createGenerativeSlice(
         })
         .addCase(actions.hydrateState, (_state, {payload}) => {
           return payload;
+        })
+        .addCase(actions.setConversationSession, (state, {payload}) => {
+          state.conversationSessionId = payload.sessionId;
+          state.conversationToken = payload.token;
         });
     },
   });

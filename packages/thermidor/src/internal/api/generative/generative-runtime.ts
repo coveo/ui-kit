@@ -2,7 +2,6 @@ import {
   readConversationEventStream,
   type ConversationStreamEvent,
   createConversationEndpointClient,
-  type CoveoConversationEndpointRequest,
 } from '@/src/internal/api/conversation/index.js';
 import type {FullEngine} from '@/src/internal/engine/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
@@ -33,6 +32,10 @@ export interface GenerativeStatePort {
   startReasoning(turnId: string): void;
   appendReasoningDelta(turnId: string, delta: string): void;
   endReasoning(turnId: string): void;
+  setConversationSession(
+    sessionId: string | undefined,
+    token: string | undefined
+  ): void;
 }
 
 export type HydrateSubInterface = (
@@ -59,8 +62,6 @@ export class GenerativeRuntime {
   private hydrateSubInterface: HydrateSubInterface;
   private agentResponseInitialized = new Set<string>();
   private currentPrompt: string | undefined;
-  private conversationSessionId: string | undefined;
-  private conversationToken: string | undefined;
   private buildRequest: ReturnType<
     typeof createConversationEndpointRequestSelector
   >;
@@ -99,22 +100,6 @@ export class GenerativeRuntime {
     return runtime;
   }
 
-  getConversationSessionId(): string | undefined {
-    return this.conversationSessionId;
-  }
-
-  getConversationToken(): string | undefined {
-    return this.conversationToken;
-  }
-
-  setConversationSession(
-    sessionId: string | undefined,
-    token: string | undefined
-  ): void {
-    this.conversationSessionId = sessionId;
-    this.conversationToken = token;
-  }
-
   async submit(prompt: string): Promise<void> {
     const tempId = generateId();
 
@@ -136,16 +121,12 @@ export class GenerativeRuntime {
 
   private async executeStream(turnId: string): Promise<void> {
     try {
-      const requestFromState = this.engine.read(this.buildRequest);
+      const {cart, ...fromState} = this.engine.read(this.buildRequest);
       const navigatorContext = this.engine.getNavigatorContextProvider()?.();
       const clientConfig = readEndpointClientConfiguration(this.engine);
 
-      const request: CoveoConversationEndpointRequest = {
-        trackingId: requestFromState.trackingId,
-        language: requestFromState.language,
-        country: requestFromState.country,
-        currency: requestFromState.currency,
-        message: requestFromState.message,
+      const request = {
+        ...fromState,
         clientId: navigatorContext?.clientId ?? undefined,
         context: {
           user: {
@@ -155,17 +136,9 @@ export class GenerativeRuntime {
             url: navigatorContext?.location ?? null,
             referrer: navigatorContext?.referrer ?? null,
           },
-          ...(requestFromState.cart.length > 0
-            ? {cart: requestFromState.cart}
-            : {}),
+          ...(cart ? {cart} : {}),
         },
-        ...(this.conversationSessionId
-          ? {conversationSessionId: this.conversationSessionId}
-          : {}),
-        ...(this.conversationToken
-          ? {conversationToken: this.conversationToken}
-          : {}),
-        targetEngine: 'AGENT_CORE',
+        targetEngine: 'AGENT_CORE' as const,
       };
 
       const client = createConversationEndpointClient();
@@ -220,11 +193,11 @@ export class GenerativeRuntime {
   ): {turnId: string; isTerminal: boolean} {
     switch (event.type) {
       case 'turn_started': {
-        if (event.conversationSessionId) {
-          this.conversationSessionId = event.conversationSessionId;
-        }
-        if (event.conversationToken) {
-          this.conversationToken = event.conversationToken;
+        if (event.conversationSessionId || event.conversationToken) {
+          this.statePort.setConversationSession(
+            event.conversationSessionId,
+            event.conversationToken
+          );
         }
         return {turnId, isTerminal: false};
       }
@@ -320,11 +293,11 @@ export class GenerativeRuntime {
       }
 
       case 'turn_complete': {
-        if (event.conversationSessionId) {
-          this.conversationSessionId = event.conversationSessionId;
-        }
-        if (event.conversationToken) {
-          this.conversationToken = event.conversationToken;
+        if (event.conversationSessionId || event.conversationToken) {
+          this.statePort.setConversationSession(
+            event.conversationSessionId,
+            event.conversationToken
+          );
         }
         this.statePort.completeTurn(turnId);
         return {turnId, isTerminal: true};
