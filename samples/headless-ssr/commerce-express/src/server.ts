@@ -58,12 +58,7 @@ app.get('/search', async (req, res) => {
         cart: {initialState: {items: getCartItems(req)}},
         context: {
           ...DEFAULT_CONTEXT,
-          view: {
-            url: new URL(
-              req.originalUrl ?? req.url,
-              `http://${req.headers.host ?? 'localhost'}`
-            ).toString(),
-          },
+          view: {url: 'https://sports.barca.group/search'},
         },
         parameterManager: {
           initialState: {parameters: deserializeParameters(req)},
@@ -101,10 +96,7 @@ app.get('/listing/:listingId', async (req, res) => {
         context: {
           ...DEFAULT_CONTEXT,
           view: {
-            url: new URL(
-              req.originalUrl ?? req.url,
-              `http://${req.headers.host ?? 'localhost'}`
-            ).toString(),
+            url: `https://sports.barca.group/browse/promotions/${listingId}`,
           },
         },
         parameterManager: {
