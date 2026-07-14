@@ -584,7 +584,10 @@ describe('GenerativeRuntime', () => {
       setupSuccessfulStream([
         {
           type: 'ACTIVITY_SNAPSHOT',
+          messageId: 'm1',
+          activityType: 'ui-surface',
           content: surface,
+          replace: false,
         } as ConversationStreamEvent,
         {type: 'turn_complete'} as ConversationStreamEvent,
       ]);
@@ -667,6 +670,54 @@ describe('GenerativeRuntime', () => {
       await runtime.submit('Find shoes');
 
       expect(config.statePort.setRoutedInterface).not.toHaveBeenCalled();
+    });
+
+    it('handles search_api_response by routing when hydration succeeds', async () => {
+      const routedInterface = {
+        useCase: 'search' as const,
+        interface: {disposed: false, dispose: vi.fn()} as InterfaceHandle,
+      };
+      const config = createMockConfig({
+        hydrateSubInterface: vi.fn().mockReturnValue(routedInterface),
+      });
+      const engine = createMockEngine();
+
+      const mockStream = {} as ReadableStream<Uint8Array>;
+      mockCreateConversationEndpointClient.mockReturnValue({
+        call: vi
+          .fn()
+          .mockResolvedValue({success: true, data: {stream: mockStream}}),
+      });
+      mockReadEndpointClientConfiguration.mockReturnValue({
+        organizationId: 'test-org',
+        accessToken: 'test-token',
+      });
+      mockReadConversationEventStream.mockImplementation(
+        async ({onEvent, onDone}) => {
+          onEvent({
+            type: 'search_api_response',
+            content: {results: [], totalCount: 0},
+          });
+          onDone?.();
+        }
+      );
+
+      const runtime = GenerativeRuntime.getInstance(
+        engine,
+        'search-route',
+        config
+      );
+      await runtime.submit('Find documents');
+
+      expect(config.hydrateSubInterface).toHaveBeenCalledWith(
+        'search_api_response',
+        {results: [], totalCount: 0},
+        'Find documents'
+      );
+      expect(config.statePort.setRoutedInterface).toHaveBeenCalledWith(
+        'generated-id-1',
+        routedInterface
+      );
     });
 
     it('handles turn_complete by completing the turn and updating session', async () => {
