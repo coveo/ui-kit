@@ -32,25 +32,10 @@ const buildConversationResponse = ({
 ];
 
 const buildRoutedResponse = ({
-  runId,
   routedEvent,
-  threadId,
-  includeInitialStateSnapshot = true,
-  includeFinalStateSnapshot = true,
 }: {
-  runId: string;
   routedEvent: ConverseEvent;
-  threadId?: string;
-  includeInitialStateSnapshot?: boolean;
-  includeFinalStateSnapshot?: boolean;
-}): ConverseEvent[] =>
-  buildConversationResponse({
-    runId,
-    middleEvents: [routedEvent],
-    threadId,
-    includeInitialStateSnapshot,
-    includeFinalStateSnapshot,
-  });
+}): ConverseEvent[] => [TurnStarted(), routedEvent, TurnComplete()];
 
 /**
  * @deprecated Use `buildRoutedResponse` instead.
@@ -68,9 +53,9 @@ const buildActivityOnlyResponse = ({
   includeInitialStateSnapshot?: boolean;
   includeFinalStateSnapshot?: boolean;
 }): ConverseEvent[] =>
-  buildRoutedResponse({
+  buildConversationResponse({
     runId,
-    routedEvent: activitySnapshot,
+    middleEvents: [activitySnapshot],
     threadId,
     includeInitialStateSnapshot,
     includeFinalStateSnapshot,

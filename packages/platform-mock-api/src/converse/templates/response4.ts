@@ -1,8 +1,6 @@
 import {buildRoutedResponse} from './shared.js';
 import {CommerceSearchApiResponse, type ConverseEvent} from '../events.js';
 
-const runId = 'b7048647-0fa0-4d27-af3e-2006846cdf88';
-
 const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
   content: {
     responseId: '8866d5a3-d2b3-4baf-96f6-2933321c5936',
@@ -5203,7 +5201,6 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
 });
 
 const response4Events: ConverseEvent[] = buildRoutedResponse({
-  runId,
   routedEvent: commerceSearchApiResponse,
 });
 
