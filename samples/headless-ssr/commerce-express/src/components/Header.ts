@@ -3,6 +3,7 @@
  * static asset pipeline) plus primary navigation tabs. Rendered on the server
  * for every page; the active tab is derived from the current path.
  */
+import {escapeHtml} from '../common/utils.js';
 import {LISTINGS} from '../lib/listings.js';
 
 const TABS = [
@@ -35,9 +36,9 @@ const COVEO_LOGO = `<svg class="HeaderLogo" viewBox="0 0 409.4 103.6" role="img"
 export function renderHeader(activePath: string, cartToggle = ''): string {
   const tabs = TABS.map((tab) => {
     const isActive = activePath === tab.href;
-    return `<a class="${isActive ? 'Tab TabActive' : 'Tab'}" href="${tab.href}"${
+    return `<a class="${isActive ? 'Tab TabActive' : 'Tab'}" href="${escapeHtml(tab.href)}"${
       isActive ? ' aria-current="page"' : ''
-    }>${tab.label}</a>`;
+    }>${escapeHtml(tab.label)}</a>`;
   }).join('');
 
   return `
