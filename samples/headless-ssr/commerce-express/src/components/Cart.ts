@@ -95,125 +95,6 @@ export function renderCart(state: CartState, currency: string): string {
   `;
 }
 
-/**
- * Client-side DOM builders for the cart body.
- *
- * The cart is seeded from a user-controlled cookie (see `lib/cart.ts`), so on
- * the client the drawer contents are built with the DOM API — untrusted fields
- * (`name`, `productId`) go through `textContent`/`dataset`, never
- * string-interpolated HTML assigned with `innerHTML`. This keeps the re-render
- * free of any HTML-injection sink. The server render (`renderCart`) escapes the
- * same fields with `escapeHtml` for the equivalent reason.
- */
-function buildQtyButton(
-  action: 'increment' | 'decrement',
-  label: string,
-  glyph: string
-): HTMLButtonElement {
-  const button = document.createElement('button');
-  button.type = 'button';
-  button.className = 'CartQtyButton';
-  button.dataset.action = action;
-  button.setAttribute('aria-label', label);
-  button.textContent = glyph;
-  return button;
-}
-
-function buildCartItemNode(item: CartItem, currency: string): HTMLLIElement {
-  const li = document.createElement('li');
-  li.className = 'CartItem';
-  li.dataset.productId = item.productId;
-
-  const main = document.createElement('div');
-  main.className = 'CartItemMain';
-  const name = document.createElement('span');
-  name.className = 'CartItemName';
-  name.textContent = item.name;
-  const price = document.createElement('span');
-  price.className = 'CartItemPrice';
-  price.textContent = `${formatCurrency(item.price, currency)} each`;
-  main.append(name, price);
-
-  const controls = document.createElement('div');
-  controls.className = 'CartItemControls';
-  const decrement = buildQtyButton(
-    'decrement',
-    `Remove one ${item.name}`,
-    '\u2212'
-  );
-  const quantity = document.createElement('span');
-  quantity.className = 'CartItemQty';
-  quantity.setAttribute('aria-label', 'Quantity');
-  quantity.textContent = String(item.quantity);
-  const increment = buildQtyButton('increment', `Add one ${item.name}`, '+');
-  const remove = document.createElement('button');
-  remove.type = 'button';
-  remove.className = 'CartItemRemove';
-  remove.dataset.action = 'remove';
-  remove.setAttribute('aria-label', `Remove all ${item.name}`);
-  remove.textContent = 'Remove';
-  controls.append(decrement, quantity, increment, remove);
-
-  const total = document.createElement('span');
-  total.className = 'CartItemTotal';
-  total.textContent = formatCurrency(item.price * item.quantity, currency);
-
-  li.append(main, controls, total);
-  return li;
-}
-
-/** Builds the drawer's inner content (item list + totals/actions) as DOM nodes. */
-function buildCartBodyNode(
-  state: CartState,
-  currency: string
-): DocumentFragment {
-  const fragment = document.createDocumentFragment();
-
-  if (state.items.length === 0) {
-    const empty = document.createElement('p');
-    empty.className = 'CartEmpty';
-    empty.textContent = 'Your cart is empty.';
-    fragment.append(empty);
-    return fragment;
-  }
-
-  const list = document.createElement('ul');
-  list.className = 'CartItems';
-  for (const item of state.items) {
-    list.append(buildCartItemNode(item, currency));
-  }
-
-  const footer = document.createElement('div');
-  footer.className = 'CartFooter';
-
-  const totalRow = document.createElement('div');
-  totalRow.className = 'CartTotalRow';
-  const totalLabel = document.createElement('span');
-  totalLabel.textContent = 'Total';
-  const totalValue = document.createElement('span');
-  totalValue.className = 'CartTotalValue';
-  totalValue.textContent = formatCurrency(state.totalPrice, currency);
-  totalRow.append(totalLabel, totalValue);
-
-  const actions = document.createElement('div');
-  actions.className = 'CartFooterActions';
-  const purchase = document.createElement('button');
-  purchase.type = 'button';
-  purchase.id = 'cart-purchase';
-  purchase.className = 'CartPurchase';
-  purchase.textContent = 'Purchase';
-  const emptyButton = document.createElement('button');
-  emptyButton.type = 'button';
-  emptyButton.id = 'cart-empty';
-  emptyButton.className = 'CartEmptyButton';
-  emptyButton.textContent = 'Empty cart';
-  actions.append(purchase, emptyButton);
-
-  footer.append(totalRow, actions);
-  fragment.append(list, footer);
-  return fragment;
-}
-
 export function hydrateCart(cart: Cart, currency: string) {
   const drawer = getElement<HTMLDivElement>('cart-drawer');
   const body = getElement<HTMLDivElement>('cart-body');
@@ -245,7 +126,7 @@ export function hydrateCart(cart: Cart, currency: string) {
   });
 
   // Event delegation on the persistent body element keeps handlers stable
-  // across re-renders (the body's children are replaced on every cart change).
+  // across re-renders (the body's innerHTML is replaced on every cart change).
   body.addEventListener('click', (event) => {
     const button = (event.target as HTMLElement).closest('button');
     if (!button) {
@@ -286,7 +167,12 @@ export function hydrateCart(cart: Cart, currency: string) {
 
   const update = () => {
     const {totalQuantity} = cart.state;
-    body.replaceChildren(buildCartBodyNode(cart.state, currency));
+    // NOTE: This is a sample and is prone to XSS. The cart is restored from a
+    // user-controlled cookie, so `cart.state` is untrusted input, and assigning
+    // an HTML string to `innerHTML` here is a DOM-based XSS sink (flagged by
+    // Snyk). Item fields are escaped with `escapeHtml` in `renderCartItem`, but
+    // real apps should prefer safe DOM APIs (e.g. `textContent`) or a sanitizer.
+    body.innerHTML = renderCartBody(cart.state, currency);
     if (badge) {
       badge.textContent = String(totalQuantity);
       badge.hidden = totalQuantity === 0;

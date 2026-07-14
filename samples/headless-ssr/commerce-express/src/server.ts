@@ -42,6 +42,11 @@ const deserializeParameters = (req: Request) => {
 
 // Restores the cart from the external cart system (a cookie in this sample; see
 // `lib/externalCartApi.ts`) so it survives navigation and reloads.
+//
+// NOTE: This is a sample and is prone to XSS. The cookie is user-controlled
+// (untrusted) input; it flows into the server-rendered HTML and the client-side
+// cart re-render (see `components/Cart.ts`). A production app must treat this
+// data as untrusted end-to-end and sanitize/encode it at every sink.
 const getCartItems = (req: Request) => parseCartItems(req.headers.cookie);
 
 app.get('/', (_req, res) => {
