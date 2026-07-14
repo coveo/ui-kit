@@ -18,6 +18,7 @@ export class AtomicAriaLive extends LightDomMixin(LitElement) {
   @state() private regions: Readonly<Regions> = {};
 
   private messagesQueue = buildDebouncedQueue({delay: 500});
+  private queuedMessageIds = new Map<string, Set<string>>();
   private ariaLiveId!: string;
 
   connectedCallback() {
@@ -33,6 +34,7 @@ export class AtomicAriaLive extends LightDomMixin(LitElement) {
   disconnectedCallback() {
     super.disconnectedCallback();
     this.messagesQueue.clear();
+    this.queuedMessageIds.clear();
     document.removeEventListener(
       'atomic/accessibility/findAriaLive',
       this.onFindAriaLive
@@ -58,12 +60,20 @@ export class AtomicAriaLive extends LightDomMixin(LitElement) {
       this.regions = {...this.regions, [region]: {assertive, message}};
     };
 
-    if (message) {
-      this.messagesQueue.enqueue(updateRegion, region);
-    } else {
-      this.messagesQueue.cancelActionIfQueued(region);
+    if (!message) {
+      this.clearQueuedMessages(region);
       updateRegion();
+      return;
     }
+
+    if (
+      this.regions[region]?.message === message &&
+      this.regions[region]?.assertive === assertive
+    ) {
+      return;
+    }
+
+    this.queueMessage(region, message, updateRegion);
   }
 
   /**
@@ -77,6 +87,40 @@ export class AtomicAriaLive extends LightDomMixin(LitElement) {
       return;
     }
     this.regions = {...this.regions, [region]: {assertive, message: ''}};
+  }
+
+  private clearQueuedMessages(region: string) {
+    for (const messageId of this.queuedMessageIds.get(region) ?? []) {
+      this.messagesQueue.cancelActionIfQueued(messageId);
+    }
+    this.queuedMessageIds.delete(region);
+  }
+
+  private getMessageQueueId(region: string, message: string) {
+    return JSON.stringify([region, message]);
+  }
+
+  private queueMessage(
+    region: string,
+    message: string,
+    updateRegion: () => void
+  ) {
+    const messageId = this.getMessageQueueId(region, message);
+    const queuedMessageIds = this.queuedMessageIds.get(region) ?? new Set();
+
+    if (queuedMessageIds.has(messageId)) {
+      return;
+    }
+
+    queuedMessageIds.add(messageId);
+    this.queuedMessageIds.set(region, queuedMessageIds);
+    this.messagesQueue.enqueue(() => {
+      queuedMessageIds.delete(messageId);
+      if (queuedMessageIds.size === 0) {
+        this.queuedMessageIds.delete(region);
+      }
+      updateRegion();
+    }, messageId);
   }
 
   render() {

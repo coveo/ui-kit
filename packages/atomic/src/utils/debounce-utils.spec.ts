@@ -111,4 +111,130 @@ describe('buildDebouncedQueue', () => {
     vi.advanceTimersByTime(1);
     expect(action).toHaveBeenCalledTimes(1);
   });
+
+  describe('bug condition exploration: live region announcement sequencing', () => {
+    function executionTimestamps() {
+      const timestamps: Record<string, number> = {};
+      return {
+        timestamps,
+        recordFor(uniqueId: string) {
+          return () => {
+            timestamps[uniqueId] = Date.now();
+          };
+        },
+      };
+    }
+
+    it('lets two different named regions execute less than `delay` ms apart when one is enqueued shortly after the queue drains to idle', () => {
+      const {timestamps, recordFor} = executionTimestamps();
+
+      queue.enqueue(recordFor('generated-answer'), 'generated-answer');
+      vi.runAllTimers();
+
+      vi.advanceTimersByTime(1);
+      queue.enqueue(recordFor('query-summary'), 'query-summary');
+
+      const gap = timestamps['query-summary'] - timestamps['generated-answer'];
+      expect(gap).toBeGreaterThanOrEqual(delay);
+    });
+
+    it('never lets two different named regions execute less than `delay` ms apart, for any refill gap in [0, delay)', () => {
+      for (let gap = 0; gap < delay; gap++) {
+        const localQueue = buildDebouncedQueue({delay});
+        const {timestamps, recordFor} = executionTimestamps();
+
+        localQueue.enqueue(recordFor('generated-answer'), 'generated-answer');
+        vi.runAllTimers();
+
+        vi.advanceTimersByTime(gap);
+        localQueue.enqueue(recordFor('query-summary'), 'query-summary');
+
+        const executionGap =
+          timestamps['query-summary'] - timestamps['generated-answer'];
+        expect(executionGap).toBeGreaterThanOrEqual(delay);
+
+        localQueue.clear();
+        vi.runAllTimers();
+      }
+    });
+
+    it('lets a second named region execute in the same tick as the first when its enqueue is triggered synchronously from within the first action (cold-start re-entrancy)', () => {
+      const {timestamps, recordFor} = executionTimestamps();
+
+      queue.enqueue(() => {
+        recordFor('generated-answer')();
+        queue.enqueue(recordFor('query-summary'), 'query-summary');
+      }, 'generated-answer');
+
+      vi.advanceTimersByTime(delay);
+
+      const gap = timestamps['query-summary'] - timestamps['generated-answer'];
+      expect(gap).toBeGreaterThanOrEqual(delay);
+    });
+  });
+
+  describe('preservation: single-region timing is unaffected', () => {
+    it('executes the first of several enqueued actions synchronously and spaces each subsequent one by at least `delay` ms, for a range of action counts and inter-enqueue gaps, using the same `uniqueId`', () => {
+      const actionCounts = [1, 2, 3, 5];
+      const enqueueGaps = [0, 1, delay - 1, delay, delay + 1, delay * 2];
+
+      for (const actionCount of actionCounts) {
+        for (const gap of enqueueGaps) {
+          const localQueue = buildDebouncedQueue({delay});
+          const executionTimestamps: number[] = [];
+
+          for (let i = 0; i < actionCount; i++) {
+            if (i > 0) {
+              vi.advanceTimersByTime(gap);
+            }
+            localQueue.enqueue(
+              () => executionTimestamps.push(Date.now()),
+              'same-region'
+            );
+          }
+          vi.runAllTimers();
+
+          expect(executionTimestamps.length).toBeGreaterThan(0);
+          for (let i = 1; i < executionTimestamps.length; i++) {
+            const executionGap =
+              executionTimestamps[i] - executionTimestamps[i - 1];
+            expect(executionGap).toBeGreaterThanOrEqual(delay);
+          }
+
+          localQueue.clear();
+          vi.runAllTimers();
+        }
+      }
+    });
+
+    it('executes the first of several anonymously enqueued actions synchronously and spaces each subsequent one by at least `delay` ms, for a range of action counts and inter-enqueue gaps, with no `uniqueId`', () => {
+      const actionCounts = [1, 2, 3, 5];
+      const enqueueGaps = [0, 1, delay - 1, delay, delay + 1, delay * 2];
+
+      for (const actionCount of actionCounts) {
+        for (const gap of enqueueGaps) {
+          const localQueue = buildDebouncedQueue({delay});
+          const executionTimestamps: number[] = [];
+
+          for (let i = 0; i < actionCount; i++) {
+            if (i > 0) {
+              vi.advanceTimersByTime(gap);
+            }
+            localQueue.enqueue(() => executionTimestamps.push(Date.now()));
+          }
+          vi.runAllTimers();
+
+          expect(executionTimestamps).toHaveLength(actionCount);
+          for (let i = 1; i < executionTimestamps.length; i++) {
+            const executionGap =
+              executionTimestamps[i] - executionTimestamps[i - 1];
+            expect(executionGap).toBeGreaterThanOrEqual(delay);
+          }
+
+          localQueue.clear();
+          vi.runAllTimers();
+        }
+      }
+    });
+  });
 });
