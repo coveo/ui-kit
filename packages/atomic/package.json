@@ -120,7 +120,7 @@
     "@types/node": "catalog:",
     "@vitest/browser-playwright": "catalog:",
     "@wc-toolkit/storybook-helpers": "10.3.0",
-    "chromatic": "18.0.1",
+    "chromatic": "catalog:",
     "handlebars": "4.7.9",
     "lit-html": "3.3.3",
     "local-web-server": "catalog:",

@@ -13,7 +13,7 @@
     "@coveo/platform-mock-api": "workspace:*",
     "@msw/playwright": "0.6.7",
     "@playwright/test": "catalog:",
-    "chromatic": "18.0.1",
+    "chromatic": "catalog:",
     "msw": "catalog:",
     "typescript": "catalog:"
   }
