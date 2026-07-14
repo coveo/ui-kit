@@ -114,7 +114,8 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
       'border-0': true,
       'appearance-none': true,
       'transition-colors': true,
-      'hover:bg-neutral-light': true,
+      'hover:bg-neutral': true,
+      'hover:text-primary': true,
       'rounded-md': true,
       'cursor-pointer': true,
       'focus-visible:outline-none': true,
@@ -134,7 +135,8 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
       'bg-neutral-dark': this.isExpanded,
       'bg-neutral-dim': !this.isExpanded,
       'cursor-pointer': isTimelineDotInteractive,
-      'group-hover:bg-neutral-dark':
+      'hover:bg-neutral-dark': !this.isExpanded && isTimelineDotInteractive,
+      'group-has-[button:hover]/title:bg-neutral-dark':
         !this.isExpanded && isTimelineDotInteractive,
     });
     const timelineDotToggleClasses = classMap({
@@ -166,7 +168,7 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
 
     return html`
       <div class="grid min-w-0">
-        <div class="flex min-w-0 items-center gap-3">
+        <div class="group/title flex min-w-0 items-center gap-3">
           <div class=${timelineDotToggleClasses}>
             ${when(
               this.showTimelineDot,
