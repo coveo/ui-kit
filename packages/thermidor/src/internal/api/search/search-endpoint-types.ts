@@ -7,6 +7,22 @@ export interface CoveoSearchEndpointRequest {
   fieldsToInclude?: string[];
   enableDidYouMean?: boolean;
   facets?: CoveoFacetRequest[];
+  pipeline?: string;
+  locale?: string;
+  timezone?: string;
+  analytics?: CoveoSearchAnalyticsParams;
+}
+
+export interface CoveoSearchAnalyticsParams {
+  clientId: string;
+  clientTimestamp: string;
+  documentReferrer: string | null;
+  originContext: string;
+  actionCause?: string;
+  documentLocation?: string | null;
+  trackingId?: string;
+  capture?: boolean;
+  source?: string[];
 }
 
 export interface CoveoFacetRequest {
