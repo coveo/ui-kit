@@ -150,7 +150,6 @@ export const markdownToPlainText = (text: string): string => {
 
   // marked outputs HTML-escaped entities; decode them so aria-live announces human text.
   const decoded = plain
-    .replace(/&amp;/g, '&')
     .replace(/&lt;/g, '<')
     .replace(/&gt;/g, '>')
     .replace(/&quot;/g, '"')
@@ -161,7 +160,8 @@ export const markdownToPlainText = (text: string): string => {
     )
     .replace(/&#(\d+);/g, (_m, num) =>
       String.fromCodePoint(Number.parseInt(num, 10))
-    );
+    )
+    .replace(/&amp;/g, '&');
 
   return decoded.replace(/\s{2,}/g, ' ').trim();
 };
