@@ -1,13 +1,5 @@
 @reference './sections-utilities.css';
 
-/*
- * Truncation is handled by line-clamp (see the section-excerpt utility below).
- * Do NOT add a max-height here: a max-height equal to the clamped number of lines
- * clips the text to 0 height in Chrome/Blink (KIT-5881), because -webkit-line-clamp
- * on display:-webkit-box combined with a max-height <= one line's height is
- * under-specified and Blink collapses it. The grid variants rely on line-clamp
- * alone and are unaffected.
- */
 @utility section-excerpt-row-result-desktop {
   &.density-comfortable {
     margin-top: 1.75rem;
