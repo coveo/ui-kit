@@ -18,6 +18,10 @@ inputs:
     description: 'Skip the build step'
     required: false
     default: 'false'
+  build-command:
+    description: 'Command used to build. Defaults to building every package.'
+    required: false
+    default: 'pnpm run build'
   cache-retention-days:
     description: 'Number of days to retain the cache artifact'
     required: false
@@ -50,7 +54,7 @@ runs:
         path: .turbo
     #endregion
     #region Build
-    - run: pnpm run build
+    - run: ${{ inputs.build-command }}
       if: inputs.skip-build != 'true'
       shell: bash
     # Save turbo cache (controlled by save-cache input)
