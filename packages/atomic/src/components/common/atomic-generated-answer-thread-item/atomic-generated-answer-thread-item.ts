@@ -31,7 +31,6 @@ export interface AtomicGeneratedAnswerThreadItemProps {
  * The `atomic-generated-answer-thread-item` component renders a generated answer
  * thread item with timeline visuals and collapsible content.
  *
- * @internal
  *
  * @slot (default) - The content rendered when the item is expanded.
  */

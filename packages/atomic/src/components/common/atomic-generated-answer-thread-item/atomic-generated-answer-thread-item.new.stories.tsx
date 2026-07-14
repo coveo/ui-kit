@@ -2,54 +2,35 @@ import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {testDisclosureA11y} from '@/storybook-utils/a11y/disclosure.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import '@/src/components/common/atomic-generated-answer-thread-item/atomic-generated-answer-thread-item.js';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {within} from 'shadow-dom-testing-library';
+import {userEvent, waitFor} from 'storybook/test';
+
+const {args, argTypes, template} = getStorybookHelpers(
+  'atomic-generated-answer-thread-item',
+  {
+    excludeCategories: ['methods'],
+  }
+);
 
 const meta: Meta = {
   component: 'atomic-generated-answer-thread-item',
   title: 'Search/Generated Answer Thread Item',
   id: 'atomic-generated-answer-thread-item',
-  render: (args) => {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'm-0 p-0';
-
-    const element = document.createElement(
-      'atomic-generated-answer-thread-item'
-    ) as HTMLElement & Record<string, unknown>;
-    element.title = args.title;
-    element.disableCollapse =
-      args.disableCollapse ?? args['disable-collapse'] ?? false;
-    element.hideLine = args.hideLine ?? args['hide-line'] ?? false;
-    element.isExpanded = args.isExpanded ?? args['is-expanded'] ?? false;
-    element.showTimelineDot =
-      args.showTimelineDot ?? args['show-timeline-dot'] ?? true;
-
-    const content = document.createElement('p');
-    content.textContent =
-      'Follow-up guidance and context for this generated answer thread item.';
-    content.className = 'm-0 text-sm';
-
-    element.appendChild(content);
-    wrapper.appendChild(element);
-
-    return wrapper;
-  },
+  render: (args) => template(args),
   parameters: {
     ...parameters,
     a11y: {disable: true},
   },
   args: {
+    ...args,
     title: 'What else should I try if this fails?',
     disableCollapse: false,
     hideLine: false,
     isExpanded: false,
     showTimelineDot: true,
   },
-  argTypes: {
-    title: {control: 'text'},
-    disableCollapse: {control: 'boolean'},
-    hideLine: {control: 'boolean'},
-    isExpanded: {control: 'boolean'},
-    showTimelineDot: {control: 'boolean'},
-  },
+  argTypes,
 };
 
 export default meta;
@@ -87,6 +68,28 @@ export const HoverState: Story = {
     pseudo: {
       hover: true,
     },
+  },
+};
+
+export const HoverStateBis: Story = {
+  name: 'Hover State Bis',
+  args: {
+    title: 'what is a query',
+  },
+  play: async ({canvasElement}) => {
+    await customElements.whenDefined('atomic-generated-answer-thread-item');
+    const canvas = within(canvasElement);
+    const threadItem = await canvas.findByShadowRole('listitem');
+
+    const titleButton = threadItem.shadowRoot?.querySelector<HTMLButtonElement>(
+      'button[type="button"][aria-expanded][aria-controls]'
+    );
+
+    if (!titleButton) {
+      throw new Error('Could not find thread item title button');
+    }
+
+    await userEvent.click(titleButton);
   },
 };
 
