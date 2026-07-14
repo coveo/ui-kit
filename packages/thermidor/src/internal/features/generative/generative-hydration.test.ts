@@ -1,5 +1,9 @@
 import {describe, it, expect, beforeEach} from 'vitest';
-import {Engine, getFullEngine} from '@/src/internal/engine/index.js';
+import {
+  Engine,
+  getFullEngine,
+  type FullEngine,
+} from '@/src/internal/engine/index.js';
 import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import {
   createHydrateSubInterface,
@@ -49,20 +53,20 @@ describe('getOrCreateHydrateFromSnapshotAction', () => {
 });
 
 describe('createHydrateSubInterface', () => {
-  let engine: Engine;
+  let fullEngine: FullEngine;
 
   beforeEach(() => {
-    engine = createTestEngine();
+    fullEngine = getFullEngine(createTestEngine());
   });
 
   it('returns null for unrecognized activity types', () => {
-    const hydrate = createHydrateSubInterface(engine);
+    const hydrate = createHydrateSubInterface(fullEngine);
     const result = hydrate('unknown-activity-type', {});
     expect(result).toBeNull();
   });
 
   it('returns a RoutedInterface for commerce-search-api-response', () => {
-    const hydrate = createHydrateSubInterface(engine);
+    const hydrate = createHydrateSubInterface(fullEngine);
     const content = {
       products: [
         {
@@ -85,7 +89,7 @@ describe('createHydrateSubInterface', () => {
   });
 
   it('returns a RoutedInterface for search-api-response', () => {
-    const hydrate = createHydrateSubInterface(engine);
+    const hydrate = createHydrateSubInterface(fullEngine);
     const content = {
       results: [
         {
@@ -109,7 +113,7 @@ describe('createHydrateSubInterface', () => {
   });
 
   it('stores hydration snapshot and hydrates products into the sub-interface', async () => {
-    const hydrate = createHydrateSubInterface(engine);
+    const hydrate = createHydrateSubInterface(fullEngine);
     const content = {
       products: [
         {
@@ -125,7 +129,6 @@ describe('createHydrateSubInterface', () => {
 
     const result = hydrate('commerce-search-api-response', content);
     const subInterface = result!.interface;
-    const fullEngine = getFullEngine(engine);
 
     const productSlice = getOrCreateProductListSlice(subInterface);
     await fullEngine.adoptSlice(productSlice);
@@ -141,7 +144,7 @@ describe('createHydrateSubInterface', () => {
   });
 
   it('stores hydration snapshot and hydrates results into the sub-interface', async () => {
-    const hydrate = createHydrateSubInterface(engine);
+    const hydrate = createHydrateSubInterface(fullEngine);
     const content = {
       results: [
         {
@@ -160,7 +163,6 @@ describe('createHydrateSubInterface', () => {
 
     const result = hydrate('search-api-response', content);
     const subInterface = result!.interface;
-    const fullEngine = getFullEngine(engine);
 
     const resultsSlice = getOrCreateResultsSlice(subInterface);
     await fullEngine.adoptSlice(resultsSlice);

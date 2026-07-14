@@ -4,8 +4,6 @@ metadata:
   name: headless-react
   title: '@coveo/headless-react'
   description: React utilities for SSR (Server Side Rendering) with headless
-  annotations:
-    github.com/project-slug: coveo/ui-kit
 spec:
   type: library
   lifecycle: production

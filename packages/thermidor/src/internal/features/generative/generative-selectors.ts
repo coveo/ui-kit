@@ -37,6 +37,14 @@ export function createGenerativeSelectors(interfaceId: string) {
         return turn?.prompt ?? '';
       }
     ),
+    getConversationSessionId: createMemoizedStateSelector(
+      sliceSelector,
+      (state): string | undefined => state.conversationSessionId
+    ),
+    getConversationToken: createMemoizedStateSelector(
+      sliceSelector,
+      (state): string | undefined => state.conversationToken
+    ),
   };
 }
 

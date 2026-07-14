@@ -1,9 +1,9 @@
 packages:
   - packages/bueno
   - packages/auth
+  - packages/mock-converse-api
   - packages/headless
   - packages/thermidor
-  - packages/mock-converse-api
   - packages/quantic
   - packages/headless-react
   - packages/atomic-hosted-page
