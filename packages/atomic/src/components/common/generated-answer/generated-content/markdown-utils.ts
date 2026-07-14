@@ -146,5 +146,22 @@ export const transformMarkdownToHtml = (text: string): string => {
 };
 
 export const markdownToPlainText = (text: string): string => {
-  return toInlinePlainText(transformMarkdownToHtml(text));
+  const plain = toInlinePlainText(transformMarkdownToHtml(text));
+
+  // marked outputs HTML-escaped entities; decode them so aria-live announces human text.
+  const decoded = plain
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&#x([0-9a-fA-F]+);/g, (_m, hex) =>
+      String.fromCodePoint(Number.parseInt(hex, 16))
+    )
+    .replace(/&#(\d+);/g, (_m, num) =>
+      String.fromCodePoint(Number.parseInt(num, 10))
+    );
+
+  return decoded.replace(/\s{2,}/g, ' ').trim();
 };

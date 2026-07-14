@@ -522,8 +522,10 @@ export class AtomicGeneratedAnswer
 
     const status = this.controller.getGeneratedAnswerStatus();
     if (this.controller.isStatusAssertive()) {
+      this.ariaMessage.message = '';
       this.ariaErrorMessage.message = status;
     } else {
+      this.ariaErrorMessage.message = '';
       this.ariaMessage.message = status;
     }
   };

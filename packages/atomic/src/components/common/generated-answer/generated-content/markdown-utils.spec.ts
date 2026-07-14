@@ -471,5 +471,9 @@ describe('markdownUtils', () => {
       const result = markdownToPlainText('**Bold** and *italic* with `code`');
       expect(result).toBe('Bold and italic with code');
     });
+
+    it('should decode HTML entities produced by the markdown renderer', () => {
+      expect(markdownToPlainText('AT&T < 5')).toBe('AT&T < 5');
+    });
   });
 });
