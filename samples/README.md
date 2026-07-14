@@ -42,6 +42,7 @@ Samples using `@coveo/thermidor` for upcoming conversational and search experien
 | Sample                                                | Description                                                           | Framework    | Use Case     |
 | ----------------------------------------------------- | --------------------------------------------------------------------- | ------------ | ------------ |
 | [conversation-react](./thermidor/conversation-react/) | React + Vite bootstrap for Headless Future conversational integration | React + Vite | Conversation |
+| [search-react](./thermidor/search-react/)             | React + Vite search sample with SearchBox, ResultList, Pagination     | React + Vite | Search       |
 
 ### [Headless SSR Samples](./headless-ssr/)
 

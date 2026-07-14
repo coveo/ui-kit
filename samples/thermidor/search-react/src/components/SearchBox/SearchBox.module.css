@@ -18,6 +18,8 @@
 
 .input:focus {
   border-color: var(--color-border-active);
+  outline: 2px solid var(--color-border-active);
+  outline-offset: -1px;
 }
 
 .input::placeholder {

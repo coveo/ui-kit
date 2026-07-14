@@ -1,4 +1,4 @@
-import {SubmitEvent, useState} from 'react';
+import {useState, type SubmitEvent} from 'react';
 import {searchBoxController} from '../../search-setup.js';
 import {useController} from '../../hooks/use-controller.js';
 import styles from './SearchBox.module.css';

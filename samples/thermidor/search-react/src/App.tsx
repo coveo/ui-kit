@@ -5,10 +5,10 @@ import styles from './App.module.css';
 
 export default function App() {
   return (
-    <div className={styles.root}>
+    <main className={styles.root}>
       <SearchBox />
       <ResultList />
       <Pagination />
-    </div>
+    </main>
   );
 }
