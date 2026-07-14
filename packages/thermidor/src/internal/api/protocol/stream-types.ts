@@ -49,6 +49,15 @@ export type TurnCompleteEvent = {
 };
 
 // ============================================================================
+// Routed interface events (Coveo converse wire format — no AG-UI equivalent)
+// ============================================================================
+
+export type CommerceSearchApiResponseEvent = {
+  type: 'commerce_search_api_response';
+  content: Record<string, unknown>;
+};
+
+// ============================================================================
 // Structured snapshot events (A2UI — Coveo-specific payload shape)
 // ============================================================================
 
@@ -126,6 +135,7 @@ export type NormalizedStreamEvent =
   | RunErrorEvent
   | TurnStartedEvent
   | TurnCompleteEvent
+  | CommerceSearchApiResponseEvent
   | TextMessageStartEvent
   | TextMessageContentEvent
   | TextMessageEndEvent

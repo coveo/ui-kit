@@ -272,8 +272,17 @@ export class GenerativeRuntime {
       }
 
       case 'ACTIVITY_SNAPSHOT': {
+        this.ensureAgentResponse(turnId);
+        this.statePort.appendSurface(
+          turnId,
+          event.content as Record<string, unknown>
+        );
+        return {turnId, isTerminal: false};
+      }
+
+      case 'commerce_search_api_response': {
         const routedInterface = this.hydrateSubInterface(
-          event.activityType,
+          'commerce_search_api_response',
           event.content,
           this.currentPrompt
         );
@@ -284,11 +293,6 @@ export class GenerativeRuntime {
           return {turnId, isTerminal: true};
         }
 
-        this.ensureAgentResponse(turnId);
-        this.statePort.appendSurface(
-          turnId,
-          event.content as Record<string, unknown>
-        );
         return {turnId, isTerminal: false};
       }
 
