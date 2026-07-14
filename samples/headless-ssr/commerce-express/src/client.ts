@@ -2,7 +2,7 @@
  * Client-side hydration for the Coveo Headless Commerce SSR sample.
  *
  * On load it:
- * 1. Reads the SSR payload the server injected (`window.__SSR_STATE__`).
+ * 1. Reads the SSR payload from a JSON data island (`#ssr-state`) the server injected.
  * 2. Hydrates the matching engine (search or listing), passing the same
  *    fetch-time props (context, parameter manager) the server used so the
  *    hydrated state matches the server render.
@@ -25,7 +25,7 @@ import {
   listingEngineDefinition,
   searchEngineDefinition,
 } from './lib/engine-definition.js';
-import type {AppControllers} from './common/types.js';
+import type {AppControllers, SsrState} from './common/types.js';
 
 function wireControllers(controllers: AppControllers) {
   const currency = controllers.context.state.currency ?? 'USD';
@@ -43,8 +43,21 @@ function wireControllers(controllers: AppControllers) {
   hydrateCart(controllers.cart, currency);
 }
 
+/** Reads the SSR payload from the JSON data island the server injected. */
+function readSsrState(): SsrState | undefined {
+  const el = document.getElementById('ssr-state');
+  if (!el?.textContent) {
+    return undefined;
+  }
+  try {
+    return JSON.parse(el.textContent) as SsrState;
+  } catch {
+    return undefined;
+  }
+}
+
 async function initApp() {
-  const ssr = window.__SSR_STATE__;
+  const ssr = readSsrState();
   if (!ssr) return;
 
   try {

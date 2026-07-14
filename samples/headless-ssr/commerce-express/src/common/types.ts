@@ -46,9 +46,3 @@ export type SsrState =
       staticState: ListingStaticState;
       navigatorContext: NavigatorContext;
     };
-
-declare global {
-  interface Window {
-    __SSR_STATE__?: SsrState;
-  }
-}
