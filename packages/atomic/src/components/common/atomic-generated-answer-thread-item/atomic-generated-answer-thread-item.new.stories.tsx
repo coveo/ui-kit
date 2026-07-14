@@ -82,14 +82,14 @@ export const HoverStateBis: Story = {
     const threadItem = await canvas.findByShadowRole('listitem');
 
     const titleButton = threadItem.shadowRoot?.querySelector<HTMLButtonElement>(
-      'button[type="button"][aria-expanded][aria-controls]'
+      'button[type="button"]'
     );
 
     if (!titleButton) {
       throw new Error('Could not find thread item title button');
     }
 
-    await userEvent.click(titleButton);
+    await userEvent.hover(titleButton);
   },
 };
 
