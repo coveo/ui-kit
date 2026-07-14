@@ -14,7 +14,7 @@ import {SurfaceOutletComponent} from './surface-outlet.component';
 marked.setOptions({breaks: true, gfm: true});
 
 @Pipe({name: 'markdown', standalone: true})
-export class MarkdownPipe implements PipeTransform {
+class MarkdownPipe implements PipeTransform {
   transform(value: string): string {
     if (!value) return '';
     return marked.parse(value) as string;

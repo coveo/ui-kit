@@ -9,15 +9,11 @@
     "dev": "ng serve --configuration development"
   },
   "dependencies": {
-    "@ag-ui/core": "0.0.57",
     "@angular/common": "catalog:",
     "@angular/compiler": "catalog:",
     "@angular/core": "catalog:",
-    "@angular/forms": "catalog:",
     "@angular/platform-browser": "catalog:",
     "@coveo/thermidor": "workspace:*",
-    "@reduxjs/toolkit": "catalog:",
-    "idb": "catalog:",
     "marked": "^15.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"

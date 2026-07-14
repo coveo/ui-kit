@@ -14,7 +14,7 @@ import {ComparisonTableComponent} from './comparison-table.component';
 import {NextActionsBarComponent} from './next-actions-bar.component';
 import {ProductCarouselComponent} from './product-carousel.component';
 
-export const SURFACE_COMPONENTS: Record<string, Type<unknown>> = {
+const SURFACE_COMPONENTS: Record<string, Type<unknown>> = {
   ProductCarousel: ProductCarouselComponent,
   ComparisonTable: ComparisonTableComponent,
   ComparisonSummary: ComparisonSummaryComponent,

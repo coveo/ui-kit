@@ -1,15 +1,7 @@
 // Shared frontend contract types for the Angular sample.
 // These types re-export Thermidor's canonical conversation types and define
 // the sample-specific commerce surface shapes used across the app.
-export type {
-  Turn,
-  TurnStatus,
-  AgentResponse,
-  AgentMessage,
-  A2UISurface,
-  ToolCall,
-  ToolCallStatus,
-} from '@coveo/thermidor';
+export type {Turn, A2UISurface, ToolCall} from '@coveo/thermidor';
 
 export type ProductRecord = {
   ec_product_id: string;
@@ -29,21 +21,16 @@ export type NextAction = {
   type: 'search' | 'followup';
 };
 
-export type BundleSlotConfig = {
+type BundleSlotConfig = {
   categoryLabel: string;
   surfaceRef: string;
 };
 
-export type BundleTierConfig = {
+type BundleTierConfig = {
   bundleId: string;
   label: string;
   description: string;
   slots: BundleSlotConfig[];
-};
-
-export type StreamTurnInput = {
-  threadId: string;
-  prompt: string;
 };
 
 export type ValueMapEntry = {
@@ -57,7 +44,7 @@ export type ValueMapItem = {
   valueMap?: ValueMapEntry[];
 };
 
-export type BeginRenderingOperation = {
+type BeginRenderingOperation = {
   beginRendering: {
     surfaceId: string;
     root: string;
@@ -128,7 +115,7 @@ type NextActionsBarComponent = {
   };
 };
 
-export type SurfaceComponentPayload =
+type SurfaceComponentPayload =
   | ProductCardComponent
   | ProductCarouselComponent
   | ComparisonTableComponent
@@ -197,7 +184,7 @@ export type ComparisonSummarySurface = {
   text: string;
 };
 
-export type BundleDisplaySlot = {
+type BundleDisplaySlot = {
   categoryLabel: string;
   surfaceRef: string;
   product: ProductRecord | null;
