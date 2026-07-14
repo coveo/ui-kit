@@ -91,4 +91,17 @@ describe('parseSSEEvent', () => {
       content,
     });
   });
+
+  it('promotes search_api_response named SSE event', () => {
+    const content = {results: [], totalCount: 0, facets: []};
+    const result = parseSSEEvent({
+      event: 'search_api_response',
+      data: JSON.stringify({content}),
+    });
+
+    expect(result).toEqual({
+      type: 'search_api_response',
+      content,
+    });
+  });
 });

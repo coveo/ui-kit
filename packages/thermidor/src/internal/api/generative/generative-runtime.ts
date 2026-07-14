@@ -280,9 +280,10 @@ export class GenerativeRuntime {
         return {turnId, isTerminal: false};
       }
 
-      case 'commerce_search_api_response': {
+      case 'commerce_search_api_response':
+      case 'search_api_response': {
         const routedInterface = this.hydrateSubInterface(
-          'commerce_search_api_response',
+          event.type,
           event.content,
           this.currentPrompt
         );

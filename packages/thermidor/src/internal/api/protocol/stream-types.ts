@@ -57,6 +57,11 @@ export type CommerceSearchApiResponseEvent = {
   content: Record<string, unknown>;
 };
 
+export type SearchApiResponseEvent = {
+  type: 'search_api_response';
+  content: Record<string, unknown>;
+};
+
 // ============================================================================
 // Structured snapshot events (A2UI — Coveo-specific payload shape)
 // ============================================================================
@@ -136,6 +141,7 @@ export type NormalizedStreamEvent =
   | TurnStartedEvent
   | TurnCompleteEvent
   | CommerceSearchApiResponseEvent
+  | SearchApiResponseEvent
   | TextMessageStartEvent
   | TextMessageContentEvent
   | TextMessageEndEvent
