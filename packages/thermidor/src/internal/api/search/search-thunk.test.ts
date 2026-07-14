@@ -1,4 +1,4 @@
-import {describe, it, expect, vi, beforeEach} from 'vitest';
+import {describe, it, expect, vi, beforeEach, afterEach} from 'vitest';
 import {createSearchEndpointThunk} from './search-thunk.js';
 import type {FullEngine} from '@/src/internal/engine/index.js';
 import type {EndpointStateScope} from '@/src/internal/utils/index.js';
@@ -70,6 +70,10 @@ describe('createSearchEndpointThunk', () => {
     vi.setSystemTime(new Date('2026-03-01T12:00:00.000Z'));
   });
 
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it('includes analytics in the request when navigator context is available', async () => {
     mockCall.mockResolvedValue({
       success: true,
@@ -104,8 +108,6 @@ describe('createSearchEndpointThunk', () => {
       }),
       expect.any(Object)
     );
-
-    vi.useRealTimers();
   });
 
   it('omits analytics when navigator context provider is not available', async () => {
@@ -134,8 +136,6 @@ describe('createSearchEndpointThunk', () => {
       expect.not.objectContaining({analytics: expect.anything()}),
       expect.any(Object)
     );
-
-    vi.useRealTimers();
   });
 
   it('rejects the thunk when the endpoint client returns an error', async () => {
@@ -153,7 +153,5 @@ describe('createSearchEndpointThunk', () => {
 
     expect(result.meta.rejectedWithValue).toBeFalsy();
     expect((result as any).error.message).toBe('Something went wrong');
-
-    vi.useRealTimers();
   });
 });

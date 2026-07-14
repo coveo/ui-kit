@@ -128,7 +128,7 @@ describe('SearchEndpointClient', () => {
     });
   });
 
-  it('should URL-encode the organizationId in the query param', async () => {
+  it('should include organizationId as a query param in the URL', async () => {
     mockedExecuteHttpRequest.mockResolvedValue({
       success: true,
       data: {},

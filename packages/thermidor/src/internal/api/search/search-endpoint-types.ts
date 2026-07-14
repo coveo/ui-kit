@@ -1,3 +1,5 @@
+import type {AnalyticsParams} from '@/src/internal/api/analytics-params.js';
+
 export interface CoveoSearchEndpointRequest {
   q?: string;
   aq?: string;
@@ -10,19 +12,7 @@ export interface CoveoSearchEndpointRequest {
   pipeline?: string;
   locale?: string;
   timezone?: string;
-  analytics?: CoveoSearchAnalyticsParams;
-}
-
-export interface CoveoSearchAnalyticsParams {
-  clientId: string;
-  clientTimestamp: string;
-  documentReferrer: string | null;
-  originContext: string;
-  actionCause?: string;
-  documentLocation?: string | null;
-  trackingId?: string;
-  capture?: boolean;
-  source?: string[];
+  analytics?: AnalyticsParams;
 }
 
 export interface CoveoFacetRequest {
