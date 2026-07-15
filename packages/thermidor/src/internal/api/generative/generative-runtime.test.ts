@@ -625,7 +625,7 @@ describe('GenerativeRuntime', () => {
         async ({onEvent, onDone}) => {
           onEvent({
             type: 'commerce_search_api_response',
-            content: {products: []},
+            products: [],
           });
           onDone?.();
         }
@@ -657,7 +657,7 @@ describe('GenerativeRuntime', () => {
       setupSuccessfulStream([
         {
           type: 'commerce_search_api_response',
-          content: {products: []},
+          products: [],
         } as ConversationStreamEvent,
         {type: 'turn_complete'} as ConversationStreamEvent,
       ]);
@@ -696,7 +696,8 @@ describe('GenerativeRuntime', () => {
         async ({onEvent, onDone}) => {
           onEvent({
             type: 'search_api_response',
-            content: {results: [], totalCount: 0},
+            results: [],
+            totalCount: 0,
           });
           onDone?.();
         }

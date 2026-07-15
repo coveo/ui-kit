@@ -80,28 +80,53 @@ describe('parseSSEEvent', () => {
   });
 
   it('promotes commerce_search_api_response named SSE event', () => {
-    const content = {products: [], pagination: {totalEntries: 0}, facets: []};
+    const payload = {
+      responseId: 'abc',
+      products: [],
+      pagination: {totalEntries: 0},
+      facets: [],
+    };
     const result = parseSSEEvent({
       event: 'commerce_search_api_response',
-      data: JSON.stringify({content}),
+      data: JSON.stringify(payload),
     });
 
     expect(result).toEqual({
       type: 'commerce_search_api_response',
-      content,
+      ...payload,
+    });
+  });
+
+  it('promotes commerce_search_api_response with queryCorrection', () => {
+    const payload = {
+      responseId: 'abc',
+      products: [],
+      pagination: {totalEntries: 0},
+      facets: [],
+      triggers: [],
+      queryCorrection: {corrections: []},
+    };
+    const result = parseSSEEvent({
+      event: 'commerce_search_api_response',
+      data: JSON.stringify(payload),
+    });
+
+    expect(result).toEqual({
+      type: 'commerce_search_api_response',
+      ...payload,
     });
   });
 
   it('promotes search_api_response named SSE event', () => {
-    const content = {results: [], totalCount: 0, facets: []};
+    const payload = {results: [], totalCount: 0, facets: []};
     const result = parseSSEEvent({
       event: 'search_api_response',
-      data: JSON.stringify({content}),
+      data: JSON.stringify(payload),
     });
 
     expect(result).toEqual({
       type: 'search_api_response',
-      content,
+      ...payload,
     });
   });
 });
