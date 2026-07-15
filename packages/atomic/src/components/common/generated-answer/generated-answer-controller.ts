@@ -115,14 +115,14 @@ export class GeneratedAnswerController implements ReactiveController {
       return bindings.i18n.t('generating-answer');
     }
 
+    if (hasError) {
+      return bindings.i18n.t('answer-could-not-be-generated');
+    }
+
     if (hasNonEmptyAnswer) {
       return bindings.i18n.t('answer-generated', {
         answer: markdownToPlainText(state.answer!),
       });
-    }
-
-    if (hasError) {
-      return bindings.i18n.t('answer-could-not-be-generated');
     }
 
     return '';
@@ -137,9 +137,8 @@ export class GeneratedAnswerController implements ReactiveController {
     if (!state) return false;
     const isHidden = !state.isVisible;
     const isGenerating = !!state.isStreaming;
-    const hasNonEmptyAnswer = !!state.answer?.trim();
     const hasError = !!state.error?.message;
-    return !isHidden && !isGenerating && !hasNonEmptyAnswer && hasError;
+    return !isHidden && !isGenerating && hasError;
   }
 
   /**
