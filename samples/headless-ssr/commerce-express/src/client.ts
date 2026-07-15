@@ -1,48 +1,130 @@
 /**
- * Client-side hydration for Coveo Headless Commerce SSR sample.
+ * Client-side hydration for the Coveo Headless Commerce SSR sample.
  *
- * Client-side lifecycle:
- * 1. On page load, reads the SSR static state injected by the server (see server.ts)
- * 2. Hydrates the Coveo engine and controllers with this state
- * 3. Initializes UI components (search box, product grid, summary) with hydrated controllers
- * 4. Handles errors gracefully if hydration fails
+ * On load it:
+ * 1. Reads the SSR payload from a JSON data island (`#ssr-state`) the server injected.
+ * 2. Hydrates the matching engine (search or listing), passing the same
+ *    fetch-time props (context, parameter manager) the server used so the
+ *    hydrated state matches the server render.
+ * 3. Wires each UI concern to its hydrated controller (the search box only
+ *    exists on the search page).
  *
- * See server.ts for the server-side SSR lifecycle.
+ * See server.ts for the server side, and each components/*.ts for the render
+ * function paired with these hydrate functions.
  */
-import type {
-  ProductList,
-  SearchBox,
-  Summary,
-} from '@coveo/headless/ssr-commerce-next';
-import type {SearchStaticState} from './common/types.js';
+import {hydrateCart} from './components/Cart.js';
 import {ErrorMessage} from './components/ErrorMessage.js';
-import {ProductGrid} from './components/ProductGrid.js';
-import {QuerySummary} from './components/QuerySummary.js';
-import {Search} from './components/Search.js';
-import {searchEngineDefinition} from './lib/engine-definition.js';
+import {hydrateFacets} from './components/Facets.js';
+import {hydratePagination} from './components/Pagination.js';
+import {hydrateParameterManager} from './components/ParameterManager.js';
+import {hydrateProductGrid} from './components/ProductGrid.js';
+import {hydrateSummary} from './components/QuerySummary.js';
+import {hydrateSearch} from './components/Search.js';
+import {hydrateSort} from './components/Sort.js';
+import {
+  listingEngineDefinition,
+  searchEngineDefinition,
+} from './lib/engine-definition.js';
+import type {AppControllers, SsrState} from './common/types.js';
 
-async function initApp() {
+function wireControllers(controllers: AppControllers) {
+  const currency = controllers.context.state.currency ?? 'USD';
+  // The search box (and its query suggestions / instant products) only exists
+  // on the search page.
+  if ('searchBox' in controllers) {
+    hydrateSearch(controllers.searchBox, controllers.instantProducts, currency);
+  }
+  hydrateProductGrid(controllers.productList, controllers.cart);
+  hydrateSummary(controllers.summary);
+  hydrateFacets(controllers.facetGenerator);
+  hydrateSort(controllers.sort);
+  hydratePagination(controllers.pagination);
+  hydrateParameterManager(controllers.parameterManager);
+  hydrateCart(controllers.cart, currency);
+}
+
+/** Reads the SSR payload from the JSON data island the server injected. */
+function readSsrState(): SsrState | undefined {
+  const el = document.getElementById('ssr-state');
+  if (!el?.textContent) {
+    return undefined;
+  }
   try {
-    const staticState: SearchStaticState = window.__STATIC_STATE__!;
-    const {controllers} =
-      await searchEngineDefinition.hydrateStaticState(staticState);
-
-    Search(controllers.searchBox as SearchBox);
-    ProductGrid(controllers.productList as ProductList);
-    QuerySummary(controllers.summary as Summary);
-  } catch (_error) {
-    const err = document.getElementById('query-error');
-    if (!err) {
-      const container = document.createElement('div');
-      container.innerHTML = ErrorMessage(
-        'Something went wrong. Please try again.'
-      );
-      document.body.appendChild(container.firstElementChild!);
-    }
+    return JSON.parse(el.textContent) as SsrState;
+  } catch {
+    return undefined;
   }
 }
 
-// ===== Boot =====
+async function initApp() {
+  const ssr = readSsrState();
+  if (!ssr) return;
+
+  try {
+    const {navigatorContext} = ssr;
+    let controllers: AppControllers;
+
+    // Set the navigator context provider on the client (matching the server)
+    // before hydrating, so client-side requests carry the same context.
+    if (ssr.type === 'listing') {
+      const {staticState} = ssr;
+      listingEngineDefinition.setNavigatorContextProvider(
+        () => navigatorContext
+      );
+      ({controllers} = await listingEngineDefinition.hydrateStaticState({
+        searchActions: staticState.searchActions,
+        controllers: {
+          cart: {
+            initialState: {items: staticState.controllers.cart.state.items},
+          },
+          context: staticState.controllers.context.state,
+          parameterManager: {
+            initialState: {
+              parameters:
+                staticState.controllers.parameterManager.state.parameters,
+            },
+          },
+        },
+      }));
+    } else {
+      const {staticState} = ssr;
+      searchEngineDefinition.setNavigatorContextProvider(
+        () => navigatorContext
+      );
+      ({controllers} = await searchEngineDefinition.hydrateStaticState({
+        searchActions: staticState.searchActions,
+        controllers: {
+          cart: {
+            initialState: {items: staticState.controllers.cart.state.items},
+          },
+          context: staticState.controllers.context.state,
+          parameterManager: {
+            initialState: {
+              parameters:
+                staticState.controllers.parameterManager.state.parameters,
+            },
+          },
+        },
+      }));
+    }
+
+    wireControllers(controllers);
+  } catch (_error) {
+    showError();
+  }
+}
+
+/** Injects a generic error banner if hydration fails and none is shown yet. */
+function showError() {
+  if (document.getElementById('query-error')) return;
+  const container = document.createElement('div');
+  container.innerHTML = ErrorMessage('Something went wrong. Please try again.');
+  const node = container.firstElementChild;
+  if (node) {
+    document.body.appendChild(node);
+  }
+}
+
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initApp);
 } else {

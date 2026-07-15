@@ -2,21 +2,24 @@ import {randomUUID} from 'node:crypto';
 import type {NextFunction, Request, Response} from 'express';
 
 /**
- * Express middleware to inject Coveo-specific headers for SSR analytics and context.
+ * Ensures every request carries a Coveo client ID.
  *
- * - Sets a unique client ID (`x-coveo-client-id`) on both the request and response.
- * - Sets the current page URL (`x-href`) on the response.
+ * `getNavigatorContext` reads the `x-coveo-client-id` request header when
+ * building the navigator context for analytics and personalization (see
+ * `lib/navigatorContext.ts`). Setting it here — once, for every route — keeps
+ * that concern out of the individual handlers.
  *
- * Why middleware?
- * - Ensures these headers are consistently set for every request, regardless of route.
- * - Centralizes logic, making it easier to maintain and less error-prone than duplicating on each page/route.
- * - Guarantees analytics and context are always available for SSR and client-side hydration.
+ * A real storefront would persist this ID in a cookie so it stays stable for a
+ * returning visitor; the sample generates one per request when the client
+ * doesn't already provide one.
  */
-export const middleware = (req: Request, res: Response, next: NextFunction) => {
-  const uuid = randomUUID();
-
-  req.headers['x-coveo-client-id'] = uuid;
-  res.setHeader('x-coveo-client-id', uuid);
-  res.setHeader('x-href', req.originalUrl);
+export const middleware = (
+  req: Request,
+  _res: Response,
+  next: NextFunction
+) => {
+  if (!req.headers['x-coveo-client-id']) {
+    req.headers['x-coveo-client-id'] = randomUUID();
+  }
   next();
 };

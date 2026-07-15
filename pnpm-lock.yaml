@@ -1367,14 +1367,20 @@ importers:
         specifier: workspace:*
         version: link:../../../packages/headless
       express:
-        specifier: ^5.0.0
+        specifier: 5.2.1
         version: 5.2.1
     devDependencies:
+      '@coveo/platform-mock-api':
+        specifier: workspace:*
+        version: link:../../../packages/platform-mock-api
+      '@msw/playwright':
+        specifier: 'catalog:'
+        version: 0.6.7(msw@2.14.6(@types/node@24.12.4)(typescript@6.0.3))
       '@playwright/test':
         specifier: 'catalog:'
         version: 1.60.0
       '@types/express':
-        specifier: ^5.0.0
+        specifier: 5.0.6
         version: 5.0.6
       '@types/node':
         specifier: 'catalog:'
@@ -1382,6 +1388,9 @@ importers:
       esbuild:
         specifier: 'catalog:'
         version: 0.28.1
+      msw:
+        specifier: 'catalog:'
+        version: 2.14.6(@types/node@24.12.4)(typescript@6.0.3)
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -19513,6 +19522,12 @@ snapshots:
 
   '@msgpackr-extract/msgpackr-extract-win32-x64@3.0.4':
     optional: true
+
+  '@msw/playwright@0.6.7(msw@2.14.6(@types/node@24.12.4)(typescript@6.0.3))':
+    dependencies:
+      '@mswjs/interceptors': 0.41.9
+      msw: 2.14.6(@types/node@24.12.4)(typescript@6.0.3)
+      outvariant: 1.4.3
 
   '@msw/playwright@0.6.7(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))':
     dependencies:
