@@ -1,5 +1,10 @@
 import {mkdir, readdir, readFile, writeFile} from 'node:fs/promises';
 import path from 'node:path';
+import {
+  getInteractiveCriteriaFailed,
+  getInteractiveCriteriaPassed,
+  getInteractiveCriteriaWarnings,
+} from '../shared/evidence.js';
 import {isA11yReport} from '../shared/guards.js';
 import {compareByName, compareByNumericId} from '../shared/sorting.js';
 import type {
@@ -9,7 +14,8 @@ import type {
   A11yInteractiveResults,
   A11yReport,
 } from '../shared/types.js';
-import {formatDate, getCriterionMetadata} from './reporter-utils.js';
+import {buildCriteria} from './report-builder.js';
+import {formatDate} from './reporter-utils.js';
 import {createSummary} from './summary.js';
 
 const SHARD_FILE_PATTERN = /^a11y-report\.shard-(\d+)\.json$/;
@@ -30,9 +36,12 @@ interface MutableAutomatedResults extends Omit<
 
 interface MutableInteractiveResults extends Omit<
   A11yInteractiveResults,
-  'criteriaCovered'
+  'criteriaCovered' | 'criteriaPassed' | 'criteriaFailed' | 'criteriaWarnings'
 > {
   criteriaCovered: Set<string>;
+  criteriaPassed: Set<string>;
+  criteriaFailed: Set<string>;
+  criteriaWarnings: Set<string>;
 }
 
 interface MutableComponentReport extends Omit<
@@ -41,14 +50,6 @@ interface MutableComponentReport extends Omit<
 > {
   automated: MutableAutomatedResults;
   interactive?: MutableInteractiveResults;
-}
-
-interface MutableCriterionReport extends Omit<
-  A11yCriterionReport,
-  'coveredComponents' | 'violatingComponents'
-> {
-  coveredComponents: Set<string>;
-  violatingComponents: Set<string>;
 }
 
 function toMutableComponent(
@@ -67,18 +68,17 @@ function toMutableComponent(
       ? {
           ...component.interactive,
           criteriaCovered: new Set(component.interactive.criteriaCovered),
+          criteriaPassed: new Set(
+            getInteractiveCriteriaPassed(component.interactive)
+          ),
+          criteriaFailed: new Set(
+            getInteractiveCriteriaFailed(component.interactive)
+          ),
+          criteriaWarnings: new Set(
+            getInteractiveCriteriaWarnings(component.interactive)
+          ),
         }
       : undefined,
-  };
-}
-
-function toMutableCriterion(
-  criterion: A11yCriterionReport
-): MutableCriterionReport {
-  return {
-    ...criterion,
-    coveredComponents: new Set(criterion.coveredComponents),
-    violatingComponents: new Set(criterion.violatingComponents),
   };
 }
 
@@ -169,6 +169,15 @@ export function mergeComponents(reports: A11yReport[]): A11yComponentReport[] {
               criteriaCovered: [...component.interactive.criteriaCovered].sort(
                 compareByNumericId
               ),
+              criteriaPassed: [...component.interactive.criteriaPassed].sort(
+                compareByNumericId
+              ),
+              criteriaFailed: [...component.interactive.criteriaFailed].sort(
+                compareByNumericId
+              ),
+              criteriaWarnings: [
+                ...component.interactive.criteriaWarnings,
+              ].sort(compareByNumericId),
             }
           : undefined,
       };
@@ -180,9 +189,16 @@ function mergeInteractiveResults(
   target: MutableComponentReport,
   source: A11yInteractiveResults
 ): void {
+  const criteriaPassed = getInteractiveCriteriaPassed(source);
+  const criteriaFailed = getInteractiveCriteriaFailed(source);
+  const criteriaWarnings = getInteractiveCriteriaWarnings(source);
+
   if (!target.interactive) {
     target.interactive = {
       criteriaCovered: new Set(source.criteriaCovered),
+      criteriaPassed: new Set(criteriaPassed),
+      criteriaFailed: new Set(criteriaFailed),
+      criteriaWarnings: new Set(criteriaWarnings),
       testCount: source.testCount,
       passedCount: source.passedCount,
     };
@@ -195,147 +211,22 @@ function mergeInteractiveResults(
   for (const criterion of source.criteriaCovered) {
     target.interactive.criteriaCovered.add(criterion);
   }
+  for (const criterion of criteriaPassed) {
+    target.interactive.criteriaPassed.add(criterion);
+  }
+  for (const criterion of criteriaFailed) {
+    target.interactive.criteriaFailed.add(criterion);
+  }
+  for (const criterion of criteriaWarnings) {
+    target.interactive.criteriaWarnings.add(criterion);
+  }
 }
 
 export function mergeCriteria(
-  reports: A11yReport[],
+  _reports: A11yReport[],
   components: A11yComponentReport[]
 ): A11yCriterionReport[] {
-  const criteriaById = new Map<string, MutableCriterionReport>();
-
-  for (const report of reports) {
-    for (const criterion of report.criteria) {
-      const existing = criteriaById.get(criterion.id);
-      if (!existing) {
-        criteriaById.set(criterion.id, toMutableCriterion(criterion));
-        continue;
-      }
-
-      for (const componentName of criterion.coveredComponents) {
-        existing.coveredComponents.add(componentName);
-      }
-
-      for (const componentName of criterion.violatingComponents) {
-        existing.violatingComponents.add(componentName);
-      }
-
-      if (criterion.interactiveCoverage) {
-        existing.interactiveCoverage = true;
-      }
-
-      if (criterion.interactiveStatus) {
-        existing.interactiveStatus = mergeInteractiveStatus(
-          existing.interactiveStatus,
-          criterion.interactiveStatus
-        );
-      }
-    }
-  }
-
-  let inferredCriteriaCount = 0;
-
-  for (const component of components) {
-    for (const criterionId of component.automated.criteriaCovered) {
-      const existing = criteriaById.get(criterionId);
-      if (existing) {
-        existing.coveredComponents.add(component.name);
-        if (component.automated.criteriaViolated.includes(criterionId)) {
-          existing.violatingComponents.add(component.name);
-        }
-        continue;
-      }
-
-      inferredCriteriaCount++;
-      const metadata = getCriterionMetadata(criterionId);
-      const violating =
-        component.automated.criteriaViolated.includes(criterionId);
-      criteriaById.set(criterionId, {
-        id: criterionId,
-        name: metadata.name,
-        level: metadata.level,
-        wcagVersion: metadata.wcagVersion,
-        conformance: 'doesNotSupport',
-        automatedCoverage: true,
-        interactiveCoverage: false,
-        manualVerified: false,
-        coveredComponents: new Set([component.name]),
-        violatingComponents: violating ? new Set([component.name]) : new Set(),
-      });
-    }
-
-    if (component.interactive) {
-      for (const criterionId of component.interactive.criteriaCovered) {
-        const existing = criteriaById.get(criterionId);
-        if (existing) {
-          existing.interactiveCoverage = true;
-          existing.interactiveStatus = mergeInteractiveStatus(
-            existing.interactiveStatus,
-            'passed'
-          );
-          existing.coveredComponents.add(component.name);
-        }
-      }
-    }
-  }
-
-  if (inferredCriteriaCount > 0) {
-    console.warn(
-      `[merge-shards] ${inferredCriteriaCount} criteria were inferred from component coverage but not present in any shard's criteria list.`
-    );
-  }
-
-  return [...criteriaById.values()]
-    .map((criterion): A11yCriterionReport => {
-      const coveredComponents = [...criterion.coveredComponents].sort(
-        compareByName
-      );
-      const violatingComponents = [...criterion.violatingComponents].sort(
-        compareByName
-      );
-      return {
-        ...criterion,
-        coveredComponents,
-        violatingComponents,
-        conformance: resolveMergedConformance(
-          coveredComponents,
-          violatingComponents
-        ),
-      };
-    })
-    .sort((first, second) => compareByNumericId(first.id, second.id));
-}
-
-function resolveMergedConformance(
-  coveredComponents: string[],
-  violatingComponents: string[]
-): A11yCriterionReport['conformance'] {
-  const coveredCount = coveredComponents.length;
-  if (coveredCount === 0) {
-    return 'doesNotSupport';
-  }
-
-  const violatingCount = violatingComponents.length;
-  if (violatingCount >= coveredCount) {
-    return 'doesNotSupport';
-  }
-  if (violatingCount > 0) {
-    return 'partiallySupports';
-  }
-
-  return 'supports';
-}
-
-function mergeInteractiveStatus(
-  current: A11yCriterionReport['interactiveStatus'],
-  incoming: NonNullable<A11yCriterionReport['interactiveStatus']>
-): NonNullable<A11yCriterionReport['interactiveStatus']> {
-  if (current === 'failed' || incoming === 'failed') {
-    return 'failed';
-  }
-  if (current === 'partiallyPassed' || incoming === 'partiallyPassed') {
-    return 'partiallyPassed';
-  }
-  return 'passed';
+  return buildCriteria(components);
 }
 
 function mergeEvaluationMethods(reports: A11yReport[]): string[] {
