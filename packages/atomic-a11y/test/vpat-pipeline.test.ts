@@ -76,8 +76,8 @@ describe('transformJsonToOpenAcr (integration)', () => {
     await rm(dir, {recursive: true, force: true});
   });
 
-  const writeInput = () =>
-    writeFile(path.join(dir, 'a11y-report.json'), JSON.stringify(report));
+  const writeInput = (input: unknown = report) =>
+    writeFile(path.join(dir, 'a11y-report.json'), JSON.stringify(input));
 
   const levelOf = (
     criteria: {num: string; components: {adherence: {level: string}}[]}[],
@@ -119,6 +119,153 @@ describe('transformJsonToOpenAcr (integration)', () => {
     expect(focusVisible?.components[0].adherence.notes).toContain(
       'manual audit found Does Not Support'
     );
+  });
+
+  it('reports incomplete axe evidence without treating it as a pass', async () => {
+    await writeInput({
+      ...report,
+      components: [
+        ...report.components,
+        {
+          name: 'atomic-result-list',
+          storyCount: 1,
+          automated: {
+            violations: 0,
+            passes: 0,
+            incomplete: 1,
+            inapplicable: 0,
+            criteriaCovered: ['1.4.4'],
+            criteriaViolated: [],
+            criteriaPassed: [],
+            incompleteDetails: [
+              {
+                ruleId: 'meta-viewport-large',
+                impact: 'moderate',
+                wcagCriteria: ['1.4.4'],
+                nodes: 1,
+                message: 'Manual review required.',
+              },
+            ],
+          },
+        },
+      ],
+    });
+
+    const result = await transformJsonToOpenAcr({
+      inputFile: path.join(dir, 'a11y-report.json'),
+      outputFile: path.join(dir, 'openacr.yaml'),
+      overridesFile: path.join(dir, 'no-overrides.json'),
+      manualAuditDir: path.join(dir, 'no-manual'),
+    });
+
+    const row = result.chapters.success_criteria_level_aa.criteria.find(
+      (criterion) => criterion.num === '1.4.4'
+    );
+    expect(row?.components[0].adherence.level).toBe('does-not-support');
+    expect(row?.components[0].adherence.notes).toContain(
+      'automated axe-core returned incomplete results requiring review in 1 component(s)'
+    );
+  });
+
+  it('reports mixed explicit axe outcomes as Partially Supports', async () => {
+    await writeInput({
+      ...report,
+      components: [
+        ...report.components,
+        {
+          name: 'atomic-result-list',
+          storyCount: 1,
+          automated: {
+            violations: 0,
+            passes: 1,
+            incomplete: 0,
+            inapplicable: 0,
+            criteriaCovered: ['1.4.3'],
+            criteriaViolated: [],
+            criteriaPassed: ['1.4.3'],
+            incompleteDetails: [],
+          },
+        },
+      ],
+    });
+
+    const result = await transformJsonToOpenAcr({
+      inputFile: path.join(dir, 'a11y-report.json'),
+      outputFile: path.join(dir, 'openacr.yaml'),
+      overridesFile: path.join(dir, 'no-overrides.json'),
+      manualAuditDir: path.join(dir, 'no-manual'),
+    });
+
+    const row = result.chapters.success_criteria_level_aa.criteria.find(
+      (criterion) => criterion.num === '1.4.3'
+    );
+    expect(row?.components[0].adherence.level).toBe('partially-supports');
+    expect(row?.components[0].adherence.notes).toContain(
+      'automated axe-core found violations in 1 component(s)'
+    );
+    expect(row?.components[0].adherence.notes).toContain(
+      'automated axe-core passed checks across 1 component(s)'
+    );
+  });
+
+  it('uses failed interactive evidence in OpenACR conformance', async () => {
+    const emptyAutomated = {
+      violations: 0,
+      passes: 0,
+      incomplete: 0,
+      inapplicable: 0,
+      criteriaCovered: [],
+      criteriaViolated: [],
+      criteriaPassed: [],
+      incompleteDetails: [],
+    };
+    await writeInput({
+      ...report,
+      components: [
+        ...report.components,
+        {
+          name: 'atomic-combobox',
+          storyCount: 1,
+          automated: emptyAutomated,
+          interactive: {
+            criteriaCovered: ['2.1.1', '2.1.2'],
+            criteriaPassed: [],
+            criteriaFailed: ['2.1.1', '2.1.2'],
+            criteriaWarnings: [],
+            testCount: 1,
+            passedCount: 0,
+          },
+        },
+        {
+          name: 'atomic-dialog',
+          storyCount: 1,
+          automated: emptyAutomated,
+          interactive: {
+            criteriaCovered: ['2.1.1'],
+            criteriaPassed: ['2.1.1'],
+            criteriaFailed: [],
+            criteriaWarnings: [],
+            testCount: 1,
+            passedCount: 1,
+          },
+        },
+      ],
+    });
+
+    const result = await transformJsonToOpenAcr({
+      inputFile: path.join(dir, 'a11y-report.json'),
+      outputFile: path.join(dir, 'openacr.yaml'),
+      overridesFile: path.join(dir, 'no-overrides.json'),
+      manualAuditDir: path.join(dir, 'no-manual'),
+    });
+
+    const criteria = result.chapters.success_criteria_level_a.criteria;
+    expect(levelOf(criteria, '2.1.1')).toBe('partially-supports');
+    expect(levelOf(criteria, '2.1.2')).toBe('does-not-support');
+    expect(
+      criteria.find((criterion) => criterion.num === '2.1.2')?.components[0]
+        .adherence.notes
+    ).toContain('interactive keyboard testing failed across 1 component(s)');
   });
 
   it('lets an engineering override win over all signals', async () => {
