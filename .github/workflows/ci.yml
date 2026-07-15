@@ -202,6 +202,7 @@ jobs:
       - uses: ./.github/actions/setup
         with:
           cache-prefix: 'cdn'
+          build-command: "pnpm exec turbo build --filter='!./samples/**'"
       - name: 'Run CDN checks'
         uses: ./.github/actions/cdn-checks
   lint-check:
