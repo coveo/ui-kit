@@ -12,7 +12,14 @@ interface AxeRule {
   helpUrl: string;
   description?: string;
   help?: string;
-  nodes: Array<{html: string; target: string[]; failureSummary: string}>;
+  nodes: Array<{
+    html: string;
+    target: string[];
+    failureSummary: string;
+    any: Array<{message: string}>;
+    all: Array<{message: string}>;
+    none: Array<{message: string}>;
+  }>;
 }
 
 interface AxeResultsLite {
@@ -39,6 +46,9 @@ const buildAxeRule = (
     html: `<div data-i="${i}"/>`,
     target: [`#node-${i}`],
     failureSummary: `Fix ${id} #${i}`,
+    any: [{message: `Review ${id} #${i}`}],
+    all: [],
+    none: [],
   })),
 });
 
@@ -223,6 +233,38 @@ describe('VitestA11yReporter — run-end gating', () => {
       0
     );
     expect(totalViolations).toBe(0);
+  });
+
+  it('does not treat incomplete or inapplicable axe results as passes', async () => {
+    const reporter = new VitestA11yReporter({outputFile, packageJsonPath});
+
+    reporter.onTestCaseResult(
+      // biome-ignore lint/suspicious/noExplicitAny: simplified test fixture
+      buildTestCase({
+        storyId: 'atomic-tab--inconclusive',
+        modulePath: 'src/components/common/atomic-tab/atomic-tab.stories.tsx',
+        axeResults: buildAxeResults({
+          incomplete: [
+            buildAxeRule('color-contrast', ['wcag2aa', 'wcag143'], 1),
+          ],
+          inapplicable: [buildAxeRule('image-alt', ['wcag2a', 'wcag111'], 0)],
+        }),
+      }) as any
+    );
+
+    await reporter.onTestRunEnd([], [], 'passed');
+
+    const written = JSON.parse(await readFile(outputFile, 'utf8'));
+    for (const criterionId of ['1.1.1', '1.4.3']) {
+      const criterion = written.criteria.find(
+        (entry: {id: string}) => entry.id === criterionId
+      );
+      expect(criterion).toMatchObject({
+        automatedCoverage: false,
+        conformance: 'doesNotSupport',
+        coveredComponents: [],
+      });
+    }
   });
 
   it('does not gate when failOnViolations is disabled', async () => {

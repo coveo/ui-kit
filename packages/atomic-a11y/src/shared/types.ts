@@ -52,6 +52,10 @@ export interface A11yAutomatedResults {
  */
 export interface A11yInteractiveResults {
   criteriaCovered: string[];
+  /** Explicit per-criterion outcomes. Optional for reports generated before version 1.1. */
+  criteriaPassed?: string[];
+  criteriaFailed?: string[];
+  criteriaWarnings?: string[];
   testCount: number;
   passedCount: number;
 }
@@ -81,7 +85,7 @@ export interface A11yCriterionReport {
     | 'notApplicable';
   automatedCoverage: boolean;
   interactiveCoverage: boolean;
-  interactiveStatus?: 'passed';
+  interactiveStatus?: 'passed' | 'partiallyPassed' | 'failed';
   manualVerified: boolean;
   coveredComponents: string[];
   violatingComponents: string[];

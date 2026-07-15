@@ -9,12 +9,15 @@ export type OpenAcrConformance =
   | 'not-applicable';
 
 export interface CriterionAggregate {
-  coveredComponents: Set<string>;
+  passedComponents: Set<string>;
   violatingComponents: Set<string>;
+  incompleteComponents: Set<string>;
 }
 
 export interface InteractiveAggregate {
-  coveredComponents: Set<string>;
+  passedComponents: Set<string>;
+  failedComponents: Set<string>;
+  warningComponents: Set<string>;
 }
 
 export interface A11yOverrideEntry {

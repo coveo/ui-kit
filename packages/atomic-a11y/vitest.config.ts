@@ -7,6 +7,6 @@ const root = fileURLToPath(new URL('.', import.meta.url));
 export default defineConfig({
   root,
   test: {
-    include: ['test/**/*.test.ts'],
+    include: ['test/**/*.test.ts', 'src/**/*.test.ts'],
   },
 });

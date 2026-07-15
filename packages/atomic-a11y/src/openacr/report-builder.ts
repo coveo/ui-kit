@@ -1,9 +1,10 @@
 import {wcagCriteriaDefinitions} from '../data/wcag-criteria.js';
-import type {
-  A11yComponentReport,
-  A11yCriterionReport,
-  A11yReport,
-} from '../shared/types.js';
+import {
+  getInteractiveCriteriaFailed,
+  getInteractiveCriteriaPassed,
+  getInteractiveCriteriaWarnings,
+} from '../shared/evidence.js';
+import type {A11yComponentReport, A11yReport} from '../shared/types.js';
 import {buildRemarks, resolveConformance} from './conformance.js';
 import type {
   A11yOverrideEntry,
@@ -22,15 +23,32 @@ const DEFAULT_REPORT_PRODUCT_NAME = 'Coveo Atomic';
 const DEFAULT_REPORT_DATE = new Date().toISOString().slice(0, 10);
 
 function buildCriterionAggregates(
-  criteria: A11yCriterionReport[]
+  components: A11yComponentReport[]
 ): Map<string, CriterionAggregate> {
   const aggregates = new Map<string, CriterionAggregate>();
 
-  for (const criterion of criteria) {
-    aggregates.set(criterion.id, {
-      coveredComponents: new Set(criterion.coveredComponents),
-      violatingComponents: new Set(criterion.violatingComponents),
-    });
+  const getAggregate = (criterionId: string) => {
+    const aggregate = aggregates.get(criterionId) ?? {
+      passedComponents: new Set<string>(),
+      violatingComponents: new Set<string>(),
+      incompleteComponents: new Set<string>(),
+    };
+    aggregates.set(criterionId, aggregate);
+    return aggregate;
+  };
+
+  for (const component of components) {
+    for (const criterionId of component.automated.criteriaPassed) {
+      getAggregate(criterionId).passedComponents.add(component.name);
+    }
+    for (const criterionId of component.automated.criteriaViolated) {
+      getAggregate(criterionId).violatingComponents.add(component.name);
+    }
+    for (const incomplete of component.automated.incompleteDetails) {
+      for (const criterionId of incomplete.wcagCriteria) {
+        getAggregate(criterionId).incompleteComponents.add(component.name);
+      }
+    }
   }
 
   return aggregates;
@@ -41,19 +59,35 @@ function buildInteractiveAggregates(
 ): Map<string, InteractiveAggregate> {
   const aggregates = new Map<string, InteractiveAggregate>();
 
+  const getAggregate = (criterionId: string) => {
+    const aggregate = aggregates.get(criterionId) ?? {
+      passedComponents: new Set<string>(),
+      failedComponents: new Set<string>(),
+      warningComponents: new Set<string>(),
+    };
+    aggregates.set(criterionId, aggregate);
+    return aggregate;
+  };
+
   for (const component of components) {
     if (!component.interactive) {
       continue;
     }
 
-    for (const criterionId of component.interactive.criteriaCovered) {
-      const aggregate = aggregates.get(criterionId) ?? {
-        coveredComponents: new Set<string>(),
-      };
-
-      aggregate.coveredComponents.add(component.name);
-
-      aggregates.set(criterionId, aggregate);
+    for (const criterionId of getInteractiveCriteriaPassed(
+      component.interactive
+    )) {
+      getAggregate(criterionId).passedComponents.add(component.name);
+    }
+    for (const criterionId of getInteractiveCriteriaFailed(
+      component.interactive
+    )) {
+      getAggregate(criterionId).failedComponents.add(component.name);
+    }
+    for (const criterionId of getInteractiveCriteriaWarnings(
+      component.interactive
+    )) {
+      getAggregate(criterionId).warningComponents.add(component.name);
     }
   }
 
@@ -83,7 +117,7 @@ function buildOpenAcrCriteria(
   success_criteria_level_a: OpenAcrCriterion[];
   success_criteria_level_aa: OpenAcrCriterion[];
 } {
-  const aggregates = buildCriterionAggregates(report.criteria);
+  const aggregates = buildCriterionAggregates(report.components);
   const interactiveAggregates = buildInteractiveAggregates(report.components);
 
   const criteriaByChapter: Record<ChapterId, OpenAcrCriterion[]> = {

@@ -133,6 +133,78 @@ describe('mergeComponents()', () => {
     expect(merged[0].automated.criteriaPassed).toEqual(['1.1.1']);
   });
 
+  it('should preserve interactive outcomes across shards', () => {
+    const firstReport = createReport(
+      [
+        createComponent({
+          interactive: {
+            criteriaCovered: ['2.1.1'],
+            criteriaPassed: ['2.1.1'],
+            criteriaFailed: [],
+            criteriaWarnings: [],
+            testCount: 1,
+            passedCount: 1,
+          },
+        }),
+      ],
+      []
+    );
+    const secondReport = createReport(
+      [
+        createComponent({
+          interactive: {
+            criteriaCovered: ['2.1.1', '2.1.2'],
+            criteriaPassed: [],
+            criteriaFailed: ['2.1.1'],
+            criteriaWarnings: ['2.1.2'],
+            testCount: 1,
+            passedCount: 0,
+          },
+        }),
+      ],
+      []
+    );
+
+    const merged = mergeComponents([firstReport, secondReport]);
+
+    expect(merged[0].interactive).toMatchObject({
+      criteriaPassed: ['2.1.1'],
+      criteriaFailed: ['2.1.1'],
+      criteriaWarnings: ['2.1.2'],
+      testCount: 2,
+      passedCount: 1,
+    });
+  });
+
+  it('should normalize legacy interactive outcomes conservatively', () => {
+    const report = createReport(
+      [
+        createComponent({
+          name: 'atomic-all-passed',
+          interactive: {
+            criteriaCovered: ['2.1.1'],
+            testCount: 1,
+            passedCount: 1,
+          },
+        }),
+        createComponent({
+          name: 'atomic-ambiguous',
+          interactive: {
+            criteriaCovered: ['2.1.2'],
+            testCount: 2,
+            passedCount: 1,
+          },
+        }),
+      ],
+      []
+    );
+
+    const merged = mergeComponents([report]);
+
+    expect(merged[0].interactive?.criteriaPassed).toEqual(['2.1.1']);
+    expect(merged[1].interactive?.criteriaPassed).toEqual([]);
+  });
+
   it('should keep distinct components separate', () => {
     const report = createReport(
       [

@@ -1,3 +1,4 @@
+import {resolveEvidenceOutcome} from '../shared/evidence.js';
 import {resolveManualConformance} from './manual-audit.js';
 import type {
   A11yOverrideEntry,
@@ -14,6 +15,12 @@ const openAcrConformanceLabel: Record<OpenAcrConformance, string> = {
   'does-not-support': 'Does Not Support',
   'not-applicable': 'Not Applicable',
 };
+
+const evidenceOutcomeToConformance = {
+  passed: 'supports',
+  'partially-passed': 'partially-supports',
+  failed: 'does-not-support',
+} as const;
 
 interface ConformanceContext {
   aggregate?: CriterionAggregate;
@@ -42,25 +49,21 @@ function worst(
 function automatedSignal(
   aggregate?: CriterionAggregate
 ): OpenAcrConformance | null {
-  const covered = aggregate?.coveredComponents.size ?? 0;
-  if (covered === 0) {
-    return null;
-  }
-
-  const violating = aggregate?.violatingComponents.size ?? 0;
-  if (violating === 0) {
-    return 'supports';
-  }
-  if (violating >= covered) {
-    return 'does-not-support';
-  }
-  return 'partially-supports';
+  const outcome = resolveEvidenceOutcome(
+    aggregate?.passedComponents.size ?? 0,
+    aggregate?.violatingComponents.size ?? 0
+  );
+  return outcome ? evidenceOutcomeToConformance[outcome] : null;
 }
 
 function interactiveSignal(
   aggregate?: InteractiveAggregate
 ): OpenAcrConformance | null {
-  return (aggregate?.coveredComponents.size ?? 0) > 0 ? 'supports' : null;
+  const outcome = resolveEvidenceOutcome(
+    aggregate?.passedComponents.size ?? 0,
+    aggregate?.failedComponents.size ?? 0
+  );
+  return outcome ? evidenceOutcomeToConformance[outcome] : null;
 }
 
 /**
@@ -105,9 +108,12 @@ export function buildRemarks(context: RemarksContext): string {
     return override.reason;
   }
 
-  const covered = aggregate?.coveredComponents.size ?? 0;
-  const violating = aggregate?.violatingComponents.size ?? 0;
-  const interactiveCovered = interactiveAggregate?.coveredComponents.size ?? 0;
+  const automatedPassed = aggregate?.passedComponents.size ?? 0;
+  const automatedFailed = aggregate?.violatingComponents.size ?? 0;
+  const automatedIncomplete = aggregate?.incompleteComponents.size ?? 0;
+  const interactivePassed = interactiveAggregate?.passedComponents.size ?? 0;
+  const interactiveFailed = interactiveAggregate?.failedComponents.size ?? 0;
+  const interactiveWarnings = interactiveAggregate?.warningComponents.size ?? 0;
   const manualConformance = resolveManualConformance(manualAggregates);
   const manualRemarks = (manualAggregates ?? [])
     .map((aggregateEntry) => aggregateEntry.remarks)
@@ -122,17 +128,35 @@ export function buildRemarks(context: RemarksContext): string {
     );
   }
 
-  if (covered > 0) {
+  if (automatedPassed > 0) {
     evidence.push(
-      violating === 0
-        ? `automated axe-core found no violations across applicable component(s) (${covered})`
-        : `automated axe-core found violations in ${violating} of ${covered} component(s)`
+      `automated axe-core passed checks across ${automatedPassed} component(s)`
+    );
+  }
+  if (automatedFailed > 0) {
+    evidence.push(
+      `automated axe-core found violations in ${automatedFailed} component(s)`
+    );
+  }
+  if (automatedIncomplete > 0) {
+    evidence.push(
+      `automated axe-core returned incomplete results requiring review in ${automatedIncomplete} component(s)`
     );
   }
 
-  if (interactiveCovered > 0) {
+  if (interactivePassed > 0) {
     evidence.push(
-      `interactive keyboard testing passed across ${interactiveCovered} component(s)`
+      `interactive keyboard testing passed across ${interactivePassed} component(s)`
+    );
+  }
+  if (interactiveFailed > 0) {
+    evidence.push(
+      `interactive keyboard testing failed across ${interactiveFailed} component(s)`
+    );
+  }
+  if (interactiveWarnings > 0) {
+    evidence.push(
+      `interactive keyboard testing returned warnings requiring review across ${interactiveWarnings} component(s)`
     );
   }
 
