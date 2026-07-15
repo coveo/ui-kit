@@ -14,19 +14,17 @@
   },
   "dependencies": {
     "@coveo/thermidor": "workspace:*",
-    "marked": "^15.0.0",
+    "marked": "12.0.2",
     "react": "catalog:",
     "react-dom": "catalog:"
   },
   "devDependencies": {
     "@playwright/test": "catalog:",
-    "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "catalog:",
-    "fast-check": "^3.22.0",
     "playwright": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",
