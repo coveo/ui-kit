@@ -177,13 +177,14 @@ export const buildConverseController = (
       clearTurnResponse(turnId) {
         fullEngine.mutate(actions.clearTurnResponse({turnId}));
       },
-      createBackendInterface(interfaceId, type, display, state) {
+      createBackendInterface(interfaceId, type, display, state, turnId) {
         fullEngine.mutate(
           biActions.createInterface({
             interfaceId,
             type,
             display: display as 'main' | 'inline',
             state,
+            turnId,
           })
         );
       },

@@ -1,11 +1,15 @@
 import {useState, useEffect} from 'react';
 import {UserPrompt} from '../UserPrompt/UserPrompt.js';
-import {AgentResponse} from '../AgentResponse/AgentResponse.js';
+import {
+  AgentResponse,
+  TypingIndicator,
+} from '../AgentResponse/AgentResponse.js';
 import {InlineCarousel} from '../InlineCarousel/InlineCarousel.js';
 import {generativeInterface} from '../../generative-setup.js';
 import {getOrCreateBackendInterfacesSelectors} from '@/src/core/internal/backend-interfaces/backend-interfaces-selectors.js';
 import {ENGINE, STATE_ID} from '@/src/core/interface/utils/symbols.js';
 import styles from './ConversationArea.module.css';
+import agentResponseStyles from '../AgentResponse/AgentResponse.module.css';
 
 interface Turn {
   id: string;
@@ -41,7 +45,12 @@ export function ConversationArea({
   const [inlineInterfaces, setInlineInterfaces] = useState<
     Record<
       string,
-      {type: string; display: string; state: Record<string, unknown>}
+      {
+        type: string;
+        display: string;
+        state: Record<string, unknown>;
+        turnId?: string;
+      }
     >
   >({});
 
@@ -66,17 +75,27 @@ export function ConversationArea({
     );
   }
 
+  const turnInlineInterfaces = Object.entries(inlineInterfaces).filter(
+    ([, iface]) => iface.turnId === turn.id
+  );
+
   return (
     <div className={styles.container}>
       <UserPrompt text={turn.prompt} />
-      {turn.agentResponse && (
+      {turn.agentResponse ? (
         <AgentResponse
           agentResponse={turn.agentResponse}
           isStreaming={isStreaming}
           onAction={onAction}
         />
+      ) : (
+        isStreaming && (
+          <div className={agentResponseStyles.container}>
+            <TypingIndicator />
+          </div>
+        )
       )}
-      {Object.entries(inlineInterfaces).map(([id, iface]) => (
+      {turnInlineInterfaces.map(([id, iface]) => (
         <InlineCarousel
           key={id}
           heading={(iface.state?.heading as string) ?? undefined}

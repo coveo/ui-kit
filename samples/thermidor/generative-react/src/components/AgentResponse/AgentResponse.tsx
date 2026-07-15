@@ -32,8 +32,17 @@ export function AgentResponse({
     messages.length > 0 || toolCalls.length > 0 || surfaces.length > 0;
 
   if (!hasContent) {
-    return null;
+    return isStreaming ? (
+      <div className={styles.container}>
+        <TypingIndicator />
+      </div>
+    ) : null;
   }
+
+  const allToolCallsCompleted =
+    toolCalls.length > 0 && toolCalls.every((tc) => tc.status === 'completed');
+  const isWaitingAfterToolCalls =
+    isStreaming && allToolCallsCompleted && messages.length === 0;
 
   return (
     <div className={styles.container}>
@@ -44,6 +53,19 @@ export function AgentResponse({
       {surfaces.length > 0 && (
         <SurfaceRenderer surfaces={surfaces} onAction={onAction} />
       )}
+      {isWaitingAfterToolCalls && <TypingIndicator />}
     </div>
   );
 }
+
+function TypingIndicator() {
+  return (
+    <div className={styles.typingIndicator} aria-label="Waiting for response">
+      <span className={styles.typingDot} />
+      <span className={styles.typingDot} />
+      <span className={styles.typingDot} />
+    </div>
+  );
+}
+
+export {TypingIndicator};

@@ -31,6 +31,7 @@ export function createBackendInterfacesSlice(interfaceId: string) {
             type: payload.type,
             display: payload.display,
             state: payload.state,
+            turnId: payload.turnId,
           };
         })
         .addCase(actions.updateInterfaceState, (state, {payload}) => {

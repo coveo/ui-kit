@@ -31,7 +31,8 @@ export interface GenerativeStatePort {
     interfaceId: string,
     type: string,
     display: string,
-    state: Record<string, unknown>
+    state: Record<string, unknown>,
+    turnId?: string
   ): void;
   updateBackendInterfaceState(
     interfaceId: string,
@@ -340,7 +341,8 @@ export class GenerativeRuntime {
               value.interfaceId as string,
               value.type as string,
               value.display as string,
-              value.state as Record<string, unknown>
+              value.state as Record<string, unknown>,
+              turnId
             );
             return {turnId, isTerminal: false};
           }

@@ -4,6 +4,7 @@ export interface BackendInterfaceEntry {
   type: string;
   display: 'main' | 'inline';
   state: Record<string, unknown>;
+  turnId?: string;
 }
 
 export interface BackendSuggestionsEntry {
@@ -27,6 +28,7 @@ export function createBackendInterfacesActions(interfaceId: string) {
       type: string;
       display: 'main' | 'inline';
       state: Record<string, unknown>;
+      turnId?: string;
     }>(`${prefix}/createInterface`),
     updateInterfaceState: createAction<{
       interfaceId: string;

@@ -87,7 +87,8 @@ describe('GenerativeRuntime.dispatchEvent — CUSTOM events', () => {
       'ui-1',
       'product_search',
       'main',
-      {query: 'shoes', products: []}
+      {query: 'shoes', products: []},
+      'turn-1'
     );
     expect(result.isTerminal).toBe(false);
   });
