@@ -2,10 +2,20 @@ export function getElement<T extends HTMLElement>(id: string): T | null {
   return document.getElementById(id) as T | null;
 }
 
-export function updateQueryParam(key: string, value: string) {
-  const params = new URLSearchParams(window.location.search);
-  value ? params.set(key, value) : params.delete(key);
+/** Formats a numeric amount as a localized currency string (default USD). */
+export function formatCurrency(value: number, currency = 'USD'): string {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency,
+  }).format(value);
+}
 
-  const nextUrl = `${window.location.pathname}${params.toString() ? `?${params}` : ''}`;
-  window.history.pushState(null, '', nextUrl);
+/** Escapes a string for safe interpolation into server-rendered HTML. */
+export function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
