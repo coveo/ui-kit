@@ -40,14 +40,6 @@ function resolveEnvironment(value: string | undefined): PlatformEnvironment {
   return 'dev';
 }
 
-function getOrganizationAdminEndpoint(
-  organizationId: string,
-  environment: PlatformEnvironment
-): string {
-  const environmentSuffix = environment === 'prod' ? '' : environment;
-  return `https://${organizationId}.admin.org${environmentSuffix}.coveo.com`;
-}
-
 function getOrganizationPlatformEndpoint(
   organizationId: string,
   environment: PlatformEnvironment
@@ -66,19 +58,17 @@ function getProxyTargets(mode: string) {
     return undefined;
   }
 
-  const platform = getOrganizationPlatformEndpoint(organizationId, environment);
-  const admin = endpointOverride
+  const platform = endpointOverride
     ? endpointOverride
-    : getOrganizationAdminEndpoint(organizationId, environment);
+    : getOrganizationPlatformEndpoint(organizationId, environment);
 
-  return {admin, platform};
+  return {platform};
 }
 
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, process.cwd(), '');
   const useProxy = parseBoolean(env.VITE_COVEO_USE_VITE_PROXY) ?? true;
   const targets = getProxyTargets(mode);
-  const orgId = env.VITE_COVEO_ORGANIZATION_ID?.trim();
 
   return {
     plugins: [react()],
@@ -93,11 +83,6 @@ export default defineConfig(({mode}) => {
       ...(useProxy && targets
         ? {
             proxy: {
-              [`/rest/organizations/${orgId}/commerce/unstable/agentic`]: {
-                target: targets.admin,
-                changeOrigin: true,
-                secure: true,
-              },
               '/rest': {
                 target: targets.platform,
                 changeOrigin: true,
