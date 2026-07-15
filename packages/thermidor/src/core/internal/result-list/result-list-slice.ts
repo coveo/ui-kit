@@ -6,19 +6,6 @@ export const initialResultListState: ResultListState = {
   results: [],
 };
 
-function mapResult(result: Record<string, unknown>) {
-  return {
-    uniqueId: result.uniqueId as string,
-    title: result.title as string,
-    uri: result.uri as string,
-    excerpt: result.excerpt as string | undefined,
-    printableUri: result.printableUri as string,
-    clickUri: result.clickUri as string,
-    raw: (result.raw as Record<string, unknown>) ?? {},
-    score: (result.score as number) ?? 0,
-  };
-}
-
 export function createResultsSlice(interfaceId: string) {
   const actions = getOrCreateResultsActions(interfaceId);
 

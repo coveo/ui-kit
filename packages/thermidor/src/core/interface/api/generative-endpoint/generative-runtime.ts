@@ -66,7 +66,6 @@ export class GenerativeRuntime {
   private engine: FullEngine;
   private statePort: GenerativeStatePort;
   private agentResponseInitialized = new Set<string>();
-  private currentPrompt: string | undefined;
   private conversationSessionId: string | undefined;
   private conversationToken: string | undefined;
   private buildRequest: ReturnType<
@@ -109,7 +108,6 @@ export class GenerativeRuntime {
   async submit(prompt: string): Promise<void> {
     const tempId = generateId();
 
-    this.currentPrompt = prompt;
     this.statePort.createTurn({id: tempId, prompt, status: 'streaming'});
     this.statePort.setActiveTurnId(tempId);
 
@@ -117,7 +115,6 @@ export class GenerativeRuntime {
   }
 
   async resubmit(turnId: string, prompt: string): Promise<void> {
-    this.currentPrompt = prompt;
     this.statePort.clearTurnResponse(turnId);
     this.statePort.createTurn({id: turnId, prompt, status: 'streaming'});
     this.agentResponseInitialized.delete(turnId);

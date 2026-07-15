@@ -239,7 +239,7 @@ export const buildBackendUrlManagerController = (
         ) {
           previousFragment = newFragment;
           previousResponseId = newResponseId;
-          callback();
+          callback(currentState);
         } else {
           previousResponseId = newResponseId;
         }

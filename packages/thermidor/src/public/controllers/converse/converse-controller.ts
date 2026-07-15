@@ -201,7 +201,7 @@ export const buildConverseController = (
         fullEngine.mutate(
           biActions.setSuggestions({
             interfaceId,
-            suggestions: suggestions as BackendSuggestionsEntry,
+            suggestions: suggestions as unknown as BackendSuggestionsEntry,
           })
         );
       },
