@@ -1,0 +1,4 @@
+# Angular-specific (not covered by monorepo root .gitignore)
+/.angular/cache
+.env
+src/environments/environment.ts

@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@coveo/atomic": "workspace:*",
-    "rxjs": "7.8.2"
+    "rxjs": "catalog:"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "catalog:",
