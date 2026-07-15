@@ -173,7 +173,7 @@ export class AtomicGeneratedAnswerThread extends LitElement {
       focus-visible:ring-primary focus-visible:ring-offset-2
     `;
     const timelineDotClasses = `
-      h-2 w-2 rounded-full bg-neutral-dim transition-colors cursor-pointer
+      h-2 w-2 rounded-full bg-neutral-dim transition-colors
       hover:bg-neutral-dark group-has-[button:hover]/title:bg-neutral-dark
     `;
     const timelineConnectorClasses = `
