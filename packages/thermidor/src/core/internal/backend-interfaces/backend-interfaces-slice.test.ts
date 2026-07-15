@@ -43,6 +43,58 @@ describe('backendInterfacesSlice', () => {
         state: {query: 'red shirt', products: []},
       });
     });
+
+    it('demotes the previous main interface to inline when a new main interface is created', () => {
+      const store = createStore();
+      const actions = getOrCreateBackendInterfacesActions(INTERFACE_ID);
+
+      store.dispatch(
+        actions.createInterface({
+          interfaceId: 'ui-1',
+          type: 'product_search',
+          display: 'main',
+          state: {query: 'shoes', products: []},
+        })
+      );
+
+      store.dispatch(
+        actions.createInterface({
+          interfaceId: 'ui-2',
+          type: 'product_search',
+          display: 'main',
+          state: {query: 'jackets', products: []},
+        })
+      );
+
+      expect(getState(store).interfaces['ui-1'].display).toBe('inline');
+      expect(getState(store).interfaces['ui-2'].display).toBe('main');
+    });
+
+    it('does not demote an existing main interface when a new inline interface is created', () => {
+      const store = createStore();
+      const actions = getOrCreateBackendInterfacesActions(INTERFACE_ID);
+
+      store.dispatch(
+        actions.createInterface({
+          interfaceId: 'ui-1',
+          type: 'product_search',
+          display: 'main',
+          state: {query: 'shoes', products: []},
+        })
+      );
+
+      store.dispatch(
+        actions.createInterface({
+          interfaceId: 'ui-2',
+          type: 'product_recommendations',
+          display: 'inline',
+          state: {},
+        })
+      );
+
+      expect(getState(store).interfaces['ui-1'].display).toBe('main');
+      expect(getState(store).interfaces['ui-2'].display).toBe('inline');
+    });
   });
 
   describe('updateInterfaceState', () => {

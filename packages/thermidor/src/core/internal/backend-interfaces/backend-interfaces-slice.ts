@@ -27,6 +27,13 @@ export function createBackendInterfacesSlice(interfaceId: string) {
     extraReducers: (builder) => {
       builder
         .addCase(actions.createInterface, (state, {payload}) => {
+          if (payload.display === 'main') {
+            for (const entry of Object.values(state.interfaces)) {
+              if (entry.display === 'main') {
+                entry.display = 'inline';
+              }
+            }
+          }
           state.interfaces[payload.interfaceId] = {
             type: payload.type,
             display: payload.display,

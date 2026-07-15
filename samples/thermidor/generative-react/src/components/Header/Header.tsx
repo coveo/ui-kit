@@ -1,18 +1,81 @@
-import {useState} from 'react';
-import {Group, TextInput, Box, Text} from '@mantine/core';
-import {converseController} from '../../generative-setup.js';
+import {useState, useEffect, useCallback, useRef} from 'react';
+import {Autocomplete, Group, Box, Text} from '@mantine/core';
+import {useDebouncedCallback} from '@mantine/hooks';
+import {
+  converseController,
+  generativeInterface,
+} from '../../generative-setup.js';
+import {getOrCreateBackendInterfacesSelectors} from '@/src/core/internal/backend-interfaces/backend-interfaces-selectors.js';
+import {ENGINE, STATE_ID} from '@/src/core/interface/utils/symbols.js';
+import {generateId} from '@/src/core/interface/utils/id-generator.js';
 
 export function Header() {
   const [searchValue, setSearchValue] = useState('');
+  const [interfaceId, setInterfaceId] = useState<string | undefined>();
+  const [completions, setCompletions] = useState<string[]>([]);
+  const [dropdownOpened, setDropdownOpened] = useState(false);
+  // Placeholder interface ID used for suggestion requests before any
+  // search has been submitted (the server accepts fetch_suggestions for
+  // an interfaceId it has never seen, and simply echoes it back).
+  const placeholderInterfaceIdRef = useRef(generateId());
+
+  const engine = generativeInterface[ENGINE];
+  const stateId = generativeInterface[STATE_ID];
+
+  useEffect(() => {
+    const selectors = getOrCreateBackendInterfacesSelectors(stateId);
+    return engine.subscribe(selectors.getInterfaces, (interfaces) => {
+      const mainId = Object.keys(interfaces).find(
+        (id) => interfaces[id]?.display === 'main'
+      );
+      setInterfaceId(mainId);
+    });
+  }, [engine, stateId]);
+
+  const suggestionsInterfaceId =
+    interfaceId ?? placeholderInterfaceIdRef.current;
+
+  useEffect(() => {
+    const selectors = getOrCreateBackendInterfacesSelectors(stateId);
+    const getSuggestions = selectors.getSuggestions(suggestionsInterfaceId);
+    return engine.subscribe(getSuggestions, (suggestions) => {
+      setCompletions(suggestions?.completions.map((c) => c.expression) ?? []);
+    });
+  }, [engine, stateId, suggestionsInterfaceId]);
+
+  const fetchSuggestions = useDebouncedCallback((query: string) => {
+    if (!query.trim()) {
+      return;
+    }
+    converseController.sendAction({
+      type: 'fetch_suggestions',
+      interfaceId: suggestionsInterfaceId,
+      query: query.trim(),
+    });
+  }, 200);
+
+  const handleChange = useCallback(
+    (value: string) => {
+      setSearchValue(value);
+      setDropdownOpened(true);
+      fetchSuggestions(value);
+    },
+    [fetchSuggestions]
+  );
+
+  const submitSearch = useCallback((query: string) => {
+    setDropdownOpened(false);
+    if (query.trim()) {
+      converseController.sendAction({
+        type: 'execute_search',
+        query: query.trim(),
+      });
+    }
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchValue.trim()) {
-      converseController.sendAction({
-        type: 'execute_search',
-        query: searchValue.trim(),
-      });
-    }
+    submitSearch(searchValue);
   };
 
   return (
@@ -26,10 +89,14 @@ export function Header() {
         onSubmit={handleSubmit}
         style={{flex: 1, maxWidth: 700}}
       >
-        <TextInput
+        <Autocomplete
           placeholder="Search products..."
           value={searchValue}
-          onChange={(e) => setSearchValue(e.currentTarget.value)}
+          onChange={handleChange}
+          onOptionSubmit={submitSearch}
+          data={completions}
+          dropdownOpened={dropdownOpened}
+          onDropdownClose={() => setDropdownOpened(false)}
           leftSection={<SearchIcon />}
           size="md"
           radius="xl"
