@@ -7,14 +7,8 @@ type PlatformEnvironment = 'prod' | 'dev' | 'stg' | 'hipaa';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const headlessFutureRoot = path.resolve(
-  __dirname,
-  '../../../packages/thermidor'
-);
-const headlessFutureSourceEntry = path.resolve(
-  headlessFutureRoot,
-  'src/index.ts'
-);
+const thermidorRoot = path.resolve(__dirname, '../../../packages/thermidor');
+const thermidorSourceEntry = path.resolve(thermidorRoot, 'src/index.ts');
 
 function parseBoolean(value: string | undefined): boolean | undefined {
   if (!value) {
@@ -90,8 +84,8 @@ export default defineConfig(({mode}) => {
     plugins: [react()],
     resolve: {
       alias: {
-        '@coveo/thermidor': headlessFutureSourceEntry,
-        '@': headlessFutureRoot,
+        '@coveo/thermidor': thermidorSourceEntry,
+        '@': thermidorRoot,
       },
     },
     server: {
