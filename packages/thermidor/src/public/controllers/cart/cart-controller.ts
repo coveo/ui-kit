@@ -1,14 +1,42 @@
-import {
+import type {
   SetCartItemsPayload,
   UpdateItemQuantityPayload,
-} from '@/src/core/interface/cart/cart-types.js';
-import {loadCart} from '@/src/core/interface/cart/cart-loader.js';
-import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
-import type {Requires} from '@/src/core/interface/utils/interface-types.js';
-import {ENGINE, STATE_ID} from '@/src/core/interface/utils/symbols.js';
-import {getOrCreateCartActions} from '@/src/core/internal/cart/cart-actions.js';
-import {getOrCreateCartSelectors} from '@/src/core/internal/cart/cart-selectors.js';
-import {Controller} from '@/src/public/controllers/controller-types.js';
+} from '@/src/internal/features/cart/index.js';
+import {getOrCreateCartSlice} from '@/src/internal/features/cart/index.js';
+import {BaseController} from '@/src/internal/utils/index.js';
+import {createMemoizedStateSelector} from '@/src/internal/utils/index.js';
+import type {Supports} from '@/src/internal/utils/index.js';
+import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getOrCreateCartActions} from '@/src/internal/features/cart/index.js';
+import {getOrCreateCartSelectors} from '@/src/internal/features/cart/index.js';
+import type {Controller} from '@/src/public/controllers/controller-types.js';
+
+class CartControllerImpl extends BaseController<CartControllerState> {
+  #actions: ReturnType<typeof getOrCreateCartActions>;
+
+  constructor(options: CartControllerOptions) {
+    const {engine} = getHandleInternals(options.interface);
+
+    engine.adoptSlice(getOrCreateCartSlice(options.interface));
+
+    const selectors = getOrCreateCartSelectors(options.interface);
+    const controllerState = createMemoizedStateSelector(
+      selectors.getItems,
+      (items) => ({items})
+    );
+
+    super(engine, controllerState);
+    this.#actions = getOrCreateCartActions(options.interface);
+  }
+
+  setItems(payload: SetCartItemsPayload): void {
+    this.engine.mutate(this.#actions.setItems(payload.items));
+  }
+
+  updateItemQuantity(payload: UpdateItemQuantityPayload): void {
+    this.engine.mutate(this.#actions.updateItemQuantity(payload.item));
+  }
+}
 
 /**
  * Creates a cart controller bound to an interface instance.
@@ -18,54 +46,15 @@ import {Controller} from '@/src/public/controllers/controller-types.js';
  */
 export const buildCartController = (
   options: CartControllerOptions
-): CartController => {
-  const engine = options.interface[ENGINE];
-  const stateId = options.interface[STATE_ID];
-
-  loadCart(engine, stateId);
-
-  const actions = getOrCreateCartActions(stateId);
-  const selectors = getOrCreateCartSelectors(stateId);
-
-  const controllerState = createMemoizedStateSelector(
-    selectors.getItems,
-    (items) => ({items})
-  );
-
-  return {
-    setItems(payload) {
-      engine.mutate(actions.setItems(payload.items));
-    },
-    updateItemQuantity(payload) {
-      engine.mutate(actions.updateItemQuantity(payload.item));
-    },
-    get state() {
-      return engine.read(controllerState);
-    },
-    subscribe(callback) {
-      return engine.subscribe(controllerState, callback);
-    },
-  };
-};
+): CartController => new CartControllerImpl(options);
 
 export interface CartController extends Controller<CartControllerState> {
-  /**
-   * Replaces the current cart items.
-   *
-   * @param payload - The cart items to store.
-   */
   setItems(payload: SetCartItemsPayload): void;
-
-  /**
-   * Updates the quantity of an existing cart item.
-   *
-   * @param payload - The item with updated quantity.
-   */
   updateItemQuantity(payload: UpdateItemQuantityPayload): void;
 }
 
 export interface CartControllerOptions {
-  interface: Requires<'search'>;
+  interface: Supports<'search'>;
 }
 
 export interface CartControllerItem {

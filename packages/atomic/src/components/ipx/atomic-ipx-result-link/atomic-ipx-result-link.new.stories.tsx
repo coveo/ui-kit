@@ -4,8 +4,8 @@ import type {
   StoryObj as Story,
 } from '@storybook/web-components-vite';
 import {html} from 'lit';
-import {MockSearchApi} from '@/storybook-utils/api/search/mock';
-import type {SearchResponse} from '@/storybook-utils/api/search/search-response';
+import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
+import type {SearchResponse} from '@coveo/platform-mock-api/search/search-response';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInRecommendationInterface} from '@/storybook-utils/search/recs-interface-wrapper';
 import {wrapInRecsResultTemplate} from '@/storybook-utils/search/recs-result-template-wrapper';

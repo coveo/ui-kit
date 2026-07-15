@@ -1,10 +1,10 @@
-import type {Requires} from '@/src/core/interface/utils/interface-types.js';
-import {ENGINE, STATE_ID, THUNKS} from '@/src/core/interface/utils/symbols.js';
-import {getOrCreateSearchBoxActions} from '@/src/core/internal/search-box/search-box-actions.js';
-import {getOrCreateSearchBoxSlice} from '@/src/core/internal/search-box/search-box-slice.js';
+import type {Supports} from '@/src/internal/utils/index.js';
+import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getOrCreateSearchBoxActions} from '@/src/internal/features/search-box/index.js';
+import {getOrCreateSearchBoxSlice} from '@/src/internal/features/search-box/index.js';
 
 export interface LoadSearchBoxActionsOptions {
-  interface: Requires<'search'>;
+  interface: Supports<'search'>;
 }
 
 /**
@@ -13,13 +13,13 @@ export interface LoadSearchBoxActionsOptions {
  * @returns The search box actions: `setQuery` and `submit`.
  */
 export function loadSearchBoxActions(options: LoadSearchBoxActionsOptions) {
-  const engine = options.interface[ENGINE];
-  const stateId = options.interface[STATE_ID];
-  const thunks = options.interface[THUNKS].search;
+  const {engine, resolveFacades} = getHandleInternals(options.interface);
 
-  engine.adoptSlice(getOrCreateSearchBoxSlice(stateId));
+  engine.adoptSlice(getOrCreateSearchBoxSlice(options.interface));
 
-  const actions = getOrCreateSearchBoxActions(stateId);
+  const thunks = resolveFacades('search');
+
+  const actions = getOrCreateSearchBoxActions(options.interface);
 
   return {
     setQuery(payload: {query: string}) {

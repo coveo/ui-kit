@@ -6,6 +6,7 @@
   "bracketSpacing": false,
   "ignorePatterns": [
     "**/packages/quantic/**/*",
+    "!**/packages/quantic/catalog-info.yaml",
     "**/packages/create-atomic-template/**/*",
     "**/packages/create-atomic-component/template/**/*",
     "**/packages/create-atomic-component-project/template/**/*",

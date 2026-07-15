@@ -97,7 +97,7 @@ const preview: Preview = {
         textColor: '#282829',
       }),
     },
-    chromatic: {disableSnapshot: true},
+    chromatic: {disableSnapshot: import.meta.env.CHROMATIC_ALL !== 'true'},
   },
   beforeEach({canvasElement, canvas}) {
     Object.assign(canvas, {...within(canvasElement)});

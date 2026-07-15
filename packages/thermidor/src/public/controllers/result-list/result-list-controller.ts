@@ -1,45 +1,42 @@
-import type {Controller} from '../controller-types.js';
-import type {Requires} from '@/src/core/interface/utils/interface-types.js';
-import {getOrCreateResultsSelectors} from '@/src/core/internal/result-list/result-list-selectors.js';
-import {getOrCreateResultsSlice} from '@/src/core/internal/result-list/result-list-slice.js';
-import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
-import {ENGINE, STATE_ID} from '@/src/core/interface/utils/symbols.js';
+import {BaseController} from '@/src/internal/utils/index.js';
+import type {Supports} from '@/src/internal/utils/index.js';
+import {createMemoizedStateSelector} from '@/src/internal/utils/index.js';
+import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getOrCreateResultsSelectors} from '@/src/internal/features/result-list/index.js';
+import {getOrCreateResultsSlice} from '@/src/internal/features/result-list/index.js';
+import type {Controller} from '@/src/public/controllers/controller-types.js';
+
+class ResultListControllerImpl extends BaseController<ResultListControllerState> {
+  constructor(options: ResultListControllerOptions) {
+    const {engine} = getHandleInternals(options.interface);
+
+    engine.adoptSlice(getOrCreateResultsSlice(options.interface));
+
+    const selectors = getOrCreateResultsSelectors(options.interface);
+
+    const controllerState = createMemoizedStateSelector(
+      selectors.getResults,
+      (results) => ({
+        results: results.map((result) => ({
+          uniqueId: result.uniqueId,
+          title: result.title,
+          uri: result.uri,
+          excerpt: result.excerpt,
+          printableUri: result.printableUri,
+          clickUri: result.clickUri,
+          raw: result.raw,
+          score: result.score,
+        })),
+      })
+    );
+
+    super(engine, controllerState);
+  }
+}
 
 export const buildResultListController = (
   options: ResultListControllerOptions
-): ResultListController => {
-  const engine = options.interface[ENGINE];
-  const stateId = options.interface[STATE_ID];
-
-  engine.adoptSlice(getOrCreateResultsSlice(stateId));
-
-  const selectors = getOrCreateResultsSelectors(stateId);
-
-  const controllerState = createMemoizedStateSelector(
-    selectors.getResults,
-    (results) => ({
-      results: results.map((result) => ({
-        uniqueId: result.uniqueId,
-        title: result.title,
-        uri: result.uri,
-        excerpt: result.excerpt,
-        printableUri: result.printableUri,
-        clickUri: result.clickUri,
-        raw: result.raw,
-        score: result.score,
-      })),
-    })
-  );
-
-  return {
-    get state() {
-      return engine.read(controllerState);
-    },
-    subscribe(callback) {
-      return engine.subscribe(controllerState, callback);
-    },
-  };
-};
+): ResultListController => new ResultListControllerImpl(options);
 
 export interface ResultListControllerResult {
   uniqueId: string;
@@ -59,5 +56,5 @@ export interface ResultListControllerState {
 export interface ResultListController extends Controller<ResultListControllerState> {}
 
 export interface ResultListControllerOptions {
-  interface: Requires<'search'>;
+  interface: Supports<'search'>;
 }

@@ -1,77 +1,76 @@
-import type {Controller} from '../controller-types.js';
-import type {Requires} from '@/src/core/interface/utils/interface-types.js';
-import {getOrCreatePaginationActions} from '@/src/core/internal/pagination/pagination-actions.js';
-import {getOrCreatePaginationSelectors} from '@/src/core/internal/pagination/pagination-selectors.js';
-import {getOrCreatePaginationSlice} from '@/src/core/internal/pagination/pagination-slice.js';
-import type {Dispatchable} from '@/src/core/interface/engine/engine-types.js';
-import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
-import {ENGINE, STATE_ID, THUNKS} from '@/src/core/interface/utils/symbols.js';
+import {BaseController} from '@/src/internal/utils/index.js';
+import type {Supports, EndpointThunk} from '@/src/internal/utils/index.js';
+import type {StateSelector} from '@/src/internal/engine/index.js';
+import {createMemoizedStateSelector} from '@/src/internal/utils/index.js';
+import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getOrCreatePaginationActions} from '@/src/internal/features/pagination/index.js';
+import {getOrCreatePaginationSelectors} from '@/src/internal/features/pagination/index.js';
+import {getOrCreatePaginationSlice} from '@/src/internal/features/pagination/index.js';
+import type {Controller} from '@/src/public/controllers/controller-types.js';
+
+class PaginationControllerImpl extends BaseController<PaginationControllerState> {
+  #thunks: EndpointThunk[];
+  #actions: ReturnType<typeof getOrCreatePaginationActions>;
+  #controllerState: StateSelector<PaginationControllerState>;
+
+  constructor(options: PaginationControllerOptions) {
+    const {engine, resolveFacades} = getHandleInternals(options.interface);
+
+    engine.adoptSlice(getOrCreatePaginationSlice(options.interface));
+
+    const selectors = getOrCreatePaginationSelectors(options.interface);
+    const actions = getOrCreatePaginationActions(options.interface);
+
+    const controllerState = createMemoizedStateSelector(
+      selectors.getFirstResult,
+      selectors.getPageSize,
+      selectors.getTotalCount,
+      (firstResult, pageSize, totalCount) => ({
+        page: pageSize > 0 ? Math.floor(firstResult / pageSize) : 0,
+        pageSize,
+        totalCount,
+        totalPages: pageSize > 0 ? Math.ceil(totalCount / pageSize) : 0,
+      })
+    ) as unknown as StateSelector<PaginationControllerState>;
+
+    super(engine, controllerState);
+
+    this.#thunks = resolveFacades('search');
+    this.#actions = actions;
+    this.#controllerState = controllerState;
+  }
+
+  selectPage(page: number): void {
+    const {pageSize, totalCount} = this.engine.read(this.#controllerState);
+    const totalPages = pageSize > 0 ? Math.ceil(totalCount / pageSize) : 0;
+    const currentPage = this.state.page;
+
+    if (page < 0 || page >= totalPages || page === currentPage) {
+      return;
+    }
+
+    this.engine.mutate(this.#actions.setFirstResult(page * pageSize));
+    for (const thunk of this.#thunks) {
+      this.engine.mutate(thunk({engine: this.engine}));
+    }
+  }
+
+  setPageSize(pageSize: number): void {
+    if (pageSize < 1) {
+      return;
+    }
+
+    this.engine.mutate(this.#actions.setFirstResult(0));
+    this.engine.mutate(this.#actions.setPageSize(pageSize));
+    for (const thunk of this.#thunks) {
+      this.engine.mutate(thunk({engine: this.engine}));
+    }
+  }
+}
 
 export const buildPaginationController = (
   options: PaginationControllerOptions
-): PaginationController => {
-  const engine = options.interface[ENGINE];
-  const stateId = options.interface[STATE_ID];
-
-  engine.adoptSlice(getOrCreatePaginationSlice(stateId));
-
-  const selectors = getOrCreatePaginationSelectors(stateId);
-  const actions = getOrCreatePaginationActions(stateId);
-
-  const controllerState = createMemoizedStateSelector(
-    selectors.getFirstResult,
-    selectors.getPageSize,
-    selectors.getTotalCount,
-    (firstResult, pageSize, totalCount) => ({
-      page: pageSize > 0 ? Math.floor(firstResult / pageSize) : 0,
-      pageSize,
-      totalCount,
-      totalPages: pageSize > 0 ? Math.ceil(totalCount / pageSize) : 0,
-    })
-  );
-
-  return {
-    get state() {
-      return engine.read(controllerState);
-    },
-    subscribe(callback) {
-      return engine.subscribe(controllerState, callback);
-    },
-    selectPage(page: number) {
-      const {pageSize, totalCount} = engine.read(controllerState);
-      const totalPages = pageSize > 0 ? Math.ceil(totalCount / pageSize) : 0;
-      const currentPage = engine.read(controllerState).page;
-
-      if (page < 0) {
-        return;
-      }
-      if (page >= totalPages) {
-        return;
-      }
-      if (page === currentPage) {
-        return;
-      }
-
-      engine.mutate(actions.setFirstResult(page * pageSize));
-
-      for (const thunk of options.interface[THUNKS].search) {
-        engine.mutate(thunk({engine}) as Dispatchable);
-      }
-    },
-    setPageSize(pageSize: number) {
-      if (pageSize < 1) {
-        return;
-      }
-
-      engine.mutate(actions.setFirstResult(0));
-      engine.mutate(actions.setPageSize(pageSize));
-
-      for (const thunk of options.interface[THUNKS].search) {
-        engine.mutate(thunk({engine}) as Dispatchable);
-      }
-    },
-  };
-};
+): PaginationController => new PaginationControllerImpl(options);
 
 export interface PaginationControllerState {
   page: number;
@@ -86,5 +85,5 @@ export interface PaginationController extends Controller<PaginationControllerSta
 }
 
 export interface PaginationControllerOptions {
-  interface: Requires<'search'>;
+  interface: Supports<'search'>;
 }

@@ -80,6 +80,9 @@ const FOLLOW_UP_INPUT_EXPORT_PARTS = [
   'input-field',
   'submit-button',
   'submit-icon',
+  'input-footer',
+  'validation-message',
+  'character-counter',
 ].join(',');
 
 /**
@@ -131,6 +134,9 @@ const FOLLOW_UP_INPUT_EXPORT_PARTS = [
  * @part input-field - The follow-up textarea input field.
  * @part submit-button - The follow-up submit button.
  * @part submit-icon - The icon displayed in the follow-up submit button.
+ * @part input-footer - The container below the follow-up input that holds the validation message and character counter.
+ * @part validation-message - The validation message shown when the follow-up question exceeds the character limit.
+ * @part character-counter - The live character counter displaying the current count out of the maximum allowed.
  */
 @customElement('atomic-generated-answer')
 @bindings()
@@ -317,9 +323,17 @@ export class AtomicGeneratedAnswer
       getBindings: () => this.bindings,
     });
 
+    this.searchStatus = buildSearchStatus(this.bindings.engine);
+    this.tabManager = buildTabManager(this.bindings.engine);
+
     this.generatedAnswer = buildGeneratedAnswer(this.bindings.engine, {
       initialState: {
         isVisible: this.controller.data.isVisible,
+        isEnabled: shouldDisplayOnCurrentTab(
+          this.tabsIncluded,
+          this.tabsExcluded,
+          this.tabManager.state.activeTab
+        ),
         responseFormat: {
           contentFormat: ['text/markdown', 'text/plain'],
         },
@@ -332,8 +346,6 @@ export class AtomicGeneratedAnswer
       }),
       fieldsToIncludeInCitations: this.getCitationFields(),
     });
-    this.searchStatus = buildSearchStatus(this.bindings.engine);
-    this.tabManager = buildTabManager(this.bindings.engine);
 
     this.controller.insertFeedbackModal();
 
@@ -527,6 +539,17 @@ export class AtomicGeneratedAnswer
 
   private get hasCustomNoAnswerMessage() {
     return getNamedSlotContent(this, 'no-answer-message').length > 0;
+  }
+
+  private get isConversationDebugEnabled() {
+    return (
+      this.bindings.engine?.state?.configuration?.knowledge
+        ?.debugAgentSession ?? false
+    );
+  }
+
+  private get followUpConversationId() {
+    return this.controller.followUpConversationId;
   }
 
   private async copyToClipboard(answer: string) {
@@ -796,6 +819,8 @@ export class AtomicGeneratedAnswer
         isAnswerVisible: this.isAnswerVisible,
         toggleTooltip: this.toggleTooltip,
         withToggle: this.withToggle,
+        withDebug: this.isConversationDebugEnabled,
+        conversationId: this.followUpConversationId,
         onToggle: (checked: boolean) => {
           checked ? this.generatedAnswer?.show() : this.generatedAnswer?.hide();
         },

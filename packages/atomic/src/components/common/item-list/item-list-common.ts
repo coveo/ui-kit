@@ -77,6 +77,14 @@ export class ItemListCommon {
     }
 
     if (!element.children.length && !element.shadowRoot?.children.length) {
+      const litElement = element as unknown as {
+        getUpdateComplete?(): Promise<boolean>;
+        updateComplete?: Promise<boolean>;
+      };
+      const ready =
+        litElement.getUpdateComplete?.() ?? litElement.updateComplete;
+
+      ready?.then(() => this.setNewResultRef(element, resultIndex));
       return;
     }
 

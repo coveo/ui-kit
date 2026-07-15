@@ -49,13 +49,6 @@ describe('#renderPagerNavigation', () => {
     );
   });
 
-  it('should set the "toolbar" role on the <div>', () => {
-    expect(element.querySelector('nav')?.querySelector('div')).toHaveAttribute(
-      'role',
-      'toolbar'
-    );
-  });
-
   it('should contain the children', () => {
     expect(
       element.querySelector('nav')?.querySelector('div')

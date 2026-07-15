@@ -14,17 +14,11 @@ interface IProductListProps {
   ) => HeadlessInteractiveProduct;
   cartController: Cart;
   promoteChildToParent: (product: ChildProduct) => void;
-  navigate: (pathName: string) => void;
 }
 
 export default function ProductList(props: IProductListProps) {
-  const {
-    products,
-    controllerBuilder,
-    cartController,
-    promoteChildToParent,
-    navigate,
-  } = props;
+  const {products, controllerBuilder, cartController, promoteChildToParent} =
+    props;
 
   if (products.length === 0) {
     return null;
@@ -38,7 +32,6 @@ export default function ProductList(props: IProductListProps) {
             product={product}
             controller={controllerBuilder({options: {product}})}
             cartController={cartController}
-            navigate={navigate}
             promoteChildToParent={promoteChildToParent}
           ></InteractiveProduct>
         </li>

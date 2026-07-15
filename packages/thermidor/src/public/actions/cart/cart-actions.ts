@@ -1,14 +1,14 @@
-import type {Requires} from '@/src/core/interface/utils/interface-types.js';
-import {ENGINE, STATE_ID} from '@/src/core/interface/utils/symbols.js';
-import {getOrCreateCartActions} from '@/src/core/internal/cart/cart-actions.js';
-import {getOrCreateCartSlice} from '@/src/core/internal/cart/cart-slice.js';
+import type {Supports} from '@/src/internal/utils/index.js';
+import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getOrCreateCartActions} from '@/src/internal/features/cart/index.js';
+import {getOrCreateCartSlice} from '@/src/internal/features/cart/index.js';
 import type {
   SetCartItemsPayload,
   UpdateItemQuantityPayload,
-} from '@/src/core/interface/cart/cart-types.js';
+} from '@/src/internal/features/cart/index.js';
 
 export interface LoadCartActionsOptions {
-  interface: Requires<'search'>;
+  interface: Supports<'search'>;
 }
 
 /**
@@ -17,12 +17,11 @@ export interface LoadCartActionsOptions {
  * @returns The cart actions: `setItems` and `updateItemQuantity`.
  */
 export function loadCartActions(options: LoadCartActionsOptions) {
-  const engine = options.interface[ENGINE];
-  const stateId = options.interface[STATE_ID];
+  const {engine} = getHandleInternals(options.interface);
 
-  engine.adoptSlice(getOrCreateCartSlice(stateId));
+  engine.adoptSlice(getOrCreateCartSlice(options.interface));
 
-  const actions = getOrCreateCartActions(stateId);
+  const actions = getOrCreateCartActions(options.interface);
 
   return {
     setItems(payload: SetCartItemsPayload) {

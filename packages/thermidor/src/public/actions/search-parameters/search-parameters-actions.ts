@@ -1,10 +1,10 @@
-import type {Requires} from '@/src/core/interface/utils/interface-types.js';
-import {ENGINE, STATE_ID} from '@/src/core/interface/utils/symbols.js';
-import {getOrCreateSearchParametersActions} from '@/src/core/internal/search-parameters/search-parameters-actions.js';
-import {getOrCreateSearchParametersSlice} from '@/src/core/internal/search-parameters/search-parameters-slice.js';
+import type {Supports} from '@/src/internal/utils/index.js';
+import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getOrCreateSearchParametersActions} from '@/src/internal/features/search-parameters/index.js';
+import {getOrCreateSearchParametersSlice} from '@/src/internal/features/search-parameters/index.js';
 
 export interface LoadSearchParametersActionsOptions {
-  interface: Requires<'search'>;
+  interface: Supports<'search'>;
 }
 
 /**
@@ -15,12 +15,11 @@ export interface LoadSearchParametersActionsOptions {
 export function loadSearchParametersActions(
   options: LoadSearchParametersActionsOptions
 ) {
-  const engine = options.interface[ENGINE];
-  const stateId = options.interface[STATE_ID];
+  const {engine} = getHandleInternals(options.interface);
 
-  engine.adoptSlice(getOrCreateSearchParametersSlice(stateId));
+  engine.adoptSlice(getOrCreateSearchParametersSlice(options.interface));
 
-  const actions = getOrCreateSearchParametersActions(stateId);
+  const actions = getOrCreateSearchParametersActions(options.interface);
 
   return {
     setPipeline(pipeline: string) {

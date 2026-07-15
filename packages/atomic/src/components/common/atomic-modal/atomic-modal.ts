@@ -29,6 +29,11 @@ import type {AnyBindings} from '../interface/bindings.js';
  * @part footer-wrapper - The wrapper with a shadow or background color around the footer.
  * @part footer - The footer at the bottom of the modal.
  *
+ * @slot header - The title of the modal. Its content provides the dialog's accessible name, so it should not include interactive controls such as a close button.
+ * @slot header-actions - Actions displayed at the top of the modal next to the title (e.g., a close button). Excluded from the dialog's accessible name.
+ * @slot body - The body of the modal, between the header and the footer.
+ * @slot footer - The footer at the bottom of the modal.
+ *
  * @event close - Emitted when the modal is closed (e.g., by pressing Escape).
  *
  * @internal
@@ -175,7 +180,9 @@ export class AtomicModal
               .source=${this.source}
               .container=${this.container ?? this}
               ${ref(this.focusTrap)}
-              .scope=${this.scope}
+              .scope=${this.scope ??
+              this.bindings?.interfaceElement ??
+              document.body}
             >
               ${this.renderContent()}
             </atomic-focus-trap>
@@ -316,9 +323,11 @@ export class AtomicModal
                 'font-bold': this.fullscreen,
               })
             )}
-            id=${this.headerId}
           >
-            <slot name="header"></slot>
+            <div id=${this.headerId} class="contents">
+              <slot name="header"></slot>
+            </div>
+            <slot name="header-actions"></slot>
           </div>
         </header>
         <hr part="header-ruler" class="border-t border-neutral" />

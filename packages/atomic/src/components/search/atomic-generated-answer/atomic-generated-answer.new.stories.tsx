@@ -10,9 +10,14 @@ import {userEvent, waitFor} from 'storybook/test';
 import {testHoverContentA11y} from '@/storybook-utils/a11y/hover-content.js';
 import {testStatusMessageSequenceA11y} from '@/storybook-utils/a11y/status-message.js';
 import {testSwitchA11y} from '@/storybook-utils/a11y/switch.js';
-import {MockAgentApi} from '@/storybook-utils/api/agent/mock';
-import {MockAnswerApi} from '@/storybook-utils/api/answer/mock';
-import {MockSearchApi} from '@/storybook-utils/api/search/mock';
+import {MockAgentApi} from '@coveo/platform-mock-api/agent/mock';
+import {
+  followUpTurnLimitErrorResponse,
+  followUpGenericErrorResponse,
+  followUpNetworkErrorResponse,
+} from '@coveo/platform-mock-api/agent/generate-response';
+import {MockAnswerApi} from '@coveo/platform-mock-api/answer/mock';
+import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-generated-answer/atomic-generated-answer.js';
@@ -237,5 +242,50 @@ export const A11ySwitch: Story = {
     await play(context);
     await submitGeneratedAnswerQuery(context);
     await testSwitchA11y(context);
+  },
+};
+
+export const FollowUpNetworkError: Story = {
+  name: 'Follow-Up Network Error',
+  args: {
+    'agent-id': 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
+    'answer-configuration-id': undefined,
+  },
+  play: async (storyContext) => {
+    agentApiHarness.followUpEndpoint.mockOnce(
+      () => followUpNetworkErrorResponse
+    );
+    await playWithLegacyAnalytics(storyContext);
+    await submitGeneratedAnswerQuery(storyContext);
+  },
+};
+
+export const FollowUpTurnLimitError: Story = {
+  name: 'Follow-Up Turn Limit Error',
+  args: {
+    'agent-id': 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
+    'answer-configuration-id': undefined,
+  },
+  play: async (storyContext) => {
+    agentApiHarness.followUpEndpoint.mockOnce(
+      () => followUpTurnLimitErrorResponse
+    );
+    await playWithLegacyAnalytics(storyContext);
+    await submitGeneratedAnswerQuery(storyContext);
+  },
+};
+
+export const FollowUpGenericError: Story = {
+  name: 'Follow-Up Generic Error',
+  args: {
+    'agent-id': 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
+    'answer-configuration-id': undefined,
+  },
+  play: async (storyContext) => {
+    agentApiHarness.followUpEndpoint.mockOnce(
+      () => followUpGenericErrorResponse
+    );
+    await playWithLegacyAnalytics(storyContext);
+    await submitGeneratedAnswerQuery(storyContext);
   },
 };

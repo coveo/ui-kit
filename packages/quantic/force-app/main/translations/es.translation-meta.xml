@@ -905,6 +905,10 @@
     <label>Enviar seguimiento</label>
   </customLabels>
   <customLabels>
+    <name>quantic_FollowUpInputTooLong</name>
+    <label>Su pregunta es demasiado larga. Por favor, use {{0}} caracteres o menos.</label>
+  </customLabels>
+  <customLabels>
     <label>Mostrar {{0}} preguntas anteriores</label>
     <name>quantic_ShowPreviousQuestions_plural</name>
   </customLabels>
@@ -923,6 +927,14 @@
   <customLabels>
     <name>quantic_AgentGenerationStepSearchCompleted</name>
     <label>Base de conocimiento consultada</label>
+  </customLabels>
+  <customLabels>
+    <name>quantic_AgentGenerationStepSearchQuery</name>
+    <label>Buscando {{0}}…</label>
+  </customLabels>
+  <customLabels>
+    <name>quantic_AgentGenerationStepSearchQueryCompleted</name>
+    <label>Buscado {{0}}</label>
   </customLabels>
   <customLabels>
     <name>quantic_AgentGenerationStepAnalyzingResults</name>

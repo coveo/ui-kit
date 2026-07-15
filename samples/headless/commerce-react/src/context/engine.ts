@@ -26,12 +26,6 @@ export const getEngine = () => {
         view: {
           url: 'https://sports.barca.group',
         },
-        custom: {
-          stringKey: 'sampleValue',
-          numberKey: 42,
-          arrayKey: [1, 2, 3],
-          objectKey: {nested: 'value'},
-        },
       },
       cart: {
         items: loadCartItemsFromLocalStorage() ?? [],

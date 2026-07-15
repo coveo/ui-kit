@@ -10,28 +10,16 @@
     "2.5.2-pointer-cancellation": {
       "conformance": "pass"
     },
-    "1.4.11-non-text-contrast": {
-      "conformance": "partial",
-      "remarks": "Numeric facet input border uses border-neutral (#e5e8e8) at 1.23:1 contrast against white, failing the 3:1 requirement. Rating stars (active #f6ce3c at 1.52:1, inactive #e5e8e8 at 1.23:1) also fail \u2014 stars are the only way sighted users identify the rating value. Users with low vision cannot perceive these UI boundaries and graphical indicators, making it difficult to identify form fields or understand rating values."
-    },
+    "1.4.11-non-text-contrast": "pass",
     "3.3.1-error-identification": {
       "conformance": "pass"
     },
-    "2.4.11-focus-not-obscured-minimum": {
-      "conformance": "fail",
-      "remarks": "When the refine-modal is open, pressing Tab repeatedly causes focus to escape the focus trap and land on elements behind the modal backdrop. The user cannot see the focused element and loses their place in the navigation sequence."
-    },
-    "2.5.3-label-in-name": {
-      "conformance": "fail",
-      "remarks": "atomic-commerce-breadbox: the show-more button displays visible text \"+ N\" but has accessible name \"Show N more filters\". Voice control users saying \"click plus 3\" will not activate the button because the visible text is not contained in the accessible name."
-    },
+    "2.4.11-focus-not-obscured-minimum": "pass",
+    "2.5.3-label-in-name": "pass",
     "1.4.10-reflow": {
       "conformance": "pass"
     },
-    "2.4.3-focus-order": {
-      "conformance": "fail",
-      "remarks": "Focus escapes commerce refine-modal when tabbing, due to broken focus trap. See KIT-5811. All non-modal components pass (search box, facets, breadbox, pager, sort dropdown, products-per-page, product list, load-more)."
-    },
+    "2.4.3-focus-order": "pass",
     "2.1.2-no-keyboard-trap": {
       "conformance": "pass"
     },

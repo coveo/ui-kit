@@ -1,10 +1,15 @@
 import type {i18n} from 'i18next';
-import {type CSSResultGroup, html, LitElement} from 'lit';
+import {type CSSResultGroup, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {createRef, ref} from 'lit/directives/ref.js';
 import {renderButton} from '@/src/components/common/button';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import styles from './atomic-ask-follow-up-input.tw.css';
+
+/**
+ * Maximum number of characters allowed in a follow-up question.
+ */
+const MAX_FOLLOW_UP_QUESTION_LENGTH = 300;
 
 /**
  * The `atomic-ask-follow-up-input` component is responsible for rendering the input for follow-up questions.
@@ -33,20 +38,28 @@ export class AtomicAskFollowUpInput extends LitElement {
   @state()
   private isSubmitting: boolean = false;
 
+  @state()
+  private characterCount: number = 0;
+
   private textAreaRef = createRef<HTMLTextAreaElement>();
+
+  private get isOverCharacterLimit() {
+    return this.characterCount > MAX_FOLLOW_UP_QUESTION_LENGTH;
+  }
 
   private async handleSubmit() {
     const input = this.textAreaRef.value;
     if (!input || this.isSubmitting) return;
 
     const inputValue = input.value.trim();
-    if (!inputValue || this.submitButtonDisabled) {
+    if (!inputValue || this.submitButtonDisabled || this.isOverCharacterLimit) {
       return;
     }
 
     this.isSubmitting = true;
     try {
       input.value = '';
+      this.characterCount = 0;
       this.clearReplicaText();
       this.collapseTextArea();
       await this.askFollowUp(inputValue);
@@ -56,6 +69,7 @@ export class AtomicAskFollowUpInput extends LitElement {
   }
 
   private handleInput() {
+    this.characterCount = this.textAreaRef.value?.value.trim().length ?? 0;
     this.expandTextArea();
     this.syncTextWithReplica();
   }
@@ -96,7 +110,9 @@ export class AtomicAskFollowUpInput extends LitElement {
     return html`
       <div
         part="input-container"
-        class="relative flex rounded-md border border-neutral"
+        class="relative flex rounded-md border ${this.isOverCharacterLimit
+          ? 'border-error'
+          : 'border-neutral'}"
       >
         <div part="textarea-expander" class="grid grow overflow-hidden">
           <textarea
@@ -109,6 +125,10 @@ export class AtomicAskFollowUpInput extends LitElement {
             @blur=${this.collapseTextArea}
             placeholder=${this.i18n.t('ask-follow-up')}
             aria-label=${this.i18n.t('ask-follow-up')}
+            aria-invalid=${this.isOverCharacterLimit}
+            aria-describedby=${this.isOverCharacterLimit
+              ? 'follow-up-validation-message'
+              : nothing}
           ></textarea>
         </div>
         ${renderButton({
@@ -118,7 +138,7 @@ export class AtomicAskFollowUpInput extends LitElement {
             class:
               'absolute right-1 bottom-1 flex h-8 w-8 items-center justify-center rounded-md disabled:bg-primary/60 disabled:opacity-100',
             type: 'button',
-            disabled: this.submitButtonDisabled,
+            disabled: this.submitButtonDisabled || this.isOverCharacterLimit,
             ariaLabel: this.i18n.t('submit-follow-up'),
             onClick: () => this.handleSubmit(),
           },
@@ -136,6 +156,31 @@ export class AtomicAskFollowUpInput extends LitElement {
             />
           </svg>`
         )}
+      </div>
+      <div
+        part="input-footer"
+        class="mt-1 flex min-h-5 items-start justify-between gap-2 px-1 text-sm"
+      >
+        <span
+          id="follow-up-validation-message"
+          part="validation-message"
+          class="text-error"
+          aria-live="polite"
+        >
+          ${this.isOverCharacterLimit
+            ? this.i18n.t('follow-up-input-too-long', {
+                max: MAX_FOLLOW_UP_QUESTION_LENGTH,
+              })
+            : ''}
+        </span>
+        <span
+          part="character-counter"
+          class="shrink-0 ${this.isOverCharacterLimit
+            ? 'text-error'
+            : 'text-neutral-dark'}"
+        >
+          ${this.characterCount} / ${MAX_FOLLOW_UP_QUESTION_LENGTH}
+        </span>
       </div>
     `;
   }

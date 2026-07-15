@@ -1,59 +1,63 @@
-import type {Requires} from '@/src/core/interface/utils/interface-types.js';
-import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
-import {ENGINE, STATE_ID, THUNKS} from '@/src/core/interface/utils/symbols.js';
-import {getOrCreateSearchBoxActions} from '@/src/core/internal/search-box/search-box-actions.js';
-import {getOrCreateSearchBoxSelectors} from '@/src/core/internal/search-box/search-box-selectors.js';
-import {getOrCreateSearchBoxSlice} from '@/src/core/internal/search-box/search-box-slice.js';
-import {getOrCreateSearchEndpointSelectors} from '@/src/core/internal/api/search-endpoint/search-endpoint-thunk-slice.js';
+import {BaseController} from '@/src/internal/utils/index.js';
+import type {Supports, EndpointThunk} from '@/src/internal/utils/index.js';
+import {createMemoizedStateSelector} from '@/src/internal/utils/index.js';
+import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getOrCreateSearchBoxActions} from '@/src/internal/features/search-box/index.js';
+import {getOrCreateSearchBoxSelectors} from '@/src/internal/features/search-box/index.js';
+import {getOrCreateSearchBoxSlice} from '@/src/internal/features/search-box/index.js';
+import {getOrCreateSearchEndpointSelectors} from '@/src/internal/api/search/index.js';
 import type {Controller} from '@/src/public/controllers/controller-types.js';
 
-/**
- * Builds a `SearchBoxController` instance.
- * @param options - The options to build the controller.
- * @returns A `SearchBoxController` instance.
- */
-export const buildSearchBoxController: (
+class SearchBoxControllerImpl extends BaseController<SearchBoxControllerState> {
+  #thunks: EndpointThunk[];
+  #actions: ReturnType<typeof getOrCreateSearchBoxActions>;
+
+  constructor(options: SearchBoxControllerOptions) {
+    const {engine, resolveFacades} = getHandleInternals(options.interface);
+
+    engine.adoptSlice(getOrCreateSearchBoxSlice(options.interface));
+
+    const selectors = getOrCreateSearchBoxSelectors(options.interface);
+    const endpointSelectors = getOrCreateSearchEndpointSelectors(
+      options.interface
+    );
+
+    const controllerState = createMemoizedStateSelector(
+      selectors.getQuery,
+      endpointSelectors.getStatus,
+      endpointSelectors.getError,
+      (query, status, error) => ({
+        query,
+        isLoading: status === 'pending',
+        error,
+      })
+    );
+
+    super(engine, controllerState);
+
+    this.#thunks = resolveFacades('search');
+    this.#actions = getOrCreateSearchBoxActions(options.interface);
+  }
+
+  setQuery({query}: SearchBoxControllerSetQueryOptions): void {
+    this.engine.mutate(this.#actions.setQuery(query));
+  }
+
+  submit(): Promise<unknown[]> {
+    return Promise.all(
+      this.#thunks.map((thunk) =>
+        this.engine.mutate(thunk({engine: this.engine}))
+      )
+    );
+  }
+}
+
+export const buildSearchBoxController = (
   options: SearchBoxControllerOptions
-) => SearchBoxController = (options) => {
-  const engine = options.interface[ENGINE];
-  const stateId = options.interface[STATE_ID];
-  const thunks = options.interface[THUNKS].search;
-
-  engine.adoptSlice(getOrCreateSearchBoxSlice(stateId));
-
-  const actions = getOrCreateSearchBoxActions(stateId);
-  const selectors = getOrCreateSearchBoxSelectors(stateId);
-  const endpointSelectors = getOrCreateSearchEndpointSelectors(stateId);
-
-  const controllerState = createMemoizedStateSelector(
-    selectors.getQuery,
-    endpointSelectors.getStatus,
-    endpointSelectors.getError,
-    (query, status, error) => ({
-      query,
-      isLoading: status === 'pending',
-      error,
-    })
-  );
-
-  return {
-    setQuery({query}: SearchBoxControllerSetQueryOptions) {
-      engine.mutate(actions.setQuery(query));
-    },
-    submit() {
-      return Promise.all(thunks.map((thunk) => engine.mutate(thunk({engine}))));
-    },
-    get state() {
-      return engine.read(controllerState);
-    },
-    subscribe(callback) {
-      return engine.subscribe(controllerState, callback);
-    },
-  };
-};
+): SearchBoxController => new SearchBoxControllerImpl(options);
 
 export interface SearchBoxControllerOptions {
-  interface: Requires<'search'>;
+  interface: Supports<'search'>;
 }
 
 export interface SearchBoxController extends Controller<SearchBoxControllerState> {

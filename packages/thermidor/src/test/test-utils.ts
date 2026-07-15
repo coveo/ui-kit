@@ -4,14 +4,13 @@
  * Common helpers and mock data builders for unit tests
  */
 
-import {Engine, getFullEngine} from '@/src/core/index.js';
-import type {SearchResult, FacetValue} from '@/src/core/index.js';
-import type {
-  EndpointThunk,
-  Operations,
-  Requires,
-} from '@/src/core/interface/utils/interface-types.js';
-import {STATE_ID, ENGINE, THUNKS} from '@/src/core/interface/utils/symbols.js';
+import {Engine} from '@/src/internal/engine/index.js';
+import type {SearchResult} from '@/src/internal/features/result-list/index.js';
+import type {FacetValue} from '@/src/internal/features/facets/index.js';
+import {
+  buildSearchInterface,
+  type SearchInterface,
+} from '@/src/public/interfaces/search.js';
 
 /**
  * Create a fresh engine instance for testing
@@ -22,20 +21,14 @@ export function createTestEngine(): Engine {
 }
 
 /**
- * Create a mock interface handle for testing controllers that require an interface.
- * The stateId defaults to 'test' and thunks default to empty arrays.
+ * Create a mock interface handle for testing controllers that require a search-capable interface.
+ * The stateId defaults to 'test'.
  */
-export function createTestInterface<T extends Operations[keyof Operations]>(
+export function createTestInterface(
   engine: Engine,
-  operations: Record<T, EndpointThunk[]> = {} as Record<T, EndpointThunk[]>,
   stateId = 'test'
-): Requires<T> {
-  const fullEngine = getFullEngine(engine);
-  return {
-    [STATE_ID]: stateId,
-    [ENGINE]: fullEngine,
-    [THUNKS]: operations,
-  } as Requires<T>;
+): SearchInterface {
+  return buildSearchInterface({engine, id: stateId});
 }
 
 /**

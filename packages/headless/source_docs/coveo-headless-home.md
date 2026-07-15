@@ -51,6 +51,7 @@ The following interactive code sample uses Coveo Headless alongside the [Materia
     title="coveo-headless-demo-v{{packageVersion}}"
     allow=""
     sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+    credentialless
 ></iframe>
 
 ## Where Do I Start?

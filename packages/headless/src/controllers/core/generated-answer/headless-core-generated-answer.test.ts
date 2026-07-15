@@ -381,6 +381,20 @@ describe('generated answer', () => {
         expect(updateResponseFormat).toHaveBeenCalledWith(responseFormat);
       });
     });
+
+    describe('when #isEnabled is set', () => {
+      it('should dispatch setIsEnabled action when set to true', () => {
+        initGeneratedAnswer({initialState: {isEnabled: true}});
+
+        expect(setIsEnabled).toHaveBeenCalledWith(true);
+      });
+
+      it('should dispatch setIsEnabled action when set to false', () => {
+        initGeneratedAnswer({initialState: {isEnabled: false}});
+
+        expect(setIsEnabled).toHaveBeenCalledWith(false);
+      });
+    });
   });
 
   describe('when passing fields to include in citations', () => {

@@ -1,24 +1,18 @@
-/**
- * SearchBox Public Actions Tests
- */
-
 import {describe, it, expect, beforeEach} from 'vitest';
 import {
   Engine,
   FullEngine,
   getFullEngine,
-} from '@/src/core/interface/engine/engine.js';
+} from '@/src/internal/engine/index.js';
 import {createTestEngine} from '@/src/test/test-utils.js';
-import {getOrCreateSearchBoxSelectors} from '@/src/core/internal/search-box/search-box-selectors.js';
+import {getOrCreateSearchBoxSelectors} from '@/src/internal/features/search-box/index.js';
 import {buildSearchInterface} from '@/src/public/interfaces/search.js';
-import type {Interface} from '@/src/core/interface/utils/interface-types.js';
-import {STATE_ID} from '@/src/core/interface/utils/symbols.js';
 import {loadSearchBoxActions} from './search-box-actions.js';
 
 describe('search-box actions', () => {
   let engine: Engine;
   let fullEngine: FullEngine;
-  let searchInterface: Interface<'search'>;
+  let searchInterface: ReturnType<typeof buildSearchInterface>;
 
   beforeEach(() => {
     engine = createTestEngine();
@@ -29,8 +23,7 @@ describe('search-box actions', () => {
   describe('loadSearchBoxActions', () => {
     it('should adopt the searchBox slice on the engine', () => {
       loadSearchBoxActions({interface: searchInterface});
-      const stateId = searchInterface[STATE_ID];
-      const selectors = getOrCreateSearchBoxSelectors(stateId);
+      const selectors = getOrCreateSearchBoxSelectors(searchInterface);
       expect(fullEngine.read(selectors.getQuery)).toBe('');
     });
 
@@ -44,8 +37,7 @@ describe('search-box actions', () => {
 
     it('should update state when setQuery action is called', () => {
       const actions = loadSearchBoxActions({interface: searchInterface});
-      const stateId = searchInterface[STATE_ID];
-      const selectors = getOrCreateSearchBoxSelectors(stateId);
+      const selectors = getOrCreateSearchBoxSelectors(searchInterface);
 
       actions.setQuery({query: 'hello world'});
       expect(fullEngine.read(selectors.getQuery)).toBe('hello world');
@@ -53,8 +45,7 @@ describe('search-box actions', () => {
 
     it('should accept empty string via setQuery action', () => {
       const actions = loadSearchBoxActions({interface: searchInterface});
-      const stateId = searchInterface[STATE_ID];
-      const selectors = getOrCreateSearchBoxSelectors(stateId);
+      const selectors = getOrCreateSearchBoxSelectors(searchInterface);
 
       actions.setQuery({query: 'something'});
       actions.setQuery({query: ''});
@@ -63,8 +54,7 @@ describe('search-box actions', () => {
 
     it('should handle multiple calls to setQuery', () => {
       const actions = loadSearchBoxActions({interface: searchInterface});
-      const stateId = searchInterface[STATE_ID];
-      const selectors = getOrCreateSearchBoxSelectors(stateId);
+      const selectors = getOrCreateSearchBoxSelectors(searchInterface);
 
       actions.setQuery({query: 'first'});
       expect(fullEngine.read(selectors.getQuery)).toBe('first');

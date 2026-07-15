@@ -7,25 +7,16 @@
     "2.5.2-pointer-cancellation": {
       "conformance": "pass"
     },
-    "1.4.11-non-text-contrast": {
-      "conformance": "partial",
-      "remarks": "Numeric facet input border uses border-neutral (#e5e8e8) at 1.23:1 contrast against white, failing the 3:1 requirement. Users with low vision cannot perceive the input field boundaries, making it difficult to identify where to enter values."
-    },
+    "1.4.11-non-text-contrast": "pass",
     "3.3.1-error-identification": {
       "conformance": "pass"
     },
-    "2.4.11-focus-not-obscured-minimum": {
-      "conformance": "fail",
-      "remarks": "When the refine-modal is open, pressing Tab repeatedly causes focus to escape the focus trap and land on elements behind the modal backdrop. The user cannot see the focused element and loses their place in the navigation sequence."
-    },
+    "2.4.11-focus-not-obscured-minimum": "pass",
     "2.5.3-label-in-name": "pass",
     "1.4.10-reflow": {
       "conformance": "pass"
     },
-    "2.4.3-focus-order": {
-      "conformance": "fail",
-      "remarks": "Focus escapes insight refine-modal and smart-snippet-feedback-modal when tabbing, due to broken focus trap. See KIT-5811. All non-modal components pass (search box, facets, pager, tabs)."
-    },
+    "2.4.3-focus-order": "pass",
     "2.1.2-no-keyboard-trap": {
       "conformance": "pass"
     },

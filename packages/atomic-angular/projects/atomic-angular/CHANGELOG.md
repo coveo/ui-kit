@@ -1,3 +1,17 @@
+## 3.11.15
+
+### Patch Changes
+
+- Updated dependencies [[`8b2ca19`](https://github.com/coveo/ui-kit/commit/8b2ca19531d3de43cf1959b21108e0775ca524c4), [`a929f0f`](https://github.com/coveo/ui-kit/commit/a929f0fcc2ee9fbe39e9e69787c2fa94c9b677f5), [`50525cd`](https://github.com/coveo/ui-kit/commit/50525cd01a504042899a1de10e8b1c66626096e5), [`9f61b23`](https://github.com/coveo/ui-kit/commit/9f61b23e2051ea4406e027eb638e3f0d2ffc2e50), [`6f93012`](https://github.com/coveo/ui-kit/commit/6f93012ed47ecb73508fe90479d755bd8126f7dc), [`c264e5c`](https://github.com/coveo/ui-kit/commit/c264e5c44d04d507dc46b614d3f9cd1efc053a3b), [`279b2ac`](https://github.com/coveo/ui-kit/commit/279b2ac82c4d0de62e468d3a9237c9496ddaf060), [`f81c617`](https://github.com/coveo/ui-kit/commit/f81c617d9de48df84d3ea7ff0f8bc9106c2cb057), [`50a5c0a`](https://github.com/coveo/ui-kit/commit/50a5c0aa676f602ac3419f03042c4fc4ad8aa8f1), [`3dddb5e`](https://github.com/coveo/ui-kit/commit/3dddb5e5d70840bc5a71b5ac62b698896ffe508c)]:
+  - @coveo/atomic@3.60.0
+
+## 3.11.14
+
+### Patch Changes
+
+- Updated dependencies [[`79b8306`](https://github.com/coveo/ui-kit/commit/79b8306c985418ad6be3b771e5e1de1028001df0)]:
+  - @coveo/atomic@3.59.8
+
 ## 3.11.13
 
 ### Patch Changes

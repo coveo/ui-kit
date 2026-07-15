@@ -1,3 +1,40 @@
+## 3.60.0
+
+### Minor Changes
+
+- [#7855](https://github.com/coveo/ui-kit/pull/7855) [`9f61b23`](https://github.com/coveo/ui-kit/commit/9f61b23e2051ea4406e027eb638e3f0d2ffc2e50) - Display generated search queries in the agent stream of thought component
+
+### Patch Changes
+
+- [#7879](https://github.com/coveo/ui-kit/pull/7879) [`8b2ca19`](https://github.com/coveo/ui-kit/commit/8b2ca19531d3de43cf1959b21108e0775ca524c4) - A11y: Announce when all results have been loaded in `atomic-load-more-results`
+
+- [#7786](https://github.com/coveo/ui-kit/pull/7786) [`a929f0f`](https://github.com/coveo/ui-kit/commit/a929f0fcc2ee9fbe39e9e69787c2fa94c9b677f5) - The breadbox "show more" button now displays the full text "Show N more filters" instead of "+ N", ensuring the visible label matches the accessible name for WCAG 2.5.3 Label in Name compliance.
+
+- [#7848](https://github.com/coveo/ui-kit/pull/7848) [`50525cd`](https://github.com/coveo/ui-kit/commit/50525cd01a504042899a1de10e8b1c66626096e5) - Fix a11y issue with generated answer thread item component by making it set host attribute role as list item
+
+- [#7878](https://github.com/coveo/ui-kit/pull/7878) [`6f93012`](https://github.com/coveo/ui-kit/commit/6f93012ed47ecb73508fe90479d755bd8126f7dc) - A11y: Fix atomic-modal dialog accessible name to exclude the close button. The `aria-labelledby` target now wraps only the title slot, and close buttons moved to a new `header-actions` slot.
+
+- [#7875](https://github.com/coveo/ui-kit/pull/7875) [`c264e5c`](https://github.com/coveo/ui-kit/commit/c264e5c44d04d507dc46b614d3f9cd1efc053a3b) - Fixed keyboard focus being lost after clicking "Load more" in both `atomic-load-more-results` and `atomic-commerce-load-more-products`. Focus now correctly moves to the first newly-loaded item. The underlying issue was a timing problem in the shared `item-list-common` infrastructure where the focus target was evaluated before the new result element finished rendering its shadow DOM.
+
+- [#7876](https://github.com/coveo/ui-kit/pull/7876) [`279b2ac`](https://github.com/coveo/ui-kit/commit/279b2ac82c4d0de62e468d3a9237c9496ddaf060) - Fixed focus escaping modal dialogs by ensuring `atomic-focus-trap` always receives a valid `scope` element. When no explicit scope is provided to `atomic-modal`, it now defaults to the interface element or `document.body` instead of `undefined`.
+
+- [#7766](https://github.com/coveo/ui-kit/pull/7766) [`f81c617`](https://github.com/coveo/ui-kit/commit/f81c617d9de48df84d3ea7ff0f8bc9106c2cb057) - Fixed incorrect ARIA roles on `atomic-pager`, `atomic-commerce-pager`, and `atomic-insight-pager`. Removed `role="toolbar"` and `role="radiogroup"` wrappers, replaced radio input page buttons with plain buttons using `aria-current="page"` on the active page. The `<nav aria-label="Pagination">` landmark and all `::part()` selectors are preserved.
+
+- [#7871](https://github.com/coveo/ui-kit/pull/7871) [`50a5c0a`](https://github.com/coveo/ui-kit/commit/50a5c0aa676f602ac3419f03042c4fc4ad8aa8f1) - chore(SFINT-6808): create visible debug header when debug mode is enabled for agent in atomic-generated-answer
+  chore(SFINT-6808): fix the check if the debug mode is enabled for search agent
+
+- [#7891](https://github.com/coveo/ui-kit/pull/7891) [`3dddb5e`](https://github.com/coveo/ui-kit/commit/3dddb5e5d70840bc5a71b5ac62b698896ffe508c) - Addition of a 300-character limit to the atomic ask follow up input component with a live character counter
+
+- Updated dependencies [[`50a5c0a`](https://github.com/coveo/ui-kit/commit/50a5c0aa676f602ac3419f03042c4fc4ad8aa8f1), [`87bd287`](https://github.com/coveo/ui-kit/commit/87bd2875ae3fbfc2377e10d6a95f5a8b3c68516f)]:
+  - @coveo/headless@3.53.0
+  - @coveo/atomic-legacy@0.0.23
+
+## 3.59.8
+
+### Patch Changes
+
+- [#7769](https://github.com/coveo/ui-kit/pull/7769) [`79b8306`](https://github.com/coveo/ui-kit/commit/79b8306c985418ad6be3b771e5e1de1028001df0) - A11y: Fix atomic-tab-manager tablist aria-label
+
 ## 3.59.7
 
 ### Patch Changes
