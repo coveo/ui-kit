@@ -147,6 +147,7 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
     const timelineLineToggleClasses = classMap({
       flex: true,
       grow: true,
+      'w-full': true,
       'justify-center': true,
       'items-center': true,
       group: isTimelineLineInteractive,

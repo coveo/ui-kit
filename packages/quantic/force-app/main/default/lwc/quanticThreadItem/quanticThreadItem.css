@@ -20,10 +20,6 @@
   height: calc(1lh + var(--lwc-spacingXxSmall, 4px) * 2);
 }
 
-.thread-item__line-column {
-  width: 10px;
-}
-
 .thread-item__line {
   position: absolute;
   top: calc(1lh + var(--lwc-spacingXxSmall, 4px) * 2);
