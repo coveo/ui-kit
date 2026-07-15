@@ -109,6 +109,8 @@ export interface ComponentAccumulator {
     testCount: number;
     passedCount: number;
     passedCriteria: Set<string>;
+    failedCriteria: Set<string>;
+    warningCriteria: Set<string>;
   };
 }
 

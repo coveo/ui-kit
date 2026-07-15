@@ -1,3 +1,4 @@
+import {resolveEvidenceOutcome} from '../shared/evidence.js';
 import {compareByName, compareByNumericId} from '../shared/sorting.js';
 import type {
   A11yComponentReport,
@@ -18,7 +19,7 @@ export function buildA11yReport(
   detectedAxeCoreVersion?: string
 ): A11yReport {
   const components = buildComponents(componentResults);
-  const criteria = buildCriteria(componentResults);
+  const criteria = buildCriteria(components);
   const hasInteractiveData = [...componentResults.values()].some(
     (c) => c.interactive !== undefined
   );
@@ -90,6 +91,15 @@ function buildComponents(
               criteriaCovered: [...component.interactive.criteriaCovered].sort(
                 compareByNumericId
               ),
+              criteriaPassed: [...component.interactive.passedCriteria].sort(
+                compareByNumericId
+              ),
+              criteriaFailed: [...component.interactive.failedCriteria].sort(
+                compareByNumericId
+              ),
+              criteriaWarnings: [...component.interactive.warningCriteria].sort(
+                compareByNumericId
+              ),
               testCount: component.interactive.testCount,
               passedCount: component.interactive.passedCount,
             }
@@ -99,94 +109,153 @@ function buildComponents(
     .sort((first, second) => compareByName(first.name, second.name));
 }
 
-function buildCriteria(
-  componentResults: Map<string, ComponentAccumulator>
-): A11yCriterionReport[] {
-  const criteriaById = new Map<string, A11yCriterionReport>();
+interface CriterionEvidence {
+  report: A11yCriterionReport;
+  automatedPassedComponents: Set<string>;
+  automatedFailedComponents: Set<string>;
+  interactivePassedComponents: Set<string>;
+  interactiveFailedComponents: Set<string>;
+}
 
-  for (const component of componentResults.values()) {
+const evidenceSeverity = {
+  passed: 0,
+  'partially-passed': 1,
+  failed: 2,
+} as const;
+
+const reportConformance = {
+  passed: 'supports',
+  'partially-passed': 'partiallySupports',
+  failed: 'doesNotSupport',
+} as const;
+
+const interactiveStatus = {
+  passed: 'passed',
+  'partially-passed': 'partiallyPassed',
+  failed: 'failed',
+} as const;
+
+export function buildCriteria(
+  components: A11yComponentReport[]
+): A11yCriterionReport[] {
+  const evidenceByCriterion = new Map<string, CriterionEvidence>();
+
+  for (const component of components) {
     for (const criterionId of component.automated.criteriaCovered) {
-      const criterion = getOrCreateCriterion(criteriaById, criterionId);
-      criterion.automatedCoverage = true;
-      addComponent(criterion.coveredComponents, component.name);
+      getOrCreateCriterion(evidenceByCriterion, criterionId);
+    }
+
+    for (const criterionId of component.automated.criteriaPassed) {
+      const evidence = getOrCreateCriterion(evidenceByCriterion, criterionId);
+      evidence.report.automatedCoverage = true;
+      evidence.automatedPassedComponents.add(component.name);
     }
 
     for (const criterionId of component.automated.criteriaViolated) {
-      const criterion = getOrCreateCriterion(criteriaById, criterionId);
-      addComponent(criterion.violatingComponents, component.name);
+      const evidence = getOrCreateCriterion(evidenceByCriterion, criterionId);
+      evidence.report.automatedCoverage = true;
+      evidence.automatedFailedComponents.add(component.name);
     }
 
-    if (component.interactive) {
-      for (const criterionId of component.interactive.criteriaCovered) {
-        const criterion = getOrCreateCriterion(criteriaById, criterionId);
-        criterion.interactiveCoverage = true;
-        criterion.interactiveStatus = 'passed';
-        addComponent(criterion.coveredComponents, component.name);
-      }
+    if (!component.interactive) {
+      continue;
+    }
+
+    for (const criterionId of component.interactive.criteriaCovered) {
+      const evidence = getOrCreateCriterion(evidenceByCriterion, criterionId);
+      evidence.report.interactiveCoverage = true;
+    }
+
+    for (const criterionId of component.interactive.criteriaPassed ?? []) {
+      getOrCreateCriterion(
+        evidenceByCriterion,
+        criterionId
+      ).interactivePassedComponents.add(component.name);
+    }
+
+    for (const criterionId of component.interactive.criteriaFailed ?? []) {
+      getOrCreateCriterion(
+        evidenceByCriterion,
+        criterionId
+      ).interactiveFailedComponents.add(component.name);
     }
   }
 
-  const criteria = [...criteriaById.values()];
-  for (const criterion of criteria) {
-    criterion.coveredComponents.sort(compareByName);
-    criterion.violatingComponents.sort(compareByName);
-    criterion.conformance = resolveAutomatedConformance(criterion);
-  }
-
-  return criteria.sort((first, second) =>
-    compareByNumericId(first.id, second.id)
-  );
+  return [...evidenceByCriterion.values()]
+    .map(resolveCriterionEvidence)
+    .sort((first, second) => compareByNumericId(first.id, second.id));
 }
 
-function resolveAutomatedConformance(
-  criterion: A11yCriterionReport
-): A11yCriterionReport['conformance'] {
-  const coveredCount = criterion.coveredComponents.length;
-  if (coveredCount === 0) {
-    return 'doesNotSupport';
-  }
+function resolveCriterionEvidence(
+  evidence: CriterionEvidence
+): A11yCriterionReport {
+  const automatedOutcome = resolveEvidenceOutcome(
+    evidence.automatedPassedComponents.size,
+    evidence.automatedFailedComponents.size
+  );
+  const interactiveOutcome = resolveEvidenceOutcome(
+    evidence.interactivePassedComponents.size,
+    evidence.interactiveFailedComponents.size
+  );
+  const outcomes = [automatedOutcome, interactiveOutcome].filter(
+    (outcome) => outcome !== null
+  );
+  const worstOutcome = outcomes.reduce(
+    (worst, outcome) =>
+      evidenceSeverity[outcome] > evidenceSeverity[worst] ? outcome : worst,
+    'passed'
+  );
 
-  const violatingCount = criterion.violatingComponents.length;
-  if (violatingCount >= coveredCount) {
-    return 'doesNotSupport';
-  }
-  if (violatingCount > 0) {
-    return 'partiallySupports';
-  }
+  const passedComponents = new Set([
+    ...evidence.automatedPassedComponents,
+    ...evidence.interactivePassedComponents,
+  ]);
+  const failedComponents = new Set([
+    ...evidence.automatedFailedComponents,
+    ...evidence.interactiveFailedComponents,
+  ]);
+  const coveredComponents = new Set([...passedComponents, ...failedComponents]);
 
-  // No violations — check if any component has an explicit pass for this criterion
-  // (not just incomplete/inapplicable coverage)
-  return 'supports';
+  return {
+    ...evidence.report,
+    conformance:
+      outcomes.length > 0 ? reportConformance[worstOutcome] : 'doesNotSupport',
+    interactiveStatus: interactiveOutcome
+      ? interactiveStatus[interactiveOutcome]
+      : undefined,
+    coveredComponents: [...coveredComponents].sort(compareByName),
+    violatingComponents: [...failedComponents].sort(compareByName),
+  };
 }
 
 function getOrCreateCriterion(
-  criteriaById: Map<string, A11yCriterionReport>,
+  evidenceByCriterion: Map<string, CriterionEvidence>,
   criterionId: string
-): A11yCriterionReport {
-  const existing = criteriaById.get(criterionId);
+): CriterionEvidence {
+  const existing = evidenceByCriterion.get(criterionId);
   if (existing) {
     return existing;
   }
 
   const metadata = getCriterionMetadata(criterionId);
-  const criterion: A11yCriterionReport = {
-    id: criterionId,
-    name: metadata.name,
-    level: metadata.level,
-    wcagVersion: metadata.wcagVersion,
-    conformance: 'doesNotSupport',
-    automatedCoverage: false,
-    interactiveCoverage: false,
-    manualVerified: false,
-    coveredComponents: [],
-    violatingComponents: [],
+  const evidence: CriterionEvidence = {
+    report: {
+      id: criterionId,
+      name: metadata.name,
+      level: metadata.level,
+      wcagVersion: metadata.wcagVersion,
+      conformance: 'doesNotSupport',
+      automatedCoverage: false,
+      interactiveCoverage: false,
+      manualVerified: false,
+      coveredComponents: [],
+      violatingComponents: [],
+    },
+    automatedPassedComponents: new Set<string>(),
+    automatedFailedComponents: new Set<string>(),
+    interactivePassedComponents: new Set<string>(),
+    interactiveFailedComponents: new Set<string>(),
   };
-  criteriaById.set(criterionId, criterion);
-  return criterion;
-}
-
-function addComponent(components: string[], name: string): void {
-  if (!components.includes(name)) {
-    components.push(name);
-  }
+  evidenceByCriterion.set(criterionId, evidence);
+  return evidence;
 }

@@ -326,10 +326,16 @@ function resolveMergedConformance(
 }
 
 function mergeInteractiveStatus(
-  current: 'passed' | undefined,
-  incoming: 'passed'
-): 'passed' {
-  return incoming;
+  current: A11yCriterionReport['interactiveStatus'],
+  incoming: NonNullable<A11yCriterionReport['interactiveStatus']>
+): NonNullable<A11yCriterionReport['interactiveStatus']> {
+  if (current === 'failed' || incoming === 'failed') {
+    return 'failed';
+  }
+  if (current === 'partiallyPassed' || incoming === 'partiallyPassed') {
+    return 'partiallyPassed';
+  }
+  return 'passed';
 }
 
 function mergeEvaluationMethods(reports: A11yReport[]): string[] {

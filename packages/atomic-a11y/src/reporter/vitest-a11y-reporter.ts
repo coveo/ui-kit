@@ -217,6 +217,8 @@ export class VitestA11yReporter implements Reporter {
             testCount: 0,
             passedCount: 0,
             passedCriteria: new Set<string>(),
+            failedCriteria: new Set<string>(),
+            warningCriteria: new Set<string>(),
           };
         }
 
@@ -224,6 +226,10 @@ export class VitestA11yReporter implements Reporter {
           component.interactive.criteriaCovered.add(criterion);
           if (interactiveReport.status === 'passed') {
             component.interactive.passedCriteria.add(criterion);
+          } else if (interactiveReport.status === 'failed') {
+            component.interactive.failedCriteria.add(criterion);
+          } else {
+            component.interactive.warningCriteria.add(criterion);
           }
         }
 
