@@ -114,7 +114,8 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
       'border-0': true,
       'appearance-none': true,
       'transition-colors': true,
-      'hover:bg-neutral-light': true,
+      'hover:bg-neutral': true,
+      'hover:text-primary': true,
       'rounded-md': true,
       'cursor-pointer': true,
       'focus-visible:outline-none': true,
@@ -139,34 +140,28 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
     });
     const timelineDotToggleClasses = classMap({
       flex: true,
-      'w-[10px]': true,
-      'shrink-0': true,
       'justify-center': true,
       'items-center': true,
+      'text-base': true,
+      'h-[calc(1lh+var(--spacing)*3)]': true,
     });
     const timelineLineToggleClasses = classMap({
       flex: true,
-      'w-[10px]': true,
-      'shrink-0': true,
+      grow: true,
       'justify-center': true,
       'items-center': true,
       group: isTimelineLineInteractive,
       'cursor-pointer': isTimelineLineInteractive,
       'py-2': true,
       '-my-2': true,
-    });
-    const timelineBodyRowClasses = classMap({
-      flex: true,
-      'min-w-0': true,
-      'gap-3': true,
       'min-h-3': !this.isExpanded,
     });
     const timelineConnectorClasses =
       "relative h-full w-px bg-neutral transition-colors duration-150 group-hover:bg-neutral-dark before:absolute before:left-0 before:top-[-8px] before:h-[8px] before:w-px before:bg-neutral before:transition-colors before:duration-150 group-hover:before:bg-neutral-dark before:content-[''] after:absolute after:bottom-[-8px] after:left-0 after:h-[8px] after:w-px after:bg-neutral after:transition-colors after:duration-150 group-hover:after:bg-neutral-dark after:content-['']";
 
     return html`
-      <div class="grid min-w-0">
-        <div class="flex min-w-0 items-center gap-3">
+      <div class="grid min-w-0 grid-cols-[10px_1fr] gap-x-3">
+        <div class="row-span-2 flex flex-col items-center">
           <div class=${timelineDotToggleClasses}>
             ${when(
               this.showTimelineDot,
@@ -178,32 +173,6 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
               `
             )}
           </div>
-          <div class="flex min-w-0 flex-col">
-            ${when(
-              !this.disableCollapse,
-              () =>
-                html`<button
-                  type="button"
-                  aria-expanded=${this.isExpanded}
-                  aria-controls=${this.contentId}
-                  class=${titleButtonClasses}
-                  @click=${this.toggle}
-                >
-                  <span part="thread-item-title" style=${clampedTitleStyles}
-                    >${this.title}</span
-                  >
-                </button>`,
-              () =>
-                html`<span
-                  class=${titleTextClasses}
-                  part="thread-item-title"
-                  style=${clampedTitleStyles}
-                  >${this.title}</span
-                >`
-            )}
-          </div>
-        </div>
-        <div class=${timelineBodyRowClasses}>
           <div
             class=${timelineLineToggleClasses}
             @click=${isTimelineLineInteractive ? this.toggle : null}
@@ -214,14 +183,38 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
               () => html`<span class=${timelineConnectorClasses}> </span>`
             )}
           </div>
-          <div id=${this.contentId} class="min-w-0 pl-2 py-1.5">
-            <div
-              class="mb-2"
-              ?hidden=${!this.isExpanded}
-              aria-hidden=${this.isExpanded ? 'false' : 'true'}
-            >
-              <slot></slot>
-            </div>
+        </div>
+        <div class="flex min-w-0 flex-col">
+          ${when(
+            !this.disableCollapse,
+            () =>
+              html`<button
+                type="button"
+                aria-expanded=${this.isExpanded}
+                aria-controls=${this.contentId}
+                class=${titleButtonClasses}
+                @click=${this.toggle}
+              >
+                <span part="thread-item-title" style=${clampedTitleStyles}
+                  >${this.title}</span
+                >
+              </button>`,
+            () =>
+              html`<span
+                class=${titleTextClasses}
+                part="thread-item-title"
+                style=${clampedTitleStyles}
+                >${this.title}</span
+              >`
+          )}
+        </div>
+        <div id=${this.contentId} class="min-w-0 pl-2 py-1.5">
+          <div
+            class="mb-2"
+            ?hidden=${!this.isExpanded}
+            aria-hidden=${this.isExpanded ? 'false' : 'true'}
+          >
+            <slot></slot>
           </div>
         </div>
       </div>
