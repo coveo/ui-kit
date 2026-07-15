@@ -21,6 +21,7 @@
     "@angular/build": "catalog:",
     "@angular/cli": "catalog:",
     "@angular/compiler-cli": "catalog:",
+    "dotenv": "catalog:",
     "typescript": "catalog:"
   }
 }

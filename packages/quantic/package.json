@@ -65,7 +65,7 @@
     "@salesforce/sfdx-lwc-jest": "6.0.0",
     "@types/wait-on": "5.3.4",
     "@typescript-eslint/parser": "8.51.0",
-    "dotenv": "17.2.3",
+    "dotenv": "catalog:",
     "eslint": "8.57",
     "eslint-config-prettier": "10.1.8",
     "exponential-backoff": "catalog:",
