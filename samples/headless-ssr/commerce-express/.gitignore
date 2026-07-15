@@ -3,6 +3,7 @@ node_modules/
 
 # Build outputs
 dist/
+dist-mocks/
 
 # Test artifacts
 test-results/

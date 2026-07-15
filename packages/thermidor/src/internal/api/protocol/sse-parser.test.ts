@@ -78,4 +78,30 @@ describe('parseSSEEvent', () => {
       payload: {foo: 'bar'},
     });
   });
+
+  it('promotes commerce_search_api_response named SSE event', () => {
+    const content = {products: [], pagination: {totalEntries: 0}, facets: []};
+    const result = parseSSEEvent({
+      event: 'commerce_search_api_response',
+      data: JSON.stringify({content}),
+    });
+
+    expect(result).toEqual({
+      type: 'commerce_search_api_response',
+      content,
+    });
+  });
+
+  it('promotes search_api_response named SSE event', () => {
+    const content = {results: [], totalCount: 0, facets: []};
+    const result = parseSSEEvent({
+      event: 'search_api_response',
+      data: JSON.stringify({content}),
+    });
+
+    expect(result).toEqual({
+      type: 'search_api_response',
+      content,
+    });
+  });
 });

@@ -4,7 +4,7 @@ import {
   createMockSearchResults,
 } from '@/src/test/test-utils.js';
 import {Engine, getFullEngine} from '@/src/internal/engine/index.js';
-import {getInterfaceInternals} from '@/src/internal/utils/index.js';
+import {getHandleInternals} from '@/src/internal/utils/index.js';
 import {getOrCreateResultsActions} from '@/src/internal/features/result-list/index.js';
 import {buildResultListController} from './result-list-controller.js';
 import {buildSearchInterface} from '@/src/public/interfaces/search.js';
@@ -37,7 +37,7 @@ describe('buildResultListController', () => {
         interface: searchInterface,
       });
 
-      getInterfaceInternals(searchInterface);
+      getHandleInternals(searchInterface);
       const actions = getOrCreateResultsActions(searchInterface);
       const fullEngine = getFullEngine(engine);
 
@@ -59,7 +59,7 @@ describe('buildResultListController', () => {
       });
       const callback = vi.fn();
 
-      getInterfaceInternals(searchInterface);
+      getHandleInternals(searchInterface);
       const actions = getOrCreateResultsActions(searchInterface);
       const fullEngine = getFullEngine(engine);
 
@@ -77,7 +77,7 @@ describe('buildResultListController', () => {
       });
       const callback = vi.fn();
 
-      getInterfaceInternals(searchInterface);
+      getHandleInternals(searchInterface);
       const actions = getOrCreateResultsActions(searchInterface);
       const fullEngine = getFullEngine(engine);
 
@@ -104,7 +104,7 @@ describe('buildResultListController', () => {
 
       const {getOrCreateSearchBoxActions} =
         await import('@/src/internal/features/search-box/index.js');
-      getInterfaceInternals(searchInterface);
+      getHandleInternals(searchInterface);
       const searchBoxActions = getOrCreateSearchBoxActions(searchInterface);
       fullEngine.mutate(searchBoxActions.setQuery('unrelated change'));
 

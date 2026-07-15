@@ -7,7 +7,12 @@ const DEFAULT_DELAY_MS = 25;
 
 let runSequence = 0;
 
-type ConverseEventType = 'turn_started' | 'turn_complete' | 'message';
+type ConverseEventType =
+  | 'turn_started'
+  | 'turn_complete'
+  | 'message'
+  | 'commerce_search_api_response'
+  | 'search_api_response';
 
 interface TurnStartedData {
   conversationSessionId: string;
@@ -171,6 +176,26 @@ const ActivitySnapshot = (options: {
   },
 });
 
+const CommerceSearchApiResponse = (options: {
+  content: Record<string, unknown>;
+}): ConverseEvent => ({
+  event: 'commerce_search_api_response',
+  data: {
+    type: 'commerce_search_api_response',
+    content: options.content,
+  },
+});
+
+const SearchApiResponse = (options: {
+  content: Record<string, unknown>;
+}): ConverseEvent => ({
+  event: 'search_api_response',
+  data: {
+    type: 'search_api_response',
+    content: options.content,
+  },
+});
+
 function textMessage(
   messageId: string,
   text: string,
@@ -286,6 +311,8 @@ export {
   ToolCallEnd,
   ToolCallResult,
   ActivitySnapshot,
+  CommerceSearchApiResponse,
+  SearchApiResponse,
   textMessage,
   toolCall,
   simpleConversation,

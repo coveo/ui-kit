@@ -272,23 +272,27 @@ export class GenerativeRuntime {
       }
 
       case 'ACTIVITY_SNAPSHOT': {
+        this.ensureAgentResponse(turnId);
+        this.statePort.appendSurface(
+          turnId,
+          event.content as Record<string, unknown>
+        );
+        return {turnId, isTerminal: false};
+      }
+
+      case 'commerce_search_api_response':
+      case 'search_api_response': {
         const routedInterface = this.hydrateSubInterface(
-          event.activityType,
+          event.type,
           event.content,
           this.currentPrompt
         );
 
         if (routedInterface) {
           this.statePort.setRoutedInterface(turnId, routedInterface);
-          this.statePort.completeTurn(turnId);
           return {turnId, isTerminal: true};
         }
 
-        this.ensureAgentResponse(turnId);
-        this.statePort.appendSurface(
-          turnId,
-          event.content as Record<string, unknown>
-        );
         return {turnId, isTerminal: false};
       }
 
