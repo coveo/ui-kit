@@ -1,6 +1,7 @@
 import type {Product} from '@coveo/thermidor';
 import {productListController} from '../../commerce-setup.js';
 import {useController} from '../../hooks/use-controller.js';
+import {StarRating} from '../StarRating/StarRating.js';
 import styles from './ProductList.module.css';
 
 function getProductImage(product: Product): string | undefined {
@@ -69,6 +70,7 @@ function ProductCard({product}: {product: Product}) {
             </span>
           ) : null}
         </div>
+        <StarRating rating={product.ec_rating} />
       </div>
     </article>
   );
