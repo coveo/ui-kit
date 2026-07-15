@@ -33,15 +33,7 @@ const dotenv = loadEnvFile();
 const env = (key) => process.env[key]?.trim() || dotenv[key] || '';
 
 function resolveEnvironment(value) {
-  if (
-    value === 'prod' ||
-    value === 'dev' ||
-    value === 'stg' ||
-    value === 'hipaa'
-  ) {
-    return value;
-  }
-  return 'prod';
+  return  ['prod', 'dev', 'stg', 'hipaa'].includes(value) ? value : 'prod';
 }
 
 function getOrganizationAdminEndpoint(organizationId, environment) {
