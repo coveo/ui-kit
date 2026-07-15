@@ -8,7 +8,9 @@ import {argv} from 'node:process';
 import {downloadTemplate, TemplateVersionUnavailableError} from './download.js';
 import {isEmptyOrMissing} from './fs-utils.js';
 import {log} from './log.js';
+import {buildProjectMetadata} from './metadata.js';
 import {promptProjectName, selectTemplate} from './prompt.js';
+import {readSampleMetadata, writeProvenance} from './provenance.js';
 import {
   installDependencies,
   moveToTarget,
@@ -148,10 +150,18 @@ export async function scaffold({
       version,
     });
 
+    const {templateVersion, dependencies} = await readSampleMetadata(sampleDir);
+    const metadata = buildProjectMetadata({
+      template: template.name,
+      templateVersion,
+      dependencies,
+    });
+
     log.step(`Creating project in ${targetDir}…`);
     createdTargetDir = await claimTargetDir(targetDir);
     await rewritePackageJson(sampleDir, projectName);
     await moveToTarget(sampleDir, targetDir);
+    await writeProvenance(targetDir, metadata);
   } catch (error) {
     if (createdTargetDir) {
       await rm(targetDir, {recursive: true, force: true});

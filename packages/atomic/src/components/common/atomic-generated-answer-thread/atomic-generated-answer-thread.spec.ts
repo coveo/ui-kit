@@ -94,12 +94,15 @@ describe('generated-answer-thread', () => {
     i18n = await createTestI18n();
   });
 
-  it('should render a single thread item when only one generated answer is provided', async () => {
+  it('should render answer content directly without thread items when only one generated answer is provided', async () => {
     const generatedAnswers = createGeneratedAnswers(1);
     const {locators} = await renderComponent({generatedAnswers});
 
-    expect(locators().threadItems).toHaveLength(1);
-    expect(locators().threadItems[0]?.showTimelineDot).toBe(false);
+    expect(locators().threadItems).toHaveLength(0);
+    expect(locators().answerContents).toHaveLength(1);
+    expect(locators().answerContents[0]?.generatedAnswer.question).toBe(
+      'Question 1'
+    );
     expect(locators().showPreviousAnswersButton).toBeNull();
   });
 
