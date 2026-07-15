@@ -1,0 +1,6 @@
+{
+  "//": "Server build only. `src/client.ts` is bundled for the browser by esbuild (see the `build:client` script); excluding it here keeps tsc from emitting an unbundled `dist/client.js` that would clash with the esbuild bundle (notably in `pnpm dev` watch mode). Type-checking still covers the client via the base tsconfig (`pnpm type-check`).",
+  "extends": "./tsconfig.json",
+  "include": ["src/**/*.ts"],
+  "exclude": ["src/client.ts"]
+}

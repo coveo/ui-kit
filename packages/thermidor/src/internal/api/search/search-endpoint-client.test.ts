@@ -65,7 +65,7 @@ describe('SearchEndpointClient', () => {
 
     expect(response.success).toBe(true);
     expect(mockedExecuteHttpRequest).toHaveBeenCalledWith({
-      url: 'https://test-org-id.org.coveo.com/rest/search/v2',
+      url: 'https://test-org-id.org.coveo.com/rest/search/v2?organizationId=test-org-id',
       method: 'POST',
       body: request,
       headers: {
@@ -93,7 +93,7 @@ describe('SearchEndpointClient', () => {
 
     expect(mockedExecuteHttpRequest).toHaveBeenCalledWith(
       expect.objectContaining({
-        url: 'https://custom.platform.coveo.com/rest/search/v2',
+        url: 'https://custom.platform.coveo.com/rest/search/v2?organizationId=test-org-id',
       })
     );
   });
@@ -126,5 +126,45 @@ describe('SearchEndpointClient', () => {
       success: false,
       error: 'network down',
     });
+  });
+
+  it('should include organizationId as a query param in the URL', async () => {
+    mockedExecuteHttpRequest.mockResolvedValue({
+      success: true,
+      data: {},
+    } as any);
+
+    await client.call(
+      {q: 'test'},
+      {
+        organizationId: 'my-org-123',
+        accessToken: 'test-token',
+        endpoint: 'https://proxy.example.com',
+      }
+    );
+
+    const calledUrl = mockedExecuteHttpRequest.mock.calls[0][0].url;
+    expect(calledUrl).toContain('?organizationId=my-org-123');
+  });
+
+  it('should pass the abort signal to the HTTP request', async () => {
+    mockedExecuteHttpRequest.mockResolvedValue({
+      success: true,
+      data: {},
+    } as any);
+
+    const controller = new AbortController();
+
+    await client.call(
+      {q: 'test'},
+      {organizationId: 'test-org-id', accessToken: 'test-token'},
+      {signal: controller.signal}
+    );
+
+    expect(mockedExecuteHttpRequest).toHaveBeenCalledWith(
+      expect.objectContaining({
+        signal: controller.signal,
+      })
+    );
   });
 });
