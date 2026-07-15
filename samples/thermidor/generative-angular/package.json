@@ -1,5 +1,5 @@
 {
-  "name": "@samples/thermidor-commerce-agent-angular",
+  "name": "@samples/thermidor-generative-angular",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -14,9 +14,8 @@
     "@angular/core": "catalog:",
     "@angular/platform-browser": "catalog:",
     "@coveo/thermidor": "workspace:*",
-    "marked": "^15.0.0",
-    "rxjs": "~7.8.0",
-    "tslib": "^2.3.0"
+    "marked": "catalog:",
+    "rxjs": "catalog:"
   },
   "devDependencies": {
     "@angular/build": "catalog:",
