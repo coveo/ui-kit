@@ -47,7 +47,7 @@
   "devDependencies": {
     "@rollup/plugin-node-resolve": "16.0.3",
     "@rollup/plugin-replace": "catalog:",
-    "@rollup/plugin-terser": "0.4.4",
+    "@rollup/plugin-terser": "1.0.0",
     "@rollup/plugin-typescript": "12.3.0",
     "@vitest/browser-playwright": "catalog:",
     "jsdom": "28.1.0",
