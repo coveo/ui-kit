@@ -49,6 +49,7 @@ export function RoutedCommerceResults(props: RoutedCommerceResultsProps) {
     return () => {
       unsubscribeProducts();
       unsubscribePagination();
+      (props.interface as {dispose?: () => void}).dispose?.();
     };
   }, [props.interface]);
 
