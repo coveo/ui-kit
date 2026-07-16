@@ -7,6 +7,7 @@ const pkgDirs = [
   'packages/atomic',
   'packages/headless',
   'packages/atomic-react',
+  'packages/relay',
 ];
 
 const issues = await Promise.all(

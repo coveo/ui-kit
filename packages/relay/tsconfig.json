@@ -20,14 +20,5 @@
     "rootDir": "src",
     "types": ["vitest/globals", "node"]
   },
-  "include": ["src/**/*.ts"],
-  "typedocOptions": {
-    "entryPointStrategy": "expand",
-    "json": "lib/docs/relay-docs.json",
-    "entryPoints": ["src/relay.ts"],
-    "includeVersion": true,
-    "excludePrivate": true,
-    "excludeNotDocumented": true,
-    "treatWarningsAsErrors": true
-  }
+  "include": ["src/**/*.ts"]
 }
