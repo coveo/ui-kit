@@ -1,6 +1,6 @@
 {
   "name": "@coveo/ui-kit-sample-headless-commerce-react",
-  "version": "0.1.0",
+  "version": "3.53.1",
   "type": "module",
   "publishConfig": {
     "access": "public",
