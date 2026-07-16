@@ -1,4 +1,19 @@
 .rating {
-  display: block;
+  display: inline-flex;
+  gap: 1px;
+  font-size: var(--font-size-lg);
+  line-height: 1;
   margin-top: var(--space-1);
+}
+
+.filled {
+  color: #f59e0b;
+}
+
+.empty {
+  color: var(--color-border);
+}
+
+.outline {
+  color: var(--color-border);
 }
