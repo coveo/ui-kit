@@ -473,7 +473,39 @@ describe('markdownUtils', () => {
     });
 
     it('should decode HTML entities produced by the markdown renderer', () => {
-      expect(markdownToPlainText('AT&T < 5')).toBe('AT&T < 5');
+      expect(markdownToPlainText('AT&T < 5 &quot;quoted&quot;')).toBe(
+        'AT&T < 5 "quoted"'
+      );
+    });
+
+    it('should remove HTML tags while preserving their text content', () => {
+      expect(markdownToPlainText('<span>Inline HTML</span>')).toBe(
+        'Inline HTML'
+      );
+    });
+
+    it('should preserve image alt text', () => {
+      expect(
+        markdownToPlainText('![Search interface](search-interface.png)')
+      ).toBe('Search interface');
+    });
+
+    it('should preserve table content without Markdown syntax', () => {
+      expect(
+        markdownToPlainText('| Name | Value |\n| --- | --- |\n| A | B |')
+      ).toBe('Name Value A B');
+    });
+
+    it('should remove horizontal rule syntax', () => {
+      expect(markdownToPlainText('Before\n\n---\n\nAfter')).toBe(
+        'Before After'
+      );
+    });
+
+    it('should remove incomplete inline formatting syntax', () => {
+      expect(markdownToPlainText('An **incomplete answer')).toBe(
+        'An incomplete answer'
+      );
     });
   });
 });
