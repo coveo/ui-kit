@@ -1,0 +1,6 @@
+description: Relay analytics library and playground
+file_patterns:
+  - packages/relay/**
+  - packages/relay-playground/**
+reviewers:
+  dxui: ~

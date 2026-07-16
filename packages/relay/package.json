@@ -1,0 +1,61 @@
+{
+  "name": "@coveo/relay",
+  "version": "2.1.1",
+  "description": "A library for sending analytics events using Coveo's Event protocol.",
+  "keywords": [
+    "Coveo",
+    "Event Protocol",
+    "analytics",
+    "event"
+  ],
+  "homepage": "https://github.com/coveo/ui-kit/tree/main/packages/relay#readme",
+  "bugs": {
+    "url": "https://github.com/coveo/ui-kit/issues"
+  },
+  "license": "Apache-2.0",
+  "author": "Coveo",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coveo/ui-kit.git",
+    "directory": "packages/relay"
+  },
+  "files": [
+    "lib/npm/*"
+  ],
+  "type": "module",
+  "types": "./lib/npm/relay.d.ts",
+  "exports": {
+    "types": "./lib/npm/relay.d.ts",
+    "browser": "./lib/npm/relay.mjs",
+    "import": "./lib/npm/relay.mjs",
+    "require": "./lib/npm/relay.cjs"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "pnpm run clean && rollup --config ./config/rollup.config.mjs",
+    "clean": "node ../../utils/ci/rm-rf.mjs lib",
+    "test": "vitest run",
+    "functional-test": "vitest run --config vitest.functional.config.ts",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@coveo/explorer-messenger": "0.5.0",
+    "uuid": "13.0.2"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "16.0.3",
+    "@rollup/plugin-replace": "catalog:",
+    "@rollup/plugin-terser": "1.0.0",
+    "@rollup/plugin-typescript": "12.3.0",
+    "@vitest/browser-playwright": "catalog:",
+    "jsdom": "28.1.0",
+    "playwright": "catalog:",
+    "rollup": "4.60.4",
+    "vitest": "catalog:"
+  },
+  "engines": {
+    "node": "^20.9.0 || ^22.11.0 || ^24.11.0"
+  }
+}
