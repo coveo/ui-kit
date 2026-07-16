@@ -1,4 +1,8 @@
-import {getHeadlessBundle} from 'c/quanticHeadlessLoader';
+import {
+  getHeadlessBundle,
+  registerComponentForInit,
+  initializeWithHeadless,
+} from 'c/quanticHeadlessLoader';
 import {api, LightningElement} from 'lwc';
 
 export default class ActionNextResults extends LightningElement {
@@ -6,25 +10,21 @@ export default class ActionNextResults extends LightningElement {
   @api disabled;
 
   pager;
-  headless;
 
-  handleGetNextResults() {
-    if (this.pager) {
-      this.pager.nextPage();
-    } else {
-      this.resolvePagerController().then((controller) => {
-        this.pager = controller;
-        this.pager.nextPage();
-      });
-    }
+  connectedCallback() {
+    registerComponentForInit(this, this.engineId);
   }
 
-  resolvePagerController() {
-    this.headless = getHeadlessBundle(this.engineId);
-    return window.coveoHeadless?.[this.engineId]?.enginePromise.then(
-      (engine) => {
-        return this.headless.buildPager(engine);
-      }
-    );
+  renderedCallback() {
+    initializeWithHeadless(this, this.engineId, this.initialize);
+  }
+
+  initialize = (engine) => {
+    const headless = getHeadlessBundle(this.engineId);
+    this.pager = headless.buildPager(engine);
+  };
+
+  handleGetNextResults() {
+    this.pager?.nextPage();
   }
 }

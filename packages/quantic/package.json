@@ -57,6 +57,7 @@
   "devDependencies": {
     "@babel/cli": "7.28.3",
     "@babel/plugin-transform-async-to-generator": "7.27.1",
+    "@coveo/platform-mock-api": "workspace:*",
     "@coveo/relay-event-types": "catalog:",
     "@octokit/graphql": "9.0.3",
     "@octokit/graphql-schema": "15.26.1",

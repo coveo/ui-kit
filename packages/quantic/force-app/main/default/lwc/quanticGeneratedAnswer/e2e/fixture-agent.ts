@@ -56,7 +56,8 @@ export const testAgent =
       await generatedAnswerObject.mockAgentFollowUpResponse(
         data.followUpStreams
       );
-
+      
+      await search.mockSearchWithBaseResponse();
       await page.goto(pageUrl);
       await configuration.configure(options);
       await search.waitForSearchResponse();
@@ -67,7 +68,7 @@ export const testAgent =
         generatedAnswerObject.waitForHeadAnswerRequest();
 
       await search.fillSearchInput(exampleQuery);
-      await search.performSearch();
+      search.performSearch();
       await search.waitForSearchResponse();
 
       await use(generatedAnswerObject);

@@ -3,6 +3,7 @@
     <template if:true={withInput}>
       <div class="slds-col">
         <lightning-input
+          lwc:ref="input"
           disabled={disabled}
           label="Results per page"
           variant="label-hidden">
