@@ -3,6 +3,7 @@ import {
   buildResultListController,
   buildPaginationController,
   loadSearchParametersActions,
+  type SearchInterface,
   type ResultListControllerState,
   type PaginationControllerState,
   type PaginationController,
@@ -12,7 +13,7 @@ import {Pagination} from '../Pagination/Pagination.js';
 import styles from './RoutedSearchResults.module.css';
 
 interface RoutedSearchResultsProps {
-  interface: unknown;
+  interface: SearchInterface;
 }
 
 export function RoutedSearchResults(props: RoutedSearchResultsProps) {
@@ -23,21 +24,15 @@ export function RoutedSearchResults(props: RoutedSearchResultsProps) {
 
   useEffect(() => {
     const controller = buildResultListController({
-      interface: props.interface as Parameters<
-        typeof buildResultListController
-      >[0]['interface'],
+      interface: props.interface,
     });
 
     const paginationCtrl = buildPaginationController({
-      interface: props.interface as Parameters<
-        typeof buildPaginationController
-      >[0]['interface'],
+      interface: props.interface,
     });
 
     const searchParams = loadSearchParametersActions({
-      interface: props.interface as Parameters<
-        typeof loadSearchParametersActions
-      >[0]['interface'],
+      interface: props.interface,
     });
 
     // Temporary hack: all information should be retrieved from the activity
@@ -60,7 +55,7 @@ export function RoutedSearchResults(props: RoutedSearchResultsProps) {
     return () => {
       unsubscribeResults();
       unsubscribePagination();
-      (props.interface as {dispose?: () => void}).dispose?.();
+      props.interface.dispose();
     };
   }, [props.interface]);
 
