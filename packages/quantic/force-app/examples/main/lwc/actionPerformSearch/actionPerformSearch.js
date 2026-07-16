@@ -31,7 +31,7 @@ export default class ActionPerformSearch extends LightningElement {
 
   handlePerformSearch() {
     const query = this.refs.input?.value ?? '';
-    this.searchBox.updateText(query);
-    this.searchBox.submit();
+    this.searchBox?.updateText(query);
+    this.searchBox?.submit();
   }
 }
