@@ -99,7 +99,7 @@
     "i18next": "25.10.10",
     "i18next-http-backend": "3.0.6",
     "lit": "catalog:",
-    "marked": "12.0.2"
+    "marked": "catalog:"
   },
   "devDependencies": {
     "@coveo/atomic-a11y": "workspace:*",
@@ -120,7 +120,7 @@
     "@types/node": "catalog:",
     "@vitest/browser-playwright": "catalog:",
     "@wc-toolkit/storybook-helpers": "10.3.0",
-    "chromatic": "15.3.1",
+    "chromatic": "catalog:",
     "handlebars": "4.7.9",
     "lit-html": "3.3.3",
     "local-web-server": "catalog:",

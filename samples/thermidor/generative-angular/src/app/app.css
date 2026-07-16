@@ -1,0 +1,125 @@
+:host {
+  display: block;
+}
+
+.turn-history {
+  border-right: 1px solid #e2e2e2;
+  padding: 12px;
+  min-width: 180px;
+  max-width: 240px;
+  flex-shrink: 0;
+}
+
+.turn-history-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.turn-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.turn-entry {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 6px 8px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.turn-entry:hover {
+  background: #f0f0f0;
+}
+
+.turn-entry.active {
+  background: #e8f0fe;
+  font-weight: 500;
+}
+
+.streaming-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e2e2e2;
+  font-size: 0.85rem;
+  color: #555;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.snapshot-label {
+  font-style: italic;
+}
+
+@media (max-width: 1024px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .workspace {
+    flex-direction: column;
+    max-height: none;
+  }
+
+  .hero-copy h1 {
+    max-width: 14ch;
+  }
+
+  .transcript-panel {
+    min-height: unset;
+  }
+
+  .turn-history {
+    display: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .shell {
+    padding-inline: 16px;
+  }
+
+  .hero-meta {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .bubble {
+    max-width: 100%;
+  }
+
+  .composer-actions,
+  .panel-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .primary-button,
+  .ghost-button {
+    width: 100%;
+  }
+}

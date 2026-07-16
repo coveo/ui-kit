@@ -12,8 +12,8 @@ import {getOrCreateSearchBoxActions} from '@/src/internal/features/search-box/in
 import {getOrCreateSearchBoxSlice} from '@/src/internal/features/search-box/index.js';
 
 const ACTIVITY_TYPE_TO_ROUTED_USE_CASE: Record<string, RoutedUseCase> = {
-  'commerce-search-api-response': 'commerceSearch',
-  'search-api-response': 'search',
+  commerce_search_api_response: 'commerceSearch',
+  search_api_response: 'search',
 };
 
 type HydrateAction = ReturnType<typeof createHydrateAction>;
