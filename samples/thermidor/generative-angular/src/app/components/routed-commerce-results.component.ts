@@ -3,9 +3,9 @@ import {
   Component,
   computed,
   DestroyRef,
+  effect,
   inject,
   input,
-  OnInit,
   signal,
 } from '@angular/core';
 import {
@@ -69,7 +69,7 @@ import {PaginationComponent} from './pagination.component';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RoutedCommerceResultsComponent implements OnInit {
+export class RoutedCommerceResultsComponent {
   private readonly destroyRef = inject(DestroyRef);
 
   readonly commerceInterface = input.required<CommerceInterface>();
@@ -96,31 +96,43 @@ export class RoutedCommerceResultsComponent implements OnInit {
     }))
   );
 
-  ngOnInit(): void {
-    const iface = this.commerceInterface();
+  constructor() {
+    let cleanup: (() => void) | null = null;
 
-    const productList = buildProductListController({interface: iface});
-    const pagination = buildPaginationController({interface: iface});
+    effect(() => {
+      const iface = this.commerceInterface();
 
-    this.paginationController = pagination;
+      if (cleanup) {
+        cleanup();
+      }
 
-    this.products.set(productList.state.products);
-    this.paginationState.set(pagination.state);
-    this.isLoading.set(productList.state.products.length === 0);
+      const productList = buildProductListController({interface: iface});
+      const pagination = buildPaginationController({interface: iface});
 
-    const unsubProducts = productList.subscribe(() => {
+      this.paginationController = pagination;
+
       this.products.set(productList.state.products);
-      this.isLoading.set(false);
-    });
-
-    const unsubPagination = pagination.subscribe(() => {
       this.paginationState.set(pagination.state);
+      this.isLoading.set(productList.state.products.length === 0);
+
+      const unsubProducts = productList.subscribe(() => {
+        this.products.set(productList.state.products);
+        this.isLoading.set(false);
+      });
+
+      const unsubPagination = pagination.subscribe(() => {
+        this.paginationState.set(pagination.state);
+      });
+
+      cleanup = () => {
+        unsubProducts();
+        unsubPagination();
+        iface.dispose();
+      };
     });
 
     this.destroyRef.onDestroy(() => {
-      unsubProducts();
-      unsubPagination();
-      iface.dispose();
+      cleanup?.();
     });
   }
 
