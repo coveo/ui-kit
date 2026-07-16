@@ -1,6 +1,11 @@
 {
   "name": "@coveo/ui-kit-sample-atomic-search-vite",
   "version": "3.60.1",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coveo/ui-kit.git",
+    "directory": "samples/atomic/search-vite"
+  },
   "type": "module",
   "publishConfig": {
     "access": "public",

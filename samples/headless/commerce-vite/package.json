@@ -1,6 +1,11 @@
 {
   "name": "@coveo/ui-kit-sample-headless-commerce-vite",
   "version": "3.53.1",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coveo/ui-kit.git",
+    "directory": "samples/headless/commerce-vite"
+  },
   "type": "module",
   "publishConfig": {
     "access": "public",

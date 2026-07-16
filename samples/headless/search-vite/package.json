@@ -1,6 +1,11 @@
 {
   "name": "@coveo/ui-kit-sample-headless-search-vite",
   "version": "3.53.1",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coveo/ui-kit.git",
+    "directory": "samples/headless/search-vite"
+  },
   "type": "module",
   "publishConfig": {
     "access": "public",
