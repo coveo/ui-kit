@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "handlebars": "4.7.9",
-    "marked": "12.0.2",
+    "marked": "catalog:",
     "yaml": "catalog:"
   },
   "devDependencies": {

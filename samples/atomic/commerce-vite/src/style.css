@@ -1,0 +1,150 @@
+/*
+ * Minimal app header matching the other UI-Kit samples: a Coveo logo + title,
+ * with the page navigation aligned to the right. Everything below the header is
+ * styled by Atomic's own theme.
+ */
+:root {
+  --sample-surface: #ffffff;
+  --sample-border: #e4e8ec;
+  --sample-text: #1c1c28;
+  --sample-text-muted: #6b7280;
+  --sample-accent: #1372ec;
+  --sample-accent-soft: #e8f1fd;
+  --sample-accent-contrast: #ffffff;
+  --sample-shadow: 0 1px 2px rgba(20, 30, 45, 0.06);
+  --sample-font: system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+body {
+  margin: 0;
+}
+
+/* Accessible "skip to main content" link (WCAG 2.4.1): visually hidden until
+   focused, then revealed at the top-left. */
+.skip-link {
+  position: absolute;
+  left: 0.5rem;
+  top: -3rem;
+  z-index: 100;
+  padding: 0.6rem 1rem;
+  border-radius: 0 0 6px 6px;
+  background: var(--sample-accent);
+  color: var(--sample-accent-contrast);
+  font-family: var(--sample-font);
+  text-decoration: none;
+  transition: top 0.15s ease;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+.app-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 1.5rem;
+  padding: 0.9rem 1.5rem;
+  background: var(--sample-surface);
+  border-bottom: 1px solid var(--sample-border);
+  box-shadow: var(--sample-shadow);
+  /* Match the font used by the other UI-Kit samples. */
+  font-family: var(--sample-font);
+}
+
+.app-header .brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.app-header .brand img {
+  height: 30px;
+}
+
+.app-header .brand h1 {
+  margin: 0;
+  font-size: 1.35rem;
+  color: var(--sample-text);
+}
+
+.app-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.app-nav a {
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  color: var(--sample-text-muted);
+  text-decoration: none;
+  font-weight: 500;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.app-nav a:hover {
+  background: var(--sample-accent-soft);
+  color: var(--sample-accent);
+}
+
+.app-nav a:focus-visible {
+  outline: 2px solid var(--sample-accent);
+  outline-offset: 2px;
+}
+
+/* The current page is marked with aria-current="page" on its own link. */
+.app-nav a[aria-current='page'] {
+  background: var(--sample-accent);
+  color: var(--sample-accent-contrast);
+  font-weight: 600;
+}
+
+.page-title {
+  margin: 1.5rem 1.5rem 0;
+  font-family: var(--sample-font);
+  /* Larger than Atomic's recommendation/list labels (24px) so the section
+     heading reads as the parent of the carousels below it. */
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--sample-text);
+}
+
+/* Home page layout: one centered column so the search box, headings, and
+   recommendation carousels all share the same width and alignment. */
+.home {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem 1.5rem 3rem;
+}
+
+.home-hero {
+  padding: 1.5rem 0 2.5rem;
+}
+
+/* Center the standalone search box. */
+.home-hero atomic-commerce-interface {
+  display: block;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.home-recs {
+  border-top: 1px solid var(--sample-border);
+  padding-top: 2rem;
+}
+
+/* Let the Atomic interfaces fill the centered column instead of applying their
+   own page padding, so everything lines up. */
+.home atomic-commerce-interface,
+.home atomic-commerce-recommendation-interface {
+  display: block;
+}
+
+.home atomic-commerce-recommendation-list {
+  --atomic-recs-number-of-columns: 4;
+}

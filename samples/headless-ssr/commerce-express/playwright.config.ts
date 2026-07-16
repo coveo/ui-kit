@@ -21,9 +21,18 @@ export default defineConfig({
     timeout: 7 * 1000,
   },
   webServer: {
+    // Run the production server so tests exercise the same output users ship.
+    // `NODE_OPTIONS` preloads the MSW mock server into the Express process so
+    // the server-side static-state fetch is deterministic and never hits a live
+    // API. The mock is pre-bundled to plain JS by `build:mocks` (esbuild), which
+    // resolves the mock package's TypeScript sources ahead of time — avoiding a
+    // runtime TypeScript loader in the server process.
     command: 'pnpm start',
-    port: 3000,
-    timeout: 120 * 1000,
+    url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
+    timeout: 120 * 1000,
+    env: {
+      NODE_OPTIONS: '--import ./dist-mocks/register.mjs',
+    },
   },
 });

@@ -100,6 +100,21 @@ export class AtomicGeneratedAnswerThread extends LitElement {
   }
 
   public render() {
+    if (this.generatedAnswers.length === 1) {
+      const answer = this.generatedAnswers[0];
+      return html`
+        <atomic-generated-answer-content
+          .generatedAnswer=${answer}
+          .i18n=${this.i18n}
+          .renderCitations=${this.renderCitations}
+          .onClickLike=${this.onClickLike}
+          .onClickDislike=${this.onClickDislike}
+          .onCopyToClipboard=${this.onCopyToClipboard}
+          exportparts=${GENERATED_ANSWER_CONTENT_EXPORT_PARTS}
+        ></atomic-generated-answer-content>
+      `;
+    }
+
     if (
       this.generatedAnswers.length > MIN_ANSWERS_TO_COLLAPSE &&
       !this.allGeneratedAnswersDisplayed
@@ -122,8 +137,6 @@ export class AtomicGeneratedAnswerThread extends LitElement {
   }
 
   private renderThread(generatedAnswers: readonly GeneratedAnswer[]) {
-    const showTimelineDot = this.generatedAnswers.length > 1;
-
     return html`
       ${repeat(
         generatedAnswers,
@@ -137,7 +150,6 @@ export class AtomicGeneratedAnswerThread extends LitElement {
               .hideLine=${isLastAnswer}
               .disableCollapse=${isLastAnswer}
               .isExpanded=${isLastAnswer}
-              .showTimelineDot=${showTimelineDot}
             >
               <atomic-generated-answer-content
                 .generatedAnswer=${answer}
