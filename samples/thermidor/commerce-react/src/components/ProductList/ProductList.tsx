@@ -22,8 +22,13 @@ function ProductCard({product}: {product: Product}) {
     product.ec_price != null &&
     product.ec_promo_price < product.ec_price;
 
+  const CardTag = product.clickUri ? 'a' : 'article';
+  const cardProps = product.clickUri
+    ? {href: product.clickUri, target: '_blank', rel: 'noopener noreferrer'}
+    : {};
+
   return (
-    <article className={styles.card}>
+    <CardTag className={styles.card} {...cardProps}>
       <div className={styles.imageWrapper}>
         {image ? (
           <img
@@ -40,20 +45,7 @@ function ProductCard({product}: {product: Product}) {
         {product.ec_brand && (
           <span className={styles.brand}>{product.ec_brand}</span>
         )}
-        <h3 className={styles.name}>
-          {product.clickUri ? (
-            <a
-              href={product.clickUri}
-              className={styles.nameLink}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {product.ec_name}
-            </a>
-          ) : (
-            product.ec_name
-          )}
-        </h3>
+        <h3 className={styles.name}>{product.ec_name}</h3>
         <div className={styles.pricing}>
           {hasPromo ? (
             <>
@@ -72,7 +64,7 @@ function ProductCard({product}: {product: Product}) {
         </div>
         <StarRating rating={product.ec_rating} />
       </div>
-    </article>
+    </CardTag>
   );
 }
 
