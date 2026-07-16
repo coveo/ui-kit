@@ -1,0 +1,3 @@
+{
+  "redirects": [{ "source": "/relay/playground/:id", "destination": "/:id" }]
+}
