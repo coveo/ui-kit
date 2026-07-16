@@ -13,16 +13,15 @@
     "docs/"
   ],
   "type": "module",
-  "main": "dist/index.cjs.js",
+  "main": "dist/index.js",
   "module": "dist/index.js",
-  "types": "dist/types/components.d.ts",
-  "unpkg": "dist/atomic-page/atomic-hosted-page.esm.js",
+  "types": "dist/index.d.ts",
+  "unpkg": "dist/atomic-hosted-page.esm.js",
   "es2015": "dist/esm/index.mjs",
   "exports": {
     ".": {
-      "types": "./dist/types/components.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs.js"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
     },
     "./loader": {
       "import": "./loader/index.js"
