@@ -1,6 +1,6 @@
 {
   "name": "@coveo/ui-kit-sample-atomic-search-react",
-  "version": "0.0.0",
+  "version": "3.11.33",
   "type": "module",
   "publishConfig": {
     "access": "public",

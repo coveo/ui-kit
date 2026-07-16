@@ -1,6 +1,6 @@
 {
   "name": "@coveo/create-ui",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Scaffold a Coveo UI project (Atomic or Headless) from the official samples.",
   "keywords": [
     "atomic",
