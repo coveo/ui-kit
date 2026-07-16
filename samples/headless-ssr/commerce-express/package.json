@@ -1,9 +1,18 @@
 {
   "name": "@coveo/ui-kit-sample-headless-ssr-commerce-express",
-  "version": "0.1.0",
-  "private": true,
+  "version": "3.53.1",
   "description": "Commerce server-side rendering (SSR) with @coveo/headless/ssr-commerce and an Express server",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/coveo/ui-kit",
+    "directory": "samples/headless-ssr/commerce-express"
+  },
   "type": "module",
+  "publishConfig": {
+    "access": "public",
+    "directory": "publish",
+    "linkDirectory": false
+  },
   "scripts": {
     "dev": "pnpm build:client --watch=forever & pnpm build:server --watch & node --watch ./dist/server.js",
     "build": "pnpm build:server && pnpm build:client && pnpm build:mocks",
@@ -12,7 +21,8 @@
     "build:mocks": "esbuild ./mocks/register.ts --bundle --outfile=dist-mocks/register.mjs --format=esm --platform=node",
     "start": "node ./dist/server.js",
     "e2e": "playwright test",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "prepack": "node ../../../scripts/build-sample-publish-dir.mjs"
   },
   "dependencies": {
     "@coveo/headless": "workspace:*",

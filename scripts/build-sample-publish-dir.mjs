@@ -22,10 +22,19 @@ const OUT_DIR = 'publish';
 // entry point is shipped as well (multi-page samples have several), so this
 // list only names non-HTML paths.
 const SHIPPED_PATHS = [
+  'actions',
+  'app',
+  'components',
+  'hooks',
+  'lib',
+  'proxy.ts',
   'src',
+  'utils',
   'public',
   '.gitignore',
+  'next.config.mjs',
   'vite.config.js',
+  'tsconfig.build.json',
   'tsconfig.json',
   'README.md',
 ];
@@ -35,10 +44,12 @@ const SHIPPED_PATHS = [
 const TEST_ONLY_DEV_DEPENDENCIES = [
   '@coveo/platform-mock-api',
   '@msw/playwright',
+  '@mswjs/http-middleware',
   '@playwright/test',
+  'express',
   'msw',
 ];
-const TEST_ONLY_SCRIPTS = ['e2e'];
+const TEST_ONLY_SCRIPTS = ['build:mocks', 'e2e'];
 
 const isTestFile = (path) => /\.(test|spec)\.[jt]sx?$/.test(path);
 
@@ -68,6 +79,10 @@ for (const dependency of TEST_ONLY_DEV_DEPENDENCIES) {
 for (const script of TEST_ONLY_SCRIPTS) {
   delete pkg.scripts?.[script];
 }
+pkg.scripts.build = pkg.scripts.build?.replace(
+  /\s*&&\s*pnpm build:mocks\b/,
+  ''
+);
 // The published copy is the final artifact: it should not re-run the builder or
 // point at a nested publish directory.
 delete pkg.scripts?.prepack;

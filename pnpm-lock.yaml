@@ -1565,6 +1565,7 @@ importers:
       typescript:
         specifier: 6.0.3
         version: 6.0.3
+    publishDirectory: publish
 
   samples/headless-ssr/commerce-nextjs:
     dependencies:
@@ -1608,6 +1609,7 @@ importers:
       typescript:
         specifier: 6.0.3
         version: 6.0.3
+    publishDirectory: publish
 
   samples/headless-ssr/commerce-nextjs-v4:
     dependencies:
