@@ -14,6 +14,7 @@ import {Cookie} from '../cookieutils';
 import {PartialDocumentInformation} from '../searchPage/searchPageEvents';
 jest.mock('../donottrack', () => {
   return {
+    __esModule: true,
     default: jest.fn(),
     doNotTrack: jest.fn(),
   };

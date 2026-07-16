@@ -1115,11 +1115,11 @@ describe('ec events', () => {
   };
 
   const changeDocumentLocation = (url: string) => {
-    // @ts-ignore
-    delete window.location;
-    // @ts-ignore
-    // Ooommmpf... JSDOM does not support any form of navigation, so let's overwrite the whole thing 💥.
-    window.location = new URL(url);
+    (
+      globalThis as typeof globalThis & {
+        reconfigureJSDOM: (options: {url: string}) => void;
+      }
+    ).reconfigureJSDOM({url});
   };
 
   const returnCommonAttributes = <T>(

@@ -1,6 +1,5 @@
-import typescript from 'rollup-plugin-typescript2';
+import typescript from '@rollup/plugin-typescript';
 import terser from '@rollup/plugin-terser';
-import serve from 'rollup-plugin-serve';
 import commonjs from '@rollup/plugin-commonjs';
 import {nodeResolve} from '@rollup/plugin-node-resolve';
 import alias from '@rollup/plugin-alias';
@@ -27,9 +26,9 @@ const browserFetch = () =>
     ],
   });
 
-const tsPlugin = () =>
+const tsPlugin = (compilerOptions = {}) =>
   typescript({
-    useTsconfigDeclarationDir: true,
+    compilerOptions,
   });
 
 const versionReplace = () =>
@@ -83,16 +82,6 @@ const coveouaConfig = {
     nodeResolve({preferBuiltins: true, browser: true}),
     versionReplace(),
     tsPlugin(),
-    process.env.SERVE
-      ? serve({
-          contentBase: ['dist', 'public'],
-          port: 9001,
-          open: true,
-          headers: {
-            'Access-Control-Allow-Origin': 'http://localhost:9001',
-          },
-        })
-      : null,
   ],
 };
 
@@ -115,7 +104,7 @@ const nodeModulesConfig = {
     nodeResolve({mainFields: ['main'], preferBuiltins: true}),
     versionReplace(),
     commonjs(),
-    tsPlugin(),
+    tsPlugin({sourceMap: false}),
     json(),
     aliasFile({
       sourceFileName: './dist/library.cjs',
@@ -137,10 +126,7 @@ const browserModulesConfig = {
     browserFetch(),
     nodeResolve({preferBuiltins: true}),
     versionReplace(),
-    typescript({
-      useTsconfigDeclarationDir: true,
-      tsconfigOverride: {compilerOptions: {target: 'es6'}},
-    }),
+    tsPlugin({sourceMap: false, target: 'ES6'}),
     aliasFile({
       sourceFileName: './dist/browser.mjs',
       aliasFileName: './dist/library.es.js',
@@ -163,10 +149,7 @@ const reactNativeConfig = {
     versionReplace(),
     commonjs(),
     json(),
-    typescript({
-      useTsconfigDeclarationDir: true,
-      tsconfigOverride: {compilerOptions: {target: 'es6'}},
-    }),
+    tsPlugin({sourceMap: false, target: 'ES6'}),
   ],
 };
 

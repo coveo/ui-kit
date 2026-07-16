@@ -3,6 +3,8 @@
     "module": "ESNext",
     "moduleResolution": "Node",
     "target": "es5",
+    "rootDir": "./src",
+    "ignoreDeprecations": "6.0",
     "declarationDir": "./dist/definitions",
     "declaration": true,
     "noImplicitAny": true,
@@ -10,7 +12,8 @@
     "sourceMap": true,
     "skipLibCheck": true,
     "strict": true,
-    "lib": ["es5", "dom", "scripthost", "es6"]
+    "lib": ["es5", "dom", "scripthost", "es6"],
+    "types": ["node"]
   },
   "include": ["src/**/*.ts"],
   "exclude": ["src/**/*.spec.ts"]

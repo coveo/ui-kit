@@ -21,6 +21,7 @@ import {Cookie} from '../cookieutils';
 
 jest.mock('../donottrack', () => {
   return {
+    __esModule: true,
     default: jest.fn(),
     doNotTrack: jest.fn(),
   };

@@ -777,10 +777,11 @@ describe('clientId from link', () => {
   const forcedUUID: string = 'c0b48880-743e-484f-8044-d7c37910c55b';
 
   function navigateTo(url: string) {
-    // @ts-ignore
-    delete window.location;
-    // @ts-ignore
-    window.location = new URL(url);
+    (
+      globalThis as typeof globalThis & {
+        reconfigureJSDOM: (options: {url: string}) => void;
+      }
+    ).reconfigureJSDOM({url});
   }
 
   beforeEach(() => {

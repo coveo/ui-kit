@@ -58,6 +58,20 @@ export default {
     'packages/relay': {
       entry: ['src/relay.ts', 'config/rollup.config.mjs'],
     },
+    'packages/coveo-analytics': {
+      entry: ['bundle/browser-fetch.ts'],
+      ignoreIssues: {
+        'src/client/analytics.ts': ['exports', 'duplicates'],
+        'src/coveoua/simpleanalytics.ts': ['exports', 'types', 'duplicates'],
+        'src/detector.ts': ['exports'],
+        'src/donottrack.ts': ['duplicates'],
+        'src/history.ts': ['duplicates'],
+        'src/storage.ts': ['exports'],
+        'src/plugins/ec.ts': ['types', 'duplicates'],
+        'src/plugins/link.ts': ['duplicates'],
+        'src/plugins/svc.ts': ['types', 'duplicates'],
+      },
+    },
     'packages/documentation': {
       entry: [
         '**/assets/**/*.js',

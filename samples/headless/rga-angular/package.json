@@ -19,7 +19,7 @@
     "@angular/platform-server": "catalog:",
     "@coveo/headless": "workspace:*",
     "rxjs": "catalog:",
-    "tslib": "2.8.1",
+    "tslib": "catalog:",
     "zone.js": "0.15.1"
   },
   "devDependencies": {

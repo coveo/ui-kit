@@ -45,14 +45,14 @@
     "uuid": "13.0.2"
   },
   "devDependencies": {
-    "@rollup/plugin-node-resolve": "16.0.3",
+    "@rollup/plugin-node-resolve": "catalog:",
     "@rollup/plugin-replace": "catalog:",
-    "@rollup/plugin-terser": "1.0.0",
-    "@rollup/plugin-typescript": "12.3.0",
+    "@rollup/plugin-terser": "catalog:",
+    "@rollup/plugin-typescript": "catalog:",
     "@vitest/browser-playwright": "catalog:",
     "jsdom": "28.1.0",
     "playwright": "catalog:",
-    "rollup": "4.60.4",
+    "rollup": "catalog:",
     "vitest": "catalog:"
   },
   "engines": {

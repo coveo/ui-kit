@@ -35,6 +35,7 @@ const expectedBaseCaseMetadata = {
 
 jest.mock('../donottrack', () => {
   return {
+    __esModule: true,
     default: jest.fn(),
     doNotTrack: jest.fn(),
   };

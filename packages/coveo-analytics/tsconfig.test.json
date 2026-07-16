@@ -5,7 +5,8 @@
     "declaration": false,
     "sourceMap": true,
     "strict": false,
-    "module": "commonjs"
+    "module": "commonjs",
+    "types": ["jest", "node"]
   },
   "include": ["src/**/*.spec.ts"],
   "exclude": []

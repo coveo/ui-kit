@@ -103,7 +103,7 @@
     "@coveo/relay-event-types": "catalog:",
     "@reduxjs/toolkit": "2.12.0",
     "abortcontroller-polyfill": "1.7.8",
-    "coveo.analytics": "catalog:",
+    "coveo.analytics": "workspace:*",
     "dayjs": "catalog:",
     "exponential-backoff": "catalog:",
     "fast-equals": "6.0.0",
