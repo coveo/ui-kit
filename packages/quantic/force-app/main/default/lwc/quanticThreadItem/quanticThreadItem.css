@@ -11,21 +11,18 @@
 
 .thread-item__timeline {
   grid-row: 1 / -1;
-  position: relative;
   align-self: stretch;
 }
 
 .thread-item__dot-column {
   width: 10px;
-  height: calc(1lh + var(--lwc-spacingXxSmall, 4px) * 2);
+  height: 1lh;
+  margin-block: var(--lwc-spacingXxSmall, 4px);
 }
 
 .thread-item__line {
-  position: absolute;
-  top: calc(1lh + var(--lwc-spacingXxSmall, 4px) * 2);
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative;
+  flex: 1;
   width: 1px;
   background-color: var(--lwc-colorBorder, #dddbda);
 }

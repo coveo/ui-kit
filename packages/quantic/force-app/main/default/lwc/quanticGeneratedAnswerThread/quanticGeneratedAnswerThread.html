@@ -11,16 +11,19 @@
     <ul class="generated-answer-thread">
       <template lwc:if={shouldCollapseOlderAnswers}>
         <li class="generated-answer-thread__show-previous">
-          <div class="slds-grid slds-grid_vertical-align-center">
-            <div
-              class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-shrink-none slds-m-right_x-small generated-answer-thread__dot-column"
-            >
-              <span
-                class="generated-answer-thread__dot"
-                data-testid="show-previous-dot"
-              ></span>
+          <div class="generated-answer-thread__grid">
+            <div class="slds-grid slds-grid_vertical slds-grid_vertical-align-center generated-answer-thread__timeline">
+              <div
+                class="slds-grid slds-grid_align-center slds-grid_vertical-align-center generated-answer-thread__dot-column"
+              >
+                <span
+                  class="generated-answer-thread__dot"
+                  data-testid="show-previous-dot"
+                ></span>
+              </div>
+              <span class="generated-answer-thread__connector"></span>
             </div>
-            <div>
+            <div class="slds-has-flexi-truncate">
               <button
                 type="button"
                 class="slds-button_reset slds-p-horizontal_x-small slds-p-vertical_xx-small generated-answer-thread__show-previous-button"
@@ -29,13 +32,6 @@
               >
                 {showPreviousQuestionsLabel}
               </button>
-            </div>
-          </div>
-          <div class="slds-grid">
-            <div
-              class="slds-grid slds-grid_align-center slds-shrink-none generated-answer-thread__line-column slds-m-right_x-small"
-            >
-              <span class="generated-answer-thread__connector"></span>
             </div>
           </div>
         </li>
