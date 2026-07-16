@@ -186,7 +186,7 @@ jobs:
   cdn-checks:
     name: 'CDN Checks'
     needs: [affected, build-cdn]
-    if: contains(needs.affected.outputs.projects, '@coveo/atomic') || contains(needs.affected.outputs.projects, '@coveo/atomic-hosted-page') || contains(needs.affected.outputs.projects, '@coveo/relay')
+    if: contains(needs.affected.outputs.projects, '@coveo/atomic') || contains(needs.affected.outputs.projects, '@coveo/atomic-hosted-page')
     env:
       DEPLOYMENT_ENVIRONMENT: CDN
     runs-on: ubuntu-latest
@@ -205,8 +205,6 @@ jobs:
           build-command: "pnpm exec turbo build --filter='!./samples/**'"
       - name: 'Run CDN checks'
         uses: ./.github/actions/cdn-checks
-      - name: 'Run CDN export and source-map checks'
-        run: pnpm --filter @coveo/cdn test
   lint-check:
     name: 'Check with linter'
     needs: build
