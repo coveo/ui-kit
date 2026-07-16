@@ -681,6 +681,7 @@ jobs:
             './packages/create-atomic-rollup-plugin' \
             './packages/headless' \
             './packages/headless-react' \
+            './packages/relay' \
             './packages/shopify'
   is-valid-pr:
     name: 'Confirm build is valid (PR)'
