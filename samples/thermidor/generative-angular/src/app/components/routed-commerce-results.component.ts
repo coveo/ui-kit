@@ -120,6 +120,7 @@ export class RoutedCommerceResultsComponent implements OnInit {
     this.destroyRef.onDestroy(() => {
       unsubProducts();
       unsubPagination();
+      iface.dispose();
     });
   }
 
