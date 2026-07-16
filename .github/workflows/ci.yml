@@ -6,8 +6,6 @@ on:
 permissions:
   contents: read
 
-env:
-  CHROMATIC_ALL: ${{ vars.CHROMATIC_ALL }}
 
 jobs:
   pr-report:

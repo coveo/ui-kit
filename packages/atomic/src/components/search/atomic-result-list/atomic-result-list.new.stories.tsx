@@ -28,6 +28,7 @@ import '@/src/components/search/atomic-result-template/atomic-result-template.js
 import '@/src/components/search/atomic-result-text/atomic-result-text.js';
 import '@/src/components/search/atomic-table-element/atomic-table-element.js';
 import '@/src/components/search/atomic-text/atomic-text.js';
+import {SearchResponse} from '@coveo/platform-mock-api/search/search-response';
 
 const defaultTemplateContent = `<atomic-result-template>
   <template>
@@ -120,12 +121,20 @@ const meta: Meta = {
   decorators: [decorator],
   parameters: {
     ...parameters,
-    chromatic: {disableSnapshot: true},
+
     msw: {handlers: [...searchApiHarness.handlers]},
     layout: 'fullscreen',
     actions: {
       handles: events,
     },
+  },
+  beforeEach: async (context) => {
+    searchApiHarness.searchEndpoint.clear();
+    searchApiHarness.searchEndpoint.mock((response) => ({
+      ...response,
+      results: (response as SearchResponse).results.slice(0, 20),
+      numberOfResults: 20,
+    }));
   },
   args: {
     ...args,

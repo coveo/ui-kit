@@ -29,7 +29,7 @@ const meta: Meta = {
   decorators: [decorator],
   parameters: {
     ...parameters,
-    chromatic: {disableSnapshot: true},
+
     actions: {},
     msw: {
       handlers: [...mockedInsightApi.handlers],
