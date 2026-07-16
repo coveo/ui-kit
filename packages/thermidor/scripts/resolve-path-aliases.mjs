@@ -24,7 +24,7 @@ async function collectFiles(dir) {
 
 function toRelative(importPath, fromFile) {
   const target = join(distDir, importPath);
-  const rel = relative(dirname(fromFile), target);
+  const rel = relative(dirname(fromFile), target).replaceAll('\\', '/');
   return rel.startsWith('.') ? rel : `./${rel}`;
 }
 
