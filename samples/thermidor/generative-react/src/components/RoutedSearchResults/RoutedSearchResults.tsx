@@ -60,6 +60,7 @@ export function RoutedSearchResults(props: RoutedSearchResultsProps) {
     return () => {
       unsubscribeResults();
       unsubscribePagination();
+      (props.interface as {dispose?: () => void}).dispose?.();
     };
   }, [props.interface]);
 
