@@ -338,11 +338,13 @@ export function createSearchEndpointThunk(
   const buildRequest = createSearchEndpointRequestSelector(scope);
   const handleResponse = createSearchEndpointResponseHandler(scope.interfaceId);
 
+  const configSelectors = getOrCreateConfigurationSelectors();
+
   const thunk = createAsyncThunk<void, {engine: FullEngine}>(
     `${sharableInterfaceId}/searchEndpoint/execute`,
     async ({engine}) => {
       const request = engine.read(buildRequest);
-      const config = readEndpointClientConfiguration(engine);
+      const config = engine.read(configSelectors.getEndpointClientConfiguration);
       const response = await createSearchEndpointClient().call(request, config);
 
       if (!response.success) {

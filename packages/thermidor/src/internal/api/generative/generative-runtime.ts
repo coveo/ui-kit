@@ -57,7 +57,8 @@ export class GenerativeRuntime {
     Map<string, GenerativeRuntime>
   >();
 
-  private configSelectors = getOrCreateConfigurationSelectors();
+  private readonly configSelectors = getOrCreateConfigurationSelectors();
+
   private engine: FullEngine;
   private statePort: GenerativeStatePort;
   private hydrateSubInterface: HydrateSubInterface;

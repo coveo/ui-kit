@@ -39,7 +39,7 @@ graph TD
         HTTP[executeHttpRequest]
         OE[getOrganizationEndpoint]
         TE[transformError]
-        CR[readEndpointClientConfiguration]
+        CR[getOrCreateConfigurationSelectors]
         NCP[NavigatorContextProvider]
     end
 
