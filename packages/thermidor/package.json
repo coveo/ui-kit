@@ -26,7 +26,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsc --project ./tsconfig.build.json",
+    "build": "tsc --project ./tsconfig.build.json && node scripts/resolve-path-aliases.mjs",
     "clean": "node ../../utils/ci/rm-rf.mjs dist",
     "test": "vitest run",
     "test:watch": "vitest",
