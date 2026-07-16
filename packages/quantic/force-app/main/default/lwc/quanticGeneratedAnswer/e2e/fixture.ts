@@ -107,8 +107,10 @@ export const testSearch =
 
       await search.mockSearchWithGenerativeQuestionAnsweringId(data.streamId);
       await search.fillSearchInput(exampleQuery);
-      search.performSearch();
-      await search.waitForSearchResponse();
+      await Promise.all([
+        search.waitForSearchResponse(),
+        search.performSearch(),
+      ]);
 
       await use(generatedAnswerObject);
     },
@@ -180,8 +182,10 @@ export const testInsight =
 
       await search.mockSearchWithGenerativeQuestionAnsweringId(data.streamId);
       await search.fillSearchInput(exampleQuery);
-      search.performSearch();
-      await search.waitForSearchResponse();
+      await Promise.all([
+        search.waitForSearchResponse(),
+        search.performSearch(),
+      ]);
 
       await use(generatedAnswerObject);
     },

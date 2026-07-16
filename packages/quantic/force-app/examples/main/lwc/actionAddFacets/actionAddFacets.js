@@ -40,7 +40,7 @@ export default class ActionAddFacets extends LightningElement {
     });
     this.dispatchEvent(addFacetsEvent);
 
-    this.searchBox.updateText('');
-    this.searchBox.submit();
+    this.searchBox?.updateText('');
+    this.searchBox?.submit();
   }
 }
