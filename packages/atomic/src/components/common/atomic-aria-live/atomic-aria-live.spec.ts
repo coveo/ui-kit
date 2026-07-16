@@ -66,11 +66,17 @@ describe('atomic-aria-live', () => {
       const {element, locators} = await renderAriaLive();
 
       element.updateMessage('query-summary', 'Results loaded', false);
-      element.updateMessage('generated-answer', 'Generating answer', false);
+      element.updateMessage(
+        'generated-answer',
+        'Generating answer',
+        false,
+        true
+      );
       element.updateMessage(
         'generated-answer',
         'Answer could not be generated',
-        false
+        false,
+        true
       );
 
       const generatedAnswerRegion = () =>
@@ -84,6 +90,17 @@ describe('atomic-aria-live', () => {
       await expect
         .poll(generatedAnswerRegion)
         .toHaveTextContent('Answer could not be generated');
+    });
+
+    it('should replace queued messages for regions that do not preserve them', async () => {
+      const {element, locators} = await renderAriaLive();
+
+      element.updateMessage('query-suggestions', 'First suggestion', false);
+      element.updateMessage('query-suggestions', 'Second suggestion', false);
+
+      await expect
+        .poll(() => locators.regions[0])
+        .toHaveTextContent('Second suggestion');
     });
   });
 

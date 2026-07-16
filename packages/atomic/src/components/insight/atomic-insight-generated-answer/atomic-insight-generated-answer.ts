@@ -181,7 +181,12 @@ export class AtomicInsightGeneratedAnswer
   @state()
   private copyError = false;
 
-  private ariaMessage = new AriaLiveRegionController(this, 'generated-answer');
+  private ariaMessage = new AriaLiveRegionController(
+    this,
+    'generated-answer',
+    false,
+    true
+  );
 
   constructor() {
     super();

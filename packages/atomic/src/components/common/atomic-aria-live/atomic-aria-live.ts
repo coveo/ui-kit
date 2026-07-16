@@ -55,7 +55,12 @@ export class AtomicAriaLive extends LightDomMixin(LitElement) {
    * @param message - The message to announce in the region.
    * @param assertive - Whether the region should use 'assertive' or 'polite' mode.
    */
-  public updateMessage(region: string, message: string, assertive: boolean) {
+  public updateMessage(
+    region: string,
+    message: string,
+    assertive: boolean,
+    preserveQueuedMessages = false
+  ) {
     const updateRegion = () => {
       this.regions = {...this.regions, [region]: {assertive, message}};
     };
@@ -63,6 +68,12 @@ export class AtomicAriaLive extends LightDomMixin(LitElement) {
     if (!message) {
       this.clearQueuedMessages(region);
       updateRegion();
+      return;
+    }
+
+    if (!preserveQueuedMessages) {
+      this.clearQueuedMessages(region);
+      this.messagesQueue.enqueue(updateRegion, region);
       return;
     }
 
