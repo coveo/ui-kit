@@ -26,7 +26,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsc --project ./tsconfig.build.json && node scripts/resolve-path-aliases.mjs",
+    "build": "tsdown",
     "clean": "node ../../utils/ci/rm-rf.mjs dist",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -39,6 +39,7 @@
   },
   "devDependencies": {
     "@microsoft/api-extractor": "7.58.9",
+    "tsdown": "0.22.0",
     "typescript": "catalog:",
     "vitest": "catalog:"
   },
