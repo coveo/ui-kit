@@ -63,7 +63,7 @@ const generateHtmlResponse = (
       <h2>Cookie Management Explanation</h2>
       <p>This page demonstrates how to manage the client ID during server-side rendering (SSR).</p>
       <p>When performing SSR, the first request to Coveo is made from the server. The Commerce API requires these requests to include a client ID so that the response is personalized based on the visitor's previous behavior.</p>
-      <p>There are two scenarios: 
+      <p>There are two scenarios:
         <br /> 1. <strong>New Visitor</strong>: The server generates a unique client ID for you.
         <br /> 2. <strong>Returning Visitor</strong>: The server retrieves your client ID from cookies.
       </p>

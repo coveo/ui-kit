@@ -12,7 +12,7 @@ export default function Page() {
       <head>
         <script type="module">
           import {createRelay} from "${process.env['NEXT_PUBLIC_CDN_HOST']}/relay/v${major}/relay.min.js";
-          
+
           window.relay = createRelay({
             url: "${process.env['NEXT_PUBLIC_EVENTS_URL']}",
             token: "${process.env['NEXT_PUBLIC_TOKEN']}",
