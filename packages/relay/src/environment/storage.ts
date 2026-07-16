@@ -26,17 +26,3 @@ export interface Storage {
    */
   setItem: (key: string, data: string) => void;
 }
-
-export function createNullStorage(): Storage {
-  return {
-    getItem(): string | null {
-      return null;
-    },
-    removeItem(): void {
-      return;
-    },
-    setItem(): void {
-      return;
-    },
-  };
-}
