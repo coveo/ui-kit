@@ -47,6 +47,6 @@ export default class ActionSelectResults extends LightningElement {
       this.engine,
       {options: {result: JSON.parse(JSON.stringify(result))}}
     );
-    interactiveResult.select();
+    interactiveResult?.select();
   }
 }
