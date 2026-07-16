@@ -26,7 +26,7 @@ function getNavigatorContext() {
   };
 }
 
-const configuration = getSampleConfiguration();
+export const configuration = getSampleConfiguration();
 
 const engine = new Engine({
   configuration,

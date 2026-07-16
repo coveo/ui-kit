@@ -1,5 +1,5 @@
 import type {Product} from '@coveo/thermidor';
-import {productListController} from '../../commerce-setup.js';
+import {productListController, configuration} from '../../commerce-setup.js';
 import {useController} from '../../hooks/use-controller.js';
 import {StarRating} from '../StarRating/StarRating.js';
 import styles from './ProductList.module.css';
@@ -11,7 +11,7 @@ function getProductImage(product: Product): string | undefined {
 function formatPrice(value: number): string {
   return value.toLocaleString(undefined, {
     style: 'currency',
-    currency: 'USD',
+    currency: configuration.currency,
   });
 }
 
