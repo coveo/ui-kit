@@ -84,6 +84,12 @@ export default {
       entry: ['mocks/mock-server.mjs'],
     },
     'samples/headless-ssr/commerce-nextjs-v4': {},
+    'samples/atomic/commerce-vite': {
+      // The search and listing pages share commerce-page.js. Vite resolves the
+      // HTML entries at runtime, so declare the shared JS entry explicitly
+      // (index.html → home-page.js is auto-detected).
+      entry: ['src/commerce-page.js'],
+    },
     'utils/ci': {},
     'utils/cdn': {},
 
@@ -153,6 +159,14 @@ export default {
     },
     'samples/thermidor/generative-react': {
       ignore: ['**/*'],
+    },
+    'samples/thermidor/generative-angular': {
+      entry: ['proxy.conf.js'],
+      ignore: [
+        'src/app/services/engine.service.ts',
+        'src/app/app.css',
+        'src/styles.css',
+      ],
     },
   },
 };

@@ -4,7 +4,7 @@ import {
   getFullEngine,
   type FullEngine,
 } from '@/src/internal/engine/index.js';
-import {getInterfaceInternals} from '@/src/internal/utils/index.js';
+import {getHandleInternals} from '@/src/internal/utils/index.js';
 import {
   createHydrateSubInterface,
   getOrCreateHydrateFromSnapshotAction,
@@ -65,7 +65,7 @@ describe('createHydrateSubInterface', () => {
     expect(result).toBeNull();
   });
 
-  it('returns a RoutedInterface for commerce-search-api-response', () => {
+  it('returns a RoutedInterface for commerce_search_api_response', () => {
     const hydrate = createHydrateSubInterface(fullEngine);
     const content = {
       products: [
@@ -80,15 +80,15 @@ describe('createHydrateSubInterface', () => {
       facets: [],
     };
 
-    const result = hydrate('commerce-search-api-response', content);
+    const result = hydrate('commerce_search_api_response', content);
     expect(result).not.toBeNull();
     expect(result!.useCase).toBe('commerceSearch');
     expect(result!.interface).toBeDefined();
-    const {stateId} = getInterfaceInternals(result!.interface);
+    const {stateId} = getHandleInternals(result!.interface);
     expect(stateId).toBeDefined();
   });
 
-  it('returns a RoutedInterface for search-api-response', () => {
+  it('returns a RoutedInterface for search_api_response', () => {
     const hydrate = createHydrateSubInterface(fullEngine);
     const content = {
       results: [
@@ -106,7 +106,7 @@ describe('createHydrateSubInterface', () => {
       facets: [],
     };
 
-    const result = hydrate('search-api-response', content);
+    const result = hydrate('search_api_response', content);
     expect(result).not.toBeNull();
     expect(result!.useCase).toBe('search');
     expect(result!.interface).toBeDefined();
@@ -127,7 +127,7 @@ describe('createHydrateSubInterface', () => {
       facets: [],
     };
 
-    const result = hydrate('commerce-search-api-response', content);
+    const result = hydrate('commerce_search_api_response', content);
     const subInterface = result!.interface;
 
     const productSlice = getOrCreateProductListSlice(subInterface);
@@ -161,7 +161,7 @@ describe('createHydrateSubInterface', () => {
       facets: [],
     };
 
-    const result = hydrate('search-api-response', content);
+    const result = hydrate('search_api_response', content);
     const subInterface = result!.interface;
 
     const resultsSlice = getOrCreateResultsSlice(subInterface);

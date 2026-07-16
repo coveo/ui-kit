@@ -1,0 +1,59 @@
+/*
+ * Minimal app header matching the other UI-Kit samples: a Coveo logo + title,
+ * with any navigation aligned to the right. Everything below the header is
+ * styled by Atomic's own theme.
+ */
+:root {
+  --sample-surface: #ffffff;
+  --sample-border: #e4e8ec;
+  --sample-text: #1c1c28;
+  --sample-accent: #1372ec;
+  --sample-shadow: 0 1px 2px rgba(20, 30, 45, 0.06);
+  --sample-font: system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+.app-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 1.5rem;
+  padding: 0.9rem 1.5rem;
+  background: var(--sample-surface);
+  border-bottom: 1px solid var(--sample-border);
+  box-shadow: var(--sample-shadow);
+  /* Match the font used by the other UI-Kit samples. */
+  font-family: var(--sample-font);
+}
+
+.app-header .brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.app-header .brand img {
+  height: 30px;
+}
+
+.app-header .brand h1 {
+  margin: 0;
+  font-size: 1.35rem;
+  color: var(--sample-text);
+}
+
+.app-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+}
+
+.app-nav a {
+  color: var(--sample-accent);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.app-nav a:hover {
+  text-decoration: underline;
+}

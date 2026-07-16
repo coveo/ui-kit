@@ -1,6 +1,7 @@
-import {defineCommerceEngine} from '@coveo/headless/ssr-commerce-next';
+import {defineCommerceEngine} from '@coveo/headless/ssr-commerce';
 import {engineConfig} from './engine-config.js';
 
 const engineDefinition = defineCommerceEngine(engineConfig);
 
-export const {searchEngineDefinition} = engineDefinition;
+export const {searchEngineDefinition, listingEngineDefinition} =
+  engineDefinition;
