@@ -279,7 +279,7 @@ jobs:
       image: mcr.microsoft.com/playwright:v1.60.0-noble
       options: --user 1001
     env:
-      VITE_ANALYTICS_KEY: ${{ secrets.VITE_ANALYTICS_KEY }}
+      VITE_ANALYTICS_KEY: ${{ secrets.RELAY_TEST_ANALYTICS_KEY }}
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
