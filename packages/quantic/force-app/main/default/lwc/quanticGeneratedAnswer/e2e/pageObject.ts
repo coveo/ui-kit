@@ -157,8 +157,8 @@ export class GeneratedAnswerObject {
   }
 
   async hoverOverCitation(index: number): Promise<void> {
-    // waiting 500ms to allow the component to render completely, cause any re-rendering abort the hover action.
-    await this.page.waitForTimeout(500);
+    // waiting 1000ms to allow the component to render completely, cause any re-rendering abort the hover action.
+    await this.page.waitForTimeout(1000);
     await this.citationLink.nth(index).hover();
     await this.page.waitForTimeout(minimumCitationTooltipDisplayDurationMs);
     await this.page.mouse.move(0, 0);

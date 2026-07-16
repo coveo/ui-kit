@@ -1,3 +1,16 @@
+## 3.43.0
+
+### Minor Changes
+
+- [#7898](https://github.com/coveo/ui-kit/pull/7898) [`61487c9`](https://github.com/coveo/ui-kit/commit/61487c9c104f1dff59d5607136dbcb039671ac8b) - Display generated search queries in the agent stream of thought component
+
+### Patch Changes
+
+- [#7908](https://github.com/coveo/ui-kit/pull/7908) [`0d32606`](https://github.com/coveo/ui-kit/commit/0d32606aaf95f00ad4ecd0f4e644c64b5300b197) - Addition of a 300-character limit to the ask follow up input component with a live character counter
+
+- Updated dependencies [[`6580723`](https://github.com/coveo/ui-kit/commit/65807231404d5f3357be02f91ff8dfadae694904), [`6bd6624`](https://github.com/coveo/ui-kit/commit/6bd662476610fbe9815919551b6c40d2b0060c52)]:
+  - @coveo/headless@3.53.1
+
 ## 3.42.1
 
 ### Patch Changes

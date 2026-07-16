@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "3.60.0",
+  "version": "3.60.1",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "license": "Apache-2.0",
@@ -136,6 +136,7 @@
     "remark-gfm": "4.0.1",
     "shadow-dom-testing-library": "1.14.0",
     "storybook": "10.4.6",
+    "storybook-addon-pseudo-states": "10.4.6",
     "tailwindcss": "4.3.2",
     "ts-dedent": "2.3.0",
     "ts-lit-plugin": "2.0.2",

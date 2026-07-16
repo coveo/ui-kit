@@ -1,5 +1,6 @@
 ---
 title: Introduction
+pageTitle: Usage Analytics
 group: Guides
 category: Usage Analytics
 slug: usage/usage-analytics/index

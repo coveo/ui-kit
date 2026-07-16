@@ -80,6 +80,16 @@ export const NonCollapsibleWithoutTimeline: Story = {
   },
 };
 
+export const HoverState: Story = {
+  name: 'Hover State',
+  args: {},
+  parameters: {
+    pseudo: {
+      hover: true,
+    },
+  },
+};
+
 export const A11yDisclosure: Story = {
   tags: ['a11y', 'test', '!dev'],
   play: async (context) => {
