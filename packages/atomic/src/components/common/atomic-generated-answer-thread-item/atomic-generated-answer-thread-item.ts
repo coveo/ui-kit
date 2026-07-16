@@ -142,7 +142,7 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
       'justify-center': true,
       'items-center': true,
       'text-base': true,
-      'h-[calc(1lh+var(--spacing)*3)]': true,
+      'h-[1lh] my-1.5': true,
     });
     const timelineLineToggleClasses = classMap({
       flex: true,
