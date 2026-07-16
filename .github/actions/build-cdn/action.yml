@@ -15,6 +15,9 @@ runs:
         save-cache: 'true'
         load-cache: 'false'
         cache-retention-days: '7'
+        # Samples are not CDN artifacts. Exclude them so the CDN build does not try
+        # to bundle samples that depend on CDN-externalized packages.
+        build-command: "pnpm exec turbo build --filter='!./samples/**'"
       env:
         DEPLOYMENT_ENVIRONMENT: CDN
         CDN_COMMIT_SHA: ${{ inputs.commit-sha }}

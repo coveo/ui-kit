@@ -1,3 +1,5 @@
+import type {AnalyticsParams} from '@/src/internal/api/analytics-params.js';
+
 export interface CoveoSearchEndpointRequest {
   q?: string;
   aq?: string;
@@ -7,6 +9,10 @@ export interface CoveoSearchEndpointRequest {
   fieldsToInclude?: string[];
   enableDidYouMean?: boolean;
   facets?: CoveoFacetRequest[];
+  pipeline?: string;
+  locale?: string;
+  timezone?: string;
+  analytics?: AnalyticsParams;
 }
 
 export interface CoveoFacetRequest {

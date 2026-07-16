@@ -34,7 +34,12 @@ const createCallSearchEndpoint = (): SearchEndpointClient['call'] => {
       const organizationEndpoint = getOrganizationEndpoint(organizationId, {
         endpoint,
       });
-      const url = `${organizationEndpoint}/rest/search/v2`;
+
+      const queryParams = new URLSearchParams({
+        organizationId,
+      });
+
+      const url = `${organizationEndpoint}/rest/search/v2?${queryParams}`;
 
       const httpResponse =
         await executeHttpRequest<CoveoSearchEndpointResponse>({
