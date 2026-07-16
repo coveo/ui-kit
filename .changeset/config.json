@@ -14,6 +14,7 @@
       "@coveo/ui-kit-sample-atomic-search-vite",
       "@coveo/ui-kit-sample-atomic-commerce-vite"
     ],
+    ["@coveo/atomic-react", "@coveo/ui-kit-sample-atomic-search-react"],
     [
       "@coveo/headless",
       "@coveo/ui-kit-sample-headless-search-vite",

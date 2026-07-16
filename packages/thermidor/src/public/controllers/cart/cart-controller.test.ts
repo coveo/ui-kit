@@ -1,7 +1,7 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {type Engine, getFullEngine} from '@/src/internal/engine/index.js';
 import {createTestEngine, createTestInterface} from '@/src/test/test-utils.js';
-import {getInterfaceInternals} from '@/src/internal/utils/index.js';
+import {getHandleInternals} from '@/src/internal/utils/index.js';
 import {getOrCreateSearchBoxSlice} from '@/src/internal/features/search-box/index.js';
 import {getOrCreateSearchBoxActions} from '@/src/internal/features/search-box/index.js';
 import {getOrCreateCartSlice} from '@/src/internal/features/cart/index.js';
@@ -35,7 +35,7 @@ describe('buildCartController', () => {
         const controller = buildCartController({interface: cartInterface});
         const callback = vi.fn();
         const fullEngine = getFullEngine(engine);
-        getInterfaceInternals(cartInterface);
+        getHandleInternals(cartInterface);
 
         const searchBoxSlice = getOrCreateSearchBoxSlice(cartInterface);
         const {setQuery} = getOrCreateSearchBoxActions(cartInterface);

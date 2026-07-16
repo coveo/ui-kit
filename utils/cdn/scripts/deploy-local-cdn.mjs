@@ -16,6 +16,11 @@ const packages = [
     source: 'packages/headless/cdn',
     cdnPath: 'headless/v$VERSION',
   },
+  {
+    name: 'relay',
+    source: 'packages/relay/lib/cdn',
+    cdnPath: 'relay/v$VERSION',
+  },
   {name: 'atomic', source: 'packages/atomic/cdn', cdnPath: 'atomic/v$VERSION'},
   {
     name: 'atomic-storybook',

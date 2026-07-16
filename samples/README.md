@@ -42,18 +42,19 @@ Samples using `@coveo/thermidor` for upcoming conversational and search experien
 | Sample                                                | Description                                                           | Framework    | Use Case     |
 | ----------------------------------------------------- | --------------------------------------------------------------------- | ------------ | ------------ |
 | [conversation-react](./thermidor/conversation-react/) | React + Vite bootstrap for Headless Future conversational integration | React + Vite | Conversation |
+| [search-react](./thermidor/search-react/)             | React + Vite search sample with SearchBox, ResultList, Pagination     | React + Vite | Search       |
 
 ### [Headless SSR Samples](./headless-ssr/)
 
 Server-side rendering with Headless controllers for improved performance and SEO.
 
-| Sample                                                         | Description                          | Framework    | Use Case |
-| -------------------------------------------------------------- | ------------------------------------ | ------------ | -------- |
-| [commerce-nextjs](./headless-ssr/commerce-nextjs/)             | Commerce SSR with Next.js App Router | Next.js      | Commerce |
-| [commerce-nextjs-v4](./headless-ssr/commerce-nextjs-v4/)       | Commerce SSR (Headless V4 preview)   | Next.js      | Commerce |
-| [search-nextjs](./headless-ssr/search-nextjs/)                 | Search SSR with Next.js App Router   | Next.js      | Search   |
-| [commerce-express](./headless-ssr/commerce-express/)           | Generic SSR with Express server      | Express      | Commerce |
-| [commerce-react-router](./headless-ssr/commerce-react-router/) | Commerce SSR with React Router       | React Router | Commerce |
+| Sample                                                         | Description                                               | Framework    | Use Case |
+| -------------------------------------------------------------- | --------------------------------------------------------- | ------------ | -------- |
+| [commerce-nextjs](./headless-ssr/commerce-nextjs/)             | Commerce SSR with Next.js App Router                      | Next.js      | Commerce |
+| [commerce-nextjs-v4](./headless-ssr/commerce-nextjs-v4/)       | Commerce SSR (Headless V4 preview)                        | Next.js      | Commerce |
+| [search-nextjs](./headless-ssr/search-nextjs/)                 | Search SSR with Next.js App Router                        | Next.js      | Search   |
+| [commerce-express](./headless-ssr/commerce-express/)           | Commerce SSR with a generic Express server (no framework) | Express      | Commerce |
+| [commerce-react-router](./headless-ssr/commerce-react-router/) | Commerce SSR with React Router                            | React Router | Commerce |
 
 ## 🚀 Quick Start
 

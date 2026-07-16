@@ -1,0 +1,27 @@
+{
+  "name": "@samples/thermidor-generative-angular",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "prebuild": "node scripts/generate-env.mjs",
+    "build": "ng build",
+    "predev": "node scripts/generate-env.mjs",
+    "dev": "ng serve --configuration development"
+  },
+  "dependencies": {
+    "@angular/common": "catalog:",
+    "@angular/compiler": "catalog:",
+    "@angular/core": "catalog:",
+    "@angular/platform-browser": "catalog:",
+    "@coveo/thermidor": "workspace:*",
+    "marked": "catalog:",
+    "rxjs": "catalog:"
+  },
+  "devDependencies": {
+    "@angular/build": "catalog:",
+    "@angular/cli": "catalog:",
+    "@angular/compiler-cli": "catalog:",
+    "dotenv": "catalog:",
+    "typescript": "catalog:"
+  }
+}
