@@ -21,7 +21,6 @@ const meta: Meta = {
   decorators: [decorator],
   parameters: {
     ...parameters,
-
     actions: {
       handles: events,
     },

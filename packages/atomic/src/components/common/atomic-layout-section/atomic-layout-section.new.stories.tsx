@@ -21,7 +21,6 @@ const meta: Meta = {
   parameters: {
     ...parameters,
     msw: {handlers: [...searchApiHarness.handlers]},
-
     actions: {
       handles: events,
     },

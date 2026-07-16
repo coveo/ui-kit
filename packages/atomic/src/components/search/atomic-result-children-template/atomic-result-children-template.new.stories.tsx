@@ -127,7 +127,6 @@ const meta: Meta = {
   render: (args) => template(args),
   parameters: {
     ...parameters,
-
     msw: {
       handlers: [...searchApiHarness.handlers],
     },

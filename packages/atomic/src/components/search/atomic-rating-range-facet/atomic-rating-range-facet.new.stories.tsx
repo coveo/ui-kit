@@ -35,7 +35,6 @@ const meta: Meta = {
   decorators: [decorator],
   parameters: {
     ...parameters,
-
     msw: {
       handlers: [...searchApiHarness.handlers],
     },

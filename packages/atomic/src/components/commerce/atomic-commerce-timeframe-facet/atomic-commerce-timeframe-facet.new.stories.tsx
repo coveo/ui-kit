@@ -60,7 +60,6 @@ const meta: Meta = {
     msw: {
       handlers: [...commerceApiHarness.handlers],
     },
-
     actions: {
       handles: events,
     },
