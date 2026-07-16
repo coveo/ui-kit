@@ -282,9 +282,10 @@ export class GenerativeRuntime {
 
       case 'commerce_search_api_response':
       case 'search_api_response': {
+        const {type: _type, ...content} = event;
         const routedInterface = this.hydrateSubInterface(
           event.type,
-          event.content,
+          content,
           this.currentPrompt
         );
 

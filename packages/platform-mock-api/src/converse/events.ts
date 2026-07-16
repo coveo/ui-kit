@@ -26,7 +26,7 @@ interface MessageData {
 
 interface ConverseEvent {
   event: ConverseEventType;
-  data: TurnStartedData | MessageData;
+  data: TurnStartedData | MessageData | Record<string, unknown>;
   delayMs?: number;
 }
 
@@ -180,20 +180,14 @@ const CommerceSearchApiResponse = (options: {
   content: Record<string, unknown>;
 }): ConverseEvent => ({
   event: 'commerce_search_api_response',
-  data: {
-    type: 'commerce_search_api_response',
-    content: options.content,
-  },
+  data: options.content,
 });
 
 const SearchApiResponse = (options: {
   content: Record<string, unknown>;
 }): ConverseEvent => ({
   event: 'search_api_response',
-  data: {
-    type: 'search_api_response',
-    content: options.content,
-  },
+  data: options.content,
 });
 
 function textMessage(

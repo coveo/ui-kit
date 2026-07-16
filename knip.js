@@ -160,5 +160,13 @@ export default {
     'samples/thermidor/generative-react': {
       ignore: ['**/*'],
     },
+    'samples/thermidor/generative-angular': {
+      entry: ['proxy.conf.js'],
+      ignore: [
+        'src/app/services/engine.service.ts',
+        'src/app/app.css',
+        'src/styles.css',
+      ],
+    },
   },
 };
