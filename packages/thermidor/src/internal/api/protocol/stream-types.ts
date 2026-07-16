@@ -54,13 +54,11 @@ export type TurnCompleteEvent = {
 
 export type CommerceSearchApiResponseEvent = {
   type: 'commerce_search_api_response';
-  content: Record<string, unknown>;
-};
+} & Record<string, unknown>;
 
 export type SearchApiResponseEvent = {
   type: 'search_api_response';
-  content: Record<string, unknown>;
-};
+} & Record<string, unknown>;
 
 // ============================================================================
 // Structured snapshot events (A2UI — Coveo-specific payload shape)
