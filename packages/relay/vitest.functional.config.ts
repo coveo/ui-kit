@@ -16,9 +16,6 @@ export default defineConfig({
       ],
     },
     globals: true,
-    env: {
-      VITE_ANALYTICS_KEY: process.env.VITE_ANALYTICS_KEY,
-    },
     include: ['**/functional.test.ts'],
   },
 });

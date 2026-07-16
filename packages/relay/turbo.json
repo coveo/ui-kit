@@ -8,8 +8,7 @@
     "functional-test": {
       "dependsOn": ["build"],
       "cache": false,
-      "outputs": [],
-      "env": ["VITE_ANALYTICS_KEY"]
+      "outputs": []
     }
   }
 }

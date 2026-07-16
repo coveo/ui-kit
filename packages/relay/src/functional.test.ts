@@ -1,14 +1,15 @@
 import {createRelay} from '../lib/npm/relay';
 import {createMockEvent} from './__mocks__/event.js';
 
-//@ts-expect-error("env not defined on meta")
-const ftToken: string = import.meta.env.VITE_ANALYTICS_KEY!;
+const sampleAnalyticsEndpoint =
+  'https://searchuisamples.analytics.org.coveo.com/rest/organizations';
+const sampleAccessToken = 'xx564559b1-0045-48e1-953c-3addd1ee4457';
 
 describe('functional tests', () => {
   it('can send an event', async () => {
     const relay = createRelay({
-      token: ftToken,
-      url: 'https://analyticsdev.cloud.coveo.com/rest/organizations/coveodev/events/v1',
+      token: sampleAccessToken,
+      url: `${sampleAnalyticsEndpoint}/searchuisamples/events/v1`,
       trackingId: null,
     });
     const event = createMockEvent({meta: {type: 'api.event.itemClick'}});
@@ -19,8 +20,8 @@ describe('functional tests', () => {
 
   it('throws on an invalid event', async () => {
     const relay = createRelay({
-      token: ftToken,
-      url: 'https://analyticsdev.cloud.coveo.com/rest/organizations/coveodev/events/v1',
+      token: sampleAccessToken,
+      url: `${sampleAnalyticsEndpoint}/searchuisamples/events/v1`,
       trackingId: null,
     });
     const event = {};
@@ -39,7 +40,7 @@ describe('functional tests', () => {
   it('throws on invalid auth', async () => {
     const relay = createRelay({
       token: 'xxnoTokenHere',
-      url: 'https://analyticsdev.cloud.coveo.com/rest/organizations/coveodev/events/v1',
+      url: `${sampleAnalyticsEndpoint}/searchuisamples/events/v1`,
       trackingId: null,
     });
     await expect(relay.emit('api.event.itemClick', {})).rejects.toThrowError(
@@ -49,8 +50,8 @@ describe('functional tests', () => {
 
   it('throws on invalid url', async () => {
     const relay = createRelay({
-      token: ftToken,
-      url: 'https://analyticsdev.cloud.coveo.com/rest/organizations/coveodev/events/v0',
+      token: sampleAccessToken,
+      url: `${sampleAnalyticsEndpoint}/searchuisamples/events/v0`,
       trackingId: null,
     });
     await expect(relay.emit('api.event.itemClick', {})).rejects.toThrowError(
@@ -60,8 +61,8 @@ describe('functional tests', () => {
 
   it('throws on invalid org', async () => {
     const relay = createRelay({
-      token: ftToken,
-      url: 'https://analyticsdev.cloud.coveo.com/rest/organizations/nono/events/v1',
+      token: sampleAccessToken,
+      url: `${sampleAnalyticsEndpoint}/nono/events/v1`,
       trackingId: null,
     });
     await expect(relay.emit('api.event.itemClick', {})).rejects.toThrowError(
