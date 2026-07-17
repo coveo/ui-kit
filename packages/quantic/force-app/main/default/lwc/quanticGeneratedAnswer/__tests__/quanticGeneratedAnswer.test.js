@@ -89,9 +89,8 @@ const selectors = {
   generatedAnswer: '[data-testid="generated-answer__answer"]',
   generatedAnswerBadge: '[data-testid="generated-answer__header-title"]',
   generatedAnswerRetryButton: '[data-testid="generated-answer__retry-button"]',
-  generatedAnswerActions: '[data-testid="generated-answer__actions"]',
   generatedAnswerToggleButton: 'c-quantic-generated-answer-toggle',
-  generatedAnswerContent: 'c-quantic-generated-answer-content',
+  generatedAnswerBodyComponent: 'c-quantic-generated-answer-body',
   generatingMessageWhenAnswerCollapsed:
     '[data-testid="generated-answer__collapse-generating-message"]',
   generatedAnswerCollapseToggle:
@@ -101,10 +100,8 @@ const selectors = {
     '[data-testid="generated-answer__no-answer-card"]',
   generatedAnswerNoAnswerMessage:
     '[data-testid="generated-answer__no-answer-message"]',
-  generatedAnswerCitations: 'c-quantic-source-citations',
   generatedAnswerThread: 'c-quantic-generated-answer-thread',
   generatedAnswerFollowUpInput: 'c-quantic-generated-answer-follow-up-input',
-  generatedAnswerFeedback: 'c-quantic-feedback',
   loadingSpinner: 'lightning-spinner',
 };
 
@@ -128,6 +125,7 @@ const functionsMocks = {
     like: functionsMocks.like,
     dislike: functionsMocks.dislike,
     closeFeedbackModal: functionsMocks.closeFeedbackModal,
+    logCitationHover: functionsMocks.logCitationHover,
   })),
   buildSearchStatus: jest.fn(() => ({
     state: searchStatusState,
@@ -148,6 +146,7 @@ const functionsMocks = {
   like: jest.fn(),
   dislike: jest.fn(),
   closeFeedbackModal: jest.fn(),
+  logCitationHover: jest.fn(),
 };
 
 /**
@@ -504,33 +503,25 @@ describe('c-quantic-generated-answer', () => {
         });
       });
 
-      it('should display the generated answer content', async () => {
+      it('should forward the streaming answer to the generated answer body', async () => {
         const element = createTestComponent();
         await flushPromises();
 
-        const generatedAnswerContent = element.shadowRoot.querySelector(
-          selectors.generatedAnswerContent
+        const generatedAnswerBody = element.shadowRoot.querySelector(
+          selectors.generatedAnswerBodyComponent
         );
 
-        expect(generatedAnswerContent).not.toBeNull();
-        expect(generatedAnswerContent.isStreaming).toBe(true);
-        expect(generatedAnswerContent.answer).toBe(exampleAnswer);
-        expect(generatedAnswerContent.answerContentFormat).toBe(
-          exampleAnswerContentFormat
+        expect(generatedAnswerBody).not.toBeNull();
+        expect(generatedAnswerBody.engineId).toBe(exampleEngineId);
+        expect(generatedAnswerBody.disableCitationAnchoring).toBe(false);
+        expect(generatedAnswerBody.generatedAnswer).toEqual(
+          expect.objectContaining({
+            answer: exampleAnswer,
+            answerContentFormat: exampleAnswerContentFormat,
+            answerId: exampleAnswerId,
+            isStreaming: true,
+          })
         );
-        expect(generatedAnswerContent.engineId).toBe(exampleEngineId);
-        expect(generatedAnswerContent.answerId).toBe(exampleAnswerId);
-      });
-
-      it('should not display the generated answer actions', async () => {
-        const element = createTestComponent();
-        await flushPromises();
-
-        const generatedAnswerActions = element.shadowRoot.querySelector(
-          selectors.generatedAnswerActions
-        );
-
-        expect(generatedAnswerActions).toBeNull();
       });
 
       it('should not display the generated answer disclaimer in the footer', async () => {
@@ -769,38 +760,48 @@ describe('c-quantic-generated-answer', () => {
         });
       });
 
-      it('should display the generated answer content', async () => {
-        const element = createTestComponent();
-        await flushPromises();
-
-        const generatedAnswerContent = element.shadowRoot.querySelector(
-          selectors.generatedAnswerContent
-        );
-
-        expect(generatedAnswerContent).not.toBeNull();
-        expect(generatedAnswerContent.isStreaming).toBe(false);
-        expect(generatedAnswerContent.answer).toBe(exampleAnswer);
-        expect(generatedAnswerContent.answerContentFormat).toBe(
-          exampleAnswerContentFormat
-        );
-      });
-
-      it('should display the generated answer actions', async () => {
+      it('should forward the ready answer with citations to the generated answer body', async () => {
         const element = createTestComponent();
         await flushPromises();
 
         const generatedAnswerBody = element.shadowRoot.querySelector(
-          selectors.generatedAnswerBody
-        );
-        const generatedAnswerActions = element.shadowRoot.querySelector(
-          selectors.generatedAnswerActions
+          selectors.generatedAnswerBodyComponent
         );
 
         expect(generatedAnswerBody).not.toBeNull();
-        expect(generatedAnswerActions).not.toBeNull();
-        expect(generatedAnswerActions.closest('section')).toBe(
-          generatedAnswerBody
+        expect(generatedAnswerBody.engineId).toBe(exampleEngineId);
+        expect(generatedAnswerBody.disableCitationAnchoring).toBe(false);
+        expect(generatedAnswerBody.generatedAnswer).toEqual(
+          expect.objectContaining({
+            answer: exampleAnswer,
+            answerContentFormat: exampleAnswerContentFormat,
+            citations: exampleCitations,
+            isStreaming: false,
+          })
         );
+      });
+
+      it('should collapse the answer when the body reports a content height exceeding the maximum collapsed height', async () => {
+        const element = createTestComponent({
+          ...defaultOptions,
+          collapsible: true,
+        });
+        await flushPromises();
+
+        const generatedAnswerBody = element.shadowRoot.querySelector(
+          selectors.generatedAnswerBodyComponent
+        );
+        generatedAnswerBody.dispatchEvent(
+          new CustomEvent('quantic__answercontentupdated', {
+            detail: {height: defaultAnswerHeight + 100},
+          })
+        );
+        await flushPromises();
+
+        const generatedAnswerCollapseToggle = element.shadowRoot.querySelector(
+          selectors.generatedAnswerCollapseToggle
+        );
+        expect(generatedAnswerCollapseToggle).not.toBeNull();
       });
 
       it('should display the generated answer disclaimer', async () => {
@@ -831,17 +832,6 @@ describe('c-quantic-generated-answer', () => {
 
         expect(generatedAnswerHeader).not.toBeNull();
         expect(generatedAnswerBadge).not.toBeNull();
-      });
-
-      it('should pass the disableCitationAnchoring property to the source citations component', async () => {
-        const element = createTestComponent();
-        await flushPromises();
-
-        const generatedAnswerCitations = element.shadowRoot.querySelector(
-          selectors.generatedAnswerCitations
-        );
-        expect(generatedAnswerCitations).not.toBeNull();
-        expect(generatedAnswerCitations.disableCitationAnchoring).toBe(false);
       });
 
       describe('when follow-ups are enabled', () => {
@@ -1385,6 +1375,103 @@ describe('c-quantic-generated-answer', () => {
     });
   });
 
+  describe('the citation hover event', () => {
+    const exampleAnswer = 'answer generated successfully';
+    const exampleAgentId = 'example agent id';
+    const exampleCitationId = 'citation-id-1';
+    const exampleCitationHoverTimeMs = 1500;
+
+    describe('when follow-ups are not enabled', () => {
+      beforeEach(() => {
+        generatedAnswerState = {
+          ...initialGeneratedAnswerState,
+          isStreaming: false,
+          answer: exampleAnswer,
+          answerContentFormat: 'text/markdown',
+          answerId: exampleAnswerId,
+          citations: exampleCitations,
+        };
+        mockSuccessfulHeadlessInitialization();
+        prepareHeadlessState();
+      });
+
+      afterAll(() => {
+        generatedAnswerState = initialGeneratedAnswerState;
+      });
+
+      it('should call logCitationHover on the controller with the correct parameters', async () => {
+        const element = createTestComponent();
+        await flushPromises();
+
+        const generatedAnswerBody = element.shadowRoot.querySelector(
+          selectors.generatedAnswerBodyComponent
+        );
+        generatedAnswerBody.dispatchEvent(
+          new CustomEvent('quantic__citationhover', {
+            detail: {
+              citationId: exampleCitationId,
+              citationHoverTimeMs: exampleCitationHoverTimeMs,
+              answerId: exampleAnswerId,
+            },
+          })
+        );
+        await flushPromises();
+
+        expect(functionsMocks.logCitationHover).toHaveBeenCalledTimes(1);
+        expect(functionsMocks.logCitationHover).toHaveBeenCalledWith(
+          exampleCitationId,
+          exampleCitationHoverTimeMs,
+          exampleAnswerId
+        );
+      });
+    });
+
+    describe('when follow-ups are enabled', () => {
+      beforeEach(() => {
+        generatedAnswerState = {
+          ...initialGeneratedAnswerState,
+          answer: exampleAnswer,
+          followUpAnswers: {isEnabled: true, followUpAnswers: []},
+        };
+        mockSuccessfulHeadlessInitialization();
+        prepareHeadlessState();
+      });
+
+      afterAll(() => {
+        generatedAnswerState = initialGeneratedAnswerState;
+      });
+
+      it('should call logCitationHover on the controller with the correct parameters', async () => {
+        const element = createTestComponent({
+          ...defaultOptions,
+          agentId: exampleAgentId,
+        });
+        await flushPromises();
+
+        const thread = element.shadowRoot.querySelector(
+          selectors.generatedAnswerThread
+        );
+        thread.dispatchEvent(
+          new CustomEvent('quantic__citationhover', {
+            detail: {
+              citationId: exampleCitationId,
+              citationHoverTimeMs: exampleCitationHoverTimeMs,
+              answerId: exampleAnswerId,
+            },
+          })
+        );
+        await flushPromises();
+
+        expect(functionsMocks.logCitationHover).toHaveBeenCalledTimes(1);
+        expect(functionsMocks.logCitationHover).toHaveBeenCalledWith(
+          exampleCitationId,
+          exampleCitationHoverTimeMs,
+          exampleAnswerId
+        );
+      });
+    });
+  });
+
   describe('the generated answer feedback', () => {
     const exampleAnswer = 'answer generated successfully';
     const exampleAgentId = 'example agent id';
@@ -1392,19 +1479,17 @@ describe('c-quantic-generated-answer', () => {
     describe.each([
       {
         action: 'like',
-        feedbackEvent: 'quantic__like',
         threadEvent: 'quantic__generatedanswerlike',
         controllerMethod: 'like',
       },
       {
         action: 'dislike',
-        feedbackEvent: 'quantic__dislike',
         threadEvent: 'quantic__generatedanswerdislike',
         controllerMethod: 'dislike',
       },
     ])(
       'when the user clicks the $action button',
-      ({feedbackEvent, threadEvent, controllerMethod}) => {
+      ({threadEvent, controllerMethod}) => {
         describe('when follow-ups are not enabled', () => {
           beforeEach(() => {
             generatedAnswerState = {
@@ -1427,11 +1512,11 @@ describe('c-quantic-generated-answer', () => {
             const element = createTestComponent();
             await flushPromises();
 
-            const feedback = element.shadowRoot.querySelector(
-              selectors.generatedAnswerFeedback
+            const generatedAnswerBody = element.shadowRoot.querySelector(
+              selectors.generatedAnswerBodyComponent
             );
-            feedback.dispatchEvent(
-              new CustomEvent(feedbackEvent, {
+            generatedAnswerBody.dispatchEvent(
+              new CustomEvent(threadEvent, {
                 detail: {answerId: exampleAnswerId},
               })
             );
