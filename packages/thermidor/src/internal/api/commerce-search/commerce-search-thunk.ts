@@ -1,8 +1,8 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import type {EndpointStateScope} from '@/src/internal/utils/index.js';
+import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 import type {FullEngine} from '@/src/internal/engine/index.js';
 import type {CommerceSearchRequest} from '@/src/internal/api/commerce-search/index.js';
-import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import {createCommerceSearchEndpointRequestSelector} from './commerce-search-request-selector.js';
 import {createCommerceSearchEndpointResponseHandler} from './commerce-search-response-handler.js';
 import {getOrCreateConfigurationSelectors} from '@/src/internal/features/configuration/index.js';
@@ -11,15 +11,13 @@ import {getOrCreateCommerceSearchEndpointSlice} from './commerce-search-thunk-sl
 
 export function createCommerceSearchEndpointThunk(
   engine: FullEngine,
-  scope: EndpointStateScope
+  iface: InterfaceHandle
 ) {
   const configSelectors = getOrCreateConfigurationSelectors();
-  const buildRequest = createCommerceSearchEndpointRequestSelector(scope);
-  const handleResponse = createCommerceSearchEndpointResponseHandler(
-    scope.baseInterface
-  );
+  const buildRequest = createCommerceSearchEndpointRequestSelector(iface);
+  const handleResponse = createCommerceSearchEndpointResponseHandler(iface);
 
-  const {stateId} = getHandleInternals(scope.scopeInterface);
+  const {stateId} = getInterfaceInternals(iface);
 
   const thunk = createAsyncThunk<void, {engine: FullEngine}>(
     `${stateId}/commerceSearchEndpoint/execute`,
@@ -56,9 +54,7 @@ export function createCommerceSearchEndpointThunk(
     }
   );
 
-  engine.adoptSlice(
-    getOrCreateCommerceSearchEndpointSlice(scope.scopeInterface, thunk)
-  );
+  engine.adoptSlice(getOrCreateCommerceSearchEndpointSlice(iface, thunk));
 
   return thunk;
 }

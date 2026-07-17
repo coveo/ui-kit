@@ -2,7 +2,7 @@ import {BaseController} from '@/src/internal/utils/index.js';
 import type {Supports, EndpointThunk} from '@/src/internal/utils/index.js';
 import type {StateSelector} from '@/src/internal/engine/index.js';
 import {createMemoizedStateSelector} from '@/src/internal/utils/index.js';
-import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import {getOrCreatePaginationActions} from '@/src/internal/features/pagination/index.js';
 import {getOrCreatePaginationSelectors} from '@/src/internal/features/pagination/index.js';
 import {getOrCreatePaginationSlice} from '@/src/internal/features/pagination/index.js';
@@ -14,7 +14,7 @@ class PaginationControllerImpl extends BaseController<PaginationControllerState>
   #controllerState: StateSelector<PaginationControllerState>;
 
   constructor(options: PaginationControllerOptions) {
-    const {engine, resolveFacades} = getHandleInternals(options.interface);
+    const {engine, resolveFacades} = getInterfaceInternals(options.interface);
 
     engine.adoptSlice(getOrCreatePaginationSlice(options.interface));
 

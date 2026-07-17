@@ -1,7 +1,7 @@
 import {BaseController} from '@/src/internal/utils/index.js';
 import type {Supports, EndpointThunk} from '@/src/internal/utils/index.js';
 import {createMemoizedStateSelector} from '@/src/internal/utils/index.js';
-import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import {getOrCreateSearchBoxActions} from '@/src/internal/features/search-box/index.js';
 import {getOrCreateSearchBoxSelectors} from '@/src/internal/features/search-box/index.js';
 import {getOrCreateSearchBoxSlice} from '@/src/internal/features/search-box/index.js';
@@ -13,7 +13,7 @@ class SearchBoxControllerImpl extends BaseController<SearchBoxControllerState> {
   #actions: ReturnType<typeof getOrCreateSearchBoxActions>;
 
   constructor(options: SearchBoxControllerOptions) {
-    const {engine, resolveFacades} = getHandleInternals(options.interface);
+    const {engine, resolveFacades} = getInterfaceInternals(options.interface);
 
     engine.adoptSlice(getOrCreateSearchBoxSlice(options.interface));
 

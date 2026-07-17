@@ -5,7 +5,7 @@ import {configurationSlice} from '@/src/internal/features/configuration/index.js
 import {setConfiguration} from '@/src/internal/features/configuration/index.js';
 import type {NavigatorContextProvider} from '@/src/internal/utils/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
-import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import {getOrCreateHydrateFromSnapshotAction} from '@/src/internal/features/generative/index.js';
 import {
   Dispatchable,
@@ -161,7 +161,7 @@ export class Engine {
     iface: InterfaceHandle
   ) {
     this.#assertNotDisposed();
-    const {stateId} = getHandleInternals(iface);
+    const {stateId} = getInterfaceInternals(iface);
     this.#hydrationSnapshots.set(stateId, {content, iface});
   }
 

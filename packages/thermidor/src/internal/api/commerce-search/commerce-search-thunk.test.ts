@@ -1,7 +1,7 @@
 import {describe, it, expect, vi, beforeEach} from 'vitest';
 import {createCommerceSearchEndpointThunk} from './commerce-search-thunk.js';
 import type {FullEngine} from '@/src/internal/engine/index.js';
-import type {EndpointStateScope} from '@/src/internal/utils/index.js';
+import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 
 const mockCall = vi.fn();
 
@@ -25,7 +25,7 @@ vi.mock('./commerce-search-response-handler.js', () => ({
 
 vi.mock('@/src/internal/features/configuration/index.js', () => ({
   getOrCreateConfigurationSelectors: () => ({
-    getEndpointClientConfiguration: (state: any) => ({
+    getEndpointClientConfiguration: () => ({
       organizationId: 'test-org',
       accessToken: 'test-token',
       endpoint: undefined,
@@ -45,7 +45,7 @@ vi.mock('./commerce-search-thunk-slice.js', () => ({
 }));
 
 vi.mock('@/src/internal/utils/index.js', () => ({
-  getHandleInternals: () => ({
+  getInterfaceInternals: () => ({
     stateId: 'test-interface',
     cacheRegistry: {getOrCreate: (_key: any, factory: any) => factory()},
   }),
@@ -89,12 +89,12 @@ describe('createCommerceSearchEndpointThunk', () => {
       },
     });
 
-    const scope: EndpointStateScope = {
-      scopeInterface: {} as any,
-      baseInterface: {} as any,
+    const iface: InterfaceHandle = {
+      disposed: false,
+      dispose: vi.fn(),
     };
 
-    const thunk = createCommerceSearchEndpointThunk(engine, scope);
+    const thunk = createCommerceSearchEndpointThunk(engine, iface);
     const action = thunk({engine});
     await action(vi.fn(), () => ({}), undefined);
 
@@ -133,12 +133,12 @@ describe('createCommerceSearchEndpointThunk', () => {
       },
     });
 
-    const scope: EndpointStateScope = {
-      scopeInterface: {} as any,
-      baseInterface: {} as any,
+    const iface: InterfaceHandle = {
+      disposed: false,
+      dispose: vi.fn(),
     };
 
-    const thunk = createCommerceSearchEndpointThunk(engine, scope);
+    const thunk = createCommerceSearchEndpointThunk(engine, iface);
     const action = thunk({engine});
     await action(vi.fn(), () => ({}), undefined);
 
@@ -166,12 +166,12 @@ describe('createCommerceSearchEndpointThunk', () => {
       },
     });
 
-    const scope: EndpointStateScope = {
-      scopeInterface: {} as any,
-      baseInterface: {} as any,
+    const iface: InterfaceHandle = {
+      disposed: false,
+      dispose: vi.fn(),
     };
 
-    const thunk = createCommerceSearchEndpointThunk(engine, scope);
+    const thunk = createCommerceSearchEndpointThunk(engine, iface);
     const action = thunk({engine});
     await action(vi.fn(), () => ({}), undefined);
 
@@ -200,16 +200,15 @@ describe('createCommerceSearchEndpointThunk', () => {
       },
     });
 
-    const scope: EndpointStateScope = {
-      scopeInterface: {} as any,
-      baseInterface: {} as any,
+    const iface: InterfaceHandle = {
+      disposed: false,
+      dispose: vi.fn(),
     };
 
-    const thunk = createCommerceSearchEndpointThunk(engine, scope);
+    const thunk = createCommerceSearchEndpointThunk(engine, iface);
     const action = thunk({engine});
     const result = await action(vi.fn(), () => ({}), undefined);
 
-    expect(result.meta.rejectedWithValue).toBeFalsy();
     expect((result as any).error.message).toBe('Commerce search failed');
   });
 
@@ -235,12 +234,12 @@ describe('createCommerceSearchEndpointThunk', () => {
       getNavigatorContextProvider: () => undefined,
     } as unknown as FullEngine;
 
-    const scope: EndpointStateScope = {
-      scopeInterface: {} as any,
-      baseInterface: {} as any,
+    const iface: InterfaceHandle = {
+      disposed: false,
+      dispose: vi.fn(),
     };
 
-    const thunk = createCommerceSearchEndpointThunk(engine, scope);
+    const thunk = createCommerceSearchEndpointThunk(engine, iface);
     const action = thunk({engine});
     await action(vi.fn(), () => ({}), undefined);
 

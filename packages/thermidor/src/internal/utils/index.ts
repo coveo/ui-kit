@@ -2,8 +2,6 @@ export {createMemoizedStateSelector} from './memoized-state-selector.js';
 export type {StateSelector} from './memoized-state-selector.js';
 export {createSelectSlice} from './select-slice.js';
 export {generateId} from './id-generator.js';
-export {getHandleInternals} from './get-handle-internals.js';
-export type {HandleInternals} from './get-handle-internals.js';
 export {
   InterfaceCacheRegistry,
   createCacheKey,
@@ -23,8 +21,6 @@ export {BaseInterface, getInterfaceInternals} from './base-interface.js';
 export type {InterfaceInternals} from './base-interface.js';
 export type {
   CommerceInterface,
-  ComposedInterface,
-  EndpointStateScope,
   EndpointThunk,
   FacadeResolver,
   FacadeResolverFactory,

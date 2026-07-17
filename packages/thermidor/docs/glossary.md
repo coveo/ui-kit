@@ -235,10 +235,10 @@ Facades are named by the operation they perform: `'search'`, `'suggestions'`, `'
 
 ### FacadeResolver
 
-A function `(scope: EndpointStateScope) => EndpointThunk` that lazily creates and caches a facade thunk. Backed by `createFacadeCache`, which holds an internal `Map<string, thunk>` in a closure.
+A function `(iface: InterfaceHandle) => EndpointThunk` that lazily creates and caches a facade thunk. Receives the interface directly and produces an endpoint thunk bound to that interface's engine and state.
 
 ```typescript
-type FacadeResolver = (scope: EndpointStateScope) => EndpointThunk;
+type FacadeResolver = (iface: InterfaceHandle) => EndpointThunk;
 ```
 
 **File**: [`src/core/interface/utils/interface-types.ts`](../src/core/interface/utils/interface-types.ts)
@@ -263,7 +263,7 @@ interface Facades {
 
 ### `[FACADE_RESOLVERS]` Symbol
 
-A Symbol-keyed property on Interface and ComposedInterface objects. Holds `Record<Facades[T], FacadeResolver>` — the dispatch table of lazy facade resolvers. Not exported publicly; only accessible to internal code (controllers, compose).
+A Symbol-keyed property on Interface objects. Holds `Record<Facades[T], FacadeResolver>` — the dispatch table of lazy facade resolvers. Not exported publicly; only accessible to internal code (controllers).
 
 **File**: [`src/core/interface/utils/symbols.ts`](../src/core/interface/utils/symbols.ts)
 
@@ -279,12 +279,12 @@ A Symbol-keyed discriminant on Interface objects. Values: `'search' | 'commerce'
 
 ### Supports\<F\>
 
-A generic utility type that accepts any interface (simple or composed) whose `[TYPE]` corresponds to an interface type that declares facade `F`. Automatically derived from the `Facades` registry — no manual maintenance needed.
+A generic utility type that accepts any `BaseInterface` whose `[TYPE]` corresponds to an interface type that declares facade `F`. Automatically derived from the `Facades` registry — no manual maintenance needed.
 
 ```typescript
-type Supports<F extends Facades[InterfaceType]> =
-  | Interface<InterfaceTypesWith<F>>
-  | ComposedInterface<InterfaceTypesWith<F>>;
+type Supports<F extends Facades[InterfaceType]> = BaseInterface<
+  InterfaceTypesWith<F>
+>;
 
 // Usage:
 interface SearchBoxControllerOptions {
@@ -298,33 +298,28 @@ interface SearchBoxControllerOptions {
 
 ### createFacadeCache
 
-A factory function that creates a closure-based cache for facade resolution. Takes an engine and a thunk factory; returns a `FacadeResolver` backed by an internal `Map<string, EndpointThunk>`.
+The facade cache is a `Map<Facades[T], EndpointThunk>` stored as a private field on each `BaseInterface` instance. It ensures each facade thunk is created only once per interface. On first access, the resolver is called and the resulting thunk is cached; subsequent accesses return the cached thunk directly.
 
 ```typescript
-function createFacadeCache<T>(
-  engine: FullEngine,
-  factory: FacadeFactory<T>
-): (scope) => T;
+#facadeCache = new Map<Facades[T], EndpointThunk>();
 ```
 
-The cache key is `scope.composedInterfaceId ?? scope.interfaceId`. GC is natural — when the interface is GC'd, the closure and its Map are collected with it.
+GC is natural — when the interface is GC'd, the Map is collected with it.
 
-**File**: [`src/core/interface/utils/facade-cache.ts`](../src/core/interface/utils/facade-cache.ts)
+**File**: [`src/internal/utils/base-interface.ts`](../src/internal/utils/base-interface.ts)
 
 ---
 
 ### resolveFacades
 
-A utility that resolves all facade thunks for a given facade name from an interface (simple or composed). Handles scope construction for both cases.
+A method on `BaseInterface` that resolves the facade thunk for a given facade name. Uses the flat `Map<Facades[T], EndpointThunk>` cache to lazily create and store thunks.
 
-- **Simple interface**: returns `[iface[FACADE_RESOLVERS][facade](scope)]`
-- **Composed interface**: iterates sub-interfaces, builds scoped per sub-interface with `composedInterfaceId`, delegates through the composed interface's resolver
+- Looks up the resolver for the requested facade name
+- If the thunk is not cached, calls `resolver(this)` and stores the result
+- Returns the cached thunk wrapped in an array
 
 ```typescript
-function resolveFacades<T extends InterfaceType>(
-  iface: Interface<T> | ComposedInterface<T>,
-  facade: Facades[T]
-): EndpointThunk[];
+resolveFacades(facade: Facades[T]): EndpointThunk[];
 ```
 
-**File**: [`src/core/interface/utils/resolve-facades.ts`](../src/core/interface/utils/resolve-facades.ts)
+**File**: [`src/internal/utils/base-interface.ts`](../src/internal/utils/base-interface.ts)

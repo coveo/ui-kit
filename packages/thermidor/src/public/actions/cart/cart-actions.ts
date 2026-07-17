@@ -1,5 +1,5 @@
 import type {Supports} from '@/src/internal/utils/index.js';
-import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import {getOrCreateCartActions} from '@/src/internal/features/cart/index.js';
 import {getOrCreateCartSlice} from '@/src/internal/features/cart/index.js';
 import type {
@@ -17,7 +17,7 @@ export interface LoadCartActionsOptions {
  * @returns The cart actions: `setItems` and `updateItemQuantity`.
  */
 export function loadCartActions(options: LoadCartActionsOptions) {
-  const {engine} = getHandleInternals(options.interface);
+  const {engine} = getInterfaceInternals(options.interface);
 
   engine.adoptSlice(getOrCreateCartSlice(options.interface));
 

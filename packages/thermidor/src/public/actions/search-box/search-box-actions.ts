@@ -1,5 +1,5 @@
 import type {Supports} from '@/src/internal/utils/index.js';
-import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import {getOrCreateSearchBoxActions} from '@/src/internal/features/search-box/index.js';
 import {getOrCreateSearchBoxSlice} from '@/src/internal/features/search-box/index.js';
 
@@ -13,7 +13,7 @@ export interface LoadSearchBoxActionsOptions {
  * @returns The search box actions: `setQuery` and `submit`.
  */
 export function loadSearchBoxActions(options: LoadSearchBoxActionsOptions) {
-  const {engine, resolveFacades} = getHandleInternals(options.interface);
+  const {engine, resolveFacades} = getInterfaceInternals(options.interface);
 
   engine.adoptSlice(getOrCreateSearchBoxSlice(options.interface));
 

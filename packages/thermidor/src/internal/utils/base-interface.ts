@@ -2,7 +2,6 @@ import {InterfaceCacheRegistry} from './interface-cache-registry.js';
 import type {FullEngine} from '@/src/internal/engine/index.js';
 import type {
   EndpointThunk,
-  EndpointStateScope,
   FacadeResolverFactory,
   Facades,
   InterfaceHandle,
@@ -10,20 +9,17 @@ import type {
   SupportsBrand,
 } from './interface-types.js';
 
-export interface InterfaceInternals<T extends InterfaceType = InterfaceType> {
+export interface InterfaceInternals {
   engine: FullEngine;
   stateId: string;
-  type: T;
+  type: InterfaceType;
   cacheRegistry: InterfaceCacheRegistry;
-  resolveFacades(
-    facade: Facades[T],
-    composedInterface?: InterfaceHandle
-  ): EndpointThunk[];
+  resolveFacades(facade: Facades[InterfaceType]): EndpointThunk[];
 }
 
-export let getInterfaceInternals: <T extends InterfaceType>(
-  iface: BaseInterface<T>
-) => InterfaceInternals<T>;
+export let getInterfaceInternals: (
+  iface: InterfaceHandle
+) => InterfaceInternals;
 
 export abstract class BaseInterface<T extends InterfaceType> {
   declare readonly [SupportsBrand]: {[K in Facades[T]]: true};
@@ -36,19 +32,25 @@ export abstract class BaseInterface<T extends InterfaceType> {
   #stateId: string;
   #type: T;
   #facadeResolvers: Record<Facades[T], FacadeResolverFactory>;
-  #facadeCache = new WeakMap<InterfaceHandle, Map<Facades[T], EndpointThunk>>();
+  #facadeCache = new Map<Facades[T], EndpointThunk>();
   #cacheRegistry = new InterfaceCacheRegistry();
   #disposed = false;
 
   static {
-    getInterfaceInternals = <typeof getInterfaceInternals>((iface) => ({
-      engine: iface.#engine,
-      stateId: iface.#stateId,
-      type: iface.#type,
-      cacheRegistry: iface.#cacheRegistry,
-      resolveFacades: (facade, composedInterface) =>
-        iface.#resolveFacades(facade, composedInterface),
-    }));
+    getInterfaceInternals = <typeof getInterfaceInternals>((iface) => {
+      if (iface instanceof BaseInterface) {
+        return {
+          engine: iface.#engine,
+          stateId: iface.#stateId,
+          type: iface.#type,
+          cacheRegistry: iface.#cacheRegistry,
+          resolveFacades: (facade) => iface.#resolveFacades(facade),
+        };
+      }
+      throw new Error(
+        'Invalid interface handle: expected a BaseInterface instance.'
+      );
+    });
   }
 
   protected constructor(
@@ -74,10 +76,7 @@ export abstract class BaseInterface<T extends InterfaceType> {
     this.#engine.removeInterface(this);
   }
 
-  #resolveFacades(
-    facade: Facades[T],
-    composedInterface?: InterfaceHandle
-  ): EndpointThunk[] {
+  #resolveFacades(facade: Facades[T]): EndpointThunk[] {
     this.#assertNotDisposed();
 
     const resolver = this.#facadeResolvers[facade];
@@ -85,19 +84,10 @@ export abstract class BaseInterface<T extends InterfaceType> {
       return [];
     }
 
-    const scopeInterface = composedInterface ?? this;
-
-    let scopeCache = this.#facadeCache.get(scopeInterface);
-    if (!scopeCache) {
-      scopeCache = new Map();
-      this.#facadeCache.set(scopeInterface, scopeCache);
-    }
-
-    let thunk = scopeCache.get(facade);
+    let thunk = this.#facadeCache.get(facade);
     if (!thunk) {
-      const scope: EndpointStateScope = {baseInterface: this, scopeInterface};
-      thunk = resolver(this.#engine)(scope);
-      scopeCache.set(facade, thunk);
+      thunk = resolver(this.#engine)(this);
+      this.#facadeCache.set(facade, thunk);
     }
 
     return [thunk];

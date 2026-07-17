@@ -1,6 +1,6 @@
 import {createAction} from '@reduxjs/toolkit';
 import {type CacheKey, createCacheKey} from '@/src/internal/utils/index.js';
-import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 
 type ProductListActions = ReturnType<typeof createProductListActions>;
@@ -17,7 +17,7 @@ export function createProductListActions(interfaceId: string) {
 }
 
 export function getOrCreateProductListActions(iface: InterfaceHandle) {
-  const {stateId, cacheRegistry} = getHandleInternals(iface);
+  const {stateId, cacheRegistry} = getInterfaceInternals(iface);
   return cacheRegistry.getOrCreate(CACHE_KEY, () =>
     createProductListActions(stateId)
   );
