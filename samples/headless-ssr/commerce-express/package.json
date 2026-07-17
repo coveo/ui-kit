@@ -15,12 +15,13 @@
   },
   "scripts": {
     "dev": "pnpm build:client --watch=forever & pnpm build:server --watch & node --watch ./dist/server.js",
-    "build": "pnpm build:server && pnpm build:client && pnpm build:mocks",
+    "build": "pnpm build:server && pnpm build:client",
+    "build:e2e": "pnpm build && pnpm build:mocks",
     "build:server": "tsc -p tsconfig.build.json",
     "build:client": "esbuild ./src/client.ts --bundle --outfile=dist/client.js --format=esm --target=es2022",
     "build:mocks": "esbuild ./mocks/register.ts --bundle --outfile=dist-mocks/register.mjs --format=esm --platform=node",
     "start": "node ./dist/server.js",
-    "e2e": "playwright test",
+    "e2e": "pnpm build:e2e && playwright test",
     "type-check": "tsc --noEmit",
     "prepack": "node ../../../scripts/build-sample-publish-dir.mjs"
   },

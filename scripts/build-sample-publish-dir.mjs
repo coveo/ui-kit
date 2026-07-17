@@ -49,7 +49,7 @@ const TEST_ONLY_DEV_DEPENDENCIES = [
   'express',
   'msw',
 ];
-const TEST_ONLY_SCRIPTS = ['build:mocks', 'e2e'];
+const TEST_ONLY_SCRIPTS = ['build:e2e', 'build:mocks', 'e2e'];
 
 const isTestFile = (path) => /\.(test|spec)\.[jt]sx?$/.test(path);
 
@@ -79,10 +79,6 @@ for (const dependency of TEST_ONLY_DEV_DEPENDENCIES) {
 for (const script of TEST_ONLY_SCRIPTS) {
   delete pkg.scripts?.[script];
 }
-pkg.scripts.build = pkg.scripts.build?.replace(
-  /\s*&&\s*pnpm build:mocks\b/,
-  ''
-);
 // The published copy is the final artifact: it should not re-run the builder or
 // point at a nested publish directory.
 delete pkg.scripts?.prepack;
