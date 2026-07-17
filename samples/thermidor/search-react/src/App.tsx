@@ -1,20 +1,20 @@
+import {BrowserRouter, Routes, Route} from 'react-router';
 import {EngineProvider} from './context/engine.js';
-import {SearchInterfaceProvider} from './context/search-interface.js';
-import {SearchBox} from './components/SearchBox/SearchBox.js';
-import {ResultList} from './components/ResultList/ResultList.js';
-import {Pagination} from './components/Pagination/Pagination.js';
-import styles from './App.module.css';
+import {RootLayout} from './layouts/RootLayout.js';
+import {HomePage} from './pages/HomePage.js';
+import {SearchPage} from './pages/SearchPage.js';
 
 export default function App() {
   return (
-    <EngineProvider>
-      <SearchInterfaceProvider>
-        <main className={styles.root}>
-          <SearchBox />
-          <ResultList />
-          <Pagination />
-        </main>
-      </SearchInterfaceProvider>
-    </EngineProvider>
+    <BrowserRouter>
+      <EngineProvider>
+        <Routes>
+          <Route element={<RootLayout />}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/search" element={<SearchPage />} />
+          </Route>
+        </Routes>
+      </EngineProvider>
+    </BrowserRouter>
   );
 }

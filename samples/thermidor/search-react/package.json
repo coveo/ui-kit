@@ -14,7 +14,8 @@
   "dependencies": {
     "@coveo/thermidor": "workspace:*",
     "react": "catalog:",
-    "react-dom": "catalog:"
+    "react-dom": "catalog:",
+    "react-router": "catalog:"
   },
   "devDependencies": {
     "@playwright/test": "catalog:",
