@@ -9,6 +9,7 @@ import {
 import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-result-section-children/atomic-result-section-children.js';
+import {SearchResponse} from '@coveo/platform-mock-api/search/search-response';
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-result-section-children',
@@ -16,18 +17,16 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 );
 
 const searchApiHarness = new MockSearchApi();
+searchApiHarness.searchEndpoint.mock((response) => ({
+  ...(response as SearchResponse),
+  results: (response as SearchResponse).results.slice(0, 1),
+  numberOfResults: 1,
+}));
 
 const {play} = wrapInSearchInterface({
-  config: {
-    preprocessRequest: (request) => {
-      const parsed = JSON.parse(request.body as string);
-      parsed.numberOfResults = 1;
-      request.body = JSON.stringify(parsed);
-      return request;
-    },
-  },
   includeCodeRoot: false,
 });
+
 const meta: Meta = {
   component: 'atomic-result-section-children',
   title: 'Search/Result Sections',
@@ -35,7 +34,6 @@ const meta: Meta = {
   render: (args) => template(args),
   parameters: {
     ...parameters,
-    chromatic: {disableSnapshot: true},
     msw: {handlers: [...searchApiHarness.handlers]},
     actions: {
       handles: events,
