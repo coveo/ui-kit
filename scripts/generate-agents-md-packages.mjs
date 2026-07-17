@@ -209,10 +209,4 @@ function main() {
   );
 }
 
-// Guard so importing this module (e.g. from the test file, which imports
-// individual functions for unit testing) never triggers `main()` as a
-// side effect: only run it when this file is executed directly via
-// `node scripts/generate-agents-md-packages.mjs`.
-if (import.meta.url === `file://${process.argv[1]}`) {
-  main();
-}
+main();

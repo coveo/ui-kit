@@ -28,7 +28,7 @@ jobs:
       - name: Check for uncommitted changes
         run: |
           if [ -n "$(git status --porcelain AGENTS.md)" ]; then
-            echo "::error::AGENTS.md packages list is out of date. Run 'node scripts/generate-agents-md-packages.mjs' and commit the results."
+            echo "::error::AGENTS.md packages list is out of date. Run 'pnpm run generate:agents-md-packages' and commit the results."
             git diff --stat
             exit 1
           fi
