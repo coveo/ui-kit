@@ -6,9 +6,9 @@ type StateOf<T> = T extends Controller<infer TState> ? TState : never;
 /**
  * Instantiates a controller once (via `useRef`) and subscribes to its state.
  * The subscription is automatically cleaned up by `useSyncExternalStore` on unmount,
- * which also releases the ref, making the controller eligible for garbage collection.
+ * which also releases the `ref`, making the controller eligible for garbage collection.
  *
- * Returns the controller instance and its reactive state.
+ * Returns the controller instance, and its reactive state.
  */
 export function useBuildController<TController extends Controller<any>>(
   factory: () => TController
