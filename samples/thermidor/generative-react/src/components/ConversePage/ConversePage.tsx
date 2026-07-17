@@ -1,5 +1,6 @@
-import {useState, useEffect, useRef, useCallback} from 'react';
+import {useEffect, useRef, useCallback, useState} from 'react';
 import {converseController} from '../../generative-setup.js';
+import {useController} from '../../hooks/use-controller.js';
 import {TurnsMenu} from '../TurnsMenu/TurnsMenu.js';
 import {ConversationArea} from '../ConversationArea/ConversationArea.js';
 import {PromptInput} from '../PromptInput/PromptInput.js';
@@ -15,38 +16,12 @@ const PROMPT_SUGGESTIONS = [
   'I like cold-water surfing. Compare wetsuits for it',
 ];
 
-interface Turn {
-  id: string;
-  prompt: string;
-  status: 'streaming' | 'complete' | 'error';
-  routedInterface?: {useCase: string; interface: unknown};
-  agentResponse?: {
-    messages: {content: string; role: string}[];
-    surfaces: Record<string, unknown>[];
-    toolCalls: {
-      id: string;
-      name: string;
-      args: string;
-      result?: string;
-      status: 'calling' | 'completed';
-    }[];
-  };
-  error?: string;
-}
-
-interface ConverseState {
-  turns: Turn[];
-  activeTurnId: string | undefined;
-  activeTurn: Turn | undefined;
-  isStreaming: boolean;
-}
-
 export function ConversePage() {
-  const [state, setState] = useState<ConverseState>(converseController.state);
+  const state = useController(converseController);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
   const scrollCooldownRef = useRef(false);
-  const prevTurnCountRef = useRef(converseController.state.turns.length);
+  const prevTurnCountRef = useRef(state.turns.length);
   const overscrollAccumRef = useRef(0);
   const overscrollResetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
     null
@@ -57,26 +32,19 @@ export function ConversePage() {
   const OVERSCROLL_THRESHOLD = 150;
 
   useEffect(() => {
-    const unsubscribe = converseController.subscribe(() => {
-      const newState = converseController.state;
-
-      if (newState.turns.length > prevTurnCountRef.current) {
-        const newestTurn = newState.turns[newState.turns.length - 1];
-        if (newestTurn && newState.activeTurnId !== newestTurn.id) {
-          converseController.selectTurn({id: newestTurn.id});
-        }
+    if (state.turns.length > prevTurnCountRef.current) {
+      const newestTurn = state.turns[state.turns.length - 1];
+      if (newestTurn && state.activeTurn?.id !== newestTurn.id) {
+        converseController.selectTurn({id: newestTurn.id});
       }
-      prevTurnCountRef.current = newState.turns.length;
-
-      setState(newState);
-    });
-    return unsubscribe;
-  }, []);
+    }
+    prevTurnCountRef.current = state.turns.length;
+  }, [state.turns]);
 
   const navigateToTurn = useCallback((direction: 'prev' | 'next') => {
     if (scrollCooldownRef.current) return;
-    const {turns, activeTurnId} = stateRef.current;
-    const currentIndex = turns.findIndex((t) => t.id === activeTurnId);
+    const {turns, activeTurn} = stateRef.current;
+    const currentIndex = turns.findIndex((t) => t.id === activeTurn?.id);
     if (currentIndex < 0) return;
 
     const targetIndex =
@@ -159,7 +127,7 @@ export function ConversePage() {
         {sidebarOpen && (
           <TurnsMenu
             turns={state.turns}
-            activeTurnId={state.activeTurnId}
+            activeTurnId={state.activeTurn?.id}
             onSelectTurn={handleSelectTurn}
           />
         )}
@@ -181,7 +149,7 @@ export function ConversePage() {
         </div>
         <div ref={contentRef} className={styles.content}>
           <ConversationArea
-            key={state.activeTurnId ?? 'empty'}
+            key={state.activeTurn?.id ?? 'empty'}
             turn={state.activeTurn}
             isStreaming={state.isStreaming}
             onRetry={handleRetry}

@@ -8,6 +8,8 @@ import {getOrCreateGenerativeActions} from './generative-actions.js';
 export const initialGenerativeState: GenerativeState = {
   turns: [],
   activeTurnId: undefined,
+  conversationSessionId: undefined,
+  conversationToken: undefined,
 };
 
 type GenerativeSlice = ReturnType<typeof createGenerativeSlice>;
@@ -54,7 +56,12 @@ export function createGenerativeSlice(
         .addCase(actions.initAgentResponse, (state, {payload}) => {
           const turn = state.turns.find((t) => t.id === payload.turnId);
           if (turn) {
-            turn.agentResponse = {messages: [], surfaces: [], toolCalls: []};
+            turn.agentResponse = {
+              messages: [],
+              surfaces: [],
+              toolCalls: [],
+              reasoningContent: '',
+            };
           }
         })
         .addCase(actions.startMessage, (state, {payload}) => {
@@ -126,6 +133,25 @@ export function createGenerativeSlice(
             delete turn.agentResponse;
             delete turn.error;
           }
+        })
+        .addCase(actions.startReasoning, (_state, _action) => {
+          // No-op: reasoning start is a lifecycle signal only.
+        })
+        .addCase(actions.appendReasoningDelta, (state, {payload}) => {
+          const turn = state.turns.find((t) => t.id === payload.turnId);
+          if (turn?.agentResponse) {
+            turn.agentResponse.reasoningContent += payload.delta;
+          }
+        })
+        .addCase(actions.endReasoning, (_state, _action) => {
+          // No-op: reasoning end is a lifecycle signal only.
+        })
+        .addCase(actions.hydrateState, (_state, {payload}) => {
+          return payload;
+        })
+        .addCase(actions.setConversationSession, (state, {payload}) => {
+          state.conversationSessionId = payload.sessionId;
+          state.conversationToken = payload.token;
         });
     },
   });

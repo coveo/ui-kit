@@ -6,59 +6,62 @@ import DateFacet from './date-facet';
 import NumericFacet from './numeric-facet';
 import RegularFacet from './regular-facet';
 
+// Facets that are intentionally kept out of the facet rail.
+const EXCLUDED_FACET_IDS = new Set(['ec_price', 'ec_rating']);
+
 export default function FacetGenerator() {
   const {state, methods} = useFacetGenerator();
 
   return (
     <nav className="Facets">
-      {state.map((facetState) => {
-        const facetId = facetState.facetId;
-        switch (facetState.type) {
-          case 'regular': {
-            return (
-              <RegularFacet
-                key={facetId}
-                controller={methods?.getFacetController(facetId, 'regular')}
-                staticState={facetState}
-              />
-            );
+      {state
+        .filter((facetState) => !EXCLUDED_FACET_IDS.has(facetState.facetId))
+        .map((facetState) => {
+          const facetId = facetState.facetId;
+          switch (facetState.type) {
+            case 'regular':
+              return (
+                <RegularFacet
+                  key={facetId}
+                  controller={methods?.getFacetController(facetId, 'regular')}
+                  staticState={facetState}
+                />
+              );
+            case 'numericalRange':
+              return (
+                <NumericFacet
+                  key={facetId}
+                  controller={methods?.getFacetController(
+                    facetId,
+                    'numericalRange'
+                  )}
+                  staticState={facetState}
+                />
+              );
+            case 'dateRange':
+              return (
+                <DateFacet
+                  key={facetId}
+                  controller={methods?.getFacetController(facetId, 'dateRange')}
+                  staticState={facetState}
+                />
+              );
+            case 'hierarchical':
+              return (
+                <CategoryFacet
+                  key={facetId}
+                  controller={methods?.getFacetController(
+                    facetId,
+                    'hierarchical'
+                  )}
+                  staticState={facetState}
+                />
+              );
+            //TODO: add location facet support https://coveord.atlassian.net/browse/KIT-3808
+            default:
+              return null;
           }
-
-          case 'numericalRange':
-            return (
-              <NumericFacet
-                key={facetId}
-                controller={methods?.getFacetController(
-                  facetId,
-                  'numericalRange'
-                )}
-                staticState={facetState}
-              />
-            );
-          case 'dateRange':
-            return (
-              <DateFacet
-                key={facetId}
-                controller={methods?.getFacetController(facetId, 'dateRange')}
-                staticState={facetState}
-              />
-            );
-          case 'hierarchical':
-            return (
-              <CategoryFacet
-                key={facetId}
-                controller={methods?.getFacetController(
-                  facetId,
-                  'hierarchical'
-                )}
-                staticState={facetState}
-              />
-            );
-          //TODO: add location facet support https://coveord.atlassian.net/browse/KIT-3808
-          default:
-            return null;
-        }
-      })}
+        })}
     </nav>
   );
 }

@@ -1,6 +1,10 @@
 import {describe, it, expect, beforeEach} from 'vitest';
-import {Engine, getFullEngine} from '@/src/internal/engine/index.js';
-import {getInterfaceInternals} from '@/src/internal/utils/index.js';
+import {
+  Engine,
+  getFullEngine,
+  type FullEngine,
+} from '@/src/internal/engine/index.js';
+import {getHandleInternals} from '@/src/internal/utils/index.js';
 import {
   createHydrateSubInterface,
   getOrCreateHydrateFromSnapshotAction,
@@ -49,20 +53,20 @@ describe('getOrCreateHydrateFromSnapshotAction', () => {
 });
 
 describe('createHydrateSubInterface', () => {
-  let engine: Engine;
+  let fullEngine: FullEngine;
 
   beforeEach(() => {
-    engine = createTestEngine();
+    fullEngine = getFullEngine(createTestEngine());
   });
 
   it('returns null for unrecognized activity types', () => {
-    const hydrate = createHydrateSubInterface(engine);
+    const hydrate = createHydrateSubInterface(fullEngine);
     const result = hydrate('unknown-activity-type', {});
     expect(result).toBeNull();
   });
 
-  it('returns a RoutedInterface for commerce-search-api-response', () => {
-    const hydrate = createHydrateSubInterface(engine);
+  it('returns a RoutedInterface for commerce_search_api_response', () => {
+    const hydrate = createHydrateSubInterface(fullEngine);
     const content = {
       products: [
         {
@@ -76,16 +80,16 @@ describe('createHydrateSubInterface', () => {
       facets: [],
     };
 
-    const result = hydrate('commerce-search-api-response', content);
+    const result = hydrate('commerce_search_api_response', content);
     expect(result).not.toBeNull();
     expect(result!.useCase).toBe('commerceSearch');
     expect(result!.interface).toBeDefined();
-    const {stateId} = getInterfaceInternals(result!.interface);
+    const {stateId} = getHandleInternals(result!.interface);
     expect(stateId).toBeDefined();
   });
 
-  it('returns a RoutedInterface for search-api-response', () => {
-    const hydrate = createHydrateSubInterface(engine);
+  it('returns a RoutedInterface for search_api_response', () => {
+    const hydrate = createHydrateSubInterface(fullEngine);
     const content = {
       results: [
         {
@@ -102,14 +106,14 @@ describe('createHydrateSubInterface', () => {
       facets: [],
     };
 
-    const result = hydrate('search-api-response', content);
+    const result = hydrate('search_api_response', content);
     expect(result).not.toBeNull();
     expect(result!.useCase).toBe('search');
     expect(result!.interface).toBeDefined();
   });
 
   it('stores hydration snapshot and hydrates products into the sub-interface', async () => {
-    const hydrate = createHydrateSubInterface(engine);
+    const hydrate = createHydrateSubInterface(fullEngine);
     const content = {
       products: [
         {
@@ -123,9 +127,8 @@ describe('createHydrateSubInterface', () => {
       facets: [],
     };
 
-    const result = hydrate('commerce-search-api-response', content);
+    const result = hydrate('commerce_search_api_response', content);
     const subInterface = result!.interface;
-    const fullEngine = getFullEngine(engine);
 
     const productSlice = getOrCreateProductListSlice(subInterface);
     await fullEngine.adoptSlice(productSlice);
@@ -141,7 +144,7 @@ describe('createHydrateSubInterface', () => {
   });
 
   it('stores hydration snapshot and hydrates results into the sub-interface', async () => {
-    const hydrate = createHydrateSubInterface(engine);
+    const hydrate = createHydrateSubInterface(fullEngine);
     const content = {
       results: [
         {
@@ -158,9 +161,8 @@ describe('createHydrateSubInterface', () => {
       facets: [],
     };
 
-    const result = hydrate('search-api-response', content);
+    const result = hydrate('search_api_response', content);
     const subInterface = result!.interface;
-    const fullEngine = getFullEngine(engine);
 
     const resultsSlice = getOrCreateResultsSlice(subInterface);
     await fullEngine.adoptSlice(resultsSlice);

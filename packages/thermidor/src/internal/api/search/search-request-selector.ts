@@ -4,6 +4,7 @@ import {getOrCreateSearchBoxSelectors} from '@/src/internal/features/search-box/
 import {getOrCreatePaginationSelectors} from '@/src/internal/features/pagination/index.js';
 import {getOrCreateFacetsSelectors} from '@/src/internal/features/facets/index.js';
 import {getOrCreateSearchParametersSelectors} from '@/src/internal/features/search-parameters/index.js';
+import {getOrCreateConfigurationSelectors} from '@/src/internal/features/configuration/index.js';
 
 export function createSearchEndpointRequestSelector(scope: EndpointStateScope) {
   const searchBox = getOrCreateSearchBoxSelectors(scope.scopeInterface);
@@ -12,6 +13,7 @@ export function createSearchEndpointRequestSelector(scope: EndpointStateScope) {
   const searchParams = getOrCreateSearchParametersSelectors(
     scope.baseInterface
   );
+  const configuration = getOrCreateConfigurationSelectors();
 
   return createMemoizedStateSelector(
     searchBox.getQuery,
@@ -20,13 +22,15 @@ export function createSearchEndpointRequestSelector(scope: EndpointStateScope) {
     facets.buildFacetsRequest,
     searchParams.getPipeline,
     searchParams.getConstantQuery,
-    (query, firstResult, pageSize, facets, pipeline, cq) => ({
+    configuration.getLanguage,
+    (query, firstResult, pageSize, facets, pipeline, cq, language) => ({
       q: query,
       firstResult,
       numberOfResults: pageSize,
       facets,
       pipeline,
       cq,
+      locale: language || undefined,
     })
   );
 }

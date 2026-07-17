@@ -55,6 +55,9 @@ export default {
     'packages/auth': {
       entry: ['src/auth.ts'],
     },
+    'packages/relay': {
+      entry: ['src/relay.ts', 'config/rollup.config.mjs'],
+    },
     'packages/documentation': {
       entry: [
         '**/assets/**/*.js',
@@ -79,8 +82,17 @@ export default {
         'src/pages/AtomicReactPage.css', // TODO: Reassess if we can remove the file.
       ],
     },
-    'samples/headless-ssr/commerce-nextjs': {},
+    'samples/headless-ssr/commerce-nextjs': {
+      // `mock-server.mjs` is a test utility, not exported publicly nor imported internally, so Knip cannot trace it.
+      entry: ['mocks/mock-server.mjs'],
+    },
     'samples/headless-ssr/commerce-nextjs-v4': {},
+    'samples/atomic/commerce-vite': {
+      // The search and listing pages share commerce-page.js. Vite resolves the
+      // HTML entries at runtime, so declare the shared JS entry explicitly
+      // (index.html → home-page.js is auto-detected).
+      entry: ['src/commerce-page.js'],
+    },
     'utils/ci': {},
     'utils/cdn': {},
 
@@ -150,6 +162,14 @@ export default {
     },
     'samples/thermidor/generative-react': {
       ignore: ['**/*'],
+    },
+    'samples/thermidor/generative-angular': {
+      entry: ['proxy.conf.js'],
+      ignore: [
+        'src/app/services/engine.service.ts',
+        'src/app/app.css',
+        'src/styles.css',
+      ],
     },
   },
 };

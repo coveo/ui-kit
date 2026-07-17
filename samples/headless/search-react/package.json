@@ -1,53 +1,38 @@
 {
-  "name": "@samples/headless-search-react",
-  "version": "0.0.0",
-  "private": true,
-  "description": "Samples with @coveo/headless & React",
+  "name": "@coveo/ui-kit-sample-headless-search-react",
+  "version": "3.53.1",
+  "description": "Minimal search UI built with @coveo/headless and React",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coveo/ui-kit.git",
+    "directory": "samples/headless/search-react"
+  },
   "type": "module",
+  "publishConfig": {
+    "access": "public",
+    "directory": "publish",
+    "linkDirectory": false
+  },
   "scripts": {
     "dev": "vite",
-    "build": "vite build && vite build --ssr server/server.tsx --outDir dist/server",
-    "serve": "vite preview",
+    "build": "vite build",
+    "preview": "vite preview",
     "e2e": "playwright test",
-    "e2e:watch": "playwright test --ui",
-    "test": "vitest run",
-    "prod:ssr": "node ./dist/server/index.js"
+    "prepack": "node ../../../scripts/build-sample-publish-dir.mjs"
   },
   "dependencies": {
-    "@coveo/auth": "workspace:*",
     "@coveo/headless": "workspace:*",
-    "@testing-library/jest-dom": "6.9.1",
-    "@testing-library/react": "catalog:",
-    "@types/escape-html": "1.0.4",
-    "@types/express": "5.0.6",
-    "@types/node": "catalog:",
-    "@types/react": "catalog:",
-    "@types/react-dom": "catalog:",
-    "dayjs": "catalog:",
-    "escape-html": "1.0.3",
-    "express": "5.2.1",
     "react": "catalog:",
-    "react-dom": "catalog:",
-    "react-router": "catalog:",
-    "typescript": "catalog:"
+    "react-dom": "catalog:"
   },
   "devDependencies": {
     "@playwright/test": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "catalog:",
-    "vite": "catalog:",
-    "vitest": "catalog:"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "typescript": "catalog:",
+    "vite": "catalog:"
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0 || ^24.11.0"

@@ -24,7 +24,7 @@ test.describe('Home Page', () => {
     const searchBox = page.getByLabel('Enter query');
     await searchBox.press('Enter');
 
-    const facetsSection = page.getByLabel('Brand');
+    const facetsSection = page.getByRole('group', {name: 'Brand'});
     await expect(facetsSection).toBeVisible();
   });
 });

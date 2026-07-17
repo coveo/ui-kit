@@ -600,4 +600,80 @@ test.describe('atomic-generated-answer', () => {
       });
     });
   });
+
+  test.describe('search agent follow-up error handling', () => {
+    const streamingTimeoutMs = 10000;
+
+    test('displays generic error message on network failure', async ({
+      generatedAnswer,
+    }) => {
+      await generatedAnswer.load({story: 'follow-up-network-error'});
+      await expect(generatedAnswer.followUpSubmitButton).toBeEnabled({
+        timeout: streamingTimeoutMs,
+      });
+
+      await generatedAnswer.followUpInput.fill('Follow-up question');
+      await generatedAnswer.followUpSubmitButton.click();
+
+      await expect(generatedAnswer.threadItems).toHaveCount(2, {
+        timeout: streamingTimeoutMs,
+      });
+
+      const errorMessage = generatedAnswer.threadItems
+        .last()
+        .locator('[part="generated-answer-error"]');
+      await expect(errorMessage).toBeVisible({timeout: streamingTimeoutMs});
+      await expect(errorMessage).toContainText(
+        'Something went wrong while generating the answer. Please try again later.'
+      );
+    });
+
+    test('displays turn limit error message on SSE turn-limit error', async ({
+      generatedAnswer,
+    }) => {
+      await generatedAnswer.load({story: 'follow-up-turn-limit-error'});
+      await expect(generatedAnswer.followUpSubmitButton).toBeEnabled({
+        timeout: streamingTimeoutMs,
+      });
+
+      await generatedAnswer.followUpInput.fill('Follow-up question');
+      await generatedAnswer.followUpSubmitButton.click();
+
+      await expect(generatedAnswer.threadItems).toHaveCount(2, {
+        timeout: streamingTimeoutMs,
+      });
+
+      const errorMessage = generatedAnswer.threadItems
+        .last()
+        .locator('[part="generated-answer-error"]');
+      await expect(errorMessage).toBeVisible({timeout: streamingTimeoutMs});
+      await expect(errorMessage).toContainText(
+        'Conversation turn limit reached. Please start a new conversation.'
+      );
+    });
+
+    test('displays generic error message on SSE internal error', async ({
+      generatedAnswer,
+    }) => {
+      await generatedAnswer.load({story: 'follow-up-generic-error'});
+      await expect(generatedAnswer.followUpSubmitButton).toBeEnabled({
+        timeout: streamingTimeoutMs,
+      });
+
+      await generatedAnswer.followUpInput.fill('Follow-up question');
+      await generatedAnswer.followUpSubmitButton.click();
+
+      await expect(generatedAnswer.threadItems).toHaveCount(2, {
+        timeout: streamingTimeoutMs,
+      });
+
+      const errorMessage = generatedAnswer.threadItems
+        .last()
+        .locator('[part="generated-answer-error"]');
+      await expect(errorMessage).toBeVisible({timeout: streamingTimeoutMs});
+      await expect(errorMessage).toContainText(
+        'Something went wrong while generating the answer. Please try again later.'
+      );
+    });
+  });
 });

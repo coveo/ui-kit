@@ -19,9 +19,4 @@ export {
   currency,
   endpoint,
 } from './configuration-selectors.js';
-export {
-  readEndpointClientConfiguration,
-  readConversationRequestDefaults,
-} from './configuration-reader.js';
-export type {ConfigurationStateReader} from './configuration-reader.js';
 export type {ConfigurationState} from './configuration-types.js';

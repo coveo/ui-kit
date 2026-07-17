@@ -25,5 +25,32 @@
     "**/packages/atomic/stencil-proxy/**",
     "**/packages/documentation/**/assets/**",
     "**/packages/headless/**/coveo.analytics/**"
+  ],
+  "overrides": [
+    {
+      "files": ["**/packages/create-ui/src/**/*.ts"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "paths": [
+              {
+                "name": "@clack/prompts",
+                "message": "Import @clack/prompts only in log.ts (output facade) or prompt.ts (input). Business logic must emit via the log facade — see packages/create-ui/docs/adr/003-cli-interactivity.md §3."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": [
+        "**/packages/create-ui/src/log.ts",
+        "**/packages/create-ui/src/prompt.ts"
+      ],
+      "rules": {
+        "no-restricted-imports": "off"
+      }
+    }
   ]
 }

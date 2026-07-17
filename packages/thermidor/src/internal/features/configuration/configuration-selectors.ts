@@ -4,6 +4,7 @@ import {
   initialConfigurationState,
 } from './configuration-slice.js';
 import type {ConfigurationState} from './configuration-types.js';
+import type {State} from '@/src/internal/engine/engine-types.js';
 
 // ---------------------------------------------------------------------------
 // Standalone selectors (formerly core/interface/configuration/configuration-selectors.ts)
@@ -37,17 +38,20 @@ export const endpoint = (state: StateWithConfigurationSlice) => {
 // Factory-based selectors (formerly core/internal/configuration/configuration-selectors.ts)
 // ---------------------------------------------------------------------------
 
-function selectConfigurationSlice(
-  state: Record<string, unknown>
-): typeof initialConfigurationState {
-  const slice = state['configuration'];
-  return slice === undefined
-    ? initialConfigurationState
-    : (slice as typeof initialConfigurationState);
+function selectConfigurationSlice(state: State) {
+  return state.configuration ?? initialConfigurationState;
 }
 
 export function createConfigurationSelectors() {
   return {
+    getOrganizationId: createMemoizedStateSelector(
+      selectConfigurationSlice,
+      (state) => state.organizationId
+    ),
+    getAccessToken: createMemoizedStateSelector(
+      selectConfigurationSlice,
+      (state) => state.accessToken
+    ),
     getTrackingId: createMemoizedStateSelector(
       selectConfigurationSlice,
       (state) => state.trackingId
@@ -64,11 +68,24 @@ export function createConfigurationSelectors() {
       selectConfigurationSlice,
       (state) => state.currency
     ),
+    getEndpoint: createMemoizedStateSelector(
+      selectConfigurationSlice,
+      (state) => state.endpoint
+    ),
+    getEndpointClientConfiguration: createMemoizedStateSelector(
+      selectConfigurationSlice,
+      (state) => ({
+        organizationId: state.organizationId,
+        accessToken: state.accessToken,
+        endpoint: state.endpoint,
+      })
+    ),
   };
 }
 
 let cachedSelectors: ReturnType<typeof createConfigurationSelectors> | null =
   null;
+
 export function getOrCreateConfigurationSelectors() {
   if (!cachedSelectors) {
     cachedSelectors = createConfigurationSelectors();

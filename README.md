@@ -24,7 +24,16 @@ See [.devcontainer/README.md](.devcontainer/README.md) for details on the devcon
 - [Quantic](packages/quantic): Coveo's LWC library for building Salesforce search experiences.
 - [Bueno](packages/bueno): A simple schema validator.
 - [Auth](packages/auth): Functions to help authenticate with the Coveo platform.
+- [Relay](packages/relay): A library for sending analytics events using Coveo's Event Protocol.
 - [Headless React Samples](packages/samples/headless-react): Various code samples using Headless inside a React application.
+
+## Documentation
+
+Official documentation for the main libraries is available on [docs.coveo.com](https://docs.coveo.com/):
+
+- [Coveo Headless](https://docs.coveo.com/en/headless/latest/): Reference documentation for the Headless library, including controllers, actions, and engine configuration.
+- [Coveo Atomic](https://docs.coveo.com/en/atomic/latest/): Reference documentation for the Atomic web-component library, including component usage and customization.
+- [Coveo Quantic](https://docs.coveo.com/en/quantic/latest/): Reference documentation for the Quantic Salesforce Lightning Web Component library.
 
 ## Samples
 

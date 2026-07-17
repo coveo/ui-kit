@@ -1,6 +1,7 @@
 {
   "name": "@coveo/headless",
-  "version": "3.53.0",
+  "version": "3.53.1",
+  "description": "A headless library for building search experiences on the Coveo platform",
   "homepage": "https://docs.coveo.com/en/headless/latest/",
   "license": "Apache-2.0",
   "repository": {
@@ -98,7 +99,7 @@
   "dependencies": {
     "@ag-ui/client": "catalog:",
     "@coveo/bueno": "workspace:*",
-    "@coveo/relay": "catalog:",
+    "@coveo/relay": "workspace:*",
     "@coveo/relay-event-types": "catalog:",
     "@reduxjs/toolkit": "2.12.0",
     "abortcontroller-polyfill": "1.7.8",

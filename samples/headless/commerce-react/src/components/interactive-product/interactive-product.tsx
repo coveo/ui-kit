@@ -53,24 +53,16 @@ export default function InteractiveProduct(props: IInteractiveProductProps) {
   const renderProductCartControls = () => {
     return (
       <div className="ProductCartControls">
-        <p className="CartCurrentQuantity">
-          Currently in cart:<span> {numberInCart()}</span>
-        </p>
         <button
           type="button"
           className="CartAddOne"
           onClick={() => adjustQuantity(1)}
         >
-          Add one
+          Add to cart
         </button>
-        <button
-          type="button"
-          className="CartRemoveOne"
-          disabled={!isInCart()}
-          onClick={() => adjustQuantity(-1)}
-        >
-          Remove one
-        </button>
+        {isInCart() && (
+          <p className="CartCurrentQuantity">In cart: {numberInCart()}</p>
+        )}
       </div>
     );
   };

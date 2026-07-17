@@ -1,4 +1,5 @@
 import {DocumentReflection, type PageEvent} from 'typedoc';
+import type {TFrontMatter} from './types.js';
 
 export const insertMetaTags = (page: PageEvent) => {
   if (!page.contents) return;
@@ -12,7 +13,20 @@ export const insertMetaTags = (page: PageEvent) => {
 
   const isHandwrittenDoc = page.model instanceof DocumentReflection;
 
-  if (!isHandwrittenDoc) {
+  if (isHandwrittenDoc) {
+    const frontmatter = (page.model as DocumentReflection)
+      .frontmatter as TFrontMatter;
+    if (frontmatter?.pageTitle) {
+      const titleMatch = page.contents.match(/<title>[^<]*<\/title>/i);
+      if (titleMatch) {
+        const suffix = titleMatch[0].match(/\|\s*([^<]*)<\/title>/i)?.[1] ?? '';
+        const newTitle = suffix
+          ? `<title>${frontmatter.pageTitle} | ${suffix}</title>`
+          : `<title>${frontmatter.pageTitle}</title>`;
+        page.contents = page.contents.replace(titleMatch[0], newTitle);
+      }
+    }
+  } else {
     const titleMatch = page.contents.match(/<title>\s*([^<]*)<\/title>/i);
     if (titleMatch) {
       const originalTitle = titleMatch[1];

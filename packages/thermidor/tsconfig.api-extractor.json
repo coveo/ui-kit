@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "moduleResolution": "NodeNext",
+    "module": "NodeNext",
+    "target": "ES2022",
+    "lib": ["DOM", "ES2023"],
+    "skipLibCheck": true,
+    "rootDir": "dist/"
+  },
+  "include": ["dist/**/*.d.ts"]
+}
