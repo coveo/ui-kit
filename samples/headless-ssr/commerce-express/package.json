@@ -1,6 +1,6 @@
 {
   "name": "@coveo/ui-kit-sample-headless-ssr-commerce-express",
-  "version": "3.53.1",
+  "version": "0.1.0",
   "description": "Commerce server-side rendering (SSR) with @coveo/headless/ssr-commerce and an Express server",
   "repository": {
     "type": "git",
