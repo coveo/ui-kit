@@ -20,7 +20,7 @@
 ### Public
 
 - [`@coveo/atomic`](packages/atomic/): A web-component library for building modern UIs interfacing with the Coveo platform
-- [`@coveo/atomic-angular`](packages/atomic-angular/projects/atomic-angular/)
+- [`@coveo/atomic-angular`](packages/atomic-angular/projects/atomic-angular/): An Angular component library for building modern UIs interfacing with the Coveo platform, wrapping the core Atomic web components
 - [`@coveo/atomic-hosted-page`](packages/atomic-hosted-page/): Web Component used to inject a Coveo Hosted Search Page in the DOM.
 - [`@coveo/atomic-legacy`](packages/atomic-legacy/): Package used internally by @coveo/atomic for components using legacy technologies (e.g., Stencil). This package is not intended for public use.
 - [`@coveo/atomic-react`](packages/atomic-react/): React specific wrapper for the Atomic component library
@@ -42,14 +42,14 @@
 ### Private
 
 - [`@coveo/atomic-a11y`](packages/atomic-a11y/): Accessibility utilities and tools for Coveo Atomic components
-- [`@coveo/atomic-angular-builder`](packages/atomic-angular/)
+- [`@coveo/atomic-angular-builder`](packages/atomic-angular/): Angular workspace used to build and publish the @coveo/atomic-angular package
 - [`@coveo/atomic-cdn-smoke`](packages/atomic-cdn-smoke/): CDN visual smoke tests for Atomic components using Playwright + Chromatic
-- [`@coveo/create-atomic-template`](packages/create-atomic-template/): {{titleCase project}} project
-- [`@coveo/documentation`](packages/documentation/)
-- [`@coveo/mock-converse-api`](packages/mock-converse-api/)
-- [`@coveo/pkg-new-template`](packages/pkg-new-template/)
+- [`@coveo/create-atomic-template`](packages/create-atomic-template/): Template project scaffolded by @coveo/create-atomic when generating a new Atomic search page
+- [`@coveo/documentation`](packages/documentation/): Typedoc plugin enforcing Coveo's documentation styling and navigation conventions across the monorepo
+- [`@coveo/mock-converse-api`](packages/mock-converse-api/): HTTP server exposing mock Converse API endpoints, built on @coveo/platform-mock-api, for local development and testing
+- [`@coveo/pkg-new-template`](packages/pkg-new-template/): Preview app used by pkg.pr.new to let reviewers try out Atomic and Headless builds from a pull request
 - [`@coveo/platform-mock-api`](packages/platform-mock-api/): Coveo Platform API mock layer for testing (search, commerce, insight, recommendations)
-- [`@coveo/relay-playground`](packages/relay-playground/)
+- [`@coveo/relay-playground`](packages/relay-playground/): Next.js playground app for manually testing and exploring the @coveo/relay analytics library
 
 ## Technology
 
