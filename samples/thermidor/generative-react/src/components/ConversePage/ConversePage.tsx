@@ -1,6 +1,7 @@
 import {useEffect, useRef, useCallback, useState} from 'react';
-import {converseController} from '../../generative-setup.js';
-import {useController} from '../../hooks/use-controller.js';
+import {buildConverseController} from '@coveo/thermidor';
+import {useGenerativeInterface} from '../../context/generative-interface.js';
+import {useBuildController} from '../../hooks/use-build-controller.js';
 import {TurnsMenu} from '../TurnsMenu/TurnsMenu.js';
 import {ConversationArea} from '../ConversationArea/ConversationArea.js';
 import {PromptInput} from '../PromptInput/PromptInput.js';
@@ -17,7 +18,12 @@ const PROMPT_SUGGESTIONS = [
 ];
 
 export function ConversePage() {
-  const state = useController(converseController);
+  const generativeInterface = useGenerativeInterface();
+
+  const [controller, state] = useBuildController(() =>
+    buildConverseController({interface: generativeInterface})
+  );
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
   const scrollCooldownRef = useRef(false);
@@ -29,13 +35,16 @@ export function ConversePage() {
   const stateRef = useRef(state);
   stateRef.current = state;
 
+  const controllerRef = useRef(controller);
+  controllerRef.current = controller;
+
   const OVERSCROLL_THRESHOLD = 150;
 
   useEffect(() => {
     if (state.turns.length > prevTurnCountRef.current) {
       const newestTurn = state.turns[state.turns.length - 1];
       if (newestTurn && state.activeTurn?.id !== newestTurn.id) {
-        converseController.selectTurn({id: newestTurn.id});
+        controllerRef.current.selectTurn({id: newestTurn.id});
       }
     }
     prevTurnCountRef.current = state.turns.length;
@@ -53,7 +62,7 @@ export function ConversePage() {
 
     scrollCooldownRef.current = true;
     overscrollAccumRef.current = 0;
-    converseController.selectTurn({id: turns[targetIndex].id});
+    controllerRef.current.selectTurn({id: turns[targetIndex].id});
 
     setTimeout(() => {
       scrollCooldownRef.current = false;
@@ -101,15 +110,15 @@ export function ConversePage() {
   }, [navigateToTurn]);
 
   const handleSubmit = useCallback((prompt: string) => {
-    converseController.submit({prompt});
+    controllerRef.current.submit({prompt});
   }, []);
 
   const handleSelectTurn = useCallback((id: string) => {
-    converseController.selectTurn({id});
+    controllerRef.current.selectTurn({id});
   }, []);
 
   const handleRetry = useCallback((id: string) => {
-    converseController.retry({id});
+    controllerRef.current.retry({id});
   }, []);
 
   const handleAction = useCallback(
