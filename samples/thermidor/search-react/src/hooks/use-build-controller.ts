@@ -18,7 +18,7 @@ export function useBuildController<TController extends Controller<any>>(
 
   const controller = controllerRef.current;
 
-  const state = useSyncExternalStore(
+  const state = useSyncExternalStore<StateOf<TController>>(
     (onStoreChange) => controller.subscribe(onStoreChange),
     () => controller.state,
     () => controller.state
