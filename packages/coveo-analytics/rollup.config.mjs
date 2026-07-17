@@ -5,8 +5,7 @@ import {nodeResolve} from '@rollup/plugin-node-resolve';
 import alias from '@rollup/plugin-alias';
 import json from '@rollup/plugin-json';
 import replace from '@rollup/plugin-replace';
-import copy from 'rollup-plugin-copy';
-import {parse, resolve} from 'path';
+import {resolve} from 'path';
 import packageJson from './package.json' with {type: 'json'};
 import * as url from 'url';
 
@@ -28,27 +27,20 @@ const browserFetch = () =>
 
 const tsPlugin = (compilerOptions = {}) =>
   typescript({
-    compilerOptions,
+    compilerOptions: {
+      inlineSources: compilerOptions.sourceMap !== false,
+      ...compilerOptions,
+    },
   });
 
 const versionReplace = () =>
   replace({
     preventAssignment: true,
     include: 'src/version.ts',
-    delimiters: ["'", "'"],
-    local: JSON.stringify(packageJson.version), // replaces 'local' in src/version.ts
+    values: {
+      'process.env.VERSION': JSON.stringify(packageJson.version),
+    },
   });
-
-/**
- * @param {{sourceFileName: string, aliasFileName: string}} options
- */
-const aliasFile = ({sourceFileName, aliasFileName}) => {
-  const {dir: dest, base: rename} = parse(aliasFileName);
-  return copy({
-    hook: 'writeBundle',
-    targets: [{src: sourceFileName, dest, rename}],
-  });
-};
 
 /**
  * @satisfies {RollupOptions}
@@ -89,10 +81,15 @@ const coveouaConfig = {
  * @satisfies {RollupOptions}
  */
 const nodeModulesConfig = {
+  external: ['encoding'],
   input: './src/coveoua/library.ts',
   output: [
     {
       file: `./dist/library.cjs`,
+      format: 'cjs',
+    },
+    {
+      file: `./dist/library.js`,
       format: 'cjs',
     },
     {
@@ -106,10 +103,6 @@ const nodeModulesConfig = {
     commonjs(),
     tsPlugin({sourceMap: false}),
     json(),
-    aliasFile({
-      sourceFileName: './dist/library.cjs',
-      aliasFileName: './dist/library.js',
-    }),
   ],
 };
 
@@ -118,19 +111,21 @@ const nodeModulesConfig = {
  */
 const browserModulesConfig = {
   input: './src/coveoua/headless.ts',
-  output: {
-    file: `./dist/browser.mjs`,
-    format: 'es',
-  },
+  output: [
+    {
+      file: `./dist/browser.mjs`,
+      format: 'es',
+    },
+    {
+      file: `./dist/library.es.js`,
+      format: 'es',
+    },
+  ],
   plugins: [
     browserFetch(),
     nodeResolve({preferBuiltins: true}),
     versionReplace(),
     tsPlugin({sourceMap: false, target: 'ES6'}),
-    aliasFile({
-      sourceFileName: './dist/browser.mjs',
-      aliasFileName: './dist/library.es.js',
-    }),
   ],
 };
 

@@ -1,1 +1,1 @@
-export const libVersion = 'local'; // processed by @rollup/plugin-replace
+export const libVersion = process.env.VERSION || 'local';

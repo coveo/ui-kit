@@ -51,7 +51,6 @@
     "jest": "catalog:",
     "jest-environment-jsdom": "catalog:",
     "rollup": "catalog:",
-    "rollup-plugin-copy": "^3.5.0",
     "ts-jest": "29.4.11",
     "tslib": "catalog:",
     "typescript": "catalog:"
