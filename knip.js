@@ -55,6 +55,9 @@ export default {
     'packages/auth': {
       entry: ['src/auth.ts'],
     },
+    'packages/relay': {
+      entry: ['src/relay.ts', 'config/rollup.config.mjs'],
+    },
     'packages/documentation': {
       entry: [
         '**/assets/**/*.js',

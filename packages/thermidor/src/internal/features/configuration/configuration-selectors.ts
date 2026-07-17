@@ -44,6 +44,14 @@ function selectConfigurationSlice(state: State) {
 
 export function createConfigurationSelectors() {
   return {
+    getOrganizationId: createMemoizedStateSelector(
+      selectConfigurationSlice,
+      (state) => state.organizationId
+    ),
+    getAccessToken: createMemoizedStateSelector(
+      selectConfigurationSlice,
+      (state) => state.accessToken
+    ),
     getTrackingId: createMemoizedStateSelector(
       selectConfigurationSlice,
       (state) => state.trackingId
@@ -59,6 +67,18 @@ export function createConfigurationSelectors() {
     getCurrency: createMemoizedStateSelector(
       selectConfigurationSlice,
       (state) => state.currency
+    ),
+    getEndpoint: createMemoizedStateSelector(
+      selectConfigurationSlice,
+      (state) => state.endpoint
+    ),
+    getEndpointClientConfiguration: createMemoizedStateSelector(
+      selectConfigurationSlice,
+      (state) => ({
+        organizationId: state.organizationId,
+        accessToken: state.accessToken,
+        endpoint: state.endpoint,
+      })
     ),
   };
 }

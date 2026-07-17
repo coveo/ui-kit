@@ -1,3 +1,18 @@
+## 3.60.1
+
+### Patch Changes
+
+- [#7911](https://github.com/coveo/ui-kit/pull/7911) [`6bd6624`](https://github.com/coveo/ui-kit/commit/6bd662476610fbe9815919551b6c40d2b0060c52) - Fix `atomic-generated-answer` not respecting `tabs-included`/`tabs-excluded` when generating answers. The component no longer sends answer-generation queries when it is hidden on the current tab, including on the initial load. The Answer API and Agent API generation paths now honor the generated answer `isEnabled` state, and `buildGeneratedAnswer`'s `initialState.isEnabled` is now applied.
+
+- [#7966](https://github.com/coveo/ui-kit/pull/7966) [`67f493a`](https://github.com/coveo/ui-kit/commit/67f493ac422cbeb8b5d93e4cd42f65813b0fa6d3) - Fixed a visual glitch where the "See all results"/"See all products" button in
+  the search suggestions showed a white box behind its label when hovered.
+
+- [#7943](https://github.com/coveo/ui-kit/pull/7943) [`3ff284d`](https://github.com/coveo/ui-kit/commit/3ff284da1409b68425f20023ed6da45e422e8bc6) - removed the question title when a singular answer is generated
+
+- Updated dependencies [[`6580723`](https://github.com/coveo/ui-kit/commit/65807231404d5f3357be02f91ff8dfadae694904), [`6bd6624`](https://github.com/coveo/ui-kit/commit/6bd662476610fbe9815919551b6c40d2b0060c52)]:
+  - @coveo/headless@3.53.1
+  - @coveo/atomic-legacy@0.0.24
+
 ## 3.60.0
 
 ### Minor Changes
