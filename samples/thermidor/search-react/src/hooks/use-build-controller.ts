@@ -13,10 +13,12 @@ type StateOf<T> = T extends Controller<infer TState> ? TState : never;
 export function useBuildController<TController extends Controller<any>>(
   factory: () => TController
 ): [TController, StateOf<TController>] {
-  const controllerRef = useRef(factory());
+  const controllerRef = useRef<TController | null>(null);
+  controllerRef.current ??= factory();
+
   const controller = controllerRef.current;
 
-  const state = useSyncExternalStore<StateOf<TController>>(
+  const state = useSyncExternalStore(
     (onStoreChange) => controller.subscribe(onStoreChange),
     () => controller.state,
     () => controller.state
