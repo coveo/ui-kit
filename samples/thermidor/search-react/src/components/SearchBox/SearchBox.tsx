@@ -1,10 +1,12 @@
 import {useState, type SubmitEvent} from 'react';
 import {buildSearchBoxController} from '@coveo/thermidor';
-import {searchInterface} from '../../search-setup.js';
+import {useSearchInterface} from '../../context/search-interface.js';
 import {useBuildController} from '../../hooks/use-build-controller.js';
 import styles from './SearchBox.module.css';
 
 export function SearchBox() {
+  const searchInterface = useSearchInterface();
+
   const [controller, state] = useBuildController(() =>
     buildSearchBoxController({interface: searchInterface})
   );

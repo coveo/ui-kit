@@ -1,9 +1,11 @@
 import {buildPaginationController} from '@coveo/thermidor';
-import {searchInterface} from '../../search-setup.js';
+import {useSearchInterface} from '../../context/search-interface.js';
 import {useBuildController} from '../../hooks/use-build-controller.js';
 import styles from './Pagination.module.css';
 
 export function Pagination() {
+  const searchInterface = useSearchInterface();
+
   const [controller, state] = useBuildController(() =>
     buildPaginationController({interface: searchInterface})
   );
