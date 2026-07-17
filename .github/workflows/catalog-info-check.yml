@@ -24,9 +24,10 @@ jobs:
         with:
           egress-policy: audit
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
-      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+      - uses: step-security/mise-action@v4
         with:
-          node-version-file: '.nvmrc'
+          install: true
+          cache: true
       - run: node scripts/generate-catalog-info.mjs
       - name: Check for uncommitted changes
         run: |
