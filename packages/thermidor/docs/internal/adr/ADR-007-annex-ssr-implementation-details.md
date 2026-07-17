@@ -63,12 +63,6 @@ export interface BuildCommerceProductListingInterfaceOptions {
   id?: string;
   initialParameters?: CommerceProductListingInterfaceInitialParameters;
 }
-
-export interface ComposeInterfacesOptions<T extends InterfaceType> {
-  interfaces: BaseInterface<T>[];
-  id?: string;
-  initialParameters?: {query?: string};
-}
 ```
 
 ## 3. Standalone Functions
@@ -363,7 +357,7 @@ The consumer passes a single snapshot object from server to client. Each interfa
 
 ### `executeInitialRequest()` on interfaces
 
-Each interface (search, commerce, composed) exposes an `executeInitialRequest()` method that triggers the appropriate backend call based on the interface type and its seeded parameters.
+Each interface (search, commerce, generative) exposes an `executeInitialRequest()` method that triggers the appropriate backend call based on the interface type and its seeded parameters.
 
 ```ts
 interface SearchInterface {

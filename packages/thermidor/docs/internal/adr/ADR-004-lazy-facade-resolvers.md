@@ -5,11 +5,11 @@
 
 ## 1. Context
 
-Interfaces previously carried eagerly-instantiated thunks via `[THUNKS]` and `[THUNK_FACTORIES]` symbols. The `composeInterfaces` function re-instantiated all factories with a different scope. Controllers read `interface[THUNKS].search` directly to dispatch.
+Interfaces previously carried eagerly-instantiated thunks via `[THUNKS]` and `[THUNK_FACTORIES]` symbols. Thunk factories were eagerly instantiated at interface construction time. Controllers read `interface[THUNKS].search` directly to dispatch.
 
-- **Business/context drivers**: Controllers must be decoupled from whether they operate on a search, commerce, or composed interface. Adding a new facade should not require modifying global type registries.
+- **Business/context drivers**: Controllers must be decoupled from the specific interface type they operate on (search, commerce, generative). Adding a new facade should not require modifying global type registries.
 - **Technical constraints**: Facades (async thunks) adopt Redux slices and create memoized selectors — instantiation has side effects. Eager instantiation wastes resources when controllers don't use all operations. In SPAs, dynamic interface creation must not leak memory.
-- **Known assumptions**: Each facade is a singleton per interface scope (interfaceId + optional composedInterfaceId). The same scope always returns the same thunk instance.
+- **Known assumptions**: Each facade is a singleton per interface instance, keyed by facade name. The same interface always returns the same thunk instance.
 
 ## 2. Decision Statement
 
@@ -21,7 +21,7 @@ Replace eager thunk instantiation with lazy facade resolvers stored as a typed `
 
 1. **Requirement**: Full use-case support
    - **Impact**: Positive
-   - **How satisfied**: Controllers call `resolveFacade(iface, 'search')` which works identically for search, commerce, and composed interfaces. Each interface's `[FACADE_RESOLVERS]` record provides the correct resolver for each operation.
+   - **How satisfied**: Controllers call `resolveFacade('search')` which works identically regardless of interface type (search, commerce, generative). Each interface's `[FACADE_RESOLVERS]` record provides the correct resolver for each operation.
 
 2. **Requirement**: Public API independence
    - **Impact**: Positive
@@ -49,9 +49,9 @@ Replace eager thunk instantiation with lazy facade resolvers stored as a typed `
 
 ### Option A: Eager Thunk Factories (Previous)
 
-- **Summary**: Interfaces carry `[THUNK_FACTORIES]` and `[THUNKS]`. Factories are called at interface construction, thunks stored as arrays. `composeInterfaces` re-calls all factories with a composed scope.
+- **Summary**: Interfaces carry `[THUNK_FACTORIES]` and `[THUNKS]`. Factories are called at interface construction, thunks stored as arrays.
 - **Pros**: Simple mental model, structural type safety via `Requires<T>` checking `[THUNKS]` shape.
-- **Cons**: Eager instantiation of all facades. `composeInterfaces` is complex (re-instantiation). No natural GC boundary for composed thunks.
+- **Cons**: Eager instantiation of all facades. Adding facades increases construction cost linearly. No natural GC boundary for unused thunks.
 - **Risks**: Adding facades increases construction cost linearly.
 
 ### Option B: Global Operation Registry
@@ -63,7 +63,7 @@ Replace eager thunk instantiation with lazy facade resolvers stored as a typed `
 
 ### Option C (Selected): Lazy Facade Resolvers on Interface (Strategy Pattern)
 
-- **Summary**: Each interface object carries `[FACADE_RESOLVERS]: Record<Facades[T], FacadeResolver>`. Each resolver is backed by `createFacadeCache(engine, factory)` — a closure with an internal Map that creates the thunk on first call and caches it by scope key. `composeInterfaces` delegates to sub-interface resolvers.
+- **Summary**: Each interface object carries `[FACADE_RESOLVERS]: Record<Facades[T], FacadeResolver>`. Each resolver is backed by `createFacadeCache(engine, factory)` — a closure with an internal Map that creates the thunk on first call and caches it by scope key.
 
 - **Pros**:
   - **Lazy**: facades instantiated only when a controller requests them
@@ -71,7 +71,6 @@ Replace eager thunk instantiation with lazy facade resolvers stored as a typed `
   - **Natural GC**: interface GC'd → closure GC'd → cache GC'd
   - **Controller decoupled**: `resolveFacade(iface, 'search')` works for any interface type
   - **Type-safe**: `Facades` Record enforces completeness; `[TYPE]` discriminant prevents wrong-interface assignment
-  - **Compose is trivial**: delegates to matching sub-interface resolver
   - **Hidden from consumer**: `[FACADE_RESOLVERS]` is Symbol-keyed, not in public API
 - **Cons**:
   - More files than original (4 loaders + facade-cache + resolve-facades)

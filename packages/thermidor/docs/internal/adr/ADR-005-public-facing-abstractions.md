@@ -28,8 +28,6 @@ Thermidor's public API is organized around four consumer-facing abstractions, la
 3. **Controller** — a high-level, feature-oriented object for building UIs. Orchestrates state and API calls behind a minimal, domain-level API.
 4. **Action** — a curated, low-level state mutation function for power users who need fine-grained control beyond what controllers offer.
 
-An additional composition primitive — **Composed Interface** — enables hybrid use cases where a single UI element spans multiple interface types, though this concept may be superseded if a unified API is validated.
-
 ### Planned addition: State Reader
 
 A fifth abstraction — **State Reader** — is planned to provide symmetric read access to feature state for power users. Today, actions allow writing state without a controller, but there is no equivalent for reading or subscribing to state without instantiating a full controller. State readers would fill this gap: one per feature, lightweight (no API orchestration or facade resolution), accepting an interface parameter like controllers and actions.
@@ -44,7 +42,7 @@ The design and contract of state readers will be discussed in a dedicated upcomi
 
 1. **Requirement**: Full use-case support
    - **Impact**: Positive
-   - **How satisfied**: The Engine + Interface + Controller layering supports search, commerce, and generative use cases. Controllers encapsulate complete feature workflows. Actions (and eventually state readers) provide an escape hatch for use cases not covered by controllers. Composed interfaces handle hybrid scenarios.
+   - **How satisfied**: The Engine + Interface + Controller layering supports search, commerce, and generative use cases. Controllers encapsulate complete feature workflows. Actions (and eventually state readers) provide an escape hatch for use cases not covered by controllers. Controllers accept any interface satisfying their facade requirements (via `Supports<F>`), enabling multi-interface patterns where a single controller spans multiple endpoints.
 
 2. **Requirement**: Public API independence
    - **Impact**: Positive
@@ -72,7 +70,7 @@ The design and contract of state readers will be discussed in a dedicated upcomi
 
 ### Option A (Selected): Engine → Interface → Controller / Action (layered abstractions)
 
-- **Summary**: Four distinct abstractions with clear responsibilities. The Engine owns state. Interfaces scope execution contexts. Controllers orchestrate features for UI builders. Actions provide direct mutations for power users. A composed interface merges multiple interfaces for hybrid use cases.
+- **Summary**: Four distinct abstractions with clear responsibilities. The Engine owns state. Interfaces scope execution contexts. Controllers orchestrate features for UI builders. Actions provide direct mutations for power users. Controllers accept any interface satisfying their declared facade requirements (enforced via `Supports<F>`), enabling multi-interface patterns without additional abstractions.
 
   **Consumer code example (standard):**
 
@@ -99,15 +97,16 @@ The design and contract of state readers will be discussed in a dedicated upcomi
   actions.submit();
   ```
 
-  **Consumer code example (hybrid):**
+  **Consumer code example (multi-interface):**
 
   ```ts
   const search = buildSearchInterface({engine});
   const commerce = buildCommerceInterface({engine});
-  const hybrid = composeInterfaces({interfaces: [search, commerce]});
 
-  const searchBox = buildSearchBoxController({interface: hybrid});
-  // One search box, two endpoints
+  // Controllers accept any interface satisfying Supports<F>
+  const searchBox = buildSearchBoxController({interface: search});
+  const productList = buildProductListController({interface: commerce});
+  // Multi-endpoint dispatch is handled internally by controllers
   ```
 
 - **Pros**:
@@ -121,7 +120,6 @@ The design and contract of state readers will be discussed in a dedicated upcomi
 
 - **Cons**:
   - **Interface as an intermediary** adds one layer between engine and controllers
-  - **Composed interface** adds conceptual weight for hybrid use cases
 
 - **Risks**:
   - The Interface concept may feel like unnecessary indirection for simple single-use-case pages
@@ -141,7 +139,7 @@ The design and contract of state readers will be discussed in a dedicated upcomi
   - Fewer concepts (no Interface to learn)
   - Simpler getting-started experience for single-use-case pages
 - **Cons**:
-  - **Multi-interface is awkward**: how does a search box target two use cases? Pass an array of use cases? Breaks the simple model.
+  - **Multi-interface is awkward**: controllers that need to span multiple interfaces require special handling — scoping becomes implicit and type safety degrades.
   - **State scoping is implicit**: no explicit handle to represent "this search interface instance." Multiple independent search interfaces on one page become difficult.
   - **Facade resolution conflated with controllers**: each controller must internally decide which API facades to call based on `useCase` string, duplicating routing logic.
   - **Tree-shaking degrades**: all use-case facades must be bundled because the controller can't know at build time which use case it'll serve.
@@ -166,7 +164,7 @@ The Interface is the architectural linchpin. It provides:
 
 - **Scoped identity**: multiple independent search interfaces on one page each have their own state partition.
 - **Type-safe facade resolution**: the interface carries its own facade resolvers (per ADR-004), ensuring that controllers call the correct API endpoints without runtime configuration.
-- **Composition target**: `composeInterfaces` works because interfaces are explicit objects with known capabilities — not implicit properties on the engine.
+- **Polymorphic dispatch target**: controllers can dispatch against any interface that satisfies their declared facade requirements (via `Supports<F>`). The interface carries typed facade resolvers that enable polymorphic dispatch without runtime configuration.
 - **Tree-shaking boundary**: unused interface types (and their facade code) are eliminated at build time.
 
 Without it, all of these concerns collapse into the controller or the engine, violating separation of concerns and degrading extensibility. Option B demonstrates this directly: removing interfaces forces state scoping, facade resolution, and composition all into the controller layer, which degrades type safety, tree-shaking, and multi-interface support.
@@ -220,8 +218,7 @@ A single abstraction cannot serve both UI builders (who want orchestrated, high-
 
 - **Engine**: typically one per application, but not enforced as a singleton — multiple engines can coexist for testing or isolated contexts.
 - **Interfaces**: one or more per engine. Multiple interfaces of the same type are valid (e.g., two independent search interfaces on one page).
-- **Composed Interface**: merges two or more interfaces for hybrid use cases (e.g., one search box driving both a search and a commerce endpoint). Provisional — may be superseded by a unified API.
-- **Controllers**: one or more per interface. Most controllers target a single interface. Only controllers whose semantics are "fan-out" (e.g., search box triggering queries on multiple endpoints) are meaningful on composed interfaces. Controllers that own per-interface state (result list, pagination, converse) must target a single interface — composing them would cause one interface's state to overwrite the other's.
+- **Controllers**: one or more per interface. Most controllers target a single interface. Controllers that own per-interface state (result list, pagination, converse) must target a single interface. Controllers whose semantics are "fan-out" (e.g., search box triggering queries on multiple endpoints) accept any interface satisfying their `Supports<F>` constraint.
 - **Actions**: used internally by controllers for state mutations, but also callable directly by consumers for custom workflows outside the controller pattern.
 
 ## Annex: Abstraction Lifecycle
@@ -231,7 +228,5 @@ Each abstraction follows a **create → use → dispose** lifecycle. Understandi
 - **Engine**: the root owner of all state, subscriptions, and in-flight requests. Calling `engine.dispose()` tears down these resources and severs internal references, making the engine — and everything it transitively owns — eligible for garbage collection. Primary use cases for disposal are SPA route transitions (where an engine is scoped to a view or micro-frontend being unmounted) and SSR (where the engine must be released after state serialization so the process does not accumulate memory across requests).
 
 - **Interface**: created from an engine, active for the lifetime of its use case. Disposing the engine cascades to all interfaces it owns. An interface can also be individually disposed (e.g., removing one search panel while keeping the engine alive for another) — this unsubscribes that interface's controllers and releases its resources without affecting sibling interfaces.
-
-- **Composed Interface**: a lightweight projection over its constituent interfaces. Calling `dispose()` on it releases the composition's own resources (cache registry) but does not dispose the underlying interfaces — those are disposed independently or via the engine.
 
 - **Controllers and Actions**: stateless by design. Controllers subscribe to interface state on creation and unsubscribe when their parent interface is disposed. They hold no resources that require independent cleanup. Actions are pure mutation functions with no lifecycle of their own.
