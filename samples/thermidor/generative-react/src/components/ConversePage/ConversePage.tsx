@@ -45,26 +45,29 @@ export function ConversePage() {
       }
     }
     prevTurnCountRef.current = state.turns.length;
-  }, [state.turns]);
+  }, [controller, state.turns]);
 
-  const navigateToTurn = useCallback((direction: 'prev' | 'next') => {
-    if (scrollCooldownRef.current) return;
-    const {turns, activeTurn} = stateRef.current;
-    const currentIndex = turns.findIndex((t) => t.id === activeTurn?.id);
-    if (currentIndex < 0) return;
+  const navigateToTurn = useCallback(
+    (direction: 'prev' | 'next') => {
+      if (scrollCooldownRef.current) return;
+      const {turns, activeTurn} = stateRef.current;
+      const currentIndex = turns.findIndex((t) => t.id === activeTurn?.id);
+      if (currentIndex < 0) return;
 
-    const targetIndex =
-      direction === 'prev' ? currentIndex - 1 : currentIndex + 1;
-    if (targetIndex < 0 || targetIndex >= turns.length) return;
+      const targetIndex =
+        direction === 'prev' ? currentIndex - 1 : currentIndex + 1;
+      if (targetIndex < 0 || targetIndex >= turns.length) return;
 
-    scrollCooldownRef.current = true;
-    overscrollAccumRef.current = 0;
-    controller.selectTurn({id: turns[targetIndex].id});
+      scrollCooldownRef.current = true;
+      overscrollAccumRef.current = 0;
+      controller.selectTurn({id: turns[targetIndex].id});
 
-    setTimeout(() => {
-      scrollCooldownRef.current = false;
-    }, 600);
-  }, []);
+      setTimeout(() => {
+        scrollCooldownRef.current = false;
+      }, 600);
+    },
+    [controller]
+  );
 
   useEffect(() => {
     const el = contentRef.current;
@@ -106,17 +109,26 @@ export function ConversePage() {
     return () => el.removeEventListener('wheel', handleWheel);
   }, [navigateToTurn]);
 
-  const handleSubmit = useCallback((prompt: string) => {
-    controller.submit({prompt});
-  }, []);
+  const handleSubmit = useCallback(
+    (prompt: string) => {
+      controller.submit({prompt});
+    },
+    [controller]
+  );
 
-  const handleSelectTurn = useCallback((id: string) => {
-    controller.selectTurn({id});
-  }, []);
+  const handleSelectTurn = useCallback(
+    (id: string) => {
+      controller.selectTurn({id});
+    },
+    [controller]
+  );
 
-  const handleRetry = useCallback((id: string) => {
-    controller.retry({id});
-  }, []);
+  const handleRetry = useCallback(
+    (id: string) => {
+      controller.retry({id});
+    },
+    [controller]
+  );
 
   const handleAction = useCallback(
     (text: string, _type: string) => {
