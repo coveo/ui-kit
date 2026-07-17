@@ -15,12 +15,13 @@ vi.mock('./search-response-handler.js', () => ({
 }));
 
 vi.mock('@/src/internal/features/configuration/index.js', () => ({
-  readEndpointClientConfiguration: () => ({
-    organizationId: 'test-org',
-    accessToken: 'test-token',
-  }),
   getOrCreateConfigurationSelectors: () => ({
     getTrackingId: (state: any) => state.__trackingId ?? '',
+    getEndpointClientConfiguration: (state: any) => ({
+      organizationId: 'test-org',
+      accessToken: 'test-token',
+      endpoint: undefined,
+    }),
   }),
 }));
 
