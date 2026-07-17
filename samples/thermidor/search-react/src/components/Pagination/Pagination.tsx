@@ -1,9 +1,12 @@
-import {paginationController} from '../../search-setup.js';
-import {useController} from '../../hooks/use-controller.js';
+import {buildPaginationController} from '@coveo/thermidor';
+import {searchInterface} from '../../search-setup.js';
+import {useBuildController} from '../../hooks/use-build-controller.js';
 import styles from './Pagination.module.css';
 
 export function Pagination() {
-  const state = useController(paginationController);
+  const [controller, state] = useBuildController(() =>
+    buildPaginationController({interface: searchInterface})
+  );
 
   if (state.totalPages <= 1) {
     return null;
@@ -13,7 +16,7 @@ export function Pagination() {
     <nav className={styles.nav} aria-label="Search results pagination">
       <button
         className={styles.button}
-        onClick={() => paginationController.selectPage(state.page - 1)}
+        onClick={() => controller.selectPage(state.page - 1)}
         disabled={state.page === 0}
       >
         Previous
@@ -23,7 +26,7 @@ export function Pagination() {
       </span>
       <button
         className={styles.button}
-        onClick={() => paginationController.selectPage(state.page + 1)}
+        onClick={() => controller.selectPage(state.page + 1)}
         disabled={state.page >= state.totalPages - 1}
       >
         Next

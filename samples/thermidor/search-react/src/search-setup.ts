@@ -1,10 +1,4 @@
-import {
-  buildSearchBoxController,
-  buildSearchInterface,
-  buildResultListController,
-  buildPaginationController,
-  Engine,
-} from '@coveo/thermidor';
+import {buildSearchInterface, Engine} from '@coveo/thermidor';
 import {getSampleConfiguration} from './env.js';
 
 function getClientId() {
@@ -33,16 +27,4 @@ const engine = new Engine({
   navigatorContextProvider: getNavigatorContext,
 });
 
-const searchInterface = buildSearchInterface({engine});
-
-export const searchBoxController = buildSearchBoxController({
-  interface: searchInterface,
-});
-
-export const resultListController = buildResultListController({
-  interface: searchInterface,
-});
-
-export const paginationController = buildPaginationController({
-  interface: searchInterface,
-});
+export const searchInterface = buildSearchInterface({engine});
