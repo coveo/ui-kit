@@ -13,11 +13,11 @@ export interface LoadSearchBoxActionsOptions {
  * @returns The search box actions: `setQuery` and `submit`.
  */
 export function loadSearchBoxActions(options: LoadSearchBoxActionsOptions) {
-  const {engine, resolveFacades} = getInterfaceInternals(options.interface);
+  const {engine, resolveFacade} = getInterfaceInternals(options.interface);
 
   engine.adoptSlice(getOrCreateSearchBoxSlice(options.interface));
 
-  const thunks = resolveFacades('search');
+  const thunk = resolveFacade('search');
 
   const actions = getOrCreateSearchBoxActions(options.interface);
 
@@ -26,7 +26,7 @@ export function loadSearchBoxActions(options: LoadSearchBoxActionsOptions) {
       engine.mutate(actions.setQuery(payload.query));
     },
     submit() {
-      return Promise.all(thunks.map((thunk) => engine.mutate(thunk({engine}))));
+      return engine.mutate(thunk({engine}));
     },
   };
 }

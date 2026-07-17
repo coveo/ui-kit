@@ -100,18 +100,19 @@ describe('BaseInterface', () => {
     });
   });
 
-  describe('resolveFacades', () => {
-    it('returns an array with one EndpointThunk', () => {
+  describe('resolveFacade', () => {
+    it('returns the EndpointThunk', () => {
       const {instance} = createTestSubject();
-      const result = getInterfaceInternals(instance).resolveFacades('search');
-      expect(result).toHaveLength(1);
+      const result = getInterfaceInternals(instance).resolveFacade('search');
+      expect(result).toBeDefined();
+      expect(typeof result).toBe('function');
     });
 
     it('returns the same cached thunk on repeated calls (caching)', () => {
       const {instance} = createTestSubject();
-      const first = getInterfaceInternals(instance).resolveFacades('search');
-      const second = getInterfaceInternals(instance).resolveFacades('search');
-      expect(first[0]).toBe(second[0]);
+      const first = getInterfaceInternals(instance).resolveFacade('search');
+      const second = getInterfaceInternals(instance).resolveFacade('search');
+      expect(first).toBe(second);
     });
 
     it('invokes the factory only once for the same facade', () => {
@@ -121,9 +122,9 @@ describe('BaseInterface', () => {
 
       const {instance} = createTestSubject({searchFactory: factorySpy});
 
-      getInterfaceInternals(instance).resolveFacades('search');
-      getInterfaceInternals(instance).resolveFacades('search');
-      getInterfaceInternals(instance).resolveFacades('search');
+      getInterfaceInternals(instance).resolveFacade('search');
+      getInterfaceInternals(instance).resolveFacade('search');
+      getInterfaceInternals(instance).resolveFacade('search');
 
       expect(factorySpy).toHaveBeenCalledTimes(1);
     });
@@ -137,7 +138,7 @@ describe('BaseInterface', () => {
       };
 
       const {instance} = createTestSubject({searchFactory: factory});
-      getInterfaceInternals(instance).resolveFacades('search');
+      getInterfaceInternals(instance).resolveFacade('search');
 
       expect(receivedIface).toBe(instance);
     });
@@ -155,11 +156,11 @@ describe('BaseInterface', () => {
       expect(instance.disposed).toBe(true);
     });
 
-    it('throws when resolveFacades is called after dispose', () => {
+    it('throws when resolveFacade is called after dispose', () => {
       const {instance} = createTestSubject();
       instance.dispose();
       expect(() =>
-        getInterfaceInternals(instance).resolveFacades('search')
+        getInterfaceInternals(instance).resolveFacade('search')
       ).toThrow('Cannot operate on a disposed interface.');
     });
   });

@@ -310,16 +310,16 @@ GC is natural — when the interface is GC'd, the Map is collected with it.
 
 ---
 
-### resolveFacades
+### resolveFacade
 
 A method on `BaseInterface` that resolves the facade thunk for a given facade name. Uses the flat `Map<Facades[T], EndpointThunk>` cache to lazily create and store thunks.
 
 - Looks up the resolver for the requested facade name
 - If the thunk is not cached, calls `resolver(this)` and stores the result
-- Returns the cached thunk wrapped in an array
+- Returns the cached thunk directly
 
 ```typescript
-resolveFacades(facade: Facades[T]): EndpointThunk[];
+resolveFacade(facade: Facades[T]): EndpointThunk;
 ```
 
 **File**: [`src/internal/utils/base-interface.ts`](../src/internal/utils/base-interface.ts)

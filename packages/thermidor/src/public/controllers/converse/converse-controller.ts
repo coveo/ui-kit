@@ -22,7 +22,9 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
   #selectors: ReturnType<typeof getOrCreateGenerativeSelectors>;
 
   constructor(options: ConverseControllerOptions) {
-    const {engine: fullEngine} = getInterfaceInternals(options.interface);
+    const {engine: fullEngine, stateId} = getInterfaceInternals(
+      options.interface
+    );
 
     const actions = getOrCreateGenerativeActions(options.interface);
     const selectors = getOrCreateGenerativeSelectors(options.interface);
@@ -33,8 +35,6 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
       );
       fullEngine.mutate(actions.hydrateState(hydratedState));
     }
-
-    const {stateId} = getInterfaceInternals(options.interface);
 
     const controllerState = createMemoizedStateSelector(
       selectors.getTurns,

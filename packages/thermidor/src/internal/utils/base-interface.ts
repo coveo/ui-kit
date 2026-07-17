@@ -14,7 +14,7 @@ export interface InterfaceInternals {
   stateId: string;
   type: InterfaceType;
   cacheRegistry: InterfaceCacheRegistry;
-  resolveFacades(facade: Facades[InterfaceType]): EndpointThunk[];
+  resolveFacade(facade: Facades[InterfaceType]): EndpointThunk;
 }
 
 export let getInterfaceInternals: (
@@ -33,6 +33,7 @@ export abstract class BaseInterface<T extends InterfaceType> {
   #type: T;
   #facadeResolvers: Record<Facades[T], FacadeResolver>;
   #facadeCache = new Map<Facades[T], EndpointThunk>();
+
   #cacheRegistry = new InterfaceCacheRegistry();
   #disposed = false;
 
@@ -44,7 +45,7 @@ export abstract class BaseInterface<T extends InterfaceType> {
           stateId: iface.#stateId,
           type: iface.#type,
           cacheRegistry: iface.#cacheRegistry,
-          resolveFacades: (facade) => iface.#resolveFacades(facade),
+          resolveFacade: (facade) => iface.#resolveFacade(facade),
         };
       }
       throw new Error(
@@ -76,12 +77,12 @@ export abstract class BaseInterface<T extends InterfaceType> {
     this.#engine.removeInterface(this);
   }
 
-  #resolveFacades(facade: Facades[T]): EndpointThunk[] {
+  #resolveFacade(facade: Facades[T]): EndpointThunk {
     this.#assertNotDisposed();
 
     const resolver = this.#facadeResolvers[facade];
     if (!resolver) {
-      return [];
+      throw new Error(`No resolver registered for facade "${facade}".`);
     }
 
     let thunk = this.#facadeCache.get(facade);
@@ -90,7 +91,7 @@ export abstract class BaseInterface<T extends InterfaceType> {
       this.#facadeCache.set(facade, thunk);
     }
 
-    return [thunk];
+    return thunk;
   }
 
   #assertNotDisposed(): void {

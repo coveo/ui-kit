@@ -9,11 +9,11 @@ import {getOrCreateSearchEndpointSelectors} from '@/src/internal/api/search/inde
 import type {Controller} from '@/src/public/controllers/controller-types.js';
 
 class SearchBoxControllerImpl extends BaseController<SearchBoxControllerState> {
-  #thunks: EndpointThunk[];
+  #thunk: EndpointThunk;
   #actions: ReturnType<typeof getOrCreateSearchBoxActions>;
 
   constructor(options: SearchBoxControllerOptions) {
-    const {engine, resolveFacades} = getInterfaceInternals(options.interface);
+    const {engine, resolveFacade} = getInterfaceInternals(options.interface);
 
     engine.adoptSlice(getOrCreateSearchBoxSlice(options.interface));
 
@@ -35,7 +35,7 @@ class SearchBoxControllerImpl extends BaseController<SearchBoxControllerState> {
 
     super(engine, controllerState);
 
-    this.#thunks = resolveFacades('search');
+    this.#thunk = resolveFacade('search');
     this.#actions = getOrCreateSearchBoxActions(options.interface);
   }
 
@@ -43,12 +43,10 @@ class SearchBoxControllerImpl extends BaseController<SearchBoxControllerState> {
     this.engine.mutate(this.#actions.setQuery(query));
   }
 
-  submit(): Promise<unknown[]> {
-    return Promise.all(
-      this.#thunks.map((thunk) =>
-        this.engine.mutate(thunk({engine: this.engine}))
-      )
-    );
+  submit(): Promise<unknown> {
+    return this.engine.mutate(
+      this.#thunk({engine: this.engine})
+    ) as Promise<unknown>;
   }
 }
 
@@ -71,7 +69,7 @@ export interface SearchBoxController extends Controller<SearchBoxControllerState
   /**
    * Executes the search query.
    */
-  submit(): Promise<unknown[]>;
+  submit(): Promise<unknown>;
 }
 
 export interface SearchBoxControllerSetQueryOptions {
