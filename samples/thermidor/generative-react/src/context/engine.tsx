@@ -15,15 +15,14 @@ const EngineContext = createContext<Engine | null>(null);
  * The engine is created once on mount and disposed when the provider unmounts.
  */
 export function EngineProvider({children}: PropsWithChildren) {
-  const engineRef = useRef(
-    new Engine({
-      configuration: getSampleConfiguration(),
-      navigatorContextProvider: getNavigatorContext,
-    })
-  );
+  const engineRef = useRef<Engine | null>(null);
+  engineRef.current ??= new Engine({
+    configuration: getSampleConfiguration(),
+    navigatorContextProvider: getNavigatorContext,
+  });
 
   useEffect(() => {
-    return () => engineRef.current.dispose();
+    return () => engineRef.current?.dispose();
   }, []);
 
   return (

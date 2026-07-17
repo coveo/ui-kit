@@ -22,10 +22,11 @@ const GenerativeInterfaceContext = createContext<GenerativeInterface | null>(
  */
 export function GenerativeInterfaceProvider({children}: PropsWithChildren) {
   const engine = useEngine();
-  const interfaceRef = useRef(buildGenerativeInterface({engine}));
+  const interfaceRef = useRef<GenerativeInterface | null>(null);
+  interfaceRef.current ??= buildGenerativeInterface({engine});
 
   useEffect(() => {
-    return () => interfaceRef.current.dispose();
+    return () => interfaceRef.current?.dispose();
   }, []);
 
   return (

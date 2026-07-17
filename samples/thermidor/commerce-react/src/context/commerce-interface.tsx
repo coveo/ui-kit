@@ -17,10 +17,11 @@ const CommerceInterfaceContext = createContext<CommerceInterface | null>(null);
  */
 export function CommerceInterfaceProvider({children}: PropsWithChildren) {
   const engine = useEngine();
-  const interfaceRef = useRef(buildCommerceInterface({engine}));
+  const interfaceRef = useRef<CommerceInterface | null>(null);
+  interfaceRef.current ??= buildCommerceInterface({engine});
 
   useEffect(() => {
-    return () => interfaceRef.current.dispose();
+    return () => interfaceRef.current?.dispose();
   }, []);
 
   return (

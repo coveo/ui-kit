@@ -17,10 +17,11 @@ const SearchInterfaceContext = createContext<SearchInterface | null>(null);
  */
 export function SearchInterfaceProvider({children}: PropsWithChildren) {
   const engine = useEngine();
-  const interfaceRef = useRef(buildSearchInterface({engine}));
+  const interfaceRef = useRef<SearchInterface | null>(null);
+  interfaceRef.current ??= buildSearchInterface({engine});
 
   useEffect(() => {
-    return () => interfaceRef.current.dispose();
+    return () => interfaceRef.current?.dispose();
   }, []);
 
   return (
