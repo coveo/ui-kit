@@ -241,7 +241,9 @@ export const buildSearchBoxController = (options: {
 
   engine.adoptSlice(getOrCreateSearchBoxSlice(stateId));
 
-  const thunk = getInterfaceInternals(options.interface).resolveFacade('search');
+  const thunk = getInterfaceInternals(options.interface).resolveFacade(
+    'search'
+  );
 
   return {
     setQuery({query}) {
