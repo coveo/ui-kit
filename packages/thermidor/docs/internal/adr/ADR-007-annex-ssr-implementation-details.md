@@ -128,7 +128,7 @@ The snapshot storage is optimistic (accepts all recognized params). The slice ad
 ### `getSSRSnapshot`
 
 ```ts
-import {getFullEngine} from '@/src/core/interface/engine/engine.js';
+import {getFullEngine} from '@/src/internal/engine/index.js';
 
 export function getSSRSnapshot({engine}: {engine: Engine}): SSRSnapshot {
   const fullEngine = getFullEngine(engine);
@@ -147,7 +147,7 @@ We pass the snapshot as plain JSON rather than base64 for two reasons: (1) `btoa
 ### `restoreSSRSnapshot`
 
 ```ts
-import {getFullEngine} from '@/src/core/interface/engine/engine.js';
+import {getFullEngine} from '@/src/internal/engine/index.js';
 
 export function restoreSSRSnapshot({
   engine,

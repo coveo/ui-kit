@@ -49,7 +49,7 @@ The fundamental rule: **Layer 0 depends on nothing. Everything else depends on L
 
 ## Layer 0: Core State
 
-**Directory**: `src/core/`  
+**Directory**: `src/internal/`  
 **Visibility**: Internal (not exported to consumers, but used by all other layers)  
 **Responsibility**: Own all application state. Hide Redux completely.
 
@@ -116,7 +116,7 @@ graph LR
 | `core/interface/` | **No** (except engine.ts which wraps it) |         **Yes** (via `core/index.ts`)         | Types, selector wrappers, mutation factories |
 | `core/internal/`  |                 **Yes**                  | **No** (except for `adoptSlice` registration) | Redux slices (`createSlice`), reducers       |
 
-**Why the split?** If you can `grep -r "@reduxjs/toolkit" src/core/interface/` and get zero results (excluding `engine.ts`), you know the abstraction holds. The interface layer's `mutate.ts` and `selectors.ts` files import from `internal/` to wrap Redux-specific implementations, but they only expose library-agnostic types.
+**Why the split?** If you can `grep -r "@reduxjs/toolkit" src/internal/interface/` and get zero results (excluding `engine.ts`), you know the abstraction holds. The interface layer's `mutate.ts` and `selectors.ts` files import from `internal/` to wrap Redux-specific implementations, but they only expose library-agnostic types.
 
 ### The Pattern Per Feature
 
@@ -241,7 +241,7 @@ export const buildSearchBoxController = (options: {
 
   engine.adoptSlice(getOrCreateSearchBoxSlice(stateId));
 
-  const thunk = resolveFacade(options.interface, 'search');
+  const thunk = getInterfaceInternals(options.interface).resolveFacade('search');
 
   return {
     setQuery({query}) {
@@ -275,12 +275,12 @@ Controllers receive an **interface handle** (not a raw engine). The interface ca
 - `[TYPE]` — discriminant (`'search' | 'commerce' | 'generative'`) for type safety
 - `[FACADE_RESOLVERS]` — a Record of lazy facade resolvers (Symbol-keyed, hidden from consumers)
 
-Controllers use `resolveFacade(iface, 'search')` to obtain the correct thunk. This works identically for search interfaces and commerce interfaces — the controller is fully decoupled from the concrete implementation.
+Controllers use `getInterfaceInternals(iface).resolveFacade('search')` to obtain the correct thunk. This works identically for search interfaces and commerce interfaces — the controller is fully decoupled from the concrete implementation.
 
 ### What Controllers Do at Initialization
 
 1. **Adopt slices** — `engine.adoptSlice(...)` ensures required slices are in the store
-2. **Resolve facade** — `resolveFacade(iface, 'search')` lazily instantiates the needed thunk
+2. **Resolve facade** — `getInterfaceInternals(iface).resolveFacade('search')` lazily instantiates the needed thunk
 3. **Create memoized selectors** — compose individual selectors into a combined state object
 4. **Return the API object** — a plain object with methods bound to the engine
 

@@ -8,7 +8,7 @@ Quick reference for terms used throughout the `@coveo/thermidor` codebase and do
 
 The central state container. An instance of the `Engine` class wraps a Redux Toolkit store but exposes only four methods: `read()`, `subscribe()`, `mutate()`, and `adoptSlice()`. Multiple independent engines can coexist (multi-engine paradigm).
 
-**File**: [`src/core/interface/engine/engine.ts`](../src/core/interface/engine/engine.ts)
+**File**: [`src/internal/engine/engine.ts`](../src/internal/engine/engine.ts)
 
 ```typescript
 const engine = new Engine();
@@ -27,7 +27,7 @@ Each slice owns:
 - Selectors (how to read from state)
 
 **Example**: The `searchBox` slice manages the search query string.  
-**File**: [`src/core/internal/searchBox/slice.ts`](../src/core/internal/searchBox/slice.ts)
+**File**: [`src/internal/features/search-box/search-box-slice.ts`](../src/internal/features/search-box/search-box-slice.ts)
 
 ---
 
@@ -59,7 +59,7 @@ interface StateMutation {
 
 Mutations are created by **mutation factories** (e.g., `searchBoxMutations.setQuery('laptops')`) and dispatched via `engine.mutate(mutation)`.
 
-**File**: [`src/core/interface/types.ts`](../src/core/interface/types.ts)
+**File**: [`src/internal/engine/engine-types.ts`](../src/internal/engine/engine-types.ts)
 
 ---
 
@@ -76,7 +76,7 @@ const mutation = searchBoxMutations.setQuery('laptops');
 engine.mutate(mutation);
 ```
 
-**Files**: `src/core/interface/{feature}/mutate.ts` (one per feature)
+**Files**: `src/internal/features/{feature}/{feature}-actions.ts` (one per feature)
 
 ---
 
@@ -91,7 +91,7 @@ type StateSelector<T> = (state: State) => T;
 const query: StateSelector<string> = (state) => state.searchBox?.query ?? '';
 ```
 
-**File**: [`src/core/interface/types.ts`](../src/core/interface/types.ts)
+**File**: [`src/internal/engine/engine-types.ts`](../src/internal/engine/engine-types.ts)
 
 ---
 
@@ -154,8 +154,8 @@ Two separate feature domains that are easy to conflate:
 
 **Files**:
 
-- `src/core/interface/result/` — individual result types and per-result UI state
-- `src/core/interface/results/` — collection-level state
+- `src/internal/result/` — individual result types and per-result UI state
+- `src/internal/results/` — collection-level state
 
 ---
 
@@ -229,7 +229,7 @@ A lazy-loaded async thunk responsible for an endpoint lifecycle (build request �
 
 Facades are named by the operation they perform: `'search'`, `'suggestions'`, `'conversation'`.
 
-**File**: [`src/core/interface/api/`](../src/core/interface/api/)
+**File**: [`src/internal/api/`](../src/internal/api/)
 
 ---
 
@@ -241,7 +241,7 @@ A function `(iface: InterfaceHandle) => EndpointThunk` that lazily creates and c
 type FacadeResolver = (iface: InterfaceHandle) => EndpointThunk;
 ```
 
-**File**: [`src/core/interface/utils/interface-types.ts`](../src/core/interface/utils/interface-types.ts)
+**File**: [`src/internal/utils/interface-types.ts`](../src/internal/utils/interface-types.ts)
 
 ---
 
@@ -257,7 +257,7 @@ interface Facades {
 }
 ```
 
-**File**: [`src/core/interface/utils/interface-types.ts`](../src/core/interface/utils/interface-types.ts)
+**File**: [`src/internal/utils/interface-types.ts`](../src/internal/utils/interface-types.ts)
 
 ---
 
@@ -265,7 +265,7 @@ interface Facades {
 
 A Symbol-keyed property on Interface objects. Holds `Record<Facades[T], FacadeResolver>` — the dispatch table of lazy facade resolvers. Not exported publicly; only accessible to internal code (controllers).
 
-**File**: [`src/core/interface/utils/symbols.ts`](../src/core/interface/utils/symbols.ts)
+**File**: [`src/internal/utils/symbols.ts`](../src/internal/utils/symbols.ts)
 
 ---
 
@@ -273,7 +273,7 @@ A Symbol-keyed property on Interface objects. Holds `Record<Facades[T], FacadeRe
 
 A Symbol-keyed discriminant on Interface objects. Values: `'search' | 'commerce' | 'generative'`. Provides structural type safety — prevents passing a generative interface to a controller that expects `Supports<'search'>`.
 
-**File**: [`src/core/interface/utils/symbols.ts`](../src/core/interface/utils/symbols.ts)
+**File**: [`src/internal/utils/symbols.ts`](../src/internal/utils/symbols.ts)
 
 ---
 
@@ -292,7 +292,7 @@ interface SearchBoxControllerOptions {
 }
 ```
 
-**File**: [`src/core/interface/utils/interface-types.ts`](../src/core/interface/utils/interface-types.ts)
+**File**: [`src/internal/utils/interface-types.ts`](../src/internal/utils/interface-types.ts)
 
 ---
 

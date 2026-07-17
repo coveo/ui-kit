@@ -69,7 +69,7 @@ Replace eager thunk instantiation with lazy facade resolvers stored as a typed `
   - **Lazy**: facades instantiated only when a controller requests them
   - **No global state**: cache lives in the closure, owned by the interface object
   - **Natural GC**: interface GC'd → closure GC'd → cache GC'd
-  - **Controller decoupled**: `resolveFacade(iface, 'search')` works for any interface type
+  - **Controller decoupled**: `getInterfaceInternals(iface).resolveFacade('search')` works for any interface type
   - **Type-safe**: `Facades` Record enforces completeness; `[TYPE]` discriminant prevents wrong-interface assignment
   - **Hidden from consumer**: `[FACADE_RESOLVERS]` is Symbol-keyed, not in public API
 - **Cons**:
