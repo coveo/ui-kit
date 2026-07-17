@@ -3,10 +3,7 @@ import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 import type {FullEngine} from '@/src/internal/engine/index.js';
 import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 
-export function createCommerceSuggestionsThunk(
-  _engine: FullEngine,
-  iface: InterfaceHandle
-) {
+export function createCommerceSuggestionsThunk(iface: InterfaceHandle) {
   const {stateId} = getInterfaceInternals(iface);
 
   return createAsyncThunk<void, {engine: FullEngine}>(

@@ -46,6 +46,7 @@ vi.mock('./commerce-search-thunk-slice.js', () => ({
 
 vi.mock('@/src/internal/utils/index.js', () => ({
   getInterfaceInternals: () => ({
+    engine: {adoptSlice: vi.fn()},
     stateId: 'test-interface',
     cacheRegistry: {getOrCreate: (_key: any, factory: any) => factory()},
   }),
@@ -94,7 +95,7 @@ describe('createCommerceSearchEndpointThunk', () => {
       dispose: vi.fn(),
     };
 
-    const thunk = createCommerceSearchEndpointThunk(engine, iface);
+    const thunk = createCommerceSearchEndpointThunk(iface);
     const action = thunk({engine});
     await action(vi.fn(), () => ({}), undefined);
 
@@ -138,7 +139,7 @@ describe('createCommerceSearchEndpointThunk', () => {
       dispose: vi.fn(),
     };
 
-    const thunk = createCommerceSearchEndpointThunk(engine, iface);
+    const thunk = createCommerceSearchEndpointThunk(iface);
     const action = thunk({engine});
     await action(vi.fn(), () => ({}), undefined);
 
@@ -171,7 +172,7 @@ describe('createCommerceSearchEndpointThunk', () => {
       dispose: vi.fn(),
     };
 
-    const thunk = createCommerceSearchEndpointThunk(engine, iface);
+    const thunk = createCommerceSearchEndpointThunk(iface);
     const action = thunk({engine});
     await action(vi.fn(), () => ({}), undefined);
 
@@ -205,7 +206,7 @@ describe('createCommerceSearchEndpointThunk', () => {
       dispose: vi.fn(),
     };
 
-    const thunk = createCommerceSearchEndpointThunk(engine, iface);
+    const thunk = createCommerceSearchEndpointThunk(iface);
     const action = thunk({engine});
     const result = await action(vi.fn(), () => ({}), undefined);
 
@@ -239,7 +240,7 @@ describe('createCommerceSearchEndpointThunk', () => {
       dispose: vi.fn(),
     };
 
-    const thunk = createCommerceSearchEndpointThunk(engine, iface);
+    const thunk = createCommerceSearchEndpointThunk(iface);
     const action = thunk({engine});
     await action(vi.fn(), () => ({}), undefined);
 

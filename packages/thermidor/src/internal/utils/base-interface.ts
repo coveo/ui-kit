@@ -2,7 +2,7 @@ import {InterfaceCacheRegistry} from './interface-cache-registry.js';
 import type {FullEngine} from '@/src/internal/engine/index.js';
 import type {
   EndpointThunk,
-  FacadeResolverFactory,
+  FacadeResolver,
   Facades,
   InterfaceHandle,
   InterfaceType,
@@ -31,7 +31,7 @@ export abstract class BaseInterface<T extends InterfaceType> {
   #engine: FullEngine;
   #stateId: string;
   #type: T;
-  #facadeResolvers: Record<Facades[T], FacadeResolverFactory>;
+  #facadeResolvers: Record<Facades[T], FacadeResolver>;
   #facadeCache = new Map<Facades[T], EndpointThunk>();
   #cacheRegistry = new InterfaceCacheRegistry();
   #disposed = false;
@@ -57,7 +57,7 @@ export abstract class BaseInterface<T extends InterfaceType> {
     engine: FullEngine,
     stateId: string,
     type: T,
-    resolvers: Record<Facades[T], FacadeResolverFactory>
+    resolvers: Record<Facades[T], FacadeResolver>
   ) {
     this.#engine = engine;
     this.#stateId = stateId;
@@ -86,7 +86,7 @@ export abstract class BaseInterface<T extends InterfaceType> {
 
     let thunk = this.#facadeCache.get(facade);
     if (!thunk) {
-      thunk = resolver(this.#engine)(this);
+      thunk = resolver(this);
       this.#facadeCache.set(facade, thunk);
     }
 

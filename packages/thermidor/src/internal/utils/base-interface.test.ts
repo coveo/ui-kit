@@ -2,7 +2,7 @@ import {describe, it, expect, vi} from 'vitest';
 import {BaseInterface, getInterfaceInternals} from './base-interface.js';
 import type {FullEngine} from '@/src/internal/engine/index.js';
 import type {
-  FacadeResolverFactory,
+  FacadeResolver,
   Facades,
   EndpointThunk,
   InterfaceHandle,
@@ -29,7 +29,7 @@ class TestInterface extends BaseInterface<'search'> {
   constructor(
     engine: FullEngine,
     stateId: string,
-    resolvers: Record<Facades['search'], FacadeResolverFactory>
+    resolvers: Record<Facades['search'], FacadeResolver>
   ) {
     super(engine, stateId, 'search', resolvers);
   }
@@ -38,8 +38,8 @@ class TestInterface extends BaseInterface<'search'> {
 function createTestSubject(options?: {
   engine?: FullEngine;
   stateId?: string;
-  searchFactory?: FacadeResolverFactory;
-  suggestionsFactory?: FacadeResolverFactory;
+  searchFactory?: FacadeResolver;
+  suggestionsFactory?: FacadeResolver;
 }) {
   const engine = options?.engine ?? createMockEngine();
   const stateId = options?.stateId ?? 'test-id';
@@ -47,10 +47,10 @@ function createTestSubject(options?: {
   const searchThunk = createMockThunk();
   const suggestionsThunk = createMockThunk();
 
-  const searchFactory: FacadeResolverFactory =
-    options?.searchFactory ?? ((_engine) => (_iface) => searchThunk);
-  const suggestionsFactory: FacadeResolverFactory =
-    options?.suggestionsFactory ?? ((_engine) => (_iface) => suggestionsThunk);
+  const searchFactory: FacadeResolver =
+    options?.searchFactory ?? ((_iface) => searchThunk);
+  const suggestionsFactory: FacadeResolver =
+    options?.suggestionsFactory ?? ((_iface) => suggestionsThunk);
 
   const instance = new TestInterface(engine, stateId, {
     search: searchFactory,
@@ -115,9 +115,8 @@ describe('BaseInterface', () => {
     });
 
     it('invokes the factory only once for the same facade', () => {
-      const factorySpy = vi.fn((_engine: FullEngine) => {
-        const thunk = createMockThunk();
-        return (_iface: InterfaceHandle) => thunk;
+      const factorySpy = vi.fn((_iface: InterfaceHandle) => {
+        return createMockThunk();
       });
 
       const {instance} = createTestSubject({searchFactory: factorySpy});
@@ -132,7 +131,7 @@ describe('BaseInterface', () => {
     it('passes the interface instance to the resolver as iface', () => {
       let receivedIface: InterfaceHandle | undefined;
 
-      const factory: FacadeResolverFactory = (_engine) => (iface) => {
+      const factory: FacadeResolver = (iface) => {
         receivedIface = iface;
         return createMockThunk();
       };

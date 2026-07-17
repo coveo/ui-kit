@@ -9,11 +9,8 @@ import {createSearchEndpointClient} from '@/src/internal/api/search/index.js';
 import {getOrCreateSearchEndpointSlice} from './search-thunk-slice.js';
 import {buildAnalyticsParams} from '@/src/internal/api/analytics-params.js';
 
-export function createSearchEndpointThunk(
-  engine: FullEngine,
-  iface: InterfaceHandle
-) {
-  const {stateId} = getInterfaceInternals(iface);
+export function createSearchEndpointThunk(iface: InterfaceHandle) {
+  const {engine, stateId} = getInterfaceInternals(iface);
   const buildRequest = createSearchEndpointRequestSelector(iface);
   const handleResponse = createSearchEndpointResponseHandler(iface);
   const configSelectors = getOrCreateConfigurationSelectors();

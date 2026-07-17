@@ -23,7 +23,6 @@ export type {
   CommerceInterface,
   EndpointThunk,
   FacadeResolver,
-  FacadeResolverFactory,
   Facades,
   GenerativeInterface,
   InferInterfaceType,

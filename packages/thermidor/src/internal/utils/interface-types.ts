@@ -10,8 +10,6 @@ export type EndpointThunk = AsyncThunk<void, {engine: FullEngine}, {}>;
 
 export type FacadeResolver = (iface: InterfaceHandle) => EndpointThunk;
 
-export type FacadeResolverFactory = (engine: FullEngine) => FacadeResolver;
-
 export interface InterfaceRegistry {
   search: {interface: SearchInterface; facades: 'search' | 'suggestions'};
   commerce: {interface: CommerceInterface; facades: 'search' | 'suggestions'};

@@ -45,6 +45,7 @@ vi.mock('@/src/internal/api/analytics-params.js', async () => {
 
 vi.mock('@/src/internal/utils/index.js', () => ({
   getInterfaceInternals: () => ({
+    engine: {adoptSlice: vi.fn()},
     stateId: 'test-interface',
     cacheRegistry: {getOrCreate: (_key: any, factory: any) => factory()},
   }),
@@ -91,7 +92,7 @@ describe('createSearchEndpointThunk', () => {
       dispose: vi.fn(),
     };
 
-    const thunk = createSearchEndpointThunk(engine, iface);
+    const thunk = createSearchEndpointThunk(iface);
     const action = thunk({engine});
     await action(vi.fn(), () => ({}), undefined);
 
@@ -129,7 +130,7 @@ describe('createSearchEndpointThunk', () => {
       dispose: vi.fn(),
     };
 
-    const thunk = createSearchEndpointThunk(engine, iface);
+    const thunk = createSearchEndpointThunk(iface);
     const action = thunk({engine});
     await action(vi.fn(), () => ({}), undefined);
 
@@ -148,7 +149,7 @@ describe('createSearchEndpointThunk', () => {
       dispose: vi.fn(),
     };
 
-    const thunk = createSearchEndpointThunk(engine, iface);
+    const thunk = createSearchEndpointThunk(iface);
     const action = thunk({engine});
     const result = await action(vi.fn(), () => ({}), undefined);
 

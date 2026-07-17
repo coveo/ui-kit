@@ -1,7 +1,7 @@
 import {BaseInterface} from '@/src/internal/utils/index.js';
 import type {FullEngine} from '@/src/internal/engine/index.js';
 import type {
-  FacadeResolverFactory,
+  FacadeResolver,
   Facades,
   SearchInterface,
 } from '@/src/internal/utils/index.js';
@@ -9,7 +9,7 @@ import {createSearchFacadeResolver} from '@/src/internal/api/search/index.js';
 import {createQuerySuggestFacadeResolver} from '@/src/internal/api/query-suggest/index.js';
 import {getOrCreateSearchParametersSlice} from '@/src/internal/features/search-parameters/index.js';
 
-const resolverFactories: Record<Facades['search'], FacadeResolverFactory> = {
+const resolvers: Record<Facades['search'], FacadeResolver> = {
   search: createSearchFacadeResolver,
   suggestions: createQuerySuggestFacadeResolver,
 };
@@ -19,7 +19,7 @@ export class SearchInterfaceImpl
   implements SearchInterface
 {
   constructor(engine: FullEngine, stateId: string) {
-    super(engine, stateId, 'search', resolverFactories);
+    super(engine, stateId, 'search', resolvers);
     engine.adoptSlice(getOrCreateSearchParametersSlice(this));
   }
 }

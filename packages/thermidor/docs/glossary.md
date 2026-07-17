@@ -235,7 +235,7 @@ Facades are named by the operation they perform: `'search'`, `'suggestions'`, `'
 
 ### FacadeResolver
 
-A function `(iface: InterfaceHandle) => EndpointThunk` that lazily creates and caches a facade thunk. Receives the interface directly and produces an endpoint thunk bound to that interface's engine and state.
+A function `(iface: InterfaceHandle) => EndpointThunk` that lazily creates and caches a facade thunk. Derives the engine from `getInterfaceInternals(iface)` internally and produces an endpoint thunk bound to that interface's state.
 
 ```typescript
 type FacadeResolver = (iface: InterfaceHandle) => EndpointThunk;

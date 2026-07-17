@@ -9,15 +9,11 @@ import {getOrCreateConfigurationSelectors} from '@/src/internal/features/configu
 import {createCommerceSearchEndpointClient} from '@/src/internal/api/commerce-search/index.js';
 import {getOrCreateCommerceSearchEndpointSlice} from './commerce-search-thunk-slice.js';
 
-export function createCommerceSearchEndpointThunk(
-  engine: FullEngine,
-  iface: InterfaceHandle
-) {
+export function createCommerceSearchEndpointThunk(iface: InterfaceHandle) {
+  const {engine, stateId} = getInterfaceInternals(iface);
   const configSelectors = getOrCreateConfigurationSelectors();
   const buildRequest = createCommerceSearchEndpointRequestSelector(iface);
   const handleResponse = createCommerceSearchEndpointResponseHandler(iface);
-
-  const {stateId} = getInterfaceInternals(iface);
 
   const thunk = createAsyncThunk<void, {engine: FullEngine}>(
     `${stateId}/commerceSearchEndpoint/execute`,
