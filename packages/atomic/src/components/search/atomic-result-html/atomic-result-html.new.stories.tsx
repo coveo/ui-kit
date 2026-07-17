@@ -34,7 +34,6 @@ const meta: Meta = {
   ],
   parameters: {
     ...parameters,
-    chromatic: {disableSnapshot: true},
     msw: {
       handlers: [...searchApiHarness.handlers],
     },
