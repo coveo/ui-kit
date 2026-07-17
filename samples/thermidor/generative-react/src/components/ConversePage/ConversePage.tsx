@@ -35,16 +35,13 @@ export function ConversePage() {
   const stateRef = useRef(state);
   stateRef.current = state;
 
-  const controllerRef = useRef(controller);
-  controllerRef.current = controller;
-
   const OVERSCROLL_THRESHOLD = 150;
 
   useEffect(() => {
     if (state.turns.length > prevTurnCountRef.current) {
       const newestTurn = state.turns[state.turns.length - 1];
       if (newestTurn && state.activeTurn?.id !== newestTurn.id) {
-        controllerRef.current.selectTurn({id: newestTurn.id});
+        controller.selectTurn({id: newestTurn.id});
       }
     }
     prevTurnCountRef.current = state.turns.length;
@@ -62,7 +59,7 @@ export function ConversePage() {
 
     scrollCooldownRef.current = true;
     overscrollAccumRef.current = 0;
-    controllerRef.current.selectTurn({id: turns[targetIndex].id});
+    controller.selectTurn({id: turns[targetIndex].id});
 
     setTimeout(() => {
       scrollCooldownRef.current = false;
@@ -110,15 +107,15 @@ export function ConversePage() {
   }, [navigateToTurn]);
 
   const handleSubmit = useCallback((prompt: string) => {
-    controllerRef.current.submit({prompt});
+    controller.submit({prompt});
   }, []);
 
   const handleSelectTurn = useCallback((id: string) => {
-    controllerRef.current.selectTurn({id});
+    controller.selectTurn({id});
   }, []);
 
   const handleRetry = useCallback((id: string) => {
-    controllerRef.current.retry({id});
+    controller.retry({id});
   }, []);
 
   const handleAction = useCallback(
