@@ -43,10 +43,8 @@ class SearchBoxControllerImpl extends BaseController<SearchBoxControllerState> {
     this.engine.mutate(this.#actions.setQuery(query));
   }
 
-  submit(): Promise<unknown> {
-    return this.engine.mutate(
-      this.#thunk({engine: this.engine})
-    ) as Promise<unknown>;
+  async submit(): Promise<void> {
+    await this.engine.mutate(this.#thunk({engine: this.engine}));
   }
 }
 
@@ -69,7 +67,7 @@ export interface SearchBoxController extends Controller<SearchBoxControllerState
   /**
    * Executes the search query.
    */
-  submit(): Promise<unknown>;
+  submit(): Promise<void>;
 }
 
 export interface SearchBoxControllerSetQueryOptions {

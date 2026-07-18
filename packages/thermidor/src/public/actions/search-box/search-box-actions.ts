@@ -25,8 +25,8 @@ export function loadSearchBoxActions(options: LoadSearchBoxActionsOptions) {
     setQuery(payload: {query: string}) {
       engine.mutate(actions.setQuery(payload.query));
     },
-    submit() {
-      return engine.mutate(thunk({engine}));
+    async submit() {
+      await engine.mutate(thunk({engine}));
     },
   };
 }
