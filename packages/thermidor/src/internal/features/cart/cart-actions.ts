@@ -1,7 +1,7 @@
 import {createAction} from '@reduxjs/toolkit';
 import type {CartItem} from './cart-types.js';
 import {type CacheKey, createCacheKey} from '@/src/internal/utils/index.js';
-import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 
 type CartActions = ReturnType<typeof createCartActions>;
@@ -19,6 +19,6 @@ export function createCartActions(interfaceId: string) {
 }
 
 export function getOrCreateCartActions(iface: InterfaceHandle) {
-  const {stateId, cacheRegistry} = getHandleInternals(iface);
+  const {stateId, cacheRegistry} = getInterfaceInternals(iface);
   return cacheRegistry.getOrCreate(CACHE_KEY, () => createCartActions(stateId));
 }

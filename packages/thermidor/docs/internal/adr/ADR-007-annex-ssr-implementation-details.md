@@ -63,12 +63,6 @@ export interface BuildCommerceProductListingInterfaceOptions {
   id?: string;
   initialParameters?: CommerceProductListingInterfaceInitialParameters;
 }
-
-export interface ComposeInterfacesOptions<T extends InterfaceType> {
-  interfaces: BaseInterface<T>[];
-  id?: string;
-  initialParameters?: {query?: string};
-}
 ```
 
 ## 3. Standalone Functions
@@ -134,7 +128,7 @@ The snapshot storage is optimistic (accepts all recognized params). The slice ad
 ### `getSSRSnapshot`
 
 ```ts
-import {getFullEngine} from '@/src/core/interface/engine/engine.js';
+import {getFullEngine} from '@/src/internal/engine/index.js';
 
 export function getSSRSnapshot({engine}: {engine: Engine}): SSRSnapshot {
   const fullEngine = getFullEngine(engine);
@@ -153,7 +147,7 @@ We pass the snapshot as plain JSON rather than base64 for two reasons: (1) `btoa
 ### `restoreSSRSnapshot`
 
 ```ts
-import {getFullEngine} from '@/src/core/interface/engine/engine.js';
+import {getFullEngine} from '@/src/internal/engine/index.js';
 
 export function restoreSSRSnapshot({
   engine,
@@ -363,7 +357,7 @@ The consumer passes a single snapshot object from server to client. Each interfa
 
 ### `executeInitialRequest()` on interfaces
 
-Each interface (search, commerce, composed) exposes an `executeInitialRequest()` method that triggers the appropriate backend call based on the interface type and its seeded parameters.
+Each interface (search, commerce, generative) exposes an `executeInitialRequest()` method that triggers the appropriate backend call based on the interface type and its seeded parameters.
 
 ```ts
 interface SearchInterface {

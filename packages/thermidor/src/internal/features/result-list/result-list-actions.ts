@@ -1,6 +1,6 @@
 import {createAction} from '@reduxjs/toolkit';
 import {type CacheKey, createCacheKey} from '@/src/internal/utils/index.js';
-import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 import type {CoveoSearchResult} from '@/src/internal/api/search/index.js';
 
@@ -18,7 +18,7 @@ export function createResultsActions(interfaceId: string) {
 }
 
 export function getOrCreateResultsActions(iface: InterfaceHandle) {
-  const {stateId, cacheRegistry} = getHandleInternals(iface);
+  const {stateId, cacheRegistry} = getInterfaceInternals(iface);
   return cacheRegistry.getOrCreate(CACHE_KEY, () =>
     createResultsActions(stateId)
   );

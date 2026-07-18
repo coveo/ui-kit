@@ -1,7 +1,7 @@
 import {describe, it, expect, vi, beforeEach, afterEach} from 'vitest';
 import {createSearchEndpointThunk} from './search-thunk.js';
 import type {FullEngine} from '@/src/internal/engine/index.js';
-import type {EndpointStateScope} from '@/src/internal/utils/index.js';
+import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 
 const mockCall = vi.fn();
 
@@ -17,7 +17,7 @@ vi.mock('./search-response-handler.js', () => ({
 vi.mock('@/src/internal/features/configuration/index.js', () => ({
   getOrCreateConfigurationSelectors: () => ({
     getTrackingId: (state: any) => state.__trackingId ?? '',
-    getEndpointClientConfiguration: (state: any) => ({
+    getEndpointClientConfiguration: () => ({
       organizationId: 'test-org',
       accessToken: 'test-token',
       endpoint: undefined,
@@ -44,7 +44,8 @@ vi.mock('@/src/internal/api/analytics-params.js', async () => {
 });
 
 vi.mock('@/src/internal/utils/index.js', () => ({
-  getHandleInternals: () => ({
+  getInterfaceInternals: () => ({
+    engine: {adoptSlice: vi.fn()},
     stateId: 'test-interface',
     cacheRegistry: {getOrCreate: (_key: any, factory: any) => factory()},
   }),
@@ -86,12 +87,12 @@ describe('createSearchEndpointThunk', () => {
       __trackingId: 'track-123',
     });
 
-    const scope: EndpointStateScope = {
-      scopeInterface: {} as any,
-      baseInterface: {} as any,
+    const iface: InterfaceHandle = {
+      disposed: false,
+      dispose: vi.fn(),
     };
 
-    const thunk = createSearchEndpointThunk(engine, scope);
+    const thunk = createSearchEndpointThunk(iface);
     const action = thunk({engine});
     await action(vi.fn(), () => ({}), undefined);
 
@@ -124,12 +125,12 @@ describe('createSearchEndpointThunk', () => {
       getNavigatorContextProvider: () => undefined,
     } as unknown as FullEngine;
 
-    const scope: EndpointStateScope = {
-      scopeInterface: {} as any,
-      baseInterface: {} as any,
+    const iface: InterfaceHandle = {
+      disposed: false,
+      dispose: vi.fn(),
     };
 
-    const thunk = createSearchEndpointThunk(engine, scope);
+    const thunk = createSearchEndpointThunk(iface);
     const action = thunk({engine});
     await action(vi.fn(), () => ({}), undefined);
 
@@ -143,16 +144,16 @@ describe('createSearchEndpointThunk', () => {
     mockCall.mockResolvedValue({success: false, error: 'Something went wrong'});
 
     const engine = createMockEngine({__request: {q: 'fail'}});
-    const scope: EndpointStateScope = {
-      scopeInterface: {} as any,
-      baseInterface: {} as any,
+    const iface: InterfaceHandle = {
+      disposed: false,
+      dispose: vi.fn(),
     };
 
-    const thunk = createSearchEndpointThunk(engine, scope);
+    const thunk = createSearchEndpointThunk(iface);
     const action = thunk({engine});
     const result = await action(vi.fn(), () => ({}), undefined);
 
-    expect(result.meta.rejectedWithValue).toBeFalsy();
+    expect((result.meta as any).rejectedWithValue).toBeFalsy();
     expect((result as any).error.message).toBe('Something went wrong');
   });
 });

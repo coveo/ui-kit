@@ -1,7 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit';
 import type {Product, ProductListState} from './product-list-types.js';
 import {type CacheKey, createCacheKey} from '@/src/internal/utils/index.js';
-import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 import {getOrCreateProductListActions} from './product-list-actions.js';
 import {getOrCreateHydrateFromSnapshotAction} from '@/src/internal/features/generative/index.js';
@@ -75,7 +75,7 @@ export function createProductListSlice(
 }
 
 export function getOrCreateProductListSlice(iface: InterfaceHandle) {
-  const {stateId, cacheRegistry} = getHandleInternals(iface);
+  const {stateId, cacheRegistry} = getInterfaceInternals(iface);
   return cacheRegistry.getOrCreate(CACHE_KEY, () => {
     const actions = getOrCreateProductListActions(iface);
     const hydrateAction = getOrCreateHydrateFromSnapshotAction(iface);

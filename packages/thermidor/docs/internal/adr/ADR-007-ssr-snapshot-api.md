@@ -21,7 +21,7 @@ Additionally, this ADR provisionally introduces `initialParameters` on interface
 
 - **Requirement**: Full use-case support
   - **Impact**: Positive
-  - **How satisfied**: Works for search, commerce, and composed interfaces. A single snapshot captures all interfaces in the engine. Routed sub-interfaces from generative turns are also supported.
+  - **How satisfied**: Works for search, commerce, and generative interfaces. A single snapshot captures all interfaces in the engine. Routed sub-interfaces from generative turns are also supported.
 
 - **Requirement**: Public API independence
   - **Impact**: Positive
@@ -92,7 +92,7 @@ Additionally, this ADR provisionally introduces `initialParameters` on interface
   - Rigid: controllers must be declared upfront (no dynamic composition)
   - Reintroduces heavy type gymnastics (`ControllerDefinitionsMap`, inference chains)
   - Conflicts with thermidor's imperative, interface-first philosophy
-  - Doesn't compose well with multi-interface / `composeInterfaces`
+  - Doesn't compose well with multi-interface pages
 - **Risks**:
   - Over-engineering for thermidor's simpler architecture
 
@@ -121,7 +121,7 @@ The import-separation benefit is also concrete: `getSSRSnapshot` is server-only 
 
 ## 6. Public API and Contract Impact
 
-- **Public API changes**: `executeInitialRequest()` method on all interfaces (search, commerce, composed). Two new standalone functions (`getSSRSnapshot`, `restoreSSRSnapshot`). `SSRSnapshot` opaque type (branded string). `deserializeSearchParameters` utility. `buildGenerativeInterface` explicitly excluded from `executeInitialRequest`. Provisionally: `initialParameters` option on `buildSearchInterface`, `buildCommerceInterface`, `composeInterfaces` — subject to revision pending a dedicated URL parameter management ADR.
+- **Public API changes**: `executeInitialRequest()` method on all interfaces (search, commerce, generative). Two new standalone functions (`getSSRSnapshot`, `restoreSSRSnapshot`). `SSRSnapshot` opaque type (branded string). `deserializeSearchParameters` utility. `buildGenerativeInterface` explicitly excluded from `executeInitialRequest`. Provisionally: `initialParameters` option on `buildSearchInterface`, `buildCommerceInterface` — subject to revision pending a dedicated URL parameter management ADR.
 - **Backward compatibility impact**: Additive only. No breaking changes. Engine class unchanged.
 - **Deprecations required**: None.
 - **Type/contract stability notes**: `SSRSnapshot` is an opaque branded string. Internal encoding may change between versions; consumers must not inspect, parse, or depend on its format.

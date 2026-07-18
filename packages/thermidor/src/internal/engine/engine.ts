@@ -5,7 +5,7 @@ import {configurationSlice} from '@/src/internal/features/configuration/index.js
 import {setConfiguration} from '@/src/internal/features/configuration/index.js';
 import type {NavigatorContextProvider} from '@/src/internal/utils/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
-import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import {getOrCreateHydrateFromSnapshotAction} from '@/src/internal/features/generative/index.js';
 import {
   Dispatchable,
@@ -16,15 +16,10 @@ import {
   Unsubscribe,
 } from './engine-types.js';
 
-export type EngineTrackedInterface = {
-  disposed: boolean;
-  dispose(): void;
-};
-
 export type FullEngine = Engine & {
   adoptSlice(slice: Slice): Promise<void>;
-  addInterface(iface: EngineTrackedInterface): void;
-  removeInterface(iface: EngineTrackedInterface): void;
+  addInterface(iface: InterfaceHandle): void;
+  removeInterface(iface: InterfaceHandle): void;
   getNavigatorContextProvider(): NavigatorContextProvider | undefined;
   mutate(mutation: Dispatchable): unknown;
   read<T>(selector: StateSelector<T>): T;
@@ -61,7 +56,7 @@ export class Engine {
   #rootReducer = combineSlices({});
   #store = configureStore({reducer: this.#rootReducer});
   #adoptedSlices = new WeakSet<Slice>();
-  #interfaces = new Set<EngineTrackedInterface>();
+  #interfaces = new Set<InterfaceHandle>();
   #navigatorContextProvider: NavigatorContextProvider | undefined;
   #didWarnMissingNavigatorContextProvider = false;
   #hydrationSnapshots = new Map<string, HydrationSnapshot>();
@@ -80,9 +75,8 @@ export class Engine {
           engine.#getNavigatorContextProvider(),
         mutate: (mutation: Dispatchable) => engine.#mutate(mutation),
         read: <T>(selector: StateSelector<T>) => engine.#read(selector),
-        addInterface: (iface: EngineTrackedInterface) =>
-          engine.#addInterface(iface),
-        removeInterface: (iface: EngineTrackedInterface) =>
+        addInterface: (iface: InterfaceHandle) => engine.#addInterface(iface),
+        removeInterface: (iface: InterfaceHandle) =>
           engine.#removeInterface(iface),
         storeHydrationSnapshot: (
           content: Record<string, unknown>,
@@ -147,12 +141,12 @@ export class Engine {
     }
   }
 
-  #addInterface(iface: EngineTrackedInterface): void {
+  #addInterface(iface: InterfaceHandle): void {
     this.#assertNotDisposed();
     this.#interfaces.add(iface);
   }
 
-  #removeInterface(iface: EngineTrackedInterface): void {
+  #removeInterface(iface: InterfaceHandle): void {
     this.#interfaces.delete(iface);
   }
 
@@ -161,7 +155,7 @@ export class Engine {
     iface: InterfaceHandle
   ) {
     this.#assertNotDisposed();
-    const {stateId} = getHandleInternals(iface);
+    const {stateId} = getInterfaceInternals(iface);
     this.#hydrationSnapshots.set(stateId, {content, iface});
   }
 

@@ -1,7 +1,7 @@
 import {BaseController} from '@/src/internal/utils/index.js';
 import type {Supports, EndpointThunk} from '@/src/internal/utils/index.js';
 import {createMemoizedStateSelector} from '@/src/internal/utils/index.js';
-import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import {getOrCreateSearchBoxActions} from '@/src/internal/features/search-box/index.js';
 import {getOrCreateSearchBoxSelectors} from '@/src/internal/features/search-box/index.js';
 import {getOrCreateSearchBoxSlice} from '@/src/internal/features/search-box/index.js';
@@ -9,11 +9,11 @@ import {getOrCreateSearchEndpointSelectors} from '@/src/internal/api/search/inde
 import type {Controller} from '@/src/public/controllers/controller-types.js';
 
 class SearchBoxControllerImpl extends BaseController<SearchBoxControllerState> {
-  #thunks: EndpointThunk[];
+  #thunk: EndpointThunk;
   #actions: ReturnType<typeof getOrCreateSearchBoxActions>;
 
   constructor(options: SearchBoxControllerOptions) {
-    const {engine, resolveFacades} = getHandleInternals(options.interface);
+    const {engine, resolveFacade} = getInterfaceInternals(options.interface);
 
     engine.adoptSlice(getOrCreateSearchBoxSlice(options.interface));
 
@@ -35,7 +35,7 @@ class SearchBoxControllerImpl extends BaseController<SearchBoxControllerState> {
 
     super(engine, controllerState);
 
-    this.#thunks = resolveFacades('search');
+    this.#thunk = resolveFacade('search');
     this.#actions = getOrCreateSearchBoxActions(options.interface);
   }
 
@@ -43,12 +43,8 @@ class SearchBoxControllerImpl extends BaseController<SearchBoxControllerState> {
     this.engine.mutate(this.#actions.setQuery(query));
   }
 
-  submit(): Promise<unknown[]> {
-    return Promise.all(
-      this.#thunks.map((thunk) =>
-        this.engine.mutate(thunk({engine: this.engine}))
-      )
-    );
+  async submit(): Promise<void> {
+    await this.engine.mutate(this.#thunk({engine: this.engine}));
   }
 }
 
@@ -71,7 +67,7 @@ export interface SearchBoxController extends Controller<SearchBoxControllerState
   /**
    * Executes the search query.
    */
-  submit(): Promise<unknown[]>;
+  submit(): Promise<void>;
 }
 
 export interface SearchBoxControllerSetQueryOptions {

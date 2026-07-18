@@ -6,7 +6,7 @@ import {GenerativeRuntime} from '@/src/internal/api/generative/index.js';
 import {createHydrateSubInterface} from '@/src/internal/features/generative/index.js';
 import {BaseController} from '@/src/internal/utils/index.js';
 import {createMemoizedStateSelector} from '@/src/internal/utils/index.js';
-import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import {getOrCreateGenerativeActions} from '@/src/internal/features/generative/index.js';
 import {getOrCreateGenerativeSelectors} from '@/src/internal/features/generative/index.js';
 import type {GenerativeInterface} from '@/src/internal/utils/index.js';
@@ -22,7 +22,9 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
   #selectors: ReturnType<typeof getOrCreateGenerativeSelectors>;
 
   constructor(options: ConverseControllerOptions) {
-    const {engine: fullEngine} = getHandleInternals(options.interface);
+    const {engine: fullEngine, stateId} = getInterfaceInternals(
+      options.interface
+    );
 
     const actions = getOrCreateGenerativeActions(options.interface);
     const selectors = getOrCreateGenerativeSelectors(options.interface);
@@ -33,8 +35,6 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
       );
       fullEngine.mutate(actions.hydrateState(hydratedState));
     }
-
-    const {stateId} = getHandleInternals(options.interface);
 
     const controllerState = createMemoizedStateSelector(
       selectors.getTurns,

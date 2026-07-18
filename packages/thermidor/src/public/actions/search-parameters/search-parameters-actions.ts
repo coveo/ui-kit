@@ -1,5 +1,5 @@
 import type {Supports} from '@/src/internal/utils/index.js';
-import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import {getOrCreateSearchParametersActions} from '@/src/internal/features/search-parameters/index.js';
 import {getOrCreateSearchParametersSlice} from '@/src/internal/features/search-parameters/index.js';
 
@@ -15,7 +15,7 @@ export interface LoadSearchParametersActionsOptions {
 export function loadSearchParametersActions(
   options: LoadSearchParametersActionsOptions
 ) {
-  const {engine} = getHandleInternals(options.interface);
+  const {engine} = getInterfaceInternals(options.interface);
 
   engine.adoptSlice(getOrCreateSearchParametersSlice(options.interface));
 

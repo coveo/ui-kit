@@ -2,19 +2,19 @@ import {BaseController} from '@/src/internal/utils/index.js';
 import type {Supports, EndpointThunk} from '@/src/internal/utils/index.js';
 import type {StateSelector} from '@/src/internal/engine/index.js';
 import {createMemoizedStateSelector} from '@/src/internal/utils/index.js';
-import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import {getOrCreatePaginationActions} from '@/src/internal/features/pagination/index.js';
 import {getOrCreatePaginationSelectors} from '@/src/internal/features/pagination/index.js';
 import {getOrCreatePaginationSlice} from '@/src/internal/features/pagination/index.js';
 import type {Controller} from '@/src/public/controllers/controller-types.js';
 
 class PaginationControllerImpl extends BaseController<PaginationControllerState> {
-  #thunks: EndpointThunk[];
+  #thunk: EndpointThunk;
   #actions: ReturnType<typeof getOrCreatePaginationActions>;
   #controllerState: StateSelector<PaginationControllerState>;
 
   constructor(options: PaginationControllerOptions) {
-    const {engine, resolveFacades} = getHandleInternals(options.interface);
+    const {engine, resolveFacade} = getInterfaceInternals(options.interface);
 
     engine.adoptSlice(getOrCreatePaginationSlice(options.interface));
 
@@ -35,7 +35,7 @@ class PaginationControllerImpl extends BaseController<PaginationControllerState>
 
     super(engine, controllerState);
 
-    this.#thunks = resolveFacades('search');
+    this.#thunk = resolveFacade('search');
     this.#actions = actions;
     this.#controllerState = controllerState;
   }
@@ -50,9 +50,7 @@ class PaginationControllerImpl extends BaseController<PaginationControllerState>
     }
 
     this.engine.mutate(this.#actions.setFirstResult(page * pageSize));
-    for (const thunk of this.#thunks) {
-      this.engine.mutate(thunk({engine: this.engine}));
-    }
+    this.engine.mutate(this.#thunk({engine: this.engine}));
   }
 
   setPageSize(pageSize: number): void {
@@ -62,9 +60,7 @@ class PaginationControllerImpl extends BaseController<PaginationControllerState>
 
     this.engine.mutate(this.#actions.setFirstResult(0));
     this.engine.mutate(this.#actions.setPageSize(pageSize));
-    for (const thunk of this.#thunks) {
-      this.engine.mutate(thunk({engine: this.engine}));
-    }
+    this.engine.mutate(this.#thunk({engine: this.engine}));
   }
 }
 

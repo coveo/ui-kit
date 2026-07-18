@@ -11,9 +11,6 @@ graph TB
         MoreIface["..."]
     end
 
-    %% Composed Interface
-    Composed["<b>ComposedInterface</b><br/><i>Merges 2+ interfaces<br/>(provisional concept)</i>"]
-
     %% Controllers
     subgraph Controllers["Controllers (1 or more per Interface)"]
         direction LR
@@ -32,19 +29,19 @@ graph TB
 
     %% Relationships
     Engine -->|"owns state for"| Interfaces
-    SearchIface & CommerceIface -->|"can be merged into"| Composed
     Interfaces -->|"scopes"| Controllers
-    Composed -->|"scopes (fan-out only,<br/>e.g., search box)"| Controllers
-    Controllers -.->|"use internally"| Actions
     Interfaces -->|"scopes"| Actions
+    Controllers -.->|"use internally"| Actions
     Consumer -->|"builds & configures"| Engine
     Consumer -->|"creates via build*Interface()"| Interfaces
     Consumer -->|"interacts primarily with"| Controllers
     Consumer -.->|"calls à la carte"| Actions
 
+    %% Note: Controllers accept any interface satisfying Supports<F>
+    %% Fan-out controllers (e.g., search box) can work with multiple interface types
+
     %% Styling
     style Engine fill:#4a9eff,color:#fff
-    style Composed fill:#9b59b6,color:#fff
     style Actions fill:#fd7e14,color:#fff
     style Consumer fill:#95a5a6,color:#fff
     style SearchIface fill:#28a745,color:#fff

@@ -2,10 +2,10 @@ import {describe, it, expect, vi} from 'vitest';
 import {BaseInterface, getInterfaceInternals} from './base-interface.js';
 import type {FullEngine} from '@/src/internal/engine/index.js';
 import type {
-  FacadeResolverFactory,
+  FacadeResolver,
   Facades,
   EndpointThunk,
-  EndpointStateScope,
+  InterfaceHandle,
 } from './interface-types.js';
 
 function createMockEngine(): FullEngine {
@@ -29,7 +29,7 @@ class TestInterface extends BaseInterface<'search'> {
   constructor(
     engine: FullEngine,
     stateId: string,
-    resolvers: Record<Facades['search'], FacadeResolverFactory>
+    resolvers: Record<Facades['search'], FacadeResolver>
   ) {
     super(engine, stateId, 'search', resolvers);
   }
@@ -38,8 +38,8 @@ class TestInterface extends BaseInterface<'search'> {
 function createTestSubject(options?: {
   engine?: FullEngine;
   stateId?: string;
-  searchFactory?: FacadeResolverFactory;
-  suggestionsFactory?: FacadeResolverFactory;
+  searchFactory?: FacadeResolver;
+  suggestionsFactory?: FacadeResolver;
 }) {
   const engine = options?.engine ?? createMockEngine();
   const stateId = options?.stateId ?? 'test-id';
@@ -47,10 +47,10 @@ function createTestSubject(options?: {
   const searchThunk = createMockThunk();
   const suggestionsThunk = createMockThunk();
 
-  const searchFactory: FacadeResolverFactory =
-    options?.searchFactory ?? ((_engine) => (_scope) => searchThunk);
-  const suggestionsFactory: FacadeResolverFactory =
-    options?.suggestionsFactory ?? ((_engine) => (_scope) => suggestionsThunk);
+  const searchFactory: FacadeResolver =
+    options?.searchFactory ?? ((_iface) => searchThunk);
+  const suggestionsFactory: FacadeResolver =
+    options?.suggestionsFactory ?? ((_iface) => suggestionsThunk);
 
   const instance = new TestInterface(engine, stateId, {
     search: searchFactory,
@@ -61,6 +61,28 @@ function createTestSubject(options?: {
 }
 
 describe('BaseInterface', () => {
+  describe('getInterfaceInternals', () => {
+    it('throws when passed a non-BaseInterface value', () => {
+      const fakeHandle: InterfaceHandle = {
+        disposed: false,
+        dispose: vi.fn(),
+      };
+
+      expect(() => getInterfaceInternals(fakeHandle)).toThrow(
+        'Invalid interface handle: expected a BaseInterface instance.'
+      );
+    });
+
+    it('returns internals for a valid BaseInterface instance', () => {
+      const {instance, engine} = createTestSubject();
+      const internals = getInterfaceInternals(instance);
+
+      expect(internals.engine).toBe(engine);
+      expect(internals.stateId).toBe('test-id');
+      expect(internals.type).toBe('search');
+    });
+  });
+
   describe('constructor', () => {
     it('stores the engine accessible via getInterfaceInternals', () => {
       const {instance, engine} = createTestSubject();
@@ -78,101 +100,47 @@ describe('BaseInterface', () => {
     });
   });
 
-  describe('resolveFacades', () => {
-    it('returns an array with one EndpointThunk', () => {
+  describe('resolveFacade', () => {
+    it('returns the EndpointThunk', () => {
       const {instance} = createTestSubject();
-      const result = getInterfaceInternals(instance).resolveFacades('search');
-      expect(result).toHaveLength(1);
+      const result = getInterfaceInternals(instance).resolveFacade('search');
+      expect(result).toBeDefined();
+      expect(typeof result).toBe('function');
     });
 
     it('returns the same cached thunk on repeated calls (caching)', () => {
       const {instance} = createTestSubject();
-      const first = getInterfaceInternals(instance).resolveFacades('search');
-      const second = getInterfaceInternals(instance).resolveFacades('search');
-      expect(first[0]).toBe(second[0]);
+      const first = getInterfaceInternals(instance).resolveFacade('search');
+      const second = getInterfaceInternals(instance).resolveFacade('search');
+      expect(first).toBe(second);
     });
 
-    it('invokes the factory only once for the same facade and scope', () => {
-      const factorySpy = vi.fn((_engine: FullEngine) => {
-        const thunk = createMockThunk();
-        return (_scope: EndpointStateScope) => thunk;
+    it('invokes the factory only once for the same facade', () => {
+      const factorySpy = vi.fn((_iface: InterfaceHandle) => {
+        return createMockThunk();
       });
 
       const {instance} = createTestSubject({searchFactory: factorySpy});
 
-      getInterfaceInternals(instance).resolveFacades('search');
-      getInterfaceInternals(instance).resolveFacades('search');
-      getInterfaceInternals(instance).resolveFacades('search');
+      getInterfaceInternals(instance).resolveFacade('search');
+      getInterfaceInternals(instance).resolveFacade('search');
+      getInterfaceInternals(instance).resolveFacade('search');
 
       expect(factorySpy).toHaveBeenCalledTimes(1);
     });
 
-    it('caches the thunk when composed', () => {
-      const {instance} = createTestSubject();
+    it('passes the interface instance to the resolver as iface', () => {
+      let receivedIface: InterfaceHandle | undefined;
 
-      const composedA = {
-        supportedFacades: ['search', 'suggestions'],
-        disposed: false,
-        dispose: vi.fn(),
-      } as any;
-
-      const resultA = getInterfaceInternals(instance).resolveFacades(
-        'search',
-        composedA
-      );
-      const resultB = getInterfaceInternals(instance).resolveFacades(
-        'search',
-        composedA
-      );
-
-      expect(resultA[0]).toBe(resultB[0]);
-    });
-
-    it('returns different thunks for composed vs standalone', () => {
-      const thunkA = createMockThunk();
-      const thunkB = createMockThunk();
-      let callCount = 0;
-
-      const factory: FacadeResolverFactory = (_engine) => (_scope) => {
-        callCount++;
-        return callCount === 1 ? thunkA : thunkB;
+      const factory: FacadeResolver = (iface) => {
+        receivedIface = iface;
+        return createMockThunk();
       };
 
       const {instance} = createTestSubject({searchFactory: factory});
+      getInterfaceInternals(instance).resolveFacade('search');
 
-      const composedA = {
-        supportedFacades: ['search', 'suggestions'],
-        disposed: false,
-        dispose: vi.fn(),
-      } as any;
-
-      const resultComposed = getInterfaceInternals(instance).resolveFacades(
-        'search',
-        composedA
-      );
-      const resultStandalone =
-        getInterfaceInternals(instance).resolveFacades('search');
-
-      expect(resultComposed[0]).toBe(thunkA);
-      expect(resultStandalone[0]).toBe(thunkB);
-    });
-
-    it('returns the cached thunk for the same composedInterface', () => {
-      const {instance} = createTestSubject();
-      const composedX = {
-        supportedFacades: ['search', 'suggestions'],
-        disposed: false,
-        dispose: vi.fn(),
-      } as any;
-      const first = getInterfaceInternals(instance).resolveFacades(
-        'search',
-        composedX
-      );
-      const second = getInterfaceInternals(instance).resolveFacades(
-        'search',
-        composedX
-      );
-      expect(first[0]).toBe(second[0]);
+      expect(receivedIface).toBe(instance);
     });
   });
 
@@ -188,11 +156,11 @@ describe('BaseInterface', () => {
       expect(instance.disposed).toBe(true);
     });
 
-    it('throws when resolveFacades is called after dispose', () => {
+    it('throws when resolveFacade is called after dispose', () => {
       const {instance} = createTestSubject();
       instance.dispose();
       expect(() =>
-        getInterfaceInternals(instance).resolveFacades('search')
+        getInterfaceInternals(instance).resolveFacade('search')
       ).toThrow('Cannot operate on a disposed interface.');
     });
   });

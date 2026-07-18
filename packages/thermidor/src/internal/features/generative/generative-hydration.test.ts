@@ -4,7 +4,7 @@ import {
   getFullEngine,
   type FullEngine,
 } from '@/src/internal/engine/index.js';
-import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import {
   createHydrateSubInterface,
   getOrCreateHydrateFromSnapshotAction,
@@ -84,7 +84,7 @@ describe('createHydrateSubInterface', () => {
     expect(result).not.toBeNull();
     expect(result!.useCase).toBe('commerceSearch');
     expect(result!.interface).toBeDefined();
-    const {stateId} = getHandleInternals(result!.interface);
+    const {stateId} = getInterfaceInternals(result!.interface);
     expect(stateId).toBeDefined();
   });
 

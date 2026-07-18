@@ -6,7 +6,7 @@ import type {
   InterfaceHandle,
 } from '@/src/internal/utils/index.js';
 import {type CacheKey, createCacheKey} from '@/src/internal/utils/index.js';
-import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 
 export interface CommerceSearchEndpointThunkState {
   status: 'idle' | 'pending';
@@ -57,7 +57,7 @@ export function getOrCreateCommerceSearchEndpointSlice(
   iface: InterfaceHandle,
   thunk: EndpointThunk
 ) {
-  const {stateId, cacheRegistry} = getHandleInternals(iface);
+  const {stateId, cacheRegistry} = getInterfaceInternals(iface);
   return cacheRegistry.getOrCreate(SLICE_CACHE_KEY, () =>
     createCommerceSearchEndpointSlice(stateId, thunk)
   );
@@ -93,7 +93,7 @@ export function createCommerceSearchEndpointSelectors(interfaceId: string) {
 export function getOrCreateCommerceSearchEndpointSelectors(
   iface: InterfaceHandle
 ) {
-  const {stateId, cacheRegistry} = getHandleInternals(iface);
+  const {stateId, cacheRegistry} = getInterfaceInternals(iface);
   return cacheRegistry.getOrCreate(SELECTORS_CACHE_KEY, () =>
     createCommerceSearchEndpointSelectors(stateId)
   );

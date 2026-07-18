@@ -1,5 +1,5 @@
 import {type CacheKey, createCacheKey} from '@/src/internal/utils/index.js';
-import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 import {createMemoizedStateSelector} from '@/src/internal/utils/index.js';
 import {createSelectSlice} from '@/src/internal/utils/index.js';
@@ -49,7 +49,7 @@ export function createGenerativeSelectors(interfaceId: string) {
 }
 
 export function getOrCreateGenerativeSelectors(iface: InterfaceHandle) {
-  const {stateId, cacheRegistry} = getHandleInternals(iface);
+  const {stateId, cacheRegistry} = getInterfaceInternals(iface);
   return cacheRegistry.getOrCreate(CACHE_KEY, () =>
     createGenerativeSelectors(stateId)
   );

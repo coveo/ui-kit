@@ -1,6 +1,6 @@
 import {createAction} from '@reduxjs/toolkit';
 import {type CacheKey, createCacheKey} from '@/src/internal/utils/index.js';
-import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import {generateId} from '@/src/internal/utils/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 import type {FullEngine} from '@/src/internal/engine/index.js';
@@ -29,7 +29,7 @@ function createHydrateAction(interfaceId: string) {
 }
 
 export function getOrCreateHydrateFromSnapshotAction(iface: InterfaceHandle) {
-  const {stateId, cacheRegistry} = getHandleInternals(iface);
+  const {stateId, cacheRegistry} = getInterfaceInternals(iface);
   return cacheRegistry.getOrCreate(CACHE_KEY, () =>
     createHydrateAction(stateId)
   );

@@ -411,7 +411,7 @@ If you never import `buildProductListController` or `buildPaginationController`,
 | `ENGINE`        | Stores the FullEngine (internal API) on an interface           |
 | `SOURCE_ENGINE` | Stores the original public Engine (for sub-interface creation) |
 | `STATE_ID`      | Unique slice namespace per interface instance                  |
-| `KIND`          | Discriminator ('interface' vs 'composed')                      |
+| `KIND`          | Discriminator for interface type                               |
 
 ---
 
