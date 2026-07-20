@@ -1,6 +1,8 @@
 import type {Product} from '@coveo/thermidor';
-import {productListController, configuration} from '../../commerce-setup.js';
-import {useController} from '../../hooks/use-controller.js';
+import {buildProductListController} from '@coveo/thermidor';
+import {useCommerceInterface} from '../../context/commerce-interface.js';
+import {configuration} from '../../context/engine.js';
+import {useBuildController} from '../../hooks/use-build-controller.js';
 import {StarRating} from '../StarRating/StarRating.js';
 import styles from './ProductList.module.css';
 
@@ -69,7 +71,11 @@ function ProductCard({product}: {product: Product}) {
 }
 
 export function ProductList() {
-  const state = useController(productListController);
+  const commerceInterface = useCommerceInterface();
+
+  const [, state] = useBuildController(() =>
+    buildProductListController({interface: commerceInterface})
+  );
 
   if (state.products.length === 0) {
     return <p className={styles.empty}>No products to display.</p>;
