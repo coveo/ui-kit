@@ -1,6 +1,6 @@
 import {createAction} from '@reduxjs/toolkit';
 
-export interface BackendInterfaceEntry {
+export interface BackendSurfaceEntry {
   type: string;
   display: 'main' | 'inline';
   state: Record<string, unknown>;
@@ -20,42 +20,45 @@ export interface BackendFacetSearchEntry {
   moreValuesAvailable: boolean;
 }
 
-export function createBackendInterfacesActions(interfaceId: string) {
-  const prefix = `${interfaceId}/backendInterfaces`;
+export function createBackendSurfacesActions(interfaceId: string) {
+  const prefix = `${interfaceId}/backendSurfaces`;
   return {
-    createInterface: createAction<{
-      interfaceId: string;
+    createSurface: createAction<{
+      surfaceId: string;
       type: string;
       display: 'main' | 'inline';
       state: Record<string, unknown>;
       turnId?: string;
-    }>(`${prefix}/createInterface`),
-    updateInterfaceState: createAction<{
-      interfaceId: string;
-      state: Record<string, unknown>;
-      display?: 'main' | 'inline';
-    }>(`${prefix}/updateInterfaceState`),
+    }>(`${prefix}/createSurface`),
+    updateSurfaceState: createAction<{
+      surfaceId: string;
+      path: string;
+      value: unknown;
+    }>(`${prefix}/updateSurfaceState`),
+    deleteSurface: createAction<{
+      surfaceId: string;
+    }>(`${prefix}/deleteSurface`),
     setSuggestions: createAction<{
-      interfaceId: string;
+      surfaceId: string;
       suggestions: BackendSuggestionsEntry;
     }>(`${prefix}/setSuggestions`),
     setFacetSearchResults: createAction<{
-      interfaceId: string;
+      surfaceId: string;
       results: BackendFacetSearchEntry;
     }>(`${prefix}/setFacetSearchResults`),
     clearFacetSearchResults: createAction<{
-      interfaceId: string;
+      surfaceId: string;
     }>(`${prefix}/clearFacetSearchResults`),
   };
 }
 
 const actionsCache = new Map<
   string,
-  ReturnType<typeof createBackendInterfacesActions>
+  ReturnType<typeof createBackendSurfacesActions>
 >();
-export function getOrCreateBackendInterfacesActions(interfaceId: string) {
+export function getOrCreateBackendSurfacesActions(interfaceId: string) {
   if (!actionsCache.has(interfaceId)) {
-    actionsCache.set(interfaceId, createBackendInterfacesActions(interfaceId));
+    actionsCache.set(interfaceId, createBackendSurfacesActions(interfaceId));
   }
   return actionsCache.get(interfaceId)!;
 }

@@ -12,7 +12,7 @@ import {
 } from '../../generative-setup.js';
 
 interface SortDropdownProps {
-  interfaceId: string;
+  surfaceId: string;
 }
 
 function getSortLabel(sort: BackendSortCriterion): string {
@@ -35,7 +35,7 @@ function serializeSort(sort: BackendSortCriterion): string {
   return sort.sortCriteria;
 }
 
-export function SortDropdown({interfaceId}: SortDropdownProps) {
+export function SortDropdown({surfaceId}: SortDropdownProps) {
   const [state, setState] = useState<BackendSortControllerState>({
     appliedSort: undefined,
     availableSorts: [],
@@ -46,14 +46,14 @@ export function SortDropdown({interfaceId}: SortDropdownProps) {
     const controller = buildBackendSortController({
       interface: generativeInterface,
       converseController,
-      interfaceId,
+      surfaceId,
     });
 
     controllerRef.current = controller;
     setState(controller.state);
 
     return controller.subscribe(() => setState(controller.state));
-  }, [interfaceId]);
+  }, [surfaceId]);
 
   if (state.availableSorts.length <= 1) return null;
 

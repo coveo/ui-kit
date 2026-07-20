@@ -1,10 +1,10 @@
 import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
 import {ENGINE, STATE_ID} from '@/src/core/interface/utils/symbols.js';
-import {getOrCreateBackendInterfacesSelectors} from '@/src/core/internal/backend-interfaces/backend-interfaces-selectors.js';
+import {getOrCreateBackendSurfacesSelectors} from '@/src/core/internal/backend-surfaces/backend-surfaces-selectors.js';
 import type {GenerativeInterface} from '@/src/public/interfaces/generative.js';
 import type {
   ConverseController,
-  BackendInterfaceAction,
+  BackendSurfaceAction,
 } from '../converse/converse-controller.js';
 import type {Controller} from '../controller-types.js';
 
@@ -39,7 +39,7 @@ export interface BackendNumericFacetControllerState {
 export interface BackendNumericFacetControllerOptions {
   interface: GenerativeInterface;
   converseController: ConverseController;
-  interfaceId: string;
+  surfaceId: string;
   facetId: string;
 }
 
@@ -48,11 +48,11 @@ export const buildBackendNumericFacetController = (
 ): BackendNumericFacetController => {
   const engine = options.interface[ENGINE];
   const stateId = options.interface[STATE_ID];
-  const selectors = getOrCreateBackendInterfacesSelectors(stateId);
-  const getInterface = selectors.getInterface(options.interfaceId);
+  const selectors = getOrCreateBackendSurfacesSelectors(stateId);
+  const getSurface = selectors.getSurface(options.surfaceId);
 
   const controllerState = createMemoizedStateSelector(
-    getInterface,
+    getSurface,
     (entry): BackendNumericFacetControllerState => {
       const facets = entry?.state?.facets as
         | Array<{
@@ -118,9 +118,9 @@ export const buildBackendNumericFacetController = (
       return engine.subscribe(controllerState, callback);
     },
     toggleSelect(value) {
-      const action: BackendInterfaceAction = {
+      const action: BackendSurfaceAction = {
         type: 'toggle_numeric_facet',
-        interfaceId: options.interfaceId,
+        surfaceId: options.surfaceId,
         facetId: options.facetId,
         start: value.start,
         end: value.end,
@@ -129,9 +129,9 @@ export const buildBackendNumericFacetController = (
       options.converseController.sendAction(action);
     },
     setRange(range) {
-      const action: BackendInterfaceAction = {
+      const action: BackendSurfaceAction = {
         type: 'set_numeric_facet_range',
-        interfaceId: options.interfaceId,
+        surfaceId: options.surfaceId,
         facetId: options.facetId,
         start: range.start,
         end: range.end,
@@ -140,9 +140,9 @@ export const buildBackendNumericFacetController = (
       options.converseController.sendAction(action);
     },
     deselectAll() {
-      const action: BackendInterfaceAction = {
+      const action: BackendSurfaceAction = {
         type: 'deselect_all_facets',
-        interfaceId: options.interfaceId,
+        surfaceId: options.surfaceId,
         facetId: options.facetId,
       };
       options.converseController.sendAction(action);

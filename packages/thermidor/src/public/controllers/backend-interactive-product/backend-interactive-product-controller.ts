@@ -1,6 +1,6 @@
 import type {
   ConverseController,
-  BackendInterfaceAction,
+  BackendSurfaceAction,
 } from '../converse/converse-controller.js';
 import type {GenerativeInterface} from '@/src/public/interfaces/generative.js';
 
@@ -12,7 +12,7 @@ export interface BackendInteractiveProductController {
 export interface BackendInteractiveProductControllerOptions {
   interface: GenerativeInterface;
   converseController: ConverseController;
-  interfaceId: string;
+  surfaceId: string;
   product: {
     productId: string;
     name: string;
@@ -30,9 +30,9 @@ export const buildBackendInteractiveProductController = (
   function sendClick() {
     if (sent) return;
     sent = true;
-    const action: BackendInterfaceAction = {
+    const action: BackendSurfaceAction = {
       type: 'product_click',
-      interfaceId: options.interfaceId,
+      surfaceId: options.surfaceId,
       productId: options.product.productId,
       name: options.product.name,
       price: options.product.price,

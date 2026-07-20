@@ -6,7 +6,7 @@ import {
 } from '../AgentResponse/AgentResponse.js';
 import {InlineCarousel} from '../InlineCarousel/InlineCarousel.js';
 import {generativeInterface} from '../../generative-setup.js';
-import {getOrCreateBackendInterfacesSelectors} from '@/src/core/internal/backend-interfaces/backend-interfaces-selectors.js';
+import {getOrCreateBackendSurfacesSelectors} from '@/src/core/internal/backend-surfaces/backend-surfaces-selectors.js';
 import {ENGINE, STATE_ID} from '@/src/core/interface/utils/symbols.js';
 import styles from './ConversationArea.module.css';
 import agentResponseStyles from '../AgentResponse/AgentResponse.module.css';
@@ -58,8 +58,8 @@ export function ConversationArea({
   const stateId = generativeInterface[STATE_ID];
 
   useEffect(() => {
-    const selectors = getOrCreateBackendInterfacesSelectors(stateId);
-    return engine.subscribe(selectors.getInterfaces, (all) => {
+    const selectors = getOrCreateBackendSurfacesSelectors(stateId);
+    return engine.subscribe(selectors.getSurfaces, (all) => {
       const inline = Object.fromEntries(
         Object.entries(all).filter(([, v]) => v.display === 'inline')
       );

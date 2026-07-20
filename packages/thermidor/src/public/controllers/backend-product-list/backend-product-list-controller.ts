@@ -1,6 +1,6 @@
 import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
 import {ENGINE, STATE_ID} from '@/src/core/interface/utils/symbols.js';
-import {getOrCreateBackendInterfacesSelectors} from '@/src/core/internal/backend-interfaces/backend-interfaces-selectors.js';
+import {getOrCreateBackendSurfacesSelectors} from '@/src/core/internal/backend-surfaces/backend-surfaces-selectors.js';
 import type {GenerativeInterface} from '@/src/public/interfaces/generative.js';
 import type {Controller} from '../controller-types.js';
 
@@ -12,7 +12,7 @@ export interface BackendProductListControllerState {
 
 export interface BackendProductListControllerOptions {
   interface: GenerativeInterface;
-  interfaceId: string;
+  surfaceId: string;
 }
 
 export const buildBackendProductListController = (
@@ -20,11 +20,11 @@ export const buildBackendProductListController = (
 ): BackendProductListController => {
   const engine = options.interface[ENGINE];
   const stateId = options.interface[STATE_ID];
-  const selectors = getOrCreateBackendInterfacesSelectors(stateId);
-  const getInterface = selectors.getInterface(options.interfaceId);
+  const selectors = getOrCreateBackendSurfacesSelectors(stateId);
+  const getSurface = selectors.getSurface(options.surfaceId);
 
   const controllerState = createMemoizedStateSelector(
-    getInterface,
+    getSurface,
     (entry): BackendProductListControllerState => ({
       products: (entry?.state?.products as Record<string, unknown>[]) ?? [],
     })

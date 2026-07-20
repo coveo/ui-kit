@@ -23,7 +23,7 @@ import {
   converseController,
   generativeInterface,
 } from '../../generative-setup.js';
-import {getOrCreateBackendInterfacesSelectors} from '@/src/core/internal/backend-interfaces/backend-interfaces-selectors.js';
+import {getOrCreateBackendSurfacesSelectors} from '@/src/core/internal/backend-surfaces/backend-surfaces-selectors.js';
 import {ENGINE, STATE_ID} from '@/src/core/interface/utils/symbols.js';
 import {FacetPanel} from '../FacetPanel/FacetPanel.js';
 import {SortDropdown} from '../SortDropdown/SortDropdown.js';
@@ -64,8 +64,8 @@ export function BackendResults() {
   useInitialUrlRestore();
 
   useEffect(() => {
-    const selectors = getOrCreateBackendInterfacesSelectors(stateId);
-    return engine.subscribe(selectors.getInterfaces, (newInterfaces) => {
+    const selectors = getOrCreateBackendSurfacesSelectors(stateId);
+    return engine.subscribe(selectors.getSurfaces, (newInterfaces) => {
       setInterfaces(newInterfaces);
     });
   }, [engine, stateId]);
@@ -90,13 +90,13 @@ export function BackendResults() {
 
     const productList = buildBackendProductListController({
       interface: generativeInterface,
-      interfaceId: firstInterfaceId,
+      surfaceId: firstInterfaceId,
     });
 
     const paginationCtrl = buildBackendPaginationController({
       interface: generativeInterface,
       converseController,
-      interfaceId: firstInterfaceId,
+      surfaceId: firstInterfaceId,
     });
 
     controllersRef.current = {
@@ -147,7 +147,7 @@ export function BackendResults() {
         if (firstInterfaceId) {
           converseController.sendAction({
             type: 'select_products',
-            interfaceId: firstInterfaceId,
+            surfaceId: firstInterfaceId,
             productIds: [...next],
           });
         }
@@ -162,7 +162,7 @@ export function BackendResults() {
     if (firstInterfaceId) {
       converseController.sendAction({
         type: 'select_products',
-        interfaceId: firstInterfaceId,
+        surfaceId: firstInterfaceId,
         productIds: [],
       });
     }
@@ -175,7 +175,7 @@ export function BackendResults() {
   return (
     <div className={styles.layout}>
       <aside className={styles.sidebar}>
-        <FacetPanel interfaceId={firstInterfaceId} facets={facets} />
+        <FacetPanel surfaceId={firstInterfaceId} facets={facets} />
       </aside>
 
       <div className={styles.content}>
@@ -225,7 +225,7 @@ export function BackendResults() {
                 allowDeselect={false}
               />
             </Group>
-            <SortDropdown interfaceId={firstInterfaceId} />
+            <SortDropdown surfaceId={firstInterfaceId} />
           </Group>
         </Group>
 
@@ -244,7 +244,7 @@ export function BackendResults() {
                   const interactive = buildBackendInteractiveProductController({
                     interface: generativeInterface,
                     converseController,
-                    interfaceId: firstInterfaceId,
+                    surfaceId: firstInterfaceId,
                     product: {
                       productId,
                       name: p.ec_name ?? '',

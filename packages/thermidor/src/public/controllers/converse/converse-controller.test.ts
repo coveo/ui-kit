@@ -205,14 +205,14 @@ describe('buildConverseController', () => {
 
       controller.sendAction({
         type: 'toggle_facet',
-        interfaceId: 'ui-1',
+        surfaceId: 'ui-1',
         facetId: 'brand',
         value: 'Nike',
       });
 
       expect(mockSubmitAction).toHaveBeenCalledWith({
         type: 'toggle_facet',
-        interfaceId: 'ui-1',
+        surfaceId: 'ui-1',
         facetId: 'brand',
         value: 'Nike',
       });
@@ -228,7 +228,7 @@ describe('buildConverseController', () => {
 
       controller.sendAction({
         type: 'select_page',
-        interfaceId: 'ui-1',
+        surfaceId: 'ui-1',
         page: 2,
       });
 

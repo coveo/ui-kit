@@ -12,8 +12,8 @@ import {
   TYPE,
   FACADE_RESOLVERS,
 } from '@/src/core/interface/utils/symbols.js';
-import {getOrCreateBackendInterfacesActions} from '@/src/core/internal/backend-interfaces/backend-interfaces-actions.js';
-import {getOrCreateBackendInterfacesSlice} from '@/src/core/internal/backend-interfaces/backend-interfaces-slice.js';
+import {getOrCreateBackendSurfacesActions} from '@/src/core/internal/backend-surfaces/backend-surfaces-actions.js';
+import {getOrCreateBackendSurfacesSlice} from '@/src/core/internal/backend-surfaces/backend-surfaces-slice.js';
 import type {GenerativeInterface} from '@/src/public/interfaces/generative.js';
 import {buildBackendProductListController} from './backend-product-list-controller.js';
 
@@ -21,7 +21,7 @@ const TEST_ID = 'test-gen';
 
 function createTestGenerativeInterface(engine: Engine): GenerativeInterface {
   const fullEngine = getFullEngine(engine);
-  fullEngine.adoptSlice(getOrCreateBackendInterfacesSlice(TEST_ID));
+  fullEngine.adoptSlice(getOrCreateBackendSurfacesSlice(TEST_ID));
   return Object.freeze({
     [KIND]: 'interface' as const,
     [TYPE]: 'generative' as const,
@@ -44,7 +44,7 @@ describe('buildBackendProductListController', () => {
   it('returns empty products when interface does not exist', () => {
     const controller = buildBackendProductListController({
       interface: generativeInterface,
-      interfaceId: 'ui-1',
+      surfaceId: 'ui-1',
     });
 
     expect(controller.state.products).toEqual([]);
@@ -52,11 +52,11 @@ describe('buildBackendProductListController', () => {
 
   it('returns products from backend interface state', () => {
     const fullEngine = getFullEngine(engine);
-    const actions = getOrCreateBackendInterfacesActions(TEST_ID);
+    const actions = getOrCreateBackendSurfacesActions(TEST_ID);
 
     fullEngine.mutate(
-      actions.createInterface({
-        interfaceId: 'ui-1',
+      actions.createSurface({
+        surfaceId: 'ui-1',
         type: 'product_search',
         display: 'main',
         state: {products: [{ec_name: 'Shoe', ec_price: 99}]},
@@ -65,7 +65,7 @@ describe('buildBackendProductListController', () => {
 
     const controller = buildBackendProductListController({
       interface: generativeInterface,
-      interfaceId: 'ui-1',
+      surfaceId: 'ui-1',
     });
 
     expect(controller.state.products).toEqual([
@@ -75,11 +75,11 @@ describe('buildBackendProductListController', () => {
 
   it('updates when backend interface state changes', () => {
     const fullEngine = getFullEngine(engine);
-    const actions = getOrCreateBackendInterfacesActions(TEST_ID);
+    const actions = getOrCreateBackendSurfacesActions(TEST_ID);
 
     fullEngine.mutate(
-      actions.createInterface({
-        interfaceId: 'ui-1',
+      actions.createSurface({
+        surfaceId: 'ui-1',
         type: 'product_search',
         display: 'main',
         state: {products: []},
@@ -88,16 +88,17 @@ describe('buildBackendProductListController', () => {
 
     const controller = buildBackendProductListController({
       interface: generativeInterface,
-      interfaceId: 'ui-1',
+      surfaceId: 'ui-1',
     });
 
     const callback = vi.fn();
     controller.subscribe(callback);
 
     fullEngine.mutate(
-      actions.updateInterfaceState({
-        interfaceId: 'ui-1',
-        state: {products: [{ec_name: 'Hat'}]},
+      actions.updateSurfaceState({
+        surfaceId: 'ui-1',
+        path: '/',
+        value: {products: [{ec_name: 'Hat'}]},
       })
     );
 

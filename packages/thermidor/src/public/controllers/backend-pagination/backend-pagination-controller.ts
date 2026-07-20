@@ -1,10 +1,10 @@
 import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
 import {ENGINE, STATE_ID} from '@/src/core/interface/utils/symbols.js';
-import {getOrCreateBackendInterfacesSelectors} from '@/src/core/internal/backend-interfaces/backend-interfaces-selectors.js';
+import {getOrCreateBackendSurfacesSelectors} from '@/src/core/internal/backend-surfaces/backend-surfaces-selectors.js';
 import type {GenerativeInterface} from '@/src/public/interfaces/generative.js';
 import type {
   ConverseController,
-  BackendInterfaceAction,
+  BackendSurfaceAction,
 } from '../converse/converse-controller.js';
 import type {Controller} from '../controller-types.js';
 
@@ -23,7 +23,7 @@ export interface BackendPaginationControllerState {
 export interface BackendPaginationControllerOptions {
   interface: GenerativeInterface;
   converseController: ConverseController;
-  interfaceId: string;
+  surfaceId: string;
 }
 
 export const buildBackendPaginationController = (
@@ -31,11 +31,11 @@ export const buildBackendPaginationController = (
 ): BackendPaginationController => {
   const engine = options.interface[ENGINE];
   const stateId = options.interface[STATE_ID];
-  const selectors = getOrCreateBackendInterfacesSelectors(stateId);
-  const getInterface = selectors.getInterface(options.interfaceId);
+  const selectors = getOrCreateBackendSurfacesSelectors(stateId);
+  const getSurface = selectors.getSurface(options.surfaceId);
 
   const controllerState = createMemoizedStateSelector(
-    getInterface,
+    getSurface,
     (entry): BackendPaginationControllerState => {
       const pagination = entry?.state?.pagination as
         | {
@@ -62,17 +62,17 @@ export const buildBackendPaginationController = (
       return engine.subscribe(controllerState, callback);
     },
     selectPage(page) {
-      const action: BackendInterfaceAction = {
+      const action: BackendSurfaceAction = {
         type: 'select_page',
-        interfaceId: options.interfaceId,
+        surfaceId: options.surfaceId,
         page,
       };
       options.converseController.sendAction(action);
     },
     setPageSize(pageSize) {
-      const action: BackendInterfaceAction = {
+      const action: BackendSurfaceAction = {
         type: 'set_page_size',
-        interfaceId: options.interfaceId,
+        surfaceId: options.surfaceId,
         pageSize,
       };
       options.converseController.sendAction(action);

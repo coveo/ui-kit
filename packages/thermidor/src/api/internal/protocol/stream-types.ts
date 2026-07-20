@@ -49,36 +49,48 @@ export type TurnCompleteEvent = {
 };
 
 // ============================================================================
-// Structured snapshot events (A2UI — Coveo-specific payload shape)
+// A2UI v1.0 operations (carried in ACTIVITY_SNAPSHOT content.operations)
 // ============================================================================
 
+export interface A2UIComponentNode {
+  id: string;
+  component: string;
+  [prop: string]: unknown;
+}
+
+export type A2UISurfacePlacement = 'main' | 'inline';
+
+export interface A2UICreateSurface {
+  surfaceId: string;
+  catalogId?: string;
+  surfaceProperties?: {placement?: A2UISurfacePlacement} & Record<
+    string,
+    unknown
+  >;
+  components: A2UIComponentNode[];
+  dataModel: Record<string, unknown>;
+}
+
 export type A2UIOperation =
+  | {createSurface: A2UICreateSurface}
   | {
-      beginRendering: {
+      updateComponents: {
         surfaceId: string;
-        root: string;
-        catalogId?: string;
+        components: A2UIComponentNode[];
       };
     }
   | {
-      surfaceUpdate: {
+      updateDataModel: {
         surfaceId: string;
-        components: Array<{
-          id: string;
-          component: Record<string, unknown>;
-        }>;
+        path: string;
+        value: unknown;
       };
     }
   | {
-      dataModelUpdate: {
-        surfaceId: string;
-        contents: Array<{
-          key: string;
-          valueString?: string;
-          valueNumber?: number;
-          valueBoolean?: boolean;
-          valueMap?: Array<unknown>;
-        }>;
+      actionResponse: {
+        actionId: string;
+        value?: unknown;
+        error?: unknown;
       };
     }
   | {
@@ -86,6 +98,16 @@ export type A2UIOperation =
         surfaceId: string;
       };
     };
+
+/**
+ * The `content` payload of an `ACTIVITY_SNAPSHOT` event whose
+ * `activityType` is `a2ui-surface`.
+ */
+export interface A2UISurfaceActivityContent {
+  operations: A2UIOperation[];
+}
+
+export const A2UI_SURFACE_ACTIVITY_TYPE = 'a2ui-surface';
 
 // ============================================================================
 // Unknown fallback (events not recognized by AG-UI or Coveo extensions)

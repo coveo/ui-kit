@@ -1,10 +1,10 @@
 import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
 import {ENGINE, STATE_ID} from '@/src/core/interface/utils/symbols.js';
-import {getOrCreateBackendInterfacesSelectors} from '@/src/core/internal/backend-interfaces/backend-interfaces-selectors.js';
+import {getOrCreateBackendSurfacesSelectors} from '@/src/core/internal/backend-surfaces/backend-surfaces-selectors.js';
 import type {GenerativeInterface} from '@/src/public/interfaces/generative.js';
 import type {
   ConverseController,
-  BackendInterfaceAction,
+  BackendSurfaceAction,
 } from '../converse/converse-controller.js';
 import type {Controller} from '../controller-types.js';
 
@@ -25,7 +25,7 @@ export interface BackendSortControllerState {
 export interface BackendSortControllerOptions {
   interface: GenerativeInterface;
   converseController: ConverseController;
-  interfaceId: string;
+  surfaceId: string;
 }
 
 export const buildBackendSortController = (
@@ -33,11 +33,11 @@ export const buildBackendSortController = (
 ): BackendSortController => {
   const engine = options.interface[ENGINE];
   const stateId = options.interface[STATE_ID];
-  const selectors = getOrCreateBackendInterfacesSelectors(stateId);
-  const getInterface = selectors.getInterface(options.interfaceId);
+  const selectors = getOrCreateBackendSurfacesSelectors(stateId);
+  const getSurface = selectors.getSurface(options.surfaceId);
 
   const controllerState = createMemoizedStateSelector(
-    getInterface,
+    getSurface,
     (entry): BackendSortControllerState => {
       const sort = entry?.state?.sort as
         | {
@@ -61,9 +61,9 @@ export const buildBackendSortController = (
       return engine.subscribe(controllerState, callback);
     },
     sortBy(sort) {
-      const action: BackendInterfaceAction = {
+      const action: BackendSurfaceAction = {
         type: 'set_sort',
-        interfaceId: options.interfaceId,
+        surfaceId: options.surfaceId,
         sortCriteria: sort.sortCriteria,
         fields: sort.fields,
       };

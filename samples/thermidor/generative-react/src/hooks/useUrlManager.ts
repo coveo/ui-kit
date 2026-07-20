@@ -45,7 +45,7 @@ export function useInitialUrlRestore() {
       }
     }
 
-    const interfaceId = parsed.interfaceId ?? 'ui-1';
+    const surfaceId = parsed.surfaceId ?? 'ui-1';
 
     const facets: {
       facetId: string;
@@ -87,7 +87,7 @@ export function useInitialUrlRestore() {
 
     converseController.sendAction({
       type: 'restore_state',
-      interfaceId,
+      surfaceId,
       query: parsed.query,
       facets: facets.length ? facets : undefined,
       page: parsed.page ?? 0,
@@ -97,20 +97,20 @@ export function useInitialUrlRestore() {
 }
 
 /**
- * Once an interface exists, manage ongoing URL ↔ state synchronization
+ * Once a surface exists, manage ongoing URL ↔ state synchronization
  * (pushState on state change, popstate → restore_state).
  */
-export function useUrlManager(interfaceId: string | undefined) {
+export function useUrlManager(surfaceId: string | undefined) {
   const controllerRef = useRef<BackendUrlManagerController | null>(null);
   const firstPushDone = useRef(false);
 
   useEffect(() => {
-    if (!interfaceId) return;
+    if (!surfaceId) return;
 
     const controller = buildBackendUrlManagerController({
       interface: generativeInterface,
       converseController,
-      interfaceId,
+      surfaceId,
     });
 
     controllerRef.current = controller;
@@ -147,5 +147,5 @@ export function useUrlManager(interfaceId: string | undefined) {
       window.removeEventListener('popstate', onPopState);
       controllerRef.current = null;
     };
-  }, [interfaceId]);
+  }, [surfaceId]);
 }

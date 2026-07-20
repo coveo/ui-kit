@@ -12,7 +12,7 @@ import {
   TYPE,
   FACADE_RESOLVERS,
 } from '@/src/core/interface/utils/symbols.js';
-import {getOrCreateBackendInterfacesSlice} from '@/src/core/internal/backend-interfaces/backend-interfaces-slice.js';
+import {getOrCreateBackendSurfacesSlice} from '@/src/core/internal/backend-surfaces/backend-surfaces-slice.js';
 import type {GenerativeInterface} from '@/src/public/interfaces/generative.js';
 import type {ConverseController} from '../converse/converse-controller.js';
 import {buildBackendInteractiveProductController} from './backend-interactive-product-controller.js';
@@ -21,7 +21,7 @@ const TEST_ID = 'test-gen';
 
 function createTestGenerativeInterface(engine: Engine): GenerativeInterface {
   const fullEngine = getFullEngine(engine);
-  fullEngine.adoptSlice(getOrCreateBackendInterfacesSlice(TEST_ID));
+  fullEngine.adoptSlice(getOrCreateBackendSurfacesSlice(TEST_ID));
   return Object.freeze({
     [KIND]: 'interface' as const,
     [TYPE]: 'generative' as const,
@@ -60,7 +60,7 @@ describe('buildBackendInteractiveProductController', () => {
     const controller = buildBackendInteractiveProductController({
       interface: generativeInterface,
       converseController,
-      interfaceId: 'ui-1',
+      surfaceId: 'ui-1',
       product: {productId: 'sku-1', name: 'Nike Air Max', price: 129.99},
       position: 3,
     });
@@ -69,7 +69,7 @@ describe('buildBackendInteractiveProductController', () => {
 
     expect(converseController.sendAction).toHaveBeenCalledWith({
       type: 'product_click',
-      interfaceId: 'ui-1',
+      surfaceId: 'ui-1',
       productId: 'sku-1',
       name: 'Nike Air Max',
       price: 129.99,
@@ -85,7 +85,7 @@ describe('buildBackendInteractiveProductController', () => {
     const controller = buildBackendInteractiveProductController({
       interface: generativeInterface,
       converseController,
-      interfaceId: 'ui-1',
+      surfaceId: 'ui-1',
       product: {productId: 'sku-1', name: 'Test', price: 10},
       position: 1,
     });

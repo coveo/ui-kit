@@ -12,6 +12,26 @@ import type {
   A2UISurface,
   TurnStatus,
 } from '@/src/core/interface/generative/generative-types.js';
+import type {
+  A2UIOperation,
+  A2UISurfaceActivityContent,
+} from '@/src/api/internal/protocol/stream-types.js';
+import {A2UI_SURFACE_ACTIVITY_TYPE} from '@/src/api/internal/protocol/stream-types.js';
+import {
+  isStatefulSurfaceComponent,
+  surfaceTypeFromComponent,
+} from '@/src/core/internal/backend-surfaces/catalog.js';
+
+/**
+ * Actions with `wantResponse: false` are fire-and-forget ACK-only turns
+ * (analytics / cart). Everything else expects an `actionResponse`.
+ */
+const ACK_ONLY_ACTIONS = new Set<string>([
+  'product_click',
+  'product_view',
+  'cart_action',
+  'purchase',
+]);
 
 export interface GenerativeStatePort {
   createTurn(payload: {id: string; prompt: string; status: TurnStatus}): void;
@@ -27,26 +47,27 @@ export interface GenerativeStatePort {
   completeTurn(turnId: string): void;
   failTurn(turnId: string, error: string): void;
   clearTurnResponse(turnId: string): void;
-  createBackendInterface(
-    interfaceId: string,
+  createBackendSurface(
+    surfaceId: string,
     type: string,
     display: string,
     state: Record<string, unknown>,
     turnId?: string
   ): void;
-  updateBackendInterfaceState(
-    interfaceId: string,
-    state: Record<string, unknown>,
-    display?: string
+  updateBackendSurfaceState(
+    surfaceId: string,
+    path: string,
+    value: unknown
   ): void;
+  deleteBackendSurface(surfaceId: string): void;
   updateSuggestions(
-    interfaceId: string,
+    surfaceId: string,
     suggestions: Record<string, unknown>
   ): void;
   setConversationSessionId(sessionId: string): void;
   setConversationToken(token: string): void;
   updateFacetSearchResults(
-    interfaceId: string,
+    surfaceId: string,
     results: Record<string, unknown>
   ): void;
 }
@@ -68,6 +89,8 @@ export class GenerativeRuntime {
   private agentResponseInitialized = new Set<string>();
   private conversationSessionId: string | undefined;
   private conversationToken: string | undefined;
+  private activeMainSurfaceId: string | undefined;
+  private pendingActionIds = new Set<string>();
   private buildRequest: ReturnType<
     typeof createConversationEndpointRequestSelector
   >;
@@ -124,12 +147,46 @@ export class GenerativeRuntime {
 
   async submitAction(action: Record<string, unknown>): Promise<void> {
     const tempId = generateId();
-    const prompt = `[action:${(action as {type?: string}).type ?? 'unknown'}]`;
+    const name = (action as {type?: string}).type ?? 'unknown';
+    const prompt = `[action:${name}]`;
 
     this.statePort.createTurn({id: tempId, prompt, status: 'streaming'});
     this.statePort.setActiveTurnId(tempId);
 
-    await this.executeActionStream(tempId, action);
+    await this.executeActionStream(tempId, this.toA2uiActionEnvelope(action));
+  }
+
+  /**
+   * Translate the ergonomic, typed controller action into the A2UI v1.0
+   * action envelope: `{surfaceId, name, actionId, wantResponse, context}`.
+   * The `type` discriminator becomes `name`; all remaining fields (other than
+   * `surfaceId`) become `context`.
+   */
+  private toA2uiActionEnvelope(
+    action: Record<string, unknown>
+  ): Record<string, unknown> {
+    const {type, surfaceId, ...rest} = action as {
+      type?: string;
+      surfaceId?: string;
+      [key: string]: unknown;
+    };
+
+    const name = type ?? 'unknown';
+    const actionId = generateId();
+    const wantResponse = !ACK_ONLY_ACTIONS.has(name);
+    const resolvedSurfaceId = surfaceId ?? this.activeMainSurfaceId;
+
+    if (wantResponse) {
+      this.pendingActionIds.add(actionId);
+    }
+
+    return {
+      ...(resolvedSurfaceId ? {surfaceId: resolvedSurfaceId} : {}),
+      name,
+      actionId,
+      wantResponse,
+      context: rest,
+    };
   }
 
   restoreSession(sessionId: string, token: string): void {
@@ -327,41 +384,38 @@ export class GenerativeRuntime {
         return {turnId, isTerminal: false};
       }
 
+      case 'ACTIVITY_SNAPSHOT': {
+        const activityType = (event as {activityType?: string}).activityType;
+        if (activityType !== A2UI_SURFACE_ACTIVITY_TYPE) {
+          return {turnId, isTerminal: false};
+        }
+        const content = (
+          event as unknown as {content?: A2UISurfaceActivityContent}
+        ).content;
+        const operations = content?.operations;
+        if (!Array.isArray(operations)) {
+          return {turnId, isTerminal: false};
+        }
+        for (const operation of operations) {
+          this.applyA2uiOperation(turnId, operation);
+        }
+        return {turnId, isTerminal: false};
+      }
+
       case 'CUSTOM': {
         const value = event.value as Record<string, unknown> | undefined;
         if (!value) {
           return {turnId, isTerminal: false};
         }
         switch (event.name) {
-          case 'coveo.interfaceCreated': {
-            this.statePort.createBackendInterface(
-              value.interfaceId as string,
-              value.type as string,
-              value.display as string,
-              value.state as Record<string, unknown>,
-              turnId
-            );
-            return {turnId, isTerminal: false};
-          }
-          case 'coveo.stateUpdate': {
-            this.statePort.updateBackendInterfaceState(
-              value.interfaceId as string,
-              value.state as Record<string, unknown>,
-              value.display as string | undefined
-            );
-            return {turnId, isTerminal: false};
-          }
           case 'coveo.suggestions': {
-            const {interfaceId, ...suggestions} = value;
-            this.statePort.updateSuggestions(
-              interfaceId as string,
-              suggestions
-            );
+            const {surfaceId, ...suggestions} = value;
+            this.statePort.updateSuggestions(surfaceId as string, suggestions);
             return {turnId, isTerminal: false};
           }
           case 'coveo.facetSearchResults': {
             this.statePort.updateFacetSearchResults(
-              value.interfaceId as string,
+              value.surfaceId as string,
               value as Record<string, unknown>
             );
             return {turnId, isTerminal: false};
@@ -398,6 +452,55 @@ export class GenerativeRuntime {
     if (!this.agentResponseInitialized.has(turnId)) {
       this.statePort.initAgentResponse(turnId);
       this.agentResponseInitialized.add(turnId);
+    }
+  }
+
+  private applyA2uiOperation(turnId: string, operation: A2UIOperation): void {
+    if ('createSurface' in operation) {
+      const {surfaceId, components, dataModel, surfaceProperties} =
+        operation.createSurface;
+      const rootComponent = components?.[0]?.component ?? '';
+
+      if (isStatefulSurfaceComponent(rootComponent)) {
+        const placement = surfaceProperties?.placement ?? 'main';
+        this.statePort.createBackendSurface(
+          surfaceId,
+          surfaceTypeFromComponent(rootComponent),
+          placement,
+          dataModel ?? {},
+          turnId
+        );
+        if (placement === 'main') {
+          this.activeMainSurfaceId = surfaceId;
+        }
+      } else {
+        this.ensureAgentResponse(turnId);
+        this.statePort.appendSurface(
+          turnId,
+          operation.createSurface as unknown as A2UISurface
+        );
+      }
+      return;
+    }
+
+    if ('updateDataModel' in operation) {
+      const {surfaceId, path, value} = operation.updateDataModel;
+      this.statePort.updateBackendSurfaceState(surfaceId, path, value);
+      return;
+    }
+
+    if ('actionResponse' in operation) {
+      this.pendingActionIds.delete(operation.actionResponse.actionId);
+      return;
+    }
+
+    if ('deleteSurface' in operation) {
+      const {surfaceId} = operation.deleteSurface;
+      this.statePort.deleteBackendSurface(surfaceId);
+      if (this.activeMainSurfaceId === surfaceId) {
+        this.activeMainSurfaceId = undefined;
+      }
+      return;
     }
   }
 }

@@ -39,7 +39,7 @@ export type {
   PaginationControllerOptions,
   PaginationControllerState,
 } from './pagination/pagination-controller.js';
-export type {BackendInterfaceAction} from './converse/converse-controller.js';
+export type {BackendSurfaceAction} from './converse/converse-controller.js';
 export {buildBackendProductListController} from './backend-product-list/backend-product-list-controller.js';
 export type {
   BackendProductListController,
@@ -101,6 +101,6 @@ export type {
   BackendUrlManagerControllerState,
 } from './backend-url-manager/backend-url-manager-controller.js';
 export {
-  serializeInterfaceState,
+  serializeSurfaceState,
   deserializeFragment,
 } from './backend-url-manager/backend-url-manager-controller.js';

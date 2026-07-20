@@ -37,11 +37,11 @@ interface FacetData {
 }
 
 interface FacetPanelProps {
-  interfaceId: string;
+  surfaceId: string;
   facets: FacetData[];
 }
 
-export function FacetPanel({interfaceId, facets}: FacetPanelProps) {
+export function FacetPanel({surfaceId, facets}: FacetPanelProps) {
   if (!facets.length) return null;
 
   return (
@@ -50,13 +50,13 @@ export function FacetPanel({interfaceId, facets}: FacetPanelProps) {
         facet.type === 'numericalRange' ? (
           <NumericFacetGroup
             key={facet.facetId}
-            interfaceId={interfaceId}
+            surfaceId={surfaceId}
             facetId={facet.facetId}
           />
         ) : (
           <FacetGroup
             key={facet.facetId}
-            interfaceId={interfaceId}
+            surfaceId={surfaceId}
             facetId={facet.facetId}
           />
         )
@@ -66,11 +66,11 @@ export function FacetPanel({interfaceId, facets}: FacetPanelProps) {
 }
 
 interface FacetGroupProps {
-  interfaceId: string;
+  surfaceId: string;
   facetId: string;
 }
 
-function FacetGroup({interfaceId, facetId}: FacetGroupProps) {
+function FacetGroup({surfaceId, facetId}: FacetGroupProps) {
   const [state, setState] = useState<BackendFacetControllerState>({
     facetId,
     field: '',
@@ -92,7 +92,7 @@ function FacetGroup({interfaceId, facetId}: FacetGroupProps) {
     const controller = buildBackendFacetController({
       interface: generativeInterface,
       converseController,
-      interfaceId,
+      surfaceId,
       facetId,
     });
 
@@ -109,7 +109,7 @@ function FacetGroup({interfaceId, facetId}: FacetGroupProps) {
       unsub1();
       unsub2();
     };
-  }, [interfaceId, facetId]);
+  }, [surfaceId, facetId]);
 
   const handleSearchInput = useCallback((val: string) => {
     setSearchInput(val);
@@ -218,7 +218,7 @@ function FacetGroup({interfaceId, facetId}: FacetGroupProps) {
   );
 }
 
-function NumericFacetGroup({interfaceId, facetId}: FacetGroupProps) {
+function NumericFacetGroup({surfaceId, facetId}: FacetGroupProps) {
   const [state, setState] = useState<BackendNumericFacetControllerState>({
     facetId,
     field: '',
@@ -239,7 +239,7 @@ function NumericFacetGroup({interfaceId, facetId}: FacetGroupProps) {
     const controller = buildBackendNumericFacetController({
       interface: generativeInterface,
       converseController,
-      interfaceId,
+      surfaceId,
       facetId,
     });
 
@@ -296,7 +296,7 @@ function NumericFacetGroup({interfaceId, facetId}: FacetGroupProps) {
         setRangeValue(sel);
       }
     });
-  }, [interfaceId, facetId]);
+  }, [surfaceId, facetId]);
 
   if (!state.values.length && !state.domain) return null;
 

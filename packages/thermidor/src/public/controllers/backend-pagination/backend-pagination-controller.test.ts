@@ -12,8 +12,8 @@ import {
   TYPE,
   FACADE_RESOLVERS,
 } from '@/src/core/interface/utils/symbols.js';
-import {getOrCreateBackendInterfacesActions} from '@/src/core/internal/backend-interfaces/backend-interfaces-actions.js';
-import {getOrCreateBackendInterfacesSlice} from '@/src/core/internal/backend-interfaces/backend-interfaces-slice.js';
+import {getOrCreateBackendSurfacesActions} from '@/src/core/internal/backend-surfaces/backend-surfaces-actions.js';
+import {getOrCreateBackendSurfacesSlice} from '@/src/core/internal/backend-surfaces/backend-surfaces-slice.js';
 import type {GenerativeInterface} from '@/src/public/interfaces/generative.js';
 import type {ConverseController} from '../converse/converse-controller.js';
 import {buildBackendPaginationController} from './backend-pagination-controller.js';
@@ -22,7 +22,7 @@ const TEST_ID = 'test-gen';
 
 function createTestGenerativeInterface(engine: Engine): GenerativeInterface {
   const fullEngine = getFullEngine(engine);
-  fullEngine.adoptSlice(getOrCreateBackendInterfacesSlice(TEST_ID));
+  fullEngine.adoptSlice(getOrCreateBackendSurfacesSlice(TEST_ID));
   return Object.freeze({
     [KIND]: 'interface' as const,
     [TYPE]: 'generative' as const,
@@ -64,7 +64,7 @@ describe('buildBackendPaginationController', () => {
     const controller = buildBackendPaginationController({
       interface: generativeInterface,
       converseController,
-      interfaceId: 'ui-1',
+      surfaceId: 'ui-1',
     });
 
     expect(controller.state).toEqual({
@@ -77,11 +77,11 @@ describe('buildBackendPaginationController', () => {
 
   it('reads pagination from backend interface state', () => {
     const fullEngine = getFullEngine(engine);
-    const actions = getOrCreateBackendInterfacesActions(TEST_ID);
+    const actions = getOrCreateBackendSurfacesActions(TEST_ID);
 
     fullEngine.mutate(
-      actions.createInterface({
-        interfaceId: 'ui-1',
+      actions.createSurface({
+        surfaceId: 'ui-1',
         type: 'product_search',
         display: 'main',
         state: {
@@ -93,7 +93,7 @@ describe('buildBackendPaginationController', () => {
     const controller = buildBackendPaginationController({
       interface: generativeInterface,
       converseController,
-      interfaceId: 'ui-1',
+      surfaceId: 'ui-1',
     });
 
     expect(controller.state).toEqual({
@@ -108,14 +108,14 @@ describe('buildBackendPaginationController', () => {
     const controller = buildBackendPaginationController({
       interface: generativeInterface,
       converseController,
-      interfaceId: 'ui-1',
+      surfaceId: 'ui-1',
     });
 
     controller.selectPage(3);
 
     expect(converseController.sendAction).toHaveBeenCalledWith({
       type: 'select_page',
-      interfaceId: 'ui-1',
+      surfaceId: 'ui-1',
       page: 3,
     });
   });
@@ -124,14 +124,14 @@ describe('buildBackendPaginationController', () => {
     const controller = buildBackendPaginationController({
       interface: generativeInterface,
       converseController,
-      interfaceId: 'ui-1',
+      surfaceId: 'ui-1',
     });
 
     controller.setPageSize(50);
 
     expect(converseController.sendAction).toHaveBeenCalledWith({
       type: 'set_page_size',
-      interfaceId: 'ui-1',
+      surfaceId: 'ui-1',
       pageSize: 50,
     });
   });

@@ -1,11 +1,11 @@
 import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
 import {ENGINE, STATE_ID} from '@/src/core/interface/utils/symbols.js';
-import {getOrCreateBackendInterfacesSelectors} from '@/src/core/internal/backend-interfaces/backend-interfaces-selectors.js';
+import {getOrCreateBackendSurfacesSelectors} from '@/src/core/internal/backend-surfaces/backend-surfaces-selectors.js';
 import {getOrCreateGenerativeSelectors} from '@/src/core/internal/generative/generative-selectors.js';
 import type {GenerativeInterface} from '@/src/public/interfaces/generative.js';
 import type {
   ConverseController,
-  BackendInterfaceAction,
+  BackendSurfaceAction,
 } from '../converse/converse-controller.js';
 import type {Controller} from '../controller-types.js';
 
@@ -20,7 +20,7 @@ export interface BackendUrlManagerControllerState {
 export interface BackendUrlManagerControllerOptions {
   interface: GenerativeInterface;
   converseController: ConverseController;
-  interfaceId: string;
+  surfaceId: string;
 }
 
 interface FacetParam {
@@ -29,9 +29,9 @@ interface FacetParam {
   values: string[];
 }
 
-export function serializeInterfaceState(
+export function serializeSurfaceState(
   csid: string | undefined,
-  interfaceId: string,
+  surfaceId: string,
   state: Record<string, unknown>
 ): string {
   const params = new URLSearchParams();
@@ -39,7 +39,7 @@ export function serializeInterfaceState(
   if (csid) {
     params.set('csid', csid);
   }
-  params.set('iid', interfaceId);
+  params.set('iid', surfaceId);
 
   const query = state.query as string | undefined;
   if (query) {
@@ -108,7 +108,7 @@ export function serializeInterfaceState(
 
 export function deserializeFragment(fragment: string): {
   csid?: string;
-  interfaceId?: string;
+  surfaceId?: string;
   query?: string;
   facets?: FacetParam[];
   page?: number;
@@ -124,7 +124,7 @@ export function deserializeFragment(fragment: string): {
   if (csid) result.csid = csid;
 
   const iid = params.get('iid');
-  if (iid) result.interfaceId = iid;
+  if (iid) result.surfaceId = iid;
 
   const q = params.get('q');
   if (q) result.query = q;
@@ -163,7 +163,7 @@ function areFragmentsEquivalent(a: string, b: string): boolean {
   const parsedB = deserializeFragment(b);
 
   if (parsedA.csid !== parsedB.csid) return false;
-  if (parsedA.interfaceId !== parsedB.interfaceId) return false;
+  if (parsedA.surfaceId !== parsedB.surfaceId) return false;
   if (parsedA.query !== parsedB.query) return false;
   if (parsedA.page !== parsedB.page) return false;
 
@@ -189,24 +189,24 @@ export const buildBackendUrlManagerController = (
 ): BackendUrlManagerController => {
   const engine = options.interface[ENGINE];
   const stateId = options.interface[STATE_ID];
-  const biSelectors = getOrCreateBackendInterfacesSelectors(stateId);
+  const biSelectors = getOrCreateBackendSurfacesSelectors(stateId);
   const genSelectors = getOrCreateGenerativeSelectors(stateId);
-  const getInterface = biSelectors.getInterface(options.interfaceId);
+  const getSurface = biSelectors.getSurface(options.surfaceId);
 
   let previousFragment = '';
   let previousResponseId: string | undefined;
   let isSynchronizing = false;
 
   const controllerState = createMemoizedStateSelector(
-    getInterface,
+    getSurface,
     genSelectors.getConversationSessionId,
     (entry, csid): BackendUrlManagerControllerState => {
       if (!entry || entry.display !== 'main') {
         return {fragment: previousFragment};
       }
-      const fragment = serializeInterfaceState(
+      const fragment = serializeSurfaceState(
         csid,
-        options.interfaceId,
+        options.surfaceId,
         entry.state
       );
       return {fragment};
@@ -219,7 +219,7 @@ export const buildBackendUrlManagerController = (
     },
 
     subscribe(callback) {
-      const entry = engine.read(getInterface);
+      const entry = engine.read(getSurface);
       previousResponseId = (entry?.state?.responseId as string) ?? undefined;
       previousFragment = engine.read(controllerState).fragment;
 
@@ -227,7 +227,7 @@ export const buildBackendUrlManagerController = (
         const currentState = engine.read(controllerState);
         const newFragment = currentState.fragment;
 
-        const currentEntry = engine.read(getInterface);
+        const currentEntry = engine.read(getSurface);
         const newResponseId =
           (currentEntry?.state?.responseId as string) ?? undefined;
         const responseIdChanged = newResponseId !== previousResponseId;
@@ -267,7 +267,7 @@ export const buildBackendUrlManagerController = (
         }
       }
 
-      const interfaceId = parsed.interfaceId ?? options.interfaceId;
+      const surfaceId = parsed.surfaceId ?? options.surfaceId;
 
       const facets: {
         facetId: string;
@@ -307,9 +307,9 @@ export const buildBackendUrlManagerController = (
         }
       }
 
-      const action: BackendInterfaceAction = {
+      const action: BackendSurfaceAction = {
         type: 'restore_state',
-        interfaceId,
+        surfaceId,
         query: parsed.query,
         facets: facets.length ? facets : undefined,
         page: parsed.page ?? 0,

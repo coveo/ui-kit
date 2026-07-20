@@ -1,34 +1,34 @@
 import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
 import {createSelectSlice} from '@/src/core/interface/utils/select-slice.js';
-import {initialBackendInterfacesState} from './backend-interfaces-slice.js';
+import {initialBackendSurfacesState} from './backend-surfaces-slice.js';
 import type {
-  BackendInterfaceEntry,
+  BackendSurfaceEntry,
   BackendSuggestionsEntry,
   BackendFacetSearchEntry,
-} from './backend-interfaces-actions.js';
+} from './backend-surfaces-actions.js';
 
-export function createBackendInterfacesSelectors(interfaceId: string) {
+export function createBackendSurfacesSelectors(interfaceId: string) {
   const sliceSelector = createSelectSlice(
     interfaceId,
-    'backendInterfaces',
-    initialBackendInterfacesState
+    'backendSurfaces',
+    initialBackendSurfacesState
   );
 
   return {
-    getInterfaces: createMemoizedStateSelector(
+    getSurfaces: createMemoizedStateSelector(
       sliceSelector,
-      (state): Record<string, BackendInterfaceEntry> => state.interfaces
+      (state): Record<string, BackendSurfaceEntry> => state.surfaces
     ),
-    getInterface: (targetId: string) =>
+    getSurface: (surfaceId: string) =>
       createMemoizedStateSelector(
         sliceSelector,
-        (state): BackendInterfaceEntry | undefined => state.interfaces[targetId]
+        (state): BackendSurfaceEntry | undefined => state.surfaces[surfaceId]
       ),
-    getSuggestions: (targetId: string) =>
+    getSuggestions: (surfaceId: string) =>
       createMemoizedStateSelector(
         sliceSelector,
         (state): BackendSuggestionsEntry | undefined =>
-          state.suggestions[targetId]
+          state.suggestions[surfaceId]
       ),
     getFacetSearchResults: (facetId: string) =>
       createMemoizedStateSelector(
@@ -41,13 +41,13 @@ export function createBackendInterfacesSelectors(interfaceId: string) {
 
 const selectorsCache = new Map<
   string,
-  ReturnType<typeof createBackendInterfacesSelectors>
+  ReturnType<typeof createBackendSurfacesSelectors>
 >();
-export function getOrCreateBackendInterfacesSelectors(interfaceId: string) {
+export function getOrCreateBackendSurfacesSelectors(interfaceId: string) {
   if (!selectorsCache.has(interfaceId)) {
     selectorsCache.set(
       interfaceId,
-      createBackendInterfacesSelectors(interfaceId)
+      createBackendSurfacesSelectors(interfaceId)
     );
   }
   return selectorsCache.get(interfaceId)!;

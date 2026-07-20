@@ -1,10 +1,10 @@
 import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
 import {ENGINE, STATE_ID} from '@/src/core/interface/utils/symbols.js';
-import {getOrCreateBackendInterfacesSelectors} from '@/src/core/internal/backend-interfaces/backend-interfaces-selectors.js';
+import {getOrCreateBackendSurfacesSelectors} from '@/src/core/internal/backend-surfaces/backend-surfaces-selectors.js';
 import type {GenerativeInterface} from '@/src/public/interfaces/generative.js';
 import type {
   ConverseController,
-  BackendInterfaceAction,
+  BackendSurfaceAction,
 } from '../converse/converse-controller.js';
 import type {Controller} from '../controller-types.js';
 
@@ -54,7 +54,7 @@ export interface BackendFacetControllerState {
 export interface BackendFacetControllerOptions {
   interface: GenerativeInterface;
   converseController: ConverseController;
-  interfaceId: string;
+  surfaceId: string;
   facetId: string;
 }
 
@@ -63,8 +63,8 @@ export const buildBackendFacetController = (
 ): BackendFacetController => {
   const engine = options.interface[ENGINE];
   const stateId = options.interface[STATE_ID];
-  const selectors = getOrCreateBackendInterfacesSelectors(stateId);
-  const getInterface = selectors.getInterface(options.interfaceId);
+  const selectors = getOrCreateBackendSurfacesSelectors(stateId);
+  const getSurface = selectors.getSurface(options.surfaceId);
   const getFacetSearchResults = selectors.getFacetSearchResults(
     options.facetId
   );
@@ -72,7 +72,7 @@ export const buildBackendFacetController = (
   let facetSearchQuery = '';
 
   const controllerState = createMemoizedStateSelector(
-    getInterface,
+    getSurface,
     (entry): BackendFacetControllerState => {
       const facets = entry?.state?.facets as
         | Array<{
@@ -127,9 +127,9 @@ export const buildBackendFacetController = (
     },
     search() {
       if (!facetSearchQuery) return;
-      const action: BackendInterfaceAction = {
+      const action: BackendSurfaceAction = {
         type: 'facet_search',
-        interfaceId: options.interfaceId,
+        surfaceId: options.surfaceId,
         facetId: options.facetId,
         query: facetSearchQuery,
       };
@@ -140,9 +140,9 @@ export const buildBackendFacetController = (
     },
     select(value: BackendFacetSearchValue) {
       facetSearchQuery = '';
-      const action: BackendInterfaceAction = {
+      const action: BackendSurfaceAction = {
         type: 'toggle_facet',
-        interfaceId: options.interfaceId,
+        surfaceId: options.surfaceId,
         facetId: options.facetId,
         value: value.rawValue,
       };
@@ -164,27 +164,27 @@ export const buildBackendFacetController = (
       return engine.subscribe(controllerState, callback);
     },
     toggleSelect(value) {
-      const action: BackendInterfaceAction = {
+      const action: BackendSurfaceAction = {
         type: 'toggle_facet',
-        interfaceId: options.interfaceId,
+        surfaceId: options.surfaceId,
         facetId: options.facetId,
         value,
       };
       options.converseController.sendAction(action);
     },
     toggleExclude(value) {
-      const action: BackendInterfaceAction = {
+      const action: BackendSurfaceAction = {
         type: 'toggle_exclude_facet',
-        interfaceId: options.interfaceId,
+        surfaceId: options.surfaceId,
         facetId: options.facetId,
         value,
       };
       options.converseController.sendAction(action);
     },
     deselectAll() {
-      const action: BackendInterfaceAction = {
+      const action: BackendSurfaceAction = {
         type: 'deselect_all_facets',
-        interfaceId: options.interfaceId,
+        surfaceId: options.surfaceId,
         facetId: options.facetId,
       };
       options.converseController.sendAction(action);

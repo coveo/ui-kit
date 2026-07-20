@@ -5,7 +5,7 @@ import {
   converseController,
   generativeInterface,
 } from '../../generative-setup.js';
-import {getOrCreateBackendInterfacesSelectors} from '@/src/core/internal/backend-interfaces/backend-interfaces-selectors.js';
+import {getOrCreateBackendSurfacesSelectors} from '@/src/core/internal/backend-surfaces/backend-surfaces-selectors.js';
 import {ENGINE, STATE_ID} from '@/src/core/interface/utils/symbols.js';
 import {generateId} from '@/src/core/interface/utils/id-generator.js';
 
@@ -23,8 +23,8 @@ export function Header() {
   const stateId = generativeInterface[STATE_ID];
 
   useEffect(() => {
-    const selectors = getOrCreateBackendInterfacesSelectors(stateId);
-    return engine.subscribe(selectors.getInterfaces, (interfaces) => {
+    const selectors = getOrCreateBackendSurfacesSelectors(stateId);
+    return engine.subscribe(selectors.getSurfaces, (interfaces) => {
       const mainId = Object.keys(interfaces).find(
         (id) => interfaces[id]?.display === 'main'
       );
@@ -36,7 +36,7 @@ export function Header() {
     interfaceId ?? placeholderInterfaceIdRef.current;
 
   useEffect(() => {
-    const selectors = getOrCreateBackendInterfacesSelectors(stateId);
+    const selectors = getOrCreateBackendSurfacesSelectors(stateId);
     const getSuggestions = selectors.getSuggestions(suggestionsInterfaceId);
     return engine.subscribe(getSuggestions, (suggestions) => {
       setCompletions(suggestions?.completions.map((c) => c.expression) ?? []);
@@ -49,7 +49,7 @@ export function Header() {
     }
     converseController.sendAction({
       type: 'fetch_suggestions',
-      interfaceId: suggestionsInterfaceId,
+      surfaceId: suggestionsInterfaceId,
       query: query.trim(),
     });
   }, 200);

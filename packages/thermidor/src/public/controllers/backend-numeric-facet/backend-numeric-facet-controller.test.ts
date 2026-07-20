@@ -12,8 +12,8 @@ import {
   TYPE,
   FACADE_RESOLVERS,
 } from '@/src/core/interface/utils/symbols.js';
-import {getOrCreateBackendInterfacesActions} from '@/src/core/internal/backend-interfaces/backend-interfaces-actions.js';
-import {getOrCreateBackendInterfacesSlice} from '@/src/core/internal/backend-interfaces/backend-interfaces-slice.js';
+import {getOrCreateBackendSurfacesActions} from '@/src/core/internal/backend-surfaces/backend-surfaces-actions.js';
+import {getOrCreateBackendSurfacesSlice} from '@/src/core/internal/backend-surfaces/backend-surfaces-slice.js';
 import type {GenerativeInterface} from '@/src/public/interfaces/generative.js';
 import type {ConverseController} from '../converse/converse-controller.js';
 import {buildBackendNumericFacetController} from './backend-numeric-facet-controller.js';
@@ -22,7 +22,7 @@ const TEST_ID = 'test-gen';
 
 function createTestGenerativeInterface(engine: Engine): GenerativeInterface {
   const fullEngine = getFullEngine(engine);
-  fullEngine.adoptSlice(getOrCreateBackendInterfacesSlice(TEST_ID));
+  fullEngine.adoptSlice(getOrCreateBackendSurfacesSlice(TEST_ID));
   return Object.freeze({
     [KIND]: 'interface' as const,
     [TYPE]: 'generative' as const,
@@ -67,7 +67,7 @@ describe('buildBackendNumericFacetController', () => {
     const controller = buildBackendNumericFacetController({
       interface: generativeInterface,
       converseController,
-      interfaceId: 'ui-1',
+      surfaceId: 'ui-1',
       facetId: 'price',
     });
 
@@ -84,11 +84,11 @@ describe('buildBackendNumericFacetController', () => {
 
   it('reads numeric facet state from backend interface', () => {
     const fullEngine = getFullEngine(engine);
-    const actions = getOrCreateBackendInterfacesActions(TEST_ID);
+    const actions = getOrCreateBackendSurfacesActions(TEST_ID);
 
     fullEngine.mutate(
-      actions.createInterface({
-        interfaceId: 'ui-1',
+      actions.createSurface({
+        surfaceId: 'ui-1',
         type: 'product_search',
         display: 'main',
         state: {
@@ -125,7 +125,7 @@ describe('buildBackendNumericFacetController', () => {
     const controller = buildBackendNumericFacetController({
       interface: generativeInterface,
       converseController,
-      interfaceId: 'ui-1',
+      surfaceId: 'ui-1',
       facetId: 'price',
     });
 
@@ -159,7 +159,7 @@ describe('buildBackendNumericFacetController', () => {
     const controller = buildBackendNumericFacetController({
       interface: generativeInterface,
       converseController,
-      interfaceId: 'ui-1',
+      surfaceId: 'ui-1',
       facetId: 'price',
     });
 
@@ -167,7 +167,7 @@ describe('buildBackendNumericFacetController', () => {
 
     expect(converseController.sendAction).toHaveBeenCalledWith({
       type: 'toggle_numeric_facet',
-      interfaceId: 'ui-1',
+      surfaceId: 'ui-1',
       facetId: 'price',
       start: 0,
       end: 50,
@@ -179,7 +179,7 @@ describe('buildBackendNumericFacetController', () => {
     const controller = buildBackendNumericFacetController({
       interface: generativeInterface,
       converseController,
-      interfaceId: 'ui-1',
+      surfaceId: 'ui-1',
       facetId: 'price',
     });
 
@@ -187,7 +187,7 @@ describe('buildBackendNumericFacetController', () => {
 
     expect(converseController.sendAction).toHaveBeenCalledWith({
       type: 'set_numeric_facet_range',
-      interfaceId: 'ui-1',
+      surfaceId: 'ui-1',
       facetId: 'price',
       start: 25,
       end: 75,
@@ -199,7 +199,7 @@ describe('buildBackendNumericFacetController', () => {
     const controller = buildBackendNumericFacetController({
       interface: generativeInterface,
       converseController,
-      interfaceId: 'ui-1',
+      surfaceId: 'ui-1',
       facetId: 'price',
     });
 
@@ -207,7 +207,7 @@ describe('buildBackendNumericFacetController', () => {
 
     expect(converseController.sendAction).toHaveBeenCalledWith({
       type: 'deselect_all_facets',
-      interfaceId: 'ui-1',
+      surfaceId: 'ui-1',
       facetId: 'price',
     });
   });

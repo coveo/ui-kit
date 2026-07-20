@@ -12,8 +12,8 @@ import {
   TYPE,
   FACADE_RESOLVERS,
 } from '@/src/core/interface/utils/symbols.js';
-import {getOrCreateBackendInterfacesActions} from '@/src/core/internal/backend-interfaces/backend-interfaces-actions.js';
-import {getOrCreateBackendInterfacesSlice} from '@/src/core/internal/backend-interfaces/backend-interfaces-slice.js';
+import {getOrCreateBackendSurfacesActions} from '@/src/core/internal/backend-surfaces/backend-surfaces-actions.js';
+import {getOrCreateBackendSurfacesSlice} from '@/src/core/internal/backend-surfaces/backend-surfaces-slice.js';
 import type {GenerativeInterface} from '@/src/public/interfaces/generative.js';
 import type {ConverseController} from '../converse/converse-controller.js';
 import {buildBackendFacetController} from './backend-facet-controller.js';
@@ -22,7 +22,7 @@ const TEST_ID = 'test-gen';
 
 function createTestGenerativeInterface(engine: Engine): GenerativeInterface {
   const fullEngine = getFullEngine(engine);
-  fullEngine.adoptSlice(getOrCreateBackendInterfacesSlice(TEST_ID));
+  fullEngine.adoptSlice(getOrCreateBackendSurfacesSlice(TEST_ID));
   return Object.freeze({
     [KIND]: 'interface' as const,
     [TYPE]: 'generative' as const,
@@ -64,7 +64,7 @@ describe('buildBackendFacetController', () => {
     const controller = buildBackendFacetController({
       interface: generativeInterface,
       converseController,
-      interfaceId: 'ui-1',
+      surfaceId: 'ui-1',
       facetId: 'brand',
     });
 
@@ -80,11 +80,11 @@ describe('buildBackendFacetController', () => {
 
   it('returns empty state when facet is not in interface state', () => {
     const fullEngine = getFullEngine(engine);
-    const actions = getOrCreateBackendInterfacesActions(TEST_ID);
+    const actions = getOrCreateBackendSurfacesActions(TEST_ID);
 
     fullEngine.mutate(
-      actions.createInterface({
-        interfaceId: 'ui-1',
+      actions.createSurface({
+        surfaceId: 'ui-1',
         type: 'product_search',
         display: 'main',
         state: {
@@ -105,7 +105,7 @@ describe('buildBackendFacetController', () => {
     const controller = buildBackendFacetController({
       interface: generativeInterface,
       converseController,
-      interfaceId: 'ui-1',
+      surfaceId: 'ui-1',
       facetId: 'brand',
     });
 
@@ -121,11 +121,11 @@ describe('buildBackendFacetController', () => {
 
   it('reads facet state from backend interface', () => {
     const fullEngine = getFullEngine(engine);
-    const actions = getOrCreateBackendInterfacesActions(TEST_ID);
+    const actions = getOrCreateBackendSurfacesActions(TEST_ID);
 
     fullEngine.mutate(
-      actions.createInterface({
-        interfaceId: 'ui-1',
+      actions.createSurface({
+        surfaceId: 'ui-1',
         type: 'product_search',
         display: 'main',
         state: {
@@ -149,7 +149,7 @@ describe('buildBackendFacetController', () => {
     const controller = buildBackendFacetController({
       interface: generativeInterface,
       converseController,
-      interfaceId: 'ui-1',
+      surfaceId: 'ui-1',
       facetId: 'brand',
     });
 
@@ -170,7 +170,7 @@ describe('buildBackendFacetController', () => {
     const controller = buildBackendFacetController({
       interface: generativeInterface,
       converseController,
-      interfaceId: 'ui-1',
+      surfaceId: 'ui-1',
       facetId: 'brand',
     });
 
@@ -178,7 +178,7 @@ describe('buildBackendFacetController', () => {
 
     expect(converseController.sendAction).toHaveBeenCalledWith({
       type: 'toggle_facet',
-      interfaceId: 'ui-1',
+      surfaceId: 'ui-1',
       facetId: 'brand',
       value: 'Nike',
     });
@@ -188,7 +188,7 @@ describe('buildBackendFacetController', () => {
     const controller = buildBackendFacetController({
       interface: generativeInterface,
       converseController,
-      interfaceId: 'ui-1',
+      surfaceId: 'ui-1',
       facetId: 'brand',
     });
 
@@ -196,7 +196,7 @@ describe('buildBackendFacetController', () => {
 
     expect(converseController.sendAction).toHaveBeenCalledWith({
       type: 'toggle_exclude_facet',
-      interfaceId: 'ui-1',
+      surfaceId: 'ui-1',
       facetId: 'brand',
       value: 'Nike',
     });
@@ -206,7 +206,7 @@ describe('buildBackendFacetController', () => {
     const controller = buildBackendFacetController({
       interface: generativeInterface,
       converseController,
-      interfaceId: 'ui-1',
+      surfaceId: 'ui-1',
       facetId: 'brand',
     });
 
@@ -214,7 +214,7 @@ describe('buildBackendFacetController', () => {
 
     expect(converseController.sendAction).toHaveBeenCalledWith({
       type: 'deselect_all_facets',
-      interfaceId: 'ui-1',
+      surfaceId: 'ui-1',
       facetId: 'brand',
     });
   });
@@ -224,7 +224,7 @@ describe('buildBackendFacetController', () => {
       const controller = buildBackendFacetController({
         interface: generativeInterface,
         converseController,
-        interfaceId: 'ui-1',
+        surfaceId: 'ui-1',
         facetId: 'brand',
       });
 
@@ -233,7 +233,7 @@ describe('buildBackendFacetController', () => {
 
       expect(converseController.sendAction).toHaveBeenCalledWith({
         type: 'facet_search',
-        interfaceId: 'ui-1',
+        surfaceId: 'ui-1',
         facetId: 'brand',
         query: 'Ni',
       });
@@ -243,7 +243,7 @@ describe('buildBackendFacetController', () => {
       const controller = buildBackendFacetController({
         interface: generativeInterface,
         converseController,
-        interfaceId: 'ui-1',
+        surfaceId: 'ui-1',
         facetId: 'brand',
       });
 
@@ -255,7 +255,7 @@ describe('buildBackendFacetController', () => {
 
       expect(converseController.sendAction).toHaveBeenCalledWith({
         type: 'toggle_facet',
-        interfaceId: 'ui-1',
+        surfaceId: 'ui-1',
         facetId: 'brand',
         value: 'Nike',
       });
@@ -263,11 +263,11 @@ describe('buildBackendFacetController', () => {
 
     it('state reads from facetSearchResults in slice', () => {
       const fullEngine = getFullEngine(engine);
-      const actions = getOrCreateBackendInterfacesActions(TEST_ID);
+      const actions = getOrCreateBackendSurfacesActions(TEST_ID);
 
       fullEngine.mutate(
         actions.setFacetSearchResults({
-          interfaceId: 'ui-1',
+          surfaceId: 'ui-1',
           results: {
             facetId: 'brand',
             query: 'Ni',
@@ -283,7 +283,7 @@ describe('buildBackendFacetController', () => {
       const controller = buildBackendFacetController({
         interface: generativeInterface,
         converseController,
-        interfaceId: 'ui-1',
+        surfaceId: 'ui-1',
         facetId: 'brand',
       });
 
@@ -301,7 +301,7 @@ describe('buildBackendFacetController', () => {
       const controller = buildBackendFacetController({
         interface: generativeInterface,
         converseController,
-        interfaceId: 'ui-1',
+        surfaceId: 'ui-1',
         facetId: 'brand',
       });
 

@@ -12,8 +12,8 @@ import {
   TYPE,
   FACADE_RESOLVERS,
 } from '@/src/core/interface/utils/symbols.js';
-import {getOrCreateBackendInterfacesActions} from '@/src/core/internal/backend-interfaces/backend-interfaces-actions.js';
-import {getOrCreateBackendInterfacesSlice} from '@/src/core/internal/backend-interfaces/backend-interfaces-slice.js';
+import {getOrCreateBackendSurfacesActions} from '@/src/core/internal/backend-surfaces/backend-surfaces-actions.js';
+import {getOrCreateBackendSurfacesSlice} from '@/src/core/internal/backend-surfaces/backend-surfaces-slice.js';
 import type {GenerativeInterface} from '@/src/public/interfaces/generative.js';
 import type {ConverseController} from '../converse/converse-controller.js';
 import {buildBackendSortController} from './backend-sort-controller.js';
@@ -22,7 +22,7 @@ const TEST_ID = 'test-gen';
 
 function createTestGenerativeInterface(engine: Engine): GenerativeInterface {
   const fullEngine = getFullEngine(engine);
-  fullEngine.adoptSlice(getOrCreateBackendInterfacesSlice(TEST_ID));
+  fullEngine.adoptSlice(getOrCreateBackendSurfacesSlice(TEST_ID));
   return Object.freeze({
     [KIND]: 'interface' as const,
     [TYPE]: 'generative' as const,
@@ -64,7 +64,7 @@ describe('buildBackendSortController', () => {
     const controller = buildBackendSortController({
       interface: generativeInterface,
       converseController,
-      interfaceId: 'ui-1',
+      surfaceId: 'ui-1',
     });
 
     expect(controller.state).toEqual({
@@ -75,11 +75,11 @@ describe('buildBackendSortController', () => {
 
   it('reads sort state from backend interface', () => {
     const fullEngine = getFullEngine(engine);
-    const actions = getOrCreateBackendInterfacesActions(TEST_ID);
+    const actions = getOrCreateBackendSurfacesActions(TEST_ID);
 
     fullEngine.mutate(
-      actions.createInterface({
-        interfaceId: 'ui-1',
+      actions.createSurface({
+        surfaceId: 'ui-1',
         type: 'product_search',
         display: 'main',
         state: {
@@ -104,7 +104,7 @@ describe('buildBackendSortController', () => {
     const controller = buildBackendSortController({
       interface: generativeInterface,
       converseController,
-      interfaceId: 'ui-1',
+      surfaceId: 'ui-1',
     });
 
     expect(controller.state).toEqual({
@@ -127,14 +127,14 @@ describe('buildBackendSortController', () => {
     const controller = buildBackendSortController({
       interface: generativeInterface,
       converseController,
-      interfaceId: 'ui-1',
+      surfaceId: 'ui-1',
     });
 
     controller.sortBy({sortCriteria: 'relevance'});
 
     expect(converseController.sendAction).toHaveBeenCalledWith({
       type: 'set_sort',
-      interfaceId: 'ui-1',
+      surfaceId: 'ui-1',
       sortCriteria: 'relevance',
       fields: undefined,
     });
@@ -144,7 +144,7 @@ describe('buildBackendSortController', () => {
     const controller = buildBackendSortController({
       interface: generativeInterface,
       converseController,
-      interfaceId: 'ui-1',
+      surfaceId: 'ui-1',
     });
 
     controller.sortBy({
@@ -154,7 +154,7 @@ describe('buildBackendSortController', () => {
 
     expect(converseController.sendAction).toHaveBeenCalledWith({
       type: 'set_sort',
-      interfaceId: 'ui-1',
+      surfaceId: 'ui-1',
       sortCriteria: 'fields',
       fields: [{field: 'ec_price', direction: 'asc'}],
     });

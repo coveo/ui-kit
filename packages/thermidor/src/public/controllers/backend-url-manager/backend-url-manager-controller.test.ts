@@ -12,15 +12,15 @@ import {
   TYPE,
   FACADE_RESOLVERS,
 } from '@/src/core/interface/utils/symbols.js';
-import {getOrCreateBackendInterfacesActions} from '@/src/core/internal/backend-interfaces/backend-interfaces-actions.js';
-import {getOrCreateBackendInterfacesSlice} from '@/src/core/internal/backend-interfaces/backend-interfaces-slice.js';
+import {getOrCreateBackendSurfacesActions} from '@/src/core/internal/backend-surfaces/backend-surfaces-actions.js';
+import {getOrCreateBackendSurfacesSlice} from '@/src/core/internal/backend-surfaces/backend-surfaces-slice.js';
 import {getOrCreateGenerativeActions} from '@/src/core/internal/generative/generative-actions.js';
 import {getOrCreateGenerativeSlice} from '@/src/core/internal/generative/generative-slice.js';
 import type {GenerativeInterface} from '@/src/public/interfaces/generative.js';
 import type {ConverseController} from '../converse/converse-controller.js';
 import {
   buildBackendUrlManagerController,
-  serializeInterfaceState,
+  serializeSurfaceState,
   deserializeFragment,
 } from './backend-url-manager-controller.js';
 
@@ -28,7 +28,7 @@ const TEST_ID = 'test-gen';
 
 function createTestGenerativeInterface(engine: Engine): GenerativeInterface {
   const fullEngine = getFullEngine(engine);
-  fullEngine.adoptSlice(getOrCreateBackendInterfacesSlice(TEST_ID));
+  fullEngine.adoptSlice(getOrCreateBackendSurfacesSlice(TEST_ID));
   fullEngine.adoptSlice(getOrCreateGenerativeSlice(TEST_ID));
   return Object.freeze({
     [KIND]: 'interface' as const,
@@ -58,9 +58,9 @@ function createMockConverseController(): ConverseController {
   };
 }
 
-describe('serializeInterfaceState', () => {
+describe('serializeSurfaceState', () => {
   it('serializes a full state', () => {
-    const result = serializeInterfaceState('session-1', 'ui-1', {
+    const result = serializeSurfaceState('session-1', 'ui-1', {
       query: 'red shirt',
       facets: [
         {
@@ -91,7 +91,7 @@ describe('serializeInterfaceState', () => {
   });
 
   it('omits page 0 and empty facets', () => {
-    const result = serializeInterfaceState('s1', 'ui-1', {
+    const result = serializeSurfaceState('s1', 'ui-1', {
       query: 'shoes',
       facets: [
         {
@@ -119,7 +119,7 @@ describe('deserializeFragment', () => {
     );
 
     expect(result.csid).toBe('session-1');
-    expect(result.interfaceId).toBe('ui-1');
+    expect(result.surfaceId).toBe('ui-1');
     expect(result.query).toBe('red shirt');
     expect(result.page).toBe(2);
     expect(result.sort).toEqual({
@@ -157,7 +157,7 @@ describe('buildBackendUrlManagerController', () => {
     const controller = buildBackendUrlManagerController({
       interface: generativeInterface,
       converseController,
-      interfaceId: 'ui-1',
+      surfaceId: 'ui-1',
     });
 
     expect(controller.state.fragment).toBe('');
@@ -165,13 +165,13 @@ describe('buildBackendUrlManagerController', () => {
 
   it('returns serialized fragment when interface exists', () => {
     const fullEngine = getFullEngine(engine);
-    const biActions = getOrCreateBackendInterfacesActions(TEST_ID);
+    const biActions = getOrCreateBackendSurfacesActions(TEST_ID);
     const genActions = getOrCreateGenerativeActions(TEST_ID);
 
     fullEngine.mutate(genActions.setConversationSessionId('sess-123'));
     fullEngine.mutate(
-      biActions.createInterface({
-        interfaceId: 'ui-1',
+      biActions.createSurface({
+        surfaceId: 'ui-1',
         type: 'product_search',
         display: 'main',
         state: {
@@ -188,7 +188,7 @@ describe('buildBackendUrlManagerController', () => {
     const controller = buildBackendUrlManagerController({
       interface: generativeInterface,
       converseController,
-      interfaceId: 'ui-1',
+      surfaceId: 'ui-1',
     });
 
     const params = new URLSearchParams(controller.state.fragment);
@@ -202,14 +202,14 @@ describe('buildBackendUrlManagerController', () => {
     const controller = buildBackendUrlManagerController({
       interface: generativeInterface,
       converseController,
-      interfaceId: 'ui-1',
+      surfaceId: 'ui-1',
     });
 
     controller.synchronize('q=red+shirt&page=1&sort=relevance');
 
     expect(converseController.sendAction).toHaveBeenCalledWith({
       type: 'restore_state',
-      interfaceId: 'ui-1',
+      surfaceId: 'ui-1',
       query: 'red shirt',
       facets: undefined,
       page: 1,
@@ -221,7 +221,7 @@ describe('buildBackendUrlManagerController', () => {
     const controller = buildBackendUrlManagerController({
       interface: generativeInterface,
       converseController,
-      interfaceId: 'ui-1',
+      surfaceId: 'ui-1',
     });
 
     controller.synchronize(
@@ -230,7 +230,7 @@ describe('buildBackendUrlManagerController', () => {
 
     expect(converseController.sendAction).toHaveBeenCalledWith({
       type: 'restore_state',
-      interfaceId: 'ui-1',
+      surfaceId: 'ui-1',
       query: 'shirt',
       facets: [{facetId: 'ec_brand', values: ['Nike', 'Adidas']}],
       page: 0,
@@ -240,13 +240,13 @@ describe('buildBackendUrlManagerController', () => {
 
   it('subscriber fires when responseId changes and fragment differs', () => {
     const fullEngine = getFullEngine(engine);
-    const biActions = getOrCreateBackendInterfacesActions(TEST_ID);
+    const biActions = getOrCreateBackendSurfacesActions(TEST_ID);
     const genActions = getOrCreateGenerativeActions(TEST_ID);
 
     fullEngine.mutate(genActions.setConversationSessionId('sess-1'));
     fullEngine.mutate(
-      biActions.createInterface({
-        interfaceId: 'ui-1',
+      biActions.createSurface({
+        surfaceId: 'ui-1',
         type: 'product_search',
         display: 'main',
         state: {
@@ -263,16 +263,17 @@ describe('buildBackendUrlManagerController', () => {
     const controller = buildBackendUrlManagerController({
       interface: generativeInterface,
       converseController,
-      interfaceId: 'ui-1',
+      surfaceId: 'ui-1',
     });
 
     const listener = vi.fn();
     controller.subscribe(listener);
 
     fullEngine.mutate(
-      biActions.updateInterfaceState({
-        interfaceId: 'ui-1',
-        state: {
+      biActions.updateSurfaceState({
+        surfaceId: 'ui-1',
+        path: '/',
+        value: {
           query: 'boots',
           products: [],
           facets: [],
@@ -288,13 +289,13 @@ describe('buildBackendUrlManagerController', () => {
 
   it('subscriber does NOT fire when responseId has not changed', () => {
     const fullEngine = getFullEngine(engine);
-    const biActions = getOrCreateBackendInterfacesActions(TEST_ID);
+    const biActions = getOrCreateBackendSurfacesActions(TEST_ID);
     const genActions = getOrCreateGenerativeActions(TEST_ID);
 
     fullEngine.mutate(genActions.setConversationSessionId('sess-1'));
     fullEngine.mutate(
-      biActions.createInterface({
-        interfaceId: 'ui-1',
+      biActions.createSurface({
+        surfaceId: 'ui-1',
         type: 'product_search',
         display: 'main',
         state: {
@@ -311,16 +312,17 @@ describe('buildBackendUrlManagerController', () => {
     const controller = buildBackendUrlManagerController({
       interface: generativeInterface,
       converseController,
-      interfaceId: 'ui-1',
+      surfaceId: 'ui-1',
     });
 
     const listener = vi.fn();
     controller.subscribe(listener);
 
     fullEngine.mutate(
-      biActions.updateInterfaceState({
-        interfaceId: 'ui-1',
-        state: {
+      biActions.updateSurfaceState({
+        surfaceId: 'ui-1',
+        path: '/',
+        value: {
           query: 'shoes',
           products: [{name: 'New shoe'}],
           facets: [],

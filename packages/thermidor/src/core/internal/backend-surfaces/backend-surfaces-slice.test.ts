@@ -1,56 +1,56 @@
 import {describe, expect, it} from 'vitest';
 import {configureStore} from '@reduxjs/toolkit';
-import {getOrCreateBackendInterfacesActions} from './backend-interfaces-actions.js';
+import {getOrCreateBackendSurfacesActions} from './backend-surfaces-actions.js';
 import {
-  createBackendInterfacesSlice,
-  initialBackendInterfacesState,
-} from './backend-interfaces-slice.js';
+  createBackendSurfacesSlice,
+  initialBackendSurfacesState,
+} from './backend-surfaces-slice.js';
 
 const INTERFACE_ID = 'test-iface';
 
 function createStore() {
-  const slice = createBackendInterfacesSlice(INTERFACE_ID);
+  const slice = createBackendSurfacesSlice(INTERFACE_ID);
   return configureStore({reducer: {[slice.name]: slice.reducer}});
 }
 
 function getState(store: ReturnType<typeof createStore>) {
-  return store.getState()[`${INTERFACE_ID}/backendInterfaces`];
+  return store.getState()[`${INTERFACE_ID}/backendSurfaces`];
 }
 
-describe('backendInterfacesSlice', () => {
+describe('backendSurfacesSlice', () => {
   it('has correct initial state', () => {
     const store = createStore();
-    expect(getState(store)).toEqual(initialBackendInterfacesState);
+    expect(getState(store)).toEqual(initialBackendSurfacesState);
   });
 
-  describe('createInterface', () => {
-    it('adds a new interface entry', () => {
+  describe('createSurface', () => {
+    it('adds a new surface entry', () => {
       const store = createStore();
-      const actions = getOrCreateBackendInterfacesActions(INTERFACE_ID);
+      const actions = getOrCreateBackendSurfacesActions(INTERFACE_ID);
 
       store.dispatch(
-        actions.createInterface({
-          interfaceId: 'ui-1',
+        actions.createSurface({
+          surfaceId: 'ui-1',
           type: 'product_search',
           display: 'main',
           state: {query: 'red shirt', products: []},
         })
       );
 
-      expect(getState(store).interfaces['ui-1']).toEqual({
+      expect(getState(store).surfaces['ui-1']).toEqual({
         type: 'product_search',
         display: 'main',
         state: {query: 'red shirt', products: []},
       });
     });
 
-    it('demotes the previous main interface to inline when a new main interface is created', () => {
+    it('demotes the previous main surface to inline when a new main surface is created', () => {
       const store = createStore();
-      const actions = getOrCreateBackendInterfacesActions(INTERFACE_ID);
+      const actions = getOrCreateBackendSurfacesActions(INTERFACE_ID);
 
       store.dispatch(
-        actions.createInterface({
-          interfaceId: 'ui-1',
+        actions.createSurface({
+          surfaceId: 'ui-1',
           type: 'product_search',
           display: 'main',
           state: {query: 'shoes', products: []},
@@ -58,25 +58,25 @@ describe('backendInterfacesSlice', () => {
       );
 
       store.dispatch(
-        actions.createInterface({
-          interfaceId: 'ui-2',
+        actions.createSurface({
+          surfaceId: 'ui-2',
           type: 'product_search',
           display: 'main',
           state: {query: 'jackets', products: []},
         })
       );
 
-      expect(getState(store).interfaces['ui-1'].display).toBe('inline');
-      expect(getState(store).interfaces['ui-2'].display).toBe('main');
+      expect(getState(store).surfaces['ui-1'].display).toBe('inline');
+      expect(getState(store).surfaces['ui-2'].display).toBe('main');
     });
 
-    it('does not demote an existing main interface when a new inline interface is created', () => {
+    it('does not demote an existing main surface when a new inline surface is created', () => {
       const store = createStore();
-      const actions = getOrCreateBackendInterfacesActions(INTERFACE_ID);
+      const actions = getOrCreateBackendSurfacesActions(INTERFACE_ID);
 
       store.dispatch(
-        actions.createInterface({
-          interfaceId: 'ui-1',
+        actions.createSurface({
+          surfaceId: 'ui-1',
           type: 'product_search',
           display: 'main',
           state: {query: 'shoes', products: []},
@@ -84,27 +84,27 @@ describe('backendInterfacesSlice', () => {
       );
 
       store.dispatch(
-        actions.createInterface({
-          interfaceId: 'ui-2',
+        actions.createSurface({
+          surfaceId: 'ui-2',
           type: 'product_recommendations',
           display: 'inline',
           state: {},
         })
       );
 
-      expect(getState(store).interfaces['ui-1'].display).toBe('main');
-      expect(getState(store).interfaces['ui-2'].display).toBe('inline');
+      expect(getState(store).surfaces['ui-1'].display).toBe('main');
+      expect(getState(store).surfaces['ui-2'].display).toBe('inline');
     });
   });
 
-  describe('updateInterfaceState', () => {
-    it('updates state of existing interface', () => {
+  describe('updateSurfaceState', () => {
+    it('replaces the whole data model when path is "/"', () => {
       const store = createStore();
-      const actions = getOrCreateBackendInterfacesActions(INTERFACE_ID);
+      const actions = getOrCreateBackendSurfacesActions(INTERFACE_ID);
 
       store.dispatch(
-        actions.createInterface({
-          interfaceId: 'ui-1',
+        actions.createSurface({
+          surfaceId: 'ui-1',
           type: 'product_search',
           display: 'main',
           state: {query: 'red shirt', products: []},
@@ -112,54 +112,60 @@ describe('backendInterfacesSlice', () => {
       );
 
       store.dispatch(
-        actions.updateInterfaceState({
-          interfaceId: 'ui-1',
-          state: {query: 'red shirt', products: [{name: 'Shirt'}]},
+        actions.updateSurfaceState({
+          surfaceId: 'ui-1',
+          path: '/',
+          value: {query: 'red shirt', products: [{name: 'Shirt'}]},
         })
       );
 
-      expect(getState(store).interfaces['ui-1'].state).toEqual({
+      expect(getState(store).surfaces['ui-1'].state).toEqual({
         query: 'red shirt',
         products: [{name: 'Shirt'}],
       });
     });
 
-    it('updates display when provided', () => {
+    it('patches a top-level key by path, leaving others intact', () => {
       const store = createStore();
-      const actions = getOrCreateBackendInterfacesActions(INTERFACE_ID);
+      const actions = getOrCreateBackendSurfacesActions(INTERFACE_ID);
 
       store.dispatch(
-        actions.createInterface({
-          interfaceId: 'ui-1',
+        actions.createSurface({
+          surfaceId: 'ui-1',
           type: 'product_search',
-          display: 'inline',
-          state: {},
+          display: 'main',
+          state: {query: 'red shirt', products: [], facets: []},
         })
       );
 
       store.dispatch(
-        actions.updateInterfaceState({
-          interfaceId: 'ui-1',
-          state: {},
-          display: 'main',
+        actions.updateSurfaceState({
+          surfaceId: 'ui-1',
+          path: '/products',
+          value: [{name: 'Shirt'}],
         })
       );
 
-      expect(getState(store).interfaces['ui-1'].display).toBe('main');
+      expect(getState(store).surfaces['ui-1'].state).toEqual({
+        query: 'red shirt',
+        products: [{name: 'Shirt'}],
+        facets: [],
+      });
     });
 
-    it('creates interface when updating non-existent entry (upsert)', () => {
+    it('creates a surface when patching a non-existent entry (upsert)', () => {
       const store = createStore();
-      const actions = getOrCreateBackendInterfacesActions(INTERFACE_ID);
+      const actions = getOrCreateBackendSurfacesActions(INTERFACE_ID);
 
       store.dispatch(
-        actions.updateInterfaceState({
-          interfaceId: 'non-existent',
-          state: {query: 'hello'},
+        actions.updateSurfaceState({
+          surfaceId: 'non-existent',
+          path: '/',
+          value: {query: 'hello'},
         })
       );
 
-      expect(getState(store).interfaces['non-existent']).toEqual({
+      expect(getState(store).surfaces['non-existent']).toEqual({
         type: 'product_search',
         display: 'main',
         state: {query: 'hello'},
@@ -167,14 +173,34 @@ describe('backendInterfacesSlice', () => {
     });
   });
 
-  describe('setSuggestions', () => {
-    it('stores suggestions for an interface', () => {
+  describe('deleteSurface', () => {
+    it('removes the surface entry', () => {
       const store = createStore();
-      const actions = getOrCreateBackendInterfacesActions(INTERFACE_ID);
+      const actions = getOrCreateBackendSurfacesActions(INTERFACE_ID);
+
+      store.dispatch(
+        actions.createSurface({
+          surfaceId: 'ui-1',
+          type: 'product_search',
+          display: 'main',
+          state: {query: 'shoes'},
+        })
+      );
+
+      store.dispatch(actions.deleteSurface({surfaceId: 'ui-1'}));
+
+      expect(getState(store).surfaces['ui-1']).toBeUndefined();
+    });
+  });
+
+  describe('setSuggestions', () => {
+    it('stores suggestions for a surface', () => {
+      const store = createStore();
+      const actions = getOrCreateBackendSurfacesActions(INTERFACE_ID);
 
       store.dispatch(
         actions.setSuggestions({
-          interfaceId: 'ui-1',
+          surfaceId: 'ui-1',
           suggestions: {
             query: 'red',
             completions: [
@@ -198,11 +224,11 @@ describe('backendInterfacesSlice', () => {
   describe('facetSearchResults', () => {
     it('setFacetSearchResults stores results keyed by facetId', () => {
       const store = createStore();
-      const actions = getOrCreateBackendInterfacesActions(INTERFACE_ID);
+      const actions = getOrCreateBackendSurfacesActions(INTERFACE_ID);
 
       store.dispatch(
         actions.setFacetSearchResults({
-          interfaceId: 'ui-1',
+          surfaceId: 'ui-1',
           results: {
             facetId: 'brand',
             query: 'Ni',
@@ -220,13 +246,13 @@ describe('backendInterfacesSlice', () => {
       });
     });
 
-    it('updateInterfaceState clears all facetSearchResults', () => {
+    it('updateSurfaceState clears all facetSearchResults', () => {
       const store = createStore();
-      const actions = getOrCreateBackendInterfacesActions(INTERFACE_ID);
+      const actions = getOrCreateBackendSurfacesActions(INTERFACE_ID);
 
       store.dispatch(
         actions.setFacetSearchResults({
-          interfaceId: 'ui-1',
+          surfaceId: 'ui-1',
           results: {
             facetId: 'brand',
             query: 'Ni',
@@ -237,9 +263,10 @@ describe('backendInterfacesSlice', () => {
       );
 
       store.dispatch(
-        actions.updateInterfaceState({
-          interfaceId: 'ui-1',
-          state: {query: 'shoes', products: []},
+        actions.updateSurfaceState({
+          surfaceId: 'ui-1',
+          path: '/',
+          value: {query: 'shoes', products: []},
         })
       );
 
@@ -248,11 +275,11 @@ describe('backendInterfacesSlice', () => {
 
     it('clearFacetSearchResults resets to empty', () => {
       const store = createStore();
-      const actions = getOrCreateBackendInterfacesActions(INTERFACE_ID);
+      const actions = getOrCreateBackendSurfacesActions(INTERFACE_ID);
 
       store.dispatch(
         actions.setFacetSearchResults({
-          interfaceId: 'ui-1',
+          surfaceId: 'ui-1',
           results: {
             facetId: 'brand',
             query: 'Ni',
@@ -262,7 +289,7 @@ describe('backendInterfacesSlice', () => {
         })
       );
 
-      store.dispatch(actions.clearFacetSearchResults({interfaceId: 'ui-1'}));
+      store.dispatch(actions.clearFacetSearchResults({surfaceId: 'ui-1'}));
 
       expect(getState(store).facetSearchResults).toEqual({});
     });
