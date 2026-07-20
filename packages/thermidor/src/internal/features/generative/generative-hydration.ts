@@ -112,10 +112,6 @@ function extractEffectiveQuery(
   return fallbackQuery;
 }
 
-/**
- * Rehydrates routed interfaces from serialized snapshots and registers
- * them in the registry. Used during restore/conversationToRestore.
- */
 export function rehydrateRoutedInterfaces(
   turns: {
     id: string;

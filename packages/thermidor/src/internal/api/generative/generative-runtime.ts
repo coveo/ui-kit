@@ -39,9 +39,6 @@ export interface GenerativeStatePort {
   ): void;
 }
 
-/**
- * Result of hydrating a sub-interface from a stream event or restored snapshot.
- */
 export interface HydrationResult<K extends RoutedUseCase = RoutedUseCase> {
   useCase: K;
   interface: UseCaseInterfaceMap[K];

@@ -20,11 +20,6 @@ export interface SerializedConverseState {
 
 export interface SerializedRoutedInterface {
   useCase: string;
-  /**
-   * The raw API response content used to rehydrate the sub-interface on restore.
-   * Can be large (full commerce/search response). Consumers persisting
-   * `SerializedConverseState` should be mindful of storage budgets.
-   */
   snapshot?: Record<string, unknown>;
   query?: string;
 }
@@ -33,11 +28,6 @@ export interface SerializedTurn extends Omit<StateTurn, 'routedInterface'> {
   routedInterface?: SerializedRoutedInterface | undefined;
 }
 
-/**
- * Converts a `SerializedConverseState` into the internal `GenerativeState`
- * shape suitable for store hydration. Handles edge cases like marking
- * interrupted streams as errors.
- */
 export function deserializeToGenerativeState(
   serialized: SerializedConverseState
 ): GenerativeState {
