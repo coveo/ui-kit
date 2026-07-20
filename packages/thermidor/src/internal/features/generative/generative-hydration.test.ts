@@ -128,16 +128,6 @@ describe('rehydrateRoutedInterfaces', () => {
     expect(registry.get('turn-1')).toBeUndefined();
   });
 
-  it('skips turns where routedInterface has no snapshot', () => {
-    const turns = [
-      {id: 'turn-1', routedInterface: {useCase: 'commerceSearch'}},
-    ];
-
-    rehydrateRoutedInterfaces(turns, registry, mockHydrate);
-
-    expect(mockHydrate).not.toHaveBeenCalled();
-  });
-
   it('skips turns with an unknown useCase', () => {
     const turns = [
       {
@@ -145,6 +135,7 @@ describe('rehydrateRoutedInterfaces', () => {
         routedInterface: {
           useCase: 'unknownUseCase',
           snapshot: {results: []},
+          query: undefined,
         },
       },
     ];
@@ -244,6 +235,7 @@ describe('rehydrateRoutedInterfaces', () => {
         routedInterface: {
           useCase: 'commerceSearch',
           snapshot: {results: []},
+          query: undefined,
         },
       },
     ];

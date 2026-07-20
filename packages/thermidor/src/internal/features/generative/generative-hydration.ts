@@ -117,15 +117,15 @@ export function rehydrateRoutedInterfaces(
     id: string;
     routedInterface?: {
       useCase: string;
-      snapshot?: Record<string, unknown>;
-      query?: string;
+      snapshot: Record<string, unknown>;
+      query: string | undefined;
     };
   }[],
   registry: RoutedInterfaceRegistry,
   hydrateSubInterface: HydrateSubInterface
 ): void {
   for (const turn of turns) {
-    if (!turn.routedInterface?.snapshot) {
+    if (!turn.routedInterface) {
       continue;
     }
 

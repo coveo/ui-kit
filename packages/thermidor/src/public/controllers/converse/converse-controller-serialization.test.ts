@@ -102,7 +102,11 @@ describe('deserializeToGenerativeState', () => {
     const serialized = createSerializedState({
       turns: [
         createSerializedTurn({
-          routedInterface: {useCase: 'commerceSearch'},
+          routedInterface: {
+            useCase: 'commerceSearch',
+            snapshot: {results: []},
+            query: undefined,
+          },
         }),
       ],
     });

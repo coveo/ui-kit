@@ -172,11 +172,13 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
       const serialized: SerializedTurn = {...rest};
       if (routedInterface) {
         const entry = this.#registry.get(turn.id);
-        serialized.routedInterface = {
-          useCase: routedInterface.useCase,
-          snapshot: entry?.snapshot,
-          query: entry?.query,
-        };
+        if (entry) {
+          serialized.routedInterface = {
+            useCase: routedInterface.useCase,
+            snapshot: entry.snapshot,
+            query: entry.query,
+          };
+        }
       }
       return serialized;
     });

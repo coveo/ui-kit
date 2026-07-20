@@ -20,8 +20,8 @@ export interface SerializedConverseState {
 
 export interface SerializedRoutedInterface {
   useCase: string;
-  snapshot?: Record<string, unknown>;
-  query?: string;
+  snapshot: Record<string, unknown>;
+  query: string | undefined;
 }
 
 export interface SerializedTurn extends Omit<StateTurn, 'routedInterface'> {
