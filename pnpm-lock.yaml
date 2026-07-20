@@ -671,6 +671,9 @@ importers:
 
   packages/coveo-analytics:
     dependencies:
+      '@types/uuid':
+        specifier: 9.0.8
+        version: 9.0.8
       cross-fetch:
         specifier: ^3.1.5
         version: 3.2.0(encoding@0.1.13)
@@ -708,9 +711,6 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 24.12.4
-      '@types/uuid':
-        specifier: 9.0.8
-        version: 9.0.8
       jest:
         specifier: 'catalog:'
         version: 30.3.0(@types/node@24.12.4)(ts-node@10.9.2(@types/node@24.12.4)(typescript@6.0.3))
