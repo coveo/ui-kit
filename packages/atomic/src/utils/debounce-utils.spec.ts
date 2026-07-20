@@ -125,7 +125,7 @@ describe('buildDebouncedQueue', () => {
       };
     }
 
-    it('lets two different named regions execute less than `delay` ms apart when one is enqueued shortly after the queue drains to idle', () => {
+    it('never lets two different named regions execute less than `delay` ms apart when one is enqueued shortly after the queue drains to idle', () => {
       const {timestamps, recordFor} = executionTimestamps();
 
       queue.enqueue(recordFor('generated-answer'), 'generated-answer');
@@ -158,7 +158,7 @@ describe('buildDebouncedQueue', () => {
       }
     });
 
-    it('lets a second named region execute in the same tick as the first when its enqueue is triggered synchronously from within the first action (cold-start re-entrancy)', () => {
+    it('never lets a second named region execute in the same tick as the first when its enqueue is triggered synchronously from within the first action (cold-start re-entrancy)', () => {
       const {timestamps, recordFor} = executionTimestamps();
 
       queue.enqueue(() => {
