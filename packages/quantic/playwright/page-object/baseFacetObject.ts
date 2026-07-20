@@ -33,6 +33,18 @@ export class BaseFacetObject extends SearchObject {
     });
   }
 
+  /**
+   * Mocks the search endpoint with a sequence of facet responses: the Nth
+   * request gets the Nth entry, and the last entry is repeated afterward.
+   */
+  async mockSearchWithFacetResponseSequence(
+    facetResponses: Array<Array<Record<string, unknown>>> | undefined
+  ) {
+    await this.mockSearchResponseSequence(
+      (facetResponses ?? []).map((facets) => ({facets}))
+    );
+  }
+
   async waitForFacetUaSearchEvent(
     actionCause: string,
     customChecker?: (obj: Record<string, unknown>) => boolean
