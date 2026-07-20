@@ -29,7 +29,6 @@ export interface GeneratedAnswerObjectConfig {
   answerApiEnabled?: boolean;
   headAnswerRequestRegex?: RegExp;
   agentFollowUpRequestRegex?: RegExp;
-  isAgent?: boolean;
   withFacets?: boolean;
 }
 
@@ -39,7 +38,6 @@ export class GeneratedAnswerObject {
   private headAnswerRequestRegex?: RegExp;
   private agentFollowUpRequestRegex?: RegExp;
   private withFacets: boolean;
-  private isAgent: boolean;
 
   constructor(
     private page: Page,
@@ -55,15 +53,14 @@ export class GeneratedAnswerObject {
     this.headAnswerRequestRegex = config.headAnswerRequestRegex;
     this.agentFollowUpRequestRegex = config.agentFollowUpRequestRegex;
     this.withFacets = config.withFacets ?? false;
-    this.isAgent = config.isAgent ?? false;
   }
 
   get likeButton(): Locator {
-    return this.page.getByRole('button', {name: this.isAgent ? 'Like' : 'This answer was helpful', exact: true});
+    return this.page.getByRole('button', {name: 'Like', exact: true});
   }
 
   get dislikeButton(): Locator {
-    return this.page.getByRole('button', {name: this.isAgent ? 'Dislike' : 'This answer was not helpful', exact: true});
+    return this.page.getByRole('button', {name: 'Dislike', exact: true});
   }
 
   get copyToClipboardButton(): Locator {
@@ -132,7 +129,7 @@ export class GeneratedAnswerObject {
 
   get citationLink(): Locator {
     return this.page
-      .getByTestId(this.isAgent ? 'generated-answer-body__citations' : 'generated-answer__citations')
+      .getByTestId('generated-answer-body__citations')
       .locator('.citation__link');
   }
 
@@ -157,8 +154,8 @@ export class GeneratedAnswerObject {
   }
 
   async hoverOverCitation(index: number): Promise<void> {
-    // waiting 500ms to allow the component to render completely, cause any re-rendering abort the hover action.
-    await this.page.waitForTimeout(500);
+    // waiting 1000ms to allow the component to render completely, cause any re-rendering abort the hover action.
+    await this.page.waitForTimeout(1000);
     await this.citationLink.nth(index).hover();
     await this.page.waitForTimeout(minimumCitationTooltipDisplayDurationMs);
     await this.page.mouse.move(0, 0);

@@ -8,8 +8,15 @@ import {
   PipeTransform,
 } from '@angular/core';
 import {marked} from 'marked';
-import type {RenderableCommerceSurface, ToolCall, Turn} from '../models';
+import type {
+  RenderableCommerceSurface,
+  RoutedInterface,
+  ToolCall,
+  Turn,
+} from '../models';
+import type {CommerceInterface} from '@coveo/thermidor';
 import {SurfaceOutletComponent} from './surface-outlet.component';
+import {RoutedCommerceResultsComponent} from './routed-commerce-results.component';
 
 marked.setOptions({breaks: true, gfm: true});
 
@@ -23,7 +30,11 @@ class MarkdownPipe implements PipeTransform {
 
 @Component({
   selector: 'app-transcript-panel',
-  imports: [SurfaceOutletComponent, MarkdownPipe],
+  imports: [
+    SurfaceOutletComponent,
+    RoutedCommerceResultsComponent,
+    MarkdownPipe,
+  ],
   template: `
     <header class="panel-header">
       <div>
@@ -116,7 +127,16 @@ class MarkdownPipe implements PipeTransform {
         </details>
       }
 
-      @if (surfaces().length > 0) {
+      @if (commerceInterface(); as iface) {
+        <article class="inline-surfaces">
+          <div class="inline-surfaces-head">
+            <p class="bubble-role">Assistant</p>
+            <span>Commerce results</span>
+          </div>
+
+          <app-routed-commerce-results [commerceInterface]="iface" />
+        </article>
+      } @else if (surfaces().length > 0) {
         <article class="inline-surfaces">
           <div class="inline-surfaces-head">
             <p class="bubble-role">Assistant</p>
@@ -142,12 +162,23 @@ export class TranscriptPanelComponent {
   readonly reasoningText = input('');
   readonly toolActivity = input<ToolCall[]>([]);
   readonly surfaces = input<RenderableCommerceSurface[]>([]);
+  readonly routedInterface = input<RoutedInterface | undefined>(undefined);
   readonly isStreaming = input(false);
   readonly errorMessage = input('');
   readonly turnId = input('');
   readonly resetConversation = output<void>();
   readonly quickAction = output<string>();
   readonly retryTurn = output<string>();
+
+  protected readonly commerceInterface = computed<CommerceInterface | null>(
+    () => {
+      const routed = this.routedInterface();
+      if (routed?.useCase === 'commerceSearch') {
+        return routed.interface;
+      }
+      return null;
+    }
+  );
 
   protected readonly hasProgress = computed(
     () => this.toolActivity().length > 0 || this.reasoningText().length > 0

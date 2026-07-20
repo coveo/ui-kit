@@ -12,6 +12,7 @@ import {CONVERSATION_STORAGE_KEY} from '../constants';
 import type {
   A2UISurface,
   RenderableCommerceSurface,
+  RoutedInterface,
   ToolCall,
   Turn,
 } from '../models';
@@ -26,6 +27,7 @@ export class ConversationService {
   readonly reasoningText = signal('');
   readonly toolActivity = signal<ToolCall[]>([]);
   readonly surfaces = signal<RenderableCommerceSurface[]>([]);
+  readonly routedInterface = signal<RoutedInterface | undefined>(undefined);
   readonly activeTurnId = signal<string | undefined>(undefined);
   readonly activeTurnError = signal('');
 
@@ -68,6 +70,7 @@ export class ConversationService {
     this.turns.set(turns);
     this.activeTurnId.set(activeTurn?.id);
     this.surfaces.set(this.buildSurfaces(turns));
+    this.routedInterface.set(activeTurn?.routedInterface);
 
     if (activeTurn) {
       this.reasoningText.set(

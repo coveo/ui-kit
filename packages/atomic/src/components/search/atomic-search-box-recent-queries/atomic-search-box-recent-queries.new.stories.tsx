@@ -33,7 +33,6 @@ const meta: Meta = {
   decorators: [searchBoxDecorator, searchInterfaceDecorator],
   parameters: {
     ...parameters,
-    chromatic: {disableSnapshot: true},
     msw: {handlers: [...searchApiHarness.handlers]},
     actions: {
       handles: events,

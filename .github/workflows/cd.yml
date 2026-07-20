@@ -6,9 +6,6 @@ on:
 permissions:
   contents: read
 
-env:
-  CHROMATIC_ALL: ${{ vars.CHROMATIC_ALL }}
-
 jobs:
   release:
     concurrency:
@@ -47,6 +44,7 @@ jobs:
           cache-retention-days: 7
       - name: Create release PR or publish
         id: changesets
+        continue-on-error: true
         uses: step-security/changeset-action@6ddf46283ed49170eb6ca2179818f7d2a0ae687c # v1.9.0
         with:
           version: pnpm changeset version
@@ -56,6 +54,11 @@ jobs:
           commitMode: github-api
         env:
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
+      - name: Fail if publishing made no progress
+        if: ${{ steps.changesets.outcome == 'failure' && steps.changesets.outputs.published != 'true' }}
+        run: |
+          echo "The publish command failed before any package was published." >&2
+          exit 1
       - name: Update release/v3 bookmark
         if: ${{ steps.changesets.outputs.published == 'true' }}
         run: |

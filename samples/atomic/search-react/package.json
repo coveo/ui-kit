@@ -1,6 +1,11 @@
 {
   "name": "@coveo/ui-kit-sample-atomic-search-react",
-  "version": "0.0.0",
+  "version": "3.11.33",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coveo/ui-kit.git",
+    "directory": "samples/atomic/search-react"
+  },
   "type": "module",
   "publishConfig": {
     "access": "public",

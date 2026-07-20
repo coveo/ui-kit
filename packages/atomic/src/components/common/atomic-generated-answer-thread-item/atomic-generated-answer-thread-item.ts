@@ -1,5 +1,5 @@
 import {html, LitElement} from 'lit';
-import {customElement, property} from 'lit/decorators.js';
+import {customElement, property, state} from 'lit/decorators.js';
 import {classMap} from 'lit/directives/class-map.js';
 import {when} from 'lit/directives/when.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
@@ -69,6 +69,9 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
   @property({type: Boolean, attribute: 'show-timeline-dot'})
   public showTimelineDot = true;
 
+  @state()
+  private isDotHovered = false;
+
   public override connectedCallback() {
     super.connectedCallback();
     this.setAttribute('role', 'listitem');
@@ -86,6 +89,14 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
     }
 
     this.isExpanded = !this.isExpanded;
+  };
+
+  private handleDotMouseEnter = () => {
+    this.isDotHovered = true;
+  };
+
+  private handleDotMouseLeave = () => {
+    this.isDotHovered = false;
   };
 
   public render() {
@@ -110,11 +121,14 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
     const titleButtonClasses = classMap({
       ...titleBaseClasses,
       ...titleWeightClasses,
-      'bg-transparent': true,
+      'bg-transparent': !this.isDotHovered,
+      'bg-neutral': this.isDotHovered,
+      'text-primary': this.isDotHovered,
       'border-0': true,
       'appearance-none': true,
       'transition-colors': true,
-      'hover:bg-neutral-light': true,
+      'hover:bg-neutral': true,
+      'hover:text-primary': true,
       'rounded-md': true,
       'cursor-pointer': true,
       'focus-visible:outline-none': true,
@@ -134,7 +148,8 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
       'bg-neutral-dark': this.isExpanded,
       'bg-neutral-dim': !this.isExpanded,
       'cursor-pointer': isTimelineDotInteractive,
-      'group-hover:bg-neutral-dark':
+      'hover:bg-neutral-dark': !this.isExpanded && isTimelineDotInteractive,
+      'group-has-[button:hover]/title:bg-neutral-dark':
         !this.isExpanded && isTimelineDotInteractive,
     });
     const timelineDotToggleClasses = classMap({
@@ -160,7 +175,7 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
       "relative h-full w-px bg-neutral transition-colors duration-150 group-hover:bg-neutral-dark before:absolute before:left-0 before:top-[-8px] before:h-[8px] before:w-px before:bg-neutral before:transition-colors before:duration-150 group-hover:before:bg-neutral-dark before:content-[''] after:absolute after:bottom-[-8px] after:left-0 after:h-[8px] after:w-px after:bg-neutral after:transition-colors after:duration-150 group-hover:after:bg-neutral-dark after:content-['']";
 
     return html`
-      <div class="grid min-w-0 grid-cols-[10px_1fr] gap-x-3">
+      <div class="group/title grid min-w-0 grid-cols-[10px_1fr] gap-x-3">
         <div class="row-span-2 flex flex-col items-center">
           <div class=${timelineDotToggleClasses}>
             ${when(
@@ -169,6 +184,12 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
                 <span
                   class=${timelineDotClasses}
                   @click=${isTimelineDotInteractive ? this.toggle : null}
+                  @mouseenter=${isTimelineDotInteractive
+                    ? this.handleDotMouseEnter
+                    : null}
+                  @mouseleave=${isTimelineDotInteractive
+                    ? this.handleDotMouseLeave
+                    : null}
                 ></span>
               `
             )}
