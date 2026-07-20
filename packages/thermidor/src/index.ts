@@ -49,6 +49,7 @@ export type {
   AgentResponse,
   RoutedInterface,
   RoutedUseCase,
+  StateTurn,
   ToolCall,
   ToolCallStatus,
   Turn,
