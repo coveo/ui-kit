@@ -1,6 +1,6 @@
 {
   "name": "@coveo/create-atomic-template",
-  "description": "Template project scaffolded by @coveo/create-atomic when generating a new Atomic search page",
+  "description": "{{titleCase project}} project",
   "version": "0.0.0",
   "private": true,
   "scripts": {

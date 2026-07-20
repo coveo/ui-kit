@@ -30,6 +30,19 @@ const agentsMdPath = resolve(rootDir, 'AGENTS.md');
  */
 
 /**
+ * Package metadata to use in `AGENTS.md` instead of the corresponding
+ * manifest values. Keys are package directories relative to `packages/`.
+ *
+ * @type {Record<string, Partial<PackageEntry>>}
+ */
+const overrides = {
+  '@coveo/create-atomic-template': {
+    description:
+      'Template project scaffolded by @coveo/create-atomic when generating a new Atomic search page',
+  },
+};
+
+/**
  * Builds a `PackageEntry` from a directory path and an already-parsed
  * manifest, applying the `description` and `private` defaulting rules.
  * This is a pure function with no file-system access, kept separate from
@@ -61,7 +74,11 @@ export function buildPackageEntryFromManifest(dir, manifest) {
 function readPackageEntry(dir) {
   const fullPath = getPackagePathFromPackageDir(dir);
   const manifest = getPackageManifestFromPackagePath(fullPath);
-  return buildPackageEntryFromManifest(dir, manifest);
+  const entry = buildPackageEntryFromManifest(dir, manifest);
+  return {
+    ...entry,
+    ...(overrides[entry.name] ?? {}),
+  };
 }
 
 /**
