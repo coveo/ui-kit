@@ -43,15 +43,16 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
     const hydrateSubInterface = createHydrateSubInterface(fullEngine);
 
     if (options.conversationToRestore) {
-      const hydratedState = deserializeToGenerativeState(
-        options.conversationToRestore
-      );
-      fullEngine.mutate(actions.hydrateState(hydratedState));
       rehydrateRoutedInterfaces(
         options.conversationToRestore.turns,
         registry,
         hydrateSubInterface
       );
+      const hydratedState = deserializeToGenerativeState(
+        options.conversationToRestore,
+        registry
+      );
+      fullEngine.mutate(actions.hydrateState(hydratedState));
     }
 
     const controllerState = createMemoizedStateSelector(
@@ -199,13 +200,13 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
 
   restore(state: SerializedConverseState): void {
     this.#registry.clear();
-    const hydratedState = deserializeToGenerativeState(state);
-    this.engine.mutate(this.#actions.hydrateState(hydratedState));
     rehydrateRoutedInterfaces(
       state.turns,
       this.#registry,
       this.#hydrateSubInterface
     );
+    const hydratedState = deserializeToGenerativeState(state, this.#registry);
+    this.engine.mutate(this.#actions.hydrateState(hydratedState));
   }
 
   clear(): void {

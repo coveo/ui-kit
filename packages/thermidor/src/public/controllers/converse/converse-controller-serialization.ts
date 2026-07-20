@@ -1,5 +1,6 @@
 import type {
   GenerativeState,
+  RoutedInterfaceRegistry,
   RoutedUseCase,
   StateTurn,
 } from '@/src/internal/features/generative/index.js';
@@ -28,8 +29,17 @@ export interface SerializedTurn extends Omit<StateTurn, 'routedInterface'> {
   routedInterface?: SerializedRoutedInterface | undefined;
 }
 
+/**
+ * Converts a `SerializedConverseState` into the internal `GenerativeState`
+ * shape suitable for store hydration. Handles edge cases like marking
+ * interrupted streams as errors.
+ *
+ * Only populates `routedInterface` on a turn when the registry has a
+ * corresponding entry, ensuring store and registry stay in sync.
+ */
 export function deserializeToGenerativeState(
-  serialized: SerializedConverseState
+  serialized: SerializedConverseState,
+  registry?: RoutedInterfaceRegistry
 ): GenerativeState {
   const turns: StateTurn[] = serialized.turns.map((serializedTurn) => {
     const {routedInterface, ...rest} = serializedTurn;
@@ -40,7 +50,11 @@ export function deserializeToGenerativeState(
       turn.error = 'Stream was interrupted';
     }
 
-    if (routedInterface && VALID_USE_CASES.has(routedInterface.useCase)) {
+    if (
+      routedInterface &&
+      VALID_USE_CASES.has(routedInterface.useCase) &&
+      (!registry || registry.get(turn.id))
+    ) {
       turn.routedInterface = {
         useCase: routedInterface.useCase as RoutedUseCase,
       };
