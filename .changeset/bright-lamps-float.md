@@ -2,4 +2,4 @@
 "@coveo/relay": patch
 ---
 
-Update UUID to 14.0.1.
+Update Rollup to 4.62.2.
