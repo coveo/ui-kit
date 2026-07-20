@@ -5,7 +5,6 @@ import {quanticBase} from './baseFixture';
 type QuanticBaseFacetE2EFixtures = {
   baseFacet: BaseFacetObject;
   urlHash?: string;
-  facetResponseMock?: Array<Record<string, unknown>>;
   facetResponses?: {responses: Array<Array<Record<string, unknown>>>};
 };
 

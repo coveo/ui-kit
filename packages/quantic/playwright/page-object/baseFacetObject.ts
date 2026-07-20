@@ -15,24 +15,6 @@ export class BaseFacetObject extends SearchObject {
     return this.page.waitForResponse(facetRequestRegex);
   }
 
-  async mockSearchWithFacetResponse(facetData: Array<Record<string, unknown>>) {
-    this.page.route(this.searchRequestRegex, async (route) => {
-      const apiResponse = await this.page.request.fetch(route.request());
-      const originalBody = await apiResponse.json();
-
-      originalBody.facets = facetData;
-      await route.fulfill({
-        body: JSON.stringify(originalBody),
-        status: 200,
-        headers: {
-          'content-type': 'application/json',
-        },
-      });
-
-      await this.page.unroute(this.searchRequestRegex);
-    });
-  }
-
   /**
    * Mocks the search endpoint with a sequence of facet responses: the Nth
    * request gets the Nth entry, and the last entry is repeated afterward.
