@@ -46,7 +46,6 @@ export const testAgent =
         {
           headAnswerRequestRegex: agentAnswerRequestRegex,
           agentFollowUpRequestRegex,
-          isAgent: true,
         }
       );
 

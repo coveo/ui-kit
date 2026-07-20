@@ -1,3 +1,9 @@
+## 1.2.50
+
+### Patch Changes
+
+- [#8012](https://github.com/coveo/ui-kit/pull/8012) [`0a03dac`](https://github.com/coveo/ui-kit/commit/0a03dac66d5c9e483b07658a95c5d6159e6c5790) - Fix package entrypoints to reference the files emitted by the current build.
+
 ## 1.2.49
 
 ### Patch Changes
