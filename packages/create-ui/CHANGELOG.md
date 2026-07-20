@@ -1,5 +1,11 @@
 # @coveo/create-ui
 
+## 0.1.1
+
+### Patch Changes
+
+- [#8010](https://github.com/coveo/ui-kit/pull/8010) [`870a09e`](https://github.com/coveo/ui-kit/commit/870a09eed5414c4c55fa17490baf69961e5a123a) - Strip the `repository` field when scaffolding a project. Published samples now declare the `coveo/ui-kit` repository (required for npm provenance), and that URL must not carry over into a user's standalone project.
+
 ## 0.1.0
 
 ### Minor Changes
