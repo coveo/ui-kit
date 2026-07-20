@@ -1,9 +1,14 @@
-import {paginationController} from '../../commerce-setup.js';
-import {useController} from '../../hooks/use-controller.js';
+import {buildPaginationController} from '@coveo/thermidor';
+import {useCommerceInterface} from '../../context/commerce-interface.js';
+import {useBuildController} from '../../hooks/use-build-controller.js';
 import styles from './Pagination.module.css';
 
 export function Pagination() {
-  const state = useController(paginationController);
+  const commerceInterface = useCommerceInterface();
+
+  const [controller, state] = useBuildController(() =>
+    buildPaginationController({interface: commerceInterface})
+  );
 
   if (state.totalPages <= 1) {
     return null;
@@ -13,7 +18,7 @@ export function Pagination() {
     <nav className={styles.nav} aria-label="Product results pagination">
       <button
         className={styles.button}
-        onClick={() => paginationController.selectPage(state.page - 1)}
+        onClick={() => controller.selectPage(state.page - 1)}
         disabled={state.page === 0}
       >
         Previous
@@ -23,7 +28,7 @@ export function Pagination() {
       </span>
       <button
         className={styles.button}
-        onClick={() => paginationController.selectPage(state.page + 1)}
+        onClick={() => controller.selectPage(state.page + 1)}
         disabled={state.page >= state.totalPages - 1}
       >
         Next
