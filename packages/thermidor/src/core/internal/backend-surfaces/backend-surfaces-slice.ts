@@ -20,10 +20,10 @@ export const initialBackendSurfacesState: BackendSurfacesState = {
 
 function applyDataModelPatch(
   state: Record<string, unknown>,
-  path: string,
+  path: string | undefined | null,
   value: unknown
 ): Record<string, unknown> {
-  if (path === '/' || path === '') {
+  if (!path || path === '/') {
     return (value ?? {}) as Record<string, unknown>;
   }
 
