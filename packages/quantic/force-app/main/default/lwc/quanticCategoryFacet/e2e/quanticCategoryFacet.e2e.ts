@@ -208,7 +208,7 @@ useCaseTestCases.forEach((useCase) => {
           },
         });
 
-        test('should select the correct facet value', async ({facet, page}) => {
+        test('should select the correct facet value', async ({facet}) => {
           expect(facet.activeParent).toHaveText(
             new RegExp(values[selectedIndex].value)
           );
