@@ -1,14 +1,7 @@
 import react from '@vitejs/plugin-react';
-import path from 'node:path';
-import {fileURLToPath} from 'node:url';
 import {defineConfig, loadEnv} from 'vite';
 
 type PlatformEnvironment = 'prod' | 'dev' | 'stg' | 'hipaa';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const thermidorRoot = path.resolve(__dirname, '../../../packages/thermidor');
-const thermidorSourceEntry = path.resolve(thermidorRoot, 'src/index.ts');
 
 function parseBoolean(value: string | undefined): boolean | undefined {
   if (!value) {
@@ -82,12 +75,6 @@ export default defineConfig(({mode}) => {
 
   return {
     plugins: [react()],
-    resolve: {
-      alias: {
-        '@coveo/thermidor': thermidorSourceEntry,
-        '@': thermidorRoot,
-      },
-    },
     server: {
       open: true,
       ...(useProxy && targets

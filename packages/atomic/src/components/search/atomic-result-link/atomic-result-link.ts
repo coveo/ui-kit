@@ -23,7 +23,7 @@ import '@/src/components/search/atomic-result-text/atomic-result-text';
 import styles from './atomic-result-link.tw.css';
 
 /**
- * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
+ * The `atomic-result-link` component automatically converts a search result title into a clickable link to the original item. When users click the link, the component logs a click analytics event.
  * @slot default - Lets you display alternative content inside the link
  * @slot attributes - Lets you pass [attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#attributes) down to the link element, overriding other attributes, to be used exclusively with an "a" tag such as `<a slot="attributes" target="_blank" download></a>`.
  */

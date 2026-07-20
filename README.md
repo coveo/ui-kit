@@ -24,6 +24,7 @@ See [.devcontainer/README.md](.devcontainer/README.md) for details on the devcon
 - [Quantic](packages/quantic): Coveo's LWC library for building Salesforce search experiences.
 - [Bueno](packages/bueno): A simple schema validator.
 - [Auth](packages/auth): Functions to help authenticate with the Coveo platform.
+- [Relay](packages/relay): A library for sending analytics events using Coveo's Event Protocol.
 - [Headless React Samples](packages/samples/headless-react): Various code samples using Headless inside a React application.
 
 ## Documentation
