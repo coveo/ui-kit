@@ -313,7 +313,7 @@ describe('buildConverseController', () => {
       expect(result.activeTurnId).toBe('turn-1');
     });
 
-    it('reduces routedInterface to {useCase} only', () => {
+    it('serializes routedInterface with useCase, snapshot, and query (without the live interface instance)', () => {
       const controller = buildController();
       const actions = getOrCreateGenerativeActions(generativeInterface);
       const registry = getOrCreateRoutedInterfaceRegistry(generativeInterface);
