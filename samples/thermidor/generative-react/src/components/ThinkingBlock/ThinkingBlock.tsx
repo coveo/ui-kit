@@ -1,15 +1,15 @@
 import styles from './ThinkingBlock.module.css';
 
-type ReasoningStep =
-  | {type: 'reasoning'; content: string}
-  | {
-      type: 'tool-call';
-      id: string;
-      name: string;
-      args: string;
-      result?: string;
-      status: 'calling' | 'completed';
-    };
+type ToolCallStep = {
+  type: 'tool-call';
+  id: string;
+  name: string;
+  args: string;
+  result?: string;
+  status: 'calling' | 'completed';
+};
+
+type ReasoningStep = {type: 'reasoning'; content: string} | ToolCallStep;
 
 export interface ThinkingBlockProps {
   reasoningSteps: ReasoningStep[];
@@ -24,8 +24,12 @@ export function ThinkingBlock({
     return null;
   }
 
-  const toolCalls = reasoningSteps.filter((s) => s.type === 'tool-call');
-  const allCompleted = toolCalls.every((tc) => tc.status === 'completed');
+  const isToolCall = (s: ReasoningStep): s is ToolCallStep =>
+    s.type === 'tool-call';
+
+  const toolCalls = reasoningSteps.filter(isToolCall);
+  const allCompleted =
+    toolCalls.length > 0 && toolCalls.every((tc) => tc.status === 'completed');
   const isProcessing = isStreaming && !allCompleted;
   const activeTool = toolCalls.findLast((tc) => tc.status === 'calling');
   const completedCount = toolCalls.filter(
