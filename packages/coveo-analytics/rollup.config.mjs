@@ -14,8 +14,10 @@ import * as url from 'url';
  */
 
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
-const coveouaOutputDirectory =
-  process.env.DEPLOYMENT_ENVIRONMENT === 'CDN' ? './cdn' : './dist';
+const coveouaOutputDirectories =
+  process.env.DEPLOYMENT_ENVIRONMENT === 'CDN'
+    ? ['./dist', './cdn']
+    : ['./dist'];
 
 const browserFetch = () =>
   alias({
@@ -51,28 +53,28 @@ const versionReplace = () =>
  */
 const coveouaConfig = {
   input: './src/coveoua/browser.ts',
-  output: [
+  output: coveouaOutputDirectories.flatMap((directory) => [
     {
-      file: `${coveouaOutputDirectory}/coveoua.js`,
+      file: `${directory}/coveoua.js`,
       format: 'umd',
       name: 'coveoua',
       sourcemap: true,
       plugins: [terser({format: {comments: false}})],
     },
     {
-      file: `${coveouaOutputDirectory}/coveoua.browser.js`,
+      file: `${directory}/coveoua.browser.js`,
       format: 'iife',
       name: 'coveoua',
       sourcemap: true,
       plugins: [terser({format: {comments: false}})],
     },
     {
-      file: `${coveouaOutputDirectory}/coveoua.debug.js`,
+      file: `${directory}/coveoua.debug.js`,
       format: 'umd',
       name: 'coveoua',
       sourcemap: true,
     },
-  ],
+  ]),
   plugins: [
     browserFetch(),
     nodeResolve({preferBuiltins: true, browser: true}),
