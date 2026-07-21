@@ -91,7 +91,7 @@ describe('#streamAnswerApi', () => {
       });
     });
 
-    describe('bug condition exploration: stale error persists after subsequent content events', () => {
+    describe('when valid content follows a stream error', () => {
       it('should clear draft.error once a genqa.messageType event adds real answer text', () => {
         const dispatch = vi.fn();
         const errorEvent: EventSourceMessage = buildEvent({

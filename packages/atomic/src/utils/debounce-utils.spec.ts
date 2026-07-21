@@ -112,7 +112,7 @@ describe('buildDebouncedQueue', () => {
     expect(action).toHaveBeenCalledTimes(1);
   });
 
-  describe('bug condition exploration: live region announcement sequencing', () => {
+  describe('when named actions are enqueued after the queue becomes idle', () => {
     function executionTimestamps() {
       const timestamps: Record<string, number> = {};
       return {
@@ -125,7 +125,7 @@ describe('buildDebouncedQueue', () => {
       };
     }
 
-    it('never lets two different named regions execute less than `delay` ms apart when one is enqueued shortly after the queue drains to idle', () => {
+    it('should delay a named action enqueued shortly after the queue becomes idle', () => {
       const {timestamps, recordFor} = executionTimestamps();
 
       queue.enqueue(recordFor('generated-answer'), 'generated-answer');
@@ -138,7 +138,7 @@ describe('buildDebouncedQueue', () => {
       expect(gap).toBeGreaterThanOrEqual(delay);
     });
 
-    it('never lets two different named regions execute less than `delay` ms apart, for any refill gap in [0, delay)', () => {
+    it('should delay a named action for every enqueue gap shorter than `delay` after the queue becomes idle', () => {
       for (let gap = 0; gap < delay; gap++) {
         const localQueue = buildDebouncedQueue({delay});
         const {timestamps, recordFor} = executionTimestamps();
@@ -158,7 +158,7 @@ describe('buildDebouncedQueue', () => {
       }
     });
 
-    it('never lets a second named region execute in the same tick as the first when its enqueue is triggered synchronously from within the first action (cold-start re-entrancy)', () => {
+    it('should delay a named action enqueued synchronously by another action', () => {
       const {timestamps, recordFor} = executionTimestamps();
 
       queue.enqueue(() => {
