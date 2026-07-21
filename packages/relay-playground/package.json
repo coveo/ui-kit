@@ -1,0 +1,28 @@
+{
+  "name": "@coveo/relay-playground",
+  "version": "3.1.1",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "test": "pnpm run test:relay-node",
+    "test:relay-node": "node ./tests/relay-node.js && node ./tests/relay-node.mjs"
+  },
+  "dependencies": {
+    "@coveo/relay": "workspace:*",
+    "@mantine/core": "8.3.18",
+    "@mantine/hooks": "8.3.18",
+    "@monaco-editor/react": "4.7.0",
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "ts-dedent": "2.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:"
+  },
+  "engines": {
+    "node": "^20.9.0 || ^22.11.0 || ^24.11.0"
+  }
+}

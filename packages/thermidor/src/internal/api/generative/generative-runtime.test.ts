@@ -12,14 +12,14 @@ const {
   mockReadConversationEventStream,
   mockCreateConversationEndpointClient,
   mockCreateConversationEndpointRequestSelector,
-  mockReadEndpointClientConfiguration,
   mockGenerateId,
+  mockGetEndpointClientConfiguration,
 } = vi.hoisted(() => ({
   mockReadConversationEventStream: vi.fn(),
   mockCreateConversationEndpointClient: vi.fn(),
   mockCreateConversationEndpointRequestSelector: vi.fn(),
-  mockReadEndpointClientConfiguration: vi.fn(),
   mockGenerateId: vi.fn(),
+  mockGetEndpointClientConfiguration: vi.fn(),
 }));
 
 vi.mock('@/src/internal/api/conversation/index.js', () => ({
@@ -30,7 +30,9 @@ vi.mock('@/src/internal/api/conversation/index.js', () => ({
 }));
 
 vi.mock('@/src/internal/features/configuration/index.js', () => ({
-  readEndpointClientConfiguration: mockReadEndpointClientConfiguration,
+  getOrCreateConfigurationSelectors: () => ({
+    getEndpointClientConfiguration: mockGetEndpointClientConfiguration,
+  }),
 }));
 
 vi.mock('@/src/internal/utils/index.js', () => ({
@@ -62,12 +64,21 @@ function createMockStatePort(): GenerativeStatePort {
 
 function createMockEngine(): FullEngine {
   return {
-    read: vi.fn().mockReturnValue({
-      trackingId: 'test-tracking',
-      language: 'en',
-      country: 'US',
-      currency: 'USD',
-      message: 'test prompt',
+    read: vi.fn().mockImplementation((selector: any) => {
+      if (selector === mockGetEndpointClientConfiguration) {
+        return {
+          organizationId: 'test-org',
+          accessToken: 'test-token',
+          endpoint: undefined,
+        };
+      }
+      return {
+        trackingId: 'test-tracking',
+        language: 'en',
+        country: 'US',
+        currency: 'USD',
+        message: 'test prompt',
+      };
     }),
     getNavigatorContextProvider: vi.fn().mockReturnValue(() => ({
       clientId: 'test-client-id',
@@ -102,10 +113,6 @@ function setupSuccessfulStream(
   };
 
   mockCreateConversationEndpointClient.mockReturnValue(mockClient);
-  mockReadEndpointClientConfiguration.mockReturnValue({
-    organizationId: 'test-org',
-    accessToken: 'test-token',
-  });
 
   mockReadConversationEventStream.mockImplementation(
     async ({onEvent, onDone}) => {
@@ -259,10 +266,6 @@ describe('GenerativeRuntime', () => {
       };
 
       mockCreateConversationEndpointClient.mockReturnValue(mockClient);
-      mockReadEndpointClientConfiguration.mockReturnValue({
-        organizationId: 'test-org',
-        accessToken: 'test-token',
-      });
 
       const runtime = GenerativeRuntime.getInstance(engine, 'api-fail', config);
       await runtime.submit('Hello');
@@ -279,10 +282,6 @@ describe('GenerativeRuntime', () => {
 
       mockCreateConversationEndpointClient.mockReturnValue({
         call: vi.fn().mockRejectedValue(new Error('network failure')),
-      });
-      mockReadEndpointClientConfiguration.mockReturnValue({
-        organizationId: 'test-org',
-        accessToken: 'test-token',
       });
 
       const runtime = GenerativeRuntime.getInstance(
@@ -304,10 +303,6 @@ describe('GenerativeRuntime', () => {
 
       mockCreateConversationEndpointClient.mockReturnValue({
         call: vi.fn().mockRejectedValue(42),
-      });
-      mockReadEndpointClientConfiguration.mockReturnValue({
-        organizationId: 'test-org',
-        accessToken: 'test-token',
       });
 
       const runtime = GenerativeRuntime.getInstance(
@@ -357,10 +352,6 @@ describe('GenerativeRuntime', () => {
           .fn()
           .mockResolvedValue({success: true, data: {stream: mockStream}}),
       });
-      mockReadEndpointClientConfiguration.mockReturnValue({
-        organizationId: 'test-org',
-        accessToken: 'test-token',
-      });
       mockReadConversationEventStream.mockImplementation(
         async ({onEvent, onDone}) => {
           onEvent({type: 'TEXT_MESSAGE_CONTENT', delta: 'hello'});
@@ -390,10 +381,6 @@ describe('GenerativeRuntime', () => {
         call: vi
           .fn()
           .mockResolvedValue({success: true, data: {stream: mockStream}}),
-      });
-      mockReadEndpointClientConfiguration.mockReturnValue({
-        organizationId: 'test-org',
-        accessToken: 'test-token',
       });
       mockReadConversationEventStream.mockImplementation(async ({onError}) => {
         onError?.(new Error('stream read failure'));
@@ -617,15 +604,11 @@ describe('GenerativeRuntime', () => {
           .fn()
           .mockResolvedValue({success: true, data: {stream: mockStream}}),
       });
-      mockReadEndpointClientConfiguration.mockReturnValue({
-        organizationId: 'test-org',
-        accessToken: 'test-token',
-      });
       mockReadConversationEventStream.mockImplementation(
         async ({onEvent, onDone}) => {
           onEvent({
             type: 'commerce_search_api_response',
-            content: {products: []},
+            products: [],
           });
           onDone?.();
         }
@@ -657,7 +640,7 @@ describe('GenerativeRuntime', () => {
       setupSuccessfulStream([
         {
           type: 'commerce_search_api_response',
-          content: {products: []},
+          products: [],
         } as ConversationStreamEvent,
         {type: 'turn_complete'} as ConversationStreamEvent,
       ]);
@@ -688,15 +671,12 @@ describe('GenerativeRuntime', () => {
           .fn()
           .mockResolvedValue({success: true, data: {stream: mockStream}}),
       });
-      mockReadEndpointClientConfiguration.mockReturnValue({
-        organizationId: 'test-org',
-        accessToken: 'test-token',
-      });
       mockReadConversationEventStream.mockImplementation(
         async ({onEvent, onDone}) => {
           onEvent({
             type: 'search_api_response',
-            content: {results: [], totalCount: 0},
+            results: [],
+            totalCount: 0,
           });
           onDone?.();
         }

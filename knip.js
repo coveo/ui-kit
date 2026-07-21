@@ -55,6 +55,9 @@ export default {
     'packages/auth': {
       entry: ['src/auth.ts'],
     },
+    'packages/relay': {
+      entry: ['src/relay.ts', 'config/rollup.config.mjs'],
+    },
     'packages/documentation': {
       entry: [
         '**/assets/**/*.js',
@@ -159,6 +162,14 @@ export default {
     },
     'samples/thermidor/generative-react': {
       ignore: ['**/*'],
+    },
+    'samples/thermidor/generative-angular': {
+      entry: ['proxy.conf.js'],
+      ignore: [
+        'src/app/services/engine.service.ts',
+        'src/app/app.css',
+        'src/styles.css',
+      ],
     },
   },
 };

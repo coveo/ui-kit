@@ -80,6 +80,49 @@ export const NonCollapsibleWithoutTimeline: Story = {
   },
 };
 
+export const MultiLineQuestion: Story = {
+  name: 'Multi-Line Question',
+  args: {
+    title:
+      'What are the detailed steps I should follow to troubleshoot connectivity issues when my application fails to establish a secure connection to the remote server after upgrading the SDK?',
+  },
+  decorators: [
+    (story) => {
+      const container = document.createElement('div');
+      container.style.maxWidth = '400px';
+      container.appendChild(story() as Node);
+      return container;
+    },
+  ],
+};
+
+export const MultiLineQuestionExpanded: Story = {
+  name: 'Multi-Line Question - Expanded',
+  args: {
+    title:
+      'What are the detailed steps I should follow to troubleshoot connectivity issues when my application fails to establish a secure connection to the remote server after upgrading the SDK?',
+    isExpanded: true,
+  },
+  decorators: [
+    (story) => {
+      const container = document.createElement('div');
+      container.style.maxWidth = '400px';
+      container.appendChild(story() as Node);
+      return container;
+    },
+  ],
+};
+
+export const HoverState: Story = {
+  name: 'Hover State',
+  args: {},
+  parameters: {
+    pseudo: {
+      hover: true,
+    },
+  },
+};
+
 export const A11yDisclosure: Story = {
   tags: ['a11y', 'test', '!dev'],
   play: async (context) => {

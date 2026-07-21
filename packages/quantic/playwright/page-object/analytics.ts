@@ -104,20 +104,23 @@ export class AnalyticsObject {
       itemMetadata?: Record<string, string>;
     }) => boolean
   ): Promise<Request> {
-    const analyticsRequest = this.page.waitForRequest(async (request) => {
+    const analyticsRequest = this.page.waitForRequest((request) => {
       if (isEventProtocol(request)) {
         const event = request.postDataJSON?.()?.[0];
-        if (event.meta?.type !== expectedEventType) return false;
-        if (event.meta?.config?.trackingId !== exampleTrackingId) return false;
+        if (event?.meta?.type !== expectedEventType) return false;
+        if (event?.meta?.config?.trackingId !== exampleTrackingId) return false;
         if (additionalMatch && !additionalMatch(event)) return false;
-
-        await this.validateEventWithEventAPI(request, event);
 
         return true;
       }
       return false;
     });
-    return analyticsRequest;
+
+    const matchedRequest = await analyticsRequest;
+    const event = matchedRequest.postDataJSON?.()?.[0];
+    await this.validateEventWithEventAPI(matchedRequest, event);
+
+    return matchedRequest;
   }
 
   async validateEventWithEventAPI(request: Request, body: object) {

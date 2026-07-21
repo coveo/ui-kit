@@ -9,6 +9,7 @@
         "@coveo/atomic-hosted-page#build",
         "@coveo/bueno#build",
         "@coveo/headless#build",
+        "@coveo/relay#build",
         "@coveo/shopify#build"
       ],
       "outputs": ["dist"]

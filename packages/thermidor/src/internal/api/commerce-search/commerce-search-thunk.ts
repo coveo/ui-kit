@@ -5,7 +5,7 @@ import type {CommerceSearchRequest} from '@/src/internal/api/commerce-search/ind
 import {getHandleInternals} from '@/src/internal/utils/index.js';
 import {createCommerceSearchEndpointRequestSelector} from './commerce-search-request-selector.js';
 import {createCommerceSearchEndpointResponseHandler} from './commerce-search-response-handler.js';
-import {readEndpointClientConfiguration} from '@/src/internal/features/configuration/index.js';
+import {getOrCreateConfigurationSelectors} from '@/src/internal/features/configuration/index.js';
 import {createCommerceSearchEndpointClient} from '@/src/internal/api/commerce-search/index.js';
 import {getOrCreateCommerceSearchEndpointSlice} from './commerce-search-thunk-slice.js';
 
@@ -13,11 +13,13 @@ export function createCommerceSearchEndpointThunk(
   engine: FullEngine,
   scope: EndpointStateScope
 ) {
-  const {stateId} = getHandleInternals(scope.scopeInterface);
+  const configSelectors = getOrCreateConfigurationSelectors();
   const buildRequest = createCommerceSearchEndpointRequestSelector(scope);
   const handleResponse = createCommerceSearchEndpointResponseHandler(
     scope.baseInterface
   );
+
+  const {stateId} = getHandleInternals(scope.scopeInterface);
 
   const thunk = createAsyncThunk<void, {engine: FullEngine}>(
     `${stateId}/commerceSearchEndpoint/execute`,
@@ -37,7 +39,9 @@ export function createCommerceSearchEndpointThunk(
         context: {view: {url: navigatorContext?.location ?? ''}},
       };
 
-      const config = readEndpointClientConfiguration(engine);
+      const config = engine.read(
+        configSelectors.getEndpointClientConfiguration
+      );
       const response = await createCommerceSearchEndpointClient().call(
         fullRequest,
         config

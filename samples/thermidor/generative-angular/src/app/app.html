@@ -1,0 +1,30 @@
+<main class="shell">
+  <app-conversation-header
+    [status]="conversation.busy() ? 'Streaming' : 'Ready'"
+    [historyCount]="conversation.turns().length"
+  />
+
+  <article class="panel transcript-panel">
+    <app-transcript-panel
+      [turns]="conversation.turns()"
+      [reasoningText]="conversation.reasoningText()"
+      [toolActivity]="conversation.toolActivity()"
+      [surfaces]="conversation.surfaces()"
+      [routedInterface]="conversation.routedInterface()"
+      [isStreaming]="conversation.busy()"
+      [errorMessage]="conversation.activeTurnError()"
+      [turnId]="conversation.activeTurnId() ?? ''"
+      (resetConversation)="conversation.resetConversation()"
+      (quickAction)="useQuickAction($event)"
+      (retryTurn)="conversation.retry($event)"
+    />
+
+    <app-prompt-composer
+      [draft]="draft()"
+      [busy]="conversation.busy()"
+      [status]="conversation.busy() ? 'Streaming' : 'Ready'"
+      (draftChange)="setDraft($event)"
+      (submitPrompt)="submitPrompt()"
+    />
+  </article>
+</main>

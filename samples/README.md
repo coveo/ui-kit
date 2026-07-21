@@ -35,14 +35,6 @@ Fully custom UIs built with `@coveo/headless` controllers (client-side rendering
 | [search-vite](./headless/search-vite/)       | Custom search interface with vanilla JS | Vanilla JS (Vite) | Search   |
 | [commerce-vite](./headless/commerce-vite/)   | Custom commerce interface with Lit      | Lit (Vite)        | Commerce |
 
-### [Headless Future Samples](./thermidor/)
-
-Samples using `@coveo/thermidor` for upcoming conversational and search experiences.
-
-| Sample                                                | Description                                                           | Framework    | Use Case     |
-| ----------------------------------------------------- | --------------------------------------------------------------------- | ------------ | ------------ |
-| [conversation-react](./thermidor/conversation-react/) | React + Vite bootstrap for Headless Future conversational integration | React + Vite | Conversation |
-
 ### [Headless SSR Samples](./headless-ssr/)
 
 Server-side rendering with Headless controllers for improved performance and SEO.
@@ -54,6 +46,16 @@ Server-side rendering with Headless controllers for improved performance and SEO
 | [search-nextjs](./headless-ssr/search-nextjs/)                 | Search SSR with Next.js App Router                        | Next.js      | Search   |
 | [commerce-express](./headless-ssr/commerce-express/)           | Commerce SSR with a generic Express server (no framework) | Express      | Commerce |
 | [commerce-react-router](./headless-ssr/commerce-react-router/) | Commerce SSR with React Router                            | React Router | Commerce |
+
+### [Thermidor Samples](./thermidor/)
+
+Samples using `@coveo/thermidor` for upcoming conversational and search experiences.
+
+| Sample                                                | Description                                                       | Framework    | Use Case     |
+| ----------------------------------------------------- | ----------------------------------------------------------------- | ------------ | ------------ |
+| [conversation-react](./thermidor/conversation-react/) | React + Vite conversational integration sample                    | React + Vite | Conversation |
+| [commerce-react](./thermidor/commerce-react/)         | React + Vite commerce sample with ProductList, Pagination         | React + Vite | Commerce     |
+| [search-react](./thermidor/search-react/)             | React + Vite search sample with SearchBox, ResultList, Pagination | React + Vite | Search       |
 
 ## 🚀 Quick Start
 

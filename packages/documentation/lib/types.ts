@@ -11,5 +11,6 @@ export type TFrontMatter = {
   group?: string;
   category?: string;
   title?: string;
+  pageTitle?: string;
   slug?: string;
 };

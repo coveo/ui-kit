@@ -6,7 +6,7 @@ import {
 import type {FullEngine} from '@/src/internal/engine/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 import {createConversationEndpointRequestSelector} from '@/src/internal/api/conversation/index.js';
-import {readEndpointClientConfiguration} from '@/src/internal/features/configuration/index.js';
+import {getOrCreateConfigurationSelectors} from '@/src/internal/features/configuration/index.js';
 import {generateId} from '@/src/internal/utils/index.js';
 import type {
   A2UISurface,
@@ -56,6 +56,8 @@ export class GenerativeRuntime {
     FullEngine,
     Map<string, GenerativeRuntime>
   >();
+
+  private readonly configSelectors = getOrCreateConfigurationSelectors();
 
   private engine: FullEngine;
   private statePort: GenerativeStatePort;
@@ -123,7 +125,9 @@ export class GenerativeRuntime {
     try {
       const {cart, ...fromState} = this.engine.read(this.buildRequest);
       const navigatorContext = this.engine.getNavigatorContextProvider()?.();
-      const clientConfig = readEndpointClientConfiguration(this.engine);
+      const clientConfig = this.engine.read(
+        this.configSelectors.getEndpointClientConfiguration
+      );
 
       const request = {
         ...fromState,
@@ -282,9 +286,10 @@ export class GenerativeRuntime {
 
       case 'commerce_search_api_response':
       case 'search_api_response': {
+        const {type: _type, ...content} = event;
         const routedInterface = this.hydrateSubInterface(
           event.type,
-          event.content,
+          content,
           this.currentPrompt
         );
 
