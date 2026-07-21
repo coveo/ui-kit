@@ -217,18 +217,19 @@ export const logGeneratedAnswerFeedback = (
     },
   });
 
-//TODO: SFINT-5435
+// TODO: SFINT-5435
+// TODO: In the next major version, make `answerId` required and remove the fallback
+// to `generativeQuestionAnsweringIdSelector(state)`.
 export const logGeneratedAnswerStreamEnd = (
-  answerGenerated: boolean
+  answerGenerated: boolean,
+  answerId?: string,
+  answerTextIsEmpty?: boolean
 ): InsightAction =>
   makeInsightAnalyticsActionFactory(SearchPageEvents.generatedAnswerStreamEnd)({
     prefix: 'analytics/generatedAnswer/streamEnd',
     __legacy__getBuilder: (client, state) => {
       const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
-      const answerTextIsEmpty = answerGenerated
-        ? !state.generatedAnswer?.answer?.trim()
-        : undefined;
+        answerId ?? generativeQuestionAnsweringIdSelector(state);
       if (!generativeQuestionAnsweringId) {
         return null;
       }
@@ -244,7 +245,7 @@ export const logGeneratedAnswerStreamEnd = (
     analyticsType: 'Rga.AnswerReceived',
     analyticsPayloadBuilder: (state): Rga.AnswerReceived | undefined => {
       const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
+        answerId ?? generativeQuestionAnsweringIdSelector(state);
       return {
         answerId: generativeQuestionAnsweringId ?? '',
         answerGenerated,

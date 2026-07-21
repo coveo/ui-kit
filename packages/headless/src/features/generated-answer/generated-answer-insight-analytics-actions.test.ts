@@ -289,18 +289,18 @@ describe('generated answer insight analytics actions', () => {
     });
 
     [false, true].map((answerGenerated) => {
-      it('should log #logGeneratedAnswerStreamEnd with the right payload', async () => {
-        await logGeneratedAnswerStreamEnd(answerGenerated)()(
-          engine.dispatch,
-          () => engine.state,
-          {} as ThunkExtraArguments
-        );
+      it(`should log #logGeneratedAnswerStreamEnd with ${answerGenerated ? 'generated' : 'not generated'} and 'empty' answer`, async () => {
+        await logGeneratedAnswerStreamEnd(
+          answerGenerated,
+          undefined,
+          answerGenerated ? true : undefined
+        )()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
         const mockToUse = mockLogGeneratedAnswerStreamEnd;
         const expectedMetadata = {
           generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
           answerGenerated,
-          answerTextIsEmpty: answerGenerated || undefined,
+          answerTextIsEmpty: answerGenerated ? true : undefined,
         };
 
         expect(mockToUse).toHaveBeenCalledTimes(1);
@@ -309,6 +309,27 @@ describe('generated answer insight analytics actions', () => {
           expectedCaseContext
         );
       });
+    });
+
+    it('should use a provided answerTextIsEmpty value', async () => {
+      await logGeneratedAnswerStreamEnd(true, undefined, false)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      const mockToUse = mockLogGeneratedAnswerStreamEnd;
+      const expectedMetadata = {
+        generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
+        answerGenerated: true,
+        answerTextIsEmpty: false,
+      };
+
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse).toHaveBeenCalledWith(
+        expectedMetadata,
+        expectedCaseContext
+      );
     });
 
     it('should log #logGeneratedAnswerShowAnswers with the right payload', async () => {

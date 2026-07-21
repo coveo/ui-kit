@@ -523,6 +523,22 @@ describe('knowledge-generated-answer', () => {
           expect(mockGenerateAnswer).toHaveBeenCalledTimes(1);
         });
 
+        it('should pass the generatedAnswerAnalyticsClient into generateAnswer', () => {
+          mockSelectAnswerTriggerParams.mockReturnValue({
+            q: 'test query',
+            requestId: 'new-request',
+            cannotAnswer: false,
+            analyticsMode: 'legacy',
+            actionCause: 'searchboxSubmit',
+          });
+
+          listener();
+
+          expect(mockGenerateAnswer).toHaveBeenCalledWith({
+            analyticsClient: generatedAnswerAnalyticsClient,
+          });
+        });
+
         it('should call generateAnswer for each new request with query', () => {
           mockSelectAnswerTriggerParams
             .mockReturnValueOnce({

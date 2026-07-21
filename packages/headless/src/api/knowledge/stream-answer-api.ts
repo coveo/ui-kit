@@ -8,10 +8,8 @@ import {
   updateCitations,
   updateMessage,
 } from '../../features/generated-answer/generated-answer-actions.js';
-import {
-  logGeneratedAnswerResponseLinked,
-  logGeneratedAnswerStreamEnd,
-} from '../../features/generated-answer/generated-answer-analytics-actions.js';
+import {logGeneratedAnswerResponseLinked} from '../../features/generated-answer/generated-answer-analytics-actions.js';
+import type {GeneratedAnswerAnalyticsClient} from '../../features/generated-answer/generated-answer-analytics-client.js';
 import type {AnswerApiQueryParams} from '../../features/generated-answer/generated-answer-request.js';
 import {fetchEventSource} from '../../utils/fetch-event-source/fetch.js';
 import type {EventSourceMessage} from '../../utils/fetch-event-source/parse.js';
@@ -108,7 +106,8 @@ const handleError = (
 export const updateCacheWithEvent = (
   event: EventSourceMessage,
   draft: GeneratedAnswerStream,
-  dispatch: ThunkDispatch<StreamAnswerAPIState, unknown, UnknownAction>
+  dispatch: ThunkDispatch<StreamAnswerAPIState, unknown, UnknownAction>,
+  analyticsClient?: GeneratedAnswerAnalyticsClient
 ) => {
   const message: Required<MessageType> = JSON.parse(event.data);
   if (message.finishReason === 'ERROR' && message.errorMessage) {
@@ -145,13 +144,15 @@ export const updateCacheWithEvent = (
       const answerTextIsEmpty = answerGenerated
         ? !draft.answer?.trim()
         : undefined;
-      dispatch(
-        logGeneratedAnswerStreamEnd(
-          answerGenerated,
-          answerId,
-          answerTextIsEmpty
-        )
-      );
+      if (analyticsClient) {
+        dispatch(
+          analyticsClient.logGeneratedAnswerStreamEnd(
+            answerGenerated,
+            answerId,
+            answerTextIsEmpty
+          )
+        );
+      }
       dispatch(logGeneratedAnswerResponseLinked());
       break;
     }
@@ -192,11 +193,15 @@ export const answerApi = answerSlice.injectEndpoints({
       serializeQueryArgs: ({endpointName, queryArgs}) => {
         // RTK Query serialize our endpoints and they're serialized state arguments as the key in the store.
         // Keys must match, because if anything in the query changes, it's not the same query anymore.
-        // Analytics data is excluded entirely as it contains volatile fields that change during streaming.
-        const {analytics: _analytics, ...queryArgsWithoutAnalytics} = queryArgs;
+        // `analyticsClient` is excluded entirely as it holds a non-serializable callback that is not
+        // part of the actual API request payload and doesn't affect the resulting cached answer.
+        const {
+          analyticsClient: _analyticsClient,
+          ...queryArgsWithoutAnalyticsClient
+        } = queryArgs;
 
-        // Standard RTK key, with analytics excluded
-        return `${endpointName}(${JSON.stringify(queryArgsWithoutAnalytics)})`;
+        // Standard RTK key, with analyticsClient excluded
+        return `${endpointName}(${JSON.stringify(queryArgsWithoutAnalyticsClient)})`;
       },
       async onCacheEntryAdded(
         args,
@@ -222,10 +227,11 @@ export const answerApi = answerSlice.injectEndpoints({
           generatedAnswer.answerConfigurationId!,
           insightConfiguration?.insightId
         );
+        const {analyticsClient: _analyticsClient, ...requestBody} = args;
 
         await fetchEventSource(answerEndpoint, {
           method: 'POST',
-          body: JSON.stringify(args),
+          body: JSON.stringify(requestBody),
           headers: {
             Authorization: `Bearer ${accessToken}`,
             Accept: 'application/json',
@@ -244,7 +250,12 @@ export const answerApi = answerSlice.injectEndpoints({
           },
           onmessage: (event) => {
             updateCachedData((draft) => {
-              updateCacheWithEvent(event, draft, dispatch);
+              updateCacheWithEvent(
+                event,
+                draft,
+                dispatch,
+                args.analyticsClient
+              );
             });
           },
           onerror: (error) => {

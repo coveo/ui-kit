@@ -1,8 +1,4 @@
 import type {CoreEngine} from '../../../app/engine.js';
-import type {
-  CustomAction,
-  LegacySearchAction,
-} from '../../../features/analytics/analytics-utils.js';
 import {
   closeGeneratedAnswerFeedbackModal,
   collapseGeneratedAnswer,
@@ -17,6 +13,7 @@ import {
   updateResponseFormat,
 } from '../../../features/generated-answer/generated-answer-actions.js';
 import type {GeneratedAnswerFeedback} from '../../../features/generated-answer/generated-answer-analytics-actions.js';
+import type {GeneratedAnswerAnalyticsClient} from '../../../features/generated-answer/generated-answer-analytics-client.js';
 import {generatedAnswerReducer as generatedAnswer} from '../../../features/generated-answer/generated-answer-slice.js';
 import type {GeneratedAnswerState} from '../../../features/generated-answer/generated-answer-state.js';
 import type {GeneratedResponseFormat} from '../../../features/generated-answer/generated-response-format.js';
@@ -132,46 +129,6 @@ export interface GeneratedAnswer extends Controller {
     citationHoverTimeMs: number,
     answerId: string
   ): void;
-}
-
-export interface GeneratedAnswerAnalyticsClient {
-  /** @deprecated */
-  logLikeGeneratedAnswer(): CustomAction;
-  logLikeGeneratedAnswer(answerId?: string): CustomAction;
-  /** @deprecated */
-  logDislikeGeneratedAnswer(): CustomAction;
-  logDislikeGeneratedAnswer(answerId?: string): CustomAction;
-  logGeneratedAnswerFeedback: (
-    feedback: GeneratedAnswerFeedback
-  ) => CustomAction;
-  /** @deprecated */
-  logOpenGeneratedAnswerSource(citationId: string): CustomAction;
-  logOpenGeneratedAnswerSource(
-    citationId: string,
-    answerId?: string
-  ): CustomAction;
-  logOpenGeneratedAnswerFollowUpSource?(
-    citationId: string,
-    answerId: string
-  ): CustomAction;
-  /** @deprecated */
-  logHoverCitation(
-    citationId: string,
-    citationHoverTimeMs: number
-  ): CustomAction;
-  logHoverCitation(
-    citationId: string,
-    citationHoverTimeMs: number,
-    answerId?: string
-  ): CustomAction;
-  logGeneratedAnswerShowAnswers: () => CustomAction;
-  logGeneratedAnswerHideAnswers: () => CustomAction;
-  /** @deprecated */
-  logCopyGeneratedAnswer(): CustomAction;
-  logCopyGeneratedAnswer(answerId?: string): CustomAction;
-  logRetryGeneratedAnswer: () => LegacySearchAction;
-  logGeneratedAnswerExpand: () => CustomAction;
-  logGeneratedAnswerCollapse: () => CustomAction;
 }
 
 export interface GeneratedAnswerPropsInitialState {

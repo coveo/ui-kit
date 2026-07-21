@@ -19,6 +19,7 @@ import type {
 } from '../../api/search/search-api-params.js';
 import type {CaseContextParam} from '../../api/service/insight/query/query-request.js';
 import type {NavigatorContext} from '../../app/navigator-context-provider.js';
+import type {GeneratedAnswerAnalyticsClient} from './generated-answer-analytics-client.js';
 import {selectAdvancedSearchQueries} from '../../features/advanced-search-queries/advanced-search-query-selectors.js';
 import {fromAnalyticsStateToAnalyticsParams} from '../../features/configuration/analytics-params.js';
 import {selectContext} from '../../features/context/context-selector.js';
@@ -68,7 +69,14 @@ export interface AnswerApiQueryParams
       SearchRequest,
       keyof (BaseParam & AuthenticationParam & AutomaticFacetsParams)
     >,
-    CaseContextParam {}
+    CaseContextParam {
+  /**
+   * The analytics client used to log analytics events with the behavior appropriate for the
+   * current use case (e.g., Search vs Insight). Excluded from the RTK Query cache key since
+   * it is not part of the actual API request payload.
+   */
+  analyticsClient?: GeneratedAnswerAnalyticsClient;
+}
 
 export const buildStreamingRequest = async (
   state: StateNeededByGeneratedAnswerStream
@@ -85,7 +93,8 @@ export const buildStreamingRequest = async (
 
 export const constructAnswerAPIQueryParams = (
   state: StreamAnswerAPIState,
-  navigatorContext: NavigatorContext
+  navigatorContext: NavigatorContext,
+  analyticsClient?: GeneratedAnswerAnalyticsClient
 ): AnswerApiQueryParams => {
   const q = selectQuery(state)?.q;
 
@@ -170,6 +179,7 @@ export const constructAnswerAPIQueryParams = (
     ...(state.insightCaseContext?.caseContext && {
       caseContext: state.insightCaseContext?.caseContext,
     }),
+    ...(analyticsClient && {analyticsClient}),
   };
 };
 

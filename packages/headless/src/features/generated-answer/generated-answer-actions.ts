@@ -21,6 +21,8 @@ import type {StreamAnswerAPIState} from '../../api/knowledge/stream-answer-api-s
 import type {AsyncThunkOptions} from '../../app/async-thunk-options.js';
 import type {SearchThunkExtraArguments} from '../../app/search-thunk-extra-arguments.js';
 import type {AnswerApiQueryParams} from '../../features/generated-answer/generated-answer-request.js';
+import {generatedAnswerAnalyticsClient} from './generated-answer-analytics-actions.js';
+import type {GeneratedAnswerAnalyticsClient} from './generated-answer-analytics-client.js';
 import type {
   ConfigurationSection,
   DebugSection,
@@ -32,10 +34,7 @@ import {
   requiredNonEmptyString,
   validatePayload,
 } from '../../utils/validate-payload.js';
-import {
-  logGeneratedAnswerResponseLinked,
-  logGeneratedAnswerStreamEnd,
-} from './generated-answer-analytics-actions.js';
+import {logGeneratedAnswerResponseLinked} from './generated-answer-analytics-actions.js';
 import {
   buildStreamingRequest,
   constructAnswerAPIQueryParams,
@@ -293,6 +292,11 @@ export const toolCallArgs = createAction(
 
 interface StreamAnswerArgs {
   setAbortControllerRef: (ref: AbortController) => void;
+  /**
+   * The analytics client used to log analytics events with the behavior appropriate for the
+   * current use case (e.g., Search vs Insight).
+   */
+  analyticsClient: GeneratedAnswerAnalyticsClient;
 }
 
 export const streamAnswer = createAsyncThunk<
@@ -305,7 +309,7 @@ export const streamAnswer = createAsyncThunk<
   const {search} = getState();
   const {queryExecuted} = search;
 
-  const {setAbortControllerRef} = params;
+  const {setAbortControllerRef, analyticsClient} = params;
 
   const request = await buildStreamingRequest(state);
 
@@ -345,7 +349,7 @@ export const streamAnswer = createAsyncThunk<
         dispatch(setIsStreaming(false));
         dispatch(setIsAnswerGenerated(isAnswerGenerated));
         dispatch(
-          logGeneratedAnswerStreamEnd(
+          analyticsClient.logGeneratedAnswerStreamEnd(
             isAnswerGenerated,
             answerId,
             isAnswerGenerated ? isAnswerTextEmpty : undefined
@@ -419,13 +423,24 @@ export const streamAnswer = createAsyncThunk<
  * 2. Construct the Answer API query parameters based on the current state.
  * 3. Fetch a new answer from the Answer API using the provided configuration.
  */
+export interface GenerateAnswerArgs {
+  /**
+   * The analytics client used to log analytics events with the behavior appropriate for the
+   * current use case (e.g., Search vs Insight).
+   *
+   * Defaults to the Search analytics client when not provided.
+   */
+  analyticsClient?: GeneratedAnswerAnalyticsClient;
+}
+
 export const generateAnswer = createAsyncThunk<
   void,
-  void,
+  GenerateAnswerArgs | void,
   AsyncThunkOptions<StreamAnswerAPIState, SearchThunkExtraArguments>
 >(
   'generatedAnswer/generateAnswer',
-  async (_, {getState, dispatch, extra: {navigatorContext, logger}}) => {
+  async (args, {getState, dispatch, extra: {navigatorContext, logger}}) => {
+    const {analyticsClient = generatedAnswerAnalyticsClient} = args ?? {};
     dispatch(resetAnswer());
 
     const state = getState() as StreamAnswerAPIState;
@@ -440,7 +455,8 @@ export const generateAnswer = createAsyncThunk<
     if (state.generatedAnswer.answerConfigurationId) {
       const answerApiQueryParams = constructAnswerAPIQueryParams(
         state,
-        navigatorContext
+        navigatorContext,
+        analyticsClient
       );
       // TODO: SVCC-5178 Refactor multiple sequential dispatches into single action
       dispatch(setAnswerApiQueryParams(answerApiQueryParams));

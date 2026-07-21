@@ -22,9 +22,9 @@ import {randomID} from '../../../utils/utils.js';
 import {
   buildCoreGeneratedAnswer,
   type GeneratedAnswer,
-  type GeneratedAnswerAnalyticsClient,
   type GeneratedAnswerProps,
 } from './headless-core-generated-answer.js';
+import type {GeneratedAnswerAnalyticsClient} from '../../../features/generated-answer/generated-answer-analytics-client.js';
 
 interface SearchAPIGeneratedAnswer extends GeneratedAnswer {}
 
@@ -44,7 +44,8 @@ interface SubscribeStateManager {
       GeneratedAnswerSection & SearchSection & DebugSection,
       ClientThunkExtraArguments<GeneratedAnswerAPIClient>,
       ConfigurationState
-    >
+    >,
+    analyticsClient: GeneratedAnswerAnalyticsClient
   ) => Unsubscribe;
 }
 
@@ -67,7 +68,7 @@ export const subscribeStateManager: SubscribeStateManager = {
     return true;
   },
 
-  subscribeToSearchRequests: (engine) => {
+  subscribeToSearchRequests: (engine, analyticsClient) => {
     const strictListener = () => {
       const state = engine.state;
       const requestId = state.search.requestId;
@@ -103,6 +104,7 @@ export const subscribeStateManager: SubscribeStateManager = {
           streamAnswer({
             setAbortControllerRef: (ref: AbortController) =>
               subscribeStateManager.setAbortControllerRef(ref, genQaEngineId),
+            analyticsClient,
           })
         );
       }
@@ -157,7 +159,7 @@ export function buildSearchAPIGeneratedAnswer(
     };
   }
 
-  subscribeStateManager.subscribeToSearchRequests(engine);
+  subscribeStateManager.subscribeToSearchRequests(engine, analyticsClient);
 
   const isSearchEngine = (
     engine: SearchEngine | InsightEngine

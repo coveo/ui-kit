@@ -318,7 +318,10 @@ describe('searchapi-generated-answer', () => {
         },
       };
 
-      subscribeStateManagerMock.subscribeToSearchRequests(engine);
+      subscribeStateManagerMock.subscribeToSearchRequests(
+        engine,
+        generatedAnswerAnalyticsClient
+      );
     };
 
     beforeEach(() => {
@@ -346,6 +349,19 @@ describe('searchapi-generated-answer', () => {
       listener();
 
       expect(streamAnswer).toHaveBeenCalled();
+    });
+
+    it('should pass the analytics client into streamAnswer', () => {
+      setupEngine(true);
+
+      const listener = engine.subscribe.mock.calls[0][0];
+      listener();
+
+      expect(streamAnswer).toHaveBeenCalledWith(
+        expect.objectContaining({
+          analyticsClient: generatedAnswerAnalyticsClient,
+        })
+      );
     });
 
     it('should not stream answer when generated answer is disabled', () => {
