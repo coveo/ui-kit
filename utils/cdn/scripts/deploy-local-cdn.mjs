@@ -42,12 +42,16 @@ const packages = [
     source: 'packages/shopify/cdn',
     cdnPath: 'shopify/v$VERSION',
   },
-  {
-    name: 'coveo-analytics',
-    source: 'packages/coveo-analytics/cdn',
-    cdnPath: 'coveo.analytics.js/$VERSION',
-    versions: ['minor', 'patch'],
-  },
+  ...(process.env.DEPLOYMENT_ENVIRONMENT === 'CDN'
+    ? [
+        {
+          name: 'coveo-analytics',
+          source: 'packages/coveo-analytics/cdn',
+          cdnPath: 'coveo.analytics.js/$VERSION',
+          versions: ['minor', 'patch'],
+        },
+      ]
+    : []),
 ];
 
 const getVersion = async (packageName) => {
