@@ -250,7 +250,7 @@ describe('generated answer slice', () => {
         responseFormat,
         isEnabled: true,
         fieldsToIncludeInCitations: ['foo'],
-        answerGenerationMode: 'automatic' as const,
+        answerGenerationMode: 'manual' as const,
       };
       const state = {
         ...baseState,
@@ -295,6 +295,16 @@ describe('generated answer slice', () => {
 
     const finalState = generatedAnswerReducer(state, resetAnswer());
     expect(finalState.answerConfigurationId).toBe('some-id');
+  });
+
+  it('should not reset the answerGenerationMode', () => {
+    const state = {
+      ...baseState,
+      answerGenerationMode: 'manual' as const,
+    };
+
+    const finalState = generatedAnswerReducer(state, resetAnswer());
+    expect(finalState.answerGenerationMode).toBe('manual');
   });
 
   test.each(generatedContentFormat)(
