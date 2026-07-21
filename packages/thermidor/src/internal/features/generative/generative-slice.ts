@@ -146,9 +146,9 @@ export function createGenerativeSlice(
         .addCase(actions.appendReasoningDelta, (state, {payload}) => {
           const turn = state.turns.find((t) => t.id === payload.turnId);
           const steps = turn?.agentResponse?.reasoningSteps;
-          if (steps && steps.length > 0) {
-            const last = steps[steps.length - 1];
-            if (last.type === 'reasoning') {
+          if (steps) {
+            const last = steps.findLast((s) => s.type === 'reasoning');
+            if (last) {
               last.content += payload.delta;
             }
           }
