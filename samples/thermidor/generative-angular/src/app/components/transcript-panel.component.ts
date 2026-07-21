@@ -14,7 +14,7 @@ import type {
   ReasoningStep,
   Turn,
 } from '../models';
-import type {CommerceInterface} from '@coveo/thermidor';
+import type {CommerceInterface, ToolCallStep} from '@coveo/thermidor';
 import {SurfaceOutletComponent} from './surface-outlet.component';
 import {RoutedCommerceResultsComponent} from './routed-commerce-results.component';
 
@@ -179,18 +179,14 @@ export class TranscriptPanelComponent {
     }
   );
 
-  protected readonly toolCalls = computed(() =>
-    this.reasoningSteps().filter(
-      (s): s is ReasoningStep & {type: 'tool-call'} => s.type === 'tool-call'
-    )
-  );
-
   protected readonly hasProgress = computed(
     () => this.reasoningSteps().length > 0
   );
 
   protected readonly progressLabel = computed(() => {
-    const tools = this.toolCalls();
+    const tools = this.reasoningSteps().filter(
+      (s): s is ToolCallStep => s.type === 'tool-call'
+    );
     return tools.length > 0
       ? tools[tools.length - 1].status === 'calling'
         ? 'Working'
