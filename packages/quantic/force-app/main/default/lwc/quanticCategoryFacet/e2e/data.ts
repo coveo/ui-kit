@@ -1,6 +1,6 @@
 const facetId = 'geographicalhierarchy';
 const field = 'geographicalhierarchy';
-const label = 'Object type';
+const label = 'Country';
 
 /**
  * Facet response before any value is selected.

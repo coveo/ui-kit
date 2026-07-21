@@ -3,7 +3,6 @@ const field = 'Date';
 
 /**
  * Facet response before any value is selected.
- *
  * The values mirror the relative timeframes declared on the exampleQuanticTimeframeFacet.html file
  */
 export const initialFacetData = {

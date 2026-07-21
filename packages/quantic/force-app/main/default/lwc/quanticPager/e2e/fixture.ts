@@ -57,9 +57,7 @@ export const testInsight = quanticBase.extend<QuanticPagerE2EInsightFixtures>({
     await page.goto(pageUrl);
     configuration.configure({...options, useCase: useCaseEnum.insight});
     await insightSetup.waitForInsightInterfaceInitialization();
-    const searchResponsePromise = search.waitForSearchResponse();
-    await search.performSearch();
-    await searchResponsePromise;
+    await Promise.all([search.waitForSearchResponse(), search.performSearch()]);
     await use(new PagerObject(page));
   },
 });
