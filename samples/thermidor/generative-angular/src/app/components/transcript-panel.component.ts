@@ -11,7 +11,7 @@ import {marked} from 'marked';
 import type {
   RenderableCommerceSurface,
   RoutedInterface,
-  ToolCall,
+  ReasoningStep,
   Turn,
 } from '../models';
 import type {CommerceInterface} from '@coveo/thermidor';
@@ -111,9 +111,9 @@ class MarkdownPipe implements PipeTransform {
               <p class="progress-reasoning">{{ reasoningText() }}</p>
             }
 
-            @if (toolActivity().length > 0) {
+            @if (toolCalls().length > 0) {
               <ul class="progress-list">
-                @for (tool of toolActivity(); track tool.id) {
+                @for (tool of toolCalls(); track tool.id) {
                   <li>
                     <span>{{ truncateToolName(tool.name) }}</span>
                     <small>{{
@@ -159,8 +159,7 @@ class MarkdownPipe implements PipeTransform {
 })
 export class TranscriptPanelComponent {
   readonly turns = input<Turn[]>([]);
-  readonly reasoningText = input('');
-  readonly toolActivity = input<ToolCall[]>([]);
+  readonly reasoningSteps = input<ReasoningStep[]>([]);
   readonly surfaces = input<RenderableCommerceSurface[]>([]);
   readonly routedInterface = input<RoutedInterface | undefined>(undefined);
   readonly isStreaming = input(false);
@@ -180,14 +179,27 @@ export class TranscriptPanelComponent {
     }
   );
 
+  protected readonly toolCalls = computed(() =>
+    this.reasoningSteps().filter(
+      (s): s is ReasoningStep & {type: 'tool-call'} => s.type === 'tool-call'
+    )
+  );
+
+  protected readonly reasoningText = computed(() =>
+    this.reasoningSteps()
+      .filter((s) => s.type === 'reasoning')
+      .map((s) => s.content)
+      .join('')
+  );
+
   protected readonly hasProgress = computed(
-    () => this.toolActivity().length > 0 || this.reasoningText().length > 0
+    () => this.reasoningSteps().length > 0
   );
 
   protected readonly progressLabel = computed(() => {
-    const activity = this.toolActivity();
-    return activity.length > 0
-      ? activity[activity.length - 1].status === 'calling'
+    const tools = this.toolCalls();
+    return tools.length > 0
+      ? tools[tools.length - 1].status === 'calling'
         ? 'Working'
         : 'Completed'
       : 'Thinking';
