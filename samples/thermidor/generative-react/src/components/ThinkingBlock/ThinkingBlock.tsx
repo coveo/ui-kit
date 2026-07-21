@@ -1,6 +1,10 @@
 import type {ReasoningStep, ToolCallStep} from '@coveo/thermidor';
 import styles from './ThinkingBlock.module.css';
 
+function isToolCall(s: ReasoningStep): s is ToolCallStep {
+  return s.type === 'tool-call';
+}
+
 export interface ThinkingBlockProps {
   reasoningSteps: ReasoningStep[];
   isStreaming: boolean;
@@ -14,9 +18,6 @@ export function ThinkingBlock({
     return null;
   }
 
-  const isToolCall = (s: ReasoningStep): s is ToolCallStep =>
-    s.type === 'tool-call';
-
   const toolCalls = reasoningSteps.filter(isToolCall);
   const allCompleted =
     toolCalls.length > 0 && toolCalls.every((tc) => tc.status === 'completed');
@@ -27,7 +28,7 @@ export function ThinkingBlock({
   ).length;
 
   let summaryText: string;
-  if (allCompleted && toolCalls.length > 0) {
+  if (allCompleted) {
     summaryText = `✓ ${toolCalls.length} tool call${toolCalls.length > 1 ? 's' : ''} completed`;
   } else if (!isStreaming && toolCalls.length === 0) {
     summaryText = `✓ Reasoning complete`;
