@@ -103,13 +103,13 @@ const templates: Template[] = [
   {
     name: 'headless-ssr-commerce-nextjs',
     library: 'headless-ssr',
-    label: 'Headless commerce SSR (Next.js App Router)',
+    label: 'Commerce SSR (Next.js App Router)',
     packageName: '@coveo/ui-kit-sample-headless-ssr-commerce-nextjs',
   },
   {
     name: 'headless-ssr-commerce-express',
     library: 'headless-ssr',
-    label: 'Headless commerce SSR (Express)',
+    label: 'Commerce SSR (Express)',
     packageName: '@coveo/ui-kit-sample-headless-ssr-commerce-express',
   },
 ];
