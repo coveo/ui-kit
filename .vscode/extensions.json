@@ -5,6 +5,6 @@
     "runem.lit-plugin",
     "unifiedjs.vscode-mdx",
     "ms-playwright.playwright",
-    "bradlc.vscode-tailwindcss",
+    "bradlc.vscode-tailwindcss"
   ]
 }
