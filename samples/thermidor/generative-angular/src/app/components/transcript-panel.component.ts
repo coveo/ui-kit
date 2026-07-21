@@ -107,22 +107,22 @@ class MarkdownPipe implements PipeTransform {
           </summary>
 
           <div class="progress-content">
-            @if (reasoningText()) {
-              <p class="progress-reasoning">{{ reasoningText() }}</p>
-            }
-
-            @if (toolCalls().length > 0) {
-              <ul class="progress-list">
-                @for (tool of toolCalls(); track tool.id) {
+            <ul class="progress-list">
+              @for (step of reasoningSteps(); track $index) {
+                @if (step.type === 'reasoning') {
+                  <li class="progress-reasoning-step">
+                    <span>{{ step.content }}</span>
+                  </li>
+                } @else {
                   <li>
-                    <span>{{ truncateToolName(tool.name) }}</span>
+                    <span>{{ truncateToolName(step.name) }}</span>
                     <small>{{
-                      tool.status === 'completed' ? 'Done' : 'Running'
+                      step.status === 'completed' ? 'Done' : 'Running'
                     }}</small>
                   </li>
                 }
-              </ul>
-            }
+              }
+            </ul>
           </div>
         </details>
       }
@@ -183,13 +183,6 @@ export class TranscriptPanelComponent {
     this.reasoningSteps().filter(
       (s): s is ReasoningStep & {type: 'tool-call'} => s.type === 'tool-call'
     )
-  );
-
-  protected readonly reasoningText = computed(() =>
-    this.reasoningSteps()
-      .filter((s) => s.type === 'reasoning')
-      .map((s) => s.content)
-      .join('')
   );
 
   protected readonly hasProgress = computed(
