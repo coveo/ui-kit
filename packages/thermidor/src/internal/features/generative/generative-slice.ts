@@ -59,8 +59,7 @@ export function createGenerativeSlice(
             turn.agentResponse = {
               messages: [],
               surfaces: [],
-              toolCalls: [],
-              reasoningContent: '',
+              reasoningSteps: [],
             };
           }
         })
@@ -86,7 +85,8 @@ export function createGenerativeSlice(
         .addCase(actions.startToolCall, (state, {payload}) => {
           const turn = state.turns.find((t) => t.id === payload.turnId);
           if (turn?.agentResponse) {
-            turn.agentResponse.toolCalls.push({
+            turn.agentResponse.reasoningSteps.push({
+              type: 'tool-call',
               id: payload.toolCallId,
               name: payload.toolName,
               args: '',
@@ -96,21 +96,21 @@ export function createGenerativeSlice(
         })
         .addCase(actions.appendToolCallArgs, (state, {payload}) => {
           const turn = state.turns.find((t) => t.id === payload.turnId);
-          const toolCall = turn?.agentResponse?.toolCalls.find(
-            (tc) => tc.id === payload.toolCallId
+          const step = turn?.agentResponse?.reasoningSteps.find(
+            (s) => s.type === 'tool-call' && s.id === payload.toolCallId
           );
-          if (toolCall) {
-            toolCall.args += payload.delta;
+          if (step && step.type === 'tool-call') {
+            step.args += payload.delta;
           }
         })
         .addCase(actions.completeToolCall, (state, {payload}) => {
           const turn = state.turns.find((t) => t.id === payload.turnId);
-          const toolCall = turn?.agentResponse?.toolCalls.find(
-            (tc) => tc.id === payload.toolCallId
+          const step = turn?.agentResponse?.reasoningSteps.find(
+            (s) => s.type === 'tool-call' && s.id === payload.toolCallId
           );
-          if (toolCall) {
-            toolCall.result = payload.result;
-            toolCall.status = 'completed';
+          if (step && step.type === 'tool-call') {
+            step.result = payload.result;
+            step.status = 'completed';
           }
         })
         .addCase(actions.completeTurn, (state, {payload}) => {
@@ -134,13 +134,23 @@ export function createGenerativeSlice(
             delete turn.error;
           }
         })
-        .addCase(actions.startReasoning, (_state, _action) => {
-          // No-op: reasoning start is a lifecycle signal only.
+        .addCase(actions.startReasoning, (state, {payload}) => {
+          const turn = state.turns.find((t) => t.id === payload.turnId);
+          if (turn?.agentResponse) {
+            turn.agentResponse.reasoningSteps.push({
+              type: 'reasoning',
+              content: '',
+            });
+          }
         })
         .addCase(actions.appendReasoningDelta, (state, {payload}) => {
           const turn = state.turns.find((t) => t.id === payload.turnId);
-          if (turn?.agentResponse) {
-            turn.agentResponse.reasoningContent += payload.delta;
+          const steps = turn?.agentResponse?.reasoningSteps;
+          if (steps && steps.length > 0) {
+            const last = steps[steps.length - 1];
+            if (last.type === 'reasoning') {
+              last.content += payload.delta;
+            }
           }
         })
         .addCase(actions.endReasoning, (_state, _action) => {
