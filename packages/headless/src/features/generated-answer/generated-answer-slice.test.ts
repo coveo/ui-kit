@@ -250,7 +250,7 @@ describe('generated answer slice', () => {
         responseFormat,
         isEnabled: true,
         fieldsToIncludeInCitations: ['foo'],
-        answerGenerationMode: 'manual' as const,
+        answerGenerationMode: 'automatic' as const,
       };
       const state = {
         ...baseState,
