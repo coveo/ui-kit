@@ -27,8 +27,8 @@
   "types": "dist/definitions/coveoua/library.d.ts",
   "scripts": {
     "build": "rollup -c",
-    "test": "jest --clearCache && jest --coverage --silent",
-    "test:watch": "jest --clearCache && jest --watch --silent",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest",
     "prepare-deploy": "mkdir -p deploy && cp dist/coveoua*.js dist/coveoua*.js.map deploy",
     "clean": "node ../../utils/ci/rm-rf.mjs dist dist_test coverage"
   },
@@ -46,14 +46,13 @@
     "@rollup/plugin-replace": "catalog:",
     "@rollup/plugin-terser": "catalog:",
     "@rollup/plugin-typescript": "catalog:",
-    "@types/jest": "catalog:",
     "@types/node": "catalog:",
-    "jest": "catalog:",
-    "jest-environment-jsdom": "catalog:",
+    "@vitest/coverage-v8": "4.1.9",
+    "jsdom": "28.1.0",
     "rollup": "catalog:",
-    "ts-jest": "29.4.11",
     "tslib": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   },
   "overrides": {
     "plist": "3.0.5"

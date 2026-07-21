@@ -8,22 +8,22 @@ describe('ReactNativeRuntime', () => {
   beforeEach(() => {
     runtimeEnvironment = new ReactNativeRuntime({
       storage: {
-        getItem: jest.fn(),
-        setItem: jest.fn(),
-        removeItem: jest.fn(),
+        getItem: vi.fn(),
+        setItem: vi.fn(),
+        removeItem: vi.fn(),
       },
     });
     client = new CoveoAnalyticsClient({runtimeEnvironment});
   });
 
   it('should call "storage.getItem" when getting the visitor ID', async () => {
-    jest.spyOn(runtimeEnvironment.storage, 'getItem');
+    vi.spyOn(runtimeEnvironment.storage, 'getItem');
     await client.getCurrentVisitorId();
     expect(runtimeEnvironment.storage.getItem).toHaveBeenCalled();
   });
 
   it('should call "storage.getItem" when getting the visitor ID', async () => {
-    jest.spyOn(runtimeEnvironment.storage, 'setItem');
+    vi.spyOn(runtimeEnvironment.storage, 'setItem');
     await client.setCurrentVisitorId('myid');
     expect(runtimeEnvironment.storage.setItem).toHaveBeenCalled();
   });

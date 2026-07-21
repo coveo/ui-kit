@@ -1,5 +1,16 @@
+const detectorState = vi.hoisted(() => ({
+  hasNavigator: false,
+  hasWindow: false,
+}));
+
+vi.mock('./detector', () => ({
+  hasNavigator: () => detectorState.hasNavigator,
+  hasWindow: () => detectorState.hasWindow,
+}));
+
+import {doNotTrack} from './donottrack';
+
 describe('doNotTrack', () => {
-  let doNotTrack: () => boolean;
   function initModule(
     hasNav: boolean,
     hasWin: boolean,
@@ -10,11 +21,8 @@ describe('doNotTrack', () => {
       windowDoNotTrack?: any;
     }
   ) {
-    jest.resetModules();
-    jest.mock('./detector', () => ({
-      hasNavigator: () => hasNav,
-      hasWindow: () => hasWin,
-    }));
+    detectorState.hasNavigator = hasNav;
+    detectorState.hasWindow = hasWin;
     if (hasNav) {
       Object.defineProperty(<any>navigator, 'globalPrivacyControl', {
         get() {
@@ -43,7 +51,6 @@ describe('doNotTrack', () => {
         configurable: true,
       });
     }
-    doNotTrack = require('./donottrack').doNotTrack;
   }
   describe('without a Navigator and without window', () => {
     it('should be false', () => {

@@ -7,3 +7,6 @@ const documentMock = {
 Object.keys(documentMock).forEach((key) =>
   Object.defineProperty(document, key, {value: documentMock[key]})
 );
+
+globalThis.reconfigureJSDOM = (options) =>
+  globalThis.jsdom.reconfigure(options);

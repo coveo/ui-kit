@@ -1,5 +1,6 @@
 import {CoveoLinkParam, LinkPlugin} from './link';
 import {createAnalyticsClientMock} from '../../tests/analyticsClientMock';
+import type {Mock} from 'vitest';
 import {v4 as uuidv4} from 'uuid';
 
 function currentSecsSinceEpoch() {
@@ -128,9 +129,9 @@ describe('CoveoLinkPlugin', () => {
   let link: LinkPlugin;
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     const analyticsClient = createAnalyticsClientMock();
-    analyticsClient.getCurrentVisitorId = jest.fn(() =>
+    analyticsClient.getCurrentVisitorId = vi.fn(() =>
       Promise.resolve('85698661-efdf-4c6d-9cad-c4632bf81ce3')
     );
     link = new LinkPlugin({client: analyticsClient});
@@ -202,7 +203,7 @@ describe('CoveoLinkPlugin', () => {
 
   it('can set a list of referrers on the client', () => {
     const analyticsClient = createAnalyticsClientMock();
-    const mock: jest.Mock = jest.fn();
+    const mock: Mock = vi.fn();
     analyticsClient.setAcceptedLinkReferrers = mock;
     link = new LinkPlugin({client: analyticsClient});
     link.acceptFrom(['*.somedomain.com', 'www.coveo.com']);

@@ -1,20 +1,21 @@
 import * as history from './history';
 import {MAX_NUMBER_OF_HISTORY_ELEMENTS} from './history';
+import type {Mocked} from 'vitest';
 import {WebStorage} from './storage';
 
 describe('history', () => {
-  let storageMock: jest.Mocked<WebStorage>;
+  let storageMock: Mocked<WebStorage>;
   let historyStore: history.HistoryStore;
   let data: history.HistoryElement;
 
   beforeEach(() => {
     let storageData: any;
     storageMock = {
-      getItem: jest.fn((key) => storageData),
-      setItem: jest.fn((key, data) => {
+      getItem: vi.fn((key) => storageData),
+      setItem: vi.fn((key, data) => {
         storageData = data;
       }),
-      removeItem: jest.fn(),
+      removeItem: vi.fn(),
     };
     historyStore = new history.HistoryStore(storageMock);
     data = {

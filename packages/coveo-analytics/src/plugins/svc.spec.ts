@@ -5,7 +5,7 @@ describe('SVC plugin', () => {
   let svc: SVCPlugin;
   let client: ReturnType<typeof createAnalyticsClientMock>;
 
-  const someUUIDGenerator = jest.fn(() => someUUID);
+  const someUUIDGenerator = vi.fn(() => someUUID);
   const someUUID = '13ccebdb-0138-45e8-bf70-884817ead190';
   const defaultResult = {
     pageViewId: someUUID,
@@ -23,7 +23,7 @@ describe('SVC plugin', () => {
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     client = createAnalyticsClientMock();
     svc = new SVCPlugin({client, uuidGenerator: someUUIDGenerator as any});
   });

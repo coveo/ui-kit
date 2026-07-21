@@ -33,11 +33,11 @@ const expectedBaseCaseMetadata = {
   CaseSubject: 'test subject',
 };
 
-jest.mock('../donottrack', () => {
+vi.mock('../donottrack', () => {
   return {
     __esModule: true,
-    default: jest.fn(),
-    doNotTrack: jest.fn(),
+    default: vi.fn(),
+    doNotTrack: vi.fn(),
   };
 });
 
@@ -2021,7 +2021,7 @@ describe('InsightClient', () => {
   });
 
   it('should disable analytics when doNotTrack is enabled', async () => {
-    (doNotTrack as jest.Mock).mockImplementationOnce(() => true);
+    vi.mocked(doNotTrack).mockImplementationOnce(() => true);
 
     const c = new CoveoInsightClient({}, provider);
     expect(c.coveoAnalyticsClient instanceof NoopAnalytics).toBe(true);

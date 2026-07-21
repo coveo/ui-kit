@@ -1,3 +1,4 @@
+import type {MockedFunction} from 'vitest';
 import * as CrossFetch from 'cross-fetch';
 
 type ResponseFactory = (url: string, options: RequestInit) => unknown;
@@ -104,7 +105,7 @@ export function mockFetch() {
   return {
     fetchMock,
     fetchMockBeforeEach: () =>
-      (CrossFetch.fetch as jest.MockedFunction<typeof CrossFetch.fetch>)
+      (CrossFetch.fetch as MockedFunction<typeof CrossFetch.fetch>)
         .mockReset()
         .mockImplementation(
           fetchMock.fetch.bind(fetchMock) as typeof CrossFetch.fetch
