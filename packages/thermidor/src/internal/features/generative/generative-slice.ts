@@ -1,5 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
-import type {GenerativeState} from './generative-types.js';
+import type {GenerativeState, ToolCallStep} from './generative-types.js';
 import {type CacheKey, createCacheKey} from '@/src/internal/utils/index.js';
 import {getHandleInternals} from '@/src/internal/utils/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
@@ -97,18 +97,20 @@ export function createGenerativeSlice(
         .addCase(actions.appendToolCallArgs, (state, {payload}) => {
           const turn = state.turns.find((t) => t.id === payload.turnId);
           const step = turn?.agentResponse?.reasoningSteps.find(
-            (s) => s.type === 'tool-call' && s.id === payload.toolCallId
+            (s): s is ToolCallStep =>
+              s.type === 'tool-call' && s.id === payload.toolCallId
           );
-          if (step && step.type === 'tool-call') {
+          if (step) {
             step.args += payload.delta;
           }
         })
         .addCase(actions.completeToolCall, (state, {payload}) => {
           const turn = state.turns.find((t) => t.id === payload.turnId);
           const step = turn?.agentResponse?.reasoningSteps.find(
-            (s) => s.type === 'tool-call' && s.id === payload.toolCallId
+            (s): s is ToolCallStep =>
+              s.type === 'tool-call' && s.id === payload.toolCallId
           );
-          if (step && step.type === 'tool-call') {
+          if (step) {
             step.result = payload.result;
             step.status = 'completed';
           }
@@ -147,12 +149,10 @@ export function createGenerativeSlice(
           const turn = state.turns.find((t) => t.id === payload.turnId);
           const steps = turn?.agentResponse?.reasoningSteps;
           if (steps) {
-            let last = steps.findLast((s) => s.type === 'reasoning');
-            if (!last) {
-              const newStep = {type: 'reasoning' as const, content: ''};
-              steps.push(newStep);
-              last = newStep;
+            if (!steps.some((s) => s.type === 'reasoning')) {
+              steps.push({type: 'reasoning', content: ''});
             }
+            const last = steps.findLast((s) => s.type === 'reasoning')!;
             last.content += payload.delta;
           }
         })
