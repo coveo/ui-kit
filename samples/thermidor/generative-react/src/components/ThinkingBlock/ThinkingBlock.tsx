@@ -29,6 +29,8 @@ export function ThinkingBlock({
   let summaryText: string;
   if (allCompleted && toolCalls.length > 0) {
     summaryText = `✓ ${toolCalls.length} tool call${toolCalls.length > 1 ? 's' : ''} completed`;
+  } else if (!isStreaming && toolCalls.length === 0) {
+    summaryText = `✓ Reasoning complete`;
   } else if (activeTool) {
     const progress =
       completedCount > 0 ? ` (${completedCount}/${toolCalls.length})` : '';
