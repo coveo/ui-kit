@@ -127,7 +127,10 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
           );
         },
       },
-      hydrateSubInterface: createHydrateSubInterface(fullEngine),
+      hydrateSubInterface: createHydrateSubInterface(
+        fullEngine,
+        options.interface
+      ),
     });
   }
 
