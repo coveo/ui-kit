@@ -121,12 +121,6 @@ export interface ToolCallStep {
   status: ToolCallStatus;
 }
 
-/**
- * @deprecated Use `ToolCallStep` instead. This alias is kept temporarily for
- * migration convenience but will be removed in a future release.
- */
-export type ToolCall = ToolCallStep;
-
 export interface AgentMessage {
   /**
    * The text content of the message.

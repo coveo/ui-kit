@@ -51,7 +51,6 @@ export type {
   ReasoningStep,
   RoutedInterface,
   RoutedUseCase,
-  ToolCall,
   ToolCallStatus,
   ToolCallStep,
   Turn,
