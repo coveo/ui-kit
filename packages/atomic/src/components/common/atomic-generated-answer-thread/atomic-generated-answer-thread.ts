@@ -197,23 +197,27 @@ export class AtomicGeneratedAnswerThread extends LitElement {
     `;
 
     return html`
-      <li class="grid min-w-0">
-        <div class="group/title flex min-w-0 items-center gap-3">
-          <div class="flex w-[10px] shrink-0 items-center justify-center">
+      <li class="group/title grid min-w-0 grid-cols-[10px_1fr] gap-x-3">
+        <div class="row-span-2 flex flex-col items-center">
+          <div
+            class="flex justify-center items-center text-base h-[1lh] my-1.5"
+          >
             <span class=${timelineDotClasses}></span>
           </div>
-          <div class="flex min-w-0 flex-col">
-            <button
-              type="button"
-              class=${showPreviousButtonClasses}
-              @click=${this.handleShowAllClick}
-            >
-              ${label}
-            </button>
+          <div
+            class="flex grow w-full justify-center items-center py-2 -my-2 min-h-3"
+          >
+            <span class=${timelineConnectorClasses}> </span>
           </div>
         </div>
-        <div class="flex h-3 w-[10px] shrink-0 justify-center">
-          <span class=${timelineConnectorClasses}> </span>
+        <div class="flex min-w-0 flex-col">
+          <button
+            type="button"
+            class=${showPreviousButtonClasses}
+            @click=${this.handleShowAllClick}
+          >
+            ${label}
+          </button>
         </div>
       </li>
     `;
