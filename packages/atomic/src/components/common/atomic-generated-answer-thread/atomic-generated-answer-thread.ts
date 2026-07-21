@@ -180,12 +180,13 @@ export class AtomicGeneratedAnswerThread extends LitElement {
     const showPreviousButtonClasses = `
       text-on-background text-base min-w-0 inline-flex text-left mr-auto
       px-2 py-1.5 font-normal bg-transparent border-0 appearance-none
-      transition-colors hover:bg-neutral-light rounded-md cursor-pointer
+      transition-colors hover:bg-neutral hover:text-primary rounded-md cursor-pointer
       focus-visible:outline-none focus-visible:ring-2
       focus-visible:ring-primary focus-visible:ring-offset-2
     `;
     const timelineDotClasses = `
-      h-2 w-2 rounded-full bg-neutral-dim
+      h-2 w-2 rounded-full bg-neutral-dim transition-colors
+      hover:bg-neutral-dark group-has-[button:hover]/title:bg-neutral-dark
     `;
     const timelineConnectorClasses = `
       relative h-full w-px bg-neutral
@@ -197,7 +198,7 @@ export class AtomicGeneratedAnswerThread extends LitElement {
 
     return html`
       <li class="grid min-w-0">
-        <div class="flex min-w-0 items-center gap-3">
+        <div class="group/title flex min-w-0 items-center gap-3">
           <div class="flex w-[10px] shrink-0 items-center justify-center">
             <span class=${timelineDotClasses}></span>
           </div>

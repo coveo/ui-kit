@@ -1,3 +1,13 @@
+## 3.53.1
+
+### Patch Changes
+
+- [#7937](https://github.com/coveo/ui-kit/pull/7937) [`6580723`](https://github.com/coveo/ui-kit/commit/65807231404d5f3357be02f91ff8dfadae694904) - fix(headless): restore memoization of commerce facet selectors
+
+  Rewrote the commerce facet selectors so their reselect input selectors return stable references (or primitives) instead of freshly allocated wrapper objects. This restores effective memoization and removes the dev-mode `inputStabilityCheck` and `identityFunctionCheck` warnings that were previously logged on every selector access. Selector outputs are unchanged.
+
+- [#7911](https://github.com/coveo/ui-kit/pull/7911) [`6bd6624`](https://github.com/coveo/ui-kit/commit/6bd662476610fbe9815919551b6c40d2b0060c52) - Fix `atomic-generated-answer` not respecting `tabs-included`/`tabs-excluded` when generating answers. The component no longer sends answer-generation queries when it is hidden on the current tab, including on the initial load. The Answer API and Agent API generation paths now honor the generated answer `isEnabled` state, and `buildGeneratedAnswer`'s `initialState.isEnabled` is now applied.
+
 ## 3.53.0
 
 ### Minor Changes

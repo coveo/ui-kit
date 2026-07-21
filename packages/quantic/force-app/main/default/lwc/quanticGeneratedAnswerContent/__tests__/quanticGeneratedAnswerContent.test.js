@@ -5,6 +5,8 @@ import {createElement} from 'lwc';
 import {loadMarkdownDependencies} from 'c/quanticUtils';
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
 
+const mockAnswerHeight = 250;
+
 jest.mock('c/quanticHeadlessLoader');
 jest.mock('c/quanticUtils', () => ({
   loadMarkdownDependencies: jest.fn(
@@ -17,6 +19,7 @@ jest.mock('c/quanticUtils', () => ({
   LinkUtils: {
     bindAnalyticsToLink: jest.fn(() => jest.fn()),
   },
+  getAbsoluteHeight: jest.fn(() => mockAnswerHeight),
 }));
 
 const mockMarkedUse = jest.fn();
@@ -415,6 +418,30 @@ describe('c-quantic-generated-answer-content', () => {
 
         expect(mockUnbind).toHaveBeenCalledTimes(exampleLinks.length);
       });
+    });
+  });
+
+  describe('the quantic__answercontentupdated event', () => {
+    beforeEach(() => {
+      mockSuccessfulHeadlessInitialization();
+      prepareHeadlessState();
+    });
+
+    it('should dispatch the event with the measured height when the markdown content is updated', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        answerContentFormat: 'text/markdown',
+        answer: 'Hello, world!',
+      });
+      const handler = jest.fn();
+      element.addEventListener('quantic__answercontentupdated', handler);
+      await flushPromises();
+
+      expect(handler).toHaveBeenCalledTimes(1);
+      const event = handler.mock.calls[0][0];
+      expect(event.detail).toEqual({height: mockAnswerHeight});
+      expect(event.bubbles).toBe(true);
+      expect(event.composed).toBe(true);
     });
   });
 });

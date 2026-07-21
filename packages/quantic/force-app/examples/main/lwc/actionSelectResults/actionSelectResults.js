@@ -1,13 +1,30 @@
-import {getHeadlessBundle} from 'c/quanticHeadlessLoader';
+import {
+  getHeadlessBundle,
+  registerComponentForInit,
+  initializeWithHeadless,
+} from 'c/quanticHeadlessLoader';
 import {api, LightningElement} from 'lwc';
 
 export default class ActionSelectResults extends LightningElement {
   @api engineId;
   @api disabled;
 
-  interactiveResult;
+  engine;
   count = 1;
   headless;
+
+  connectedCallback() {
+    registerComponentForInit(this, this.engineId);
+  }
+
+  renderedCallback() {
+    initializeWithHeadless(this, this.engineId, this.initialize);
+  }
+
+  initialize = (engine) => {
+    this.engine = engine;
+    this.headless = getHeadlessBundle(this.engineId);
+  };
 
   handle() {
     const result = {
@@ -26,20 +43,10 @@ export default class ActionSelectResults extends LightningElement {
       },
     };
     this.count++;
-    this.resolveInteractiveResultController(result).then((controller) => {
-      this.interactiveResult = controller;
-      this.interactiveResult.select();
-    });
-  }
-
-  resolveInteractiveResultController(result) {
-    this.headless = getHeadlessBundle(this.engineId);
-    return window.coveoHeadless?.[this.engineId]?.enginePromise.then(
-      (engine) => {
-        return this.headless.buildInteractiveResult(engine, {
-          options: {result: JSON.parse(JSON.stringify(result))},
-        });
-      }
+    const interactiveResult = this.headless.buildInteractiveResult(
+      this.engine,
+      {options: {result: JSON.parse(JSON.stringify(result))}}
     );
+    interactiveResult?.select();
   }
 }

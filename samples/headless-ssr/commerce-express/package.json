@@ -1,28 +1,42 @@
 {
-  "name": "@samples/headless-ssr-commerce-express",
-  "version": "0.0.0",
-  "private": true,
-  "description": "Headless Commerce SSR Generic Sample using the new simplified ssr-next API",
+  "name": "@coveo/ui-kit-sample-headless-ssr-commerce-express",
+  "version": "0.1.0",
+  "description": "Commerce server-side rendering (SSR) with @coveo/headless/ssr-commerce and an Express server",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/coveo/ui-kit",
+    "directory": "samples/headless-ssr/commerce-express"
+  },
   "type": "module",
+  "publishConfig": {
+    "access": "public",
+    "directory": "publish",
+    "linkDirectory": false
+  },
   "scripts": {
-    "dev": "pnpm build:client --watch=forever & pnpm build:server --watch & pnpm start -- --watch",
+    "dev": "pnpm build:client --watch=forever & pnpm build:server --watch & node --watch ./dist/server.js",
     "build": "pnpm build:server && pnpm build:client",
-    "build:server": "tsc",
+    "build:e2e": "pnpm build && pnpm build:mocks",
+    "build:server": "tsc -p tsconfig.build.json",
     "build:client": "esbuild ./src/client.ts --bundle --outfile=dist/client.js --format=esm --target=es2022",
+    "build:mocks": "esbuild ./mocks/register.ts --bundle --outfile=dist-mocks/register.mjs --format=esm --platform=node",
     "start": "node ./dist/server.js",
-    "test": "playwright test",
-    "test:headed": "playwright test --headed",
-    "type-check": "tsc --noEmit"
+    "e2e": "pnpm build:e2e && playwright test",
+    "type-check": "tsc --noEmit",
+    "prepack": "node ../../../scripts/build-sample-publish-dir.mjs"
   },
   "dependencies": {
     "@coveo/headless": "workspace:*",
-    "express": "^5.0.0"
+    "express": "5.2.1"
   },
   "devDependencies": {
+    "@coveo/platform-mock-api": "workspace:*",
+    "@msw/playwright": "catalog:",
     "@playwright/test": "catalog:",
-    "@types/express": "^5.0.0",
+    "@types/express": "5.0.6",
     "@types/node": "catalog:",
     "esbuild": "catalog:",
+    "msw": "catalog:",
     "typescript": "catalog:"
   }
 }

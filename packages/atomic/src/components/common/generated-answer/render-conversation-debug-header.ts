@@ -21,7 +21,7 @@ export const renderConversationDebugHeader: FunctionalComponent<
     ${i18n.t('generated-answer-debug-mode-on')}
     <div class="bg-success h-2 w-2 rounded-full shrink-0"></div>
 
-    <div class="flex items-center text-neutral-dark shrink-0">
+    <div class="flex items-center text-neutral-dark break-all">
       ${i18n.t('generated-answer-conversation-id', {conversationId})}
       ${hasClipboardSupport()
         ? renderButton({

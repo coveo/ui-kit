@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import {Command, CommanderError} from 'commander';
+import {realpathSync} from 'node:fs';
 import {mkdir, mkdtemp, rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join, resolve} from 'node:path';
@@ -281,7 +282,8 @@ export async function main(rawArgs: string[]): Promise<number> {
 }
 
 const isDirectRun =
-  argv[1] !== undefined && fileURLToPath(import.meta.url) === argv[1];
+  argv[1] !== undefined &&
+  fileURLToPath(import.meta.url) === realpathSync(argv[1]);
 
 if (isDirectRun) {
   process.on('uncaughtException', (err) => {
