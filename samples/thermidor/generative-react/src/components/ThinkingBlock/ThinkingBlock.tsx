@@ -1,15 +1,5 @@
+import type {ReasoningStep, ToolCallStep} from '@coveo/thermidor';
 import styles from './ThinkingBlock.module.css';
-
-type ToolCallStep = {
-  type: 'tool-call';
-  id: string;
-  name: string;
-  args: string;
-  result?: string;
-  status: 'calling' | 'completed';
-};
-
-type ReasoningStep = {type: 'reasoning'; content: string} | ToolCallStep;
 
 export interface ThinkingBlockProps {
   reasoningSteps: ReasoningStep[];

@@ -1,27 +1,11 @@
 import {StreamingMessage} from '../StreamingMessage/StreamingMessage.js';
 import {ThinkingBlock} from '../ThinkingBlock/ThinkingBlock.js';
 import {SurfaceRenderer} from '../../a2ui/SurfaceRenderer/SurfaceRenderer.js';
+import type {AgentResponse as AgentResponseState} from '@coveo/thermidor';
 import styles from './AgentResponse.module.css';
 
-type ReasoningStep =
-  | {type: 'reasoning'; content: string}
-  | {
-      type: 'tool-call';
-      id: string;
-      name: string;
-      args: string;
-      result?: string;
-      status: 'calling' | 'completed';
-    };
-
-interface AgentResponseData {
-  messages: {content: string; role: string}[];
-  surfaces: Record<string, unknown>[];
-  reasoningSteps: ReasoningStep[];
-}
-
 export interface AgentResponseProps {
-  agentResponse: AgentResponseData;
+  agentResponse: AgentResponseState;
   isStreaming: boolean;
   onAction?: (text: string, type: string) => void;
 }

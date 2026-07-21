@@ -2,30 +2,8 @@ import {UserPrompt} from '../UserPrompt/UserPrompt.js';
 import {AgentResponse} from '../AgentResponse/AgentResponse.js';
 import {RoutedCommerceResults} from '../RoutedCommerceResults/RoutedCommerceResults.js';
 import {RoutedSearchResults} from '../RoutedSearchResults/RoutedSearchResults.js';
+import type {Turn} from '@coveo/thermidor';
 import styles from './ConversationArea.module.css';
-
-interface Turn {
-  id: string;
-  prompt: string;
-  status: 'streaming' | 'complete' | 'error';
-  routedInterface?: {useCase: string; interface: unknown};
-  agentResponse?: {
-    messages: {content: string; role: string}[];
-    surfaces: Record<string, unknown>[];
-    reasoningSteps: (
-      | {type: 'reasoning'; content: string}
-      | {
-          type: 'tool-call';
-          id: string;
-          name: string;
-          args: string;
-          result?: string;
-          status: 'calling' | 'completed';
-        }
-    )[];
-  };
-  error?: string;
-}
 
 export interface ConversationAreaProps {
   turn: Turn | undefined;
