@@ -1,23 +1,30 @@
 import styles from './ThinkingBlock.module.css';
 
-interface ToolCall {
-  id: string;
-  name: string;
-  args: string;
-  result?: string;
-  status: 'calling' | 'completed';
-}
+type ReasoningStep =
+  | {type: 'reasoning'; content: string}
+  | {
+      type: 'tool-call';
+      id: string;
+      name: string;
+      args: string;
+      result?: string;
+      status: 'calling' | 'completed';
+    };
 
 export interface ThinkingBlockProps {
-  toolCalls: ToolCall[];
+  reasoningSteps: ReasoningStep[];
   isStreaming: boolean;
 }
 
-export function ThinkingBlock({toolCalls, isStreaming}: ThinkingBlockProps) {
-  if (toolCalls.length === 0) {
+export function ThinkingBlock({
+  reasoningSteps,
+  isStreaming,
+}: ThinkingBlockProps) {
+  if (reasoningSteps.length === 0) {
     return null;
   }
 
+  const toolCalls = reasoningSteps.filter((s) => s.type === 'tool-call');
   const allCompleted = toolCalls.every((tc) => tc.status === 'completed');
   const isProcessing = isStreaming && !allCompleted;
   const activeTool = toolCalls.findLast((tc) => tc.status === 'calling');
@@ -26,14 +33,14 @@ export function ThinkingBlock({toolCalls, isStreaming}: ThinkingBlockProps) {
   ).length;
 
   let summaryText: string;
-  if (allCompleted) {
+  if (allCompleted && toolCalls.length > 0) {
     summaryText = `✓ ${toolCalls.length} tool call${toolCalls.length > 1 ? 's' : ''} completed`;
   } else if (activeTool) {
     const progress =
       completedCount > 0 ? ` (${completedCount}/${toolCalls.length})` : '';
     summaryText = `⏳ ${activeTool.name}${progress}`;
   } else {
-    summaryText = `⏳ ${toolCalls.length} tool call${toolCalls.length > 1 ? 's' : ''} in progress…`;
+    summaryText = `⏳ Thinking…`;
   }
 
   const indicatorClass = isProcessing ? styles.processing : styles.success;
@@ -45,18 +52,28 @@ export function ThinkingBlock({toolCalls, isStreaming}: ThinkingBlockProps) {
       </summary>
       <div className={styles.content}>
         <ul className={styles.toolList}>
-          {toolCalls.map((tc) => (
-            <li key={tc.id} className={styles.toolItem}>
-              <div className={styles.toolName}>{tc.name}</div>
-              <pre className={styles.toolArgs}>{tc.args}</pre>
-              {tc.status === 'completed' && tc.result && (
-                <>
-                  <div className={styles.resultLabel}>Result</div>
-                  <pre className={styles.toolResult}>{tc.result}</pre>
-                </>
-              )}
-            </li>
-          ))}
+          {reasoningSteps.map((step, index) => {
+            if (step.type === 'reasoning') {
+              return (
+                <li key={`reasoning-${index}`} className={styles.toolItem}>
+                  <div className={styles.toolName}>Reasoning</div>
+                  <pre className={styles.toolArgs}>{step.content}</pre>
+                </li>
+              );
+            }
+            return (
+              <li key={step.id} className={styles.toolItem}>
+                <div className={styles.toolName}>{step.name}</div>
+                <pre className={styles.toolArgs}>{step.args}</pre>
+                {step.status === 'completed' && step.result && (
+                  <>
+                    <div className={styles.resultLabel}>Result</div>
+                    <pre className={styles.toolResult}>{step.result}</pre>
+                  </>
+                )}
+              </li>
+            );
+          })}
         </ul>
       </div>
     </details>

@@ -12,13 +12,17 @@ interface Turn {
   agentResponse?: {
     messages: {content: string; role: string}[];
     surfaces: Record<string, unknown>[];
-    toolCalls: {
-      id: string;
-      name: string;
-      args: string;
-      result?: string;
-      status: 'calling' | 'completed';
-    }[];
+    reasoningSteps: (
+      | {type: 'reasoning'; content: string}
+      | {
+          type: 'tool-call';
+          id: string;
+          name: string;
+          args: string;
+          result?: string;
+          status: 'calling' | 'completed';
+        }
+    )[];
   };
   error?: string;
 }

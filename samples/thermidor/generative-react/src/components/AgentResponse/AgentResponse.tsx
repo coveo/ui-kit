@@ -3,16 +3,21 @@ import {ThinkingBlock} from '../ThinkingBlock/ThinkingBlock.js';
 import {SurfaceRenderer} from '../../a2ui/SurfaceRenderer/SurfaceRenderer.js';
 import styles from './AgentResponse.module.css';
 
+type ReasoningStep =
+  | {type: 'reasoning'; content: string}
+  | {
+      type: 'tool-call';
+      id: string;
+      name: string;
+      args: string;
+      result?: string;
+      status: 'calling' | 'completed';
+    };
+
 interface AgentResponseData {
   messages: {content: string; role: string}[];
   surfaces: Record<string, unknown>[];
-  toolCalls: {
-    id: string;
-    name: string;
-    args: string;
-    result?: string;
-    status: 'calling' | 'completed';
-  }[];
+  reasoningSteps: ReasoningStep[];
 }
 
 export interface AgentResponseProps {
@@ -26,10 +31,10 @@ export function AgentResponse({
   isStreaming,
   onAction,
 }: AgentResponseProps) {
-  const {messages, toolCalls, surfaces} = agentResponse;
+  const {messages, reasoningSteps, surfaces} = agentResponse;
 
   const hasContent =
-    messages.length > 0 || toolCalls.length > 0 || surfaces.length > 0;
+    messages.length > 0 || reasoningSteps.length > 0 || surfaces.length > 0;
 
   if (!hasContent) {
     return null;
@@ -37,8 +42,11 @@ export function AgentResponse({
 
   return (
     <div className={styles.container}>
-      {toolCalls.length > 0 && (
-        <ThinkingBlock toolCalls={toolCalls} isStreaming={isStreaming} />
+      {reasoningSteps.length > 0 && (
+        <ThinkingBlock
+          reasoningSteps={reasoningSteps}
+          isStreaming={isStreaming}
+        />
       )}
       {messages.length > 0 && <StreamingMessage messages={messages} />}
       {surfaces.length > 0 && (
