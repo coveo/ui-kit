@@ -29,8 +29,7 @@
     "build": "rollup -c",
     "test": "vitest run --coverage",
     "test:watch": "vitest",
-    "prepare-deploy": "mkdir -p deploy && cp dist/coveoua*.js dist/coveoua*.js.map deploy",
-    "clean": "node ../../utils/ci/rm-rf.mjs dist dist_test coverage"
+    "clean": "node ../../utils/ci/rm-rf.mjs cdn dist dist_test coverage"
   },
   "dependencies": {
     "@types/uuid": "9.0.8",
