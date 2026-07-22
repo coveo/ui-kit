@@ -25,8 +25,7 @@
     "**/packages/atomic/**/*.d.ts",
     "**/packages/atomic/stencil-proxy/**",
     "**/packages/documentation/**/assets/**",
-    "**/packages/headless/**/coveo.analytics/**",
-    "**/packages/coveo-analytics/**"
+    "**/packages/headless/**/coveo.analytics/**"
   ],
   "overrides": [
     {
@@ -52,6 +51,15 @@
       ],
       "rules": {
         "no-restricted-imports": "off"
+      }
+    },
+    {
+      "files": [
+        "**/packages/coveo-analytics/src/caseAssist/caseAssistActions.ts",
+        "**/packages/coveo-analytics/src/searchPage/searchPageEvents.ts"
+      ],
+      "rules": {
+        "typescript/no-duplicate-enum-values": "off"
       }
     }
   ]
