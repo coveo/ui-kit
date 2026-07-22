@@ -4,7 +4,6 @@ import type {FullEngine} from '@/src/internal/engine/index.js';
 import {getHandleInternals} from '@/src/internal/utils/index.js';
 import {createSearchEndpointRequestSelector} from './search-request-selector.js';
 import {createSearchEndpointResponseHandler} from './search-response-handler.js';
-import {readEndpointClientConfiguration} from '@/src/internal/features/configuration/index.js';
 import {getOrCreateConfigurationSelectors} from '@/src/internal/features/configuration/index.js';
 import {createSearchEndpointClient} from '@/src/internal/api/search/index.js';
 import {getOrCreateSearchEndpointSlice} from './search-thunk-slice.js';
@@ -26,8 +25,10 @@ export function createSearchEndpointThunk(
     async ({engine}) => {
       const request = engine.read(buildRequest);
       const trackingId = engine.read(configSelectors.getTrackingId);
+      const config = engine.read(
+        configSelectors.getEndpointClientConfiguration
+      );
 
-      const config = readEndpointClientConfiguration(engine);
       const analytics = buildAnalyticsParams(engine, {
         originContext: 'Search',
         trackingId,

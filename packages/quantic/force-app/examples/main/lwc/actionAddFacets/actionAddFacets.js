@@ -1,4 +1,9 @@
 import {api, LightningElement} from 'lwc';
+import {
+  getHeadlessBundle,
+  registerComponentForInit,
+  initializeWithHeadless,
+} from 'c/quanticHeadlessLoader';
 
 export default class ActionAddFacets extends LightningElement {
   @api engineId;
@@ -7,6 +12,23 @@ export default class ActionAddFacets extends LightningElement {
   @api label;
 
   searchBox;
+
+  connectedCallback() {
+    registerComponentForInit(this, this.engineId);
+  }
+
+  renderedCallback() {
+    initializeWithHeadless(this, this.engineId, this.initialize);
+  }
+
+  initialize = (engine) => {
+    this.headless = getHeadlessBundle(this.engineId);
+    this.searchBox = this.headless.buildSearchBox(engine, {
+      options: {
+        numberOfSuggestions: 0,
+      },
+    });
+  };
 
   handleAddFacets() {
     const eventName = this.withoutInputs
@@ -18,31 +40,7 @@ export default class ActionAddFacets extends LightningElement {
     });
     this.dispatchEvent(addFacetsEvent);
 
-    if (this.searchBox) {
-      this.triggerSearch(this.searchBox);
-    } else {
-      this.resolveSearchBoxController().then((controller) => {
-        this.searchBox = controller;
-        this.triggerSearch(this.searchBox);
-      });
-    }
-  }
-
-  triggerSearch(controller) {
-    const query = '';
-    controller.updateText(query);
-    controller.submit();
-  }
-
-  resolveSearchBoxController() {
-    return window.coveoHeadless?.[this.engineId]?.enginePromise.then(
-      (engine) => {
-        return CoveoHeadless.buildSearchBox(engine, {
-          options: {
-            numberOfSuggestions: 0,
-          },
-        });
-      }
-    );
+    this.searchBox?.updateText('');
+    this.searchBox?.submit();
   }
 }

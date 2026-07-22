@@ -171,10 +171,6 @@ const config: StorybookConfig = {
     name: '@storybook/web-components-vite',
     options: {},
   },
-  env: (config) => ({
-    ...config,
-    CHROMATIC_ALL: process.env.CHROMATIC_ALL ?? '',
-  }),
   async viteFinal(config, {configType}) {
     const {default: tailwindcss} = await import('@tailwindcss/vite');
     const version = getPackageVersion();

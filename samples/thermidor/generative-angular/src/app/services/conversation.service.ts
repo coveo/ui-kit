@@ -5,6 +5,7 @@ import {
   type ConverseController,
   type ConverseControllerState,
   type SerializedConverseState,
+  type ReasoningStep,
 } from '@coveo/thermidor';
 import {EngineService} from './engine.service';
 import {parseSurfaces} from '../a2ui-parser';
@@ -12,7 +13,7 @@ import {CONVERSATION_STORAGE_KEY} from '../constants';
 import type {
   A2UISurface,
   RenderableCommerceSurface,
-  ToolCall,
+  RoutedInterface,
   Turn,
 } from '../models';
 
@@ -23,9 +24,9 @@ export class ConversationService {
 
   readonly busy = signal(false);
   readonly turns = signal<Turn[]>([]);
-  readonly reasoningText = signal('');
-  readonly toolActivity = signal<ToolCall[]>([]);
+  readonly reasoningSteps = signal<ReasoningStep[]>([]);
   readonly surfaces = signal<RenderableCommerceSurface[]>([]);
+  readonly routedInterface = signal<RoutedInterface | undefined>(undefined);
   readonly activeTurnId = signal<string | undefined>(undefined);
   readonly activeTurnError = signal('');
 
@@ -68,21 +69,18 @@ export class ConversationService {
     this.turns.set(turns);
     this.activeTurnId.set(activeTurn?.id);
     this.surfaces.set(this.buildSurfaces(turns));
+    this.routedInterface.set(activeTurn?.routedInterface);
 
     if (activeTurn) {
-      this.reasoningText.set(
-        isStreaming ? (activeTurn.agentResponse?.reasoningContent ?? '') : ''
-      );
+      this.reasoningSteps.set(activeTurn.agentResponse?.reasoningSteps ?? []);
       this.activeTurnError.set(
         activeTurn.status === 'error'
           ? (activeTurn.error ?? 'An error occurred')
           : ''
       );
-      this.toolActivity.set(activeTurn.agentResponse?.toolCalls ?? []);
     } else {
-      this.reasoningText.set('');
+      this.reasoningSteps.set([]);
       this.activeTurnError.set('');
-      this.toolActivity.set([]);
     }
   }
 

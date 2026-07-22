@@ -7,9 +7,9 @@
   <article class="panel transcript-panel">
     <app-transcript-panel
       [turns]="conversation.turns()"
-      [reasoningText]="conversation.reasoningText()"
-      [toolActivity]="conversation.toolActivity()"
+      [reasoningSteps]="conversation.reasoningSteps()"
       [surfaces]="conversation.surfaces()"
+      [routedInterface]="conversation.routedInterface()"
       [isStreaming]="conversation.busy()"
       [errorMessage]="conversation.activeTurnError()"
       [turnId]="conversation.activeTurnId() ?? ''"

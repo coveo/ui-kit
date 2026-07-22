@@ -1,14 +1,23 @@
 <template>
   <li class="thread-item">
-    <div class="slds-grid slds-grid_vertical-align-center">
+    <div class="thread-item__grid">
       <div
-        class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-shrink-none slds-m-right_x-small thread-item__dot-column"
+        class={lineColumnClass}
+        data-testid="thread-item-line-column"
+        onclick={handleLineClick}
       >
-        <span
-          class={dotClass}
-          data-testid="thread-item-dot"
-          onclick={handleDotClick}
-        ></span>
+        <div
+          class="slds-grid slds-grid_align-center slds-grid_vertical-align-center thread-item__dot-column"
+        >
+          <span
+            class={dotClass}
+            data-testid="thread-item-dot"
+            onclick={handleDotClick}
+          ></span>
+        </div>
+        <template lwc:if={shouldDisplayLine}>
+          <span class="thread-item__line" data-testid="thread-item-line"></span>
+        </template>
       </div>
       <div class="slds-has-flexi-truncate">
         <template lwc:if={disableCollapse}>
@@ -29,20 +38,9 @@
           </button>
         </template>
       </div>
-    </div>
-    <div class="slds-grid">
-      <div
-        class={lineColumnClass}
-        data-testid="thread-item-line-column"
-        onclick={handleLineClick}
-      >
-        <template lwc:if={shouldDisplayLine}>
-          <span class="thread-item__line" data-testid="thread-item-line"></span>
-        </template>
-      </div>
       <div
         id="thread-item-content"
-        class="slds-col slds-p-left_x-small slds-p-vertical_xx-small"
+        class="slds-p-left_x-small slds-p-vertical_xx-small thread-item__content"
         data-testid="thread-item-content"
       >
         <div hidden={contentHidden}>

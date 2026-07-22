@@ -2,6 +2,7 @@
   "name": "@coveo/atomic-angular-builder",
   "version": "0.0.0",
   "private": true,
+  "description": "Angular workspace used to build and publish the @coveo/atomic-angular package",
   "scripts": {
     "ng": "ng",
     "dev": "ng serve",

@@ -74,6 +74,11 @@ describe('atomic-citation', () => {
             '.citation-title'
           ) as HTMLElement | null;
         },
+        get citationText() {
+          return element.shadowRoot?.querySelector(
+            'p.text-on-background'
+          ) as HTMLElement | null;
+        },
       },
     };
   };
@@ -130,6 +135,19 @@ describe('atomic-citation', () => {
 
       expect(locators.citationPopover?.textContent).toContain(
         `${'a'.repeat(200)}...`
+      );
+    });
+
+    it('should render citation preview text without Markdown syntax', async () => {
+      const {locators} = await renderComponent({
+        citation: {
+          ...mockCitation,
+          text: '## About the search hub\n\nOn the [**Query Pipelines**](https://example.com/pipelines) page.',
+        },
+      });
+
+      expect(locators.citationText).toHaveTextContent(
+        'About the search hub On the Query Pipelines page.'
       );
     });
   });

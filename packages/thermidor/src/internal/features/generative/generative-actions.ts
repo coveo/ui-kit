@@ -5,7 +5,7 @@ import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 import type {
   A2UISurface,
   GenerativeState,
-  RoutedInterface,
+  RoutedUseCase,
   TurnStatus,
 } from './generative-types.js';
 
@@ -26,7 +26,7 @@ export function createGenerativeActions(interfaceId: string) {
     ),
     setRoutedInterface: createAction<{
       turnId: string;
-      routedInterface: RoutedInterface;
+      useCase: RoutedUseCase;
     }>(`${prefix}/setRoutedInterface`),
     initAgentResponse: createAction<{turnId: string}>(
       `${prefix}/initAgentResponse`

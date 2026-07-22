@@ -2,6 +2,7 @@ import {useState, useEffect, useRef} from 'react';
 import {
   buildProductListController,
   buildPaginationController,
+  type CommerceInterface,
   type ProductListControllerState,
   type PaginationControllerState,
   type PaginationController,
@@ -11,7 +12,7 @@ import {Pagination} from '../Pagination/Pagination.js';
 import styles from './RoutedCommerceResults.module.css';
 
 interface RoutedCommerceResultsProps {
-  interface: unknown;
+  interface: CommerceInterface;
 }
 
 export function RoutedCommerceResults(props: RoutedCommerceResultsProps) {
@@ -22,15 +23,11 @@ export function RoutedCommerceResults(props: RoutedCommerceResultsProps) {
 
   useEffect(() => {
     const controller = buildProductListController({
-      interface: props.interface as Parameters<
-        typeof buildProductListController
-      >[0]['interface'],
+      interface: props.interface,
     });
 
     const paginationCtrl = buildPaginationController({
-      interface: props.interface as Parameters<
-        typeof buildPaginationController
-      >[0]['interface'],
+      interface: props.interface,
     });
 
     paginationRef.current = paginationCtrl;
@@ -49,6 +46,7 @@ export function RoutedCommerceResults(props: RoutedCommerceResultsProps) {
     return () => {
       unsubscribeProducts();
       unsubscribePagination();
+      props.interface.dispose();
     };
   }, [props.interface]);
 

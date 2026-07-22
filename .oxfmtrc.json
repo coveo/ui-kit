@@ -5,6 +5,7 @@
   "trailingComma": "es5",
   "bracketSpacing": false,
   "ignorePatterns": [
+    "**/.kiro/**/*",
     "**/packages/quantic/**/*",
     "!**/packages/quantic/catalog-info.yaml",
     "**/packages/create-atomic-template/**/*",
@@ -17,6 +18,7 @@
     "**/packages/atomic/stencil-proxy/**/*",
     "**/packages/documentation/**/assets/**/*",
     "**/packages/headless/**/coveo.analytics/**/*",
+    "**/packages/coveo-analytics/**/*",
     "**/samples/headless/rga-angular/**/*.html",
     "**/*.hbs",
     "**/*.handlebars",

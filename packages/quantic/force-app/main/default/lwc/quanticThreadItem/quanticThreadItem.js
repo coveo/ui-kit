@@ -58,7 +58,8 @@ export default class QuanticThreadItem extends LightningElement {
     this._isExpanded = !this._isExpanded;
   }
 
-  handleDotClick() {
+  handleDotClick(event) {
+    event.stopPropagation();
     if (this.disableCollapse) {
       return;
     }
@@ -103,9 +104,10 @@ export default class QuanticThreadItem extends LightningElement {
     const classes = [
       'slds-grid',
       'slds-grid_align-center',
+      'slds-grid_vertical',
+      'slds-grid_vertical-align-center',
       'slds-shrink-none',
-      'thread-item__line-column',
-      'slds-m-right_x-small',
+      'thread-item__timeline',
     ];
     if (!this.disableCollapse && !this.hideLine) {
       classes.push('thread-item__line-column--interactive');

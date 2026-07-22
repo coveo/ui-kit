@@ -6,11 +6,7 @@
     "outDir": "./out-tsc/app",
     "types": [],
     "noPropertyAccessFromIndexSignature": false,
-    "importHelpers": false,
-    "paths": {
-      "@coveo/thermidor": ["../../../packages/thermidor/src/index.ts"],
-      "@/*": ["../../../packages/thermidor/*"]
-    }
+    "importHelpers": false
   },
   "include": ["src/**/*.ts"],
   "exclude": ["src/**/*.spec.ts"]

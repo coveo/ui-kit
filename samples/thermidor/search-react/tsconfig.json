@@ -10,11 +10,7 @@
     "moduleResolution": "Node16",
     "noEmit": true,
     "resolveJsonModule": true,
-    "types": ["vitest/globals", "vite/client"],
-    "paths": {
-      "@coveo/thermidor": ["../../../packages/thermidor/src/index.ts"],
-      "@/*": ["../../../packages/thermidor/*"]
-    }
+    "types": ["vitest/globals", "vite/client"]
   },
   "include": ["src", "vite.config.ts"]
 }

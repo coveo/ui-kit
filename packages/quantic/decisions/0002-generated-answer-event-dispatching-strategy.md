@@ -24,8 +24,6 @@ Because of this, `QuanticGeneratedAnswerBody` must not re-dispatch events with t
 
 Instead, `QuanticGeneratedAnswerBody` intercepts `quantic__like`/`quantic__dislike` from `QuanticFeedback`, stops their propagation, and dispatches dedicated events: **`quantic__generatedanswerlike`** and **`quantic__generatedanswerdislike`**, enriched with `{ answerId }`.
 
-On the short term, `QuanticGeneratedAnswer` will handle both `quantic__like`/`quantic__dislike` (from the direct `QuanticFeedback` usage in the Search API/Answer API template) and `quantic__generatedanswerlike`/`quantic__generatedanswerdislike` (from `QuanticGeneratedAnswerBody`). This duplication is temporary — the goal is to migrate all generated answer usecases to use `QuanticGeneratedAnswerBody`, at which point only the dedicated events will remain.
-
 ### QuanticGeneratedAnswerCopyToClipboard — Accepts optional `answerId` property
 
 This component is dedicated to CRGA. It dispatches `quantic__generatedanswercopy`. Since it is not a generic component, it will accept an optional `answerId` property and include it in the event payload when present. This eliminates the need for `QuanticGeneratedAnswerBody` to intercept and re-dispatch the copy event.
@@ -39,4 +37,3 @@ This component accepts a `handleCitationHover` callback (called with `citationId
 - Clear separation between generic events (`quantic__like`) and generated-answer-specific events (`quantic__generatedanswerlike`).
 - No two components emit the same event with different payload shapes.
 - CRGA-dedicated components (`QuanticGeneratedAnswerCopyToClipboard`, `QuanticSourceCitations`) handle their own enrichment, reducing the mediation responsibility of `QuanticGeneratedAnswerBody`.
-- Temporary duplication in `QuanticGeneratedAnswer` event handling will be resolved once all flows use `QuanticGeneratedAnswerBody`.
