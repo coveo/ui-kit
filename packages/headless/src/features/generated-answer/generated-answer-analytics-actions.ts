@@ -10,7 +10,6 @@ import {
 import {SearchPageEvents} from '../analytics/search-action-cause.js';
 import type {SearchAction} from '../search/search-actions.js';
 import type {InlineLink} from '../../utils/inline-link.js';
-import type {AnswerGenerationAnalyticsClient} from './answer-generation-analytics-client.js';
 import {
   citationSourceSelector,
   generativeQuestionAnsweringIdSelector,
@@ -331,12 +330,6 @@ export const logGeneratedAnswerResponseLinked = (
     },
   });
 
-export const searchAnswerGenerationAnalyticsClient: AnswerGenerationAnalyticsClient =
-  {
-    logGeneratedAnswerStreamEnd,
-    logGeneratedAnswerResponseLinked,
-  };
-
 export const logGeneratedAnswerShowAnswers = (): CustomAction =>
   makeAnalyticsAction({
     prefix: 'analytics/generatedAnswer/show',
@@ -501,6 +494,7 @@ export const generatedAnswerAnalyticsClient = {
   logGeneratedAnswerHideAnswers,
   logGeneratedAnswerShowAnswers,
   logGeneratedAnswerStreamEnd,
+  logGeneratedAnswerResponseLinked,
   logGeneratedAnswerFeedback,
   logDislikeGeneratedAnswer,
   logLikeGeneratedAnswer,

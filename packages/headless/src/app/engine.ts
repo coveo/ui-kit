@@ -26,7 +26,7 @@ import type {
 } from '../features/configuration/configuration-state.js';
 import {versionReducer as version} from '../features/debug/version-slice.js';
 import type {AnswerGenerationAnalyticsClient} from '../features/generated-answer/answer-generation-analytics-client.js';
-import {searchAnswerGenerationAnalyticsClient} from '../features/generated-answer/generated-answer-analytics-actions.js';
+import {generatedAnswerAnalyticsClient} from '../features/generated-answer/generated-answer-analytics-actions.js';
 import type {SearchParametersState} from '../state/search-app-state.js';
 import {doNotTrack} from '../utils/utils.js';
 import {analyticsMiddleware} from './analytics-middleware.js';
@@ -380,7 +380,7 @@ function createMiddleware<Reducers extends ReducersMapObject>(
   const generateAnswerListener = createGenerateAnswerListener({
     getNavigatorContext,
     generationAnalyticsClient:
-      generationAnalyticsClient ?? searchAnswerGenerationAnalyticsClient,
+      generationAnalyticsClient ?? generatedAnswerAnalyticsClient,
   });
 
   return [

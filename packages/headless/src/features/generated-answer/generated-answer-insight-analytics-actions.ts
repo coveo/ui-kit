@@ -418,6 +418,7 @@ export const generatedAnswerInsightAnalyticsClient = {
   logGeneratedAnswerHideAnswers,
   logGeneratedAnswerShowAnswers,
   logGeneratedAnswerStreamEnd,
+  logGeneratedAnswerResponseLinked,
   logGeneratedAnswerFeedback,
   logDislikeGeneratedAnswer,
   logLikeGeneratedAnswer,

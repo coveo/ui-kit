@@ -19,7 +19,6 @@ import {
 import {followUpAnswersReducer as followUpAnswers} from '../../../features/follow-up-answers/follow-up-answers-slice.js';
 import type {FollowUpAnswersState} from '../../../features/follow-up-answers/follow-up-answers-state.js';
 import {generativeQuestionAnsweringIdSelector} from '../../../features/generated-answer/generated-answer-selectors.js';
-import type {AnswerGenerationAnalyticsClient} from '../../../features/generated-answer/answer-generation-analytics-client.js';
 import {withGeneratedAnswerSseErrorHelpers} from '../../../features/generated-answer/sse-generated-answer-errors.js';
 import type {GeneratedAnswerState} from '../../../index.js';
 import type {
@@ -103,7 +102,6 @@ export type GeneratedAnswerWithFollowUpsProps = GeneratedAnswerProps &
 export function buildGeneratedAnswerWithFollowUps(
   engine: SearchEngine | InsightEngine,
   analyticsClient: GeneratedAnswerAnalyticsClient,
-  generationAnalyticsClient: AnswerGenerationAnalyticsClient,
   props: GeneratedAnswerWithFollowUpsProps
 ): GeneratedAnswerWithFollowUps {
   if (!props.agentId || props.agentId.trim() === '') {
@@ -129,7 +127,7 @@ export function buildGeneratedAnswerWithFollowUps(
   );
   const followUpStrategy = createFollowUpStrategy(
     engine.dispatch,
-    generationAnalyticsClient
+    analyticsClient
   );
   const answerRunner = createAnswerRunner();
 
@@ -159,7 +157,7 @@ export function buildGeneratedAnswerWithFollowUps(
         engine.state,
         engine.dispatch,
         () => engine.navigatorContext,
-        generationAnalyticsClient
+        analyticsClient
       );
     },
 
