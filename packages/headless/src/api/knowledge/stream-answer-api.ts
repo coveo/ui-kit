@@ -61,6 +61,7 @@ const handleMessage = (
     return;
   }
 
+  delete draft.error;
   draft.answer = answer?.trim() ? answer.concat(textDelta) : textDelta;
 };
 
@@ -68,6 +69,7 @@ const handleCitations = (
   draft: GeneratedAnswerStream,
   payload: Pick<StreamPayload, 'citations'>
 ) => {
+  delete draft.error;
   draft.citations = payload.citations;
 };
 
