@@ -57,33 +57,22 @@ export function createHydrateSubInterface(
       const subInterface = new CommerceInterfaceImpl(fullEngine, generateId(), {
         search: createConverseSearchFacadeResolver(generativeInterface),
       });
-      return hydrateAndReturn(
-        fullEngine,
-        subInterface,
-        contentRecord,
-        effectiveQuery,
-        'commerceSearch'
-      );
+      hydrate(fullEngine, subInterface, contentRecord, effectiveQuery);
+      return {useCase: 'commerceSearch', interface: subInterface};
     }
 
     const subInterface = new SearchInterfaceImpl(fullEngine, generateId());
-    return hydrateAndReturn(
-      fullEngine,
-      subInterface,
-      contentRecord,
-      effectiveQuery,
-      'search'
-    );
+    hydrate(fullEngine, subInterface, contentRecord, effectiveQuery);
+    return {useCase: 'search', interface: subInterface};
   };
 }
 
-function hydrateAndReturn(
+function hydrate(
   fullEngine: FullEngine,
   subInterface: InterfaceHandle,
   contentRecord: Record<string, unknown>,
-  effectiveQuery: string | undefined,
-  useCase: RoutedUseCase
-): RoutedInterface {
+  effectiveQuery: string | undefined
+): void {
   fullEngine.storeHydrationSnapshot(contentRecord, subInterface);
   const hydrateAction = getOrCreateHydrateFromSnapshotAction(subInterface);
   fullEngine.mutate(hydrateAction(contentRecord));
@@ -92,7 +81,6 @@ function hydrateAndReturn(
     const searchBoxActions = getOrCreateSearchBoxActions(subInterface);
     fullEngine.mutate(searchBoxActions.setQuery(effectiveQuery));
   }
-  return {useCase, interface: subInterface};
 }
 
 function extractEffectiveQuery(
