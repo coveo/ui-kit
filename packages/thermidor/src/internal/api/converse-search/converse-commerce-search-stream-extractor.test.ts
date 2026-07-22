@@ -21,7 +21,7 @@ describe('extractCommerceSearchResponseFromStream', () => {
   it('resolves on first commerce_search_api_response among mixed events', async () => {
     const expectedPayload = {
       products: [{id: '1', name: 'Product A'}],
-      totalCount: 1,
+      pagination: {totalEntries: 1},
     };
 
     mockReadConversationEventStream.mockImplementation(
@@ -32,7 +32,7 @@ describe('extractCommerceSearchResponseFromStream', () => {
         onEvent({
           type: 'commerce_search_api_response',
           products: [{id: '2'}],
-          totalCount: 2,
+          pagination: {totalEntries: 2},
         });
         onDone?.();
       }
