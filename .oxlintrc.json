@@ -52,15 +52,6 @@
       "rules": {
         "no-restricted-imports": "off"
       }
-    },
-    {
-      "files": [
-        "**/packages/coveo-analytics/src/caseAssist/caseAssistActions.ts",
-        "**/packages/coveo-analytics/src/searchPage/searchPageEvents.ts"
-      ],
-      "rules": {
-        "typescript/no-duplicate-enum-values": "off"
-      }
     }
   ]
 }

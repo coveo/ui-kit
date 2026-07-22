@@ -5,6 +5,7 @@ export enum CaseAssistEvents {
     flowStart = 'flowStart',
 }
 
+// oxlint-disable typescript/no-duplicate-enum-values -- Preserves legacy emitted event values
 export enum CaseAssistActions {
     enterInterface = 'ticket_create_start',
     fieldUpdate = 'ticket_field_update',
@@ -16,6 +17,7 @@ export enum CaseAssistActions {
     caseSolved = 'ticket_cancel',
     caseCreated = 'ticket_create',
 }
+// oxlint-enable typescript/no-duplicate-enum-values
 
 export enum CaseCancelledReasons {
     quit = 'Quit',
