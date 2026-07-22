@@ -24,7 +24,8 @@
     "**/packages/atomic/**/*.d.ts",
     "**/packages/atomic/stencil-proxy/**",
     "**/packages/documentation/**/assets/**",
-    "**/packages/headless/**/coveo.analytics/**"
+    "**/packages/headless/**/coveo.analytics/**",
+    "**/packages/coveo-analytics/**"
   ],
   "overrides": [
     {
