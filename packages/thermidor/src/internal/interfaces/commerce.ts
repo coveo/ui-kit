@@ -17,7 +17,16 @@ export class CommerceInterfaceImpl
   extends BaseInterface<'commerce'>
   implements CommerceInterface
 {
-  constructor(engine: FullEngine, stateId: string) {
-    super(engine, stateId, 'commerce', resolverFactories);
+  constructor(
+    engine: FullEngine,
+    stateId: string,
+    customResolvers?: Partial<
+      Record<Facades['commerce'], FacadeResolverFactory>
+    >
+  ) {
+    super(engine, stateId, 'commerce', {
+      ...resolverFactories,
+      ...customResolvers,
+    });
   }
 }

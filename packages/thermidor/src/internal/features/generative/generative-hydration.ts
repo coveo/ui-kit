@@ -14,6 +14,7 @@ import {CommerceInterfaceImpl} from '@/src/internal/interfaces/index.js';
 import {SearchInterfaceImpl} from '@/src/internal/interfaces/index.js';
 import {getOrCreateSearchBoxActions} from '@/src/internal/features/search-box/index.js';
 import {getOrCreateSearchBoxSlice} from '@/src/internal/features/search-box/index.js';
+import {createConverseSearchFacadeResolver} from '@/src/internal/api/converse-search/index.js';
 
 const ACTIVITY_TYPE_TO_ROUTED_USE_CASE: Record<string, RoutedUseCase> = {
   commerce_search_api_response: 'commerceSearch',
@@ -45,7 +46,8 @@ export function getOrCreateHydrateFromSnapshotAction(iface: InterfaceHandle) {
 }
 
 export function createHydrateSubInterface(
-  fullEngine: FullEngine
+  fullEngine: FullEngine,
+  generativeInterface: InterfaceHandle
 ): HydrateSubInterface {
   return (
     activityType: string,
@@ -61,15 +63,10 @@ export function createHydrateSubInterface(
     const effectiveQuery = extractEffectiveQuery(contentRecord, query);
 
     if (routedUseCase === 'commerceSearch') {
-      const subInterface = new CommerceInterfaceImpl(fullEngine, generateId());
-      fullEngine.storeHydrationSnapshot(contentRecord, subInterface);
-      const hydrateAction = getOrCreateHydrateFromSnapshotAction(subInterface);
-      fullEngine.mutate(hydrateAction(contentRecord));
-      if (effectiveQuery) {
-        fullEngine.adoptSlice(getOrCreateSearchBoxSlice(subInterface));
-        const searchBoxActions = getOrCreateSearchBoxActions(subInterface);
-        fullEngine.mutate(searchBoxActions.setQuery(effectiveQuery));
-      }
+      const subInterface = new CommerceInterfaceImpl(fullEngine, generateId(), {
+        search: createConverseSearchFacadeResolver(generativeInterface),
+      });
+      hydrate(fullEngine, subInterface, contentRecord, effectiveQuery);
       return {
         useCase: 'commerceSearch' as const,
         interface: subInterface,
@@ -79,14 +76,7 @@ export function createHydrateSubInterface(
     }
 
     const subInterface = new SearchInterfaceImpl(fullEngine, generateId());
-    fullEngine.storeHydrationSnapshot(contentRecord, subInterface);
-    const hydrateAction = getOrCreateHydrateFromSnapshotAction(subInterface);
-    fullEngine.mutate(hydrateAction(contentRecord));
-    if (effectiveQuery) {
-      fullEngine.adoptSlice(getOrCreateSearchBoxSlice(subInterface));
-      const searchBoxActions = getOrCreateSearchBoxActions(subInterface);
-      fullEngine.mutate(searchBoxActions.setQuery(effectiveQuery));
-    }
+    hydrate(fullEngine, subInterface, contentRecord, effectiveQuery);
     return {
       useCase: 'search' as const,
       interface: subInterface,
@@ -94,6 +84,22 @@ export function createHydrateSubInterface(
       query: effectiveQuery,
     };
   };
+}
+
+function hydrate(
+  fullEngine: FullEngine,
+  subInterface: InterfaceHandle,
+  contentRecord: Record<string, unknown>,
+  effectiveQuery: string | undefined
+): void {
+  fullEngine.storeHydrationSnapshot(contentRecord, subInterface);
+  const hydrateAction = getOrCreateHydrateFromSnapshotAction(subInterface);
+  fullEngine.mutate(hydrateAction(contentRecord));
+  if (effectiveQuery) {
+    fullEngine.adoptSlice(getOrCreateSearchBoxSlice(subInterface));
+    const searchBoxActions = getOrCreateSearchBoxActions(subInterface);
+    fullEngine.mutate(searchBoxActions.setQuery(effectiveQuery));
+  }
 }
 
 function extractEffectiveQuery(

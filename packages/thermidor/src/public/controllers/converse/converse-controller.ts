@@ -40,7 +40,10 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
     const actions = getOrCreateGenerativeActions(options.interface);
     const selectors = getOrCreateGenerativeSelectors(options.interface);
     const registry = getOrCreateRoutedInterfaceRegistry(options.interface);
-    const hydrateSubInterface = createHydrateSubInterface(fullEngine);
+    const hydrateSubInterface = createHydrateSubInterface(
+      fullEngine,
+      options.interface
+    );
 
     if (options.conversationToRestore) {
       rehydrateRoutedInterfaces(

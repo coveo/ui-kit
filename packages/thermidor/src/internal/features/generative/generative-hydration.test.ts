@@ -5,6 +5,7 @@ import {
   type FullEngine,
   getFullEngine,
 } from '@/src/internal/engine/index.js';
+import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 import {
   createHydrateSubInterface,
   rehydrateRoutedInterfaces,
@@ -13,18 +14,21 @@ import {RoutedInterfaceRegistry} from './routed-interface-registry.js';
 import {CommerceInterfaceImpl} from '@/src/internal/interfaces/index.js';
 import {SearchInterfaceImpl} from '@/src/internal/interfaces/index.js';
 import type {HydrateSubInterface} from '@/src/internal/api/generative/index.js';
+import {buildSearchInterface} from '@/src/public/interfaces/search.js';
 
 describe('createHydrateSubInterface', () => {
   let engine: Engine;
   let fullEngine: FullEngine;
+  let generativeInterface: InterfaceHandle;
 
   beforeEach(() => {
     engine = createTestEngine();
     fullEngine = getFullEngine(engine);
+    generativeInterface = buildSearchInterface({engine, id: 'generative-test'});
   });
 
   it('returns null for an unknown activity type', () => {
-    const hydrate = createHydrateSubInterface(fullEngine);
+    const hydrate = createHydrateSubInterface(fullEngine, generativeInterface);
 
     const result = hydrate('unknown_activity', {results: []});
 
@@ -32,7 +36,7 @@ describe('createHydrateSubInterface', () => {
   });
 
   it('returns a CommerceInterfaceImpl for commerce_search_api_response', () => {
-    const hydrate = createHydrateSubInterface(fullEngine);
+    const hydrate = createHydrateSubInterface(fullEngine, generativeInterface);
     const content = {results: [{title: 'Shoes'}]};
 
     const result = hydrate('commerce_search_api_response', content, 'shoes');
@@ -45,7 +49,7 @@ describe('createHydrateSubInterface', () => {
   });
 
   it('returns a SearchInterfaceImpl for search_api_response', () => {
-    const hydrate = createHydrateSubInterface(fullEngine);
+    const hydrate = createHydrateSubInterface(fullEngine, generativeInterface);
     const content = {results: [{title: 'Doc'}]};
 
     const result = hydrate('search_api_response', content, 'docs');
@@ -58,7 +62,7 @@ describe('createHydrateSubInterface', () => {
   });
 
   it('uses queryCorrection.correctedQuery over the fallback query', () => {
-    const hydrate = createHydrateSubInterface(fullEngine);
+    const hydrate = createHydrateSubInterface(fullEngine, generativeInterface);
     const content = {
       results: [],
       queryCorrection: {correctedQuery: 'corrected'},
@@ -70,7 +74,7 @@ describe('createHydrateSubInterface', () => {
   });
 
   it('falls back to the provided query when queryCorrection is absent', () => {
-    const hydrate = createHydrateSubInterface(fullEngine);
+    const hydrate = createHydrateSubInterface(fullEngine, generativeInterface);
     const content = {results: []};
 
     const result = hydrate('search_api_response', content, 'fallback');
@@ -79,7 +83,7 @@ describe('createHydrateSubInterface', () => {
   });
 
   it('returns undefined query when neither queryCorrection nor fallback are provided', () => {
-    const hydrate = createHydrateSubInterface(fullEngine);
+    const hydrate = createHydrateSubInterface(fullEngine, generativeInterface);
     const content = {results: []};
 
     const result = hydrate('search_api_response', content);
@@ -88,7 +92,7 @@ describe('createHydrateSubInterface', () => {
   });
 
   it('ignores queryCorrection with null correctedQuery', () => {
-    const hydrate = createHydrateSubInterface(fullEngine);
+    const hydrate = createHydrateSubInterface(fullEngine, generativeInterface);
     const content = {
       results: [],
       queryCorrection: {correctedQuery: null},
@@ -101,7 +105,7 @@ describe('createHydrateSubInterface', () => {
 
   it('stores the hydration snapshot on the engine', () => {
     const spy = vi.spyOn(fullEngine, 'storeHydrationSnapshot');
-    const hydrate = createHydrateSubInterface(fullEngine);
+    const hydrate = createHydrateSubInterface(fullEngine, generativeInterface);
     const content = {results: []};
 
     const result = hydrate('commerce_search_api_response', content);
