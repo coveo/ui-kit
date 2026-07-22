@@ -1,3 +1,19 @@
+## 3.60.2
+
+### Patch Changes
+
+- [#8005](https://github.com/coveo/ui-kit/pull/8005) [`fe52658`](https://github.com/coveo/ui-kit/commit/fe5265887c0c26cf3ea3699a6560a729899d3c2a) - Announce when a generated answer cannot be produced.
+
+- [#7997](https://github.com/coveo/ui-kit/pull/7997) [`0dd5704`](https://github.com/coveo/ui-kit/commit/0dd57045f21029ff175ff787637c98b9e5572bba) - Fixed thread component displaying gaps in the timeline when the questions are on multiple lines.
+
+- [#7987](https://github.com/coveo/ui-kit/pull/7987) [`3273fe6`](https://github.com/coveo/ui-kit/commit/3273fe6a761f62ebddcc6794e9a76aaeca765ca9) - Fixed the low contrast between question title and the background color in the answer thread.
+
+- [#8021](https://github.com/coveo/ui-kit/pull/8021) [`7325c0b`](https://github.com/coveo/ui-kit/commit/7325c0b771104e25c1b69143ff2d07a52f3befa1) - Fix Conversation ID and copy button alignment on mobile in the generated answer debug header by allowing the conversation ID text to wrap on narrow viewports, keeping the copy button within the card.
+
+- [#7979](https://github.com/coveo/ui-kit/pull/7979) [`deac16e`](https://github.com/coveo/ui-kit/commit/deac16e906be7eeaf9d92360972d8ed7d52f1a82) - Fix two generated answer accessibility issues:
+  - Strip markdown syntax from the aria-live announcement so screen readers read clean prose instead of raw markdown characters (e.g. `##`, `**`, `` ` ``).
+  - Announce error states (e.g. "Answer could not be generated") assertively so the message is not skipped when a screen reader is already announcing "Generating answer".
+
 ## 3.60.1
 
 ### Patch Changes
