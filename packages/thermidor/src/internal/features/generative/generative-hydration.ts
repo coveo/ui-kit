@@ -11,7 +11,6 @@ import {SearchInterfaceImpl} from '@/src/internal/interfaces/index.js';
 import {getOrCreateSearchBoxActions} from '@/src/internal/features/search-box/index.js';
 import {getOrCreateSearchBoxSlice} from '@/src/internal/features/search-box/index.js';
 import {createConverseSearchFacadeResolver} from '@/src/internal/api/converse-search/index.js';
-import {createCommerceSuggestionsFacadeResolver} from '@/src/internal/api/commerce-query-suggest/index.js';
 
 const ACTIVITY_TYPE_TO_ROUTED_USE_CASE: Record<string, RoutedUseCase> = {
   commerce_search_api_response: 'commerceSearch',
@@ -57,7 +56,6 @@ export function createHydrateSubInterface(
     if (routedUseCase === 'commerceSearch') {
       const subInterface = new CommerceInterfaceImpl(fullEngine, generateId(), {
         search: createConverseSearchFacadeResolver(generativeInterface),
-        suggestions: createCommerceSuggestionsFacadeResolver,
       });
       return hydrateAndReturn(
         fullEngine,
