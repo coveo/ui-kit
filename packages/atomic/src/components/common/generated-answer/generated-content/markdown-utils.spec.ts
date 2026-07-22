@@ -1,5 +1,8 @@
 import {describe, expect, it} from 'vitest';
-import {transformMarkdownToHtml} from './markdown-utils.js';
+import {
+  markdownToPlainText,
+  transformMarkdownToHtml,
+} from './markdown-utils.js';
 
 describe('markdownUtils', () => {
   describe('transformMarkdownToHtml', () => {
@@ -433,6 +436,76 @@ describe('markdownUtils', () => {
           )
         );
       });
+    });
+  });
+
+  describe('markdownToPlainText', () => {
+    it('should return plain text unchanged', () => {
+      expect(markdownToPlainText('Hello world')).toBe('Hello world');
+    });
+
+    it('should strip bold syntax', () => {
+      expect(markdownToPlainText('**bold text**')).toBe('bold text');
+    });
+
+    it('should strip italic syntax', () => {
+      expect(markdownToPlainText('*italic text*')).toBe('italic text');
+    });
+
+    it('should strip heading syntax', () => {
+      expect(markdownToPlainText('# Heading')).toBe('Heading');
+    });
+
+    it('should strip inline code syntax', () => {
+      expect(markdownToPlainText('`code`')).toBe('code');
+    });
+
+    it('should strip list syntax and preserve item text', () => {
+      const result = markdownToPlainText('- Item 1\n- Item 2');
+      expect(result).toContain('Item 1');
+      expect(result).toContain('Item 2');
+      expect(result).not.toContain('-');
+    });
+
+    it('should produce readable text from mixed markdown', () => {
+      const result = markdownToPlainText('**Bold** and *italic* with `code`');
+      expect(result).toBe('Bold and italic with code');
+    });
+
+    it('should decode HTML entities produced by the markdown renderer', () => {
+      expect(markdownToPlainText('AT&T < 5 &quot;quoted&quot;')).toBe(
+        'AT&T < 5 "quoted"'
+      );
+    });
+
+    it('should remove HTML tags while preserving their text content', () => {
+      expect(markdownToPlainText('<span>Inline HTML</span>')).toBe(
+        'Inline HTML'
+      );
+    });
+
+    it('should preserve image alt text', () => {
+      expect(
+        markdownToPlainText('![Search interface](search-interface.png)')
+      ).toBe('Search interface');
+    });
+
+    it('should preserve table content without Markdown syntax', () => {
+      expect(
+        markdownToPlainText('| Name | Value |\n| --- | --- |\n| A | B |')
+      ).toBe('Name Value A B');
+    });
+
+    it('should remove horizontal rule syntax', () => {
+      expect(markdownToPlainText('Before\n\n---\n\nAfter')).toBe(
+        'Before After'
+      );
+    });
+
+    it('should remove incomplete inline formatting syntax', () => {
+      expect(markdownToPlainText('An **incomplete answer')).toBe(
+        'An incomplete answer'
+      );
     });
   });
 });

@@ -49,7 +49,7 @@ export function createGenerativeSlice(
         .addCase(actions.setRoutedInterface, (state, {payload}) => {
           const turn = state.turns.find((t) => t.id === payload.turnId);
           if (turn) {
-            turn.routedInterface = payload.routedInterface;
+            turn.routedInterface = {useCase: payload.useCase};
             turn.status = 'complete';
           }
         })

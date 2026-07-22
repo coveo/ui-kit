@@ -1,8 +1,8 @@
+import type {Turn} from '@coveo/thermidor';
 import {UserPrompt} from '../UserPrompt/UserPrompt.js';
 import {AgentResponse} from '../AgentResponse/AgentResponse.js';
 import {RoutedCommerceResults} from '../RoutedCommerceResults/RoutedCommerceResults.js';
 import {RoutedSearchResults} from '../RoutedSearchResults/RoutedSearchResults.js';
-import type {Turn} from '@coveo/thermidor';
 import styles from './ConversationArea.module.css';
 
 export interface ConversationAreaProps {

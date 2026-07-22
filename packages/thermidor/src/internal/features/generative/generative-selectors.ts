@@ -4,7 +4,7 @@ import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 import {createMemoizedStateSelector} from '@/src/internal/utils/index.js';
 import {createSelectSlice} from '@/src/internal/utils/index.js';
 import {initialGenerativeState} from './generative-slice.js';
-import type {Turn} from './generative-types.js';
+import type {StateTurn} from './generative-types.js';
 
 type GenerativeSelectors = ReturnType<typeof createGenerativeSelectors>;
 
@@ -21,7 +21,7 @@ export function createGenerativeSelectors(interfaceId: string) {
   return {
     getTurns: createMemoizedStateSelector(
       sliceSelector,
-      (state): Turn[] => state.turns
+      (state): StateTurn[] => state.turns
     ),
     getActiveTurnId: createMemoizedStateSelector(
       sliceSelector,

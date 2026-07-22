@@ -13,6 +13,7 @@ import {classMap} from 'lit/directives/class-map.js';
 import {createRef, type Ref, ref} from 'lit/directives/ref.js';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import {markdownToPlainText} from '@/src/components/common/generated-answer/generated-content/markdown-utils';
 import {renderHeading} from '../heading';
 import {renderLinkWithItemAnalytics} from '../item-link/item-link';
 import styles from './atomic-citation.tw.css';
@@ -191,12 +192,11 @@ export class AtomicCitation extends LitElement {
   }
 
   private getTruncatedText() {
-    return (
-      this.citation.text &&
-      `${this.citation.text?.trim().slice(0, 200)}${
-        this.citation.text.length > 200 ? '...' : ''
-      }`
-    );
+    const plainText = markdownToPlainText(this.citation.text ?? '');
+
+    return plainText
+      ? `${plainText.slice(0, 200)}${plainText.length > 200 ? '...' : ''}`
+      : undefined;
   }
 
   private anchorUrl(

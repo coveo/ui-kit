@@ -1,3 +1,9 @@
+## 3.43.1
+
+### Patch Changes
+
+- [#7923](https://github.com/coveo/ui-kit/pull/7923) [`b2983bf`](https://github.com/coveo/ui-kit/commit/b2983bfa8126a61bb07a71867e7dfc506722cd9d) - quanticGenerateAnswerBody reused in generated answer template of the quanticGeneratedAnswer component
+
 ## 3.43.0
 
 ### Minor Changes

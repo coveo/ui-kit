@@ -180,12 +180,13 @@ export class AtomicGeneratedAnswerThread extends LitElement {
     const showPreviousButtonClasses = `
       text-on-background text-base min-w-0 inline-flex text-left mr-auto
       px-2 py-1.5 font-normal bg-transparent border-0 appearance-none
-      transition-colors hover:bg-neutral-light rounded-md cursor-pointer
+      transition-colors hover:bg-neutral hover:text-primary rounded-md cursor-pointer
       focus-visible:outline-none focus-visible:ring-2
       focus-visible:ring-primary focus-visible:ring-offset-2
     `;
     const timelineDotClasses = `
-      h-2 w-2 rounded-full bg-neutral-dim
+      h-2 w-2 rounded-full bg-neutral-dim transition-colors
+      hover:bg-neutral-dark group-has-[button:hover]/title:bg-neutral-dark
     `;
     const timelineConnectorClasses = `
       relative h-full w-px bg-neutral
@@ -196,23 +197,27 @@ export class AtomicGeneratedAnswerThread extends LitElement {
     `;
 
     return html`
-      <li class="grid min-w-0">
-        <div class="flex min-w-0 items-center gap-3">
-          <div class="flex w-[10px] shrink-0 items-center justify-center">
+      <li class="group/title grid min-w-0 grid-cols-[10px_1fr] gap-x-3">
+        <div class="row-span-2 flex flex-col items-center">
+          <div
+            class="flex justify-center items-center text-base h-[1lh] my-1.5"
+          >
             <span class=${timelineDotClasses}></span>
           </div>
-          <div class="flex min-w-0 flex-col">
-            <button
-              type="button"
-              class=${showPreviousButtonClasses}
-              @click=${this.handleShowAllClick}
-            >
-              ${label}
-            </button>
+          <div
+            class="flex grow w-full justify-center items-center py-2 -my-2 min-h-3"
+          >
+            <span class=${timelineConnectorClasses}> </span>
           </div>
         </div>
-        <div class="flex h-3 w-[10px] shrink-0 justify-center">
-          <span class=${timelineConnectorClasses}> </span>
+        <div class="flex min-w-0 flex-col">
+          <button
+            type="button"
+            class=${showPreviousButtonClasses}
+            @click=${this.handleShowAllClick}
+          >
+            ${label}
+          </button>
         </div>
       </li>
     `;
