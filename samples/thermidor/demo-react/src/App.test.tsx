@@ -14,9 +14,13 @@ vi.mock('./context/generative-interface.js', () => ({
   useGenerativeInterface: () => ({}),
 }));
 
+vi.mock('./components/AppShell.js', () => ({
+  AppShell: () => <div data-testid="app-shell">AppShell</div>,
+}));
+
 describe('App', () => {
-  it('renders without crashing', () => {
+  it('renders AppShell inside providers', () => {
     render(<App />);
-    expect(screen.getByText('Generative Experience Demo')).toBeDefined();
+    expect(screen.getByTestId('app-shell')).toBeDefined();
   });
 });
