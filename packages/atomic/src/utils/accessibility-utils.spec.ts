@@ -59,6 +59,22 @@ class TestElement extends LitElement {
   }
 }
 
+@customElement('preserving-test-element')
+class PreservingTestElement extends LitElement {
+  region = new AriaLiveRegionController(
+    this,
+    'preserving-test-region',
+    true,
+    true
+  );
+
+  render() {
+    this.region.message = 'Test message';
+
+    return html`<div>A test element</div>`;
+  }
+}
+
 @customElement('focus-target-controller-test-component')
 @bindings()
 class FocusTargetControllerTestComponent
@@ -117,6 +133,17 @@ describe('accessibility-utils', () => {
       expect(ariaLive.updateMessage).toHaveBeenCalledWith(
         'test-region',
         'New message',
+        true
+      );
+    });
+
+    it('should preserve queued messages when configured', async () => {
+      await fixture(html`<preserving-test-element></preserving-test-element>`);
+
+      expect(ariaLive.updateMessage).toHaveBeenCalledWith(
+        'preserving-test-region',
+        'Test message',
+        true,
         true
       );
     });
