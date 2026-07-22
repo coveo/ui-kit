@@ -188,6 +188,38 @@ describe('generated answer', () => {
       expect(resetAnswerCall).toBeDefined();
     });
 
+    it('should preserve the answerGenerationMode after resetting the answer', async () => {
+      const mockGetStateWithManualMode = vi.fn(
+        () =>
+          ({
+            generatedAnswer: {
+              answerConfigurationId: 'test-config-id',
+              answerGenerationMode: 'manual',
+            },
+            searchHub: 'default',
+            pipeline: 'default',
+          }) as any
+      );
+
+      const thunk = generateAnswer();
+      await thunk(mockDispatch, mockGetStateWithManualMode, mockExtra);
+
+      const dispatchedTypes = mockDispatch.mock.calls.map(
+        (call) => call[0]?.type
+      );
+      const resetIndex = dispatchedTypes.indexOf('generatedAnswer/resetAnswer');
+      const setModeIndex = dispatchedTypes.indexOf(
+        'generatedAnswer/setAnswerGenerationMode'
+      );
+
+      expect(setModeIndex).toBeGreaterThan(resetIndex);
+
+      const setModeCall = mockDispatch.mock.calls.find(
+        (call) => call[0]?.type === 'generatedAnswer/setAnswerGenerationMode'
+      );
+      expect(setModeCall?.[0].payload).toBe('manual');
+    });
+
     it('should dispatch setAnswerApiQueryParams with constructed parameters when answerConfigurationId is present', async () => {
       const thunk = generateAnswer();
       await thunk(mockDispatch, mockGetState, mockExtra);

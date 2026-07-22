@@ -426,7 +426,10 @@ export const generateAnswer = createAsyncThunk<
 >(
   'generatedAnswer/generateAnswer',
   async (_, {getState, dispatch, extra: {navigatorContext, logger}}) => {
+    const currentMode = (getState() as StreamAnswerAPIState).generatedAnswer
+      .answerGenerationMode;
     dispatch(resetAnswer());
+    dispatch(setAnswerGenerationMode(currentMode));
 
     const state = getState() as StreamAnswerAPIState;
     if (state.generatedAnswer.isEnabled === false) {
