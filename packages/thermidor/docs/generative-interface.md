@@ -171,8 +171,9 @@ Each sub-interface gets its own `STATE_ID`, so slices from different turns never
   ┌─────────────┐ ┌──────────────┐   ┌─────────────┐
   │ routedIface │ │ agentResp    │   │ status:error│
   │ status:     │ │ messages[]   │   │ error: msg  │
-  │  complete   │ │ toolCalls[]  │   └─────────────┘
-  └─────────────┘ │ surfaces[]   │
+  │  complete   │ │ reasoning-   │   └─────────────┘
+  └─────────────┘ │  Steps[]    │
+                  │ surfaces[]   │
                   │ status:      │
                   │  complete    │
                   └──────────────┘
@@ -265,11 +266,17 @@ export function ConversePage() {
             <p key={i}>{msg.content}</p>
           ))}
 
-          {activeTurn.agentResponse.toolCalls.map((tc) => (
-            <div key={tc.id}>
-              {tc.status === 'calling' ? '⏳' : '✓'} {tc.name}
-            </div>
-          ))}
+          {activeTurn.agentResponse.reasoningSteps.map((step, i) =>
+            step.type === 'tool-call' ? (
+              <div key={step.id}>
+                {step.status === 'calling' ? '⏳' : '✓'} {step.name}
+              </div>
+            ) : (
+              <div key={`reasoning-${i}`} className="reasoning">
+                {step.content}
+              </div>
+            )
+          )}
 
           {activeTurn.agentResponse.surfaces.map((surface, i) => (
             <pre key={i}>{JSON.stringify(surface, null, 2)}</pre>

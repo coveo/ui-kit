@@ -10,15 +10,16 @@ import {getOrCreateConfigurationSelectors} from '@/src/internal/features/configu
 import {generateId} from '@/src/internal/utils/index.js';
 import type {
   A2UISurface,
-  RoutedInterface,
+  RoutedUseCase,
   TurnStatus,
+  UseCaseInterfaceMap,
 } from '@/src/internal/features/generative/index.js';
 
 export interface GenerativeStatePort {
   createTurn(payload: {id: string; prompt: string; status: TurnStatus}): void;
   setActiveTurnId(id: string): void;
   replaceTurnId(oldId: string, newId: string): void;
-  setRoutedInterface(turnId: string, routedInterface: RoutedInterface): void;
+  setRoutedInterface(turnId: string, hydrationResult: HydrationResult): void;
   initAgentResponse(turnId: string): void;
   startMessage(turnId: string, role: string): void;
   appendMessageDelta(turnId: string, delta: string): void;
@@ -38,11 +39,18 @@ export interface GenerativeStatePort {
   ): void;
 }
 
+export interface HydrationResult<K extends RoutedUseCase = RoutedUseCase> {
+  useCase: K;
+  interface: UseCaseInterfaceMap[K];
+  snapshot: Record<string, unknown>;
+  query: string | undefined;
+}
+
 export type HydrateSubInterface = (
   activityType: string,
   content: unknown,
   query?: string
-) => RoutedInterface | null;
+) => HydrationResult | null;
 
 export interface GenerativeRuntimeConfig {
   statePort: GenerativeStatePort;
@@ -287,14 +295,14 @@ export class GenerativeRuntime {
       case 'commerce_search_api_response':
       case 'search_api_response': {
         const {type: _type, ...content} = event;
-        const routedInterface = this.hydrateSubInterface(
+        const hydrationResult = this.hydrateSubInterface(
           event.type,
           content,
           this.currentPrompt
         );
 
-        if (routedInterface) {
-          this.statePort.setRoutedInterface(turnId, routedInterface);
+        if (hydrationResult) {
+          this.statePort.setRoutedInterface(turnId, hydrationResult);
           return {turnId, isTerminal: true};
         }
 

@@ -11,10 +11,10 @@ import {marked} from 'marked';
 import type {
   RenderableCommerceSurface,
   RoutedInterface,
-  ToolCall,
+  ReasoningStep,
   Turn,
 } from '../models';
-import type {CommerceInterface} from '@coveo/thermidor';
+import type {CommerceInterface, ToolCallStep} from '@coveo/thermidor';
 import {SurfaceOutletComponent} from './surface-outlet.component';
 import {RoutedCommerceResultsComponent} from './routed-commerce-results.component';
 
@@ -107,22 +107,22 @@ class MarkdownPipe implements PipeTransform {
           </summary>
 
           <div class="progress-content">
-            @if (reasoningText()) {
-              <p class="progress-reasoning">{{ reasoningText() }}</p>
-            }
-
-            @if (toolActivity().length > 0) {
-              <ul class="progress-list">
-                @for (tool of toolActivity(); track tool.id) {
+            <ul class="progress-list">
+              @for (step of reasoningSteps(); track $index) {
+                @if (step.type === 'reasoning') {
+                  <li class="progress-reasoning-step">
+                    <span>{{ step.content }}</span>
+                  </li>
+                } @else {
                   <li>
-                    <span>{{ truncateToolName(tool.name) }}</span>
+                    <span>{{ truncateToolName(step.name) }}</span>
                     <small>{{
-                      tool.status === 'completed' ? 'Done' : 'Running'
+                      step.status === 'completed' ? 'Done' : 'Running'
                     }}</small>
                   </li>
                 }
-              </ul>
-            }
+              }
+            </ul>
           </div>
         </details>
       }
@@ -159,8 +159,7 @@ class MarkdownPipe implements PipeTransform {
 })
 export class TranscriptPanelComponent {
   readonly turns = input<Turn[]>([]);
-  readonly reasoningText = input('');
-  readonly toolActivity = input<ToolCall[]>([]);
+  readonly reasoningSteps = input<ReasoningStep[]>([]);
   readonly surfaces = input<RenderableCommerceSurface[]>([]);
   readonly routedInterface = input<RoutedInterface | undefined>(undefined);
   readonly isStreaming = input(false);
@@ -181,13 +180,15 @@ export class TranscriptPanelComponent {
   );
 
   protected readonly hasProgress = computed(
-    () => this.toolActivity().length > 0 || this.reasoningText().length > 0
+    () => this.reasoningSteps().length > 0
   );
 
   protected readonly progressLabel = computed(() => {
-    const activity = this.toolActivity();
-    return activity.length > 0
-      ? activity[activity.length - 1].status === 'calling'
+    const tools = this.reasoningSteps().filter(
+      (s): s is ToolCallStep => s.type === 'tool-call'
+    );
+    return tools.length > 0
+      ? tools[tools.length - 1].status === 'calling'
         ? 'Working'
         : 'Completed'
       : 'Thinking';
