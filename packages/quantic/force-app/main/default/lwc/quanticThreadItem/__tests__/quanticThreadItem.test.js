@@ -109,9 +109,7 @@ describe('c-quantic-thread-item', () => {
       const element = createTestComponent();
       await flushPromises();
 
-      const lineColumn = element.shadowRoot.querySelector(
-        selectors.lineColumn
-      );
+      const lineColumn = element.shadowRoot.querySelector(selectors.lineColumn);
       expect(lineColumn.className).toContain(
         'thread-item__line-column--interactive'
       );
@@ -121,9 +119,7 @@ describe('c-quantic-thread-item', () => {
       const element = createTestComponent({disableCollapse: true});
       await flushPromises();
 
-      const lineColumn = element.shadowRoot.querySelector(
-        selectors.lineColumn
-      );
+      const lineColumn = element.shadowRoot.querySelector(selectors.lineColumn);
       expect(lineColumn.className).not.toContain(
         'thread-item__line-column--interactive'
       );
@@ -133,9 +129,7 @@ describe('c-quantic-thread-item', () => {
       const element = createTestComponent({hideLine: true});
       await flushPromises();
 
-      const lineColumn = element.shadowRoot.querySelector(
-        selectors.lineColumn
-      );
+      const lineColumn = element.shadowRoot.querySelector(selectors.lineColumn);
       expect(lineColumn.className).not.toContain(
         'thread-item__line-column--interactive'
       );
