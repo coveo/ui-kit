@@ -1,5 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
-import type {GenerativeState} from './generative-types.js';
+import type {GenerativeState, ToolCallStep} from './generative-types.js';
 import {type CacheKey, createCacheKey} from '@/src/internal/utils/index.js';
 import {getHandleInternals} from '@/src/internal/utils/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
@@ -59,8 +59,7 @@ export function createGenerativeSlice(
             turn.agentResponse = {
               messages: [],
               surfaces: [],
-              toolCalls: [],
-              reasoningContent: '',
+              reasoningSteps: [],
             };
           }
         })
@@ -86,7 +85,8 @@ export function createGenerativeSlice(
         .addCase(actions.startToolCall, (state, {payload}) => {
           const turn = state.turns.find((t) => t.id === payload.turnId);
           if (turn?.agentResponse) {
-            turn.agentResponse.toolCalls.push({
+            turn.agentResponse.reasoningSteps.push({
+              type: 'tool-call',
               id: payload.toolCallId,
               name: payload.toolName,
               args: '',
@@ -96,21 +96,23 @@ export function createGenerativeSlice(
         })
         .addCase(actions.appendToolCallArgs, (state, {payload}) => {
           const turn = state.turns.find((t) => t.id === payload.turnId);
-          const toolCall = turn?.agentResponse?.toolCalls.find(
-            (tc) => tc.id === payload.toolCallId
+          const step = turn?.agentResponse?.reasoningSteps.find(
+            (s): s is ToolCallStep =>
+              s.type === 'tool-call' && s.id === payload.toolCallId
           );
-          if (toolCall) {
-            toolCall.args += payload.delta;
+          if (step) {
+            step.args += payload.delta;
           }
         })
         .addCase(actions.completeToolCall, (state, {payload}) => {
           const turn = state.turns.find((t) => t.id === payload.turnId);
-          const toolCall = turn?.agentResponse?.toolCalls.find(
-            (tc) => tc.id === payload.toolCallId
+          const step = turn?.agentResponse?.reasoningSteps.find(
+            (s): s is ToolCallStep =>
+              s.type === 'tool-call' && s.id === payload.toolCallId
           );
-          if (toolCall) {
-            toolCall.result = payload.result;
-            toolCall.status = 'completed';
+          if (step) {
+            step.result = payload.result;
+            step.status = 'completed';
           }
         })
         .addCase(actions.completeTurn, (state, {payload}) => {
@@ -134,13 +136,24 @@ export function createGenerativeSlice(
             delete turn.error;
           }
         })
-        .addCase(actions.startReasoning, (_state, _action) => {
-          // No-op: reasoning start is a lifecycle signal only.
+        .addCase(actions.startReasoning, (state, {payload}) => {
+          const turn = state.turns.find((t) => t.id === payload.turnId);
+          if (turn?.agentResponse) {
+            turn.agentResponse.reasoningSteps.push({
+              type: 'reasoning',
+              content: '',
+            });
+          }
         })
         .addCase(actions.appendReasoningDelta, (state, {payload}) => {
           const turn = state.turns.find((t) => t.id === payload.turnId);
-          if (turn?.agentResponse) {
-            turn.agentResponse.reasoningContent += payload.delta;
+          const steps = turn?.agentResponse?.reasoningSteps;
+          if (steps) {
+            if (!steps.some((s) => s.type === 'reasoning')) {
+              steps.push({type: 'reasoning', content: ''});
+            }
+            const last = steps.findLast((s) => s.type === 'reasoning')!;
+            last.content += payload.delta;
           }
         })
         .addCase(actions.endReasoning, (_state, _action) => {

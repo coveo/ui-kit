@@ -441,8 +441,7 @@ describe('buildConverseController', () => {
             agentResponse: {
               messages: [{content: 'Hi there', role: 'assistant'}],
               surfaces: [],
-              toolCalls: [],
-              reasoningContent: '',
+              reasoningSteps: [],
             },
           },
         ],

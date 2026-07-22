@@ -122,19 +122,34 @@ export interface AgentResponse {
   surfaces: A2UISurface[];
 
   /**
-   * Tool calls made by the agent during the turn, in order of invocation.
+   * An ordered sequence of reasoning steps that preserves the temporal
+   * interleaving of reasoning messages and tool calls as produced by the
+   * agent during the turn.
    */
-  toolCalls: ToolCall[];
+  reasoningSteps: ReasoningStep[];
+}
+
+/**
+ * A single step in the agent's reasoning process — either a reasoning message
+ * or a tool-call invocation. The array order in `AgentResponse.reasoningSteps`
+ * reflects the chronological order of events received from the stream.
+ */
+export type ReasoningStep = ReasoningMessageStep | ToolCallStep;
+
+export interface ReasoningMessageStep {
+  type: 'reasoning';
 
   /**
-   * Accumulated reasoning/thinking text received during the turn.
+   * The accumulated reasoning/thinking text for this step.
    */
-  reasoningContent: string;
+  content: string;
 }
 
 export type ToolCallStatus = 'calling' | 'completed';
 
-export interface ToolCall {
+export interface ToolCallStep {
+  type: 'tool-call';
+
   /**
    * The server-assigned tool call identifier.
    */
