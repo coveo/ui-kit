@@ -12,6 +12,15 @@
   width: 8px;
   border-radius: 50%;
   background-color: var(--lwc-colorBorder, #dddbda);
+  transition: background-color 0.2s ease;
+}
+
+.thread-item__dot--interactive {
+  cursor: pointer;
+}
+
+.thread-item__dot--interactive:hover {
+  background-color: var(--lwc-colorTextDefault, #080707);
 }
 
 .thread-item__dot--expanded {
@@ -23,6 +32,7 @@
   width: 1px;
   height: 100%;
   background-color: var(--lwc-colorBorder, #dddbda);
+  transition: background-color 0.2s ease;
 }
 
 .thread-item__line::before,
@@ -33,6 +43,7 @@
   width: 1px;
   height: 8px;
   background-color: var(--lwc-colorBorder, #dddbda);
+  transition: background-color 0.2s ease;
 }
 
 .thread-item__line::before {
@@ -41,6 +52,16 @@
 
 .thread-item__line::after {
   bottom: -8px;
+}
+
+.thread-item__line-column--interactive {
+  cursor: pointer;
+}
+
+.thread-item__line-column--interactive:hover .thread-item__line,
+.thread-item__line-column--interactive:hover .thread-item__line::before,
+.thread-item__line-column--interactive:hover .thread-item__line::after {
+  background-color: var(--lwc-colorTextDefault, #080707);
 }
 
 .thread-item__clamped-text {

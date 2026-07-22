@@ -4,7 +4,11 @@
       <div
         class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-shrink-none slds-m-right_x-small thread-item__dot-column"
       >
-        <span class={dotClass} data-testid="thread-item-dot"></span>
+        <span
+          class={dotClass}
+          data-testid="thread-item-dot"
+          onclick={handleDotClick}
+        ></span>
       </div>
       <div class="slds-has-flexi-truncate">
         <template lwc:if={disableCollapse}>
@@ -28,7 +32,9 @@
     </div>
     <div class="slds-grid">
       <div
-        class="slds-grid slds-grid_align-center slds-shrink-none thread-item__line-column slds-m-right_x-small"
+        class={lineColumnClass}
+        data-testid="thread-item-line-column"
+        onclick={handleLineClick}
       >
         <template lwc:if={shouldDisplayLine}>
           <span class="thread-item__line" data-testid="thread-item-line"></span>
