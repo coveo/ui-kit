@@ -1,6 +1,6 @@
 import CoveoAnalyticsClient, {AnalyticsClient, ClientOptions} from '../client/analytics';
 import {NoopAnalytics} from '../client/noopAnalytics';
-import doNotTrack from '../donottrack';
+import {shouldDisableAnalyticsForPrivacy} from '../donottrack';
 import {ClickEventRequest, CustomEventRequest, SearchEventRequest} from '../events';
 import {
     CustomEventsTypes,
@@ -89,7 +89,8 @@ export class CoveoInsightClient {
     public coveoAnalyticsClient: AnalyticsClient;
 
     constructor(private opts: Partial<InsightClientOptions>, private provider: InsightClientProvider) {
-        const shouldDisableAnalytics = opts.enableAnalytics === false || doNotTrack();
+        const shouldDisableAnalytics =
+            opts.enableAnalytics === false || shouldDisableAnalyticsForPrivacy(opts.disableBrowserPrivacySignals);
         this.coveoAnalyticsClient = shouldDisableAnalytics ? new NoopAnalytics() : new CoveoAnalyticsClient(opts);
     }
 

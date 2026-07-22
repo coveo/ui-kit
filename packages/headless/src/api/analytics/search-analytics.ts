@@ -294,6 +294,7 @@ interface LegacyConfigureAnalyticsOptions<
   preprocessRequest?: PreprocessRequest;
   provider?: SearchPageClientProvider;
   getState(): State;
+  disableBrowserPrivacySignals?: boolean;
 }
 
 //TODO: KIT-2859
@@ -305,6 +306,7 @@ export const configureLegacyAnalytics = <
   analyticsClientMiddleware = (_, p) => p,
   preprocessRequest,
   provider,
+  disableBrowserPrivacySignals,
 }: LegacyConfigureAnalyticsOptions<State> & {
   provider: SearchPageClientProvider;
 }) => {
@@ -324,6 +326,7 @@ export const configureLegacyAnalytics = <
       token,
       endpoint,
       runtimeEnvironment,
+      disableBrowserPrivacySignals,
       preprocessRequest: wrapPreprocessRequest(logger, preprocessRequest),
       beforeSendHooks: [
         wrapAnalyticsClientSendEventHook(logger, analyticsClientMiddleware),

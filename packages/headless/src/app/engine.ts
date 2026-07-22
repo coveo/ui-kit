@@ -196,7 +196,11 @@ function getUpdateAnalyticsConfigurationPayload(
   logger: Logger
 ): UpdateAnalyticsConfigurationActionCreatorPayload | null {
   const {analytics} = configuration;
-  const {analyticsClientMiddleware: _, ...payload} = analytics ?? {};
+  const {
+    analyticsClientMiddleware: _,
+    disableBrowserPrivacySignals,
+    ...payload
+  } = analytics ?? {};
 
   const payloadWithURL = {
     ...payload,
@@ -207,7 +211,14 @@ function getUpdateAnalyticsConfigurationPayload(
   };
 
   // TODO KIT-2844
-  if (payloadWithURL.analyticsMode !== 'next' && doNotTrack()) {
+  const browserPrivacyGateApplies = payloadWithURL.analyticsMode !== 'next';
+  // Scoped to explicitly-selected legacy analytics so omitting analyticsMode
+  // preserves the existing behavior.
+  const privacySignalsOverridden =
+    payloadWithURL.analyticsMode === 'legacy' &&
+    disableBrowserPrivacySignals === true;
+
+  if (browserPrivacyGateApplies && doNotTrack() && !privacySignalsOverridden) {
     logger.info('Analytics disabled since doNotTrack is active.');
     return {
       ...payloadWithURL,

@@ -120,3 +120,74 @@ describe('doNotTrack', () => {
         });
     });
 });
+
+describe('shouldDisableAnalyticsForPrivacy', () => {
+    let shouldDisableAnalyticsForPrivacy: (disableBrowserPrivacySignals?: boolean) => boolean;
+
+    function initModule(signal: {navigatorGlobalPrivacyControl?: any; navigatorDoNotTrack?: any}) {
+        jest.resetModules();
+        jest.mock('./detector', () => ({
+            hasNavigator: () => true,
+        }));
+        Object.defineProperty(<any>navigator, 'globalPrivacyControl', {
+            get() {
+                return signal.navigatorGlobalPrivacyControl;
+            },
+            configurable: true,
+        });
+        Object.defineProperty(<any>navigator, 'doNotTrack', {
+            get() {
+                return signal.navigatorDoNotTrack;
+            },
+            configurable: true,
+        });
+        Object.defineProperty(<any>navigator, 'msDoNotTrack', {
+            get() {
+                return undefined;
+            },
+            configurable: true,
+        });
+        Object.defineProperty(<any>window, 'doNotTrack', {
+            get() {
+                return undefined;
+            },
+            configurable: true,
+        });
+        shouldDisableAnalyticsForPrivacy = require('./donottrack').shouldDisableAnalyticsForPrivacy;
+    }
+
+    it('disables when DNT is active and the option is omitted', () => {
+        initModule({navigatorDoNotTrack: '1'});
+        expect(shouldDisableAnalyticsForPrivacy()).toBe(true);
+    });
+
+    it('disables when GPC is active and the option is omitted', () => {
+        initModule({navigatorGlobalPrivacyControl: true});
+        expect(shouldDisableAnalyticsForPrivacy()).toBe(true);
+    });
+
+    it('keeps analytics when DNT is active but the option is true', () => {
+        initModule({navigatorDoNotTrack: '1'});
+        expect(shouldDisableAnalyticsForPrivacy(true)).toBe(false);
+    });
+
+    it('keeps analytics when GPC is active but the option is true (umbrella overrides GPC)', () => {
+        initModule({navigatorGlobalPrivacyControl: true});
+        expect(shouldDisableAnalyticsForPrivacy(true)).toBe(false);
+    });
+
+    it('keeps analytics when both DNT and GPC are active but the option is true', () => {
+        initModule({navigatorDoNotTrack: '1', navigatorGlobalPrivacyControl: true});
+        expect(shouldDisableAnalyticsForPrivacy(true)).toBe(false);
+    });
+
+    it('does not disable when no signal is active and the option is omitted', () => {
+        initModule({});
+        expect(shouldDisableAnalyticsForPrivacy()).toBe(false);
+    });
+
+    it('treats a false option the same as omitting it', () => {
+        initModule({navigatorDoNotTrack: '1'});
+        expect(shouldDisableAnalyticsForPrivacy(false)).toBe(true);
+    });
+});

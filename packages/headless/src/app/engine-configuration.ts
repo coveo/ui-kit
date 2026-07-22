@@ -149,6 +149,22 @@ export interface AnalyticsConfiguration {
    * See [Headless proxy: Analytics](https://docs.coveo.com/en/headless/latest/usage/proxy#analytics).
    */
   proxyBaseUrl?: string;
+  /**
+   * For **legacy** analytics only (`analyticsMode: 'legacy'`), whether to stop
+   * honoring browser privacy signals (Do Not Track and Global Privacy Control)
+   * when deciding whether to send analytics.
+   *
+   * By default, Coveo libraries respect these signals. When set to `true`, your
+   * integration takes ownership of privacy decisions and legacy analytics events are
+   * sent even when a browser privacy signal is present. Enable this only if your
+   * privacy and compliance obligations permit it; Global Privacy Control is legally
+   * recognized as an opt-out mechanism in some jurisdictions.
+   *
+   * Has no effect with `analyticsMode: 'next'`, which does not honor these signals.
+   *
+   * @defaultValue `false`
+   */
+  disableBrowserPrivacySignals?: boolean;
 }
 
 export type AnalyticsRuntimeEnvironment = IRuntimeEnvironment;
@@ -191,6 +207,9 @@ export const engineConfigurationDefinitions: SchemaDefinition<EngineConfiguratio
           required: false,
           emptyAllowed: false,
           regex: /^[a-zA-Z0-9_\-.]{1,100}$/,
+        }),
+        disableBrowserPrivacySignals: new BooleanValue({
+          required: false,
         }),
       },
     }),
