@@ -67,6 +67,11 @@ describe('generateAnswerListener', () => {
               getDefaultMiddleware().prepend(
                 createGenerateAnswerListener({
                   getNavigatorContext: buildMockNavigatorContextProvider(),
+                  generationAnalyticsClient: {
+                    logGeneratedAnswerStreamEnd: vi.fn(),
+                    logGeneratedAnswerResponseLinked: vi.fn(),
+                    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- unit test
+                  } as any,
                   // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- unit test
                 }).middleware as Middleware<{}, any>
               ),
@@ -109,6 +114,11 @@ describe('generateAnswerListener', () => {
               getDefaultMiddleware().prepend(
                 createGenerateAnswerListener({
                   getNavigatorContext: buildMockNavigatorContextProvider(),
+                  generationAnalyticsClient: {
+                    logGeneratedAnswerStreamEnd: vi.fn(),
+                    logGeneratedAnswerResponseLinked: vi.fn(),
+                    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- unit test
+                  } as any,
                   // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- unit test
                 }).middleware as Middleware<{}, any>
               ),
@@ -181,6 +191,11 @@ describe('generateAnswerListener', () => {
             getDefaultMiddleware().prepend(
               createGenerateAnswerListener({
                 getNavigatorContext: buildMockNavigatorContextProvider(),
+                generationAnalyticsClient: {
+                  logGeneratedAnswerStreamEnd: vi.fn(),
+                  logGeneratedAnswerResponseLinked: vi.fn(),
+                  // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- unit test
+                } as any,
                 // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- unit test
               }).middleware as Middleware<{}, any>
             ),
@@ -218,6 +233,11 @@ describe('generateAnswerListener', () => {
             getDefaultMiddleware().prepend(
               createGenerateAnswerListener({
                 getNavigatorContext: buildMockNavigatorContextProvider(),
+                generationAnalyticsClient: {
+                  logGeneratedAnswerStreamEnd: vi.fn(),
+                  logGeneratedAnswerResponseLinked: vi.fn(),
+                  // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- unit test
+                } as any,
                 // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- unit test
               }).middleware as Middleware<{}, any>
             ),

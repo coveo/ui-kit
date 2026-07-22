@@ -19,6 +19,7 @@ import {
   logLikeGeneratedAnswer,
   logOpenGeneratedAnswerFollowUpSource,
   logOpenGeneratedAnswerSource,
+  searchAnswerGenerationAnalyticsClient,
 } from '../../../features/generated-answer/generated-answer-analytics-actions.js';
 import {getGeneratedAnswerInitialState} from '../../../features/generated-answer/generated-answer-state.js';
 import type {SearchAppState} from '../../../index.js';
@@ -106,6 +107,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
     buildGeneratedAnswerWithFollowUps(
       engine,
       generatedAnswerAnalyticsClient,
+      searchAnswerGenerationAnalyticsClient,
       props
     );
 
@@ -196,7 +198,10 @@ describe('GeneratedAnswerWithFollowUps', () => {
       'org-123',
       'prod'
     );
-    expect(mockCreateFollowUpStrategy).toHaveBeenCalledWith(engine.dispatch);
+    expect(mockCreateFollowUpStrategy).toHaveBeenCalledWith(
+      engine.dispatch,
+      searchAnswerGenerationAnalyticsClient
+    );
   });
 
   describe('state getter', () => {
@@ -297,7 +302,8 @@ describe('GeneratedAnswerWithFollowUps', () => {
       expect(mockAnswerRunner.run).toHaveBeenCalledWith(
         engine.state,
         engine.dispatch,
-        expect.any(Function)
+        expect.any(Function),
+        searchAnswerGenerationAnalyticsClient
       );
       const navigatorContextProvider = mockAnswerRunner.run.mock.calls[0][2];
       expect(navigatorContextProvider()).toBe(engine.navigatorContext);

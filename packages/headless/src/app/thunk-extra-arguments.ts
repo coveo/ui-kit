@@ -2,6 +2,7 @@ import type {Relay} from '@coveo/relay';
 import type {AnalyticsClientSendEventHook} from 'coveo.analytics';
 import type {Logger} from 'pino';
 import type {GeneratedAnswerAPIClient} from '../api/generated-answer/generated-answer-client.js';
+import type {AnswerGenerationAnalyticsClient} from '../features/generated-answer/answer-generation-analytics-client.js';
 import {
   NoopPreprocessRequest,
   type PreprocessRequest,
@@ -25,6 +26,7 @@ export interface ThunkExtraArguments {
   analyticsClientMiddleware: AnalyticsClientSendEventHook;
   logger: Logger;
   validatePayload: typeof validatePayloadAndThrow;
+  answerGenerationAnalyticsClient?: AnswerGenerationAnalyticsClient;
 }
 
 export function buildThunkExtraArguments(

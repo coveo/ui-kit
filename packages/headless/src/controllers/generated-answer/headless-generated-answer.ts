@@ -1,7 +1,10 @@
 import type {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload.js';
 import {warnIfUsingNextAnalyticsModeForServiceFeature} from '../../app/engine.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
-import {generatedAnswerAnalyticsClient} from '../../features/generated-answer/generated-answer-analytics-actions.js';
+import {
+  generatedAnswerAnalyticsClient,
+  searchAnswerGenerationAnalyticsClient,
+} from '../../features/generated-answer/generated-answer-analytics-actions.js';
 import type {
   GeneratedAnswerBase,
   GeneratedAnswerState,
@@ -67,6 +70,7 @@ export function buildGeneratedAnswer(
     controller = buildGeneratedAnswerWithFollowUps(
       engine,
       generatedAnswerAnalyticsClient,
+      searchAnswerGenerationAnalyticsClient,
       {...props, agentId: props.agentId}
     );
   } else if (

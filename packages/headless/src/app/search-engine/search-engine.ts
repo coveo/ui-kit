@@ -23,6 +23,7 @@ import {
 } from '../../features/configuration/configuration-actions.js';
 import type {ConfigurationState} from '../../features/configuration/configuration-state.js';
 import {debugReducer as debug} from '../../features/debug/debug-slice.js';
+import {searchAnswerGenerationAnalyticsClient} from '../../features/generated-answer/generated-answer-analytics-actions.js';
 import {pipelineReducer as pipeline} from '../../features/pipeline/pipeline-slice.js';
 import {executeSearch} from '../../features/search/search-actions.js';
 import {firstSearchExecutedSelector} from '../../features/search/search-selectors.js';
@@ -137,6 +138,7 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
     ...buildThunkExtraArguments(configuration, logger),
     apiClient: searchAPIClient,
     streamingClient: generatedAnswerClient,
+    answerGenerationAnalyticsClient: searchAnswerGenerationAnalyticsClient,
   };
 
   const augmentedOptions: EngineOptions<SearchEngineReducers> = {

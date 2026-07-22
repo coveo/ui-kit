@@ -62,6 +62,10 @@ describe('createAnswerRunner', () => {
   };
   const navigatorProvider = vi.fn(() => navigatorContext);
   const exampleStrategy = {onRunStartedEvent: () => {}};
+  const analytics = {
+    logGeneratedAnswerStreamEnd: vi.fn(),
+    logGeneratedAnswerResponseLinked: vi.fn(),
+  } as any;
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -86,8 +90,8 @@ describe('createAnswerRunner', () => {
     const runner = buildRunner();
 
     await Promise.all([
-      runner.run(state, dispatch, navigatorProvider),
-      runner.run(state, dispatch, navigatorProvider),
+      runner.run(state, dispatch, navigatorProvider, analytics),
+      runner.run(state, dispatch, navigatorProvider, analytics),
     ]);
 
     expect(abortRunMock).toHaveBeenCalledTimes(1);
@@ -96,7 +100,7 @@ describe('createAnswerRunner', () => {
   it('creates the agent using configuration selectors', async () => {
     const runner = buildRunner();
 
-    await runner.run(state, dispatch, navigatorProvider);
+    await runner.run(state, dispatch, navigatorProvider, analytics);
 
     expect(createAnswerAgent).toHaveBeenCalledWith(
       'agent-123',
@@ -108,9 +112,9 @@ describe('createAnswerRunner', () => {
   it('builds the strategy and executes the agent with forwarded props', async () => {
     const runner = buildRunner();
 
-    await runner.run(state, dispatch, navigatorProvider);
+    await runner.run(state, dispatch, navigatorProvider, analytics);
 
-    expect(createHeadAnswerStrategy).toHaveBeenCalledWith(dispatch);
+    expect(createHeadAnswerStrategy).toHaveBeenCalledWith(dispatch, analytics);
     expect(constructGenerateHeadAnswerParams).toHaveBeenCalledWith(
       state,
       navigatorContext
@@ -132,7 +136,7 @@ describe('createAnswerRunner', () => {
     vi.mocked(selectDebugAgentSession).mockReturnValue(true);
     const runner = buildRunner();
 
-    await runner.run(state, dispatch, navigatorProvider);
+    await runner.run(state, dispatch, navigatorProvider, analytics);
 
     expect(mockAgent.runAgent).toHaveBeenCalledWith(
       {
@@ -149,7 +153,7 @@ describe('createAnswerRunner', () => {
   it('exposes an abortRun helper that cancels the active agent', async () => {
     const runner = buildRunner();
 
-    await runner.run(state, dispatch, navigatorProvider);
+    await runner.run(state, dispatch, navigatorProvider, analytics);
     runner.abortRun();
 
     expect(abortRunMock).toHaveBeenCalledTimes(1);
@@ -158,7 +162,7 @@ describe('createAnswerRunner', () => {
   it('sets isRunning to false on the agent when abortRun is called', async () => {
     const runner = buildRunner();
 
-    await runner.run(state, dispatch, navigatorProvider);
+    await runner.run(state, dispatch, navigatorProvider, analytics);
     mockAgent.isRunning = true;
     runner.abortRun();
 
@@ -168,7 +172,7 @@ describe('createAnswerRunner', () => {
   it('dispatches the loading state when a run starts', async () => {
     const runner = buildRunner();
 
-    await runner.run(state, dispatch, navigatorProvider);
+    await runner.run(state, dispatch, navigatorProvider, analytics);
 
     expect(dispatch).toHaveBeenCalledWith(setIsLoading(true));
   });
@@ -179,7 +183,7 @@ describe('createAnswerRunner', () => {
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     runAgentMock.mockRejectedValueOnce(error);
 
-    await runner.run(state, dispatch, navigatorProvider);
+    await runner.run(state, dispatch, navigatorProvider, analytics);
 
     expect(dispatch).toHaveBeenCalledWith(setIsLoading(true));
     expect(dispatch).toHaveBeenCalledWith(

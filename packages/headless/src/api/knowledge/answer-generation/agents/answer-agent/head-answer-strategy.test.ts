@@ -24,13 +24,16 @@ import {
   updateError,
   updateMessage,
 } from '../../../../../features/generated-answer/generated-answer-actions.js';
-import * as generatedAnswerAnalyticsActions from '../../../../../features/generated-answer/generated-answer-analytics-actions.js';
 import {GeneratedAnswerSseErrorCode} from '../../../../../features/generated-answer/sse-generated-answer-errors.js';
 import {createHeadAnswerStrategy} from './head-answer-strategy.js';
 
 describe('createHeadAnswerStrategy', () => {
   let dispatch: ReturnType<typeof vi.fn> & Dispatch;
   let strategy: AgentSubscriber;
+  let analytics: {
+    logGeneratedAnswerStreamEnd: ReturnType<typeof vi.fn>;
+    logGeneratedAnswerResponseLinked: ReturnType<typeof vi.fn>;
+  };
 
   afterEach(() => {
     vi.restoreAllMocks();
@@ -38,7 +41,11 @@ describe('createHeadAnswerStrategy', () => {
 
   beforeEach(() => {
     dispatch = vi.fn() as unknown as ReturnType<typeof vi.fn> & Dispatch;
-    strategy = createHeadAnswerStrategy(dispatch);
+    analytics = {
+      logGeneratedAnswerStreamEnd: vi.fn(),
+      logGeneratedAnswerResponseLinked: vi.fn(),
+    };
+    strategy = createHeadAnswerStrategy(dispatch, analytics as any);
   });
 
   it('initializes identifiers and streaming state when a run starts', () => {
@@ -154,14 +161,11 @@ describe('createHeadAnswerStrategy', () => {
   it('finalizes the run with the answer generation result', () => {
     const streamEndAction = vi.fn() as any;
     const responseLinkedAction = vi.fn() as any;
-    const streamEndSpy = vi
-      .spyOn(generatedAnswerAnalyticsActions, 'logGeneratedAnswerStreamEnd')
-      .mockReturnValue(streamEndAction);
-    vi.spyOn(
-      generatedAnswerAnalyticsActions,
-      'logGeneratedAnswerResponseLinked'
-    ).mockReturnValue(responseLinkedAction);
-    strategy = createHeadAnswerStrategy(dispatch);
+    analytics.logGeneratedAnswerStreamEnd.mockReturnValue(streamEndAction);
+    analytics.logGeneratedAnswerResponseLinked.mockReturnValue(
+      responseLinkedAction
+    );
+    strategy = createHeadAnswerStrategy(dispatch, analytics as any);
     strategy.onRunStartedEvent!({
       event: {runId: 'run-001', threadId: 'thread-007'},
     } as any);
@@ -180,7 +184,11 @@ describe('createHeadAnswerStrategy', () => {
     expect(dispatch).toHaveBeenNthCalledWith(1, setIsAnswerGenerated(true));
     expect(dispatch).toHaveBeenNthCalledWith(2, setCannotAnswer(false));
     expect(dispatch).toHaveBeenNthCalledWith(3, setIsStreaming(false));
-    expect(streamEndSpy).toHaveBeenCalledWith(true, 'run-001', true);
+    expect(analytics.logGeneratedAnswerStreamEnd).toHaveBeenCalledWith(
+      true,
+      'run-001',
+      true
+    );
     expect(dispatch).toHaveBeenNthCalledWith(4, streamEndAction);
     expect(dispatch).toHaveBeenNthCalledWith(5, responseLinkedAction);
   });
@@ -188,14 +196,11 @@ describe('createHeadAnswerStrategy', () => {
   it('disables answer flags when no answer was generated', () => {
     const streamEndAction = vi.fn() as any;
     const responseLinkedAction = vi.fn() as any;
-    const streamEndSpy = vi
-      .spyOn(generatedAnswerAnalyticsActions, 'logGeneratedAnswerStreamEnd')
-      .mockReturnValue(streamEndAction);
-    vi.spyOn(
-      generatedAnswerAnalyticsActions,
-      'logGeneratedAnswerResponseLinked'
-    ).mockReturnValue(responseLinkedAction);
-    strategy = createHeadAnswerStrategy(dispatch);
+    analytics.logGeneratedAnswerStreamEnd.mockReturnValue(streamEndAction);
+    analytics.logGeneratedAnswerResponseLinked.mockReturnValue(
+      responseLinkedAction
+    );
+    strategy = createHeadAnswerStrategy(dispatch, analytics as any);
     strategy.onRunStartedEvent!({
       event: {runId: 'run-001', threadId: 'thread-007'},
     } as any);
@@ -214,7 +219,11 @@ describe('createHeadAnswerStrategy', () => {
     expect(dispatch).toHaveBeenNthCalledWith(1, setIsAnswerGenerated(false));
     expect(dispatch).toHaveBeenNthCalledWith(2, setCannotAnswer(true));
     expect(dispatch).toHaveBeenNthCalledWith(3, setIsStreaming(false));
-    expect(streamEndSpy).toHaveBeenCalledWith(false, 'run-001', undefined);
+    expect(analytics.logGeneratedAnswerStreamEnd).toHaveBeenCalledWith(
+      false,
+      'run-001',
+      undefined
+    );
     expect(dispatch).toHaveBeenNthCalledWith(4, streamEndAction);
     expect(dispatch).toHaveBeenNthCalledWith(5, responseLinkedAction);
   });

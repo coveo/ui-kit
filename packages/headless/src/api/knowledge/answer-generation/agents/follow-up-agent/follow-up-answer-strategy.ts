@@ -15,10 +15,7 @@ import {
   setFollowUpIsLoading,
   setFollowUpIsStreaming,
 } from '../../../../../features/follow-up-answers/follow-up-answers-actions.js';
-import {
-  logGeneratedAnswerResponseLinked,
-  logGeneratedAnswerStreamEnd,
-} from '../../../../../features/generated-answer/generated-answer-analytics-actions.js';
+import type {AnswerGenerationAnalyticsClient} from '../../../../../features/generated-answer/answer-generation-analytics-client.js';
 import type {
   GenerationStepName,
   GenerationToolCallArgsGeneric,
@@ -30,7 +27,8 @@ import {mapRunErrorCode} from '../../../../../features/generated-answer/sse-gene
  * Creates an AgentSubscriber that handles follow-up answer streaming events
  */
 export const createFollowUpStrategy = (
-  dispatch: ThunkDispatch<unknown, unknown, UnknownAction>
+  dispatch: ThunkDispatch<unknown, unknown, UnknownAction>,
+  analytics: AnswerGenerationAnalyticsClient
 ): AgentSubscriber => {
   let runId = '';
   let answerHasText = false;
@@ -184,9 +182,13 @@ export const createFollowUpStrategy = (
         })
       );
       dispatch(
-        logGeneratedAnswerStreamEnd(answerGenerated, runId, answerTextIsEmpty)
+        analytics.logGeneratedAnswerStreamEnd(
+          answerGenerated,
+          runId,
+          answerTextIsEmpty
+        )
       );
-      dispatch(logGeneratedAnswerResponseLinked(runId));
+      dispatch(analytics.logGeneratedAnswerResponseLinked(runId));
       runId = '';
       answerHasText = false;
     },

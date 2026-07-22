@@ -1,5 +1,6 @@
 import type {Dispatch} from '@reduxjs/toolkit';
 import type {NavigatorContext} from '../../../../../app/navigator-context-provider.js';
+import type {AnswerGenerationAnalyticsClient} from '../../../../../features/generated-answer/answer-generation-analytics-client.js';
 import {
   selectAccessToken,
   selectAgentId,
@@ -39,7 +40,8 @@ export const createAnswerRunner = () => {
   const run = async (
     state: StateNeededForHeadAnswerParams,
     dispatch: Dispatch,
-    getNavigatorContext: () => NavigatorContext
+    getNavigatorContext: () => NavigatorContext,
+    analytics: AnswerGenerationAnalyticsClient
   ) => {
     abortRun();
 
@@ -53,7 +55,7 @@ export const createAnswerRunner = () => {
 
     currentAgent = agent;
 
-    const strategy = createHeadAnswerStrategy(dispatch);
+    const strategy = createHeadAnswerStrategy(dispatch, analytics);
     const params = constructGenerateHeadAnswerParams(
       state,
       getNavigatorContext()
