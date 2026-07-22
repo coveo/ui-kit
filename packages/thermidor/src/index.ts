@@ -49,6 +49,8 @@ export type {
   AgentResponse,
   RoutedInterface,
   RoutedUseCase,
+  SerializableRoutedInterface,
+  StateTurn,
   ToolCall,
   ToolCallStatus,
   Turn,

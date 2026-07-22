@@ -5,7 +5,10 @@ import {
   type FullEngine,
   getFullEngine,
 } from '@/src/internal/engine/index.js';
-import {getOrCreateGenerativeActions} from '@/src/internal/features/generative/index.js';
+import {
+  getOrCreateGenerativeActions,
+  getOrCreateRoutedInterfaceRegistry,
+} from '@/src/internal/features/generative/index.js';
 import {
   buildGenerativeInterface,
   type GenerativeInterface,
@@ -310,9 +313,10 @@ describe('buildConverseController', () => {
       expect(result.activeTurnId).toBe('turn-1');
     });
 
-    it('reduces routedInterface to {useCase} only', () => {
+    it('serializes routedInterface with useCase, snapshot, and query (without the live interface instance)', () => {
       const controller = buildController();
       const actions = getOrCreateGenerativeActions(generativeInterface);
+      const registry = getOrCreateRoutedInterfaceRegistry(generativeInterface);
 
       fullEngine.mutate(
         actions.createTurn({
@@ -321,13 +325,16 @@ describe('buildConverseController', () => {
           status: 'streaming',
         })
       );
+      registry.register('turn-1', {
+        useCase: 'commerceSearch',
+        interface: {} as never,
+        snapshot: {results: []},
+        query: 'shoes',
+      });
       fullEngine.mutate(
         actions.setRoutedInterface({
           turnId: 'turn-1',
-          routedInterface: {
-            useCase: 'commerceSearch',
-            interface: {} as never,
-          },
+          useCase: 'commerceSearch',
         })
       );
       fullEngine.mutate(actions.completeTurn({turnId: 'turn-1'}));
@@ -336,6 +343,8 @@ describe('buildConverseController', () => {
 
       expect(result.turns[0].routedInterface).toEqual({
         useCase: 'commerceSearch',
+        snapshot: {results: []},
+        query: 'shoes',
       });
     });
 
