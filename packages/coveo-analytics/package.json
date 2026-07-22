@@ -1,0 +1,59 @@
+{
+  "name": "coveo.analytics",
+  "version": "2.30.56",
+  "description": "📈 Coveo analytics client (node and browser compatible) ",
+  "license": "MIT",
+  "author": "Coveo",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/coveo/coveo.analytics.js.git"
+  },
+  "files": [
+    "modules/",
+    "dist/**/*.d.ts",
+    "dist/**/*.js",
+    "dist/**/*.mjs",
+    "dist/**/*.cjs",
+    "dist/**/*.js.map",
+    "dist/**/*.mjs.map",
+    "dist/**/*.cjs.map",
+    "src/**/*.ts",
+    "react-native/",
+    "LICENSE"
+  ],
+  "main": "dist/library.cjs",
+  "module": "dist/browser.mjs",
+  "browser": "dist/coveoua.browser.js",
+  "types": "dist/definitions/coveoua/library.d.ts",
+  "scripts": {
+    "build": "rollup -c",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest",
+    "clean": "node ../../utils/ci/rm-rf.mjs cdn dist dist_test coverage"
+  },
+  "dependencies": {
+    "@types/uuid": "9.0.8",
+    "cross-fetch": "^3.1.5",
+    "react-native-get-random-values": "^1.11.0",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-alias": "^5.0.0",
+    "@rollup/plugin-commonjs": "catalog:",
+    "@rollup/plugin-json": "catalog:",
+    "@rollup/plugin-node-resolve": "catalog:",
+    "@rollup/plugin-replace": "catalog:",
+    "@rollup/plugin-terser": "catalog:",
+    "@rollup/plugin-typescript": "catalog:",
+    "@types/node": "catalog:",
+    "@vitest/coverage-v8": "4.1.9",
+    "jsdom": "28.1.0",
+    "rollup": "catalog:",
+    "tslib": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "overrides": {
+    "plist": "3.0.5"
+  }
+}

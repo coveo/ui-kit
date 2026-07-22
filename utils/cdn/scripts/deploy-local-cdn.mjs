@@ -42,6 +42,16 @@ const packages = [
     source: 'packages/shopify/cdn',
     cdnPath: 'shopify/v$VERSION',
   },
+  ...(process.env.DEPLOYMENT_ENVIRONMENT === 'CDN'
+    ? [
+        {
+          name: 'coveo-analytics',
+          source: 'packages/coveo-analytics/cdn',
+          cdnPath: 'coveo.analytics.js/$VERSION',
+          versions: ['minor', 'patch'],
+        },
+      ]
+    : []),
 ];
 
 const getVersion = async (packageName) => {
@@ -76,8 +86,10 @@ const main = async () => {
     const packageName = entry.source.split('/')[1];
     const version = await getVersion(packageName);
     const levels = getVersionLevels(version);
+    const versions = entry.versions ?? Object.keys(levels);
 
-    for (const level of Object.values(levels)) {
+    for (const levelName of versions) {
+      const level = levels[levelName];
       const cdnPath = entry.cdnPath.replace('$VERSION', level);
       const targetPath = path.resolve(devCdnDir, 'proda/StaticCDN', cdnPath);
 

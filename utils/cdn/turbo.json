@@ -8,6 +8,7 @@
         "@coveo/atomic-react#build",
         "@coveo/atomic-hosted-page#build",
         "@coveo/bueno#build",
+        "coveo.analytics#build",
         "@coveo/headless#build",
         "@coveo/relay#build",
         "@coveo/shopify#build"
