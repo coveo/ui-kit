@@ -35,6 +35,10 @@ export function PromptInput({
   const [value, setValue] = useState(initialValue);
   const [showDropdown, setShowDropdown] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
+  const [pendingSuggestion, setPendingSuggestion] = useState<{
+    item: SuggestionItem;
+    sectionId: string;
+  } | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const blurTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const suppressNextFocusRef = useRef(false);
@@ -48,14 +52,18 @@ export function PromptInput({
     setActiveIndex(-1);
   }, [suggestions]);
 
+  useEffect(() => {
+    if (pendingSuggestion) {
+      const {item, sectionId} = pendingSuggestion;
+      setPendingSuggestion(null);
+      onSuggestionSelect?.(item, sectionId);
+    }
+  }, [pendingSuggestion, onSuggestionSelect]);
+
   const submit = useCallback(() => {
     const trimmed = value.trim();
     if (trimmed && !disabled) {
       onSubmit(trimmed);
-      setValue('');
-      if (textareaRef.current) {
-        textareaRef.current.style.height = 'auto';
-      }
     }
   }, [value, disabled, onSubmit]);
 
@@ -95,8 +103,9 @@ export function PromptInput({
         }
         count += section.items.length;
       }
-      onSuggestionSelect?.(item, sectionId);
+      setValue(item.label);
       setShowDropdown(false);
+      setPendingSuggestion({item, sectionId});
     }
   }
 
@@ -139,6 +148,12 @@ export function PromptInput({
     el.style.height = `${el.scrollHeight}px`;
     const maxHeight = parseInt(getComputedStyle(el).maxHeight, 10);
     el.style.overflowY = el.scrollHeight > maxHeight ? 'auto' : 'hidden';
+  }
+
+  function handleDropdownSelect(item: SuggestionItem, sectionId: string) {
+    setValue(item.label);
+    setShowDropdown(false);
+    setPendingSuggestion({item, sectionId});
   }
 
   const activeDescendant =
@@ -220,10 +235,7 @@ export function PromptInput({
       {suggestions && (
         <SuggestionsDropdown
           sections={suggestions}
-          onSelect={(item, sectionId) => {
-            onSuggestionSelect?.(item, sectionId);
-            setShowDropdown(false);
-          }}
+          onSelect={handleDropdownSelect}
           visible={showDropdown}
           activeIndex={activeIndex}
         />
