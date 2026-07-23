@@ -1,0 +1,34 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  padding: var(--space-6);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 680px;
+}
+
+.title {
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-6);
+  text-align: center;
+}
+
+.inputWrapper {
+  width: 100%;
+}
+
+.error {
+  margin-top: var(--space-4);
+  font-size: var(--font-size-sm);
+  color: var(--color-error);
+}

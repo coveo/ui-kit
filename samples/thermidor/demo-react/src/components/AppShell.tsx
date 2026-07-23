@@ -3,7 +3,7 @@ import {buildConverseController, type RoutedInterface} from '@coveo/thermidor';
 import {useGenerativeInterface} from '../context/generative-interface.js';
 import {useBuildController} from '../hooks/use-build-controller.js';
 import {useAppState} from '../hooks/use-app-state.js';
-import {LandingPage} from './LandingPage.js';
+import {LandingPage} from './LandingPage/LandingPage.js';
 import {SearchResultsPage} from './SearchResultsPage.js';
 import {ConversationPage} from './ConversationPage.js';
 

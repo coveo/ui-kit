@@ -19,7 +19,7 @@ vi.mock('../hooks/use-build-controller.js', () => ({
   ],
 }));
 
-vi.mock('./LandingPage.js', () => ({
+vi.mock('./LandingPage/LandingPage.js', () => ({
   LandingPage: (props: any) => (
     <div data-testid="landing-page">
       <button
