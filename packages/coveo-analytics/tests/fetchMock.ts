@@ -2,6 +2,7 @@ import * as fm from 'fetch-mock';
 import * as CrossFetch from 'cross-fetch';
 
 export function mockFetch() {
+  // oxlint-disable-next-line import/namespace -- fetch-mock's separate type package does not declare its runtime sandbox API.
   const fetchMock = fm.sandbox();
   return {
     fetchMock,

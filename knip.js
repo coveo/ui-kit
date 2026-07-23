@@ -7,8 +7,7 @@ export default {
   ],
   ignoreDependencies: ['semver'],
   ignore: [
-    'packages/quantic/**',
-    // Temporary until CAJS package activation supplies package metadata and entry points.
+    // Temporary until CAJS build and test entrypoints are enabled.
     'packages/coveo-analytics/**',
     'samples/headless/rga-react/src/components/Quickstart.tsx',
     'samples/headless/rga-react/src/components/Citation.tsx',

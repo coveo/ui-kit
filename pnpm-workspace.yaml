@@ -18,6 +18,7 @@ packages:
   - packages/atomic-legacy
   - packages/shopify
   - packages/relay
+  - packages/coveo-analytics
   - packages/relay-playground
   - packages/create-atomic-template
   - packages/create-atomic
