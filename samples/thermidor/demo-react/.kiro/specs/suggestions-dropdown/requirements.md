@@ -156,3 +156,15 @@ The Suggestions Dropdown is a configurable dropdown component that appears below
 2. THE PromptInput textarea SHALL NOT display a vertical scrollbar while content height is below the maximum height threshold
 3. THE PromptInput textarea SHALL cap its height at approximately 10 lines of text
 4. WHEN the content height exceeds the maximum height threshold, THE PromptInput textarea SHALL display a vertical scrollbar to allow access to overflow content
+
+### Requirement 13: Clear Button
+
+**User Story:** As a user, I want a clear button to appear when there is text in the input, so that I can quickly reset my query without manually selecting and deleting text.
+
+#### Acceptance Criteria
+
+1. WHEN the textarea contains text, THE PromptInput SHALL display a clear (×) button to the left of the submit/magnifier icon
+2. WHEN the textarea is empty, THE PromptInput SHALL NOT display the clear button
+3. WHEN the clear button is activated (click or keyboard), THE PromptInput SHALL clear all text from the textarea
+4. WHEN the clear button is activated, THE PromptInput SHALL return focus to the textarea
+5. WHEN the clear button is activated, THE PromptInput SHALL reset the textarea height to its default single-row size

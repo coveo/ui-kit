@@ -159,6 +159,8 @@ interface PromptInputProps {
 - Close dropdown after selection or on Escape
 - Auto-expand textarea height to fit content, capped at ~10 lines (~272px)
 - Show vertical scrollbar only when content exceeds the max height threshold (overflow-y toggled from hidden to auto dynamically)
+- Display a clear (×) button to the left of the submit icon when the textarea has text content
+- On clear: reset textarea value, height, and overflow; return focus to the textarea
 
 ## Data Models
 
