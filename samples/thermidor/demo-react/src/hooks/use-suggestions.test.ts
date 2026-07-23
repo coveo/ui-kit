@@ -40,14 +40,14 @@ describe('useSuggestions', () => {
       expect(result.current.sections).toHaveLength(3);
     });
 
-    it('returns a first section with id "refinements", title "Search refinements", and icon "filter-sparkle"', () => {
+    it('returns a first section with id "refinements", title "Search refinements", and icon "settings"', () => {
       const {result} = renderHook(() =>
         useSuggestions({inputValue: '', context: 'search-results'})
       );
       const first = result.current.sections[0];
       expect(first.id).toBe('refinements');
       expect(first.title).toBe('Search refinements');
-      expect(first.icon).toBe('filter-sparkle');
+      expect(first.icon).toBe('settings');
     });
 
     it('returns a second section with id "search"', () => {

@@ -53,7 +53,7 @@ const SEARCH_RESULTS_SECTIONS: SuggestionSection[] = [
   {
     id: 'refinements',
     title: 'Search refinements',
-    icon: 'filter-sparkle',
+    icon: 'settings',
     items: [
       {id: 'r1', label: 'Show boards under $400'},
       {id: 'r2', label: 'Beginner-friendly only'},
