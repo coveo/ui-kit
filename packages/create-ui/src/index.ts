@@ -113,7 +113,7 @@ const isDirectRun =
 
 /**
  * On an unexpected crash, capture a plain-JSON report and print how to submit
- * it (ADR 003). Handled outcomes ({@link isExpectedError}) and `DO_NOT_TRACK`
+ * it. Handled outcomes ({@link isExpectedError}) and `DO_NOT_TRACK`
  * are skipped. Never throws — a reporting failure must not mask the original
  * error.
  */
