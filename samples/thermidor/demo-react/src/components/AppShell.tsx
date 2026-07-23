@@ -19,6 +19,12 @@ export function AppShell() {
   const lastObservedTurnIdRef = useRef<string | null>(null);
 
   useEffect(() => {
+    return () => {
+      persistedInterfaceRef.current?.interface.dispose();
+    };
+  }, []);
+
+  useEffect(() => {
     const turns = converseState.turns;
     let latestCompletedTurn = null;
     for (let i = turns.length - 1; i >= 0; i--) {
