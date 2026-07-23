@@ -22,12 +22,6 @@ Coveo documentation:
   Headless    https://docs.coveo.com/en/headless/latest
 `;
 
-/**
- * Builds the commander program. `commander` owns usage/`--help` generation,
- * option parsing, and unknown-option errors; domain validation (known
- * template, project name) stays in `main`. `exitOverride` turns commander's
- * `process.exit` into a thrown `CommanderError` so the CLI stays testable.
- */
 function buildProgram(): Command {
   return new Command()
     .name('create-ui')
@@ -79,6 +73,8 @@ export function parseArgs(rawArgs: string[]): CliArgs {
 }
 
 export async function main(rawArgs: string[]): Promise<number> {
+  // `report` is an internal maintenance subcommand, dispatched before commander
+  // so it stays out of the scaffolding `--help`.
   if (rawArgs[0] === 'report') {
     return submitReport(rawArgs[1]);
   }
@@ -111,12 +107,6 @@ const isDirectRun =
   argv[1] !== undefined &&
   fileURLToPath(import.meta.url) === realpathSync(argv[1]);
 
-/**
- * On an unexpected crash, capture a plain-JSON report and print how to submit
- * it. Handled outcomes ({@link isExpectedError}) and `DO_NOT_TRACK`
- * are skipped. Never throws — a reporting failure must not mask the original
- * error.
- */
 export async function reportCrashIfUnexpected(error: unknown): Promise<void> {
   if (isExpectedError(error) || isTrackingDisabled()) {
     return;

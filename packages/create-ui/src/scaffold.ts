@@ -17,7 +17,6 @@ import {
 import {getTemplate, getTemplates, type Template} from './templates.js';
 import {getPackageManager} from './utils.js';
 
-/** The parsed CLI arguments the scaffold module needs to resolve its inputs. */
 export interface CliArgs {
   projectName?: string;
   template?: string;
@@ -25,7 +24,6 @@ export interface CliArgs {
   docs: boolean;
 }
 
-/** Fully-resolved inputs — everything `scaffold` needs, with nothing left to prompt for. */
 export interface ScaffoldOptions {
   template: Template;
   projectName: string;
@@ -41,12 +39,8 @@ export function unavailableTemplateMessage(
     : `Template "${templateName}" is not available.`;
 }
 
-/**
- * Atomically claims the target directory. Returns true if this call created it
- * (so it is safe to remove on failure), or false if it already existed and is
- * empty (pre-existing — must not be deleted). Throws if it exists and is not
- * empty. A single `mkdir` avoids the check-then-create TOCTOU race.
- */
+// A single mkdir avoids a check-then-create race. Returns true when this call
+// created the dir (safe to delete on failure), false when it pre-existed empty.
 async function claimTargetDir(targetDir: string): Promise<boolean> {
   const firstCreated = await mkdir(targetDir, {recursive: true});
   if (firstCreated !== undefined) {
@@ -60,7 +54,6 @@ async function claimTargetDir(targetDir: string): Promise<boolean> {
   return false;
 }
 
-/** Downloads, resolves, finalizes, and installs the chosen template. */
 export async function scaffold({
   template,
   projectName,
@@ -129,11 +122,6 @@ export async function scaffold({
   log.info(`  ${pm} run dev\n`);
 }
 
-/**
- * Resolves the template from an explicit `--template` value (validated) or,
- * when omitted, the interactive selector. Returns null when an explicit value
- * is unknown.
- */
 async function resolveTemplate(
   templateArg: string | undefined
 ): Promise<Template | null> {
@@ -158,11 +146,7 @@ async function resolveTemplate(
   return null;
 }
 
-/**
- * The single interactive phase: turns parsed args into a fully-resolved options
- * object, validating flags and prompting for anything missing.
- * Returns null when validation fails so the caller can exit non-zero.
- */
+// Returns null when validation fails, so the caller can exit non-zero.
 export async function resolveInputs(
   args: CliArgs
 ): Promise<ScaffoldOptions | null> {
