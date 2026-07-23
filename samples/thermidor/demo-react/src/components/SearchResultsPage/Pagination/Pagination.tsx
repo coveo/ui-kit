@@ -34,7 +34,7 @@ export function Pagination({controller}: PaginationProps) {
       </button>
 
       <div className={styles.pages}>
-        {pages.map((item, index) => {
+        {pages.map((item) => {
           if (item === 'ellipsis-start' || item === 'ellipsis-end') {
             return (
               <span key={item} className={styles.ellipsis}>
