@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, useRef, useEffect} from 'react';
 import type {RoutedInterface} from '@coveo/thermidor';
 import {
   SECTION_ACTIONS,
@@ -24,12 +24,24 @@ export function SearchResultsPage({
     context: 'search-results',
   });
   const [toast, setToast] = useState<string | null>(null);
+  const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (toastTimerRef.current) {
+        clearTimeout(toastTimerRef.current);
+      }
+    };
+  }, []);
 
   const handleSuggestionSelect = (item: SuggestionItem, sectionId: string) => {
     const action = SECTION_ACTIONS[sectionId];
     if (action === 'toast') {
+      if (toastTimerRef.current) {
+        clearTimeout(toastTimerRef.current);
+      }
       setToast('Not supported yet');
-      setTimeout(() => setToast(null), 3000);
+      toastTimerRef.current = setTimeout(() => setToast(null), 3000);
     } else {
       onSubmit(item.label);
     }
