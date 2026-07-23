@@ -24,7 +24,7 @@
   position: relative;
   flex: 1;
   width: 1px;
-  background-color: var(--lwc-colorBorder, #dddbda);
+  background-color: var(--slds-g-color-neutral-base-90, var(--lwc-colorBorder, #dddbda));
 }
 
 .thread-item__line::before,
@@ -34,7 +34,7 @@
   left: 0;
   width: 1px;
   height: 8px;
-  background-color: var(--lwc-colorBorder, #dddbda);
+  background-color: var(--slds-g-color-neutral-base-90, var(--lwc-colorBorder, #dddbda));
 }
 
 .thread-item__line::before {
@@ -54,11 +54,11 @@
   height: 8px;
   width: 8px;
   border-radius: 50%;
-  background-color: var(--lwc-colorBorder, #dddbda);
+  background-color: var(--slds-g-color-neutral-base-90, var(--lwc-colorBorder, #dddbda));
 }
 
 .thread-item__dot--expanded {
-  background-color: var(--lwc-colorTextDefault, #080707);
+  background-color: var(--slds-g-color-on-surface-3, var(--lwc-colorTextDefault, #080707));
 }
 
 .thread-item__clamped-text {
@@ -74,5 +74,5 @@
 }
 
 .thread-item__title-button:hover {
-  background-color: var(--lwc-colorBackgroundRowHover, #f3f2f2);
+  background-color: var(--slds-g-color-surface-container-1, var(--lwc-colorBackgroundRowHover, #f3f2f2));
 }

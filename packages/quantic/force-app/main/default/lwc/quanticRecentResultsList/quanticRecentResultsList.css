@@ -4,7 +4,7 @@
   display: flex;
   flex-direction: row;
   min-width: 0;
-  color:  var(--lwc-brandTextLink, #0176d3);
+  color: var(--slds-s-link-color, var(--lwc-brandTextLink, #0176d3));
 }
 
 .result-link__container {
@@ -16,5 +16,5 @@
 }
 
 .empty-list-message {
-  color: var(--lwc-colorTextPlaceholder, var(--lwc-colorTextIconDefault, #747474));
+  color: var(--slds-g-color-on-surface-1, var(--lwc-colorTextPlaceholder, var(--lwc-colorTextIconDefault, #747474)));
 }

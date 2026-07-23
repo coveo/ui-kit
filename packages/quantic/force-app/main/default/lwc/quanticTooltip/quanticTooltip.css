@@ -37,7 +37,7 @@
 }
 
 .tooltip__arrow--light {
-  background-color: var(--lwc-colorBackgroundAlt, rgb(255, 255, 255));
+  background-color: var(--slds-g-color-surface-1, var(--lwc-colorBackgroundAlt, rgb(255, 255, 255)));
 }
 
 .tooltip__arrow--positioned-above {
@@ -64,11 +64,11 @@
 .tooltip__nubbin--bottom:before,
 .tooltip__nubbin--bottom:after {
   clip-path: polygon(100% 0, 0% 100%, 100% 100%);
-  border: solid 0.5px rgba(0, 0, 0, 0.16);
+  border: solid 0.5px var(--slds-g-color-border-1, rgba(0, 0, 0, 0.16));
 }
 
 .tooltip__nubbin--top:before,
 .tooltip__nubbin--top:after {
   clip-path: polygon(100% 0, 0 0, 0 100%);
-  border: solid 0.5px rgba(0, 0, 0, 0.16);
+  border: solid 0.5px var(--slds-g-color-border-1, rgba(0, 0, 0, 0.16));
 }

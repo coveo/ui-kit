@@ -13,7 +13,7 @@ a {
 }
 
 .recent-query__container:hover {
-  background-color: #f6f7f9;
+  background-color: var(--slds-g-color-surface-2, #f6f7f9);
 }
 
 .query-text__container {
@@ -25,5 +25,5 @@ a {
 }
 
 .empty-list-message {
-  color: var(--lwc-colorTextPlaceholder, var(--lwc-colorTextIconDefault, #747474));
+  color: var(--slds-g-color-on-surface-1, var(--lwc-colorTextPlaceholder, var(--lwc-colorTextIconDefault, #747474)));
 }

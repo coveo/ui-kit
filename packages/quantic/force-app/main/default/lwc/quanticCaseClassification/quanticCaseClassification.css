@@ -28,7 +28,7 @@ lightning-icon {
 }
 
 .slds-visual-picker input:checked ~ label .visual-picker__figure:after {
-  border-right-color: var(--lwc-colorBorderRowSelectedHover, rgb(27, 150, 255));
-  border-top-color: var(--lwc-colorBorderRowSelectedHover, rgb(27, 150, 255));
+  border-right-color: var(--slds-g-color-brand-base-50, var(--lwc-colorBorderRowSelectedHover, rgb(27, 150, 255)));
+  border-top-color: var(--slds-g-color-brand-base-50, var(--lwc-colorBorderRowSelectedHover, rgb(27, 150, 255)));
   border-radius: 4px;
 }

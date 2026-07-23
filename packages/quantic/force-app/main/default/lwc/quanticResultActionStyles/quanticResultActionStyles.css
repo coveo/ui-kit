@@ -1,5 +1,5 @@
 .result-action_white-container {
-  background-color: white;
+  background-color: var(--slds-g-color-surface-1, white);
   display: inline-block;
   border-radius: var(--slds-g-sizing-border-4, 0.25rem);
 }
