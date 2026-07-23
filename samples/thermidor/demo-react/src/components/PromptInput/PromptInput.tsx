@@ -196,7 +196,7 @@ export function PromptInput({
             }
           }}
           aria-label="Clear"
-          style={{visibility: value ? 'visible' : 'hidden'}}
+          style={{visibility: value && !disabled ? 'visible' : 'hidden'}}
         >
           <svg
             viewBox="0 0 24 24"
