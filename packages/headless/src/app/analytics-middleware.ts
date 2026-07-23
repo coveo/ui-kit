@@ -5,11 +5,8 @@ type UnknownActionWithAnalyticsPayload = UnknownAction & {
   payload: {analyticsAction?: UnknownAction};
 };
 
-function isAnalyticsAction(
-  action: unknown
-): action is UnknownActionWithAnalyticsPayload {
-  const analytics = (action as UnknownActionWithAnalyticsPayload).payload
-    ?.analyticsAction;
+function isAnalyticsAction(action: unknown): action is UnknownActionWithAnalyticsPayload {
+  const analytics = (action as UnknownActionWithAnalyticsPayload).payload?.analyticsAction;
 
   return isActionWithType(action) && !isNullOrUndefined(analytics);
 }
@@ -36,31 +33,16 @@ export const analyticsMiddleware: Middleware = (api) => (next) => (action) => {
   const ret = next(action);
 
   if (isActionWithType(action)) {
-    if (
-      action.type === 'search/executeSearch/fullfilled' &&
-      analytics === undefined
-    ) {
+    if (action.type === 'search/executeSearch/fullfilled' && analytics === undefined) {
       console.error('No analytics action associated with search:', action);
     }
 
-    if (
-      action.type === 'recommendation/get/fullfilled' &&
-      analytics === undefined
-    ) {
-      console.error(
-        'No analytics action associated with recommendation:',
-        action
-      );
+    if (action.type === 'recommendation/get/fullfilled' && analytics === undefined) {
+      console.error('No analytics action associated with recommendation:', action);
     }
 
-    if (
-      action.type === 'productRecommendations/get/fullfilled' &&
-      analytics === undefined
-    ) {
-      console.error(
-        'No analytics action associated with product recommendation:',
-        action
-      );
+    if (action.type === 'productRecommendations/get/fullfilled' && analytics === undefined) {
+      console.error('No analytics action associated with product recommendation:', action);
     }
   }
 

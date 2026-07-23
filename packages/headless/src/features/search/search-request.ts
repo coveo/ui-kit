@@ -17,8 +17,7 @@ import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/
 import {selectStaticFilterExpressions} from '../static-filter-set/static-filter-set-selectors.js';
 import {mapSearchRequest} from './search-mappings.js';
 
-type StateNeededBySearchRequest = ConfigurationSection &
-  Partial<SearchAppState>;
+type StateNeededBySearchRequest = ConfigurationSection & Partial<SearchAppState>;
 
 export const buildSearchRequest = async (
   state: StateNeededBySearchRequest,
@@ -30,23 +29,15 @@ export const buildSearchRequest = async (
   const automaticFacets = getAutomaticFacets(state);
   const sharedWithFoldingRequest =
     state.configuration.analytics.analyticsMode === 'legacy'
-      ? await legacyBuildSearchAndFoldingLoadCollectionRequest(
-          state,
-          eventDescription
-        )
-      : buildSearchAndFoldingLoadCollectionRequest(
-          state,
-          navigatorContext,
-          eventDescription
-        );
+      ? await legacyBuildSearchAndFoldingLoadCollectionRequest(state, eventDescription)
+      : buildSearchAndFoldingLoadCollectionRequest(state, navigatorContext, eventDescription);
 
   return mapSearchRequest({
     ...sharedWithFoldingRequest,
     ...(state.didYouMean && {
       queryCorrection: {
         enabled:
-          state.didYouMean.enableDidYouMean &&
-          state.didYouMean.queryCorrectionMode === 'next',
+          state.didYouMean.enableDidYouMean && state.didYouMean.queryCorrectionMode === 'next',
         options: {
           automaticallyCorrect: state.didYouMean.automaticallyCorrectQuery
             ? ('whenNoResults' as const)
@@ -54,8 +45,7 @@ export const buildSearchRequest = async (
         },
       },
       enableDidYouMean:
-        state.didYouMean.enableDidYouMean &&
-        state.didYouMean.queryCorrectionMode === 'legacy',
+        state.didYouMean.enableDidYouMean && state.didYouMean.queryCorrectionMode === 'legacy',
     }),
     ...(cq && {cq}),
     ...(facets.length && {facets}),
@@ -83,8 +73,7 @@ export const buildSearchRequest = async (
       pipelineRuleParameters: {
         mlGenerativeQuestionAnswering: {
           responseFormat: state.generatedAnswer.responseFormat,
-          citationsFieldToInclude:
-            state.generatedAnswer.fieldsToIncludeInCitations,
+          citationsFieldToInclude: state.generatedAnswer.fieldsToIncludeInCitations,
         },
       },
     }),
@@ -94,9 +83,7 @@ export const buildSearchRequest = async (
 // Corner case:
 // If the number of results requested would go over the index limit (maximumNumberOfResultsFromIndex)
 // we need to request fewer results in order to ensure we do not receive an exception from the index
-export function getNumberOfResultsWithinIndexLimit(
-  state: StateNeededBySearchRequest
-) {
+export function getNumberOfResultsWithinIndexLimit(state: StateNeededBySearchRequest) {
   if (!state.pagination) {
     return undefined;
   }
@@ -125,9 +112,7 @@ function getAutomaticFacets(state: StateNeededBySearchRequest) {
         .filter((facetRequest) => facetRequest.currentValues.length > 0)
     : undefined;
 }
-function responseToAutomaticFacetRequest(
-  response: AutomaticFacetResponse
-): AutomaticFacetRequest {
+function responseToAutomaticFacetRequest(response: AutomaticFacetResponse): AutomaticFacetRequest {
   const {field, label, values} = response;
 
   const selectedValues = values.filter((value) => value.state === 'selected');
@@ -156,8 +141,7 @@ function getSpecificFacetRequests<T extends FacetSetState>(state: T) {
   return getFacetRequests(state).map((request) => {
     /* The Search API does not support 'alphanumericDescending' as a string value and instead relies on a new sort mechanism to specify sort order.
     At the moment, this is only supported for alphanumeric sorting, but will likely transition to this pattern for other types in the future. */
-    const sortCriteria =
-      sortCriteriaMap[request.sortCriteria as keyof typeof sortCriteriaMap];
+    const sortCriteria = sortCriteriaMap[request.sortCriteria as keyof typeof sortCriteriaMap];
     if (sortCriteria) {
       return {
         ...request,
@@ -170,18 +154,11 @@ function getSpecificFacetRequests<T extends FacetSetState>(state: T) {
 
 function getRangeFacetRequests<T extends RangeFacetSetState>(state: T) {
   return getFacetRequests(state).map((request) => {
-    const currentValues =
-      request.currentValues as AnyFacetRequest['currentValues'];
+    const currentValues = request.currentValues as AnyFacetRequest['currentValues'];
     const hasActiveValues = currentValues.some(({state}) => state !== 'idle');
-    const hasPreviousStateValues = currentValues.some(
-      (value) => value.previousState
-    );
+    const hasPreviousStateValues = currentValues.some((value) => value.previousState);
 
-    if (
-      request.generateAutomaticRanges &&
-      !hasActiveValues &&
-      !hasPreviousStateValues
-    ) {
+    if (request.generateAutomaticRanges && !hasActiveValues && !hasPreviousStateValues) {
       return {...request, currentValues: []};
     }
 
@@ -191,9 +168,7 @@ function getRangeFacetRequests<T extends RangeFacetSetState>(state: T) {
 
 export function buildConstantQuery(state: StateNeededBySearchRequest) {
   const cq = state.advancedSearchQueries?.cq.trim() || '';
-  const activeTab = Object.values(state.tabSet || {}).find(
-    (tab) => tab.isActive
-  );
+  const activeTab = Object.values(state.tabSet || {}).find((tab) => tab.isActive);
   const tabExpression = activeTab?.expression.trim() || '';
   const filterExpressions = selectStaticFilterExpressions(state);
 

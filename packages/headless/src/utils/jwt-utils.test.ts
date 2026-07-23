@@ -33,9 +33,7 @@ describe('jwt-utils', () => {
     it('should return false for invalid token', () => {
       expect(shouldRenewJWT('')).toBe(false);
       expect(shouldRenewJWT('invalid')).toBe(false);
-      expect(shouldRenewJWT('xx12345678-1234-1234-1234-123456789012')).toBe(
-        false
-      );
+      expect(shouldRenewJWT('xx12345678-1234-1234-1234-123456789012')).toBe(false);
       expect(shouldRenewJWT(undefined)).toBe(false);
     });
 

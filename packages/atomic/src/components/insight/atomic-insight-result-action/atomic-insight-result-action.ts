@@ -122,33 +122,24 @@ export class AtomicInsightResultAction
 
     switch (this.action) {
       case Actions.CopyToClipboard:
-        this.bindings.engine.dispatch(
-          this.actions.logCopyToClipboard(this.result)
-        );
+        this.bindings.engine.dispatch(this.actions.logCopyToClipboard(this.result));
         navigator.clipboard.writeText(this.result.clickUri);
         break;
       case Actions.PostToFeed:
-        this.bindings.engine.dispatch(
-          this.actions.logFeedItemTextPost(this.result)
-        );
+        this.bindings.engine.dispatch(this.actions.logFeedItemTextPost(this.result));
         break;
       case Actions.SendAsEmail:
-        this.bindings.engine.dispatch(
-          this.actions.logCaseSendEmail(this.result)
-        );
+        this.bindings.engine.dispatch(this.actions.logCaseSendEmail(this.result));
         break;
     }
 
     this.dispatchEvent(
-      new CustomEvent<InsightResultActionClickedEvent>(
-        'atomicInsightResultActionClicked',
-        {
-          bubbles: true,
-          composed: true,
-          cancelable: true,
-          detail: {action: this.action, result: this.result},
-        }
-      )
+      new CustomEvent<InsightResultActionClickedEvent>('atomicInsightResultActionClicked', {
+        bubbles: true,
+        composed: true,
+        cancelable: true,
+        detail: {action: this.action, result: this.result},
+      })
     );
   }
 

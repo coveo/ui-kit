@@ -38,10 +38,7 @@ export type CategoryFacetOptions = Omit<
  * @group Sub-controllers
  * @category CategoryFacet
  * */
-export type CategoryFacetState = Omit<
-  CoreCommerceFacetState<CategoryFacetValue>,
-  'type'
-> & {
+export type CategoryFacetState = Omit<CoreCommerceFacetState<CategoryFacetValue>, 'type'> & {
   activeValue?: CategoryFacetValue;
   canShowLessValues: boolean;
   canShowMoreValues: boolean;
@@ -60,10 +57,7 @@ export type CategoryFacetState = Omit<
  */
 export type CategoryFacet = Omit<
   CoreCommerceFacet<CategoryFacetValueRequest, CategoryFacetValue>,
-  | 'isValueExcluded'
-  | 'toggleExclude'
-  | 'toggleSingleExclude'
-  | 'toggleSingleSelect'
+  'isValueExcluded' | 'toggleExclude' | 'toggleSingleExclude' | 'toggleSingleSelect'
 > & {
   facetSearch: Omit<CategoryFacetSearch, 'state'>;
   state: CategoryFacetState;
@@ -85,17 +79,16 @@ export function buildCategoryFacet(
   engine: CommerceEngine,
   options: CategoryFacetOptions
 ): CategoryFacet {
-  const coreController = buildCoreCommerceFacet<
-    CategoryFacetValueRequest,
-    CategoryFacetValue
-  >(engine, {
-    options: {
-      ...options,
-      toggleSelectActionCreator: toggleSelectCategoryFacetValue,
-    },
-  });
-  const {deselectAll, isValueSelected, subscribe, toggleSelect} =
-    coreController;
+  const coreController = buildCoreCommerceFacet<CategoryFacetValueRequest, CategoryFacetValue>(
+    engine,
+    {
+      options: {
+        ...options,
+        toggleSelectActionCreator: toggleSelectCategoryFacetValue,
+      },
+    }
+  );
+  const {deselectAll, isValueSelected, subscribe, toggleSelect} = coreController;
   const {dispatch} = engine;
   const {facetId} = options;
 
@@ -107,8 +100,7 @@ export function buildCategoryFacet(
     isForFieldSuggestions: false,
   });
 
-  const getRequest = () =>
-    facetRequestSelector(engine[stateKey], facetId)! as CategoryFacetRequest;
+  const getRequest = () => facetRequestSelector(engine[stateKey], facetId)! as CategoryFacetRequest;
 
   const findSelectedValueChildren = (
     values: CategoryFacetValueRequest[]
@@ -201,8 +193,7 @@ export const getCategoryFacetState = (
     !!initialNumberOfValues &&
     (activeValue
       ? initialNumberOfValues < activeValue.children.length
-      : initialNumberOfValues <
-        (request!.numberOfValues ?? coreState.values.length));
+      : initialNumberOfValues < (request!.numberOfValues ?? coreState.values.length));
 
   const canShowMoreValues = activeValue
     ? activeValue.moreValuesAvailable
@@ -215,8 +206,7 @@ export const getCategoryFacetState = (
     canShowMoreValues,
     facetSearch: {
       isLoading: facetSearchSelector?.isLoading ?? false,
-      moreValuesAvailable:
-        facetSearchSelector?.response.moreValuesAvailable ?? false,
+      moreValuesAvailable: facetSearchSelector?.response.moreValuesAvailable ?? false,
       query: facetSearchSelector?.options.query ?? '',
       values: facetSearchSelector?.response.values ?? [],
     },

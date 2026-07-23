@@ -127,16 +127,15 @@ describe('sub-controllers', () => {
         },
       };
 
-      const interactiveSpotlightContent =
-        subControllers.interactiveSpotlightContent(props);
+      const interactiveSpotlightContent = subControllers.interactiveSpotlightContent(props);
 
       expect(interactiveSpotlightContent).toEqual(
         buildCoreInteractiveSpotlightContentMock.mock.results[0].value
       );
-      expect(buildCoreInteractiveSpotlightContentMock).toHaveBeenCalledWith(
-        engine,
-        {...props, responseIdSelector: mockResponseIdSelector}
-      );
+      expect(buildCoreInteractiveSpotlightContentMock).toHaveBeenCalledWith(engine, {
+        ...props,
+        responseIdSelector: mockResponseIdSelector,
+      });
     });
   });
 
@@ -159,9 +158,7 @@ describe('sub-controllers', () => {
         isFacetLoadingResponseSelector: mockIsFacetLoadingResponseSelector,
         requestIdSelector: mockRequestIdSelector,
         serializer: mockSerializer,
-        parametersDefinition: mockParametersDefinition as SchemaDefinition<
-          Required<Parameters>
-        >,
+        parametersDefinition: mockParametersDefinition as SchemaDefinition<Required<Parameters>>,
         activeParametersSelector: mockActiveParametersSelector,
         restoreActionCreator: mockRestoreActionCreator,
       });
@@ -200,24 +197,20 @@ describe('sub-controllers', () => {
         },
       };
 
-      const interactiveSpotlightContent =
-        subControllers.interactiveSpotlightContent(props);
+      const interactiveSpotlightContent = subControllers.interactiveSpotlightContent(props);
 
       expect(interactiveSpotlightContent).toEqual(
         buildCoreInteractiveSpotlightContentMock.mock.results[0].value
       );
-      expect(buildCoreInteractiveSpotlightContentMock).toHaveBeenCalledWith(
-        engine,
-        {...props, responseIdSelector: mockResponseIdSelector}
-      );
+      expect(buildCoreInteractiveSpotlightContentMock).toHaveBeenCalledWith(engine, {
+        ...props,
+        responseIdSelector: mockResponseIdSelector,
+      });
     });
   });
 
   describe('#buildSearchAndListingsSubControllers', () => {
-    let subControllers: SearchAndListingSubControllers<
-      Parameters,
-      SearchSummaryState
-    >;
+    let subControllers: SearchAndListingSubControllers<Parameters, SearchSummaryState>;
 
     beforeEach(() => {
       subControllers = buildSearchAndListingsSubControllers(engine, {
@@ -235,9 +228,7 @@ describe('sub-controllers', () => {
         isFacetLoadingResponseSelector: mockIsFacetLoadingResponseSelector,
         requestIdSelector: mockRequestIdSelector,
         serializer: mockSerializer,
-        parametersDefinition: mockParametersDefinition as SchemaDefinition<
-          Required<Parameters>
-        >,
+        parametersDefinition: mockParametersDefinition as SchemaDefinition<Required<Parameters>>,
         activeParametersSelector: mockActiveParametersSelector,
         restoreActionCreator: mockRestoreActionCreator,
         facetSearchType: 'LISTING',
@@ -258,16 +249,11 @@ describe('sub-controllers', () => {
     });
 
     it('#facetGenerator builds facet generator', () => {
-      const buildCoreFacetGenerator = vi.spyOn(
-        CoreFacetGenerator,
-        'buildFacetGenerator'
-      );
+      const buildCoreFacetGenerator = vi.spyOn(CoreFacetGenerator, 'buildFacetGenerator');
 
       const facetGenerator = subControllers.facetGenerator();
 
-      expect(facetGenerator).toEqual(
-        buildCoreFacetGenerator.mock.results[0].value
-      );
+      expect(facetGenerator).toEqual(buildCoreFacetGenerator.mock.results[0].value);
     });
 
     it('#breadcrumbManager builds breadcrumb manager', () => {
@@ -278,17 +264,12 @@ describe('sub-controllers', () => {
 
       const breadcrumbManager = subControllers.breadcrumbManager();
 
-      expect(breadcrumbManager).toEqual(
-        buildCoreBreadcrumbManager.mock.results[0].value
-      );
+      expect(breadcrumbManager).toEqual(buildCoreBreadcrumbManager.mock.results[0].value);
     });
 
     it('#urlManager builds url manager', () => {
       mockSerializer.deserialize.mockReturnValue({});
-      const buildCoreUrlManager = vi.spyOn(
-        CoreUrlManager,
-        'buildCoreUrlManager'
-      );
+      const buildCoreUrlManager = vi.spyOn(CoreUrlManager, 'buildCoreUrlManager');
 
       const props = {
         initialState: {fragment: 'q=windmill'},
@@ -306,24 +287,17 @@ describe('sub-controllers', () => {
     });
 
     it('#parameterManager builds parameter manager', () => {
-      const buildCoreParameterManager = vi.spyOn(
-        CoreParameterManager,
-        'buildCoreParameterManager'
-      );
+      const buildCoreParameterManager = vi.spyOn(CoreParameterManager, 'buildCoreParameterManager');
       const props = {
         initialState: {parameters: {}},
       };
 
       const parameterManager = subControllers.parameterManager(props);
 
-      expect(parameterManager).toEqual(
-        buildCoreParameterManager.mock.results[0].value
-      );
+      expect(parameterManager).toEqual(buildCoreParameterManager.mock.results[0].value);
       expect(buildCoreParameterManager).toHaveBeenCalledWith(engine, {
         ...props,
-        parametersDefinition: mockParametersDefinition as SchemaDefinition<
-          Required<Parameters>
-        >,
+        parametersDefinition: mockParametersDefinition as SchemaDefinition<Required<Parameters>>,
         activeParametersSelector: mockActiveParametersSelector,
         restoreActionCreator: mockRestoreActionCreator,
         fetchProductsActionCreator: mockFetchProductsActionCreator,
@@ -371,9 +345,7 @@ describe('sub-controllers', () => {
 
       const interactiveProduct = subControllers.interactiveProduct(props);
 
-      expect(interactiveProduct).toEqual(
-        buildCoreInteractiveProductMock.mock.results[0].value
-      );
+      expect(interactiveProduct).toEqual(buildCoreInteractiveProductMock.mock.results[0].value);
       expect(buildCoreInteractiveProductMock).toHaveBeenCalledWith(engine, {
         ...props,
         responseIdSelector: mockResponseIdSelector,
@@ -381,10 +353,7 @@ describe('sub-controllers', () => {
     });
 
     it('#pagination builds pagination controller with slot id', () => {
-      const buildCorePaginationMock = vi.spyOn(
-        CorePagination,
-        'buildCorePagination'
-      );
+      const buildCorePaginationMock = vi.spyOn(CorePagination, 'buildCorePagination');
 
       const pagination = subControllers.pagination();
 

@@ -80,9 +80,7 @@ const styles = css`
     @apply border-neutral-dim mb-6 inline-block max-h-96 max-w-full overflow-auto rounded-md border border-solid;
   }
 
-  [part='generated-text']
-    [part='answer-table-container']
-    [part='answer-table-header'] {
+  [part='generated-text'] [part='answer-table-container'] [part='answer-table-header'] {
     @apply sticky top-0;
   }
 
@@ -90,17 +88,11 @@ const styles = css`
     @apply text-base;
   }
 
-  [part='generated-text']
-    [part='answer-table']
-    thead
-    [part='answer-table-header'] {
+  [part='generated-text'] [part='answer-table'] thead [part='answer-table-header'] {
     @apply bg-neutral border-b-neutral-dim border-l-neutral-dim p-4 text-left font-bold;
   }
 
-  [part='generated-text']
-    [part='answer-table']
-    thead
-    [part='answer-table-header']:first-of-type {
+  [part='generated-text'] [part='answer-table'] thead [part='answer-table-header']:first-of-type {
     border-left: none;
   }
 
@@ -108,11 +100,7 @@ const styles = css`
     @apply bg-neutral-light;
   }
 
-  [part='generated-text']
-    [part='answer-table']
-    tbody
-    tr
-    [part='answer-table-content'] {
+  [part='generated-text'] [part='answer-table'] tbody tr [part='answer-table-content'] {
     @apply border-l-neutral-dim border-b-neutral-dim border p-4;
   }
 

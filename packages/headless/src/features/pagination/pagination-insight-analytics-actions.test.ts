@@ -71,37 +71,23 @@ describe('pagination insight analytics actions', () => {
   });
 
   it('should log #logPagerNumber with the right payload', async () => {
-    await logPageNumber()()(
-      engine.dispatch,
-      () => engine.state,
-      {} as ThunkExtraArguments
-    );
+    await logPageNumber()()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
     expect(mockLogPagerNumber).toHaveBeenCalledTimes(1);
     expect(mockLogPagerNumber.mock.calls[0][0]).toStrictEqual(expectedPayload);
   });
 
   it('should log #logPagerNext with the right payload', async () => {
-    await logPageNext()()(
-      engine.dispatch,
-      () => engine.state,
-      {} as ThunkExtraArguments
-    );
+    await logPageNext()()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
     expect(mockLogPagerNext).toHaveBeenCalledTimes(1);
     expect(mockLogPagerNext.mock.calls[0][0]).toStrictEqual(expectedPayload);
   });
 
   it('should log #logPagerPrevious with the right payload', async () => {
-    await logPagePrevious()()(
-      engine.dispatch,
-      () => engine.state,
-      {} as ThunkExtraArguments
-    );
+    await logPagePrevious()()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
     expect(mockLogPagerPrevious).toHaveBeenCalledTimes(1);
-    expect(mockLogPagerPrevious.mock.calls[0][0]).toStrictEqual(
-      expectedPayload
-    );
+    expect(mockLogPagerPrevious.mock.calls[0][0]).toStrictEqual(expectedPayload);
   });
 });

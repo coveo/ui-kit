@@ -15,9 +15,7 @@ export interface SSRSearchEngine extends SearchEngine {
   waitForSearchCompletedAction(): Promise<SearchCompletedAction>;
 }
 
-export type SearchCompletedAction = ReturnType<
-  LegacySearchAction['fulfilled' | 'rejected']
->;
+export type SearchCompletedAction = ReturnType<LegacySearchAction['fulfilled' | 'rejected']>;
 
 export type BuildConfig = {
   navigatorContext: NavigatorContext;

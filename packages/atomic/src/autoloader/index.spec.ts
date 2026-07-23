@@ -1,12 +1,4 @@
-import {
-  afterAll,
-  beforeAll,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-} from 'vitest';
+import {afterAll, beforeAll, beforeEach, describe, expect, it, vi} from 'vitest';
 import {registerAutoloader} from './index';
 
 const mockCustomElementsRegistry = new Map<string, CustomElementConstructor>();
@@ -18,9 +10,7 @@ const mockCustomElements = {
   get: vi.fn((name: string) => mockCustomElementsRegistry.get(name)),
   whenDefined: vi.fn((name: string) => {
     const constructorFn = mockCustomElementsRegistry.get(name);
-    return constructorFn
-      ? Promise.resolve(constructorFn)
-      : new Promise(() => {});
+    return constructorFn ? Promise.resolve(constructorFn) : new Promise(() => {});
   }),
   upgrade: vi.fn(),
 };
@@ -114,8 +104,7 @@ describe('autoloader', () => {
         const element = document.createElement('x-test-component');
         element.attachShadow({mode: 'open'});
         const template = document.createElement('template');
-        template.innerHTML =
-          '<x-test-component-inside>test</x-test-component-inside>';
+        template.innerHTML = '<x-test-component-inside>test</x-test-component-inside>';
 
         element.shadowRoot!.appendChild(template);
         return element;
@@ -125,9 +114,7 @@ describe('autoloader', () => {
     });
 
     it('should handle components in shadow roots with hydration', async () => {
-      const el = await setupComponent(() =>
-        document.createElement('test-component')
-      );
+      const el = await setupComponent(() => document.createElement('test-component'));
 
       el.attachShadow({mode: 'open'});
       await waitForNextTick();

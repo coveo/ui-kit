@@ -1,12 +1,5 @@
 #!/usr/bin/env node
-import {
-  cpSync,
-  readdirSync,
-  readFileSync,
-  renameSync,
-  unlinkSync,
-  writeFileSync,
-} from 'node:fs';
+import {cpSync, readdirSync, readFileSync, renameSync, unlinkSync, writeFileSync} from 'node:fs';
 import {dirname, resolve} from 'node:path';
 import {cwd} from 'node:process';
 import {fileURLToPath} from 'node:url';

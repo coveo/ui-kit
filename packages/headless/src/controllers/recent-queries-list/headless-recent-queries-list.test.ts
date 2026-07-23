@@ -3,16 +3,10 @@ import {
   logRecentQueryClick,
 } from '../../features/recent-queries/recent-queries-analytics-actions.js';
 import {executeSearch} from '../../features/search/search-actions.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../test/mock-engine-v2.js';
 import {createMockState} from '../../test/mock-state.js';
 import {buildCoreRecentQueriesList} from '../core/recent-queries-list/headless-core-recent-queries-list.js';
-import {
-  buildRecentQueriesList,
-  type RecentQueriesList,
-} from './headless-recent-queries-list.js';
+import {buildRecentQueriesList, type RecentQueriesList} from './headless-recent-queries-list.js';
 
 vi.mock('../../features/search/search-actions.js');
 vi.mock('../../features/recent-queries/recent-queries-analytics-actions');

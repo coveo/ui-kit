@@ -25,12 +25,9 @@ import '@/src/components/search/atomic-text/atomic-text.js';
 
 const {decorator: insightInterfaceDecorator, play: initializeInsightInterface} =
   wrapInInsightInterface();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-insight-result-list',
-  {
-    excludeCategories: ['methods'],
-  }
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-insight-result-list', {
+  excludeCategories: ['methods'],
+});
 
 const insightApiHarness = new MockInsightApi();
 
@@ -85,9 +82,7 @@ const TEMPLATE_EXAMPLE = `<template>
 
 const layoutDecorator = (story: () => unknown) => html`
   <atomic-insight-layout>
-    <atomic-layout-section section="results">
-      ${story()}
-    </atomic-layout-section>
+    <atomic-layout-section section="results"> ${story()} </atomic-layout-section>
   </atomic-insight-layout>
 `;
 

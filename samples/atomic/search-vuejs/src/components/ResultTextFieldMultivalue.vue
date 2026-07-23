@@ -7,7 +7,5 @@ const _props = defineProps({
 
 <template>
   <atomic-text :value="_props.label"></atomic-text>:
-  <atomic-result-multi-value-text
-    :field="_props.field"
-  ></atomic-result-multi-value-text>
+  <atomic-result-multi-value-text :field="_props.field"></atomic-result-multi-value-text>
 </template>

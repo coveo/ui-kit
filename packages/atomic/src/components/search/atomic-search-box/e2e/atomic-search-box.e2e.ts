@@ -22,10 +22,7 @@ test.describe('atomic-search-box', () => {
 
       test.describe('after clicking the submit button', () => {
         test.beforeEach(async ({searchBox}) => {
-          await searchBox
-            .searchSuggestions()
-            .first()
-            .waitFor({state: 'visible', timeout: 10e3});
+          await searchBox.searchSuggestions().first().waitFor({state: 'visible', timeout: 10e3});
           await searchBox.submitButton.click();
         });
 
@@ -58,9 +55,7 @@ test.describe('atomic-search-box', () => {
         await expect(searchBox.recentQueries().first()).toBeVisible();
       });
 
-      test('should clear recent queries when clicking the clear button', async ({
-        searchBox,
-      }) => {
+      test('should clear recent queries when clicking the clear button', async ({searchBox}) => {
         await searchBox.clearRecentQueriesButton.click();
         await expect(searchBox.recentQueries().first()).not.toBeVisible();
       });
@@ -80,20 +75,14 @@ test.describe('atomic-search-box', () => {
       });
 
       test('should display suggested queries', async ({searchBox}) => {
-        await expect(
-          searchBox.searchSuggestions({listSide: 'Left'}).first()
-        ).toBeVisible();
+        await expect(searchBox.searchSuggestions({listSide: 'Left'}).first()).toBeVisible();
       });
 
       test('should display instant results', async ({searchBox}) => {
-        await expect(
-          searchBox.instantResult({listSide: 'Right'}).first()
-        ).toBeVisible();
+        await expect(searchBox.instantResult({listSide: 'Right'}).first()).toBeVisible();
       });
 
-      test('should display in the search box what has been submitted', async ({
-        searchBox,
-      }) => {
+      test('should display in the search box what has been submitted', async ({searchBox}) => {
         await searchBox.searchInput.fill('shoe');
         await searchBox.submitButton.click();
         await expect(searchBox.searchInput).toHaveValue('shoe');
@@ -112,9 +101,7 @@ test.describe('atomic-search-box', () => {
     });
 
     test.describe('when hovering a instant result and pressing Enter', () => {
-      test('should execute the query in the search box', async ({
-        searchBox,
-      }) => {
+      test('should execute the query in the search box', async ({searchBox}) => {
         await searchBox.searchInput.click();
         await searchBox.searchInput.fill('a');
         await searchBox.instantResult({listSide: 'Right'}).first().hover();

@@ -18,10 +18,7 @@ import {cartSchema} from '../../../../features/commerce/context/cart/cart-valida
 import type {CartSection} from '../../../../state/state-sections.js';
 import {loadReducerError} from '../../../../utils/errors.js';
 import {validateInitialState} from '../../../../utils/validate-payload.js';
-import {
-  buildController,
-  type Controller,
-} from '../../../controller/headless-controller.js';
+import {buildController, type Controller} from '../../../controller/headless-controller.js';
 import {
   itemSelector,
   totalPriceSelector,
@@ -166,10 +163,7 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
     dispatch(setItems(initialState.items));
   }
 
-  function isNewQuantityDifferent(
-    currentItem: CartItem,
-    prevItem: CartItemWithMetadata
-  ) {
+  function isNewQuantityDifferent(currentItem: CartItem, prevItem: CartItemWithMetadata) {
     return prevItem ? prevItem.quantity !== currentItem.quantity : true;
   }
 
@@ -177,15 +171,11 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
     currentItem: CartItem,
     prevItem: CartItemWithMetadata | undefined
   ): 'add' | 'remove' {
-    const isCurrentQuantityGreater =
-      !prevItem || currentItem.quantity > prevItem.quantity;
+    const isCurrentQuantityGreater = !prevItem || currentItem.quantity > prevItem.quantity;
     return isCurrentQuantityGreater ? 'add' : 'remove';
   }
 
-  function isEqual(
-    currentItem: CartItem,
-    prevItem: CartItemWithMetadata | undefined
-  ): boolean {
+  function isEqual(currentItem: CartItem, prevItem: CartItemWithMetadata | undefined): boolean {
     return prevItem
       ? currentItem.name === prevItem.name &&
           currentItem.price === prevItem.price &&
@@ -199,9 +189,7 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
   ): CartActionPayload {
     const {quantity: currentQuantity, ...product} = currentItem;
     const action = getCartAction(currentItem, prevItem);
-    const quantity = !prevItem
-      ? currentQuantity
-      : Math.abs(currentQuantity - prevItem.quantity);
+    const quantity = !prevItem ? currentQuantity : Math.abs(currentQuantity - prevItem.quantity);
 
     return {
       action,
@@ -233,9 +221,7 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
       }
 
       if (isNewQuantityDifferent(item, prevItem)) {
-        dispatch(
-          emitCartActionEvent(createEcCartActionPayload(item, prevItem))
-        );
+        dispatch(emitCartActionEvent(createEcCartActionPayload(item, prevItem)));
       }
 
       dispatch(updateItemQuantity(item));
@@ -259,9 +245,7 @@ export function createCartKey(item: CartItem): CartKey {
   return `${item.productId},${item.name},${item.price}`;
 }
 
-function loadBaseCartReducers(
-  engine: CommerceEngine
-): engine is CommerceEngine<CartSection> {
+function loadBaseCartReducers(engine: CommerceEngine): engine is CommerceEngine<CartSection> {
   engine.addReducers({cart});
   return true;
 }

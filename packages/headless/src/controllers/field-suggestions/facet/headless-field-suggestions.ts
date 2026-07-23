@@ -28,10 +28,7 @@ import type {
   SearchSection,
 } from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
-import {
-  buildController,
-  type Subscribable,
-} from '../../controller/headless-controller.js';
+import {buildController, type Subscribable} from '../../controller/headless-controller.js';
 import {determineFacetId} from '../../core/facets/_common/facet-id-determinor.js';
 import {buildFacetSearch} from '../../core/facets/facet-search/specific/headless-facet-search.js';
 import type {FacetOptions} from '../../facets/facet/headless-facet-options.js';
@@ -177,11 +174,7 @@ export function buildFieldSuggestions(
   if (!loadFieldSuggestionsReducers(engine)) {
     throw loadReducerError;
   }
-  const {
-    facetSearch: facetSearchOptions,
-    allowedValues,
-    ...facetOptions
-  } = props.options.facet;
+  const {facetSearch: facetSearchOptions, allowedValues, ...facetOptions} = props.options.facet;
   const facetId = determineFacetId(engine, facetOptions);
   engine.dispatch(
     registerFacet({

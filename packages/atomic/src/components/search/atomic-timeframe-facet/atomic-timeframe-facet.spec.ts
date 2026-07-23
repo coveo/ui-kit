@@ -77,9 +77,7 @@ describe('atomic-timeframe-facet', () => {
       buildFakeSearchStatus({firstSearchExecuted: true})
     );
     vi.mocked(buildTabManager).mockReturnValue(buildFakeTabManager({}));
-    vi.mocked(buildFacetConditionsManager).mockReturnValue(
-      buildFakeFacetConditionsManager({})
-    );
+    vi.mocked(buildFacetConditionsManager).mockReturnValue(buildFakeFacetConditionsManager({}));
     vi.mocked(loadDateFacetSetActions).mockReturnValue({
       deselectAllDateFacetValues: vi.fn().mockReturnValue({type: 'mock'}),
     } as unknown as ReturnType<typeof loadDateFacetSetActions>);
@@ -103,44 +101,40 @@ describe('atomic-timeframe-facet', () => {
       facetId: string;
     }>
   ) => {
-    const {element} = await renderInAtomicSearchInterface<AtomicTimeframeFacet>(
-      {
-        template: html`<atomic-timeframe-facet
-          field=${props?.field ?? 'date'}
-          label=${props?.label ?? 'Date'}
-          facet-id=${ifDefined(props?.facetId)}
-          sort-criteria=${ifDefined(props?.sortCriteria)}
-          injection-depth=${ifDefined(props?.injectionDepth)}
-          heading-level=${ifDefined(props?.headingLevel)}
-          .tabsIncluded=${props?.tabsIncluded || []}
-          .tabsExcluded=${props?.tabsExcluded || []}
-          .dependsOn=${props?.dependsOn || {}}
-          ?filter-facet-count=${props?.filterFacetCount}
-          ?is-collapsed=${props?.isCollapsed}
-          ?with-date-picker=${props?.withDatePicker}
-          min=${ifDefined(props?.min)}
-          max=${ifDefined(props?.max)}
-        ></atomic-timeframe-facet>`,
-        selector: 'atomic-timeframe-facet',
-        bindings: (bindings) => ({
-          ...bindings,
-          store: {
-            ...bindings.store,
-            getUniqueIDFromEngine: vi.fn().mockReturnValue('123'),
-            registerFacet: mockedRegisterFacet,
-            state: {
-              ...bindings.store.state,
-              dateFacets: {},
-            },
+    const {element} = await renderInAtomicSearchInterface<AtomicTimeframeFacet>({
+      template: html`<atomic-timeframe-facet
+        field=${props?.field ?? 'date'}
+        label=${props?.label ?? 'Date'}
+        facet-id=${ifDefined(props?.facetId)}
+        sort-criteria=${ifDefined(props?.sortCriteria)}
+        injection-depth=${ifDefined(props?.injectionDepth)}
+        heading-level=${ifDefined(props?.headingLevel)}
+        .tabsIncluded=${props?.tabsIncluded || []}
+        .tabsExcluded=${props?.tabsExcluded || []}
+        .dependsOn=${props?.dependsOn || {}}
+        ?filter-facet-count=${props?.filterFacetCount}
+        ?is-collapsed=${props?.isCollapsed}
+        ?with-date-picker=${props?.withDatePicker}
+        min=${ifDefined(props?.min)}
+        max=${ifDefined(props?.max)}
+      ></atomic-timeframe-facet>`,
+      selector: 'atomic-timeframe-facet',
+      bindings: (bindings) => ({
+        ...bindings,
+        store: {
+          ...bindings.store,
+          getUniqueIDFromEngine: vi.fn().mockReturnValue('123'),
+          registerFacet: mockedRegisterFacet,
+          state: {
+            ...bindings.store.state,
+            dateFacets: {},
           },
-        }),
-      }
-    );
+        },
+      }),
+    });
 
-    const qs = (part: string) =>
-      element.shadowRoot?.querySelector(`[part~="${part}"]`);
-    const qsa = (part: string) =>
-      element.shadowRoot?.querySelectorAll(`[part~="${part}"]`);
+    const qs = (part: string) => element.shadowRoot?.querySelector(`[part~="${part}"]`);
+    const qsa = (part: string) => element.shadowRoot?.querySelectorAll(`[part~="${part}"]`);
 
     const locators = {
       get facet() {
@@ -190,12 +184,8 @@ describe('atomic-timeframe-facet', () => {
         tabsExcluded: ['tab2'],
       });
 
-      expect(mockedConsole.warn).toHaveBeenCalledWith(
-        expect.stringContaining('tabs-included')
-      );
-      expect(mockedConsole.warn).toHaveBeenCalledWith(
-        expect.stringContaining('tabs-excluded')
-      );
+      expect(mockedConsole.warn).toHaveBeenCalledWith(expect.stringContaining('tabs-included'));
+      expect(mockedConsole.warn).toHaveBeenCalledWith(expect.stringContaining('tabs-excluded'));
     });
   });
 
@@ -233,15 +223,10 @@ describe('atomic-timeframe-facet', () => {
         await element.updateComplete;
 
         expect(mockedConsole.warn).toHaveBeenCalledWith(
-          expect.stringContaining(
-            'Prop validation failed for component atomic-timeframe-facet'
-          ),
+          expect.stringContaining('Prop validation failed for component atomic-timeframe-facet'),
           element
         );
-        expect(mockedConsole.warn).toHaveBeenCalledWith(
-          expect.stringContaining(prop),
-          element
-        );
+        expect(mockedConsole.warn).toHaveBeenCalledWith(expect.stringContaining(prop), element);
       }
     );
   });

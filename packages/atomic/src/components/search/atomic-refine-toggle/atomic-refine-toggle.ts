@@ -1,8 +1,4 @@
-import {
-  buildSearchStatus,
-  type SearchStatus,
-  type SearchStatusState,
-} from '@coveo/headless';
+import {buildSearchStatus, type SearchStatus, type SearchStatusState} from '@coveo/headless';
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {bindStateToController} from '@/src/decorators/bind-state';
@@ -28,10 +24,7 @@ import '@/src/components/search/atomic-refine-modal/atomic-refine-modal';
 @customElement('atomic-refine-toggle')
 @bindings()
 @withTailwindStyles
-export class AtomicRefineToggle
-  extends LitElement
-  implements InitializableComponent<Bindings>
-{
+export class AtomicRefineToggle extends LitElement implements InitializableComponent<Bindings> {
   @state()
   bindings!: Bindings;
 

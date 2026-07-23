@@ -9,9 +9,8 @@ export const selectTimezone = (state: {configuration: ConfigurationState}) =>
 export const selectAccessToken = (state: {configuration: ConfigurationState}) =>
   state.configuration.accessToken;
 
-export const selectOrganizationId = (state: {
-  configuration: ConfigurationState;
-}) => state.configuration.organizationId;
+export const selectOrganizationId = (state: {configuration: ConfigurationState}) =>
+  state.configuration.organizationId;
 
 export const selectEnvironment = (state: {configuration: ConfigurationState}) =>
   state.configuration.environment;
@@ -23,6 +22,5 @@ export const selectEnvironment = (state: {configuration: ConfigurationState}) =>
 export const selectAgentId = (state: {configuration: ConfigurationState}) =>
   state.configuration?.knowledge?.agentId;
 
-export const selectDebugAgentSession = (state: {
-  configuration: ConfigurationState;
-}) => state.configuration.knowledge.debugAgentSession;
+export const selectDebugAgentSession = (state: {configuration: ConfigurationState}) =>
+  state.configuration.knowledge.debugAgentSession;

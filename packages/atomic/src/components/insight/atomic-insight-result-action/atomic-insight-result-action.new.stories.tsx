@@ -16,18 +16,10 @@ import '@/src/components/search/atomic-result-text/atomic-result-text.js';
 
 const insightApiHarness = new MockInsightApi();
 
-const {decorator: insightInterfaceDecorator, play} = wrapInInsightInterface(
-  {},
-  false,
-  false
-);
+const {decorator: insightInterfaceDecorator, play} = wrapInInsightInterface({}, false, false);
 const {decorator: insightLayoutDecorator} = wrapInInsightLayout(false);
-const {decorator: insightResultListDecorator} = wrapInInsightResultList(
-  'list',
-  false
-);
-const {decorator: insightResultTemplateDecorator} =
-  wrapInInsightResultTemplate(false);
+const {decorator: insightResultListDecorator} = wrapInInsightResultList('list', false);
+const {decorator: insightResultTemplateDecorator} = wrapInInsightResultTemplate(false);
 
 const meta: Meta = {
   component: 'atomic-insight-result-action',
@@ -52,13 +44,7 @@ const meta: Meta = {
   argTypes: {
     action: {
       control: 'select',
-      options: [
-        'copyToClipboard',
-        'attachToCase',
-        'quickview',
-        'postToFeed',
-        'sendAsEmail',
-      ],
+      options: ['copyToClipboard', 'attachToCase', 'quickview', 'postToFeed', 'sendAsEmail'],
       description: 'The type of action to perform when clicked',
     },
     tooltip: {

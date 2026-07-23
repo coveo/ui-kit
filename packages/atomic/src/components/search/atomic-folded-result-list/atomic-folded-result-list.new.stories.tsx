@@ -139,10 +139,9 @@ const SLOTS_DEFAULT = `
 const searchApiHarness = new MockSearchApi();
 
 const {decorator, play} = wrapInSearchInterface();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-folded-result-list',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-folded-result-list', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-folded-result-list',

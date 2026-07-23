@@ -75,17 +75,12 @@ describe('generated-answer-thread', () => {
       element,
       locators: () => ({
         threadItems: Array.from(
-          element.shadowRoot?.querySelectorAll(
-            'atomic-generated-answer-thread-item'
-          ) ?? []
+          element.shadowRoot?.querySelectorAll('atomic-generated-answer-thread-item') ?? []
         ) as AtomicGeneratedAnswerThreadItem[],
         answerContents: Array.from(
-          element.shadowRoot?.querySelectorAll(
-            'atomic-generated-answer-content'
-          ) ?? []
+          element.shadowRoot?.querySelectorAll('atomic-generated-answer-content') ?? []
         ) as AtomicGeneratedAnswerContent[],
-        showPreviousAnswersButton:
-          element.shadowRoot?.querySelector('button') ?? null,
+        showPreviousAnswersButton: element.shadowRoot?.querySelector('button') ?? null,
       }),
     };
   };
@@ -100,9 +95,7 @@ describe('generated-answer-thread', () => {
 
     expect(locators().threadItems).toHaveLength(0);
     expect(locators().answerContents).toHaveLength(1);
-    expect(locators().answerContents[0]?.generatedAnswer.question).toBe(
-      'Question 1'
-    );
+    expect(locators().answerContents[0]?.generatedAnswer.question).toBe('Question 1');
     expect(locators().showPreviousAnswersButton).toBeNull();
   });
 
@@ -114,12 +107,8 @@ describe('generated-answer-thread', () => {
     locators().threadItems.forEach((item) => {
       expect(item.showTimelineDot).toBe(true);
     });
-    expect(locators().answerContents[0]?.generatedAnswer.question).toBe(
-      'Question 1'
-    );
-    expect(locators().answerContents[1]?.generatedAnswer.question).toBe(
-      'Question 2'
-    );
+    expect(locators().answerContents[0]?.generatedAnswer.question).toBe('Question 1');
+    expect(locators().answerContents[1]?.generatedAnswer.question).toBe('Question 2');
     expect(locators().showPreviousAnswersButton).toBeNull();
   });
 
@@ -135,9 +124,7 @@ describe('generated-answer-thread', () => {
     const {locators} = await renderComponent({generatedAnswers});
 
     expect(locators().threadItems).toHaveLength(1);
-    expect(locators().answerContents[0]?.generatedAnswer.question).toBe(
-      'Question 3'
-    );
+    expect(locators().answerContents[0]?.generatedAnswer.question).toBe('Question 3');
     expect(locators().showPreviousAnswersButton).toBeInTheDocument();
   });
 
@@ -218,9 +205,7 @@ describe('generated-answer-thread', () => {
 
     const updatedLocators = locators();
     expect(updatedLocators.threadItems).toHaveLength(1);
-    expect(updatedLocators.answerContents[0]?.generatedAnswer.question).toBe(
-      'Question 4'
-    );
+    expect(updatedLocators.answerContents[0]?.generatedAnswer.question).toBe('Question 4');
     expect(updatedLocators.showPreviousAnswersButton).toBeInTheDocument();
   });
 
@@ -270,9 +255,7 @@ describe('generated-answer-thread', () => {
     const translate = vi
       .fn()
       .mockImplementation((key: string) =>
-        key === 'show-previous-questions'
-          ? 'Afficher les questions précédentes'
-          : key
+        key === 'show-previous-questions' ? 'Afficher les questions précédentes' : key
       );
     const translatedI18n = {t: translate} as unknown as i18n;
 

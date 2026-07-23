@@ -7,10 +7,7 @@ import type {
   SearchEngineDefinitionOptions,
 } from '../types/engine.js';
 
-const ensureNavigatorContext = (
-  buildConfig: BuildConfig,
-  loggerOptions?: LoggerOptions
-) => {
+const ensureNavigatorContext = (buildConfig: BuildConfig, loggerOptions?: LoggerOptions) => {
   if (!buildConfig.navigatorContext) {
     const logger = buildLogger(loggerOptions);
     logger.error(

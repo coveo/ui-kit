@@ -6,10 +6,7 @@ import {
   fetchBaseQuery,
   retry,
 } from '@reduxjs/toolkit/query';
-import type {
-  ConfigurationSection,
-  GeneratedAnswerSection,
-} from '../../state/state-sections.js';
+import type {ConfigurationSection, GeneratedAnswerSection} from '../../state/state-sections.js';
 import {getApiBaseUrlOrOrganizationEndpoint} from '../platform-client.js';
 
 type StateNeededByAnswerSlice = ConfigurationSection & GeneratedAnswerSection;
@@ -18,11 +15,11 @@ type StateNeededByAnswerSlice = ConfigurationSection & GeneratedAnswerSection;
  * `dynamicBaseQuery` is passed to the baseQuery of the createApi,
  * but note that the baseQuery will not be used if a queryFn is provided in the createApi endpoint
  */
-const dynamicBaseQuery: BaseQueryFn<
-  string | FetchArgs,
-  unknown,
-  FetchBaseQueryError
-> = async (args, api, extraOptions) => {
+const dynamicBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (
+  args,
+  api,
+  extraOptions
+) => {
   const state = api.getState() as StateNeededByAnswerSlice;
   const {accessToken, environment, organizationId} = state.configuration;
   const answerConfigurationId = state.generatedAnswer.answerConfigurationId;

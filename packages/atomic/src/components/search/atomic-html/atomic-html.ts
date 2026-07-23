@@ -18,10 +18,7 @@ import type {Bindings} from '../atomic-search-interface/atomic-search-interface'
 @customElement('atomic-html')
 @bindings()
 @withTailwindStyles
-export class AtomicHtml
-  extends LitElement
-  implements InitializableComponent<Bindings>
-{
+export class AtomicHtml extends LitElement implements InitializableComponent<Bindings> {
   @state() bindings!: Bindings;
   @state() error!: Error;
 

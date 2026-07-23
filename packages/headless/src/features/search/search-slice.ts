@@ -9,18 +9,11 @@ import {
   type TransitiveSearchAction,
   updateSearchAction,
 } from './search-actions.js';
-import {
-  emptyQuestionAnswer,
-  getSearchInitialState,
-  type SearchState,
-} from './search-state.js';
+import {emptyQuestionAnswer, getSearchInitialState, type SearchState} from './search-state.js';
 
 type SearchAction = typeof executeSearch | typeof fetchMoreResults;
 
-function handleRejectedSearch(
-  state: SearchState,
-  action: ReturnType<SearchAction['rejected']>
-) {
+function handleRejectedSearch(state: SearchState, action: ReturnType<SearchAction['rejected']>) {
   const error = action.payload ?? null;
   if (error) {
     state.response = getSearchInitialState().response;
@@ -32,10 +25,7 @@ function handleRejectedSearch(
   state.isLoading = false;
 }
 
-function handleFulfilledSearch(
-  state: SearchState,
-  action: ReturnType<SearchAction['fulfilled']>
-) {
+function handleFulfilledSearch(state: SearchState, action: ReturnType<SearchAction['fulfilled']>) {
   state.error = null;
   state.response = action.payload.response;
   state.queryExecuted = action.payload.queryExecuted;
@@ -88,53 +78,46 @@ function handlePendingFetchMoreResults(
   state.requestId = action.meta.requestId;
 }
 
-export const searchReducer = createReducer(
-  getSearchInitialState(),
-  (builder) => {
-    builder.addCase(executeSearch.rejected, (state, action) =>
-      handleRejectedSearch(state, action)
-    );
-    builder.addCase(fetchMoreResults.rejected, (state, action) =>
-      handleRejectedSearch(state, action)
-    );
-    builder.addCase(fetchPage.rejected, (state, action) =>
-      handleRejectedSearch(state, action)
-    );
-    builder.addCase(executeSearch.fulfilled, (state, action) => {
-      handleFulfilledNewSearch(state, action);
-    });
-    builder.addCase(fetchMoreResults.fulfilled, (state, action) => {
-      handleFulfilledSearch(state, action);
-      state.results = [
-        ...state.results,
-        ...action.payload.response.results.map((result) => ({
-          ...result,
-          searchUid: action.payload.response.searchUid,
-        })),
-      ];
-    });
-    builder.addCase(fetchPage.fulfilled, (state, action) => {
-      handleFulfilledSearch(state, action);
-      state.results = [
-        ...action.payload.response.results.map((result) => ({
-          ...result,
-          searchUid: action.payload.response.searchUid,
-        })),
-      ];
-    });
-    builder.addCase(fetchFacetValues.fulfilled, (state, action) => {
-      state.response.facets = action.payload.response.facets;
-      state.response.searchUid = action.payload.response.searchUid;
-    });
-    builder.addCase(executeSearch.pending, handlePendingSearch);
-    builder.addCase(fetchMoreResults.pending, handlePendingFetchMoreResults);
-    builder.addCase(fetchPage.pending, handlePendingSearch);
-    builder.addCase(updateSearchAction, (state, action) => {
-      state.searchAction = action.payload;
-    });
-    builder.addCase(setError, (state, action) => {
-      state.error = action.payload;
-      state.isLoading = false;
-    });
-  }
-);
+export const searchReducer = createReducer(getSearchInitialState(), (builder) => {
+  builder.addCase(executeSearch.rejected, (state, action) => handleRejectedSearch(state, action));
+  builder.addCase(fetchMoreResults.rejected, (state, action) =>
+    handleRejectedSearch(state, action)
+  );
+  builder.addCase(fetchPage.rejected, (state, action) => handleRejectedSearch(state, action));
+  builder.addCase(executeSearch.fulfilled, (state, action) => {
+    handleFulfilledNewSearch(state, action);
+  });
+  builder.addCase(fetchMoreResults.fulfilled, (state, action) => {
+    handleFulfilledSearch(state, action);
+    state.results = [
+      ...state.results,
+      ...action.payload.response.results.map((result) => ({
+        ...result,
+        searchUid: action.payload.response.searchUid,
+      })),
+    ];
+  });
+  builder.addCase(fetchPage.fulfilled, (state, action) => {
+    handleFulfilledSearch(state, action);
+    state.results = [
+      ...action.payload.response.results.map((result) => ({
+        ...result,
+        searchUid: action.payload.response.searchUid,
+      })),
+    ];
+  });
+  builder.addCase(fetchFacetValues.fulfilled, (state, action) => {
+    state.response.facets = action.payload.response.facets;
+    state.response.searchUid = action.payload.response.searchUid;
+  });
+  builder.addCase(executeSearch.pending, handlePendingSearch);
+  builder.addCase(fetchMoreResults.pending, handlePendingFetchMoreResults);
+  builder.addCase(fetchPage.pending, handlePendingSearch);
+  builder.addCase(updateSearchAction, (state, action) => {
+    state.searchAction = action.payload;
+  });
+  builder.addCase(setError, (state, action) => {
+    state.error = action.payload;
+    state.isLoading = false;
+  });
+});

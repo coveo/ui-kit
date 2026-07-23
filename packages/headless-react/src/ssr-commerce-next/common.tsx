@@ -8,18 +8,9 @@ import {
   SolutionType,
   type CommerceEngine as SSRCommerceEngine,
 } from '@coveo/headless/ssr-commerce-next';
-import {
-  type Context,
-  type PropsWithChildren,
-  useCallback,
-  useContext,
-  useMemo,
-} from 'react';
+import {type Context, type PropsWithChildren, useCallback, useContext, useMemo} from 'react';
 import {useSyncMemoizedStore} from '../client-utils.js';
-import {
-  MissingEngineProviderError,
-  UndefinedControllerError,
-} from '../errors.js';
+import {MissingEngineProviderError, UndefinedControllerError} from '../errors.js';
 import {capitalize, mapObject, type SingletonGetter} from '../utils.js';
 import type {
   ContextHydratedState,
@@ -42,9 +33,7 @@ function buildControllerHook<
   TKey extends keyof TControllers,
   TSolutionType extends SolutionType,
 >(
-  singletonContext: SingletonGetter<
-    Context<ContextState<TControllers, TSolutionType> | null>
-  >,
+  singletonContext: SingletonGetter<Context<ContextState<TControllers, TSolutionType> | null>>,
   key: TKey,
   controllerDefinition: ControllerDefinition<Controller>
 ): ControllerHook<InferControllerFromDefinition<TControllers[TKey]>> {
@@ -63,10 +52,7 @@ function buildControllerHook<
     // TODO: KIT-3715 - Workaround to ensure that 'key' can be used as an index for 'ctx.controllers'. A more robust solution is needed.
     type ControllerKey = Exclude<keyof typeof ctx.controllers, symbol>;
     if (ctx.controllers[key as ControllerKey] === undefined) {
-      throw new UndefinedControllerError(
-        key.toString(),
-        supportedSolutionTypes
-      );
+      throw new UndefinedControllerError(key.toString(), supportedSolutionTypes);
     }
 
     const subscribe = useCallback(
@@ -86,10 +72,7 @@ function buildControllerHook<
       const {state: _, subscribe: __, ...remainder} = controller;
       return mapObject(remainder, (member) =>
         typeof member === 'function' ? member.bind(controller) : member
-      ) as Omit<
-        InferControllerFromDefinition<TControllers[TKey]>,
-        'state' | 'subscribe'
-      >;
+      ) as Omit<InferControllerFromDefinition<TControllers[TKey]>, 'state' | 'subscribe'>;
     }, [ctx]);
     return {state, methods};
   };
@@ -99,9 +82,7 @@ export function buildControllerHooks<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
 >(
-  singletonContext: SingletonGetter<
-    Context<ContextState<TControllers, TSolutionType> | null>
-  >,
+  singletonContext: SingletonGetter<Context<ContextState<TControllers, TSolutionType> | null>>,
   controllersMap?: TControllers
 ) {
   return (
@@ -119,11 +100,7 @@ export function buildControllerHooks<
 export function buildEngineHook<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
->(
-  singletonContext: SingletonGetter<
-    Context<ContextState<TControllers, TSolutionType> | null>
-  >
-) {
+>(singletonContext: SingletonGetter<Context<ContextState<TControllers, TSolutionType> | null>>) {
   return () => {
     const ctx = useContext(singletonContext.get());
     if (ctx === null) {
@@ -137,9 +114,7 @@ export function buildStateProvider<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
 >(
-  singletonContext: SingletonGetter<
-    Context<ContextState<TControllers, TSolutionType> | null>
-  >,
+  singletonContext: SingletonGetter<Context<ContextState<TControllers, TSolutionType> | null>>,
   solutionType: TSolutionType
 ) {
   return ({
@@ -150,16 +125,9 @@ export function buildStateProvider<
     engine?: SSRCommerceEngine;
     controllers:
       | InferControllersMapFromDefinition<TControllers, TSolutionType>
-      | InferControllerStaticStateMapFromDefinitionsWithSolutionType<
-          TControllers,
-          TSolutionType
-        >;
+      | InferControllerStaticStateMapFromDefinitionsWithSolutionType<TControllers, TSolutionType>;
   }>) => {
     const {Provider} = singletonContext.get();
-    return (
-      <Provider value={{engine, controllers, solutionType}}>
-        {children}
-      </Provider>
-    );
+    return <Provider value={{engine, controllers, solutionType}}>{children}</Provider>;
   };
 }

@@ -9,9 +9,7 @@ import {
 vi.mock('../../../utils/utils.js', {spy: true});
 
 describe('createStaticControllerBuilder', () => {
-  const buildMockController = (
-    overrides: Partial<StaticControllerState> = {}
-  ) =>
+  const buildMockController = (overrides: Partial<StaticControllerState> = {}) =>
     ({
       state: {},
       ...overrides,

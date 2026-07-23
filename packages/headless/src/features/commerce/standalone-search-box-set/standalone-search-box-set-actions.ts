@@ -4,10 +4,7 @@ import {
   type AsyncThunkCommerceOptions,
   isErrorResponse,
 } from '../../../api/commerce/commerce-api-client.js';
-import {
-  requiredNonEmptyString,
-  validatePayload,
-} from '../../../utils/validate-payload.js';
+import {requiredNonEmptyString, validatePayload} from '../../../utils/validate-payload.js';
 import {
   buildPlanRequest,
   type StateNeededForPlanCommerceAPIRequest,
@@ -26,10 +23,7 @@ export const fetchRedirectUrl = createAsyncThunk<
   AsyncThunkCommerceOptions<StateNeededForPlanCommerceAPIRequest>
 >(
   'commerce/standaloneSearchBox/fetchRedirect',
-  async (
-    payload,
-    {getState, rejectWithValue, extra: {apiClient, navigatorContext}}
-  ) => {
+  async (payload, {getState, rejectWithValue, extra: {apiClient, navigatorContext}}) => {
     validatePayload(payload, {id: new StringValue({emptyAllowed: false})});
     const state = getState();
     const request = buildPlanRequest(state, navigatorContext);

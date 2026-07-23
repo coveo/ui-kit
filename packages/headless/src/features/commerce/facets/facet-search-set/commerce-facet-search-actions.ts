@@ -1,7 +1,4 @@
-import {
-  type AsyncThunkPayloadCreator,
-  createAsyncThunk,
-} from '@reduxjs/toolkit';
+import {type AsyncThunkPayloadCreator, createAsyncThunk} from '@reduxjs/toolkit';
 import type {
   CommerceAPIResponse,
   CommerceFacetSearchAPIClient,
@@ -20,9 +17,7 @@ import type {StateNeededForRegularFacetSearch} from './regular/commerce-regular-
 
 type ExecuteCommerceFacetSearchThunkReturn = {
   facetId: string;
-  response: CommerceAPIResponse<
-    SpecificFacetSearchResponse | CategoryFacetSearchResponse
-  >;
+  response: CommerceAPIResponse<SpecificFacetSearchResponse | CategoryFacetSearchResponse>;
 };
 
 interface ExecuteCommerceFacetSearchThunkArg {
@@ -50,14 +45,8 @@ const getExecuteFacetSearchThunkPayloadCreator =
     const state = getState();
     validatePayload(facetId, requiredNonEmptyString);
     const req =
-      isRegularFacetSearchState(state, facetId) ||
-      isRegularFieldSuggestionsState(state, facetId)
-        ? buildFacetSearchRequest(
-            facetId,
-            state,
-            isFieldSuggestionsRequest,
-            navigatorContext
-          )
+      isRegularFacetSearchState(state, facetId) || isRegularFieldSuggestionsState(state, facetId)
+        ? buildFacetSearchRequest(facetId, state, isFieldSuggestionsRequest, navigatorContext)
         : buildCategoryFacetSearchRequest(
             facetId,
             state,
@@ -77,10 +66,7 @@ export const executeCommerceFacetSearch = createAsyncThunk<
     StateNeededForAnyFacetSearch,
     ClientThunkExtraArguments<CommerceFacetSearchAPIClient>
   >
->(
-  'commerce/facetSearch/executeSearch',
-  getExecuteFacetSearchThunkPayloadCreator(false)
-);
+>('commerce/facetSearch/executeSearch', getExecuteFacetSearchThunkPayloadCreator(false));
 
 export const executeCommerceFieldSuggest = createAsyncThunk<
   ExecuteCommerceFacetSearchThunkReturn,
@@ -89,10 +75,7 @@ export const executeCommerceFieldSuggest = createAsyncThunk<
     StateNeededForAnyFacetSearch,
     ClientThunkExtraArguments<CommerceFacetSearchAPIClient>
   >
->(
-  'commerce/facetSearch/facetFieldSuggest',
-  getExecuteFacetSearchThunkPayloadCreator(true)
-);
+>('commerce/facetSearch/facetFieldSuggest', getExecuteFacetSearchThunkPayloadCreator(true));
 
 const isRegularFacetSearchState = (
   s: StateNeededForAnyFacetSearch,
@@ -120,17 +103,13 @@ const isRegularFieldSuggestionsState = (
 
 const commerceFieldSuggestionNamespace = 'field_suggestion:';
 
-export function getFacetIdWithoutCommerceFieldSuggestionNamespace(
-  facetId: string
-) {
+export function getFacetIdWithoutCommerceFieldSuggestionNamespace(facetId: string) {
   return facetId.startsWith(commerceFieldSuggestionNamespace)
     ? facetId.slice(commerceFieldSuggestionNamespace.length)
     : facetId;
 }
 
-export function getFacetIdWithCommerceFieldSuggestionNamespace(
-  facetId: string
-): string {
+export function getFacetIdWithCommerceFieldSuggestionNamespace(facetId: string): string {
   return facetId.startsWith(commerceFieldSuggestionNamespace)
     ? facetId
     : `${commerceFieldSuggestionNamespace}${facetId}`;

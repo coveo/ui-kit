@@ -47,6 +47,4 @@ export interface CommerceInterface extends Supports<Facades['commerce']> {}
 
 export interface GenerativeInterface extends Supports<Facades['generative']> {}
 
-export interface ComposedInterface<T extends InterfaceType> extends Supports<
-  Facades[T]
-> {}
+export interface ComposedInterface<T extends InterfaceType> extends Supports<Facades[T]> {}

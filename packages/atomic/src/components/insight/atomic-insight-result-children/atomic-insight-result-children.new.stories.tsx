@@ -1,10 +1,7 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
-import {
-  baseFoldedResponse,
-  MockInsightApi,
-} from '@coveo/platform-mock-api/insight/mock';
+import {baseFoldedResponse, MockInsightApi} from '@coveo/platform-mock-api/insight/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 import {wrapInInsightFoldedResultList} from '@/storybook-utils/insight/insight-result-list-wrapper';
@@ -19,15 +16,9 @@ import '@/src/components/search/atomic-result-text/atomic-result-text.js';
 
 const insightApiHarness = new MockInsightApi();
 
-const {decorator: insightInterfaceDecorator, play} = wrapInInsightInterface(
-  {},
-  false,
-  false
-);
-const {decorator: insightFoldedResultListDecorator} =
-  wrapInInsightFoldedResultList('list', false);
-const {decorator: insightResultTemplateDecorator} =
-  wrapInInsightResultTemplate(false);
+const {decorator: insightInterfaceDecorator, play} = wrapInInsightInterface({}, false, false);
+const {decorator: insightFoldedResultListDecorator} = wrapInInsightFoldedResultList('list', false);
+const {decorator: insightResultTemplateDecorator} = wrapInInsightResultTemplate(false);
 
 const {events, args, argTypes, styleTemplate} = getStorybookHelpers(
   'atomic-insight-result-children',
@@ -110,9 +101,7 @@ export const WithBeforeChildrenSlot: Story = {
         image-size=${args['image-size'] || 'icon'}
         inherit-templates=${args['inherit-templates'] || false}
       >
-        <div slot="before-children" class="text-sm text-neutral-dark">
-          Related documents:
-        </div>
+        <div slot="before-children" class="text-sm text-neutral-dark">Related documents:</div>
         ${childrenTemplate}
       </atomic-insight-result-children>
     </atomic-result-section-children>
@@ -152,9 +141,7 @@ export const WithBothSlots: Story = {
         image-size=${args['image-size'] || 'icon'}
         inherit-templates=${args['inherit-templates'] || false}
       >
-        <div slot="before-children" class="text-sm text-neutral-dark">
-          Related documents:
-        </div>
+        <div slot="before-children" class="text-sm text-neutral-dark">Related documents:</div>
         ${childrenTemplate}
         <div slot="after-children" class="text-sm text-neutral-dark mt-2">
           End of related documents

@@ -8,10 +8,7 @@ import {
 export type ProductTemplate<Content = unknown> = Template<Product, Content>;
 export type ProductTemplateCondition = TemplateCondition<Product>;
 
-export interface ProductTemplatesManager<
-  Content = unknown,
-  LinkContent = unknown,
-> {
+export interface ProductTemplatesManager<Content = unknown, LinkContent = unknown> {
   /**
    * Registers any number of product templates in the manager.
    * @param templates (...Template<Product, Content>) A list of templates to register.

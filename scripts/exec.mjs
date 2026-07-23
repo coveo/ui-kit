@@ -35,10 +35,7 @@ export function execute(command, args = []) {
     });
     proc.stderr.on('data', (chunk) => {
       const exclamation = '\x1b[31m!\x1b[0m\xa0';
-      console.error(
-        exclamation,
-        trimNewline(chunk.toString()).replace(/\n/g, `\n${exclamation}`)
-      );
+      console.error(exclamation, trimNewline(chunk.toString()).replace(/\n/g, `\n${exclamation}`));
       errorBuffer = Buffer.concat([errorBuffer, chunk]);
     });
     proc.on('exit', (code) =>

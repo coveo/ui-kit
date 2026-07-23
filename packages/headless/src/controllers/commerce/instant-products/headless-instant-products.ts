@@ -1,10 +1,7 @@
 import {NumberValue, Schema} from '@coveo/bueno';
 import type {SerializedError} from '@reduxjs/toolkit';
 import type {CommerceAPIErrorResponse} from '../../../api/commerce/commerce-api-error-response.js';
-import type {
-  ChildProduct,
-  Product,
-} from '../../../api/commerce/common/product.js';
+import type {ChildProduct, Product} from '../../../api/commerce/common/product.js';
 import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../app/state-key.js';
 import {
@@ -19,14 +16,8 @@ import {hasExpired} from '../../../features/instant-items/instant-items-state.js
 import type {InstantProductsSection} from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {randomID} from '../../../utils/utils.js';
-import {
-  nonEmptyString,
-  validateOptions,
-} from '../../../utils/validate-payload.js';
-import {
-  buildController,
-  type Controller,
-} from '../../controller/headless-controller.js';
+import {nonEmptyString, validateOptions} from '../../../utils/validate-payload.js';
+import {buildController, type Controller} from '../../controller/headless-controller.js';
 import {
   buildCoreInteractiveProduct,
   type InteractiveProduct,
@@ -49,9 +40,9 @@ const instantProductsOptionDefinitions = {
   cacheTimeout: new NumberValue(),
 };
 
-const instantProductsOptionsSchema = new Schema<
-  Required<InstantProductsOptions>
->(instantProductsOptionDefinitions);
+const instantProductsOptionsSchema = new Schema<Required<InstantProductsOptions>>(
+  instantProductsOptionDefinitions
+);
 
 export interface InstantProductsProps {
   options: InstantProductsOptions;
@@ -160,12 +151,7 @@ export function buildInstantProducts(
     cacheTimeout: props.options.cacheTimeout || 6e4,
   };
 
-  validateOptions(
-    engine,
-    instantProductsOptionsSchema,
-    options,
-    'buildInstantProducts'
-  );
+  validateOptions(engine, instantProductsOptionsSchema, options, 'buildInstantProducts');
 
   const searchBoxId = options.searchBoxId;
   dispatch(registerInstantProducts({id: searchBoxId}));
@@ -193,10 +179,7 @@ export function buildInstantProducts(
         return;
       }
       const cached = getCached(query);
-      if (
-        !cached ||
-        (!cached.isLoading && (cached.error || hasExpired(cached)))
-      ) {
+      if (!cached || (!cached.isLoading && (cached.error || hasExpired(cached)))) {
         dispatch(
           fetchInstantProducts({
             id: searchBoxId,
@@ -229,8 +212,7 @@ export function buildInstantProducts(
     interactiveProduct(props: InteractiveProductProps) {
       return buildCoreInteractiveProduct(engine, {
         ...props,
-        responseIdSelector: () =>
-          getStateForSearchBox().cache[getQuery()].searchUid,
+        responseIdSelector: () => getStateForSearchBox().cache[getQuery()].searchUid,
       });
     },
 

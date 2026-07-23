@@ -21,16 +21,13 @@ const commerceApiHarness = new MockCommerceApi();
 
 async function initializeCommerceInterface(canvasElement: HTMLElement) {
   await customElements.whenDefined('atomic-commerce-interface');
-  const commerceInterface = canvasElement.querySelector(
-    'atomic-commerce-interface'
-  );
+  const commerceInterface = canvasElement.querySelector('atomic-commerce-interface');
   await commerceInterface!.initialize(getSampleCommerceEngineConfiguration());
 }
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-commerce-interface',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-commerce-interface', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-commerce-interface',
@@ -53,9 +50,7 @@ const meta: Meta = {
 
   play: async (context) => {
     await initializeCommerceInterface(context.canvasElement);
-    const searchInterface = context.canvasElement.querySelector(
-      'atomic-commerce-interface'
-    );
+    const searchInterface = context.canvasElement.querySelector('atomic-commerce-interface');
     await searchInterface!.executeFirstRequest();
   },
   argTypes: {

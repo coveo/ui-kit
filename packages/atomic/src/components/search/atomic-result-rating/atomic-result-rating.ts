@@ -108,10 +108,7 @@ export class AtomicResultRating
     if (!this.result) {
       return;
     }
-    const value = ResultTemplatesHelpers.getResultProperty(
-      this.result,
-      this.field
-    );
+    const value = ResultTemplatesHelpers.getResultProperty(this.result, this.field);
     try {
       this.numberOfStars = computeNumberOfStars(value, this.field);
     } catch (error) {

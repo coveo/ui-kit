@@ -35,12 +35,7 @@ export const MinimumFieldsToInclude = [
 /**
  * A list of the recommended fields to be used in a query.
  */
-export const DefaultFieldsToInclude = [
-  ...MinimumFieldsToInclude,
-  'date',
-  'filetype',
-  'parents',
-];
+export const DefaultFieldsToInclude = [...MinimumFieldsToInclude, 'date', 'filetype', 'parents'];
 
 /**
  * A list of the recommended fields to be used in a query for an e-commerce page.

@@ -12,13 +12,7 @@
  *   node scripts/generate-catalog-info.mjs
  */
 
-import {
-  readFileSync,
-  writeFileSync,
-  readdirSync,
-  statSync,
-  existsSync,
-} from 'node:fs';
+import {readFileSync, writeFileSync, readdirSync, statSync, existsSync} from 'node:fs';
 import {resolve, relative} from 'node:path';
 import {fileURLToPath} from 'node:url';
 
@@ -167,11 +161,7 @@ function generateSystemYaml(rootManifest, config) {
       name: rootManifest.name,
       title: rootManifest.name
         .split('-')
-        .map((w) =>
-          w.length <= 2
-            ? w.toUpperCase()
-            : w.charAt(0).toUpperCase() + w.slice(1)
-        )
+        .map((w) => (w.length <= 2 ? w.toUpperCase() : w.charAt(0).toUpperCase() + w.slice(1)))
         .join(' '),
       description: rootManifest.description,
     },
@@ -206,10 +196,7 @@ function getWorkspaceDependsOn(manifest, catalogComponents) {
 function main() {
   const packageDirs = readdirSync(packagesDir).filter((dir) => {
     const fullPath = resolve(packagesDir, dir);
-    return (
-      statSync(fullPath).isDirectory() &&
-      existsSync(resolve(fullPath, 'package.json'))
-    );
+    return statSync(fullPath).isDirectory() && existsSync(resolve(fullPath, 'package.json'));
   });
 
   /** @type {Map<string, {manifest: object, config: Record<string, string>}>} */
@@ -258,13 +245,9 @@ function main() {
     console.log(`Generated: ${relativePath}`);
   }
 
-  const rootManifest = JSON.parse(
-    readFileSync(resolve(rootDir, 'package.json'), 'utf-8')
-  );
+  const rootManifest = JSON.parse(readFileSync(resolve(rootDir, 'package.json'), 'utf-8'));
   const rootConfigPath = resolve(rootDir, 'catalog-info.ui-kit.config.yaml');
-  const rootConfig = existsSync(rootConfigPath)
-    ? parseSimpleYaml(rootConfigPath)
-    : {};
+  const rootConfig = existsSync(rootConfigPath) ? parseSimpleYaml(rootConfigPath) : {};
 
   const systemYaml = generateSystemYaml(rootManifest, rootConfig);
   writeFileSync(resolve(rootDir, 'catalog-info.ui-kit.yaml'), systemYaml);

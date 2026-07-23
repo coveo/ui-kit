@@ -17,13 +17,10 @@ export interface CarouselProps {
   label: string;
 }
 
-export const renderImageCarousel: FunctionalComponentWithChildren<
-  CarouselProps
-> = ({props}) => {
+export const renderImageCarousel: FunctionalComponentWithChildren<CarouselProps> = ({props}) => {
   const commonPaginationClasses =
     'w-6 h-6 grid mobile-only:w-10 mobile-only:h-10 justify-center items-center z-1 group rounded-full duration-200 opacity-50 hover:opacity-100 focus:opacity-100 transition-opacity hover:shadow-sm bottom-0 mb-1 absolute';
-  const commonArrowClasses =
-    'w-4 align-middle text-on-background group-hover:text-primary';
+  const commonArrowClasses = 'w-4 align-middle text-on-background group-hover:text-primary';
 
   const renderPreviousButton = () => {
     return renderButton({
@@ -59,11 +56,7 @@ export const renderImageCarousel: FunctionalComponentWithChildren<
         class: `${commonPaginationClasses} right-0 mr-1`,
       },
     })(html`
-      <atomic-icon
-        part="next-icon"
-        icon=${ArrowRight}
-        class=${commonArrowClasses}
-      ></atomic-icon>
+      <atomic-icon part="next-icon" icon=${ArrowRight} class=${commonArrowClasses}></atomic-icon>
     `);
   };
 
@@ -88,9 +81,7 @@ export const renderImageCarousel: FunctionalComponentWithChildren<
       aria-label=${props.label}
     >
       ${renderPreviousButton()}
-      <div class="w-full h-full" aria-live="polite" aria-atomic="false">
-        ${children}
-      </div>
+      <div class="w-full h-full" aria-live="polite" aria-atomic="false">${children}</div>
       ${renderNextButton()} ${renderIndicators()}
     </div>`;
   };

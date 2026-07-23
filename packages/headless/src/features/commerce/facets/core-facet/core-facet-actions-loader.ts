@@ -105,9 +105,7 @@ export interface CoreFacetActionsCreators {
  * @group Actions
  * @category CategoryFacet
  */
-export function loadCoreFacetActions(
-  engine: CommerceEngine
-): CoreFacetActionsCreators {
+export function loadCoreFacetActions(engine: CommerceEngine): CoreFacetActionsCreators {
   engine.addReducers({commerceFacetSet});
   return {
     clearAllCoreFacets,

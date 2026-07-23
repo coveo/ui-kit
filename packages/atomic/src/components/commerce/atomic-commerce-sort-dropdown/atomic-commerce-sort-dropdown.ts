@@ -68,9 +68,7 @@ export class AtomicCommerceSortDropdown
 
   private select(e: Event) {
     const select = e.composedPath()[0] as HTMLSelectElement;
-    this.sort.sortBy(
-      getSortByLabel(select.value, this.sortState.availableSorts)
-    );
+    this.sort.sortBy(getSortByLabel(select.value, this.sortState.availableSorts));
   }
 
   private sortLabelTemplate() {
@@ -117,8 +115,7 @@ export class AtomicCommerceSortDropdown
       {
         isLoading,
         firstSearchExecuted: responseId !== '',
-        hasResults:
-          products.length > 0 && this.sortState.availableSorts.length > 1,
+        hasResults: products.length > 0 && this.sortState.availableSorts.length > 1,
         hasError: error !== null,
       },
       () =>

@@ -29,9 +29,7 @@ describe('schema', () => {
       });
 
       it('throws an error with the value that failed validation', () => {
-        expect(() => schema.validate()).toThrow(
-          'requiredValue: value is required'
-        );
+        expect(() => schema.validate()).toThrow('requiredValue: value is required');
       });
 
       it('the error contains the passed context message', () => {

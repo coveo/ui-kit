@@ -93,15 +93,9 @@ describe('promise-utils', () => {
     });
 
     it('should handle multiple concurrent timeouts', async () => {
-      const promise1 = new Promise((resolve) =>
-        setTimeout(() => resolve('p1'), 500)
-      );
-      const promise2 = new Promise((resolve) =>
-        setTimeout(() => resolve('p2'), 1500)
-      );
-      const promise3 = new Promise((resolve) =>
-        setTimeout(() => resolve('p3'), 800)
-      );
+      const promise1 = new Promise((resolve) => setTimeout(() => resolve('p1'), 500));
+      const promise2 = new Promise((resolve) => setTimeout(() => resolve('p2'), 1500));
+      const promise3 = new Promise((resolve) => setTimeout(() => resolve('p3'), 800));
 
       const result1 = promiseTimeout(promise1, 1000);
       const result2 = promiseTimeout(promise2, 1000);
@@ -176,20 +170,14 @@ describe('promise-utils', () => {
       const nullPromise = Promise.resolve(null);
       const undefinedPromise = Promise.resolve(undefined);
 
-      await expect(promiseTimeout(stringPromise, 1000)).resolves.toBe(
-        'string value'
-      );
+      await expect(promiseTimeout(stringPromise, 1000)).resolves.toBe('string value');
       await expect(promiseTimeout(numberPromise, 1000)).resolves.toBe(42);
       await expect(promiseTimeout(objectPromise, 1000)).resolves.toEqual({
         key: 'value',
       });
-      await expect(promiseTimeout(arrayPromise, 1000)).resolves.toEqual([
-        1, 2, 3,
-      ]);
+      await expect(promiseTimeout(arrayPromise, 1000)).resolves.toEqual([1, 2, 3]);
       await expect(promiseTimeout(nullPromise, 1000)).resolves.toBeNull();
-      await expect(
-        promiseTimeout(undefinedPromise, 1000)
-      ).resolves.toBeUndefined();
+      await expect(promiseTimeout(undefinedPromise, 1000)).resolves.toBeUndefined();
     });
   });
 });

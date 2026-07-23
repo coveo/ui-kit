@@ -3,10 +3,7 @@ import {beforeAll, describe, expect, it, vi} from 'vitest';
 import {page} from 'vitest/browser';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {
-  type FacetSearchMatchesProps,
-  renderFacetSearchMatches,
-} from './facet-search-matches';
+import {type FacetSearchMatchesProps, renderFacetSearchMatches} from './facet-search-matches';
 
 describe('#renderFacetSearchMatches', () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;
@@ -38,9 +35,7 @@ describe('#renderFacetSearchMatches', () => {
       showMoreMatches: vi.fn(),
     };
     const mergedProps = {...defaultProps, ...props};
-    return renderFunctionFixture(
-      html`${renderFacetSearchMatches({props: mergedProps})}`
-    );
+    return renderFunctionFixture(html`${renderFacetSearchMatches({props: mergedProps})}`);
   };
 
   it('renders "no matches found" message when numberOfMatches is 0', async () => {
@@ -86,18 +81,14 @@ describe('#renderFacetSearchMatches', () => {
 
   it('renders "no matches" with the correct part attribute', async () => {
     await renderComponent();
-    await expect
-      .element(locators.noMatch)
-      .toHaveAttribute('part', 'no-matches');
+    await expect.element(locators.noMatch).toHaveAttribute('part', 'no-matches');
   });
   it('renders "more matches" with the correct part attribute', async () => {
     await renderComponent({
       numberOfMatches: 5,
       hasMoreMatches: true,
     });
-    await expect
-      .element(locators.moreMatches)
-      .toHaveAttribute('part', 'more-matches');
+    await expect.element(locators.moreMatches).toHaveAttribute('part', 'more-matches');
   });
 
   it('renders matched query with the correct part attribute', async () => {

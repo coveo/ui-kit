@@ -10,13 +10,7 @@ test.describe('atomic-tab-manager', () => {
     await expect(tabManager.tabArea).toBeVisible();
   });
 
-  test('should display tab buttons for each atomic-tab element', async ({
-    tabManager,
-  }) => {
-    await expect(tabManager.tabButtons()).toHaveText([
-      /All/,
-      /Documentation/,
-      /Articles/,
-    ]);
+  test('should display tab buttons for each atomic-tab element', async ({tabManager}) => {
+    await expect(tabManager.tabButtons()).toHaveText([/All/, /Documentation/, /Articles/]);
   });
 });

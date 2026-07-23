@@ -25,14 +25,7 @@ import colors from '../../../utils/ci/colors.mjs';
  * to hang indefinitely while waiting for the component to be defined.
  */
 
-const directories = [
-  'commerce',
-  'common',
-  'search',
-  'insight',
-  'ipx',
-  'recommendations',
-];
+const directories = ['commerce', 'common', 'search', 'insight', 'ipx', 'recommendations'];
 
 const baseComponentsDir = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -62,16 +55,8 @@ async function generateLitExportsForDir(dir) {
   const files = readdirSync(componentsDir, {withFileTypes: true});
   const litComponents = files
     .filter((file) => {
-      const componentPath = path.join(
-        componentsDir,
-        file.name,
-        `${file.name}.ts`
-      );
-      return (
-        file.isDirectory() &&
-        existsSync(componentPath) &&
-        isLitComponent(componentPath)
-      );
+      const componentPath = path.join(componentsDir, file.name, `${file.name}.ts`);
+      return file.isDirectory() && existsSync(componentPath) && isLitComponent(componentPath);
     })
     .map((file) => file.name)
     .sort();
@@ -94,8 +79,7 @@ async function generateLitExportsForDir(dir) {
   export default {
     ${litComponents
       .map(
-        (component) =>
-          `'${component}': async () => await import('./${component}/${component}.js'),`
+        (component) => `'${component}': async () => await import('./${component}/${component}.js'),`
       )
       .join('\n')}
   } as Record<string, () => Promise<unknown>>;

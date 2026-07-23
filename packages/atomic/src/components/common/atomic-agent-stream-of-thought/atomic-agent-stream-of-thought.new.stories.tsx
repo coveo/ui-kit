@@ -56,9 +56,7 @@ const fullSequenceSteps: GenerationStep[] = [
 export const ThinkingBeforeSearch: Story = {
   name: 'Thinking before search',
   args: {
-    agentSteps: [
-      {name: 'thinking', status: 'active', startedAt: Date.now()},
-    ] as GenerationStep[],
+    agentSteps: [{name: 'thinking', status: 'active', startedAt: Date.now()}] as GenerationStep[],
     isStreaming: true,
   },
 };
@@ -116,9 +114,7 @@ export const CompleteExpanded: Story = {
   play: async ({canvasElement}) => {
     await customElements.whenDefined('atomic-agent-stream-of-thought');
     const el = canvasElement.querySelector('atomic-agent-stream-of-thought');
-    const button = el?.shadowRoot?.querySelector<HTMLButtonElement>(
-      '.collapsed-timeline-summary'
-    );
+    const button = el?.shadowRoot?.querySelector<HTMLButtonElement>('.collapsed-timeline-summary');
     if (button) {
       await userEvent.click(button);
     }

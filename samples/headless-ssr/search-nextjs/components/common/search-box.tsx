@@ -5,10 +5,7 @@ interface SearchBoxCommonProps {
   value: string;
 }
 
-export default function SearchBoxCommon({
-  controller,
-  value,
-}: SearchBoxCommonProps) {
+export default function SearchBoxCommon({controller, value}: SearchBoxCommonProps) {
   return (
     <form
       className="search-box"
@@ -17,10 +14,7 @@ export default function SearchBoxCommon({
         controller?.submit();
       }}
     >
-      <input
-        value={value}
-        onChange={(e) => controller?.updateText(e.target.value)}
-      />
+      <input value={value} onChange={(e) => controller?.updateText(e.target.value)} />
     </form>
   );
 }

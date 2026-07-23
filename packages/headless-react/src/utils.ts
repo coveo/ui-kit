@@ -26,9 +26,6 @@ export function mapObject<TKey extends string, TInitialValue, TNewValue>(
   predicate: (value: TInitialValue, key: TKey) => TNewValue
 ): Record<TKey, TNewValue> {
   return Object.fromEntries(
-    Object.entries(obj).map(([key, value]) => [
-      key,
-      predicate(value as TInitialValue, key as TKey),
-    ])
+    Object.entries(obj).map(([key, value]) => [key, predicate(value as TInitialValue, key as TKey)])
   ) as Record<TKey, TNewValue>;
 }

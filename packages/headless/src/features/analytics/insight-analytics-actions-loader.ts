@@ -120,9 +120,7 @@ export interface InsightAnalyticsActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  logFacetBreadcrumb(
-    payload: LogFacetBreadcrumbActionCreatorPayload
-  ): InsightAction;
+  logFacetBreadcrumb(payload: LogFacetBreadcrumbActionCreatorPayload): InsightAction;
 
   /**
    * The event to log when all selected values in a facet are deselected.
@@ -138,9 +136,7 @@ export interface InsightAnalyticsActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  logFacetDeselect(
-    payload: LogFacetDeselectActionCreatorPayload
-  ): InsightAction;
+  logFacetDeselect(payload: LogFacetDeselectActionCreatorPayload): InsightAction;
 
   /**
    * The event to log when an idle facet value is selected.
@@ -172,9 +168,7 @@ export interface InsightAnalyticsActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  logFacetUpdateSort(
-    payload: LogFacetUpdateSortActionCreatorPayload
-  ): InsightAction;
+  logFacetUpdateSort(payload: LogFacetUpdateSortActionCreatorPayload): InsightAction;
 
   /**
    * The event to log when a date facet breadcrumb is deselected.
@@ -182,9 +176,7 @@ export interface InsightAnalyticsActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  logDateFacetBreadcrumb(
-    payload: LogDateFacetBreadcrumbActionCreatorPayload
-  ): InsightAction;
+  logDateFacetBreadcrumb(payload: LogDateFacetBreadcrumbActionCreatorPayload): InsightAction;
 
   /**
    * The event to log when a numeric facet breadcrumb is deselected.
@@ -192,9 +184,7 @@ export interface InsightAnalyticsActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  logNumericFacetBreadcrumb(
-    payload: LogNumericFacetBreadcrumbActionCreatorPayload
-  ): InsightAction;
+  logNumericFacetBreadcrumb(payload: LogNumericFacetBreadcrumbActionCreatorPayload): InsightAction;
 
   /**
    * The event to log when navigating to the next page of results.
@@ -230,9 +220,7 @@ export interface InsightAnalyticsActionCreators {
    * @param payload - The action creation payload.
    * @returns A dispatchable action.
    */
-  logStaticFilterDeselect(
-    payload: LogStaticFilterToggleValueActionCreatorPayload
-  ): InsightAction;
+  logStaticFilterDeselect(payload: LogStaticFilterToggleValueActionCreatorPayload): InsightAction;
 
   /**
    * The event to log when the Copy To Clipboard result action is clicked.
@@ -275,9 +263,7 @@ export interface InsightAnalyticsActionCreators {
  * @group Actions
  * @category Analytics
  */
-export function loadInsightAnalyticsActions(
-  engine: InsightEngine
-): InsightAnalyticsActionCreators {
+export function loadInsightAnalyticsActions(engine: InsightEngine): InsightAnalyticsActionCreators {
   engine.addReducers({});
 
   return {

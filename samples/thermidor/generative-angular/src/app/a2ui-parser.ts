@@ -51,9 +51,7 @@ function readLiteralOrPath(value: unknown): string {
   return '';
 }
 
-function valueMapToRecord(
-  entries: ValueMapEntry[] | undefined
-): Record<string, string | number> {
+function valueMapToRecord(entries: ValueMapEntry[] | undefined): Record<string, string | number> {
   const record: Record<string, string | number> = {};
   for (const entry of entries ?? []) {
     if (entry.valueString != null) record[entry.key] = entry.valueString;
@@ -75,12 +73,10 @@ function toProductRecord(item: ValueMapItem): ProductRecord | null {
     ec_name: name,
     ec_brand: String(r['ec_brand'] ?? ''),
     ec_price: Number(r['ec_price'] ?? 0),
-    ec_promo_price:
-      typeof r['ec_promo_price'] === 'number' ? r['ec_promo_price'] : undefined,
+    ec_promo_price: typeof r['ec_promo_price'] === 'number' ? r['ec_promo_price'] : undefined,
     ec_image: String(r['ec_image'] ?? ''),
     clickUri: String(r['clickUri'] ?? '#'),
-    description:
-      typeof r['description'] === 'string' ? r['description'] : undefined,
+    description: typeof r['description'] === 'string' ? r['description'] : undefined,
     accent: typeof r['accent'] === 'string' ? r['accent'] : undefined,
   };
 }
@@ -138,8 +134,7 @@ function processOperations(allSurfaces: A2UISurface[]): {
 
     for (const op of content.operations as A2UIOperation[]) {
       if ('surfaceUpdate' in op && op.surfaceUpdate) {
-        const {surfaceId, components} = (op as SurfaceUpdateOperation)
-          .surfaceUpdate;
+        const {surfaceId, components} = (op as SurfaceUpdateOperation).surfaceUpdate;
 
         for (const component of components) {
           const keys = Object.keys(component.component ?? {});
@@ -148,9 +143,7 @@ function processOperations(allSurfaces: A2UISurface[]): {
           const type = keys[0] as CommerceSurfaceComponentType;
           if (type === 'ProductCard') continue;
 
-          const payload = (
-            component.component as Record<string, Record<string, unknown>>
-          )[type];
+          const payload = (component.component as Record<string, Record<string, unknown>>)[type];
           const draft = ensureDraft(drafts, surfaceId, type);
 
           if (type === 'ProductCarousel') {
@@ -159,9 +152,7 @@ function processOperations(allSurfaces: A2UISurface[]): {
           } else if (type === 'ComparisonTable') {
             draft.heading = readLiteralOrPath(payload?.['heading']);
             draft.attributes = Array.isArray(payload?.['attributes'])
-              ? payload['attributes'].filter(
-                  (v): v is string => typeof v === 'string'
-                )
+              ? payload['attributes'].filter((v): v is string => typeof v === 'string')
               : [];
             draft.isLoading = payload?.['isLoading'] === true;
           } else if (type === 'ComparisonSummary') {
@@ -179,8 +170,7 @@ function processOperations(allSurfaces: A2UISurface[]): {
       }
 
       if ('dataModelUpdate' in op && op.dataModelUpdate) {
-        const {surfaceId, contents} = (op as DataModelUpdateOperation)
-          .dataModelUpdate;
+        const {surfaceId, contents} = (op as DataModelUpdateOperation).dataModelUpdate;
 
         for (const entry of contents) {
           if (entry.key === 'items') {
@@ -223,9 +213,7 @@ function buildBundleTiers(
       description: String(bundle['description'] ?? ''),
       slots: Array.isArray(bundle['slots'])
         ? bundle['slots']
-            .filter(
-              (s): s is Record<string, unknown> => !!s && typeof s === 'object'
-            )
+            .filter((s): s is Record<string, unknown> => !!s && typeof s === 'object')
             .map((slot) => {
               const ref = String(slot['surfaceRef'] ?? '');
               return {
@@ -309,9 +297,7 @@ function surfaceHasContent(s: RenderableCommerceSurface): boolean {
   }
 }
 
-function deduplicate(
-  surfaces: RenderableCommerceSurface[]
-): RenderableCommerceSurface[] {
+function deduplicate(surfaces: RenderableCommerceSurface[]): RenderableCommerceSurface[] {
   const byType = new Map<string, RenderableCommerceSurface[]>();
 
   for (const s of surfaces) {

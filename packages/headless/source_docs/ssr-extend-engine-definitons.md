@@ -233,9 +233,8 @@ const hydratedState = await hydrateStaticState({
 > import {engineDefinition} from './common/engine-definition.ts';
 >
 > const buildResult = await engineDefinition.build();
-> const hydratedState =
->   await engineDefinition.hydrateStaticState.fromBuildResult({
->     buildResult,
->     searchAction: staticState.searchAction,
->   });
+> const hydratedState = await engineDefinition.hydrateStaticState.fromBuildResult({
+>   buildResult,
+>   searchAction: staticState.searchAction,
+> });
 > ```

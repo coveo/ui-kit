@@ -52,16 +52,15 @@ describe('atomic-insight-refine-toggle', () => {
     // Mock controllers used by atomic-insight-refine-modal (which is dynamically created)
     vi.mocked(buildQuerySummary).mockReturnValue(buildFakeQuerySummary());
 
-    const {element} =
-      await renderInAtomicInsightInterface<AtomicInsightRefineToggle>({
-        template: html`<atomic-insight-refine-toggle></atomic-insight-refine-toggle>`,
-        selector: 'atomic-insight-refine-toggle',
-        bindings: (bindings) => {
-          bindings.engine = mockedEngine;
-          bindings.store.getFacetElements = () => [];
-          return bindings;
-        },
-      });
+    const {element} = await renderInAtomicInsightInterface<AtomicInsightRefineToggle>({
+      template: html`<atomic-insight-refine-toggle></atomic-insight-refine-toggle>`,
+      selector: 'atomic-insight-refine-toggle',
+      bindings: (bindings) => {
+        bindings.engine = mockedEngine;
+        bindings.store.getFacetElements = () => [];
+        return bindings;
+      },
+    });
 
     return {
       element,
@@ -72,14 +71,10 @@ describe('atomic-insight-refine-toggle', () => {
         return element.shadowRoot?.querySelector('button');
       },
       get container() {
-        return element.shadowRoot?.querySelector(
-          '[part="insight-refine-toggle-container"]'
-        );
+        return element.shadowRoot?.querySelector('[part="insight-refine-toggle-container"]');
       },
       get badge() {
-        return element.shadowRoot?.querySelector(
-          '[part="insight-refine-toggle-badge"]'
-        );
+        return element.shadowRoot?.querySelector('[part="insight-refine-toggle-badge"]');
       },
       get modal() {
         return (element.getRootNode() as Document | ShadowRoot)?.querySelector(

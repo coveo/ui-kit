@@ -43,9 +43,7 @@ export class RatingRangeFacetPageObject extends BasePageObject {
   }
 
   getRatingValueByStars(stars: number): Locator {
-    return this.hydrated.locator(
-      `[part="value-link"]:has([aria-label*="${stars} star"])`
-    );
+    return this.hydrated.locator(`[part="value-link"]:has([aria-label*="${stars} star"])`);
   }
 
   /**

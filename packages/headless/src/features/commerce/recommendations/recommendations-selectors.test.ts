@@ -38,9 +38,7 @@ describe('commerce recommendations selectors', () => {
         },
       },
     });
-    expect(
-      numberOfRecommendationsSelector(state, 'some-other-slot-id')
-    ).toEqual(0);
+    expect(numberOfRecommendationsSelector(state, 'some-other-slot-id')).toEqual(0);
   });
 
   it('#moreRecommendationsAvailableSelector should return true when the number of recommendations is less than the total number of entries', () => {
@@ -66,9 +64,7 @@ describe('commerce recommendations selectors', () => {
         },
       },
     });
-    expect(moreRecommendationsAvailableSelector(state, 'some-slot-id')).toBe(
-      true
-    );
+    expect(moreRecommendationsAvailableSelector(state, 'some-slot-id')).toBe(true);
   });
 
   it('#moreRecommendationsAvailableSelector should return false when the number of recommendations is equal to the total number of entries', () => {
@@ -94,9 +90,7 @@ describe('commerce recommendations selectors', () => {
         },
       },
     });
-    expect(moreRecommendationsAvailableSelector(state, 'some-slot-id')).toBe(
-      false
-    );
+    expect(moreRecommendationsAvailableSelector(state, 'some-slot-id')).toBe(false);
   });
 
   it('#isLoadingSelector should return the isLoading value from the recommendations section', () => {

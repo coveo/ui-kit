@@ -73,9 +73,7 @@ export interface PaginationActionCreators {
  * @group Actions
  * @category Pagination
  */
-export function loadPaginationActions(
-  engine: CoreEngine
-): PaginationActionCreators {
+export function loadPaginationActions(engine: CoreEngine): PaginationActionCreators {
   engine.addReducers({pagination});
 
   return {

@@ -51,23 +51,15 @@ const styles = css`
       atomic-search-box {
         &::part(suggestions-double-list) {
           width: 125%;
-          max-width: var(
-            --atomic-layout-max-search-box-double-suggestions-width,
-            800px
-          );
+          max-width: var(--atomic-layout-max-search-box-double-suggestions-width, 800px);
         }
 
         &::part(suggestions-left) {
-          flex-basis: var(
-            --atomic-layout-search-box-left-suggestions-width,
-            30%
-          );
+          flex-basis: var(--atomic-layout-search-box-left-suggestions-width, 30%);
         }
 
         &::part(suggestions-right) {
-          flex-basis: calc(
-            100% - var(--atomic-layout-search-box-left-suggestions-width, 30%)
-          );
+          flex-basis: calc(100% - var(--atomic-layout-search-box-left-suggestions-width, 30%));
         }
       }
     }

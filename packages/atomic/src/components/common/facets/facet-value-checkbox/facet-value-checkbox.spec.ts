@@ -9,17 +9,11 @@ import {renderTriStateCheckbox} from '@/src/components/common/triStateCheckbox';
 import {createRipple} from '@/src/utils/ripple-utils';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {
-  renderFacetValueCheckbox,
-  type TriStateFacetValueProps,
-} from './facet-value-checkbox';
+import {renderFacetValueCheckbox, type TriStateFacetValueProps} from './facet-value-checkbox';
 
 vi.mock('@/src/components/common/triStateCheckbox', {spy: true});
 vi.mock('@/src/components/common/checkbox', {spy: true});
-vi.mock(
-  '@/src/components/common/facets/facet-value-exclude/facet-value-exclude',
-  {spy: true}
-);
+vi.mock('@/src/components/common/facets/facet-value-exclude/facet-value-exclude', {spy: true});
 vi.mock('@/src/utils/ripple-utils', {spy: true});
 
 describe('#renderFacetValueCheckbox', () => {
@@ -28,9 +22,7 @@ describe('#renderFacetValueCheckbox', () => {
   beforeAll(async () => {
     i18n = await createTestI18n();
   });
-  const setupElement = async (
-    props?: Partial<FacetValuePropsBase | TriStateFacetValueProps>
-  ) => {
+  const setupElement = async (props?: Partial<FacetValuePropsBase | TriStateFacetValueProps>) => {
     const element = await renderFunctionFixture(
       html`${renderFacetValueCheckbox({
         props: {
@@ -51,9 +43,7 @@ describe('#renderFacetValueCheckbox', () => {
       triStateCheckbox: page.getByRole('button'),
       label: page.getByText('Some Value Label'),
       valueCount: page.getByText('42'),
-      exclusionButton: page.getByLabelText(
-        'Exclusion filter on Test Value; 42 results'
-      ),
+      exclusionButton: page.getByLabelText('Exclusion filter on Test Value; 42 results'),
     };
   };
 
@@ -145,9 +135,7 @@ describe('#renderFacetValueCheckbox', () => {
         state: 'idle',
         isSelected: false,
       });
-      const nullExclusionButton = label
-        .element()
-        .querySelector('.value-exclude-button');
+      const nullExclusionButton = label.element().querySelector('.value-exclude-button');
       expect(nullExclusionButton).not.toBeInTheDocument();
       expect(exclusionButton).toBeInTheDocument();
     });

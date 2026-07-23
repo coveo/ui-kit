@@ -7,10 +7,7 @@ import {
   updateProxyBaseUrl,
 } from './configuration-actions.js';
 import {configurationReducer} from './configuration-slice.js';
-import {
-  type ConfigurationState,
-  getConfigurationInitialState,
-} from './configuration-state.js';
+import {type ConfigurationState, getConfigurationInitialState} from './configuration-state.js';
 
 describe('commerce configuration slice', () => {
   const initialState = getConfigurationInitialState();
@@ -184,29 +181,21 @@ describe('commerce configuration slice', () => {
     const state = getConfigurationInitialState();
     state.analytics.enabled = true;
 
-    expect(
-      configurationReducer(state, disableAnalytics()).analytics.enabled
-    ).toBe(false);
+    expect(configurationReducer(state, disableAnalytics()).analytics.enabled).toBe(false);
 
     state.analytics.enabled = false;
 
-    expect(
-      configurationReducer(state, disableAnalytics()).analytics.enabled
-    ).toBe(false);
+    expect(configurationReducer(state, disableAnalytics()).analytics.enabled).toBe(false);
   });
 
   it('#enableAnalytics works as expected', () => {
     const state = getConfigurationInitialState();
     state.analytics.enabled = false;
 
-    expect(
-      configurationReducer(state, enableAnalytics()).analytics.enabled
-    ).toBe(true);
+    expect(configurationReducer(state, enableAnalytics()).analytics.enabled).toBe(true);
 
     state.analytics.enabled = true;
 
-    expect(
-      configurationReducer(state, enableAnalytics()).analytics.enabled
-    ).toBe(true);
+    expect(configurationReducer(state, enableAnalytics()).analytics.enabled).toBe(true);
   });
 });

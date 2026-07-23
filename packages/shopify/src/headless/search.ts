@@ -24,9 +24,7 @@ export interface BuildShopifySearchEngineOptions {
  * @returns The constructed search engine instance.
  * @throws Error if the required "_shopify_y" cookie is not found, ensuring the code runs within a Shopify store.
  */
-export function buildShopifySearchEngine({
-  searchEngineOptions,
-}: BuildShopifySearchEngineOptions) {
+export function buildShopifySearchEngine({searchEngineOptions}: BuildShopifySearchEngineOptions) {
   if (!searchEngineOptions.configuration.analytics?.trackingId) {
     throw new Error(
       'The configuration for the search engine must include an analytics tracking ID.'

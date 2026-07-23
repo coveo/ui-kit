@@ -1,10 +1,7 @@
 import type {Raw} from '../../../api/search/search/raw.js';
 import type {Result} from '../../../api/search/search/result.js';
 import {configurationReducer as configuration} from '../../../features/configuration/configuration-slice.js';
-import {
-  loadCollection,
-  registerFolding,
-} from '../../../features/folding/folding-actions.js';
+import {loadCollection, registerFolding} from '../../../features/folding/folding-actions.js';
 import {
   foldedResultAnalyticsClient,
   logShowMoreFoldedResults,
@@ -17,10 +14,7 @@ import {
 import {queryReducer as query} from '../../../features/query/query-slice.js';
 import {fetchMoreResults} from '../../../features/search/search-actions.js';
 import {searchReducer as search} from '../../../features/search/search-slice.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../../test/mock-engine-v2.js';
 import {buildMockResult} from '../../../test/mock-result.js';
 import {createMockState} from '../../../test/mock-state.js';
 import {
@@ -39,11 +33,7 @@ describe('FoldedResultList', () => {
   let props: CoreFoldedResultListProps;
 
   function initFoldedResultList() {
-    foldedResultList = buildCoreFoldedResultList(
-      engine,
-      props,
-      foldedResultAnalyticsClient
-    );
+    foldedResultList = buildCoreFoldedResultList(engine, props, foldedResultAnalyticsClient);
   }
 
   beforeEach(() => {
@@ -95,9 +85,7 @@ describe('FoldedResultList', () => {
     };
 
     expect(foldedResultList.state.results).toStrictEqual(expectedState.results);
-    expect(foldedResultList.state.searchResponseId).toStrictEqual(
-      expectedState.searchResponseId
-    );
+    expect(foldedResultList.state.searchResponseId).toStrictEqual(expectedState.searchResponseId);
     expect(foldedResultList.state.moreResultsAvailable).toStrictEqual(
       expectedState.moreResultsAvailable
     );
@@ -150,15 +138,15 @@ describe('FoldedResultList', () => {
     });
 
     it('includes results with collections', () => {
-      expect(
-        foldedResultList.state.results.map((result) => result.result.title)
-      ).toEqual(['thread-result', 'extra-result', 'people-result']);
+      expect(foldedResultList.state.results.map((result) => result.result.title)).toEqual([
+        'thread-result',
+        'extra-result',
+        'people-result',
+      ]);
     });
 
     it('sets moreResultsAvailable to false on non-collection results', () => {
-      expect(
-        foldedResultList.state.results[1].moreResultsAvailable
-      ).toBeFalsy();
+      expect(foldedResultList.state.results[1].moreResultsAvailable).toBeFalsy();
     });
 
     it('#loadCollection dispatches folding/loadCollection and #logShowMoreFoldedResults analytics', () => {
@@ -237,10 +225,7 @@ describe('FoldedResultList', () => {
   });
 });
 
-function makeFoldedResult(
-  result: Partial<Result>,
-  children: FoldedCollection[] = []
-) {
+function makeFoldedResult(result: Partial<Result>, children: FoldedCollection[] = []) {
   return {
     isLoadingMoreResults: true,
     moreResultsAvailable: true,

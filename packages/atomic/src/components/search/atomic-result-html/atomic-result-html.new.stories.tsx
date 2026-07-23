@@ -10,10 +10,9 @@ import {SearchResponse} from '@coveo/platform-mock-api/search/search-response';
 
 const searchApiHarness = new MockSearchApi();
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-result-html',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-result-html', {
+  excludeCategories: ['methods'],
+});
 
 const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
   includeCodeRoot: false,
@@ -27,11 +26,7 @@ const meta: Meta = {
   title: 'Search/ResultList/ResultHtml',
   id: 'atomic-result-html',
   render: (args) => template(args),
-  decorators: [
-    resultTemplateDecorator,
-    resultListDecorator,
-    searchInterfaceDecorator,
-  ],
+  decorators: [resultTemplateDecorator, resultListDecorator, searchInterfaceDecorator],
   parameters: {
     ...parameters,
     msw: {
@@ -47,17 +42,15 @@ const meta: Meta = {
     searchApiHarness.searchEndpoint.clear();
     searchApiHarness.searchEndpoint.mockOnce((response) => ({
       ...response,
-      results: (response as SearchResponse).results
-        .slice(0, 1)
-        .map((r: any) => ({
-          ...r,
-          excerpt: '<div>Some <b>HTML</b> content</div>',
-          title: '<h2>HTML Title <em>with emphasis</em></h2>',
-          raw: {
-            ...r.raw,
-            custom_html_field: '<p>Custom <strong>HTML</strong> field</p>',
-          },
-        })),
+      results: (response as SearchResponse).results.slice(0, 1).map((r: any) => ({
+        ...r,
+        excerpt: '<div>Some <b>HTML</b> content</div>',
+        title: '<h2>HTML Title <em>with emphasis</em></h2>',
+        raw: {
+          ...r.raw,
+          custom_html_field: '<p>Custom <strong>HTML</strong> field</p>',
+        },
+      })),
       totalCount: 1,
       totalCountFiltered: 1,
     }));

@@ -7,10 +7,7 @@ import {
   buildCategoryFacet,
   type CategoryFacet,
 } from '../controllers/facets/category-facet/headless-category-facet.js';
-import {
-  buildFacet,
-  type Facet,
-} from '../controllers/facets/facet/headless-facet.js';
+import {buildFacet, type Facet} from '../controllers/facets/facet/headless-facet.js';
 import {
   buildCategoryFieldSuggestions,
   type CategoryFieldSuggestions,
@@ -131,9 +128,7 @@ describe('category field suggestions', () => {
           action: () => categoryFieldSuggestions.showMoreResults(),
           expectedSubscriberCalls: 2,
         });
-        expect(categoryFieldSuggestions.state.values.length).toBeGreaterThan(
-          numberOfValues
-        );
+        expect(categoryFieldSuggestions.state.values.length).toBeGreaterThan(numberOfValues);
       });
     });
 
@@ -184,10 +179,9 @@ describe('category field suggestions', () => {
       });
       expect(categoryFieldSuggestions.state.query).toEqual(query);
       expect(categoryFieldSuggestions.state.values.length).toBeGreaterThan(0);
-      const valuesThatDoNotContainQuery =
-        categoryFieldSuggestions.state.values.filter(
-          (value) => !value.displayValue.toLowerCase().includes(query)
-        );
+      const valuesThatDoNotContainQuery = categoryFieldSuggestions.state.values.filter(
+        (value) => !value.displayValue.toLowerCase().includes(query)
+      );
       expect(valuesThatDoNotContainQuery.length).toEqual(0);
     });
 
@@ -203,9 +197,8 @@ describe('category field suggestions', () => {
         expectedSubscriberCalls: 3,
       });
       expect(
-        categoryFieldSuggestions.state.values.find(
-          (value) => value.rawValue === rawValue
-        )?.displayValue
+        categoryFieldSuggestions.state.values.find((value) => value.rawValue === rawValue)
+          ?.displayValue
       ).toEqual(displayValue);
     });
 

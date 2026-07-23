@@ -18,9 +18,7 @@ test.describe('atomic-numeric-facet', () => {
     });
   });
 
-  test('should collapse and hide values when clicking the label button', async ({
-    facet,
-  }) => {
+  test('should collapse and hide values when clicking the label button', async ({facet}) => {
     await facet.load();
 
     await test.step('Verify values are initially visible', async () => {

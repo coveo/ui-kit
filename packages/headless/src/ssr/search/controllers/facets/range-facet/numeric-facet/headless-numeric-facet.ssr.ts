@@ -19,9 +19,7 @@ export interface NumericFacetDefinition extends ControllerDefinitionWithoutProps
  * @param props - The configurable `NumericFacet` properties.
  * @returns The `NumericFacet` controller definition.
  * */
-export function defineNumericFacet(
-  props: NumericFacetProps
-): NumericFacetDefinition {
+export function defineNumericFacet(props: NumericFacetProps): NumericFacetDefinition {
   return {
     build: (engine) => buildNumericFacet(engine, props),
   };

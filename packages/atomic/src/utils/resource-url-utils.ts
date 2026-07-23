@@ -13,5 +13,4 @@ function getCoveoCdnResourceUrl() {
   return new URL(/* webpackIgnore: true */ './', import.meta.url).href;
 }
 
-export const getResourceUrl = () =>
-  isCoveoCDN() ? getCoveoCdnResourceUrl() : undefined;
+export const getResourceUrl = () => (isCoveoCDN() ? getCoveoCdnResourceUrl() : undefined);

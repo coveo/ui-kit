@@ -2,8 +2,7 @@ import type {AnyAction, Reducer} from '@reduxjs/toolkit';
 import {makeHistory, undoable} from './undoable.js';
 
 describe('undoable', () => {
-  const reducer: Reducer = (state: string, action: AnyAction) =>
-    action.payload ?? state;
+  const reducer: Reducer = (state: string, action: AnyAction) => action.payload ?? state;
   const undo = () => ({type: 'undo'});
   const redo = () => ({type: 'redo'});
   const snapshot = (payload?: string) => ({type: 'snapshot', payload});
@@ -77,10 +76,7 @@ describe('undoable', () => {
     });
 
     it('returns updated state when snapshot is different from current state', () => {
-      const newState = setupUndoable()(
-        makeHistory('first'),
-        snapshot('second')
-      );
+      const newState = setupUndoable()(makeHistory('first'), snapshot('second'));
       expect(newState).toEqual({
         past: ['first'],
         present: 'second',
@@ -100,21 +96,13 @@ describe('undoable', () => {
       const initialOverflow = 50;
 
       const initialState = {
-        past: Array.from(
-          {length: initialOverflow},
-          (_, i) => `entry-overflow-${i}`
-        ),
+        past: Array.from({length: initialOverflow}, (_, i) => `entry-overflow-${i}`),
         present: 'present-before-snapshot',
         future: [],
       };
-      const newState = mockUndoableReducer(
-        initialState,
-        snapshot('present-after-snapshot')
-      );
+      const newState = mockUndoableReducer(initialState, snapshot('present-after-snapshot'));
       expect(newState.past.length).toBe(10);
-      expect(newState.past[newState.past.length - 1]).toBe(
-        'present-before-snapshot'
-      );
+      expect(newState.past[newState.past.length - 1]).toBe('present-before-snapshot');
       expect(newState.past[0]).toBe(`entry-overflow-${initialOverflow - 9}`);
       expect(newState.present).toBe('present-after-snapshot');
     });

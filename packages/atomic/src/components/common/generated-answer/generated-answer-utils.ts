@@ -12,9 +12,7 @@ export function getCitationWithTitle(
   const {title} = citation;
   const normalizedTitle = (title ?? '').trim();
 
-  return normalizedTitle !== ''
-    ? citation
-    : {...citation, title: i18n.t('no-title')};
+  return normalizedTitle !== '' ? citation : {...citation, title: i18n.t('no-title')};
 }
 
 /**

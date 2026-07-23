@@ -4,10 +4,7 @@ import type {
   PostprocessQuerySuggestResponseMiddleware,
   PostprocessSearchResponseMiddleware,
 } from '../../api/search/search-api-client-middleware.js';
-import {
-  nonEmptyString,
-  requiredNonEmptyString,
-} from '../../utils/validate-payload.js';
+import {nonEmptyString, requiredNonEmptyString} from '../../utils/validate-payload.js';
 import {
   type EngineConfiguration,
   engineConfigurationDefinitions,
@@ -82,26 +79,25 @@ export interface SearchConfigurationOptions {
   proxyBaseUrl?: string;
 }
 
-export const searchEngineConfigurationSchema =
-  new Schema<SearchEngineConfiguration>({
-    ...engineConfigurationDefinitions,
-    search: new RecordValue({
-      options: {
+export const searchEngineConfigurationSchema = new Schema<SearchEngineConfiguration>({
+  ...engineConfigurationDefinitions,
+  search: new RecordValue({
+    options: {
+      required: false,
+    },
+    values: {
+      pipeline: new StringValue({required: false, emptyAllowed: true}),
+      searchHub: nonEmptyString,
+      locale: nonEmptyString,
+      timezone: nonEmptyString,
+      authenticationProviders: new ArrayValue({
         required: false,
-      },
-      values: {
-        pipeline: new StringValue({required: false, emptyAllowed: true}),
-        searchHub: nonEmptyString,
-        locale: nonEmptyString,
-        timezone: nonEmptyString,
-        authenticationProviders: new ArrayValue({
-          required: false,
-          each: requiredNonEmptyString,
-        }),
-        proxyBaseUrl: new StringValue({required: false, url: true}),
-      },
-    }),
-  });
+        each: requiredNonEmptyString,
+      }),
+      proxyBaseUrl: new StringValue({required: false, url: true}),
+    },
+  }),
+});
 
 /**
  * Creates a sample search engine configuration.

@@ -6,9 +6,7 @@ test.describe('atomic-automatic-facet', () => {
     await automaticFacet.hydrated.waitFor();
   });
 
-  test('should render the automatic facet with label', async ({
-    automaticFacet,
-  }) => {
+  test('should render the automatic facet with label', async ({automaticFacet}) => {
     await expect(automaticFacet.facetLabel).toBeVisible();
     await expect(automaticFacet.facetLabel).toContainText('Type');
   });

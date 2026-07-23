@@ -27,10 +27,9 @@ const {decorator, play} = wrapInCommerceInterface({
   },
 });
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-commerce-did-you-mean',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-commerce-did-you-mean', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-commerce-did-you-mean',

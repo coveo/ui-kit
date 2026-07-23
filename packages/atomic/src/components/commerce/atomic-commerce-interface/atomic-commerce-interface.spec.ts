@@ -43,10 +43,7 @@ import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/
 import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/summary-subcontroller';
 import '@/src/components/commerce/atomic-commerce-layout/atomic-commerce-layout';
 import {getAnalyticsConfig} from './analytics-config';
-import {
-  AtomicCommerceInterface,
-  type CommerceBindings,
-} from './atomic-commerce-interface';
+import {AtomicCommerceInterface, type CommerceBindings} from './atomic-commerce-interface';
 import {createCommerceStore} from './store';
 import './atomic-commerce-interface';
 
@@ -58,10 +55,7 @@ vi.mock('@/src/utils/initialization-common-utils', {spy: true});
 
 @customElement('test-element')
 @bindings()
-class TestElement
-  extends LitElement
-  implements InitializableComponent<CommerceBindings>
-{
+class TestElement extends LitElement implements InitializableComponent<CommerceBindings> {
   @state()
   public bindings: CommerceBindings = {} as CommerceBindings;
   @state() public error!: Error;
@@ -74,15 +68,10 @@ class TestElement
 }
 
 describe('atomic-commerce-interface', () => {
-  const commerceEngineConfig: CommerceEngineConfiguration =
-    getSampleCommerceEngineConfiguration();
+  const commerceEngineConfig: CommerceEngineConfiguration = getSampleCommerceEngineConfiguration();
 
-  let mockProductListingSummary: ReturnType<
-    typeof buildFakeSummary<ProductListingSummaryState>
-  >;
-  let mockSearchSummary: ReturnType<
-    typeof buildFakeSummary<SearchSummaryState>
-  >;
+  let mockProductListingSummary: ReturnType<typeof buildFakeSummary<ProductListingSummaryState>>;
+  let mockSearchSummary: ReturnType<typeof buildFakeSummary<SearchSummaryState>>;
 
   let mockUrlManager: UrlManager;
 
@@ -121,9 +110,8 @@ describe('atomic-commerce-interface', () => {
   };
 
   const addChildElement = async (element: Element, tag = 'test-element') => {
-    const childElement = document.createElement(
-      tag
-    ) as InitializableComponent<CommerceBindings> & TestElement;
+    const childElement = document.createElement(tag) as InitializableComponent<CommerceBindings> &
+      TestElement;
     element.appendChild(childElement);
 
     await childElement.updateComplete;
@@ -218,10 +206,7 @@ describe('atomic-commerce-interface', () => {
 
   describe('#connectedCallback (when added to the DOM)', () => {
     it("should add an 'atomic/initializeComponent' event listener on the element", async () => {
-      const addEventListenerSpy = vi.spyOn(
-        AtomicCommerceInterface.prototype,
-        'addEventListener'
-      );
+      const addEventListenerSpy = vi.spyOn(AtomicCommerceInterface.prototype, 'addEventListener');
 
       await setupElement();
 
@@ -241,30 +226,20 @@ describe('atomic-commerce-interface', () => {
 
       element.dispatchEvent(event);
 
-      expect(onComponentInitializationSpy).toHaveBeenCalledExactlyOnceWith(
-        event
-      );
+      expect(onComponentInitializationSpy).toHaveBeenCalledExactlyOnceWith(event);
     });
 
     it('should add an "atomic/scrollToTop" event listener on the element', async () => {
-      const addEventListenerSpy = vi.spyOn(
-        AtomicCommerceInterface.prototype,
-        'addEventListener'
-      );
+      const addEventListenerSpy = vi.spyOn(AtomicCommerceInterface.prototype, 'addEventListener');
 
       await setupElement();
 
-      expect(addEventListenerSpy).toHaveBeenCalledWith(
-        'atomic/scrollToTop',
-        expect.any(Function)
-      );
+      expect(addEventListenerSpy).toHaveBeenCalledWith('atomic/scrollToTop', expect.any(Function));
     });
 
     describe("when an 'atomic/scrollToTop' event is dispatched", () => {
       it('should log a warning when no element in the DOM matches the scrollContainer selector', async () => {
-        const consoleWarnSpy = vi
-          .spyOn(console, 'warn')
-          .mockImplementation(() => {});
+        const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
         const element = await setupElement({scrollContainer: 'i-do-not-exist'});
         const event = new CustomEvent('atomic/scrollToTop', {});
 
@@ -297,9 +272,7 @@ describe('atomic-commerce-interface', () => {
       testedInitMethodName: 'initializeWithEngine',
     },
   ])('#$testedInitMethodName', ({testedInitMethodName}) => {
-    const callTestedInitMethod = async (
-      element: Awaited<ReturnType<typeof setupElement>>
-    ) => {
+    const callTestedInitMethod = async (element: Awaited<ReturnType<typeof setupElement>>) => {
       if (testedInitMethodName === 'initialize') {
         await element.initialize(commerceEngineConfig);
       } else {
@@ -309,16 +282,11 @@ describe('atomic-commerce-interface', () => {
 
     it('should call InterfaceController.onInitialization', async () => {
       const element = await setupElement();
-      const onInitializationSpy = vi.spyOn(
-        InterfaceController.prototype,
-        'onInitialization'
-      );
+      const onInitializationSpy = vi.spyOn(InterfaceController.prototype, 'onInitialization');
 
       await callTestedInitMethod(element);
 
-      expect(onInitializationSpy).toHaveBeenCalledExactlyOnceWith(
-        expect.any(Function)
-      );
+      expect(onInitializationSpy).toHaveBeenCalledExactlyOnceWith(expect.any(Function));
     });
 
     it('should initialize the context with #buildContext', async () => {
@@ -326,9 +294,7 @@ describe('atomic-commerce-interface', () => {
       const mockedBuildContext = vi.mocked(buildContext);
 
       await callTestedInitMethod(element);
-      expect(mockedBuildContext).toHaveBeenCalledExactlyOnceWith(
-        element.engine!
-      );
+      expect(mockedBuildContext).toHaveBeenCalledExactlyOnceWith(element.engine!);
       expect(element.context).toBe(mockedBuildContext.mock.results[0].value);
     });
 
@@ -344,10 +310,7 @@ describe('atomic-commerce-interface', () => {
     // TODO - (v4) KIT-4365: Eliminate the describe wrapper; we'll always set the language from the context state in v4.
     describe('when the language prop is not specified', () => {
       it('should set the language from the context state', async () => {
-        const onLanguageChangeSpy = vi.spyOn(
-          InterfaceController.prototype,
-          'onLanguageChange'
-        );
+        const onLanguageChangeSpy = vi.spyOn(InterfaceController.prototype, 'onLanguageChange');
         const element = await setupElement();
         const fakeContext = buildFakeContext({
           state: {language: 'es'},
@@ -378,9 +341,7 @@ describe('atomic-commerce-interface', () => {
 
       await callTestedInitMethod(element);
 
-      expect(mockedCreateCommerceStore).toHaveBeenCalledExactlyOnceWith(
-        element.type
-      );
+      expect(mockedCreateCommerceStore).toHaveBeenCalledExactlyOnceWith(element.type);
 
       expect(element.bindings).toEqual({
         engine: element.engine,
@@ -430,12 +391,8 @@ describe('atomic-commerce-interface', () => {
       });
 
       it('should set searchOrListing with #buildProductListing', async () => {
-        expect(buildProductListing).toHaveBeenCalledExactlyOnceWith(
-          element.engine!
-        );
-        expect(element.searchOrListing).toBe(
-          vi.mocked(buildProductListing).mock.results[0].value
-        );
+        expect(buildProductListing).toHaveBeenCalledExactlyOnceWith(element.engine!);
+        expect(element.searchOrListing).toBe(vi.mocked(buildProductListing).mock.results[0].value);
       });
 
       it('should set the product listing summary', async () => {
@@ -443,9 +400,9 @@ describe('atomic-commerce-interface', () => {
       });
 
       it('should subscribe to the product listing summary state updates', async () => {
-        expect(
-          mockProductListingSummary.subscribe
-        ).toHaveBeenCalledExactlyOnceWith(expect.any(Function));
+        expect(mockProductListingSummary.subscribe).toHaveBeenCalledExactlyOnceWith(
+          expect.any(Function)
+        );
       });
     });
 
@@ -460,9 +417,7 @@ describe('atomic-commerce-interface', () => {
 
       it('should set searchOrListing with #buildSearch', async () => {
         expect(buildSearch).toHaveBeenCalledExactlyOnceWith(element.engine!);
-        expect(element.searchOrListing).toBe(
-          vi.mocked(buildSearch).mock.results[0].value
-        );
+        expect(element.searchOrListing).toBe(vi.mocked(buildSearch).mock.results[0].value);
       });
 
       it('should initialize the search summary', async () => {
@@ -470,9 +425,7 @@ describe('atomic-commerce-interface', () => {
       });
 
       it('should subscribe to the search summary state updates', async () => {
-        expect(mockSearchSummary.subscribe).toHaveBeenCalledExactlyOnceWith(
-          expect.any(Function)
-        );
+        expect(mockSearchSummary.subscribe).toHaveBeenCalledExactlyOnceWith(expect.any(Function));
       });
     });
 
@@ -487,14 +440,11 @@ describe('atomic-commerce-interface', () => {
           hasError: false,
           hasProducts: false,
         };
-        const summarySubscribeCallback =
-          mockedSummarySubscribe.mock.calls[0][0];
+        const summarySubscribeCallback = mockedSummarySubscribe.mock.calls[0][0];
 
         summarySubscribeCallback();
 
-        expect(element.classList).toContain(
-          'atomic-commerce-interface-no-results'
-        );
+        expect(element.classList).toContain('atomic-commerce-interface-no-results');
       });
 
       it('should remove the atomic-commerce-interface-no-results class when there are products after the initial query', async () => {
@@ -508,14 +458,11 @@ describe('atomic-commerce-interface', () => {
           hasProducts: true,
         };
         element.classList.add('atomic-commerce-interface-no-results');
-        const summarySubscribeCallback =
-          mockedSummarySubscribe.mock.calls[0][0];
+        const summarySubscribeCallback = mockedSummarySubscribe.mock.calls[0][0];
 
         summarySubscribeCallback();
 
-        expect(element.classList).not.toContain(
-          'atomic-commerce-interface-no-results'
-        );
+        expect(element.classList).not.toContain('atomic-commerce-interface-no-results');
       });
 
       it('should add the atomic-commerce-interface-error class when there is an error', async () => {
@@ -526,8 +473,7 @@ describe('atomic-commerce-interface', () => {
           ...element.summary.state,
           hasError: true,
         };
-        const summarySubscribeCallback =
-          mockedSummarySubscribe.mock.calls[0][0];
+        const summarySubscribeCallback = mockedSummarySubscribe.mock.calls[0][0];
 
         summarySubscribeCallback();
 
@@ -543,14 +489,11 @@ describe('atomic-commerce-interface', () => {
           hasError: false,
         };
         element.classList.add('atomic-commerce-interface-error');
-        const summarySubscribeCallback =
-          mockedSummarySubscribe.mock.calls[0][0];
+        const summarySubscribeCallback = mockedSummarySubscribe.mock.calls[0][0];
 
         summarySubscribeCallback();
 
-        expect(element.classList).not.toContain(
-          'atomic-commerce-interface-error'
-        );
+        expect(element.classList).not.toContain('atomic-commerce-interface-error');
       });
 
       it('should add the atomic-commerce-interface-search-executed class when the first request was executed', async () => {
@@ -561,14 +504,11 @@ describe('atomic-commerce-interface', () => {
           ...element.summary.state,
           firstRequestExecuted: true,
         };
-        const summarySubscribeCallback =
-          mockedSummarySubscribe.mock.calls[0][0];
+        const summarySubscribeCallback = mockedSummarySubscribe.mock.calls[0][0];
 
         summarySubscribeCallback();
 
-        expect(element.classList).toContain(
-          'atomic-commerce-interface-search-executed'
-        );
+        expect(element.classList).toContain('atomic-commerce-interface-search-executed');
       });
 
       it('should remove the atomic-commerce-interface-search-executed class when the first request was not executed', async () => {
@@ -580,14 +520,11 @@ describe('atomic-commerce-interface', () => {
           firstRequestExecuted: false,
         };
         element.classList.add('atomic-commerce-interface-search-executed');
-        const summarySubscribeCallback =
-          mockedSummarySubscribe.mock.calls[0][0];
+        const summarySubscribeCallback = mockedSummarySubscribe.mock.calls[0][0];
 
         summarySubscribeCallback();
 
-        expect(element.classList).not.toContain(
-          'atomic-commerce-interface-search-executed'
-        );
+        expect(element.classList).not.toContain('atomic-commerce-interface-search-executed');
       });
 
       it('should unset the loading flag when the first request was executed', async () => {
@@ -598,12 +535,8 @@ describe('atomic-commerce-interface', () => {
           ...element.summary.state,
           firstRequestExecuted: true,
         };
-        const mockedUnsetLoadingFlag = vi.spyOn(
-          element.bindings.store,
-          'unsetLoadingFlag'
-        );
-        const summarySubscribeCallback =
-          mockedSummarySubscribe.mock.calls[0][0];
+        const mockedUnsetLoadingFlag = vi.spyOn(element.bindings.store, 'unsetLoadingFlag');
+        const summarySubscribeCallback = mockedSummarySubscribe.mock.calls[0][0];
 
         summarySubscribeCallback();
 
@@ -694,9 +627,7 @@ describe('atomic-commerce-interface', () => {
       it('should subscribe to the urlManager state updates', async () => {
         await callTestedInitMethod(element);
 
-        expect(mockUrlManager.subscribe).toHaveBeenCalledExactlyOnceWith(
-          expect.any(Function)
-        );
+        expect(mockUrlManager.subscribe).toHaveBeenCalledExactlyOnceWith(expect.any(Function));
       });
 
       describe('when the urlManager state changes', () => {
@@ -717,8 +648,7 @@ describe('atomic-commerce-interface', () => {
 
             element.summary.state.firstRequestExecuted = false;
             element.urlManager!.state.fragment = 'test-fragment';
-            urlManagerSubscribeCallback =
-              urlManagerSubscribeSpy.mock.calls[0][0];
+            urlManagerSubscribeCallback = urlManagerSubscribeSpy.mock.calls[0][0];
 
             loggerSpy = vi.spyOn(element.bindings.engine.logger, 'info');
           });
@@ -726,11 +656,7 @@ describe('atomic-commerce-interface', () => {
           it('should replace the history state with the #-prefixed new fragment', async () => {
             urlManagerSubscribeCallback();
 
-            expect(replaceStateSpy).toHaveBeenCalledWith(
-              null,
-              document.title,
-              '#test-fragment'
-            );
+            expect(replaceStateSpy).toHaveBeenCalledWith(null, document.title, '#test-fragment');
           });
 
           it('should not call history.pushState', async () => {
@@ -757,8 +683,7 @@ describe('atomic-commerce-interface', () => {
 
             element.summary.state.firstRequestExecuted = true;
             element.urlManager!.state.fragment = 'test-fragment';
-            urlManagerSubscribeCallback =
-              urlManagerSubscribeSpy.mock.calls[0][0];
+            urlManagerSubscribeCallback = urlManagerSubscribeSpy.mock.calls[0][0];
 
             loggerSpy = vi.spyOn(element.bindings.engine.logger, 'info');
           });
@@ -766,11 +691,7 @@ describe('atomic-commerce-interface', () => {
           it('should push the new fragment to the history state', async () => {
             urlManagerSubscribeCallback();
 
-            expect(pushStateSpy).toHaveBeenCalledWith(
-              null,
-              document.title,
-              '#test-fragment'
-            );
+            expect(pushStateSpy).toHaveBeenCalledWith(null, document.title, '#test-fragment');
           });
 
           it('should not call history.replaceState', async () => {
@@ -782,9 +703,7 @@ describe('atomic-commerce-interface', () => {
           it('should log the correct info message', async () => {
             urlManagerSubscribeCallback();
 
-            expect(loggerSpy).toHaveBeenCalledWith(
-              'History pushState #test-fragment'
-            );
+            expect(loggerSpy).toHaveBeenCalledWith('History pushState #test-fragment');
           });
         });
       });
@@ -792,10 +711,7 @@ describe('atomic-commerce-interface', () => {
       it('should add a hashchange event listener on the window object', async () => {
         await callTestedInitMethod(element);
 
-        expect(addEventListenerSpy).toHaveBeenCalledWith(
-          'hashchange',
-          expect.any(Function)
-        );
+        expect(addEventListenerSpy).toHaveBeenCalledWith('hashchange', expect.any(Function));
       });
 
       describe('when the hashchange event is dispatched on the window object', () => {
@@ -805,63 +721,56 @@ describe('atomic-commerce-interface', () => {
           window.location.hash = '#new-fragment';
           window.dispatchEvent(new HashChangeEvent('hashchange'));
 
-          expect(mockUrlManager.synchronize).toHaveBeenCalledExactlyOnceWith(
-            'new-fragment'
-          );
+          expect(mockUrlManager.synchronize).toHaveBeenCalledExactlyOnceWith('new-fragment');
         });
       });
     });
 
-    describe.skipIf(testedInitMethodName !== 'initialize')(
-      '#initialize only',
-      () => {
-        it('should set the engine with #buildCommerceEngine', async () => {
-          const element = await setupElement();
+    describe.skipIf(testedInitMethodName !== 'initialize')('#initialize only', () => {
+      it('should set the engine with #buildCommerceEngine', async () => {
+        const element = await setupElement();
 
-          await element.initialize(commerceEngineConfig);
+        await element.initialize(commerceEngineConfig);
 
-          expect(element.engine).toBe(
-            vi.mocked(buildCommerceEngine).mock.results[0].value
-          );
+        expect(element.engine).toBe(vi.mocked(buildCommerceEngine).mock.results[0].value);
+      });
+
+      it('should pass the specified configuration and log level, along with an analytics configuration augmented with #getAnalyticsConfig to #buildCommerceEngine when setting the engine', async () => {
+        const mockedGetAnalyticsConfig = vi.mocked(getAnalyticsConfig);
+        const element = await setupElement();
+
+        await element.initialize(commerceEngineConfig);
+
+        expect(getAnalyticsConfig).toHaveBeenCalledExactlyOnceWith(
+          commerceEngineConfig,
+          element.analytics
+        );
+        expect(buildCommerceEngine).toHaveBeenCalledExactlyOnceWith({
+          configuration: {
+            ...commerceEngineConfig,
+            analytics: mockedGetAnalyticsConfig.mock.results[0].value,
+          },
+          loggerOptions: {level: element.logLevel},
+        });
+      });
+
+      it('should set the error when #buildCommerceEngine throws', async () => {
+        vi.spyOn(console, 'error').mockImplementation(() => {});
+        const element = await setupElement();
+        const buildEngineError = new Error('Oh no!', {
+          cause: 'A noble cause',
         });
 
-        it('should pass the specified configuration and log level, along with an analytics configuration augmented with #getAnalyticsConfig to #buildCommerceEngine when setting the engine', async () => {
-          const mockedGetAnalyticsConfig = vi.mocked(getAnalyticsConfig);
-          const element = await setupElement();
-
-          await element.initialize(commerceEngineConfig);
-
-          expect(getAnalyticsConfig).toHaveBeenCalledExactlyOnceWith(
-            commerceEngineConfig,
-            element.analytics
-          );
-          expect(buildCommerceEngine).toHaveBeenCalledExactlyOnceWith({
-            configuration: {
-              ...commerceEngineConfig,
-              analytics: mockedGetAnalyticsConfig.mock.results[0].value,
-            },
-            loggerOptions: {level: element.logLevel},
-          });
+        vi.mocked(buildCommerceEngine).mockImplementation(() => {
+          throw buildEngineError;
         });
 
-        it('should set the error when #buildCommerceEngine throws', async () => {
-          vi.spyOn(console, 'error').mockImplementation(() => {});
-          const element = await setupElement();
-          const buildEngineError = new Error('Oh no!', {
-            cause: 'A noble cause',
-          });
+        await element.initialize(commerceEngineConfig).catch(() => {});
 
-          vi.mocked(buildCommerceEngine).mockImplementation(() => {
-            throw buildEngineError;
-          });
-
-          await element.initialize(commerceEngineConfig).catch(() => {});
-
-          expect(element.engine).toBeUndefined();
-          expect(element.error).toBe(buildEngineError);
-        });
-      }
-    );
+        expect(element.engine).toBeUndefined();
+        expect(element.error).toBe(buildEngineError);
+      });
+    });
 
     describe.skipIf(testedInitMethodName !== 'initializeWithEngine')(
       '#initializeWithEngine only',
@@ -913,18 +822,14 @@ describe('atomic-commerce-interface', () => {
 
       await callTestedInitMethod(element);
 
-      expect(element.bindings.store.state.mobileBreakpoint).toBe(
-        DEFAULT_MOBILE_BREAKPOINT
-      );
+      expect(element.bindings.store.state.mobileBreakpoint).toBe(DEFAULT_MOBILE_BREAKPOINT);
     });
   });
 
   describe('#executeFirstRequest', () => {
     it('should log an error when called before initialization', async () => {
       const element = await setupElement();
-      const consoleErrorSpy = vi
-        .spyOn(console, 'error')
-        .mockImplementation(() => {});
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
       await element.executeFirstRequest();
 
@@ -936,9 +841,7 @@ describe('atomic-commerce-interface', () => {
 
     it('should log an error when called before initialization finishes', async () => {
       const element = await setupElement();
-      const consoleErrorSpy = vi
-        .spyOn(console, 'error')
-        .mockImplementation(() => {});
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
       element.engine = buildFakeCommerceEngine({}); // Simulate that the engine was created but the interface wasn't initialized
 
       await element.executeFirstRequest();
@@ -1088,10 +991,7 @@ describe('atomic-commerce-interface', () => {
     it('should do nothing when the engine has not been created', async () => {
       vi.spyOn(console, 'error').mockImplementation(() => {});
       const element = await setupElement();
-      const onLanguageChangeSpy = vi.spyOn(
-        InterfaceController.prototype,
-        'onLanguageChange'
-      );
+      const onLanguageChangeSpy = vi.spyOn(InterfaceController.prototype, 'onLanguageChange');
       const setContextMock = vi.fn();
       vi.mocked(loadContextActions, {partial: true}).mockReturnValue({
         setContext: setContextMock,
@@ -1109,10 +1009,7 @@ describe('atomic-commerce-interface', () => {
       const element = await setupElement();
       const engine = buildFakeCommerceEngine();
       element.initializeWithEngine(engine);
-      const onLanguageChangeSpy = vi.spyOn(
-        InterfaceController.prototype,
-        'onLanguageChange'
-      );
+      const onLanguageChangeSpy = vi.spyOn(InterfaceController.prototype, 'onLanguageChange');
       const setContextMock = vi.fn();
       vi.mocked(loadContextActions, {partial: true}).mockReturnValue({
         setContext: setContextMock,
@@ -1139,10 +1036,7 @@ describe('atomic-commerce-interface', () => {
         await element.initializeWithEngine(engine);
 
         setContextMock = vi.fn();
-        onLanguageChangeSpy = vi.spyOn(
-          InterfaceController.prototype,
-          'onLanguageChange'
-        );
+        onLanguageChangeSpy = vi.spyOn(InterfaceController.prototype, 'onLanguageChange');
         onLanguageChangeSpy.mockClear();
 
         vi.mocked(loadContextActions).mockImplementation(() => ({
@@ -1212,10 +1106,7 @@ describe('atomic-commerce-interface', () => {
   it('should call InterfaceController.onAnalyticsChange when the analytics attribute changes', async () => {
     const element = await setupElement();
     await element.initialize(commerceEngineConfig);
-    const onAnalyticsChangeSpy = vi.spyOn(
-      InterfaceController.prototype,
-      'onAnalyticsChange'
-    );
+    const onAnalyticsChangeSpy = vi.spyOn(InterfaceController.prototype, 'onAnalyticsChange');
 
     expect(onAnalyticsChangeSpy).not.toHaveBeenCalled();
 
@@ -1235,26 +1126,19 @@ describe('atomic-commerce-interface', () => {
     const element = await setupElement();
     await element.initialize(commerceEngineConfig);
 
-    expect(element.bindings.store.state.iconAssetsPath).not.toBe(
-      '/new/icon/assets/path'
-    );
+    expect(element.bindings.store.state.iconAssetsPath).not.toBe('/new/icon/assets/path');
 
     element.iconAssetsPath = '/new/icon/assets/path';
     await element.updateComplete;
 
-    expect(element.bindings.store.state.iconAssetsPath).toBe(
-      '/new/icon/assets/path'
-    );
+    expect(element.bindings.store.state.iconAssetsPath).toBe('/new/icon/assets/path');
   });
 
   // #updateLanguage
   // TODO - (v4) KIT-4365: Remove these tests.
   describe('when the language attribute changes', () => {
     it('should do nothing when the engine has not been created', async () => {
-      const onLanguageChangeSpy = vi.spyOn(
-        InterfaceController.prototype,
-        'onLanguageChange'
-      );
+      const onLanguageChangeSpy = vi.spyOn(InterfaceController.prototype, 'onLanguageChange');
       const element = await setupElement({language: 'en'});
 
       element.language = 'fr';
@@ -1265,10 +1149,7 @@ describe('atomic-commerce-interface', () => {
     });
 
     it('should do nothing when the new language attribute is undefined', async () => {
-      const onLanguageChangeSpy = vi.spyOn(
-        InterfaceController.prototype,
-        'onLanguageChange'
-      );
+      const onLanguageChangeSpy = vi.spyOn(InterfaceController.prototype, 'onLanguageChange');
       const element = await setupElement({language: 'en'});
 
       element.language = undefined;
@@ -1279,10 +1160,7 @@ describe('atomic-commerce-interface', () => {
     });
 
     it('should do nothing when the context is not defined', async () => {
-      const onLanguageChangeSpy = vi.spyOn(
-        InterfaceController.prototype,
-        'onLanguageChange'
-      );
+      const onLanguageChangeSpy = vi.spyOn(InterfaceController.prototype, 'onLanguageChange');
       const element = await setupElement({language: 'en'});
       element.engine = buildFakeCommerceEngine(); // Simulate that the engine was created but the context wasn't built
 
@@ -1308,10 +1186,7 @@ describe('atomic-commerce-interface', () => {
       });
 
       it('should call InterfaceController.onLanguageChange with no argument', async () => {
-        const onLanguageChangeSpy = vi.spyOn(
-          InterfaceController.prototype,
-          'onLanguageChange'
-        );
+        const onLanguageChangeSpy = vi.spyOn(InterfaceController.prototype, 'onLanguageChange');
         const element = await setupElement({language: 'en'});
         await element.initialize(commerceEngineConfig);
         await element.updateComplete;
@@ -1375,10 +1250,7 @@ describe('atomic-commerce-interface', () => {
 
       element.remove();
 
-      expect(removeEventListenerSpy).toHaveBeenCalledWith(
-        'hashchange',
-        expect.any(Function)
-      );
+      expect(removeEventListenerSpy).toHaveBeenCalledWith('hashchange', expect.any(Function));
     });
 
     it('should remove the atomic/initializeComponent event listener', async () => {

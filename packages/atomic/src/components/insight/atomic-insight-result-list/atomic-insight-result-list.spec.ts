@@ -41,15 +41,11 @@ describe('atomic-insight-result-list', () => {
         },
       })
     );
-    vi.mocked(buildInsightResultsPerPage).mockReturnValue(
-      buildFakeInsightResultsPerPage()
-    );
+    vi.mocked(buildInsightResultsPerPage).mockReturnValue(buildFakeInsightResultsPerPage());
 
-    vi.mocked(buildInsightInteractiveResult).mockImplementation(
-      (_engine, props) => {
-        return interactiveResult(props);
-      }
-    );
+    vi.mocked(buildInsightInteractiveResult).mockImplementation((_engine, props) => {
+      return interactiveResult(props);
+    });
   });
 
   const mockResultsWithCount = (count: number) => {
@@ -128,15 +124,13 @@ describe('atomic-insight-result-list', () => {
         expectedResult: true,
       },
       {
-        description:
-          'should not change #isEveryResultReady when staying in loading state',
+        description: 'should not change #isEveryResultReady when staying in loading state',
         oldState: true,
         newState: true,
         expectedResult: true,
       },
       {
-        description:
-          'should not change #isEveryResultReady when staying in not loading state',
+        description: 'should not change #isEveryResultReady when staying in not loading state',
         oldState: false,
         newState: false,
         expectedResult: true,
@@ -235,22 +229,15 @@ describe('atomic-insight-result-list', () => {
       isAppLoaded: false,
     });
 
-    const atomicResultPlaceholderElements =
-      element.shadowRoot?.querySelectorAll('atomic-result-placeholder');
+    const atomicResultPlaceholderElements = element.shadowRoot?.querySelectorAll(
+      'atomic-result-placeholder'
+    );
 
     expect(atomicResultPlaceholderElements).toHaveLength(numberOfPlaceholders);
-    expect(
-      page.elementLocator(atomicResultPlaceholderElements!.item(0))
-    ).toBeInTheDocument();
-    expect(
-      page.elementLocator(atomicResultPlaceholderElements!.item(1))
-    ).toBeInTheDocument();
-    expect(
-      page.elementLocator(atomicResultPlaceholderElements!.item(2))
-    ).toBeInTheDocument();
-    expect(
-      page.elementLocator(atomicResultPlaceholderElements!.item(3))
-    ).toBeInTheDocument();
+    expect(page.elementLocator(atomicResultPlaceholderElements!.item(0))).toBeInTheDocument();
+    expect(page.elementLocator(atomicResultPlaceholderElements!.item(1))).toBeInTheDocument();
+    expect(page.elementLocator(atomicResultPlaceholderElements!.item(2))).toBeInTheDocument();
+    expect(page.elementLocator(atomicResultPlaceholderElements!.item(3))).toBeInTheDocument();
   });
 
   describe('when app is loaded', () => {
@@ -263,9 +250,7 @@ describe('atomic-insight-result-list', () => {
 
       expect(resultListParts).toHaveLength(1);
 
-      await expect
-        .element(page.elementLocator(resultListParts!.item(0)))
-        .toBeInTheDocument();
+      await expect.element(page.elementLocator(resultListParts!.item(0))).toBeInTheDocument();
     });
 
     it('should render 1 outline part per result', async () => {
@@ -284,15 +269,9 @@ describe('atomic-insight-result-list', () => {
       const outlineParts = getParts(element).outline;
 
       expect(outlineParts).toHaveLength(3);
-      await expect
-        .element(page.elementLocator(outlineParts!.item(0)))
-        .toBeInTheDocument();
-      await expect
-        .element(page.elementLocator(outlineParts!.item(1)))
-        .toBeInTheDocument();
-      await expect
-        .element(page.elementLocator(outlineParts!.item(2)))
-        .toBeInTheDocument();
+      await expect.element(page.elementLocator(outlineParts!.item(0))).toBeInTheDocument();
+      await expect.element(page.elementLocator(outlineParts!.item(1))).toBeInTheDocument();
+      await expect.element(page.elementLocator(outlineParts!.item(2))).toBeInTheDocument();
     });
 
     describe.each<{
@@ -322,9 +301,8 @@ describe('atomic-insight-result-list', () => {
 
       const element = await setupElement();
 
-      const atomicInsightResultElements = element.shadowRoot?.querySelectorAll(
-        'atomic-insight-result'
-      );
+      const atomicInsightResultElements =
+        element.shadowRoot?.querySelectorAll('atomic-insight-result');
 
       expect(atomicInsightResultElements).toHaveLength(9);
     });
@@ -334,9 +312,8 @@ describe('atomic-insight-result-list', () => {
         const density = 'comfortable';
         const element = await setupElement({density});
 
-        const atomicInsightResultElement = element.shadowRoot?.querySelector(
-          'atomic-insight-result'
-        );
+        const atomicInsightResultElement =
+          element.shadowRoot?.querySelector('atomic-insight-result');
 
         expect(atomicInsightResultElement?.density).toBe(density);
       });
@@ -345,9 +322,7 @@ describe('atomic-insight-result-list', () => {
         const imageSize = 'none';
         const element = await setupElement({imageSize});
 
-        const renderedResultElement = element.shadowRoot?.querySelector(
-          'atomic-insight-result'
-        );
+        const renderedResultElement = element.shadowRoot?.querySelector('atomic-insight-result');
 
         expect(renderedResultElement?.imageSize).toBe(imageSize);
       });
@@ -356,16 +331,14 @@ describe('atomic-insight-result-list', () => {
         const mockResult1 = buildFakeInsightResult({uniqueId: '123'});
         const mockResult2 = buildFakeInsightResult({uniqueId: '456'});
 
-        interactiveResult.mockImplementation(
-          (props: InsightInteractiveResultProps) => {
-            return {
-              select: vi.fn(),
-              beginDelayedSelect: vi.fn(),
-              cancelPendingSelect: vi.fn(),
-              warningMessage: props.options.result.uniqueId,
-            } as unknown as InteractiveResult;
-          }
-        );
+        interactiveResult.mockImplementation((props: InsightInteractiveResultProps) => {
+          return {
+            select: vi.fn(),
+            beginDelayedSelect: vi.fn(),
+            cancelPendingSelect: vi.fn(),
+            warningMessage: props.options.result.uniqueId,
+          } as unknown as InteractiveResult;
+        });
 
         vi.mocked(buildInsightResultList).mockReturnValue(
           buildFakeInsightResultList({
@@ -400,9 +373,8 @@ describe('atomic-insight-result-list', () => {
       it('should pass correct #loadingFlag', async () => {
         const element = await setupElement();
 
-        const atomicInsightResultElement = element.shadowRoot?.querySelector(
-          'atomic-insight-result'
-        );
+        const atomicInsightResultElement =
+          element.shadowRoot?.querySelector('atomic-insight-result');
 
         expect(atomicInsightResultElement?.loadingFlag).toBe(
           // @ts-expect-error - accessing private property
@@ -424,9 +396,8 @@ describe('atomic-insight-result-list', () => {
 
         const element = await setupElement();
 
-        const atomicInsightResultElement = element.shadowRoot?.querySelectorAll(
-          'atomic-insight-result'
-        );
+        const atomicInsightResultElement =
+          element.shadowRoot?.querySelectorAll('atomic-insight-result');
 
         expect(atomicInsightResultElement?.[0].result).toBe(mockResult1);
         expect(atomicInsightResultElement?.[1].result).toBe(mockResult2);
@@ -435,13 +406,10 @@ describe('atomic-insight-result-list', () => {
       it('should pass correct #store', async () => {
         const element = await setupElement();
 
-        const atomicInsightResultElement = element.shadowRoot?.querySelector(
-          'atomic-insight-result'
-        );
+        const atomicInsightResultElement =
+          element.shadowRoot?.querySelector('atomic-insight-result');
 
-        expect(atomicInsightResultElement?.store).toEqual(
-          element.bindings.store
-        );
+        expect(atomicInsightResultElement?.store).toEqual(element.bindings.store);
       });
     });
 
@@ -457,14 +425,10 @@ describe('atomic-insight-result-list', () => {
         ...(imageSize && {imageSize}),
       });
 
-      const listWrapperElements =
-        element.shadowRoot?.querySelectorAll('.list-wrapper');
-      const listWrapperLocator = page.elementLocator(
-        listWrapperElements!.item(0)
-      );
+      const listWrapperElements = element.shadowRoot?.querySelectorAll('.list-wrapper');
+      const listWrapperLocator = page.elementLocator(listWrapperElements!.item(0));
 
-      const listRootElements =
-        element.shadowRoot?.querySelectorAll('.list-root');
+      const listRootElements = element.shadowRoot?.querySelectorAll('.list-root');
       const listRootLocator = page.elementLocator(listRootElements!.item(0));
 
       const expectedClass = [
@@ -492,43 +456,31 @@ describe('atomic-insight-result-list', () => {
     imageSize?: ItemDisplayImageSize;
     isAppLoaded?: boolean;
   } = {}) => {
-    const {element} =
-      await renderInAtomicInsightInterface<AtomicInsightResultList>({
-        template: html`<atomic-insight-result-list
-          .density=${density}
-          .imageSize=${imageSize}
-        >
-          <atomic-insight-result-template
-            .conditions=${[]}
-            .mustMatch=${{}}
-            .mustNotMatch=${{}}
-          >
-            <slot>
-              <template>
-                <div>Result Content</div>
-              </template>
-            </slot>
-          </atomic-insight-result-template></atomic-insight-result-list
-        >`,
-        selector: 'atomic-insight-result-list',
-        bindings: (bindings) => {
-          bindings.store.state.loadingFlags = isAppLoaded
-            ? []
-            : ['loading-flag'];
-          bindings.engine = mockedEngine;
-          bindings.engine.logger = {error: vi.fn()} as never;
-          return bindings;
-        },
-      });
+    const {element} = await renderInAtomicInsightInterface<AtomicInsightResultList>({
+      template: html`<atomic-insight-result-list .density=${density} .imageSize=${imageSize}>
+        <atomic-insight-result-template .conditions=${[]} .mustMatch=${{}} .mustNotMatch=${{}}>
+          <slot>
+            <template>
+              <div>Result Content</div>
+            </template>
+          </slot>
+        </atomic-insight-result-template></atomic-insight-result-list
+      >`,
+      selector: 'atomic-insight-result-list',
+      bindings: (bindings) => {
+        bindings.store.state.loadingFlags = isAppLoaded ? [] : ['loading-flag'];
+        bindings.engine = mockedEngine;
+        bindings.engine.logger = {error: vi.fn()} as never;
+        return bindings;
+      },
+    });
 
     return element;
   };
 
   const getParts = (element: AtomicInsightResultList) => {
     const qs = (part: string, exact = true) =>
-      element.shadowRoot?.querySelectorAll(
-        `[part${exact ? '' : '*'}="${part}"]`
-      );
+      element.shadowRoot?.querySelectorAll(`[part${exact ? '' : '*'}="${part}"]`);
 
     return {
       outline: qs('outline', false),

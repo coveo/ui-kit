@@ -21,8 +21,7 @@ export function getOrganizationEndpoint(
   }
 
   const environmentSuffix = environment === 'prod' ? '' : environment;
-  const endpointTypePart =
-    endpointType === 'platform' ? '' : `.${endpointType}`;
+  const endpointTypePart = endpointType === 'platform' ? '' : `.${endpointType}`;
 
   return `https://${organizationId}${endpointTypePart}.org${environmentSuffix}.coveo.com`;
 }

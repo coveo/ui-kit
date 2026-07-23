@@ -6,10 +6,7 @@ import {fetchDocumentSuggestions} from '../../features/document-suggestion/docum
 import {documentSuggestionReducer as documentSuggestion} from '../../features/document-suggestion/document-suggestion-slice.js';
 import {getDocumentSuggestionInitialState} from '../../features/document-suggestion/document-suggestion-state.js';
 import {buildMockCaseAssistState} from '../../test/mock-case-assist-state.js';
-import {
-  buildMockCaseAssistEngine,
-  type MockedCaseAssistEngine,
-} from '../../test/mock-engine-v2.js';
+import {buildMockCaseAssistEngine, type MockedCaseAssistEngine} from '../../test/mock-engine-v2.js';
 import {
   buildDocumentSuggestionList,
   type DocumentSuggestionList,
@@ -56,9 +53,7 @@ describe('DocumentSuggestionList', () => {
 
   describe('#fetch', () => {
     it('dispatches a #fetchDocumentSuggestions', () => {
-      const mockedFetchDocumentSuggestions = vi.mocked(
-        fetchDocumentSuggestions
-      );
+      const mockedFetchDocumentSuggestions = vi.mocked(fetchDocumentSuggestions);
 
       docSuggestionList.fetch();
 

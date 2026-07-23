@@ -11,10 +11,7 @@ describe('atomic-component-error', () => {
     const element = document.createElement('div');
     const error = new Error('Test error');
     return fixture(
-      html`<atomic-component-error
-        .element=${element}
-        .error=${error}
-      ></atomic-component-error>`
+      html`<atomic-component-error .element=${element} .error=${error}></atomic-component-error>`
     );
   };
 
@@ -54,10 +51,7 @@ describe('atomic-component-error', () => {
         .error=${error}
       ></atomic-component-error-clone>`
     );
-    customElements.define(
-      'atomic-component-error-clone',
-      class extends AtomicComponentError {}
-    );
+    customElements.define('atomic-component-error-clone', class extends AtomicComponentError {});
 
     await el.updateComplete;
 

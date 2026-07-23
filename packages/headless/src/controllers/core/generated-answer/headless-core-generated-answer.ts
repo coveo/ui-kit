@@ -27,10 +27,7 @@ import type {
   SearchSection,
 } from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
-import {
-  buildController,
-  type Controller,
-} from '../../controller/headless-controller.js';
+import {buildController, type Controller} from '../../controller/headless-controller.js';
 
 /**
  * The `GeneratedAnswer` controller uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
@@ -127,11 +124,7 @@ export interface GeneratedAnswer extends Controller {
    * @param citationHoverTimeMs - The number of milliseconds spent hovering over the citation.
    * @param answerId - Answer Id of the hovered citation's answer.
    */
-  logCitationHover(
-    citationId: string,
-    citationHoverTimeMs: number,
-    answerId: string
-  ): void;
+  logCitationHover(citationId: string, citationHoverTimeMs: number, answerId: string): void;
 }
 
 export interface GeneratedAnswerAnalyticsClient {
@@ -141,24 +134,13 @@ export interface GeneratedAnswerAnalyticsClient {
   /** @deprecated */
   logDislikeGeneratedAnswer(): CustomAction;
   logDislikeGeneratedAnswer(answerId?: string): CustomAction;
-  logGeneratedAnswerFeedback: (
-    feedback: GeneratedAnswerFeedback
-  ) => CustomAction;
+  logGeneratedAnswerFeedback: (feedback: GeneratedAnswerFeedback) => CustomAction;
   /** @deprecated */
   logOpenGeneratedAnswerSource(citationId: string): CustomAction;
-  logOpenGeneratedAnswerSource(
-    citationId: string,
-    answerId?: string
-  ): CustomAction;
-  logOpenGeneratedAnswerFollowUpSource?(
-    citationId: string,
-    answerId: string
-  ): CustomAction;
+  logOpenGeneratedAnswerSource(citationId: string, answerId?: string): CustomAction;
+  logOpenGeneratedAnswerFollowUpSource?(citationId: string, answerId: string): CustomAction;
   /** @deprecated */
-  logHoverCitation(
-    citationId: string,
-    citationHoverTimeMs: number
-  ): CustomAction;
+  logHoverCitation(citationId: string, citationHoverTimeMs: number): CustomAction;
   logHoverCitation(
     citationId: string,
     citationHoverTimeMs: number,
@@ -277,9 +259,7 @@ export function buildCoreGeneratedAnswer(
     dislike() {
       if (!this.state.disliked) {
         dispatch(dislikeGeneratedAnswer());
-        dispatch(
-          analyticsClient.logDislikeGeneratedAnswer(this.state.answerId)
-        );
+        dispatch(analyticsClient.logDislikeGeneratedAnswer(this.state.answerId));
       }
     },
 
@@ -298,24 +278,12 @@ export function buildCoreGeneratedAnswer(
 
     // TODO: SFINT-6665
     logCitationClick(citationId: string, answerId?: string) {
-      dispatch(
-        analyticsClient.logOpenGeneratedAnswerSource(citationId, answerId)
-      );
+      dispatch(analyticsClient.logOpenGeneratedAnswerSource(citationId, answerId));
     },
 
     // TODO: SFINT-6665
-    logCitationHover(
-      citationId: string,
-      citationHoverTimeMs: number,
-      answerId?: string
-    ) {
-      dispatch(
-        analyticsClient.logHoverCitation(
-          citationId,
-          citationHoverTimeMs,
-          answerId
-        )
-      );
+    logCitationHover(citationId: string, citationHoverTimeMs: number, answerId?: string) {
+      dispatch(analyticsClient.logHoverCitation(citationId, citationHoverTimeMs, answerId));
     },
 
     show() {

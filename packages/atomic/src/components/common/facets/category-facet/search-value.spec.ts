@@ -3,23 +3,16 @@ import {beforeAll, describe, expect, it, type MockedFunction, vi} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {getAllCategoriesLocalizedLabel} from './all-categories-localized-label';
-import {
-  type CategoryFacetSearchValueProps,
-  renderCategoryFacetSearchValue,
-} from './search-value';
+import {type CategoryFacetSearchValueProps, renderCategoryFacetSearchValue} from './search-value';
 
 vi.mock('./all-categories-localized-label', {spy: true});
 vi.mock('@/src/utils/field-utils', () => ({
-  getFieldValueCaption: vi.fn(
-    (field: string, value: string) => `${field}: ${value}`
-  ),
+  getFieldValueCaption: vi.fn((field: string, value: string) => `${field}: ${value}`),
 }));
 
 describe('#renderCategoryFacetSearchValue', () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;
-  let mockedGetAllCategoriesLocalizedLabel: MockedFunction<
-    typeof getAllCategoriesLocalizedLabel
-  >;
+  let mockedGetAllCategoriesLocalizedLabel: MockedFunction<typeof getAllCategoriesLocalizedLabel>;
 
   beforeAll(async () => {
     i18n = await createTestI18n();
@@ -28,9 +21,7 @@ describe('#renderCategoryFacetSearchValue', () => {
       .mockReturnValue('All Categories');
   });
 
-  const renderComponent = async (
-    props: Partial<CategoryFacetSearchValueProps> = {}
-  ) => {
+  const renderComponent = async (props: Partial<CategoryFacetSearchValueProps> = {}) => {
     const defaultProps: CategoryFacetSearchValueProps = {
       value: {
         count: 42,

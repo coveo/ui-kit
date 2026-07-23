@@ -12,9 +12,7 @@ export interface ItemTextProps<T> {
   getProperty: (result: T, property: string) => unknown;
 }
 
-export const renderItemTextFallback: FunctionalComponentWithChildren<
-  ItemTextProps<unknown>
-> =
+export const renderItemTextFallback: FunctionalComponentWithChildren<ItemTextProps<unknown>> =
   ({props}) =>
   (children) => {
     const {getProperty, item, field, host, logger, defaultValue} = props;

@@ -6,10 +6,7 @@ import type {CommerceEngineOptions as OriginalCommerceEngineOptions} from '../..
 import type {NavigatorContextProvider} from '../../../app/navigator-context-provider.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import {createAccessTokenManager} from '../../common/access-token-manager.js';
-import {
-  buildFactory,
-  type CommerceEngineDefinitionOptions,
-} from '../factories/build-factory.js';
+import {buildFactory, type CommerceEngineDefinitionOptions} from '../factories/build-factory.js';
 import {hydratedStaticStateFactory} from '../factories/hydrated-state-factory.js';
 import {hydratedRecommendationStaticStateFactory} from '../factories/recommendation-hydrated-state-factory.js';
 import {fetchRecommendationStaticStateFactory} from '../factories/recommendation-static-state-factory.js';
@@ -26,11 +23,7 @@ export type CommerceEngineOptions = OriginalCommerceEngineOptions;
 export interface CommerceEngineDefinition<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
-> extends EngineDefinition<
-  TControllers,
-  CommerceEngineOptions,
-  TSolutionType
-> {}
+> extends EngineDefinition<TControllers, CommerceEngineOptions, TSolutionType> {}
 
 /**
  * Initializes a Commerce engine definition in SSR with given controllers definitions and commerce engine config.
@@ -45,14 +38,8 @@ export function defineCommerceEngine<
 >(
   options: CommerceEngineDefinitionOptions<TControllerDefinitions>
 ): {
-  listingEngineDefinition: CommerceEngineDefinition<
-    TControllerDefinitions,
-    SolutionType.listing
-  >;
-  searchEngineDefinition: CommerceEngineDefinition<
-    TControllerDefinitions,
-    SolutionType.search
-  >;
+  listingEngineDefinition: CommerceEngineDefinition<TControllerDefinitions, SolutionType.listing>;
+  searchEngineDefinition: CommerceEngineDefinition<TControllerDefinitions, SolutionType.search>;
   standaloneEngineDefinition: CommerceEngineDefinition<
     TControllerDefinitions,
     SolutionType.standalone
@@ -64,19 +51,13 @@ export function defineCommerceEngine<
 } {
   const {controllers: controllerDefinitions, ...engineOptions} = options;
 
-  const setNavigatorContextProvider = (
-    navigatorContextProvider: NavigatorContextProvider
-  ) => {
+  const setNavigatorContextProvider = (navigatorContextProvider: NavigatorContextProvider) => {
     engineOptions.navigatorContextProvider = navigatorContextProvider;
   };
 
-  const tokenManager = createAccessTokenManager(
-    engineOptions.configuration.accessToken
-  );
+  const tokenManager = createAccessTokenManager(engineOptions.configuration.accessToken);
 
-  const onAccessTokenUpdate = (
-    updateCallback: (accessToken: string) => void
-  ) => {
+  const onAccessTokenUpdate = (updateCallback: (accessToken: string) => void) => {
     tokenManager.registerCallback(updateCallback);
   };
 
@@ -106,10 +87,7 @@ export function defineCommerceEngine<
     tokenManager.setAccessToken(accessToken);
   };
 
-  const build = buildFactory<TControllerDefinitions>(
-    controllerDefinitions,
-    definitionOptions
-  );
+  const build = buildFactory<TControllerDefinitions>(controllerDefinitions, definitionOptions);
   const fetchStaticState = fetchStaticStateFactory<TControllerDefinitions>(
     controllerDefinitions,
     definitionOptions
@@ -153,10 +131,7 @@ export function defineCommerceEngine<
       setNavigatorContextProvider,
       getAccessToken,
       setAccessToken,
-    } as CommerceEngineDefinition<
-      TControllerDefinitions,
-      SolutionType.recommendation
-    >,
+    } as CommerceEngineDefinition<TControllerDefinitions, SolutionType.recommendation>,
     // TODO KIT-3738 :  The standaloneEngineDefinition should not be async since no request is sent to the API
     standaloneEngineDefinition: {
       build: build(SolutionType.standalone),
@@ -165,9 +140,6 @@ export function defineCommerceEngine<
       setNavigatorContextProvider,
       getAccessToken,
       setAccessToken,
-    } as CommerceEngineDefinition<
-      TControllerDefinitions,
-      SolutionType.standalone
-    >,
+    } as CommerceEngineDefinition<TControllerDefinitions, SolutionType.standalone>,
   };
 }

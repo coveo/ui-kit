@@ -3,10 +3,7 @@ import {html} from 'lit';
 import {beforeAll, describe, expect, it} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {
-  renderSnippetWrapper,
-  type SnippetWrapperProps,
-} from './snippet-wrapper';
+import {renderSnippetWrapper, type SnippetWrapperProps} from './snippet-wrapper';
 
 describe('#renderSnippetWrapper', () => {
   let i18n: i18n;
@@ -15,10 +12,7 @@ describe('#renderSnippetWrapper', () => {
     i18n = await createTestI18n();
   });
 
-  const renderComponent = async (
-    props: Partial<SnippetWrapperProps> = {},
-    children = html``
-  ) => {
+  const renderComponent = async (props: Partial<SnippetWrapperProps> = {}, children = html``) => {
     const element = await renderFunctionFixture(
       html`${renderSnippetWrapper({
         props: {

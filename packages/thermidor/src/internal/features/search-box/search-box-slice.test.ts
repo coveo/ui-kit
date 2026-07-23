@@ -8,14 +8,8 @@ import {
   getOrCreateSearchBoxSlice,
   initialSearchBoxState,
 } from './search-box-slice.js';
-import {
-  createSearchBoxActions,
-  getOrCreateSearchBoxActions,
-} from './search-box-actions.js';
-import {
-  createSearchBoxSelectors,
-  getOrCreateSearchBoxSelectors,
-} from './search-box-selectors.js';
+import {createSearchBoxActions, getOrCreateSearchBoxActions} from './search-box-actions.js';
+import {createSearchBoxSelectors, getOrCreateSearchBoxSelectors} from './search-box-selectors.js';
 import {createTestEngine, createTestInterface} from '@/src/test/test-utils.js';
 
 describe('createSearchBoxActions', () => {
@@ -69,10 +63,7 @@ describe('createSearchBoxSlice', () => {
     const actions = getOrCreateSearchBoxActions(iface);
     const slice = createSearchBoxSlice('test', actions);
 
-    const state = slice.reducer(
-      initialSearchBoxState,
-      actions.setQuery('laptops')
-    );
+    const state = slice.reducer(initialSearchBoxState, actions.setQuery('laptops'));
     expect(state.query).toBe('laptops');
   });
 

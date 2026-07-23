@@ -25,9 +25,5 @@ export function canBeFormUrlEncoded(obj: unknown): obj is FormEncodable {
 }
 
 function isPrimitive(val: unknown) {
-  return (
-    typeof val === 'string' ||
-    typeof val === 'number' ||
-    typeof val === 'boolean'
-  );
+  return typeof val === 'string' || typeof val === 'number' || typeof val === 'boolean';
 }

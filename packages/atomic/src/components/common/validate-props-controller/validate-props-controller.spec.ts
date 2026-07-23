@@ -1,14 +1,7 @@
 import {Schema, StringValue} from '@coveo/bueno';
 import {LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
-import {
-  beforeEach,
-  describe,
-  expect,
-  it,
-  type MockedFunction,
-  vi,
-} from 'vitest';
+import {beforeEach, describe, expect, it, type MockedFunction, vi} from 'vitest';
 import {deepEqual} from '@/src/utils/compare-utils';
 import {fixtureWrapper} from '@/vitest-utils/testing-helpers/fixture-wrapper';
 import {ValidatePropsController} from './validate-props-controller';
@@ -50,9 +43,7 @@ describe('ValidatePropsController', () => {
     });
 
     it('should register itself as a controller with the host', () => {
-      expect(mockElement.addController).toHaveBeenCalledExactlyOnceWith(
-        controller
-      );
+      expect(mockElement.addController).toHaveBeenCalledExactlyOnceWith(controller);
     });
 
     describe('when the host is connected to the DOM', () => {
@@ -103,10 +94,7 @@ describe('ValidatePropsController', () => {
         mockElement.requestUpdate();
         await mockElement.updateComplete;
 
-        expect(vi.mocked(deepEqual)).toHaveBeenCalledExactlyOnceWith(
-          newProps,
-          props
-        );
+        expect(vi.mocked(deepEqual)).toHaveBeenCalledExactlyOnceWith(newProps, props);
       });
 
       it('should not revalidate when the props have not changed', async () => {
@@ -186,9 +174,7 @@ describe('ValidatePropsController', () => {
     });
 
     it('should register itself as a controller with the host', () => {
-      expect(mockElement.addController).toHaveBeenCalledExactlyOnceWith(
-        controller
-      );
+      expect(mockElement.addController).toHaveBeenCalledExactlyOnceWith(controller);
     });
 
     describe('when the host is connected to the DOM', () => {
@@ -209,9 +195,7 @@ describe('ValidatePropsController', () => {
         await mockElement.updateComplete;
 
         expect(consoleWarnSpy).toHaveBeenCalledWith(
-          expect.stringContaining(
-            'Prop validation failed for component test-element'
-          ),
+          expect.stringContaining('Prop validation failed for component test-element'),
           mockElement
         );
         expect(mockElement.error).toBeUndefined();
@@ -241,9 +225,7 @@ describe('ValidatePropsController', () => {
           controller.hostUpdate();
 
           expect(consoleWarnSpy).toHaveBeenCalledWith(
-            expect.stringContaining(
-              'Prop validation failed for component test-element'
-            ),
+            expect.stringContaining('Prop validation failed for component test-element'),
             mockElement
           );
           expect(mockElement.error).toBeUndefined();

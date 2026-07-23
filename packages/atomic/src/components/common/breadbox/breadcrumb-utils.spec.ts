@@ -1,8 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {
-  getFirstBreadcrumbValue,
-  joinBreadcrumbValues,
-} from './breadcrumb-utils';
+import {getFirstBreadcrumbValue, joinBreadcrumbValues} from './breadcrumb-utils';
 
 describe('#joinBreadcrumbValues', () => {
   const breadcrumb = {

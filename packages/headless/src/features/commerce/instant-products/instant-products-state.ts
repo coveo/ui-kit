@@ -11,9 +11,7 @@ export interface InstantProductsCache extends InstantItemsCache {
   products: Product[];
 }
 
-export type InstantProductsState = InstantItemsState<
-  Record<string, InstantProductsCache>
->;
+export type InstantProductsState = InstantItemsState<Record<string, InstantProductsCache>>;
 
 export function getInstantProductsInitialState(): InstantProductsState {
   return {};

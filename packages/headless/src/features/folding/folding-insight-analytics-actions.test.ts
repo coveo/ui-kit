@@ -1,9 +1,6 @@
 import {CoveoInsightClient} from 'coveo.analytics';
 import type {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
-import {
-  buildMockInsightEngine,
-  type MockedInsightEngine,
-} from '../../test/mock-engine-v2.js';
+import {buildMockInsightEngine, type MockedInsightEngine} from '../../test/mock-engine-v2.js';
 import {buildMockInsightState} from '../../test/mock-insight-state.js';
 import {buildMockRaw} from '../../test/mock-raw.js';
 import {buildMockResult} from '../../test/mock-result.js';
@@ -121,9 +118,7 @@ describe('folding insight analytics actions', () => {
     const mockToUse = mockLogShowMoreFoldedResults;
     expect(mockToUse).toHaveBeenCalledTimes(1);
     expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedDocumentInfo);
-    expect(mockToUse.mock.calls[0][1]).toStrictEqual(
-      expectedDocumentIdentifier
-    );
+    expect(mockToUse.mock.calls[0][1]).toStrictEqual(expectedDocumentIdentifier);
     expect(mockToUse.mock.calls[0][2]).toStrictEqual(expectedCaseContext);
   });
 

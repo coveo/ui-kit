@@ -11,18 +11,14 @@ export class NoResultsPageObject extends BasePageObject {
   }
 
   ariaLive(query?: string) {
-    const text = query
-      ? `We couldn't find anything for ${query}`
-      : 'No results';
+    const text = query ? `We couldn't find anything for ${query}` : 'No results';
 
     return this.page.getByRole('status').filter({hasText: text});
   }
 
   message(query?: string) {
     return this.page.locator('[part="no-results"]', {
-      hasText: query
-        ? `We couldn't find anything for "${query}"`
-        : 'No results',
+      hasText: query ? `We couldn't find anything for "${query}"` : 'No results',
     });
   }
 

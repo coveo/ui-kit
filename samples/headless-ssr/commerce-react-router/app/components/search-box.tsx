@@ -1,19 +1,13 @@
 import {useState} from 'react';
 import {useInitializeRecentQueries} from '@/app/hooks/use-recent-queries';
-import {
-  useInstantProducts,
-  useRecentQueriesList,
-  useSearchBox,
-} from '@/lib/commerce-engine';
+import {useInstantProducts, useRecentQueriesList, useSearchBox} from '@/lib/commerce-engine';
 import InstantProducts from './instant-product.js';
 import RecentQueries from './recent-queries.js';
 
 export default function SearchBox() {
   const {state, methods} = useSearchBox();
-  const {state: recentQueriesState, methods: recentQueriesController} =
-    useRecentQueriesList();
-  const {state: instantProductsState, methods: instantProductsController} =
-    useInstantProducts();
+  const {state: recentQueriesState, methods: recentQueriesController} = useRecentQueriesList();
+  const {state: instantProductsState, methods: instantProductsController} = useInstantProducts();
 
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [isSelectingSuggestion, setIsSelectingSuggestion] = useState(false);
@@ -80,14 +74,8 @@ export default function SearchBox() {
                 <li key={suggestion.rawValue}>
                   <button
                     type="button"
-                    onMouseEnter={() =>
-                      instantProductsController?.updateQuery(
-                        suggestion.rawValue
-                      )
-                    }
-                    onClick={() =>
-                      methods?.selectSuggestion(suggestion.rawValue)
-                    }
+                    onMouseEnter={() => instantProductsController?.updateQuery(suggestion.rawValue)}
+                    onClick={() => methods?.selectSuggestion(suggestion.rawValue)}
                     dangerouslySetInnerHTML={{
                       __html: suggestion.highlightedValue,
                     }}

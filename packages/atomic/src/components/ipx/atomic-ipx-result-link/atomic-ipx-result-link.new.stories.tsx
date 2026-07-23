@@ -1,8 +1,4 @@
-import type {
-  Decorator,
-  Meta,
-  StoryObj as Story,
-} from '@storybook/web-components-vite';
+import type {Decorator, Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {html} from 'lit';
 import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
 import type {SearchResponse} from '@coveo/platform-mock-api/search/search-response';
@@ -23,8 +19,7 @@ searchApiHarness.searchEndpoint.mock((response) => ({
   totalCountFiltered: 1,
 }));
 
-const {decorator: recsInterfaceDecorator, play} =
-  wrapInRecommendationInterface();
+const {decorator: recsInterfaceDecorator, play} = wrapInRecommendationInterface();
 const {decorator: recsResultTemplateDecorator} = wrapInRecsResultTemplate();
 
 const resultSectionDecorator: Decorator = (story) => html`
@@ -39,11 +34,7 @@ const meta: Meta = {
   title: 'IPX/Ipx Result Link',
   id: 'atomic-ipx-result-link',
   render: () => html`<atomic-ipx-result-link></atomic-ipx-result-link>`,
-  decorators: [
-    resultSectionDecorator,
-    recsResultTemplateDecorator,
-    recsInterfaceDecorator,
-  ],
+  decorators: [resultSectionDecorator, recsResultTemplateDecorator, recsInterfaceDecorator],
   parameters: {
     ...parameters,
     msw: {
@@ -76,9 +67,7 @@ export const WithHrefTemplate: Story = {
   name: 'With href template',
   decorators: [
     () => html`
-      <atomic-ipx-result-link
-        href-template="\${clickUri}?source=ipx"
-      ></atomic-ipx-result-link>
+      <atomic-ipx-result-link href-template="\${clickUri}?source=ipx"></atomic-ipx-result-link>
     `,
   ],
 };

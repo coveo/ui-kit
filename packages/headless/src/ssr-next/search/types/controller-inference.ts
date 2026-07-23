@@ -10,10 +10,7 @@ import type {
 } from './controller-definition.js';
 
 type InferControllerPropsFromDefinition<
-  TController extends ControllerDefinition<
-    CoreEngine | CoreEngineNext,
-    Controller
-  >,
+  TController extends ControllerDefinition<CoreEngine | CoreEngineNext, Controller>,
 > =
   TController extends ControllerDefinitionWithProps<
     CoreEngine | CoreEngineNext,
@@ -21,18 +18,12 @@ type InferControllerPropsFromDefinition<
     infer Props
   >
     ? Props
-    : TController extends ControllerDefinitionWithoutProps<
-          CoreEngine | CoreEngineNext,
-          Controller
-        >
+    : TController extends ControllerDefinitionWithoutProps<CoreEngine | CoreEngineNext, Controller>
       ? {}
       : unknown;
 
 export type InferControllerPropsMapFromDefinitions<
-  TControllers extends ControllerDefinitionsMap<
-    CoreEngine | CoreEngineNext,
-    Controller
-  >,
+  TControllers extends ControllerDefinitionsMap<CoreEngine | CoreEngineNext, Controller>,
 > = {
   [K in keyof TControllers as HasKeys<
     InferControllerPropsFromDefinition<TControllers[K]>
@@ -42,27 +33,15 @@ export type InferControllerPropsMapFromDefinitions<
 };
 
 export type InferControllerFromDefinition<
-  TDefinition extends ControllerDefinition<
-    CoreEngine | CoreEngineNext,
-    Controller
-  >,
-> =
-  TDefinition extends ControllerDefinition<infer _, infer TController>
-    ? TController
-    : never;
+  TDefinition extends ControllerDefinition<CoreEngine | CoreEngineNext, Controller>,
+> = TDefinition extends ControllerDefinition<infer _, infer TController> ? TController : never;
 
 export type InferControllersMapFromDefinition<
-  TControllers extends ControllerDefinitionsMap<
-    CoreEngine | CoreEngineNext,
-    Controller
-  >,
+  TControllers extends ControllerDefinitionsMap<CoreEngine | CoreEngineNext, Controller>,
 > = {[K in keyof TControllers]: InferControllerFromDefinition<TControllers[K]>};
 
 export type InferControllerStaticStateMapFromDefinitions<
-  TControllers extends ControllerDefinitionsMap<
-    CoreEngine | CoreEngineNext,
-    Controller
-  >,
+  TControllers extends ControllerDefinitionsMap<CoreEngine | CoreEngineNext, Controller>,
 > = {
   [K in keyof TControllers]: InferControllerStaticStateFromController<
     InferControllerFromDefinition<TControllers[K]>

@@ -27,9 +27,7 @@ test.describe('atomic-rating-facet', () => {
     });
   });
 
-  test('should select and clear rating value when displayed as links', async ({
-    facet,
-  }) => {
+  test('should select and clear rating value when displayed as links', async ({facet}) => {
     await facet.load({story: 'display-as-link'});
 
     await test.step('Verify clear button is not visible initially', async () => {
@@ -84,9 +82,7 @@ test.describe('atomic-rating-facet', () => {
   });
 
   // TODO: Issue #6691: Unskip visual tests after fixing CI snapshot issues
-  test.skip('should match baseline after selecting a value', async ({
-    facet,
-  }) => {
+  test.skip('should match baseline after selecting a value', async ({facet}) => {
     await test.step('Load facet and select a value', async () => {
       await facet.load({story: 'default'});
       await facet.hydrated.waitFor();

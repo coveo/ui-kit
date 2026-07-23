@@ -53,10 +53,7 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import {
-  AriaLiveRegionController,
-  FocusTargetController,
-} from '@/src/utils/accessibility-utils';
+import {AriaLiveRegionController, FocusTargetController} from '@/src/utils/accessibility-utils';
 import {getFieldCaptions, getFieldValueCaption} from '@/src/utils/field-utils';
 import {mapProperty} from '@/src/utils/props-utils';
 
@@ -102,10 +99,7 @@ import {mapProperty} from '@/src/utils/props-utils';
 @customElement('atomic-color-facet')
 @bindings()
 @withTailwindStyles
-export class AtomicColorFacet
-  extends LitElement
-  implements InitializableComponent<Bindings>
-{
+export class AtomicColorFacet extends LitElement implements InitializableComponent<Bindings> {
   private static readonly propsSchema = new Schema({
     field: new StringValue({required: true, emptyAllowed: false}),
     numberOfValues: new NumberValue({min: 1, required: false}),
@@ -160,10 +154,7 @@ export class AtomicColorFacet
         display: grid;
         padding-left: 0.5rem;
         padding-right: 0.5rem;
-        grid-template-columns: repeat(
-          var(--atomic-facet-color-boxes-per-row, 3),
-          minmax(0, 1fr)
-        );
+        grid-template-columns: repeat(var(--atomic-facet-color-boxes-per-row, 3), minmax(0, 1fr));
         gap: var(--atomic-facet-color-boxes-gap, 0.5rem);
       }
 
@@ -411,9 +402,7 @@ export class AtomicColorFacet
         sortCriteria: this.sortCriteria,
         resultsMustMatch: this.resultsMustMatch,
         displayValuesAs: this.displayValuesAs,
-        allowedValues: Array.isArray(this.allowedValues)
-          ? this.allowedValues
-          : [],
+        allowedValues: Array.isArray(this.allowedValues) ? this.allowedValues : [],
         customSort: Array.isArray(this.customSort) ? this.customSort : [],
         tabsExcluded: this.tabsExcluded,
         tabsIncluded: this.tabsIncluded,
@@ -450,9 +439,7 @@ export class AtomicColorFacet
   public shouldUpdate(changedProperties: Map<string, unknown>) {
     if (changedProperties.has('facetState') && this.withSearch) {
       const currentFacetState = this.facetState;
-      const previousFacetState = changedProperties.get(
-        'facetState'
-      ) as FacetState;
+      const previousFacetState = changedProperties.get('facetState') as FacetState;
 
       if (previousFacetState && currentFacetState) {
         return shouldUpdateFacetSearchComponent(
@@ -469,8 +456,7 @@ export class AtomicColorFacet
       this.searchStatusState &&
       !this.searchStatusState.hasError &&
       this.facetState?.enabled &&
-      (!this.searchStatusState.firstSearchExecuted ||
-        this.facetState.values.length > 0)
+      (!this.searchStatusState.firstSearchExecuted || this.facetState.values.length > 0)
     );
   }
 
@@ -479,9 +465,7 @@ export class AtomicColorFacet
   render() {
     return html`${when(this.shouldRenderFacet(), () =>
       this.searchStatusState.firstSearchExecuted
-        ? renderFacetContainer()(html`
-            ${this.renderFacetHeader()} ${this.renderBody()}
-          `)
+        ? renderFacetContainer()(html` ${this.renderFacetHeader()} ${this.renderBody()} `)
         : renderFacetPlaceholder({
             props: {
               numberOfValues: this.numberOfValues,
@@ -555,11 +539,7 @@ export class AtomicColorFacet
     isShowLessFocusTarget: boolean,
     isShowMoreFocusTarget: boolean
   ) {
-    const displayValue = getFieldValueCaption(
-      this.facetId!,
-      facetValue.value,
-      this.bindings.i18n
-    );
+    const displayValue = getFieldValueCaption(this.facetId!, facetValue.value, this.bindings.i18n);
     const isSelected = facetValue.state === 'selected';
     const isExcluded = facetValue.state === 'excluded';
     const partValueWithDisplayValue = displayValue.replace(/[^a-z0-9]/gi, '');
@@ -624,9 +604,7 @@ export class AtomicColorFacet
   }
 
   private renderValuesContainer(children: unknown[], query?: string) {
-    const classes = `mt-3 ${
-      this.displayValuesAs === 'box' ? 'box-color-container' : ''
-    }`;
+    const classes = `mt-3 ${this.displayValuesAs === 'box' ? 'box-color-container' : ''}`;
     return renderFacetValuesGroup({
       props: {
         i18n: this.bindings.i18n,
@@ -663,10 +641,7 @@ export class AtomicColorFacet
       this.facet.state.values.map((value, i) => {
         const shouldFocusOnShowLessAfterInteraction = i === 0;
         const shouldFocusOnShowMoreAfterInteraction =
-          i ===
-          (this.sortCriteria === 'automatic'
-            ? 0
-            : this.resultIndexToFocusOnShowMore);
+          i === (this.sortCriteria === 'automatic' ? 0 : this.resultIndexToFocusOnShowMore);
 
         return this.renderValue(
           value,
@@ -742,15 +717,12 @@ export class AtomicColorFacet
   }
 
   private initConditionManager() {
-    this.facetConditionsManager = buildFacetConditionsManager(
-      this.bindings.engine,
-      {
-        facetId: this.facetId!,
-        conditions: parseDependsOn<
-          FacetValueRequest | CategoryFacetValueRequest
-        >(this.dependsOn || {}),
-      }
-    );
+    this.facetConditionsManager = buildFacetConditionsManager(this.bindings.engine, {
+      facetId: this.facetId!,
+      conditions: parseDependsOn<FacetValueRequest | CategoryFacetValueRequest>(
+        this.dependsOn || {}
+      ),
+    });
   }
 
   private registerFacet() {
@@ -766,10 +738,7 @@ export class AtomicColorFacet
   }
 
   private initAriaLive() {
-    this.facetSearchAriaLive = new AriaLiveRegionController(
-      this,
-      'facet-search'
-    );
+    this.facetSearchAriaLive = new AriaLiveRegionController(this, 'facet-search');
     announceFacetSearchResultsWithAriaLive(
       this.facet,
       this.label,
@@ -790,9 +759,7 @@ export class AtomicColorFacet
   }
 
   private get definedLabel() {
-    return this.label === 'no-label' && this.facetState?.label
-      ? this.facetState.label
-      : this.label;
+    return this.label === 'no-label' && this.facetState?.label ? this.facetState.label : this.label;
   }
 
   private get focusTargets(): {

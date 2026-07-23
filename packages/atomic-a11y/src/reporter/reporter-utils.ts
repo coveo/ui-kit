@@ -25,9 +25,7 @@ function isStorybookReport(value: unknown): value is StorybookReport {
   return isRecord(value) && typeof value.type === 'string';
 }
 
-export function isStorybookTaskMeta(
-  value: unknown
-): value is StorybookTaskMeta {
+export function isStorybookTaskMeta(value: unknown): value is StorybookTaskMeta {
   if (!isRecord(value)) {
     return false;
   }
@@ -37,9 +35,7 @@ export function isStorybookTaskMeta(
   }
 
   if (Object.hasOwn(value, 'reports')) {
-    return (
-      Array.isArray(value.reports) && value.reports.every(isStorybookReport)
-    );
+    return Array.isArray(value.reports) && value.reports.every(isStorybookReport);
   }
 
   return true;
@@ -54,9 +50,7 @@ export interface StorybookInteractiveReport {
   };
 }
 
-export function isInteractiveReport(
-  report: unknown
-): report is StorybookInteractiveReport {
+export function isInteractiveReport(report: unknown): report is StorybookInteractiveReport {
   if (!isRecord(report)) {
     return false;
   }

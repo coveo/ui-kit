@@ -22,9 +22,7 @@ import {
   type DateFacetOptions,
 } from './headless-commerce-date-facet.js';
 
-vi.mock(
-  '../../../../../features/commerce/facets/date-facet/date-facet-actions'
-);
+vi.mock('../../../../../features/commerce/facets/date-facet/date-facet-actions');
 
 describe('DateFacet', () => {
   const facetId: string = 'date_facet_id';
@@ -46,9 +44,7 @@ describe('DateFacet', () => {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
       request: buildMockCommerceFacetRequest({facetId, type, ...config}),
     });
-    state.productListing.facets = [
-      buildMockCommerceDateFacetResponse({facetId}),
-    ];
+    state.productListing.facets = [buildMockCommerceDateFacetResponse({facetId})];
   }
 
   beforeEach(() => {
@@ -100,14 +96,12 @@ describe('DateFacet', () => {
   describe('#setRanges', () => {
     let values: DateRangeRequest[];
     beforeEach(() => {
-      values = [buildMockCommerceDateFacetValue()].map(
-        ({start, end, endInclusive, state}) => ({
-          start,
-          end,
-          endInclusive,
-          state,
-        })
-      );
+      values = [buildMockCommerceDateFacetValue()].map(({start, end, endInclusive, state}) => ({
+        start,
+        end,
+        endInclusive,
+        state,
+      }));
       facet.setRanges(values);
     });
     it('dispatches #updateDateFacetValues with the correct payload', () => {

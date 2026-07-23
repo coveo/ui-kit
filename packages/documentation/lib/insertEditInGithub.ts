@@ -53,9 +53,7 @@ function buildMarkdownSourceMap(): Map<string, string> {
   }
 
   try {
-    const files = readdirSync(sourceDocsDir).filter(
-      (f) => f.endsWith('.md') || f.endsWith('.mdx')
-    );
+    const files = readdirSync(sourceDocsDir).filter((f) => f.endsWith('.md') || f.endsWith('.mdx'));
 
     for (const file of files) {
       const filePath = join(sourceDocsDir, file);
@@ -71,9 +69,7 @@ function buildMarkdownSourceMap(): Map<string, string> {
           mdSourceMap.set(normalizeKey(slugMatch[1]), repoRelativePath);
         }
 
-        const titleMatch = block.match(
-          /^\s*title:\s*['"]?([^'"\n]+)['"]?\s*$/m
-        );
+        const titleMatch = block.match(/^\s*title:\s*['"]?([^'"\n]+)['"]?\s*$/m);
         if (titleMatch) {
           mdSourceMap.set(normalizeKey(titleMatch[1]), repoRelativePath);
         }
@@ -197,9 +193,7 @@ export function insertEditInGithub(page: PageEvent<Reflection>) {
 
   // 3) Root index.html (TypeDoc's alias for documents/index.html)
   if (!githubUrl && (pageUrl === 'index.html' || pageUrl === '')) {
-    const inferredPath = inferSourceDocPath(
-      `${DOCUMENT_PAGE_PREFIX}index.html`
-    );
+    const inferredPath = inferSourceDocPath(`${DOCUMENT_PAGE_PREFIX}index.html`);
     if (inferredPath) {
       githubUrl = `${GITHUB_BASE}${inferredPath}`;
     }

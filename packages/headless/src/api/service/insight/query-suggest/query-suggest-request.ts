@@ -1,7 +1,4 @@
-import type {
-  ContextParam,
-  LocaleParam,
-} from '../../../platform-service-params.js';
+import type {ContextParam, LocaleParam} from '../../../platform-service-params.js';
 import type {
   ActionsHistoryParam,
   AnalyticsParam,

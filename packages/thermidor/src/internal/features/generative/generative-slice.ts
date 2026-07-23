@@ -14,8 +14,7 @@ export const initialGenerativeState: GenerativeState = {
 
 type GenerativeSlice = ReturnType<typeof createGenerativeSlice>;
 
-const CACHE_KEY: CacheKey<GenerativeSlice> =
-  createCacheKey<GenerativeSlice>('generative/slice');
+const CACHE_KEY: CacheKey<GenerativeSlice> = createCacheKey<GenerativeSlice>('generative/slice');
 
 export function createGenerativeSlice(
   interfaceId: string,
@@ -97,8 +96,7 @@ export function createGenerativeSlice(
         .addCase(actions.appendToolCallArgs, (state, {payload}) => {
           const turn = state.turns.find((t) => t.id === payload.turnId);
           const step = turn?.agentResponse?.reasoningSteps.find(
-            (s): s is ToolCallStep =>
-              s.type === 'tool-call' && s.id === payload.toolCallId
+            (s): s is ToolCallStep => s.type === 'tool-call' && s.id === payload.toolCallId
           );
           if (step) {
             step.args += payload.delta;
@@ -107,8 +105,7 @@ export function createGenerativeSlice(
         .addCase(actions.completeToolCall, (state, {payload}) => {
           const turn = state.turns.find((t) => t.id === payload.turnId);
           const step = turn?.agentResponse?.reasoningSteps.find(
-            (s): s is ToolCallStep =>
-              s.type === 'tool-call' && s.id === payload.toolCallId
+            (s): s is ToolCallStep => s.type === 'tool-call' && s.id === payload.toolCallId
           );
           if (step) {
             step.result = payload.result;

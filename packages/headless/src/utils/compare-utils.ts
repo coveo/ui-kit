@@ -6,18 +6,14 @@ export {deepEqual};
 export function arrayEqual<T>(
   firstArray: T[],
   secondArray: T[],
-  isEqual: (first: T, second: T) => boolean = (first, second) =>
-    first === second
+  isEqual: (first: T, second: T) => boolean = (first, second) => first === second
 ) {
   return (
     firstArray.length === secondArray.length &&
     firstArray.findIndex((val, i) => !isEqual(secondArray[i], val)) === -1
   );
 }
-function checkUnionEquality<T extends PrimitivesValues>(
-  set1: Set<T>,
-  set2: Set<T>
-): boolean {
+function checkUnionEquality<T extends PrimitivesValues>(set1: Set<T>, set2: Set<T>): boolean {
   const unionSet = new Set([...set1, ...set2]);
   return unionSet.size === set1.size && unionSet.size === set2.size;
 }
@@ -36,9 +32,7 @@ function arrayEqualAnyOrder<T>(firstArray: T[], secondArray: T[]) {
 
   return firstArray.every(
     (firstVal) =>
-      secondArray.findIndex((secondVal) =>
-        deepEqualAnyOrder(firstVal, secondVal)
-      ) !== -1
+      secondArray.findIndex((secondVal) => deepEqualAnyOrder(firstVal, secondVal)) !== -1
   );
 }
 
@@ -50,9 +44,7 @@ function arrayEqualAnyOrder<T>(firstArray: T[], secondArray: T[]) {
  * @param secondArray The second array of primitive values to compare.
  * @returns `true` if the arrays have the same elements in different orders, `false` otherwise. Unless the two arrays have only one identical element each, this function will return `false` if the two arrays have the same elements in the same order.
  */
-export const arrayEqualStrictlyDifferentOrder = <
-  T extends Exclude<PrimitivesValues, object>,
->(
+export const arrayEqualStrictlyDifferentOrder = <T extends Exclude<PrimitivesValues, object>>(
   firstArray: T[],
   secondArray: T[]
 ): boolean => {

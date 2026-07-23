@@ -18,9 +18,7 @@ describe('buildInteractiveCitationAnalyticsClient', () => {
   });
 
   it('calls logOpenGeneratedAnswerSource when no answerId is provided', () => {
-    vi.mocked(generativeQuestionAnsweringIdSelector).mockReturnValue(
-      headAnswerId
-    );
+    vi.mocked(generativeQuestionAnsweringIdSelector).mockReturnValue(headAnswerId);
     const client = buildInteractiveCitationAnalyticsClient(() => ({}));
 
     client.logCitationOpen(citationId);
@@ -30,32 +28,22 @@ describe('buildInteractiveCitationAnalyticsClient', () => {
   });
 
   it('calls logOpenGeneratedAnswerSource when answerId matches head answer', () => {
-    vi.mocked(generativeQuestionAnsweringIdSelector).mockReturnValue(
-      headAnswerId
-    );
+    vi.mocked(generativeQuestionAnsweringIdSelector).mockReturnValue(headAnswerId);
     const client = buildInteractiveCitationAnalyticsClient(() => ({}));
 
     client.logCitationOpen(citationId, headAnswerId);
 
-    expect(logOpenGeneratedAnswerSource).toHaveBeenCalledWith(
-      citationId,
-      headAnswerId
-    );
+    expect(logOpenGeneratedAnswerSource).toHaveBeenCalledWith(citationId, headAnswerId);
     expect(logOpenGeneratedAnswerFollowUpSource).not.toHaveBeenCalled();
   });
 
   it('calls logOpenGeneratedAnswerFollowUpSource when answerId differs from head answer', () => {
-    vi.mocked(generativeQuestionAnsweringIdSelector).mockReturnValue(
-      headAnswerId
-    );
+    vi.mocked(generativeQuestionAnsweringIdSelector).mockReturnValue(headAnswerId);
     const client = buildInteractiveCitationAnalyticsClient(() => ({}));
 
     client.logCitationOpen(citationId, followUpAnswerId);
 
-    expect(logOpenGeneratedAnswerFollowUpSource).toHaveBeenCalledWith(
-      citationId,
-      followUpAnswerId
-    );
+    expect(logOpenGeneratedAnswerFollowUpSource).toHaveBeenCalledWith(citationId, followUpAnswerId);
     expect(logOpenGeneratedAnswerSource).not.toHaveBeenCalled();
   });
 
@@ -65,10 +53,7 @@ describe('buildInteractiveCitationAnalyticsClient', () => {
 
     client.logCitationOpen(citationId, followUpAnswerId);
 
-    expect(logOpenGeneratedAnswerSource).toHaveBeenCalledWith(
-      citationId,
-      followUpAnswerId
-    );
+    expect(logOpenGeneratedAnswerSource).toHaveBeenCalledWith(citationId, followUpAnswerId);
     expect(logOpenGeneratedAnswerFollowUpSource).not.toHaveBeenCalled();
   });
 });

@@ -141,10 +141,7 @@ const FOLLOW_UP_INPUT_EXPORT_PARTS = [
 @customElement('atomic-generated-answer')
 @bindings()
 @withTailwindStyles
-export class AtomicGeneratedAnswer
-  extends LitElement
-  implements InitializableComponent<Bindings>
-{
+export class AtomicGeneratedAnswer extends LitElement implements InitializableComponent<Bindings> {
   static styles = [atomicGeneratedAnswerStyles];
   private static readonly propsSchema = new Schema({
     maxCollapsedHeight: new NumberValue({
@@ -155,12 +152,13 @@ export class AtomicGeneratedAnswer
   });
 
   // TODO V4 (KIT-5306): Remove converter and use arrayConverter directly.
-  private static readonly fieldsToIncludeInCitationsConverter =
-    createLegacyArrayStringConverter((value) => {
+  private static readonly fieldsToIncludeInCitationsConverter = createLegacyArrayStringConverter(
+    (value) => {
       console.warn(
         `Starting from Atomic v4, the "fields-to-include-in-citations" property will only accept an array of strings. Using a comma-separated string value ("${value}") is now deprecated. Please update the value to be a JSON array. For example: fields-to-include-in-citations='["fieldA","fieldB"]'`
       );
-    });
+    }
+  );
 
   private readonly DEFAULT_COLLAPSED_HEIGHT = 16;
   private readonly MAX_COLLAPSED_HEIGHT = 32;
@@ -294,17 +292,8 @@ export class AtomicGeneratedAnswer
   @state()
   private copyError = false;
 
-  private ariaMessage = new AriaLiveRegionController(
-    this,
-    'generated-answer',
-    false,
-    true
-  );
-  private ariaErrorMessage = new AriaLiveRegionController(
-    this,
-    'generated-answer-error',
-    true
-  );
+  private ariaMessage = new AriaLiveRegionController(this, 'generated-answer', false, true);
+  private ariaErrorMessage = new AriaLiveRegionController(this, 'generated-answer-error', true);
 
   constructor() {
     super();
@@ -360,10 +349,7 @@ export class AtomicGeneratedAnswer
     this.controller.insertFeedbackModal();
 
     if (window.ResizeObserver && this.collapsible) {
-      const debouncedAdaptAnswerHeight = debounce(
-        () => this.adaptAnswerHeight(),
-        100
-      );
+      const debouncedAdaptAnswerHeight = debounce(() => this.adaptAnswerHeight(), 100);
       this.resizeObserver = new ResizeObserver(debouncedAdaptAnswerHeight);
       this.resizeObserver.observe(this);
     }
@@ -376,9 +362,9 @@ export class AtomicGeneratedAnswer
 
   protected willUpdate(changedProperties: PropertyValueMap<this>) {
     if (changedProperties.has('tabManagerState' as keyof this)) {
-      const oldValue = changedProperties.get(
-        'tabManagerState' as keyof this
-      ) as TabManagerState | undefined;
+      const oldValue = changedProperties.get('tabManagerState' as keyof this) as
+        | TabManagerState
+        | undefined;
       if (oldValue && this.tabManagerState?.activeTab !== oldValue?.activeTab) {
         if (
           !shouldDisplayOnCurrentTab(
@@ -395,9 +381,9 @@ export class AtomicGeneratedAnswer
     }
 
     if (changedProperties.has('generatedAnswerState' as keyof this)) {
-      const oldState = changedProperties.get(
-        'generatedAnswerState' as keyof this
-      ) as GeneratedAnswerState | undefined;
+      const oldState = changedProperties.get('generatedAnswerState' as keyof this) as
+        | GeneratedAnswerState
+        | undefined;
       if (
         oldState &&
         this.generatedAnswerState?.expanded !== oldState?.expanded &&
@@ -405,18 +391,13 @@ export class AtomicGeneratedAnswer
       ) {
         const container = this.getAnswerContainer();
         if (container) {
-          this.toggleClass(
-            container,
-            'answer-collapsed',
-            !this.generatedAnswerState.expanded
-          );
+          this.toggleClass(container, 'answer-collapsed', !this.generatedAnswerState.expanded);
         }
       }
     }
 
     if (
-      (changedProperties.has('collapsible') ||
-        changedProperties.has('agentId')) &&
+      (changedProperties.has('collapsible') || changedProperties.has('agentId')) &&
       !this.isCollapsibleEnabled
     ) {
       this.resetCollapsibleStyles();
@@ -440,10 +421,7 @@ export class AtomicGeneratedAnswer
       'mx-auto mt-0 mb-4 border border-neutral shadow-lg bg-background rounded-lg text-on-background';
 
     if (this.hasNoAnswerGenerated) {
-      if (
-        this.generatedAnswerState?.cannotAnswer &&
-        this.hasCustomNoAnswerMessage
-      ) {
+      if (this.generatedAnswerState?.cannotAnswer && this.hasCustomNoAnswerMessage) {
         return html`
           <div>
             <aside
@@ -455,8 +433,7 @@ export class AtomicGeneratedAnswer
                 ${this.renderCardHeaderWrapper()}
                 ${when(
                   this.isAnswerVisible,
-                  () =>
-                    html`<article>${renderCustomNoAnswerMessage()}</article>`
+                  () => html`<article>${renderCustomNoAnswerMessage()}</article>`
                 )}
               </div>
             </aside>
@@ -483,8 +460,7 @@ export class AtomicGeneratedAnswer
                     class=${classMap({
                       'px-6': true,
                       'pt-6': true,
-                      'generated-answer-content-background':
-                        this.areFollowUpsEnabled,
+                      'generated-answer-content-background': this.areFollowUpsEnabled,
                       'agent-scrollable': this.areFollowUpsEnabled,
                     })}
                   >
@@ -515,9 +491,7 @@ export class AtomicGeneratedAnswer
 
   // Used by bindStateToController decorator via onUpdateCallbackMethod option
   public onGeneratedAnswerStateUpdate = () => {
-    if (
-      this.generatedAnswerState.isVisible !== this.controller.data.isVisible
-    ) {
+    if (this.generatedAnswerState.isVisible !== this.controller.data.isVisible) {
       this.controller.data = {
         ...this.controller.data,
         isVisible: this.generatedAnswerState.isVisible,
@@ -548,10 +522,7 @@ export class AtomicGeneratedAnswer
   }
 
   private get copyToClipboardTooltip() {
-    return this.controller.getCopyToClipboardTooltip(
-      this.copied,
-      this.copyError
-    );
+    return this.controller.getCopyToClipboardTooltip(this.copied, this.copyError);
   }
 
   private get hasCustomNoAnswerMessage() {
@@ -559,10 +530,7 @@ export class AtomicGeneratedAnswer
   }
 
   private get isConversationDebugEnabled() {
-    return (
-      this.bindings.engine?.state?.configuration?.knowledge
-        ?.debugAgentSession ?? false
-    );
+    return this.bindings.engine?.state?.configuration?.knowledge?.debugAgentSession ?? false;
   }
 
   private get followUpConversationId() {
@@ -630,9 +598,7 @@ export class AtomicGeneratedAnswer
       ?.getBoundingClientRect().height;
 
     if (answerHeight) {
-      const rootFontSize = parseFloat(
-        getComputedStyle(document.documentElement).fontSize
-      );
+      const rootFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize);
 
       const nextFullAnswerHeight = answerHeight / rootFontSize;
       if (this.fullAnswerHeight !== nextFullAnswerHeight) {
@@ -670,17 +636,9 @@ export class AtomicGeneratedAnswer
 
     if (this.fullAnswerHeight! > maxHeight) {
       this.setCSSVariable('--atomic-crga-collapsed-height', `${maxHeight}rem`);
-      this.toggleClass(
-        container,
-        'answer-collapsed',
-        !this.generatedAnswerState.expanded
-      );
+      this.toggleClass(container, 'answer-collapsed', !this.generatedAnswerState.expanded);
       this.toggleClass(footer, 'is-collapsible', true);
-      this.toggleClass(
-        footer,
-        'generating-label-visible',
-        this.generatedAnswerState.isStreaming
-      );
+      this.toggleClass(footer, 'generating-label-visible', this.generatedAnswerState.isStreaming);
     } else {
       this.toggleClass(container, 'answer-collapsed', false);
       this.toggleClass(footer, 'is-collapsible', false);
@@ -696,10 +654,7 @@ export class AtomicGeneratedAnswer
     this.controller.clickLike();
   }
 
-  private renderCitationsList(
-    citations: GeneratedAnswerCitation[],
-    answerId?: string
-  ) {
+  private renderCitationsList(citations: GeneratedAnswerCitation[], answerId?: string) {
     return renderCitations({
       props: {
         citations,
@@ -709,11 +664,7 @@ export class AtomicGeneratedAnswer
             options: {citation, answerId},
           }),
         logCitationHover: (citationId, citationHoverTimeMs) => {
-          this.generatedAnswer?.logCitationHover(
-            citationId,
-            citationHoverTimeMs,
-            answerId
-          );
+          this.generatedAnswer?.logCitationHover(citationId, citationHoverTimeMs, answerId);
         },
         disableCitationAnchoring: this.disableCitationAnchoring,
       },
@@ -750,16 +701,14 @@ export class AtomicGeneratedAnswer
 
       const allGeneratedAnswers = [
         generatedAnswerWithQuestion,
-        ...(this.generatedAnswerWithFollowUps?.state.followUpAnswers
-          .followUpAnswers ?? []),
+        ...(this.generatedAnswerWithFollowUps?.state.followUpAnswers.followUpAnswers ?? []),
       ];
 
       return html`<atomic-generated-answer-thread
         .generatedAnswers=${allGeneratedAnswers}
         .i18n=${this.bindings.i18n}
         .renderCitations=${this.renderCitationsList.bind(this)}
-        .onClickLike=${(answerId: string) =>
-          this.generatedAnswerWithFollowUps?.like(answerId)}
+        .onClickLike=${(answerId: string) => this.generatedAnswerWithFollowUps?.like(answerId)}
         .onClickDislike=${(answerId: string) =>
           this.generatedAnswerWithFollowUps?.dislike(answerId)}
         .onCopyToClipboard=${(answerId: string) =>
@@ -773,8 +722,7 @@ export class AtomicGeneratedAnswer
         i18n: this.bindings.i18n,
         generatedAnswer: this.generatedAnswerState,
         collapsible: this.isCollapsibleEnabled,
-        renderFeedbackAndCopyButtonsSlot: () =>
-          this.renderFeedbackAndCopyButtonsWrapper(),
+        renderFeedbackAndCopyButtonsSlot: () => this.renderFeedbackAndCopyButtonsWrapper(),
         renderCitationsSlot: () =>
           html`${this.renderCitationsList(this.generatedAnswerState.citations)}`,
         onRetry: () => this.generatedAnswer?.retry(),
@@ -787,14 +735,8 @@ export class AtomicGeneratedAnswer
     return Boolean(this.agentId);
   }
 
-  private get generatedAnswerWithFollowUps():
-    | GeneratedAnswerWithFollowUps
-    | undefined {
-    if (
-      !this.hasAgentId ||
-      !this.generatedAnswer ||
-      !('askFollowUp' in this.generatedAnswer)
-    ) {
+  private get generatedAnswerWithFollowUps(): GeneratedAnswerWithFollowUps | undefined {
+    if (!this.hasAgentId || !this.generatedAnswer || !('askFollowUp' in this.generatedAnswer)) {
       return undefined;
     }
 
@@ -802,10 +744,7 @@ export class AtomicGeneratedAnswer
   }
 
   private get areFollowUpsEnabled() {
-    return (
-      this.generatedAnswerWithFollowUps?.state.followUpAnswers?.isEnabled ===
-      true
-    );
+    return this.generatedAnswerWithFollowUps?.state.followUpAnswers?.isEnabled === true;
   }
 
   private get isCollapsibleEnabled() {
@@ -847,8 +786,7 @@ export class AtomicGeneratedAnswer
 
   private get isAnswerGenerationOngoing() {
     const initialAnswerPending =
-      this.generatedAnswerState.isStreaming ||
-      this.generatedAnswerState.isLoading;
+      this.generatedAnswerState.isStreaming || this.generatedAnswerState.isLoading;
     return (
       initialAnswerPending ||
       (this.generatedAnswerWithFollowUps?.state.followUpAnswers?.followUpAnswers?.some(

@@ -23,15 +23,11 @@ describe('atomic-focus-trap', () => {
         .shouldHideSelf=${options.shouldHideSelf ?? true}
         .scope=${options.scope ?? document.body}
       >
-        ${options.children
-          ? html`${options.children}`
-          : html`<button>Test Button</button>`}
+        ${options.children ? html`${options.children}` : html`<button>Test Button</button>`}
       </atomic-focus-trap>`
     );
 
-    const element = wrapper.querySelector(
-      'atomic-focus-trap'
-    ) as AtomicFocusTrap;
+    const element = wrapper.querySelector('atomic-focus-trap') as AtomicFocusTrap;
     await element.updateComplete;
 
     return element;
@@ -240,10 +236,7 @@ describe('atomic-focus-trap', () => {
       const addEventListenerSpy = vi.spyOn(document, 'addEventListener');
       await renderFocusTrap();
 
-      expect(addEventListenerSpy).toHaveBeenCalledWith(
-        'focusin',
-        expect.any(Function)
-      );
+      expect(addEventListenerSpy).toHaveBeenCalledWith('focusin', expect.any(Function));
     });
   });
 
@@ -254,10 +247,7 @@ describe('atomic-focus-trap', () => {
 
       element.remove();
 
-      expect(removeEventListenerSpy).toHaveBeenCalledWith(
-        'focusin',
-        expect.any(Function)
-      );
+      expect(removeEventListenerSpy).toHaveBeenCalledWith('focusin', expect.any(Function));
     });
   });
 

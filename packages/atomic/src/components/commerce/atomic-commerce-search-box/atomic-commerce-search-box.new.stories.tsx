@@ -1,8 +1,4 @@
-import type {
-  Decorator,
-  Meta,
-  StoryObj as Story,
-} from '@storybook/web-components-vite';
+import type {Decorator, Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {HttpResponse, http} from 'msw';
@@ -17,10 +13,9 @@ import '@/src/components/commerce/atomic-commerce-search-box-recent-queries/atom
 
 const commerceApiHarness = new MockCommerceApi();
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-commerce-search-box',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-commerce-search-box', {
+  excludeCategories: ['methods'],
+});
 const {decorator, play} = wrapInCommerceInterface({
   skipFirstRequest: true,
   includeCodeRoot: false,
@@ -75,8 +70,7 @@ export const RichSearchBox: Story = {
 export const StandaloneSearchBox: Story = {
   name: 'As a standalone search box',
   args: {
-    'redirection-url':
-      './iframe.html?id=atomic-commerce-interface--with-product-list',
+    'redirection-url': './iframe.html?id=atomic-commerce-interface--with-product-list',
   },
 };
 
@@ -128,10 +122,7 @@ export const WithSuggestionsAndRecentQueries: Story = {
   beforeEach: () => {
     const count = 4;
     const localStorageKey = 'coveo-recent-queries';
-    const recentQueries = Array.from(
-      {length: count},
-      (_, i) => `recent query ${i}`
-    );
+    const recentQueries = Array.from({length: count}, (_, i) => `recent query ${i}`);
     const stringified = JSON.stringify(recentQueries);
     localStorage.setItem(localStorageKey, stringified);
     return () => {

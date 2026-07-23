@@ -24,9 +24,7 @@ import {getRecentQueriesInitialState} from '../features/recent-queries/recent-qu
 import {getTriggerInitialState} from '../features/triggers/triggers-state.js';
 import type {CommerceAppState} from '../state/commerce-app-state.js';
 
-export function buildMockCommerceState(
-  config: Partial<CommerceAppState> = {}
-): CommerceAppState {
+export function buildMockCommerceState(config: Partial<CommerceAppState> = {}): CommerceAppState {
   return {
     configuration: getConfigurationInitialState(),
     productListing: getProductListingInitialState(),
@@ -47,8 +45,7 @@ export function buildMockCommerceState(
     cart: getCartInitialState(),
     didYouMean: getDidYouMeanInitialState(),
     instantProducts: getInstantProductsInitialState(),
-    commerceStandaloneSearchBoxSet:
-      getCommerceStandaloneSearchBoxSetInitialState(),
+    commerceStandaloneSearchBoxSet: getCommerceStandaloneSearchBoxSetInitialState(),
     triggers: getTriggerInitialState(),
     fieldSuggestionsOrder: getFieldSuggestionsOrderInitialState(),
     manualNumericFacetSet: getManualNumericFacetInitialState(),

@@ -12,9 +12,7 @@ routes.forEach((route) => {
 
       test.beforeEach(async ({page}) => {
         await page.goto(`/${route}`);
-        historyLengthAfterGoto = await page.evaluate(
-          () => window.history.length
-        );
+        historyLengthAfterGoto = await page.evaluate(() => window.history.length);
         await waitForHydration(page);
         initialResults = await getResultTitles(page);
         expect(initialResults.length).toBeGreaterThan(0);
@@ -42,9 +40,7 @@ routes.forEach((route) => {
 
         test('has only two history states', async ({page}) => {
           // goto + search pushState = historyLengthAfterGoto + 1
-          const historyLength = await page.evaluate(
-            () => window.history.length
-          );
+          const historyLength = await page.evaluate(() => window.history.length);
           expect(historyLength).toBe(historyLengthAfterGoto + 1);
         });
 
@@ -89,9 +85,7 @@ routes.forEach((route) => {
         const response = await fetch(`${baseURL}${getInitialUrl()}`);
         const html = await response.text();
 
-        const valueMatch = html.match(
-          /class="search-box"[^>]*>[\s\S]*?<input[^>]*value="([^"]*)"/
-        );
+        const valueMatch = html.match(/class="search-box"[^>]*>[\s\S]*?<input[^>]*value="([^"]*)"/);
         expect(valueMatch?.[1] ?? '').toBe(query);
 
         await page.goto(getInitialUrl());
@@ -103,9 +97,7 @@ routes.forEach((route) => {
 
         test.beforeEach(async ({page}) => {
           await page.goto(getInitialUrl());
-          historyLengthAfterGoto = await page.evaluate(
-            () => window.history.length
-          );
+          historyLengthAfterGoto = await page.evaluate(() => window.history.length);
           await waitForHydration(page);
         });
 
@@ -125,9 +117,7 @@ routes.forEach((route) => {
 
         test('has only one history state', async ({page}) => {
           // No additional history entries should be added during hydration
-          const historyLength = await page.evaluate(
-            () => window.history.length
-          );
+          const historyLength = await page.evaluate(() => window.history.length);
           expect(historyLength).toBe(historyLengthAfterGoto);
         });
       });
@@ -142,9 +132,7 @@ routes.forEach((route) => {
         const response = await fetch(`${baseURL}${getInitialUrl()}`);
         const html = await response.text();
 
-        const valueMatch = html.match(
-          /class="search-box"[^>]*>[\s\S]*?<input[^>]*value="([^"]*)"/
-        );
+        const valueMatch = html.match(/class="search-box"[^>]*>[\s\S]*?<input[^>]*value="([^"]*)"/);
         expect(valueMatch?.[1] ?? '').toBe('');
 
         await page.goto(getInitialUrl());
@@ -156,9 +144,7 @@ routes.forEach((route) => {
 
         test.beforeEach(async ({page}) => {
           await page.goto(getInitialUrl());
-          historyLengthAfterGoto = await page.evaluate(
-            () => window.history.length
-          );
+          historyLengthAfterGoto = await page.evaluate(() => window.history.length);
           await waitForHydration(page);
         });
 
@@ -169,9 +155,7 @@ routes.forEach((route) => {
 
         test('has only two history states', async ({page}) => {
           // Invalid params should be cleaned via replaceState, not pushState
-          const historyLength = await page.evaluate(
-            () => window.history.length
-          );
+          const historyLength = await page.evaluate(() => window.history.length);
           expect(historyLength).toBe(historyLengthAfterGoto);
         });
       });

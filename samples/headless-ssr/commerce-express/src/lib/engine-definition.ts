@@ -3,5 +3,4 @@ import {engineConfig} from './engine-config.js';
 
 const engineDefinition = defineCommerceEngine(engineConfig);
 
-export const {searchEngineDefinition, listingEngineDefinition} =
-  engineDefinition;
+export const {searchEngineDefinition, listingEngineDefinition} = engineDefinition;

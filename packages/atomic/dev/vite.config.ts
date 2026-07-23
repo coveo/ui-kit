@@ -9,10 +9,7 @@ function configureAssetPaths(): Plugin {
         /language-assets-path="[^"]*"/g,
         'language-assets-path="/lang"'
       );
-      updatedHtml = updatedHtml.replace(
-        /icon-assets-path="[^"]*"/g,
-        'icon-assets-path="/assets"'
-      );
+      updatedHtml = updatedHtml.replace(/icon-assets-path="[^"]*"/g, 'icon-assets-path="/assets"');
       updatedHtml = updatedHtml.replace(
         /http:\/\/localhost:3000\/atomic\/.*\/assets\//g,
         '/assets/'

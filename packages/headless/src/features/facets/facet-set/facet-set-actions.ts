@@ -1,11 +1,4 @@
-import {
-  ArrayValue,
-  BooleanValue,
-  NumberValue,
-  RecordValue,
-  StringValue,
-  Value,
-} from '@coveo/bueno';
+import {ArrayValue, BooleanValue, NumberValue, RecordValue, StringValue, Value} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import {
   allowedValues,
@@ -174,9 +167,8 @@ export const toggleExcludeFacetValue = createAction(
     })
 );
 
-export const deselectAllFacetValues = createAction(
-  'facet/deselectAll',
-  (payload: string) => validatePayload(payload, facetIdDefinition)
+export const deselectAllFacetValues = createAction('facet/deselectAll', (payload: string) =>
+  validatePayload(payload, facetIdDefinition)
 );
 
 export interface UpdateFacetSortCriterionActionCreatorPayload {

@@ -3,8 +3,7 @@ export const isFacetVisibleOnTab = (
   activeTab: string | undefined
 ) => {
   if (
-    (typeof facetTabs === 'object' &&
-      Object.keys({...facetTabs}).length === 0) ||
+    (typeof facetTabs === 'object' && Object.keys({...facetTabs}).length === 0) ||
     !activeTab ||
     !facetTabs
   ) {

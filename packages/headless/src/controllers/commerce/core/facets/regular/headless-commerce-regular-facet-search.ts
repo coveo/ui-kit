@@ -15,8 +15,7 @@ import {
 } from '../../../../core/facets/facet-search/specific/headless-facet-search.js';
 import type {CoreFacetSearchState} from '../searchable/headless-commerce-searchable-facet.js';
 
-export type RegularFacetSearchState =
-  CoreFacetSearchState<SpecificFacetSearchResult>;
+export type RegularFacetSearchState = CoreFacetSearchState<SpecificFacetSearchResult>;
 
 export type RegularFacetSearch = Omit<
   ReturnType<typeof buildFacetSearch>,

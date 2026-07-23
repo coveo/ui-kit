@@ -1,8 +1,5 @@
 import {NumberValue, Schema, StringValue} from '@coveo/bueno';
-import {
-  type IPXActionsHistoryActionCreators,
-  loadIPXActionsHistoryActions,
-} from '@coveo/headless';
+import {type IPXActionsHistoryActionCreators, loadIPXActionsHistoryActions} from '@coveo/headless';
 import {
   buildRecommendationList,
   buildInteractiveResult as buildRecsInteractiveResult,
@@ -92,10 +89,7 @@ export class AtomicIpxRecsList
  */
         .list-root {
           @apply atomic-grid-with-cards;
-          grid-template-columns: repeat(
-            var(--atomic-recs-number-of-columns, 1),
-            minmax(0, 1fr)
-          );
+          grid-template-columns: repeat(var(--atomic-recs-number-of-columns, 1), minmax(0, 1fr));
         }
 
         [part='label'] {
@@ -233,9 +227,7 @@ export class AtomicIpxRecsList
    *
    * @param resultRenderingFunction
    */
-  public async setRenderFunction(
-    resultRenderingFunction: ItemRenderingFunction
-  ) {
+  public async setRenderFunction(resultRenderingFunction: ItemRenderingFunction) {
     this.itemRenderingFunction = resultRenderingFunction;
   }
 
@@ -243,8 +235,7 @@ export class AtomicIpxRecsList
    * Moves to the previous page, when the carousel is activated.
    */
   public async previousPage() {
-    this.currentPage =
-      this.currentPage - 1 < 0 ? this.numberOfPages - 1 : this.currentPage - 1;
+    this.currentPage = this.currentPage - 1 < 0 ? this.numberOfPages - 1 : this.currentPage - 1;
   }
 
   /**
@@ -268,9 +259,7 @@ export class AtomicIpxRecsList
 
     this.itemTemplateProvider = new ResultTemplateProvider({
       includeDefaultTemplate: true,
-      templateElements: Array.from(
-        this.querySelectorAll('atomic-recs-result-template')
-      ),
+      templateElements: Array.from(this.querySelectorAll('atomic-recs-result-template')),
       getResultTemplateRegistered: () => this.resultTemplateRegistered,
       getTemplateHasError: () => this.templateHasError,
       setResultTemplateRegistered: (value: boolean) => {
@@ -284,8 +273,7 @@ export class AtomicIpxRecsList
 
     this.itemListCommon = new ItemListCommon({
       engineSubscribe: this.bindings.engine.subscribe,
-      getCurrentNumberOfItems: () =>
-        this.recommendationListState.recommendations.length,
+      getCurrentNumberOfItems: () => this.recommendationListState.recommendations.length,
       getIsLoading: () => this.recommendationListState.isLoading,
       host: this,
       loadingFlag: this.loadingFlag,
@@ -293,9 +281,7 @@ export class AtomicIpxRecsList
       store: this.bindings.store,
     });
 
-    this.actionsHistoryActions = loadIPXActionsHistoryActions(
-      this.bindings.engine
-    );
+    this.actionsHistoryActions = loadIPXActionsHistoryActions(this.bindings.engine);
 
     createAppLoadedListener(this.bindings.store, (isAppLoaded) => {
       this.isAppLoaded = isAppLoaded;
@@ -310,9 +296,7 @@ export class AtomicIpxRecsList
     }
 
     if (changedProperties.has('recommendationListState')) {
-      const oldState = changedProperties.get(
-        'recommendationListState'
-      ) as RecommendationListState;
+      const oldState = changedProperties.get('recommendationListState') as RecommendationListState;
       if (this.recommendationListState.searchResponseId !== '') {
         this.bindings.store.unsetLoadingFlag(this.loadingFlag);
       }
@@ -346,8 +330,7 @@ export class AtomicIpxRecsList
   private get recommendationListStateWithAugment() {
     return {
       ...this.recommendationListState,
-      firstRequestExecuted:
-        this.recommendationListState.searchResponseId !== '',
+      firstRequestExecuted: this.recommendationListState.searchResponseId !== '',
       hasError: this.recommendationListState.error !== null,
       hasItems: this.recommendationListState.recommendations.length !== 0,
       results: this.subsetRecommendations,
@@ -365,9 +348,7 @@ export class AtomicIpxRecsList
     }).validate(this.numberOfRecommendationsPerPage);
 
     if (msg) {
-      this.error = new Error(
-        `The "numberOfRecommendationsPerPage" is invalid: ${msg}`
-      );
+      this.error = new Error(`The "numberOfRecommendationsPerPage" is invalid: ${msg}`);
     }
   }
 
@@ -385,9 +366,7 @@ export class AtomicIpxRecsList
 
   private updateOriginLevel2() {
     if (this.label) {
-      const action = loadConfigurationActions(
-        this.bindings.engine
-      ).setOriginLevel2({
+      const action = loadConfigurationActions(this.bindings.engine).setOriginLevel2({
         originLevel2: this.label,
       });
 
@@ -421,8 +400,7 @@ export class AtomicIpxRecsList
       return 1;
     }
     return Math.ceil(
-      this.recommendationListState.recommendations.length /
-        this.numberOfRecommendationsPerPage
+      this.recommendationListState.recommendations.length / this.numberOfRecommendationsPerPage
     );
   }
 
@@ -431,9 +409,7 @@ export class AtomicIpxRecsList
   }
 
   private get shouldRenderPagination() {
-    return (
-      this.hasPagination && this.recommendationListStateWithAugment.hasItems
-    );
+    return this.hasPagination && this.recommendationListStateWithAugment.hasItems;
   }
 
   private get hasNoResults() {
@@ -445,10 +421,9 @@ export class AtomicIpxRecsList
 
   private onSelect(recommendation: RecsResult, originalSelect: () => void) {
     if (recommendation.raw.permanentid && this.actionsHistoryActions) {
-      const action =
-        this.actionsHistoryActions.addPageViewEntryInActionsHistory(
-          recommendation.raw.permanentid
-        );
+      const action = this.actionsHistoryActions.addPageViewEntryInActionsHistory(
+        recommendation.raw.permanentid
+      );
       this.bindings.engine.dispatch(action);
     }
     originalSelect();
@@ -462,8 +437,7 @@ export class AtomicIpxRecsList
     interactiveResult.select = () => {
       this.onSelect(recommendation, originalSelect);
     };
-    const linkContent =
-      this.itemTemplateProvider.getLinkTemplateContent(recommendation);
+    const linkContent = this.itemTemplateProvider.getLinkTemplateContent(recommendation);
 
     return {
       interactiveResult,
@@ -509,10 +483,7 @@ export class AtomicIpxRecsList
 
     if (!this.isEveryResultReady && this.isAppLoaded) {
       return html`
-        <div
-          aria-hidden="true"
-          class="bg-neutral my-2 h-8 w-60 animate-pulse rounded"
-        ></div>
+        <div aria-hidden="true" class="bg-neutral my-2 h-8 w-60 animate-pulse rounded"></div>
       `;
     }
 
@@ -545,11 +516,7 @@ export class AtomicIpxRecsList
           },
           ...props.interactiveResult,
           setRef: (element) => {
-            element &&
-              this.itemListCommon.setNewResultRef(
-                element as HTMLElement,
-                index
-              );
+            element && this.itemListCommon.setNewResultRef(element as HTMLElement, index);
           },
         },
       })(
@@ -600,8 +567,7 @@ export class AtomicIpxRecsList
               display: this.display,
               imageSize: this.imageSize,
               numberOfPlaceholders:
-                this.numberOfRecommendationsPerPage ??
-                this.numberOfRecommendations,
+                this.numberOfRecommendationsPerPage ?? this.numberOfRecommendations,
             },
           })
         )
@@ -644,13 +610,9 @@ export class AtomicIpxRecsList
                 nextPage: () => this.nextPage(),
                 numberOfPages: this.numberOfPages,
                 currentPage: this.currentPage,
-                ariaLabel: this.bindings.i18n.t(
-                  this.label ?? 'recommendations'
-                ),
+                ariaLabel: this.bindings.i18n.t(this.label ?? 'recommendations'),
               },
-            })(
-              html`<div class="px-3">${this.renderRecommendationList()}</div>`
-            ),
+            })(html`<div class="px-3">${this.renderRecommendationList()}</div>`),
           () => this.renderRecommendationList()
         )}`
     )}`;

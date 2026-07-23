@@ -13,10 +13,7 @@ import type {LitElementWithError} from '@/src/decorators/types.js';
  * The numerical format of compatible parents will be set according to the properties of this component.
  */
 @customElement('atomic-format-unit')
-export class AtomicFormatUnit
-  extends LitElement
-  implements LitElementWithError
-{
+export class AtomicFormatUnit extends LitElement implements LitElementWithError {
   /**
    * The unit to use in unit formatting.
    * Leverages the [Intl.NumberFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat) constructor.
@@ -46,12 +43,11 @@ export class AtomicFormatUnit
 
   connectedCallback() {
     super.connectedCallback();
-    dispatchNumberFormatEvent(
-      (value, languages) => this.format(value, languages),
-      this
-    ).catch((error) => {
-      this.error = error as Error;
-    });
+    dispatchNumberFormatEvent((value, languages) => this.format(value, languages), this).catch(
+      (error) => {
+        this.error = error as Error;
+      }
+    );
   }
 
   @errorGuard()

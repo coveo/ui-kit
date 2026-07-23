@@ -27,10 +27,8 @@ function getLegacyAnalyticsConfig(
   recsConfig: RecommendationEngineConfiguration,
   enabled: boolean
 ): AnalyticsConfiguration {
-  const analyticsClientMiddleware = (
-    event: string,
-    payload: AnalyticsPayload
-  ) => augmentAnalytics(event, payload, recsConfig);
+  const analyticsClientMiddleware = (event: string, payload: AnalyticsPayload) =>
+    augmentAnalytics(event, payload, recsConfig);
 
   const defaultAnalyticsConfig: AnalyticsConfiguration = {
     analyticsClientMiddleware,

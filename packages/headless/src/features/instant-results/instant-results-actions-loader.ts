@@ -65,9 +65,7 @@ export interface InstantResultsActionCreators {
  * @group Actions
  * @category InsightResults
  */
-export function loadInstantResultsActions(
-  engine: SearchEngine
-): InstantResultsActionCreators {
+export function loadInstantResultsActions(engine: SearchEngine): InstantResultsActionCreators {
   engine.addReducers({instantResults: instantResults});
 
   return {

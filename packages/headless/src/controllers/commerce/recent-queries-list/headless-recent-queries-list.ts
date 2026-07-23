@@ -1,10 +1,4 @@
-import {
-  ArrayValue,
-  BooleanValue,
-  NumberValue,
-  Schema,
-  StringValue,
-} from '@coveo/bueno';
+import {ArrayValue, BooleanValue, NumberValue, Schema, StringValue} from '@coveo/bueno';
 import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../app/state-key.js';
 import type {UpdateQueryPayload} from '../../../features/commerce/query/query-actions.js';
@@ -21,14 +15,8 @@ import {
 import {commerceSearchReducer as search} from '../../../features/commerce/search/search-slice.js';
 import type {RecentQueriesSection} from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
-import {
-  validateInitialState,
-  validateOptions,
-} from '../../../utils/validate-payload.js';
-import {
-  buildController,
-  type Controller,
-} from '../../controller/headless-controller.js';
+import {validateInitialState, validateOptions} from '../../../utils/validate-payload.js';
+import {buildController, type Controller} from '../../controller/headless-controller.js';
 import type {
   RecentQueriesListInitialState,
   RecentQueriesListOptions as CoreRecentQueriesListOptions,
@@ -46,10 +34,7 @@ export type RecentQueriesListOptions = Partial<CoreRecentQueriesListOptions> & {
   enableResults?: boolean;
 };
 
-export interface RecentQueriesListProps extends Omit<
-  CoreRecentQueriesListProps,
-  'options'
-> {
+export interface RecentQueriesListProps extends Omit<CoreRecentQueriesListProps, 'options'> {
   options?: RecentQueriesListOptions;
 }
 
@@ -122,22 +107,9 @@ export interface RecentQueriesState {
   analyticsEnabled: boolean;
 }
 
-function validateRecentQueriesProps(
-  engine: CommerceEngine,
-  props?: RecentQueriesListProps
-) {
-  validateOptions(
-    engine,
-    optionsSchema,
-    props?.options,
-    'buildRecentQueriesList'
-  );
-  validateInitialState(
-    engine,
-    initialStateSchema,
-    props?.initialState,
-    'buildRecentQueriesList'
-  );
+function validateRecentQueriesProps(engine: CommerceEngine, props?: RecentQueriesListProps) {
+  validateOptions(engine, optionsSchema, props?.options, 'buildRecentQueriesList');
+  validateInitialState(engine, initialStateSchema, props?.initialState, 'buildRecentQueriesList');
 }
 
 /**
@@ -228,16 +200,13 @@ export function buildRecentQueriesList(
         throw new Error(errorMessage);
       }
 
-      const queryOptions: UpdateQueryPayload &
-        PrepareForSearchWithQueryOptions = {
+      const queryOptions: UpdateQueryPayload & PrepareForSearchWithQueryOptions = {
         query: this.state.queries[index],
         clearFilters: registrationOptions.clearFilters,
       };
 
       dispatch(prepareForSearchWithQuery(queryOptions));
-      dispatch(
-        executeSearch({enableResults: registrationOptions.enableResults})
-      );
+      dispatch(executeSearch({enableResults: registrationOptions.enableResults}));
     },
   };
 }

@@ -1,10 +1,7 @@
 import {describe, expect, it} from 'vitest';
 import {streamAnswerAPIStateMock} from '../../features/generated-answer/generated-answer-mocks.js';
 import type {SearchAppState} from '../../state/search-app-state.js';
-import {
-  selectAnswerApiQueryParams,
-  selectAnswerTriggerParams,
-} from './answer-api-selectors.js';
+import {selectAnswerApiQueryParams, selectAnswerTriggerParams} from './answer-api-selectors.js';
 
 const buildState = (overrides: Partial<SearchAppState> = {}): SearchAppState =>
   ({

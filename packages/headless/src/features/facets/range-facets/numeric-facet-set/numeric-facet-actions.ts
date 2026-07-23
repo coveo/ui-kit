@@ -1,11 +1,4 @@
-import {
-  ArrayValue,
-  BooleanValue,
-  NumberValue,
-  RecordValue,
-  StringValue,
-  Value,
-} from '@coveo/bueno';
+import {ArrayValue, BooleanValue, NumberValue, RecordValue, StringValue, Value} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import {
   requiredNonEmptyString,

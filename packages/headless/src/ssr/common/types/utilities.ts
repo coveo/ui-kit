@@ -29,9 +29,7 @@ export type HasOptionalKeys<TObject> = TObject extends {}
   : boolean;
 
 type ExtractRequiredOptions<TOptions> = {
-  [TKey in keyof TOptions as Pick<TOptions, TKey> extends Required<
-    Pick<TOptions, TKey>
-  >
+  [TKey in keyof TOptions as Pick<TOptions, TKey> extends Required<Pick<TOptions, TKey>>
     ? TKey
     : never]: TOptions[TKey];
 };
@@ -46,6 +44,4 @@ export type OptionsTuple<TOptions> =
       ? [options?: TOptions]
       : [options: TOptions];
 
-export type OptionsExtender<TOptions> = (
-  options: TOptions
-) => TOptions | Promise<TOptions>;
+export type OptionsExtender<TOptions> = (options: TOptions) => TOptions | Promise<TOptions>;

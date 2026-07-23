@@ -9,9 +9,7 @@ import {defineConfig} from 'vite';
 // and copy them into `public/` so Vite serves them in dev and build.
 const require = createRequire(import.meta.url);
 const atomicRequire = createRequire(require.resolve('@coveo/atomic-react'));
-const themesDir = dirname(
-  atomicRequire.resolve('@coveo/atomic/themes/coveo.css')
-);
+const themesDir = dirname(atomicRequire.resolve('@coveo/atomic/themes/coveo.css'));
 const distDir = dirname(themesDir);
 
 const copies = [

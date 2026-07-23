@@ -24,10 +24,7 @@ import {getSortCriteriaInitialState} from '../../../features/sort-criteria/sort-
 import type {TabSetState} from '../../../features/tab-set/tab-set-state.js';
 import type {SearchParametersState} from '../../../state/search-app-state.js';
 import {validateInitialState} from '../../../utils/validate-payload.js';
-import {
-  buildController,
-  type Controller,
-} from '../../controller/headless-controller.js';
+import {buildController, type Controller} from '../../controller/headless-controller.js';
 import type {DateRangeRequest} from '../facets/range-facet/date-facet/headless-core-date-facet.js';
 import type {NumericRangeRequest} from '../facets/range-facet/numeric-facet/headless-core-numeric-facet.js';
 
@@ -45,9 +42,7 @@ export interface SearchParameterManagerInitialState {
   parameters: SearchParameters;
 }
 
-const initialStateSchema = new Schema<
-  Required<SearchParameterManagerInitialState>
->({
+const initialStateSchema = new Schema<Required<SearchParameterManagerInitialState>>({
   parameters: new RecordValue({
     options: {required: true},
     values: searchParametersDefinition,
@@ -180,9 +175,7 @@ function ensureTabIsValid(
     return {...parameters, tab: getFallbackTabId(tabSet)};
   }
 
-  const tabExists = Object.values(tabSet).some(
-    (tab) => tab.id === parameters.tab
-  );
+  const tabExists = Object.values(tabSet).some((tab) => tab.id === parameters.tab);
 
   if (!tabExists) {
     const currentActiveTab = Object.values(tabSet).find((tab) => tab.isActive);
@@ -200,18 +193,14 @@ function getFallbackTabId(tabSet: TabSetState): string {
   return firstTabId ?? '';
 }
 
-export function getCoreActiveSearchParameters(
-  engine: CoreEngine
-): SearchParameters {
+export function getCoreActiveSearchParameters(engine: CoreEngine): SearchParameters {
   const state = engine.state;
   return {
     ...getQ(state.query, (s) => s.q, getQueryInitialState().q),
     ...getTab(
       state.tabSet,
       (tabSet) => {
-        const activeTab = Object.values(tabSet ?? {}).find(
-          (tab) => tab.isActive
-        );
+        const activeTab = Object.values(tabSet ?? {}).find((tab) => tab.isActive);
         return activeTab ? activeTab.id : Object.keys(tabSet ?? {})[0];
       },
       state.tabSet ? Object.keys(state.tabSet)[0] : ''
@@ -292,8 +281,7 @@ function getCategoryFacets(state: CoreEngine['state']) {
   return getFacets(
     state.categoryFacetSet,
     facetIsEnabledAndVisibleOnTab(state),
-    (request) =>
-      findActiveValueAncestry(request.currentValues).map((v) => v.value),
+    (request) => findActiveValueAncestry(request.currentValues).map((v) => v.value),
     'cf'
   );
 }
@@ -333,7 +321,5 @@ function getAutomaticFacets(state: Partial<SearchParametersState>) {
 }
 
 function getSelectedResponseValues(response: AutomaticFacetResponse) {
-  return response.values
-    .filter((fv) => fv.state === 'selected')
-    .map((fv) => fv.value);
+  return response.values.filter((fv) => fv.state === 'selected').map((fv) => fv.value);
 }

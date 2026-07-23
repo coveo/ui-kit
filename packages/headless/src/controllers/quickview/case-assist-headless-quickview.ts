@@ -78,9 +78,7 @@ export function buildCaseAssistQuickview(
   const getDocuments = () => getState().documentSuggestion.documents;
 
   const fetchResultContentCallback = () => {
-    engine.dispatch(
-      logQuickviewDocumentSuggestionClick(props.options.result.uniqueId)
-    );
+    engine.dispatch(logQuickviewDocumentSuggestionClick(props.options.result.uniqueId));
   };
   const path = '/html';
 
@@ -104,9 +102,7 @@ export function buildCaseAssistQuickview(
       return {
         ...core.state,
         currentDocument:
-          getDocuments().findIndex(
-            (r) => r.uniqueId === core.state.currentResultUniqueId
-          ) + 1,
+          getDocuments().findIndex((r) => r.uniqueId === core.state.currentResultUniqueId) + 1,
         totalDocuments: getDocuments().length,
       };
     },
@@ -115,10 +111,7 @@ export function buildCaseAssistQuickview(
 
 function loadSearchQuickviewReducers(
   engine: CoreEngine
-): engine is CoreEngine<
-  DocumentSuggestionSection,
-  ClientThunkExtraArguments<CaseAssistAPIClient>
-> {
+): engine is CoreEngine<DocumentSuggestionSection, ClientThunkExtraArguments<CaseAssistAPIClient>> {
   engine.addReducers({documentSuggestion});
   return true;
 }

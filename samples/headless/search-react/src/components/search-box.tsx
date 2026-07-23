@@ -14,11 +14,7 @@ interface SearchBoxProps {
   instantResults: InstantResults;
 }
 
-export function SearchBox({
-  engine,
-  controller,
-  instantResults,
-}: SearchBoxProps) {
+export function SearchBox({engine, controller, instantResults}: SearchBoxProps) {
   const {value, suggestions} = useController(controller);
   const {results} = useController(instantResults);
   const [focused, setFocused] = useState(false);
@@ -72,8 +68,7 @@ export function SearchBox({
     }
   };
 
-  const showDropdown =
-    focused && value !== '' && (suggestions.length > 0 || results.length > 0);
+  const showDropdown = focused && value !== '' && (suggestions.length > 0 || results.length > 0);
 
   return (
     <div className="search-box">
@@ -90,10 +85,7 @@ export function SearchBox({
       {showDropdown && (
         // Prevent mousedown from blurring the input (which would close the dropdown
         // before the click registers).
-        <div
-          className="search-box__dropdown"
-          onMouseDown={(e) => e.preventDefault()}
-        >
+        <div className="search-box__dropdown" onMouseDown={(e) => e.preventDefault()}>
           {suggestions.length > 0 && (
             <div className="search-box__column">
               <p className="search-box__column-title">Suggestions</p>
@@ -129,13 +121,9 @@ export function SearchBox({
                       onAuxClick={() => selectInstant(result)}
                       onContextMenu={() => selectInstant(result)}
                     >
-                      <span className="search-box__instant-title">
-                        {result.title}
-                      </span>
+                      <span className="search-box__instant-title">{result.title}</span>
                       {result.excerpt && (
-                        <span className="search-box__instant-excerpt">
-                          {result.excerpt}
-                        </span>
+                        <span className="search-box__instant-excerpt">{result.excerpt}</span>
                       )}
                     </a>
                   </li>

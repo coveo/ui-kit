@@ -16,10 +16,7 @@ import type {
   AugmentedControllerDefinition,
   ControllerDefinitionsMap,
 } from '../types/controller-definitions.js';
-import type {
-  CommerceEngineDefinition,
-  CommerceEngineDefinitionOptions,
-} from '../types/engine.js';
+import type {CommerceEngineDefinition, CommerceEngineDefinitionOptions} from '../types/engine.js';
 import {validateControllerNames} from '../validation/controller-validation.js';
 
 /**
@@ -52,14 +49,8 @@ export function defineCommerceEngine<
 >(
   options: CommerceEngineDefinitionOptions<TControllerDefinitions>
 ): {
-  listingEngineDefinition: CommerceEngineDefinition<
-    TControllerDefinitions,
-    SolutionType.listing
-  >;
-  searchEngineDefinition: CommerceEngineDefinition<
-    TControllerDefinitions,
-    SolutionType.search
-  >;
+  listingEngineDefinition: CommerceEngineDefinition<TControllerDefinitions, SolutionType.listing>;
+  searchEngineDefinition: CommerceEngineDefinition<TControllerDefinitions, SolutionType.search>;
   standaloneEngineDefinition: CommerceEngineDefinition<
     TControllerDefinitions,
     SolutionType.standalone
@@ -71,13 +62,9 @@ export function defineCommerceEngine<
 } {
   const {controllers: controllerDefinitions, ...engineOptions} = options;
 
-  const tokenManager = createAccessTokenManager(
-    engineOptions.configuration.accessToken
-  );
+  const tokenManager = createAccessTokenManager(engineOptions.configuration.accessToken);
 
-  const onAccessTokenUpdate = (
-    updateCallback: (accessToken: string) => void
-  ) => {
+  const onAccessTokenUpdate = (updateCallback: (accessToken: string) => void) => {
     tokenManager.registerCallback(updateCallback);
   };
 

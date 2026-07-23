@@ -1,13 +1,7 @@
 /*  src/app/coveo-headless-rga.component.ts */
 
 import {CommonModule} from '@angular/common';
-import {
-  Component,
-  inject,
-  type OnDestroy,
-  type OnInit,
-  signal,
-} from '@angular/core';
+import {Component, inject, type OnDestroy, type OnInit, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {
   type GeneratedAnswerState,
@@ -27,9 +21,7 @@ import {CoveoHeadlessRGAService} from './coveo-headless-rga.service';
 })
 export class CoveoSearchComponent implements OnInit, OnDestroy {
   private searchBox!: ReturnType<CoveoHeadlessRGAServiceType['buildSearchBox']>;
-  private generatedAnswer!: ReturnType<
-    CoveoHeadlessRGAServiceType['buildGeneratedAnswer']
-  >;
+  private generatedAnswer!: ReturnType<CoveoHeadlessRGAServiceType['buildGeneratedAnswer']>;
 
   searchBoxState = signal<SearchBoxState>({
     isLoading: false,
@@ -53,9 +45,7 @@ export class CoveoSearchComponent implements OnInit, OnDestroy {
     this.headless.engine.dispatch(executeSearch(logInterfaceLoad()));
 
     this.unsubscribers.push(
-      this.searchBox.subscribe(() =>
-        this.searchBoxState.set(this.searchBox.state)
-      ),
+      this.searchBox.subscribe(() => this.searchBoxState.set(this.searchBox.state)),
       this.generatedAnswer.subscribe(() => {
         return this.generatedAnswerState.set(this.generatedAnswer.state);
       })
@@ -68,21 +58,15 @@ export class CoveoSearchComponent implements OnInit, OnDestroy {
 
   onSearchSubmit(): void {
     const {updateQuery} = loadQueryActions(this.headless.engine);
-    const {logSearchboxSubmit} = loadSearchAnalyticsActions(
-      this.headless.engine
-    );
+    const {logSearchboxSubmit} = loadSearchAnalyticsActions(this.headless.engine);
     const {executeSearch} = loadSearchActions(this.headless.engine);
-    this.headless.engine.dispatch(
-      updateQuery({q: this.searchBoxState()?.value})
-    );
+    this.headless.engine.dispatch(updateQuery({q: this.searchBoxState()?.value}));
     this.headless.engine.dispatch(executeSearch(logSearchboxSubmit()));
   }
 
   onClear(): void {
     const {updateQuery} = loadQueryActions(this.headless.engine);
-    const {logSearchboxSubmit} = loadSearchAnalyticsActions(
-      this.headless.engine
-    );
+    const {logSearchboxSubmit} = loadSearchAnalyticsActions(this.headless.engine);
     const {executeSearch} = loadSearchActions(this.headless.engine);
 
     this.headless.engine.dispatch(updateQuery({q: ''}));

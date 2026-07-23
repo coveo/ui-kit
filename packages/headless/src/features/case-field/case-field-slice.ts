@@ -29,15 +29,13 @@ export const caseFieldReducer = createReducer(
       })
       .addCase(fetchCaseClassifications.fulfilled, (state, action) => {
         const defaultField = {value: '', suggestions: []};
-        Object.entries(action.payload.response.fields).forEach(
-          ([fieldName, content]) => {
-            if (!state.fields[fieldName]) {
-              state.fields[fieldName] = {...defaultField};
-            }
-
-            state.fields[fieldName].suggestions = content.predictions;
+        Object.entries(action.payload.response.fields).forEach(([fieldName, content]) => {
+          if (!state.fields[fieldName]) {
+            state.fields[fieldName] = {...defaultField};
           }
-        );
+
+          state.fields[fieldName].suggestions = content.predictions;
+        });
         state.status.lastResponseId = action.payload.response.responseId;
         state.status.error = null;
         state.status.loading = false;

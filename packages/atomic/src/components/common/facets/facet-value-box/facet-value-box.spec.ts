@@ -13,9 +13,7 @@ describe('renderFacetValueBox', () => {
       return page.getByRole('listitem');
     },
     get button() {
-      return page.getByLabelText(
-        'Inclusion filter on Test Value; 988M results'
-      );
+      return page.getByLabelText('Inclusion filter on Test Value; 988M results');
     },
     get valueCount() {
       return page.getByText('(988M)');
@@ -26,10 +24,7 @@ describe('renderFacetValueBox', () => {
     i18n = await createTestI18n();
   });
 
-  const setupElement = async (
-    props = {},
-    children = html`Some Value Label`
-  ) => {
+  const setupElement = async (props = {}, children = html`Some Value Label`) => {
     const baseProps = {
       displayValue: 'Test Value',
       numberOfResults: 987654321,
@@ -77,10 +72,7 @@ describe('renderFacetValueBox', () => {
     await setupElement({isSelected: true});
     const {button} = locators;
     await expect(button).toHaveAttribute('aria-pressed', 'true');
-    await expect(button).toHaveAttribute(
-      'part',
-      expect.stringContaining('value-box-selected')
-    );
+    await expect(button).toHaveAttribute('part', expect.stringContaining('value-box-selected'));
   });
 
   it('should apply selected class to the button', async () => {

@@ -18,9 +18,7 @@ function saveRecentQueries(queries: string[]) {
   localStorage.setItem(recentQueriesKeyStorageKey, JSON.stringify(queries));
 }
 
-export function useInitializeRecentQueries(
-  updateRecentQueries?: (queries: string[]) => void
-) {
+export function useInitializeRecentQueries(updateRecentQueries?: (queries: string[]) => void) {
   useEffect(() => {
     const queries = getStoredRecentQueries();
     if (updateRecentQueries && queries.length > 0) {

@@ -15,22 +15,15 @@ export class PopoverPageObject extends BasePageObject {
   }
 
   get facetContainer(): Locator {
-    return this.page
-      .locator('atomic-popover')
-      .locator('[part="facet"]')
-      .first();
+    return this.page.locator('atomic-popover').locator('[part="facet"]').first();
   }
 
   get valueLabel(): Locator {
-    return this.page.locator(
-      'atomic-popover button[part="popover-button"] [part="value-label"]'
-    );
+    return this.page.locator('atomic-popover button[part="popover-button"] [part="value-label"]');
   }
 
   get valueCount(): Locator {
-    return this.page.locator(
-      'atomic-popover button[part="popover-button"] [part="value-count"]'
-    );
+    return this.page.locator('atomic-popover button[part="popover-button"] [part="value-count"]');
   }
 
   get placeholder(): Locator {

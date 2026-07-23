@@ -11,10 +11,7 @@ import {
 } from './value.js';
 
 type RecordWithPrimitiveValues = Record<string, PrimitivesValues>;
-type ComplexRecord = Record<
-  string,
-  PrimitivesValues | RecordWithPrimitiveValues | ArrayValue
->;
+type ComplexRecord = Record<string, PrimitivesValues | RecordWithPrimitiveValues | ArrayValue>;
 
 type RecordValueConfig = {
   options: ValueConfig<ComplexRecord>;
@@ -33,9 +30,7 @@ export class RecordValue implements SchemaValue<ComplexRecord> {
 
   public validate(input: unknown): string | null {
     if (isUndefined(input)) {
-      return this.config.options.required
-        ? 'value is required and is currently undefined'
-        : null;
+      return this.config.options.required ? 'value is required and is currently undefined' : null;
     }
 
     if (!isRecord(input)) {
@@ -75,17 +70,13 @@ export function isRecord(value: unknown): value is ComplexRecord {
   return value !== undefined && typeof value === 'object';
 }
 
-interface ArrayValueConfig<
-  T extends PrimitivesValues = PrimitivesValues,
-> extends ValueConfig<T[]> {
+interface ArrayValueConfig<T extends PrimitivesValues = PrimitivesValues> extends ValueConfig<T[]> {
   min?: number;
   max?: number;
   each?: BooleanValue | NumberValue | StringValue | RecordValue;
 }
 
-export class ArrayValue<
-  T extends PrimitivesValues = PrimitivesValues,
-> implements SchemaValue<T[]> {
+export class ArrayValue<T extends PrimitivesValues = PrimitivesValues> implements SchemaValue<T[]> {
   private value: Value<T[]>;
   constructor(private config: ArrayValueConfig<T> = {}) {
     this.value = new Value(this.config);

@@ -1,8 +1,6 @@
 import type {AnalyticsState} from '../features/configuration/configuration-state.js';
 
-export function buildMockAnalyticsState(
-  config: Partial<AnalyticsState> = {}
-): AnalyticsState {
+export function buildMockAnalyticsState(config: Partial<AnalyticsState> = {}): AnalyticsState {
   return {
     apiBaseUrl: '',
     enabled: false,

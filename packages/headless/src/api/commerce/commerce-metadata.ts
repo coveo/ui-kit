@@ -14,6 +14,4 @@ export type CommerceApiMethod =
  * These endpoints use the pattern: /tracking-ids/{trackingId}/{method}
  * All other endpoints use: /{method}
  */
-export const TRACKING_ID_IN_PATH_METHODS: readonly CommerceApiMethod[] = [
-  'badges',
-] as const;
+export const TRACKING_ID_IN_PATH_METHODS: readonly CommerceApiMethod[] = ['badges'] as const;

@@ -34,13 +34,10 @@ export class ItemDisplayConfigContextController implements ReactiveController {
   }
 
   private _resolveDisplayConfig(): void {
-    const event = buildCustomEvent(
-      itemDisplayConfigContextEventName,
-      (config: DisplayConfig) => {
-        this._config = config;
-        this.host.requestUpdate();
-      }
-    );
+    const event = buildCustomEvent(itemDisplayConfigContextEventName, (config: DisplayConfig) => {
+      this._config = config;
+      this.host.requestUpdate();
+    });
 
     const canceled = this.host.dispatchEvent(event);
     if (canceled) {

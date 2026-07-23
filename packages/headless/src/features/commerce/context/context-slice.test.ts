@@ -1,14 +1,6 @@
-import {
-  setContext,
-  setCustom,
-  setLocation,
-  setView,
-} from './context-actions.js';
+import {setContext, setCustom, setLocation, setView} from './context-actions.js';
 import {contextReducer} from './context-slice.js';
-import {
-  type CommerceContextState,
-  getContextInitialState,
-} from './context-state.js';
+import {type CommerceContextState, getContextInitialState} from './context-state.js';
 
 describe('context-slice', () => {
   let state: CommerceContextState;
@@ -17,9 +9,7 @@ describe('context-slice', () => {
   });
 
   it('should have an initial state', () => {
-    expect(contextReducer(undefined, {type: 'foo'})).toEqual(
-      getContextInitialState()
-    );
+    expect(contextReducer(undefined, {type: 'foo'})).toEqual(getContextInitialState());
   });
 
   it('should allow to set context', () => {
@@ -57,9 +47,7 @@ describe('context-slice', () => {
       latitude: -10.2,
       longitude: 20.1,
     };
-    expect(contextReducer(state, setLocation(location)).location).toEqual(
-      location
-    );
+    expect(contextReducer(state, setLocation(location)).location).toEqual(location);
   });
 
   it('should allow to set custom context', () => {

@@ -9,18 +9,12 @@ type StencilTestElement = HTMLElement & {
   value: string;
 };
 
-type ChildElement =
-  | ChildLitElement
-  | ChildLitElementNested
-  | StencilTestElement;
+type ChildElement = ChildLitElement | ChildLitElementNested | StencilTestElement;
 
-const CHILDREN_SELECTOR =
-  'child-lit-element, stencil-component, child-lit-element-nested';
+const CHILDREN_SELECTOR = 'child-lit-element, stencil-component, child-lit-element-nested';
 
 @customElement('test-children-update-complete')
-class TestChildrenUpdateComplete extends ChildrenUpdateCompleteMixin(
-  LitElement
-) {
+class TestChildrenUpdateComplete extends ChildrenUpdateCompleteMixin(LitElement) {
   isChildrenLoaded = false;
   waitForUpdateComplete = true;
 
@@ -36,9 +30,7 @@ class TestChildrenUpdateComplete extends ChildrenUpdateCompleteMixin(
       const children: ChildElement[] = [];
       const allChildren = [
         ...Array.from(element.querySelectorAll(CHILDREN_SELECTOR)),
-        ...Array.from(
-          element.shadowRoot?.querySelectorAll(CHILDREN_SELECTOR) || []
-        ),
+        ...Array.from(element.shadowRoot?.querySelectorAll(CHILDREN_SELECTOR) || []),
       ];
 
       allChildren.forEach((child) => {
@@ -82,9 +74,7 @@ class ChildLitElement extends ChildrenUpdateCompleteMixin(LitElement) {
   }
 
   private async initializeNested() {
-    const nestedChild = document.createElement(
-      'child-lit-element-nested'
-    ) as ChildLitElementNested;
+    const nestedChild = document.createElement('child-lit-element-nested') as ChildLitElementNested;
     this.appendChild(nestedChild);
     if (nestedChild) {
       (nestedChild as ChildLitElementNested).initialize();
@@ -116,25 +106,19 @@ describe('ChildrenUpdateCompleteMixin', () => {
   let element: TestChildrenUpdateComplete;
 
   const setupInterfaceElement = async () => {
-    element = document.createElement(
-      'test-children-update-complete'
-    ) as TestChildrenUpdateComplete;
+    element = document.createElement('test-children-update-complete') as TestChildrenUpdateComplete;
     document.body.appendChild(element);
 
     await element.updateComplete;
   };
 
   const setupChildLitElement = async (parentElement: LitElement) => {
-    const child = document.createElement(
-      'child-lit-element'
-    ) as ChildLitElement;
+    const child = document.createElement('child-lit-element') as ChildLitElement;
     parentElement.appendChild(child);
   };
 
   const setupStencilElement = async (parentElement: LitElement) => {
-    const stencilElement = document.createElement(
-      'stencil-component'
-    ) as StencilTestElement & {
+    const stencilElement = document.createElement('stencil-component') as StencilTestElement & {
       componentOnReady: () => Promise<void>;
       value: string;
     };
@@ -193,12 +177,8 @@ describe('ChildrenUpdateCompleteMixin', () => {
   });
 
   it('should wait for all children to be ready before resolving updateComplete', async () => {
-    const child1 = document.createElement(
-      'child-lit-element'
-    ) as ChildLitElement;
-    const child2 = document.createElement(
-      'child-lit-element'
-    ) as ChildLitElement;
+    const child1 = document.createElement('child-lit-element') as ChildLitElement;
+    const child2 = document.createElement('child-lit-element') as ChildLitElement;
 
     const child1UpdateCompleteSpy = vi.spyOn(child1, 'updateComplete', 'get');
     const child2UpdateCompleteSpy = vi.spyOn(child2, 'updateComplete', 'get');
@@ -215,26 +195,16 @@ describe('ChildrenUpdateCompleteMixin', () => {
   });
 
   it('should not wait for updateComplete when child has an error', async () => {
-    const childWithError = document.createElement(
-      'child-lit-element'
-    ) as ChildLitElement & {error: Error};
-    const childWithoutError = document.createElement(
-      'child-lit-element'
-    ) as ChildLitElement;
+    const childWithError = document.createElement('child-lit-element') as ChildLitElement & {
+      error: Error;
+    };
+    const childWithoutError = document.createElement('child-lit-element') as ChildLitElement;
 
     // Set an error on the first child
     childWithError.error = new Error('Test error');
 
-    const childWithErrorUpdateCompleteSpy = vi.spyOn(
-      childWithError,
-      'updateComplete',
-      'get'
-    );
-    const childWithoutErrorUpdateCompleteSpy = vi.spyOn(
-      childWithoutError,
-      'updateComplete',
-      'get'
-    );
+    const childWithErrorUpdateCompleteSpy = vi.spyOn(childWithError, 'updateComplete', 'get');
+    const childWithoutErrorUpdateCompleteSpy = vi.spyOn(childWithoutError, 'updateComplete', 'get');
 
     childWithErrorUpdateCompleteSpy.mockReturnValue(Promise.resolve(true));
     childWithoutErrorUpdateCompleteSpy.mockReturnValue(Promise.resolve(true));

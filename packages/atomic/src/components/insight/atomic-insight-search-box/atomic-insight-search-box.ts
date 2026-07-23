@@ -8,12 +8,7 @@ import {
 import {html, LitElement, nothing, type TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {classMap} from 'lit/directives/class-map.js';
-import {
-  createRef,
-  type Ref,
-  type RefOrCallback,
-  ref,
-} from 'lit/directives/ref.js';
+import {createRef, type Ref, type RefOrCallback, ref} from 'lit/directives/ref.js';
 import {renderSearchBoxWrapper} from '@/src/components/common/search-box/search-box-wrapper';
 import {renderSearchBoxTextArea} from '@/src/components/common/search-box/search-text-area';
 import {
@@ -95,15 +90,8 @@ export class AtomicInsightSearchBox
   private searchBoxId!: string;
   private textAreaRef: Ref<HTMLTextAreaElement> = createRef();
   private suggestionManager!: SuggestionManager<InsightSearchBox>;
-  private searchBoxAriaMessage = new AriaLiveRegionController(
-    this,
-    'search-box'
-  );
-  private suggestionsAriaMessage = new AriaLiveRegionController(
-    this,
-    'search-suggestions',
-    true
-  );
+  private searchBoxAriaMessage = new AriaLiveRegionController(this, 'search-box');
+  private suggestionsAriaMessage = new AriaLiveRegionController(this, 'search-suggestions', true);
 
   public initialize() {
     this.searchBoxId = randomID('atomic-search-box-');
@@ -123,8 +111,9 @@ export class AtomicInsightSearchBox
       },
     };
 
-    const {fetchQuerySuggestions, registerQuerySuggest} =
-      loadInsightSearchActions(this.bindings.engine);
+    const {fetchQuerySuggestions, registerQuerySuggest} = loadInsightSearchActions(
+      this.bindings.engine
+    );
 
     this.searchBox = buildInsightSearchBox(this.bindings.engine, {
       options: searchBoxOptions,
@@ -150,13 +139,8 @@ export class AtomicInsightSearchBox
     this.suggestionManager.registerSuggestions({
       position: 0,
       renderItems: () =>
-        this.searchBox.state.suggestions.map((suggestion) =>
-          this.renderSuggestionItem(suggestion)
-        ),
-      onInput: () =>
-        this.bindings.engine.dispatch(
-          fetchQuerySuggestions({id: this.searchBoxId})
-        ),
+        this.searchBox.state.suggestions.map((suggestion) => this.renderSuggestionItem(suggestion)),
+      onInput: () => this.bindings.engine.dispatch(fetchQuerySuggestions({id: this.searchBoxId})),
       panel: 'left',
     });
   }
@@ -243,14 +227,9 @@ export class AtomicInsightSearchBox
     ></atomic-suggestion-renderer>`;
   }
 
-  private renderSuggestionItem(
-    suggestion: InsightSuggestion
-  ): SearchBoxSuggestionElement {
+  private renderSuggestionItem(suggestion: InsightSuggestion): SearchBoxSuggestionElement {
     const hasQuery = this.searchBox.state.value !== '';
-    const partialItem = getPartialSearchBoxSuggestionElement(
-      suggestion,
-      this.bindings.i18n
-    );
+    const partialItem = getPartialSearchBoxSuggestionElement(suggestion, this.bindings.i18n);
 
     return {
       ...partialItem,
@@ -358,9 +337,7 @@ export class AtomicInsightSearchBox
 
   private announceNewSuggestionsToScreenReader() {
     const numberOfSuggestionsToAnnounce =
-      this.suggestionManager.allSuggestionElements.filter(
-        elementHasQuery
-      ).length;
+      this.suggestionManager.allSuggestionElements.filter(elementHasQuery).length;
     this.searchBoxAriaMessage.message = numberOfSuggestionsToAnnounce
       ? this.bindings.i18n.t(
           this.searchBoxState.value

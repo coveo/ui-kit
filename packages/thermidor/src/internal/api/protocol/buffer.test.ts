@@ -144,9 +144,7 @@ describe('SSE spec compliance', () => {
     const events: RawSSEEvent[] = [];
     const processor = createBufferProcessor((e) => events.push(e));
 
-    processor.processChunk(
-      'data: first\n\n' + ':keep-alive\n\n' + 'data: second\n\n'
-    );
+    processor.processChunk('data: first\n\n' + ':keep-alive\n\n' + 'data: second\n\n');
 
     expect(events).toHaveLength(3);
     expect(events[0].data).toBe('first');

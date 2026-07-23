@@ -4,10 +4,7 @@ import HistoryStore from '../../api/analytics/coveo.analytics/history-store.js';
 import {getSearchApiBaseUrl} from '../../api/platform-client.js';
 import type {QuerySuggestRequest} from '../../api/search/query-suggest/query-suggest-request.js';
 import type {QuerySuggestSuccessResponse} from '../../api/search/query-suggest/query-suggest-response.js';
-import {
-  type AsyncThunkSearchOptions,
-  isErrorResponse,
-} from '../../api/search/search-api-client.js';
+import {type AsyncThunkSearchOptions, isErrorResponse} from '../../api/search/search-api-client.js';
 import type {NavigatorContext} from '../../app/navigator-context-provider.js';
 import type {
   ConfigurationSection,
@@ -92,8 +89,7 @@ export interface ClearQuerySuggestActionCreatorPayload {
 
 export const clearQuerySuggest = createAction(
   'querySuggest/clear',
-  (payload: ClearQuerySuggestActionCreatorPayload) =>
-    validatePayload(payload, idDefinition)
+  (payload: ClearQuerySuggestActionCreatorPayload) => validatePayload(payload, idDefinition)
 );
 
 export interface FetchQuerySuggestionsActionCreatorPayload {
@@ -104,9 +100,7 @@ export interface FetchQuerySuggestionsActionCreatorPayload {
 }
 
 export interface FetchQuerySuggestionsThunkReturn
-  extends
-    FetchQuerySuggestionsActionCreatorPayload,
-    QuerySuggestSuccessResponse {
+  extends FetchQuerySuggestionsActionCreatorPayload, QuerySuggestSuccessResponse {
   /**
    * The query for which query suggestions were retrieved.
    */
@@ -122,19 +116,11 @@ export const fetchQuerySuggestions = createAsyncThunk<
 
   async (
     payload: {id: string},
-    {
-      getState,
-      rejectWithValue,
-      extra: {apiClient, validatePayload, navigatorContext},
-    }
+    {getState, rejectWithValue, extra: {apiClient, validatePayload, navigatorContext}}
   ) => {
     validatePayload(payload, idDefinition);
     const id = payload.id;
-    const request = await buildQuerySuggestRequest(
-      id,
-      getState(),
-      navigatorContext
-    );
+    const request = await buildQuerySuggestRequest(id, getState(), navigatorContext);
     const response = await apiClient.querySuggest(request);
 
     if (isErrorResponse(response)) {
@@ -159,10 +145,7 @@ export const buildQuerySuggestRequest = async (
     organizationId: s.configuration.organizationId,
     url:
       s.configuration.search.apiBaseUrl ??
-      getSearchApiBaseUrl(
-        s.configuration.organizationId,
-        s.configuration.environment
-      ),
+      getSearchApiBaseUrl(s.configuration.organizationId, s.configuration.environment),
     count: s.querySuggest[id]!.count,
     q: s.querySet[id],
     locale: s.configuration.search.locale,
@@ -175,15 +158,9 @@ export const buildQuerySuggestRequest = async (
     ...(s.searchHub && {searchHub: s.searchHub}),
     tab: s.configuration.analytics.originLevel2,
     ...(s.configuration.analytics.enabled && {
-      ...(s.configuration.analytics.enabled &&
-      s.configuration.analytics.analyticsMode === 'legacy'
-        ? await legacyFromAnalyticsStateToAnalyticsParams(
-            s.configuration.analytics
-          )
-        : fromAnalyticsStateToAnalyticsParams(
-            s.configuration.analytics,
-            navigatorContext
-          )),
+      ...(s.configuration.analytics.enabled && s.configuration.analytics.analyticsMode === 'legacy'
+        ? await legacyFromAnalyticsStateToAnalyticsParams(s.configuration.analytics)
+        : fromAnalyticsStateToAnalyticsParams(s.configuration.analytics, navigatorContext)),
     }),
     ...(s.configuration.search.authenticationProviders.length && {
       authentication: s.configuration.search.authenticationProviders.join(','),

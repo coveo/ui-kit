@@ -24,14 +24,10 @@ interface InsightResultTemplate {
   tags: Tags;
 }
 
-type Condition<
-  ConditionType = 'isDefined' | 'isNotDefined' | 'mustMatch' | 'mustNotMatch',
-> = {
+type Condition<ConditionType = 'isDefined' | 'isNotDefined' | 'mustMatch' | 'mustNotMatch'> = {
   field: string;
   conditionType: ConditionType;
-} & (ConditionType extends 'mustMatch' | 'mustNotMatch'
-  ? {values: string[]}
-  : {});
+} & (ConditionType extends 'mustMatch' | 'mustNotMatch' ? {values: string[]} : {});
 
 interface Badge {
   field: string;
@@ -47,12 +43,7 @@ interface Detail {
   fieldType?: InsightFieldType;
 }
 
-type ResultAction =
-  | 'attachToCase'
-  | 'copyToClipboard'
-  | 'quickview'
-  | 'sendAsEmail'
-  | 'sendToFeed';
+type ResultAction = 'attachToCase' | 'copyToClipboard' | 'quickview' | 'sendAsEmail' | 'sendToFeed';
 
 type InsightFacetType = 'standard' | 'numeric' | 'timeframe';
 

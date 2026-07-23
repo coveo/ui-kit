@@ -16,8 +16,7 @@ interface SearchBoxSuggestionsProps {
   onSelectSuggestion: (rawValue: string) => void;
 }
 
-export const suggestionsListId = (idPrefix: string) =>
-  `${idPrefix}-suggestions`;
+export const suggestionsListId = (idPrefix: string) => `${idPrefix}-suggestions`;
 export const suggestionOptionId = (idPrefix: string, index: number) =>
   `${idPrefix}-suggestion-${index}`;
 
@@ -45,11 +44,7 @@ export default function SearchBoxSuggestions({
             {hasSuggestions && (
               <>
                 <h4>Query suggestions</h4>
-                <ul
-                  className="Suggestions"
-                  id={suggestionsListId(idPrefix)}
-                  role="listbox"
-                >
+                <ul className="Suggestions" id={suggestionsListId(idPrefix)} role="listbox">
                   {suggestions.map((suggestion, index) => (
                     <li key={suggestion.rawValue} role="presentation">
                       <button

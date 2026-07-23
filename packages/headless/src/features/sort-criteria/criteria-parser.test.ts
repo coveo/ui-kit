@@ -11,15 +11,11 @@ import {parseCriterionExpression} from './criteria-parser.js';
 
 describe('#parseCriterionExpression', () => {
   it('when criterion expression is empty, throws an error', () => {
-    expect(() => parseCriterionExpression('')).toThrowError(
-      'Wrong criterion expression format'
-    );
+    expect(() => parseCriterionExpression('')).toThrowError('Wrong criterion expression format');
   });
 
   it('when criterion expression contains an invalid order, throws an error', () => {
-    expect(() => parseCriterionExpression('size desc')).toThrowError(
-      'Wrong criterion sort order'
-    );
+    expect(() => parseCriterionExpression('size desc')).toThrowError('Wrong criterion sort order');
   });
 
   it('should parse SortByRelevancy criterion correctly', () => {
@@ -64,9 +60,8 @@ describe('#parseCriterionExpression', () => {
 
   it('should split expressions by comma', () => {
     expect(
-      parseCriterionExpression(
-        ` ${SortBy.Relevancy}, ${SortBy.QRE},size ${SortOrder.Ascending}`
-      ).length
+      parseCriterionExpression(` ${SortBy.Relevancy}, ${SortBy.QRE},size ${SortOrder.Ascending}`)
+        .length
     ).toBe(3);
   });
 });

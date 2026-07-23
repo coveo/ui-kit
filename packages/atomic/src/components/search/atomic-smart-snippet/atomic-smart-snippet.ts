@@ -76,10 +76,7 @@ import type {AtomicSmartSnippetFeedbackModal} from '@/src/components/search/atom
 @customElement('atomic-smart-snippet')
 @bindings()
 @withTailwindStyles
-export class AtomicSmartSnippet
-  extends LitElement
-  implements InitializableComponent<Bindings>
-{
+export class AtomicSmartSnippet extends LitElement implements InitializableComponent<Bindings> {
   static styles = styles;
 
   @state() public bindings!: Bindings;
@@ -188,10 +185,7 @@ export class AtomicSmartSnippet
   connectedCallback(): void {
     super.connectedCallback();
     this.#id ||= randomID();
-    this.addEventListener(
-      'selectInlineLink',
-      this.onSelectInlineLink as EventListener
-    );
+    this.addEventListener('selectInlineLink', this.onSelectInlineLink as EventListener);
     this.addEventListener(
       'beginDelayedSelectInlineLink',
       this.onBeginDelayedSelectInlineLink as EventListener
@@ -204,10 +198,7 @@ export class AtomicSmartSnippet
 
   disconnectedCallback(): void {
     super.disconnectedCallback();
-    this.removeEventListener(
-      'selectInlineLink',
-      this.onSelectInlineLink as EventListener
-    );
+    this.removeEventListener('selectInlineLink', this.onSelectInlineLink as EventListener);
     this.removeEventListener(
       'beginDelayedSelectInlineLink',
       this.onBeginDelayedSelectInlineLink as EventListener
@@ -253,8 +244,7 @@ export class AtomicSmartSnippet
   }
 
   private get computedStyle() {
-    const styleTag =
-      this.querySelector('template')?.content.querySelector('style');
+    const styleTag = this.querySelector('template')?.content.querySelector('style');
     if (!styleTag) {
       return this.snippetStyle;
     }
@@ -265,9 +255,7 @@ export class AtomicSmartSnippet
     if (this.modalRef) {
       return;
     }
-    const modalRef = document.createElement(
-      'atomic-smart-snippet-feedback-modal'
-    );
+    const modalRef = document.createElement('atomic-smart-snippet-feedback-modal');
     modalRef.addEventListener('feedbackSent', () => {
       this.setFeedbackSent(true);
     });
@@ -344,10 +332,8 @@ export class AtomicSmartSnippet
                   'source-anchor-attributes'
                 )}
                 @select-source=${this.smartSnippet.selectSource}
-                @begin-delayed-select-source=${this.smartSnippet
-                  .beginDelayedSelectSource}
-                @cancel-pending-select-source=${this.smartSnippet
-                  .cancelPendingSelectSource}
+                @begin-delayed-select-source=${this.smartSnippet.beginDelayedSelectSource}
+                @cancel-pending-select-source=${this.smartSnippet.cancelPendingSelectSource}
               ></atomic-smart-snippet-source>
             `
           )}

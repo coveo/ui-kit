@@ -35,22 +35,20 @@ describe('atomic-result-children', () => {
         </atomic-result-children-template>`
       : html``;
 
-    const {element} = await renderInAtomicSearchInterface<AtomicResultChildren>(
-      {
-        template: html`<atomic-result-children
-          ?inherit-templates=${inheritTemplates}
-          image-size=${imageSize ?? ''}
-          no-result-text=${noResultText}
-        >
-          ${templateSlot}
-        </atomic-result-children>`,
-        selector: 'atomic-result-children',
-        bindings: (bindings) => {
-          bindings.engine = mockedEngine;
-          return bindings;
-        },
-      }
-    );
+    const {element} = await renderInAtomicSearchInterface<AtomicResultChildren>({
+      template: html`<atomic-result-children
+        ?inherit-templates=${inheritTemplates}
+        image-size=${imageSize ?? ''}
+        no-result-text=${noResultText}
+      >
+        ${templateSlot}
+      </atomic-result-children>`,
+      selector: 'atomic-result-children',
+      bindings: (bindings) => {
+        bindings.engine = mockedEngine;
+        return bindings;
+      },
+    });
 
     return {
       element,

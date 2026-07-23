@@ -30,10 +30,7 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {
-  AriaLiveRegionController,
-  FocusTargetController,
-} from '@/src/utils/accessibility-utils';
+import {AriaLiveRegionController, FocusTargetController} from '@/src/utils/accessibility-utils';
 import {getFieldValueCaption} from '@/src/utils/field-utils';
 import {renderCategoryFacetAllCategoryButton} from '../../common/facets/category-facet/all-categories-button';
 import {renderCategoryFacetChildrenAsTreeContainer} from '../../common/facets/category-facet/children-as-tree-container';
@@ -164,10 +161,7 @@ export class AtomicCommerceCategoryFacet
   private headerFocus?: FocusTargetController;
   private activeValueFocus?: FocusTargetController;
 
-  private facetSearchAriaMessage = new AriaLiveRegionController(
-    this,
-    'facet-search'
-  );
+  private facetSearchAriaMessage = new AriaLiveRegionController(this, 'facet-search');
 
   public initialize() {
     this.validateFacet();
@@ -208,20 +202,13 @@ export class AtomicCommerceCategoryFacet
     };
   }
 
-  public shouldUpdate(
-    changedProperties: Map<string | number | symbol, unknown>
-  ): boolean {
+  public shouldUpdate(changedProperties: Map<string | number | symbol, unknown>): boolean {
     if (changedProperties.has('facetState')) {
       const newState = this.facetState;
-      const oldState = changedProperties.get(
-        'facetState'
-      ) as CategoryFacetState;
+      const oldState = changedProperties.get('facetState') as CategoryFacetState;
 
       if (newState && oldState) {
-        return shouldUpdateFacetSearchComponent(
-          newState.facetSearch,
-          oldState.facetSearch
-        );
+        return shouldUpdateFacetSearchComponent(newState.facetSearch, oldState.facetSearch);
       }
     }
     return super.shouldUpdate(changedProperties);
@@ -236,8 +223,7 @@ export class AtomicCommerceCategoryFacet
       props: {
         i18n: this.bindings.i18n,
         label: this.displayName,
-        numberOfActiveValues:
-          this.facetState.hasActiveValues && this.isCollapsed ? 1 : 0,
+        numberOfActiveValues: this.facetState.hasActiveValues && this.isCollapsed ? 1 : 0,
         isCollapsed: this.isCollapsed,
         headingLevel: 0,
         onToggleCollapse: () => {
@@ -257,10 +243,7 @@ export class AtomicCommerceCategoryFacet
     });
   }
 
-  private renderValuesTree(
-    parents: CategoryFacetValue[],
-    isRoot: boolean
-  ): TemplateResult {
+  private renderValuesTree(parents: CategoryFacetValue[], isRoot: boolean): TemplateResult {
     if (!this.hasParents) {
       return this.renderChildren();
     }
@@ -333,9 +316,7 @@ export class AtomicCommerceCategoryFacet
           },
         },
       })(html`
-        ${renderCategoryFacetChildrenAsTreeContainer({props: {}})(
-          html` ${this.renderChildren()}`
-        )}
+        ${renderCategoryFacetChildrenAsTreeContainer({props: {}})(html` ${this.renderChildren()}`)}
       `)}
     `;
   }
@@ -366,10 +347,8 @@ export class AtomicCommerceCategoryFacet
         searchQuery: this.facetState.facetSearch.query,
         isLeafValue: facetValue.isLeafValue,
         setRef: (el) => {
-          isShowLessFocusTarget &&
-            this.focusTargets.showLessFocus.setTarget(el as HTMLElement);
-          isShowMoreFocusTarget &&
-            this.focusTargets.showMoreFocus.setTarget(el as HTMLElement);
+          isShowLessFocusTarget && this.focusTargets.showLessFocus.setTarget(el as HTMLElement);
+          isShowMoreFocusTarget && this.focusTargets.showMoreFocus.setTarget(el as HTMLElement);
         },
       },
     })()} `;
@@ -489,10 +468,8 @@ export class AtomicCommerceCategoryFacet
                   i18n: this.bindings.i18n,
                   query: this.facetState.facetSearch.query,
                   numberOfMatches: this.facetState.facetSearch.values.length,
-                  hasMoreMatches:
-                    this.facetState.facetSearch.moreValuesAvailable,
-                  showMoreMatches: () =>
-                    this.facet.facetSearch.showMoreResults(),
+                  hasMoreMatches: this.facetState.facetSearch.moreValuesAvailable,
+                  showMoreMatches: () => this.facet.facetSearch.showMoreResults(),
                 },
               })}
             `,

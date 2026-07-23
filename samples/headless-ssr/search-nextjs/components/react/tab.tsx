@@ -1,20 +1,9 @@
 'use client';
 
-import {
-  useTabAll,
-  useTabCountries,
-  useTabManager,
-  useTabVideos,
-} from '../../lib/react/engine';
+import {useTabAll, useTabCountries, useTabManager, useTabVideos} from '../../lib/react/engine';
 import TabCommon from '../common/tab';
 
-export default function Tab({
-  tabName,
-  tabLabel,
-}: {
-  tabName: string;
-  tabLabel: string;
-}) {
+export default function Tab({tabName, tabLabel}: {tabName: string; tabLabel: string}) {
   const tabManager = useTabManager();
 
   // oxlint-disable-next-line oxc/no-implicit-any-let -- <>

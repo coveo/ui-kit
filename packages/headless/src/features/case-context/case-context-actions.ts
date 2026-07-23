@@ -1,9 +1,6 @@
 import {ArrayValue, RecordValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
-import {
-  requiredEmptyAllowedString,
-  validatePayload,
-} from '../../utils/validate-payload.js';
+import {requiredEmptyAllowedString, validatePayload} from '../../utils/validate-payload.js';
 
 /**
  * Set case context action
@@ -33,33 +30,27 @@ export const setCaseContext = createAction(
 /**
  * Set case id action
  */
-export const setCaseId = createAction(
-  'insight/caseId/set',
-  (payload: string) => {
-    const valueSchema = requiredEmptyAllowedString;
-    const valuesError = validatePayload(payload, valueSchema).error;
+export const setCaseId = createAction('insight/caseId/set', (payload: string) => {
+  const valueSchema = requiredEmptyAllowedString;
+  const valuesError = validatePayload(payload, valueSchema).error;
 
-    if (valuesError) {
-      return {payload, error: valuesError};
-    }
-
-    return {payload};
+  if (valuesError) {
+    return {payload, error: valuesError};
   }
-);
+
+  return {payload};
+});
 
 /**
  * Set case number action
  */
-export const setCaseNumber = createAction(
-  'insight/caseNumber/set',
-  (payload: string) => {
-    const valueSchema = requiredEmptyAllowedString;
-    const valuesError = validatePayload(payload, valueSchema).error;
+export const setCaseNumber = createAction('insight/caseNumber/set', (payload: string) => {
+  const valueSchema = requiredEmptyAllowedString;
+  const valuesError = validatePayload(payload, valueSchema).error;
 
-    if (valuesError) {
-      return {payload, error: valuesError};
-    }
-
-    return {payload};
+  if (valuesError) {
+    return {payload, error: valuesError};
   }
-);
+
+  return {payload};
+});

@@ -8,15 +8,8 @@ interface CarouselIndicatorProps {
   maxImagesBeforeAndAfter?: number;
 }
 
-export const renderCarouselIndicator: FunctionalComponent<
-  CarouselIndicatorProps
-> = ({
-  props: {
-    numberOfImages,
-    currentImage,
-    navigateToImage,
-    maxImagesBeforeAndAfter = 2,
-  },
+export const renderCarouselIndicator: FunctionalComponent<CarouselIndicatorProps> = ({
+  props: {numberOfImages, currentImage, navigateToImage, maxImagesBeforeAndAfter = 2},
 }) => {
   return html`
     <ul
@@ -28,18 +21,12 @@ export const renderCarouselIndicator: FunctionalComponent<
 
         const shouldDisplay =
           index >= Math.max(0, currentImage - maxImagesBeforeAndAfter) &&
-          index <=
-            Math.min(
-              currentImage + maxImagesBeforeAndAfter,
-              numberOfImages - 1
-            );
+          index <= Math.min(currentImage + maxImagesBeforeAndAfter, numberOfImages - 1);
 
         const isLastDisplayed =
-          index === currentImage + maxImagesBeforeAndAfter &&
-          index < numberOfImages - 1;
+          index === currentImage + maxImagesBeforeAndAfter && index < numberOfImages - 1;
 
-        const isFirstDisplayed =
-          index === currentImage - maxImagesBeforeAndAfter && index > 0;
+        const isFirstDisplayed = index === currentImage - maxImagesBeforeAndAfter && index > 0;
 
         return html`
           <li

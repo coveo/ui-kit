@@ -4,14 +4,7 @@ import {html, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {within} from 'shadow-dom-testing-library';
-import {
-  beforeEach,
-  describe,
-  expect,
-  it,
-  type MockedFunction,
-  vi,
-} from 'vitest';
+import {beforeEach, describe, expect, it, type MockedFunction, vi} from 'vitest';
 import {
   AtomicCommerceRecommendationInterface,
   type CommerceBindings,
@@ -29,18 +22,12 @@ import type {ContextActionCreators} from '@coveo/headless/commerce';
 
 vi.mock('i18next', {spy: true});
 vi.mock('@coveo/headless/commerce', {spy: true});
-vi.mock(
-  '@/src/components/commerce/atomic-commerce-recommendation-interface/store',
-  {spy: true}
-);
+vi.mock('@/src/components/commerce/atomic-commerce-recommendation-interface/store', {spy: true});
 vi.mock('@/src/utils/init-queue', {spy: true});
 
 @customElement('test-element')
 @bindings()
-class TestElement
-  extends LitElement
-  implements InitializableComponent<CommerceBindings>
-{
+class TestElement extends LitElement implements InitializableComponent<CommerceBindings> {
   @state()
   public bindings: CommerceBindings = {} as CommerceBindings;
   @state() public error!: Error;
@@ -54,9 +41,7 @@ class TestElement
 
 describe('atomic-commerce-recommendation-interface', () => {
   beforeEach(async () => {
-    vi.mocked(headless.buildCommerceEngine).mockReturnValue(
-      buildFakeCommerceEngine({})
-    );
+    vi.mocked(headless.buildCommerceEngine).mockReturnValue(buildFakeCommerceEngine({}));
 
     vi.mocked(headless.buildContext).mockReturnValue(buildFakeContext({}));
   });
@@ -76,8 +61,7 @@ describe('atomic-commerce-recommendation-interface', () => {
         icon-assets-path=${ifDefined(props.iconAssetsPath)}
         language=${ifDefined(props.language)}
         language-assets-path=${ifDefined(props.languageAssetsPath)}
-        scroll-container=${props.scrollContainer ||
-        'atomic-commerce-recommendation-interface'}
+        scroll-container=${props.scrollContainer || 'atomic-commerce-recommendation-interface'}
       >
       </atomic-commerce-recommendation-interface>`
     )) as AtomicCommerceRecommendationInterface;
@@ -88,9 +72,8 @@ describe('atomic-commerce-recommendation-interface', () => {
   };
 
   const addChildElement = async (element: Element, tag = 'test-element') => {
-    const childElement = document.createElement(
-      tag
-    ) as InitializableComponent<CommerceBindings> & TestElement;
+    const childElement = document.createElement(tag) as InitializableComponent<CommerceBindings> &
+      TestElement;
     element.appendChild(childElement);
 
     await childElement.updateComplete;
@@ -114,17 +97,13 @@ describe('atomic-commerce-recommendation-interface', () => {
     });
 
     it('should set #store to the value returned by createCommerceRecommendationStore', async () => {
-      const createCommerceRecommendationStoreSpy = vi.mocked(
-        createCommerceRecommendationStore
-      );
+      const createCommerceRecommendationStoreSpy = vi.mocked(createCommerceRecommendationStore);
 
       const element = await setupElement();
 
       expect(createCommerceRecommendationStoreSpy).toHaveBeenCalledOnce();
       expect(element.store).toBeDefined();
-      expect(element.store).toBe(
-        createCommerceRecommendationStoreSpy.mock.results[0].value
-      );
+      expect(element.store).toBe(createCommerceRecommendationStoreSpy.mock.results[0].value);
     });
 
     it('should set i18n to the value returned by i18next.createInstance', async () => {
@@ -208,18 +187,13 @@ describe('atomic-commerce-recommendation-interface', () => {
       vi.spyOn(console, 'error').mockImplementation(() => {});
       const element = await setupElement();
       const engine = buildFakeCommerceEngine({});
-      const onInitializationSpy = vi.spyOn(
-        InterfaceController.prototype,
-        'onInitialization'
-      );
+      const onInitializationSpy = vi.spyOn(InterfaceController.prototype, 'onInitialization');
 
       expect(onInitializationSpy).not.toHaveBeenCalled();
 
       await element.initializeWithEngine(engine);
 
-      expect(onInitializationSpy).toHaveBeenCalledExactlyOnceWith(
-        expect.any(Function)
-      );
+      expect(onInitializationSpy).toHaveBeenCalledExactlyOnceWith(expect.any(Function));
 
       element.engine = undefined;
       onInitializationSpy.mock.calls[0][0]();
@@ -253,10 +227,7 @@ describe('atomic-commerce-recommendation-interface', () => {
     });
 
     it('should update the language when language prop is defined', async () => {
-      const onLanguageChangeSpy = vi.spyOn(
-        InterfaceController.prototype,
-        'onLanguageChange'
-      );
+      const onLanguageChangeSpy = vi.spyOn(InterfaceController.prototype, 'onLanguageChange');
       const element = await setupElement({language: 'fr'});
       const engine = buildFakeCommerceEngine({});
 
@@ -338,10 +309,7 @@ describe('atomic-commerce-recommendation-interface', () => {
     });
 
     it('should call CommonAtomicInteraceHelper.onLanguageChange with context.state.language when language prop is undefined', async () => {
-      const onLanguageChangeSpy = vi.spyOn(
-        InterfaceController.prototype,
-        'onLanguageChange'
-      );
+      const onLanguageChangeSpy = vi.spyOn(InterfaceController.prototype, 'onLanguageChange');
       const buildContextMock = vi.mocked(headless.buildContext);
       buildContextMock.mockReturnValue(
         buildFakeContext({
@@ -363,10 +331,7 @@ describe('atomic-commerce-recommendation-interface', () => {
       // We're updating attributes before calling #initializeWithEngine; this would console.error.
       vi.spyOn(console, 'error').mockImplementation(() => {});
 
-      const onLanguageChangeSpy = vi.spyOn(
-        InterfaceController.prototype,
-        'onLanguageChange'
-      );
+      const onLanguageChangeSpy = vi.spyOn(InterfaceController.prototype, 'onLanguageChange');
       const buildContextMock = vi.mocked(headless.buildContext);
       buildContextMock.mockReturnValue(
         buildFakeContext({
@@ -389,10 +354,7 @@ describe('atomic-commerce-recommendation-interface', () => {
     it('should do nothing when the engine has not been created', async () => {
       vi.spyOn(console, 'error').mockImplementation(() => {});
       const element = await setupElement();
-      const onLanguageChangeSpy = vi.spyOn(
-        InterfaceController.prototype,
-        'onLanguageChange'
-      );
+      const onLanguageChangeSpy = vi.spyOn(InterfaceController.prototype, 'onLanguageChange');
       const setContextMock = vi.fn();
       vi.mocked(headless.loadContextActions).mockReturnValue({
         setContext: setContextMock,
@@ -410,10 +372,7 @@ describe('atomic-commerce-recommendation-interface', () => {
       const element = await setupElement();
       const engine = buildFakeCommerceEngine();
       element.initializeWithEngine(engine);
-      const onLanguageChangeSpy = vi.spyOn(
-        InterfaceController.prototype,
-        'onLanguageChange'
-      );
+      const onLanguageChangeSpy = vi.spyOn(InterfaceController.prototype, 'onLanguageChange');
       const setContextMock = vi.fn();
       vi.mocked(headless.loadContextActions).mockReturnValue({
         setContext: setContextMock,
@@ -443,10 +402,7 @@ describe('atomic-commerce-recommendation-interface', () => {
         vi.mocked(headless.loadContextActions).mockReturnValue({
           setContext: setContextMock,
         } as unknown as ReturnType<typeof headless.loadContextActions>);
-        onLanguageChangeSpy = vi.spyOn(
-          InterfaceController.prototype,
-          'onLanguageChange'
-        );
+        onLanguageChangeSpy = vi.spyOn(InterfaceController.prototype, 'onLanguageChange');
         onLanguageChangeSpy.mockClear();
       });
 
@@ -514,10 +470,7 @@ describe('atomic-commerce-recommendation-interface', () => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
 
     const element = await setupElement();
-    const onAnalyticsChangeSpy = vi.spyOn(
-      InterfaceController.prototype,
-      'onAnalyticsChange'
-    );
+    const onAnalyticsChangeSpy = vi.spyOn(InterfaceController.prototype, 'onAnalyticsChange');
 
     expect(onAnalyticsChangeSpy).not.toHaveBeenCalled();
 
@@ -549,10 +502,7 @@ describe('atomic-commerce-recommendation-interface', () => {
   // TODO - (v4) KIT-4365: Remove these tests.
   describe('when the language attribute changes', () => {
     it('should do nothing when the engine has not been created', async () => {
-      const onLanguageChangeSpy = vi.spyOn(
-        InterfaceController.prototype,
-        'onLanguageChange'
-      );
+      const onLanguageChangeSpy = vi.spyOn(InterfaceController.prototype, 'onLanguageChange');
       const element = await setupElement({language: 'en'});
 
       element.language = 'fr';
@@ -563,10 +513,7 @@ describe('atomic-commerce-recommendation-interface', () => {
     });
 
     it('should do nothing when the new language attribute is undefined', async () => {
-      const onLanguageChangeSpy = vi.spyOn(
-        InterfaceController.prototype,
-        'onLanguageChange'
-      );
+      const onLanguageChangeSpy = vi.spyOn(InterfaceController.prototype, 'onLanguageChange');
       const element = await setupElement({language: 'en'});
 
       element.language = undefined;
@@ -577,10 +524,7 @@ describe('atomic-commerce-recommendation-interface', () => {
     });
 
     it('should do nothing when the context is not defined', async () => {
-      const onLanguageChangeSpy = vi.spyOn(
-        InterfaceController.prototype,
-        'onLanguageChange'
-      );
+      const onLanguageChangeSpy = vi.spyOn(InterfaceController.prototype, 'onLanguageChange');
       const element = await setupElement({language: 'en'});
       element.engine = buildFakeCommerceEngine(); // Simulate that the engine was created but the context wasn't built
 
@@ -606,10 +550,7 @@ describe('atomic-commerce-recommendation-interface', () => {
       });
 
       it('should call InterfaceController.onLanguageChange with no argument', async () => {
-        const onLanguageChangeSpy = vi.spyOn(
-          InterfaceController.prototype,
-          'onLanguageChange'
-        );
+        const onLanguageChangeSpy = vi.spyOn(InterfaceController.prototype, 'onLanguageChange');
         const element = await setupElement({language: 'en'});
         const engine = buildFakeCommerceEngine();
         await element.initializeWithEngine(engine);

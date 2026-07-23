@@ -86,16 +86,12 @@ describe('commerce pagination selectors', () => {
       },
     });
 
-    expect(totalEntriesRecommendationSelector(state, 'some-slot-id')).toEqual(
-      100
-    );
+    expect(totalEntriesRecommendationSelector(state, 'some-slot-id')).toEqual(100);
   });
 
   it('#totalEntriesRecommendationSelector should return 0 when the totalEntries value is not set', () => {
     const state = buildMockCommerceState();
-    expect(totalEntriesRecommendationSelector(state, 'some-slot-id')).toEqual(
-      0
-    );
+    expect(totalEntriesRecommendationSelector(state, 'some-slot-id')).toEqual(0);
   });
 
   it('#pagePrincipalSelector should return the page value from the principal section', () => {

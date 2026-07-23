@@ -21,9 +21,11 @@ export class MockSearchApi implements MockApi {
   readonly htmlEndpoint;
 
   constructor(basePath: string = 'https://:orgId.org.coveo.com') {
-    this.searchEndpoint = new EndpointHarness<
-      SearchResponse | APIErrorWithStatusCode
-    >('POST', `${basePath}/rest/search/v2`, baseSearchResponse);
+    this.searchEndpoint = new EndpointHarness<SearchResponse | APIErrorWithStatusCode>(
+      'POST',
+      `${basePath}/rest/search/v2`,
+      baseSearchResponse
+    );
 
     this.querySuggestEndpoint = new EndpointHarness(
       'POST',

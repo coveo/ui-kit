@@ -14,10 +14,7 @@ import {createMockState} from '../../test/mock-state.js';
 import * as utils from '../../utils/utils.js';
 import {ControllerBuilder} from '../common/builders/controller-builder.js';
 import {createStaticControllerBuilder} from '../common/builders/static-controller-builder.js';
-import {
-  buildControllerDefinitions,
-  createStaticState,
-} from './controller-utils.js';
+import {buildControllerDefinitions, createStaticState} from './controller-utils.js';
 
 vi.mock('../../utils/utils.js', {spy: true});
 vi.mock('../common/builders/static-controller-builder.js', {spy: true});
@@ -103,9 +100,7 @@ describe('controller-utils', () => {
         }),
       };
 
-      vi.mocked(createStaticControllerBuilder).mockReturnValue(
-        mockStaticBuilder
-      );
+      vi.mocked(createStaticControllerBuilder).mockReturnValue(mockStaticBuilder);
 
       const controllers = {
         controller1: buildMockController(),

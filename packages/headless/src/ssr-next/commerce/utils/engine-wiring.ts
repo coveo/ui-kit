@@ -7,10 +7,7 @@ import type {
   CommerceEngineDefinitionOptions,
 } from '../types/engine.js';
 
-const ensurenavigatorContext = (
-  buildConfig: CommonBuildConfig,
-  loggerOptions?: LoggerOptions
-) => {
+const ensurenavigatorContext = (buildConfig: CommonBuildConfig, loggerOptions?: LoggerOptions) => {
   if (!buildConfig.navigatorContext) {
     const logger = buildLogger(loggerOptions);
     logger.error(

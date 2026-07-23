@@ -1,11 +1,7 @@
 import elementMap from '@/src/components/lazy-index.js';
 
 export function registerAutoloader(
-  roots?:
-    | (Element | ShadowRoot | DocumentFragment)[]
-    | Element
-    | ShadowRoot
-    | DocumentFragment
+  roots?: (Element | ShadowRoot | DocumentFragment)[] | Element | ShadowRoot | DocumentFragment
 ) {
   if (typeof window === 'undefined') {
     return;
@@ -48,8 +44,7 @@ export function registerAutoloader(
   const discover = async (root: Element | ShadowRoot | DocumentFragment) => {
     visitedNodes.add(root);
 
-    const rootTagName =
-      root instanceof Element ? root.tagName.toLowerCase() : '';
+    const rootTagName = root instanceof Element ? root.tagName.toLowerCase() : '';
     const rootIsCustomElement = rootTagName?.includes('-');
     const allCustomElements = [...root.querySelectorAll('*')].filter((el) =>
       el.tagName.toLowerCase().includes('-')
@@ -66,11 +61,7 @@ export function registerAutoloader(
     }
     if (rootIsCustomElement) {
       //TODO: This part should not be necessary: instead, if component-a uses component-b, component-a should be responsible for loading component-b
-      if (
-        'shadowRoot' in root &&
-        root.shadowRoot &&
-        !visitedNodes.has(root.shadowRoot)
-      ) {
+      if ('shadowRoot' in root && root.shadowRoot && !visitedNodes.has(root.shadowRoot)) {
         await discover(root.shadowRoot);
         observer.observe(root.shadowRoot, {subtree: true, childList: true});
       }

@@ -41,19 +41,13 @@ export async function testTableA11y(
     let table!: HTMLElement;
 
     await step('Find table element', async () => {
-      const tables = await root.findAllByShadowRole(
-        'table',
-        {},
-        {timeout: 5000}
-      );
+      const tables = await root.findAllByShadowRole('table', {}, {timeout: 5000});
       expect(tables.length).toBeGreaterThanOrEqual(1);
       table = tables[0];
     });
 
     await step('Table has accessible label', async () => {
-      const label =
-        table.getAttribute('aria-label') ||
-        table.getAttribute('aria-labelledby');
+      const label = table.getAttribute('aria-label') || table.getAttribute('aria-labelledby');
       expect(label).toBeTruthy();
 
       if (options?.expectedLabel) {

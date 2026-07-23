@@ -17,10 +17,7 @@
 export type {Relay} from '@coveo/relay';
 // 3rd Party Libraries
 export type {Middleware, Unsubscribe} from '@reduxjs/toolkit';
-export {
-  getAnalyticsNextApiBaseUrl,
-  getOrganizationEndpoint,
-} from './api/platform-client.js';
+export {getAnalyticsNextApiBaseUrl, getOrganizationEndpoint} from './api/platform-client.js';
 export type {Raw} from './api/search/search/raw.js';
 export type {Result} from './api/search/search/result.js';
 export type {DocumentSuggestionResponse} from './api/service/case-assist/get-document-suggestions/get-document-suggestions-response.js';
@@ -56,10 +53,7 @@ export type {
 } from './controllers/case-input/headless-case-input.js';
 export {buildCaseInput} from './controllers/case-input/headless-case-input.js';
 // Controllers
-export type {
-  Controller,
-  Subscribable,
-} from './controllers/controller/headless-controller.js';
+export type {Controller, Subscribable} from './controllers/controller/headless-controller.js';
 export {buildController} from './controllers/controller/headless-controller.js';
 export type {
   Quickview,

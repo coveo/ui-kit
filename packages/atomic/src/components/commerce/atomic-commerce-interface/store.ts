@@ -1,8 +1,4 @@
-import {
-  type ChildProduct,
-  type CommerceEngine,
-  Selectors,
-} from '@coveo/headless/commerce';
+import {type ChildProduct, type CommerceEngine, Selectors} from '@coveo/headless/commerce';
 import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint-utils';
 import {
   type BaseStore,
@@ -28,9 +24,7 @@ export type CommerceStore = BaseStore<Data> & {
   getUniqueIDFromEngine(engine: CommerceEngine): string;
 };
 
-export function createCommerceStore(
-  type: 'search' | 'product-listing'
-): CommerceStore {
+export function createCommerceStore(type: 'search' | 'product-listing'): CommerceStore {
   const store = createBaseStore({
     loadingFlags: [],
     iconAssetsPath: '',
@@ -51,8 +45,7 @@ export function createCommerceStore(
     },
 
     isMobile() {
-      return !window.matchMedia(makeDesktopQuery(store.state.mobileBreakpoint))
-        .matches;
+      return !window.matchMedia(makeDesktopQuery(store.state.mobileBreakpoint)).matches;
     },
 
     getUniqueIDFromEngine(engine: CommerceEngine): string {

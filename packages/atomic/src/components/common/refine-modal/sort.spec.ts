@@ -32,9 +32,7 @@ describe('#renderRefineModalSortSection', () => {
       sectionTitle: element.querySelector('h2[part*="section-sort-title"]'),
       selectWrapper: element.querySelector('div[part="select-wrapper"]'),
       select: element.querySelector('select[part="select"]'),
-      selectIconWrapper: element.querySelector(
-        'div[part="select-icon-wrapper"]'
-      ),
+      selectIconWrapper: element.querySelector('div[part="select-icon-wrapper"]'),
       selectIcon: element.querySelector('atomic-icon[part="select-icon"]'),
       options: element.querySelectorAll('option'),
     };
@@ -43,10 +41,7 @@ describe('#renderRefineModalSortSection', () => {
   it('should render the section title with correct parts', async () => {
     const {sectionTitle} = await renderComponent();
 
-    expect(sectionTitle).toHaveAttribute(
-      'part',
-      'section-title section-sort-title'
-    );
+    expect(sectionTitle).toHaveAttribute('part', 'section-title section-sort-title');
   });
 
   it('should render the correct title text from i18n', async () => {

@@ -1,8 +1,4 @@
-import type {
-  Decorator,
-  Meta,
-  StoryObj as Story,
-} from '@storybook/web-components-vite';
+import type {Decorator, Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
 import {testDialogA11y} from '@/storybook-utils/a11y/dialog.js';
@@ -62,10 +58,7 @@ const meta: Meta = {
       },
     },
     msw: {
-      handlers: [
-        ...insightApiHarness.handlers,
-        ...machineLearningApiHarness.handlers,
-      ],
+      handlers: [...insightApiHarness.handlers, ...machineLearningApiHarness.handlers],
     },
   },
   beforeEach: () => {

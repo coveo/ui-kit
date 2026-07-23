@@ -73,8 +73,7 @@ describe('buildRecommendationEngine', () => {
 
     it('passing trackingId containing an invalid character throws', () => {
       options.configuration.analytics = {
-        trackingId:
-          'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-.\\',
+        trackingId: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-.\\',
       };
       expect(initEngine).toThrow();
     });
@@ -129,9 +128,7 @@ describe('buildRecommendationEngine', () => {
   });
 
   it('should ensure that engine.relay is the same reference as thunk extra args relay', async () => {
-    const thunkRelay = await engine.dispatch(
-      (_dispatch, _getState, extra) => extra.relay
-    );
+    const thunkRelay = await engine.dispatch((_dispatch, _getState, extra) => extra.relay);
 
     expect(thunkRelay).toBe(engine.relay);
   });

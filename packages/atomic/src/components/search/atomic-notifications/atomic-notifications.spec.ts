@@ -73,9 +73,7 @@ describe('atomic-notifications', () => {
         notifyTriggerState: {notifications},
       });
 
-      expect(element.notifyTrigger).toBe(
-        buildNotifyTriggerMock.mock.results[0].value
-      );
+      expect(element.notifyTrigger).toBe(buildNotifyTriggerMock.mock.results[0].value);
     });
 
     it('should render the notifications container', async () => {
@@ -206,9 +204,7 @@ describe('atomic-notifications', () => {
 
   // TODO V4: KIT-5197 - Remove this test
   it('should log validation warning when headingLevel is invalid (negative)', async () => {
-    const consoleWarnSpy = vi
-      .spyOn(console, 'warn')
-      .mockImplementation(() => {});
+    const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
     const {element} = await renderNotifications({props: {headingLevel: 2}});
 
@@ -217,24 +213,17 @@ describe('atomic-notifications', () => {
     await element.updateComplete;
 
     expect(consoleWarnSpy).toHaveBeenCalledWith(
-      expect.stringContaining(
-        'Prop validation failed for component atomic-notifications'
-      ),
+      expect.stringContaining('Prop validation failed for component atomic-notifications'),
       element
     );
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
-      expect.stringContaining('headingLevel'),
-      element
-    );
+    expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('headingLevel'), element);
 
     consoleWarnSpy.mockRestore();
   });
 
   // TODO V4: KIT-5197 - Remove this test
   it('should log validation warning when headingLevel is invalid (greater than 6)', async () => {
-    const consoleWarnSpy = vi
-      .spyOn(console, 'warn')
-      .mockImplementation(() => {});
+    const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
     const {element} = await renderNotifications({props: {headingLevel: 2}});
 
@@ -243,15 +232,10 @@ describe('atomic-notifications', () => {
     await element.updateComplete;
 
     expect(consoleWarnSpy).toHaveBeenCalledWith(
-      expect.stringContaining(
-        'Prop validation failed for component atomic-notifications'
-      ),
+      expect.stringContaining('Prop validation failed for component atomic-notifications'),
       element
     );
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
-      expect.stringContaining('headingLevel'),
-      element
-    );
+    expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('headingLevel'), element);
 
     consoleWarnSpy.mockRestore();
   });

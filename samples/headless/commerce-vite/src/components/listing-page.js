@@ -40,26 +40,18 @@ export class ListingPage extends LitElement {
     return html`
       <div class="interface">
         <div class="toolbar">
-          <commerce-sort-dropdown
-            .controller=${this.sortController}
-          ></commerce-sort-dropdown>
+          <commerce-sort-dropdown .controller=${this.sortController}></commerce-sort-dropdown>
         </div>
         <aside class="facets">
-          <commerce-facet-list
-            .controller=${this.listing}
-          ></commerce-facet-list>
+          <commerce-facet-list .controller=${this.listing}></commerce-facet-list>
         </aside>
         <div class="results">
-          <commerce-breadcrumbs
-            .controller=${this.listing}
-          ></commerce-breadcrumbs>
+          <commerce-breadcrumbs .controller=${this.listing}></commerce-breadcrumbs>
           <commerce-product-list
             .controller=${this.listing}
             .cart=${this.cart}
           ></commerce-product-list>
-          <commerce-pager
-            .controller=${this.paginationController}
-          ></commerce-pager>
+          <commerce-pager .controller=${this.paginationController}></commerce-pager>
         </div>
       </div>
     `;

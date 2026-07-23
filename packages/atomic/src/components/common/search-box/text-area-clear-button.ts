@@ -24,20 +24,13 @@ export const renderTextAreaClearButton: FunctionalComponent<Props> = ({
       props: {
         style: 'text-transparent',
         part: 'clear-button',
-        class:
-          'text-neutral-dark flex h-8 w-8 shrink-0 items-center justify-center',
+        class: 'text-neutral-dark flex h-8 w-8 shrink-0 items-center justify-center',
         onClick: () => {
           onClick?.();
           textAreaRef?.value?.focus();
         },
         ariaLabel: i18n.t('clear-searchbox'),
       },
-    })(
-      html`<atomic-icon
-        part="clear-icon"
-        icon=${ClearSlim}
-        class="h-4 w-4"
-      ></atomic-icon>`
-    )}
+    })(html`<atomic-icon part="clear-icon" icon=${ClearSlim} class="h-4 w-4"></atomic-icon>`)}
   </div>`;
 };

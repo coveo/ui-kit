@@ -12,10 +12,7 @@ import type {
   NumericFacetRequest,
 } from './interfaces/request.js';
 
-export function restoreFromParameters(
-  state: CommerceFacetSetState,
-  action: {payload: Parameters}
-) {
+export function restoreFromParameters(state: CommerceFacetSetState, action: {payload: Parameters}) {
   for (const facetId of Object.keys(state)) {
     delete state[facetId];
   }
@@ -205,9 +202,7 @@ function buildCurrentValuesFromPath(path: string[]) {
   return [root];
 }
 
-export function buildCategoryFacetValueRequest(
-  value: string
-): CategoryFacetValueRequest {
+export function buildCategoryFacetValueRequest(value: string): CategoryFacetValueRequest {
   return {
     children: [],
     state: 'idle',

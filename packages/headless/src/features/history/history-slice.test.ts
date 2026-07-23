@@ -1,9 +1,5 @@
 import type {Reducer} from '@reduxjs/toolkit';
-import {
-  makeHistory,
-  type StateWithHistory,
-  undoable,
-} from '../../app/undoable.js';
+import {makeHistory, type StateWithHistory, undoable} from '../../app/undoable.js';
 import {buildMockAdvancedSearchQueriesState} from '../../test/mock-advanced-search-queries-state.js';
 import {buildMockAutomaticFacetSlice} from '../../test/mock-automatic-facet-slice.js';
 import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request.js';
@@ -123,10 +119,7 @@ describe('history slice', () => {
   describe('should not consider snapshot entry to be different', () => {
     it('for #identical snapshot', () => {
       const query = buildMockQueryState({q: 'foo'});
-      expectHistoryNotToHaveCreatedDifferentSnapshots(
-        getSnapshot({query}),
-        getSnapshot({query})
-      );
+      expectHistoryNotToHaveCreatedDifferentSnapshots(getSnapshot({query}), getSnapshot({query}));
     });
 
     it('for #pagination totalCountFiltered', () => {
@@ -275,9 +268,7 @@ describe('history slice', () => {
           categoryFacetSet: {
             foo: buildMockCategoryFacetSlice({
               request: buildMockCategoryFacetRequest({
-                currentValues: [
-                  buildMockCategoryFacetValueRequest({state: 'selected'}),
-                ],
+                currentValues: [buildMockCategoryFacetValueRequest({state: 'selected'})],
               }),
             }),
           },
@@ -292,9 +283,7 @@ describe('history slice', () => {
           categoryFacetSet: {
             foo: buildMockCategoryFacetSlice({
               request: buildMockCategoryFacetRequest({
-                currentValues: [
-                  buildMockCategoryFacetValueRequest({state: 'idle'}),
-                ],
+                currentValues: [buildMockCategoryFacetValueRequest({state: 'idle'})],
               }),
             }),
           },

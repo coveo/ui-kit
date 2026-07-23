@@ -8,10 +8,9 @@ import {MockCommerceApi} from '@coveo/platform-mock-api/commerce/mock';
 const commerceApiHarness = new MockCommerceApi();
 
 const {decorator, play} = wrapInCommerceInterface();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-commerce-layout',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-commerce-layout', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-commerce-layout',

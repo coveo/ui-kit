@@ -8,9 +8,7 @@ test.describe('atomic-insight-result-children-template', () => {
     await expect(resultChildrenTemplate.childResult).toBeVisible();
   });
 
-  test('should display nested grandchild results', async ({
-    resultChildrenTemplate,
-  }) => {
+  test('should display nested grandchild results', async ({resultChildrenTemplate}) => {
     await resultChildrenTemplate.load({story: 'with-nested-children'});
 
     await expect(resultChildrenTemplate.childrenRoot.first()).toBeVisible();

@@ -108,17 +108,16 @@ describe('atomic-insight-user-actions-timeline', () => {
       buildFakeUserActions(userActionsState || defaultUserActions)
     );
 
-    const {element} =
-      await renderInAtomicInsightInterface<AtomicInsightUserActionsTimeline>({
-        template: html`
-          <atomic-insight-user-actions-timeline
-            user-id=${ifDefined(props.userId)}
-            ticket-creation-date-time=${ifDefined(props.ticketCreationDateTime)}
-            .excludedCustomActions=${props.excludedCustomActions || []}
-          ></atomic-insight-user-actions-timeline>
-        `,
-        selector: 'atomic-insight-user-actions-timeline',
-      });
+    const {element} = await renderInAtomicInsightInterface<AtomicInsightUserActionsTimeline>({
+      template: html`
+        <atomic-insight-user-actions-timeline
+          user-id=${ifDefined(props.userId)}
+          ticket-creation-date-time=${ifDefined(props.ticketCreationDateTime)}
+          .excludedCustomActions=${props.excludedCustomActions || []}
+        ></atomic-insight-user-actions-timeline>
+      `,
+      selector: 'atomic-insight-user-actions-timeline',
+    });
 
     return {
       element,
@@ -139,15 +138,11 @@ describe('atomic-insight-user-actions-timeline', () => {
       }),
       userActionsError: page.getByTestId('user-actions-error'),
       parts: (el: AtomicInsightUserActionsTimeline) => ({
-        toggleFollowingSessions: el.shadowRoot?.querySelector(
-          '[part="toggle-following-sessions"]'
-        ),
+        toggleFollowingSessions: el.shadowRoot?.querySelector('[part="toggle-following-sessions"]'),
         toggleFollowingSessionsIcon: el.shadowRoot?.querySelector(
           '[part="toggle-following-sessions-icon"]'
         ),
-        togglePrecedingSessions: el.shadowRoot?.querySelector(
-          '[part="toggle-preceding-sessions"]'
-        ),
+        togglePrecedingSessions: el.shadowRoot?.querySelector('[part="toggle-preceding-sessions"]'),
         togglePrecedingSessionsIcon: el.shadowRoot?.querySelector(
           '[part="toggle-preceding-sessions-icon"]'
         ),
@@ -165,15 +160,12 @@ describe('atomic-insight-user-actions-timeline', () => {
         },
       });
 
-      expect(buildInsightUserActions).toHaveBeenCalledWith(
-        element.bindings.engine,
-        {
-          options: {
-            ticketCreationDate: '2024-08-01T00:00:00Z',
-            excludedCustomActions: ['custom1', 'custom2'],
-          },
-        }
-      );
+      expect(buildInsightUserActions).toHaveBeenCalledWith(element.bindings.engine, {
+        options: {
+          ticketCreationDate: '2024-08-01T00:00:00Z',
+          excludedCustomActions: ['custom1', 'custom2'],
+        },
+      });
     });
 
     it('should fetch user actions with provided userId', async () => {
@@ -184,22 +176,19 @@ describe('atomic-insight-user-actions-timeline', () => {
       // Mock before rendering
       vi.mocked(buildInsightUserActions).mockReturnValue(fakeUserActions);
 
-      const {element} =
-        await renderInAtomicInsightInterface<AtomicInsightUserActionsTimeline>({
-          template: html`
-            <atomic-insight-user-actions-timeline
-              user-id="test-user@example.com"
-              ticket-creation-date-time="2024-08-01T00:00:00Z"
-            ></atomic-insight-user-actions-timeline>
-          `,
-          selector: 'atomic-insight-user-actions-timeline',
-        });
+      const {element} = await renderInAtomicInsightInterface<AtomicInsightUserActionsTimeline>({
+        template: html`
+          <atomic-insight-user-actions-timeline
+            user-id="test-user@example.com"
+            ticket-creation-date-time="2024-08-01T00:00:00Z"
+          ></atomic-insight-user-actions-timeline>
+        `,
+        selector: 'atomic-insight-user-actions-timeline',
+      });
 
       await element.updateComplete;
 
-      expect(mockFetchUserActions).toHaveBeenCalledWith(
-        'test-user@example.com'
-      );
+      expect(mockFetchUserActions).toHaveBeenCalledWith('test-user@example.com');
     });
 
     it('should bind state to controller', async () => {
@@ -279,13 +268,12 @@ describe('atomic-insight-user-actions-timeline', () => {
 
   describe('when toggling following sessions', () => {
     it('should show following sessions when clicking show button', async () => {
-      const {showFollowingSessionsButton, followingSessions, element} =
-        await renderComponent({
-          props: {
-            userId: 'user@example.com',
-            ticketCreationDateTime: '2024-08-01T00:00:00Z',
-          },
-        });
+      const {showFollowingSessionsButton, followingSessions, element} = await renderComponent({
+        props: {
+          userId: 'user@example.com',
+          ticketCreationDateTime: '2024-08-01T00:00:00Z',
+        },
+      });
 
       await showFollowingSessionsButton.click();
       await element.updateComplete;
@@ -294,16 +282,13 @@ describe('atomic-insight-user-actions-timeline', () => {
     });
 
     it('should hide following sessions when clicking hide button', async () => {
-      const {
-        showFollowingSessionsButton,
-        hideFollowingSessionsButton,
-        followingSessions,
-      } = await renderComponent({
-        props: {
-          userId: 'user@example.com',
-          ticketCreationDateTime: '2024-08-01T00:00:00Z',
-        },
-      });
+      const {showFollowingSessionsButton, hideFollowingSessionsButton, followingSessions} =
+        await renderComponent({
+          props: {
+            userId: 'user@example.com',
+            ticketCreationDateTime: '2024-08-01T00:00:00Z',
+          },
+        });
 
       await showFollowingSessionsButton.click();
       await expect.element(hideFollowingSessionsButton).toBeInTheDocument();
@@ -314,13 +299,12 @@ describe('atomic-insight-user-actions-timeline', () => {
     });
 
     it('should toggle button label when showing/hiding', async () => {
-      const {showFollowingSessionsButton, hideFollowingSessionsButton} =
-        await renderComponent({
-          props: {
-            userId: 'user@example.com',
-            ticketCreationDateTime: '2024-08-01T00:00:00Z',
-          },
-        });
+      const {showFollowingSessionsButton, hideFollowingSessionsButton} = await renderComponent({
+        props: {
+          userId: 'user@example.com',
+          ticketCreationDateTime: '2024-08-01T00:00:00Z',
+        },
+      });
 
       await expect.element(showFollowingSessionsButton).toBeInTheDocument();
       await showFollowingSessionsButton.click();
@@ -334,13 +318,12 @@ describe('atomic-insight-user-actions-timeline', () => {
 
   describe('when toggling preceding sessions', () => {
     it('should show preceding sessions when clicking show button', async () => {
-      const {showPrecedingSessionsButton, precedingSessions, element} =
-        await renderComponent({
-          props: {
-            userId: 'user@example.com',
-            ticketCreationDateTime: '2024-08-01T00:00:00Z',
-          },
-        });
+      const {showPrecedingSessionsButton, precedingSessions, element} = await renderComponent({
+        props: {
+          userId: 'user@example.com',
+          ticketCreationDateTime: '2024-08-01T00:00:00Z',
+        },
+      });
 
       await showPrecedingSessionsButton.click();
       await element.updateComplete;
@@ -349,16 +332,13 @@ describe('atomic-insight-user-actions-timeline', () => {
     });
 
     it('should hide preceding sessions when clicking hide button', async () => {
-      const {
-        showPrecedingSessionsButton,
-        hidePrecedingSessionsButton,
-        precedingSessions,
-      } = await renderComponent({
-        props: {
-          userId: 'user@example.com',
-          ticketCreationDateTime: '2024-08-01T00:00:00Z',
-        },
-      });
+      const {showPrecedingSessionsButton, hidePrecedingSessionsButton, precedingSessions} =
+        await renderComponent({
+          props: {
+            userId: 'user@example.com',
+            ticketCreationDateTime: '2024-08-01T00:00:00Z',
+          },
+        });
 
       await showPrecedingSessionsButton.click();
       await expect.element(hidePrecedingSessionsButton).toBeInTheDocument();
@@ -369,13 +349,12 @@ describe('atomic-insight-user-actions-timeline', () => {
     });
 
     it('should toggle button label when showing/hiding', async () => {
-      const {showPrecedingSessionsButton, hidePrecedingSessionsButton} =
-        await renderComponent({
-          props: {
-            userId: 'user@example.com',
-            ticketCreationDateTime: '2024-08-01T00:00:00Z',
-          },
-        });
+      const {showPrecedingSessionsButton, hidePrecedingSessionsButton} = await renderComponent({
+        props: {
+          userId: 'user@example.com',
+          ticketCreationDateTime: '2024-08-01T00:00:00Z',
+        },
+      });
 
       await expect.element(showPrecedingSessionsButton).toBeInTheDocument();
       await showPrecedingSessionsButton.click();
@@ -549,10 +528,7 @@ describe('atomic-insight-user-actions-timeline', () => {
           ),
           element
         );
-        expect(mockedConsole.warn).toHaveBeenCalledWith(
-          expect.stringContaining(prop),
-          element
-        );
+        expect(mockedConsole.warn).toHaveBeenCalledWith(expect.stringContaining(prop), element);
       }
     );
 

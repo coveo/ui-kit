@@ -61,17 +61,12 @@ export function doNotTrack() {
   const nav = <any>navigator;
   // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
   const win = <any>window;
-  return [
-    nav.globalPrivacyControl,
-    nav.doNotTrack,
-    nav.msDoNotTrack,
-    win.doNotTrack,
-  ].some((value) => doNotTrackValues.has(value));
+  return [nav.globalPrivacyControl, nav.doNotTrack, nav.msDoNotTrack, win.doNotTrack].some(
+    (value) => doNotTrackValues.has(value)
+  );
 }
 
-export function fromEntries<K extends PropertyKey, V>(
-  values: [K, V][]
-): Record<K, V> {
+export function fromEntries<K extends PropertyKey, V>(values: [K, V][]): Record<K, V> {
   const newObject: Partial<Record<K, V>> = {};
   for (const [key, value] of values) {
     newObject[key] = value;
@@ -94,10 +89,7 @@ export function mapObject<TKey extends string, TInitialValue, TNewValue>(
   predicate: (value: TInitialValue, key: TKey) => TNewValue
 ): Record<TKey, TNewValue> {
   return Object.fromEntries(
-    Object.entries(obj).map(([key, value]) => [
-      key,
-      predicate(value as TInitialValue, key as TKey),
-    ])
+    Object.entries(obj).map(([key, value]) => [key, predicate(value as TInitialValue, key as TKey)])
   ) as Record<TKey, TNewValue>;
 }
 
@@ -106,9 +98,7 @@ export function filterObject<TKey extends string, TValue>(
   predicate: (value: TValue, key: TKey) => boolean
 ): Record<TKey, TValue> {
   return Object.fromEntries(
-    Object.entries(obj).filter(([key, value]) =>
-      predicate(value as TValue, key as TKey)
-    )
+    Object.entries(obj).filter(([key, value]) => predicate(value as TValue, key as TKey))
   ) as Record<TKey, TValue>;
 }
 
@@ -168,17 +158,15 @@ function isRecommendationActionPayload<P = void, T extends string = string>(
 
   if (typeof action === 'object' && 'meta' in action) {
     return (
-      (action as PayloadAction<P, T, {arg: FetchRecommendationsPayload}>).meta
-        ?.arg?.slotId !== undefined
+      (action as PayloadAction<P, T, {arg: FetchRecommendationsPayload}>).meta?.arg?.slotId !==
+      undefined
     );
   }
 
   return false;
 }
 
-export function createWaitForActionMiddlewareForRecommendation<
-  TAction extends Action,
->(
+export function createWaitForActionMiddlewareForRecommendation<TAction extends Action>(
   isDesiredAction: (action: unknown) => action is TAction,
   memo: Set<string>
 ): {promise: Promise<TAction>; middleware: Middleware} {

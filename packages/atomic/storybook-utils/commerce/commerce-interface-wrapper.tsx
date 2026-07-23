@@ -39,10 +39,9 @@ export const wrapInCommerceInterface = ({
   `,
   play: async ({canvasElement}) => {
     await customElements.whenDefined('atomic-commerce-interface');
-    const commerceInterface =
-      canvasElement.querySelector<AtomicCommerceInterface>(
-        'atomic-commerce-interface'
-      )!;
+    const commerceInterface = canvasElement.querySelector<AtomicCommerceInterface>(
+      'atomic-commerce-interface'
+    )!;
     await commerceInterface.initialize({
       ...getSampleCommerceEngineConfiguration(),
       ...engineConfig,
@@ -54,13 +53,12 @@ export const wrapInCommerceInterface = ({
   },
 });
 
-export const executeFirstRequestHook: (
-  context: StoryContext
-) => Promise<void> = async ({canvasElement}) => {
-  const commerceInterface =
-    canvasElement.querySelector<AtomicCommerceInterface>(
-      'atomic-commerce-interface'
-    )!;
+export const executeFirstRequestHook: (context: StoryContext) => Promise<void> = async ({
+  canvasElement,
+}) => {
+  const commerceInterface = canvasElement.querySelector<AtomicCommerceInterface>(
+    'atomic-commerce-interface'
+  )!;
   await commerceInterface!.executeFirstRequest();
 };
 
@@ -75,16 +73,12 @@ export const hideFacetTypesHook = async (
     'atomic-commerce-category-facet',
   ];
 
-  const facetTypesToHide = allFacetTypes.filter(
-    (type) => type !== facetTypeToKeep
-  );
+  const facetTypesToHide = allFacetTypes.filter((type) => type !== facetTypeToKeep);
 
   const waitForFacets = () => {
     return new Promise<void>((resolve) => {
       const checkForFacets = () => {
-        const facetsContainer = context.canvasElement.querySelector(
-          'atomic-commerce-facets'
-        );
+        const facetsContainer = context.canvasElement.querySelector('atomic-commerce-facets');
         if (facetsContainer) {
           const totalFacets = facetTypesToHide.reduce((count, type) => {
             return count + facetsContainer.querySelectorAll(type).length;
@@ -103,9 +97,7 @@ export const hideFacetTypesHook = async (
 
   await waitForFacets();
 
-  const facetsContainer = context.canvasElement.querySelector(
-    'atomic-commerce-facets'
-  );
+  const facetsContainer = context.canvasElement.querySelector('atomic-commerce-facets');
   if (facetsContainer) {
     // Hide all facets of other types.
     facetTypesToHide.forEach((facetType) => {

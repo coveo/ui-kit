@@ -13,16 +13,12 @@ test.describe('atomic-ipx-refine-toggle', () => {
     await expect(ipxRefineToggle.icon).toBeVisible();
   });
 
-  test('should open refine modal when button is clicked', async ({
-    ipxRefineToggle,
-  }) => {
+  test('should open refine modal when button is clicked', async ({ipxRefineToggle}) => {
     await ipxRefineToggle.clickButton();
     await expect(ipxRefineToggle.modal).toHaveAttribute('is-open', '');
   });
 
-  test('should display facets inside the modal when opened', async ({
-    ipxRefineToggle,
-  }) => {
+  test('should display facets inside the modal when opened', async ({ipxRefineToggle}) => {
     await test.step('open the refine modal', async () => {
       await ipxRefineToggle.clickButton();
       await expect(ipxRefineToggle.modal).toHaveAttribute('is-open', '');

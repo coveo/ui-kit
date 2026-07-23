@@ -7,14 +7,8 @@ type PlatformEnvironment = 'prod' | 'dev' | 'stg' | 'hipaa';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const headlessFutureRoot = path.resolve(
-  __dirname,
-  '../../../packages/thermidor'
-);
-const headlessFutureSourceEntry = path.resolve(
-  headlessFutureRoot,
-  'src/index.ts'
-);
+const headlessFutureRoot = path.resolve(__dirname, '../../../packages/thermidor');
+const headlessFutureSourceEntry = path.resolve(headlessFutureRoot, 'src/index.ts');
 
 function parseBoolean(value: string | undefined): boolean | undefined {
   if (!value) {
@@ -34,12 +28,7 @@ function parseBoolean(value: string | undefined): boolean | undefined {
 }
 
 function resolveEnvironment(value: string | undefined): PlatformEnvironment {
-  if (
-    value === 'prod' ||
-    value === 'dev' ||
-    value === 'stg' ||
-    value === 'hipaa'
-  ) {
+  if (value === 'prod' || value === 'dev' || value === 'stg' || value === 'hipaa') {
     return value;
   }
 

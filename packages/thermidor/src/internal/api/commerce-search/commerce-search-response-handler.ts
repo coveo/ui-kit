@@ -9,9 +9,7 @@ import {getOrCreateSortActions} from '@/src/internal/features/sort/index.js';
 import {getOrCreateTriggersActions} from '@/src/internal/features/triggers/index.js';
 import {getOrCreateQueryCorrectionActions} from '@/src/internal/features/query-correction/index.js';
 
-export function createCommerceSearchEndpointResponseHandler(
-  iface: InterfaceHandle
-) {
+export function createCommerceSearchEndpointResponseHandler(iface: InterfaceHandle) {
   const productListActions = getOrCreateProductListActions(iface);
   const paginationActions = getOrCreatePaginationActions(iface);
   const facetActions = getOrCreateFacetsActions(iface);
@@ -20,25 +18,17 @@ export function createCommerceSearchEndpointResponseHandler(
   const queryCorrectionActions = getOrCreateQueryCorrectionActions(iface);
 
   return (engine: FullEngine, response: CommerceSearchResponse) => {
-    engine.mutate(
-      productListActions.setProductsFromResponse(response.products)
-    );
+    engine.mutate(productListActions.setProductsFromResponse(response.products));
 
+    engine.mutate(paginationActions.setTotalCount(response.pagination.totalEntries));
     engine.mutate(
-      paginationActions.setTotalCount(response.pagination.totalEntries)
-    );
-    engine.mutate(
-      paginationActions.setFirstResult(
-        response.pagination.page * response.pagination.perPage
-      )
+      paginationActions.setFirstResult(response.pagination.page * response.pagination.perPage)
     );
     engine.mutate(paginationActions.setPageSize(response.pagination.perPage));
 
     if (response.facets.length > 0) {
       engine.mutate(
-        facetActions.updateFromResponse(
-          response.facets as unknown as CoveoFacetResponse[]
-        )
+        facetActions.updateFromResponse(response.facets as unknown as CoveoFacetResponse[])
       );
     }
 
@@ -51,9 +41,7 @@ export function createCommerceSearchEndpointResponseHandler(
     }
 
     if (response.queryCorrection !== undefined) {
-      engine.mutate(
-        queryCorrectionActions.setQueryCorrection(response.queryCorrection)
-      );
+      engine.mutate(queryCorrectionActions.setQueryCorrection(response.queryCorrection));
     }
   };
 }

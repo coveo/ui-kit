@@ -13,10 +13,7 @@ import {
 export type ResultTemplate<Content = unknown> = Template<Result, Content>;
 export type ResultTemplateCondition = TemplateCondition<Result>;
 
-export interface ResultTemplatesManager<
-  Content = unknown,
-  LinkContent = unknown,
-> {
+export interface ResultTemplatesManager<Content = unknown, LinkContent = unknown> {
   /**
    * Registers any number of result templates in the manager.
    * @param templates (...ResultTemplate<Content>) A list of templates to register.
@@ -43,10 +40,7 @@ export interface ResultTemplatesManager<
  * @param engine (HeadlessEngine) The `HeadlessEngine` instance of your application.
  * @returns (ResultTemplatesManager<Content, State>) A new result templates manager.
  */
-export function buildResultTemplatesManager<
-  Content = unknown,
-  LinkContent = unknown,
->(
+export function buildResultTemplatesManager<Content = unknown, LinkContent = unknown>(
   engine: CoreEngine | CoreEngineNext
 ): ResultTemplatesManager<Content, LinkContent> {
   if (!loadResultTemplatesManagerReducers(engine)) {

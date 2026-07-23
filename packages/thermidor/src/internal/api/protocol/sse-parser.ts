@@ -19,10 +19,7 @@ import type {NormalizedStreamEvent, RawSSEEvent} from './stream-types.js';
  * For structured payloads, promotes the event name into the `type` field.
  * For non-object payloads, wraps them with a `type` and `payload` field.
  */
-function normalizeNamedEvent(
-  eventName: string,
-  payload: unknown
-): NormalizedStreamEvent {
+function normalizeNamedEvent(eventName: string, payload: unknown): NormalizedStreamEvent {
   if (payload && typeof payload === 'object' && !Array.isArray(payload)) {
     return {
       ...(payload as Record<string, unknown>),
@@ -74,15 +71,9 @@ export function parseSSEEvent(raw: RawSSEEvent): NormalizedStreamEvent {
       // CUSTOM events that failed Zod validation — handle gracefully
       if (record.type === 'CUSTOM') {
         const name =
-          typeof record.name === 'string' && record.name.trim()
-            ? record.name.trim()
-            : 'custom';
+          typeof record.name === 'string' && record.name.trim() ? record.name.trim() : 'custom';
         const value =
-          'value' in record
-            ? record.value
-            : 'payload' in record
-              ? record.payload
-              : record;
+          'value' in record ? record.value : 'payload' in record ? record.payload : record;
         return {type: 'CUSTOM', name, value} as NormalizedStreamEvent;
       }
 

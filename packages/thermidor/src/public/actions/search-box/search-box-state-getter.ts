@@ -15,10 +15,7 @@ export function getSearchBoxState(options: GetSearchBoxStateOptions) {
 
   const selectors = getOrCreateSearchBoxSelectors(options.interface);
 
-  const stateSelector = createMemoizedStateSelector(
-    selectors.getQuery,
-    (query) => ({query})
-  );
+  const stateSelector = createMemoizedStateSelector(selectors.getQuery, (query) => ({query}));
 
   return {
     get query() {

@@ -3,10 +3,7 @@ import HistoryStore from '../../api/analytics/coveo.analytics/history-store.js';
 import type {GeneratedAnswerStreamRequest} from '../../api/generated-answer/generated-answer-request.js';
 import type {StreamAnswerAPIState} from '../../api/knowledge/stream-answer-api-state.js';
 import {getApiBaseUrlOrOrganizationEndpoint} from '../../api/platform-client.js';
-import type {
-  BaseParam,
-  ContextParam,
-} from '../../api/platform-service-params.js';
+import type {BaseParam, ContextParam} from '../../api/platform-service-params.js';
 import type {SearchRequest} from '../../api/search/search/search-request.js';
 import type {
   AdvancedQueryParam,
@@ -24,14 +21,8 @@ import {fromAnalyticsStateToAnalyticsParams} from '../../features/configuration/
 import {selectContext} from '../../features/context/context-selector.js';
 import {selectFieldsToIncludeInCitation} from '../../features/generated-answer/generated-answer-selectors.js';
 import {selectPipeline} from '../../features/pipeline/select-pipeline.js';
-import {
-  selectEnableQuerySyntax,
-  selectQuery,
-} from '../../features/query/query-selectors.js';
-import {
-  initialSearchMappings,
-  mapFacetRequest,
-} from '../../features/search/search-mappings.js';
+import {selectEnableQuerySyntax, selectQuery} from '../../features/query/query-selectors.js';
+import {initialSearchMappings, mapFacetRequest} from '../../features/search/search-mappings.js';
 import {
   buildConstantQuery,
   getNumberOfResultsWithinIndexLimit,
@@ -47,10 +38,7 @@ import type {
   TabSection,
 } from '../../state/state-sections.js';
 import {getFacets} from '../../utils/facet-utils.js';
-import {
-  selectLocale,
-  selectTimezone,
-} from '../configuration/configuration-selectors.js';
+import {selectLocale, selectTimezone} from '../configuration/configuration-selectors.js';
 import {selectDictionaryFieldContext} from '../dictionary-field-context/dictionary-field-context-selectors.js';
 import {selectExcerptLength} from '../excerpt-length/excerpt-length-selectors.js';
 import {selectFacetOptions} from '../facet-options/facet-options-selectors.js';
@@ -64,10 +52,7 @@ type StateNeededByGeneratedAnswerStream = ConfigurationSection &
 
 export interface AnswerApiQueryParams
   extends
-    Omit<
-      SearchRequest,
-      keyof (BaseParam & AuthenticationParam & AutomaticFacetsParams)
-    >,
+    Omit<SearchRequest, keyof (BaseParam & AuthenticationParam & AutomaticFacetsParams)>,
     CaseContextParam {}
 
 export const buildStreamingRequest = async (
@@ -137,8 +122,7 @@ export const constructAnswerAPIQueryParams = (
     ...(state.didYouMean && {
       queryCorrection: {
         enabled:
-          state.didYouMean.enableDidYouMean &&
-          state.didYouMean.queryCorrectionMode === 'next',
+          state.didYouMean.enableDidYouMean && state.didYouMean.queryCorrectionMode === 'next',
         options: {
           automaticallyCorrect: state.didYouMean.automaticallyCorrectQuery
             ? ('whenNoResults' as const)
@@ -146,8 +130,7 @@ export const constructAnswerAPIQueryParams = (
         },
       },
       enableDidYouMean:
-        state.didYouMean.enableDidYouMean &&
-        state.didYouMean.queryCorrectionMode === 'legacy',
+        state.didYouMean.enableDidYouMean && state.didYouMean.queryCorrectionMode === 'legacy',
     }),
     ...(state.pagination && {
       numberOfResults: getNumberOfResultsWithinIndexLimit(state),
@@ -232,27 +215,19 @@ export const constructGenerateHeadAnswerParams = (
   };
 };
 
-const getGeneratedFacetParams = (
-  state: Partial<SearchAppState>
-): AnyFacetRequest[] =>
+const getGeneratedFacetParams = (state: Partial<SearchAppState>): AnyFacetRequest[] =>
   getFacets(state)
-    ?.map((facetRequest) =>
-      mapFacetRequest(facetRequest, initialSearchMappings())
-    )
-    .sort((a, b) =>
-      a.facetId > b.facetId ? 1 : b.facetId > a.facetId ? -1 : 0
-    );
+    ?.map((facetRequest) => mapFacetRequest(facetRequest, initialSearchMappings()))
+    .sort((a, b) => (a.facetId > b.facetId ? 1 : b.facetId > a.facetId ? -1 : 0));
 
-const getActionsHistory = (
-  state: StreamAnswerAPIState
-): {actionsHistory: HistoryElement[]} => ({
+const getActionsHistory = (state: StreamAnswerAPIState): {actionsHistory: HistoryElement[]} => ({
   actionsHistory: state.configuration.analytics.enabled
     ? HistoryStore.getInstance().getHistory()
     : [],
 });
 
-type StateNeededByGeneratedAnswerAdvancedSearchQueryParams =
-  ConfigurationSection & Partial<SearchAppState>;
+type StateNeededByGeneratedAnswerAdvancedSearchQueryParams = ConfigurationSection &
+  Partial<SearchAppState>;
 
 const buildAdvancedSearchQueryParams = (
   state: StateNeededByGeneratedAnswerAdvancedSearchQueryParams

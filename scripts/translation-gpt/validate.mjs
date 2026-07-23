@@ -3,9 +3,7 @@ import {env} from 'node:process';
 
 const keysToValidate = process.argv.slice(2);
 
-const fileToValidate = JSON.parse(
-  readFileSync('../../packages/atomic/src/locales.json')
-);
+const fileToValidate = JSON.parse(readFileSync('../../packages/atomic/src/locales.json'));
 
 if (!existsSync('temporary.json')) {
   openSync('temporary.json', 'w');
@@ -36,8 +34,7 @@ async function main() {
   let allIdentifiedProblems = {};
 
   for (const translationKey of Object.keys(fileToValidate)) {
-    if (keysToValidate.length > 0 && !keysToValidate.includes(translationKey))
-      continue;
+    if (keysToValidate.length > 0 && !keysToValidate.includes(translationKey)) continue;
     try {
       const englishTranslation = fileToValidate[translationKey].en;
       const translationsToValidate = fileToValidate[translationKey];
@@ -66,27 +63,25 @@ async function main() {
       const data = await res.json();
       const answer = JSON.parse(data.choices[0].message.content);
 
-      Object.entries(answer).forEach(
-        ([languageCode, {validation, translation}]) => {
-          if (validation !== true) {
-            const problem = {
-              languageCode,
-              translation,
-              validation,
-              validator: englishTranslation,
-              translationKeyToVerify: translationKey,
-            };
+      Object.entries(answer).forEach(([languageCode, {validation, translation}]) => {
+        if (validation !== true) {
+          const problem = {
+            languageCode,
+            translation,
+            validation,
+            validator: englishTranslation,
+            translationKeyToVerify: translationKey,
+          };
 
-            console.error('!!! Potential problem to verify !!!');
-            console.error(problem);
+          console.error('!!! Potential problem to verify !!!');
+          console.error(problem);
 
-            allIdentifiedProblems = {
-              [translationKey]: {[languageCode]: {...problem}},
-              ...allIdentifiedProblems,
-            };
-          }
+          allIdentifiedProblems = {
+            [translationKey]: {[languageCode]: {...problem}},
+            ...allIdentifiedProblems,
+          };
         }
-      );
+      });
       console.log(`Finished validating ${translationKey}...`);
     } catch (e) {
       console.error(e);

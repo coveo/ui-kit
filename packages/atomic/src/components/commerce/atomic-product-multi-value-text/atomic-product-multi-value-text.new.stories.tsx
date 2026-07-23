@@ -22,14 +22,10 @@ commerceApiHarness.searchEndpoint.mock((response) => ({
 }));
 
 const {decorator: productDecorator} = wrapInProductTemplate();
-const {decorator: commerceProductListDecorator} = wrapInCommerceProductList(
-  'list',
-  false
-);
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-product-multi-value-text',
-  {excludeCategories: ['methods']}
-);
+const {decorator: commerceProductListDecorator} = wrapInCommerceProductList('list', false);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-product-multi-value-text', {
+  excludeCategories: ['methods'],
+});
 const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
   engineConfig: {
     preprocessRequest: (request) => {
@@ -56,11 +52,7 @@ const meta: Meta = {
   },
   argTypes,
 
-  decorators: [
-    productDecorator,
-    commerceProductListDecorator,
-    commerceInterfaceDecorator,
-  ],
+  decorators: [productDecorator, commerceProductListDecorator, commerceInterfaceDecorator],
   play,
   args: {
     ...args,

@@ -39,19 +39,13 @@ describe('recommendation-slice', () => {
       state[slotId] = buildMockRecommendationsSlice();
       const originalSlot = state[slotId];
 
-      const finalState = recommendationsReducer(
-        state,
-        registerRecommendationsSlot({slotId})
-      );
+      const finalState = recommendationsReducer(state, registerRecommendationsSlot({slotId}));
 
       expect(finalState[slotId]).toEqual(originalSlot);
     });
 
     it('when slot does not exist, registers a new one', () => {
-      const finalState = recommendationsReducer(
-        state,
-        registerRecommendationsSlot({slotId})
-      );
+      const finalState = recommendationsReducer(state, registerRecommendationsSlot({slotId}));
       expect(finalState[slotId]).toEqual(buildMockRecommendationsSlice());
     });
 
@@ -74,10 +68,7 @@ describe('recommendation-slice', () => {
     });
     const action = fetchRecommendations.fulfilled(response, '', {slotId});
 
-    it(
-      'when slot does not exist, ignores response',
-      expectSlotToStayUnchanged(action)
-    );
+    it('when slot does not exist, ignores response', expectSlotToStayUnchanged(action));
 
     it('when slot exists, sets the state to the received payload', () => {
       const baseProduct = buildMockBaseProduct({ec_name: 'product-1'});
@@ -95,9 +86,7 @@ describe('recommendation-slice', () => {
       const slot = finalState[slotId]!;
 
       expect(slot.products).toEqual(
-        response.response.products.map((p) =>
-          buildMockProduct({ec_name: p.ec_name, responseId})
-        )
+        response.response.products.map((p) => buildMockProduct({ec_name: p.ec_name, responseId}))
       );
       expect(slot.responseId).toEqual(responseId);
       expect(slot.isLoading).toBe(false);
@@ -160,10 +149,7 @@ describe('recommendation-slice', () => {
     });
     const action = fetchMoreRecommendations.fulfilled(response, '', {slotId});
 
-    it(
-      'when slot does not exist, ignores response',
-      expectSlotToStayUnchanged(action)
-    );
+    it('when slot does not exist, ignores response', expectSlotToStayUnchanged(action));
 
     it('when slot exists, appends the received payload to the state', () => {
       state[slotId] = buildMockRecommendationsSlice({
@@ -257,12 +243,8 @@ describe('recommendation-slice', () => {
       const finalState = recommendationsReducer(state, action);
 
       // Original products keep their responseId
-      expect(finalState[slotId]!.products[0].responseId).toBe(
-        'old-response-id'
-      );
-      expect(finalState[slotId]!.products[1].responseId).toBe(
-        'old-response-id'
-      );
+      expect(finalState[slotId]!.products[0].responseId).toBe('old-response-id');
+      expect(finalState[slotId]!.products[1].responseId).toBe('old-response-id');
       // New products get the new responseId
       expect(finalState[slotId]!.products[2].responseId).toBe(responseId);
     });
@@ -284,10 +266,7 @@ describe('recommendation-slice', () => {
       },
     };
 
-    it(
-      'when slot does not exist, ignores response',
-      expectSlotToStayUnchanged(action)
-    );
+    it('when slot does not exist, ignores response', expectSlotToStayUnchanged(action));
 
     it('when slot exists, sets the error on rejection', () => {
       state[slotId] = buildMockRecommendationsSlice();
@@ -326,10 +305,7 @@ describe('recommendation-slice', () => {
       },
     };
 
-    it(
-      'when slot does not exist, ignores response',
-      expectSlotToStayUnchanged(action)
-    );
+    it('when slot does not exist, ignores response', expectSlotToStayUnchanged(action));
 
     it('when slot exists, sets the error on rejection', () => {
       state[slotId] = buildMockRecommendationsSlice();
@@ -355,10 +331,7 @@ describe('recommendation-slice', () => {
   describe('on #fetchRecommendations.pending', () => {
     const action = fetchRecommendations.pending('', {slotId});
 
-    it(
-      'when slot does not exist, does not alter slot',
-      expectSlotToStayUnchanged(action)
-    );
+    it('when slot does not exist, does not alter slot', expectSlotToStayUnchanged(action));
 
     it('when slot exists, sets #isLoading to true', () => {
       state[slotId] = buildMockRecommendationsSlice({isLoading: false});
@@ -372,10 +345,7 @@ describe('recommendation-slice', () => {
   describe('on #fetchMoreRecommendations.pending', () => {
     const action = fetchMoreRecommendations.pending('', {slotId});
 
-    it(
-      'when slot does not exist, does not alter slot',
-      expectSlotToStayUnchanged(action)
-    );
+    it('when slot does not exist, does not alter slot', expectSlotToStayUnchanged(action));
 
     it('when slot exists, sets #isLoading to true', () => {
       state[slotId] = buildMockRecommendationsSlice({isLoading: false});
@@ -409,9 +379,7 @@ describe('recommendation-slice', () => {
     });
 
     it('when child does not exist in slot, it does not change the state', () => {
-      state[slotId]!.products = [
-        buildMockProduct({permanentid: 'parent-id', children: []}),
-      ];
+      state[slotId]!.products = [buildMockProduct({permanentid: 'parent-id', children: []})];
 
       expectSlotToStayUnchanged(action);
     });

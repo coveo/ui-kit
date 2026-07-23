@@ -2,10 +2,7 @@ import {html, nothing, type TemplateResult} from 'lit';
 import {describe, expect, it} from 'vitest';
 import type {ItemDisplayLayout} from '@/src/components';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
-import {
-  type DisplayWrapperProps,
-  renderDisplayWrapper,
-} from './display-wrapper';
+import {type DisplayWrapperProps, renderDisplayWrapper} from './display-wrapper';
 
 describe('renderDisplayWrapper', () => {
   const displayWrapperFixture = async (
@@ -43,9 +40,7 @@ describe('renderDisplayWrapper', () => {
         display: 'table',
       });
 
-      expect(
-        displayWrapper.querySelector('.list-root')
-      ).not.toBeInTheDocument();
+      expect(displayWrapper.querySelector('.list-root')).not.toBeInTheDocument();
     });
 
     it('should render its children', async () => {
@@ -63,80 +58,78 @@ describe('renderDisplayWrapper', () => {
     });
   });
 
-  describe.each<{display: ItemDisplayLayout}>([
-    {display: 'grid'},
-    {display: 'list'},
-  ])('when #display is $display', ({display}) => {
-    it('should render a list wrapper element in the document', async () => {
-      const displayWrapper = await displayWrapperFixture({
-        display,
+  describe.each<{display: ItemDisplayLayout}>([{display: 'grid'}, {display: 'list'}])(
+    'when #display is $display',
+    ({display}) => {
+      it('should render a list wrapper element in the document', async () => {
+        const displayWrapper = await displayWrapperFixture({
+          display,
+        });
+
+        expect(displayWrapper).toBeInTheDocument();
+        expect(displayWrapper).toHaveClass('list-wrapper');
       });
 
-      expect(displayWrapper).toBeInTheDocument();
-      expect(displayWrapper).toHaveClass('list-wrapper');
-    });
+      it("should apply the #listClasses prop value to the list wrapper element's 'class' attribute", async () => {
+        const displayWrapper = await displayWrapperFixture({
+          listClasses: 'test-class-1 test-class-2',
+        });
 
-    it("should apply the #listClasses prop value to the list wrapper element's 'class' attribute", async () => {
-      const displayWrapper = await displayWrapperFixture({
-        listClasses: 'test-class-1 test-class-2',
+        expect(displayWrapper).toHaveClass('test-class-1');
+        expect(displayWrapper).toHaveClass('test-class-2');
       });
 
-      expect(displayWrapper).toHaveClass('test-class-1');
-      expect(displayWrapper).toHaveClass('test-class-2');
-    });
+      it('should render a list root element under the list wrapper element in the document', async () => {
+        const displayWrapper = await displayWrapperFixture({
+          display,
+        });
 
-    it('should render a list root element under the list wrapper element in the document', async () => {
-      const displayWrapper = await displayWrapperFixture({
-        display,
+        const listRootElements = displayWrapper.querySelectorAll('.list-root');
+
+        expect(listRootElements).toHaveLength(1);
+        expect(listRootElements.item(0)).toBeInTheDocument();
+        expect(listRootElements.item(0)).toHaveClass('list-root');
+        expect(listRootElements.item(0).parentElement).toHaveClass('list-wrapper');
       });
 
-      const listRootElements = displayWrapper.querySelectorAll('.list-root');
+      it('should render the list root element with the correct part', async () => {
+        const displayWrapper = await displayWrapperFixture({
+          display,
+        });
 
-      expect(listRootElements).toHaveLength(1);
-      expect(listRootElements.item(0)).toBeInTheDocument();
-      expect(listRootElements.item(0)).toHaveClass('list-root');
-      expect(listRootElements.item(0).parentElement).toHaveClass(
-        'list-wrapper'
-      );
-    });
+        const listRootElement = displayWrapper.querySelector('.list-root');
 
-    it('should render the list root element with the correct part', async () => {
-      const displayWrapper = await displayWrapperFixture({
-        display,
+        expect(listRootElement?.part.value).toBe('result-list');
       });
 
-      const listRootElement = displayWrapper.querySelector('.list-root');
+      it("should apply the #listClasses prop value to the list root element's 'class' attribute", async () => {
+        const displayWrapper = await displayWrapperFixture({
+          listClasses: 'test-class-1 test-class-2',
+        });
 
-      expect(listRootElement?.part.value).toBe('result-list');
-    });
+        const listRootElement = displayWrapper.querySelector('.list-root');
 
-    it("should apply the #listClasses prop value to the list root element's 'class' attribute", async () => {
-      const displayWrapper = await displayWrapperFixture({
-        listClasses: 'test-class-1 test-class-2',
+        expect(listRootElement).toHaveClass('test-class-1');
+        expect(listRootElement).toHaveClass('test-class-2');
       });
 
-      const listRootElement = displayWrapper.querySelector('.list-root');
+      it('should render its children under the list root element', async () => {
+        const displayWrapper = await displayWrapperFixture(
+          {display},
+          html`<div class="child">Test Child 1</div>
+            <div class="child">Test Child 2</div>`
+        );
 
-      expect(listRootElement).toHaveClass('test-class-1');
-      expect(listRootElement).toHaveClass('test-class-2');
-    });
+        const children = displayWrapper.querySelectorAll('.child');
 
-    it('should render its children under the list root element', async () => {
-      const displayWrapper = await displayWrapperFixture(
-        {display},
-        html`<div class="child">Test Child 1</div>
-          <div class="child">Test Child 2</div>`
-      );
-
-      const children = displayWrapper.querySelectorAll('.child');
-
-      expect(children).toHaveLength(2);
-      expect(children.item(0)).toBeInTheDocument();
-      expect(children.item(0).parentElement).toHaveClass('list-root');
-      expect(children.item(0).textContent).toBe('Test Child 1');
-      expect(children.item(1)).toBeInTheDocument();
-      expect(children.item(1).parentElement).toHaveClass('list-root');
-      expect(children.item(1).textContent).toBe('Test Child 2');
-    });
-  });
+        expect(children).toHaveLength(2);
+        expect(children.item(0)).toBeInTheDocument();
+        expect(children.item(0).parentElement).toHaveClass('list-root');
+        expect(children.item(0).textContent).toBe('Test Child 1');
+        expect(children.item(1)).toBeInTheDocument();
+        expect(children.item(1).parentElement).toHaveClass('list-root');
+        expect(children.item(1).textContent).toBe('Test Child 2');
+      });
+    }
+  );
 });

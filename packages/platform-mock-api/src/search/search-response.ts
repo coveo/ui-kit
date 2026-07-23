@@ -420,8 +420,7 @@ export const richResponse = {
   queryCorrection: {
     corrections: [],
   },
-  index:
-    'searchuisamples-x2gfkt3pnhhygw75wjwd4ikgtu-Indexer-1-xear73dnxrjptdfj53fhppcixi',
+  index: 'searchuisamples-x2gfkt3pnhhygw75wjwd4ikgtu-Indexer-1-xear73dnxrjptdfj53fhppcixi',
   logicalIndex: 'default',
   indexRegion: 'us-east-1',
   indexToken:
@@ -1297,8 +1296,7 @@ export const richResponse = {
   categoryFacets: [],
   results: [
     {
-      title:
-        'Several countries boycott Eurovision after Israel allowed to compete | BBC',
+      title: 'Several countries boycott Eurovision after Israel allowed to compete | BBC',
       uri: 'https://youtube.com/User:bbcnews/Channel:UC16niRr50-MSBwiO3YDb3RA/Video:jWxMrzEXCZE',
       printableUri: 'https://www.youtube.com/watch?v=jWxMrzEXCZE',
       clickUri: 'https://www.youtube.com/watch?v=jWxMrzEXCZE',
@@ -1331,8 +1329,7 @@ export const richResponse = {
         sysauthor: ['BBC News'],
         sysurihash: '7oQhK429ñzbuW5c7',
         urihash: '7oQhK429ñzbuW5c7',
-        permanentid:
-          'c336706aae89ebe6738283d538adcf6e227f969993d4dbc0c97ef36b6b75',
+        permanentid: 'c336706aae89ebe6738283d538adcf6e227f969993d4dbc0c97ef36b6b75',
         syslanguage: ['English'],
         date: 1764883694000,
         sourcetype: 'YouTube',
@@ -1347,8 +1344,7 @@ export const richResponse = {
         language: ['English'],
         syscollection: 'default',
       },
-      Title:
-        'Several countries boycott Eurovision after Israel allowed to compete | BBC',
+      Title: 'Several countries boycott Eurovision after Israel allowed to compete | BBC',
       Uri: 'https://youtube.com/User:bbcnews/Channel:UC16niRr50-MSBwiO3YDb3RA/Video:jWxMrzEXCZE',
       PrintableUri: 'https://www.youtube.com/watch?v=jWxMrzEXCZE',
       ClickUri: 'https://www.youtube.com/watch?v=jWxMrzEXCZE',
@@ -1393,8 +1389,7 @@ export const richResponse = {
         sysauthor: ['BBC News'],
         sysurihash: '8cNR3ðQRmDjvRSWy',
         urihash: '8cNR3ðQRmDjvRSWy',
-        permanentid:
-          '1a27211ee7e8e2357a5738dede814db7693e9539b079a69610828b137430',
+        permanentid: '1a27211ee7e8e2357a5738dede814db7693e9539b079a69610828b137430',
         syslanguage: ['English'],
         date: 1764884930000,
         sourcetype: 'YouTube',
@@ -1455,8 +1450,7 @@ export const richResponse = {
         sysauthor: ['BBC News'],
         sysurihash: '5YOHBrxZMx3i03vu',
         urihash: '5YOHBrxZMx3i03vu',
-        permanentid:
-          '9a0a48bd6f3e2975e22ce989d60e7c7f85facafd75156fa28e1949bdfe4d',
+        permanentid: '9a0a48bd6f3e2975e22ce989d60e7c7f85facafd75156fa28e1949bdfe4d',
         syslanguage: ['English'],
         date: 1764869412000,
         sourcetype: 'YouTube',
@@ -1483,8 +1477,7 @@ export const richResponse = {
       FirstSentences: null,
     },
     {
-      title:
-        'CCTV captures raccoon drunk in liquor store. #Raccoon #Scotch #BBCNews',
+      title: 'CCTV captures raccoon drunk in liquor store. #Raccoon #Scotch #BBCNews',
       uri: 'https://youtube.com/User:bbcnews/Channel:UC16niRr50-MSBwiO3YDb3RA/Video:c-_Mn7m2VM8',
       printableUri: 'https://www.youtube.com/watch?v=c-_Mn7m2VM8',
       clickUri: 'https://www.youtube.com/watch?v=c-_Mn7m2VM8',
@@ -1516,8 +1509,7 @@ export const richResponse = {
         sysauthor: ['BBC News'],
         sysurihash: 'tz4Xñpz3B1vCupcB',
         urihash: 'tz4Xñpz3B1vCupcB',
-        permanentid:
-          'e8e388478d18684fae15c32c445415c5cab5e7d92af90f4a3ad8d24ca174',
+        permanentid: 'e8e388478d18684fae15c32c445415c5cab5e7d92af90f4a3ad8d24ca174',
         date: 1764858626000,
         sourcetype: 'YouTube',
         syssource: 'Coveo Samples - Youtube BBC News',
@@ -1530,8 +1522,7 @@ export const richResponse = {
         sysfiletype: 'YouTubeVideo',
         syscollection: 'default',
       },
-      Title:
-        'CCTV captures raccoon drunk in liquor store. #Raccoon #Scotch #BBCNews',
+      Title: 'CCTV captures raccoon drunk in liquor store. #Raccoon #Scotch #BBCNews',
       Uri: 'https://youtube.com/User:bbcnews/Channel:UC16niRr50-MSBwiO3YDb3RA/Video:c-_Mn7m2VM8',
       PrintableUri: 'https://www.youtube.com/watch?v=c-_Mn7m2VM8',
       ClickUri: 'https://www.youtube.com/watch?v=c-_Mn7m2VM8',
@@ -1575,8 +1566,7 @@ export const richResponse = {
         sysauthor: ['BBC News'],
         sysurihash: 'lbXhxYñ14UHlIfsD',
         urihash: 'lbXhxYñ14UHlIfsD',
-        permanentid:
-          '38ab3850f8b7176c7622a7ee0952466e1d697b14dbe5a6fe30c38af7dfc7',
+        permanentid: '38ab3850f8b7176c7622a7ee0952466e1d697b14dbe5a6fe30c38af7dfc7',
         syslanguage: ['English'],
         date: 1764858057000,
         sourcetype: 'YouTube',
@@ -1636,8 +1626,7 @@ export const richResponse = {
         sysauthor: ['BBC News'],
         sysurihash: 'Xwj1dORVSR0YiDkA',
         urihash: 'Xwj1dORVSR0YiDkA',
-        permanentid:
-          '1c73412bdfee8b70a14a4209a229c287cebc94fa365d518751b2f92a3290',
+        permanentid: '1c73412bdfee8b70a14a4209a229c287cebc94fa365d518751b2f92a3290',
         date: 1764862208000,
         sourcetype: 'YouTube',
         syssource: 'Coveo Samples - Youtube BBC News',
@@ -1661,8 +1650,7 @@ export const richResponse = {
       FirstSentences: null,
     },
     {
-      title:
-        'Mum of doctor who gave Matthew Perry ketamine says sorry. #MatthewPerry #BBCNews',
+      title: 'Mum of doctor who gave Matthew Perry ketamine says sorry. #MatthewPerry #BBCNews',
       uri: 'https://youtube.com/User:bbcnews/Channel:UC16niRr50-MSBwiO3YDb3RA/Video:H-1Oe0gKXfU',
       printableUri: 'https://www.youtube.com/watch?v=H-1Oe0gKXfU',
       clickUri: 'https://www.youtube.com/watch?v=H-1Oe0gKXfU',
@@ -1694,8 +1682,7 @@ export const richResponse = {
         sysauthor: ['BBC News'],
         sysurihash: 'JS0xMvWjY66YJWz3',
         urihash: 'JS0xMvWjY66YJWz3',
-        permanentid:
-          'e65502cefc9cc755b4614a740fe5db392e5359874fc854bd4da2e4d0b94b',
+        permanentid: 'e65502cefc9cc755b4614a740fe5db392e5359874fc854bd4da2e4d0b94b',
         date: 1764844552000,
         sourcetype: 'YouTube',
         syssource: 'Coveo Samples - Youtube BBC News',
@@ -1708,8 +1695,7 @@ export const richResponse = {
         sysfiletype: 'YouTubeVideo',
         syscollection: 'default',
       },
-      Title:
-        'Mum of doctor who gave Matthew Perry ketamine says sorry. #MatthewPerry #BBCNews',
+      Title: 'Mum of doctor who gave Matthew Perry ketamine says sorry. #MatthewPerry #BBCNews',
       Uri: 'https://youtube.com/User:bbcnews/Channel:UC16niRr50-MSBwiO3YDb3RA/Video:H-1Oe0gKXfU',
       PrintableUri: 'https://www.youtube.com/watch?v=H-1Oe0gKXfU',
       ClickUri: 'https://www.youtube.com/watch?v=H-1Oe0gKXfU',
@@ -1719,8 +1705,7 @@ export const richResponse = {
       FirstSentences: null,
     },
     {
-      title:
-        "Ilhan Omar calls Trump 'creepy' over his 'obsession' with Somali community. #BBCNews",
+      title: "Ilhan Omar calls Trump 'creepy' over his 'obsession' with Somali community. #BBCNews",
       uri: 'https://youtube.com/User:bbcnews/Channel:UC16niRr50-MSBwiO3YDb3RA/Video:XCoYn-NcG2k',
       printableUri: 'https://www.youtube.com/watch?v=XCoYn-NcG2k',
       clickUri: 'https://www.youtube.com/watch?v=XCoYn-NcG2k',
@@ -1752,8 +1737,7 @@ export const richResponse = {
         sysauthor: ['BBC News'],
         sysurihash: 'Xj2JYzozsoWm5SK7',
         urihash: 'Xj2JYzozsoWm5SK7',
-        permanentid:
-          '69e39a0a4e9033b15382f9a0d6ea54ddc30d7ec2108a4225892496820320',
+        permanentid: '69e39a0a4e9033b15382f9a0d6ea54ddc30d7ec2108a4225892496820320',
         date: 1764849671000,
         sourcetype: 'YouTube',
         syssource: 'Coveo Samples - Youtube BBC News',
@@ -1766,8 +1750,7 @@ export const richResponse = {
         sysfiletype: 'YouTubeVideo',
         syscollection: 'default',
       },
-      Title:
-        "Ilhan Omar calls Trump 'creepy' over his 'obsession' with Somali community. #BBCNews",
+      Title: "Ilhan Omar calls Trump 'creepy' over his 'obsession' with Somali community. #BBCNews",
       Uri: 'https://youtube.com/User:bbcnews/Channel:UC16niRr50-MSBwiO3YDb3RA/Video:XCoYn-NcG2k',
       PrintableUri: 'https://www.youtube.com/watch?v=XCoYn-NcG2k',
       ClickUri: 'https://www.youtube.com/watch?v=XCoYn-NcG2k',
@@ -1811,8 +1794,7 @@ export const richResponse = {
         sysauthor: ['BBC News'],
         sysurihash: 'J6LC5icgcvRzeYXs',
         urihash: 'J6LC5icgcvRzeYXs',
-        permanentid:
-          '9f6d838f4956572105a7573b4dbcfc78c4c1390dfc940d5f2c26685ec334',
+        permanentid: '9f6d838f4956572105a7573b4dbcfc78c4c1390dfc940d5f2c26685ec334',
         syslanguage: ['English'],
         date: 1764831610000,
         sourcetype: 'YouTube',
@@ -1839,8 +1821,7 @@ export const richResponse = {
       FirstSentences: null,
     },
     {
-      title:
-        'Doctor who sold ketamine to Friends star Matthew Perry is jailed | BBC News',
+      title: 'Doctor who sold ketamine to Friends star Matthew Perry is jailed | BBC News',
       uri: 'https://youtube.com/User:bbcnews/Channel:UC16niRr50-MSBwiO3YDb3RA/Video:vQCZOwOKxP4',
       printableUri: 'https://www.youtube.com/watch?v=vQCZOwOKxP4',
       clickUri: 'https://www.youtube.com/watch?v=vQCZOwOKxP4',
@@ -1873,8 +1854,7 @@ export const richResponse = {
         sysauthor: ['BBC News'],
         sysurihash: 'uvxEPVN7PNq0ðhyd',
         urihash: 'uvxEPVN7PNq0ðhyd',
-        permanentid:
-          '72026f656a1c83e4296d214092d5693cba2e89d8ac5589055e434a8c940f',
+        permanentid: '72026f656a1c83e4296d214092d5693cba2e89d8ac5589055e434a8c940f',
         syslanguage: ['English'],
         date: 1764801164000,
         sourcetype: 'YouTube',
@@ -1889,8 +1869,7 @@ export const richResponse = {
         language: ['English'],
         syscollection: 'default',
       },
-      Title:
-        'Doctor who sold ketamine to Friends star Matthew Perry is jailed | BBC News',
+      Title: 'Doctor who sold ketamine to Friends star Matthew Perry is jailed | BBC News',
       Uri: 'https://youtube.com/User:bbcnews/Channel:UC16niRr50-MSBwiO3YDb3RA/Video:vQCZOwOKxP4',
       PrintableUri: 'https://www.youtube.com/watch?v=vQCZOwOKxP4',
       ClickUri: 'https://www.youtube.com/watch?v=vQCZOwOKxP4',

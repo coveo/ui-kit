@@ -44,10 +44,7 @@ import type {Bindings} from '../atomic-search-interface/atomic-search-interface'
 @customElement('atomic-sort-dropdown')
 @bindings()
 @withTailwindStyles
-export class AtomicSortDropdown
-  extends LitElement
-  implements InitializableComponent<Bindings>
-{
+export class AtomicSortDropdown extends LitElement implements InitializableComponent<Bindings> {
   @state() bindings!: Bindings;
 
   private readonly dropdownId = randomID('atomic-sort-dropdown-');
@@ -83,9 +80,7 @@ export class AtomicSortDropdown
   }
 
   private buildOptions() {
-    const sortExpressionElements = Array.from(
-      this.querySelectorAll('atomic-sort-expression')
-    );
+    const sortExpressionElements = Array.from(this.querySelectorAll('atomic-sort-expression'));
 
     if (!sortExpressionElements.length) {
       this.error = new Error(
@@ -94,32 +89,26 @@ export class AtomicSortDropdown
       return;
     }
 
-    this.bindings.store.state.sortOptions = sortExpressionElements.map(
-      (element) => {
-        const expression = element.getAttribute('expression') || '';
-        const label = element.getAttribute('label') || '';
-        const tabsIncluded = JSON.parse(
-          element.getAttribute('tabs-included') || '[]'
-        );
-        const tabsExcluded = JSON.parse(
-          element.getAttribute('tabs-excluded') || '[]'
-        );
+    this.bindings.store.state.sortOptions = sortExpressionElements.map((element) => {
+      const expression = element.getAttribute('expression') || '';
+      const label = element.getAttribute('label') || '';
+      const tabsIncluded = JSON.parse(element.getAttribute('tabs-included') || '[]');
+      const tabsExcluded = JSON.parse(element.getAttribute('tabs-excluded') || '[]');
 
-        new Schema({
-          label: new StringValue({emptyAllowed: false, required: true}),
-        }).validate({label});
+      new Schema({
+        label: new StringValue({emptyAllowed: false, required: true}),
+      }).validate({label});
 
-        return {
-          tabs: {
-            included: tabsIncluded,
-            excluded: tabsExcluded,
-          },
-          criteria: parseCriterionExpression(expression),
-          expression,
-          label,
-        };
-      }
-    );
+      return {
+        tabs: {
+          included: tabsIncluded,
+          excluded: tabsExcluded,
+        },
+        criteria: parseCriterionExpression(expression),
+        expression,
+        label,
+      };
+    });
   }
 
   private get options() {
@@ -134,9 +123,7 @@ export class AtomicSortDropdown
 
   private select(e: Event) {
     const select = e.composedPath()[0] as HTMLSelectElement;
-    const option = this.options.find(
-      (option) => option.expression === select.value
-    );
+    const option = this.options.find((option) => option.expression === select.value);
     option && this.sort.sortBy(option.criteria);
   }
 
@@ -158,9 +145,9 @@ export class AtomicSortDropdown
       return;
     }
 
-    const action = loadSortCriteriaActions(
-      this.bindings.engine
-    ).updateSortCriterion(this.options[0]?.criteria);
+    const action = loadSortCriteriaActions(this.bindings.engine).updateSortCriterion(
+      this.options[0]?.criteria
+    );
 
     this.bindings.engine.dispatch(action);
   }
@@ -213,8 +200,7 @@ export class AtomicSortDropdown
   @errorGuard()
   @bindingGuard()
   render() {
-    const {hasError, hasResults, firstSearchExecuted, isLoading} =
-      this.searchStatusState;
+    const {hasError, hasResults, firstSearchExecuted, isLoading} = this.searchStatusState;
 
     return html`
       ${sortGuard(

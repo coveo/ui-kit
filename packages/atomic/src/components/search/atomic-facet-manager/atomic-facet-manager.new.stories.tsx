@@ -10,10 +10,9 @@ import '@/src/components/search/atomic-facet-manager/atomic-facet-manager.js';
 const searchApiHarness = new MockSearchApi();
 
 const {decorator, play} = wrapInSearchInterface();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-facet-manager',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-facet-manager', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-facet-manager',

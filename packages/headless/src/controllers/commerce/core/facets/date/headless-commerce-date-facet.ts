@@ -28,10 +28,7 @@ export type DateFacetOptions = Omit<
  * @group Sub-controllers
  * @category DateFacet
  */
-export type DateFacetState = Omit<
-  CoreCommerceFacetState<DateFacetValue>,
-  'type'
-> & {
+export type DateFacetState = Omit<CoreCommerceFacetState<DateFacetValue>, 'type'> & {
   type: 'dateRange';
 };
 
@@ -73,10 +70,7 @@ export function buildCommerceDateFacet(
   engine: CommerceEngine,
   options: DateFacetOptions
 ): DateFacet {
-  const coreController = buildCoreCommerceFacet<
-    DateRangeRequest,
-    DateFacetValue
-  >(engine, {
+  const coreController = buildCoreCommerceFacet<DateRangeRequest, DateFacetValue>(engine, {
     options: {
       ...options,
       toggleSelectActionCreator: toggleSelectDateFacetValue,

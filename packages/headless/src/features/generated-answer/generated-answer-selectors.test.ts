@@ -44,8 +44,7 @@ describe('generated-answer-selectors', () => {
         search: {
           response: {
             extendedResults: {
-              generativeQuestionAnsweringId:
-                'generativeQuestionAnsweringId4321',
+              generativeQuestionAnsweringId: 'generativeQuestionAnsweringId4321',
             },
           },
         },
@@ -81,9 +80,7 @@ describe('generated-answer-selectors', () => {
         },
       } as Partial<SearchAppState>;
 
-      const result = generativeQuestionAnsweringIdSelector(
-        stateWithoutGeneratedAnswer
-      );
+      const result = generativeQuestionAnsweringIdSelector(stateWithoutGeneratedAnswer);
       expect(result).toEqual('fromSearch123');
     });
 

@@ -6,9 +6,7 @@ import {renderLoadMoreContainer} from './container';
 describe('#renderLoadMoreContainer', () => {
   const renderComponent = async () => {
     const children = html`<div class="test-children">Test Children</div>`;
-    const element = await renderFunctionFixture(
-      html`${renderLoadMoreContainer()(children)}`
-    );
+    const element = await renderFunctionFixture(html`${renderLoadMoreContainer()(children)}`);
 
     return {
       div: element.querySelector('div[part="container"]'),

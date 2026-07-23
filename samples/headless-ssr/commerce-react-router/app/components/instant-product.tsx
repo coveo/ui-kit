@@ -23,15 +23,13 @@ export default function InstantProducts() {
           <button type="button" onClick={() => clickProduct(product)}>
             {product.ec_name} ({product.ec_product_id})
           </button>
-          {product.ec_product_id &&
-            product.ec_price !== null &&
-            product.ec_name && (
-              <AddToCartButton
-                productId={product.ec_product_id}
-                price={product.ec_price}
-                name={product.ec_name}
-              />
-            )}
+          {product.ec_product_id && product.ec_price !== null && product.ec_name && (
+            <AddToCartButton
+              productId={product.ec_product_id}
+              price={product.ec_price}
+              name={product.ec_name}
+            />
+          )}
         </li>
       ))}
     </ul>

@@ -5,9 +5,7 @@ import {defineConfig} from '@rslib/core';
 import {litCssPlugin} from './scripts/lit-css-plugin.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const {version} = JSON.parse(
-  readFileSync(join(__dirname, 'package.json'), 'utf8')
-);
+const {version} = JSON.parse(readFileSync(join(__dirname, 'package.json'), 'utf8'));
 
 const shared = {
   bundle: false,
@@ -46,12 +44,7 @@ export default defineConfig({
   ],
   source: {
     entry: {
-      index: [
-        './src/**/*.ts',
-        '!./src/**/*.spec.ts',
-        '!./src/**/*.d.ts',
-        '!./src/**/e2e/**',
-      ],
+      index: ['./src/**/*.ts', '!./src/**/*.spec.ts', '!./src/**/*.d.ts', '!./src/**/e2e/**'],
     },
     define: {
       'process.env.VERSION': JSON.stringify(version),

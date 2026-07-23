@@ -27,9 +27,7 @@ export default function wildcardExportTransformer(context) {
   const exportCache = new Map(); // Cache to avoid re-parsing the same files
 
   function hasExportModifier(node) {
-    return node.modifiers?.some(
-      (modifier) => modifier.kind === SyntaxKind.ExportKeyword
-    );
+    return node.modifiers?.some((modifier) => modifier.kind === SyntaxKind.ExportKeyword);
   }
 
   function resolveModulePath(moduleSpecifier, sourceFile) {
@@ -151,8 +149,7 @@ export default function wildcardExportTransformer(context) {
         true
       );
 
-      const {runtimeExports, typeOnlyExports} =
-        extractExportsFromAST(targetSourceFile);
+      const {runtimeExports, typeOnlyExports} = extractExportsFromAST(targetSourceFile);
 
       // Cache the result
       const result = {
@@ -178,10 +175,7 @@ export default function wildcardExportTransformer(context) {
       !node.isTypeOnly // Skip type-only exports
     ) {
       const moduleSpecifier = node.moduleSpecifier.text;
-      const exportsData = getNamedExportsFromModule(
-        moduleSpecifier,
-        sourceFile
-      );
+      const exportsData = getNamedExportsFromModule(moduleSpecifier, sourceFile);
 
       if (exportsData) {
         const {runtimeExports, typeOnlyExports} = exportsData;
@@ -235,6 +229,5 @@ export default function wildcardExportTransformer(context) {
     return visitEachChild(node, (child) => visit(child, sourceFile), context);
   }
 
-  return (sourceFile) =>
-    visitNode(sourceFile, (node) => visit(node, sourceFile));
+  return (sourceFile) => visitNode(sourceFile, (node) => visit(node, sourceFile));
 }

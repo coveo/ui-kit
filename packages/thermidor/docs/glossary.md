@@ -301,10 +301,7 @@ interface SearchBoxControllerOptions {
 A factory function that creates a closure-based cache for facade resolution. Takes an engine and a thunk factory; returns a `FacadeResolver` backed by an internal `Map<string, EndpointThunk>`.
 
 ```typescript
-function createFacadeCache<T>(
-  engine: FullEngine,
-  factory: FacadeFactory<T>
-): (scope) => T;
+function createFacadeCache<T>(engine: FullEngine, factory: FacadeFactory<T>): (scope) => T;
 ```
 
 The cache key is `scope.composedInterfaceId ?? scope.interfaceId`. GC is natural — when the interface is GC'd, the closure and its Map are collected with it.

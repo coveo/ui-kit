@@ -1,9 +1,7 @@
 import {expect, test} from '@playwright/test';
 
 const DEFAULT_VITE_PORT = 3333;
-const vitePort = process.env.VITE_PORT
-  ? parseInt(process.env.VITE_PORT, 10)
-  : DEFAULT_VITE_PORT;
+const vitePort = process.env.VITE_PORT ? parseInt(process.env.VITE_PORT, 10) : DEFAULT_VITE_PORT;
 const baseUrl = `http://localhost:${vitePort}`;
 
 const urls = [
@@ -151,11 +149,7 @@ test.describe('theme customization', () => {
   test.describe('in result template', () => {
     for (const {style, selector, property} of inResultTemplateTests) {
       test(`${style} with ${selector}`, async ({page}) => {
-        const element = page
-          .locator('atomic-result')
-          .first()
-          .locator(selector)
-          .first();
+        const element = page.locator('atomic-result').first().locator(selector).first();
         await expect(element).toHaveCSS(property, styles[style]);
       });
     }

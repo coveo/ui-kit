@@ -20,10 +20,9 @@ commerceApiHarness.searchEndpoint.mock((response) => ({
   pagination: {...response.pagination, totalEntries: 0, totalPages: 0},
 }));
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-commerce-no-products',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-commerce-no-products', {
+  excludeCategories: ['methods'],
+});
 
 const {decorator, play: preprocessedPlayed} = wrapInCommerceInterface({
   skipFirstRequest: true,

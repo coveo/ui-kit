@@ -1,18 +1,13 @@
 import type {LightDOMWithSlots} from '@/src/mixins/slots-for-no-shadow-dom-mixin';
 
-function hasLightDOMSlotContent(
-  element: HTMLElement
-): element is HTMLElement & LightDOMWithSlots {
+function hasLightDOMSlotContent(element: HTMLElement): element is HTMLElement & LightDOMWithSlots {
   return (
     'slotContent' in element &&
     typeof (element as HTMLElement & LightDOMWithSlots).slotContent === 'object'
   );
 }
 
-export function getNamedSlotContent(
-  host: HTMLElement,
-  slotName: string
-): Element[] {
+export function getNamedSlotContent(host: HTMLElement, slotName: string): Element[] {
   if (hasLightDOMSlotContent(host)) {
     const targetLightDomSlotContent = host.slotContent[slotName];
 

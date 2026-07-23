@@ -33,10 +33,7 @@ type Image = {
 @customElement('atomic-product-image')
 @bindings()
 @withTailwindStyles
-export class AtomicProductImage
-  extends LitElement
-  implements InitializableComponent<Bindings>
-{
+export class AtomicProductImage extends LitElement implements InitializableComponent<Bindings> {
   @state() public bindings!: Bindings;
 
   public productController = createProductContextController(this);
@@ -77,8 +74,7 @@ export class AtomicProductImage
     'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50"%3E%3Crect width="50" height="50" fill="none" stroke="none"%3E%3C/rect%3E%3C/svg%3E';
 
   private previousImage() {
-    this.currentImage =
-      this.currentImage >= 1 ? this.currentImage - 1 : this.numberOfImages - 1;
+    this.currentImage = this.currentImage >= 1 ? this.currentImage - 1 : this.numberOfImages - 1;
   }
 
   private nextImage() {
@@ -132,16 +128,10 @@ export class AtomicProductImage
   }
 
   private filterValidImageUrls(): string[] {
-    return this.imageUrls.filter(
-      (image): image is string => typeof image === 'string'
-    );
+    return this.imageUrls.filter((image): image is string => typeof image === 'string');
   }
 
-  private getAltText(
-    index: number,
-    max: number,
-    validImageAlt: string | null
-  ): string {
+  private getAltText(index: number, max: number, validImageAlt: string | null): string {
     if (typeof validImageAlt === 'string') {
       return validImageAlt;
     }
@@ -156,11 +146,7 @@ export class AtomicProductImage
     const finalUrl = this.useFallback ? this.fallback : url;
     this.validateUrl(finalUrl);
     const validImageAlt = this.imageAlt;
-    const altText = this.getAltText(
-      index,
-      this.filterValidImageUrls().length,
-      validImageAlt
-    );
+    const altText = this.getAltText(index, this.filterValidImageUrls().length, validImageAlt);
     return {
       src: filterProtocol(finalUrl),
       alt: altText,
@@ -168,17 +154,12 @@ export class AtomicProductImage
   }
 
   private get images(): Image[] {
-    return this.filterValidImageUrls().map((url, index) =>
-      this.buildImage(url, index)
-    );
+    return this.filterValidImageUrls().map((url, index) => this.buildImage(url, index));
   }
 
   private get imageUrls() {
     try {
-      const value = ProductTemplatesHelpers.getProductProperty(
-        this.product,
-        this.field
-      );
+      const value = ProductTemplatesHelpers.getProductProperty(this.product, this.field);
 
       return Array.isArray(value) ? value : [value];
     } catch (error) {
@@ -191,10 +172,7 @@ export class AtomicProductImage
     if (!this.imageAltField) {
       return null;
     }
-    const value = ProductTemplatesHelpers.getProductProperty(
-      this.product,
-      this.imageAltField
-    );
+    const value = ProductTemplatesHelpers.getProductProperty(this.product, this.imageAltField);
     if (isNullOrUndefined(value)) {
       return null;
     }
@@ -261,8 +239,7 @@ export class AtomicProductImage
                 props: {
                   bindings: this.bindings,
                   currentImage: this.currentImage,
-                  navigateToImage: (index: number) =>
-                    this.navigateToImage(index),
+                  navigateToImage: (index: number) => this.navigateToImage(index),
                   nextImage: () => this.nextImage(),
                   previousImage: () => this.previousImage(),
                   numberOfImages: this.numberOfImages,

@@ -1,20 +1,14 @@
 import {ArrayValue, RecordValue, Schema, StringValue} from '@coveo/bueno';
 import {contextDefinition} from '../../../features/commerce/context/context-validation.js';
 import {parametersDefinition} from '../../../features/commerce/parameters/parameters-schema.js';
-import {
-  nonEmptyString,
-  nonRequiredEmptyAllowedString,
-} from '../../../utils/validate-payload.js';
+import {nonEmptyString, nonRequiredEmptyAllowedString} from '../../../utils/validate-payload.js';
 import type {ControllersPropsMap} from '../../common/types/controllers.js';
 import type {Parameters} from '../controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
 import type {BuildConfig} from '../types/build.js';
 import {SolutionType} from '../types/controller-constants.js';
 import type {InferControllerPropsMapFromDefinitions} from '../types/controller-inference.js';
 import type {CommerceControllerDefinitionsMap} from '../types/engine.js';
-import {
-  getRecommendationDefinitions,
-  isRecommendationDefinition,
-} from './recommendation-filter.js';
+import {getRecommendationDefinitions, isRecommendationDefinition} from './recommendation-filter.js';
 
 const requiredDefinition = {
   context: new RecordValue({
@@ -64,9 +58,7 @@ export const recommendationsDefinitionSchema = (recommendationName: string[]) =>
 /**
  * Validates the build configuration based on the solution type.
  */
-function validateBuildConfig<
-  TControllerDefinitions extends CommerceControllerDefinitionsMap,
->(
+function validateBuildConfig<TControllerDefinitions extends CommerceControllerDefinitionsMap>(
   solutionType: SolutionType,
   controllerDefinitions: CommerceControllerDefinitionsMap,
   buildConfig: BuildConfig<TControllerDefinitions, SolutionType>
@@ -141,9 +133,7 @@ class ControllerWirer<
       return;
     }
     for (const recController in this.controllerDefinitions) {
-      if (
-        isRecommendationDefinition(this.controllerDefinitions[recController])
-      ) {
+      if (isRecommendationDefinition(this.controllerDefinitions[recController])) {
         this.controllerProps[recController] = {
           initialState: {
             ...('productId' in this.buildConfig && {
@@ -213,9 +203,7 @@ export function wireControllerParams<
 
   const controllerProps: ControllersPropsMap = buildConfig.controllers ?? {};
 
-  new ControllerWirer(buildConfig, controllerDefinitions, controllerProps).wire(
-    solutionType
-  );
+  new ControllerWirer(buildConfig, controllerDefinitions, controllerProps).wire(solutionType);
 
   return controllerProps as InferControllerPropsMapFromDefinitions<TControllerDefinitions>;
 }

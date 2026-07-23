@@ -17,9 +17,7 @@ interface CollectionGuardProps {
   noResultText: string;
 }
 
-export const renderCollectionGuard: FunctionalComponentWithChildren<
-  CollectionGuardProps
-> =
+export const renderCollectionGuard: FunctionalComponentWithChildren<CollectionGuardProps> =
   ({props}) =>
   (children) => {
     const {
@@ -51,9 +49,7 @@ export const renderCollectionGuard: FunctionalComponentWithChildren<
     if (!moreResultsAvailable && !hasChildren) {
       return when(
         noResultText.trim().length > 0,
-        () => html`<p part="no-result-root" class="no-result-root my-3">
-          ${noResultText}
-        </p>`
+        () => html`<p part="no-result-root" class="no-result-root my-3">${noResultText}</p>`
       );
     }
 

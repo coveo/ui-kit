@@ -12,23 +12,14 @@ const CACHE_KEY: CacheKey<ProductListSelectors> =
   createCacheKey<ProductListSelectors>('productList/selectors');
 
 export function createProductListSelectors(interfaceId: string) {
-  const sliceSelector = createSelectSlice(
-    interfaceId,
-    'products',
-    initialProductListState
-  );
+  const sliceSelector = createSelectSlice(interfaceId, 'products', initialProductListState);
 
   return {
-    getProducts: createMemoizedStateSelector(
-      sliceSelector,
-      (state): Product[] => state.products
-    ),
+    getProducts: createMemoizedStateSelector(sliceSelector, (state): Product[] => state.products),
   };
 }
 
 export function getOrCreateProductListSelectors(iface: InterfaceHandle) {
   const {stateId, cacheRegistry} = getHandleInternals(iface);
-  return cacheRegistry.getOrCreate(CACHE_KEY, () =>
-    createProductListSelectors(stateId)
-  );
+  return cacheRegistry.getOrCreate(CACHE_KEY, () => createProductListSelectors(stateId));
 }

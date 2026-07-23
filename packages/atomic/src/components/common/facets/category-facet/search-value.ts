@@ -20,9 +20,9 @@ interface CategoryFacetSearchValueProps {
 const SEPARATOR = '/';
 const PATH_MAX_LENGTH = 3;
 
-export const renderCategoryFacetSearchValue: FunctionalComponent<
-  CategoryFacetSearchValueProps
-> = ({props}) => {
+export const renderCategoryFacetSearchValue: FunctionalComponent<CategoryFacetSearchValueProps> = ({
+  props,
+}) => {
   const count = props.value.count.toLocaleString(props.i18n.language);
   const inLabel = props.i18n.t('in');
   const allCategories = getAllCategoriesLocalizedLabel({
@@ -31,9 +31,7 @@ export const renderCategoryFacetSearchValue: FunctionalComponent<
     i18n: props.i18n,
   });
   const localizedPath = props.value.path.length
-    ? props.value.path.map((value) =>
-        getFieldValueCaption(props.field, value, props.i18n)
-      )
+    ? props.value.path.map((value) => getFieldValueCaption(props.field, value, props.i18n))
     : [allCategories];
   const ariaLabel = props.i18n.t('under', {
     child: props.i18n.t('facet-value', {
@@ -50,8 +48,7 @@ export const renderCategoryFacetSearchValue: FunctionalComponent<
         style: 'text-neutral',
         part: 'search-result',
         onClick: () => props.onClick(),
-        class:
-          'group flex w-full flex-col truncate px-2 py-2.5 focus-visible:outline-none',
+        class: 'group flex w-full flex-col truncate px-2 py-2.5 focus-visible:outline-none',
         ariaLabel,
       },
     })(html`
@@ -78,9 +75,7 @@ export const renderCategoryFacetSearchValue: FunctionalComponent<
           path: localizedPath,
           separator: SEPARATOR,
           maxLength: PATH_MAX_LENGTH,
-          emptyPathContent: html`<span class="truncate">
-            ${inLabel} ${allCategories}
-          </span>`,
+          emptyPathContent: html`<span class="truncate"> ${inLabel} ${allCategories} </span>`,
           separatorClass: 'mx-0.5',
           itemClass: 'max-w-max flex-1 truncate',
           ellipsisClass: '',

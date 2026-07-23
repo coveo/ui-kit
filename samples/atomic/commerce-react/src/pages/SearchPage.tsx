@@ -17,17 +17,10 @@ import {buildEngine} from '../engine';
 import {ProductTemplate} from './ProductTemplate';
 
 export const SearchPage = () => {
-  const engine = useMemo(
-    () => buildEngine('https://sports.barca.group/commerce-search'),
-    []
-  );
+  const engine = useMemo(() => buildEngine('https://sports.barca.group/commerce-search'), []);
 
   return (
-    <AtomicCommerceInterface
-      engine={engine}
-      type="search"
-      languageAssetsPath="/lang"
-    >
+    <AtomicCommerceInterface engine={engine} type="search" languageAssetsPath="/lang">
       <AtomicCommerceLayout>
         <AtomicLayoutSection section="search">
           <AtomicCommerceSearchBox>

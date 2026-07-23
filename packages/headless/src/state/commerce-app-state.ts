@@ -29,8 +29,8 @@ import type {
 export type CommerceProductListingParametersState = CommerceFacetSetSection &
   CommerceSortSection &
   CommercePaginationSection;
-export type CommerceSearchParametersState =
-  CommerceProductListingParametersState & CommerceQuerySection;
+export type CommerceSearchParametersState = CommerceProductListingParametersState &
+  CommerceQuerySection;
 
 export type CommerceAppState = CommerceConfigurationSection &
   CommerceStandaloneSearchBoxSection &

@@ -74,9 +74,7 @@ describe('atomic-numeric-facet', () => {
     vi.mocked(buildNumericFilter).mockReturnValue(mockedNumericFilter);
     vi.mocked(buildSearchStatus).mockReturnValue(mockedSearchStatus);
     vi.mocked(buildTabManager).mockReturnValue(mockedTabManager);
-    vi.mocked(buildFacetConditionsManager).mockReturnValue(
-      mockedFacetConditionsManager
-    );
+    vi.mocked(buildFacetConditionsManager).mockReturnValue(mockedFacetConditionsManager);
 
     const inputType = withInput ? 'integer' : props.withInput;
 
@@ -113,10 +111,8 @@ describe('atomic-numeric-facet', () => {
       }),
     });
 
-    const qs = (part: string) =>
-      element.shadowRoot?.querySelector(`[part~="${part}"]`)!;
-    const qsa = (part: string) =>
-      element.shadowRoot?.querySelectorAll(`[part~="${part}"]`)!;
+    const qs = (part: string) => element.shadowRoot?.querySelector(`[part~="${part}"]`)!;
+    const qsa = (part: string) => element.shadowRoot?.querySelectorAll(`[part~="${part}"]`)!;
 
     const locators = {
       get title() {
@@ -292,34 +288,28 @@ describe('atomic-numeric-facet', () => {
     it('should render "no-label" when label is not provided', async () => {
       mockedNumericFacet = buildFakeNumericFacet({});
 
-      const {element} = await renderInAtomicSearchInterface<AtomicNumericFacet>(
-        {
-          template: html`<atomic-numeric-facet
-            field="price"
-          ></atomic-numeric-facet>`,
-          selector: 'atomic-numeric-facet',
-          bindings: (bindings) => {
-            vi.mocked(buildNumericFacet).mockReturnValue(mockedNumericFacet);
-            vi.mocked(buildSearchStatus).mockReturnValue(mockedSearchStatus);
-            vi.mocked(buildTabManager).mockReturnValue(mockedTabManager);
-            vi.mocked(buildFacetConditionsManager).mockReturnValue(
-              mockedFacetConditionsManager
-            );
-            return {
-              ...bindings,
-              store: {
-                ...bindings.store,
-                getUniqueIDFromEngine: vi.fn().mockReturnValue('123'),
-                registerFacet: mockedRegisterFacet,
-                state: {
-                  ...bindings.store.state,
-                  numericFacets: {},
-                },
+      const {element} = await renderInAtomicSearchInterface<AtomicNumericFacet>({
+        template: html`<atomic-numeric-facet field="price"></atomic-numeric-facet>`,
+        selector: 'atomic-numeric-facet',
+        bindings: (bindings) => {
+          vi.mocked(buildNumericFacet).mockReturnValue(mockedNumericFacet);
+          vi.mocked(buildSearchStatus).mockReturnValue(mockedSearchStatus);
+          vi.mocked(buildTabManager).mockReturnValue(mockedTabManager);
+          vi.mocked(buildFacetConditionsManager).mockReturnValue(mockedFacetConditionsManager);
+          return {
+            ...bindings,
+            store: {
+              ...bindings.store,
+              getUniqueIDFromEngine: vi.fn().mockReturnValue('123'),
+              registerFacet: mockedRegisterFacet,
+              state: {
+                ...bindings.store.state,
+                numericFacets: {},
               },
-            };
-          },
-        }
-      );
+            },
+          };
+        },
+      });
 
       expect(element.label).toBe('no-label');
     });
@@ -350,9 +340,7 @@ describe('atomic-numeric-facet', () => {
       mockedSearchStatus = buildFakeSearchStatus({firstSearchExecuted: false});
 
       const {element} = await setupElement();
-      const placeholder = element.shadowRoot?.querySelector(
-        '[part="placeholder"]'
-      );
+      const placeholder = element.shadowRoot?.querySelector('[part="placeholder"]');
       expect(placeholder).toBeInTheDocument();
     });
   });
@@ -716,9 +704,7 @@ describe('atomic-numeric-facet', () => {
           },
         });
 
-        expect(consoleWarnSpy).toHaveBeenCalledWith(
-          expect.stringContaining('tabs-included')
-        );
+        expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('tabs-included'));
       });
     });
 
@@ -771,9 +757,7 @@ describe('atomic-numeric-facet', () => {
 
       element.remove();
 
-      expect(mockedFacetConditionsManager.stopWatching).toHaveBeenCalledTimes(
-        1
-      );
+      expect(mockedFacetConditionsManager.stopWatching).toHaveBeenCalledTimes(1);
     });
 
     it('should stop all condition managers when the element is disconnected and withInput is set', async () => {
@@ -781,9 +765,7 @@ describe('atomic-numeric-facet', () => {
 
       element.remove();
 
-      expect(mockedFacetConditionsManager.stopWatching).toHaveBeenCalledTimes(
-        2
-      );
+      expect(mockedFacetConditionsManager.stopWatching).toHaveBeenCalledTimes(2);
     });
   });
 
@@ -792,40 +774,35 @@ describe('atomic-numeric-facet', () => {
       let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
 
       beforeEach(() => {
-        consoleErrorSpy = vi
-          .spyOn(console, 'error')
-          .mockImplementation(() => {});
+        consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
       });
 
       it('should set error when displayValuesAs is invalid', async () => {
-        const {element} =
-          await renderInAtomicSearchInterface<AtomicNumericFacet>({
-            template: html`<atomic-numeric-facet
-              field="price"
-              display-values-as=${'invalid' as 'checkbox'}
-            ></atomic-numeric-facet>`,
-            selector: 'atomic-numeric-facet',
-            bindings: (bindings) => {
-              vi.mocked(buildNumericFacet).mockReturnValue(mockedNumericFacet);
-              vi.mocked(buildSearchStatus).mockReturnValue(mockedSearchStatus);
-              vi.mocked(buildTabManager).mockReturnValue(mockedTabManager);
-              vi.mocked(buildFacetConditionsManager).mockReturnValue(
-                mockedFacetConditionsManager
-              );
-              return {
-                ...bindings,
-                store: {
-                  ...bindings.store,
-                  getUniqueIDFromEngine: vi.fn().mockReturnValue('123'),
-                  registerFacet: mockedRegisterFacet,
-                  state: {
-                    ...bindings.store.state,
-                    numericFacets: {},
-                  },
+        const {element} = await renderInAtomicSearchInterface<AtomicNumericFacet>({
+          template: html`<atomic-numeric-facet
+            field="price"
+            display-values-as=${'invalid' as 'checkbox'}
+          ></atomic-numeric-facet>`,
+          selector: 'atomic-numeric-facet',
+          bindings: (bindings) => {
+            vi.mocked(buildNumericFacet).mockReturnValue(mockedNumericFacet);
+            vi.mocked(buildSearchStatus).mockReturnValue(mockedSearchStatus);
+            vi.mocked(buildTabManager).mockReturnValue(mockedTabManager);
+            vi.mocked(buildFacetConditionsManager).mockReturnValue(mockedFacetConditionsManager);
+            return {
+              ...bindings,
+              store: {
+                ...bindings.store,
+                getUniqueIDFromEngine: vi.fn().mockReturnValue('123'),
+                registerFacet: mockedRegisterFacet,
+                state: {
+                  ...bindings.store.state,
+                  numericFacets: {},
                 },
-              };
-            },
-          });
+              },
+            };
+          },
+        });
 
         expect(element.error).toBeDefined();
         expect(consoleErrorSpy).toHaveBeenCalled();
@@ -836,40 +813,35 @@ describe('atomic-numeric-facet', () => {
       let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
 
       beforeEach(() => {
-        consoleErrorSpy = vi
-          .spyOn(console, 'error')
-          .mockImplementation(() => {});
+        consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
       });
 
       it('should set error when withInput is invalid', async () => {
-        const {element} =
-          await renderInAtomicSearchInterface<AtomicNumericFacet>({
-            template: html`<atomic-numeric-facet
-              field="price"
-              with-input=${'invalid' as 'integer'}
-            ></atomic-numeric-facet>`,
-            selector: 'atomic-numeric-facet',
-            bindings: (bindings) => {
-              vi.mocked(buildNumericFacet).mockReturnValue(mockedNumericFacet);
-              vi.mocked(buildSearchStatus).mockReturnValue(mockedSearchStatus);
-              vi.mocked(buildTabManager).mockReturnValue(mockedTabManager);
-              vi.mocked(buildFacetConditionsManager).mockReturnValue(
-                mockedFacetConditionsManager
-              );
-              return {
-                ...bindings,
-                store: {
-                  ...bindings.store,
-                  getUniqueIDFromEngine: vi.fn().mockReturnValue('123'),
-                  registerFacet: mockedRegisterFacet,
-                  state: {
-                    ...bindings.store.state,
-                    numericFacets: {},
-                  },
+        const {element} = await renderInAtomicSearchInterface<AtomicNumericFacet>({
+          template: html`<atomic-numeric-facet
+            field="price"
+            with-input=${'invalid' as 'integer'}
+          ></atomic-numeric-facet>`,
+          selector: 'atomic-numeric-facet',
+          bindings: (bindings) => {
+            vi.mocked(buildNumericFacet).mockReturnValue(mockedNumericFacet);
+            vi.mocked(buildSearchStatus).mockReturnValue(mockedSearchStatus);
+            vi.mocked(buildTabManager).mockReturnValue(mockedTabManager);
+            vi.mocked(buildFacetConditionsManager).mockReturnValue(mockedFacetConditionsManager);
+            return {
+              ...bindings,
+              store: {
+                ...bindings.store,
+                getUniqueIDFromEngine: vi.fn().mockReturnValue('123'),
+                registerFacet: mockedRegisterFacet,
+                state: {
+                  ...bindings.store.state,
+                  numericFacets: {},
                 },
-              };
-            },
-          });
+              },
+            };
+          },
+        });
 
         expect(element.error).toBeDefined();
         expect(consoleErrorSpy).toHaveBeenCalled();

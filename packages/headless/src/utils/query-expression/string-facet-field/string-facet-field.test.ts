@@ -9,9 +9,7 @@ describe('#buildStringFacetField', () => {
         value: 'someAuthor',
       });
 
-      expect(builder.toQuerySyntax()).toBe(
-        '@author~= $quoteVar(value: someAuthor)'
-      );
+      expect(builder.toQuerySyntax()).toBe('@author~= $quoteVar(value: someAuthor)');
     });
 
     it('#wildcardMatch operator', () => {

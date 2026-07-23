@@ -90,9 +90,7 @@ describe('range facet reducers', () => {
 
       register(options);
 
-      expect(state[facetId]?.request.numberOfValues).toBe(
-        options.currentValues?.length
-      );
+      expect(state[facetId]?.request.numberOfValues).toBe(options.currentValues?.length);
     });
 
     it(`when #generateAutomaticRanges is true, and the number of hard-coded ranges is greater than the #numberOfValues,
@@ -107,9 +105,7 @@ describe('range facet reducers', () => {
       };
 
       register(options);
-      expect(state[facetId]?.request.numberOfValues).toBe(
-        options.currentValues?.length
-      );
+      expect(state[facetId]?.request.numberOfValues).toBe(options.currentValues?.length);
     });
   });
 
@@ -192,9 +188,7 @@ describe('range facet reducers', () => {
 
   it('dispatching #toggleSelectFacetValue with an unregistered id does not throw', () => {
     const value = buildMockNumericFacetValue();
-    expect(() =>
-      toggleSelectRangeValue(state, 'unknownId', value)
-    ).not.toThrow();
+    expect(() => toggleSelectRangeValue(state, 'unknownId', value)).not.toThrow();
   });
 
   describe('#handleRangeFacetDeselectAll', () => {
@@ -463,9 +457,7 @@ describe('range facet reducers', () => {
   });
 
   describe('#onRangeRequestSearchFulfilled', () => {
-    function convertToRangeValueRequests(
-      values: NumericFacetValue[]
-    ): NumericRangeRequest[] {
+    function convertToRangeValueRequests(values: NumericFacetValue[]): NumericRangeRequest[] {
       return values.map((v) => {
         const {numberOfResults: _numberOfResults, ...rest} = v;
         return rest;
@@ -502,11 +494,7 @@ describe('range facet reducers', () => {
       const id = '1';
       const facet = buildMockNumericFacetResponse({facetId: id});
       const action = () =>
-        onRangeFacetRequestFulfilled(
-          state,
-          [facet],
-          convertToRangeValueRequests
-        );
+        onRangeFacetRequestFulfilled(state, [facet], convertToRangeValueRequests);
 
       expect(action).not.toThrow();
     });

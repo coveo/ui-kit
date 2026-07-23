@@ -1,10 +1,7 @@
 export default {
   $schema: 'https://unpkg.com/knip@6/schema.json',
   // Always ignoring quantic since it throws errors. Adding those two lines is necessary for 100% of quantic to be ignored.
-  ignoreWorkspaces: [
-    'packages/quantic',
-    'packages/create-atomic-component-project/template',
-  ],
+  ignoreWorkspaces: ['packages/quantic', 'packages/create-atomic-component-project/template'],
   ignoreDependencies: ['semver'],
   ignore: [
     'packages/quantic/**',
@@ -70,10 +67,7 @@ export default {
     'samples/headless/commerce-react': {
       // ShowMore and ProductsPerPage are kept as reference examples but are not
       // wired into the UI, so Knip should not flag them as unused files.
-      ignore: [
-        'src/components/show-more/**',
-        'src/components/products-per-page/**',
-      ],
+      ignore: ['src/components/show-more/**', 'src/components/products-per-page/**'],
     },
     'samples/headless-ssr/commerce-express': {
       entry: ['src/server.ts'],
@@ -167,11 +161,7 @@ export default {
     },
     'samples/thermidor/generative-angular': {
       entry: ['proxy.conf.js'],
-      ignore: [
-        'src/app/services/engine.service.ts',
-        'src/app/app.css',
-        'src/styles.css',
-      ],
+      ignore: ['src/app/services/engine.service.ts', 'src/app/app.css', 'src/styles.css'],
     },
   },
 };

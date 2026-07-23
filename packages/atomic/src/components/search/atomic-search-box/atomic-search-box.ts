@@ -42,12 +42,7 @@ import {
 } from '@/src/utils/local-storage-utils';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils';
 import {getDefaultSlotContent} from '@/src/utils/slot-utils';
-import {
-  isFocusingOut,
-  once,
-  randomID,
-  spreadProperties,
-} from '@/src/utils/utils';
+import {isFocusingOut, once, randomID, spreadProperties} from '@/src/utils/utils';
 import '@/src/components/search/atomic-search-box-query-suggestions/atomic-search-box-query-suggestions';
 import '@/src/components/search/atomic-search-box-recent-queries/atomic-search-box-recent-queries';
 import '@coveo/atomic-legacy/atomic-suggestion-renderer';
@@ -99,10 +94,7 @@ import '@coveo/atomic-legacy/atomic-suggestion-renderer';
 @customElement('atomic-search-box')
 @bindings()
 @withTailwindStyles
-export class AtomicSearchBox
-  extends LitElement
-  implements InitializableComponent<Bindings>
-{
+export class AtomicSearchBox extends LitElement implements InitializableComponent<Bindings> {
   static shadowRootOptions = {
     ...LitElement.shadowRootOptions,
     delegatesFocus: true,
@@ -122,22 +114,13 @@ export class AtomicSearchBox
   private searchBoxSuggestionEventsQueue: CustomEvent<
     SearchBoxSuggestionsEvent<SearchBox | StandaloneSearchBox>
   >[] = [];
-  private suggestionManager!: SuggestionManager<
-    SearchBox | StandaloneSearchBox
-  >;
+  private suggestionManager!: SuggestionManager<SearchBox | StandaloneSearchBox>;
   public searchBox!: SearchBox | StandaloneSearchBox;
   id!: string;
 
-  protected searchBoxAriaMessage = new AriaLiveRegionController(
-    this,
-    'search-box'
-  );
+  protected searchBoxAriaMessage = new AriaLiveRegionController(this, 'search-box');
 
-  protected suggestionsAriaMessage = new AriaLiveRegionController(
-    this,
-    'search-suggestions',
-    true
-  );
+  protected suggestionsAriaMessage = new AriaLiveRegionController(this, 'search-suggestions', true);
 
   /**
    * The amount of queries displayed when the user interacts with the search box.
@@ -229,22 +212,16 @@ export class AtomicSearchBox
   connectedCallback() {
     super.connectedCallback();
 
-    this.addEventListener(
-      'atomic/searchBoxSuggestion/register',
-      (event: Event) => {
-        const customEvent = event as CustomEvent<
-          SearchBoxSuggestionsEvent<SearchBox | StandaloneSearchBox>
-        >;
-        if (!this.bindings) {
-          this.searchBoxSuggestionEventsQueue.push(customEvent);
-        } else {
-          this.suggestionManager.registerSuggestionsFromEvent(
-            customEvent,
-            this.suggestionBindings
-          );
-        }
+    this.addEventListener('atomic/searchBoxSuggestion/register', (event: Event) => {
+      const customEvent = event as CustomEvent<
+        SearchBoxSuggestionsEvent<SearchBox | StandaloneSearchBox>
+      >;
+      if (!this.bindings) {
+        this.searchBoxSuggestionEventsQueue.push(customEvent);
+      } else {
+        this.suggestionManager.registerSuggestionsFromEvent(customEvent, this.suggestionBindings);
       }
-    );
+    });
   }
 
   disconnectedCallback() {
@@ -255,10 +232,7 @@ export class AtomicSearchBox
     if (!this.searchBoxState || !this.searchBox) {
       return;
     }
-    if (
-      !('redirectTo' in this.searchBoxState) ||
-      !('afterRedirection' in this.searchBox)
-    ) {
+    if (!('redirectTo' in this.searchBoxState) || !('afterRedirection' in this.searchBox)) {
       return;
     }
 
@@ -373,9 +347,7 @@ export class AtomicSearchBox
     return this.bindings.i18n.t('search-box-with-suggestions');
   }
 
-  private get suggestionBindings(): SearchBoxSuggestionsBindings<
-    SearchBox | StandaloneSearchBox
-  > {
+  private get suggestionBindings(): SearchBoxSuggestionsBindings<SearchBox | StandaloneSearchBox> {
     return spreadProperties(
       this.bindings,
       this.suggestionManager.partialSuggestionBindings,
@@ -385,11 +357,7 @@ export class AtomicSearchBox
 
   private get partialSuggestionBindings(): Pick<
     SearchBoxSuggestionsBindings<SearchBox | StandaloneSearchBox>,
-    | 'id'
-    | 'isStandalone'
-    | 'searchBoxController'
-    | 'numberOfQueries'
-    | 'clearFilters'
+    'id' | 'isStandalone' | 'searchBoxController' | 'numberOfQueries' | 'clearFilters'
   > {
     return Object.defineProperties(
       {...this.bindings},
@@ -417,11 +385,7 @@ export class AtomicSearchBox
       }
     ) as unknown as Pick<
       SearchBoxSuggestionsBindings<SearchBox | StandaloneSearchBox>,
-      | 'id'
-      | 'isStandalone'
-      | 'searchBoxController'
-      | 'numberOfQueries'
-      | 'clearFilters'
+      'id' | 'isStandalone' | 'searchBoxController' | 'numberOfQueries' | 'clearFilters'
     >;
   }
 
@@ -451,10 +415,7 @@ export class AtomicSearchBox
 
   private registerSearchboxSuggestionEvents() {
     this.searchBoxSuggestionEventsQueue.forEach((evt) => {
-      this.suggestionManager.registerSuggestionsFromEvent(
-        evt,
-        this.suggestionBindings
-      );
+      this.suggestionManager.registerSuggestionsFromEvent(evt, this.suggestionBindings);
     });
     this.searchBoxSuggestionEventsQueue = [];
   }
@@ -519,20 +480,14 @@ export class AtomicSearchBox
         this.announceNewActiveSuggestionToScreenReader();
         break;
       case 'ArrowRight':
-        if (
-          this.suggestionManager.hasActiveDescendant ||
-          !this.searchBox.state.value
-        ) {
+        if (this.suggestionManager.hasActiveDescendant || !this.searchBox.state.value) {
           e.preventDefault();
           this.suggestionManager.focusPanel('right');
           this.announceNewActiveSuggestionToScreenReader();
         }
         break;
       case 'ArrowLeft':
-        if (
-          this.suggestionManager.hasActiveDescendant ||
-          !this.searchBox.state.value
-        ) {
+        if (this.suggestionManager.hasActiveDescendant || !this.searchBox.state.value) {
           e.preventDefault();
           this.suggestionManager.focusPanel('left');
           this.announceNewActiveSuggestionToScreenReader();
@@ -562,10 +517,7 @@ export class AtomicSearchBox
   }
 
   private announceNewSuggestionsToScreenReader() {
-    const elsLength =
-      this.suggestionManager.allSuggestionElements.filter(
-        elementHasQuery
-      ).length;
+    const elsLength = this.suggestionManager.allSuggestionElements.filter(elementHasQuery).length;
 
     this.searchBoxAriaMessage.message = elsLength
       ? this.bindings.i18n.t(
@@ -581,8 +533,7 @@ export class AtomicSearchBox
   }
 
   private announceClearSearchBoxToScreenReader() {
-    this.searchBoxAriaMessage.message =
-      this.bindings.i18n.t('search-box-cleared');
+    this.searchBoxAriaMessage.message = this.bindings.i18n.t('search-box-cleared');
   }
 
   private renderAbsolutePositionSpacer() {
@@ -605,8 +556,7 @@ export class AtomicSearchBox
         title: this.textAreaLabel,
         ariaLabel: this.textAreaLabel,
         onFocus: () => this.onFocus(),
-        onInput: (e: Event) =>
-          this.onInput((e.target as HTMLTextAreaElement).value),
+        onInput: (e: Event) => this.onInput((e.target as HTMLTextAreaElement).value),
         onKeyDown: (e: KeyboardEvent) => this.onKeyDown(e),
         onClear: () => {
           this.searchBox.clear();
@@ -626,15 +576,11 @@ export class AtomicSearchBox
 
   private renderSuggestions() {
     const part = `suggestions-wrapper ${
-      this.suggestionManager.isDoubleList
-        ? 'suggestions-double-list'
-        : 'suggestions-single-list'
+      this.suggestionManager.isDoubleList ? 'suggestions-double-list' : 'suggestions-single-list'
     }`;
 
     const isVisible =
-      this.suggestionManager.hasSuggestions &&
-      this.isExpanded &&
-      !this.isSearchDisabledForEndUser;
+      this.suggestionManager.hasSuggestions && this.isExpanded && !this.isSearchDisabledForEndUser;
 
     const classes = {
       'bg-background border-neutral absolute top-full left-0 z-10 flex w-full rounded-md border': true,

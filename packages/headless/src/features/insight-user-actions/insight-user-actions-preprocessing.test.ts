@@ -216,8 +216,7 @@ describe('insight user actions preprocessing', () => {
         },
       ];
       const mockRawActions = [...fakeActions];
-      const mappedAndSortedActions =
-        mapAndSortActionsByMostRecent(mockRawActions);
+      const mappedAndSortedActions = mapAndSortActionsByMostRecent(mockRawActions);
 
       expect(mappedAndSortedActions).toEqual(expectedMappedAndSortedActions);
       expect(mappedAndSortedActions[0].timestamp).toBeGreaterThan(
@@ -242,9 +241,7 @@ describe('insight user actions preprocessing', () => {
           value: '{ "key": "value",,,, }',
           time: '2023-10-01T12:00:00Z',
         };
-        const mappedAndSortedActions = mapAndSortActionsByMostRecent([
-          invalidRawUserAction,
-        ]);
+        const mappedAndSortedActions = mapAndSortActionsByMostRecent([invalidRawUserAction]);
         expect(mappedAndSortedActions.length).toEqual(0);
         expect(mappedAndSortedActions).toEqual([]);
         expect(consoleWarnSpy).toHaveBeenCalledTimes(1);
@@ -283,9 +280,7 @@ describe('insight user actions preprocessing', () => {
     });
 
     it('should properly insert a given following session in the following sessions of the timeline', async () => {
-      const ticketCreationDate = new Date(
-        'Fri Apr 1 2022 12:00:00 GMT'
-      ).valueOf();
+      const ticketCreationDate = new Date('Fri Apr 1 2022 12:00:00 GMT').valueOf();
 
       insertSessionInTimeline(mockSession, ticketCreationDate, mockTimeline);
 
@@ -294,9 +289,7 @@ describe('insight user actions preprocessing', () => {
     });
 
     it('should properly insert a given preceding session in the preceding sessions of the timeline', async () => {
-      const ticketCreationDate = new Date(
-        'Fri Apr 1 2022 20:30:00 GMT'
-      ).valueOf();
+      const ticketCreationDate = new Date('Fri Apr 1 2022 20:30:00 GMT').valueOf();
 
       insertSessionInTimeline(mockSession, ticketCreationDate, mockTimeline);
 
@@ -305,55 +298,41 @@ describe('insight user actions preprocessing', () => {
     });
 
     it('should properly insert a given ticket creation session in the case creation session of the timeline', async () => {
-      const ticketCreationDate = new Date(
-        'Fri Apr 1 2022 14:25:00 GMT'
-      ).valueOf();
+      const ticketCreationDate = new Date('Fri Apr 1 2022 14:25:00 GMT').valueOf();
 
       insertSessionInTimeline(mockSession, ticketCreationDate, mockTimeline);
 
       expect(mockTimeline.session).toEqual(mockSession);
-      expect(mockTimeline.session?.actions[1].actionType).toEqual(
-        UserActionType.TICKET_CREATION
-      );
+      expect(mockTimeline.session?.actions[1].actionType).toEqual(UserActionType.TICKET_CREATION);
     });
 
     describe('when within the inactivity threshold before the start of the session', () => {
       it('should properly insert a given ticket creation session in the case creation session of the timeline', async () => {
-        const ticketCreationDate = new Date(
-          'Fri Apr 1 2022 14:00:00 GMT'
-        ).valueOf();
+        const ticketCreationDate = new Date('Fri Apr 1 2022 14:00:00 GMT').valueOf();
 
         insertSessionInTimeline(mockSession, ticketCreationDate, mockTimeline);
 
         expect(mockTimeline.session).toEqual(mockSession);
-        expect(mockTimeline.session?.actions[2].actionType).toEqual(
-          UserActionType.TICKET_CREATION
-        );
+        expect(mockTimeline.session?.actions[2].actionType).toEqual(UserActionType.TICKET_CREATION);
         expect(mockTimeline.session?.start).toEqual(ticketCreationDate);
       });
     });
 
     describe('when within the inactivity threshold after the end of the session', () => {
       it('should properly insert a given ticket creation session in the case creation session of the timeline', async () => {
-        const ticketCreationDate = new Date(
-          'Fri Apr 1 2022 14:45:00 GMT'
-        ).valueOf();
+        const ticketCreationDate = new Date('Fri Apr 1 2022 14:45:00 GMT').valueOf();
 
         insertSessionInTimeline(mockSession, ticketCreationDate, mockTimeline);
 
         expect(mockTimeline.session).toEqual(mockSession);
-        expect(mockTimeline.session?.actions[0].actionType).toEqual(
-          UserActionType.TICKET_CREATION
-        );
+        expect(mockTimeline.session?.actions[0].actionType).toEqual(UserActionType.TICKET_CREATION);
         expect(mockTimeline.session?.end).toEqual(ticketCreationDate);
       });
     });
 
     describe('when a session is empty', () => {
       it('should not insert the session in the timeline', async () => {
-        const ticketCreationDate = new Date(
-          'Fri Apr 1 2022 14:45:00 GMT'
-        ).valueOf();
+        const ticketCreationDate = new Date('Fri Apr 1 2022 14:45:00 GMT').valueOf();
 
         insertSessionInTimeline(
           {
@@ -385,9 +364,7 @@ describe('insight user actions preprocessing', () => {
                 actions: [
                   {
                     actionType: 'CUSTOM',
-                    timestamp: new Date(
-                      'Tue Mar 29 2022 9:24:30 GMT'
-                    ).valueOf(),
+                    timestamp: new Date('Tue Mar 29 2022 9:24:30 GMT').valueOf(),
                     eventData: {
                       type: 'smartSnippetSuggestions',
                       value: 'likeSmartSnippet',
@@ -403,9 +380,7 @@ describe('insight user actions preprocessing', () => {
                 actions: [
                   {
                     actionType: 'CLICK',
-                    timestamp: new Date(
-                      'Tue Mar 29 2022 8:51:00 GMT'
-                    ).valueOf(),
+                    timestamp: new Date('Tue Mar 29 2022 8:51:00 GMT').valueOf(),
                     eventData: {},
                     searchHub: 'in-product-help',
                     document: {
@@ -464,9 +439,7 @@ describe('insight user actions preprocessing', () => {
                 actions: [
                   {
                     actionType: 'VIEW',
-                    timestamp: new Date(
-                      'Fri Apr 1 2022 15:14:00 GMT'
-                    ).valueOf(),
+                    timestamp: new Date('Fri Apr 1 2022 15:14:00 GMT').valueOf(),
                     eventData: {},
                     searchHub: 'in-product-help',
                     document: {
@@ -476,9 +449,7 @@ describe('insight user actions preprocessing', () => {
                   },
                   {
                     actionType: 'CLICK',
-                    timestamp: new Date(
-                      'Fri Apr 1 2022 14:59:00 GMT'
-                    ).valueOf(),
+                    timestamp: new Date('Fri Apr 1 2022 14:59:00 GMT').valueOf(),
                     eventData: {},
                     searchHub: 'in-product-help',
                     document: {
@@ -493,8 +464,7 @@ describe('insight user actions preprocessing', () => {
             ],
           };
 
-          const mappedAndSortedActions =
-            mapAndSortActionsByMostRecent(mockRawActions);
+          const mappedAndSortedActions = mapAndSortActionsByMostRecent(mockRawActions);
           const ticketCreationDate = caseCreationDate.getTime();
 
           const timeline = splitActionsIntoTimelineSessions(
@@ -511,9 +481,7 @@ describe('insight user actions preprocessing', () => {
           expect(timeline.precedingSessions.length).toEqual(
             expectedTimeline.precedingSessions.length
           );
-          expect(timeline.session?.actions[2].actionType).toEqual(
-            UserActionType.TICKET_CREATION
-          );
+          expect(timeline.session?.actions[2].actionType).toEqual(UserActionType.TICKET_CREATION);
         });
       });
     });
@@ -542,9 +510,7 @@ describe('insight user actions preprocessing', () => {
                 actions: [
                   {
                     actionType: 'CUSTOM',
-                    timestamp: new Date(
-                      'Tue Mar 29 2022 9:24:30 GMT'
-                    ).valueOf(),
+                    timestamp: new Date('Tue Mar 29 2022 9:24:30 GMT').valueOf(),
                     eventData: {
                       type: 'smartSnippetSuggestions',
                       value: 'likeSmartSnippet',
@@ -560,9 +526,7 @@ describe('insight user actions preprocessing', () => {
                 actions: [
                   {
                     actionType: 'CLICK',
-                    timestamp: new Date(
-                      'Tue Mar 29 2022 8:51:00 GMT'
-                    ).valueOf(),
+                    timestamp: new Date('Tue Mar 29 2022 8:51:00 GMT').valueOf(),
                     eventData: {},
                     searchHub: 'in-product-help',
                     document: {
@@ -574,14 +538,9 @@ describe('insight user actions preprocessing', () => {
               },
             ],
           };
-          const mappedAndSortedActions =
-            mapAndSortActionsByMostRecent(mockRawActions);
+          const mappedAndSortedActions = mapAndSortActionsByMostRecent(mockRawActions);
           // Date far back before the first session
-          const ticketCreationDate = createRelativeDate(
-            firstSessionDate,
-            -1000,
-            0
-          ).getTime();
+          const ticketCreationDate = createRelativeDate(firstSessionDate, -1000, 0).getTime();
 
           const timeline = splitActionsIntoTimelineSessions(
             mappedAndSortedActions,
@@ -596,9 +555,7 @@ describe('insight user actions preprocessing', () => {
             expectedTimeline.followingSessions.length
           );
           expect(timeline.precedingSessions.length).toEqual(0);
-          expect(timeline.session?.actions[0].actionType).toEqual(
-            UserActionType.TICKET_CREATION
-          );
+          expect(timeline.session?.actions[0].actionType).toEqual(UserActionType.TICKET_CREATION);
         });
       });
 
@@ -613,9 +570,7 @@ describe('insight user actions preprocessing', () => {
                 actions: [
                   {
                     actionType: 'VIEW',
-                    timestamp: new Date(
-                      'Fri Apr 1 2022 15:14:00 GMT'
-                    ).valueOf(),
+                    timestamp: new Date('Fri Apr 1 2022 15:14:00 GMT').valueOf(),
                     eventData: {},
                     searchHub: 'in-product-help',
                     document: {
@@ -625,9 +580,7 @@ describe('insight user actions preprocessing', () => {
                   },
                   {
                     actionType: 'CLICK',
-                    timestamp: new Date(
-                      'Fri Apr 1 2022 14:59:00 GMT'
-                    ).valueOf(),
+                    timestamp: new Date('Fri Apr 1 2022 14:59:00 GMT').valueOf(),
                     eventData: {},
                     searchHub: 'in-product-help',
                     document: {
@@ -645,9 +598,7 @@ describe('insight user actions preprocessing', () => {
                 actions: [
                   {
                     actionType: 'CLICK',
-                    timestamp: new Date(
-                      'Tue Mar 31 2022 17:00:00 GMT'
-                    ).valueOf(),
+                    timestamp: new Date('Tue Mar 31 2022 17:00:00 GMT').valueOf(),
                     eventData: {},
                     searchHub: 'in-product-help',
                     document: {
@@ -657,9 +608,7 @@ describe('insight user actions preprocessing', () => {
                   },
                   {
                     actionType: 'CLICK',
-                    timestamp: new Date(
-                      'Tue Mar 31 2022 16:40:00 GMT'
-                    ).valueOf(),
+                    timestamp: new Date('Tue Mar 31 2022 16:40:00 GMT').valueOf(),
                     eventData: {},
                     searchHub: 'in-product-help',
                     document: {
@@ -669,9 +618,7 @@ describe('insight user actions preprocessing', () => {
                   },
                   {
                     actionType: 'CUSTOM',
-                    timestamp: new Date(
-                      'Tue Mar 31 2022 16:15:00 GMT'
-                    ).valueOf(),
+                    timestamp: new Date('Tue Mar 31 2022 16:15:00 GMT').valueOf(),
                     eventData: {
                       type: 'smartSnippetSuggestions',
                       value: 'expandSmartSnippetSuggestion',
@@ -696,14 +643,9 @@ describe('insight user actions preprocessing', () => {
             followingSessions: [],
           };
 
-          const mappedAndSortedActions =
-            mapAndSortActionsByMostRecent(mockRawActions);
+          const mappedAndSortedActions = mapAndSortActionsByMostRecent(mockRawActions);
           // Date far back before the first session
-          const ticketCreationDate = createRelativeDate(
-            firstSessionDate,
-            5000,
-            0
-          ).getTime();
+          const ticketCreationDate = createRelativeDate(firstSessionDate, 5000, 0).getTime();
 
           const timeline = splitActionsIntoTimelineSessions(
             mappedAndSortedActions,
@@ -718,22 +660,15 @@ describe('insight user actions preprocessing', () => {
           expect(timeline.precedingSessions.length).toEqual(
             expectedTimeline.precedingSessions.length
           );
-          expect(timeline.session?.actions[0].actionType).toEqual(
-            UserActionType.TICKET_CREATION
-          );
+          expect(timeline.session?.actions[0].actionType).toEqual(UserActionType.TICKET_CREATION);
         });
       });
 
       describe('when the ticket creation date falls between two sessions', () => {
         it('should return the timeline including current session timestamp set as the ticket creation date', async () => {
           const mockRawActions = [...fakeActions];
-          const mappedAndSortedActions =
-            mapAndSortActionsByMostRecent(mockRawActions);
-          const ticketCreationDate = createRelativeDate(
-            caseCreationDate,
-            120,
-            0
-          ).getTime();
+          const mappedAndSortedActions = mapAndSortActionsByMostRecent(mockRawActions);
+          const ticketCreationDate = createRelativeDate(caseCreationDate, 120, 0).getTime();
 
           const sessions = splitActionsIntoTimelineSessions(
             mappedAndSortedActions,
@@ -742,12 +677,8 @@ describe('insight user actions preprocessing', () => {
           );
 
           expect(sessions.session?.actions.length).toEqual(1);
-          expect(sessions.session?.actions[0].actionType).toEqual(
-            UserActionType.TICKET_CREATION
-          );
-          expect(sessions.session?.actions[0].timestamp).toEqual(
-            ticketCreationDate
-          );
+          expect(sessions.session?.actions[0].actionType).toEqual(UserActionType.TICKET_CREATION);
+          expect(sessions.session?.actions[0].timestamp).toEqual(ticketCreationDate);
         });
       });
     });
@@ -764,16 +695,9 @@ describe('insight user actions preprocessing', () => {
       };
 
       // Added 1 min to action timestamp, so it is within 30 mins of the previous action
-      const previousEndDateTime = createRelativeDate(
-        firstSessionDate,
-        1,
-        0
-      ).getTime();
+      const previousEndDateTime = createRelativeDate(firstSessionDate, 1, 0).getTime();
 
-      const isSameSession = isActionWithinSessionThreshold(
-        action,
-        previousEndDateTime
-      );
+      const isSameSession = isActionWithinSessionThreshold(action, previousEndDateTime);
       expect(isSameSession).toEqual(true);
     });
 
@@ -787,16 +711,9 @@ describe('insight user actions preprocessing', () => {
       };
 
       // Added 1 hour to action timestamp, so it is not within 30 mins of the previous action
-      const previousEndDateTime = createRelativeDate(
-        firstSessionDate,
-        60,
-        0
-      ).getTime();
+      const previousEndDateTime = createRelativeDate(firstSessionDate, 60, 0).getTime();
 
-      const isSameSession = isActionWithinSessionThreshold(
-        action,
-        previousEndDateTime
-      );
+      const isSameSession = isActionWithinSessionThreshold(action, previousEndDateTime);
       expect(isSameSession).toEqual(false);
     });
   });
@@ -822,38 +739,26 @@ describe('insight user actions preprocessing', () => {
     };
 
     it('should return true if the action is in the excluded actions list', () => {
-      const shouldExclude = shouldExcludeAction(
-        mockCustomAction,
-        actionsToExclude
-      );
+      const shouldExclude = shouldExcludeAction(mockCustomAction, actionsToExclude);
       expect(shouldExclude).toEqual(true);
     });
 
     it('should return false if the action is NOT in the excluded actions list', () => {
       mockCustomAction.eventData.type = 'useful_event';
 
-      const shouldExclude = shouldExcludeAction(
-        mockCustomAction,
-        actionsToExclude
-      );
+      const shouldExclude = shouldExcludeAction(mockCustomAction, actionsToExclude);
       expect(shouldExclude).toEqual(false);
     });
 
     it('should return true if the action is an empty search', () => {
-      const shouldExclude = shouldExcludeAction(
-        mockSearchAction,
-        actionsToExclude
-      );
+      const shouldExclude = shouldExcludeAction(mockSearchAction, actionsToExclude);
       expect(shouldExclude).toEqual(true);
     });
 
     it('should return false if the action is NOT an empty search', () => {
       mockSearchAction.query = 'some query';
 
-      const shouldExclude = shouldExcludeAction(
-        mockSearchAction,
-        actionsToExclude
-      );
+      const shouldExclude = shouldExcludeAction(mockSearchAction, actionsToExclude);
       expect(shouldExclude).toEqual(false);
     });
   });
@@ -989,10 +894,7 @@ describe('insight user actions preprocessing', () => {
           ],
         };
 
-        const preprocessedTimeline = preprocessUserActionsData(
-          mockState,
-          fakeActions
-        );
+        const preprocessedTimeline = preprocessUserActionsData(mockState, fakeActions);
 
         expect(preprocessedTimeline).toEqual(expectedTimeline);
         expect(preprocessedTimeline.session).not.toBeUndefined();

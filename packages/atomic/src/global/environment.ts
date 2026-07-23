@@ -13,9 +13,7 @@ function getWindow() {
   return window;
 }
 
-export function getAtomicEnvironment(
-  headlessVersion: string
-): AtomicEnvironment {
+export function getAtomicEnvironment(headlessVersion: string): AtomicEnvironment {
   return {
     version: process.env.VERSION!,
     headlessVersion,
@@ -26,10 +24,7 @@ export function getAtomicVersion(): string {
   return getAtomicEnvironment('').version;
 }
 
-export function setCoveoGlobal(
-  globalVariableName: string,
-  headlessVersion: string
-) {
+export function setCoveoGlobal(globalVariableName: string, headlessVersion: string) {
   if (getWindow()[globalVariableName]) {
     return;
   }

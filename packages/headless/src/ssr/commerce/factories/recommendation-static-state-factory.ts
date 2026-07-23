@@ -14,10 +14,7 @@ import type {
   FetchStaticStateParameters,
 } from '../types/engine.js';
 import {filterRecommendationControllers} from '../utils/recommendation-filter.js';
-import {
-  buildFactory,
-  type CommerceEngineDefinitionOptions,
-} from './build-factory.js';
+import {buildFactory, type CommerceEngineDefinitionOptions} from './build-factory.js';
 
 export function fetchRecommendationStaticStateFactory<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
@@ -72,14 +69,11 @@ export function fetchRecommendationStaticStateFactory<
           },
         ] = params;
 
-        filterRecommendationControllers(
-          controllers,
-          controllerDefinitions ?? {}
-        ).refresh(allowedRecommendationKeys);
-
-        const searchActions = await Promise.all(
-          engine.waitForRequestCompletedAction()
+        filterRecommendationControllers(controllers, controllerDefinitions ?? {}).refresh(
+          allowedRecommendationKeys
         );
+
+        const searchActions = await Promise.all(engine.waitForRequestCompletedAction());
 
         return createStaticState({
           searchActions,

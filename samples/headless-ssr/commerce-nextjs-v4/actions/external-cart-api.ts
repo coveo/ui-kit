@@ -44,9 +44,7 @@ export async function getCart(): Promise<CartItem[]> {
 
 export async function addItemToCart(newItem: CartItem): Promise<CartItem[]> {
   const cart = await getCartFromCookies();
-  const existingItem = cart.find(
-    (item) => item.productId === newItem.productId
-  );
+  const existingItem = cart.find((item) => item.productId === newItem.productId);
   if (existingItem) {
     existingItem.quantity += 1;
   } else {
@@ -56,13 +54,9 @@ export async function addItemToCart(newItem: CartItem): Promise<CartItem[]> {
   return cart;
 }
 
-export async function updateItemQuantity(
-  updatedItem: CartItem
-): Promise<CartItem[]> {
+export async function updateItemQuantity(updatedItem: CartItem): Promise<CartItem[]> {
   let cart = await getCartFromCookies();
-  const existingItem = cart.find(
-    (item) => item.productId === updatedItem.productId
-  );
+  const existingItem = cart.find((item) => item.productId === updatedItem.productId);
   if (existingItem) {
     if (updatedItem.quantity === 0) {
       cart = cart.filter((item) => item.productId !== updatedItem.productId);

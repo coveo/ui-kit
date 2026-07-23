@@ -89,9 +89,7 @@ export const RecsBeforeInit: Story = {
   tags: ['!dev'],
   play: async (context) => {
     await playNoFirstQuery(context);
-    const recsInterface = context.canvasElement.querySelector(
-      'atomic-recs-interface'
-    );
+    const recsInterface = context.canvasElement.querySelector('atomic-recs-interface');
     await recsInterface?.getRecommendations();
   },
 };

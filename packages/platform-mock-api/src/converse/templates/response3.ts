@@ -4769,8 +4769,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
               description: "Calling 'topClicks' reveal service",
               duration: 12,
               config: {
-                model:
-                  'barcasportsmcy01fvu_topclicks_442e592c_5931_4462_b3fd_de7e1dc4b59b',
+                model: 'barcasportsmcy01fvu_topclicks_442e592c_5931_4462_b3fd_de7e1dc4b59b',
                 engineVersion: '~2|~3',
                 modifier: 250,
                 matchQuery: false,
@@ -4821,16 +4820,14 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
         },
         {
           name: 'BuildFacetSelectedValueOverride',
-          description:
-            'Build query overrides based on selected facet selected values',
+          description: 'Build query overrides based on selected facet selected values',
           duration: 0,
           selectedFacets: [],
           createdOverrides: [],
         },
         {
           name: 'AddExistingQueryParametersToGroupByOverride',
-          description:
-            'Add query overrides in the query to each Group By results',
+          description: 'Add query overrides in the query to each Group By results',
           duration: 0,
           queryExpressions: {
             q: 'kayaks',
@@ -4988,8 +4985,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
               AutomaticFacetsRequest: {},
             },
             out: {
-              index:
-                'barcasportsmcy01fvu-l56dsftu-Indexer-1-r65oq43natljouzp7wev7gcmfe',
+              index: 'barcasportsmcy01fvu-l56dsftu-Indexer-1-r65oq43natljouzp7wev7gcmfe',
               indexRegion: 'us-east-1',
               logEntryId: '212648437657504076',
               serverTime: 222,
@@ -5002,8 +4998,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
         },
         {
           name: 'FacetResultPostProcessingEvaluationReport',
-          description:
-            'Post process the result through the processors pipeline',
+          description: 'Post process the result through the processors pipeline',
           duration: 1,
           'Index Scores': [
             {
@@ -5026,8 +5021,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
           children: [
             {
               name: 'FacetSense ML score assigning',
-              description:
-                'Processing facet result: FacetSense ML score assigning',
+              description: 'Processing facet result: FacetSense ML score assigning',
               duration: 0,
               changed: false,
               in: [],
@@ -5035,8 +5029,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
             },
             {
               name: 'Setting more values available',
-              description:
-                'Processing facet result: Setting more values available',
+              description: 'Processing facet result: Setting more values available',
               duration: 0,
               changed: true,
               in: [
@@ -5396,8 +5389,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
             },
             {
               name: 'Apply selection from request',
-              description:
-                'Processing facet result: Apply selection from request',
+              description: 'Processing facet result: Apply selection from request',
               duration: 0,
               changed: false,
               in: [],
@@ -5765,8 +5757,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
             },
             {
               name: 'Freezing facet values if any',
-              description:
-                'Processing facet result: Freezing facet values if any',
+              description: 'Processing facet result: Freezing facet values if any',
               duration: 0,
               changed: false,
               in: [],
@@ -5774,8 +5765,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
             },
             {
               name: 'Reordering values based on facet sense',
-              description:
-                'Processing facet result: Reordering values based on facet sense',
+              description: 'Processing facet result: Reordering values based on facet sense',
               duration: 0,
               changed: false,
               in: [],
@@ -5783,8 +5773,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
             },
             {
               name: 'Retaining selected values based on request',
-              description:
-                'Processing facet result: Retaining selected values based on request',
+              description: 'Processing facet result: Retaining selected values based on request',
               duration: 0,
               changed: false,
               in: [],
@@ -5801,8 +5790,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
             },
             {
               name: 'Reorder facet values using custom sort',
-              description:
-                'Processing facet result: Reorder facet values using custom sort',
+              description: 'Processing facet result: Reorder facet values using custom sort',
               duration: 1,
               changed: true,
               in: [
@@ -6171,8 +6159,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
             },
             {
               name: 'Truncate extra values in request',
-              description:
-                'Processing facet result: Truncate extra values in request',
+              description: 'Processing facet result: Truncate extra values in request',
               duration: 0,
               changed: true,
               in: [
@@ -6484,8 +6471,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
             },
             {
               name: 'Reorder facets using index score',
-              description:
-                'Processing facet result: Reorder facets using index score',
+              description: 'Processing facet result: Reorder facets using index score',
               duration: 0,
               changed: true,
               in: [
@@ -6749,8 +6735,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
             },
             {
               name: 'Reorder facets using ML score',
-              description:
-                'Processing facet result: Reorder facets using ML score',
+              description: 'Processing facet result: Reorder facets using ML score',
               duration: 0,
               changed: false,
               in: [],

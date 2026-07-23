@@ -10,22 +10,16 @@ export interface ThinkingBlockProps {
   isStreaming: boolean;
 }
 
-export function ThinkingBlock({
-  reasoningSteps,
-  isStreaming,
-}: ThinkingBlockProps) {
+export function ThinkingBlock({reasoningSteps, isStreaming}: ThinkingBlockProps) {
   if (reasoningSteps.length === 0) {
     return null;
   }
 
   const toolCalls = reasoningSteps.filter(isToolCall);
-  const allCompleted =
-    toolCalls.length > 0 && toolCalls.every((tc) => tc.status === 'completed');
+  const allCompleted = toolCalls.length > 0 && toolCalls.every((tc) => tc.status === 'completed');
   const isProcessing = isStreaming && !allCompleted;
   const activeTool = toolCalls.findLast((tc) => tc.status === 'calling');
-  const completedCount = toolCalls.filter(
-    (tc) => tc.status === 'completed'
-  ).length;
+  const completedCount = toolCalls.filter((tc) => tc.status === 'completed').length;
 
   let summaryText: string;
   if (allCompleted) {
@@ -33,8 +27,7 @@ export function ThinkingBlock({
   } else if (!isStreaming && toolCalls.length === 0) {
     summaryText = `✓ Reasoning complete`;
   } else if (activeTool) {
-    const progress =
-      completedCount > 0 ? ` (${completedCount}/${toolCalls.length})` : '';
+    const progress = completedCount > 0 ? ` (${completedCount}/${toolCalls.length})` : '';
     summaryText = `⏳ ${activeTool.name}${progress}`;
   } else {
     summaryText = `⏳ Thinking…`;
@@ -44,9 +37,7 @@ export function ThinkingBlock({
 
   return (
     <details className={styles.details}>
-      <summary className={`${styles.summary} ${indicatorClass}`}>
-        {summaryText}
-      </summary>
+      <summary className={`${styles.summary} ${indicatorClass}`}>{summaryText}</summary>
       <div className={styles.content}>
         <ul className={styles.toolList}>
           {reasoningSteps.map((step, index) => {

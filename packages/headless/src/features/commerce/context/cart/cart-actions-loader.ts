@@ -17,12 +17,7 @@ import {
 } from './cart-actions.js';
 import {cartReducer as cart} from './cart-slice.js';
 
-export type {
-  CartActionPayload,
-  PurchasePayload,
-  SetItemsPayload,
-  UpdateItemQuantityPayload,
-};
+export type {CartActionPayload, PurchasePayload, SetItemsPayload, UpdateItemQuantityPayload};
 
 /**
  * The cart action creators.
@@ -41,11 +36,7 @@ export interface CartActionCreators {
    */
   emitPurchaseEvent(
     payload: PurchasePayload
-  ): AsyncThunkAction<
-    void,
-    PurchasePayload,
-    AsyncThunkCommerceOptions<CommerceEngineState>
-  >;
+  ): AsyncThunkAction<void, PurchasePayload, AsyncThunkCommerceOptions<CommerceEngineState>>;
 
   /**
    * Marks the items in the cart as purchased and empties the cart.
@@ -74,11 +65,7 @@ export interface CartActionCreators {
    */
   emitCartActionEvent(
     payload: CartActionPayload
-  ): AsyncThunkAction<
-    void,
-    CartActionPayload,
-    AsyncThunkCommerceOptions<CommerceEngineState>
-  >;
+  ): AsyncThunkAction<void, CartActionPayload, AsyncThunkCommerceOptions<CommerceEngineState>>;
 
   /**
    * Updates the quantity of an item in the cart.
@@ -88,9 +75,7 @@ export interface CartActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  updateItemQuantity(
-    payload: UpdateItemQuantityPayload
-  ): PayloadAction<UpdateItemQuantityPayload>;
+  updateItemQuantity(payload: UpdateItemQuantityPayload): PayloadAction<UpdateItemQuantityPayload>;
 }
 
 /**

@@ -59,18 +59,15 @@ describe('atomic-insight-result-attach-to-case-indicator', () => {
       },
     };
 
-    const {element} =
-      await renderInAtomicInsightResult<AtomicInsightResultAttachToCaseIndicator>(
-        {
-          template: html`<atomic-insight-result-attach-to-case-indicator></atomic-insight-result-attach-to-case-indicator>`,
-          selector: 'atomic-insight-result-attach-to-case-indicator',
-          result: mockResult,
-          bindings: (bindings) => {
-            bindings.engine = engineWithCaseContext;
-            return bindings;
-          },
-        }
-      );
+    const {element} = await renderInAtomicInsightResult<AtomicInsightResultAttachToCaseIndicator>({
+      template: html`<atomic-insight-result-attach-to-case-indicator></atomic-insight-result-attach-to-case-indicator>`,
+      selector: 'atomic-insight-result-attach-to-case-indicator',
+      result: mockResult,
+      bindings: (bindings) => {
+        bindings.engine = engineWithCaseContext;
+        return bindings;
+      },
+    });
 
     return {element};
   };

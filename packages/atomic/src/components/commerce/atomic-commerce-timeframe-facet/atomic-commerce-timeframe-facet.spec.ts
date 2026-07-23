@@ -23,9 +23,7 @@ describe('atomic-commerce-timeframe-facet', () => {
 
   beforeEach(() => {
     vi.mocked(shouldDisplayInputForFacetRange).mockReset();
-    mockedConsoleError = vi
-      .spyOn(console, 'error')
-      .mockImplementation(() => {});
+    mockedConsoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
 
     mockedSummary = buildFakeSummary({});
     mockedFacet = buildFakeDateFacet({
@@ -37,25 +35,22 @@ describe('atomic-commerce-timeframe-facet', () => {
     });
   });
 
-  const setupElement = async (
-    props?: Partial<{isCollapsed: boolean; field: string}>
-  ) => {
-    const {element} =
-      await renderInAtomicCommerceInterface<AtomicCommerceTimeframeFacet>({
-        template: html`<atomic-commerce-timeframe-facet
-          .facet=${mockedFacet}
-          .summary=${mockedSummary}
-          ?is-collapsed=${props?.isCollapsed || false}
-          field=${props?.field || 'testField'}
-        ></atomic-commerce-timeframe-facet>`,
-        selector: 'atomic-commerce-timeframe-facet',
-        bindings: (bindings) => {
-          bindings.interfaceElement.type = 'product-listing';
-          bindings.store.getUniqueIDFromEngine = vi.fn().mockReturnValue('123');
-          bindings.store.onChange = vi.fn();
-          return bindings;
-        },
-      });
+  const setupElement = async (props?: Partial<{isCollapsed: boolean; field: string}>) => {
+    const {element} = await renderInAtomicCommerceInterface<AtomicCommerceTimeframeFacet>({
+      template: html`<atomic-commerce-timeframe-facet
+        .facet=${mockedFacet}
+        .summary=${mockedSummary}
+        ?is-collapsed=${props?.isCollapsed || false}
+        field=${props?.field || 'testField'}
+      ></atomic-commerce-timeframe-facet>`,
+      selector: 'atomic-commerce-timeframe-facet',
+      bindings: (bindings) => {
+        bindings.interfaceElement.type = 'product-listing';
+        bindings.store.getUniqueIDFromEngine = vi.fn().mockReturnValue('123');
+        bindings.store.onChange = vi.fn();
+        return bindings;
+      },
+    });
     return {
       element,
       getFacetValueByPosition(valuePosition: number) {
@@ -77,14 +72,10 @@ describe('atomic-commerce-timeframe-facet', () => {
         return page.getByText('No label', {exact: true});
       },
       get componentError() {
-        return page.getByText(
-          'Look at the developer console for more information'
-        );
+        return page.getByText('Look at the developer console for more information');
       },
       get clearButton() {
-        return element.shadowRoot!.querySelector(
-          '[part=clear-button]'
-        ) as HTMLButtonElement;
+        return element.shadowRoot!.querySelector('[part=clear-button]') as HTMLButtonElement;
       },
       get labelButton() {
         return element.shadowRoot!.querySelector('[part=label-button]')!;
@@ -105,22 +96,16 @@ describe('atomic-commerce-timeframe-facet', () => {
         return element.shadowRoot!.querySelectorAll('[part=value-link]');
       },
       get inputApplyButton() {
-        return element.shadowRoot!.querySelector(
-          '[part=input-apply-button]'
-        )! as HTMLButtonElement;
+        return element.shadowRoot!.querySelector('[part=input-apply-button]')! as HTMLButtonElement;
       },
       get dateInput() {
         return element.shadowRoot!.querySelector('atomic-facet-date-input')!;
       },
       get inputStart() {
-        return element.shadowRoot!.querySelector(
-          '[part=input-start]'
-        )! as HTMLInputElement;
+        return element.shadowRoot!.querySelector('[part=input-start]')! as HTMLInputElement;
       },
       get inputEnd() {
-        return element.shadowRoot!.querySelector(
-          '[part=input-end]'
-        )! as HTMLInputElement;
+        return element.shadowRoot!.querySelector('[part=input-end]')! as HTMLInputElement;
       },
     };
   };
@@ -305,9 +290,7 @@ describe('atomic-commerce-timeframe-facet', () => {
 
     expect(componentError).toBeVisible();
     expect(mockedConsoleError).toHaveBeenCalledWith(
-      new Error(
-        'The "facet" property is required for <atomic-commerce-timeframe-facet>.'
-      ),
+      new Error('The "facet" property is required for <atomic-commerce-timeframe-facet>.'),
       expect.anything()
     );
   });
@@ -385,10 +368,7 @@ describe('atomic-commerce-timeframe-facet', () => {
   });
 
   it('should call #focusAfterSearch when clear button is clicked', async () => {
-    const focusAfterSearchSpy = vi.spyOn(
-      FocusTargetController.prototype,
-      'focusAfterSearch'
-    );
+    const focusAfterSearchSpy = vi.spyOn(FocusTargetController.prototype, 'focusAfterSearch');
     mockedFacet = buildFakeDateFacet({
       state: {
         values: [
@@ -426,12 +406,7 @@ describe('atomic-commerce-timeframe-facet', () => {
         },
       });
 
-      const {
-        inputStart,
-        inputEnd,
-        inputApplyButton,
-        clearButton: btn,
-      } = await setupElement();
+      const {inputStart, inputEnd, inputApplyButton, clearButton: btn} = await setupElement();
 
       clearButton = btn;
 

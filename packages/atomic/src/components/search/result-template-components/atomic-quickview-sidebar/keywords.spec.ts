@@ -71,9 +71,7 @@ describe('Keywords (Lit)', () => {
     expect(text).toContain('ocean');
     expect(text).toContain('(3)');
 
-    const colorSwatch = container.querySelector(
-      '.mr-2.h-5.w-5.flex-none'
-    ) as HTMLElement | null;
+    const colorSwatch = container.querySelector('.mr-2.h-5.w-5.flex-none') as HTMLElement | null;
     expect(colorSwatch).toBeTruthy();
 
     const legend = container.querySelector('legend');
@@ -142,9 +140,7 @@ describe('Keywords (Lit)', () => {
       },
     });
 
-    const navigationContainer = container.querySelector(
-      '.bg-background'
-    ) as HTMLElement | null;
+    const navigationContainer = container.querySelector('.bg-background') as HTMLElement | null;
     const toggleButton = container.querySelector(
       '[part="sidebar-remove-word-button"]'
     ) as HTMLButtonElement | null;

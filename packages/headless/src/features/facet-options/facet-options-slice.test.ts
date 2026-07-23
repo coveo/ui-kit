@@ -6,10 +6,7 @@ import {getHistoryInitialState} from '../history/history-state.js';
 import {executeSearch} from '../search/search-actions.js';
 import {updateFacetOptions} from './facet-options-actions.js';
 import {facetOptionsReducer} from './facet-options-slice.js';
-import {
-  type FacetOptionsState,
-  getFacetOptionsInitialState,
-} from './facet-options-state.js';
+import {type FacetOptionsState, getFacetOptionsInitialState} from './facet-options-state.js';
 
 describe('facet options slice', () => {
   let state: FacetOptionsState;

@@ -7,10 +7,9 @@ import '@/src/components/common/atomic-layout-section/atomic-layout-section.js';
 
 const searchApiHarness = new MockSearchApi();
 const {decorator, play} = wrapInSearchInterface();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-layout-section',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-layout-section', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-layout-section',

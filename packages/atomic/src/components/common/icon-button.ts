@@ -12,9 +12,7 @@ export interface IconButtonProps extends ButtonProps {
   partPrefix: string;
 }
 
-export const renderIconButton: FunctionalComponent<IconButtonProps> = ({
-  props,
-}) => {
+export const renderIconButton: FunctionalComponent<IconButtonProps> = ({props}) => {
   return html`
     <div class="relative" part="${props.partPrefix}-container">
       ${renderButton({

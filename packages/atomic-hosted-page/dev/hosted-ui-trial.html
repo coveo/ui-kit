@@ -10,9 +10,7 @@
 
     <script type="module">
       const deploymentEnvironment =
-        typeof process !== 'undefined'
-          ? process.env.DEPLOYMENT_ENVIRONMENT
-          : 'CDN';
+        typeof process !== 'undefined' ? process.env.DEPLOYMENT_ENVIRONMENT : 'CDN';
 
       if (deploymentEnvironment === 'CDN') {
         const script = document.createElement('script');
@@ -21,11 +19,9 @@
           'http://localhost:3000/atomic-hosted-page/v1/atomic-hosted-page/atomic-hosted-page.esm.js';
         document.head.appendChild(script);
       } else {
-        import('@coveo/atomic-hosted-page/loader').then(
-          ({defineCustomElements}) => {
-            defineCustomElements();
-          }
-        );
+        import('@coveo/atomic-hosted-page/loader').then(({defineCustomElements}) => {
+          defineCustomElements();
+        });
       }
     </script>
     <script type="module">

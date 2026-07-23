@@ -46,10 +46,7 @@ import {
 } from '../../../utils/highlight.js';
 import {randomID} from '../../../utils/utils.js';
 import {validateOptions} from '../../../utils/validate-payload.js';
-import {
-  buildController,
-  type Controller,
-} from '../../controller/headless-controller.js';
+import {buildController, type Controller} from '../../controller/headless-controller.js';
 import {
   defaultSearchBoxOptions,
   type SearchBoxOptions,
@@ -58,8 +55,7 @@ import {
 
 export type {Delimiters, SearchBoxOptions, SuggestionHighlightingOptions};
 
-export type SearchBoxProps = SearchBoxPropsBase &
-  (NextSearchBoxProps | LegacySearchBoxProps);
+export type SearchBoxProps = SearchBoxPropsBase & (NextSearchBoxProps | LegacySearchBoxProps);
 
 interface NextSearchBoxProps {
   /**
@@ -196,10 +192,7 @@ export interface SearchBox extends Controller {
    * @param legacyAnalytics -  The legacy analytics action to log after submitting a query.
    * @param nextAnalytics - The next analytics action to log after submitting a query.
    */
-  submit(
-    legacyAnalytics?: LegacySearchAction,
-    nextAnalytics?: SearchAction
-  ): void;
+  submit(legacyAnalytics?: LegacySearchAction, nextAnalytics?: SearchAction): void;
 
   /**
    * The state of the `SearchBox` controller.
@@ -214,10 +207,7 @@ export interface SearchBox extends Controller {
  * @param engine - The headless engine instance.
  * @returns A `SearchBox` controller instance.
  */
-export function buildCoreSearchBox(
-  engine: CoreEngine,
-  props: SearchBoxProps
-): SearchBox {
+export function buildCoreSearchBox(engine: CoreEngine, props: SearchBoxProps): SearchBox {
   if (!loadSearchBoxReducers(engine)) {
     throw loadReducerError;
   }
@@ -297,9 +287,7 @@ export function buildCoreSearchBox(
     },
 
     submit(
-      legacyAnalytics:
-        | LegacySearchAction
-        | InsightAction = logSearchboxSubmit(),
+      legacyAnalytics: LegacySearchAction | InsightAction = logSearchboxSubmit(),
       nextAnalytics: SearchAction
     ) {
       performSearch({legacy: legacyAnalytics, next: nextAnalytics});
@@ -309,13 +297,8 @@ export function buildCoreSearchBox(
     get state() {
       const state = getState();
       const querySuggest = state.querySuggest[options.id];
-      const suggestions = getSuggestions(
-        querySuggest,
-        options.highlightOptions
-      );
-      const isLoadingSuggestions = querySuggest
-        ? querySuggest.isLoading
-        : false;
+      const suggestions = getSuggestions(querySuggest, options.highlightOptions);
+      const isLoadingSuggestions = querySuggest ? querySuggest.isLoading : false;
 
       return {
         searchBoxId: id,
@@ -337,10 +320,7 @@ export function getSuggestions(
   }
 
   return state.completions.map((completion) => ({
-    highlightedValue: getHighlightedSuggestion(
-      completion.highlighted,
-      highlightOptions
-    ),
+    highlightedValue: getHighlightedSuggestion(completion.highlighted, highlightOptions),
     rawValue: completion.expression,
   }));
 }
@@ -348,11 +328,7 @@ export function getSuggestions(
 function loadSearchBoxReducers(
   engine: CoreEngine
 ): engine is CoreEngine<
-  QuerySection &
-    QuerySuggestionSection &
-    ConfigurationSection &
-    QuerySetSection &
-    SearchSection
+  QuerySection & QuerySuggestionSection & ConfigurationSection & QuerySetSection & SearchSection
 > {
   engine.addReducers({query, querySuggest, configuration, querySet, search});
   return true;

@@ -162,11 +162,7 @@ describe('buildSamlFlow', () => {
     });
 
     it('removes the handshake token from the url but keeps the slash', () => {
-      expect(options.history!.replaceState).toHaveBeenCalledWith(
-        null,
-        '',
-        '#/'
-      );
+      expect(options.history!.replaceState).toHaveBeenCalledWith(null, '', '#/');
     });
   });
 });

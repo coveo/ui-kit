@@ -16,30 +16,18 @@ export function A2UIProductCard(props: A2UIProductCardProps) {
   return (
     <div className={styles.card}>
       {ec_image && (
-        <img
-          className={styles.image}
-          src={ec_image}
-          alt={ec_name ?? 'Product'}
-          loading="lazy"
-        />
+        <img className={styles.image} src={ec_image} alt={ec_name ?? 'Product'} loading="lazy" />
       )}
       <div className={styles.content}>
         {clickUri ? (
-          <a
-            className={styles.name}
-            href={clickUri}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <a className={styles.name} href={clickUri} target="_blank" rel="noopener noreferrer">
             {ec_name}
           </a>
         ) : (
           <span className={styles.name}>{ec_name}</span>
         )}
         {ec_brand && <span className={styles.brand}>{ec_brand}</span>}
-        {ec_price !== undefined && (
-          <span className={styles.price}>{formatPrice(ec_price)}</span>
-        )}
+        {ec_price !== undefined && <span className={styles.price}>{formatPrice(ec_price)}</span>}
       </div>
     </div>
   );

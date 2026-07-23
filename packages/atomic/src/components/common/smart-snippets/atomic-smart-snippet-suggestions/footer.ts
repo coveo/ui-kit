@@ -12,10 +12,7 @@ export interface FooterProps {
 export const renderFooter: FunctionalComponentWithChildren<FooterProps> =
   ({props}) =>
   (children) => {
-    return html`<footer
-      part="footer"
-      aria-label=${props.i18n.t('smart-snippet-source')}
-    >
+    return html`<footer part="footer" aria-label=${props.i18n.t('smart-snippet-source')}>
       ${children}
     </footer>`;
   };

@@ -31,10 +31,7 @@ import {once, randomID} from '@/src/utils/utils.js';
 @customElement('atomic-ipx-embedded')
 @bindings()
 @withTailwindStyles
-export class AtomicIpxEmbedded
-  extends LitElement
-  implements InitializableComponent<AnyBindings>
-{
+export class AtomicIpxEmbedded extends LitElement implements InitializableComponent<AnyBindings> {
   static styles: CSSResultGroup = [
     ipxBodyStyles,
     css`

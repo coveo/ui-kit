@@ -79,10 +79,7 @@ describe('#renderBreadcrumbButton', () => {
     });
 
     it('should have the proper aria-label on the button', async () => {
-      expect(button).toHaveAttribute(
-        'aria-label',
-        'Remove exclusion filter on test: test'
-      );
+      expect(button).toHaveAttribute('aria-label', 'Remove exclusion filter on test: test');
     });
   });
 
@@ -108,10 +105,7 @@ describe('#renderBreadcrumbButton', () => {
     });
 
     it('should have the proper aria-label on the button', async () => {
-      expect(button).toHaveAttribute(
-        'aria-label',
-        'Remove inclusion filter on test: test'
-      );
+      expect(button).toHaveAttribute('aria-label', 'Remove inclusion filter on test: test');
     });
   });
 

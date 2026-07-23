@@ -81,10 +81,7 @@ export class AtomicProductMultiValueText
     if (!product) {
       return [];
     }
-    const property = ProductTemplatesHelpers.getProductProperty(
-      product,
-      this.field
-    );
+    const property = ProductTemplatesHelpers.getProductProperty(product, this.field);
     if (property === null) {
       return [];
     }
@@ -105,32 +102,22 @@ export class AtomicProductMultiValueText
   }
 
   private get facetSelectedValues() {
-    return this.breadcrumbManager.state.facetBreadcrumbs.reduce(
-      (values, facet) => {
-        if (facet.field !== this.field) {
-          return values;
-        }
-        return values.concat(
-          facet.values.map(({value}) => (value as RegularFacetValue).value)
-        );
-      },
-      [] as string[]
-    );
+    return this.breadcrumbManager.state.facetBreadcrumbs.reduce((values, facet) => {
+      if (facet.field !== this.field) {
+        return values;
+      }
+      return values.concat(facet.values.map(({value}) => (value as RegularFacetValue).value));
+    }, [] as string[]);
   }
 
   private get sortedValues() {
-    const firstValues = this.facetSelectedValues.filter((value) =>
-      this.values.includes(value)
-    );
+    const firstValues = this.facetSelectedValues.filter((value) => this.values.includes(value));
 
     return Array.from(new Set([...firstValues, ...this.values]));
   }
 
   private get shouldDisplayLabel() {
-    return (
-      this.maxValuesToDisplay > 0 &&
-      this.sortedValues.length > this.maxValuesToDisplay
-    );
+    return this.maxValuesToDisplay > 0 && this.sortedValues.length > this.maxValuesToDisplay;
   }
 
   private get numberOfValuesToDisplay() {
@@ -142,9 +129,7 @@ export class AtomicProductMultiValueText
     const kebabValue = titleToKebab(value);
     return html`
       <li part="product-multi-value-text-value" class="inline-block">
-        <slot name=${`product-multi-value-text-value-${kebabValue}`}>
-          ${label}
-        </slot>
+        <slot name=${`product-multi-value-text-value-${kebabValue}`}> ${label} </slot>
       </li>
     `;
   }
@@ -176,9 +161,7 @@ export class AtomicProductMultiValueText
     }
     if (this.shouldDisplayLabel) {
       templates.push(this.renderSeparator());
-      templates.push(
-        this.renderMoreLabel(values.length - this.numberOfValuesToDisplay)
-      );
+      templates.push(this.renderMoreLabel(values.length - this.numberOfValuesToDisplay));
     }
     return templates;
   }
@@ -191,10 +174,7 @@ export class AtomicProductMultiValueText
     }
 
     return html`
-      <ul
-        part="product-multi-value-text-list"
-        class="m-0 flex list-none p-0 set-font-size-sm"
-      >
+      <ul part="product-multi-value-text-list" class="m-0 flex list-none p-0 set-font-size-sm">
         ${this.renderListItems(this.sortedValues)}
       </ul>
     `;

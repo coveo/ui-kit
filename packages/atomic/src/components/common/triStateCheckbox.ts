@@ -14,17 +14,14 @@ export type TriStateCheckboxProps = Omit<CheckboxProps, 'checked'> & {
   state: FacetValueState;
 };
 
-export const renderTriStateCheckbox: FunctionalComponent<
-  TriStateCheckboxProps
-> = ({props}) => {
+export const renderTriStateCheckbox: FunctionalComponent<TriStateCheckboxProps> = ({props}) => {
   const isSelected = props.state === 'selected';
   const isExcluded = props.state === 'excluded';
   const partName = props.part ?? 'checkbox';
 
   const classNames = tw({
     'hover:border-primary-light focus-visible:border-primary-light grid h-4 w-4 place-items-center rounded focus-visible:outline-none': true,
-    'selected bg-primary hover:bg-primary-light focus-visible:bg-primary-light':
-      isSelected,
+    'selected bg-primary hover:bg-primary-light focus-visible:bg-primary-light': isSelected,
     'border-neutral-dark border': !isSelected,
     'excluded bg-error hover:bg-error focus-visible:bg-error hover:border-error focus-visible:border-error':
       isExcluded,

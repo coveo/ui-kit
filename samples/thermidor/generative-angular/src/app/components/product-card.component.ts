@@ -15,18 +15,11 @@ export interface ProductCardData {
   selector: 'app-product-card',
   template: `
     @if (product().image) {
-      <img
-        class="product-image"
-        [src]="product().image"
-        [alt]="product().name"
-        loading="lazy"
-      />
+      <img class="product-image" [src]="product().image" [alt]="product().name" loading="lazy" />
     } @else {
       <div
         class="swatch"
-        [style.background]="
-          product().accent || 'linear-gradient(135deg, #e7d8c8, #c6a889)'
-        "
+        [style.background]="product().accent || 'linear-gradient(135deg, #e7d8c8, #c6a889)'"
       ></div>
     }
     <p class="brand">{{ product().brand }}</p>
@@ -35,9 +28,7 @@ export interface ProductCardData {
       {{ truncate(product().description || 'Barca Sports product', 80) }}
     </p>
     <div class="footer">
-      <strong>{{
-        formatPrice(product().promoPrice ?? product().price)
-      }}</strong>
+      <strong>{{ formatPrice(product().promoPrice ?? product().price) }}</strong>
       <span>{{ product().promoPrice ? 'Sale price' : 'View details' }}</span>
     </div>
   `,

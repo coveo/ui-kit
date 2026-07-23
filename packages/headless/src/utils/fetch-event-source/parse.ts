@@ -44,9 +44,7 @@ enum ControlChars {
  * @param onLine A function that will be called on each new EventSource line.
  * @returns A function that should be called for each incoming byte chunk.
  */
-export function getLines(
-  onLine: (line: Uint8Array, fieldLength: number) => void
-) {
+export function getLines(onLine: (line: Uint8Array, fieldLength: number) => void) {
   let buffer: Uint8Array | undefined;
   let position: number; // current read position
   let fieldLength: number; // length of the `field` portion of the line
@@ -143,8 +141,7 @@ export function getMessages(
       // line is of format "<field>:<value>" or "<field>: <value>"
       // https://html.spec.whatwg.org/multipage/server-sent-events.html#event-stream-interpretation
       const field = decoder.decode(line.subarray(0, fieldLength));
-      const valueOffset =
-        fieldLength + (line[fieldLength + 1] === ControlChars.Space ? 2 : 1);
+      const valueOffset = fieldLength + (line[fieldLength + 1] === ControlChars.Space ? 2 : 1);
       const value = decoder.decode(line.subarray(valueOffset));
 
       switch (field) {

@@ -1,15 +1,9 @@
 import type {ThunkExtraArguments} from '../../../app/thunk-extra-arguments.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../../test/mock-engine-v2.js';
 import {buildMockFacetValue} from '../../../test/mock-facet-value.js';
 import {createMockState} from '../../../test/mock-state.js';
 import {updateFacetOptions} from '../../facet-options/facet-options-actions.js';
-import {
-  toggleExcludeFacetValue,
-  toggleSelectFacetValue,
-} from './facet-set-actions.js';
+import {toggleExcludeFacetValue, toggleSelectFacetValue} from './facet-set-actions.js';
 import {
   executeToggleFacetExclude,
   executeToggleFacetSelect,

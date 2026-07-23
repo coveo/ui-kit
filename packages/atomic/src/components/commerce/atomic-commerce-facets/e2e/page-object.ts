@@ -37,8 +37,6 @@ export class FacetsPageObject extends BasePageObject {
   }
 
   clearFilters(numberOfFilters?: number) {
-    return this.page.getByLabel(
-      new RegExp(`Clear ${numberOfFilters ?? '\\d'} filter for`)
-    );
+    return this.page.getByLabel(new RegExp(`Clear ${numberOfFilters ?? '\\d'} filter for`));
   }
 }

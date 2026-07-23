@@ -1,7 +1,4 @@
-import type {
-  ProductTemplate,
-  ProductTemplateCondition,
-} from '@coveo/headless/commerce';
+import type {ProductTemplate, ProductTemplateCondition} from '@coveo/headless/commerce';
 import {ProductTemplatesHelpers} from '@coveo/headless/commerce';
 import {LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
@@ -22,10 +19,7 @@ import {arrayConverter} from '@/src/converters/array-converter';
  * @slot link - A `template` element that contains a single `atomic-product-link` component.
  */
 @customElement('atomic-product-template')
-export class AtomicProductTemplate
-  extends LitElement
-  implements LitElementWithError
-{
+export class AtomicProductTemplate extends LitElement implements LitElementWithError {
   private productTemplateController: ProductTemplateController;
 
   @state() error!: Error;
@@ -68,11 +62,7 @@ export class AtomicProductTemplate
       'atomic-commerce-search-box-instant-products',
     ];
     const allowEmpty = true;
-    this.productTemplateController = new ProductTemplateController(
-      this,
-      validParent,
-      allowEmpty
-    );
+    this.productTemplateController = new ProductTemplateController(this, validParent, allowEmpty);
   }
 
   connectedCallback() {

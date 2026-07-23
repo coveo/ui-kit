@@ -3,11 +3,7 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import type {ProjectMetadata} from './metadata.js';
-import {
-  provenancePath,
-  readSampleMetadata,
-  writeProvenance,
-} from './provenance.js';
+import {provenancePath, readSampleMetadata, writeProvenance} from './provenance.js';
 
 vi.mock('./log.js', () => ({
   log: {

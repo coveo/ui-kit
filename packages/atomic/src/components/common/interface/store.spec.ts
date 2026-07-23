@@ -50,10 +50,7 @@ describe('store', () => {
 
       createAppLoadedListener(store, cb);
 
-      expect(onChange).toHaveBeenCalledWith(
-        'loadingFlags',
-        expect.any(Function)
-      );
+      expect(onChange).toHaveBeenCalledWith('loadingFlags', expect.any(Function));
 
       onChange.mock.lastCall?.[1]();
 
@@ -143,9 +140,7 @@ describe('store', () => {
 
     it('should throw an error when calling #getUniqueIDFromEngine', () => {
       const baseStore = createBaseStore({});
-      expect(() =>
-        baseStore.getUniqueIDFromEngine(buildFakeCommerceEngine({}))
-      ).toThrow(
+      expect(() => baseStore.getUniqueIDFromEngine(buildFakeCommerceEngine({}))).toThrow(
         'getUniqueIDFromEngine not implemented at the base store level.'
       );
     });
@@ -422,10 +417,7 @@ describe('store', () => {
       waitUntilAppLoaded(store as never, cb);
 
       expect(cb).not.toHaveBeenCalled();
-      expect(store.onChange).toHaveBeenCalledExactlyOnceWith(
-        'loadingFlags',
-        expect.any(Function)
-      );
+      expect(store.onChange).toHaveBeenCalledExactlyOnceWith('loadingFlags', expect.any(Function));
 
       // Simulate loadingFlags becoming empty
       listener!([]);

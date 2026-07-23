@@ -31,12 +31,9 @@ describe('#buildFilterableCommerceAPIRequest', () => {
   let state: StateNeededForFilterableCommerceAPIRequest;
   let navigatorContext: NavigatorContext;
 
-  const mockPaginatedCommerceAPIRequest =
-    buildMockPaginatedCommerceAPIRequest();
+  const mockPaginatedCommerceAPIRequest = buildMockPaginatedCommerceAPIRequest();
 
-  const setState = (
-    configuration?: Partial<StateNeededForFilterableCommerceAPIRequest>
-  ) => {
+  const setState = (configuration?: Partial<StateNeededForFilterableCommerceAPIRequest>) => {
     state = {
       configuration: getConfigurationInitialState(),
       cart: getCartInitialState(),
@@ -56,9 +53,7 @@ describe('#buildFilterableCommerceAPIRequest', () => {
   };
   beforeEach(() => {
     vi.resetAllMocks();
-    vi.mocked(buildPaginatedCommerceAPIRequest).mockReturnValue(
-      mockPaginatedCommerceAPIRequest
-    );
+    vi.mocked(buildPaginatedCommerceAPIRequest).mockReturnValue(mockPaginatedCommerceAPIRequest);
     setState();
     setNavigatorContext();
   });
@@ -70,10 +65,7 @@ describe('#buildFilterableCommerceAPIRequest', () => {
       ...restOfRequest
     } = buildFilterableCommerceAPIRequest(state, navigatorContext);
 
-    expect(buildPaginatedCommerceAPIRequest).toHaveBeenCalledWith(
-      state,
-      navigatorContext
-    );
+    expect(buildPaginatedCommerceAPIRequest).toHaveBeenCalledWith(state, navigatorContext);
     expect(restOfRequest).toEqual(mockPaginatedCommerceAPIRequest);
   });
 
@@ -132,10 +124,7 @@ describe('#buildFilterableCommerceAPIRequest', () => {
     });
 
     it('when #state.commerceFacetSet[f].values is non-empty, includes #state.commerceFacetSet[f] in the facets array', () => {
-      const request = buildFilterableCommerceAPIRequest(
-        state,
-        navigatorContext
-      );
+      const request = buildFilterableCommerceAPIRequest(state, navigatorContext);
 
       expect(request.facets).toEqual([facet1.request, facet2.request]);
     });
@@ -156,10 +145,7 @@ describe('#buildFilterableCommerceAPIRequest', () => {
       state.commerceFacetSet![facetId3] = facet3;
       state.facetOrder.push(facetId3);
 
-      const request = buildFilterableCommerceAPIRequest(
-        state,
-        navigatorContext
-      );
+      const request = buildFilterableCommerceAPIRequest(state, navigatorContext);
 
       expect(request.facets).toEqual([facet1.request, facet2.request]);
     });
@@ -176,14 +162,9 @@ describe('#buildFilterableCommerceAPIRequest', () => {
         },
       };
 
-      const request = buildFilterableCommerceAPIRequest(
-        state,
-        navigatorContext
-      );
+      const request = buildFilterableCommerceAPIRequest(state, navigatorContext);
 
-      const facet1InRequest = request.facets?.find(
-        (facet) => facet.facetId === facetId1
-      );
+      const facet1InRequest = request.facets?.find((facet) => facet.facetId === facetId1);
 
       expect(facet1InRequest?.values).toEqual([
         {
@@ -210,10 +191,7 @@ describe('#buildFilterableCommerceAPIRequest', () => {
         },
       };
 
-      const request = buildFilterableCommerceAPIRequest(
-        state,
-        navigatorContext
-      );
+      const request = buildFilterableCommerceAPIRequest(state, navigatorContext);
 
       expect(request.sort).toEqual({sortCriteria: SortBy.Relevance});
     });
@@ -234,10 +212,7 @@ describe('#buildFilterableCommerceAPIRequest', () => {
         appliedSort: sortCriterion,
       };
 
-      const request = buildFilterableCommerceAPIRequest(
-        state,
-        navigatorContext
-      );
+      const request = buildFilterableCommerceAPIRequest(state, navigatorContext);
 
       expect(request.sort?.fields).toEqual([
         {

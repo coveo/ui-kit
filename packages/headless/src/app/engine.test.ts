@@ -1,8 +1,4 @@
-import {
-  createAction,
-  createReducer,
-  type StateFromReducersMapObject,
-} from '@reduxjs/toolkit';
+import {createAction, createReducer, type StateFromReducersMapObject} from '@reduxjs/toolkit';
 import * as Store from '../app/store.js';
 import {updateAnalyticsConfiguration} from '../features/configuration/configuration-actions.js';
 import {buildMockNavigatorContextProvider} from '../test/mock-navigator-context-provider.js';
@@ -86,8 +82,7 @@ describe('engine', () => {
     const engine = initEngine();
 
     const {analytics} = engine.state.configuration;
-    const {proxyBaseUrl, ...restOfAnalyticsConfiguration} =
-      options.configuration.analytics;
+    const {proxyBaseUrl, ...restOfAnalyticsConfiguration} = options.configuration.analytics;
 
     expect(analytics).toEqual({
       ...restOfAnalyticsConfiguration,
@@ -251,9 +246,7 @@ describe('engine', () => {
   it('should return a new instance of Relay if the state has changed', () => {
     const engine = initEngine();
     const oldRelay = engine.relay;
-    engine.dispatch(
-      updateAnalyticsConfiguration({trackingId: 'newTrackingId'})
-    );
+    engine.dispatch(updateAnalyticsConfiguration({trackingId: 'newTrackingId'}));
     expect(engine.relay).not.toBe(oldRelay);
   });
 

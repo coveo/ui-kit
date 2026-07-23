@@ -1,7 +1,4 @@
-import {
-  buildQueryExpression,
-  type QueryExpression,
-} from './query-expression.js';
+import {buildQueryExpression, type QueryExpression} from './query-expression.js';
 
 describe('buildQueryExpression', () => {
   let builder: QueryExpression;
@@ -136,9 +133,7 @@ describe('buildQueryExpression', () => {
       })
       .joinUsing('and');
 
-    expect(builder.toQuerySyntax()).toBe(
-      '(@author="someAuthor") AND (@size>100)'
-    );
+    expect(builder.toQuerySyntax()).toBe('(@author="someAuthor") AND (@size>100)');
   });
 
   it('#operator is #or, with two expressions, #toQuerySyntax joins them correctly', () => {
@@ -155,9 +150,7 @@ describe('buildQueryExpression', () => {
       })
       .joinUsing('or');
 
-    expect(builder.toQuerySyntax()).toBe(
-      '(@author="someAuthor") OR (@size>100)'
-    );
+    expect(builder.toQuerySyntax()).toBe('(@author="someAuthor") OR (@size>100)');
   });
 
   it('#addNumericRangeFieldwith one expression, #toString returns the expected syntax', () => {

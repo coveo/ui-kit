@@ -91,8 +91,7 @@ describe('atomic-no-results', () => {
     return {
       element,
       parts: (element: AtomicNoResults) => {
-        const qs = (part: string) =>
-          element.shadowRoot?.querySelector(`[part="${part}"]`);
+        const qs = (part: string) => element.shadowRoot?.querySelector(`[part="${part}"]`);
         return {
           slot: element.shadowRoot?.querySelector('slot'),
           icon: qs('icon'),
@@ -284,10 +283,7 @@ describe('atomic-no-results', () => {
         },
       });
 
-      expect(parts(element).cancelButton).toHaveAttribute(
-        'part',
-        'cancel-button'
-      );
+      expect(parts(element).cancelButton).toHaveAttribute('part', 'cancel-button');
     });
 
     it('should call history.backOnNoResults when cancel button is clicked', async () => {

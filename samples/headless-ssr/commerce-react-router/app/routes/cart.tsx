@@ -1,24 +1,15 @@
-import {
-  type NavigatorContext,
-  SolutionType,
-} from '@coveo/headless-react/ssr-commerce';
+import {type NavigatorContext, SolutionType} from '@coveo/headless-react/ssr-commerce';
 import type {LoaderFunctionArgs} from 'react-router';
 import {useLoaderData} from 'react-router';
 import Cart from '@/app/components/cart';
 import ContextDropdown from '@/app/components/context-dropdown';
-import {
-  RecommendationProvider,
-  StandaloneProvider,
-} from '@/app/components/providers/providers';
+import {RecommendationProvider, StandaloneProvider} from '@/app/components/providers/providers';
 import PopularRecommendations from '@/app/components/recommendations/popular-recommendations';
 import externalCartService, {
   type ExternalCartItem,
 } from '@/external-services/external-cart-service';
 import externalContextService from '@/external-services/external-context-service';
-import type {
-  RecommendationStaticState,
-  StandaloneStaticState,
-} from '@/lib/commerce-engine';
+import type {RecommendationStaticState, StandaloneStaticState} from '@/lib/commerce-engine';
 import {
   getBaseFetchStaticStateConfiguration,
   getEngineDefinition,
@@ -30,11 +21,11 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
 
   const items = await externalCartService.getItems();
   const totalPrice = await externalCartService.getTotalPrice();
-  const {currency, language} =
-    await externalContextService.getContextInformation();
+  const {currency, language} = await externalContextService.getContextInformation();
 
-  const baseFetchStaticStateConfiguration =
-    await getBaseFetchStaticStateConfiguration(new URL(request.url).pathname);
+  const baseFetchStaticStateConfiguration = await getBaseFetchStaticStateConfiguration(
+    new URL(request.url).pathname
+  );
 
   const standaloneEngineDefinition = await getEngineDefinition(
     navigatorContext,
@@ -52,15 +43,13 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
     SolutionType.recommendation
   );
 
-  const recsStaticState = await recommendationEngineDefinition.fetchStaticState(
-    {
-      controllers: {
-        ...baseFetchStaticStateConfiguration.controllers,
-        popularViewedRecs: {enabled: true},
-        popularBoughtRecs: {enabled: true},
-      },
-    }
-  );
+  const recsStaticState = await recommendationEngineDefinition.fetchStaticState({
+    controllers: {
+      ...baseFetchStaticStateConfiguration.controllers,
+      popularViewedRecs: {enabled: true},
+      popularBoughtRecs: {enabled: true},
+    },
+  });
 
   return Response.json({
     staticState,
@@ -74,42 +63,24 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
 };
 
 export default function CartRoute() {
-  const {
-    staticState,
-    navigatorContext,
-    items,
-    totalPrice,
-    language,
-    currency,
-    recsStaticState,
-  } = useLoaderData<{
-    staticState: StandaloneStaticState;
-    navigatorContext: NavigatorContext;
-    items: ExternalCartItem[];
-    totalPrice: number;
-    language: string;
-    currency: string;
-    recsStaticState: RecommendationStaticState;
-  }>();
+  const {staticState, navigatorContext, items, totalPrice, language, currency, recsStaticState} =
+    useLoaderData<{
+      staticState: StandaloneStaticState;
+      navigatorContext: NavigatorContext;
+      items: ExternalCartItem[];
+      totalPrice: number;
+      language: string;
+      currency: string;
+      recsStaticState: RecommendationStaticState;
+    }>();
 
   return (
-    <StandaloneProvider
-      staticState={staticState}
-      navigatorContext={navigatorContext}
-    >
+    <StandaloneProvider staticState={staticState} navigatorContext={navigatorContext}>
       <h2>Cart</h2>
       <div style={{display: 'flex', flexDirection: 'column'}}>
         <ContextDropdown />
-        <Cart
-          items={items}
-          totalPrice={totalPrice}
-          language={language}
-          currency={currency}
-        />
-        <RecommendationProvider
-          staticState={recsStaticState}
-          navigatorContext={navigatorContext}
-        >
+        <Cart items={items} totalPrice={totalPrice} language={language} currency={currency} />
+        <RecommendationProvider staticState={recsStaticState} navigatorContext={navigatorContext}>
           <PopularRecommendations type="bought" />
         </RecommendationProvider>
       </div>

@@ -19,10 +19,7 @@ import {
   updateDateFacetValues,
 } from './date-facet-actions.js';
 import {dateFacetSetReducer} from './date-facet-set-slice.js';
-import {
-  type DateFacetSetState,
-  getDateFacetSetInitialState,
-} from './date-facet-set-state.js';
+import {type DateFacetSetState, getDateFacetSetInitialState} from './date-facet-set-state.js';
 
 describe('date-facet-set slice', () => {
   let state: DateFacetSetState;
@@ -72,19 +69,13 @@ describe('date-facet-set slice', () => {
       dateFacetSet,
     };
 
-    const finalState = dateFacetSetReducer(
-      state,
-      change.fulfilled(payload, '')
-    );
+    const finalState = dateFacetSetReducer(state, change.fulfilled(payload, ''));
 
     expect(finalState).toEqual(dateFacetSet);
   });
 
   it('#restoreSearchParameters restores the #nf payload correctly', () => {
-    const spy = vi.spyOn(
-      RangeFacetReducers,
-      'handleRangeFacetSearchParameterRestoration'
-    );
+    const spy = vi.spyOn(RangeFacetReducers, 'handleRangeFacetSearchParameterRestoration');
 
     const facetId = '1';
     state[facetId] = buildMockDateFacetSlice();
@@ -104,10 +95,7 @@ describe('date-facet-set slice', () => {
     const selection = buildMockDateFacetValue();
     vi.spyOn(RangeFacetReducers, 'toggleSelectRangeValue');
 
-    dateFacetSetReducer(
-      state,
-      toggleSelectDateFacetValue({facetId, selection})
-    );
+    dateFacetSetReducer(state, toggleSelectDateFacetValue({facetId, selection}));
 
     expect(RangeFacetReducers.toggleSelectRangeValue).toHaveBeenCalledTimes(1);
   });
@@ -125,9 +113,7 @@ describe('date-facet-set slice', () => {
     const action = deselectAllDateFacetValues('1');
     dateFacetSetReducer(state, action);
 
-    expect(
-      RangeFacetReducers.handleRangeFacetDeselectAll
-    ).toHaveBeenCalledTimes(1);
+    expect(RangeFacetReducers.handleRangeFacetDeselectAll).toHaveBeenCalledTimes(1);
   });
 
   it('dispatching #deselectAllBreadcrumbs calls #handleRangeFacetDeselectAll for every date facet', () => {
@@ -137,9 +123,7 @@ describe('date-facet-set slice', () => {
     state['2'] = buildMockDateFacetSlice();
     dateFacetSetReducer(state, deselectAllBreadcrumbs());
 
-    expect(
-      RangeFacetReducers.handleRangeFacetDeselectAll
-    ).toHaveBeenCalledTimes(2);
+    expect(RangeFacetReducers.handleRangeFacetDeselectAll).toHaveBeenCalledTimes(2);
   });
 
   it('#updateDateFacetSortCriterion calls #handleFacetSortCriterionUpdate', () => {
@@ -151,9 +135,7 @@ describe('date-facet-set slice', () => {
     });
     dateFacetSetReducer(state, action);
 
-    expect(FacetReducers.handleFacetSortCriterionUpdate).toHaveBeenCalledTimes(
-      1
-    );
+    expect(FacetReducers.handleFacetSortCriterionUpdate).toHaveBeenCalledTimes(1);
   });
 
   it('#executeSearch.fulfilled calls #onRangeFacetRequestFulfilled', () => {
@@ -167,9 +149,7 @@ describe('date-facet-set slice', () => {
       })
     );
 
-    expect(
-      RangeFacetReducers.onRangeFacetRequestFulfilled
-    ).toHaveBeenCalledTimes(1);
+    expect(RangeFacetReducers.onRangeFacetRequestFulfilled).toHaveBeenCalledTimes(1);
   });
 
   describe('#updateActiveTab', () => {
@@ -182,9 +162,7 @@ describe('date-facet-set slice', () => {
 
       dateFacetSetReducer(state, updateActiveTab('tab3'));
 
-      expect(
-        RangeFacetReducers.handleRangeFacetDeselectAll
-      ).toHaveBeenCalledTimes(1);
+      expect(RangeFacetReducers.handleRangeFacetDeselectAll).toHaveBeenCalledTimes(1);
     });
 
     it('should not deselect values for a facet with tabsIncluded when switching to an included tab', () => {
@@ -196,9 +174,7 @@ describe('date-facet-set slice', () => {
 
       dateFacetSetReducer(state, updateActiveTab('tab1'));
 
-      expect(
-        RangeFacetReducers.handleRangeFacetDeselectAll
-      ).not.toHaveBeenCalled();
+      expect(RangeFacetReducers.handleRangeFacetDeselectAll).not.toHaveBeenCalled();
     });
 
     it('should deselect values for a facet with tabsExcluded when switching to an excluded tab', () => {
@@ -210,9 +186,7 @@ describe('date-facet-set slice', () => {
 
       dateFacetSetReducer(state, updateActiveTab('tab3'));
 
-      expect(
-        RangeFacetReducers.handleRangeFacetDeselectAll
-      ).toHaveBeenCalledTimes(1);
+      expect(RangeFacetReducers.handleRangeFacetDeselectAll).toHaveBeenCalledTimes(1);
     });
 
     it('should not deselect values for a facet without tabs configuration', () => {
@@ -222,9 +196,7 @@ describe('date-facet-set slice', () => {
 
       dateFacetSetReducer(state, updateActiveTab('anyTab'));
 
-      expect(
-        RangeFacetReducers.handleRangeFacetDeselectAll
-      ).not.toHaveBeenCalled();
+      expect(RangeFacetReducers.handleRangeFacetDeselectAll).not.toHaveBeenCalled();
     });
   });
 });

@@ -1,8 +1,4 @@
-import {
-  HighlightUtils,
-  type Product,
-  ProductTemplatesHelpers,
-} from '@coveo/headless/commerce';
+import {HighlightUtils, type Product, ProductTemplatesHelpers} from '@coveo/headless/commerce';
 import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
@@ -91,11 +87,7 @@ export class AtomicProductText
   }
 
   private get shouldRenderHighlights(): boolean {
-    return (
-      !this.disableHighlight &&
-      this.shouldHighlight &&
-      this.isFieldSupportedForHighlighting()
-    );
+    return !this.disableHighlight && this.shouldHighlight && this.isFieldSupportedForHighlighting();
   }
 
   private isFieldSupportedForHighlighting(): boolean {
@@ -126,18 +118,11 @@ export class AtomicProductText
         defaultValue: this.default,
         item: this.product,
         getProperty: (result: unknown, property: string) =>
-          ProductTemplatesHelpers.getProductProperty(
-            result as Product,
-            property
-          ),
+          ProductTemplatesHelpers.getProductProperty(result as Product, property),
       },
     })(html`
       <atomic-commerce-text
-        .value=${getFieldValueCaption(
-          this.field,
-          this.default!,
-          this.bindings.i18n
-        )}
+        .value=${getFieldValueCaption(this.field, this.default!, this.bindings.i18n)}
       ></atomic-commerce-text>
     `);
   }
@@ -145,9 +130,7 @@ export class AtomicProductText
   private renderProductText(textValue: string) {
     const highlightKeywords = this.highlightKeywords;
 
-    return this.shouldRenderHighlights &&
-      highlightKeywords &&
-      highlightKeywords.length > 0
+    return this.shouldRenderHighlights && highlightKeywords && highlightKeywords.length > 0
       ? renderItemTextHighlighted({
           props: {
             textValue,
@@ -160,20 +143,13 @@ export class AtomicProductText
         })
       : html`
           <atomic-commerce-text
-            .value=${getFieldValueCaption(
-              this.field,
-              textValue,
-              this.bindings.i18n
-            )}
+            .value=${getFieldValueCaption(this.field, textValue, this.bindings.i18n)}
           ></atomic-commerce-text>
         `;
   }
 
   private renderProductTextValue() {
-    const productValueAsString = getStringValueFromProductOrNull(
-      this.product,
-      this.field
-    );
+    const productValueAsString = getStringValueFromProductOrNull(this.product, this.field);
 
     if (productValueAsString === null) {
       return this.renderFallback();

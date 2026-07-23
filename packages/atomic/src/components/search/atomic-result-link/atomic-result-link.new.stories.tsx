@@ -1,8 +1,4 @@
-import type {
-  Decorator,
-  Meta,
-  StoryObj as Story,
-} from '@storybook/web-components-vite';
+import type {Decorator, Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
@@ -37,21 +33,16 @@ const customResultListDecorator: Decorator = (story) => html`
   </atomic-result-list>
 `;
 const {decorator: resultTemplateDecorator} = wrapInResultTemplate(false);
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-result-link',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-result-link', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-result-link',
   title: 'Search/Result Link',
   id: 'atomic-result-link',
   render: (args) => template(args),
-  decorators: [
-    resultTemplateDecorator,
-    customResultListDecorator,
-    searchInterfaceDecorator,
-  ],
+  decorators: [resultTemplateDecorator, customResultListDecorator, searchInterfaceDecorator],
   parameters: {
     ...parameters,
     actions: {
@@ -108,9 +99,7 @@ export const WithHrefTemplate: Story = {
   decorators: [
     () => {
       return html`
-        <atomic-result-link
-          href-template="\${clickUri}?source=\${raw.source}"
-        ></atomic-result-link>
+        <atomic-result-link href-template="\${clickUri}?source=\${raw.source}"></atomic-result-link>
       `;
     },
   ],

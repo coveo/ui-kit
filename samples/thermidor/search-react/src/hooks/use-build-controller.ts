@@ -23,10 +23,7 @@ export function useBuildController<TController extends Controller<any>>(
     [controller]
   );
 
-  const getSnapshot = useCallback(
-    () => controller.state as StateOf<TController>,
-    [controller]
-  );
+  const getSnapshot = useCallback(() => controller.state as StateOf<TController>, [controller]);
 
   const state = useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
 

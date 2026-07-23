@@ -2,10 +2,7 @@ import {getSampleSearchEngineConfiguration} from '@coveo/headless';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {html} from 'lit';
 import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
-import {
-  type baseResponse,
-  richResponse,
-} from '@coveo/platform-mock-api/search/search-response';
+import {type baseResponse, richResponse} from '@coveo/platform-mock-api/search/search-response';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters.js';
 import {isTestMode} from '@/storybook-utils/common/is-test-mode';
 import '@/src/components/search/atomic-automatic-facet-generator/atomic-automatic-facet-generator.js';
@@ -67,9 +64,7 @@ import '@/src/components/search/atomic-timeframe-facet/atomic-timeframe-facet.js
 
 async function initializeSearchInterface(canvasElement: HTMLElement) {
   await customElements.whenDefined('atomic-search-interface');
-  const searchInterface = canvasElement.querySelector(
-    'atomic-search-interface'
-  );
+  const searchInterface = canvasElement.querySelector('atomic-search-interface');
   await searchInterface!.initialize(getSampleSearchEngineConfiguration());
 }
 
@@ -88,9 +83,7 @@ const meta: Meta = {
     chromatic: {disableSnapshot: false},
   },
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.mock(
-      () => richResponse as unknown as typeof baseResponse
-    );
+    mockSearchApi.searchEndpoint.mock(() => richResponse as unknown as typeof baseResponse);
   },
   render: () => html`
     <atomic-search-interface
@@ -107,25 +100,15 @@ const meta: Meta = {
         </atomic-layout-section>
         <atomic-layout-section section="facets">
           <atomic-facet-manager>
-            <atomic-automatic-facet-generator
-              desired-count="3"
-            ></atomic-automatic-facet-generator>
+            <atomic-automatic-facet-generator desired-count="3"></atomic-automatic-facet-generator>
             <atomic-category-facet
               field="geographicalhierarchy"
               label="World Atlas"
               with-search
             ></atomic-category-facet>
             <atomic-facet field="author" label="Authors"></atomic-facet>
-            <atomic-facet
-              field="source"
-              label="Source"
-              display-values-as="link"
-            ></atomic-facet>
-            <atomic-facet
-              field="filetype"
-              label="File Type"
-              display-values-as="box"
-            ></atomic-facet>
+            <atomic-facet field="source" label="Source" display-values-as="link"></atomic-facet>
+            <atomic-facet field="filetype" label="File Type" display-values-as="box"></atomic-facet>
             <atomic-facet field="language" label="Language"></atomic-facet>
             <atomic-facet field="year" label="Year"></atomic-facet>
             <atomic-numeric-facet
@@ -138,11 +121,7 @@ const meta: Meta = {
               label="YouTube Likes"
               display-values-as="link"
             >
-              <atomic-numeric-range
-                start="0"
-                end="1000"
-                label="Unpopular"
-              ></atomic-numeric-range>
+              <atomic-numeric-range start="0" end="1000" label="Unpopular"></atomic-numeric-range>
               <atomic-numeric-range
                 start="1000"
                 end="8000"
@@ -222,11 +201,7 @@ const meta: Meta = {
           <atomic-layout-section section="results">
             <atomic-smart-snippet></atomic-smart-snippet>
             <atomic-smart-snippet-suggestions></atomic-smart-snippet-suggestions>
-            <atomic-result-list
-              display="list"
-              density="normal"
-              image-size="small"
-            >
+            <atomic-result-list display="list" density="normal" image-size="small">
               <atomic-result-template>
                 <template>
                   <style>
@@ -251,14 +226,10 @@ const meta: Meta = {
                       ></atomic-result-multi-value-text>
                     </atomic-result-badge>
                     <atomic-field-condition must-match-is-recommendation="true">
-                      <atomic-result-badge
-                        label="Recommended"
-                      ></atomic-result-badge>
+                      <atomic-result-badge label="Recommended"></atomic-result-badge>
                     </atomic-field-condition>
                     <atomic-field-condition must-match-is-top-result="true">
-                      <atomic-result-badge
-                        label="Top Result"
-                      ></atomic-result-badge>
+                      <atomic-result-badge label="Top Result"></atomic-result-badge>
                     </atomic-field-condition>
                   </atomic-result-section-badges>
                   <atomic-result-section-visual>
@@ -272,14 +243,9 @@ const meta: Meta = {
                   </atomic-result-section-title>
                   <atomic-result-section-title-metadata>
                     <atomic-field-condition class="field" if-defined="snrating">
-                      <atomic-result-rating
-                        field="snrating"
-                      ></atomic-result-rating>
+                      <atomic-result-rating field="snrating"></atomic-result-rating>
                     </atomic-field-condition>
-                    <atomic-field-condition
-                      class="field"
-                      if-not-defined="snrating"
-                    >
+                    <atomic-field-condition class="field" if-not-defined="snrating">
                       <atomic-result-printable-uri
                         max-number-of-parts="3"
                       ></atomic-result-printable-uri>
@@ -291,23 +257,16 @@ const meta: Meta = {
                   <atomic-result-section-bottom-metadata>
                     <atomic-result-fields-list>
                       <atomic-field-condition class="field" if-defined="author">
-                        <span class="field-label"
-                          ><atomic-text value="author"></atomic-text>:</span
-                        >
+                        <span class="field-label"><atomic-text value="author"></atomic-text>:</span>
                         <atomic-result-multi-value-text
                           field="author"
                         ></atomic-result-multi-value-text>
                       </atomic-field-condition>
                       <atomic-field-condition class="field" if-defined="source">
-                        <span class="field-label"
-                          ><atomic-text value="source"></atomic-text>:</span
-                        >
+                        <span class="field-label"><atomic-text value="source"></atomic-text>:</span>
                         <atomic-result-text field="source"></atomic-result-text>
                       </atomic-field-condition>
-                      <atomic-field-condition
-                        class="field"
-                        if-defined="language"
-                      >
+                      <atomic-field-condition class="field" if-defined="language">
                         <span class="field-label"
                           ><atomic-text value="language"></atomic-text>:</span
                         >
@@ -315,49 +274,27 @@ const meta: Meta = {
                           field="language"
                         ></atomic-result-multi-value-text>
                       </atomic-field-condition>
-                      <atomic-field-condition
-                        class="field"
-                        if-defined="filetype"
-                      >
+                      <atomic-field-condition class="field" if-defined="filetype">
                         <span class="field-label"
                           ><atomic-text value="fileType"></atomic-text>:</span
                         >
-                        <atomic-result-text
-                          field="filetype"
-                        ></atomic-result-text>
+                        <atomic-result-text field="filetype"></atomic-result-text>
                       </atomic-field-condition>
-                      <atomic-field-condition
-                        class="field"
-                        if-defined="ytviewcount"
-                      >
+                      <atomic-field-condition class="field" if-defined="ytviewcount">
                         <span class="field-label">Views:</span>
-                        <atomic-result-number
-                          field="ytviewcount"
-                        ></atomic-result-number>
+                        <atomic-result-number field="ytviewcount"></atomic-result-number>
                       </atomic-field-condition>
-                      <atomic-field-condition
-                        class="field"
-                        if-defined="ytlikecount"
-                      >
+                      <atomic-field-condition class="field" if-defined="ytlikecount">
                         <span class="field-label">Likes:</span>
-                        <atomic-result-number
-                          field="ytlikecount"
-                        ></atomic-result-number>
+                        <atomic-result-number field="ytlikecount"></atomic-result-number>
                       </atomic-field-condition>
-                      <atomic-field-condition
-                        class="field"
-                        if-defined="videoduration"
-                      >
+                      <atomic-field-condition class="field" if-defined="videoduration">
                         <span class="field-label">Duration:</span>
-                        <atomic-result-timespan
-                          field="videoduration"
-                        ></atomic-result-timespan>
+                        <atomic-result-timespan field="videoduration"></atomic-result-timespan>
                       </atomic-field-condition>
                       <span class="field">
                         <span class="field-label">Date:</span>
-                        <atomic-result-date
-                          format="ddd MMM D YYYY"
-                        ></atomic-result-date>
+                        <atomic-result-date format="ddd MMM D YYYY"></atomic-result-date>
                       </span>
                     </atomic-result-fields-list>
                   </atomic-result-section-bottom-metadata>
@@ -377,9 +314,7 @@ const meta: Meta = {
   `,
   play: async (context) => {
     await initializeSearchInterface(context.canvasElement);
-    const searchInterface = context.canvasElement.querySelector(
-      'atomic-search-interface'
-    );
+    const searchInterface = context.canvasElement.querySelector('atomic-search-interface');
     await searchInterface!.executeFirstSearch();
   },
 };

@@ -9,15 +9,10 @@ import {getOrCreateConfigurationSelectors} from '@/src/internal/features/configu
 import {createCommerceSearchEndpointClient} from '@/src/internal/api/commerce-search/index.js';
 import {getOrCreateCommerceSearchEndpointSlice} from './commerce-search-thunk-slice.js';
 
-export function createCommerceSearchEndpointThunk(
-  engine: FullEngine,
-  scope: EndpointStateScope
-) {
+export function createCommerceSearchEndpointThunk(engine: FullEngine, scope: EndpointStateScope) {
   const configSelectors = getOrCreateConfigurationSelectors();
   const buildRequest = createCommerceSearchEndpointRequestSelector(scope);
-  const handleResponse = createCommerceSearchEndpointResponseHandler(
-    scope.baseInterface
-  );
+  const handleResponse = createCommerceSearchEndpointResponseHandler(scope.baseInterface);
 
   const {stateId} = getHandleInternals(scope.scopeInterface);
 
@@ -39,13 +34,8 @@ export function createCommerceSearchEndpointThunk(
         context: {view: {url: navigatorContext?.location ?? ''}},
       };
 
-      const config = engine.read(
-        configSelectors.getEndpointClientConfiguration
-      );
-      const response = await createCommerceSearchEndpointClient().call(
-        fullRequest,
-        config
-      );
+      const config = engine.read(configSelectors.getEndpointClientConfiguration);
+      const response = await createCommerceSearchEndpointClient().call(fullRequest, config);
 
       if (!response.success) {
         throw new Error(response.error);
@@ -56,9 +46,7 @@ export function createCommerceSearchEndpointThunk(
     }
   );
 
-  engine.adoptSlice(
-    getOrCreateCommerceSearchEndpointSlice(scope.scopeInterface, thunk)
-  );
+  engine.adoptSlice(getOrCreateCommerceSearchEndpointSlice(scope.scopeInterface, thunk));
 
   return thunk;
 }

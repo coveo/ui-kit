@@ -27,7 +27,6 @@ export type Build<
   TControllersProps extends ControllersPropsMap,
 > = (
   ...params: OptionsTuple<
-    BuildOptions<TEngineOptions> &
-      EngineDefinitionControllersPropsOption<TControllersProps>
+    BuildOptions<TEngineOptions> & EngineDefinitionControllersPropsOption<TControllersProps>
   >
 ) => Promise<EngineDefinitionBuildResult<TEngine, TControllersMap>>;

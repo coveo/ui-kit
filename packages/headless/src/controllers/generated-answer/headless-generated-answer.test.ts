@@ -2,10 +2,7 @@ import {nextAnalyticsUsageWithServiceFeatureWarning} from '../../app/engine.js';
 import {getConfigurationInitialState} from '../../features/configuration/configuration-state.js';
 import {updateResponseFormat} from '../../features/generated-answer/generated-answer-actions.js';
 import {buildMockAnalyticsState} from '../../test/mock-analytics-state.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../test/mock-engine-v2.js';
 import {createMockState} from '../../test/mock-state.js';
 import {buildAnswerApiGeneratedAnswer} from '../knowledge/generated-answer/headless-answerapi-generated-answer.js';
 import {buildGeneratedAnswerWithFollowUps} from '../knowledge/generated-answer/headless-generated-answer-with-follow-ups.js';
@@ -18,18 +15,12 @@ import {
 
 vi.mock('../../features/generated-answer/generated-answer-actions');
 vi.mock('../../features/search/search-actions');
-vi.mock(
-  '../knowledge/generated-answer/headless-generated-answer-with-follow-ups',
-  () => ({
-    buildGeneratedAnswerWithFollowUps: vi.fn(),
-  })
-);
-vi.mock(
-  '../knowledge/generated-answer/headless-answerapi-generated-answer',
-  () => ({
-    buildAnswerApiGeneratedAnswer: vi.fn(),
-  })
-);
+vi.mock('../knowledge/generated-answer/headless-generated-answer-with-follow-ups', () => ({
+  buildGeneratedAnswerWithFollowUps: vi.fn(),
+}));
+vi.mock('../knowledge/generated-answer/headless-answerapi-generated-answer', () => ({
+  buildAnswerApiGeneratedAnswer: vi.fn(),
+}));
 
 describe('generated answer', () => {
   let engine: MockedSearchEngine;
@@ -78,9 +69,7 @@ describe('generated answer', () => {
     it('should log a warning when the controller is used with the next analytics mode', () => {
       initGeneratedAnswer();
       expect(warnSpy).toHaveBeenCalledTimes(1);
-      expect(warnSpy).toHaveBeenCalledWith(
-        nextAnalyticsUsageWithServiceFeatureWarning
-      );
+      expect(warnSpy).toHaveBeenCalledWith(nextAnalyticsUsageWithServiceFeatureWarning);
     });
   });
 

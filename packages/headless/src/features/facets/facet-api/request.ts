@@ -88,11 +88,7 @@ export interface Type<T extends FacetType> {
   type: T;
 }
 
-export type FacetType =
-  | 'specific'
-  | 'dateRange'
-  | 'numericalRange'
-  | 'hierarchical';
+export type FacetType = 'specific' | 'dateRange' | 'numericalRange' | 'hierarchical';
 
 export interface SortCriteria<
   T extends
@@ -123,10 +119,7 @@ export interface RangeAlgorithm<T extends 'even' | 'equiprobable'> {
 
 export type FacetResultsMustMatch = 'allValues' | 'atLeastOneValue';
 
-export const facetResultsMustMatch: FacetResultsMustMatch[] = [
-  'allValues',
-  'atLeastOneValue',
-];
+export const facetResultsMustMatch: FacetResultsMustMatch[] = ['allValues', 'atLeastOneValue'];
 
 export interface AllowedValues {
   /**

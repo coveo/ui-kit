@@ -8,11 +8,6 @@ export interface PopoverChildFacet extends FacetInfo {
 
 export const popoverClass = 'popover-nested';
 
-export function initializePopover(
-  host: HTMLElement,
-  childFacet: PopoverChildFacet
-) {
-  host.dispatchEvent(
-    buildCustomEvent<PopoverChildFacet>('atomic/initializePopover', childFacet)
-  );
+export function initializePopover(host: HTMLElement, childFacet: PopoverChildFacet) {
+  host.dispatchEvent(buildCustomEvent<PopoverChildFacet>('atomic/initializePopover', childFacet));
 }

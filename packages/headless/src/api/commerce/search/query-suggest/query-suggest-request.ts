@@ -27,8 +27,7 @@ export const getQuerySuggestRequestOptions = (req: QuerySuggestRequest) => {
 };
 
 const prepareRequestParams = (req: QuerySuggestRequest) => {
-  const {trackingId, query, clientId, context, language, country, currency} =
-    req;
+  const {trackingId, query, clientId, context, language, country, currency} = req;
   return {
     trackingId,
     query,

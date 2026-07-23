@@ -68,9 +68,7 @@ describe('filterRecommendationControllers', () => {
     it('should not refresh non-recommendation controllers', () => {
       refresh(['summary', 'productList']);
       expect(mockRecommendationController.refresh).not.toHaveBeenCalled();
-      expect(
-        (mockController as {refresh?: Function}).refresh
-      ).not.toHaveBeenCalled();
+      expect((mockController as {refresh?: Function}).refresh).not.toHaveBeenCalled();
     });
 
     it('should not refresh if the whitelist is undefined', () => {

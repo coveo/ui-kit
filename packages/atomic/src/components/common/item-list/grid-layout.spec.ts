@@ -65,10 +65,7 @@ describe('renderGridLayout', () => {
       {
         selectorForItem: '#test-child',
       },
-      html`<button
-        @click=${testChildHandleClick as Function}
-        id="test-child"
-      ></button>`
+      html`<button @click=${testChildHandleClick as Function} id="test-child"></button>`
     );
 
     await userEvent.click(gridLayout);

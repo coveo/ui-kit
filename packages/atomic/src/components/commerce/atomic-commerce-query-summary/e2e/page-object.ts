@@ -13,8 +13,6 @@ export class QuerySummaryPageObject extends BasePageObject {
   }
 
   get ariaLive() {
-    return this.page
-      .getByRole('status')
-      .filter({hasText: /Products \d+-\d+ of [\d,]+/});
+    return this.page.getByRole('status').filter({hasText: /Products \d+-\d+ of [\d,]+/});
   }
 }

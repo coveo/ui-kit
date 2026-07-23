@@ -13,9 +13,7 @@ describe('functional tests', () => {
       trackingId: null,
     });
     const event = createMockEvent({meta: {type: 'api.event.itemClick'}});
-    await expect(
-      relay.emit('api.event.itemClick', event)
-    ).resolves.not.toThrow();
+    await expect(relay.emit('api.event.itemClick', event)).resolves.not.toThrow();
   });
 
   it('throws on an invalid event', async () => {
@@ -30,9 +28,7 @@ describe('functional tests', () => {
       relay.emit(null, event)
     ).rejects.toThrowError(
       expect.objectContaining({
-        message: expect.stringContaining(
-          'Received event was rejected for processing'
-        ),
+        message: expect.stringContaining('Received event was rejected for processing'),
       })
     );
   });

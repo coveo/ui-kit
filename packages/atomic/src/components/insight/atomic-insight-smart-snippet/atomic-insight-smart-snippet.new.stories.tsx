@@ -9,10 +9,9 @@ import '@/src/components/insight/atomic-insight-smart-snippet/atomic-insight-sma
 
 const insightApiHarness = new MockInsightApi();
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-insight-smart-snippet',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-insight-smart-snippet', {
+  excludeCategories: ['methods'],
+});
 
 const {decorator, play} = wrapInInsightInterface();
 

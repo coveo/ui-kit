@@ -17,10 +17,8 @@ export function shouldUpdateFacetSearchComponent(
   prevFacetSearchState: FacetSearchState
 ) {
   const hasQuery = nextFacetSearchState.query !== '';
-  const stillNoValues =
-    !nextFacetSearchState.values.length && !prevFacetSearchState.values.length;
-  const hasFinishedLoading =
-    !nextFacetSearchState.isLoading && prevFacetSearchState.isLoading;
+  const stillNoValues = !nextFacetSearchState.values.length && !prevFacetSearchState.values.length;
+  const hasFinishedLoading = !nextFacetSearchState.isLoading && prevFacetSearchState.isLoading;
 
   if (hasQuery && stillNoValues) {
     return hasFinishedLoading;

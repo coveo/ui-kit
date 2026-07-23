@@ -28,9 +28,7 @@ export const getCaseContextInitialState = (): CaseContextState => ({
  * @param state - The case context state
  * @returns Case context metadata
  */
-export const getCaseContextAnalyticsMetadata = (
-  state: CaseContextState | undefined
-) => {
+export const getCaseContextAnalyticsMetadata = (state: CaseContextState | undefined) => {
   return {
     caseContext: state?.caseContext || {},
     caseId: state?.caseId,

@@ -90,9 +90,7 @@ describe('#deepEqual', () => {
 
     it('should return true for objects with same properties in different order', () => {
       expect(deepEqual({a: 1, b: 2}, {b: 2, a: 1})).toBe(true);
-      expect(
-        deepEqual({x: 'hello', y: 'world'}, {y: 'world', x: 'hello'})
-      ).toBe(true);
+      expect(deepEqual({x: 'hello', y: 'world'}, {y: 'world', x: 'hello'})).toBe(true);
     });
 
     it('should return false for objects with different number of properties', () => {

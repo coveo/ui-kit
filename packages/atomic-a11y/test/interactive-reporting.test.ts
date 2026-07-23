@@ -4,10 +4,7 @@ import {buildA11yReport} from '../src/reporter/report-builder.js';
 import type {ComponentAccumulator} from '../src/reporter/reporter-utils.js';
 import {isInteractiveReport} from '../src/reporter/reporter-utils.js';
 import {createSummary} from '../src/reporter/summary.js';
-import type {
-  A11yComponentReport,
-  A11yCriterionReport,
-} from '../src/shared/types.js';
+import type {A11yComponentReport, A11yCriterionReport} from '../src/shared/types.js';
 
 describe('isInteractiveReport', () => {
   it('accepts well-formed interactive reports', () => {
@@ -79,9 +76,7 @@ describe('interactive report aggregation', () => {
       devDependencies: {'axe-core': '4.10.3', storybook: '10.3.5'},
     });
 
-    expect(report.criteria[0].coveredComponents).toEqual([
-      'atomic-result-list',
-    ]);
+    expect(report.criteria[0].coveredComponents).toEqual(['atomic-result-list']);
   });
 
   it('excludes warning-only criteria from interactive pass rate', () => {
@@ -114,8 +109,6 @@ describe('interactive report aggregation', () => {
       },
     ];
 
-    expect(createSummary(components, criteria).interactivePassRate).toBe(
-      '100%'
-    );
+    expect(createSummary(components, criteria).interactivePassRate).toBe('100%');
   });
 });

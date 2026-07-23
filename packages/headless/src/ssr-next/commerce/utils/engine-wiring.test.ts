@@ -31,9 +31,7 @@ describe('#augmentCommerceEngineOptions', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(buildLogger).mockReturnValue(
-      mockLogger as unknown as ReturnType<typeof buildLogger>
-    );
+    vi.mocked(buildLogger).mockReturnValue(mockLogger as unknown as ReturnType<typeof buildLogger>);
   });
 
   describe('when navigatorContext is provided', () => {
@@ -76,9 +74,7 @@ describe('#augmentCommerceEngineOptions', () => {
         }
       );
 
-      expect(
-        mockedAugmentPreprocessRequestWithForwardedFor
-      ).toHaveBeenCalledWith(
+      expect(mockedAugmentPreprocessRequestWithForwardedFor).toHaveBeenCalledWith(
         expect.objectContaining({
           navigatorContext: {
             clientId: 'test-client-id',
@@ -118,14 +114,9 @@ describe('#augmentCommerceEngineOptions', () => {
         context: buildMockCommerceContext(),
       };
 
-      augmentCommerceEngineOptions(
-        sampleCommerceConfig,
-        buildConfigWithout as CommonBuildConfig
-      );
+      augmentCommerceEngineOptions(sampleCommerceConfig, buildConfigWithout as CommonBuildConfig);
 
-      expect(
-        mockedAugmentPreprocessRequestWithForwardedFor
-      ).toHaveBeenCalledWith(
+      expect(mockedAugmentPreprocessRequestWithForwardedFor).toHaveBeenCalledWith(
         expect.objectContaining({
           navigatorContext: undefined,
         })

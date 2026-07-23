@@ -1,8 +1,4 @@
-import type {
-  Decorator,
-  Meta,
-  StoryObj as Story,
-} from '@storybook/web-components-vite';
+import type {Decorator, Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {testComboboxA11y} from '@/storybook-utils/a11y/combobox.js';
@@ -11,10 +7,9 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 import '@/src/components/insight/atomic-insight-search-box/atomic-insight-search-box.js';
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-insight-search-box',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-insight-search-box', {
+  excludeCategories: ['methods'],
+});
 const {decorator, play} = wrapInInsightInterface({}, true);
 
 const insightApiHarness = new MockInsightApi();

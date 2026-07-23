@@ -1,13 +1,7 @@
-export {
-  Engine,
-  getSampleEngineConfiguration,
-} from '@/src/internal/engine/index.js';
+export {Engine, getSampleEngineConfiguration} from '@/src/internal/engine/index.js';
 export type {EngineOptions} from '@/src/internal/engine/index.js';
 export type {Unsubscribe} from '@/src/internal/engine/index.js';
-export type {
-  NavigatorContext,
-  NavigatorContextProvider,
-} from '@/src/internal/utils/index.js';
+export type {NavigatorContext, NavigatorContextProvider} from '@/src/internal/utils/index.js';
 export type {ConfigurationState} from '@/src/internal/features/configuration/index.js';
 export type {
   CartItem,
@@ -26,10 +20,7 @@ export type {
   BuildGenerativeInterfaceOptions,
   GenerativeInterface,
 } from './public/interfaces/generative.js';
-export type {
-  BuildSearchInterfaceOptions,
-  SearchInterface,
-} from './public/interfaces/search.js';
+export type {BuildSearchInterfaceOptions, SearchInterface} from './public/interfaces/search.js';
 export type {
   BuildCommerceInterfaceOptions,
   CommerceInterface,

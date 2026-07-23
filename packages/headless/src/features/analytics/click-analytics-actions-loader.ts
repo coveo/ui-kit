@@ -73,9 +73,7 @@ export interface ClickAnalyticsActionCreators {
  * @group Actions
  * @category Analytics
  */
-export function loadClickAnalyticsActions(
-  engine: SearchEngine
-): ClickAnalyticsActionCreators {
+export function loadClickAnalyticsActions(engine: SearchEngine): ClickAnalyticsActionCreators {
   engine.addReducers({});
 
   return {

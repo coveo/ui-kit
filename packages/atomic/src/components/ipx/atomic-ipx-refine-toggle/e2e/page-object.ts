@@ -11,9 +11,7 @@ export class IpxRefineTogglePageObject extends BasePageObject {
   }
 
   get icon() {
-    return this.page.locator(
-      'atomic-ipx-refine-toggle [part="ipx-refine-toggle-icon"]'
-    );
+    return this.page.locator('atomic-ipx-refine-toggle [part="ipx-refine-toggle-icon"]');
   }
 
   get modal() {
@@ -21,9 +19,7 @@ export class IpxRefineTogglePageObject extends BasePageObject {
   }
 
   get modalExpandFacetButton() {
-    return this.modal
-      .getByRole('button', {name: /Expand the .* facet/})
-      .first();
+    return this.modal.getByRole('button', {name: /Expand the .* facet/}).first();
   }
 
   async clickButton() {

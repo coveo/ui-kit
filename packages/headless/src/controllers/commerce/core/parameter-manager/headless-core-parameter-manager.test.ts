@@ -26,9 +26,7 @@ describe('parameter manager', () => {
     engine = buildMockCommerceEngine(preloadedState);
   }
 
-  function initParameterManager(
-    props: Partial<CoreParameterManagerProps<Parameters>> = {}
-  ) {
+  function initParameterManager(props: Partial<CoreParameterManagerProps<Parameters>> = {}) {
     parameterManager = buildCoreParameterManager(engine, {
       initialState: {parameters: {}},
       parametersDefinition,

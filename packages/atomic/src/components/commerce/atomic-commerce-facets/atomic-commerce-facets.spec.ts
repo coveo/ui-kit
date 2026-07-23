@@ -47,9 +47,7 @@ describe('atomic-commerce-facets', () => {
   let mockedSearch: Search;
   let mockedAppLoaded: MockInstance<typeof createAppLoadedListener>;
   let appLoadedCallback: (isAppLoaded: boolean) => void;
-  let mockedLogger: MockInstance<
-    ReturnType<typeof buildFakeCommerceEngine>['logger']['warn']
-  >;
+  let mockedLogger: MockInstance<ReturnType<typeof buildFakeCommerceEngine>['logger']['warn']>;
 
   beforeEach(() => {
     mockedLogger = vi.fn();
@@ -87,19 +85,11 @@ describe('atomic-commerce-facets', () => {
       },
     });
     mockedFacetGenerator = buildFakeFacetGenerator({
-      state: [
-        mockedRegularFacet,
-        mockedNumericFacet,
-        mockedCategoryFacet,
-        mockedDateFacet,
-      ].map((facet) => facet.state.facetId),
+      state: [mockedRegularFacet, mockedNumericFacet, mockedCategoryFacet, mockedDateFacet].map(
+        (facet) => facet.state.facetId
+      ),
       implementation: {
-        facets: [
-          mockedRegularFacet,
-          mockedNumericFacet,
-          mockedCategoryFacet,
-          mockedDateFacet,
-        ],
+        facets: [mockedRegularFacet, mockedNumericFacet, mockedCategoryFacet, mockedDateFacet],
       },
     });
     mockedAppLoaded = vi.mocked(createAppLoadedListener);
@@ -125,19 +115,18 @@ describe('atomic-commerce-facets', () => {
     vi.mocked(buildSearch).mockReturnValue(mockedSearch);
     vi.mocked(buildContext).mockReturnValue(mockedContext);
 
-    const {element} =
-      await renderInAtomicCommerceInterface<AtomicCommerceFacets>({
-        template: html`<atomic-commerce-facets
-          collapse-facets-after="${collapseFacetsAfter}"
-        ></atomic-commerce-facets>`,
-        selector: 'atomic-commerce-facets',
-        bindings: (bindings) => {
-          bindings.interfaceElement.type = interfaceType;
-          // @ts-expect-error - testing logger override
-          bindings.engine.logger = {warn: mockedLogger};
-          return bindings;
-        },
-      });
+    const {element} = await renderInAtomicCommerceInterface<AtomicCommerceFacets>({
+      template: html`<atomic-commerce-facets
+        collapse-facets-after="${collapseFacetsAfter}"
+      ></atomic-commerce-facets>`,
+      selector: 'atomic-commerce-facets',
+      bindings: (bindings) => {
+        bindings.interfaceElement.type = interfaceType;
+        // @ts-expect-error - testing logger override
+        bindings.engine.logger = {warn: mockedLogger};
+        return bindings;
+      },
+    });
 
     appLoadedCallback(isAppLoaded);
 
@@ -159,10 +148,9 @@ describe('atomic-commerce-facets', () => {
         return element.querySelector('atomic-commerce-timeframe-facet')!;
       },
       header(facet: string) {
-        return page.getByLabelText(
-          new RegExp(`(Expand|Collapse) the ${facet} facet`),
-          {exact: true}
-        );
+        return page.getByLabelText(new RegExp(`(Expand|Collapse) the ${facet} facet`), {
+          exact: true,
+        });
       },
     };
   };
@@ -247,9 +235,7 @@ describe('atomic-commerce-facets', () => {
 
       expect(mockedConsoleError).toHaveBeenCalledWith(
         expect.objectContaining({
-          message: expect.stringContaining(
-            'collapseFacetsAfter: value is not a number.'
-          ),
+          message: expect.stringContaining('collapseFacetsAfter: value is not a number.'),
         }),
         expect.anything()
       );
@@ -261,18 +247,10 @@ describe('atomic-commerce-facets', () => {
         isAppLoaded: true,
       });
 
-      await expect
-        .element(header('Regular Facet'))
-        .toHaveAttribute('aria-expanded', 'true');
-      await expect
-        .element(header('Numeric Facet'))
-        .toHaveAttribute('aria-expanded', 'true');
-      await expect
-        .element(header('Category Facet'))
-        .toHaveAttribute('aria-expanded', 'false');
-      await expect
-        .element(header('Date Facet'))
-        .toHaveAttribute('aria-expanded', 'false');
+      await expect.element(header('Regular Facet')).toHaveAttribute('aria-expanded', 'true');
+      await expect.element(header('Numeric Facet')).toHaveAttribute('aria-expanded', 'true');
+      await expect.element(header('Category Facet')).toHaveAttribute('aria-expanded', 'false');
+      await expect.element(header('Date Facet')).toHaveAttribute('aria-expanded', 'false');
     });
 
     it('should not collapse any facets when collapseFacetsAfter is -1', async () => {
@@ -280,18 +258,10 @@ describe('atomic-commerce-facets', () => {
         collapseFacetsAfter: -1,
       });
 
-      await expect
-        .element(header('Regular Facet'))
-        .toHaveAttribute('aria-expanded', 'true');
-      await expect
-        .element(header('Numeric Facet'))
-        .toHaveAttribute('aria-expanded', 'true');
-      await expect
-        .element(header('Category Facet'))
-        .toHaveAttribute('aria-expanded', 'true');
-      await expect
-        .element(header('Date Facet'))
-        .toHaveAttribute('aria-expanded', 'true');
+      await expect.element(header('Regular Facet')).toHaveAttribute('aria-expanded', 'true');
+      await expect.element(header('Numeric Facet')).toHaveAttribute('aria-expanded', 'true');
+      await expect.element(header('Category Facet')).toHaveAttribute('aria-expanded', 'true');
+      await expect.element(header('Date Facet')).toHaveAttribute('aria-expanded', 'true');
     });
 
     it('should collapse all facets when collapseFacetsAfter is 0', async () => {
@@ -299,18 +269,10 @@ describe('atomic-commerce-facets', () => {
         collapseFacetsAfter: 0,
       });
 
-      await expect
-        .element(header('Regular Facet'))
-        .toHaveAttribute('aria-expanded', 'false');
-      await expect
-        .element(header('Numeric Facet'))
-        .toHaveAttribute('aria-expanded', 'false');
-      await expect
-        .element(header('Category Facet'))
-        .toHaveAttribute('aria-expanded', 'false');
-      await expect
-        .element(header('Date Facet'))
-        .toHaveAttribute('aria-expanded', 'false');
+      await expect.element(header('Regular Facet')).toHaveAttribute('aria-expanded', 'false');
+      await expect.element(header('Numeric Facet')).toHaveAttribute('aria-expanded', 'false');
+      await expect.element(header('Category Facet')).toHaveAttribute('aria-expanded', 'false');
+      await expect.element(header('Date Facet')).toHaveAttribute('aria-expanded', 'false');
     });
   });
 
@@ -400,19 +362,11 @@ describe('atomic-commerce-facets', () => {
       });
 
       mockedFacetGenerator = buildFakeFacetGenerator({
-        state: [
-          mockedRegularFacet,
-          mockedNumericFacet,
-          mockedCategoryFacet,
-          mockedDateFacet,
-        ].map((facet) => facet.state.facetId),
+        state: [mockedRegularFacet, mockedNumericFacet, mockedCategoryFacet, mockedDateFacet].map(
+          (facet) => facet.state.facetId
+        ),
         implementation: {
-          facets: [
-            mockedRegularFacet,
-            mockedNumericFacet,
-            mockedCategoryFacet,
-            mockedDateFacet,
-          ],
+          facets: [mockedRegularFacet, mockedNumericFacet, mockedCategoryFacet, mockedDateFacet],
         },
       });
 
@@ -422,21 +376,13 @@ describe('atomic-commerce-facets', () => {
       });
 
       // First facet has active values, should stay expanded
-      await expect
-        .element(header('Regular Facet'))
-        .toHaveAttribute('aria-expanded', 'true');
+      await expect.element(header('Regular Facet')).toHaveAttribute('aria-expanded', 'true');
       // Second facet has no active values, should stay expanded (within limit)
-      await expect
-        .element(header('Numeric Facet'))
-        .toHaveAttribute('aria-expanded', 'true');
+      await expect.element(header('Numeric Facet')).toHaveAttribute('aria-expanded', 'true');
       // Third facet has active values, should stay expanded even though it exceeds the limit
-      await expect
-        .element(header('Category Facet'))
-        .toHaveAttribute('aria-expanded', 'true');
+      await expect.element(header('Category Facet')).toHaveAttribute('aria-expanded', 'true');
       // Fourth facet has no active values and exceeds limit, should collapse
-      await expect
-        .element(header('Date Facet'))
-        .toHaveAttribute('aria-expanded', 'false');
+      await expect.element(header('Date Facet')).toHaveAttribute('aria-expanded', 'false');
     });
 
     it('should keep all facets with active values expanded when collapseFacetsAfter is 0', async () => {
@@ -454,9 +400,7 @@ describe('atomic-commerce-facets', () => {
       });
 
       mockedFacetGenerator = buildFakeFacetGenerator({
-        state: [mockedRegularFacet, mockedNumericFacet].map(
-          (facet) => facet.state.facetId
-        ),
+        state: [mockedRegularFacet, mockedNumericFacet].map((facet) => facet.state.facetId),
         implementation: {
           facets: [mockedRegularFacet, mockedNumericFacet],
         },
@@ -468,13 +412,9 @@ describe('atomic-commerce-facets', () => {
       });
 
       // Facet with active values should stay expanded even when collapseFacetsAfter is 0
-      await expect
-        .element(header('Regular Facet'))
-        .toHaveAttribute('aria-expanded', 'true');
+      await expect.element(header('Regular Facet')).toHaveAttribute('aria-expanded', 'true');
       // Facet without active values should collapse
-      await expect
-        .element(header('Numeric Facet'))
-        .toHaveAttribute('aria-expanded', 'false');
+      await expect.element(header('Numeric Facet')).toHaveAttribute('aria-expanded', 'false');
     });
   });
 });

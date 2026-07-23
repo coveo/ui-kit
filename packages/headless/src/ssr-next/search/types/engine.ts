@@ -2,10 +2,7 @@ import type {UnknownAction} from '@reduxjs/toolkit';
 import type {CoreEngine, CoreEngineNext} from '../../../app/engine.js';
 import type {SearchEngineOptions} from '../../../app/search-engine/search-engine.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
-import type {
-  ControllersMap,
-  ControllersPropsMap,
-} from '../../common/types/controllers.js';
+import type {ControllersMap, ControllersPropsMap} from '../../common/types/controllers.js';
 import type {HasKeys} from '../../common/types/utilities.js';
 import type {SSRSearchEngine} from './build.js';
 import type {ControllerDefinitionsMap} from './controller-definition.js';
@@ -96,10 +93,7 @@ export interface SearchEngineDefinitionBuildResult<
   controllers: TControllers;
 }
 
-export type SearchControllerDefinitionsMap = ControllerDefinitionsMap<
-  SSRSearchEngine,
-  Controller
->;
+export type SearchControllerDefinitionsMap = ControllerDefinitionsMap<SSRSearchEngine, Controller>;
 
 type Definition<TControllerDefinitions extends SearchControllerDefinitionsMap> =
   SearchEngineDefinition<SSRSearchEngine, TControllerDefinitions>;

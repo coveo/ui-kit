@@ -18,9 +18,7 @@ vi.mock('../generated-answer/render-feedback-and-copy-buttons', () => ({
   renderFeedbackAndCopyButtons: vi.fn(() => html``),
 }));
 vi.mock('../generated-answer/generated-content-container', () => ({
-  renderGeneratedContentContainer: vi.fn(
-    () => (slot?: unknown) => html`${slot ?? ''}`
-  ),
+  renderGeneratedContentContainer: vi.fn(() => (slot?: unknown) => html`${slot ?? ''}`),
 }));
 
 vi.mock('../generated-answer/source-citations', () => ({
@@ -53,10 +51,7 @@ describe('atomic-generated-answer-content', () => {
       onClickLike?: (answerId?: string) => void;
       onClickDislike?: (answerId?: string) => void;
       onCopyToClipboard?: (answerId?: string) => void;
-      renderCitations?: (
-        citations: GeneratedAnswerCitation[],
-        answerId?: string
-      ) => TemplateResult;
+      renderCitations?: (citations: GeneratedAnswerCitation[], answerId?: string) => TemplateResult;
     } = {}
   ) => {
     const generatedAnswer = {
@@ -69,18 +64,17 @@ describe('atomic-generated-answer-content', () => {
     const onCopyToClipboard = options.onCopyToClipboard ?? vi.fn();
     const renderCitations = options.renderCitations ?? vi.fn(() => html``);
 
-    const {element} =
-      await renderInAtomicSearchInterface<AtomicGeneratedAnswerContent>({
-        template: html`<atomic-generated-answer-content
-          .generatedAnswer=${generatedAnswer}
-          .i18n=${i18n}
-          .onClickLike=${onClickLike}
-          .onClickDislike=${onClickDislike}
-          .onCopyToClipboard=${onCopyToClipboard}
-          .renderCitations=${renderCitations}
-        ></atomic-generated-answer-content>`,
-        selector: 'atomic-generated-answer-content',
-      });
+    const {element} = await renderInAtomicSearchInterface<AtomicGeneratedAnswerContent>({
+      template: html`<atomic-generated-answer-content
+        .generatedAnswer=${generatedAnswer}
+        .i18n=${i18n}
+        .onClickLike=${onClickLike}
+        .onClickDislike=${onClickDislike}
+        .onCopyToClipboard=${onCopyToClipboard}
+        .renderCitations=${renderCitations}
+      ></atomic-generated-answer-content>`,
+      selector: 'atomic-generated-answer-content',
+    });
 
     return {
       element,
@@ -89,12 +83,10 @@ describe('atomic-generated-answer-content', () => {
       onClickDislike,
       onCopyToClipboard,
       renderCitations,
-      getFeedbackProps: () =>
-        vi.mocked(renderFeedbackAndCopyButtons).mock.calls.at(-1)?.[0].props,
+      getFeedbackProps: () => vi.mocked(renderFeedbackAndCopyButtons).mock.calls.at(-1)?.[0].props,
       getGeneratedContentProps: () =>
         vi.mocked(renderGeneratedContentContainer).mock.calls.at(-1)?.[0].props,
-      getSourceCitationsProps: () =>
-        vi.mocked(renderSourceCitations).mock.calls.at(-1)?.[0].props,
+      getSourceCitationsProps: () => vi.mocked(renderSourceCitations).mock.calls.at(-1)?.[0].props,
       getStreamOfThought: () =>
         element.shadowRoot?.querySelector<AtomicAgentStreamOfThought>(
           'atomic-agent-stream-of-thought'
@@ -206,15 +198,11 @@ describe('atomic-generated-answer-content', () => {
 
     await element.updateComplete;
 
-    const errorContainer = element.shadowRoot?.querySelector(
-      '[part="generated-answer-error"]'
-    );
+    const errorContainer = element.shadowRoot?.querySelector('[part="generated-answer-error"]');
 
     expect(renderGeneratedContentContainer).not.toHaveBeenCalled();
     expect(errorContainer).not.toBeNull();
-    expect(errorContainer?.textContent).toContain(
-      i18n.t('generated-answer-error-generic')
-    );
+    expect(errorContainer?.textContent).toContain(i18n.t('generated-answer-error-generic'));
   });
 
   it('should render the cannot answer template when the generated answer cannot be answered', async () => {
@@ -250,9 +238,7 @@ describe('atomic-generated-answer-content', () => {
 
     await element.updateComplete;
 
-    const errorContainer = element.shadowRoot?.querySelector(
-      '[part="generated-answer-error"]'
-    );
+    const errorContainer = element.shadowRoot?.querySelector('[part="generated-answer-error"]');
 
     expect(errorContainer).not.toBeNull();
     expect(errorContainer?.textContent).toContain(
@@ -312,10 +298,7 @@ describe('atomic-generated-answer-content', () => {
       renderCitations,
     });
 
-    expect(renderCitations).toHaveBeenCalledWith(
-      citations,
-      generatedAnswer.answerId
-    );
+    expect(renderCitations).toHaveBeenCalledWith(citations, generatedAnswer.answerId);
   });
 
   it('should wire feedback buttons to the provided callbacks with answerId', async () => {
@@ -338,9 +321,7 @@ describe('atomic-generated-answer-content', () => {
   it('should pass the default copy tooltip label to the FeedbackAndCopyButtons component', async () => {
     const {getFeedbackProps} = await renderComponent();
 
-    expect(getFeedbackProps()?.getCopyToClipboardTooltip()).toBe(
-      i18n.t('copy-generated-answer')
-    );
+    expect(getFeedbackProps()?.getCopyToClipboardTooltip()).toBe(i18n.t('copy-generated-answer'));
   });
 
   it('should copy the answer to the clipboard and expose copied state when the copy button is clicked', async () => {
@@ -368,13 +349,10 @@ describe('atomic-generated-answer-content', () => {
   });
 
   it('should set copy error state when clipboard write fails', async () => {
-    const consoleErrorSpy = vi
-      .spyOn(console, 'error')
-      .mockImplementation(() => {});
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     writeTextMock.mockRejectedValueOnce(new Error('copy failed'));
 
-    const {element, getFeedbackProps, onCopyToClipboard} =
-      await renderComponent();
+    const {element, getFeedbackProps, onCopyToClipboard} = await renderComponent();
 
     const feedbackProps = getFeedbackProps();
     await feedbackProps?.onCopyToClipboard('example answer');

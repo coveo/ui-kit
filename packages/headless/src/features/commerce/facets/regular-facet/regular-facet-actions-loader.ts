@@ -47,9 +47,7 @@ export interface RegularFacetActionCreators {
  * @group Actions
  * @category RegularFacet
  */
-export function loadRegularFacetActions(
-  engine: CommerceEngine
-): RegularFacetActionCreators {
+export function loadRegularFacetActions(engine: CommerceEngine): RegularFacetActionCreators {
   engine.addReducers({commerceFacetSet});
   return {
     toggleExcludeFacetValue,

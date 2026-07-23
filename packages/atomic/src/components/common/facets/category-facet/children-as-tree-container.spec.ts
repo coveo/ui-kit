@@ -17,9 +17,7 @@ describe('#renderCategoryFacetChildrenAsTreeContainer', () => {
   ) => {
     const mergedProps = {...defaultProps, ...props};
     return renderFunctionFixture(
-      html`${renderCategoryFacetChildrenAsTreeContainer({props: mergedProps})(
-        children
-      )}`
+      html`${renderCategoryFacetChildrenAsTreeContainer({props: mergedProps})(children)}`
     );
   };
 

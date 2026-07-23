@@ -13,17 +13,17 @@ import '@/src/components/search/atomic-search-box-recent-queries/atomic-search-b
 
 const searchApiHarness = new MockSearchApi();
 searchApiHarness.searchEndpoint.addRequestTransformer(searchFacetTransformer);
-searchApiHarness.facetSearchEndpoint.addRequestTransformer(
-  searchFacetSearchTransformer
-);
+searchApiHarness.facetSearchEndpoint.addRequestTransformer(searchFacetSearchTransformer);
 
-const {decorator: searchInterfaceDecorator, play: searchInterfacePlay} =
-  wrapInSearchInterface({}, false, false);
-const {decorator: searchBoxDecorator} = wrapInSearchBox();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-search-box-recent-queries',
-  {excludeCategories: ['methods']}
+const {decorator: searchInterfaceDecorator, play: searchInterfacePlay} = wrapInSearchInterface(
+  {},
+  false,
+  false
 );
+const {decorator: searchBoxDecorator} = wrapInSearchBox();
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-search-box-recent-queries', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-search-box-recent-queries',
@@ -43,8 +43,7 @@ const meta: Meta = {
 
   play: async (context) => {
     await searchInterfacePlay(context);
-    const searchBox =
-      await context.canvas.findAllByShadowPlaceholderText('Search');
+    const searchBox = await context.canvas.findAllByShadowPlaceholderText('Search');
     await userEvent.click(searchBox[0]);
   },
 };

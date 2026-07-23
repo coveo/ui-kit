@@ -39,20 +39,19 @@ describe('atomic-result-timespan', () => {
     result?: Result;
   } = {}) => {
     const resultToUse = result ?? mockResult;
-    const {element, atomicInterface} =
-      await renderInAtomicResult<AtomicResultTimespan>({
-        template: html`<atomic-result-timespan
-          field=${ifDefined(props.field)}
-          unit=${ifDefined(props.unit)}
-          format=${ifDefined(props.format)}
-        ></atomic-result-timespan>`,
-        selector: 'atomic-result-timespan',
-        result: resultToUse,
-        bindings: (bindings) => {
-          bindings.i18n = i18n;
-          return bindings;
-        },
-      });
+    const {element, atomicInterface} = await renderInAtomicResult<AtomicResultTimespan>({
+      template: html`<atomic-result-timespan
+        field=${ifDefined(props.field)}
+        unit=${ifDefined(props.unit)}
+        format=${ifDefined(props.format)}
+      ></atomic-result-timespan>`,
+      selector: 'atomic-result-timespan',
+      result: resultToUse,
+      bindings: (bindings) => {
+        bindings.i18n = i18n;
+        return bindings;
+      },
+    });
 
     await atomicInterface.updateComplete;
     await element?.updateComplete;
@@ -124,9 +123,7 @@ describe('atomic-result-timespan', () => {
 
   describe('when initializing', () => {
     it('should not set error when field value exists and is a number', async () => {
-      vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(
-        3600000
-      );
+      vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(3600000);
 
       const {element} = await renderResultTimespan({
         props: {field: 'duration'},
@@ -159,9 +156,7 @@ describe('atomic-result-timespan', () => {
 
   describe('when rendering with HH:mm:ss format (durations under a day)', () => {
     it('should render 1 hour in milliseconds', async () => {
-      vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(
-        3600000
-      );
+      vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(3600000);
 
       const {element} = await renderResultTimespan({
         props: {field: 'duration', unit: 'ms'},
@@ -212,9 +207,7 @@ describe('atomic-result-timespan', () => {
     });
 
     it('should handle negative duration values', async () => {
-      vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(
-        -3600000
-      );
+      vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(-3600000);
 
       const {element} = await renderResultTimespan({
         props: {field: 'duration', unit: 'ms'},
@@ -224,9 +217,7 @@ describe('atomic-result-timespan', () => {
     });
 
     it('should handle very large duration values', async () => {
-      vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(
-        Number.MAX_SAFE_INTEGER
-      );
+      vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(Number.MAX_SAFE_INTEGER);
 
       const {element} = await renderResultTimespan({
         props: {field: 'duration', unit: 'ms'},
@@ -246,9 +237,7 @@ describe('atomic-result-timespan', () => {
     });
 
     it('should handle decimal values', async () => {
-      vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(
-        1500.5
-      );
+      vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(1500.5);
 
       const {element} = await renderResultTimespan({
         props: {field: 'duration', unit: 'ms'},
@@ -312,9 +301,7 @@ describe('atomic-result-timespan', () => {
 
   describe('when rendering with custom format', () => {
     it('should render with custom format pattern', async () => {
-      vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(
-        3600000
-      );
+      vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(3600000);
 
       const {element} = await renderResultTimespan({
         props: {

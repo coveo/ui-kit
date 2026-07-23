@@ -30,9 +30,7 @@ import {getTabSetInitialState} from '../features/tab-set/tab-set-state.js';
 import {getTriggerInitialState} from '../features/triggers/triggers-state.js';
 import type {InsightAppState} from '../state/insight-app-state.js';
 
-export function buildMockInsightState(
-  config: Partial<InsightAppState> = {}
-): InsightAppState {
+export function buildMockInsightState(config: Partial<InsightAppState> = {}): InsightAppState {
   return {
     configuration: getConfigurationInitialState(),
     insightConfiguration: getInsightConfigurationInitialState(),

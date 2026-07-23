@@ -13,13 +13,7 @@
     "includeGroups": true,
     "includeFolders": true
   },
-  "hoistOther.topLevelOrder": [
-    "Home",
-    "Getting Started",
-    "Guides",
-    "Reference",
-    "Contributing"
-  ],
+  "hoistOther.topLevelOrder": ["Home", "Getting Started", "Guides", "Reference", "Contributing"],
   "categorizeByGroup": true,
   "entryPoints": ["./temp/ssr-commerce.json", "./temp/ssr.json"],
   "gitRevision": "main",

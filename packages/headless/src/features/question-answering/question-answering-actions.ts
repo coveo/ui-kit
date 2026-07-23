@@ -12,13 +12,9 @@ export const likeSmartSnippet = createAction('smartSnippet/like');
 
 export const dislikeSmartSnippet = createAction('smartSnippet/dislike');
 
-export const openFeedbackModal = createAction(
-  'smartSnippet/feedbackModal/open'
-);
+export const openFeedbackModal = createAction('smartSnippet/feedbackModal/open');
 
-export const closeFeedbackModal = createAction(
-  'smartSnippet/feedbackModal/close'
-);
+export const closeFeedbackModal = createAction('smartSnippet/feedbackModal/close');
 
 export const expandSmartSnippetRelatedQuestion = createAction(
   'smartSnippet/related/expand',

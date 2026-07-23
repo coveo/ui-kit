@@ -49,10 +49,7 @@ describe('numeric-facet-set slice', () => {
       generateAutomaticRanges: true,
     };
 
-    const finalState = numericFacetSetReducer(
-      state,
-      registerNumericFacet(options)
-    );
+    const finalState = numericFacetSetReducer(state, registerNumericFacet(options));
 
     expect(finalState[facetId]?.request).toEqual({
       ...options,
@@ -76,19 +73,13 @@ describe('numeric-facet-set slice', () => {
       numericFacetSet,
     };
 
-    const finalState = numericFacetSetReducer(
-      state,
-      change.fulfilled(payload, '')
-    );
+    const finalState = numericFacetSetReducer(state, change.fulfilled(payload, ''));
 
     expect(finalState).toEqual(numericFacetSet);
   });
 
   it('#restoreSearchParameters restores the #nf payload correctly', () => {
-    const spy = vi.spyOn(
-      RangeFacetReducers,
-      'handleRangeFacetSearchParameterRestoration'
-    );
+    const spy = vi.spyOn(RangeFacetReducers, 'handleRangeFacetSearchParameterRestoration');
 
     const facetId = '1';
     state[facetId] = buildMockNumericFacetSlice();
@@ -108,10 +99,7 @@ describe('numeric-facet-set slice', () => {
     const selection = buildMockNumericFacetValue();
     vi.spyOn(RangeFacetReducers, 'toggleSelectRangeValue');
 
-    numericFacetSetReducer(
-      state,
-      toggleSelectNumericFacetValue({facetId, selection})
-    );
+    numericFacetSetReducer(state, toggleSelectNumericFacetValue({facetId, selection}));
 
     expect(RangeFacetReducers.toggleSelectRangeValue).toHaveBeenCalledTimes(1);
   });
@@ -121,10 +109,7 @@ describe('numeric-facet-set slice', () => {
     const selection = buildMockNumericFacetValue();
     vi.spyOn(RangeFacetReducers, 'toggleExcludeRangeValue');
 
-    numericFacetSetReducer(
-      state,
-      toggleExcludeNumericFacetValue({facetId, selection})
-    );
+    numericFacetSetReducer(state, toggleExcludeNumericFacetValue({facetId, selection}));
 
     expect(RangeFacetReducers.toggleExcludeRangeValue).toHaveBeenCalledTimes(1);
   });
@@ -134,9 +119,7 @@ describe('numeric-facet-set slice', () => {
     const action = deselectAllNumericFacetValues('1');
     numericFacetSetReducer(state, action);
 
-    expect(
-      RangeFacetReducers.handleRangeFacetDeselectAll
-    ).toHaveBeenCalledTimes(1);
+    expect(RangeFacetReducers.handleRangeFacetDeselectAll).toHaveBeenCalledTimes(1);
   });
 
   it('#updateNumericFacetValues calls #updateRangeValues', () => {
@@ -154,9 +137,7 @@ describe('numeric-facet-set slice', () => {
     state['2'] = buildMockNumericFacetSlice();
     numericFacetSetReducer(state, deselectAllBreadcrumbs());
 
-    expect(
-      RangeFacetReducers.handleRangeFacetDeselectAll
-    ).toHaveBeenCalledTimes(2);
+    expect(RangeFacetReducers.handleRangeFacetDeselectAll).toHaveBeenCalledTimes(2);
   });
 
   it('#updateNumericFacetSortCriterion calls #handleFacetSortCriterionUpdate', () => {
@@ -168,9 +149,7 @@ describe('numeric-facet-set slice', () => {
     });
     numericFacetSetReducer(state, action);
 
-    expect(FacetReducers.handleFacetSortCriterionUpdate).toHaveBeenCalledTimes(
-      1
-    );
+    expect(FacetReducers.handleFacetSortCriterionUpdate).toHaveBeenCalledTimes(1);
   });
 
   it('#executeSearch.fulfilled calls #onRangeFacetRequestFulfilled', () => {
@@ -184,9 +163,7 @@ describe('numeric-facet-set slice', () => {
       })
     );
 
-    expect(
-      RangeFacetReducers.onRangeFacetRequestFulfilled
-    ).toHaveBeenCalledTimes(1);
+    expect(RangeFacetReducers.onRangeFacetRequestFulfilled).toHaveBeenCalledTimes(1);
   });
 
   describe('#updateActiveTab', () => {
@@ -199,9 +176,7 @@ describe('numeric-facet-set slice', () => {
 
       numericFacetSetReducer(state, updateActiveTab('tab3'));
 
-      expect(
-        RangeFacetReducers.handleRangeFacetDeselectAll
-      ).toHaveBeenCalledTimes(1);
+      expect(RangeFacetReducers.handleRangeFacetDeselectAll).toHaveBeenCalledTimes(1);
     });
 
     it('should not deselect values for a facet with tabsIncluded when switching to an included tab', () => {
@@ -213,9 +188,7 @@ describe('numeric-facet-set slice', () => {
 
       numericFacetSetReducer(state, updateActiveTab('tab1'));
 
-      expect(
-        RangeFacetReducers.handleRangeFacetDeselectAll
-      ).not.toHaveBeenCalled();
+      expect(RangeFacetReducers.handleRangeFacetDeselectAll).not.toHaveBeenCalled();
     });
 
     it('should deselect values for a facet with tabsExcluded when switching to an excluded tab', () => {
@@ -227,9 +200,7 @@ describe('numeric-facet-set slice', () => {
 
       numericFacetSetReducer(state, updateActiveTab('tab3'));
 
-      expect(
-        RangeFacetReducers.handleRangeFacetDeselectAll
-      ).toHaveBeenCalledTimes(1);
+      expect(RangeFacetReducers.handleRangeFacetDeselectAll).toHaveBeenCalledTimes(1);
     });
 
     it('should not deselect values for a facet without tabs configuration', () => {
@@ -239,9 +210,7 @@ describe('numeric-facet-set slice', () => {
 
       numericFacetSetReducer(state, updateActiveTab('anyTab'));
 
-      expect(
-        RangeFacetReducers.handleRangeFacetDeselectAll
-      ).not.toHaveBeenCalled();
+      expect(RangeFacetReducers.handleRangeFacetDeselectAll).not.toHaveBeenCalled();
     });
   });
 });

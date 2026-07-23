@@ -27,9 +27,7 @@ export type SortCriterion = SortByRelevance | SortByFields;
  * @param fields - An array of fields to sort by.
  * @returns The sort criterion object.
  */
-export const buildFieldsSortCriterion = (
-  fields: SortByFieldsFields[]
-): SortByFields => ({
+export const buildFieldsSortCriterion = (fields: SortByFieldsFields[]): SortByFields => ({
   by: SortBy.Fields,
   fields,
 });

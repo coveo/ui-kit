@@ -30,9 +30,7 @@ const FACET_CLASS: Record<string, string> = {
 };
 
 function hasVisibleFacets(states: FacetStates): boolean {
-  return states.some(
-    (facet) => !EXCLUDED_FACET_IDS.has(facet.facetId) && facet.values.length > 0
-  );
+  return states.some((facet) => !EXCLUDED_FACET_IDS.has(facet.facetId) && facet.values.length > 0);
 }
 
 function facetValueLabel(facet: FacetState, value: FacetValueView): string {
@@ -133,10 +131,7 @@ function toggleFacetValue(
       break;
     }
     case 'numericalRange': {
-      const facet = facetGenerator.getFacetController(
-        facetId,
-        'numericalRange'
-      );
+      const facet = facetGenerator.getFacetController(facetId, 'numericalRange');
       const value = facet?.state.values[index];
       if (facet && value) facet.toggleSelect(value);
       break;

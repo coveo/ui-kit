@@ -52,29 +52,28 @@ describe('atomic-result-image', () => {
     } = {}
   ) => {
     const resultToUse = 'result' in options ? options.result : mockResult;
-    const {element, atomicInterface} =
-      await renderInAtomicResult<AtomicResultImage>({
-        template: html`<atomic-result-image
-          field=${ifDefined(options.field)}
-          image-alt-field=${ifDefined(options.imageAltField)}
-          fallback=${ifDefined(options.fallback)}
-        ></atomic-result-image>`,
-        selector: 'atomic-result-image',
-        result: resultToUse === null ? undefined : resultToUse,
-        bindings: (bindings) => {
-          bindings.i18n = i18n;
-          bindings.engine.logger = {warn: vi.fn()} as never;
-          bindings.store = {
-            ...bindings.store,
-            onChange: vi.fn(),
-            state: {
-              ...bindings.store?.state,
-              loadingFlags: [],
-            },
-          };
-          return bindings;
-        },
-      });
+    const {element, atomicInterface} = await renderInAtomicResult<AtomicResultImage>({
+      template: html`<atomic-result-image
+        field=${ifDefined(options.field)}
+        image-alt-field=${ifDefined(options.imageAltField)}
+        fallback=${ifDefined(options.fallback)}
+      ></atomic-result-image>`,
+      selector: 'atomic-result-image',
+      result: resultToUse === null ? undefined : resultToUse,
+      bindings: (bindings) => {
+        bindings.i18n = i18n;
+        bindings.engine.logger = {warn: vi.fn()} as never;
+        bindings.store = {
+          ...bindings.store,
+          onChange: vi.fn(),
+          state: {
+            ...bindings.store?.state,
+            loadingFlags: [],
+          },
+        };
+        return bindings;
+      },
+    });
 
     await atomicInterface.updateComplete;
     await element?.updateComplete;
@@ -319,9 +318,7 @@ describe('atomic-result-image', () => {
     ])(
       'should log validation warning when #$prop is updated to invalid value',
       async ({prop, validValue, invalidValue}) => {
-        const consoleWarnSpy = vi
-          .spyOn(console, 'warn')
-          .mockImplementation(() => {});
+        const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
         const {element} = await renderResultImage({[prop]: validValue});
 
@@ -330,15 +327,10 @@ describe('atomic-result-image', () => {
         await element?.updateComplete;
 
         expect(consoleWarnSpy).toHaveBeenCalledWith(
-          expect.stringContaining(
-            'Prop validation failed for component atomic-result-image'
-          ),
+          expect.stringContaining('Prop validation failed for component atomic-result-image'),
           element
         );
-        expect(consoleWarnSpy).toHaveBeenCalledWith(
-          expect.stringContaining(prop),
-          element
-        );
+        expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining(prop), element);
 
         consoleWarnSpy.mockRestore();
       }
@@ -350,13 +342,8 @@ describe('atomic-result-image', () => {
         prop: 'field',
         invalidValue: '',
       },
-    ])(
-      'should throw error when #$prop is set to invalid value',
-      async ({prop, invalidValue}) => {
-        await expect(() =>
-          renderResultImage({[prop]: invalidValue})
-        ).rejects.toThrow();
-      }
-    );
+    ])('should throw error when #$prop is set to invalid value', async ({prop, invalidValue}) => {
+      await expect(() => renderResultImage({[prop]: invalidValue})).rejects.toThrow();
+    });
   });
 });

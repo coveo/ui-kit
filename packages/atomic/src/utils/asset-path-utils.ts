@@ -8,14 +8,11 @@ export function getAssetPath(path: string): string {
       : new URL('./', window.document.baseURI).href;
   const assetUrl = new URL(path, baseUrl);
 
-  return assetUrl.origin !== window.location.origin
-    ? assetUrl.href
-    : assetUrl.pathname;
+  return assetUrl.origin !== window.location.origin ? assetUrl.href : assetUrl.pathname;
 }
 
 export function parseAssetURL(url: string, assetPath = './assets') {
-  const [, protocol, remainder] =
-    url.match(/^([a-z]+):\/\/(.*?)(\.svg)?$/) || [];
+  const [, protocol, remainder] = url.match(/^([a-z]+):\/\/(.*?)(\.svg)?$/) || [];
   if (!protocol) {
     if (url.startsWith('./') || url.startsWith('../')) {
       return url;

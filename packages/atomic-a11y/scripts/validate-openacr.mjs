@@ -15,16 +15,13 @@ import Ajv from 'ajv';
 import {parse} from 'yaml';
 
 const LOG_PREFIX = '[validate-openacr]';
-const SCHEMA_URL =
-  'https://raw.githubusercontent.com/GSA/openacr/main/schema/openacr-0.1.0.json';
+const SCHEMA_URL = 'https://raw.githubusercontent.com/GSA/openacr/main/schema/openacr-0.1.0.json';
 const DEFAULT_INPUT = 'reports/openacr.yaml';
 
 async function fetchSchema() {
   const response = await fetch(SCHEMA_URL);
   if (!response.ok) {
-    throw new Error(
-      `Failed to fetch OpenACR schema: ${response.status} ${response.statusText}`
-    );
+    throw new Error(`Failed to fetch OpenACR schema: ${response.status} ${response.statusText}`);
   }
   return response.json();
 }
@@ -48,21 +45,12 @@ async function main() {
   const valid = validate(data);
 
   if (valid) {
-    console.log(
-      LOG_PREFIX,
-      `✓ OpenACR output conforms to the official GSA schema.`
-    );
+    console.log(LOG_PREFIX, `✓ OpenACR output conforms to the official GSA schema.`);
   } else {
-    console.error(
-      LOG_PREFIX,
-      `✗ OpenACR output does NOT conform to the official GSA schema.`
-    );
+    console.error(LOG_PREFIX, `✗ OpenACR output does NOT conform to the official GSA schema.`);
     console.error(LOG_PREFIX, `Validation errors:`);
     for (const error of validate.errors) {
-      console.error(
-        LOG_PREFIX,
-        `  - ${error.instancePath || '(root)'}: ${error.message}`
-      );
+      console.error(LOG_PREFIX, `  - ${error.instancePath || '(root)'}: ${error.message}`);
     }
     process.exit(1);
   }

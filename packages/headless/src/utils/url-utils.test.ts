@@ -36,9 +36,7 @@ describe('URLPath', () => {
 
       testParams.forEach((param) => url.addParam(param.key, param.value));
 
-      expect(url.href).toBe(
-        'https://www.test.com?testKey=test%23Value&testKey1=test%23Value1'
-      );
+      expect(url.href).toBe('https://www.test.com?testKey=test%23Value&testKey1=test%23Value1');
     });
   });
 });

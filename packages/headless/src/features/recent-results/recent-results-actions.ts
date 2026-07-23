@@ -2,10 +2,7 @@ import {ArrayValue, NumberValue, RecordValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import type {Result} from '../../api/search/search/result.js';
 import {validatePayload} from '../../utils/validate-payload.js';
-import {
-  resultPartialDefinition,
-  validateResultPayload,
-} from '../analytics/analytics-utils.js';
+import {resultPartialDefinition, validateResultPayload} from '../analytics/analytics-utils.js';
 
 export interface RegisterRecentResultsCreatorPayload {
   /**
@@ -42,6 +39,4 @@ export const pushRecentResult = createAction(
   }
 );
 
-export const clearRecentResults = createAction(
-  'recentResults/clearRecentResults'
-);
+export const clearRecentResults = createAction('recentResults/clearRecentResults');

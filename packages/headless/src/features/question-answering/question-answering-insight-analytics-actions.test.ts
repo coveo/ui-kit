@@ -1,10 +1,7 @@
 import {createRelay} from '@coveo/relay';
 import {CoveoInsightClient} from 'coveo.analytics';
 import type {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
-import {
-  buildMockInsightEngine,
-  type MockedInsightEngine,
-} from '../../test/mock-engine-v2.js';
+import {buildMockInsightEngine, type MockedInsightEngine} from '../../test/mock-engine-v2.js';
 import {buildMockInsightState} from '../../test/mock-insight-state.js';
 import {buildMockRaw} from '../../test/mock-raw.js';
 import {buildMockResult} from '../../test/mock-result.js';
@@ -66,16 +63,12 @@ vi.mocked(CoveoInsightClient).mockImplementation(function () {
   this.logOpenSmartSnippetSource = mockLogOpenSmartSnippetSource;
   this.logOpenSmartSnippetInlineLink = mockLogOpenSmartSnippetInlineLink;
   this.logOpenSmartSnippetFeedbackModal = mockLogOpenSmartSnippetFeedbackModal;
-  this.logCloseSmartSnippetFeedbackModal =
-    mockLogCloseSmartSnippetFeedbackModal;
+  this.logCloseSmartSnippetFeedbackModal = mockLogCloseSmartSnippetFeedbackModal;
   this.logSmartSnippetFeedbackReason = mockLogSmartSnippetFeedback;
   this.logExpandSmartSnippetSuggestion = mockLogExpandSmartSnippetSuggestion;
-  this.logCollapseSmartSnippetSuggestion =
-    mockLogCollapseSmartSnippetSuggestion;
-  this.logOpenSmartSnippetSuggestionSource =
-    mockLogOpenSmartSnippetSuggestionSource;
-  this.logOpenSmartSnippetSuggestionInlineLink =
-    mockLogOpenSmartSnippetSuggestionInlineLink;
+  this.logCollapseSmartSnippetSuggestion = mockLogCollapseSmartSnippetSuggestion;
+  this.logOpenSmartSnippetSuggestionSource = mockLogOpenSmartSnippetSuggestionSource;
+  this.logOpenSmartSnippetSuggestionInlineLink = mockLogOpenSmartSnippetSuggestionInlineLink;
 });
 
 const exampleSearchUid = '456';
@@ -244,11 +237,7 @@ describe('question answering insight analytics actions', () => {
     });
 
     it('should log #logLikeSmartSnippet with the case payload', async () => {
-      await logLikeSmartSnippet()()(
-        engine.dispatch,
-        () => engine.state,
-        {} as ThunkExtraArguments
-      );
+      await logLikeSmartSnippet()()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
       const mockToUse = mockLogLikeSmartSnippet;
       expect(mockToUse).toHaveBeenCalledTimes(1);
@@ -369,9 +358,7 @@ describe('question answering insight analytics actions', () => {
 
       const mockToUse = mockLogExpandSmartSnippetSuggestion;
       expect(mockToUse).toHaveBeenCalledTimes(1);
-      expect(mockToUse.mock.calls[0][0]).toStrictEqual(
-        expectedRelatedQuestionPayload
-      );
+      expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedRelatedQuestionPayload);
       expect(mockToUse.mock.calls[0][1]).toStrictEqual(expectedCaseContext);
     });
 
@@ -388,9 +375,7 @@ describe('question answering insight analytics actions', () => {
 
       const mockToUse = mockLogCollapseSmartSnippetSuggestion;
       expect(mockToUse).toHaveBeenCalledTimes(1);
-      expect(mockToUse.mock.calls[0][0]).toStrictEqual(
-        expectedRelatedQuestionPayload
-      );
+      expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedRelatedQuestionPayload);
       expect(mockToUse.mock.calls[0][1]).toStrictEqual(expectedCaseContext);
     });
 
@@ -408,9 +393,7 @@ describe('question answering insight analytics actions', () => {
       const mockToUse = mockLogOpenSmartSnippetSuggestionSource;
       expect(mockToUse).toHaveBeenCalledTimes(1);
       expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedDocumentInfo);
-      expect(mockToUse.mock.calls[0][1]).toStrictEqual(
-        expectedRelatedQuestionPayload
-      );
+      expect(mockToUse.mock.calls[0][1]).toStrictEqual(expectedRelatedQuestionPayload);
       expect(mockToUse.mock.calls[0][2]).toStrictEqual(expectedCaseContext);
     });
 
@@ -478,11 +461,7 @@ describe('question answering insight analytics actions', () => {
     });
 
     it('should log #logLikeSmartSnippet with the case payload', async () => {
-      await logLikeSmartSnippet()()(
-        engine.dispatch,
-        () => engine.state,
-        {} as ThunkExtraArguments
-      );
+      await logLikeSmartSnippet()()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
       expect(emit).toHaveBeenCalledTimes(1);
       expect(emit.mock.calls[0]).toMatchSnapshot();

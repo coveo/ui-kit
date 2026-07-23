@@ -81,8 +81,7 @@ describe('pagination slice', () => {
     },
     {
       name: 'recommendation slot',
-      getSlice: (state: CommercePaginationState) =>
-        state.recommendations[slotId],
+      getSlice: (state: CommercePaginationState) => state.recommendations[slotId],
       setSlice: (slice: PaginationSlice) => {
         state.recommendations[slotId] = slice;
       },
@@ -206,10 +205,9 @@ describe('pagination slice', () => {
       pagination,
     });
 
-    expect(
-      paginationReducer(state, fetchProductListing.fulfilled(response, ''))
-        .principal
-    ).toEqual(pagination);
+    expect(paginationReducer(state, fetchProductListing.fulfilled(response, '')).principal).toEqual(
+      pagination
+    );
   });
 
   it('sets the principal pagination on #executeSearch.fulfilled', () => {
@@ -217,9 +215,9 @@ describe('pagination slice', () => {
       pagination,
     });
 
-    expect(
-      paginationReducer(state, executeSearch.fulfilled(response, '')).principal
-    ).toEqual(pagination);
+    expect(paginationReducer(state, executeSearch.fulfilled(response, '')).principal).toEqual(
+      pagination
+    );
   });
 
   it('sets the recommendation slot pagination on #fetchRecommendations.fulfilled', () => {
@@ -228,10 +226,8 @@ describe('pagination slice', () => {
     });
 
     expect(
-      paginationReducer(
-        state,
-        fetchRecommendations.fulfilled(response, '', {slotId})
-      ).recommendations[slotId]
+      paginationReducer(state, fetchRecommendations.fulfilled(response, '', {slotId}))
+        .recommendations[slotId]
     ).toEqual(pagination);
   });
 
@@ -265,9 +261,7 @@ describe('pagination slice', () => {
 
       const finalState = paginationReducer(state, action(parameters));
 
-      expect(finalState.principal.page).toEqual(
-        getCommercePaginationInitialState().principal.page
-      );
+      expect(finalState.principal.page).toEqual(getCommercePaginationInitialState().principal.page);
     });
 
     it('does not restore principal pagination perPage when perPage parameter is undefined', () => {
@@ -347,14 +341,9 @@ describe('pagination slice', () => {
 
   describe('#registerRecommendationsSlotPagination', () => {
     it('when slot id is not already registered, registers the slot', () => {
-      const finalState = paginationReducer(
-        state,
-        registerRecommendationsSlotPagination({slotId})
-      );
+      const finalState = paginationReducer(state, registerRecommendationsSlotPagination({slotId}));
 
-      expect(finalState.recommendations[slotId]).toEqual(
-        getCommercePaginationInitialSlice()
-      );
+      expect(finalState.recommendations[slotId]).toEqual(getCommercePaginationInitialSlice());
     });
 
     it('when slot id is already registered, does not register the slot', () => {
@@ -366,10 +355,7 @@ describe('pagination slice', () => {
       };
       state.recommendations[slotId] = recommendation;
 
-      const finalState = paginationReducer(
-        state,
-        registerRecommendationsSlotPagination({slotId})
-      );
+      const finalState = paginationReducer(state, registerRecommendationsSlotPagination({slotId}));
 
       expect(finalState.recommendations[slotId]).toEqual(recommendation);
     });

@@ -10,8 +10,7 @@ interface PromptMapping {
 
 const PROMPT_TEMPLATE_MAP: ReadonlyArray<PromptMapping> = [
   {
-    prompt:
-      'build a beginner surfing kit with budget, mid-range, and premium options',
+    prompt: 'build a beginner surfing kit with budget, mid-range, and premium options',
     templateId: 'response1',
   },
   {
@@ -32,9 +31,7 @@ const FALLBACK_TEMPLATE_ID: TemplateId = 'response5';
 
 function matchPrompt(message: string): TemplateId {
   const normalized = message.trim().toLowerCase();
-  const match = PROMPT_TEMPLATE_MAP.find(
-    (entry) => entry.prompt === normalized
-  );
+  const match = PROMPT_TEMPLATE_MAP.find((entry) => entry.prompt === normalized);
   return match ? match.templateId : FALLBACK_TEMPLATE_ID;
 }
 
@@ -57,9 +54,7 @@ const baseResponse = (body?: unknown) => {
     'message' in body &&
     typeof (body as Record<string, unknown>).message === 'string'
   ) {
-    templateId = matchPrompt(
-      (body as Record<string, unknown>).message as string
-    );
+    templateId = matchPrompt((body as Record<string, unknown>).message as string);
   }
   return buildConverseStreamingResponse({
     delayBetweenMessages: 'real',

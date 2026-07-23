@@ -1,8 +1,4 @@
-import type {
-  Tab as TabController,
-  TabManager,
-  TabState,
-} from '@coveo/headless/ssr';
+import type {Tab as TabController, TabManager, TabState} from '@coveo/headless/ssr';
 import {type FunctionComponent, useEffect, useState} from 'react';
 import TabCommon from '../common/tab';
 
@@ -23,10 +19,7 @@ export const Tab: FunctionComponent<TabProps> = ({
 }) => {
   const [state, setState] = useState(staticState);
 
-  useEffect(
-    () => controller?.subscribe(() => setState({...controller.state})),
-    [controller]
-  );
+  useEffect(() => controller?.subscribe(() => setState({...controller.state})), [controller]);
 
   return (
     <TabCommon

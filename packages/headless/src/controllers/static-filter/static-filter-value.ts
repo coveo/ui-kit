@@ -26,9 +26,7 @@ export interface StaticFilterValueOptions {
  * @param config - The options with which to create a `StaticFilterValue`.
  * @returns A new `StaticFilterValue`.
  */
-export function buildStaticFilterValue(
-  config: StaticFilterValueOptions
-): StaticFilterValue {
+export function buildStaticFilterValue(config: StaticFilterValueOptions): StaticFilterValue {
   return {
     state: 'idle',
     ...config,

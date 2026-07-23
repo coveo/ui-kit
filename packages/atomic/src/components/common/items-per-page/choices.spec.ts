@@ -133,9 +133,7 @@ describe('#renderChoices', () => {
 
   it('should call focusOnFirstResultAfterNextSearch and scrollToTopEvent when selecting smaller page size', async () => {
     const scrollToTopEvent = vi.fn();
-    const focusOnFirstResultAfterNextSearch = vi
-      .fn()
-      .mockResolvedValue(undefined);
+    const focusOnFirstResultAfterNextSearch = vi.fn().mockResolvedValue(undefined);
 
     const {getRadioButtonByValue} = await renderComponent({
       pageSize: 25,

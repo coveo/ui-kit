@@ -63,9 +63,7 @@ export interface NumericFacetActionCreators {
  * @group Actions
  * @category NumericFacet
  */
-export function loadNumericFacetActions(
-  engine: CommerceEngine
-): NumericFacetActionCreators {
+export function loadNumericFacetActions(engine: CommerceEngine): NumericFacetActionCreators {
   engine.addReducers({commerceFacetSet});
   return {
     toggleSelectNumericFacetValue,

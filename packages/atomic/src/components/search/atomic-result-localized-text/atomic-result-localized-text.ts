@@ -93,10 +93,7 @@ export class AtomicResultLocalizedText
       return ret;
     }
     Object.entries(this.field).forEach(([fieldName, i18nParameter]) => {
-      const fieldValueRaw = ResultTemplatesHelpers.getResultProperty(
-        this.result,
-        fieldName
-      );
+      const fieldValueRaw = ResultTemplatesHelpers.getResultProperty(this.result, fieldName);
       if (!isNullOrUndefined(fieldValueRaw)) {
         ret[i18nParameter] = fieldValueRaw;
       }
@@ -111,10 +108,7 @@ export class AtomicResultLocalizedText
     }
     return {
       count:
-        (ResultTemplatesHelpers.getResultProperty(
-          this.result,
-          this.fieldCount
-        ) as number) ?? 1,
+        (ResultTemplatesHelpers.getResultProperty(this.result, this.fieldCount) as number) ?? 1,
     };
   }
 }

@@ -1,10 +1,7 @@
 import {buildSSRSearchParameterSerializer} from '@coveo/headless/ssr';
 import {headers} from 'next/headers';
 import SearchPage from '../../components/generic/search-page';
-import {
-  fetchStaticState,
-  setNavigatorContextProvider,
-} from '../../lib/generic/engine';
+import {fetchStaticState, setNavigatorContextProvider} from '../../lib/generic/engine';
 import {NextJsAppRouterNavigatorContext} from '../../navigatorContextProvider';
 
 /**
@@ -52,10 +49,7 @@ export default async function Search({
     },
   });
   return (
-    <SearchPage
-      staticState={staticState}
-      navigatorContext={navigatorContext.marshal}
-    ></SearchPage>
+    <SearchPage staticState={staticState} navigatorContext={navigatorContext.marshal}></SearchPage>
   );
 }
 

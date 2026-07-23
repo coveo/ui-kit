@@ -1,8 +1,6 @@
 import type {QuerySuggestState} from '../features/query-suggest/query-suggest-state.js';
 
-export function buildMockQuerySuggest(
-  config: Partial<QuerySuggestState> = {}
-): QuerySuggestState {
+export function buildMockQuerySuggest(config: Partial<QuerySuggestState> = {}): QuerySuggestState {
   return {
     id: '',
     count: 0,

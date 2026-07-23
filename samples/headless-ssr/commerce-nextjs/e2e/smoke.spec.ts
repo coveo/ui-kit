@@ -22,9 +22,7 @@ test.describe('product listing page', () => {
     await expect(page.getByText(/Showing results/)).toBeVisible();
   });
 
-  test('shows cart-quantity feedback on the Add to cart button', async ({
-    page,
-  }) => {
+  test('shows cart-quantity feedback on the Add to cart button', async ({page}) => {
     const addToCart = page.getByRole('button', {name: /^Add to cart/}).first();
     await addToCart.click();
     await expect(addToCart).toHaveText(/\(\d+\)/);

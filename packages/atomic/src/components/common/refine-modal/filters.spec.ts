@@ -4,10 +4,7 @@ import {userEvent} from 'storybook/test';
 import {beforeAll, describe, expect, it, vi} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {
-  renderRefineModalFiltersClearButton,
-  renderRefineModalFiltersSection,
-} from './filters';
+import {renderRefineModalFiltersClearButton, renderRefineModalFiltersSection} from './filters';
 
 describe('filters', () => {
   describe('#renderRefineModalFiltersSection', () => {
@@ -32,13 +29,9 @@ describe('filters', () => {
 
       return {
         filterSection: element.querySelector('div[part="filter-section"]'),
-        sectionTitle: element.querySelector(
-          'h2[part*="section-filters-title"]'
-        ),
+        sectionTitle: element.querySelector('h2[part*="section-filters-title"]'),
         facetsSlot: element.querySelector('slot[name="facets"]'),
-        automaticFacetsSlot: element.querySelector(
-          'slot[name="automatic-facets"]'
-        ),
+        automaticFacetsSlot: element.querySelector('slot[name="automatic-facets"]'),
         children: element.querySelector('.test-children'),
       };
     };
@@ -52,10 +45,7 @@ describe('filters', () => {
     it('should render the section title with correct parts', async () => {
       const {sectionTitle} = await renderComponent();
 
-      expect(sectionTitle).toHaveAttribute(
-        'part',
-        'section-title section-filters-title'
-      );
+      expect(sectionTitle).toHaveAttribute('part', 'section-title section-filters-title');
     });
 
     it('should render the correct title text from i18n', async () => {

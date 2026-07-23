@@ -13,19 +13,13 @@ describe('render-highlights', () => {
     highlights,
   }) => {
     let result = content;
-    const sortedHighlights = [...highlights].sort(
-      (a, b) => b.offset - a.offset
-    );
+    const sortedHighlights = [...highlights].sort((a, b) => b.offset - a.offset);
 
     for (const highlight of sortedHighlights) {
       const before = result.slice(0, highlight.offset);
-      const highlighted = result.slice(
-        highlight.offset,
-        highlight.offset + highlight.length
-      );
+      const highlighted = result.slice(highlight.offset, highlight.offset + highlight.length);
       const after = result.slice(highlight.offset + highlight.length);
-      result =
-        before + openingDelimiter + highlighted + closingDelimiter + after;
+      result = before + openingDelimiter + highlighted + closingDelimiter + after;
     }
 
     return result;
@@ -36,11 +30,7 @@ describe('render-highlights', () => {
       const value = 'Hello world';
       const highlights: HighlightKeywords[] = [{offset: 0, length: 5}];
 
-      const result = renderWithHighlights(
-        value,
-        highlights,
-        mockHighlightString
-      );
+      const result = renderWithHighlights(value, highlights, mockHighlightString);
       expect(result).toBe('<b>Hello</b> world');
     });
 
@@ -51,11 +41,7 @@ describe('render-highlights', () => {
         {offset: 16, length: 5},
       ];
 
-      const result = renderWithHighlights(
-        value,
-        highlights,
-        mockHighlightString
-      );
+      const result = renderWithHighlights(value, highlights, mockHighlightString);
       expect(result).toBe('<b>Hello</b> beautiful <b>world</b>');
     });
 
@@ -66,11 +52,7 @@ describe('render-highlights', () => {
         {offset: 5, length: 5},
       ];
 
-      const result = renderWithHighlights(
-        value,
-        highlights,
-        mockHighlightString
-      );
+      const result = renderWithHighlights(value, highlights, mockHighlightString);
 
       expect(result).toBe('<b>Hello</b><b>World</b>');
     });
@@ -79,11 +61,7 @@ describe('render-highlights', () => {
       const value = 'Hello world';
       const highlights: HighlightKeywords[] = [];
 
-      const result = renderWithHighlights(
-        value,
-        highlights,
-        mockHighlightString
-      );
+      const result = renderWithHighlights(value, highlights, mockHighlightString);
 
       expect(result).toBe('Hello world');
     });
@@ -92,11 +70,7 @@ describe('render-highlights', () => {
       const value = '';
       const highlights: HighlightKeywords[] = [];
 
-      const result = renderWithHighlights(
-        value,
-        highlights,
-        mockHighlightString
-      );
+      const result = renderWithHighlights(value, highlights, mockHighlightString);
 
       expect(result).toBe('');
     });
@@ -105,11 +79,7 @@ describe('render-highlights', () => {
       const value = 'Hello';
       const highlights: HighlightKeywords[] = [{offset: 0, length: 5}];
 
-      const result = renderWithHighlights(
-        value,
-        highlights,
-        mockHighlightString
-      );
+      const result = renderWithHighlights(value, highlights, mockHighlightString);
 
       expect(result).toBe('<b>Hello</b>');
     });
@@ -118,11 +88,7 @@ describe('render-highlights', () => {
       const value = 'Hello world';
       const highlights: HighlightKeywords[] = [{offset: 6, length: 1}];
 
-      const result = renderWithHighlights(
-        value,
-        highlights,
-        mockHighlightString
-      );
+      const result = renderWithHighlights(value, highlights, mockHighlightString);
 
       // eslint-disable-next-line @cspell/spellchecker
       expect(result).toBe('Hello <b>w</b>orld');
@@ -132,11 +98,7 @@ describe('render-highlights', () => {
       const value = 'Hello world';
       const highlights: HighlightKeywords[] = [{offset: 6, length: 5}];
 
-      const result = renderWithHighlights(
-        value,
-        highlights,
-        mockHighlightString
-      );
+      const result = renderWithHighlights(value, highlights, mockHighlightString);
 
       expect(result).toBe('Hello <b>world</b>');
     });
@@ -149,11 +111,7 @@ describe('render-highlights', () => {
         {offset: 0, length: 3}, // The
       ];
 
-      const result = renderWithHighlights(
-        value,
-        highlights,
-        mockHighlightString
-      );
+      const result = renderWithHighlights(value, highlights, mockHighlightString);
 
       expect(result).toBe('<b>The</b> <b>quick</b> brown <b>fox</b> jumps');
     });
@@ -166,11 +124,7 @@ describe('render-highlights', () => {
           {offset: 14, length: 6}, // [test]
         ];
 
-        const result = renderWithHighlights(
-          value,
-          highlights,
-          mockHighlightString
-        );
+        const result = renderWithHighlights(value, highlights, mockHighlightString);
 
         expect(result).toBe('Hello <b>(world)</b> <b>[test]</b>');
       });
@@ -179,11 +133,7 @@ describe('render-highlights', () => {
         const value = 'Hello <span>world</span>';
         const highlights: HighlightKeywords[] = [{offset: 6, length: 5}];
 
-        const result = renderWithHighlights(
-          value,
-          highlights,
-          mockHighlightString
-        );
+        const result = renderWithHighlights(value, highlights, mockHighlightString);
 
         expect(result).toBe('Hello <b><span</b>>world</span>');
       });
@@ -194,11 +144,7 @@ describe('render-highlights', () => {
         const value = 'Hello world';
         const highlights: HighlightKeywords[] = [{offset: 5, length: 0}];
 
-        const result = renderWithHighlights(
-          value,
-          highlights,
-          mockHighlightString
-        );
+        const result = renderWithHighlights(value, highlights, mockHighlightString);
 
         expect(result).toBe('Hello<b></b> world');
       });
@@ -213,16 +159,11 @@ describe('render-highlights', () => {
           highlights,
         }) => {
           let result = content;
-          const sortedHighlights = [...highlights].sort(
-            (a, b) => b.offset - a.offset
-          );
+          const sortedHighlights = [...highlights].sort((a, b) => b.offset - a.offset);
 
           for (const highlight of sortedHighlights) {
             const before = result.slice(0, highlight.offset);
-            const highlighted = result.slice(
-              highlight.offset,
-              highlight.offset + highlight.length
-            );
+            const highlighted = result.slice(highlight.offset, highlight.offset + highlight.length);
             const after = result.slice(highlight.offset + highlight.length);
             result =
               before +
@@ -240,11 +181,7 @@ describe('render-highlights', () => {
         const value = 'Hello world';
         const highlights: HighlightKeywords[] = [{offset: 0, length: 5}];
 
-        const result = renderWithHighlights(
-          value,
-          highlights,
-          customHighlightString
-        );
+        const result = renderWithHighlights(value, highlights, customHighlightString);
 
         expect(result).toBe('[START]<b>Hello</b>[END] world');
       });

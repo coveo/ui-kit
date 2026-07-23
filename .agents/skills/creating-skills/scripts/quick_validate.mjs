@@ -115,9 +115,7 @@ export function validateSkill(skillPath) {
   ]);
 
   // Check for unexpected properties
-  const unexpectedKeys = Object.keys(frontmatter).filter(
-    (k) => !ALLOWED_PROPERTIES.has(k)
-  );
+  const unexpectedKeys = Object.keys(frontmatter).filter((k) => !ALLOWED_PROPERTIES.has(k));
   if (unexpectedKeys.length > 0) {
     return {
       valid: false,
@@ -250,9 +248,7 @@ export function validateSkill(skillPath) {
   const lineCount = body.split('\n').length;
 
   if (lineCount > 500) {
-    console.log(
-      `⚠️  Warning: SKILL.md body is ${lineCount} lines (recommended max: 500)`
-    );
+    console.log(`⚠️  Warning: SKILL.md body is ${lineCount} lines (recommended max: 500)`);
   }
 
   return {valid: true, message: 'Skill is valid!'};

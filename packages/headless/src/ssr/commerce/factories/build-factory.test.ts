@@ -80,8 +80,7 @@ describe('buildFactory', () => {
     it('should never add middlewares', async () => {
       await build();
       expect(
-        (commerceEngine.buildCommerceEngine as Mock).mock.calls[0][0]
-          .middlewares
+        (commerceEngine.buildCommerceEngine as Mock).mock.calls[0][0].middlewares
       ).toHaveLength(0);
     });
   });
@@ -102,8 +101,7 @@ describe('buildFactory', () => {
     it('should always add a single middleware', async () => {
       await build();
       expect(
-        (commerceEngine.buildCommerceEngine as Mock).mock.calls[0][0]
-          .middlewares
+        (commerceEngine.buildCommerceEngine as Mock).mock.calls[0][0].middlewares
       ).toHaveLength(1);
     });
   });
@@ -178,8 +176,7 @@ describe('buildFactory', () => {
       await factory(SolutionType.listing)();
 
       expect(
-        (commerceEngine.buildCommerceEngine as Mock).mock.calls[0][0]
-          .middlewares
+        (commerceEngine.buildCommerceEngine as Mock).mock.calls[0][0].middlewares
       ).toHaveLength(1);
     });
   });
@@ -213,8 +210,7 @@ describe('buildFactory', () => {
     it('should not add middleware if not specified otherwise', async () => {
       await build({controllers: {}});
       expect(
-        (commerceEngine.buildCommerceEngine as Mock).mock.calls[0][0]
-          .middlewares
+        (commerceEngine.buildCommerceEngine as Mock).mock.calls[0][0].middlewares
       ).toHaveLength(0);
     });
 
@@ -226,8 +222,7 @@ describe('buildFactory', () => {
         },
       });
       expect(
-        (commerceEngine.buildCommerceEngine as Mock).mock.calls[0][0]
-          .middlewares
+        (commerceEngine.buildCommerceEngine as Mock).mock.calls[0][0].middlewares
       ).toHaveLength(2);
     });
 
@@ -239,8 +234,7 @@ describe('buildFactory', () => {
         },
       });
       expect(
-        (commerceEngine.buildCommerceEngine as Mock).mock.calls[0][0]
-          .middlewares
+        (commerceEngine.buildCommerceEngine as Mock).mock.calls[0][0].middlewares
       ).toHaveLength(0);
     });
   });

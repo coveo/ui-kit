@@ -19,12 +19,7 @@ describe('#buildCategoryFacetSearchRequest', () => {
   }
 
   function buildParams() {
-    return buildCategoryFacetSearchRequest(
-      id,
-      state,
-      buildMockNavigatorContextProvider()(),
-      false
-    );
+    return buildCategoryFacetSearchRequest(id, state, buildMockNavigatorContextProvider()(), false);
   }
 
   beforeEach(() => setupState());
@@ -83,10 +78,7 @@ describe('#buildCategoryFacetSearchRequest', () => {
 
   it('sets the #searchContext to the search request params', async () => {
     const facet = state.categoryFacetSet[id]!.request;
-    const builtRequest = await buildSearchRequest(
-      state,
-      buildMockNavigatorContextProvider()()
-    );
+    const builtRequest = await buildSearchRequest(state, buildMockNavigatorContextProvider()());
     const request = {...builtRequest.request, facets: [facet]};
 
     expect((await buildParams()).searchContext).toEqual({

@@ -21,9 +21,9 @@ export type {Sort, SortProps, SortState};
  * @param props - The configurable `Sort` properties.
  * @returns The `Sort` controller definition.
  */
-export function defineSort<
-  TOptions extends ControllerDefinitionOption | undefined,
->(props?: SortProps & TOptions) {
+export function defineSort<TOptions extends ControllerDefinitionOption | undefined>(
+  props?: SortProps & TOptions
+) {
   ensureAtLeastOneSolutionType(props);
   return {
     listing: true,

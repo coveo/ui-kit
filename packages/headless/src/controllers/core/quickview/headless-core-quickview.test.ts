@@ -6,10 +6,7 @@ import {
   updateContentURL,
 } from '../../../features/result-preview/result-preview-actions.js';
 import {resultPreviewReducer as resultPreview} from '../../../features/result-preview/result-preview-slice.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../../test/mock-engine-v2.js';
 import {buildMockResult} from '../../../test/mock-result.js';
 import {buildMockResultPreviewRequest} from '../../../test/mock-result-preview-request-builder.js';
 import {buildMockResultPreviewState} from '../../../test/mock-result-preview-state.js';
@@ -30,12 +27,7 @@ describe('QuickviewCore', () => {
   const path = '/html';
 
   function initQuickview(options = defaultOptions) {
-    quickview = buildCoreQuickview(
-      engine,
-      {options},
-      buildMockResultPreviewRequest,
-      path
-    );
+    quickview = buildCoreQuickview(engine, {options}, buildMockResultPreviewRequest, path);
   }
 
   beforeEach(() => {

@@ -1,8 +1,6 @@
 import type {FacetRequest} from '../features/facets/facet-set/interfaces/request.js';
 
-export function buildMockFacetRequest(
-  config: Partial<FacetRequest> = {}
-): FacetRequest {
+export function buildMockFacetRequest(config: Partial<FacetRequest> = {}): FacetRequest {
   return {
     facetId: '',
     field: '',

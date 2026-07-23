@@ -1,9 +1,5 @@
 import {BooleanValue, Schema, StringValue} from '@coveo/bueno';
-import {
-  HighlightUtils,
-  type Result,
-  ResultTemplatesHelpers,
-} from '@coveo/headless';
+import {HighlightUtils, type Result, ResultTemplatesHelpers} from '@coveo/headless';
 import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
@@ -120,21 +116,11 @@ export class AtomicResultText
   }
 
   private get shouldRenderHighlights(): boolean {
-    return (
-      !this.disableHighlight &&
-      this.shouldHighlight &&
-      this.isFieldSupportedForHighlighting()
-    );
+    return !this.disableHighlight && this.shouldHighlight && this.isFieldSupportedForHighlighting();
   }
 
   private isFieldSupportedForHighlighting(): boolean {
-    return [
-      'title',
-      'excerpt',
-      'firstSentences',
-      'printableUri',
-      'summary',
-    ].includes(this.field);
+    return ['title', 'excerpt', 'firstSentences', 'printableUri', 'summary'].includes(this.field);
   }
 
   private highlightKeywords(): HighlightUtils.HighlightKeyword[] | null {
@@ -178,11 +164,7 @@ export class AtomicResultText
       },
     })(html`
       <atomic-text
-        .value=${getFieldValueCaption(
-          this.field,
-          this.default!,
-          this.bindings.i18n
-        )}
+        .value=${getFieldValueCaption(this.field, this.default!, this.bindings.i18n)}
       ></atomic-text>
     `);
   }
@@ -190,9 +172,7 @@ export class AtomicResultText
   private renderResultText(textValue: string) {
     const highlightKeywords = this.highlightKeywords();
 
-    return this.shouldRenderHighlights &&
-      highlightKeywords &&
-      highlightKeywords.length > 0
+    return this.shouldRenderHighlights && highlightKeywords && highlightKeywords.length > 0
       ? renderItemTextHighlighted({
           props: {
             textValue,
@@ -205,20 +185,13 @@ export class AtomicResultText
         })
       : html`
           <atomic-text
-            .value=${getFieldValueCaption(
-              this.field,
-              textValue,
-              this.bindings.i18n
-            )}
+            .value=${getFieldValueCaption(this.field, textValue, this.bindings.i18n)}
           ></atomic-text>
         `;
   }
 
   private renderResultTextValue() {
-    const resultValueAsString = getStringValueFromResultOrNull(
-      this.result,
-      this.field
-    );
+    const resultValueAsString = getStringValueFromResultOrNull(this.result, this.field);
 
     if (resultValueAsString === null) {
       return this.renderFallback();

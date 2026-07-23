@@ -2,12 +2,7 @@ import {createAction} from '@reduxjs/toolkit';
 import {type CacheKey, createCacheKey} from '@/src/internal/utils/index.js';
 import {getHandleInternals} from '@/src/internal/utils/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
-import type {
-  A2UISurface,
-  GenerativeState,
-  RoutedUseCase,
-  TurnStatus,
-} from './generative-types.js';
+import type {A2UISurface, GenerativeState, RoutedUseCase, TurnStatus} from './generative-types.js';
 
 type GenerativeActions = ReturnType<typeof createGenerativeActions>;
 
@@ -21,25 +16,17 @@ export function createGenerativeActions(interfaceId: string) {
       `${prefix}/createTurn`
     ),
     setActiveTurnId: createAction<string>(`${prefix}/setActiveTurnId`),
-    replaceTurnId: createAction<{oldId: string; newId: string}>(
-      `${prefix}/replaceTurnId`
-    ),
+    replaceTurnId: createAction<{oldId: string; newId: string}>(`${prefix}/replaceTurnId`),
     setRoutedInterface: createAction<{
       turnId: string;
       useCase: RoutedUseCase;
     }>(`${prefix}/setRoutedInterface`),
-    initAgentResponse: createAction<{turnId: string}>(
-      `${prefix}/initAgentResponse`
-    ),
-    startMessage: createAction<{turnId: string; role: string}>(
-      `${prefix}/startMessage`
-    ),
+    initAgentResponse: createAction<{turnId: string}>(`${prefix}/initAgentResponse`),
+    startMessage: createAction<{turnId: string; role: string}>(`${prefix}/startMessage`),
     appendMessageDelta: createAction<{turnId: string; delta: string}>(
       `${prefix}/appendMessageDelta`
     ),
-    appendSurface: createAction<{turnId: string; surface: A2UISurface}>(
-      `${prefix}/appendSurface`
-    ),
+    appendSurface: createAction<{turnId: string; surface: A2UISurface}>(`${prefix}/appendSurface`),
     startToolCall: createAction<{
       turnId: string;
       toolCallId: string;
@@ -56,12 +43,8 @@ export function createGenerativeActions(interfaceId: string) {
       result: string;
     }>(`${prefix}/completeToolCall`),
     completeTurn: createAction<{turnId: string}>(`${prefix}/completeTurn`),
-    failTurn: createAction<{turnId: string; error: string}>(
-      `${prefix}/failTurn`
-    ),
-    clearTurnResponse: createAction<{turnId: string}>(
-      `${prefix}/clearTurnResponse`
-    ),
+    failTurn: createAction<{turnId: string; error: string}>(`${prefix}/failTurn`),
+    clearTurnResponse: createAction<{turnId: string}>(`${prefix}/clearTurnResponse`),
     startReasoning: createAction<{turnId: string}>(`${prefix}/startReasoning`),
     appendReasoningDelta: createAction<{turnId: string; delta: string}>(
       `${prefix}/appendReasoningDelta`
@@ -77,7 +60,5 @@ export function createGenerativeActions(interfaceId: string) {
 
 export function getOrCreateGenerativeActions(iface: InterfaceHandle) {
   const {stateId, cacheRegistry} = getHandleInternals(iface);
-  return cacheRegistry.getOrCreate(CACHE_KEY, () =>
-    createGenerativeActions(stateId)
-  );
+  return cacheRegistry.getOrCreate(CACHE_KEY, () => createGenerativeActions(stateId));
 }

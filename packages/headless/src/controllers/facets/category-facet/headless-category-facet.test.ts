@@ -16,10 +16,7 @@ import type {
   CategoryFacetSortCriterion,
 } from '../../../features/facets/category-facet-set/interfaces/request.js';
 import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/facets/facet-search-set/category/category-facet-search-set-slice.js';
-import {
-  executeSearch,
-  fetchFacetValues,
-} from '../../../features/search/search-actions.js';
+import {executeSearch, fetchFacetValues} from '../../../features/search/search-actions.js';
 import {searchReducer as search} from '../../../features/search/search-slice.js';
 import type {SearchAppState} from '../../../state/search-app-state.js';
 import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request.js';
@@ -27,10 +24,7 @@ import {buildMockCategoryFacetResponse} from '../../../test/mock-category-facet-
 import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-search.js';
 import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice.js';
 import {buildMockCategoryFacetValue} from '../../../test/mock-category-facet-value.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../../test/mock-engine-v2.js';
 import {createMockState} from '../../../test/mock-state.js';
 import * as FacetIdDeterminor from '../../core/facets/_common/facet-id-determinor.js';
 import * as CategoryFacetSearch from '../../core/facets/facet-search/category/headless-category-facet-search.js';
@@ -40,9 +34,7 @@ import {
   type CategoryFacetOptions,
 } from './headless-category-facet.js';
 
-vi.mock(
-  '../../../features/facets/category-facet-set/category-facet-set-actions'
-);
+vi.mock('../../../features/facets/category-facet-set/category-facet-set-actions');
 vi.mock('../../../features/search/search-actions');
 vi.mock('../../../features/facet-options/facet-options-actions');
 
@@ -89,10 +81,7 @@ describe('category facet', () => {
 
     initCategoryFacet();
 
-    expect(FacetIdDeterminor.determineFacetId).toHaveBeenCalledWith(
-      engine,
-      options
-    );
+    expect(FacetIdDeterminor.determineFacetId).toHaveBeenCalledWith(engine, options);
   });
 
   it('#state.facetId exposes the facet id', () => {
@@ -111,9 +100,7 @@ describe('category facet', () => {
 
   it('when an option is invalid, it throws', () => {
     options.numberOfValues = 0;
-    expect(() => initCategoryFacet()).toThrow(
-      'Check the options of buildCategoryFacet'
-    );
+    expect(() => initCategoryFacet()).toThrow('Check the options of buildCategoryFacet');
   });
 
   it('is subscribable', () => {
@@ -188,9 +175,7 @@ describe('category facet', () => {
     });
 
     it('#state.selectedValueAncestry contains the selected leaf value', () => {
-      expect(categoryFacet.state.selectedValueAncestry).toEqual([
-        selectedValue,
-      ]);
+      expect(categoryFacet.state.selectedValueAncestry).toEqual([selectedValue]);
     });
   });
 
@@ -453,9 +438,7 @@ describe('category facet', () => {
     initCategoryFacet();
 
     expect(categoryFacet.facetSearch).toBeTruthy();
-    expect(
-      CategoryFacetSearch.buildCoreCategoryFacetSearch
-    ).toHaveBeenCalledTimes(1);
+    expect(CategoryFacetSearch.buildCoreCategoryFacetSearch).toHaveBeenCalledTimes(1);
   });
 
   it('exposes a #facetSearch state', () => {
@@ -469,12 +452,8 @@ describe('category facet', () => {
       path: ['bar', 'bazz'],
     };
 
-    engine.state.categoryFacetSearchSet![facetId].response.values = [
-      fakeResponseValue,
-    ];
+    engine.state.categoryFacetSearchSet![facetId].response.values = [fakeResponseValue];
 
-    expect(categoryFacet.state.facetSearch.values[0]).toMatchObject(
-      fakeResponseValue
-    );
+    expect(categoryFacet.state.facetSearch.values[0]).toMatchObject(fakeResponseValue);
   });
 });

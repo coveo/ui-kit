@@ -10,9 +10,7 @@ export interface FacetValuesGroupProps {
   query?: string;
 }
 
-export const renderFacetValuesGroup: FunctionalComponentWithChildren<
-  FacetValuesGroupProps
-> =
+export const renderFacetValuesGroup: FunctionalComponentWithChildren<FacetValuesGroupProps> =
   ({props}) =>
   (children) => {
     const label = props.label

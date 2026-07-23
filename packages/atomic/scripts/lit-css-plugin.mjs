@@ -1,10 +1,4 @@
-import {
-  mkdirSync,
-  readdirSync,
-  readFileSync,
-  statSync,
-  writeFileSync,
-} from 'node:fs';
+import {mkdirSync, readdirSync, readFileSync, statSync, writeFileSync} from 'node:fs';
 import {basename, dirname, join, posix, relative, sep} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import cssnano from 'cssnano';
@@ -20,9 +14,7 @@ const esmDir = join(packageDir, 'dist/esm');
 const cjsDir = join(packageDir, 'dist/cjs');
 
 function moduleExport(value, format) {
-  return format === 'cjs'
-    ? `module.exports = ${value};\n`
-    : `export default ${value};\n`;
+  return format === 'cjs' ? `module.exports = ${value};\n` : `export default ${value};\n`;
 }
 
 function jsExt(format) {
@@ -76,15 +68,10 @@ function createJsonModules(distDir, format = 'esm') {
   const distGeneratedDir = join(distDir, 'generated');
   mkdirSync(distGeneratedDir, {recursive: true});
 
-  const jsonFiles = readdirSync(generatedDir).filter((f) =>
-    f.endsWith('.json')
-  );
+  const jsonFiles = readdirSync(generatedDir).filter((f) => f.endsWith('.json'));
   for (const file of jsonFiles) {
     const content = readFileSync(join(generatedDir, file), 'utf8');
-    const outPath = join(
-      distGeneratedDir,
-      file.replace('.json', jsExt(format))
-    );
+    const outPath = join(distGeneratedDir, file.replace('.json', jsExt(format)));
     writeFileSync(outPath, moduleExport(content.trim(), format));
   }
   console.log(
@@ -95,10 +82,7 @@ function createJsonModules(distDir, format = 'esm') {
 
 // ── Standalone CSS module generation ───────────────────────────────────────────
 
-const standaloneCssFiles = [
-  'utils/coveo.tw.css',
-  'utils/tailwind.global.tw.css',
-];
+const standaloneCssFiles = ['utils/coveo.tw.css', 'utils/tailwind.global.tw.css'];
 
 /**
  * Create JS wrapper modules for standalone `.tw.css` files.
@@ -121,20 +105,11 @@ async function createCssModules(distDir, format = 'esm') {
     const outPath = join(distDir, `${cssFile}${jsExt(format)}`);
     mkdirSync(dirname(outPath), {recursive: true});
     if (format === 'cjs') {
-      writeFileSync(
-        outPath,
-        `const css = \`${escaped}\`;\nmodule.exports = css;\n`
-      );
+      writeFileSync(outPath, `const css = \`${escaped}\`;\nmodule.exports = css;\n`);
     } else {
-      writeFileSync(
-        outPath,
-        `const css = \`${escaped}\`;\nexport default css;\n`
-      );
+      writeFileSync(outPath, `const css = \`${escaped}\`;\nexport default css;\n`);
     }
-    console.log(
-      colors.bgGreen(`Created CSS module (${format}):`),
-      colors.green(basename(outPath))
-    );
+    console.log(colors.bgGreen(`Created CSS module (${format}):`), colors.green(basename(outPath)));
   }
 }
 
@@ -170,10 +145,7 @@ async function processInlineCss(distDir, format = 'esm') {
     if (matches.length === 0) continue;
 
     const relativeFromDist = relative(distDir, file);
-    const originalSrcFile = join(
-      srcDir,
-      relativeFromDist.replace(new RegExp(`\\${ext}$`), '.ts')
-    );
+    const originalSrcFile = join(srcDir, relativeFromDist.replace(new RegExp(`\\${ext}$`), '.ts'));
 
     for (const match of matches) {
       const fullMatch = match[0];
@@ -190,10 +162,7 @@ async function processInlineCss(distDir, format = 'esm') {
     }
 
     writeFileSync(file, content, 'utf8');
-    console.log(
-      colors.bgGreen('Successfully processed inline CSS'),
-      colors.green(basename(file))
-    );
+    console.log(colors.bgGreen('Successfully processed inline CSS'), colors.green(basename(file)));
   }
 }
 

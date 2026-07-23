@@ -35,9 +35,7 @@ export interface QuerySuggestActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  clearQuerySuggest(
-    payload: ClearQuerySuggestPayload
-  ): PayloadAction<ClearQuerySuggestPayload>;
+  clearQuerySuggest(payload: ClearQuerySuggestPayload): PayloadAction<ClearQuerySuggestPayload>;
 
   /**
    * Fetches a list of query suggestions for a specific query suggest entity according to the current headless state.
@@ -83,9 +81,7 @@ export interface QuerySuggestActionCreators {
  * @group Actions
  * @category QuerySuggest
  */
-export function loadQuerySuggestActions(
-  engine: CommerceEngine
-): QuerySuggestActionCreators {
+export function loadQuerySuggestActions(engine: CommerceEngine): QuerySuggestActionCreators {
   engine.addReducers({querySuggest});
 
   return {

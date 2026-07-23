@@ -36,11 +36,7 @@ describe('facet generic insight analytics actions', () => {
       })
     );
 
-    await logClearBreadcrumbs()()(
-      engine.dispatch,
-      () => engine.state,
-      {} as ThunkExtraArguments
-    );
+    await logClearBreadcrumbs()()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
     const expectedPayload = {
       caseContext: {
@@ -52,8 +48,6 @@ describe('facet generic insight analytics actions', () => {
     };
 
     expect(mockLogBreadcrumbResetAll).toHaveBeenCalledTimes(1);
-    expect(mockLogBreadcrumbResetAll.mock.calls[0][0]).toStrictEqual(
-      expectedPayload
-    );
+    expect(mockLogBreadcrumbResetAll.mock.calls[0][0]).toStrictEqual(expectedPayload);
   });
 });

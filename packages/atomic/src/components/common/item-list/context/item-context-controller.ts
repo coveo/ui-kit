@@ -2,10 +2,7 @@ import type {LitElement, ReactiveController, ReactiveControllerHost} from 'lit';
 import type {InitializableComponent} from '@/src/decorators/types.js';
 import {buildCustomEvent} from '@/src/utils/event-utils';
 
-type LitElementWithError = Omit<
-  Pick<InitializableComponent, 'error'>,
-  'error'
-> &
+type LitElementWithError = Omit<Pick<InitializableComponent, 'error'>, 'error'> &
   LitElement & {
     error: Error | null;
   };
@@ -14,9 +11,7 @@ const itemContextEventName = 'atomic/resolveResult';
 
 export class MissingParentError extends Error {
   constructor(elementName: string, parentName: string) {
-    super(
-      `The "${elementName}" element must be the child of an "${parentName}" element.`
-    );
+    super(`The "${elementName}" element must be the child of an "${parentName}" element.`);
   }
 }
 
@@ -42,9 +37,7 @@ function extractFolded<T = Record<string, unknown>>(
  * A reactive controller that manages item context data from parent components.
  * Handles fetching item data via custom events and manages error states.
  */
-export class ItemContextController<
-  T = Record<string, unknown>,
-> implements ReactiveController {
+export class ItemContextController<T = Record<string, unknown>> implements ReactiveController {
   private host: ReactiveControllerHost & LitElementWithError;
   private parentName: string;
   private folded: boolean;
@@ -78,15 +71,12 @@ export class ItemContextController<
   }
 
   private _resolveItemContext(): void {
-    const event = buildCustomEvent(
-      itemContextEventName,
-      (item: Record<string, unknown>) => {
-        this._item = extractFolded<T>(item, this.folded);
-        this._error = null;
-        this.host.error = null;
-        this.host.requestUpdate();
-      }
-    );
+    const event = buildCustomEvent(itemContextEventName, (item: Record<string, unknown>) => {
+      this._item = extractFolded<T>(item, this.folded);
+      this._error = null;
+      this.host.error = null;
+      this.host.requestUpdate();
+    });
 
     const canceled = this.host.dispatchEvent(event);
     if (canceled) {

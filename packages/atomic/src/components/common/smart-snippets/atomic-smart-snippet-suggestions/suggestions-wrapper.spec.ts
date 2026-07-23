@@ -3,10 +3,7 @@ import {html} from 'lit';
 import {beforeAll, describe, expect, it} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {
-  renderSuggestionsWrapper,
-  type SuggestionsWrapperProps,
-} from './suggestions-wrapper';
+import {renderSuggestionsWrapper, type SuggestionsWrapperProps} from './suggestions-wrapper';
 
 describe('#renderSuggestionsWrapper', () => {
   let i18n: i18n;
@@ -70,8 +67,6 @@ describe('#renderSuggestionsWrapper', () => {
 
   it('should have correct aria-label', async () => {
     const wrapper = await renderComponent();
-    expect(wrapper.getAttribute('aria-label')).toBe(
-      i18n.t('smart-snippet-people-also-ask')
-    );
+    expect(wrapper.getAttribute('aria-label')).toBe(i18n.t('smart-snippet-people-also-ask'));
   });
 });

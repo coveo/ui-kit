@@ -11,9 +11,7 @@ export class AtomicCommerceRecommendationListPageObject extends BasePageObject {
   }
 
   get recommendation() {
-    return this.page.locator(
-      '[part="result-list-grid-clickable-container outline"]'
-    );
+    return this.page.locator('[part="result-list-grid-clickable-container outline"]');
   }
 
   get indicators() {

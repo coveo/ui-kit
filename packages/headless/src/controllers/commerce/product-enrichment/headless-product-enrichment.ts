@@ -13,10 +13,7 @@ import {productEnrichmentReducer as productEnrichment} from '../../../features/c
 import type {ProductEnrichmentSection} from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {validateInitialState} from '../../../utils/validate-payload.js';
-import {
-  buildController,
-  type Controller,
-} from '../../controller/headless-controller.js';
+import {buildController, type Controller} from '../../controller/headless-controller.js';
 
 export interface ProductEnrichmentOptions extends FetchBadgesPayload {}
 
@@ -72,10 +69,7 @@ export interface ProductEnrichmentState {
   placementIds: string[];
 }
 
-function validateProductEnrichmentProps(
-  engine: CommerceEngine,
-  props?: ProductEnrichmentProps
-) {
+function validateProductEnrichmentProps(engine: CommerceEngine, props?: ProductEnrichmentProps) {
   validateInitialState(
     engine,
     productEnrichmentOptionsSchema,
@@ -135,9 +129,7 @@ export function buildProductEnrichment(
       const {placementIds, productId} = getState().productEnrichment;
 
       if (!placementIds || placementIds.length === 0) {
-        throw new Error(
-          'placementIds must be provided and non-empty to fetch badges'
-        );
+        throw new Error('placementIds must be provided and non-empty to fetch badges');
       }
 
       dispatch(

@@ -22,9 +22,7 @@ describe('atomic-result-rating', () => {
     getRatingContainer: (element: AtomicResultRating) =>
       element?.shadowRoot?.querySelector('[part="value-rating"]'),
     getRatingIcons: (element: AtomicResultRating) =>
-      element?.shadowRoot?.querySelectorAll(
-        'atomic-icon[part="value-rating-icon"]'
-      ),
+      element?.shadowRoot?.querySelectorAll('atomic-icon[part="value-rating-icon"]'),
   };
 
   beforeEach(async () => {
@@ -196,9 +194,7 @@ describe('atomic-result-rating', () => {
     await element.updateComplete;
 
     expect(mockedConsole.warn).toHaveBeenCalledWith(
-      expect.stringContaining(
-        'Prop validation failed for component atomic-result-rating'
-      ),
+      expect.stringContaining('Prop validation failed for component atomic-result-rating'),
       element
     );
   });

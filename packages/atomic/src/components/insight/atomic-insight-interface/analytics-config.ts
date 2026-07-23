@@ -25,10 +25,8 @@ function getLegacyAnalyticsConfig(
   searchEngineConfig: InsightEngineConfiguration,
   enabled: boolean
 ): InsightAnalyticsConfiguration {
-  const analyticsClientMiddleware = (
-    event: string,
-    payload: AnalyticsPayload
-  ) => augmentAnalytics(event, payload, searchEngineConfig);
+  const analyticsClientMiddleware = (event: string, payload: AnalyticsPayload) =>
+    augmentAnalytics(event, payload, searchEngineConfig);
 
   const defaultConfiguration: InsightAnalyticsConfiguration = {
     analyticsClientMiddleware,

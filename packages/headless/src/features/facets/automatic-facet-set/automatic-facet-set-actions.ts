@@ -1,10 +1,7 @@
 import {NumberValue, RecordValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import type {AutomaticFacetGeneratorOptions} from '../../../controllers/facets/automatic-facet-generator/headless-automatic-facet-generator-options.js';
-import {
-  requiredNonEmptyString,
-  validatePayload,
-} from '../../../utils/validate-payload.js';
+import {requiredNonEmptyString, validatePayload} from '../../../utils/validate-payload.js';
 import {facetValueDefinition} from '../facet-set/facet-set-validate-payload.js';
 import type {FacetValue} from '../facet-set/interfaces/response.js';
 import {facetIdDefinition} from '../generic/facet-actions-validation.js';
@@ -47,8 +44,7 @@ const optionsSchema = {
 };
 export const setOptions = createAction(
   'automaticFacet/setOptions',
-  (payload: Partial<AutomaticFacetGeneratorOptions>) =>
-    validatePayload(payload, optionsSchema)
+  (payload: Partial<AutomaticFacetGeneratorOptions>) => validatePayload(payload, optionsSchema)
 );
 
 export const deselectAllAutomaticFacetValues = createAction(

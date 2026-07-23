@@ -12,10 +12,7 @@ import type {
   SortParam,
   TrackingIdParam,
 } from '../commerce-api-params.js';
-import {
-  type CommerceApiMethod,
-  TRACKING_ID_IN_PATH_METHODS,
-} from '../commerce-metadata.js';
+import {type CommerceApiMethod, TRACKING_ID_IN_PATH_METHODS} from '../commerce-metadata.js';
 
 export type BaseCommerceAPIRequest = BaseParam &
   TrackingIdParam &
@@ -25,18 +22,11 @@ export type BaseCommerceAPIRequest = BaseParam &
   ClientIdParam &
   ContextParam;
 
-export type PaginatedCommerceAPIRequest = BaseCommerceAPIRequest &
-  PageParam &
-  PerPageParam;
+export type PaginatedCommerceAPIRequest = BaseCommerceAPIRequest & PageParam & PerPageParam;
 
-export type FilterableCommerceAPIRequest = PaginatedCommerceAPIRequest &
-  FacetsParam &
-  SortParam;
+export type FilterableCommerceAPIRequest = PaginatedCommerceAPIRequest & FacetsParam & SortParam;
 
-export const getRequestOptions = (
-  req: FilterableCommerceAPIRequest,
-  path: CommerceApiMethod
-) => {
+export const getRequestOptions = (req: FilterableCommerceAPIRequest, path: CommerceApiMethod) => {
   return {
     ...baseRequest(req, path),
     requestParams: prepareRequestParams(req),
@@ -44,18 +34,8 @@ export const getRequestOptions = (
 };
 
 const prepareRequestParams = (req: FilterableCommerceAPIRequest) => {
-  const {
-    trackingId,
-    clientId,
-    context,
-    language,
-    country,
-    currency,
-    page,
-    perPage,
-    facets,
-    sort,
-  } = req;
+  const {trackingId, clientId, context, language, country, currency, page, perPage, facets, sort} =
+    req;
   return {
     trackingId,
     clientId,
@@ -75,12 +55,7 @@ export const baseRequest = (
   path: CommerceApiMethod
 ): Pick<
   PlatformClientCallOptions,
-  | 'accessToken'
-  | 'method'
-  | 'contentType'
-  | 'url'
-  | 'origin'
-  | 'requestMetadata'
+  'accessToken' | 'method' | 'contentType' | 'url' | 'origin' | 'requestMetadata'
 > => {
   const {url, trackingId, accessToken} = req;
 
