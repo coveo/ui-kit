@@ -56,9 +56,15 @@ export interface ClientOptions {
     afterSendHooks: AnalyticsClientSendEventHook[];
     preprocessRequest?: PreprocessAnalyticsRequest;
     /**
-     * When `true`, browser privacy signals (Do Not Track and Global Privacy Control)
-     * are not honored and analytics is sent regardless of them. Defaults to `false`,
-     * which preserves the privacy-friendly behavior of honoring these signals.
+     * Whether to stop honoring browser privacy signals — Do Not Track (DNT) and
+     * Global Privacy Control (GPC) — when deciding whether to send analytics.
+     *
+     * Defaults to `false`, which preserves the privacy-friendly behavior of honoring
+     * these signals (analytics is disabled when a signal is present). When set to
+     * `true`, analytics is sent regardless of these signals, and the integrator that
+     * enables it is responsible for complying with the applicable privacy
+     * obligations. An explicit `enableAnalytics: false` always disables analytics,
+     * regardless of this option.
      */
     disableBrowserPrivacySignals?: boolean;
 }

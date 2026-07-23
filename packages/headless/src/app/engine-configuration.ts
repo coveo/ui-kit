@@ -150,17 +150,29 @@ export interface AnalyticsConfiguration {
    */
   proxyBaseUrl?: string;
   /**
-   * For **legacy** analytics only (`analyticsMode: 'legacy'`), whether to stop
-   * honoring browser privacy signals (Do Not Track and Global Privacy Control)
-   * when deciding whether to send analytics.
+   * Whether to stop honoring browser privacy signals — Do Not Track (DNT) and
+   * Global Privacy Control (GPC) — when deciding whether to send **legacy**
+   * analytics (`analyticsMode: 'legacy'`).
    *
-   * By default, Coveo libraries respect these signals. When set to `true`, your
-   * integration takes ownership of privacy decisions and legacy analytics events are
-   * sent even when a browser privacy signal is present. Enable this only if your
-   * privacy and compliance obligations permit it; Global Privacy Control is legally
-   * recognized as an opt-out mechanism in some jurisdictions.
+   * By default (`false`), Coveo libraries honor these signals: when the browser
+   * presents DNT or GPC, legacy analytics is automatically disabled. Setting this
+   * option to `true` is a deliberate choice that you configure in your own
+   * application code; legacy analytics events are then sent even when the browser
+   * presents a DNT or GPC signal.
    *
-   * Has no effect with `analyticsMode: 'next'`, which does not honor these signals.
+   * Coveo honors these signals by default and cannot determine whether overriding
+   * them is appropriate for your use case. If you enable this option, you are
+   * responsible for ensuring that doing so complies with the privacy laws and
+   * obligations that apply to you. Note that GPC is legally recognized as a valid
+   * opt-out mechanism in some jurisdictions (for example, under the California
+   * Consumer Privacy Act (CCPA) as amended by the California Privacy Rights Act
+   * (CPRA)).
+   *
+   * This option:
+   * - applies only when `analyticsMode` is explicitly set to `'legacy'`;
+   * - has no effect with `analyticsMode: 'next'`, which does not honor these signals;
+   * - does not override an explicit `enabled: false` or a runtime
+   *   `disableAnalytics()` call, which always disable analytics.
    *
    * @defaultValue `false`
    */
