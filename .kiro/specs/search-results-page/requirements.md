@@ -18,6 +18,7 @@ The Search Results Page is the primary view for displaying product search result
 - **SortPlaceholder**: A non-functional dropdown element displaying a sort option label (e.g., "Sort by: Relevance"), positioned at the top-right of the product list area. It serves as a visual placeholder until a sort controller is available in Thermidor.
 - **AppShell**: The parent component that manages the persisted RoutedInterface ref and passes it to SearchResultsPage.
 - **useBuildController**: A React hook that instantiates a Thermidor controller once (via `useRef`) and subscribes to its state via `useSyncExternalStore`.
+- **PageSizeSelector**: A dropdown control positioned adjacent to the Pagination component that allows users to change the number of products displayed per page by calling `paginationController.setPageSize(size)`.
 
 ## Requirements
 
@@ -52,16 +53,15 @@ The Search Results Page is the primary view for displaying product search result
 
 #### Acceptance Criteria
 
-1. WHEN the PaginationController state has `totalPages` greater than one, THE Pagination component SHALL render a "Previous" button, a "Next" button, and numbered page buttons.
+1. WHEN the PaginationController state has `totalPages` greater than one, THE Pagination component SHALL render a previous-page button (chevron back icon), a next-page button (chevron forward icon), and numbered page buttons.
 2. WHEN the PaginationController state has `totalPages` equal to one or zero, THE Pagination component SHALL not render any navigation controls.
 3. WHEN the user clicks a numbered page button, THE Pagination component SHALL call `paginationController.selectPage(page)` with the zero-indexed page number corresponding to that button.
-4. WHEN the user clicks the "Next" button, THE Pagination component SHALL call `paginationController.selectPage(currentPage + 1)`.
-5. WHEN the user clicks the "Previous" button, THE Pagination component SHALL call `paginationController.selectPage(currentPage - 1)`.
-6. WHILE the current page is the first page (page equals zero), THE Pagination component SHALL disable the "Previous" button to prevent user activation.
-7. WHILE the current page is the last page (page equals `totalPages - 1`), THE Pagination component SHALL disable the "Next" button to prevent user activation.
-8. THE Pagination component SHALL display the current page as a one-indexed number (`page + 1`) and the total as `totalPages` (e.g., "Page 2 of 5").
-9. WHEN `totalPages` exceeds 5, THE Pagination component SHALL display at most 5 visible page number buttons with an ellipsis indicator for omitted ranges.
-10. THE Pagination component SHALL be centered horizontally within the main content area.
+4. WHEN the user clicks the next-page button, THE Pagination component SHALL call `paginationController.selectPage(currentPage + 1)`.
+5. WHEN the user clicks the previous-page button, THE Pagination component SHALL call `paginationController.selectPage(currentPage - 1)`.
+6. WHILE the current page is the first page (page equals zero), THE Pagination component SHALL disable the previous-page button to prevent user activation.
+7. WHILE the current page is the last page (page equals `totalPages - 1`), THE Pagination component SHALL disable the next-page button to prevent user activation.
+8. WHEN `totalPages` exceeds 5, THE Pagination component SHALL display at most 5 visible page number buttons with an ellipsis indicator for omitted ranges.
+9. THE Pagination component SHALL be aligned to the left within the bottom row of the main content area.
 
 ### Requirement 4: Controller Integration with Persisted RoutedInterface
 
@@ -123,3 +123,17 @@ The Search Results Page is the primary view for displaying product search result
 2. WHEN the user clicks the SortPlaceholder, THE SortPlaceholder SHALL display a toast notification with the text "Not supported yet" that auto-dismisses after 3 seconds.
 3. THE SortPlaceholder SHALL visually resemble a standard dropdown control (with a downward arrow indicator) to communicate its future interactive purpose.
 4. THE SortPlaceholder SHALL NOT trigger any controller actions or modify application state beyond displaying the toast notification.
+
+### Requirement 9: Page Size Selector
+
+**User Story:** As a user, I want to change how many products are displayed per page, so that I can view more or fewer results at once depending on my preference.
+
+#### Acceptance Criteria
+
+1. WHEN the SearchResultsPage renders, THE PageSizeSelector SHALL display a `<select>` element with the options 10, 25, and 50 as available page sizes.
+2. THE PageSizeSelector SHALL reflect the current `paginationController.state.pageSize` as its selected value.
+3. WHEN the user selects a different page size option, THE PageSizeSelector SHALL call `paginationController.setPageSize(newSize)` with the newly selected numeric value.
+4. WHEN the user selects a different page size option, THE PageSizeSelector SHALL call `paginationController.selectPage(0)` to reset navigation to the first page.
+5. THE PageSizeSelector SHALL be positioned to the right of the Pagination component, within the same horizontal row at the bottom of the main content area.
+6. THE PageSizeSelector SHALL include a visible label "Products per page" associated with the select element via an HTML `<label>` element or `aria-label` attribute for accessibility.
+7. THE PageSizeSelector SHALL receive the `PaginationController` directly as a prop, following the same controller-passing pattern used by the Pagination and ProductGrid components.

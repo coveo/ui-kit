@@ -26,6 +26,7 @@ graph TD
     MainContent --> TopRow[Top Row]
     MainContent --> ProductGrid
     MainContent --> Pagination
+    MainContent --> PageSizeSelector
     TopRow --> QuerySummaryPlaceholder
     TopRow --> SortPlaceholder
     ProductGrid --> ProductCard
@@ -66,10 +67,14 @@ src/components/
 │   │   ├── QuerySummaryPlaceholder.tsx
 │   │   ├── QuerySummaryPlaceholder.module.css
 │   │   └── QuerySummaryPlaceholder.test.tsx
-│   └── SortPlaceholder/
-│       ├── SortPlaceholder.tsx
-│       ├── SortPlaceholder.module.css
-│       └── SortPlaceholder.test.tsx
+│   ├── SortPlaceholder/
+│   │   ├── SortPlaceholder.tsx
+│   │   ├── SortPlaceholder.module.css
+│   │   └── SortPlaceholder.test.tsx
+│   └── PageSizeSelector/
+│       ├── PageSizeSelector.tsx
+│       ├── PageSizeSelector.module.css
+│       └── PageSizeSelector.test.tsx
 ```
 
 ### Component Interfaces
@@ -107,6 +112,11 @@ interface QuerySummaryPlaceholderProps {
 interface SortPlaceholderProps {
   onToast: () => void;
 }
+
+// PageSizeSelector.tsx
+interface PageSizeSelectorProps {
+  controller: PaginationController;
+}
 ```
 
 ### Design Decisions
@@ -122,6 +132,12 @@ interface SortPlaceholderProps {
 5. **Toast mechanism is lifted to `SearchResultsPage`** and shared between `SortPlaceholder` and suggestion actions, reusing the existing `useState`/`useRef` timer pattern already in the current codebase.
 
 6. **RoutedInterface null guard:** If `routedInterface` is unexpectedly null/undefined, the component returns `null` early without building controllers. In practice, `AppShell` only renders `SearchResultsPage` when the ref is non-null, but the guard provides defense-in-depth.
+
+### PageSizeSelector Design Notes
+
+The PageSizeSelector receives `PaginationController` directly (same pattern as Pagination). It subscribes to the controller state via `useSyncExternalStore` to read the current `pageSize`, and renders a native `<select>` element with preset options `[10, 25, 50]`. On change, it calls both `controller.setPageSize(newSize)` and `controller.selectPage(0)` to avoid an out-of-bounds page index.
+
+**Layout integration:** The bottom row of the main content area uses a flex container with `justify-content: space-between`. Pagination is aligned to the left, PageSizeSelector to the right.
 
 ## Data Models
 
@@ -218,9 +234,10 @@ function truncate(text: string, maxLen: number): string {
 | SearchResultsPage | Renders header with PromptInput, sidebar, main content; builds all 3 controllers via mock interface; returns null when routedInterface is null |
 | ProductCard | Renders name, brand, price; shows placeholder when no image; shows promo price correctly; displays title attribute with full product name |
 | ProductGrid | Renders correct number of cards; shows empty state message |
-| Pagination | Renders nothing when totalPages <= 1; calls onSelectPage with correct args; disables Previous on first page; disables Next on last page; enables both when in middle |
+| Pagination | Renders nothing when totalPages <= 1; calls onSelectPage with correct args; disables previous-page on first page; disables next-page on last page; enables both when in middle; uses chevron icons for navigation |
 | QuerySummaryPlaceholder | Renders correct text for each state combination (query+count, query only, count only, neither) |
 | SortPlaceholder | Shows label; triggers toast on click |
 | `computeVisiblePages` | Returns all pages when totalPages ≤ 5; returns correct window when current page is at start, middle, and end; always includes first and last page; returns at most 5 items for large page counts |
 | `resolveProductImage` | Returns first thumbnail when thumbnails exist; falls back to first image when no thumbnails; returns null when neither thumbnails nor images exist |
 | `formatQuerySummary` / `truncate` | Correct formatting for all state combinations (query+count, query-only, count-only, neither); truncates query at 100 characters with ellipsis; preserves short queries verbatim; formats count with locale separators |
+| PageSizeSelector | Renders select with options 10, 25, 50; reflects current pageSize; calls setPageSize on change; calls selectPage(0) on change; has accessible label "Products per page" |
