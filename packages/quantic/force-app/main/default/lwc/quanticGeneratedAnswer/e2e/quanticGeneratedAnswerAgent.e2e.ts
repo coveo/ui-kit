@@ -1,5 +1,5 @@
 import {testAgent, expect} from './fixture-agent';
-import agentData from './agentData';
+import agentData, {turnLimitErrorStream, genericErrorStream} from './agentData';
 import {
   analyticsModeTest,
   AnalyticsModeEnum,
@@ -230,4 +230,69 @@ analyticsModeTest.forEach((analytics) => {
       }
     );
   });
+});
+
+testAgent.describe('quantic generated answer - agent follow-up error handling', () => {
+  testAgent.use({
+    options: {agentId: exampleAgentId},
+  });
+
+  testAgent(
+    'should display a generic error message when the follow-up request fails due to a network error',
+    async ({generatedAnswer}) => {
+      await generatedAnswer.streamEndAnalyticRequestPromise;
+      await generatedAnswer.mockAgentFollowUpNetworkError();
+
+      await generatedAnswer.typeFollowUpQuestion('follow-up question');
+      await generatedAnswer.submitFollowUp();
+
+      await expect(generatedAnswer.threadItems).toHaveCount(2);
+
+      const errorMessage = generatedAnswer.threadItems
+        .last()
+        .getByTestId('generated-answer-body__error');
+      await expect(errorMessage).toBeVisible();
+      await expect(errorMessage).toContainText('Something went wrong.');
+    }
+  );
+
+  testAgent(
+    'should display a distinct turn-limit message when the follow-up SSE stream reports a turn-limit error',
+    async ({generatedAnswer}) => {
+      await generatedAnswer.streamEndAnalyticRequestPromise;
+      await generatedAnswer.mockAgentFollowUpResponse([turnLimitErrorStream]);
+
+      await generatedAnswer.typeFollowUpQuestion('follow-up question');
+      await generatedAnswer.submitFollowUp();
+
+      await expect(generatedAnswer.threadItems).toHaveCount(2);
+
+      const errorMessage = generatedAnswer.threadItems
+        .last()
+        .getByTestId('generated-answer-body__error');
+      await expect(errorMessage).toBeVisible();
+      await expect(errorMessage).toContainText(
+        'Conversation turn limit reached. Please start a new conversation.'
+      );
+    }
+  );
+
+  testAgent(
+    'should display a generic error message when the follow-up SSE stream reports a generic error',
+    async ({generatedAnswer}) => {
+      await generatedAnswer.streamEndAnalyticRequestPromise;
+      await generatedAnswer.mockAgentFollowUpResponse([genericErrorStream]);
+
+      await generatedAnswer.typeFollowUpQuestion('follow-up question');
+      await generatedAnswer.submitFollowUp();
+
+      await expect(generatedAnswer.threadItems).toHaveCount(2);
+
+      const errorMessage = generatedAnswer.threadItems
+        .last()
+        .getByTestId('generated-answer-body__error');
+      await expect(errorMessage).toBeVisible();
+      await expect(errorMessage).toContainText('Something went wrong.');
+    }
+  );
 });

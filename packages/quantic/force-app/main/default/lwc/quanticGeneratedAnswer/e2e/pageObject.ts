@@ -549,6 +549,18 @@ export class GeneratedAnswerObject {
     });
   }
 
+  /**
+   * Mocks the agent follow-up endpoint to simulate a network/HTTP failure (e.g., a 500 response with no body).
+   * Used to test the follow-up error handling when the underlying HTTP request itself fails.
+   */
+  async mockAgentFollowUpNetworkError(status = 500) {
+    await this.page.route('**/agents/*/follow-up', (route) => {
+      route.fulfill({
+        status,
+      });
+    });
+  }
+
   get followUpInput(): Locator {
     return this.page.locator(
       'c-quantic-generated-answer-follow-up-input textarea'
