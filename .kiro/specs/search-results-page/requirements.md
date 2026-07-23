@@ -28,10 +28,11 @@ The Search Results Page is the primary view for displaying product search result
 
 #### Acceptance Criteria
 
-1. WHEN the SearchResultsPage renders, THE SearchResultsPage SHALL display a header bar containing only a PromptInput component (the same component used on the landing page) configured without suggestion pills and with a single-row text area. The header SHALL NOT contain a logo element.
+1. WHEN the SearchResultsPage renders, THE SearchResultsPage SHALL display a header bar containing only a PromptInput component (the same component used on the landing page) configured without suggestion pills and with a single-row text area. The PromptInput SHALL occupy one third of the total available width and be horizontally centered within the header. The header SHALL NOT contain a logo element.
 2. WHEN the SearchResultsPage renders, THE SearchResultsPage SHALL display a sidebar region positioned to the left of the main content area, containing the visible text "Facets (coming soon)".
-3. WHEN the SearchResultsPage renders, THE SearchResultsPage SHALL display a main content area with the following top-to-bottom layout: a top row containing the QuerySummaryPlaceholder positioned at the left and the SortPlaceholder positioned at the right, followed by the ProductGrid component, followed by the Pagination component centered at the bottom.
-4. THE SearchResultsPage SHALL use CSS Modules for all styling.
+3. WHEN the SearchResultsPage renders, THE SearchResultsPage SHALL display a main content area with the following top-to-bottom layout: a top row containing the QuerySummaryPlaceholder positioned at the left and the SortPlaceholder positioned at the right, followed by the ProductGrid component, followed by a bottom row with the Pagination aligned to the left and the PageSizeSelector aligned to the right.
+4. THE SearchResultsPage SHALL use a 12-column proportional grid layout with a 24px column gap: 1/12 empty left gutter, 2/12 facet sidebar, 8/12 main content, 1/12 empty right gutter. The header spans the full width above all columns.
+5. THE SearchResultsPage SHALL use CSS Modules for all styling.
 
 ### Requirement 2: Product Grid Display
 
@@ -46,6 +47,7 @@ The Search Results Page is the primary view for displaying product search result
 5. WHEN a product has an `ec_promo_price` that is both defined and numerically less than `ec_price`, THE ProductCard SHALL display the original `ec_price` with a visible strikethrough style and the `ec_promo_price` as the current price.
 6. THE ProductGrid SHALL arrange ProductCard instances in a responsive CSS grid layout that displays a minimum of 1 column on viewports narrower than 600px and a maximum of 4 columns on viewports 1200px or wider.
 7. IF `ec_name` text exceeds 2 lines within the ProductCard layout, THEN THE ProductCard SHALL truncate the text with an ellipsis and expose the full name via a `title` attribute.
+8. THE ProductCard SHALL display a pointer cursor on hover to indicate interactivity.
 
 ### Requirement 3: Pagination Controls
 
@@ -83,11 +85,11 @@ The Search Results Page is the primary view for displaying product search result
 
 #### Acceptance Criteria
 
-1. WHEN the SearchBoxController state has a non-empty `query`, THE QuerySummaryPlaceholder SHALL display text in the format "Showing results for \"{query}\"" where `{query}` is the verbatim string from controller state, truncated to 100 characters followed by "…" if it exceeds that length.
-2. IF the PaginationController state `totalCount` is greater than 0, THEN THE QuerySummaryPlaceholder SHALL display the total result count as a locale-formatted integer (e.g., "1,234") adjacent to the query text.
-3. IF the SearchBoxController state `query` is an empty string, THEN THE QuerySummaryPlaceholder SHALL hide the query portion and display only the result count (when totalCount is greater than 0).
-4. IF the PaginationController state `totalCount` is 0 AND the SearchBoxController state `query` is non-empty, THEN THE QuerySummaryPlaceholder SHALL display "No results for \"{query}\"".
-5. IF both the SearchBoxController state `query` is an empty string AND the PaginationController state `totalCount` is 0, THEN THE QuerySummaryPlaceholder SHALL render nothing (empty output).
+1. WHEN the PaginationController state `totalCount` is greater than 0, THE QuerySummaryPlaceholder SHALL display text in the format "Products **{first}**-**{last}** of **{total}** for **{query}**" where `{first}` is `firstResult + 1`, `{last}` is `firstResult + productCount` (the actual number of products displayed on the current page), `{total}` is the locale-formatted `totalCount`, and `{query}` is the search query truncated to 100 characters. The values for first, last, total, and query SHALL be rendered in bold (`<strong>` elements).
+2. IF the SearchBoxController state `query` is an empty string AND totalCount is greater than 0, THEN THE QuerySummaryPlaceholder SHALL omit the "for {query}" portion and display only "Products **{first}**-**{last}** of **{total}**".
+3. IF the PaginationController state `totalCount` is 0 AND the SearchBoxController state `query` is non-empty, THEN THE QuerySummaryPlaceholder SHALL display "No results for **{query}**" with the query in bold.
+4. IF both the SearchBoxController state `query` is an empty string AND the PaginationController state `totalCount` is 0, THEN THE QuerySummaryPlaceholder SHALL render nothing (empty output).
+5. THE QuerySummaryPlaceholder SHALL receive `query`, `totalCount`, `firstResult`, `pageSize`, and `productCount` as props.
 6. THE QuerySummaryPlaceholder SHALL be positioned at the top-left of the main content area, left-aligned within the top row.
 
 ### Requirement 6: Header Input Behavior
@@ -109,7 +111,7 @@ The Search Results Page is the primary view for displaying product search result
 #### Acceptance Criteria
 
 1. WHEN the SearchResultsPage renders, THE SearchResultsPage SHALL display a sidebar area on the left side of the content region with a visible boundary and the text "Facets (coming soon)".
-2. THE sidebar placeholder SHALL occupy a fixed width between 200px and 300px and SHALL NOT cause the main content area to shift or resize when present.
+2. THE sidebar placeholder SHALL occupy a proportional width of 2/12 of the available page width (as defined by the page grid) and SHALL NOT cause the main content area to shift or resize when present.
 3. WHEN the viewport width is below 768px, THE sidebar placeholder SHALL be hidden to preserve content area usability.
 4. THE sidebar placeholder SHALL be non-interactive — it SHALL NOT respond to click, focus, or other user input events.
 
@@ -119,9 +121,9 @@ The Search Results Page is the primary view for displaying product search result
 
 #### Acceptance Criteria
 
-1. WHEN the SearchResultsPage renders, THE SortPlaceholder SHALL display a dropdown-styled element with the label "Sort by: Relevance" positioned at the top-right of the main content area, in the same row as the QuerySummaryPlaceholder.
-2. WHEN the user clicks the SortPlaceholder, THE SortPlaceholder SHALL display a toast notification with the text "Not supported yet" that auto-dismisses after 3 seconds.
-3. THE SortPlaceholder SHALL visually resemble a standard dropdown control (with a downward arrow indicator) to communicate its future interactive purpose.
+1. WHEN the SearchResultsPage renders, THE SortPlaceholder SHALL display a bold "Sort by:" label to the left of a native `<select>` element showing "Relevance" as its only option, positioned at the top-right of the main content area, in the same row as the QuerySummaryPlaceholder.
+2. WHEN the user clicks the SortPlaceholder select, THE SortPlaceholder SHALL display a toast notification with the text "Not supported yet" that auto-dismisses after 3 seconds.
+3. THE SortPlaceholder SHALL use a native `<select>` element (matching the PageSizeSelector pattern) with 8px padding. The bold "Sort by:" label SHALL be outside the select, to its left, with 8px gap.
 4. THE SortPlaceholder SHALL NOT trigger any controller actions or modify application state beyond displaying the toast notification.
 
 ### Requirement 9: Page Size Selector
@@ -135,5 +137,5 @@ The Search Results Page is the primary view for displaying product search result
 3. WHEN the user selects a different page size option, THE PageSizeSelector SHALL call `paginationController.setPageSize(newSize)` with the newly selected numeric value.
 4. WHEN the user selects a different page size option, THE PageSizeSelector SHALL call `paginationController.selectPage(0)` to reset navigation to the first page.
 5. THE PageSizeSelector SHALL be positioned to the right of the Pagination component, within the same horizontal row at the bottom of the main content area.
-6. THE PageSizeSelector SHALL include a visible label "Products per page" associated with the select element via an HTML `<label>` element or `aria-label` attribute for accessibility.
+6. THE PageSizeSelector SHALL include a visible bold label "Products per page:" associated with the select element via an HTML `<label>` element for accessibility.
 7. THE PageSizeSelector SHALL receive the `PaginationController` directly as a prop, following the same controller-passing pattern used by the Pagination and ProductGrid components.

@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Search Results Page is the primary product-browsing view in the `demo-react` Thermidor sample application. It displays a three-region layout — header, sidebar, and main content — built on top of Thermidor's `ProductListController`, `PaginationController`, and `SearchBoxController`. The page receives a persisted `RoutedInterface` from the `AppShell` parent, builds controllers once per mount via the existing `useBuildController` hook, and remounts cleanly when the interface identity changes (via React key strategy).
+The Search Results Page is the primary product-browsing view in the `demo-react` Thermidor sample application. It uses a 12-column proportional CSS Grid layout (1fr 2fr 8fr 1fr with 24px gap) — empty gutters on left/right, a facet sidebar, and a main content area — built on top of Thermidor's `ProductListController`, `PaginationController`, and `SearchBoxController`. The header spans the full width with a centered PromptInput at 1/3 width. The page receives a persisted `RoutedInterface` from the `AppShell` parent, builds controllers once per mount via the existing `useBuildController` hook, and remounts cleanly when the interface identity changes (via React key strategy).
 
 Key design goals:
 - Reuse existing infrastructure (`PromptInput`, `useSuggestions`, `useBuildController`, toast mechanism)
@@ -106,6 +106,9 @@ interface PaginationProps {
 interface QuerySummaryPlaceholderProps {
   query: string;
   totalCount: number;
+  firstResult: number;
+  pageSize: number;
+  productCount: number;
 }
 
 // SortPlaceholder.tsx
@@ -201,14 +204,16 @@ function resolveProductImage(product: Product): string | null {
 
 ### Query Summary Formatting
 
-```typescript
-function formatQuerySummary(query: string, totalCount: number): string | null {
-  if (!query && totalCount === 0) return null;
-  if (totalCount === 0 && query) return `No results for "${truncate(query, 100)}"`;
-  if (!query && totalCount > 0) return totalCount.toLocaleString();
-  return `Showing results for "${truncate(query, 100)}" (${totalCount.toLocaleString()})`;
-}
+The `QuerySummaryPlaceholder` renders inline JSX with `<strong>` elements for emphasis:
 
+- **With results + query:** `Products <strong>1</strong>-<strong>10</strong> of <strong>42</strong> for <strong>shoes</strong>`
+- **With results, no query:** `Products <strong>1</strong>-<strong>25</strong> of <strong>100</strong>`
+- **No results + query:** `No results for <strong>nonexistent</strong>`
+- **No results, no query:** renders nothing (returns `null`)
+
+Range is computed as: `firstIndex = firstResult + 1`, `lastIndex = firstResult + productCount`
+
+```typescript
 function truncate(text: string, maxLen: number): string {
   return text.length > maxLen ? text.slice(0, maxLen) + '…' : text;
 }
@@ -235,8 +240,8 @@ function truncate(text: string, maxLen: number): string {
 | ProductCard | Renders name, brand, price; shows placeholder when no image; shows promo price correctly; displays title attribute with full product name |
 | ProductGrid | Renders correct number of cards; shows empty state message |
 | Pagination | Renders nothing when totalPages <= 1; calls onSelectPage with correct args; disables previous-page on first page; disables next-page on last page; enables both when in middle; uses chevron icons for navigation |
-| QuerySummaryPlaceholder | Renders correct text for each state combination (query+count, query only, count only, neither) |
-| SortPlaceholder | Shows label; triggers toast on click |
+| QuerySummaryPlaceholder | Renders range, total, and query with bold formatting; omits query when empty; shows "No results for" when totalCount is 0; renders nothing when both empty |
+| SortPlaceholder | Shows "Sort by:" label and "Relevance" value; triggers toast on click |
 | `computeVisiblePages` | Returns all pages when totalPages ≤ 5; returns correct window when current page is at start, middle, and end; always includes first and last page; returns at most 5 items for large page counts |
 | `resolveProductImage` | Returns first thumbnail when thumbnails exist; falls back to first image when no thumbnails; returns null when neither thumbnails nor images exist |
 | `formatQuerySummary` / `truncate` | Correct formatting for all state combinations (query+count, query-only, count-only, neither); truncates query at 100 characters with ellipsis; preserves short queries verbatim; formats count with locale separators |
