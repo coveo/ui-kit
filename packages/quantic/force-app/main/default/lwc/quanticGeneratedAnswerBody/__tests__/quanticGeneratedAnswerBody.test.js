@@ -269,6 +269,29 @@ describe('c-quantic-generated-answer-body', () => {
       expect(error).not.toBeNull();
       expect(content).toBeNull();
     });
+
+    it('should render the generic error message when the error has no code (e.g., a network/transport failure)', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        generatedAnswer: {
+          ...defaultOptions.generatedAnswer,
+          answer: '',
+          // @ts-ignore
+          error: {
+            message:
+              'An error occurred while starting the follow-up answer generation.',
+          },
+        },
+      });
+      await flushPromises();
+
+      const error = element.shadowRoot.querySelector(selectors.error);
+
+      expect(error).not.toBeNull();
+      expect(error.textContent).toContain(
+        'Something went wrong while generating the answer. Please try again later.'
+      );
+    });
   });
 
   describe('rendering of actions', () => {
