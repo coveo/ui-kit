@@ -18,13 +18,16 @@ import {
   setFollowUpIsLoading,
   setFollowUpIsStreaming,
 } from '../../../../../features/follow-up-answers/follow-up-answers-actions.js';
-import * as generatedAnswerAnalyticsActions from '../../../../../features/generated-answer/generated-answer-analytics-actions.js';
 import {GeneratedAnswerSseErrorCode} from '../../../../../features/generated-answer/sse-generated-answer-errors.js';
 import {createFollowUpStrategy} from './follow-up-answer-strategy.js';
 
 describe('createFollowUpStrategy', () => {
   let dispatch: ReturnType<typeof vi.fn> & Dispatch;
   let strategy: AgentSubscriber;
+  let analytics: {
+    logGeneratedAnswerStreamEnd: ReturnType<typeof vi.fn>;
+    logGeneratedAnswerResponseLinked: ReturnType<typeof vi.fn>;
+  };
 
   afterEach(() => {
     vi.restoreAllMocks();
@@ -34,7 +37,11 @@ describe('createFollowUpStrategy', () => {
 
   beforeEach(() => {
     dispatch = vi.fn() as unknown as ReturnType<typeof vi.fn> & Dispatch;
-    strategy = createFollowUpStrategy(dispatch);
+    analytics = {
+      logGeneratedAnswerStreamEnd: vi.fn(),
+      logGeneratedAnswerResponseLinked: vi.fn(),
+    };
+    strategy = createFollowUpStrategy(dispatch, analytics as any);
     strategy.onRunStartedEvent!({event: {runId}} as any);
     vi.clearAllMocks();
   });
@@ -154,7 +161,7 @@ describe('createFollowUpStrategy', () => {
   });
 
   it('records turn limit failures using the input run id when no run was started', () => {
-    strategy = createFollowUpStrategy(dispatch);
+    strategy = createFollowUpStrategy(dispatch, analytics as any);
 
     strategy.onRunErrorEvent!({
       input: {runId: 'run-456'},
@@ -225,16 +232,11 @@ describe('createFollowUpStrategy', () => {
   it('dispatches stream end and response linked analytics when a run finishes', () => {
     const streamEndAction = vi.fn() as any;
     const responseLinkedAction = vi.fn() as any;
-    const streamEndSpy = vi
-      .spyOn(generatedAnswerAnalyticsActions, 'logGeneratedAnswerStreamEnd')
-      .mockReturnValue(streamEndAction);
-    const responseLinkedSpy = vi
-      .spyOn(
-        generatedAnswerAnalyticsActions,
-        'logGeneratedAnswerResponseLinked'
-      )
-      .mockReturnValue(responseLinkedAction);
-    strategy = createFollowUpStrategy(dispatch);
+    analytics.logGeneratedAnswerStreamEnd.mockReturnValue(streamEndAction);
+    analytics.logGeneratedAnswerResponseLinked.mockReturnValue(
+      responseLinkedAction
+    );
+    strategy = createFollowUpStrategy(dispatch, analytics as any);
     strategy.onRunStartedEvent!({event: {runId}} as any);
     vi.clearAllMocks();
 
@@ -249,8 +251,14 @@ describe('createFollowUpStrategy', () => {
       1,
       followUpCompleted({answerId: runId, cannotAnswer: false})
     );
-    expect(streamEndSpy).toHaveBeenCalledWith(true, runId, true);
-    expect(responseLinkedSpy).toHaveBeenCalledWith(runId);
+    expect(analytics.logGeneratedAnswerStreamEnd).toHaveBeenCalledWith(
+      true,
+      runId,
+      true
+    );
+    expect(analytics.logGeneratedAnswerResponseLinked).toHaveBeenCalledWith(
+      runId
+    );
     expect(dispatch).toHaveBeenNthCalledWith(2, streamEndAction);
     expect(dispatch).toHaveBeenNthCalledWith(3, responseLinkedAction);
   });

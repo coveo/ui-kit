@@ -494,6 +494,7 @@ export const generatedAnswerAnalyticsClient = {
   logGeneratedAnswerHideAnswers,
   logGeneratedAnswerShowAnswers,
   logGeneratedAnswerStreamEnd,
+  logGeneratedAnswerResponseLinked,
   logGeneratedAnswerFeedback,
   logDislikeGeneratedAnswer,
   logLikeGeneratedAnswer,

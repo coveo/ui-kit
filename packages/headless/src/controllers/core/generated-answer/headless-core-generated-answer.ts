@@ -3,6 +3,7 @@ import type {
   CustomAction,
   LegacySearchAction,
 } from '../../../features/analytics/analytics-utils.js';
+import type {AnswerGenerationAnalyticsClient} from '../../../features/generated-answer/answer-generation-analytics-client.js';
 import {
   closeGeneratedAnswerFeedbackModal,
   collapseGeneratedAnswer,
@@ -134,7 +135,7 @@ export interface GeneratedAnswer extends Controller {
   ): void;
 }
 
-export interface GeneratedAnswerAnalyticsClient {
+export interface GeneratedAnswerAnalyticsClient extends AnswerGenerationAnalyticsClient {
   /** @deprecated */
   logLikeGeneratedAnswer(): CustomAction;
   logLikeGeneratedAnswer(answerId?: string): CustomAction;

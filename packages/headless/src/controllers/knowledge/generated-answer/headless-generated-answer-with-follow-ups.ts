@@ -125,7 +125,10 @@ export function buildGeneratedAnswerWithFollowUps(
     organizationId,
     environment
   );
-  const followUpStrategy = createFollowUpStrategy(engine.dispatch);
+  const followUpStrategy = createFollowUpStrategy(
+    engine.dispatch,
+    analyticsClient
+  );
   const answerRunner = createAnswerRunner();
 
   return {
@@ -153,7 +156,8 @@ export function buildGeneratedAnswerWithFollowUps(
       answerRunner.run(
         engine.state,
         engine.dispatch,
-        () => engine.navigatorContext
+        () => engine.navigatorContext,
+        analyticsClient
       );
     },
 

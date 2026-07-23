@@ -22,10 +22,7 @@ import {
   updateError,
   updateMessage,
 } from '../../../../../features/generated-answer/generated-answer-actions.js';
-import {
-  logGeneratedAnswerResponseLinked,
-  logGeneratedAnswerStreamEnd,
-} from '../../../../../features/generated-answer/generated-answer-analytics-actions.js';
+import type {AnswerGenerationAnalyticsClient} from '../../../../../features/generated-answer/answer-generation-analytics-client.js';
 import type {
   GenerationStepName,
   GenerationToolCallArgsGeneric,
@@ -37,7 +34,8 @@ import {mapRunErrorCode} from '../../../../../features/generated-answer/sse-gene
  * Creates an AgentSubscriber that handles answer streaming events
  */
 export const createHeadAnswerStrategy = (
-  dispatch: ThunkDispatch<unknown, unknown, UnknownAction>
+  dispatch: ThunkDispatch<unknown, unknown, UnknownAction>,
+  analytics: AnswerGenerationAnalyticsClient
 ): AgentSubscriber => {
   let runId = '';
   let answerHasText = false;
@@ -191,9 +189,13 @@ export const createHeadAnswerStrategy = (
       dispatch(setCannotAnswer(!answerGenerated));
       dispatch(setIsStreaming(false));
       dispatch(
-        logGeneratedAnswerStreamEnd(answerGenerated, runId, answerTextIsEmpty)
+        analytics.logGeneratedAnswerStreamEnd(
+          answerGenerated,
+          runId,
+          answerTextIsEmpty
+        )
       );
-      dispatch(logGeneratedAnswerResponseLinked());
+      dispatch(analytics.logGeneratedAnswerResponseLinked());
     },
   };
 };

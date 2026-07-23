@@ -25,6 +25,8 @@ import type {
   CoreConfigurationState,
 } from '../features/configuration/configuration-state.js';
 import {versionReducer as version} from '../features/debug/version-slice.js';
+import type {AnswerGenerationAnalyticsClient} from '../features/generated-answer/answer-generation-analytics-client.js';
+import {generatedAnswerAnalyticsClient} from '../features/generated-answer/generated-answer-analytics-actions.js';
 import type {SearchParametersState} from '../state/search-app-state.js';
 import {doNotTrack} from '../utils/utils.js';
 import {analyticsMiddleware} from './analytics-middleware.js';
@@ -351,7 +353,8 @@ function createStore<
   const middlewares = createMiddleware(
     options,
     thunkExtraArguments.logger,
-    () => thunkExtraArguments.navigatorContext
+    () => thunkExtraArguments.navigatorContext,
+    thunkExtraArguments.answerGenerationAnalyticsClient
   );
 
   return configureStore({
@@ -366,7 +369,8 @@ function createStore<
 function createMiddleware<Reducers extends ReducersMapObject>(
   options: EngineOptions<Reducers>,
   logger: Logger,
-  getNavigatorContext: () => NavigatorContext
+  getNavigatorContext: () => NavigatorContext,
+  generationAnalyticsClient?: AnswerGenerationAnalyticsClient
 ) {
   const {renewAccessToken} = options.configuration;
   const renewTokenMiddleware = createRenewAccessTokenMiddleware(
@@ -375,6 +379,8 @@ function createMiddleware<Reducers extends ReducersMapObject>(
   );
   const generateAnswerListener = createGenerateAnswerListener({
     getNavigatorContext,
+    generationAnalyticsClient:
+      generationAnalyticsClient ?? generatedAnswerAnalyticsClient,
   });
 
   return [

@@ -2,6 +2,7 @@ import {createListenerMiddleware, type Dispatch} from '@reduxjs/toolkit';
 import {createAnswerRunner} from '../../api/knowledge/answer-generation/agents/answer-agent/answer-agent-runner.js';
 import {resetFollowUpAnswers} from '../../features/follow-up-answers/follow-up-answers-actions.js';
 import {resetAnswer} from '../../features/generated-answer/generated-answer-actions.js';
+import type {AnswerGenerationAnalyticsClient} from '../../features/generated-answer/answer-generation-analytics-client.js';
 import type {StateNeededForHeadAnswerParams} from '../../features/generated-answer/generated-answer-request.js';
 import {isGeneratedAnswerFeatureEnabledWithAgentAPI} from '../../features/generated-answer/generated-answer-selectors.js';
 import {selectQuery} from '../../features/query/query-selectors.js';
@@ -10,11 +11,15 @@ import type {NavigatorContext} from '../navigator-context-provider.js';
 
 export const createGenerateAnswerListener = (extra: {
   getNavigatorContext: () => NavigatorContext;
+  generationAnalyticsClient: AnswerGenerationAnalyticsClient;
 }) => {
   const generateAnswerListener = createListenerMiddleware<
     StateNeededForHeadAnswerParams,
     Dispatch,
-    {getNavigatorContext: () => NavigatorContext}
+    {
+      getNavigatorContext: () => NavigatorContext;
+      generationAnalyticsClient: AnswerGenerationAnalyticsClient;
+    }
   >({extra});
   const answerRunner = createAnswerRunner();
 
@@ -41,7 +46,12 @@ export const createGenerateAnswerListener = (extra: {
         return;
       }
 
-      answerRunner.run(state, listenerApi.dispatch, extra.getNavigatorContext);
+      answerRunner.run(
+        state,
+        listenerApi.dispatch,
+        extra.getNavigatorContext,
+        extra.generationAnalyticsClient
+      );
     },
   });
 

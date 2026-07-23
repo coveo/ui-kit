@@ -196,7 +196,10 @@ describe('GeneratedAnswerWithFollowUps', () => {
       'org-123',
       'prod'
     );
-    expect(mockCreateFollowUpStrategy).toHaveBeenCalledWith(engine.dispatch);
+    expect(mockCreateFollowUpStrategy).toHaveBeenCalledWith(
+      engine.dispatch,
+      generatedAnswerAnalyticsClient
+    );
   });
 
   describe('state getter', () => {
@@ -297,7 +300,8 @@ describe('GeneratedAnswerWithFollowUps', () => {
       expect(mockAnswerRunner.run).toHaveBeenCalledWith(
         engine.state,
         engine.dispatch,
-        expect.any(Function)
+        expect.any(Function),
+        generatedAnswerAnalyticsClient
       );
       const navigatorContextProvider = mockAnswerRunner.run.mock.calls[0][2];
       expect(navigatorContextProvider()).toBe(engine.navigatorContext);
