@@ -1,4 +1,12 @@
-import {useState, useRef, useCallback, useMemo, useEffect} from 'react';
+import {
+  useState,
+  useRef,
+  useCallback,
+  useMemo,
+  useEffect,
+  type KeyboardEvent,
+  type ChangeEvent,
+} from 'react';
 import {
   SuggestionsDropdown,
   SUGGESTIONS_LISTBOX_ID,
@@ -87,7 +95,7 @@ export function PromptInput({
     }
   }
 
-  function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
+  function handleKeyDown(e: KeyboardEvent<HTMLTextAreaElement>) {
     if (e.key === 'Escape' && showDropdown) {
       e.preventDefault();
       setShowDropdown(false);
@@ -119,7 +127,7 @@ export function PromptInput({
     }
   }
 
-  function handleInput(e: React.ChangeEvent<HTMLTextAreaElement>) {
+  function handleInput(e: ChangeEvent<HTMLTextAreaElement>) {
     setValue(e.target.value);
     const el = e.target;
     el.style.height = 'auto';
