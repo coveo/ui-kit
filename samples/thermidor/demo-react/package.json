@@ -24,7 +24,6 @@
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "catalog:",
-    "fast-check": "^3.22.0",
     "playwright": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",
