@@ -5,6 +5,7 @@ import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import type {ProjectMetadata} from './metadata.js';
 import {
   provenancePath,
+  readProvenance,
   readSampleMetadata,
   writeProvenance,
 } from './provenance.js';
@@ -74,6 +75,18 @@ describe('provenance file I/O', () => {
       const ok = await writeProvenance(fileAsProjectRoot, sampleMetadata);
 
       expect(ok).toBe(false);
+    });
+  });
+
+  describe('readProvenance', () => {
+    it('reads back what writeProvenance wrote', async () => {
+      await writeProvenance(dir, sampleMetadata);
+
+      expect(await readProvenance(dir)).toEqual(sampleMetadata);
+    });
+
+    it('returns null when the provenance file is absent', async () => {
+      expect(await readProvenance(dir)).toBeNull();
     });
   });
 });
