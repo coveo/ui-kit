@@ -1,3 +1,9 @@
+## 3.43.2
+
+### Patch Changes
+
+- [#7997](https://github.com/coveo/ui-kit/pull/7997) [`0dd5704`](https://github.com/coveo/ui-kit/commit/0dd57045f21029ff175ff787637c98b9e5572bba) - Fixed thread component displaying gaps in the timeline when the questions are on multiple lines.
+
 ## 3.43.1
 
 ### Patch Changes
