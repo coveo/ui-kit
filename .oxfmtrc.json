@@ -6,6 +6,7 @@
   "bracketSpacing": false,
   "ignorePatterns": [
     "**/.kiro/**/*",
+    "AGENTS.md",
     "**/packages/quantic/**/*",
     "!**/packages/quantic/catalog-info.yaml",
     "**/packages/create-atomic-template/**/*",
