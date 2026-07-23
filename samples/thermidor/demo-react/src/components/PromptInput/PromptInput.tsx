@@ -27,7 +27,7 @@ interface PromptInputProps {
 export function PromptInput({
   onSubmit,
   disabled = false,
-  placeholder = 'Ask something...',
+  placeholder = 'Search for products or ask a question...',
   initialValue = '',
   suggestions,
   onSuggestionSelect,
