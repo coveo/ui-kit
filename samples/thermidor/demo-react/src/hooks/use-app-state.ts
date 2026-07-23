@@ -1,7 +1,7 @@
 import {Turn} from '@coveo/thermidor';
 import {useReducer} from 'react';
 
-export type ViewState = 'landing' | 'search' | 'conversation';
+type ViewState = 'landing' | 'search' | 'conversation';
 
 export type AppAction =
   | {type: 'NAVIGATE_SEARCH'}
