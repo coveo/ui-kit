@@ -174,6 +174,12 @@ export interface AnalyticsConfiguration {
    * - does not override an explicit `enabled: false` or a runtime
    *   `disableAnalytics()` call, which always disable analytics.
    *
+   * @deprecated Introduced as deprecated on purpose to signal that it is
+   * transitional. This option exists only to bridge legacy-analytics deployments
+   * where a browser privacy signal is enforced by policy, and it will be removed
+   * when legacy analytics is removed (see KIT-2844). Migrate to Event Protocol
+   * (`analyticsMode: 'next'`) rather than relying on this option long term.
+   *
    * @defaultValue `false`
    */
   disableBrowserPrivacySignals?: boolean;
