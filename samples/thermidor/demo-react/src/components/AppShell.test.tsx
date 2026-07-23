@@ -31,7 +31,7 @@ vi.mock('./LandingPage/LandingPage.js', () => ({
   ),
 }));
 
-vi.mock('./SearchResultsPage.js', () => ({
+vi.mock('./SearchResultsPage/SearchResultsPage.js', () => ({
   SearchResultsPage: (props: any) => (
     <div data-testid="search-results-page">
       <span data-testid="use-case">{props.routedInterface?.useCase}</span>

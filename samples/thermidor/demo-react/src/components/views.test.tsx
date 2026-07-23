@@ -2,8 +2,34 @@ import {render, screen, fireEvent} from '@testing-library/react';
 import {describe, it, expect, vi} from 'vitest';
 import type {Turn, RoutedInterface} from '@coveo/thermidor';
 import {LandingPage} from './LandingPage/LandingPage.js';
-import {SearchResultsPage} from './SearchResultsPage.js';
+import {SearchResultsPage} from './SearchResultsPage/SearchResultsPage.js';
 import {ConversationPage} from './ConversationPage.js';
+
+function createMockController(state: Record<string, unknown> = {}) {
+  return {
+    state,
+    subscribe: (cb: () => void) => {
+      cb();
+      return () => {};
+    },
+  };
+}
+
+vi.mock('@coveo/thermidor', async (importOriginal) => {
+  const actual = (await importOriginal()) as Record<string, unknown>;
+  return {
+    ...actual,
+    buildProductListController: () => createMockController({products: []}),
+    buildPaginationController: () =>
+      createMockController({
+        page: 0,
+        pageSize: 10,
+        totalCount: 0,
+        totalPages: 0,
+      }),
+    buildSearchBoxController: () => createMockController({query: ''}),
+  };
+});
 
 describe('LandingPage', () => {
   it('renders the heading', () => {
@@ -52,10 +78,10 @@ describe('LandingPage', () => {
 describe('SearchResultsPage', () => {
   const mockRoutedInterface = {
     useCase: 'search',
-    interface: {},
+    interface: {id: 'mock'},
   } as unknown as RoutedInterface;
 
-  it('renders the "Search Results" heading', () => {
+  it('renders the search results page container', () => {
     render(
       <SearchResultsPage
         onSubmit={vi.fn()}
@@ -63,10 +89,10 @@ describe('SearchResultsPage', () => {
         routedInterface={mockRoutedInterface}
       />
     );
-    expect(screen.getByRole('heading', {name: 'Search Results'})).toBeDefined();
+    expect(screen.getByTestId('search-results-page')).toBeDefined();
   });
 
-  it('displays the routedInterface useCase', () => {
+  it('renders the facet sidebar placeholder', () => {
     render(
       <SearchResultsPage
         onSubmit={vi.fn()}
@@ -74,7 +100,7 @@ describe('SearchResultsPage', () => {
         routedInterface={mockRoutedInterface}
       />
     );
-    expect(screen.getByText('Use case: search')).toBeDefined();
+    expect(screen.getByText('Facets (coming soon)')).toBeDefined();
   });
 
   it('calls onSubmit with the input value on form submission', () => {
