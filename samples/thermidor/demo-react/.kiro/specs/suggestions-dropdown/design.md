@@ -11,6 +11,7 @@ The component supports two configurations: a two-section layout (Search + Conver
 The dropdown is a pure presentational component: it renders whatever `SuggestionSection[]` it receives. Visibility is managed by the parent (`PromptInput` wrapper) based on focus state. A `useSuggestions` hook owns all data-sourcing logic — today returning hardcoded data, tomorrow subscribing to backend-provided suggestions via the converse controller or a dedicated suggestions controller.
 
 The architecture diagram shows:
+
 - PromptInput manages focus/blur events and controls SuggestionsDropdown visibility
 - SuggestionsDropdown renders N SuggestionSection groups, each containing SuggestionItem rows
 - LandingPage uses useSuggestions('landing') to get 2 sections
@@ -45,6 +46,7 @@ function useSuggestions(options: UseSuggestionsOptions): UseSuggestionsResult;
 **Phase 1 (current)**: Returns hardcoded sections based on `context`. `isLoading` is always `false`. `inputValue` is accepted but unused.
 
 **Future integration path**: When the converse controller (or a dedicated suggestions controller built on the unified API) provides real suggestion data, this hook is the **only place that changes**. It will:
+
 - Subscribe to suggestion state from the controller
 - Map the backend response shape into `SuggestionSection[]`
 - Use `inputValue` to trigger debounced suggestion requests
@@ -87,6 +89,7 @@ interface SuggestionsDropdownProps {
 ```
 
 **Responsibilities**:
+
 - Render grouped sections with headers and icons
 - Delegate item rendering to SuggestionItemRow
 - Manage ARIA attributes for accessibility (listbox role, option roles, aria-activedescendant)
@@ -108,6 +111,7 @@ interface SuggestionSectionGroupProps {
 ```
 
 **Responsibilities**:
+
 - Render section header with icon and label
 - Render list of SuggestionItemRow components
 - Pass active state for keyboard navigation highlighting
@@ -129,6 +133,7 @@ interface SuggestionItemRowProps {
 ```
 
 **Responsibilities**:
+
 - Render the item label and optional subtitle
 - Render the section's icon inline with the item
 - Apply active/highlighted styling when keyboard-navigated
@@ -152,6 +157,7 @@ interface PromptInputProps {
 ```
 
 **Responsibilities**:
+
 - Show/hide dropdown on focus/blur (with delay to allow click registration)
 - Intercept ArrowUp/ArrowDown/Enter for keyboard navigation when dropdown is open
 - Pass `activeIndex` to dropdown for highlight state
@@ -184,6 +190,7 @@ interface SuggestionSection {
 ```
 
 **Validation Rules**:
+
 - `id` must be unique within the section
 - `label` must be a non-empty string
 - `sections` array must have at least one section
@@ -198,10 +205,10 @@ const LANDING_SECTIONS: SuggestionSection[] = [
     title: 'Search',
     icon: 'search',
     items: [
-      { id: 's1', label: 'Surfboards' },
-      { id: 's2', label: 'Wetsuits' },
-      { id: 's3', label: 'Kayaks' },
-      { id: 's4', label: 'Snorkeling gear' },
+      {id: 's1', label: 'Surfboards'},
+      {id: 's2', label: 'Wetsuits'},
+      {id: 's3', label: 'Kayaks'},
+      {id: 's4', label: 'Snorkeling gear'},
     ],
   },
   {
@@ -209,9 +216,21 @@ const LANDING_SECTIONS: SuggestionSection[] = [
     title: 'Conversational',
     icon: 'sparkle',
     items: [
-      { id: 'c1', label: 'Build a beginner surfing kit', subtitle: 'Surfing / Budget options' },
-      { id: 'c2', label: 'What should I pack for a snorkeling trip?', subtitle: 'Snorkeling / Trip planning' },
-      { id: 'c3', label: 'Compare wetsuits for cold-water surfing', subtitle: 'Surfing / Comparison' },
+      {
+        id: 'c1',
+        label: 'Build a beginner surfing kit',
+        subtitle: 'Shopping / Grid-based starter kit or discovery layout that spans several adjacent product types.',
+      },
+      {
+        id: 'c2',
+        label: 'What should I pack for a snorkeling trip?',
+        subtitle: 'Shopping / Focused product-grid layout for a single shopping task with lightweight filtering.',
+      },
+      {
+        id: 'c3',
+        label: 'Compare wetsuits for cold-water surfing',
+        subtitle: 'Shopping / Side-by-side evaluation layout for a small, agent-curated set of products.',
+      },
     ],
   },
 ];
@@ -222,9 +241,9 @@ const SEARCH_RESULTS_SECTIONS: SuggestionSection[] = [
     title: 'Search refinements',
     icon: 'filter-sparkle',
     items: [
-      { id: 'r1', label: 'Show boards under $400' },
-      { id: 'r2', label: 'Beginner-friendly only' },
-      { id: 'r3', label: 'Sort by price low to high' },
+      {id: 'r1', label: 'Show boards under $400'},
+      {id: 'r2', label: 'Beginner-friendly only'},
+      {id: 'r3', label: 'Sort by price low to high'},
     ],
   },
   ...LANDING_SECTIONS,
