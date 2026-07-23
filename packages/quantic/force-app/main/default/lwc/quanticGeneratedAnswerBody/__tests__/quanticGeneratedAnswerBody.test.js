@@ -292,6 +292,22 @@ describe('c-quantic-generated-answer-body', () => {
         'Something went wrong while generating the answer. Please try again later.'
       );
     });
+
+    it('should not render the error message when the error object is present but empty', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        generatedAnswer: {
+          ...defaultOptions.generatedAnswer,
+          // @ts-ignore
+          error: {},
+        },
+      });
+      await flushPromises();
+
+      const error = element.shadowRoot.querySelector(selectors.error);
+
+      expect(error).toBeNull();
+    });
   });
 
   describe('rendering of actions', () => {
