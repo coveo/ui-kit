@@ -37,10 +37,13 @@
   },
   "dependencies": {
     "@clack/prompts": "1.6.0",
+    "@sentry/node": "10.65.0",
     "commander": "15.0.0",
+    "fast-redact": "3.5.0",
     "pacote": "21.5.1"
   },
   "devDependencies": {
+    "@types/fast-redact": "3.0.4",
     "@types/node": "catalog:",
     "@types/pacote": "11.1.8",
     "typescript": "catalog:",
