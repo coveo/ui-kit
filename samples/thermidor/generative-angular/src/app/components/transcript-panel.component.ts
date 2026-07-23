@@ -8,8 +8,15 @@ import {
   PipeTransform,
 } from '@angular/core';
 import {marked} from 'marked';
-import type {RenderableCommerceSurface, ToolCall, Turn} from '../models';
+import type {
+  RenderableCommerceSurface,
+  RoutedInterface,
+  ReasoningStep,
+  Turn,
+} from '../models';
+import type {CommerceInterface, ToolCallStep} from '@coveo/thermidor';
 import {SurfaceOutletComponent} from './surface-outlet.component';
+import {RoutedCommerceResultsComponent} from './routed-commerce-results.component';
 
 marked.setOptions({breaks: true, gfm: true});
 
@@ -23,7 +30,11 @@ class MarkdownPipe implements PipeTransform {
 
 @Component({
   selector: 'app-transcript-panel',
-  imports: [SurfaceOutletComponent, MarkdownPipe],
+  imports: [
+    SurfaceOutletComponent,
+    RoutedCommerceResultsComponent,
+    MarkdownPipe,
+  ],
   template: `
     <header class="panel-header">
       <div>
@@ -96,27 +107,36 @@ class MarkdownPipe implements PipeTransform {
           </summary>
 
           <div class="progress-content">
-            @if (reasoningText()) {
-              <p class="progress-reasoning">{{ reasoningText() }}</p>
-            }
-
-            @if (toolActivity().length > 0) {
-              <ul class="progress-list">
-                @for (tool of toolActivity(); track tool.id) {
+            <ul class="progress-list">
+              @for (step of reasoningSteps(); track $index) {
+                @if (step.type === 'reasoning') {
+                  <li class="progress-reasoning-step">
+                    <span>{{ step.content }}</span>
+                  </li>
+                } @else {
                   <li>
-                    <span>{{ truncateToolName(tool.name) }}</span>
+                    <span>{{ truncateToolName(step.name) }}</span>
                     <small>{{
-                      tool.status === 'completed' ? 'Done' : 'Running'
+                      step.status === 'completed' ? 'Done' : 'Running'
                     }}</small>
                   </li>
                 }
-              </ul>
-            }
+              }
+            </ul>
           </div>
         </details>
       }
 
-      @if (surfaces().length > 0) {
+      @if (commerceInterface(); as iface) {
+        <article class="inline-surfaces">
+          <div class="inline-surfaces-head">
+            <p class="bubble-role">Assistant</p>
+            <span>Commerce results</span>
+          </div>
+
+          <app-routed-commerce-results [commerceInterface]="iface" />
+        </article>
+      } @else if (surfaces().length > 0) {
         <article class="inline-surfaces">
           <div class="inline-surfaces-head">
             <p class="bubble-role">Assistant</p>
@@ -139,9 +159,9 @@ class MarkdownPipe implements PipeTransform {
 })
 export class TranscriptPanelComponent {
   readonly turns = input<Turn[]>([]);
-  readonly reasoningText = input('');
-  readonly toolActivity = input<ToolCall[]>([]);
+  readonly reasoningSteps = input<ReasoningStep[]>([]);
   readonly surfaces = input<RenderableCommerceSurface[]>([]);
+  readonly routedInterface = input<RoutedInterface | undefined>(undefined);
   readonly isStreaming = input(false);
   readonly errorMessage = input('');
   readonly turnId = input('');
@@ -149,14 +169,26 @@ export class TranscriptPanelComponent {
   readonly quickAction = output<string>();
   readonly retryTurn = output<string>();
 
+  protected readonly commerceInterface = computed<CommerceInterface | null>(
+    () => {
+      const routed = this.routedInterface();
+      if (routed?.useCase === 'commerceSearch') {
+        return routed.interface;
+      }
+      return null;
+    }
+  );
+
   protected readonly hasProgress = computed(
-    () => this.toolActivity().length > 0 || this.reasoningText().length > 0
+    () => this.reasoningSteps().length > 0
   );
 
   protected readonly progressLabel = computed(() => {
-    const activity = this.toolActivity();
-    return activity.length > 0
-      ? activity[activity.length - 1].status === 'calling'
+    const tools = this.reasoningSteps().filter(
+      (s): s is ToolCallStep => s.type === 'tool-call'
+    );
+    return tools.length > 0
+      ? tools[tools.length - 1].status === 'calling'
         ? 'Working'
         : 'Completed'
       : 'Thinking';

@@ -22,7 +22,8 @@
     "notify:docs": "node ./scripts/notify-docs/published-ui-kit.mjs",
     "release": "pnpm run build && changeset publish",
     "knip": "knip",
-    "generate:catalog-info": "node scripts/generate-catalog-info.mjs"
+    "generate:catalog-info": "node scripts/generate-catalog-info.mjs",
+    "generate:agents-md-packages": "node scripts/generate-agents-md-packages.mjs"
   },
   "devDependencies": {
     "@actions/github": "9.1.1",

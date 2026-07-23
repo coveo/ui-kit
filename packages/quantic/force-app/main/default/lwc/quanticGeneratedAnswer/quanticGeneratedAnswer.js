@@ -1,23 +1,14 @@
 import answerGenerated from '@salesforce/label/c.quantic_AnswerGenerated';
 import couldNotGenerateAnAnswer from '@salesforce/label/c.quantic_CouldNotGenerateAnAnswer';
-import feedback from '@salesforce/label/c.quantic_Feedback';
 import feedbackHelpUsImprove from '@salesforce/label/c.quantic_FeedbackHelpUsImprove';
 import generatedAnswerForYou from '@salesforce/label/c.quantic_GeneratedAnswerForYou';
 import generatedAnswerIsHidden from '@salesforce/label/c.quantic_GeneratedAnswerIsHidden';
 import showLess from '@salesforce/label/c.quantic_GeneratedAnswerShowLess';
 import showMore from '@salesforce/label/c.quantic_GeneratedAnswerShowMore';
 import generatingAnswer from '@salesforce/label/c.quantic_GeneratingAnswer';
-import harmful from '@salesforce/label/c.quantic_Harmful';
-import inaccurate from '@salesforce/label/c.quantic_Inaccurate';
-import irrelevant from '@salesforce/label/c.quantic_Irrelevant';
 import loading from '@salesforce/label/c.quantic_Loading';
-import other from '@salesforce/label/c.quantic_Other';
-import outOfDate from '@salesforce/label/c.quantic_OutOfDate';
 import rgaDisclaimer from '@salesforce/label/c.quantic_RGADisclaimer';
-import thisAnswerWasHelpful from '@salesforce/label/c.quantic_ThisAnswerWasHelpful';
-import thisAnswerWasNotHelpful from '@salesforce/label/c.quantic_ThisAnswerWasNotHelpful';
 import tryAgain from '@salesforce/label/c.quantic_TryAgain';
-import whyGeneratedAnswerWasNotHelpful from '@salesforce/label/c.quantic_WhyGeneratedAnswerWasNotHelpful';
 import noGeneratedAnswer from '@salesforce/label/c.quantic_NoGeneratedAnswer';
 import FeedbackModalQna from 'c/quanticFeedbackModalQna';
 import {
@@ -25,7 +16,7 @@ import {
   initializeWithHeadless,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
-import {AriaLiveRegion, I18nUtils, getAbsoluteHeight} from 'c/quanticUtils';
+import {AriaLiveRegion, I18nUtils} from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
 // @ts-ignore
 import errorTemplate from './templates/errorTemplate.html';
@@ -42,14 +33,8 @@ import conversationTemplate from './templates/conversation.html';
 /** @typedef {import("coveo").GeneratedAnswer} GeneratedAnswer */
 /** @typedef {import("coveo").GeneratedAnswerWithFollowUps} GeneratedAnswerWithFollowUps */
 /** @typedef {import("coveo").GeneratedAnswerState} GeneratedAnswerState */
-/** @typedef {import("coveo").GeneratedAnswerCitation} GeneratedAnswerCitation */
-/** @typedef { 'neutral' | 'liked' | 'disliked'} FeedbackState */
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchStatusState} SearchStatusState */
-
-const FEEDBACK_LIKED_STATE = 'liked';
-const FEEDBACK_DISLIKED_STATE = 'disliked';
-const FEEDBACK_NEUTRAL_STATE = 'neutral';
 
 const DEFAULT_COLLAPSED_HEIGHT = 250;
 const MAX_VALID_COLLAPSED_HEIGHT = 500;
@@ -143,18 +128,9 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   labels = {
     generatedAnswerForYou,
-    thisAnswerWasNotHelpful,
-    thisAnswerWasHelpful,
     tryAgain,
     couldNotGenerateAnAnswer,
-    other,
-    harmful,
-    irrelevant,
-    inaccurate,
-    outOfDate,
     feedbackHelpUsImprove,
-    feedback,
-    whyGeneratedAnswerWasNotHelpful,
     generatingAnswer,
     generatedAnswerIsHidden,
     answerGenerated,
@@ -169,8 +145,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   generatedAnswer;
   /** @type {GeneratedAnswerState} */
   state;
-  /** @type {FeedbackState} */
-  feedbackState = 'neutral';
   /** @type {SearchStatus} */
   searchStatus;
   /** @type {SearchStatusState} */
@@ -185,6 +159,8 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   _exceedsMaximumHeight = false;
   /** @type {number} */
   _maxCollapsedHeight = DEFAULT_COLLAPSED_HEIGHT;
+  /** @type {number} */
+  generatedAnswerHeight = 0;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -266,7 +242,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   updateState() {
     this.state = this.generatedAnswer.state;
-    this.updateFeedbackState();
     this.ariaLiveMessage.dispatchMessage(this.getGeneratedAnswerStatus());
 
     if (this.isCollapsibleEnabled) {
@@ -278,8 +253,8 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     // If we are still streaming add a little extra height to the answer element to account for the next answer chunk.
     // This helps a lot with the jankyness of the answer fading out when the chunk is close but not yet over the max height.
     const answerElementHeight = this.isStreaming
-      ? this.generatedAnswerElementHeight + 50
-      : this.generatedAnswerElementHeight;
+      ? this.generatedAnswerHeight + 50
+      : this.generatedAnswerHeight;
 
     return answerElementHeight > this.maxCollapsedHeight;
   }
@@ -308,25 +283,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     this.feedbackSubmitted = false;
     this.searchStatusState = this.searchStatus.state;
   }
-
-  updateFeedbackState() {
-    if (this.state?.liked) {
-      this.feedbackState = FEEDBACK_LIKED_STATE;
-    } else if (this.state?.disliked) {
-      this.feedbackState = FEEDBACK_DISLIKED_STATE;
-    } else {
-      this.feedbackState = FEEDBACK_NEUTRAL_STATE;
-    }
-  }
-
-  /**
-   * handles hovering over a citation.
-   * @param {string} id
-   * @param {number} citationHoverTimeMs
-   */
-  logCitationHover = (id, citationHoverTimeMs) => {
-    this.generatedAnswer.logCitationHover(id, citationHoverTimeMs);
-  };
 
   /**
    * handles liking the generated answer.
@@ -420,6 +376,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   handleAnswerContentUpdated = (event) => {
     event.stopPropagation();
+    this.generatedAnswerHeight = event.detail?.height;
     if (this.isCollapsibleEnabled) {
       this._exceedsMaximumHeight = this.isMaximumHeightExceeded();
     }
@@ -454,15 +411,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   /**
-   * Returns the generated answer height.
-   * @returns {number}
-   */
-  get generatedAnswerElementHeight() {
-    // @ts-ignore
-    return getAbsoluteHeight(this.generatedAnswerElement?.firstChild);
-  }
-
-  /**
    * Sets the value of the CSS variable "--maxHeight" to the value of the maxCollapsedHeight property.
    */
   updateGeneratedAnswerCSSVariables() {
@@ -476,29 +424,12 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     return this?.state?.answer;
   }
 
-  get answerId() {
-    return this?.state?.answerId;
-  }
-
   get citations() {
     return this?.state?.citations;
   }
 
-  get answerContentFormat() {
-    return this?.state?.answerContentFormat;
-  }
-
-  get shouldDisplayCitations() {
-    const hasCitations = !!this.citations?.length;
-    return hasCitations && !this.isAnswerCollapsed;
-  }
-
   get isStreaming() {
     return this?.state?.isStreaming;
-  }
-
-  get shouldDisplayActions() {
-    return this.isVisible && !this.isStreaming && !this.isAnswerCollapsed;
   }
 
   get isVisible() {
@@ -527,15 +458,18 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     );
   }
 
-  get allGeneratedAnswers() {
-    const initialAnswer = {
+  get initialAnswer() {
+    return {
       ...this.state,
       question: this.engine?.state.query?.q ?? '',
     };
+  }
+
+  get allGeneratedAnswers() {
     const followUpAnswers =
       this.generateAnswerWithFollowUps?.state.followUpAnswers
         ?.followUpAnswers ?? [];
-    return [initialAnswer, ...followUpAnswers];
+    return [this.initialAnswer, ...followUpAnswers];
   }
 
   get isCollapsibleEnabled() {
@@ -564,36 +498,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   get hasRetryableError() {
     return !this?.searchStatusState?.hasError && this.state?.error?.isRetryable;
-  }
-
-  /**
-   * Returns the options displayed in the Quantic Feedback Modal.
-   */
-  get options() {
-    return [
-      {
-        label: this.labels.irrelevant,
-        value: 'irrelevant',
-      },
-      {
-        label: this.labels.inaccurate,
-        value: 'notAccurate',
-      },
-      {
-        label: this.labels.outOfDate,
-        value: 'outOfDate',
-      },
-      {
-        label: this.labels.harmful,
-        value: 'harmful',
-      },
-      {
-        label: this.labels.other,
-        value: 'other',
-        withDetails: true,
-        detailsRequired: true,
-      },
-    ];
   }
 
   get generatedAnswerHeaderClass() {

@@ -1,5 +1,6 @@
 ---
 title: Introduction
+pageTitle: Server-side rendering
 category: Server-side rendering
 group: Guides
 slug: usage/server-side-rendering/index

@@ -59,6 +59,11 @@ test.describe('Storybook MDX Pages - Component doc pages (AtomicDocTemplate)', (
 
       const docsRoot = page.frameLocator('#storybook-preview-iframe');
 
+      await docsRoot
+        .getByRole('heading', {level: 1})
+        .first()
+        .waitFor({state: 'visible'});
+
       await expect(
         docsRoot.getByRole('heading', {name: 'Usage'}).first()
       ).toBeVisible();

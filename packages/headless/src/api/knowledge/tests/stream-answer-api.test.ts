@@ -91,6 +91,65 @@ describe('#streamAnswerApi', () => {
       });
     });
 
+    describe('when valid content follows a stream error', () => {
+      it('should clear draft.error once a genqa.messageType event adds real answer text', () => {
+        const dispatch = vi.fn();
+        const errorEvent: EventSourceMessage = buildEvent({
+          finishReason: 'ERROR',
+          errorMessage: 'transient error',
+          code: 500,
+          payload: '',
+          payloadType: 'genqa.messageType',
+        });
+        const draft = buildDefaultDraft();
+        updateCacheWithEvent(errorEvent, draft, dispatch);
+        expect(draft.error).toEqual({message: 'transient error', code: 500});
+
+        const messageEvent = buildSuccessEvent({
+          payloadType: 'genqa.messageType',
+          payload: {
+            textDelta: 'a full valid answer',
+          },
+        });
+        updateCacheWithEvent(messageEvent, draft, dispatch);
+
+        expect(draft.answer).toBe('a full valid answer');
+        expect(draft.error).toBeUndefined();
+      });
+
+      it('should clear draft.error once a genqa.citationsType event adds real citations', () => {
+        const dispatch = vi.fn();
+        const errorEvent: EventSourceMessage = buildEvent({
+          finishReason: 'ERROR',
+          errorMessage: 'transient error',
+          code: 500,
+          payload: '',
+          payloadType: 'genqa.citationsType',
+        });
+        const draft = buildDefaultDraft();
+        updateCacheWithEvent(errorEvent, draft, dispatch);
+        expect(draft.error).toEqual({message: 'transient error', code: 500});
+
+        const citation = {
+          id: '1',
+          permanentid: '1',
+          source: 'source',
+          title: 'some title',
+          uri: 'some uri',
+        };
+        const citationsEvent = buildSuccessEvent({
+          payloadType: 'genqa.citationsType',
+          payload: {
+            citations: [citation],
+          },
+        });
+        updateCacheWithEvent(citationsEvent, draft, dispatch);
+
+        expect(draft.citations).toEqual([citation]);
+        expect(draft.error).toBeUndefined();
+      });
+    });
+
     it('should handle the message type', () => {
       const dispatch = vi.fn();
       const event = buildSuccessEvent({

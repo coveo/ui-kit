@@ -1,3 +1,34 @@
+## 3.60.2
+
+### Patch Changes
+
+- [#8005](https://github.com/coveo/ui-kit/pull/8005) [`fe52658`](https://github.com/coveo/ui-kit/commit/fe5265887c0c26cf3ea3699a6560a729899d3c2a) - Announce when a generated answer cannot be produced.
+
+- [#7997](https://github.com/coveo/ui-kit/pull/7997) [`0dd5704`](https://github.com/coveo/ui-kit/commit/0dd57045f21029ff175ff787637c98b9e5572bba) - Fixed thread component displaying gaps in the timeline when the questions are on multiple lines.
+
+- [#7987](https://github.com/coveo/ui-kit/pull/7987) [`3273fe6`](https://github.com/coveo/ui-kit/commit/3273fe6a761f62ebddcc6794e9a76aaeca765ca9) - Fixed the low contrast between question title and the background color in the answer thread.
+
+- [#8021](https://github.com/coveo/ui-kit/pull/8021) [`7325c0b`](https://github.com/coveo/ui-kit/commit/7325c0b771104e25c1b69143ff2d07a52f3befa1) - Fix Conversation ID and copy button alignment on mobile in the generated answer debug header by allowing the conversation ID text to wrap on narrow viewports, keeping the copy button within the card.
+
+- [#7979](https://github.com/coveo/ui-kit/pull/7979) [`deac16e`](https://github.com/coveo/ui-kit/commit/deac16e906be7eeaf9d92360972d8ed7d52f1a82) - Fix two generated answer accessibility issues:
+  - Strip markdown syntax from the aria-live announcement so screen readers read clean prose instead of raw markdown characters (e.g. `##`, `**`, `` ` ``).
+  - Announce error states (e.g. "Answer could not be generated") assertively so the message is not skipped when a screen reader is already announcing "Generating answer".
+
+## 3.60.1
+
+### Patch Changes
+
+- [#7911](https://github.com/coveo/ui-kit/pull/7911) [`6bd6624`](https://github.com/coveo/ui-kit/commit/6bd662476610fbe9815919551b6c40d2b0060c52) - Fix `atomic-generated-answer` not respecting `tabs-included`/`tabs-excluded` when generating answers. The component no longer sends answer-generation queries when it is hidden on the current tab, including on the initial load. The Answer API and Agent API generation paths now honor the generated answer `isEnabled` state, and `buildGeneratedAnswer`'s `initialState.isEnabled` is now applied.
+
+- [#7966](https://github.com/coveo/ui-kit/pull/7966) [`67f493a`](https://github.com/coveo/ui-kit/commit/67f493ac422cbeb8b5d93e4cd42f65813b0fa6d3) - Fixed a visual glitch where the "See all results"/"See all products" button in
+  the search suggestions showed a white box behind its label when hovered.
+
+- [#7943](https://github.com/coveo/ui-kit/pull/7943) [`3ff284d`](https://github.com/coveo/ui-kit/commit/3ff284da1409b68425f20023ed6da45e422e8bc6) - removed the question title when a singular answer is generated
+
+- Updated dependencies [[`6580723`](https://github.com/coveo/ui-kit/commit/65807231404d5f3357be02f91ff8dfadae694904), [`6bd6624`](https://github.com/coveo/ui-kit/commit/6bd662476610fbe9815919551b6c40d2b0060c52)]:
+  - @coveo/headless@3.53.1
+  - @coveo/atomic-legacy@0.0.24
+
 ## 3.60.0
 
 ### Minor Changes

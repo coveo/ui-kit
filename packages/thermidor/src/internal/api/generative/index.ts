@@ -3,4 +3,5 @@ export type {
   GenerativeStatePort,
   GenerativeRuntimeConfig,
   HydrateSubInterface,
+  HydrationResult,
 } from './generative-runtime.js';

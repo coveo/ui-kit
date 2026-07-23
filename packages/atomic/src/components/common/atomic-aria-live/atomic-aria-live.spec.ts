@@ -52,14 +52,55 @@ describe('atomic-aria-live', () => {
       const message = 'Test message';
       const assertive = true;
       element.updateMessage(region, message, assertive);
-      vi.waitFor(() =>
-        expect(locators.regions[0]).toHaveTextContent('Test message')
-      );
+      await expect
+        .poll(() => locators.regions[0])
+        .toHaveTextContent('Test message');
 
       const newMessage = '';
       element.updateMessage(region, newMessage, assertive);
 
       await expect.poll(() => locators.regions[0]).toHaveTextContent('');
+    });
+
+    it('should announce distinct messages for the same region in order', async () => {
+      const {element, locators} = await renderAriaLive();
+
+      element.updateMessage('query-summary', 'Results loaded', false);
+      element.updateMessage(
+        'generated-answer',
+        'Generating answer',
+        false,
+        true
+      );
+      element.updateMessage(
+        'generated-answer',
+        'Answer could not be generated',
+        false,
+        true
+      );
+
+      const generatedAnswerRegion = () =>
+        Array.from(locators.regions).find((region) =>
+          region.id.includes('generated-answer')
+        );
+
+      await expect
+        .poll(generatedAnswerRegion)
+        .toHaveTextContent('Generating answer');
+      await expect
+        .poll(generatedAnswerRegion)
+        .toHaveTextContent('Answer could not be generated');
+    });
+
+    it('should replace queued messages for regions that do not preserve them', async () => {
+      const {element, locators} = await renderAriaLive();
+
+      element.updateMessage('query-suggestions', 'First suggestion', false);
+      element.updateMessage('query-suggestions', 'Second suggestion', false);
+
+      await expect
+        .poll(() => locators.regions[0])
+        .toHaveTextContent('Second suggestion');
     });
   });
 

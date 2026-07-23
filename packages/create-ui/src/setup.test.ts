@@ -38,6 +38,23 @@ describe('stripMonorepoFields', () => {
     expect(result.version).toBe('0.1.0');
     expect(result.foo).toBe('bar');
   });
+
+  it('strips the repository so scaffolded projects do not inherit the monorepo repo', () => {
+    const result = stripMonorepoFields(
+      {
+        name: '@coveo/ui-kit-sample-headless-search-react',
+        repository: {
+          type: 'git',
+          url: 'git+https://github.com/coveo/ui-kit.git',
+          directory: 'samples/headless/search-react',
+        },
+        foo: 'bar',
+      },
+      'my-app'
+    );
+    expect(result.repository).toBeUndefined();
+    expect(result.foo).toBe('bar');
+  });
 });
 
 describe('rewritePackageJson', () => {

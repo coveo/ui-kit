@@ -5,6 +5,7 @@
   "trailingComma": "es5",
   "bracketSpacing": false,
   "ignorePatterns": [
+    "**/.kiro/**/*",
     "**/packages/quantic/**/*",
     "!**/packages/quantic/catalog-info.yaml",
     "**/packages/create-atomic-template/**/*",

@@ -21,6 +21,9 @@ export function stripMonorepoFields(
 ): PackageJson {
   const next: PackageJson = {...pkg, name: toPackageName(projectName)};
   delete next.private;
+  // Published samples carry the monorepo's repository (for npm provenance); a
+  // scaffolded standalone project must not inherit coveo/ui-kit as its repo.
+  delete next.repository;
   next.version = '0.1.0';
   return next;
 }

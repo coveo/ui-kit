@@ -6,9 +6,6 @@ on:
 permissions:
   contents: read
 
-env:
-  CHROMATIC_ALL: ${{ vars.CHROMATIC_ALL }}
-
 jobs:
   pr-report:
     if: ${{ github.event_name == 'pull_request' && !startsWith(github.head_ref, 'changeset-release/') }}
@@ -677,6 +674,7 @@ jobs:
             './packages/create-atomic-component-project' \
             './packages/create-atomic-result-component' \
             './packages/create-atomic-rollup-plugin' \
+            './packages/create-ui' \
             './packages/headless' \
             './packages/headless-react' \
             './packages/relay' \

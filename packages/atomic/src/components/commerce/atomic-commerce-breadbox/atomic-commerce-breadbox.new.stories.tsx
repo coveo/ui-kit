@@ -98,7 +98,6 @@ const meta: Meta = {
     msw: {
       handlers: [...commerceApiHarness.handlers],
     },
-    chromatic: {disableSnapshot: true},
     layout: 'fullscreen',
     actions: {
       handles: events,
