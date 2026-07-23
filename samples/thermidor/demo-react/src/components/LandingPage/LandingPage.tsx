@@ -35,7 +35,9 @@ export function LandingPage({onSubmit, isStreaming}: LandingPageProps) {
             onSuggestionSelect={handleSuggestionSelect}
           />
         </div>
-        <SuggestionPills onSelect={onSubmit} disabled={isStreaming} />
+        <div className={styles.pillsWrapper}>
+          <SuggestionPills onSelect={onSubmit} disabled={isStreaming} />
+        </div>
       </div>
     </section>
   );

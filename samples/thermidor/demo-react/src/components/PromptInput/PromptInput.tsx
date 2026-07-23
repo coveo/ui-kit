@@ -37,6 +37,7 @@ export function PromptInput({
   const [activeIndex, setActiveIndex] = useState(-1);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const blurTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const suppressNextFocusRef = useRef(false);
 
   const totalItems = useMemo(
     () => (suggestions ? suggestions.flatMap((s) => s.items) : []),
@@ -60,6 +61,10 @@ export function PromptInput({
 
   function handleFocus() {
     if (disabled) {
+      return;
+    }
+    if (suppressNextFocusRef.current) {
+      suppressNextFocusRef.current = false;
       return;
     }
     if (suggestions && suggestions.length > 0) {
@@ -162,34 +167,35 @@ export function PromptInput({
           aria-controls={SUGGESTIONS_LISTBOX_ID}
           aria-activedescendant={activeDescendant}
         />
-        {value && (
-          <button
-            type="button"
-            className={`${styles.iconButton} ${styles.clearButton}`}
-            onClick={() => {
-              setValue('');
-              if (textareaRef.current) {
-                textareaRef.current.style.height = 'auto';
-                textareaRef.current.style.overflowY = 'hidden';
-                textareaRef.current.focus();
-              }
-            }}
-            aria-label="Clear"
+        <button
+          type="button"
+          className={`${styles.iconButton} ${styles.clearButton}`}
+          onClick={() => {
+            setValue('');
+            setShowDropdown(false);
+            suppressNextFocusRef.current = true;
+            if (textareaRef.current) {
+              textareaRef.current.style.height = 'auto';
+              textareaRef.current.style.overflowY = 'hidden';
+              textareaRef.current.focus();
+            }
+          }}
+          aria-label="Clear"
+          style={{visibility: value ? 'visible' : 'hidden'}}
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
           >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
-          </button>
-        )}
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
         <button
           type="button"
           className={`${styles.iconButton} ${styles.submitButton}`}
