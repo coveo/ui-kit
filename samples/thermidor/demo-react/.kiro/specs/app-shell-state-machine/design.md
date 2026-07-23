@@ -186,9 +186,9 @@ interface ConverseControllerState {
 }
 ```
 
-## Correctness Properties
+## Correctness Invariants
 
-_A property is a characteristic or behavior that should hold true across all valid executions of a system — essentially, a formal statement about what the system should do. Properties serve as the bridge between human-readable specifications and machine-verifiable correctness guarantees._
+_These are the key behavioral invariants the implementation must uphold. They are validated through example-based unit tests rather than property-based testing, as the state machine's simplicity makes PBT overkill for this demo._
 
 ### Property 1: Turn completion drives correct view transition
 
@@ -239,21 +239,7 @@ _For any_ non-empty prompt string submitted from any view, the ConverseControlle
 - **Render tests**: Each view state renders the correct placeholder component.
 - **Props passing**: Each placeholder receives the expected props.
 
-### Property-Based Tests (fast-check + Vitest)
-
-Property-based testing is appropriate here because the state machine logic is a pure function of inputs (turns, actions) and the properties hold universally across all valid inputs.
-
-- **Library**: `fast-check` (standard PBT library for TypeScript/Vitest)
-- **Minimum iterations**: 100 per property
-- **Tag format**: `Feature: app-shell-state-machine, Property N: <title>`
-
-Each correctness property maps to a single property-based test:
-
-1. Generate random completed turns (with routedInterface or agentResponse) → verify view transition
-2. Generate sequences of routed interfaces → verify dispose chain
-3. Generate random prompts + streaming=true state → verify no submission
-4. Generate random error turns from various view states → verify no transition
-5. Generate random non-empty strings → verify submit called with exact text
+Property-based tests were considered but deemed overkill for a demo sample with a simple 3-state machine. The example-based unit tests provide sufficient coverage.
 
 ### Test File Location
 
