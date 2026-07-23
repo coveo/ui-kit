@@ -26,7 +26,8 @@
     "execute_bash": {
       "allowedCommands": [
         "pnpm run test:unit",
-        "npx @salesforce-ux/slds-linter report"
+        "npx @salesforce-ux/slds-linter report",
+        "gh pr create"
       ],
       "autoAllowReadonly": true
     }

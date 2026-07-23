@@ -213,3 +213,47 @@ Apply **brand-related color hooks** (`--slds-g-color-brand-*`) where the compone
 - Do NOT modify HTML templates, JavaScript logic, or component APIs — this agent only modifies CSS
 - Run `pnpm run test:unit -p force-app/main/default/lwc/{componentName}/` to verify unit tests still pass after changes
 - Styling should be visually unaffected (very similar) after migration — fallback values guarantee this
+
+## Pull Request Creation
+
+When the user asks to create a PR, use the `gh` CLI tool with the following structure and pattern:
+
+```bash
+gh pr create --title "<JIRA-TICKET> <Short title>" --body "<body>"
+```
+
+### PR Description Template
+
+```markdown
+[<JIRA-TICKET>](https://coveord.atlassian.net/browse/<JIRA-TICKET>)
+
+### <Short descriptive title>
+
+<One-paragraph summary of what was done and the approach taken.>
+
+## What changed
+
+- <Bullet list of concrete changes>
+- <Number of files, what was migrated>
+- <Any exceptions or special cases>
+
+## Why
+
+<Explain the motivation: SLDS1 deprecation, SLDS2 theming incompatibility with hardcoded values, dark mode support, etc.>
+
+## Validation
+
+- <Linter results before/after>
+- <Unit test results>
+- <Visual parity confirmation>
+
+See examples community post deployment: <scratch org URL if available>
+```
+
+### Guidelines
+- Always include the Jira ticket link at the top
+- Keep the title concise (under 70 characters)
+- In "What changed", be specific about numbers (files changed, issues resolved)
+- In "Why", mention that SLDS2 does not resolve hardcoded color values through its theming system
+- In "Validation", include concrete metrics (issue count before/after, test count)
+- Add a link to the examples community scratch org if available for visual verification
