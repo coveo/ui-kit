@@ -1,7 +1,6 @@
 import {DocumentInformation, FacetStateRequest} from '../events';
 import {InsightEvents} from '../insight/insightEvents';
 
-// oxlint-disable typescript/no-duplicate-enum-values -- Preserves legacy emitted event values
 export enum SearchPageEvents {
     /**
      * Identifies the search event that gets logged when the initial query is performed as a result of loading a search interface.
@@ -352,7 +351,6 @@ export enum SearchPageEvents {
      */
     generatedAnswerFeedbackSubmitV2 = 'generatedAnswerFeedbackSubmitV2',
 }
-// oxlint-enable typescript/no-duplicate-enum-values
 
 export const CustomEventsTypes: Partial<Record<SearchPageEvents | InsightEvents, string>> = {
     [SearchPageEvents.triggerNotify]: 'queryPipelineTriggers',

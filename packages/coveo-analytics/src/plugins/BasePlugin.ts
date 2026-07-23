@@ -140,7 +140,7 @@ export abstract class BasePlugin extends Plugin {
     }
 
     private getCurrentLocationFromPayload(payload: any) {
-        if (payload.page) {
+        if (!!payload.page) {
             const removeStartingSlash = (page: string) => page.replace(/^\/?(.*)$/, '/$1');
             const extractHostnamePart = (location: string) => location.split('/').slice(0, 3).join('/');
             return `${extractHostnamePart(this.currentLocation)}${removeStartingSlash(payload.page)}`;

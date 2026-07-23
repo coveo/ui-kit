@@ -55,7 +55,7 @@ const getFirstCustomMeasurementProtocolKeyMatch = (key: string): string | undefi
     let matchedKey: string | undefined = undefined;
     [...isCustomCommerceKey].every((regex) => {
         matchedKey = regex.exec(key)?.[1];
-        return !matchedKey;
+        return !Boolean(matchedKey);
     });
     return matchedKey;
 };
