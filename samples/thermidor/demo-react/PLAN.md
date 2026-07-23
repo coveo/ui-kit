@@ -16,6 +16,10 @@ Create a new React sample under `samples/thermidor/demo-react/` that realizes th
 - Incremental phasing: hardcoded → real backend where available → future backends
 - URL state serialization for browser history navigation on the search page
 
+## Spec Guidelines
+
+- **No property-based testing (fast-check).** This is a demo app — standard unit tests with Vitest + Testing Library are sufficient. When writing specs for tasks in this project, do not include correctness properties or property-based test sections.
+
 ## Background
 
 - Thermidor currently provides: `Engine`, `GenerativeInterface`, `CommerceInterface`, `SearchInterface`, `ConverseController`, `SearchBoxController`, `ProductListController`, `PaginationController`
