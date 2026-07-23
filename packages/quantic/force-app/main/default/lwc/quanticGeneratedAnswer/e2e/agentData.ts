@@ -195,10 +195,6 @@ export type AgentMessage =
   | AgentCitationType
   | AgentRunErrorType;
 
-/**
- * SSE error stream simulating the turn limit being reached on a follow-up request.
- * The strategy sets the active answer id from RUN_STARTED before the error is dispatched.
- */
 export const turnLimitErrorStream: Array<AgentMessage> = [
   runStartStream(ANSWER_ID_2),
   runErrorStream(
@@ -207,9 +203,6 @@ export const turnLimitErrorStream: Array<AgentMessage> = [
   ),
 ];
 
-/**
- * SSE error stream simulating a generic/internal error on a follow-up request.
- */
 export const genericErrorStream: Array<AgentMessage> = [
   runStartStream(ANSWER_ID_2),
   runErrorStream('An unexpected error occurred.', 'KNOWLEDGE:SSE_INTERNAL_ERROR'),
