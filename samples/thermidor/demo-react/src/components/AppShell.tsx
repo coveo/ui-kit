@@ -44,6 +44,13 @@ export function AppShell() {
     }
   }, [converseState.turns, dispatch]);
 
+  useEffect(() => {
+    const lastTurn = converseState.turns[converseState.turns.length - 1];
+    if (lastTurn?.status === 'error') {
+      console.warn(lastTurn.error ?? 'An error occurred');
+    }
+  }, [converseState.turns]);
+
   const handleSubmit = (prompt: string) => {
     if (!prompt.trim() || converseState.isStreaming) return;
     controller.submit({prompt});
@@ -66,12 +73,6 @@ export function AppShell() {
     dispatch({type: 'NAVIGATE_LANDING'});
   };
 
-  const lastTurn = converseState.turns[converseState.turns.length - 1];
-  const error =
-    lastTurn?.status === 'error'
-      ? (lastTurn.error ?? 'An error occurred')
-      : null;
-
   switch (view) {
     case 'search':
       return (
@@ -79,7 +80,6 @@ export function AppShell() {
           onSubmit={handleSubmit}
           isStreaming={converseState.isStreaming}
           routedInterface={persistedInterfaceRef.current!}
-          error={error}
         />
       );
     case 'conversation':
@@ -91,7 +91,6 @@ export function AppShell() {
           onBackToSearch={handleBackToSearch}
           canGoBackToSearch={canGoBackToSearch}
           onResetToLanding={handleResetToLanding}
-          error={error}
         />
       );
     default:
@@ -99,7 +98,6 @@ export function AppShell() {
         <LandingPage
           onSubmit={handleSubmit}
           isStreaming={converseState.isStreaming}
-          error={error}
         />
       );
   }

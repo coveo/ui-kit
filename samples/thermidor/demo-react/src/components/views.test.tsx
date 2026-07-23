@@ -7,7 +7,7 @@ import {ConversationPage} from './ConversationPage.js';
 
 describe('LandingPage', () => {
   it('renders the heading', () => {
-    render(<LandingPage onSubmit={vi.fn()} isStreaming={false} error={null} />);
+    render(<LandingPage onSubmit={vi.fn()} isStreaming={false} />);
     expect(
       screen.getByRole('heading', {name: 'What can I help you find?'})
     ).toBeDefined();
@@ -15,9 +15,7 @@ describe('LandingPage', () => {
 
   it('calls onSubmit with the textarea value when Enter is pressed', () => {
     const onSubmit = vi.fn();
-    render(
-      <LandingPage onSubmit={onSubmit} isStreaming={false} error={null} />
-    );
+    render(<LandingPage onSubmit={onSubmit} isStreaming={false} />);
 
     const textarea = screen.getByLabelText('Prompt');
     fireEvent.change(textarea, {target: {value: 'hello world'}});
@@ -28,9 +26,7 @@ describe('LandingPage', () => {
 
   it('calls onSubmit when a suggestion pill is clicked', () => {
     const onSubmit = vi.fn();
-    render(
-      <LandingPage onSubmit={onSubmit} isStreaming={false} error={null} />
-    );
+    render(<LandingPage onSubmit={onSubmit} isStreaming={false} />);
 
     fireEvent.click(screen.getByRole('button', {name: 'kayaks'}));
 
@@ -38,29 +34,18 @@ describe('LandingPage', () => {
   });
 
   it('disables the textarea when isStreaming is true', () => {
-    render(<LandingPage onSubmit={vi.fn()} isStreaming={true} error={null} />);
+    render(<LandingPage onSubmit={vi.fn()} isStreaming={true} />);
     expect(
       (screen.getByLabelText('Prompt') as HTMLTextAreaElement).disabled
     ).toBe(true);
   });
 
   it('disables suggestion pills when isStreaming is true', () => {
-    render(<LandingPage onSubmit={vi.fn()} isStreaming={true} error={null} />);
+    render(<LandingPage onSubmit={vi.fn()} isStreaming={true} />);
     const pills = screen.getAllByRole('button');
     for (const pill of pills) {
       expect((pill as HTMLButtonElement).disabled).toBe(true);
     }
-  });
-
-  it('displays an error message when error is provided', () => {
-    render(
-      <LandingPage
-        onSubmit={vi.fn()}
-        isStreaming={false}
-        error="Something went wrong"
-      />
-    );
-    expect(screen.getByRole('alert').textContent).toBe('Something went wrong');
   });
 });
 
@@ -76,7 +61,6 @@ describe('SearchResultsPage', () => {
         onSubmit={vi.fn()}
         isStreaming={false}
         routedInterface={mockRoutedInterface}
-        error={null}
       />
     );
     expect(screen.getByRole('heading', {name: 'Search Results'})).toBeDefined();
@@ -88,7 +72,6 @@ describe('SearchResultsPage', () => {
         onSubmit={vi.fn()}
         isStreaming={false}
         routedInterface={mockRoutedInterface}
-        error={null}
       />
     );
     expect(screen.getByText('Use case: search')).toBeDefined();
@@ -101,13 +84,12 @@ describe('SearchResultsPage', () => {
         onSubmit={onSubmit}
         isStreaming={false}
         routedInterface={mockRoutedInterface}
-        error={null}
       />
     );
 
     const input = screen.getByLabelText('Prompt');
     fireEvent.change(input, {target: {value: 'find products'}});
-    fireEvent.submit(input.closest('form')!);
+    fireEvent.keyDown(input, {key: 'Enter', code: 'Enter'});
 
     expect(onSubmit).toHaveBeenCalledWith('find products');
   });
@@ -118,7 +100,6 @@ describe('SearchResultsPage', () => {
         onSubmit={vi.fn()}
         isStreaming={true}
         routedInterface={mockRoutedInterface}
-        error={null}
       />
     );
     expect((screen.getByLabelText('Prompt') as HTMLInputElement).disabled).toBe(
@@ -143,7 +124,6 @@ describe('ConversationPage', () => {
         onBackToSearch={vi.fn()}
         canGoBackToSearch={true}
         onResetToLanding={vi.fn()}
-        error={null}
       />
     );
     expect(screen.getByRole('heading', {name: 'Conversation'})).toBeDefined();
@@ -162,7 +142,6 @@ describe('ConversationPage', () => {
         onBackToSearch={vi.fn()}
         canGoBackToSearch={true}
         onResetToLanding={vi.fn()}
-        error={null}
       />
     );
     expect(screen.getByText('Latest prompt: second question')).toBeDefined();
@@ -178,7 +157,6 @@ describe('ConversationPage', () => {
         onBackToSearch={vi.fn()}
         canGoBackToSearch={true}
         onResetToLanding={vi.fn()}
-        error={null}
       />
     );
 
@@ -198,7 +176,6 @@ describe('ConversationPage', () => {
         onBackToSearch={vi.fn()}
         canGoBackToSearch={true}
         onResetToLanding={vi.fn()}
-        error={null}
       />
     );
     expect((screen.getByLabelText('Prompt') as HTMLInputElement).disabled).toBe(
@@ -216,7 +193,6 @@ describe('ConversationPage', () => {
         onBackToSearch={onBackToSearch}
         canGoBackToSearch={true}
         onResetToLanding={vi.fn()}
-        error={null}
       />
     );
 
@@ -234,7 +210,6 @@ describe('ConversationPage', () => {
         onBackToSearch={vi.fn()}
         canGoBackToSearch={false}
         onResetToLanding={vi.fn()}
-        error={null}
       />
     );
     expect(
@@ -252,7 +227,6 @@ describe('ConversationPage', () => {
         onBackToSearch={vi.fn()}
         canGoBackToSearch={false}
         onResetToLanding={onReset}
-        error={null}
       />
     );
 

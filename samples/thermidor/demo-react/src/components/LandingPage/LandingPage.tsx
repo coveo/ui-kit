@@ -1,14 +1,27 @@
+import {
+  SECTION_ACTIONS,
+  type SuggestionItem,
+} from '../SuggestionsDropdown/index.js';
 import {PromptInput} from '../PromptInput/PromptInput.js';
 import {SuggestionPills} from '../SuggestionPills/SuggestionPills.js';
+import {useSuggestions} from '../../hooks/use-suggestions.js';
 import styles from './LandingPage.module.css';
 
 interface LandingPageProps {
   onSubmit: (prompt: string) => void;
   isStreaming: boolean;
-  error: string | null;
 }
 
-export function LandingPage({onSubmit, isStreaming, error}: LandingPageProps) {
+export function LandingPage({onSubmit, isStreaming}: LandingPageProps) {
+  const {sections} = useSuggestions({inputValue: '', context: 'landing'});
+
+  const handleSuggestionSelect = (item: SuggestionItem, sectionId: string) => {
+    const action = SECTION_ACTIONS[sectionId];
+    if (action === 'submit') {
+      onSubmit(item.label);
+    }
+  };
+
   return (
     <section className={styles.page}>
       <div className={styles.content}>
@@ -18,14 +31,11 @@ export function LandingPage({onSubmit, isStreaming, error}: LandingPageProps) {
             onSubmit={onSubmit}
             disabled={isStreaming}
             placeholder="Search for products or ask a question..."
+            suggestions={sections}
+            onSuggestionSelect={handleSuggestionSelect}
           />
         </div>
         <SuggestionPills onSelect={onSubmit} disabled={isStreaming} />
-        {error && (
-          <p role="alert" className={styles.error}>
-            {error}
-          </p>
-        )}
       </div>
     </section>
   );
