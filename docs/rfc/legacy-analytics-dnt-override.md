@@ -147,6 +147,10 @@ Runtime behavior remains unchanged:
 - `enableAnalytics()` enables analytics.
 - Reconstructing an engine evaluates the new configuration.
 
+### Deprecated at introduction
+
+The option is introduced with a `@deprecated` annotation (and equivalent documentation markers) from its very first release. This signals to implementers immediately that the option is a transitional bridge, not a long-lived capability. Teams integrating the option can plan for its removal early rather than discovering the deprecation in a future release.
+
 ### `coveo.analytics.js` support
 
 The downstream client must accept and honor an equivalent option. When present, it must skip its own `doNotTrack()` check in:
