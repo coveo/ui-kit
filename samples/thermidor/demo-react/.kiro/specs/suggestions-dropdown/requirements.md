@@ -145,3 +145,14 @@ The Suggestions Dropdown is a configurable dropdown component that appears below
 1. THE SuggestionItemRow SHALL use `mousedown` event (which fires before blur) for item selection instead of `click`
 2. IF `mousedown` is not used, THEN THE PromptInput SHALL delay hiding the Dropdown by at least 150ms on blur to allow the click event to register
 3. WHEN a suggestion is selected via mouse interaction, THE Dropdown SHALL close only after the selection callback has been invoked
+
+### Requirement 12: Textarea Scrollbar Behavior
+
+**User Story:** As a user, I want the input area to grow as I type without showing a scrollbar until it reaches a reasonable maximum height, so that my text entry experience is clean and free of layout jitter.
+
+#### Acceptance Criteria
+
+1. THE PromptInput textarea SHALL auto-expand its height to fit content as the user types
+2. THE PromptInput textarea SHALL NOT display a vertical scrollbar while content height is below the maximum height threshold
+3. THE PromptInput textarea SHALL cap its height at approximately 10 lines of text
+4. WHEN the content height exceeds the maximum height threshold, THE PromptInput textarea SHALL display a vertical scrollbar to allow access to overflow content

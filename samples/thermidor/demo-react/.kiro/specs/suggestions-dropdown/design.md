@@ -157,6 +157,8 @@ interface PromptInputProps {
 - Pass `activeIndex` to dropdown for highlight state
 - Call `onSuggestionSelect` when an item is chosen (keyboard or click)
 - Close dropdown after selection or on Escape
+- Auto-expand textarea height to fit content, capped at ~10 lines (~272px)
+- Show vertical scrollbar only when content exceeds the max height threshold (overflow-y toggled from hidden to auto dynamically)
 
 ## Data Models
 
