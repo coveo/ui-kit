@@ -90,15 +90,10 @@ The `processVariableArgumentsNamesStep` is parsing the "variable arguments" of t
 
 ```ts
 this.client.addEventTypeMapping(ECPluginEventTypes.event, {
-  newEventType: EventType.collect,
-  variableLengthArgumentsNames: [
-    'eventCategory',
-    'eventAction',
-    'eventLabel',
-    'eventValue',
-  ],
-  addVisitorIdParameter: true,
-  usesMeasurementProtocol: true,
+    newEventType: EventType.collect,
+    variableLengthArgumentsNames: ['eventCategory', 'eventAction', 'eventLabel', 'eventValue'],
+    addVisitorIdParameter: true,
+    usesMeasurementProtocol: true,
 });
 ```
 

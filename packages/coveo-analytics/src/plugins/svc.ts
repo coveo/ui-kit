@@ -1,129 +1,115 @@
 import {EventType} from '../events';
 import {v4 as uuidv4} from 'uuid';
 import {convertTicketToMeasurementProtocol} from '../client/measurementProtocolMapping/serviceMeasurementProtocolMapper';
-import {
-  BasePlugin,
-  BasePluginEventTypes,
-  PluginClass,
-  PluginOptions,
-} from './BasePlugin';
+import {BasePlugin, BasePluginEventTypes, PluginClass, PluginOptions} from './BasePlugin';
 
 export const SVCPluginEventTypes = {
-  ...BasePluginEventTypes,
+    ...BasePluginEventTypes,
 };
 
 const allSVCEventTypes = Object.keys(SVCPluginEventTypes).map(
-  (key) => SVCPluginEventTypes[key as keyof typeof SVCPluginEventTypes]
+    (key) => SVCPluginEventTypes[key as keyof typeof SVCPluginEventTypes]
 );
 
 export type CustomValues = {
-  [key: string]: string | number | boolean;
+    [key: string]: string | number | boolean;
 };
 
 export interface TicketProperties {
-  id?: string;
-  subject?: string;
-  description?: string;
-  category?: string;
-  productId?: string;
-  custom?: CustomValues;
+    id?: string;
+    subject?: string;
+    description?: string;
+    category?: string;
+    productId?: string;
+    custom?: CustomValues;
 }
 
 export type Ticket = TicketProperties;
 
 export class SVCPlugin extends BasePlugin {
-  public static readonly Id = 'svc';
-  private ticket: Ticket = {};
+    public static readonly Id = 'svc';
+    private ticket: Ticket = {};
 
-  constructor({client, uuidGenerator = uuidv4}: PluginOptions) {
-    super({client, uuidGenerator});
-  }
-
-  public getApi(name: string): Function | null {
-    const superCall: Function | null = super.getApi(name);
-    if (superCall !== null) return superCall;
-    switch (name) {
-      case 'setTicket':
-        return this.setTicket;
-      default:
-        return null;
+    constructor({client, uuidGenerator = uuidv4}: PluginOptions) {
+        super({client, uuidGenerator});
     }
-  }
 
-  protected addHooks(): void {
-    this.addHooksForEvent();
-    this.addHooksForPageView();
-    this.addHooksForSVCEvents();
-  }
+    public getApi(name: string): Function | null {
+        const superCall: Function | null = super.getApi(name);
+        if (superCall !== null) return superCall;
+        switch (name) {
+            case 'setTicket':
+                return this.setTicket;
+            default:
+                return null;
+        }
+    }
 
-  setTicket(ticket: Ticket) {
-    this.ticket = ticket;
-  }
+    protected addHooks(): void {
+        this.addHooksForEvent();
+        this.addHooksForPageView();
+        this.addHooksForSVCEvents();
+    }
 
-  protected clearPluginData() {
-    this.ticket = {};
-  }
+    setTicket(ticket: Ticket) {
+        this.ticket = ticket;
+    }
 
-  private addHooksForSVCEvents() {
-    this.client.registerBeforeSendEventHook((eventType, ...[payload]) => {
-      return allSVCEventTypes.indexOf(eventType) !== -1
-        ? this.addSVCDataToPayload(eventType, payload)
-        : payload;
-    });
-    this.client.registerAfterSendEventHook((eventType, ...[payload]) => {
-      if (allSVCEventTypes.indexOf(eventType) !== -1) {
-        this.updateLocationInformation(eventType, payload);
-      }
-      return payload;
-    });
-  }
+    protected clearPluginData() {
+        this.ticket = {};
+    }
 
-  private addHooksForPageView() {
-    this.client.addEventTypeMapping(SVCPluginEventTypes.pageview, {
-      newEventType: EventType.collect,
-      variableLengthArgumentsNames: ['page'],
-      addVisitorIdParameter: true,
-      usesMeasurementProtocol: true,
-    });
-  }
+    private addHooksForSVCEvents() {
+        this.client.registerBeforeSendEventHook((eventType, ...[payload]) => {
+            return allSVCEventTypes.indexOf(eventType) !== -1 ? this.addSVCDataToPayload(eventType, payload) : payload;
+        });
+        this.client.registerAfterSendEventHook((eventType, ...[payload]) => {
+            if (allSVCEventTypes.indexOf(eventType) !== -1) {
+                this.updateLocationInformation(eventType, payload);
+            }
+            return payload;
+        });
+    }
 
-  private addHooksForEvent() {
-    this.client.addEventTypeMapping(SVCPluginEventTypes.event, {
-      newEventType: EventType.collect,
-      variableLengthArgumentsNames: [
-        'eventCategory',
-        'eventAction',
-        'eventLabel',
-        'eventValue',
-      ],
-      addVisitorIdParameter: true,
-      usesMeasurementProtocol: true,
-    });
-  }
+    private addHooksForPageView() {
+        this.client.addEventTypeMapping(SVCPluginEventTypes.pageview, {
+            newEventType: EventType.collect,
+            variableLengthArgumentsNames: ['page'],
+            addVisitorIdParameter: true,
+            usesMeasurementProtocol: true,
+        });
+    }
 
-  private addSVCDataToPayload(eventType: string, payload: any) {
-    const svcPayload = {
-      ...this.getLocationInformation(eventType, payload),
-      ...this.getDefaultContextInformation(eventType),
-      ...(this.action ? {svcAction: this.action} : {}),
-      ...(Object.keys(this.actionData ?? {}).length > 0
-        ? {svcActionData: this.actionData}
-        : {}),
-    };
+    private addHooksForEvent() {
+        this.client.addEventTypeMapping(SVCPluginEventTypes.event, {
+            newEventType: EventType.collect,
+            variableLengthArgumentsNames: ['eventCategory', 'eventAction', 'eventLabel', 'eventValue'],
+            addVisitorIdParameter: true,
+            usesMeasurementProtocol: true,
+        });
+    }
 
-    const ticketPayload = this.getTicketPayload();
-    this.clearData();
+    private addSVCDataToPayload(eventType: string, payload: any) {
+        const svcPayload = {
+            ...this.getLocationInformation(eventType, payload),
+            ...this.getDefaultContextInformation(eventType),
+            ...(this.action ? {svcAction: this.action} : {}),
+            ...(Object.keys(this.actionData ?? {}).length > 0 ? {svcActionData: this.actionData} : {}),
+        };
 
-    return {
-      ...ticketPayload,
-      ...svcPayload,
-      ...payload,
-    };
-  }
+        const ticketPayload = this.getTicketPayload();
+        this.clearData();
 
-  private getTicketPayload() {
-    return convertTicketToMeasurementProtocol(this.ticket);
-  }
+        return {
+            ...ticketPayload,
+            ...svcPayload,
+            ...payload,
+        };
+    }
+
+    private getTicketPayload() {
+        return convertTicketToMeasurementProtocol(this.ticket);
+    }
 }
 
 export const SVC: PluginClass = SVCPlugin;

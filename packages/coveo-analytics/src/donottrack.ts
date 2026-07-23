@@ -9,15 +9,15 @@ import {hasNavigator} from './detector';
 const doNotTrackValues = ['1', 1, 'yes', true];
 
 export function doNotTrack(): boolean {
-  return (
-    hasNavigator() &&
-    [
-      (<any>navigator).globalPrivacyControl,
-      (<any>navigator).doNotTrack,
-      (<any>navigator).msDoNotTrack,
-      (<any>window).doNotTrack,
-    ].some((value) => doNotTrackValues.indexOf(value) !== -1)
-  );
+    return (
+        hasNavigator() &&
+        [
+            (<any>navigator).globalPrivacyControl,
+            (<any>navigator).doNotTrack,
+            (<any>navigator).msDoNotTrack,
+            (<any>window).doNotTrack,
+        ].some((value) => doNotTrackValues.indexOf(value) !== -1)
+    );
 }
 
 export default doNotTrack;
