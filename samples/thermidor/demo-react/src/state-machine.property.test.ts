@@ -2,9 +2,11 @@ import {describe, it, expect, vi} from 'vitest';
 import fc from 'fast-check';
 import {
   appReducer,
+  deriveTransitionAction,
   type AppState,
   type ViewState,
 } from './hooks/use-app-state.js';
+import type {Turn} from '@coveo/thermidor';
 
 /**
  * Property-based tests for the App Shell state machine correctness.
@@ -17,25 +19,47 @@ describe('Feature: app-shell-state-machine — Property-Based Tests', () => {
   /**
    * **Validates: Requirements 1.2, 1.3**
    *
-   * Property 1: For any completed turn with routedInterface, view transitions
-   * to 'search'; with agentResponse, transitions to 'conversation'.
+   * Property 1: For any completed turn with routedInterface, deriveTransitionAction
+   * returns NAVIGATE_SEARCH; with agentResponse, returns NAVIGATE_CONVERSATION.
+   * Applying that action to the reducer from any starting view produces the correct view.
    */
   it('Property 1: Turn completion drives correct view transition', () => {
+    const turnWithRoutedInterface: fc.Arbitrary<Turn> = fc.record({
+      id: fc.uuid(),
+      prompt: fc.string({minLength: 1}),
+      status: fc.constant('complete' as const),
+      routedInterface: fc.constant({
+        useCase: 'commerceSearch' as const,
+        interface: {} as any,
+      }),
+    }) as fc.Arbitrary<Turn>;
+
+    const turnWithAgentResponse: fc.Arbitrary<Turn> = fc.record({
+      id: fc.uuid(),
+      prompt: fc.string({minLength: 1}),
+      status: fc.constant('complete' as const),
+      agentResponse: fc.constant({
+        messages: [],
+        surfaces: [],
+        toolCalls: [],
+        reasoningContent: '',
+      } as any),
+    }) as fc.Arbitrary<Turn>;
+
     fc.assert(
       fc.property(
-        fc.oneof(
-          fc.constant('routedInterface' as const),
-          fc.constant('agentResponse' as const)
-        ),
+        fc.oneof(turnWithRoutedInterface, turnWithAgentResponse),
         fc.constantFrom(...viewStates),
-        (turnType, startView) => {
-          const state: AppState = {view: startView};
+        (turn, startView) => {
+          const action = deriveTransitionAction(turn);
+          expect(action).not.toBeNull();
 
-          if (turnType === 'routedInterface') {
-            const result = appReducer(state, {type: 'NAVIGATE_SEARCH'});
+          const state: AppState = {view: startView};
+          const result = appReducer(state, action!);
+
+          if (turn.routedInterface) {
             expect(result.view).toBe('search');
           } else {
-            const result = appReducer(state, {type: 'NAVIGATE_CONVERSATION'});
             expect(result.view).toBe('conversation');
           }
         }
@@ -110,33 +134,43 @@ describe('Feature: app-shell-state-machine — Property-Based Tests', () => {
   /**
    * **Validates: Requirements 5.2, 5.3**
    *
-   * Property 4: For any error turn from any view state, view state remains
-   * unchanged.
+   * Property 4: For any turn with status 'error' (regardless of whether it
+   * also has routedInterface or agentResponse), deriveTransitionAction returns
+   * null, meaning no view transition occurs.
    */
   it('Property 4: Error turns preserve view state', () => {
+    const turnArb = fc.record({
+      id: fc.uuid(),
+      prompt: fc.string({minLength: 1}),
+      status: fc.constant('error' as const),
+      error: fc.string({minLength: 1}),
+      routedInterface: fc.oneof(
+        fc.constant(undefined),
+        fc.constant({useCase: 'commerceSearch' as const, interface: {} as any})
+      ),
+      agentResponse: fc.oneof(
+        fc.constant(undefined),
+        fc.constant({
+          messages: [],
+          surfaces: [],
+          toolCalls: [],
+          reasoningContent: '',
+        } as any)
+      ),
+    }) as fc.Arbitrary<Turn>;
+
     fc.assert(
-      fc.property(fc.constantFrom(...viewStates), (startView) => {
-        const state: AppState = {view: startView};
+      fc.property(
+        turnArb,
+        fc.constantFrom(...viewStates),
+        (turn, startView) => {
+          const action = deriveTransitionAction(turn);
+          expect(action).toBeNull();
 
-        const turn = {
-          id: 'error-turn',
-          prompt: 'test',
-          status: 'error' as const,
-          error: 'Something went wrong',
-        };
-
-        const hasRoutedInterface = !!turn.routedInterface;
-        const hasAgentResponse = !!(turn as any).agentResponse;
-
-        if (turn.status === 'complete' && hasRoutedInterface) {
-          return;
+          const state: AppState = {view: startView};
+          expect(state.view).toBe(startView);
         }
-        if (turn.status === 'complete' && hasAgentResponse) {
-          return;
-        }
-
-        expect(state.view).toBe(startView);
-      }),
+      ),
       {numRuns: 100}
     );
   });

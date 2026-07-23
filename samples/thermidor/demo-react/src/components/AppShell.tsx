@@ -2,7 +2,7 @@ import {useEffect, useRef} from 'react';
 import {buildConverseController, type RoutedInterface} from '@coveo/thermidor';
 import {useGenerativeInterface} from '../context/generative-interface.js';
 import {useBuildController} from '../hooks/use-build-controller.js';
-import {useAppState} from '../hooks/use-app-state.js';
+import {useAppState, deriveTransitionAction} from '../hooks/use-app-state.js';
 import {LandingPage} from './LandingPage.js';
 import {SearchResultsPage} from './SearchResultsPage.js';
 import {ConversationPage} from './ConversationPage.js';
@@ -39,14 +39,19 @@ export function AppShell() {
 
     lastObservedTurnIdRef.current = latestCompletedTurn.id;
 
-    if (latestCompletedTurn.routedInterface) {
+    const action = deriveTransitionAction(latestCompletedTurn);
+
+    if (
+      action?.type === 'NAVIGATE_SEARCH' &&
+      latestCompletedTurn.routedInterface
+    ) {
       if (persistedInterfaceRef.current) {
         persistedInterfaceRef.current.interface.dispose();
       }
       persistedInterfaceRef.current = latestCompletedTurn.routedInterface;
-      dispatch({type: 'NAVIGATE_SEARCH'});
-    } else if (latestCompletedTurn.agentResponse) {
-      dispatch({type: 'NAVIGATE_CONVERSATION'});
+      dispatch(action);
+    } else if (action) {
+      dispatch(action);
     }
   }, [converseState.turns, dispatch]);
 
