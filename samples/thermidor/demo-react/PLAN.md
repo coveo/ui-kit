@@ -310,40 +310,40 @@ Each task is categorized by the level of upfront specification needed before imp
 
 These tasks are mechanical, pattern-copying, or iterative refinement. The plan guidance is sufficient.
 
-| Task | Reason |
-|------|--------|
-| 1 | Scaffolding — copying established patterns from `generative-react` |
-| 3 | Landing page — UX is clear from mockup, straightforward component |
-| 6 | Query summary + smart filters — small scope, well-defined behavior |
-| 12 | Query suggestions Phase 2 — mostly defining a hook interface boundary |
-| 13 | Sort control — small scope, placeholder vs functional decision is clear |
-| 14 | Polish — iterative refinement, no architectural decisions |
+| Task | Reason                                                                  |
+| ---- | ----------------------------------------------------------------------- |
+| 1    | Scaffolding — copying established patterns from `generative-react`      |
+| 3    | Landing page — UX is clear from mockup, straightforward component       |
+| 6    | Query summary + smart filters — small scope, well-defined behavior      |
+| 12   | Query suggestions Phase 2 — mostly defining a hook interface boundary   |
+| 13   | Sort control — small scope, placeholder vs functional decision is clear |
+| 14   | Polish — iterative refinement, no architectural decisions               |
 
 ### Full spec-driven development (spec required before implementation)
 
 These tasks have complex interactions, architectural decisions, or edge cases that benefit from a formal specification upfront.
 
-| Task(s) | Spec scope | Reason |
-|---------|-----------|--------|
-| 2 | App shell + view state machine | Architectural backbone. State transitions, turn observation logic, and interface persistence strategy — errors here cascade everywhere. |
-| 4 + 7 | Suggestion dropdown component | Shared component supporting multiple configurations (2 vs 3 sections, different item types, different actions per section). Spec ensures extensibility from the start. |
-| 5 | Search results page + routed interface lifecycle | Introduces the routed interface persistence pattern — when to capture, when to dispose, what controllers to build, how pagination interacts with the persisted reference. |
-| 8 + 9 | Conversation mode (basic + turn history) | Large surface area (a2ui rendering, streaming, turn threading). Spec defines what to copy verbatim vs. adapt from `generative-react`. |
-| 10 | Bidirectional navigation flow | Edge cases in preserving both search and conversation state simultaneously, disposal rules, re-entry behavior. |
-| 11 | URL state serialization | Interaction between URL params, persisted interface, and converse controller session needs clear rules (e.g., does browser back trigger a new converse submission or a local state restore?). |
+| Task(s) | Spec scope                                       | Reason                                                                                                                                                                                        |
+| ------- | ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2       | App shell + view state machine                   | Architectural backbone. State transitions, turn observation logic, and interface persistence strategy — errors here cascade everywhere.                                                       |
+| 4 + 7   | Suggestion dropdown component                    | Shared component supporting multiple configurations (2 vs 3 sections, different item types, different actions per section). Spec ensures extensibility from the start.                        |
+| 5       | Search results page + routed interface lifecycle | Introduces the routed interface persistence pattern — when to capture, when to dispose, what controllers to build, how pagination interacts with the persisted reference.                     |
+| 8 + 9   | Conversation mode (basic + turn history)         | Large surface area (a2ui rendering, streaming, turn threading). Spec defines what to copy verbatim vs. adapt from `generative-react`.                                                         |
+| 10      | Bidirectional navigation flow                    | Edge cases in preserving both search and conversation state simultaneously, disposal rules, re-entry behavior.                                                                                |
+| 11      | URL state serialization                          | Interaction between URL params, persisted interface, and converse controller session needs clear rules (e.g., does browser back trigger a new converse submission or a local state restore?). |
 
 ---
 
 ## PR Strategy
 
-| PR | Tasks | Scope |
-|----|-------|-------|
-| PR 1 | Tasks 1–2 | Project init + app shell with view state machine |
-| PR 2 | Tasks 3–4 | Landing page with input, pills, and suggestion dropdown |
-| PR 3 | Tasks 5–6 | Search results page (grid, pagination, query summary, placeholders) |
-| PR 4 | Task 7 | Three-section suggestions on search page |
-| PR 5 | Tasks 8–9 | Conversation mode (basic + turn history) |
-| PR 6 | Task 10 | Bidirectional navigation flow |
-| PR 7 | Task 11 | URL state serialization |
-| PR 8 | Tasks 12–13 | Query suggestions Phase 2 + sort control |
-| PR 9 | Task 14 | Polish and responsive design |
+| PR   | Tasks       | Scope                                                               |
+| ---- | ----------- | ------------------------------------------------------------------- |
+| PR 1 | Tasks 1–2   | Project init + app shell with view state machine                    |
+| PR 2 | Tasks 3–4   | Landing page with input, pills, and suggestion dropdown             |
+| PR 3 | Tasks 5–6   | Search results page (grid, pagination, query summary, placeholders) |
+| PR 4 | Task 7      | Three-section suggestions on search page                            |
+| PR 5 | Tasks 8–9   | Conversation mode (basic + turn history)                            |
+| PR 6 | Task 10     | Bidirectional navigation flow                                       |
+| PR 7 | Task 11     | URL state serialization                                             |
+| PR 8 | Tasks 12–13 | Query suggestions Phase 2 + sort control                            |
+| PR 9 | Task 14     | Polish and responsive design                                        |

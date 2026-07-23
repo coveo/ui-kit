@@ -48,6 +48,7 @@ graph TD
 ### AppShell
 
 The top-level component that:
+
 - Instantiates the `ConverseController` via `useBuildController`
 - Manages view state via `useAppState`
 - Observes turn completions and dispatches transitions
@@ -118,11 +119,11 @@ The helper `findLatestCompletedTurn` scans the turns array in reverse for the mo
 
 ### Props Contract
 
-| Component | Props |
-|-----------|-------|
-| `LandingPage` | `onSubmit: (prompt: string) => void`, `isStreaming: boolean` |
-| `SearchResultsPage` | `onSubmit: (prompt: string) => void`, `isStreaming: boolean`, `routedInterface: RoutedInterface` |
-| `ConversationPage` | `onSubmit: (prompt: string) => void`, `isStreaming: boolean`, `turns: Turn[]`, `onBackToSearch: (() => void) \| null`, `onResetToLanding: () => void` |
+| Component           | Props                                                                                                                                                 |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `LandingPage`       | `onSubmit: (prompt: string) => void`, `isStreaming: boolean`                                                                                          |
+| `SearchResultsPage` | `onSubmit: (prompt: string) => void`, `isStreaming: boolean`, `routedInterface: RoutedInterface`                                                      |
+| `ConversationPage`  | `onSubmit: (prompt: string) => void`, `isStreaming: boolean`, `turns: Turn[]`, `onBackToSearch: (() => void) \| null`, `onResetToLanding: () => void` |
 
 - `onSubmit` — delegates to `converseController.submit({prompt})`
 - `isStreaming` — from `converseState.isStreaming`, used to disable input
@@ -187,46 +188,46 @@ interface ConverseControllerState {
 
 ## Correctness Properties
 
-*A property is a characteristic or behavior that should hold true across all valid executions of a system — essentially, a formal statement about what the system should do. Properties serve as the bridge between human-readable specifications and machine-verifiable correctness guarantees.*
+_A property is a characteristic or behavior that should hold true across all valid executions of a system — essentially, a formal statement about what the system should do. Properties serve as the bridge between human-readable specifications and machine-verifiable correctness guarantees._
 
 ### Property 1: Turn completion drives correct view transition
 
-*For any* completed turn, if the turn has a `routedInterface`, the view state SHALL become `'search'`; if the turn has an `agentResponse`, the view state SHALL become `'conversation'`.
+_For any_ completed turn, if the turn has a `routedInterface`, the view state SHALL become `'search'`; if the turn has an `agentResponse`, the view state SHALL become `'conversation'`.
 
 **Validates: Requirements 1.2, 1.3**
 
 ### Property 2: Interface disposal on replacement
 
-*For any* sequence of two or more routed interfaces arriving via turn completions, the `dispose()` method SHALL be called on the previous interface before the new one is stored in the persisted ref.
+_For any_ sequence of two or more routed interfaces arriving via turn completions, the `dispose()` method SHALL be called on the previous interface before the new one is stored in the persisted ref.
 
 **Validates: Requirements 3.2**
 
 ### Property 3: Streaming blocks all submissions
 
-*For any* prompt string attempted while `isStreaming` is `true`, the ConverseController `submit` function SHALL not be invoked.
+_For any_ prompt string attempted while `isStreaming` is `true`, the ConverseController `submit` function SHALL not be invoked.
 
 **Validates: Requirements 5.1**
 
 ### Property 4: Error turns preserve view state
 
-*For any* turn that completes with `status: 'error'`, regardless of the current view state, the view state SHALL remain unchanged.
+_For any_ turn that completes with `status: 'error'`, regardless of the current view state, the view state SHALL remain unchanged.
 
 **Validates: Requirements 5.2, 5.3**
 
 ### Property 5: Prompt forwarding integrity
 
-*For any* non-empty prompt string submitted from any view, the ConverseController `submit` function SHALL be called with that exact string.
+_For any_ non-empty prompt string submitted from any view, the ConverseController `submit` function SHALL be called with that exact string.
 
 **Validates: Requirements 6.4, 2.3**
 
 ## Error Handling
 
-| Scenario | Behavior |
-|----------|----------|
-| Turn completes with `status: 'error'` | View stays unchanged. The error message from `turn.error` is surfaced to the active view for display. |
+| Scenario                                     | Behavior                                                                                                    |
+| -------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| Turn completes with `status: 'error'`        | View stays unchanged. The error message from `turn.error` is surfaced to the active view for display.       |
 | `dispose()` throws on the previous interface | Catch and log. Still store the new interface and transition. The previous interface is released regardless. |
-| `submit` called while streaming | Silently ignored (guard in `handleSubmit` or rely on controller's internal guard). |
-| Controller instantiation fails | Caught by React error boundary wrapping `AppShell`. |
+| `submit` called while streaming              | Silently ignored (guard in `handleSubmit` or rely on controller's internal guard).                          |
+| Controller instantiation fails               | Caught by React error boundary wrapping `AppShell`.                                                         |
 
 ## Testing Strategy
 
@@ -282,6 +283,7 @@ src/
 ```
 
 New files for this task:
+
 - `src/components/AppShell.tsx`
 - `src/components/LandingPage.tsx`
 - `src/components/SearchResultsPage.tsx`
