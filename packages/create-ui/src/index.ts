@@ -1,38 +1,16 @@
 #!/usr/bin/env node
 import {Command, CommanderError} from 'commander';
 import {realpathSync} from 'node:fs';
-import {mkdir, mkdtemp, rm} from 'node:fs/promises';
-import {tmpdir} from 'node:os';
-import {join, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {argv} from 'node:process';
-import {downloadTemplate, TemplateVersionUnavailableError} from './download.js';
-import {isEmptyOrMissing} from './fs-utils.js';
+import {buildCrashReport, writeCrashReport} from './crash-report.js';
+import {isExpectedError} from './errors.js';
 import {log} from './log.js';
-import {buildProjectMetadata} from './metadata.js';
-import {promptProjectName, selectTemplate} from './prompt.js';
-import {readSampleMetadata, writeProvenance} from './provenance.js';
-import {
-  installDependencies,
-  moveToTarget,
-  rewritePackageJson,
-} from './setup.js';
-import {
-  describeTemplate,
-  getTemplate,
-  getTemplates,
-  type Template,
-} from './templates.js';
-import {formatError, getPackageManager} from './utils.js';
-
-export function unavailableTemplateMessage(
-  templateName: string,
-  version?: string
-): string {
-  return version
-    ? `Template "${templateName}" version "${version}" is not available.`
-    : `Template "${templateName}" is not available.`;
-}
+import {resolveInputs, scaffold, type CliArgs} from './scaffold.js';
+import {submitReport} from './submit-report.js';
+import {describeTemplate, getTemplates} from './templates.js';
+import {buildCrashDisclosure, isTrackingDisabled} from './telemetry.js';
+import {formatError} from './utils.js';
 
 // TODO: (KIT-5833): add a link to the "How to use @coveo/create-ui" guide here
 // once that documentation page is published.
@@ -43,19 +21,6 @@ Coveo documentation:
   Atomic      https://docs.coveo.com/en/atomic/latest
   Headless    https://docs.coveo.com/en/headless/latest
 `;
-
-export interface CliArgs {
-  projectName?: string;
-  template?: string;
-  templateVersion?: string;
-  docs: boolean;
-}
-
-export interface ScaffoldOptions {
-  template: Template;
-  projectName: string;
-  version?: string;
-}
 
 /**
  * Builds the commander program. `commander` owns usage/`--help` generation,
@@ -113,154 +78,15 @@ export function parseArgs(rawArgs: string[]): CliArgs {
   };
 }
 
-/**
- * Atomically claims the target directory. Returns true if this call created it
- * (so it is safe to remove on failure), or false if it already existed and is
- * empty (pre-existing — must not be deleted). Throws if it exists and is not
- * empty. A single `mkdir` avoids the check-then-create TOCTOU race.
- */
-async function claimTargetDir(targetDir: string): Promise<boolean> {
-  const firstCreated = await mkdir(targetDir, {recursive: true});
-  if (firstCreated !== undefined) {
-    return true;
-  }
-  if (!(await isEmptyOrMissing(targetDir))) {
-    throw new Error(
-      `Target directory "${targetDir}" already exists and is not empty.`
-    );
-  }
-  return false;
-}
-
-/** Downloads, resolves, finalizes, and installs the chosen template. */
-export async function scaffold({
-  template,
-  projectName,
-  version,
-}: ScaffoldOptions): Promise<void> {
-  const targetDir = resolve(process.cwd(), projectName);
-  const tempDir = await mkdtemp(join(tmpdir(), 'create-ui-'));
-  let createdTargetDir = false;
-
-  try {
-    const versionSuffix = version ? ` (${version})` : '';
-    log.step(`Downloading the "${template.name}" template${versionSuffix}…`);
-    const sampleDir = await downloadTemplate({
-      packageName: template.packageName,
-      destDir: tempDir,
-      version,
-    });
-
-    const {templateVersion, dependencies} = await readSampleMetadata(sampleDir);
-    const metadata = buildProjectMetadata({
-      template: template.name,
-      templateVersion,
-      dependencies,
-    });
-
-    log.step(`Creating project in ${targetDir}…`);
-    createdTargetDir = await claimTargetDir(targetDir);
-    await rewritePackageJson(sampleDir, projectName);
-    await moveToTarget(sampleDir, targetDir);
-    await writeProvenance(targetDir, metadata);
-  } catch (error) {
-    if (createdTargetDir) {
-      await rm(targetDir, {recursive: true, force: true});
-    }
-    if (error instanceof TemplateVersionUnavailableError) {
-      log.note(
-        `Check available templates:  npm create @coveo/ui -- --help\n` +
-          `Open an issue:              https://github.com/coveo/ui-kit/issues\n` +
-          `Coveo community:            https://connect.coveo.com`,
-        'Need help?'
-      );
-      throw new Error(unavailableTemplateMessage(template.name, error.version));
-    }
-    throw error;
-  } finally {
-    await rm(tempDir, {recursive: true, force: true});
-  }
-
-  const pm = getPackageManager();
-  log.step(`Installing dependencies with ${pm}…`);
-  const installed = installDependencies(targetDir);
-
-  log.step('Done!');
-  log.info(`\n  cd ${projectName}`);
-  if (!installed) {
-    log.warn(`Dependency installation failed — run "${pm} install" manually.`);
-  }
-  log.info(`  ${pm} run dev\n`);
-}
-
-/**
- * Resolves the template from an explicit `--template` value (validated) or,
- * when omitted, the interactive selector. Returns null when an explicit value
- * is unknown.
- */
-async function resolveTemplate(
-  templateArg: string | undefined
-): Promise<Template | null> {
-  if (templateArg === undefined) {
-    return selectTemplate();
-  }
-  const found = getTemplate(templateArg);
-  if (found) {
-    return found;
-  }
-  log.error(`Unknown template "${templateArg}".`);
-  log.info(
-    `\nAvailable templates:\n${getTemplates()
-      .map((t) => `  ${t.name}`)
-      .join('\n')}`
-  );
-  log.note(
-    `Run with --help to see all templates:\n` +
-      `  npm create @coveo/ui -- --help`,
-    'Tip'
-  );
-  return null;
-}
-
-/**
- * The single interactive phase: turns parsed args into a fully-resolved options
- * object, validating flags and prompting for anything missing.
- * Returns null when validation fails so the caller can exit non-zero.
- */
-async function resolveInputs(args: CliArgs): Promise<ScaffoldOptions | null> {
-  const template = await resolveTemplate(args.template);
-  if (!template) {
-    return null;
-  }
-
-  const projectName = args.projectName ?? (await promptProjectName());
-
-  const targetDir = resolve(process.cwd(), projectName);
-  if (!(await isEmptyOrMissing(targetDir))) {
-    log.error(
-      `Target directory "${projectName}" already exists and is not empty.`
-    );
-    log.note(
-      `Pick a different name, or remove the directory:\n` +
-        `  rm -rf ${projectName}`,
-      'Tip'
-    );
-    return null;
-  }
-
-  const version = args.templateVersion;
-
-  return {template, projectName, version};
-}
-
 export async function main(rawArgs: string[]): Promise<number> {
+  if (rawArgs[0] === 'report') {
+    return submitReport(rawArgs[1]);
+  }
+
   let args: CliArgs;
   try {
     args = parseArgs(rawArgs);
   } catch (error) {
-    // `exitOverride` makes commander throw instead of calling process.exit.
-    // `--help` exits 0 (commander already printed help); parse errors exit
-    // non-zero (commander already printed the message + usage).
     if (error instanceof CommanderError) {
       return error.exitCode;
     }
@@ -285,26 +111,38 @@ const isDirectRun =
   argv[1] !== undefined &&
   fileURLToPath(import.meta.url) === realpathSync(argv[1]);
 
-if (isDirectRun) {
-  process.on('uncaughtException', (err) => {
-    log.error(formatError(err));
-    process.exit(1);
-  });
-  process.on('unhandledRejection', (reason) => {
-    log.error(formatError(reason));
-    process.exit(1);
-  });
+/**
+ * On an unexpected crash, capture a plain-JSON report and print how to submit
+ * it (ADR 003). Handled outcomes ({@link isExpectedError}) and `DO_NOT_TRACK`
+ * are skipped. Never throws — a reporting failure must not mask the original
+ * error.
+ */
+export async function reportCrashIfUnexpected(error: unknown): Promise<void> {
+  if (isExpectedError(error) || isTrackingDisabled()) {
+    return;
+  }
+  try {
+    const report = await buildCrashReport(error);
+    const reportPath = await writeCrashReport(report);
+    log.note(buildCrashDisclosure(reportPath), 'Crash report');
+  } catch {
+    // Best-effort: never let a reporting failure hide the real crash.
+  }
+}
 
-  main(argv.slice(2)).then(
-    (code) => process.exit(code),
-    (error) => {
-      // A user pressing Ctrl-C during a prompt should exit quietly.
-      if (error instanceof Error && error.name === 'ExitPromptError') {
-        log.info('\nAborted.');
-        process.exit(130);
-      }
-      log.error(formatError(error));
-      process.exit(1);
+if (isDirectRun) {
+  const fail = async (error: unknown): Promise<never> => {
+    if (error instanceof Error && error.name === 'ExitPromptError') {
+      log.info('\nAborted.');
+      process.exit(130);
     }
-  );
+    log.error(formatError(error));
+    await reportCrashIfUnexpected(error);
+    process.exit(1);
+  };
+
+  process.on('uncaughtException', (err) => void fail(err));
+  process.on('unhandledRejection', (reason) => void fail(reason));
+
+  main(argv.slice(2)).then((code) => process.exit(code), fail);
 }
