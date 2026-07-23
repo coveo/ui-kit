@@ -21,6 +21,7 @@ import {
   generateAnswer,
   resetAnswer,
   sendGeneratedAnswerFeedback,
+  setAnswerGenerationMode,
   updateAnswerConfigurationId,
 } from '../../../features/generated-answer/generated-answer-actions.js';
 import type {GeneratedAnswerFeedback} from '../../../features/generated-answer/generated-answer-analytics-actions.js';
@@ -119,6 +120,7 @@ const subscribeToSearchRequest = (
       }
 
       if (triggerParams.q?.length > 0) {
+        engine.dispatch(setAnswerGenerationMode('automatic'));
         engine.dispatch(generateAnswer());
       }
     }

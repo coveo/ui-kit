@@ -110,6 +110,7 @@ export const generatedAnswerReducer = createReducer(
           fieldsToIncludeInCitations: state.fieldsToIncludeInCitations,
           isVisible: state.isVisible,
           id: state.id,
+          answerGenerationMode: state.answerGenerationMode,
         };
       })
       .addCase(setIsLoading, (state, {payload}) => {
