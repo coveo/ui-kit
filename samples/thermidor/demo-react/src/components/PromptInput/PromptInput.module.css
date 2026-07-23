@@ -1,0 +1,87 @@
+.wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.inputContainer {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+}
+
+.textarea {
+  width: 100%;
+  min-height: 52px;
+  max-height: 272px;
+  padding: var(--space-4);
+  padding-right: 84px;
+  font-family: var(--font-sans);
+  font-size: var(--font-size-md);
+  line-height: 1.5;
+  color: var(--color-text-primary);
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  outline: none;
+  resize: none;
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+  overflow-y: hidden;
+}
+
+.textarea:focus {
+  border-color: var(--color-border-active);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: var(--color-bg-secondary);
+}
+
+.textarea::placeholder {
+  color: var(--color-text-muted);
+}
+
+.iconButton {
+  position: absolute;
+  top: var(--space-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition:
+    color var(--transition-fast),
+    opacity var(--transition-fast);
+}
+
+.iconButton:hover:not(:disabled) {
+  color: var(--color-text-primary);
+}
+
+.iconButton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.iconButton svg {
+  width: 18px;
+  height: 18px;
+}
+
+.submitButton {
+  right: var(--space-2);
+}
+
+.clearButton {
+  right: calc(var(--space-2) + 36px);
+}

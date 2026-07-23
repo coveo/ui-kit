@@ -1,5 +1,5 @@
+import {Turn} from '@coveo/thermidor';
 import {useReducer} from 'react';
-import type {Turn} from '@coveo/thermidor';
 
 type ViewState = 'landing' | 'search' | 'conversation';
 

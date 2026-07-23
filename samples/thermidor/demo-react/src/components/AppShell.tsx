@@ -3,7 +3,7 @@ import {buildConverseController, type RoutedInterface} from '@coveo/thermidor';
 import {useGenerativeInterface} from '../context/generative-interface.js';
 import {useBuildController} from '../hooks/use-build-controller.js';
 import {useAppState, deriveTransitionAction} from '../hooks/use-app-state.js';
-import {LandingPage} from './LandingPage.js';
+import {LandingPage} from './LandingPage/LandingPage.js';
 import {SearchResultsPage} from './SearchResultsPage.js';
 import {ConversationPage} from './ConversationPage.js';
 
@@ -90,7 +90,6 @@ export function AppShell() {
           onSubmit={handleSubmit}
           isStreaming={converseState.isStreaming}
           routedInterface={persistedInterfaceRef.current!}
-          error={error}
         />
       );
     case 'conversation':
@@ -102,7 +101,6 @@ export function AppShell() {
           onBackToSearch={handleBackToSearch}
           canGoBackToSearch={canGoBackToSearch}
           onResetToLanding={handleResetToLanding}
-          error={error}
         />
       );
     default:
@@ -110,7 +108,6 @@ export function AppShell() {
         <LandingPage
           onSubmit={handleSubmit}
           isStreaming={converseState.isStreaming}
-          error={error}
         />
       );
   }
