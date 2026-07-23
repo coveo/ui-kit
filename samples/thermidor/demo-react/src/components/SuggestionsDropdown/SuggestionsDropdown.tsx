@@ -34,7 +34,12 @@ export function SuggestionsDropdown({
   let runningIndex = 0;
 
   return (
-    <div id={SUGGESTIONS_LISTBOX_ID} role="listbox" className={styles.dropdown}>
+    <div
+      id={SUGGESTIONS_LISTBOX_ID}
+      role="listbox"
+      aria-label="Query suggestions"
+      className={styles.dropdown}
+    >
       <div className={styles.dropdownHeader}>
         <span className={styles.dropdownHeaderTitle}>Query suggestions</span>
       </div>
