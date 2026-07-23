@@ -31,8 +31,6 @@ export function SuggestionsDropdown({
     }
   }
 
-  let runningIndex = 0;
-
   return (
     <div
       id={SUGGESTIONS_LISTBOX_ID}
@@ -43,20 +41,14 @@ export function SuggestionsDropdown({
       <div className={styles.dropdownHeader}>
         <span className={styles.dropdownHeaderTitle}>Query suggestions</span>
       </div>
-      {sections.map((section) => {
-        const startIndex = runningIndex;
-        runningIndex += section.items.length;
-
-        return (
-          <SuggestionSectionGroup
-            key={section.id}
-            section={section}
-            onSelect={(item) => onSelect(item, section.id)}
-            activeItemId={activeItemId}
-            startIndex={startIndex}
-          />
-        );
-      })}
+      {sections.map((section) => (
+        <SuggestionSectionGroup
+          key={section.id}
+          section={section}
+          onSelect={(item) => onSelect(item, section.id)}
+          activeItemId={activeItemId}
+        />
+      ))}
     </div>
   );
 }

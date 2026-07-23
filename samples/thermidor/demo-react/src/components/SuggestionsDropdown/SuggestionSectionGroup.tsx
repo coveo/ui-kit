@@ -6,7 +6,6 @@ interface SuggestionSectionGroupProps {
   section: SuggestionSection;
   onSelect: (item: SuggestionItem) => void;
   activeItemId?: string;
-  startIndex: number;
 }
 
 export function SuggestionSectionGroup({

@@ -18,7 +18,6 @@ describe('SuggestionSectionGroup', () => {
   const baseProps = {
     section: testSection,
     onSelect: vi.fn(),
-    startIndex: 0,
   };
 
   it('renders the section title', () => {
