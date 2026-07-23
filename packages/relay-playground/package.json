@@ -2,6 +2,7 @@
   "name": "@coveo/relay-playground",
   "version": "3.1.1",
   "private": true,
+  "description": "Next.js playground app for manually testing and exploring the @coveo/relay analytics library",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

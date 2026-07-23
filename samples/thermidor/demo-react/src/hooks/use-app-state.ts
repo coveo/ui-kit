@@ -1,3 +1,4 @@
+import {Turn} from '@coveo/thermidor';
 import {useReducer} from 'react';
 
 export type ViewState = 'landing' | 'search' | 'conversation';
@@ -22,6 +23,26 @@ export function appReducer(state: AppState, action: AppAction): AppState {
     default:
       return state;
   }
+}
+
+/**
+ * Given a completed turn, derives the navigation action to dispatch.
+ * Returns null if no transition should occur (e.g., error turns).
+ */
+export function deriveTransitionAction(turn: Turn): AppAction | null {
+  if (turn.status !== 'complete') {
+    return null;
+  }
+
+  if (turn.routedInterface) {
+    return {type: 'NAVIGATE_SEARCH'};
+  }
+
+  if (turn.agentResponse) {
+    return {type: 'NAVIGATE_CONVERSATION'};
+  }
+
+  return null;
 }
 
 export function useAppState() {

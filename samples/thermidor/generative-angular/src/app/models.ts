@@ -4,7 +4,7 @@
 export type {
   Turn,
   A2UISurface,
-  ToolCall,
+  ReasoningStep,
   RoutedInterface,
 } from '@coveo/thermidor';
 

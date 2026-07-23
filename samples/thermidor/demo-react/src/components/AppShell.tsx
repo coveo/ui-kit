@@ -2,7 +2,7 @@ import {useEffect, useRef} from 'react';
 import {buildConverseController, type RoutedInterface} from '@coveo/thermidor';
 import {useGenerativeInterface} from '../context/generative-interface.js';
 import {useBuildController} from '../hooks/use-build-controller.js';
-import {useAppState} from '../hooks/use-app-state.js';
+import {useAppState, deriveTransitionAction} from '../hooks/use-app-state.js';
 import {LandingPage} from './LandingPage/LandingPage.js';
 import {SearchResultsPage} from './SearchResultsPage.js';
 import {ConversationPage} from './ConversationPage.js';
@@ -19,6 +19,12 @@ export function AppShell() {
   const lastObservedTurnIdRef = useRef<string | null>(null);
 
   useEffect(() => {
+    return () => {
+      persistedInterfaceRef.current?.interface.dispose();
+    };
+  }, []);
+
+  useEffect(() => {
     const turns = converseState.turns;
     let latestCompletedTurn = null;
     for (let i = turns.length - 1; i >= 0; i--) {
@@ -33,23 +39,21 @@ export function AppShell() {
 
     lastObservedTurnIdRef.current = latestCompletedTurn.id;
 
-    if (latestCompletedTurn.routedInterface) {
+    const action = deriveTransitionAction(latestCompletedTurn);
+
+    if (
+      action?.type === 'NAVIGATE_SEARCH' &&
+      latestCompletedTurn.routedInterface
+    ) {
       if (persistedInterfaceRef.current) {
         persistedInterfaceRef.current.interface.dispose();
       }
       persistedInterfaceRef.current = latestCompletedTurn.routedInterface;
-      dispatch({type: 'NAVIGATE_SEARCH'});
-    } else if (latestCompletedTurn.agentResponse) {
-      dispatch({type: 'NAVIGATE_CONVERSATION'});
+      dispatch(action);
+    } else if (action) {
+      dispatch(action);
     }
   }, [converseState.turns, dispatch]);
-
-  useEffect(() => {
-    const lastTurn = converseState.turns[converseState.turns.length - 1];
-    if (lastTurn?.status === 'error') {
-      console.warn(lastTurn.error ?? 'An error occurred');
-    }
-  }, [converseState.turns]);
 
   const handleSubmit = (prompt: string) => {
     if (!prompt.trim() || converseState.isStreaming) return;
@@ -72,6 +76,12 @@ export function AppShell() {
     controller.clear();
     dispatch({type: 'NAVIGATE_LANDING'});
   };
+
+  const lastTurn = converseState.turns[converseState.turns.length - 1];
+  const error =
+    lastTurn?.status === 'error'
+      ? (lastTurn.error ?? 'An error occurred')
+      : null;
 
   switch (view) {
     case 'search':

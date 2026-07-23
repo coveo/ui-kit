@@ -144,6 +144,20 @@ describe('GeneratedAnswerController', () => {
       );
     });
 
+    it('should return the failure status when the completed request cannot produce an answer', () => {
+      const controller = createController({
+        getGeneratedAnswerState: () => ({
+          isVisible: true,
+          isStreaming: false,
+          cannotAnswer: true,
+        }),
+      });
+
+      expect(controller.getGeneratedAnswerStatus()).toBe(
+        'Answer could not be generated'
+      );
+    });
+
     it('should return correct translated key with answer when it has answer', () => {
       const controller = createController({
         getGeneratedAnswerState: () => ({
