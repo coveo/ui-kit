@@ -20,9 +20,9 @@ describe('templates', () => {
     expect(describeTemplate(getTemplate('headless-ssr-commerce-nextjs')!)).toBe(
       'Headless SSR Commerce SSR (Next.js App Router, @coveo/headless-react)'
     );
-    expect(
-      describeTemplate(getTemplate('headless-ssr-commerce-express')!)
-    ).toBe('Headless SSR Commerce SSR (Express, @coveo/headless/ssr)');
+    expect(describeTemplate(getTemplate('headless-ssr-commerce-express')!)).toBe(
+      'Headless SSR Commerce SSR (Express, @coveo/headless/ssr)'
+    );
   });
 
   it('describes a template with its library, without the "UI" suffix', () => {
