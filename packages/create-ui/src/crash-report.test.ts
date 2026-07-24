@@ -1,6 +1,5 @@
-import {mkdir, mkdtemp, readFile, rm, writeFile} from 'node:fs/promises';
-import {homedir, tmpdir} from 'node:os';
-import {join} from 'node:path';
+import {readFile, rm} from 'node:fs/promises';
+import {homedir} from 'node:os';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {
   buildCrashReport,
@@ -14,7 +13,6 @@ import {
 } from './crash-report.js';
 import {CrashReportError} from './errors.js';
 import type {ProjectMetadata} from './metadata.js';
-import {provenancePath} from './provenance.js';
 
 // scrub and the OS block read the real environment; pin the home dir so
 // path assertions are deterministic across machines. tmpdir stays real.
@@ -23,7 +21,7 @@ vi.mock('node:os', async (importOriginal) => {
   return {...actual, homedir: vi.fn(() => '/Users/alice')};
 });
 
-const provenance: ProjectMetadata = {
+const metadata: ProjectMetadata = {
   template: 'headless-search-react',
   templateVersion: '3.5.0',
   createdWith: 'create-ui@1.2.3',
@@ -32,13 +30,6 @@ const provenance: ProjectMetadata = {
   node: '22.12.0',
   packageManager: 'pnpm',
 };
-
-async function withProvenance(): Promise<string> {
-  const dir = await mkdtemp(join(tmpdir(), 'create-ui-crash-'));
-  await mkdir(join(dir, '.coveo'), {recursive: true});
-  await writeFile(provenancePath(dir), JSON.stringify(provenance));
-  return dir;
-}
 
 describe('buildCrashReport', () => {
   beforeEach(() => {
@@ -49,46 +40,47 @@ describe('buildCrashReport', () => {
     resetRunContext();
   });
 
-  it('assembles the documented shape, scrubbing the home dir and reusing provenance', async () => {
-    const dir = await withProvenance();
-    try {
-      setRunContext({targetDir: dir});
+  it('assembles the documented shape, scrubbing the home dir and using captured metadata', () => {
+    setRunContext({metadata});
 
-      const report = await buildCrashReport(
-        new Error('failed at /Users/alice/my-app/index.js')
-      );
+    const report = buildCrashReport(
+      new Error('failed at /Users/alice/my-app/index.js')
+    );
 
-      expect(report.schemaVersion).toBe(CRASH_REPORT_SCHEMA_VERSION);
-      expect(report.runId).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-/);
-      expect(Number.isNaN(Date.parse(report.crashedOn))).toBe(false);
-      expect(report.error).toEqual({
-        name: 'Error',
-        message: 'failed at ~/my-app/index.js',
-        stack: expect.any(String),
-      });
-      expect(report.os).toEqual({
-        platform: expect.any(String),
-        arch: expect.any(String),
-        release: expect.any(String),
-      });
-      expect(report.metadata).toEqual(provenance);
-    } finally {
-      await rm(dir, {recursive: true, force: true});
-    }
+    expect(report.schemaVersion).toBe(CRASH_REPORT_SCHEMA_VERSION);
+    expect(report.runId).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-/);
+    expect(Number.isNaN(Date.parse(report.crashedOn))).toBe(false);
+    expect(report.error).toEqual({
+      name: 'Error',
+      message: 'failed at ~/my-app/index.js',
+      stack: expect.any(String),
+    });
+    expect(report.os).toEqual({
+      platform: expect.any(String),
+      arch: expect.any(String),
+      release: expect.any(String),
+    });
+    expect(report.metadata).toEqual(metadata);
   });
 
-  it('handles a non-Error thrown value', async () => {
-    const report = await buildCrashReport('a string failure');
+  it('prefers captured metadata over runtime-derived fields', () => {
+    setRunContext({template: 'atomic-search', templateVersion: '', metadata});
+
+    expect(buildCrashReport(new Error('boom')).metadata).toEqual(metadata);
+  });
+
+  it('handles a non-Error thrown value', () => {
+    const report = buildCrashReport('a string failure');
     expect(report.error).toEqual({
       name: 'NonError',
       message: 'a string failure',
     });
   });
 
-  it('derives metadata from runtime state when no provenance file exists', async () => {
+  it('derives metadata from runtime state when none was captured', () => {
     setRunContext({template: 'atomic-search', templateVersion: '3.2.1'});
 
-    const report = await buildCrashReport(new Error('boom'));
+    const report = buildCrashReport(new Error('boom'));
 
     expect(report.metadata.template).toBe('atomic-search');
     expect(report.metadata.templateVersion).toBe('3.2.1');
@@ -102,7 +94,7 @@ describe('writeCrashReport', () => {
   afterEach(() => resetRunContext());
 
   it('writes pretty-printed JSON to a run-id-named file in tmpdir', async () => {
-    const report = await buildCrashReport(new Error('boom'));
+    const report = buildCrashReport(new Error('boom'));
     const path = await writeCrashReport(report);
     try {
       expect(path).toBe(crashReportPath(report.runId));
@@ -133,8 +125,8 @@ describe('scrub', () => {
 describe('parseCrashReport', () => {
   beforeEach(() => resetRunContext());
 
-  it('round-trips a report written by the capture side', async () => {
-    const report = await buildCrashReport(new Error('boom'));
+  it('round-trips a report written by the capture side', () => {
+    const report = buildCrashReport(new Error('boom'));
     expect(parseCrashReport(JSON.stringify(report))).toEqual(report);
   });
 
@@ -154,7 +146,7 @@ describe('parseCrashReport', () => {
       crashedOn: '2026-07-22T15:00:00.000Z',
       error: {name: 'Error', message: 'x'},
       os: {platform: 'darwin', arch: 'arm64', release: '24.0.0'},
-      metadata: provenance,
+      metadata,
     };
     let caught: unknown;
     try {

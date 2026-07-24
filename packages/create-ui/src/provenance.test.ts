@@ -5,7 +5,6 @@ import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import type {ProjectMetadata} from './metadata.js';
 import {
   provenancePath,
-  readProvenance,
   readSampleMetadata,
   writeProvenance,
 } from './provenance.js';
@@ -56,12 +55,12 @@ describe('provenance file I/O', () => {
     expect(result.dependencies).toEqual({'@coveo/headless': '4.1.0'});
   });
 
-  it('writes pretty-printed JSON that readProvenance reads back', async () => {
+  it('writes pretty-printed JSON to the provenance path', async () => {
     expect(await writeProvenance(dir, sampleMetadata)).toBe(true);
 
     const written = await readFile(provenancePath(dir), 'utf8');
     expect(written.endsWith('\n')).toBe(true);
-    expect(await readProvenance(dir)).toEqual(sampleMetadata);
+    expect(JSON.parse(written)).toEqual(sampleMetadata);
   });
 
   it('warns and returns false instead of throwing when the write fails', async () => {
@@ -71,9 +70,5 @@ describe('provenance file I/O', () => {
     expect(await writeProvenance(fileAsProjectRoot, sampleMetadata)).toBe(
       false
     );
-  });
-
-  it('readProvenance returns null when the file is absent', async () => {
-    expect(await readProvenance(dir)).toBeNull();
   });
 });

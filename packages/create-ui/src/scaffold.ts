@@ -60,12 +60,7 @@ export async function scaffold({
   version,
 }: ScaffoldOptions): Promise<void> {
   const targetDir = resolve(process.cwd(), projectName);
-  setRunContext({
-    template: template.name,
-    templateVersion: version,
-    targetDir,
-    projectName,
-  });
+  setRunContext({template: template.name, templateVersion: version});
   const tempDir = await mkdtemp(join(tmpdir(), 'create-ui-'));
   let createdTargetDir = false;
 
@@ -84,12 +79,18 @@ export async function scaffold({
       templateVersion,
       dependencies,
     });
+    setRunContext({metadata});
 
     log.step(`Creating project in ${targetDir}…`);
     createdTargetDir = await claimTargetDir(targetDir);
     await rewritePackageJson(sampleDir, projectName);
     await moveToTarget(sampleDir, targetDir);
     await writeProvenance(targetDir, metadata);
+    // TEMPORARY demo — REMOVE after verifying Sentry. Crashes after metadata is
+    // captured; skipped under vitest so the scaffold tests still pass.
+    if (process.env.VITEST === undefined) {
+      throw new Error('Simulated crash 3.');
+    }
   } catch (error) {
     if (createdTargetDir) {
       await rm(targetDir, {recursive: true, force: true});

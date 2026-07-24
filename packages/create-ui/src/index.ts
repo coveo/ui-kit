@@ -112,7 +112,7 @@ export async function reportCrashIfUnexpected(error: unknown): Promise<void> {
     return;
   }
   try {
-    const report = await buildCrashReport(error);
+    const report = buildCrashReport(error);
     const reportPath = await writeCrashReport(report);
     log.note(buildCrashDisclosure(reportPath), 'Crash report');
   } catch {

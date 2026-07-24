@@ -4,15 +4,13 @@ import {arch, homedir, platform, release, tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {buildProjectMetadata, type ProjectMetadata} from './metadata.js';
 import {CrashReportError} from './errors.js';
-import {readProvenance} from './provenance.js';
 
 export const CRASH_REPORT_SCHEMA_VERSION = 1;
 
 export interface RunContext {
   template?: string;
   templateVersion?: string;
-  targetDir?: string;
-  projectName?: string;
+  metadata?: ProjectMetadata;
 }
 
 let currentContext: RunContext = {};
@@ -71,30 +69,27 @@ function toErrorInfo(error: unknown): CrashErrorInfo {
   return {name: 'NonError', message: scrub(raw)};
 }
 
-// Prefer the provenance file (written before dependency install, a common crash
-// point) for recorded dependency versions; fall back to runtime state.
-async function resolveMetadata(context: RunContext): Promise<ProjectMetadata> {
-  if (context.targetDir !== undefined) {
-    const fromProvenance = await readProvenance(context.targetDir);
-    if (fromProvenance) {
-      return fromProvenance;
-    }
-  }
-  return buildProjectMetadata({
-    template: context.template ?? 'unknown',
-    templateVersion: context.templateVersion ?? '',
-    dependencies: {},
-  });
+// Prefer the metadata captured in-memory during scaffolding (it survives the
+// target-dir cleanup on failure); fall back to runtime state for early crashes.
+function resolveMetadata(context: RunContext): ProjectMetadata {
+  return (
+    context.metadata ??
+    buildProjectMetadata({
+      template: context.template ?? 'unknown',
+      templateVersion: context.templateVersion ?? '',
+      dependencies: {},
+    })
+  );
 }
 
-export async function buildCrashReport(error: unknown): Promise<CrashReport> {
+export function buildCrashReport(error: unknown): CrashReport {
   return {
     schemaVersion: CRASH_REPORT_SCHEMA_VERSION,
     runId: randomUUID(),
     crashedOn: new Date().toISOString(),
     error: toErrorInfo(error),
     os: {platform: platform(), arch: arch(), release: release()},
-    metadata: await resolveMetadata(currentContext),
+    metadata: resolveMetadata(currentContext),
   };
 }
 

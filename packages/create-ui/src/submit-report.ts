@@ -148,9 +148,7 @@ async function sendReport(report: CrashReport): Promise<number> {
   try {
     const sent = await sendToSentry(report);
     if (sent) {
-      log.success(
-        `Thank you! Crash report ${report.runId} was submitted. Nothing else is sent.`
-      );
+      log.success(`Thank you! Crash report ${report.runId} was submitted.`);
       return 0;
     }
     log.warn(

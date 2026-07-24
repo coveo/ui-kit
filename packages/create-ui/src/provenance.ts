@@ -47,14 +47,3 @@ export async function writeProvenance(
     return false;
   }
 }
-
-export async function readProvenance(
-  projectDir: string
-): Promise<ProjectMetadata | null> {
-  try {
-    const raw = await readFile(provenancePath(projectDir), 'utf8');
-    return JSON.parse(raw) as ProjectMetadata;
-  } catch {
-    return null;
-  }
-}
