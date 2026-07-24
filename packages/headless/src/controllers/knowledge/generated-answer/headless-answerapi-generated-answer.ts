@@ -35,9 +35,9 @@ import {loadReducerError} from '../../../utils/errors.js';
 import {
   buildCoreGeneratedAnswer,
   type GeneratedAnswer,
-  type GeneratedAnswerAnalyticsClient,
   type GeneratedAnswerProps,
 } from '../../core/generated-answer/headless-core-generated-answer.js';
+import type {GeneratedAnswerAnalyticsClient} from '../../../features/generated-answer/generated-answer-analytics-client.js';
 
 interface AnswerApiGeneratedAnswer extends Omit<
   GeneratedAnswer,
@@ -99,7 +99,8 @@ const parseEvaluationArguments = ({
 });
 
 const subscribeToSearchRequest = (
-  engine: SearchEngine<StreamAnswerAPIState>
+  engine: SearchEngine<StreamAnswerAPIState>,
+  analyticsClient: SearchAPIGeneratedAnswerAnalyticsClient
 ) => {
   let lastRequestId = '';
 
@@ -119,7 +120,11 @@ const subscribeToSearchRequest = (
       }
 
       if (triggerParams.q?.length > 0) {
-        engine.dispatch(generateAnswer());
+        engine.dispatch(
+          generateAnswer({
+            analyticsClient,
+          })
+        );
       }
     }
   };
@@ -157,7 +162,10 @@ export function buildAnswerApiGeneratedAnswer(
   const getState = () => engine.state;
   engine.dispatch(updateAnswerConfigurationId(props.answerConfigurationId!));
 
-  subscribeToSearchRequest(engine as SearchEngine<StreamAnswerAPIState>);
+  subscribeToSearchRequest(
+    engine as SearchEngine<StreamAnswerAPIState>,
+    analyticsClient
+  );
 
   return {
     ...controller,

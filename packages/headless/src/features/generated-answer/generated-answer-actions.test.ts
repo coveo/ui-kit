@@ -1,5 +1,6 @@
 /* oxlint-disable @typescript-eslint/no-explicit-any -- unit tests */
 import {buildMockCitation} from '../../test/mock-citation.js';
+import {generatedAnswerAnalyticsClient} from './generated-answer-analytics-actions.js';
 import {
   generateAnswer,
   registerFieldsToIncludeInCitations,
@@ -12,6 +13,7 @@ import {
   updateMessage,
   updateResponseFormat,
 } from './generated-answer-actions.js';
+import {constructAnswerAPIQueryParams} from './generated-answer-request.js';
 import {
   type GeneratedContentFormat,
   generatedContentFormat,
@@ -221,6 +223,44 @@ describe('generated answer', () => {
         expect.stringContaining(
           'Missing answerConfigurationId in engine configuration'
         )
+      );
+    });
+
+    it('should default to the Search analytics client when called without arguments (backward compatibility)', async () => {
+      const thunk = generateAnswer();
+      await expect(
+        thunk(mockDispatch, mockGetState, mockExtra)
+      ).resolves.not.toThrow();
+
+      expect(constructAnswerAPIQueryParams).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        generatedAnswerAnalyticsClient
+      );
+    });
+
+    it('should thread the provided analyticsClient into constructAnswerAPIQueryParams', async () => {
+      const analyticsClient = {
+        logLikeGeneratedAnswer: vi.fn(),
+        logDislikeGeneratedAnswer: vi.fn(),
+        logGeneratedAnswerFeedback: vi.fn(),
+        logOpenGeneratedAnswerSource: vi.fn(),
+        logHoverCitation: vi.fn(),
+        logGeneratedAnswerShowAnswers: vi.fn(),
+        logGeneratedAnswerHideAnswers: vi.fn(),
+        logCopyGeneratedAnswer: vi.fn(),
+        logRetryGeneratedAnswer: vi.fn(),
+        logGeneratedAnswerExpand: vi.fn(),
+        logGeneratedAnswerCollapse: vi.fn(),
+        logGeneratedAnswerStreamEnd: vi.fn(),
+      };
+      const thunk = generateAnswer({analyticsClient});
+      await thunk(mockDispatch, mockGetState, mockExtra);
+
+      expect(constructAnswerAPIQueryParams).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        analyticsClient
       );
     });
 

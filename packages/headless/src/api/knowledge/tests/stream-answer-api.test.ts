@@ -264,7 +264,7 @@ describe('#streamAnswerApi', () => {
           answerGenerated: true,
         },
       });
-      const draft = buildDefaultDraft({answer: 'some answer'});
+      const draft = buildDefaultDraft({answer: 'some answer', answerId: '1'});
 
       updateCacheWithEvent(event, draft, dispatch);
 
@@ -288,6 +288,63 @@ describe('#streamAnswerApi', () => {
       expect(draft).toHaveProperty('generated', false);
       expect(draft).toHaveProperty('isStreaming', false);
       expect(dispatch).toHaveBeenCalled();
+    });
+
+    it('should invoke the provided analyticsClient.logGeneratedAnswerStreamEnd with the right arguments', () => {
+      const dispatch = vi.fn();
+      const logGeneratedAnswerStreamEnd = vi.fn().mockReturnValue({
+        type: 'analytics/generatedAnswer/streamEnd',
+      });
+      const analyticsClient = {
+        logLikeGeneratedAnswer: vi.fn(),
+        logDislikeGeneratedAnswer: vi.fn(),
+        logGeneratedAnswerFeedback: vi.fn(),
+        logOpenGeneratedAnswerSource: vi.fn(),
+        logHoverCitation: vi.fn(),
+        logGeneratedAnswerShowAnswers: vi.fn(),
+        logGeneratedAnswerHideAnswers: vi.fn(),
+        logCopyGeneratedAnswer: vi.fn(),
+        logRetryGeneratedAnswer: vi.fn(),
+        logGeneratedAnswerExpand: vi.fn(),
+        logGeneratedAnswerCollapse: vi.fn(),
+        logGeneratedAnswerStreamEnd,
+      };
+      const event = buildSuccessEvent({
+        payloadType: 'genqa.endOfStreamType',
+        payload: {
+          answerGenerated: true,
+        },
+      });
+      const draft = buildDefaultDraft({answer: 'some answer', answerId: '1'});
+
+      updateCacheWithEvent(event, draft, dispatch, analyticsClient);
+
+      expect(logGeneratedAnswerStreamEnd).toHaveBeenCalledWith(
+        true,
+        '1',
+        false
+      );
+      expect(dispatch).toHaveBeenCalledWith({
+        type: 'analytics/generatedAnswer/streamEnd',
+      });
+    });
+
+    it('should not throw and should not dispatch a streamEnd analytics action when analytics is not provided', () => {
+      const dispatch = vi.fn();
+      const event = buildSuccessEvent({
+        payloadType: 'genqa.endOfStreamType',
+        payload: {
+          answerGenerated: true,
+        },
+      });
+      const draft = buildDefaultDraft({answer: 'some answer', answerId: '1'});
+
+      expect(() => updateCacheWithEvent(event, draft, dispatch)).not.toThrow();
+      expect(dispatch).not.toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: 'analytics/generatedAnswer/streamEnd',
+        })
+      );
     });
   });
 
