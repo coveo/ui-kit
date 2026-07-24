@@ -81,7 +81,7 @@ const templates: Template[] = [
   {
     name: 'headless-commerce',
     library: 'headless',
-    label: 'Commerce (Vite, @coveo/headless)',
+    label: 'Commerce (Vite, @coveo/headless/commerce)',
     packageName: '@coveo/ui-kit-sample-headless-commerce-vite',
   },
   {
@@ -93,7 +93,7 @@ const templates: Template[] = [
   {
     name: 'headless-commerce-react',
     library: 'headless',
-    label: 'Commerce (React, @coveo/headless)',
+    label: 'Commerce (React, @coveo/headless/commerce)',
     packageName: '@coveo/ui-kit-sample-headless-commerce-react',
   },
   {

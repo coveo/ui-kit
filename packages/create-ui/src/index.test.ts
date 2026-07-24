@@ -16,7 +16,13 @@ describe('templates', () => {
     expect(getTemplate('does-not-exist')).toBeUndefined();
   });
 
-  it('identifies the package used by each Headless SSR template', () => {
+  it('identifies the package used by each Headless Commerce template', () => {
+    expect(describeTemplate(getTemplate('headless-commerce')!)).toBe(
+      'Headless Commerce (Vite, @coveo/headless/commerce)'
+    );
+    expect(describeTemplate(getTemplate('headless-commerce-react')!)).toBe(
+      'Headless Commerce (React, @coveo/headless/commerce)'
+    );
     expect(describeTemplate(getTemplate('headless-ssr-commerce-nextjs')!)).toBe(
       'Headless SSR Commerce SSR (Next.js App Router, @coveo/headless-react)'
     );
