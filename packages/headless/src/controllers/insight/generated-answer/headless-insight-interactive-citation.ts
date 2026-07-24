@@ -7,11 +7,7 @@ import {
   type InteractiveCitationProps,
 } from '../../core/generated-answer/headless-core-interactive-citation.js';
 
-export type {
-  InteractiveCitation,
-  InteractiveCitationOptions,
-  InteractiveCitationProps,
-};
+export type {InteractiveCitation, InteractiveCitationOptions, InteractiveCitationProps};
 
 /**
  * Creates an insight `InteractiveCitation` controller instance.

@@ -27,9 +27,7 @@ export const formatHumanReadable = ({
   logger,
   formatter,
 }: FormatFacetValueRange) => {
-  const manualRangeLabel = manualRanges.find((range) =>
-    areRangesEqual(range, facetValue)
-  )?.label;
+  const manualRangeLabel = manualRanges.find((range) => areRangesEqual(range, facetValue))?.label;
   return manualRangeLabel
     ? getFieldValueCaption(field, manualRangeLabel, i18n)
     : i18n.t('to', {
@@ -55,10 +53,7 @@ export const formatNumberLocalized = (
   }
 };
 
-const areRangesEqual = (
-  firstRange: FacetValueRange,
-  secondRange: FacetValueRange
-) => {
+const areRangesEqual = (firstRange: FacetValueRange, secondRange: FacetValueRange) => {
   return (
     firstRange.start === secondRange.start &&
     firstRange.end === secondRange.end &&

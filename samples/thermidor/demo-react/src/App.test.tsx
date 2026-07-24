@@ -8,9 +8,7 @@ vi.mock('./context/engine.js', () => ({
 }));
 
 vi.mock('./context/generative-interface.js', () => ({
-  GenerativeInterfaceProvider: ({children}: {children: React.ReactNode}) => (
-    <>{children}</>
-  ),
+  GenerativeInterfaceProvider: ({children}: {children: React.ReactNode}) => <>{children}</>,
   useGenerativeInterface: () => ({}),
 }));
 

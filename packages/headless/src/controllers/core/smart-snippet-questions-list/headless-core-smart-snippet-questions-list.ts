@@ -8,15 +8,9 @@ import {
 import {questionAnsweringReducer as questionAnswering} from '../../../features/question-answering/question-answering-slice.js';
 import {getResultProperty} from '../../../features/result-templates/result-templates-helpers.js';
 import {searchReducer as search} from '../../../features/search/search-slice.js';
-import type {
-  QuestionAnsweringSection,
-  SearchSection,
-} from '../../../state/state-sections.js';
+import type {QuestionAnsweringSection, SearchSection} from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
-import {
-  buildController,
-  type Controller,
-} from '../../controller/headless-controller.js';
+import {buildController, type Controller} from '../../controller/headless-controller.js';
 import type {SmartSnippetAnalyticsClient} from '../smart-snippet/headless-core-smart-snippet.js';
 
 export interface SmartSnippetQuestionsListOptions {
@@ -131,17 +125,14 @@ export function buildCoreSmartSnippetQuestionsList(
       const state = getState();
 
       return {
-        questions: state.search.questionAnswer.relatedQuestions.map(
-          (relatedQuestion, i) => ({
-            question: relatedQuestion.question,
-            answer: relatedQuestion.answerSnippet,
-            documentId: relatedQuestion.documentId,
-            questionAnswerId:
-              state.questionAnswering.relatedQuestions[i].questionAnswerId,
-            expanded: state.questionAnswering.relatedQuestions[i].expanded,
-            source: getResult(relatedQuestion.documentId),
-          })
-        ),
+        questions: state.search.questionAnswer.relatedQuestions.map((relatedQuestion, i) => ({
+          question: relatedQuestion.question,
+          answer: relatedQuestion.answerSnippet,
+          documentId: relatedQuestion.documentId,
+          questionAnswerId: state.questionAnswering.relatedQuestions[i].questionAnswerId,
+          expanded: state.questionAnswering.relatedQuestions[i].expanded,
+          source: getResult(relatedQuestion.documentId),
+        })),
       };
     },
 
@@ -152,9 +143,7 @@ export function buildCoreSmartSnippetQuestionsList(
     },
     collapse(identifier) {
       const payload = {questionAnswerId: identifier};
-      engine.dispatch(
-        analyticsClient.logCollapseSmartSnippetSuggestion(payload)
-      );
+      engine.dispatch(analyticsClient.logCollapseSmartSnippetSuggestion(payload));
       engine.dispatch(collapseSmartSnippetRelatedQuestion(payload));
     },
   };

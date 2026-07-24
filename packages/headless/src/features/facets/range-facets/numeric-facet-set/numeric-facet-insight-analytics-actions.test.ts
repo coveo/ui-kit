@@ -77,8 +77,6 @@ describe('numeric facet insight analytics actions', () => {
     };
 
     expect(mockLogBreadcrumbFacet).toBeCalledTimes(1);
-    expect(mockLogBreadcrumbFacet.mock.calls[0][0]).toStrictEqual(
-      expectedPayload
-    );
+    expect(mockLogBreadcrumbFacet.mock.calls[0][0]).toStrictEqual(expectedPayload);
   });
 });

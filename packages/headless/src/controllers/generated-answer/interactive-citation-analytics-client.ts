@@ -13,11 +13,7 @@ export function buildInteractiveCitationAnalyticsClient(
     logCitationOpen(citationId: string, answerId?: string) {
       const headAnswerId = generativeQuestionAnsweringIdSelector(getState());
 
-      if (
-        answerId !== undefined &&
-        headAnswerId !== undefined &&
-        answerId !== headAnswerId
-      ) {
+      if (answerId !== undefined && headAnswerId !== undefined && answerId !== headAnswerId) {
         return logOpenGeneratedAnswerFollowUpSource(citationId, answerId);
       }
       return answerId !== undefined

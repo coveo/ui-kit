@@ -13,8 +13,7 @@ import {
 } from '../../../facets/range-facets/date-facet-set/date-facet-actions.js';
 import {dateFacetValueDefinition} from '../../../facets/range-facets/generic/range-facet-validate-payload.js';
 
-export type ToggleSelectDateFacetValuePayload =
-  ToggleSelectDateFacetValueActionCreatorPayload;
+export type ToggleSelectDateFacetValuePayload = ToggleSelectDateFacetValueActionCreatorPayload;
 
 export const toggleSelectDateFacetValue = createAction(
   'commerce/facets/dateFacet/toggleSelectValue',
@@ -25,8 +24,7 @@ export const toggleSelectDateFacetValue = createAction(
     })
 );
 
-export type ToggleExcludeDateFacetValuePayload =
-  ToggleSelectDateFacetValueActionCreatorPayload;
+export type ToggleExcludeDateFacetValuePayload = ToggleSelectDateFacetValueActionCreatorPayload;
 
 export const toggleExcludeDateFacetValue = createAction(
   'commerce/facets/dateFacet/toggleExcludeValue',
@@ -37,8 +35,7 @@ export const toggleExcludeDateFacetValue = createAction(
     })
 );
 
-export type UpdateDateFacetValuesPayload =
-  UpdateDateFacetValuesActionCreatorPayload;
+export type UpdateDateFacetValuesPayload = UpdateDateFacetValuesActionCreatorPayload;
 
 export const updateDateFacetValues = createAction(
   'commerce/facets/dateFacet/updateValues',

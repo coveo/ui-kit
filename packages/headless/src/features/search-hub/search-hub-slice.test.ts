@@ -7,9 +7,7 @@ import {getSearchHubInitialState} from './search-hub-state.js';
 
 describe('search hub slice', () => {
   it('should have initial state', () => {
-    expect(searchHubReducer(undefined, {type: 'randomAction'})).toEqual(
-      getSearchHubInitialState()
-    );
+    expect(searchHubReducer(undefined, {type: 'randomAction'})).toEqual(getSearchHubInitialState());
   });
 
   it('allows to set a search hub', () => {
@@ -17,9 +15,7 @@ describe('search hub slice', () => {
   });
 
   it('allows to set a search hub through configuration', () => {
-    expect(
-      searchHubReducer('foo', updateSearchConfiguration({searchHub: 'bar'}))
-    ).toEqual('bar');
+    expect(searchHubReducer('foo', updateSearchConfiguration({searchHub: 'bar'}))).toEqual('bar');
   });
 
   it('allows to restore a search hub on history change', () => {
@@ -29,10 +25,7 @@ describe('search hub slice', () => {
       searchHub: 'bar',
     };
 
-    const nextState = searchHubReducer(
-      state,
-      change.fulfilled(historyChange, '')
-    );
+    const nextState = searchHubReducer(state, change.fulfilled(historyChange, ''));
 
     expect(nextState).toEqual('bar');
   });

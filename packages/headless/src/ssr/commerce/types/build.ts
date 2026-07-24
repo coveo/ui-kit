@@ -1,12 +1,6 @@
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
-import type {
-  ControllersMap,
-  ControllersPropsMap,
-} from '../../common/types/controllers.js';
-import type {
-  OptionsExtender,
-  OptionsTuple,
-} from '../../common/types/utilities.js';
+import type {ControllersMap, ControllersPropsMap} from '../../common/types/controllers.js';
+import type {OptionsExtender, OptionsTuple} from '../../common/types/utilities.js';
 import type {SSRCommerceEngine} from '../factories/build-factory.js';
 import type {SolutionType} from './controller-constants.js';
 import type {

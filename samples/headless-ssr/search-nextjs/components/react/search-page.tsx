@@ -22,9 +22,7 @@ export function SearchPageProvider({
   navigatorContext,
   children,
 }: PropsWithChildren<SearchPageProviderProps>) {
-  const [hydratedState, setHydratedState] = useState<
-    SearchHydratedState | undefined
-  >(undefined);
+  const [hydratedState, setHydratedState] = useState<SearchHydratedState | undefined>(undefined);
 
   // Setting the navigator context provider also in client-side before hydrating the application
   setNavigatorContextProvider(() => navigatorContext);
@@ -48,25 +46,16 @@ export function SearchPageProvider({
 
   if (hydratedState) {
     return (
-      <HydratedStateProvider
-        engine={hydratedState.engine}
-        controllers={hydratedState.controllers}
-      >
+      <HydratedStateProvider engine={hydratedState.engine} controllers={hydratedState.controllers}>
         {children}
-        <HydrationMetadata
-          staticState={staticState}
-          hydratedState={hydratedState}
-        />
+        <HydrationMetadata staticState={staticState} hydratedState={hydratedState} />
       </HydratedStateProvider>
     );
   } else {
     return (
       <StaticStateProvider controllers={staticState.controllers}>
         {children}
-        <HydrationMetadata
-          staticState={staticState}
-          hydratedState={hydratedState}
-        />
+        <HydrationMetadata staticState={staticState} hydratedState={hydratedState} />
       </StaticStateProvider>
     );
   }

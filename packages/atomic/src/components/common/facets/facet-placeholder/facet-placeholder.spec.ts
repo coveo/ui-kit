@@ -24,9 +24,7 @@ describe('#renderFacetPlaceholder', () => {
     },
   });
 
-  const renderComponent = async (
-    props: Partial<FacetPlaceholderProps> = {}
-  ) => {
+  const renderComponent = async (props: Partial<FacetPlaceholderProps> = {}) => {
     return await renderFunctionFixture(
       html`${renderFacetPlaceholder({
         props: {

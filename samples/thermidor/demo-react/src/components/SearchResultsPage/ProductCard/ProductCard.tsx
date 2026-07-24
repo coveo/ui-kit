@@ -18,8 +18,7 @@ export function ProductCard({product}: ProductCardProps) {
   const price = product.ec_price as number | undefined;
   const promoPrice = product.ec_promo_price as number | undefined;
 
-  const hasPromo =
-    promoPrice !== undefined && price !== undefined && promoPrice < price;
+  const hasPromo = promoPrice !== undefined && price !== undefined && promoPrice < price;
 
   return (
     <article className={styles.card}>
@@ -27,10 +26,7 @@ export function ProductCard({product}: ProductCardProps) {
         {imageUrl ? (
           <img className={styles.image} src={imageUrl} alt={name ?? ''} />
         ) : (
-          <div
-            className={styles.imagePlaceholder}
-            aria-label="No image available"
-          />
+          <div className={styles.imagePlaceholder} aria-label="No image available" />
         )}
       </div>
       <div className={styles.content}>
@@ -43,9 +39,7 @@ export function ProductCard({product}: ProductCardProps) {
             <span className={styles.price}>&mdash;</span>
           ) : hasPromo ? (
             <>
-              <span className={styles.promoPrice}>
-                {formatPrice(promoPrice!)}
-              </span>
+              <span className={styles.promoPrice}>{formatPrice(promoPrice!)}</span>
               <span className={styles.originalPrice}>{formatPrice(price)}</span>
             </>
           ) : (

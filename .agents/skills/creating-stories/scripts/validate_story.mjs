@@ -44,11 +44,9 @@ const compactContent = content.replace(/\s+/g, ' ');
 console.log(`🔍 Validating story: ${storyPath}\n`);
 
 // Required imports (check in compact version for multi-line imports)
-if (/Meta/.test(compactContent) && /@storybook/.test(content))
-  info('Meta type');
+if (/Meta/.test(compactContent) && /@storybook/.test(content)) info('Meta type');
 else error('Missing Meta type import');
-if (/Story/.test(compactContent) && /@storybook/.test(content))
-  info('Story type');
+if (/Story/.test(compactContent) && /@storybook/.test(content)) info('Story type');
 else error('Missing Story type import');
 
 // getStorybookHelpers is optional (result templates and pages don't always use it)
@@ -59,8 +57,7 @@ if (/getStorybookHelpers/.test(content)) {
 }
 
 // Interface wrappers (optional for pages)
-const hasWrapper =
-  /wrap(In(Search|Commerce|Insight)Interface|InResultTemplate)/.test(content);
+const hasWrapper = /wrap(In(Search|Commerce|Insight)Interface|InResultTemplate)/.test(content);
 if (hasWrapper) {
   info('Interface/template wrapper');
 }

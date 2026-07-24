@@ -1,8 +1,4 @@
-import {
-  buildDateRange,
-  type DateFilterRange,
-  type DateRangeRequest,
-} from '@coveo/headless';
+import {buildDateRange, type DateFilterRange, type DateRangeRequest} from '@coveo/headless';
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {ifDefined} from 'lit/directives/if-defined.js';
@@ -28,10 +24,7 @@ export type FacetDateInputEventDetails = Omit<DateRangeRequest, 'state'>;
  */
 @customElement('atomic-facet-date-input')
 @bindings()
-export class AtomicFacetDateInput
-  extends LightDomMixin(LitElement)
-  implements LitElementWithError
-{
+export class AtomicFacetDateInput extends LightDomMixin(LitElement) implements LitElementWithError {
   @state() private start?: Date;
   @state() private end?: Date;
   private startRef: Ref<HTMLInputElement> = createRef();
@@ -53,12 +46,8 @@ export class AtomicFacetDateInput
     super.connectedCallback();
     this.validateParentComponent();
 
-    this.start = this.inputRange
-      ? parseDate(this.inputRange.start).toDate()
-      : undefined;
-    this.end = this.inputRange
-      ? parseDate(this.inputRange.end).toDate()
-      : undefined;
+    this.start = this.inputRange ? parseDate(this.inputRange.start).toDate() : undefined;
+    this.end = this.inputRange ? parseDate(this.inputRange.end).toDate() : undefined;
   }
 
   /**
@@ -74,13 +63,9 @@ export class AtomicFacetDateInput
     const parentElement = this.parentElement;
 
     const shadowHost =
-      this.getRootNode() instanceof ShadowRoot
-        ? (this.getRootNode() as ShadowRoot).host
-        : null;
+      this.getRootNode() instanceof ShadowRoot ? (this.getRootNode() as ShadowRoot).host : null;
 
-    const hostElements = [parentElement, shadowHost].filter(
-      Boolean
-    ) as Element[];
+    const hostElements = [parentElement, shadowHost].filter(Boolean) as Element[];
 
     const isValidParent = hostElements.some(({tagName}) =>
       validParents.includes(tagName.toLowerCase())
@@ -132,10 +117,7 @@ export class AtomicFacetDateInput
     };
 
     this.dispatchEvent(
-      new CustomEvent<FacetDateInputEventDetails>(
-        'atomic-date-input-apply',
-        eventDict
-      )
+      new CustomEvent<FacetDateInputEventDetails>('atomic-date-input-apply', eventDict)
     );
 
     // Backwards compatibility for stencil components listening this event
@@ -165,8 +147,7 @@ export class AtomicFacetDateInput
 
     const placeholder = this.bindings.i18n.t('date-format-placeholder');
     // Fallback for Safari < 14.1, date with format yyyy-mm-dd over 1400 (API limit)
-    const pattern =
-      '^(1[4-9]\\d{2}|2\\d{3})-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$';
+    const pattern = '^(1[4-9]\\d{2}|2\\d{3})-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$';
 
     return html`
       <form
@@ -177,11 +158,7 @@ export class AtomicFacetDateInput
           return false;
         }}
       >
-        <label
-          part="input-label"
-          class=${labelClasses}
-          for=${`${this.facetId}_start`}
-        >
+        <label part="input-label" class=${labelClasses} for=${`${this.facetId}_start`}>
           ${startLabel}:
         </label>
         <input
@@ -195,21 +172,13 @@ export class AtomicFacetDateInput
           pattern=${pattern}
           required
           min=${ifDefined(this.min || this.formattedDateValue('1401-01-01'))}
-          max=${ifDefined(
-            this.end ? this.formattedDateValue(this.end) : this.max
-          )}
+          max=${ifDefined(this.end ? this.formattedDateValue(this.end) : this.max)}
           .value=${this.formattedDateValue(this.inputRange?.start)}
           @input=${(e: Event) => {
-            this.start = parseDate(
-              (e.target as HTMLInputElement).value
-            ).toDate();
+            this.start = parseDate((e.target as HTMLInputElement).value).toDate();
           }}
         />
-        <label
-          part="input-label"
-          class=${labelClasses}
-          for=${`${this.facetId}_end`}
-        >
+        <label part="input-label" class=${labelClasses} for=${`${this.facetId}_end`}>
           ${endLabel}:
         </label>
         <input

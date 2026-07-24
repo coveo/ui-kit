@@ -20,9 +20,7 @@ export interface CommerceSearchEndpointRequest {
   context: {view: {url: string}};
 }
 
-export function createCommerceSearchEndpointRequestSelector(
-  scope: EndpointStateScope
-) {
+export function createCommerceSearchEndpointRequestSelector(scope: EndpointStateScope) {
   const configuration = getOrCreateConfigurationSelectors();
   const searchBox = getOrCreateSearchBoxSelectors(scope.scopeInterface);
   const pagination = getOrCreatePaginationSelectors(scope.baseInterface);

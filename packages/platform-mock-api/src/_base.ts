@@ -19,8 +19,7 @@ export abstract class MockApi {
 
 type HttpMethod = 'GET' | 'POST';
 export class EndpointHarness<TResponse extends {}> {
-  private nextResponses: ('error' | ((response: TResponse) => TResponse))[] =
-    [];
+  private nextResponses: ('error' | ((response: TResponse) => TResponse))[] = [];
   private nextResponseInit: HttpResponseInit[] = [];
   private baseResponse: Readonly<TResponse>;
   private initialBaseResponse: Readonly<TResponse>;
@@ -48,9 +47,7 @@ export class EndpointHarness<TResponse extends {}> {
     ...transformers: RequestTransformer<TInput>[]
   ) {
     for (const transformer of transformers) {
-      this.requestTransformers.push(
-        transformer as unknown as RequestTransformer<TResponse>
-      );
+      this.requestTransformers.push(transformer as unknown as RequestTransformer<TResponse>);
     }
     return this;
   }

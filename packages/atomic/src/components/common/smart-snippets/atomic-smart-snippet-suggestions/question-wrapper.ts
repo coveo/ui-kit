@@ -13,9 +13,7 @@ export interface QuestionWrapperProps {
   key: string;
 }
 
-export const renderQuestionWrapper: FunctionalComponentWithChildren<
-  QuestionWrapperProps
-> =
+export const renderQuestionWrapper: FunctionalComponentWithChildren<QuestionWrapperProps> =
   ({props}) =>
   (children) => {
     return html`${keyed(

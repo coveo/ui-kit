@@ -13,9 +13,7 @@ test.describe('atomic-timeframe-facet', () => {
     });
   });
 
-  test('should toggle collapse and expand when clicking the label button', async ({
-    facet,
-  }) => {
+  test('should toggle collapse and expand when clicking the label button', async ({facet}) => {
     await facet.load();
 
     await test.step('Verify values are initially visible', async () => {
@@ -39,9 +37,7 @@ test.describe('atomic-timeframe-facet', () => {
     });
   });
 
-  test('should display selected value with visual indicator and clear button', async ({
-    facet,
-  }) => {
+  test('should display selected value with visual indicator and clear button', async ({facet}) => {
     await facet.load({story: 'with-selected-value'});
 
     await test.step('Verify facet is visible', async () => {

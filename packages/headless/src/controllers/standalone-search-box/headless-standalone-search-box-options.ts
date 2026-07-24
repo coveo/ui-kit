@@ -16,9 +16,7 @@ export interface StandaloneSearchBoxOptions extends SearchBoxOptions {
   overwrite?: boolean;
 }
 
-export const standaloneSearchBoxSchema = new Schema<
-  Required<StandaloneSearchBoxOptions>
->({
+export const standaloneSearchBoxSchema = new Schema<Required<StandaloneSearchBoxOptions>>({
   ...searchBoxOptionDefinitions,
   redirectionUrl: new StringValue({
     required: true,

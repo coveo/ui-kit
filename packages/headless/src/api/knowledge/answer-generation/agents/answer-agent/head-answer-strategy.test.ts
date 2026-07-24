@@ -49,9 +49,7 @@ describe('createHeadAnswerStrategy', () => {
     expect(dispatch).toHaveBeenCalledWith(setAnswerId('run-001'));
     expect(dispatch).toHaveBeenCalledWith(setIsLoading(false));
     expect(dispatch).toHaveBeenCalledWith(setIsStreaming(true));
-    expect(dispatch).toHaveBeenCalledWith(
-      setFollowUpAnswersConversationId('thread-007')
-    );
+    expect(dispatch).toHaveBeenCalledWith(setFollowUpAnswersConversationId('thread-007'));
   });
 
   it('dispatches a new generation step start when a step starts', () => {
@@ -60,9 +58,7 @@ describe('createHeadAnswerStrategy', () => {
       agent: {isRunning: true},
     } as any);
 
-    expect(dispatch).toHaveBeenCalledWith(
-      startStep({name: 'searching', startedAt: 123})
-    );
+    expect(dispatch).toHaveBeenCalledWith(startStep({name: 'searching', startedAt: 123}));
   });
 
   it('records the completion of a generation step and falls back to Date.now()', () => {
@@ -73,9 +69,7 @@ describe('createHeadAnswerStrategy', () => {
       agent: {isRunning: true},
     } as any);
 
-    expect(dispatch).toHaveBeenCalledWith(
-      finishStep({name: 'answering', finishedAt: 456})
-    );
+    expect(dispatch).toHaveBeenCalledWith(finishStep({name: 'answering', finishedAt: 456}));
 
     nowSpy.mockRestore();
   });
@@ -102,13 +96,9 @@ describe('createHeadAnswerStrategy', () => {
       agent: {isRunning: true},
     } as any);
 
-    expect(dispatch).toHaveBeenCalledWith(
-      setAnswerContentFormat('text/markdown')
-    );
+    expect(dispatch).toHaveBeenCalledWith(setAnswerContentFormat('text/markdown'));
     expect(dispatch).toHaveBeenCalledWith(setIsEnabled(true));
-    expect(dispatch).toHaveBeenCalledWith(
-      setFollowUpAnswersConversationToken('token-123')
-    );
+    expect(dispatch).toHaveBeenCalledWith(setFollowUpAnswersConversationToken('token-123'));
   });
 
   it('updates citations when the server sends citation data', () => {
@@ -157,10 +147,9 @@ describe('createHeadAnswerStrategy', () => {
     const streamEndSpy = vi
       .spyOn(generatedAnswerAnalyticsActions, 'logGeneratedAnswerStreamEnd')
       .mockReturnValue(streamEndAction);
-    vi.spyOn(
-      generatedAnswerAnalyticsActions,
-      'logGeneratedAnswerResponseLinked'
-    ).mockReturnValue(responseLinkedAction);
+    vi.spyOn(generatedAnswerAnalyticsActions, 'logGeneratedAnswerResponseLinked').mockReturnValue(
+      responseLinkedAction
+    );
     strategy = createHeadAnswerStrategy(dispatch);
     strategy.onRunStartedEvent!({
       event: {runId: 'run-001', threadId: 'thread-007'},
@@ -191,10 +180,9 @@ describe('createHeadAnswerStrategy', () => {
     const streamEndSpy = vi
       .spyOn(generatedAnswerAnalyticsActions, 'logGeneratedAnswerStreamEnd')
       .mockReturnValue(streamEndAction);
-    vi.spyOn(
-      generatedAnswerAnalyticsActions,
-      'logGeneratedAnswerResponseLinked'
-    ).mockReturnValue(responseLinkedAction);
+    vi.spyOn(generatedAnswerAnalyticsActions, 'logGeneratedAnswerResponseLinked').mockReturnValue(
+      responseLinkedAction
+    );
     strategy = createHeadAnswerStrategy(dispatch);
     strategy.onRunStartedEvent!({
       event: {runId: 'run-001', threadId: 'thread-007'},
@@ -260,9 +248,7 @@ describe('createHeadAnswerStrategy', () => {
         agent: {isRunning: true},
       } as any);
 
-      expect(dispatch).toHaveBeenCalledWith(
-        finishToolCall({toolCallId: 'tc-1', finishedAt: 200})
-      );
+      expect(dispatch).toHaveBeenCalledWith(finishToolCall({toolCallId: 'tc-1', finishedAt: 200}));
     });
 
     it('dispatches finishToolCall with Date.now() when timestamp is missing', () => {
@@ -273,9 +259,7 @@ describe('createHeadAnswerStrategy', () => {
         agent: {isRunning: true},
       } as any);
 
-      expect(dispatch).toHaveBeenCalledWith(
-        finishToolCall({toolCallId: 'tc-1', finishedAt: 888})
-      );
+      expect(dispatch).toHaveBeenCalledWith(finishToolCall({toolCallId: 'tc-1', finishedAt: 888}));
 
       nowSpy.mockRestore();
     });

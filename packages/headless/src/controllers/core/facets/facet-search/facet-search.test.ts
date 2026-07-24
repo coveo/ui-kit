@@ -6,14 +6,8 @@ import {
 } from '../../../../features/facets/facet-search-set/generic/generic-facet-search-actions.js';
 import {updateFacetSearch} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-actions.js';
 import type {SpecificFacetSearchState} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-set-state.js';
-import type {
-  ConfigurationSection,
-  FacetSearchSection,
-} from '../../../../state/state-sections.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../../../test/mock-engine-v2.js';
+import type {ConfigurationSection, FacetSearchSection} from '../../../../state/state-sections.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../../../test/mock-engine-v2.js';
 import {buildMockFacetSearch} from '../../../../test/mock-facet-search.js';
 import {buildMockFacetSearchRequestOptions} from '../../../../test/mock-facet-search-request-options.js';
 import {buildMockFacetSearchResponse} from '../../../../test/mock-facet-search-response.js';
@@ -24,12 +18,8 @@ import {
   type GenericFacetSearchProps,
 } from './facet-search.js';
 
-vi.mock(
-  '../../../../features/facets/facet-search-set/generic/generic-facet-search-actions'
-);
-vi.mock(
-  '../../../../features/facets/facet-search-set/specific/specific-facet-search-actions'
-);
+vi.mock('../../../../features/facets/facet-search-set/generic/generic-facet-search-actions');
+vi.mock('../../../../features/facets/facet-search-set/specific/specific-facet-search-actions');
 
 describe('FacetSearch', () => {
   const facetId = '1';
@@ -131,8 +121,7 @@ describe('FacetSearch', () => {
       query: '',
     };
 
-    engine.state.facetSearchSet![facetId] =
-      buildMockFacetSearch(facetSearchState);
+    engine.state.facetSearchSet![facetId] = buildMockFacetSearch(facetSearchState);
     expect(controller.state).toEqual(facetSearchState);
   });
 });

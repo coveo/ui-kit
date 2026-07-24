@@ -16,17 +16,11 @@ import type {
   FacetOrderSection,
 } from '../../../../../state/state-sections.js';
 import {loadReducerError} from '../../../../../utils/errors.js';
-import {
-  buildController,
-  type Controller,
-} from '../../../../controller/headless-controller.js';
+import {buildController, type Controller} from '../../../../controller/headless-controller.js';
 import type {FetchProductsActionCreator} from '../../common.js';
 import type {CategoryFacet} from '../category/headless-commerce-category-facet.js';
 import type {DateFacet} from '../date/headless-commerce-date-facet.js';
-import type {
-  CommerceFacetOptions,
-  CoreCommerceFacet,
-} from '../headless-core-commerce-facet.js';
+import type {CommerceFacetOptions, CoreCommerceFacet} from '../headless-core-commerce-facet.js';
 import type {LocationFacet} from '../location/headless-commerce-location-facet.js';
 import type {NumericFacet} from '../numeric/headless-commerce-numeric-facet.js';
 import type {RegularFacet} from '../regular/headless-commerce-regular-facet.js';
@@ -72,9 +66,7 @@ export type FacetGeneratorState = FacetGenerator['state'];
  * Represents an array of generated facet sub-controllers.
  * Each sub-controller is mapped to a specific facet type.
  */
-export type GeneratedFacetControllers = Array<
-  MappedGeneratedFacetController[FacetType]
->;
+export type GeneratedFacetControllers = Array<MappedGeneratedFacetController[FacetType]>;
 
 export type MappedGeneratedFacetController = {
   [T in FacetType]: T extends 'numericalRange'
@@ -93,19 +85,13 @@ export type MappedGeneratedFacetController = {
 type CommerceFacetBuilder<
   Facet extends Omit<
     CoreCommerceFacet<AnyFacetValueRequest, AnyFacetValueResponse>,
-    | 'isValueExcluded'
-    | 'toggleExclude'
-    | 'toggleSingleExclude'
-    | 'toggleSingleSelect'
+    'isValueExcluded' | 'toggleExclude' | 'toggleSingleExclude' | 'toggleSingleSelect'
   >,
 > = (engine: CommerceEngine, options: CommerceFacetOptions) => Facet;
 
 export type CommerceSearchableFacetBuilder<
   Facet extends CoreCommerceFacet<AnyFacetValueRequest, AnyFacetValueResponse>,
-> = (
-  engine: CommerceEngine,
-  options: CommerceFacetOptions & SearchableFacetOptions
-) => Facet;
+> = (engine: CommerceEngine, options: CommerceFacetOptions & SearchableFacetOptions) => Facet;
 /**
  * @internal
  *
@@ -147,9 +133,7 @@ export function buildFacetGenerator(
     ],
 
     (facetOrder, commerceFacetSet) =>
-      facetOrder.map((facetId: string) =>
-        createFacetController(commerceFacetSet, facetId)
-      )
+      facetOrder.map((facetId: string) => createFacetController(commerceFacetSet, facetId))
   );
 
   const createFacetController = createSelector(

@@ -34,9 +34,7 @@ vi.mock('@coveo/thermidor', async (importOriginal) => {
 describe('LandingPage', () => {
   it('renders the heading', () => {
     render(<LandingPage onSubmit={vi.fn()} isStreaming={false} />);
-    expect(
-      screen.getByRole('heading', {name: 'What can I help you find?'})
-    ).toBeDefined();
+    expect(screen.getByRole('heading', {name: 'What can I help you find?'})).toBeDefined();
   });
 
   it('calls onSubmit with the textarea value when Enter is pressed', () => {
@@ -61,9 +59,7 @@ describe('LandingPage', () => {
 
   it('disables the textarea when isStreaming is true', () => {
     render(<LandingPage onSubmit={vi.fn()} isStreaming={true} />);
-    expect(
-      (screen.getByLabelText('Prompt') as HTMLTextAreaElement).disabled
-    ).toBe(true);
+    expect((screen.getByLabelText('Prompt') as HTMLTextAreaElement).disabled).toBe(true);
   });
 
   it('disables suggestion pills when isStreaming is true', () => {
@@ -128,9 +124,7 @@ describe('SearchResultsPage', () => {
         routedInterface={mockRoutedInterface}
       />
     );
-    expect((screen.getByLabelText('Prompt') as HTMLInputElement).disabled).toBe(
-      true
-    );
+    expect((screen.getByLabelText('Prompt') as HTMLInputElement).disabled).toBe(true);
   });
 });
 
@@ -204,9 +198,7 @@ describe('ConversationPage', () => {
         onResetToLanding={vi.fn()}
       />
     );
-    expect((screen.getByLabelText('Prompt') as HTMLInputElement).disabled).toBe(
-      true
-    );
+    expect((screen.getByLabelText('Prompt') as HTMLInputElement).disabled).toBe(true);
   });
 
   it('renders "Back to search results" button when onBackToSearch is provided', () => {
@@ -238,9 +230,7 @@ describe('ConversationPage', () => {
         onResetToLanding={vi.fn()}
       />
     );
-    expect(
-      screen.queryByRole('button', {name: 'Back to search results'})
-    ).toBeNull();
+    expect(screen.queryByRole('button', {name: 'Back to search results'})).toBeNull();
   });
 
   it('calls onResetToLanding when "Reset" button is clicked', () => {

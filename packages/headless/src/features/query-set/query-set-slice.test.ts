@@ -2,20 +2,11 @@ import {buildMockSearch} from '../../test/mock-search.js';
 import {change} from '../history/history-actions.js';
 import {getHistoryInitialState} from '../history/history-state.js';
 import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions.js';
-import {
-  type ExecuteSearchThunkReturn,
-  executeSearch,
-} from '../search/search-actions.js';
+import {type ExecuteSearchThunkReturn, executeSearch} from '../search/search-actions.js';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions.js';
-import {
-  registerQuerySetQuery,
-  updateQuerySetQuery,
-} from './query-set-actions.js';
+import {registerQuerySetQuery, updateQuerySetQuery} from './query-set-actions.js';
 import {querySetReducer} from './query-set-slice.js';
-import {
-  getQuerySetInitialState,
-  type QuerySetState,
-} from './query-set-state.js';
+import {getQuerySetInitialState, type QuerySetState} from './query-set-state.js';
 
 describe('querySet slice', () => {
   let state: QuerySetState;
@@ -105,11 +96,9 @@ describe('querySet slice', () => {
     const searchState = buildMockSearch({queryExecuted: 'world'});
     const nextState = querySetReducer(
       state,
-      executeSearch.fulfilled(
-        searchState as unknown as ExecuteSearchThunkReturn,
-        '',
-        {legacy: null as never}
-      )
+      executeSearch.fulfilled(searchState as unknown as ExecuteSearchThunkReturn, '', {
+        legacy: null as never,
+      })
     );
     expect(nextState).toEqual(expectedQuerySet);
   });
@@ -119,10 +108,7 @@ describe('querySet slice', () => {
     registerQueryWithId('bar');
 
     const expectedQuerySet = {foo: 'world', bar: 'world'};
-    const nextState = querySetReducer(
-      state,
-      restoreSearchParameters({q: 'world'})
-    );
+    const nextState = querySetReducer(state, restoreSearchParameters({q: 'world'}));
     expect(nextState).toEqual(expectedQuerySet);
   });
 
@@ -145,10 +131,7 @@ describe('querySet slice', () => {
       querySet: expectedQuerySet,
     };
 
-    const nextState = querySetReducer(
-      state,
-      change.fulfilled(historyChange, '')
-    );
+    const nextState = querySetReducer(state, change.fulfilled(historyChange, ''));
 
     expect(nextState).toEqual(expectedQuerySet);
   });

@@ -50,8 +50,7 @@
 
         get template() {
           const template = document.createElement('template');
-          template.innerHTML =
-            '<input type="text" placeholder="Search as you type" />';
+          template.innerHTML = '<input type="text" placeholder="Search as you type" />';
           return template;
         }
 
@@ -104,31 +103,21 @@
         }
       }
 
-      window.customElements.define(
-        'custom-template-component',
-        CustomTemplateComponent
-      );
+      window.customElements.define('custom-template-component', CustomTemplateComponent);
     </script>
   </head>
 
   <body>
-    <atomic-search-interface
-      language-assets-path="./lang"
-      icon-assets-path="./assets"
-    >
+    <atomic-search-interface language-assets-path="./lang" icon-assets-path="./assets">
       <custom-component></custom-component>
       <atomic-segmented-facet field="language"></atomic-segmented-facet>
       <atomic-query-summary></atomic-query-summary>
       <atomic-result-list>
         <atomic-result-template>
           <template>
-            <custom-template-component
-              label="Hello"
-            ></custom-template-component>
+            <custom-template-component label="Hello"></custom-template-component>
             <atomic-field-condition must-not-match-language="Swedish">
-              <custom-template-component
-                label="Hallå"
-              ></custom-template-component>
+              <custom-template-component label="Hallå"></custom-template-component>
             </atomic-field-condition>
           </template>
         </atomic-result-template>

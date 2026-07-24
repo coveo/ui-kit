@@ -12,9 +12,7 @@ import {enqueueOrDispatchInitializationEvent} from './init-queue';
  * @param event - The element on which to dispatch the event, which must be the child of a configured Atomic container element.
  * @returns A promise that resolves upon initialization of the parent container element, and rejects otherwise.
  */
-export function fetchBindings<SpecificBindings extends AnyBindings>(
-  element: Element
-) {
+export function fetchBindings<SpecificBindings extends AnyBindings>(element: Element) {
   return new Promise<SpecificBindings>((resolve, reject) => {
     const event = buildCustomEvent<InitializeEventHandler>(
       initializeEventName,
@@ -61,9 +59,7 @@ export type AtomicInterface = HTMLElement & {
  *
  * @param host - The host element to scan for Atomic children
  */
-export async function waitForAtomicChildrenToBeDefined(
-  host: Element
-): Promise<void> {
+export async function waitForAtomicChildrenToBeDefined(host: Element): Promise<void> {
   await Promise.all(
     Array.from(host.querySelectorAll('*'))
       .filter((el) => ATOMIC_CUSTOM_ELEMENT_TAGS.has(el.tagName.toLowerCase()))

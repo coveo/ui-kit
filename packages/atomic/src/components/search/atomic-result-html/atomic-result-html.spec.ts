@@ -16,8 +16,7 @@ describe('atomic-result-html', () => {
   const mockedEngine = buildFakeSearchEngine();
 
   const locators = {
-    getHtml: (element: AtomicResultHtml) =>
-      element?.querySelector('atomic-html'),
+    getHtml: (element: AtomicResultHtml) => element?.querySelector('atomic-html'),
   };
 
   beforeEach(async () => {
@@ -120,9 +119,7 @@ describe('atomic-result-html', () => {
         const htmlElement = locators.getHtml(element);
 
         expect(htmlElement).toBeDefined();
-        expect(htmlElement?.getAttribute('value')).toBe(
-          '<p>Custom <em>HTML</em> content</p>'
-        );
+        expect(htmlElement?.getAttribute('value')).toBe('<p>Custom <em>HTML</em> content</p>');
       });
 
       it('should render title field with HTML content', async () => {
@@ -130,9 +127,7 @@ describe('atomic-result-html', () => {
         const htmlElement = locators.getHtml(element);
 
         expect(htmlElement).toBeDefined();
-        expect(htmlElement?.getAttribute('value')).toBe(
-          'Test <b>HTML</b> Title'
-        );
+        expect(htmlElement?.getAttribute('value')).toBe('Test <b>HTML</b> Title');
       });
 
       it('should pass sanitize property correctly when false', async () => {
@@ -189,18 +184,16 @@ describe('atomic-result-html', () => {
   });
 
   it('should set the error when not used in a result template', async () => {
-    const {atomicInterface} =
-      await renderInAtomicSearchInterface<AtomicResultHtml>({
-        template: html`<atomic-result-html field="title"></atomic-result-html>`,
-        selector: undefined,
-        bindings: (bindings) => {
-          bindings.engine = mockedEngine;
-          return bindings;
-        },
-      });
+    const {atomicInterface} = await renderInAtomicSearchInterface<AtomicResultHtml>({
+      template: html`<atomic-result-html field="title"></atomic-result-html>`,
+      selector: undefined,
+      bindings: (bindings) => {
+        bindings.engine = mockedEngine;
+        return bindings;
+      },
+    });
 
-    const element =
-      atomicInterface.querySelector<AtomicResultHtml>('atomic-result-html');
+    const element = atomicInterface.querySelector<AtomicResultHtml>('atomic-result-html');
 
     expect(element).toBeInTheDocument();
     expect(element!.error).toBeInstanceOf(Error);

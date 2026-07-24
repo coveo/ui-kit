@@ -22,9 +22,7 @@ describe('atomic-insight-user-actions-toggle', () => {
     excludedCustomActions = [] as string[],
     userActionsState = {} as Partial<InsightUserActionsState>,
   } = {}) => {
-    vi.mocked(buildInsightUserActions).mockReturnValue(
-      buildFakeUserActions(userActionsState)
-    );
+    vi.mocked(buildInsightUserActions).mockReturnValue(buildFakeUserActions(userActionsState));
 
     const {element, atomicInterface} =
       await renderInAtomicInsightInterface<AtomicInsightUserActionsToggle>({
@@ -40,8 +38,7 @@ describe('atomic-insight-user-actions-toggle', () => {
       });
 
     const getButton = () => element.shadowRoot?.querySelector('button');
-    const getModal = () =>
-      atomicInterface.querySelector('atomic-insight-user-actions-modal');
+    const getModal = () => atomicInterface.querySelector('atomic-insight-user-actions-modal');
 
     return {element, atomicInterface, getButton, getModal};
   };
@@ -54,23 +51,18 @@ describe('atomic-insight-user-actions-toggle', () => {
         excludedCustomActions: ['custom-event'],
       });
 
-      expect(buildInsightUserActions).toHaveBeenCalledWith(
-        atomicInterface.bindings.engine,
-        {
-          options: {
-            ticketCreationDate: '2024-01-01T00:00:00Z',
-            excludedCustomActions: ['custom-event'],
-          },
-        }
-      );
+      expect(buildInsightUserActions).toHaveBeenCalledWith(atomicInterface.bindings.engine, {
+        options: {
+          ticketCreationDate: '2024-01-01T00:00:00Z',
+          excludedCustomActions: ['custom-event'],
+        },
+      });
     });
 
     it('should set this.userActions to the user actions controller', async () => {
       const {element} = await renderUserActionsToggle();
 
-      expect(element.userActions).toBe(
-        vi.mocked(buildInsightUserActions).mock.results[0].value
-      );
+      expect(element.userActions).toBe(vi.mocked(buildInsightUserActions).mock.results[0].value);
     });
 
     it('should bind state to controller', async () => {
@@ -82,9 +74,7 @@ describe('atomic-insight-user-actions-toggle', () => {
       });
 
       expect(element.userActionsState.loading).toBe(true);
-      expect(element.userActionsState.excludedCustomActions).toEqual([
-        'test-event',
-      ]);
+      expect(element.userActionsState.excludedCustomActions).toEqual(['test-event']);
     });
   });
 
@@ -164,10 +154,7 @@ describe('atomic-insight-user-actions-toggle', () => {
 
     it('should call logOpenUserActions when the button is clicked', async () => {
       const {element, getButton} = await renderUserActionsToggle();
-      const logOpenUserActionsSpy = vi.spyOn(
-        element.userActions,
-        'logOpenUserActions'
-      );
+      const logOpenUserActionsSpy = vi.spyOn(element.userActions, 'logOpenUserActions');
 
       await userEvent.click(getButton()!);
 

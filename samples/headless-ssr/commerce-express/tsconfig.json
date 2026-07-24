@@ -18,12 +18,5 @@
     "lib": ["ES2022", "DOM"]
   },
   "include": ["src/**/*.ts"],
-  "exclude": [
-    "dist",
-    "node_modules",
-    "e2e",
-    "playwright.config.ts",
-    "**/*.spec.ts",
-    "**/*.test.ts"
-  ]
+  "exclude": ["dist", "node_modules", "e2e", "playwright.config.ts", "**/*.spec.ts", "**/*.test.ts"]
 }

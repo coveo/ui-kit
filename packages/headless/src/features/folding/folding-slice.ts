@@ -1,11 +1,7 @@
 import {createReducer} from '@reduxjs/toolkit';
 import type {Result} from '../../api/search/search/result.js';
 import {isArray} from '../../utils/utils.js';
-import {
-  executeSearch,
-  fetchMoreResults,
-  fetchPage,
-} from '../search/search-actions.js';
+import {executeSearch, fetchMoreResults, fetchPage} from '../search/search-actions.js';
 import {loadCollection, registerFolding} from './folding-actions.js';
 import {
   type CollectionId,
@@ -39,10 +35,7 @@ function getChildField(result: ResultWithFolding, fields: FoldingFields) {
   return rawValue;
 }
 
-function areDefinedAndEqual<T>(
-  value1: T | undefined,
-  value2: T | undefined
-): boolean {
+function areDefinedAndEqual<T>(value1: T | undefined, value2: T | undefined): boolean {
   return (value1 || value2) !== undefined && value1 === value2;
 }
 
@@ -61,10 +54,8 @@ function resolveChildrenFromFields(
   }
   return results
     .filter((result) => {
-      const isSameResultAsSource =
-        getChildField(result, fields) === getChildField(parent, fields);
-      const isChildOfSource =
-        getParentField(result, fields) === sourceChildValue;
+      const isSameResultAsSource = getChildField(result, fields) === getChildField(parent, fields);
+      const isChildOfSource = getParentField(result, fields) === sourceChildValue;
       return isChildOfSource && !isSameResultAsSource;
     })
     .map((result) => {
@@ -79,10 +70,7 @@ function resolveChildrenFromFields(
     });
 }
 
-function resolveRootFromFields(
-  results: ResultWithFolding[],
-  fields: FoldingFields
-) {
+function resolveRootFromFields(results: ResultWithFolding[], fields: FoldingFields) {
   return results.find((result) => {
     const hasNoParent = getParentField(result, fields) === undefined;
     const isParentOfItself = areDefinedAndEqual(
@@ -93,9 +81,7 @@ function resolveRootFromFields(
   });
 }
 
-function resolveRootFromParentResult(
-  result: ResultWithFolding
-): ResultWithFolding {
+function resolveRootFromParentResult(result: ResultWithFolding): ResultWithFolding {
   if (result.parentResult) {
     return resolveRootFromParentResult(result.parentResult);
   }
@@ -125,8 +111,7 @@ function createCollectionFromResult(
     result: extendedResultToUseAsRoot,
     children,
     // To understand why "1" instead of "0", see here : https://coveord.atlassian.net/browse/SEARCHAPI-11075. totalNumberOfChildResults is off by 1 by the index design.
-    moreResultsAvailable:
-      relevantResult.totalNumberOfChildResults > children.length + 1,
+    moreResultsAvailable: relevantResult.totalNumberOfChildResults > children.length + 1,
     isLoadingMoreResults: false,
   };
 }
@@ -146,20 +131,12 @@ function createCollections(
     if (!getChildField(result, fields) && !result.parentResult) {
       return;
     }
-    collections[collectionId] = createCollectionFromResult(
-      result,
-      fields,
-      searchUid,
-      rootResult
-    );
+    collections[collectionId] = createCollectionFromResult(result, fields, searchUid, rootResult);
   });
   return collections;
 }
 
-function tryGetCollectionFromStateOrThrow(
-  state: FoldingState,
-  collectionId: string
-) {
+function tryGetCollectionFromStateOrThrow(state: FoldingState, collectionId: string) {
   if (!state.collections[collectionId]) {
     throw new Error(
       `Missing collection ${collectionId} from ${Object.keys(
@@ -171,87 +148,78 @@ function tryGetCollectionFromStateOrThrow(
   return state.collections[collectionId];
 }
 
-export const foldingReducer = createReducer(
-  getFoldingInitialState(),
-  (builder) =>
-    builder
-      .addCase(executeSearch.fulfilled, (state, {payload}) => {
-        state.collections = state.enabled
-          ? createCollections(
-              payload.response.results as ResultWithFolding[],
-              state.fields,
-              payload.response.searchUid
-            )
-          : {};
-      })
-      .addCase(fetchPage.fulfilled, (state, {payload}) => {
-        state.collections = state.enabled
-          ? createCollections(
-              payload.response.results as ResultWithFolding[],
-              state.fields,
-              payload.response.searchUid
-            )
-          : {};
-      })
-      .addCase(fetchMoreResults.fulfilled, (state, {payload}) => {
-        state.collections = state.enabled
-          ? {
-              ...state.collections,
-              ...createCollections(
-                payload.response.results as ResultWithFolding[],
-                state.fields,
-                payload.response.searchUid
-              ),
-            }
-          : {};
-      })
-      .addCase(registerFolding, (state, {payload}) =>
-        state.enabled
-          ? state
-          : {
-              enabled: true,
-              collections: {},
-              fields: {
-                collection: payload.collectionField ?? state.fields.collection,
-                parent: payload.parentField ?? state.fields.parent,
-                child: payload.childField ?? state.fields.child,
-              },
-              filterFieldRange:
-                payload.numberOfFoldedResults ?? state.filterFieldRange,
-            }
-      )
-      .addCase(loadCollection.pending, (state, {meta}) => {
-        const collectionId = meta.arg;
-        tryGetCollectionFromStateOrThrow(
-          state,
-          collectionId
-        ).isLoadingMoreResults = true;
-      })
-      .addCase(loadCollection.rejected, (state, {meta}) => {
-        const collectionId = meta.arg;
-        tryGetCollectionFromStateOrThrow(
-          state,
-          collectionId
-        ).isLoadingMoreResults = false;
-      })
-      .addCase(
-        loadCollection.fulfilled,
-        (state, {payload: {collectionId, results, rootResult, searchUid}}) => {
-          const newCollections = createCollections(
-            results as ResultWithFolding[],
+export const foldingReducer = createReducer(getFoldingInitialState(), (builder) =>
+  builder
+    .addCase(executeSearch.fulfilled, (state, {payload}) => {
+      state.collections = state.enabled
+        ? createCollections(
+            payload.response.results as ResultWithFolding[],
             state.fields,
-            searchUid,
-            rootResult
-          );
-          if (!newCollections || !newCollections[collectionId]) {
-            throw new Error(
-              `Unable to create collection ${collectionId} from received results: ${JSON.stringify(
-                results
-              )}. Folding most probably in an invalid state... `
-            );
+            payload.response.searchUid
+          )
+        : {};
+    })
+    .addCase(fetchPage.fulfilled, (state, {payload}) => {
+      state.collections = state.enabled
+        ? createCollections(
+            payload.response.results as ResultWithFolding[],
+            state.fields,
+            payload.response.searchUid
+          )
+        : {};
+    })
+    .addCase(fetchMoreResults.fulfilled, (state, {payload}) => {
+      state.collections = state.enabled
+        ? {
+            ...state.collections,
+            ...createCollections(
+              payload.response.results as ResultWithFolding[],
+              state.fields,
+              payload.response.searchUid
+            ),
           }
-          state.collections[collectionId] = newCollections[collectionId];
-          state.collections[collectionId].moreResultsAvailable = false;
+        : {};
+    })
+    .addCase(registerFolding, (state, {payload}) =>
+      state.enabled
+        ? state
+        : {
+            enabled: true,
+            collections: {},
+            fields: {
+              collection: payload.collectionField ?? state.fields.collection,
+              parent: payload.parentField ?? state.fields.parent,
+              child: payload.childField ?? state.fields.child,
+            },
+            filterFieldRange: payload.numberOfFoldedResults ?? state.filterFieldRange,
+          }
+    )
+    .addCase(loadCollection.pending, (state, {meta}) => {
+      const collectionId = meta.arg;
+      tryGetCollectionFromStateOrThrow(state, collectionId).isLoadingMoreResults = true;
+    })
+    .addCase(loadCollection.rejected, (state, {meta}) => {
+      const collectionId = meta.arg;
+      tryGetCollectionFromStateOrThrow(state, collectionId).isLoadingMoreResults = false;
+    })
+    .addCase(
+      loadCollection.fulfilled,
+      (state, {payload: {collectionId, results, rootResult, searchUid}}) => {
+        const newCollections = createCollections(
+          results as ResultWithFolding[],
+          state.fields,
+          searchUid,
+          rootResult
+        );
+        if (!newCollections || !newCollections[collectionId]) {
+          throw new Error(
+            `Unable to create collection ${collectionId} from received results: ${JSON.stringify(
+              results
+            )}. Folding most probably in an invalid state... `
+          );
         }
-      )
+        state.collections[collectionId] = newCollections[collectionId];
+        state.collections[collectionId].moreResultsAvailable = false;
+      }
+    )
 );

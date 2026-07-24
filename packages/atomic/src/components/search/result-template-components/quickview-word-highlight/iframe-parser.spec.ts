@@ -32,8 +32,7 @@ describe('getWordsHighlights', () => {
       iframe = document.createElement('iframe') as HTMLIFrameElement;
       container.appendChild(iframe);
 
-      iframeDoc = (iframe.contentDocument ||
-        iframe.contentWindow?.document) as Document;
+      iframeDoc = (iframe.contentDocument || iframe.contentWindow?.document) as Document;
     });
 
     afterEach(() => {

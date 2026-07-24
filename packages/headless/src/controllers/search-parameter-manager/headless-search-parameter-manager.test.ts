@@ -9,10 +9,7 @@ import {buildMockCategoryFacetValueRequest} from '../../test/mock-category-facet
 import {buildMockDateFacetRequest} from '../../test/mock-date-facet-request.js';
 import {buildMockDateFacetSlice} from '../../test/mock-date-facet-slice.js';
 import {buildMockDateFacetValue} from '../../test/mock-date-facet-value.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../test/mock-engine-v2.js';
 import {buildMockFacetRequest} from '../../test/mock-facet-request.js';
 import {buildMockFacetSlice} from '../../test/mock-facet-slice.js';
 import {buildMockFacetValue} from '../../test/mock-facet-value.js';
@@ -206,9 +203,7 @@ describe('search parameter manager', () => {
       }),
     };
 
-    const staticFilterValues = [
-      buildMockStaticFilterValue({state: 'selected'}),
-    ];
+    const staticFilterValues = [buildMockStaticFilterValue({state: 'selected'})];
     engine.state.staticFilterSet = {
       a: buildMockStaticFilterSlice({id: 'a', values: staticFilterValues}),
     };

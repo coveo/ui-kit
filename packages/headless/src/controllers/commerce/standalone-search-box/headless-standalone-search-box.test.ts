@@ -16,10 +16,7 @@ import {
 import {commerceStandaloneSearchBoxSetReducer as commerceStandaloneSearchBoxSet} from '../../../features/commerce/standalone-search-box-set/standalone-search-box-set-slice.js';
 import type {CommerceAppState} from '../../../state/commerce-app-state.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
-import {
-  buildMockCommerceEngine,
-  type MockedCommerceEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockCommerceEngine, type MockedCommerceEngine} from '../../../test/mock-engine-v2.js';
 import {buildMockQuerySuggest} from '../../../test/mock-query-suggest.js';
 import {buildMockStandaloneSearchBoxEntry} from '../../../test/mock-standalone-search-box-entry.js';
 import {
@@ -31,9 +28,7 @@ import type {StandaloneSearchBoxOptions} from './headless-standalone-search-box-
 vi.mock('../../../features/commerce/query-set/query-set-actions');
 vi.mock('../../../features/commerce/query-suggest/query-suggest-actions');
 vi.mock('../../../features/commerce/query/query-actions');
-vi.mock(
-  '../../../features/commerce/standalone-search-box-set/standalone-search-box-set-actions'
-);
+vi.mock('../../../features/commerce/standalone-search-box-set/standalone-search-box-set-actions');
 
 describe('headless standalone searchBox', () => {
   const id = 'search-box-123';
@@ -57,8 +52,7 @@ describe('headless standalone searchBox', () => {
     state = buildMockCommerceState();
     state.querySet[id] = 'query';
     state.querySuggest[id] = buildMockQuerySuggest({id});
-    state.commerceStandaloneSearchBoxSet[id] =
-      buildMockStandaloneSearchBoxEntry();
+    state.commerceStandaloneSearchBoxSet[id] = buildMockStandaloneSearchBoxEntry();
   }
 
   function initController() {
@@ -114,8 +108,9 @@ describe('headless standalone searchBox', () => {
 
   it('#state.redirectTo uses the value in the standalone search-box reducer', () => {
     const redirectTo = '/search-page';
-    engine[stateKey].commerceStandaloneSearchBoxSet![id] =
-      buildMockStandaloneSearchBoxEntry({redirectTo});
+    engine[stateKey].commerceStandaloneSearchBoxSet![id] = buildMockStandaloneSearchBoxEntry({
+      redirectTo,
+    });
     expect(searchBox.state.redirectTo).toBe(redirectTo);
   });
 

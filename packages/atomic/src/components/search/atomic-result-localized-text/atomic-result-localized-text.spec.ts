@@ -54,29 +54,28 @@ describe('atomic-result-localized-text', () => {
   ) => {
     const resultToUse = 'result' in options ? options.result : mockResult;
 
-    const {element, atomicInterface} =
-      await renderInAtomicResult<AtomicResultLocalizedText>({
-        template: html`<atomic-result-localized-text
-          locale-key=${ifDefined(options.localeKey)}
-          field-author=${ifDefined(options.fieldAuthor)}
-          field-booktitle=${ifDefined(options.fieldBooktitle)}
-          field-count=${ifDefined(options.fieldCount)}
-        ></atomic-result-localized-text>`,
-        selector: 'atomic-result-localized-text',
-        result: resultToUse === null ? undefined : resultToUse,
-        bindings: (bindings) => {
-          bindings.i18n = i18n;
-          bindings.store = {
-            ...bindings.store,
-            onChange: vi.fn(),
-            state: {
-              ...bindings.store?.state,
-              loadingFlags: [],
-            },
-          };
-          return bindings;
-        },
-      });
+    const {element, atomicInterface} = await renderInAtomicResult<AtomicResultLocalizedText>({
+      template: html`<atomic-result-localized-text
+        locale-key=${ifDefined(options.localeKey)}
+        field-author=${ifDefined(options.fieldAuthor)}
+        field-booktitle=${ifDefined(options.fieldBooktitle)}
+        field-count=${ifDefined(options.fieldCount)}
+      ></atomic-result-localized-text>`,
+      selector: 'atomic-result-localized-text',
+      result: resultToUse === null ? undefined : resultToUse,
+      bindings: (bindings) => {
+        bindings.i18n = i18n;
+        bindings.store = {
+          ...bindings.store,
+          onChange: vi.fn(),
+          state: {
+            ...bindings.store?.state,
+            loadingFlags: [],
+          },
+        };
+        return bindings;
+      },
+    });
 
     await atomicInterface.updateComplete;
     await element?.updateComplete;
@@ -134,9 +133,7 @@ describe('atomic-result-localized-text', () => {
       await element.updateComplete;
 
       expect(element).toBeDefined();
-      expect(element.textContent?.trim()).toBe(
-        'Author: Test Author, Title: Advanced Testing'
-      );
+      expect(element.textContent?.trim()).toBe('Author: Test Author, Title: Advanced Testing');
     });
 
     describe('when field-count is provided', () => {

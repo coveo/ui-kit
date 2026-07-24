@@ -8,10 +8,7 @@ import {dictionaryFieldContextReducer as dictionaryFieldContext} from '../../fea
 import type {DictionaryFieldContextPayload} from '../../features/dictionary-field-context/dictionary-field-context-state.js';
 import type {DictionaryFieldContextSection} from '../../state/state-sections.js';
 import {loadReducerError} from '../../utils/errors.js';
-import {
-  buildController,
-  type Controller,
-} from '../controller/headless-controller.js';
+import {buildController, type Controller} from '../controller/headless-controller.js';
 
 export type {DictionaryFieldContextPayload};
 
@@ -73,9 +70,7 @@ export interface DictionaryFieldContextState {
  * @group Controllers
  * @category DictionaryFieldContext
  */
-export function buildDictionaryFieldContext(
-  engine: CoreEngine
-): DictionaryFieldContext {
+export function buildDictionaryFieldContext(engine: CoreEngine): DictionaryFieldContext {
   if (!loadReducers(engine)) {
     throw loadReducerError;
   }
@@ -107,9 +102,7 @@ export function buildDictionaryFieldContext(
   };
 }
 
-function loadReducers(
-  engine: CoreEngine
-): engine is CoreEngine<DictionaryFieldContextSection> {
+function loadReducers(engine: CoreEngine): engine is CoreEngine<DictionaryFieldContextSection> {
   engine.addReducers({dictionaryFieldContext});
   return true;
 }

@@ -16,10 +16,9 @@ searchApiHarness.searchEndpoint.mock((response) => ({
   totalCountFiltered: 1,
 }));
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-result-badge',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-result-badge', {
+  excludeCategories: ['methods'],
+});
 
 const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
   includeCodeRoot: false,
@@ -32,11 +31,7 @@ const meta: Meta = {
   title: 'Search/Result Badge',
   id: 'atomic-result-badge',
   render: (args) => template(args),
-  decorators: [
-    resultTemplateDecorator,
-    resultListDecorator,
-    searchInterfaceDecorator,
-  ],
+  decorators: [resultTemplateDecorator, resultListDecorator, searchInterfaceDecorator],
   parameters: {
     ...parameters,
     msw: {

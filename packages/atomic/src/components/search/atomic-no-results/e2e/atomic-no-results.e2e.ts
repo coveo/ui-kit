@@ -6,9 +6,7 @@ test.describe('atomic-no-results', () => {
     await noResults.hydrated.waitFor();
   });
 
-  test('should display no results message with search tips', async ({
-    noResults,
-  }) => {
+  test('should display no results message with search tips', async ({noResults}) => {
     await expect(noResults.ariaLive()).toBeVisible();
     await expect(noResults.message()).toBeVisible();
     await expect(noResults.searchTips()).toBeVisible();

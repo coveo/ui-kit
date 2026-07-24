@@ -78,9 +78,7 @@ describe('atomic-modal', () => {
       >
         <div slot="header">${options.headerContent ?? 'Modal Header'}</div>
         ${options.withCloseButton
-          ? html`<button slot="header-actions" aria-label="Close">
-              Close
-            </button>`
+          ? html`<button slot="header-actions" aria-label="Close">Close</button>`
           : nothing}
         <div slot="body">${options.bodyContent ?? 'Modal Body Content'}</div>
         <div slot="footer">${options.footerContent ?? 'Modal Footer'}</div>
@@ -95,10 +93,8 @@ describe('atomic-modal', () => {
     return {
       element,
       parts: (element: AtomicModal) => {
-        const qs = (part: string) =>
-          element?.shadowRoot?.querySelector(`[part="${part}"]`);
-        const focusTrap =
-          element?.shadowRoot?.querySelector('atomic-focus-trap');
+        const qs = (part: string) => element?.shadowRoot?.querySelector(`[part="${part}"]`);
+        const focusTrap = element?.shadowRoot?.querySelector('atomic-focus-trap');
         const labelledById = focusTrap?.getAttribute('aria-labelledby');
         return {
           backdrop: qs('backdrop'),
@@ -110,13 +106,10 @@ describe('atomic-modal', () => {
           body: qs('body'),
           footerWrapper: qs('footer-wrapper'),
           footer: qs('footer'),
-          headerSlot: element?.shadowRoot?.querySelector<HTMLSlotElement>(
-            'slot[name="header"]'
+          headerSlot: element?.shadowRoot?.querySelector<HTMLSlotElement>('slot[name="header"]'),
+          headerActionsSlot: element?.shadowRoot?.querySelector<HTMLSlotElement>(
+            'slot[name="header-actions"]'
           ),
-          headerActionsSlot:
-            element?.shadowRoot?.querySelector<HTMLSlotElement>(
-              'slot[name="header-actions"]'
-            ),
           labelledByTarget:
             labelledById && element?.shadowRoot
               ? element.shadowRoot.getElementById(labelledById)
@@ -140,10 +133,7 @@ describe('atomic-modal', () => {
 
       await renderModal();
 
-      expect(addEventListenerSpy).toHaveBeenCalledWith(
-        'keyup',
-        expect.any(Function)
-      );
+      expect(addEventListenerSpy).toHaveBeenCalledWith('keyup', expect.any(Function));
     });
 
     describe('when a "keyup" event is dispatched with the "Escape" key', () => {
@@ -191,11 +181,9 @@ describe('atomic-modal', () => {
 
       await renderModal({isOpen: false});
 
-      expect(addEventListenerSpy).toHaveBeenCalledWith(
-        'touchmove',
-        expect.any(Function),
-        {passive: false}
-      );
+      expect(addEventListenerSpy).toHaveBeenCalledWith('touchmove', expect.any(Function), {
+        passive: false,
+      });
     });
 
     describe('when a "touchmove" event is dispatched', () => {
@@ -290,13 +278,10 @@ describe('atomic-modal', () => {
       it('should render an atomic-focus-trap with the correct ARIA attributes', async () => {
         const {element} = await renderModal({isOpen: true});
 
-        const focusTrap =
-          element.shadowRoot?.querySelector('atomic-focus-trap');
+        const focusTrap = element.shadowRoot?.querySelector('atomic-focus-trap');
         expect(focusTrap?.getAttribute('role')).toBe('dialog');
         expect(focusTrap?.getAttribute('aria-modal')).toBe('true');
-        expect(focusTrap?.getAttribute('aria-labelledby')).toContain(
-          'atomic-modal-header-'
-        );
+        expect(focusTrap?.getAttribute('aria-labelledby')).toContain('atomic-modal-header-');
       });
 
       it('should point aria-labelledby to an element that wraps only the header slot', async () => {
@@ -304,12 +289,8 @@ describe('atomic-modal', () => {
 
         const {labelledByTarget} = parts(element);
         expect(labelledByTarget).toBeTruthy();
-        expect(
-          labelledByTarget?.querySelector('slot[name="header"]')
-        ).toBeTruthy();
-        expect(
-          labelledByTarget?.querySelector('slot[name="header-actions"]')
-        ).toBeFalsy();
+        expect(labelledByTarget?.querySelector('slot[name="header"]')).toBeTruthy();
+        expect(labelledByTarget?.querySelector('slot[name="header-actions"]')).toBeFalsy();
       });
 
       it('should render a header-actions slot in the header but outside the aria-labelledby target', async () => {
@@ -329,13 +310,9 @@ describe('atomic-modal', () => {
         });
 
         await expect
-          .element(
-            page.getByRole('dialog', {name: 'Sort & Filter', exact: true})
-          )
+          .element(page.getByRole('dialog', {name: 'Sort & Filter', exact: true}))
           .toBeInTheDocument();
-        await expect
-          .element(page.getByRole('button', {name: 'Close'}))
-          .toBeInTheDocument();
+        await expect.element(page.getByRole('button', {name: 'Close'})).toBeInTheDocument();
       });
 
       it('should render atomic-focus-trap with the correct source when specified', async () => {
@@ -345,8 +322,7 @@ describe('atomic-modal', () => {
           source: sourceElement,
         });
 
-        const focusTrap =
-          element.shadowRoot?.querySelector('atomic-focus-trap');
+        const focusTrap = element.shadowRoot?.querySelector('atomic-focus-trap');
         expect(focusTrap?.source).toBe(sourceElement);
       });
 
@@ -357,8 +333,7 @@ describe('atomic-modal', () => {
           container: containerElement,
         });
 
-        const focusTrap =
-          element.shadowRoot?.querySelector('atomic-focus-trap');
+        const focusTrap = element.shadowRoot?.querySelector('atomic-focus-trap');
         expect(focusTrap?.container).toBe(containerElement);
       });
 
@@ -367,8 +342,7 @@ describe('atomic-modal', () => {
           isOpen: true,
         });
 
-        const focusTrap =
-          element.shadowRoot?.querySelector('atomic-focus-trap');
+        const focusTrap = element.shadowRoot?.querySelector('atomic-focus-trap');
         expect(focusTrap?.container).toBe(element);
       });
 
@@ -379,8 +353,7 @@ describe('atomic-modal', () => {
           scope: scopeElement,
         });
 
-        const focusTrap =
-          element.shadowRoot?.querySelector('atomic-focus-trap');
+        const focusTrap = element.shadowRoot?.querySelector('atomic-focus-trap');
         expect(focusTrap?.scope).toBe(scopeElement);
       });
     });
@@ -414,9 +387,7 @@ describe('atomic-modal', () => {
       element.isOpen = true;
       await element.updateComplete;
 
-      expect(parts(element).container?.classList).not.toContain(
-        'animate-close'
-      );
+      expect(parts(element).container?.classList).not.toContain('animate-close');
       expect(parts(element).container?.classList).toContain('animate-open');
     });
 
@@ -426,9 +397,7 @@ describe('atomic-modal', () => {
       });
 
       expect(parts(element).headerWrapper).toBeTruthy();
-      expect(parts(element).headerWrapper?.getAttribute('part')).toBe(
-        'header-wrapper'
-      );
+      expect(parts(element).headerWrapper?.getAttribute('part')).toBe('header-wrapper');
     });
 
     it('should render a header with the correct part', async () => {
@@ -446,9 +415,7 @@ describe('atomic-modal', () => {
       });
 
       expect(parts(element).headerRuler).toBeTruthy();
-      expect(parts(element).headerRuler?.getAttribute('part')).toBe(
-        'header-ruler'
-      );
+      expect(parts(element).headerRuler?.getAttribute('part')).toBe('header-ruler');
     });
 
     it('should render a body wrapper with the correct part', async () => {
@@ -457,9 +424,7 @@ describe('atomic-modal', () => {
       });
 
       expect(parts(element).bodyWrapper).toBeTruthy();
-      expect(parts(element).bodyWrapper?.getAttribute('part')).toBe(
-        'body-wrapper'
-      );
+      expect(parts(element).bodyWrapper?.getAttribute('part')).toBe('body-wrapper');
     });
 
     it('should render a body with the correct part', async () => {
@@ -488,9 +453,7 @@ describe('atomic-modal', () => {
       });
 
       expect(parts(element).footerWrapper).toBeTruthy();
-      expect(parts(element).footerWrapper?.getAttribute('part')).toBe(
-        'footer-wrapper'
-      );
+      expect(parts(element).footerWrapper?.getAttribute('part')).toBe('footer-wrapper');
     });
 
     it('should render slotted content', async () => {
@@ -516,9 +479,7 @@ describe('atomic-modal', () => {
       element.error = new Error('Test error');
 
       await element.updateComplete;
-      const errorComponent = element.shadowRoot?.querySelector(
-        'atomic-component-error'
-      );
+      const errorComponent = element.shadowRoot?.querySelector('atomic-component-error');
 
       expect(errorComponent).toBeTruthy();
     });
@@ -527,32 +488,20 @@ describe('atomic-modal', () => {
   describe('#disconnectedCallback (when removed from the DOM)', () => {
     it('should remove the keyup event listener from the document body', async () => {
       const {element} = await renderModal({isOpen: true});
-      const removeEventListenerSpy = vi.spyOn(
-        document.body,
-        'removeEventListener'
-      );
+      const removeEventListenerSpy = vi.spyOn(document.body, 'removeEventListener');
 
       element.remove();
 
-      expect(removeEventListenerSpy).toHaveBeenCalledWith(
-        'keyup',
-        expect.any(Function)
-      );
+      expect(removeEventListenerSpy).toHaveBeenCalledWith('keyup', expect.any(Function));
     });
 
     it('should remove the touchmove event listener from the document body', async () => {
       const {element} = await renderModal({isOpen: true});
-      const removeEventListenerSpy = vi.spyOn(
-        document.body,
-        'removeEventListener'
-      );
+      const removeEventListenerSpy = vi.spyOn(document.body, 'removeEventListener');
 
       element.remove();
 
-      expect(removeEventListenerSpy).toHaveBeenCalledWith(
-        'touchmove',
-        expect.any(Function)
-      );
+      expect(removeEventListenerSpy).toHaveBeenCalledWith('touchmove', expect.any(Function));
     });
   });
 
@@ -571,9 +520,7 @@ describe('atomic-modal', () => {
 
         element.initialize();
 
-        expect(element.bindings.interfaceElement.className).toContain(
-          'atomic-modal-opened'
-        );
+        expect(element.bindings.interfaceElement.className).toContain('atomic-modal-opened');
       });
     });
   });
@@ -600,16 +547,12 @@ describe('atomic-modal', () => {
       it('should add the "atomic-modal-opened" class to the interface element', async () => {
         element.isOpen = false;
         await element.updateComplete;
-        expect(element.bindings.interfaceElement.className).not.toContain(
-          'atomic-modal-opened'
-        );
+        expect(element.bindings.interfaceElement.className).not.toContain('atomic-modal-opened');
 
         element.isOpen = true;
         await element.updateComplete;
 
-        expect(element.bindings.interfaceElement.className).toContain(
-          'atomic-modal-opened'
-        );
+        expect(element.bindings.interfaceElement.className).toContain('atomic-modal-opened');
       });
     });
 
@@ -628,16 +571,12 @@ describe('atomic-modal', () => {
       it('should remove the "atomic-modal-opened" class from the interface element', async () => {
         element.isOpen = true;
         await element.updateComplete;
-        expect(element.bindings.interfaceElement.className).toContain(
-          'atomic-modal-opened'
-        );
+        expect(element.bindings.interfaceElement.className).toContain('atomic-modal-opened');
 
         element.isOpen = false;
         await element.updateComplete;
 
-        expect(element.bindings.interfaceElement.className).not.toContain(
-          'atomic-modal-opened'
-        );
+        expect(element.bindings.interfaceElement.className).not.toContain('atomic-modal-opened');
       });
     });
   });

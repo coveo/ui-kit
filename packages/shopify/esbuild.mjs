@@ -21,9 +21,7 @@ const buenoJson = JSON.parse(readFileSync(buenoJsonPath, 'utf-8'));
 const buenoVersion = isNightly
   ? `v${buenoJson.version.split('.').shift()}-nightly`
   : `v${buenoJson.version}`;
-const buenoBase = commitSha
-  ? `/bueno/commits/${commitSha}`
-  : `/bueno/${buenoVersion}`;
+const buenoBase = commitSha ? `/bueno/commits/${commitSha}` : `/bueno/${buenoVersion}`;
 const buenoPath = isCDN ? `${buenoBase}/bueno.esm.js` : '@coveo/bueno';
 
 /**

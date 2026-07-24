@@ -1,10 +1,4 @@
-import {
-  ArrayValue,
-  BooleanValue,
-  NumberValue,
-  RecordValue,
-  StringValue,
-} from '@coveo/bueno';
+import {ArrayValue, BooleanValue, NumberValue, RecordValue, StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import type {AsyncThunkGeneratedAnswerOptions} from '../../api/generated-answer/generated-answer-client.js';
 import type {
@@ -36,10 +30,7 @@ import {
   logGeneratedAnswerResponseLinked,
   logGeneratedAnswerStreamEnd,
 } from './generated-answer-analytics-actions.js';
-import {
-  buildStreamingRequest,
-  constructAnswerAPIQueryParams,
-} from './generated-answer-request.js';
+import {buildStreamingRequest, constructAnswerAPIQueryParams} from './generated-answer-request.js';
 import {
   GENERATION_STEP_NAMES,
   type GenerationStepName,
@@ -71,11 +62,10 @@ export const citationSchema = {
   clickUri: optionalStringValue,
 };
 
-export const answerContentFormatSchema =
-  new StringValue<GeneratedContentFormat>({
-    required: true,
-    constrainTo: generatedContentFormat,
-  });
+export const answerContentFormatSchema = new StringValue<GeneratedContentFormat>({
+  required: true,
+  constrainTo: generatedContentFormat,
+});
 
 const generationStepNameValue = new StringValue<GenerationStepName>({
   required: true,
@@ -94,14 +84,12 @@ export interface GeneratedAnswerErrorPayload {
   code?: number;
 }
 
-export const setIsVisible = createAction(
-  'generatedAnswer/setIsVisible',
-  (payload: boolean) => validatePayload(payload, booleanValue)
+export const setIsVisible = createAction('generatedAnswer/setIsVisible', (payload: boolean) =>
+  validatePayload(payload, booleanValue)
 );
 
-export const setAnswerId = createAction(
-  'generatedAnswer/setAnswerId',
-  (payload: string) => validatePayload(payload, requiredNonEmptyString)
+export const setAnswerId = createAction('generatedAnswer/setAnswerId', (payload: string) =>
+  validatePayload(payload, requiredNonEmptyString)
 );
 
 export const setAnswerGenerationMode = createAction(
@@ -117,9 +105,8 @@ export const setAnswerGenerationMode = createAction(
     )
 );
 
-export const setIsEnabled = createAction(
-  'generatedAnswer/setIsEnabled',
-  (payload: boolean) => validatePayload(payload, booleanValue)
+export const setIsEnabled = createAction('generatedAnswer/setIsEnabled', (payload: boolean) =>
+  validatePayload(payload, booleanValue)
 );
 
 export const updateMessage = createAction(
@@ -158,46 +145,37 @@ export const likeGeneratedAnswer = createAction('generatedAnswer/like');
 
 export const dislikeGeneratedAnswer = createAction('generatedAnswer/dislike');
 
-export const openGeneratedAnswerFeedbackModal = createAction(
-  'generatedAnswer/feedbackModal/open'
-);
+export const openGeneratedAnswerFeedbackModal = createAction('generatedAnswer/feedbackModal/open');
 
 export const expandGeneratedAnswer = createAction('generatedAnswer/expand');
 
 export const collapseGeneratedAnswer = createAction('generatedAnswer/collapse');
 
-export const setId = createAction(
-  'generatedAnswer/setId',
-  (payload: {id: string}) =>
-    validatePayload(payload, {
-      id: new StringValue({
-        required: true,
-      }),
-    })
+export const setId = createAction('generatedAnswer/setId', (payload: {id: string}) =>
+  validatePayload(payload, {
+    id: new StringValue({
+      required: true,
+    }),
+  })
 );
 
 export const closeGeneratedAnswerFeedbackModal = createAction(
   'generatedAnswer/feedbackModal/close'
 );
 
-export const sendGeneratedAnswerFeedback = createAction(
-  'generatedAnswer/sendFeedback'
+export const sendGeneratedAnswerFeedback = createAction('generatedAnswer/sendFeedback');
+
+export const setIsLoading = createAction('generatedAnswer/setIsLoading', (payload: boolean) =>
+  validatePayload(payload, booleanValue)
 );
 
-export const setIsLoading = createAction(
-  'generatedAnswer/setIsLoading',
-  (payload: boolean) => validatePayload(payload, booleanValue)
-);
-
-export const setIsStreaming = createAction(
-  'generatedAnswer/setIsStreaming',
-  (payload: boolean) => validatePayload(payload, booleanValue)
+export const setIsStreaming = createAction('generatedAnswer/setIsStreaming', (payload: boolean) =>
+  validatePayload(payload, booleanValue)
 );
 
 export const setAnswerContentFormat = createAction(
   'generatedAnswer/setAnswerContentFormat',
-  (payload: GeneratedContentFormat) =>
-    validatePayload(payload, answerContentFormatSchema)
+  (payload: GeneratedContentFormat) => validatePayload(payload, answerContentFormatSchema)
 );
 
 export const updateResponseFormat = createAction(
@@ -226,15 +204,13 @@ export const setIsAnswerGenerated = createAction(
   (payload: boolean) => validatePayload(payload, booleanValue)
 );
 
-export const setCannotAnswer = createAction(
-  'generatedAnswer/setCannotAnswer',
-  (payload: boolean) => validatePayload(payload, booleanValue)
+export const setCannotAnswer = createAction('generatedAnswer/setCannotAnswer', (payload: boolean) =>
+  validatePayload(payload, booleanValue)
 );
 
 export const setAnswerApiQueryParams = createAction(
   'generatedAnswer/setAnswerApiQueryParams',
-  (payload: Partial<AnswerApiQueryParams>) =>
-    validatePayload(payload, new RecordValue({}))
+  (payload: Partial<AnswerApiQueryParams>) => validatePayload(payload, new RecordValue({}))
 );
 
 export const startStep = createAction(
@@ -309,34 +285,22 @@ export const streamAnswer = createAsyncThunk<
 
   const request = await buildStreamingRequest(state);
 
-  const handleStreamPayload = (
-    payloadType: GeneratedAnswerPayloadType,
-    payload: string
-  ) => {
+  const handleStreamPayload = (payloadType: GeneratedAnswerPayloadType, payload: string) => {
     switch (payloadType) {
       case 'genqa.headerMessageType': {
-        const header = JSON.parse(
-          payload
-        ) as GeneratedAnswerHeaderMessagePayload;
+        const header = JSON.parse(payload) as GeneratedAnswerHeaderMessagePayload;
         dispatch(setAnswerContentFormat(header.contentFormat));
         break;
       }
       case 'genqa.messageType':
-        dispatch(
-          updateMessage(JSON.parse(payload) as GeneratedAnswerMessagePayload)
-        );
+        dispatch(updateMessage(JSON.parse(payload) as GeneratedAnswerMessagePayload));
         break;
       case 'genqa.citationsType':
-        dispatch(
-          updateCitations(
-            JSON.parse(payload) as GeneratedAnswerCitationsPayload
-          )
-        );
+        dispatch(updateCitations(JSON.parse(payload) as GeneratedAnswerCitationsPayload));
         break;
       case 'genqa.endOfStreamType': {
-        const isAnswerGenerated = (
-          JSON.parse(payload) as GeneratedAnswerEndOfStreamPayload
-        ).answerGenerated;
+        const isAnswerGenerated = (JSON.parse(payload) as GeneratedAnswerEndOfStreamPayload)
+          .answerGenerated;
         const {answerId, answer} = getState().generatedAnswer;
         const hasExecutedQuery = queryExecuted.length !== 0;
         const cannotAnswer = hasExecutedQuery && !isAnswerGenerated;
@@ -367,38 +331,34 @@ export const streamAnswer = createAsyncThunk<
     request: GeneratedAnswerStreamRequest
   ) => {
     return (
-      request.streamId ===
-      config.getState().search.extendedResults.generativeQuestionAnsweringId
+      request.streamId === config.getState().search.extendedResults.generativeQuestionAnsweringId
     );
   };
-  const abortController = extra.streamingClient?.streamGeneratedAnswer(
-    request,
-    {
-      write: (data: GeneratedAnswerStreamEventData) => {
-        if (currentStreamRequestMatchesOriginalStreamRequest(request)) {
-          dispatch(setIsLoading(false));
-          if (data.payload && data.payloadType) {
-            handleStreamPayload(data.payloadType, data.payload);
-          }
+  const abortController = extra.streamingClient?.streamGeneratedAnswer(request, {
+    write: (data: GeneratedAnswerStreamEventData) => {
+      if (currentStreamRequestMatchesOriginalStreamRequest(request)) {
+        dispatch(setIsLoading(false));
+        if (data.payload && data.payloadType) {
+          handleStreamPayload(data.payloadType, data.payload);
         }
-      },
-      abort: (error: GeneratedAnswerErrorPayload) => {
-        if (currentStreamRequestMatchesOriginalStreamRequest(request)) {
-          dispatch(updateError(error));
-        }
-      },
-      close: () => {
-        if (currentStreamRequestMatchesOriginalStreamRequest(request)) {
-          dispatch(setIsStreaming(false));
-        }
-      },
-      resetAnswer: () => {
-        if (currentStreamRequestMatchesOriginalStreamRequest(request)) {
-          dispatch(resetAnswer());
-        }
-      },
-    }
-  );
+      }
+    },
+    abort: (error: GeneratedAnswerErrorPayload) => {
+      if (currentStreamRequestMatchesOriginalStreamRequest(request)) {
+        dispatch(updateError(error));
+      }
+    },
+    close: () => {
+      if (currentStreamRequestMatchesOriginalStreamRequest(request)) {
+        dispatch(setIsStreaming(false));
+      }
+    },
+    resetAnswer: () => {
+      if (currentStreamRequestMatchesOriginalStreamRequest(request)) {
+        dispatch(resetAnswer());
+      }
+    },
+  });
   if (abortController) {
     setAbortControllerRef(abortController);
   } else {
@@ -438,10 +398,7 @@ export const generateAnswer = createAsyncThunk<
     }
 
     if (state.generatedAnswer.answerConfigurationId) {
-      const answerApiQueryParams = constructAnswerAPIQueryParams(
-        state,
-        navigatorContext
-      );
+      const answerApiQueryParams = constructAnswerAPIQueryParams(state, navigatorContext);
       // TODO: SVCC-5178 Refactor multiple sequential dispatches into single action
       dispatch(setAnswerApiQueryParams(answerApiQueryParams));
       await dispatch(fetchAnswer(answerApiQueryParams));

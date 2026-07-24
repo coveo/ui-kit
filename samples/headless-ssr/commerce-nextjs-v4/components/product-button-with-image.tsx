@@ -1,8 +1,4 @@
-import type {
-  Product,
-  ProductList,
-  Recommendations,
-} from '@coveo/headless-react/ssr-commerce-next';
+import type {Product, ProductList, Recommendations} from '@coveo/headless-react/ssr-commerce-next';
 import Image from 'next/image';
 import {useRouter} from 'next/navigation';
 
@@ -14,10 +10,7 @@ interface ProductButtonWithImageProps {
   product: Product;
 }
 
-export default function ProductButtonWithImage({
-  methods,
-  product,
-}: ProductButtonWithImageProps) {
+export default function ProductButtonWithImage({methods, product}: ProductButtonWithImageProps) {
   const router = useRouter();
 
   const onProductClick = (product: Product) => {
@@ -28,18 +21,9 @@ export default function ProductButtonWithImage({
   };
 
   return (
-    <button
-      type="button"
-      disabled={!methods}
-      onClick={() => onProductClick(product)}
-    >
+    <button type="button" disabled={!methods} onClick={() => onProductClick(product)}>
       {product.ec_name}
-      <Image
-        src={product.ec_images[0]}
-        alt={product.ec_name!}
-        width={50}
-        height={50}
-      />
+      <Image src={product.ec_images[0]} alt={product.ec_name!} width={50} height={50} />
     </button>
   );
 }

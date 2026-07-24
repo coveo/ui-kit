@@ -18,10 +18,7 @@ import * as HighlightUtils from './utils/highlight.js';
 export type {Relay} from '@coveo/relay';
 // 3rd Party Libraries
 export type {Middleware, Unsubscribe} from '@reduxjs/toolkit';
-export {
-  getAnalyticsNextApiBaseUrl,
-  getOrganizationEndpoint,
-} from './api/platform-client.js';
+export {getAnalyticsNextApiBaseUrl, getOrganizationEndpoint} from './api/platform-client.js';
 export type {
   RelativeDate,
   RelativeDatePeriod,
@@ -52,10 +49,7 @@ export {
 export type {LoggerOptions, LogLevel} from './app/logger.js';
 export type {NavigatorContext} from './app/navigator-context-provider.js';
 // Controllers
-export type {
-  Controller,
-  Subscribable,
-} from './controllers/controller/headless-controller.js';
+export type {Controller, Subscribable} from './controllers/controller/headless-controller.js';
 export {buildController} from './controllers/controller/headless-controller.js';
 export type {
   AttachToCase,

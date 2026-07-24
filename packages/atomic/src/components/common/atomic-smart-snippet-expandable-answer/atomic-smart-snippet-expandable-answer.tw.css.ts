@@ -12,19 +12,10 @@ const styles = css`
 
     --gradient-start: var(
       --atomic-smart-snippet-gradient-start,
-      calc(
-        max(
-          var(--collapsed-size) - (var(--line-height) * 1.5),
-          var(--collapsed-size) * 0.5
-        )
-      )
+      calc(max(var(--collapsed-size) - (var(--line-height) * 1.5), var(--collapsed-size) * 0.5))
     );
     color: var(--atomic-on-background);
-    mask-image: linear-gradient(
-      black,
-      black var(--gradient-start),
-      transparent 100%
-    );
+    mask-image: linear-gradient(black, black var(--gradient-start), transparent 100%);
   }
 
   atomic-smart-snippet-answer.loaded {

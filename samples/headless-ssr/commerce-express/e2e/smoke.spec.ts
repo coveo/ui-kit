@@ -57,9 +57,7 @@ test.describe('commerce SSR search page', () => {
     await expect(firstValue).toBeVisible();
 
     await firstValue.check();
-    await expect(
-      page.locator('.FacetValueCheckbox:checked').first()
-    ).toBeVisible();
+    await expect(page.locator('.FacetValueCheckbox:checked').first()).toBeVisible();
     await expect(page.locator('.ProductCard').first()).toBeVisible();
   });
 });
@@ -110,19 +108,13 @@ test.describe('search box suggestions and instant products', () => {
     await expect(page.locator('#search-input')).toHaveValue(suggestionText);
   });
 
-  test('navigates suggestions with the keyboard and searches on Enter', async ({
-    page,
-  }) => {
+  test('navigates suggestions with the keyboard and searches on Enter', async ({page}) => {
     const input = page.locator('#search-input');
     await input.fill('surf');
-    await expect(
-      page.locator('#search-dropdown').getByRole('option').first()
-    ).toBeVisible();
+    await expect(page.locator('#search-dropdown').getByRole('option').first()).toBeVisible();
 
     await input.press('ArrowDown');
-    await expect(page.locator('.Suggestion[aria-selected="true"]')).toHaveCount(
-      1
-    );
+    await expect(page.locator('.Suggestion[aria-selected="true"]')).toHaveCount(1);
 
     await input.press('Enter');
     await expect(page).toHaveURL(/[?&]q=/);
@@ -197,9 +189,7 @@ test.describe('URL deep-linking', () => {
 });
 
 test.describe('product listing page', () => {
-  test('server-renders a category listing with products and facets', async ({
-    page,
-  }) => {
+  test('server-renders a category listing with products and facets', async ({page}) => {
     await page.goto('/listing/surf-accessories');
 
     await expect(page.locator('.Tab.TabActive')).toHaveText('Surf Accessories');
@@ -222,17 +212,13 @@ test.describe('cart', () => {
     await expect(page.locator('.ProductCard').first()).toBeVisible();
   });
 
-  test('shows the cart toggle with the badge hidden when empty', async ({
-    page,
-  }) => {
+  test('shows the cart toggle with the badge hidden when empty', async ({page}) => {
     await expect(page.locator('#cart-toggle')).toBeVisible();
     await expect(page.locator('#cart-count')).toBeHidden();
     await expect(page.locator('#cart-drawer')).toBeHidden();
   });
 
-  test('adds a product to the cart and updates the badge and button', async ({
-    page,
-  }) => {
+  test('adds a product to the cart and updates the badge and button', async ({page}) => {
     const firstAddToCart = page.locator('.ProductCard .AddToCart').first();
     await firstAddToCart.click();
 
@@ -272,9 +258,7 @@ test.describe('cart', () => {
 
     await page.locator('#cart-empty').click();
 
-    await expect(page.locator('#cart-body')).toContainText(
-      'Your cart is empty'
-    );
+    await expect(page.locator('#cart-body')).toContainText('Your cart is empty');
     await expect(page.locator('#cart-count')).toBeHidden();
   });
 

@@ -5,9 +5,7 @@ import type {FacetValuePropsBase} from '@/src/components/common/facets/facet-com
 import {multiClassMap, tw} from '@/src/directives/multi-class-map';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 
-export const renderFacetSegmentedValue: FunctionalComponent<
-  FacetValuePropsBase
-> = ({props}) => {
+export const renderFacetSegmentedValue: FunctionalComponent<FacetValuePropsBase> = ({props}) => {
   const compactCount = new Intl.NumberFormat(props.i18n.language, {
     notation: 'compact',
   }).format(props.numberOfResults);
@@ -23,22 +21,19 @@ export const renderFacetSegmentedValue: FunctionalComponent<
   const labelClasses = tw({
     'value-label truncate': true,
     'text-primary': props.isSelected,
-    'group-hover:text-primary-light group-focus:text-primary':
-      !props.isSelected,
+    'group-hover:text-primary-light group-focus:text-primary': !props.isSelected,
   });
 
   const countClasses = tw({
     'value-box-count mt-0 w-auto truncate pl-1 text-sm': true,
     'text-primary': props.isSelected,
-    'text-neutral-dark group-hover:text-primary-light group-focus:text-primary':
-      !props.isSelected,
+    'text-neutral-dark group-hover:text-primary-light group-focus:text-primary': !props.isSelected,
   });
 
   const buttonClasses = tw({
     'value-box group box-border flex h-full items-center p-2': true,
     'selected border-primary shadow-inner-primary': props.isSelected,
-    'hover:border-primary-light focus-visible:border-primary-light':
-      !props.isSelected,
+    'hover:border-primary-light focus-visible:border-primary-light': !props.isSelected,
   });
 
   const buttonClassString = Object.entries(buttonClasses)
@@ -68,11 +63,7 @@ export const renderFacetSegmentedValue: FunctionalComponent<
             >
               ${props.displayValue}
             </span>
-            <span
-              title=${count}
-              part="value-count"
-              class=${multiClassMap(countClasses)}
-            >
+            <span title=${count} part="value-count" class=${multiClassMap(countClasses)}>
               ${props.i18n.t('between-parentheses', {
                 text: compactCount,
               })}

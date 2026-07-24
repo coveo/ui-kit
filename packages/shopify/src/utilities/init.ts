@@ -6,10 +6,7 @@ import {publishCustomShopifyEvent} from './shopify';
 
 export function init(options: CoveoShopifyOptions) {
   const relay = createRelay({
-    url: getAnalyticsNextApiBaseUrl(
-      options.organizationId,
-      options.environment
-    ),
+    url: getAnalyticsNextApiBaseUrl(options.organizationId, options.environment),
     token: options.accessToken,
     trackingId: options.trackingId,
   });

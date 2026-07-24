@@ -148,17 +148,9 @@ export const GET = async (request: Request) => {
   const locationUrl = request.url;
   const referrer = request.headers.get('referer') || '';
 
-  const searchResults = await search(
-    query,
-    clientId,
-    userAgent,
-    locationUrl,
-    referrer
-  );
+  const searchResults = await search(query, clientId, userAgent, locationUrl, referrer);
 
-  const products: Product[] = searchResults.success
-    ? searchResults.data.products || []
-    : [];
+  const products: Product[] = searchResults.success ? searchResults.data.products || [] : [];
 
   const htmlResponse = generateHtmlResponse(clientId, cliendIdStatus, products);
 

@@ -1,12 +1,6 @@
 import {Schema} from '@coveo/bueno';
-import {
-  nonEmptyString,
-  requiredNonEmptyString,
-} from '../../utils/validate-payload.js';
-import {
-  type EngineConfiguration,
-  engineConfigurationDefinitions,
-} from '../engine-configuration.js';
+import {nonEmptyString, requiredNonEmptyString} from '../../utils/validate-payload.js';
+import {type EngineConfiguration, engineConfigurationDefinitions} from '../engine-configuration.js';
 
 /**
  * The case assist engine configuration.
@@ -40,9 +34,8 @@ export interface CaseAssistEngineConfiguration extends EngineConfiguration {
   proxyBaseUrl?: string;
 }
 
-export const caseAssistEngineConfigurationSchema =
-  new Schema<CaseAssistEngineConfiguration>({
-    ...engineConfigurationDefinitions,
-    caseAssistId: requiredNonEmptyString,
-    locale: nonEmptyString,
-  });
+export const caseAssistEngineConfigurationSchema = new Schema<CaseAssistEngineConfiguration>({
+  ...engineConfigurationDefinitions,
+  caseAssistId: requiredNonEmptyString,
+  locale: nonEmptyString,
+});

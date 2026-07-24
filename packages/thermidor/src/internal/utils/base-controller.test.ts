@@ -30,8 +30,7 @@ describe('BaseController', () => {
       const expectedState: TestState = {value: 42, label: 'test'};
       vi.mocked(mockEngine.read).mockReturnValue(expectedState);
 
-      const selector: StateSelector<TestState> = (state) =>
-        state as unknown as TestState;
+      const selector: StateSelector<TestState> = (state) => state as unknown as TestState;
       const controller = new TestController(mockEngine, selector);
 
       const result = controller.state;
@@ -44,12 +43,9 @@ describe('BaseController', () => {
       const mockEngine = createMockEngine();
       const firstState: TestState = {value: 1, label: 'first'};
       const secondState: TestState = {value: 2, label: 'second'};
-      vi.mocked(mockEngine.read)
-        .mockReturnValueOnce(firstState)
-        .mockReturnValueOnce(secondState);
+      vi.mocked(mockEngine.read).mockReturnValueOnce(firstState).mockReturnValueOnce(secondState);
 
-      const selector: StateSelector<TestState> = (state) =>
-        state as unknown as TestState;
+      const selector: StateSelector<TestState> = (state) => state as unknown as TestState;
       const controller = new TestController(mockEngine, selector);
 
       expect(controller.state).toBe(firstState);
@@ -64,8 +60,7 @@ describe('BaseController', () => {
       const unsubscribeFn = vi.fn();
       vi.mocked(mockEngine.subscribe).mockReturnValue(unsubscribeFn);
 
-      const selector: StateSelector<TestState> = (state) =>
-        state as unknown as TestState;
+      const selector: StateSelector<TestState> = (state) => state as unknown as TestState;
       const controller = new TestController(mockEngine, selector);
       const callback = vi.fn();
 
@@ -79,8 +74,7 @@ describe('BaseController', () => {
       const unsubscribeFn: Unsubscribe = vi.fn();
       vi.mocked(mockEngine.subscribe).mockReturnValue(unsubscribeFn);
 
-      const selector: StateSelector<TestState> = (state) =>
-        state as unknown as TestState;
+      const selector: StateSelector<TestState> = (state) => state as unknown as TestState;
       const controller = new TestController(mockEngine, selector);
 
       const result = controller.subscribe(vi.fn());

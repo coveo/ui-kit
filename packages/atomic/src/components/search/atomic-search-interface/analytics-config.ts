@@ -1,7 +1,4 @@
-import type {
-  AnalyticsConfiguration,
-  SearchEngineConfiguration,
-} from '@coveo/headless';
+import type {AnalyticsConfiguration, SearchEngineConfiguration} from '@coveo/headless';
 import {
   type AnalyticsPayload,
   augmentAnalyticsConfigWithAtomicVersion,
@@ -30,10 +27,8 @@ function getLegacyAnalyticsConfig(
   enabled: boolean,
   store: ReturnType<typeof createSearchStore>
 ): AnalyticsConfiguration {
-  const analyticsClientMiddleware = (
-    event: string,
-    payload: AnalyticsPayload
-  ) => augmentAnalytics(event, payload, store, searchEngineConfig);
+  const analyticsClientMiddleware = (event: string, payload: AnalyticsPayload) =>
+    augmentAnalytics(event, payload, store, searchEngineConfig);
 
   const defaultConfiguration: AnalyticsConfiguration = {
     analyticsClientMiddleware,
@@ -77,10 +72,8 @@ function augmentAnalyticsWithFacetTitles(
   store: ReturnType<typeof createSearchStore>
 ) {
   const allFacets = store.getAllFacets();
-  const getAtomicFacetLabelOrOriginalTitle = (
-    facetId: string,
-    originalTitle: string
-  ) => (allFacets[facetId] ? allFacets[facetId].label() : originalTitle);
+  const getAtomicFacetLabelOrOriginalTitle = (facetId: string, originalTitle: string) =>
+    allFacets[facetId] ? allFacets[facetId].label() : originalTitle;
 
   if (payload.facetState) {
     payload.facetState = payload.facetState.map(

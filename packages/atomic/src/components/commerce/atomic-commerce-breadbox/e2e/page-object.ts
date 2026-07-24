@@ -27,12 +27,7 @@ export class AtomicCommerceBreadboxPageObject extends BasePageObject {
   }
 
   getFacetValue(
-    facetType:
-      | 'regular'
-      | 'category'
-      | 'nestedCategory'
-      | 'numerical'
-      | 'dateRange',
+    facetType: 'regular' | 'category' | 'nestedCategory' | 'numerical' | 'dateRange',
     value?: string | RegExp
   ) {
     const facetTypeLocators = {
@@ -43,9 +38,7 @@ export class AtomicCommerceBreadboxPageObject extends BasePageObject {
       dateRange: 'atomic-commerce-timeframe-facet',
     };
 
-    const baseLocator = this.page
-      .locator(facetTypeLocators[facetType])
-      .getByRole('listitem');
+    const baseLocator = this.page.locator(facetTypeLocators[facetType]).getByRole('listitem');
     return value ? baseLocator.filter({hasText: value}) : baseLocator;
   }
 

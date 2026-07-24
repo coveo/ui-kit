@@ -20,9 +20,7 @@ export interface FoldedResultListDefinition extends ControllerDefinitionWithoutP
  * @param props - The configurable `FoldedResultList` properties.
  * @returns The `FoldedResultList` controller definition.
  * */
-export function defineFoldedResultList(
-  props?: FoldedResultListProps
-): FoldedResultListDefinition {
+export function defineFoldedResultList(props?: FoldedResultListProps): FoldedResultListDefinition {
   return {
     build: (engine) => buildFoldedResultList(engine, props),
   };

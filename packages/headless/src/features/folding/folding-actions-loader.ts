@@ -53,9 +53,7 @@ export interface FoldingActionCreators {
  * @group Actions
  * @category Folding
  */
-export function loadFoldingActions(
-  engine: SearchEngine
-): FoldingActionCreators {
+export function loadFoldingActions(engine: SearchEngine): FoldingActionCreators {
   engine.addReducers({folding});
 
   return {

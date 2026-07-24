@@ -21,10 +21,7 @@ import type {HasKeys} from './utilities.js';
 
 export type EngineDefinitionOptions<
   TOptions extends {configuration: EngineConfiguration},
-  TControllers extends ControllerDefinitionsMap<
-    CoreEngine | CoreEngineNext,
-    Controller
-  >,
+  TControllers extends ControllerDefinitionsMap<CoreEngine | CoreEngineNext, Controller>,
 > = TOptions & {
   /**
    * The controllers to initialize with the search engine.
@@ -64,9 +61,7 @@ export interface EngineDefinition<
    *
    * Note: The implementation specifics of the navigator context provider depend on the Node.js framework being utilized. It is the developer's responsibility to appropriately define and implement the navigator context provider to ensure accurate navigation context is available throughout the application. If the user fails to provide a navigator context provider, a warning will be logged either on the server or the browser console.
    */
-  setNavigatorContextProvider: (
-    navigatorContextProvider: NavigatorContextProvider
-  ) => void;
+  setNavigatorContextProvider: (navigatorContextProvider: NavigatorContextProvider) => void;
   /**
    * @deprecated This method is deprecated and will be removed in a future major version. Use the `fetchStaticState` method instead.
    *

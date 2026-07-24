@@ -26,10 +26,7 @@ describe('#renderSortSelect', () => {
     i18n = await createTestI18n();
   });
 
-  const setupElement = async (
-    children: TemplateResult,
-    props?: Partial<SortSelectProps>
-  ) => {
+  const setupElement = async (children: TemplateResult, props?: Partial<SortSelectProps>) => {
     return await renderFunctionFixture(
       html`${renderSortSelect({
         props: {
@@ -46,9 +43,7 @@ describe('#renderSortSelect', () => {
 
     const separator = () => locators.separator(element);
 
-    await expect
-      .element(locators.select)
-      .toHaveAttribute('aria-label', 'Sort by');
+    await expect.element(locators.select).toHaveAttribute('aria-label', 'Sort by');
     await expect.element(locators.select).toHaveAttribute('id', 'sort-select');
     await expect.element(locators.option.getByText('Foo')).toBeInTheDocument();
     await expect.element(separator()).toBeInTheDocument();

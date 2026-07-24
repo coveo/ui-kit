@@ -23,13 +23,8 @@ interface ProductVariantsProps {
  * thumbnails. Selecting one promotes that variant to be the displayed product.
  * A trailing "and N more" indicates variants beyond the visible thumbnails.
  */
-export default function ProductVariants({
-  methods,
-  product,
-}: ProductVariantsProps) {
-  const variants = product.children.filter(
-    (child) => child.permanentid !== product.permanentid
-  );
+export default function ProductVariants({methods, product}: ProductVariantsProps) {
+  const variants = product.children.filter((child) => child.permanentid !== product.permanentid);
   const totalVariants = product.totalNumberOfChildren ?? variants.length;
 
   // Only products that belong to a multi-variant group have something to show.
@@ -77,9 +72,7 @@ export default function ProductVariants({
             </li>
           );
         })}
-        {remaining > 0 && (
-          <li className="ProductVariantsMore">and {remaining} more</li>
-        )}
+        {remaining > 0 && <li className="ProductVariantsMore">and {remaining} more</li>}
       </ul>
     </div>
   );

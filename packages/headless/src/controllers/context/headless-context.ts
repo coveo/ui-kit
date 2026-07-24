@@ -1,8 +1,5 @@
 import type {CoreEngine} from '../../app/engine.js';
-import type {
-  ContextPayload,
-  ContextValue,
-} from '../../features/context/context-state.js';
+import type {ContextPayload, ContextValue} from '../../features/context/context-state.js';
 import type {ContextInitialState} from './../core/context/headless-core-context.js';
 import {
   buildCoreContext,
@@ -31,9 +28,6 @@ export type {
  * @object Controllers
  * @category Context
  */
-export function buildContext(
-  engine: CoreEngine,
-  props?: ContextProps
-): Context {
+export function buildContext(engine: CoreEngine, props?: ContextProps): Context {
   return buildCoreContext(engine, props);
 }

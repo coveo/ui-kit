@@ -1,12 +1,7 @@
 import type {CurrencyCodeISO4217} from '@coveo/relay-event-types';
-import type {
-  UserParams,
-  ViewParams,
-} from '../../../api/commerce/commerce-api-params.js';
+import type {UserParams, ViewParams} from '../../../api/commerce/commerce-api-params.js';
 
-export type LocationState = Required<
-  Pick<UserParams, 'latitude' | 'longitude'>
->;
+export type LocationState = Required<Pick<UserParams, 'latitude' | 'longitude'>>;
 
 /**
  * Custom context state that accepts JSON-serializable values.

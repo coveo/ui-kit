@@ -1,11 +1,4 @@
-import {
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-  type MockedFunction,
-} from 'vitest';
+import {beforeEach, describe, expect, it, vi, type MockedFunction} from 'vitest';
 import {createConversationEndpointClient} from './conversation-endpoint-client.js';
 import type {CoveoConversationEndpointRequest} from './conversation-endpoint-types.js';
 
@@ -95,8 +88,7 @@ describe('ConversationEndpointClient', () => {
           'Content-Type': 'application/json',
           Accept: 'text/event-stream',
           Authorization: 'Bearer test-token',
-          'X-Coveo-Feature-Flags-Overrides':
-            '{"use-demo-agent-core-runtime":false}',
+          'X-Coveo-Feature-Flags-Overrides': '{"use-demo-agent-core-runtime":false}',
         },
       }
     );

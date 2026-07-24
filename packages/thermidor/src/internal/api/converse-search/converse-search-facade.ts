@@ -1,7 +1,4 @@
-import type {
-  FacadeResolverFactory,
-  InterfaceHandle,
-} from '@/src/internal/utils/index.js';
+import type {FacadeResolverFactory, InterfaceHandle} from '@/src/internal/utils/index.js';
 import {createConverseSearchEndpointThunk} from './converse-search-thunk.js';
 
 export function createConverseSearchFacadeResolver(

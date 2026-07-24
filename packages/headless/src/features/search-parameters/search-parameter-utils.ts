@@ -17,25 +17,16 @@ import {
 export type SearchParamValue = string | string[] | undefined;
 export type SearchParamPair<T> = [SearchParameterKey, T];
 export type FacetValueSearchParam = Record<string, string[]>;
-export type RangeFacetValueSearchParam = Record<
-  string,
-  DateRangeRequest[] | NumericRangeRequest[]
->;
+export type RangeFacetValueSearchParam = Record<string, DateRangeRequest[] | NumericRangeRequest[]>;
 
 export function toArray<T>(value: T | T[]): T[] {
   return Array.isArray(value) ? value : [value];
 }
 
-export function addFacetValuesToSearchParams(
-  facetId: string,
-  paramKey: SearchParameterKey
-) {
+export function addFacetValuesToSearchParams(facetId: string, paramKey: SearchParameterKey) {
   return (searchParams: Record<string, unknown>, valueArray: unknown[]) => {
     if (paramKey in searchParams) {
-      const record = (searchParams[paramKey] ?? {}) as Record<
-        string,
-        unknown[]
-      >;
+      const record = (searchParams[paramKey] ?? {}) as Record<string, unknown[]>;
       record[facetId] = [...(record[facetId] ?? []), ...valueArray];
       searchParams[paramKey] = record;
     } else {
@@ -79,11 +70,7 @@ export function extendSearchParameters(
   if (isNullOrUndefined(value)) {
     return;
   }
-  if (
-    isValidBasicKey(key) &&
-    typeof value === 'string' &&
-    !isEmptyString(value)
-  ) {
+  if (isValidBasicKey(key) && typeof value === 'string' && !isEmptyString(value)) {
     const [k, v] = cast([key, value], false);
     searchParams[k] = v;
     return;

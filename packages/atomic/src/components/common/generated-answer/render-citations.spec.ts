@@ -16,10 +16,7 @@ describe('#renderCitations', () => {
     i18n = await createTestI18n();
   });
 
-  const createMockCitation = (
-    id: string,
-    title?: string
-  ): GeneratedAnswerCitation =>
+  const createMockCitation = (id: string, title?: string): GeneratedAnswerCitation =>
     ({
       id,
       title: title || `Citation ${id}`,
@@ -30,9 +27,7 @@ describe('#renderCitations', () => {
       // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Test fixture with partial mock
     }) as any;
 
-  const renderComponent = async (
-    overrides: Partial<RenderCitationsProps> = {}
-  ) => {
+  const renderComponent = async (overrides: Partial<RenderCitationsProps> = {}) => {
     const defaultProps: RenderCitationsProps = {
       citations: [createMockCitation('1'), createMockCitation('2')],
       i18n,
@@ -42,9 +37,7 @@ describe('#renderCitations', () => {
       ...overrides,
     };
 
-    const element = await renderFunctionFixture(
-      html`${renderCitations({props: defaultProps})}`
-    );
+    const element = await renderFunctionFixture(html`${renderCitations({props: defaultProps})}`);
 
     return {
       element,
@@ -119,10 +112,7 @@ describe('#renderCitations', () => {
     const citations = Array.from(element.querySelectorAll('atomic-citation'));
     expect(citations).toHaveLength(2);
     citations.forEach((citation) => {
-      expect(citation).toHaveAttribute(
-        'exportparts',
-        'citation,citation-popover'
-      );
+      expect(citation).toHaveAttribute('exportparts', 'citation,citation-popover');
     });
   });
 

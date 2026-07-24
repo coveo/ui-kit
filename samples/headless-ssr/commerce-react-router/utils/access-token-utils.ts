@@ -1,6 +1,4 @@
-export function parseJwt(
-  token?: string
-): (Record<string, unknown> & {exp: number}) | null {
+export function parseJwt(token?: string): (Record<string, unknown> & {exp: number}) | null {
   if (!token || !isJwtToken(token)) {
     return null;
   }

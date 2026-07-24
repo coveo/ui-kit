@@ -8,10 +8,7 @@ import {
   updateCategoryFacetNumberOfValues,
 } from './category-facet-actions.js';
 
-export type {
-  ToggleSelectCategoryFacetValuePayload,
-  UpdateCategoryFacetNumberOfValuesPayload,
-};
+export type {ToggleSelectCategoryFacetValuePayload, UpdateCategoryFacetNumberOfValuesPayload};
 
 /**
  * The category facet action creators.

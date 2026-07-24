@@ -3,10 +3,7 @@ import {html} from 'lit';
 import {beforeAll, describe, expect, it} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {
-  getProductQuerySummaryI18nParameters,
-  getQuerySummaryI18nParameters,
-} from './utils';
+import {getProductQuerySummaryI18nParameters, getQuerySummaryI18nParameters} from './utils';
 
 describe('#getQuerySummaryI18nParameters', () => {
   let i18n: i18n;
@@ -27,8 +24,8 @@ describe('#getQuerySummaryI18nParameters', () => {
     });
 
     const template = html`
-      ${parameters.highlights.first} ${parameters.highlights.last}
-      ${parameters.highlights.total} ${parameters.highlights.query}
+      ${parameters.highlights.first} ${parameters.highlights.last} ${parameters.highlights.total}
+      ${parameters.highlights.query}
     `;
 
     const element = await renderFunctionFixture(template);
@@ -60,9 +57,7 @@ describe('#getQuerySummaryI18nParameters', () => {
   it('should return the correct aria live message when isLoading is false', async () => {
     const {parameters} = await setup({isLoading: false});
 
-    expect(parameters.ariaLiveMessage).toBe(
-      'Results loaded. Results 1-10 of 50 for query'
-    );
+    expect(parameters.ariaLiveMessage).toBe('Results loaded. Results 1-10 of 50 for query');
   });
 
   it('should render the highlights with correct values', async () => {
@@ -112,8 +107,8 @@ describe('#getProductQuerySummaryI18nParameters', () => {
     });
 
     const template = html`
-      ${parameters.highlights.first} ${parameters.highlights.last}
-      ${parameters.highlights.total} ${parameters.highlights.query}
+      ${parameters.highlights.first} ${parameters.highlights.last} ${parameters.highlights.total}
+      ${parameters.highlights.query}
     `;
 
     const element = await renderFunctionFixture(template);
@@ -145,9 +140,7 @@ describe('#getProductQuerySummaryI18nParameters', () => {
   it('should return the correct aria live message when isLoading is false', async () => {
     const {parameters} = await setup({isLoading: false});
 
-    expect(parameters.ariaLiveMessage).toBe(
-      'Results loaded. Products 1-10 of 50 for query'
-    );
+    expect(parameters.ariaLiveMessage).toBe('Results loaded. Products 1-10 of 50 for query');
   });
 
   it('should render the highlights with correct values', async () => {

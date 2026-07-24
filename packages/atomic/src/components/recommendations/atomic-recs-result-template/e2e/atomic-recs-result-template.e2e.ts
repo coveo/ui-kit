@@ -2,10 +2,7 @@ import {expect, test} from './fixture';
 
 test.describe('atomic-recs-result-template', () => {
   test.describe('when used as a child of a recs list', () => {
-    test('should display recommendation results', async ({
-      recsResultTemplate,
-      page,
-    }) => {
+    test('should display recommendation results', async ({recsResultTemplate, page}) => {
       await recsResultTemplate.load({story: 'default'});
       await page.waitForLoadState('networkidle');
 

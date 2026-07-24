@@ -1,7 +1,4 @@
-import {
-  buildSearchEngine,
-  getSampleSearchEngineConfiguration,
-} from '@coveo/headless';
+import {buildSearchEngine, getSampleSearchEngineConfiguration} from '@coveo/headless';
 import {html, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';

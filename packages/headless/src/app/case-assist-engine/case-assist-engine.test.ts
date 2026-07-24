@@ -82,8 +82,7 @@ describe('buildCaseAssistEngine', () => {
 
     it('passing trackingId containing an invalid character throws', () => {
       options.configuration.analytics = {
-        trackingId:
-          'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-.\\',
+        trackingId: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-.\\',
       };
       expect(initEngine).toThrow();
     });
@@ -107,9 +106,7 @@ describe('buildCaseAssistEngine', () => {
         initEngine();
 
         expect(warnSpy).toHaveBeenCalledTimes(1);
-        expect(warnSpy).toHaveBeenCalledWith(
-          nextAnalyticsUsageWithServiceFeatureWarning
-        );
+        expect(warnSpy).toHaveBeenCalledWith(nextAnalyticsUsageWithServiceFeatureWarning);
       });
 
       it('should not log a warning when the case assist engine is used with the legacy analytics mode', () => {
@@ -135,15 +132,11 @@ describe('buildCaseAssistEngine', () => {
   });
 
   it('sets the locale correctly', () => {
-    expect(engine.state.caseAssistConfiguration?.locale).toEqual(
-      options.configuration.locale
-    );
+    expect(engine.state.caseAssistConfiguration?.locale).toEqual(options.configuration.locale);
   });
 
   it('should ensure that engine.relay is the same reference as thunk extra args relay', async () => {
-    const thunkRelay = await engine.dispatch(
-      (_dispatch, _getState, extra) => extra.relay
-    );
+    const thunkRelay = await engine.dispatch((_dispatch, _getState, extra) => extra.relay);
 
     expect(thunkRelay).toBe(engine.relay);
   });

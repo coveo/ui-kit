@@ -81,8 +81,6 @@ describe('#renderQueryErrorDescription', () => {
       errorType: 'UnknownError',
     });
 
-    expect(description).toHaveTextContent(
-      'If the problem persists contact the administrator.'
-    );
+    expect(description).toHaveTextContent('If the problem persists contact the administrator.');
   });
 });

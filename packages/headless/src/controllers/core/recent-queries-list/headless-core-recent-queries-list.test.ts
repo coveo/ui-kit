@@ -8,10 +8,7 @@ import {
 import {recentQueriesReducer as recentQueries} from '../../../features/recent-queries/recent-queries-slice.js';
 import {prepareForSearchWithQuery} from '../../../features/search/search-actions.js';
 import {searchReducer as search} from '../../../features/search/search-slice.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../../test/mock-engine-v2.js';
 import {buildMockQueryState} from '../../../test/mock-query-state.js';
 import {createMockState} from '../../../test/mock-state.js';
 import {
@@ -168,9 +165,7 @@ describe('recent queries list', () => {
     });
 
     it('should throw an error if the queries array is empty', () => {
-      expect(() => recentQueriesList.updateRecentQueries([])).toThrow(
-        'value contains less than 1'
-      );
+      expect(() => recentQueriesList.updateRecentQueries([])).toThrow('value contains less than 1');
     });
   });
 });

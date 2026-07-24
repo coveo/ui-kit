@@ -14,14 +14,12 @@ export const updateNumberOfResults = createAction(
   (payload: number) => validatePayload(payload, numberValue)
 );
 
-export const registerPage = createAction(
-  'pagination/registerPage',
-  (payload: number) => validatePayload(payload, numberValue)
+export const registerPage = createAction('pagination/registerPage', (payload: number) =>
+  validatePayload(payload, numberValue)
 );
 
-export const updatePage = createAction(
-  'pagination/updatePage',
-  (payload: number) => validatePayload(payload, numberValue)
+export const updatePage = createAction('pagination/updatePage', (payload: number) =>
+  validatePayload(payload, numberValue)
 );
 
 export const nextPage = createAction('pagination/nextPage');

@@ -5,23 +5,18 @@ import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 
 type SearchParametersActions = ReturnType<typeof createSearchParametersActions>;
 
-const CACHE_KEY: CacheKey<SearchParametersActions> =
-  createCacheKey<SearchParametersActions>('searchParameters/actions');
+const CACHE_KEY: CacheKey<SearchParametersActions> = createCacheKey<SearchParametersActions>(
+  'searchParameters/actions'
+);
 
 export function createSearchParametersActions(interfaceId: string) {
   return {
-    setPipeline: createAction<string>(
-      `${interfaceId}/searchParameters/setPipeline`
-    ),
-    setConstantQuery: createAction<string>(
-      `${interfaceId}/searchParameters/setConstantQuery`
-    ),
+    setPipeline: createAction<string>(`${interfaceId}/searchParameters/setPipeline`),
+    setConstantQuery: createAction<string>(`${interfaceId}/searchParameters/setConstantQuery`),
   };
 }
 
 export function getOrCreateSearchParametersActions(iface: InterfaceHandle) {
   const {stateId, cacheRegistry} = getHandleInternals(iface);
-  return cacheRegistry.getOrCreate(CACHE_KEY, () =>
-    createSearchParametersActions(stateId)
-  );
+  return cacheRegistry.getOrCreate(CACHE_KEY, () => createSearchParametersActions(stateId));
 }

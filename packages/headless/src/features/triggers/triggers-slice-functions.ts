@@ -13,10 +13,7 @@ export function handleFetchItemsPending(state: TriggerState) {
   return state;
 }
 
-export function handleFetchItemsFulfilled(
-  state: TriggerState,
-  triggers: Trigger[]
-) {
+export function handleFetchItemsFulfilled(state: TriggerState, triggers: Trigger[]) {
   const redirectTriggers: string[] = [];
   const queryTriggers: string[] = [];
   const executeTriggers: FunctionExecutionTrigger[] = [];
@@ -59,10 +56,7 @@ export function handleApplyQueryTriggerModification(
   return state;
 }
 
-export function handleUpdateIgnoreQueryTrigger(
-  state: TriggerState,
-  payload: string
-) {
+export function handleUpdateIgnoreQueryTrigger(state: TriggerState, payload: string) {
   state.queryModification.queryToIgnore = payload;
 
   return state;

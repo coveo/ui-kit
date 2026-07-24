@@ -31,9 +31,7 @@ export class BooleanValue implements SchemaValue<boolean> {
   }
 }
 
-export function isBooleanOrUndefined(
-  value: unknown
-): value is undefined | boolean {
+export function isBooleanOrUndefined(value: unknown): value is undefined | boolean {
   return isUndefined(value) || isBoolean(value);
 }
 

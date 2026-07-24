@@ -11,9 +11,7 @@ export class InsightResultChildrenTemplateObject extends BasePageObject {
   }
 
   get grandchildResult() {
-    return this.page
-      .locator('atomic-insight-result atomic-insight-result')
-      .first();
+    return this.page.locator('atomic-insight-result atomic-insight-result').first();
   }
 
   get childrenRoot() {

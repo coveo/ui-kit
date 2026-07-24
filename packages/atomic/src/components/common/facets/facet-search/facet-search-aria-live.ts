@@ -11,10 +11,7 @@ export function announceFacetSearchResultsWithAriaLive(
   let prevState = facet.state.facetSearch;
   facet.subscribe(() => {
     const nextState = facet.state.facetSearch;
-    if (
-      shouldUpdateFacetSearchComponent(nextState, prevState) &&
-      nextState.query
-    ) {
+    if (shouldUpdateFacetSearchComponent(nextState, prevState) && nextState.query) {
       setAriaLive(
         i18n.t('facet-search-results-count', {
           count: nextState.values.length,

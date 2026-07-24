@@ -31,8 +31,7 @@ export type SetPageSizePayload = SlotIdPayload & {
 
 export const setPageSize = createAction(
   'commerce/pagination/setPageSize',
-  (payload: SetPageSizePayload) =>
-    validatePayload(payload, setPageSizeDefinition)
+  (payload: SetPageSizePayload) => validatePayload(payload, setPageSizeDefinition)
 );
 
 const selectPageDefinition = {
@@ -54,9 +53,8 @@ export const selectPage = createAction(
 
 export type NextPagePayload = SlotIdPayload;
 
-export const nextPage = createAction(
-  'commerce/pagination/nextPage',
-  (payload?: NextPagePayload) => validatePayload(payload, slotIdDefinition)
+export const nextPage = createAction('commerce/pagination/nextPage', (payload?: NextPagePayload) =>
+  validatePayload(payload, slotIdDefinition)
 );
 
 export type PreviousPagePayload = SlotIdPayload;
@@ -66,8 +64,7 @@ export const previousPage = createAction(
   (payload?: PreviousPagePayload) => validatePayload(payload, slotIdDefinition)
 );
 
-export type RegisterRecommendationsSlotPaginationPayload =
-  Required<SlotIdPayload>;
+export type RegisterRecommendationsSlotPaginationPayload = Required<SlotIdPayload>;
 
 export const registerRecommendationsSlotPagination = createAction(
   'commerce/pagination/registerRecommendationsSlot',

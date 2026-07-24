@@ -6,10 +6,7 @@ import {
   toggleSelectStaticFilterValue,
 } from '../../features/static-filter-set/static-filter-set-actions.js';
 import {staticFilterSetReducer as staticFilterSet} from '../../features/static-filter-set/static-filter-set-slice.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../test/mock-engine-v2.js';
 import {createMockState} from '../../test/mock-state.js';
 import {buildMockStaticFilterSlice} from '../../test/mock-static-filter-slice.js';
 import {buildMockStaticFilterValue} from '../../test/mock-static-filter-value.js';
@@ -58,9 +55,7 @@ describe('Static Filter', () => {
 
   it('when #id option has an invalid type, it throws', () => {
     options.id = true as unknown as string;
-    expect(() => initStaticFilter()).toThrow(
-      'Check the options of buildStaticFilter'
-    );
+    expect(() => initStaticFilter()).toThrow('Check the options of buildStaticFilter');
   });
   describe('#toggleSelect', () => {
     it('dispatches #toggleSelectStaticFilterValue', () => {

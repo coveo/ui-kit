@@ -97,8 +97,7 @@ export class AtomicInsightRefineToggle
       {
         firstRequestExecuted: this.searchStatusState.firstSearchExecuted,
         hasError: this.searchStatusState.hasError,
-        hasItems:
-          this.searchStatusState.hasResults || this.numberOfBreadcrumbs > 0,
+        hasItems: this.searchStatusState.hasResults || this.numberOfBreadcrumbs > 0,
       },
       () =>
         html`${renderIconButton({
@@ -108,9 +107,7 @@ export class AtomicInsightRefineToggle
             icon: FilterIcon,
             ariaLabel: this.bindings.i18n.t('filters'),
             title: this.bindings.i18n.t('filters'),
-            disabled:
-              !this.searchStatusState.hasResults &&
-              this.numberOfBreadcrumbs === 0,
+            disabled: !this.searchStatusState.hasResults && this.numberOfBreadcrumbs === 0,
             onClick: () => this.enableModal(),
             buttonRef: (button) => {
               if (!button) {

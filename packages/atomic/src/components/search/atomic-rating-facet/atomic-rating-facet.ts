@@ -76,10 +76,7 @@ import Star from '../../../images/star.svg';
 @customElement('atomic-rating-facet')
 @bindings()
 @withTailwindStyles
-export class AtomicRatingFacet
-  extends LitElement
-  implements InitializableComponent<Bindings>
-{
+export class AtomicRatingFacet extends LitElement implements InitializableComponent<Bindings> {
   private static readonly propsSchema = new Schema({
     field: new StringValue({required: true, emptyAllowed: false}),
     numberOfIntervals: new NumberValue({min: 1}),
@@ -91,11 +88,7 @@ export class AtomicRatingFacet
     headingLevel: new NumberValue({min: 0, max: 6, required: false}),
   });
 
-  static styles = [
-    facetCommonStyles,
-    facetValueCheckboxStyles,
-    atomicRatingStyles,
-  ];
+  static styles = [facetCommonStyles, facetValueCheckboxStyles, atomicRatingStyles];
 
   @state() public bindings!: Bindings;
   @state() public error!: Error;
@@ -326,10 +319,7 @@ export class AtomicRatingFacet
   }
 
   public initialize() {
-    if (
-      [...this.tabsIncluded].length > 0 &&
-      [...this.tabsExcluded].length > 0
-    ) {
+    if ([...this.tabsIncluded].length > 0 && [...this.tabsExcluded].length > 0) {
       console.warn(
         'Values for both "tabs-included" and "tabs-excluded" have been provided. This is could lead to unexpected behaviors.'
       );
@@ -386,33 +376,25 @@ export class AtomicRatingFacet
 
   private get isHidden() {
     return (
-      this.searchStatusState.hasError ||
-      !this.facet.state.enabled ||
-      !this.valuesToRender.length
+      this.searchStatusState.hasError || !this.facet.state.enabled || !this.valuesToRender.length
     );
   }
 
   private get scaleFactor() {
-    return (
-      (this.maxValueInIndex ?? this.numberOfIntervals) / this.numberOfIntervals
-    );
+    return (this.maxValueInIndex ?? this.numberOfIntervals) / this.numberOfIntervals;
   }
 
   private get numberOfSelectedValues() {
-    return this.facetState.values.filter(({state}) => state === 'selected')
-      .length;
+    return this.facetState.values.filter(({state}) => state === 'selected').length;
   }
 
   private initializeDependenciesManager() {
-    this.dependenciesManager = buildFacetConditionsManager(
-      this.bindings.engine,
-      {
-        facetId: this.facetId!,
-        conditions: parseDependsOn<
-          FacetValueRequest | CategoryFacetValueRequest
-        >(this.dependsOn || {}),
-      }
-    );
+    this.dependenciesManager = buildFacetConditionsManager(this.bindings.engine, {
+      facetId: this.facetId!,
+      conditions: parseDependsOn<FacetValueRequest | CategoryFacetValueRequest>(
+        this.dependsOn || {}
+      ),
+    });
   }
 
   private generateCurrentValues() {
@@ -553,8 +535,7 @@ export class AtomicRatingFacet
     }
 
     return renderFacetContainer()(html`
-      ${this.renderHeader()}
-      ${when(!this.isCollapsed, () => this.renderValues())}
+      ${this.renderHeader()} ${when(!this.isCollapsed, () => this.renderValues())}
     `);
   }
 }

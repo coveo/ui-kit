@@ -29,10 +29,7 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
-import {
-  AriaLiveRegionController,
-  FocusTargetController,
-} from '@/src/utils/accessibility-utils';
+import {AriaLiveRegionController, FocusTargetController} from '@/src/utils/accessibility-utils';
 import {buildCustomEvent} from '@/src/utils/event-utils';
 import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
 import ArrowRightIcon from '../../../images/arrow-right-rounded.svg';
@@ -184,9 +181,7 @@ export class AtomicPager
                       await this.focusOnFirstResultAndScrollToTop();
                     },
                     page: pageNumber,
-                    text: (pageNumber + 1).toLocaleString(
-                      this.bindings.i18n.language
-                    ),
+                    text: (pageNumber + 1).toLocaleString(this.bindings.i18n.language),
                   },
                 })
               )

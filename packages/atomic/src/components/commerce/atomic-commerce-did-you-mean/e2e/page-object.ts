@@ -11,8 +11,6 @@ export class AtomicCommerceDidYouMeanPageObject extends BasePageObject {
   }
 
   get autoCorrection() {
-    return this.page.getByText(
-      'Query was automatically corrected to running shoes'
-    );
+    return this.page.getByText('Query was automatically corrected to running shoes');
   }
 }

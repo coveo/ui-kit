@@ -10,12 +10,8 @@ test.describe('atomic-folded-result-list', () => {
       await expect(foldedResultList.noResultsLabel.first()).toBeVisible();
     });
 
-    test('should NOT show the "load all results" button', async ({
-      foldedResultList,
-    }) => {
-      await expect(
-        foldedResultList.loadAllResultsButton.first()
-      ).not.toBeVisible();
+    test('should NOT show the "load all results" button', async ({foldedResultList}) => {
+      await expect(foldedResultList.loadAllResultsButton.first()).not.toBeVisible();
     });
 
     test('should NOT show result children', async ({foldedResultList}) => {
@@ -36,12 +32,8 @@ test.describe('atomic-folded-result-list', () => {
       await expect(foldedResultList.noResultsLabel.first()).not.toBeVisible();
     });
 
-    test('should NOT show "load all results" button', async ({
-      foldedResultList,
-    }) => {
-      await expect(
-        foldedResultList.loadAllResultsButton.first()
-      ).not.toBeVisible();
+    test('should NOT show "load all results" button', async ({foldedResultList}) => {
+      await expect(foldedResultList.loadAllResultsButton.first()).not.toBeVisible();
     });
   });
 
@@ -50,9 +42,7 @@ test.describe('atomic-folded-result-list', () => {
       await foldedResultList.load();
     });
 
-    test('should show the "load all results" button', async ({
-      foldedResultList,
-    }) => {
+    test('should show the "load all results" button', async ({foldedResultList}) => {
       await expect(foldedResultList.loadAllResultsButton.first()).toBeVisible();
     });
 
@@ -60,18 +50,14 @@ test.describe('atomic-folded-result-list', () => {
       foldedResultList,
     }) => {
       await foldedResultList.loadAllResultsButton.first().click();
-      await expect(
-        foldedResultList.collapseResultsButton.first()
-      ).toBeVisible();
+      await expect(foldedResultList.collapseResultsButton.first()).toBeVisible();
     });
 
     test('should show result children', async ({foldedResultList}) => {
       await expect(foldedResultList.resultChildren.first()).toBeVisible();
     });
 
-    test('should NOT show the "no results" label', async ({
-      foldedResultList,
-    }) => {
+    test('should NOT show the "no results" label', async ({foldedResultList}) => {
       await expect(foldedResultList.noResultsLabel.first()).not.toBeVisible();
     });
   });
@@ -83,9 +69,7 @@ test.describe('atomic-folded-result-list', () => {
       });
     });
 
-    test('should show the "load all results" button', async ({
-      foldedResultList,
-    }) => {
+    test('should show the "load all results" button', async ({foldedResultList}) => {
       await expect(foldedResultList.loadAllResultsButton.first()).toBeVisible();
     });
 
@@ -93,9 +77,7 @@ test.describe('atomic-folded-result-list', () => {
       await expect(foldedResultList.resultChildren.first()).not.toBeVisible();
     });
 
-    test('should NOT show the "no results" label', async ({
-      foldedResultList,
-    }) => {
+    test('should NOT show the "no results" label', async ({foldedResultList}) => {
       await expect(foldedResultList.noResultsLabel.first()).not.toBeVisible();
     });
   });

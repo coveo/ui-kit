@@ -32,8 +32,7 @@ interface AtomicCommerceProductListProps {
   numberOfPlaceholders?: number;
 }
 
-interface HTMLAtomicCommerceProductListElement
-  extends AtomicCommerceProductList, HTMLElement {}
+interface HTMLAtomicCommerceProductListElement extends AtomicCommerceProductList, HTMLElement {}
 
 // oxlint-disable-next-line @typescript-eslint/no-unused-vars -- <>
 var HTMLAtomicCommerceProductListElement: {
@@ -59,31 +58,18 @@ interface WrapperProps extends AtomicCommerceProductListProps {
  */
 export const ListWrapper: React.FC<WrapperProps> = (props) => {
   const {template, ...otherProps} = props;
-  const commerceProductListRef =
-    useRef<HTMLAtomicCommerceProductListElement>(null);
+  const commerceProductListRef = useRef<HTMLAtomicCommerceProductListElement>(null);
   useEffect(() => {
-    commerceProductListRef.current?.setRenderFunction(
-      (result, root, linkContainer) => {
-        const templateResult = template(result as Product);
-        if (isTemplate(templateResult)) {
-          return renderTemplate(linkContainer, templateResult, root);
-        } else {
-          return renderJSXTemplate(
-            linkContainer,
-            root,
-            templateResult,
-            otherProps.display
-          );
-        }
+    commerceProductListRef.current?.setRenderFunction((result, root, linkContainer) => {
+      const templateResult = template(result as Product);
+      if (isTemplate(templateResult)) {
+        return renderTemplate(linkContainer, templateResult, root);
+      } else {
+        return renderJSXTemplate(linkContainer, root, templateResult, otherProps.display);
       }
-    );
+    });
   }, [otherProps.display, template]);
-  return (
-    <LitAtomicCommerceProductList
-      ref={commerceProductListRef}
-      {...otherProps}
-    />
-  );
+  return <LitAtomicCommerceProductList ref={commerceProductListRef} {...otherProps} />;
 };
 
 const isTemplate = (template: JSX.Element | Template): template is Template => {

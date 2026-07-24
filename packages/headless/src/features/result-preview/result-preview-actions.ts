@@ -1,13 +1,7 @@
 import {ArrayValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {
-  buildContentURL,
-  type HtmlApiClient,
-} from '../../api/search/html/html-api-client.js';
-import type {
-  HtmlRequest,
-  HtmlRequestOptions,
-} from '../../api/search/html/html-request.js';
+import {buildContentURL, type HtmlApiClient} from '../../api/search/html/html-api-client.js';
+import type {HtmlRequest, HtmlRequestOptions} from '../../api/search/html/html-request.js';
 import type {Result} from '../../api/search/search/result.js';
 import {isErrorResponse} from '../../api/search/search-api-client.js';
 import type {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response.js';
@@ -86,26 +80,23 @@ export const updateContentURL = createAsyncThunk<
   UpdateContentURLThunkReturn,
   UpdateContentURLOptions,
   AsyncThunkGlobalOptions<StateNeededByHtmlEndpoint>
->(
-  'resultPreview/updateContentURL',
-  async (options: UpdateContentURLOptions, {getState, extra}) => {
-    const state = getState();
-    const contentURL = buildContentURL(
-      await options.buildResultPreviewRequest(state, {
-        uniqueId: options.uniqueId,
-        requestedOutputSize: options.requestedOutputSize,
-      }),
-      options.path
+>('resultPreview/updateContentURL', async (options: UpdateContentURLOptions, {getState, extra}) => {
+  const state = getState();
+  const contentURL = buildContentURL(
+    await options.buildResultPreviewRequest(state, {
+      uniqueId: options.uniqueId,
+      requestedOutputSize: options.requestedOutputSize,
+    }),
+    options.path
+  );
+
+  if (contentURL?.length > MAX_GET_LENGTH) {
+    extra.logger.error(
+      `The content URL was truncated as it exceeds the maximum allowed length of ${MAX_GET_LENGTH} characters.`
     );
-
-    if (contentURL?.length > MAX_GET_LENGTH) {
-      extra.logger.error(
-        `The content URL was truncated as it exceeds the maximum allowed length of ${MAX_GET_LENGTH} characters.`
-      );
-    }
-
-    return {
-      contentURL: contentURL,
-    };
   }
-);
+
+  return {
+    contentURL: contentURL,
+  };
+});

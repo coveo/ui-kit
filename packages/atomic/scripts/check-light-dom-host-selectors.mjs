@@ -29,8 +29,7 @@ const ATOMIC_SRC = new URL('../src', import.meta.url).pathname;
 const STATIC_STYLES_PATTERN = /static\s+(?:(?:override\s+)?styles)\s*[=:]/;
 const HOST_SELECTOR_PATTERN = /:host(?![a-z-])/;
 const IMPORT_PATTERN = /import\s+(?:[\w{}\s,*]+\s+from\s+)?['"]([^'"]+)['"]/g;
-const CSS_IMPORT_PATTERN =
-  /import\s+\w+\s+from\s+['"]([^'"]+\.tw\.css(?:\.ts|\.js)?)['"]/g;
+const CSS_IMPORT_PATTERN = /import\s+\w+\s+from\s+['"]([^'"]+\.tw\.css(?:\.ts|\.js)?)['"]/g;
 const NAMED_CSS_IMPORT_PATTERN =
   /import\s+\{([^}]+)\}\s+from\s+['"]([^'"]+\.tw\.css(?:\.ts|\.js)?)['"]/g;
 
@@ -217,9 +216,7 @@ function analyzeComponent(filePath) {
   }
 
   // Check named imported style files
-  for (const [, namedImports, importPath] of content.matchAll(
-    NAMED_CSS_IMPORT_PATTERN
-  )) {
+  for (const [, namedImports, importPath] of content.matchAll(NAMED_CSS_IMPORT_PATTERN)) {
     const resolvedPath = resolveImportPath(importPath, filePath);
     if (resolvedPath) {
       const result = checkImportedStyles(resolvedPath, new Set());
@@ -240,13 +237,7 @@ function analyzeComponent(filePath) {
   return violations;
 }
 
-const EXCLUDED_FILES = [
-  '.spec.ts',
-  '.stories.ts',
-  '.e2e.ts',
-  '.tw.css.ts',
-  '.d.ts',
-];
+const EXCLUDED_FILES = ['.spec.ts', '.stories.ts', '.e2e.ts', '.tw.css.ts', '.d.ts'];
 const EXCLUDED_EXACT = ['fixture.ts', 'page-object.ts'];
 
 function findTsFiles(dir, files = []) {
@@ -258,8 +249,7 @@ function findTsFiles(dir, files = []) {
       findTsFiles(fullPath, files);
     } else if (stat.isFile() && extname(entry) === '.ts') {
       const shouldSkip =
-        EXCLUDED_FILES.some((suffix) => entry.endsWith(suffix)) ||
-        EXCLUDED_EXACT.includes(entry);
+        EXCLUDED_FILES.some((suffix) => entry.endsWith(suffix)) || EXCLUDED_EXACT.includes(entry);
       if (!shouldSkip) {
         files.push(fullPath);
       }
@@ -281,9 +271,7 @@ function main() {
   }
 
   if (allViolations.length === 0) {
-    console.log(
-      '✅ No :host selector violations found in Light DOM components.\n'
-    );
+    console.log('✅ No :host selector violations found in Light DOM components.\n');
     process.exit(0);
   }
 
@@ -291,27 +279,17 @@ function main() {
 
   for (const violation of allViolations) {
     console.log(`📁 ${violation.file}`);
-    console.log(
-      `   Component: ${violation.className} (${violation.tagName || 'no tag name'})`
-    );
-    console.log(
-      `   Type: ${violation.type === 'inline' ? 'Inline styles' : 'Imported styles'}`
-    );
+    console.log(`   Component: ${violation.className} (${violation.tagName || 'no tag name'})`);
+    console.log(`   Type: ${violation.type === 'inline' ? 'Inline styles' : 'Imported styles'}`);
     console.log(`   Issue: ${violation.message}`);
     console.log(`   Fix: ${violation.suggestion}`);
     console.log('');
   }
 
   console.log('\n💡 Why this matters:');
-  console.log(
-    "   Light DOM components (using LightDomMixin) don't have a shadow boundary."
-  );
-  console.log(
-    "   The :host selector targets the shadow host, which doesn't exist in Light DOM."
-  );
-  console.log(
-    '   This can cause styles to leak or not apply correctly, leading to visual bugs.\n'
-  );
+  console.log("   Light DOM components (using LightDomMixin) don't have a shadow boundary.");
+  console.log("   The :host selector targets the shadow host, which doesn't exist in Light DOM.");
+  console.log('   This can cause styles to leak or not apply correctly, leading to visual bugs.\n');
 
   process.exit(1);
 }

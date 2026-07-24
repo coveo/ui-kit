@@ -15,10 +15,7 @@ import {
 import {paginationReducer as commercePagination} from '../../../../features/commerce/pagination/pagination-slice.js';
 import {loadReducerError} from '../../../../utils/errors.js';
 import {validateOptions} from '../../../../utils/validate-payload.js';
-import {
-  buildController,
-  type Controller,
-} from '../../../controller/headless-controller.js';
+import {buildController, type Controller} from '../../../controller/headless-controller.js';
 import type {FetchProductsActionCreator} from '../common.js';
 
 /**
@@ -186,9 +183,7 @@ export function buildCorePagination(
   };
 }
 
-function loadPaginationReducers(
-  engine: CommerceEngine
-): engine is CommerceEngine {
+function loadPaginationReducers(engine: CommerceEngine): engine is CommerceEngine {
   engine.addReducers({
     commercePagination,
   });

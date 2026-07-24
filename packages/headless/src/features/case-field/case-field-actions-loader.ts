@@ -63,9 +63,7 @@ export interface CaseFieldActionCreators {
  * @group Actions
  * @category CaseField
  */
-export function loadCaseFieldActions(
-  engine: CaseAssistEngine
-): CaseFieldActionCreators {
+export function loadCaseFieldActions(engine: CaseAssistEngine): CaseFieldActionCreators {
   engine.addReducers({caseField});
 
   return {

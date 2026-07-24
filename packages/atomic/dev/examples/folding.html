@@ -28,9 +28,7 @@
         : import('http://localhost:3000/headless/v0.0.0/headless.esm.js'));
 
       function setExpression(engine) {
-        const action = loadAdvancedSearchQueryActions(
-          engine
-        ).updateAdvancedSearchQueries({
+        const action = loadAdvancedSearchQueryActions(engine).updateAdvancedSearchQueries({
           aq: '@source=iNaturalistTaxons',
         });
         engine.dispatch(action);
@@ -38,9 +36,7 @@
 
       (async () => {
         await customElements.whenDefined('atomic-search-interface');
-        const searchInterface = document.querySelector(
-          'atomic-search-interface'
-        );
+        const searchInterface = document.querySelector('atomic-search-interface');
 
         // Initialization
         await searchInterface.initialize({
@@ -143,34 +139,19 @@
                   ></atomic-result-section-excerpt>
                   <atomic-result-section-bottom-metadata>
                     <atomic-result-fields-list>
-                      <atomic-field-condition
-                        class="field"
-                        if-defined="inat_kingdom"
-                      >
+                      <atomic-field-condition class="field" if-defined="inat_kingdom">
                         <span class="field-label">Kingdom:</span>
-                        <atomic-result-text
-                          field="inat_kingdom"
-                        ></atomic-result-text>
+                        <atomic-result-text field="inat_kingdom"></atomic-result-text>
                       </atomic-field-condition>
 
-                      <atomic-field-condition
-                        class="field"
-                        if-defined="inat_family"
-                      >
+                      <atomic-field-condition class="field" if-defined="inat_family">
                         <span class="field-label">Family:</span>
-                        <atomic-result-text
-                          field="inat_family"
-                        ></atomic-result-text>
+                        <atomic-result-text field="inat_family"></atomic-result-text>
                       </atomic-field-condition>
 
-                      <atomic-field-condition
-                        class="field"
-                        if-defined="inat_class"
-                      >
+                      <atomic-field-condition class="field" if-defined="inat_class">
                         <span class="field-label">Class:</span>
-                        <atomic-result-text
-                          field="inat_class"
-                        ></atomic-result-text>
+                        <atomic-result-text field="inat_class"></atomic-result-text>
                       </atomic-field-condition>
                     </atomic-result-fields-list>
                   </atomic-result-section-bottom-metadata>
@@ -203,46 +184,28 @@
                             ><atomic-result-link></atomic-result-link
                           ></atomic-result-section-title>
                           <atomic-result-section-excerpt
-                            ><atomic-result-text
-                              field="excerpt"
-                            ></atomic-result-text
+                            ><atomic-result-text field="excerpt"></atomic-result-text
                           ></atomic-result-section-excerpt>
                           <atomic-result-section-bottom-metadata>
                             <atomic-result-fields-list>
-                              <atomic-field-condition
-                                class="field"
-                                if-defined="inat_kingdom"
-                              >
+                              <atomic-field-condition class="field" if-defined="inat_kingdom">
                                 <span class="field-label">Kingdom:</span>
-                                <atomic-result-text
-                                  field="inat_kingdom"
-                                ></atomic-result-text>
+                                <atomic-result-text field="inat_kingdom"></atomic-result-text>
                               </atomic-field-condition>
 
-                              <atomic-field-condition
-                                class="field"
-                                if-defined="inat_family"
-                              >
+                              <atomic-field-condition class="field" if-defined="inat_family">
                                 <span class="field-label">Family:</span>
-                                <atomic-result-text
-                                  field="inat_family"
-                                ></atomic-result-text>
+                                <atomic-result-text field="inat_family"></atomic-result-text>
                               </atomic-field-condition>
 
-                              <atomic-field-condition
-                                class="field"
-                                if-defined="inat_class"
-                              >
+                              <atomic-field-condition class="field" if-defined="inat_class">
                                 <span class="field-label">Class:</span>
-                                <atomic-result-text
-                                  field="inat_class"
-                                ></atomic-result-text>
+                                <atomic-result-text field="inat_class"></atomic-result-text>
                               </atomic-field-condition>
                             </atomic-result-fields-list>
                           </atomic-result-section-bottom-metadata>
                           <atomic-result-section-children>
-                            <atomic-result-children inherit-templates>
-                            </atomic-result-children>
+                            <atomic-result-children inherit-templates> </atomic-result-children>
                           </atomic-result-section-children>
                         </template>
                       </atomic-result-children-template>

@@ -3,10 +3,7 @@ import {buildCustomEvent} from '@/src/utils/event-utils';
 
 export type NumberFormatter = (value: number, languages: string[]) => string;
 
-export const dispatchNumberFormatEvent = async (
-  formatter: NumberFormatter,
-  element: Element
-) => {
+export const dispatchNumberFormatEvent = async (formatter: NumberFormatter, element: Element) => {
   const event = buildCustomEvent('atomic/numberFormat', formatter);
 
   const tagName = element.parentElement?.tagName.toLowerCase();
@@ -15,8 +12,7 @@ export const dispatchNumberFormatEvent = async (
   }
 
   if (element.parentElement && 'updateComplete' in element.parentElement) {
-    await (element.parentElement as {updateComplete: Promise<boolean>})
-      .updateComplete;
+    await (element.parentElement as {updateComplete: Promise<boolean>}).updateComplete;
   } else if ('componentOnReady' in element.parentElement!) {
     await (element.parentElement as HTMLStencilElement).componentOnReady();
   }

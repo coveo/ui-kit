@@ -2,10 +2,7 @@ import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {MockInsightApi} from '@coveo/platform-mock-api/insight/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {
-  facetDecorator,
-  withBreadboxDecorator,
-} from '@/storybook-utils/common/facets-decorator';
+import {facetDecorator, withBreadboxDecorator} from '@/storybook-utils/common/facets-decorator';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 import '@/src/components/insight/atomic-insight-timeframe-facet/atomic-insight-timeframe-facet.js';
 import '@/src/components/common/atomic-timeframe/atomic-timeframe.js';
@@ -98,10 +95,9 @@ const mockDefaultFacetResponse = () => {
   }));
 };
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-insight-timeframe-facet',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-insight-timeframe-facet', {
+  excludeCategories: ['methods'],
+});
 
 const {decorator, play} = wrapInInsightInterface();
 

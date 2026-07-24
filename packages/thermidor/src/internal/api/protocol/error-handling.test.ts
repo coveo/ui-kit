@@ -44,9 +44,7 @@ describe('transformError()', () => {
       });
       const message = transformError(response);
 
-      expect(message).toBe(
-        'Access denied: You do not have permission to access this resource.'
-      );
+      expect(message).toBe('Access denied: You do not have permission to access this resource.');
     });
 
     it('should handle 400 Bad Request', () => {

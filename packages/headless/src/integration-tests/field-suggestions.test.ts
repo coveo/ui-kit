@@ -3,10 +3,7 @@ import {
   getSampleSearchEngineConfiguration,
   type SearchEngine,
 } from '../app/search-engine/search-engine.js';
-import {
-  buildFacet,
-  type Facet,
-} from '../controllers/facets/facet/headless-facet.js';
+import {buildFacet, type Facet} from '../controllers/facets/facet/headless-facet.js';
 import {
   buildFieldSuggestions,
   type FieldSuggestions,
@@ -82,10 +79,7 @@ describe('field suggestions', () => {
         let valuesToSelect: FieldSuggestionsValue[];
         beforeEach(async () => {
           const numberOfValuesToSelect = 2;
-          valuesToSelect = fieldSuggestions.state.values.slice(
-            0,
-            numberOfValuesToSelect
-          );
+          valuesToSelect = fieldSuggestions.state.values.slice(0, numberOfValuesToSelect);
           for (const value of valuesToSelect) {
             await waitForNextStateChange(facet, {
               action: () => fieldSuggestions.select(value),
@@ -95,9 +89,7 @@ describe('field suggestions', () => {
         });
 
         it('can select multiple facet value', async () => {
-          const expectedValues = valuesToSelect.map(
-            ({displayValue}) => displayValue
-          );
+          const expectedValues = valuesToSelect.map(({displayValue}) => displayValue);
           expect(getSelectedValues()).toEqual(expectedValues);
         });
       });
@@ -149,9 +141,7 @@ describe('field suggestions', () => {
           action: () => fieldSuggestions.showMoreResults(),
           expectedSubscriberCalls: 2,
         });
-        expect(fieldSuggestions.state.values.length).toBeGreaterThan(
-          numberOfValues
-        );
+        expect(fieldSuggestions.state.values.length).toBeGreaterThan(numberOfValues);
       });
     });
 
@@ -216,9 +206,7 @@ describe('field suggestions', () => {
         expectedSubscriberCalls: 3,
       });
       expect(
-        fieldSuggestions.state.values.find(
-          (value) => value.rawValue === rawValue
-        )?.displayValue
+        fieldSuggestions.state.values.find((value) => value.rawValue === rawValue)?.displayValue
       ).toEqual(displayValue);
     });
 

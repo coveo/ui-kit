@@ -34,10 +34,9 @@ commerceApiHarness.facetSearchEndpoint.addRequestTransformer(
 const {play, decorator} = wrapInCommerceInterface({
   includeCodeRoot: false,
 });
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-commerce-facet',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-commerce-facet', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-commerce-facet',

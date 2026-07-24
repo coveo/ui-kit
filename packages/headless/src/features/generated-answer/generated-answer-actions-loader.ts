@@ -1,10 +1,6 @@
 import type {PayloadAction} from '@reduxjs/toolkit';
 import type {CoreEngine} from '../../app/engine.js';
-import {
-  generateAnswer,
-  resetAnswer,
-  setAnswerGenerationMode,
-} from './generated-answer-actions.js';
+import {generateAnswer, resetAnswer, setAnswerGenerationMode} from './generated-answer-actions.js';
 import {generatedAnswerReducer as generatedAnswer} from './generated-answer-slice.js';
 
 /**
@@ -49,9 +45,7 @@ export interface GeneratedAnswerActionCreators {
  * @group Actions
  * @category GeneratedAnswer
  */
-export function loadGeneratedAnswerActions(
-  engine: CoreEngine
-): GeneratedAnswerActionCreators {
+export function loadGeneratedAnswerActions(engine: CoreEngine): GeneratedAnswerActionCreators {
   engine.addReducers({generatedAnswer});
 
   return {

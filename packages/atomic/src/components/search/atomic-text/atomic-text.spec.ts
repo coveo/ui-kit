@@ -22,29 +22,26 @@ describe('atomic-text', () => {
     );
   });
 
-  const renderComponent = async (
-    options: {value?: string; count?: number} = {}
-  ) => {
-    const {element, atomicInterface} =
-      await renderInAtomicSearchInterface<AtomicText>({
-        template: html`<atomic-text
-          .value=${options.value || ''}
-          .count=${options.count}
-        ></atomic-text>`,
-        selector: 'atomic-text',
-        bindings: (bindings) => {
-          bindings.i18n = i18n;
-          bindings.store = {
-            ...bindings.store,
-            onChange: vi.fn(),
-            state: {
-              ...bindings.store?.state,
-              loadingFlags: [],
-            },
-          };
-          return bindings;
-        },
-      });
+  const renderComponent = async (options: {value?: string; count?: number} = {}) => {
+    const {element, atomicInterface} = await renderInAtomicSearchInterface<AtomicText>({
+      template: html`<atomic-text
+        .value=${options.value || ''}
+        .count=${options.count}
+      ></atomic-text>`,
+      selector: 'atomic-text',
+      bindings: (bindings) => {
+        bindings.i18n = i18n;
+        bindings.store = {
+          ...bindings.store,
+          onChange: vi.fn(),
+          state: {
+            ...bindings.store?.state,
+            loadingFlags: [],
+          },
+        };
+        return bindings;
+      },
+    });
 
     await atomicInterface.updateComplete;
     await element.updateComplete;

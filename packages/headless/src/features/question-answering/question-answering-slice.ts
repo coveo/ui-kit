@@ -23,8 +23,7 @@ const findRelatedQuestionIdx = (
   identifier: QuestionAnsweringUniqueIdentifierActionCreatorPayload
 ) =>
   relatedQuestions.findIndex(
-    (relatedQuestion) =>
-      relatedQuestion.questionAnswerId === identifier.questionAnswerId
+    (relatedQuestion) => relatedQuestion.questionAnswerId === identifier.questionAnswerId
   );
 
 function hashQuestionAnswer({
@@ -82,17 +81,11 @@ export const questionAnsweringReducer = createReducer(
         state.feedbackModalOpen = false;
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
-        const relatedQuestions =
-          action.payload.response.questionAnswer.relatedQuestions.map(
-            (relatedQuestion, i) =>
-              buildQuestionAnsweringRelatedQuestionState(
-                relatedQuestion,
-                state.relatedQuestions[i]
-              )
-          );
-        const questionAnswerId = hashQuestionAnswer(
-          action.payload.response.questionAnswer
+        const relatedQuestions = action.payload.response.questionAnswer.relatedQuestions.map(
+          (relatedQuestion, i) =>
+            buildQuestionAnsweringRelatedQuestionState(relatedQuestion, state.relatedQuestions[i])
         );
+        const questionAnswerId = hashQuestionAnswer(action.payload.response.questionAnswer);
         if (state.questionAnswerId === questionAnswerId) {
           return {
             ...state,
@@ -107,14 +100,8 @@ export const questionAnsweringReducer = createReducer(
       })
       .addCase(
         expandSmartSnippetRelatedQuestion,
-        (
-          state,
-          action: ReturnType<typeof expandSmartSnippetRelatedQuestion>
-        ) => {
-          const idx = findRelatedQuestionIdx(
-            state.relatedQuestions,
-            action.payload
-          );
+        (state, action: ReturnType<typeof expandSmartSnippetRelatedQuestion>) => {
+          const idx = findRelatedQuestionIdx(state.relatedQuestions, action.payload);
           if (idx === -1) {
             return;
           }
@@ -122,10 +109,7 @@ export const questionAnsweringReducer = createReducer(
         }
       )
       .addCase(collapseSmartSnippetRelatedQuestion, (state, action) => {
-        const idx = findRelatedQuestionIdx(
-          state.relatedQuestions,
-          action.payload
-        );
+        const idx = findRelatedQuestionIdx(state.relatedQuestions, action.payload);
         if (idx === -1) {
           return;
         }

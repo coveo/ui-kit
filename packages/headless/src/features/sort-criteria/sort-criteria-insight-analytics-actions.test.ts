@@ -37,11 +37,7 @@ describe('sort criteria insight analytics actions', () => {
         configuration,
       })
     );
-    await logResultsSort()()(
-      engine.dispatch,
-      () => engine.state,
-      {} as ThunkExtraArguments
-    );
+    await logResultsSort()()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
     const expectedPayload = {
       caseContext: {

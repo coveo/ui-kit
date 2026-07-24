@@ -29,9 +29,7 @@ export async function addToCart(
   headlessCart: HeadlessSSRCart,
   headlessCartState: HeadlessCartState,
   product: HeadlessProduct,
-  methods:
-    | Omit<InstantProducts | ProductList, 'state' | 'subscribe'>
-    | undefined
+  methods: Omit<InstantProducts | ProductList, 'state' | 'subscribe'> | undefined
 ) {
   const existingItem = headlessCartState.items.find(
     (item) => item.productId === product.ec_product_id
@@ -55,10 +53,7 @@ export async function addToCart(
   methods?.interactiveProduct({options: {product}}).select();
 }
 
-export async function purchase(
-  headlessCart: HeadlessSSRCart,
-  totalPrice: number
-) {
+export async function purchase(headlessCart: HeadlessSSRCart, totalPrice: number) {
   headlessCart.purchase({id: crypto.randomUUID(), revenue: totalPrice});
   // Clear the cart in the external service
   await externalCartAPI.clearCart();

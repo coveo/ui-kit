@@ -49,8 +49,8 @@ describe('#configureLegacyAnalytics', () => {
   it('should be enabled by default', () => {
     const state = createMockState();
     expect(
-      configureLegacyAnalytics({getState: () => state, logger})
-        .coveoAnalyticsClient instanceof CoveoAnalyticsClient
+      configureLegacyAnalytics({getState: () => state, logger}).coveoAnalyticsClient instanceof
+        CoveoAnalyticsClient
     ).toBe(true);
   });
 
@@ -59,8 +59,8 @@ describe('#configureLegacyAnalytics', () => {
     state.configuration.analytics.enabled = true;
 
     expect(
-      configureLegacyAnalytics({getState: () => state, logger})
-        .coveoAnalyticsClient instanceof CoveoAnalyticsClient
+      configureLegacyAnalytics({getState: () => state, logger}).coveoAnalyticsClient instanceof
+        CoveoAnalyticsClient
     ).toBe(true);
   });
 
@@ -68,8 +68,8 @@ describe('#configureLegacyAnalytics', () => {
     const state = createMockState();
     state.configuration.analytics.enabled = false;
     expect(
-      configureLegacyAnalytics({getState: () => state, logger})
-        .coveoAnalyticsClient instanceof CoveoAnalyticsClient
+      configureLegacyAnalytics({getState: () => state, logger}).coveoAnalyticsClient instanceof
+        CoveoAnalyticsClient
     ).toBe(false);
   });
 
@@ -125,9 +125,7 @@ describe('#configureLegacyAnalytics', () => {
     it('should properly return the pipeline from the state', () => {
       const state = getBaseState();
       state.pipeline = 'foo';
-      expect(new SearchAnalyticsProvider(() => state).getPipeline()).toBe(
-        'foo'
-      );
+      expect(new SearchAnalyticsProvider(() => state).getPipeline()).toBe('foo');
     });
 
     it('should properly return the pipeline from the response if not available directly from state', () => {
@@ -135,9 +133,7 @@ describe('#configureLegacyAnalytics', () => {
       state.pipeline = undefined;
       state.search = buildMockSearchState({});
       state.search.response.pipeline = 'foo';
-      expect(new SearchAnalyticsProvider(() => state).getPipeline()).toBe(
-        'foo'
-      );
+      expect(new SearchAnalyticsProvider(() => state).getPipeline()).toBe('foo');
     });
 
     it('should properly return facet state', () => {
@@ -158,56 +154,44 @@ describe('#configureLegacyAnalytics', () => {
         }),
       ];
 
-      expect(
-        new SearchAnalyticsProvider(() => state).getFacetState()[0].field
-      ).toBe('foo');
+      expect(new SearchAnalyticsProvider(() => state).getFacetState()[0].field).toBe('foo');
     });
 
     it('should properly return getSearchEventRequestPayload', () => {
       const state = getBaseState();
       state.search = buildMockSearchState({});
-      state.search.response.results = [
-        buildMockResult(),
-        buildMockResult(),
-        buildMockResult(),
-      ];
+      state.search.response.results = [buildMockResult(), buildMockResult(), buildMockResult()];
       state.search.response.totalCountFiltered = 1234;
       state.query = buildMockQueryState({q: 'foo'});
-      expect(
-        new SearchAnalyticsProvider(() => state).getSearchEventRequestPayload()
-      ).toMatchObject({
-        queryText: 'foo',
-        responseTime: 0,
-        results: expect.any(Array),
-        numberOfResults: 1234,
-      });
+      expect(new SearchAnalyticsProvider(() => state).getSearchEventRequestPayload()).toMatchObject(
+        {
+          queryText: 'foo',
+          responseTime: 0,
+          results: expect.any(Array),
+          numberOfResults: 1234,
+        }
+      );
     });
 
     it('should properly return getSearchUID from searchResponseId if available', () => {
       const state = getBaseState();
       state.search = buildMockSearchState({searchResponseId: 'the_id'});
       state.search.response.searchUid = 'another_id';
-      expect(new SearchAnalyticsProvider(() => state).getSearchUID()).toEqual(
-        'the_id'
-      );
+      expect(new SearchAnalyticsProvider(() => state).getSearchUID()).toEqual('the_id');
     });
 
     it('should properly return getSearchUID from response.searchUid if available', () => {
       const state = getBaseState();
       state.search = buildMockSearchState({});
       state.search.response.searchUid = 'another_id';
-      expect(new SearchAnalyticsProvider(() => state).getSearchUID()).toEqual(
-        'another_id'
-      );
+      expect(new SearchAnalyticsProvider(() => state).getSearchUID()).toEqual('another_id');
     });
 
     it('should return an undefined getSplitTestRunVersion if there is no splitTestRunName', () => {
       const state = getBaseState();
       state.search = buildMockSearchState({});
       state.search.response.splitTestRun = '';
-      expect(
-        new SearchAnalyticsProvider(() => state).getSplitTestRunVersion()
-      ).toBeUndefined();
+      expect(new SearchAnalyticsProvider(() => state).getSplitTestRunVersion()).toBeUndefined();
     });
 
     it('should return getSplitTestRunVersion from the pipeline search response if available', () => {
@@ -216,9 +200,9 @@ describe('#configureLegacyAnalytics', () => {
       state.search.response.splitTestRun = 'foo';
       state.search.response.pipeline = 'pipeline-from-response';
       state.pipeline = 'pipeline-from-state';
-      expect(
-        new SearchAnalyticsProvider(() => state).getSplitTestRunVersion()
-      ).toBe('pipeline-from-response');
+      expect(new SearchAnalyticsProvider(() => state).getSplitTestRunVersion()).toBe(
+        'pipeline-from-response'
+      );
     });
 
     it('should return getSplitTestRunVersion from the pipeline state value if there is no pipeline available in the search response', () => {
@@ -227,18 +211,18 @@ describe('#configureLegacyAnalytics', () => {
       state.search.response.splitTestRun = 'foo';
       state.search.response.pipeline = '';
       state.pipeline = 'pipeline-from-state';
-      expect(
-        new SearchAnalyticsProvider(() => state).getSplitTestRunVersion()
-      ).toBe('pipeline-from-state');
+      expect(new SearchAnalyticsProvider(() => state).getSplitTestRunVersion()).toBe(
+        'pipeline-from-state'
+      );
     });
 
     it('should properly return the generated answer metadata from the state', () => {
       const state = getBaseState();
       state.generatedAnswer = getGeneratedAnswerInitialState();
       state.generatedAnswer.isVisible = false;
-      expect(
-        new SearchAnalyticsProvider(() => state).getGeneratedAnswerMetadata()
-      ).toEqual({showGeneratedAnswer: false});
+      expect(new SearchAnalyticsProvider(() => state).getGeneratedAnswerMetadata()).toEqual({
+        showGeneratedAnswer: false,
+      });
     });
 
     it('should properly return the facet metadata from the state', () => {
@@ -249,10 +233,7 @@ describe('#configureLegacyAnalytics', () => {
       state.facetSet[facetId] = buildMockFacetSlice({});
 
       expect(
-        new SearchAnalyticsProvider(() => state).getFacetMetadata(
-          facetId,
-          facetValue
-        )
+        new SearchAnalyticsProvider(() => state).getFacetMetadata(facetId, facetValue)
       ).toEqual({
         coveoHeadlessVersion: 'Test version',
         facetField: state.facetSet[facetId].request.field,
@@ -268,11 +249,7 @@ describe('#configureLegacyAnalytics', () => {
       state.facetSet = getFacetSetInitialState();
       state.facetSet[facetId] = buildMockFacetSlice({});
 
-      expect(
-        new SearchAnalyticsProvider(() => state).getFacetClearAllMetadata(
-          facetId
-        )
-      ).toEqual({
+      expect(new SearchAnalyticsProvider(() => state).getFacetClearAllMetadata(facetId)).toEqual({
         coveoHeadlessVersion: 'Test version',
         facetField: state.facetSet[facetId].request.field,
         facetId,
@@ -288,10 +265,7 @@ describe('#configureLegacyAnalytics', () => {
       state.facetSet[facetId] = buildMockFacetSlice({});
 
       expect(
-        new SearchAnalyticsProvider(() => state).getFacetUpdateSortMetadata(
-          facetId,
-          criteria
-        )
+        new SearchAnalyticsProvider(() => state).getFacetUpdateSortMetadata(facetId, criteria)
       ).toEqual({
         coveoHeadlessVersion: 'Test version',
         facetField: state.facetSet[facetId].request.field,
@@ -315,9 +289,10 @@ describe('#configureLegacyAnalytics', () => {
       state.facetSet[facetId] = buildMockFacetSlice({});
 
       expect(
-        new SearchAnalyticsProvider(
-          () => state
-        ).getRangeBreadcrumbFacetMetadata(facetId, facetValue)
+        new SearchAnalyticsProvider(() => state).getRangeBreadcrumbFacetMetadata(
+          facetId,
+          facetValue
+        )
       ).toEqual({
         coveoHeadlessVersion: 'Test version',
         facetField: state.facetSet[facetId].request.field,
@@ -334,9 +309,7 @@ describe('#configureLegacyAnalytics', () => {
       const state = getBaseState();
       state.sortCriteria = resultsSortBy;
 
-      expect(
-        new SearchAnalyticsProvider(() => state).getResultSortMetadata()
-      ).toEqual({
+      expect(new SearchAnalyticsProvider(() => state).getResultSortMetadata()).toEqual({
         coveoHeadlessVersion: 'Test version',
         resultsSortBy,
       });
@@ -367,9 +340,7 @@ describe('#configureLegacyAnalytics', () => {
       const state = getBaseState();
 
       expect(
-        new SearchAnalyticsProvider(() => state).getUndoTriggerQueryMetadata(
-          undoneQuery
-        )
+        new SearchAnalyticsProvider(() => state).getUndoTriggerQueryMetadata(undoneQuery)
       ).toEqual({
         coveoHeadlessVersion: 'Test version',
         undoneQuery,
@@ -384,13 +355,13 @@ describe('#configureLegacyAnalytics', () => {
       state.categoryFacetSet[categoryFacetId] = buildMockCategoryFacetSlice({});
 
       expect(
-        new SearchAnalyticsProvider(
-          () => state
-        ).getCategoryBreadcrumbFacetMetadata(categoryFacetId, categoryFacetPath)
+        new SearchAnalyticsProvider(() => state).getCategoryBreadcrumbFacetMetadata(
+          categoryFacetId,
+          categoryFacetPath
+        )
       ).toEqual({
         coveoHeadlessVersion: 'Test version',
-        categoryFacetField:
-          state.categoryFacetSet[categoryFacetId].request.field,
+        categoryFacetField: state.categoryFacetSet[categoryFacetId].request.field,
         categoryFacetId,
         categoryFacetTitle: `${state.categoryFacetSet[categoryFacetId].request.field}_${categoryFacetId}`,
         categoryFacetPath,
@@ -424,10 +395,7 @@ describe('#configureLegacyAnalytics', () => {
       });
 
       expect(
-        new SearchAnalyticsProvider(() => state).getOmniboxAnalyticsMetadata(
-          id,
-          suggestion
-        )
+        new SearchAnalyticsProvider(() => state).getOmniboxAnalyticsMetadata(id, suggestion)
       ).toEqual({
         coveoHeadlessVersion: 'Test version',
         partialQueries,
@@ -443,9 +411,7 @@ describe('#configureLegacyAnalytics', () => {
       const state = getBaseState();
       state.configuration.analytics.originLevel2 = originLevel2;
 
-      expect(
-        new SearchAnalyticsProvider(() => state).getInterfaceChangeMetadata()
-      ).toEqual({
+      expect(new SearchAnalyticsProvider(() => state).getInterfaceChangeMetadata()).toEqual({
         coveoHeadlessVersion: 'Test version',
         interfaceChangeTo: originLevel2,
       });
@@ -462,14 +428,12 @@ describe('#configureLegacyAnalytics', () => {
 
       const state = getBaseState();
 
-      expect(
-        new SearchAnalyticsProvider(() => state).getOmniboxFromLinkMetadata(
-          metadata
-        )
-      ).toEqual({
-        coveoHeadlessVersion: 'Test version',
-        ...metadata,
-      });
+      expect(new SearchAnalyticsProvider(() => state).getOmniboxFromLinkMetadata(metadata)).toEqual(
+        {
+          coveoHeadlessVersion: 'Test version',
+          ...metadata,
+        }
+      );
     });
 
     describe('getBaseMetadata with Generative Answering ID', () => {
@@ -589,10 +553,7 @@ describe('#configureLegacyAnalytics', () => {
         expect(metadata).toHaveProperty('generativeQuestionAnsweringId');
 
         expect(metadata).toHaveProperty('context_customKey', 'customValue');
-        expect(metadata).toHaveProperty('context_multiValue', [
-          'value1',
-          'value2',
-        ]);
+        expect(metadata).toHaveProperty('context_multiValue', ['value1', 'value2']);
       });
     });
   });

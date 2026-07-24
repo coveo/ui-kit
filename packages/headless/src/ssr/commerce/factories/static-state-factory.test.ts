@@ -5,10 +5,7 @@ import {
   buildProductListing,
   type ProductListing,
 } from '../../../controllers/commerce/product-listing/headless-product-listing.js';
-import {
-  buildSearch,
-  type Search,
-} from '../../../controllers/commerce/search/headless-search.js';
+import {buildSearch, type Search} from '../../../controllers/commerce/search/headless-search.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {
   buildMockProductListingController,
@@ -24,9 +21,7 @@ import type {CommerceControllerDefinitionsMap} from '../types/engine.js';
 import * as buildFactory from './build-factory.js';
 import {fetchStaticStateFactory} from './static-state-factory.js';
 
-vi.mock(
-  '../../../controllers/commerce/product-listing/headless-product-listing.js'
-);
+vi.mock('../../../controllers/commerce/product-listing/headless-product-listing.js');
 vi.mock('../../../controllers/commerce/search/headless-search.js');
 
 describe('fetchStaticStateFactory', () => {
@@ -88,10 +83,7 @@ describe('fetchStaticStateFactory', () => {
   });
 
   it('should call augmentPreprocessRequestWithForwardedFor when fetchStaticState is invoked', async () => {
-    const spy = vi.spyOn(
-      augmentModule,
-      'augmentPreprocessRequestWithForwardedFor'
-    );
+    const spy = vi.spyOn(augmentModule, 'augmentPreprocessRequestWithForwardedFor');
 
     const mockNavigatorContextProvider = vi.fn();
     const mockPreprocessRequest = vi.fn(async (req) => req);
@@ -171,12 +163,8 @@ describe('fetchStaticStateFactory', () => {
   });
 
   describe('when controllers include a ProductList controller with executeFirstRequest/executeFirstSearch', () => {
-    let mockProductListController: ReturnType<
-      typeof buildMockProductListingController
-    >;
-    let mockSearchProductListController: ReturnType<
-      typeof buildMockSearchController
-    >;
+    let mockProductListController: ReturnType<typeof buildMockProductListingController>;
+    let mockSearchProductListController: ReturnType<typeof buildMockSearchController>;
 
     beforeEach(() => {
       mockProductListController = buildMockProductListingController();
@@ -202,9 +190,7 @@ describe('fetchStaticStateFactory', () => {
       const factory = fetchStaticStateFactory(definition, mockEngineOptions);
       await factory(SolutionType.listing)();
 
-      expect(
-        mockProductListController.executeFirstRequest
-      ).toHaveBeenCalledTimes(1);
+      expect(mockProductListController.executeFirstRequest).toHaveBeenCalledTimes(1);
       expect(buildProductListing).not.toHaveBeenCalled();
     });
 
@@ -212,9 +198,7 @@ describe('fetchStaticStateFactory', () => {
       const factory = fetchStaticStateFactory(definition, mockEngineOptions);
       await factory(SolutionType.search)();
 
-      expect(
-        mockSearchProductListController.executeFirstSearch
-      ).toHaveBeenCalledTimes(1);
+      expect(mockSearchProductListController.executeFirstSearch).toHaveBeenCalledTimes(1);
       expect(buildSearch).not.toHaveBeenCalled();
     });
   });

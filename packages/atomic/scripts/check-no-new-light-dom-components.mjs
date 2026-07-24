@@ -138,10 +138,7 @@ function extractTagName(content) {
  * - Direct createRenderRoot() override returning `this`
  */
 function isLightDomComponent(content) {
-  if (
-    LIGHT_DOM_MIXIN_PATTERN.test(content) ||
-    ITEM_SECTION_MIXIN_PATTERN.test(content)
-  ) {
+  if (LIGHT_DOM_MIXIN_PATTERN.test(content) || ITEM_SECTION_MIXIN_PATTERN.test(content)) {
     return {isLightDom: true, method: 'mixin'};
   }
 
@@ -187,8 +184,7 @@ function findTsFiles(dir, files = []) {
       findTsFiles(fullPath, files);
     } else if (stat.isFile() && extname(entry) === '.ts') {
       const shouldSkip =
-        EXCLUDED_FILES.some((suffix) => entry.endsWith(suffix)) ||
-        EXCLUDED_EXACT.includes(entry);
+        EXCLUDED_FILES.some((suffix) => entry.endsWith(suffix)) || EXCLUDED_EXACT.includes(entry);
       if (!shouldSkip) {
         files.push(fullPath);
       }
@@ -238,36 +234,22 @@ function main() {
 
   for (const violation of violations) {
     console.log(`📁 ${violation.file}`);
-    console.log(
-      `   Component: ${violation.className} (${violation.tagName || 'no tag name'})`
-    );
+    console.log(`   Component: ${violation.className} (${violation.tagName || 'no tag name'})`);
     console.log(`   Uses: ${violation.mixinType}`);
     console.log('');
   }
 
   console.log('\n💡 Why this is not allowed:');
-  console.log(
-    '   New components should use Shadow DOM for proper style encapsulation.'
-  );
-  console.log(
-    '   Light DOM components can cause styles to leak and are harder to maintain.'
-  );
+  console.log('   New components should use Shadow DOM for proper style encapsulation.');
+  console.log('   Light DOM components can cause styles to leak and are harder to maintain.');
   console.log('');
   console.log('📝 How to fix:');
   console.log('   - Use Shadow DOM by extending LitElement directly');
-  console.log(
-    '   - Use @withTailwindStyles decorator for Tailwind CSS support'
-  );
-  console.log(
-    '   - See the component generation script: node scripts/generate-component.mjs'
-  );
+  console.log('   - Use @withTailwindStyles decorator for Tailwind CSS support');
+  console.log('   - See the component generation script: node scripts/generate-component.mjs');
   console.log('');
-  console.log(
-    '⚠️  If Light DOM is absolutely required for a valid reason, discuss with the team'
-  );
-  console.log(
-    '   and update the allowlist in scripts/check-no-new-light-dom-components.mjs\n'
-  );
+  console.log('⚠️  If Light DOM is absolutely required for a valid reason, discuss with the team');
+  console.log('   and update the allowlist in scripts/check-no-new-light-dom-components.mjs\n');
 
   process.exit(1);
 }

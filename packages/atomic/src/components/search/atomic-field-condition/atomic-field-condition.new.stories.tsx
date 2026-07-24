@@ -22,10 +22,9 @@ const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
 const {decorator: resultListDecorator} = wrapInResultList('list', false);
 const {decorator: resultTemplateDecorator} = wrapInResultTemplate();
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-field-condition',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-field-condition', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-field-condition',
@@ -33,11 +32,7 @@ const meta: Meta = {
   id: 'atomic-field-condition',
 
   render: (args) => template(args),
-  decorators: [
-    resultTemplateDecorator,
-    resultListDecorator,
-    searchInterfaceDecorator,
-  ],
+  decorators: [resultTemplateDecorator, resultListDecorator, searchInterfaceDecorator],
   parameters: {
     ...parameters,
     msw: {

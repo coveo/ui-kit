@@ -46,10 +46,9 @@ import '@/src/components/search/atomic-text/atomic-text.js';
 import '@/src/components/common/atomic-timeframe/atomic-timeframe.js';
 
 const {decorator, play} = wrapInInsightInterface();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-insight-interface',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-insight-interface', {
+  excludeCategories: ['methods'],
+});
 
 const insightApiHarness = new MockInsightApi();
 insightApiHarness.searchEndpoint.mock((response) => ({
@@ -124,15 +123,8 @@ export const Default: Story = {
           <atomic-insight-refine-toggle></atomic-insight-refine-toggle>
           <atomic-insight-user-actions-toggle></atomic-insight-user-actions-toggle>
           <atomic-insight-tabs>
-            <atomic-insight-tab
-              label="All"
-              expression=""
-              active="true"
-            ></atomic-insight-tab>
-            <atomic-insight-tab
-              label="Videos"
-              expression="@ytchanneltitle"
-            ></atomic-insight-tab>
+            <atomic-insight-tab label="All" expression="" active="true"></atomic-insight-tab>
+            <atomic-insight-tab label="Videos" expression="@ytchanneltitle"></atomic-insight-tab>
             <atomic-insight-tab
               label="Documentation"
               expression='@documenttype==("WebPage")'
@@ -140,19 +132,13 @@ export const Default: Story = {
           </atomic-insight-tabs>
         </atomic-layout-section>
         <atomic-layout-section section="facets">
-          <atomic-insight-timeframe-facet
-            field="date"
-            label="Date"
-            with-date-picker="true"
-          >
+          <atomic-insight-timeframe-facet field="date" label="Date" with-date-picker="true">
             <atomic-timeframe unit="hour"></atomic-timeframe>
             <atomic-timeframe unit="day"></atomic-timeframe>
             <atomic-timeframe unit="week"></atomic-timeframe>
             <atomic-timeframe unit="month"></atomic-timeframe>
             <atomic-timeframe unit="quarter"></atomic-timeframe>
-            <atomic-timeframe
-              unit="year"
-            ></atomic-timeframe> </atomic-insight-timeframe-facet
+            <atomic-timeframe unit="year"></atomic-timeframe> </atomic-insight-timeframe-facet
           ><atomic-insight-facet
             field="source"
             label="Source"
@@ -168,8 +154,7 @@ export const Default: Story = {
           <atomic-insight-query-summary></atomic-insight-query-summary>
         </atomic-layout-section>
         <atomic-layout-section section="results">
-          <atomic-insight-generated-answer collapsible="true">
-          </atomic-insight-generated-answer>
+          <atomic-insight-generated-answer collapsible="true"> </atomic-insight-generated-answer>
           <atomic-insight-folded-result-list image-size="none">
             <atomic-insight-result-template must-match-sourcetype="YouTube">
               <template>
@@ -276,10 +261,7 @@ export const Default: Story = {
                 </style>
                 <atomic-insight-result-action-bar>
                   <atomic-insight-result-attach-to-case-action></atomic-insight-result-attach-to-case-action>
-                  <atomic-insight-result-action
-                    action="copyToClipboard"
-                    tooltip="Copy"
-                  >
+                  <atomic-insight-result-action action="copyToClipboard" tooltip="Copy">
                   </atomic-insight-result-action>
                   <atomic-insight-result-quickview-action></atomic-insight-result-quickview-action>
                 </atomic-insight-result-action-bar>
@@ -308,34 +290,19 @@ export const Default: Story = {
                     <a slot="attributes" target="_self"></a>
                   </atomic-result-link>
                 </atomic-result-section-title>
-                <atomic-result-section-title-metadata>
-                </atomic-result-section-title-metadata>
+                <atomic-result-section-title-metadata> </atomic-result-section-title-metadata>
                 <atomic-result-section-excerpt>
                   <atomic-result-text field="excerpt"></atomic-result-text>
                 </atomic-result-section-excerpt>
                 <atomic-result-section-bottom-metadata>
                   <atomic-result-fields-list>
-                    <atomic-field-condition
-                      class="field"
-                      if-defined="ytchanneltitle"
-                    >
-                      <span class="field-label"
-                        ><atomic-text value="Channel"></atomic-text>:</span
-                      >
-                      <atomic-result-text
-                        field="ytchanneltitle"
-                      ></atomic-result-text>
+                    <atomic-field-condition class="field" if-defined="ytchanneltitle">
+                      <span class="field-label"><atomic-text value="Channel"></atomic-text>:</span>
+                      <atomic-result-text field="ytchanneltitle"></atomic-result-text>
                     </atomic-field-condition>
-                    <atomic-field-condition
-                      class="field"
-                      if-defined="ytviewcount"
-                    >
-                      <span class="field-label"
-                        ><atomic-text value="Views"></atomic-text>:</span
-                      >
-                      <atomic-result-number
-                        field="ytviewcount"
-                      ></atomic-result-number>
+                    <atomic-field-condition class="field" if-defined="ytviewcount">
+                      <span class="field-label"><atomic-text value="Views"></atomic-text>:</span>
+                      <atomic-result-number field="ytviewcount"></atomic-result-number>
                     </atomic-field-condition>
                     <atomic-field-condition
                       class="viewed-by-customer"
@@ -381,14 +348,11 @@ export const Default: Story = {
                           }
 
                           .result-root.image-small atomic-result-section-visual,
-                          .result-root.image-large
-                            atomic-result-section-visual {
+                          .result-root.image-large atomic-result-section-visual {
                             border-radius: var(--atomic-border-radius-xl);
                           }
 
-                          .result-root:has(
-                            atomic-result-section-children:hover
-                          ) {
+                          .result-root:has(atomic-result-section-children:hover) {
                             atomic-insight-result-action-bar {
                               visibility: hidden;
                             }
@@ -398,9 +362,7 @@ export const Default: Story = {
                             color: var(--atomic-neutral-dark);
                           }
 
-                          atomic-insight-result-action-bar
-                            button:hover
-                            atomic-icon {
+                          atomic-insight-result-action-bar button:hover atomic-icon {
                             color: var(--atomic-primary);
                           }
 
@@ -469,18 +431,14 @@ export const Default: Story = {
                             class="badge-documenttype"
                             field="documenttype"
                           ></atomic-result-badge>
-                          <atomic-field-condition
-                            must-match-is-recommendation="true"
-                          >
+                          <atomic-field-condition must-match-is-recommendation="true">
                             <atomic-result-badge
                               class="tag-recommended"
                               label="Recommended"
                               icon='&lt;svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 52 52" xml:space="preserve"&gt;&lt;path d="m27.4 3.1 4.6 15c.2.6.8.9 1.4.9h15c1.5 0 2.1 2 .9 2.9l-12.2 9c-.5.4-.7 1.1-.5 1.7L42.4 48c.4 1.4-1.1 2.6-2.3 1.7L27 39.9c-.5-.4-1.2-.4-1.8 0L12 49.7c-1.2.9-2.8-.3-2.3-1.7l5.6-15.4c.2-.6 0-1.3-.5-1.7l-12.2-9c-1.2-.9-.5-2.9.9-2.9h15c.7 0 1.2-.2 1.4-.9L24.6 3c.4-1.4 2.4-1.3 2.8.1z"/&gt;&lt;/svg&gt;'
                             ></atomic-result-badge>
                           </atomic-field-condition>
-                          <atomic-field-condition
-                            must-match-is-top-result="true"
-                          >
+                          <atomic-field-condition must-match-is-top-result="true">
                             <atomic-result-badge
                               class="tag-featured"
                               label="Featured"
@@ -500,47 +458,28 @@ export const Default: Story = {
                           ></atomic-result-text></atomic-result-section-excerpt
                         ><atomic-result-section-bottom-metadata>
                           <atomic-result-fields-list>
-                            <atomic-field-condition
-                              class="field"
-                              if-defined="ytchanneltitle"
-                            >
+                            <atomic-field-condition class="field" if-defined="ytchanneltitle">
                               <span class="field-label"
-                                ><atomic-text value="Channel"></atomic-text
-                                >:</span
+                                ><atomic-text value="Channel"></atomic-text>:</span
                               >
-                              <atomic-result-text
-                                field="ytchanneltitle"
-                              ></atomic-result-text>
+                              <atomic-result-text field="ytchanneltitle"></atomic-result-text>
                             </atomic-field-condition>
-                            <atomic-field-condition
-                              class="field"
-                              if-defined="ytviewcount"
-                            >
+                            <atomic-field-condition class="field" if-defined="ytviewcount">
                               <span class="field-label"
-                                ><atomic-text value="Views"></atomic-text
-                                >:</span
+                                ><atomic-text value="Views"></atomic-text>:</span
                               >
-                              <atomic-result-number
-                                field="ytviewcount"
-                              ></atomic-result-number>
+                              <atomic-result-number field="ytviewcount"></atomic-result-number>
                             </atomic-field-condition>
                             <atomic-field-condition
                               class="viewed-by-customer"
                               must-match-is-user-action-view="true"
                             >
-                              <atomic-icon
-                                icon="assets://user.svg"
-                              ></atomic-icon>
-                              <atomic-text
-                                value="viewed-by-customer"
-                              ></atomic-text>
+                              <atomic-icon icon="assets://user.svg"></atomic-icon>
+                              <atomic-text value="viewed-by-customer"></atomic-text>
                             </atomic-field-condition> </atomic-result-fields-list
                         ></atomic-result-section-bottom-metadata>
                         <atomic-result-section-children>
-                          <atomic-insight-result-children
-                            inherit-templates
-                            no-result-text=""
-                          >
+                          <atomic-insight-result-children inherit-templates no-result-text="">
                           </atomic-insight-result-children>
                         </atomic-result-section-children>
                       </template>
@@ -655,19 +594,12 @@ export const Default: Story = {
                 <atomic-insight-result-action-bar>
                   <atomic-insight-result-attach-to-case-action>
                   </atomic-insight-result-attach-to-case-action>
-                  <atomic-insight-result-action
-                    action="copyToClipboard"
-                    tooltip="Copy"
-                  >
+                  <atomic-insight-result-action action="copyToClipboard" tooltip="Copy">
                   </atomic-insight-result-action>
-                  <atomic-insight-result-quickview-action>
-                  </atomic-insight-result-quickview-action>
+                  <atomic-insight-result-quickview-action> </atomic-insight-result-quickview-action>
                 </atomic-insight-result-action-bar>
                 <atomic-result-section-badges>
-                  <atomic-result-badge
-                    class="badge-documenttype"
-                    field="documenttype"
-                  >
+                  <atomic-result-badge class="badge-documenttype" field="documenttype">
                   </atomic-result-badge>
                   <atomic-field-condition must-match-is-recommendation="true">
                     <atomic-result-badge
@@ -689,8 +621,7 @@ export const Default: Story = {
                     <a slot="attributes" target="_self"></a>
                   </atomic-result-link>
                 </atomic-result-section-title>
-                <atomic-result-section-title-metadata>
-                </atomic-result-section-title-metadata>
+                <atomic-result-section-title-metadata> </atomic-result-section-title-metadata>
                 <atomic-result-section-excerpt>
                   <atomic-result-text field="excerpt"></atomic-result-text>
                 </atomic-result-section-excerpt>
@@ -740,14 +671,11 @@ export const Default: Story = {
                           }
 
                           .result-root.image-small atomic-result-section-visual,
-                          .result-root.image-large
-                            atomic-result-section-visual {
+                          .result-root.image-large atomic-result-section-visual {
                             border-radius: var(--atomic-border-radius-xl);
                           }
 
-                          .result-root:has(
-                            atomic-result-section-children:hover
-                          ) {
+                          .result-root:has(atomic-result-section-children:hover) {
                             atomic-insight-result-action-bar {
                               visibility: hidden;
                             }
@@ -757,9 +685,7 @@ export const Default: Story = {
                             color: var(--atomic-neutral-dark);
                           }
 
-                          atomic-insight-result-action-bar
-                            button:hover
-                            atomic-icon {
+                          atomic-insight-result-action-bar button:hover atomic-icon {
                             color: var(--atomic-primary);
                           }
 
@@ -826,18 +752,14 @@ export const Default: Story = {
                             class="badge-documenttype"
                             field="documenttype"
                           ></atomic-result-badge>
-                          <atomic-field-condition
-                            must-match-is-recommendation="true"
-                          >
+                          <atomic-field-condition must-match-is-recommendation="true">
                             <atomic-result-badge
                               class="tag-recommended"
                               label="Recommended"
                               icon='&lt;svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 52 52" xml:space="preserve"&gt;&lt;path d="m27.4 3.1 4.6 15c.2.6.8.9 1.4.9h15c1.5 0 2.1 2 .9 2.9l-12.2 9c-.5.4-.7 1.1-.5 1.7L42.4 48c.4 1.4-1.1 2.6-2.3 1.7L27 39.9c-.5-.4-1.2-.4-1.8 0L12 49.7c-1.2.9-2.8-.3-2.3-1.7l5.6-15.4c.2-.6 0-1.3-.5-1.7l-12.2-9c-1.2-.9-.5-2.9.9-2.9h15c.7 0 1.2-.2 1.4-.9L24.6 3c.4-1.4 2.4-1.3 2.8.1z"/&gt;&lt;/svg&gt;'
                             ></atomic-result-badge>
                           </atomic-field-condition>
-                          <atomic-field-condition
-                            must-match-is-top-result="true"
-                          >
+                          <atomic-field-condition must-match-is-top-result="true">
                             <atomic-result-badge
                               class="tag-featured"
                               label="Featured"
@@ -861,19 +783,12 @@ export const Default: Story = {
                               class="viewed-by-customer"
                               must-match-is-user-action-view="true"
                             >
-                              <atomic-icon
-                                icon="assets://user.svg"
-                              ></atomic-icon>
-                              <atomic-text
-                                value="viewed-by-customer"
-                              ></atomic-text>
+                              <atomic-icon icon="assets://user.svg"></atomic-icon>
+                              <atomic-text value="viewed-by-customer"></atomic-text>
                             </atomic-field-condition> </atomic-result-fields-list
                         ></atomic-result-section-bottom-metadata>
                         <atomic-result-section-children>
-                          <atomic-insight-result-children
-                            inherit-templates
-                            no-result-text=""
-                          >
+                          <atomic-insight-result-children inherit-templates no-result-text="">
                           </atomic-insight-result-children>
                         </atomic-result-section-children>
                       </template>

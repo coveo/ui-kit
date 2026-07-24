@@ -32,8 +32,7 @@ describe('atomic-product-multi-value-text', () => {
   }
 
   const parts = (element: AtomicProductMultiValueText) => {
-    const qs = (part: string) =>
-      element.shadowRoot?.querySelector(`[part="${part}"]`);
+    const qs = (part: string) => element.shadowRoot?.querySelector(`[part="${part}"]`);
     return {
       title: qs('product-multi-value-text-list'),
       closeButton: qs('product-multi-value-text-separator'),
@@ -88,33 +87,23 @@ describe('atomic-product-multi-value-text', () => {
     return {
       element,
       get individualValue() {
-        return element.shadowRoot?.querySelector(
-          '[part="product-multi-value-text-value"]'
-        );
+        return element.shadowRoot?.querySelector('[part="product-multi-value-text-value"]');
       },
       get list() {
-        return element.shadowRoot?.querySelector(
-          '[part="product-multi-value-text-list"]'
-        );
+        return element.shadowRoot?.querySelector('[part="product-multi-value-text-list"]');
       },
       get allValues() {
         return Array.from(
-          element.shadowRoot?.querySelectorAll(
-            '[part="product-multi-value-text-value"]'
-          ) || []
+          element.shadowRoot?.querySelectorAll('[part="product-multi-value-text-value"]') || []
         );
       },
       get allSeperators() {
         return Array.from(
-          element.shadowRoot?.querySelectorAll(
-            '[part="product-multi-value-text-separator"]'
-          ) || []
+          element.shadowRoot?.querySelectorAll('[part="product-multi-value-text-separator"]') || []
         );
       },
       get more() {
-        return element.shadowRoot?.querySelector(
-          '[part="product-multi-value-text-value-more"]'
-        );
+        return element.shadowRoot?.querySelector('[part="product-multi-value-text-value-more"]');
       },
     };
   };

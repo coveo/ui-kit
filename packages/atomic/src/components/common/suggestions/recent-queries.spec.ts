@@ -63,9 +63,7 @@ describe('#getPartialRecentQueryClearElement', () => {
 });
 
 describe('#renderRecentQuery', () => {
-  const renderQuery = async (
-    overrides: Partial<RecentQueriesContainerProps> = {}
-  ) => {
+  const renderQuery = async (overrides: Partial<RecentQueriesContainerProps> = {}) => {
     const props = {
       icon: 'test-icon',
       query: 'test',
@@ -101,9 +99,7 @@ describe('#renderRecentQuery', () => {
 
     it('should have the properly highlighted value based on the query', async () => {
       const element = await renderQuery();
-      const highlighted = element.querySelector(
-        '[part="recent-query-text-highlight"]'
-      );
+      const highlighted = element.querySelector('[part="recent-query-text-highlight"]');
 
       expect(highlighted).toBeTruthy();
       expect(highlighted).toHaveTextContent('-value');

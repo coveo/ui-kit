@@ -1,19 +1,7 @@
 import {describe, it, expect} from 'vitest';
-import {
-  ComposedInterfaceImpl,
-  composeInterfaces,
-  getComposedInternals,
-} from './compose.js';
-import {
-  BaseInterface,
-  createNoopThunk,
-  getInterfaceInternals,
-} from '@/src/internal/utils/index.js';
-import {
-  Engine,
-  getFullEngine,
-  type FullEngine,
-} from '@/src/internal/engine/index.js';
+import {ComposedInterfaceImpl, composeInterfaces, getComposedInternals} from './compose.js';
+import {BaseInterface, createNoopThunk, getInterfaceInternals} from '@/src/internal/utils/index.js';
+import {Engine, getFullEngine, type FullEngine} from '@/src/internal/engine/index.js';
 
 function createMockThunk(label: string) {
   return createNoopThunk(label);
@@ -110,9 +98,7 @@ describe('composeInterfaces', () => {
     const ifaceA = new TestSearchInterface(engine, 'a');
 
     const composed = composeInterfaces({interfaces: [ifaceA]});
-    const {stateId} = getComposedInternals(
-      composed as ComposedInterfaceImpl<'search'>
-    );
+    const {stateId} = getComposedInternals(composed as ComposedInterfaceImpl<'search'>);
 
     expect(typeof stateId).toBe('string');
     expect(stateId.length).toBeGreaterThan(0);
@@ -144,16 +130,9 @@ describe('ComposedInterfaceImpl', () => {
 
     const composed = new ComposedInterfaceImpl([ifaceA, ifaceB], 'composed-1');
 
-    const thunksA = getInterfaceInternals(ifaceA).resolveFacades(
-      'search',
-      composed
-    );
-    const thunksB = getInterfaceInternals(ifaceB).resolveFacades(
-      'search',
-      composed
-    );
-    const composedThunks =
-      getComposedInternals(composed).resolveFacades('search');
+    const thunksA = getInterfaceInternals(ifaceA).resolveFacades('search', composed);
+    const thunksB = getInterfaceInternals(ifaceB).resolveFacades('search', composed);
+    const composedThunks = getComposedInternals(composed).resolveFacades('search');
 
     expect(composedThunks).toHaveLength(2);
     expect(composedThunks[0]).toBe(thunksA[0]);
@@ -167,10 +146,7 @@ describe('ComposedInterfaceImpl', () => {
     const composed = new ComposedInterfaceImpl([ifaceA], 'my-composed-id');
     const thunks = getComposedInternals(composed).resolveFacades('search');
 
-    const thunksViaInterface = getInterfaceInternals(ifaceA).resolveFacades(
-      'search',
-      composed
-    );
+    const thunksViaInterface = getInterfaceInternals(ifaceA).resolveFacades('search', composed);
     expect(thunks[0]).toBe(thunksViaInterface[0]);
   });
 
@@ -180,10 +156,7 @@ describe('ComposedInterfaceImpl', () => {
     const overrideInterface = new TestSearchInterface(engine, 'override-id');
 
     const composed = new ComposedInterfaceImpl([ifaceA], 'my-composed-id');
-    const thunks = getComposedInternals(composed).resolveFacades(
-      'search',
-      overrideInterface
-    );
+    const thunks = getComposedInternals(composed).resolveFacades('search', overrideInterface);
 
     const thunksViaInterface = getInterfaceInternals(ifaceA).resolveFacades(
       'search',

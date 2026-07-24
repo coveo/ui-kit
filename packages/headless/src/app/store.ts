@@ -10,8 +10,7 @@ import {logActionMiddleware} from './logger-middlewares.js';
 import type {NavigatorContext} from './navigator-context-provider.js';
 import type {ThunkExtraArguments} from './thunk-extra-arguments.js';
 
-export interface CoreExtraArguments
-  extends ThunkExtraArguments, AdditionalCoreExtraArguments {}
+export interface CoreExtraArguments extends ThunkExtraArguments, AdditionalCoreExtraArguments {}
 
 export interface AdditionalCoreExtraArguments {
   relay: Relay;
@@ -38,9 +37,7 @@ export function configureStore<Reducers extends ReducersMapObject>({
     preloadedState,
     devTools: {
       stateSanitizer: (state) =>
-        (state as {history?: unknown}).history
-          ? {...state, history: '<<OMIT>>'}
-          : state,
+        (state as {history?: unknown}).history ? {...state, history: '<<OMIT>>'} : state,
       name,
       shouldHotReload: false, // KIT-961 -> Redux dev tool + hot reloading interacts badly with replaceReducers mechanism.
     },

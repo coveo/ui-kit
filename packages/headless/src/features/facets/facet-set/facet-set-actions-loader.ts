@@ -136,9 +136,7 @@ export interface FacetSetActionCreators {
  * @group Actions
  * @category FacetSet
  */
-export function loadFacetSetActions(
-  engine: SearchEngine
-): FacetSetActionCreators {
+export function loadFacetSetActions(engine: SearchEngine): FacetSetActionCreators {
   engine.addReducers({facetSet});
 
   return {

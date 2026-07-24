@@ -63,13 +63,10 @@ const SEARCH_RESULTS_SECTIONS: SuggestionSection[] = [
   ...LANDING_SECTIONS,
 ];
 
-export function useSuggestions(
-  options: UseSuggestionsOptions
-): UseSuggestionsResult {
+export function useSuggestions(options: UseSuggestionsOptions): UseSuggestionsResult {
   const {context: _context, inputValue: _inputValue} = options;
 
-  const sections =
-    _context === 'search-results' ? SEARCH_RESULTS_SECTIONS : LANDING_SECTIONS;
+  const sections = _context === 'search-results' ? SEARCH_RESULTS_SECTIONS : LANDING_SECTIONS;
 
   return {sections, isLoading: false};
 }

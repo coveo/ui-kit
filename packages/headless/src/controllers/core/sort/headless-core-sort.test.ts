@@ -13,16 +13,9 @@ import {
   updateSortCriterion,
 } from '../../../features/sort-criteria/sort-criteria-actions.js';
 import {sortCriteriaReducer as sortCriteria} from '../../../features/sort-criteria/sort-criteria-slice.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../../test/mock-engine-v2.js';
 import {createMockState} from '../../../test/mock-state.js';
-import {
-  buildCoreSort,
-  type Sort,
-  type SortProps,
-} from './headless-core-sort.js';
+import {buildCoreSort, type Sort, type SortProps} from './headless-core-sort.js';
 
 vi.mock('../../../features/sort-criteria/sort-criteria-actions');
 vi.mock('../../../features/pagination/pagination-actions');
@@ -64,9 +57,7 @@ describe('Sort', () => {
   it('when the #criterion option is specified, it dispatches a registration action', () => {
     props.initialState!.criterion = buildRelevanceSortCriterion();
     initSort();
-    expect(registerSortCriterion).toHaveBeenCalledWith(
-      props.initialState!.criterion
-    );
+    expect(registerSortCriterion).toHaveBeenCalledWith(props.initialState!.criterion);
   });
 
   it('when the #criterion is an array, it dispatches a registration action', () => {
@@ -76,9 +67,7 @@ describe('Sort', () => {
     ];
     initSort();
 
-    expect(registerSortCriterion).toHaveBeenCalledWith(
-      props.initialState!.criterion
-    );
+    expect(registerSortCriterion).toHaveBeenCalledWith(props.initialState!.criterion);
   });
 
   describe('when calling #sortBy with a criterion', () => {
@@ -99,8 +88,7 @@ describe('Sort', () => {
 
   describe('when the store #sortCiteria is set', () => {
     const criterionInState = buildDateSortCriterion(SortOrder.Descending);
-    const criterionInStateExpression =
-      buildCriterionExpression(criterionInState);
+    const criterionInStateExpression = buildCriterionExpression(criterionInState);
 
     beforeEach(() => {
       const state = createMockState({

@@ -1,10 +1,4 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useRef,
-  type PropsWithChildren,
-} from 'react';
+import {createContext, useContext, useEffect, useRef, type PropsWithChildren} from 'react';
 import {buildSearchInterface, type SearchInterface} from '@coveo/thermidor';
 import {useEngine} from './engine.js';
 
@@ -37,9 +31,7 @@ export function SearchInterfaceProvider({children}: PropsWithChildren) {
 export function useSearchInterface(): SearchInterface {
   const searchInterface = useContext(SearchInterfaceContext);
   if (!searchInterface) {
-    throw new Error(
-      'useSearchInterface must be used within a SearchInterfaceProvider'
-    );
+    throw new Error('useSearchInterface must be used within a SearchInterfaceProvider');
   }
   return searchInterface;
 }

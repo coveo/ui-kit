@@ -91,17 +91,11 @@ describe('insight search analytics actions', () => {
     };
 
     expect(mockLogContextChanged).toHaveBeenCalledTimes(1);
-    expect(mockLogContextChanged.mock.calls[0][0]).toStrictEqual(
-      expectedPayload
-    );
+    expect(mockLogContextChanged.mock.calls[0][0]).toStrictEqual(expectedPayload);
   });
 
   it('should log #logFetchMoreResults with the right payload', async () => {
-    await logFetchMoreResults()()(
-      engine.dispatch,
-      () => engine.state,
-      {} as ThunkExtraArguments
-    );
+    await logFetchMoreResults()()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
     const expectedPayload = {
       caseContext: {
@@ -113,9 +107,7 @@ describe('insight search analytics actions', () => {
     };
 
     expect(mockLogFetchMoreResults).toHaveBeenCalledTimes(1);
-    expect(mockLogFetchMoreResults.mock.calls[0][0]).toStrictEqual(
-      expectedPayload
-    );
+    expect(mockLogFetchMoreResults.mock.calls[0][0]).toStrictEqual(expectedPayload);
   });
 
   it('should log #logQueryError with the right payload', async () => {
@@ -172,9 +164,7 @@ describe('insight search analytics actions', () => {
     };
 
     expect(mockLogInterfaceLoad).toHaveBeenCalledTimes(1);
-    expect(mockLogInterfaceLoad.mock.calls[0][0]).toStrictEqual(
-      expectedPayload
-    );
+    expect(mockLogInterfaceLoad.mock.calls[0][0]).toStrictEqual(expectedPayload);
   });
 
   it('should log #logInterfaceChange with the right payload', async () => {
@@ -199,8 +189,6 @@ describe('insight search analytics actions', () => {
     };
 
     expect(mockLogInterfaceChange).toHaveBeenCalledTimes(1);
-    expect(mockLogInterfaceChange.mock.calls[0][0]).toStrictEqual(
-      expectedPayload
-    );
+    expect(mockLogInterfaceChange.mock.calls[0][0]).toStrictEqual(expectedPayload);
   });
 });

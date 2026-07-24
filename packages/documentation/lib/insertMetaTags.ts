@@ -14,8 +14,7 @@ export const insertMetaTags = (page: PageEvent) => {
   const isHandwrittenDoc = page.model instanceof DocumentReflection;
 
   if (isHandwrittenDoc) {
-    const frontmatter = (page.model as DocumentReflection)
-      .frontmatter as TFrontMatter;
+    const frontmatter = (page.model as DocumentReflection).frontmatter as TFrontMatter;
     if (frontmatter?.pageTitle) {
       const titleMatch = page.contents.match(/<title>[^<]*<\/title>/i);
       if (titleMatch) {
@@ -35,14 +34,9 @@ export const insertMetaTags = (page: PageEvent) => {
         .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
         .replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2')
         .toLowerCase();
-      metaTags.push(
-        `<meta name="docsSiteMeta" content="${formattedName} reference" />`
-      );
+      metaTags.push(`<meta name="docsSiteMeta" content="${formattedName} reference" />`);
     }
   }
 
-  page.contents = page.contents.replace(
-    /<\/head>/,
-    `${metaTags.join('\n')}\n</head>`
-  );
+  page.contents = page.contents.replace(/<\/head>/, `${metaTags.join('\n')}\n</head>`);
 };

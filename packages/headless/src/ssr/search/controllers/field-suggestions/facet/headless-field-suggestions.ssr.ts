@@ -20,9 +20,7 @@ export interface FieldSuggestionsDefinition extends ControllerDefinitionWithoutP
  * @param props - The configurable `FieldSuggestions` properties.
  * @returns The `FieldSuggestions` controller definition.
  * */
-export function defineFieldSuggestions(
-  props: FieldSuggestionsProps
-): FieldSuggestionsDefinition {
+export function defineFieldSuggestions(props: FieldSuggestionsProps): FieldSuggestionsDefinition {
   return {
     build: (engine) => buildFieldSuggestions(engine, props),
   };

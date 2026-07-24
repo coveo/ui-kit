@@ -86,14 +86,8 @@ export class AtomicCommerceRecommendationList
      */
         .list-root {
           @apply atomic-grid-with-cards;
-          grid-template-columns: repeat(
-            var(--atomic-recs-number-of-columns, 1),
-            minmax(0, 1fr)
-          );
-          grid-template-rows: repeat(
-            var(--atomic-recs-number-of-rows, 1),
-            minmax(0, 1fr)
-          );
+          grid-template-columns: repeat(var(--atomic-recs-number-of-columns, 1), minmax(0, 1fr));
+          grid-template-rows: repeat(var(--atomic-recs-number-of-rows, 1), minmax(0, 1fr));
         }
 
         [part='label'] {
@@ -157,8 +151,7 @@ export class AtomicCommerceRecommendationList
   /**
    * The spacing of various elements in the product list, including the gap between products, the gap between parts of a product, and the font sizes of the parts of a product.
    */
-  @property({reflect: true, type: String}) public density: ItemDisplayDensity =
-    'normal';
+  @property({reflect: true, type: String}) public density: ItemDisplayDensity = 'normal';
   /**
    * The expected size of the image displayed on the recommended products.
    */
@@ -195,9 +188,7 @@ export class AtomicCommerceRecommendationList
    * @param productRenderingFunction
    */
 
-  public async setRenderFunction(
-    productRenderingFunction: ItemRenderingFunction
-  ) {
+  public async setRenderFunction(productRenderingFunction: ItemRenderingFunction) {
     this.itemRenderingFunction = productRenderingFunction;
   }
 
@@ -205,8 +196,7 @@ export class AtomicCommerceRecommendationList
    * Moves to the previous page, when the carousel is activated.
    */
   public async previousPage() {
-    this.currentPage =
-      this.currentPage - 1 < 0 ? this.numberOfPages - 1 : this.currentPage - 1;
+    this.currentPage = this.currentPage - 1 < 0 ? this.numberOfPages - 1 : this.currentPage - 1;
   }
 
   /**
@@ -232,18 +222,12 @@ export class AtomicCommerceRecommendationList
   public disconnectedCallback() {
     super.disconnectedCallback();
     this.unsubscribeSummary?.();
-    this.removeEventListener(
-      'atomic/selectChildProduct',
-      this.selectChildProductCallback
-    );
+    this.removeEventListener('atomic/selectChildProduct', this.selectChildProductCallback);
   }
 
   public async updated(changedProperties: Map<string, unknown>) {
     super.updated(changedProperties);
-    if (
-      changedProperties.has('recommendationsState') &&
-      this.isEveryProductReady
-    ) {
+    if (changedProperties.has('recommendationsState') && this.isEveryProductReady) {
       this.isEveryProductReady = false;
     }
     await this.updateProductsReadyState();
@@ -263,10 +247,7 @@ export class AtomicCommerceRecommendationList
 
   private get focusTarget() {
     if (!this.nextNewProductTarget) {
-      this.nextNewProductTarget = new FocusTargetController(
-        this,
-        this.bindings
-      );
+      this.nextNewProductTarget = new FocusTargetController(this, this.bindings);
     }
     return this.nextNewProductTarget;
   }
@@ -323,10 +304,7 @@ export class AtomicCommerceRecommendationList
 
     if (!this.isEveryProductReady && this.isAppLoaded) {
       return html`
-        <div
-          aria-hidden="true"
-          class="bg-neutral my-2 h-8 w-60 animate-pulse rounded"
-        ></div>
+        <div aria-hidden="true" class="bg-neutral my-2 h-8 w-60 animate-pulse rounded"></div>
       `;
     }
 
@@ -351,15 +329,12 @@ export class AtomicCommerceRecommendationList
   }
 
   private get numberOfPages() {
-    return Math.ceil(
-      this.recommendationsState.products.length / this.productsPerPage!
-    );
+    return Math.ceil(this.recommendationsState.products.length / this.productsPerPage!);
   }
 
   private get currentIndex() {
     return Math.abs(
-      (this.currentPage * this.productsPerPage!) %
-        this.recommendationsState.products.length
+      (this.currentPage * this.productsPerPage!) % this.recommendationsState.products.length
     );
   }
 
@@ -391,8 +366,7 @@ export class AtomicCommerceRecommendationList
   }
 
   private getAtomicProductProps(product: Product) {
-    const linkContent =
-      this.productTemplateProvider.getLinkTemplateContent(product);
+    const linkContent = this.productTemplateProvider.getLinkTemplateContent(product);
 
     return {
       interactiveProduct: this.recommendations.interactiveProduct({
@@ -420,9 +394,7 @@ export class AtomicCommerceRecommendationList
   private initProductTemplateProvider() {
     this.productTemplateProvider = new ProductTemplateProvider({
       includeDefaultTemplate: true,
-      templateElements: Array.from(
-        this.querySelectorAll('atomic-product-template')
-      ),
+      templateElements: Array.from(this.querySelectorAll('atomic-product-template')),
       getResultTemplateRegistered: () => this.productTemplateRegistered,
       getTemplateHasError: () => this.templateHasError,
       setResultTemplateRegistered: (value: boolean) => {
@@ -447,16 +419,12 @@ export class AtomicCommerceRecommendationList
   }
 
   private createSelectChildProductListener() {
-    this.addEventListener(
-      'atomic/selectChildProduct',
-      this.selectChildProductCallback
-    );
+    this.addEventListener('atomic/selectChildProduct', this.selectChildProductCallback);
   }
 
   private selectChildProductCallback(event: Event) {
     event.stopPropagation();
-    const child = (event as CustomEvent<SelectChildProductEventArgs>).detail
-      .child;
+    const child = (event as CustomEvent<SelectChildProductEventArgs>).detail.child;
     this.recommendations.promoteChildToParent(child);
   }
 
@@ -490,13 +458,9 @@ export class AtomicCommerceRecommendationList
                 nextPage: () => this.nextPage(),
                 numberOfPages: this.numberOfPages,
                 currentPage: this.currentPage,
-                ariaLabel: this.bindings.i18n.t(
-                  this.recommendationsState.headline
-                ),
+                ariaLabel: this.bindings.i18n.t(this.recommendationsState.headline),
               },
-            })(
-              html`<div class="px-3">${this.renderRecommendationList()}</div>`
-            )}`
+            })(html`<div class="px-3">${this.renderRecommendationList()}</div>`)}`
         )}`,
       () => nothing
     )}`;
@@ -515,11 +479,7 @@ export class AtomicCommerceRecommendationList
           },
           ...props.interactiveProduct,
           setRef: (element) => {
-            element &&
-              this.productListCommon.setNewResultRef(
-                element as HTMLElement,
-                index
-              );
+            element && this.productListCommon.setNewResultRef(element as HTMLElement, index);
           },
         },
       })(
@@ -574,8 +534,7 @@ export class AtomicCommerceRecommendationList
               display: this.display,
               imageSize: this.imageSize,
               numberOfPlaceholders:
-                this.productsPerPage ??
-                this.recommendationsState.products.length,
+                this.productsPerPage ?? this.recommendationsState.products.length,
             },
           })
         )

@@ -39,16 +39,13 @@ export function buildSamlFlow(config: SamlFlowOptions): SamlFlow {
       removeHandshakeToken(location, history);
 
       try {
-        const response = await request(
-          `${api}/handshake/token?organizationId=${encodedOrgId}`,
-          {
-            method: 'POST',
-            body: JSON.stringify({handshakeToken}),
-            headers: {
-              'content-type': 'application/json; charset=UTF-8',
-            },
-          }
-        );
+        const response = await request(`${api}/handshake/token?organizationId=${encodedOrgId}`, {
+          method: 'POST',
+          body: JSON.stringify({handshakeToken}),
+          headers: {
+            'content-type': 'application/json; charset=UTF-8',
+          },
+        });
         const data = await response.json();
         return data.token;
       } catch (_) {
@@ -90,10 +87,7 @@ function isAngularHash(location: BrowserLocation) {
   return hash.indexOf('#/') === 0;
 }
 
-function removeHandshakeToken(
-  location: BrowserLocation,
-  history: BrowserHistory
-) {
+function removeHandshakeToken(location: BrowserLocation, history: BrowserHistory) {
   const params = getHashParamsAfterAdjustingForAngular(location);
   params.delete(handshakeTokenParamName);
   const newHash = params.toString();

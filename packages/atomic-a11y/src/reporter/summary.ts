@@ -1,9 +1,5 @@
 import {DEFAULT_WCAG_22_AA_CRITERIA_COUNT} from '../shared/constants.js';
-import type {
-  A11yComponentReport,
-  A11yCriterionReport,
-  A11ySummary,
-} from '../shared/types.js';
+import type {A11yComponentReport, A11yCriterionReport, A11ySummary} from '../shared/types.js';
 import {getAutomationCoveragePercentage} from './reporter-utils.js';
 
 export function createSummary(
@@ -29,15 +25,9 @@ export function createSummary(
   ).length;
 
   const supports = criteria.filter((c) => c.conformance === 'supports').length;
-  const partiallySupports = criteria.filter(
-    (c) => c.conformance === 'partiallySupports'
-  ).length;
-  const doesNotSupport = criteria.filter(
-    (c) => c.conformance === 'doesNotSupport'
-  ).length;
-  const notApplicable = criteria.filter(
-    (c) => c.conformance === 'notApplicable'
-  ).length;
+  const partiallySupports = criteria.filter((c) => c.conformance === 'partiallySupports').length;
+  const doesNotSupport = criteria.filter((c) => c.conformance === 'doesNotSupport').length;
+  const notApplicable = criteria.filter((c) => c.conformance === 'notApplicable').length;
 
   return {
     totalComponents: components.length,
@@ -51,14 +41,8 @@ export function createSummary(
     partiallySupports,
     doesNotSupport,
     notApplicable,
-    automatedCoverage: getAutomationCoveragePercentage(
-      automatedCoveredCriteria,
-      totalCriteria
-    ),
-    interactiveCoverage: getAutomationCoveragePercentage(
-      interactiveCoveredCriteria,
-      totalCriteria
-    ),
+    automatedCoverage: getAutomationCoveragePercentage(automatedCoveredCriteria, totalCriteria),
+    interactiveCoverage: getAutomationCoveragePercentage(interactiveCoveredCriteria, totalCriteria),
     interactivePassRate: getAutomationCoveragePercentage(
       interactivePassedCriteria,
       interactiveStatusCriteria

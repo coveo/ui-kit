@@ -102,9 +102,7 @@ describe('buildCartController', () => {
 
       buildCartController({interface: cartInterface});
 
-      expect(adoptSpy).toHaveBeenCalledWith(
-        getOrCreateCartSlice(cartInterface)
-      );
+      expect(adoptSpy).toHaveBeenCalledWith(getOrCreateCartSlice(cartInterface));
     });
 
     it('setItems() dispatches the scoped setItems action', () => {

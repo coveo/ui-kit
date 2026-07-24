@@ -168,9 +168,7 @@ describe('suggestions integration', () => {
     fireEvent.focus(textarea);
     fireEvent.keyDown(textarea, {key: 'ArrowDown'});
 
-    expect(textarea.getAttribute('aria-activedescendant')).toBe(
-      'suggestion-item-s1'
-    );
+    expect(textarea.getAttribute('aria-activedescendant')).toBe('suggestion-item-s1');
   });
 
   it('ArrowUp decrements activeIndex', () => {
@@ -181,14 +179,10 @@ describe('suggestions integration', () => {
 
     fireEvent.keyDown(textarea, {key: 'ArrowDown'});
     fireEvent.keyDown(textarea, {key: 'ArrowDown'});
-    expect(textarea.getAttribute('aria-activedescendant')).toBe(
-      'suggestion-item-s2'
-    );
+    expect(textarea.getAttribute('aria-activedescendant')).toBe('suggestion-item-s2');
 
     fireEvent.keyDown(textarea, {key: 'ArrowUp'});
-    expect(textarea.getAttribute('aria-activedescendant')).toBe(
-      'suggestion-item-s1'
-    );
+    expect(textarea.getAttribute('aria-activedescendant')).toBe('suggestion-item-s1');
   });
 
   it('Enter selects the active item', async () => {
@@ -207,10 +201,7 @@ describe('suggestions integration', () => {
     fireEvent.keyDown(textarea, {key: 'Enter'});
 
     await waitFor(() => {
-      expect(onSuggestionSelect).toHaveBeenCalledWith(
-        {id: 's1', label: 'Surfboards'},
-        'search'
-      );
+      expect(onSuggestionSelect).toHaveBeenCalledWith({id: 's1', label: 'Surfboards'}, 'search');
     });
   });
 
@@ -254,9 +245,7 @@ describe('suggestions integration', () => {
     expect(textarea.getAttribute('aria-activedescendant')).toBeNull();
 
     fireEvent.keyDown(textarea, {key: 'ArrowDown'});
-    expect(textarea.getAttribute('aria-activedescendant')).toBe(
-      'suggestion-item-s1'
-    );
+    expect(textarea.getAttribute('aria-activedescendant')).toBe('suggestion-item-s1');
   });
 
   it('removes aria-activedescendant when dropdown is hidden', () => {
@@ -265,9 +254,7 @@ describe('suggestions integration', () => {
     const textarea = screen.getByLabelText('Prompt');
     fireEvent.focus(textarea);
     fireEvent.keyDown(textarea, {key: 'ArrowDown'});
-    expect(textarea.getAttribute('aria-activedescendant')).toBe(
-      'suggestion-item-s1'
-    );
+    expect(textarea.getAttribute('aria-activedescendant')).toBe('suggestion-item-s1');
 
     fireEvent.keyDown(textarea, {key: 'Escape'});
     expect(textarea.getAttribute('aria-activedescendant')).toBeNull();
@@ -281,9 +268,7 @@ describe('suggestions integration', () => {
     const textarea = screen.getByLabelText('Prompt');
     fireEvent.focus(textarea);
     fireEvent.keyDown(textarea, {key: 'ArrowDown'});
-    expect(textarea.getAttribute('aria-activedescendant')).toBe(
-      'suggestion-item-s1'
-    );
+    expect(textarea.getAttribute('aria-activedescendant')).toBe('suggestion-item-s1');
 
     // Close and re-open
     fireEvent.blur(textarea);
@@ -349,9 +334,7 @@ describe('ARIA combobox pattern', () => {
 
 describe('disabled + focus interaction', () => {
   it('does not show dropdown when disabled even with suggestions provided', () => {
-    render(
-      <PromptInput onSubmit={vi.fn()} suggestions={testSuggestions} disabled />
-    );
+    render(<PromptInput onSubmit={vi.fn()} suggestions={testSuggestions} disabled />);
 
     const textarea = screen.getByRole('combobox', {name: 'Prompt'});
     fireEvent.focus(textarea);

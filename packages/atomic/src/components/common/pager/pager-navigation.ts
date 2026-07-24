@@ -6,9 +6,7 @@ interface PagerNavigationProps {
   i18n: i18n;
 }
 
-export const renderPagerNavigation: FunctionalComponentWithChildren<
-  PagerNavigationProps
-> =
+export const renderPagerNavigation: FunctionalComponentWithChildren<PagerNavigationProps> =
   ({props}) =>
   (children) => {
     return html`<nav aria-label=${props.i18n.t('pagination')}>

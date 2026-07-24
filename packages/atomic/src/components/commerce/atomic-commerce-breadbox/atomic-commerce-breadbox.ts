@@ -39,10 +39,7 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {
-  AriaLiveRegionController,
-  FocusTargetController,
-} from '@/src/utils/accessibility-utils';
+import {AriaLiveRegionController, FocusTargetController} from '@/src/utils/accessibility-utils';
 import {parseDate} from '@/src/utils/date-utils';
 import {getFieldValueCaption} from '@/src/utils/field-utils';
 
@@ -134,11 +131,7 @@ export class AtomicCommerceBreadbox
   @property({type: Boolean, attribute: 'disable-collapse'})
   disableCollapse = false;
 
-  private breadboxAriaMessage = new AriaLiveRegionController(
-    this,
-    'breadbox',
-    true
-  );
+  private breadboxAriaMessage = new AriaLiveRegionController(this, 'breadbox', true);
 
   /**
    * This prop allows you to control the display depth
@@ -182,18 +175,9 @@ export class AtomicCommerceBreadbox
       this.resizeObserver.observe(this.parentElement);
     }
 
-    this.breadcrumbRemovedFocus = new FocusTargetController(
-      this,
-      this.bindings
-    );
-    this.breadcrumbShowMoreFocus = new FocusTargetController(
-      this,
-      this.bindings
-    );
-    this.breadcrumbShowLessFocus = new FocusTargetController(
-      this,
-      this.bindings
-    );
+    this.breadcrumbRemovedFocus = new FocusTargetController(this, this.bindings);
+    this.breadcrumbShowMoreFocus = new FocusTargetController(this, this.bindings);
+    this.breadcrumbShowLessFocus = new FocusTargetController(this, this.bindings);
   }
 
   updated() {
@@ -205,21 +189,15 @@ export class AtomicCommerceBreadbox
   }
 
   private get breadcrumbs() {
-    return Array.from(
-      this.shadowRoot!.querySelectorAll('li.breadcrumb')
-    ) as HTMLElement[];
+    return Array.from(this.shadowRoot!.querySelectorAll('li.breadcrumb')) as HTMLElement[];
   }
 
   private get showMoreButton() {
-    return this.shadowRoot!.querySelector(
-      'button[part="show-more"]'
-    ) as HTMLButtonElement;
+    return this.shadowRoot!.querySelector('button[part="show-more"]') as HTMLButtonElement;
   }
 
   private get showLessButton() {
-    return this.shadowRoot!.querySelector(
-      'button[part="show-less"]'
-    ) as HTMLButtonElement;
+    return this.shadowRoot!.querySelector('button[part="show-less"]') as HTMLButtonElement;
   }
 
   private hide(element: HTMLElement) {
@@ -257,11 +235,7 @@ export class AtomicCommerceBreadbox
 
   private hideOverflowingBreadcrumbs() {
     let hiddenBreadcrumbs = 0;
-    for (
-      let i = this.breadcrumbs.length - 1;
-      this.isOverflowing && i >= 0;
-      i--
-    ) {
+    for (let i = this.breadcrumbs.length - 1; this.isOverflowing && i >= 0; i--) {
       this.hide(this.breadcrumbs[i]);
       hiddenBreadcrumbs++;
     }
@@ -313,26 +287,17 @@ export class AtomicCommerceBreadbox
       case 'dateRange':
         return [
           this.bindings.i18n.t('to', {
-            start: parseDate((value.value as DateFacetValue).start).format(
-              'YYYY-MM-DD'
-            ),
-            end: parseDate((value.value as DateFacetValue).end).format(
-              'YYYY-MM-DD'
-            ),
+            start: parseDate((value.value as DateFacetValue).start).format('YYYY-MM-DD'),
+            end: parseDate((value.value as DateFacetValue).end).format('YYYY-MM-DD'),
           }),
         ];
       case 'hierarchical':
-        return (value.value as CategoryFacetValue).path.map(
-          (pathValue: string) =>
-            getFieldValueCaption(field, pathValue, this.bindings.i18n)
+        return (value.value as CategoryFacetValue).path.map((pathValue: string) =>
+          getFieldValueCaption(field, pathValue, this.bindings.i18n)
         );
       case 'regular':
         return [
-          getFieldValueCaption(
-            field,
-            (value.value as RegularFacetValue).value,
-            this.bindings.i18n
-          ),
+          getFieldValueCaption(field, (value.value as RegularFacetValue).value, this.bindings.i18n),
         ];
       default: {
         // TODO COMHUB-291 support location breadcrumb
@@ -348,11 +313,7 @@ export class AtomicCommerceBreadbox
         facetId: breadcrumb.facetId,
         label: breadcrumb.facetDisplayName ?? this.bindings.i18n.t('no-label'),
         deselect: value.deselect,
-        formattedValue: this.valueForFacetType(
-          breadcrumb.type,
-          breadcrumb.facetId,
-          value
-        ),
+        formattedValue: this.valueForFacetType(breadcrumb.type, breadcrumb.facetId, value),
       };
     });
   }
@@ -404,11 +365,9 @@ export class AtomicCommerceBreadbox
   @bindingGuard()
   @errorGuard()
   render() {
-    const breadcrumbs = this.breadcrumbManagerState.facetBreadcrumbs.flatMap(
-      (breadcrumb) => {
-        return this.buildBreadcrumb(breadcrumb);
-      }
-    );
+    const breadcrumbs = this.breadcrumbManagerState.facetBreadcrumbs.flatMap((breadcrumb) => {
+      return this.buildBreadcrumb(breadcrumb);
+    });
 
     if (!breadcrumbs.length) {
       return nothing;
@@ -454,8 +413,7 @@ export class AtomicCommerceBreadbox
       ${renderBreadcrumbClearAll({
         props: {
           refCallback: async (ref) => {
-            const isFocusTarget =
-              this.lastRemovedBreadcrumbIndex === this.numberOfBreadcrumbs;
+            const isFocusTarget = this.lastRemovedBreadcrumbIndex === this.numberOfBreadcrumbs;
 
             if (isFocusTarget) {
               await this.breadcrumbRemovedFocus.setTarget(ref);

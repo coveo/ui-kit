@@ -1,18 +1,10 @@
 import {describe, it, expect} from 'vitest';
-import {
-  RoutedInterfaceRegistry,
-  mergeTurnsWithRegistry,
-} from './routed-interface-registry.js';
+import {RoutedInterfaceRegistry, mergeTurnsWithRegistry} from './routed-interface-registry.js';
 import type {RoutedInterfaceEntry} from './routed-interface-registry.js';
 import type {StateTurn} from './generative-types.js';
-import type {
-  CommerceInterface,
-  SearchInterface,
-} from '@/src/internal/utils/index.js';
+import type {CommerceInterface, SearchInterface} from '@/src/internal/utils/index.js';
 
-function createEntry(
-  overrides: Partial<RoutedInterfaceEntry> = {}
-): RoutedInterfaceEntry {
+function createEntry(overrides: Partial<RoutedInterfaceEntry> = {}): RoutedInterfaceEntry {
   return {
     useCase: 'commerceSearch',
     interface: {} as CommerceInterface,

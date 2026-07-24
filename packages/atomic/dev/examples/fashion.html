@@ -6,9 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0"
     />
-    <title>
-      Coveo Atomic Fashion Example With Recommendations & Instant Results
-    </title>
+    <title>Coveo Atomic Fashion Example With Recommendations & Instant Results</title>
     <script type="module">
       if (import.meta.env) {
         const {defineCustomElements} = await import('@coveo/atomic/loader');
@@ -35,9 +33,7 @@
 
       (async function main() {
         await customElements.whenDefined('atomic-search-interface');
-        const searchInterface = document.querySelector(
-          'atomic-search-interface'
-        );
+        const searchInterface = document.querySelector('atomic-search-interface');
 
         await searchInterface.initialize({
           accessToken: 'xx149e3ec9-786f-4c6c-b64f-49a403b930de',
@@ -49,9 +45,7 @@
     </script>
     <script type="module">
       await customElements.whenDefined('atomic-recs-interface');
-      const recommendationInterface = document.querySelector(
-        'atomic-recs-interface'
-      );
+      const recommendationInterface = document.querySelector('atomic-recs-interface');
       await recommendationInterface.initialize({
         accessToken: 'xx149e3ec9-786f-4c6c-b64f-49a403b930de',
         organizationId: 'fashioncoveodemocomgzh7iep8',
@@ -138,36 +132,24 @@
                     }
                   </style>
                   <atomic-result-section-visual>
-                    <atomic-result-image
-                      field="ec_images"
-                      aria-hidden="true"
-                    ></atomic-result-image>
+                    <atomic-result-image field="ec_images" aria-hidden="true"></atomic-result-image>
                   </atomic-result-section-visual>
                   <atomic-result-section-title>
                     <atomic-result-link></atomic-result-link>
                   </atomic-result-section-title>
                   <atomic-result-section-title-metadata>
                     <div class="rating-wrapper">
-                      <atomic-result-rating
-                        field="ec_rating"
-                      ></atomic-result-rating>
-                      <atomic-field-condition
-                        class="field"
-                        if-defined="ec_rating"
-                      >
+                      <atomic-result-rating field="ec_rating"></atomic-result-rating>
+                      <atomic-field-condition class="field" if-defined="ec_rating">
                         <span>
-                          <atomic-result-number
-                            field="cat_rating_count"
-                          ></atomic-result-number>
+                          <atomic-result-number field="cat_rating_count"></atomic-result-number>
                         </span>
                       </atomic-field-condition>
                     </div>
                   </atomic-result-section-title-metadata>
                   <atomic-result-section-bottom-metadata>
                     <atomic-result-number field="ec_price">
-                      <atomic-format-currency
-                        currency="USD"
-                      ></atomic-format-currency>
+                      <atomic-format-currency currency="USD"></atomic-format-currency>
                     </atomic-result-number>
                   </atomic-result-section-bottom-metadata>
                 </template>
@@ -177,11 +159,7 @@
         </atomic-layout-section>
         <atomic-layout-section section="facets">
           <atomic-facet-manager collapse-facets-after="-1">
-            <atomic-facet
-              field="cat_gender"
-              label="Gender"
-              display-values-as="link"
-            ></atomic-facet>
+            <atomic-facet field="cat_gender" label="Gender" display-values-as="link"></atomic-facet>
             <atomic-facet
               field="store_name"
               label="Store"
@@ -193,11 +171,7 @@
               display-values-as="box"
               sort-criteria="alphanumeric"
             ></atomic-facet>
-            <atomic-facet
-              field="ec_brand"
-              label="Brand"
-              sort-criteria="occurrences"
-            ></atomic-facet>
+            <atomic-facet field="ec_brand" label="Brand" sort-criteria="occurrences"></atomic-facet>
             <atomic-facet field="cat_size_type" label="Fit"></atomic-facet>
             <!-- TODO: add color tiles -->
             <!-- <atomic-color-facet field="cat_color" label="Color"></atomic-color-facet> -->
@@ -250,27 +224,17 @@
                     }
                   </style>
                   <atomic-result-section-visual>
-                    <atomic-result-image
-                      field="ec_images"
-                      aria-hidden="true"
-                    ></atomic-result-image>
+                    <atomic-result-image field="ec_images" aria-hidden="true"></atomic-result-image>
                   </atomic-result-section-visual>
                   <atomic-result-section-title>
                     <atomic-result-link></atomic-result-link>
                   </atomic-result-section-title>
                   <atomic-result-section-title-metadata>
                     <div class="rating-wrapper">
-                      <atomic-result-rating
-                        field="ec_rating"
-                      ></atomic-result-rating>
-                      <atomic-field-condition
-                        class="field"
-                        if-defined="ec_rating"
-                      >
+                      <atomic-result-rating field="ec_rating"></atomic-result-rating>
+                      <atomic-field-condition class="field" if-defined="ec_rating">
                         <span>
-                          <atomic-result-number
-                            field="cat_rating_count"
-                          ></atomic-result-number>
+                          <atomic-result-number field="cat_rating_count"></atomic-result-number>
                           reviews
                         </span>
                       </atomic-field-condition>
@@ -278,9 +242,7 @@
                   </atomic-result-section-title-metadata>
                   <atomic-result-section-emphasized>
                     <atomic-result-number field="ec_price">
-                      <atomic-format-currency
-                        currency="USD"
-                      ></atomic-format-currency>
+                      <atomic-format-currency currency="USD"></atomic-format-currency>
                     </atomic-result-number>
                   </atomic-result-section-emphasized>
                   <atomic-result-section-excerpt
@@ -324,27 +286,17 @@
                     }
                   </style>
                   <atomic-result-section-visual>
-                    <atomic-result-image
-                      field="ec_images"
-                      aria-hidden="true"
-                    ></atomic-result-image>
+                    <atomic-result-image field="ec_images" aria-hidden="true"></atomic-result-image>
                   </atomic-result-section-visual>
                   <atomic-result-section-title>
                     <atomic-result-link></atomic-result-link>
                   </atomic-result-section-title>
                   <atomic-result-section-title-metadata>
                     <div class="rating-wrapper">
-                      <atomic-result-rating
-                        field="ec_rating"
-                      ></atomic-result-rating>
-                      <atomic-field-condition
-                        class="field"
-                        if-defined="ec_rating"
-                      >
+                      <atomic-result-rating field="ec_rating"></atomic-result-rating>
+                      <atomic-field-condition class="field" if-defined="ec_rating">
                         <span>
-                          <atomic-result-number
-                            field="cat_rating_count"
-                          ></atomic-result-number>
+                          <atomic-result-number field="cat_rating_count"></atomic-result-number>
                           reviews
                         </span>
                       </atomic-field-condition>
@@ -352,9 +304,7 @@
                   </atomic-result-section-title-metadata>
                   <atomic-result-section-emphasized>
                     <atomic-result-number field="ec_price">
-                      <atomic-format-currency
-                        currency="USD"
-                      ></atomic-format-currency>
+                      <atomic-format-currency currency="USD"></atomic-format-currency>
                     </atomic-result-number>
                   </atomic-result-section-emphasized>
                   <atomic-result-section-excerpt

@@ -1,13 +1,6 @@
-import {
-  addContext,
-  removeContext,
-  setContext,
-} from '../../../features/context/context-actions.js';
+import {addContext, removeContext, setContext} from '../../../features/context/context-actions.js';
 import {contextReducer} from '../../../features/context/context-slice.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../../test/mock-engine-v2.js';
 import {createMockState} from '../../../test/mock-state.js';
 import {buildCoreContext, type Context} from './headless-core-context.js';
 
@@ -35,18 +28,14 @@ describe('Context', () => {
 
   it('setContext dispatches #setContext', () => {
     context.set({foo: ['bar']});
-    expect(setContext).toHaveBeenCalledWith(
-      expect.objectContaining({foo: ['bar']})
-    );
+    expect(setContext).toHaveBeenCalledWith(expect.objectContaining({foo: ['bar']}));
   });
 
   it('initialize context with values dispatches #setContext', () => {
     buildCoreContext(engine, {
       initialState: {values: {foo: ['bar']}},
     });
-    expect(setContext).toHaveBeenCalledWith(
-      expect.objectContaining({foo: ['bar']})
-    );
+    expect(setContext).toHaveBeenCalledWith(expect.objectContaining({foo: ['bar']}));
   });
 
   it('addContext dispatches #addContext', () => {

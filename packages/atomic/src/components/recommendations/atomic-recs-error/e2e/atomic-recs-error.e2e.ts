@@ -5,9 +5,7 @@ test.describe('atomic-recs-error', () => {
     await recsError.load();
   });
 
-  test('should display the component with the correct content', async ({
-    recsError,
-  }) => {
+  test('should display the component with the correct content', async ({recsError}) => {
     await expect(recsError.title).toBeVisible();
     await expect(recsError.description).toBeVisible();
     await expect(recsError.moreInfoButton).toBeVisible();

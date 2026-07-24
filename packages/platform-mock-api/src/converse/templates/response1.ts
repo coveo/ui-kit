@@ -145,8 +145,7 @@ const middleEvents: ConverseEvent[] = [
     data: {
       type: 'TOOL_CALL_ARGS',
       toolCallId: 'tooluse_yv2pQe2GYLRekYmWcbu6eT',
-      delta:
-        '{"query": "beginner surfboard", "listing_surface_id": "surfboard", "perPage": 10}',
+      delta: '{"query": "beginner surfboard", "listing_surface_id": "surfboard", "perPage": 10}',
     },
   },
   {
@@ -170,8 +169,7 @@ const middleEvents: ConverseEvent[] = [
     data: {
       type: 'TOOL_CALL_ARGS',
       toolCallId: 'tooluse_4B2uOffB9CJ1gC3o5kTXi4',
-      delta:
-        '{"query": "wetsuit", "listing_surface_id": "wetsuit", "perPage": 10}',
+      delta: '{"query": "wetsuit", "listing_surface_id": "wetsuit", "perPage": 10}',
     },
   },
   {
@@ -195,8 +193,7 @@ const middleEvents: ConverseEvent[] = [
     data: {
       type: 'TOOL_CALL_ARGS',
       toolCallId: 'tooluse_RsS4KXaXPgx8cgdBSaff8j',
-      delta:
-        '{"query": "surf leash", "listing_surface_id": "leash", "perPage": 10}',
+      delta: '{"query": "surf leash", "listing_surface_id": "leash", "perPage": 10}',
     },
   },
   {
@@ -220,8 +217,7 @@ const middleEvents: ConverseEvent[] = [
     data: {
       type: 'TOOL_CALL_ARGS',
       toolCallId: 'tooluse_cyFjeocyd3Jc4iylDLGLlA',
-      delta:
-        '{"query": "surf wax", "listing_surface_id": "wax", "perPage": 10}',
+      delta: '{"query": "surf wax", "listing_surface_id": "wax", "perPage": 10}',
     },
   },
   {
@@ -380,8 +376,7 @@ const middleEvents: ConverseEvent[] = [
     data: {
       type: 'TOOL_CALL_ARGS',
       toolCallId: 'tooluse_g3Bo2i73OfM0MirRAYb9aD',
-      delta:
-        '{"listing_surface_id": "leash", "perPage": 10, "query": "surfboard leash"}',
+      delta: '{"listing_surface_id": "leash", "perPage": 10, "query": "surfboard leash"}',
     },
   },
   {
@@ -510,8 +505,7 @@ const middleEvents: ConverseEvent[] = [
     data: {
       type: 'TOOL_CALL_ARGS',
       toolCallId: 'tooluse_QYEuo0EixPmmrGo6a3khej',
-      delta:
-        '{"listing_surface_id": "leash", "perPage": 10, "query": "leash ankle"}',
+      delta: '{"listing_surface_id": "leash", "perPage": 10, "query": "leash ankle"}',
     },
   },
   {
@@ -1371,8 +1365,7 @@ const middleEvents: ConverseEvent[] = [
                         },
                         {
                           key: 'ec_product_id',
-                          valueString:
-                            'gid://shopify/ProductVariant/50674988548370',
+                          valueString: 'gid://shopify/ProductVariant/50674988548370',
                         },
                         {
                           key: 'ec_description',
@@ -1426,8 +1419,7 @@ const middleEvents: ConverseEvent[] = [
                         },
                         {
                           key: 'ec_product_id',
-                          valueString:
-                            'gid://shopify/ProductVariant/50676912128274',
+                          valueString: 'gid://shopify/ProductVariant/50676912128274',
                         },
                         {
                           key: 'ec_description',
@@ -1460,8 +1452,7 @@ const middleEvents: ConverseEvent[] = [
                       valueMap: [
                         {
                           key: 'ec_name',
-                          valueString:
-                            'HydroLite Sleeveless Wetsuit - Black / XL',
+                          valueString: 'HydroLite Sleeveless Wetsuit - Black / XL',
                         },
                         {
                           key: 'ec_brand',
@@ -1482,8 +1473,7 @@ const middleEvents: ConverseEvent[] = [
                         },
                         {
                           key: 'ec_product_id',
-                          valueString:
-                            'gid://shopify/ProductVariant/50674589237522',
+                          valueString: 'gid://shopify/ProductVariant/50674589237522',
                         },
                         {
                           key: 'ec_description',
@@ -1541,8 +1531,7 @@ const middleEvents: ConverseEvent[] = [
                         },
                         {
                           key: 'ec_product_id',
-                          valueString:
-                            'gid://shopify/ProductVariant/50674633900306',
+                          valueString: 'gid://shopify/ProductVariant/50674633900306',
                         },
                         {
                           key: 'ec_description',
@@ -1600,8 +1589,7 @@ const middleEvents: ConverseEvent[] = [
                         },
                         {
                           key: 'ec_product_id',
-                          valueString:
-                            'gid://shopify/ProductVariant/50670409482514',
+                          valueString: 'gid://shopify/ProductVariant/50670409482514',
                         },
                         {
                           key: 'ec_description',
@@ -1659,8 +1647,7 @@ const middleEvents: ConverseEvent[] = [
                         },
                         {
                           key: 'ec_product_id',
-                          valueString:
-                            'gid://shopify/ProductVariant/50670410760466',
+                          valueString: 'gid://shopify/ProductVariant/50670410760466',
                         },
                         {
                           key: 'ec_description',
@@ -1718,8 +1705,7 @@ const middleEvents: ConverseEvent[] = [
                         },
                         {
                           key: 'ec_product_id',
-                          valueString:
-                            'gid://shopify/ProductVariant/50676927463698',
+                          valueString: 'gid://shopify/ProductVariant/50676927463698',
                         },
                         {
                           key: 'ec_description',
@@ -1773,8 +1759,7 @@ const middleEvents: ConverseEvent[] = [
                         },
                         {
                           key: 'ec_product_id',
-                          valueString:
-                            'gid://shopify/ProductVariant/50674590613778',
+                          valueString: 'gid://shopify/ProductVariant/50674590613778',
                         },
                         {
                           key: 'ec_description',
@@ -1832,8 +1817,7 @@ const middleEvents: ConverseEvent[] = [
                         },
                         {
                           key: 'ec_product_id',
-                          valueString:
-                            'gid://shopify/ProductVariant/50670410760466',
+                          valueString: 'gid://shopify/ProductVariant/50670410760466',
                         },
                         {
                           key: 'ec_description',
@@ -2181,8 +2165,7 @@ const middleEvents: ConverseEvent[] = [
       type: 'TOOL_CALL_RESULT',
       messageId: 'd3b5ebdc-d63d-4593-9bdd-e5459aba05c6',
       toolCallId: 'tooluse_Ile1JLyf9FulHTSzBzeOSr',
-      content:
-        '"NextActionsBar queued on surface \'next-actions-surface\' with 3 action(s)."',
+      content: '"NextActionsBar queued on surface \'next-actions-surface\' with 3 action(s)."',
     },
   },
   {

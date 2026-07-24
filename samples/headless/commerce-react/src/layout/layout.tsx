@@ -69,10 +69,7 @@ export default function Layout(props: ILayoutProps) {
             <label htmlFor="surf-accessories">Surf Accessories</label>
           </span>
 
-          <CartTab
-            controller={buildCart(engine)}
-            onChange={() => navigate('/cart')}
-          ></CartTab>
+          <CartTab controller={buildCart(engine)} onChange={() => navigate('/cart')}></CartTab>
         </nav>
         {!(window.location.pathname === '/search') && (
           <StandaloneSearchBox
@@ -87,9 +84,7 @@ export default function Layout(props: ILayoutProps) {
             instantProductsController={buildInstantProducts(engine, {
               options: {searchBoxId: standaloneSearchBoxId},
             })}
-            filterSuggestionsGeneratorController={buildFilterSuggestionsGenerator(
-              engine
-            )}
+            filterSuggestionsGeneratorController={buildFilterSuggestionsGenerator(engine)}
             /* Uncomment the `legacyFieldSUggestionsGeneratorController` prop below and comment out the
                `filterSuggestionsGeneratorController` prop above if using legacy field suggestions */
             //legacyFieldSuggestionsGeneratorController={buildFieldSuggestionsGenerator(engine)}

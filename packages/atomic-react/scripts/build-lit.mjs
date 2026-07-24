@@ -1,8 +1,7 @@
 import {writeFileSync} from 'node:fs';
 import cem from '@coveo/atomic/custom-elements-manifest' with {type: 'json'};
 
-const isLitDeclaration = (declaration) =>
-  declaration?.superclass?.name === 'LitElement';
+const isLitDeclaration = (declaration) => declaration?.superclass?.name === 'LitElement';
 
 const entries = [
   {
@@ -40,8 +39,7 @@ const entries = [
   },
 ];
 
-const declarationToLitImport = (declaration) =>
-  `${declaration.name} as Lit${declaration.name}`;
+const declarationToLitImport = (declaration) => `${declaration.name} as Lit${declaration.name}`;
 
 const declarationToComponent = (declaration) =>
   `
@@ -77,9 +75,7 @@ for (const entry of entries) {
   if (entry.declarations.length === 0) {
     continue;
   }
-  entry.declarations.sort((a, b) =>
-    a.name.localeCompare(b.name, 'en-US', {sensitivity: 'base'})
-  );
+  entry.declarations.sort((a, b) => a.name.localeCompare(b.name, 'en-US', {sensitivity: 'base'}));
   for (const declaration of entry.declarations) {
     entry.computedComponentImports.push(declarationToLitImport(declaration));
     entry.content += declarationToComponent(declaration);

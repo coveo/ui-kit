@@ -1,7 +1,4 @@
-import {
-  VERSION as HEADLESS_VERSION,
-  loadConfigurationActions,
-} from '@coveo/headless';
+import {VERSION as HEADLESS_VERSION, loadConfigurationActions} from '@coveo/headless';
 import {
   buildRecommendationEngine,
   EcommerceDefaultFieldsToInclude,
@@ -36,17 +33,11 @@ import {getAnalyticsConfig} from './analytics-config';
 import {createRecsStore, type RecsStore} from './store';
 
 type RecsInitializationOptions = RecommendationEngineConfiguration;
-export type RecsBindings = CommonBindings<
-  RecommendationEngine,
-  RecsStore,
-  AtomicRecsInterface
->;
+export type RecsBindings = CommonBindings<RecommendationEngine, RecsStore, AtomicRecsInterface>;
 
 const FirstRecommendationExecutedFlag = 'firstRecommendationExecuted';
 
-const engineConfigurationConflictError = (
-  configurationName: 'query pipeline' | 'search hub'
-) =>
+const engineConfigurationConflictError = (configurationName: 'query pipeline' | 'search hub') =>
   `A ${configurationName} is configured on the recommendation interface element, but the recommendation interface was initialized with an engine. You should only configure the ${configurationName} in the target engine.`;
 
 /**
@@ -180,10 +171,7 @@ export class AtomicRecsInterface
     this.store.setLoadingFlag(FirstRecommendationExecutedFlag);
     this.initFieldsToInclude();
 
-    this.addEventListener(
-      'atomic/initializeComponent',
-      this.handleInitialization as EventListener
-    );
+    this.addEventListener('atomic/initializeComponent', this.handleInitialization as EventListener);
   }
 
   public willUpdate(changedProperties: Map<string, unknown>) {
@@ -247,16 +235,12 @@ export class AtomicRecsInterface
       return;
     }
 
-    this.engine!.dispatch(
-      loadRecommendationActions(this.engine!).getRecommendations()
-    );
+    this.engine!.dispatch(loadRecommendationActions(this.engine!).getRecommendations());
   }
 
   public registerFieldsToInclude() {
     this.engine?.dispatch(
-      loadFieldActions(this.engine!).registerFieldsToInclude(
-        this.store.state.fieldsToInclude
-      )
+      loadFieldActions(this.engine!).registerFieldsToInclude(this.store.state.fieldsToInclude)
     );
   }
 
@@ -270,16 +254,11 @@ export class AtomicRecsInterface
 
   @watch('language')
   public updateLanguage() {
-    if (
-      !this.interfaceController.engineIsCreated(this.engine) ||
-      !this.language
-    ) {
+    if (!this.interfaceController.engineIsCreated(this.engine) || !this.language) {
       return;
     }
 
-    const {updateSearchConfiguration} = loadSearchConfigurationActions(
-      this.engine
-    );
+    const {updateSearchConfiguration} = loadSearchConfigurationActions(this.engine);
     this.engine.dispatch(
       updateSearchConfiguration({
         locale: this.language,
@@ -345,10 +324,7 @@ export class AtomicRecsInterface
   }
 
   private async internalInitialization(initEngine: () => void) {
-    await Promise.all([
-      this.interfaceController.onInitialization(initEngine),
-      this.i18Initialized,
-    ]);
+    await Promise.all([this.interfaceController.onInitialization(initEngine), this.i18Initialized]);
     this.updateLanguage();
     this.bindings = this.getBindings();
     markParentAsReady(this);

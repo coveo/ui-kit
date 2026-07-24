@@ -116,14 +116,8 @@ describe('BaseInterface', () => {
         dispose: vi.fn(),
       } as any;
 
-      const resultA = getInterfaceInternals(instance).resolveFacades(
-        'search',
-        composedA
-      );
-      const resultB = getInterfaceInternals(instance).resolveFacades(
-        'search',
-        composedA
-      );
+      const resultA = getInterfaceInternals(instance).resolveFacades('search', composedA);
+      const resultB = getInterfaceInternals(instance).resolveFacades('search', composedA);
 
       expect(resultA[0]).toBe(resultB[0]);
     });
@@ -146,12 +140,8 @@ describe('BaseInterface', () => {
         dispose: vi.fn(),
       } as any;
 
-      const resultComposed = getInterfaceInternals(instance).resolveFacades(
-        'search',
-        composedA
-      );
-      const resultStandalone =
-        getInterfaceInternals(instance).resolveFacades('search');
+      const resultComposed = getInterfaceInternals(instance).resolveFacades('search', composedA);
+      const resultStandalone = getInterfaceInternals(instance).resolveFacades('search');
 
       expect(resultComposed[0]).toBe(thunkA);
       expect(resultStandalone[0]).toBe(thunkB);
@@ -164,14 +154,8 @@ describe('BaseInterface', () => {
         disposed: false,
         dispose: vi.fn(),
       } as any;
-      const first = getInterfaceInternals(instance).resolveFacades(
-        'search',
-        composedX
-      );
-      const second = getInterfaceInternals(instance).resolveFacades(
-        'search',
-        composedX
-      );
+      const first = getInterfaceInternals(instance).resolveFacades('search', composedX);
+      const second = getInterfaceInternals(instance).resolveFacades('search', composedX);
       expect(first[0]).toBe(second[0]);
     });
   });
@@ -191,9 +175,9 @@ describe('BaseInterface', () => {
     it('throws when resolveFacades is called after dispose', () => {
       const {instance} = createTestSubject();
       instance.dispose();
-      expect(() =>
-        getInterfaceInternals(instance).resolveFacades('search')
-      ).toThrow('Cannot operate on a disposed interface.');
+      expect(() => getInterfaceInternals(instance).resolveFacades('search')).toThrow(
+        'Cannot operate on a disposed interface.'
+      );
     });
   });
 });

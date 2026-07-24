@@ -1,10 +1,7 @@
 import {ArrayValue} from '@coveo/bueno';
 import type {CategoryFacetMetadata} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents.js';
 import type {InsightAppState} from '../../../state/insight-app-state.js';
-import {
-  requiredNonEmptyString,
-  validatePayload,
-} from '../../../utils/validate-payload.js';
+import {requiredNonEmptyString, validatePayload} from '../../../utils/validate-payload.js';
 import {
   type InsightAction,
   makeInsightAnalyticsActionFactory,
@@ -24,10 +21,7 @@ const categoryFacetBreadcrumbPayloadDefinition = {
 
 const getCategoryFacetMetadata = (
   state: Partial<InsightAppState>,
-  {
-    categoryFacetId,
-    categoryFacetPath,
-  }: LogCategoryFacetBreadcrumbActionCreatorPayload
+  {categoryFacetId, categoryFacetPath}: LogCategoryFacetBreadcrumbActionCreatorPayload
 ): CategoryFacetMetadata => {
   const facet = state.categoryFacetSet![categoryFacetId]!;
   const categoryFacetField = facet?.request.field;

@@ -1,7 +1,4 @@
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../../../test/mock-engine-v2.js';
 import {buildMockFacetIdConfig} from '../../../../test/mock-facet-id-config.js';
 import {createMockState} from '../../../../test/mock-state.js';
 import {determineFacetId} from './facet-id-determinor.js';
@@ -25,10 +22,7 @@ describe('#determineFacetId', () => {
 
     const {state, logger} = engine;
     const config = buildMockFacetIdConfig({field: 'author', state});
-    expect(FacetIdGenerator.generateFacetId).toHaveBeenCalledWith(
-      config,
-      logger
-    );
+    expect(FacetIdGenerator.generateFacetId).toHaveBeenCalledWith(config, logger);
   });
 
   it('when the #facetId key is not passed, it calls #generateFacetId', () => {
@@ -37,9 +31,6 @@ describe('#determineFacetId', () => {
 
     const {state, logger} = engine;
     const config = buildMockFacetIdConfig({field: 'author', state});
-    expect(FacetIdGenerator.generateFacetId).toHaveBeenCalledWith(
-      config,
-      logger
-    );
+    expect(FacetIdGenerator.generateFacetId).toHaveBeenCalledWith(config, logger);
   });
 });

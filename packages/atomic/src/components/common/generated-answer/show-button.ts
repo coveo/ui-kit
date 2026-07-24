@@ -13,9 +13,7 @@ export interface ShowButtonProps {
   onClick: () => void;
 }
 
-export const renderShowButton: FunctionalComponent<ShowButtonProps> = ({
-  props,
-}) => {
+export const renderShowButton: FunctionalComponent<ShowButtonProps> = ({props}) => {
   return html`${renderButton({
     props: {
       style: 'text-primary',

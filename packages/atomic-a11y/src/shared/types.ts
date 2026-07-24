@@ -74,11 +74,7 @@ export interface A11yCriterionReport {
   name: string;
   level: CriterionLevel;
   wcagVersion: WCAGVersion;
-  conformance:
-    | 'supports'
-    | 'partiallySupports'
-    | 'doesNotSupport'
-    | 'notApplicable';
+  conformance: 'supports' | 'partiallySupports' | 'doesNotSupport' | 'notApplicable';
   automatedCoverage: boolean;
   interactiveCoverage: boolean;
   interactiveStatus?: 'passed';

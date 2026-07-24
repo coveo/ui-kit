@@ -26,9 +26,7 @@ describe('#renderBreadcrumbContainer', () => {
     return {
       container: element.querySelector('div[part="container"]'),
       label: element.querySelector('span'),
-      listContainer: element.querySelector(
-        'div[part="breadcrumb-list-container"]'
-      ),
+      listContainer: element.querySelector('div[part="breadcrumb-list-container"]'),
       list: element.querySelector('ul[part="breadcrumb-list"]'),
     };
   };

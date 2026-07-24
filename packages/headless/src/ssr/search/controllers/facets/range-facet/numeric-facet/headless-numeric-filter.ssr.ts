@@ -20,9 +20,7 @@ export interface NumericFilterDefinition extends ControllerDefinitionWithoutProp
  * @param props - The configurable `NumericFilter` properties.
  * @returns The `NumericFilter` controller definition.
  * */
-export function defineNumericFilter(
-  props: NumericFilterProps
-): NumericFilterDefinition {
+export function defineNumericFilter(props: NumericFilterProps): NumericFilterDefinition {
   return {
     build: (engine) => buildNumericFilter(engine, props),
   };

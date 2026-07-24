@@ -7,6 +7,5 @@ function isInstantlyCallableThunkAction(action: unknown): action is () => void {
 /**
  * Makes instantly callable thunk actions dispatchable directly.
  */
-export const instantlyCallableThunkActionMiddleware: Middleware =
-  () => (next) => (action) =>
-    next(isInstantlyCallableThunkAction(action) ? action() : action);
+export const instantlyCallableThunkActionMiddleware: Middleware = () => (next) => (action) =>
+  next(isInstantlyCallableThunkAction(action) ? action() : action);

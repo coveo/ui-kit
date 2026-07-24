@@ -72,8 +72,7 @@ export class AtomicCommerceSearchBoxQuerySuggestions
 
   public initialize(): SearchBoxSuggestions {
     const engine = this.bindings.engine as CommerceEngine<{querySet: string}>;
-    const {registerQuerySuggest, fetchQuerySuggestions} =
-      loadQuerySuggestActions(engine);
+    const {registerQuerySuggest, fetchQuerySuggestions} = loadQuerySuggestActions(engine);
 
     const numberOfQueries = this.bindings.numberOfQueries;
     const maxWithQuery = this.maxWithQuery;
@@ -115,15 +114,11 @@ export class AtomicCommerceSearchBoxQuerySuggestions
   }
 
   private renderItem(suggestion: Suggestion) {
-    const partialItem = getPartialSearchBoxSuggestionElement(
-      suggestion,
-      this.bindings.i18n
-    );
+    const partialItem = getPartialSearchBoxSuggestionElement(suggestion, this.bindings.i18n);
 
     const icon = this.icon ? this.icon : SearchIcon;
     const hasQuery = this.bindings.searchBoxController.state.value !== '';
-    const hasMultipleKindOfSuggestions =
-      this.bindings.getSuggestions().length > 1;
+    const hasMultipleKindOfSuggestions = this.bindings.getSuggestions().length > 1;
 
     return {
       ...partialItem,

@@ -6,14 +6,14 @@ import type {
   RangeValueRequest,
 } from './interfaces/range-facet.js';
 
-type RangeFacetSlice<
-  RequestType extends RangeFacetRequest = RangeFacetRequest,
-> = {
+type RangeFacetSlice<RequestType extends RangeFacetRequest = RangeFacetRequest> = {
   request: RequestType;
 };
 
-type RangeFacetState<SliceType extends RangeFacetSlice<RangeFacetRequest>> =
-  Record<string, SliceType>;
+type RangeFacetState<SliceType extends RangeFacetSlice<RangeFacetRequest>> = Record<
+  string,
+  SliceType
+>;
 
 export const defaultRangeFacetOptions: RangeFacetOptionalParameters = {
   filterFacetCount: true,
@@ -24,10 +24,7 @@ export const defaultRangeFacetOptions: RangeFacetOptionalParameters = {
   resultsMustMatch: 'atLeastOneValue',
 };
 
-export function registerRangeFacet<T extends RangeFacetSlice>(
-  state: RangeFacetState<T>,
-  slice: T
-) {
+export function registerRangeFacet<T extends RangeFacetSlice>(state: RangeFacetState<T>, slice: T) {
   const {request} = slice;
   const {facetId} = request;
 
@@ -55,10 +52,11 @@ export function updateRangeValues<T extends RangeFacetSlice>(
   request.numberOfValues = calculateNumberOfValues(request);
 }
 
-export function toggleSelectRangeValue<
-  T extends RangeFacetSlice,
-  U extends RangeFacetValue,
->(state: RangeFacetState<T>, facetId: string, selection: U) {
+export function toggleSelectRangeValue<T extends RangeFacetSlice, U extends RangeFacetValue>(
+  state: RangeFacetState<T>,
+  facetId: string,
+  selection: U
+) {
   const request = state[facetId]?.request;
 
   if (!request) {
@@ -78,10 +76,11 @@ export function toggleSelectRangeValue<
   request.preventAutoSelect = true;
 }
 
-export function toggleExcludeRangeValue<
-  T extends RangeFacetSlice,
-  U extends RangeFacetValue,
->(state: RangeFacetState<T>, facetId: string, selection: U) {
+export function toggleExcludeRangeValue<T extends RangeFacetSlice, U extends RangeFacetValue>(
+  state: RangeFacetState<T>,
+  facetId: string,
+  selection: U
+) {
   const request = state[facetId]?.request;
 
   if (!request) {
@@ -119,9 +118,7 @@ export function handleRangeFacetDeselectAll<T extends RangeFacetSlice>(
   });
 }
 
-export function handleRangeFacetSearchParameterRestoration<
-  T extends RangeFacetSlice,
->(
+export function handleRangeFacetSearchParameterRestoration<T extends RangeFacetSlice>(
   state: RangeFacetState<T>,
   rangeFacets: Record<string, T['request']['currentValues']>
 ) {
@@ -150,10 +147,7 @@ export function handleRangeFacetSearchParameterRestoration<
     const currentValues: Range[] = request.currentValues;
     currentValues.push(...missingRanges);
 
-    request.numberOfValues = Math.max(
-      request.numberOfValues,
-      currentValues.length
-    );
+    request.numberOfValues = Math.max(request.numberOfValues, currentValues.length);
   });
 }
 
@@ -184,16 +178,10 @@ function findRange(values: RangeValueRequest[], value: RangeValueRequest) {
   return values.find((range) => range.start === start && range.end === end);
 }
 
-export function findExactRangeValue(
-  values: RangeValueRequest[],
-  value: RangeValueRequest
-) {
+export function findExactRangeValue(values: RangeValueRequest[], value: RangeValueRequest) {
   const {start, end, endInclusive} = value;
   return values.find(
-    (range) =>
-      range.start === start &&
-      range.end === end &&
-      range.endInclusive === endInclusive
+    (range) => range.start === start && range.end === end && range.endInclusive === endInclusive
   );
 }
 

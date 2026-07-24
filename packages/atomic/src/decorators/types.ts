@@ -3,9 +3,7 @@ import type {TemplateResultType} from 'lit/directive-helpers.js';
 import type {AnyBindings} from '../components/common/interface/bindings';
 import type {SearchBoxSuggestions} from '../components/common/suggestions/suggestions-types';
 
-export type GenericRender<T extends TemplateResultType> =
-  | TemplateResult<T>
-  | typeof nothing;
+export type GenericRender<T extends TemplateResultType> = TemplateResult<T> | typeof nothing;
 
 export type RenderGuardDecorator<Component, _T extends TemplateResultType> = (
   target: Component,
@@ -51,17 +49,14 @@ interface BaseInitializableComponent<
 /**
  * Interface for an Atomic component whose `initialize` method is called after bindings are initialized with the @bindings decorator.
  */
-export type InitializableComponent<
-  SpecificBindings extends AnyBindings = AnyBindings,
-> = BaseInitializableComponent<SpecificBindings, void>;
+export type InitializableComponent<SpecificBindings extends AnyBindings = AnyBindings> =
+  BaseInitializableComponent<SpecificBindings, void>;
 
 /**
  * Interface for an Atomic component whose `initialize` method returns `SearchBoxSuggestions`.
  * Used for search box suggestions components that require specific bindings.
  */
-export type SearchBoxSuggestionsComponent<
-  SpecificBindings extends AnyBindings = AnyBindings,
-> = BaseInitializableComponent<SpecificBindings, SearchBoxSuggestions>;
+export type SearchBoxSuggestionsComponent<SpecificBindings extends AnyBindings = AnyBindings> =
+  BaseInitializableComponent<SpecificBindings, SearchBoxSuggestions>;
 
-export interface LitElementWithError
-  extends Pick<InitializableComponent, 'error'>, LitElement {}
+export interface LitElementWithError extends Pick<InitializableComponent, 'error'>, LitElement {}

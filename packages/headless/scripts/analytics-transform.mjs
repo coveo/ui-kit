@@ -1,11 +1,6 @@
 import {createRequire} from 'node:module';
 import {join} from 'node:path/posix';
-import {
-  isImportDeclaration,
-  isStringLiteral,
-  visitEachChild,
-  visitNode,
-} from 'typescript';
+import {isImportDeclaration, isStringLiteral, visitEachChild, visitNode} from 'typescript';
 
 const require = createRequire(import.meta.url);
 
@@ -30,10 +25,7 @@ export default function analyticsTransformer(context) {
       isStringLiteral(node.moduleSpecifier) &&
       node.moduleSpecifier.text === 'coveo.analytics'
     ) {
-      console.log(
-        'Replacing coveo.analytics import with:',
-        resolvedAnalyticsPath
-      );
+      console.log('Replacing coveo.analytics import with:', resolvedAnalyticsPath);
       return factory.updateImportDeclaration(
         node,
         node.modifiers,

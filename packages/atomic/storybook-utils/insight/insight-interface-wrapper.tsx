@@ -38,10 +38,9 @@ export const wrapInInsightInterface = (
   `,
   play: async ({canvasElement, step}) => {
     await customElements.whenDefined('atomic-insight-interface');
-    const insightInterface =
-      canvasElement.querySelector<AtomicInsightInterface>(
-        'atomic-insight-interface'
-      );
+    const insightInterface = canvasElement.querySelector<AtomicInsightInterface>(
+      'atomic-insight-interface'
+    );
     await step('Render the Insight Interface', async () => {
       await insightInterface!.initialize({
         ...getSampleInsightEngineConfiguration(),

@@ -16,10 +16,7 @@ import {
   type PaginationController,
   type CommerceInterface,
 } from '@coveo/thermidor';
-import {
-  ProductCardComponent,
-  type ProductCardData,
-} from './product-card.component';
+import {ProductCardComponent, type ProductCardData} from './product-card.component';
 import {PaginationComponent} from './pagination.component';
 
 @Component({
@@ -74,12 +71,8 @@ export class RoutedCommerceResultsComponent {
 
   readonly commerceInterface = input.required<CommerceInterface>();
 
-  protected readonly products = signal<ProductListControllerState['products']>(
-    []
-  );
-  protected readonly paginationState = signal<PaginationControllerState | null>(
-    null
-  );
+  protected readonly products = signal<ProductListControllerState['products']>([]);
+  protected readonly paginationState = signal<PaginationControllerState | null>(null);
   protected readonly isLoading = signal(true);
 
   private paginationController: PaginationController | null = null;

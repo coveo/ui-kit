@@ -8,10 +8,9 @@ import '@/src/components/search/atomic-search-layout/atomic-search-layout.js';
 const searchApiHarness = new MockSearchApi();
 
 const {decorator, play} = wrapInSearchInterface();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-search-layout',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-search-layout', {
+  excludeCategories: ['methods'],
+});
 const meta: Meta = {
   component: 'atomic-search-layout',
   title: 'Search/Search Layout',

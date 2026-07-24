@@ -64,9 +64,7 @@ describe('#pagerButtons', () => {
       text: '1',
       ...overrides,
     };
-    const element = await renderFunctionFixture(html`
-      ${renderPagerPageButton({props})}
-    `);
+    const element = await renderFunctionFixture(html` ${renderPagerPageButton({props})} `);
     return {
       element,
       button: element.querySelector('button'),

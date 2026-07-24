@@ -11,11 +11,7 @@ import {buildSearchInterface} from '@/src/public/interfaces/search.js';
 const sampleConfiguration = getSampleEngineConfiguration();
 const query = 'test';
 
-const waitFor = async (
-  predicate: () => boolean,
-  timeoutMs = 30000,
-  intervalMs = 200
-) => {
+const waitFor = async (predicate: () => boolean, timeoutMs = 30000, intervalMs = 200) => {
   const start = Date.now();
   while (!predicate()) {
     if (Date.now() - start > timeoutMs) {

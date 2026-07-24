@@ -73,9 +73,7 @@ describe('ResultTemplateProvider', () => {
         expect(defaultTemplate).toBeInstanceOf(DocumentFragment);
 
         expect(defaultTemplate.children.length).toBe(1);
-        expect(defaultTemplate.children[0]?.nodeName).toBe(
-          'ATOMIC-RESULT-LINK'
-        );
+        expect(defaultTemplate.children[0]?.nodeName).toBe('ATOMIC-RESULT-LINK');
       });
 
       it('should register the correct default link template when #gridCellLinkTarget is undefined', async () => {
@@ -86,14 +84,11 @@ describe('ResultTemplateProvider', () => {
 
         await vi.runAllTimersAsync();
 
-        const defaultLinkTemplate =
-          registerTemplates.mock.lastCall?.[0].linkContent;
+        const defaultLinkTemplate = registerTemplates.mock.lastCall?.[0].linkContent;
         expect(defaultLinkTemplate).toBeInstanceOf(DocumentFragment);
 
         expect(defaultLinkTemplate.children.length).toBe(1);
-        expect(defaultLinkTemplate.children[0]?.nodeName).toBe(
-          'ATOMIC-RESULT-LINK'
-        );
+        expect(defaultLinkTemplate.children[0]?.nodeName).toBe('ATOMIC-RESULT-LINK');
       });
 
       it('should register the correct default link template when #gridCellLinkTarget is defined', async () => {
@@ -104,23 +99,14 @@ describe('ResultTemplateProvider', () => {
 
         await vi.runAllTimersAsync();
 
-        const defaultLinkTemplate =
-          registerTemplates.mock.lastCall?.[0].linkContent;
+        const defaultLinkTemplate = registerTemplates.mock.lastCall?.[0].linkContent;
         expect(defaultLinkTemplate).toBeInstanceOf(DocumentFragment);
 
         expect(defaultLinkTemplate.children.length).toBe(1);
-        expect(defaultLinkTemplate.children[0]?.nodeName).toBe(
-          'ATOMIC-RESULT-LINK'
-        );
+        expect(defaultLinkTemplate.children[0]?.nodeName).toBe('ATOMIC-RESULT-LINK');
         expect(defaultLinkTemplate.children[0].children.length).toBe(1);
-        expect(defaultLinkTemplate.children[0].children[0]).toHaveAttribute(
-          'slot',
-          'attributes'
-        );
-        expect(defaultLinkTemplate.children[0].children[0]).toHaveAttribute(
-          'target',
-          '_blank'
-        );
+        expect(defaultLinkTemplate.children[0].children[0]).toHaveAttribute('slot', 'attributes');
+        expect(defaultLinkTemplate.children[0].children[0]).toHaveAttribute('target', '_blank');
       });
     });
   });

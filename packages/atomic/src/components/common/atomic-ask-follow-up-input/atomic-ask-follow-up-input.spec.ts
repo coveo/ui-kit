@@ -33,8 +33,7 @@ describe('atomic-ask-follow-up-input', () => {
       <atomic-ask-follow-up-input
         .i18n=${i18n}
         .submitButtonDisabled=${props.submitButtonDisabled ?? false}
-        .askFollowUp=${props.askFollowUp ??
-        vi.fn().mockResolvedValue(undefined)}
+        .askFollowUp=${props.askFollowUp ?? vi.fn().mockResolvedValue(undefined)}
       ></atomic-ask-follow-up-input>
     `);
 
@@ -210,16 +209,12 @@ describe('atomic-ask-follow-up-input', () => {
       });
 
       await input.fill('test question');
-      expect(parts().textareaExpander?.dataset.replicatedValue).toBe(
-        'test question'
-      );
+      expect(parts().textareaExpander?.dataset.replicatedValue).toBe('test question');
 
       await submitButton.click();
 
       await vi.waitFor(() => {
-        expect(
-          parts().textareaExpander?.dataset.replicatedValue
-        ).toBeUndefined();
+        expect(parts().textareaExpander?.dataset.replicatedValue).toBeUndefined();
       });
     });
 
@@ -308,9 +303,7 @@ describe('atomic-ask-follow-up-input', () => {
 
       await input.fill('first line\nsecond line');
 
-      expect(parts().textareaExpander?.dataset.replicatedValue).toBe(
-        'first line\nsecond line'
-      );
+      expect(parts().textareaExpander?.dataset.replicatedValue).toBe('first line\nsecond line');
     });
   });
 
@@ -321,9 +314,7 @@ describe('atomic-ask-follow-up-input', () => {
       const inputElement = input.element() as HTMLTextAreaElement;
       inputElement.focus();
 
-      expect(parts().textareaExpander?.classList.contains('expanded')).toBe(
-        true
-      );
+      expect(parts().textareaExpander?.classList.contains('expanded')).toBe(true);
     });
 
     it('should remove expanded class from textarea-expander on blur', async () => {
@@ -333,9 +324,7 @@ describe('atomic-ask-follow-up-input', () => {
       inputElement.focus();
       inputElement.blur();
 
-      expect(parts().textareaExpander?.classList.contains('expanded')).toBe(
-        false
-      );
+      expect(parts().textareaExpander?.classList.contains('expanded')).toBe(false);
     });
 
     it('should collapse textarea after successful submission', async () => {
@@ -351,9 +340,7 @@ describe('atomic-ask-follow-up-input', () => {
       await submitButton.click();
 
       await vi.waitFor(() => {
-        expect(parts().textareaExpander?.classList.contains('expanded')).toBe(
-          false
-        );
+        expect(parts().textareaExpander?.classList.contains('expanded')).toBe(false);
       });
     });
 
@@ -366,9 +353,7 @@ describe('atomic-ask-follow-up-input', () => {
       const inputElement = input.element() as HTMLTextAreaElement;
       inputElement.dispatchEvent(new InputEvent('input', {bubbles: true}));
 
-      expect(parts().textareaExpander?.classList.contains('expanded')).toBe(
-        true
-      );
+      expect(parts().textareaExpander?.classList.contains('expanded')).toBe(true);
     });
   });
 
@@ -411,12 +396,8 @@ describe('atomic-ask-follow-up-input', () => {
 
       await input.fill('a'.repeat(MAX_LENGTH + 1));
 
-      expect(parts().characterCounter?.classList.contains('text-error')).toBe(
-        true
-      );
-      expect(parts().inputContainer?.classList.contains('border-error')).toBe(
-        true
-      );
+      expect(parts().characterCounter?.classList.contains('text-error')).toBe(true);
+      expect(parts().inputContainer?.classList.contains('border-error')).toBe(true);
     });
 
     it('should display a validation message when over the limit', async () => {
@@ -465,17 +446,11 @@ describe('atomic-ask-follow-up-input', () => {
       const {input, parts} = await renderComponent();
 
       await input.fill('a'.repeat(MAX_LENGTH + 1));
-      expect(parts().inputContainer?.classList.contains('border-error')).toBe(
-        true
-      );
+      expect(parts().inputContainer?.classList.contains('border-error')).toBe(true);
 
       await input.fill('a'.repeat(MAX_LENGTH));
-      expect(parts().inputContainer?.classList.contains('border-error')).toBe(
-        false
-      );
-      expect(parts().characterCounter?.classList.contains('text-error')).toBe(
-        false
-      );
+      expect(parts().inputContainer?.classList.contains('border-error')).toBe(false);
+      expect(parts().characterCounter?.classList.contains('text-error')).toBe(false);
     });
 
     it('should reset the character counter after a successful submission', async () => {
@@ -498,9 +473,7 @@ describe('atomic-ask-follow-up-input', () => {
       await input.fill(`  ${'a'.repeat(MAX_LENGTH)}  `);
 
       expect(parts().characterCounter?.textContent?.trim()).toBe('300 / 300');
-      expect(parts().inputContainer?.classList.contains('border-error')).toBe(
-        false
-      );
+      expect(parts().inputContainer?.classList.contains('border-error')).toBe(false);
     });
 
     it('should not be over the limit when only surrounding whitespace exceeds it', async () => {

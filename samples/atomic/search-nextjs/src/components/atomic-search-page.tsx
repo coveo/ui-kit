@@ -66,11 +66,7 @@ const SearchPage: NextPage = () => {
               numberOfValues={6}
               sortCriteria="occurrences"
             />
-            <AtomicNumericFacet
-              field="ec_price"
-              label="Cost"
-              withInput="integer"
-            >
+            <AtomicNumericFacet field="ec_price" label="Cost" withInput="integer">
               <AtomicFormatCurrency currency="USD" />
             </AtomicNumericFacet>
             <AtomicTimeframeFacet withDatePicker label="Listed within">
@@ -82,11 +78,7 @@ const SearchPage: NextPage = () => {
               <AtomicTimeframe unit="year" />
               <AtomicTimeframe unit="year" amount={10} period="next" />
             </AtomicTimeframeFacet>
-            <AtomicRatingFacet
-              field="ec_rating"
-              label="Rating"
-              numberOfIntervals={5}
-            />
+            <AtomicRatingFacet field="ec_rating" label="Rating" numberOfIntervals={5} />
             <AtomicRatingRangeFacet
               field="ec_rating"
               label="Rating Range"
@@ -102,23 +94,13 @@ const SearchPage: NextPage = () => {
             <AtomicRefineToggle />
             <AtomicSortDropdown>
               <AtomicSortExpression label="relevance" expression="relevancy" />
-              <AtomicSortExpression
-                label="Price (low to high)"
-                expression="ec_price ascending"
-              />
-              <AtomicSortExpression
-                label="Price (high to low)"
-                expression="ec_price descending"
-              />
+              <AtomicSortExpression label="Price (low to high)" expression="ec_price ascending" />
+              <AtomicSortExpression label="Price (high to low)" expression="ec_price descending" />
             </AtomicSortDropdown>
             <AtomicDidYouMean />
           </AtomicLayoutSection>
           <AtomicLayoutSection section="results">
-            <AtomicResultList
-              display="list"
-              imageSize="large"
-              template={MyTemplate}
-            />
+            <AtomicResultList display="list" imageSize="large" template={MyTemplate} />
             <AtomicQueryError />
             <AtomicNoResults />
           </AtomicLayoutSection>

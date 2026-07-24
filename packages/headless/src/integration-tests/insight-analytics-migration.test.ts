@@ -1,18 +1,12 @@
 import type {MockInstance} from 'vitest';
-import {
-  PlatformClient,
-  type PlatformClientCallError,
-} from '../api/platform-client.js';
+import {PlatformClient, type PlatformClientCallError} from '../api/platform-client.js';
 import {getSampleEngineConfiguration} from '../app/engine-configuration.js';
 import {
   buildInsightEngine,
   type InsightEngineConfiguration,
 } from '../app/insight-engine/insight-engine.js';
 import type {NumericFacetValue} from '../controllers/facets/range-facet/numeric-facet/headless-numeric-facet.js';
-import {
-  interfaceChange,
-  interfaceLoad,
-} from '../features/analytics/analytics-actions.js';
+import {interfaceChange, interfaceLoad} from '../features/analytics/analytics-actions.js';
 import {didYouMeanClick} from '../features/did-you-mean/did-you-mean-analytics-actions.js';
 import {logDidYouMeanClick} from '../features/did-you-mean/did-you-mean-insight-analytics-actions.js';
 import {registerCategoryFacet} from '../features/facets/category-facet-set/category-facet-set-actions.js';
@@ -109,9 +103,7 @@ const ANY_RANGE_FACET_BREADCRUMB_VALUE: DateFacetValue = {
 const ANY_CATEGORY_FACET_PATH = ['any category facet path'];
 
 describe('Analytics Search Migration', () => {
-  type Procedure = (
-    ...args: unknown[]
-  ) => Promise<Response | PlatformClientCallError>;
+  type Procedure = (...args: unknown[]) => Promise<Response | PlatformClientCallError>;
 
   let callSpy: MockInstance<Procedure>;
 
@@ -283,8 +275,7 @@ describe('Analytics Search Migration', () => {
     const action = executeSearch({
       legacy: logNumericFacetBreadcrumb({
         facetId: ANY_FACET_ID,
-        selection:
-          ANY_RANGE_FACET_BREADCRUMB_VALUE as unknown as NumericFacetValue,
+        selection: ANY_RANGE_FACET_BREADCRUMB_VALUE as unknown as NumericFacetValue,
       }),
       next: numericBreadcrumbFacet(),
     });

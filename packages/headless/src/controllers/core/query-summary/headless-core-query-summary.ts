@@ -1,19 +1,10 @@
 import type {CoreEngine} from '../../../app/engine.js';
 import {paginationReducer as pagination} from '../../../features/pagination/pagination-slice.js';
 import {searchReducer as search} from '../../../features/search/search-slice.js';
-import type {
-  PaginationSection,
-  SearchSection,
-} from '../../../state/state-sections.js';
+import type {PaginationSection, SearchSection} from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
-import {
-  buildController,
-  type Controller,
-} from '../../controller/headless-controller.js';
-import {
-  buildCoreStatus,
-  type SearchStatusState,
-} from '../status/headless-core-status.js';
+import {buildController, type Controller} from '../../controller/headless-controller.js';
+import {buildCoreStatus, type SearchStatusState} from '../status/headless-core-status.js';
 
 /**
  * The `QuerySummary` headless controller offers a high-level interface for designing a common query summary UI controller.
@@ -105,8 +96,7 @@ export function buildCoreQuerySummary(engine: CoreEngine): QuerySummary {
         firstResult: getState().pagination.firstResult + 1,
         hasDuration: getState().search.duration !== 0,
         hasQuery: getState().search.queryExecuted !== '',
-        lastResult:
-          getState().pagination.firstResult + getState().search.results.length,
+        lastResult: getState().pagination.firstResult + getState().search.results.length,
         query: getState().search.queryExecuted,
         total: getState().pagination.totalCountFiltered,
       };

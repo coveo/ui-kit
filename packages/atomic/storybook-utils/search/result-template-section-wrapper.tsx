@@ -22,11 +22,7 @@ export const wrapInResultTemplateForSections = (): {
 
     // Render the story to extract its content.
     let storyContent = '';
-    if (
-      storyResult &&
-      typeof storyResult === 'object' &&
-      '_$litType$' in storyResult
-    ) {
+    if (storyResult && typeof storyResult === 'object' && '_$litType$' in storyResult) {
       render(storyResult as TemplateResult, tempContainer);
       storyContent = tempContainer.innerHTML;
     } else {
@@ -111,9 +107,7 @@ txt</span>`,
 
     templateTag.innerHTML = templateContent;
 
-    return html`
-      <atomic-result-template>${templateTag}</atomic-result-template>
-    `;
+    return html` <atomic-result-template>${templateTag}</atomic-result-template> `;
   };
 
   return {

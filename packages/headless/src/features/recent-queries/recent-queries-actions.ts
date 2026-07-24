@@ -27,6 +27,4 @@ export const registerRecentQueries = createAction(
     validatePayload(payload, registerRecentQueriesPayloadDefinition)
 );
 
-export const clearRecentQueries = createAction(
-  'recentQueries/clearRecentQueries'
-);
+export const clearRecentQueries = createAction('recentQueries/clearRecentQueries');

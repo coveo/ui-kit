@@ -23,16 +23,12 @@ export const logCaseStart = (): CaseAssistAction =>
   });
 
 //TODO: SFINT-5435
-export const logCaseNextStage = (
-  options?: NextStageOptions
-): CaseAssistAction =>
-  makeCaseAssistAnalyticsAction(
-    'analytics/caseAssist/case/nextStage',
-    (client, state) =>
-      client.logMoveToNextCaseStep({
-        ticket: caseAssistCaseSelector(state),
-        stage: options?.stageName,
-      })
+export const logCaseNextStage = (options?: NextStageOptions): CaseAssistAction =>
+  makeCaseAssistAnalyticsAction('analytics/caseAssist/case/nextStage', (client, state) =>
+    client.logMoveToNextCaseStep({
+      ticket: caseAssistCaseSelector(state),
+      stage: options?.stageName,
+    })
   );
 
 export const logCreateCase = (): CaseAssistAction =>
@@ -45,8 +41,7 @@ export const logCreateCase = (): CaseAssistAction =>
     },
     analyticsType: 'CaseAssist.CreateTicket',
     analyticsPayloadBuilder: (state): CaseAssist.CreateTicket => {
-      const {id, category, subject, description, productId} =
-        caseAssistCaseSelector(state);
+      const {id, category, subject, description, productId} = caseAssistCaseSelector(state);
       return {
         ticket: {
           id: id!,
@@ -99,9 +94,7 @@ export const logUpdateCaseField = (fieldName: string): CaseAssistAction =>
     analyticsType: 'CaseAssist.UpdateField',
     analyticsPayloadBuilder: (state): CaseAssist.UpdateField => {
       const fieldValue =
-        state.caseField?.fields?.[fieldName]?.value ||
-        state.caseInput?.[fieldName]?.value ||
-        '';
+        state.caseField?.fields?.[fieldName]?.value || state.caseInput?.[fieldName]?.value || '';
       return {
         fieldName,
         fieldValue,
@@ -109,25 +102,17 @@ export const logUpdateCaseField = (fieldName: string): CaseAssistAction =>
     },
   });
 
-export const logAutoSelectCaseField = (
-  classificationId: string
-): CaseAssistAction =>
+export const logAutoSelectCaseField = (classificationId: string): CaseAssistAction =>
   makeCaseAssistAnalyticsAction({
     prefix: 'analytics/caseAssist/classification/click',
     __legacy__getBuilder: (client, state) => {
       return client.logSelectFieldSuggestion({
-        suggestion: caseAssistCaseClassificationSelector(
-          state,
-          classificationId,
-          true
-        ),
+        suggestion: caseAssistCaseClassificationSelector(state, classificationId, true),
         ticket: caseAssistCaseSelector(state),
       });
     },
     analyticsType: 'CaseAssist.SelectFieldClassification',
-    analyticsPayloadBuilder: (
-      state
-    ): CaseAssist.SelectFieldClassification | undefined => {
+    analyticsPayloadBuilder: (state): CaseAssist.SelectFieldClassification | undefined => {
       const responseId = state.caseField?.status?.lastResponseId;
       if (responseId) {
         return {
@@ -139,24 +124,17 @@ export const logAutoSelectCaseField = (
     },
   });
 
-export const logClassificationClick = (
-  classificationId: string
-): CaseAssistAction =>
+export const logClassificationClick = (classificationId: string): CaseAssistAction =>
   makeCaseAssistAnalyticsAction({
     prefix: 'analytics/caseAssist/classification/click',
     __legacy__getBuilder: (client, state) => {
       return client.logSelectFieldSuggestion({
-        suggestion: caseAssistCaseClassificationSelector(
-          state,
-          classificationId
-        ),
+        suggestion: caseAssistCaseClassificationSelector(state, classificationId),
         ticket: caseAssistCaseSelector(state),
       });
     },
     analyticsType: 'CaseAssist.SelectFieldClassification',
-    analyticsPayloadBuilder: (
-      state
-    ): CaseAssist.SelectFieldClassification | undefined => {
+    analyticsPayloadBuilder: (state): CaseAssist.SelectFieldClassification | undefined => {
       const responseId = state.caseField?.status?.lastResponseId;
       if (responseId) {
         return {
@@ -168,9 +146,7 @@ export const logClassificationClick = (
     },
   });
 
-export const logDocumentSuggestionClick = (
-  suggestionId: string
-): CaseAssistAction =>
+export const logDocumentSuggestionClick = (suggestionId: string): CaseAssistAction =>
   makeCaseAssistAnalyticsAction({
     prefix: 'analytics/caseAssist/documentSuggestion/click',
     __legacy__getBuilder: (client, state) => {
@@ -180,14 +156,9 @@ export const logDocumentSuggestionClick = (
       });
     },
     analyticsType: 'CaseAssist.DocumentSuggestionClick',
-    analyticsPayloadBuilder: (
-      state
-    ): CaseAssist.DocumentSuggestionClick | undefined => {
+    analyticsPayloadBuilder: (state): CaseAssist.DocumentSuggestionClick | undefined => {
       const responseId = state.documentSuggestion?.status?.lastResponseId;
-      const documentSuggestion = caseAssistDocumentSuggestionSelector(
-        state,
-        suggestionId
-      );
+      const documentSuggestion = caseAssistDocumentSuggestionSelector(state, suggestionId);
       if (responseId) {
         return {
           responseId,
@@ -203,9 +174,7 @@ export const logDocumentSuggestionClick = (
     },
   });
 
-export const logQuickviewDocumentSuggestionClick = (
-  suggestionId: string
-): CaseAssistAction =>
+export const logQuickviewDocumentSuggestionClick = (suggestionId: string): CaseAssistAction =>
   makeCaseAssistAnalyticsAction({
     prefix: 'analytics/caseAssist/documentSuggestion/click',
     __legacy__getBuilder: (client, state) => {
@@ -215,14 +184,9 @@ export const logQuickviewDocumentSuggestionClick = (
       });
     },
     analyticsType: 'CaseAssist.DocumentSuggestionClick',
-    analyticsPayloadBuilder: (
-      state
-    ): CaseAssist.DocumentSuggestionClick | undefined => {
+    analyticsPayloadBuilder: (state): CaseAssist.DocumentSuggestionClick | undefined => {
       const responseId = state.documentSuggestion?.status?.lastResponseId;
-      const documentSuggestion = caseAssistDocumentSuggestionSelector(
-        state,
-        suggestionId
-      );
+      const documentSuggestion = caseAssistDocumentSuggestionSelector(state, suggestionId);
       if (responseId) {
         return {
           responseId,
@@ -238,31 +202,19 @@ export const logQuickviewDocumentSuggestionClick = (
     },
   });
 
-export const logDocumentSuggestionOpen = (
-  suggestionId: string
-): CaseAssistAction =>
+export const logDocumentSuggestionOpen = (suggestionId: string): CaseAssistAction =>
   makeCaseAssistAnalyticsAction({
     prefix: 'analytics/caseAssist/documentSuggestion/click',
     __legacy__getBuilder: (client, state) => {
       return client.logSelectDocumentSuggestion({
-        suggestion: caseAssistDocumentSuggestionSelector(
-          state,
-          suggestionId,
-          false,
-          true
-        ),
+        suggestion: caseAssistDocumentSuggestionSelector(state, suggestionId, false, true),
         ticket: caseAssistCaseSelector(state),
       });
     },
     analyticsType: 'CaseAssist.DocumentSuggestionClick',
-    analyticsPayloadBuilder: (
-      state
-    ): CaseAssist.DocumentSuggestionClick | undefined => {
+    analyticsPayloadBuilder: (state): CaseAssist.DocumentSuggestionClick | undefined => {
       const responseId = state.documentSuggestion?.status?.lastResponseId;
-      const documentSuggestion = caseAssistDocumentSuggestionSelector(
-        state,
-        suggestionId
-      );
+      const documentSuggestion = caseAssistDocumentSuggestionSelector(state, suggestionId);
       if (responseId) {
         return {
           responseId,
@@ -293,14 +245,9 @@ export const logDocumentSuggestionRating = (
       });
     },
     analyticsType: 'CaseAssist.DocumentSuggestionFeedback',
-    analyticsPayloadBuilder: (
-      state
-    ): CaseAssist.DocumentSuggestionFeedback | undefined => {
+    analyticsPayloadBuilder: (state): CaseAssist.DocumentSuggestionFeedback | undefined => {
       const responseId = state.documentSuggestion?.status?.lastResponseId;
-      const documentSuggestion = caseAssistDocumentSuggestionSelector(
-        state,
-        suggestionId
-      );
+      const documentSuggestion = caseAssistDocumentSuggestionSelector(state, suggestionId);
       if (responseId) {
         return {
           responseId,

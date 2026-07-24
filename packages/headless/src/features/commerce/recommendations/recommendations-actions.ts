@@ -27,8 +27,8 @@ export interface QueryRecommendationsCommerceAPIThunkReturn {
   response: RecommendationsCommerceSuccessResponse;
 }
 
-export type StateNeededByFetchRecommendations =
-  StateNeededForPaginatedCommerceAPIRequest & RecommendationsSection;
+export type StateNeededByFetchRecommendations = StateNeededForPaginatedCommerceAPIRequest &
+  RecommendationsSection;
 
 const buildRecommendationCommerceAPIRequest = (
   slotId: string,
@@ -36,11 +36,7 @@ const buildRecommendationCommerceAPIRequest = (
   navigatorContext: NavigatorContext,
   productId?: string
 ): CommerceRecommendationsRequest => {
-  const commerceAPIRequest = buildPaginatedCommerceAPIRequest(
-    state,
-    navigatorContext,
-    slotId
-  );
+  const commerceAPIRequest = buildPaginatedCommerceAPIRequest(state, navigatorContext, slotId);
   return {
     ...commerceAPIRequest,
     context: {
@@ -66,10 +62,7 @@ export const fetchRecommendations = createAsyncThunk<
   AsyncThunkCommerceOptions<StateNeededByFetchRecommendations>
 >(
   'commerce/recommendations/fetch',
-  async (
-    payload,
-    {getState, rejectWithValue, extra: {apiClient, navigatorContext}}
-  ) => {
+  async (payload, {getState, rejectWithValue, extra: {apiClient, navigatorContext}}) => {
     const {slotId, productId} = payload;
     const request = buildRecommendationCommerceAPIRequest(
       slotId,
@@ -97,16 +90,10 @@ export const fetchMoreRecommendations = createAsyncThunk<
   AsyncThunkCommerceOptions<StateNeededByFetchRecommendations>
 >(
   'commerce/recommendations/fetchMore',
-  async (
-    payload,
-    {getState, rejectWithValue, extra: {apiClient, navigatorContext}}
-  ) => {
+  async (payload, {getState, rejectWithValue, extra: {apiClient, navigatorContext}}) => {
     const slotId = payload.slotId;
     const state = getState();
-    const moreRecommendationsAvailable = moreRecommendationsAvailableSelector(
-      state,
-      slotId
-    );
+    const moreRecommendationsAvailable = moreRecommendationsAvailableSelector(state, slotId);
     if (!moreRecommendationsAvailable === false) {
       return null;
     }
@@ -160,6 +147,5 @@ const promoteChildToParentDefinition = {
 
 export const promoteChildToParent = createAction(
   'commerce/recommendations/promoteChildToParent',
-  (payload: PromoteChildToParentPayload) =>
-    validatePayload(payload, promoteChildToParentDefinition)
+  (payload: PromoteChildToParentPayload) => validatePayload(payload, promoteChildToParentDefinition)
 );

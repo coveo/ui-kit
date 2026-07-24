@@ -42,10 +42,7 @@ export function AppShell() {
 
     const action = deriveTransitionAction(latestCompletedTurn);
 
-    if (
-      action?.type === 'NAVIGATE_SEARCH' &&
-      latestCompletedTurn.routedInterface
-    ) {
+    if (action?.type === 'NAVIGATE_SEARCH' && latestCompletedTurn.routedInterface) {
       if (persistedInterfaceRef.current) {
         persistedInterfaceRef.current.interface.dispose();
       }
@@ -102,11 +99,6 @@ export function AppShell() {
         />
       );
     default:
-      return (
-        <LandingPage
-          onSubmit={handleSubmit}
-          isStreaming={converseState.isStreaming}
-        />
-      );
+      return <LandingPage onSubmit={handleSubmit} isStreaming={converseState.isStreaming} />;
   }
 }

@@ -103,11 +103,7 @@ export const App = () => (
 
         <AtomicLayoutSection section="facets">
           <AtomicFacetManager>
-            <AtomicCategoryFacet
-              field="ec_category"
-              label="Category"
-              delimitingCharacter="|"
-            />
+            <AtomicCategoryFacet field="ec_category" label="Category" delimitingCharacter="|" />
             <AtomicFacet field="article_type" label="Article type" />
             <AtomicFacet field="robot_series" label="Robot series" />
             <AtomicFacet field="difficulty_level" label="Difficulty" />
@@ -121,14 +117,8 @@ export const App = () => (
             <AtomicQuerySummary />
             <AtomicSortDropdown>
               <AtomicSortExpression label="Relevance" expression="relevancy" />
-              <AtomicSortExpression
-                label="Newest"
-                expression="date descending"
-              />
-              <AtomicSortExpression
-                label="Oldest"
-                expression="date ascending"
-              />
+              <AtomicSortExpression label="Newest" expression="date descending" />
+              <AtomicSortExpression label="Oldest" expression="date ascending" />
             </AtomicSortDropdown>
           </AtomicLayoutSection>
 

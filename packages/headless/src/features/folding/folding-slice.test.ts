@@ -2,10 +2,7 @@ import type {Action} from '@reduxjs/toolkit';
 import type {Result} from '../../api/search/search/result.js';
 import type {SearchAPIClient} from '../../api/search/search-api-client.js';
 import type {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../test/mock-engine-v2.js';
 import {buildMockNavigatorContextProvider} from '../../test/mock-navigator-context-provider.js';
 import {buildMockResult} from '../../test/mock-result.js';
 import {buildMockResultWithFolding} from '../../test/mock-result-with-folding.js';
@@ -15,11 +12,7 @@ import {createMockState} from '../../test/mock-state.js';
 import {executeSearch, fetchMoreResults} from '../search/search-actions.js';
 import {loadCollection} from './folding-actions.js';
 import {foldingReducer, type ResultWithFolding} from './folding-slice.js';
-import type {
-  FoldedResult,
-  FoldingFields,
-  FoldingState,
-} from './folding-state.js';
+import type {FoldedResult, FoldingFields, FoldingState} from './folding-state.js';
 
 interface MockFoldingHierarchy {
   name: string;
@@ -86,9 +79,7 @@ function emulateAPIFolding(
 function extractMockFoldingHierarchy(root: FoldedResult): MockFoldingHierarchy {
   const part: MockFoldingHierarchy = {name: root.result.title};
   if (root.children.length) {
-    part.children = root.children.map((child) =>
-      extractMockFoldingHierarchy(child)
-    );
+    part.children = root.children.map((child) => extractMockFoldingHierarchy(child));
   }
   return part;
 }
@@ -129,11 +120,7 @@ describe('folding slice', () => {
         {name: 'private things', children: [{name: 'taxes'}]},
         {
           name: 'art',
-          children: [
-            {name: 'paintings'},
-            {name: 'sketches'},
-            {name: 'commissions'},
-          ],
+          children: [{name: 'paintings'}, {name: 'sketches'}, {name: 'commissions'}],
         },
       ],
     };
@@ -163,10 +150,7 @@ describe('folding slice', () => {
       );
     }
 
-    function dispatchLoadCollection(
-      results: ResultWithFolding[],
-      rootResult = results[0]
-    ) {
+    function dispatchLoadCollection(results: ResultWithFolding[], rootResult = results[0]) {
       dispatchAsync(loadCollection.fulfilled, {
         collectionId: results[0].raw.collection!,
         results,
@@ -197,10 +181,7 @@ describe('folding slice', () => {
       });
 
       const doLoadCollection = async () => {
-        const indexedResults = buildMockResultsFromHierarchy(
-          'thread',
-          testThreadHierarchy
-        );
+        const indexedResults = buildMockResultsFromHierarchy('thread', testThreadHierarchy);
         rootResult = emulateAPIFolding(indexedResults);
         await loadCollection(rootResult.raw.collection!)(
           mockEngine.dispatch,
@@ -213,10 +194,7 @@ describe('folding slice', () => {
       };
 
       it('when a fetchPage fulfilled is received, new results should contain the latest search #searchUid', () => {
-        const indexedResults = buildMockResultsFromHierarchy(
-          'thread',
-          testThreadHierarchy
-        );
+        const indexedResults = buildMockResultsFromHierarchy('thread', testThreadHierarchy);
         const rootResult = emulateAPIFolding(indexedResults);
         const response = {
           ...buildMockSearchResponse({results: [rootResult]}),
@@ -226,14 +204,9 @@ describe('folding slice', () => {
           response,
         });
 
-        const finalState = foldingReducer(
-          state,
-          fetchMoreResults.fulfilled(search, '')
-        );
+        const finalState = foldingReducer(state, fetchMoreResults.fulfilled(search, ''));
 
-        expect(finalState.collections.thread.children[0].result.searchUid).toBe(
-          'a_new_id'
-        );
+        expect(finalState.collections.thread.children[0].result.searchUid).toBe('a_new_id');
       });
 
       it('uses #cq with correct expression to obtain the full collection', async () => {
@@ -300,24 +273,16 @@ describe('folding slice', () => {
     });
 
     it('should resolve the hierarchy from the root when the root is the relevant result', () => {
-      const indexedResults = buildMockResultsFromHierarchy(
-        'thread',
-        testThreadHierarchy
-      );
+      const indexedResults = buildMockResultsFromHierarchy('thread', testThreadHierarchy);
       const rootResult = emulateAPIFolding(indexedResults);
 
       dispatchSearch([rootResult]);
 
-      expect(extractMockFoldingHierarchy(state.collections.thread)).toEqual(
-        testThreadHierarchy
-      );
+      expect(extractMockFoldingHierarchy(state.collections.thread)).toEqual(testThreadHierarchy);
     });
 
     it('should resolve the hierarchy partially from the root when a result is missing from childResults', () => {
-      const indexedResults = buildMockResultsFromHierarchy(
-        'thread',
-        testThreadHierarchy
-      );
+      const indexedResults = buildMockResultsFromHierarchy('thread', testThreadHierarchy);
       const rootResult = emulateAPIFolding(
         indexedResults,
         indexedResults.find((result) => result.title === 'first-answer')!
@@ -327,19 +292,12 @@ describe('folding slice', () => {
 
       expect(extractMockFoldingHierarchy(state.collections.thread)).toEqual({
         ...testThreadHierarchy,
-        children: [
-          testThreadHierarchy.children!.find(
-            (child) => child.name === 'first-answer'
-          )!,
-        ],
+        children: [testThreadHierarchy.children!.find((child) => child.name === 'first-answer')!],
       });
     });
 
     it("should not fold when there's no collection id on the returned result", () => {
-      const indexedResults = buildMockResultsFromHierarchy(
-        'thread',
-        testThreadHierarchy
-      );
+      const indexedResults = buildMockResultsFromHierarchy('thread', testThreadHierarchy);
       const rootResult = emulateAPIFolding(indexedResults);
 
       delete rootResult.raw.collection;
@@ -350,10 +308,7 @@ describe('folding slice', () => {
     });
 
     it("should not fold when there's no child id on the returned result", () => {
-      const results = buildMockResultsFromHierarchy(
-        'thread',
-        testThreadHierarchy
-      );
+      const results = buildMockResultsFromHierarchy('thread', testThreadHierarchy);
       const rootResult = emulateAPIFolding(results);
 
       delete rootResult.raw.id;
@@ -413,10 +368,7 @@ describe('folding slice', () => {
     });
 
     it('should resolve the hierarchy from the relevant result when the root cannot be found', () => {
-      const indexedResults = buildMockResultsFromHierarchy(
-        'thread',
-        testThreadHierarchy
-      );
+      const indexedResults = buildMockResultsFromHierarchy('thread', testThreadHierarchy);
       const rootResult = emulateAPIFolding(indexedResults);
 
       const relevantResult = rootResult.childResults[0];
@@ -430,18 +382,13 @@ describe('folding slice', () => {
     });
 
     it('should still resolve the hierarchy when the root is a parent of itself', () => {
-      const indexedResults = buildMockResultsFromHierarchy(
-        'thread',
-        testThreadHierarchy
-      );
+      const indexedResults = buildMockResultsFromHierarchy('thread', testThreadHierarchy);
       const rootResult = emulateAPIFolding(indexedResults);
       rootResult.raw.parent = rootResult.raw.id;
 
       dispatchSearch([rootResult]);
 
-      expect(extractMockFoldingHierarchy(state.collections.thread)).toEqual(
-        testThreadHierarchy
-      );
+      expect(extractMockFoldingHierarchy(state.collections.thread)).toEqual(testThreadHierarchy);
     });
 
     it('should prioritize root result over parent / child with same uniqueId when filtering out duplicates', () => {
@@ -459,26 +406,17 @@ describe('folding slice', () => {
         isRecommendation: true,
       });
 
-      rootResult.parentResult = buildMockResultWithFolding(
-        duplicateRootResultBaseConfig
-      );
+      rootResult.parentResult = buildMockResultWithFolding(duplicateRootResultBaseConfig);
 
-      rootResult.childResults = [
-        buildMockResultWithFolding(duplicateRootResultBaseConfig),
-      ];
+      rootResult.childResults = [buildMockResultWithFolding(duplicateRootResultBaseConfig)];
 
       dispatchSearch([rootResult]);
 
-      expect(state.collections.duplicates_test.result.isRecommendation).toBe(
-        true
-      );
+      expect(state.collections.duplicates_test.result.isRecommendation).toBe(true);
     });
 
     it('should still resolve the hierarchy when child fields are single-value arrays', () => {
-      const indexedResults = buildMockResultsFromHierarchy(
-        'thread',
-        testThreadHierarchy
-      );
+      const indexedResults = buildMockResultsFromHierarchy('thread', testThreadHierarchy);
       indexedResults.forEach((result) => {
         result.raw.id = [result.raw.id];
       });
@@ -486,40 +424,28 @@ describe('folding slice', () => {
 
       dispatchSearch([rootResult]);
 
-      expect(extractMockFoldingHierarchy(state.collections.thread)).toEqual(
-        testThreadHierarchy
-      );
+      expect(extractMockFoldingHierarchy(state.collections.thread)).toEqual(testThreadHierarchy);
     });
 
     it('should be able to load more results into an existing collection', () => {
-      const indexedResults = buildMockResultsFromHierarchy(
-        'thread',
-        testThreadHierarchy
-      );
+      const indexedResults = buildMockResultsFromHierarchy('thread', testThreadHierarchy);
       const relevantUnfoldedResult = indexedResults.find(
         (result) => result.title === 'first-answer'
       )!;
 
       dispatchSearch([relevantUnfoldedResult]);
 
-      expect(extractMockFoldingHierarchy(state.collections.thread)).toEqual(<
-        MockFoldingHierarchy
-      >{
+      expect(extractMockFoldingHierarchy(state.collections.thread)).toEqual(<MockFoldingHierarchy>{
         name: 'first-answer',
       });
 
       dispatchLoadCollection([emulateAPIFolding(indexedResults)]);
 
-      expect(extractMockFoldingHierarchy(state.collections.thread)).toEqual(
-        testThreadHierarchy
-      );
+      expect(extractMockFoldingHierarchy(state.collections.thread)).toEqual(testThreadHierarchy);
     });
 
     it('should not change the collection when loadCollection is rejected', () => {
-      const indexedResults = buildMockResultsFromHierarchy(
-        'thread',
-        testThreadHierarchy
-      );
+      const indexedResults = buildMockResultsFromHierarchy('thread', testThreadHierarchy);
       const relevantUnfoldedResult = indexedResults.find(
         (result) => result.title === 'first-answer'
       )!;
@@ -528,9 +454,7 @@ describe('folding slice', () => {
 
       dispatchAsync(loadCollection.rejected, new Error(), 'thread');
 
-      expect(extractMockFoldingHierarchy(state.collections.thread)).toEqual(<
-        MockFoldingHierarchy
-      >{
+      expect(extractMockFoldingHierarchy(state.collections.thread)).toEqual(<MockFoldingHierarchy>{
         name: 'first-answer',
       });
     });
@@ -541,10 +465,7 @@ describe('folding slice', () => {
         parent: 'p',
         child: 'c',
       };
-      const indexedResults = buildMockResultsFromHierarchy(
-        'thread',
-        testThreadHierarchy
-      );
+      const indexedResults = buildMockResultsFromHierarchy('thread', testThreadHierarchy);
       indexedResults.forEach((result) => {
         result.raw = {
           urihash: '',
@@ -553,92 +474,52 @@ describe('folding slice', () => {
           c: result.raw.id,
         };
       });
-      const rootResult = emulateAPIFolding(
-        indexedResults,
-        indexedResults[0],
-        state.fields
-      );
+      const rootResult = emulateAPIFolding(indexedResults, indexedResults[0], state.fields);
 
       dispatchSearch([rootResult]);
 
-      expect(extractMockFoldingHierarchy(state.collections.thread)).toEqual(
-        testThreadHierarchy
-      );
+      expect(extractMockFoldingHierarchy(state.collections.thread)).toEqual(testThreadHierarchy);
     });
 
     it('can fold multiple collections', () => {
-      const indexedThreadResults = buildMockResultsFromHierarchy(
-        'thread',
-        testThreadHierarchy
-      );
+      const indexedThreadResults = buildMockResultsFromHierarchy('thread', testThreadHierarchy);
       const indexedGenericResult = buildMockResult();
-      const indexedStorageResults = buildMockResultsFromHierarchy(
-        'storage',
-        testStorageHierarchy
-      );
+      const indexedStorageResults = buildMockResultsFromHierarchy('storage', testStorageHierarchy);
 
       const rootThreadResult = emulateAPIFolding(indexedThreadResults);
       const rootStorageResult = emulateAPIFolding(indexedStorageResults);
 
-      dispatchSearch([
-        rootThreadResult,
-        indexedGenericResult,
-        rootStorageResult,
-      ]);
+      dispatchSearch([rootThreadResult, indexedGenericResult, rootStorageResult]);
 
       expect(Object.keys(state.collections)).toEqual(['thread', 'storage']);
-      expect(extractMockFoldingHierarchy(state.collections.thread)).toEqual(
-        testThreadHierarchy
-      );
-      expect(extractMockFoldingHierarchy(state.collections.storage)).toEqual(
-        testStorageHierarchy
-      );
+      expect(extractMockFoldingHierarchy(state.collections.thread)).toEqual(testThreadHierarchy);
+      expect(extractMockFoldingHierarchy(state.collections.storage)).toEqual(testStorageHierarchy);
     });
 
     it("doesn't affect unrelated collections when loading more results", () => {
-      const indexedThreadResults = buildMockResultsFromHierarchy(
-        'thread',
-        testThreadHierarchy
-      );
+      const indexedThreadResults = buildMockResultsFromHierarchy('thread', testThreadHierarchy);
       const indexedGenericResult = buildMockResult();
-      const indexedStorageResults = buildMockResultsFromHierarchy(
-        'storage',
-        testStorageHierarchy
-      );
+      const indexedStorageResults = buildMockResultsFromHierarchy('storage', testStorageHierarchy);
 
       const rootThreadResult = emulateAPIFolding(indexedThreadResults);
 
-      dispatchSearch([
-        rootThreadResult,
-        indexedGenericResult,
-        indexedStorageResults[0],
-      ]);
+      dispatchSearch([rootThreadResult, indexedGenericResult, indexedStorageResults[0]]);
 
       dispatchLoadCollection([emulateAPIFolding(indexedStorageResults)]);
 
-      expect(extractMockFoldingHierarchy(state.collections.thread)).toEqual(
-        testThreadHierarchy
-      );
-      expect(extractMockFoldingHierarchy(state.collections.storage)).toEqual(
-        testStorageHierarchy
-      );
+      expect(extractMockFoldingHierarchy(state.collections.thread)).toEqual(testThreadHierarchy);
+      expect(extractMockFoldingHierarchy(state.collections.storage)).toEqual(testStorageHierarchy);
     });
 
     it('adds more collections when fetchMoreResults is called', () => {
-      const indexedThreadResults = buildMockResultsFromHierarchy(
-        'thread',
-        testThreadHierarchy
-      );
+      const indexedThreadResults = buildMockResultsFromHierarchy('thread', testThreadHierarchy);
       const indexedGenericResult = buildMockResult();
       const rootThreadResult = emulateAPIFolding(indexedThreadResults);
       dispatchSearch([rootThreadResult, indexedGenericResult]);
 
       expect(Object.keys(state.collections)).toEqual(['thread']);
 
-      const indexedStorageResults = buildMockResultsFromHierarchy(
-        'storage',
-        testStorageHierarchy
-      );
+      const indexedStorageResults = buildMockResultsFromHierarchy('storage', testStorageHierarchy);
       const rootStorageResult = emulateAPIFolding(indexedStorageResults);
       dispatchAsync(
         fetchMoreResults.fulfilled,
@@ -659,12 +540,9 @@ describe('folding slice', () => {
         uniqueId: 'parent',
         raw: {urihash: '', parent: '', id: 'a'},
       });
-      childResult.raw.collection = childResult.parentResult.raw.collection =
-        'the_collection';
+      childResult.raw.collection = childResult.parentResult.raw.collection = 'the_collection';
       dispatchSearch([childResult]);
-      expect(state.collections.the_collection.result).toEqual(
-        childResult.parentResult
-      );
+      expect(state.collections.the_collection.result).toEqual(childResult.parentResult);
     });
 
     it('throws a clear error message when it is unable to find a collection in the state', () => {
@@ -678,10 +556,7 @@ describe('folding slice', () => {
 
     describe('moreResultsAvailable', () => {
       it('should be false when totalNumberOfChildResults equals resolved children count + 1', () => {
-        const indexedResults = buildMockResultsFromHierarchy(
-          'thread',
-          testThreadHierarchy
-        );
+        const indexedResults = buildMockResultsFromHierarchy('thread', testThreadHierarchy);
         const rootResult = emulateAPIFolding(indexedResults);
         // testThreadHierarchy root has 2 direct children, so children.length = 2
         // moreResultsAvailable = totalNumberOfChildResults > 2 + 1 = 3
@@ -693,10 +568,7 @@ describe('folding slice', () => {
       });
 
       it('should be true when totalNumberOfChildResults exceeds resolved children count + 1', () => {
-        const indexedResults = buildMockResultsFromHierarchy(
-          'thread',
-          testThreadHierarchy
-        );
+        const indexedResults = buildMockResultsFromHierarchy('thread', testThreadHierarchy);
         const rootResult = emulateAPIFolding(indexedResults);
         rootResult.totalNumberOfChildResults = 100;
 
@@ -706,10 +578,7 @@ describe('folding slice', () => {
       });
 
       it('should be false when totalNumberOfChildResults is less than resolved children count + 1', () => {
-        const indexedResults = buildMockResultsFromHierarchy(
-          'thread',
-          testThreadHierarchy
-        );
+        const indexedResults = buildMockResultsFromHierarchy('thread', testThreadHierarchy);
         const rootResult = emulateAPIFolding(indexedResults);
         rootResult.totalNumberOfChildResults = 0;
 

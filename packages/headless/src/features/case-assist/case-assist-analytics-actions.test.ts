@@ -2,10 +2,7 @@ import {createRelay} from '@coveo/relay';
 import type {CaseAssistClient} from 'coveo.analytics';
 import type {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import {buildMockCaseAssistState} from '../../test/mock-case-assist-state.js';
-import {
-  buildMockCaseAssistEngine,
-  type MockedCaseAssistEngine,
-} from '../../test/mock-engine-v2.js';
+import {buildMockCaseAssistEngine, type MockedCaseAssistEngine} from '../../test/mock-engine-v2.js';
 import {getCaseFieldInitialState} from '../case-field/case-field-state.js';
 import {getConfigurationInitialState} from '../configuration/configuration-state.js';
 import {getDocumentSuggestionInitialState} from '../document-suggestion/document-suggestion-state.js';
@@ -49,20 +46,18 @@ vi.mocked(createRelay).mockReturnValue({
 });
 
 vi.mock('coveo.analytics', () => {
-  const mockCaseAssistClient = vi
-    .fn()
-    .mockImplementation(function (this: CaseAssistClient) {
-      this.logEnterInterface = mockLogEnterInterface;
-      this.logMoveToNextCaseStep = mockLogMoveToNextCaseStep;
-      this.logCaseCreated = mockLogCaseCreated;
-      this.logCaseSolved = mockLogCaseSolved;
-      this.logCaseCancelled = mockLogCaseCancelled;
-      this.logUpdateCaseField = mockLogUpdateCaseField;
-      this.logSelectFieldSuggestion = mockLogSelectFieldSuggestion;
-      this.logSelectDocumentSuggestion = mockLogSelectDocumentSuggestion;
-      this.logRateDocumentSuggestion = mockLogRateDocumentSuggestion;
-      this.logQuickviewDocumentSuggestion = mockLogQuickviewDocumentSuggestion;
-    });
+  const mockCaseAssistClient = vi.fn().mockImplementation(function (this: CaseAssistClient) {
+    this.logEnterInterface = mockLogEnterInterface;
+    this.logMoveToNextCaseStep = mockLogMoveToNextCaseStep;
+    this.logCaseCreated = mockLogCaseCreated;
+    this.logCaseSolved = mockLogCaseSolved;
+    this.logCaseCancelled = mockLogCaseCancelled;
+    this.logUpdateCaseField = mockLogUpdateCaseField;
+    this.logSelectFieldSuggestion = mockLogSelectFieldSuggestion;
+    this.logSelectDocumentSuggestion = mockLogSelectDocumentSuggestion;
+    this.logRateDocumentSuggestion = mockLogRateDocumentSuggestion;
+    this.logQuickviewDocumentSuggestion = mockLogQuickviewDocumentSuggestion;
+  });
   return {
     CaseAssistClient: mockCaseAssistClient,
     history: {HistoryStore: vi.fn()},
@@ -194,11 +189,7 @@ describe('generated answer insight analytics actions', () => {
     });
 
     it('should log #logCaseStart with the right payload', async () => {
-      await logCaseStart()()(
-        engine.dispatch,
-        () => engine.state,
-        {} as ThunkExtraArguments
-      );
+      await logCaseStart()()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
       const mockToUse = mockLogEnterInterface;
 
@@ -224,11 +215,7 @@ describe('generated answer insight analytics actions', () => {
     });
 
     it('should log #logCreateCase with the right payload', async () => {
-      await logCreateCase()()(
-        engine.dispatch,
-        () => engine.state,
-        {} as ThunkExtraArguments
-      );
+      await logCreateCase()()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
       const mockToUse = mockLogCaseCreated;
 
@@ -237,11 +224,7 @@ describe('generated answer insight analytics actions', () => {
     });
 
     it('should log #logSolveCase with the right payload', async () => {
-      await logSolveCase()()(
-        engine.dispatch,
-        () => engine.state,
-        {} as ThunkExtraArguments
-      );
+      await logSolveCase()()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
       const mockToUse = mockLogCaseSolved;
 
@@ -250,11 +233,7 @@ describe('generated answer insight analytics actions', () => {
     });
 
     it('should log #logAbandonCase with the right payload', async () => {
-      await logAbandonCase()()(
-        engine.dispatch,
-        () => engine.state,
-        {} as ThunkExtraArguments
-      );
+      await logAbandonCase()()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
       const mockToUse = mockLogCaseCancelled;
 
@@ -399,44 +378,28 @@ describe('generated answer insight analytics actions', () => {
     });
 
     it('should log #logCaseStart with the right payload', async () => {
-      await logCaseStart()()(
-        engine.dispatch,
-        () => engine.state,
-        {} as ThunkExtraArguments
-      );
+      await logCaseStart()()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
       expect(emit).toHaveBeenCalledTimes(1);
       expect(emit.mock.calls[0]).toMatchSnapshot();
     });
 
     it('should log #logCreateCase with the right payload', async () => {
-      await logCreateCase()()(
-        engine.dispatch,
-        () => engine.state,
-        {} as ThunkExtraArguments
-      );
+      await logCreateCase()()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
       expect(emit).toHaveBeenCalledTimes(1);
       expect(emit.mock.calls[0]).toMatchSnapshot();
     });
 
     it('should log #logSolveCase with the right payload', async () => {
-      await logSolveCase()()(
-        engine.dispatch,
-        () => engine.state,
-        {} as ThunkExtraArguments
-      );
+      await logSolveCase()()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
       expect(emit).toHaveBeenCalledTimes(1);
       expect(emit.mock.calls[0]).toMatchSnapshot();
     });
 
     it('should log #logAbandonCase with the right payload', async () => {
-      await logAbandonCase()()(
-        engine.dispatch,
-        () => engine.state,
-        {} as ThunkExtraArguments
-      );
+      await logAbandonCase()()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
       expect(emit).toHaveBeenCalledTimes(1);
       expect(emit.mock.calls[0]).toMatchSnapshot();

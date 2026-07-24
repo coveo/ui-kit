@@ -33,9 +33,7 @@ describe('highlight', () => {
 
     it('should return the string unchanged if "content" is an empty string', () => {
       const expectedString = '';
-      expect(highlightString({...highlightParams, content: ''})).toBe(
-        expectedString
-      );
+      expect(highlightString({...highlightParams, content: ''})).toBe(expectedString);
     });
 
     it('should throw if "tag" is an empty string', () => {
@@ -178,9 +176,7 @@ describe('highlight', () => {
         'an&#x27;es&#x27;caped&amp;&lt;str&amp;&gt;ing&#x60;&quot;&#x60;'
       );
       /* cspell:disable-next-line */
-      expect(escapeHtml("constante d'acidité")).toBe(
-        'constante d&#x27;acidité'
-      );
+      expect(escapeHtml("constante d'acidité")).toBe('constante d&#x27;acidité');
     });
   });
 });

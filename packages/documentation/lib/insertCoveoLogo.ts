@@ -1,8 +1,6 @@
 export const insertCoveoLogo = (imagePath: string) => {
   document.addEventListener('DOMContentLoaded', () => {
-    const toolbarContents = document.getElementsByClassName(
-      'tsd-toolbar-contents'
-    )[0];
+    const toolbarContents = document.getElementsByClassName('tsd-toolbar-contents')[0];
     if (toolbarContents) {
       const logoCell = document.createElement('div');
       logoCell.classList.add('table-cell', 'coveo-logo-cell');

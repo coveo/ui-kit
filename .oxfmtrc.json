@@ -1,6 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/oxc-project/oxc/main/npm/oxfmt/configuration_schema.json",
-  "printWidth": 80,
+  "printWidth": 100,
   "singleQuote": true,
   "trailingComma": "es5",
   "bracketSpacing": false,

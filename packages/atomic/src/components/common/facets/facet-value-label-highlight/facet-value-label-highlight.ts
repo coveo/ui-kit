@@ -10,9 +10,9 @@ interface FacetValueLabelHighlightProps {
   isExcluded?: boolean;
 }
 
-export const renderFacetValueLabelHighlight: FunctionalComponent<
-  FacetValueLabelHighlightProps
-> = ({props}) => {
+export const renderFacetValueLabelHighlight: FunctionalComponent<FacetValueLabelHighlightProps> = ({
+  props,
+}) => {
   const classNames = tw({
     'value-label peer-hover:text-error truncate': true,
     'font-bold': props.isSelected || !!props.isExcluded,

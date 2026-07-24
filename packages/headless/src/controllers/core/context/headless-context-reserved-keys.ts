@@ -17,8 +17,6 @@ export class ReservedContextKeyError extends Error {
   }
 }
 
-export function isReservedContextKey(
-  contextKey: string
-): contextKey is ReservedContextKey {
+export function isReservedContextKey(contextKey: string): contextKey is ReservedContextKey {
   return (ReservedContextKeys as readonly string[]).includes(contextKey);
 }

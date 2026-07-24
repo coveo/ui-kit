@@ -1,10 +1,7 @@
 import type {PayloadAction} from '@reduxjs/toolkit';
 import type {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine.js';
 import {caseInputReducer as caseInput} from '../../features/case-input/case-input-slice.js';
-import {
-  type SetCaseInputActionCreatorPayload,
-  updateCaseInput,
-} from './case-input-actions.js';
+import {type SetCaseInputActionCreatorPayload, updateCaseInput} from './case-input-actions.js';
 
 export type {SetCaseInputActionCreatorPayload};
 
@@ -35,9 +32,7 @@ export interface CaseInputActionCreators {
  * @group Actions
  * @category CaseInput
  */
-export function loadCaseInputActions(
-  engine: CaseAssistEngine
-): CaseInputActionCreators {
+export function loadCaseInputActions(engine: CaseAssistEngine): CaseInputActionCreators {
   engine.addReducers({caseInput});
 
   return {

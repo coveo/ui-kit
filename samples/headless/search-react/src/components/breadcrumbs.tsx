@@ -10,8 +10,7 @@ interface BreadcrumbsProps {
  * button. Backed by a Headless `BreadcrumbManager`.
  */
 export function Breadcrumbs({controller}: BreadcrumbsProps) {
-  const {facetBreadcrumbs, categoryFacetBreadcrumbs} =
-    useController(controller);
+  const {facetBreadcrumbs, categoryFacetBreadcrumbs} = useController(controller);
 
   const crumbs = [
     ...facetBreadcrumbs.flatMap((facet) =>
@@ -37,12 +36,7 @@ export function Breadcrumbs({controller}: BreadcrumbsProps) {
   return (
     <div className="breadcrumbs">
       {crumbs.map((crumb) => (
-        <button
-          type="button"
-          className="breadcrumb"
-          key={crumb.key}
-          onClick={crumb.deselect}
-        >
+        <button type="button" className="breadcrumb" key={crumb.key} onClick={crumb.deselect}>
           {crumb.label} ✕
         </button>
       ))}

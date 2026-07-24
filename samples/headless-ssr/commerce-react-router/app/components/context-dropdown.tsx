@@ -15,11 +15,7 @@ const loader = async (_args: LoaderFunctionArgs) => {
   return contextInfo;
 };
 
-export default function ContextDropdown({
-  useCase,
-}: {
-  useCase?: 'listing' | 'search';
-}) {
+export default function ContextDropdown({useCase}: {useCase?: 'listing' | 'search'}) {
   const {state, methods} = useContext();
   const engine = useEngine();
   const fetcher = useFetcher();
@@ -46,15 +42,9 @@ export default function ContextDropdown({
     );
 
     if (useCase === 'search') {
-      engine?.dispatch(
-        loadSearchActions(engine as CommerceEngine).executeSearch()
-      );
+      engine?.dispatch(loadSearchActions(engine as CommerceEngine).executeSearch());
     } else if (useCase === 'listing') {
-      engine?.dispatch(
-        loadProductListingActions(
-          engine as CommerceEngine
-        ).fetchProductListing()
-      );
+      engine?.dispatch(loadProductListingActions(engine as CommerceEngine).fetchProductListing());
     }
   };
 

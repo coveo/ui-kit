@@ -29,12 +29,7 @@ function SearchIcon() {
 
 function SparkleIcon() {
   return (
-    <svg
-      className={styles.icon}
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      aria-hidden="true"
-    >
+    <svg className={styles.icon} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
       <path d="M10 2l1.5 4.5L16 8l-4.5 1.5L10 14l-1.5-4.5L4 8l4.5-1.5L10 2z" />
       <path d="M18 10l1 3 3 1-3 1-1 3-1-3-3-1 3-1 1-3z" />
       <path d="M15 2l.5 1.5L17 4l-1.5.5L15 6l-.5-1.5L13 4l1.5-.5L15 2z" />
@@ -70,13 +65,7 @@ const ICON_MAP = {
   settings: SettingsIcon,
 };
 
-export function SuggestionItemRow({
-  item,
-  icon,
-  isActive,
-  onSelect,
-  id,
-}: SuggestionItemRowProps) {
+export function SuggestionItemRow({item, icon, isActive, onSelect, id}: SuggestionItemRowProps) {
   const IconComponent = ICON_MAP[icon];
 
   return (
@@ -90,9 +79,7 @@ export function SuggestionItemRow({
       <IconComponent />
       <div className={styles.content}>
         <span className={styles.label}>{item.label}</span>
-        {item.subtitle && (
-          <span className={styles.subtitle}>{item.subtitle}</span>
-        )}
+        {item.subtitle && <span className={styles.subtitle}>{item.subtitle}</span>}
       </div>
     </div>
   );

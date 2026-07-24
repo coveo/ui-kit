@@ -41,9 +41,7 @@ describe('controller-wiring', () => {
         const validate = () => {
           listingDefinitionSchema.validate({});
         };
-        expect(validate).toThrowError(
-          /context: value is required and is currently undefined/
-        );
+        expect(validate).toThrowError(/context: value is required and is currently undefined/);
       });
     });
 
@@ -52,9 +50,7 @@ describe('controller-wiring', () => {
         const validate = () => {
           searchDefinitionSchema.validate({});
         };
-        expect(validate).toThrowError(
-          /context: value is required and is currently undefined/
-        );
+        expect(validate).toThrowError(/context: value is required and is currently undefined/);
       });
     });
 
@@ -63,9 +59,7 @@ describe('controller-wiring', () => {
         const validate = () => {
           standaloneDefinitionSchema.validate({});
         };
-        expect(validate).toThrowError(
-          /context: value is required and is currently undefined/
-        );
+        expect(validate).toThrowError(/context: value is required and is currently undefined/);
       });
     });
 
@@ -74,9 +68,7 @@ describe('controller-wiring', () => {
         const validate = () => {
           recommendationsDefinitionSchema([]).validate({});
         };
-        expect(validate).toThrowError(
-          /context: value is required and is currently undefined/
-        );
+        expect(validate).toThrowError(/context: value is required and is currently undefined/);
       });
     });
 
@@ -115,9 +107,7 @@ describe('controller-wiring', () => {
         recommendations: ['invalid-rec'],
       };
       expect(() => {
-        recommendationsDefinitionSchema(['rec1', 'rec2']).validate(
-          recommendationsConfig
-        );
+        recommendationsDefinitionSchema(['rec1', 'rec2']).validate(recommendationsConfig);
       }).toThrowError(/value should be one of: rec1, rec2./);
     });
 
@@ -128,9 +118,7 @@ describe('controller-wiring', () => {
         productId: 'product-123',
       };
       expect(() => {
-        recommendationsDefinitionSchema(['rec1']).validate(
-          recommendationsConfig
-        );
+        recommendationsDefinitionSchema(['rec1']).validate(recommendationsConfig);
       }).not.toThrow();
     });
 
@@ -140,9 +128,7 @@ describe('controller-wiring', () => {
         recommendations: ['rec1'],
       };
       expect(() => {
-        recommendationsDefinitionSchema(['rec1']).validate(
-          recommendationsConfig
-        );
+        recommendationsDefinitionSchema(['rec1']).validate(recommendationsConfig);
       }).not.toThrow();
     });
 
@@ -153,9 +139,7 @@ describe('controller-wiring', () => {
         productId: '',
       };
       expect(() => {
-        recommendationsDefinitionSchema(['rec1']).validate(
-          recommendationsConfig
-        );
+        recommendationsDefinitionSchema(['rec1']).validate(recommendationsConfig);
       }).toThrow();
     });
   });
@@ -193,11 +177,7 @@ describe('controller-wiring', () => {
           },
         };
 
-        props = wireControllerParams(
-          solutionType,
-          mockControllerDefinitions,
-          params
-        );
+        props = wireControllerParams(solutionType, mockControllerDefinitions, params);
       });
 
       it(`should wire context for ${solutionType} solution type`, () => {
@@ -268,11 +248,7 @@ describe('controller-wiring', () => {
         },
       };
 
-      const props = wireControllerParams(
-        SolutionType.search,
-        mockControllerDefinitions,
-        params
-      );
+      const props = wireControllerParams(SolutionType.search, mockControllerDefinitions, params);
 
       expect(props.customController).toEqual({
         initialState: {
@@ -325,11 +301,7 @@ describe('controller-wiring', () => {
         cart: {items: []},
       };
 
-      const props = wireControllerParams(
-        SolutionType.listing,
-        definitionsWithoutCart,
-        params
-      );
+      const props = wireControllerParams(SolutionType.listing, definitionsWithoutCart, params);
 
       expect(props.cart).toBeUndefined();
       expect(props.parameterManager).toBeUndefined();

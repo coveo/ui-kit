@@ -24,9 +24,7 @@ export let getComposedInternals: <T extends InterfaceType>(
   composed: ComposedInterfaceImpl<T>
 ) => ComposedInternals;
 
-export class ComposedInterfaceImpl<
-  T extends InterfaceType,
-> implements ComposedInterface<T> {
+export class ComposedInterfaceImpl<T extends InterfaceType> implements ComposedInterface<T> {
   declare readonly [SupportsBrand]: {[K in Facades[T]]: true};
 
   get disposed(): boolean {
@@ -71,10 +69,7 @@ export class ComposedInterfaceImpl<
     this.#engine.removeInterface(this);
   }
 
-  #resolveFacades(
-    facade: Facades[T],
-    composedInterface?: InterfaceHandle
-  ): EndpointThunk[] {
+  #resolveFacades(facade: Facades[T], composedInterface?: InterfaceHandle): EndpointThunk[] {
     this.#assertNotDisposed();
     const target = composedInterface ?? this;
     return this.#interfaces.flatMap((sub) => {

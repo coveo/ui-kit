@@ -1,8 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {
-  formatDateForSearchApi,
-  parseDate,
-} from '../../../../../api/search/date/date-format.js';
+import {formatDateForSearchApi, parseDate} from '../../../../../api/search/date/date-format.js';
 import {
   type RelativeDate,
   serializeRelativeDate,
@@ -12,10 +9,7 @@ import {buildDateRange} from './date-range.js';
 
 describe('date range', () => {
   describe('#buildDateRange', () => {
-    function validateAbsoluteRange(
-      start: string | number | Date,
-      end: string | number | Date
-    ) {
+    function validateAbsoluteRange(start: string | number | Date, end: string | number | Date) {
       const dateRange = buildDateRange({
         start,
         end,

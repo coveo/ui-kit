@@ -10,15 +10,10 @@ export interface AgentResponseProps {
   onAction?: (text: string, type: string) => void;
 }
 
-export function AgentResponse({
-  agentResponse,
-  isStreaming,
-  onAction,
-}: AgentResponseProps) {
+export function AgentResponse({agentResponse, isStreaming, onAction}: AgentResponseProps) {
   const {messages, reasoningSteps, surfaces} = agentResponse;
 
-  const hasContent =
-    messages.length > 0 || reasoningSteps.length > 0 || surfaces.length > 0;
+  const hasContent = messages.length > 0 || reasoningSteps.length > 0 || surfaces.length > 0;
 
   if (!hasContent) {
     return null;
@@ -27,15 +22,10 @@ export function AgentResponse({
   return (
     <div className={styles.container}>
       {reasoningSteps.length > 0 && (
-        <ThinkingBlock
-          reasoningSteps={reasoningSteps}
-          isStreaming={isStreaming}
-        />
+        <ThinkingBlock reasoningSteps={reasoningSteps} isStreaming={isStreaming} />
       )}
       {messages.length > 0 && <StreamingMessage messages={messages} />}
-      {surfaces.length > 0 && (
-        <SurfaceRenderer surfaces={surfaces} onAction={onAction} />
-      )}
+      {surfaces.length > 0 && <SurfaceRenderer surfaces={surfaces} onAction={onAction} />}
     </div>
   );
 }

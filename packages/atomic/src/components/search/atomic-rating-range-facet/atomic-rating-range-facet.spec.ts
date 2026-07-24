@@ -60,38 +60,35 @@ describe('atomic-rating-range-facet', () => {
     vi.mocked(buildNumericFacet).mockReturnValue(mockedNumericFacet);
     vi.mocked(buildSearchStatus).mockReturnValue(mockedSearchStatus);
     vi.mocked(buildTabManager).mockReturnValue(mockedTabManager);
-    vi.mocked(buildFacetConditionsManager).mockReturnValue(
-      mockedFacetConditionsManager
-    );
+    vi.mocked(buildFacetConditionsManager).mockReturnValue(mockedFacetConditionsManager);
 
-    const {element} =
-      await renderInAtomicSearchInterface<AtomicRatingRangeFacet>({
-        template: html`<atomic-rating-range-facet
-          field=${props.field ?? 'rating'}
-          label=${props.label ?? 'Rating'}
-          facet-id=${ifDefined(props.facetId)}
-          number-of-intervals=${ifDefined(props.numberOfIntervals)}
-          max-value-in-index=${ifDefined(props.maxValueInIndex)}
-          min-value-in-index=${ifDefined(props.minValueInIndex)}
-          icon=${ifDefined(props.icon)}
-          ?is-collapsed=${props.isCollapsed}
-          heading-level=${ifDefined(props.headingLevel)}
-          filter-facet-count=${props.filterFacetCount}
-          injection-depth=${ifDefined(props.injectionDepth)}
-          .tabsIncluded=${props.tabsIncluded || []}
-          .tabsExcluded=${props.tabsExcluded || []}
-          .dependsOn=${props.dependsOn || {}}
-        ></atomic-rating-range-facet>`,
-        selector: 'atomic-rating-range-facet',
-        bindings: (bindings) => ({
-          ...bindings,
-          store: {
-            ...bindings.store,
-            getUniqueIDFromEngine: vi.fn().mockReturnValue('123'),
-            registerFacet: mockedRegisterFacet,
-          },
-        }),
-      });
+    const {element} = await renderInAtomicSearchInterface<AtomicRatingRangeFacet>({
+      template: html`<atomic-rating-range-facet
+        field=${props.field ?? 'rating'}
+        label=${props.label ?? 'Rating'}
+        facet-id=${ifDefined(props.facetId)}
+        number-of-intervals=${ifDefined(props.numberOfIntervals)}
+        max-value-in-index=${ifDefined(props.maxValueInIndex)}
+        min-value-in-index=${ifDefined(props.minValueInIndex)}
+        icon=${ifDefined(props.icon)}
+        ?is-collapsed=${props.isCollapsed}
+        heading-level=${ifDefined(props.headingLevel)}
+        filter-facet-count=${props.filterFacetCount}
+        injection-depth=${ifDefined(props.injectionDepth)}
+        .tabsIncluded=${props.tabsIncluded || []}
+        .tabsExcluded=${props.tabsExcluded || []}
+        .dependsOn=${props.dependsOn || {}}
+      ></atomic-rating-range-facet>`,
+      selector: 'atomic-rating-range-facet',
+      bindings: (bindings) => ({
+        ...bindings,
+        store: {
+          ...bindings.store,
+          getUniqueIDFromEngine: vi.fn().mockReturnValue('123'),
+          registerFacet: mockedRegisterFacet,
+        },
+      }),
+    });
 
     const locators = {
       get title() {
@@ -169,9 +166,7 @@ describe('atomic-rating-range-facet', () => {
   // TODO V4: KIT-5197 - unskip
   describe.skip('props validation', () => {
     it('should set error when field prop is missing', async () => {
-      const consoleErrorSpy = vi
-        .spyOn(console, 'error')
-        .mockImplementation(() => {});
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
       const {element} = await renderRatingRangeFacet({
         props: {field: ''},
@@ -189,15 +184,11 @@ describe('atomic-rating-range-facet', () => {
       await element.updateComplete;
 
       expect(element.error).toBeDefined();
-      expect(element.error.message).toContain(
-        'minimum value of 1 not respected'
-      );
+      expect(element.error.message).toContain('minimum value of 1 not respected');
     });
 
     it('should warn when both tabsIncluded and tabsExcluded are provided', async () => {
-      const consoleWarnSpy = vi
-        .spyOn(console, 'warn')
-        .mockImplementation(() => {});
+      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
       await renderRatingRangeFacet({
         props: {
@@ -206,9 +197,7 @@ describe('atomic-rating-range-facet', () => {
         },
       });
 
-      expect(consoleWarnSpy).toHaveBeenCalledWith(
-        expect.stringContaining('tabs-included')
-      );
+      expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('tabs-included'));
 
       consoleWarnSpy.mockRestore();
     });
@@ -234,9 +223,7 @@ describe('atomic-rating-range-facet', () => {
       });
 
       const {element} = await renderRatingRangeFacet();
-      const placeholder = element.shadowRoot?.querySelector(
-        'atomic-facet-placeholder'
-      );
+      const placeholder = element.shadowRoot?.querySelector('atomic-facet-placeholder');
       expect(placeholder).toBeDefined();
     });
 
@@ -249,8 +236,7 @@ describe('atomic-rating-range-facet', () => {
       });
 
       const {element} = await renderRatingRangeFacet();
-      const facetContainer =
-        element.shadowRoot?.querySelector('[part="facet"]');
+      const facetContainer = element.shadowRoot?.querySelector('[part="facet"]');
       expect(facetContainer).toBeNull();
     });
 
@@ -260,8 +246,7 @@ describe('atomic-rating-range-facet', () => {
       });
 
       const {element} = await renderRatingRangeFacet();
-      const facetContainer =
-        element.shadowRoot?.querySelector('[part="facet"]');
+      const facetContainer = element.shadowRoot?.querySelector('[part="facet"]');
       expect(facetContainer).toBeNull();
     });
 
@@ -274,8 +259,7 @@ describe('atomic-rating-range-facet', () => {
       });
 
       const {element} = await renderRatingRangeFacet();
-      const facetContainer =
-        element.shadowRoot?.querySelector('[part="facet"]');
+      const facetContainer = element.shadowRoot?.querySelector('[part="facet"]');
       expect(facetContainer).toBeNull();
     });
   });
@@ -301,9 +285,7 @@ describe('atomic-rating-range-facet', () => {
   describe('rating display', () => {
     it('should display rating icons for each value', async () => {
       const {element} = await renderRatingRangeFacet();
-      const ratingIcons = element.shadowRoot?.querySelectorAll(
-        '[part~="value-rating-icon"]'
-      );
+      const ratingIcons = element.shadowRoot?.querySelectorAll('[part~="value-rating-icon"]');
       expect(ratingIcons!.length).toBeGreaterThan(0);
     });
 
@@ -358,10 +340,7 @@ describe('atomic-rating-range-facet', () => {
 
   describe('when removed from the DOM (#disconnectedCallback)', () => {
     it('should stop watching dependencies', async () => {
-      const stopWatchingSpy = vi.spyOn(
-        mockedFacetConditionsManager,
-        'stopWatching'
-      );
+      const stopWatchingSpy = vi.spyOn(mockedFacetConditionsManager, 'stopWatching');
       const {element} = await renderRatingRangeFacet();
       element.remove();
       expect(stopWatchingSpy).toHaveBeenCalled();
@@ -478,9 +457,7 @@ describe('atomic-rating-range-facet', () => {
 
     it('should have value-link part', async () => {
       const {element} = await renderRatingRangeFacet();
-      const valueLink = element.shadowRoot?.querySelector(
-        '[part="value-link"]'
-      );
+      const valueLink = element.shadowRoot?.querySelector('[part="value-link"]');
       expect(valueLink).toBeDefined();
     });
 
@@ -505,31 +482,21 @@ describe('atomic-rating-range-facet', () => {
       const values = element.shadowRoot?.querySelector('[part="values"]');
       expect(values).toBeDefined();
 
-      const valueCount = element.shadowRoot?.querySelector(
-        '[part="value-count"]'
-      );
+      const valueCount = element.shadowRoot?.querySelector('[part="value-count"]');
 
       expect(valueCount).toBeDefined();
 
-      const placeholder = element.shadowRoot?.querySelector(
-        '[part="placeholder"]'
-      );
+      const placeholder = element.shadowRoot?.querySelector('[part="placeholder"]');
 
       expect(placeholder).toBeDefined();
 
-      const valueLink = element.shadowRoot?.querySelector(
-        '[part="value-link"]'
-      );
+      const valueLink = element.shadowRoot?.querySelector('[part="value-link"]');
       expect(valueLink).toBeDefined();
 
-      const selectedLink = element.shadowRoot?.querySelector(
-        '[part="value-link-selected"]'
-      );
+      const selectedLink = element.shadowRoot?.querySelector('[part="value-link-selected"]');
       expect(selectedLink).toBeDefined();
 
-      const ratingIcon = element.shadowRoot?.querySelector(
-        '[part~="value-rating-icon"]'
-      );
+      const ratingIcon = element.shadowRoot?.querySelector('[part~="value-rating-icon"]');
       expect(ratingIcon).toBeDefined();
     });
   });

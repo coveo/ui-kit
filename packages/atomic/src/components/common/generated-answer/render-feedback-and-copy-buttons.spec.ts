@@ -15,9 +15,7 @@ vi.mock('./copy-button', () => ({
 }));
 
 vi.mock('./feedback-button', () => ({
-  renderFeedbackButton: vi.fn(
-    () => html`<button part="feedback-button"></button>`
-  ),
+  renderFeedbackButton: vi.fn(() => html`<button part="feedback-button"></button>`),
 }));
 
 vi.mock('./generated-answer-utils', () => ({
@@ -31,9 +29,7 @@ describe('#renderFeedbackAndCopyButtons', () => {
     i18n = await createTestI18n();
   });
 
-  const renderComponent = async (
-    overrides: Partial<RenderFeedbackAndCopyButtonsProps> = {}
-  ) => {
+  const renderComponent = async (overrides: Partial<RenderFeedbackAndCopyButtonsProps> = {}) => {
     const defaultProps: RenderFeedbackAndCopyButtonsProps = {
       i18n: i18n,
       generatedAnswerActionsState: {
@@ -52,9 +48,7 @@ describe('#renderFeedbackAndCopyButtons', () => {
     };
 
     const props = {...defaultProps, ...overrides};
-    const element = await renderFunctionFixture(
-      html`${renderFeedbackAndCopyButtons({props})}`
-    );
+    const element = await renderFunctionFixture(html`${renderFeedbackAndCopyButtons({props})}`);
 
     return {
       element,
@@ -226,9 +220,7 @@ describe('#renderFeedbackAndCopyButtons', () => {
       });
 
       it('should call renderCopyButton with correct props', async () => {
-        const getCopyToClipboardTooltip = vi
-          .fn()
-          .mockReturnValue('Custom tooltip');
+        const getCopyToClipboardTooltip = vi.fn().mockReturnValue('Custom tooltip');
 
         await renderComponent({
           copied: true,
@@ -246,9 +238,7 @@ describe('#renderFeedbackAndCopyButtons', () => {
       });
 
       it('should call getCopyToClipboardTooltip', async () => {
-        const getCopyToClipboardTooltip = vi
-          .fn()
-          .mockReturnValue('Copy answer');
+        const getCopyToClipboardTooltip = vi.fn().mockReturnValue('Copy answer');
 
         await renderComponent({getCopyToClipboardTooltip});
 
@@ -267,8 +257,7 @@ describe('#renderFeedbackAndCopyButtons', () => {
           onCopyToClipboard,
         });
 
-        const copyButtonCall = vi.mocked(copyButton.renderCopyButton).mock
-          .calls[0][0];
+        const copyButtonCall = vi.mocked(copyButton.renderCopyButton).mock.calls[0][0];
         const onClickHandler = copyButtonCall.props.onClick;
 
         await onClickHandler();

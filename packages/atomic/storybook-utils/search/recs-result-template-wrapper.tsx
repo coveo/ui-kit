@@ -12,11 +12,7 @@ export const wrapInRecsResultTemplate = (): {
 
     const storyResult = story();
 
-    if (
-      storyResult &&
-      typeof storyResult === 'object' &&
-      '_$litType$' in storyResult
-    ) {
+    if (storyResult && typeof storyResult === 'object' && '_$litType$' in storyResult) {
       render(storyResult as TemplateResult, tempContainer);
       templateTag.innerHTML = tempContainer.innerHTML;
     } else {
@@ -25,9 +21,7 @@ export const wrapInRecsResultTemplate = (): {
 
     return html`
       <atomic-recs-list display="list" density="normal" image-size="none">
-        <atomic-recs-result-template
-          >${templateTag}</atomic-recs-result-template
-        >
+        <atomic-recs-result-template>${templateTag}</atomic-recs-result-template>
       </atomic-recs-list>
     `;
   };

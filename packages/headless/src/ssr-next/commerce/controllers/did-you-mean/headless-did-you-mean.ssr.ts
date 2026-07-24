@@ -8,8 +8,7 @@ import type {SearchOnlyControllerDefinitionWithoutProps} from '../../types/contr
 
 export type {DidYouMean, DidYouMeanOptions, DidYouMeanState};
 
-export type DidYouMeanDefinition =
-  SearchOnlyControllerDefinitionWithoutProps<DidYouMean>;
+export type DidYouMeanDefinition = SearchOnlyControllerDefinitionWithoutProps<DidYouMean>;
 
 /**
  * Defines a `DidYouMean` controller instance.
@@ -18,12 +17,9 @@ export type DidYouMeanDefinition =
  * @param options - The configurable `DidYouMean` options.
  * @returns The `DidYouMean` controller definition.
  */
-export function defineDidYouMean(
-  options?: DidYouMeanOptions
-): DidYouMeanDefinition {
+export function defineDidYouMean(options?: DidYouMeanOptions): DidYouMeanDefinition {
   return {
     search: true,
-    build: (engine) =>
-      buildSearch(engine, {enableResults: options?.enableResults}).didYouMean(),
+    build: (engine) => buildSearch(engine, {enableResults: options?.enableResults}).didYouMean(),
   };
 }

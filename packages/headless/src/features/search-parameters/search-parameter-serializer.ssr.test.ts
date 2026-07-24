@@ -1,17 +1,7 @@
 import type {SearchParameters} from './search-parameter-actions.js';
 import {buildSSRSearchParameterSerializer} from './search-parameter-serializer.ssr.js';
 
-const someSpecialCharactersThatNeedsEncoding = [
-  '&',
-  ',',
-  '=',
-  '[',
-  ']',
-  '#',
-  '?',
-  '/',
-  '>',
-];
+const someSpecialCharactersThatNeedsEncoding = ['&', ',', '=', '[', ']', '#', '?', '/', '>'];
 
 describe('buildSSRSearchParameterSerializer', () => {
   const {toSearchParameters} = buildSSRSearchParameterSerializer();
@@ -124,9 +114,7 @@ describe('buildSSRSearchParameterSerializer', () => {
 
       it('should convert a URL search parameter with a single key and string value with special characters', () => {
         someSpecialCharactersThatNeedsEncoding.forEach((char) => {
-          const {searchParams} = new URL(
-            `https://example.com?q=hello${encodeURIComponent(char)}`
-          );
+          const {searchParams} = new URL(`https://example.com?q=hello${encodeURIComponent(char)}`);
           const result = toSearchParameters(searchParams);
           expect(result).toEqual({q: `hello${char}`});
         });
@@ -135,9 +123,7 @@ describe('buildSSRSearchParameterSerializer', () => {
       it('should convert two facets correctly with special characters', () => {
         someSpecialCharactersThatNeedsEncoding.forEach((char) => {
           const {searchParams} = new URL(
-            `https://example.com?f-color=${encodeURIComponent(
-              char
-            )}&f-color=green&f-shape=square`
+            `https://example.com?f-color=${encodeURIComponent(char)}&f-color=green&f-shape=square`
           );
 
           const result = toSearchParameters(searchParams);
@@ -160,9 +146,7 @@ describe('buildSSRSearchParameterSerializer', () => {
       const initialUrl = new URL('https://example.com');
       someSpecialCharactersThatNeedsEncoding.forEach((specialChar) => {
         const result = serialize({q: `hello${specialChar}`}, initialUrl);
-        expect(result).toBe(
-          `https://example.com/?q=hello${encodeURIComponent(specialChar)}`
-        );
+        expect(result).toBe(`https://example.com/?q=hello${encodeURIComponent(specialChar)}`);
       });
     });
 
@@ -172,9 +156,7 @@ describe('buildSSRSearchParameterSerializer', () => {
         const f = {author: ['a', specialChar]};
         const result = serialize({f}, initialUrl);
         expect(result).toEqual(
-          `https://example.com/?f-author=a&f-author=${encodeURIComponent(
-            specialChar
-          )}`
+          `https://example.com/?f-author=a&f-author=${encodeURIComponent(specialChar)}`
         );
       });
     });
@@ -188,9 +170,7 @@ describe('buildSSRSearchParameterSerializer', () => {
 
       const result = serialize(searchParameters, initialUrl);
 
-      expect(result).toBe(
-        'https://example.com/?q=query&f-color=red&f-color=green&f-shape=square'
-      );
+      expect(result).toBe('https://example.com/?q=query&f-color=red&f-color=green&f-shape=square');
     });
 
     it('should serialize search parameters to URL regardless of their types', () => {
@@ -203,9 +183,7 @@ describe('buildSSRSearchParameterSerializer', () => {
 
       const result = serialize(searchParameters, initialUrl);
 
-      expect(result).toBe(
-        'https://example.com/?debug=true&firstResult=10&tab=all'
-      );
+      expect(result).toBe('https://example.com/?debug=true&firstResult=10&tab=all');
     });
 
     it('should not alter url host and route', () => {
@@ -230,24 +208,18 @@ describe('buildSSRSearchParameterSerializer', () => {
 
       const result = serialize(searchParameters, initialUrl);
 
-      expect(result).toBe(
-        'https://example.com/?foo=bar&f-color=red&f-color=green&f-shape=square'
-      );
+      expect(result).toBe('https://example.com/?foo=bar&f-color=red&f-color=green&f-shape=square');
     });
 
     it('should overwrite existing coveo search parameters in URL', () => {
       const searchParameters = {
         f: {color: ['red', 'green'], shape: ['square']},
       };
-      const initialUrl = new URL(
-        'https://example.com/?f-color=blue&f-shape=oval'
-      );
+      const initialUrl = new URL('https://example.com/?f-color=blue&f-shape=oval');
 
       const result = serialize(searchParameters, initialUrl);
 
-      expect(result).toBe(
-        'https://example.com/?f-color=red&f-color=green&f-shape=square'
-      );
+      expect(result).toBe('https://example.com/?f-color=red&f-color=green&f-shape=square');
     });
 
     it('should handle empty search parameters', () => {

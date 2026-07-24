@@ -1,8 +1,4 @@
-import {
-  buildCart,
-  buildInstantProducts,
-  buildStandaloneSearchBox,
-} from '@coveo/headless/commerce';
+import {buildCart, buildInstantProducts, buildStandaloneSearchBox} from '@coveo/headless/commerce';
 import {css, html, LitElement, nothing} from 'lit';
 import {saveCartItemsToLocalStorage} from '../cart-utils.js';
 import {HeadlessController} from '../controllers/headless-controller.js';
@@ -150,24 +146,17 @@ export class CommerceApp extends LitElement {
   }
 
   #tab(href, label) {
-    return html`<a
-      href=${href}
-      aria-current=${this.#isActive(href) ? 'page' : nothing}
-    >
+    return html`<a href=${href} aria-current=${this.#isActive(href) ? 'page' : nothing}>
       ${label}
     </a>`;
   }
 
   #renderPage() {
     if (this.route.startsWith('#/search')) {
-      return html`<commerce-search-page
-        .cart=${this.cart}
-      ></commerce-search-page>`;
+      return html`<commerce-search-page .cart=${this.cart}></commerce-search-page>`;
     }
     if (this.route.startsWith('#/listing')) {
-      return html`<commerce-listing-page
-        .cart=${this.cart}
-      ></commerce-listing-page>`;
+      return html`<commerce-listing-page .cart=${this.cart}></commerce-listing-page>`;
     }
     if (this.route.startsWith('#/cart')) {
       return html`<commerce-cart-page .cart=${this.cart}></commerce-cart-page>`;

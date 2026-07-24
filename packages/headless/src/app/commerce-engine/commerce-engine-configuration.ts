@@ -17,10 +17,7 @@ export interface CommerceEngineConfiguration extends EngineConfiguration {
   /**
    * The commerce analytics configuration.
    */
-  analytics: Pick<
-    AnalyticsConfiguration,
-    'enabled' | 'proxyBaseUrl' | 'source'
-  > &
+  analytics: Pick<AnalyticsConfiguration, 'enabled' | 'proxyBaseUrl' | 'source'> &
     Required<Pick<AnalyticsConfiguration, 'trackingId'>>;
   /**
    * The commerce context options.
@@ -41,37 +38,36 @@ export interface CommerceEngineConfiguration extends EngineConfiguration {
   proxyBaseUrl?: string;
 }
 
-export const commerceEngineConfigurationSchema =
-  new Schema<CommerceEngineConfiguration>({
-    ...engineConfigurationDefinitions,
-    analytics: new RecordValue({
-      options: {required: true},
-      values: {
-        enabled: new BooleanValue({required: false, default: true}),
-        proxyBaseUrl: new StringValue({required: false, url: true}),
-        source: new RecordValue({
-          options: {required: false},
-          values: {
-            '@coveo/atomic': nonEmptyString,
-            '@coveo/quantic': nonEmptyString,
-          },
-        }),
-        trackingId: new StringValue({
-          required: true,
-          emptyAllowed: false,
-          regex: /^[a-zA-Z0-9_\-.]{1,100}$/,
-        }),
-      },
-    }),
-    context: new RecordValue({
-      options: {required: true},
-      values: contextDefinition,
-    }),
-    cart: new RecordValue({
-      values: cartDefinition,
-    }),
-    proxyBaseUrl: new StringValue({required: false, url: true}),
-  });
+export const commerceEngineConfigurationSchema = new Schema<CommerceEngineConfiguration>({
+  ...engineConfigurationDefinitions,
+  analytics: new RecordValue({
+    options: {required: true},
+    values: {
+      enabled: new BooleanValue({required: false, default: true}),
+      proxyBaseUrl: new StringValue({required: false, url: true}),
+      source: new RecordValue({
+        options: {required: false},
+        values: {
+          '@coveo/atomic': nonEmptyString,
+          '@coveo/quantic': nonEmptyString,
+        },
+      }),
+      trackingId: new StringValue({
+        required: true,
+        emptyAllowed: false,
+        regex: /^[a-zA-Z0-9_\-.]{1,100}$/,
+      }),
+    },
+  }),
+  context: new RecordValue({
+    options: {required: true},
+    values: contextDefinition,
+  }),
+  cart: new RecordValue({
+    values: cartDefinition,
+  }),
+  proxyBaseUrl: new StringValue({required: false, url: true}),
+});
 
 export function getSampleCommerceEngineConfiguration(): CommerceEngineConfiguration {
   return {

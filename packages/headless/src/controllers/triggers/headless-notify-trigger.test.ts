@@ -1,7 +1,4 @@
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../test/mock-engine-v2.js';
 import {createMockState} from '../../test/mock-state.js';
 import type {NotifyTrigger} from '../core/triggers/headless-core-notify-trigger.js';
 import {buildNotifyTrigger} from './headless-notify-trigger.js';

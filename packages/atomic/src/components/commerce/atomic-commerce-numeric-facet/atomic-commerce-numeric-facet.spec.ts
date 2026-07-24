@@ -5,15 +5,7 @@ import {
   type Summary,
 } from '@coveo/headless/commerce';
 import {html, LitElement} from 'lit';
-import {
-  afterEach,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  type MockInstance,
-  vi,
-} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
 import {page, userEvent} from 'vitest/browser';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeContext} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/context-controller';
@@ -32,9 +24,7 @@ describe('atomic-commerce-numeric-facet', () => {
   let mockedConsoleError: MockInstance;
 
   beforeEach(() => {
-    mockedConsoleError = vi
-      .spyOn(console, 'error')
-      .mockImplementation(() => {});
+    mockedConsoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
 
     mockedContext = buildFakeContext({});
     mockedSummary = buildFakeSummary({});
@@ -55,21 +45,20 @@ describe('atomic-commerce-numeric-facet', () => {
 
   const setupElement = async ({isCollapsed} = {isCollapsed: false}) => {
     vi.mocked(buildContext).mockReturnValue(mockedContext);
-    const {element} =
-      await renderInAtomicCommerceInterface<AtomicCommerceNumericFacet>({
-        template: html`<atomic-commerce-numeric-facet
-          .facet=${mockedFacet}
-          .summary=${mockedSummary}
-          ?is-collapsed=${isCollapsed}
-          field="ec_price"
-        ></atomic-commerce-numeric-facet>`,
-        selector: 'atomic-commerce-numeric-facet',
-        bindings: (bindings) => {
-          bindings.store.getUniqueIDFromEngine = vi.fn().mockReturnValue('123');
-          bindings.engine = buildFakeCommerceEngine({});
-          return bindings;
-        },
-      });
+    const {element} = await renderInAtomicCommerceInterface<AtomicCommerceNumericFacet>({
+      template: html`<atomic-commerce-numeric-facet
+        .facet=${mockedFacet}
+        .summary=${mockedSummary}
+        ?is-collapsed=${isCollapsed}
+        field="ec_price"
+      ></atomic-commerce-numeric-facet>`,
+      selector: 'atomic-commerce-numeric-facet',
+      bindings: (bindings) => {
+        bindings.store.getUniqueIDFromEngine = vi.fn().mockReturnValue('123');
+        bindings.engine = buildFakeCommerceEngine({});
+        return bindings;
+      },
+    });
 
     return {
       element,
@@ -83,17 +72,13 @@ describe('atomic-commerce-numeric-facet', () => {
         return page.getByRole('checkbox').nth(valuePosition);
       },
       get componentError() {
-        return page.getByText(
-          'Look at the developer console for more information'
-        );
+        return page.getByText('Look at the developer console for more information');
       },
       get clearFilter() {
         return page.getByRole('button', {name: /clear filter/i});
       },
       get inputs() {
-        return element.shadowRoot!.querySelector(
-          'atomic-commerce-facet-number-input'
-        )!;
+        return element.shadowRoot!.querySelector('atomic-commerce-facet-number-input')!;
       },
       get inputMinimum() {
         return element.shadowRoot!.querySelector('[part~=input-start]')!;
@@ -129,19 +114,13 @@ describe('atomic-commerce-numeric-facet', () => {
         return element.shadowRoot!.querySelectorAll('[part~=value-checkbox]');
       },
       get valueCheckboxChecked() {
-        return element.shadowRoot!.querySelectorAll(
-          '[part~=value-checkbox-checked]'
-        );
+        return element.shadowRoot!.querySelectorAll('[part~=value-checkbox-checked]');
       },
       get valueCheckboxLabel() {
-        return element.shadowRoot!.querySelectorAll(
-          '[part~=value-checkbox-label]'
-        );
+        return element.shadowRoot!.querySelectorAll('[part~=value-checkbox-label]');
       },
       get valueCheckboxIcon() {
-        return element.shadowRoot!.querySelectorAll(
-          '[part~=value-checkbox-icon]'
-        );
+        return element.shadowRoot!.querySelectorAll('[part~=value-checkbox-icon]');
       },
     };
   };
@@ -294,9 +273,7 @@ describe('atomic-commerce-numeric-facet', () => {
 
     expect(componentError).toBeVisible();
     expect(mockedConsoleError).toHaveBeenCalledWith(
-      new Error(
-        'The "facet" property is required for <atomic-commerce-facet>.'
-      ),
+      new Error('The "facet" property is required for <atomic-commerce-facet>.'),
       expect.anything()
     );
   });

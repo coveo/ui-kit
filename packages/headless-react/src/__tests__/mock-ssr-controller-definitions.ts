@@ -15,9 +15,7 @@ export function buildMockController(): Controller {
   } as Controller;
 }
 
-export function defineMockCommerceController(
-  options?: SolutionTypeAvailabilities
-) {
+export function defineMockCommerceController(options?: SolutionTypeAvailabilities) {
   return {
     build: vi.fn((_engine) => {
       return buildMockController();

@@ -25,10 +25,7 @@ import {getOrganizationEndpoint} from '../platform-client.js';
 import type {PreprocessRequest} from '../preprocess-request.js';
 import {BaseAnalyticsProvider} from './base-analytics.js';
 import HistoryStore from './coveo.analytics/history-store.js';
-import {
-  wrapAnalyticsClientSendEventHook,
-  wrapPreprocessRequest,
-} from './coveo-analytics-utils.js';
+import {wrapAnalyticsClientSendEventHook, wrapPreprocessRequest} from './coveo-analytics-utils.js';
 
 export type StateNeededBySearchAnalyticsProvider = ConfigurationSection &
   Partial<Omit<SearchAppState, 'configuration'>>;
@@ -40,9 +37,7 @@ export class SearchAnalyticsProvider
   private static fallbackPipelineName = 'default';
 
   public getFacetState() {
-    return buildFacetStateMetadata(
-      getStateNeededForFacetMetadata(this.getState())
-    );
+    return buildFacetStateMetadata(getStateNeededForFacetMetadata(this.getState()));
   }
 
   public getPipeline() {
@@ -92,8 +87,7 @@ export class SearchAnalyticsProvider
     const state = this.getState();
     const baseObject = super.getBaseMetadata();
 
-    const generativeQuestionAnsweringId =
-      generativeQuestionAnsweringIdSelector(state);
+    const generativeQuestionAnsweringId = generativeQuestionAnsweringIdSelector(state);
 
     if (generativeQuestionAnsweringId) {
       baseObject.generativeQuestionAnsweringId = generativeQuestionAnsweringId;
@@ -199,10 +193,7 @@ export class SearchAnalyticsProvider
     };
   }
 
-  public getCategoryBreadcrumbFacetMetadata(
-    categoryFacetId: string,
-    categoryFacetPath: string[]
-  ) {
+  public getCategoryBreadcrumbFacetMetadata(categoryFacetId: string, categoryFacetPath: string[]) {
     const facetRequest = this.getFacetRequest(categoryFacetId);
     const categoryFacetField = facetRequest?.field ?? '';
     return {
@@ -216,9 +207,7 @@ export class SearchAnalyticsProvider
 
   public getOmniboxAnalyticsMetadata(id: string, suggestion: string) {
     const querySuggest = this.state.querySuggest?.[id];
-    const suggestions = querySuggest!.completions.map(
-      (completion) => completion.expression
-    );
+    const suggestions = querySuggest!.completions.map((completion) => completion.expression);
 
     const lastIndex = querySuggest!.partialQueries.length - 1;
     const partialQuery = querySuggest!.partialQueries[lastIndex] || '';
@@ -227,10 +216,7 @@ export class SearchAnalyticsProvider
       ...this.getBaseMetadata(),
       suggestionRanking: suggestions.indexOf(suggestion),
       partialQuery,
-      partialQueries:
-        querySuggest!.partialQueries.length > 0
-          ? querySuggest!.partialQueries
-          : '',
+      partialQueries: querySuggest!.partialQueries.length > 0 ? querySuggest!.partialQueries : '',
       suggestions: suggestions.length > 0 ? suggestions : '',
       querySuggestResponseId,
     };

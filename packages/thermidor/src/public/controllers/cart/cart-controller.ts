@@ -20,10 +20,7 @@ class CartControllerImpl extends BaseController<CartControllerState> {
     engine.adoptSlice(getOrCreateCartSlice(options.interface));
 
     const selectors = getOrCreateCartSelectors(options.interface);
-    const controllerState = createMemoizedStateSelector(
-      selectors.getItems,
-      (items) => ({items})
-    );
+    const controllerState = createMemoizedStateSelector(selectors.getItems, (items) => ({items}));
 
     super(engine, controllerState);
     this.#actions = getOrCreateCartActions(options.interface);
@@ -44,9 +41,8 @@ class CartControllerImpl extends BaseController<CartControllerState> {
  * @param options - The controller creation options.
  * @returns A cart controller.
  */
-export const buildCartController = (
-  options: CartControllerOptions
-): CartController => new CartControllerImpl(options);
+export const buildCartController = (options: CartControllerOptions): CartController =>
+  new CartControllerImpl(options);
 
 export interface CartController extends Controller<CartControllerState> {
   setItems(payload: SetCartItemsPayload): void;

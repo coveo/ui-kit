@@ -44,11 +44,7 @@ export const Default: Story = {
   render: () => html`
     <atomic-insight-layout>
       <atomic-layout-section section="results">
-        <atomic-insight-result-list
-          display="list"
-          density="normal"
-          image-size="icon"
-        >
+        <atomic-insight-result-list display="list" density="normal" image-size="icon">
           <atomic-insight-result-template>
             <template>
               <atomic-result-section-title>
@@ -78,11 +74,7 @@ export const WithCopyAction: Story = {
   render: () => html`
     <atomic-insight-layout>
       <atomic-layout-section section="results">
-        <atomic-insight-result-list
-          display="list"
-          density="normal"
-          image-size="icon"
-        >
+        <atomic-insight-result-list display="list" density="normal" image-size="icon">
           <atomic-insight-result-template>
             <template>
               <atomic-result-section-title>
@@ -112,11 +104,7 @@ export const WithAllActions: Story = {
   render: () => html`
     <atomic-insight-layout>
       <atomic-layout-section section="results">
-        <atomic-insight-result-list
-          display="list"
-          density="normal"
-          image-size="icon"
-        >
+        <atomic-insight-result-list display="list" density="normal" image-size="icon">
           <atomic-insight-result-template>
             <template>
               <atomic-result-section-title>

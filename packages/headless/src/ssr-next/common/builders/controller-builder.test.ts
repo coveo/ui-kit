@@ -22,16 +22,8 @@ describe('ControllerBuilder', () => {
   });
 
   describe('with definition that has build method', () => {
-    let mockDefinition: BaseControllerDefinitionWithoutProps<
-      CoreEngine,
-      Controller
-    >;
-    let builder: ControllerBuilder<
-      typeof mockDefinition,
-      CoreEngine,
-      undefined,
-      Controller
-    >;
+    let mockDefinition: BaseControllerDefinitionWithoutProps<CoreEngine, Controller>;
+    let builder: ControllerBuilder<typeof mockDefinition, CoreEngine, undefined, Controller>;
 
     beforeEach(() => {
       mockDefinition = {
@@ -53,11 +45,7 @@ describe('ControllerBuilder', () => {
 
       builder.build();
 
-      expect(mockDefinition.build).toHaveBeenCalledWith(
-        mockEngine,
-        'arg1',
-        'arg2'
-      );
+      expect(mockDefinition.build).toHaveBeenCalledWith(mockEngine, 'arg1', 'arg2');
     });
   });
 
@@ -67,17 +55,8 @@ describe('ControllerBuilder', () => {
       prop2: number;
     }
 
-    let mockDefinition: BaseControllerDefinitionWithProps<
-      CoreEngine,
-      Controller,
-      MockProps
-    >;
-    let builder: ControllerBuilder<
-      typeof mockDefinition,
-      CoreEngine,
-      MockProps,
-      Controller
-    >;
+    let mockDefinition: BaseControllerDefinitionWithProps<CoreEngine, Controller, MockProps>;
+    let builder: ControllerBuilder<typeof mockDefinition, CoreEngine, MockProps, Controller>;
     let mockProps: MockProps;
 
     beforeEach(() => {
@@ -91,14 +70,11 @@ describe('ControllerBuilder', () => {
     it('should call #buildWithProps method when building with props', () => {
       const result = builder.build();
 
-      expect(mockDefinition.buildWithProps).toHaveBeenCalledWith(
-        mockEngine,
-        mockProps
-      );
+      expect(mockDefinition.buildWithProps).toHaveBeenCalledWith(mockEngine, mockProps);
       expect(result.state).toEqual({someProperty: 'test'});
-      expect(
-        (result as Controller & {initialState: unknown}).initialState
-      ).toEqual({someProperty: 'test'});
+      expect((result as Controller & {initialState: unknown}).initialState).toEqual({
+        someProperty: 'test',
+      });
       expect(typeof result.subscribe).toBe('function');
     });
 
@@ -121,16 +97,14 @@ describe('ControllerBuilder', () => {
         state: {customProperty: 'value'},
         subscribe: vi.fn(),
       };
-      mockDefinition.buildWithProps = vi
-        .fn()
-        .mockReturnValue(controllerWithState);
+      mockDefinition.buildWithProps = vi.fn().mockReturnValue(controllerWithState);
 
       const result = builder.build();
 
       expect(result.state).toEqual({customProperty: 'value'});
-      expect(
-        (result as Controller & {initialState: unknown}).initialState
-      ).toEqual({customProperty: 'value'});
+      expect((result as Controller & {initialState: unknown}).initialState).toEqual({
+        customProperty: 'value',
+      });
       expect(typeof result.subscribe).toBe('function');
     });
   });
@@ -154,10 +128,7 @@ describe('ControllerBuilder', () => {
     };
 
     const builder1 = new ControllerBuilder(buildDefinition, mockEngine);
-    const builder2 = new ControllerBuilder(
-      buildWithPropsDefinition,
-      mockEngine
-    );
+    const builder2 = new ControllerBuilder(buildWithPropsDefinition, mockEngine);
 
     builder1.build();
     builder2.build();

@@ -68,11 +68,7 @@ describe('SearchResultsPage integration', () => {
 
   it('returns null when routedInterface is null', () => {
     const {container} = render(
-      <SearchResultsPage
-        onSubmit={vi.fn()}
-        isStreaming={false}
-        routedInterface={null as any}
-      />
+      <SearchResultsPage onSubmit={vi.fn()} isStreaming={false} routedInterface={null as any} />
     );
 
     expect(container.firstChild).toBeNull();
@@ -168,9 +164,7 @@ describe('SearchResultsPage PageSizeSelector integration', () => {
     renderPage();
 
     expect(screen.getByLabelText('Products per page:')).toBeDefined();
-    const select = screen.getByLabelText(
-      'Products per page:'
-    ) as HTMLSelectElement;
+    const select = screen.getByLabelText('Products per page:') as HTMLSelectElement;
     expect(select.tagName).toBe('SELECT');
   });
 

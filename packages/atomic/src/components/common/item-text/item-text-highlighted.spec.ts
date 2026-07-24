@@ -1,10 +1,7 @@
 import {html, nothing} from 'lit';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {
-  type ItemTextHighlightedProps,
-  renderItemTextHighlighted,
-} from './item-text-highlighted';
+import {type ItemTextHighlightedProps, renderItemTextHighlighted} from './item-text-highlighted';
 import {renderWithHighlights} from './render-highlights';
 
 vi.mock('./render-highlights', {spy: true});
@@ -101,11 +98,7 @@ describe('#renderItemTextHighlighted', () => {
 
     const result = renderItemTextHighlighted({props: emptyHighlightsProps});
 
-    expect(mockRenderWithHighlights).toHaveBeenCalledWith(
-      'Hello world',
-      [],
-      props.highlightString
-    );
+    expect(mockRenderWithHighlights).toHaveBeenCalledWith('Hello world', [], props.highlightString);
     expect(result).toEqual(html`${unsafeHTML('Hello world')}`);
   });
 });

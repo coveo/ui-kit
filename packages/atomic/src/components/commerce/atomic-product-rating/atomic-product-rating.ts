@@ -81,10 +81,7 @@ export class AtomicProductRating
   }
 
   private updateNumberOfStars() {
-    const value = ProductTemplatesHelpers.getProductProperty(
-      this.product,
-      this.field
-    );
+    const value = ProductTemplatesHelpers.getProductProperty(this.product, this.field);
     try {
       this.numberOfStars = computeNumberOfStars(value, this.field);
     } catch (error) {
@@ -145,9 +142,7 @@ export class AtomicProductRating
             ${when(
               this.ratingDetails !== null,
               () => html`
-                <span class="text-neutral-dark rating-details pl-1">
-                  (${this.ratingDetails})
-                </span>
+                <span class="text-neutral-dark rating-details pl-1"> (${this.ratingDetails}) </span>
               `
             )}
           </div>

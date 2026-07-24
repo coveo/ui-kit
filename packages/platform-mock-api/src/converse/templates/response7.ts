@@ -88,8 +88,7 @@ const searchApiResponse: ConverseEvent = SearchApiResponse({
     categoryFacets: [],
     results: [
       {
-        title:
-          'How to Stay Afloat With Better Boating Gear – Barca Sports Blog',
+        title: 'How to Stay Afloat With Better Boating Gear – Barca Sports Blog',
         uri: 'https://barca356.wordpress.com/2022/12/22/how-to-stay-afloat-with-better-boating-gear/',
         printableUri:
           'https://barca356.wordpress.com/2022/12/22/how-to-stay-afloat-with-better-boating-gear/',
@@ -148,8 +147,7 @@ const searchApiResponse: ConverseEvent = SearchApiResponse({
           sysurihash: 'jFNuaLñnQ3Ewy0TD',
           urihash: 'jFNuaLñnQ3Ewy0TD',
           sysindexeddate: 1761049877000,
-          permanentid:
-            '344358cc4b190efa5f298b7393edce28745a74e03c286a489bac855cb95a',
+          permanentid: '344358cc4b190efa5f298b7393edce28745a74e03c286a489bac855cb95a',
           date: 1671730301000,
           objecttype: 'Article',
           sourcetype: 'Sitemap',
@@ -164,8 +162,7 @@ const searchApiResponse: ConverseEvent = SearchApiResponse({
           sysfiletype: 'html',
           sysrowid: 1761049877583812600,
         },
-        Title:
-          'How to Stay Afloat With Better Boating Gear – Barca Sports Blog',
+        Title: 'How to Stay Afloat With Better Boating Gear – Barca Sports Blog',
         Uri: 'https://barca356.wordpress.com/2022/12/22/how-to-stay-afloat-with-better-boating-gear/',
         PrintableUri:
           'https://barca356.wordpress.com/2022/12/22/how-to-stay-afloat-with-better-boating-gear/',
@@ -180,12 +177,9 @@ const searchApiResponse: ConverseEvent = SearchApiResponse({
       {
         title: 'Boat Accessories 101 – Barca Sports Blog',
         uri: 'https://barca356.wordpress.com/2022/12/22/boat-accessories-101/',
-        printableUri:
-          'https://barca356.wordpress.com/2022/12/22/boat-accessories-101/',
-        clickUri:
-          'https://barca356.wordpress.com/2022/12/22/boat-accessories-101/',
-        uniqueId:
-          '42.32075$https://barca356.wordpress.com/2022/12/22/boat-accessories-101/',
+        printableUri: 'https://barca356.wordpress.com/2022/12/22/boat-accessories-101/',
+        clickUri: 'https://barca356.wordpress.com/2022/12/22/boat-accessories-101/',
+        uniqueId: '42.32075$https://barca356.wordpress.com/2022/12/22/boat-accessories-101/',
         primaryid: 'KVGGCNSTINDFO2DJNZDGM6DKHAXDGMRQG42S4ZDFMZQXK3DU',
         excerpt:
           'Boating is a great way to have fun and spend time with friends and family, but it can be a hassle if ... Safety Equipment: Safety is always the first priority when it comes to boating, so it ...',
@@ -241,8 +235,7 @@ const searchApiResponse: ConverseEvent = SearchApiResponse({
           sysurihash: 'ULa6SCFWhinFfxj8',
           urihash: 'ULa6SCFWhinFfxj8',
           sysindexeddate: 1761049883000,
-          permanentid:
-            'd634d8d7ef261255ebd8f8a18d65e4c47e56b914190bfb70320bc8fe4b65',
+          permanentid: 'd634d8d7ef261255ebd8f8a18d65e4c47e56b914190bfb70320bc8fe4b65',
           date: 1671730440000,
           objecttype: 'Article',
           sourcetype: 'Sitemap',
@@ -259,12 +252,9 @@ const searchApiResponse: ConverseEvent = SearchApiResponse({
         },
         Title: 'Boat Accessories 101 – Barca Sports Blog',
         Uri: 'https://barca356.wordpress.com/2022/12/22/boat-accessories-101/',
-        PrintableUri:
-          'https://barca356.wordpress.com/2022/12/22/boat-accessories-101/',
-        ClickUri:
-          'https://barca356.wordpress.com/2022/12/22/boat-accessories-101/',
-        UniqueId:
-          '42.32075$https://barca356.wordpress.com/2022/12/22/boat-accessories-101/',
+        PrintableUri: 'https://barca356.wordpress.com/2022/12/22/boat-accessories-101/',
+        ClickUri: 'https://barca356.wordpress.com/2022/12/22/boat-accessories-101/',
+        UniqueId: '42.32075$https://barca356.wordpress.com/2022/12/22/boat-accessories-101/',
         Excerpt:
           'Boating is a great way to have fun and spend time with friends and family, but it can be a hassle if ... Safety Equipment: Safety is always the first priority when it comes to boating, so it ...',
         FirstSentences: null,
@@ -325,8 +315,7 @@ const searchApiResponse: ConverseEvent = SearchApiResponse({
           sysurihash: 'gnc7uFO2EscVSPfo',
           urihash: 'gnc7uFO2EscVSPfo',
           sysindexeddate: 1761049878000,
-          permanentid:
-            '1fea96a7471f7fce8a36e6ce5cc72ce9a48168628ce7792db0c45a1c7153',
+          permanentid: '1fea96a7471f7fce8a36e6ce5cc72ce9a48168628ce7792db0c45a1c7153',
           date: 1671730943000,
           objecttype: 'Article',
           sourcetype: 'Sitemap',
@@ -413,8 +402,7 @@ const searchApiResponse: ConverseEvent = SearchApiResponse({
           sysurihash: 'yc7cshtszeIXC4bU',
           urihash: 'yc7cshtszeIXC4bU',
           sysindexeddate: 1761049875000,
-          permanentid:
-            '3a0b36771c5c572ee17630175af15fe1e59b992d9b0b27205e0aa32f1f49',
+          permanentid: '3a0b36771c5c572ee17630175af15fe1e59b992d9b0b27205e0aa32f1f49',
           date: 1671730626000,
           objecttype: 'Article',
           sourcetype: 'Sitemap',
@@ -442,8 +430,7 @@ const searchApiResponse: ConverseEvent = SearchApiResponse({
         FirstSentences: null,
       },
       {
-        title:
-          'Water Sledding 101: Staying Safe in The Water – Barca Sports Blog',
+        title: 'Water Sledding 101: Staying Safe in The Water – Barca Sports Blog',
         uri: 'https://barca356.wordpress.com/2022/12/22/water-sledding-101-staying-safe-in-the-water/',
         printableUri:
           'https://barca356.wordpress.com/2022/12/22/water-sledding-101-staying-safe-in-the-water/',
@@ -492,8 +479,7 @@ const searchApiResponse: ConverseEvent = SearchApiResponse({
           sysurihash: 'fGu3Bb1foRlIREZð',
           urihash: 'fGu3Bb1foRlIREZð',
           sysindexeddate: 1761049875000,
-          permanentid:
-            '534d6d592006ab5d792dd0ba5eb0b3af03baf69638d61462c5ef5f70deb3',
+          permanentid: '534d6d592006ab5d792dd0ba5eb0b3af03baf69638d61462c5ef5f70deb3',
           date: 1671730792000,
           objecttype: 'Article',
           sourcetype: 'Sitemap',
@@ -508,8 +494,7 @@ const searchApiResponse: ConverseEvent = SearchApiResponse({
           sysfiletype: 'html',
           sysrowid: 1761049875164964900,
         },
-        Title:
-          'Water Sledding 101: Staying Safe in The Water – Barca Sports Blog',
+        Title: 'Water Sledding 101: Staying Safe in The Water – Barca Sports Blog',
         Uri: 'https://barca356.wordpress.com/2022/12/22/water-sledding-101-staying-safe-in-the-water/',
         PrintableUri:
           'https://barca356.wordpress.com/2022/12/22/water-sledding-101-staying-safe-in-the-water/',
@@ -522,8 +507,7 @@ const searchApiResponse: ConverseEvent = SearchApiResponse({
         FirstSentences: null,
       },
       {
-        title:
-          'Make A Splash: Getting Ready For Paddle Sports – Barca Sports Blog',
+        title: 'Make A Splash: Getting Ready For Paddle Sports – Barca Sports Blog',
         uri: 'https://barca356.wordpress.com/2022/12/22/make-a-splash-getting-ready-for-paddle-sports/',
         printableUri:
           'https://barca356.wordpress.com/2022/12/22/make-a-splash-getting-ready-for-paddle-sports/',
@@ -568,8 +552,7 @@ const searchApiResponse: ConverseEvent = SearchApiResponse({
           sysurihash: '0M3qmQWFnwpzTIiB',
           urihash: '0M3qmQWFnwpzTIiB',
           sysindexeddate: 1761049872000,
-          permanentid:
-            '5cc7cdd7f10bf34879e71c2d042a72a1d8c47182cd814a9ad65ffcd540c7',
+          permanentid: '5cc7cdd7f10bf34879e71c2d042a72a1d8c47182cd814a9ad65ffcd540c7',
           date: 1671731507000,
           objecttype: 'Article',
           sourcetype: 'Sitemap',
@@ -584,8 +567,7 @@ const searchApiResponse: ConverseEvent = SearchApiResponse({
           sysfiletype: 'html',
           sysrowid: 1761049872581534700,
         },
-        Title:
-          'Make A Splash: Getting Ready For Paddle Sports – Barca Sports Blog',
+        Title: 'Make A Splash: Getting Ready For Paddle Sports – Barca Sports Blog',
         Uri: 'https://barca356.wordpress.com/2022/12/22/make-a-splash-getting-ready-for-paddle-sports/',
         PrintableUri:
           'https://barca356.wordpress.com/2022/12/22/make-a-splash-getting-ready-for-paddle-sports/',
@@ -643,8 +625,7 @@ const searchApiResponse: ConverseEvent = SearchApiResponse({
           sysurihash: 'hXy9fLañePmQJV18',
           urihash: 'hXy9fLañePmQJV18',
           sysindexeddate: 1761049878000,
-          permanentid:
-            'd92b7d3e82c23e348ba49e0cb2da4e11817898e7353bcb4a8273a63f1cd4',
+          permanentid: 'd92b7d3e82c23e348ba49e0cb2da4e11817898e7353bcb4a8273a63f1cd4',
           date: 1671730858000,
           objecttype: 'Article',
           sourcetype: 'Sitemap',
@@ -672,8 +653,7 @@ const searchApiResponse: ConverseEvent = SearchApiResponse({
         FirstSentences: null,
       },
       {
-        title:
-          '3 Dangers You’ll Encounter While Jet Skiing – Barca Sports Blog',
+        title: '3 Dangers You’ll Encounter While Jet Skiing – Barca Sports Blog',
         uri: 'https://barca356.wordpress.com/2022/12/22/3-dangers-youll-encounter-while-skiing/',
         printableUri:
           'https://barca356.wordpress.com/2022/12/22/3-dangers-youll-encounter-while-skiing/',
@@ -718,8 +698,7 @@ const searchApiResponse: ConverseEvent = SearchApiResponse({
           sysurihash: 'thajcDtPcI26doGz',
           urihash: 'thajcDtPcI26doGz',
           sysindexeddate: 1761049878000,
-          permanentid:
-            '1cfc813acf9690f2e88cc64ef4782bd02fcf53953b5867c26e844cb1a27f',
+          permanentid: '1cfc813acf9690f2e88cc64ef4782bd02fcf53953b5867c26e844cb1a27f',
           date: 1671734748000,
           objecttype: 'Article',
           sourcetype: 'Sitemap',
@@ -734,8 +713,7 @@ const searchApiResponse: ConverseEvent = SearchApiResponse({
           sysfiletype: 'html',
           sysrowid: 1761049878625987800,
         },
-        Title:
-          '3 Dangers You’ll Encounter While Jet Skiing – Barca Sports Blog',
+        Title: '3 Dangers You’ll Encounter While Jet Skiing – Barca Sports Blog',
         Uri: 'https://barca356.wordpress.com/2022/12/22/3-dangers-youll-encounter-while-skiing/',
         PrintableUri:
           'https://barca356.wordpress.com/2022/12/22/3-dangers-youll-encounter-while-skiing/',
@@ -793,8 +771,7 @@ const searchApiResponse: ConverseEvent = SearchApiResponse({
           sysurihash: 'l6na900DTBTZu6lW',
           urihash: 'l6na900DTBTZu6lW',
           sysindexeddate: 1761049877000,
-          permanentid:
-            '97dd12209f36f16ed89e38c0e2b448939162501d70a22c7fe285d6f7487f',
+          permanentid: '97dd12209f36f16ed89e38c0e2b448939162501d70a22c7fe285d6f7487f',
           date: 1673321284000,
           objecttype: 'Article',
           sourcetype: 'Sitemap',

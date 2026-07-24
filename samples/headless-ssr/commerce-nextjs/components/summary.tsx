@@ -9,8 +9,7 @@ export default function Summary() {
     const {firstProduct, lastProduct, totalNumberOfProducts} = state;
     return (
       <span>
-        Showing results {firstProduct} - {lastProduct} of{' '}
-        {totalNumberOfProducts}
+        Showing results {firstProduct} - {lastProduct} of {totalNumberOfProducts}
       </span>
     );
   };

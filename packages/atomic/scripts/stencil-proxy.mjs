@@ -1,12 +1,8 @@
 import {cpSync, readdirSync, readFileSync, writeFileSync} from 'node:fs';
 import {dirname, join, relative, resolve} from 'node:path';
 
-const headlessVersion = JSON.parse(
-  readFileSync('../headless/package.json', 'utf8')
-).version;
-const atomicVersion = JSON.parse(
-  readFileSync('./package.json', 'utf8')
-).version;
+const headlessVersion = JSON.parse(readFileSync('../headless/package.json', 'utf8')).version;
+const atomicVersion = JSON.parse(readFileSync('./package.json', 'utf8')).version;
 
 const srcDir = resolve('./stencil-proxy');
 const distDir = resolve('./dist');

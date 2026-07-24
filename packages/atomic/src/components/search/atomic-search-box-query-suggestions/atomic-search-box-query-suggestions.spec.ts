@@ -17,11 +17,10 @@ describe('atomic-search-box-query-suggestions', () => {
       </atomic-search-box-query-suggestions>
     `;
 
-    const {element} =
-      await renderInAtomicSearchInterface<AtomicSearchBoxQuerySuggestions>({
-        template,
-        selector: 'atomic-search-box-query-suggestions',
-      });
+    const {element} = await renderInAtomicSearchInterface<AtomicSearchBoxQuerySuggestions>({
+      template,
+      selector: 'atomic-search-box-query-suggestions',
+    });
 
     await element.updateComplete;
 
@@ -77,8 +76,6 @@ describe('atomic-search-box-query-suggestions', () => {
   });
 
   it('should be properly defined as a custom element', () => {
-    expect(
-      customElements.get('atomic-search-box-query-suggestions')
-    ).toBeDefined();
+    expect(customElements.get('atomic-search-box-query-suggestions')).toBeDefined();
   });
 });

@@ -48,9 +48,7 @@ describe('#renderQueryErrorShowMore', () => {
   });
 
   it('should render the link when link prop is provided', async () => {
-    const linkTemplate = html`<a href="https://example.com" part="doc-link"
-      >Test Link</a
-    >`;
+    const linkTemplate = html`<a href="https://example.com" part="doc-link">Test Link</a>`;
     const {link} = await renderComponent(vi.fn(), linkTemplate);
 
     expect(link).toHaveAttribute('href', 'https://example.com');
@@ -58,9 +56,7 @@ describe('#renderQueryErrorShowMore', () => {
   });
 
   it('should not render button when link prop is provided', async () => {
-    const linkTemplate = html`<a href="https://example.com" part="doc-link"
-      >Test Link</a
-    >`;
+    const linkTemplate = html`<a href="https://example.com" part="doc-link">Test Link</a>`;
     const {button} = await renderComponent(vi.fn(), linkTemplate);
 
     expect(button).toBeNull();

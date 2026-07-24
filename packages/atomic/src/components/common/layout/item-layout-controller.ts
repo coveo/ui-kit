@@ -71,9 +71,7 @@ export class ItemLayoutController implements ReactiveController {
    */
   public getCombinedClasses(additionalContent?: string): string[] {
     const config = this.getLayout();
-    const layoutClasses = config
-      ? getItemLayoutClasses(config, additionalContent)
-      : [];
+    const layoutClasses = config ? getItemLayoutClasses(config, additionalContent) : [];
     const itemClasses = this.options
       .itemClasses()
       .split(/\s+/)
@@ -84,10 +82,7 @@ export class ItemLayoutController implements ReactiveController {
   /**
    * Applies layout classes to a specific element (useful for custom rendering)
    */
-  public applyLayoutClassesToElement(
-    element: HTMLElement,
-    additionalContent?: string
-  ): void {
+  public applyLayoutClassesToElement(element: HTMLElement, additionalContent?: string): void {
     const config = this.getLayout();
     if (!config) {
       return;
@@ -159,8 +154,7 @@ export class ItemLayoutController implements ReactiveController {
   private observeAndApplyClasses(root: Element, classes: string[]): void {
     const observer = new MutationObserver((mutations) => {
       const hasNewElements = mutations.some(
-        (mutation) =>
-          mutation.type === 'childList' && mutation.addedNodes.length > 0
+        (mutation) => mutation.type === 'childList' && mutation.addedNodes.length > 0
       );
 
       if (hasNewElements) {

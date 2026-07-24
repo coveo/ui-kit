@@ -28,9 +28,7 @@ export default function RegularFacet(props: IRegularFacetProps) {
   return (
     <fieldset className="RegularFacet">
       <legend className="FacetHeader">
-        <span className="FacetDisplayName">
-          {state.displayName ?? state.facetId}
-        </span>
+        <span className="FacetDisplayName">{state.displayName ?? state.facetId}</span>
         <button
           type="button"
           className="FacetClear"

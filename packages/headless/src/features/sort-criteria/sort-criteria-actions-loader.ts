@@ -2,10 +2,7 @@ import type {PayloadAction} from '@reduxjs/toolkit';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {sortCriteriaReducer as sortCriteria} from '../../features/sort-criteria/sort-criteria-slice.js';
 import type {SortCriterion} from './criteria.js';
-import {
-  registerSortCriterion,
-  updateSortCriterion,
-} from './sort-criteria-actions.js';
+import {registerSortCriterion, updateSortCriterion} from './sort-criteria-actions.js';
 
 /**
  * The sort criteria action creators.
@@ -44,9 +41,7 @@ export interface SortCriteriaActionCreators {
  * @group Actions
  * @category SortCriteria
  */
-export function loadSortCriteriaActions(
-  engine: SearchEngine
-): SortCriteriaActionCreators {
+export function loadSortCriteriaActions(engine: SearchEngine): SortCriteriaActionCreators {
   engine.addReducers({sortCriteria});
 
   return {

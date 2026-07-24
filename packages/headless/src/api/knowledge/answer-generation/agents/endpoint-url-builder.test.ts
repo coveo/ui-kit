@@ -16,9 +16,7 @@ describe('buildBaseAnswerGenerationUrl', () => {
   const expectedError = 'Missing required parameters for answer endpoint';
 
   beforeEach(() => {
-    mockedGetOrganizationEndpoint.mockReturnValue(
-      'https://my-test-org.org.coveo.com'
-    );
+    mockedGetOrganizationEndpoint.mockReturnValue('https://my-test-org.org.coveo.com');
   });
 
   afterEach(() => {
@@ -26,38 +24,29 @@ describe('buildBaseAnswerGenerationUrl', () => {
   });
 
   it('builds the preview agent URL using a trimmed agent ID', () => {
-    const url = buildBaseAnswerGenerationUrl(
-      `  ${agentId}  `,
-      organizationId,
-      environment
-    );
+    const url = buildBaseAnswerGenerationUrl(`  ${agentId}  `, organizationId, environment);
 
     expect(url).toBe(
       `https://my-test-org.org.coveo.com/api/v1/organizations/${organizationId}/agents/${agentId}`
     );
-    expect(mockedGetOrganizationEndpoint).toHaveBeenCalledWith(
-      organizationId,
-      environment
-    );
+    expect(mockedGetOrganizationEndpoint).toHaveBeenCalledWith(organizationId, environment);
   });
 
   it('throws when organization ID is missing', () => {
-    expect(() =>
-      buildBaseAnswerGenerationUrl('agent', '', environment)
-    ).toThrow(expectedError);
+    expect(() => buildBaseAnswerGenerationUrl('agent', '', environment)).toThrow(expectedError);
   });
 
   it('throws when agent ID is blank after trimming', () => {
-    expect(() =>
-      buildBaseAnswerGenerationUrl('   ', organizationId, environment)
-    ).toThrow(expectedError);
+    expect(() => buildBaseAnswerGenerationUrl('   ', organizationId, environment)).toThrow(
+      expectedError
+    );
   });
 
   it('throws when the platform endpoint cannot be resolved', () => {
     mockedGetOrganizationEndpoint.mockReturnValue('');
 
-    expect(() =>
-      buildBaseAnswerGenerationUrl(agentId, organizationId, environment)
-    ).toThrow(expectedError);
+    expect(() => buildBaseAnswerGenerationUrl(agentId, organizationId, environment)).toThrow(
+      expectedError
+    );
   });
 });

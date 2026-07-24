@@ -16,9 +16,7 @@ import {
   type LocationFacetOptions,
 } from './headless-commerce-location-facet.js';
 
-vi.mock(
-  '../../../../../features/commerce/facets/location-facet/location-facet-actions'
-);
+vi.mock('../../../../../features/commerce/facets/location-facet/location-facet-actions');
 
 describe('LocationFacet', () => {
   const facetId: string = 'location_facet_id';
@@ -40,12 +38,8 @@ describe('LocationFacet', () => {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
       request: buildMockCommerceFacetRequest({facetId, ...config}),
     });
-    state.productListing.facets = [
-      buildMockCommerceLocationFacetResponse({facetId}),
-    ];
-    facetResponseSelector.mockReturnValue(
-      buildMockCommerceLocationFacetResponse({facetId})
-    );
+    state.productListing.facets = [buildMockCommerceLocationFacetResponse({facetId})];
+    facetResponseSelector.mockReturnValue(buildMockCommerceLocationFacetResponse({facetId}));
   }
 
   beforeEach(() => {

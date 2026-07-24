@@ -16,11 +16,10 @@ describe('atomic-search-box-instant-results', () => {
   });
 
   const renderComponent = async () => {
-    const {element} =
-      await renderInAtomicSearchInterface<AtomicSearchBoxInstantResults>({
-        template: html`<atomic-search-box-instant-results></atomic-search-box-instant-results>`,
-        selector: 'atomic-search-box-instant-results',
-      });
+    const {element} = await renderInAtomicSearchInterface<AtomicSearchBoxInstantResults>({
+      template: html`<atomic-search-box-instant-results></atomic-search-box-instant-results>`,
+      selector: 'atomic-search-box-instant-results',
+    });
     return element;
   };
 
@@ -46,9 +45,7 @@ describe('atomic-search-box-instant-results', () => {
 
     it('should display an error component', async () => {
       await expect
-        .element(
-          page.getByText('atomic-search-box-instant-results component error')
-        )
+        .element(page.getByText('atomic-search-box-instant-results component error'))
         .toBeInTheDocument();
     });
   });
@@ -73,10 +70,9 @@ describe('atomic-search-box-instant-results', () => {
 
         await element.setRenderFunction(mockRenderFunction);
 
-        expect(
-          (element as unknown as {itemRenderingFunction: unknown})
-            .itemRenderingFunction
-        ).toBe(mockRenderFunction);
+        expect((element as unknown as {itemRenderingFunction: unknown}).itemRenderingFunction).toBe(
+          mockRenderFunction
+        );
       });
     });
   });

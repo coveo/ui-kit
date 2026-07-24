@@ -6,10 +6,7 @@ import {
   type NavigatorContext,
 } from '../../../app/navigator-context-provider.js';
 import {getConfigurationInitialState} from '../configuration/configuration-state.js';
-import {
-  getCartInitialState,
-  getProductsFromCartState,
-} from '../context/cart/cart-state.js';
+import {getCartInitialState, getProductsFromCartState} from '../context/cart/cart-state.js';
 import {getContextInitialState} from '../context/context-state.js';
 import {
   buildBaseCommerceAPIRequest,
@@ -25,9 +22,7 @@ describe('#buildBaseCommerceAPIRequest', () => {
   let navigatorContext: NavigatorContext;
   let request: BaseCommerceAPIRequest;
 
-  const setState = (
-    configuration?: Partial<StateNeededForBaseCommerceAPIRequest>
-  ) => {
+  const setState = (configuration?: Partial<StateNeededForBaseCommerceAPIRequest>) => {
     state = {
       configuration: getConfigurationInitialState(),
       cart: getCartInitialState(),
@@ -90,16 +85,11 @@ describe('#buildBaseCommerceAPIRequest', () => {
     const getCommerceApiBaseUrlReturnValue =
       'https://some-organization-id.orghipaa.coveo.com/rest/organizations/some-organization-id/commerce/v2';
 
-    vi.mocked(getCommerceApiBaseUrl).mockReturnValue(
-      getCommerceApiBaseUrlReturnValue
-    );
+    vi.mocked(getCommerceApiBaseUrl).mockReturnValue(getCommerceApiBaseUrlReturnValue);
 
     request = buildBaseCommerceAPIRequest(state, navigatorContext);
 
-    expect(getCommerceApiBaseUrl).toHaveBeenCalledWith(
-      organizationId,
-      environment
-    );
+    expect(getCommerceApiBaseUrl).toHaveBeenCalledWith(organizationId, environment);
     expect(request.url).toBe(getCommerceApiBaseUrlReturnValue);
   });
 
@@ -394,9 +384,7 @@ describe('#buildBaseCommerceAPIRequest', () => {
       {productId: 'cart-item-2', quantity: 2},
     ];
 
-    vi.mocked(getProductsFromCartState).mockReturnValue(
-      getProductsFromCartStateReturnValue
-    );
+    vi.mocked(getProductsFromCartState).mockReturnValue(getProductsFromCartStateReturnValue);
 
     request = buildBaseCommerceAPIRequest(state, navigatorContext);
 
@@ -417,20 +405,13 @@ describe('#buildBaseCommerceAPIRequest', () => {
       },
     });
 
-    const getAnalyticsSourceReturnValue = [
-      '@coveo/atomic@10.0.1',
-      '@coveo/headless@10.1.2',
-    ];
+    const getAnalyticsSourceReturnValue = ['@coveo/atomic@10.0.1', '@coveo/headless@10.1.2'];
 
-    vi.mocked(getAnalyticsSource).mockReturnValue(
-      getAnalyticsSourceReturnValue
-    );
+    vi.mocked(getAnalyticsSource).mockReturnValue(getAnalyticsSourceReturnValue);
 
     request = buildBaseCommerceAPIRequest(state, navigatorContext);
 
-    expect(getAnalyticsSource).toHaveBeenCalledWith(
-      state.configuration.analytics
-    );
+    expect(getAnalyticsSource).toHaveBeenCalledWith(state.configuration.analytics);
     expect(request.context.source).toEqual(getAnalyticsSourceReturnValue);
   });
 

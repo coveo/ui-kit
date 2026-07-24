@@ -23,26 +23,17 @@ import {getHistoryInitialState, type HistoryState} from './history-state.js';
 // TODO: https://coveord.atlassian.net/browse/KIT-2969:
 // Should be able to remove most of the code in this file following changes history management change
 
-export const historyReducer = createReducer(
-  getHistoryInitialState(),
-  (builder) => {
-    builder.addCase(snapshot, (state, action) =>
-      isEqual(state, action.payload) ? undefined : action.payload
-    );
-  }
-);
+export const historyReducer = createReducer(getHistoryInitialState(), (builder) => {
+  builder.addCase(snapshot, (state, action) =>
+    isEqual(state, action.payload) ? undefined : action.payload
+  );
+});
 
 const isEqual = (current: HistoryState, next: HistoryState) => {
   return (
     isContextEqual(current.context, next.context) &&
-    isDictionaryFieldContextEqual(
-      current.dictionaryFieldContext,
-      next.dictionaryFieldContext
-    ) &&
-    isAdvancedSearchQueriesEqual(
-      current.advancedSearchQueries,
-      next.advancedSearchQueries
-    ) &&
+    isDictionaryFieldContextEqual(current.dictionaryFieldContext, next.dictionaryFieldContext) &&
+    isAdvancedSearchQueriesEqual(current.advancedSearchQueries, next.advancedSearchQueries) &&
     isTabSetEqual(current.tabSet, next.tabSet) &&
     isStaticFilterSetEqual(current.staticFilterSet, next.staticFilterSet) &&
     isFacetsEqual(current.facetSet, next.facetSet) &&
@@ -66,8 +57,7 @@ const isContextEqual = (current: ContextState, next: ContextState) =>
 const isDictionaryFieldContextEqual = (
   current: DictionaryFieldContextState,
   next: DictionaryFieldContextState
-) =>
-  JSON.stringify(current.contextValues) === JSON.stringify(next.contextValues);
+) => JSON.stringify(current.contextValues) === JSON.stringify(next.contextValues);
 
 const isTabSetEqual = (current: TabSetState, next: TabSetState) => {
   const currentTab = findActiveTab(current);
@@ -80,10 +70,7 @@ const findActiveTab = (tabSet: TabSetState) => {
   return Object.values(tabSet).find((tab) => tab.isActive);
 };
 
-const isStaticFilterSetEqual = (
-  current: StaticFilterSetState,
-  next: StaticFilterSetState
-) => {
+const isStaticFilterSetEqual = (current: StaticFilterSetState, next: StaticFilterSetState) => {
   for (const [id, filter] of Object.entries(next)) {
     if (!current[id]) {
       return false;
@@ -104,8 +91,7 @@ const getActiveStaticFilterValues = (filter: StaticFilterSlice) => {
   return filter.values.filter((value) => value.state !== 'idle');
 };
 
-type AnyFacetValueRequest =
-  AnyFacetSetState[string]['request']['currentValues'][number];
+type AnyFacetValueRequest = AnyFacetSetState[string]['request']['currentValues'][number];
 
 const isFacetsEqual = (current: AnyFacetSetState, next: AnyFacetSetState) => {
   for (const [key, value] of Object.entries(next)) {
@@ -116,14 +102,11 @@ const isFacetsEqual = (current: AnyFacetSetState, next: AnyFacetSetState) => {
     const currentSelectedValues = (
       current[key].request.currentValues as AnyFacetValueRequest[]
     ).filter((value) => value.state !== 'idle');
-    const nextSelectedValues = (
-      value.request.currentValues as AnyFacetValueRequest[]
-    ).filter((value) => value.state !== 'idle');
+    const nextSelectedValues = (value.request.currentValues as AnyFacetValueRequest[]).filter(
+      (value) => value.state !== 'idle'
+    );
 
-    if (
-      JSON.stringify(currentSelectedValues) !==
-      JSON.stringify(nextSelectedValues)
-    ) {
+    if (JSON.stringify(currentSelectedValues) !== JSON.stringify(nextSelectedValues)) {
       return false;
     }
   }
@@ -131,26 +114,20 @@ const isFacetsEqual = (current: AnyFacetSetState, next: AnyFacetSetState) => {
   return true;
 };
 
-const isCategoryFacetsEqual = (
-  current: CategoryFacetSetState,
-  next: CategoryFacetSetState
-) => {
+const isCategoryFacetsEqual = (current: CategoryFacetSetState, next: CategoryFacetSetState) => {
   for (const [key, value] of Object.entries(next)) {
     if (!current[key]) {
       return false;
     }
 
-    const currentSelectedValues = findActiveValueAncestry(
-      current[key]?.request.currentValues
-    ).map(({value}) => value);
-    const nextSelectedValues = findActiveValueAncestry(
-      value?.request.currentValues
-    ).map(({value}) => value);
+    const currentSelectedValues = findActiveValueAncestry(current[key]?.request.currentValues).map(
+      ({value}) => value
+    );
+    const nextSelectedValues = findActiveValueAncestry(value?.request.currentValues).map(
+      ({value}) => value
+    );
 
-    if (
-      JSON.stringify(currentSelectedValues) !==
-      JSON.stringify(nextSelectedValues)
-    ) {
+    if (JSON.stringify(currentSelectedValues) !== JSON.stringify(nextSelectedValues)) {
       return false;
     }
   }
@@ -158,26 +135,20 @@ const isCategoryFacetsEqual = (
   return true;
 };
 
-const isAutomaticFacetsEqual = (
-  current: AutomaticFacetSetState,
-  next: AutomaticFacetSetState
-) => {
+const isAutomaticFacetsEqual = (current: AutomaticFacetSetState, next: AutomaticFacetSetState) => {
   for (const [key, value] of Object.entries(next.set)) {
     if (!current.set[key]) {
       return false;
     }
 
-    const currentSelectedValues = (
-      current.set[key].response.values as FacetValue[]
-    ).filter((value) => value.state !== 'idle');
+    const currentSelectedValues = (current.set[key].response.values as FacetValue[]).filter(
+      (value) => value.state !== 'idle'
+    );
     const nextSelectedValues = (value.response.values as FacetValue[]).filter(
       (value) => value.state !== 'idle'
     );
 
-    if (
-      JSON.stringify(currentSelectedValues) !==
-      JSON.stringify(nextSelectedValues)
-    ) {
+    if (JSON.stringify(currentSelectedValues) !== JSON.stringify(nextSelectedValues)) {
       return false;
     }
   }
@@ -185,8 +156,7 @@ const isAutomaticFacetsEqual = (
   return true;
 };
 const isPaginationEqual = (current: PaginationState, next: PaginationState) =>
-  current.firstResult === next.firstResult &&
-  current.numberOfResults === next.numberOfResults;
+  current.firstResult === next.firstResult && current.numberOfResults === next.numberOfResults;
 
 const isQueryEqual = (current: QueryState, next: QueryState) =>
   JSON.stringify(current) === JSON.stringify(next);
@@ -202,8 +172,7 @@ const isPipelineEqual = (current: string, next: string) => current === next;
 
 const isSearchHubEqual = (current: string, next: string) => current === next;
 
-const isFacetOrderEqual = (current: string[], next: string[]) =>
-  arrayEqual(current, next);
+const isFacetOrderEqual = (current: string[], next: string[]) => arrayEqual(current, next);
 
 const isDebugEqual = (current: boolean, next: boolean) => current === next;
 

@@ -11,10 +11,7 @@ import {attachedResultsReducer as attachedResults} from '../../../features/attac
 import {buildAttachedResultFromSearchResult} from '../../../features/attached-results/attached-results-utils.js';
 import type {InsightAppState} from '../../../state/insight-app-state.js';
 import {createMockAttachedResult} from '../../../test/mock-attached-results.js';
-import {
-  buildMockInsightEngine,
-  type MockedInsightEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockInsightEngine, type MockedInsightEngine} from '../../../test/mock-engine-v2.js';
 import {buildMockInsightState} from '../../../test/mock-insight-state.js';
 import {buildMockResult} from '../../../test/mock-result.js';
 import {
@@ -23,13 +20,10 @@ import {
   buildAttachToCase,
 } from './headless-attach-to-case.js';
 
-vi.mock(
-  '../../../features/attached-results/attached-results-analytics-actions',
-  () => ({
-    logCaseAttach: vi.fn(() => () => {}),
-    logCaseDetach: vi.fn(() => () => {}),
-  })
-);
+vi.mock('../../../features/attached-results/attached-results-analytics-actions', () => ({
+  logCaseAttach: vi.fn(() => () => {}),
+  logCaseDetach: vi.fn(() => () => {}),
+}));
 
 vi.mock('../../../features/attached-results/attached-results-actions');
 
@@ -176,10 +170,7 @@ describe('insight attach to case', () => {
 
     it('calling #attach should trigger the #attachResult action with the correct payload', () => {
       attachToCase.attach();
-      const attachedResult = buildAttachedResultFromSearchResult(
-        testResult,
-        testCaseId
-      );
+      const attachedResult = buildAttachedResultFromSearchResult(testResult, testCaseId);
 
       expect(attachResult).toHaveBeenCalledTimes(1);
       expect(attachResult).toHaveBeenCalledWith(attachedResult);
@@ -216,10 +207,7 @@ describe('insight attach to case', () => {
 
     it('calling #detach should trigger the #detachResult with the correct payload', () => {
       attachToCase.detach();
-      const resultToDetach = buildAttachedResultFromSearchResult(
-        testResult,
-        testCaseId
-      );
+      const resultToDetach = buildAttachedResultFromSearchResult(testResult, testCaseId);
 
       expect(detachResult).toHaveBeenCalledTimes(1);
       expect(detachResult).toHaveBeenCalledWith(resultToDetach);

@@ -175,9 +175,7 @@ export interface SearchAnalyticsActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  logFacetBreadcrumb(
-    payload: LogFacetBreadcrumbActionCreatorPayload
-  ): LegacySearchAction;
+  logFacetBreadcrumb(payload: LogFacetBreadcrumbActionCreatorPayload): LegacySearchAction;
 
   /**
    * The event to log when all selected values in a facet are deselected.
@@ -193,9 +191,7 @@ export interface SearchAnalyticsActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  logFacetDeselect(
-    payload: LogFacetDeselectActionCreatorPayload
-  ): LegacySearchAction;
+  logFacetDeselect(payload: LogFacetDeselectActionCreatorPayload): LegacySearchAction;
 
   /**
    * The event to log when an idle facet value is selected.
@@ -203,9 +199,7 @@ export interface SearchAnalyticsActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  logFacetSelect(
-    payload: LogFacetSelectActionCreatorPayload
-  ): LegacySearchAction;
+  logFacetSelect(payload: LogFacetSelectActionCreatorPayload): LegacySearchAction;
 
   /**
    * The event to log when a selected facet value is unexcluded.
@@ -213,9 +207,7 @@ export interface SearchAnalyticsActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  logFacetUnexclude(
-    payload: LogFacetDeselectActionCreatorPayload
-  ): LegacySearchAction;
+  logFacetUnexclude(payload: LogFacetDeselectActionCreatorPayload): LegacySearchAction;
 
   /**
    * The event to log when an idle facet value is excluded.
@@ -223,9 +215,7 @@ export interface SearchAnalyticsActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  logFacetExclude(
-    payload: LogFacetSelectActionCreatorPayload
-  ): LegacySearchAction;
+  logFacetExclude(payload: LogFacetSelectActionCreatorPayload): LegacySearchAction;
 
   /**
    * The event to log when shrinking a facet to show fewer values.
@@ -249,9 +239,7 @@ export interface SearchAnalyticsActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  logFacetUpdateSort(
-    payload: LogFacetUpdateSortActionCreatorPayload
-  ): LegacySearchAction;
+  logFacetUpdateSort(payload: LogFacetUpdateSortActionCreatorPayload): LegacySearchAction;
 
   /**
    * The event to log when a date facet breadcrumb is deselected.
@@ -259,9 +247,7 @@ export interface SearchAnalyticsActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  logDateFacetBreadcrumb(
-    payload: LogDateFacetBreadcrumbActionCreatorPayload
-  ): LegacySearchAction;
+  logDateFacetBreadcrumb(payload: LogDateFacetBreadcrumbActionCreatorPayload): LegacySearchAction;
 
   /**
    * The event to log when a numeric facet breadcrumb is deselected.
@@ -328,9 +314,7 @@ export interface SearchAnalyticsActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  logQuerySuggestionClick(
-    payload: LogQuerySuggestionClickActionCreatorPayload
-  ): LegacySearchAction;
+  logQuerySuggestionClick(payload: LogQuerySuggestionClickActionCreatorPayload): LegacySearchAction;
 
   /**
    * The event to log when the results sort criterion is changed.
@@ -451,9 +435,7 @@ export interface SearchAnalyticsActionCreators {
    * @param payload - The action creation payload.
    * @returns A dispatchable action.
    */
-  logStaticFilterClearAll(
-    payload: LogStaticFilterClearAllActionCreatorPayload
-  ): LegacySearchAction;
+  logStaticFilterClearAll(payload: LogStaticFilterClearAllActionCreatorPayload): LegacySearchAction;
 
   /**
    * The event to log when a user action triggers a new query set in the effective query pipeline on the search page.
@@ -468,9 +450,7 @@ export interface SearchAnalyticsActionCreators {
    * @param payload - The action creation payload.
    * @returns A dispatchable action.
    */
-  logUndoTriggerQuery(
-    payload: LogUndoTriggerQueryActionCreatorPayload
-  ): LegacySearchAction;
+  logUndoTriggerQuery(payload: LogUndoTriggerQueryActionCreatorPayload): LegacySearchAction;
 
   /**
    * The event to log when a user action triggers a notification set in the effective query pipeline on the search page.
@@ -503,9 +483,7 @@ export interface SearchAnalyticsActionCreators {
  * @group Actions
  * @category Analytics
  */
-export function loadSearchAnalyticsActions(
-  engine: SearchEngine
-): SearchAnalyticsActionCreators {
+export function loadSearchAnalyticsActions(engine: SearchEngine): SearchAnalyticsActionCreators {
   engine.addReducers({});
 
   return {

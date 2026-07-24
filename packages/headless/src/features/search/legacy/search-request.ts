@@ -8,8 +8,7 @@ import {maximumNumberOfResultsFromIndex} from '../../pagination/pagination-const
 import {buildSearchAndFoldingLoadCollectionRequest} from '../../search-and-folding/legacy/search-and-folding-request.js';
 import {mapSearchRequest} from '../search-mappings.js';
 
-type StateNeededBySearchRequest = ConfigurationSection &
-  Partial<SearchAppState>;
+type StateNeededBySearchRequest = ConfigurationSection & Partial<SearchAppState>;
 
 export const buildSearchRequest = async (
   state: StateNeededBySearchRequest,
@@ -18,8 +17,10 @@ export const buildSearchRequest = async (
   const cq = buildConstantQuery(state);
   const facets = getFacets(state);
   const automaticFacets = getAutomaticFacets(state);
-  const sharedWithFoldingRequest =
-    await buildSearchAndFoldingLoadCollectionRequest(state, eventDescription);
+  const sharedWithFoldingRequest = await buildSearchAndFoldingLoadCollectionRequest(
+    state,
+    eventDescription
+  );
 
   // Corner case:
   // If the number of results requested would go over the index limit (maximumNumberOfResultsFromIndex)
@@ -44,8 +45,7 @@ export const buildSearchRequest = async (
     ...(state.didYouMean && {
       queryCorrection: {
         enabled:
-          state.didYouMean.enableDidYouMean &&
-          state.didYouMean.queryCorrectionMode === 'next',
+          state.didYouMean.enableDidYouMean && state.didYouMean.queryCorrectionMode === 'next',
         options: {
           automaticallyCorrect: state.didYouMean.automaticallyCorrectQuery
             ? ('whenNoResults' as const)
@@ -53,8 +53,7 @@ export const buildSearchRequest = async (
         },
       },
       enableDidYouMean:
-        state.didYouMean.enableDidYouMean &&
-        state.didYouMean.queryCorrectionMode === 'legacy',
+        state.didYouMean.enableDidYouMean && state.didYouMean.queryCorrectionMode === 'legacy',
     }),
     ...(cq && {cq}),
     ...(facets.length && {facets}),
@@ -82,8 +81,7 @@ export const buildSearchRequest = async (
       pipelineRuleParameters: {
         mlGenerativeQuestionAnswering: {
           responseFormat: state.generatedAnswer.responseFormat,
-          citationsFieldToInclude:
-            state.generatedAnswer.fieldsToIncludeInCitations,
+          citationsFieldToInclude: state.generatedAnswer.fieldsToIncludeInCitations,
         },
       },
     }),
@@ -100,9 +98,7 @@ function getAutomaticFacets(state: StateNeededBySearchRequest) {
         .filter((facetRequest) => facetRequest.currentValues.length > 0)
     : undefined;
 }
-function responseToAutomaticFacetRequest(
-  response: AutomaticFacetResponse
-): AutomaticFacetRequest {
+function responseToAutomaticFacetRequest(response: AutomaticFacetResponse): AutomaticFacetRequest {
   const {field, label, values} = response;
 
   const selectedValues = values.filter((value) => value.state === 'selected');
@@ -115,9 +111,7 @@ function responseToAutomaticFacetRequest(
 
 function buildConstantQuery(state: StateNeededBySearchRequest) {
   const cq = state.advancedSearchQueries?.cq.trim() || '';
-  const activeTab = Object.values(state.tabSet || {}).find(
-    (tab) => tab.isActive
-  );
+  const activeTab = Object.values(state.tabSet || {}).find((tab) => tab.isActive);
   const tabExpression = activeTab?.expression.trim() || '';
   const filterExpressions = getStaticFilterExpressions(state);
 

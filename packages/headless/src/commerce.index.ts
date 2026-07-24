@@ -23,31 +23,17 @@ export type {Relay} from '@coveo/relay';
 export type {Middleware, Unsubscribe} from '@reduxjs/toolkit';
 export {getCommerceApiBaseUrl} from './api/commerce/commerce-api-client.js';
 export type {CartItemParam} from './api/commerce/commerce-api-params.js';
-export type {
-  BaseProduct,
-  ChildProduct,
-  Product,
-} from './api/commerce/common/product.js';
-export type {
-  BaseResult,
-  Result,
-  SpotlightContent,
-} from './api/commerce/common/result.js';
+export type {BaseProduct, ChildProduct, Product} from './api/commerce/common/product.js';
+export type {BaseResult, Result, SpotlightContent} from './api/commerce/common/result.js';
 export {ResultType} from './api/commerce/common/result.js';
 export type {
   Badge,
   BadgePlacement,
   BadgesProduct,
 } from './api/commerce/product-enrichment/product-enrichment-response.js';
-export {
-  getAnalyticsNextApiBaseUrl,
-  getOrganizationEndpoint,
-} from './api/platform-client.js';
+export {getAnalyticsNextApiBaseUrl, getOrganizationEndpoint} from './api/platform-client.js';
 // Types & Helpers
-export {
-  deserializeRelativeDate,
-  validateRelativeDate,
-} from './api/search/date/relative-date.js';
+export {deserializeRelativeDate, validateRelativeDate} from './api/search/date/relative-date.js';
 export type {CategoryFacetSearchResult} from './api/search/facet-search/category-facet-search/category-facet-search-response.js';
 export type {SpecificFacetSearchResult as RegularFacetSearchResult} from './api/search/facet-search/specific-facet-search/specific-facet-search-response.js';
 export type {
@@ -57,11 +43,7 @@ export type {
 } from './app/commerce-engine/commerce-engine.js';
 export {buildCommerceEngine} from './app/commerce-engine/commerce-engine.js';
 export {getSampleCommerceEngineConfiguration} from './app/commerce-engine/commerce-engine-configuration.js';
-export type {
-  CoreEngine,
-  CoreEngineNext,
-  ExternalEngineOptions,
-} from './app/engine.js';
+export type {CoreEngine, CoreEngineNext, ExternalEngineOptions} from './app/engine.js';
 export type {
   AnalyticsConfiguration,
   AnalyticsRuntimeEnvironment,
@@ -288,10 +270,7 @@ export {buildNotifyTrigger} from './controllers/commerce/triggers/headless-notif
 export type {QueryTriggerOptions} from './controllers/commerce/triggers/headless-query-trigger.js';
 export {buildQueryTrigger} from './controllers/commerce/triggers/headless-query-trigger.js';
 export {buildRedirectionTrigger} from './controllers/commerce/triggers/headless-redirection-trigger.js';
-export type {
-  Controller,
-  Subscribable,
-} from './controllers/controller/headless-controller.js';
+export type {Controller, Subscribable} from './controllers/controller/headless-controller.js';
 // Controllers
 export {buildController} from './controllers/controller/headless-controller.js';
 export type {DateFilterRange} from './controllers/core/facets/range-facet/date-facet/headless-core-date-filter.js';

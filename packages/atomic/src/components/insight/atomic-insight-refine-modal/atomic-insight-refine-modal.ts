@@ -94,9 +94,7 @@ export class AtomicInsightRefineModal
 
   public initialize() {
     this.querySummary = buildInsightQuerySummary(this.bindings.engine);
-    this.breadcrumbManager = buildInsightBreadcrumbManager(
-      this.bindings.engine
-    );
+    this.breadcrumbManager = buildInsightBreadcrumbManager(this.bindings.engine);
   }
 
   connectedCallback() {
@@ -141,9 +139,7 @@ export class AtomicInsightRefineModal
     if (this.dimensionChanged()) {
       this.updateDimensions();
     }
-    this.animationFrameId = window.requestAnimationFrame(() =>
-      this.onAnimationFrame()
-    );
+    this.animationFrameId = window.requestAnimationFrame(() => this.onAnimationFrame());
   }
 
   private dimensionChanged() {
@@ -158,8 +154,7 @@ export class AtomicInsightRefineModal
   }
 
   public updateDimensions() {
-    this.interfaceDimensions =
-      this.bindings.interfaceElement.getBoundingClientRect();
+    this.interfaceDimensions = this.bindings.interfaceElement.getBoundingClientRect();
     this.updateBackdropStyles();
   }
 

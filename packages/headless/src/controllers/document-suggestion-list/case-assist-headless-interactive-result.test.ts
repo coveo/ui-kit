@@ -1,10 +1,7 @@
 import type {Mock} from 'vitest';
 import {logDocumentSuggestionOpen} from '../../features/case-assist/case-assist-analytics-actions.js';
 import {buildMockCaseAssistState} from '../../test/mock-case-assist-state.js';
-import {
-  buildMockCaseAssistEngine,
-  type MockedCaseAssistEngine,
-} from '../../test/mock-engine-v2.js';
+import {buildMockCaseAssistEngine, type MockedCaseAssistEngine} from '../../test/mock-engine-v2.js';
 import {buildMockResult} from '../../test/mock-result.js';
 import {buildInteractiveResultCore} from '../core/interactive-result/headless-core-interactive-result.js';
 import {
@@ -55,21 +52,15 @@ describe('InteractiveResult', () => {
   });
 
   it('dispatches #logDocumentSuggestionOpen when the action is triggered for the first time', () => {
-    const mockedLogDocumentSuggestionOpen = vi.mocked(
-      logDocumentSuggestionOpen
-    );
+    const mockedLogDocumentSuggestionOpen = vi.mocked(logDocumentSuggestionOpen);
 
     mockedSelect();
     expect(mockedLogDocumentSuggestionOpen).toHaveBeenCalledTimes(1);
-    expect(mockedLogDocumentSuggestionOpen).toHaveBeenCalledWith(
-      resultStringParams.uniqueId
-    );
+    expect(mockedLogDocumentSuggestionOpen).toHaveBeenCalledWith(resultStringParams.uniqueId);
   });
 
   it('does not dispatch logDocumentSuggestionOpen when the action is triggered for the second time', () => {
-    const mockedLogDocumentSuggestionOpen = vi.mocked(
-      logDocumentSuggestionOpen
-    );
+    const mockedLogDocumentSuggestionOpen = vi.mocked(logDocumentSuggestionOpen);
 
     mockedSelect();
     mockedSelect();

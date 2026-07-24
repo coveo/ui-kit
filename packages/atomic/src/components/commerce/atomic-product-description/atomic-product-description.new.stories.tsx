@@ -1,8 +1,4 @@
-import type {
-  Decorator,
-  Meta,
-  StoryObj as Story,
-} from '@storybook/web-components-vite';
+import type {Decorator, Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {MockCommerceApi} from '@coveo/platform-mock-api/commerce/mock';
@@ -25,19 +21,13 @@ const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
   },
   includeCodeRoot: false,
 });
-const {decorator: commerceProductListDecorator} = wrapInCommerceProductList(
-  'list',
-  false
-);
+const {decorator: commerceProductListDecorator} = wrapInCommerceProductList('list', false);
 const {decorator: productTemplateDecorator} = wrapInProductTemplate(false);
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-product-description',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-product-description', {
+  excludeCategories: ['methods'],
+});
 const wrapperDecorator: Decorator = (story) => {
-  return html`
-    <div style="width: 200px; height: 60px;" id="code-root">${story()}</div>
-  `;
+  return html` <div style="width: 200px; height: 60px;" id="code-root">${story()}</div> `;
 };
 
 const meta: Meta = {

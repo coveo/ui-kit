@@ -27,9 +27,7 @@ export class NumericFacetPageObject extends AnyFacetPageObject<'atomic-commerce-
   }
 
   getFacetValueByRange(start: string, end: string) {
-    return this.hydrated
-      .getByRole('listitem')
-      .filter({hasText: `${start} to ${end}`});
+    return this.hydrated.getByRole('listitem').filter({hasText: `${start} to ${end}`});
   }
 
   get clearFilter() {

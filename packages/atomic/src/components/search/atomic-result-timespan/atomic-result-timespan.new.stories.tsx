@@ -35,10 +35,9 @@ const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
 const {decorator: resultListDecorator} = wrapInResultList('list', false);
 const {decorator: resultTemplateDecorator} = wrapInResultTemplate();
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-result-timespan',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-result-timespan', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-result-timespan',
@@ -46,11 +45,7 @@ const meta: Meta = {
   id: 'atomic-result-timespan',
 
   render: (args) => template(args),
-  decorators: [
-    resultTemplateDecorator,
-    resultListDecorator,
-    searchInterfaceDecorator,
-  ],
+  decorators: [resultTemplateDecorator, resultListDecorator, searchInterfaceDecorator],
   parameters: {
     ...parameters,
     msw: {

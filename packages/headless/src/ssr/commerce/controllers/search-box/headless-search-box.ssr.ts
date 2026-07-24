@@ -26,9 +26,7 @@ export interface SearchBoxDefinition extends SearchOnlyControllerDefinitionWitho
  *
  * @returns The `SearchBox` controller definition.
  */
-export function defineSearchBox(
-  props: SearchBoxProps = {}
-): SearchBoxDefinition {
+export function defineSearchBox(props: SearchBoxProps = {}): SearchBoxDefinition {
   return {
     search: true,
     build: (engine) => buildSearchBox(engine, props),

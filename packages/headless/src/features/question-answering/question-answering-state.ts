@@ -34,11 +34,10 @@ export interface QuestionAnsweringState {
   relatedQuestions: QuestionAnsweringRelatedQuestionState[];
 }
 
-export const getQuestionAnsweringInitialState: () => QuestionAnsweringState =
-  () => ({
-    liked: false,
-    disliked: false,
-    expanded: false,
-    feedbackModalOpen: false,
-    relatedQuestions: [],
-  });
+export const getQuestionAnsweringInitialState: () => QuestionAnsweringState = () => ({
+  liked: false,
+  disliked: false,
+  expanded: false,
+  feedbackModalOpen: false,
+  relatedQuestions: [],
+});

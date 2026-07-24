@@ -1,25 +1,17 @@
 import type {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload.js';
 import type {AnswerApiQueryParams} from '../../features/generated-answer/generated-answer-request.js';
-import type {
-  GeneratedContentFormat,
-  GeneratedResponseFormat,
-} from './generated-response-format.js';
+import type {GeneratedContentFormat, GeneratedResponseFormat} from './generated-response-format.js';
 
 type GenerationStepStatus = 'active' | 'completed';
 export type GenerationStepName = (typeof GENERATION_STEP_NAMES)[number];
-export const GENERATION_STEP_NAMES = [
-  'searching',
-  'thinking',
-  'answering',
-] as const;
+export const GENERATION_STEP_NAMES = ['searching', 'thinking', 'answering'] as const;
 
 export function normalizeGenerationStepName(name: string): GenerationStepName {
   return name.toLowerCase() as GenerationStepName;
 }
 
 type GenerationToolCallStatus = 'active' | 'completed';
-export type GenerationToolCallType =
-  (typeof GENERATION_TOOL_CALL_TYPES)[number];
+export type GenerationToolCallType = (typeof GENERATION_TOOL_CALL_TYPES)[number];
 export const GENERATION_TOOL_CALL_TYPES = ['search', 'generic'] as const;
 
 export interface GenerationToolCallArgsGeneric {

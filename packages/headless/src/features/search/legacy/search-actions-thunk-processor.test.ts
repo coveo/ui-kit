@@ -66,9 +66,7 @@ describe('AsyncSearchThunkProcessor', () => {
       requestExecuted: buildMockSearchRequest(),
     };
 
-    const processed = (await processor.process(
-      fetched
-    )) as ExecuteSearchThunkReturn;
+    const processed = (await processor.process(fetched)) as ExecuteSearchThunkReturn;
 
     expect(processed.response).toMatchObject(searchResponse);
     expect(config.extra.apiClient.search).not.toHaveBeenCalled();
@@ -106,9 +104,7 @@ describe('AsyncSearchThunkProcessor', () => {
       queryCorrections: [
         {
           correctedQuery: 'bar',
-          wordCorrections: [
-            {correctedWord: 'foo', length: 3, offset: 0, originalWord: 'foo'},
-          ],
+          wordCorrections: [{correctedWord: 'foo', length: 3, offset: 0, originalWord: 'foo'}],
         },
       ],
     });
@@ -130,16 +126,13 @@ describe('AsyncSearchThunkProcessor', () => {
       requestExecuted: buildMockSearchRequest(),
     };
 
-    const processed = (await processor.process(
-      fetched
-    )) as ExecuteSearchThunkReturn;
+    const processed = (await processor.process(fetched)) as ExecuteSearchThunkReturn;
 
     expect(config.dispatch).toHaveBeenCalledWith(updateQuery({q: 'bar'}));
     expect(config.extra.apiClient.search).toHaveBeenCalled();
     expect(processed.response).toMatchObject({
       ...responseAfterCorrection,
-      queryCorrections:
-        originalResponseWithNoResultsAndCorrection.queryCorrections,
+      queryCorrections: originalResponseWithNoResultsAndCorrection.queryCorrections,
     });
     expect(processed.automaticallyCorrected).toBe(true);
   });
@@ -165,15 +158,11 @@ describe('AsyncSearchThunkProcessor', () => {
       requestExecuted: buildMockSearchRequest(),
     };
 
-    const processed = (await processor.process(
-      fetched
-    )) as ExecuteSearchThunkReturn;
+    const processed = (await processor.process(fetched)) as ExecuteSearchThunkReturn;
 
     expect(config.dispatch).toHaveBeenCalledWith(updateQuery({q: 'bar'}));
     expect(config.extra.apiClient.search).not.toHaveBeenCalled();
-    expect(processed.response).toMatchObject(
-      originalResponseWithResultsAndChangedQuery
-    );
+    expect(processed.response).toMatchObject(originalResponseWithResultsAndChangedQuery);
     expect(processed.automaticallyCorrected).toBe(true);
     expect(processed.originalQuery).toBe('foo');
     expect(processed.queryExecuted).toBe('bar');
@@ -200,9 +189,7 @@ describe('AsyncSearchThunkProcessor', () => {
       queryCorrections: [
         {
           correctedQuery: 'bar',
-          wordCorrections: [
-            {correctedWord: 'foo', length: 3, offset: 0, originalWord: 'foo'},
-          ],
+          wordCorrections: [{correctedWord: 'foo', length: 3, offset: 0, originalWord: 'foo'}],
         },
       ],
     });
@@ -216,9 +203,7 @@ describe('AsyncSearchThunkProcessor', () => {
       requestExecuted: buildMockSearchRequest(),
     };
 
-    const processed = (await processor.process(
-      fetched
-    )) as ExecuteSearchThunkReturn;
+    const processed = (await processor.process(fetched)) as ExecuteSearchThunkReturn;
 
     expect(processed.response).toMatchObject(searchResponse);
     expect(config.extra.apiClient.search).not.toHaveBeenCalled();
@@ -249,9 +234,7 @@ describe('AsyncSearchThunkProcessor', () => {
       requestExecuted: buildMockSearchRequest(),
     };
 
-    const processed = (await processor.process(
-      fetched
-    )) as ExecuteSearchThunkReturn;
+    const processed = (await processor.process(fetched)) as ExecuteSearchThunkReturn;
 
     expect(config.dispatch).toHaveBeenCalledWith(config.analyticsAction);
     expect(config.extra.apiClient.search).toHaveBeenCalled();

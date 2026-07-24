@@ -54,9 +54,7 @@ describe('automatic-facet-set slice', () => {
     }
 
     it('registers facets', () => {
-      const facets: AutomaticFacetResponse[] = [
-        buildMockAutomaticFacetResponse(),
-      ];
+      const facets: AutomaticFacetResponse[] = [buildMockAutomaticFacetResponse()];
       const facetsRecord: Record<string, AutomaticFacetSlice> = {
         [facets[0].field]: {response: facets[0]},
       };
@@ -205,9 +203,7 @@ describe('automatic-facet-set slice', () => {
       const finalState = automaticFacetSetReducer(state, action);
       const targetValues = finalState.set[field].response.values;
 
-      expect(targetValues.every((value) => value.state === 'idle')).toEqual(
-        true
-      );
+      expect(targetValues.every((value) => value.state === 'idle')).toEqual(true);
     });
   });
 
@@ -232,10 +228,7 @@ describe('automatic-facet-set slice', () => {
       const finalState = automaticFacetSetReducer(state, action);
       const selectedValue = buildMockFacetValue({value, state: 'selected'});
 
-      expect(finalState.set[field].response.values).toEqual([
-        initialValue,
-        selectedValue,
-      ]);
+      expect(finalState.set[field].response.values).toEqual([initialValue, selectedValue]);
     });
   });
 
@@ -270,9 +263,7 @@ describe('automatic-facet-set slice', () => {
         ...finalState.set[field2].response.values,
       ];
 
-      expect(targetValues.every((value) => value.state === 'idle')).toEqual(
-        true
-      );
+      expect(targetValues.every((value) => value.state === 'idle')).toEqual(true);
     });
   });
 });

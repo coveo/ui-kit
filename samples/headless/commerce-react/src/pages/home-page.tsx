@@ -28,10 +28,7 @@ export default function HomePage(props: IHomePageProps) {
      */
     contextController.setView({url});
 
-    if (
-      !recommendationsController.state.isLoading &&
-      !recommendationsController.state.responseId
-    ) {
+    if (!recommendationsController.state.isLoading && !recommendationsController.state.responseId) {
       recommendationsController.refresh();
       return;
     }

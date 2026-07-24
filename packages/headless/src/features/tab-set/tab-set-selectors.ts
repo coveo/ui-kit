@@ -21,8 +21,6 @@ export const selectActiveTabExpression = createSelector(
   (state?: TabSetState) => state,
   (tabSetState?: TabSetState): string => {
     const activeTabId = selectActiveTab(tabSetState);
-    return activeTabId && tabSetState
-      ? tabSetState[activeTabId].expression
-      : '';
+    return activeTabId && tabSetState ? tabSetState[activeTabId].expression : '';
   }
 );

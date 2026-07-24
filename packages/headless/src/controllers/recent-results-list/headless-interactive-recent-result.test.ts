@@ -1,10 +1,7 @@
 import type {Result} from '../../api/search/search/result.js';
 import {configuration} from '../../app/common-reducers.js';
 import {logRecentResultClick} from '../../features/recent-results/recent-results-analytics-actions.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../test/mock-engine-v2.js';
 import {buildMockResult} from '../../test/mock-result.js';
 import {createMockState} from '../../test/mock-state.js';
 import {

@@ -40,9 +40,7 @@ describe('atomic-tab-manager', () => {
 
     const {element} = await renderInAtomicSearchInterface<AtomicTabManager>({
       template: html`
-        <atomic-tab-manager
-          ?clear-filters-on-tab-change=${clearFiltersOnTabChange}
-        >
+        <atomic-tab-manager ?clear-filters-on-tab-change=${clearFiltersOnTabChange}>
           ${slottedContent ??
           html`
             <atomic-tab label="All" name="all"></atomic-tab>
@@ -112,9 +110,7 @@ describe('atomic-tab-manager', () => {
 
   describe('when atomic-tab child is missing name attribute', () => {
     it('should set error when atomic-tab is missing name', async () => {
-      const consoleErrorSpy = vi
-        .spyOn(console, 'error')
-        .mockImplementation(() => {});
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
       const {element} = await renderTabManager({
         slottedContent: html` <atomic-tab label="Test"></atomic-tab> `,

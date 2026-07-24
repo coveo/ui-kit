@@ -1,15 +1,9 @@
 import {test, commerceApi} from '../fixtures.js';
 
-test('Commerce page renders products', async ({
-  page,
-  openPage,
-  useHandlers,
-}) => {
+test('Commerce page renders products', async ({page, openPage, useHandlers}) => {
   await useHandlers(commerceApi.handlers);
   await openPage('commerce.html');
-  await page.waitForFunction(() =>
-    customElements.get('atomic-commerce-interface')
-  );
+  await page.waitForFunction(() => customElements.get('atomic-commerce-interface'));
   await page.locator('atomic-commerce-interface').evaluate((el: any) =>
     el.initialize({
       accessToken: 'test-token',
@@ -23,11 +17,6 @@ test('Commerce page renders products', async ({
       },
     })
   );
-  await page
-    .locator('atomic-commerce-interface')
-    .evaluate((el: any) => el.executeFirstRequest());
-  await page
-    .locator('atomic-commerce-product-list atomic-product')
-    .first()
-    .waitFor();
+  await page.locator('atomic-commerce-interface').evaluate((el: any) => el.executeFirstRequest());
+  await page.locator('atomic-commerce-product-list atomic-product').first().waitFor();
 });

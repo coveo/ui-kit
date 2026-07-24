@@ -40,9 +40,7 @@ describe('extractCoveoDependencies', () => {
 
   it('returns an empty object when there are no dependencies', () => {
     expect(extractCoveoDependencies({})).toEqual({});
-    expect(extractCoveoDependencies({dependencies: {react: '18.0.0'}})).toEqual(
-      {}
-    );
+    expect(extractCoveoDependencies({dependencies: {react: '18.0.0'}})).toEqual({});
   });
 });
 
@@ -101,9 +99,7 @@ describe('buildProjectMetadata', () => {
       'template',
       'templateVersion',
     ]);
-    const scalarValues = Object.values(metadata).filter(
-      (value) => typeof value === 'string'
-    );
+    const scalarValues = Object.values(metadata).filter((value) => typeof value === 'string');
     for (const value of scalarValues) {
       expect(value).not.toMatch(/[/\\]/);
     }

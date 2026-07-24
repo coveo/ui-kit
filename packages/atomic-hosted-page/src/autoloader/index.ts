@@ -12,19 +12,14 @@ if (typeof window !== 'undefined') {
    */
   const discover = async (root: Element | ShadowRoot | DocumentFragment) => {
     visitedNodes.add(root);
-    const rootTagName =
-      root instanceof Element ? root.tagName.toLowerCase() : '';
+    const rootTagName = root instanceof Element ? root.tagName.toLowerCase() : '';
     const rootIsCustomElement = rootTagName?.includes('-');
     const tags = [...root.querySelectorAll(':not(:defined)')]
       .map((el) => el.tagName.toLowerCase())
       .filter((tag) => tag.includes('-'));
 
     // If the root element is an undefined Atomic component, add it to the list
-    if (
-      rootIsCustomElement &&
-      !customElements.get(rootTagName) &&
-      !tags.includes(rootTagName)
-    ) {
+    if (rootIsCustomElement && !customElements.get(rootTagName) && !tags.includes(rootTagName)) {
       tags.push(rootTagName);
     }
 
@@ -49,9 +44,7 @@ if (typeof window !== 'undefined') {
     }
     // Make the list unique
     const tagsToRegister = [...new Set(tags)];
-    await Promise.allSettled(
-      tagsToRegister.map((tagName) => register(tagName))
-    );
+    await Promise.allSettled(tagsToRegister.map((tagName) => register(tagName)));
     customElements.upgrade(root);
   };
 

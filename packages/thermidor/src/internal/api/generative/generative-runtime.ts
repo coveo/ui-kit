@@ -33,10 +33,7 @@ export interface GenerativeStatePort {
   startReasoning(turnId: string): void;
   appendReasoningDelta(turnId: string, delta: string): void;
   endReasoning(turnId: string): void;
-  setConversationSession(
-    sessionId: string | undefined,
-    token: string | undefined
-  ): void;
+  setConversationSession(sessionId: string | undefined, token: string | undefined): void;
 }
 
 export interface HydrationResult<K extends RoutedUseCase = RoutedUseCase> {
@@ -60,10 +57,7 @@ export interface GenerativeRuntimeConfig {
 }
 
 export class GenerativeRuntime {
-  private static cache = new WeakMap<
-    FullEngine,
-    Map<string, GenerativeRuntime>
-  >();
+  private static cache = new WeakMap<FullEngine, Map<string, GenerativeRuntime>>();
 
   private readonly configSelectors = getOrCreateConfigurationSelectors();
 
@@ -72,15 +66,9 @@ export class GenerativeRuntime {
   private hydrateSubInterface: HydrateSubInterface;
   private agentResponseInitialized = new Set<string>();
   private currentPrompt: string | undefined;
-  private buildRequest: ReturnType<
-    typeof createConversationEndpointRequestSelector
-  >;
+  private buildRequest: ReturnType<typeof createConversationEndpointRequestSelector>;
 
-  private constructor(
-    engine: FullEngine,
-    _interfaceId: string,
-    config: GenerativeRuntimeConfig
-  ) {
+  private constructor(engine: FullEngine, _interfaceId: string, config: GenerativeRuntimeConfig) {
     this.engine = engine;
     this.statePort = config.statePort;
     this.hydrateSubInterface = config.hydrateSubInterface;
@@ -133,9 +121,7 @@ export class GenerativeRuntime {
     try {
       const {cart, ...fromState} = this.engine.read(this.buildRequest);
       const navigatorContext = this.engine.getNavigatorContextProvider()?.();
-      const clientConfig = this.engine.read(
-        this.configSelectors.getEndpointClientConfiguration
-      );
+      const clientConfig = this.engine.read(this.configSelectors.getEndpointClientConfiguration);
 
       const request = {
         ...fromState,
@@ -167,10 +153,7 @@ export class GenerativeRuntime {
     }
   }
 
-  private async consumeStream(
-    turnId: string,
-    stream: ReadableStream<Uint8Array>
-  ): Promise<void> {
+  private async consumeStream(turnId: string, stream: ReadableStream<Uint8Array>): Promise<void> {
     let activeTurnId = turnId;
     let terminalEventReceived = false;
 
@@ -185,10 +168,7 @@ export class GenerativeRuntime {
       },
       onDone: () => {
         if (!terminalEventReceived) {
-          this.statePort.failTurn(
-            activeTurnId,
-            'Stream ended without a terminal event.'
-          );
+          this.statePort.failTurn(activeTurnId, 'Stream ended without a terminal event.');
         }
       },
       onError: (error) => {
@@ -249,20 +229,12 @@ export class GenerativeRuntime {
 
       case 'TOOL_CALL_START': {
         this.ensureAgentResponse(turnId);
-        this.statePort.startToolCall(
-          turnId,
-          event.toolCallId,
-          event.toolCallName
-        );
+        this.statePort.startToolCall(turnId, event.toolCallId, event.toolCallName);
         return {turnId, isTerminal: false};
       }
 
       case 'TOOL_CALL_ARGS': {
-        this.statePort.appendToolCallArgs(
-          turnId,
-          event.toolCallId,
-          event.delta
-        );
+        this.statePort.appendToolCallArgs(turnId, event.toolCallId, event.delta);
         return {turnId, isTerminal: false};
       }
 
@@ -271,11 +243,7 @@ export class GenerativeRuntime {
       }
 
       case 'TOOL_CALL_RESULT': {
-        this.statePort.completeToolCall(
-          turnId,
-          event.toolCallId,
-          event.content
-        );
+        this.statePort.completeToolCall(turnId, event.toolCallId, event.content);
         return {turnId, isTerminal: false};
       }
 
@@ -285,21 +253,14 @@ export class GenerativeRuntime {
 
       case 'ACTIVITY_SNAPSHOT': {
         this.ensureAgentResponse(turnId);
-        this.statePort.appendSurface(
-          turnId,
-          event.content as Record<string, unknown>
-        );
+        this.statePort.appendSurface(turnId, event.content as Record<string, unknown>);
         return {turnId, isTerminal: false};
       }
 
       case 'commerce_search_api_response':
       case 'search_api_response': {
         const {type: _type, ...content} = event;
-        const hydrationResult = this.hydrateSubInterface(
-          event.type,
-          content,
-          this.currentPrompt
-        );
+        const hydrationResult = this.hydrateSubInterface(event.type, content, this.currentPrompt);
 
         if (hydrationResult) {
           this.statePort.setRoutedInterface(turnId, hydrationResult);
@@ -321,10 +282,7 @@ export class GenerativeRuntime {
       }
 
       case 'RUN_ERROR': {
-        this.statePort.failTurn(
-          turnId,
-          event.message || 'An error occurred during the turn.'
-        );
+        this.statePort.failTurn(turnId, event.message || 'An error occurred during the turn.');
         return {turnId, isTerminal: true};
       }
 

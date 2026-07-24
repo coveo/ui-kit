@@ -28,45 +28,21 @@ describe('computeVisiblePages', () => {
 
   describe('when currentPage is at the end', () => {
     it('returns [0, ellipsis-start, last-2, last-1, last] when currentPage is totalPages - 2', () => {
-      expect(computeVisiblePages(8, 10)).toEqual([
-        0,
-        'ellipsis-start',
-        7,
-        8,
-        9,
-      ]);
+      expect(computeVisiblePages(8, 10)).toEqual([0, 'ellipsis-start', 7, 8, 9]);
     });
 
     it('returns [0, ellipsis-start, last-2, last-1, last] when currentPage is totalPages - 1', () => {
-      expect(computeVisiblePages(9, 10)).toEqual([
-        0,
-        'ellipsis-start',
-        7,
-        8,
-        9,
-      ]);
+      expect(computeVisiblePages(9, 10)).toEqual([0, 'ellipsis-start', 7, 8, 9]);
     });
   });
 
   describe('when currentPage is in the middle', () => {
     it('returns [0, ellipsis-start, current, ellipsis-end, last]', () => {
-      expect(computeVisiblePages(5, 10)).toEqual([
-        0,
-        'ellipsis-start',
-        5,
-        'ellipsis-end',
-        9,
-      ]);
+      expect(computeVisiblePages(5, 10)).toEqual([0, 'ellipsis-start', 5, 'ellipsis-end', 9]);
     });
 
     it('returns correct window for page 3 of 8', () => {
-      expect(computeVisiblePages(3, 8)).toEqual([
-        0,
-        'ellipsis-start',
-        3,
-        'ellipsis-end',
-        7,
-      ]);
+      expect(computeVisiblePages(3, 8)).toEqual([0, 'ellipsis-start', 3, 'ellipsis-end', 7]);
     });
   });
 

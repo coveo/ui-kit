@@ -9,10 +9,7 @@ import {renderTriStateCheckbox} from '../../triStateCheckbox';
 import type {FacetValuePropsBase} from '../facet-common';
 import {renderFacetValueExclude} from '../facet-value-exclude/facet-value-exclude';
 
-export type TriStateFacetValueProps = Omit<
-  FacetValuePropsBase,
-  'isSelected'
-> & {
+export type TriStateFacetValueProps = Omit<FacetValuePropsBase, 'isSelected'> & {
   state: 'idle' | 'selected' | 'excluded';
   onExclude(): void;
 };
@@ -31,10 +28,7 @@ export const renderFacetValueCheckbox: FunctionalComponentWithChildren<
       interpolation: {escapeValue: false},
     };
     const selectedAriaLabel = props.i18n.t('facet-value', ariaLabelAttributes);
-    const excludedAriaLabel = props.i18n.t(
-      'facet-value-exclude',
-      ariaLabelAttributes
-    );
+    const excludedAriaLabel = props.i18n.t('facet-value-exclude', ariaLabelAttributes);
     let labelRef: HTMLLabelElement;
 
     const isTriStateCheckbox = (
@@ -51,8 +45,7 @@ export const renderFacetValueCheckbox: FunctionalComponentWithChildren<
         class: 'value-checkbox',
         ariaLabel: selectedAriaLabel,
         ref: props.buttonRef,
-        onMouseDown: (e: MouseEvent) =>
-          createRipple(e, {color: 'neutral', parent: labelRef}),
+        onMouseDown: (e: MouseEvent) => createRipple(e, {color: 'neutral', parent: labelRef}),
         iconPart: 'value-checkbox-icon',
       };
       if (isTriStateCheckbox(props)) {

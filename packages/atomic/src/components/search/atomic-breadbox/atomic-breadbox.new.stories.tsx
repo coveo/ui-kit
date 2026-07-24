@@ -18,15 +18,12 @@ import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
 
 const searchApiHarness = new MockSearchApi();
 searchApiHarness.searchEndpoint.addRequestTransformer(searchFacetTransformer);
-searchApiHarness.facetSearchEndpoint.addRequestTransformer(
-  searchFacetSearchTransformer
-);
+searchApiHarness.facetSearchEndpoint.addRequestTransformer(searchFacetSearchTransformer);
 
 const {decorator, play} = wrapInSearchInterface();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-breadbox',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-breadbox', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-breadbox',
@@ -56,25 +53,11 @@ export const Default: Story = {
   decorators: [
     (story) => html`
       ${story()}
-      <div style="margin:20px 0">
-        Select facet value(s) to see the Breadbox component.
-      </div>
+      <div style="margin:20px 0">Select facet value(s) to see the Breadbox component.</div>
       <div style="display: flex; justify-content: flex-start;">
-        <atomic-facet
-          field="objecttype"
-          style="flex-grow:1"
-          label="Object type"
-        ></atomic-facet>
-        <atomic-facet
-          field="filetype"
-          style="flex-grow:1"
-          label="File type"
-        ></atomic-facet>
-        <atomic-facet
-          field="source"
-          style="flex-grow:1"
-          label="Source"
-        ></atomic-facet>
+        <atomic-facet field="objecttype" style="flex-grow:1" label="Object type"></atomic-facet>
+        <atomic-facet field="filetype" style="flex-grow:1" label="File type"></atomic-facet>
+        <atomic-facet field="source" style="flex-grow:1" label="Source"></atomic-facet>
       </div>
     `,
   ],
@@ -82,12 +65,9 @@ export const Default: Story = {
     await play(context);
     const {canvas, step} = context;
     await step('Wait for the facet values to render', async () => {
-      await waitFor(
-        () => expect(canvas.getByShadowTitle('People')).toBeInTheDocument(),
-        {
-          timeout: 30e3,
-        }
-      );
+      await waitFor(() => expect(canvas.getByShadowTitle('People')).toBeInTheDocument(), {
+        timeout: 30e3,
+      });
     });
   },
 };
@@ -100,40 +80,28 @@ export const A11yStatusMessage: Story = {
       ${story()}
       <atomic-query-summary></atomic-query-summary>
       <div style="display: flex; justify-content: flex-start;">
-        <atomic-facet
-          field="objecttype"
-          style="flex-grow:1"
-          label="Object type"
-        ></atomic-facet>
+        <atomic-facet field="objecttype" style="flex-grow:1" label="Object type"></atomic-facet>
       </div>
     `,
   ],
   beforeEach: async () => {
-    searchApiHarness.searchEndpoint.mockOnce(
-      buildSearchResponseWithResults(120)
-    );
-    searchApiHarness.searchEndpoint.mockOnce(
-      buildSearchResponseWithResults(42)
-    );
-    searchApiHarness.searchEndpoint.mockOnce(
-      buildSearchResponseWithResults(120)
-    );
+    searchApiHarness.searchEndpoint.mockOnce(buildSearchResponseWithResults(120));
+    searchApiHarness.searchEndpoint.mockOnce(buildSearchResponseWithResults(42));
+    searchApiHarness.searchEndpoint.mockOnce(buildSearchResponseWithResults(120));
   },
   play: async (context) => {
     await play(context);
     const {canvas} = context;
-    await waitFor(
-      () => expect(canvas.getByShadowTitle('People')).toBeInTheDocument(),
-      {timeout: 30e3}
-    );
+    await waitFor(() => expect(canvas.getByShadowTitle('People')).toBeInTheDocument(), {
+      timeout: 30e3,
+    });
 
     await testStatusMessageA11y(context, {
       triggerAction: async () => {
         const screen = within(context.canvasElement);
-        const facetValue = await screen.findByShadowLabelText(
-          'Inclusion filter on People',
-          {exact: false}
-        );
+        const facetValue = await screen.findByShadowLabelText('Inclusion filter on People', {
+          exact: false,
+        });
         facetValue.click();
       },
       expectedText: 'Results loaded. Results 1-10 of 42',

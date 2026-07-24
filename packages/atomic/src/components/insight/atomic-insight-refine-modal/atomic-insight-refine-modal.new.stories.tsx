@@ -1,17 +1,10 @@
-import type {
-  Decorator,
-  Meta,
-  StoryObj as Story,
-} from '@storybook/web-components-vite';
+import type {Decorator, Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
 import {testDialogA11y} from '@/storybook-utils/a11y/dialog.js';
 import {MockInsightApi} from '@coveo/platform-mock-api/insight/mock';
-import {
-  type baseResponse,
-  richResponse,
-} from '@coveo/platform-mock-api/insight/search-response';
+import {type baseResponse, richResponse} from '@coveo/platform-mock-api/insight/search-response';
 import {parameters as commonParameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 import '@/src/components/insight/atomic-insight-facet/atomic-insight-facet.js';
@@ -20,10 +13,9 @@ import '@/src/components/insight/atomic-insight-refine-toggle/atomic-insight-ref
 
 const insightApiHarness = new MockInsightApi();
 const {decorator, play} = wrapInInsightInterface();
-const {events, args, argTypes, styleTemplate} = getStorybookHelpers(
-  'atomic-insight-refine-modal',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, styleTemplate} = getStorybookHelpers('atomic-insight-refine-modal', {
+  excludeCategories: ['methods'],
+});
 const facetWidthDecorator: Decorator = (story) =>
   html`<div style="min-width: 470px;">${story()}</div> `;
 
@@ -53,9 +45,7 @@ const meta: Meta = {
   },
   argTypes,
   beforeEach: async () => {
-    insightApiHarness.searchEndpoint.mock(
-      () => richResponse as unknown as typeof baseResponse
-    );
+    insightApiHarness.searchEndpoint.mock(() => richResponse as unknown as typeof baseResponse);
   },
   play: async (context) => {
     await play(context);
@@ -63,12 +53,9 @@ const meta: Meta = {
     const refineToggleElement = within(
       canvasElement.querySelector('atomic-insight-refine-toggle')!
     );
-    const refineToggleButton = await refineToggleElement.findByShadowRole(
-      'button',
-      {
-        name: 'Filters',
-      }
-    );
+    const refineToggleButton = await refineToggleElement.findByShadowRole('button', {
+      name: 'Filters',
+    });
     // Facets call `bindings.store.registerFacet()` during initialization to register themselves with the interface store.
     // The refine modal uses `bindings.store.getAllFacets()` to retrieve and render these registered facets.
     // This delay ensures facets have completed initialization and registration before the modal attempts to render them.
@@ -88,14 +75,8 @@ export const Default: Story = {
     () => html`
       <atomic-insight-refine-toggle></atomic-insight-refine-toggle>
       <div style="display:none;">
-        <atomic-insight-facet
-          field="source"
-          label="Source"
-        ></atomic-insight-facet>
-        <atomic-insight-facet
-          field="filetype"
-          label="File Type"
-        ></atomic-insight-facet>
+        <atomic-insight-facet field="source" label="Source"></atomic-insight-facet>
+        <atomic-insight-facet field="filetype" label="File Type"></atomic-insight-facet>
       </div>
     `,
     decorator,
@@ -110,14 +91,8 @@ export const A11yDialog: Story = {
     () => html`
       <atomic-insight-refine-toggle></atomic-insight-refine-toggle>
       <div style="display:none;">
-        <atomic-insight-facet
-          field="source"
-          label="Source"
-        ></atomic-insight-facet>
-        <atomic-insight-facet
-          field="filetype"
-          label="File Type"
-        ></atomic-insight-facet>
+        <atomic-insight-facet field="source" label="Source"></atomic-insight-facet>
+        <atomic-insight-facet field="filetype" label="File Type"></atomic-insight-facet>
       </div>
     `,
     decorator,

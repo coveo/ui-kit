@@ -60,9 +60,7 @@ function renderCartBody(state: CartState, currency: string): string {
     return '<p class="CartEmpty">Your cart is empty.</p>';
   }
 
-  const items = state.items
-    .map((item) => renderCartItem(item, currency))
-    .join('');
+  const items = state.items.map((item) => renderCartItem(item, currency)).join('');
 
   return `
     <ul class="CartItems">${items}</ul>
@@ -150,8 +148,7 @@ export function hydrateCart(cart: Cart, currency: string) {
     if (!action) {
       return;
     }
-    const productId =
-      button.closest<HTMLLIElement>('.CartItem')?.dataset.productId;
+    const productId = button.closest<HTMLLIElement>('.CartItem')?.dataset.productId;
     const item = cart.state.items.find((i) => i.productId === productId);
     if (!item) {
       return;
@@ -177,10 +174,7 @@ export function hydrateCart(cart: Cart, currency: string) {
       badge.textContent = String(totalQuantity);
       badge.hidden = totalQuantity === 0;
     }
-    toggle?.setAttribute(
-      'aria-label',
-      `Cart, ${itemCountLabel(totalQuantity)}`
-    );
+    toggle?.setAttribute('aria-label', `Cart, ${itemCountLabel(totalQuantity)}`);
   };
 
   cart.subscribe(update);

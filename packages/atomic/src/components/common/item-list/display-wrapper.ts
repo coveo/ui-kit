@@ -7,9 +7,9 @@ export interface DisplayWrapperProps {
   listClasses: string;
 }
 
-export const renderDisplayWrapper: FunctionalComponentWithChildren<
-  DisplayWrapperProps
-> = ({props}) => {
+export const renderDisplayWrapper: FunctionalComponentWithChildren<DisplayWrapperProps> = ({
+  props,
+}) => {
   const {display, listClasses} = props;
 
   if (display === 'table') {
@@ -17,9 +17,7 @@ export const renderDisplayWrapper: FunctionalComponentWithChildren<
   }
 
   return (children) =>
-    renderListWrapper({props: {listClasses}})(
-      renderListRoot({props: {listClasses}})(children)
-    );
+    renderListWrapper({props: {listClasses}})(renderListRoot({props: {listClasses}})(children));
 };
 
 const renderListWrapper: FunctionalComponentWithChildren<
@@ -27,17 +25,14 @@ const renderListWrapper: FunctionalComponentWithChildren<
 > = ({props}) => {
   const {listClasses} = props;
 
-  return (children) =>
-    html`<div class="list-wrapper ${listClasses}">${children}</div>`;
+  return (children) => html`<div class="list-wrapper ${listClasses}">${children}</div>`;
 };
 
-const renderListRoot: FunctionalComponentWithChildren<
-  Pick<DisplayWrapperProps, 'listClasses'>
-> = ({props}) => {
+const renderListRoot: FunctionalComponentWithChildren<Pick<DisplayWrapperProps, 'listClasses'>> = ({
+  props,
+}) => {
   const {listClasses} = props;
 
   return (children) =>
-    html`<div class="list-root ${listClasses}" part="result-list">
-      ${children}
-    </div>`;
+    html`<div class="list-root ${listClasses}" part="result-list">${children}</div>`;
 };

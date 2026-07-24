@@ -43,10 +43,7 @@ import {
   updatePage,
 } from './pagination-actions.js';
 import {calculatePage, paginationReducer} from './pagination-slice.js';
-import {
-  getPaginationInitialState,
-  type PaginationState,
-} from './pagination-state.js';
+import {getPaginationInitialState, type PaginationState} from './pagination-state.js';
 
 describe('pagination slice', () => {
   let state: PaginationState;
@@ -61,9 +58,7 @@ describe('pagination slice', () => {
     state.numberOfResults = 10;
     const nextState = paginationReducer(state, action);
 
-    expect(nextState.firstResult).toEqual(
-      getPaginationInitialState().firstResult
-    );
+    expect(nextState.firstResult).toEqual(getPaginationInitialState().firstResult);
   }
 
   beforeEach(() => {
@@ -184,9 +179,7 @@ describe('pagination slice', () => {
     });
 
     const finalState = paginationReducer(state, action);
-    expect(finalState.totalCountFiltered).toBe(
-      search.response.totalCountFiltered
-    );
+    expect(finalState.totalCountFiltered).toBe(search.response.totalCountFiltered);
   });
 
   it('executeSearch.fulfilled updates totalCountFiltered to the response value', () => {
@@ -197,9 +190,7 @@ describe('pagination slice', () => {
     });
 
     const finalState = paginationReducer(state, action);
-    expect(finalState.totalCountFiltered).toBe(
-      search.response.totalCountFiltered
-    );
+    expect(finalState.totalCountFiltered).toBe(search.response.totalCountFiltered);
   });
 
   it('allows to restore pagination state on history change', () => {
@@ -215,10 +206,7 @@ describe('pagination slice', () => {
       pagination: expectedPagination,
     };
 
-    const nextState = paginationReducer(
-      state,
-      change.fulfilled(historyChange, '')
-    );
+    const nextState = paginationReducer(state, change.fulfilled(historyChange, ''));
 
     expect(nextState.firstResult).toEqual(123);
     expect(nextState.numberOfResults).toEqual(456);
@@ -227,10 +215,7 @@ describe('pagination slice', () => {
   describe('#restoreSearchParameters', () => {
     it('when the object contains a #firstResult key, it sets the value in state', () => {
       state.firstResult = 1;
-      const finalState = paginationReducer(
-        state,
-        restoreSearchParameters({firstResult: 0})
-      );
+      const finalState = paginationReducer(state, restoreSearchParameters({firstResult: 0}));
       expect(finalState.firstResult).toEqual(0);
     });
 
@@ -242,10 +227,7 @@ describe('pagination slice', () => {
 
     it('when the object contains a #numberOfResults key, it sets the value in state', () => {
       state.numberOfResults = 1;
-      const finalState = paginationReducer(
-        state,
-        restoreSearchParameters({numberOfResults: 0})
-      );
+      const finalState = paginationReducer(state, restoreSearchParameters({numberOfResults: 0}));
       expect(finalState.numberOfResults).toEqual(0);
     });
 

@@ -11,9 +11,7 @@ const mockEnvironment: Environment = {
   getClientId: vi.fn(),
 };
 
-export function createMockEnvironment(
-  environment: Partial<Environment> = {}
-): Environment {
+export function createMockEnvironment(environment: Partial<Environment> = {}): Environment {
   return {...mockEnvironment, ...environment};
 }
 

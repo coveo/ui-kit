@@ -96,26 +96,23 @@ describe('atomic-insight-result-children', () => {
           }
         : mockResult;
 
-    const {element} =
-      await renderInAtomicInsightResult<AtomicInsightResultChildren>({
-        template: html`<atomic-insight-result-children
-          ?inherit-templates=${inheritTemplates}
-          image-size=${imageSize ?? ''}
-          no-result-text=${noResultText}
-        >
-          ${templateSlot}
-        </atomic-insight-result-children>`,
-        selector: 'atomic-insight-result-children',
-        result: resultWithCollectionProps,
-        foldedResultList: buildMockInsightFoldedResultList([
-          resultWithCollectionProps,
-        ]),
-        displayConfig: displayConfig ?? buildMockDisplayConfig(),
-        bindings: (bindings) => {
-          bindings.engine = mockedEngine;
-          return bindings;
-        },
-      });
+    const {element} = await renderInAtomicInsightResult<AtomicInsightResultChildren>({
+      template: html`<atomic-insight-result-children
+        ?inherit-templates=${inheritTemplates}
+        image-size=${imageSize ?? ''}
+        no-result-text=${noResultText}
+      >
+        ${templateSlot}
+      </atomic-insight-result-children>`,
+      selector: 'atomic-insight-result-children',
+      result: resultWithCollectionProps,
+      foldedResultList: buildMockInsightFoldedResultList([resultWithCollectionProps]),
+      displayConfig: displayConfig ?? buildMockDisplayConfig(),
+      bindings: (bindings) => {
+        bindings.engine = mockedEngine;
+        return bindings;
+      },
+    });
 
     return {
       element,
@@ -322,9 +319,7 @@ describe('atomic-insight-result-children', () => {
       });
 
       expect(element.error).toBeFalsy();
-      const childrenRoot = element.shadowRoot?.querySelector(
-        '[part="children-root"]'
-      );
+      const childrenRoot = element.shadowRoot?.querySelector('[part="children-root"]');
       expect(childrenRoot).toBeDefined();
     });
 
@@ -334,9 +329,7 @@ describe('atomic-insight-result-children', () => {
       });
 
       expect(element.error).toBeFalsy();
-      const childrenRoot = element.shadowRoot?.querySelector(
-        '[part="children-root"]'
-      );
+      const childrenRoot = element.shadowRoot?.querySelector('[part="children-root"]');
       expect(childrenRoot).toBeNull();
     });
 
@@ -350,9 +343,7 @@ describe('atomic-insight-result-children', () => {
       });
 
       expect(element.error).toBeFalsy();
-      const atomicResults = element.shadowRoot?.querySelectorAll(
-        'atomic-insight-result'
-      );
+      const atomicResults = element.shadowRoot?.querySelectorAll('atomic-insight-result');
       expect(atomicResults?.length).toBe(3);
     });
 
@@ -362,9 +353,7 @@ describe('atomic-insight-result-children', () => {
       });
 
       expect(element.error).toBeFalsy();
-      const atomicResult = element.shadowRoot?.querySelector(
-        'atomic-insight-result'
-      );
+      const atomicResult = element.shadowRoot?.querySelector('atomic-insight-result');
       expect(atomicResult?.getAttribute('density')).toBe('compact');
     });
 
@@ -375,9 +364,7 @@ describe('atomic-insight-result-children', () => {
       });
 
       expect(element.error).toBeFalsy();
-      const atomicResult = element.shadowRoot?.querySelector(
-        'atomic-insight-result'
-      );
+      const atomicResult = element.shadowRoot?.querySelector('atomic-insight-result');
       expect(atomicResult?.getAttribute('image-size')).toBe('large');
     });
 
@@ -387,9 +374,7 @@ describe('atomic-insight-result-children', () => {
       });
 
       expect(element.error).toBeFalsy();
-      const atomicResult = element.shadowRoot?.querySelector(
-        'atomic-insight-result'
-      );
+      const atomicResult = element.shadowRoot?.querySelector('atomic-insight-result');
       expect(atomicResult?.getAttribute('image-size')).toBe('large');
     });
   });
@@ -406,9 +391,7 @@ describe('atomic-insight-result-children', () => {
       });
 
       expect(element.error).toBeFalsy();
-      const showHideButton = element.shadowRoot?.querySelector(
-        '[part="show-hide-button"]'
-      );
+      const showHideButton = element.shadowRoot?.querySelector('[part="show-hide-button"]');
       expect(showHideButton).toBeDefined();
     });
 
@@ -420,9 +403,7 @@ describe('atomic-insight-result-children', () => {
       });
 
       expect(element.error).toBeFalsy();
-      const noResultRoot = element.shadowRoot?.querySelector(
-        '[part="no-result-root"]'
-      );
+      const noResultRoot = element.shadowRoot?.querySelector('[part="no-result-root"]');
       expect(noResultRoot).toBeDefined();
     });
   });

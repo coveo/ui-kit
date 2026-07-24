@@ -20,10 +20,7 @@ import {answerSlice} from './answer-slice.js';
 import type {GeneratedAnswerStream} from './generated-answer-stream.js';
 import type {StreamAnswerAPIState} from './stream-answer-api-state.js';
 
-interface StreamPayload extends Pick<
-  GeneratedAnswerStream,
-  'contentFormat' | 'citations'
-> {
+interface StreamPayload extends Pick<GeneratedAnswerStream, 'contentFormat' | 'citations'> {
   textDelta?: string;
   padding?: string;
   answerGenerated?: boolean;
@@ -45,10 +42,7 @@ const handleHeaderMessage = (
   draft.isLoading = false;
 };
 
-const handleMessage = (
-  draft: GeneratedAnswerStream,
-  payload: Pick<StreamPayload, 'textDelta'>
-) => {
+const handleMessage = (draft: GeneratedAnswerStream, payload: Pick<StreamPayload, 'textDelta'>) => {
   const {textDelta} = payload;
 
   if (typeof textDelta !== 'string') {
@@ -89,10 +83,7 @@ interface MessageType {
   code?: number;
 }
 
-const handleError = (
-  draft: GeneratedAnswerStream,
-  message: Required<MessageType>
-) => {
+const handleError = (draft: GeneratedAnswerStream, message: Required<MessageType>) => {
   const errorMessage = message.errorMessage || 'Unknown error occurred';
 
   draft.error = {
@@ -102,9 +93,7 @@ const handleError = (
   draft.isStreaming = false;
   draft.isLoading = false;
   // Throwing an error here breaks the client and prevents the error from reaching the state.
-  console.error(
-    `Generated answer error: ${errorMessage} (code: ${message.code})`
-  );
+  console.error(`Generated answer error: ${errorMessage} (code: ${message.code})`);
 };
 
 export const updateCacheWithEvent = (
@@ -117,9 +106,7 @@ export const updateCacheWithEvent = (
     handleError(draft, message);
   }
 
-  const parsedPayload: StreamPayload = message.payload.length
-    ? JSON.parse(message.payload)
-    : {};
+  const parsedPayload: StreamPayload = message.payload.length ? JSON.parse(message.payload) : {};
 
   switch (message.payloadType) {
     case 'genqa.headerMessageType':
@@ -144,16 +131,8 @@ export const updateCacheWithEvent = (
       handleEndOfStream(draft, parsedPayload);
       const answerId = draft.answerId;
       const answerGenerated = parsedPayload.answerGenerated ?? false;
-      const answerTextIsEmpty = answerGenerated
-        ? !draft.answer?.trim()
-        : undefined;
-      dispatch(
-        logGeneratedAnswerStreamEnd(
-          answerGenerated,
-          answerId,
-          answerTextIsEmpty
-        )
-      );
+      const answerTextIsEmpty = answerGenerated ? !draft.answer?.trim() : undefined;
+      dispatch(logGeneratedAnswerStreamEnd(answerGenerated, answerId, answerTextIsEmpty));
       dispatch(logGeneratedAnswerResponseLinked());
       break;
     }
@@ -170,9 +149,7 @@ export const buildAnswerEndpoint = (
     throw new Error('Missing required parameters for answer endpoint');
   }
   const basePath = `/rest/organizations/${organizationId}`;
-  const prefix = insightId
-    ? `insight/v1/configs/${insightId}/answer`
-    : `answer/v1/configs`;
+  const prefix = insightId ? `insight/v1/configs/${insightId}/answer` : `answer/v1/configs`;
   return `${platformEndpoint}${basePath}/${prefix}/${answerConfigurationId}/generate`;
 };
 
@@ -200,10 +177,7 @@ export const answerApi = answerSlice.injectEndpoints({
         // Standard RTK key, with analytics excluded
         return `${endpointName}(${JSON.stringify(queryArgsWithoutAnalytics)})`;
       },
-      async onCacheEntryAdded(
-        args,
-        {getState, cacheDataLoaded, updateCachedData, dispatch}
-      ) {
+      async onCacheEntryAdded(args, {getState, cacheDataLoaded, updateCachedData, dispatch}) {
         await cacheDataLoaded;
         /**
          * createApi has to be called prior to creating the redux store and is used as part of the store setup sequence.

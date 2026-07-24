@@ -5,9 +5,7 @@ import type {FunctionalComponentWithChildren} from '@/src/utils/functional-compo
 import {renderButton} from '../../button';
 import type {FacetValuePropsBase} from '../facet-common';
 
-export const renderFacetValueBox: FunctionalComponentWithChildren<
-  FacetValuePropsBase
-> =
+export const renderFacetValueBox: FunctionalComponentWithChildren<FacetValuePropsBase> =
   ({props}) =>
   (children) => {
     const compactCount = new Intl.NumberFormat(props.i18n.language, {

@@ -13,10 +13,7 @@ const LINE_HEIGHT = 16;
 
 describe('atomic-product-excerpt', () => {
   beforeEach(() => {
-    document.documentElement.style.setProperty(
-      '--line-height',
-      `${LINE_HEIGHT}px`
-    );
+    document.documentElement.style.setProperty('--line-height', `${LINE_HEIGHT}px`);
   });
   const renderProductExcerpt = async (
     props: {
@@ -76,10 +73,7 @@ describe('atomic-product-excerpt', () => {
       excerpt: 'This is a short excerpt for child product.',
     });
 
-    expect(locators.text).toHaveAttribute(
-      'value',
-      'This is a short excerpt for child product.'
-    );
+    expect(locators.text).toHaveAttribute('value', 'This is a short excerpt for child product.');
   });
 
   it('should show the excerpt truncated to the specified number of lines', async () => {

@@ -1,10 +1,7 @@
 /* oxlint-disable @typescript-eslint/no-explicit-any -- Just tests */
 import type {EventSourceMessage} from '../../../utils/fetch-event-source/parse.js';
 import type {GeneratedAnswerStream} from '../generated-answer-stream.js';
-import {
-  buildAnswerEndpoint,
-  updateCacheWithEvent,
-} from '../stream-answer-api.js';
+import {buildAnswerEndpoint, updateCacheWithEvent} from '../stream-answer-api.js';
 
 describe('#streamAnswerApi', () => {
   describe('updateCacheWithEvent', () => {
@@ -39,9 +36,7 @@ describe('#streamAnswerApi', () => {
       };
     };
 
-    const buildDefaultDraft = (
-      draft: Record<string, any> = {}
-    ): GeneratedAnswerStream =>
+    const buildDefaultDraft = (draft: Record<string, any> = {}): GeneratedAnswerStream =>
       Object.assign(
         {...draft},
         {
@@ -302,17 +297,13 @@ describe('#streamAnswerApi', () => {
         'Missing required parameters for answer endpoint'
       );
 
-      expect(() =>
-        buildAnswerEndpoint(baseUrl, organizationId, undefined as any)
-      ).toThrow('Missing required parameters for answer endpoint');
+      expect(() => buildAnswerEndpoint(baseUrl, organizationId, undefined as any)).toThrow(
+        'Missing required parameters for answer endpoint'
+      );
     });
 
     it('should build the proper endpoint when insightId is not provided', () => {
-      const result = buildAnswerEndpoint(
-        baseUrl,
-        organizationId,
-        answerConfigurationId
-      );
+      const result = buildAnswerEndpoint(baseUrl, organizationId, answerConfigurationId);
 
       expect(result).toBe(
         `${baseUrl}/rest/organizations/${organizationId}/answer/v1/configs/${answerConfigurationId}/generate`
@@ -320,12 +311,7 @@ describe('#streamAnswerApi', () => {
     });
 
     it('should build the proper endpoint when insightId is provided', () => {
-      const result = buildAnswerEndpoint(
-        baseUrl,
-        organizationId,
-        answerConfigurationId,
-        insightId
-      );
+      const result = buildAnswerEndpoint(baseUrl, organizationId, answerConfigurationId, insightId);
 
       expect(result).toBe(
         `${baseUrl}/rest/organizations/${organizationId}/insight/v1/configs/${insightId}/answer/${answerConfigurationId}/generate`

@@ -28,9 +28,7 @@ export type GeneratedAnswerFeedback = {
   documentUrl?: string;
 };
 
-export const parseEvaluationDetails = (
-  detail: 'yes' | 'no' | 'unknown'
-): boolean | undefined => {
+export const parseEvaluationDetails = (detail: 'yes' | 'no' | 'unknown'): boolean | undefined => {
   if (detail === 'yes') {
     return true;
   }
@@ -49,19 +47,12 @@ export const logRetryGeneratedAnswer = (): LegacySearchAction =>
 // TODO: SFINT-6665
 // Overloading the function here for backward compatibility because #logOpenGeneratedAnswerSource will eventually take an answerId.
 export function logOpenGeneratedAnswerSource(citationId: string): CustomAction;
-export function logOpenGeneratedAnswerSource(
-  citationId: string,
-  answerId: string
-): CustomAction;
-export function logOpenGeneratedAnswerSource(
-  citationId: string,
-  answerId?: string
-): CustomAction {
+export function logOpenGeneratedAnswerSource(citationId: string, answerId: string): CustomAction;
+export function logOpenGeneratedAnswerSource(citationId: string, answerId?: string): CustomAction {
   return makeAnalyticsAction({
     prefix: 'analytics/generatedAnswer/openAnswerSource',
     __legacy__getBuilder: (client, state) => {
-      const resolvedAnswerId =
-        answerId ?? generativeQuestionAnsweringIdSelector(state);
+      const resolvedAnswerId = answerId ?? generativeQuestionAnsweringIdSelector(state);
       const citation = citationSourceSelector(state, citationId);
       if (!resolvedAnswerId || !citation) {
         return null;
@@ -81,8 +72,7 @@ export function logOpenGeneratedAnswerSource(
     analyticsType: 'Rga.CitationClick',
     analyticsPayloadBuilder: (state): Rga.CitationClick | undefined => {
       const citation = citationSourceSelector(state, citationId);
-      const resolvedAnswerId =
-        answerId ?? generativeQuestionAnsweringIdSelector(state);
+      const resolvedAnswerId = answerId ?? generativeQuestionAnsweringIdSelector(state);
       return {
         answerId: resolvedAnswerId ?? '',
         citationId,
@@ -99,10 +89,7 @@ export function logOpenGeneratedAnswerSource(
 
 // TODO: SFINT-6665
 // Overloading the function here for backward compatibility because #logHoverCitation will eventually take an answerId.
-export function logHoverCitation(
-  citationId: string,
-  citationHoverTimeInMs: number
-): CustomAction;
+export function logHoverCitation(citationId: string, citationHoverTimeInMs: number): CustomAction;
 export function logHoverCitation(
   citationId: string,
   citationHoverTimeInMs: number,
@@ -116,8 +103,7 @@ export function logHoverCitation(
   return makeAnalyticsAction({
     prefix: 'analytics/generatedAnswer/hoverCitation',
     __legacy__getBuilder: (client, state) => {
-      const resolvedAnswerId =
-        answerId ?? generativeQuestionAnsweringIdSelector(state);
+      const resolvedAnswerId = answerId ?? generativeQuestionAnsweringIdSelector(state);
       const citation = citationSourceSelector(state, citationId);
 
       if (!resolvedAnswerId || !citation) {
@@ -135,8 +121,7 @@ export function logHoverCitation(
     analyticsType: 'Rga.CitationHover',
     analyticsPayloadBuilder: (state): Rga.CitationHover | undefined => {
       const citation = citationSourceSelector(state, citationId);
-      const resolvedAnswerId =
-        answerId ?? generativeQuestionAnsweringIdSelector(state);
+      const resolvedAnswerId = answerId ?? generativeQuestionAnsweringIdSelector(state);
       return {
         answerId: resolvedAnswerId ?? '',
         citationId,
@@ -175,8 +160,7 @@ export function logLikeGeneratedAnswer(answerId?: string): CustomAction {
   return makeAnalyticsAction({
     prefix: 'analytics/generatedAnswer/like',
     __legacy__getBuilder: (client, state) => {
-      const resolvedAnswerId =
-        answerId ?? generativeQuestionAnsweringIdSelector(state);
+      const resolvedAnswerId = answerId ?? generativeQuestionAnsweringIdSelector(state);
       if (!resolvedAnswerId) {
         return null;
       }
@@ -188,8 +172,7 @@ export function logLikeGeneratedAnswer(answerId?: string): CustomAction {
     },
     analyticsType: 'Rga.AnswerAction',
     analyticsPayloadBuilder: (state): Rga.AnswerAction | undefined => {
-      const resolvedAnswerId =
-        answerId ?? generativeQuestionAnsweringIdSelector(state);
+      const resolvedAnswerId = answerId ?? generativeQuestionAnsweringIdSelector(state);
       return {
         answerId: resolvedAnswerId ?? '',
         action: 'like',
@@ -206,8 +189,7 @@ export function logDislikeGeneratedAnswer(answerId?: string): CustomAction {
   return makeAnalyticsAction({
     prefix: 'analytics/generatedAnswer/dislike',
     __legacy__getBuilder: (client, state) => {
-      const resolvedAnswerId =
-        answerId ?? generativeQuestionAnsweringIdSelector(state);
+      const resolvedAnswerId = answerId ?? generativeQuestionAnsweringIdSelector(state);
       if (!resolvedAnswerId) {
         return null;
       }
@@ -219,8 +201,7 @@ export function logDislikeGeneratedAnswer(answerId?: string): CustomAction {
     },
     analyticsType: 'Rga.AnswerAction',
     analyticsPayloadBuilder: (state): Rga.AnswerAction | undefined => {
-      const resolvedAnswerId =
-        answerId ?? generativeQuestionAnsweringIdSelector(state);
+      const resolvedAnswerId = answerId ?? generativeQuestionAnsweringIdSelector(state);
       return {
         answerId: resolvedAnswerId ?? '',
         action: 'dislike',
@@ -229,14 +210,11 @@ export function logDislikeGeneratedAnswer(answerId?: string): CustomAction {
   });
 }
 
-export const logGeneratedAnswerFeedback = (
-  feedback: GeneratedAnswerFeedback
-): CustomAction =>
+export const logGeneratedAnswerFeedback = (feedback: GeneratedAnswerFeedback): CustomAction =>
   makeAnalyticsAction({
     prefix: 'analytics/generatedAnswer/sendFeedback',
     __legacy__getBuilder: (client, state) => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
+      const generativeQuestionAnsweringId = generativeQuestionAnsweringIdSelector(state);
       if (!generativeQuestionAnsweringId) {
         return null;
       }
@@ -247,17 +225,9 @@ export const logGeneratedAnswerFeedback = (
     },
     analyticsType: 'Rga.SubmitFeedback',
     analyticsPayloadBuilder: (state): Rga.SubmitFeedback | undefined => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
-      const {
-        helpful,
-        readable,
-        documented,
-        hallucinationFree,
-        correctTopic,
-        documentUrl,
-        details,
-      } = feedback;
+      const generativeQuestionAnsweringId = generativeQuestionAnsweringIdSelector(state);
+      const {helpful, readable, documented, hallucinationFree, correctTopic, documentUrl, details} =
+        feedback;
       return {
         answerId: generativeQuestionAnsweringId ?? '',
         helpful,
@@ -308,9 +278,7 @@ export const logGeneratedAnswerStreamEnd = (
     },
   });
 
-export const logGeneratedAnswerResponseLinked = (
-  answerId?: string
-): CustomAction =>
+export const logGeneratedAnswerResponseLinked = (answerId?: string): CustomAction =>
   makeAnalyticsAction({
     prefix: 'analytics/generatedAnswer/responseLinked',
     __legacy__getBuilder: () => {
@@ -322,10 +290,7 @@ export const logGeneratedAnswerResponseLinked = (
         answerId ?? generativeQuestionAnsweringIdSelector(state);
       return {
         answerId: generativeQuestionAnsweringId ?? '',
-        responseId:
-          state.search?.searchResponseId ||
-          state.search?.response.searchUid ||
-          '',
+        responseId: state.search?.searchResponseId || state.search?.response.searchUid || '',
       };
     },
   });
@@ -334,8 +299,7 @@ export const logGeneratedAnswerShowAnswers = (): CustomAction =>
   makeAnalyticsAction({
     prefix: 'analytics/generatedAnswer/show',
     __legacy__getBuilder: (client, state) => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
+      const generativeQuestionAnsweringId = generativeQuestionAnsweringIdSelector(state);
       if (!generativeQuestionAnsweringId) {
         return null;
       }
@@ -345,8 +309,7 @@ export const logGeneratedAnswerShowAnswers = (): CustomAction =>
     },
     analyticsType: 'Rga.AnswerAction',
     analyticsPayloadBuilder: (state): Rga.AnswerAction | undefined => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
+      const generativeQuestionAnsweringId = generativeQuestionAnsweringIdSelector(state);
       return {
         answerId: generativeQuestionAnsweringId ?? '',
         action: 'show',
@@ -358,8 +321,7 @@ export const logGeneratedAnswerHideAnswers = (): CustomAction =>
   makeAnalyticsAction({
     prefix: 'analytics/generatedAnswer/hide',
     __legacy__getBuilder: (client, state) => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
+      const generativeQuestionAnsweringId = generativeQuestionAnsweringIdSelector(state);
       if (!generativeQuestionAnsweringId) {
         return null;
       }
@@ -369,8 +331,7 @@ export const logGeneratedAnswerHideAnswers = (): CustomAction =>
     },
     analyticsType: 'Rga.AnswerAction',
     analyticsPayloadBuilder: (state): Rga.AnswerAction | undefined => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
+      const generativeQuestionAnsweringId = generativeQuestionAnsweringIdSelector(state);
       return {
         answerId: generativeQuestionAnsweringId ?? '',
         action: 'hide',
@@ -382,8 +343,7 @@ export const logGeneratedAnswerExpand = (): CustomAction =>
   makeAnalyticsAction({
     prefix: 'analytics/generatedAnswer/expand',
     __legacy__getBuilder: (client, state) => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
+      const generativeQuestionAnsweringId = generativeQuestionAnsweringIdSelector(state);
       if (!generativeQuestionAnsweringId) {
         return null;
       }
@@ -393,8 +353,7 @@ export const logGeneratedAnswerExpand = (): CustomAction =>
     },
     analyticsType: 'Rga.AnswerAction',
     analyticsPayloadBuilder: (state): Rga.AnswerAction | undefined => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
+      const generativeQuestionAnsweringId = generativeQuestionAnsweringIdSelector(state);
       return {
         answerId: generativeQuestionAnsweringId ?? '',
         action: 'expand',
@@ -406,8 +365,7 @@ export const logGeneratedAnswerCollapse = (): CustomAction =>
   makeAnalyticsAction({
     prefix: 'analytics/generatedAnswer/collapse',
     __legacy__getBuilder: (client, state) => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
+      const generativeQuestionAnsweringId = generativeQuestionAnsweringIdSelector(state);
       if (!generativeQuestionAnsweringId) {
         return null;
       }
@@ -417,8 +375,7 @@ export const logGeneratedAnswerCollapse = (): CustomAction =>
     },
     analyticsType: 'Rga.AnswerAction',
     analyticsPayloadBuilder: (state): Rga.AnswerAction | undefined => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
+      const generativeQuestionAnsweringId = generativeQuestionAnsweringIdSelector(state);
       return {
         answerId: generativeQuestionAnsweringId ?? '',
         action: 'collapse',
@@ -434,8 +391,7 @@ export function logCopyGeneratedAnswer(answerId?: string): CustomAction {
   return makeAnalyticsAction({
     prefix: 'analytics/generatedAnswer/copy',
     __legacy__getBuilder: (client, state) => {
-      const resolvedAnswerId =
-        answerId ?? generativeQuestionAnsweringIdSelector(state);
+      const resolvedAnswerId = answerId ?? generativeQuestionAnsweringIdSelector(state);
       if (!resolvedAnswerId) {
         return null;
       }
@@ -447,8 +403,7 @@ export function logCopyGeneratedAnswer(answerId?: string): CustomAction {
     },
     analyticsType: 'Rga.AnswerAction',
     analyticsPayloadBuilder: (state): Rga.AnswerAction | undefined => {
-      const resolvedAnswerId =
-        answerId ?? generativeQuestionAnsweringIdSelector(state);
+      const resolvedAnswerId = answerId ?? generativeQuestionAnsweringIdSelector(state);
       return {
         answerId: resolvedAnswerId ?? '',
         action: 'copyToClipboard',

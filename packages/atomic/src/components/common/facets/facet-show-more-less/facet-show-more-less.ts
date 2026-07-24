@@ -18,9 +18,7 @@ export interface FacetShowMoreProps {
   showLessRef?: (element?: HTMLButtonElement) => void;
 }
 
-export const renderFacetShowMoreLess: FunctionalComponent<
-  FacetShowMoreProps
-> = ({props}) => {
+export const renderFacetShowMoreLess: FunctionalComponent<FacetShowMoreProps> = ({props}) => {
   const label = props.i18n.t(props.label);
   const showMore = props.i18n.t('show-more');
   const showMoreFacetValues = props.i18n.t('show-more-facet-values', {

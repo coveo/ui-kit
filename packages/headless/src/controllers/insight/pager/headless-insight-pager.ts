@@ -27,10 +27,7 @@ export type {Pager, PagerInitialState, PagerOptions, PagerProps, PagerState};
  * @group Controllers
  * @category Pager
  * */
-export function buildPager(
-  engine: InsightEngine,
-  props: PagerProps = {}
-): Pager {
+export function buildPager(engine: InsightEngine, props: PagerProps = {}): Pager {
   const {dispatch} = engine;
   const pager = buildCorePager(engine, props);
 

@@ -75,9 +75,7 @@ export interface ResultPreviewActionCreators {
  * @group Actions
  * @category ResultPreview
  */
-export function loadResultPreviewActions(
-  engine: CoreEngine
-): ResultPreviewActionCreators {
+export function loadResultPreviewActions(engine: CoreEngine): ResultPreviewActionCreators {
   engine.addReducers({resultPreview});
 
   return {

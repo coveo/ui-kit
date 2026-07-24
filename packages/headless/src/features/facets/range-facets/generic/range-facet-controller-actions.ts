@@ -8,17 +8,11 @@ import {
 export const executeToggleRangeFacetSelect = createAction(
   'rangeFacet/executeToggleSelect',
   (payload: RangeFacetSelectionPayload) =>
-    validatePayload(
-      payload,
-      rangeFacetSelectionPayloadDefinition(payload.selection)
-    )
+    validatePayload(payload, rangeFacetSelectionPayloadDefinition(payload.selection))
 );
 
 export const executeToggleRangeFacetExclude = createAction(
   'rangeFacet/executeToggleExclude',
   (payload: RangeFacetSelectionPayload) =>
-    validatePayload(
-      payload,
-      rangeFacetSelectionPayloadDefinition(payload.selection)
-    )
+    validatePayload(payload, rangeFacetSelectionPayloadDefinition(payload.selection))
 );

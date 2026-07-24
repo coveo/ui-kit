@@ -25,10 +25,7 @@ export function ProductGrid({controller}: ProductGridProps) {
   return (
     <div className={styles.grid}>
       {products.map((product, index) => (
-        <ProductCard
-          key={(product.permanentid as string | undefined) ?? index}
-          product={product}
-        />
+        <ProductCard key={(product.permanentid as string | undefined) ?? index} product={product} />
       ))}
     </div>
   );

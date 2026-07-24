@@ -1,9 +1,7 @@
 import {existsSync, openSync, readFileSync, writeFileSync} from 'node:fs';
 import {env} from 'node:process';
 
-const localeToTranslate = JSON.parse(
-  readFileSync('../../packages/atomic/src/locales.json')
-);
+const localeToTranslate = JSON.parse(readFileSync('../../packages/atomic/src/locales.json'));
 
 if (!existsSync('temporary.json')) {
   openSync('temporary.json', 'w');
@@ -40,11 +38,7 @@ const supportedLanguages = [
   'zh-TW',
 ];
 
-const prompt = (
-  translationKey,
-  englishTranslation,
-  languagesThatNeedTranslation
-) =>
+const prompt = (translationKey, englishTranslation, languagesThatNeedTranslation) =>
   `I will give you a string to translate. The string can optionally contain variables between braces similar to this: {{variable}}. 
   Those variables are meant to represent dynamic values.
   If there is no variable present, then do a normal translation.
@@ -69,12 +63,8 @@ async function main() {
     );
 
     if (languagesThatNeedTranslation.length === 0) {
-      localeAlreadyTranslated[translationKey] =
-        localeToTranslate[translationKey];
-      writeFileSync(
-        'temporary.json',
-        JSON.stringify(localeAlreadyTranslated, null, 2)
-      );
+      localeAlreadyTranslated[translationKey] = localeToTranslate[translationKey];
+      writeFileSync('temporary.json', JSON.stringify(localeAlreadyTranslated, null, 2));
       continue;
     }
 
@@ -93,11 +83,7 @@ async function main() {
           messages: [
             {
               role: 'user',
-              content: prompt(
-                translationKey,
-                englishTranslation,
-                languagesThatNeedTranslation
-              ),
+              content: prompt(translationKey, englishTranslation, languagesThatNeedTranslation),
             },
           ],
           stream: false,
@@ -111,24 +97,16 @@ async function main() {
         ...localeToTranslate[translationKey],
         ...JSON.parse(answer)[translationKey],
       };
-      writeFileSync(
-        'temporary.json',
-        JSON.stringify(localeAlreadyTranslated, null, 2)
-      );
+      writeFileSync('temporary.json', JSON.stringify(localeAlreadyTranslated, null, 2));
 
       console.log(`${answer}`);
     } catch (e) {
       console.error(`Error while translating ${translationKey} : ${e}.`);
-      console.error(
-        'Troubleshoot the issue, then restart to script to continue translation.'
-      );
+      console.error('Troubleshoot the issue, then restart to script to continue translation.');
     }
   }
 
-  writeFileSync(
-    '../../packages/atomic/src/locales.json',
-    `${readFileSync('temporary.json')}\n`
-  );
+  writeFileSync('../../packages/atomic/src/locales.json', `${readFileSync('temporary.json')}\n`);
   writeFileSync('temporary.json', JSON.stringify({}, null, 2));
 }
 

@@ -59,11 +59,7 @@ export class AtomicCommerceSearchBoxRecentQueries
   @property({type: Number, attribute: 'max-without-query', reflect: true})
   public maxWithoutQuery?: number;
 
-  private searchBoxAriaMessage = new AriaLiveRegionController(
-    this,
-    'recent-search-cleared',
-    true
-  );
+  private searchBoxAriaMessage = new AriaLiveRegionController(this, 'recent-search-cleared', true);
 
   connectedCallback() {
     super.connectedCallback();
@@ -105,10 +101,7 @@ export class AtomicCommerceSearchBoxRecentQueries
       return this.disableFeature();
     }
 
-    return this.storage.setJSON(
-      StorageItems.RECENT_QUERIES,
-      this.recentQueriesList.state.queries
-    );
+    return this.storage.setJSON(StorageItems.RECENT_QUERIES, this.recentQueriesList.state.queries);
   }
 
   private warnUser = once(() =>
@@ -131,13 +124,12 @@ export class AtomicCommerceSearchBoxRecentQueries
     const hasQuery = query !== '';
     const max = hasQuery ? this.maxWithQuery : this.maxWithoutQuery;
     const filteredQueries = this.recentQueriesList.state.queries
-      .filter((recentQuery) =>
-        recentQuery.toLowerCase().startsWith(query.toLowerCase())
-      )
+      .filter((recentQuery) => recentQuery.toLowerCase().startsWith(query.toLowerCase()))
       .slice(0, max);
 
-    const suggestionElements: SearchBoxSuggestionElement[] =
-      filteredQueries.map((value) => this.renderItem(value));
+    const suggestionElements: SearchBoxSuggestionElement[] = filteredQueries.map((value) =>
+      this.renderItem(value)
+    );
     if (suggestionElements.length) {
       suggestionElements.unshift(this.renderClear());
     }
@@ -154,9 +146,7 @@ export class AtomicCommerceSearchBoxRecentQueries
       onSelect: () => {
         this.recentQueriesList.clear();
         this.bindings.triggerSuggestions();
-        this.searchBoxAriaMessage.message = this.bindings.i18n.t(
-          'recent-search-cleared'
-        );
+        this.searchBoxAriaMessage.message = this.bindings.i18n.t('recent-search-cleared');
       },
     };
   }

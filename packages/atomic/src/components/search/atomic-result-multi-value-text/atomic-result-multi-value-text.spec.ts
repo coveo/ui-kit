@@ -58,28 +58,20 @@ describe('atomic-result-multi-value-text', () => {
     return {
       element,
       get list() {
-        return element.shadowRoot?.querySelector(
-          '[part="result-multi-value-text-list"]'
-        );
+        return element.shadowRoot?.querySelector('[part="result-multi-value-text-list"]');
       },
       get allValues() {
         return Array.from(
-          element.shadowRoot?.querySelectorAll(
-            '[part="result-multi-value-text-value"]'
-          ) || []
+          element.shadowRoot?.querySelectorAll('[part="result-multi-value-text-value"]') || []
         );
       },
       get allSeparators() {
         return Array.from(
-          element.shadowRoot?.querySelectorAll(
-            '[part="result-multi-value-text-separator"]'
-          ) || []
+          element.shadowRoot?.querySelectorAll('[part="result-multi-value-text-separator"]') || []
         );
       },
       get more() {
-        return element.shadowRoot?.querySelector(
-          '[part="result-multi-value-text-value-more"]'
-        );
+        return element.shadowRoot?.querySelector('[part="result-multi-value-text-value-more"]');
       },
     };
   };
@@ -246,9 +238,7 @@ describe('atomic-result-multi-value-text', () => {
   });
 
   it('should set error when field value is not a string or array', async () => {
-    const consoleErrorSpy = vi
-      .spyOn(console, 'error')
-      .mockImplementation(() => {});
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
     const {element} = await renderComponent({
       resultState: {

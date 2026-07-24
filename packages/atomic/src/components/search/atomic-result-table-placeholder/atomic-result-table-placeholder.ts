@@ -78,22 +78,13 @@ export class AtomicResultTablePlaceholder extends LitElement {
         <thead aria-hidden="true">
           <tr>
             <th>
-              <div
-                class="mt-2 h-8 block bg-neutral rounded"
-                style="width: 14.5rem;"
-              ></div>
+              <div class="mt-2 h-8 block bg-neutral rounded" style="width: 14.5rem;"></div>
             </th>
             <th>
-              <div
-                class="mt-2 h-8 block bg-neutral rounded"
-                style="width: 9.75rem;"
-              ></div>
+              <div class="mt-2 h-8 block bg-neutral rounded" style="width: 9.75rem;"></div>
             </th>
             <th>
-              <div
-                class="mt-2 h-8 block bg-neutral rounded"
-                style="width: 6.5rem;"
-              ></div>
+              <div class="mt-2 h-8 block bg-neutral rounded" style="width: 6.5rem;"></div>
             </th>
           </tr>
         </thead>
@@ -103,30 +94,15 @@ export class AtomicResultTablePlaceholder extends LitElement {
             () => html`
               <tr>
                 <td>
-                  <div
-                    class="mb-6 h-8 block bg-neutral rounded"
-                    style="width: 22.875rem;"
-                  ></div>
-                  <div
-                    class="mb-2 h-5 block bg-neutral rounded"
-                    style="width: 23.75rem;"
-                  ></div>
-                  <div
-                    class="h-5 block bg-neutral rounded"
-                    style="width: 11.5rem;"
-                  ></div>
+                  <div class="mb-6 h-8 block bg-neutral rounded" style="width: 22.875rem;"></div>
+                  <div class="mb-2 h-5 block bg-neutral rounded" style="width: 23.75rem;"></div>
+                  <div class="h-5 block bg-neutral rounded" style="width: 11.5rem;"></div>
                 </td>
                 <td>
-                  <div
-                    class="mt-1.5 h-5 block bg-neutral rounded"
-                    style="width: 11rem;"
-                  ></div>
+                  <div class="mt-1.5 h-5 block bg-neutral rounded" style="width: 11rem;"></div>
                 </td>
                 <td>
-                  <div
-                    class="mt-1.5 h-5 block bg-neutral rounded"
-                    style="width: 4.875rem;"
-                  ></div>
+                  <div class="mt-1.5 h-5 block bg-neutral rounded" style="width: 4.875rem;"></div>
                 </td>
               </tr>
             `

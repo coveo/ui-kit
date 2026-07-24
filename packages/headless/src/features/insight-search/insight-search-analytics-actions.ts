@@ -11,14 +11,10 @@ export const logFetchMoreResults = (): InsightAction =>
   makeInsightAnalyticsActionFactory(SearchPageEvents.browseResults)(
     'search/logFetchMoreResults',
     (client, state) =>
-      client.logFetchMoreResults(
-        getCaseContextAnalyticsMetadata(state.insightCaseContext)
-      )
+      client.logFetchMoreResults(getCaseContextAnalyticsMetadata(state.insightCaseContext))
   );
 
-export const logQueryError = (
-  error: SearchAPIErrorWithStatusCode
-): InsightAction =>
+export const logQueryError = (error: SearchAPIErrorWithStatusCode): InsightAction =>
   makeInsightAnalyticsActionFactory(SearchPageEvents.queryError)(
     'search/queryError',
     (client, state) =>
@@ -33,10 +29,7 @@ export const logQueryError = (
       })
   );
 
-export const logContextChanged = (
-  caseId: string,
-  caseNumber: string
-): InsightAction =>
+export const logContextChanged = (caseId: string, caseNumber: string): InsightAction =>
   makeInsightAnalyticsActionFactory(SearchPageEvents.contextChanged)(
     'analytics/contextChanged',
     (client, state) => {
@@ -53,9 +46,7 @@ export const logInsightInterfaceLoad = (): InsightAction =>
   makeInsightAnalyticsActionFactory(SearchPageEvents.interfaceLoad)(
     'analytics/interface/load',
     (client, state) =>
-      client.logInterfaceLoad(
-        getCaseContextAnalyticsMetadata(state.insightCaseContext)
-      )
+      client.logInterfaceLoad(getCaseContextAnalyticsMetadata(state.insightCaseContext))
   );
 
 export const logInsightInterfaceChange = (): InsightAction =>

@@ -7,10 +7,7 @@ import {questionAnsweringReducer as questionAnswering} from '../../../features/q
 import {getQuestionAnsweringInitialState} from '../../../features/question-answering/question-answering-state.js';
 import {searchReducer as search} from '../../../features/search/search-slice.js';
 import {emptyQuestionAnswer} from '../../../features/search/search-state.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../../test/mock-engine-v2.js';
 import {buildMockRaw} from '../../../test/mock-raw.js';
 import {buildMockResult} from '../../../test/mock-result.js';
 import {buildMockSearchState} from '../../../test/mock-search-state.js';
@@ -21,9 +18,7 @@ import {
 } from './headless-core-smart-snippet-questions-list.js';
 
 vi.mock('../../../features/question-answering/question-answering-actions');
-vi.mock(
-  '../../../features/question-answering/question-answering-analytics-actions'
-);
+vi.mock('../../../features/question-answering/question-answering-analytics-actions');
 
 const examplePermanentIdOne = 'example permanentid one';
 const examplePermanentIdTwo = 'example permanentid two';
@@ -123,19 +118,13 @@ describe('SmartSnippetQuestionsList', () => {
   it('should properly build the state', () => {
     engine.state.questionAnswering = {
       ...getQuestionAnsweringInitialState(),
-      relatedQuestions: [
-        exampleRelatedQuestionStateOne,
-        exampleRelatedQuestionStateTwo,
-      ],
+      relatedQuestions: [exampleRelatedQuestionStateOne, exampleRelatedQuestionStateTwo],
     };
     engine.state.search = buildMockSearchState({
       results: [exampleResultOne, exampleResultTwo],
       questionAnswer: {
         ...emptyQuestionAnswer(),
-        relatedQuestions: [
-          exampleRelatedQuestionOne,
-          exampleRelatedQuestionTwo,
-        ],
+        relatedQuestions: [exampleRelatedQuestionOne, exampleRelatedQuestionTwo],
       },
     });
 
@@ -157,9 +146,7 @@ describe('SmartSnippetQuestionsList', () => {
         source: exampleResultTwo,
       },
     ];
-    expect(smartSnippetQuestionsList.state.questions).toStrictEqual(
-      expectedState
-    );
+    expect(smartSnippetQuestionsList.state.questions).toStrictEqual(expectedState);
   });
 
   it('should not dispatch any action at initialization', () => {

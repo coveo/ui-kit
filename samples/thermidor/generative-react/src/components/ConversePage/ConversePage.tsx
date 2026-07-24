@@ -29,9 +29,7 @@ export function ConversePage() {
   const scrollCooldownRef = useRef(false);
   const prevTurnCountRef = useRef(state.turns.length);
   const overscrollAccumRef = useRef(0);
-  const overscrollResetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
-    null
-  );
+  const overscrollResetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const stateRef = useRef(state);
   stateRef.current = state;
 
@@ -54,8 +52,7 @@ export function ConversePage() {
       const currentIndex = turns.findIndex((t) => t.id === activeTurn?.id);
       if (currentIndex < 0) return;
 
-      const targetIndex =
-        direction === 'prev' ? currentIndex - 1 : currentIndex + 1;
+      const targetIndex = direction === 'prev' ? currentIndex - 1 : currentIndex + 1;
       if (targetIndex < 0 || targetIndex >= turns.length) return;
 
       scrollCooldownRef.current = true;
@@ -77,8 +74,7 @@ export function ConversePage() {
       if (!el || scrollCooldownRef.current) return;
 
       const atTop = el.scrollTop <= 0;
-      const atBottom =
-        Math.abs(el.scrollHeight - el.scrollTop - el.clientHeight) < 2;
+      const atBottom = Math.abs(el.scrollHeight - el.scrollTop - el.clientHeight) < 2;
 
       const atBoundary = (atTop && e.deltaY < 0) || (atBottom && e.deltaY > 0);
 
@@ -139,9 +135,7 @@ export function ConversePage() {
 
   return (
     <div className={styles.container}>
-      <aside
-        className={`${styles.sidebar} ${sidebarOpen ? '' : styles.sidebarCollapsed}`}
-      >
+      <aside className={`${styles.sidebar} ${sidebarOpen ? '' : styles.sidebarCollapsed}`}>
         {sidebarOpen && (
           <TurnsMenu
             turns={state.turns}

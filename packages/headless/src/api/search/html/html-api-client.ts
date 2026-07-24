@@ -2,10 +2,7 @@ import type {Logger} from 'pino';
 import {URLPath} from '../../../utils/url-utils.js';
 import {pickNonBaseParams, unwrapError} from '../../api-client-utils.js';
 import {PlatformClient} from '../../platform-client.js';
-import type {
-  PreprocessRequest,
-  RequestMetadata,
-} from '../../preprocess-request.js';
+import type {PreprocessRequest, RequestMetadata} from '../../preprocess-request.js';
 import {findEncoding} from '../encoding-finder.js';
 import type {SearchAPIErrorWithStatusCode} from '../search-api-error-response.js';
 import {baseSearchRequest} from '../search-api-params.js';
@@ -50,17 +47,9 @@ export const buildContentURL = (req: HtmlRequest, path: string) => {
   return url.href;
 };
 
-export const getHtml = async (
-  req: HtmlRequest,
-  options: HtmlAPIClientOptions
-) => {
+export const getHtml = async (req: HtmlRequest, options: HtmlAPIClientOptions) => {
   const response = await PlatformClient.call({
-    ...baseSearchRequest(
-      req,
-      'POST',
-      'application/x-www-form-urlencoded',
-      '/html'
-    ),
+    ...baseSearchRequest(req, 'POST', 'application/x-www-form-urlencoded', '/html'),
     requestParams: pickNonBaseParams(req),
     requestMetadata: {method: 'html'},
     ...options,

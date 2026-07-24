@@ -112,8 +112,7 @@ test.describe('smoke test', () => {
     // Filter out expected MissingInterfaceParentError for atomic-result-link
     const filteredErrors = consoleErrors.filter(
       (error) =>
-        !error.includes('MissingInterfaceParentError') ||
-        !error.includes('atomic-result-link')
+        !error.includes('MissingInterfaceParentError') || !error.includes('atomic-result-link')
     );
     expect(filteredErrors).toEqual([]);
   });
@@ -126,20 +125,14 @@ test.describe('smoke test', () => {
       }
     });
 
-    await page.goto(
-      'http://localhost:5173/?page=Commerce%20Recommendations%20Page'
-    );
+    await page.goto('http://localhost:5173/?page=Commerce%20Recommendations%20Page');
 
     // Verify recommendation list is visible
-    const recommendationList = page.locator(
-      'atomic-commerce-recommendation-list'
-    );
+    const recommendationList = page.locator('atomic-commerce-recommendation-list');
     await expect(recommendationList).toBeVisible();
 
     // Verify at least one recommendation is displayed
-    const firstRecommendation = recommendationList
-      .locator('atomic-product')
-      .first();
+    const firstRecommendation = recommendationList.locator('atomic-product').first();
     await expect(firstRecommendation).toBeVisible();
 
     expect(consoleErrors).toEqual([]);

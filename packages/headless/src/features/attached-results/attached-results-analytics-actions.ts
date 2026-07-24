@@ -21,9 +21,7 @@ export const logCaseAttach = (result: Result) =>
     prefix: 'insight/caseAttach',
     __legacy__getBuilder: (client, state) => {
       validateResultPayload(result);
-      const metadata = getCaseContextAnalyticsMetadata(
-        state.insightCaseContext
-      );
+      const metadata = getCaseContextAnalyticsMetadata(state.insightCaseContext);
       return client.logCaseAttach(
         partialDocumentInformation(result, state),
         documentIdentifier(result),
@@ -62,16 +60,11 @@ export const logCaseDetach = (result: Result) =>
   });
 
 export const logCitationDocumentAttach = (citation: GeneratedAnswerCitation) =>
-  makeInsightAnalyticsActionFactory(
-    SearchPageEvents.generatedAnswerCitationDocumentAttach
-  )({
+  makeInsightAnalyticsActionFactory(SearchPageEvents.generatedAnswerCitationDocumentAttach)({
     prefix: 'insight/generatedAnswerCitationDocumentAttach',
     __legacy__getBuilder: (client, state) => {
-      const metadata = getCaseContextAnalyticsMetadata(
-        state.insightCaseContext
-      );
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
+      const metadata = getCaseContextAnalyticsMetadata(state.insightCaseContext);
+      const generativeQuestionAnsweringId = generativeQuestionAnsweringIdSelector(state);
 
       if (!generativeQuestionAnsweringId || !citation) {
         return null;

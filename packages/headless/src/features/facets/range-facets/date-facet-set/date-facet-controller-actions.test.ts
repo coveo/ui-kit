@@ -1,19 +1,13 @@
 import type {ThunkExtraArguments} from '../../../../app/thunk-extra-arguments.js';
 import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../../../test/mock-engine-v2.js';
 import {createMockState} from '../../../../test/mock-state.js';
 import {updateFacetOptions} from '../../../facet-options/facet-options-actions.js';
 import {
   executeToggleRangeFacetExclude,
   executeToggleRangeFacetSelect,
 } from '../generic/range-facet-controller-actions.js';
-import {
-  toggleExcludeDateFacetValue,
-  toggleSelectDateFacetValue,
-} from './date-facet-actions.js';
+import {toggleExcludeDateFacetValue, toggleSelectDateFacetValue} from './date-facet-actions.js';
 import {
   executeToggleDateFacetExclude,
   executeToggleDateFacetSelect,

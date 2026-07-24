@@ -57,9 +57,7 @@ describe('#renderQuerySuggestion', () => {
     hasMultipleKindOfSuggestions: true,
   };
 
-  const renderSuggestion = async (
-    overrides: Partial<RenderQuerySuggestionOptions> = {}
-  ) => {
+  const renderSuggestion = async (overrides: Partial<RenderQuerySuggestionOptions> = {}) => {
     const props = {...defaultProps, ...overrides};
     return await fixture(html`${renderQuerySuggestion(props)}`);
   };

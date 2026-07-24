@@ -1,8 +1,4 @@
-import {
-  buildSearchStatus,
-  type SearchStatus,
-  type SearchStatusState,
-} from '@coveo/headless';
+import {buildSearchStatus, type SearchStatus, type SearchStatusState} from '@coveo/headless';
 import {type CSSResultGroup, css, html, LitElement, nothing} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {createRef, type Ref, ref} from 'lit/directives/ref.js';
@@ -129,8 +125,7 @@ export class AtomicSegmentedFacetScrollable
 
     const isLeftEdge = Math.floor(container.scrollLeft) <= 0;
     const isRightEdge =
-      Math.ceil(container.scrollLeft) >=
-      container.scrollWidth - container.clientWidth;
+      Math.ceil(container.scrollLeft) >= container.scrollWidth - container.clientWidth;
 
     this.hideLeftArrow = !isScrollable || isLeftEdge;
     this.hideRightArrow = !isScrollable || isRightEdge;
@@ -165,14 +160,10 @@ export class AtomicSegmentedFacetScrollable
       (direction === 'left' && this.hideLeftArrow) ||
       (direction === 'right' && this.hideRightArrow);
     const hiddenClass = hide ? 'invisible opacity-0' : '';
-    const transitionClass =
-      'transition-opacity transition-[visibility] ease-in-out duration-300';
+    const transitionClass = 'transition-opacity transition-[visibility] ease-in-out duration-300';
 
     return html`
-      <div
-        part="${direction}-arrow-wrapper"
-        class="${hiddenClass} ${transitionClass}"
-      >
+      <div part="${direction}-arrow-wrapper" class="${hiddenClass} ${transitionClass}">
         ${renderButton({
           props: {
             style: 'square-neutral',

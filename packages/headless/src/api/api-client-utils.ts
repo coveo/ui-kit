@@ -7,9 +7,7 @@ import type {
 } from './search/search-api-error-response.js';
 import type {AuthenticationParam} from './search/search-api-params.js';
 
-export function pickNonBaseParams<
-  Params extends BaseParam & AuthenticationParam,
->(req: Params) {
+export function pickNonBaseParams<Params extends BaseParam & AuthenticationParam>(req: Params) {
   const {
     url: _url,
     accessToken: _accessToken,
@@ -32,9 +30,7 @@ export const unwrapError = (
   return unwrapClientError(response);
 };
 
-const unwrapSearchApiError = (
-  payload: PlatformResponse<AllSearchAPIResponse>
-) => {
+const unwrapSearchApiError = (payload: PlatformResponse<AllSearchAPIResponse>) => {
   if (isSearchAPIException(payload)) {
     return unwrapErrorByException(payload);
   }
@@ -48,9 +44,7 @@ const unwrapSearchApiError = (
 
 const unwrapClientError = (response: Response) => {
   // Transform an error to an object https://stackoverflow.com/a/26199752
-  const body = JSON.parse(
-    JSON.stringify(response, Object.getOwnPropertyNames(response))
-  ) as Error;
+  const body = JSON.parse(JSON.stringify(response, Object.getOwnPropertyNames(response))) as Error;
 
   return {
     ...body,
@@ -63,19 +57,13 @@ const unwrapClientError = (response: Response) => {
 function isSearchAPIErrorWithStatusCode(
   r: PlatformResponse<AllSearchAPIResponse>
 ): r is PlatformResponse<SearchAPIErrorWithStatusCode> {
-  return (
-    (r as PlatformResponse<SearchAPIErrorWithStatusCode>).body.statusCode !==
-    undefined
-  );
+  return (r as PlatformResponse<SearchAPIErrorWithStatusCode>).body.statusCode !== undefined;
 }
 
 function isSearchAPIException(
   r: PlatformResponse<AllSearchAPIResponse>
 ): r is PlatformResponse<SearchAPIErrorWithExceptionInBody> {
-  return (
-    (r as PlatformResponse<SearchAPIErrorWithExceptionInBody>).body
-      .exception !== undefined
-  );
+  return (r as PlatformResponse<SearchAPIErrorWithExceptionInBody>).body.exception !== undefined;
 }
 
 const unwrapErrorByException = (

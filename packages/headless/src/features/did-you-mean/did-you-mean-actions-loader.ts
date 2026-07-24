@@ -74,9 +74,7 @@ export interface DidYouMeanActionCreators {
  * @group Actions
  * @category DidYouMean
  */
-export function loadDidYouMeanActions(
-  engine: SearchEngine
-): DidYouMeanActionCreators {
+export function loadDidYouMeanActions(engine: SearchEngine): DidYouMeanActionCreators {
   engine.addReducers({didYouMean, query});
 
   return {

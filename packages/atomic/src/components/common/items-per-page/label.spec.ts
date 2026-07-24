@@ -5,9 +5,7 @@ import {renderLabel} from './label';
 
 describe('#renderLabel', () => {
   const renderComponent = async () => {
-    const element = await renderFunctionFixture(
-      html`${renderLabel()(html`children`)}`
-    );
+    const element = await renderFunctionFixture(html`${renderLabel()(html`children`)}`);
 
     return {
       span: element.querySelector('span[part="label"]'),

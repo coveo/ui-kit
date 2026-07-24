@@ -7,10 +7,7 @@ export interface LayoutStylesHost extends ReactiveControllerHost {
   id?: string;
 }
 
-type StylesBuilderFunction = (
-  host: HTMLElement,
-  mobileBreakpoint: string
-) => string;
+type StylesBuilderFunction = (host: HTMLElement, mobileBreakpoint: string) => string;
 
 /**
  * A reactive controller that manages dynamic layout styles.
@@ -46,8 +43,7 @@ export class LayoutStylesController implements ReactiveController {
    */
   public updateStyles() {
     const parent = this.host.getRootNode();
-    const isDocumentOrShadowRoot =
-      parent instanceof Document || parent instanceof ShadowRoot;
+    const isDocumentOrShadowRoot = parent instanceof Document || parent instanceof ShadowRoot;
 
     if (!isDocumentOrShadowRoot) {
       return;
@@ -61,10 +57,7 @@ export class LayoutStylesController implements ReactiveController {
     if (!this.dynamicStyleSheet) {
       this.dynamicStyleSheet = new CSSStyleSheet();
       this.dynamicStyleSheet.replaceSync(newStylesCSS);
-      parent.adoptedStyleSheets = [
-        ...parent.adoptedStyleSheets,
-        this.dynamicStyleSheet,
-      ];
+      parent.adoptedStyleSheets = [...parent.adoptedStyleSheets, this.dynamicStyleSheet];
       return;
     }
 

@@ -96,9 +96,7 @@ export interface DateFacetSetActionCreators {
  * @group Actions
  * @category DateFacetSet
  */
-export function loadDateFacetSetActions(
-  engine: CoreEngine
-): DateFacetSetActionCreators {
+export function loadDateFacetSetActions(engine: CoreEngine): DateFacetSetActionCreators {
   engine.addReducers({dateFacetSet});
 
   return {

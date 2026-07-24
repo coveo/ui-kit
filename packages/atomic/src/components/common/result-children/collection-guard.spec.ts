@@ -41,9 +41,7 @@ describe('#renderCollectionGuard', () => {
         numberOfChildren: 5,
       });
 
-      const placeholders = element.querySelectorAll(
-        'atomic-result-placeholder'
-      );
+      const placeholders = element.querySelectorAll('atomic-result-placeholder');
       expect(placeholders).toHaveLength(5);
     });
 
@@ -53,9 +51,7 @@ describe('#renderCollectionGuard', () => {
         density: 'compact',
       });
 
-      const placeholders = element.querySelectorAll(
-        'atomic-result-placeholder'
-      );
+      const placeholders = element.querySelectorAll('atomic-result-placeholder');
       placeholders.forEach((placeholder) => {
         expect(placeholder.density).toBe('compact');
       });
@@ -67,9 +63,7 @@ describe('#renderCollectionGuard', () => {
         imageSize: 'small',
       });
 
-      const placeholders = element.querySelectorAll(
-        'atomic-result-placeholder'
-      );
+      const placeholders = element.querySelectorAll('atomic-result-placeholder');
       placeholders.forEach((placeholder) => {
         expect(placeholder.imageSize).toBe('small');
       });
@@ -215,9 +209,7 @@ describe('#renderCollectionGuard', () => {
         isLoadingMoreResults: false,
       });
 
-      const placeholders = element.querySelectorAll(
-        'atomic-result-placeholder'
-      );
+      const placeholders = element.querySelectorAll('atomic-result-placeholder');
       expect(placeholders).toHaveLength(0);
     });
 

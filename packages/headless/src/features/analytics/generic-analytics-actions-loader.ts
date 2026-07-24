@@ -7,11 +7,7 @@ import {
   logCustomEvent,
   logSearchEvent,
 } from './analytics-actions.js';
-import type {
-  ClickAction,
-  CustomAction,
-  LegacySearchAction,
-} from './analytics-utils.js';
+import type {ClickAction, CustomAction, LegacySearchAction} from './analytics-utils.js';
 
 export type {
   LogClickEventActionCreatorPayload,
@@ -32,9 +28,7 @@ export interface GenericAnalyticsActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  logSearchEvent(
-    payload: LogSearchEventActionCreatorPayload
-  ): LegacySearchAction;
+  logSearchEvent(payload: LogSearchEventActionCreatorPayload): LegacySearchAction;
 
   /**
    * Creates a click analytics event.
@@ -62,9 +56,7 @@ export interface GenericAnalyticsActionCreators {
  * @group Actions
  * @category GenericAnalytics
  */
-export function loadGenericAnalyticsActions(
-  engine: SearchEngine
-): GenericAnalyticsActionCreators {
+export function loadGenericAnalyticsActions(engine: SearchEngine): GenericAnalyticsActionCreators {
   engine.addReducers({});
 
   return {

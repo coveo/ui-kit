@@ -6,9 +6,7 @@ import {wrapInCommerceProductList} from './commerce-product-list-wrapper';
 import {wrapInCommerceInterface} from './commerce-interface-wrapper';
 import {wrapInProductTemplateForSections} from './product-template-section-wrapper';
 
-const createDynamicProductListDecorator = (
-  display: ItemDisplayLayout
-): Decorator => {
+const createDynamicProductListDecorator = (display: ItemDisplayLayout): Decorator => {
   const {decorator} = wrapInCommerceProductList(
     display,
     false,
@@ -46,8 +44,7 @@ export const getProductSectionDecorators = (
 ): Decorator[] => {
   const {includeCodeRoot = false, engineConfig} = config;
 
-  const {decorator: productTemplateDecorator} =
-    wrapInProductTemplateForSections();
+  const {decorator: productTemplateDecorator} = wrapInProductTemplateForSections();
 
   const defaultEngineConfig: Partial<CommerceEngineConfiguration> = {
     preprocessRequest: (request) => {

@@ -44,10 +44,7 @@ export const maxPageSelector = (state: PaginationSection) => {
  * @param desiredNumberOfPages the number of pages to return.
  * @returns the current page numbers.
  */
-export const currentPagesSelector = (
-  state: PaginationSection,
-  desiredNumberOfPages: number
-) => {
+export const currentPagesSelector = (state: PaginationSection, desiredNumberOfPages: number) => {
   const page = currentPageSelector(state);
   const maxPage = maxPageSelector(state);
 

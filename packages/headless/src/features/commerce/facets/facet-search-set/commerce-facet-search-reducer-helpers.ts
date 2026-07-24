@@ -8,9 +8,7 @@ import {
 import type {FieldSuggestionsFacet} from '../field-suggestions-order/field-suggestions-order-state.js';
 import {getFacetIdWithCommerceFieldSuggestionNamespace} from './commerce-facet-search-actions.js';
 
-export function handleCommerceFacetSearchFulfilled<
-  T extends FacetSearchResponse,
->(
+export function handleCommerceFacetSearchFulfilled<T extends FacetSearchResponse>(
   state: FacetSearchSetState<T>,
   payload: {
     facetId: string;
@@ -35,9 +33,7 @@ export function handleCommerceFacetSearchFulfilled<
   }
 }
 
-export function handleCommerceFacetFieldSuggestionsFulfilled<
-  T extends FacetSearchResponse,
->(
+export function handleCommerceFacetFieldSuggestionsFulfilled<T extends FacetSearchResponse>(
   state: FacetSearchSetState<T>,
   payload: {
     facetId: string;
@@ -47,16 +43,11 @@ export function handleCommerceFacetFieldSuggestionsFulfilled<
   buildEmptyResponse: () => T
 ) {
   const {facetId, response} = payload;
-  const namespacedFacetId =
-    getFacetIdWithCommerceFieldSuggestionNamespace(facetId);
+  const namespacedFacetId = getFacetIdWithCommerceFieldSuggestionNamespace(facetId);
   let search = state[namespacedFacetId];
 
   if (!search) {
-    handleFacetSearchRegistration(
-      state,
-      {facetId: namespacedFacetId},
-      buildEmptyResponse
-    );
+    handleFacetSearchRegistration(state, {facetId: namespacedFacetId}, buildEmptyResponse);
     search = state[namespacedFacetId];
   } else if (search.requestId !== requestId) {
     return;
@@ -84,10 +75,7 @@ export function handleCommerceFetchQuerySuggestionsFulfilledForRegularFacet<
   }
 
   for (const fieldSuggestionFacet of payload.fieldSuggestionsFacets) {
-    if (
-      fieldSuggestionFacet.facetId in state ||
-      fieldSuggestionFacet.type !== 'regular'
-    ) {
+    if (fieldSuggestionFacet.facetId in state || fieldSuggestionFacet.type !== 'regular') {
       continue;
     }
 
@@ -123,10 +111,7 @@ export function handleCommerceFetchQuerySuggestionsFulfilledForCategoryFacet<
     const namespacedFacetId = getFacetIdWithCommerceFieldSuggestionNamespace(
       fieldSuggestionFacet.facetId
     );
-    if (
-      namespacedFacetId in state ||
-      fieldSuggestionFacet.type !== 'hierarchical'
-    ) {
+    if (namespacedFacetId in state || fieldSuggestionFacet.type !== 'hierarchical') {
       continue;
     }
 

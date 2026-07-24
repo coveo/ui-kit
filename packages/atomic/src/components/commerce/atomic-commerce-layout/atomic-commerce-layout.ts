@@ -17,9 +17,7 @@ import {buildCommerceLayout} from './commerce-layout';
  * @cssprop --atomic-layout-search-box-left-suggestions-width: The width of the left list when displaying a double list.
  */
 @customElement('atomic-commerce-layout')
-export class AtomicCommerceLayout extends LightDomMixin(
-  ChildrenUpdateCompleteMixin(LitElement)
-) {
+export class AtomicCommerceLayout extends LightDomMixin(ChildrenUpdateCompleteMixin(LitElement)) {
   static styles = [styles];
 
   @state() error!: Error;

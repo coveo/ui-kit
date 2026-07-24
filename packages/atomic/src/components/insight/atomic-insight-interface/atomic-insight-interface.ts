@@ -30,11 +30,7 @@ import {createInsightStore, type InsightStore} from './store.js';
 
 const FirstInsightRequestExecutedFlag = 'firstInsightRequestExecuted';
 type InsightInitializationOptions = InsightEngineConfiguration;
-export type InsightBindings = CommonBindings<
-  InsightEngine,
-  InsightStore,
-  AtomicInsightInterface
->;
+export type InsightBindings = CommonBindings<InsightEngine, InsightStore, AtomicInsightInterface>;
 
 /**
  * The `atomic-insight-interface` component is the parent to all other atomic insight components in an insight page.
@@ -163,10 +159,7 @@ export class AtomicInsightInterface
     super.connectedCallback();
     this.store.setLoadingFlag(FirstInsightRequestExecutedFlag);
 
-    this.addEventListener(
-      'atomic/initializeComponent',
-      this.handleInitialization as EventListener
-    );
+    this.addEventListener('atomic/initializeComponent', this.handleInitialization as EventListener);
   }
 
   /**
@@ -276,10 +269,7 @@ export class AtomicInsightInterface
   }
 
   private async internalInitialization(initEngine: () => void) {
-    await Promise.all([
-      this.interfaceController.onInitialization(initEngine),
-      this.i18Initialized,
-    ]);
+    await Promise.all([this.interfaceController.onInitialization(initEngine), this.i18Initialized]);
     this.updateLanguage();
     this.bindings = this.getBindings();
     markParentAsReady(this);
@@ -295,9 +285,7 @@ export class AtomicInsightInterface
   public registerFieldsToInclude() {
     if (this.fieldsToInclude.length) {
       this.engine!.dispatch(
-        loadFieldActions(this.engine!).registerFieldsToInclude([
-          ...this.fieldsToInclude,
-        ])
+        loadFieldActions(this.engine!).registerFieldsToInclude([...this.fieldsToInclude])
       );
     }
   }

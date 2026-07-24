@@ -13,10 +13,7 @@ import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindings} from '@/src/decorators/bindings';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import {
-  AriaLiveRegionController,
-  FocusTargetController,
-} from '@/src/utils/accessibility-utils';
+import {AriaLiveRegionController, FocusTargetController} from '@/src/utils/accessibility-utils';
 import QuickviewIcon from '../../../images/quickview.svg';
 import '@/src/components/common/atomic-icon/atomic-icon';
 import '@/src/components/search/atomic-quickview-modal/atomic-quickview-modal';
@@ -35,10 +32,7 @@ import type {AtomicQuickviewModal} from '../atomic-quickview-modal/atomic-quickv
 @customElement('atomic-quickview')
 @bindings()
 @withTailwindStyles
-export class AtomicQuickview
-  extends LitElement
-  implements InitializableComponent<Bindings>
-{
+export class AtomicQuickview extends LitElement implements InitializableComponent<Bindings> {
   private static readonly propsSchema = new Schema({
     sandbox: new StringValue({
       required: true,
@@ -84,11 +78,7 @@ export class AtomicQuickview
   constructor() {
     super();
 
-    new ValidatePropsController(
-      this,
-      () => ({sandbox: this.sandbox}),
-      AtomicQuickview.propsSchema
-    );
+    new ValidatePropsController(this, () => ({sandbox: this.sandbox}), AtomicQuickview.propsSchema);
   }
 
   public initialize() {
@@ -108,26 +98,14 @@ export class AtomicQuickview
 
   connectedCallback() {
     super.connectedCallback();
-    document.body.addEventListener(
-      'atomic/quickview/next',
-      this.nextQuickviewHandler
-    );
-    document.body.addEventListener(
-      'atomic/quickview/previous',
-      this.previousQuickviewHandler
-    );
+    document.body.addEventListener('atomic/quickview/next', this.nextQuickviewHandler);
+    document.body.addEventListener('atomic/quickview/previous', this.previousQuickviewHandler);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    document.body.removeEventListener(
-      'atomic/quickview/next',
-      this.nextQuickviewHandler
-    );
-    document.body.removeEventListener(
-      'atomic/quickview/previous',
-      this.previousQuickviewHandler
-    );
+    document.body.removeEventListener('atomic/quickview/next', this.nextQuickviewHandler);
+    document.body.removeEventListener('atomic/quickview/previous', this.previousQuickviewHandler);
   }
 
   private addQuickviewModalIfNeeded() {
@@ -135,9 +113,7 @@ export class AtomicQuickview
       return;
     }
 
-    const quickviewModal = this.bindings.interfaceElement.querySelector(
-      'atomic-quickview-modal'
-    );
+    const quickviewModal = this.bindings.interfaceElement.querySelector('atomic-quickview-modal');
     if (quickviewModal) {
       this.quickviewModalRef = quickviewModal;
       return;
@@ -153,8 +129,7 @@ export class AtomicQuickview
       this.quickviewModalRef.result = this.result;
       this.quickviewModalRef.total = this.quickviewState.totalResults;
       this.quickviewModalRef.current = this.quickviewState.currentResult;
-      this.quickviewModalRef.modalCloseCallback = () =>
-        this.buttonFocusTarget.focus();
+      this.quickviewModalRef.modalCloseCallback = () => this.buttonFocusTarget.focus();
 
       this.ariaLiveRegion.message = this.quickviewState.isLoading
         ? this.bindings.i18n.t('quickview-loading')

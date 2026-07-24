@@ -70,48 +70,43 @@ describe('atomic-insight-numeric-facet', () => {
     vi.mocked(buildNumericFacet).mockReturnValue(mockedNumericFacet);
     vi.mocked(buildNumericFilter).mockReturnValue(mockedNumericFilter);
     vi.mocked(buildSearchStatus).mockReturnValue(mockedSearchStatus);
-    vi.mocked(buildFacetConditionsManager).mockReturnValue(
-      mockedFacetConditionsManager
-    );
+    vi.mocked(buildFacetConditionsManager).mockReturnValue(mockedFacetConditionsManager);
 
     const inputType = withInput ? 'integer' : props.withInput;
 
-    const {element} =
-      await renderInAtomicInsightInterface<AtomicInsightNumericFacet>({
-        template: html`<atomic-insight-numeric-facet
-          field=${props.field ?? 'price'}
-          label=${props.label ?? 'Price'}
-          facet-id=${ifDefined(props.facetId)}
-          number-of-values=${ifDefined(props.numberOfValues)}
-          sort-criteria=${ifDefined(props.sortCriteria)}
-          range-algorithm=${ifDefined(props.rangeAlgorithm)}
-          display-values-as=${ifDefined(props.displayValuesAs)}
-          ?is-collapsed=${props.isCollapsed}
-          heading-level=${ifDefined(props.headingLevel)}
-          ?filter-facet-count=${props.filterFacetCount}
-          injection-depth=${ifDefined(props.injectionDepth)}
-          with-input=${ifDefined(inputType)}
-          .dependsOn=${props.dependsOn || {}}
-        ></atomic-insight-numeric-facet>`,
-        selector: 'atomic-insight-numeric-facet',
-        bindings: (bindings) => ({
-          ...bindings,
-          store: {
-            ...bindings.store,
-            getUniqueIDFromEngine: vi.fn().mockReturnValue('123'),
-            registerFacet: mockedRegisterFacet,
-            state: {
-              ...bindings.store.state,
-              numericFacets: {},
-            },
+    const {element} = await renderInAtomicInsightInterface<AtomicInsightNumericFacet>({
+      template: html`<atomic-insight-numeric-facet
+        field=${props.field ?? 'price'}
+        label=${props.label ?? 'Price'}
+        facet-id=${ifDefined(props.facetId)}
+        number-of-values=${ifDefined(props.numberOfValues)}
+        sort-criteria=${ifDefined(props.sortCriteria)}
+        range-algorithm=${ifDefined(props.rangeAlgorithm)}
+        display-values-as=${ifDefined(props.displayValuesAs)}
+        ?is-collapsed=${props.isCollapsed}
+        heading-level=${ifDefined(props.headingLevel)}
+        ?filter-facet-count=${props.filterFacetCount}
+        injection-depth=${ifDefined(props.injectionDepth)}
+        with-input=${ifDefined(inputType)}
+        .dependsOn=${props.dependsOn || {}}
+      ></atomic-insight-numeric-facet>`,
+      selector: 'atomic-insight-numeric-facet',
+      bindings: (bindings) => ({
+        ...bindings,
+        store: {
+          ...bindings.store,
+          getUniqueIDFromEngine: vi.fn().mockReturnValue('123'),
+          registerFacet: mockedRegisterFacet,
+          state: {
+            ...bindings.store.state,
+            numericFacets: {},
           },
-        }),
-      });
+        },
+      }),
+    });
 
-    const qs = (part: string) =>
-      element.shadowRoot?.querySelector(`[part~="${part}"]`)!;
-    const qsa = (part: string) =>
-      element.shadowRoot?.querySelectorAll(`[part~="${part}"]`)!;
+    const qs = (part: string) => element.shadowRoot?.querySelector(`[part~="${part}"]`)!;
+    const qsa = (part: string) => element.shadowRoot?.querySelectorAll(`[part~="${part}"]`)!;
 
     const locators = {
       get title() {
@@ -282,32 +277,27 @@ describe('atomic-insight-numeric-facet', () => {
     it('should render "no-label" when label is not provided', async () => {
       mockedNumericFacet = buildFakeNumericFacet({});
 
-      const {element} =
-        await renderInAtomicInsightInterface<AtomicInsightNumericFacet>({
-          template: html`<atomic-insight-numeric-facet
-            field="price"
-          ></atomic-insight-numeric-facet>`,
-          selector: 'atomic-insight-numeric-facet',
-          bindings: (bindings) => {
-            vi.mocked(buildNumericFacet).mockReturnValue(mockedNumericFacet);
-            vi.mocked(buildSearchStatus).mockReturnValue(mockedSearchStatus);
-            vi.mocked(buildFacetConditionsManager).mockReturnValue(
-              mockedFacetConditionsManager
-            );
-            return {
-              ...bindings,
-              store: {
-                ...bindings.store,
-                getUniqueIDFromEngine: vi.fn().mockReturnValue('123'),
-                registerFacet: mockedRegisterFacet,
-                state: {
-                  ...bindings.store.state,
-                  numericFacets: {},
-                },
+      const {element} = await renderInAtomicInsightInterface<AtomicInsightNumericFacet>({
+        template: html`<atomic-insight-numeric-facet field="price"></atomic-insight-numeric-facet>`,
+        selector: 'atomic-insight-numeric-facet',
+        bindings: (bindings) => {
+          vi.mocked(buildNumericFacet).mockReturnValue(mockedNumericFacet);
+          vi.mocked(buildSearchStatus).mockReturnValue(mockedSearchStatus);
+          vi.mocked(buildFacetConditionsManager).mockReturnValue(mockedFacetConditionsManager);
+          return {
+            ...bindings,
+            store: {
+              ...bindings.store,
+              getUniqueIDFromEngine: vi.fn().mockReturnValue('123'),
+              registerFacet: mockedRegisterFacet,
+              state: {
+                ...bindings.store.state,
+                numericFacets: {},
               },
-            };
-          },
-        });
+            },
+          };
+        },
+      });
 
       expect(element.label).toBe('no-label');
     });
@@ -338,9 +328,7 @@ describe('atomic-insight-numeric-facet', () => {
       mockedSearchStatus = buildFakeSearchStatus({firstSearchExecuted: false});
 
       const {element} = await setupElement();
-      const placeholder = element.shadowRoot?.querySelector(
-        '[part="placeholder"]'
-      );
+      const placeholder = element.shadowRoot?.querySelector('[part="placeholder"]');
       expect(placeholder).toBeInTheDocument();
     });
   });
@@ -691,33 +679,30 @@ describe('atomic-insight-numeric-facet', () => {
   describe('when validating props', () => {
     describe('when displayValuesAs has invalid value', () => {
       it('should set error when displayValuesAs is invalid', async () => {
-        const {element} =
-          await renderInAtomicInsightInterface<AtomicInsightNumericFacet>({
-            template: html`<atomic-insight-numeric-facet
-              field="price"
-              display-values-as=${'invalid' as 'checkbox'}
-            ></atomic-insight-numeric-facet>`,
-            selector: 'atomic-insight-numeric-facet',
-            bindings: (bindings) => {
-              vi.mocked(buildNumericFacet).mockReturnValue(mockedNumericFacet);
-              vi.mocked(buildSearchStatus).mockReturnValue(mockedSearchStatus);
-              vi.mocked(buildFacetConditionsManager).mockReturnValue(
-                mockedFacetConditionsManager
-              );
-              return {
-                ...bindings,
-                store: {
-                  ...bindings.store,
-                  getUniqueIDFromEngine: vi.fn().mockReturnValue('123'),
-                  registerFacet: mockedRegisterFacet,
-                  state: {
-                    ...bindings.store.state,
-                    numericFacets: {},
-                  },
+        const {element} = await renderInAtomicInsightInterface<AtomicInsightNumericFacet>({
+          template: html`<atomic-insight-numeric-facet
+            field="price"
+            display-values-as=${'invalid' as 'checkbox'}
+          ></atomic-insight-numeric-facet>`,
+          selector: 'atomic-insight-numeric-facet',
+          bindings: (bindings) => {
+            vi.mocked(buildNumericFacet).mockReturnValue(mockedNumericFacet);
+            vi.mocked(buildSearchStatus).mockReturnValue(mockedSearchStatus);
+            vi.mocked(buildFacetConditionsManager).mockReturnValue(mockedFacetConditionsManager);
+            return {
+              ...bindings,
+              store: {
+                ...bindings.store,
+                getUniqueIDFromEngine: vi.fn().mockReturnValue('123'),
+                registerFacet: mockedRegisterFacet,
+                state: {
+                  ...bindings.store.state,
+                  numericFacets: {},
                 },
-              };
-            },
-          });
+              },
+            };
+          },
+        });
 
         expect(element.error).toBeDefined();
         expect(mockedConsole.error).toHaveBeenCalled();
@@ -726,33 +711,30 @@ describe('atomic-insight-numeric-facet', () => {
 
     describe('when withInput has invalid value', () => {
       it('should set error when withInput is invalid', async () => {
-        const {element} =
-          await renderInAtomicInsightInterface<AtomicInsightNumericFacet>({
-            template: html`<atomic-insight-numeric-facet
-              field="price"
-              with-input=${'invalid' as 'integer'}
-            ></atomic-insight-numeric-facet>`,
-            selector: 'atomic-insight-numeric-facet',
-            bindings: (bindings) => {
-              vi.mocked(buildNumericFacet).mockReturnValue(mockedNumericFacet);
-              vi.mocked(buildSearchStatus).mockReturnValue(mockedSearchStatus);
-              vi.mocked(buildFacetConditionsManager).mockReturnValue(
-                mockedFacetConditionsManager
-              );
-              return {
-                ...bindings,
-                store: {
-                  ...bindings.store,
-                  getUniqueIDFromEngine: vi.fn().mockReturnValue('123'),
-                  registerFacet: mockedRegisterFacet,
-                  state: {
-                    ...bindings.store.state,
-                    numericFacets: {},
-                  },
+        const {element} = await renderInAtomicInsightInterface<AtomicInsightNumericFacet>({
+          template: html`<atomic-insight-numeric-facet
+            field="price"
+            with-input=${'invalid' as 'integer'}
+          ></atomic-insight-numeric-facet>`,
+          selector: 'atomic-insight-numeric-facet',
+          bindings: (bindings) => {
+            vi.mocked(buildNumericFacet).mockReturnValue(mockedNumericFacet);
+            vi.mocked(buildSearchStatus).mockReturnValue(mockedSearchStatus);
+            vi.mocked(buildFacetConditionsManager).mockReturnValue(mockedFacetConditionsManager);
+            return {
+              ...bindings,
+              store: {
+                ...bindings.store,
+                getUniqueIDFromEngine: vi.fn().mockReturnValue('123'),
+                registerFacet: mockedRegisterFacet,
+                state: {
+                  ...bindings.store.state,
+                  numericFacets: {},
                 },
-              };
-            },
-          });
+              },
+            };
+          },
+        });
 
         expect(element.error).toBeDefined();
         expect(mockedConsole.error).toHaveBeenCalled();

@@ -23,8 +23,7 @@ const meta: Meta = {
   title: 'Commerce/Refine Modal',
   id: 'atomic-commerce-refine-modal',
   render: (args) =>
-    html`${styleTemplate(args)}<atomic-commerce-refine-toggle
-      ></atomic-commerce-refine-toggle>`,
+    html`${styleTemplate(args)}<atomic-commerce-refine-toggle></atomic-commerce-refine-toggle>`,
   decorators: [decorator],
   parameters: {
     ...commonParameters,
@@ -83,20 +82,13 @@ const meta: Meta = {
     const refineToggleElement = within(
       canvasElement.querySelector('atomic-commerce-refine-toggle')!
     );
-    const refineToggleButton = await refineToggleElement.findByShadowRole(
-      'button',
-      {
-        name: 'Sort & Filter',
-      }
-    );
+    const refineToggleButton = await refineToggleElement.findByShadowRole('button', {
+      name: 'Sort & Filter',
+    });
     await step('Open refine modal', async () => {
       await userEvent.click(refineToggleButton);
       await expect(
-        await canvas.findByShadowText(
-          'Relevance',
-          {exact: false},
-          {timeout: 10e3}
-        )
+        await canvas.findByShadowText('Relevance', {exact: false}, {timeout: 10e3})
       ).toBeVisible();
     });
     // It's tough to wait exactly for the modal to be visible because of animations. Thus, we add a small delay here.

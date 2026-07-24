@@ -25,9 +25,7 @@ export type ContextHydratedState<
 export type ContextState<
   TEngine extends CoreEngine,
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
-> =
-  | ContextStaticState<TEngine, TControllers>
-  | ContextHydratedState<TEngine, TControllers>;
+> = ContextStaticState<TEngine, TControllers> | ContextHydratedState<TEngine, TControllers>;
 
 export type ControllerHook<TController extends Controller> = () => {
   state: TController['state'];
@@ -37,9 +35,9 @@ export type ControllerHook<TController extends Controller> = () => {
 export type InferControllerHooksMapFromDefinition<
   TControllers extends ControllerDefinitionsMap<CoreEngine, Controller>,
 > = {
-  [K in keyof TControllers as `use${Capitalize<
-    K extends string ? K : never
-  >}`]: ControllerHook<InferControllerFromDefinition<TControllers[K]>>;
+  [K in keyof TControllers as `use${Capitalize<K extends string ? K : never>}`]: ControllerHook<
+    InferControllerFromDefinition<TControllers[K]>
+  >;
 };
 
 export type ReactEngineDefinition<

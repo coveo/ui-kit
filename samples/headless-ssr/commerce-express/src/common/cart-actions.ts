@@ -1,10 +1,4 @@
-import type {
-  Cart,
-  CartItem,
-  CartState,
-  Product,
-  ProductList,
-} from '@coveo/headless/ssr-commerce';
+import type {Cart, CartItem, CartState, Product, ProductList} from '@coveo/headless/ssr-commerce';
 import * as externalCartApi from '../lib/externalCartApi.js';
 
 /** The Cart controller surface used by the UI (no `state`/`subscribe`). */
@@ -30,9 +24,7 @@ export function addToCart(
   product: Product,
   productList?: ProductListMethods
 ): void {
-  const existingItem = cartState.items.find(
-    (item) => item.productId === product.ec_product_id
-  );
+  const existingItem = cartState.items.find((item) => item.productId === product.ec_product_id);
   const quantity = existingItem ? existingItem.quantity + 1 : 1;
   const item: CartItem = {
     name: product.ec_name ?? 'Unknown product',
@@ -49,11 +41,7 @@ export function addToCart(
 }
 
 /** Changes the quantity of an existing cart `item` by `delta` (may be negative). */
-export function adjustQuantity(
-  cart: CartMethods,
-  item: CartItem,
-  delta: number
-): void {
+export function adjustQuantity(cart: CartMethods, item: CartItem, delta: number): void {
   const updatedItem: CartItem = {...item, quantity: item.quantity + delta};
   cart.updateItemQuantity(updatedItem);
   externalCartApi.updateItemQuantity(updatedItem);

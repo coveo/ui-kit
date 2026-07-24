@@ -1,17 +1,10 @@
 import {enableDebug} from '../../features/debug/debug-actions.js';
 import * as ConfigurationActions from '../../features/configuration/configuration-actions.js';
 import {setSearchHub} from '../../features/search-hub/search-hub-actions.js';
-import {
-  buildSearchEngine,
-  type SearchEngine,
-  type SearchEngineOptions,
-} from './search-engine.js';
+import {buildSearchEngine, type SearchEngine, type SearchEngineOptions} from './search-engine.js';
 import {getSampleSearchEngineConfiguration} from './search-engine-configuration.js';
 
-const updateSearchConfigurationSpy = vi.spyOn(
-  ConfigurationActions,
-  'updateSearchConfiguration'
-);
+const updateSearchConfigurationSpy = vi.spyOn(ConfigurationActions, 'updateSearchConfiguration');
 
 describe('searchEngine', () => {
   let engine: SearchEngine;
@@ -81,8 +74,7 @@ describe('searchEngine', () => {
 
       it('passing trackingId containing an invalid character throws', () => {
         options.configuration.analytics = {
-          trackingId:
-            'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-.\\',
+          trackingId: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-.\\',
         };
         expect(initEngine).toThrow();
       });
@@ -135,9 +127,7 @@ describe('searchEngine', () => {
     });
 
     it('exposes an #executeFirstSearchAfterStandaloneSearchBoxRedirect method', () => {
-      expect(
-        engine.executeFirstSearchAfterStandaloneSearchBoxRedirect
-      ).toBeTruthy();
+      expect(engine.executeFirstSearchAfterStandaloneSearchBoxRedirect).toBeTruthy();
     });
 
     it('is possible to change the search hub', () => {
@@ -222,9 +212,7 @@ describe('searchEngine', () => {
     });
 
     it('should ensure that engine.relay is the same reference as thunk extra args relay', async () => {
-      const thunkRelay = await engine.dispatch(
-        (_dispatch, _getState, extra) => extra.relay
-      );
+      const thunkRelay = await engine.dispatch((_dispatch, _getState, extra) => extra.relay);
 
       expect(thunkRelay).toBe(engine.relay);
     });

@@ -71,10 +71,7 @@ describe('memoize', () => {
 
   it('should allow failed calls to be retried and eventually succeed', async () => {
     const error = new Error('temporary error');
-    mockFn
-      .mockRejectedValueOnce(error)
-      .mockRejectedValueOnce(error)
-      .mockResolvedValue('success');
+    mockFn.mockRejectedValueOnce(error).mockRejectedValueOnce(error).mockResolvedValue('success');
 
     const memoized = memoize(mockFn, (arg: string) => arg);
 

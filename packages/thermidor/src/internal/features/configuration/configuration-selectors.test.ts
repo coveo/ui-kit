@@ -132,9 +132,7 @@ describe('createConfigurationSelectors', () => {
     it('returns undefined endpoint when not configured', () => {
       const state = createState({endpoint: undefined});
 
-      expect(
-        selectors.getEndpointClientConfiguration(state).endpoint
-      ).toBeUndefined();
+      expect(selectors.getEndpointClientConfiguration(state).endpoint).toBeUndefined();
     });
 
     it('returns the same reference when state has not changed', () => {

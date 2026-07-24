@@ -2,10 +2,7 @@ import {html} from 'lit';
 import {beforeAll, describe, expect, it} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {
-  type RenderDisclaimerProps,
-  renderDisclaimer,
-} from './render-disclaimer';
+import {type RenderDisclaimerProps, renderDisclaimer} from './render-disclaimer';
 
 describe('#renderDisclaimer', () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;
@@ -14,17 +11,13 @@ describe('#renderDisclaimer', () => {
     i18n = await createTestI18n();
   });
 
-  const renderComponent = async (
-    overrides: Partial<RenderDisclaimerProps> = {}
-  ) => {
+  const renderComponent = async (overrides: Partial<RenderDisclaimerProps> = {}) => {
     const defaultProps: RenderDisclaimerProps = {
       i18n,
       ...overrides,
     };
 
-    const element = await renderFunctionFixture(
-      html`${renderDisclaimer({props: defaultProps})}`
-    );
+    const element = await renderFunctionFixture(html`${renderDisclaimer({props: defaultProps})}`);
 
     return {
       element,
@@ -52,9 +45,7 @@ describe('#renderDisclaimer', () => {
 
       await expect
         .element(element)
-        .toHaveTextContent(
-          'Generated content may contain errors. Verify important information.'
-        );
+        .toHaveTextContent('Generated content may contain errors. Verify important information.');
     });
   });
 });

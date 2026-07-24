@@ -183,9 +183,7 @@ describe('commerce search selectors', () => {
         correctedQuery: 'corrected query',
       },
     } as SearchCommerceSuccessResponse;
-    expect(queryExecutedFromResponseSelector(state, response)).toEqual(
-      'corrected query'
-    );
+    expect(queryExecutedFromResponseSelector(state, response)).toEqual('corrected query');
   });
 
   it('#queryExecutedFromResponseSelector should return the original query when the corrected query is not set in the response', () => {
@@ -195,8 +193,6 @@ describe('commerce search selectors', () => {
       },
     });
     const response = {} as SearchCommerceSuccessResponse;
-    expect(queryExecutedFromResponseSelector(state, response)).toEqual(
-      'original query'
-    );
+    expect(queryExecutedFromResponseSelector(state, response)).toEqual('original query');
   });
 });

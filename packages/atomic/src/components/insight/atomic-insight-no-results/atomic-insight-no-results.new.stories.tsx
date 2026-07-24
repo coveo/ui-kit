@@ -5,10 +5,9 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 import '@/src/components/insight/atomic-insight-no-results/atomic-insight-no-results.js';
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-insight-no-results',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-insight-no-results', {
+  excludeCategories: ['methods'],
+});
 
 const insightApiHarness = new MockInsightApi();
 

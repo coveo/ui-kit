@@ -45,10 +45,7 @@ export {buildDateRange};
  * @group Controllers
  * @category DateFacet
  */
-export function buildDateFacet(
-  engine: SearchEngine,
-  props: DateFacetProps
-): DateFacet {
+export function buildDateFacet(engine: SearchEngine, props: DateFacetProps): DateFacet {
   const coreController = buildCoreDateFacet(engine, props);
   const dispatch = engine.dispatch;
   const getFacetId = () => coreController.state.facetId;
@@ -79,10 +76,7 @@ export function buildDateFacet(
       coreController.toggleSelect(selection);
       dispatch(
         executeSearch({
-          legacy: getLegacyAnalyticsActionForToggleRangeFacetSelect(
-            getFacetId(),
-            selection
-          ),
+          legacy: getLegacyAnalyticsActionForToggleRangeFacetSelect(getFacetId(), selection),
           next: getAnalyticsActionForToggleFacetSelect(selection),
         })
       );
@@ -92,10 +86,7 @@ export function buildDateFacet(
       coreController.toggleExclude(selection);
       dispatch(
         executeSearch({
-          legacy: getLegacyAnalyticsActionForToggleRangeFacetExclude(
-            getFacetId(),
-            selection
-          ),
+          legacy: getLegacyAnalyticsActionForToggleRangeFacetExclude(getFacetId(), selection),
         })
       );
     },

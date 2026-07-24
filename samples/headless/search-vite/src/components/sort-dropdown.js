@@ -59,10 +59,7 @@ export class SortDropdown extends LitElement {
         <select id="sort-select" @change=${(e) => this.#onChange(e)}>
           ${options.map((option) => {
             const expression = buildCriterionExpression(option.criterion);
-            return html`<option
-              value=${expression}
-              ?selected=${expression === current}
-            >
+            return html`<option value=${expression} ?selected=${expression === current}>
               ${option.label}
             </option>`;
           })}

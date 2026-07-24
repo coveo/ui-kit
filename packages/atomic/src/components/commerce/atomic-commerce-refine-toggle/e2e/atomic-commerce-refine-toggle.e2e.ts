@@ -6,9 +6,7 @@ test.describe('atomic-commerce-refine-toggle', () => {
     await commerceRefineToggle.hydrated.waitFor();
   });
 
-  test('should open the modal when the button is clicked', async ({
-    commerceRefineToggle,
-  }) => {
+  test('should open the modal when the button is clicked', async ({commerceRefineToggle}) => {
     await commerceRefineToggle.button.click();
 
     await expect(commerceRefineToggle.filters).toBeVisible();

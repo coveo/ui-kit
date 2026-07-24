@@ -25,10 +25,7 @@ import type {
   SearchSection,
 } from '../../../../../state/state-sections.js';
 import {loadReducerError} from '../../../../../utils/errors.js';
-import {
-  buildController,
-  type Controller,
-} from '../../../../controller/headless-controller.js';
+import {buildController, type Controller} from '../../../../controller/headless-controller.js';
 import {determineFacetId} from '../../_common/facet-id-determinor.js';
 import {validateNumericFacetOptions} from './headless-numeric-facet-options.js';
 
@@ -241,10 +238,7 @@ export function buildCoreNumericFilter(
     get state() {
       const isLoading = isFacetLoadingResponseSelector(getState());
       const enabled = getIsEnabled();
-      const selectedRanges = numericFacetSelectedValuesSelector(
-        getState(),
-        facetId
-      );
+      const selectedRanges = numericFacetSelectedValuesSelector(getState(), facetId);
       const range = selectedRanges.length ? selectedRanges[0] : undefined;
 
       return {
@@ -260,10 +254,7 @@ export function buildCoreNumericFilter(
 function loadNumericFilterReducer(
   engine: CoreEngine
 ): engine is CoreEngine<
-  NumericFacetSection &
-    FacetOptionsSection &
-    ConfigurationSection &
-    SearchSection
+  NumericFacetSection & FacetOptionsSection & ConfigurationSection & SearchSection
 > {
   engine.addReducers({numericFacetSet, facetOptions, configuration, search});
   return true;

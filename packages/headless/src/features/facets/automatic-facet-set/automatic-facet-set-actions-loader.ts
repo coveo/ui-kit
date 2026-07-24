@@ -54,9 +54,7 @@ export interface AutomaticFacetsActionCreators {
  * @group Actions
  * @category Automatic facets
  */
-export function loadAutomaticFacetSetActions(
-  engine: SearchEngine
-): AutomaticFacetsActionCreators {
+export function loadAutomaticFacetSetActions(engine: SearchEngine): AutomaticFacetsActionCreators {
   engine.addReducers({automaticFacetSet});
 
   return {

@@ -13,9 +13,7 @@ interface QueuedAction {
   execute: () => void;
 }
 
-export function buildDebouncedQueue(
-  options: DebouncedQueueOptions
-): DebouncedQueue {
+export function buildDebouncedQueue(options: DebouncedQueueOptions): DebouncedQueue {
   let actions: QueuedAction[] = [];
   let intervalId: ReturnType<typeof setInterval> | null = null;
   let lastExecutedAt: number | null = null;
@@ -49,10 +47,7 @@ export function buildDebouncedQueue(
       const elapsedSinceLastExecution =
         lastExecutedAt === null ? null : Date.now() - lastExecutedAt;
 
-      if (
-        elapsedSinceLastExecution === null ||
-        elapsedSinceLastExecution >= options.delay
-      ) {
+      if (elapsedSinceLastExecution === null || elapsedSinceLastExecution >= options.delay) {
         intervalId = setInterval(dequeueAction, options.delay);
         dequeueAction();
         return;
@@ -71,13 +66,8 @@ export function buildDebouncedQueue(
   };
 }
 
-export function debounce<
-  ExecuteParameters extends unknown[],
-  ExecuteReturnType,
->(
-  execute: (
-    ...args: ExecuteParameters
-  ) => Promise<ExecuteReturnType> | ExecuteReturnType,
+export function debounce<ExecuteParameters extends unknown[], ExecuteReturnType>(
+  execute: (...args: ExecuteParameters) => Promise<ExecuteReturnType> | ExecuteReturnType,
   wait: number
 ) {
   let timer: ReturnType<typeof setTimeout>;

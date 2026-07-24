@@ -15,9 +15,7 @@ describe('atomic-tab-popover', () => {
     console.error = vi.fn();
   });
 
-  const renderTabPopover = async (
-    options: {show?: boolean; slottedContent?: unknown} = {}
-  ) => {
+  const renderTabPopover = async (options: {show?: boolean; slottedContent?: unknown} = {}) => {
     const {element} = await renderInAtomicSearchInterface<AtomicTabPopover>({
       template: html`<atomic-tab-popover>
         ${options.slottedContent ??
@@ -41,8 +39,7 @@ describe('atomic-tab-popover', () => {
       element,
       popoverButton: page.getByRole('button', {name: /popover menu/i}),
       parts: (el: AtomicTabPopover) => {
-        const qs = (part: string) =>
-          el?.shadowRoot?.querySelector(`[part="${part}"]`);
+        const qs = (part: string) => el?.shadowRoot?.querySelector(`[part="${part}"]`);
         return {
           popoverButton: qs('popover-button'),
           valueLabel: qs('value-label'),
@@ -180,9 +177,7 @@ describe('atomic-tab-popover', () => {
   it('should toggle isOpen state when toggle is called', async () => {
     const {element, parts} = await renderTabPopover({show: true});
 
-    expect(parts(element).overflowTabs?.classList.contains('hidden')).toBe(
-      true
-    );
+    expect(parts(element).overflowTabs?.classList.contains('hidden')).toBe(true);
 
     element.toggle();
     await element.updateComplete;
@@ -192,9 +187,7 @@ describe('atomic-tab-popover', () => {
     element.toggle();
     await element.updateComplete;
 
-    expect(parts(element).overflowTabs?.classList.contains('hidden')).toBe(
-      true
-    );
+    expect(parts(element).overflowTabs?.classList.contains('hidden')).toBe(true);
   });
 
   describe('#setButtonVisibility', () => {
@@ -234,8 +227,6 @@ describe('atomic-tab-popover', () => {
     element.dispatchEvent(keyEvent);
     await element.updateComplete;
 
-    expect(parts(element).overflowTabs?.classList.contains('hidden')).toBe(
-      true
-    );
+    expect(parts(element).overflowTabs?.classList.contains('hidden')).toBe(true);
   });
 });

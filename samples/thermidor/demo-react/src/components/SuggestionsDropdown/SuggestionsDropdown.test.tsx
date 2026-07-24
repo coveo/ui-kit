@@ -29,13 +29,7 @@ const testSections: SuggestionSection[] = [
 
 describe('SuggestionsDropdown', () => {
   it('renders all sections and items when visible', () => {
-    render(
-      <SuggestionsDropdown
-        sections={testSections}
-        onSelect={vi.fn()}
-        visible={true}
-      />
-    );
+    render(<SuggestionsDropdown sections={testSections} onSelect={vi.fn()} visible={true} />);
     const options = screen.getAllByRole('option');
     expect(options).toHaveLength(3);
     expect(screen.getByText('Surfboards')).toBeDefined();
@@ -45,11 +39,7 @@ describe('SuggestionsDropdown', () => {
 
   it('returns null when visible is false', () => {
     const {container} = render(
-      <SuggestionsDropdown
-        sections={testSections}
-        onSelect={vi.fn()}
-        visible={false}
-      />
+      <SuggestionsDropdown sections={testSections} onSelect={vi.fn()} visible={false} />
     );
     expect(container.querySelector('[role="listbox"]')).toBeNull();
   });
@@ -62,13 +52,7 @@ describe('SuggestionsDropdown', () => {
   });
 
   it('preserves section order', () => {
-    render(
-      <SuggestionsDropdown
-        sections={testSections}
-        onSelect={vi.fn()}
-        visible={true}
-      />
-    );
+    render(<SuggestionsDropdown sections={testSections} onSelect={vi.fn()} visible={true} />);
     const options = screen.getAllByRole('option');
     expect(options[0].textContent).toContain('Surfboards');
     expect(options[1].textContent).toContain('Wetsuits');
@@ -76,32 +60,15 @@ describe('SuggestionsDropdown', () => {
   });
 
   it('has role="listbox"', () => {
-    render(
-      <SuggestionsDropdown
-        sections={testSections}
-        onSelect={vi.fn()}
-        visible={true}
-      />
-    );
+    render(<SuggestionsDropdown sections={testSections} onSelect={vi.fn()} visible={true} />);
     expect(screen.getByRole('listbox')).toBeDefined();
   });
 
   it('calls onSelect with item and sectionId on item click', () => {
     const onSelect = vi.fn();
-    render(
-      <SuggestionsDropdown
-        sections={testSections}
-        onSelect={onSelect}
-        visible={true}
-      />
-    );
-    const surfboardsOption = screen
-      .getByText('Surfboards')
-      .closest('[role="option"]')!;
+    render(<SuggestionsDropdown sections={testSections} onSelect={onSelect} visible={true} />);
+    const surfboardsOption = screen.getByText('Surfboards').closest('[role="option"]')!;
     fireEvent.mouseDown(surfboardsOption);
-    expect(onSelect).toHaveBeenCalledWith(
-      {id: 's1', label: 'Surfboards'},
-      'search'
-    );
+    expect(onSelect).toHaveBeenCalledWith({id: 's1', label: 'Surfboards'}, 'search');
   });
 });

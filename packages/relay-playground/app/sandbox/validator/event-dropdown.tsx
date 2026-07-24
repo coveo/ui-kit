@@ -7,11 +7,7 @@ interface EventDropdownProps {
   onSelectEvent: (selected: string) => void;
 }
 
-export function EventDropdown({
-  events,
-  selectedEventType,
-  onSelectEvent,
-}: EventDropdownProps) {
+export function EventDropdown({events, selectedEventType, onSelectEvent}: EventDropdownProps) {
   return (
     <Select
       data={events.map((e) => e.type)}

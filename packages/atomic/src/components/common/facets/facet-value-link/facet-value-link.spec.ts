@@ -3,10 +3,7 @@ import {beforeAll, describe, expect, it, vi} from 'vitest';
 import {page} from 'vitest/browser';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {
-  type FacetValueLinkProps,
-  renderFacetValueLink,
-} from './facet-value-link';
+import {type FacetValueLinkProps, renderFacetValueLink} from './facet-value-link';
 
 describe('renderFacetValueLink', () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;
@@ -79,10 +76,7 @@ describe('renderFacetValueLink', () => {
   it('applies the correct part when selected', async () => {
     await setupElement({isSelected: true});
     const {button} = locators;
-    await expect(button).toHaveAttribute(
-      'part',
-      'value-link value-link-selected'
-    );
+    await expect(button).toHaveAttribute('part', 'value-link value-link-selected');
   });
 
   it('calls onClick when the button is clicked', async () => {
@@ -112,10 +106,7 @@ describe('renderFacetValueLink', () => {
   it('applies additionalPart if provided', async () => {
     await setupElement({additionalPart: 'extra-part'});
     const {button} = locators;
-    await expect(button).toHaveAttribute(
-      'part',
-      expect.stringContaining('extra-part')
-    );
+    await expect(button).toHaveAttribute('part', expect.stringContaining('extra-part'));
   });
 
   it('renders the aria-label attribute', async () => {

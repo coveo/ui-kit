@@ -23,9 +23,7 @@ test.describe('smoke test', () => {
       await expect(facet).toBeVisible();
 
       // Check if the query summary contains the expected text
-      const querySummary = page.locator(
-        'atomic-query-summary div[part="container"]'
-      );
+      const querySummary = page.locator('atomic-query-summary div[part="container"]');
       await expect(querySummary).toContainText(/Results 1-[1-9]/);
       await expect(querySummary).toContainText('for test');
 

@@ -1,8 +1,4 @@
-import type {
-  DateFacetValue,
-  InsightEngine,
-  NumericFacetValue,
-} from '@coveo/headless/insight';
+import type {DateFacetValue, InsightEngine, NumericFacetValue} from '@coveo/headless/insight';
 import {DEFAULT_MOBILE_BREAKPOINT} from '@/src/utils/replace-breakpoint-utils';
 import type {
   FacetInfo,
@@ -91,8 +87,7 @@ export function createInsightStore(): InsightStore {
     },
 
     isMobile() {
-      return !window.matchMedia(makeDesktopQuery(store.state.mobileBreakpoint))
-        .matches;
+      return !window.matchMedia(makeDesktopQuery(store.state.mobileBreakpoint)).matches;
     },
 
     registerFacet<T extends FacetType, U extends string>(

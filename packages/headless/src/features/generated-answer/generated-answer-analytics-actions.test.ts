@@ -2,10 +2,7 @@ import {createRelay} from '@coveo/relay';
 import {CoveoSearchPageClient} from 'coveo.analytics';
 import type {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import type {GeneratedAnswerCitation} from '../../controllers/generated-answer/headless-generated-answer.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../test/mock-engine-v2.js';
 import {buildMockSearchResponse} from '../../test/mock-search-response.js';
 import {buildMockSearchState} from '../../test/mock-search-state.js';
 import {createMockState} from '../../test/mock-state.js';
@@ -100,8 +97,7 @@ const exampleFeedback: GeneratedAnswerFeedback = {
   hallucinationFree: 'unknown',
   readable: 'yes',
 };
-const exampleGenerativeQuestionAnsweringId =
-  '94b77748-2479-4e4b-a4e8-010fa62b04a0';
+const exampleGenerativeQuestionAnsweringId = '94b77748-2479-4e4b-a4e8-010fa62b04a0';
 const exampleProvidedAnswerId = 'explicit-answer-id';
 const exampleConversationId = 'conversation-123';
 const exampleSearchUid = '456';
@@ -233,9 +229,7 @@ describe('generated answer analytics actions', () => {
 
       expect(mockToUse).toHaveBeenCalledTimes(1);
 
-      expect(mockToUse.mock.calls[0][0]).toStrictEqual(
-        expectedCitationDocumentInfo
-      );
+      expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedCitationDocumentInfo);
 
       expect(mockToUse.mock.calls[0][1]).toStrictEqual({
         generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
@@ -247,18 +241,17 @@ describe('generated answer analytics actions', () => {
     });
 
     it('should log #logOpenGeneratedAnswerSource with a provided answerId', async () => {
-      await logOpenGeneratedAnswerSource(
-        exampleCitation.id,
-        exampleProvidedAnswerId
-      )()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
+      await logOpenGeneratedAnswerSource(exampleCitation.id, exampleProvidedAnswerId)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
 
       const mockToUse = mockMakeGeneratedAnswerCitationClick;
 
       expect(mockToUse).toHaveBeenCalledTimes(1);
 
-      expect(mockToUse.mock.calls[0][0]).toStrictEqual(
-        expectedCitationDocumentInfo
-      );
+      expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedCitationDocumentInfo);
 
       expect(mockToUse.mock.calls[0][1]).toStrictEqual({
         generativeQuestionAnsweringId: exampleProvidedAnswerId,
@@ -272,15 +265,14 @@ describe('generated answer analytics actions', () => {
     it('should log #logOpenGeneratedAnswerSource with the conversationId from state', async () => {
       setConversationIdInState();
 
-      await logOpenGeneratedAnswerSource(
-        exampleCitation.id,
-        exampleProvidedAnswerId
-      )()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
+      await logOpenGeneratedAnswerSource(exampleCitation.id, exampleProvidedAnswerId)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
 
       expect(mockMakeGeneratedAnswerCitationClick).toHaveBeenCalledTimes(1);
-      expect(
-        mockMakeGeneratedAnswerCitationClick.mock.calls[0][1]
-      ).toStrictEqual({
+      expect(mockMakeGeneratedAnswerCitationClick.mock.calls[0][1]).toStrictEqual({
         generativeQuestionAnsweringId: exampleProvidedAnswerId,
         citationId: exampleCitation.id,
         documentId: exampleDocumentId,
@@ -292,17 +284,14 @@ describe('generated answer analytics actions', () => {
     it('should log #logOpenGeneratedAnswerFollowUpSource with the right payload', async () => {
       setConversationIdInState();
 
-      await logOpenGeneratedAnswerFollowUpSource(
-        exampleCitation.id,
-        exampleProvidedAnswerId
-      )()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
-
-      expect(mockMakeGeneratedAnswerFollowupOpenSource).toHaveBeenCalledTimes(
-        1
+      await logOpenGeneratedAnswerFollowUpSource(exampleCitation.id, exampleProvidedAnswerId)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
       );
-      expect(
-        mockMakeGeneratedAnswerFollowupOpenSource.mock.calls[0][0]
-      ).toStrictEqual({
+
+      expect(mockMakeGeneratedAnswerFollowupOpenSource).toHaveBeenCalledTimes(1);
+      expect(mockMakeGeneratedAnswerFollowupOpenSource.mock.calls[0][0]).toStrictEqual({
         sourceName: expectedCitationDocumentInfo.sourceName,
         documentTitle: expectedCitationDocumentInfo.documentTitle,
         documentUri: expectedCitationDocumentInfo.documentUri,
@@ -340,11 +329,11 @@ describe('generated answer analytics actions', () => {
     it('should log #logHoverCitation with a provided answerId', async () => {
       const hoverDuration = 1234;
 
-      await logHoverCitation(
-        exampleCitation.id,
-        hoverDuration,
-        exampleProvidedAnswerId
-      )()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
+      await logHoverCitation(exampleCitation.id, hoverDuration, exampleProvidedAnswerId)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
 
       const mockToUse = mockMakeGeneratedAnswerSourceHover;
 
@@ -362,11 +351,11 @@ describe('generated answer analytics actions', () => {
       const hoverDuration = 1234;
       setConversationIdInState();
 
-      await logHoverCitation(
-        exampleCitation.id,
-        hoverDuration,
-        exampleProvidedAnswerId
-      )()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
+      await logHoverCitation(exampleCitation.id, hoverDuration, exampleProvidedAnswerId)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
 
       expect(mockMakeGeneratedAnswerSourceHover).toHaveBeenCalledTimes(1);
       expect(mockMakeGeneratedAnswerSourceHover).toHaveBeenCalledWith({
@@ -747,10 +736,11 @@ describe('generated answer analytics actions', () => {
     });
 
     it('should log #logOpenGeneratedAnswerSource with a provided answerId', async () => {
-      await logOpenGeneratedAnswerSource(
-        exampleCitation.id,
-        exampleProvidedAnswerId
-      )()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
+      await logOpenGeneratedAnswerSource(exampleCitation.id, exampleProvidedAnswerId)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
 
       expect(emit).toHaveBeenCalledTimes(1);
       expect(emit.mock.calls[0]).toStrictEqual([
@@ -784,11 +774,11 @@ describe('generated answer analytics actions', () => {
     it('should log #logHoverCitation with a provided answerId', async () => {
       const hoverDuration = 1234;
 
-      await logHoverCitation(
-        exampleCitation.id,
-        hoverDuration,
-        exampleProvidedAnswerId
-      )()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
+      await logHoverCitation(exampleCitation.id, hoverDuration, exampleProvidedAnswerId)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
 
       expect(emit).toHaveBeenCalledTimes(1);
       expect(emit.mock.calls[0]).toStrictEqual([

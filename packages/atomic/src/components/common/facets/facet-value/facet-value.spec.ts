@@ -1,13 +1,5 @@
 import {html} from 'lit';
-import {
-  beforeAll,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  type MockedFunction,
-  vi,
-} from 'vitest';
+import {beforeAll, beforeEach, describe, expect, it, type MockedFunction, vi} from 'vitest';
 import {renderFacetValueBox} from '@/src/components/common/facets/facet-value-box/facet-value-box';
 import {renderFacetValueCheckbox} from '@/src/components/common/facets/facet-value-checkbox/facet-value-checkbox';
 import {renderFacetValueLabelHighlight} from '@/src/components/common/facets/facet-value-label-highlight/facet-value-label-highlight';
@@ -16,22 +8,16 @@ import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {type FacetValueProps, renderFacetValue} from './facet-value';
 
-vi.mock(
-  '@/src/components/common/facets/facet-value-checkbox/facet-value-checkbox',
-  {spy: true}
-);
+vi.mock('@/src/components/common/facets/facet-value-checkbox/facet-value-checkbox', {spy: true});
 vi.mock('@/src/components/common/facets/facet-value-link/facet-value-link', {
   spy: true,
 });
 vi.mock('@/src/components/common/facets/facet-value-box/facet-value-box', {
   spy: true,
 });
-vi.mock(
-  '@/src/components/common/facets/facet-value-label-highlight/facet-value-label-highlight',
-  {
-    spy: true,
-  }
-);
+vi.mock('@/src/components/common/facets/facet-value-label-highlight/facet-value-label-highlight', {
+  spy: true,
+});
 
 describe('#renderFacetValue', () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;
@@ -64,9 +50,7 @@ describe('#renderFacetValue', () => {
   };
 
   describe('when displayValuesAs is checkbox', () => {
-    let renderFacetValueCheckboxSpy: MockedFunction<
-      typeof renderFacetValueCheckbox
-    >;
+    let renderFacetValueCheckboxSpy: MockedFunction<typeof renderFacetValueCheckbox>;
 
     beforeEach(() => {
       renderFacetValueCheckboxSpy = vi.mocked(renderFacetValueCheckbox);
@@ -122,9 +106,7 @@ describe('#renderFacetValue', () => {
     });
 
     it('calls #renderFacetValueLabelHighlight with the correct arguments', async () => {
-      const renderFacetValueLabelHighlightSpy = vi.mocked(
-        renderFacetValueLabelHighlight
-      );
+      const renderFacetValueLabelHighlightSpy = vi.mocked(renderFacetValueLabelHighlight);
       await setupElement();
       expect(renderFacetValueLabelHighlightSpy).toHaveBeenCalledWith({
         props: {
@@ -157,9 +139,7 @@ describe('#renderFacetValue', () => {
     });
 
     it('calls #renderFacetValueLabelHighlight with the correct arguments', async () => {
-      const renderFacetValueLabelHighlightSpy = vi.mocked(
-        renderFacetValueLabelHighlight
-      );
+      const renderFacetValueLabelHighlightSpy = vi.mocked(renderFacetValueLabelHighlight);
       await setupElement({displayValuesAs: 'link'});
       expect(renderFacetValueLabelHighlightSpy).toHaveBeenCalledWith({
         props: {

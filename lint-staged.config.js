@@ -7,41 +7,27 @@ module.exports = {
       // Exclude quantic and create-atomic-template packages
       if (file.includes('/packages/quantic/')) return false;
       if (file.includes('/packages/create-atomic-template/')) return false;
-      if (file.includes('/packages/create-atomic-component/template/'))
-        return false;
-      if (file.includes('/packages/create-atomic-component-project/template/'))
-        return false;
+      if (file.includes('/packages/create-atomic-component/template/')) return false;
+      if (file.includes('/packages/create-atomic-component-project/template/')) return false;
 
       // Exclude root deployment config
       if (file.includes('/.deployment.config/')) return false;
 
       // Exclude atomic package d.ts files
-      if (file.includes('/packages/atomic/') && file.endsWith('.d.ts'))
-        return false;
+      if (file.includes('/packages/atomic/') && file.endsWith('.d.ts')) return false;
 
       // Exclude documentation assets
-      if (
-        file.includes('/packages/documentation/') &&
-        file.includes('/assets/')
-      )
-        return false;
+      if (file.includes('/packages/documentation/') && file.includes('/assets/')) return false;
 
       // Exclude headless coveo.analytics
-      if (
-        file.includes('/packages/headless/') &&
-        file.includes('/coveo.analytics/')
-      )
-        return false;
+      if (file.includes('/packages/headless/') && file.includes('/coveo.analytics/')) return false;
 
       return true;
     });
     if (filteredFiles.length === 0) {
       return 'echo "No files to lint"';
     }
-    return [
-      `oxlint --fix ${filteredFiles.join(' ')}`,
-      `oxfmt ${filteredFiles.join(' ')}`,
-    ];
+    return [`oxlint --fix ${filteredFiles.join(' ')}`, `oxfmt ${filteredFiles.join(' ')}`];
   },
   '**/*.{json,css,html}': (files) => {
     const filteredFiles = files.filter((file) => {
@@ -50,11 +36,7 @@ module.exports = {
       if (file.includes('/.deployment.config/')) return false;
       if (file.endsWith('package-lock.json')) return false;
       if (file.includes('/.storybook/') && file.endsWith('.html')) return false;
-      if (
-        file.includes('/packages/documentation/') &&
-        file.includes('/assets/')
-      )
-        return false;
+      if (file.includes('/packages/documentation/') && file.includes('/assets/')) return false;
       return true;
     });
     if (filteredFiles.length === 0) {
@@ -67,8 +49,7 @@ module.exports = {
       ' '
     )}`;
   },
-  '{**/package.json,scripts/generate-catalog-info.mjs,**/catalog-info*.yaml}':
-    () => {
-      return 'node scripts/generate-catalog-info.mjs';
-    },
+  '{**/package.json,scripts/generate-catalog-info.mjs,**/catalog-info*.yaml}': () => {
+    return 'node scripts/generate-catalog-info.mjs';
+  },
 };

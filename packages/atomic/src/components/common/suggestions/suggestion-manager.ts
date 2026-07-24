@@ -61,8 +61,7 @@ export class SuggestionManager<SearchBoxController> {
   public keyboardActiveDescendant = '';
 
   private queryDataAttribute = 'data-query';
-  private suggestionEvents: SearchBoxSuggestionsEvent<SearchBoxController>[] =
-    [];
+  private suggestionEvents: SearchBoxSuggestionsEvent<SearchBoxController>[] = [];
 
   private previousActiveDescendantElement: HTMLElement | null = null;
   private leftSuggestions: SearchBoxSuggestions[] = [];
@@ -124,19 +123,14 @@ export class SuggestionManager<SearchBoxController> {
   }
 
   public isRightPanelInFocus() {
-    if (
-      isNullOrUndefined(this.panelInFocus) ||
-      isNullOrUndefined(this.rightPanel)
-    ) {
+    if (isNullOrUndefined(this.panelInFocus) || isNullOrUndefined(this.rightPanel)) {
       return false;
     }
 
     return this.panelInFocus === this.rightPanel;
   }
 
-  public initializeSuggestions(
-    bindings: SearchBoxSuggestionsBindings<SearchBoxController>
-  ) {
+  public initializeSuggestions(bindings: SearchBoxSuggestionsBindings<SearchBoxController>) {
     this.suggestions = this.suggestionEvents.map((event) => event(bindings));
   }
 
@@ -155,9 +149,7 @@ export class SuggestionManager<SearchBoxController> {
   }
 
   public get isDoubleList() {
-    return Boolean(
-      this.leftSuggestionElements.length && this.rightSuggestionElements.length
-    );
+    return Boolean(this.leftSuggestionElements.length && this.rightSuggestionElements.length);
   }
 
   public focusPanel(side: 'left' | 'right') {
@@ -268,30 +260,22 @@ export class SuggestionManager<SearchBoxController> {
       } else {
         this.ownerSearchBoxProps
           .getLogger()
-          .warn(
-            'Some query suggestions are not being shown because the promise timed out.'
-          );
+          .warn('Some query suggestions are not being shown because the promise timed out.');
       }
     });
 
     const splitSuggestions = (side: 'left' | 'right', isDefault = false) =>
       fulfilledSuggestions
-        .filter(
-          (suggestion) =>
-            suggestion.panel === side || (!suggestion.panel && isDefault)
-        )
+        .filter((suggestion) => suggestion.panel === side || (!suggestion.panel && isDefault))
         .sort(this.sortSuggestions);
 
     this.leftSuggestions = splitSuggestions('left', true);
     this.leftSuggestionElements = this.getAndFilterLeftSuggestionElements();
 
     this.rightSuggestions = splitSuggestions('right');
-    this.rightSuggestionElements = this.getSuggestionElements(
-      this.rightSuggestions
-    );
+    this.rightSuggestionElements = this.getSuggestionElements(this.rightSuggestions);
 
-    const defaultSuggestedQuery =
-      this.allSuggestionElements.find(elementHasQuery)?.query || '';
+    const defaultSuggestedQuery = this.allSuggestionElements.find(elementHasQuery)?.query || '';
 
     await this.updateSuggestedQuery(defaultSuggestedQuery);
   }
@@ -305,12 +289,10 @@ export class SuggestionManager<SearchBoxController> {
       return this.lastValue?.firstChild;
     }
 
-    const parentOfActiveDescendant =
-      this.activeDescendantElement?.parentElement;
+    const parentOfActiveDescendant = this.activeDescendantElement?.parentElement;
 
     return (
-      parentOfActiveDescendant?.previousElementSibling?.firstChild ||
-      this.firstValue?.firstChild
+      parentOfActiveDescendant?.previousElementSibling?.firstChild || this.firstValue?.firstChild
     );
   }
 
@@ -323,12 +305,8 @@ export class SuggestionManager<SearchBoxController> {
       return this.firstValue?.firstChild;
     }
 
-    const parentOfActiveDescendant =
-      this.activeDescendantElement?.parentElement;
-    return (
-      parentOfActiveDescendant?.nextElementSibling?.firstChild ||
-      this.firstValue?.firstChild
-    );
+    const parentOfActiveDescendant = this.activeDescendantElement?.parentElement;
+    return parentOfActiveDescendant?.nextElementSibling?.firstChild || this.firstValue?.firstChild;
   }
 
   private get firstValue() {
@@ -352,9 +330,7 @@ export class SuggestionManager<SearchBoxController> {
   }
 
   private async updateQueryFromSuggestion() {
-    const suggestedQuery = this.activeDescendantElement?.getAttribute(
-      this.queryDataAttribute
-    );
+    const suggestedQuery = this.activeDescendantElement?.getAttribute(this.queryDataAttribute);
     await this.updateOwnerSearchboxQuery(suggestedQuery || '');
   }
 
@@ -387,9 +363,7 @@ export class SuggestionManager<SearchBoxController> {
     }
 
     if (!this.isPanelInFocus(this.rightPanel, query)) {
-      this.rightSuggestionElements = this.getSuggestionElements(
-        this.rightSuggestions
-      );
+      this.rightSuggestionElements = this.getSuggestionElements(this.rightSuggestions);
     }
   }
 
@@ -398,19 +372,14 @@ export class SuggestionManager<SearchBoxController> {
     this.ownerSearchBoxProps.getHost().requestUpdate();
   }
 
-  private isPanelInFocus(
-    panel: HTMLElement | undefined,
-    query: string
-  ): boolean {
+  private isPanelInFocus(panel: HTMLElement | undefined, query: string): boolean {
     if (!this.activeDescendantElement) {
       return false;
     }
 
     if (query) {
       const escaped = DOMPurify.sanitize(query);
-      return !!panel?.querySelector(
-        `[${this.queryDataAttribute}="${CSS.escape(escaped)}"]`
-      );
+      return !!panel?.querySelector(`[${this.queryDataAttribute}="${CSS.escape(escaped)}"]`);
     }
 
     return this.activeDescendantElement?.closest('ul') === panel;
@@ -436,9 +405,7 @@ export class SuggestionManager<SearchBoxController> {
   }
 
   private getSuggestionElements(suggestions: SearchBoxSuggestions[]) {
-    const elements = suggestions.flatMap((suggestion) =>
-      suggestion.renderItems()
-    );
+    const elements = suggestions.flatMap((suggestion) => suggestion.renderItems());
 
     const max =
       this.ownerSearchBoxProps.getNumberOfSuggestionsToDisplay() +

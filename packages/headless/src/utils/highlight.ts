@@ -64,10 +64,7 @@ export interface SuggestionHighlightingOptions {
  * Highlight the passed string using specified highlights.
  */
 export function highlightString(params: HighlightParams): string {
-  if (
-    isEmptyString(params.openingDelimiter) ||
-    isEmptyString(params.closingDelimiter)
-  ) {
+  if (isEmptyString(params.openingDelimiter) || isEmptyString(params.closingDelimiter)) {
     throw Error('delimiters should be a non-empty string');
   }
 
@@ -122,10 +119,7 @@ export function getHighlightedSuggestion(
         return suggestionWithDelimiters(matched, options.exactMatchDelimiters);
       }
       if (corrected) {
-        return suggestionWithDelimiters(
-          corrected,
-          options.correctionDelimiters
-        );
+        return suggestionWithDelimiters(corrected, options.correctionDelimiters);
       }
 
       return part;
@@ -133,10 +127,7 @@ export function getHighlightedSuggestion(
   );
 }
 
-function suggestionWithDelimiters(
-  suggestion: string,
-  delimiters: Delimiters | undefined
-) {
+function suggestionWithDelimiters(suggestion: string, delimiters: Delimiters | undefined) {
   if (delimiters) {
     return delimiters.open + suggestion + delimiters.close;
   }

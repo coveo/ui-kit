@@ -13,10 +13,7 @@ import {executeSearch} from '../search/search-actions.js';
 import {restoreSearchParameters} from '../search-parameters/search-parameters-actions.js';
 import {applySort} from './sort-actions.js';
 import {sortReducer} from './sort-slice.js';
-import {
-  type CommerceSortState,
-  getCommerceSortInitialState,
-} from './sort-state.js';
+import {type CommerceSortState, getCommerceSortInitialState} from './sort-state.js';
 
 describe('product-listing-sort-slice', () => {
   const sort = {
@@ -36,9 +33,7 @@ describe('product-listing-sort-slice', () => {
   });
 
   it('should have an initial state', () => {
-    expect(sortReducer(undefined, {type: 'foo'})).toEqual(
-      getCommerceSortInitialState()
-    );
+    expect(sortReducer(undefined, {type: 'foo'})).toEqual(getCommerceSortInitialState());
   });
 
   it('sets the applied sort', () => {
@@ -66,25 +61,21 @@ describe('product-listing-sort-slice', () => {
     it('on #fetchProductListing.fulfilled', () => {
       const response = buildFetchProductListingResponse(sortResponse);
 
+      expect(sortReducer(state, fetchProductListing.fulfilled(response, '')).appliedSort).toEqual(
+        sort
+      );
       expect(
-        sortReducer(state, fetchProductListing.fulfilled(response, ''))
-          .appliedSort
-      ).toEqual(sort);
-      expect(
-        sortReducer(state, fetchProductListing.fulfilled(response, ''))
-          .availableSorts
+        sortReducer(state, fetchProductListing.fulfilled(response, '')).availableSorts
       ).toEqual([sort]);
     });
 
     it('on #executeSearch.fulfilled', () => {
       const response = buildSearchResponse(sortResponse);
 
-      expect(
-        sortReducer(state, executeSearch.fulfilled(response, '')).appliedSort
-      ).toEqual(sort);
-      expect(
-        sortReducer(state, executeSearch.fulfilled(response, '')).availableSorts
-      ).toEqual([sort]);
+      expect(sortReducer(state, executeSearch.fulfilled(response, '')).appliedSort).toEqual(sort);
+      expect(sortReducer(state, executeSearch.fulfilled(response, '')).availableSorts).toEqual([
+        sort,
+      ]);
     });
   });
 
@@ -117,9 +108,7 @@ describe('product-listing-sort-slice', () => {
 
       const finalState = sortReducer(state, action(parameters));
 
-      expect(finalState.appliedSort).toEqual(
-        getCommerceSortInitialState().appliedSort
-      );
+      expect(finalState.appliedSort).toEqual(getCommerceSortInitialState().appliedSort);
     });
   });
 

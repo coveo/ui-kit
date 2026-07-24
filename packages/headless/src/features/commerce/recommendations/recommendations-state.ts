@@ -13,18 +13,14 @@ export interface RecommendationsSlice {
 /**
  * An object in which each key is a slot identifier, and each value is the corresponding recommendations slice.
  */
-export type RecommendationsState = Record<
-  string,
-  RecommendationsSlice | undefined
->;
+export type RecommendationsState = Record<string, RecommendationsSlice | undefined>;
 
 export const getRecommendationsInitialState = (): RecommendationsState => ({});
-export const getRecommendationsSliceInitialState =
-  (): RecommendationsSlice => ({
-    headline: '',
-    error: null,
-    isLoading: false,
-    responseId: '',
-    products: [],
-    productId: undefined,
-  });
+export const getRecommendationsSliceInitialState = (): RecommendationsSlice => ({
+  headline: '',
+  error: null,
+  isLoading: false,
+  responseId: '',
+  products: [],
+  productId: undefined,
+});

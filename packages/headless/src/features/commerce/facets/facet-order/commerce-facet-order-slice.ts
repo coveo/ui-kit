@@ -10,29 +10,21 @@ import {restoreProductListingParameters} from '../../product-listing-parameters/
 import {executeSearch as executeCommerceSearch} from '../../search/search-actions.js';
 import {restoreSearchParameters} from '../../search-parameters/search-parameters-actions.js';
 
-export const commerceFacetOrderReducer = createReducer(
-  getFacetOrderInitialState(),
-  (builder) => {
-    builder
-      .addCase(fetchProductListing.fulfilled, handleQueryFulfilled)
-      .addCase(executeCommerceSearch.fulfilled, handleQueryFulfilled)
-      .addCase(restoreSearchParameters, handleRestoreParameters)
-      .addCase(restoreProductListingParameters, handleRestoreParameters)
-      .addCase(setView, () => getFacetOrderInitialState())
-      .addCase(setContext, () => getFacetOrderInitialState());
-  }
-);
+export const commerceFacetOrderReducer = createReducer(getFacetOrderInitialState(), (builder) => {
+  builder
+    .addCase(fetchProductListing.fulfilled, handleQueryFulfilled)
+    .addCase(executeCommerceSearch.fulfilled, handleQueryFulfilled)
+    .addCase(restoreSearchParameters, handleRestoreParameters)
+    .addCase(restoreProductListingParameters, handleRestoreParameters)
+    .addCase(setView, () => getFacetOrderInitialState())
+    .addCase(setContext, () => getFacetOrderInitialState());
+});
 
 function handleQueryFulfilled(_: FacetOrderState, action: AnyAction) {
-  return action.payload.response.facets.map(
-    (facet: {facetId: string}) => facet.facetId
-  );
+  return action.payload.response.facets.map((facet: {facetId: string}) => facet.facetId);
 }
 
-function handleRestoreParameters(
-  _: FacetOrderState,
-  action: {payload: Parameters}
-) {
+function handleRestoreParameters(_: FacetOrderState, action: {payload: Parameters}) {
   return [
     ...Object.keys(action.payload.f ?? {}),
     ...Object.keys(action.payload.lf ?? {}),

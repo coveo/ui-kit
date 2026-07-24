@@ -194,22 +194,13 @@ If you try to use this component in an html template like the snippet below, and
 <template>
   <atomic-result-fields-list>
     <atomic-field-condition class="field" if-defined="cat_platform">
-      <result-text-field
-        label="Platform"
-        field="cat_platform"
-      ></result-text-field>
+      <result-text-field label="Platform" field="cat_platform"></result-text-field>
     </atomic-field-condition>
     <atomic-field-condition class="field" if-defined="cat_condition">
-      <result-text-field
-        label="Condition"
-        field="cat_condition"
-      ></result-text-field>
+      <result-text-field label="Condition" field="cat_condition"></result-text-field>
     </atomic-field-condition>
     <atomic-field-condition class="field" if-defined="cat_categories">
-      <result-text-field
-        label="Tags"
-        field="cat_categories"
-      ></result-text-field>
+      <result-text-field label="Tags" field="cat_categories"></result-text-field>
     </atomic-field-condition>
   </atomic-result-fields-list>
 </template>

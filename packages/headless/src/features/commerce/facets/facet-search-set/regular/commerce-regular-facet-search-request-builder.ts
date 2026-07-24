@@ -13,9 +13,7 @@ export const buildFacetSearchRequest = (
   const baseFacetQuery = state.facetSearchSet[facetId]!.options.query;
   const numberOfValues = state.facetSearchSet[facetId]!.options.numberOfValues;
   const facetQuery = `*${baseFacetQuery}*`;
-  const query = !isFieldSuggestionsRequest
-    ? state.commerceQuery?.query
-    : baseFacetQuery;
+  const query = !isFieldSuggestionsRequest ? state.commerceQuery?.query : baseFacetQuery;
 
   const {
     url,

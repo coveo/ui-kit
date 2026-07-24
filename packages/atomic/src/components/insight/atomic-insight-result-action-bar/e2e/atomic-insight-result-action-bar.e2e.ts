@@ -8,9 +8,7 @@ test.describe('atomic-insight-result-action-bar', () => {
     await expect(actionBar.buttons).toHaveCount(2);
   });
 
-  test('should become visible when hovering over result', async ({
-    actionBar,
-  }) => {
+  test('should become visible when hovering over result', async ({actionBar}) => {
     await actionBar.load({story: 'default'});
 
     await expect(actionBar.result).toBeVisible();

@@ -9,11 +9,7 @@ export default defineConfig({
       enabled: true,
       headless: true,
       screenshotFailures: false,
-      instances: [
-        {browser: 'chromium'},
-        {browser: 'firefox'},
-        {browser: 'webkit'},
-      ],
+      instances: [{browser: 'chromium'}, {browser: 'firefox'}, {browser: 'webkit'}],
     },
     globals: true,
     include: ['**/functional.test.ts'],

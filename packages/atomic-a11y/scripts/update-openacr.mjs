@@ -11,14 +11,9 @@ import {formatWithOxfmt} from './format-with-oxfmt.mjs';
 
 const PKG_ROOT = resolve(import.meta.dirname, '..');
 const REPO_ROOT = resolve(PKG_ROOT, '../..');
-const REPORT_PATH = resolve(
-  REPO_ROOT,
-  'packages/atomic/reports/a11y-report.json'
-);
+const REPORT_PATH = resolve(REPO_ROOT, 'packages/atomic/reports/a11y-report.json');
 
-const runId = process.argv
-  .find((a) => a.startsWith('--run-id='))
-  ?.split('=')[1];
+const runId = process.argv.find((a) => a.startsWith('--run-id='))?.split('=')[1];
 if (!runId) {
   console.error(
     'Usage: pnpm exec turbo run a11y:update-openacr --filter=@coveo/atomic-a11y -- --run-id=<RUN_ID>'
@@ -30,15 +25,7 @@ console.log(`[update-openacr] Downloading a11y report from run ${runId}...`);
 rmSync(REPORT_PATH, {force: true});
 execFileSync(
   'gh',
-  [
-    'run',
-    'download',
-    runId,
-    '-n',
-    'atomic-storybook-a11y-report',
-    '-D',
-    'packages/atomic/reports',
-  ],
+  ['run', 'download', runId, '-n', 'atomic-storybook-a11y-report', '-D', 'packages/atomic/reports'],
   {cwd: REPO_ROOT, stdio: 'inherit'}
 );
 
@@ -50,6 +37,4 @@ await transformJsonToOpenAcr({
 });
 formatWithOxfmt(OPENACR_PATH);
 
-console.log(
-  '[update-openacr] ✓ Done. Review and commit packages/atomic-a11y/reports/openacr.yaml'
-);
+console.log('[update-openacr] ✓ Done. Review and commit packages/atomic-a11y/reports/openacr.yaml');

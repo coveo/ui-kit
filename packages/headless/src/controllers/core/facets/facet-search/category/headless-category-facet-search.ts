@@ -22,23 +22,13 @@ export interface CategoryFacetSearchProps {
   select: (value: CategoryFacetSearchResult) => void;
   executeFacetSearchActionCreator: (
     facetId: string
-  ) => AsyncThunkAction<
-    unknown,
-    unknown,
-    AsyncThunkOptions<unknown, ThunkExtraArguments>
-  >;
+  ) => AsyncThunkAction<unknown, unknown, AsyncThunkOptions<unknown, ThunkExtraArguments>>;
   executeFieldSuggestActionCreator: (
     facetId: string
-  ) => AsyncThunkAction<
-    unknown,
-    unknown,
-    AsyncThunkOptions<unknown, ThunkExtraArguments>
-  >;
+  ) => AsyncThunkAction<unknown, unknown, AsyncThunkOptions<unknown, ThunkExtraArguments>>;
 }
 
-export type CategoryFacetSearch = ReturnType<
-  typeof buildCoreCategoryFacetSearch
->;
+export type CategoryFacetSearch = ReturnType<typeof buildCoreCategoryFacetSearch>;
 
 export function buildCoreCategoryFacetSearch(
   engine:

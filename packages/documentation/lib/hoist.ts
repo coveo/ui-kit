@@ -6,10 +6,7 @@ import type {TNavNode} from './types.js';
  * to the *parent* level, at the exact position where the bucket appeared.
  * Runs depth-first so descendants are processed as well.
  */
-export const hoistOtherCategoryInNav = (
-  root: TNavNode,
-  fallbackCategory: string
-) => {
+export const hoistOtherCategoryInNav = (root: TNavNode, fallbackCategory: string) => {
   if (!root) return;
 
   const stack: TNavNode[] = [root];

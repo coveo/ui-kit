@@ -6,9 +6,7 @@ test.describe('atomic-commerce-products-per-page', () => {
     await productsPerPage.hydrated.waitFor();
   });
 
-  test('should display the correct number of choices', async ({
-    productsPerPage,
-  }) => {
+  test('should display the correct number of choices', async ({productsPerPage}) => {
     await expect(productsPerPage.choice(10)).toBeVisible();
     await expect(productsPerPage.choice(25)).toBeVisible();
     await expect(productsPerPage.choice(50)).toBeVisible();

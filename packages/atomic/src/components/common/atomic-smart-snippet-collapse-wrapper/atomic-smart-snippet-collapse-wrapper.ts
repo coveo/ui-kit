@@ -39,19 +39,10 @@ export class AtomicSmartSnippetCollapseWrapper
 
       --gradient-start: var(
         --atomic-smart-snippet-gradient-start,
-        calc(
-          max(
-            var(--collapsed-size) - (var(--line-height) * 1.5),
-            var(--collapsed-size) * 0.5
-          )
-        )
+        calc(max(var(--collapsed-size) - (var(--line-height) * 1.5), var(--collapsed-size) * 0.5))
       );
 
-      mask-image: linear-gradient(
-        black,
-        black var(--gradient-start),
-        transparent 100%
-      );
+      mask-image: linear-gradient(black, black var(--gradient-start), transparent 100%);
     }
 
     :host(.expanded) .smart-snippet-content {
@@ -118,9 +109,7 @@ export class AtomicSmartSnippetCollapseWrapper
       this.maximumHeight &&
       (!this.collapsedHeight || this.maximumHeight < this.collapsedHeight)
     ) {
-      throw new Error(
-        'snippetMaximumHeight must be equal or greater than snippetCollapsedHeight'
-      );
+      throw new Error('snippetMaximumHeight must be equal or greater than snippetCollapsedHeight');
     }
   }
 
@@ -170,8 +159,7 @@ export class AtomicSmartSnippetCollapseWrapper
       this.initializeFullHeight();
     }
 
-    const isExpanded =
-      this.isExpanded && (!!this.fullHeight || !this.shouldRenderButton);
+    const isExpanded = this.isExpanded && (!!this.fullHeight || !this.shouldRenderButton);
     const isInvisible = !this.fullHeight && this.shouldRenderButton;
 
     this.classList.toggle('expanded', isExpanded);

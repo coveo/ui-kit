@@ -4,10 +4,7 @@ import {fileURLToPath} from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const headlessFutureRoot = path.resolve(
-  __dirname,
-  '../../../packages/thermidor'
-);
+const headlessFutureRoot = path.resolve(__dirname, '../../../packages/thermidor');
 
 export default defineConfig({
   resolve: {

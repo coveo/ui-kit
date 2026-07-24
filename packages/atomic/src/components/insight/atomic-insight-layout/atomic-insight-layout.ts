@@ -12,9 +12,7 @@ import {buildInsightLayout} from './insight-layout';
  * The `atomic-insight-layout` helps organize elements in the insight page.
  */
 @customElement('atomic-insight-layout')
-export class AtomicInsightLayout extends LightDomMixin(
-  ChildrenUpdateCompleteMixin(LitElement)
-) {
+export class AtomicInsightLayout extends LightDomMixin(ChildrenUpdateCompleteMixin(LitElement)) {
   @state() error!: Error;
 
   /**

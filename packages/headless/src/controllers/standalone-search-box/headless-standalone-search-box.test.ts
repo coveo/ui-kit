@@ -17,10 +17,7 @@ import {
 import {standaloneSearchBoxSetReducer as standaloneSearchBoxSet} from '../../features/standalone-search-box-set/standalone-search-box-set-slice.js';
 import type {StandaloneSearchBoxAnalytics} from '../../features/standalone-search-box-set/standalone-search-box-set-state.js';
 import type {SearchAppState} from '../../state/search-app-state.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../test/mock-engine-v2.js';
 import {buildMockOmniboxSuggestionMetadata} from '../../test/mock-omnibox-suggestion-metadata.js';
 import {buildMockQuerySuggest} from '../../test/mock-query-suggest.js';
 import {buildMockStandaloneSearchBoxEntry} from '../../test/mock-standalone-search-box-entry.js';
@@ -34,9 +31,7 @@ import {
 vi.mock('../../features/query-set/query-set-actions');
 vi.mock('../../features/query-suggest/query-suggest-actions');
 vi.mock('../../features/query/query-actions');
-vi.mock(
-  '../../features/standalone-search-box-set/standalone-search-box-set-actions'
-);
+vi.mock('../../features/standalone-search-box-set/standalone-search-box-set-actions');
 
 describe('headless standalone searchBox', () => {
   const id = 'search-box-123';
@@ -98,9 +93,7 @@ describe('headless standalone searchBox', () => {
 
   it('when configuring an invalid option, it throws an error', () => {
     options.numberOfSuggestions = '1' as unknown as number;
-    expect(() => initController()).toThrow(
-      'Check the options of buildStandaloneSearchBox'
-    );
+    expect(() => initController()).toThrow('Check the options of buildStandaloneSearchBox');
   });
 
   it('when the redirectionUrl is a relative url, it does not throw', () => {
@@ -126,15 +119,13 @@ describe('headless standalone searchBox', () => {
   });
 
   it('#state.isLoading uses the value in the standalone search-box reducer', () => {
-    engine.state.standaloneSearchBoxSet![id] =
-      buildMockStandaloneSearchBoxEntry({isLoading: true});
+    engine.state.standaloneSearchBoxSet![id] = buildMockStandaloneSearchBoxEntry({isLoading: true});
     expect(searchBox.state.isLoading).toBe(true);
   });
 
   it('#state.redirectTo uses the value in the standalone search-box reducer', () => {
     const redirectTo = '/search-page';
-    engine.state.standaloneSearchBoxSet![id] =
-      buildMockStandaloneSearchBoxEntry({redirectTo});
+    engine.state.standaloneSearchBoxSet![id] = buildMockStandaloneSearchBoxEntry({redirectTo});
     expect(searchBox.state.redirectTo).toBe(redirectTo);
   });
 
@@ -144,8 +135,7 @@ describe('headless standalone searchBox', () => {
       cause: 'omniboxFromLink',
       metadata,
     };
-    engine.state.standaloneSearchBoxSet![id] =
-      buildMockStandaloneSearchBoxEntry({analytics});
+    engine.state.standaloneSearchBoxSet![id] = buildMockStandaloneSearchBoxEntry({analytics});
 
     expect(searchBox.state.analytics).toEqual(analytics);
   });

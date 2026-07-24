@@ -87,9 +87,7 @@ interface FetchedResponse {
   requestExecuted: SearchRequest;
 }
 
-type ValidReturnTypeFromProcessingStep<RejectionType> =
-  | ExecuteSearchThunkReturn
-  | RejectionType;
+type ValidReturnTypeFromProcessingStep<RejectionType> = ExecuteSearchThunkReturn | RejectionType;
 
 interface AsyncThunkConfig {
   getState: () => StateNeededByExecuteSearch;
@@ -116,9 +114,7 @@ interface FetchFromAPIOptions {
 export class AsyncSearchThunkProcessor<RejectionType> {
   constructor(
     private config: AsyncThunkConfig,
-    private onUpdateQueryForCorrection: QueryCorrectionCallback = (
-      modification
-    ) => {
+    private onUpdateQueryForCorrection: QueryCorrectionCallback = (modification) => {
       this.dispatch(updateQuery({q: modification}));
     }
   ) {}
@@ -194,12 +190,10 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       results.length === 0 && queryCorrections && queryCorrections.length !== 0;
 
     const shouldExecuteModernDidYouMeanAutoCorrection =
-      !isNullOrUndefined(queryCorrection) &&
-      !isNullOrUndefined(queryCorrection.correctedQuery);
+      !isNullOrUndefined(queryCorrection) && !isNullOrUndefined(queryCorrection.correctedQuery);
 
     const shouldExitWithNoAutoCorrection =
-      !shouldExecuteClassicDidYouMeanAutoCorrection &&
-      !shouldExecuteModernDidYouMeanAutoCorrection;
+      !shouldExecuteClassicDidYouMeanAutoCorrection && !shouldExecuteModernDidYouMeanAutoCorrection;
 
     if (shouldExitWithNoAutoCorrection) {
       return null;
@@ -218,17 +212,14 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     originalFetchedResponse: FetchedResponse
   ): Promise<ExecuteSearchThunkReturn | RejectionType | null> {
     const originalQuery = this.getCurrentQuery();
-    const originalSearchSuccessResponse = this.getSuccessResponse(
-      originalFetchedResponse
-    )!;
+    const originalSearchSuccessResponse = this.getSuccessResponse(originalFetchedResponse)!;
     if (!originalSearchSuccessResponse.queryCorrections) {
       return null;
     }
 
     const {correctedQuery} = originalSearchSuccessResponse.queryCorrections[0];
 
-    const retried =
-      await this.automaticallyRetryQueryWithCorrection(correctedQuery);
+    const retried = await this.automaticallyRetryQueryWithCorrection(correctedQuery);
 
     if (isErrorResponse(retried.response)) {
       this.dispatch(logQueryError(retried.response.error));
@@ -275,8 +266,8 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       return null;
     }
     const correctedQuery =
-      (successResponse.triggers.find((trigger) => trigger.type === 'query')
-        ?.content as string) || '';
+      (successResponse.triggers.find((trigger) => trigger.type === 'query')?.content as string) ||
+      '';
 
     if (!correctedQuery) {
       return null;
@@ -290,8 +281,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     }
 
     const originalQuery = this.getCurrentQuery();
-    const retried =
-      await this.automaticallyRetryQueryWithTriggerModification(correctedQuery);
+    const retried = await this.automaticallyRetryQueryWithTriggerModification(correctedQuery);
 
     if (isErrorResponse(retried.response)) {
       this.dispatch(logQueryError(retried.response.error));
@@ -342,9 +332,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     return fetched;
   }
 
-  private async automaticallyRetryQueryWithTriggerModification(
-    modified: string
-  ) {
+  private async automaticallyRetryQueryWithTriggerModification(modified: string) {
     this.dispatch(
       applyQueryTriggerModification({
         newQuery: modified,

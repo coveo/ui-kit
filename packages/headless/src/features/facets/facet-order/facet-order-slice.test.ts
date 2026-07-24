@@ -6,10 +6,7 @@ import {change} from '../../history/history-actions.js';
 import {getHistoryInitialState} from '../../history/history-state.js';
 import {executeSearch} from '../../search/search-actions.js';
 import {facetOrderReducer} from './facet-order-slice.js';
-import {
-  type FacetOrderState,
-  getFacetOrderInitialState,
-} from './facet-order-state.js';
+import {type FacetOrderState, getFacetOrderInitialState} from './facet-order-state.js';
 
 describe('facet-order slice', () => {
   let state: FacetOrderState;
@@ -23,9 +20,7 @@ describe('facet-order slice', () => {
       executeSearch.fulfilled(
         buildMockSearch({
           response: buildMockSearchResponse({
-            facets: facetIds.map((facetId) =>
-              buildMockFacetResponse({facetId})
-            ),
+            facets: facetIds.map((facetId) => buildMockFacetResponse({facetId})),
           }),
         }),
         '',
@@ -36,11 +31,7 @@ describe('facet-order slice', () => {
 
   function dispatchMockHistoryChange(facetIds: string[]) {
     dispatchMock(
-      change.fulfilled(
-        {...getHistoryInitialState(), facetOrder: facetIds},
-        '',
-        null as never
-      )
+      change.fulfilled({...getHistoryInitialState(), facetOrder: facetIds}, '', null as never)
     );
   }
 

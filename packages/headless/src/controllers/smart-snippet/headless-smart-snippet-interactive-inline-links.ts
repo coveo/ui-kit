@@ -34,14 +34,8 @@ interface SmartSnippetInteractiveInlineLinksProps {
  */
 interface SmartSnippetInteractiveInlineLinks {
   selectInlineLink(link: InlineLink, questionAnswerId?: string): void;
-  beginDelayedSelectInlineLink(
-    link: InlineLink,
-    questionAnswerId?: string
-  ): void;
-  cancelPendingSelectInlineLink(
-    link: InlineLink,
-    questionAnswerId?: string
-  ): void;
+  beginDelayedSelectInlineLink(link: InlineLink, questionAnswerId?: string): void;
+  cancelPendingSelectInlineLink(link: InlineLink, questionAnswerId?: string): void;
 }
 
 /**
@@ -67,9 +61,7 @@ export function buildSmartSnippetInteractiveInlineLinks(
   };
 
   let lastSearchResponseId: string | null = null;
-  const resetInteractiveResultsIfSearchResponseChanged = (
-    currentSearchResponseId: string
-  ) => {
+  const resetInteractiveResultsIfSearchResponseChanged = (currentSearchResponseId: string) => {
     if (lastSearchResponseId !== currentSearchResponseId) {
       lastSearchResponseId = currentSearchResponseId;
       interactiveResultsPerInlineLink = {};
@@ -97,12 +89,8 @@ export function buildSmartSnippetInteractiveInlineLinks(
       }
     );
 
-  let interactiveResultsPerInlineLink: Record<string, InteractiveResultCore> =
-    {};
-  const getInteractiveResult = (
-    link: InlineLink,
-    questionAnswerId?: string
-  ) => {
+  let interactiveResultsPerInlineLink: Record<string, InteractiveResultCore> = {};
+  const getInteractiveResult = (link: InlineLink, questionAnswerId?: string) => {
     const {searchResponseId} = getState().search;
     resetInteractiveResultsIfSearchResponseChanged(searchResponseId);
 

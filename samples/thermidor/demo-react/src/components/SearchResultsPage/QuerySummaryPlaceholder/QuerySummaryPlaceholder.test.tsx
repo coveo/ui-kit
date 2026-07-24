@@ -96,9 +96,7 @@ describe('QuerySummaryPlaceholder', () => {
       />
     );
 
-    const strongElements = screen.getAllByText(
-      (_, el) => el?.tagName === 'STRONG'
-    );
+    const strongElements = screen.getAllByText((_, el) => el?.tagName === 'STRONG');
     expect(strongElements.length).toBeGreaterThanOrEqual(4);
   });
 });

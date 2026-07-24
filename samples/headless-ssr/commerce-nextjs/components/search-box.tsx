@@ -11,8 +11,7 @@ const ID_PREFIX = 'search-box';
 
 export default function SearchBox() {
   const {state, methods} = useSearchBox();
-  const {state: instantProductsState, methods: instantProductsController} =
-    useInstantProducts();
+  const {state: instantProductsState, methods: instantProductsController} = useInstantProducts();
 
   // Keyboard navigation, Enter/Escape and click-outside handling live in the
   // shared hook; this component only wires it to the Coveo controllers.
@@ -30,8 +29,7 @@ export default function SearchBox() {
   };
 
   const showDropdown =
-    nav.isOpen &&
-    (state.suggestions.length > 0 || instantProductsState.products.length > 0);
+    nav.isOpen && (state.suggestions.length > 0 || instantProductsState.products.length > 0);
 
   return (
     <div className="SearchBox" ref={nav.rootRef}>
@@ -43,9 +41,7 @@ export default function SearchBox() {
           aria-expanded={showDropdown}
           aria-controls={suggestionsListId(ID_PREFIX)}
           aria-activedescendant={
-            nav.activeIndex >= 0
-              ? suggestionOptionId(ID_PREFIX, nav.activeIndex)
-              : undefined
+            nav.activeIndex >= 0 ? suggestionOptionId(ID_PREFIX, nav.activeIndex) : undefined
           }
           aria-autocomplete="list"
           placeholder="Search"
