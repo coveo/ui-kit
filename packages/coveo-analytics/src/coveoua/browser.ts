@@ -5,23 +5,23 @@ declare const self: any;
 
 const promise = (window as any)['Promise'];
 if (!(promise instanceof Function) && !global) {
-    console.error(
-        `This script uses window.Promise which is not supported in your browser. Consider adding a polyfill like "es6-promise".`,
-    );
+  console.error(
+    `This script uses window.Promise which is not supported in your browser. Consider adding a polyfill like "es6-promise".`
+  );
 }
 const fetch = (window as any)['fetch'];
 if (!(fetch instanceof Function) && !global) {
-    console.error(
-        `This script uses window.fetch which is not supported in your browser. Consider adding a polyfill like "fetch".`,
-    );
+  console.error(
+    `This script uses window.fetch which is not supported in your browser. Consider adding a polyfill like "fetch".`
+  );
 }
 
 // CoveoUAGlobal is the interface for the global function which also has a
 // queue `q` of unexecuted parameters
 export interface CoveoUAGlobal {
-    (action: string, ...params: any[]): void;
-    // CoveoAnalytics.q is the queue of last called actions before lib was included
-    q?: [string, any[]][];
+  (action: string, ...params: any[]): void;
+  // CoveoAnalytics.q is the queue of last called actions before lib was included
+  q?: [string, any[]][];
 }
 
 // On load of this script we get the global object `coveoua` (which would be)
@@ -36,9 +36,15 @@ self.coveoanalytics = analytics;
 // On normal execution this library should be loaded after the snippet execution
 // so we will execute the actions in the `q` array
 if (coveoua.q) {
-    const initEvents = coveoua.q.filter((args: [string, any[]]) => args[0] === 'init');
-    const otherEvents = coveoua.q.filter((args: [string, any[]]) => args[0] !== 'init');
-    [...initEvents, ...otherEvents].forEach((args: [string, any[]]) => handleOneAnalyticsEvent.apply(void 0, args));
+  const initEvents = coveoua.q.filter(
+    (args: [string, any[]]) => args[0] === 'init'
+  );
+  const otherEvents = coveoua.q.filter(
+    (args: [string, any[]]) => args[0] !== 'init'
+  );
+  [...initEvents, ...otherEvents].forEach((args: [string, any[]]) =>
+    handleOneAnalyticsEvent.apply(void 0, args)
+  );
 }
 
 export default self.coveoua;

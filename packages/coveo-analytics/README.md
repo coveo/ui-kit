@@ -16,20 +16,25 @@ In order to ensure the tracking code is available on your webpage, the following
 
 ```html
 <script>
-    (function (c, o, v, e, O, u, a) {
-        a = 'coveoua';
-        c[a] =
-            c[a] ||
-            function () {
-                (c[a].q = c[a].q || []).push(arguments);
-            };
-        c[a].t = Date.now();
-        u = o.createElement(v);
-        u.async = 1;
-        u.src = e;
-        O = o.getElementsByTagName(v)[0];
-        O.parentNode.insertBefore(u, O);
-    })(window, document, 'script', 'https://static.cloud.coveo.com/coveo.analytics.js/2/coveoua.js');
+  (function (c, o, v, e, O, u, a) {
+    a = 'coveoua';
+    c[a] =
+      c[a] ||
+      function () {
+        (c[a].q = c[a].q || []).push(arguments);
+      };
+    c[a].t = Date.now();
+    u = o.createElement(v);
+    u.async = 1;
+    u.src = e;
+    O = o.getElementsByTagName(v)[0];
+    O.parentNode.insertBefore(u, O);
+  })(
+    window,
+    document,
+    'script',
+    'https://static.cloud.coveo.com/coveo.analytics.js/2/coveoua.js'
+  );
 </script>
 
 coveoua('init', #COVEO_API_KEY); // Replace #COVEO_API_KEY with your api key
@@ -45,13 +50,13 @@ After the library has loaded sucessfully, you can interact with coveoua through 
 
 - `coveoua('version')`: Returns the current version of the tracking library.
 - `coveoua('init', <COVEO_API_KEY>, <ENDPOINT>)`: Initializes the library with the given api key and endpoint. The following parameters are accepted
-    - COVEO_API_KEY (mandatory): A valid api key.
-    - ENDPOINT (optional): A string specifying the desired analytics endpoint. The default value is https://analytics.cloud.coveo.com/rest/ua. In case your organization is HIPAA enabled, you should override with https://analyticshipaa.cloud.coveo.com/rest/ua.
+  - COVEO_API_KEY (mandatory): A valid api key.
+  - ENDPOINT (optional): A string specifying the desired analytics endpoint. The default value is https://analytics.cloud.coveo.com/rest/ua. In case your organization is HIPAA enabled, you should override with https://analyticshipaa.cloud.coveo.com/rest/ua.
 - `coveoua('init', <COVEO_API_KEY>, {endpoint: <ENDPOINT>, isCustomEndpoint: <IS_CUSTOM_ENDPOINT>, plugins: <PLUGINS>})`: Initializes the library with the given api key, endpoint, isCustomEndpoint option and plugins. The following parameters are accepted
-    - COVEO_API_KEY (mandatory): A valid api key.
-    - ENDPOINT (optional): An object string specifying the desired analytics endpoint. The default value is https://analytics.cloud.coveo.com/rest/ua. In case your organization is HIPAA enabled, you should override with https://analyticshipaa.cloud.coveo.com/rest/ua.
-    - IS_CUSTOM_ENDPOINT (optional): An boolean specifying if the desired analytics endpoint is custom. This means the library will not try to add any prefix logic like /rest/ua at the end of the provided endpoint. This can be useful when implementing analytics through a reverse-proxy solution like cloudfront.
-    - PLUGINS (optional): An array of known plugin names. See [plugins](#plugins) for more information.
+  - COVEO_API_KEY (mandatory): A valid api key.
+  - ENDPOINT (optional): An object string specifying the desired analytics endpoint. The default value is https://analytics.cloud.coveo.com/rest/ua. In case your organization is HIPAA enabled, you should override with https://analyticshipaa.cloud.coveo.com/rest/ua.
+  - IS_CUSTOM_ENDPOINT (optional): An boolean specifying if the desired analytics endpoint is custom. This means the library will not try to add any prefix logic like /rest/ua at the end of the provided endpoint. This can be useful when implementing analytics through a reverse-proxy solution like cloudfront.
+  - PLUGINS (optional): An array of known plugin names. See [plugins](#plugins) for more information.
 - `coveoua('set', <NAME>, <VALUE>)`: Attempts to inject an attribute with given name and value on every logged event, overriding any existing value. Some payloads may reject attributes they do not support.
 - `coveoua('set', <OBJECT>)`: Attempts to inject all attributes and values of the given object on every logged event, overriding any existing value. Some payloads may reject attributes they do not support.
 - `coveoua('set', 'custom', <OBJECT>)`: Attempts to inject all attributes and values of the given object in the custom section of an object, overriding any existing value. Use this call to pass customer specific parameters on the payload.
@@ -115,17 +120,17 @@ The eCommerce plugin supports adding product data (`ec:addProduct`) as well as s
 As a sample, here is how a [cart modification event](https://docs.coveo.com/en/l3jg0266/coveo-for-commerce/measure-cart-page-events#measure-an-increase-in-item-quantity-in-cart) is assembled:
 
 1. First use the `ec:addProduct` action to include the [relevant product data](https://docs.coveo.com/en/l29e0540/coveo-for-commerce/commerce-events-reference#product-data-fields-reference) in the event you’re about to send
-    ```js
-    coveoua('ec:addProduct', <PRODUCT_DATA>);
-    ```
+   ```js
+   coveoua('ec:addProduct', <PRODUCT_DATA>);
+   ```
 2. Then use the `ec:setAction` action to specify that the [action done on this data](https://docs.coveo.com/en/l29e0540/coveo-for-commerce/commerce-events-reference#product-action-type-reference) is an addition to the cart.
-    ```js
-    coveoua('ec:setAction', 'add');
-    ```
+   ```js
+   coveoua('ec:setAction', 'add');
+   ```
 3. Finally, use the `send` action to send the generic event to Coveo Usage Analytics. The payload is implicit in this case, and has been generated by the plugin.
-    ```js
-    coveoua('send', 'event');
-    ```
+   ```js
+   coveoua('send', 'event');
+   ```
 
 ## Linking clientIds across different domains using a URL parameter
 
@@ -144,9 +149,9 @@ Given that you want to ensure the clientId remains consistent when you navigate 
 
 ```html
 <script>
-    async function decorate(element) {
-        element.href = await coveoua('link:decorate', element.href);
-    }
+  async function decorate(element) {
+    element.href = await coveoua('link:decorate', element.href);
+  }
 </script>
 <a onclick="decorate(this)" href="http://bar.com/index.html">Navigate</a>>
 ```
