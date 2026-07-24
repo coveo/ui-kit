@@ -158,17 +158,18 @@ export function PromptInput({
     }
   }
 
-  const supportsFieldSizing =
-    typeof CSS !== 'undefined' && CSS.supports('field-sizing', 'content');
+  const supportsFieldSizing = typeof CSS !== 'undefined' && CSS.supports('field-sizing', 'content');
 
   function handleInput(e: ChangeEvent<HTMLTextAreaElement>) {
     setValue(e.target.value);
     const el = e.target;
-    const maxHeight = 272;
+    const computed = getComputedStyle(el);
+    const maxHeight = parseInt(computed.maxHeight, 10);
+    const minHeight = parseInt(computed.minHeight, 10);
 
     if (!supportsFieldSizing) {
-      el.style.height = '52px';
-      if (el.scrollHeight > 52) {
+      el.style.height = `${minHeight}px`;
+      if (el.scrollHeight > minHeight) {
         el.style.height = `${Math.min(el.scrollHeight, maxHeight)}px`;
       }
     }
