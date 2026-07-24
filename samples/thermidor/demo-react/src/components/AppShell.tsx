@@ -1,5 +1,5 @@
-import {useEffect, useRef, useState} from 'react';
-import {buildConverseController, type RoutedInterface} from '@coveo/thermidor';
+import {useCallback, useEffect, useRef, useState} from 'react';
+import {buildConverseController, type RoutedInterface, type Turn} from '@coveo/thermidor';
 import {useGenerativeInterface} from '../context/generative-interface.js';
 import {useBuildController} from '../hooks/use-build-controller.js';
 import {useAppState, deriveTransitionAction} from '../hooks/use-app-state.js';
@@ -19,8 +19,23 @@ export function AppShell() {
   const persistedInterfaceTurnIdRef = useRef<string | null>(null);
   const persistedQueryRef = useRef<string>('');
   const lastObservedTurnIdRef = useRef<string | null>(null);
-  const pendingLandingNavigationRef = useRef(false);
+  const pendingNavigationRef = useRef(false);
   const [canGoBackToSearch, setCanGoBackToSearch] = useState(false);
+
+  const persistAndNavigateToSearch = useCallback(
+    (turn: Turn) => {
+      if (persistedInterfaceRef.current) {
+        persistedInterfaceRef.current.interface.dispose();
+      }
+      persistedInterfaceRef.current = turn.routedInterface!;
+      persistedInterfaceTurnIdRef.current = turn.id;
+      persistedQueryRef.current = turn.prompt;
+      lastObservedTurnIdRef.current = turn.id;
+      setCanGoBackToSearch(true);
+      dispatch({type: 'NAVIGATE_SEARCH'});
+    },
+    [dispatch]
+  );
 
   useEffect(() => {
     return () => {
@@ -31,30 +46,22 @@ export function AppShell() {
   useEffect(() => {
     const turns = converseState.turns;
 
-    // NAVIGATION ORDERING INVARIANT: When pendingLandingNavigationRef is true,
+    // NAVIGATION ORDERING INVARIANT: When pendingNavigationRef is true,
     // we check routedInterface BEFORE agentResponse.reasoningSteps.
     // This ensures that if a turn produces a routed interface, we navigate to
     // search regardless of whether reasoning steps also appeared. The routedInterface
     // check uses an early return to guarantee mutual exclusivity.
-    if (pendingLandingNavigationRef.current && turns.length > 0) {
+    if (pendingNavigationRef.current && turns.length > 0) {
       const latestTurn = turns[turns.length - 1];
 
       if (latestTurn.routedInterface) {
-        pendingLandingNavigationRef.current = false;
-        if (persistedInterfaceRef.current) {
-          persistedInterfaceRef.current.interface.dispose();
-        }
-        persistedInterfaceRef.current = latestTurn.routedInterface;
-        persistedInterfaceTurnIdRef.current = latestTurn.id;
-        persistedQueryRef.current = latestTurn.prompt;
-        lastObservedTurnIdRef.current = latestTurn.id;
-        setCanGoBackToSearch(true);
-        dispatch({type: 'NAVIGATE_SEARCH'});
+        pendingNavigationRef.current = false;
+        persistAndNavigateToSearch(latestTurn);
         return;
       }
 
       if (latestTurn.agentResponse && latestTurn.agentResponse.reasoningSteps?.length > 0) {
-        pendingLandingNavigationRef.current = false;
+        pendingNavigationRef.current = false;
         dispatch({type: 'NAVIGATE_CONVERSATION'});
       }
     }
@@ -75,27 +82,20 @@ export function AppShell() {
     const action = deriveTransitionAction(latestCompletedTurn);
 
     if (action?.type === 'NAVIGATE_SEARCH' && latestCompletedTurn.routedInterface) {
-      if (persistedInterfaceRef.current) {
-        persistedInterfaceRef.current.interface.dispose();
-      }
-      persistedInterfaceRef.current = latestCompletedTurn.routedInterface;
-      persistedInterfaceTurnIdRef.current = latestCompletedTurn.id;
-      persistedQueryRef.current = latestCompletedTurn.prompt;
-      setCanGoBackToSearch(true);
-      dispatch(action);
+      persistAndNavigateToSearch(latestCompletedTurn);
     } else if (action?.type === 'NAVIGATE_CONVERSATION') {
-      if (pendingLandingNavigationRef.current) {
-        pendingLandingNavigationRef.current = false;
+      if (pendingNavigationRef.current) {
+        pendingNavigationRef.current = false;
         dispatch(action);
       }
     }
-  }, [converseState.turns, dispatch]);
+  }, [converseState.turns, dispatch, persistAndNavigateToSearch]);
 
   const handleSubmit = (prompt: string) => {
     if (!prompt.trim() || converseState.isStreaming) return;
     controller.submit({prompt});
     if (view === 'landing' || view === 'search') {
-      pendingLandingNavigationRef.current = true;
+      pendingNavigationRef.current = true;
     }
   };
 
@@ -104,6 +104,10 @@ export function AppShell() {
       persistedQueryRef.current = '';
       dispatch({type: 'NAVIGATE_SEARCH'});
     }
+  };
+
+  const handleBackToConversation = () => {
+    dispatch({type: 'NAVIGATE_CONVERSATION'});
   };
 
   const handleResetToLanding = () => {
@@ -117,37 +121,36 @@ export function AppShell() {
     dispatch({type: 'NAVIGATE_LANDING'});
   };
 
-  const viewContent = (() => {
-    switch (view) {
-      case 'search':
-        return (
+  return (
+    <div className="view-shell">
+      {persistedInterfaceRef.current && (
+        <div className={`view-panel ${view === 'search' ? 'view-panel--active' : ''}`}>
           <SearchResultsPage
             key={persistedInterfaceTurnIdRef.current!}
             onSubmit={handleSubmit}
             isStreaming={converseState.isStreaming}
-            routedInterface={persistedInterfaceRef.current!}
+            routedInterface={persistedInterfaceRef.current}
             query={persistedQueryRef.current}
+            onBackToConversation={handleBackToConversation}
           />
-        );
-      case 'conversation':
-        return (
-          <ConversationPage
-            onSubmit={handleSubmit}
-            isStreaming={converseState.isStreaming}
-            turns={converseState.turns}
-            onBackToSearch={handleBackToSearch}
-            canGoBackToSearch={canGoBackToSearch}
-            onResetToLanding={handleResetToLanding}
-          />
-        );
-      default:
-        return <LandingPage onSubmit={handleSubmit} isStreaming={converseState.isStreaming} />;
-    }
-  })();
-
-  return (
-    <div key={view} className="view-transition">
-      {viewContent}
+        </div>
+      )}
+      {view !== 'search' && (
+        <div className="view-panel view-panel--active">
+          {view === 'conversation' ? (
+            <ConversationPage
+              onSubmit={handleSubmit}
+              isStreaming={converseState.isStreaming}
+              turns={converseState.turns}
+              onBackToSearch={handleBackToSearch}
+              canGoBackToSearch={canGoBackToSearch}
+              onResetToLanding={handleResetToLanding}
+            />
+          ) : (
+            <LandingPage onSubmit={handleSubmit} isStreaming={converseState.isStreaming} />
+          )}
+        </div>
+      )}
     </div>
   );
 }
