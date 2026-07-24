@@ -19,12 +19,7 @@ async function buildReport() {
   const titleFormatReport = await buildTitleReport();
   const bundleSizeReport = await buildBundleSizeReport();
 
-  return [
-    reportTitle,
-    titleFormatReport,
-    bundleSizeReport,
-    reportCommentIdentifier,
-  ].join('\n\n');
+  return [reportTitle, titleFormatReport, bundleSizeReport, reportCommentIdentifier].join('\n\n');
 }
 
 async function sendReport(report) {
@@ -32,15 +27,11 @@ async function sendReport(report) {
   const comments = await getPullRequestComments();
   const comment = findBundleSizeComment(comments.data);
 
-  comment
-    ? updatePullRequestComment(comment.id, report)
-    : createPullRequestComment(report);
+  comment ? updatePullRequestComment(comment.id, report) : createPullRequestComment(report);
 }
 ''.en;
 function findBundleSizeComment(comments) {
-  return comments.find((comment) =>
-    comment.body.endsWith(reportCommentIdentifier)
-  );
+  return comments.find((comment) => comment.body.endsWith(reportCommentIdentifier));
 }
 
 main();

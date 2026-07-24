@@ -18,12 +18,8 @@ import {
   type RegularFacetSearchProps,
 } from './headless-commerce-regular-facet-search.js';
 
-vi.mock(
-  '../../../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions'
-);
-vi.mock(
-  '../../../../../features/facets/facet-search-set/specific/specific-facet-search-actions'
-);
+vi.mock('../../../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions');
+vi.mock('../../../../../features/facets/facet-search-set/specific/specific-facet-search-actions');
 
 describe('RegularFacetSearch', () => {
   const facetId: string = 'regular_facet_id';
@@ -39,9 +35,7 @@ describe('RegularFacetSearch', () => {
     facetSearch = buildRegularFacetSearch(engine, props);
   }
 
-  function setFacetSearchState(
-    updates: Partial<SpecificFacetSearchState> = {}
-  ) {
+  function setFacetSearchState(updates: Partial<SpecificFacetSearchState> = {}) {
     engine[stateKey].facetSearchSet[facetId] = buildMockFacetSearch(updates);
   }
 

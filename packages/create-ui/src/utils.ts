@@ -16,8 +16,5 @@ const DEFAULT_PACKAGE_MANAGER = 'npm';
  */
 export function getPackageManager(): string {
   const firstUserAgent = /^\w+(?=\/)/;
-  return (
-    process.env.npm_config_user_agent?.match(firstUserAgent)?.[0] ??
-    DEFAULT_PACKAGE_MANAGER
-  );
+  return process.env.npm_config_user_agent?.match(firstUserAgent)?.[0] ?? DEFAULT_PACKAGE_MANAGER;
 }

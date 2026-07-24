@@ -25,10 +25,9 @@ commerceApiHarness.facetSearchEndpoint.addRequestTransformer(
 );
 
 const {decorator, play} = wrapInCommerceInterface();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-commerce-refine-toggle',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-commerce-refine-toggle', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-commerce-refine-toggle',

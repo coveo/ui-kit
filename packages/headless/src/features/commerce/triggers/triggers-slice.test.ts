@@ -10,16 +10,10 @@ import {
   handleFetchItemsPending,
   handleUpdateIgnoreQueryTrigger,
 } from '../../triggers/triggers-slice-functions.js';
-import {
-  getTriggerInitialState,
-  type TriggerState,
-} from '../../triggers/triggers-state.js';
+import {getTriggerInitialState, type TriggerState} from '../../triggers/triggers-state.js';
 import {fetchProductListing} from '../product-listing/product-listing-actions.js';
 import {executeSearch} from '../search/search-actions.js';
-import {
-  applyQueryTriggerModification,
-  updateIgnoreQueryTrigger,
-} from './triggers-actions.js';
+import {applyQueryTriggerModification, updateIgnoreQueryTrigger} from './triggers-actions.js';
 import {commerceTriggersReducer} from './triggers-slice.js';
 
 describe('commerce triggers slice', () => {
@@ -31,14 +25,10 @@ describe('commerce triggers slice', () => {
   beforeEach(() => {
     vi.resetAllMocks();
     initialState = getTriggerInitialState();
-    initialStateCopy = JSON.parse(
-      JSON.stringify(initialState)
-    ) as typeof initialState;
+    initialStateCopy = JSON.parse(JSON.stringify(initialState)) as typeof initialState;
   });
   it('should have initial state', () => {
-    expect(commerceTriggersReducer(undefined, {type: 'randomAction'})).toEqual(
-      initialState
-    );
+    expect(commerceTriggersReducer(undefined, {type: 'randomAction'})).toEqual(initialState);
   });
 
   it('on #executeSearch.pending, updates state using #handleFetchItemsPending', () => {
@@ -58,10 +48,7 @@ describe('commerce triggers slice', () => {
       buildMockRedirectTrigger(),
     ];
     const action = executeSearch.fulfilled(searchResponse, '');
-    expectedState = handleFetchItemsFulfilled(
-      initialStateCopy,
-      action.payload.response.triggers
-    );
+    expectedState = handleFetchItemsFulfilled(initialStateCopy, action.payload.response.triggers);
     finalState = commerceTriggersReducer(initialState, action);
 
     expect(finalState).toEqual(expectedState);
@@ -83,14 +70,8 @@ describe('commerce triggers slice', () => {
       buildMockExecuteTrigger(),
       buildMockRedirectTrigger(),
     ];
-    const action = fetchProductListing.fulfilled(
-      fetchProductListingResponse,
-      ''
-    );
-    expectedState = handleFetchItemsFulfilled(
-      initialStateCopy,
-      action.payload.response.triggers
-    );
+    const action = fetchProductListing.fulfilled(fetchProductListingResponse, '');
+    expectedState = handleFetchItemsFulfilled(initialStateCopy, action.payload.response.triggers);
     finalState = commerceTriggersReducer(initialState, action);
 
     expect(finalState).toEqual(expectedState);
@@ -101,10 +82,7 @@ describe('commerce triggers slice', () => {
       newQuery: 'new query',
       originalQuery: 'original query',
     });
-    expectedState = handleApplyQueryTriggerModification(
-      initialStateCopy,
-      action.payload
-    );
+    expectedState = handleApplyQueryTriggerModification(initialStateCopy, action.payload);
     finalState = commerceTriggersReducer(initialState, action);
 
     expect(finalState).toEqual(expectedState);
@@ -112,10 +90,7 @@ describe('commerce triggers slice', () => {
 
   it('on #updateIgnoreQueryTrigger, updates state using #handleUpdateIgnoreQueryTrigger', () => {
     const action = updateIgnoreQueryTrigger({q: 'query to ignore'});
-    expectedState = handleUpdateIgnoreQueryTrigger(
-      initialStateCopy,
-      action.payload.q
-    );
+    expectedState = handleUpdateIgnoreQueryTrigger(initialStateCopy, action.payload.q);
     finalState = commerceTriggersReducer(initialState, action);
 
     expect(finalState).toEqual(expectedState);

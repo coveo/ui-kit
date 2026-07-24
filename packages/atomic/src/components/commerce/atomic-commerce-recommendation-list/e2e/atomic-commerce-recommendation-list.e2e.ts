@@ -18,9 +18,7 @@ test.describe('with a carousel', () => {
     await expect(recommendationList.recommendation.first()).toBeVisible();
   });
 
-  test('should support going forward and backward', async ({
-    recommendationList,
-  }) => {
+  test('should support going forward and backward', async ({recommendationList}) => {
     await recommendationList.nextButton.click();
     await expect(recommendationList.indicators.nth(1)).toHaveAttribute(
       'part',

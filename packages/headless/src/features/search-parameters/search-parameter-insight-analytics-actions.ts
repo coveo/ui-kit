@@ -33,26 +33,15 @@ export function logParametersChange(
   }
 
   if (!areFacetParamsEqual(previousParameters.nf, newParameters.nf)) {
-    return logRangeFacetAnalyticsAction(
-      previousParameters.nf,
-      newParameters.nf
-    );
+    return logRangeFacetAnalyticsAction(previousParameters.nf, newParameters.nf);
   }
 
   if (!areFacetParamsEqual(previousParameters.df, newParameters.df)) {
-    return logRangeFacetAnalyticsAction(
-      previousParameters.df,
-      newParameters.df
-    );
+    return logRangeFacetAnalyticsAction(previousParameters.df, newParameters.df);
   }
 
-  if (
-    !areFacetParamsEqual(previousParameters.fExcluded, newParameters.fExcluded)
-  ) {
-    return logFacetExcludeAnalyticsAction(
-      previousParameters.fExcluded,
-      newParameters.fExcluded
-    );
+  if (!areFacetParamsEqual(previousParameters.fExcluded, newParameters.fExcluded)) {
+    return logFacetExcludeAnalyticsAction(previousParameters.fExcluded, newParameters.fExcluded);
   }
 
   return logInsightInterfaceChange();
@@ -60,10 +49,7 @@ export function logParametersChange(
 
 type AnyFacetParameters = FacetParameters | RangeFacetParameters;
 
-type RangeFacetParameters = Record<
-  string,
-  (NumericRangeRequest | DateRangeRequest)[]
->;
+type RangeFacetParameters = Record<string, (NumericRangeRequest | DateRangeRequest)[]>;
 
 type FacetParameters = Record<string, string[]>;
 
@@ -114,9 +100,7 @@ function logFacetAnalyticsAction(
   }
 
   const facetIdWithDifferentValues = newIds.find((key) =>
-    newFacets[key].filter((facetValue) =>
-      previousFacets[key].includes(facetValue)
-    )
+    newFacets[key].filter((facetValue) => previousFacets[key].includes(facetValue))
   );
   if (!facetIdWithDifferentValues) {
     return logInsightInterfaceChange();
@@ -125,9 +109,7 @@ function logFacetAnalyticsAction(
   const previousValues = previousFacets[facetIdWithDifferentValues];
   const newValues = newFacets[facetIdWithDifferentValues];
 
-  const addedValues = newValues.filter(
-    (value) => !previousValues.includes(value)
-  );
+  const addedValues = newValues.filter((value) => !previousValues.includes(value));
 
   if (addedValues.length) {
     return logFacetSelect({
@@ -136,9 +118,7 @@ function logFacetAnalyticsAction(
     });
   }
 
-  const removedValues = previousValues.filter(
-    (value) => !newValues.includes(value)
-  );
+  const removedValues = previousValues.filter((value) => !newValues.includes(value));
 
   if (removedValues.length) {
     return (isExclude ? logFacetUnexclude : logFacetDeselect)({

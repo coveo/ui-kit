@@ -21,10 +21,7 @@ import {hydrateProductGrid} from './components/ProductGrid.js';
 import {hydrateSummary} from './components/QuerySummary.js';
 import {hydrateSearch} from './components/Search.js';
 import {hydrateSort} from './components/Sort.js';
-import {
-  listingEngineDefinition,
-  searchEngineDefinition,
-} from './lib/engine-definition.js';
+import {listingEngineDefinition, searchEngineDefinition} from './lib/engine-definition.js';
 import type {AppControllers, SsrState} from './common/types.js';
 
 function wireControllers(controllers: AppControllers) {
@@ -68,9 +65,7 @@ async function initApp() {
     // before hydrating, so client-side requests carry the same context.
     if (ssr.type === 'listing') {
       const {staticState} = ssr;
-      listingEngineDefinition.setNavigatorContextProvider(
-        () => navigatorContext
-      );
+      listingEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
       ({controllers} = await listingEngineDefinition.hydrateStaticState({
         searchActions: staticState.searchActions,
         controllers: {
@@ -80,17 +75,14 @@ async function initApp() {
           context: staticState.controllers.context.state,
           parameterManager: {
             initialState: {
-              parameters:
-                staticState.controllers.parameterManager.state.parameters,
+              parameters: staticState.controllers.parameterManager.state.parameters,
             },
           },
         },
       }));
     } else {
       const {staticState} = ssr;
-      searchEngineDefinition.setNavigatorContextProvider(
-        () => navigatorContext
-      );
+      searchEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
       ({controllers} = await searchEngineDefinition.hydrateStaticState({
         searchActions: staticState.searchActions,
         controllers: {
@@ -100,8 +92,7 @@ async function initApp() {
           context: staticState.controllers.context.state,
           parameterManager: {
             initialState: {
-              parameters:
-                staticState.controllers.parameterManager.state.parameters,
+              parameters: staticState.controllers.parameterManager.state.parameters,
             },
           },
         },

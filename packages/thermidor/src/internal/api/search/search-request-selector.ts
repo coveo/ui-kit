@@ -10,9 +10,7 @@ export function createSearchEndpointRequestSelector(scope: EndpointStateScope) {
   const searchBox = getOrCreateSearchBoxSelectors(scope.scopeInterface);
   const pagination = getOrCreatePaginationSelectors(scope.baseInterface);
   const facets = getOrCreateFacetsSelectors(scope.baseInterface);
-  const searchParams = getOrCreateSearchParametersSelectors(
-    scope.baseInterface
-  );
+  const searchParams = getOrCreateSearchParametersSelectors(scope.baseInterface);
   const configuration = getOrCreateConfigurationSelectors();
 
   return createMemoizedStateSelector(

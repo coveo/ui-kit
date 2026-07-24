@@ -30,8 +30,7 @@ export function buildQueryTrigger(engine: SearchEngine): QueryTrigger {
   const getState = () => engine.state;
 
   const modification = () => getState().triggers.queryModification.newQuery;
-  const originalQuery = () =>
-    getState().triggers.queryModification.originalQuery;
+  const originalQuery = () => getState().triggers.queryModification.originalQuery;
 
   return {
     ...controller,

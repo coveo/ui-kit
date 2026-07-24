@@ -14,10 +14,9 @@ import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
 const searchApiHarness = new MockSearchApi();
 
 const {decorator, play} = wrapInSearchInterface();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-results-per-page',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-results-per-page', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-results-per-page',
@@ -56,12 +55,8 @@ export const A11yStatusMessage: Story = {
     `,
   ],
   beforeEach: async () => {
-    searchApiHarness.searchEndpoint.mockOnce(
-      buildSearchResponseWithResults(120)
-    );
-    searchApiHarness.searchEndpoint.mockOnce(
-      buildSearchResponseWithResults(120, 25)
-    );
+    searchApiHarness.searchEndpoint.mockOnce(buildSearchResponseWithResults(120));
+    searchApiHarness.searchEndpoint.mockOnce(buildSearchResponseWithResults(120, 25));
   },
   play: async (context) => {
     await play(context);

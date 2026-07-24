@@ -38,14 +38,8 @@ import {
   updateFacetSortCriterion,
   updateFreezeCurrentValues,
 } from './facet-set-actions.js';
-import {
-  convertFacetValueToRequest,
-  facetSetReducer,
-} from './facet-set-slice.js';
-import {
-  type FacetSetState,
-  getFacetSetInitialState,
-} from './facet-set-state.js';
+import {convertFacetValueToRequest, facetSetReducer} from './facet-set-slice.js';
+import {type FacetSetState, getFacetSetInitialState} from './facet-set-state.js';
 import type {FacetResponse} from './interfaces/response.js';
 
 describe('facet-set slice', () => {
@@ -135,10 +129,7 @@ describe('facet-set slice', () => {
       facetSet: expectedFacetSet,
     };
 
-    const nextState = facetSetReducer(
-      state,
-      change.fulfilled(historyChange, '')
-    );
+    const nextState = facetSetReducer(state, change.fulfilled(historyChange, ''));
 
     expect(nextState).toEqual(expectedFacetSet);
   });
@@ -151,10 +142,7 @@ describe('facet-set slice', () => {
       facetSet: emptyFacetSet,
     };
 
-    const nextState = facetSetReducer(
-      state,
-      change.fulfilled(historyChange, '')
-    );
+    const nextState = facetSetReducer(state, change.fulfilled(historyChange, ''));
 
     expect(nextState).toEqual(state);
   });
@@ -346,74 +334,69 @@ describe('facet-set slice', () => {
         facetValueState: 'excluded' as FacetValueState,
         toggleAction: toggleExcludeFacetValue,
       },
-    ])(
-      'when the facet value does not exist',
-      ({facetValueState, toggleAction}) => {
-        it('inserts the new value before the first idle value and removes the last value', () => {
-          const newFacetValue = buildMockFacetValue({
-            value: 'TED',
-            state: facetValueState,
-          });
-
-          state[id] = buildMockFacetSlice({
-            request: buildMockFacetRequest({
-              numberOfValues: 4,
-              currentValues: [
-                buildMockFacetValue({
-                  value: 'active1',
-                  state: facetValueState,
-                }),
-                buildMockFacetValue({
-                  value: 'active2',
-                  state: facetValueState,
-                }),
-                buildMockFacetValue({value: 'idle1', state: 'idle'}),
-                buildMockFacetValue({value: 'idle2', state: 'idle'}),
-              ],
-            }),
-          });
-
-          const action = toggleAction({
-            facetId: id,
-            selection: newFacetValue,
-          });
-
-          const finalState = facetSetReducer(state, action);
-          expect(
-            finalState[id]?.request.currentValues.indexOf(newFacetValue)
-          ).toBe(2);
-          expect(finalState[id]?.request.currentValues.length).toBe(4);
+    ])('when the facet value does not exist', ({facetValueState, toggleAction}) => {
+      it('inserts the new value before the first idle value and removes the last value', () => {
+        const newFacetValue = buildMockFacetValue({
+          value: 'TED',
+          state: facetValueState,
         });
 
-        it('does not set #freezeCurrentValues to true', () => {
-          state[id] = buildMockFacetSlice({
-            request: buildMockFacetRequest({currentValues: []}),
-          });
-
-          const action = toggleAction({
-            facetId: id,
-            selection: buildMockFacetValue({value: 'TED'}),
-          });
-          const finalState = facetSetReducer(state, action);
-
-          expect(finalState[id]?.request.freezeCurrentValues).toBe(false);
+        state[id] = buildMockFacetSlice({
+          request: buildMockFacetRequest({
+            numberOfValues: 4,
+            currentValues: [
+              buildMockFacetValue({
+                value: 'active1',
+                state: facetValueState,
+              }),
+              buildMockFacetValue({
+                value: 'active2',
+                state: facetValueState,
+              }),
+              buildMockFacetValue({value: 'idle1', state: 'idle'}),
+              buildMockFacetValue({value: 'idle2', state: 'idle'}),
+            ],
+          }),
         });
 
-        it('sets #preventAutoSelect to true', () => {
-          state[id] = buildMockFacetSlice({
-            request: buildMockFacetRequest({currentValues: []}),
-          });
-
-          const action = toggleAction({
-            facetId: id,
-            selection: buildMockFacetValue({value: 'TED'}),
-          });
-          const finalState = facetSetReducer(state, action);
-
-          expect(finalState[id]?.request.preventAutoSelect).toBe(true);
+        const action = toggleAction({
+          facetId: id,
+          selection: newFacetValue,
         });
-      }
-    );
+
+        const finalState = facetSetReducer(state, action);
+        expect(finalState[id]?.request.currentValues.indexOf(newFacetValue)).toBe(2);
+        expect(finalState[id]?.request.currentValues.length).toBe(4);
+      });
+
+      it('does not set #freezeCurrentValues to true', () => {
+        state[id] = buildMockFacetSlice({
+          request: buildMockFacetRequest({currentValues: []}),
+        });
+
+        const action = toggleAction({
+          facetId: id,
+          selection: buildMockFacetValue({value: 'TED'}),
+        });
+        const finalState = facetSetReducer(state, action);
+
+        expect(finalState[id]?.request.freezeCurrentValues).toBe(false);
+      });
+
+      it('sets #preventAutoSelect to true', () => {
+        state[id] = buildMockFacetSlice({
+          request: buildMockFacetRequest({currentValues: []}),
+        });
+
+        const action = toggleAction({
+          facetId: id,
+          selection: buildMockFacetValue({value: 'TED'}),
+        });
+        const finalState = facetSetReducer(state, action);
+
+        expect(finalState[id]?.request.preventAutoSelect).toBe(true);
+      });
+    });
   });
 
   it('dispatching #toggleSelectFacetValue with an invalid id does not throw', () => {
@@ -473,10 +456,7 @@ describe('facet-set slice', () => {
     state['2'] = buildMockFacetSlice({
       request: buildMockFacetRequest({preventAutoSelect: true}),
     });
-    const finalState = facetSetReducer(
-      state,
-      updateFacetAutoSelection({allow: true})
-    );
+    const finalState = facetSetReducer(state, updateFacetAutoSelection({allow: true}));
     expect(finalState['1']?.request.preventAutoSelect).toBe(false);
     expect(finalState['2']?.request.preventAutoSelect).toBe(false);
   });
@@ -527,9 +507,7 @@ describe('facet-set slice', () => {
     });
     facetSetReducer(state, action);
 
-    expect(FacetReducers.handleFacetSortCriterionUpdate).toHaveBeenCalledTimes(
-      1
-    );
+    expect(FacetReducers.handleFacetSortCriterionUpdate).toHaveBeenCalledTimes(1);
   });
 
   it('dispatching #updateFacetNumberOfValues calls #handleFacetUpdateNumberOfValues', () => {
@@ -542,9 +520,7 @@ describe('facet-set slice', () => {
       })
     );
 
-    expect(FacetReducers.handleFacetUpdateNumberOfValues).toHaveBeenCalledTimes(
-      1
-    );
+    expect(FacetReducers.handleFacetUpdateNumberOfValues).toHaveBeenCalledTimes(1);
   });
 
   describe('#updateFacetIsFieldExpanded', () => {
@@ -560,9 +536,7 @@ describe('facet-set slice', () => {
       const action = updateFacetIsFieldExpanded({facetId, isFieldExpanded});
       const finalState = facetSetReducer(state, action);
 
-      expect(finalState[facetId]?.request.isFieldExpanded).toBe(
-        isFieldExpanded
-      );
+      expect(finalState[facetId]?.request.isFieldExpanded).toBe(isFieldExpanded);
     });
 
     it('dispatching with an unregistered id does not throw', () => {
@@ -575,9 +549,7 @@ describe('facet-set slice', () => {
   });
 
   function testFulfilledSearchRequest(
-    searchBuilder: (
-      facets: FacetResponse[]
-    ) => PayloadAction<ExecuteSearchThunkReturn, string>
+    searchBuilder: (facets: FacetResponse[]) => PayloadAction<ExecuteSearchThunkReturn, string>
   ) {
     it('updates the currentValues of facet requests to the values in the response', () => {
       const id = '1';
@@ -592,9 +564,7 @@ describe('facet-set slice', () => {
       const finalState = facetSetReducer(state, action);
 
       const expectedFacetValueRequest = convertFacetValueToRequest(facetValue);
-      expect(finalState[id]?.request.currentValues).toEqual([
-        expectedFacetValueRequest,
-      ]);
+      expect(finalState[id]?.request.currentValues).toEqual([expectedFacetValueRequest]);
     });
 
     it('sets #freezeCurrentValues to false', () => {
@@ -758,11 +728,7 @@ describe('facet-set slice', () => {
       dispatchFacetSearchResultAction();
 
       const {currentValues} = getFacetRequest();
-      expect(currentValues).toEqual([
-        activeValue,
-        activeValue2,
-        expectedSearchResultValue,
-      ]);
+      expect(currentValues).toEqual([activeValue, activeValue2, expectedSearchResultValue]);
     });
   });
 
@@ -793,10 +759,7 @@ describe('facet-set slice', () => {
         value: 'a',
         state: 'selected',
       });
-      expect(finalState[facetId]?.request.currentValues).toEqual([
-        selectedValue,
-        valueB,
-      ]);
+      expect(finalState[facetId]?.request.currentValues).toEqual([selectedValue, valueB]);
     });
 
     it(`when the number of values in the payload is greater than the number of values on the request,
@@ -832,17 +795,13 @@ describe('facet-set slice', () => {
       `when a facet is not found in the #$hash payload,
     it deselects all values by setting the state of each facet value in #currentValues to idle`,
       ({facetValueState}) => {
-        const currentValues = [
-          buildMockFacetValueRequest({state: facetValueState}),
-        ];
+        const currentValues = [buildMockFacetValueRequest({state: facetValueState})];
         state.author = buildMockFacetSlice({
           request: buildMockFacetRequest({currentValues}),
         });
 
         const finalState = facetSetReducer(state, restoreSearchParameters({}));
-        expect(finalState.author?.request.currentValues).toEqual([
-          buildMockFacetValueRequest(),
-        ]);
+        expect(finalState.author?.request.currentValues).toEqual([buildMockFacetValueRequest()]);
       }
     );
 

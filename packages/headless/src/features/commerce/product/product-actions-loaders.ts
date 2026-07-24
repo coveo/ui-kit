@@ -25,11 +25,7 @@ export interface ProductActionCreators {
    */
   productClick(
     payload: ProductClickPayload
-  ): AsyncThunkAction<
-    void,
-    ProductClickPayload,
-    AsyncThunkCommerceOptions<CommerceEngineState>
-  >;
+  ): AsyncThunkAction<void, ProductClickPayload, AsyncThunkCommerceOptions<CommerceEngineState>>;
 
   /**
    * Logs a view analytics event for a product.
@@ -39,11 +35,7 @@ export interface ProductActionCreators {
    */
   productView(
     payload: ProductViewPayload
-  ): AsyncThunkAction<
-    void,
-    ProductViewPayload,
-    AsyncThunkCommerceOptions<CommerceEngineState>
-  >;
+  ): AsyncThunkAction<void, ProductViewPayload, AsyncThunkCommerceOptions<CommerceEngineState>>;
 }
 
 /**

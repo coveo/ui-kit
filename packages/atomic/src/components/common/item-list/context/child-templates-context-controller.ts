@@ -47,8 +47,5 @@ export class ChildTemplatesContextController implements ReactiveController {
   }
 }
 
-type ChildTemplatesContextEventHandler = (
-  itemTemplateProvider?: ResultTemplateProvider
-) => void;
-export type ChildTemplatesContextEvent =
-  CustomEvent<ChildTemplatesContextEventHandler>;
+type ChildTemplatesContextEventHandler = (itemTemplateProvider?: ResultTemplateProvider) => void;
+export type ChildTemplatesContextEvent = CustomEvent<ChildTemplatesContextEventHandler>;

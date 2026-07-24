@@ -1,8 +1,5 @@
 import {change} from '../history/history-actions.js';
-import {
-  getHistoryInitialState,
-  type HistoryState,
-} from '../history/history-state.js';
+import {getHistoryInitialState, type HistoryState} from '../history/history-state.js';
 import {
   type AddDictionaryFieldContextActionCreatorPayload,
   addContext,
@@ -31,9 +28,7 @@ describe('dictionary field context slice', () => {
     });
 
     it('when the payload is not an object, the action contains an error', () => {
-      const payload = setContext(
-        undefined as unknown as DictionaryFieldContextPayload
-      );
+      const payload = setContext(undefined as unknown as DictionaryFieldContextPayload);
       expect('error' in payload).toBe(true);
     });
 

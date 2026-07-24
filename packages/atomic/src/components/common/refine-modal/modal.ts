@@ -22,9 +22,7 @@ interface RefineModalProps {
   scope?: HTMLElement;
 }
 
-export const renderRefineModal: FunctionalComponentWithChildren<
-  RefineModalProps
-> =
+export const renderRefineModal: FunctionalComponentWithChildren<RefineModalProps> =
   ({props}) =>
   (children) => {
     const flushFacetElements = () => {
@@ -43,13 +41,7 @@ export const renderRefineModal: FunctionalComponentWithChildren<
               onClick: props.onClose,
               ariaLabel: props.i18n.t('close'),
             },
-          })(
-            html`<atomic-icon
-              part="close-icon"
-              class="h-5 w-5"
-              icon=${CloseIcon}
-            ></atomic-icon>`
-          )}
+          })(html`<atomic-icon part="close-icon" class="h-5 w-5" icon=${CloseIcon}></atomic-icon>`)}
         </div>
       `;
     };

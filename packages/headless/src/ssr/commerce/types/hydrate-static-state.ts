@@ -1,9 +1,6 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
-import type {
-  ControllersMap,
-  ControllersPropsMap,
-} from '../../common/types/controllers.js';
+import type {ControllersMap, ControllersPropsMap} from '../../common/types/controllers.js';
 import type {HydratedState} from '../../common/types/hydrate-static-state.js';
 import type {SSRCommerceEngine} from '../factories/build-factory.js';
 import type {SolutionType} from './controller-constants.js';

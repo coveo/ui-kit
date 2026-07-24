@@ -22,11 +22,7 @@ The engine needs configuration (org ID, access token) before API calls work. Thi
 The standard way to use the library. Controllers handle slice adoption, state management, and API orchestration.
 
 ```typescript
-import {
-  Engine,
-  buildSearchBoxController,
-  buildResultListController,
-} from '@coveo/thermidor';
+import {Engine, buildSearchBoxController, buildResultListController} from '@coveo/thermidor';
 
 // 1. Create the engine
 const engine = new Engine();
@@ -201,11 +197,7 @@ engine.mutate({type: 'searchBox/setQuery', payload: 'laptops'});
 Controllers share state through a single engine. Changes from one controller are visible to others.
 
 ```typescript
-import {
-  Engine,
-  buildSearchBoxController,
-  buildResultListController,
-} from '@coveo/thermidor';
+import {Engine, buildSearchBoxController, buildResultListController} from '@coveo/thermidor';
 
 const engine = new Engine();
 

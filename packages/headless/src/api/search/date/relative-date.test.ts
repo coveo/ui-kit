@@ -42,11 +42,9 @@ describe('#serializeRelativeDate', () => {
 });
 
 describe('#isRelativeDate', () => {
-  it('when using with a string, returns false', () =>
-    expect(isRelativeDate('hello')).toBe(false));
+  it('when using with a string, returns false', () => expect(isRelativeDate('hello')).toBe(false));
 
-  it('when using with a Date, returns false', () =>
-    expect(isRelativeDate(new Date())).toBe(false));
+  it('when using with a Date, returns false', () => expect(isRelativeDate(new Date())).toBe(false));
 
   it('when using with a number, returns false', () =>
     expect(isRelativeDate(242324324)).toBe(false));
@@ -55,16 +53,12 @@ describe('#isRelativeDate', () => {
     expect(isRelativeDate({hello: 'test'})).toBe(false));
 
   it('when using with an object with period, returns true', () =>
-    expect(isRelativeDate({period: 'past', amount: 2, unit: 'week'})).toBe(
-      true
-    ));
+    expect(isRelativeDate({period: 'past', amount: 2, unit: 'week'})).toBe(true));
 });
 
 describe('#formatRelativeDateForSearchApi', () => {
   it('returns an valid API date value', () =>
-    expect(
-      isSearchApiDate(formatRelativeDateForSearchApi('next-100-quarter'))
-    ).toBe(true));
+    expect(isSearchApiDate(formatRelativeDateForSearchApi('next-100-quarter'))).toBe(true));
 });
 
 describe('#isRelativeDateFormat', () => {
@@ -77,8 +71,7 @@ describe('#isRelativeDateFormat', () => {
   it('returns false on a wrong period', () =>
     expect(isRelativeDateFormat('previous-2-day')).toBe(false));
 
-  it('returns false on a wrong unit', () =>
-    expect(isRelativeDateFormat('past-2-dog')).toBe(false));
+  it('returns false on a wrong unit', () => expect(isRelativeDateFormat('past-2-dog')).toBe(false));
 
   it('returns false on an invalid format', () =>
     expect(isRelativeDateFormat('2018/01/01@00:00:00')).toBe(false));
@@ -96,9 +89,7 @@ describe('#validateRelativeDate', () => {
   });
 
   it('should throw for an invalid date', () => {
-    expect(() => validateRelativeDate('past-100000000-year')).toThrowError(
-      'Date is invalid'
-    );
+    expect(() => validateRelativeDate('past-100000000-year')).toThrowError('Date is invalid');
   });
 
   it('should throw for a valid date earlier than 1401', () => {

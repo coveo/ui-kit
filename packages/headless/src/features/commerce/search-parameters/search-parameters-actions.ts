@@ -17,6 +17,5 @@ export type RestoreSearchParametersPayload = CommerceSearchParameters;
 
 export const restoreSearchParameters = createAction(
   'commerce/searchParameters/restore',
-  (payload: RestoreSearchParametersPayload) =>
-    validatePayload(payload, searchParametersDefinition)
+  (payload: RestoreSearchParametersPayload) => validatePayload(payload, searchParametersDefinition)
 );

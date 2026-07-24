@@ -1,7 +1,4 @@
-import type {
-  QueryCorrection,
-  WordCorrection,
-} from '../../api/search/search/query-corrections.js';
+import type {QueryCorrection, WordCorrection} from '../../api/search/search/query-corrections.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {
   didYouMeanClick,
@@ -36,10 +33,7 @@ export type {
  * @group Controllers
  * @category DidYouMean
  */
-export function buildDidYouMean(
-  engine: SearchEngine,
-  props: DidYouMeanProps = {}
-): DidYouMean {
+export function buildDidYouMean(engine: SearchEngine, props: DidYouMeanProps = {}): DidYouMean {
   const controller = buildCoreDidYouMean(engine, props);
   const {dispatch} = engine;
 

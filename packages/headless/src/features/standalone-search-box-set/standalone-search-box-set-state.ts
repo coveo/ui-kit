@@ -1,9 +1,6 @@
 import type {OmniboxSuggestionMetadata} from '../query-suggest/query-suggest-analytics-actions.js';
 
-export type StandaloneSearchBoxSetState = Record<
-  string,
-  StandaloneSearchBoxEntry | undefined
->;
+export type StandaloneSearchBoxSetState = Record<string, StandaloneSearchBoxEntry | undefined>;
 
 export type StandaloneSearchBoxEntry = {
   defaultRedirectionUrl: string;
@@ -12,10 +9,7 @@ export type StandaloneSearchBoxEntry = {
   isLoading: boolean;
 };
 
-export type StandaloneSearchBoxAnalytics =
-  | InitialData
-  | SearchFromLinkData
-  | OmniboxFromLinkData;
+export type StandaloneSearchBoxAnalytics = InitialData | SearchFromLinkData | OmniboxFromLinkData;
 
 interface InitialData {
   cause: '';

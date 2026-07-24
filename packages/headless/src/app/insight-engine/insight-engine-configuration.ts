@@ -1,8 +1,5 @@
 import {RecordValue, Schema} from '@coveo/bueno';
-import {
-  nonEmptyString,
-  requiredNonEmptyString,
-} from '../../utils/validate-payload.js';
+import {nonEmptyString, requiredNonEmptyString} from '../../utils/validate-payload.js';
 import {
   type EngineConfiguration,
   engineConfigurationDefinitions,
@@ -46,19 +43,18 @@ export interface InsightEngineSearchConfigurationOptions {
   proxyBaseUrl?: string;
 }
 
-export const insightEngineConfigurationSchema =
-  new Schema<InsightEngineConfiguration>({
-    ...engineConfigurationDefinitions,
-    insightId: requiredNonEmptyString,
-    search: new RecordValue({
-      options: {
-        required: false,
-      },
-      values: {
-        locale: nonEmptyString,
-      },
-    }),
-  });
+export const insightEngineConfigurationSchema = new Schema<InsightEngineConfiguration>({
+  ...engineConfigurationDefinitions,
+  insightId: requiredNonEmptyString,
+  search: new RecordValue({
+    options: {
+      required: false,
+    },
+    values: {
+      locale: nonEmptyString,
+    },
+  }),
+});
 
 const sampleInsightId = '2729db39-d7fd-4504-a06e-668c64968c95';
 

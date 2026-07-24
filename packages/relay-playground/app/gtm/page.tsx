@@ -60,8 +60,7 @@ export default function Page() {
       <Title order={4}>Send events using Google Tag Manager</Title>
       <Box style={{marginTop: '1rem'}}>
         <p>
-          The page represents a basic PDP and is integrated with GTM. The GTM
-          container used is:{' '}
+          The page represents a basic PDP and is integrated with GTM. The GTM container used is:{' '}
           <a
             href="https://tagmanager.google.com/#/container/accounts/6216759964/containers/177262508"
             target="_blank"
@@ -71,13 +70,12 @@ export default function Page() {
         </p>
         <List type="unordered">
           <List.Item>
-            When this page is loaded, the GTM initializes Relay and sends an{' '}
-            <b>ec.productView</b> event. You can resend it by reloading the
-            page.
+            When this page is loaded, the GTM initializes Relay and sends an <b>ec.productView</b>{' '}
+            event. You can resend it by reloading the page.
           </List.Item>
           <List.Item>
-            You can additionally send the <b>ec.cartAction</b> event by clicking
-            the "Add to basket" button.
+            You can additionally send the <b>ec.cartAction</b> event by clicking the "Add to basket"
+            button.
           </List.Item>
         </List>
       </Box>
@@ -88,9 +86,7 @@ export default function Page() {
           const isDev = process.env['NODE_ENV'] === 'development';
           const img = 'ski.png';
           const src = isDev ? `/${img}` : `/relay/playground/${img}`;
-          return (
-            <Image src={src} alt="A drawing of skis" style={{width: '300px'}} />
-          );
+          return <Image src={src} alt="A drawing of skis" style={{width: '300px'}} />;
         })()}
 
         <Button onClick={() => send(ecCartAction)}>Add to basket</Button>
@@ -101,9 +97,7 @@ export default function Page() {
           Check the Network tab to see if there are successful requests:
           <List.Item>GTM initialization request</List.Item>
           <List.Item>relay.min.js request</List.Item>
-          <List.Item>
-            request that sends the event to the Coveo backend
-          </List.Item>
+          <List.Item>request that sends the event to the Coveo backend</List.Item>
         </List>
       </Box>
     </>

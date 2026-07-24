@@ -18,12 +18,7 @@ export type FetchStaticState<
   TControllersStaticState extends ControllerStaticStateMap,
   TControllersProps extends ControllersPropsMap,
 > = (
-  params: BuildConfig &
-    SearchEngineDefinitionControllersPropsOption<TControllersProps>
+  params: BuildConfig & SearchEngineDefinitionControllersPropsOption<TControllersProps>
 ) => Promise<
-  EngineStaticState<
-    TSearchAction,
-    TControllersStaticState & BakedInSearchControllers
-  > &
-    BuildConfig
+  EngineStaticState<TSearchAction, TControllersStaticState & BakedInSearchControllers> & BuildConfig
 >;

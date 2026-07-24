@@ -13,11 +13,7 @@ export interface FacetSearchMatchesProps {
 }
 
 //TODO: change to noMatchesFound & remove the key in https://coveord.atlassian.net/browse/KIT-3368
-function matchesFound(
-  key: 'more-matches-for' | 'no-matches-found-for',
-  query: string,
-  i18n: i18n
-) {
+function matchesFound(key: 'more-matches-for' | 'no-matches-found-for', query: string, i18n: i18n) {
   return i18n.t(key, {
     query: `<span class="font-bold italic text-on-background" part="matches-query">${escapeHtml(
       query
@@ -28,27 +24,19 @@ function matchesFound(
 
 function clickableMoreMatchesFound(query: string, i18n: i18n) {
   return i18n.t('more-matches-for', {
-    query: `<span class="font-bold italic" part="matches-query">${escapeHtml(
-      query
-    )}</span>`,
+    query: `<span class="font-bold italic" part="matches-query">${escapeHtml(query)}</span>`,
     interpolation: {escapeValue: false},
   });
 }
 
-export const renderFacetSearchMatches: FunctionalComponent<
-  FacetSearchMatchesProps
-> = ({props}) => {
+export const renderFacetSearchMatches: FunctionalComponent<FacetSearchMatchesProps> = ({props}) => {
   if (!props.numberOfMatches) {
     return html`
       <div class="px-2">
         <div
           part="no-matches"
           class="bg-neutral-light text-neutral-dark truncate rounded p-3 text-sm"
-          .innerHTML=${matchesFound(
-            'no-matches-found-for',
-            props.query,
-            props.i18n
-          )}
+          .innerHTML=${matchesFound('no-matches-found-for', props.query, props.i18n)}
         ></div>
       </div>
     `;
@@ -79,11 +67,7 @@ export const renderFacetSearchMatches: FunctionalComponent<
         <div
           part="more-matches"
           class="text-neutral-dark mt-3 truncate text-sm"
-          .innerHTML=${matchesFound(
-            'more-matches-for',
-            props.query,
-            props.i18n
-          )}
+          .innerHTML=${matchesFound('more-matches-for', props.query, props.i18n)}
         ></div>
       </div>
     `;

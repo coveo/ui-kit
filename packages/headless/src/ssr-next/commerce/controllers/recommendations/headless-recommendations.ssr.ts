@@ -34,10 +34,7 @@ export function defineRecommendations(
     [recommendationInternalOptionKey]: {
       ...props.options,
     },
-    buildWithProps: (
-      engine,
-      options: Omit<RecommendationsOptions, 'slotId'>
-    ) => {
+    buildWithProps: (engine, options: Omit<RecommendationsOptions, 'slotId'>) => {
       const staticOptions = props.options;
       return buildRecommendations(engine, {
         options: {...staticOptions, ...options},

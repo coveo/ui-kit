@@ -5,8 +5,7 @@ import {renderCheckbox} from '@/src/components/common/checkbox';
 import type {HighlightKeywords} from '@/src/components/search/atomic-quickview-modal/highlight-keywords';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 
-const highlightKeywordsCheckboxId =
-  'atomic-quickview-sidebar-highlight-keywords';
+const highlightKeywordsCheckboxId = 'atomic-quickview-sidebar-highlight-keywords';
 
 interface HighlightKeywordsCheckboxProps {
   i18n: i18n;
@@ -37,9 +36,7 @@ export const renderHighlightKeywordsCheckbox: FunctionalComponent<
     ${when(
       !props.minimized,
       () => html`
-        <label
-          class="cursor-pointer font-bold whitespace-nowrap"
-          for=${highlightKeywordsCheckboxId}
+        <label class="cursor-pointer font-bold whitespace-nowrap" for=${highlightKeywordsCheckboxId}
           >${label}</label
         >
       `

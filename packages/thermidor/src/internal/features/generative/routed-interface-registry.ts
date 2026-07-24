@@ -77,15 +77,13 @@ function buildRoutedInterface(entry: RoutedInterfaceEntry): RoutedInterface {
   }
 }
 
-const CACHE_KEY: CacheKey<RoutedInterfaceRegistry> =
-  createCacheKey<RoutedInterfaceRegistry>('generative/routedInterfaceRegistry');
+const CACHE_KEY: CacheKey<RoutedInterfaceRegistry> = createCacheKey<RoutedInterfaceRegistry>(
+  'generative/routedInterfaceRegistry'
+);
 
 export function getOrCreateRoutedInterfaceRegistry(
   iface: InterfaceHandle
 ): RoutedInterfaceRegistry {
   const {cacheRegistry} = getHandleInternals(iface);
-  return cacheRegistry.getOrCreate(
-    CACHE_KEY,
-    () => new RoutedInterfaceRegistry()
-  );
+  return cacheRegistry.getOrCreate(CACHE_KEY, () => new RoutedInterfaceRegistry());
 }

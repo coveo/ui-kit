@@ -76,21 +76,20 @@ describe('atomic-commerce-breadbox', () => {
     );
     vi.mocked(buildContext).mockReturnValue(buildFakeContext({}));
 
-    const {element} =
-      await renderInAtomicCommerceInterface<AtomicCommerceBreadbox>({
-        template: html`<div>
-          <atomic-commerce-breadbox
-            path-limit=${ifDefined(pathLimit)}
-            ?disable-collapse=${disableCollapse}
-          ></atomic-commerce-breadbox>
-        </div>`,
-        selector: 'atomic-commerce-breadbox',
-        bindings: (bindings) => {
-          bindings.interfaceElement.type = interfaceElementType;
-          bindings.engine = mockedEngine;
-          return bindings;
-        },
-      });
+    const {element} = await renderInAtomicCommerceInterface<AtomicCommerceBreadbox>({
+      template: html`<div>
+        <atomic-commerce-breadbox
+          path-limit=${ifDefined(pathLimit)}
+          ?disable-collapse=${disableCollapse}
+        ></atomic-commerce-breadbox>
+      </div>`,
+      selector: 'atomic-commerce-breadbox',
+      bindings: (bindings) => {
+        bindings.interfaceElement.type = interfaceElementType;
+        bindings.engine = mockedEngine;
+        return bindings;
+      },
+    });
 
     return {
       element,
@@ -104,8 +103,7 @@ describe('atomic-commerce-breadbox', () => {
       showLess: () => page.getByText('Show less'),
       clearAll: () => page.getByLabelText('Clear All Filters'),
       parts: (element: AtomicCommerceBreadbox) => {
-        const qs = (part: string) =>
-          element.shadowRoot?.querySelector(`[part="${part}"]`);
+        const qs = (part: string) => element.shadowRoot?.querySelector(`[part="${part}"]`);
         return {
           container: qs('container'),
           breadcrumbListContainer: qs('breadcrumb-list-container'),
@@ -149,9 +147,7 @@ describe('atomic-commerce-breadbox', () => {
     });
 
     expect(element.error).toBeDefined();
-    expect(element.error.message).toMatch(
-      /pathLimit: minimum value of 1 not respected/i
-    );
+    expect(element.error.message).toMatch(/pathLimit: minimum value of 1 not respected/i);
   });
 
   it('should set error when valid pathLimit is updated to a value lower than 1', async () => {
@@ -164,18 +160,14 @@ describe('atomic-commerce-breadbox', () => {
     await element.updateComplete;
 
     expect(element.error).toBeDefined();
-    expect(element.error.message).toMatch(
-      /pathLimit: minimum value of 1 not respected/i
-    );
+    expect(element.error.message).toMatch(/pathLimit: minimum value of 1 not respected/i);
   });
 
   it('should render nothing when there are no breadcrumbs', async () => {
     const {element} = await renderBreadbox({
       state: {facetBreadcrumbs: []},
     });
-    expect(
-      element.shadowRoot?.querySelector('atomic-commerce-breadbox')
-    ).toBeNull();
+    expect(element.shadowRoot?.querySelector('atomic-commerce-breadbox')).toBeNull();
   });
 
   it('should have the right text on the label', async () => {
@@ -285,20 +277,12 @@ describe('atomic-commerce-breadbox', () => {
 
   it('should have the correct aria-label on the show more button', async () => {
     const {showMore} = await renderBreadbox();
-    await expect
-      .element(showMore())
-      .toHaveAttribute('aria-label', 'Show 3 more filters');
+    await expect.element(showMore()).toHaveAttribute('aria-label', 'Show 3 more filters');
   });
 
   it('should expand and collapse the number of breadcrumbs when clicking on the show more button and on the show less button', async () => {
-    const {
-      regular,
-      hierarchical,
-      numericalRange,
-      dateRange,
-      showMore,
-      showLess,
-    } = await renderBreadbox();
+    const {regular, hierarchical, numericalRange, dateRange, showMore, showLess} =
+      await renderBreadbox();
 
     await expect.element(regular()).toBeVisible();
     await expect.element(hierarchical()).not.toBeVisible();
@@ -339,15 +323,12 @@ describe('atomic-commerce-breadbox', () => {
 
   it('should have the correct aria-label on the clear all button', async () => {
     const {clearAll} = await renderBreadbox();
-    await expect
-      .element(clearAll())
-      .toHaveAttribute('aria-label', 'Clear All Filters');
+    await expect.element(clearAll()).toHaveAttribute('aria-label', 'Clear All Filters');
   });
 
   it('should hide the breadcrumbs when the viewport gets smaller', async () => {
     await page.viewport(1600, 100);
-    const {regular, hierarchical, numericalRange, dateRange, showMore} =
-      await renderBreadbox();
+    const {regular, hierarchical, numericalRange, dateRange, showMore} = await renderBreadbox();
     await expect.element(regular()).toBeVisible();
     await expect.element(hierarchical()).toBeVisible();
     await expect.element(numericalRange()).toBeVisible();
@@ -364,8 +345,7 @@ describe('atomic-commerce-breadbox', () => {
 
   it('should not hide the breadcrumbs when they are expanded and the viewport gets smaller', async () => {
     await page.viewport(200, 100);
-    const {regular, hierarchical, numericalRange, dateRange, showMore} =
-      await renderBreadbox();
+    const {regular, hierarchical, numericalRange, dateRange, showMore} = await renderBreadbox();
     await userEvent.click(showMore()!);
 
     await page.viewport(1200, 100);
@@ -389,9 +369,7 @@ describe('atomic-commerce-breadbox', () => {
     const partsElements = parts(element);
 
     await expect.element(partsElements.container!).toBeInTheDocument();
-    await expect
-      .element(partsElements.breadcrumbListContainer!)
-      .toBeInTheDocument();
+    await expect.element(partsElements.breadcrumbListContainer!).toBeInTheDocument();
     await expect.element(partsElements.breadcrumbList!).toBeInTheDocument();
     await expect.element(partsElements.breadcrumbButton!).toBeInTheDocument();
     await expect.element(partsElements.breadcrumbLabel!).toBeInTheDocument();
@@ -415,9 +393,7 @@ describe('atomic-commerce-breadbox', () => {
         disableCollapse: true,
       });
 
-      const breadcrumbButtons = element.shadowRoot?.querySelectorAll(
-        '[part="breadcrumb-button"]'
-      );
+      const breadcrumbButtons = element.shadowRoot?.querySelectorAll('[part="breadcrumb-button"]');
       expect(breadcrumbButtons?.length).toBe(4);
 
       const partsElements = parts(element);

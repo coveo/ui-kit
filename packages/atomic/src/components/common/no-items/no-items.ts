@@ -30,11 +30,6 @@ export const renderNoItems: FunctionalComponent<NoItemsProps> = ({props}) => {
     : props.i18n.t(props.i18nKey);
 
   return html`
-    <div
-      class="my-2 max-w-full text-center text-2xl font-medium"
-      part="no-results"
-    >
-      ${content}
-    </div>
+    <div class="my-2 max-w-full text-center text-2xl font-medium" part="no-results">${content}</div>
   `;
 };

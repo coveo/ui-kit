@@ -2,10 +2,7 @@ import type {SearchEventRequest} from 'coveo.analytics/dist/definitions/events.j
 import {getConfigurationInitialState} from '../../features/configuration/configuration-state.js';
 import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state.js';
 import {buildMockAnalyticsState} from '../../test/mock-analytics-state.js';
-import {
-  BaseAnalyticsProvider,
-  type StateNeededByBaseAnalyticsProvider,
-} from './base-analytics.js';
+import {BaseAnalyticsProvider, type StateNeededByBaseAnalyticsProvider} from './base-analytics.js';
 
 class TestProvider extends BaseAnalyticsProvider<StateNeededByBaseAnalyticsProvider> {
   public getPipeline(): string {
@@ -44,9 +41,7 @@ describe('base analytics provider', () => {
       },
     };
     const provider = new TestProvider(() => state);
-    expect(provider.getBaseMetadata()).not.toHaveProperty(
-      'coveoHeadlessVersion'
-    );
+    expect(provider.getBaseMetadata()).not.toHaveProperty('coveoHeadlessVersion');
   });
 
   it('when analyticMode=legacy, #getBaseMetadata returns an object with coveoHeadlessVersion', () => {

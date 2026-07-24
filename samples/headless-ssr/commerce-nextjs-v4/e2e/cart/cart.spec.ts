@@ -67,10 +67,7 @@ test.describe('default', () => {
         (await (await cart.getItemQuantity(item)).textContent()) || '',
         10
       );
-      initialItemPrice = parseInt(
-        (await (await cart.getItemPrice(item)).textContent()) || '',
-        10
-      );
+      initialItemPrice = parseInt((await (await cart.getItemPrice(item)).textContent()) || '', 10);
       initialCartTotal = parseInt((await cart.total.textContent()) || '', 10);
 
       await cart.addOneButton.first().click();
@@ -81,10 +78,7 @@ test.describe('default', () => {
 
       await expect
         .poll(async () => {
-          return parseInt(
-            (await (await cart.getItemQuantity(item)).textContent()) || '',
-            10
-          );
+          return parseInt((await (await cart.getItemQuantity(item)).textContent()) || '', 10);
         })
         .toBe(initialItemQuantity + 1);
     });
@@ -94,10 +88,7 @@ test.describe('default', () => {
 
       await expect
         .poll(async () => {
-          return parseInt(
-            (await (await cart.getItemTotalPrice(item)).textContent()) || '',
-            10
-          );
+          return parseInt((await (await cart.getItemTotalPrice(item)).textContent()) || '', 10);
         })
         .toBe(initialItemPrice * (initialItemQuantity + 1));
     });

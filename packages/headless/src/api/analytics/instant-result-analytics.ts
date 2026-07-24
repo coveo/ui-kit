@@ -6,13 +6,11 @@ import {
   type StateNeededBySearchAnalyticsProvider,
 } from './search-analytics.js';
 
-export type StateNeededByInstantResultsAnalyticsProvider =
-  StateNeededBySearchAnalyticsProvider & InstantResultSection;
+export type StateNeededByInstantResultsAnalyticsProvider = StateNeededBySearchAnalyticsProvider &
+  InstantResultSection;
 
 export class InstantResultsAnalyticsProvider extends SearchAnalyticsProvider {
-  constructor(
-    protected getState: () => StateNeededByInstantResultsAnalyticsProvider
-  ) {
+  constructor(protected getState: () => StateNeededByInstantResultsAnalyticsProvider) {
     super(getState);
   }
 
@@ -51,10 +49,7 @@ export class InstantResultsAnalyticsProvider extends SearchAnalyticsProvider {
   }
 
   protected get responseTime() {
-    return (
-      this.activeInstantResultCache?.duration ??
-      getSearchInitialState().duration
-    );
+    return this.activeInstantResultCache?.duration ?? getSearchInitialState().duration;
   }
 
   protected get numberOfResults() {

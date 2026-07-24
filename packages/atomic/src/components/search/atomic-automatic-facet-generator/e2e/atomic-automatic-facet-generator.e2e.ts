@@ -6,9 +6,7 @@ test.describe('atomic-automatic-facet-generator', () => {
     await automaticFacetGenerator.hydrated.waitFor();
   });
 
-  test('should render automatic facets after first search', async ({
-    automaticFacetGenerator,
-  }) => {
+  test('should render automatic facets after first search', async ({automaticFacetGenerator}) => {
     await expect(automaticFacetGenerator.automaticFacets.first()).toBeVisible();
   });
 

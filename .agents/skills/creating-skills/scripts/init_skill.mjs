@@ -235,15 +235,11 @@ function initSkill(skillName, path) {
 
   // Print next steps
   console.log('');
-  console.log(
-    `✅ Skill '${skillName}' initialized successfully at ${skillDir}`
-  );
+  console.log(`✅ Skill '${skillName}' initialized successfully at ${skillDir}`);
   console.log('');
   console.log('Next steps:');
   console.log('1. Edit SKILL.md to complete the TODO items');
-  console.log(
-    '2. Customize or delete example files in scripts/, references/, assets/'
-  );
+  console.log('2. Customize or delete example files in scripts/, references/, assets/');
   console.log(
     `3. Run validation: node ${path}/creating-skills/scripts/quick_validate.mjs ${skillDir}`
   );
@@ -271,22 +267,14 @@ function main() {
     console.log('  - Must match directory name exactly');
     console.log('');
     console.log('Path options:');
-    console.log(
-      '  - .agents/skills (workspace-level, recommended for local dev)'
-    );
+    console.log('  - .agents/skills (workspace-level, recommended for local dev)');
     console.log('  - .skills or skills/ (alternative workspace conventions)');
     console.log('  - ~/.agents/skills (user-level)');
     console.log('');
     console.log('Examples:');
-    console.log(
-      '  node init_skill.mjs generate-vitest-tests --path .agents/skills'
-    );
-    console.log(
-      '  node init_skill.mjs accessibility-audit --path .agents/skills'
-    );
-    console.log(
-      '  node init_skill.mjs stencil-to-lit-migration --path .skills'
-    );
+    console.log('  node init_skill.mjs generate-vitest-tests --path .agents/skills');
+    console.log('  node init_skill.mjs accessibility-audit --path .agents/skills');
+    console.log('  node init_skill.mjs stencil-to-lit-migration --path .skills');
     process.exit(1);
   }
 

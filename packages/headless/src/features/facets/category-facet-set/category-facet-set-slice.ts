@@ -10,10 +10,7 @@ import {selectCategoryFacetSearchResult} from '../facet-search-set/category/cate
 import {updateFacetAutoSelection} from '../generic/facet-actions.js';
 import {handleFacetUpdateNumberOfValues} from '../generic/facet-reducer-helpers.js';
 import type {AnyFacetResponse} from '../generic/interfaces/generic-facet-response.js';
-import {
-  handleCategoryFacetDeselectAll,
-  selectPath,
-} from './category-facet-reducer-helpers.js';
+import {handleCategoryFacetDeselectAll, selectPath} from './category-facet-reducer-helpers.js';
 import {
   deselectAllCategoryFacetValues,
   type RegisterCategoryFacetActionCreatorPayload,
@@ -29,10 +26,7 @@ import {
 } from './category-facet-set-state.js';
 import {findActiveValueAncestry} from './category-facet-utils.js';
 import type {CategoryFacetOptionalParameters} from './interfaces/options.js';
-import type {
-  CategoryFacetRequest,
-  CategoryFacetValueRequest,
-} from './interfaces/request.js';
+import type {CategoryFacetRequest, CategoryFacetValueRequest} from './interfaces/request.js';
 import type {CategoryFacetResponse} from './interfaces/response.js';
 
 export const categoryFacetSetReducer = createReducer(
@@ -51,10 +45,7 @@ export const categoryFacetSetReducer = createReducer(
         const initialNumberOfValues = request.numberOfValues;
         state[facetId] = {request, initialNumberOfValues, tabs};
       })
-      .addCase(
-        change.fulfilled,
-        (state, action) => action.payload?.categoryFacetSet ?? state
-      )
+      .addCase(change.fulfilled, (state, action) => action.payload?.categoryFacetSet ?? state)
       .addCase(restoreSearchParameters, (state, action) => {
         const cf = action.payload.cf || {};
         const activeTab = action.payload.tab;
@@ -65,9 +56,7 @@ export const categoryFacetSetReducer = createReducer(
 
           // Don't restore values for tab-managed facets that aren't visible on the active tab.
           // The FacetConditionsManager handles their enabled state based on the active tab.
-          const hasTabs =
-            facetSlice.tabs?.included?.length ||
-            facetSlice.tabs?.excluded?.length;
+          const hasTabs = facetSlice.tabs?.included?.length || facetSlice.tabs?.excluded?.length;
           if (hasTabs && !isFacetVisibleOnTab(facetSlice.tabs, activeTab)) {
             if (request.currentValues.length) {
               selectPath(request, [], facetSlice.initialNumberOfValues);
@@ -111,11 +100,7 @@ export const categoryFacetSetReducer = createReducer(
 
         const {path} = selection;
         const pathToSelection = path.slice(0, path.length - 1);
-        const children = ensurePathAndReturnChildren(
-          request,
-          pathToSelection,
-          retrieveCount
-        );
+        const children = ensurePathAndReturnChildren(request, pathToSelection, retrieveCount);
 
         if (children.length) {
           const lastSelectedParent = children[0];
@@ -127,10 +112,7 @@ export const categoryFacetSetReducer = createReducer(
           return;
         }
 
-        const newParent = buildCategoryFacetValueRequest(
-          selection.value,
-          retrieveCount
-        );
+        const newParent = buildCategoryFacetValueRequest(selection.value, retrieveCount);
         newParent.state = 'selected';
         newParent.previousState = 'idle';
         children.push(newParent);
@@ -141,9 +123,7 @@ export const categoryFacetSetReducer = createReducer(
         handleCategoryFacetDeselectAll(state, facetId);
       })
       .addCase(deselectAllBreadcrumbs, (state) => {
-        Object.keys(state).forEach((facetId) =>
-          handleCategoryFacetDeselectAll(state, facetId)
-        );
+        Object.keys(state).forEach((facetId) => handleCategoryFacetDeselectAll(state, facetId));
       })
       .addCase(updateFacetAutoSelection, (state, action) =>
         Object.keys(state).forEach((facetId) => {
@@ -157,10 +137,7 @@ export const categoryFacetSetReducer = createReducer(
           return;
         }
         if (!request.currentValues.length) {
-          return handleFacetUpdateNumberOfValues<CategoryFacetRequest>(
-            request,
-            numberOfValues
-          );
+          return handleFacetUpdateNumberOfValues<CategoryFacetRequest>(request, numberOfValues);
         }
         handleCategoryFacetNestedNumberOfValuesUpdate(state, action.payload);
       })
@@ -176,16 +153,10 @@ export const categoryFacetSetReducer = createReducer(
         selectPath(facet.request, path, facet.initialNumberOfValues);
       })
       .addCase(fetchFacetValues.fulfilled, (state, action) => {
-        handleCategoryFacetResponseUpdate(
-          state,
-          action.payload.response.facets
-        );
+        handleCategoryFacetResponseUpdate(state, action.payload.response.facets);
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
-        handleCategoryFacetResponseUpdate(
-          state,
-          action.payload.response.facets
-        );
+        handleCategoryFacetResponseUpdate(state, action.payload.response.facets);
       })
       .addCase(disableFacet, (state, action) => {
         handleCategoryFacetDeselectAll(state, action.payload);
@@ -194,9 +165,7 @@ export const categoryFacetSetReducer = createReducer(
         const newActiveTab = action.payload;
         Object.keys(state).forEach((facetId) => {
           const facetSlice = state[facetId]!;
-          const hasTabs =
-            facetSlice.tabs?.included?.length ||
-            facetSlice.tabs?.excluded?.length;
+          const hasTabs = facetSlice.tabs?.included?.length || facetSlice.tabs?.excluded?.length;
           if (hasTabs && !isFacetVisibleOnTab(facetSlice.tabs, newActiveTab)) {
             handleCategoryFacetDeselectAll(state, facetId);
           }
@@ -314,10 +283,7 @@ function isCategoryFacetResponse(
   return id in state;
 }
 
-function isRequestInvalid(
-  request: CategoryFacetRequest,
-  response: CategoryFacetResponse
-) {
+function isRequestInvalid(request: CategoryFacetRequest, response: CategoryFacetResponse) {
   const requestParents = findActiveValueAncestry(request.currentValues);
   const responseParents = findActiveValueAncestry(response.values);
   return requestParents.length !== responseParents.length;

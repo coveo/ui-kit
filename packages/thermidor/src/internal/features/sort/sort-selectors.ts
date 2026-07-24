@@ -8,15 +8,10 @@ import type {SortState} from './sort-slice.js';
 
 type SortSelectors = ReturnType<typeof createSortSelectors>;
 
-const CACHE_KEY: CacheKey<SortSelectors> =
-  createCacheKey<SortSelectors>('sort/selectors');
+const CACHE_KEY: CacheKey<SortSelectors> = createCacheKey<SortSelectors>('sort/selectors');
 
 export function createSortSelectors(interfaceId: string) {
-  const sliceSelector = createSelectSlice(
-    interfaceId,
-    'sort',
-    initialSortState
-  );
+  const sliceSelector = createSelectSlice(interfaceId, 'sort', initialSortState);
 
   return {
     getAppliedSort: createMemoizedStateSelector(
@@ -27,21 +22,16 @@ export function createSortSelectors(interfaceId: string) {
       sliceSelector,
       (state: SortState) => state.availableSorts
     ),
-    buildSortRequest: createMemoizedStateSelector(
-      sliceSelector,
-      (state: SortState) => {
-        if (!state.appliedSort) {
-          return [];
-        }
-        return [state.appliedSort];
+    buildSortRequest: createMemoizedStateSelector(sliceSelector, (state: SortState) => {
+      if (!state.appliedSort) {
+        return [];
       }
-    ),
+      return [state.appliedSort];
+    }),
   };
 }
 
 export function getOrCreateSortSelectors(iface: InterfaceHandle) {
   const {stateId, cacheRegistry} = getHandleInternals(iface);
-  return cacheRegistry.getOrCreate(CACHE_KEY, () =>
-    createSortSelectors(stateId)
-  );
+  return cacheRegistry.getOrCreate(CACHE_KEY, () => createSortSelectors(stateId));
 }

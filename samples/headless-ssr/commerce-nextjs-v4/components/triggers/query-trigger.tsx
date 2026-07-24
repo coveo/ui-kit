@@ -14,8 +14,7 @@ export default function QueryTrigger() {
     <div className="QueryTrigger">
       <p>
         {' '}
-        The query changed from <b>{state.originalQuery}</b> to{' '}
-        <b>{state.newQuery}</b>
+        The query changed from <b>{state.originalQuery}</b> to <b>{state.newQuery}</b>
       </p>
     </div>
   );

@@ -38,10 +38,7 @@ import type {Bindings} from '../atomic-search-interface/atomic-search-interface'
 @customElement('atomic-load-more-results')
 @bindings()
 @withTailwindStyles
-export class AtomicLoadMoreResults
-  extends LitElement
-  implements InitializableComponent<Bindings>
-{
+export class AtomicLoadMoreResults extends LitElement implements InitializableComponent<Bindings> {
   @state()
   public bindings!: Bindings;
 
@@ -125,16 +122,12 @@ export class AtomicLoadMoreResults
    * distinguish loading the last batch from a brand new search that happens to
    * have no more results available.
    */
-  private announceWhenAllResultsAreLoaded(
-    changedProperties: PropertyValues
-  ): void {
+  private announceWhenAllResultsAreLoaded(changedProperties: PropertyValues): void {
     if (!changedProperties.has('resultListState') || !this.resultListState) {
       return;
     }
 
-    const previousState = changedProperties.get('resultListState') as
-      | ResultListState
-      | undefined;
+    const previousState = changedProperties.get('resultListState') as ResultListState | undefined;
 
     const justLoadedLastBatch =
       previousState?.moreResultsAvailable === true &&

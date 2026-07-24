@@ -5,9 +5,7 @@ test.describe('atomic-insight-query-error', () => {
     await insightQueryError.load();
   });
 
-  test('should display the component with the correct content', async ({
-    insightQueryError,
-  }) => {
+  test('should display the component with the correct content', async ({insightQueryError}) => {
     await expect(insightQueryError.title).toBeVisible();
     await expect(insightQueryError.description).toBeVisible();
     await expect(insightQueryError.moreInfoButton).toBeVisible();

@@ -1,12 +1,6 @@
 import {RecordValue} from '@coveo/bueno';
-import {
-  requiredEmptyAllowedString,
-  validatePayload,
-} from '../../utils/validate-payload.js';
-import {
-  type LegacySearchAction,
-  makeAnalyticsAction,
-} from '../analytics/analytics-utils.js';
+import {requiredEmptyAllowedString, validatePayload} from '../../utils/validate-payload.js';
+import {type LegacySearchAction, makeAnalyticsAction} from '../analytics/analytics-utils.js';
 
 export interface LogUndoTriggerQueryActionCreatorPayload {
   /**

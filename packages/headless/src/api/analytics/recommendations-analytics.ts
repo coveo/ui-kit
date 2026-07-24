@@ -11,23 +11,15 @@ import type {
 } from '../../state/state-sections.js';
 import {BaseAnalyticsProvider} from './base-analytics.js';
 
-export type StateNeededByRecommendationAnalyticsProvider =
-  ConfigurationSection &
-    Partial<
-      SearchHubSection &
-        PipelineSection &
-        ContextSection &
-        RecommendationSection
-    >;
+export type StateNeededByRecommendationAnalyticsProvider = ConfigurationSection &
+  Partial<SearchHubSection & PipelineSection & ContextSection & RecommendationSection>;
 
 export class RecommendationAnalyticsProvider
   extends BaseAnalyticsProvider<StateNeededByRecommendationAnalyticsProvider>
   implements SearchPageClientProvider
 {
   public getPipeline(): string {
-    return (
-      this.state.pipeline || this.state.recommendation?.pipeline || 'default'
-    );
+    return this.state.pipeline || this.state.recommendation?.pipeline || 'default';
   }
 
   public getSearchEventRequestPayload(): Omit<
@@ -44,10 +36,7 @@ export class RecommendationAnalyticsProvider
 
   public getSearchUID(): string {
     const newState = this.getState();
-    return (
-      newState.recommendation?.searchUid ||
-      getRecommendationInitialState().searchUid
-    );
+    return newState.recommendation?.searchUid || getRecommendationInitialState().searchUid;
   }
 
   public getSplitTestRunName(): string | undefined {
@@ -63,10 +52,7 @@ export class RecommendationAnalyticsProvider
   }
 
   private get responseTime() {
-    return (
-      this.state.recommendation?.duration ||
-      getRecommendationInitialState().duration
-    );
+    return this.state.recommendation?.duration || getRecommendationInitialState().duration;
   }
 
   private mapResultsToAnalyticsDocument() {

@@ -85,9 +85,7 @@ export interface SearchActionCreators {
  * @group Actions
  * @category Search
  */
-export function loadSearchActions(
-  engine: CommerceEngine
-): SearchActionCreators {
+export function loadSearchActions(engine: CommerceEngine): SearchActionCreators {
   engine.addReducers({commerceSearch});
 
   return {

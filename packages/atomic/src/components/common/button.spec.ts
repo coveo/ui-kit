@@ -17,9 +17,7 @@ describe('#renderButton', () => {
     },
   };
 
-  const renderButton = async (
-    props: Partial<ButtonProps>
-  ): Promise<HTMLElement> => {
+  const renderButton = async (props: Partial<ButtonProps>): Promise<HTMLElement> => {
     return renderFunctionFixture(
       html`${button({
         props: {
@@ -52,9 +50,7 @@ describe('#renderButton', () => {
 
     await renderButton(props);
 
-    await expect
-      .element(locators.button.getByText('Click me'))
-      .toBeInTheDocument();
+    await expect.element(locators.button.getByText('Click me')).toBeInTheDocument();
   });
 
   it('should wrap the button text with a truncate class', async () => {
@@ -100,12 +96,8 @@ describe('#renderButton', () => {
 
     await renderButton(props);
 
-    await expect
-      .element(locators.button)
-      .toHaveAttribute('aria-label', 'button');
-    await expect
-      .element(locators.button)
-      .toHaveAttribute('aria-pressed', 'true');
+    await expect.element(locators.button).toHaveAttribute('aria-label', 'button');
+    await expect.element(locators.button).toHaveAttribute('aria-pressed', 'true');
   });
 
   it('should apply custom class', async () => {
@@ -126,9 +118,7 @@ describe('#renderButton', () => {
 
     await renderButton(props);
 
-    await expect
-      .element(locators.button)
-      .toHaveAttribute('part', 'button-part');
+    await expect.element(locators.button).toHaveAttribute('part', 'button-part');
   });
 
   it('should apply title attribute', async () => {
@@ -138,9 +128,7 @@ describe('#renderButton', () => {
 
     await renderButton(props);
 
-    await expect
-      .element(locators.button)
-      .toHaveAttribute('title', 'Button Title');
+    await expect.element(locators.button).toHaveAttribute('title', 'Button Title');
   });
 
   it('should apply tabindex attribute', async () => {

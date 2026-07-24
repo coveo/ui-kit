@@ -12,10 +12,9 @@ import '@/src/components/commerce/atomic-product-section-actions/atomic-product-
 
 const commerceApiHarness = new MockCommerceApi();
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-product-section-actions',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-product-section-actions', {
+  excludeCategories: ['methods'],
+});
 
 const {play} = wrapInCommerceInterface({
   engineConfig: {

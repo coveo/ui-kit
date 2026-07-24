@@ -32,10 +32,7 @@ npm install @coveo/headless@{{packageVersion}}
 Once installed, you can import from the package in your project:
 
 ```typescript
-import {
-  buildSearchEngine,
-  getSampleSearchEngineConfiguration,
-} from '@coveo/headless';
+import {buildSearchEngine, getSampleSearchEngineConfiguration} from '@coveo/headless';
 ```
 
 ## Use via CDN

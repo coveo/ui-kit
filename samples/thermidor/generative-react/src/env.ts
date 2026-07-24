@@ -48,12 +48,7 @@ function getOptionalEnvValue(key: string): string | undefined {
 
 function resolvePlatformEnvironment(): PlatformEnvironment {
   const candidate = getOptionalEnvValue('VITE_COVEO_PLATFORM_ENVIRONMENT');
-  if (
-    candidate === 'prod' ||
-    candidate === 'dev' ||
-    candidate === 'stg' ||
-    candidate === 'hipaa'
-  ) {
+  if (candidate === 'prod' || candidate === 'dev' || candidate === 'stg' || candidate === 'hipaa') {
     return candidate;
   }
 
@@ -69,9 +64,7 @@ function getOrganizationAdminEndpoint(
 }
 
 function shouldUseViteProxy() {
-  const configured = parseBoolean(
-    getOptionalEnvValue('VITE_COVEO_USE_VITE_PROXY')
-  );
+  const configured = parseBoolean(getOptionalEnvValue('VITE_COVEO_USE_VITE_PROXY'));
 
   if (configured !== undefined) {
     return configured;
@@ -84,10 +77,7 @@ export function getSampleConfiguration() {
   const organizationId = getRequiredEnvValue('VITE_COVEO_ORGANIZATION_ID');
   const endpointOverride = getOptionalEnvValue('VITE_COVEO_ENDPOINT');
   const environment = resolvePlatformEnvironment();
-  const endpointFromEnvironment = getOrganizationAdminEndpoint(
-    organizationId,
-    environment
-  );
+  const endpointFromEnvironment = getOrganizationAdminEndpoint(organizationId, environment);
 
   const endpoint = shouldUseViteProxy()
     ? window.location.origin

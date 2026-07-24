@@ -1,8 +1,4 @@
-import type {
-  Decorator,
-  Meta,
-  StoryObj as Story,
-} from '@storybook/web-components-vite';
+import type {Decorator, Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
@@ -15,10 +11,9 @@ const searchApiHarness = new MockSearchApi();
 const {decorator, play} = wrapInSearchInterface();
 const facetWidthDecorator: Decorator = (story) =>
   html`<div style="min-width: 470px;">${story()}</div>`;
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-automatic-facet-generator',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-automatic-facet-generator', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-automatic-facet-generator',

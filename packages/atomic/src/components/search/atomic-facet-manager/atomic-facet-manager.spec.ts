@@ -32,9 +32,7 @@ describe('atomic-facet-manager', () => {
     );
 
     const template = html`
-      <atomic-facet-manager
-        .collapseFacetsAfter=${props.collapseFacetsAfter ?? 4}
-      >
+      <atomic-facet-manager .collapseFacetsAfter=${props.collapseFacetsAfter ?? 4}>
         ${slottedContent}
       </atomic-facet-manager>
     `;
@@ -144,9 +142,7 @@ describe('atomic-facet-manager', () => {
       const generator = document.createElement(
         'atomic-automatic-facet-generator'
       ) as unknown as HTMLElement & {
-        updateCollapseFacetsDependingOnFacetsVisibility: ReturnType<
-          typeof vi.fn
-        >;
+        updateCollapseFacetsDependingOnFacetsVisibility: ReturnType<typeof vi.fn>;
       };
       generator.updateCollapseFacetsDependingOnFacetsVisibility = vi.fn();
       return generator;
@@ -238,9 +234,10 @@ describe('atomic-facet-manager', () => {
 
       await element?.sortFacets();
 
-      expect(
-        mockGenerator.updateCollapseFacetsDependingOnFacetsVisibility
-      ).toHaveBeenCalledWith(3, 2);
+      expect(mockGenerator.updateCollapseFacetsDependingOnFacetsVisibility).toHaveBeenCalledWith(
+        3,
+        2
+      );
     });
   });
 });

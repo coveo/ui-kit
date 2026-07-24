@@ -1,10 +1,7 @@
 import {RecordValue} from '@coveo/bueno';
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import type {AsyncThunkOptions} from '../../../../app/async-thunk-options.js';
-import type {
-  ConfigurationSection,
-  NumericFacetSection,
-} from '../../../../state/state-sections.js';
+import type {ConfigurationSection, NumericFacetSection} from '../../../../state/state-sections.js';
 import {updateFacetOptions} from '../../../facet-options/facet-options-actions.js';
 import {facetIdDefinition} from '../../generic/facet-actions-validation.js';
 import {
@@ -30,15 +27,12 @@ export const executeToggleNumericFacetSelect = createAsyncThunk<
     selection: NumericFacetValue;
   },
   AsyncThunkOptions<ConfigurationSection & NumericFacetSection>
->(
-  'numericFacet/executeToggleSelect',
-  (payload, {dispatch, extra: {validatePayload}}) => {
-    validatePayload(payload, definition);
-    dispatch(toggleSelectNumericFacetValue(payload));
-    dispatch(executeToggleRangeFacetSelect(payload));
-    dispatch(updateFacetOptions());
-  }
-);
+>('numericFacet/executeToggleSelect', (payload, {dispatch, extra: {validatePayload}}) => {
+  validatePayload(payload, definition);
+  dispatch(toggleSelectNumericFacetValue(payload));
+  dispatch(executeToggleRangeFacetSelect(payload));
+  dispatch(updateFacetOptions());
+});
 
 export const executeToggleNumericFacetExclude = createAsyncThunk<
   void,
@@ -47,12 +41,9 @@ export const executeToggleNumericFacetExclude = createAsyncThunk<
     selection: NumericFacetValue;
   },
   AsyncThunkOptions<ConfigurationSection & NumericFacetSection>
->(
-  'numericFacet/executeToggleExclude',
-  (payload, {dispatch, extra: {validatePayload}}) => {
-    validatePayload(payload, definition);
-    dispatch(toggleExcludeNumericFacetValue(payload));
-    dispatch(executeToggleRangeFacetExclude(payload));
-    dispatch(updateFacetOptions());
-  }
-);
+>('numericFacet/executeToggleExclude', (payload, {dispatch, extra: {validatePayload}}) => {
+  validatePayload(payload, definition);
+  dispatch(toggleExcludeNumericFacetValue(payload));
+  dispatch(executeToggleRangeFacetExclude(payload));
+  dispatch(updateFacetOptions());
+});

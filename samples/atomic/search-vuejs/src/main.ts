@@ -9,13 +9,8 @@ defineCustomElements(window);
 
 const app = createApp(App);
 const resultTextField = defineCustomElement(ResultTextField);
-const resultTextFieldMultivalue = defineCustomElement(
-  ResultTextFieldMultivalue
-);
+const resultTextFieldMultivalue = defineCustomElement(ResultTextFieldMultivalue);
 customElements.define('result-text-field', resultTextField);
-customElements.define(
-  'result-text-field-multivalue',
-  resultTextFieldMultivalue
-);
+customElements.define('result-text-field-multivalue', resultTextFieldMultivalue);
 
 app.mount('#app');

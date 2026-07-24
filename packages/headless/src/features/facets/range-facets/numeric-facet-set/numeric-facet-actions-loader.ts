@@ -96,9 +96,7 @@ export interface NumericFacetSetActionCreators {
  * @group Actions
  * @category NumericFacetSet
  */
-export function loadNumericFacetSetActions(
-  engine: CoreEngine
-): NumericFacetSetActionCreators {
+export function loadNumericFacetSetActions(engine: CoreEngine): NumericFacetSetActionCreators {
   engine.addReducers({numericFacetSet});
 
   return {

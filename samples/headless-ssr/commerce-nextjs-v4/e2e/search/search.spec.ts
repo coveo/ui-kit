@@ -31,8 +31,7 @@ test.describe('default', () => {
       let suggestionValue: string;
       test.beforeEach(async ({facet, search}) => {
         const suggestions = search.suggestions;
-        suggestionValue =
-          (await suggestions.first().textContent()) || 'no value found';
+        suggestionValue = (await suggestions.first().textContent()) || 'no value found';
         await suggestions.first().click();
 
         await facet.facetLoading.waitFor({state: 'visible'});
@@ -100,9 +99,7 @@ test.describe('default', () => {
         const productItems = await search.productItems;
         expect(productItems.length).toBeGreaterThan(0);
 
-        expect(initialResultSummary).not.toEqual(
-          await search.resultSummary.textContent()
-        );
+        expect(initialResultSummary).not.toEqual(await search.resultSummary.textContent());
       });
 
       test('should be checked after clicking', async ({facet}) => {

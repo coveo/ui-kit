@@ -66,10 +66,7 @@ export default function Cart(props: ICartProps) {
             <button type="button" onClick={() => adjustQuantity(item, -1)}>
               Remove one
             </button>
-            <button
-              type="button"
-              onClick={() => adjustQuantity(item, -item.quantity)}
-            >
+            <button type="button" onClick={() => adjustQuantity(item, -item.quantity)}>
               Remove all
             </button>
           </li>

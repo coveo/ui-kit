@@ -6,9 +6,7 @@ import {wrapInResultList} from './result-list-wrapper';
 import {wrapInSearchInterface} from './search-interface-wrapper';
 import {wrapInResultTemplateForSections} from './result-template-section-wrapper';
 
-const createDynamicResultListDecorator = (
-  display: ItemDisplayLayout
-): Decorator => {
+const createDynamicResultListDecorator = (display: ItemDisplayLayout): Decorator => {
   const {decorator} = wrapInResultList(
     display,
     false,
@@ -42,17 +40,10 @@ interface ResultSectionStoryConfig {
   skipFirstSearch?: boolean;
 }
 
-export const getResultSectionDecorators = (
-  config: ResultSectionStoryConfig = {}
-): Decorator[] => {
-  const {
-    includeCodeRoot = false,
-    config: searchConfig,
-    skipFirstSearch,
-  } = config;
+export const getResultSectionDecorators = (config: ResultSectionStoryConfig = {}): Decorator[] => {
+  const {includeCodeRoot = false, config: searchConfig, skipFirstSearch} = config;
 
-  const {decorator: resultTemplateDecorator} =
-    wrapInResultTemplateForSections();
+  const {decorator: resultTemplateDecorator} = wrapInResultTemplateForSections();
 
   const {decorator: searchInterfaceDecorator} = wrapInSearchInterface({
     config: searchConfig,

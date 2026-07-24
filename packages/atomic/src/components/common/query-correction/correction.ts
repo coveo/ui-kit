@@ -9,9 +9,7 @@ interface CorrectionProps {
   correctedQuery: string;
 }
 
-export const renderCorrection: FunctionalComponent<CorrectionProps> = ({
-  props,
-}) => {
+export const renderCorrection: FunctionalComponent<CorrectionProps> = ({props}) => {
   return html`
     <p class="text-on-background" part="did-you-mean">
       ${localizedString({

@@ -1,14 +1,6 @@
 import {buildInstantProducts} from '@coveo/headless/commerce';
 import {html} from 'lit';
-import {
-  beforeEach,
-  describe,
-  expect,
-  it,
-  type MockedObject,
-  type MockInstance,
-  vi,
-} from 'vitest';
+import {beforeEach, describe, expect, it, type MockedObject, type MockInstance, vi} from 'vitest';
 import {page} from 'vitest/browser';
 import type {
   SearchBoxSuggestionElement,
@@ -36,15 +28,13 @@ describe('atomic-commerce-search-box-instant-products', () => {
   });
   const renderElements = async (bindings: Record<string, unknown> = {}) => {
     const {element, searchBox} =
-      await renderInAtomicCommerceSearchBox<AtomicCommerceSearchBoxInstantProducts>(
-        {
-          template: html`<atomic-commerce-search-box-instant-products></atomic-commerce-search-box-instant-products>`,
-          selector: 'atomic-commerce-search-box-instant-products',
-          bindings: {
-            ...bindings,
-          },
-        }
-      );
+      await renderInAtomicCommerceSearchBox<AtomicCommerceSearchBoxInstantProducts>({
+        template: html`<atomic-commerce-search-box-instant-products></atomic-commerce-search-box-instant-products>`,
+        selector: 'atomic-commerce-search-box-instant-products',
+        bindings: {
+          ...bindings,
+        },
+      });
     return {element, searchBox};
   };
 
@@ -68,11 +58,7 @@ describe('atomic-commerce-search-box-instant-products', () => {
 
     it('should display an error component', async () => {
       await expect
-        .element(
-          page.getByText(
-            'atomic-commerce-search-box-instant-products component error'
-          )
-        )
+        .element(page.getByText('atomic-commerce-search-box-instant-products component error'))
         .toBeInTheDocument();
     });
   });
@@ -83,22 +69,13 @@ describe('atomic-commerce-search-box-instant-products', () => {
     let element: AtomicCommerceSearchBoxInstantProducts;
 
     beforeEach(async () => {
-      dispatchSpy = vi.spyOn(
-        AtomicCommerceSearchBoxInstantProducts.prototype,
-        'dispatchEvent'
-      );
-      initializeSpy = vi.spyOn(
-        AtomicCommerceSearchBoxInstantProducts.prototype,
-        'initialize'
-      );
+      dispatchSpy = vi.spyOn(AtomicCommerceSearchBoxInstantProducts.prototype, 'dispatchEvent');
+      initializeSpy = vi.spyOn(AtomicCommerceSearchBoxInstantProducts.prototype, 'initialize');
       ({element} = await renderElements());
     });
 
     it('should dispatch the search box suggestions event', async () => {
-      const event = buildCustomEvent(
-        'atomic/searchBoxSuggestion/register',
-        vi.fn()
-      );
+      const event = buildCustomEvent('atomic/searchBoxSuggestion/register', vi.fn());
       expect(dispatchSpy).toHaveBeenCalledWith(event);
     });
 
@@ -121,10 +98,7 @@ describe('atomic-commerce-search-box-instant-products', () => {
     it('should create an instant products controller', async () => {
       const {element} = await renderElements();
 
-      expect(buildInstantProducts).toHaveBeenCalledWith(
-        element.bindings.engine,
-        {options: {}}
-      );
+      expect(buildInstantProducts).toHaveBeenCalledWith(element.bindings.engine, {options: {}});
     });
 
     it('should call the store onChange method to promote child products to parent', async () => {
@@ -171,9 +145,7 @@ describe('atomic-commerce-search-box-instant-products', () => {
         const object = element.initialize();
 
         expect(object.onSuggestedQueryChange).toBeInstanceOf(Function);
-        await expect(
-          object.onSuggestedQueryChange!('new query')
-        ).resolves.toBeUndefined();
+        await expect(object.onSuggestedQueryChange!('new query')).resolves.toBeUndefined();
       });
     });
 
@@ -205,9 +177,7 @@ describe('atomic-commerce-search-box-instant-products', () => {
         let items: SearchBoxSuggestionElement[];
 
         beforeEach(async () => {
-          vi.mocked(buildInstantProducts).mockReturnValue(
-            buildFakeInstantProducts()
-          );
+          vi.mocked(buildInstantProducts).mockReturnValue(buildFakeInstantProducts());
           ({element} = await renderElements());
           object = element.initialize();
           items = object.renderItems();
@@ -245,42 +215,34 @@ describe('atomic-commerce-search-box-instant-products', () => {
 
         it('should have a div element as content for the show all item', async () => {
           expect(items[items.length - 1].content).toBeInstanceOf(HTMLElement);
-          expect((items[items.length - 1].content as Element).tagName).toBe(
-            'DIV'
-          );
+          expect((items[items.length - 1].content as Element).tagName).toBe('DIV');
         });
 
         it('should have the correct onSelect function for the show all item', async () => {
           items[items.length - 1].onSelect?.(new Event('click'));
 
           expect(element.bindings.clearSuggestions).toHaveBeenCalled();
-          expect(
-            element.bindings.searchBoxController.updateText
-          ).toHaveBeenCalledWith(buildFakeInstantProducts().state.query);
-          expect(
-            element.bindings.searchBoxController.submit
-          ).toHaveBeenCalled();
+          expect(element.bindings.searchBoxController.updateText).toHaveBeenCalledWith(
+            buildFakeInstantProducts().state.query
+          );
+          expect(element.bindings.searchBoxController.submit).toHaveBeenCalled();
         });
 
         describe('when rendering the content', () => {
           it('should have the "outline" part on the atomic-product for the instant products item', () => {
-            expect((items[0].content as Element).getAttribute('part')).toBe(
-              'outline'
-            );
+            expect((items[0].content as Element).getAttribute('part')).toBe('outline');
           });
 
           it('should have the "instant-results-show-all-button" part on the show all item', () => {
-            expect(
-              (items[items.length - 1].content as Element).getAttribute('part')
-            ).toBe('instant-results-show-all-button');
+            expect((items[items.length - 1].content as Element).getAttribute('part')).toBe(
+              'instant-results-show-all-button'
+            );
           });
 
           it('should have the correct text content for the show all item', () => {
-            expect(
-              (
-                items[items.length - 1].content as HTMLElement
-              ).textContent?.trim()
-            ).toBe('See all products');
+            expect((items[items.length - 1].content as HTMLElement).textContent?.trim()).toBe(
+              'See all products'
+            );
           });
         });
       });

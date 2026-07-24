@@ -29,16 +29,12 @@ describe('#renderTextAreaClearButton', () => {
 
   it('should have the correct classes when disabled', async () => {
     const {wrapper} = await renderComponent({disabled: true});
-    expect(wrapper).toHaveClass(
-      'focus-within:border-disabled focus-within:ring-neutral'
-    );
+    expect(wrapper).toHaveClass('focus-within:border-disabled focus-within:ring-neutral');
   });
 
   it('should have the correct classes when not disabled', async () => {
     const {wrapper} = await renderComponent({disabled: false});
-    expect(wrapper).toHaveClass(
-      'focus-within:border-primary focus-within:ring-ring-primary'
-    );
+    expect(wrapper).toHaveClass('focus-within:border-primary focus-within:ring-ring-primary');
   });
 
   it('should call onFocusout when focus is lost', async () => {

@@ -34,9 +34,7 @@ test.describe('Storybook MDX Pages - Introduction pages', () => {
       await page.waitForLoadState('domcontentloaded');
 
       const docsRoot = page.frameLocator('#storybook-preview-iframe');
-      await expect(
-        docsRoot.getByRole('heading', {name: heading})
-      ).toBeVisible();
+      await expect(docsRoot.getByRole('heading', {name: heading})).toBeVisible();
     });
   }
 });
@@ -51,28 +49,17 @@ test.describe('Storybook MDX Pages - Component doc pages (AtomicDocTemplate)', (
   ];
 
   for (const {id, title} of componentDocPages) {
-    test(`should render the "${title}" doc page with expected sections`, async ({
-      page,
-    }) => {
+    test(`should render the "${title}" doc page with expected sections`, async ({page}) => {
       await page.goto(`./?path=/docs/${id}`);
       await page.waitForLoadState('domcontentloaded');
 
       const docsRoot = page.frameLocator('#storybook-preview-iframe');
 
-      await docsRoot
-        .getByRole('heading', {level: 1})
-        .first()
-        .waitFor({state: 'visible'});
+      await docsRoot.getByRole('heading', {level: 1}).first().waitFor({state: 'visible'});
 
-      await expect(
-        docsRoot.getByRole('heading', {name: 'Usage'}).first()
-      ).toBeVisible();
-      await expect(
-        docsRoot.getByRole('heading', {name: 'Examples'}).first()
-      ).toBeVisible();
-      await expect(
-        docsRoot.getByRole('heading', {name: 'Reference'}).first()
-      ).toBeVisible();
+      await expect(docsRoot.getByRole('heading', {name: 'Usage'}).first()).toBeVisible();
+      await expect(docsRoot.getByRole('heading', {name: 'Examples'}).first()).toBeVisible();
+      await expect(docsRoot.getByRole('heading', {name: 'Reference'}).first()).toBeVisible();
     });
   }
 });

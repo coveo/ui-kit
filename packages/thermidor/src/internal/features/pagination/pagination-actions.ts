@@ -10,19 +10,13 @@ const CACHE_KEY: CacheKey<PaginationActions> =
 
 export function createPaginationActions(interfaceId: string) {
   return {
-    setFirstResult: createAction<number>(
-      `${interfaceId}/pagination/setFirstResult`
-    ),
+    setFirstResult: createAction<number>(`${interfaceId}/pagination/setFirstResult`),
     setPageSize: createAction<number>(`${interfaceId}/pagination/setPageSize`),
-    setTotalCount: createAction<number>(
-      `${interfaceId}/pagination/setTotalCount`
-    ),
+    setTotalCount: createAction<number>(`${interfaceId}/pagination/setTotalCount`),
   };
 }
 
 export function getOrCreatePaginationActions(iface: InterfaceHandle) {
   const {stateId, cacheRegistry} = getHandleInternals(iface);
-  return cacheRegistry.getOrCreate(CACHE_KEY, () =>
-    createPaginationActions(stateId)
-  );
+  return cacheRegistry.getOrCreate(CACHE_KEY, () => createPaginationActions(stateId));
 }

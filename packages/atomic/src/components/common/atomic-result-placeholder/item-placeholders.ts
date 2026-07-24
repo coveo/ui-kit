@@ -16,9 +16,7 @@ export interface ItemPlaceholdersProps {
   numberOfPlaceholders: number;
 }
 
-export const renderItemPlaceholders: FunctionalComponent<
-  ItemPlaceholdersProps
-> = ({props}) => {
+export const renderItemPlaceholders: FunctionalComponent<ItemPlaceholdersProps> = ({props}) => {
   const {display} = props;
 
   if (display === 'table') {
@@ -27,9 +25,7 @@ export const renderItemPlaceholders: FunctionalComponent<
   return renderGridOrListItemPlaceholders({props});
 };
 
-const renderGridOrListItemPlaceholders: FunctionalComponent<
-  ItemPlaceholdersProps
-> = ({props}) => {
+const renderGridOrListItemPlaceholders: FunctionalComponent<ItemPlaceholdersProps> = ({props}) => {
   const placeholders = Array.from({length: props.numberOfPlaceholders});
   return html`${map(
     placeholders,
@@ -45,9 +41,9 @@ const renderGridOrListItemPlaceholders: FunctionalComponent<
   )}`;
 };
 
-const renderTableItemPlaceholders: FunctionalComponent<
-  Omit<ItemPlaceholdersProps, 'display'>
-> = ({props}) => {
+const renderTableItemPlaceholders: FunctionalComponent<Omit<ItemPlaceholdersProps, 'display'>> = ({
+  props,
+}) => {
   return html`<atomic-result-table-placeholder
     .density=${props.density}
     .imageSize=${props.imageSize}

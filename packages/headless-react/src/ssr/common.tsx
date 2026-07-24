@@ -6,13 +6,7 @@ import type {
   InferControllerStaticStateMapFromDefinitions,
   InferControllersMapFromDefinition,
 } from '@coveo/headless/ssr';
-import {
-  type Context,
-  type PropsWithChildren,
-  useCallback,
-  useContext,
-  useMemo,
-} from 'react';
+import {type Context, type PropsWithChildren, useCallback, useContext, useMemo} from 'react';
 import {useSyncMemoizedStore} from '../client-utils.js';
 import {MissingEngineProviderError} from '../errors.js';
 import {capitalize, mapObject, type SingletonGetter} from '../utils.js';
@@ -26,9 +20,7 @@ import type {
 function isHydratedStateContext<
   TEngine extends CoreEngine,
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
->(
-  ctx: ContextState<TEngine, TControllers>
-): ctx is ContextHydratedState<TEngine, TControllers> {
+>(ctx: ContextState<TEngine, TControllers>): ctx is ContextHydratedState<TEngine, TControllers> {
   return 'engine' in ctx && !!ctx.engine;
 }
 
@@ -37,9 +29,7 @@ function buildControllerHook<
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
   TKey extends keyof TControllers,
 >(
-  singletonContext: SingletonGetter<
-    Context<ContextState<TEngine, TControllers> | null>
-  >,
+  singletonContext: SingletonGetter<Context<ContextState<TEngine, TControllers> | null>>,
   key: TKey
 ): ControllerHook<InferControllerFromDefinition<TControllers[TKey]>> {
   return () => {
@@ -49,9 +39,7 @@ function buildControllerHook<
     }
     const subscribe = useCallback(
       (listener: () => void) =>
-        isHydratedStateContext(ctx)
-          ? ctx.controllers[key].subscribe(listener)
-          : () => {},
+        isHydratedStateContext(ctx) ? ctx.controllers[key].subscribe(listener) : () => {},
       [ctx]
     );
     const getStaticState = useCallback(() => ctx.controllers[key].state, [ctx]);
@@ -74,9 +62,7 @@ export function buildControllerHooks<
   TEngine extends CoreEngine,
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
 >(
-  singletonContext: SingletonGetter<
-    Context<ContextState<TEngine, TControllers> | null>
-  >,
+  singletonContext: SingletonGetter<Context<ContextState<TEngine, TControllers> | null>>,
   controllersMap?: TControllers
 ) {
   return (
@@ -94,11 +80,7 @@ export function buildControllerHooks<
 export function buildEngineHook<
   TEngine extends CoreEngine,
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
->(
-  singletonContext: SingletonGetter<
-    Context<ContextState<TEngine, TControllers> | null>
-  >
-) {
+>(singletonContext: SingletonGetter<Context<ContextState<TEngine, TControllers> | null>>) {
   return () => {
     const ctx = useContext(singletonContext.get());
     if (ctx === null) {
@@ -115,11 +97,7 @@ export function buildEngineHook<
 export function buildStaticStateProvider<
   TEngine extends CoreEngine,
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
->(
-  singletonContext: SingletonGetter<
-    Context<ContextState<TEngine, TControllers> | null>
-  >
-) {
+>(singletonContext: SingletonGetter<Context<ContextState<TEngine, TControllers> | null>>) {
   return ({
     controllers,
     children,
@@ -138,11 +116,7 @@ export function buildStaticStateProvider<
 export function buildHydratedStateProvider<
   TEngine extends CoreEngine,
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
->(
-  singletonContext: SingletonGetter<
-    Context<ContextState<TEngine, TControllers> | null>
-  >
-) {
+>(singletonContext: SingletonGetter<Context<ContextState<TEngine, TControllers> | null>>) {
   return ({
     engine,
     controllers,
@@ -159,11 +133,7 @@ export function buildHydratedStateProvider<
 export function buildStateProvider<
   TEngine extends CoreEngine,
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
->(
-  singletonContext: SingletonGetter<
-    Context<ContextState<TEngine, TControllers> | null>
-  >
-) {
+>(singletonContext: SingletonGetter<Context<ContextState<TEngine, TControllers> | null>>) {
   return ({
     engine,
     controllers,

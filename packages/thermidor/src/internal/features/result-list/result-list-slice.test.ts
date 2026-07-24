@@ -4,14 +4,8 @@ import {
   getOrCreateResultsSlice,
   initialResultListState,
 } from './result-list-slice.js';
-import {
-  createResultsActions,
-  getOrCreateResultsActions,
-} from './result-list-actions.js';
-import {
-  createResultsSelectors,
-  getOrCreateResultsSelectors,
-} from './result-list-selectors.js';
+import {createResultsActions, getOrCreateResultsActions} from './result-list-actions.js';
+import {createResultsSelectors, getOrCreateResultsSelectors} from './result-list-selectors.js';
 import type {CoveoSearchResult} from '@/src/internal/api/search/index.js';
 import {createTestEngine, createTestInterface} from '@/src/test/test-utils.js';
 import {getOrCreateHydrateFromSnapshotAction} from '@/src/internal/features/generative/index.js';
@@ -25,9 +19,7 @@ function iface(id: string) {
   return ifaceCache.get(id)!;
 }
 
-const mockCoveoResult = (
-  overrides: Partial<CoveoSearchResult> = {}
-): CoveoSearchResult => ({
+const mockCoveoResult = (overrides: Partial<CoveoSearchResult> = {}): CoveoSearchResult => ({
   uniqueId: '1',
   title: 'Test',
   uri: 'test',
@@ -51,18 +43,14 @@ describe('createResultsActions', () => {
   it('should create actions scoped to the given interfaceId', () => {
     const actions = createResultsActions('search-1');
 
-    expect(actions.setResultsFromResponse.type).toBe(
-      'search-1/results/setResultsFromResponse'
-    );
+    expect(actions.setResultsFromResponse.type).toBe('search-1/results/setResultsFromResponse');
   });
 
   it('should create independent actions for different interfaceIds', () => {
     const actions1 = createResultsActions('interface-a');
     const actions2 = createResultsActions('interface-b');
 
-    expect(actions1.setResultsFromResponse.type).not.toBe(
-      actions2.setResultsFromResponse.type
-    );
+    expect(actions1.setResultsFromResponse.type).not.toBe(actions2.setResultsFromResponse.type);
   });
 });
 
@@ -173,9 +161,7 @@ describe('createResultsSlice', () => {
 
     const state = slice.reducer(
       oldState,
-      actions.setResultsFromResponse([
-        mockCoveoResult({uniqueId: 'new', title: 'New'}),
-      ])
+      actions.setResultsFromResponse([mockCoveoResult({uniqueId: 'new', title: 'New'})])
     );
 
     expect(state.results).toHaveLength(1);

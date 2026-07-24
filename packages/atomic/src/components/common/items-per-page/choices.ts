@@ -36,12 +36,7 @@ export const renderChoices: FunctionalComponent<ChoicesProps> = ({props}) => {
   };
 
   return html`
-    <div
-      part="buttons"
-      role="radiogroup"
-      aria-label=${label}
-      class="flex flex-wrap gap-2"
-    >
+    <div part="buttons" role="radiogroup" aria-label=${label} class="flex flex-wrap gap-2">
       ${choices.map((choice) => {
         const isSelected = pageSize === choice;
         const parts = ['button'];

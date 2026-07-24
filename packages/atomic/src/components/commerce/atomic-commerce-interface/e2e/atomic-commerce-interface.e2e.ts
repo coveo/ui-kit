@@ -10,10 +10,7 @@ testCases.forEach(({mode, story, facetBrand}) => {
     test('should render products', async ({commerceInterface}) => {
       await commerceInterface.load({story});
       await expect(
-        commerceInterface
-          .productList()
-          .locator('atomic-product-section-name')
-          .first()
+        commerceInterface.productList().locator('atomic-product-section-name').first()
       ).toBeVisible();
     });
 
@@ -23,23 +20,16 @@ testCases.forEach(({mode, story, facetBrand}) => {
         args: {language: 'fr'},
       });
       await commerceInterface.searchBox().waitFor({state: 'visible'});
-      await expect(
-        commerceInterface.searchBox().getByPlaceholder('Recherche')
-      ).toBeVisible();
+      await expect(commerceInterface.searchBox().getByPlaceholder('Recherche')).toBeVisible();
     });
 
-    test('should reflect state in URL when facet selected', async ({
-      page,
-      commerceInterface,
-    }) => {
+    test('should reflect state in URL when facet selected', async ({page, commerceInterface}) => {
       await commerceInterface.load({story});
       const facetValueLabel = commerceInterface.getFacetValue(facetBrand);
 
       await facetValueLabel.click();
 
-      await page.waitForURL(
-        `**/iframe.html?id=atomic-commerce-interface--${story}*`
-      );
+      await page.waitForURL(`**/iframe.html?id=atomic-commerce-interface--${story}*`);
 
       await expect(page).toHaveURL(new RegExp(facetBrand));
     });

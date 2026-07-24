@@ -31,10 +31,7 @@ import '@/src/components/ipx/atomic-ipx-refine-modal/atomic-ipx-refine-modal';
 @customElement('atomic-ipx-refine-toggle')
 @bindings()
 @withTailwindStyles
-export class AtomicIpxRefineToggle
-  extends LitElement
-  implements InitializableComponent<Bindings>
-{
+export class AtomicIpxRefineToggle extends LitElement implements InitializableComponent<Bindings> {
   static styles = css`
     @reference '../../../utils/tailwind.global.tw.css';
 
@@ -130,8 +127,7 @@ export class AtomicIpxRefineToggle
         style: 'outline-neutral',
         title: this.bindings.i18n.t('filters'),
         icon: FilterIcon,
-        disabled:
-          !this.searchStatusState.hasResults && !this.numberOfBreadcrumbs,
+        disabled: !this.searchStatusState.hasResults && !this.numberOfBreadcrumbs,
         ariaLabel: this.bindings.i18n.t('filters'),
         onClick: () => this.handleClick(),
         buttonRef: (button) => {

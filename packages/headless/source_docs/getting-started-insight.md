@@ -23,10 +23,7 @@ npm install @coveo/headless@{{packageVersion}}
 Once installed, you can import from the Insight sub-package:
 
 ```typescript
-import {
-  buildInsightEngine,
-  getSampleInsightEngineConfiguration,
-} from '@coveo/headless/insight';
+import {buildInsightEngine, getSampleInsightEngineConfiguration} from '@coveo/headless/insight';
 ```
 
 ## Use via CDN
@@ -52,8 +49,7 @@ If you prefer not to use a package manager, you can load Headless Insight direct
 <script src="https://static.cloud.coveo.com/headless/v{{packageVersion}}/insight/headless.js"></script>
 <script>
   // All exports are available on the global CoveoHeadlessInsight object.
-  const {buildInsightEngine, getSampleInsightEngineConfiguration} =
-    CoveoHeadlessInsight;
+  const {buildInsightEngine, getSampleInsightEngineConfiguration} = CoveoHeadlessInsight;
 </script>
 ```
 

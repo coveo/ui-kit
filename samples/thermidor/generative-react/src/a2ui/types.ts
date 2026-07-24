@@ -67,9 +67,7 @@ export interface ParsedSurface {
 /**
  * Parse an A2UI surface snapshot into a list of renderable surfaces.
  */
-export function parseSurfaceSnapshot(
-  raw: Record<string, unknown>
-): ParsedSurface[] {
+export function parseSurfaceSnapshot(raw: Record<string, unknown>): ParsedSurface[] {
   const snapshot = raw as unknown as A2UISurfaceData;
   if (!snapshot.operations || !Array.isArray(snapshot.operations)) {
     return [];
@@ -103,10 +101,7 @@ export function parseSurfaceSnapshot(
       const entry = surfaces.get(surfaceId);
       if (entry && components.length > 0) {
         const rootComponent = components[0].component;
-        const [type, props] = Object.entries(rootComponent)[0] ?? [
-          'Unknown',
-          {},
-        ];
+        const [type, props] = Object.entries(rootComponent)[0] ?? ['Unknown', {}];
         entry.componentType = type;
         entry.componentProps = props as Record<string, unknown>;
       }

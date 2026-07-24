@@ -1,8 +1,5 @@
 import type {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response.js';
-import type {
-  ChildProduct,
-  Product,
-} from '../../../api/commerce/common/product.js';
+import type {ChildProduct, Product} from '../../../api/commerce/common/product.js';
 import type {Result} from '../../../api/commerce/common/result.js';
 import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {configuration} from '../../../app/common-reducers.js';
@@ -33,10 +30,7 @@ import {commerceSearchReducer as commerceSearch} from '../../../features/commerc
 import {restoreSearchParameters} from '../../../features/commerce/search-parameters/search-parameters-actions.js';
 import {searchParametersDefinition} from '../../../features/commerce/search-parameters/search-parameters-schema.js';
 import {loadReducerError} from '../../../utils/errors.js';
-import {
-  buildController,
-  type Controller,
-} from '../../controller/headless-controller.js';
+import {buildController, type Controller} from '../../controller/headless-controller.js';
 import {
   buildSearchSubControllers,
   type SearchSubControllers,
@@ -158,8 +152,7 @@ export function buildSearch(
     ...subControllers,
 
     get state() {
-      const {products, results, error, isLoading, responseId} =
-        getState().commerceSearch;
+      const {products, results, error, isLoading, responseId} = getState().commerceSearch;
       return {
         products,
         results,
@@ -185,9 +178,7 @@ export function buildSearch(
   };
 }
 
-function loadBaseSearchReducers(
-  engine: CommerceEngine
-): engine is CommerceEngine {
+function loadBaseSearchReducers(engine: CommerceEngine): engine is CommerceEngine {
   engine.addReducers({
     commerceContext,
     configuration,

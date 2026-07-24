@@ -358,10 +358,8 @@ export const richResponse = {
       queryPinned: false,
       badgePlacements: [],
       ec_name: 'Slippery',
-      ec_description:
-        'This Blue slipper is made of PET and is perfect for keeping your feet warm.',
-      ec_shortdesc:
-        'This Blue slipper is made of PET and is perfect for keeping your feet warm.',
+      ec_description: 'This Blue slipper is made of PET and is perfect for keeping your feet warm.',
+      ec_shortdesc: 'This Blue slipper is made of PET and is perfect for keeping your feet warm.',
       ec_brand: 'Ecco',
       ec_category: ['Sandals & Shoes', 'Sandals & Shoes|Slippers'],
       ec_thumbnails: [
@@ -382,8 +380,7 @@ export const richResponse = {
       clickUri: 'https://sports.barca.group/pdp/SP04884_00002',
       permanentid: 'SP04884_00002',
       nameHighlights: [],
-      excerpt:
-        'This Blue slipper is made of PET and is perfect for keeping your feet warm.',
+      excerpt: 'This Blue slipper is made of PET and is perfect for keeping your feet warm.',
       excerptHighlights: [],
       children: [
         {
@@ -1761,8 +1758,7 @@ export const richResponse = {
       ec_product_id: 'SP04766_00005',
       ec_gender: null,
       ec_color: null,
-      ec_listing:
-        '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
+      ec_listing: '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
       clickUri: 'https://sports.barca.group/pdp/SP04766_00005',
       permanentid: 'SP04766_00005',
       nameHighlights: [],
@@ -1818,8 +1814,7 @@ export const richResponse = {
           ec_product_id: 'SP04766_00001',
           ec_gender: null,
           ec_color: null,
-          ec_listing:
-            '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
+          ec_listing: '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
           clickUri: 'https://sports.barca.group/pdp/SP04766_00001',
           permanentid: 'SP04766_00001',
           nameHighlights: [],
@@ -1875,8 +1870,7 @@ export const richResponse = {
           ec_product_id: 'SP04766_00006',
           ec_gender: null,
           ec_color: null,
-          ec_listing:
-            '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
+          ec_listing: '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
           clickUri: 'https://sports.barca.group/pdp/SP04766_00006',
           permanentid: 'SP04766_00006',
           nameHighlights: [],
@@ -1930,8 +1924,7 @@ export const richResponse = {
           ec_product_id: 'SP04766_00003',
           ec_gender: null,
           ec_color: null,
-          ec_listing:
-            '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
+          ec_listing: '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
           clickUri: 'https://sports.barca.group/pdp/SP04766_00003',
           permanentid: 'SP04766_00003',
           nameHighlights: [],
@@ -1986,8 +1979,7 @@ export const richResponse = {
           ec_product_id: 'SP04766_00002',
           ec_gender: null,
           ec_color: null,
-          ec_listing:
-            '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
+          ec_listing: '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
           clickUri: 'https://sports.barca.group/pdp/SP04766_00002',
           permanentid: 'SP04766_00002',
           nameHighlights: [],
@@ -2043,8 +2035,7 @@ export const richResponse = {
           ec_product_id: 'SP04766_00004',
           ec_gender: null,
           ec_color: null,
-          ec_listing:
-            '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
+          ec_listing: '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
           clickUri: 'https://sports.barca.group/pdp/SP04766_00004',
           permanentid: 'SP04766_00004',
           nameHighlights: [],
@@ -2645,8 +2636,7 @@ export const richResponse = {
           clickUri: 'https://sports.barca.group/pdp/SP04882_00004',
           permanentid: 'SP04882_00004',
           nameHighlights: [],
-          excerpt:
-            'The Gray Slipper is a fleece slipper that will keep your feet warm and cozy.',
+          excerpt: 'The Gray Slipper is a fleece slipper that will keep your feet warm and cozy.',
           excerptHighlights: [],
         },
       ],
@@ -2700,8 +2690,7 @@ export const richResponse = {
       ec_product_id: 'SP04763_00002',
       ec_gender: null,
       ec_color: null,
-      ec_listing:
-        '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
+      ec_listing: '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
       clickUri: 'https://sports.barca.group/pdp/SP04763_00002',
       permanentid: 'SP04763_00002',
       nameHighlights: [],
@@ -2757,8 +2746,7 @@ export const richResponse = {
           ec_product_id: 'SP04763_00005',
           ec_gender: null,
           ec_color: null,
-          ec_listing:
-            '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
+          ec_listing: '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
           clickUri: 'https://sports.barca.group/pdp/SP04763_00005',
           permanentid: 'SP04763_00005',
           nameHighlights: [],
@@ -2814,8 +2802,7 @@ export const richResponse = {
           ec_product_id: 'SP04763_00004',
           ec_gender: null,
           ec_color: null,
-          ec_listing:
-            '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
+          ec_listing: '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
           clickUri: 'https://sports.barca.group/pdp/SP04763_00004',
           permanentid: 'SP04763_00004',
           nameHighlights: [],
@@ -2871,8 +2858,7 @@ export const richResponse = {
           ec_product_id: 'SP04763_00001',
           ec_gender: null,
           ec_color: null,
-          ec_listing:
-            '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
+          ec_listing: '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
           clickUri: 'https://sports.barca.group/pdp/SP04763_00001',
           permanentid: 'SP04763_00001',
           nameHighlights: [],
@@ -2928,8 +2914,7 @@ export const richResponse = {
           ec_product_id: 'SP04763_00006',
           ec_gender: null,
           ec_color: null,
-          ec_listing:
-            '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
+          ec_listing: '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
           clickUri: 'https://sports.barca.group/pdp/SP04763_00006',
           permanentid: 'SP04763_00006',
           nameHighlights: [],
@@ -2985,8 +2970,7 @@ export const richResponse = {
           ec_product_id: 'SP04763_00003',
           ec_gender: null,
           ec_color: null,
-          ec_listing:
-            '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
+          ec_listing: '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
           clickUri: 'https://sports.barca.group/pdp/SP04763_00003',
           permanentid: 'SP04763_00003',
           nameHighlights: [],
@@ -3761,8 +3745,7 @@ export const richResponse = {
           clickUri: 'https://sports.barca.group/pdp/SP04883_00004',
           permanentid: 'SP04883_00004',
           nameHighlights: [],
-          excerpt:
-            'The Gray Slipper is a fleece slipper that will keep your feet warm and cozy.',
+          excerpt: 'The Gray Slipper is a fleece slipper that will keep your feet warm and cozy.',
           excerptHighlights: [],
         },
         {
@@ -4584,8 +4567,7 @@ export const richResponse = {
       ec_product_id: 'SP04765_00002',
       ec_gender: null,
       ec_color: null,
-      ec_listing:
-        '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
+      ec_listing: '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
       clickUri: 'https://sports.barca.group/pdp/SP04765_00002',
       permanentid: 'SP04765_00002',
       nameHighlights: [],
@@ -4641,8 +4623,7 @@ export const richResponse = {
           ec_product_id: 'SP04765_00004',
           ec_gender: null,
           ec_color: null,
-          ec_listing:
-            '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
+          ec_listing: '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
           clickUri: 'https://sports.barca.group/pdp/SP04765_00004',
           permanentid: 'SP04765_00004',
           nameHighlights: [],
@@ -4698,8 +4679,7 @@ export const richResponse = {
           ec_product_id: 'SP04765_00001',
           ec_gender: null,
           ec_color: null,
-          ec_listing:
-            '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
+          ec_listing: '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
           clickUri: 'https://sports.barca.group/pdp/SP04765_00001',
           permanentid: 'SP04765_00001',
           nameHighlights: [],
@@ -4755,8 +4735,7 @@ export const richResponse = {
           ec_product_id: 'SP04765_00005',
           ec_gender: null,
           ec_color: null,
-          ec_listing:
-            '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
+          ec_listing: '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
           clickUri: 'https://sports.barca.group/pdp/SP04765_00005',
           permanentid: 'SP04765_00005',
           nameHighlights: [],
@@ -4812,8 +4791,7 @@ export const richResponse = {
           ec_product_id: 'SP04765_00003',
           ec_gender: null,
           ec_color: null,
-          ec_listing:
-            '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
+          ec_listing: '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
           clickUri: 'https://sports.barca.group/pdp/SP04765_00003',
           permanentid: 'SP04765_00003',
           nameHighlights: [],
@@ -4869,8 +4847,7 @@ export const richResponse = {
           ec_product_id: 'SP04765_00006',
           ec_gender: null,
           ec_color: null,
-          ec_listing:
-            '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
+          ec_listing: '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
           clickUri: 'https://sports.barca.group/pdp/SP04765_00006',
           permanentid: 'SP04765_00006',
           nameHighlights: [],
@@ -6285,8 +6262,7 @@ export const richResponse = {
       ec_product_id: 'SP04762_00005',
       ec_gender: null,
       ec_color: null,
-      ec_listing:
-        '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
+      ec_listing: '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
       clickUri: 'https://sports.barca.group/pdp/SP04762_00005',
       permanentid: 'SP04762_00005',
       nameHighlights: [],
@@ -6342,8 +6318,7 @@ export const richResponse = {
           ec_product_id: 'SP04762_00003',
           ec_gender: null,
           ec_color: null,
-          ec_listing:
-            '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
+          ec_listing: '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
           clickUri: 'https://sports.barca.group/pdp/SP04762_00003',
           permanentid: 'SP04762_00003',
           nameHighlights: [],
@@ -6399,8 +6374,7 @@ export const richResponse = {
           ec_product_id: 'SP04762_00002',
           ec_gender: null,
           ec_color: null,
-          ec_listing:
-            '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
+          ec_listing: '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
           clickUri: 'https://sports.barca.group/pdp/SP04762_00002',
           permanentid: 'SP04762_00002',
           nameHighlights: [],
@@ -6456,8 +6430,7 @@ export const richResponse = {
           ec_product_id: 'SP04762_00001',
           ec_gender: null,
           ec_color: null,
-          ec_listing:
-            '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
+          ec_listing: '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
           clickUri: 'https://sports.barca.group/pdp/SP04762_00001',
           permanentid: 'SP04762_00001',
           nameHighlights: [],
@@ -6513,8 +6486,7 @@ export const richResponse = {
           ec_product_id: 'SP04762_00006',
           ec_gender: null,
           ec_color: null,
-          ec_listing:
-            '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
+          ec_listing: '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
           clickUri: 'https://sports.barca.group/pdp/SP04762_00006',
           permanentid: 'SP04762_00006',
           nameHighlights: [],
@@ -6570,8 +6542,7 @@ export const richResponse = {
           ec_product_id: 'SP04762_00004',
           ec_gender: null,
           ec_color: null,
-          ec_listing:
-            '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
+          ec_listing: '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
           clickUri: 'https://sports.barca.group/pdp/SP04762_00004',
           permanentid: 'SP04762_00004',
           nameHighlights: [],
@@ -6969,8 +6940,7 @@ export const richResponse = {
       ec_product_id: 'SP04764_00005',
       ec_gender: null,
       ec_color: null,
-      ec_listing:
-        '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
+      ec_listing: '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
       clickUri: 'https://sports.barca.group/pdp/SP04764_00005',
       permanentid: 'SP04764_00005',
       nameHighlights: [],
@@ -7026,8 +6996,7 @@ export const richResponse = {
           ec_product_id: 'SP04764_00003',
           ec_gender: null,
           ec_color: null,
-          ec_listing:
-            '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
+          ec_listing: '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
           clickUri: 'https://sports.barca.group/pdp/SP04764_00003',
           permanentid: 'SP04764_00003',
           nameHighlights: [],
@@ -7083,8 +7052,7 @@ export const richResponse = {
           ec_product_id: 'SP04764_00002',
           ec_gender: null,
           ec_color: null,
-          ec_listing:
-            '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
+          ec_listing: '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
           clickUri: 'https://sports.barca.group/pdp/SP04764_00002',
           permanentid: 'SP04764_00002',
           nameHighlights: [],
@@ -7140,8 +7108,7 @@ export const richResponse = {
           ec_product_id: 'SP04764_00001',
           ec_gender: null,
           ec_color: null,
-          ec_listing:
-            '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
+          ec_listing: '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
           clickUri: 'https://sports.barca.group/pdp/SP04764_00001',
           permanentid: 'SP04764_00001',
           nameHighlights: [],
@@ -7197,8 +7164,7 @@ export const richResponse = {
           ec_product_id: 'SP04764_00004',
           ec_gender: null,
           ec_color: null,
-          ec_listing:
-            '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
+          ec_listing: '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
           clickUri: 'https://sports.barca.group/pdp/SP04764_00004',
           permanentid: 'SP04764_00004',
           nameHighlights: [],
@@ -7254,8 +7220,7 @@ export const richResponse = {
           ec_product_id: 'SP04764_00006',
           ec_gender: null,
           ec_color: null,
-          ec_listing:
-            '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
+          ec_listing: '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
           clickUri: 'https://sports.barca.group/pdp/SP04764_00006',
           permanentid: 'SP04764_00006',
           nameHighlights: [],
@@ -9105,10 +9070,8 @@ export const richResponse = {
           queryPinned: false,
           badgePlacements: [],
           ec_name: 'Pink Persuasion Sunglasses',
-          ec_description:
-            'A Rimless sunglass with a polarized lens for an updated look.',
-          ec_shortdesc:
-            'A Rimless sunglass with a polarized lens for an updated look.',
+          ec_description: 'A Rimless sunglass with a polarized lens for an updated look.',
+          ec_shortdesc: 'A Rimless sunglass with a polarized lens for an updated look.',
           ec_brand: 'Oakley',
           ec_category: ['Accessories', 'Accessories|Sunglasses'],
           ec_thumbnails: [
@@ -9129,8 +9092,7 @@ export const richResponse = {
           clickUri: 'https://sports.barca.group/pdp/SP04277_00007',
           permanentid: 'SP04277_00007',
           nameHighlights: [],
-          excerpt:
-            'A Rimless sunglass with a polarized lens for an updated look.',
+          excerpt: 'A Rimless sunglass with a polarized lens for an updated look.',
           excerptHighlights: [],
         },
         {
@@ -9270,8 +9232,7 @@ export const richResponse = {
       ec_product_id: 'SP04767_00005',
       ec_gender: null,
       ec_color: null,
-      ec_listing:
-        '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
+      ec_listing: '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
       clickUri: 'https://sports.barca.group/pdp/SP04767_00005',
       permanentid: 'SP04767_00005',
       nameHighlights: [],
@@ -9327,8 +9288,7 @@ export const richResponse = {
           ec_product_id: 'SP04767_00001',
           ec_gender: null,
           ec_color: null,
-          ec_listing:
-            '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
+          ec_listing: '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
           clickUri: 'https://sports.barca.group/pdp/SP04767_00001',
           permanentid: 'SP04767_00001',
           nameHighlights: [],
@@ -9384,8 +9344,7 @@ export const richResponse = {
           ec_product_id: 'SP04767_00006',
           ec_gender: null,
           ec_color: null,
-          ec_listing:
-            '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
+          ec_listing: '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
           clickUri: 'https://sports.barca.group/pdp/SP04767_00006',
           permanentid: 'SP04767_00006',
           nameHighlights: [],
@@ -9439,8 +9398,7 @@ export const richResponse = {
           ec_product_id: 'SP04767_00002',
           ec_gender: null,
           ec_color: null,
-          ec_listing:
-            '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
+          ec_listing: '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
           clickUri: 'https://sports.barca.group/pdp/SP04767_00002',
           permanentid: 'SP04767_00002',
           nameHighlights: [],
@@ -9495,8 +9453,7 @@ export const richResponse = {
           ec_product_id: 'SP04767_00003',
           ec_gender: null,
           ec_color: null,
-          ec_listing:
-            '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
+          ec_listing: '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
           clickUri: 'https://sports.barca.group/pdp/SP04767_00003',
           permanentid: 'SP04767_00003',
           nameHighlights: [],
@@ -9552,8 +9509,7 @@ export const richResponse = {
           ec_product_id: 'SP04767_00004',
           ec_gender: null,
           ec_color: null,
-          ec_listing:
-            '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
+          ec_listing: '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
           clickUri: 'https://sports.barca.group/pdp/SP04767_00004',
           permanentid: 'SP04767_00004',
           nameHighlights: [],
@@ -10812,8 +10768,7 @@ export const richResponse = {
       ec_product_id: 'SP04761_00003',
       ec_gender: null,
       ec_color: null,
-      ec_listing:
-        '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
+      ec_listing: '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
       clickUri: 'https://sports.barca.group/pdp/SP04761_00003',
       permanentid: 'SP04761_00003',
       nameHighlights: [],
@@ -10869,8 +10824,7 @@ export const richResponse = {
           ec_product_id: 'SP04761_00002',
           ec_gender: null,
           ec_color: null,
-          ec_listing:
-            '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
+          ec_listing: '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
           clickUri: 'https://sports.barca.group/pdp/SP04761_00002',
           permanentid: 'SP04761_00002',
           nameHighlights: [],
@@ -10926,8 +10880,7 @@ export const richResponse = {
           ec_product_id: 'SP04761_00005',
           ec_gender: null,
           ec_color: null,
-          ec_listing:
-            '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
+          ec_listing: '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
           clickUri: 'https://sports.barca.group/pdp/SP04761_00005',
           permanentid: 'SP04761_00005',
           nameHighlights: [],
@@ -10983,8 +10936,7 @@ export const richResponse = {
           ec_product_id: 'SP04761_00001',
           ec_gender: null,
           ec_color: null,
-          ec_listing:
-            '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
+          ec_listing: '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
           clickUri: 'https://sports.barca.group/pdp/SP04761_00001',
           permanentid: 'SP04761_00001',
           nameHighlights: [],
@@ -11040,8 +10992,7 @@ export const richResponse = {
           ec_product_id: 'SP04761_00004',
           ec_gender: null,
           ec_color: null,
-          ec_listing:
-            '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
+          ec_listing: '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
           clickUri: 'https://sports.barca.group/pdp/SP04761_00004',
           permanentid: 'SP04761_00004',
           nameHighlights: [],
@@ -11097,8 +11048,7 @@ export const richResponse = {
           ec_product_id: 'SP04761_00006',
           ec_gender: null,
           ec_color: null,
-          ec_listing:
-            '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
+          ec_listing: '/Sandals_Shoes/Water_Shoes;/Promotions/Surf_With_Us_This_Year',
           clickUri: 'https://sports.barca.group/pdp/SP04761_00006',
           permanentid: 'SP04761_00006',
           nameHighlights: [],

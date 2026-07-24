@@ -4,9 +4,7 @@ import {ChangeDetectionStrategy, Component, input, output} from '@angular/core';
   selector: 'app-prompt-composer',
   template: `
     <form class="composer" (submit)="handleSubmit($event)">
-      <label class="composer-label" for="prompt"
-        >Ask the storefront assistant</label
-      >
+      <label class="composer-label" for="prompt">Ask the storefront assistant</label>
       <textarea
         #draftInput
         id="prompt"
@@ -19,11 +17,7 @@ import {ChangeDetectionStrategy, Component, input, output} from '@angular/core';
 
       <div class="composer-actions">
         <span class="status-pill" [class.active]="busy()">{{ status() }}</span>
-        <button
-          class="primary-button"
-          type="submit"
-          [disabled]="busy() || !draft().trim()"
-        >
+        <button class="primary-button" type="submit" [disabled]="busy() || !draft().trim()">
           {{ busy() ? 'Streaming…' : 'Send' }}
         </button>
       </div>

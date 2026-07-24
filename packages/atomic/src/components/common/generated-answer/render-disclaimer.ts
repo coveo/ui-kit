@@ -9,9 +9,7 @@ export interface RenderDisclaimerProps {
 /**
  * Renders the disclaimer text for the generated answer.
  */
-export const renderDisclaimer: FunctionalComponent<RenderDisclaimerProps> = ({
-  props,
-}) => {
+export const renderDisclaimer: FunctionalComponent<RenderDisclaimerProps> = ({props}) => {
   const {i18n} = props;
 
   return html`

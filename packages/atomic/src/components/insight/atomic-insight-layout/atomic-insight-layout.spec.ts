@@ -8,25 +8,21 @@ import {renderInAtomicInsightInterface} from '@/vitest-utils/testing-helpers/fix
 import type {AtomicInsightLayout} from './atomic-insight-layout';
 
 describe('atomic-insight-layout', () => {
-  const renderInsightLayout = async (
-    widget?: boolean,
-    mobileBreakpoint?: string
-  ) => {
-    const {element, atomicInterface} =
-      await renderInAtomicInsightInterface<AtomicInsightLayout>({
-        template: html`<atomic-insight-layout
-          ?widget="${widget}"
-          mobile-breakpoint="${ifDefined(mobileBreakpoint)}"
-        >
-          <atomic-layout-section data-testid="facets" section="facets">
-            facets...
-          </atomic-layout-section>
-          <atomic-layout-section data-testid="results" section="results">
-            results...
-          </atomic-layout-section>
-        </atomic-insight-layout>`,
-        selector: 'atomic-insight-layout',
-      });
+  const renderInsightLayout = async (widget?: boolean, mobileBreakpoint?: string) => {
+    const {element, atomicInterface} = await renderInAtomicInsightInterface<AtomicInsightLayout>({
+      template: html`<atomic-insight-layout
+        ?widget="${widget}"
+        mobile-breakpoint="${ifDefined(mobileBreakpoint)}"
+      >
+        <atomic-layout-section data-testid="facets" section="facets">
+          facets...
+        </atomic-layout-section>
+        <atomic-layout-section data-testid="results" section="results">
+          results...
+        </atomic-layout-section>
+      </atomic-insight-layout>`,
+      selector: 'atomic-insight-layout',
+    });
 
     return {
       element,

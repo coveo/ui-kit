@@ -4,11 +4,7 @@ import {
   type AnswerEvaluationPOSTParams,
   answerEvaluation,
 } from '../../../api/knowledge/post-answer-evaluation.js';
-import {
-  answerApi,
-  fetchAnswer,
-  selectAnswer,
-} from '../../../api/knowledge/stream-answer-api.js';
+import {answerApi, fetchAnswer, selectAnswer} from '../../../api/knowledge/stream-answer-api.js';
 import type {StreamAnswerAPIState} from '../../../api/knowledge/stream-answer-api-state.js';
 import {warnIfUsingNextAnalyticsModeForServiceFeature} from '../../../app/engine.js';
 import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
@@ -28,10 +24,7 @@ import type {GeneratedAnswerFeedback} from '../../../features/generated-answer/g
 import {withGeneratedAnswerSseErrorHelpers} from '../../../features/generated-answer/sse-generated-answer-errors.js';
 import {filterOutDuplicatedCitations} from '../../../features/generated-answer/utils/generated-answer-citation-utils.js';
 import {queryReducer as query} from '../../../features/query/query-slice.js';
-import type {
-  GeneratedAnswerSection,
-  QuerySection,
-} from '../../../state/state-sections.js';
+import type {GeneratedAnswerSection, QuerySection} from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {
   buildCoreGeneratedAnswer,
@@ -40,10 +33,7 @@ import {
   type GeneratedAnswerProps,
 } from '../../core/generated-answer/headless-core-generated-answer.js';
 
-interface AnswerApiGeneratedAnswer extends Omit<
-  GeneratedAnswer,
-  'sendFeedback'
-> {
+interface AnswerApiGeneratedAnswer extends Omit<GeneratedAnswer, 'sendFeedback'> {
   /**
    * Resets the last answer.
    */
@@ -65,9 +55,7 @@ interface ParseEvaluationArgumentsParams {
   query: string;
 }
 
-const parseEvaluationDetails = (
-  detail: 'yes' | 'no' | 'unknown'
-): boolean | null => {
+const parseEvaluationDetails = (detail: 'yes' | 'no' | 'unknown'): boolean | null => {
   if (detail === 'yes') {
     return true;
   }
@@ -99,9 +87,7 @@ const parseEvaluationArguments = ({
   question: query,
 });
 
-const subscribeToSearchRequest = (
-  engine: SearchEngine<StreamAnswerAPIState>
-) => {
+const subscribeToSearchRequest = (engine: SearchEngine<StreamAnswerAPIState>) => {
   let lastRequestId = '';
 
   const strictListener = () => {
@@ -147,15 +133,9 @@ export function buildAnswerApiGeneratedAnswer(
   if (!loadAnswerApiReducers(engine)) {
     throw loadReducerError;
   }
-  warnIfUsingNextAnalyticsModeForServiceFeature(
-    engine.state.configuration.analytics.analyticsMode
-  );
+  warnIfUsingNextAnalyticsModeForServiceFeature(engine.state.configuration.analytics.analyticsMode);
 
-  const {...controller} = buildCoreGeneratedAnswer(
-    engine,
-    analyticsClient,
-    props
-  );
+  const {...controller} = buildCoreGeneratedAnswer(engine, analyticsClient, props);
   const getState = () => engine.state;
   engine.dispatch(updateAnswerConfigurationId(props.answerConfigurationId!));
 
@@ -169,9 +149,7 @@ export function buildAnswerApiGeneratedAnswer(
       return {
         ...state,
         answer: answerApiState?.answer,
-        citations: filterOutDuplicatedCitations(
-          answerApiState?.citations ?? []
-        ),
+        citations: filterOutDuplicatedCitations(answerApiState?.citations ?? []),
         error: withGeneratedAnswerSseErrorHelpers({
           message: answerApiState?.error?.message,
           code: answerApiState?.error?.code,
@@ -210,8 +188,7 @@ export function buildAnswerApiGeneratedAnswer(
 function loadAnswerApiReducers(
   engine: SearchEngine | InsightEngine
 ): engine is SearchEngine<
-  GeneratedAnswerSection &
-    QuerySection & {answer: ReturnType<typeof answerApi.reducer>}
+  GeneratedAnswerSection & QuerySection & {answer: ReturnType<typeof answerApi.reducer>}
 > {
   engine.addReducers({[answerApi.reducerPath]: answerApi.reducer, query});
   return true;

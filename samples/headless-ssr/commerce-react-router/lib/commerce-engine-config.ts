@@ -24,9 +24,7 @@ import {
 import {fetchToken} from './fetch-token.js';
 
 const getAccessToken = async (usePublicApiKey: boolean) => {
-  return usePublicApiKey || typeof window !== 'undefined'
-    ? await fetchToken(usePublicApiKey)
-    : '';
+  return usePublicApiKey || typeof window !== 'undefined' ? await fetchToken(usePublicApiKey) : '';
 };
 
 export default {

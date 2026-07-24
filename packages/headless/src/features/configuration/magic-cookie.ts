@@ -1,6 +1,5 @@
 const pendragonCookieValueMatcher = /(^|; )Coveo-Pendragon=([^;]*)/;
-const searchAgentDebugCookieValueMatcher =
-  /(^|; )Coveo-SearchAgentDebug=([^;]*)/;
+const searchAgentDebugCookieValueMatcher = /(^|; )Coveo-SearchAgentDebug=([^;]*)/;
 export function getMagicCookie() {
   if (typeof window === 'undefined') {
     return false;

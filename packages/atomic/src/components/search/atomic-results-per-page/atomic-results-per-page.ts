@@ -67,8 +67,7 @@ export class AtomicResultsPerPage
   /**
    * A list of choices for the number of results to display per page, separated by commas.
    */
-  @property({reflect: true, attribute: 'choices-displayed'}) choicesDisplayed =
-    '10,25,50,100';
+  @property({reflect: true, attribute: 'choices-displayed'}) choicesDisplayed = '10,25,50,100';
   /**
    * The initial selection for the number of result per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
    * @type {number}
@@ -82,10 +81,7 @@ export class AtomicResultsPerPage
       this.initialChoice = this.initialChoice ?? this.choices[0];
       validateInitialChoice(this.initialChoice, this.choices);
     } catch (error) {
-      if (
-        error instanceof ChoiceIsNaNError ||
-        error instanceof InitialChoiceNotInChoicesError
-      ) {
+      if (error instanceof ChoiceIsNaNError || error instanceof InitialChoiceNotInChoicesError) {
         this.bindings.engine.logger.error(error.message);
         throw error;
       }
@@ -117,9 +113,7 @@ export class AtomicResultsPerPage
 
     return html`
       ${when(
-        !this.searchStatusState.hasError &&
-          this.isAppLoaded &&
-          this.searchStatusState.hasResults,
+        !this.searchStatusState.hasError && this.isAppLoaded && this.searchStatusState.hasResults,
         () => html`
           <div class="flex items-center">
             ${renderLabel()(html`${this.label}`)}

@@ -1,11 +1,7 @@
 import type {PayloadAction} from '@reduxjs/toolkit';
 import type {CoreEngine} from '../../app/engine.js';
 import {caseContextReducer as insightCaseContext} from '../../features/case-context/case-context-slice.js';
-import {
-  setCaseContext,
-  setCaseId,
-  setCaseNumber,
-} from './case-context-actions.js';
+import {setCaseContext, setCaseId, setCaseNumber} from './case-context-actions.js';
 
 /**
  * The case context action creators.
@@ -20,9 +16,7 @@ export interface CaseContextActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  setCaseContext(
-    payload: Record<string, string>
-  ): PayloadAction<Record<string, string>>;
+  setCaseContext(payload: Record<string, string>): PayloadAction<Record<string, string>>;
 
   /**
    * Sets the case id.
@@ -50,9 +44,7 @@ export interface CaseContextActionCreators {
  * @group Actions
  * @category CaseContext
  */
-export function loadCaseContextActions(
-  engine: CoreEngine
-): CaseContextActionCreators {
+export function loadCaseContextActions(engine: CoreEngine): CaseContextActionCreators {
   engine.addReducers({insightCaseContext});
 
   return {

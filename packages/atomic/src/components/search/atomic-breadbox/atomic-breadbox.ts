@@ -24,10 +24,7 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {
-  AriaLiveRegionController,
-  FocusTargetController,
-} from '@/src/utils/accessibility-utils';
+import {AriaLiveRegionController, FocusTargetController} from '@/src/utils/accessibility-utils';
 import {getFieldValueCaption} from '@/src/utils/field-utils';
 import {HiddenStateController} from '@/src/utils/hidden-state-controller';
 
@@ -51,10 +48,7 @@ import {HiddenStateController} from '@/src/utils/hidden-state-controller';
 @customElement('atomic-breadbox')
 @bindings()
 @withTailwindStyles
-export class AtomicBreadbox
-  extends LitElement
-  implements InitializableComponent<Bindings>
-{
+export class AtomicBreadbox extends LitElement implements InitializableComponent<Bindings> {
   static styles: CSSResultGroup = [
     css`
       @reference '../../../utils/tailwind.global.tw.css';
@@ -111,11 +105,7 @@ export class AtomicBreadbox
   @property({type: Boolean, attribute: 'disable-collapse'})
   disableCollapse = false;
 
-  private breadboxAriaMessage = new AriaLiveRegionController(
-    this,
-    'breadbox',
-    true
-  );
+  private breadboxAriaMessage = new AriaLiveRegionController(this, 'breadbox', true);
 
   /**
    * This prop allows you to control the display depth
@@ -154,18 +144,9 @@ export class AtomicBreadbox
       this.resizeObserver.observe(this.parentElement);
     }
 
-    this.breadcrumbRemovedFocus = new FocusTargetController(
-      this,
-      this.bindings
-    );
-    this.breadcrumbShowMoreFocus = new FocusTargetController(
-      this,
-      this.bindings
-    );
-    this.breadcrumbShowLessFocus = new FocusTargetController(
-      this,
-      this.bindings
-    );
+    this.breadcrumbRemovedFocus = new FocusTargetController(this, this.bindings);
+    this.breadcrumbShowMoreFocus = new FocusTargetController(this, this.bindings);
+    this.breadcrumbShowLessFocus = new FocusTargetController(this, this.bindings);
   }
 
   public updated() {
@@ -222,8 +203,7 @@ export class AtomicBreadbox
       ${renderBreadcrumbClearAll({
         props: {
           refCallback: async (ref) => {
-            const isFocusTarget =
-              this.lastRemovedBreadcrumbIndex === this.numberOfBreadcrumbs;
+            const isFocusTarget = this.lastRemovedBreadcrumbIndex === this.numberOfBreadcrumbs;
 
             if (isFocusTarget) {
               await this.breadcrumbRemovedFocus.setTarget(ref);
@@ -246,21 +226,15 @@ export class AtomicBreadbox
   }
 
   private get breadcrumbs() {
-    return Array.from(
-      this.shadowRoot!.querySelectorAll('li.breadcrumb')
-    ) as HTMLElement[];
+    return Array.from(this.shadowRoot!.querySelectorAll('li.breadcrumb')) as HTMLElement[];
   }
 
   private get showMoreButton() {
-    return this.shadowRoot!.querySelector(
-      'button[part="show-more"]'
-    ) as HTMLButtonElement;
+    return this.shadowRoot!.querySelector('button[part="show-more"]') as HTMLButtonElement;
   }
 
   private get showLessButton() {
-    return this.shadowRoot!.querySelector(
-      'button[part="show-less"]'
-    ) as HTMLButtonElement;
+    return this.shadowRoot!.querySelector('button[part="show-less"]') as HTMLButtonElement;
   }
 
   private hide(element: HTMLElement) {
@@ -298,11 +272,7 @@ export class AtomicBreadbox
 
   private hideOverflowingBreadcrumbs() {
     let hiddenBreadcrumbs = 0;
-    for (
-      let i = this.breadcrumbs.length - 1;
-      this.isOverflowing && i >= 0;
-      i--
-    ) {
+    for (let i = this.breadcrumbs.length - 1; this.isOverflowing && i >= 0; i--) {
       this.hide(this.breadcrumbs[i]);
       hiddenBreadcrumbs++;
     }
@@ -329,18 +299,14 @@ export class AtomicBreadbox
 
   private get facetBreadcrumbs(): BreadboxBreadcrumb[] {
     return this.breadcrumbManagerState.facetBreadcrumbs
-      .flatMap(({facetId, field, values}) =>
-        values.map((value) => ({value, facetId, field}))
-      )
+      .flatMap(({facetId, field, values}) => values.map((value) => ({value, facetId, field})))
       .filter(({facetId}) => this.bindings.store.state.facets[facetId])
       .map(({value, facetId, field}) => ({
         facetId,
         label: this.bindings.store.state.facets[facetId]?.label(),
         state: value.value.state,
         deselect: value.deselect,
-        formattedValue: [
-          getFieldValueCaption(field, value.value.value, this.bindings.i18n),
-        ],
+        formattedValue: [getFieldValueCaption(field, value.value.value, this.bindings.i18n)],
       }));
   }
 
@@ -359,36 +325,26 @@ export class AtomicBreadbox
 
   private get numericFacetBreadcrumbs(): BreadboxBreadcrumb[] {
     return this.breadcrumbManagerState.numericFacetBreadcrumbs
-      .flatMap(({facetId, field, values}) =>
-        values.map((value) => ({value, facetId, field}))
-      )
+      .flatMap(({facetId, field, values}) => values.map((value) => ({value, facetId, field})))
       .map(({value, facetId}) => ({
         facetId,
         label: this.bindings.store.state.numericFacets[facetId].label(),
         state: value.value.state,
         deselect: value.deselect,
-        formattedValue: [
-          this.bindings.store.state.numericFacets[facetId].format(value.value),
-        ],
-        content: this.bindings.store.state.numericFacets[facetId].content?.(
-          value.value
-        ),
+        formattedValue: [this.bindings.store.state.numericFacets[facetId].format(value.value)],
+        content: this.bindings.store.state.numericFacets[facetId].content?.(value.value),
       }));
   }
 
   private get dateFacetBreadcrumbs(): BreadboxBreadcrumb[] {
     return this.breadcrumbManagerState.dateFacetBreadcrumbs
-      .flatMap(({facetId, field, values}) =>
-        values.map((value) => ({value, facetId, field}))
-      )
+      .flatMap(({facetId, field, values}) => values.map((value) => ({value, facetId, field})))
       .map(({value, facetId}) => ({
         facetId,
         label: this.bindings.store.state.dateFacets[facetId].label(),
         state: value.value.state,
         deselect: value.deselect,
-        formattedValue: [
-          this.bindings.store.state.dateFacets[facetId].format(value.value),
-        ],
+        formattedValue: [this.bindings.store.state.dateFacets[facetId].format(value.value)],
       }));
   }
 
@@ -402,9 +358,7 @@ export class AtomicBreadbox
         state: value.value.state,
         label: label ? label : field,
         deselect: value.deselect,
-        formattedValue: [
-          getFieldValueCaption(field, value.value.value, this.bindings.i18n),
-        ],
+        formattedValue: [getFieldValueCaption(field, value.value.value, this.bindings.i18n)],
       }));
   }
 

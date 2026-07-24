@@ -42,10 +42,7 @@ import {AriaLiveRegionController} from '@/src/utils/accessibility-utils.js';
 @customElement('atomic-no-results')
 @bindings()
 @withTailwindStyles
-export class AtomicNoResults
-  extends LitElement
-  implements InitializableComponent<Bindings>
-{
+export class AtomicNoResults extends LitElement implements InitializableComponent<Bindings> {
   // TODO - (v4) KIT-4823: Remove.
   /**
    * Whether to display a button which cancels the last available action.
@@ -107,8 +104,7 @@ export class AtomicNoResults
     } = this;
 
     this.ariaMessage.message =
-      this.searchStatusState.firstSearchExecuted &&
-      !this.searchStatusState.isLoading
+      this.searchStatusState.firstSearchExecuted && !this.searchStatusState.isLoading
         ? getSummary(
             i18n,
             this.querySummaryState.query,
@@ -125,8 +121,8 @@ export class AtomicNoResults
       },
       () =>
         renderNoItemsContainer()(html`
-          ${renderMagnifyingGlass()} ${this.renderNoItems()}
-          ${this.renderSearchTips()} ${this.renderCancelButton()}
+          ${renderMagnifyingGlass()} ${this.renderNoItems()} ${this.renderSearchTips()}
+          ${this.renderCancelButton()}
         `)
     )}`;
   }

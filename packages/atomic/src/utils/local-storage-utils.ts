@@ -98,17 +98,12 @@ export class SafeStorage implements Storage {
     orElse: () => OnFailure
   ) {
     return this.tryOrElse(tryTo, () => {
-      console.warn(
-        `Error while trying to do JSON manipulation with local storage entry. ${key}`
-      );
+      console.warn(`Error while trying to do JSON manipulation with local storage entry. ${key}`);
       return orElse();
     });
   }
 
-  private tryOrElse<OnSuccess, OnFailure>(
-    tryTo: () => OnSuccess,
-    orElse: () => OnFailure
-  ) {
+  private tryOrElse<OnSuccess, OnFailure>(tryTo: () => OnSuccess, orElse: () => OnFailure) {
     try {
       return tryTo();
     } catch (e) {

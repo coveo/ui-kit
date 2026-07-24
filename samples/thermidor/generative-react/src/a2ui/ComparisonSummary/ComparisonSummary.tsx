@@ -6,9 +6,7 @@ interface A2UIComparisonSummaryProps {
 }
 
 export function A2UIComparisonSummary({surface}: A2UIComparisonSummaryProps) {
-  const text =
-    (surface.componentProps.text as {literalString?: string})?.literalString ??
-    '';
+  const text = (surface.componentProps.text as {literalString?: string})?.literalString ?? '';
 
   if (!text) {
     return null;

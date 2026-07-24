@@ -18,54 +18,46 @@ import {
   updateBasicConfiguration,
   updateSearchConfiguration,
 } from './configuration-actions.js';
-import {
-  type ConfigurationState,
-  getConfigurationInitialState,
-} from './configuration-state.js';
-import {
-  getMagicCookie,
-  getSearchAgentDebugMagicCookie,
-} from './magic-cookie.js';
+import {type ConfigurationState, getConfigurationInitialState} from './configuration-state.js';
+import {getMagicCookie, getSearchAgentDebugMagicCookie} from './magic-cookie.js';
 
-export const configurationReducer = createReducer(
-  getConfigurationInitialState(),
-  (builder) =>
-    builder
-      .addCase(updateBasicConfiguration, (state, action) => {
-        handleUpdateBasicConfiguration(state, action.payload);
-      })
-      .addCase(updateSearchConfiguration, (state, action) => {
-        handleUpdateSearchConfiguration(state, action.payload);
-      })
-      .addCase(updateAnalyticsConfiguration, (state, action) => {
-        handleUpdateAnalyticsConfiguration(state, action.payload);
-      })
-      .addCase(disableAnalytics, (state) => {
-        state.analytics.enabled = false;
-      })
-      .addCase(enableAnalytics, (state) => {
-        state.analytics.enabled = true;
-      })
-      .addCase(setOriginLevel2, (state, action) => {
-        state.analytics.originLevel2 = action.payload.originLevel2;
-      })
-      .addCase(setOriginLevel3, (state, action) => {
-        state.analytics.originLevel3 = action.payload.originLevel3;
-      })
-      .addCase(updateActiveTab, (state, action) => {
-        state.analytics.originLevel2 = action.payload;
-      })
-      .addCase(restoreTab, (state, action) => {
-        state.analytics.originLevel2 = action.payload;
-      })
-      .addCase(restoreSearchParameters, (state, action) => {
-        if (!isNullOrUndefined(action.payload.tab)) {
-          state.analytics.originLevel2 = action.payload.tab;
-        }
-      })
-      .addCase(setAgentId, (state, {payload}) => {
-        handleUpdateAgentId(state, payload);
-      })
+export const configurationReducer = createReducer(getConfigurationInitialState(), (builder) =>
+  builder
+    .addCase(updateBasicConfiguration, (state, action) => {
+      handleUpdateBasicConfiguration(state, action.payload);
+    })
+    .addCase(updateSearchConfiguration, (state, action) => {
+      handleUpdateSearchConfiguration(state, action.payload);
+    })
+    .addCase(updateAnalyticsConfiguration, (state, action) => {
+      handleUpdateAnalyticsConfiguration(state, action.payload);
+    })
+    .addCase(disableAnalytics, (state) => {
+      state.analytics.enabled = false;
+    })
+    .addCase(enableAnalytics, (state) => {
+      state.analytics.enabled = true;
+    })
+    .addCase(setOriginLevel2, (state, action) => {
+      state.analytics.originLevel2 = action.payload.originLevel2;
+    })
+    .addCase(setOriginLevel3, (state, action) => {
+      state.analytics.originLevel3 = action.payload.originLevel3;
+    })
+    .addCase(updateActiveTab, (state, action) => {
+      state.analytics.originLevel2 = action.payload;
+    })
+    .addCase(restoreTab, (state, action) => {
+      state.analytics.originLevel2 = action.payload;
+    })
+    .addCase(restoreSearchParameters, (state, action) => {
+      if (!isNullOrUndefined(action.payload.tab)) {
+        state.analytics.originLevel2 = action.payload.tab;
+      }
+    })
+    .addCase(setAgentId, (state, {payload}) => {
+      handleUpdateAgentId(state, payload);
+    })
 );
 
 function handleUpdateBasicConfiguration(

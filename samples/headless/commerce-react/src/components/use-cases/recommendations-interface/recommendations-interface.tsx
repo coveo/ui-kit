@@ -10,14 +10,10 @@ interface IRecommendationsInterfaceProps {
   cartController: Cart;
 }
 
-export default function RecommendationsInterface(
-  props: IRecommendationsInterfaceProps
-) {
+export default function RecommendationsInterface(props: IRecommendationsInterfaceProps) {
   const {recommendationsController, cartController} = props;
 
-  const [recommendationsState, setRecommendationsState] = useState(
-    recommendationsController.state
-  );
+  const [recommendationsState, setRecommendationsState] = useState(recommendationsController.state);
 
   const summaryController = recommendationsController.summary();
 
@@ -29,17 +25,13 @@ export default function RecommendationsInterface(
 
   return (
     <div className="RecommendationsInterface">
-      <h3 className="RecommendationsHeadline">
-        {recommendationsState.headline}
-      </h3>
+      <h3 className="RecommendationsHeadline">{recommendationsState.headline}</h3>
       <Summary controller={summaryController} />
       <ProductList
         products={recommendationsState.products}
         cartController={cartController}
         controllerBuilder={recommendationsController.interactiveProduct}
-        promoteChildToParent={(child) =>
-          recommendationsController.promoteChildToParent(child)
-        }
+        promoteChildToParent={(child) => recommendationsController.promoteChildToParent(child)}
       />
     </div>
   );

@@ -1,7 +1,4 @@
-import {
-  SearchEngineConfiguration,
-  getSampleSearchEngineConfiguration,
-} from '@coveo/headless';
+import {SearchEngineConfiguration, getSampleSearchEngineConfiguration} from '@coveo/headless';
 import {Decorator, StoryContext} from '@storybook/web-components-vite';
 import {html} from 'lit';
 import {spreadProps} from '@open-wc/lit-helpers';
@@ -36,9 +33,8 @@ export const wrapInSearchInterface = ({
   `,
   play: async ({canvasElement, step}) => {
     await customElements.whenDefined('atomic-search-interface');
-    const searchInterface = canvasElement.querySelector<AtomicSearchInterface>(
-      'atomic-search-interface'
-    )!;
+    const searchInterface =
+      canvasElement.querySelector<AtomicSearchInterface>('atomic-search-interface')!;
     await step('Render the Search Interface', async () => {
       await searchInterface.initialize({
         ...getSampleSearchEngineConfiguration(),
@@ -55,12 +51,12 @@ export const wrapInSearchInterface = ({
   },
 });
 
-export const playExecuteFirstSearch: (
-  context: StoryContext
-) => Promise<void> = async ({canvasElement, step}) => {
-  const searchInterface = canvasElement.querySelector<AtomicSearchInterface>(
-    'atomic-search-interface'
-  );
+export const playExecuteFirstSearch: (context: StoryContext) => Promise<void> = async ({
+  canvasElement,
+  step,
+}) => {
+  const searchInterface =
+    canvasElement.querySelector<AtomicSearchInterface>('atomic-search-interface');
   await step('Execute the first search', async () => {
     await searchInterface!.executeFirstSearch();
   });

@@ -101,9 +101,7 @@ describe('facet set insight analytics actions', () => {
     };
 
     expect(mockLogBreadcrumbFacet).toHaveBeenCalledTimes(1);
-    expect(mockLogBreadcrumbFacet.mock.calls[0][0]).toStrictEqual(
-      expectedPayload
-    );
+    expect(mockLogBreadcrumbFacet.mock.calls[0][0]).toStrictEqual(expectedPayload);
   });
 
   it('should log #logFacetSelect with the right payload', async () => {
@@ -133,9 +131,7 @@ describe('facet set insight analytics actions', () => {
     };
 
     expect(mockLogFacetDeselect).toHaveBeenCalledTimes(1);
-    expect(mockLogFacetDeselect.mock.calls[0][0]).toStrictEqual(
-      expectedPayload
-    );
+    expect(mockLogFacetDeselect.mock.calls[0][0]).toStrictEqual(expectedPayload);
   });
 
   it('should log #logFacetUpdateSort with the right payload', async () => {
@@ -150,9 +146,7 @@ describe('facet set insight analytics actions', () => {
     };
 
     expect(mockLogFacetUpdateSort).toHaveBeenCalledTimes(1);
-    expect(mockLogFacetUpdateSort.mock.calls[0][0]).toStrictEqual(
-      expectedPayload
-    );
+    expect(mockLogFacetUpdateSort.mock.calls[0][0]).toStrictEqual(expectedPayload);
   });
 
   it('should log #logFacetClearAll with the right payload', async () => {
@@ -165,9 +159,7 @@ describe('facet set insight analytics actions', () => {
     const expectedPayload = baseExpectedPayload;
 
     expect(mockLogFacetClearAll).toHaveBeenCalledTimes(1);
-    expect(mockLogFacetClearAll.mock.calls[0][0]).toStrictEqual(
-      expectedPayload
-    );
+    expect(mockLogFacetClearAll.mock.calls[0][0]).toStrictEqual(expectedPayload);
   });
 
   it('should log #logFacetShowMore with the right payload', async () => {
@@ -180,9 +172,7 @@ describe('facet set insight analytics actions', () => {
     const expectedPayload = baseExpectedPayload;
 
     expect(mockLogFacetShowMore).toHaveBeenCalledTimes(1);
-    expect(mockLogFacetShowMore.mock.calls[0][0]).toStrictEqual(
-      expectedPayload
-    );
+    expect(mockLogFacetShowMore.mock.calls[0][0]).toStrictEqual(expectedPayload);
   });
 
   it('should log #logFacetShowLess with the right payload', async () => {
@@ -195,8 +185,6 @@ describe('facet set insight analytics actions', () => {
     const expectedPayload = baseExpectedPayload;
 
     expect(mockLogFacetShowLess).toHaveBeenCalledTimes(1);
-    expect(mockLogFacetShowLess.mock.calls[0][0]).toStrictEqual(
-      expectedPayload
-    );
+    expect(mockLogFacetShowLess.mock.calls[0][0]).toStrictEqual(expectedPayload);
   });
 });

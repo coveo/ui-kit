@@ -12,9 +12,7 @@ test.describe('Atomic Insight Query Summary', () => {
     await expect(querySummary.querySummary).toBeVisible();
   });
 
-  test('should display default message when no query', async ({
-    querySummary,
-  }) => {
+  test('should display default message when no query', async ({querySummary}) => {
     await expect(querySummary.querySummary).toHaveText(/Insights related to/);
   });
 });

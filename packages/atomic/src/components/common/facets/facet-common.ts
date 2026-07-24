@@ -36,9 +36,7 @@ export function shouldDisplayInputForFacetRange(facetRange: {
   }
 
   const onlyValuesWithResultsOrActive =
-    facetValues.filter(
-      (value) => value.numberOfResults || value.state !== 'idle'
-    ) || [];
+    facetValues.filter((value) => value.numberOfResults || value.state !== 'idle') || [];
 
   if (!onlyValuesWithResultsOrActive.length) {
     return false;
@@ -70,10 +68,7 @@ export function sortFacetVisibility(
   return {visibleFacets, invisibleFacets};
 }
 
-export function collapseFacetsAfter(
-  facets: BaseFacetElement[],
-  visibleFacetsCount: number
-) {
+export function collapseFacetsAfter(facets: BaseFacetElement[], visibleFacetsCount: number) {
   if (visibleFacetsCount === -1) {
     return;
   }
@@ -103,15 +98,10 @@ export function getFacetsInChildren(parent: HTMLElement): BaseFacetElement[] {
 export function getAutomaticFacetGenerator(
   parent: HTMLElement
 ): AtomicAutomaticFacetGenerator | undefined {
-  return (Array.from(parent.children) as HTMLElement[]).find(
-    isAutomaticFacetGenerator
-  );
+  return (Array.from(parent.children) as HTMLElement[]).find(isAutomaticFacetGenerator);
 }
 
-function findFacetParent(
-  facet: BaseFacetElement,
-  parents: (HTMLElement | null)[]
-) {
+function findFacetParent(facet: BaseFacetElement, parents: (HTMLElement | null)[]) {
   for (let i = 0; i < parents.length; i++) {
     if (parents[i]?.contains(facet)) {
       return parents[i];

@@ -1,7 +1,4 @@
-import {
-  buildCommerceEngine,
-  getSampleCommerceEngineConfiguration,
-} from '@coveo/headless/commerce';
+import {buildCommerceEngine, getSampleCommerceEngineConfiguration} from '@coveo/headless/commerce';
 
 /**
  * Builds a commerce engine bound to a given catalog `view` URL, using the

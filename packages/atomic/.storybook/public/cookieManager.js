@@ -21,9 +21,7 @@ export const getOptanonConsentCookie = () => {
 export const updateCookieSettings = () => {
   const optanonConsentCookie = getOptanonConsentCookie();
   if (optanonConsentCookie) {
-    functionalKeys.enabled = optanonConsentCookie.includes(
-      FUNCTIONAL_COOKIE_CATEGORY
-    );
+    functionalKeys.enabled = optanonConsentCookie.includes(FUNCTIONAL_COOKIE_CATEGORY);
   }
 };
 

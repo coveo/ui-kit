@@ -11,10 +11,9 @@ const searchApiHarness = new MockSearchApi();
 const {decorator, play} = wrapInSearchInterface();
 const {play: playInitOnly} = wrapInSearchInterface({skipFirstSearch: true});
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-no-results',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-no-results', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-no-results',
@@ -66,9 +65,7 @@ export const A11yStatusMessage: Story = {
     await playInitOnly(context);
     await testStatusMessageA11y(context, {
       triggerAction: async (canvasElement) => {
-        const searchInterface = canvasElement.querySelector(
-          'atomic-search-interface'
-        )!;
+        const searchInterface = canvasElement.querySelector('atomic-search-interface')!;
         await (searchInterface as any).executeFirstSearch();
       },
       expectedText: 'No results',

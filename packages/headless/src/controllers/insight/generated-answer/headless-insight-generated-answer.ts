@@ -28,16 +28,8 @@ export function buildGeneratedAnswer(
 ): GeneratedAnswer {
   const {dispatch} = engine;
   const controller = props.answerConfigurationId
-    ? buildAnswerApiGeneratedAnswer(
-        engine,
-        generatedAnswerInsightAnalyticsClient,
-        props
-      )
-    : buildSearchAPIGeneratedAnswer(
-        engine,
-        generatedAnswerInsightAnalyticsClient,
-        props
-      );
+    ? buildAnswerApiGeneratedAnswer(engine, generatedAnswerInsightAnalyticsClient, props)
+    : buildSearchAPIGeneratedAnswer(engine, generatedAnswerInsightAnalyticsClient, props);
 
   return {
     ...controller,
@@ -49,8 +41,7 @@ export function buildGeneratedAnswer(
     retry() {
       dispatch(
         executeSearch({
-          legacy:
-            generatedAnswerInsightAnalyticsClient.logRetryGeneratedAnswer(),
+          legacy: generatedAnswerInsightAnalyticsClient.logRetryGeneratedAnswer(),
           next: retryGeneratedAnswer(),
         })
       );

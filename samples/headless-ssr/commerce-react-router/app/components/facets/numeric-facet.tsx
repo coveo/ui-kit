@@ -165,10 +165,7 @@ export default function NumericFacet({
                   <span className="FacetValueName">
                     {value.start} to {value.end}
                   </span>
-                  <span className="FacetValueNumberOfProducts">
-                    {' '}
-                    ({value.numberOfResults})
-                  </span>
+                  <span className="FacetValueNumberOfProducts"> ({value.numberOfResults})</span>
                 </label>
               </li>
             );
@@ -200,9 +197,7 @@ export default function NumericFacet({
 
   return (
     <fieldset className="NumericFacet">
-      <legend className="FacetDisplayName">
-        {state.displayName ?? state.facetId}
-      </legend>
+      <legend className="FacetDisplayName">{state.displayName ?? state.facetId}</legend>
       {renderManualRangeControls()}
       {renderFacetValues()}
     </fieldset>

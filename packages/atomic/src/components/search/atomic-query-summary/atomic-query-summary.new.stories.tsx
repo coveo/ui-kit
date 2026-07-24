@@ -12,15 +12,12 @@ import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
 
 const searchApiHarness = new MockSearchApi();
 searchApiHarness.searchEndpoint.addRequestTransformer(searchFacetTransformer);
-searchApiHarness.facetSearchEndpoint.addRequestTransformer(
-  searchFacetSearchTransformer
-);
+searchApiHarness.facetSearchEndpoint.addRequestTransformer(searchFacetSearchTransformer);
 
 const {decorator, play} = wrapInSearchInterface();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-query-summary',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-query-summary', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-query-summary',

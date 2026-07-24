@@ -1,14 +1,6 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  input,
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, input} from '@angular/core';
 import {ProductCarouselSurface} from '../models';
-import {
-  ProductCardComponent,
-  type ProductCardData,
-} from './product-card.component';
+import {ProductCardComponent, type ProductCardData} from './product-card.component';
 
 @Component({
   selector: 'app-product-carousel',

@@ -33,10 +33,7 @@ import {
 import type {GeneratedResponseFormat} from '../../../features/generated-answer/generated-response-format.js';
 import type {SearchAppState} from '../../../state/search-app-state.js';
 import {buildMockCitation} from '../../../test/mock-citation.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../../test/mock-engine-v2.js';
 import {createMockState} from '../../../test/mock-state.js';
 import {
   buildCoreGeneratedAnswer,
@@ -45,9 +42,7 @@ import {
 } from './headless-core-generated-answer.js';
 
 vi.mock('../../../features/generated-answer/generated-answer-actions');
-vi.mock(
-  '../../../features/generated-answer/generated-answer-analytics-actions'
-);
+vi.mock('../../../features/generated-answer/generated-answer-analytics-actions');
 
 const providedAnswerId = 'provided-answer-id';
 
@@ -57,16 +52,10 @@ describe('generated answer', () => {
   let state: SearchAppState;
 
   function initGeneratedAnswer(props: GeneratedAnswerProps = {}) {
-    generatedAnswer = buildCoreGeneratedAnswer(
-      engine,
-      generatedAnswerAnalyticsClient,
-      props
-    );
+    generatedAnswer = buildCoreGeneratedAnswer(engine, generatedAnswerAnalyticsClient, props);
   }
 
-  function buildEngineWithGeneratedAnswer(
-    initialState: Partial<GeneratedAnswerState> = {}
-  ) {
+  function buildEngineWithGeneratedAnswer(initialState: Partial<GeneratedAnswerState> = {}) {
     state = createMockState({
       generatedAnswer: {
         ...getGeneratedAnswerInitialState(),
@@ -147,20 +136,14 @@ describe('generated answer', () => {
   it('#logCitationClick dispatches analytics action', () => {
     const testCitation = buildMockCitation();
     generatedAnswer.logCitationClick(testCitation.id);
-    expect(logOpenGeneratedAnswerSource).toHaveBeenCalledWith(
-      testCitation.id,
-      undefined
-    );
+    expect(logOpenGeneratedAnswerSource).toHaveBeenCalledWith(testCitation.id, undefined);
   });
 
   it('#logCitationClick dispatches analytics action with provided answerId', () => {
     const testCitation = buildMockCitation();
     generatedAnswer.logCitationClick(testCitation.id, providedAnswerId);
 
-    expect(logOpenGeneratedAnswerSource).toHaveBeenCalledWith(
-      testCitation.id,
-      providedAnswerId
-    );
+    expect(logOpenGeneratedAnswerSource).toHaveBeenCalledWith(testCitation.id, providedAnswerId);
   });
 
   it('#logCitationHover dispatches analytics action', () => {
@@ -168,22 +151,14 @@ describe('generated answer', () => {
     const exampleDuration = 100;
 
     generatedAnswer.logCitationHover(testCitation.id, exampleDuration);
-    expect(logHoverCitation).toHaveBeenCalledWith(
-      testCitation.id,
-      exampleDuration,
-      undefined
-    );
+    expect(logHoverCitation).toHaveBeenCalledWith(testCitation.id, exampleDuration, undefined);
   });
 
   it('#logCitationHover dispatches analytics action with provided answerId', () => {
     const testCitation = buildMockCitation();
     const exampleDuration = 100;
 
-    generatedAnswer.logCitationHover(
-      testCitation.id,
-      exampleDuration,
-      providedAnswerId
-    );
+    generatedAnswer.logCitationHover(testCitation.id, exampleDuration, providedAnswerId);
 
     expect(logHoverCitation).toHaveBeenCalledWith(
       testCitation.id,

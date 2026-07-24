@@ -76,8 +76,7 @@ export default function (plop: NodePlopAPI) {
         message: 'Name of the project',
         validate: (input) => {
           // Taken from http://json.schemastore.org/package
-          const npmPackageRegex =
-            /^(?:@[a-z0-9-*~][a-z0-9-*._~]*\/)?[a-z0-9-~][a-z0-9-._~]*/;
+          const npmPackageRegex = /^(?:@[a-z0-9-*~][a-z0-9-*._~]*\/)?[a-z0-9-~][a-z0-9-._~]*/;
           if (!npmPackageRegex.test(input)) {
             return 'Project name is invalid, please follow the guidelines: https://docs.npmjs.com/cli/v7/configuring-npm/package-json#name)';
           }
@@ -95,8 +94,7 @@ export default function (plop: NodePlopAPI) {
       {
         type: 'input',
         name: 'platform-environment',
-        message:
-          'The Plaform Environment to use. See https://docs.coveo.com/en/mcc80216',
+        message: 'The Plaform Environment to use. See https://docs.coveo.com/en/mcc80216',
         default: 'prod',
       },
       {
@@ -128,8 +126,7 @@ export default function (plop: NodePlopAPI) {
         default: undefined,
         loop: false,
         pageSize: 10,
-        message:
-          'Use an existing hosted search page as a template, or start from scratch?',
+        message: 'Use an existing hosted search page as a template, or start from scratch?',
         choices: async (answers: PlopData) => [
           {value: undefined, name: 'Start from scratch'},
           {type: 'separator'},
@@ -137,11 +134,7 @@ export default function (plop: NodePlopAPI) {
         ],
         validate: async (input: string, answers: PlopData) => {
           try {
-            return !!(await fetchPageManifest(
-              initPlatformClient(answers),
-              input,
-              'unknown'
-            ));
+            return !!(await fetchPageManifest(initPlatformClient(answers), input, 'unknown'));
           } catch (_) {
             return `The search page with the id "${input}" does not exist.`;
           }
@@ -215,10 +208,7 @@ export default function (plop: NodePlopAPI) {
             'results-manager',
             `template-${index + 1}.html`
           );
-          writeFileSync(
-            filePath,
-            plop.renderString('{{{markup}}}', resultTemplate)
-          );
+          writeFileSync(filePath, plop.renderString('{{{markup}}}', resultTemplate));
         });
 
         return `${page.results.templates.length} result template(s) generated`;

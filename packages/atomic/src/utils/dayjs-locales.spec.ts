@@ -1,13 +1,5 @@
 import dayjs from 'dayjs';
-import {
-  afterEach,
-  beforeAll,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-} from 'vitest';
+import {afterEach, beforeAll, beforeEach, describe, expect, it, vi} from 'vitest';
 import {loadDayjsLocale} from './dayjs-locales';
 
 vi.mock('@/src/generated/dayjs-locales-data', () => {
@@ -22,8 +14,7 @@ vi.mock('@/src/generated/dayjs-locales-data', () => {
   };
 });
 
-const flushPromises = () =>
-  new Promise<void>((resolve) => setTimeout(resolve, 0));
+const flushPromises = () => new Promise<void>((resolve) => setTimeout(resolve, 0));
 
 describe('#loadDayjsLocale', () => {
   let mockLocales: Record<string, ReturnType<typeof vi.fn>>;
@@ -68,9 +59,7 @@ describe('#loadDayjsLocale', () => {
   it('should warn when locale is not available', () => {
     loadDayjsLocale('de');
 
-    expect(console.warn).toHaveBeenCalledWith(
-      'Cannot load dayjs locale file for "de"'
-    );
+    expect(console.warn).toHaveBeenCalledWith('Cannot load dayjs locale file for "de"');
   });
 
   it('should handle errors thrown by locale loader', () => {
@@ -79,8 +68,6 @@ describe('#loadDayjsLocale', () => {
     });
     loadDayjsLocale('fr');
 
-    expect(console.warn).toHaveBeenCalledWith(
-      'Cannot load dayjs locale file for "fr"'
-    );
+    expect(console.warn).toHaveBeenCalledWith('Cannot load dayjs locale file for "fr"');
   });
 });

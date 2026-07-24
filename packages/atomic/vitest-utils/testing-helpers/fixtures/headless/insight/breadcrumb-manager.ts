@@ -1,7 +1,4 @@
-import type {
-  BreadcrumbManager,
-  BreadcrumbManagerState,
-} from '@coveo/headless/insight';
+import type {BreadcrumbManager, BreadcrumbManagerState} from '@coveo/headless/insight';
 import {vi} from 'vitest';
 
 export const defaultState = {

@@ -53,9 +53,7 @@ describe('HighlightKeywordsCheckbox (Lit)', () => {
 
     expect(checkbox).toBeTruthy();
     expect(label?.textContent).toBe(translation);
-    expect(label?.getAttribute('for')).toBe(
-      'atomic-quickview-sidebar-highlight-keywords'
-    );
+    expect(label?.getAttribute('for')).toBe('atomic-quickview-sidebar-highlight-keywords');
     expect(checkbox?.getAttribute('aria-checked')).toBe('true');
   });
 

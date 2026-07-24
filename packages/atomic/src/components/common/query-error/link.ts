@@ -8,9 +8,7 @@ interface QueryErrorLinkProps {
   i18n: i18n;
 }
 
-export const renderQueryErrorLink: FunctionalComponent<QueryErrorLinkProps> = ({
-  props,
-}) => {
+export const renderQueryErrorLink: FunctionalComponent<QueryErrorLinkProps> = ({props}) => {
   const getErrorLink = () => {
     switch (props.errorType as KnownErrorType) {
       case 'NoEndpointsException':
@@ -27,11 +25,7 @@ export const renderQueryErrorLink: FunctionalComponent<QueryErrorLinkProps> = ({
   const link = getErrorLink();
 
   return link
-    ? html`<a
-        href=${link}
-        part="doc-link"
-        class="btn-primary mt-10 inline-block p-3"
-      >
+    ? html`<a href=${link} part="doc-link" class="btn-primary mt-10 inline-block p-3">
         ${props.i18n.t('coveo-online-help')}
       </a>`
     : nothing;

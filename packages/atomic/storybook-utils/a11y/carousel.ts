@@ -33,9 +33,7 @@ async function findCarousel(
       timeout: 5000,
     });
     // Filter to only those with aria-roledescription="carousel"
-    elements = elements.filter(
-      (el) => el.getAttribute('aria-roledescription') === 'carousel'
-    );
+    elements = elements.filter((el) => el.getAttribute('aria-roledescription') === 'carousel');
   } catch {
     elements = [];
   }
@@ -76,18 +74,14 @@ export async function testCarouselA11y(
   try {
     let carousel!: HTMLElement;
 
-    await step(
-      'Find carousel with role="region" and aria-roledescription="carousel"',
-      async () => {
-        carousel = await findCarousel(canvasElement, options);
-        expect(carousel).toBeTruthy();
-      }
-    );
+    await step('Find carousel with role="region" and aria-roledescription="carousel"', async () => {
+      carousel = await findCarousel(canvasElement, options);
+      expect(carousel).toBeTruthy();
+    });
 
     await step('Carousel has accessible label', async () => {
       const hasLabel =
-        carousel.hasAttribute('aria-label') ||
-        carousel.hasAttribute('aria-labelledby');
+        carousel.hasAttribute('aria-label') || carousel.hasAttribute('aria-labelledby');
       expect(hasLabel).toBe(true);
     });
 
@@ -103,11 +97,7 @@ export async function testCarouselA11y(
 
     await step('Navigation buttons have accessible labels', async () => {
       const root = within(canvasElement);
-      const buttons = await root.findAllByShadowRole(
-        'button',
-        {},
-        {timeout: 5000}
-      );
+      const buttons = await root.findAllByShadowRole('button', {}, {timeout: 5000});
       const navButtons = buttons.filter(
         (btn) => btn.getAttribute('aria-label') && carousel.contains(btn)
       );

@@ -9,10 +9,9 @@ import '@/src/components/ipx/atomic-ipx-modal/atomic-ipx-modal.js';
 const searchApiHarness = new MockSearchApi();
 
 const {decorator, play} = wrapInSearchInterface();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-ipx-modal',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-ipx-modal', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-ipx-modal',

@@ -20,15 +20,11 @@ export const buildSpecificFacetSearchRequest = async (
   return {
     url:
       state.configuration.search.apiBaseUrl ??
-      getSearchApiBaseUrl(
-        state.configuration.organizationId,
-        state.configuration.environment
-      ),
+      getSearchApiBaseUrl(state.configuration.organizationId, state.configuration.environment),
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
     ...(state.configuration.search.authenticationProviders && {
-      authentication:
-        state.configuration.search.authenticationProviders.join(','),
+      authentication: state.configuration.search.authenticationProviders.join(','),
     }),
     captions,
     numberOfValues,
@@ -40,8 +36,7 @@ export const buildSpecificFacetSearchRequest = async (
     ...(isFieldSuggestionsRequest
       ? {}
       : {
-          searchContext: (await buildSearchRequest(state, navigatorContext))
-            .request,
+          searchContext: (await buildSearchRequest(state, navigatorContext)).request,
         }),
   };
 };

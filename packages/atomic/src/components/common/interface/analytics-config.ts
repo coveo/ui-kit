@@ -13,10 +13,7 @@ export type AnalyticsPayload = Parameters<AnalyticsClientSendEventHook>[1];
 export function augmentWithExternalMiddleware(
   event: string,
   payload: AnalyticsPayload,
-  config:
-    | InsightEngineConfiguration
-    | SearchEngineConfiguration
-    | RecommendationEngineConfiguration
+  config: InsightEngineConfiguration | SearchEngineConfiguration | RecommendationEngineConfiguration
 ) {
   if (config.analytics?.analyticsClientMiddleware) {
     return config.analytics.analyticsClientMiddleware(event, payload);
@@ -61,10 +58,7 @@ export function getNextAnalyticsConfig(
   };
 
   const analyticsConfiguration = searchEngineConfig.analytics ?? {};
-  Object.assign(
-    analyticsConfiguration,
-    augmentAnalyticsConfigWithAtomicVersion()
-  );
+  Object.assign(analyticsConfiguration, augmentAnalyticsConfigWithAtomicVersion());
   Object.assign(configuration, analyticsConfiguration);
 
   return configuration;

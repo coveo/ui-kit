@@ -6,11 +6,7 @@ test.describe('atomic-insight-result-attach-to-case-action', () => {
     await insightResultAttachToCaseAction.hydrated.first().waitFor();
   });
 
-  test('should render the action button', async ({
-    insightResultAttachToCaseAction,
-  }) => {
-    await expect(
-      insightResultAttachToCaseAction.actionButton.first()
-    ).toBeVisible();
+  test('should render the action button', async ({insightResultAttachToCaseAction}) => {
+    await expect(insightResultAttachToCaseAction.actionButton.first()).toBeVisible();
   });
 });

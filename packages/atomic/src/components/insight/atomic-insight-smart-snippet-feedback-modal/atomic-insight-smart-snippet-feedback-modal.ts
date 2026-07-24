@@ -88,9 +88,7 @@ export class AtomicInsightSmartSnippetFeedbackModal
   private currentAnswer?: SmartSnippetFeedback | 'other';
 
   private detailsInputRef: Ref<HTMLTextAreaElement> = createRef();
-  private readonly formId = randomID(
-    'atomic-insight-smart-snippet-feedback-modal-form-'
-  );
+  private readonly formId = randomID('atomic-insight-smart-snippet-feedback-modal-form-');
   private smartSnippet!: SmartSnippet;
 
   public initialize() {
@@ -173,9 +171,7 @@ export class AtomicInsightSmartSnippetFeedbackModal
     if (this.currentAnswer === 'other') {
       this.smartSnippet.sendDetailedFeedback(this.detailsInputRef.value!.value);
     } else {
-      this.smartSnippet.sendFeedback(
-        this.currentAnswer as SmartSnippetFeedback
-      );
+      this.smartSnippet.sendFeedback(this.currentAnswer as SmartSnippetFeedback);
     }
     this.dispatchEvent(new Event('feedbackSent'));
     this.isOpen = false;

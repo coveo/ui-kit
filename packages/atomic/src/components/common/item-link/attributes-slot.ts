@@ -1,9 +1,6 @@
 import {getNamedSlotContent} from '@/src/utils/slot-utils';
 
-export function getAttributesFromLinkSlotContent(
-  host: HTMLElement,
-  slotName: string
-) {
+export function getAttributesFromLinkSlotContent(host: HTMLElement, slotName: string) {
   const namedSlotContent = getNamedSlotContent(host, slotName);
   if (namedSlotContent.length === 0) {
     return;
@@ -19,10 +16,7 @@ export function getAttributesFromLinkSlotContent(
   const attributesSlotContent = namedSlotContent[0];
 
   if (attributesSlotContent.nodeName !== 'A') {
-    console.warn(
-      `Slot named "${slotName}" should be an "a" tag`,
-      attributesSlotContent
-    );
+    console.warn(`Slot named "${slotName}" should be an "a" tag`, attributesSlotContent);
     return;
   }
 
@@ -32,9 +26,7 @@ export function getAttributesFromLinkSlotContent(
     }
 
     if (nodeName === 'href') {
-      console.warn(
-        'The "href" attribute set on the "attributes" slot element will be ignored.'
-      );
+      console.warn('The "href" attribute set on the "attributes" slot element will be ignored.');
       return false;
     }
 

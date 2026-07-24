@@ -19,11 +19,7 @@ export default function ProductView({
 }) {
   const {methods} = useProductView();
 
-  const {
-    productName: name,
-    pricePerUnit: price,
-    uniqueId: productId,
-  } = catalogItem;
+  const {productName: name, pricePerUnit: price, uniqueId: productId} = catalogItem;
 
   let viewed = false;
 
@@ -41,19 +37,11 @@ export default function ProductView({
       <AddToCartButton productId={productId} price={price} name={name} />
       {cartItem && (
         <>
-          <RemoveFromCartButton
-            productId={productId}
-            price={price}
-            name={name}
-          />
+          <RemoveFromCartButton productId={productId} price={price} name={name} />
           <p>In cart: {cartItem.totalQuantity}</p>
           <p>
             Total cost:{' '}
-            {formatCurrency(
-              cartItem.pricePerUnit * cartItem.totalQuantity,
-              language,
-              currency
-            )}
+            {formatCurrency(cartItem.pricePerUnit * cartItem.totalQuantity, language, currency)}
           </p>
         </>
       )}

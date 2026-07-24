@@ -1,8 +1,5 @@
 import type {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response.js';
-import type {
-  ChildProduct,
-  Product,
-} from '../../../api/commerce/common/product.js';
+import type {ChildProduct, Product} from '../../../api/commerce/common/product.js';
 import type {Result} from '../../../api/commerce/common/result.js';
 import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {configuration} from '../../../app/common-reducers.js';
@@ -33,10 +30,7 @@ import {
 import {productListingReducer as productListing} from '../../../features/commerce/product-listing/product-listing-slice.js';
 import {restoreProductListingParameters} from '../../../features/commerce/product-listing-parameters/product-listing-parameters-actions.js';
 import {loadReducerError} from '../../../utils/errors.js';
-import {
-  buildController,
-  type Controller,
-} from '../../controller/headless-controller.js';
+import {buildController, type Controller} from '../../controller/headless-controller.js';
 import type {SearchAndListingSubControllers} from '../core/sub-controller/headless-sub-controller.js';
 import {buildProductListingSubControllers} from '../core/sub-controller/headless-sub-controller.js';
 import {
@@ -54,9 +48,7 @@ import type {ProductListingSummaryState} from './summary/headless-product-listin
  * @category ProductListing
  */
 export interface ProductListing
-  extends
-    Controller,
-    SearchAndListingSubControllers<Parameters, ProductListingSummaryState> {
+  extends Controller, SearchAndListingSubControllers<Parameters, ProductListingSummaryState> {
   /**
    * Fetches the product listing.
    */
@@ -159,8 +151,7 @@ export function buildProductListing(
     ...subControllers,
 
     get state() {
-      const {products, results, error, isLoading, responseId} =
-        getState().productListing;
+      const {products, results, error, isLoading, responseId} = getState().productListing;
       return {
         products,
         results,
@@ -188,9 +179,7 @@ export function buildProductListing(
   };
 }
 
-function loadBaseProductListingReducers(
-  engine: CommerceEngine
-): engine is CommerceEngine {
+function loadBaseProductListingReducers(engine: CommerceEngine): engine is CommerceEngine {
   engine.addReducers({productListing, commerceContext, configuration});
   return true;
 }

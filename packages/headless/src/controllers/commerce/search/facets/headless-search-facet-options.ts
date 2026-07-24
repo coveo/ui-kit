@@ -5,17 +5,13 @@ import type {
 } from '../../../../state/state-sections.js';
 
 export const facetResponseSelector = createSelector(
-  (state: CommerceSearchSection & CommerceFacetSetSection) =>
-    state.commerceSearch.facets,
+  (state: CommerceSearchSection & CommerceFacetSetSection) => state.commerceSearch.facets,
   (state: CommerceSearchSection & CommerceFacetSetSection, facetId: string) =>
     facetId in state.commerceFacetSet,
-  (_state: CommerceSearchSection & CommerceFacetSetSection, facetId: string) =>
-    facetId,
+  (_state: CommerceSearchSection & CommerceFacetSetSection, facetId: string) => facetId,
 
   (facets, isFacetIdInFacetSet, facetId) => {
-    const facetResponse = facets.find(
-      (facetResponse) => facetResponse.facetId === facetId
-    );
+    const facetResponse = facets.find((facetResponse) => facetResponse.facetId === facetId);
     if (facetResponse && isFacetIdInFacetSet) {
       return facetResponse;
     }

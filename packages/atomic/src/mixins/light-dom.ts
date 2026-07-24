@@ -1,9 +1,4 @@
-import type {
-  CSSResultArray,
-  CSSResultGroup,
-  CSSResultOrNative,
-  LitElement,
-} from 'lit';
+import type {CSSResultArray, CSSResultGroup, CSSResultOrNative, LitElement} from 'lit';
 import type {Constructor} from './mixin-common.js';
 
 declare class LightDomMixinInterface {
@@ -28,9 +23,7 @@ declare class LightDomMixinInterface {
  * @param superClass - The base class to extend (must be a LitElement constructor)
  * @returns A class that extends the superClass with dynamic styles injection functionality
  */
-export const LightDomMixin = <T extends Constructor<LitElement>>(
-  superClass: T
-) => {
+export const LightDomMixin = <T extends Constructor<LitElement>>(superClass: T) => {
   class LightDomMixinClass extends superClass {
     protected createRenderRoot() {
       return this;
@@ -51,8 +44,7 @@ export const LightDomMixin = <T extends Constructor<LitElement>>(
      */
     async injectStyles(dynamicStyles?: CSSResultGroup) {
       const parent = this.getRootNode();
-      const isDocumentOrShadowRoot =
-        parent instanceof Document || parent instanceof ShadowRoot;
+      const isDocumentOrShadowRoot = parent instanceof Document || parent instanceof ShadowRoot;
 
       if (!isDocumentOrShadowRoot) {
         return;
@@ -63,9 +55,7 @@ export const LightDomMixin = <T extends Constructor<LitElement>>(
         ? constructorStyles
         : [constructorStyles];
 
-      const dynamicStylesArray = Array.isArray(dynamicStyles)
-        ? dynamicStyles
-        : [dynamicStyles];
+      const dynamicStylesArray = Array.isArray(dynamicStyles) ? dynamicStyles : [dynamicStyles];
 
       const allStyles = [...staticStyles, ...dynamicStylesArray];
 

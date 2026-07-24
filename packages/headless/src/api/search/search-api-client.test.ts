@@ -41,10 +41,7 @@ import {
   type SearchAPIClient,
   type SearchAPIClientOptions,
 } from './search-api-client.js';
-import {
-  getAuthenticationQueryParam,
-  getOrganizationIdQueryParam,
-} from './search-api-params.js';
+import {getAuthenticationQueryParam, getOrganizationIdQueryParam} from './search-api-params.js';
 
 vi.mock('../platform-client');
 
@@ -107,9 +104,7 @@ describe('search api client', () => {
           };
         },
       });
-      const req = (
-        await buildSearchRequest(state, buildMockNavigatorContextProvider()())
-      ).request;
+      const req = (await buildSearchRequest(state, buildMockNavigatorContextProvider()())).request;
       const res = await searchAPIClient.search(req);
       if (!isErrorResponse(res)) {
         expect(res.success.searchUid).toEqual(newId);
@@ -123,9 +118,7 @@ describe('search api client', () => {
         },
       });
 
-      const completions = [
-        buildMockQuerySuggestCompletion({expression: 'hello world'}),
-      ];
+      const completions = [buildMockQuerySuggestCompletion({expression: 'hello world'})];
       buildSearchAPIClient({
         postprocessQuerySuggestResponseMiddleware: (response) => {
           return {
@@ -214,8 +207,7 @@ describe('search api client', () => {
       const navigatorContextProvier = buildMockNavigatorContextProvider({
         referrer: 'example.com',
       });
-      const req = (await buildSearchRequest(state, navigatorContextProvier()))
-        .request;
+      const req = (await buildSearchRequest(state, navigatorContextProvier())).request;
       searchAPIClient.search(req);
       const request = (PlatformClient.call as Mock).mock.calls[0][0];
 
@@ -227,10 +219,7 @@ describe('search api client', () => {
         contentType: 'application/json',
         url: `${
           state.configuration.search.apiBaseUrl ??
-          getSearchApiBaseUrl(
-            state.configuration.organizationId,
-            state.configuration.environment
-          )
+          getSearchApiBaseUrl(state.configuration.organizationId, state.configuration.environment)
         }?${getOrganizationIdQueryParam(req)}`,
         logger,
         origin: 'searchApiFetch',
@@ -261,33 +250,21 @@ describe('search api client', () => {
 
     it(`when calling SearchAPIClient.search with authentication providers
     should call PlatformClient.call with the right options`, async () => {
-      state.configuration.search.authenticationProviders = [
-        'myProvider',
-        'myOtherProvider',
-      ];
-      const req = (
-        await buildSearchRequest(state, buildMockNavigatorContextProvider()())
-      ).request;
+      state.configuration.search.authenticationProviders = ['myProvider', 'myOtherProvider'];
+      const req = (await buildSearchRequest(state, buildMockNavigatorContextProvider()())).request;
       searchAPIClient.search(req);
       const request = (PlatformClient.call as Mock).mock.calls[0][0];
       const expectedUrl = `${
         state.configuration.search.apiBaseUrl ??
-        getSearchApiBaseUrl(
-          state.configuration.organizationId,
-          state.configuration.environment
-        )
-      }?${getOrganizationIdQueryParam(req)}&${getAuthenticationQueryParam(
-        req
-      )}`;
+        getSearchApiBaseUrl(state.configuration.organizationId, state.configuration.environment)
+      }?${getOrganizationIdQueryParam(req)}&${getAuthenticationQueryParam(req)}`;
       expect(request.url).toBe(expectedUrl);
     });
 
     it(`when calling SearchAPIClient.search multiple times
     should abort the previous pending requests`, async () => {
       mockPlatformResponse(() => buildMockSearchEndpointResponse(), 3);
-      const req = (
-        await buildSearchRequest(state, buildMockNavigatorContextProvider()())
-      ).request;
+      const req = (await buildSearchRequest(state, buildMockNavigatorContextProvider()())).request;
       searchAPIClient.search(req);
       searchAPIClient.search(req);
       searchAPIClient.search(req);
@@ -299,9 +276,7 @@ describe('search api client', () => {
     it(`when calling SearchAPIClient.search with different origins
     should abort only the requests with the same origin`, async () => {
       mockPlatformResponse(() => buildMockSearchEndpointResponse(), 5);
-      const req = (
-        await buildSearchRequest(state, buildMockNavigatorContextProvider()())
-      ).request;
+      const req = (await buildSearchRequest(state, buildMockNavigatorContextProvider()())).request;
       searchAPIClient.search(req);
       searchAPIClient.search(req, {origin: 'mainSearch'});
       searchAPIClient.search(req, {origin: 'facetValues'});
@@ -316,10 +291,7 @@ describe('search api client', () => {
 
     it(`when calling SearchAPIClient.plan
     should call PlatformClient.call with the right options`, async () => {
-      const req = await buildPlanRequest(
-        state,
-        buildMockNavigatorContextProvider()()
-      );
+      const req = await buildPlanRequest(state, buildMockNavigatorContextProvider()());
       searchAPIClient.plan(req);
       const request = (PlatformClient.call as Mock).mock.calls[0][0];
 
@@ -331,10 +303,7 @@ describe('search api client', () => {
         contentType: 'application/json',
         url: `${
           state.configuration.search.apiBaseUrl ??
-          getSearchApiBaseUrl(
-            state.configuration.organizationId,
-            state.configuration.environment
-          )
+          getSearchApiBaseUrl(state.configuration.organizationId, state.configuration.environment)
         }/plan?${getOrganizationIdQueryParam(req)}`,
         logger,
         origin: 'searchApiFetch',
@@ -356,31 +325,20 @@ describe('search api client', () => {
     it(`when calling SearchAPIClient.plan with authentication providers
     should call PlatformClient.call with the right options`, async () => {
       state.configuration.search.authenticationProviders = ['myProvider'];
-      const req = await buildPlanRequest(
-        state,
-        buildMockNavigatorContextProvider()()
-      );
+      const req = await buildPlanRequest(state, buildMockNavigatorContextProvider()());
       searchAPIClient.plan(req);
       const request = (PlatformClient.call as Mock).mock.calls[0][0];
       const expectedUrl = `${
         state.configuration.search.apiBaseUrl ??
-        getSearchApiBaseUrl(
-          state.configuration.organizationId,
-          state.configuration.environment
-        )
-      }/plan?${getOrganizationIdQueryParam(req)}&${getAuthenticationQueryParam(
-        req
-      )}`;
+        getSearchApiBaseUrl(state.configuration.organizationId, state.configuration.environment)
+      }/plan?${getOrganizationIdQueryParam(req)}&${getAuthenticationQueryParam(req)}`;
       expect(request.url).toBe(expectedUrl);
     });
 
     it(`when calling SearchAPIClient.plan with enableQuerySyntax=true
     should include enableQuerySyntax=true in the request params`, async () => {
       state.query.enableQuerySyntax = true;
-      const req = await buildPlanRequest(
-        state,
-        buildMockNavigatorContextProvider()()
-      );
+      const req = await buildPlanRequest(state, buildMockNavigatorContextProvider()());
       searchAPIClient.plan(req);
       const request = (PlatformClient.call as Mock).mock.calls[0][0];
 
@@ -390,10 +348,7 @@ describe('search api client', () => {
     it(`when calling SearchAPIClient.plan with enableQuerySyntax=false
     should include enableQuerySyntax=false in the request params`, async () => {
       state.query.enableQuerySyntax = false;
-      const req = await buildPlanRequest(
-        state,
-        buildMockNavigatorContextProvider()()
-      );
+      const req = await buildPlanRequest(state, buildMockNavigatorContextProvider()());
       searchAPIClient.plan(req);
       const request = (PlatformClient.call as Mock).mock.calls[0][0];
 
@@ -407,11 +362,7 @@ describe('search api client', () => {
       state.querySet[id] = 'some query';
       state.querySuggest[id] = qs;
 
-      const req = await buildQuerySuggestRequest(
-        id,
-        state,
-        buildMockNavigatorContextProvider()()
-      );
+      const req = await buildQuerySuggestRequest(id, state, buildMockNavigatorContextProvider()());
       searchAPIClient.querySuggest(req);
       const request = (PlatformClient.call as Mock).mock.calls[0][0];
 
@@ -423,10 +374,7 @@ describe('search api client', () => {
         contentType: 'application/json',
         url: `${
           state.configuration.search.apiBaseUrl ??
-          getSearchApiBaseUrl(
-            state.configuration.organizationId,
-            state.configuration.environment
-          )
+          getSearchApiBaseUrl(state.configuration.organizationId, state.configuration.environment)
         }/querySuggest?${getOrganizationIdQueryParam(req)}`,
         logger,
         origin: 'searchApiFetch',
@@ -456,23 +404,14 @@ describe('search api client', () => {
       state.querySuggest[id] = qs;
       state.configuration.search.authenticationProviders = ['myProvider'];
 
-      const req = await buildQuerySuggestRequest(
-        id,
-        state,
-        buildMockNavigatorContextProvider()()
-      );
+      const req = await buildQuerySuggestRequest(id, state, buildMockNavigatorContextProvider()());
       searchAPIClient.querySuggest(req);
       const request = (PlatformClient.call as Mock).mock.calls[0][0];
 
       const expectedUrl = `${
         state.configuration.search.apiBaseUrl ??
-        getSearchApiBaseUrl(
-          state.configuration.organizationId,
-          state.configuration.environment
-        )
-      }/querySuggest?${getOrganizationIdQueryParam(
-        req
-      )}&${getAuthenticationQueryParam(req)}`;
+        getSearchApiBaseUrl(state.configuration.organizationId, state.configuration.environment)
+      }/querySuggest?${getOrganizationIdQueryParam(req)}&${getAuthenticationQueryParam(req)}`;
       expect(request.url).toBe(expectedUrl);
     });
 
@@ -502,10 +441,7 @@ describe('search api client', () => {
           contentType: 'application/json',
           url: `${
             state.configuration.search.apiBaseUrl ??
-            getSearchApiBaseUrl(
-              state.configuration.organizationId,
-              state.configuration.environment
-            )
+            getSearchApiBaseUrl(state.configuration.organizationId, state.configuration.environment)
           }/facet?${getOrganizationIdQueryParam(req)}`,
           requestMetadata: {
             method: 'facetSearch',
@@ -546,13 +482,8 @@ describe('search api client', () => {
         const request = (PlatformClient.call as Mock).mock.calls[0][0];
         const expectedUrl = `${
           state.configuration.search.apiBaseUrl ??
-          getSearchApiBaseUrl(
-            state.configuration.organizationId,
-            state.configuration.environment
-          )
-        }/facet?${getOrganizationIdQueryParam(
-          req
-        )}&${getAuthenticationQueryParam(req)}`;
+          getSearchApiBaseUrl(state.configuration.organizationId, state.configuration.environment)
+        }/facet?${getOrganizationIdQueryParam(req)}&${getAuthenticationQueryParam(req)}`;
 
         expect(request.url).toBe(expectedUrl);
       });
@@ -697,8 +628,7 @@ it calls PlatformClient.call with the category facet search params`, async () =>
           cq: recommendationState.advancedSearchQueries.cq,
           fieldsToInclude: recommendationState.fields.fieldsToInclude,
           context: recommendationState.context.contextValues,
-          dictionaryFieldContext:
-            recommendationState.dictionaryFieldContext.contextValues,
+          dictionaryFieldContext: recommendationState.dictionaryFieldContext.contextValues,
           pipeline: recommendationState.pipeline,
           searchHub: recommendationState.searchHub,
           timezone: state.configuration.search.timezone,
@@ -733,9 +663,7 @@ it calls PlatformClient.call with the category facet search params`, async () =>
           recommendationState.configuration.organizationId,
           recommendationState.configuration.environment
         )
-      }?${getOrganizationIdQueryParam(req)}&${getAuthenticationQueryParam(
-        req
-      )}`;
+      }?${getOrganizationIdQueryParam(req)}&${getAuthenticationQueryParam(req)}`;
       const request = (PlatformClient.call as Mock).mock.calls[0][0];
 
       expect(request.url).toBe(expectedUrl);
@@ -743,9 +671,7 @@ it calls PlatformClient.call with the category facet search params`, async () =>
 
     it(`when calling SearchAPIClient.fieldDescriptions
 should call PlatformClient.call with the right options`, async () => {
-      const req = (
-        await buildSearchRequest(state, buildMockNavigatorContextProvider()())
-      ).request;
+      const req = (await buildSearchRequest(state, buildMockNavigatorContextProvider()())).request;
 
       searchAPIClient.fieldDescriptions(req);
       const request = (PlatformClient.call as Mock).mock.calls[0][0];
@@ -761,10 +687,7 @@ should call PlatformClient.call with the right options`, async () => {
         method: 'GET',
         url: `${
           state.configuration.search.apiBaseUrl ??
-          getSearchApiBaseUrl(
-            state.configuration.organizationId,
-            state.configuration.environment
-          )
+          getSearchApiBaseUrl(state.configuration.organizationId, state.configuration.environment)
         }/fields?${getOrganizationIdQueryParam(req)}`,
       };
 
@@ -809,10 +732,7 @@ should call PlatformClient.call with the right options`, async () => {
           origin: 'searchApiFetch',
           url: `${
             state.configuration.search.apiBaseUrl ??
-            getSearchApiBaseUrl(
-              state.configuration.organizationId,
-              state.configuration.environment
-            )
+            getSearchApiBaseUrl(state.configuration.organizationId, state.configuration.environment)
           }/html?${getOrganizationIdQueryParam(req)}`,
           preprocessRequest: NoopPreprocessRequest,
           requestParams: {
@@ -829,21 +749,16 @@ should call PlatformClient.call with the right options`, async () => {
   });
 
   describe('SearchAPIClient.search question answering', () => {
-    const doMockPlatformResponseAndAssertSuccess = async (
-      mockResponse: SearchResponseSuccess
-    ) => {
+    const doMockPlatformResponseAndAssertSuccess = async (mockResponse: SearchResponseSuccess) => {
       const body = JSON.stringify(mockResponse);
       const response = new Response(body);
 
       PlatformClient.call = () => Promise.resolve(response);
       const res = await searchAPIClient.search(
-        (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
-          .request
+        (await buildSearchRequest(state, buildMockNavigatorContextProvider()())).request
       );
       if (isErrorResponse(res)) {
-        fail(
-          'SearchAPIClient should not return an error when processing question answering'
-        );
+        fail('SearchAPIClient should not return an error when processing question answering');
       }
       return res.success;
     };
@@ -860,10 +775,8 @@ should call PlatformClient.call with the right options`, async () => {
       const mockResponse = buildMockSearchResponse();
       mockResponse.questionAnswer.question = 'foo';
       mockResponse.questionAnswer.answerSnippet = 'bar';
-      delete (mockResponse.questionAnswer as Partial<QuestionsAnswers>)
-        .documentId;
-      delete (mockResponse.questionAnswer as Partial<QuestionsAnswers>)
-        .relatedQuestions;
+      delete (mockResponse.questionAnswer as Partial<QuestionsAnswers>).documentId;
+      delete (mockResponse.questionAnswer as Partial<QuestionsAnswers>).relatedQuestions;
 
       const res = await doMockPlatformResponseAndAssertSuccess(mockResponse);
       expect(res.questionAnswer.question).toBe('foo');

@@ -35,16 +35,15 @@ describe('atomic-commerce-query-error', () => {
     );
     vi.mocked(buildSearch).mockReturnValue(buildFakeSearch({state: {error}}));
 
-    const {element} =
-      await renderInAtomicCommerceInterface<AtomicCommerceQueryError>({
-        template: html`<atomic-commerce-query-error></atomic-commerce-query-error>`,
-        selector: 'atomic-commerce-query-error',
-        bindings: (bindings) => {
-          bindings.interfaceElement.type = interfaceElementType;
-          bindings.engine = mockedEngine;
-          return bindings;
-        },
-      });
+    const {element} = await renderInAtomicCommerceInterface<AtomicCommerceQueryError>({
+      template: html`<atomic-commerce-query-error></atomic-commerce-query-error>`,
+      selector: 'atomic-commerce-query-error',
+      bindings: (bindings) => {
+        bindings.interfaceElement.type = interfaceElementType;
+        bindings.engine = mockedEngine;
+        return bindings;
+      },
+    });
 
     return {
       element,
@@ -119,10 +118,7 @@ describe('atomic-commerce-query-error', () => {
     it('should render the button with the correct part', async () => {
       const {locators} = await renderQueryError();
 
-      expect(locators.showMoreInfoButton).toHaveAttribute(
-        'part',
-        'more-info-btn'
-      );
+      expect(locators.showMoreInfoButton).toHaveAttribute('part', 'more-info-btn');
     });
 
     it('should render the button with the correct text', async () => {
@@ -272,9 +268,7 @@ describe('atomic-commerce-query-error', () => {
     });
 
     it('should display the correct description', () => {
-      expect(locators.description).toHaveTextContent(
-        'Ensure that the token is valid.'
-      );
+      expect(locators.description).toHaveTextContent('Ensure that the token is valid.');
     });
 
     it('should not display the show more info button', () => {

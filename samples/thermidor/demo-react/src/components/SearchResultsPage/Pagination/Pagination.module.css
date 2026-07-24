@@ -1,0 +1,78 @@
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2, 8px);
+  padding: var(--space-4, 16px) 0;
+  flex-wrap: wrap;
+}
+
+.navButton {
+  min-width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-border, #ccc);
+  border-radius: var(--radius-md, 6px);
+  background: var(--color-bg-primary, #fff);
+  color: var(--color-text-primary, #333);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color 150ms ease;
+}
+
+.navButton:hover:not(:disabled) {
+  border-color: var(--color-border-active, #666);
+}
+
+.navButton:disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.pages {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1, 4px);
+}
+
+.pageButton {
+  min-width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-1, 4px) var(--space-2, 8px);
+  border: 1px solid var(--color-border, #ccc);
+  border-radius: var(--radius-md, 6px);
+  background: var(--color-bg-primary, #fff);
+  color: var(--color-text-primary, #333);
+  font-size: var(--font-size-sm, 14px);
+  cursor: pointer;
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease;
+}
+
+.pageButton:hover:not(.active) {
+  border-color: var(--color-border-active, #666);
+}
+
+.pageButton.active {
+  background: var(--color-primary, #1d4ed8);
+  border-color: var(--color-primary, #1d4ed8);
+  color: #fff;
+  font-weight: 600;
+  pointer-events: none;
+}
+
+.ellipsis {
+  min-width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-sm, 14px);
+  color: var(--color-text-muted, #666);
+}

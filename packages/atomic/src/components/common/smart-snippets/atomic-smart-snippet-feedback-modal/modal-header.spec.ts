@@ -37,8 +37,6 @@ describe('#renderModalHeader', () => {
     const element = await renderComponent();
     const header = element.querySelector('h1[slot="header"]');
 
-    expect(header).toHaveTextContent(
-      i18n.t('smart-snippet-feedback-explain-why')
-    );
+    expect(header).toHaveTextContent(i18n.t('smart-snippet-feedback-explain-why'));
   });
 });

@@ -6,8 +6,7 @@ import type {CoveoSearchResult} from '@/src/internal/api/search/index.js';
 
 type ResultsActions = ReturnType<typeof createResultsActions>;
 
-const CACHE_KEY: CacheKey<ResultsActions> =
-  createCacheKey<ResultsActions>('resultList/actions');
+const CACHE_KEY: CacheKey<ResultsActions> = createCacheKey<ResultsActions>('resultList/actions');
 
 export function createResultsActions(interfaceId: string) {
   return {
@@ -19,7 +18,5 @@ export function createResultsActions(interfaceId: string) {
 
 export function getOrCreateResultsActions(iface: InterfaceHandle) {
   const {stateId, cacheRegistry} = getHandleInternals(iface);
-  return cacheRegistry.getOrCreate(CACHE_KEY, () =>
-    createResultsActions(stateId)
-  );
+  return cacheRegistry.getOrCreate(CACHE_KEY, () => createResultsActions(stateId));
 }

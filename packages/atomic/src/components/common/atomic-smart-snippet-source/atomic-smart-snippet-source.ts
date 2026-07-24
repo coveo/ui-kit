@@ -64,18 +64,12 @@ export class AtomicSmartSnippetSource
   @state() public error!: Error;
 
   public initialize() {
-    this.addEventListener(
-      'atomic/resolveResult',
-      this.handleResolveResult as EventListener
-    );
+    this.addEventListener('atomic/resolveResult', this.handleResolveResult as EventListener);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.removeEventListener(
-      'atomic/resolveResult',
-      this.handleResolveResult as EventListener
-    );
+    this.removeEventListener('atomic/resolveResult', this.handleResolveResult as EventListener);
   }
 
   private handleResolveResult = (event: CustomEvent) => {
@@ -91,10 +85,7 @@ export class AtomicSmartSnippetSource
   }
 
   private handleSourceEvent(
-    eventName:
-      | 'select-source'
-      | 'begin-delayed-select-source'
-      | 'cancel-pending-select-source'
+    eventName: 'select-source' | 'begin-delayed-select-source' | 'cancel-pending-select-source'
   ) {
     // Dispatch event for Lit components
     this.dispatchSourceEvent(eventName);
@@ -127,10 +118,8 @@ export class AtomicSmartSnippetSource
             part: 'source-url',
             attributes: this.anchorAttributes,
             onSelect: () => this.handleSourceEvent('select-source'),
-            onBeginDelayedSelect: () =>
-              this.handleSourceEvent('begin-delayed-select-source'),
-            onCancelPendingSelect: () =>
-              this.handleSourceEvent('cancel-pending-select-source'),
+            onBeginDelayedSelect: () => this.handleSourceEvent('begin-delayed-select-source'),
+            onCancelPendingSelect: () => this.handleSourceEvent('cancel-pending-select-source'),
           },
         })(html`${this.source.clickUri}`)}
         ${renderLinkWithItemAnalytics({
@@ -141,17 +130,10 @@ export class AtomicSmartSnippetSource
             className: 'block',
             part: 'source-title',
             onSelect: () => this.handleSourceEvent('select-source'),
-            onBeginDelayedSelect: () =>
-              this.handleSourceEvent('begin-delayed-select-source'),
-            onCancelPendingSelect: () =>
-              this.handleSourceEvent('cancel-pending-select-source'),
+            onBeginDelayedSelect: () => this.handleSourceEvent('begin-delayed-select-source'),
+            onCancelPendingSelect: () => this.handleSourceEvent('cancel-pending-select-source'),
           },
-        })(
-          html`<atomic-result-text
-            field="title"
-            default="no-title"
-          ></atomic-result-text>`
-        )}
+        })(html`<atomic-result-text field="title" default="no-title"></atomic-result-text>`)}
       `
     )}`;
   }

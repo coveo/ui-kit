@@ -23,9 +23,7 @@ test.describe('atomic-commerce-sort-dropdown', () => {
     });
 
     test('should update the select state', async ({commerceSortDropdown}) => {
-      expect(await commerceSortDropdown.select.inputValue()).toBe(
-        'Price (Low to High)'
-      );
+      expect(await commerceSortDropdown.select.inputValue()).toBe('Price (Low to High)');
     });
 
     test('should reflect price sortCriteria in the URL', async ({page}) => {

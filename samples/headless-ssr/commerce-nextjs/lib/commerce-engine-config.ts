@@ -17,8 +17,7 @@ import {
   getSampleCommerceEngineConfiguration,
 } from '@coveo/headless-react/ssr-commerce';
 
-const sampleCommerceEngineConfiguration =
-  getSampleCommerceEngineConfiguration();
+const sampleCommerceEngineConfiguration = getSampleCommerceEngineConfiguration();
 
 export default {
   // By default, the logger level is set to 'warn'. To get more detailed error

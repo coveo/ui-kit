@@ -40,17 +40,9 @@ export default function BreadcrumbManager(props: BreadcrumbManagerProps) {
       case 'regular':
         return (value as RegularFacetValue).value;
       case 'numericalRange':
-        return (
-          (value as NumericFacetValue).start +
-          ' - ' +
-          (value as NumericFacetValue).end
-        );
+        return (value as NumericFacetValue).start + ' - ' + (value as NumericFacetValue).end;
       case 'dateRange':
-        return (
-          (value as DateFacetValue).start +
-          ' - ' +
-          (value as DateFacetValue).end
-        );
+        return (value as DateFacetValue).start + ' - ' + (value as DateFacetValue).end;
       default:
         // TODO COMHUB-292 add location facet example
         return null;
@@ -67,10 +59,7 @@ export default function BreadcrumbManager(props: BreadcrumbManagerProps) {
       <ul className="Breadcrumbs">
         {state.facetBreadcrumbs.map((facetBreadcrumb) => {
           return (
-            <li
-              className="FacetBreadcrumbs"
-              key={`${facetBreadcrumb.facetId}-breadcrumbs`}
-            >
+            <li className="FacetBreadcrumbs" key={`${facetBreadcrumb.facetId}-breadcrumbs`}>
               {facetBreadcrumb.values.map((value, index) => {
                 return (
                   <button

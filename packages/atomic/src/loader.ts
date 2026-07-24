@@ -2,9 +2,7 @@ import {registerAutoloader} from './autoloader/index.js';
 
 export const defineCustomElements = async (...args: unknown[]) => {
   const rootElementAutoloader = args.length > 2 ? args.pop() : undefined;
-  registerAutoloader(
-    rootElementAutoloader as Element | ShadowRoot | DocumentFragment
-  );
+  registerAutoloader(rootElementAutoloader as Element | ShadowRoot | DocumentFragment);
 };
 /**
  * @deprecated The applyPolyfills function has been removed. It has always been a no-op, and should not be used.

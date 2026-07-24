@@ -1,9 +1,6 @@
 'use client';
 
-import {
-  SortBy,
-  type SortCriterion,
-} from '@coveo/headless-react/ssr-commerce-next';
+import {SortBy, type SortCriterion} from '@coveo/headless-react/ssr-commerce-next';
 // import {SortBy, SortCriterion} from '@coveo/headless-react/ssr-commerce-next';
 import {useSort} from '@/lib/commerce-engine';
 
@@ -14,11 +11,8 @@ export default function Sort() {
     return null;
   }
 
-  const formatSortFieldLabel = (field: {
-    name: string;
-    direction?: string;
-    displayName?: string;
-  }) => field?.displayName ?? `${field.name} ${field.direction ?? ''}`.trim();
+  const formatSortFieldLabel = (field: {name: string; direction?: string; displayName?: string}) =>
+    field?.displayName ?? `${field.name} ${field.direction ?? ''}`.trim();
 
   const getSortLabel = (criterion: SortCriterion) => {
     switch (criterion.by) {
@@ -34,9 +28,7 @@ export default function Sort() {
       case SortBy.Relevance:
         return 'relevance';
       case SortBy.Fields:
-        return sort.fields
-          .map((field) => `${field.name}-${field.direction ?? ''}`)
-          .join(',');
+        return sort.fields.map((field) => `${field.name}-${field.direction ?? ''}`).join(',');
       default:
         return '';
     }

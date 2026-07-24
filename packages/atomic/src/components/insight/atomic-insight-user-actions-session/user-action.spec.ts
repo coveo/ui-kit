@@ -35,9 +35,7 @@ describe('#renderUserAction', () => {
     interfaceElement: {} as InsightBindings['interfaceElement'],
   });
 
-  const createMockAction = (
-    overrides: Partial<IUserAction> = {}
-  ): IUserAction =>
+  const createMockAction = (overrides: Partial<IUserAction> = {}): IUserAction =>
     ({
       actionType: 'SEARCH',
       timestamp: new Date('2024-01-01T10:30:00Z').getTime(),
@@ -53,9 +51,7 @@ describe('#renderUserAction', () => {
     const action = createMockAction(actionOverrides);
     const bindings = {...createMockBindings(), ...bindingsOverrides};
 
-    return renderFunctionFixture(
-      html`${renderUserAction({props: {action, bindings}})}`
-    );
+    return renderFunctionFixture(html`${renderUserAction({props: {action, bindings}})}`);
   };
 
   it('should render a list item', async () => {
@@ -131,9 +127,7 @@ describe('#renderUserAction', () => {
   describe('action title rendering', () => {
     it('should render ticket created message for TICKET_CREATION action', async () => {
       await renderComponent({actionType: 'TICKET_CREATION'});
-      await expect
-        .element(page.getByText('Ticket created'))
-        .toBeInTheDocument();
+      await expect.element(page.getByText('Ticket created')).toBeInTheDocument();
     });
 
     it('should render eventData value for CUSTOM action', async () => {
@@ -141,9 +135,7 @@ describe('#renderUserAction', () => {
         actionType: 'CUSTOM',
         eventData: {value: 'Custom Event Value'},
       });
-      await expect
-        .element(page.getByText('Custom Event Value'))
-        .toBeInTheDocument();
+      await expect.element(page.getByText('Custom Event Value')).toBeInTheDocument();
     });
 
     it('should render eventData type for CUSTOM action when value is missing', async () => {
@@ -159,9 +151,7 @@ describe('#renderUserAction', () => {
         actionType: 'SEARCH',
         query: 'my search query',
       });
-      await expect
-        .element(page.getByText('my search query'))
-        .toBeInTheDocument();
+      await expect.element(page.getByText('my search query')).toBeInTheDocument();
     });
 
     it('should render empty search message when query is empty for SEARCH action', async () => {
@@ -197,9 +187,7 @@ describe('#renderUserAction', () => {
         },
       });
 
-      await expect
-        .element(page.getByText('Clicked Document'))
-        .toBeInTheDocument();
+      await expect.element(page.getByText('Clicked Document')).toBeInTheDocument();
       expect(element.querySelector('a')).not.toBeInTheDocument();
     });
   });

@@ -35,10 +35,7 @@ export type RegularFacetOptions = Omit<
  * @group Sub-controllers
  * @category RegularFacet
  */
-export type RegularFacetState = Omit<
-  CoreCommerceFacetState<RegularFacetValue>,
-  'type'
-> & {
+export type RegularFacetState = Omit<CoreCommerceFacetState<RegularFacetValue>, 'type'> & {
   facetSearch: RegularFacetSearchState;
   type: 'regular';
 };
@@ -50,10 +47,7 @@ export type RegularFacetState = Omit<
  * @group Sub-controllers
  * @category RegularFacet
  */
-export type RegularFacet = CoreCommerceFacet<
-  FacetValueRequest,
-  RegularFacetValue
-> & {
+export type RegularFacet = CoreCommerceFacet<FacetValueRequest, RegularFacetValue> & {
   facetSearch: Omit<RegularFacetSearch, 'state'>;
   state: RegularFacetState;
 } & FacetControllerType<'regular'>;
@@ -74,10 +68,7 @@ export function buildCommerceRegularFacet(
   engine: CommerceEngine,
   options: RegularFacetOptions
 ): RegularFacet {
-  const coreController = buildCoreCommerceFacet<
-    FacetValueRequest,
-    RegularFacetValue
-  >(engine, {
+  const coreController = buildCoreCommerceFacet<FacetValueRequest, RegularFacetValue>(engine, {
     options: {
       ...options,
       toggleSelectActionCreator: toggleSelectFacetValue,
@@ -121,8 +112,7 @@ export const getRegularFacetState = (
     ...coreState,
     facetSearch: {
       isLoading: facetSearchSelector?.isLoading ?? false,
-      moreValuesAvailable:
-        facetSearchSelector?.response.moreValuesAvailable ?? false,
+      moreValuesAvailable: facetSearchSelector?.response.moreValuesAvailable ?? false,
       query: facetSearchSelector?.options.query ?? '',
       values: facetSearchSelector?.response.values ?? [],
     },

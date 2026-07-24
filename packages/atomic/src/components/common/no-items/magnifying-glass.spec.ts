@@ -5,9 +5,7 @@ import {renderMagnifyingGlass} from './magnifying-glass';
 
 describe('#renderMagnifyingGlass', () => {
   const renderComponent = async () => {
-    const element = await renderFunctionFixture(
-      html`${renderMagnifyingGlass()}`
-    );
+    const element = await renderFunctionFixture(html`${renderMagnifyingGlass()}`);
 
     return {
       icon: element.querySelector('atomic-icon'),

@@ -13,9 +13,7 @@ interface StringValueConfig<T extends string> extends ValueConfig<T> {
 const ISODateStringRegex =
   /^\d{4}(-\d\d(-\d\d(T\d\d:\d\d(:\d\d)?(\.\d+)?(([+-]\d\d:\d\d)|Z)?)?)?)?$/i;
 
-export class StringValue<
-  T extends string = string,
-> implements SchemaValue<string> {
+export class StringValue<T extends string = string> implements SchemaValue<string> {
   private value: Value<T>;
   private config: StringValueConfig<T>;
   constructor(config: StringValueConfig<T> = {}) {
@@ -65,10 +63,7 @@ export class StringValue<
 
     if (
       ISODate &&
-      !(
-        ISODateStringRegex.test(value) &&
-        new Date(value).toString() !== 'Invalid Date'
-      )
+      !(ISODateStringRegex.test(value) && new Date(value).toString() !== 'Invalid Date')
     ) {
       return 'value is not a valid ISO8601 date string';
     }

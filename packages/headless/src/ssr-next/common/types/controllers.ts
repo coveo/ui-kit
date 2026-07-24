@@ -12,10 +12,7 @@ export interface ControllerStaticStateMap {
   [customName: string]: ControllerStaticState<unknown>;
 }
 
-export interface BaseControllerDefinitionWithoutProps<
-  TEngine,
-  TController extends Controller,
-> {
+export interface BaseControllerDefinitionWithoutProps<TEngine, TController extends Controller> {
   build(engine: TEngine, ...args: unknown[]): TController;
 }
 
@@ -24,11 +21,7 @@ export interface BaseControllerDefinitionWithProps<
   TController extends Controller,
   TProps,
 > {
-  buildWithProps(
-    engine: TEngine,
-    props?: TProps,
-    ...args: unknown[]
-  ): TController;
+  buildWithProps(engine: TEngine, props?: TProps, ...args: unknown[]): TController;
 }
 
 export interface ControllersPropsMap {

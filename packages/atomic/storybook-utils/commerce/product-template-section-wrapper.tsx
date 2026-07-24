@@ -22,11 +22,7 @@ export const wrapInProductTemplateForSections = (): {
 
     // Render the story to extract its content.
     let storyContent = '';
-    if (
-      storyResult &&
-      typeof storyResult === 'object' &&
-      '_$litType$' in storyResult
-    ) {
+    if (storyResult && typeof storyResult === 'object' && '_$litType$' in storyResult) {
       render(storyResult as TemplateResult, tempContainer);
       storyContent = tempContainer.innerHTML;
     } else {
@@ -116,9 +112,7 @@ export const wrapInProductTemplateForSections = (): {
 
     templateTag.innerHTML = templateContent;
 
-    return html`
-      <atomic-product-template>${templateTag}</atomic-product-template>
-    `;
+    return html` <atomic-product-template>${templateTag}</atomic-product-template> `;
   };
 
   return {

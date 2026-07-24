@@ -8,10 +8,7 @@ const currentDir = import.meta.dirname;
 const siteDir = path.resolve(currentDir, '../dev');
 
 const getVersionFromPackageJson = async (packageName, versionType) => {
-  const packageJsonPath = findPackageJSON(
-    `@coveo/${packageName}`,
-    import.meta.url
-  );
+  const packageJsonPath = findPackageJSON(`@coveo/${packageName}`, import.meta.url);
   console.log(`Reading version from ${packageJsonPath}`);
   try {
     const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
@@ -79,20 +76,10 @@ const updateHtmlVersionsInDirectory = (
           versionType,
           cdnType
         );
-      } else if (
-        file.endsWith('.html') ||
-        file.endsWith('.js') ||
-        file.endsWith('.mjs')
-      ) {
+      } else if (file.endsWith('.html') || file.endsWith('.js') || file.endsWith('.mjs')) {
         let content = readFileSync(filePath, 'utf-8');
-        content = content.replace(
-          atomicRegex,
-          `${cdnBaseUrl}/atomic/${newAtomicVersion}`
-        );
-        content = content.replace(
-          headlessRegex,
-          `${cdnBaseUrl}/headless/${newHeadlessVersion}`
-        );
+        content = content.replace(atomicRegex, `${cdnBaseUrl}/atomic/${newAtomicVersion}`);
+        content = content.replace(headlessRegex, `${cdnBaseUrl}/headless/${newHeadlessVersion}`);
         content = content.replace(atomicAssetRegex, (match, p1, p2, p3, p4) => {
           const assetPath = p2 || p4;
           if (!assetPath) {
@@ -127,28 +114,19 @@ const parseArgs = (args) => {
   for (let i = 0; i < args.length; i++) {
     if (args[i].startsWith('--')) {
       const key = args[i].substring(2);
-      const value =
-        args[i + 1] && !args[i + 1].startsWith('--') ? args[++i] : true;
+      const value = args[i + 1] && !args[i + 1].startsWith('--') ? args[++i] : true;
       result[key] = value;
     }
   }
   return result;
 };
 
-const validateArgs = (
-  cdnType,
-  atomicCloudVersion,
-  headlessCloudVersion,
-  versionType
-) => {
+const validateArgs = (cdnType, atomicCloudVersion, headlessCloudVersion, versionType) => {
   if (
     !cdnType ||
     (cdnType === 'prod' && (!atomicCloudVersion || !headlessCloudVersion)) ||
     (cdnType === 'local' && !versionType) ||
-    (cdnType !== 'prod' &&
-      cdnType !== 'local' &&
-      cdnType !== 'dev' &&
-      cdnType !== 'staging')
+    (cdnType !== 'prod' && cdnType !== 'local' && cdnType !== 'dev' && cdnType !== 'staging')
   ) {
     console.error(
       colors.red(
@@ -169,10 +147,7 @@ const validateArgs = (
     }
   } else if (cdnType === 'prod' || cdnType === 'staging' || cdnType === 'dev') {
     const versionRegex = /^v\d+(\.\d+)?(\.\d+)?$/;
-    if (
-      !versionRegex.test(atomicCloudVersion) ||
-      !versionRegex.test(headlessCloudVersion)
-    ) {
+    if (!versionRegex.test(atomicCloudVersion) || !versionRegex.test(headlessCloudVersion)) {
       console.error(
         colors.red(
           'For cloud environment, --atomic and --headless must be in the format: vX.X.X, vX.X, or vX.'
@@ -203,14 +178,8 @@ try {
 
   validateArgs(cdnType, atomicCloudVersion, headlessCloudVersion, versionType);
 
-  const headlessLocalVersion = await getVersionFromPackageJson(
-    'headless',
-    versionType
-  );
-  const atomicLocalVersion = await getVersionFromPackageJson(
-    'atomic',
-    versionType
-  );
+  const headlessLocalVersion = await getVersionFromPackageJson('headless', versionType);
+  const atomicLocalVersion = await getVersionFromPackageJson('atomic', versionType);
 
   if (cdnType === 'local') {
     await updateHtmlVersionsInDirectory(
@@ -236,9 +205,7 @@ try {
     );
   }
 
-  console.log(
-    colors.cyan('Starting workspace server on port 3333 for ./dev directory...')
-  );
+  console.log(colors.cyan('Starting workspace server on port 3333 for ./dev directory...'));
   spawn('npx', ['ws', '--port', '3333', '-d', 'dev', '--open'], {
     stdio: 'inherit',
   });

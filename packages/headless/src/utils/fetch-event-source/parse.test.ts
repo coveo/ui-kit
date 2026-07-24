@@ -26,9 +26,7 @@ describe('parse', () => {
       let lineNum = 0;
       const next = parse.getLines((line, fieldLength) => {
         ++lineNum;
-        expect(decoder.decode(line)).toEqual(
-          lineNum === 1 ? 'id: abc' : 'data: def'
-        );
+        expect(decoder.decode(line)).toEqual(lineNum === 1 ? 'id: abc' : 'data: def');
         expect(fieldLength).toEqual(lineNum === 1 ? 2 : 4);
       });
 
@@ -62,9 +60,7 @@ describe('parse', () => {
       let lineNum = 0;
       const next = parse.getLines((line, fieldLength) => {
         ++lineNum;
-        expect(decoder.decode(line)).toEqual(
-          lineNum === 1 ? 'id: abc' : 'data: def'
-        );
+        expect(decoder.decode(line)).toEqual(lineNum === 1 ? 'id: abc' : 'data: def');
         expect(fieldLength).toEqual(lineNum === 1 ? 2 : 4);
       });
 
@@ -146,9 +142,7 @@ describe('parse', () => {
       let lineNum = 0;
       const next = parse.getLines((line, fieldLength) => {
         ++lineNum;
-        expect(decoder.decode(line)).toEqual(
-          lineNum === 1 ? 'id: abc' : 'data: def'
-        );
+        expect(decoder.decode(line)).toEqual(lineNum === 1 ? 'id: abc' : 'data: def');
         expect(fieldLength).toEqual(lineNum === 1 ? 2 : 4);
       });
 
@@ -164,9 +158,7 @@ describe('parse', () => {
       let lineNum = 0;
       const next = parse.getLines((line, fieldLength) => {
         ++lineNum;
-        expect(decoder.decode(line)).toEqual(
-          lineNum === 1 ? 'id: abc' : 'data: def'
-        );
+        expect(decoder.decode(line)).toEqual(lineNum === 1 ? 'id: abc' : 'data: def');
         expect(fieldLength).toEqual(lineNum === 1 ? 2 : 4);
       });
 
@@ -182,9 +174,7 @@ describe('parse', () => {
       let lineNum = 0;
       const next = parse.getLines((line, fieldLength) => {
         ++lineNum;
-        expect(decoder.decode(line)).toEqual(
-          lineNum === 1 ? 'id: abc' : 'data: def'
-        );
+        expect(decoder.decode(line)).toEqual(lineNum === 1 ? 'id: abc' : 'data: def');
         expect(fieldLength).toEqual(lineNum === 1 ? 2 : 4);
       });
 

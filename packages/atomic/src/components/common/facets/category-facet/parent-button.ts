@@ -16,17 +16,11 @@ interface CategoryFacetParentButtonProps {
 export const renderCategoryFacetParentButton: FunctionalComponent<
   CategoryFacetParentButtonProps
 > = ({props}) => {
-  const displayValue = getFieldValueCaption(
-    props.field,
-    props.facetValue.value,
-    props.i18n
-  );
+  const displayValue = getFieldValueCaption(props.field, props.facetValue.value, props.i18n);
   const ariaLabel = props.i18n.t('facet-value', {
     value: displayValue,
     count: props.facetValue.numberOfResults,
-    formattedCount: props.facetValue.numberOfResults.toLocaleString(
-      props.i18n.language
-    ),
+    formattedCount: props.facetValue.numberOfResults.toLocaleString(props.i18n.language),
   });
 
   return renderButton({
@@ -40,11 +34,7 @@ export const renderCategoryFacetParentButton: FunctionalComponent<
       ariaLabel: ariaLabel,
     },
   })(html`
-    <atomic-icon
-      icon=${LeftArrow}
-      part="back-arrow"
-      class="back-arrow"
-    ></atomic-icon>
+    <atomic-icon icon=${LeftArrow} part="back-arrow" class="back-arrow"></atomic-icon>
     <span class="truncate">${displayValue}</span>
   `);
 };

@@ -51,9 +51,7 @@ describe('atomic-insight-folded-result-list', () => {
     logShowLessFoldedResults: vi.fn(),
   });
 
-  const buildFakeInsightResultsPerPage = (
-    overrides: {numberOfResults?: number} = {}
-  ) => ({
+  const buildFakeInsightResultsPerPage = (overrides: {numberOfResults?: number} = {}) => ({
     state: {
       numberOfResults: overrides.numberOfResults ?? 10,
     },
@@ -73,16 +71,12 @@ describe('atomic-insight-folded-result-list', () => {
       }) as ReturnType<typeof buildInsightFoldedResultList>
     );
     vi.mocked(buildInsightResultsPerPage).mockReturnValue(
-      buildFakeInsightResultsPerPage() as ReturnType<
-        typeof buildInsightResultsPerPage
-      >
+      buildFakeInsightResultsPerPage() as ReturnType<typeof buildInsightResultsPerPage>
     );
 
-    vi.mocked(buildInsightInteractiveResult).mockImplementation(
-      (_engine, props) => {
-        return interactiveResult(props);
-      }
-    );
+    vi.mocked(buildInsightInteractiveResult).mockImplementation((_engine, props) => {
+      return interactiveResult(props);
+    });
   });
 
   interface RenderOptions {
@@ -104,31 +98,28 @@ describe('atomic-insight-folded-result-list', () => {
     numberOfFoldedResults,
     isAppLoaded = true,
   }: RenderOptions = {}) => {
-    const {element} =
-      await renderInAtomicInsightInterface<AtomicInsightFoldedResultList>({
-        template: html`<atomic-insight-folded-result-list
-          .density=${ifDefined(density)}
-          .imageSize=${ifDefined(imageSize)}
-          .collectionField=${ifDefined(collectionField)}
-          .parentField=${ifDefined(parentField)}
-          .childField=${ifDefined(childField)}
-          .numberOfFoldedResults=${ifDefined(numberOfFoldedResults)}
-        >
-          <atomic-insight-result-template>
-            <template>
-              <div>Result Content</div>
-            </template>
-          </atomic-insight-result-template>
-        </atomic-insight-folded-result-list>`,
-        selector: 'atomic-insight-folded-result-list',
-        bindings: (bindings) => {
-          bindings.store.state.loadingFlags = isAppLoaded
-            ? []
-            : ['loading-flag'];
-          bindings.engine = mockedEngine;
-          return bindings;
-        },
-      });
+    const {element} = await renderInAtomicInsightInterface<AtomicInsightFoldedResultList>({
+      template: html`<atomic-insight-folded-result-list
+        .density=${ifDefined(density)}
+        .imageSize=${ifDefined(imageSize)}
+        .collectionField=${ifDefined(collectionField)}
+        .parentField=${ifDefined(parentField)}
+        .childField=${ifDefined(childField)}
+        .numberOfFoldedResults=${ifDefined(numberOfFoldedResults)}
+      >
+        <atomic-insight-result-template>
+          <template>
+            <div>Result Content</div>
+          </template>
+        </atomic-insight-result-template>
+      </atomic-insight-folded-result-list>`,
+      selector: 'atomic-insight-folded-result-list',
+      bindings: (bindings) => {
+        bindings.store.state.loadingFlags = isAppLoaded ? [] : ['loading-flag'];
+        bindings.engine = mockedEngine;
+        return bindings;
+      },
+    });
 
     return {
       element,
@@ -161,19 +152,16 @@ describe('atomic-insight-folded-result-list', () => {
     it('should call buildFoldedResultList with engine and default options', async () => {
       await renderFoldedResultList();
 
-      expect(vi.mocked(buildInsightFoldedResultList)).toHaveBeenCalledWith(
-        mockedEngine,
-        {
-          options: {
-            folding: {
-              collectionField: undefined,
-              parentField: undefined,
-              childField: undefined,
-              numberOfFoldedResults: 2,
-            },
+      expect(vi.mocked(buildInsightFoldedResultList)).toHaveBeenCalledWith(mockedEngine, {
+        options: {
+          folding: {
+            collectionField: undefined,
+            parentField: undefined,
+            childField: undefined,
+            numberOfFoldedResults: 2,
           },
-        }
-      );
+        },
+      });
     });
 
     it('should call buildFoldedResultList with custom folding options', async () => {
@@ -184,27 +172,22 @@ describe('atomic-insight-folded-result-list', () => {
         numberOfFoldedResults: 5,
       });
 
-      expect(vi.mocked(buildInsightFoldedResultList)).toHaveBeenCalledWith(
-        mockedEngine,
-        {
-          options: {
-            folding: {
-              collectionField: 'custom-collection',
-              parentField: 'custom-parent',
-              childField: 'custom-child',
-              numberOfFoldedResults: 5,
-            },
+      expect(vi.mocked(buildInsightFoldedResultList)).toHaveBeenCalledWith(mockedEngine, {
+        options: {
+          folding: {
+            collectionField: 'custom-collection',
+            parentField: 'custom-parent',
+            childField: 'custom-child',
+            numberOfFoldedResults: 5,
           },
-        }
-      );
+        },
+      });
     });
 
     it('should call buildResultsPerPage with engine', async () => {
       await renderFoldedResultList();
 
-      expect(vi.mocked(buildInsightResultsPerPage)).toHaveBeenCalledWith(
-        mockedEngine
-      );
+      expect(vi.mocked(buildInsightResultsPerPage)).toHaveBeenCalledWith(mockedEngine);
     });
   });
 
@@ -214,18 +197,14 @@ describe('atomic-insight-folded-result-list', () => {
       const {parts} = await renderFoldedResultList();
 
       expect(parts.resultList).toBeTruthy();
-      await expect
-        .element(page.elementLocator(parts.resultList!))
-        .toBeInTheDocument();
+      await expect.element(page.elementLocator(parts.resultList!)).toBeInTheDocument();
     });
 
     it('should render atomic-insight-result for each folded collection', async () => {
       mockFoldedCollections(3);
       const {element} = await renderFoldedResultList();
 
-      const results = element.shadowRoot?.querySelectorAll(
-        'atomic-insight-result'
-      );
+      const results = element.shadowRoot?.querySelectorAll('atomic-insight-result');
       expect(results?.length).toBe(3);
     });
 
@@ -233,9 +212,7 @@ describe('atomic-insight-folded-result-list', () => {
       mockFoldedCollections(1);
       const {element} = await renderFoldedResultList();
 
-      const result = element.shadowRoot?.querySelector(
-        'atomic-insight-result[part="outline"]'
-      );
+      const result = element.shadowRoot?.querySelector('atomic-insight-result[part="outline"]');
       expect(result).toBeTruthy();
       await expect.element(page.elementLocator(result!)).toBeInTheDocument();
     });
@@ -252,9 +229,7 @@ describe('atomic-insight-folded-result-list', () => {
 
       const {element} = await renderFoldedResultList({isAppLoaded: false});
 
-      const placeholders = element.shadowRoot?.querySelectorAll(
-        'atomic-result-placeholder'
-      );
+      const placeholders = element.shadowRoot?.querySelectorAll('atomic-result-placeholder');
       expect(placeholders?.length).toBe(numberOfPlaceholders);
     });
   });
@@ -316,9 +291,7 @@ describe('atomic-insight-folded-result-list', () => {
 
       element.dispatchEvent(event);
 
-      expect(element.foldedResultList.loadCollection).toHaveBeenCalledWith(
-        mockCollection
-      );
+      expect(element.foldedResultList.loadCollection).toHaveBeenCalledWith(mockCollection);
     });
 
     it('should prevent event default', async () => {

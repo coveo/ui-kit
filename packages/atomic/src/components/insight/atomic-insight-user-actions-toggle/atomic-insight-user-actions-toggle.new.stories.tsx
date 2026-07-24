@@ -28,10 +28,7 @@ const meta: Meta = {
       handles: events,
     },
     msw: {
-      handlers: [
-        ...insightApiHarness.handlers,
-        ...machineLearningApiHarness.handlers,
-      ],
+      handlers: [...insightApiHarness.handlers, ...machineLearningApiHarness.handlers],
     },
   },
   beforeEach: () => {

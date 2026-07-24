@@ -5,10 +5,7 @@ import {generateId} from '@/src/internal/utils/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 import type {FullEngine} from '@/src/internal/engine/index.js';
 import type {RoutedUseCase} from './generative-types.js';
-import type {
-  HydrateSubInterface,
-  HydrationResult,
-} from '@/src/internal/api/generative/index.js';
+import type {HydrateSubInterface, HydrationResult} from '@/src/internal/api/generative/index.js';
 import type {RoutedInterfaceRegistry} from './routed-interface-registry.js';
 import {CommerceInterfaceImpl} from '@/src/internal/interfaces/index.js';
 import {SearchInterfaceImpl} from '@/src/internal/interfaces/index.js';
@@ -33,27 +30,19 @@ const CACHE_KEY: CacheKey<HydrateAction> = createCacheKey<HydrateAction>(
 );
 
 function createHydrateAction(interfaceId: string) {
-  return createAction<Record<string, unknown>>(
-    `${interfaceId}/hydrateFromSnapshot`
-  );
+  return createAction<Record<string, unknown>>(`${interfaceId}/hydrateFromSnapshot`);
 }
 
 export function getOrCreateHydrateFromSnapshotAction(iface: InterfaceHandle) {
   const {stateId, cacheRegistry} = getHandleInternals(iface);
-  return cacheRegistry.getOrCreate(CACHE_KEY, () =>
-    createHydrateAction(stateId)
-  );
+  return cacheRegistry.getOrCreate(CACHE_KEY, () => createHydrateAction(stateId));
 }
 
 export function createHydrateSubInterface(
   fullEngine: FullEngine,
   generativeInterface: InterfaceHandle
 ): HydrateSubInterface {
-  return (
-    activityType: string,
-    content: unknown,
-    query?: string
-  ): HydrationResult | null => {
+  return (activityType: string, content: unknown, query?: string): HydrationResult | null => {
     const routedUseCase = ACTIVITY_TYPE_TO_ROUTED_USE_CASE[activityType];
     if (!routedUseCase) {
       return null;
@@ -136,9 +125,7 @@ export function rehydrateRoutedInterfaces(
     }
 
     const activityType =
-      ROUTED_USE_CASE_TO_ACTIVITY_TYPE[
-        turn.routedInterface.useCase as RoutedUseCase
-      ];
+      ROUTED_USE_CASE_TO_ACTIVITY_TYPE[turn.routedInterface.useCase as RoutedUseCase];
     if (!activityType) {
       continue;
     }

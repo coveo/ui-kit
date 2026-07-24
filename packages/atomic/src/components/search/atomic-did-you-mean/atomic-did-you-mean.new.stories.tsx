@@ -13,18 +13,15 @@ const searchApiHarness = new MockSearchApi();
 
 const {decorator, play} = wrapInSearchInterface();
 const {play: playInitOnly} = wrapInSearchInterface({skipFirstSearch: true});
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-did-you-mean',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-did-you-mean', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   title: 'Search/Did You Mean',
   id: 'atomic-did-you-mean',
   component: 'atomic-did-you-mean',
-  render: (args) => html` <div
-    style="display: flex; justify-content: flex-start;"
-  >
+  render: (args) => html` <div style="display: flex; justify-content: flex-start;">
     ${template(args)}
   </div>`,
   decorators: [decorator],
@@ -100,9 +97,7 @@ export const A11yStatusMessage: Story = {
     await playInitOnly(context);
     await testStatusMessageA11y(context, {
       triggerAction: async (canvasElement) => {
-        const searchInterface = canvasElement.querySelector(
-          'atomic-search-interface'
-        )!;
+        const searchInterface = canvasElement.querySelector('atomic-search-interface')!;
         await (searchInterface as any).executeFirstSearch();
       },
       expectedText: 'Query was automatically corrected to coveo',

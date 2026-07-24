@@ -1,13 +1,7 @@
 import type {CategoryFacetSetState} from './category-facet-set-state.js';
-import type {
-  CategoryFacetRequest,
-  CategoryFacetValueRequest,
-} from './interfaces/request.js';
+import type {CategoryFacetRequest, CategoryFacetValueRequest} from './interfaces/request.js';
 
-export function handleCategoryFacetDeselectAll(
-  state: CategoryFacetSetState,
-  facetId: string
-) {
+export function handleCategoryFacetDeselectAll(state: CategoryFacetSetState, facetId: string) {
   const slice = state[facetId];
 
   if (!slice) {
@@ -24,10 +18,7 @@ export function selectPath(
   path: string[],
   initialNumberOfValues: number
 ) {
-  request.currentValues = buildCurrentValuesFromPath(
-    path,
-    initialNumberOfValues
-  );
+  request.currentValues = buildCurrentValuesFromPath(path, initialNumberOfValues);
   request.numberOfValues = path.length ? 1 : initialNumberOfValues;
   request.preventAutoSelect = true;
 }

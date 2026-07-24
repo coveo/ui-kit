@@ -10,8 +10,7 @@ export const defaultState = {
 
 export const defaultImplementation = {
   clear: vi.fn() as unknown as RecentQueriesList['clear'],
-  executeRecentQuery:
-    vi.fn() as unknown as RecentQueriesList['executeRecentQuery'],
+  executeRecentQuery: vi.fn() as unknown as RecentQueriesList['executeRecentQuery'],
   subscribe: genericSubscribe as unknown as RecentQueriesList['subscribe'],
   state: defaultState,
   updateRecentQueries: vi.fn(),

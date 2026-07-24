@@ -17,10 +17,7 @@ export function fetchRecommendationStaticStateFactory<
   options: CommerceEngineDefinitionOptions<TControllerDefinitions>
 ) {
   return async (
-    params: FetchStaticStateParameters<
-      TControllerDefinitions,
-      SolutionType.recommendation
-    >
+    params: FetchStaticStateParameters<TControllerDefinitions, SolutionType.recommendation>
   ) => {
     const allowedRecommendationKeys = params.recommendations;
 
@@ -31,14 +28,11 @@ export function fetchRecommendationStaticStateFactory<
 
     const {engine, controllers} = await solutionTypeBuild(params);
 
-    filterRecommendationControllers(
-      controllers,
-      controllerDefinitions ?? {}
-    ).refresh(allowedRecommendationKeys);
-
-    const searchActions = await Promise.all(
-      engine.waitForRequestCompletedAction()
+    filterRecommendationControllers(controllers, controllerDefinitions ?? {}).refresh(
+      allowedRecommendationKeys
     );
+
+    const searchActions = await Promise.all(engine.waitForRequestCompletedAction());
 
     const staticState = createStaticState<
       UnknownAction,

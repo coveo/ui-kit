@@ -149,9 +149,7 @@ export class AtomicInsightUserActionsModal
   private renderHeader() {
     return html`
       <div slot="header" class="contents">
-        <div part="title" class="font-light truncate">
-          ${this.bindings.i18n.t('user-actions')}
-        </div>
+        <div part="title" class="font-light truncate">${this.bindings.i18n.t('user-actions')}</div>
         ${renderButton({
           props: {
             style: 'text-transparent',
@@ -163,11 +161,7 @@ export class AtomicInsightUserActionsModal
             ariaLabel: this.bindings.i18n.t('close'),
           },
         })(html`
-          <atomic-icon
-            part="close-icon"
-            class="w-5 h-5"
-            .icon=${CloseIcon}
-          ></atomic-icon>
+          <atomic-icon part="close-icon" class="w-5 h-5" .icon=${CloseIcon}></atomic-icon>
         `)}
       </div>
     `;
@@ -199,9 +193,7 @@ export class AtomicInsightUserActionsModal
     if (this.dimensionChanged()) {
       this.updateDimensions();
     }
-    this.animationFrameId = window.requestAnimationFrame(() =>
-      this.onAnimationFrame()
-    );
+    this.animationFrameId = window.requestAnimationFrame(() => this.onAnimationFrame());
   }
 
   private dimensionChanged() {
@@ -223,8 +215,7 @@ export class AtomicInsightUserActionsModal
     if (!this.bindings?.interfaceElement) {
       return;
     }
-    this.interfaceDimensions =
-      this.bindings.interfaceElement.getBoundingClientRect();
+    this.interfaceDimensions = this.bindings.interfaceElement.getBoundingClientRect();
   }
 }
 

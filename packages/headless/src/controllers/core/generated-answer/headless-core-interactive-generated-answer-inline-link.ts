@@ -37,10 +37,7 @@ export interface InteractiveGeneratedAnswerInlineLinkProps extends InteractiveRe
 export interface InteractiveGeneratedAnswerInlineLink extends InteractiveResultCore {}
 
 interface InteractiveGeneratedAnswerInlineLinkAnalyticsClient {
-  logGeneratedAnswerOpenInlineLink(
-    link: InlineLink,
-    answerId: string
-  ): CustomAction;
+  logGeneratedAnswerOpenInlineLink(link: InlineLink, answerId: string): CustomAction;
 }
 
 /**
@@ -66,10 +63,7 @@ export function buildInteractiveGeneratedAnswerInlineLinkCore(
 
     wasOpened = true;
     engine.dispatch(
-      analyticsClient.logGeneratedAnswerOpenInlineLink(
-        props.options.link,
-        props.options.answerId
-      )
+      analyticsClient.logGeneratedAnswerOpenInlineLink(props.options.link, props.options.answerId)
     );
   };
 

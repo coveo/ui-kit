@@ -3,10 +3,7 @@ import {SortBy} from '../../features/sort/sort.js';
 import {buildMockCommerceAPIClient} from '../../test/mock-commerce-api-client.js';
 import {VERSION} from '../../utils/version.js';
 import {PlatformClient} from '../platform-client.js';
-import {
-  type CommerceAPIClient,
-  getCommerceApiBaseUrl,
-} from './commerce-api-client.js';
+import {type CommerceAPIClient, getCommerceApiBaseUrl} from './commerce-api-client.js';
 import type {CommerceAPIErrorStatusResponse} from './commerce-api-error-response.js';
 import type {FilterableCommerceAPIRequest} from './common/request.js';
 import type {CommerceListingRequest} from './listing/request.js';

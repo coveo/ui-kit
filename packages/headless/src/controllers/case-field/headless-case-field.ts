@@ -26,14 +26,8 @@ import type {
   DocumentSuggestionSection,
 } from '../../state/state-sections.js';
 import {loadReducerError} from '../../utils/errors.js';
-import {
-  requiredNonEmptyString,
-  validateOptions,
-} from '../../utils/validate-payload.js';
-import {
-  buildController,
-  type Controller,
-} from '../controller/headless-controller.js';
+import {requiredNonEmptyString, validateOptions} from '../../utils/validate-payload.js';
+import {buildController, type Controller} from '../controller/headless-controller.js';
 
 export interface CaseFieldProps {
   options?: CaseFieldOptions;
@@ -117,10 +111,7 @@ export interface UpdateCaseFieldFetchOptions {
  * @group Controllers
  * @category CaseField
  */
-export function buildCaseField(
-  engine: CaseAssistEngine,
-  props: CaseFieldProps = {}
-): CaseField {
+export function buildCaseField(engine: CaseAssistEngine, props: CaseFieldProps = {}): CaseField {
   if (!loadCaseFieldReducers(engine)) {
     throw loadReducerError;
   }
@@ -169,14 +160,10 @@ export function buildCaseField(
       };
     },
 
-    update(
-      value: string,
-      updatesToFetch?: UpdateCaseFieldFetchOptions,
-      autoSelection?: boolean
-    ) {
-      const suggestionId = getState().caseField?.fields?.[
-        options.field
-      ]?.suggestions?.find((s) => s.value === value)?.id;
+    update(value: string, updatesToFetch?: UpdateCaseFieldFetchOptions, autoSelection?: boolean) {
+      const suggestionId = getState().caseField?.fields?.[options.field]?.suggestions?.find(
+        (s) => s.value === value
+      )?.id;
 
       if (suggestionId) {
         autoSelection
@@ -193,10 +180,8 @@ export function buildCaseField(
 
       !autoSelection && dispatch(logUpdateCaseField(options.field));
 
-      updatesToFetch?.caseClassifications &&
-        dispatch(fetchCaseClassifications());
-      updatesToFetch?.documentSuggestions &&
-        dispatch(fetchDocumentSuggestions());
+      updatesToFetch?.caseClassifications && dispatch(fetchCaseClassifications());
+      updatesToFetch?.documentSuggestions && dispatch(fetchDocumentSuggestions());
     },
   };
 }

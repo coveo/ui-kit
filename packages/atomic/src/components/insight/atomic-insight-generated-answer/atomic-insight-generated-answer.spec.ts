@@ -62,24 +62,21 @@ describe('atomic-insight-generated-answer', () => {
       cancelPendingSelect: vi.fn(),
     } as ReturnType<typeof buildInteractiveCitation>);
 
-    const {element} =
-      await renderInAtomicInsightInterface<AtomicInsightGeneratedAnswer>({
-        template: html`<atomic-insight-generated-answer
-          .withToggle=${props.withToggle ?? false}
-          .collapsible=${props.collapsible ?? false}
-          .disableCitationAnchoring=${props.disableCitationAnchoring ?? false}
-          .answerConfigurationId=${props.answerConfigurationId}
-          fields-to-include-in-citations=${ifDefined(
-            props.fieldsToIncludeInCitations
-          )}
-          .maxCollapsedHeight=${props.maxCollapsedHeight ?? 16}
-        ></atomic-insight-generated-answer>`,
-        selector: 'atomic-insight-generated-answer',
-        bindings: (bindings) => {
-          bindings.engine = mockedEngine;
-          return bindings;
-        },
-      });
+    const {element} = await renderInAtomicInsightInterface<AtomicInsightGeneratedAnswer>({
+      template: html`<atomic-insight-generated-answer
+        .withToggle=${props.withToggle ?? false}
+        .collapsible=${props.collapsible ?? false}
+        .disableCitationAnchoring=${props.disableCitationAnchoring ?? false}
+        .answerConfigurationId=${props.answerConfigurationId}
+        fields-to-include-in-citations=${ifDefined(props.fieldsToIncludeInCitations)}
+        .maxCollapsedHeight=${props.maxCollapsedHeight ?? 16}
+      ></atomic-insight-generated-answer>`,
+      selector: 'atomic-insight-generated-answer',
+      bindings: (bindings) => {
+        bindings.engine = mockedEngine;
+        return bindings;
+      },
+    });
 
     return {
       element,
@@ -93,9 +90,7 @@ describe('atomic-insight-generated-answer', () => {
         return element.shadowRoot!.querySelector('[part="toggle"]');
       },
       get generatedContainer() {
-        return element.shadowRoot!.querySelector(
-          '[part="generated-container"]'
-        );
+        return element.shadowRoot!.querySelector('[part="generated-container"]');
       },
       get generatedContent() {
         return element.shadowRoot!.querySelector('[part="generated-content"]');
@@ -110,9 +105,7 @@ describe('atomic-insight-generated-answer', () => {
         return element.shadowRoot!.querySelector('[part="citations-label"]');
       },
       get generatedAnswerFooter() {
-        return element.shadowRoot!.querySelector(
-          '[part="generated-answer-footer"]'
-        );
+        return element.shadowRoot!.querySelector('[part="generated-answer-footer"]');
       },
       get likeButton() {
         return element.shadowRoot!.querySelector(
@@ -163,10 +156,7 @@ describe('atomic-insight-generated-answer', () => {
 
     it('should call buildGeneratedAnswer with the engine', async () => {
       await renderGeneratedAnswer();
-      expect(buildGeneratedAnswer).toHaveBeenCalledWith(
-        mockedEngine,
-        expect.any(Object)
-      );
+      expect(buildGeneratedAnswer).toHaveBeenCalledWith(mockedEngine, expect.any(Object));
     });
 
     it('should call buildSearchStatus with the engine', async () => {
@@ -463,10 +453,7 @@ describe('atomic-insight-generated-answer', () => {
     ) as HTMLElement | null;
     expect(generatedText).not.toBeNull();
 
-    vi.spyOn(
-      generatedText as HTMLElement,
-      'getBoundingClientRect'
-    ).mockReturnValue({
+    vi.spyOn(generatedText as HTMLElement, 'getBoundingClientRect').mockReturnValue({
       x: 0,
       y: 0,
       width: 0,
@@ -593,9 +580,7 @@ describe('atomic-insight-generated-answer', () => {
     await element.updateComplete;
     expect(citationElements.length).toBeGreaterThan(0);
     const citationEl = citationElements[0];
-    const popover = citationEl.shadowRoot?.querySelector(
-      '[part="citation-popover"]'
-    );
+    const popover = citationEl.shadowRoot?.querySelector('[part="citation-popover"]');
     expect(popover).toBeInTheDocument();
   });
 
@@ -640,11 +625,7 @@ describe('atomic-insight-generated-answer', () => {
       expect(buildGeneratedAnswer).toHaveBeenCalledWith(
         mockedEngine,
         expect.objectContaining({
-          fieldsToIncludeInCitations: expect.arrayContaining([
-            'author',
-            'date',
-            'custom_field',
-          ]),
+          fieldsToIncludeInCitations: expect.arrayContaining(['author', 'date', 'custom_field']),
         })
       );
     });
@@ -672,11 +653,7 @@ describe('atomic-insight-generated-answer', () => {
       expect(buildGeneratedAnswer).toHaveBeenCalledWith(
         mockedEngine,
         expect.objectContaining({
-          fieldsToIncludeInCitations: expect.arrayContaining([
-            'field1',
-            'field2',
-            'field3',
-          ]),
+          fieldsToIncludeInCitations: expect.arrayContaining(['field1', 'field2', 'field3']),
         })
       );
     });
@@ -861,9 +838,7 @@ describe('atomic-insight-generated-answer', () => {
 
     const disconnectSpy = vi.fn();
     // Access the internal resizeObserver and spy on disconnect
-    const resizeObserver = (
-      element as unknown as {resizeObserver?: ResizeObserver}
-    ).resizeObserver;
+    const resizeObserver = (element as unknown as {resizeObserver?: ResizeObserver}).resizeObserver;
     if (resizeObserver) {
       resizeObserver.disconnect = disconnectSpy;
     }

@@ -12,23 +12,11 @@ import {log} from './log.js';
 import {buildProjectMetadata} from './metadata.js';
 import {promptProjectName, selectTemplate} from './prompt.js';
 import {readSampleMetadata, writeProvenance} from './provenance.js';
-import {
-  installDependencies,
-  moveToTarget,
-  rewritePackageJson,
-} from './setup.js';
-import {
-  describeTemplate,
-  getTemplate,
-  getTemplates,
-  type Template,
-} from './templates.js';
+import {installDependencies, moveToTarget, rewritePackageJson} from './setup.js';
+import {describeTemplate, getTemplate, getTemplates, type Template} from './templates.js';
 import {formatError, getPackageManager} from './utils.js';
 
-export function unavailableTemplateMessage(
-  templateName: string,
-  version?: string
-): string {
+export function unavailableTemplateMessage(templateName: string, version?: string): string {
   return version
     ? `Template "${templateName}" version "${version}" is not available.`
     : `Template "${templateName}" is not available.`;
@@ -72,10 +60,7 @@ function buildProgram(): Command {
         'configuration against the sample organization — no credentials required.'
     )
     .argument('[project-name]', 'name (and directory) of the project to create')
-    .option(
-      '--template <name>',
-      'template to scaffold (skips the interactive prompt)'
-    )
+    .option('--template <name>', 'template to scaffold (skips the interactive prompt)')
     .option(
       '--template-version <version>',
       'Headless/Atomic library version (or npm dist-tag) to scaffold (defaults to latest)'
@@ -106,9 +91,7 @@ export function parseArgs(rawArgs: string[]): CliArgs {
     projectName: program.args[0],
     template: opts.template,
     templateVersion:
-      templateVersion !== undefined && templateVersion.length > 0
-        ? templateVersion
-        : undefined,
+      templateVersion !== undefined && templateVersion.length > 0 ? templateVersion : undefined,
     docs: Boolean(opts.docs),
   };
 }
@@ -125,19 +108,13 @@ async function claimTargetDir(targetDir: string): Promise<boolean> {
     return true;
   }
   if (!(await isEmptyOrMissing(targetDir))) {
-    throw new Error(
-      `Target directory "${targetDir}" already exists and is not empty.`
-    );
+    throw new Error(`Target directory "${targetDir}" already exists and is not empty.`);
   }
   return false;
 }
 
 /** Downloads, resolves, finalizes, and installs the chosen template. */
-export async function scaffold({
-  template,
-  projectName,
-  version,
-}: ScaffoldOptions): Promise<void> {
+export async function scaffold({template, projectName, version}: ScaffoldOptions): Promise<void> {
   const targetDir = resolve(process.cwd(), projectName);
   const tempDir = await mkdtemp(join(tmpdir(), 'create-ui-'));
   let createdTargetDir = false;
@@ -198,9 +175,7 @@ export async function scaffold({
  * when omitted, the interactive selector. Returns null when an explicit value
  * is unknown.
  */
-async function resolveTemplate(
-  templateArg: string | undefined
-): Promise<Template | null> {
+async function resolveTemplate(templateArg: string | undefined): Promise<Template | null> {
   if (templateArg === undefined) {
     return selectTemplate();
   }
@@ -214,11 +189,7 @@ async function resolveTemplate(
       .map((t) => `  ${t.name}`)
       .join('\n')}`
   );
-  log.note(
-    `Run with --help to see all templates:\n` +
-      `  npm create @coveo/ui -- --help`,
-    'Tip'
-  );
+  log.note(`Run with --help to see all templates:\n` + `  npm create @coveo/ui -- --help`, 'Tip');
   return null;
 }
 
@@ -237,12 +208,9 @@ async function resolveInputs(args: CliArgs): Promise<ScaffoldOptions | null> {
 
   const targetDir = resolve(process.cwd(), projectName);
   if (!(await isEmptyOrMissing(targetDir))) {
-    log.error(
-      `Target directory "${projectName}" already exists and is not empty.`
-    );
+    log.error(`Target directory "${projectName}" already exists and is not empty.`);
     log.note(
-      `Pick a different name, or remove the directory:\n` +
-        `  rm -rf ${projectName}`,
+      `Pick a different name, or remove the directory:\n` + `  rm -rf ${projectName}`,
       'Tip'
     );
     return null;
@@ -282,8 +250,7 @@ export async function main(rawArgs: string[]): Promise<number> {
 }
 
 const isDirectRun =
-  argv[1] !== undefined &&
-  fileURLToPath(import.meta.url) === realpathSync(argv[1]);
+  argv[1] !== undefined && fileURLToPath(import.meta.url) === realpathSync(argv[1]);
 
 if (isDirectRun) {
   process.on('uncaughtException', (err) => {

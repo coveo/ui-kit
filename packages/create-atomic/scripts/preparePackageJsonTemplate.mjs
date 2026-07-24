@@ -102,20 +102,11 @@ const workspaceVersions = {
 };
 
 cpSync(atomicTemplatePath, bundledTemplatePath, {recursive: true});
-copyFileSync(
-  join(__dirname, '!.eslintrc'),
-  join(bundledTemplatePath, '.eslintrc')
-);
+copyFileSync(join(__dirname, '!.eslintrc'), join(bundledTemplatePath, '.eslintrc'));
 
-const packageJson = readFileSync(
-  join(bundledTemplatePath, 'package.json'),
-  'utf-8'
-);
+const packageJson = readFileSync(join(bundledTemplatePath, 'package.json'), 'utf-8');
 
-const packageTemplate = readFileSync(
-  resolve(__dirname, 'packageTemplate.json'),
-  'utf-8'
-);
+const packageTemplate = readFileSync(resolve(__dirname, 'packageTemplate.json'), 'utf-8');
 
 const pkgIndent = detectIndent(packageTemplate).indent || '\t';
 const finalPackageJsonTemplate = JSON.parse(packageTemplate);

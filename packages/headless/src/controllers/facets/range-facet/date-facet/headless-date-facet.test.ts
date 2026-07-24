@@ -15,10 +15,7 @@ import type {SearchAppState} from '../../../../state/search-app-state.js';
 import {buildMockDateFacetResponse} from '../../../../test/mock-date-facet-response.js';
 import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice.js';
 import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../../../test/mock-engine-v2.js';
 import {createMockState} from '../../../../test/mock-state.js';
 import * as FacetIdDeterminor from '../../../core/facets/_common/facet-id-determinor.js';
 import {
@@ -28,9 +25,7 @@ import {
   type DateFacetOptions,
 } from './headless-date-facet.js';
 
-vi.mock(
-  '../../../../features/facets/range-facets/date-facet-set/date-facet-actions'
-);
+vi.mock('../../../../features/facets/range-facets/date-facet-set/date-facet-actions');
 vi.mock('../../../../features/search/search-actions');
 vi.mock('../../../../features/facets/facet-set/facet-set-actions');
 vi.mock('../../../../features/facet-options/facet-options-actions');
@@ -62,9 +57,7 @@ describe('date facet', () => {
   });
 
   it('#initDateFacet validates manual range in the options', () => {
-    options.currentValues = [
-      buildDateRange({start: 1616679091000, end: 1616592691000}),
-    ];
+    options.currentValues = [buildDateRange({start: 1616679091000, end: 1616592691000})];
     initDateFacet();
     expect(validateManualDateRanges).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -92,10 +85,7 @@ describe('date facet', () => {
 
     initDateFacet();
 
-    expect(FacetIdDeterminor.determineFacetId).toHaveBeenCalledWith(
-      engine,
-      options
-    );
+    expect(FacetIdDeterminor.determineFacetId).toHaveBeenCalledWith(engine, options);
   });
 
   it('registers a date facet with the passed options', () => {
@@ -110,9 +100,7 @@ describe('date facet', () => {
 
   it('when an option is invalid, it throws an error', () => {
     options.numberOfValues = 0;
-    expect(() => initDateFacet()).toThrow(
-      'Check the options of buildDateFacet'
-    );
+    expect(() => initDateFacet()).toThrow('Check the options of buildDateFacet');
   });
 
   describe('#toggleSelect', () => {
@@ -187,9 +175,7 @@ describe('date facet', () => {
 
   it('exposes a #state getter property to retrieve the values', () => {
     const values = [buildMockDateFacetValue()];
-    state.search.response.facets = [
-      buildMockDateFacetResponse({facetId, values}),
-    ];
+    state.search.response.facets = [buildMockDateFacetResponse({facetId, values})];
 
     expect(dateFacet.state.values).toEqual(values);
   });

@@ -48,9 +48,7 @@ describe('atomic-external', () => {
     it('should find interface by default selector', async () => {
       const {element} = await renderComponent();
       expect(element.boundInterface).toBeDefined();
-      expect(element.boundInterface?.tagName.toLowerCase()).toBe(
-        'atomic-search-interface'
-      );
+      expect(element.boundInterface?.tagName.toLowerCase()).toBe('atomic-search-interface');
     });
 
     it('should use custom selector when specified', async () => {
@@ -69,10 +67,7 @@ describe('atomic-external', () => {
     });
 
     it('should add event listeners', async () => {
-      const addEventListenerSpy = vi.spyOn(
-        HTMLElement.prototype,
-        'addEventListener'
-      );
+      const addEventListenerSpy = vi.spyOn(HTMLElement.prototype, 'addEventListener');
 
       await renderComponent();
 
@@ -80,14 +75,8 @@ describe('atomic-external', () => {
         'atomic/initializeComponent',
         expect.any(Function)
       );
-      expect(addEventListenerSpy).toHaveBeenCalledWith(
-        'atomic/scrollToTop',
-        expect.any(Function)
-      );
-      expect(addEventListenerSpy).toHaveBeenCalledWith(
-        'atomic/parentReady',
-        expect.any(Function)
-      );
+      expect(addEventListenerSpy).toHaveBeenCalledWith('atomic/scrollToTop', expect.any(Function));
+      expect(addEventListenerSpy).toHaveBeenCalledWith('atomic/parentReady', expect.any(Function));
 
       addEventListenerSpy.mockRestore();
     });
@@ -97,10 +86,7 @@ describe('atomic-external', () => {
     it('should remove event listeners', async () => {
       const {element} = await renderComponent();
 
-      const removeEventListenerSpy = vi.spyOn(
-        HTMLElement.prototype,
-        'removeEventListener'
-      );
+      const removeEventListenerSpy = vi.spyOn(HTMLElement.prototype, 'removeEventListener');
 
       element.remove();
 
@@ -239,9 +225,8 @@ describe('atomic-external', () => {
       const {element} = await renderComponent();
 
       // Set bindings on the bound interface after component is connected
-      (
-        element.boundInterface as HTMLElement & {bindings: typeof mockBindings}
-      ).bindings = mockBindings;
+      (element.boundInterface as HTMLElement & {bindings: typeof mockBindings}).bindings =
+        mockBindings;
 
       // Verify boundInterface is set correctly
       expect(element.boundInterface).toStrictEqual(mockInterface);
@@ -295,9 +280,7 @@ describe('atomic-external', () => {
       props: {selector: '#non-existent-interface'},
     });
 
-    const errorComponent = element.shadowRoot?.querySelector(
-      'atomic-component-error'
-    );
+    const errorComponent = element.shadowRoot?.querySelector('atomic-component-error');
     expect(errorComponent).toBeDefined();
   });
 });

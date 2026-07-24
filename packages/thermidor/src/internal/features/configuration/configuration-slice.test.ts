@@ -3,10 +3,7 @@
  */
 
 import {describe, it, expect} from 'vitest';
-import {
-  configurationSlice,
-  initialConfigurationState,
-} from './configuration-slice.js';
+import {configurationSlice, initialConfigurationState} from './configuration-slice.js';
 import {
   setAccessToken,
   setConfiguration,
@@ -50,10 +47,7 @@ describe('configurationSlice: setOrganizationId', () => {
       endpoint: 'https://api.example.com',
     };
 
-    const state = configurationSlice.reducer(
-      initialState,
-      setOrganizationId('new-org')
-    );
+    const state = configurationSlice.reducer(initialState, setOrganizationId('new-org'));
 
     expect(state.organizationId).toBe('new-org');
     expect(state.accessToken).toBe('existing-token');
@@ -95,10 +89,7 @@ describe('configurationSlice: setAccessToken', () => {
       endpoint: 'https://api.example.com',
     };
 
-    const state = configurationSlice.reducer(
-      initialState,
-      setAccessToken('new-token')
-    );
+    const state = configurationSlice.reducer(initialState, setAccessToken('new-token'));
 
     expect(state.accessToken).toBe('new-token');
     expect(state.organizationId).toBe('my-org');
@@ -131,10 +122,7 @@ describe('configurationSlice: setEndpoint', () => {
       endpoint: 'https://api.example.com',
     };
 
-    const state = configurationSlice.reducer(
-      initialState,
-      setEndpoint(undefined)
-    );
+    const state = configurationSlice.reducer(initialState, setEndpoint(undefined));
 
     expect(state.endpoint).toBeUndefined();
   });
@@ -147,10 +135,7 @@ describe('configurationSlice: setEndpoint', () => {
       endpoint: undefined,
     };
 
-    const state = configurationSlice.reducer(
-      initialState,
-      setEndpoint('https://new.endpoint.com')
-    );
+    const state = configurationSlice.reducer(initialState, setEndpoint('https://new.endpoint.com'));
 
     expect(state.endpoint).toBe('https://new.endpoint.com');
     expect(state.organizationId).toBe('my-org');
@@ -190,10 +175,7 @@ describe('configurationSlice: setConfiguration', () => {
       endpoint: undefined,
     };
 
-    const state = configurationSlice.reducer(
-      initialState,
-      setConfiguration(newConfig)
-    );
+    const state = configurationSlice.reducer(initialState, setConfiguration(newConfig));
 
     expect(state).toEqual(newConfig);
   });
@@ -223,10 +205,7 @@ describe('configurationSlice: setConfiguration', () => {
       endpoint: 'https://new.com',
     };
 
-    const state = configurationSlice.reducer(
-      original,
-      setConfiguration(newConfig)
-    );
+    const state = configurationSlice.reducer(original, setConfiguration(newConfig));
 
     expect(state).toEqual(newConfig);
     expect(state).not.toBe(original);
@@ -244,10 +223,7 @@ describe('configurationSlice: sequential updates', () => {
     expect(state.accessToken).toBe('my-token');
     expect(state.organizationId).toBe('my-org');
 
-    state = configurationSlice.reducer(
-      state,
-      setEndpoint('https://api.example.com')
-    );
+    state = configurationSlice.reducer(state, setEndpoint('https://api.example.com'));
     expect(state.endpoint).toBe('https://api.example.com');
     expect(state.organizationId).toBe('my-org');
     expect(state.accessToken).toBe('my-token');

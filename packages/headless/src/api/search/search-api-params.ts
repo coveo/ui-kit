@@ -4,11 +4,7 @@ import type {AnyFacetRequest} from '../../features/facets/generic/interfaces/gen
 import type {GeneratedContentFormat} from '../../features/generated-answer/generated-response-format.js';
 import {URLPath} from '../../utils/url-utils.js';
 import type {HistoryElement} from '../analytics/coveo.analytics/history-store.js';
-import type {
-  HTTPContentType,
-  HttpMethods,
-  PlatformClientCallOptions,
-} from '../platform-client.js';
+import type {HTTPContentType, HttpMethods, PlatformClientCallOptions} from '../platform-client.js';
 import type {BaseParam} from '../platform-service-params.js';
 
 export interface QueryParam {
@@ -149,10 +145,7 @@ export const baseSearchRequest = (
   method: HttpMethods,
   contentType: HTTPContentType,
   path: string
-): Pick<
-  PlatformClientCallOptions,
-  'accessToken' | 'method' | 'contentType' | 'url' | 'origin'
-> => {
+): Pick<PlatformClientCallOptions, 'accessToken' | 'method' | 'contentType' | 'url' | 'origin'> => {
   const url = new URLPath(`${req.url}${path}`);
 
   url.addParam('organizationId', req.organizationId);

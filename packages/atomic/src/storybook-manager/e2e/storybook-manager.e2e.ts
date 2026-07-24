@@ -16,9 +16,7 @@ test.describe('Storybook Manager - Custom toolbar overrides', () => {
     await expect(toolbarChild).toBeAttached();
   });
 
-  test('should render the Coveo Docs search box in the toolbar', async ({
-    page,
-  }) => {
+  test('should render the Coveo Docs search box in the toolbar', async ({page}) => {
     const searchContainer = page.locator('#coveo-docs-search-container');
     await expect(searchContainer).toBeVisible();
 

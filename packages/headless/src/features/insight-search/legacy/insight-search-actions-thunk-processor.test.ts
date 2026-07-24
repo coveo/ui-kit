@@ -12,14 +12,8 @@ import {getConfigurationInitialState} from '../../configuration/configuration-st
 import {getInsightConfigurationInitialState} from '../../insight-configuration/insight-configuration-state.js';
 import {updateQuery} from '../../query/query-actions.js';
 import type {ExecuteSearchThunkReturn} from '../../search/legacy/search-actions.js';
-import type {
-  MappedSearchRequest,
-  SearchMappings,
-} from '../../search/search-mappings.js';
-import {
-  logFetchMoreResults,
-  logQueryError,
-} from '../insight-search-analytics-actions.js';
+import type {MappedSearchRequest, SearchMappings} from '../../search/search-mappings.js';
+import {logFetchMoreResults, logQueryError} from '../insight-search-analytics-actions.js';
 import {
   AsyncInsightSearchThunkProcessor,
   type AsyncThunkConfig,
@@ -83,10 +77,7 @@ describe('AsyncInsightSearchThunkProcessor', () => {
       requestExecuted: mappedRequest.request,
     };
 
-    const processed = (await processor.process(
-      fetched,
-      mappedRequest
-    )) as ExecuteSearchThunkReturn;
+    const processed = (await processor.process(fetched, mappedRequest)) as ExecuteSearchThunkReturn;
 
     expect(processed.response).toEqual(searchResponse);
     expect(config.extra.apiClient.query).not.toHaveBeenCalled();
@@ -113,10 +104,7 @@ describe('AsyncInsightSearchThunkProcessor', () => {
       requestExecuted: mappedRequest.request,
     };
 
-    (await processor.process(
-      fetched,
-      mappedRequest
-    )) as ExecuteSearchThunkReturn;
+    (await processor.process(fetched, mappedRequest)) as ExecuteSearchThunkReturn;
 
     expect(config.rejectWithValue).toHaveBeenCalledWith(theError);
     expect(config.extra.apiClient.query).not.toHaveBeenCalled();
@@ -132,23 +120,22 @@ describe('AsyncInsightSearchThunkProcessor', () => {
           mappings: initialSearchMappings(),
         };
 
-        const originalResponseWithNoResultsAndCorrection =
-          buildMockSearchResponse({
-            results: [],
-            queryCorrections: [
-              {
-                correctedQuery: 'bar',
-                wordCorrections: [
-                  {
-                    correctedWord: 'foo',
-                    length: 3,
-                    offset: 0,
-                    originalWord: 'foo',
-                  },
-                ],
-              },
-            ],
-          });
+        const originalResponseWithNoResultsAndCorrection = buildMockSearchResponse({
+          results: [],
+          queryCorrections: [
+            {
+              correctedQuery: 'bar',
+              wordCorrections: [
+                {
+                  correctedWord: 'foo',
+                  length: 3,
+                  offset: 0,
+                  originalWord: 'foo',
+                },
+              ],
+            },
+          ],
+        });
 
         const responseAfterCorrection = buildMockSearchResponse({
           results: [buildMockResult({uniqueId: '123'})],
@@ -176,8 +163,7 @@ describe('AsyncInsightSearchThunkProcessor', () => {
         expect(config.extra.apiClient.query).toHaveBeenCalled();
         expect(processed.response).toEqual({
           ...responseAfterCorrection,
-          queryCorrections:
-            originalResponseWithNoResultsAndCorrection.queryCorrections,
+          queryCorrections: originalResponseWithNoResultsAndCorrection.queryCorrections,
         });
         expect(processed.automaticallyCorrected).toBe(true);
       });
@@ -190,15 +176,14 @@ describe('AsyncInsightSearchThunkProcessor', () => {
           request: buildMockInsightQueryRequest(),
           mappings: initialSearchMappings(),
         };
-        const originalResponseWithResultsAndChangedQuery =
-          buildMockSearchResponse({
-            results: [buildMockResult()],
-            queryCorrection: {
-              correctedQuery: 'bar',
-              originalQuery: 'foo',
-              corrections: [],
-            },
-          });
+        const originalResponseWithResultsAndChangedQuery = buildMockSearchResponse({
+          results: [buildMockResult()],
+          queryCorrection: {
+            correctedQuery: 'bar',
+            originalQuery: 'foo',
+            corrections: [],
+          },
+        });
 
         const fetched = {
           response: {
@@ -216,9 +201,7 @@ describe('AsyncInsightSearchThunkProcessor', () => {
 
         expect(config.dispatch).toHaveBeenCalledWith(updateQuery({q: 'bar'}));
         expect(config.extra.apiClient.query).not.toHaveBeenCalled();
-        expect(processed.response).toMatchObject(
-          originalResponseWithResultsAndChangedQuery
-        );
+        expect(processed.response).toMatchObject(originalResponseWithResultsAndChangedQuery);
         expect(processed.automaticallyCorrected).toBe(true);
         expect(processed.originalQuery).toBe('foo');
         expect(processed.queryExecuted).toBe('bar');

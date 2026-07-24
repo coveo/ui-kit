@@ -6,15 +6,10 @@ export interface SnippetFooterProps {
   i18n: i18n;
 }
 
-export const renderSnippetFooter: FunctionalComponentWithChildren<
-  SnippetFooterProps
-> =
+export const renderSnippetFooter: FunctionalComponentWithChildren<SnippetFooterProps> =
   ({props}) =>
   (children) => {
-    return html`<footer
-      part="footer"
-      aria-label=${props.i18n.t('smart-snippet-source')}
-    >
+    return html`<footer part="footer" aria-label=${props.i18n.t('smart-snippet-source')}>
       ${children}
     </footer>`;
   };

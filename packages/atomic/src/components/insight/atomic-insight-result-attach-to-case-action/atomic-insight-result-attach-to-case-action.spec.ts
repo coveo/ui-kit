@@ -46,9 +46,7 @@ describe('atomic-insight-result-attach-to-case-action', () => {
     });
 
     const headless = await import('@coveo/headless/insight');
-    vi.mocked(headless.buildAttachedResults).mockReturnValue(
-      mockedAttachedResults
-    );
+    vi.mocked(headless.buildAttachedResults).mockReturnValue(mockedAttachedResults);
 
     const mockFoldedResult = buildMockInsightFoldedResult({
       uniqueId: 'test-result-id',
@@ -58,16 +56,15 @@ describe('atomic-insight-result-attach-to-case-action', () => {
     const effectiveResult = options.result ?? mockFoldedResult.result;
     mockFoldedResult.result = effectiveResult;
 
-    const {element} =
-      await renderInAtomicInsightResult<AtomicInsightResultAttachToCaseAction>({
-        template: html`<atomic-insight-result-attach-to-case-action></atomic-insight-result-attach-to-case-action>`,
-        selector: 'atomic-insight-result-attach-to-case-action',
-        result: mockFoldedResult,
-        bindings: (bindings) => {
-          bindings.engine = mockedEngine;
-          return bindings;
-        },
-      });
+    const {element} = await renderInAtomicInsightResult<AtomicInsightResultAttachToCaseAction>({
+      template: html`<atomic-insight-result-attach-to-case-action></atomic-insight-result-attach-to-case-action>`,
+      selector: 'atomic-insight-result-attach-to-case-action',
+      result: mockFoldedResult,
+      bindings: (bindings) => {
+        bindings.engine = mockedEngine;
+        return bindings;
+      },
+    });
 
     return {
       element,
@@ -122,16 +119,12 @@ describe('atomic-insight-result-attach-to-case-action', () => {
       const {element: detachedElement} = await renderComponent({
         isAttached: false,
       });
-      const detachedIcon = detachedElement
-        .querySelector('atomic-icon')
-        ?.getAttribute('icon');
+      const detachedIcon = detachedElement.querySelector('atomic-icon')?.getAttribute('icon');
 
       const {element: attachedElement} = await renderComponent({
         isAttached: true,
       });
-      const attachedIcon = attachedElement
-        .querySelector('atomic-icon')
-        ?.getAttribute('icon');
+      const attachedIcon = attachedElement.querySelector('atomic-icon')?.getAttribute('icon');
 
       expect(detachedIcon).toBeTruthy();
       expect(attachedIcon).toBeTruthy();
@@ -147,17 +140,13 @@ describe('atomic-insight-result-attach-to-case-action', () => {
 
     it('should have "Attach to case" as aria-label', async () => {
       const {button} = await renderComponent({isAttached: false});
-      await expect
-        .element(button)
-        .toHaveAttribute('aria-label', 'Attach to case');
+      await expect.element(button).toHaveAttribute('aria-label', 'Attach to case');
     });
 
     it('should emit atomic/insight/attachToCase/attach event when clicked', async () => {
       const {element, button} = await renderComponent({isAttached: false});
 
-      const eventPromise = new Promise<
-        CustomEvent<InsightResultAttachToCaseEvent>
-      >((resolve) => {
+      const eventPromise = new Promise<CustomEvent<InsightResultAttachToCaseEvent>>((resolve) => {
         element.addEventListener(
           'atomic/insight/attachToCase/attach',
           (e) => resolve(e as CustomEvent<InsightResultAttachToCaseEvent>),
@@ -176,9 +165,7 @@ describe('atomic-insight-result-attach-to-case-action', () => {
 
       // Verify that calling the callback invokes attach with the result
       event.detail.callback();
-      expect(mockedAttachedResults.attach).toHaveBeenCalledWith(
-        event.detail.result
-      );
+      expect(mockedAttachedResults.attach).toHaveBeenCalledWith(event.detail.result);
     });
   });
 
@@ -190,17 +177,13 @@ describe('atomic-insight-result-attach-to-case-action', () => {
 
     it('should have "Detach from case" as aria-label', async () => {
       const {button} = await renderComponent({isAttached: true});
-      await expect
-        .element(button)
-        .toHaveAttribute('aria-label', 'Detach from case');
+      await expect.element(button).toHaveAttribute('aria-label', 'Detach from case');
     });
 
     it('should emit atomic/insight/attachToCase/detach event when clicked', async () => {
       const {element, button} = await renderComponent({isAttached: true});
 
-      const eventPromise = new Promise<
-        CustomEvent<InsightResultAttachToCaseEvent>
-      >((resolve) => {
+      const eventPromise = new Promise<CustomEvent<InsightResultAttachToCaseEvent>>((resolve) => {
         element.addEventListener(
           'atomic/insight/attachToCase/detach',
           (e) => resolve(e as CustomEvent<InsightResultAttachToCaseEvent>),
@@ -219,18 +202,14 @@ describe('atomic-insight-result-attach-to-case-action', () => {
 
       // Verify that calling the callback invokes detach with the result
       event.detail.callback();
-      expect(mockedAttachedResults.detach).toHaveBeenCalledWith(
-        event.detail.result
-      );
+      expect(mockedAttachedResults.detach).toHaveBeenCalledWith(event.detail.result);
     });
   });
 
   it('should emit event when activated via keyboard', async () => {
     const {element} = await renderComponent({isAttached: false});
 
-    const eventPromise = new Promise<
-      CustomEvent<InsightResultAttachToCaseEvent>
-    >((resolve) => {
+    const eventPromise = new Promise<CustomEvent<InsightResultAttachToCaseEvent>>((resolve) => {
       element.addEventListener(
         'atomic/insight/attachToCase/attach',
         (e) => resolve(e as CustomEvent<InsightResultAttachToCaseEvent>),

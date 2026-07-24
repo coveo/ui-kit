@@ -1,9 +1,6 @@
 import {buildMockResult} from '../../test/mock-result.js';
 import {fetchInstantResults} from '../search/search-actions.js';
-import {
-  registerInstantResults,
-  updateInstantResultsQuery,
-} from './instant-results-actions.js';
+import {registerInstantResults, updateInstantResultsQuery} from './instant-results-actions.js';
 import {instantResultsReducer} from './instant-results-slice.js';
 import type {InstantResultCache} from './instant-results-state.js';
 
@@ -36,22 +33,17 @@ describe('instant results slice', () => {
   describe('registerInstantResults', () => {
     it('registers one search box instant results cache', () => {
       const expectedState = getSearchBoxInstantResultsState(id1);
-      expect(
-        instantResultsReducer({}, registerInstantResults({id: id1}))
-      ).toEqual(expectedState);
+      expect(instantResultsReducer({}, registerInstantResults({id: id1}))).toEqual(expectedState);
     });
     it('registers multiple search box instant results cache', () => {
       const expectedState = {
         ...getSearchBoxInstantResultsState(id1),
         ...getSearchBoxInstantResultsState(id2),
       };
-      const newState = instantResultsReducer(
-        {},
-        registerInstantResults({id: id1})
+      const newState = instantResultsReducer({}, registerInstantResults({id: id1}));
+      expect(instantResultsReducer(newState, registerInstantResults({id: id2}))).toEqual(
+        expectedState
       );
-      expect(
-        instantResultsReducer(newState, registerInstantResults({id: id2}))
-      ).toEqual(expectedState);
     });
     it('does not override an existing search box', () => {
       const searchBox1 = () =>
@@ -59,9 +51,9 @@ describe('instant results slice', () => {
           some_query: initialEmptyCache(),
         });
 
-      expect(
-        instantResultsReducer(searchBox1(), registerInstantResults({id: id1}))
-      ).toEqual(searchBox1());
+      expect(instantResultsReducer(searchBox1(), registerInstantResults({id: id1}))).toEqual(
+        searchBox1()
+      );
     });
   });
 
@@ -71,10 +63,7 @@ describe('instant results slice', () => {
       const initialState = getSearchBoxInstantResultsState(id1);
       const expectedState = getSearchBoxInstantResultsState(id1, query);
       expect(
-        instantResultsReducer(
-          initialState,
-          updateInstantResultsQuery({id: id1, q: query})
-        )
+        instantResultsReducer(initialState, updateInstantResultsQuery({id: id1, q: query}))
       ).toEqual(expectedState);
     });
 
@@ -84,10 +73,7 @@ describe('instant results slice', () => {
       const initialState = getSearchBoxInstantResultsState(id1, query);
 
       expect(
-        instantResultsReducer(
-          initialState,
-          updateInstantResultsQuery({id: id1, q: ''})
-        )
+        instantResultsReducer(initialState, updateInstantResultsQuery({id: id1, q: ''}))
       ).toEqual(initialState);
     });
   });
@@ -107,9 +93,7 @@ describe('instant results slice', () => {
           some_query: initialEmptyCache(),
         });
 
-        expect(instantResultsReducer(initialState, action)).toEqual(
-          expectedState
-        );
+        expect(instantResultsReducer(initialState, action)).toEqual(expectedState);
       });
 
       it('updates cache when one already exists', () => {
@@ -127,9 +111,7 @@ describe('instant results slice', () => {
           some_query: initialEmptyCache(),
         });
 
-        expect(instantResultsReducer(initialState, action)).toEqual(
-          expectedState
-        );
+        expect(instantResultsReducer(initialState, action)).toEqual(expectedState);
       });
 
       it('creates cache in correct search box', () => {
@@ -151,9 +133,7 @@ describe('instant results slice', () => {
           ...getSearchBoxInstantResultsState(id2, query),
         };
 
-        expect(instantResultsReducer(initialState, action)).toEqual(
-          expectedState
-        );
+        expect(instantResultsReducer(initialState, action)).toEqual(expectedState);
       });
 
       it('set isActive of all previous caches to false', () => {
@@ -176,9 +156,7 @@ describe('instant results slice', () => {
           }),
         };
 
-        expect(instantResultsReducer(initialState, action)).toEqual(
-          expectedState
-        );
+        expect(instantResultsReducer(initialState, action)).toEqual(expectedState);
       });
     });
 
@@ -229,9 +207,7 @@ describe('instant results slice', () => {
           duration: 2,
         });
 
-        expect(instantResultsReducer(initialState, action)).toEqual(
-          expectedState
-        );
+        expect(instantResultsReducer(initialState, action)).toEqual(expectedState);
       });
 
       it('sets correct isLoading, error, searchUid and expiresAt properties', () => {
@@ -271,9 +247,7 @@ describe('instant results slice', () => {
           totalCountFiltered: 2,
         });
 
-        expect(instantResultsReducer(initialState, action)).toEqual(
-          expectedState
-        );
+        expect(instantResultsReducer(initialState, action)).toEqual(expectedState);
       });
     });
   });

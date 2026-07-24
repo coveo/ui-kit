@@ -59,22 +59,20 @@ commerceApiHarness.productListingEndpoint.mock(
     }) as typeof response
 );
 
-const {context, ...restOfConfiguration} =
-  getSampleCommerceEngineConfiguration();
+const {context, ...restOfConfiguration} = getSampleCommerceEngineConfiguration();
 
-const productListingEngineConfiguration: Partial<CommerceEngineConfiguration> =
-  {
-    context: {
-      ...context,
-      country: 'US',
-      currency: 'USD',
-      language: 'en',
-      view: {
-        url: `${context.view.url}/browse/promotions/ui-kit-testing`,
-      },
+const productListingEngineConfiguration: Partial<CommerceEngineConfiguration> = {
+  context: {
+    ...context,
+    country: 'US',
+    currency: 'USD',
+    language: 'en',
+    view: {
+      url: `${context.view.url}/browse/promotions/ui-kit-testing`,
     },
-    ...restOfConfiguration,
-  };
+  },
+  ...restOfConfiguration,
+};
 
 const {decorator, play} = wrapInCommerceInterface({
   engineConfig: productListingEngineConfiguration,
@@ -82,10 +80,9 @@ const {decorator, play} = wrapInCommerceInterface({
   includeCodeRoot: false,
 });
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-commerce-breadbox',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-commerce-breadbox', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-commerce-breadbox',
@@ -118,12 +115,9 @@ export const Default: Story = {
   decorators: [
     (story) => html`
       <div id="code-root">${story()}</div>
-      <div style="margin:20px 0">
-        Select facet value(s) to see the Breadbox component.
-      </div>
+      <div style="margin:20px 0">Select facet value(s) to see the Breadbox component.</div>
       <div style="display: flex; justify-content: flex-start;">
-        <atomic-commerce-facets collapse-facets-after="-1">
-        </atomic-commerce-facets>
+        <atomic-commerce-facets collapse-facets-after="-1"> </atomic-commerce-facets>
       </div>
     `,
   ],

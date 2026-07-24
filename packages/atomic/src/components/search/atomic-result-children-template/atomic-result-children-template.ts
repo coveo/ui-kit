@@ -18,10 +18,7 @@ import type {LitElementWithError} from '@/src/decorators/types';
  */
 @customElement('atomic-result-children-template')
 @withTailwindStyles
-export class AtomicResultChildrenTemplate
-  extends LitElement
-  implements LitElementWithError
-{
+export class AtomicResultChildrenTemplate extends LitElement implements LitElementWithError {
   private resultTemplateController: ResultTemplateController;
 
   @state() error!: Error;

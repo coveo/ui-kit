@@ -1,7 +1,4 @@
-import type {
-  GeneratedAnswerBase,
-  GeneratedAnswerCitation,
-} from '@coveo/headless';
+import type {GeneratedAnswerBase, GeneratedAnswerCitation} from '@coveo/headless';
 import type {i18n} from 'i18next';
 import {html, LitElement, type TemplateResult} from 'lit';
 import {provide} from '@lit/context';
@@ -207,10 +204,9 @@ export class AtomicGeneratedAnswerContent extends LitElement {
   }
 
   private renderError(): TemplateResult {
-    const errorMessageKey =
-      this.generatedAnswer.error?.isSseTurnLimitReachedError?.()
-        ? 'generated-answer-error-turn-limit-reached'
-        : 'generated-answer-error-generic';
+    const errorMessageKey = this.generatedAnswer.error?.isSseTurnLimitReachedError?.()
+      ? 'generated-answer-error-turn-limit-reached'
+      : 'generated-answer-error-generic';
 
     return html`
       <div part="generated-answer-error">

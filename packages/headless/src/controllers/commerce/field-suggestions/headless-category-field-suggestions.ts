@@ -17,10 +17,7 @@ import type {
   FieldSuggestionsOrderSection,
 } from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
-import {
-  buildController,
-  type Controller,
-} from '../../controller/headless-controller.js';
+import {buildController, type Controller} from '../../controller/headless-controller.js';
 import type {
   CategoryFieldSuggestionsValue,
   CategoryFieldSuggestionsState as CoreCategoryFieldSuggestionsState,
@@ -52,8 +49,7 @@ export type CategoryFieldSuggestionsState = CoreCategoryFieldSuggestionsState &
  * @alpha
  * @deprecated
  */
-export interface CategoryFieldSuggestions
-  extends Controller, FacetControllerType<'hierarchical'> {
+export interface CategoryFieldSuggestions extends Controller, FacetControllerType<'hierarchical'> {
   /**
    * Requests field suggestions based on a query.
    *
@@ -102,9 +98,7 @@ export function buildCategoryFieldSuggestions(
 
   const {dispatch} = engine;
 
-  const namespacedFacetId = getFacetIdWithCommerceFieldSuggestionNamespace(
-    options.facetId
-  );
+  const namespacedFacetId = getFacetIdWithCommerceFieldSuggestionNamespace(options.facetId);
   const facetSearch = buildCategoryFacetSearch(engine, {
     options: {
       facetId: namespacedFacetId,
@@ -120,16 +114,13 @@ export function buildCategoryFieldSuggestions(
   const getState = () => engine[stateKey];
 
   const getFacetForFieldSuggestions = (facetId: string) => {
-    return getState().fieldSuggestionsOrder.find(
-      (facet) => facet.facetId === facetId
-    )!;
+    return getState().fieldSuggestionsOrder.find((facet) => facet.facetId === facetId)!;
   };
 
   const controller = buildController(engine);
 
   const facetSearchStateSelector = createSelector(
-    (state: CommerceEngineState) =>
-      state.categoryFacetSearchSet[namespacedFacetId],
+    (state: CommerceEngineState) => state.categoryFacetSearchSet[namespacedFacetId],
     (facetSearch) => ({
       isLoading: facetSearch.isLoading,
       moreValuesAvailable: facetSearch.response.moreValuesAvailable,
@@ -143,9 +134,7 @@ export function buildCategoryFieldSuggestions(
     ...facetSearch,
 
     select: (value: CategoryFieldSuggestionsValue) => {
-      dispatch(
-        selectCategoryFacetSearchResult({facetId: options.facetId, value})
-      );
+      dispatch(selectCategoryFacetSearchResult({facetId: options.facetId, value}));
 
       dispatch(options.fetchProductsActionCreator());
     },

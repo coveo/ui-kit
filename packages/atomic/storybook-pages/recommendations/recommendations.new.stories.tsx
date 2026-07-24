@@ -145,10 +145,7 @@ const meta: Meta = {
                 }
               </style>
               <atomic-result-section-visual>
-                <atomic-result-image
-                  field="image"
-                  aria-hidden="true"
-                ></atomic-result-image>
+                <atomic-result-image field="image" aria-hidden="true"></atomic-result-image>
               </atomic-result-section-visual>
               <atomic-result-section-badges>
                 <atomic-field-condition if-defined="category">
@@ -184,15 +181,11 @@ const meta: Meta = {
     </div>
   `,
   play: async (context) => {
-    const recsInterfaces = context.canvasElement.querySelectorAll(
-      'atomic-recs-interface'
-    );
+    const recsInterfaces = context.canvasElement.querySelectorAll('atomic-recs-interface');
 
     await Promise.all(
       Array.from(recsInterfaces).map(async (recsInterface) => {
-        await initializeRecsInterface(
-          recsInterface.parentElement as HTMLElement
-        );
+        await initializeRecsInterface(recsInterface.parentElement as HTMLElement);
       })
     );
 

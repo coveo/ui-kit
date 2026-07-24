@@ -31,9 +31,7 @@ test.describe('atomic-commerce-search-box-instant-products', () => {
     });
 
     test('should apply comfortable density class', async ({instantProduct}) => {
-      await expect(instantProduct.productRoots.first()).toHaveClass(
-        /.*density-comfortable.*/
-      );
+      await expect(instantProduct.productRoots.first()).toHaveClass(/.*density-comfortable.*/);
     });
   });
 
@@ -45,9 +43,7 @@ test.describe('atomic-commerce-search-box-instant-products', () => {
     });
 
     test('should apply no image class', async ({instantProduct}) => {
-      await expect(instantProduct.productRoots.first()).toHaveClass(
-        /.*image-none.*/
-      );
+      await expect(instantProduct.productRoots.first()).toHaveClass(/.*image-none.*/);
     });
   });
 
@@ -68,9 +64,7 @@ test.describe('atomic-commerce-search-box-instant-products', () => {
       page,
     }) => {
       await instantProduct.showAllButton.click();
-      await page.waitForURL(
-        '**/iframe.html?id=atomic-commerce-interface--with-product-list*'
-      );
+      await page.waitForURL('**/iframe.html?id=atomic-commerce-interface--with-product-list*');
     });
   });
 
@@ -84,15 +78,10 @@ test.describe('atomic-commerce-search-box-instant-products', () => {
       await searchBox.searchInput.click();
     });
 
-    test.skip('should update the instant product aria label', async ({
-      instantProduct,
-    }) => {
+    test.skip('should update the instant product aria label', async ({instantProduct}) => {
       const products = await instantProduct.instantProducts.all();
       for (let i = 0; i < products.length; i++) {
-        await expect(products[i]).toHaveAttribute(
-          'aria-label',
-          'custom-aria-label'
-        );
+        await expect(products[i]).toHaveAttribute('aria-label', 'custom-aria-label');
       }
     });
   });

@@ -6,10 +6,7 @@ import {
   updateCaseField,
 } from './case-field-actions.js';
 import {caseFieldReducer} from './case-field-slice.js';
-import {
-  type CaseFieldState,
-  getCaseFieldInitialState,
-} from './case-field-state.js';
+import {type CaseFieldState, getCaseFieldInitialState} from './case-field-state.js';
 
 describe('case field slice', () => {
   let state: CaseFieldState;
@@ -23,17 +20,13 @@ describe('case field slice', () => {
   });
 
   it('should have an initial state', () => {
-    expect(caseFieldReducer(undefined, {type: 'foo'})).toEqual(
-      getCaseFieldInitialState()
-    );
+    expect(caseFieldReducer(undefined, {type: 'foo'})).toEqual(getCaseFieldInitialState());
   });
 
   describe('#registerCaseField', () => {
     it('should allow to set a case field', () => {
       expect(
-        caseFieldReducer(state, registerCaseField(testField)).fields[
-          testField.fieldName
-        ].value
+        caseFieldReducer(state, registerCaseField(testField)).fields[testField.fieldName].value
       ).toEqual(testField.fieldValue);
     });
   });
@@ -66,9 +59,7 @@ describe('case field slice', () => {
         state,
         updateCaseField({...existingField, fieldValue: updatedValue})
       );
-      expect(modifiedState.fields[existingField.fieldName].value).toEqual(
-        updatedValue
-      );
+      expect(modifiedState.fields[existingField.fieldName].value).toEqual(updatedValue);
       expect(modifiedState.fields[existingField.fieldName].suggestions).toEqual(
         existingSuggestions
       );

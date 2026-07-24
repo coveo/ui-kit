@@ -1,10 +1,4 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useRef,
-  type PropsWithChildren,
-} from 'react';
+import {createContext, useContext, useEffect, useRef, type PropsWithChildren} from 'react';
 import {buildCommerceInterface, type CommerceInterface} from '@coveo/thermidor';
 import {useEngine} from './engine.js';
 
@@ -37,9 +31,7 @@ export function CommerceInterfaceProvider({children}: PropsWithChildren) {
 export function useCommerceInterface(): CommerceInterface {
   const commerceInterface = useContext(CommerceInterfaceContext);
   if (!commerceInterface) {
-    throw new Error(
-      'useCommerceInterface must be used within a CommerceInterfaceProvider'
-    );
+    throw new Error('useCommerceInterface must be used within a CommerceInterfaceProvider');
   }
   return commerceInterface;
 }

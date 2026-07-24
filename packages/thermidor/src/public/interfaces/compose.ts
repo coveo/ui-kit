@@ -9,14 +9,11 @@ import type {
 import {ComposedInterfaceImpl} from '@/src/internal/interfaces/index.js';
 
 export type {ComposedInterface} from '@/src/internal/utils/index.js';
-export {
-  ComposedInterfaceImpl,
-  getComposedInternals,
-} from '@/src/internal/interfaces/index.js';
+export {ComposedInterfaceImpl, getComposedInternals} from '@/src/internal/interfaces/index.js';
 
-export function composeInterfaces<
-  I extends InterfaceTypeMap[InterfaceType],
->(options: {interfaces: I[]}): ComposedInterface<InferInterfaceType<I>> {
+export function composeInterfaces<I extends InterfaceTypeMap[InterfaceType]>(options: {
+  interfaces: I[];
+}): ComposedInterface<InferInterfaceType<I>> {
   if (options.interfaces.length === 0) {
     throw new Error('composeInterfaces requires at least one interface.');
   }
@@ -30,8 +27,5 @@ export function composeInterfaces<
     }
   }
 
-  return new ComposedInterfaceImpl<InferInterfaceType<I>>(
-    options.interfaces,
-    generateId()
-  );
+  return new ComposedInterfaceImpl<InferInterfaceType<I>>(options.interfaces, generateId());
 }

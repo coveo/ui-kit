@@ -1,8 +1,4 @@
-import type {
-  InstantProducts,
-  Product,
-  SearchBox,
-} from '@coveo/headless/ssr-commerce';
+import type {InstantProducts, Product, SearchBox} from '@coveo/headless/ssr-commerce';
 import {escapeHtml, formatCurrency, getElement} from '../common/utils.js';
 
 /**
@@ -91,11 +87,7 @@ function renderSuggestions(
 }
 
 /** A single instant-product preview tile. */
-function renderInstantProduct(
-  product: Product,
-  index: number,
-  currency: string
-): string {
+function renderInstantProduct(product: Product, index: number, currency: string): string {
   const name = product.ec_name ?? 'Unknown product';
   const imageUrl = product.ec_images?.[0] ?? '';
   const price = product.ec_promo_price ?? product.ec_price;
@@ -182,8 +174,7 @@ export function hydrateSearch(
     // Never show the dropdown for an empty box (e.g. after clearing), even if
     // the controllers still hold suggestions/products from a previous query.
     const hasQuery = searchBox.state.value.trim() !== '';
-    const show =
-      isOpen && hasQuery && (suggestions.length > 0 || products.length > 0);
+    const show = isOpen && hasQuery && (suggestions.length > 0 || products.length > 0);
 
     input.setAttribute('aria-expanded', String(show));
     dropdown.hidden = !show;
@@ -202,10 +193,7 @@ export function hydrateSearch(
     `;
 
     if (activeIndex >= 0) {
-      input.setAttribute(
-        'aria-activedescendant',
-        suggestionOptionId(activeIndex)
-      );
+      input.setAttribute('aria-activedescendant', suggestionOptionId(activeIndex));
     } else {
       input.removeAttribute('aria-activedescendant');
     }
@@ -254,9 +242,7 @@ export function hydrateSearch(
       case 'ArrowUp':
         event.preventDefault();
         if (suggestions.length > 0) {
-          highlight(
-            activeIndex <= 0 ? suggestions.length - 1 : activeIndex - 1
-          );
+          highlight(activeIndex <= 0 ? suggestions.length - 1 : activeIndex - 1);
         }
         break;
 
@@ -286,9 +272,7 @@ export function hydrateSearch(
 
   // Delegated handlers keep working across dropdown re-renders.
   dropdown.addEventListener('mouseover', (event) => {
-    const option = (event.target as HTMLElement).closest<HTMLElement>(
-      '[data-suggestion-index]'
-    );
+    const option = (event.target as HTMLElement).closest<HTMLElement>('[data-suggestion-index]');
     if (option) {
       highlight(Number(option.dataset.suggestionIndex));
     }
@@ -308,9 +292,7 @@ export function hydrateSearch(
       return;
     }
 
-    const productTile = target.closest<HTMLElement>(
-      '[data-instant-product-index]'
-    );
+    const productTile = target.closest<HTMLElement>('[data-instant-product-index]');
     if (productTile) {
       const index = Number(productTile.dataset.instantProductIndex);
       const product = instantProducts.state.products[index];

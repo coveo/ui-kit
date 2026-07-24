@@ -1,8 +1,4 @@
-import type {
-  BaseParam,
-  ContextParam,
-  LocaleParam,
-} from '../../platform-service-params.js';
+import type {BaseParam, ContextParam, LocaleParam} from '../../platform-service-params.js';
 import type {
   AnalyticsParam,
   AuthenticationParam,

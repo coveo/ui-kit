@@ -4,10 +4,7 @@ import {
   isSearchApiDate,
   validateAbsoluteDate,
 } from '../../api/search/date/date-format.js';
-import {
-  isRelativeDateFormat,
-  validateRelativeDate,
-} from '../../api/search/date/relative-date.js';
+import {isRelativeDateFormat, validateRelativeDate} from '../../api/search/date/relative-date.js';
 import {
   buildDateRange,
   type DateRangeRequest,
@@ -52,9 +49,7 @@ export function keyHasObjectValue(key: string): key is FacetKey {
   return key in supportedFacetParameters;
 }
 
-export function isValidBasicKey(
-  key: string
-): key is Exclude<SearchParameterKey, FacetKey> {
+export function isValidBasicKey(key: string): key is Exclude<SearchParameterKey, FacetKey> {
   const supportedBasicParameters: Record<
     Exclude<keyof SearchParameters, FacetSearchParameters>,
     boolean
@@ -72,17 +67,13 @@ export function isValidBasicKey(
   return key in supportedBasicParameters;
 }
 
-export function isRangeFacetKey(
-  key: string
-): key is Extract<FacetKey, 'nf' | 'df' | 'mnf'> {
-  const supportedRangeFacetParameters: Pick<
-    typeof supportedFacetParameters,
-    'df' | 'nf' | 'mnf'
-  > = {
-    nf: true,
-    df: true,
-    mnf: true,
-  };
+export function isRangeFacetKey(key: string): key is Extract<FacetKey, 'nf' | 'df' | 'mnf'> {
+  const supportedRangeFacetParameters: Pick<typeof supportedFacetParameters, 'df' | 'nf' | 'mnf'> =
+    {
+      nf: true,
+      df: true,
+      mnf: true,
+    };
   const isRangeFacet = key in supportedRangeFacetParameters;
   return keyHasObjectValue(key) && isRangeFacet;
 }
@@ -119,9 +110,7 @@ function serializePair(pair: [string, unknown]) {
 }
 
 export function serializeSpecialCharacters(key: string, val: unknown) {
-  return `${key}${equal}${encodeURIComponent(
-    val as string | number | boolean
-  )}`;
+  return `${key}${equal}${encodeURIComponent(val as string | number | boolean)}`;
 }
 
 export function isFacetObject(obj: unknown): obj is Record<string, string[]> {
@@ -133,15 +122,12 @@ export function isFacetObject(obj: unknown): obj is Record<string, string[]> {
   return allEntriesAreValid(obj, isValidValue);
 }
 
-export function isRangeFacetObject(
-  obj: unknown
-): obj is Record<string, RangeValueRequest[]> {
+export function isRangeFacetObject(obj: unknown): obj is Record<string, RangeValueRequest[]> {
   if (!isObject(obj)) {
     return false;
   }
 
-  const isRangeValue = (v: unknown) =>
-    isObject(v) && 'start' in v && 'end' in v;
+  const isRangeValue = (v: unknown) => isObject(v) && 'start' in v && 'end' in v;
   return allEntriesAreValid(obj, isRangeValue);
 }
 
@@ -149,10 +135,7 @@ export function isObject(obj: unknown): obj is object {
   return !!(obj && typeof obj === 'object');
 }
 
-export function allEntriesAreValid(
-  obj: object,
-  isValidValue: (v: unknown) => boolean
-) {
+export function allEntriesAreValid(obj: object, isValidValue: (v: unknown) => boolean) {
   const invalidEntries = Object.entries(obj).filter((entry) => {
     const values = entry[1];
     return !Array.isArray(values) || !values.every(isValidValue);
@@ -165,25 +148,18 @@ export function serializeFacets(key: string, facets: Record<string, string[]>) {
   return Object.entries(facets)
     .map(
       ([facetId, values]) =>
-        `${key}-${facetId}${equal}${values
-          .map((value) => encodeURIComponent(value))
-          .join(',')}`
+        `${key}-${facetId}${equal}${values.map((value) => encodeURIComponent(value)).join(',')}`
     )
     .join(delimiter);
 }
 
-export function serializeRangeFacets(
-  key: string,
-  facets: Record<string, RangeValueRequest[]>
-) {
+export function serializeRangeFacets(key: string, facets: Record<string, RangeValueRequest[]>) {
   return Object.entries(facets)
     .map(([facetId, ranges]) => {
       const value = ranges
         .map(
           ({start, end, endInclusive}) =>
-            `${start}${
-              endInclusive ? rangeDelimiterInclusive : rangeDelimiterExclusive
-            }${end}`
+            `${start}${endInclusive ? rangeDelimiterInclusive : rangeDelimiterExclusive}${end}`
         )
         .join(',');
       return `${key}-${facetId}${equal}${value}`;
@@ -220,10 +196,7 @@ export function splitOnFirstEqual(str: string) {
   return [first, second];
 }
 
-export function preprocessObjectPairs(
-  pair: string[],
-  regex = facetSearchParamRegex
-) {
+export function preprocessObjectPairs(pair: string[], regex = facetSearchParamRegex) {
   const [key, val] = pair;
   const result = regex.exec(key);
 
@@ -256,8 +229,7 @@ export function buildNumericRanges(ranges: string[], state: FacetValueState) {
   const numericRanges = [];
 
   for (const range of ranges) {
-    const {startAsString, endAsString, isEndInclusive} =
-      splitRangeValueAsStringByDelimiter(range);
+    const {startAsString, endAsString, isEndInclusive} = splitRangeValueAsStringByDelimiter(range);
 
     const start = parseFloat(startAsString);
     const end = parseFloat(endAsString);
@@ -266,9 +238,7 @@ export function buildNumericRanges(ranges: string[], state: FacetValueState) {
       continue;
     }
 
-    numericRanges.push(
-      buildNumericRange({start, end, state, endInclusive: isEndInclusive})
-    );
+    numericRanges.push(buildNumericRange({start, end, state, endInclusive: isEndInclusive}));
   }
 
   return numericRanges;
@@ -295,12 +265,8 @@ export function buildDateRanges(ranges: string[], state: FacetValueState) {
   const dateRanges: DateRangeRequest[] = [];
 
   for (const range of ranges) {
-    const {isEndInclusive, startAsString, endAsString} =
-      splitRangeValueAsStringByDelimiter(range);
-    if (
-      !isValidDateRangeValue(startAsString) ||
-      !isValidDateRangeValue(endAsString)
-    ) {
+    const {isEndInclusive, startAsString, endAsString} = splitRangeValueAsStringByDelimiter(range);
+    if (!isValidDateRangeValue(startAsString) || !isValidDateRangeValue(endAsString)) {
       continue;
     }
 
@@ -317,18 +283,13 @@ export function buildDateRanges(ranges: string[], state: FacetValueState) {
   return dateRanges;
 }
 
-function isValidPair<K extends SearchParameterKey>(
-  pair: string[]
-): pair is [K, string] {
+function isValidPair<K extends SearchParameterKey>(pair: string[]): pair is [K, string] {
   const validKey = isValidKey(pair[0]);
   const lengthOfTwo = pair.length === 2;
   return validKey && lengthOfTwo;
 }
 
-export function cast<K extends SearchParameterKey>(
-  pair: [K, string],
-  decode = true
-): [K, unknown] {
+export function cast<K extends SearchParameterKey>(pair: [K, string], decode = true): [K, unknown] {
   const [key, value] = pair;
 
   if (key === 'enableQuerySyntax') {

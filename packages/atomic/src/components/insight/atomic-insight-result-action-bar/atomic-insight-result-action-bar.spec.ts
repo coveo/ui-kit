@@ -7,9 +7,7 @@ import './atomic-insight-result-action-bar';
 describe('atomic-insight-result-action-bar', () => {
   const renderActionBar = async (slottedContent?: unknown) => {
     const element = await fixture<AtomicInsightResultActionBar>(
-      html`<atomic-insight-result-action-bar
-        >${slottedContent}</atomic-insight-result-action-bar
-      >`
+      html`<atomic-insight-result-action-bar>${slottedContent}</atomic-insight-result-action-bar>`
     );
     return {element};
   };

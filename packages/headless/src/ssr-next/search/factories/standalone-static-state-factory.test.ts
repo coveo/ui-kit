@@ -35,16 +35,13 @@ describe('fetchStandaloneStaticStateFactory', () => {
   beforeEach(() => {
     mockNavigatorContext = buildMockNavigatorContext();
 
-    engineSpy = vi
-      .spyOn(buildFactory, 'buildFactory')
-      .mockReturnValue(async () =>
-        Promise.resolve({
-          engine: mockEngine,
-          controllers:
-            {} as InferControllersMapFromDefinition<SearchControllerDefinitionsMap> &
-              BakedInSearchControllers,
-        })
-      );
+    engineSpy = vi.spyOn(buildFactory, 'buildFactory').mockReturnValue(async () =>
+      Promise.resolve({
+        engine: mockEngine,
+        controllers: {} as InferControllersMapFromDefinition<SearchControllerDefinitionsMap> &
+          BakedInSearchControllers,
+      })
+    );
 
     // Mock engine methods
     mockEngine.executeFirstSearch = vi.fn();
@@ -59,10 +56,7 @@ describe('fetchStandaloneStaticStateFactory', () => {
 
   it('should call buildFactory with the correct parameters', async () => {
     // @ts-expect-error: do not care about baked-in controller initial state
-    const factory = fetchStandaloneStaticStateFactory(
-      definition,
-      mockEngineOptions
-    );
+    const factory = fetchStandaloneStaticStateFactory(definition, mockEngineOptions);
     await factory({
       navigatorContext: mockNavigatorContext,
       searchParams: {q: 'test'},
@@ -73,10 +67,7 @@ describe('fetchStandaloneStaticStateFactory', () => {
 
   it('should return the navigator context and search params', async () => {
     // @ts-expect-error: do not care about baked-in controller initial state
-    const factory = fetchStandaloneStaticStateFactory(
-      definition,
-      mockEngineOptions
-    );
+    const factory = fetchStandaloneStaticStateFactory(definition, mockEngineOptions);
     const result = await factory({
       navigatorContext: mockNavigatorContext,
       searchParams: {q: 'test'},
@@ -87,10 +78,7 @@ describe('fetchStandaloneStaticStateFactory', () => {
 
   it('should NOT execute a search', async () => {
     // @ts-expect-error: do not care about baked-in controller initial state
-    const factory = fetchStandaloneStaticStateFactory(
-      definition,
-      mockEngineOptions
-    );
+    const factory = fetchStandaloneStaticStateFactory(definition, mockEngineOptions);
     await factory({
       navigatorContext: mockNavigatorContext,
       searchParams: {q: 'test'},
@@ -101,10 +89,7 @@ describe('fetchStandaloneStaticStateFactory', () => {
 
   it('should NOT wait for search completion', async () => {
     // @ts-expect-error: do not care about baked-in controller initial state
-    const factory = fetchStandaloneStaticStateFactory(
-      definition,
-      mockEngineOptions
-    );
+    const factory = fetchStandaloneStaticStateFactory(definition, mockEngineOptions);
     await factory({
       navigatorContext: mockNavigatorContext,
       searchParams: {q: 'test'},
@@ -115,10 +100,7 @@ describe('fetchStandaloneStaticStateFactory', () => {
 
   it('should return an empty searchActions array', async () => {
     // @ts-expect-error: do not care about baked-in controller initial state
-    const factory = fetchStandaloneStaticStateFactory(
-      definition,
-      mockEngineOptions
-    );
+    const factory = fetchStandaloneStaticStateFactory(definition, mockEngineOptions);
     const result = await factory({
       navigatorContext: mockNavigatorContext,
       searchParams: {q: 'test'},
@@ -129,10 +111,7 @@ describe('fetchStandaloneStaticStateFactory', () => {
 
   it('should return controllers from buildFactory', async () => {
     // @ts-expect-error: do not care about baked-in controller initial state
-    const factory = fetchStandaloneStaticStateFactory(
-      definition,
-      mockEngineOptions
-    );
+    const factory = fetchStandaloneStaticStateFactory(definition, mockEngineOptions);
     const result = await factory({
       navigatorContext: mockNavigatorContext,
       searchParams: {q: 'test'},
@@ -143,10 +122,7 @@ describe('fetchStandaloneStaticStateFactory', () => {
 
   it('should work without searchParams', async () => {
     // @ts-expect-error: do not care about baked-in controller initial state
-    const factory = fetchStandaloneStaticStateFactory(
-      definition,
-      mockEngineOptions
-    );
+    const factory = fetchStandaloneStaticStateFactory(definition, mockEngineOptions);
     const result = await factory({
       navigatorContext: mockNavigatorContext,
     });

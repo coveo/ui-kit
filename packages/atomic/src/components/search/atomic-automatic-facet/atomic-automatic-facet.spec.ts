@@ -1,8 +1,4 @@
-import type {
-  AutomaticFacet,
-  AutomaticFacetState,
-  SearchStatus,
-} from '@coveo/headless';
+import type {AutomaticFacet, AutomaticFacetState, SearchStatus} from '@coveo/headless';
 import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
 import {page, userEvent} from 'vitest/browser';
@@ -60,25 +56,23 @@ describe('atomic-automatic-facet', () => {
       },
     });
 
-    const {element} = await renderInAtomicSearchInterface<AtomicAutomaticFacet>(
-      {
-        template: html`<div>
-          <atomic-automatic-facet
-            field=${field}
-            facet-id=${facetId}
-            .facet=${mockedFacet}
-            .searchStatus=${mockedSearchStatus}
-            ?is-collapsed=${isCollapsed}
-          ></atomic-automatic-facet>
-        </div>`,
-        selector: 'atomic-automatic-facet',
-        bindings: (bindings) => {
-          bindings.engine = mockedEngine;
-          bindings.store.getUniqueIDFromEngine = vi.fn().mockReturnValue('123');
-          return bindings;
-        },
-      }
-    );
+    const {element} = await renderInAtomicSearchInterface<AtomicAutomaticFacet>({
+      template: html`<div>
+        <atomic-automatic-facet
+          field=${field}
+          facet-id=${facetId}
+          .facet=${mockedFacet}
+          .searchStatus=${mockedSearchStatus}
+          ?is-collapsed=${isCollapsed}
+        ></atomic-automatic-facet>
+      </div>`,
+      selector: 'atomic-automatic-facet',
+      bindings: (bindings) => {
+        bindings.engine = mockedEngine;
+        bindings.store.getUniqueIDFromEngine = vi.fn().mockReturnValue('123');
+        return bindings;
+      },
+    });
 
     return {
       element,
@@ -86,8 +80,7 @@ describe('atomic-automatic-facet', () => {
       clearButton: () => page.getByLabelText(/Clear filter/i),
       value: (name: string) => page.getByText(name),
       parts: (element: AtomicAutomaticFacet) => {
-        const qs = (part: string) =>
-          element.shadowRoot?.querySelector(`[part~="${part}"]`);
+        const qs = (part: string) => element.shadowRoot?.querySelector(`[part~="${part}"]`);
         return {
           facet: qs('facet'),
           labelButton: qs('label-button'),
@@ -95,15 +88,9 @@ describe('atomic-automatic-facet', () => {
           clearButton: qs('clear-button'),
           clearButtonIcon: qs('clear-button-icon'),
           values: element.shadowRoot?.querySelector('[part="values"]'),
-          valueCheckboxes: element.shadowRoot?.querySelectorAll(
-            '[part~="value-checkbox"]'
-          ),
-          valueLabels: element.shadowRoot?.querySelectorAll(
-            '[part~="value-label"]'
-          ),
-          valueCounts: element.shadowRoot?.querySelectorAll(
-            '[part~="value-count"]'
-          ),
+          valueCheckboxes: element.shadowRoot?.querySelectorAll('[part~="value-checkbox"]'),
+          valueLabels: element.shadowRoot?.querySelectorAll('[part~="value-label"]'),
+          valueCounts: element.shadowRoot?.querySelectorAll('[part~="value-count"]'),
         };
       },
     };
@@ -119,9 +106,7 @@ describe('atomic-automatic-facet', () => {
       field: 'my_custom_field',
       state: {label: undefined},
     });
-    await expect
-      .element(page.getByRole('button', {name: /my_custom_field/i}))
-      .toBeInTheDocument();
+    await expect.element(page.getByRole('button', {name: /my_custom_field/i})).toBeInTheDocument();
   });
 
   it('should render facet values', async () => {
@@ -163,9 +148,7 @@ describe('atomic-automatic-facet', () => {
     ) as HTMLElement;
 
     await userEvent.click(firstCheckbox);
-    expect(mockedToggleSelect).toHaveBeenCalledWith(
-      mockedFacet.state.values[0]
-    );
+    expect(mockedToggleSelect).toHaveBeenCalledWith(mockedFacet.state.values[0]);
   });
 
   it('should not show clear button when no values are selected', async () => {
@@ -225,9 +208,7 @@ describe('atomic-automatic-facet', () => {
       it('should expose clear-button part', async () => {
         const {element, parts} = await renderAutomaticFacet({
           state: {
-            values: [
-              {value: 'Document', numberOfResults: 45, state: 'selected'},
-            ],
+            values: [{value: 'Document', numberOfResults: 45, state: 'selected'}],
           },
         });
         expect(parts(element).clearButton).not.toBeNull();
@@ -236,9 +217,7 @@ describe('atomic-automatic-facet', () => {
       it('should expose clear-button-icon part', async () => {
         const {element, parts} = await renderAutomaticFacet({
           state: {
-            values: [
-              {value: 'Document', numberOfResults: 45, state: 'selected'},
-            ],
+            values: [{value: 'Document', numberOfResults: 45, state: 'selected'}],
           },
         });
         expect(parts(element).clearButtonIcon).not.toBeNull();

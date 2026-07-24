@@ -66,9 +66,7 @@ export interface DateFacetActionCreators {
  * @group Actions
  * @category DateFacet
  */
-export function loadDateFacetActions(
-  engine: CommerceEngine
-): DateFacetActionCreators {
+export function loadDateFacetActions(engine: CommerceEngine): DateFacetActionCreators {
   engine.addReducers({commerceFacetSet});
   return {
     toggleSelectDateFacetValue,

@@ -29,10 +29,7 @@ describe('insight user actions request', () => {
     const params = await buildFetchUserActionsRequest(state, exampleUserId);
 
     expect(params.url).toBe(
-      getOrganizationEndpoint(
-        state.configuration.organizationId,
-        state.configuration.environment
-      )
+      getOrganizationEndpoint(state.configuration.organizationId, state.configuration.environment)
     );
   });
 

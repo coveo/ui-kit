@@ -28,10 +28,7 @@ import {
   getLegacyAnalyticsActionForToggleFacetSelect,
 } from '../../../features/facets/facet-set/facet-set-utils.js';
 import type {FacetSortCriterion} from '../../../features/facets/facet-set/interfaces/request.js';
-import {
-  executeSearch,
-  fetchFacetValues,
-} from '../../../features/search/search-actions.js';
+import {executeSearch, fetchFacetValues} from '../../../features/search/search-actions.js';
 import {searchReducer as search} from '../../../features/search/search-slice.js';
 import type {
   ConfigurationSection,
@@ -160,10 +157,7 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
       coreController.toggleSelect(selection);
       dispatch(
         executeSearch({
-          legacy: getLegacyAnalyticsActionForToggleFacetSelect(
-            getFacetId(),
-            selection
-          ),
+          legacy: getLegacyAnalyticsActionForToggleFacetSelect(getFacetId(), selection),
           next: getAnalyticsActionForToggleFacetSelect(selection),
         })
       );
@@ -173,10 +167,7 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
       coreController.toggleExclude(selection);
       dispatch(
         executeSearch({
-          legacy: getLegacyAnalyticsActionForToggleFacetExclude(
-            getFacetId(),
-            selection
-          ),
+          legacy: getLegacyAnalyticsActionForToggleFacetExclude(getFacetId(), selection),
           next: getAnalyticsActionForToggleFacetExclude(selection),
         })
       );

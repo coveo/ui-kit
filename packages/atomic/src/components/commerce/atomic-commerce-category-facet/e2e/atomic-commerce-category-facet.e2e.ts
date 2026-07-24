@@ -5,22 +5,16 @@ test.describe('atomic-commerce-category-facet', () => {
     await categoryFacet.load();
   });
 
-  test('should allow to filter by selecting and deselecting a value', async ({
-    categoryFacet,
-  }) => {
+  test('should allow to filter by selecting and deselecting a value', async ({categoryFacet}) => {
     await categoryFacet.searchInput.fill('Canoes & Kayaks');
     await categoryFacet.getSearchResult('Canoes & Kayaks').click();
     await expect(categoryFacet.getFacetValue('Canoes & Kayaks')).toBeVisible();
-    const categoryFacetValueLabel =
-      categoryFacet.getFacetValue('Canoes & Kayaks');
+    const categoryFacetValueLabel = categoryFacet.getFacetValue('Canoes & Kayaks');
 
     await categoryFacetValueLabel.click();
 
     await expect(categoryFacet.allCategoryButton).toBeVisible();
-    await expect(categoryFacetValueLabel).toHaveAttribute(
-      'aria-pressed',
-      'true'
-    );
+    await expect(categoryFacetValueLabel).toHaveAttribute('aria-pressed', 'true');
     await expect(categoryFacet.getFacetValue('Canoes')).toBeVisible();
     await expect(categoryFacet.getFacetValue('Kayaks')).toBeVisible();
 
@@ -28,9 +22,7 @@ test.describe('atomic-commerce-category-facet', () => {
     await expect(categoryFacet.allCategoryButton).not.toBeVisible();
   });
 
-  test('should allow to filter by more than one level deep', async ({
-    categoryFacet,
-  }) => {
+  test('should allow to filter by more than one level deep', async ({categoryFacet}) => {
     await categoryFacet.searchInput.fill('Canoes & Kayaks');
     await categoryFacet.getSearchResult('Canoes & Kayaks').click();
     await expect(categoryFacet.getFacetValue('Canoes & Kayaks')).toBeVisible();
@@ -87,8 +79,6 @@ test.describe('atomic-commerce-category-facet', () => {
   }) => {
     await categoryFacet.searchInput.fill('non-existing-value');
 
-    await expect(
-      page.getByText('No matches found for non-existing-value')
-    ).toBeVisible();
+    await expect(page.getByText('No matches found for non-existing-value')).toBeVisible();
   });
 });

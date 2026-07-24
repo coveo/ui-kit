@@ -31,9 +31,7 @@ export function i18nBackendOptions(
 
         const response = await fetch(fetchUrl);
         if (response.status !== 200 && response.status !== 304) {
-          throw new Error(
-            `Unsuccessful request returned status "${response.status}"`
-          );
+          throw new Error(`Unsuccessful request returned status "${response.status}"`);
         }
 
         callback(null, {

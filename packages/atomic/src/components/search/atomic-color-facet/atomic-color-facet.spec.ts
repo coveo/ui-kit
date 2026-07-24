@@ -31,9 +31,7 @@ describe('atomic-color-facet', () => {
       buildFakeSearchStatus({firstSearchExecuted: true})
     );
     vi.mocked(buildTabManager).mockReturnValue(buildFakeTabManager({}));
-    vi.mocked(buildFacetConditionsManager).mockReturnValue(
-      buildFakeFacetConditionsManager({})
-    );
+    vi.mocked(buildFacetConditionsManager).mockReturnValue(buildFakeFacetConditionsManager({}));
   });
 
   const setupElement = async (
@@ -82,12 +80,9 @@ describe('atomic-color-facet', () => {
         },
       }),
     });
-    const qs = (part: string) =>
-      element.shadowRoot?.querySelector(`[part~="${part}"]`)!;
+    const qs = (part: string) => element.shadowRoot?.querySelector(`[part~="${part}"]`)!;
     const qsa = (part: string, ...additionalSelector: string[]) =>
-      element.shadowRoot?.querySelectorAll(
-        `[part~="${part}"]${additionalSelector?.join('')}`
-      )!;
+      element.shadowRoot?.querySelectorAll(`[part~="${part}"]${additionalSelector?.join('')}`)!;
 
     const locators = {
       get title() {
@@ -147,9 +142,7 @@ describe('atomic-color-facet', () => {
 
     it('should render the first facet value', async () => {
       const {locators} = await setupElement();
-      await expect
-        .element(locators.values[0] as HTMLElement)
-        .toBeInTheDocument();
+      await expect.element(locators.values[0] as HTMLElement).toBeInTheDocument();
     });
 
     it('should render facet values when available', async () => {
@@ -157,99 +150,43 @@ describe('atomic-color-facet', () => {
       const valueLabel = locators.valueLabel;
 
       expect(valueLabel!.length).toBe(2);
-      await expect
-        .element(valueLabel[0] as HTMLElement)
-        .toHaveTextContent('value-1');
-      await expect
-        .element(valueLabel[1] as HTMLElement)
-        .toHaveTextContent('value-2');
+      await expect.element(valueLabel[0] as HTMLElement).toHaveTextContent('value-1');
+      await expect.element(valueLabel[1] as HTMLElement).toHaveTextContent('value-2');
     });
 
     it('should render all parts for box display', async () => {
       const {locators} = await setupElement({displayValuesAs: 'box'});
-      await expect
-        .element(locators.labelButton as HTMLElement)
-        .toBeInTheDocument();
-      await expect
-        .element(locators.labelButtonIcon as HTMLElement)
-        .toBeInTheDocument();
-      await expect
-        .element(locators.searchWrapper as HTMLElement)
-        .toBeInTheDocument();
-      await expect
-        .element(locators.searchInput as HTMLElement)
-        .toBeInTheDocument();
-      await expect
-        .element(locators.searchIcon as HTMLElement)
-        .toBeInTheDocument();
-      await expect
-        .element(locators.values[0] as HTMLElement)
-        .toBeInTheDocument();
-      await expect
-        .element(locators.valueLabel[0] as HTMLElement)
-        .toBeInTheDocument();
-      await expect
-        .element(locators.valueCount[0] as HTMLElement)
-        .toBeInTheDocument();
-      await expect
-        .element(locators.showMore as HTMLElement)
-        .toBeInTheDocument();
-      await expect
-        .element(locators.showLess as HTMLElement)
-        .toBeInTheDocument();
-      await expect
-        .element(locators.showMoreLessIcon as HTMLElement)
-        .toBeInTheDocument();
-      await expect
-        .element(locators.valueBox[0] as HTMLElement)
-        .toBeInTheDocument();
-      await expect
-        .element(locators.defaultColorValue[0] as HTMLElement)
-        .toBeInTheDocument();
+      await expect.element(locators.labelButton as HTMLElement).toBeInTheDocument();
+      await expect.element(locators.labelButtonIcon as HTMLElement).toBeInTheDocument();
+      await expect.element(locators.searchWrapper as HTMLElement).toBeInTheDocument();
+      await expect.element(locators.searchInput as HTMLElement).toBeInTheDocument();
+      await expect.element(locators.searchIcon as HTMLElement).toBeInTheDocument();
+      await expect.element(locators.values[0] as HTMLElement).toBeInTheDocument();
+      await expect.element(locators.valueLabel[0] as HTMLElement).toBeInTheDocument();
+      await expect.element(locators.valueCount[0] as HTMLElement).toBeInTheDocument();
+      await expect.element(locators.showMore as HTMLElement).toBeInTheDocument();
+      await expect.element(locators.showLess as HTMLElement).toBeInTheDocument();
+      await expect.element(locators.showMoreLessIcon as HTMLElement).toBeInTheDocument();
+      await expect.element(locators.valueBox[0] as HTMLElement).toBeInTheDocument();
+      await expect.element(locators.defaultColorValue[0] as HTMLElement).toBeInTheDocument();
       await expect.element(locators.facet as HTMLElement).toBeInTheDocument();
     });
 
     it('should render all parts for checkbox display', async () => {
       const {locators} = await setupElement({displayValuesAs: 'checkbox'});
-      await expect
-        .element(locators.labelButton as HTMLElement)
-        .toBeInTheDocument();
-      await expect
-        .element(locators.labelButtonIcon as HTMLElement)
-        .toBeInTheDocument();
-      await expect
-        .element(locators.searchWrapper as HTMLElement)
-        .toBeInTheDocument();
-      await expect
-        .element(locators.searchInput as HTMLElement)
-        .toBeInTheDocument();
-      await expect
-        .element(locators.searchIcon as HTMLElement)
-        .toBeInTheDocument();
-      await expect
-        .element(locators.values[0] as HTMLElement)
-        .toBeInTheDocument();
-      await expect
-        .element(locators.valueLabel[0] as HTMLElement)
-        .toBeInTheDocument();
-      await expect
-        .element(locators.valueCount[0] as HTMLElement)
-        .toBeInTheDocument();
-      await expect
-        .element(locators.showMore as HTMLElement)
-        .toBeInTheDocument();
-      await expect
-        .element(locators.showLess as HTMLElement)
-        .toBeInTheDocument();
-      await expect
-        .element(locators.showMoreLessIcon as HTMLElement)
-        .toBeInTheDocument();
-      await expect
-        .element(locators.valueCheckbox[0] as HTMLElement)
-        .toBeInTheDocument();
-      await expect
-        .element(locators.valueCheckboxLabel[0] as HTMLElement)
-        .toBeInTheDocument();
+      await expect.element(locators.labelButton as HTMLElement).toBeInTheDocument();
+      await expect.element(locators.labelButtonIcon as HTMLElement).toBeInTheDocument();
+      await expect.element(locators.searchWrapper as HTMLElement).toBeInTheDocument();
+      await expect.element(locators.searchInput as HTMLElement).toBeInTheDocument();
+      await expect.element(locators.searchIcon as HTMLElement).toBeInTheDocument();
+      await expect.element(locators.values[0] as HTMLElement).toBeInTheDocument();
+      await expect.element(locators.valueLabel[0] as HTMLElement).toBeInTheDocument();
+      await expect.element(locators.valueCount[0] as HTMLElement).toBeInTheDocument();
+      await expect.element(locators.showMore as HTMLElement).toBeInTheDocument();
+      await expect.element(locators.showLess as HTMLElement).toBeInTheDocument();
+      await expect.element(locators.showMoreLessIcon as HTMLElement).toBeInTheDocument();
+      await expect.element(locators.valueCheckbox[0] as HTMLElement).toBeInTheDocument();
+      await expect.element(locators.valueCheckboxLabel[0] as HTMLElement).toBeInTheDocument();
       await expect.element(locators.facet as HTMLElement).toBeInTheDocument();
     });
 
@@ -300,9 +237,7 @@ describe('atomic-color-facet', () => {
     });
 
     it('should not render facet when there is an error', async () => {
-      vi.mocked(buildSearchStatus).mockReturnValue(
-        buildFakeSearchStatus({hasError: true})
-      );
+      vi.mocked(buildSearchStatus).mockReturnValue(buildFakeSearchStatus({hasError: true}));
 
       const {locators} = await setupElement();
       expect(locators.facet).toBeNull();
@@ -355,12 +290,8 @@ describe('atomic-color-facet', () => {
         tabsExcluded: ['tab2'],
       });
 
-      expect(mockedConsole.warn).toHaveBeenCalledWith(
-        expect.stringContaining('tabs-included')
-      );
-      expect(mockedConsole.warn).toHaveBeenCalledWith(
-        expect.stringContaining('tabs-excluded')
-      );
+      expect(mockedConsole.warn).toHaveBeenCalledWith(expect.stringContaining('tabs-included'));
+      expect(mockedConsole.warn).toHaveBeenCalledWith(expect.stringContaining('tabs-excluded'));
     });
   });
 
@@ -421,16 +352,12 @@ describe('atomic-color-facet', () => {
 
   it('should render box display when displayValuesAs is box', async () => {
     const {locators} = await setupElement({displayValuesAs: 'box'});
-    await expect
-      .element(locators.valueBox[0] as HTMLElement)
-      .toBeInTheDocument();
+    await expect.element(locators.valueBox[0] as HTMLElement).toBeInTheDocument();
   });
 
   it('should render checkbox display when displayValuesAs is checkbox', async () => {
     const {locators} = await setupElement({displayValuesAs: 'checkbox'});
-    await expect
-      .element(locators.valueCheckbox[0] as HTMLElement)
-      .toBeInTheDocument();
+    await expect.element(locators.valueCheckbox[0] as HTMLElement).toBeInTheDocument();
   });
 
   it('should not render values when isCollapsed is true', async () => {
@@ -445,9 +372,7 @@ describe('atomic-color-facet', () => {
 
   it('should render search input when withSearch is true', async () => {
     const {locators} = await setupElement({withSearch: true});
-    await expect
-      .element(locators.searchInput as HTMLElement)
-      .toBeInTheDocument();
+    await expect.element(locators.searchInput as HTMLElement).toBeInTheDocument();
   });
 
   it('should not render search input when withSearch is false', async () => {
@@ -760,21 +685,18 @@ describe('atomic-color-facet', () => {
       prop: 'tabsIncluded',
       invalidValue: [''],
     },
-  ])(
-    'should set error when #$prop is invalid',
-    async ({prop, invalidValue}) => {
-      const {element} = await setupElement();
+  ])('should set error when #$prop is invalid', async ({prop, invalidValue}) => {
+    const {element} = await setupElement();
 
-      expect(element.error).toBeUndefined();
+    expect(element.error).toBeUndefined();
 
-      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
-      (element as any)[prop] = invalidValue;
-      await element.updateComplete;
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
+    (element as any)[prop] = invalidValue;
+    await element.updateComplete;
 
-      expect(element.error).toBeDefined();
-      expect(element.error.message).toMatch(new RegExp(prop, 'i'));
-    }
-  );
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toMatch(new RegExp(prop, 'i'));
+  });
 
   // TODO V4: KIT-5197 - Remove this test
   it.each<{
@@ -851,9 +773,7 @@ describe('atomic-color-facet', () => {
   ])(
     'should log validation warning when #$prop is updated to invalid value',
     async ({prop, validValue, invalidValue}) => {
-      const consoleWarnSpy = vi
-        .spyOn(console, 'warn')
-        .mockImplementation(() => {});
+      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
       const {element} = await setupElement({[prop]: validValue});
 
@@ -862,15 +782,10 @@ describe('atomic-color-facet', () => {
       await element.updateComplete;
 
       expect(consoleWarnSpy).toHaveBeenCalledWith(
-        expect.stringContaining(
-          'Prop validation failed for component atomic-color-facet'
-        ),
+        expect.stringContaining('Prop validation failed for component atomic-color-facet'),
         element
       );
-      expect(consoleWarnSpy).toHaveBeenCalledWith(
-        expect.stringContaining(prop),
-        element
-      );
+      expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining(prop), element);
 
       consoleWarnSpy.mockRestore();
     }

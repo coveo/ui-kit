@@ -36,10 +36,7 @@ export const fetchDocumentSuggestions = createAsyncThunk<
   AsyncThunkCaseAssistOptions<StateNeededByFetchDocumentSuggestions>
 >(
   'caseAssist/documentSuggestions/fetch',
-  async (
-    _,
-    {getState, rejectWithValue, extra: {apiClient, navigatorContext}}
-  ) => {
+  async (_, {getState, rejectWithValue, extra: {apiClient, navigatorContext}}) => {
     const state = getState();
 
     const fetched = await apiClient.getDocumentSuggestions(
@@ -64,26 +61,17 @@ export const buildFetchDocumentSuggestionsRequest = async (
   organizationId: state.configuration.organizationId,
   url:
     state.caseAssistConfiguration.apiBaseUrl ??
-    getOrganizationEndpoint(
-      state.configuration.organizationId,
-      state.configuration.environment
-    ),
+    getOrganizationEndpoint(state.configuration.organizationId, state.configuration.environment),
   caseAssistId: state.caseAssistConfiguration.caseAssistId,
   ...(state.configuration.analytics.enabled && {
     clientId: await getVisitorID(state.configuration.analytics),
   }),
   ...(state.configuration.analytics.enabled &&
-    fromAnalyticsStateToAnalyticsParams(
-      state.configuration.analytics,
-      navigatorContext,
-      {
-        actionCause: SearchPageEvents.documentSuggestion,
-      }
-    )),
+    fromAnalyticsStateToAnalyticsParams(state.configuration.analytics, navigatorContext, {
+      actionCause: SearchPageEvents.documentSuggestion,
+    })),
   fields: state.caseInput,
-  context: state.caseField
-    ? prepareContextFromFields(state.caseField.fields)
-    : undefined,
+  context: state.caseField ? prepareContextFromFields(state.caseField.fields) : undefined,
   locale: state.caseAssistConfiguration.locale,
   debug: state.debug,
 });

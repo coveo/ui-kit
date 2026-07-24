@@ -93,12 +93,8 @@ describe('insight analytics actions', () => {
         };
 
         expect(mockLogCreateArticle).toHaveBeenCalledTimes(1);
-        expect(mockLogCreateArticle.mock.calls[0][0]).toStrictEqual(
-          exampleCreateArticleMetadata
-        );
-        expect(mockLogCreateArticle.mock.calls[0][1]).toStrictEqual(
-          expectedPayload
-        );
+        expect(mockLogCreateArticle.mock.calls[0][0]).toStrictEqual(exampleCreateArticleMetadata);
+        expect(mockLogCreateArticle.mock.calls[0][1]).toStrictEqual(expectedPayload);
       });
     });
 
@@ -120,9 +116,7 @@ describe('insight analytics actions', () => {
         };
 
         expect(mockLogOpenUserActions).toHaveBeenCalledTimes(1);
-        expect(mockLogOpenUserActions.mock.calls[0][0]).toStrictEqual(
-          expectedPayload
-        );
+        expect(mockLogOpenUserActions.mock.calls[0][0]).toStrictEqual(expectedPayload);
       });
     });
 
@@ -146,9 +140,7 @@ describe('insight analytics actions', () => {
         };
 
         expect(mockLogExpandtoFullUI).toHaveBeenCalledTimes(1);
-        expect(mockLogExpandtoFullUI.mock.calls[0][0]).toStrictEqual(
-          expectedPayload
-        );
+        expect(mockLogExpandtoFullUI.mock.calls[0][0]).toStrictEqual(expectedPayload);
       });
     });
   });

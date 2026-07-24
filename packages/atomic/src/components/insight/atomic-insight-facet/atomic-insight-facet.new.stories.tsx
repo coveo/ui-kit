@@ -10,12 +10,9 @@ import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interfac
 import '@/src/components/insight/atomic-insight-facet/atomic-insight-facet.js';
 
 const {decorator, play} = wrapInInsightInterface();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-insight-facet',
-  {
-    excludeCategories: ['methods'],
-  }
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-insight-facet', {
+  excludeCategories: ['methods'],
+});
 
 const insightApiHarness = new MockInsightApi();
 
@@ -166,13 +163,9 @@ export const A11yCheckbox: Story = {
   },
   decorators: [facetDecorator],
   beforeEach: () => {
-    insightApiHarness.searchEndpoint.addRequestTransformer(
-      searchFacetTransformer
-    );
+    insightApiHarness.searchEndpoint.addRequestTransformer(searchFacetTransformer);
     return () => {
-      insightApiHarness.searchEndpoint.removeRequestTransformer(
-        searchFacetTransformer
-      );
+      insightApiHarness.searchEndpoint.removeRequestTransformer(searchFacetTransformer);
     };
   },
   play: async (context) => {

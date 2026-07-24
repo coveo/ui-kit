@@ -14,25 +14,13 @@ export interface TemplateProviderProps<ItemType> {
 }
 
 export abstract class TemplateProvider<ItemType> {
-  private templateManager: TemplatesManager<
-    ItemType,
-    DocumentFragment,
-    DocumentFragment
-  >;
+  private templateManager: TemplatesManager<ItemType, DocumentFragment, DocumentFragment>;
 
-  protected abstract makeDefaultTemplate(): Template<
-    ItemType,
-    DocumentFragment,
-    DocumentFragment
-  >;
+  protected abstract makeDefaultTemplate(): Template<ItemType, DocumentFragment, DocumentFragment>;
 
   constructor(
     private props: TemplateProviderProps<ItemType>,
-    private buildManager: () => TemplatesManager<
-      ItemType,
-      DocumentFragment,
-      DocumentFragment
-    >
+    private buildManager: () => TemplatesManager<ItemType, DocumentFragment, DocumentFragment>
   ) {
     this.templateManager = this.buildManager();
     this.registerResultTemplates();

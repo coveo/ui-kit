@@ -23,9 +23,7 @@ describe('#buildPaginatedCommerceAPIRequest', () => {
   const slotId = 'slotId';
   const mockBaseCommerceAPIRequest = buildMockBaseCommerceAPIRequest();
 
-  const setState = (
-    configuration?: Partial<StateNeededForPaginatedCommerceAPIRequest>
-  ) => {
+  const setState = (configuration?: Partial<StateNeededForPaginatedCommerceAPIRequest>) => {
     state = {
       configuration: getConfigurationInitialState(),
       cart: getCartInitialState(),
@@ -43,9 +41,7 @@ describe('#buildPaginatedCommerceAPIRequest', () => {
   };
   beforeEach(() => {
     vi.resetAllMocks();
-    vi.mocked(buildBaseCommerceAPIRequest).mockReturnValue(
-      mockBaseCommerceAPIRequest
-    );
+    vi.mocked(buildBaseCommerceAPIRequest).mockReturnValue(mockBaseCommerceAPIRequest);
     setState();
     setNavigatorContext();
   });
@@ -57,10 +53,7 @@ describe('#buildPaginatedCommerceAPIRequest', () => {
       ...restOfRequest
     } = buildPaginatedCommerceAPIRequest(state, navigatorContext, slotId);
 
-    expect(buildBaseCommerceAPIRequest).toHaveBeenCalledWith(
-      state,
-      navigatorContext
-    );
+    expect(buildBaseCommerceAPIRequest).toHaveBeenCalledWith(state, navigatorContext);
     expect(restOfRequest).toEqual(mockBaseCommerceAPIRequest);
   });
 
@@ -124,11 +117,7 @@ describe('#buildPaginatedCommerceAPIRequest', () => {
     describe('when #slotId is defined', () => {
       let request: PaginatedCommerceAPIRequest;
       beforeEach(() => {
-        request = buildPaginatedCommerceAPIRequest(
-          state,
-          navigatorContext,
-          slotId
-        );
+        request = buildPaginatedCommerceAPIRequest(state, navigatorContext, slotId);
       });
 
       it('sets #page to #state.commercePagination.recommendations[slotId].page', () => {

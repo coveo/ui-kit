@@ -1,10 +1,7 @@
 import {createRelay} from '@coveo/relay';
 import {CoveoInsightClient} from 'coveo.analytics';
 import type {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
-import {
-  buildMockInsightEngine,
-  type MockedInsightEngine,
-} from '../../test/mock-engine-v2.js';
+import {buildMockInsightEngine, type MockedInsightEngine} from '../../test/mock-engine-v2.js';
 import {buildMockInsightState} from '../../test/mock-insight-state.js';
 import {buildMockSearchResponse} from '../../test/mock-search-response.js';
 import {buildMockSearchState} from '../../test/mock-search-state.js';
@@ -68,8 +65,7 @@ vi.mocked(CoveoInsightClient).mockImplementation(function () {
   this.logGeneratedAnswerCopyToClipboard = mockLogCopyGeneratedAnswer;
   this.logGeneratedAnswerExpand = mockLogGeneratedAnswerExpand;
   this.logGeneratedAnswerCollapse = mockLogGeneratedAnswerCollapse;
-  this.logGeneratedAnswerFeedbackSubmitV2 =
-    mockLogGeneratedAnswerFeedbackSubmitV2;
+  this.logGeneratedAnswerFeedbackSubmitV2 = mockLogGeneratedAnswerFeedbackSubmitV2;
 });
 
 const exampleFeedback: GeneratedAnswerFeedback = {
@@ -198,9 +194,7 @@ describe('generated answer insight analytics actions', () => {
 
       expect(mockToUse).toHaveBeenCalledTimes(1);
 
-      expect(mockToUse.mock.calls[0][0]).toStrictEqual(
-        expectedCitationDocumentInfo
-      );
+      expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedCitationDocumentInfo);
 
       expect(mockToUse.mock.calls[0][1]).toStrictEqual(expectedMetadata);
 
@@ -224,10 +218,7 @@ describe('generated answer insight analytics actions', () => {
       };
 
       expect(mockToUse).toHaveBeenCalledTimes(1);
-      expect(mockToUse).toHaveBeenCalledWith(
-        expectedMetadata,
-        expectedCaseContext
-      );
+      expect(mockToUse).toHaveBeenCalledWith(expectedMetadata, expectedCaseContext);
     });
 
     it('should log #logLikeGeneratedAnswer with the right payload', async () => {
@@ -243,10 +234,7 @@ describe('generated answer insight analytics actions', () => {
       };
 
       expect(mockToUse).toHaveBeenCalledTimes(1);
-      expect(mockToUse).toHaveBeenCalledWith(
-        expectedMetadata,
-        expectedCaseContext
-      );
+      expect(mockToUse).toHaveBeenCalledWith(expectedMetadata, expectedCaseContext);
     });
 
     it('should log #logDislikeGeneratedAnswer with the right payload', async () => {
@@ -262,10 +250,7 @@ describe('generated answer insight analytics actions', () => {
       };
 
       expect(mockToUse).toHaveBeenCalledTimes(1);
-      expect(mockToUse).toHaveBeenCalledWith(
-        expectedMetadata,
-        expectedCaseContext
-      );
+      expect(mockToUse).toHaveBeenCalledWith(expectedMetadata, expectedCaseContext);
     });
 
     it('should log #logGeneratedAnswerFeedback with V2 payload', async () => {
@@ -282,10 +267,7 @@ describe('generated answer insight analytics actions', () => {
       };
 
       expect(mockToUse).toHaveBeenCalledTimes(1);
-      expect(mockToUse).toHaveBeenCalledWith(
-        expectedMetadata,
-        expectedCaseContext
-      );
+      expect(mockToUse).toHaveBeenCalledWith(expectedMetadata, expectedCaseContext);
     });
 
     [false, true].map((answerGenerated) => {
@@ -304,10 +286,7 @@ describe('generated answer insight analytics actions', () => {
         };
 
         expect(mockToUse).toHaveBeenCalledTimes(1);
-        expect(mockToUse).toHaveBeenCalledWith(
-          expectedMetadata,
-          expectedCaseContext
-        );
+        expect(mockToUse).toHaveBeenCalledWith(expectedMetadata, expectedCaseContext);
       });
     });
 
@@ -324,10 +303,7 @@ describe('generated answer insight analytics actions', () => {
       };
 
       expect(mockToUse).toHaveBeenCalledTimes(1);
-      expect(mockToUse).toHaveBeenCalledWith(
-        expectedMetadata,
-        expectedCaseContext
-      );
+      expect(mockToUse).toHaveBeenCalledWith(expectedMetadata, expectedCaseContext);
     });
 
     it('should log #logGeneratedAnswerHideAnswers with the right payload', async () => {
@@ -343,10 +319,7 @@ describe('generated answer insight analytics actions', () => {
       };
 
       expect(mockToUse).toHaveBeenCalledTimes(1);
-      expect(mockToUse).toHaveBeenCalledWith(
-        expectedMetadata,
-        expectedCaseContext
-      );
+      expect(mockToUse).toHaveBeenCalledWith(expectedMetadata, expectedCaseContext);
     });
 
     it('should log #logGeneratedAnswerExpand with the right payload', async () => {
@@ -398,10 +371,7 @@ describe('generated answer insight analytics actions', () => {
       };
 
       expect(mockToUse).toHaveBeenCalledTimes(1);
-      expect(mockToUse).toHaveBeenCalledWith(
-        expectedMetadata,
-        expectedCaseContext
-      );
+      expect(mockToUse).toHaveBeenCalledWith(expectedMetadata, expectedCaseContext);
     });
   });
 

@@ -8,9 +8,7 @@ export class InsightQuerySummaryPageObject {
   }
 
   async load({story}: {story: string}) {
-    await this.page.goto(
-      `/iframe.html?id=atomic-insight-query-summary--${story}&viewMode=story`
-    );
+    await this.page.goto(`/iframe.html?id=atomic-insight-query-summary--${story}&viewMode=story`);
   }
 
   async hydrated() {

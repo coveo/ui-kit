@@ -17,20 +17,14 @@ describe('atomic-format-unit', () => {
       });
     }
     const element = await fixture<AtomicFormatUnit>(
-      html`<atomic-format-unit
-        unit="${unit}"
-        unit-display="${unitDisplay}"
-      ></atomic-format-unit>`,
+      html`<atomic-format-unit unit="${unit}" unit-display="${unitDisplay}"></atomic-format-unit>`,
       container
     );
     return {element};
   };
 
   it('should dispatch atomic/numberFormat event on connectedCallback', async () => {
-    const dispatchEventSpy = vi.spyOn(
-      AtomicFormatUnit.prototype,
-      'dispatchEvent'
-    );
+    const dispatchEventSpy = vi.spyOn(AtomicFormatUnit.prototype, 'dispatchEvent');
 
     await renderAtomicFormatUnit('byte');
 
@@ -43,16 +37,12 @@ describe('atomic-format-unit', () => {
 
   it('should render nothing when there is no error', async () => {
     const {element} = await renderAtomicFormatUnit();
-    const errorComponent = element.shadowRoot?.querySelector(
-      'atomic-component-error'
-    );
+    const errorComponent = element.shadowRoot?.querySelector('atomic-component-error');
     expect(errorComponent).toBeNull();
   });
 
   it('should format unit correctly with short display', async () => {
-    let capturedFormatter:
-      | ((value: number, languages: string[]) => string)
-      | undefined;
+    let capturedFormatter: ((value: number, languages: string[]) => string) | undefined;
 
     const container = document.createElement('div');
     container.addEventListener('atomic/numberFormat', (e) => {
@@ -61,10 +51,7 @@ describe('atomic-format-unit', () => {
     });
 
     await fixture<AtomicFormatUnit>(
-      html`<atomic-format-unit
-        unit="liter"
-        unit-display="short"
-      ></atomic-format-unit>`,
+      html`<atomic-format-unit unit="liter" unit-display="short"></atomic-format-unit>`,
       container
     );
 
@@ -77,9 +64,7 @@ describe('atomic-format-unit', () => {
   });
 
   it('should format unit correctly with long display', async () => {
-    let capturedFormatter:
-      | ((value: number, languages: string[]) => string)
-      | undefined;
+    let capturedFormatter: ((value: number, languages: string[]) => string) | undefined;
 
     const container = document.createElement('div');
     container.addEventListener('atomic/numberFormat', (e) => {
@@ -88,10 +73,7 @@ describe('atomic-format-unit', () => {
     });
 
     await fixture<AtomicFormatUnit>(
-      html`<atomic-format-unit
-        unit="liter"
-        unit-display="long"
-      ></atomic-format-unit>`,
+      html`<atomic-format-unit unit="liter" unit-display="long"></atomic-format-unit>`,
       container
     );
 
@@ -108,9 +90,7 @@ describe('atomic-format-unit', () => {
       const {element} = await renderAtomicFormatUnit('byte', 'short', false);
 
       await element.updateComplete;
-      const errorComponent = element.shadowRoot?.querySelector(
-        'atomic-component-error'
-      );
+      const errorComponent = element.shadowRoot?.querySelector('atomic-component-error');
       expect(errorComponent).toBeTruthy();
     });
   });

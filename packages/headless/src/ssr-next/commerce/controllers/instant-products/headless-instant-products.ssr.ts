@@ -7,12 +7,7 @@ import {
 } from '../../../../controllers/commerce/instant-products/headless-instant-products.js';
 import type {NonRecommendationControllerDefinitionWithoutProps} from '../../types/controller-definitions.js';
 
-export type {
-  InstantProducts,
-  InstantProductsOptions,
-  InstantProductsProps,
-  InstantProductsState,
-};
+export type {InstantProducts, InstantProductsOptions, InstantProductsProps, InstantProductsState};
 
 export type InstantProductsDefinition =
   NonRecommendationControllerDefinitionWithoutProps<InstantProducts>;

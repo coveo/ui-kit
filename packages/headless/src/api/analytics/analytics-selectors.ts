@@ -6,9 +6,6 @@ export const getAnalyticsSource = createSelector(
   (state: CoreAnalyticsState) => state.source,
   (source) =>
     Object.entries(source)
-      .map(
-        ([frameworkName, frameworkVersion]) =>
-          `${frameworkName}@${frameworkVersion}`
-      )
+      .map(([frameworkName, frameworkVersion]) => `${frameworkName}@${frameworkVersion}`)
       .concat(`@coveo/headless@${VERSION}`)
 );

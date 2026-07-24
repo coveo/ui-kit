@@ -1,10 +1,5 @@
 import type {CartItem} from '@coveo/headless/ssr-commerce';
-import {
-  CART_COOKIE,
-  CART_COOKIE_MAX_AGE,
-  parseCartItems,
-  serializeCartItems,
-} from './cart.js';
+import {CART_COOKIE, CART_COOKIE_MAX_AGE, parseCartItems, serializeCartItems} from './cart.js';
 
 /**
  * IMPORTANT: The functions in this module simulate a programming interface that
@@ -30,9 +25,7 @@ function writeCart(items: CartItem[]): void {
 
 export function addItemToCart(newItem: CartItem): CartItem[] {
   const cart = readCart();
-  const existingItem = cart.find(
-    (item) => item.productId === newItem.productId
-  );
+  const existingItem = cart.find((item) => item.productId === newItem.productId);
   if (existingItem) {
     existingItem.quantity += 1;
   } else {
@@ -44,9 +37,7 @@ export function addItemToCart(newItem: CartItem): CartItem[] {
 
 export function updateItemQuantity(updatedItem: CartItem): CartItem[] {
   let cart = readCart();
-  const existingItem = cart.find(
-    (item) => item.productId === updatedItem.productId
-  );
+  const existingItem = cart.find((item) => item.productId === updatedItem.productId);
   if (existingItem) {
     if (updatedItem.quantity <= 0) {
       cart = cart.filter((item) => item.productId !== updatedItem.productId);

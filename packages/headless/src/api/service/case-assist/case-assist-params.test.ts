@@ -19,12 +19,7 @@ describe('case assist params', () => {
     };
 
     it('should build request object', () => {
-      const effective = baseCaseAssistRequest(
-        request,
-        method,
-        contentType,
-        path
-      );
+      const effective = baseCaseAssistRequest(request, method, contentType, path);
 
       expect(effective).toEqual({
         accessToken: request.accessToken,
@@ -36,30 +31,16 @@ describe('case assist params', () => {
     });
 
     it('should add query string arguments when specified', () => {
-      const effective = baseCaseAssistRequest(
-        request,
-        method,
-        contentType,
-        path,
-        {
-          first: 'one',
-          second: 'two',
-        }
-      );
+      const effective = baseCaseAssistRequest(request, method, contentType, path, {
+        first: 'one',
+        second: 'two',
+      });
 
-      expect(effective.url).toEqual(
-        expect.stringMatching(/\?first=one&second=two$/)
-      );
+      expect(effective.url).toEqual(expect.stringMatching(/\?first=one&second=two$/));
     });
 
     it('should URL encode query string arguments when specified', () => {
-      const effective = baseCaseAssistRequest(
-        request,
-        method,
-        contentType,
-        path,
-        {section: 'Q&A'}
-      );
+      const effective = baseCaseAssistRequest(request, method, contentType, path, {section: 'Q&A'});
 
       expect(effective.url).toEqual(expect.stringMatching(/\?section=Q%26A$/));
     });

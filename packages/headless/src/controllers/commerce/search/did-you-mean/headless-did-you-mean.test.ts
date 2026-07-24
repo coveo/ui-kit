@@ -72,17 +72,13 @@ describe('did you mean', () => {
         wasCorrectedTo: '',
         queryCorrection: {
           correctedQuery: 'correctedQuery',
-          wordCorrections: [
-            {correctedWord: 'abc', originalWord: 'abd', length: 3, offset: 2},
-          ],
+          wordCorrections: [{correctedWord: 'abc', originalWord: 'abd', length: 3, offset: 2}],
         },
       };
 
       expect(didYouMean.state.queryCorrection).toEqual({
         correctedQuery: 'correctedQuery',
-        wordCorrections: [
-          {correctedWord: 'abc', originalWord: 'abd', length: 3, offset: 2},
-        ],
+        wordCorrections: [{correctedWord: 'abc', originalWord: 'abd', length: 3, offset: 2}],
       });
     });
 

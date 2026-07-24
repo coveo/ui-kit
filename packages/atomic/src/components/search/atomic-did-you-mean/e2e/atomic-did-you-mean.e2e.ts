@@ -11,9 +11,7 @@ test.describe('atomic-did-you-mean', () => {
     });
 
     test('should display the original query', async ({page}) => {
-      await expect(
-        page.getByText(`We couldn't find anything for ${ORIGINAL_QUERY}`)
-      ).toBeVisible();
+      await expect(page.getByText(`We couldn't find anything for ${ORIGINAL_QUERY}`)).toBeVisible();
     });
 
     test('should display the auto corrected', async ({page}) => {
@@ -33,15 +31,11 @@ test.describe('atomic-did-you-mean', () => {
     });
 
     test('should show did you mean text', async ({page}) => {
-      await expect(
-        page.locator('atomic-did-you-mean [part="did-you-mean"]')
-      ).toBeVisible();
+      await expect(page.locator('atomic-did-you-mean [part="did-you-mean"]')).toBeVisible();
     });
 
     test('should show manual correction button', async ({page}) => {
-      await expect(
-        page.getByRole('button', {name: CORRECTED_QUERY})
-      ).toBeVisible();
+      await expect(page.getByRole('button', {name: CORRECTED_QUERY})).toBeVisible();
     });
   });
 });

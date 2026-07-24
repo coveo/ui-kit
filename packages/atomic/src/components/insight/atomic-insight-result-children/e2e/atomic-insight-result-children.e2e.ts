@@ -6,9 +6,7 @@ test.describe('atomic-insight-result-children', () => {
     await insightResultChildren.hydrated.first().waitFor();
   });
 
-  test('should render child results when available', async ({
-    insightResultChildren,
-  }) => {
+  test('should render child results when available', async ({insightResultChildren}) => {
     await expect(insightResultChildren.childrenRoot.first()).toBeVisible();
   });
 });

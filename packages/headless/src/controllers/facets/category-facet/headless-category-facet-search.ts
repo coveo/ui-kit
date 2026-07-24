@@ -17,10 +17,7 @@ import {
 import {buildGenericFacetSearch} from '../../core/facets/facet-search/facet-search.js';
 
 export function buildCategoryFacetSearch(
-  engine: CoreEngine<
-    CategoryFacetSearchSection & ConfigurationSection,
-    SearchThunkExtraArguments
-  >,
+  engine: CoreEngine<CategoryFacetSearchSection & ConfigurationSection, SearchThunkExtraArguments>,
   props: CategoryFacetSearchProps
 ) {
   const {

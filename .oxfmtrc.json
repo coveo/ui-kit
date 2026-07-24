@@ -1,11 +1,12 @@
 {
   "$schema": "https://raw.githubusercontent.com/oxc-project/oxc/main/npm/oxfmt/configuration_schema.json",
-  "printWidth": 80,
+  "printWidth": 100,
   "singleQuote": true,
   "trailingComma": "es5",
   "bracketSpacing": false,
   "ignorePatterns": [
     "**/.kiro/**/*",
+    "AGENTS.md",
     "**/packages/quantic/**/*",
     "!**/packages/quantic/catalog-info.yaml",
     "**/packages/create-atomic-template/**/*",
@@ -18,6 +19,7 @@
     "**/packages/atomic/stencil-proxy/**/*",
     "**/packages/documentation/**/assets/**/*",
     "**/packages/headless/**/coveo.analytics/**/*",
+    "**/packages/coveo-analytics/**/*",
     "**/samples/headless/rga-angular/**/*.html",
     "**/*.hbs",
     "**/*.handlebars",

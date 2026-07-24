@@ -26,10 +26,9 @@ searchApiHarness.searchEndpoint.mock((response) => ({
 }));
 
 const {decorator, play} = wrapInRecommendationInterface();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-recs-list',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-recs-list', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-recs-list',

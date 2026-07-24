@@ -1,8 +1,5 @@
 import {executeSearch} from '../../features/search/search-actions.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../test/mock-engine-v2.js';
 import {createMockState} from '../../test/mock-state.js';
 import {buildTab, type Tab, type TabProps} from './headless-tab.js';
 

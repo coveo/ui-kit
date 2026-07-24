@@ -97,8 +97,7 @@ export class AtomicModal
   /**
    * Whether to display the open and close animations over the entire page or the atomic-modal only.
    */
-  @property({type: String, reflect: true}) boundary: 'page' | 'element' =
-    'page';
+  @property({type: String, reflect: true}) boundary: 'page' | 'element' = 'page';
 
   @property({type: Object, attribute: false}) close: () => void = () => {
     this.isOpen = false;
@@ -121,8 +120,7 @@ export class AtomicModal
   })
   isOpen = false;
 
-  @property({type: Object, attribute: false}) onAnimationEnded: () => void =
-    () => {};
+  @property({type: Object, attribute: false}) onAnimationEnded: () => void = () => {};
 
   @property({type: Object, attribute: false}) scope?: HTMLElement;
 
@@ -168,8 +166,7 @@ export class AtomicModal
                 'pointer-events-none': !this.isOpen,
               })
             )}
-            @click="${(e: MouseEvent) =>
-              e.target === e.currentTarget && this.close()}"
+            @click="${(e: MouseEvent) => e.target === e.currentTarget && this.close()}"
             data-nosnippet
           >
             <atomic-focus-trap
@@ -180,9 +177,7 @@ export class AtomicModal
               .source=${this.source}
               .container=${this.container ?? this}
               ${ref(this.focusTrap)}
-              .scope=${this.scope ??
-              this.bindings?.interfaceElement ??
-              document.body}
+              .scope=${this.scope ?? this.bindings?.interfaceElement ?? document.body}
             >
               ${this.renderContent()}
             </atomic-focus-trap>
@@ -380,9 +375,7 @@ export class AtomicModal
         resolve();
         return;
       }
-      listenOnce(this.animatableContainer.value, 'animationend', () =>
-        resolve()
-      );
+      listenOnce(this.animatableContainer.value, 'animationend', () => resolve());
     });
   }
 }

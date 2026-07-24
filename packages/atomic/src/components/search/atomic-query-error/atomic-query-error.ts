@@ -37,10 +37,7 @@ import type {Bindings} from '../atomic-search-interface/atomic-search-interface'
 @customElement('atomic-query-error')
 @bindings()
 @withTailwindStyles
-export class AtomicQueryError
-  extends LitElement
-  implements InitializableComponent<Bindings>
-{
+export class AtomicQueryError extends LitElement implements InitializableComponent<Bindings> {
   @bindStateToController('queryError')
   @state()
   private queryErrorState!: QueryErrorState;
@@ -61,8 +58,7 @@ export class AtomicQueryError
   render() {
     const {hasError, error} = this.queryErrorState;
     const i18n = this.bindings.i18n;
-    const {organizationId, environment} =
-      this.bindings.engine.state.configuration;
+    const {organizationId, environment} = this.bindings.engine.state.configuration;
     const url = getOrganizationEndpoint(organizationId, environment);
     if (hasError) {
       this.ariaMessage.message = getAriaMessageFromErrorType(

@@ -3,15 +3,9 @@ import {configuration} from '../../../app/common-reducers.js';
 import type {CoreEngine} from '../../../app/engine.js';
 import {getConfigurationInitialState} from '../../../features/configuration/configuration-state.js';
 import {prepareForSearchWithQuery} from '../../../features/search/search-actions.js';
-import {
-  registerTab,
-  updateActiveTab,
-} from '../../../features/tab-set/tab-set-actions.js';
+import {registerTab, updateActiveTab} from '../../../features/tab-set/tab-set-actions.js';
 import {tabSetReducer as tabSet} from '../../../features/tab-set/tab-set-slice.js';
-import type {
-  ConfigurationSection,
-  TabSection,
-} from '../../../state/state-sections.js';
+import type {ConfigurationSection, TabSection} from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {
   requiredEmptyAllowedString,
@@ -19,10 +13,7 @@ import {
   validateInitialState,
   validateOptions,
 } from '../../../utils/validate-payload.js';
-import {
-  buildController,
-  type Controller,
-} from '../../controller/headless-controller.js';
+import {buildController, type Controller} from '../../controller/headless-controller.js';
 
 export interface TabOptions {
   /**
@@ -174,8 +165,7 @@ function loadTabReducers(
 }
 
 function assertIdNotEqualToDefaultOriginLevel2(id: string | undefined) {
-  const defaultOriginLevel2 =
-    getConfigurationInitialState().analytics.originLevel2;
+  const defaultOriginLevel2 = getConfigurationInitialState().analytics.originLevel2;
   if (id === defaultOriginLevel2) {
     throw new Error(
       `The #id option on the Tab controller cannot use the reserved value "${defaultOriginLevel2}". Please specify a different value.`

@@ -88,17 +88,13 @@ describe('SlotsForNoShadowDOMMixin', () => {
 
     beforeEach(async () => {
       element = (await fixture(html`
-        <simple-slotted-element
-          ><p>Unslotted content</p></simple-slotted-element
-        >
+        <simple-slotted-element><p>Unslotted content</p></simple-slotted-element>
       `)) as TestableSlottedElement;
     });
 
     it('should adopt unslotted content to default slot', () => {
       expect(element.slotContent['']).toBeDefined();
-      expect(element.slotContent['']).toContain(
-        (element as Element).querySelector('p')
-      );
+      expect(element.slotContent['']).toContain((element as Element).querySelector('p'));
     });
 
     it('should render unslotted content correctly', async () => {
@@ -152,8 +148,7 @@ describe('SlotsForNoShadowDOMMixin', () => {
         <slotted-element><!-- a comment --></slotted-element>
       `)) as TestableSlottedElement;
       const fallbackContent = html`<span>Fallback</span>`;
-      const contentComment =
-        commentElement.renderDefaultSlotContent(fallbackContent);
+      const contentComment = commentElement.renderDefaultSlotContent(fallbackContent);
       expect(Array.isArray(contentComment)).toBe(true);
       expect(contentComment).toHaveLength(1);
       expect((contentComment as unknown[])[0]).toBe(fallbackContent);
@@ -164,8 +159,7 @@ describe('SlotsForNoShadowDOMMixin', () => {
         <slotted-element> </slotted-element>
       `)) as TestableSlottedElement;
       const fallbackContent = html`<span>Fallback</span>`;
-      const contentEmptyText =
-        emptyTextElement.renderDefaultSlotContent(fallbackContent);
+      const contentEmptyText = emptyTextElement.renderDefaultSlotContent(fallbackContent);
       expect(Array.isArray(contentEmptyText)).toBe(true);
       expect(contentEmptyText).toHaveLength(1);
       expect((contentEmptyText as unknown[])[0]).toBe(fallbackContent);

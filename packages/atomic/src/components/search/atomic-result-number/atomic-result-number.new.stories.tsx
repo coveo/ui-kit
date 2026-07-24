@@ -15,10 +15,9 @@ import {SearchResponse} from '@coveo/platform-mock-api/search/search-response';
 
 const searchApiHarness = new MockSearchApi();
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-result-number',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-result-number', {
+  excludeCategories: ['methods'],
+});
 
 const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
   includeCodeRoot: false,
@@ -31,11 +30,7 @@ const meta: Meta = {
   title: 'Search/Result Number',
   id: 'atomic-result-number',
   render: (args) => template(args),
-  decorators: [
-    resultTemplateDecorator,
-    resultListDecorator,
-    searchInterfaceDecorator,
-  ],
+  decorators: [resultTemplateDecorator, resultListDecorator, searchInterfaceDecorator],
   parameters: {
     ...parameters,
     msw: {
@@ -51,15 +46,13 @@ const meta: Meta = {
     searchApiHarness.searchEndpoint.clear();
     searchApiHarness.searchEndpoint.mockOnce((response) => ({
       ...response,
-      results: (response as SearchResponse).results
-        .slice(0, 1)
-        .map((r: any) => ({
-          ...r,
-          raw: {
-            ...r.raw,
-            size: 1234567,
-          },
-        })),
+      results: (response as SearchResponse).results.slice(0, 1).map((r: any) => ({
+        ...r,
+        raw: {
+          ...r.raw,
+          size: 1234567,
+        },
+      })),
       totalCount: 1,
       totalCountFiltered: 1,
     }));
@@ -108,8 +101,6 @@ export const WithUnitFormatting: Story = {
   },
   render: (args) =>
     html`<atomic-result-number field=${args.field}>
-      ${unsafeHTML(
-        '<atomic-format-unit unit="byte" unit-display="long"></atomic-format-unit>'
-      )}
+      ${unsafeHTML('<atomic-format-unit unit="byte" unit-display="long"></atomic-format-unit>')}
     </atomic-result-number>`,
 };

@@ -22,10 +22,7 @@ import {
 } from '../../../features/generated-answer/generated-answer-analytics-actions.js';
 import {getGeneratedAnswerInitialState} from '../../../features/generated-answer/generated-answer-state.js';
 import type {SearchAppState} from '../../../index.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../../test/mock-engine-v2.js';
 import {createMockState} from '../../../test/mock-state.js';
 import {
   buildGeneratedAnswerWithFollowUps,
@@ -35,9 +32,7 @@ import {
 vi.mock('../../../features/generated-answer/generated-answer-actions');
 vi.mock('../../../features/follow-up-answers/follow-up-answers-actions');
 vi.mock('../../../features/configuration/configuration-actions');
-vi.mock(
-  '../../../features/generated-answer/generated-answer-analytics-actions'
-);
+vi.mock('../../../features/generated-answer/generated-answer-analytics-actions');
 
 const mockCoreLike = vi.fn();
 const mockCoreDislike = vi.fn();
@@ -55,18 +50,9 @@ const mockFollowUpAgent = {
   abortRun: vi.fn(),
 };
 const mockFollowUpStrategy = {};
-const mockCreateAnswerRunner = vi.spyOn(
-  answerAgentRunnerModule,
-  'createAnswerRunner'
-);
-const mockCreateFollowUpAgent = vi.spyOn(
-  followUpAgentModule,
-  'createFollowUpAgent'
-);
-const mockCreateFollowUpStrategy = vi.spyOn(
-  followUpStrategyModule,
-  'createFollowUpStrategy'
-);
+const mockCreateAnswerRunner = vi.spyOn(answerAgentRunnerModule, 'createAnswerRunner');
+const mockCreateFollowUpAgent = vi.spyOn(followUpAgentModule, 'createFollowUpAgent');
+const mockCreateFollowUpStrategy = vi.spyOn(followUpStrategyModule, 'createFollowUpStrategy');
 const mockCreateFollowUpAnswer = vi.mocked(createFollowUpAnswer);
 const mockActiveFollowUpStartFailed = vi.mocked(activeFollowUpStartFailed);
 
@@ -102,16 +88,9 @@ describe('GeneratedAnswerWithFollowUps', () => {
   let engine: MockedSearchEngine;
   const createGeneratedAnswerWithFollowUps = (
     props: GeneratedAnswerWithFollowUpsProps = {agentId: 'default-agent-id'}
-  ) =>
-    buildGeneratedAnswerWithFollowUps(
-      engine,
-      generatedAnswerAnalyticsClient,
-      props
-    );
+  ) => buildGeneratedAnswerWithFollowUps(engine, generatedAnswerAnalyticsClient, props);
 
-  const buildEngineWithGeneratedAnswer = (
-    initialState: Partial<SearchAppState> = {}
-  ) => {
+  const buildEngineWithGeneratedAnswer = (initialState: Partial<SearchAppState> = {}) => {
     const state = createMockState({
       ...initialState,
       configuration: {
@@ -169,9 +148,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
   });
 
   it('should not throw an error when agentId is valid', () => {
-    expect(() =>
-      createGeneratedAnswerWithFollowUps({agentId: 'valid-agent-id'})
-    ).not.toThrow();
+    expect(() => createGeneratedAnswerWithFollowUps({agentId: 'valid-agent-id'})).not.toThrow();
   });
 
   it('adds the followUpAnswers reducers to engine', () => {
@@ -191,11 +168,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
   it('creates a follow-up agent with the configuration context', () => {
     createGeneratedAnswerWithFollowUps({agentId: 'agent-xyz'});
 
-    expect(mockCreateFollowUpAgent).toHaveBeenCalledWith(
-      'agent-xyz',
-      'org-123',
-      'prod'
-    );
+    expect(mockCreateFollowUpAgent).toHaveBeenCalledWith('agent-xyz', 'org-123', 'prod');
     expect(mockCreateFollowUpStrategy).toHaveBeenCalledWith(engine.dispatch);
   });
 
@@ -351,9 +324,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
         answerId: exampleFollowUpAnswer.answerId,
       });
       expect(mockCoreLike).not.toHaveBeenCalled();
-      expect(logLikeGeneratedAnswer).toHaveBeenCalledWith(
-        exampleFollowUpAnswer.answerId
-      );
+      expect(logLikeGeneratedAnswer).toHaveBeenCalledWith(exampleFollowUpAnswer.answerId);
     });
 
     it('should not dispatch follow-up like actions when already liked', () => {
@@ -391,9 +362,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
           followUpAnswers: [exampleFollowUpAnswer],
         },
       });
-      const consoleWarnSpy = vi
-        .spyOn(console, 'warn')
-        .mockImplementation(() => {});
+      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
       const controller = createGeneratedAnswerWithFollowUps();
 
       controller.like('non-existent-answer-id');
@@ -455,9 +424,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
         answerId: exampleFollowUpAnswer.answerId,
       });
       expect(mockCoreDislike).not.toHaveBeenCalled();
-      expect(logDislikeGeneratedAnswer).toHaveBeenCalledWith(
-        exampleFollowUpAnswer.answerId
-      );
+      expect(logDislikeGeneratedAnswer).toHaveBeenCalledWith(exampleFollowUpAnswer.answerId);
     });
 
     it('should not dispatch follow-up dislike actions when already disliked', () => {
@@ -495,9 +462,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
           followUpAnswers: [exampleFollowUpAnswer],
         },
       });
-      const consoleWarnSpy = vi
-        .spyOn(console, 'warn')
-        .mockImplementation(() => {});
+      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
       const controller = createGeneratedAnswerWithFollowUps();
 
       controller.dislike('non-existent-answer-id');
@@ -568,10 +533,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
 
       controller.logCitationClick(citationId);
 
-      expect(logOpenGeneratedAnswerSource).toHaveBeenCalledWith(
-        citationId,
-        undefined
-      );
+      expect(logOpenGeneratedAnswerSource).toHaveBeenCalledWith(citationId, undefined);
       expect(logOpenGeneratedAnswerFollowUpSource).not.toHaveBeenCalled();
     });
 
@@ -588,10 +550,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
 
       controller.logCitationClick(citationId, headAnswerId);
 
-      expect(logOpenGeneratedAnswerSource).toHaveBeenCalledWith(
-        citationId,
-        headAnswerId
-      );
+      expect(logOpenGeneratedAnswerSource).toHaveBeenCalledWith(citationId, headAnswerId);
       expect(logOpenGeneratedAnswerFollowUpSource).not.toHaveBeenCalled();
     });
 
@@ -648,11 +607,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
 
       controller.logCitationHover(citationId, 10, followUpAnswerId);
 
-      expect(logHoverCitation).toHaveBeenCalledWith(
-        citationId,
-        10,
-        followUpAnswerId
-      );
+      expect(logHoverCitation).toHaveBeenCalledWith(citationId, 10, followUpAnswerId);
       expect(mockCoreCitationHover).not.toHaveBeenCalled();
     });
   });
@@ -740,9 +695,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
           conversationToken,
         },
       });
-      const consoleWarnSpy = vi
-        .spyOn(console, 'warn')
-        .mockImplementation(() => {});
+      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
       const controller = createGeneratedAnswerWithFollowUps();
 
       controller.askFollowUp(question);
@@ -764,9 +717,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
           isEnabled: true,
         },
       });
-      const consoleWarnSpy = vi
-        .spyOn(console, 'warn')
-        .mockImplementation(() => {});
+      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
       const controller = createGeneratedAnswerWithFollowUps();
 
       controller.askFollowUp(question);
@@ -790,9 +741,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
         },
       });
       const controller = createGeneratedAnswerWithFollowUps();
-      const consoleErrorSpy = vi
-        .spyOn(console, 'error')
-        .mockImplementation(() => {});
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
       const failureAction = {type: 'follow-up/startFailed'};
       const error = new Error('network down');
       mockActiveFollowUpStartFailed.mockReturnValue(failureAction as never);
@@ -802,14 +751,10 @@ describe('GeneratedAnswerWithFollowUps', () => {
 
       expect(mockFollowUpAgent.runAgent).toHaveBeenCalled();
       expect(mockActiveFollowUpStartFailed).toHaveBeenCalledWith({
-        message:
-          'An error occurred while starting the follow-up answer generation.',
+        message: 'An error occurred while starting the follow-up answer generation.',
       });
       expect(engine.dispatch).toHaveBeenCalledWith(failureAction);
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        'Error running the follow-up agent:',
-        error
-      );
+      expect(consoleErrorSpy).toHaveBeenCalledWith('Error running the follow-up agent:', error);
       consoleErrorSpy.mockRestore();
     });
   });

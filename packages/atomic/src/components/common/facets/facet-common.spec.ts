@@ -13,10 +13,7 @@ import {
 type TestFacet = HTMLElement & {facetId: string; isCollapsed: boolean};
 
 describe('facet-common', () => {
-  const buildMockFacetElement = (props: {
-    facetId?: string;
-    isCollapsed?: boolean;
-  }): TestFacet => {
+  const buildMockFacetElement = (props: {facetId?: string; isCollapsed?: boolean}): TestFacet => {
     const visibleFacet = document.createElement('div') as unknown as TestFacet;
     visibleFacet.facetId = props.facetId || 'default-facet-id';
     visibleFacet.isCollapsed = props.isCollapsed || false;
@@ -161,9 +158,7 @@ describe('facet-common', () => {
   describe('#getAutomaticFacetGenerator', () => {
     it('should return the automatic facet generator child if present', () => {
       const parent = document.createElement('div');
-      const autoGen = document.createElement(
-        'atomic-automatic-facet-generator'
-      );
+      const autoGen = document.createElement('atomic-automatic-facet-generator');
       parent.appendChild(autoGen);
       expect(getAutomaticFacetGenerator(parent)).toBe(autoGen);
     });

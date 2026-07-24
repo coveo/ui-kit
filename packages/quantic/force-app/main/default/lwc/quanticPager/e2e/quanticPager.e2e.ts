@@ -52,7 +52,7 @@ useCaseTestCases.forEach((useCase) => {
         pager,
         search,
       }) => {
-        const examplePage = 3;
+        const examplePage = 2;
         const searchResponsePromise = search.waitForSearchResponse();
         const pagerPageUaAnalyticsPromise =
           pager.waitForPagerNumberUaAnalytics();

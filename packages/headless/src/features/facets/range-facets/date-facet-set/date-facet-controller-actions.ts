@@ -1,10 +1,7 @@
 import {RecordValue} from '@coveo/bueno';
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import type {AsyncThunkOptions} from '../../../../app/async-thunk-options.js';
-import type {
-  ConfigurationSection,
-  DateFacetSection,
-} from '../../../../state/state-sections.js';
+import type {ConfigurationSection, DateFacetSection} from '../../../../state/state-sections.js';
 import {updateFacetOptions} from '../../../facet-options/facet-options-actions.js';
 import {facetIdDefinition} from '../../generic/facet-actions-validation.js';
 import {
@@ -12,10 +9,7 @@ import {
   executeToggleRangeFacetSelect,
 } from '../generic/range-facet-controller-actions.js';
 import {dateFacetValueDefinition} from '../generic/range-facet-validate-payload.js';
-import {
-  toggleExcludeDateFacetValue,
-  toggleSelectDateFacetValue,
-} from './date-facet-actions.js';
+import {toggleExcludeDateFacetValue, toggleSelectDateFacetValue} from './date-facet-actions.js';
 import type {DateFacetValue} from './interfaces/response.js';
 
 const definition = {
@@ -30,15 +24,12 @@ export const executeToggleDateFacetSelect = createAsyncThunk<
     selection: DateFacetValue;
   },
   AsyncThunkOptions<ConfigurationSection & DateFacetSection>
->(
-  'dateFacet/executeToggleSelect',
-  (payload, {dispatch, extra: {validatePayload}}) => {
-    validatePayload(payload, definition);
-    dispatch(toggleSelectDateFacetValue(payload));
-    dispatch(executeToggleRangeFacetSelect(payload));
-    dispatch(updateFacetOptions());
-  }
-);
+>('dateFacet/executeToggleSelect', (payload, {dispatch, extra: {validatePayload}}) => {
+  validatePayload(payload, definition);
+  dispatch(toggleSelectDateFacetValue(payload));
+  dispatch(executeToggleRangeFacetSelect(payload));
+  dispatch(updateFacetOptions());
+});
 
 export const executeToggleDateFacetExclude = createAsyncThunk<
   void,
@@ -47,12 +38,9 @@ export const executeToggleDateFacetExclude = createAsyncThunk<
     selection: DateFacetValue;
   },
   AsyncThunkOptions<ConfigurationSection & DateFacetSection>
->(
-  'dateFacet/executeToggleExclude',
-  (payload, {dispatch, extra: {validatePayload}}) => {
-    validatePayload(payload, definition);
-    dispatch(toggleExcludeDateFacetValue(payload));
-    dispatch(executeToggleRangeFacetExclude(payload));
-    dispatch(updateFacetOptions());
-  }
-);
+>('dateFacet/executeToggleExclude', (payload, {dispatch, extra: {validatePayload}}) => {
+  validatePayload(payload, definition);
+  dispatch(toggleExcludeDateFacetValue(payload));
+  dispatch(executeToggleRangeFacetExclude(payload));
+  dispatch(updateFacetOptions());
+});

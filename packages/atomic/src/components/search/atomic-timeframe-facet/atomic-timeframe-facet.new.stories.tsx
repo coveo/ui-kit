@@ -85,12 +85,9 @@ const createDateFacetResponse = (
 
 const {decorator, play} = wrapInSearchInterface();
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-timeframe-facet',
-  {
-    excludeCategories: ['methods'],
-  }
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-timeframe-facet', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-timeframe-facet',
@@ -245,10 +242,9 @@ export const WithDependsOn: Story = {
     await play(context);
     const {canvas, step} = context;
     await step('Select YouTubeVideo in filetype facet', async () => {
-      const button = await canvas.findByShadowLabelText(
-        'Inclusion filter on YouTubeVideo',
-        {exact: false}
-      );
+      const button = await canvas.findByShadowLabelText('Inclusion filter on YouTubeVideo', {
+        exact: false,
+      });
       button.ariaChecked === 'false' ? button.click() : null;
     });
   },
@@ -305,20 +301,17 @@ export const A11yStatusMessage: Story = {
         ],
       })
     );
-    searchApiHarness.searchEndpoint.mockOnce(
-      buildSearchResponseWithResults(42)
-    );
+    searchApiHarness.searchEndpoint.mockOnce(buildSearchResponseWithResults(42));
   },
-  decorators: [
-    (story) => html`<atomic-query-summary></atomic-query-summary>${story()}`,
-  ],
+  decorators: [(story) => html`<atomic-query-summary></atomic-query-summary>${story()}`],
   play: async (context) => {
     await play(context);
     await testStatusMessageA11y(context, {
       triggerAction: async () => {
-        const [link] = await within(
-          context.canvasElement
-        ).findAllByShadowLabelText('Inclusion filter on', {exact: false});
+        const [link] = await within(context.canvasElement).findAllByShadowLabelText(
+          'Inclusion filter on',
+          {exact: false}
+        );
         link.click();
       },
       expectedText: 'Results loaded. Results 1-10 of 42',

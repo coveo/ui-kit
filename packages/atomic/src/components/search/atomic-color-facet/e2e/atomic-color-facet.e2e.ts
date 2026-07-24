@@ -40,17 +40,12 @@ test.describe('atomic-color-facet', () => {
     });
   });
 
-  test('should display selected value with visual indicator and clear button', async ({
-    facet,
-  }) => {
+  test('should display selected value with visual indicator and clear button', async ({facet}) => {
     await facet.load({story: 'with-selected-value'});
 
     await test.step('Verify selected value has selected styling', async () => {
       await expect(facet.selectedValueBoxes).toHaveCount(1);
-      await expect(facet.selectedValueBoxes.first()).toHaveAttribute(
-        'aria-pressed',
-        'true'
-      );
+      await expect(facet.selectedValueBoxes.first()).toHaveAttribute('aria-pressed', 'true');
     });
 
     await test.step('Verify clear button is visible', async () => {
@@ -58,9 +53,7 @@ test.describe('atomic-color-facet', () => {
     });
   });
 
-  test('should render checkboxes when display-values-as is checkbox', async ({
-    facet,
-  }) => {
+  test('should render checkboxes when display-values-as is checkbox', async ({facet}) => {
     await facet.load({story: 'checkbox-display'});
 
     await test.step('Verify facet is loaded', async () => {
@@ -72,9 +65,7 @@ test.describe('atomic-color-facet', () => {
     });
   });
 
-  test('should collapse and hide values when clicking the label button', async ({
-    facet,
-  }) => {
+  test('should collapse and hide values when clicking the label button', async ({facet}) => {
     await facet.load();
 
     await test.step('Verify values are initially visible', async () => {

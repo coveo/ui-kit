@@ -58,8 +58,7 @@ If you prefer not to use a package manager, you can load the SSR Commerce bundle
 <script src="https://static.cloud.coveo.com/headless/v{{packageVersion}}/ssr-commerce/headless.js"></script>
 <script>
   // All exports are available on the global CoveoHeadlessCommerceSSR object.
-  const {defineCommerceEngine, getSampleCommerceEngineConfiguration} =
-    CoveoHeadlessCommerceSSR;
+  const {defineCommerceEngine, getSampleCommerceEngineConfiguration} = CoveoHeadlessCommerceSSR;
 </script>
 ```
 
@@ -92,11 +91,8 @@ const engineDefinition = defineCommerceEngine({
   },
 });
 
-export const {
-  listingEngineDefinition,
-  searchEngineDefinition,
-  standaloneEngineDefinition,
-} = engineDefinition;
+export const {listingEngineDefinition, searchEngineDefinition, standaloneEngineDefinition} =
+  engineDefinition;
 ```
 
 > [!NOTE]

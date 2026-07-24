@@ -6,10 +6,9 @@ import type {StateNeededForPaginatedCommerceAPIRequest} from '../../common/pagin
 import type {StateNeededForCategoryFacetSearch} from './category/commerce-category-facet-search-state.js';
 import type {StateNeededForRegularFacetSearch} from './regular/commerce-regular-facet-search-state.js';
 
-export type CoreStateNeededForFacetSearch =
-  StateNeededForPaginatedCommerceAPIRequest &
-    CommerceFacetSetSection &
-    Partial<CommerceQuerySection>;
+export type CoreStateNeededForFacetSearch = StateNeededForPaginatedCommerceAPIRequest &
+  CommerceFacetSetSection &
+  Partial<CommerceQuerySection>;
 
 export type StateNeededForAnyFacetSearch =
   | StateNeededForRegularFacetSearch

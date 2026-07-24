@@ -93,22 +93,14 @@ export class AtomicResultHtml
   }
 
   private renderResultHtml() {
-    const resultValue = getStringValueFromResultOrNull(
-      this.result!,
-      this.field!
-    );
+    const resultValue = getStringValueFromResultOrNull(this.result!, this.field!);
 
     if (!resultValue) {
       this.remove();
       return nothing;
     }
 
-    return html`
-      <atomic-html
-        value=${resultValue}
-        ?sanitize=${this.sanitize}
-      ></atomic-html>
-    `;
+    return html` <atomic-html value=${resultValue} ?sanitize=${this.sanitize}></atomic-html> `;
   }
 }
 

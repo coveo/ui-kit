@@ -5,9 +5,7 @@ import {renderChildrenWrapper} from './children-wrapper';
 
 describe('#renderChildrenWrapper', () => {
   const renderComponent = async (children = html`<div>Test content</div>`) => {
-    const element = await renderFunctionFixture(
-      html`${renderChildrenWrapper()(children)}`
-    );
+    const element = await renderFunctionFixture(html`${renderChildrenWrapper()(children)}`);
 
     return {
       divElement: element.querySelector('div[part="children-root"]'),

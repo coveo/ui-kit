@@ -17,9 +17,7 @@ import {
   type DateFilterOptions,
 } from './headless-insight-date-filter.js';
 
-vi.mock(
-  '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions'
-);
+vi.mock('../../../../../features/facets/range-facets/date-facet-set/date-facet-actions');
 vi.mock('../../../../../features/facet-options/facet-options-actions');
 vi.mock('../../../../../features/insight-search/insight-search-actions');
 

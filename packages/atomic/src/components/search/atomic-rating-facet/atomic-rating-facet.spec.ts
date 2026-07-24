@@ -61,9 +61,7 @@ describe('atomic-rating-facet', () => {
     vi.mocked(buildNumericFacet).mockReturnValue(mockedNumericFacet);
     vi.mocked(buildSearchStatus).mockReturnValue(mockedSearchStatus);
     vi.mocked(buildTabManager).mockReturnValue(mockedTabManager);
-    vi.mocked(buildFacetConditionsManager).mockReturnValue(
-      mockedFacetConditionsManager
-    );
+    vi.mocked(buildFacetConditionsManager).mockReturnValue(mockedFacetConditionsManager);
 
     const {element} = await renderInAtomicSearchInterface<AtomicRatingFacet>({
       template: html`<atomic-rating-facet
@@ -203,26 +201,21 @@ describe('atomic-rating-facet', () => {
         prop: 'injectionDepth',
         invalidValue: -1,
       },
-    ])(
-      'should set error when #$prop is invalid',
-      async ({prop, invalidValue}) => {
-        const element = await renderRatingFacet().then(({element}) => element);
+    ])('should set error when #$prop is invalid', async ({prop, invalidValue}) => {
+      const element = await renderRatingFacet().then(({element}) => element);
 
-        expect(element.error).toBeUndefined();
+      expect(element.error).toBeUndefined();
 
-        // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
-        (element as any)[prop] = invalidValue;
-        await element.updateComplete;
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
+      (element as any)[prop] = invalidValue;
+      await element.updateComplete;
 
-        expect(element.error).toBeDefined();
-        expect(element.error.message).toMatch(new RegExp(prop, 'i'));
-      }
-    );
+      expect(element.error).toBeDefined();
+      expect(element.error.message).toMatch(new RegExp(prop, 'i'));
+    });
 
     it('should warn when both tabsIncluded and tabsExcluded are provided', async () => {
-      const consoleWarnSpy = vi
-        .spyOn(console, 'warn')
-        .mockImplementation(() => {});
+      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
       await renderRatingFacet({
         props: {
@@ -231,9 +224,7 @@ describe('atomic-rating-facet', () => {
         },
       });
 
-      expect(consoleWarnSpy).toHaveBeenCalledWith(
-        expect.stringContaining('tabs-included')
-      );
+      expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('tabs-included'));
       consoleWarnSpy.mockRestore();
     });
 
@@ -267,9 +258,7 @@ describe('atomic-rating-facet', () => {
       });
 
       const {element} = await renderRatingFacet();
-      const placeholder = element.shadowRoot?.querySelector(
-        'atomic-facet-placeholder'
-      );
+      const placeholder = element.shadowRoot?.querySelector('atomic-facet-placeholder');
       expect(placeholder).toBeDefined();
     });
 
@@ -282,8 +271,7 @@ describe('atomic-rating-facet', () => {
       });
 
       const {element} = await renderRatingFacet();
-      const facetContainer =
-        element.shadowRoot?.querySelector('[part="facet"]');
+      const facetContainer = element.shadowRoot?.querySelector('[part="facet"]');
       expect(facetContainer).toBeNull();
     });
 
@@ -293,8 +281,7 @@ describe('atomic-rating-facet', () => {
       });
 
       const {element} = await renderRatingFacet();
-      const facetContainer =
-        element.shadowRoot?.querySelector('[part="facet"]');
+      const facetContainer = element.shadowRoot?.querySelector('[part="facet"]');
       expect(facetContainer).toBeNull();
     });
 
@@ -307,8 +294,7 @@ describe('atomic-rating-facet', () => {
       });
 
       const {element} = await renderRatingFacet();
-      const facetContainer =
-        element.shadowRoot?.querySelector('[part="facet"]');
+      const facetContainer = element.shadowRoot?.querySelector('[part="facet"]');
       expect(facetContainer).toBeNull();
     });
   });
@@ -316,9 +302,7 @@ describe('atomic-rating-facet', () => {
   describe('display modes', () => {
     it('should render as checkboxes by default', async () => {
       const {element} = await renderRatingFacet();
-      const checkbox = element.shadowRoot?.querySelector(
-        '[part~="value-checkbox"]'
-      );
+      const checkbox = element.shadowRoot?.querySelector('[part~="value-checkbox"]');
       expect(checkbox).toBeDefined();
     });
 
@@ -352,9 +336,7 @@ describe('atomic-rating-facet', () => {
   describe('rating display', () => {
     it('should display rating icons for each value', async () => {
       const {element} = await renderRatingFacet();
-      const ratingIcons = element.shadowRoot?.querySelectorAll(
-        '[part~="value-rating-icon"]'
-      );
+      const ratingIcons = element.shadowRoot?.querySelectorAll('[part~="value-rating-icon"]');
       expect(ratingIcons!.length).toBeGreaterThan(0);
     });
 
@@ -426,10 +408,7 @@ describe('atomic-rating-facet', () => {
   describe('disconnectedCallback', () => {
     it('should stop watching dependencies when disconnected', async () => {
       mockedFacetConditionsManager = buildFakeFacetConditionsManager({});
-      const stopWatchingSpy = vi.spyOn(
-        mockedFacetConditionsManager,
-        'stopWatching'
-      );
+      const stopWatchingSpy = vi.spyOn(mockedFacetConditionsManager, 'stopWatching');
 
       const {element} = await renderRatingFacet();
       element.remove();

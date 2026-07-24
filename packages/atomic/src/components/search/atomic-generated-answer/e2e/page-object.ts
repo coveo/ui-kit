@@ -6,11 +6,7 @@ interface AtomicCitationElement extends HTMLElement {
   citation?: GeneratedAnswerCitation;
 }
 
-type FeedbackQuestion =
-  | 'correctTopic'
-  | 'hallucinationFree'
-  | 'documented'
-  | 'readable';
+type FeedbackQuestion = 'correctTopic' | 'hallucinationFree' | 'documented' | 'readable';
 
 type FeedbackValue = 'Yes' | 'No' | 'Not Sure';
 
@@ -60,10 +56,7 @@ export class GeneratedAnswerPageObject extends BasePageObject {
     const citationComponent = this.citationComponents.nth(index);
 
     return await citationComponent.evaluate((citationElement) => {
-      return (
-        (citationElement as AtomicCitationElement).citation?.fields?.filetype ??
-        null
-      );
+      return (citationElement as AtomicCitationElement).citation?.fields?.filetype ?? null;
     });
   }
 
@@ -126,9 +119,7 @@ export class GeneratedAnswerPageObject extends BasePageObject {
   }
 
   get feedbackModalSuccessMessageDoneButton() {
-    return this.feedbackModal
-      .locator('button[part="cancel-button"]')
-      .filter({hasText: 'Done'});
+    return this.feedbackModal.locator('button[part="cancel-button"]').filter({hasText: 'Done'});
   }
 
   async selectOption(questionType: FeedbackQuestion, option: FeedbackValue) {
@@ -139,10 +130,7 @@ export class GeneratedAnswerPageObject extends BasePageObject {
 
   async fillAllRequiredOptions(params?: FeedbackParams) {
     await this.selectOption('correctTopic', params?.correctTopic ?? 'Yes');
-    await this.selectOption(
-      'hallucinationFree',
-      params?.hallucinationFree ?? 'Yes'
-    );
+    await this.selectOption('hallucinationFree', params?.hallucinationFree ?? 'Yes');
     await this.selectOption('documented', params?.documented ?? 'Yes');
     await this.selectOption('readable', params?.readable ?? 'Yes');
   }
@@ -150,18 +138,14 @@ export class GeneratedAnswerPageObject extends BasePageObject {
   async waitForModalToOpen() {
     await this.feedbackModal.waitFor({state: 'attached'});
     await this.page.waitForFunction(() => {
-      const modal = document.querySelector(
-        'atomic-generated-answer-feedback-modal'
-      );
+      const modal = document.querySelector('atomic-generated-answer-feedback-modal');
       return modal?.hasAttribute('is-open');
     });
   }
 
   async waitForModalToClose() {
     await this.page.waitForFunction(() => {
-      const modal = document.querySelector(
-        'atomic-generated-answer-feedback-modal'
-      );
+      const modal = document.querySelector('atomic-generated-answer-feedback-modal');
       return !modal?.hasAttribute('is-open');
     });
   }
@@ -174,9 +158,7 @@ export class GeneratedAnswerPageObject extends BasePageObject {
     const evaluationRequest = await this.page.waitForRequest((request) => {
       if (
         request.method() === 'POST' &&
-        /\/rest\/organizations\/.*\/answer\/v1\/configs\/.*\/evaluations/.test(
-          request.url()
-        )
+        /\/rest\/organizations\/.*\/answer\/v1\/configs\/.*\/evaluations/.test(request.url())
       ) {
         const body = request.postDataJSON();
         return body?.helpful === expectedHelpful;
@@ -203,10 +185,7 @@ export class GeneratedAnswerPageObject extends BasePageObject {
 
   async waitForLegacyAnalyticsSearchboxSubmitRequest() {
     const legacyAnalyticsRequest = await this.page.waitForRequest((request) => {
-      if (
-        request.method() === 'POST' &&
-        /\/rest\/v15\/analytics\/search/.test(request.url())
-      ) {
+      if (request.method() === 'POST' && /\/rest\/v15\/analytics\/search/.test(request.url())) {
         const body = request.postDataJSON();
         return body?.actionCause === 'searchboxSubmit';
       }
@@ -218,10 +197,7 @@ export class GeneratedAnswerPageObject extends BasePageObject {
 
   async waitForFollowUpRequest() {
     const followUpRequest = await this.page.waitForRequest((request) => {
-      if (
-        request.method() === 'POST' &&
-        /\/agents\/.*\/follow-up/.test(request.url())
-      ) {
+      if (request.method() === 'POST' && /\/agents\/.*\/follow-up/.test(request.url())) {
         return true;
       }
       return false;
@@ -232,17 +208,12 @@ export class GeneratedAnswerPageObject extends BasePageObject {
 
   async waitForCustomAnalyticsEvent(eventValue: string, answerId?: string) {
     const analyticsRequest = await this.page.waitForRequest((request) => {
-      if (
-        request.method() === 'POST' &&
-        /\/rest\/v15\/analytics\/custom/.test(request.url())
-      ) {
+      if (request.method() === 'POST' && /\/rest\/v15\/analytics\/custom/.test(request.url())) {
         const body = request.postDataJSON();
         if (body?.eventValue !== eventValue) {
           return false;
         }
-        return answerId
-          ? body?.customData?.generativeQuestionAnsweringId === answerId
-          : true;
+        return answerId ? body?.customData?.generativeQuestionAnsweringId === answerId : true;
       }
       return false;
     });
@@ -252,14 +223,10 @@ export class GeneratedAnswerPageObject extends BasePageObject {
 
   async waitForStreamEndAnalyticsRequest() {
     const streamEndRequest = await this.page.waitForRequest((request) => {
-      if (
-        request.method() === 'POST' &&
-        /\/rest\/v15\/analytics\/custom/.test(request.url())
-      ) {
+      if (request.method() === 'POST' && /\/rest\/v15\/analytics\/custom/.test(request.url())) {
         const body = request.postDataJSON();
         return (
-          body?.eventType === 'generatedAnswer' &&
-          body?.eventValue === 'generatedAnswerStreamEnd'
+          body?.eventType === 'generatedAnswer' && body?.eventValue === 'generatedAnswerStreamEnd'
         );
       }
       return false;

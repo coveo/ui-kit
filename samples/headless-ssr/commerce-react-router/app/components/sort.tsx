@@ -8,11 +8,8 @@ export default function Sort() {
     return null;
   }
 
-  const formatSortFieldLabel = (field: {
-    name: string;
-    direction?: string;
-    displayName?: string;
-  }) => field?.displayName ?? `${field.name} ${field.direction ?? ''}`.trim();
+  const formatSortFieldLabel = (field: {name: string; direction?: string; displayName?: string}) =>
+    field?.displayName ?? `${field.name} ${field.direction ?? ''}`.trim();
 
   const getSortLabel = (criterion: SortCriterion) => {
     switch (criterion.by) {

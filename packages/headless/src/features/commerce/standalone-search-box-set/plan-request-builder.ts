@@ -6,8 +6,8 @@ import {
   type StateNeededForBaseCommerceAPIRequest,
 } from '../common/base-commerce-api-request-builder.js';
 
-export type StateNeededForPlanCommerceAPIRequest =
-  StateNeededForBaseCommerceAPIRequest & CommerceQuerySection;
+export type StateNeededForPlanCommerceAPIRequest = StateNeededForBaseCommerceAPIRequest &
+  CommerceQuerySection;
 
 export const buildPlanRequest = (
   state: StateNeededForPlanCommerceAPIRequest,

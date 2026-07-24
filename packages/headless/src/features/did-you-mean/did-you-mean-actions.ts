@@ -1,9 +1,6 @@
 import {StringValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
-import {
-  requiredNonEmptyString,
-  validatePayload,
-} from '../../utils/validate-payload.js';
+import {requiredNonEmptyString, validatePayload} from '../../utils/validate-payload.js';
 import type {CorrectionMode} from './did-you-mean-state.js';
 
 export const enableDidYouMean = createAction('didYouMean/enable');
@@ -18,9 +15,8 @@ export const enableAutomaticQueryCorrection = createAction(
   'didYouMean/automaticCorrections/enable'
 );
 
-export const applyDidYouMeanCorrection = createAction(
-  'didYouMean/correction',
-  (payload: string) => validatePayload(payload, requiredNonEmptyString)
+export const applyDidYouMeanCorrection = createAction('didYouMean/correction', (payload: string) =>
+  validatePayload(payload, requiredNonEmptyString)
 );
 
 export const setCorrectionMode = createAction(

@@ -1,8 +1,4 @@
-import {
-  type AttachedResults,
-  buildAttachedResults,
-  type Result,
-} from '@coveo/headless/insight';
+import {type AttachedResults, buildAttachedResults, type Result} from '@coveo/headless/insight';
 import {html, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {renderIconButton} from '@/src/components/common/icon-button';
@@ -66,8 +62,7 @@ export class AtomicInsightResultAttachToCaseAction
   }
 
   public initialize() {
-    const caseId: string =
-      this.bindings.engine.state.insightCaseContext?.caseId || '';
+    const caseId: string = this.bindings.engine.state.insightCaseContext?.caseId || '';
     this.attachedResults = buildAttachedResults(this.bindings.engine, {
       options: {
         caseId: caseId,
@@ -82,41 +77,33 @@ export class AtomicInsightResultAttachToCaseAction
 
     if (this.attachedResults.isAttached(this.result)) {
       this.dispatchEvent(
-        new CustomEvent<InsightResultAttachToCaseEvent>(
-          'atomic/insight/attachToCase/detach',
-          {
-            bubbles: true,
-            composed: true,
-            cancelable: true,
-            detail: {
-              callback: () => this.attachedResults.detach(this.result!),
-              result: this.result,
-            },
-          }
-        )
+        new CustomEvent<InsightResultAttachToCaseEvent>('atomic/insight/attachToCase/detach', {
+          bubbles: true,
+          composed: true,
+          cancelable: true,
+          detail: {
+            callback: () => this.attachedResults.detach(this.result!),
+            result: this.result,
+          },
+        })
       );
     } else {
       this.dispatchEvent(
-        new CustomEvent<InsightResultAttachToCaseEvent>(
-          'atomic/insight/attachToCase/attach',
-          {
-            bubbles: true,
-            composed: true,
-            cancelable: true,
-            detail: {
-              callback: () => this.attachedResults.attach(this.result!),
-              result: this.result,
-            },
-          }
-        )
+        new CustomEvent<InsightResultAttachToCaseEvent>('atomic/insight/attachToCase/attach', {
+          bubbles: true,
+          composed: true,
+          cancelable: true,
+          detail: {
+            callback: () => this.attachedResults.attach(this.result!),
+            result: this.result,
+          },
+        })
       );
     }
   }
 
   private getIcon() {
-    return this.result && this.attachedResults?.isAttached(this.result)
-      ? DetachIcon
-      : AttachIcon;
+    return this.result && this.attachedResults?.isAttached(this.result) ? DetachIcon : AttachIcon;
   }
 
   private getTooltip() {

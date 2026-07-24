@@ -89,8 +89,7 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
   /**
    * How large or small products should be.
    */
-  @property({reflect: true, type: String}) density: ItemDisplayDensity =
-    'normal';
+  @property({reflect: true, type: String}) density: ItemDisplayDensity = 'normal';
 
   /**
    * The size of the visual section in product list items.
@@ -130,9 +129,7 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
     event.detail(this.product);
   };
 
-  public resolveInteractiveProduct = (
-    event: InteractiveProductContextEvent
-  ) => {
+  public resolveInteractiveProduct = (event: InteractiveProductContextEvent) => {
     event.preventDefault();
     event.stopPropagation();
     if (this.interactiveProduct) {
@@ -144,9 +141,7 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
     event.detail(this.stopPropagation);
   };
 
-  public resolveProductDisplayConfig = (
-    event: ProductContextEvent<DisplayConfig>
-  ) => {
+  public resolveProductDisplayConfig = (event: ProductContextEvent<DisplayConfig>) => {
     event.preventDefault();
     event.stopPropagation();
     event.detail({
@@ -166,9 +161,7 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
 
   public clickLinkContainer = () => {
     this.shadowRoot
-      ?.querySelector<HTMLAnchorElement>(
-        '.link-container > atomic-product-link a:not([slot])'
-      )
+      ?.querySelector<HTMLAnchorElement>('.link-container > atomic-product-link a:not([slot])')
       ?.click();
   };
 
@@ -197,10 +190,7 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
       itemClasses: () => this.classes,
     });
 
-    this.addEventListener(
-      'atomic/resolveResult',
-      this.resolveProduct as EventListener
-    );
+    this.addEventListener('atomic/resolveResult', this.resolveProduct as EventListener);
     this.addEventListener(
       'atomic/resolveInteractiveResult',
       this.resolveInteractiveProduct as EventListener
@@ -222,10 +212,7 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
   public disconnectedCallback() {
     super.disconnectedCallback();
 
-    this.removeEventListener(
-      'atomic/resolveResult',
-      this.resolveProduct as EventListener
-    );
+    this.removeEventListener('atomic/resolveResult', this.resolveProduct as EventListener);
     this.removeEventListener(
       'atomic/resolveInteractiveResult',
       this.resolveInteractiveProduct as EventListener
@@ -243,10 +230,7 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
 
   private getContentHTML() {
     if (!this.content) {
-      console.warn(
-        'atomic-product: content property is undefined. Cannot get content HTML.',
-        this
-      );
+      console.warn('atomic-product: content property is undefined. Cannot get content HTML.', this);
       return '';
     }
     return parentNodeToString(this.content);
@@ -283,9 +267,7 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
     return html`
       <div class=${resultComponentClass}>
         <div
-          class="result-root ${this.itemLayoutController
-            .getCombinedClasses()
-            .join(' ')}"
+          class="result-root ${this.itemLayoutController.getCombinedClasses().join(' ')}"
           .innerHTML=${this.getContentHTML()}
         ></div>
         <div class="link-container" .innerHTML=${this.getLinkHTML()}></div>

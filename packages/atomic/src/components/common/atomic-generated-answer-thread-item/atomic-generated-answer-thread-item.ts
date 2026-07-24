@@ -100,8 +100,7 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
   };
 
   public render() {
-    const isTimelineDotInteractive =
-      !this.disableCollapse && this.showTimelineDot;
+    const isTimelineDotInteractive = !this.disableCollapse && this.showTimelineDot;
     const isTimelineLineInteractive = !this.disableCollapse && !this.hideLine;
     const clampedTitleStyles =
       'display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; max-height: calc(4.5rem + 1px);';
@@ -184,12 +183,8 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
                 <span
                   class=${timelineDotClasses}
                   @click=${isTimelineDotInteractive ? this.toggle : null}
-                  @mouseenter=${isTimelineDotInteractive
-                    ? this.handleDotMouseEnter
-                    : null}
-                  @mouseleave=${isTimelineDotInteractive
-                    ? this.handleDotMouseLeave
-                    : null}
+                  @mouseenter=${isTimelineDotInteractive ? this.handleDotMouseEnter : null}
+                  @mouseleave=${isTimelineDotInteractive ? this.handleDotMouseLeave : null}
                 ></span>
               `
             )}
@@ -216,9 +211,7 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
                 class=${titleButtonClasses}
                 @click=${this.toggle}
               >
-                <span part="thread-item-title" style=${clampedTitleStyles}
-                  >${this.title}</span
-                >
+                <span part="thread-item-title" style=${clampedTitleStyles}>${this.title}</span>
               </button>`,
             () =>
               html`<span

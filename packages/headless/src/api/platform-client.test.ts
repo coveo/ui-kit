@@ -27,8 +27,7 @@ it.each([
     organizationEndpoints: {
       admin: 'https://foo.admin.org.coveo.com',
       analytics: 'https://foo.analytics.org.coveo.com',
-      analyticsNext:
-        'https://foo.analytics.org.coveo.com/rest/organizations/foo/events/v1',
+      analyticsNext: 'https://foo.analytics.org.coveo.com/rest/organizations/foo/events/v1',
       platform: 'https://foo.org.coveo.com',
       search: 'https://foo.org.coveo.com/rest/search/v2',
     },
@@ -39,8 +38,7 @@ it.each([
     organizationEndpoints: {
       admin: 'https://foo.admin.orgdev.coveo.com',
       analytics: 'https://foo.analytics.orgdev.coveo.com',
-      analyticsNext:
-        'https://foo.analytics.orgdev.coveo.com/rest/organizations/foo/events/v1',
+      analyticsNext: 'https://foo.analytics.orgdev.coveo.com/rest/organizations/foo/events/v1',
       platform: 'https://foo.orgdev.coveo.com',
       search: 'https://foo.orgdev.coveo.com/rest/search/v2',
     },
@@ -51,8 +49,7 @@ it.each([
     organizationEndpoints: {
       admin: 'https://foo.admin.orgstg.coveo.com',
       analytics: 'https://foo.analytics.orgstg.coveo.com',
-      analyticsNext:
-        'https://foo.analytics.orgstg.coveo.com/rest/organizations/foo/events/v1',
+      analyticsNext: 'https://foo.analytics.orgstg.coveo.com/rest/organizations/foo/events/v1',
       platform: 'https://foo.orgstg.coveo.com',
       search: 'https://foo.orgstg.coveo.com/rest/search/v2',
     },
@@ -63,8 +60,7 @@ it.each([
     organizationEndpoints: {
       admin: 'https://foo.admin.org.coveo.com',
       analytics: 'https://foo.analytics.org.coveo.com',
-      analyticsNext:
-        'https://foo.analytics.org.coveo.com/rest/organizations/foo/events/v1',
+      analyticsNext: 'https://foo.analytics.org.coveo.com/rest/organizations/foo/events/v1',
       platform: 'https://foo.org.coveo.com',
       search: 'https://foo.org.coveo.com/rest/search/v2',
     },
@@ -75,8 +71,7 @@ it.each([
     organizationEndpoints: {
       admin: 'https://foo.admin.orghipaa.coveo.com',
       analytics: 'https://foo.analytics.orghipaa.coveo.com',
-      analyticsNext:
-        'https://foo.analytics.orghipaa.coveo.com/rest/organizations/foo/events/v1',
+      analyticsNext: 'https://foo.analytics.orghipaa.coveo.com/rest/organizations/foo/events/v1',
       platform: 'https://foo.orghipaa.coveo.com',
       search: 'https://foo.orghipaa.coveo.com/rest/search/v2',
     },
@@ -91,29 +86,14 @@ it.each([
     platform: string;
     search: string;
   };
-}>)(
-  'return the correct #getOrganizationEndpoints()',
-  ({orgId, env, organizationEndpoints}) => {
-    expect(getOrganizationEndpoint(orgId, env, 'admin')).toEqual(
-      organizationEndpoints.admin
-    );
-    expect(getOrganizationEndpoint(orgId, env, 'analytics')).toEqual(
-      organizationEndpoints.analytics
-    );
-    expect(getAnalyticsNextApiBaseUrl(orgId, env)).toEqual(
-      organizationEndpoints.analyticsNext
-    );
-    expect(getOrganizationEndpoint(orgId, env, 'platform')).toEqual(
-      organizationEndpoints.platform
-    );
-    expect(getOrganizationEndpoint(orgId, env)).toEqual(
-      organizationEndpoints.platform
-    );
-    expect(getSearchApiBaseUrl(orgId, env)).toEqual(
-      organizationEndpoints.search
-    );
-  }
-);
+}>)('return the correct #getOrganizationEndpoints()', ({orgId, env, organizationEndpoints}) => {
+  expect(getOrganizationEndpoint(orgId, env, 'admin')).toEqual(organizationEndpoints.admin);
+  expect(getOrganizationEndpoint(orgId, env, 'analytics')).toEqual(organizationEndpoints.analytics);
+  expect(getAnalyticsNextApiBaseUrl(orgId, env)).toEqual(organizationEndpoints.analyticsNext);
+  expect(getOrganizationEndpoint(orgId, env, 'platform')).toEqual(organizationEndpoints.platform);
+  expect(getOrganizationEndpoint(orgId, env)).toEqual(organizationEndpoints.platform);
+  expect(getSearchApiBaseUrl(orgId, env)).toEqual(organizationEndpoints.search);
+});
 
 describe('PlatformClient call', () => {
   let url: string;
@@ -139,9 +119,7 @@ describe('PlatformClient call', () => {
   });
 
   it('should call fetch with the right parameters', async () => {
-    mockFetch.mockReturnValue(
-      Promise.resolve(new Response(JSON.stringify({})))
-    );
+    mockFetch.mockReturnValue(Promise.resolve(new Response(JSON.stringify({}))));
 
     await platformCall();
 
@@ -158,9 +136,7 @@ describe('PlatformClient call', () => {
   });
 
   it('should preprocess the request if a middleware is provided', async () => {
-    mockFetch.mockReturnValue(
-      Promise.resolve(new Response(JSON.stringify({})))
-    );
+    mockFetch.mockReturnValue(Promise.resolve(new Response(JSON.stringify({}))));
     const middleware = (request: PlatformRequestOptions) => {
       return {
         ...request,
@@ -186,9 +162,7 @@ describe('PlatformClient call', () => {
   });
 
   it('should recover if the preprocessRequest throws and should use an untainted request', async () => {
-    mockFetch.mockReturnValue(
-      Promise.resolve(new Response(JSON.stringify({})))
-    );
+    mockFetch.mockReturnValue(Promise.resolve(new Response(JSON.stringify({}))));
     const preprocessRequest: PreprocessRequest = (req) => {
       req.headers = {
         shouldNotExistsOnTheOutgoingRequest: 'foo',
@@ -214,10 +188,7 @@ describe('PlatformClient call', () => {
       requestParams: {q: 'hello', page: 5},
     });
 
-    expect(mockFetch).toHaveBeenCalledWith(
-      url,
-      expect.objectContaining({body: 'q=hello&page=5'})
-    );
+    expect(mockFetch).toHaveBeenCalledWith(url, expect.objectContaining({body: 'q=hello&page=5'}));
   });
 
   it(`when the contentType is www-url-form-encoded and the #requestParams cannot be encoded,
@@ -228,10 +199,7 @@ describe('PlatformClient call', () => {
       requestParams: {q: {}},
     });
 
-    expect(mockFetch).toHaveBeenCalledWith(
-      url,
-      expect.objectContaining({body: ''})
-    );
+    expect(mockFetch).toHaveBeenCalledWith(url, expect.objectContaining({body: ''}));
   });
 
   it('when the contentType is unrecognized, it encodes the request params as JSON', async () => {
@@ -251,10 +219,7 @@ describe('PlatformClient call', () => {
       requestParams: {q: 'hello', page: 5},
     });
 
-    expect(mockFetch).toHaveBeenCalledWith(
-      url,
-      expect.objectContaining({body: 'q=hello&page=5'})
-    );
+    expect(mockFetch).toHaveBeenCalledWith(url, expect.objectContaining({body: 'q=hello&page=5'}));
   });
 
   it('when the method is PUT, #body is used for body', async () => {
@@ -264,10 +229,7 @@ describe('PlatformClient call', () => {
       requestParams: {q: 'hello', page: 5},
     });
 
-    expect(mockFetch).toHaveBeenCalledWith(
-      url,
-      expect.objectContaining({body: 'q=hello&page=5'})
-    );
+    expect(mockFetch).toHaveBeenCalledWith(url, expect.objectContaining({body: 'q=hello&page=5'}));
   });
 
   it('when the method is GET, #body should be absent', async () => {
@@ -296,29 +258,18 @@ describe('PlatformClient call', () => {
     );
   });
 
-  it.each([401, 419])(
-    'when status is %d should return a TokenExpiredError',
-    async (status) => {
-      mockFetch.mockReturnValueOnce(
-        Promise.resolve(new Response(JSON.stringify({}), {status}))
-      );
+  it.each([401, 419])('when status is %d should return a TokenExpiredError', async (status) => {
+    mockFetch.mockReturnValueOnce(Promise.resolve(new Response(JSON.stringify({}), {status})));
 
-      const response = await platformCall();
-      expect(response).toBeInstanceOf(UnauthorizedTokenError);
-    }
-  );
+    const response = await platformCall();
+    expect(response).toBeInstanceOf(UnauthorizedTokenError);
+  });
 
   it('when status is 429 should try exponential backOff', async () => {
     mockFetch
-      .mockReturnValueOnce(
-        Promise.resolve(new Response(JSON.stringify({}), {status: 429}))
-      )
-      .mockReturnValueOnce(
-        Promise.resolve(new Response(JSON.stringify({}), {status: 429}))
-      )
-      .mockReturnValueOnce(
-        Promise.resolve(new Response(JSON.stringify({}), {status: 200}))
-      );
+      .mockReturnValueOnce(Promise.resolve(new Response(JSON.stringify({}), {status: 429})))
+      .mockReturnValueOnce(Promise.resolve(new Response(JSON.stringify({}), {status: 429})))
+      .mockReturnValueOnce(Promise.resolve(new Response(JSON.stringify({}), {status: 200})));
 
     await platformCall();
 
@@ -327,12 +278,9 @@ describe('PlatformClient call', () => {
 
   it('should not throw when backOff rejects with a response', async () => {
     const spy = vi.spyOn(BackOff, 'backOff');
-    const expectedResponse = new Response(
-      JSON.stringify({someProps: 'someValue'}),
-      {
-        status: 429,
-      }
-    );
+    const expectedResponse = new Response(JSON.stringify({someProps: 'someValue'}), {
+      status: 429,
+    });
     spy.mockRejectedValueOnce(expectedResponse);
 
     const response = await platformCall();
@@ -403,12 +351,8 @@ describe('PlatformClient call', () => {
     it('should wait minimum 1s between retries', async () => {
       const startTime = Date.now();
       mockFetch
-        .mockReturnValueOnce(
-          Promise.resolve(new Response(JSON.stringify({}), {status: 429}))
-        )
-        .mockReturnValueOnce(
-          Promise.resolve(new Response(JSON.stringify({}), {status: 200}))
-        );
+        .mockReturnValueOnce(Promise.resolve(new Response(JSON.stringify({}), {status: 429})))
+        .mockReturnValueOnce(Promise.resolve(new Response(JSON.stringify({}), {status: 200})));
 
       await platformCall();
 

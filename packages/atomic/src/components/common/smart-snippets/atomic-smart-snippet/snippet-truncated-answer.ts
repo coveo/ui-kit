@@ -8,9 +8,9 @@ export interface SnippetTruncatedAnswerProps {
   style?: string;
 }
 
-export const renderSnippetTruncatedAnswer: FunctionalComponent<
-  SnippetTruncatedAnswerProps
-> = ({props}) => {
+export const renderSnippetTruncatedAnswer: FunctionalComponent<SnippetTruncatedAnswerProps> = ({
+  props,
+}) => {
   return html`<div part="truncated-answer">
     <atomic-smart-snippet-answer
       exportparts="answer"

@@ -14,9 +14,7 @@ test.describe('atomic-product-text', () => {
         });
         await productText.hydrated.first().waitFor();
 
-        await expect(productText.textContent.first()).toContainText(
-          'Default Text'
-        );
+        await expect(productText.textContent.first()).toContainText('Default Text');
       });
     });
   });
@@ -31,13 +29,10 @@ test.describe('atomic-product-text', () => {
           await productText.hydrated.first().waitFor();
         });
 
-        test(`should highlight the keywords in the ${field}`, async ({
-          productText,
-        }) => {
+        test(`should highlight the keywords in the ${field}`, async ({productText}) => {
           const keywordPattern = /^kayak/i;
 
-          const highlightedText =
-            await productText.highlightedText.allTextContents();
+          const highlightedText = await productText.highlightedText.allTextContents();
 
           highlightedText.forEach((text) => {
             expect(text).toMatch(keywordPattern);
@@ -54,8 +49,7 @@ test.describe('atomic-product-text', () => {
         await productText.hydrated.first().waitFor();
 
         await expect(productText.textContent.first()).toContainText(/kayak/i);
-        const highlightedText =
-          await productText.highlightedText.allTextContents();
+        const highlightedText = await productText.highlightedText.allTextContents();
         expect(highlightedText.length).toEqual(0);
       });
     });
@@ -71,9 +65,7 @@ test.describe('atomic-product-text', () => {
       await expect(productText.textContent.first()).toBeVisible();
     });
 
-    test('should not highlight the keywords in the excerpt', async ({
-      productText,
-    }) => {
+    test('should not highlight the keywords in the excerpt', async ({productText}) => {
       await productText.load({
         args: {field: 'excerpt', 'no-highlight': true},
       });
@@ -81,8 +73,7 @@ test.describe('atomic-product-text', () => {
 
       await expect(productText.textContent.first()).toContainText(/kayak/i);
 
-      const highlightedText =
-        await productText.highlightedText.allTextContents();
+      const highlightedText = await productText.highlightedText.allTextContents();
       await expect(productText.textContent.first()).toContainText(/kayak/i);
       expect(highlightedText).not.toContain(/kayak/i);
     });

@@ -20,7 +20,6 @@ export function defineDidYouMean(
 ): SearchOnlyControllerDefinitionWithoutProps<DidYouMean> {
   return {
     search: true,
-    build: (engine) =>
-      buildSearch(engine, {enableResults: options?.enableResults}).didYouMean(),
+    build: (engine) => buildSearch(engine, {enableResults: options?.enableResults}).didYouMean(),
   };
 }

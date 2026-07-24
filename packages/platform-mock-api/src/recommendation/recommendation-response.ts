@@ -175,8 +175,7 @@ export const baseRecommendationResponse = {
     {
       title: 'Introduction to TypeScript Advanced Types',
       uri: 'https://example.coveo.com/tutorials/typescript-advanced-types',
-      printableUri:
-        'https://example.coveo.com/tutorials/typescript-advanced-types',
+      printableUri: 'https://example.coveo.com/tutorials/typescript-advanced-types',
       clickUri: 'https://example.coveo.com/tutorials/typescript-advanced-types',
       uniqueId: 'tutorial-ts-004',
       excerpt:
@@ -216,8 +215,7 @@ export const baseRecommendationResponse = {
       },
       Title: 'Introduction to TypeScript Advanced Types',
       Uri: 'https://example.coveo.com/tutorials/typescript-advanced-types',
-      PrintableUri:
-        'https://example.coveo.com/tutorials/typescript-advanced-types',
+      PrintableUri: 'https://example.coveo.com/tutorials/typescript-advanced-types',
       ClickUri: 'https://example.coveo.com/tutorials/typescript-advanced-types',
       UniqueId: 'tutorial-ts-004',
       Excerpt:
@@ -327,8 +325,7 @@ export const baseRecommendationResponse = {
     {
       title: 'Understanding React Server Components',
       uri: 'https://example.coveo.com/tutorials/react-server-components',
-      printableUri:
-        'https://example.coveo.com/tutorials/react-server-components',
+      printableUri: 'https://example.coveo.com/tutorials/react-server-components',
       clickUri: 'https://example.coveo.com/tutorials/react-server-components',
       uniqueId: 'tutorial-react-007',
       excerpt:
@@ -368,8 +365,7 @@ export const baseRecommendationResponse = {
       },
       Title: 'Understanding React Server Components',
       Uri: 'https://example.coveo.com/tutorials/react-server-components',
-      PrintableUri:
-        'https://example.coveo.com/tutorials/react-server-components',
+      PrintableUri: 'https://example.coveo.com/tutorials/react-server-components',
       ClickUri: 'https://example.coveo.com/tutorials/react-server-components',
       UniqueId: 'tutorial-react-007',
       Excerpt:

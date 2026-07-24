@@ -14,25 +14,19 @@ vi.mock('@coveo/headless', {spy: true});
 
 describe('atomic-search-box-recent-queries', () => {
   beforeEach(() => {
-    vi.mocked(buildRecentQueriesList).mockReturnValue(
-      buildFakeRecentQueriesList()
-    );
+    vi.mocked(buildRecentQueriesList).mockReturnValue(buildFakeRecentQueriesList());
   });
 
-  const renderElements = async (
-    bindings: {} = {},
-    maxWithoutQuery?: number
-  ) => {
-    const {element, searchBox} =
-      await renderInAtomicSearchBox<AtomicSearchBoxRecentQueries>({
-        template: html`<atomic-search-box-recent-queries
-          max-without-query=${ifDefined(maxWithoutQuery)}
-        ></atomic-search-box-recent-queries>`,
-        selector: 'atomic-search-box-recent-queries',
-        bindings: {
-          ...bindings,
-        },
-      });
+  const renderElements = async (bindings: {} = {}, maxWithoutQuery?: number) => {
+    const {element, searchBox} = await renderInAtomicSearchBox<AtomicSearchBoxRecentQueries>({
+      template: html`<atomic-search-box-recent-queries
+        max-without-query=${ifDefined(maxWithoutQuery)}
+      ></atomic-search-box-recent-queries>`,
+      selector: 'atomic-search-box-recent-queries',
+      bindings: {
+        ...bindings,
+      },
+    });
     return {element, searchBox};
   };
 
@@ -58,9 +52,7 @@ describe('atomic-search-box-recent-queries', () => {
 
     it('should display an error component', async () => {
       await expect
-        .element(
-          page.getByText('atomic-search-box-recent-queries component error')
-        )
+        .element(page.getByText('atomic-search-box-recent-queries component error'))
         .toBeInTheDocument();
     });
   });
@@ -75,9 +67,7 @@ describe('atomic-search-box-recent-queries', () => {
     });
 
     it('should be properly defined as a custom element', () => {
-      expect(
-        customElements.get('atomic-search-box-recent-queries')
-      ).toBeDefined();
+      expect(customElements.get('atomic-search-box-recent-queries')).toBeDefined();
     });
 
     it('should render with default properties', () => {
@@ -102,18 +92,15 @@ describe('atomic-search-box-recent-queries', () => {
     });
 
     it('should dispatch the searchBoxSuggestion/register event', async () => {
-      const event = buildCustomEvent(
-        'atomic/searchBoxSuggestion/register',
-        vi.fn()
-      );
+      const event = buildCustomEvent('atomic/searchBoxSuggestion/register', vi.fn());
       expect(dispatchSpy).toHaveBeenCalledWith(event);
     });
 
     it('should dispatch custom event with buildCustomEvent', () => {
-      const customEvent = buildCustomEvent(
-        'atomic/searchBoxRecentQueries/register',
-        {element, recentQueriesList: expect.any(Object)}
-      );
+      const customEvent = buildCustomEvent('atomic/searchBoxRecentQueries/register', {
+        element,
+        recentQueriesList: expect.any(Object),
+      });
       expect(customEvent).toBeInstanceOf(CustomEvent);
     });
   });

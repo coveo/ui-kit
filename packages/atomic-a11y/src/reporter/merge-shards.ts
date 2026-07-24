@@ -28,17 +28,11 @@ interface MutableAutomatedResults extends Omit<
   criteriaPassed: Set<string>;
 }
 
-interface MutableInteractiveResults extends Omit<
-  A11yInteractiveResults,
-  'criteriaCovered'
-> {
+interface MutableInteractiveResults extends Omit<A11yInteractiveResults, 'criteriaCovered'> {
   criteriaCovered: Set<string>;
 }
 
-interface MutableComponentReport extends Omit<
-  A11yComponentReport,
-  'automated' | 'interactive'
-> {
+interface MutableComponentReport extends Omit<A11yComponentReport, 'automated' | 'interactive'> {
   automated: MutableAutomatedResults;
   interactive?: MutableInteractiveResults;
 }
@@ -51,9 +45,7 @@ interface MutableCriterionReport extends Omit<
   violatingComponents: Set<string>;
 }
 
-function toMutableComponent(
-  component: A11yComponentReport
-): MutableComponentReport {
+function toMutableComponent(component: A11yComponentReport): MutableComponentReport {
   return {
     ...component,
     automated: {
@@ -72,9 +64,7 @@ function toMutableComponent(
   };
 }
 
-function toMutableCriterion(
-  criterion: A11yCriterionReport
-): MutableCriterionReport {
+function toMutableCriterion(criterion: A11yCriterionReport): MutableCriterionReport {
   return {
     ...criterion,
     coveredComponents: new Set(criterion.coveredComponents),
@@ -137,9 +127,7 @@ export function mergeComponents(reports: A11yReport[]): A11yComponentReport[] {
         existing.automated.criteriaPassed.add(criterion);
       }
 
-      existing.automated.incompleteDetails.push(
-        ...component.automated.incompleteDetails
-      );
+      existing.automated.incompleteDetails.push(...component.automated.incompleteDetails);
 
       if (component.interactive) {
         mergeInteractiveResults(existing, component.interactive);
@@ -153,22 +141,14 @@ export function mergeComponents(reports: A11yReport[]): A11yComponentReport[] {
         ...component,
         automated: {
           ...component.automated,
-          criteriaCovered: [...component.automated.criteriaCovered].sort(
-            compareByNumericId
-          ),
-          criteriaViolated: [...component.automated.criteriaViolated].sort(
-            compareByNumericId
-          ),
-          criteriaPassed: [...component.automated.criteriaPassed].sort(
-            compareByNumericId
-          ),
+          criteriaCovered: [...component.automated.criteriaCovered].sort(compareByNumericId),
+          criteriaViolated: [...component.automated.criteriaViolated].sort(compareByNumericId),
+          criteriaPassed: [...component.automated.criteriaPassed].sort(compareByNumericId),
         },
         interactive: component.interactive
           ? {
               ...component.interactive,
-              criteriaCovered: [...component.interactive.criteriaCovered].sort(
-                compareByNumericId
-              ),
+              criteriaCovered: [...component.interactive.criteriaCovered].sort(compareByNumericId),
             }
           : undefined,
       };
@@ -247,8 +227,7 @@ export function mergeCriteria(
 
       inferredCriteriaCount++;
       const metadata = getCriterionMetadata(criterionId);
-      const violating =
-        component.automated.criteriaViolated.includes(criterionId);
+      const violating = component.automated.criteriaViolated.includes(criterionId);
       criteriaById.set(criterionId, {
         id: criterionId,
         name: metadata.name,
@@ -268,10 +247,7 @@ export function mergeCriteria(
         const existing = criteriaById.get(criterionId);
         if (existing) {
           existing.interactiveCoverage = true;
-          existing.interactiveStatus = mergeInteractiveStatus(
-            existing.interactiveStatus,
-            'passed'
-          );
+          existing.interactiveStatus = mergeInteractiveStatus(existing.interactiveStatus, 'passed');
           existing.coveredComponents.add(component.name);
         }
       }
@@ -286,20 +262,13 @@ export function mergeCriteria(
 
   return [...criteriaById.values()]
     .map((criterion): A11yCriterionReport => {
-      const coveredComponents = [...criterion.coveredComponents].sort(
-        compareByName
-      );
-      const violatingComponents = [...criterion.violatingComponents].sort(
-        compareByName
-      );
+      const coveredComponents = [...criterion.coveredComponents].sort(compareByName);
+      const violatingComponents = [...criterion.violatingComponents].sort(compareByName);
       return {
         ...criterion,
         coveredComponents,
         violatingComponents,
-        conformance: resolveMergedConformance(
-          coveredComponents,
-          violatingComponents
-        ),
+        conformance: resolveMergedConformance(coveredComponents, violatingComponents),
       };
     })
     .sort((first, second) => compareByNumericId(first.id, second.id));
@@ -325,10 +294,7 @@ function resolveMergedConformance(
   return 'supports';
 }
 
-function mergeInteractiveStatus(
-  current: 'passed' | undefined,
-  incoming: 'passed'
-): 'passed' {
+function mergeInteractiveStatus(current: 'passed' | undefined, incoming: 'passed'): 'passed' {
   return incoming;
 }
 
@@ -371,9 +337,7 @@ export async function mergeA11yShardReports(
     return null;
   }
 
-  console.log(
-    `[merge-shards] Found ${shardFiles.length} shard files, reading...`
-  );
+  console.log(`[merge-shards] Found ${shardFiles.length} shard files, reading...`);
 
   const shardReports = await readShardReports(shardFiles);
   if (shardReports.length === 0) {
@@ -381,9 +345,7 @@ export async function mergeA11yShardReports(
     return null;
   }
 
-  console.log(
-    `[merge-shards] Loaded ${shardReports.length} valid shard reports, merging...`
-  );
+  console.log(`[merge-shards] Loaded ${shardReports.length} valid shard reports, merging...`);
 
   const components = mergeComponents(shardReports);
   const criteria = mergeCriteria(shardReports, components);
@@ -401,11 +363,7 @@ export async function mergeA11yShardReports(
   };
 
   await mkdir(path.dirname(outputFile), {recursive: true});
-  await writeFile(
-    outputFile,
-    `${JSON.stringify(mergedReport, null, 2)}\n`,
-    'utf8'
-  );
+  await writeFile(outputFile, `${JSON.stringify(mergedReport, null, 2)}\n`, 'utf8');
 
   console.log(
     `[merge-shards] Merged ${components.length} components and ${criteria.length} criteria into ${outputFile}`

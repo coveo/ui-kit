@@ -8,9 +8,7 @@ import type {CoveoFramework} from '../../utils/version.js';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-export interface CoreConfigurationState<
-  Analytics extends CoreAnalyticsState = CoreAnalyticsState,
-> {
+export interface CoreConfigurationState<Analytics extends CoreAnalyticsState = CoreAnalyticsState> {
   /**
    * The access token to use to authenticate requests against the Coveo endpoints. Typically, this will be an API key or search token that grants the privileges to execute queries and push usage analytics data in the target Coveo organization.
    */

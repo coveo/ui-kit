@@ -6,9 +6,7 @@ test.describe('atomic-product-description', async () => {
     await productDescription.hydrated.first().waitFor();
   });
 
-  test('should render description text and the show more button', async ({
-    productDescription,
-  }) => {
+  test('should render description text and the show more button', async ({productDescription}) => {
     await productDescription.hydrated.first().waitFor();
 
     await expect(productDescription.textContent.first()).toBeVisible();

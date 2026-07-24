@@ -10,9 +10,7 @@ export interface BuildCommerceInterfaceOptions {
   id?: string;
 }
 
-export function buildCommerceInterface(
-  options: BuildCommerceInterfaceOptions
-): CommerceInterface {
+export function buildCommerceInterface(options: BuildCommerceInterfaceOptions): CommerceInterface {
   const fullEngine = getFullEngine(options.engine);
   const interfaceId = options.id ?? generateId();
 

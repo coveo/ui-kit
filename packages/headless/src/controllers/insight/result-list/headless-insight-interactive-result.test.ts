@@ -2,10 +2,7 @@ import type {Result} from '../../../api/search/search/result.js';
 import {configuration} from '../../../app/common-reducers.js';
 import {pushRecentResult} from '../../../features/recent-results/recent-results-actions.js';
 import {logDocumentOpen} from '../../../features/result/result-insight-analytics-actions.js';
-import {
-  buildMockInsightEngine,
-  type MockedInsightEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockInsightEngine, type MockedInsightEngine} from '../../../test/mock-engine-v2.js';
 import {buildMockInsightState} from '../../../test/mock-insight-state.js';
 import {buildMockResult} from '../../../test/mock-result.js';
 import {

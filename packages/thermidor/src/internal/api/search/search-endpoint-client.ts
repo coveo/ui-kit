@@ -1,7 +1,4 @@
-import {
-  CoveoSearchEndpointRequest,
-  CoveoSearchEndpointResponse,
-} from './search-endpoint-types.js';
+import {CoveoSearchEndpointRequest, CoveoSearchEndpointResponse} from './search-endpoint-types.js';
 import {executeHttpRequest} from '@/src/internal/api/protocol/http.js';
 import {transformError} from '@/src/internal/api/protocol/error-handling.js';
 import {getOrganizationEndpoint} from '@/src/internal/api/organization-endpoint.js';
@@ -41,18 +38,17 @@ const createCallSearchEndpoint = (): SearchEndpointClient['call'] => {
 
       const url = `${organizationEndpoint}/rest/search/v2?${queryParams}`;
 
-      const httpResponse =
-        await executeHttpRequest<CoveoSearchEndpointResponse>({
-          url,
-          method: 'POST',
-          body: request,
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${accessToken}`,
-            'Coveo-Organization-Id': organizationId,
-          },
-          signal: options?.signal,
-        });
+      const httpResponse = await executeHttpRequest<CoveoSearchEndpointResponse>({
+        url,
+        method: 'POST',
+        body: request,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+          'Coveo-Organization-Id': organizationId,
+        },
+        signal: options?.signal,
+      });
 
       if (!httpResponse.success) {
         return {

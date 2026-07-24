@@ -5,11 +5,7 @@ export async function getHostedPage(
   options: InitializationOptions,
   hostedType: 'trial' | 'builder' | 'code'
 ) {
-  const platformUrl = getOrganizationEndpoint(
-    options.organizationId,
-    options.environment,
-    'admin'
-  );
+  const platformUrl = getOrganizationEndpoint(options.organizationId, options.environment, 'admin');
 
   const paths = {
     builder: {

@@ -25,6 +25,6 @@ const instantResultsOptionDefinitions = {
   cacheTimeout: new NumberValue(),
 };
 
-export const instantResultsOptionsSchema = new Schema<
-  Required<InstantResultOptions>
->(instantResultsOptionDefinitions);
+export const instantResultsOptionsSchema = new Schema<Required<InstantResultOptions>>(
+  instantResultsOptionDefinitions
+);

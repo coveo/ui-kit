@@ -12,20 +12,18 @@ const distRoot = join(packageDir, 'dist');
  */
 function buildAssets() {
   const salesforceDesignSystem = dirname(
-    fileURLToPath(
-      import.meta.resolve('@salesforce-ux/design-system/package.json')
-    )
+    fileURLToPath(import.meta.resolve('@salesforce-ux/design-system/package.json'))
   );
 
-  const salesforceDocTypeIcons = readdirSync(
-    `${salesforceDesignSystem}/assets/icons/doctype`,
-    {recursive: true, withFileTypes: true}
-  ).toSorted((a, b) => a.name.localeCompare(b.name));
+  const salesforceDocTypeIcons = readdirSync(`${salesforceDesignSystem}/assets/icons/doctype`, {
+    recursive: true,
+    withFileTypes: true,
+  }).toSorted((a, b) => a.name.localeCompare(b.name));
 
-  const salesforceStandardIcons = readdirSync(
-    `${salesforceDesignSystem}/assets/icons/standard`,
-    {recursive: true, withFileTypes: true}
-  ).toSorted((a, b) => a.name.localeCompare(b.name));
+  const salesforceStandardIcons = readdirSync(`${salesforceDesignSystem}/assets/icons/standard`, {
+    recursive: true,
+    withFileTypes: true,
+  }).toSorted((a, b) => a.name.localeCompare(b.name));
 
   const assetsDir = join(distRoot, 'assets');
   mkdirSync(assetsDir, {recursive: true});

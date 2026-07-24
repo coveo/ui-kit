@@ -25,8 +25,7 @@ describe('atomic-ipx-result-link', () => {
 
   const locators = {
     getLink: () => page.getByRole('link'),
-    getText: (element: AtomicIpxResultLink) =>
-      element?.querySelector('atomic-result-text'),
+    getText: (element: AtomicIpxResultLink) => element?.querySelector('atomic-result-text'),
   };
 
   const parts = (element: AtomicIpxResultLink) => ({
@@ -54,9 +53,7 @@ describe('atomic-ipx-result-link', () => {
       addPageViewEntryInActionsHistory: vi.fn(() => ({type: 'test-action'})),
     } as unknown as IPXActionsHistoryActionCreators;
 
-    vi.mocked(loadIPXActionsHistoryActions).mockReturnValue(
-      mockActionsHistoryActions
-    );
+    vi.mocked(loadIPXActionsHistoryActions).mockReturnValue(mockActionsHistoryActions);
   });
 
   const renderComponent = async ({
@@ -72,11 +69,8 @@ describe('atomic-ipx-result-link', () => {
   } = {}) => {
     const {element, atomicResult, atomicInterface} =
       await renderInAtomicResult<AtomicIpxResultLink>({
-        template: html`<atomic-ipx-result-link
-          href-template=${ifDefined(props.hrefTemplate)}
-          >${slottedContent
-            ? unsafeHTML(slottedContent)
-            : ''}</atomic-ipx-result-link
+        template: html`<atomic-ipx-result-link href-template=${ifDefined(props.hrefTemplate)}
+          >${slottedContent ? unsafeHTML(slottedContent) : ''}</atomic-ipx-result-link
         >`,
         selector: 'atomic-ipx-result-link',
         result,
@@ -129,16 +123,11 @@ describe('atomic-ipx-result-link', () => {
       const callbackSpy = vi.fn();
       const {atomicResult, element} = await renderComponent();
 
-      atomicResult.addEventListener(
-        'atomic/resolveStopPropagation',
-        (event) => {
-          const customEvent = event as CustomEvent<
-            (stopPropagation: boolean) => void
-          >;
-          callbackSpy(true);
-          customEvent.detail(true);
-        }
-      );
+      atomicResult.addEventListener('atomic/resolveStopPropagation', (event) => {
+        const customEvent = event as CustomEvent<(stopPropagation: boolean) => void>;
+        callbackSpy(true);
+        customEvent.detail(true);
+      });
 
       element.initialize();
 
@@ -149,16 +138,11 @@ describe('atomic-ipx-result-link', () => {
       const callbackSpy = vi.fn();
       const {atomicResult, element} = await renderComponent();
 
-      atomicResult.addEventListener(
-        'atomic/resolveStopPropagation',
-        (event) => {
-          const customEvent = event as CustomEvent<
-            (stopPropagation: boolean) => void
-          >;
-          callbackSpy(false);
-          customEvent.detail(false);
-        }
-      );
+      atomicResult.addEventListener('atomic/resolveStopPropagation', (event) => {
+        const customEvent = event as CustomEvent<(stopPropagation: boolean) => void>;
+        callbackSpy(false);
+        customEvent.detail(false);
+      });
 
       element.initialize();
 
@@ -202,9 +186,9 @@ describe('atomic-ipx-result-link', () => {
 
       await link.click();
 
-      expect(
-        mockActionsHistoryActions.addPageViewEntryInActionsHistory
-      ).toHaveBeenCalledWith('test-permanent-id');
+      expect(mockActionsHistoryActions.addPageViewEntryInActionsHistory).toHaveBeenCalledWith(
+        'test-permanent-id'
+      );
       expect(dispatchSpy).toHaveBeenCalledWith({type: 'test-action'});
     });
 
@@ -222,9 +206,7 @@ describe('atomic-ipx-result-link', () => {
 
       await link.click();
 
-      expect(
-        mockActionsHistoryActions.addPageViewEntryInActionsHistory
-      ).not.toHaveBeenCalled();
+      expect(mockActionsHistoryActions.addPageViewEntryInActionsHistory).not.toHaveBeenCalled();
       expect(dispatchSpy).not.toHaveBeenCalled();
     });
 
@@ -246,14 +228,11 @@ describe('atomic-ipx-result-link', () => {
         } as AnyUnfoldedItem,
       });
 
-      await expect
-        .element(link)
-        .toHaveAttribute('href', 'https://example.com/click');
+      await expect.element(link).toHaveAttribute('href', 'https://example.com/click');
     });
 
     it('should build href from template using result properties', async () => {
-      const templateString =
-        '$' + '{clickUri}' + '?' + 'id=' + '$' + '{raw.urihash}';
+      const templateString = '$' + '{clickUri}' + '?' + 'id=' + '$' + '{raw.urihash}';
       const {link} = await renderComponent({
         props: {hrefTemplate: templateString},
         result: {
@@ -263,9 +242,7 @@ describe('atomic-ipx-result-link', () => {
         } as AnyUnfoldedItem,
       });
 
-      await expect
-        .element(link)
-        .toHaveAttribute('href', 'https://example.com/test?id=hash123');
+      await expect.element(link).toHaveAttribute('href', 'https://example.com/test?id=hash123');
     });
 
     it('should handle complex template with multiple substitutions', async () => {
@@ -382,9 +359,7 @@ describe('atomic-ipx-result-link', () => {
 
       await expect.element(link).toBeInTheDocument();
       await expect.element(link).toHaveAttribute('href', '');
-      expect(warnSpy).toHaveBeenCalledWith(
-        expect.stringContaining('invalid.syntax')
-      );
+      expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('invalid.syntax'));
     });
 
     it('should update href when hrefTemplate property changes', async () => {
@@ -398,9 +373,7 @@ describe('atomic-ipx-result-link', () => {
       element.hrefTemplate = '$' + '{uri}' + '?' + 'new=param';
       await element.updateComplete;
 
-      await expect
-        .element(link)
-        .toHaveAttribute('href', `${mockResult.uri}?new=param`);
+      await expect.element(link).toHaveAttribute('href', `${mockResult.uri}?new=param`);
     });
   });
 });

@@ -24,9 +24,7 @@ export type GetDocumentSuggestionsRequest = BaseParam &
   DebugParam &
   AnalyticsParam;
 
-export const buildGetDocumentSuggestionsRequest = (
-  req: GetDocumentSuggestionsRequest
-) => {
+export const buildGetDocumentSuggestionsRequest = (req: GetDocumentSuggestionsRequest) => {
   const queryStringArguments: Record<string, string> = {};
   if (req.debug) {
     queryStringArguments.debug = '1';

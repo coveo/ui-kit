@@ -91,10 +91,8 @@ export const richResponse = {
       queryPinned: false,
       badgePlacements: [],
       ec_name: 'Slippery',
-      ec_description:
-        'This Blue slipper is made of PET and is perfect for keeping your feet warm.',
-      ec_shortdesc:
-        'This Blue slipper is made of PET and is perfect for keeping your feet warm.',
+      ec_description: 'This Blue slipper is made of PET and is perfect for keeping your feet warm.',
+      ec_shortdesc: 'This Blue slipper is made of PET and is perfect for keeping your feet warm.',
       ec_brand: 'Ecco',
       ec_category: ['Sandals & Shoes', 'Sandals & Shoes|Slippers'],
       ec_thumbnails: [
@@ -652,16 +650,14 @@ export const richResponse = {
       },
       {
         name: 'BuildFacetSelectedValueOverride',
-        description:
-          'Build query overrides based on selected facet selected values',
+        description: 'Build query overrides based on selected facet selected values',
         duration: 0,
         selectedFacets: [],
         createdOverrides: [],
       },
       {
         name: 'AddExistingQueryParametersToGroupByOverride',
-        description:
-          'Add query overrides in the query to each Group By results',
+        description: 'Add query overrides in the query to each Group By results',
         duration: 0,
         queryExpressions: {
           cq: '@source==Sports',
@@ -689,8 +685,7 @@ export const richResponse = {
           in: {
             LogicalIndex: 'default',
             BasicExpression: '@uri',
-            AdvancedExpression:
-              '@uri @objecttype==Product [[@ec_productid] @objecttype==Variant]',
+            AdvancedExpression: '@uri @objecttype==Product [[@ec_productid] @objecttype==Variant]',
             ConstantExpression:
               '@source==Sports @objecttype==Product [[@ec_productid] @objecttype==Variant @source==Sports]',
             FirstResult: 0,
@@ -737,8 +732,7 @@ export const richResponse = {
         children: [
           {
             name: 'FacetSense ML score assigning',
-            description:
-              'Processing facet result: FacetSense ML score assigning',
+            description: 'Processing facet result: FacetSense ML score assigning',
             duration: 0,
             changed: false,
             in: [],
@@ -746,8 +740,7 @@ export const richResponse = {
           },
           {
             name: 'Setting more values available',
-            description:
-              'Processing facet result: Setting more values available',
+            description: 'Processing facet result: Setting more values available',
             duration: 0,
             changed: false,
             in: [],
@@ -755,8 +748,7 @@ export const richResponse = {
           },
           {
             name: 'Apply selection from request',
-            description:
-              'Processing facet result: Apply selection from request',
+            description: 'Processing facet result: Apply selection from request',
             duration: 0,
             changed: false,
             in: [],
@@ -772,8 +764,7 @@ export const richResponse = {
           },
           {
             name: 'Freezing facet values if any',
-            description:
-              'Processing facet result: Freezing facet values if any',
+            description: 'Processing facet result: Freezing facet values if any',
             duration: 0,
             changed: false,
             in: [],
@@ -781,8 +772,7 @@ export const richResponse = {
           },
           {
             name: 'Reordering values based on facet sense',
-            description:
-              'Processing facet result: Reordering values based on facet sense',
+            description: 'Processing facet result: Reordering values based on facet sense',
             duration: 0,
             changed: false,
             in: [],
@@ -790,8 +780,7 @@ export const richResponse = {
           },
           {
             name: 'Retaining selected values based on request',
-            description:
-              'Processing facet result: Retaining selected values based on request',
+            description: 'Processing facet result: Retaining selected values based on request',
             duration: 0,
             changed: false,
             in: [],
@@ -808,8 +797,7 @@ export const richResponse = {
           },
           {
             name: 'Reorder facet values using custom sort',
-            description:
-              'Processing facet result: Reorder facet values using custom sort',
+            description: 'Processing facet result: Reorder facet values using custom sort',
             duration: 0,
             changed: false,
             in: [],
@@ -826,8 +814,7 @@ export const richResponse = {
           },
           {
             name: 'Truncate extra values in request',
-            description:
-              'Processing facet result: Truncate extra values in request',
+            description: 'Processing facet result: Truncate extra values in request',
             duration: 0,
             changed: false,
             in: [],
@@ -835,8 +822,7 @@ export const richResponse = {
           },
           {
             name: 'Reorder facets using index score',
-            description:
-              'Processing facet result: Reorder facets using index score',
+            description: 'Processing facet result: Reorder facets using index score',
             duration: 0,
             changed: false,
             in: [],
@@ -844,8 +830,7 @@ export const richResponse = {
           },
           {
             name: 'Reorder facets using ML score',
-            description:
-              'Processing facet result: Reorder facets using ML score',
+            description: 'Processing facet result: Reorder facets using ML score',
             duration: 0,
             changed: false,
             in: [],

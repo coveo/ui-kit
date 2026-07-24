@@ -13,11 +13,7 @@ export const wrapInInsightResultTemplate = (
 
     const storyResult = story();
 
-    if (
-      storyResult &&
-      typeof storyResult === 'object' &&
-      '_$litType$' in storyResult
-    ) {
+    if (storyResult && typeof storyResult === 'object' && '_$litType$' in storyResult) {
       render(storyResult as TemplateResult, tempContainer);
       templateTag.innerHTML = tempContainer.innerHTML;
     } else {
@@ -27,11 +23,7 @@ export const wrapInInsightResultTemplate = (
     if (includeCodeRoot) {
       templateTag.id = 'code-root';
     }
-    return html`
-      <atomic-insight-result-template
-        >${templateTag}</atomic-insight-result-template
-      >
-    `;
+    return html` <atomic-insight-result-template>${templateTag}</atomic-insight-result-template> `;
   };
 
   return {

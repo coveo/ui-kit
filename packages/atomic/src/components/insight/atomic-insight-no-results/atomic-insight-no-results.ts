@@ -86,8 +86,7 @@ export class AtomicInsightNoResults
       },
       () =>
         renderNoItemsContainer()(html`
-          ${renderMagnifyingGlass()} ${this.renderNoItems()}
-          ${this.renderSearchTips()}
+          ${renderMagnifyingGlass()} ${this.renderNoItems()} ${this.renderSearchTips()}
         `)
     )}`;
   }

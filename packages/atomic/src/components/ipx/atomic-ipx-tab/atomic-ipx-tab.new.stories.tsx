@@ -17,14 +17,8 @@ const meta: Meta = {
   id: 'atomic-ipx-tab',
   render: () => html`<atomic-ipx-tabs>
     <atomic-ipx-tab label="All" expression="" active></atomic-ipx-tab>
-    <atomic-ipx-tab
-      label="Videos"
-      expression="@ytchanneltitle"
-    ></atomic-ipx-tab>
-    <atomic-ipx-tab
-      label="Articles"
-      expression='@documenttype==("WebPage")'
-    ></atomic-ipx-tab>
+    <atomic-ipx-tab label="Videos" expression="@ytchanneltitle"></atomic-ipx-tab>
+    <atomic-ipx-tab label="Articles" expression='@documenttype==("WebPage")'></atomic-ipx-tab>
   </atomic-ipx-tabs>`,
   decorators: [decorator],
   parameters: {

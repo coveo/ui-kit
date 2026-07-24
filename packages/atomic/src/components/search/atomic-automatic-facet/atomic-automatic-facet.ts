@@ -103,8 +103,7 @@ export class AtomicAutomaticFacet
   }
 
   private get numberOfSelectedValues() {
-    return this.facet.state.values.filter((value) => this.isSelected(value))
-      .length;
+    return this.facet.state.values.filter((value) => this.isSelected(value)).length;
   }
 
   private isSelected(value: FacetValue) {
@@ -192,8 +191,7 @@ export class AtomicAutomaticFacet
     }
 
     return renderFacetContainer()(html`
-      ${this.renderHeader()}
-      ${when(!this.isCollapsed, () => this.renderValues())}
+      ${this.renderHeader()} ${when(!this.isCollapsed, () => this.renderValues())}
     `);
   }
 }

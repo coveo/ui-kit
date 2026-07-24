@@ -25,9 +25,7 @@ export class MockCommerceApi implements MockApi {
   readonly facetSearchEndpoint;
 
   constructor(basePath: string = 'https://:orgId.org.coveo.com') {
-    this.searchEndpoint = new EndpointHarness<
-      CommerceSearchResponse | APIErrorWithStatusCode
-    >(
+    this.searchEndpoint = new EndpointHarness<CommerceSearchResponse | APIErrorWithStatusCode>(
       'POST',
       `${basePath}/rest/organizations/:orgId/commerce/v2/search`,
       baseSearchResponse

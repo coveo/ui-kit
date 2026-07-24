@@ -119,13 +119,11 @@ export class AtomicGeneratedAnswerThread extends LitElement {
       this.generatedAnswers.length > MIN_ANSWERS_TO_COLLAPSE &&
       !this.allGeneratedAnswersDisplayed
     ) {
-      const lastGeneratedAnswer =
-        this.generatedAnswers[this.generatedAnswers.length - 1];
+      const lastGeneratedAnswer = this.generatedAnswers[this.generatedAnswers.length - 1];
 
       return html`
         <ul>
-          ${this.renderShowPreviousAnswersButton()}
-          ${this.renderThread([lastGeneratedAnswer])}
+          ${this.renderShowPreviousAnswersButton()} ${this.renderThread([lastGeneratedAnswer])}
         </ul>
       `;
     }
@@ -199,14 +197,10 @@ export class AtomicGeneratedAnswerThread extends LitElement {
     return html`
       <li class="group/title grid min-w-0 grid-cols-[10px_1fr] gap-x-3">
         <div class="row-span-2 flex flex-col items-center">
-          <div
-            class="flex justify-center items-center text-base h-[1lh] my-1.5"
-          >
+          <div class="flex justify-center items-center text-base h-[1lh] my-1.5">
             <span class=${timelineDotClasses}></span>
           </div>
-          <div
-            class="flex grow w-full justify-center items-center py-2 -my-2 min-h-3"
-          >
+          <div class="flex grow w-full justify-center items-center py-2 -my-2 min-h-3">
             <span class=${timelineConnectorClasses}> </span>
           </div>
         </div>

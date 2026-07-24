@@ -2,15 +2,9 @@ import type {Mock} from 'vitest';
 import {logTriggerExecute} from '../../features/triggers/trigger-analytics-actions.js';
 import {triggerReducer as triggers} from '../../features/triggers/triggers-slice.js';
 import type {FunctionExecutionTrigger} from '../../features/triggers/triggers-state.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../test/mock-engine-v2.js';
 import {createMockState} from '../../test/mock-state.js';
-import {
-  buildExecuteTrigger,
-  type ExecuteTrigger,
-} from './headless-execute-trigger.js';
+import {buildExecuteTrigger, type ExecuteTrigger} from './headless-execute-trigger.js';
 
 vi.mock('../../features/triggers/trigger-analytics-actions');
 
@@ -96,9 +90,7 @@ describe('ExecuteTrigger', () => {
     });
 
     it('#state should be updated', () => {
-      expect(executeTrigger.state.executions).toEqual([
-        {functionName: 'function', params: ['hi']},
-      ]);
+      expect(executeTrigger.state.executions).toEqual([{functionName: 'function', params: ['hi']}]);
     });
   });
 

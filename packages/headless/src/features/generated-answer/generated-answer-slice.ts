@@ -36,179 +36,164 @@ import {
 import {getGeneratedAnswerInitialState} from './generated-answer-state.js';
 import {filterOutDuplicatedCitations} from './utils/generated-answer-citation-utils.js';
 
-export const generatedAnswerReducer = createReducer(
-  getGeneratedAnswerInitialState(),
-  (builder) =>
-    builder
-      .addCase(setIsVisible, (state, {payload}) => {
-        state.isVisible = payload;
-      })
-      .addCase(setIsEnabled, (state, {payload}) => {
-        state.isEnabled = payload;
-      })
-      .addCase(setId, (state, {payload}) => {
-        state.id = payload.id;
-      })
-      .addCase(updateMessage, (state, {payload}) => {
-        state.isLoading = false;
-        state.isStreaming = true;
-        delete state.error;
-        const incomingText = payload.textDelta;
-        const hasExistingAnswer = Boolean(state.answer?.trim());
-        const shouldStartAnswer = incomingText.trim().length > 0;
+export const generatedAnswerReducer = createReducer(getGeneratedAnswerInitialState(), (builder) =>
+  builder
+    .addCase(setIsVisible, (state, {payload}) => {
+      state.isVisible = payload;
+    })
+    .addCase(setIsEnabled, (state, {payload}) => {
+      state.isEnabled = payload;
+    })
+    .addCase(setId, (state, {payload}) => {
+      state.id = payload.id;
+    })
+    .addCase(updateMessage, (state, {payload}) => {
+      state.isLoading = false;
+      state.isStreaming = true;
+      delete state.error;
+      const incomingText = payload.textDelta;
+      const hasExistingAnswer = Boolean(state.answer?.trim());
+      const shouldStartAnswer = incomingText.trim().length > 0;
 
-        if (hasExistingAnswer) {
-          state.answer += incomingText;
-          return;
-        }
+      if (hasExistingAnswer) {
+        state.answer += incomingText;
+        return;
+      }
 
-        state.answer = shouldStartAnswer ? incomingText : undefined;
-      })
-      .addCase(updateCitations, (state, {payload}) => {
-        state.isLoading = false;
-        state.isStreaming = true;
-        state.citations = filterOutDuplicatedCitations([
-          ...state.citations,
-          ...payload.citations,
-        ]);
-        delete state.error;
-      })
-      .addCase(updateError, (state, {payload}) => {
-        state.isLoading = false;
-        state.isStreaming = false;
-        state.error = {
-          ...payload,
-          isRetryable: payload.code === RETRYABLE_STREAM_ERROR_CODE,
-        };
-        state.citations = [];
-        delete state.answer;
-      })
-      .addCase(likeGeneratedAnswer, (state) => {
-        state.liked = true;
-        state.disliked = false;
-      })
-      .addCase(dislikeGeneratedAnswer, (state) => {
-        state.liked = false;
-        state.disliked = true;
-      })
-      .addCase(openGeneratedAnswerFeedbackModal, (state) => {
-        state.feedbackModalOpen = true;
-      })
-      .addCase(closeGeneratedAnswerFeedbackModal, (state) => {
-        state.feedbackModalOpen = false;
-      })
-      .addCase(sendGeneratedAnswerFeedback, (state) => {
-        state.feedbackSubmitted = true;
-      })
-      .addCase(resetAnswer, (state) => {
-        return {
-          ...getGeneratedAnswerInitialState(),
-          ...(state.answerConfigurationId
-            ? {answerConfigurationId: state.answerConfigurationId}
-            : {}),
-          responseFormat: state.responseFormat,
-          fieldsToIncludeInCitations: state.fieldsToIncludeInCitations,
-          isVisible: state.isVisible,
-          id: state.id,
-          answerGenerationMode: state.answerGenerationMode,
-        };
-      })
-      .addCase(setIsLoading, (state, {payload}) => {
-        state.isLoading = payload;
-      })
-      .addCase(setIsStreaming, (state, {payload}) => {
-        state.isStreaming = payload;
-      })
-      .addCase(setAnswerContentFormat, (state, {payload}) => {
-        state.answerContentFormat = payload;
-      })
-      .addCase(updateResponseFormat, (state, {payload}) => {
-        state.responseFormat = payload;
-      })
-      .addCase(registerFieldsToIncludeInCitations, (state, action) => {
-        state.fieldsToIncludeInCitations = [
-          ...new Set(state.fieldsToIncludeInCitations.concat(action.payload)),
-        ];
-      })
-      .addCase(setIsAnswerGenerated, (state, {payload}) => {
-        state.isAnswerGenerated = payload;
-      })
-      .addCase(expandGeneratedAnswer, (state) => {
-        state.expanded = true;
-      })
-      .addCase(collapseGeneratedAnswer, (state) => {
-        state.expanded = false;
-      })
-      .addCase(updateAnswerConfigurationId, (state, {payload}) => {
-        state.answerConfigurationId = payload;
-      })
-      .addCase(setCannotAnswer, (state, {payload}) => {
-        state.cannotAnswer = payload;
-      })
-      .addCase(setAnswerApiQueryParams, (state, {payload}) => {
-        state.answerApiQueryParams = payload as AnswerApiQueryParams;
-      })
-      .addCase(setAnswerId, (state, {payload}) => {
-        state.answerId = payload;
-      })
-      .addCase(setAnswerGenerationMode, (state, {payload}) => {
-        state.answerGenerationMode = payload;
-      })
-      .addCase(startStep, (state, {payload}) => {
-        state.generationSteps.push({
-          name: payload.name,
+      state.answer = shouldStartAnswer ? incomingText : undefined;
+    })
+    .addCase(updateCitations, (state, {payload}) => {
+      state.isLoading = false;
+      state.isStreaming = true;
+      state.citations = filterOutDuplicatedCitations([...state.citations, ...payload.citations]);
+      delete state.error;
+    })
+    .addCase(updateError, (state, {payload}) => {
+      state.isLoading = false;
+      state.isStreaming = false;
+      state.error = {
+        ...payload,
+        isRetryable: payload.code === RETRYABLE_STREAM_ERROR_CODE,
+      };
+      state.citations = [];
+      delete state.answer;
+    })
+    .addCase(likeGeneratedAnswer, (state) => {
+      state.liked = true;
+      state.disliked = false;
+    })
+    .addCase(dislikeGeneratedAnswer, (state) => {
+      state.liked = false;
+      state.disliked = true;
+    })
+    .addCase(openGeneratedAnswerFeedbackModal, (state) => {
+      state.feedbackModalOpen = true;
+    })
+    .addCase(closeGeneratedAnswerFeedbackModal, (state) => {
+      state.feedbackModalOpen = false;
+    })
+    .addCase(sendGeneratedAnswerFeedback, (state) => {
+      state.feedbackSubmitted = true;
+    })
+    .addCase(resetAnswer, (state) => {
+      return {
+        ...getGeneratedAnswerInitialState(),
+        ...(state.answerConfigurationId
+          ? {answerConfigurationId: state.answerConfigurationId}
+          : {}),
+        responseFormat: state.responseFormat,
+        fieldsToIncludeInCitations: state.fieldsToIncludeInCitations,
+        isVisible: state.isVisible,
+        id: state.id,
+        answerGenerationMode: state.answerGenerationMode,
+      };
+    })
+    .addCase(setIsLoading, (state, {payload}) => {
+      state.isLoading = payload;
+    })
+    .addCase(setIsStreaming, (state, {payload}) => {
+      state.isStreaming = payload;
+    })
+    .addCase(setAnswerContentFormat, (state, {payload}) => {
+      state.answerContentFormat = payload;
+    })
+    .addCase(updateResponseFormat, (state, {payload}) => {
+      state.responseFormat = payload;
+    })
+    .addCase(registerFieldsToIncludeInCitations, (state, action) => {
+      state.fieldsToIncludeInCitations = [
+        ...new Set(state.fieldsToIncludeInCitations.concat(action.payload)),
+      ];
+    })
+    .addCase(setIsAnswerGenerated, (state, {payload}) => {
+      state.isAnswerGenerated = payload;
+    })
+    .addCase(expandGeneratedAnswer, (state) => {
+      state.expanded = true;
+    })
+    .addCase(collapseGeneratedAnswer, (state) => {
+      state.expanded = false;
+    })
+    .addCase(updateAnswerConfigurationId, (state, {payload}) => {
+      state.answerConfigurationId = payload;
+    })
+    .addCase(setCannotAnswer, (state, {payload}) => {
+      state.cannotAnswer = payload;
+    })
+    .addCase(setAnswerApiQueryParams, (state, {payload}) => {
+      state.answerApiQueryParams = payload as AnswerApiQueryParams;
+    })
+    .addCase(setAnswerId, (state, {payload}) => {
+      state.answerId = payload;
+    })
+    .addCase(setAnswerGenerationMode, (state, {payload}) => {
+      state.answerGenerationMode = payload;
+    })
+    .addCase(startStep, (state, {payload}) => {
+      state.generationSteps.push({
+        name: payload.name,
+        status: 'active',
+        startedAt: payload.startedAt,
+      });
+    })
+    .addCase(finishStep, (state, {payload}) => {
+      const step = state.generationSteps.findLast(
+        (step) => step.name === payload.name && step.status === 'active'
+      );
+      if (step) {
+        step.status = 'completed';
+        step.finishedAt = payload.finishedAt;
+      }
+    })
+    .addCase(startToolCall, (state, {payload}) => {
+      const {toolCallName, toolCallId, startedAt} = payload;
+      const currentActiveStep = state.generationSteps.findLast((step) => step.status === 'active');
+      if (currentActiveStep) {
+        currentActiveStep.toolCalls = currentActiveStep.toolCalls || [];
+        currentActiveStep.toolCalls.push({
+          toolCallName,
+          toolCallId,
+          startedAt,
           status: 'active',
-          startedAt: payload.startedAt,
         });
-      })
-      .addCase(finishStep, (state, {payload}) => {
-        const step = state.generationSteps.findLast(
-          (step) => step.name === payload.name && step.status === 'active'
-        );
-        if (step) {
-          step.status = 'completed';
-          step.finishedAt = payload.finishedAt;
-        }
-      })
-      .addCase(startToolCall, (state, {payload}) => {
-        const {toolCallName, toolCallId, startedAt} = payload;
-        const currentActiveStep = state.generationSteps.findLast(
-          (step) => step.status === 'active'
-        );
-        if (currentActiveStep) {
-          currentActiveStep.toolCalls = currentActiveStep.toolCalls || [];
-          currentActiveStep.toolCalls.push({
-            toolCallName,
-            toolCallId,
-            startedAt,
-            status: 'active',
-          });
-        }
-      })
-      .addCase(toolCallArgs, (state, {payload}) => {
-        const {toolCallId, args, type} = payload;
-        const currentActiveStep = state.generationSteps.findLast(
-          (step) => step.status === 'active'
-        );
-        const toolCall = currentActiveStep?.toolCalls?.find(
-          (call) => call.toolCallId === toolCallId
-        );
-        if (toolCall) {
-          toolCall.toolCallArgs = args;
-          toolCall.type = type === 'search' ? 'search' : 'generic';
-        }
-      })
-      .addCase(finishToolCall, (state, {payload}) => {
-        const {toolCallId, finishedAt} = payload;
-        const currentActiveStep = state.generationSteps.findLast(
-          (step) => step.status === 'active'
-        );
-        const toolCall = currentActiveStep?.toolCalls?.find(
-          (call) => call.toolCallId === toolCallId
-        );
-        if (toolCall) {
-          toolCall.finishedAt = finishedAt;
-          toolCall.status = 'completed';
-        }
-      })
+      }
+    })
+    .addCase(toolCallArgs, (state, {payload}) => {
+      const {toolCallId, args, type} = payload;
+      const currentActiveStep = state.generationSteps.findLast((step) => step.status === 'active');
+      const toolCall = currentActiveStep?.toolCalls?.find((call) => call.toolCallId === toolCallId);
+      if (toolCall) {
+        toolCall.toolCallArgs = args;
+        toolCall.type = type === 'search' ? 'search' : 'generic';
+      }
+    })
+    .addCase(finishToolCall, (state, {payload}) => {
+      const {toolCallId, finishedAt} = payload;
+      const currentActiveStep = state.generationSteps.findLast((step) => step.status === 'active');
+      const toolCall = currentActiveStep?.toolCalls?.find((call) => call.toolCallId === toolCallId);
+      if (toolCall) {
+        toolCall.finishedAt = finishedAt;
+        toolCall.status = 'completed';
+      }
+    })
 );

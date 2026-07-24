@@ -10,9 +10,7 @@ export interface BuildSearchInterfaceOptions {
   id?: string;
 }
 
-export function buildSearchInterface(
-  options: BuildSearchInterfaceOptions
-): SearchInterface {
+export function buildSearchInterface(options: BuildSearchInterfaceOptions): SearchInterface {
   const fullEngine = getFullEngine(options.engine);
   const interfaceId = options.id ?? generateId();
 

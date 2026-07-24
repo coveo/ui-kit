@@ -27,9 +27,7 @@ describe('resource-url-utils', () => {
 
   beforeEach(async () => {
     mockModule = (await import('./resource-url-utils')) as typeof mockModule;
-    mockModule.__mockGetCoveoCdnResourceUrl.mockReturnValue(
-      './mocked-resource-path/'
-    );
+    mockModule.__mockGetCoveoCdnResourceUrl.mockReturnValue('./mocked-resource-path/');
   });
 
   describe('#getResourceUrl', () => {

@@ -39,6 +39,5 @@ export function createProductContextController(
 }
 
 export type ProductContextEvent<T = Product> = ItemContextEvent<T>;
-export type InteractiveProductContextEvent<
-  T extends InteractiveProduct = InteractiveProduct,
-> = InteractiveItemContextEvent<T>;
+export type InteractiveProductContextEvent<T extends InteractiveProduct = InteractiveProduct> =
+  InteractiveItemContextEvent<T>;

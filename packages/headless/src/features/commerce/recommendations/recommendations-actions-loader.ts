@@ -86,9 +86,7 @@ export interface RecommendationsActionCreator {
  * @group Actions
  * @category Recommendations
  */
-export function loadRecommendationsActions(
-  engine: CommerceEngine
-): RecommendationsActionCreator {
+export function loadRecommendationsActions(engine: CommerceEngine): RecommendationsActionCreator {
   engine.addReducers({recommendations});
   return {
     fetchRecommendations,

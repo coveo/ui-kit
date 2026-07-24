@@ -18,20 +18,17 @@ function makeRequest(
       return;
     }
 
-    const req = http.request(
-      {hostname: '127.0.0.1', port: address.port, ...options},
-      (res) => {
-        let data = '';
-        res.on('data', (chunk) => (data += chunk));
-        res.on('end', () =>
-          resolve({
-            statusCode: res.statusCode ?? 0,
-            headers: res.headers,
-            body: data,
-          })
-        );
-      }
-    );
+    const req = http.request({hostname: '127.0.0.1', port: address.port, ...options}, (res) => {
+      let data = '';
+      res.on('data', (chunk) => (data += chunk));
+      res.on('end', () =>
+        resolve({
+          statusCode: res.statusCode ?? 0,
+          headers: res.headers,
+          body: data,
+        })
+      );
+    });
 
     req.on('error', reject);
     if (body) {
@@ -47,9 +44,7 @@ describe('createMockConverseServer', () => {
   const startServer = async () => {
     const app = createMockConverseServer();
     server = app.listen(0);
-    await new Promise<void>((resolve) =>
-      server.once('listening', () => resolve())
-    );
+    await new Promise<void>((resolve) => server.once('listening', () => resolve()));
   };
 
   afterEach(async () => {

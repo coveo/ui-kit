@@ -34,15 +34,14 @@ describe('atomic-generated-answer-feedback-modal', () => {
   }: RenderFeedbackModalOptions = {}) => {
     mockedGeneratedAnswer = buildFakeGeneratedAnswer();
 
-    const {element} =
-      await renderInAtomicSearchInterface<AtomicGeneratedAnswerFeedbackModal>({
-        template: html`<atomic-generated-answer-feedback-modal
-          .isOpen=${isOpen}
-          .helpful=${helpful}
-          .generatedAnswer=${mockedGeneratedAnswer}
-        ></atomic-generated-answer-feedback-modal>`,
-        selector: 'atomic-generated-answer-feedback-modal',
-      });
+    const {element} = await renderInAtomicSearchInterface<AtomicGeneratedAnswerFeedbackModal>({
+      template: html`<atomic-generated-answer-feedback-modal
+        .isOpen=${isOpen}
+        .helpful=${helpful}
+        .generatedAnswer=${mockedGeneratedAnswer}
+      ></atomic-generated-answer-feedback-modal>`,
+      selector: 'atomic-generated-answer-feedback-modal',
+    });
 
     return {
       element,
@@ -52,25 +51,13 @@ describe('atomic-generated-answer-feedback-modal', () => {
       },
       parts: {
         get modalHeader() {
-          return (
-            element.shadowRoot?.querySelector<HTMLElement>(
-              '[part="modal-header"]'
-            ) ?? null
-          );
+          return element.shadowRoot?.querySelector<HTMLElement>('[part="modal-header"]') ?? null;
         },
         get form() {
-          return (
-            element.shadowRoot?.querySelector<HTMLFormElement>(
-              '[part="form"]'
-            ) ?? null
-          );
+          return element.shadowRoot?.querySelector<HTMLFormElement>('[part="form"]') ?? null;
         },
         get modalFooter() {
-          return (
-            element.shadowRoot?.querySelector<HTMLElement>(
-              '[part="modal-footer"]'
-            ) ?? null
-          );
+          return element.shadowRoot?.querySelector<HTMLElement>('[part="modal-footer"]') ?? null;
         },
       },
     };
@@ -124,9 +111,7 @@ describe('atomic-generated-answer-feedback-modal', () => {
 
       expect(parts.modalHeader).toHaveAttribute('slot', 'header');
 
-      const closeButton = element.shadowRoot?.querySelector(
-        '[part="close-button"]'
-      );
+      const closeButton = element.shadowRoot?.querySelector('[part="close-button"]');
       expect(closeButton?.closest('[slot="header-actions"]')).not.toBeNull();
       expect(closeButton?.closest('[slot="header"]')).toBeNull();
     });
@@ -260,12 +245,9 @@ describe('atomic-generated-answer-feedback-modal', () => {
     it('should render radio buttons for each feedback category and option', async () => {
       const {element} = await renderFeedbackModal({isOpen: true});
 
-      const radioButtons = element.shadowRoot?.querySelectorAll(
-        'input[type="radio"]'
-      );
+      const radioButtons = element.shadowRoot?.querySelectorAll('input[type="radio"]');
 
-      const expectedCount =
-        FEEDBACK_CATEGORIES.length * FEEDBACK_OPTIONS.length;
+      const expectedCount = FEEDBACK_CATEGORIES.length * FEEDBACK_OPTIONS.length;
       expect(radioButtons?.length).toBe(expectedCount);
 
       for (const category of FEEDBACK_CATEGORIES) {
@@ -310,9 +292,7 @@ describe('atomic-generated-answer-feedback-modal', () => {
     // This test was added to catch a specific bug where toggling radio button selection would cause a DOMTokenList error due to class manipulation on the radio buttons.
     it('should not cause DOMTokenList error when toggling selection', async () => {
       const {element} = await renderFeedbackModal({isOpen: true});
-      const consoleErrorSpy = vi
-        .spyOn(console, 'error')
-        .mockImplementation(() => {});
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
       const radioButtons = element.shadowRoot?.querySelectorAll(
         'input[type="radio"]'
@@ -414,10 +394,9 @@ describe('atomic-generated-answer-feedback-modal', () => {
 
       element.isOpen = true;
 
-      const newTextarea =
-        element.shadowRoot?.querySelector<HTMLTextAreaElement>(
-          'textarea[name="answer-details"]'
-        );
+      const newTextarea = element.shadowRoot?.querySelector<HTMLTextAreaElement>(
+        'textarea[name="answer-details"]'
+      );
       expect(newTextarea?.value).toBe('');
     });
   });

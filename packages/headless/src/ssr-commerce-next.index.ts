@@ -96,10 +96,7 @@ export type {
   InteractiveProductProps,
 } from './controllers/commerce/core/interactive-product/headless-core-interactive-product.js';
 //#region Controllers
-export type {
-  Controller,
-  Subscribable,
-} from './controllers/controller/headless-controller.js';
+export type {Controller, Subscribable} from './controllers/controller/headless-controller.js';
 export type {
   BreadcrumbManager,
   BreadcrumbManagerDefinition,
@@ -364,26 +361,16 @@ export {buildResultTemplatesManager} from './features/result-templates/result-te
 export {getCommerceApiBaseUrl} from './api/commerce/commerce-api-client.js';
 // Types & Helpers
 // TODO KIT-3462: add export commerce SSR parameter serializer
-export type {
-  BaseProduct,
-  ChildProduct,
-  Product,
-} from './api/commerce/common/product.js';
+export type {BaseProduct, ChildProduct, Product} from './api/commerce/common/product.js';
 export type {Result, SpotlightContent} from './api/commerce/common/result.js';
 export {ResultType} from './api/commerce/common/result.js';
-export {
-  getAnalyticsNextApiBaseUrl,
-  getOrganizationEndpoint,
-} from './api/platform-client.js';
+export {getAnalyticsNextApiBaseUrl, getOrganizationEndpoint} from './api/platform-client.js';
 export type {
   RelativeDate,
   RelativeDatePeriod,
   RelativeDateUnit,
 } from './api/search/date/relative-date.js';
-export {
-  deserializeRelativeDate,
-  validateRelativeDate,
-} from './api/search/date/relative-date.js';
+export {deserializeRelativeDate, validateRelativeDate} from './api/search/date/relative-date.js';
 export {buildParameterSerializer} from './features/commerce/parameters/parameters-serializer.ssr.js';
 export {ProductTemplatesHelpers} from './features/commerce/product-templates/product-templates-helpers.js';
 export type {

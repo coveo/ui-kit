@@ -29,8 +29,7 @@ const templateEvents = {
   response8: response8Events,
 } satisfies Record<TemplateId, ConverseEvent[]>;
 
-const getTemplateEvents = (templateId: TemplateId): ConverseEvent[] =>
-  templateEvents[templateId];
+const getTemplateEvents = (templateId: TemplateId): ConverseEvent[] => templateEvents[templateId];
 
 export {getTemplateEvents, templateEvents};
 export type {TemplateId};

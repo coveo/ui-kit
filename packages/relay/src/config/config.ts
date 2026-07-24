@@ -47,12 +47,7 @@ export interface ConfigManager {
   update: (updatedConfig: Partial<RelayConfig>) => void;
 }
 
-function pick({
-  url,
-  token,
-  trackingId,
-  ...rest
-}: RelayConfig): Readonly<RelayConfig> {
+function pick({url, token, trackingId, ...rest}: RelayConfig): Readonly<RelayConfig> {
   return Object.freeze({
     url,
     token,
@@ -63,9 +58,7 @@ function pick({
   });
 }
 
-export function createConfigManager(
-  initialConfig: RelayConfig
-): Readonly<ConfigManager> {
+export function createConfigManager(initialConfig: RelayConfig): Readonly<ConfigManager> {
   let _config: Readonly<RelayConfig> = pick(initialConfig);
 
   return {

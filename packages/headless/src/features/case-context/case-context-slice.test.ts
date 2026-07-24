@@ -1,8 +1,4 @@
-import {
-  setCaseContext,
-  setCaseId,
-  setCaseNumber,
-} from './case-context-actions.js';
+import {setCaseContext, setCaseId, setCaseNumber} from './case-context-actions.js';
 import {caseContextReducer} from './case-context-slice.js';
 
 describe('case context slice', () => {
@@ -21,9 +17,7 @@ describe('case context slice', () => {
     });
 
     it('when the payload is not an object, the action contains an error', () => {
-      const payload = setCaseContext(
-        undefined as unknown as Record<string, string>
-      );
+      const payload = setCaseContext(undefined as unknown as Record<string, string>);
       expect('error' in payload).toBe(true);
     });
 

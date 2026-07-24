@@ -57,9 +57,7 @@ describe('ProductTemplateController', () => {
       const linkElement = controller.getLinkTemplateElement(controller.host);
 
       expect(linkElement).toBeInstanceOf(HTMLTemplateElement);
-      expect(linkElement.innerHTML).toBe(
-        '<atomic-product-link></atomic-product-link>'
-      );
+      expect(linkElement.innerHTML).toBe('<atomic-product-link></atomic-product-link>');
     });
 
     it('should use custom link template when provided', async () => {
@@ -74,9 +72,7 @@ describe('ProductTemplateController', () => {
 
       const linkElement = element.controller.getLinkTemplateElement(element);
 
-      expect(linkElement.innerHTML.trim()).toBe(
-        '<custom-product-link></custom-product-link>'
-      );
+      expect(linkElement.innerHTML.trim()).toBe('<custom-product-link></custom-product-link>');
     });
   });
 });

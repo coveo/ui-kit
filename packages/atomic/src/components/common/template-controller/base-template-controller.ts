@@ -15,9 +15,7 @@ interface Template<TCondition> {
   priority: number;
 }
 
-export abstract class BaseTemplateController<
-  TCondition,
-> implements ReactiveController {
+export abstract class BaseTemplateController<TCondition> implements ReactiveController {
   private static readonly ERRORS = {
     invalidParent: (tagName: string, validParents: string[]) =>
       `The "${tagName}" component has to be the child of one of the following: ${validParents
@@ -25,8 +23,7 @@ export abstract class BaseTemplateController<
         .join(', ')}.`,
     missingTemplate: (tagName: string) =>
       `The "${tagName}" component must contain a "template" element as a child.`,
-    emptyTemplate: (tagName: string) =>
-      `The "template" tag inside "${tagName}" cannot be empty.`,
+    emptyTemplate: (tagName: string) => `The "template" tag inside "${tagName}" cannot be empty.`,
   };
 
   private gridCellLinkTarget?: ItemTarget;
@@ -53,9 +50,7 @@ export abstract class BaseTemplateController<
 
   protected abstract getDefaultLinkTemplateElement(): HTMLTemplateElement;
 
-  protected getBaseTemplate(
-    conditions: TCondition[]
-  ): Template<TCondition> | null {
+  protected getBaseTemplate(conditions: TCondition[]): Template<TCondition> | null {
     if (this.host.error) {
       return null;
     }
@@ -95,33 +90,22 @@ export abstract class BaseTemplateController<
 
     if (!hasValidParent) {
       this.setError(
-        new Error(
-          BaseTemplateController.ERRORS.invalidParent(
-            tagName,
-            this.validParents
-          )
-        )
+        new Error(BaseTemplateController.ERRORS.invalidParent(tagName, this.validParents))
       );
       return;
     }
 
     if (this.parentAttr('display') === 'grid') {
-      this.gridCellLinkTarget = this.parentAttr(
-        'grid-cell-link-target'
-      ) as ItemTarget;
+      this.gridCellLinkTarget = this.parentAttr('grid-cell-link-target') as ItemTarget;
     }
 
     if (!this.template) {
-      this.setError(
-        new Error(BaseTemplateController.ERRORS.missingTemplate(tagName))
-      );
+      this.setError(new Error(BaseTemplateController.ERRORS.missingTemplate(tagName)));
       return;
     }
 
     if (!this.allowEmpty && !this.template.innerHTML.trim()) {
-      this.setError(
-        new Error(BaseTemplateController.ERRORS.emptyTemplate(tagName))
-      );
+      this.setError(new Error(BaseTemplateController.ERRORS.emptyTemplate(tagName)));
       return;
     }
 
@@ -131,9 +115,7 @@ export abstract class BaseTemplateController<
       console.warn(warnings.scriptTag, this.host);
     }
 
-    const {section, other} = this.groupNodesByType(
-      this.template.content.childNodes
-    );
+    const {section, other} = this.groupNodesByType(this.template.content.childNodes);
 
     if (section?.length && other?.length) {
       console.warn(warnings.sectionMix, this.host, {
@@ -153,15 +135,11 @@ export abstract class BaseTemplateController<
   }
 
   private getTemplateElement() {
-    return this.host.querySelector<HTMLTemplateElement>(
-      'template:not([slot])'
-    )!;
+    return this.host.querySelector<HTMLTemplateElement>('template:not([slot])')!;
   }
 
   private groupNodesByType(nodes: NodeList) {
-    return aggregate(Array.from(nodes), (node) =>
-      this.getTemplateNodeType(node)
-    );
+    return aggregate(Array.from(nodes), (node) => this.getTemplateNodeType(node));
   }
 
   private getTemplateNodeType(
@@ -173,10 +151,7 @@ export abstract class BaseTemplateController<
     if (!isVisualNode(node)) {
       return 'metadata';
     }
-    if (
-      isElementNode(node) &&
-      node.tagName.toLowerCase() === tableElementTagName
-    ) {
+    if (isElementNode(node) && node.tagName.toLowerCase() === tableElementTagName) {
       return 'table-column-definition';
     }
     return 'other';

@@ -68,8 +68,6 @@ describe('category facet set insight analytics actions', () => {
     };
 
     expect(mockLogBreadcrumbFacet).toHaveBeenCalledTimes(1);
-    expect(mockLogBreadcrumbFacet.mock.calls[0][0]).toStrictEqual(
-      expectedPayload
-    );
+    expect(mockLogBreadcrumbFacet.mock.calls[0][0]).toStrictEqual(expectedPayload);
   });
 });

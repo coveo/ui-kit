@@ -199,9 +199,7 @@ export class AtomicCommerceProductList
    *
    * @param productRenderingFunction
    */
-  public async setRenderFunction(
-    productRenderingFunction: ItemRenderingFunction
-  ) {
+  public async setRenderFunction(productRenderingFunction: ItemRenderingFunction) {
     this.itemRenderingFunction = productRenderingFunction;
   }
 
@@ -220,10 +218,7 @@ export class AtomicCommerceProductList
   public disconnectedCallback(): void {
     super.disconnectedCallback();
     this.unsubscribeSummary?.();
-    this.removeEventListener(
-      'atomic/selectChildProduct',
-      this.selectChildProductCallback
-    );
+    this.removeEventListener('atomic/selectChildProduct', this.selectChildProductCallback);
   }
   public async updated(changedProperties: Map<string, unknown>) {
     super.updated(changedProperties);
@@ -350,9 +345,7 @@ export class AtomicCommerceProductList
   private initProductTemplateProvider() {
     this.productTemplateProvider = new ProductTemplateProvider({
       includeDefaultTemplate: true,
-      templateElements: Array.from(
-        this.querySelectorAll('atomic-product-template')
-      ),
+      templateElements: Array.from(this.querySelectorAll('atomic-product-template')),
       getResultTemplateRegistered: () => this.resultTemplateRegistered,
       getTemplateHasError: () => this.templateHasError,
       setResultTemplateRegistered: (value: boolean) => {
@@ -377,16 +370,12 @@ export class AtomicCommerceProductList
   }
 
   private createSelectChildProductListener() {
-    this.addEventListener(
-      'atomic/selectChildProduct',
-      this.selectChildProductCallback
-    );
+    this.addEventListener('atomic/selectChildProduct', this.selectChildProductCallback);
   }
 
   private selectChildProductCallback(event: Event) {
     event.stopPropagation();
-    const child = (event as CustomEvent<SelectChildProductEventArgs>).detail
-      .child;
+    const child = (event as CustomEvent<SelectChildProductEventArgs>).detail.child;
     this.searchOrListing.promoteChildToParent(child);
   }
 
@@ -432,9 +421,7 @@ export class AtomicCommerceProductList
             .interactiveProduct=${this.searchOrListing.interactiveProduct({
               options: {product},
             })}
-            .linkContent=${this.productTemplateProvider.getLinkTemplateContent(
-              product
-            )}
+            .linkContent=${this.productTemplateProvider.getLinkTemplateContent(product)}
             .loadingFlag=${this.loadingFlag}
             .product=${product}
             .renderingFunction=${this.itemRenderingFunction}
@@ -468,9 +455,7 @@ export class AtomicCommerceProductList
           .interactiveProduct=${this.searchOrListing.interactiveProduct({
             options: {product},
           })}
-          .linkContent=${this.productTemplateProvider.getLinkTemplateContent(
-            product
-          )}
+          .linkContent=${this.productTemplateProvider.getLinkTemplateContent(product)}
           .loadingFlag=${this.loadingFlag}
           .product=${product}
           .renderingFunction=${this.itemRenderingFunction}
@@ -529,12 +514,10 @@ export class AtomicCommerceProductList
                         .density=${this.density}
                         .display=${this.display}
                         .imageSize=${this.imageSize}
-                        .interactiveProduct=${this.searchOrListing.interactiveProduct(
-                          {options: {product}}
-                        )}
-                        .linkContent=${this.productTemplateProvider.getLinkTemplateContent(
-                          product
-                        )}
+                        .interactiveProduct=${this.searchOrListing.interactiveProduct({
+                          options: {product},
+                        })}
+                        .linkContent=${this.productTemplateProvider.getLinkTemplateContent(product)}
                         .loadingFlag=${this.loadingFlag}
                         .product=${product}
                         .store=${this.bindings.store as never}

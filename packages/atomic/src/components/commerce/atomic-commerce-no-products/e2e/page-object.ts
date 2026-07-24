@@ -11,18 +11,14 @@ export class NoProductsPageObject extends BasePageObject {
   }
 
   ariaLive(query?: string) {
-    const text = query
-      ? `We couldn't find any product for ${query}`
-      : 'No products';
+    const text = query ? `We couldn't find any product for ${query}` : 'No products';
 
     return this.page.getByRole('status').filter({hasText: text});
   }
 
   message(query?: string) {
     return this.page.locator('[part="no-results"]', {
-      hasText: query
-        ? `We couldn't find any product for “${query}”`
-        : 'No products',
+      hasText: query ? `We couldn't find any product for “${query}”` : 'No products',
     });
   }
 }

@@ -92,9 +92,7 @@ export class FacetList extends LitElement {
   }
 
   render() {
-    const facets = (this.generator?.facets ?? []).filter(
-      (facet) => facet.type === 'regular'
-    );
+    const facets = (this.generator?.facets ?? []).filter((facet) => facet.type === 'regular');
 
     return html`
       ${facets.map(
@@ -117,11 +115,7 @@ export class FacetList extends LitElement {
               )}
             </div>
             ${facet.state.hasActiveValues
-              ? html`<button
-                  type="button"
-                  class="clear"
-                  @click=${() => facet.deselectAll()}
-                >
+              ? html`<button type="button" class="clear" @click=${() => facet.deselectAll()}>
                   Clear
                 </button>`
               : nothing}

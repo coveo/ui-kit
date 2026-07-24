@@ -1,11 +1,5 @@
 import {cancel, isCancel, select, text} from '@clack/prompts';
-import {
-  getTemplates,
-  LIBRARIES,
-  LIBRARY_ORDER,
-  type Library,
-  type Template,
-} from './templates.js';
+import {getTemplates, LIBRARIES, LIBRARY_ORDER, type Library, type Template} from './templates.js';
 
 export interface Choice<Value extends string = string> {
   label: string;
@@ -13,16 +7,14 @@ export interface Choice<Value extends string = string> {
   hint?: string;
 }
 
-export function buildLibraryChoices(
-  templates: Template[] = getTemplates()
-): Choice<Library>[] {
-  return LIBRARY_ORDER.filter((library) =>
-    templates.some((t) => t.library === library)
-  ).map((library) => ({
-    value: library,
-    label: LIBRARIES[library].label,
-    hint: LIBRARIES[library].hint,
-  }));
+export function buildLibraryChoices(templates: Template[] = getTemplates()): Choice<Library>[] {
+  return LIBRARY_ORDER.filter((library) => templates.some((t) => t.library === library)).map(
+    (library) => ({
+      value: library,
+      label: LIBRARIES[library].label,
+      hint: LIBRARIES[library].hint,
+    })
+  );
 }
 
 export function buildTemplateChoices(templates: Template[]): Choice[] {
@@ -69,15 +61,12 @@ export async function selectTemplate(): Promise<Template> {
   return template;
 }
 
-export async function promptProjectName(
-  defaultName = 'my-coveo-app'
-): Promise<string> {
+export async function promptProjectName(defaultName = 'my-coveo-app'): Promise<string> {
   const value = await text({
     message: 'Project name:',
     placeholder: defaultName,
     defaultValue: defaultName,
-    validate: (v) =>
-      !v || v.trim().length > 0 ? undefined : 'Please enter a project name.',
+    validate: (v) => (!v || v.trim().length > 0 ? undefined : 'Please enter a project name.'),
   });
   handleCancel(value);
   return value.trim();

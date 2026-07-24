@@ -29,8 +29,7 @@ function buildParameters(params: QueryExtensionParameters) {
   return Object.entries(params)
     .map((entry) => {
       const [name, value] = entry;
-      const formatted =
-        typeof value === 'string' ? value : value.toQuerySyntax();
+      const formatted = typeof value === 'string' ? value : value.toQuerySyntax();
       return `${name}: ${formatted}`;
     })
     .join(', ');

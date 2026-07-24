@@ -65,10 +65,7 @@ import {sortByDocumentPosition} from '@/src/utils/utils';
 @customElement('atomic-ipx-refine-modal')
 @bindings()
 @withTailwindStyles
-export class AtomicIpxRefineModal
-  extends LitElement
-  implements InitializableComponent<Bindings>
-{
+export class AtomicIpxRefineModal extends LitElement implements InitializableComponent<Bindings> {
   static styles: CSSResultGroup = [
     css`
       @reference '../../../utils/tailwind.global.tw.css';
@@ -154,9 +151,9 @@ export class AtomicIpxRefineModal
     divSlot.setAttribute('slot', 'facets');
     this.addFacetColumnStyling(divSlot);
 
-    const facets = (
-      this.bindings.store.getFacetElements() as BaseFacetElement[]
-    ).sort(sortByDocumentPosition);
+    const facets = (this.bindings.store.getFacetElements() as BaseFacetElement[]).sort(
+      sortByDocumentPosition
+    );
     const clonedFacets = this.cloneFacets(facets);
 
     collapseFacetsAfter(clonedFacets, this.collapseFacetsAfter);
@@ -171,9 +168,7 @@ export class AtomicIpxRefineModal
       clone.classList.remove(popoverClass);
       clone.setAttribute(isRefineModalFacet, '');
       clone.isCollapsed =
-        this.collapseFacetsAfter === -1
-          ? false
-          : i + 1 > this.collapseFacetsAfter;
+        this.collapseFacetsAfter === -1 ? false : i + 1 > this.collapseFacetsAfter;
       return clone;
     });
   }
@@ -229,9 +224,7 @@ export class AtomicIpxRefineModal
         boundary: 'element',
         scope: this.bindings.interfaceElement,
       },
-    })(
-      renderRefineModalBody(this.bindings.i18n)(html`${this.renderFilters()}`)
-    )}`;
+    })(renderRefineModalBody(this.bindings.i18n)(html`${this.renderFilters()}`))}`;
   }
 }
 

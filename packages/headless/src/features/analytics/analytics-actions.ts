@@ -35,9 +35,7 @@ export interface LogSearchEventActionCreatorPayload {
   meta?: Record<string, unknown>;
 }
 
-export const logSearchEvent = (
-  p: LogSearchEventActionCreatorPayload
-): LegacySearchAction =>
+export const logSearchEvent = (p: LogSearchEventActionCreatorPayload): LegacySearchAction =>
   makeAnalyticsAction('analytics/generic/search', (client) => {
     validateEvent(p);
     const {evt, meta} = p;
@@ -61,9 +59,7 @@ export interface LogClickEventActionCreatorPayload {
   meta?: Record<string, unknown>;
 }
 
-export const logClickEvent = (
-  p: LogClickEventActionCreatorPayload
-): ClickAction =>
+export const logClickEvent = (p: LogClickEventActionCreatorPayload): ClickAction =>
   makeAnalyticsAction('analytics/generic/click', (client, state) => {
     validateResultPayload(p.result);
     validateEvent(p);
@@ -91,9 +87,7 @@ export interface LogCustomEventActionCreatorPayload {
   meta?: Record<string, unknown>;
 }
 
-export const logCustomEvent = (
-  p: LogCustomEventActionCreatorPayload
-): CustomAction =>
+export const logCustomEvent = (p: LogCustomEventActionCreatorPayload): CustomAction =>
   makeAnalyticsAction('analytics/generic/custom', (client) => {
     validateEvent(p);
     return client.makeCustomEventWithType(p.evt, p.type, p.meta);
@@ -101,9 +95,7 @@ export const logCustomEvent = (
 
 //TODO: KIT-2859
 export const logInterfaceLoad = (): LegacySearchAction =>
-  makeAnalyticsAction('analytics/interface/load', (client) =>
-    client.makeInterfaceLoad()
-  );
+  makeAnalyticsAction('analytics/interface/load', (client) => client.makeInterfaceLoad());
 
 //TODO: KIT-2859
 export const logInterfaceChange = (): LegacySearchAction =>
@@ -120,9 +112,7 @@ export const logSearchFromLink = (): LegacySearchAction =>
   );
 
 //TODO: KIT-2859
-export const logOmniboxFromLink = (
-  metadata: OmniboxSuggestionMetadata
-): LegacySearchAction =>
+export const logOmniboxFromLink = (metadata: OmniboxSuggestionMetadata): LegacySearchAction =>
   makeAnalyticsAction('analytics/interface/omniboxFromLink', (client) =>
     client.makeOmniboxFromLink(metadata)
   );

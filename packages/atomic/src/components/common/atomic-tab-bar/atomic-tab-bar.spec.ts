@@ -96,9 +96,7 @@ describe('atomic-tab-bar', () => {
     return div as unknown as MockTabElement;
   };
 
-  const renderTabBar = async (
-    options: {tabs?: MockTabElement[]; containerWidth?: number} = {}
-  ) => {
+  const renderTabBar = async (options: {tabs?: MockTabElement[]; containerWidth?: number} = {}) => {
     const tabs = options.tabs ?? [
       createMockTab({label: 'Tab 1', active: true}),
       createMockTab({label: 'Tab 2'}),
@@ -123,10 +121,8 @@ describe('atomic-tab-bar', () => {
       element,
       tabs,
       locators: {
-        tabPopover: () =>
-          element.shadowRoot?.querySelector('atomic-tab-popover'),
-        popoverTabs: () =>
-          element.shadowRoot?.querySelectorAll('[part="popover-tab"]'),
+        tabPopover: () => element.shadowRoot?.querySelector('atomic-tab-popover'),
+        popoverTabs: () => element.shadowRoot?.querySelectorAll('[part="popover-tab"]'),
         slot: () => element.shadowRoot?.querySelector('slot'),
       },
     };
@@ -158,15 +154,11 @@ describe('atomic-tab-bar', () => {
     it('should export parts from tab-popover', async () => {
       const {locators} = await renderTabBar();
       const tabPopover = locators.tabPopover();
-      expect(tabPopover?.getAttribute('exportparts')).toContain(
-        'popover-button'
-      );
+      expect(tabPopover?.getAttribute('exportparts')).toContain('popover-button');
       expect(tabPopover?.getAttribute('exportparts')).toContain('value-label');
       expect(tabPopover?.getAttribute('exportparts')).toContain('arrow-icon');
       expect(tabPopover?.getAttribute('exportparts')).toContain('backdrop');
-      expect(tabPopover?.getAttribute('exportparts')).toContain(
-        'overflow-tabs'
-      );
+      expect(tabPopover?.getAttribute('exportparts')).toContain('overflow-tabs');
     });
   });
 

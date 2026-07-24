@@ -33,14 +33,9 @@ export interface DateRangeRequest {
   previousState?: FacetValueState;
 }
 
-export function isDateFacetRequest(
-  request: AnyFacetRequest
-): request is DateFacetRequest {
+export function isDateFacetRequest(request: AnyFacetRequest): request is DateFacetRequest {
   return request.type === 'dateRange';
 }
 
 export interface DateFacetRequest
-  extends
-    BaseRangeFacetRequest,
-    CurrentValues<DateRangeRequest>,
-    Type<'dateRange'> {}
+  extends BaseRangeFacetRequest, CurrentValues<DateRangeRequest>, Type<'dateRange'> {}

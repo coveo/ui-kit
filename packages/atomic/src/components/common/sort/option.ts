@@ -12,7 +12,5 @@ export interface SortOptionProps {
 export const renderSortOption: FunctionalComponent<SortOptionProps> = ({
   props: {value, selected, i18n, label},
 }) => {
-  return html`
-    <option value=${value} ?selected=${selected}>${i18n.t(label)}</option>
-  `;
+  return html` <option value=${value} ?selected=${selected}>${i18n.t(label)}</option> `;
 };

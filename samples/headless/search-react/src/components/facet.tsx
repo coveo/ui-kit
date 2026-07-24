@@ -33,11 +33,7 @@ export function Facet({controller, title}: FacetProps) {
         ))}
       </ul>
       {hasActiveValues && (
-        <button
-          type="button"
-          className="facet__clear"
-          onClick={() => controller.deselectAll()}
-        >
+        <button type="button" className="facet__clear" onClick={() => controller.deselectAll()}>
           Clear
         </button>
       )}

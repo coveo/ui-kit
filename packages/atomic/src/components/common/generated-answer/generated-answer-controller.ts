@@ -6,11 +6,7 @@ import type {
 } from '@coveo/headless';
 import type {ReactiveController, ReactiveControllerHost} from 'lit';
 import type {AnyBindings} from '@/src/components/common/interface/bindings';
-import {
-  type GeneratedAnswerData,
-  SafeStorage,
-  StorageItems,
-} from '@/src/utils/local-storage-utils';
+import {type GeneratedAnswerData, SafeStorage, StorageItems} from '@/src/utils/local-storage-utils';
 import type {AtomicGeneratedAnswerFeedbackModal} from '../atomic-generated-answer-feedback-modal/atomic-generated-answer-feedback-modal';
 import '@/src/components/common/atomic-generated-answer-feedback-modal/atomic-generated-answer-feedback-modal';
 import {markdownToPlainText} from './generated-content/markdown-utils';
@@ -60,9 +56,7 @@ export class GeneratedAnswerController implements ReactiveController {
    * Creates and inserts the feedback modal element before the host element.
    */
   public insertFeedbackModal(): void {
-    this.modalRef = document.createElement(
-      'atomic-generated-answer-feedback-modal'
-    );
+    this.modalRef = document.createElement('atomic-generated-answer-feedback-modal');
     const generatedAnswer = this.options.getGeneratedAnswer();
     if (generatedAnswer) {
       this.modalRef.generatedAnswer = generatedAnswer;
@@ -172,28 +166,22 @@ export class GeneratedAnswerController implements ReactiveController {
   }
 
   public get followUpConversationId(): string | undefined {
-    return (
-      this.options.getGeneratedAnswerState() as GeneratedAnswerWithFollowUpsState
-    )?.followUpAnswers?.conversationId;
+    return (this.options.getGeneratedAnswerState() as GeneratedAnswerWithFollowUpsState)
+      ?.followUpAnswers?.conversationId;
   }
 
   /**
    * Gets the tooltip text for the toggle button.
    */
   public getToggleTooltip(): string {
-    const key = this.isAnswerVisible
-      ? 'generated-answer-toggle-on'
-      : 'generated-answer-toggle-off';
+    const key = this.isAnswerVisible ? 'generated-answer-toggle-on' : 'generated-answer-toggle-off';
     return this.options.getBindings().i18n.t(key);
   }
 
   /**
    * Gets the tooltip text for the copy to clipboard button.
    */
-  public getCopyToClipboardTooltip(
-    copied: boolean,
-    copyError: boolean
-  ): string {
+  public getCopyToClipboardTooltip(copied: boolean, copyError: boolean): string {
     const bindings = this.options.getBindings();
 
     if (copyError) {
@@ -219,9 +207,7 @@ export class GeneratedAnswerController implements ReactiveController {
       this.options.getGeneratedAnswer()?.logCopyToClipboard();
     } catch (error) {
       onCopyError();
-      this.options
-        .getBindings()
-        .engine.logger.error(`Failed to copy to clipboard: ${error}`);
+      this.options.getBindings().engine.logger.error(`Failed to copy to clipboard: ${error}`);
     }
   }
 

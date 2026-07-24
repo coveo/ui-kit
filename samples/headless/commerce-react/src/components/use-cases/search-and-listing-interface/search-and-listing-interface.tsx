@@ -22,14 +22,10 @@ interface ISearchAndListingInterface {
   cartController: Cart;
 }
 
-export default function SearchAndListingInterface(
-  props: ISearchAndListingInterface
-) {
+export default function SearchAndListingInterface(props: ISearchAndListingInterface) {
   const {searchOrListingController, cartController} = props;
 
-  const [searchOrListingState, setSearchOrListingState] = useState(
-    searchOrListingController.state
-  );
+  const [searchOrListingState, setSearchOrListingState] = useState(searchOrListingController.state);
 
   useEffect(() => {
     searchOrListingController.subscribe(() =>
@@ -55,20 +51,14 @@ export default function SearchAndListingInterface(
         <Summary controller={summaryController} />
       </div>
       <div className="column small">
-        <FacetGenerator
-          controller={searchOrListingController.facetGenerator()}
-        />
+        <FacetGenerator controller={searchOrListingController.facetGenerator()} />
       </div>
       <div className="column medium">
-        <BreadcrumbManager
-          controller={searchOrListingController.breadcrumbManager()}
-        />
+        <BreadcrumbManager controller={searchOrListingController.breadcrumbManager()} />
 
         <ResultList
           results={searchOrListingState.results}
-          productControllerBuilder={
-            searchOrListingController.interactiveProduct
-          }
+          productControllerBuilder={searchOrListingController.interactiveProduct}
           cartController={cartController}
           promoteChildToParent={(child: ChildProduct) =>
             searchOrListingController.promoteChildToParent(child)

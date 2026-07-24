@@ -29,9 +29,7 @@ export interface LocationFacetActionCreators {
  * @param engine - The commerce engine.
  * @returns An object holding the location facet action creators.
  */
-export function loadLocationFacetActions(
-  engine: CommerceEngine
-): LocationFacetActionCreators {
+export function loadLocationFacetActions(engine: CommerceEngine): LocationFacetActionCreators {
   engine.addReducers({commerceFacetSet});
   return {
     toggleSelectLocationFacetValue,

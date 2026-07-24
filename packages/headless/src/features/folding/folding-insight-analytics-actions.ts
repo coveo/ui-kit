@@ -27,9 +27,7 @@ export const logShowLessFoldedResults = (): InsightAction =>
   makeInsightAnalyticsActionFactory(SearchPageEvents.showLessFoldedResults)(
     'analytics/folding/showLess',
     (client, state) =>
-      client.logShowLessFoldedResults(
-        getCaseContextAnalyticsMetadata(state.insightCaseContext)
-      )
+      client.logShowLessFoldedResults(getCaseContextAnalyticsMetadata(state.insightCaseContext))
   );
 
 export const insightFoldedResultAnalyticsClient = {

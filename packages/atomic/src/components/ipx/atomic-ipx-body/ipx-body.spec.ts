@@ -172,8 +172,6 @@ describe('#renderIpxBody', () => {
     const {parts: allParts} = await renderComponent();
     const bodyWrapper = allParts.bodyWrapper as HTMLElement;
 
-    expect(bodyWrapper.getAttribute('aria-label')).toBe(
-      i18n.t('ipx-body-content')
-    );
+    expect(bodyWrapper.getAttribute('aria-label')).toBe(i18n.t('ipx-body-content'));
   });
 });

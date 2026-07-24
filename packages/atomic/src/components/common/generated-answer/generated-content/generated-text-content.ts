@@ -6,15 +6,13 @@ export interface GeneratedTextContentProps {
   isStreaming: boolean;
 }
 
-export const renderGeneratedTextContent: FunctionalComponent<
-  GeneratedTextContentProps
-> = ({props}) => {
+export const renderGeneratedTextContent: FunctionalComponent<GeneratedTextContentProps> = ({
+  props,
+}) => {
   return html`
     <p
       part="generated-text"
-      class="text-on-background mb-0 whitespace-pre-wrap ${props.isStreaming
-        ? 'cursor'
-        : ''}"
+      class="text-on-background mb-0 whitespace-pre-wrap ${props.isStreaming ? 'cursor' : ''}"
     >
       ${props.answer}
     </p>

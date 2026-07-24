@@ -1,7 +1,4 @@
-import type {
-  AttachedResults,
-  AttachedResultsState,
-} from '@coveo/headless/insight';
+import type {AttachedResults, AttachedResultsState} from '@coveo/headless/insight';
 import {vi} from 'vitest';
 
 export const defaultState = {

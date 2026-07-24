@@ -101,9 +101,7 @@ export function useSearchBoxSuggestions({
       case 'ArrowUp':
         event.preventDefault();
         if (suggestions.length > 0) {
-          highlight(
-            activeIndex <= 0 ? suggestions.length - 1 : activeIndex - 1
-          );
+          highlight(activeIndex <= 0 ? suggestions.length - 1 : activeIndex - 1);
         }
         break;
 

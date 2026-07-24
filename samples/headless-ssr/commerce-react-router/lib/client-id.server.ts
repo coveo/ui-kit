@@ -2,9 +2,7 @@ import {randomUUID} from 'node:crypto';
 import type {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
 import {coveo_capture, coveo_visitorId} from '../app/cookies.server.js';
 
-interface CoveoAnalyticsContext extends Required<
-  Pick<NavigatorContext, 'clientId' | 'capture'>
-> {}
+interface CoveoAnalyticsContext extends Required<Pick<NavigatorContext, 'clientId' | 'capture'>> {}
 
 type SetCookieHeader = {'Set-Cookie': string} | Record<string, never>;
 
@@ -53,16 +51,12 @@ const isUserTrackingAllowedByClient = async (request: Request) => {
  * @param request - The request object.
  * @returns The Coveo analytics context.
  */
-export const getAnalyticsContext = async (
-  request: Request
-): Promise<CoveoAnalyticsContext> => {
+export const getAnalyticsContext = async (request: Request): Promise<CoveoAnalyticsContext> => {
   const capture = await shouldCapture(request);
   let visitorIdCookieValue: string | undefined;
 
   if (capture) {
-    visitorIdCookieValue = await coveo_visitorId.parse(
-      request.headers.get('Cookie')
-    );
+    visitorIdCookieValue = await coveo_visitorId.parse(request.headers.get('Cookie'));
   }
 
   // When `shouldCapture(request)` evaluates to `true`, the `visitorIdCookieValue` will be defined unless the user has
@@ -70,9 +64,7 @@ export const getAnalyticsContext = async (
   // new `clientId` on the server is useful, as otherwise the server-side request would have to be made with
   // `capture: false` due to the lack of a `clientId`.
   const generateNewClientId = capture && !visitorIdCookieValue;
-  const clientId = generateNewClientId
-    ? randomUUID()
-    : (visitorIdCookieValue ?? '');
+  const clientId = generateNewClientId ? randomUUID() : (visitorIdCookieValue ?? '');
 
   return {capture, clientId};
 };

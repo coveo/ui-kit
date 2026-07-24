@@ -35,9 +35,7 @@ export interface HistoryActionCreators {
  * @group Actions
  * @category History
  */
-export function loadHistoryActions(
-  engine: SearchEngine
-): HistoryActionCreators {
+export function loadHistoryActions(engine: SearchEngine): HistoryActionCreators {
   engine.addReducers({history, facetOrder});
 
   return {

@@ -1,8 +1,4 @@
-import {
-  buildProductListing,
-  buildSearch,
-  type PaginationState,
-} from '@coveo/headless/commerce';
+import {buildProductListing, buildSearch, type PaginationState} from '@coveo/headless/commerce';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
@@ -27,8 +23,7 @@ describe('atomic-commerce-pager', () => {
     previous: page.getByLabelText('Previous'),
     next: page.getByLabelText('Next'),
     parts: (element: AtomicCommercePager) => {
-      const qs = (part: string) =>
-        element.shadowRoot?.querySelector(`[part="${part}"]`);
+      const qs = (part: string) => element.shadowRoot?.querySelector(`[part="${part}"]`);
       return {
         buttons: qs('buttons'),
         pageButtons: qs('page-button'),
@@ -71,27 +66,26 @@ describe('atomic-commerce-pager', () => {
       })
     );
 
-    const {element} =
-      await renderInAtomicCommerceInterface<AtomicCommercePager>({
-        template: html`
-          <atomic-commerce-pager
-            number-of-pages=${ifDefined(numberOfPages)}
-            previous-button-icon=${ifDefined(previousButtonIcon)}
-            next-button-icon=${ifDefined(nextButtonIcon)}
-          ></atomic-commerce-pager>
-        `,
-        selector: 'atomic-commerce-pager',
-        bindings: (bindings) => {
-          bindings.interfaceElement.type = interfaceType ?? 'product-listing';
-          bindings.store.onChange = vi.fn();
-          bindings.store.state.resultList = {
-            focusOnFirstResultAfterNextSearch: vi.fn(),
-            focusOnNextNewResult: vi.fn(),
-          };
-          bindings.store.state.loadingFlags = [];
-          return bindings;
-        },
-      });
+    const {element} = await renderInAtomicCommerceInterface<AtomicCommercePager>({
+      template: html`
+        <atomic-commerce-pager
+          number-of-pages=${ifDefined(numberOfPages)}
+          previous-button-icon=${ifDefined(previousButtonIcon)}
+          next-button-icon=${ifDefined(nextButtonIcon)}
+        ></atomic-commerce-pager>
+      `,
+      selector: 'atomic-commerce-pager',
+      bindings: (bindings) => {
+        bindings.interfaceElement.type = interfaceType ?? 'product-listing';
+        bindings.store.onChange = vi.fn();
+        bindings.store.state.resultList = {
+          focusOnFirstResultAfterNextSearch: vi.fn(),
+          focusOnNextNewResult: vi.fn(),
+        };
+        bindings.store.state.loadingFlags = [];
+        return bindings;
+      },
+    });
 
     return element;
   };
@@ -135,16 +129,12 @@ describe('atomic-commerce-pager', () => {
   });
 
   it('should throw an error when numberOfPages is less than 0', async () => {
-    const consoleErrorSpy = vi
-      .spyOn(console, 'error')
-      .mockImplementation(() => {});
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     const element = await renderPager({numberOfPages: -1});
 
     expect(consoleErrorSpy).toHaveBeenCalledWith(
       expect.objectContaining({
-        message: expect.stringContaining(
-          'numberOfPages: minimum value of 0 not respected'
-        ),
+        message: expect.stringContaining('numberOfPages: minimum value of 0 not respected'),
       }),
       element
     );
@@ -198,9 +188,7 @@ describe('atomic-commerce-pager', () => {
     });
 
     it("should dispatch 'atomic/scrollToTop'", async () => {
-      expect(eventSpy).toHaveBeenCalledWith(
-        new CustomEvent('atomic/scrollToTop')
-      );
+      expect(eventSpy).toHaveBeenCalledWith(new CustomEvent('atomic/scrollToTop'));
     });
 
     it('should call #pager.previousPage', async () => {
@@ -236,9 +224,7 @@ describe('atomic-commerce-pager', () => {
     });
 
     it("should dispatch 'atomic/scrollToTop'", async () => {
-      expect(eventSpy).toHaveBeenCalledWith(
-        new CustomEvent('atomic/scrollToTop')
-      );
+      expect(eventSpy).toHaveBeenCalledWith(new CustomEvent('atomic/scrollToTop'));
     });
 
     it('should call #pager.nextPage', async () => {
@@ -271,9 +257,7 @@ describe('atomic-commerce-pager', () => {
     });
 
     it("should dispatch 'atomic/scrollToTop'", async () => {
-      expect(eventSpy).toHaveBeenCalledWith(
-        new CustomEvent('atomic/scrollToTop')
-      );
+      expect(eventSpy).toHaveBeenCalledWith(new CustomEvent('atomic/scrollToTop'));
     });
 
     it('should call #pager.selectPage', async () => {
@@ -292,9 +276,7 @@ describe('atomic-commerce-pager', () => {
   it('should have the selected button as active', async () => {
     await renderPager();
 
-    await expect
-      .element(locators.page1)
-      .toHaveAttribute('part', 'page-button active-page-button');
+    await expect.element(locators.page1).toHaveAttribute('part', 'page-button active-page-button');
     await expect.element(locators.page2).toHaveAttribute('part', 'page-button');
   });
 
@@ -304,9 +286,7 @@ describe('atomic-commerce-pager', () => {
       previousButtonIcon: icon,
     });
 
-    const atomicIcon = element.shadowRoot?.querySelector(
-      '[part="previous-button-icon"]'
-    );
+    const atomicIcon = element.shadowRoot?.querySelector('[part="previous-button-icon"]');
     expect(atomicIcon).toHaveAttribute('icon', icon);
   });
 
@@ -316,9 +296,7 @@ describe('atomic-commerce-pager', () => {
       nextButtonIcon: icon,
     });
 
-    const atomicIcon = element.shadowRoot?.querySelector(
-      '[part="next-button-icon"]'
-    );
+    const atomicIcon = element.shadowRoot?.querySelector('[part="next-button-icon"]');
     expect(atomicIcon).toHaveAttribute('icon', icon);
   });
 
@@ -354,9 +332,7 @@ describe('atomic-commerce-pager', () => {
 
     const retrievePageButtons = () => {
       return Array.from(
-        element.shadowRoot?.querySelectorAll<HTMLButtonElement>(
-          'button[part~="page-button"]'
-        ) || []
+        element.shadowRoot?.querySelectorAll<HTMLButtonElement>('button[part~="page-button"]') || []
       );
     };
 
@@ -367,9 +343,7 @@ describe('atomic-commerce-pager', () => {
 
     it('should set aria-current=page on the active page button', async () => {
       const buttons = retrievePageButtons();
-      const activeButton = buttons.find(
-        (btn) => btn.getAttribute('aria-current') === 'page'
-      );
+      const activeButton = buttons.find((btn) => btn.getAttribute('aria-current') === 'page');
       expect(activeButton).toBeDefined();
     });
   });

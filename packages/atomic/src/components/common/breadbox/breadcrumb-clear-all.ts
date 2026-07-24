@@ -11,9 +11,7 @@ interface BreadcrumbClearAllProps {
   i18n: i18n;
 }
 
-export const renderBreadcrumbClearAll: FunctionalComponent<
-  BreadcrumbClearAllProps
-> = ({props}) => {
+export const renderBreadcrumbClearAll: FunctionalComponent<BreadcrumbClearAllProps> = ({props}) => {
   return html`${keyed(
     'clear-all',
     html` <li>

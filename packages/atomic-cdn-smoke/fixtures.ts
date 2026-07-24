@@ -1,11 +1,7 @@
 import path from 'node:path';
 import {test as base} from '@chromatic-com/playwright';
 import {defineNetworkFixture, type NetworkFixture} from '@msw/playwright';
-import {
-  MockSearchApi,
-  MockCommerceApi,
-  MockInsightApi,
-} from '@coveo/platform-mock-api';
+import {MockSearchApi, MockCommerceApi, MockInsightApi} from '@coveo/platform-mock-api';
 import type {HttpHandler} from 'msw';
 
 const COMMIT_SHA = process.env.COMMIT_SHA;

@@ -25,20 +25,14 @@ export class AtomicAriaLive extends LightDomMixin(LitElement) {
     super.connectedCallback();
     this.ariaLiveId = randomID('atomic-aria-live-');
 
-    document.addEventListener(
-      'atomic/accessibility/findAriaLive',
-      this.onFindAriaLive
-    );
+    document.addEventListener('atomic/accessibility/findAriaLive', this.onFindAriaLive);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     this.messagesQueue.clear();
     this.queuedMessageIds.clear();
-    document.removeEventListener(
-      'atomic/accessibility/findAriaLive',
-      this.onFindAriaLive
-    );
+    document.removeEventListener('atomic/accessibility/findAriaLive', this.onFindAriaLive);
   }
 
   private onFindAriaLive = (event: Event) => {
@@ -111,11 +105,7 @@ export class AtomicAriaLive extends LightDomMixin(LitElement) {
     return JSON.stringify([region, message]);
   }
 
-  private queueMessage(
-    region: string,
-    message: string,
-    updateRegion: () => void
-  ) {
+  private queueMessage(region: string, message: string, updateRegion: () => void) {
     const messageId = this.getMessageQueueId(region, message);
     const queuedMessageIds = this.queuedMessageIds.get(region) ?? new Set();
 

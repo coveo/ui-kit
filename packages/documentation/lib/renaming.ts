@@ -1,11 +1,7 @@
 import {normalize} from './normalize.js';
 import type {TNavNode} from './types.js';
 
-export const applyTopLevelRenameArray = (
-  items: TNavNode[],
-  from: string,
-  to: string
-) => {
+export const applyTopLevelRenameArray = (items: TNavNode[], from: string, to: string) => {
   if (!Array.isArray(items) || items.length === 0) return;
   const fromN = normalize(from);
   for (const item of items) {

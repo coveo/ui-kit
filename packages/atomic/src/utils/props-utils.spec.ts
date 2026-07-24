@@ -6,12 +6,7 @@ import {mapAttributesToProp, mapProperty} from './props-utils';
 describe('mapAttributesToProp', () => {
   it('should map a simple attribute name (prefix-property) with a single value', () => {
     const map = {};
-    mapAttributesToProp(
-      'provinces',
-      map,
-      [{name: 'provinces-canada', value: 'quebec'}],
-      true
-    );
+    mapAttributesToProp('provinces', map, [{name: 'provinces-canada', value: 'quebec'}], true);
     expect(map).toEqual({canada: ['quebec']});
   });
 
@@ -56,19 +51,13 @@ describe('mapAttributesToProp', () => {
       [
         {
           name: 'filters-category',
-          value:
-            'Appliances,Clothing\\, Linens \\& more,Something \\\\, Something else',
+          value: 'Appliances,Clothing\\, Linens \\& more,Something \\\\, Something else',
         },
       ],
       true
     );
     expect(map).toEqual({
-      category: [
-        'Appliances',
-        'Clothing, Linens & more',
-        'Something \\',
-        'Something else',
-      ],
+      category: ['Appliances', 'Clothing, Linens & more', 'Something \\', 'Something else'],
     });
   });
 });

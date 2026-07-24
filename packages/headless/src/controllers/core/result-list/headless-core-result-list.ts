@@ -13,14 +13,8 @@ import type {
 } from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {validateOptions} from '../../../utils/validate-payload.js';
-import {
-  buildController,
-  type Controller,
-} from '../../controller/headless-controller.js';
-import {
-  buildCoreStatus,
-  type SearchStatusState,
-} from '../status/headless-core-status.js';
+import {buildController, type Controller} from '../../controller/headless-controller.js';
+import {buildCoreStatus, type SearchStatusState} from '../status/headless-core-status.js';
 
 const optionsSchema = new Schema<ResultListOptions>({
   fieldsToInclude: new ArrayValue({
@@ -107,10 +101,7 @@ export interface ResultListState extends SearchStatusState {
  * @param props - The configurable `ResultList` properties.
  * @returns A `ResultList` controller instance.
  */
-export function buildCoreResultList(
-  engine: CoreEngine,
-  props?: ResultListProps
-): ResultList {
+export function buildCoreResultList(engine: CoreEngine, props?: ResultListProps): ResultList {
   if (!loadResultListReducers(engine)) {
     throw loadReducerError;
   }
@@ -120,20 +111,14 @@ export function buildCoreResultList(
   const {dispatch} = engine;
   const getState = () => engine.state;
 
-  const options = validateOptions(
-    engine,
-    optionsSchema,
-    props?.options,
-    'buildCoreResultList'
-  );
+  const options = validateOptions(engine, optionsSchema, props?.options, 'buildCoreResultList');
 
   if (options.fieldsToInclude) {
     dispatch(registerFieldsToInclude(options.fieldsToInclude));
   }
 
   const moreResultsAvailable = () =>
-    engine.state.search.results.length <
-    engine.state.search.response.totalCountFiltered;
+    engine.state.search.results.length < engine.state.search.response.totalCountFiltered;
 
   let lastFetchCompleted = 0;
   let consecutiveFetches = 0;
@@ -147,9 +132,7 @@ export function buildCoreResultList(
     }
 
     if (!moreResultsAvailable()) {
-      engine.logger.info(
-        'No more results are available for the result list to fetch.'
-      );
+      engine.logger.info('No more results are available for the result list to fetch.');
       return;
     }
 

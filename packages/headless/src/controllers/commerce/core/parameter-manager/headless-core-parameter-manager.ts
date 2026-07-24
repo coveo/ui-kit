@@ -11,10 +11,7 @@ import type {CommerceParametersSection} from '../../../../state/state-sections.j
 import {deepEqualAnyOrder} from '../../../../utils/compare-utils.js';
 import {loadReducerError} from '../../../../utils/errors.js';
 import {validateInitialState} from '../../../../utils/validate-payload.js';
-import {
-  buildController,
-  type Controller,
-} from '../../../controller/headless-controller.js';
+import {buildController, type Controller} from '../../../controller/headless-controller.js';
 import type {FetchProductsActionCreator} from '../common.js';
 
 export interface ParameterManagerProps<T extends Parameters> {
@@ -32,9 +29,7 @@ export interface ParameterManagerProps<T extends Parameters> {
   excludeDefaultParameters?: boolean;
 }
 
-export interface CoreParameterManagerProps<
-  T extends Parameters,
-> extends ParameterManagerProps<T> {
+export interface CoreParameterManagerProps<T extends Parameters> extends ParameterManagerProps<T> {
   /**
    * The definition of the parameters.
    */
@@ -122,8 +117,7 @@ export function buildCoreParameterManager<T extends Parameters>(
     throw loadReducerError;
   }
 
-  const parametersSelector = (state: CommerceEngineState) =>
-    state.commerceParameters;
+  const parametersSelector = (state: CommerceEngineState) => state.commerceParameters;
 
   const {dispatch} = engine;
   const controller = buildController(engine);
@@ -146,10 +140,7 @@ export function buildCoreParameterManager<T extends Parameters>(
 
       // Always restore empty parameters or parameters that are different from the active ones.
       // We always restore empty parameters in commerce because they may correspond to navigation to a new page.
-      if (
-        Object.keys(parameters).length > 0 &&
-        deepEqualAnyOrder(activeParams, parameters)
-      ) {
+      if (Object.keys(parameters).length > 0 && deepEqualAnyOrder(activeParams, parameters)) {
         return;
       }
 

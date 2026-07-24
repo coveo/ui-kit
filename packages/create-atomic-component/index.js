@@ -1,12 +1,6 @@
 #!/usr/bin/env node
 import '@coveo/create-atomic-component-project';
-import {
-  cpSync,
-  readFileSync,
-  renameSync,
-  unlinkSync,
-  writeFileSync,
-} from 'node:fs';
+import {cpSync, readFileSync, renameSync, unlinkSync, writeFileSync} from 'node:fs';
 import {dirname, resolve} from 'node:path';
 import {cwd} from 'node:process';
 import {fileURLToPath} from 'node:url';
@@ -99,20 +93,14 @@ const ensureComponentValidity = (tag) => {
     errors.push(`"${tag}" cannot end with a dash (-)`);
   }
   if (!shouldContainAtLeastOneHyphen.test(tag)) {
-    errors.push(
-      `"${tag}" must contain a dash (-) to work as a valid web component`
-    );
+    errors.push(`"${tag}" must contain a dash (-) to work as a valid web component`);
   }
   if (forbiddenMultiHyphen.test(tag)) {
-    errors.push(
-      `"${tag}" cannot contain multiple dashes (--) next to each other`
-    );
+    errors.push(`"${tag}" cannot contain multiple dashes (--) next to each other`);
   }
 
   if (errors.length > 0) {
-    handleErrors(
-      new SerializableAggregateError(errors, 'Invalid component tag name')
-    );
+    handleErrors(new SerializableAggregateError(errors, 'Invalid component tag name'));
   }
 };
 
@@ -149,10 +137,7 @@ if (componentName) {
       srcPath: `src/components/${componentName}/package.json`,
       destPath: `src/components/${componentName}/package.json`,
       transform: (text) => {
-        const transformedText = text.replaceAll(
-          /(@coveo\/)?sample-component/g,
-          componentName
-        );
+        const transformedText = text.replaceAll(/(@coveo\/)?sample-component/g, componentName);
 
         const packageJson = JSON.parse(transformedText);
 

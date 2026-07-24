@@ -40,10 +40,7 @@ import '@/src/components/common/atomic-icon/atomic-icon';
 @customElement('atomic-popover')
 @bindings()
 @withTailwindStyles
-export class AtomicPopover
-  extends LitElement
-  implements InitializableComponent<Bindings>
-{
+export class AtomicPopover extends LitElement implements InitializableComponent<Bindings> {
   static styles = [facetCommonStyles];
 
   private buttonRef: Ref<HTMLButtonElement> = createRef();
@@ -68,17 +65,13 @@ export class AtomicPopover
     this.searchStatus = buildSearchStatus(this.bindings.engine);
 
     if (this.children.length === 0) {
-      this.error = new Error(
-        'One child is required inside a set of popover tags.'
-      );
+      this.error = new Error('One child is required inside a set of popover tags.');
 
       return;
     }
 
     if (this.children.length > 1) {
-      this.error = new Error(
-        'Cannot have more than one child inside a set of popover tags.'
-      );
+      this.error = new Error('Cannot have more than one child inside a set of popover tags.');
     }
   }
 
@@ -140,14 +133,10 @@ export class AtomicPopover
     }
 
     if (!this.popperInstance) {
-      this.popperInstance = createPopper(
-        this.buttonRef.value,
-        this.popupRef.value,
-        {
-          placement: 'bottom-start',
-          modifiers: [preventOverflow],
-        }
-      );
+      this.popperInstance = createPopper(this.buttonRef.value, this.popupRef.value, {
+        placement: 'bottom-start',
+        modifiers: [preventOverflow],
+      });
     } else {
       this.popperInstance.forceUpdate();
     }
@@ -163,8 +152,7 @@ export class AtomicPopover
 
     const buttonClasses = tw({
       'hover:border-primary-light focus-visible:border-primary-light group box-border flex h-full max-w-60 min-w-24 items-center rounded p-2.5 hover:border focus-visible:border overflow-hidden relative': true,
-      'border-primary ring-ring-primary text-primary z-9999 ring-3':
-        this.isOpen,
+      'border-primary ring-ring-primary text-primary z-9999 ring-3': this.isOpen,
     });
 
     const labelClasses = tw({
@@ -201,13 +189,7 @@ export class AtomicPopover
         class: buttonClassString,
       },
     })(html`
-      <span
-        title=${label}
-        part="value-label"
-        class=${multiClassMap(labelClasses)}
-      >
-        ${label}
-      </span>
+      <span title=${label} part="value-label" class=${multiClassMap(labelClasses)}> ${label} </span>
       <span part="value-count" class=${multiClassMap(countClasses)}>
         ${this.bindings.i18n.t('between-parentheses', {
           text: count,

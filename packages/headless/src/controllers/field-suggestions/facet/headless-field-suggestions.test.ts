@@ -4,10 +4,7 @@ import {registerFacet} from '../../../features/facets/facet-set/facet-set-action
 import {defaultFacetOptions} from '../../../features/facets/facet-set/facet-set-slice.js';
 import type {FacetRequest} from '../../../features/facets/facet-set/interfaces/request.js';
 import type {SearchAppState} from '../../../state/search-app-state.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../../test/mock-engine-v2.js';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request.js';
 import {buildMockFacetSearch} from '../../../test/mock-facet-search.js';
 import {buildMockFacetSlice} from '../../../test/mock-facet-slice.js';
@@ -19,12 +16,8 @@ import {
 } from './headless-field-suggestions.js';
 
 vi.mock('../../../features/facets/facet-set/facet-set-actions');
-vi.mock(
-  '../../../features/facets/facet-search-set/generic/generic-facet-search-actions'
-);
-vi.mock(
-  '../../../features/facets/facet-search-set/specific/specific-facet-search-actions'
-);
+vi.mock('../../../features/facets/facet-search-set/generic/generic-facet-search-actions');
+vi.mock('../../../features/facets/facet-search-set/specific/specific-facet-search-actions');
 
 describe('fieldSuggestions', () => {
   const field = 'author';

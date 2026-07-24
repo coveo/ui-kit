@@ -18,9 +18,7 @@ describe('atomic-recs-result-template', () => {
     'conditions' | 'mustMatch' | 'mustNotMatch'
   >;
 
-  const setupElement = async (
-    options: Partial<AtomicRecsResultTemplateProps> = {}
-  ) => {
+  const setupElement = async (options: Partial<AtomicRecsResultTemplateProps> = {}) => {
     const defaultProps: AtomicRecsResultTemplateProps = {
       conditions: [],
       mustMatch: {},
@@ -76,11 +74,7 @@ describe('atomic-recs-result-template', () => {
       const mustNotMatch = {source: ['spam']};
       const element = await setupElement({mustMatch, mustNotMatch});
 
-      const expected = makeMatchConditions(
-        mustMatch,
-        mustNotMatch,
-        ResultTemplatesHelpers
-      );
+      const expected = makeMatchConditions(mustMatch, mustNotMatch, ResultTemplatesHelpers);
 
       const template = await element.getTemplate();
       expect(template).not.toBeNull();
@@ -114,9 +108,7 @@ describe('atomic-recs-result-template', () => {
   });
 
   it('should render an atomic-component-error if error is thrown', async () => {
-    const mockedConsoleError = vi
-      .spyOn(console, 'error')
-      .mockImplementation(() => {});
+    const mockedConsoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
 
     const container = await fixture(html`
       <div>
@@ -132,9 +124,7 @@ describe('atomic-recs-result-template', () => {
 
     await element.updateComplete;
 
-    const errorComponent = element.shadowRoot?.querySelector(
-      'atomic-component-error'
-    );
+    const errorComponent = element.shadowRoot?.querySelector('atomic-component-error');
     expect(errorComponent).toBeDefined();
     mockedConsoleError.mockRestore();
   });

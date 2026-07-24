@@ -1,9 +1,5 @@
 import {wcagCriteriaDefinitions} from '../data/wcag-criteria.js';
-import type {
-  A11yComponentReport,
-  A11yCriterionReport,
-  A11yReport,
-} from '../shared/types.js';
+import type {A11yComponentReport, A11yCriterionReport, A11yReport} from '../shared/types.js';
 import {buildRemarks, resolveConformance} from './conformance.js';
 import type {
   A11yOverrideEntry,
@@ -121,13 +117,10 @@ export function buildOpenAcrReport(
   manualAggregates: Map<string, ManualAuditAggregate[]>
 ): OpenAcrReport {
   const reportDate = report.report.reportDate ?? DEFAULT_REPORT_DATE;
-  const reportProductName =
-    report.report.product ?? DEFAULT_REPORT_PRODUCT_NAME;
+  const reportProductName = report.report.product ?? DEFAULT_REPORT_PRODUCT_NAME;
 
   if (!report.report.version) {
-    throw new Error(
-      'report.version is required to generate the OpenACR report'
-    );
+    throw new Error('report.version is required to generate the OpenACR report');
   }
   const reportVersion = report.report.version;
 
@@ -141,11 +134,7 @@ export function buildOpenAcrReport(
     }
   }
 
-  const criteriaByChapter = buildOpenAcrCriteria(
-    report,
-    overrides,
-    manualAggregates
-  );
+  const criteriaByChapter = buildOpenAcrCriteria(report, overrides, manualAggregates);
 
   const successNotes =
     'Conformance is based on automated Storybook + axe-core output and interactive keyboard testing.';

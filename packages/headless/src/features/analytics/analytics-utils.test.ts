@@ -2,10 +2,7 @@ import {createRelay} from '@coveo/relay';
 import type {MockInstance} from 'vitest';
 import type {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import {buildMockAnalyticsState} from '../../test/mock-analytics-state.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../test/mock-engine-v2.js';
 import {createMockRecommendationState} from '../../test/mock-recommendation-state.js';
 import {buildMockResult} from '../../test/mock-result.js';
 import {buildMockResultWithFolding} from '../../test/mock-result-with-folding.js';
@@ -29,60 +26,50 @@ describe('analytics-utils', () => {
       const result = buildMockResult();
       result.raw.author = 'john';
 
-      expect(
-        partialDocumentInformation(result, createMockState()).documentAuthor
-      ).toBe('john');
+      expect(partialDocumentInformation(result, createMockState()).documentAuthor).toBe('john');
     });
 
     it('should extract documentation information with multiple author', () => {
       const result = buildMockResult();
       result.raw.author = ['john', 'doe'];
 
-      expect(
-        partialDocumentInformation(result, createMockState()).documentAuthor
-      ).toBe('john;doe');
+      expect(partialDocumentInformation(result, createMockState()).documentAuthor).toBe('john;doe');
     });
 
     it('should extract document information when there is no author', () => {
       const result = buildMockResult();
       delete result.raw.author;
-      expect(
-        partialDocumentInformation(result, createMockState()).documentAuthor
-      ).toBe('unknown');
+      expect(partialDocumentInformation(result, createMockState()).documentAuthor).toBe('unknown');
     });
 
     it('should extract sourceName information from source field', () => {
       const result = buildMockResult();
       result.raw.source = 'mysource';
-      expect(
-        partialDocumentInformation(result, createMockState()).sourceName
-      ).toBe('mysource');
+      expect(partialDocumentInformation(result, createMockState()).sourceName).toBe('mysource');
     });
 
     it('should extract sourceName information when there is no source field', () => {
       const result = buildMockResult();
       delete result.raw.source;
-      expect(
-        partialDocumentInformation(result, createMockState()).sourceName
-      ).toBe('unknown');
+      expect(partialDocumentInformation(result, createMockState()).sourceName).toBe('unknown');
     });
 
     it('should extract documentCategory information from objecttype', () => {
       const result = buildMockResult();
       result.raw.objecttype = 'Message';
 
-      expect(
-        partialDocumentInformation(result, createMockState()).documentCategory
-      ).toBe('Message');
+      expect(partialDocumentInformation(result, createMockState()).documentCategory).toBe(
+        'Message'
+      );
     });
 
     it('should not include documentCategory when objecttype is missing', () => {
       const result = buildMockResult();
       delete result.raw.objecttype;
 
-      expect(
-        partialDocumentInformation(result, createMockState())
-      ).not.toHaveProperty('documentCategory');
+      expect(partialDocumentInformation(result, createMockState())).not.toHaveProperty(
+        'documentCategory'
+      );
     });
 
     it('when the result is not found in state, the documentPosition is 1', () => {
@@ -131,10 +118,7 @@ describe('analytics-utils', () => {
         buildMockResultWithFolding(),
         buildMockResultWithFolding(),
       ];
-      parentResults[1].childResults = [
-        buildMockResultWithFolding(),
-        buildMockResultWithFolding(),
-      ];
+      parentResults[1].childResults = [buildMockResultWithFolding(), buildMockResultWithFolding()];
       parentResults[2].childResults = [
         buildMockResultWithFolding(),
         buildMockResultWithFolding(),
@@ -152,10 +136,7 @@ describe('analytics-utils', () => {
       const recommendation = buildMockResult({uniqueId: '1'});
       const state = createMockRecommendationState();
 
-      const {documentPosition} = partialRecommendationInformation(
-        recommendation,
-        state
-      );
+      const {documentPosition} = partialRecommendationInformation(recommendation, state);
       expect(documentPosition).toBe(0);
     });
 
@@ -164,10 +145,7 @@ describe('analytics-utils', () => {
       const state = createMockRecommendationState();
       state.recommendation.recommendations = [recommendation];
 
-      const {documentPosition} = partialRecommendationInformation(
-        recommendation,
-        state
-      );
+      const {documentPosition} = partialRecommendationInformation(recommendation, state);
       expect(documentPosition).toBe(1);
     });
   });
@@ -259,11 +237,7 @@ describe('analytics-utils', () => {
             ...additionalMakeAnalyticParamsForRelay,
           });
 
-          await action()(
-            engine.dispatch,
-            () => engine.state,
-            {} as ThunkExtraArguments
-          );
+          await action()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
           expect(fakeCAJSLog).not.toHaveBeenCalled();
           expect(relayEmitSpy).toHaveBeenCalled();
@@ -300,11 +274,7 @@ describe('analytics-utils', () => {
           ...additionalMakeAnalyticParamsForRelay,
         });
 
-        await action()(
-          engine.dispatch,
-          () => engine.state,
-          {} as ThunkExtraArguments
-        );
+        await action()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
         expect(fakeCAJSLog).toHaveBeenCalled();
         expect(relayEmitSpy).not.toHaveBeenCalled();
@@ -320,11 +290,7 @@ describe('analytics-utils', () => {
           log: vi.fn().mockResolvedValue({searchUID: 'test-uid'}),
         });
 
-        const action = makeAnalyticsAction(
-          'test/search',
-          mockBuilder,
-          undefined
-        );
+        const action = makeAnalyticsAction('test/search', mockBuilder, undefined);
 
         const engine = buildMockSearchEngine(createMockState());
 
@@ -339,15 +305,9 @@ describe('analytics-utils', () => {
       });
 
       it('should fail gracefully when configurator setup fails', async () => {
-        const mockBuilder = vi
-          .fn()
-          .mockRejectedValue(new Error('Configurator failed'));
+        const mockBuilder = vi.fn().mockRejectedValue(new Error('Configurator failed'));
 
-        const action = makeAnalyticsAction(
-          'test/failing',
-          mockBuilder,
-          undefined
-        );
+        const action = makeAnalyticsAction('test/failing', mockBuilder, undefined);
 
         const engine = buildMockSearchEngine(createMockState());
 
@@ -385,10 +345,7 @@ describe('analytics-utils', () => {
           },
         });
 
-        const partialInfo = partialRecommendationInformation(
-          result,
-          recommendationState
-        );
+        const partialInfo = partialRecommendationInformation(result, recommendationState);
 
         expect(partialInfo).toBeDefined();
         expect(partialInfo.documentTitle).toBe(result.title);
@@ -418,11 +375,7 @@ describe('analytics-utils', () => {
           log: vi.fn().mockRejectedValue(new Error('Analytics client failed')),
         });
 
-        const action = makeAnalyticsAction(
-          'test/client-failure',
-          mockBuilder,
-          undefined
-        );
+        const action = makeAnalyticsAction('test/client-failure', mockBuilder, undefined);
 
         const engine = buildMockSearchEngine(createMockState());
 
@@ -435,11 +388,7 @@ describe('analytics-utils', () => {
 
         // Should not throw during execution, even if analytics fails
         await expect(
-          prepared.action()(
-            engine.dispatch,
-            () => engine.state,
-            {} as ThunkExtraArguments
-          )
+          prepared.action()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments)
         ).resolves.not.toThrow();
       });
     });
@@ -462,11 +411,7 @@ describe('analytics-utils', () => {
           log: vi.fn().mockResolvedValue({searchUID: 'legacy-uid'}),
         });
 
-        const action = makeAnalyticsAction(
-          'test/legacy',
-          mockBuilder,
-          undefined
-        );
+        const action = makeAnalyticsAction('test/legacy', mockBuilder, undefined);
 
         const engine = buildMockSearchEngine(state);
 

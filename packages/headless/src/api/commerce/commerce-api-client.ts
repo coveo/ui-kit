@@ -32,10 +32,7 @@ import {
   type CommerceRecommendationsRequest,
 } from './recommendations/recommendations-request.js';
 import type {RecommendationsCommerceSuccessResponse} from './recommendations/recommendations-response.js';
-import {
-  type CommercePlanRequest,
-  getPlanRequestOptions,
-} from './search/plan/plan-request.js';
+import {type CommercePlanRequest, getPlanRequestOptions} from './search/plan/plan-request.js';
 import type {CommercePlanSuccessResponse} from './search/plan/plan-response.js';
 import {
   getQuerySuggestRequestOptions,
@@ -52,9 +49,7 @@ export interface CommerceFacetSearchAPIClient {
   ): Promise<CommerceAPIResponse<SpecificFacetSearchResponse>>;
 }
 
-export interface AsyncThunkCommerceOptions<
-  T extends Partial<CommerceAppState>,
-> {
+export interface AsyncThunkCommerceOptions<T extends Partial<CommerceAppState>> {
   state: T;
   rejectValue: CommerceAPIErrorStatusResponse;
   extra: CommerceThunkExtraArguments;
@@ -65,17 +60,13 @@ export interface CommerceAPIClientOptions {
   preprocessRequest: PreprocessRequest;
 }
 
-export type CommerceAPIResponse<T> =
-  | CommerceAPISuccessResponse<T>
-  | CommerceAPIErrorResponse;
+export type CommerceAPIResponse<T> = CommerceAPISuccessResponse<T> | CommerceAPIErrorResponse;
 
 interface CommerceAPISuccessResponse<T> {
   success: T;
 }
 
-export const isErrorResponse = <T>(
-  r: CommerceAPIResponse<T>
-): r is CommerceAPIErrorResponse => {
+export const isErrorResponse = <T>(r: CommerceAPIResponse<T>): r is CommerceAPIErrorResponse => {
   return (r as CommerceAPIErrorResponse).error !== undefined;
 };
 
@@ -176,9 +167,7 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
     });
   }
 
-  async plan(
-    req: CommercePlanRequest
-  ): Promise<CommerceAPIResponse<CommercePlanSuccessResponse>> {
+  async plan(req: CommercePlanRequest): Promise<CommerceAPIResponse<CommercePlanSuccessResponse>> {
     const requestOptions = getPlanRequestOptions(req);
     return this.query<CommercePlanSuccessResponse>({
       ...requestOptions,
@@ -190,9 +179,7 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
     });
   }
 
-  private async query<T = CommerceSuccessResponse>(
-    options: PlatformClientCallOptions
-  ) {
+  private async query<T = CommerceSuccessResponse>(options: PlatformClientCallOptions) {
     const response = await PlatformClient.call(options);
 
     if (response instanceof Error) {
@@ -200,9 +187,7 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
     }
 
     const body = await response.json();
-    return response.ok
-      ? {success: body as T}
-      : {error: body as CommerceAPIErrorStatusResponse};
+    return response.ok ? {success: body as T} : {error: body as CommerceAPIErrorStatusResponse};
   }
 }
 

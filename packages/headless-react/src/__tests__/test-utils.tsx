@@ -27,10 +27,7 @@ export const waitForAsyncUpdates = async () => {
 function createProviderWrapper(options?: ProviderWrapperOptions) {
   return function ProviderWrapper({children}: PropsWithChildren) {
     return options?.provider ? (
-      <options.provider
-        controllers={options?.controllers}
-        engine={options?.engine}
-      >
+      <options.provider controllers={options?.controllers} engine={options?.engine}>
         {children}
       </options.provider>
     ) : (

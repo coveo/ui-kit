@@ -1,15 +1,9 @@
 import {buildMockRecommendation} from '../../test/mock-recommendation.js';
 import {buildMockResult} from '../../test/mock-result.js';
 import {setError} from '../error/error-actions.js';
-import {
-  getRecommendations,
-  setRecommendationId,
-} from './recommendation-actions.js';
+import {getRecommendations, setRecommendationId} from './recommendation-actions.js';
 import {recommendationReducer} from './recommendation-slice.js';
-import {
-  getRecommendationInitialState,
-  type RecommendationState,
-} from './recommendation-state.js';
+import {getRecommendationInitialState, type RecommendationState} from './recommendation-state.js';
 
 describe('recommendation slice', () => {
   let state: RecommendationState;
@@ -23,15 +17,11 @@ describe('recommendation slice', () => {
   });
 
   it('should have a default recommendation id', () => {
-    expect(recommendationReducer(undefined, {type: 'foo'}).id).toEqual(
-      'Recommendation'
-    );
+    expect(recommendationReducer(undefined, {type: 'foo'}).id).toEqual('Recommendation');
   });
 
   it('should allow to set the recommendation id', () => {
-    expect(
-      recommendationReducer(state, setRecommendationId({id: 'foo'})).id
-    ).toEqual('foo');
+    expect(recommendationReducer(state, setRecommendationId({id: 'foo'})).id).toEqual('foo');
   });
 
   it('when a getRecommendations fulfilled is received, it updates the state to the received payload', () => {

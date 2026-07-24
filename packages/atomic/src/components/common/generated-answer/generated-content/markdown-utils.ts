@@ -16,8 +16,7 @@ const completeUnclosedElement = (text: string) => {
     const symbol = match[1];
 
     const replacements: Record<string, string> = {
-      '***':
-        '<strong part="answer-strong"><em part="answer-emphasis">$2</em></strong>',
+      '***': '<strong part="answer-strong"><em part="answer-emphasis">$2</em></strong>',
       '**': '<strong part="answer-strong">$2</strong>',
       '*': '<em part="answer-emphasis">$2</em>',
       '`': '<code part="answer-inline-code">$2</code>',
@@ -98,9 +97,7 @@ const customRenderer = {
    * @returns The list item element to render.
    */
   listitem(text: string) {
-    const unwrappedText = text
-      .replace(/^<p[^>]*>/, '')
-      .replace(/<\/p>\n?$/, '');
+    const unwrappedText = text.replace(/^<p[^>]*>/, '').replace(/<\/p>\n?$/, '');
     const withClosedElement = completeUnclosedElement(unwrappedText);
     return `<li part="answer-list-item">${withClosedElement}</li>`;
   },
@@ -123,10 +120,7 @@ const customRenderer = {
     return `<div part="answer-table-container" class="scrollable-table"><table part="answer-table"><thead>${header}</thead><tbody>${body}</tbody></table></div>`;
   },
 
-  tablecell(
-    content: string,
-    flags: {header: boolean; align: 'center' | 'left' | 'right' | null}
-  ) {
+  tablecell(content: string, flags: {header: boolean; align: 'center' | 'left' | 'right' | null}) {
     const type = flags.header ? 'th' : 'td';
     const part = flags.header ? 'answer-table-header' : 'answer-table-content';
     const tag = flags.align

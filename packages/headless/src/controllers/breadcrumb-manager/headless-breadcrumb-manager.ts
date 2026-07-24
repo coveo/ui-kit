@@ -142,9 +142,7 @@ export interface AutomaticFacetBreadcrumb extends Breadcrumb<FacetValue> {
  * @group Controllers
  * @category BreadcrumbManager
  */
-export function buildBreadcrumbManager(
-  engine: SearchEngine
-): BreadcrumbManager {
+export function buildBreadcrumbManager(engine: SearchEngine): BreadcrumbManager {
   if (!loadBreadcrumbManagerReducers(engine)) {
     throw loadReducerError;
   }
@@ -159,9 +157,7 @@ export function buildBreadcrumbManager(
       facetSet: getState().facetSet,
       executeToggleSelect: ({facetId, selection}) => {
         dispatch(toggleSelectFacetValue({facetId, selection}));
-        dispatch(
-          updateFreezeCurrentValues({facetId, freezeCurrentValues: false})
-        );
+        dispatch(updateFreezeCurrentValues({facetId, freezeCurrentValues: false}));
         dispatch(
           executeSearch({
             legacy: logFacetBreadcrumb({
@@ -174,9 +170,7 @@ export function buildBreadcrumbManager(
       },
       executeToggleExclude: ({facetId, selection}) => {
         dispatch(toggleExcludeFacetValue({facetId, selection}));
-        dispatch(
-          updateFreezeCurrentValues({facetId, freezeCurrentValues: false})
-        );
+        dispatch(updateFreezeCurrentValues({facetId, freezeCurrentValues: false}));
         dispatch(
           executeSearch({
             legacy: logFacetBreadcrumb({
@@ -194,9 +188,7 @@ export function buildBreadcrumbManager(
   };
 
   const getNumericFacetBreadcrumbs = (): NumericFacetBreadcrumb[] => {
-    const config: GetBreadcrumbsConfiguration<
-      Record<string, NumericFacetSlice>
-    > = {
+    const config: GetBreadcrumbsConfiguration<Record<string, NumericFacetSlice>> = {
       engine,
       facetSet: getState().numericFacetSet,
       executeToggleSelect: (payload) => {
@@ -223,30 +215,29 @@ export function buildBreadcrumbManager(
   };
 
   const getDateFacetBreadcrumbs = (): DateFacetBreadcrumb[] => {
-    const config: GetBreadcrumbsConfiguration<Record<string, DateFacetSlice>> =
-      {
-        engine,
-        facetSet: getState().dateFacetSet,
-        executeToggleSelect: (payload) => {
-          dispatch(toggleSelectDateFacetValue(payload));
-          dispatch(
-            executeSearch({
-              legacy: logDateFacetBreadcrumb(payload),
-              next: dateBreadcrumbFacet(),
-            })
-          );
-        },
-        executeToggleExclude: (payload) => {
-          dispatch(toggleExcludeDateFacetValue(payload));
-          dispatch(
-            executeSearch({
-              legacy: logDateFacetBreadcrumb(payload),
-              next: dateBreadcrumbFacet(),
-            })
-          );
-        },
-        facetValuesSelector: dateFacetActiveValuesSelector,
-      };
+    const config: GetBreadcrumbsConfiguration<Record<string, DateFacetSlice>> = {
+      engine,
+      facetSet: getState().dateFacetSet,
+      executeToggleSelect: (payload) => {
+        dispatch(toggleSelectDateFacetValue(payload));
+        dispatch(
+          executeSearch({
+            legacy: logDateFacetBreadcrumb(payload),
+            next: dateBreadcrumbFacet(),
+          })
+        );
+      },
+      executeToggleExclude: (payload) => {
+        dispatch(toggleExcludeDateFacetValue(payload));
+        dispatch(
+          executeSearch({
+            legacy: logDateFacetBreadcrumb(payload),
+            next: dateBreadcrumbFacet(),
+          })
+        );
+      },
+      facetValuesSelector: dateFacetActiveValuesSelector,
+    };
 
     return getBreadcrumbs(config);
   };
@@ -258,10 +249,7 @@ export function buildBreadcrumbManager(
   };
 
   const buildCategoryFacetBreadcrumb = (facetId: string) => {
-    const path = categoryFacetResponseSelectedValuesSelector(
-      getState(),
-      facetId
-    );
+    const path = categoryFacetResponseSelectedValuesSelector(getState(), facetId);
     return {
       facetId,
       field: getState().categoryFacetSet[facetId]!.request.field,
@@ -271,9 +259,7 @@ export function buildBreadcrumbManager(
         dispatch(
           executeSearch({
             legacy: logCategoryFacetBreadcrumb({
-              categoryFacetPath: path.map(
-                (categoryFacetValue) => categoryFacetValue.value
-              ),
+              categoryFacetPath: path.map((categoryFacetValue) => categoryFacetValue.value),
               categoryFacetId: facetId,
             }),
             next: categoryBreadcrumbFacet(),
@@ -288,9 +274,7 @@ export function buildBreadcrumbManager(
     return Object.values(set).map(buildStaticFilterBreadcrumb);
   };
 
-  const buildStaticFilterBreadcrumb = (
-    filter: StaticFilterSlice
-  ): StaticFilterBreadcrumb => {
+  const buildStaticFilterBreadcrumb = (filter: StaticFilterSlice): StaticFilterBreadcrumb => {
     const {id, values: filterValues} = filter;
     const values = filterValues
       .filter((value) => value.state !== 'idle')
@@ -299,10 +283,7 @@ export function buildBreadcrumbManager(
     return {id, values};
   };
 
-  const buildStaticFilterBreadcrumbValue = (
-    id: string,
-    value: StaticFilterValue
-  ) => {
+  const buildStaticFilterBreadcrumbValue = (id: string, value: StaticFilterValue) => {
     return {
       value,
       deselect: () => {
@@ -347,10 +328,7 @@ export function buildBreadcrumbManager(
     };
   };
 
-  const buildAutomaticFacetBreadcrumbValue = (
-    field: string,
-    selection: FacetValue
-  ) => {
+  const buildAutomaticFacetBreadcrumbValue = (field: string, selection: FacetValue) => {
     return {
       value: selection,
       deselect: () => {

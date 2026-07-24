@@ -12,9 +12,7 @@ export class CategoryFacetPageObject extends AnyFacetPageObject<'atomic-commerce
 
   get hydrated() {
     // Find the category facet by looking for the one that contains the "Category" text
-    return this.page
-      .locator('atomic-commerce-category-facet')
-      .filter({hasText: 'Category'});
+    return this.page.locator('atomic-commerce-category-facet').filter({hasText: 'Category'});
   }
 
   get searchInput() {
@@ -42,9 +40,6 @@ export class CategoryFacetPageObject extends AnyFacetPageObject<'atomic-commerce
   }
 
   getSearchResult(value: string) {
-    return this.hydrated
-      .locator('[part="search-results"]')
-      .locator('li')
-      .getByTitle(value);
+    return this.hydrated.locator('[part="search-results"]').locator('li').getByTitle(value);
   }
 }

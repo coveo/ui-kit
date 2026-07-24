@@ -5,10 +5,7 @@ import {
   buildProductListing,
   type ProductListing,
 } from '../../../controllers/commerce/product-listing/headless-product-listing.js';
-import {
-  buildSearch,
-  type Search,
-} from '../../../controllers/commerce/search/headless-search.js';
+import {buildSearch, type Search} from '../../../controllers/commerce/search/headless-search.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {buildMockCommerceContext} from '../../../test/mock-context.js';
 import {
@@ -27,9 +24,7 @@ import * as buildFactory from './build-factory.js';
 import {fetchStaticStateFactory} from './static-state-factory.js';
 
 vi.mock('../utils/controller-wiring.js');
-vi.mock(
-  '../../../controllers/commerce/product-listing/headless-product-listing.js'
-);
+vi.mock('../../../controllers/commerce/product-listing/headless-product-listing.js');
 vi.mock('../../../controllers/commerce/search/headless-search.js');
 
 describe('fetchStaticStateFactory', () => {
@@ -184,12 +179,8 @@ describe('fetchStaticStateFactory', () => {
   });
 
   describe('when controllers include a ProductList controller with executeFirstRequest/executeFirstSearch', () => {
-    let mockProductListController: ReturnType<
-      typeof buildMockProductListingController
-    >;
-    let mockSearchProductListController: ReturnType<
-      typeof buildMockSearchController
-    >;
+    let mockProductListController: ReturnType<typeof buildMockProductListingController>;
+    let mockSearchProductListController: ReturnType<typeof buildMockSearchController>;
 
     beforeEach(() => {
       mockProductListController = buildMockProductListingController();
@@ -221,9 +212,7 @@ describe('fetchStaticStateFactory', () => {
         context: mockContext,
       });
 
-      expect(
-        mockProductListController.executeFirstRequest
-      ).toHaveBeenCalledTimes(1);
+      expect(mockProductListController.executeFirstRequest).toHaveBeenCalledTimes(1);
       expect(buildProductListing).not.toHaveBeenCalled();
     });
 
@@ -243,9 +232,7 @@ describe('fetchStaticStateFactory', () => {
         },
       });
 
-      expect(
-        mockSearchProductListController.executeFirstSearch
-      ).toHaveBeenCalledTimes(1);
+      expect(mockSearchProductListController.executeFirstSearch).toHaveBeenCalledTimes(1);
       expect(buildSearch).not.toHaveBeenCalled();
     });
   });

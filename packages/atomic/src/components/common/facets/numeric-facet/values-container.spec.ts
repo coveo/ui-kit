@@ -8,10 +8,7 @@ import {
   renderNumericFacetValuesGroup,
 } from './values-container';
 
-vi.mock(
-  '@/src/components/common/facets/facet-values-group/facet-values-group',
-  {spy: true}
-);
+vi.mock('@/src/components/common/facets/facet-values-group/facet-values-group', {spy: true});
 
 describe('#renderNumericFacetValuesGroup', async () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;
@@ -28,8 +25,7 @@ describe('#renderNumericFacetValuesGroup', async () => {
     };
 
     vi.mocked(renderFacetValuesGroup).mockReturnValue(
-      (children) =>
-        html`<div data-testid="facet-values-group">${children}</div>`
+      (children) => html`<div data-testid="facet-values-group">${children}</div>`
     );
   });
 

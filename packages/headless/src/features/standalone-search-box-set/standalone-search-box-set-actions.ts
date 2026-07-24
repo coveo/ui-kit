@@ -3,10 +3,7 @@ import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {getSearchApiBaseUrl} from '../../api/platform-client.js';
 import {ExecutionPlan} from '../../api/search/plan/plan-endpoint.js';
 import type {PlanRequest} from '../../api/search/plan/plan-request.js';
-import {
-  type AsyncThunkSearchOptions,
-  isErrorResponse,
-} from '../../api/search/search-api-client.js';
+import {type AsyncThunkSearchOptions, isErrorResponse} from '../../api/search/search-api-client.js';
 import type {NavigatorContext} from '../../app/navigator-context-provider.js';
 import type {
   ConfigurationSection,
@@ -15,14 +12,8 @@ import type {
   QuerySection,
   SearchHubSection,
 } from '../../state/state-sections.js';
-import {
-  requiredNonEmptyString,
-  validatePayload,
-} from '../../utils/validate-payload.js';
-import {
-  type CustomAction,
-  makeAnalyticsAction,
-} from '../analytics/analytics-utils.js';
+import {requiredNonEmptyString, validatePayload} from '../../utils/validate-payload.js';
+import {type CustomAction, makeAnalyticsAction} from '../analytics/analytics-utils.js';
 import {fromAnalyticsStateToAnalyticsParams} from '../configuration/analytics-params.js';
 import {fromAnalyticsStateToAnalyticsParams as legacyFromAnalyticsStateToAnalyticsParams} from '../configuration/legacy-analytics-params.js';
 import type {OmniboxSuggestionMetadata} from '../query-suggest/query-suggest-analytics-actions.js';
@@ -139,12 +130,7 @@ export const fetchRedirectUrl = createAsyncThunk<
   'standaloneSearchBox/fetchRedirect',
   async (
     payload,
-    {
-      dispatch,
-      getState,
-      rejectWithValue,
-      extra: {apiClient, validatePayload, navigatorContext},
-    }
+    {dispatch, getState, rejectWithValue, extra: {apiClient, validatePayload, navigatorContext}}
   ) => {
     validatePayload(payload, {id: new StringValue({emptyAllowed: false})});
     const request = await buildPlanRequest(getState(), navigatorContext);
@@ -177,10 +163,7 @@ export const buildPlanRequest = async (
     organizationId: state.configuration.organizationId,
     url:
       state.configuration.search.apiBaseUrl ??
-      getSearchApiBaseUrl(
-        state.configuration.organizationId,
-        state.configuration.environment
-      ),
+      getSearchApiBaseUrl(state.configuration.organizationId, state.configuration.environment),
     locale: state.configuration.search.locale,
     timezone: state.configuration.search.timezone,
     q: state.query.q,
@@ -192,16 +175,10 @@ export const buildPlanRequest = async (
     }),
     ...(state.configuration.analytics.enabled &&
     state.configuration.analytics.analyticsMode === 'legacy'
-      ? await legacyFromAnalyticsStateToAnalyticsParams(
-          state.configuration.analytics
-        )
-      : fromAnalyticsStateToAnalyticsParams(
-          state.configuration.analytics,
-          navigatorContext
-        )),
+      ? await legacyFromAnalyticsStateToAnalyticsParams(state.configuration.analytics)
+      : fromAnalyticsStateToAnalyticsParams(state.configuration.analytics, navigatorContext)),
     ...(state.configuration.search.authenticationProviders.length && {
-      authentication:
-        state.configuration.search.authenticationProviders.join(','),
+      authentication: state.configuration.search.authenticationProviders.join(','),
     }),
   };
 };

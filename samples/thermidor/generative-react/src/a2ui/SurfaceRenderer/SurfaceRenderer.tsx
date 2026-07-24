@@ -46,9 +46,7 @@ export function SurfaceRenderer({surfaces, onAction}: SurfaceRendererProps) {
   }, [surfaces]);
 
   const renderItems = useMemo(() => {
-    const known = allParsed.filter((s) =>
-      KNOWN_COMPONENTS.has(s.componentType)
-    );
+    const known = allParsed.filter((s) => KNOWN_COMPONENTS.has(s.componentType));
 
     const skeletons: ParsedSurface[] = [];
     const real: ParsedSurface[] = [];
@@ -101,12 +99,7 @@ export function SurfaceRenderer({surfaces, onAction}: SurfaceRendererProps) {
     <div className={styles.container}>
       {renderItems.map((item) => {
         if (item.type === 'skeleton') {
-          return (
-            <A2UISkeleton
-              key={item.surfaceId}
-              componentType={item.componentType}
-            />
-          );
+          return <A2UISkeleton key={item.surfaceId} componentType={item.componentType} />;
         }
         return (
           <A2UISurfaceComponent
@@ -127,11 +120,7 @@ interface A2UISurfaceComponentProps {
   onAction?: (text: string, type: string) => void;
 }
 
-function A2UISurfaceComponent({
-  surface,
-  allSurfaces,
-  onAction,
-}: A2UISurfaceComponentProps) {
+function A2UISurfaceComponent({surface, allSurfaces, onAction}: A2UISurfaceComponentProps) {
   switch (surface.componentType) {
     case 'ProductCarousel':
       return <A2UIProductCarousel surface={surface} />;

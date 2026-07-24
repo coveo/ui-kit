@@ -9,18 +9,7 @@ import {
   keyHasObjectValue,
 } from './search-parameter-serializer.js';
 
-const someSpecialCharactersThatNeedsEncoding = [
-  '&',
-  ',',
-  '=',
-  '[',
-  ']',
-  '#',
-  '?',
-  ' ',
-  '/',
-  '>',
-];
+const someSpecialCharactersThatNeedsEncoding = ['&', ',', '=', '[', ']', '#', '?', ' ', '/', '>'];
 
 describe('search-parameter-serializer', () => {
   describe('buildSearchParameterSerializer', () => {
@@ -67,9 +56,7 @@ describe('search-parameter-serializer', () => {
         someSpecialCharactersThatNeedsEncoding.forEach((specialChar) => {
           const f = {author: ['a', specialChar]};
           const result = serialize({f});
-          expect(result).toEqual(
-            `f-author=a,${encodeURIComponent(specialChar)}`
-          );
+          expect(result).toEqual(`f-author=a,${encodeURIComponent(specialChar)}`);
         });
       });
 
@@ -81,10 +68,7 @@ describe('search-parameter-serializer', () => {
 
       it('serializes the #nf parameter correctly', () => {
         const nf = {
-          size: [
-            buildNumericRange({start: 0, end: 10}),
-            buildNumericRange({start: 10, end: 20}),
-          ],
+          size: [buildNumericRange({start: 0, end: 10}), buildNumericRange({start: 10, end: 20})],
           amount: [buildNumericRange({start: 100, end: 200})],
         };
 
@@ -127,9 +111,7 @@ describe('search-parameter-serializer', () => {
         const range1 = `${date1}..${date2}`;
         const range2 = `${date2}..${date3}`;
 
-        expect(result).toEqual(
-          `df-date=${range1},${range2}&df-created=${range1}`
-        );
+        expect(result).toEqual(`df-date=${range1},${range2}&df-created=${range1}`);
       });
 
       describe('when the #df parameter contains facetIds with invalid values', () => {
@@ -190,9 +172,7 @@ describe('search-parameter-serializer', () => {
 
       it('deserializes a string with multiple key-value pairs with special characters', () => {
         someSpecialCharactersThatNeedsEncoding.forEach((char) => {
-          const result = deserialize(
-            `q=${encodeURIComponent(char)}&enableQuerySyntax=true`
-          );
+          const result = deserialize(`q=${encodeURIComponent(char)}&enableQuerySyntax=true`);
           expect(result).toEqual({q: char, enableQuerySyntax: true});
         });
       });
@@ -223,9 +203,7 @@ describe('search-parameter-serializer', () => {
 
       it('deserializes two automatic facets correctly with special characters', () => {
         someSpecialCharactersThatNeedsEncoding.forEach((char) => {
-          const result = deserialize(
-            `af-author=${encodeURIComponent(char)},b&af-filetype=c,d`
-          );
+          const result = deserialize(`af-author=${encodeURIComponent(char)},b&af-filetype=c,d`);
           expect(result).toEqual({
             af: {
               author: [char, 'b'],
@@ -246,9 +224,7 @@ describe('search-parameter-serializer', () => {
 
       it('deserializes two facets correctly with special characters', () => {
         someSpecialCharactersThatNeedsEncoding.forEach((char) => {
-          const result = deserialize(
-            `f-author=${encodeURIComponent(char)},b&f-filetype=c,d`
-          );
+          const result = deserialize(`f-author=${encodeURIComponent(char)},b&f-filetype=c,d`);
           expect(result).toEqual({
             f: {
               author: [char, 'b'],
@@ -270,9 +246,7 @@ describe('search-parameter-serializer', () => {
 
       it('deserializes two category facets correctly with special characters', () => {
         someSpecialCharactersThatNeedsEncoding.forEach((char) => {
-          const result = deserialize(
-            `cf-author=${encodeURIComponent(char)},b&cf-filetype=c,d`
-          );
+          const result = deserialize(`cf-author=${encodeURIComponent(char)},b&cf-filetype=c,d`);
           expect(result).toEqual({
             cf: {
               author: [char, 'b'],
@@ -316,9 +290,7 @@ describe('search-parameter-serializer', () => {
         expect(result).toEqual({
           nf: {
             size: [buildNumericRange({start: 0, end: 10, state: 'selected'})],
-            amount: [
-              buildNumericRange({start: 100, end: 200, state: 'selected'}),
-            ],
+            amount: [buildNumericRange({start: 100, end: 200, state: 'selected'})],
           },
         });
       });

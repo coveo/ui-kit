@@ -9,9 +9,7 @@ interface AutoCorrectionProps {
   correctedTo: string;
 }
 
-export const renderAutoCorrection: FunctionalComponent<AutoCorrectionProps> = ({
-  props,
-}) => {
+export const renderAutoCorrection: FunctionalComponent<AutoCorrectionProps> = ({props}) => {
   return html`
     <p class="text-on-background mb-1" part="no-results">
       ${localizedString({

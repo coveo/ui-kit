@@ -37,12 +37,11 @@ interface FetchedResponse {
   enableResults?: boolean;
 }
 
-export type StateNeededByExecuteSearch =
-  StateNeededForFilterableCommerceAPIRequest &
-    CommerceSearchSection &
-    CommerceQuerySection &
-    CommerceDidYouMeanSection &
-    TriggerSection;
+export type StateNeededByExecuteSearch = StateNeededForFilterableCommerceAPIRequest &
+  CommerceSearchSection &
+  CommerceQuerySection &
+  CommerceDidYouMeanSection &
+  TriggerSection;
 
 export interface AsyncThunkConfig {
   getState: () => StateNeededByExecuteSearch;
@@ -76,9 +75,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     );
   }
 
-  public async fetchFromAPI(
-    request: FilterableCommerceAPIRequest | CommerceSearchRequest
-  ) {
+  public async fetchFromAPI(request: FilterableCommerceAPIRequest | CommerceSearchRequest) {
     const startedAt = Date.now();
     const response = await this.extra.apiClient.search(request);
     const duration = Date.now() - startedAt;
@@ -88,15 +85,11 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       duration,
       queryExecuted,
       requestExecuted: request,
-      enableResults: Boolean(
-        'enableResults' in request && request.enableResults
-      ),
+      enableResults: Boolean('enableResults' in request && request.enableResults),
     };
   }
 
-  private processSuccessResponse(
-    fetched: FetchedResponse
-  ): QuerySearchCommerceAPIThunkReturn {
+  private processSuccessResponse(fetched: FetchedResponse): QuerySearchCommerceAPIThunkReturn {
     return {
       ...fetched,
       response: this.getSuccessResponse(fetched)!,
@@ -126,8 +119,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     const {queryCorrection} = successResponse;
 
     const shouldExecuteQueryCorrection =
-      !isNullOrUndefined(queryCorrection) &&
-      !isNullOrUndefined(queryCorrection.correctedQuery);
+      !isNullOrUndefined(queryCorrection) && !isNullOrUndefined(queryCorrection.correctedQuery);
 
     if (!shouldExecuteQueryCorrection) {
       return null;
@@ -155,8 +147,8 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       return null;
     }
     const correctedQuery =
-      (successResponse.triggers.find((trigger) => trigger.type === 'query')
-        ?.content as string) || '';
+      (successResponse.triggers.find((trigger) => trigger.type === 'query')?.content as string) ||
+      '';
 
     if (!correctedQuery) {
       return null;
@@ -200,10 +192,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     );
     this.onUpdateQueryForCorrection(modified);
     const fetched = await this.fetchFromAPI({
-      ...buildFilterableCommerceAPIRequest(
-        this.getState(),
-        this.navigatorContext
-      ),
+      ...buildFilterableCommerceAPIRequest(this.getState(), this.navigatorContext),
       query: modified,
       enableResults: Boolean(enableResults),
     });
@@ -229,9 +218,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
 
   private getCurrentQuery() {
     const state = this.getState();
-    return state.commerceQuery.query !== undefined
-      ? state.commerceQuery.query
-      : '';
+    return state.commerceQuery.query !== undefined ? state.commerceQuery.query : '';
   }
 
   private getSuccessResponse(fetched: FetchedResponse) {

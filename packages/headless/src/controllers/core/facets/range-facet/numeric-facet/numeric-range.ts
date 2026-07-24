@@ -33,9 +33,7 @@ export interface NumericRangeOptions {
  * @param config - The options with which to create a `NumericRangeRequest`.
  * @returns A new `NumericRangeRequest`.
  */
-export function buildNumericRange(
-  config: NumericRangeOptions
-): NumericRangeRequest {
+export function buildNumericRange(config: NumericRangeOptions): NumericRangeRequest {
   return {
     endInclusive: false,
     state: 'idle',

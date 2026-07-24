@@ -22,9 +22,7 @@ import {
   type CategoryFacetOptions,
 } from './headless-commerce-category-facet.js';
 
-vi.mock(
-  '../../../../../features/commerce/facets/category-facet/category-facet-actions'
-);
+vi.mock('../../../../../features/commerce/facets/category-facet/category-facet-actions');
 
 describe('CategoryFacet', () => {
   const facetId: string = 'category_facet_id';
@@ -249,8 +247,7 @@ describe('CategoryFacet', () => {
           mock: {invocationCallOrder: number[]};
         }
       ).mock.invocationCallOrder[0];
-      const fetchCall =
-        mockFetchProductsActionCreator.mock.invocationCallOrder[0];
+      const fetchCall = mockFetchProductsActionCreator.mock.invocationCallOrder[0];
 
       expect(updateCall).toBeLessThan(fetchCall);
     });
@@ -292,8 +289,7 @@ describe('CategoryFacet', () => {
           mock: {invocationCallOrder: number[]};
         }
       ).mock.invocationCallOrder[0];
-      const fetchCall =
-        mockFetchProductsActionCreator.mock.invocationCallOrder[0];
+      const fetchCall = mockFetchProductsActionCreator.mock.invocationCallOrder[0];
 
       expect(updateCall).toBeLessThan(fetchCall);
     });
@@ -352,10 +348,7 @@ describe('CategoryFacet', () => {
           it('should be false when initialNumberOfValues is greater than the number of children in the active value', () => {
             const activeValue = buildMockCategoryFacetValue({
               state: 'selected',
-              children: [
-                buildMockCategoryFacetValue(),
-                buildMockCategoryFacetValue(),
-              ],
+              children: [buildMockCategoryFacetValue(), buildMockCategoryFacetValue()],
             });
             setFacetState(
               {
@@ -445,10 +438,7 @@ describe('CategoryFacet', () => {
             it('should be false when initialNumberOfValues is greater than the number of values in the response', () => {
               setFacetState(
                 {
-                  values: [
-                    buildMockCategoryFacetValue(),
-                    buildMockCategoryFacetValue(),
-                  ],
+                  values: [buildMockCategoryFacetValue(), buildMockCategoryFacetValue()],
                 },
                 false,
                 {
@@ -532,9 +522,7 @@ describe('CategoryFacet', () => {
           isLoading: true,
           moreValuesAvailable: true,
           query: 'test',
-          values: [
-            {count: 1, displayValue: 'test', path: ['test'], rawValue: 'test'},
-          ],
+          values: [{count: 1, displayValue: 'test', path: ['test'], rawValue: 'test'}],
         });
       });
     });
@@ -590,11 +578,7 @@ describe('CategoryFacet', () => {
           values: [rootValue],
         });
 
-        expect(facet.state.selectedValueAncestry).toEqual([
-          rootValue,
-          parentValue,
-          activeValue,
-        ]);
+        expect(facet.state.selectedValueAncestry).toEqual([rootValue, parentValue, activeValue]);
       });
     });
   });

@@ -45,10 +45,7 @@
       }
     },
     {
-      "files": [
-        "**/packages/create-ui/src/log.ts",
-        "**/packages/create-ui/src/prompt.ts"
-      ],
+      "files": ["**/packages/create-ui/src/log.ts", "**/packages/create-ui/src/prompt.ts"],
       "rules": {
         "no-restricted-imports": "off"
       }

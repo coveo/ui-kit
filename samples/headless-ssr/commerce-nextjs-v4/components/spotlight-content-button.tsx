@@ -1,7 +1,4 @@
-import type {
-  ProductList,
-  SpotlightContent,
-} from '@coveo/headless-react/ssr-commerce-next';
+import type {ProductList, SpotlightContent} from '@coveo/headless-react/ssr-commerce-next';
 
 interface SpotlightContentButtonProps {
   methods: Omit<ProductList, 'state' | 'subscribe'> | undefined;
@@ -13,9 +10,7 @@ export default function SpotlightContentButton({
   spotlightContent,
 }: SpotlightContentButtonProps) {
   const handleClick = () => {
-    methods
-      ?.interactiveSpotlightContent({options: {spotlightContent}})
-      .select();
+    methods?.interactiveSpotlightContent({options: {spotlightContent}}).select();
     window.location.href = spotlightContent.clickUri;
   };
 
@@ -28,17 +23,11 @@ export default function SpotlightContentButton({
     >
       <img
         src={spotlightContent.desktopImage}
-        alt={
-          spotlightContent.altText ||
-          spotlightContent.name ||
-          'Spotlight content'
-        }
+        alt={spotlightContent.altText || spotlightContent.name || 'Spotlight content'}
         style={{height: 'auto', maxHeight: '120px', objectFit: 'contain'}}
       />
       {spotlightContent.name && (
-        <h4 style={{color: spotlightContent.nameFontColor}}>
-          {spotlightContent.name}
-        </h4>
+        <h4 style={{color: spotlightContent.nameFontColor}}>{spotlightContent.name}</h4>
       )}
       {spotlightContent.description && (
         <span style={{color: spotlightContent.descriptionFontColor}}>
