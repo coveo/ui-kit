@@ -9,10 +9,7 @@ import type {BaseAtomicInterface} from '@/src/components/common/interface/interf
 import type {AtomicSearchInterface} from '@/src/components/index.js';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces.js';
 import type {SearchStore} from '@/src/components/search/atomic-search-interface/store.js';
-import {
-  type InitializeEvent,
-  markParentAsReady,
-} from '@/src/utils/init-queue.js';
+import {type InitializeEvent, markParentAsReady} from '@/src/utils/init-queue.js';
 import {initializeEventName} from '@/src/utils/initialization-common-utils.js';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture.js';
 import {genericSubscribe} from '@/vitest-utils/testing-helpers/fixtures/headless/common.js';
@@ -104,9 +101,7 @@ export function renderInAtomicSearchInterface<T extends LitElement>({
 }: {
   template: TemplateResult;
   selector?: string;
-  bindings?:
-    | Partial<Bindings>
-    | ((bindings: MinimalBindings) => MinimalBindings);
+  bindings?: Partial<Bindings> | ((bindings: MinimalBindings) => MinimalBindings);
 }): Promise<{
   element: T;
   atomicInterface: FixtureAtomicSearchInterface;
@@ -118,9 +113,7 @@ export async function renderInAtomicSearchInterface<T extends LitElement>({
 }: {
   template: TemplateResult;
   selector?: string | never;
-  bindings?:
-    | Partial<Bindings>
-    | ((bindings: MinimalBindings) => MinimalBindings);
+  bindings?: Partial<Bindings> | ((bindings: MinimalBindings) => MinimalBindings);
 }): Promise<{
   element: null | T;
   atomicInterface: FixtureAtomicSearchInterface;

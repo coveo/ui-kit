@@ -4,10 +4,7 @@ import type {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments
 import type {InsightAppState} from '../../../state/insight-app-state.js';
 import {PlatformClient} from '../../platform-client.js';
 import type {PreprocessRequest} from '../../preprocess-request.js';
-import {
-  getHtml,
-  type HtmlAPIClientOptions,
-} from '../../search/html/html-api-client.js';
+import {getHtml, type HtmlAPIClientOptions} from '../../search/html/html-api-client.js';
 import type {HtmlRequest} from '../../search/html/html-request.js';
 import type {QuerySuggestSuccessResponse} from '../../search/query-suggest/query-suggest-response.js';
 import type {SearchResponseSuccess} from '../../search/search/search-response.js';
@@ -129,9 +126,7 @@ export class InsightAPIClient {
 
     const body = await response.json();
 
-    return body.completions
-      ? {success: body}
-      : {error: body as InsightAPIErrorStatusResponse};
+    return body.completions ? {success: body} : {error: body as InsightAPIErrorStatusResponse};
   }
 
   async userActions(

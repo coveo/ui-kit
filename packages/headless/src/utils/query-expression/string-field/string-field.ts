@@ -26,8 +26,7 @@ export function buildStringField(config: StringFieldExpression): Part {
       const prefix = getNegationPrefix(config);
       const operator = getOperatorSymbol(config.operator);
       const processed = config.values.map((value) => `"${value}"`);
-      const values =
-        processed.length === 1 ? processed[0] : `(${processed.join(',')})`;
+      const values = processed.length === 1 ? processed[0] : `(${processed.join(',')})`;
 
       return `${prefix}@${field}${operator}${values}`;
     },

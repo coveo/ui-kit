@@ -22,10 +22,9 @@ const {play} = wrapInSearchInterface({
   includeCodeRoot: false,
 });
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-result-section-excerpt',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-result-section-excerpt', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-result-section-excerpt',

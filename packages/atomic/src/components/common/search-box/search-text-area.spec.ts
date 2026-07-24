@@ -14,9 +14,7 @@ describe('#renderSearchBoxTextArea', () => {
   });
 
   const renderComponent = async (
-    overrides: Partial<
-      Parameters<typeof renderSearchBoxTextArea>[0]['props']
-    > = {}
+    overrides: Partial<Parameters<typeof renderSearchBoxTextArea>[0]['props']> = {}
   ) => {
     const element = await renderFunctionFixture(
       html`${renderSearchBoxTextArea({
@@ -108,10 +106,7 @@ describe('#renderSearchBoxTextArea', () => {
         hasSuggestions: false,
       },
     });
-    expect(textarea).toHaveAttribute(
-      'aria-activedescendant',
-      'test-active-descendant'
-    );
+    expect(textarea).toHaveAttribute('aria-activedescendant', 'test-active-descendant');
   });
 
   it('should have the right aria-controls', async () => {

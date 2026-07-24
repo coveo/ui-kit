@@ -10,10 +10,7 @@ import {
   setCorrectionMode,
 } from './did-you-mean-actions.js';
 import {didYouMeanReducer} from './did-you-mean-slice.js';
-import {
-  type DidYouMeanState,
-  getDidYouMeanInitialState,
-} from './did-you-mean-state.js';
+import {type DidYouMeanState, getDidYouMeanInitialState} from './did-you-mean-state.js';
 
 describe('did you mean slice', () => {
   let state: DidYouMeanState;
@@ -26,23 +23,18 @@ describe('did you mean slice', () => {
 
   it('should handle enable did you mean', () => {
     state.enableDidYouMean = false;
-    expect(didYouMeanReducer(state, enableDidYouMean()).enableDidYouMean).toBe(
-      true
-    );
+    expect(didYouMeanReducer(state, enableDidYouMean()).enableDidYouMean).toBe(true);
   });
 
   it('should handle disable did you mean', () => {
     state.enableDidYouMean = true;
-    expect(didYouMeanReducer(state, disableDidYouMean()).enableDidYouMean).toBe(
-      false
-    );
+    expect(didYouMeanReducer(state, disableDidYouMean()).enableDidYouMean).toBe(false);
   });
 
   it('should clear query corrections on new search', () => {
     state.queryCorrection = {correctedQuery: 'foo', wordCorrections: []};
     expect(
-      didYouMeanReducer(state, {type: executeSearch.pending.type})
-        .queryCorrection.correctedQuery
+      didYouMeanReducer(state, {type: executeSearch.pending.type}).queryCorrection.correctedQuery
     ).toBe('');
   });
 
@@ -67,9 +59,7 @@ describe('did you mean slice', () => {
       {legacy: logSearchEvent({evt: 'foo'})}
     );
 
-    expect(
-      didYouMeanReducer(state, searchAction).queryCorrection.correctedQuery
-    ).toBe('foo');
+    expect(didYouMeanReducer(state, searchAction).queryCorrection.correctedQuery).toBe('foo');
   });
 
   it('should set new query correction to empty if none are returned by the API on search fulfilled', () => {
@@ -83,9 +73,7 @@ describe('did you mean slice', () => {
       {legacy: logSearchEvent({evt: 'foo'})}
     );
 
-    expect(
-      didYouMeanReducer(state, searchAction).queryCorrection.correctedQuery
-    ).toBe('');
+    expect(didYouMeanReducer(state, searchAction).queryCorrection.correctedQuery).toBe('');
   });
 
   it('should set originalQuery to empty if no corrections are returned by the API on search fulfilled', () => {
@@ -106,24 +94,20 @@ describe('did you mean slice', () => {
   it('should handle enable autocorrection', () => {
     state.automaticallyCorrectQuery = false;
     expect(
-      didYouMeanReducer(state, enableAutomaticQueryCorrection())
-        .automaticallyCorrectQuery
+      didYouMeanReducer(state, enableAutomaticQueryCorrection()).automaticallyCorrectQuery
     ).toBe(true);
   });
 
   it('should handle disable autocorrection', () => {
     state.automaticallyCorrectQuery = true;
     expect(
-      didYouMeanReducer(state, disableAutomaticQueryCorrection())
-        .automaticallyCorrectQuery
+      didYouMeanReducer(state, disableAutomaticQueryCorrection()).automaticallyCorrectQuery
     ).toBe(false);
   });
 
   it('should handle #setCorrectionMode', () => {
     state.queryCorrectionMode = 'legacy';
-    expect(
-      didYouMeanReducer(state, setCorrectionMode('next')).queryCorrectionMode
-    ).toBe('next');
+    expect(didYouMeanReducer(state, setCorrectionMode('next')).queryCorrectionMode).toBe('next');
   });
 
   it('should set corrected query if mode is next', () => {

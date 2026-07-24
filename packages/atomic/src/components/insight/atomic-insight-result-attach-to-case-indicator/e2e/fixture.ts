@@ -5,9 +5,8 @@ type AtomicInsightResultAttachToCaseIndicatorE2EFixtures = {
   attachToCaseIndicator: AtomicInsightResultAttachToCaseIndicatorPageObject;
 };
 
-export const test =
-  base.extend<AtomicInsightResultAttachToCaseIndicatorE2EFixtures>({
-    attachToCaseIndicator: async ({page}, use) => {
-      await use(new AtomicInsightResultAttachToCaseIndicatorPageObject(page));
-    },
-  });
+export const test = base.extend<AtomicInsightResultAttachToCaseIndicatorE2EFixtures>({
+  attachToCaseIndicator: async ({page}, use) => {
+    await use(new AtomicInsightResultAttachToCaseIndicatorPageObject(page));
+  },
+});

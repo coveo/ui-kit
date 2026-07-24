@@ -56,9 +56,7 @@
               .then((res) => res.json())
               .then((res) => {
                 const results = res.results.slice(0, 2).map((r) => r.name);
-                this.suggestions = query
-                  ? results.filter((r) => r.includes(query[0]))
-                  : results;
+                this.suggestions = query ? results.filter((r) => r.includes(query[0])) : results;
               });
           }
 
@@ -78,9 +76,7 @@
 
       async function main() {
         await customElements.whenDefined('atomic-search-interface');
-        const searchInterface = document.querySelector(
-          'atomic-search-interface'
-        );
+        const searchInterface = document.querySelector('atomic-search-interface');
         await searchInterface.initialize({
           accessToken: 'xx149e3ec9-786f-4c6c-b64f-49a403b930de',
           organizationId: 'fashioncoveodemocomgzh7iep8',
@@ -118,8 +114,7 @@
         <atomic-layout-section section="search">
           <atomic-search-box suggestion-timeout="1000">
             <custom-suggestions></custom-suggestions>
-            <atomic-search-box-query-suggestions>
-            </atomic-search-box-query-suggestions>
+            <atomic-search-box-query-suggestions> </atomic-search-box-query-suggestions>
             <atomic-search-box-recent-queries icon="assets://xml.svg">
             </atomic-search-box-recent-queries>
           </atomic-search-box>

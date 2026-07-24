@@ -17,9 +17,7 @@ describe('#buildNear', () => {
         ],
       });
 
-      expect(builder.toQuerySyntax()).toBe(
-        'keep calm near:1 and near:5 carry on'
-      );
+      expect(builder.toQuerySyntax()).toBe('keep calm near:1 and near:5 carry on');
     });
 
     it('with #negate set to true', () => {

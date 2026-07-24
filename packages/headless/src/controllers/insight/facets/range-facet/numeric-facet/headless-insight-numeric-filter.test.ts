@@ -17,9 +17,7 @@ import {
   type NumericFilterOptions,
 } from './headless-insight-numeric-filter.js';
 
-vi.mock(
-  '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions'
-);
+vi.mock('../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions');
 vi.mock('../../../../../features/facet-options/facet-options-actions');
 vi.mock('../../../../../features/insight-search/insight-search-actions');
 
@@ -57,9 +55,7 @@ describe('insight numeric filter', () => {
       numericFacet.setRange(value);
       expect(updateNumericFacetValues).toHaveBeenCalledWith({
         facetId,
-        values: [
-          {...value, state: 'selected', numberOfResults: 0, endInclusive: true},
-        ],
+        values: [{...value, state: 'selected', numberOfResults: 0, endInclusive: true}],
       });
     });
 

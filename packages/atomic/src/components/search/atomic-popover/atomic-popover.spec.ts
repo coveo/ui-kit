@@ -35,8 +35,7 @@ describe('atomic-popover', () => {
       return page.getByTestId('backdrop');
     },
     parts: (element: AtomicPopover) => {
-      const qs = (part: string) =>
-        element.shadowRoot?.querySelector(`[part="${part}"]`);
+      const qs = (part: string) => element.shadowRoot?.querySelector(`[part="${part}"]`);
       return {
         button: qs('popover-button') as HTMLButtonElement,
         valueLabel: qs('value-label'),
@@ -158,10 +157,7 @@ describe('atomic-popover', () => {
         'atomic/initializePopover',
         expect.any(Function)
       );
-      expect(addEventListenerSpy).toHaveBeenCalledWith(
-        'keydown',
-        expect.any(Function)
-      );
+      expect(addEventListenerSpy).toHaveBeenCalledWith('keydown', expect.any(Function));
     });
   });
 
@@ -176,10 +172,7 @@ describe('atomic-popover', () => {
         'atomic/initializePopover',
         expect.any(Function)
       );
-      expect(removeEventListenerSpy).toHaveBeenCalledWith(
-        'keydown',
-        expect.any(Function)
-      );
+      expect(removeEventListenerSpy).toHaveBeenCalledWith('keydown', expect.any(Function));
     });
   });
 
@@ -276,9 +269,7 @@ describe('atomic-popover', () => {
     describe('when search has error', () => {
       it('should render nothing', async () => {
         const element = await renderPopover({hasError: true});
-        const button = element.shadowRoot?.querySelector(
-          '[part="popover-button"]'
-        );
+        const button = element.shadowRoot?.querySelector('[part="popover-button"]');
         expect(button).toBeFalsy();
       });
     });

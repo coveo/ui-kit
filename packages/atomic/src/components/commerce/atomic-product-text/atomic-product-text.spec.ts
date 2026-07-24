@@ -16,8 +16,7 @@ describe('atomic-product-text', () => {
   let mockProduct: Product;
 
   const locators = {
-    getCommerceText: (element: AtomicProductText) =>
-      element?.querySelector('atomic-commerce-text'),
+    getCommerceText: (element: AtomicProductText) => element?.querySelector('atomic-commerce-text'),
   };
 
   beforeEach(async () => {
@@ -54,29 +53,28 @@ describe('atomic-product-text', () => {
     } = {}
   ) => {
     const productToUse = 'product' in options ? options.product : mockProduct;
-    const {element, atomicInterface} =
-      await renderInAtomicProduct<AtomicProductText>({
-        template: html`<atomic-product-text
-          field=${ifDefined(options.field)}
-          should-highlight=${ifDefined(options.shouldHighlight)}
-          default=${ifDefined(options.default)}
-        ></atomic-product-text>`,
-        selector: 'atomic-product-text',
-        product: productToUse === null ? undefined : productToUse,
-        bindings: (bindings) => {
-          bindings.interfaceElement.type = 'product-listing';
-          bindings.i18n = i18n;
-          bindings.store = {
-            ...bindings.store,
-            onChange: vi.fn(),
-            state: {
-              ...bindings.store?.state,
-              loadingFlags: [],
-            },
-          };
-          return bindings;
-        },
-      });
+    const {element, atomicInterface} = await renderInAtomicProduct<AtomicProductText>({
+      template: html`<atomic-product-text
+        field=${ifDefined(options.field)}
+        should-highlight=${ifDefined(options.shouldHighlight)}
+        default=${ifDefined(options.default)}
+      ></atomic-product-text>`,
+      selector: 'atomic-product-text',
+      product: productToUse === null ? undefined : productToUse,
+      bindings: (bindings) => {
+        bindings.interfaceElement.type = 'product-listing';
+        bindings.i18n = i18n;
+        bindings.store = {
+          ...bindings.store,
+          onChange: vi.fn(),
+          state: {
+            ...bindings.store?.state,
+            loadingFlags: [],
+          },
+        };
+        return bindings;
+      },
+    });
 
     await atomicInterface.updateComplete;
     await element?.updateComplete;
@@ -103,9 +101,7 @@ describe('atomic-product-text', () => {
 
       const commerceText = locators.getCommerceText(element);
       expect(commerceText).toBeDefined();
-      expect(commerceText?.shadowRoot?.textContent).toContain(
-        'Test Product Name'
-      );
+      expect(commerceText?.shadowRoot?.textContent).toContain('Test Product Name');
     });
 
     it('should render the #field value from additionalFields', async () => {
@@ -113,9 +109,7 @@ describe('atomic-product-text', () => {
 
       const commerceText = locators.getCommerceText(element);
       expect(commerceText).toBeDefined();
-      expect(commerceText?.shadowRoot?.textContent).toContain(
-        'Custom Field Value'
-      );
+      expect(commerceText?.shadowRoot?.textContent).toContain('Custom Field Value');
     });
   });
 
@@ -129,9 +123,7 @@ describe('atomic-product-text', () => {
       const commerceText = locators.getCommerceText(element);
       expect(commerceText).toBeDefined();
 
-      expect(commerceText?.shadowRoot?.textContent).toContain(
-        'Default text content'
-      );
+      expect(commerceText?.shadowRoot?.textContent).toContain('Default text content');
     });
 
     it('should render default value when #field is null', async () => {
@@ -142,9 +134,7 @@ describe('atomic-product-text', () => {
 
       const commerceText = locators.getCommerceText(element);
       expect(commerceText).toBeDefined();
-      expect(commerceText?.shadowRoot?.textContent).toContain(
-        'Default text content'
-      );
+      expect(commerceText?.shadowRoot?.textContent).toContain('Default text content');
     });
 
     it('should render default value when #field does not exist', async () => {
@@ -155,9 +145,7 @@ describe('atomic-product-text', () => {
 
       const commerceText = locators.getCommerceText(element);
       expect(commerceText).toBeDefined();
-      expect(commerceText?.shadowRoot?.textContent).toContain(
-        'Default text content'
-      );
+      expect(commerceText?.shadowRoot?.textContent).toContain('Default text content');
     });
 
     it('should render nothing when no #default is provided', async () => {
@@ -239,9 +227,7 @@ describe('atomic-product-text', () => {
       await element.updateComplete;
 
       const commerceText = locators.getCommerceText(element);
-      expect(commerceText?.shadowRoot?.textContent).toContain(
-        'New Product Name'
-      );
+      expect(commerceText?.shadowRoot?.textContent).toContain('New Product Name');
     });
   });
 
@@ -317,9 +303,7 @@ describe('atomic-product-text', () => {
 
       const commerceText = locators.getCommerceText(element);
       expect(commerceText).toBeDefined();
-      expect(commerceText?.shadowRoot?.textContent).toContain(
-        'Test Product Name'
-      );
+      expect(commerceText?.shadowRoot?.textContent).toContain('Test Product Name');
     });
 
     it('should render plain text when highlight keywords are null', async () => {
@@ -336,9 +320,7 @@ describe('atomic-product-text', () => {
 
       const commerceText = locators.getCommerceText(element);
       expect(commerceText).toBeDefined();
-      expect(commerceText?.shadowRoot?.textContent).toContain(
-        'Test Product Name'
-      );
+      expect(commerceText?.shadowRoot?.textContent).toContain('Test Product Name');
     });
 
     describe('when #shouldHighlight is false', () => {
@@ -365,9 +347,7 @@ describe('atomic-product-text', () => {
 
         const commerceText = locators.getCommerceText(element);
         expect(commerceText).toBeDefined();
-        expect(commerceText?.shadowRoot?.textContent).toContain(
-          'Test Product Name'
-        );
+        expect(commerceText?.shadowRoot?.textContent).toContain('Test Product Name');
       });
 
       it('should render plain text for #excerpt field', async () => {
@@ -492,16 +472,12 @@ describe('atomic-product-text', () => {
     });
 
     const commerceText = locators.getCommerceText(element);
-    expect(commerceText?.shadowRoot?.textContent).toContain(
-      'Value with éàü & symbols!'
-    );
+    expect(commerceText?.shadowRoot?.textContent).toContain('Value with éàü & symbols!');
   });
 
   it('should work with `search` interface type', async () => {
     const {element} = await renderInAtomicProduct<AtomicProductText>({
-      template: html`<atomic-product-text
-        .field=${'ec_name'}
-      ></atomic-product-text>`,
+      template: html`<atomic-product-text .field=${'ec_name'}></atomic-product-text>`,
       selector: 'atomic-product-text',
       product: mockProduct,
       bindings: (bindings) => {
@@ -517,9 +493,7 @@ describe('atomic-product-text', () => {
 
   it('should work with `product-listing interface type', async () => {
     const {element} = await renderInAtomicProduct<AtomicProductText>({
-      template: html`<atomic-product-text
-        .field=${'ec_name'}
-      ></atomic-product-text>`,
+      template: html`<atomic-product-text .field=${'ec_name'}></atomic-product-text>`,
       selector: 'atomic-product-text',
       product: mockProduct,
       bindings: (bindings) => {

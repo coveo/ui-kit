@@ -6,8 +6,7 @@ import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 
 type FacetsActions = ReturnType<typeof createFacetsActions>;
 
-const CACHE_KEY: CacheKey<FacetsActions> =
-  createCacheKey<FacetsActions>('facets/actions');
+const CACHE_KEY: CacheKey<FacetsActions> = createCacheKey<FacetsActions>('facets/actions');
 
 export function createFacetsActions(interfaceId: string) {
   return {
@@ -22,7 +21,5 @@ export function createFacetsActions(interfaceId: string) {
 
 export function getOrCreateFacetsActions(iface: InterfaceHandle) {
   const {stateId, cacheRegistry} = getHandleInternals(iface);
-  return cacheRegistry.getOrCreate(CACHE_KEY, () =>
-    createFacetsActions(stateId)
-  );
+  return cacheRegistry.getOrCreate(CACHE_KEY, () => createFacetsActions(stateId));
 }

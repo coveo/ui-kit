@@ -7,11 +7,7 @@ interface PromptInputProps {
   suggestions?: string[];
 }
 
-export function PromptInput({
-  onSubmit,
-  disabled,
-  suggestions = [],
-}: PromptInputProps) {
+export function PromptInput({onSubmit, disabled, suggestions = []}: PromptInputProps) {
   const [value, setValue] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
 
@@ -47,11 +43,7 @@ export function PromptInput({
       {showSuggestions && suggestions.length > 0 && (
         <ul className={styles.dropdown}>
           {suggestions.map((s) => (
-            <li
-              key={s}
-              className={styles.suggestion}
-              onMouseDown={() => submit(s)}
-            >
+            <li key={s} className={styles.suggestion} onMouseDown={() => submit(s)}>
               {s}
             </li>
           ))}

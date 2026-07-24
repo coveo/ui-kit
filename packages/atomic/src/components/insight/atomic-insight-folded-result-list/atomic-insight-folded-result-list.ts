@@ -174,10 +174,7 @@ export class AtomicInsightFoldedResultList
       'atomic/resolveFoldedResultList',
       this.handleResolveFoldedResultList as EventListener
     );
-    this.removeEventListener(
-      'atomic/loadCollection',
-      this.handleLoadCollection as EventListener
-    );
+    this.removeEventListener('atomic/loadCollection', this.handleLoadCollection as EventListener);
   }
 
   public initialize() {
@@ -195,10 +192,7 @@ export class AtomicInsightFoldedResultList
       'atomic/resolveFoldedResultList',
       this.handleResolveFoldedResultList as EventListener
     );
-    this.addEventListener(
-      'atomic/loadCollection',
-      this.handleLoadCollection as EventListener
-    );
+    this.addEventListener('atomic/loadCollection', this.handleLoadCollection as EventListener);
   }
 
   /**
@@ -207,9 +201,7 @@ export class AtomicInsightFoldedResultList
    *
    * Do not use this method if you integrate Atomic in a plain HTML deployment.
    */
-  public async setRenderFunction(
-    resultRenderingFunction: ItemRenderingFunction
-  ) {
+  public async setRenderFunction(resultRenderingFunction: ItemRenderingFunction) {
     this.itemRenderingFunction = resultRenderingFunction;
   }
 
@@ -266,8 +258,7 @@ export class AtomicInsightFoldedResultList
                     density: this.density,
                     display: this.display,
                     imageSize: this.imageSize,
-                    numberOfPlaceholders:
-                      this.resultsPerPageState.numberOfResults || 10,
+                    numberOfPlaceholders: this.resultsPerPageState.numberOfResults || 10,
                   },
                 })
               )
@@ -298,9 +289,7 @@ export class AtomicInsightFoldedResultList
     event.detail(this.foldedResultList);
   };
 
-  private handleLoadCollection = (
-    event: CustomEvent<InsightFoldedCollection>
-  ) => {
+  private handleLoadCollection = (event: CustomEvent<InsightFoldedCollection>) => {
     event.preventDefault();
     event.stopPropagation();
     this.foldedResultList.loadCollection(event.detail);
@@ -322,9 +311,7 @@ export class AtomicInsightFoldedResultList
   private initResultTemplateProvider() {
     this.resultTemplateProvider = new ResultTemplateProvider({
       includeDefaultTemplate: true,
-      templateElements: Array.from(
-        this.querySelectorAll('atomic-insight-result-template')
-      ),
+      templateElements: Array.from(this.querySelectorAll('atomic-insight-result-template')),
       getResultTemplateRegistered: () => this.resultTemplateRegistered,
       getTemplateHasError: () => this.templateHasError,
       setResultTemplateRegistered: (value: boolean) => {
@@ -362,30 +349,27 @@ export class AtomicInsightFoldedResultList
   }
 
   private renderList() {
-    return html`${map(
-      this.foldedResultListState.results,
-      (collection, index) => {
-        return html`${keyed(
-          this.getResultId(collection),
-          html`<atomic-insight-result
-            part="outline"
-            ${ref(
-              (element) =>
-                element instanceof HTMLElement &&
-                this.resultListCommon.setNewResultRef(element, index)
-            )}
-            .content=${this.getContent(collection)}
-            .density=${this.density}
-            .imageSize=${this.imageSize}
-            .interactiveResult=${this.getInteractiveResult(collection)}
-            .loadingFlag=${this.loadingFlag}
-            .result=${collection}
-            .renderingFunction=${this.itemRenderingFunction}
-            .store=${this.bindings.store as never}
-          ></atomic-insight-result>`
-        )}`;
-      }
-    )}`;
+    return html`${map(this.foldedResultListState.results, (collection, index) => {
+      return html`${keyed(
+        this.getResultId(collection),
+        html`<atomic-insight-result
+          part="outline"
+          ${ref(
+            (element) =>
+              element instanceof HTMLElement &&
+              this.resultListCommon.setNewResultRef(element, index)
+          )}
+          .content=${this.getContent(collection)}
+          .density=${this.density}
+          .imageSize=${this.imageSize}
+          .interactiveResult=${this.getInteractiveResult(collection)}
+          .loadingFlag=${this.loadingFlag}
+          .result=${collection}
+          .renderingFunction=${this.itemRenderingFunction}
+          .store=${this.bindings.store as never}
+        ></atomic-insight-result>`
+      )}`;
+    })}`;
   }
 
   private get focusTarget() {

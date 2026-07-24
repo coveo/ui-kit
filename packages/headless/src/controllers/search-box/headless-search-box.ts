@@ -1,14 +1,8 @@
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
-import {
-  logSearchboxSubmit,
-  searchboxSubmit,
-} from '../../features/query/query-analytics-actions.js';
+import {logSearchboxSubmit, searchboxSubmit} from '../../features/query/query-analytics-actions.js';
 import {fetchQuerySuggestions} from '../../features/query-suggest/query-suggest-actions.js';
 import {executeSearch} from '../../features/search/search-actions.js';
-import type {
-  Delimiters,
-  SuggestionHighlightingOptions,
-} from '../../utils/highlight.js';
+import type {Delimiters, SuggestionHighlightingOptions} from '../../utils/highlight.js';
 import type {Controller} from '../controller/headless-controller.js';
 import {
   buildCoreSearchBox,
@@ -87,10 +81,7 @@ export interface SearchBox extends Controller {
  * @group Controllers
  * @category SearchBox
  */
-export function buildSearchBox(
-  engine: SearchEngine,
-  props: SearchBoxProps = {}
-): SearchBox {
+export function buildSearchBox(engine: SearchEngine, props: SearchBoxProps = {}): SearchBox {
   const searchBox = buildCoreSearchBox(engine, {
     ...props,
     executeSearchActionCreator: executeSearch,

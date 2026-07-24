@@ -4,27 +4,17 @@ import {
   getOrCreatePaginationSlice,
   initialPaginationState,
 } from './pagination-slice.js';
-import {
-  createPaginationActions,
-  getOrCreatePaginationActions,
-} from './pagination-actions.js';
-import {
-  createPaginationSelectors,
-  getOrCreatePaginationSelectors,
-} from './pagination-selectors.js';
+import {createPaginationActions, getOrCreatePaginationActions} from './pagination-actions.js';
+import {createPaginationSelectors, getOrCreatePaginationSelectors} from './pagination-selectors.js';
 import {createTestEngine, createTestInterface} from '@/src/test/test-utils.js';
 import {getOrCreateHydrateFromSnapshotAction} from '@/src/internal/features/generative/index.js';
 
 describe('createPaginationActions', () => {
   it('should create actions scoped to the interface ID', () => {
     const actions = createPaginationActions('search-1');
-    expect(actions.setFirstResult.type).toBe(
-      'search-1/pagination/setFirstResult'
-    );
+    expect(actions.setFirstResult.type).toBe('search-1/pagination/setFirstResult');
     expect(actions.setPageSize.type).toBe('search-1/pagination/setPageSize');
-    expect(actions.setTotalCount.type).toBe(
-      'search-1/pagination/setTotalCount'
-    );
+    expect(actions.setTotalCount.type).toBe('search-1/pagination/setTotalCount');
   });
   it('should create distinct actions for different interface IDs', () => {
     const actionsA = createPaginationActions('interface-a');
@@ -65,10 +55,7 @@ describe('createPaginationSlice', () => {
     const actions = getOrCreatePaginationActions(iface);
     const hydrateAction = getOrCreateHydrateFromSnapshotAction(iface);
     const slice = createPaginationSlice('test-1', actions, hydrateAction);
-    const state = slice.reducer(
-      initialPaginationState,
-      actions.setFirstResult(20)
-    );
+    const state = slice.reducer(initialPaginationState, actions.setFirstResult(20));
     expect(state.firstResult).toBe(20);
     expect(state.pageSize).toBe(10);
     expect(state.totalCount).toBe(0);
@@ -79,10 +66,7 @@ describe('createPaginationSlice', () => {
     const actions = getOrCreatePaginationActions(iface);
     const hydrateAction = getOrCreateHydrateFromSnapshotAction(iface);
     const slice = createPaginationSlice('test-2', actions, hydrateAction);
-    const state = slice.reducer(
-      initialPaginationState,
-      actions.setPageSize(25)
-    );
+    const state = slice.reducer(initialPaginationState, actions.setPageSize(25));
     expect(state.pageSize).toBe(25);
     expect(state.firstResult).toBe(0);
     expect(state.totalCount).toBe(0);
@@ -93,10 +77,7 @@ describe('createPaginationSlice', () => {
     const actions = getOrCreatePaginationActions(iface);
     const hydrateAction = getOrCreateHydrateFromSnapshotAction(iface);
     const slice = createPaginationSlice('test-3', actions, hydrateAction);
-    const state = slice.reducer(
-      initialPaginationState,
-      actions.setTotalCount(100)
-    );
+    const state = slice.reducer(initialPaginationState, actions.setTotalCount(100));
     expect(state.totalCount).toBe(100);
     expect(state.firstResult).toBe(0);
     expect(state.pageSize).toBe(10);
@@ -109,10 +90,7 @@ describe('createPaginationSlice', () => {
     const hydrateX = getOrCreateHydrateFromSnapshotAction(ifaceX);
     const slice = createPaginationSlice('iface-x', actionsX, hydrateX);
     const otherActions = getOrCreatePaginationActions(ifaceY);
-    const state = slice.reducer(
-      initialPaginationState,
-      otherActions.setFirstResult(50)
-    );
+    const state = slice.reducer(initialPaginationState, otherActions.setFirstResult(50));
     expect(state.firstResult).toBe(0);
   });
   it('should maintain state immutability', () => {

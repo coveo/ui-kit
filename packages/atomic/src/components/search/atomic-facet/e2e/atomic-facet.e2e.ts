@@ -79,13 +79,11 @@ const sortCriteriaTests: {
   },
   {
     criteria: 'alphanumericNatural',
-    sortFunction: (values: string[]) =>
-      orderBy([...values], [(value: string) => value], 'asc'),
+    sortFunction: (values: string[]) => orderBy([...values], [(value: string) => value], 'asc'),
   },
   {
     criteria: 'alphanumericNaturalDescending',
-    sortFunction: (values: string[]) =>
-      orderBy([...values], [(value: string) => value], ['desc']),
+    sortFunction: (values: string[]) => orderBy([...values], [(value: string) => value], ['desc']),
   },
 ];
 
@@ -105,9 +103,7 @@ test.describe('Sort Criteria', () => {
         await expect.poll(async () => await facet.facetValue.count()).toBe(30);
       });
 
-      test(`should have facet values sorted by ${criteria}`, async ({
-        facet,
-      }) => {
+      test(`should have facet values sorted by ${criteria}`, async ({facet}) => {
         const values = await facet.facetValueLabel.allTextContents();
         const sortedValues = sortFunction(values);
         expect(values).toEqual(sortedValues);
@@ -124,9 +120,7 @@ test.describe('Sort Criteria', () => {
             },
           });
           await facet.hydrated.waitFor();
-          await expect
-            .poll(async () => await facet.facetValue.count())
-            .toBe(30);
+          await expect.poll(async () => await facet.facetValue.count()).toBe(30);
         });
 
         // oxlint-disable-next-line no-template-curly-in-string -- <>
@@ -137,12 +131,8 @@ test.describe('Sort Criteria', () => {
 
           const customSort = new Set(['XL', 'L', 'M', 'S']);
 
-          const customSortedValues = values.filter((value) =>
-            customSort.has(value)
-          );
-          const remainingValues = sortFunction(
-            values.filter((value) => !customSort.has(value))
-          );
+          const customSortedValues = values.filter((value) => customSort.has(value));
+          const remainingValues = sortFunction(values.filter((value) => !customSort.has(value)));
 
           expect(values).toEqual([...customSortedValues, ...remainingValues]);
         });
@@ -190,9 +180,7 @@ test.describe('Sort Criteria', () => {
       await expect.poll(async () => await facet.facetValue.count()).toBe(10);
     });
 
-    test('should have facet values sorted by occurrences when not expanded', async ({
-      facet,
-    }) => {
+    test('should have facet values sorted by occurrences when not expanded', async ({facet}) => {
       const values = await facet.facetValueOccurrences.allTextContents();
       const sortedValues = [...values]
         .sort((a, b) => {
@@ -210,9 +198,7 @@ test.describe('Sort Criteria', () => {
         await expect.poll(async () => await facet.facetValue.count()).toBe(20);
       });
 
-      test('should have facet values sorted alphanumerically when expanded', async ({
-        facet,
-      }) => {
+      test('should have facet values sorted alphanumerically when expanded', async ({facet}) => {
         const values = await facet.facetValueLabel.allTextContents();
         const sortedValues = [...values].sort();
         expect(values).toEqual(sortedValues);

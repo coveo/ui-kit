@@ -8,13 +8,12 @@ describe('atomic-insight-full-search-button', () => {
   let element: AtomicInsightFullSearchButton;
 
   const setupElement = async (props: {tooltip?: string} = {}) => {
-    const result =
-      await renderInAtomicInsightInterface<AtomicInsightFullSearchButton>({
-        template: html`<atomic-insight-full-search-button
-          .tooltip=${props.tooltip ?? ''}
-        ></atomic-insight-full-search-button>`,
-        selector: 'atomic-insight-full-search-button',
-      });
+    const result = await renderInAtomicInsightInterface<AtomicInsightFullSearchButton>({
+      template: html`<atomic-insight-full-search-button
+        .tooltip=${props.tooltip ?? ''}
+      ></atomic-insight-full-search-button>`,
+      selector: 'atomic-insight-full-search-button',
+    });
 
     element = result.element;
     await element.updateComplete;
@@ -40,15 +39,9 @@ describe('atomic-insight-full-search-button', () => {
     it('should render the button with the correct part prefix', async () => {
       await setupElement();
 
-      const container = element.shadowRoot?.querySelector(
-        '[part="full-search-container"]'
-      );
-      const button = element.shadowRoot?.querySelector(
-        '[part="full-search-button"]'
-      );
-      const icon = element.shadowRoot?.querySelector(
-        '[part="full-search-icon"]'
-      );
+      const container = element.shadowRoot?.querySelector('[part="full-search-container"]');
+      const button = element.shadowRoot?.querySelector('[part="full-search-button"]');
+      const icon = element.shadowRoot?.querySelector('[part="full-search-icon"]');
 
       expect(container).toBeInTheDocument();
       expect(button).toBeInTheDocument();
@@ -59,9 +52,7 @@ describe('atomic-insight-full-search-button', () => {
       await setupElement();
 
       const button = element.shadowRoot?.querySelector('button');
-      expect(button?.getAttribute('aria-label')).toBe(
-        'Button to access full search'
-      );
+      expect(button?.getAttribute('aria-label')).toBe('Button to access full search');
     });
 
     it('should render the button with an empty title by default', async () => {

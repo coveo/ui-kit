@@ -46,9 +46,7 @@ describe('#renderModalOptions', () => {
     const element = await renderComponent();
     const legend = element.querySelector('legend');
 
-    expect(legend).toHaveTextContent(
-      i18n.t('smart-snippet-feedback-select-reason')
-    );
+    expect(legend).toHaveTextContent(i18n.t('smart-snippet-feedback-select-reason'));
   });
 
   it('should render children inside fieldset', async () => {

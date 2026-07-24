@@ -11,10 +11,9 @@ import '@/src/components/search/atomic-format-unit/atomic-format-unit.js';
 import '@/src/components/search/atomic-numeric-facet/atomic-numeric-facet.js';
 import '@/src/components/search/atomic-result-number/atomic-result-number.js';
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-format-unit',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-format-unit', {
+  excludeCategories: ['methods'],
+});
 
 const searchApiHarness = new MockSearchApi();
 
@@ -51,9 +50,7 @@ export default meta;
 export const Facet: Story = {
   name: 'Within Numeric Facet',
   render: (args) => html`
-    <atomic-numeric-facet field="size" label="Size">
-      ${template(args)}
-    </atomic-numeric-facet>
+    <atomic-numeric-facet field="size" label="Size"> ${template(args)} </atomic-numeric-facet>
   `,
   beforeEach: () => {
     searchApiHarness.searchEndpoint.mockOnce((response) => ({
@@ -104,9 +101,7 @@ export const Facet: Story = {
 export const Result: Story = {
   name: 'Within Numeric Result',
   render: (args) => html`
-    <atomic-result-number field="size">
-      ${template(args)}
-    </atomic-result-number>
+    <atomic-result-number field="size"> ${template(args)} </atomic-result-number>
   `,
   decorators: [resultTemplateDecorator, resultListDecorator],
   beforeEach: () => {

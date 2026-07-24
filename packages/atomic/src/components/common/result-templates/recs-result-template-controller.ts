@@ -8,15 +8,10 @@ import {
   type TemplateContent,
 } from '@/src/components/common/template-controller/base-template-controller';
 
-type RecsResultTemplateHost = ReactiveControllerHost &
-  HTMLElement & {error?: Error};
+type RecsResultTemplateHost = ReactiveControllerHost & HTMLElement & {error?: Error};
 
 export class RecsResultTemplateController extends BaseTemplateController<RecsResultTemplateCondition> {
-  constructor(
-    host: RecsResultTemplateHost,
-    validParents: string[],
-    allowEmpty: boolean = false
-  ) {
+  constructor(host: RecsResultTemplateHost, validParents: string[], allowEmpty: boolean = false) {
     super(host, validParents, allowEmpty);
   }
 

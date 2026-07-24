@@ -5,16 +5,10 @@ import {registerFieldsToInclude} from '../../../features/fields/fields-actions.j
 import {fieldsReducer as fields} from '../../../features/fields/fields-slice.js';
 import {fetchMoreResults} from '../../../features/search/search-actions.js';
 import {searchReducer as search} from '../../../features/search/search-slice.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../../test/mock-engine-v2.js';
 import {buildMockResult} from '../../../test/mock-result.js';
 import {createMockState} from '../../../test/mock-state.js';
-import {
-  buildCoreResultList,
-  type ResultList,
-} from './headless-core-result-list.js';
+import {buildCoreResultList, type ResultList} from './headless-core-result-list.js';
 
 vi.mock('../../../features/fields/fields-actions');
 vi.mock('../../../features/search/search-actions');
@@ -86,8 +80,7 @@ describe('CoreResultList', () => {
   });
 
   it('moreResultsAvailable should return true when totalCountFiltered is lower or equal than the results length', () => {
-    engine.state.search.response.totalCountFiltered =
-      engine.state.search.results.length;
+    engine.state.search.response.totalCountFiltered = engine.state.search.results.length;
     expect(buildCoreResultList(engine).state.moreResultsAvailable).toBe(false);
   });
 
@@ -95,10 +88,7 @@ describe('CoreResultList', () => {
     let resultList: ResultList;
     let mockDispatch: Mock;
 
-    const fetchMoreResultsAndWait = async (
-      iterations: number,
-      delay: number
-    ) => {
+    const fetchMoreResultsAndWait = async (iterations: number, delay: number) => {
       for (let i = 0; i < iterations; i++) {
         resultList.fetchMoreResults();
         await Promise.resolve();
@@ -146,8 +136,7 @@ describe('CoreResultList', () => {
 
     it(`when calling fetchMoreResults while there are no more results available
     is should not dispatch and log an info`, async () => {
-      engine.state.search.response.totalCountFiltered =
-        engine.state.search.response.results.length;
+      engine.state.search.response.totalCountFiltered = engine.state.search.response.results.length;
       await fetchMoreResultsAndWait(1, 0);
 
       expect(mockDispatch).not.toHaveBeenCalled();

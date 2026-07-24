@@ -28,9 +28,7 @@ describe('hydratedRecommendationStaticStateFactory', () => {
   const mockBuildResult = {
     engine: {
       dispatch: vi.fn(),
-      waitForRequestCompletedAction: vi
-        .fn()
-        .mockResolvedValue([{type: 'some-action'}]),
+      waitForRequestCompletedAction: vi.fn().mockResolvedValue([{type: 'some-action'}]),
     },
     controllers: {},
   };
@@ -44,22 +42,15 @@ describe('hydratedRecommendationStaticStateFactory', () => {
     const mockSolutionTypeBuild = vi.fn().mockResolvedValue(mockBuildResult);
     const controllerDefinitions = createControllerDefinitions();
     const options = createEngineOptions();
-    const mockRecommendationState = vi
-      .fn()
-      .mockImplementation(() => mockSolutionTypeBuild);
+    const mockRecommendationState = vi.fn().mockImplementation(() => mockSolutionTypeBuild);
     vi.mocked(buildFactory).mockReturnValue(mockRecommendationState);
 
-    const factory = hydratedRecommendationStaticStateFactory(
-      controllerDefinitions,
-      options
-    );
+    const factory = hydratedRecommendationStaticStateFactory(controllerDefinitions, options);
 
     await factory({searchActions: mockSearchActions, controllers: {}});
 
     expect(buildFactory).toHaveBeenCalledWith(controllerDefinitions, options);
-    expect(mockRecommendationState).toHaveBeenCalledWith(
-      SolutionType.recommendation
-    );
+    expect(mockRecommendationState).toHaveBeenCalledWith(SolutionType.recommendation);
   });
 
   it('should dispatch search actions and wait for request completion', async () => {
@@ -76,12 +67,8 @@ describe('hydratedRecommendationStaticStateFactory', () => {
       controllers: {},
     });
 
-    expect(mockBuildResult.engine.dispatch).toHaveBeenCalledWith(
-      mockSearchActions[0]
-    );
-    expect(
-      mockBuildResult.engine.waitForRequestCompletedAction
-    ).toHaveBeenCalledOnce();
+    expect(mockBuildResult.engine.dispatch).toHaveBeenCalledWith(mockSearchActions[0]);
+    expect(mockBuildResult.engine.waitForRequestCompletedAction).toHaveBeenCalledOnce();
     expect(staticState).toEqual(mockBuildResult);
   });
 

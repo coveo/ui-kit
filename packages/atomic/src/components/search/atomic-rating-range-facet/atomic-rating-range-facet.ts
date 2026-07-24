@@ -74,10 +74,7 @@ import Star from '../../../images/star.svg';
 @customElement('atomic-rating-range-facet')
 @bindings()
 @withTailwindStyles
-export class AtomicRatingRangeFacet
-  extends LitElement
-  implements InitializableComponent<Bindings>
-{
+export class AtomicRatingRangeFacet extends LitElement implements InitializableComponent<Bindings> {
   private static readonly propsSchema = new Schema({
     field: new StringValue({required: true, emptyAllowed: false}),
     numberOfIntervals: new NumberValue({min: 1}),
@@ -87,11 +84,7 @@ export class AtomicRatingRangeFacet
     dependsOn: new RecordValue({options: {required: false}}),
   });
 
-  static styles = [
-    facetCommonStyles,
-    facetValueCheckboxStyles,
-    atomicRatingStyles,
-  ];
+  static styles = [facetCommonStyles, facetValueCheckboxStyles, atomicRatingStyles];
   @state() public bindings!: Bindings;
   @state() public error!: Error;
 
@@ -320,9 +313,7 @@ export class AtomicRatingRangeFacet
 
   private get isHidden() {
     return (
-      !this.valuesToRender.length ||
-      this.searchStatusState.hasError ||
-      !this.facet.state.enabled
+      !this.valuesToRender.length || this.searchStatusState.hasError || !this.facet.state.enabled
     );
   }
 
@@ -363,26 +354,20 @@ export class AtomicRatingRangeFacet
   }
 
   private get scaleFactor() {
-    return (
-      (this.maxValueInIndex ?? this.numberOfIntervals) / this.numberOfIntervals
-    );
+    return (this.maxValueInIndex ?? this.numberOfIntervals) / this.numberOfIntervals;
   }
 
   private get numberOfSelectedValues() {
-    return this.facetState.values.filter(({state}) => state === 'selected')
-      .length;
+    return this.facetState.values.filter(({state}) => state === 'selected').length;
   }
 
   private initializeDependenciesManager() {
-    this.dependenciesManager = buildFacetConditionsManager(
-      this.bindings.engine,
-      {
-        facetId: this.facetId!,
-        conditions: parseDependsOn<
-          FacetValueRequest | CategoryFacetValueRequest
-        >(this.dependsOn || {}),
-      }
-    );
+    this.dependenciesManager = buildFacetConditionsManager(this.bindings.engine, {
+      facetId: this.facetId!,
+      conditions: parseDependsOn<FacetValueRequest | CategoryFacetValueRequest>(
+        this.dependsOn || {}
+      ),
+    });
   }
 
   private generateCurrentValues() {
@@ -391,9 +376,7 @@ export class AtomicRatingRangeFacet
       currentValues.push(
         buildNumericRange({
           start: Math.round(i * this.scaleFactor * 100) / 100,
-          end:
-            Math.round((this.maxValueInIndex ?? this.numberOfIntervals) * 100) /
-            100,
+          end: Math.round((this.maxValueInIndex ?? this.numberOfIntervals) * 100) / 100,
           endInclusive: true,
         })
       );
@@ -506,26 +489,23 @@ export class AtomicRatingRangeFacet
   @bindingGuard()
   @errorGuard()
   render() {
-    return html`${when(
-      !this.searchStatusState.hasError && this.facet.state.enabled,
-      () => {
-        if (!this.searchStatusState.firstSearchExecuted) {
-          return renderFacetPlaceholder({
-            props: {
-              numberOfValues: this.numberOfIntervals,
-              isCollapsed: this.isCollapsed,
-            },
-          });
-        }
-
-        if (!this.valuesToRender.length) {
-          return nothing;
-        }
-
-        return renderFacetContainer()(html`${this.renderHeader()}
-        ${when(!this.isCollapsed, () => this.renderValues())}`);
+    return html`${when(!this.searchStatusState.hasError && this.facet.state.enabled, () => {
+      if (!this.searchStatusState.firstSearchExecuted) {
+        return renderFacetPlaceholder({
+          props: {
+            numberOfValues: this.numberOfIntervals,
+            isCollapsed: this.isCollapsed,
+          },
+        });
       }
-    )}`;
+
+      if (!this.valuesToRender.length) {
+        return nothing;
+      }
+
+      return renderFacetContainer()(html`${this.renderHeader()}
+      ${when(!this.isCollapsed, () => this.renderValues())}`);
+    })}`;
   }
 }
 

@@ -35,9 +35,8 @@ export const wrapInRecommendationInterface = ({
   `,
   play: async ({canvasElement, step}) => {
     await customElements.whenDefined('atomic-recs-interface');
-    const recsInterface = canvasElement.querySelector<AtomicRecsInterface>(
-      'atomic-recs-interface'
-    )!;
+    const recsInterface =
+      canvasElement.querySelector<AtomicRecsInterface>('atomic-recs-interface')!;
 
     if (!skipInitialization) {
       await step('Render the Recs Interface', async () => {

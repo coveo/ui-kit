@@ -11,10 +11,9 @@ import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-w
 import '@/src/components/search/atomic-result-section-visual/atomic-result-section-visual.js';
 import {SearchResponse} from '@coveo/platform-mock-api/search/search-response';
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-result-section-visual',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-result-section-visual', {
+  excludeCategories: ['methods'],
+});
 
 const searchApiHarness = new MockSearchApi();
 searchApiHarness.searchEndpoint.mock((response) => ({

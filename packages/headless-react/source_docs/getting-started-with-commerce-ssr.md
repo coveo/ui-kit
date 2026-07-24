@@ -78,8 +78,7 @@ export const engineDefinition = defineCommerceEngine({
   },
 });
 
-export const {useSummary, useProductList, useCart} =
-  engineDefinition.controllers;
+export const {useSummary, useProductList, useCart} = engineDefinition.controllers;
 ```
 
 The commerce engine definition provides four solution-type definitions that you can use depending on the page type:

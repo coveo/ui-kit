@@ -84,9 +84,9 @@ export const executeSearch = createAsyncThunk<
   const request = buildFilterableCommerceAPIRequest(state, navigatorContext);
   const query = querySelector(state);
 
-  const processor = new AsyncSearchThunkProcessor<
-    ReturnType<typeof config.rejectWithValue>
-  >(config);
+  const processor = new AsyncSearchThunkProcessor<ReturnType<typeof config.rejectWithValue>>(
+    config
+  );
   const fetchedResponse = await processor.fetchFromAPI({
     ...request,
     query,
@@ -117,9 +117,9 @@ export const fetchMoreProducts = createAsyncThunk<
 
   const request = buildFilterableCommerceAPIRequest(state, navigatorContext);
 
-  const processor = new AsyncSearchThunkProcessor<
-    ReturnType<typeof config.rejectWithValue>
-  >(config);
+  const processor = new AsyncSearchThunkProcessor<ReturnType<typeof config.rejectWithValue>>(
+    config
+  );
   const fetchedResponse = await processor.fetchFromAPI({
     ...request,
     query,
@@ -161,26 +161,23 @@ export const fetchInstantProducts = createAsyncThunk<
   FetchInstantProductsThunkReturn,
   FetchInstantProductsPayload,
   AsyncThunkCommerceOptions<StateNeededByExecuteSearch>
->(
-  'commerce/search/fetchInstantProducts',
-  async (payload, {getState, rejectWithValue, extra}) => {
-    const state = getState();
-    const {apiClient, navigatorContext} = extra;
-    const {q} = payload;
-    const fetched = await apiClient.productSuggestions({
-      ...buildBaseCommerceAPIRequest(state, navigatorContext),
-      query: q,
-    });
+>('commerce/search/fetchInstantProducts', async (payload, {getState, rejectWithValue, extra}) => {
+  const state = getState();
+  const {apiClient, navigatorContext} = extra;
+  const {q} = payload;
+  const fetched = await apiClient.productSuggestions({
+    ...buildBaseCommerceAPIRequest(state, navigatorContext),
+    query: q,
+  });
 
-    if (isErrorResponse(fetched)) {
-      return rejectWithValue(fetched.error);
-    }
-
-    return {
-      response: {...fetched.success, products: fetched.success.products},
-    };
+  if (isErrorResponse(fetched)) {
+    return rejectWithValue(fetched.error);
   }
-);
+
+  return {
+    response: {...fetched.success, products: fetched.success.products},
+  };
+});
 
 export interface PromoteChildToParentPayload {
   child: ChildProduct;
@@ -197,6 +194,5 @@ const promoteChildToParentDefinition = {
 
 export const promoteChildToParent = createAction(
   'commerce/search/promoteChildToParent',
-  (payload: PromoteChildToParentPayload) =>
-    validatePayload(payload, promoteChildToParentDefinition)
+  (payload: PromoteChildToParentPayload) => validatePayload(payload, promoteChildToParentDefinition)
 );

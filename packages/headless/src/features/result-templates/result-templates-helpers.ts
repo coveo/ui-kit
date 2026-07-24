@@ -27,9 +27,7 @@ export const getResultProperty = (result: Result, property: string) => {
  * @param fieldNames (string[]) A list of fields that must be defined.
  * @returns (ResultTemplateCondition) A function that takes a result and checks if every field in the specified list is defined.
  */
-export const fieldsMustBeDefined = (
-  fieldNames: string[]
-): ResultTemplateCondition => {
+export const fieldsMustBeDefined = (fieldNames: string[]): ResultTemplateCondition => {
   return (result: Result) => {
     return fieldNames.every(
       (fieldName) => !isNullOrUndefined(getResultProperty(result, fieldName))
@@ -42,13 +40,9 @@ export const fieldsMustBeDefined = (
  * @param fieldNames (string[]) A list of fields that must not be defined.
  * @returns (ResultTemplateCondition) A function that takes a result and checks if every field in the specified list is not defined.
  */
-export const fieldsMustNotBeDefined = (
-  fieldNames: string[]
-): ResultTemplateCondition => {
+export const fieldsMustNotBeDefined = (fieldNames: string[]): ResultTemplateCondition => {
   return (result: Result) => {
-    return fieldNames.every((fieldName) =>
-      isNullOrUndefined(getResultProperty(result, fieldName))
-    );
+    return fieldNames.every((fieldName) => isNullOrUndefined(getResultProperty(result, fieldName)));
   };
 };
 
@@ -65,10 +59,7 @@ export const fieldMustMatch = (
   return (result: Result) => {
     const fieldValues = getFieldValuesFromResult(fieldName, result);
     return valuesToMatch.some((valueToMatch) =>
-      fieldValues.some(
-        (fieldValue) =>
-          `${fieldValue}`.toLowerCase() === valueToMatch.toLowerCase()
-      )
+      fieldValues.some((fieldValue) => `${fieldValue}`.toLowerCase() === valueToMatch.toLowerCase())
     );
   };
 };
@@ -87,8 +78,7 @@ export const fieldMustNotMatch = (
     const fieldValues = getFieldValuesFromResult(fieldName, result);
     return blacklistedValues.every((blacklistedValue) =>
       fieldValues.every(
-        (fieldValue) =>
-          `${fieldValue}`.toLowerCase() !== blacklistedValue.toLowerCase()
+        (fieldValue) => `${fieldValue}`.toLowerCase() !== blacklistedValue.toLowerCase()
       )
     );
   };

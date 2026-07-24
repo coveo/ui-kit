@@ -1,8 +1,5 @@
 import {useEffect} from 'react';
-import {
-  isUserTrackingAllowedByClient,
-  retrieveOrGenerateClientId,
-} from '@/lib/client-id.client';
+import {isUserTrackingAllowedByClient, retrieveOrGenerateClientId} from '@/lib/client-id.client';
 import {removeCookie, setCookie} from '@/utils/cookie-utils.client';
 
 /**

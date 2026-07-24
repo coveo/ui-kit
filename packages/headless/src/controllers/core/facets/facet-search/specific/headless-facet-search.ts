@@ -21,18 +21,10 @@ export interface FacetSearchProps {
   isForFieldSuggestions: boolean;
   executeFacetSearchActionCreator: (
     facetId: string
-  ) => AsyncThunkAction<
-    unknown,
-    unknown,
-    AsyncThunkOptions<unknown, ThunkExtraArguments>
-  >;
+  ) => AsyncThunkAction<unknown, unknown, AsyncThunkOptions<unknown, ThunkExtraArguments>>;
   executeFieldSuggestActionCreator: (
     facetId: string
-  ) => AsyncThunkAction<
-    unknown,
-    unknown,
-    AsyncThunkOptions<unknown, ThunkExtraArguments>
-  >;
+  ) => AsyncThunkAction<unknown, unknown, AsyncThunkOptions<unknown, ThunkExtraArguments>>;
 }
 
 export type FacetSearch = ReturnType<typeof buildFacetSearch>;

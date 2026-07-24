@@ -11,10 +11,9 @@ const searchApiHarness = new MockSearchApi();
 const {decorator, play} = wrapInSearchInterface({
   includeCodeRoot: false,
 });
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-timeframe',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-timeframe', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-timeframe',

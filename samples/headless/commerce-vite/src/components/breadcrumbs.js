@@ -43,8 +43,7 @@ export class Breadcrumbs extends LitElement {
   }
 
   render() {
-    const facetBreadcrumbs =
-      this.breadcrumbManager?.state.facetBreadcrumbs ?? [];
+    const facetBreadcrumbs = this.breadcrumbManager?.state.facetBreadcrumbs ?? [];
     const crumbs = facetBreadcrumbs.flatMap((facet) =>
       facet.values.map((value) => ({
         key: `${facet.facetId}:${value.value.value}`,
@@ -62,16 +61,10 @@ export class Breadcrumbs extends LitElement {
       <div class="breadcrumbs">
         ${crumbs.map(
           (crumb) => html`
-            <button type="button" @click=${crumb.deselect}>
-              ${crumb.label} ✕
-            </button>
+            <button type="button" @click=${crumb.deselect}>${crumb.label} ✕</button>
           `
         )}
-        <button
-          type="button"
-          class="clear"
-          @click=${() => this.breadcrumbManager.deselectAll()}
-        >
+        <button type="button" class="clear" @click=${() => this.breadcrumbManager.deselectAll()}>
           Clear all
         </button>
       </div>

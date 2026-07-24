@@ -8,10 +8,7 @@ class TestElement extends LitElement {
   @property({type: String}) myProp: string = 'initial value';
 
   @watch('myProp', {waitUntilFirstUpdate: false})
-  public withWaitUntilFirstUpdateFalse(
-    _oldValue?: string,
-    _newValue?: string
-  ) {}
+  public withWaitUntilFirstUpdateFalse(_oldValue?: string, _newValue?: string) {}
 
   @watch('myProp')
   public withWaitUntilFirstUpdateTrue(_oldValue?: string, _newValue?: string) {}
@@ -26,14 +23,8 @@ describe('@watch decorator', () => {
     // TODO: use @open-wc/testing package for fixture and helpers
     element = document.createElement('test-element') as TestElement;
     document.body.appendChild(element);
-    withWaitUntilFirstUpdateFalseSpy = vi.spyOn(
-      element,
-      'withWaitUntilFirstUpdateFalse'
-    );
-    withWaitUntilFirstUpdateTrueSpy = vi.spyOn(
-      element,
-      'withWaitUntilFirstUpdateTrue'
-    );
+    withWaitUntilFirstUpdateFalseSpy = vi.spyOn(element, 'withWaitUntilFirstUpdateFalse');
+    withWaitUntilFirstUpdateTrueSpy = vi.spyOn(element, 'withWaitUntilFirstUpdateTrue');
   };
 
   const teardownElement = () => {
@@ -53,10 +44,7 @@ describe('@watch decorator', () => {
   describe('when #waitUntilFirstUpdate is false', () => {
     it('should call the watch on the first render', async () => {
       expect(withWaitUntilFirstUpdateFalseSpy).toHaveBeenCalledTimes(1);
-      expect(withWaitUntilFirstUpdateFalseSpy).toHaveBeenCalledWith(
-        undefined,
-        'initial value'
-      );
+      expect(withWaitUntilFirstUpdateFalseSpy).toHaveBeenCalledWith(undefined, 'initial value');
     });
   });
 
@@ -70,10 +58,7 @@ describe('@watch decorator', () => {
       await element.updateComplete;
 
       expect(withWaitUntilFirstUpdateTrueSpy).toHaveBeenCalledTimes(1);
-      expect(withWaitUntilFirstUpdateTrueSpy).toHaveBeenCalledWith(
-        'initial value',
-        'new value'
-      );
+      expect(withWaitUntilFirstUpdateTrueSpy).toHaveBeenCalledWith('initial value', 'new value');
     });
   });
 
@@ -83,16 +68,10 @@ describe('@watch decorator', () => {
       await element.updateComplete;
 
       expect(withWaitUntilFirstUpdateFalseSpy).toHaveBeenCalledTimes(2);
-      expect(withWaitUntilFirstUpdateFalseSpy).toHaveBeenCalledWith(
-        'initial value',
-        'new value'
-      );
+      expect(withWaitUntilFirstUpdateFalseSpy).toHaveBeenCalledWith('initial value', 'new value');
 
       expect(withWaitUntilFirstUpdateTrueSpy).toHaveBeenCalledTimes(1);
-      expect(withWaitUntilFirstUpdateTrueSpy).toHaveBeenCalledWith(
-        'initial value',
-        'new value'
-      );
+      expect(withWaitUntilFirstUpdateTrueSpy).toHaveBeenCalledWith('initial value', 'new value');
     });
 
     it('should not call the watch method when a different property changes', async () => {

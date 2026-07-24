@@ -1,7 +1,4 @@
-import type {
-  ChildProduct,
-  Product,
-} from '../../../api/commerce/common/product.js';
+import type {ChildProduct, Product} from '../../../api/commerce/common/product.js';
 import {ResultType} from '../../../api/commerce/common/result.js';
 import {buildMockCommerceRegularFacetResponse} from '../../../test/mock-commerce-facet-response.js';
 import {buildSearchResponse} from '../../../test/mock-commerce-search.js';
@@ -16,16 +13,9 @@ import {
 } from '../../../test/mock-spotlight-content.js';
 import {setError} from '../../error/error-actions.js';
 import {setContext, setView} from '../context/context-actions.js';
-import {
-  executeSearch,
-  fetchMoreProducts,
-  promoteChildToParent,
-} from './search-actions.js';
+import {executeSearch, fetchMoreProducts, promoteChildToParent} from './search-actions.js';
 import {commerceSearchReducer} from './search-slice.js';
-import {
-  type CommerceSearchState,
-  getCommerceSearchInitialState,
-} from './search-state.js';
+import {type CommerceSearchState, getCommerceSearchInitialState} from './search-state.js';
 
 describe('search-slice', () => {
   let state: CommerceSearchState;
@@ -35,9 +25,7 @@ describe('search-slice', () => {
   });
 
   it('should have an initial state', () => {
-    expect(commerceSearchReducer(undefined, {type: ''})).toEqual(
-      getCommerceSearchInitialState()
-    );
+    expect(commerceSearchReducer(undefined, {type: ''})).toEqual(getCommerceSearchInitialState());
   });
 
   describe('on #executeSearch.fulfilled', () => {
@@ -525,9 +513,7 @@ describe('search-slice', () => {
     });
 
     it('when child does not exist, does not change the state', () => {
-      state.products = [
-        buildMockProduct({permanentid: parentPermanentId, children: []}),
-      ];
+      state.products = [buildMockProduct({permanentid: parentPermanentId, children: []})];
 
       const finalState = commerceSearchReducer(state, action);
 
@@ -602,9 +588,7 @@ describe('search-slice', () => {
       // Verify results array was modified
       expect(finalState.results).toHaveLength(1);
       expect((finalState.results[0] as Product).permanentid).toBe(permanentid);
-      expect((finalState.results[0] as Product).children).toEqual(
-        parentProduct.children
-      );
+      expect((finalState.results[0] as Product).children).toEqual(parentProduct.children);
       // Verify products array was not touched
       expect(finalState.products).toEqual([]);
     });
@@ -705,10 +689,7 @@ describe('search-slice', () => {
       const finalState = commerceSearchReducer(state, action);
 
       // Verify children array is preserved
-      expect((finalState.results[0] as Product).children).toEqual([
-        childProduct,
-        otherChild,
-      ]);
+      expect((finalState.results[0] as Product).children).toEqual([childProduct, otherChild]);
       // Verify totalNumberOfChildren is preserved
       expect((finalState.results[0] as Product).totalNumberOfChildren).toBe(5);
     });
@@ -719,10 +700,7 @@ describe('search-slice', () => {
       isLoading: true,
       requestId: 'request-id',
       facets: [buildMockCommerceRegularFacetResponse()],
-      products: [
-        buildMockProduct({ec_name: 'product1'}),
-        buildMockProduct({ec_name: 'product2'}),
-      ],
+      products: [buildMockProduct({ec_name: 'product1'}), buildMockProduct({ec_name: 'product2'})],
       results: [],
       queryExecuted: 'query',
       responseId: 'response-id',
@@ -739,10 +717,7 @@ describe('search-slice', () => {
       isLoading: true,
       requestId: 'request-id',
       facets: [buildMockCommerceRegularFacetResponse()],
-      products: [
-        buildMockProduct({ec_name: 'product1'}),
-        buildMockProduct({ec_name: 'product2'}),
-      ],
+      products: [buildMockProduct({ec_name: 'product1'}), buildMockProduct({ec_name: 'product2'})],
       results: [],
       queryExecuted: 'query',
       responseId: 'response-id',

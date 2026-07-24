@@ -13,11 +13,7 @@ import {
 // Workaround to prevent Next.js erroring about importing CSR only hooks
 import React from 'react';
 import {type SingletonGetter, singleton} from '../utils.js';
-import {
-  buildControllerHooks,
-  buildEngineHook,
-  buildStateProvider,
-} from './common.js';
+import {buildControllerHooks, buildEngineHook, buildStateProvider} from './common.js';
 import type {
   ContextState,
   InferControllerHooksMapFromDefinition,
@@ -51,27 +47,14 @@ function createSingletonContext<
  *
  * @group Engine
  */
-export function defineCommerceEngine<
-  TControllers extends ControllerDefinitionsMap<Controller>,
->(
+export function defineCommerceEngine<TControllers extends ControllerDefinitionsMap<Controller>>(
   options: CommerceEngineDefinitionOptions<TControllers>
 ): {
   useEngine: () => CommerceEngine | undefined;
-  controllers: InferControllerHooksMapFromDefinition<
-    AugmentedControllerDefinition<TControllers>
-  >;
-  listingEngineDefinition: ReactCommerceEngineDefinition<
-    TControllers,
-    SolutionType.listing
-  >;
-  searchEngineDefinition: ReactCommerceEngineDefinition<
-    TControllers,
-    SolutionType.search
-  >;
-  standaloneEngineDefinition: ReactCommerceEngineDefinition<
-    TControllers,
-    SolutionType.standalone
-  >;
+  controllers: InferControllerHooksMapFromDefinition<AugmentedControllerDefinition<TControllers>>;
+  listingEngineDefinition: ReactCommerceEngineDefinition<TControllers, SolutionType.listing>;
+  searchEngineDefinition: ReactCommerceEngineDefinition<TControllers, SolutionType.search>;
+  standaloneEngineDefinition: ReactCommerceEngineDefinition<TControllers, SolutionType.standalone>;
   recommendationEngineDefinition: ReactCommerceEngineDefinition<
     TControllers,
     SolutionType.recommendation
@@ -103,23 +86,14 @@ export function defineCommerceEngine<
 
   return {
     useEngine: buildEngineHook(singletonContext),
-    controllers: buildControllerHooks(
-      singletonContext,
-      augmentedControllerDefinition
-    ),
+    controllers: buildControllerHooks(singletonContext, augmentedControllerDefinition),
     listingEngineDefinition: {
       ...listingEngineDefinition,
-      StateProvider: buildStateProvider(
-        singletonContext as ListingContext,
-        SolutionType.listing
-      ),
+      StateProvider: buildStateProvider(singletonContext as ListingContext, SolutionType.listing),
     },
     searchEngineDefinition: {
       ...searchEngineDefinition,
-      StateProvider: buildStateProvider(
-        singletonContext as SearchContext,
-        SolutionType.search
-      ),
+      StateProvider: buildStateProvider(singletonContext as SearchContext, SolutionType.search),
     },
     standaloneEngineDefinition: {
       ...standaloneEngineDefinition,

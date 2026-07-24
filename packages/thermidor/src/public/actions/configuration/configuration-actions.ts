@@ -35,9 +35,7 @@ const ensureLoaded = (engine: Engine) => {
   loadedEngine.add(engine);
 };
 
-export const loadConfigurationActions = (
-  engine: Engine
-): ConfigurationActions => {
+export const loadConfigurationActions = (engine: Engine): ConfigurationActions => {
   ensureLoaded(engine);
   const fullEngine = getFullEngine(engine);
 

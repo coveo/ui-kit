@@ -1,9 +1,7 @@
 import {Directive, directive} from 'lit/directive.js';
 import {classMap} from 'lit/directives/class-map.js';
 
-export const tw = <T extends {[x: string]: boolean}>(
-  rec: NoDuplicateWords<T>
-) => rec;
+export const tw = <T extends {[x: string]: boolean}>(rec: NoDuplicateWords<T>) => rec;
 
 /**
  * A utility type that splits a string `Word` into an array of substrings based on a specified `Separator`.
@@ -106,14 +104,13 @@ type DuplicateWords<T extends Record<string, boolean>> = {
  * Ensures that no duplicate words exist in the keys of the record `T`.
  * Throws a static error if duplicates are found, if the recursion limit is reached, or if any other issue is detected.
  */
-type NoDuplicateWords<T extends Record<string, boolean>> =
-  string extends keyof T // Check if runtime values are being used
-    ? T // Allow runtime values without static checks
-    : DuplicateWords<T> extends never
-      ? T
-      : DuplicateWords<T> extends false
-        ? 'Recursion limit reached in class map. Ensure the class list is not too long.'
-        : 'Duplicate class detected in class map. Ensure that no class appears in more than one key.';
+type NoDuplicateWords<T extends Record<string, boolean>> = string extends keyof T // Check if runtime values are being used
+  ? T // Allow runtime values without static checks
+  : DuplicateWords<T> extends never
+    ? T
+    : DuplicateWords<T> extends false
+      ? 'Recursion limit reached in class map. Ensure the class list is not too long.'
+      : 'Duplicate class detected in class map. Ensure that no class appears in more than one key.';
 
 class MultiClassMapDirective extends Directive {
   /**
@@ -164,8 +161,6 @@ class MultiClassMapDirective extends Directive {
   }
 }
 
-export function multiClassMap<T extends Record<string, boolean>>(
-  record: NoDuplicateWords<T>
-) {
+export function multiClassMap<T extends Record<string, boolean>>(record: NoDuplicateWords<T>) {
   return directive(MultiClassMapDirective)(record as Record<string, boolean>);
 }

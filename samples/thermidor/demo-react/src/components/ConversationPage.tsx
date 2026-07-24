@@ -8,7 +8,6 @@ interface ConversationPageProps {
   onBackToSearch: () => void;
   canGoBackToSearch: boolean;
   onResetToLanding: () => void;
-  error: string | null;
 }
 
 export function ConversationPage({
@@ -18,7 +17,6 @@ export function ConversationPage({
   onBackToSearch,
   canGoBackToSearch,
   onResetToLanding,
-  error,
 }: ConversationPageProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -36,11 +34,6 @@ export function ConversationPage({
   return (
     <section>
       <h1>Conversation</h1>
-      {error && (
-        <p role="alert" style={{color: 'var(--color-error)'}}>
-          {error}
-        </p>
-      )}
       {latestPrompt && <p>Latest prompt: {latestPrompt}</p>}
       <nav>
         {canGoBackToSearch && (
@@ -53,12 +46,7 @@ export function ConversationPage({
         </button>
       </nav>
       <form onSubmit={handleSubmit}>
-        <input
-          ref={inputRef}
-          type="text"
-          disabled={isStreaming}
-          aria-label="Prompt"
-        />
+        <input ref={inputRef} type="text" disabled={isStreaming} aria-label="Prompt" />
         <button type="submit" disabled={isStreaming}>
           Submit
         </button>

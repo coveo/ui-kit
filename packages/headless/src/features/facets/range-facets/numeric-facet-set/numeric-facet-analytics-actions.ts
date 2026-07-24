@@ -1,8 +1,5 @@
 import {validatePayload} from '../../../../utils/validate-payload.js';
-import {
-  type LegacySearchAction,
-  makeAnalyticsAction,
-} from '../../../analytics/analytics-utils.js';
+import {type LegacySearchAction, makeAnalyticsAction} from '../../../analytics/analytics-utils.js';
 import {
   getRangeFacetMetadata,
   rangeBreadcrumbFacet,
@@ -27,10 +24,7 @@ export const logNumericFacetBreadcrumb = (
   payload: LogNumericFacetBreadcrumbActionCreatorPayload
 ): LegacySearchAction =>
   makeAnalyticsAction('analytics/numericFacet/breadcrumb', (client, state) => {
-    validatePayload(
-      payload,
-      rangeFacetSelectionPayloadDefinition(payload.selection)
-    );
+    validatePayload(payload, rangeFacetSelectionPayloadDefinition(payload.selection));
     const metadata = getRangeFacetMetadata(state, payload);
 
     return client.makeBreadcrumbFacet(metadata);

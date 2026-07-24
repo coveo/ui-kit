@@ -4,8 +4,7 @@ test.describe('Quickview', () => {
   test.beforeEach(async ({quickview}) => {
     await quickview.load({
       args: {
-        sandbox:
-          'allow-scripts allow-popups allow-top-navigation allow-same-origin',
+        sandbox: 'allow-scripts allow-popups allow-top-navigation allow-same-origin',
       },
     });
     await quickview.hydrated.waitFor();

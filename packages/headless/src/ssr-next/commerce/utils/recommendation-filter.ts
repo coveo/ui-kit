@@ -15,21 +15,15 @@ import type {
  * Type guard to check if a controller definition is a recommendation controller.
  * A recommendation controller must have both the recommendation flag and a slotId.
  */
-export function isRecommendationDefinition<
-  C extends ControllerDefinition<Controller>,
->(
+export function isRecommendationDefinition<C extends ControllerDefinition<Controller>>(
   controllerDefinition: C
 ): controllerDefinition is C & RecommendationsDefinitionMeta {
   const hasRecommendationFlag =
-    'recommendation' in controllerDefinition &&
-    controllerDefinition.recommendation === true;
+    'recommendation' in controllerDefinition && controllerDefinition.recommendation === true;
 
   const hasValidSlotId =
     recommendationInternalOptionKey in controllerDefinition &&
-    'slotId' in
-      (controllerDefinition[
-        recommendationInternalOptionKey
-      ] as RecommendationsOptions);
+    'slotId' in (controllerDefinition[recommendationInternalOptionKey] as RecommendationsOptions);
 
   return hasRecommendationFlag && hasValidSlotId;
 }
@@ -42,10 +36,7 @@ export function isRecommendationDefinition<
  */
 export function getRecommendationDefinitions(
   controllerDefinitions: ControllerDefinitionsMap<Controller>
-): Record<
-  string,
-  ControllerDefinition<Controller> & RecommendationsDefinitionMeta
-> {
+): Record<string, ControllerDefinition<Controller> & RecommendationsDefinitionMeta> {
   const recommendationMap: Record<
     string,
     ControllerDefinition<Controller> & RecommendationsDefinitionMeta
@@ -62,31 +53,26 @@ export function getRecommendationDefinitions(
 
 export function filterRecommendationControllers<
   TControllerDefinitions extends ControllerDefinitionsMap<Controller>,
->(
-  controllers: Record<string, Controller>,
-  controllerDefinitions: TControllerDefinitions
-) {
+>(controllers: Record<string, Controller>, controllerDefinitions: TControllerDefinitions) {
   const slotIdSet = new Set<string>();
 
   const ensureSingleRecommendationPerSlot = (slotId: string) => {
     throw new MultipleRecommendationError(slotId);
   };
 
-  const filtered = Object.entries(controllerDefinitions).filter(
-    ([_, value]) => {
-      if (!isRecommendationDefinition(value)) {
-        return false;
-      }
-      const {slotId} = value[recommendationInternalOptionKey];
-      const key = slotId;
-      if (slotIdSet.has(slotId)) {
-        ensureSingleRecommendationPerSlot(slotId);
-        return false;
-      }
-      slotIdSet.add(key);
-      return true;
+  const filtered = Object.entries(controllerDefinitions).filter(([_, value]) => {
+    if (!isRecommendationDefinition(value)) {
+      return false;
     }
-  );
+    const {slotId} = value[recommendationInternalOptionKey];
+    const key = slotId;
+    if (slotIdSet.has(slotId)) {
+      ensureSingleRecommendationPerSlot(slotId);
+      return false;
+    }
+    slotIdSet.add(key);
+    return true;
+  });
 
   const name = filtered.map(([name, _]) => name);
 

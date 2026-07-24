@@ -14,10 +14,7 @@ import {
 import * as utils from '../../utils/utils.js';
 import {ControllerBuilder} from '../common/builders/controller-builder.js';
 import {createStaticControllerBuilder} from '../common/builders/static-controller-builder.js';
-import {
-  buildControllerDefinitions,
-  createStaticState,
-} from './controller-utils.js';
+import {buildControllerDefinitions, createStaticState} from './controller-utils.js';
 import type {SSRCommerceEngine} from './factories/build-factory.js';
 import {SolutionType} from './types/controller-constants.js';
 import type {ControllerDefinition} from './types/controller-definitions.js';
@@ -31,9 +28,7 @@ describe('commerce controller-utils', () => {
   let mockEngine: SSRCommerceEngine;
 
   beforeEach(() => {
-    mockEngine = buildMockCommerceEngine(
-      buildMockCommerceState()
-    ) as SSRCommerceEngine;
+    mockEngine = buildMockCommerceEngine(buildMockCommerceState()) as SSRCommerceEngine;
     mockSearchActions = [
       {type: 'search/executeSearch/fulfilled', payload: {q: 'test'}},
       {type: 'products/fetch/fulfilled', payload: {products: []}},
@@ -66,11 +61,8 @@ describe('commerce controller-utils', () => {
 
     beforeEach(() => {
       vi.mocked(ControllerBuilder).mockImplementation(function () {
-        this.withAdditionalArgs =
-          mockControllerBuilderWithAdditionalArgs.mockReturnThis();
-        this.build = mockControllerBuilderBuild.mockReturnValue(
-          buildMockController()
-        );
+        this.withAdditionalArgs = mockControllerBuilderWithAdditionalArgs.mockReturnThis();
+        this.build = mockControllerBuilderBuild.mockReturnValue(buildMockController());
       });
     });
 
@@ -83,9 +75,7 @@ describe('commerce controller-utils', () => {
     it('should call #withAdditionalArgs with solutionType for each controller', () => {
       buildControllersWithDefaultSetup();
       expect(mockControllerBuilderWithAdditionalArgs).toHaveBeenCalledTimes(2);
-      expect(mockControllerBuilderWithAdditionalArgs).toHaveBeenCalledWith([
-        SolutionType.search,
-      ]);
+      expect(mockControllerBuilderWithAdditionalArgs).toHaveBeenCalledWith([SolutionType.search]);
     });
 
     it('should call #ControllerBuilder for the controller without props with the correct arguments', () => {
@@ -197,9 +187,7 @@ describe('commerce controller-utils', () => {
         }),
       };
 
-      vi.mocked(createStaticControllerBuilder).mockReturnValue(
-        mockStaticBuilder
-      );
+      vi.mocked(createStaticControllerBuilder).mockReturnValue(mockStaticBuilder);
 
       const controllers = {
         controller1: buildMockController(),

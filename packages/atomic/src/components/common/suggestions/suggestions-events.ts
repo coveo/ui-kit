@@ -14,10 +14,7 @@ import type {SearchBoxSuggestionsEvent} from './suggestions-types';
  *
  * @throws Error if the element is not a child of an allowed search box element
  */
-export const dispatchSearchBoxSuggestionsEvent = <
-  SearchBoxController,
-  Bindings = AnyBindings,
->(
+export const dispatchSearchBoxSuggestionsEvent = <SearchBoxController, Bindings = AnyBindings>(
   event: SearchBoxSuggestionsEvent<SearchBoxController, Bindings>,
   element: HTMLElement,
   allowedSearchBoxElements: readonly (typeof searchBoxElements)[number][] = searchBoxElements
@@ -30,11 +27,7 @@ export const dispatchSearchBoxSuggestionsEvent = <
       )}`
     );
   }
-  void dispatchSearchBoxSuggestionsEventEventually(
-    interfaceElement,
-    element,
-    event
-  );
+  void dispatchSearchBoxSuggestionsEventEventually(interfaceElement, element, event);
 };
 
 const searchBoxElements = [
@@ -61,7 +54,5 @@ const dispatchSearchBoxSuggestionsEventEventually = async <
   } else if ('componentOnReady' in interfaceElement) {
     await (interfaceElement as HTMLStencilElement).componentOnReady();
   }
-  element.dispatchEvent(
-    buildCustomEvent('atomic/searchBoxSuggestion/register', event)
-  );
+  element.dispatchEvent(buildCustomEvent('atomic/searchBoxSuggestion/register', event));
 };

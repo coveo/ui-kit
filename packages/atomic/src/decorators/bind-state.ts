@@ -29,8 +29,7 @@ export function bindStateToController<Element extends ReactiveElement>(
   }
 ) {
   return <
-    T extends Record<ControllerProperties<Element>, Controller> &
-      Record<string, unknown>,
+    T extends Record<ControllerProperties<Element>, Controller> & Record<string, unknown>,
     Instance extends Element & T & InitializableComponent,
     K extends keyof Instance,
   >(
@@ -60,10 +59,7 @@ export function bindStateToController<Element extends ReactiveElement>(
           );
         }
 
-        if (
-          options?.onUpdateCallbackMethod &&
-          !component[options.onUpdateCallbackMethod]
-        ) {
+        if (options?.onUpdateCallbackMethod && !component[options.onUpdateCallbackMethod]) {
           return console.error(
             `ControllerState: The onUpdateCallbackMethod property "${options.onUpdateCallbackMethod}" is not defined`,
             component

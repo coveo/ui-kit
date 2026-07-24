@@ -26,12 +26,7 @@ import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
 } from '../facets/regular-facet/regular-facet-actions.js';
-import {
-  nextPage,
-  previousPage,
-  selectPage,
-  setPageSize,
-} from '../pagination/pagination-actions.js';
+import {nextPage, previousPage, selectPage, setPageSize} from '../pagination/pagination-actions.js';
 import {
   type ProductListingParameters,
   restoreProductListingParameters,
@@ -91,10 +86,7 @@ describe('commerceParameters slice', () => {
         ...initialState,
         page: 2,
       };
-      const finalState = parametersReducer(
-        state,
-        previousPage({slotId: 'slotId'})
-      );
+      const finalState = parametersReducer(state, previousPage({slotId: 'slotId'}));
       expect(finalState).toEqual(state);
     });
 
@@ -139,10 +131,7 @@ describe('commerceParameters slice', () => {
         ...initialState,
         page: 1,
       };
-      const finalState = parametersReducer(
-        state,
-        selectPage({slotId: 'slotId', page: 5})
-      );
+      const finalState = parametersReducer(state, selectPage({slotId: 'slotId', page: 5}));
       expect(finalState).toEqual(state);
     });
 
@@ -174,10 +163,7 @@ describe('commerceParameters slice', () => {
         page: 5,
         perPage: 5,
       };
-      const finalState = parametersReducer(
-        state,
-        setPageSize({slotId: 'slotId', pageSize: 20})
-      );
+      const finalState = parametersReducer(state, setPageSize({slotId: 'slotId', pageSize: 20}));
       expect(finalState).toEqual(state);
     });
 
@@ -206,10 +192,7 @@ describe('commerceParameters slice', () => {
           ...initialState,
           perPage: 5,
         };
-        const finalState = parametersReducer(
-          state,
-          setPageSize({pageSize: 20})
-        );
+        const finalState = parametersReducer(state, setPageSize({pageSize: 20}));
         expect(finalState).toEqual({...initialState, perPage: 20});
       });
     });
@@ -221,10 +204,7 @@ describe('commerceParameters slice', () => {
         ...initialState,
         page: 5,
       };
-      const finalState = parametersReducer(
-        state,
-        applySort({by: SortBy.Relevance})
-      );
+      const finalState = parametersReducer(state, applySort({by: SortBy.Relevance}));
       expect(finalState.page).toBeUndefined();
     });
     it('sets state.sortCriteria to payload', () => {
@@ -251,10 +231,7 @@ describe('commerceParameters slice', () => {
         ...initialState,
         page: 5,
       };
-      const finalState = parametersReducer(
-        state,
-        updateQuery({query: 'new query'})
-      );
+      const finalState = parametersReducer(state, updateQuery({query: 'new query'}));
       expect(finalState.page).toBeUndefined();
     });
     it('when payload.query is undefined, set state.q to undefined', () => {
@@ -262,10 +239,7 @@ describe('commerceParameters slice', () => {
         ...initialState,
         q: 'query',
       };
-      const finalState = parametersReducer(
-        state,
-        updateQuery({query: undefined})
-      );
+      const finalState = parametersReducer(state, updateQuery({query: undefined}));
       expect(finalState).toEqual({...state, q: undefined});
     });
 
@@ -283,19 +257,13 @@ describe('commerceParameters slice', () => {
         ...initialState,
         q: 'query',
       };
-      const finalState = parametersReducer(
-        state,
-        updateQuery({query: '          '})
-      );
+      const finalState = parametersReducer(state, updateQuery({query: '          '}));
       expect(finalState).toEqual({...state, q: undefined});
     });
 
     it('when payload.query is not undefined, blank, or empty, set state.q to payload.query', () => {
       const state = {...initialState, q: 'query'};
-      const finalState = parametersReducer(
-        state,
-        updateQuery({query: 'new query'})
-      );
+      const finalState = parametersReducer(state, updateQuery({query: 'new query'}));
       expect(finalState).toEqual({...state, q: 'new query'});
     });
   });
@@ -340,24 +308,16 @@ describe('commerceParameters slice', () => {
           },
           lf: {facetId3: ['value']},
           mnf: {
-            facetId4: [
-              {start: 0, end: 100, endInclusive: true, state: 'selected'},
-            ],
+            facetId4: [{start: 0, end: 100, endInclusive: true, state: 'selected'}],
           },
           mnfExcluded: {
-            facetId4: [
-              {start: 100, end: 200, endInclusive: true, state: 'selected'},
-            ],
+            facetId4: [{start: 100, end: 200, endInclusive: true, state: 'selected'}],
           },
           nf: {
-            facetId5: [
-              {start: 0, end: 100, endInclusive: true, state: 'selected'},
-            ],
+            facetId5: [{start: 0, end: 100, endInclusive: true, state: 'selected'}],
           },
           nfExcluded: {
-            facetId5: [
-              {start: 100, end: 200, endInclusive: true, state: 'selected'},
-            ],
+            facetId5: [{start: 100, end: 200, endInclusive: true, state: 'selected'}],
           },
           f: {facetId6: ['value']},
           fExcluded: {facetId7: ['value']},
@@ -396,24 +356,16 @@ describe('commerceParameters slice', () => {
         },
         lf: {facetId1: ['value1']},
         mnf: {
-          facetId1: [
-            {start: 0, end: 100, endInclusive: true, state: 'selected'},
-          ],
+          facetId1: [{start: 0, end: 100, endInclusive: true, state: 'selected'}],
         },
         mnfExcluded: {
-          facetId1: [
-            {start: 100, end: 200, endInclusive: true, state: 'excluded'},
-          ],
+          facetId1: [{start: 100, end: 200, endInclusive: true, state: 'excluded'}],
         },
         nf: {
-          facetId1: [
-            {start: 0, end: 100, endInclusive: true, state: 'selected'},
-          ],
+          facetId1: [{start: 0, end: 100, endInclusive: true, state: 'selected'}],
         },
         nfExcluded: {
-          facetId1: [
-            {start: 100, end: 200, endInclusive: true, state: 'excluded'},
-          ],
+          facetId1: [{start: 100, end: 200, endInclusive: true, state: 'excluded'}],
         },
         f: {facetId1: ['value1']},
         fExcluded: {facetId1: ['value1']},
@@ -462,27 +414,19 @@ describe('commerceParameters slice', () => {
           lf: {...state.lf, facetId2: ['value2']},
           mnf: {
             ...state.mnf,
-            facetId2: [
-              {start: 0, end: 100, endInclusive: true, state: 'selected'},
-            ],
+            facetId2: [{start: 0, end: 100, endInclusive: true, state: 'selected'}],
           },
           mnfExcluded: {
             ...state.mnfExcluded,
-            facetId2: [
-              {start: 100, end: 200, endInclusive: true, state: 'excluded'},
-            ],
+            facetId2: [{start: 100, end: 200, endInclusive: true, state: 'excluded'}],
           },
           nf: {
             ...state.nf,
-            facetId2: [
-              {start: 0, end: 100, endInclusive: true, state: 'selected'},
-            ],
+            facetId2: [{start: 0, end: 100, endInclusive: true, state: 'selected'}],
           },
           nfExcluded: {
             ...state.nfExcluded,
-            facetId2: [
-              {start: 100, end: 200, endInclusive: true, state: 'excluded'},
-            ],
+            facetId2: [{start: 100, end: 200, endInclusive: true, state: 'excluded'}],
           },
           f: {...state.f, facetId2: ['value2']},
           fExcluded: {...state.fExcluded, facetId2: ['value2']},
@@ -746,66 +690,51 @@ describe('commerceParameters slice', () => {
     });
 
     describe('when payload.selection.state is "selected"', () => {
-      testUnsetValueAfterRegularFacetToggle(
-        'fExcluded',
-        'selected',
-        toggleSelectFacetValue
-      );
-      testUnsetValueAfterRegularFacetToggle(
-        'f',
-        'selected',
-        toggleSelectFacetValue
-      );
+      testUnsetValueAfterRegularFacetToggle('fExcluded', 'selected', toggleSelectFacetValue);
+      testUnsetValueAfterRegularFacetToggle('f', 'selected', toggleSelectFacetValue);
     });
 
     describe.each<{payloadValueState: FacetValueState}>([
       {payloadValueState: 'excluded'},
       {payloadValueState: 'idle'},
-    ])(
-      'when payload.selection.state is $payloadValueState',
-      ({payloadValueState}) => {
-        testUnsetValueAfterRegularFacetToggle(
-          'fExcluded',
-          payloadValueState,
-          toggleSelectFacetValue
-        );
+    ])('when payload.selection.state is $payloadValueState', ({payloadValueState}) => {
+      testUnsetValueAfterRegularFacetToggle('fExcluded', payloadValueState, toggleSelectFacetValue);
 
-        it('when state.f[payload.facetId] is undefined, creates it and pushes payload.selection.value to it', () => {
-          const finalState = parametersReducer(
-            initialState,
-            toggleSelectFacetValue({
-              facetId: 'facetId',
-              selection: {
-                value: 'value',
-                state: payloadValueState,
-                numberOfResults: 1,
-              },
-            })
-          );
-          expect(finalState).toEqual({
-            ...initialState,
-            f: {facetId: ['value']},
-          });
+      it('when state.f[payload.facetId] is undefined, creates it and pushes payload.selection.value to it', () => {
+        const finalState = parametersReducer(
+          initialState,
+          toggleSelectFacetValue({
+            facetId: 'facetId',
+            selection: {
+              value: 'value',
+              state: payloadValueState,
+              numberOfResults: 1,
+            },
+          })
+        );
+        expect(finalState).toEqual({
+          ...initialState,
+          f: {facetId: ['value']},
         });
-        it('when state.f[payload.facetId] is defined, appends payload.selection.value to it', () => {
-          const finalState = parametersReducer(
-            {...initialState, f: {facetId: ['value1']}},
-            toggleSelectFacetValue({
-              facetId: 'facetId',
-              selection: {
-                value: 'value2',
-                state: payloadValueState,
-                numberOfResults: 1,
-              },
-            })
-          );
-          expect(finalState).toEqual({
-            ...initialState,
-            f: {facetId: ['value1', 'value2']},
-          });
+      });
+      it('when state.f[payload.facetId] is defined, appends payload.selection.value to it', () => {
+        const finalState = parametersReducer(
+          {...initialState, f: {facetId: ['value1']}},
+          toggleSelectFacetValue({
+            facetId: 'facetId',
+            selection: {
+              value: 'value2',
+              state: payloadValueState,
+              numberOfResults: 1,
+            },
+          })
+        );
+        expect(finalState).toEqual({
+          ...initialState,
+          f: {facetId: ['value1', 'value2']},
         });
-      }
-    );
+      });
+    });
   });
 
   describe('when #toggleExcludeFacetValue is dispatched', () => {
@@ -829,66 +758,51 @@ describe('commerceParameters slice', () => {
     });
 
     describe('when payload.selection.state is "excluded"', () => {
-      testUnsetValueAfterRegularFacetToggle(
-        'f',
-        'excluded',
-        toggleExcludeFacetValue
-      );
-      testUnsetValueAfterRegularFacetToggle(
-        'fExcluded',
-        'excluded',
-        toggleExcludeFacetValue
-      );
+      testUnsetValueAfterRegularFacetToggle('f', 'excluded', toggleExcludeFacetValue);
+      testUnsetValueAfterRegularFacetToggle('fExcluded', 'excluded', toggleExcludeFacetValue);
     });
 
     describe.each<{payloadValueState: FacetValueState}>([
       {payloadValueState: 'selected'},
       {payloadValueState: 'idle'},
-    ])(
-      'when payload.selection.state is $payloadValueState',
-      ({payloadValueState}) => {
-        testUnsetValueAfterRegularFacetToggle(
-          'f',
-          payloadValueState,
-          toggleExcludeFacetValue
-        );
+    ])('when payload.selection.state is $payloadValueState', ({payloadValueState}) => {
+      testUnsetValueAfterRegularFacetToggle('f', payloadValueState, toggleExcludeFacetValue);
 
-        it('when state.fExcluded[payload.facetId] is undefined, creates it and pushes payload.selection.value to it', () => {
-          const finalState = parametersReducer(
-            initialState,
-            toggleExcludeFacetValue({
-              facetId: 'facetId',
-              selection: {
-                value: 'value',
-                state: payloadValueState,
-                numberOfResults: 1,
-              },
-            })
-          );
-          expect(finalState).toEqual({
-            ...initialState,
-            fExcluded: {facetId: ['value']},
-          });
+      it('when state.fExcluded[payload.facetId] is undefined, creates it and pushes payload.selection.value to it', () => {
+        const finalState = parametersReducer(
+          initialState,
+          toggleExcludeFacetValue({
+            facetId: 'facetId',
+            selection: {
+              value: 'value',
+              state: payloadValueState,
+              numberOfResults: 1,
+            },
+          })
+        );
+        expect(finalState).toEqual({
+          ...initialState,
+          fExcluded: {facetId: ['value']},
         });
-        it('when state.fExcluded[payload.facetId] is defined, appends payload.selection.value to it', () => {
-          const finalState = parametersReducer(
-            {...initialState, fExcluded: {facetId: ['value1']}},
-            toggleExcludeFacetValue({
-              facetId: 'facetId',
-              selection: {
-                value: 'value2',
-                state: payloadValueState,
-                numberOfResults: 1,
-              },
-            })
-          );
-          expect(finalState).toEqual({
-            ...initialState,
-            fExcluded: {facetId: ['value1', 'value2']},
-          });
+      });
+      it('when state.fExcluded[payload.facetId] is defined, appends payload.selection.value to it', () => {
+        const finalState = parametersReducer(
+          {...initialState, fExcluded: {facetId: ['value1']}},
+          toggleExcludeFacetValue({
+            facetId: 'facetId',
+            selection: {
+              value: 'value2',
+              state: payloadValueState,
+              numberOfResults: 1,
+            },
+          })
+        );
+        expect(finalState).toEqual({
+          ...initialState,
+          fExcluded: {facetId: ['value1', 'value2']},
         });
-      }
-    );
+      });
+    });
   });
 
   const testUnsetValueAfterFacetSearch = (
@@ -1053,9 +967,7 @@ describe('commerceParameters slice', () => {
   const testUnsetValueAfterNumericRangeToggle = (
     stateKey: keyof CommerceParametersState,
     payloadValueState: FacetValueState,
-    action:
-      | typeof toggleSelectNumericFacetValue
-      | typeof toggleExcludeNumericFacetValue
+    action: typeof toggleSelectNumericFacetValue | typeof toggleExcludeNumericFacetValue
   ) => {
     describe(`when state.${stateKey}[payload.facetId] is defined`, () => {
       let state: CommerceParametersState;
@@ -1063,9 +975,7 @@ describe('commerceParameters slice', () => {
         state = {
           ...initialState,
           [stateKey]: {
-            facetId1: [
-              {start: 0, end: 100, endInclusive: true, state: 'selected'},
-            ],
+            facetId1: [{start: 0, end: 100, endInclusive: true, state: 'selected'}],
             facetId2: [
               {start: 0, end: 100, endInclusive: true, state: 'selected'},
               {start: 100, end: 200, endInclusive: true, state: 'selected'},
@@ -1087,12 +997,8 @@ describe('commerceParameters slice', () => {
           })
         );
         expect(finalState[stateKey]).toEqual({
-          facetId1: [
-            {start: 0, end: 100, endInclusive: true, state: 'selected'},
-          ],
-          facetId2: [
-            {start: 100, end: 200, endInclusive: true, state: 'selected'},
-          ],
+          facetId1: [{start: 0, end: 100, endInclusive: true, state: 'selected'}],
+          facetId2: [{start: 100, end: 200, endInclusive: true, state: 'selected'}],
         });
       });
 
@@ -1169,9 +1075,7 @@ describe('commerceParameters slice', () => {
         state = {
           ...state,
           [stateKey]: {
-            facetId1: [
-              {start: 0, end: 100, endInclusive: true, state: 'selected'},
-            ],
+            facetId1: [{start: 0, end: 100, endInclusive: true, state: 'selected'}],
           },
         };
 
@@ -1214,11 +1118,7 @@ describe('commerceParameters slice', () => {
     });
 
     describe('when payload.selection.state is "selected"', () => {
-      testUnsetValueAfterNumericRangeToggle(
-        'mnf',
-        'selected',
-        toggleSelectNumericFacetValue
-      );
+      testUnsetValueAfterNumericRangeToggle('mnf', 'selected', toggleSelectNumericFacetValue);
       testUnsetValueAfterNumericRangeToggle(
         'mnfExcluded',
         'selected',
@@ -1229,92 +1129,83 @@ describe('commerceParameters slice', () => {
         'selected',
         toggleSelectNumericFacetValue
       );
-      testUnsetValueAfterNumericRangeToggle(
-        'nf',
-        'selected',
-        toggleSelectNumericFacetValue
-      );
+      testUnsetValueAfterNumericRangeToggle('nf', 'selected', toggleSelectNumericFacetValue);
     });
 
     describe.each([
       {payloadValueState: 'excluded' as FacetValueState},
       {payloadValueState: 'idle' as FacetValueState},
-    ])(
-      'when payload.selection.state is "$payloadValueState"',
-      ({payloadValueState}) => {
-        testUnsetValueAfterNumericRangeToggle(
-          'mnf',
-          payloadValueState,
-          toggleSelectNumericFacetValue
-        );
-        testUnsetValueAfterNumericRangeToggle(
-          'mnfExcluded',
-          payloadValueState,
-          toggleSelectNumericFacetValue
-        );
-        testUnsetValueAfterNumericRangeToggle(
-          'nfExcluded',
-          payloadValueState,
-          toggleSelectNumericFacetValue
-        );
-        it('when state.nf[payload.facetId] is undefined, creates it and pushes payload.selection.value to it', () => {
-          const value = {
-            start: 0,
-            end: 100,
-            endInclusive: true,
-            state: payloadValueState,
-          };
+    ])('when payload.selection.state is "$payloadValueState"', ({payloadValueState}) => {
+      testUnsetValueAfterNumericRangeToggle(
+        'mnf',
+        payloadValueState,
+        toggleSelectNumericFacetValue
+      );
+      testUnsetValueAfterNumericRangeToggle(
+        'mnfExcluded',
+        payloadValueState,
+        toggleSelectNumericFacetValue
+      );
+      testUnsetValueAfterNumericRangeToggle(
+        'nfExcluded',
+        payloadValueState,
+        toggleSelectNumericFacetValue
+      );
+      it('when state.nf[payload.facetId] is undefined, creates it and pushes payload.selection.value to it', () => {
+        const value = {
+          start: 0,
+          end: 100,
+          endInclusive: true,
+          state: payloadValueState,
+        };
 
-          const finalState = parametersReducer(
-            initialState,
-            toggleSelectNumericFacetValue({
-              facetId: 'facetId',
-              selection: value,
-            })
-          );
-          expect(finalState).toEqual({
-            ...initialState,
-            nf: {facetId: [value]},
-          });
+        const finalState = parametersReducer(
+          initialState,
+          toggleSelectNumericFacetValue({
+            facetId: 'facetId',
+            selection: value,
+          })
+        );
+        expect(finalState).toEqual({
+          ...initialState,
+          nf: {facetId: [value]},
         });
-        it('when state.nf[payload.facetId] is defined, appends payload.selection.value to it', () => {
-          const state: CommerceParametersState = {
-            ...initialState,
-            nf: {
-              facetId: [
-                {start: 0, end: 100, endInclusive: true, state: 'selected'},
-              ],
+      });
+      it('when state.nf[payload.facetId] is defined, appends payload.selection.value to it', () => {
+        const state: CommerceParametersState = {
+          ...initialState,
+          nf: {
+            facetId: [{start: 0, end: 100, endInclusive: true, state: 'selected'}],
+          },
+        };
+        const finalState = parametersReducer(
+          state,
+          toggleSelectNumericFacetValue({
+            facetId: 'facetId',
+            selection: {
+              start: 100,
+              end: 200,
+              endInclusive: true,
+              state: payloadValueState,
             },
-          };
-          const finalState = parametersReducer(
-            state,
-            toggleSelectNumericFacetValue({
-              facetId: 'facetId',
-              selection: {
+          })
+        );
+        expect(finalState).toEqual({
+          ...state,
+          nf: {
+            facetId: [
+              ...state.nf!.facetId,
+              {
                 start: 100,
                 end: 200,
                 endInclusive: true,
                 state: payloadValueState,
               },
-            })
-          );
-          expect(finalState).toEqual({
-            ...state,
-            nf: {
-              facetId: [
-                ...state.nf!.facetId,
-                {
-                  start: 100,
-                  end: 200,
-                  endInclusive: true,
-                  state: payloadValueState,
-                },
-              ],
-            },
-          });
+            ],
+          },
         });
-      }
-    );
+      });
+    });
   });
 
   describe('when #toggleExcludeNumericFacetValue is dispatched', () => {
@@ -1339,21 +1230,13 @@ describe('commerceParameters slice', () => {
     });
 
     describe('when payload.selection.state is "excluded"', () => {
-      testUnsetValueAfterNumericRangeToggle(
-        'mnf',
-        'excluded',
-        toggleExcludeNumericFacetValue
-      );
+      testUnsetValueAfterNumericRangeToggle('mnf', 'excluded', toggleExcludeNumericFacetValue);
       testUnsetValueAfterNumericRangeToggle(
         'mnfExcluded',
         'excluded',
         toggleExcludeNumericFacetValue
       );
-      testUnsetValueAfterNumericRangeToggle(
-        'nf',
-        'excluded',
-        toggleExcludeNumericFacetValue
-      );
+      testUnsetValueAfterNumericRangeToggle('nf', 'excluded', toggleExcludeNumericFacetValue);
       testUnsetValueAfterNumericRangeToggle(
         'nfExcluded',
         'excluded',
@@ -1364,96 +1247,87 @@ describe('commerceParameters slice', () => {
     describe.each([
       {payloadValueState: 'selected' as FacetValueState},
       {payloadValueState: 'idle' as FacetValueState},
-    ])(
-      'when payload.selection.state is "$payloadValueState"',
-      ({payloadValueState}) => {
-        testUnsetValueAfterNumericRangeToggle(
-          'mnf',
-          payloadValueState,
-          toggleExcludeNumericFacetValue
-        );
-        testUnsetValueAfterNumericRangeToggle(
-          'mnfExcluded',
-          payloadValueState,
-          toggleExcludeNumericFacetValue
-        );
-        testUnsetValueAfterNumericRangeToggle(
-          'nf',
-          payloadValueState,
-          toggleExcludeNumericFacetValue
-        );
-        it('when state.nfExcluded[payload.facetId] is undefined, creates it and pushes payload.selection.value to it', () => {
-          const value = {
-            start: 0,
-            end: 100,
-            endInclusive: true,
-            state: payloadValueState,
-          };
+    ])('when payload.selection.state is "$payloadValueState"', ({payloadValueState}) => {
+      testUnsetValueAfterNumericRangeToggle(
+        'mnf',
+        payloadValueState,
+        toggleExcludeNumericFacetValue
+      );
+      testUnsetValueAfterNumericRangeToggle(
+        'mnfExcluded',
+        payloadValueState,
+        toggleExcludeNumericFacetValue
+      );
+      testUnsetValueAfterNumericRangeToggle(
+        'nf',
+        payloadValueState,
+        toggleExcludeNumericFacetValue
+      );
+      it('when state.nfExcluded[payload.facetId] is undefined, creates it and pushes payload.selection.value to it', () => {
+        const value = {
+          start: 0,
+          end: 100,
+          endInclusive: true,
+          state: payloadValueState,
+        };
 
-          const finalState = parametersReducer(
-            initialState,
-            toggleExcludeNumericFacetValue({
-              facetId: 'facetId',
-              selection: value,
-            })
-          );
-          expect(finalState).toEqual({
-            ...initialState,
-            nfExcluded: {facetId: [value]},
-          });
+        const finalState = parametersReducer(
+          initialState,
+          toggleExcludeNumericFacetValue({
+            facetId: 'facetId',
+            selection: value,
+          })
+        );
+        expect(finalState).toEqual({
+          ...initialState,
+          nfExcluded: {facetId: [value]},
         });
-        it('when state.nfExcluded[payload.facetId] is defined, appends payload.selection.value to it', () => {
-          const state: CommerceParametersState = {
-            ...initialState,
-            nfExcluded: {
-              facetId: [
-                {start: 0, end: 100, endInclusive: true, state: 'excluded'},
-              ],
+      });
+      it('when state.nfExcluded[payload.facetId] is defined, appends payload.selection.value to it', () => {
+        const state: CommerceParametersState = {
+          ...initialState,
+          nfExcluded: {
+            facetId: [{start: 0, end: 100, endInclusive: true, state: 'excluded'}],
+          },
+        };
+        const finalState = parametersReducer(
+          state,
+          toggleExcludeNumericFacetValue({
+            facetId: 'facetId',
+            selection: {
+              start: 100,
+              end: 200,
+              endInclusive: true,
+              state: payloadValueState,
             },
-          };
-          const finalState = parametersReducer(
-            state,
-            toggleExcludeNumericFacetValue({
-              facetId: 'facetId',
-              selection: {
+          })
+        );
+        expect(finalState).toEqual({
+          ...state,
+          nfExcluded: {
+            facetId: [
+              ...state.nfExcluded!.facetId,
+              {
                 start: 100,
                 end: 200,
                 endInclusive: true,
                 state: payloadValueState,
               },
-            })
-          );
-          expect(finalState).toEqual({
-            ...state,
-            nfExcluded: {
-              facetId: [
-                ...state.nfExcluded!.facetId,
-                {
-                  start: 100,
-                  end: 200,
-                  endInclusive: true,
-                  state: payloadValueState,
-                },
-              ],
-            },
-          });
+            ],
+          },
         });
-      }
-    );
+      });
+    });
   });
 
-  const testUnsetValueAfterManualNumericRangeUpdate = (
-    stateKey: keyof CommerceParametersState
-  ) => {
+  const testUnsetValueAfterManualNumericRangeUpdate = (stateKey: keyof CommerceParametersState) => {
     describe(`when state.${stateKey} is defined`, () => {
       let state: CommerceParametersState;
       beforeEach(() => {
         state = {
           ...initialState,
           [stateKey]: {
-            facetId1: [
-              {start: 0, end: 100, endInclusive: true, state: 'selected'},
-            ],
+            facetId1: [{start: 0, end: 100, endInclusive: true, state: 'selected'}],
             facetId2: [
               {start: 0, end: 100, endInclusive: true, state: 'selected'},
               {start: 100, end: 200, endInclusive: true, state: 'selected'},
@@ -1475,12 +1349,8 @@ describe('commerceParameters slice', () => {
         expect(finalState).toEqual({
           ...state,
           [stateKey]: {
-            facetId1: [
-              {start: 0, end: 100, endInclusive: true, state: 'selected'},
-            ],
-            facetId2: [
-              {start: 100, end: 200, endInclusive: true, state: 'selected'},
-            ],
+            facetId1: [{start: 0, end: 100, endInclusive: true, state: 'selected'}],
+            facetId2: [{start: 100, end: 200, endInclusive: true, state: 'selected'}],
           },
         });
       });
@@ -1553,9 +1423,7 @@ describe('commerceParameters slice', () => {
         state = {
           ...state,
           [stateKey]: {
-            facetId1: [
-              {start: 0, end: 100, endInclusive: true, state: 'selected'},
-            ],
+            facetId1: [{start: 0, end: 100, endInclusive: true, state: 'selected'}],
           },
         };
 
@@ -1629,9 +1497,7 @@ describe('commerceParameters slice', () => {
         expect(finalState).toEqual({
           ...initialState,
           mnfExcluded: {
-            facetId: [
-              {start: 0, end: 100, endInclusive: true, state: 'excluded'},
-            ],
+            facetId: [{start: 0, end: 100, endInclusive: true, state: 'excluded'}],
           },
         });
       });
@@ -1654,9 +1520,7 @@ describe('commerceParameters slice', () => {
         expect(finalState).toEqual({
           ...initialState,
           mnf: {
-            facetId: [
-              {start: 0, end: 100, endInclusive: true, state: 'selected'},
-            ],
+            facetId: [{start: 0, end: 100, endInclusive: true, state: 'selected'}],
           },
         });
       });
@@ -1666,9 +1530,7 @@ describe('commerceParameters slice', () => {
   const testUnsetValueAfterDateRangeToggle = (
     stateKey: keyof CommerceParametersState,
     payloadValueState: FacetValueState,
-    action:
-      | typeof toggleSelectDateFacetValue
-      | typeof toggleExcludeDateFacetValue
+    action: typeof toggleSelectDateFacetValue | typeof toggleExcludeDateFacetValue
   ) => {
     describe(`when state.${stateKey}[payload.facetId] is defined`, () => {
       let state: CommerceParametersState;
@@ -1874,93 +1736,82 @@ describe('commerceParameters slice', () => {
     });
 
     describe('when payload.selection.state is "selected"', () => {
-      testUnsetValueAfterDateRangeToggle(
-        'dfExcluded',
-        'selected',
-        toggleSelectDateFacetValue
-      );
-      testUnsetValueAfterDateRangeToggle(
-        'df',
-        'selected',
-        toggleSelectDateFacetValue
-      );
+      testUnsetValueAfterDateRangeToggle('dfExcluded', 'selected', toggleSelectDateFacetValue);
+      testUnsetValueAfterDateRangeToggle('df', 'selected', toggleSelectDateFacetValue);
     });
 
     describe.each<{payloadValueState: FacetValueState}>([
       {payloadValueState: 'excluded'},
       {payloadValueState: 'idle'},
-    ])(
-      'when payload.selection.state is "$payloadValueState"',
-      ({payloadValueState}) => {
-        testUnsetValueAfterDateRangeToggle(
-          'dfExcluded',
-          payloadValueState,
-          toggleSelectDateFacetValue
-        );
-        it('when state.df[payload.facetId] is undefined, creates it and pushes payload.selection.value to it without numberOfResults', () => {
-          const value = {
-            start: '2025-01-01',
-            end: '2025-12-31',
-            endInclusive: true,
-            state: payloadValueState,
-          };
+    ])('when payload.selection.state is "$payloadValueState"', ({payloadValueState}) => {
+      testUnsetValueAfterDateRangeToggle(
+        'dfExcluded',
+        payloadValueState,
+        toggleSelectDateFacetValue
+      );
+      it('when state.df[payload.facetId] is undefined, creates it and pushes payload.selection.value to it without numberOfResults', () => {
+        const value = {
+          start: '2025-01-01',
+          end: '2025-12-31',
+          endInclusive: true,
+          state: payloadValueState,
+        };
 
-          const finalState = parametersReducer(
-            initialState,
-            toggleSelectDateFacetValue({
-              facetId: 'facetId',
-              selection: {...value, numberOfResults: 1},
-            })
-          );
-          expect(finalState).toEqual({
-            ...initialState,
-            df: {facetId: [value]},
-          });
+        const finalState = parametersReducer(
+          initialState,
+          toggleSelectDateFacetValue({
+            facetId: 'facetId',
+            selection: {...value, numberOfResults: 1},
+          })
+        );
+        expect(finalState).toEqual({
+          ...initialState,
+          df: {facetId: [value]},
         });
-        it('when state.df[payload.facetId] is defined, appends payload.selection.value to it without numberOfResults', () => {
-          const state: CommerceParametersState = {
-            ...initialState,
-            df: {
-              facetId: [
-                {
-                  start: '2025-01-01',
-                  end: '2025-12-31',
-                  endInclusive: true,
-                  state: 'selected',
-                },
-              ],
+      });
+      it('when state.df[payload.facetId] is defined, appends payload.selection.value to it without numberOfResults', () => {
+        const state: CommerceParametersState = {
+          ...initialState,
+          df: {
+            facetId: [
+              {
+                start: '2025-01-01',
+                end: '2025-12-31',
+                endInclusive: true,
+                state: 'selected',
+              },
+            ],
+          },
+        };
+        const finalState = parametersReducer(
+          state,
+          toggleSelectDateFacetValue({
+            facetId: 'facetId',
+            selection: {
+              start: '2026-01-01',
+              end: '2026-12-31',
+              endInclusive: true,
+              state: payloadValueState,
+              numberOfResults: 1,
             },
-          };
-          const finalState = parametersReducer(
-            state,
-            toggleSelectDateFacetValue({
-              facetId: 'facetId',
-              selection: {
+          })
+        );
+        expect(finalState).toEqual({
+          ...state,
+          df: {
+            facetId: [
+              ...state.df!.facetId,
+              {
                 start: '2026-01-01',
                 end: '2026-12-31',
                 endInclusive: true,
                 state: payloadValueState,
-                numberOfResults: 1,
               },
-            })
-          );
-          expect(finalState).toEqual({
-            ...state,
-            df: {
-              facetId: [
-                ...state.df!.facetId,
-                {
-                  start: '2026-01-01',
-                  end: '2026-12-31',
-                  endInclusive: true,
-                  state: payloadValueState,
-                },
-              ],
-            },
-          });
+            ],
+          },
         });
-      }
-    );
+      });
+    });
   });
 
   describe('when #toggleExcludeDateFacetValue is dispatched', () => {
@@ -1986,93 +1837,78 @@ describe('commerceParameters slice', () => {
     });
 
     describe('when payload.selection.state is "excluded"', () => {
-      testUnsetValueAfterDateRangeToggle(
-        'df',
-        'excluded',
-        toggleExcludeDateFacetValue
-      );
-      testUnsetValueAfterDateRangeToggle(
-        'dfExcluded',
-        'excluded',
-        toggleExcludeDateFacetValue
-      );
+      testUnsetValueAfterDateRangeToggle('df', 'excluded', toggleExcludeDateFacetValue);
+      testUnsetValueAfterDateRangeToggle('dfExcluded', 'excluded', toggleExcludeDateFacetValue);
     });
 
     describe.each<{payloadValueState: FacetValueState}>([
       {payloadValueState: 'selected'},
       {payloadValueState: 'idle'},
-    ])(
-      'when payload.selection.state is "$payloadValueState"',
-      ({payloadValueState}) => {
-        testUnsetValueAfterDateRangeToggle(
-          'df',
-          payloadValueState,
-          toggleExcludeDateFacetValue
-        );
-        it('when state.dfExcluded[payload.facetId] is undefined, creates it and pushes payload.selection.value to it without numberOfResults', () => {
-          const value = {
-            start: '2025-01-01',
-            end: '2025-12-31',
-            endInclusive: true,
-            state: payloadValueState,
-          };
+    ])('when payload.selection.state is "$payloadValueState"', ({payloadValueState}) => {
+      testUnsetValueAfterDateRangeToggle('df', payloadValueState, toggleExcludeDateFacetValue);
+      it('when state.dfExcluded[payload.facetId] is undefined, creates it and pushes payload.selection.value to it without numberOfResults', () => {
+        const value = {
+          start: '2025-01-01',
+          end: '2025-12-31',
+          endInclusive: true,
+          state: payloadValueState,
+        };
 
-          const finalState = parametersReducer(
-            initialState,
-            toggleExcludeDateFacetValue({
-              facetId: 'facetId',
-              selection: {...value, numberOfResults: 1},
-            })
-          );
-          expect(finalState).toEqual({
-            ...initialState,
-            dfExcluded: {facetId: [value]},
-          });
+        const finalState = parametersReducer(
+          initialState,
+          toggleExcludeDateFacetValue({
+            facetId: 'facetId',
+            selection: {...value, numberOfResults: 1},
+          })
+        );
+        expect(finalState).toEqual({
+          ...initialState,
+          dfExcluded: {facetId: [value]},
         });
-        it('when state.dfExcluded[payload.facetId] is defined, appends payload.selection.value to it without numberOfResults', () => {
-          const state: CommerceParametersState = {
-            ...initialState,
-            dfExcluded: {
-              facetId: [
-                {
-                  start: '2025-01-01',
-                  end: '2025-12-31',
-                  endInclusive: true,
-                  state: 'excluded',
-                },
-              ],
+      });
+      it('when state.dfExcluded[payload.facetId] is defined, appends payload.selection.value to it without numberOfResults', () => {
+        const state: CommerceParametersState = {
+          ...initialState,
+          dfExcluded: {
+            facetId: [
+              {
+                start: '2025-01-01',
+                end: '2025-12-31',
+                endInclusive: true,
+                state: 'excluded',
+              },
+            ],
+          },
+        };
+        const finalState = parametersReducer(
+          state,
+          toggleExcludeDateFacetValue({
+            facetId: 'facetId',
+            selection: {
+              start: '2026-01-01',
+              end: '2026-12-31',
+              endInclusive: true,
+              state: payloadValueState,
+              numberOfResults: 1,
             },
-          };
-          const finalState = parametersReducer(
-            state,
-            toggleExcludeDateFacetValue({
-              facetId: 'facetId',
-              selection: {
+          })
+        );
+        expect(finalState).toEqual({
+          ...state,
+          dfExcluded: {
+            facetId: [
+              ...state.dfExcluded!.facetId,
+              {
                 start: '2026-01-01',
                 end: '2026-12-31',
                 endInclusive: true,
                 state: payloadValueState,
-                numberOfResults: 1,
               },
-            })
-          );
-          expect(finalState).toEqual({
-            ...state,
-            dfExcluded: {
-              facetId: [
-                ...state.dfExcluded!.facetId,
-                {
-                  start: '2026-01-01',
-                  end: '2026-12-31',
-                  endInclusive: true,
-                  state: payloadValueState,
-                },
-              ],
-            },
-          });
+            ],
+          },
         });
-      }
-    );
+      });
+    });
   });
 
   describe('when #toggleSelectLocationFacetValue is dispatched', () => {
@@ -2095,53 +1931,46 @@ describe('commerceParameters slice', () => {
     });
 
     describe('when payload.selection.state is "selected"', () => {
-      testUnsetValueAfterRegularFacetToggle(
-        'lf',
-        'selected',
-        toggleSelectLocationFacetValue
-      );
+      testUnsetValueAfterRegularFacetToggle('lf', 'selected', toggleSelectLocationFacetValue);
     });
 
     describe.each<{payloadValueState: FacetValueState}>([
       {payloadValueState: 'excluded'},
       {payloadValueState: 'idle'},
-    ])(
-      'when payload.selection.state is $payloadValueState',
-      ({payloadValueState}) => {
-        it('when state.lf[payload.facetId] is undefined, creates it and pushes payload.selection.value to it', () => {
-          const finalState = parametersReducer(
-            initialState,
-            toggleSelectLocationFacetValue({
-              facetId: 'facetId',
-              selection: {
-                value: 'value',
-                state: payloadValueState,
-              },
-            })
-          );
-          expect(finalState).toEqual({
-            ...initialState,
-            lf: {facetId: ['value']},
-          });
+    ])('when payload.selection.state is $payloadValueState', ({payloadValueState}) => {
+      it('when state.lf[payload.facetId] is undefined, creates it and pushes payload.selection.value to it', () => {
+        const finalState = parametersReducer(
+          initialState,
+          toggleSelectLocationFacetValue({
+            facetId: 'facetId',
+            selection: {
+              value: 'value',
+              state: payloadValueState,
+            },
+          })
+        );
+        expect(finalState).toEqual({
+          ...initialState,
+          lf: {facetId: ['value']},
         });
-        it('when state.lf[payload.facetId] is defined, appends payload.selection.value to it', () => {
-          const finalState = parametersReducer(
-            {...initialState, lf: {facetId: ['value1']}},
-            toggleSelectLocationFacetValue({
-              facetId: 'facetId',
-              selection: {
-                value: 'value2',
-                state: payloadValueState,
-              },
-            })
-          );
-          expect(finalState).toEqual({
-            ...initialState,
-            lf: {facetId: ['value1', 'value2']},
-          });
+      });
+      it('when state.lf[payload.facetId] is defined, appends payload.selection.value to it', () => {
+        const finalState = parametersReducer(
+          {...initialState, lf: {facetId: ['value1']}},
+          toggleSelectLocationFacetValue({
+            facetId: 'facetId',
+            selection: {
+              value: 'value2',
+              state: payloadValueState,
+            },
+          })
+        );
+        expect(finalState).toEqual({
+          ...initialState,
+          lf: {facetId: ['value1', 'value2']},
         });
-      }
-    );
+      });
+    });
   });
 
   it('when #setView is dispatched, resets state', () => {
@@ -2181,10 +2010,7 @@ describe('commerceParameters slice', () => {
       },
     };
 
-    const finalState = parametersReducer(
-      state,
-      setView({url: 'https://example.com'})
-    );
+    const finalState = parametersReducer(state, setView({url: 'https://example.com'}));
 
     expect(finalState).toEqual(initialState);
   });
@@ -2217,17 +2043,13 @@ describe('commerceParameters slice', () => {
         facetId4: [{start: 0, end: 100, endInclusive: true, state: 'selected'}],
       },
       mnfExcluded: {
-        facetId4: [
-          {start: 100, end: 200, endInclusive: true, state: 'excluded'},
-        ],
+        facetId4: [{start: 100, end: 200, endInclusive: true, state: 'excluded'}],
       },
       nf: {
         facetId5: [{start: 0, end: 100, endInclusive: true, state: 'selected'}],
       },
       nfExcluded: {
-        facetId5: [
-          {start: 100, end: 200, endInclusive: true, state: 'excluded'},
-        ],
+        facetId5: [{start: 100, end: 200, endInclusive: true, state: 'excluded'}],
       },
       f: {facetId6: ['value1']},
       fExcluded: {facetId6: ['value2']},
@@ -2245,10 +2067,7 @@ describe('commerceParameters slice', () => {
       },
     };
 
-    const finalState = parametersReducer(
-      initialState,
-      restoreProductListingParameters(payload)
-    );
+    const finalState = parametersReducer(initialState, restoreProductListingParameters(payload));
 
     expect(finalState).toEqual(payload);
   });
@@ -2281,17 +2100,13 @@ describe('commerceParameters slice', () => {
         facetId4: [{start: 0, end: 100, endInclusive: true, state: 'selected'}],
       },
       mnfExcluded: {
-        facetId4: [
-          {start: 100, end: 200, endInclusive: true, state: 'excluded'},
-        ],
+        facetId4: [{start: 100, end: 200, endInclusive: true, state: 'excluded'}],
       },
       nf: {
         facetId5: [{start: 0, end: 100, endInclusive: true, state: 'selected'}],
       },
       nfExcluded: {
-        facetId5: [
-          {start: 100, end: 200, endInclusive: true, state: 'excluded'},
-        ],
+        facetId5: [{start: 100, end: 200, endInclusive: true, state: 'excluded'}],
       },
       f: {facetId6: ['value1']},
       fExcluded: {facetId6: ['value2']},
@@ -2310,10 +2125,7 @@ describe('commerceParameters slice', () => {
       q: 'query',
     };
 
-    const finalState = parametersReducer(
-      initialState,
-      restoreProductListingParameters(payload)
-    );
+    const finalState = parametersReducer(initialState, restoreProductListingParameters(payload));
 
     expect(finalState).toEqual(payload);
   });

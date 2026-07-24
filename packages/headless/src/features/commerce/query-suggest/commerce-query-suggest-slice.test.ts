@@ -40,9 +40,7 @@ describe('Commerce querySuggest slice', () => {
   });
 
   it('should have initial state', () => {
-    expect(
-      commerceQuerySuggestReducer(undefined, {type: 'randomAction'})
-    ).toEqual({});
+    expect(commerceQuerySuggestReducer(undefined, {type: 'randomAction'})).toEqual({});
   });
 
   describe('#registerQuerySuggest', () => {
@@ -76,10 +74,7 @@ describe('Commerce querySuggest slice', () => {
         responseId: '',
       });
 
-      const finalState = commerceQuerySuggestReducer(
-        state,
-        clearQuerySuggest({id})
-      );
+      const finalState = commerceQuerySuggestReducer(state, clearQuerySuggest({id}));
       expect(finalState[id]).toEqual(expectedState);
     });
 
@@ -114,8 +109,7 @@ describe('Commerce querySuggest slice', () => {
     describe('#fetchQuerySuggestions.fulfilled', () => {
       const responseId = 'response-uuid';
       const completions = getCompletions(0, 0);
-      const fetchQuerySuggestionsFulfilledAction =
-        buildFetchQuerySuggestFulfilledAction();
+      const fetchQuerySuggestionsFulfilledAction = buildFetchQuerySuggestFulfilledAction();
 
       fetchQuerySuggestionsFulfilledAction.meta.requestId = 'the_right_id';
 
@@ -146,10 +140,7 @@ describe('Commerce querySuggest slice', () => {
       should update the completions`, () => {
         state[id]!.currentRequestId = 'the_right_id';
 
-        const finalState = commerceQuerySuggestReducer(
-          state,
-          fetchQuerySuggestionsFulfilledAction
-        );
+        const finalState = commerceQuerySuggestReducer(state, fetchQuerySuggestionsFulfilledAction);
 
         expect(finalState[id]?.completions).toEqual(completions);
       });
@@ -161,10 +152,7 @@ describe('Commerce querySuggest slice', () => {
           isLoading: true,
         });
 
-        const finalState = commerceQuerySuggestReducer(
-          state,
-          fetchQuerySuggestionsFulfilledAction
-        );
+        const finalState = commerceQuerySuggestReducer(state, fetchQuerySuggestionsFulfilledAction);
 
         expect(finalState[id]?.isLoading).toBe(false);
       });
@@ -173,10 +161,7 @@ describe('Commerce querySuggest slice', () => {
       it sets the responseId`, () => {
         state[id]!.currentRequestId = 'the_right_id';
 
-        const finalState = commerceQuerySuggestReducer(
-          state,
-          fetchQuerySuggestionsFulfilledAction
-        );
+        const finalState = commerceQuerySuggestReducer(state, fetchQuerySuggestionsFulfilledAction);
 
         expect(finalState[id]?.responseId).toBe(responseId);
       });
@@ -188,10 +173,7 @@ describe('Commerce querySuggest slice', () => {
           currentRequestId: 'the_right_id',
         });
 
-        const finalState = commerceQuerySuggestReducer(
-          state,
-          fetchQuerySuggestionsFulfilledAction
-        );
+        const finalState = commerceQuerySuggestReducer(state, fetchQuerySuggestionsFulfilledAction);
 
         expect(finalState[id]?.error).toBe(null);
       });
@@ -201,20 +183,14 @@ describe('Commerce querySuggest slice', () => {
         state[id]!.currentRequestId = 'the_wrong_id';
 
         expect(
-          commerceQuerySuggestReducer(
-            state,
-            fetchQuerySuggestionsFulfilledAction
-          )
+          commerceQuerySuggestReducer(state, fetchQuerySuggestionsFulfilledAction)
         ).toMatchObject(state);
       });
 
       it('should add the executed query to the list of partialQueries', () => {
         state[id] = buildMockQuerySuggest({currentRequestId: 'the_right_id'});
 
-        const nextState = commerceQuerySuggestReducer(
-          state,
-          fetchQuerySuggestionsFulfilledAction
-        );
+        const nextState = commerceQuerySuggestReducer(state, fetchQuerySuggestionsFulfilledAction);
 
         const {query} = fetchQuerySuggestionsFulfilledAction.payload;
         expect(nextState[id]?.partialQueries).toEqual([query]);
@@ -225,15 +201,10 @@ describe('Commerce querySuggest slice', () => {
 
         state[id] = buildMockQuerySuggest({currentRequestId: 'the_right_id'});
 
-        const nextState = commerceQuerySuggestReducer(
-          state,
-          fetchQuerySuggestionsFulfilledAction
-        );
+        const nextState = commerceQuerySuggestReducer(state, fetchQuerySuggestionsFulfilledAction);
 
         const {query} = fetchQuerySuggestionsFulfilledAction.payload;
-        expect(nextState[id]?.partialQueries).toEqual([
-          encodeURIComponent(query),
-        ]);
+        expect(nextState[id]?.partialQueries).toEqual([encodeURIComponent(query)]);
       });
     });
 

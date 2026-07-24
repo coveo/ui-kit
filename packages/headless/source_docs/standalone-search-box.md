@@ -29,10 +29,7 @@ searchBox.subscribe(() => {
   const {redirectTo, value, analytics} = searchBox.state;
   if (redirectTo) {
     const data = {value, analytics};
-    localStorage.setItem(
-      'coveo_standalone_search_box_data',
-      JSON.stringify(data)
-    );
+    localStorage.setItem('coveo_standalone_search_box_data', JSON.stringify(data));
     // perform redirect
     window.location.href = redirectTo;
   }
@@ -73,11 +70,7 @@ The final steps are to delete the data in local storage and to handle the case w
 If you do all of this, here’s what the code for your full search page will look like:
 
 ```typescript
-import {
-  buildSearchEngine,
-  loadQueryActions,
-  loadSearchAnalyticsActions,
-} from '@coveo/headless';
+import {buildSearchEngine, loadQueryActions, loadSearchAnalyticsActions} from '@coveo/headless';
 const engine = buildSearchEngine({
   configuration: {
     // ...

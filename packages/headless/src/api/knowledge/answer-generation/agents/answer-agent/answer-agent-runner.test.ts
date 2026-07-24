@@ -23,23 +23,17 @@ vi.mock('./answer-agent.js', () => ({
   createAnswerAgent: vi.fn(),
 }));
 
-vi.mock(
-  '../../../../../features/configuration/configuration-selectors.js',
-  () => ({
-    selectAgentId: vi.fn(),
-    selectOrganizationId: vi.fn(),
-    selectEnvironment: vi.fn(),
-    selectAccessToken: vi.fn(),
-    selectDebugAgentSession: vi.fn(),
-  })
-);
+vi.mock('../../../../../features/configuration/configuration-selectors.js', () => ({
+  selectAgentId: vi.fn(),
+  selectOrganizationId: vi.fn(),
+  selectEnvironment: vi.fn(),
+  selectAccessToken: vi.fn(),
+  selectDebugAgentSession: vi.fn(),
+}));
 
-vi.mock(
-  '../../../../../features/generated-answer/generated-answer-request.js',
-  () => ({
-    constructGenerateHeadAnswerParams: vi.fn(),
-  })
-);
+vi.mock('../../../../../features/generated-answer/generated-answer-request.js', () => ({
+  constructGenerateHeadAnswerParams: vi.fn(),
+}));
 
 vi.mock('./head-answer-strategy.js', () => ({
   createHeadAnswerStrategy: vi.fn(),
@@ -98,11 +92,7 @@ describe('createAnswerRunner', () => {
 
     await runner.run(state, dispatch, navigatorProvider);
 
-    expect(createAnswerAgent).toHaveBeenCalledWith(
-      'agent-123',
-      'org-123',
-      'prod'
-    );
+    expect(createAnswerAgent).toHaveBeenCalledWith('agent-123', 'org-123', 'prod');
   });
 
   it('builds the strategy and executes the agent with forwarded props', async () => {
@@ -111,10 +101,7 @@ describe('createAnswerRunner', () => {
     await runner.run(state, dispatch, navigatorProvider);
 
     expect(createHeadAnswerStrategy).toHaveBeenCalledWith(dispatch);
-    expect(constructGenerateHeadAnswerParams).toHaveBeenCalledWith(
-      state,
-      navigatorContext
-    );
+    expect(constructGenerateHeadAnswerParams).toHaveBeenCalledWith(state, navigatorContext);
     expect(navigatorProvider).toHaveBeenCalled();
     expect(mockAgent.runAgent).toHaveBeenCalledWith(
       {
@@ -187,10 +174,7 @@ describe('createAnswerRunner', () => {
         message: 'An error occurred while starting the answer generation.',
       })
     );
-    expect(consoleSpy).toHaveBeenCalledWith(
-      'Error running the answer agent:',
-      error
-    );
+    expect(consoleSpy).toHaveBeenCalledWith('Error running the answer agent:', error);
     expect(dispatch).toHaveBeenCalledWith(setIsLoading(false));
     consoleSpy.mockRestore();
   });

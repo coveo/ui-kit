@@ -7,10 +7,7 @@ import {triggerReducer as triggers} from '../../../features/triggers/triggers-sl
 import type {TriggerSection} from '../../../state/state-sections.js';
 import {arrayEqual} from '../../../utils/compare-utils.js';
 import {loadReducerError} from '../../../utils/errors.js';
-import {
-  buildController,
-  type Controller,
-} from '../../controller/headless-controller.js';
+import {buildController, type Controller} from '../../controller/headless-controller.js';
 
 /**
  * The `NotifyTrigger` controller handles notify triggers. A [Notify trigger](https://docs.coveo.com/en/3413#notify) query pipeline rule lets you define a message to be displayed to the end user when a certain condition is met.
@@ -79,10 +76,7 @@ export function buildCoreNotifyTrigger(
 
     subscribe(listener: () => void) {
       const strictListener = () => {
-        const hasChanged = !arrayEqual(
-          previousNotifications,
-          this.state.notifications
-        );
+        const hasChanged = !arrayEqual(previousNotifications, this.state.notifications);
         previousNotifications = this.state.notifications;
 
         if (hasChanged) {
@@ -102,9 +96,7 @@ export function buildCoreNotifyTrigger(
   };
 }
 
-function loadNotifyTriggerReducers(
-  engine: CoreEngine
-): engine is CoreEngine<TriggerSection> {
+function loadNotifyTriggerReducers(engine: CoreEngine): engine is CoreEngine<TriggerSection> {
   engine.addReducers({triggers});
   return true;
 }

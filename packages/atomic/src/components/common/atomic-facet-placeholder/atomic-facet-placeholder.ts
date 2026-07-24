@@ -24,11 +24,7 @@ export class AtomicFacetPlaceholder extends LitElement {
         class="bg-background border-neutral mb-4 animate-pulse rounded-lg border p-7"
         aria-hidden="true"
       >
-        <div
-          part="title-skeleton"
-          class="bg-neutral h-8 rounded"
-          style="width: 75%;"
-        ></div>
+        <div part="title-skeleton" class="bg-neutral h-8 rounded" style="width: 75%;"></div>
         <div part="values-container" class="mt-7">
           ${map(
             Array.from({length: this.valueCount}),

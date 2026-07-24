@@ -43,9 +43,7 @@ describe('atomic-product-link', () => {
   ) => {
     const productToUse = 'product' in options ? options.product : mockProduct;
     const interactiveProductToUse =
-      'interactiveProduct' in options
-        ? options.interactiveProduct
-        : mockInteractiveProduct;
+      'interactiveProduct' in options ? options.interactiveProduct : mockInteractiveProduct;
 
     const attributesSlot = options.attributes
       ? html`<a slot="attributes" target="_blank" download></a>`
@@ -53,9 +51,7 @@ describe('atomic-product-link', () => {
 
     const {element, atomicInterface, atomicProduct} =
       await renderInAtomicProduct<AtomicProductLink>({
-        template: html`<atomic-product-link
-          .hrefTemplate=${options.hrefTemplate}
-        >
+        template: html`<atomic-product-link .hrefTemplate=${options.hrefTemplate}>
           ${ifDefined(options.slotContent)} ${attributesSlot}
         </atomic-product-link>`,
         selector: 'atomic-product-link',
@@ -85,8 +81,7 @@ describe('atomic-product-link', () => {
       link: page.getByRole('link'),
       productText: () => element.querySelector('atomic-product-text'),
       parts: (element: AtomicProductLink) => {
-        const qs = (selector: string) =>
-          element.shadowRoot?.querySelector(selector);
+        const qs = (selector: string) => element.shadowRoot?.querySelector(selector);
         return {
           link: qs('a'),
           productText: qs('atomic-product-text'),
@@ -126,9 +121,7 @@ describe('atomic-product-link', () => {
       slotContent: 'Custom link content',
     });
 
-    expect(link.first().element()?.textContent).toContain(
-      'Custom link content'
-    );
+    expect(link.first().element()?.textContent).toContain('Custom link content');
   });
 
   describe('#initialize', () => {
@@ -165,10 +158,7 @@ describe('atomic-product-link', () => {
 
       if (element) {
         const eventListener = vi.fn();
-        element.addEventListener(
-          'atomic/resolveStopPropagation',
-          eventListener
-        );
+        element.addEventListener('atomic/resolveStopPropagation', eventListener);
 
         element.initialize();
 
@@ -209,9 +199,7 @@ describe('atomic-product-link', () => {
     });
 
     it('should use template with additional fields', async () => {
-      await setupTemplate(
-        '$' + '{clickUri}?custom=$' + '{additionalFields.custom_url_param}'
-      );
+      await setupTemplate('$' + '{clickUri}?custom=$' + '{additionalFields.custom_url_param}');
       const expectedHref = `https://example.com/product/123?custom=custom-value`;
       expect(link).toHaveAttribute('href', expectedHref);
     });
@@ -252,9 +240,7 @@ describe('atomic-product-link', () => {
 
     expect(mockInteractiveProduct.select).toHaveBeenCalled();
 
-    expect(element.bindings?.engine.logger.warn).toHaveBeenCalledWith(
-      'Test warning message'
-    );
+    expect(element.bindings?.engine.logger.warn).toHaveBeenCalledWith('Test warning message');
   });
 
   it('should handle #hrefTemplate property changes', async () => {

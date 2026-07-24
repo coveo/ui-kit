@@ -1,7 +1,4 @@
-import {
-  buildCommerceEngine,
-  getSampleCommerceEngineConfiguration,
-} from '@coveo/headless/commerce';
+import {buildCommerceEngine, getSampleCommerceEngineConfiguration} from '@coveo/headless/commerce';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {html} from 'lit';
 import {MockCommerceApi} from '@coveo/platform-mock-api/commerce/mock';
@@ -29,9 +26,7 @@ import '@/src/components/commerce/atomic-product-text/atomic-product-text.js';
 
 const mockCommerceApi = new MockCommerceApi();
 
-async function initializeCommerceRecommendationInterface(
-  canvasElement: HTMLElement
-) {
+async function initializeCommerceRecommendationInterface(canvasElement: HTMLElement) {
   await customElements.whenDefined('atomic-commerce-recommendation-interface');
   const commerceRecommendationInterface = canvasElement.querySelector(
     'atomic-commerce-recommendation-interface'
@@ -74,9 +69,7 @@ const meta: Meta = {
               <atomic-product-link class="font-bold"></atomic-product-link>
             </atomic-product-section-name>
             <atomic-product-section-visual>
-              <atomic-product-image
-                field="ec_thumbnails"
-              ></atomic-product-image>
+              <atomic-product-image field="ec_thumbnails"></atomic-product-image>
             </atomic-product-section-visual>
             <atomic-product-section-metadata>
               <atomic-product-field-condition if-defined="ec_brand">
@@ -86,9 +79,7 @@ const meta: Meta = {
                 ></atomic-product-text>
               </atomic-product-field-condition>
               <atomic-product-field-condition if-defined="ec_rating">
-                <atomic-product-rating
-                  field="ec_rating"
-                ></atomic-product-rating>
+                <atomic-product-rating field="ec_rating"></atomic-product-rating>
               </atomic-product-field-condition>
             </atomic-product-section-metadata>
             <atomic-product-section-emphasized>

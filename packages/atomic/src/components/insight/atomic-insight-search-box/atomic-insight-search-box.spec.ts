@@ -5,15 +5,7 @@ import {
   loadInsightSearchActions,
 } from '@coveo/headless/insight';
 import {html} from 'lit';
-import {
-  beforeEach,
-  describe,
-  expect,
-  it,
-  type Mock,
-  type MockInstance,
-  vi,
-} from 'vitest';
+import {beforeEach, describe, expect, it, type Mock, type MockInstance, vi} from 'vitest';
 import {userEvent} from 'vitest/browser';
 import {isMacOS} from '@/src/utils/device-utils';
 import {renderInAtomicInsightInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/insight/atomic-insight-interface-fixture';
@@ -46,8 +38,7 @@ describe('atomic-insight-search-box', () => {
       registerQuerySuggest: registerQuerySuggestSpy,
     } as unknown as ReturnType<typeof loadInsightSearchActions>);
 
-    mockedEngine.dispatch =
-      dispatchSpy as unknown as typeof mockedEngine.dispatch;
+    mockedEngine.dispatch = dispatchSpy as unknown as typeof mockedEngine.dispatch;
   });
 
   const renderComponent = async ({
@@ -73,27 +64,22 @@ describe('atomic-insight-search-box', () => {
 
     vi.mocked(buildInsightSearchBox).mockReturnValue(mockedSearchBox);
 
-    const {element} =
-      await renderInAtomicInsightInterface<AtomicInsightSearchBox>({
-        template: html`<atomic-insight-search-box></atomic-insight-search-box>`,
-        selector: 'atomic-insight-search-box',
-        bindings: (bindings) => {
-          bindings.engine = mockedEngine;
-          return bindings;
-        },
-      });
+    const {element} = await renderInAtomicInsightInterface<AtomicInsightSearchBox>({
+      template: html`<atomic-insight-search-box></atomic-insight-search-box>`,
+      selector: 'atomic-insight-search-box',
+      bindings: (bindings) => {
+        bindings.engine = mockedEngine;
+        return bindings;
+      },
+    });
 
     return {
       element,
       wrapper: element.shadowRoot!.querySelector('[part="wrapper"]')!,
-      textArea: element.shadowRoot!.querySelector(
-        '[part="textarea"]'
-      )! as HTMLTextAreaElement,
+      textArea: element.shadowRoot!.querySelector('[part="textarea"]')! as HTMLTextAreaElement,
       submitIcon: element.shadowRoot!.querySelector('[part="submit-icon"]'),
-      clearButton: () =>
-        element.shadowRoot!.querySelector('button[part="clear-button"]'),
-      suggestionsWrapper: () =>
-        element.shadowRoot!.querySelector('[part="suggestions-wrapper"]'),
+      clearButton: () => element.shadowRoot!.querySelector('button[part="clear-button"]'),
+      suggestionsWrapper: () => element.shadowRoot!.querySelector('[part="suggestions-wrapper"]'),
     };
   };
 
@@ -114,9 +100,7 @@ describe('atomic-insight-search-box', () => {
     expect(dispatchSpy).toHaveBeenCalledWith(
       expect.objectContaining({type: 'registerQuerySuggest'})
     );
-    expect(registerQuerySuggestSpy).toHaveBeenCalledWith(
-      expect.objectContaining({count: 5})
-    );
+    expect(registerQuerySuggestSpy).toHaveBeenCalledWith(expect.objectContaining({count: 5}));
   });
 
   it('should set searchBox property to the controller', async () => {

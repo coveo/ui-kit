@@ -8,9 +8,8 @@ import {ChangeDetectionStrategy, Component, input} from '@angular/core';
         <p class="eyebrow">Barca Sports reference app</p>
         <h1>Structured commerce surfaces for a sports storefront.</h1>
         <p class="lede">
-          This demo focuses on storefront-side responsibilities: stable
-          conversation identity, streamed assistant text, and renderable A2UI
-          surfaces for shopping flows.
+          This demo focuses on storefront-side responsibilities: stable conversation identity,
+          streamed assistant text, and renderable A2UI surfaces for shopping flows.
         </p>
       </div>
 

@@ -8,9 +8,7 @@ test.describe('atomic-facet-manager', () => {
     });
 
     await test.step('Verify component renders with facets', async () => {
-      await expect(component.facets).toHaveCount(
-        await component.facets.count()
-      );
+      await expect(component.facets).toHaveCount(await component.facets.count());
       await expect(component.collapsedFacets).toHaveCount(0);
     });
   });
@@ -48,9 +46,7 @@ test.describe('atomic-facet-manager', () => {
     });
   });
 
-  test('should not collapse facets when collapseFacetsAfter is -1', async ({
-    component,
-  }) => {
+  test('should not collapse facets when collapseFacetsAfter is -1', async ({component}) => {
     await test.step('Load component with collapse disabled', async () => {
       await component.load({
         story: 'default',

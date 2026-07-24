@@ -45,8 +45,7 @@ class ExternalContextService {
 
   public static getInstance(): ExternalContextService {
     if (!globalThis.__externalContextServiceInstance) {
-      globalThis.__externalContextServiceInstance =
-        new ExternalContextService();
+      globalThis.__externalContextServiceInstance = new ExternalContextService();
     }
     return globalThis.__externalContextServiceInstance as ExternalContextService;
   }
@@ -55,9 +54,7 @@ class ExternalContextService {
     return this.contextDB;
   }
 
-  public async setContextInformation(
-    localeInformation: ExternalContextInformation
-  ): Promise<void> {
+  public async setContextInformation(localeInformation: ExternalContextInformation): Promise<void> {
     this.contextDB = localeInformation;
   }
 

@@ -58,108 +58,90 @@ import {
   getCommerceParametersInitialState,
 } from './parameters-state.js';
 
-export const parametersReducer = createReducer(
-  getCommerceParametersInitialState(),
-  (builder) => {
-    builder
-      .addCase(nextPage, (state, action) =>
-        handleNextPage(state, action.payload)
-      )
+export const parametersReducer = createReducer(getCommerceParametersInitialState(), (builder) => {
+  builder
+    .addCase(nextPage, (state, action) => handleNextPage(state, action.payload))
 
-      .addCase(previousPage, (state, action) =>
-        handlePreviousPage(state, action.payload)
-      )
+    .addCase(previousPage, (state, action) => handlePreviousPage(state, action.payload))
 
-      .addCase(selectPage, (state, action) =>
-        handleSelectPage(state, action.payload)
-      )
+    .addCase(selectPage, (state, action) => handleSelectPage(state, action.payload))
 
-      .addCase(setPageSize, (state, action) =>
-        handleSetPageSize(state, action.payload)
-      )
+    .addCase(setPageSize, (state, action) => handleSetPageSize(state, action.payload))
 
-      .addCase(applySort, (state, action) =>
-        handleApplySort(state, action.payload)
-      )
+    .addCase(applySort, (state, action) => handleApplySort(state, action.payload))
 
-      .addCase(updateQuery, (state, action) =>
-        handleUpdateQuery(state, action.payload)
-      )
+    .addCase(updateQuery, (state, action) => handleUpdateQuery(state, action.payload))
 
-      .addCase(clearAllCoreFacets, (state) => handleClearAllCoreFacets(state))
+    .addCase(clearAllCoreFacets, (state) => handleClearAllCoreFacets(state))
 
-      .addCase(deleteAllCoreFacets, (state) => handleClearAllCoreFacets(state))
+    .addCase(deleteAllCoreFacets, (state) => handleClearAllCoreFacets(state))
 
-      .addCase(deselectAllValuesInCoreFacet, (state, action) =>
-        handleDeselectAllValuesInCoreFacet(state, action.payload)
-      )
+    .addCase(deselectAllValuesInCoreFacet, (state, action) =>
+      handleDeselectAllValuesInCoreFacet(state, action.payload)
+    )
 
-      .addCase(toggleSelectCategoryFacetValue, (state, action) =>
-        handleToggleCategoryFacetValue(state, action.payload)
-      )
+    .addCase(toggleSelectCategoryFacetValue, (state, action) =>
+      handleToggleCategoryFacetValue(state, action.payload)
+    )
 
-      .addCase(selectCategoryFacetSearchResult, (state, action) =>
-        handleSelectCategoryFacetSearchResult(state, action)
-      )
+    .addCase(selectCategoryFacetSearchResult, (state, action) =>
+      handleSelectCategoryFacetSearchResult(state, action)
+    )
 
-      .addCase(toggleSelectFacetValue, (state, action) =>
-        handleToggleSelectFacetValue(state, action.payload)
-      )
+    .addCase(toggleSelectFacetValue, (state, action) =>
+      handleToggleSelectFacetValue(state, action.payload)
+    )
 
-      .addCase(toggleExcludeFacetValue, (state, action) =>
-        handleToggleExcludeFacetValue(state, action.payload)
-      )
+    .addCase(toggleExcludeFacetValue, (state, action) =>
+      handleToggleExcludeFacetValue(state, action.payload)
+    )
 
-      .addCase(selectFacetSearchResult, (state, action) =>
-        handleSelectFacetSearchResult(state, action)
-      )
+    .addCase(selectFacetSearchResult, (state, action) =>
+      handleSelectFacetSearchResult(state, action)
+    )
 
-      .addCase(excludeFacetSearchResult, (state, action) =>
-        handleExcludeFacetSearchResult(state, action)
-      )
+    .addCase(excludeFacetSearchResult, (state, action) =>
+      handleExcludeFacetSearchResult(state, action)
+    )
 
-      .addCase(toggleSelectNumericFacetValue, (state, action) =>
-        handleToggleSelectNumericFacetValue(state, action.payload)
-      )
+    .addCase(toggleSelectNumericFacetValue, (state, action) =>
+      handleToggleSelectNumericFacetValue(state, action.payload)
+    )
 
-      .addCase(toggleExcludeNumericFacetValue, (state, action) =>
-        handleToggleExcludeNumericFacetValue(state, action.payload)
-      )
+    .addCase(toggleExcludeNumericFacetValue, (state, action) =>
+      handleToggleExcludeNumericFacetValue(state, action.payload)
+    )
 
-      .addCase(updateManualNumericFacetRange, (state, action) =>
-        handleUpdateManualNumericFacetRange(state, action.payload)
-      )
+    .addCase(updateManualNumericFacetRange, (state, action) =>
+      handleUpdateManualNumericFacetRange(state, action.payload)
+    )
 
-      .addCase(toggleSelectDateFacetValue, (state, action) =>
-        handleToggleSelectDateFacetValue(state, action.payload)
-      )
+    .addCase(toggleSelectDateFacetValue, (state, action) =>
+      handleToggleSelectDateFacetValue(state, action.payload)
+    )
 
-      .addCase(toggleExcludeDateFacetValue, (state, action) =>
-        handleToggleExcludeDateFacetValue(state, action.payload)
-      )
+    .addCase(toggleExcludeDateFacetValue, (state, action) =>
+      handleToggleExcludeDateFacetValue(state, action.payload)
+    )
 
-      .addCase(toggleSelectLocationFacetValue, (state, action) =>
-        handleToggleSelectLocationFacetValue(state, action.payload)
-      )
+    .addCase(toggleSelectLocationFacetValue, (state, action) =>
+      handleToggleSelectLocationFacetValue(state, action.payload)
+    )
 
-      .addCase(setView, getCommerceParametersInitialState)
+    .addCase(setView, getCommerceParametersInitialState)
 
-      .addCase(restoreProductListingParameters, (state, action) => {
-        state = action.payload;
-        return state;
-      })
+    .addCase(restoreProductListingParameters, (state, action) => {
+      state = action.payload;
+      return state;
+    })
 
-      .addCase(restoreSearchParameters, (state, action) => {
-        state = action.payload;
-        return state;
-      });
-  }
-);
+    .addCase(restoreSearchParameters, (state, action) => {
+      state = action.payload;
+      return state;
+    });
+});
 
-const handleNextPage = (
-  state: CommerceParametersState,
-  payload?: NextPagePayload
-) => {
+const handleNextPage = (state: CommerceParametersState, payload?: NextPagePayload) => {
   if (payload?.slotId !== undefined) {
     return;
   }
@@ -172,10 +154,7 @@ const handleNextPage = (
   state.page = 1;
 };
 
-const handlePreviousPage = (
-  state: CommerceParametersState,
-  payload?: PreviousPagePayload
-) => {
+const handlePreviousPage = (state: CommerceParametersState, payload?: PreviousPagePayload) => {
   if (payload?.slotId !== undefined) {
     return;
   }
@@ -188,10 +167,7 @@ const handlePreviousPage = (
   state.page = undefined;
 };
 
-const handleSelectPage = (
-  state: CommerceParametersState,
-  payload: SelectPagePayload
-) => {
+const handleSelectPage = (state: CommerceParametersState, payload: SelectPagePayload) => {
   if (payload?.slotId !== undefined) {
     return;
   }
@@ -199,10 +175,7 @@ const handleSelectPage = (
   state.page = payload.page > 0 ? payload.page : undefined;
 };
 
-const handleSetPageSize = (
-  state: CommerceParametersState,
-  payload: SetPageSizePayload
-) => {
+const handleSetPageSize = (state: CommerceParametersState, payload: SetPageSizePayload) => {
   if (payload?.slotId !== undefined) {
     return;
   }
@@ -217,18 +190,12 @@ const handleSetPageSize = (
   state.perPage = payload.pageSize;
 };
 
-const handleApplySort = (
-  state: CommerceParametersState,
-  payload: ApplySortPayload
-) => {
+const handleApplySort = (state: CommerceParametersState, payload: ApplySortPayload) => {
   state.page = undefined;
   state.sortCriteria = payload;
 };
 
-const handleUpdateQuery = (
-  state: CommerceParametersState,
-  payload: UpdateQueryPayload
-) => {
+const handleUpdateQuery = (state: CommerceParametersState, payload: UpdateQueryPayload) => {
   state.page = undefined;
 
   const {query} = payload;
@@ -349,31 +316,16 @@ const handleToggleSelectFacetValue = (
 ) => {
   state.page = undefined;
 
-  unsetRegularValue(
-    state,
-    'fExcluded',
-    state.fExcluded,
-    payload.facetId,
-    payload.selection.value
-  );
+  unsetRegularValue(state, 'fExcluded', state.fExcluded, payload.facetId, payload.selection.value);
 
   switch (payload.selection.state) {
     case 'selected':
-      unsetRegularValue(
-        state,
-        'f',
-        state.f,
-        payload.facetId,
-        payload.selection.value
-      );
+      unsetRegularValue(state, 'f', state.f, payload.facetId, payload.selection.value);
       break;
     case 'excluded':
     case 'idle':
       state.f ??= {};
-      state.f[payload.facetId] = [
-        ...(state.f[payload.facetId] ?? []),
-        payload.selection.value,
-      ];
+      state.f[payload.facetId] = [...(state.f[payload.facetId] ?? []), payload.selection.value];
       break;
   }
 };
@@ -385,19 +337,10 @@ const handleSelectFacetSearchResult = (
   const payload = action.payload;
   state.page = undefined;
 
-  unsetRegularValue(
-    state,
-    'fExcluded',
-    state.fExcluded,
-    payload.facetId,
-    payload.value.rawValue
-  );
+  unsetRegularValue(state, 'fExcluded', state.fExcluded, payload.facetId, payload.value.rawValue);
 
   state.f ??= {};
-  state.f[payload.facetId] = [
-    ...(state.f[payload.facetId] ?? []),
-    payload.value.rawValue,
-  ];
+  state.f[payload.facetId] = [...(state.f[payload.facetId] ?? []), payload.value.rawValue];
 };
 
 const handleToggleExcludeFacetValue = (
@@ -406,13 +349,7 @@ const handleToggleExcludeFacetValue = (
 ) => {
   state.page = undefined;
 
-  unsetRegularValue(
-    state,
-    'f',
-    state.f,
-    payload.facetId,
-    payload.selection.value
-  );
+  unsetRegularValue(state, 'f', state.f, payload.facetId, payload.selection.value);
 
   switch (payload.selection.state) {
     case 'excluded':
@@ -442,13 +379,7 @@ const handleExcludeFacetSearchResult = (
   const payload = action.payload;
   state.page = undefined;
 
-  unsetRegularValue(
-    state,
-    'f',
-    state.f,
-    payload.facetId,
-    payload.value.rawValue
-  );
+  unsetRegularValue(state, 'f', state.f, payload.facetId, payload.value.rawValue);
 
   state.fExcluded ??= {};
   state.fExcluded[payload.facetId] = [
@@ -464,38 +395,17 @@ const handleToggleSelectNumericFacetValue = (
   state.page = undefined;
 
   unsetRangeValue(state, 'mnf', state.mnf, payload.facetId, payload.selection);
-  unsetRangeValue(
-    state,
-    'mnfExcluded',
-    state.mnfExcluded,
-    payload.facetId,
-    payload.selection
-  );
-  unsetRangeValue(
-    state,
-    'nfExcluded',
-    state.nfExcluded,
-    payload.facetId,
-    payload.selection
-  );
+  unsetRangeValue(state, 'mnfExcluded', state.mnfExcluded, payload.facetId, payload.selection);
+  unsetRangeValue(state, 'nfExcluded', state.nfExcluded, payload.facetId, payload.selection);
 
   switch (payload.selection.state) {
     case 'selected':
-      unsetRangeValue(
-        state,
-        'nf',
-        state.nf,
-        payload.facetId,
-        payload.selection
-      );
+      unsetRangeValue(state, 'nf', state.nf, payload.facetId, payload.selection);
       break;
     case 'excluded':
     case 'idle':
       state.nf ??= {};
-      state.nf[payload.facetId] = [
-        ...(state.nf[payload.facetId] ?? []),
-        payload.selection,
-      ];
+      state.nf[payload.facetId] = [...(state.nf[payload.facetId] ?? []), payload.selection];
       break;
     default:
       break;
@@ -509,24 +419,12 @@ const handleToggleExcludeNumericFacetValue = (
   state.page = undefined;
 
   unsetRangeValue(state, 'mnf', state.mnf, payload.facetId, payload.selection);
-  unsetRangeValue(
-    state,
-    'mnfExcluded',
-    state.mnfExcluded,
-    payload.facetId,
-    payload.selection
-  );
+  unsetRangeValue(state, 'mnfExcluded', state.mnfExcluded, payload.facetId, payload.selection);
   unsetRangeValue(state, 'nf', state.nf, payload.facetId, payload.selection);
 
   switch (payload.selection.state) {
     case 'excluded':
-      unsetRangeValue(
-        state,
-        'nfExcluded',
-        state.nfExcluded,
-        payload.facetId,
-        payload.selection
-      );
+      unsetRangeValue(state, 'nfExcluded', state.nfExcluded, payload.facetId, payload.selection);
       break;
     case 'selected':
     case 'idle':
@@ -548,26 +446,14 @@ const handleUpdateManualNumericFacetRange = (
   state.page = undefined;
 
   unsetRangeValue(state, 'nf', state.nf, payload.facetId, payload);
-  unsetRangeValue(
-    state,
-    'nfExcluded',
-    state.nfExcluded,
-    payload.facetId,
-    payload
-  );
+  unsetRangeValue(state, 'nfExcluded', state.nfExcluded, payload.facetId, payload);
 
   const {facetId: _facetId, ...restOfPayload} = payload;
 
   switch (payload.state) {
     case 'idle':
       unsetRangeValue(state, 'mnf', state.mnf, payload.facetId, payload);
-      unsetRangeValue(
-        state,
-        'mnfExcluded',
-        state.mnfExcluded,
-        payload.facetId,
-        payload
-      );
+      unsetRangeValue(state, 'mnfExcluded', state.mnfExcluded, payload.facetId, payload);
       break;
     case 'excluded':
       unsetRangeValue(state, 'mnf', state.mnf, payload.facetId, payload);
@@ -575,13 +461,7 @@ const handleUpdateManualNumericFacetRange = (
       state.mnfExcluded[payload.facetId] = [restOfPayload];
       break;
     case 'selected':
-      unsetRangeValue(
-        state,
-        'mnfExcluded',
-        state.mnfExcluded,
-        payload.facetId,
-        payload
-      );
+      unsetRangeValue(state, 'mnfExcluded', state.mnfExcluded, payload.facetId, payload);
       state.mnf ??= {};
       state.mnf[payload.facetId] = [restOfPayload];
       break;
@@ -596,34 +476,18 @@ const handleToggleSelectDateFacetValue = (
 ) => {
   state.page = undefined;
 
-  unsetRangeValue(
-    state,
-    'dfExcluded',
-    state.dfExcluded,
-    payload.facetId,
-    payload.selection
-  );
+  unsetRangeValue(state, 'dfExcluded', state.dfExcluded, payload.facetId, payload.selection);
 
-  const {numberOfResults: _numberOfResults, ...restOfPayload} =
-    payload.selection;
+  const {numberOfResults: _numberOfResults, ...restOfPayload} = payload.selection;
 
   switch (payload.selection.state) {
     case 'selected':
-      unsetRangeValue(
-        state,
-        'df',
-        state.df,
-        payload.facetId,
-        payload.selection
-      );
+      unsetRangeValue(state, 'df', state.df, payload.facetId, payload.selection);
       break;
     case 'excluded':
     case 'idle':
       state.df ??= {};
-      state.df[payload.facetId] = [
-        ...(state.df[payload.facetId] ?? []),
-        restOfPayload,
-      ];
+      state.df[payload.facetId] = [...(state.df[payload.facetId] ?? []), restOfPayload];
       break;
     default:
       break;
@@ -638,18 +502,11 @@ const handleToggleExcludeDateFacetValue = (
 
   unsetRangeValue(state, 'df', state.df, payload.facetId, payload.selection);
 
-  const {numberOfResults: _numberOfResults, ...restOfPayload} =
-    payload.selection;
+  const {numberOfResults: _numberOfResults, ...restOfPayload} = payload.selection;
 
   switch (payload.selection.state) {
     case 'excluded':
-      unsetRangeValue(
-        state,
-        'dfExcluded',
-        state.dfExcluded,
-        payload.facetId,
-        payload.selection
-      );
+      unsetRangeValue(state, 'dfExcluded', state.dfExcluded, payload.facetId, payload.selection);
       break;
     case 'selected':
     case 'idle':
@@ -672,21 +529,12 @@ const handleToggleSelectLocationFacetValue = (
 
   switch (payload.selection.state) {
     case 'selected':
-      unsetRegularValue(
-        state,
-        'lf',
-        state.lf,
-        payload.facetId,
-        payload.selection.value
-      );
+      unsetRegularValue(state, 'lf', state.lf, payload.facetId, payload.selection.value);
       break;
     case 'excluded':
     case 'idle':
       state.lf ??= {};
-      state.lf[payload.facetId] = [
-        ...(state.lf[payload.facetId] ?? []),
-        payload.selection.value,
-      ];
+      state.lf[payload.facetId] = [...(state.lf[payload.facetId] ?? []), payload.selection.value];
       break;
   }
 };
@@ -699,9 +547,7 @@ const unsetRegularValue = (
   selection: string
 ) => {
   if (stateParameter !== undefined && stateParameter[facetId] !== undefined) {
-    stateParameter[facetId] = stateParameter[facetId].filter(
-      (value) => value !== selection
-    );
+    stateParameter[facetId] = stateParameter[facetId].filter((value) => value !== selection);
     if (stateParameter[facetId].length === 0) {
       delete stateParameter[facetId];
     }

@@ -4,10 +4,7 @@ import type {
   InferControllerStaticStateFromController,
   InferControllerStaticStateMapFromControllers,
 } from '../../common/types/controller-inference.js';
-import type {
-  InferHydratedState,
-  InferStaticState,
-} from '../../common/types/engine.js';
+import type {InferHydratedState, InferStaticState} from '../../common/types/engine.js';
 import type {SearchParameterManagerDefinition} from '../controllers/search-parameter-manager/headless-search-parameter-manager.ssr.js';
 
 export type {
@@ -81,8 +78,5 @@ export type BakedInSearchControllers = {
  * @template TControllerDefinitions - The controller definitions map
  */
 export type AugmentedControllerDefinition<
-  TControllerDefinitions extends ControllerDefinitionsMap<
-    CoreEngine | CoreEngineNext,
-    Controller
-  >,
+  TControllerDefinitions extends ControllerDefinitionsMap<CoreEngine | CoreEngineNext, Controller>,
 > = TControllerDefinitions & BakedInControllerDefinitions;

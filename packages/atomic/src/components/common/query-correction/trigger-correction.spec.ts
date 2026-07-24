@@ -28,12 +28,8 @@ describe('#renderTriggerCorrection', () => {
     );
 
     return {
-      paragraphShowingResultsFor: element.querySelector(
-        'p[part="showing-results-for"]'
-      ),
-      paragraphSearchInsteadFor: element.querySelector(
-        'p[part="search-instead-for"]'
-      ),
+      paragraphShowingResultsFor: element.querySelector('p[part="showing-results-for"]'),
+      paragraphSearchInsteadFor: element.querySelector('p[part="search-instead-for"]'),
       buttonUndo: element.querySelector('button[part="undo-btn"]'),
     };
   };
@@ -41,35 +37,25 @@ describe('#renderTriggerCorrection', () => {
   it('should render the part "showing-results-for" on the first paragraph', async () => {
     const {paragraphShowingResultsFor} = await renderComponent();
 
-    expect(paragraphShowingResultsFor).toHaveAttribute(
-      'part',
-      'showing-results-for'
-    );
+    expect(paragraphShowingResultsFor).toHaveAttribute('part', 'showing-results-for');
   });
 
   it('should render the correct text on the first paragraph', async () => {
     const {paragraphShowingResultsFor} = await renderComponent();
 
-    expect(paragraphShowingResultsFor).toHaveTextContent(
-      'Showing products for corrected query'
-    );
+    expect(paragraphShowingResultsFor).toHaveTextContent('Showing products for corrected query');
   });
 
   it('should render the part "search-instead-for" on the second paragraph', async () => {
     const {paragraphSearchInsteadFor} = await renderComponent();
 
-    expect(paragraphSearchInsteadFor).toHaveAttribute(
-      'part',
-      'search-instead-for'
-    );
+    expect(paragraphSearchInsteadFor).toHaveAttribute('part', 'search-instead-for');
   });
 
   it('should render the correct text on the second paragraph', async () => {
     const {paragraphSearchInsteadFor} = await renderComponent();
 
-    expect(paragraphSearchInsteadFor).toHaveTextContent(
-      'Search instead for original query'
-    );
+    expect(paragraphSearchInsteadFor).toHaveTextContent('Search instead for original query');
   });
 
   it('should render a button with the part "undo-btn"', async () => {

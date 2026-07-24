@@ -32,9 +32,7 @@ describe('#getClonedFacetElements', () => {
 
     expect(result.style.display).toBe('flex');
     expect(result.style.flexDirection).toBe('column');
-    expect(result.style.gap).toBe(
-      'var(--atomic-refine-modal-facet-margin, 20px)'
-    );
+    expect(result.style.gap).toBe('var(--atomic-refine-modal-facet-margin, 20px)');
   });
 
   it('should clone facet elements', () => {

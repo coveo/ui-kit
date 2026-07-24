@@ -65,11 +65,7 @@ export const App = () => {
 
       <main className="page">
         {listing ? (
-          <ListingPage
-            key={path}
-            title={listing.title}
-            viewUrl={listing.viewUrl}
-          />
+          <ListingPage key={path} title={listing.title} viewUrl={listing.viewUrl} />
         ) : path === '/search' ? (
           <SearchPage />
         ) : (

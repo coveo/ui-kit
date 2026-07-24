@@ -68,10 +68,7 @@ The following example builds a Case Assist engine, creates a case input controll
 > Case Assist requires valid Coveo organization credentials and a case assist configuration ID. The sample below uses placeholder values and cannot run without replacing them with real values from your Coveo organization.
 
 ```typescript
-import {
-  buildCaseAssistEngine,
-  buildCaseInput,
-} from '@coveo/headless/case-assist';
+import {buildCaseAssistEngine, buildCaseInput} from '@coveo/headless/case-assist';
 
 const engine = buildCaseAssistEngine({
   configuration: {

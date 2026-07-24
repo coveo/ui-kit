@@ -40,9 +40,7 @@ export class SortDropdown extends LitElement {
     if (criterion.by === 'relevance') {
       return 'Relevance';
     }
-    return criterion.fields
-      .map((field) => field.displayName ?? field.name)
-      .join(', ');
+    return criterion.fields.map((field) => field.displayName ?? field.name).join(', ');
   }
 
   render() {
@@ -62,8 +60,7 @@ export class SortDropdown extends LitElement {
             (criterion) => html`
               <option
                 value=${JSON.stringify(criterion)}
-                ?selected=${JSON.stringify(state.appliedSort) ===
-                JSON.stringify(criterion)}
+                ?selected=${JSON.stringify(state.appliedSort) === JSON.stringify(criterion)}
               >
                 ${this.#label(criterion)}
               </option>

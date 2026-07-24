@@ -19,10 +19,7 @@ export const buildInsightQuerySuggestRequest = async (
   return {
     accessToken: s.configuration.accessToken,
     organizationId: s.configuration.organizationId,
-    url: getOrganizationEndpoint(
-      s.configuration.organizationId,
-      s.configuration.environment
-    ),
+    url: getOrganizationEndpoint(s.configuration.organizationId, s.configuration.environment),
     count: s.querySuggest![id]!.count,
     insightId: s.insightConfiguration.insightId,
     q: s.querySet?.[id],

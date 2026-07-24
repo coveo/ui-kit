@@ -13,9 +13,7 @@ import type {ContextState} from './types.js';
 type MockContext = ContextState<any, any>;
 describe('SSR Common functions', () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const mockContext = createContext(
-    null
-  ) as unknown as Context<MockContext | null>;
+  const mockContext = createContext(null) as unknown as Context<MockContext | null>;
   const mockSingletonContext = {
     get: () => mockContext,
   };
@@ -144,15 +142,11 @@ describe('SSR Common functions', () => {
   });
 
   describe('buildHydratedStateProvider (deprecated)', () => {
-    const HydratedStateProvider =
-      buildHydratedStateProvider(mockSingletonContext);
+    const HydratedStateProvider = buildHydratedStateProvider(mockSingletonContext);
 
     test('should render with engine and controllers', () => {
       render(
-        <HydratedStateProvider
-          engine={mockEngine}
-          controllers={mockControllers}
-        >
+        <HydratedStateProvider engine={mockEngine} controllers={mockControllers}>
           <TestComponent />
         </HydratedStateProvider>
       );
@@ -169,10 +163,7 @@ describe('SSR Common functions', () => {
       };
 
       render(
-        <HydratedStateProvider
-          engine={mockEngine}
-          controllers={mockControllers}
-        >
+        <HydratedStateProvider engine={mockEngine} controllers={mockControllers}>
           <TestConsumer />
         </HydratedStateProvider>
       );
@@ -187,8 +178,7 @@ describe('SSR Common functions', () => {
   describe('StateProvider vs deprecated providers comparison', () => {
     const StateProvider = buildStateProvider(mockSingletonContext);
     const StaticStateProvider = buildStaticStateProvider(mockSingletonContext);
-    const HydratedStateProvider =
-      buildHydratedStateProvider(mockSingletonContext);
+    const HydratedStateProvider = buildHydratedStateProvider(mockSingletonContext);
 
     test('StateProvider with static controllers should behave like StaticStateProvider', () => {
       let stateProviderValue: MockContext | null = null;
@@ -219,9 +209,7 @@ describe('SSR Common functions', () => {
       );
 
       // StateProvider should include engine: undefined, while StaticStateProvider doesn't include engine at all
-      expect(stateProviderValue!.controllers).toEqual(
-        staticProviderValue!.controllers
-      );
+      expect(stateProviderValue!.controllers).toEqual(staticProviderValue!.controllers);
       expect('engine' in staticProviderValue!).toBe(false);
     });
 
@@ -248,10 +236,7 @@ describe('SSR Common functions', () => {
       );
 
       render(
-        <HydratedStateProvider
-          engine={mockEngine}
-          controllers={mockControllers}
-        >
+        <HydratedStateProvider engine={mockEngine} controllers={mockControllers}>
           <HydratedConsumer />
         </HydratedStateProvider>
       );

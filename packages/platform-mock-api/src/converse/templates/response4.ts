@@ -137,11 +137,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
         ec_shortdesc:
           'Get ready for adventure in the Yellow Glide Shorty wetsuit! Perfect for women kayakers, it offers comfort, eco-friendly materials, waterproof protection, and portability.',
         ec_brand: 'Xcel',
-        ec_category: [
-          'Accessories',
-          'Accessories|Wetsuits',
-          'Accessories|Wetsuits|Partial Suits',
-        ],
+        ec_category: ['Accessories', 'Accessories|Wetsuits', 'Accessories|Wetsuits|Partial Suits'],
         ec_thumbnails: [
           'https://images.barca.group/Sports/v2/Accessories/Wetsuits/Partial Suits/XCWETS_2829_YL/5b114e309fe6_bottom_right.webp',
         ],
@@ -224,11 +220,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
         ec_shortdesc:
           'Conquer the waves in the EcoWave Neoprene Shorty! This ergonomically designed wetsuit for men ensures comfort, flexibility, and durability. Perfect for warm-water surfing.',
         ec_brand: 'Rip Curl',
-        ec_category: [
-          'Accessories',
-          'Accessories|Wetsuits',
-          'Accessories|Wetsuits|Partial Suits',
-        ],
+        ec_category: ['Accessories', 'Accessories|Wetsuits', 'Accessories|Wetsuits|Partial Suits'],
         ec_thumbnails: [
           'https://images.barca.group/Sports/v2/Accessories/Wetsuits/Partial Suits/RCWETS_61D4_RD/ca5670819eed_top_right.webp',
         ],
@@ -289,11 +281,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
           ec_price: 299.99,
           ec_thumbnails:
             'https://images.barca.group/Sports/v2/Accessories/Wetsuits/Full Suit/QSWETF_CA7A_GN/bf86ebb42b0f_bottom_left.webp',
-          ec_category: [
-            'Accessories',
-            'Accessories|Wetsuits',
-            'Accessories|Wetsuits|Full Suit',
-          ],
+          ec_category: ['Accessories', 'Accessories|Wetsuits', 'Accessories|Wetsuits|Full Suit'],
           ec_listing: null,
           titleHighlights: null,
           excerpt: null,
@@ -307,11 +295,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
         ec_shortdesc:
           'Reach peak performance and comfort with the AquaGuard Thermal Suit. Perfect for women kayakers, this high-quality apparel offers warmth, flexibility, and durability for all water adventures.',
         ec_brand: 'Quiksilver',
-        ec_category: [
-          'Accessories',
-          'Accessories|Wetsuits',
-          'Accessories|Wetsuits|Full Suit',
-        ],
+        ec_category: ['Accessories', 'Accessories|Wetsuits', 'Accessories|Wetsuits|Full Suit'],
         ec_thumbnails: [
           'https://images.barca.group/Sports/v2/Accessories/Wetsuits/Full Suit/QSWETF_CA7A_GN/bf86ebb42b0f_bottom_left.webp',
         ],
@@ -388,11 +372,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
             ec_shortdesc:
               'Reach peak performance and comfort with the AquaGuard Thermal Suit. Perfect for women kayakers, this high-quality apparel offers warmth, flexibility, and durability for all water adventures.',
             ec_brand: 'Quiksilver',
-            ec_category: [
-              'Accessories',
-              'Accessories|Wetsuits',
-              'Accessories|Wetsuits|Full Suit',
-            ],
+            ec_category: ['Accessories', 'Accessories|Wetsuits', 'Accessories|Wetsuits|Full Suit'],
             ec_thumbnails: [
               'https://images.barca.group/Sports/v2/Accessories/Wetsuits/Full Suit/QSWETF_CA7A_BK/1a215a1307e2_top_right.webp',
             ],
@@ -454,11 +434,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
           ec_price: 99.99,
           ec_thumbnails:
             'https://images.barca.group/Sports/v2/Accessories/Wetsuits/Full Suit/ONWETF_CE54_BL/2aa46c411b93_top_right.webp',
-          ec_category: [
-            'Accessories',
-            'Accessories|Wetsuits',
-            'Accessories|Wetsuits|Full Suit',
-          ],
+          ec_category: ['Accessories', 'Accessories|Wetsuits', 'Accessories|Wetsuits|Full Suit'],
           ec_listing: null,
           titleHighlights: null,
           excerpt: null,
@@ -472,11 +448,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
         ec_shortdesc:
           'Stay warm and ride the waves with the Blue Wave Wetsuit for men. Lightweight, flexible, and eco-friendly, this wetsuit ensures comfort and confidence in cold waters.',
         ec_brand: "O'Neill",
-        ec_category: [
-          'Accessories',
-          'Accessories|Wetsuits',
-          'Accessories|Wetsuits|Full Suit',
-        ],
+        ec_category: ['Accessories', 'Accessories|Wetsuits', 'Accessories|Wetsuits|Full Suit'],
         ec_thumbnails: [
           'https://images.barca.group/Sports/v2/Accessories/Wetsuits/Full Suit/ONWETF_CE54_BL/2aa46c411b93_top_right.webp',
         ],
@@ -550,11 +522,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
           ec_price: 249.99,
           ec_thumbnails:
             'https://images.barca.group/Sports/v2/Accessories/Wetsuits/Full Suit/QSWETF_3425_GY/818c85f28435_top_left.webp',
-          ec_category: [
-            'Accessories',
-            'Accessories|Wetsuits',
-            'Accessories|Wetsuits|Full Suit',
-          ],
+          ec_category: ['Accessories', 'Accessories|Wetsuits', 'Accessories|Wetsuits|Full Suit'],
           ec_listing: null,
           titleHighlights: null,
           excerpt: null,
@@ -568,11 +536,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
         ec_shortdesc:
           "Dive into new adventures with the men's AquaFlex Full Suit! This durable, 6mm wetsuit is perfect for kayakers, offering comfort and performance in all waters.",
         ec_brand: 'Quiksilver',
-        ec_category: [
-          'Accessories',
-          'Accessories|Wetsuits',
-          'Accessories|Wetsuits|Full Suit',
-        ],
+        ec_category: ['Accessories', 'Accessories|Wetsuits', 'Accessories|Wetsuits|Full Suit'],
         ec_thumbnails: [
           'https://images.barca.group/Sports/v2/Accessories/Wetsuits/Full Suit/QSWETF_3425_GY/818c85f28435_top_left.webp',
         ],
@@ -649,11 +613,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
             ec_shortdesc:
               "Dive into new adventures with the men's AquaFlex Full Suit! This durable, 6mm wetsuit is perfect for kayakers, offering comfort and performance in all waters.",
             ec_brand: 'Quiksilver',
-            ec_category: [
-              'Accessories',
-              'Accessories|Wetsuits',
-              'Accessories|Wetsuits|Full Suit',
-            ],
+            ec_category: ['Accessories', 'Accessories|Wetsuits', 'Accessories|Wetsuits|Full Suit'],
             ec_thumbnails: [
               'https://images.barca.group/Sports/v2/Accessories/Wetsuits/Full Suit/QSWETF_3425_GN/e5dc09b7f487_bottom_right.webp',
             ],
@@ -730,11 +690,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
             ec_shortdesc:
               "Dive into new adventures with the men's AquaFlex Full Suit! This durable, 6mm wetsuit is perfect for kayakers, offering comfort and performance in all waters.",
             ec_brand: 'Quiksilver',
-            ec_category: [
-              'Accessories',
-              'Accessories|Wetsuits',
-              'Accessories|Wetsuits|Full Suit',
-            ],
+            ec_category: ['Accessories', 'Accessories|Wetsuits', 'Accessories|Wetsuits|Full Suit'],
             ec_thumbnails: [
               'https://images.barca.group/Sports/v2/Accessories/Wetsuits/Full Suit/QSWETF_3425_BK/97a85641e860_bottom_left.webp',
             ],
@@ -814,11 +770,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
         ec_shortdesc:
           'Experience peak performance with the PaddlePro Sleeveless Wetsuit for women. This eco-friendly, UV-resistant wetsuit combines comfort, warmth, and flexibility. Dive into adventure today!',
         ec_brand: 'Quiksilver',
-        ec_category: [
-          'Accessories',
-          'Accessories|Wetsuits',
-          'Accessories|Wetsuits|Partial Suits',
-        ],
+        ec_category: ['Accessories', 'Accessories|Wetsuits', 'Accessories|Wetsuits|Partial Suits'],
         ec_thumbnails: [
           'https://images.barca.group/Sports/v2/Accessories/Wetsuits/Partial Suits/QSWETS_5BB5_YL/f3f5c43dc038_bottom_left.webp',
         ],
@@ -987,11 +939,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
           ec_price: 299.99,
           ec_thumbnails:
             'https://images.barca.group/Sports/v2/Accessories/Wetsuits/Full Suit/RCWETF_793C_GN/416b539ca627_top_right.webp',
-          ec_category: [
-            'Accessories',
-            'Accessories|Wetsuits',
-            'Accessories|Wetsuits|Full Suit',
-          ],
+          ec_category: ['Accessories', 'Accessories|Wetsuits', 'Accessories|Wetsuits|Full Suit'],
           ec_listing: null,
           titleHighlights: null,
           excerpt: null,
@@ -1005,11 +953,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
         ec_shortdesc:
           'Dive into unmatched warmth and flexibility with the Diva ThermoFlex Dive Suit. This durable, Limestone Neoprene wetsuit offers top performance and eco-friendly design for women!',
         ec_brand: 'Rip Curl',
-        ec_category: [
-          'Accessories',
-          'Accessories|Wetsuits',
-          'Accessories|Wetsuits|Full Suit',
-        ],
+        ec_category: ['Accessories', 'Accessories|Wetsuits', 'Accessories|Wetsuits|Full Suit'],
         ec_thumbnails: [
           'https://images.barca.group/Sports/v2/Accessories/Wetsuits/Full Suit/RCWETF_793C_GN/416b539ca627_top_right.webp',
         ],
@@ -1090,11 +1034,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
             ec_shortdesc:
               'Dive into unmatched warmth and flexibility with the Diva ThermoFlex Dive Suit. This durable, Limestone Neoprene wetsuit offers top performance and eco-friendly design for women!',
             ec_brand: 'Rip Curl',
-            ec_category: [
-              'Accessories',
-              'Accessories|Wetsuits',
-              'Accessories|Wetsuits|Full Suit',
-            ],
+            ec_category: ['Accessories', 'Accessories|Wetsuits', 'Accessories|Wetsuits|Full Suit'],
             ec_thumbnails: [
               'https://images.barca.group/Sports/v2/Accessories/Wetsuits/Full Suit/RCWETF_793C_GY/d929f6d089f7_bottom_right.webp',
             ],
@@ -1160,11 +1100,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
           ec_price: 399.99,
           ec_thumbnails:
             'https://images.barca.group/Sports/v2/Accessories/Wetsuits/Full Suit/RCWETF_1CCE_GY/1b3ed94a22e9_bottom_left.webp',
-          ec_category: [
-            'Accessories',
-            'Accessories|Wetsuits',
-            'Accessories|Wetsuits|Full Suit',
-          ],
+          ec_category: ['Accessories', 'Accessories|Wetsuits', 'Accessories|Wetsuits|Full Suit'],
           ec_listing: null,
           titleHighlights: null,
           excerpt: null,
@@ -1178,11 +1114,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
         ec_shortdesc:
           "Stay warm and flexible on your dives with the women's EcoWave Pro Thermal Full Suit. Made from high-stretch Neoprene, it's eco-friendly and perfect for water sports enthusiasts.",
         ec_brand: 'Rip Curl',
-        ec_category: [
-          'Accessories',
-          'Accessories|Wetsuits',
-          'Accessories|Wetsuits|Full Suit',
-        ],
+        ec_category: ['Accessories', 'Accessories|Wetsuits', 'Accessories|Wetsuits|Full Suit'],
         ec_thumbnails: [
           'https://images.barca.group/Sports/v2/Accessories/Wetsuits/Full Suit/RCWETF_1CCE_GY/1b3ed94a22e9_bottom_left.webp',
         ],
@@ -1265,11 +1197,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
         ec_shortdesc:
           'Surf the waves with the EcoFlex Performance Suit! This eco-friendly wetsuit for male surfers offers unmatched flexibility, cold-water protection, and endless adventure.',
         ec_brand: "O'Neill",
-        ec_category: [
-          'Accessories',
-          'Accessories|Wetsuits',
-          'Accessories|Wetsuits|Partial Suits',
-        ],
+        ec_category: ['Accessories', 'Accessories|Wetsuits', 'Accessories|Wetsuits|Partial Suits'],
         ec_thumbnails: [
           'https://images.barca.group/Sports/v2/Accessories/Wetsuits/Partial Suits/ONWETS_676B_GY/dd7f855062d8_bottom_right.webp',
         ],
@@ -1430,11 +1358,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
         ec_shortdesc:
           "Ready for your next water adventure? The Green Wave Glide women's wetsuit is perfect for snorkeling, with durable, heat-retaining comfort and freedom of movement. Explore now!",
         ec_brand: 'Patagonia',
-        ec_category: [
-          'Accessories',
-          'Accessories|Wetsuits',
-          'Accessories|Wetsuits|Partial Suits',
-        ],
+        ec_category: ['Accessories', 'Accessories|Wetsuits', 'Accessories|Wetsuits|Partial Suits'],
         ec_thumbnails: [
           'https://images.barca.group/Sports/v2/Accessories/Wetsuits/Partial Suits/PTWETS_7689_GN/76060f11c60d_top_left.webp',
         ],
@@ -1522,11 +1446,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
         ec_shortdesc:
           'Conquer the waves with the Blue Adventurer Sleeveless Wetsuit. Ultra-flexible, UV-resistant, and eco-friendly! Perfect for paddleboarding escapades. Shop high-quality water sports gear now!',
         ec_brand: 'Rip Curl',
-        ec_category: [
-          'Accessories',
-          'Accessories|Wetsuits',
-          'Accessories|Wetsuits|Partial Suits',
-        ],
+        ec_category: ['Accessories', 'Accessories|Wetsuits', 'Accessories|Wetsuits|Partial Suits'],
         ec_thumbnails: [
           'https://images.barca.group/Sports/v2/Accessories/Wetsuits/Partial Suits/RCWETS_4051_BL/74f7ae510724_top_left.webp',
         ],
@@ -1614,11 +1534,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
         ec_shortdesc:
           'Explore the waves with the WaveRider Shorty Wetsuit. Crafted from eco-friendly Limestone Neoprene, this flexible, tear-resistant wetsuit offers comfort, performance, and style.',
         ec_brand: "O'Neill",
-        ec_category: [
-          'Accessories',
-          'Accessories|Wetsuits',
-          'Accessories|Wetsuits|Partial Suits',
-        ],
+        ec_category: ['Accessories', 'Accessories|Wetsuits', 'Accessories|Wetsuits|Partial Suits'],
         ec_thumbnails: [
           'https://images.barca.group/Sports/v2/Accessories/Wetsuits/Partial Suits/ONWETS_ED9F_BL/92e2a0512087_top_right.webp',
         ],
@@ -1797,11 +1713,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
         ec_shortdesc:
           'Dive into ultimate comfort and performance with the WaveFlex Sleeveless Wetsuit for women. High-stretch neoprene, durable nylon, and easy-wear front zip – perfect for water adventures!',
         ec_brand: 'Billabong',
-        ec_category: [
-          'Accessories',
-          'Accessories|Wetsuits',
-          'Accessories|Wetsuits|Partial Suits',
-        ],
+        ec_category: ['Accessories', 'Accessories|Wetsuits', 'Accessories|Wetsuits|Partial Suits'],
         ec_thumbnails: [
           'https://images.barca.group/Sports/v2/Accessories/Wetsuits/Partial Suits/BGWETS_A679_GY/761ea741a719_bottom_right.webp',
         ],
@@ -1871,11 +1783,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
           ec_price: 199.99,
           ec_thumbnails:
             'https://images.barca.group/Sports/v2/Accessories/Wetsuits/Full Suit/BGWETF_DC19_BL/bace5e0dc0e0_top_left.webp',
-          ec_category: [
-            'Accessories',
-            'Accessories|Wetsuits',
-            'Accessories|Wetsuits|Full Suit',
-          ],
+          ec_category: ['Accessories', 'Accessories|Wetsuits', 'Accessories|Wetsuits|Full Suit'],
           ec_listing: null,
           titleHighlights: null,
           excerpt: null,
@@ -1889,11 +1797,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
         ec_shortdesc:
           'Unleash your surf spirit with the EcoWave Performance Wetsuit, crafted eco-friendly for top-tier flexibility and comfort. Perfect visibility, UV resistance & a 1-year warranty!',
         ec_brand: 'Billabong',
-        ec_category: [
-          'Accessories',
-          'Accessories|Wetsuits',
-          'Accessories|Wetsuits|Full Suit',
-        ],
+        ec_category: ['Accessories', 'Accessories|Wetsuits', 'Accessories|Wetsuits|Full Suit'],
         ec_thumbnails: [
           'https://images.barca.group/Sports/v2/Accessories/Wetsuits/Full Suit/BGWETF_DC19_BL/bace5e0dc0e0_top_left.webp',
         ],
@@ -1979,11 +1883,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
             ec_shortdesc:
               'Unleash your surf spirit with the EcoWave Performance Wetsuit, crafted eco-friendly for top-tier flexibility and comfort. Perfect visibility, UV resistance & a 1-year warranty!',
             ec_brand: 'Billabong',
-            ec_category: [
-              'Accessories',
-              'Accessories|Wetsuits',
-              'Accessories|Wetsuits|Full Suit',
-            ],
+            ec_category: ['Accessories', 'Accessories|Wetsuits', 'Accessories|Wetsuits|Full Suit'],
             ec_thumbnails: [
               'https://images.barca.group/Sports/v2/Accessories/Wetsuits/Full Suit/BGWETF_DC19_YL/f3c1a327fd8f_top_left.webp',
             ],
@@ -2054,11 +1954,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
           ec_price: 299.99,
           ec_thumbnails:
             'https://images.barca.group/Sports/v2/Accessories/Wetsuits/Full Suit/ONWETF_7384_BL/4e298f8cbccd_bottom_right.webp',
-          ec_category: [
-            'Accessories',
-            'Accessories|Wetsuits',
-            'Accessories|Wetsuits|Full Suit',
-          ],
+          ec_category: ['Accessories', 'Accessories|Wetsuits', 'Accessories|Wetsuits|Full Suit'],
           ec_listing: null,
           titleHighlights: null,
           excerpt: null,
@@ -2072,11 +1968,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
         ec_shortdesc:
           'Ride the waves with confidence in the ZenSurf Full Suit! High-performance Neoprene wetsuit, ergonomic flexibility, and thermal protection. Ideal for cold water adventures.',
         ec_brand: "O'Neill",
-        ec_category: [
-          'Accessories',
-          'Accessories|Wetsuits',
-          'Accessories|Wetsuits|Full Suit',
-        ],
+        ec_category: ['Accessories', 'Accessories|Wetsuits', 'Accessories|Wetsuits|Full Suit'],
         ec_thumbnails: [
           'https://images.barca.group/Sports/v2/Accessories/Wetsuits/Full Suit/ONWETF_7384_BL/4e298f8cbccd_bottom_right.webp',
         ],
@@ -2157,11 +2049,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
             ec_shortdesc:
               'Ride the waves with confidence in the ZenSurf Full Suit! High-performance Neoprene wetsuit, ergonomic flexibility, and thermal protection. Ideal for cold water adventures.',
             ec_brand: "O'Neill",
-            ec_category: [
-              'Accessories',
-              'Accessories|Wetsuits',
-              'Accessories|Wetsuits|Full Suit',
-            ],
+            ec_category: ['Accessories', 'Accessories|Wetsuits', 'Accessories|Wetsuits|Full Suit'],
             ec_thumbnails: [
               'https://images.barca.group/Sports/v2/Accessories/Wetsuits/Full Suit/ONWETF_7384_BK/307e94463bde_bottom_right.webp',
             ],
@@ -2242,11 +2130,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
             ec_shortdesc:
               'Ride the waves with confidence in the ZenSurf Full Suit! High-performance Neoprene wetsuit, ergonomic flexibility, and thermal protection. Ideal for cold water adventures.',
             ec_brand: "O'Neill",
-            ec_category: [
-              'Accessories',
-              'Accessories|Wetsuits',
-              'Accessories|Wetsuits|Full Suit',
-            ],
+            ec_category: ['Accessories', 'Accessories|Wetsuits', 'Accessories|Wetsuits|Full Suit'],
             ec_thumbnails: [
               'https://images.barca.group/Sports/v2/Accessories/Wetsuits/Full Suit/ONWETF_7384_RD/8d486fbcd37e_bottom_right.webp',
             ],
@@ -2330,11 +2214,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
         ec_shortdesc:
           'Achieve peak performance with the Triathlon PowerSuit for men. This wetsuit features reinforced flex zones, superior thermal control, and enhanced safety. Perfect for any outdoor adventure.',
         ec_brand: 'Quiksilver',
-        ec_category: [
-          'Accessories',
-          'Accessories|Wetsuits',
-          'Accessories|Wetsuits|Partial Suits',
-        ],
+        ec_category: ['Accessories', 'Accessories|Wetsuits', 'Accessories|Wetsuits|Partial Suits'],
         ec_thumbnails: [
           'https://images.barca.group/Sports/v2/Accessories/Wetsuits/Partial Suits/QSWETS_D43E_GY/454135a19ad5_bottom_left.webp',
         ],
@@ -2477,11 +2357,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
           ec_price: 249.99,
           ec_thumbnails:
             'https://images.barca.group/Sports/v2/Accessories/Wetsuits/Full Suit/ONWETF_C792_BL/eaa2b31a66fa_bottom_left.webp',
-          ec_category: [
-            'Accessories',
-            'Accessories|Wetsuits',
-            'Accessories|Wetsuits|Full Suit',
-          ],
+          ec_category: ['Accessories', 'Accessories|Wetsuits', 'Accessories|Wetsuits|Full Suit'],
           ec_listing: null,
           titleHighlights: null,
           excerpt: null,
@@ -2495,11 +2371,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
         ec_shortdesc:
           'Gear up for the ultimate surf adventure with the WaveGuard Performance Full Suit! Experience unbeatable flexibility, warmth, and durability in this high-quality, eco-friendly wetsuit.',
         ec_brand: "O'Neill",
-        ec_category: [
-          'Accessories',
-          'Accessories|Wetsuits',
-          'Accessories|Wetsuits|Full Suit',
-        ],
+        ec_category: ['Accessories', 'Accessories|Wetsuits', 'Accessories|Wetsuits|Full Suit'],
         ec_thumbnails: [
           'https://images.barca.group/Sports/v2/Accessories/Wetsuits/Full Suit/ONWETF_C792_BL/eaa2b31a66fa_bottom_left.webp',
         ],
@@ -2576,11 +2448,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
             ec_shortdesc:
               'Gear up for the ultimate surf adventure with the WaveGuard Performance Full Suit! Experience unbeatable flexibility, warmth, and durability in this high-quality, eco-friendly wetsuit.',
             ec_brand: "O'Neill",
-            ec_category: [
-              'Accessories',
-              'Accessories|Wetsuits',
-              'Accessories|Wetsuits|Full Suit',
-            ],
+            ec_category: ['Accessories', 'Accessories|Wetsuits', 'Accessories|Wetsuits|Full Suit'],
             ec_thumbnails: [
               'https://images.barca.group/Sports/v2/Accessories/Wetsuits/Full Suit/ONWETF_C792_BK/a1cd999bd5d3_bottom_left.webp',
             ],
@@ -2660,11 +2528,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
         ec_shortdesc:
           "Get ready for adventure with the Wave Rider Shorty men's wetsuit. This high-quality, flexible 3mm wetsuit is perfect for warm water surfing. Lightweight, UV-resistant, and sustainable.",
         ec_brand: "O'Neill",
-        ec_category: [
-          'Accessories',
-          'Accessories|Wetsuits',
-          'Accessories|Wetsuits|Partial Suits',
-        ],
+        ec_category: ['Accessories', 'Accessories|Wetsuits', 'Accessories|Wetsuits|Partial Suits'],
         ec_thumbnails: [
           'https://images.barca.group/Sports/v2/Accessories/Wetsuits/Partial Suits/ONWETS_943D_RD/8b40c7ea4543_top_left.webp',
         ],
@@ -2815,11 +2679,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
           ec_price: 399.99,
           ec_thumbnails:
             'https://images.barca.group/Sports/v2/Accessories/Wetsuits/Full Suit/RCWETF_D9B2_BK/c2f4c855b23f_top_left.webp',
-          ec_category: [
-            'Accessories',
-            'Accessories|Wetsuits',
-            'Accessories|Wetsuits|Full Suit',
-          ],
+          ec_category: ['Accessories', 'Accessories|Wetsuits', 'Accessories|Wetsuits|Full Suit'],
           ec_listing: null,
           titleHighlights: null,
           excerpt: null,
@@ -2833,11 +2693,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
         ec_shortdesc:
           "Dive into adventure with the women's TideFlex Dive Suit! Crafted from durable limestone neoprene and boasting a TÜV and CE certification, it's perfect for committed divers.",
         ec_brand: 'Rip Curl',
-        ec_category: [
-          'Accessories',
-          'Accessories|Wetsuits',
-          'Accessories|Wetsuits|Full Suit',
-        ],
+        ec_category: ['Accessories', 'Accessories|Wetsuits', 'Accessories|Wetsuits|Full Suit'],
         ec_thumbnails: [
           'https://images.barca.group/Sports/v2/Accessories/Wetsuits/Full Suit/RCWETF_D9B2_BK/c2f4c855b23f_top_left.webp',
         ],
@@ -2909,11 +2765,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
             ec_shortdesc:
               "Dive into adventure with the women's TideFlex Dive Suit! Crafted from durable limestone neoprene and boasting a TÜV and CE certification, it's perfect for committed divers.",
             ec_brand: 'Rip Curl',
-            ec_category: [
-              'Accessories',
-              'Accessories|Wetsuits',
-              'Accessories|Wetsuits|Full Suit',
-            ],
+            ec_category: ['Accessories', 'Accessories|Wetsuits', 'Accessories|Wetsuits|Full Suit'],
             ec_thumbnails: [
               'https://images.barca.group/Sports/v2/Accessories/Wetsuits/Full Suit/RCWETF_D9B2_GY/d2c4cd753c23_bottom_right.webp',
             ],
@@ -3628,8 +3480,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
               description: "Calling 'topClicks' reveal service",
               duration: 1,
               config: {
-                model:
-                  'barcasportsmcy01fvu_topclicks_442e592c_5931_4462_b3fd_de7e1dc4b59b',
+                model: 'barcasportsmcy01fvu_topclicks_442e592c_5931_4462_b3fd_de7e1dc4b59b',
                 engineVersion: '~2|~3',
                 modifier: 250,
                 matchQuery: false,
@@ -3680,16 +3531,14 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
         },
         {
           name: 'BuildFacetSelectedValueOverride',
-          description:
-            'Build query overrides based on selected facet selected values',
+          description: 'Build query overrides based on selected facet selected values',
           duration: 0,
           selectedFacets: [],
           createdOverrides: [],
         },
         {
           name: 'AddExistingQueryParametersToGroupByOverride',
-          description:
-            'Add query overrides in the query to each Group By results',
+          description: 'Add query overrides in the query to each Group By results',
           duration: 0,
           queryExpressions: {
             q: 'wetsuits',
@@ -3847,8 +3696,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
               AutomaticFacetsRequest: {},
             },
             out: {
-              index:
-                'barcasportsmcy01fvu-l56dsftu-Indexer-1-r65oq43natljouzp7wev7gcmfe',
+              index: 'barcasportsmcy01fvu-l56dsftu-Indexer-1-r65oq43natljouzp7wev7gcmfe',
               indexRegion: 'us-east-1',
               logEntryId: '212648437657505546',
               serverTime: 163,
@@ -3861,8 +3709,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
         },
         {
           name: 'FacetResultPostProcessingEvaluationReport',
-          description:
-            'Post process the result through the processors pipeline',
+          description: 'Post process the result through the processors pipeline',
           duration: 1,
           'Index Scores': [
             {
@@ -3885,8 +3732,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
           children: [
             {
               name: 'FacetSense ML score assigning',
-              description:
-                'Processing facet result: FacetSense ML score assigning',
+              description: 'Processing facet result: FacetSense ML score assigning',
               duration: 0,
               changed: false,
               in: [],
@@ -3894,8 +3740,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
             },
             {
               name: 'Setting more values available',
-              description:
-                'Processing facet result: Setting more values available',
+              description: 'Processing facet result: Setting more values available',
               duration: 0,
               changed: true,
               in: [
@@ -4143,8 +3988,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
             },
             {
               name: 'Apply selection from request',
-              description:
-                'Processing facet result: Apply selection from request',
+              description: 'Processing facet result: Apply selection from request',
               duration: 0,
               changed: false,
               in: [],
@@ -4400,8 +4244,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
             },
             {
               name: 'Freezing facet values if any',
-              description:
-                'Processing facet result: Freezing facet values if any',
+              description: 'Processing facet result: Freezing facet values if any',
               duration: 0,
               changed: false,
               in: [],
@@ -4409,8 +4252,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
             },
             {
               name: 'Reordering values based on facet sense',
-              description:
-                'Processing facet result: Reordering values based on facet sense',
+              description: 'Processing facet result: Reordering values based on facet sense',
               duration: 0,
               changed: false,
               in: [],
@@ -4418,8 +4260,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
             },
             {
               name: 'Retaining selected values based on request',
-              description:
-                'Processing facet result: Retaining selected values based on request',
+              description: 'Processing facet result: Retaining selected values based on request',
               duration: 0,
               changed: false,
               in: [],
@@ -4436,8 +4277,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
             },
             {
               name: 'Reorder facet values using custom sort',
-              description:
-                'Processing facet result: Reorder facet values using custom sort',
+              description: 'Processing facet result: Reorder facet values using custom sort',
               duration: 0,
               changed: true,
               in: [
@@ -4694,8 +4534,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
             },
             {
               name: 'Truncate extra values in request',
-              description:
-                'Processing facet result: Truncate extra values in request',
+              description: 'Processing facet result: Truncate extra values in request',
               duration: 1,
               changed: true,
               in: [
@@ -4939,8 +4778,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
             },
             {
               name: 'Reorder facets using index score',
-              description:
-                'Processing facet result: Reorder facets using index score',
+              description: 'Processing facet result: Reorder facets using index score',
               duration: 0,
               changed: true,
               in: [
@@ -5180,8 +5018,7 @@ const commerceSearchApiResponse: ConverseEvent = CommerceSearchApiResponse({
             },
             {
               name: 'Reorder facets using ML score',
-              description:
-                'Processing facet result: Reorder facets using ML score',
+              description: 'Processing facet result: Reorder facets using ML score',
               duration: 0,
               changed: false,
               in: [],

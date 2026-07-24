@@ -5,15 +5,11 @@ import type {SearchResponseSuccess} from './search/search-response.js';
 
 export type PostprocessSearchResponseMiddleware = (
   response: PlatformResponse<SearchResponseSuccess>
-) =>
-  | PlatformResponse<SearchResponseSuccess>
-  | Promise<PlatformResponse<SearchResponseSuccess>>;
+) => PlatformResponse<SearchResponseSuccess> | Promise<PlatformResponse<SearchResponseSuccess>>;
 
 export type PostprocessFacetSearchResponseMiddleware = (
   response: PlatformResponse<FacetSearchResponse>
-) =>
-  | PlatformResponse<FacetSearchResponse>
-  | Promise<PlatformResponse<FacetSearchResponse>>;
+) => PlatformResponse<FacetSearchResponse> | Promise<PlatformResponse<FacetSearchResponse>>;
 
 export type PostprocessQuerySuggestResponseMiddleware = (
   response: PlatformResponse<QuerySuggestSuccessResponse>
@@ -21,8 +17,9 @@ export type PostprocessQuerySuggestResponseMiddleware = (
   | PlatformResponse<QuerySuggestSuccessResponse>
   | Promise<PlatformResponse<QuerySuggestSuccessResponse>>;
 
-export const NoopPostprocessSearchResponseMiddleware: PostprocessSearchResponseMiddleware =
-  (response) => response;
+export const NoopPostprocessSearchResponseMiddleware: PostprocessSearchResponseMiddleware = (
+  response
+) => response;
 
 export const NoopPostprocessFacetSearchResponseMiddleware: PostprocessFacetSearchResponseMiddleware =
   (response) => response;

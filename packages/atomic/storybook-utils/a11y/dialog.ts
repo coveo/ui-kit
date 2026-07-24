@@ -56,10 +56,7 @@ export async function testDialogA11y(
 
       await waitFor(
         () => {
-          expect(
-            focusTrap.active,
-            'Focus trap should be active after animation end'
-          ).toBe(true);
+          expect(focusTrap.active, 'Focus trap should be active after animation end').toBe(true);
         },
         {timeout: 3000}
       );
@@ -113,23 +110,20 @@ export async function testDialogA11y(
       );
     });
 
-    await step(
-      'Focus returns to trigger after dialog closes (2.1.2)',
-      async () => {
-        await waitFor(
-          () => {
-            const active = getActiveElementDeep(doc);
-            const focusOnTrigger = active === trigger;
-            const triggerGone = !trigger.isConnected && active != null;
-            expect(
-              focusOnTrigger || triggerGone,
-              'Focus should return to the trigger (or move to a valid element if trigger was removed)'
-            ).toBe(true);
-          },
-          {timeout: 3000}
-        );
-      }
-    );
+    await step('Focus returns to trigger after dialog closes (2.1.2)', async () => {
+      await waitFor(
+        () => {
+          const active = getActiveElementDeep(doc);
+          const focusOnTrigger = active === trigger;
+          const triggerGone = !trigger.isConnected && active != null;
+          expect(
+            focusOnTrigger || triggerGone,
+            'Focus should return to the trigger (or move to a valid element if trigger was removed)'
+          ).toBe(true);
+        },
+        {timeout: 3000}
+      );
+    });
 
     // Re-open the dialog so the addon-a11y afterEach hook runs axe on a
     // stable, fully-visible DOM. Without this, axe may catch the close

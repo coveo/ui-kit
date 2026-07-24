@@ -6,10 +6,7 @@ import SearchBox from '../../components/react/search-box';
 import {SearchPageProvider} from '../../components/react/search-page';
 import SearchParameterManager from '../../components/react/search-parameter-manager';
 import TabManager from '../../components/react/tab-manager';
-import {
-  fetchStaticState,
-  setNavigatorContextProvider,
-} from '../../lib/react/engine';
+import {fetchStaticState, setNavigatorContextProvider} from '../../lib/react/engine';
 import {NextJsAppRouterNavigatorContext} from '../../navigatorContextProvider';
 
 /**
@@ -59,10 +56,7 @@ export default async function Search({
   });
 
   return (
-    <SearchPageProvider
-      staticState={staticState}
-      navigatorContext={navigatorContext.marshal}
-    >
+    <SearchPageProvider staticState={staticState} navigatorContext={navigatorContext.marshal}>
       <SearchParameterManager />
       <SearchBox />
       <TabManager />

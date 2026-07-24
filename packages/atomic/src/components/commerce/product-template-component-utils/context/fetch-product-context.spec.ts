@@ -13,9 +13,7 @@ describe('product-template-controllers', () => {
     it('should call fetchItemContext with element and atomic-product parent name', () => {
       const mockElement = document.createElement('div');
       const mockPromise = Promise.resolve({});
-      vi.mocked(fetchItemContextModule.fetchItemContext).mockReturnValue(
-        mockPromise
-      );
+      vi.mocked(fetchItemContextModule.fetchItemContext).mockReturnValue(mockPromise);
 
       fetchProductContext(mockElement);
 
@@ -28,9 +26,7 @@ describe('product-template-controllers', () => {
     it('should return promise from fetchItemContext', () => {
       const mockElement = document.createElement('div');
       const mockPromise = Promise.resolve({title: 'Test Product'});
-      vi.mocked(fetchItemContextModule.fetchItemContext).mockReturnValue(
-        mockPromise
-      );
+      vi.mocked(fetchItemContextModule.fetchItemContext).mockReturnValue(mockPromise);
 
       const result = fetchProductContext(mockElement);
 

@@ -76,12 +76,10 @@ describe('init', () => {
     const mockPublishCustomShopifyEvent = vi.mocked(publishCustomShopifyEvent);
 
     init(mockOptions);
-    const firstClientId =
-      mockPublishCustomShopifyEvent.mock.calls[0][1].clientId;
+    const firstClientId = mockPublishCustomShopifyEvent.mock.calls[0][1].clientId;
 
     init(mockOptions);
-    const secondClientId =
-      mockPublishCustomShopifyEvent.mock.calls[1][1].clientId;
+    const secondClientId = mockPublishCustomShopifyEvent.mock.calls[1][1].clientId;
 
     expect(firstClientId).toBe(secondClientId);
   });

@@ -1,7 +1,4 @@
-import type {
-  GeneratedAnswer,
-  GeneratedAnswerState,
-} from '@coveo/headless/insight';
+import type {GeneratedAnswer, GeneratedAnswerState} from '@coveo/headless/insight';
 import {vi} from 'vitest';
 import {genericSubscribe} from '@/vitest-utils/testing-helpers/fixtures/headless/common';
 

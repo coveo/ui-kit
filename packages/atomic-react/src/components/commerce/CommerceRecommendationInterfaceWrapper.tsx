@@ -28,25 +28,19 @@ const DefaultProps: Required<Pick<WrapperProps, 'localization'>> = {
  * @param props
  * @returns
  */
-export const InterfaceWrapper = (
-  props: React.PropsWithChildren<WrapperProps>
-) => {
+export const InterfaceWrapper = (props: React.PropsWithChildren<WrapperProps>) => {
   const mergedProps = {...DefaultProps, ...props};
   if (!mergedProps.engine) {
     throw new Error('The "engine" prop is required.');
   }
   const {engine, localization, ...allOtherProps} = mergedProps;
-  const interfaceRef =
-    useRef<React.ElementRef<typeof AtomicCommerceRecommendationInterface>>(
-      null
-    );
+  const interfaceRef = useRef<React.ElementRef<typeof AtomicCommerceRecommendationInterface>>(null);
   let initialization: Promise<void> | null = null;
 
   useEffect(() => {
     const CommerceRecommendationInterfaceAtomic = interfaceRef.current!;
     if (!initialization) {
-      initialization =
-        CommerceRecommendationInterfaceAtomic.initializeWithEngine(engine);
+      initialization = CommerceRecommendationInterfaceAtomic.initializeWithEngine(engine);
       initialization.then(() => {
         localization(CommerceRecommendationInterfaceAtomic.i18n);
       });
@@ -54,11 +48,7 @@ export const InterfaceWrapper = (
   }, [localization, engine, initialization]);
 
   return (
-    <AtomicCommerceRecommendationInterface
-      engine={engine}
-      ref={interfaceRef}
-      {...allOtherProps}
-    >
+    <AtomicCommerceRecommendationInterface engine={engine} ref={interfaceRef} {...allOtherProps}>
       {props.children}
     </AtomicCommerceRecommendationInterface>
   );

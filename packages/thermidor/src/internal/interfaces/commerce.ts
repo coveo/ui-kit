@@ -13,16 +13,11 @@ const resolverFactories: Record<Facades['commerce'], FacadeResolverFactory> = {
   suggestions: createCommerceSuggestionsFacadeResolver,
 };
 
-export class CommerceInterfaceImpl
-  extends BaseInterface<'commerce'>
-  implements CommerceInterface
-{
+export class CommerceInterfaceImpl extends BaseInterface<'commerce'> implements CommerceInterface {
   constructor(
     engine: FullEngine,
     stateId: string,
-    customResolvers?: Partial<
-      Record<Facades['commerce'], FacadeResolverFactory>
-    >
+    customResolvers?: Partial<Record<Facades['commerce'], FacadeResolverFactory>>
   ) {
     super(engine, stateId, 'commerce', {
       ...resolverFactories,

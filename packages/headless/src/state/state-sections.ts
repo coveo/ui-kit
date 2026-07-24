@@ -536,13 +536,7 @@ export interface GetAnswerQuerySection {
     {
       getAnswer: QueryDefinition<
         AnswerApiQueryParams,
-        BaseQueryFn<
-          string | FetchArgs,
-          unknown,
-          FetchBaseQueryError,
-          {} & RetryOptions,
-          {}
-        >,
+        BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError, {} & RetryOptions, {}>,
         never,
         GeneratedAnswerStream,
         'answer'

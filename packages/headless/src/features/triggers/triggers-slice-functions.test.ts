@@ -84,11 +84,7 @@ describe('triggers slice functions', () => {
     });
 
     it('when action payload contains no redirect triggers, sets #redirectTo to an empty string', () => {
-      const triggers = [
-        mockExecuteTrigger,
-        mockNotifyTrigger,
-        mockQueryTrigger,
-      ];
+      const triggers = [mockExecuteTrigger, mockNotifyTrigger, mockQueryTrigger];
 
       const finalState = handleFetchItemsFulfilled(state, triggers);
 
@@ -178,10 +174,7 @@ describe('triggers slice functions', () => {
       originalQuery: 'original query',
     };
 
-    const finalState = handleApplyQueryTriggerModification(
-      originalState,
-      payload
-    );
+    const finalState = handleApplyQueryTriggerModification(originalState, payload);
 
     expect(finalState).toEqual({
       ...originalState,

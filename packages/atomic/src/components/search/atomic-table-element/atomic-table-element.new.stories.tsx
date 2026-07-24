@@ -12,10 +12,9 @@ import '@/src/components/search/atomic-table-element/atomic-table-element.js';
 
 const searchApiHarness = new MockSearchApi();
 const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-table-element',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-table-element', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-table-element',
@@ -52,11 +51,7 @@ export const Default: Story = {
 
       const storyResult = story();
 
-      if (
-        storyResult &&
-        typeof storyResult === 'object' &&
-        '_$litType$' in storyResult
-      ) {
+      if (storyResult && typeof storyResult === 'object' && '_$litType$' in storyResult) {
         render(storyResult as TemplateResult, tempContainer);
         templateTag.innerHTML = tempContainer.innerHTML;
       } else {

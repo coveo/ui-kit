@@ -28,9 +28,7 @@ export interface SearchHubActionCreators {
  * @group Actions
  * @category SearchHub
  */
-export function loadSearchHubActions(
-  engine: CoreEngine
-): SearchHubActionCreators {
+export function loadSearchHubActions(engine: CoreEngine): SearchHubActionCreators {
   engine.addReducers({searchHub});
 
   return {setSearchHub};

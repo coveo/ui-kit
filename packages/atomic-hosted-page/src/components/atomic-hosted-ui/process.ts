@@ -44,15 +44,10 @@ interface HostedPageJavascriptFile {
   url?: string;
 }
 
-export function processHostedPage(
-  element: HTMLElement,
-  hostedPage: HostedPage
-) {
+export function processHostedPage(element: HTMLElement, hostedPage: HostedPage) {
   element.innerHTML = hostedPage.html;
   hostedPage.javascript?.forEach((file) => insertJS(file));
-  hostedPage.css?.forEach((file) =>
-    'url' in file ? insertCSSUrl(file) : insertCSSInline(file)
-  );
+  hostedPage.css?.forEach((file) => ('url' in file ? insertCSSUrl(file) : insertCSSInline(file)));
 }
 
 function insertJS(file: HostedPageJavascriptFile) {

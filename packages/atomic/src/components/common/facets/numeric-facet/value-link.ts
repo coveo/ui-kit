@@ -11,9 +11,9 @@ export interface NumericFacetValueLinkProps extends FormatFacetValueRange {
   displayValuesAs: 'checkbox' | 'link';
 }
 
-export const renderNumericFacetValue: FunctionalComponent<
-  NumericFacetValueLinkProps
-> = ({props}) => {
+export const renderNumericFacetValue: FunctionalComponent<NumericFacetValueLinkProps> = ({
+  props,
+}) => {
   const {facetValue, displayValuesAs, i18n, onClick} = props;
   const displayValue = formatHumanReadable(props);
   const isSelected = facetValue.state === 'selected';

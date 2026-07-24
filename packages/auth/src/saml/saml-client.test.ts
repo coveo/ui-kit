@@ -1,9 +1,5 @@
 import {describe, it, expect, vi, beforeEach, type Mock} from 'vitest';
-import {
-  buildSamlClient,
-  type SamlClient,
-  type SamlClientOptions,
-} from './saml-client';
+import {buildSamlClient, type SamlClient, type SamlClientOptions} from './saml-client';
 import * as SamlFlow from './saml-flow';
 import * as SamlState from './saml-state';
 

@@ -168,9 +168,7 @@ export class AtomicCommerceRefineModal
 
   private onSelectSortOption = (e: Event) => {
     const select = e.composedPath()[0] as HTMLSelectElement;
-    this.sort.sortBy(
-      getSortByLabel(select.value, this.sortState.availableSorts)
-    );
+    this.sort.sortBy(getSortByLabel(select.value, this.sortState.availableSorts));
   };
 
   private renderSort() {

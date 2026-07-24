@@ -1,0 +1,9 @@
+{
+    "private": true,
+    "name": "react-native",
+    "description": "Coveo analytics client for React Native",
+    "main": "../dist/react-native.es.js",
+    "module": "../dist/react-native.es.js",
+    "types": "../dist/definitions/react-native/index.d.ts",
+    "license": "MIT"
+}

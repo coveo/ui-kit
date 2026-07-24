@@ -9,10 +9,7 @@ import {markParentAsReady} from '@/src/utils/init-queue.js';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {InterfaceController} from '../../common/interface/interface-controller.js';
 import {getAnalyticsConfig} from './analytics-config.js';
-import {
-  AtomicInsightInterface,
-  type InsightBindings,
-} from './atomic-insight-interface';
+import {AtomicInsightInterface, type InsightBindings} from './atomic-insight-interface';
 import {createInsightStore} from './store.js';
 import './atomic-insight-interface.js';
 import {
@@ -32,10 +29,7 @@ vi.mock('@/src/utils/init-queue.js', {spy: true});
 
 @customElement('test-element')
 @bindings()
-class TestElement
-  extends LitElement
-  implements InitializableComponent<InsightBindings>
-{
+class TestElement extends LitElement implements InitializableComponent<InsightBindings> {
   @state()
   public bindings: InsightBindings = {} as InsightBindings;
   @state() public error!: Error;
@@ -48,8 +42,7 @@ class TestElement
 }
 
 describe('atomic-insight-interface', () => {
-  const insightEngineConfig: InsightEngineConfiguration =
-    getSampleInsightEngineConfiguration();
+  const insightEngineConfig: InsightEngineConfiguration = getSampleInsightEngineConfiguration();
 
   const setupElement = async (
     props: {
@@ -81,9 +74,8 @@ describe('atomic-insight-interface', () => {
   };
 
   const addChildElement = async (element: Element, tag = 'test-element') => {
-    const childElement = document.createElement(
-      tag
-    ) as InitializableComponent<InsightBindings> & TestElement;
+    const childElement = document.createElement(tag) as InitializableComponent<InsightBindings> &
+      TestElement;
     element.appendChild(childElement);
 
     await childElement.updateComplete;
@@ -115,10 +107,7 @@ describe('atomic-insight-interface', () => {
 
   describe('#connectedCallback (when added to the DOM)', () => {
     it("should add an 'atomic/initializeComponent' event listener on the element", async () => {
-      const addEventListenerSpy = vi.spyOn(
-        AtomicInsightInterface.prototype,
-        'addEventListener'
-      );
+      const addEventListenerSpy = vi.spyOn(AtomicInsightInterface.prototype, 'addEventListener');
 
       await setupElement();
 
@@ -138,9 +127,7 @@ describe('atomic-insight-interface', () => {
 
       element.dispatchEvent(event);
 
-      expect(onComponentInitializationSpy).toHaveBeenCalledExactlyOnceWith(
-        event
-      );
+      expect(onComponentInitializationSpy).toHaveBeenCalledExactlyOnceWith(event);
     });
   });
 
@@ -154,9 +141,7 @@ describe('atomic-insight-interface', () => {
       testedInitMethodName: 'initializeWithInsightEngine',
     },
   ])('#$testedInitMethodName', ({testedInitMethodName}) => {
-    const callTestedInitMethod = async (
-      element: Awaited<ReturnType<typeof setupElement>>
-    ) => {
+    const callTestedInitMethod = async (element: Awaited<ReturnType<typeof setupElement>>) => {
       if (testedInitMethodName === 'initialize') {
         await element.initialize(insightEngineConfig);
       } else {
@@ -166,16 +151,11 @@ describe('atomic-insight-interface', () => {
 
     it('should call InterfaceController.onInitialization', async () => {
       const element = await setupElement();
-      const onInitializationSpy = vi.spyOn(
-        InterfaceController.prototype,
-        'onInitialization'
-      );
+      const onInitializationSpy = vi.spyOn(InterfaceController.prototype, 'onInitialization');
 
       await callTestedInitMethod(element);
 
-      expect(onInitializationSpy).toHaveBeenCalledExactlyOnceWith(
-        expect.any(Function)
-      );
+      expect(onInitializationSpy).toHaveBeenCalledExactlyOnceWith(expect.any(Function));
     });
 
     it('should call #updateLanguage', async () => {
@@ -238,10 +218,9 @@ describe('atomic-insight-interface', () => {
 
       await callTestedInitMethod(element);
 
-      expect(buildResultsPerPage).toHaveBeenCalledExactlyOnceWith(
-        element.bindings.engine,
-        {initialState: {numberOfResults: 5}}
-      );
+      expect(buildResultsPerPage).toHaveBeenCalledExactlyOnceWith(element.bindings.engine, {
+        initialState: {numberOfResults: 5},
+      });
     });
 
     it('should call buildResultsPerPage with correct value when resultsPerPage is specified', async () => {
@@ -249,10 +228,9 @@ describe('atomic-insight-interface', () => {
 
       await callTestedInitMethod(element);
 
-      expect(buildResultsPerPage).toHaveBeenCalledExactlyOnceWith(
-        element.bindings.engine,
-        {initialState: {numberOfResults: 15}}
-      );
+      expect(buildResultsPerPage).toHaveBeenCalledExactlyOnceWith(element.bindings.engine, {
+        initialState: {numberOfResults: 15},
+      });
     });
 
     it('should not dispatch a registerFieldsToInclude action when fieldsToInclude is unspecified', async () => {
@@ -278,62 +256,54 @@ describe('atomic-insight-interface', () => {
 
       await callTestedInitMethod(element);
       expect(loadFieldActionsSpy).toHaveBeenCalledWith(element.bindings.engine);
-      expect(registerFieldsToIncludeMock).toHaveBeenCalledWith([
-        'fieldA',
-        'fieldB',
-      ]);
+      expect(registerFieldsToIncludeMock).toHaveBeenCalledWith(['fieldA', 'fieldB']);
     });
 
-    describe.skipIf(testedInitMethodName !== 'initialize')(
-      '#initialize only',
-      () => {
-        it('should set the engine with #buildInsightEngine', async () => {
-          const element = await setupElement();
+    describe.skipIf(testedInitMethodName !== 'initialize')('#initialize only', () => {
+      it('should set the engine with #buildInsightEngine', async () => {
+        const element = await setupElement();
 
-          await element.initialize(insightEngineConfig);
+        await element.initialize(insightEngineConfig);
 
-          expect(element.engine).toBe(
-            vi.mocked(buildInsightEngine).mock.results[0].value
-          );
+        expect(element.engine).toBe(vi.mocked(buildInsightEngine).mock.results[0].value);
+      });
+
+      it('should pass the specified configuration and log level, along with an analytics configuration augmented with #getAnalyticsConfig to #buildCommerceEngine when setting the engine', async () => {
+        const mockedGetAnalyticsConfig = vi.mocked(getAnalyticsConfig);
+        const element = await setupElement();
+
+        await element.initialize(insightEngineConfig);
+
+        expect(getAnalyticsConfig).toHaveBeenCalledExactlyOnceWith(
+          insightEngineConfig,
+          element.analytics
+        );
+        expect(buildInsightEngine).toHaveBeenCalledExactlyOnceWith({
+          configuration: {
+            ...insightEngineConfig,
+            analytics: mockedGetAnalyticsConfig.mock.results[0].value,
+          },
+          loggerOptions: {level: element.logLevel},
+        });
+      });
+
+      it('should set the error when #buildCommerceEngine throws', async () => {
+        vi.spyOn(console, 'error').mockImplementation(() => {});
+        const element = await setupElement();
+        const buildEngineError = new Error('Oh no!', {
+          cause: 'A noble cause',
         });
 
-        it('should pass the specified configuration and log level, along with an analytics configuration augmented with #getAnalyticsConfig to #buildCommerceEngine when setting the engine', async () => {
-          const mockedGetAnalyticsConfig = vi.mocked(getAnalyticsConfig);
-          const element = await setupElement();
-
-          await element.initialize(insightEngineConfig);
-
-          expect(getAnalyticsConfig).toHaveBeenCalledExactlyOnceWith(
-            insightEngineConfig,
-            element.analytics
-          );
-          expect(buildInsightEngine).toHaveBeenCalledExactlyOnceWith({
-            configuration: {
-              ...insightEngineConfig,
-              analytics: mockedGetAnalyticsConfig.mock.results[0].value,
-            },
-            loggerOptions: {level: element.logLevel},
-          });
+        vi.mocked(buildInsightEngine).mockImplementation(() => {
+          throw buildEngineError;
         });
 
-        it('should set the error when #buildCommerceEngine throws', async () => {
-          vi.spyOn(console, 'error').mockImplementation(() => {});
-          const element = await setupElement();
-          const buildEngineError = new Error('Oh no!', {
-            cause: 'A noble cause',
-          });
+        await element.initialize(insightEngineConfig).catch(() => {});
 
-          vi.mocked(buildInsightEngine).mockImplementation(() => {
-            throw buildEngineError;
-          });
-
-          await element.initialize(insightEngineConfig).catch(() => {});
-
-          expect(element.engine).toBeUndefined();
-          expect(element.error).toBe(buildEngineError);
-        });
-      }
-    );
+        expect(element.engine).toBeUndefined();
+        expect(element.error).toBe(buildEngineError);
+      });
+    });
 
     describe.skipIf(testedInitMethodName !== 'initializeWithInsightEngine')(
       '#initializeWithInsightEngine only',
@@ -353,9 +323,7 @@ describe('atomic-insight-interface', () => {
   describe('#executeFirstSearch', () => {
     it('should log an error when called before initialization', async () => {
       const element = await setupElement();
-      const consoleErrorSpy = vi
-        .spyOn(console, 'error')
-        .mockImplementation(() => {});
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
       await element.executeFirstSearch();
 
@@ -367,9 +335,7 @@ describe('atomic-insight-interface', () => {
 
     it('should log an error when called before initialization finishes', async () => {
       const element = await setupElement();
-      const consoleErrorSpy = vi
-        .spyOn(console, 'error')
-        .mockImplementation(() => {});
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
       element.engine = buildFakeInsightEngine(); // Simulate that the engine was created but the interface wasn't initialized
 
       await element.executeFirstSearch();
@@ -383,10 +349,7 @@ describe('atomic-insight-interface', () => {
     it('should call executeFirstSearch on the engine when the engine has been created and initialization has finished', async () => {
       const element = await setupElement();
       element.engine = buildFakeInsightEngine();
-      const executeFirstSearchSpy = vi.spyOn(
-        element.engine,
-        'executeFirstSearch'
-      );
+      const executeFirstSearchSpy = vi.spyOn(element.engine, 'executeFirstSearch');
       await element.initializeWithInsightEngine(element.engine);
 
       await element.executeFirstSearch();
@@ -399,10 +362,7 @@ describe('atomic-insight-interface', () => {
   // #toggleAnalytics
   it('should call InterfaceController.onAnalyticsChange when the analytics attribute changes', async () => {
     const element = await setupElement();
-    const onAnalyticsChangeSpy = vi.spyOn(
-      InterfaceController.prototype,
-      'onAnalyticsChange'
-    );
+    const onAnalyticsChangeSpy = vi.spyOn(InterfaceController.prototype, 'onAnalyticsChange');
 
     expect(onAnalyticsChangeSpy).not.toHaveBeenCalled();
 
@@ -422,16 +382,12 @@ describe('atomic-insight-interface', () => {
     const element = await setupElement();
     await element.initialize(insightEngineConfig);
 
-    expect(element.bindings.store.state.iconAssetsPath).not.toBe(
-      '/new/icon/assets/path'
-    );
+    expect(element.bindings.store.state.iconAssetsPath).not.toBe('/new/icon/assets/path');
 
     element.iconAssetsPath = '/new/icon/assets/path';
     await element.updateComplete;
 
-    expect(element.bindings.store.state.iconAssetsPath).toBe(
-      '/new/icon/assets/path'
-    );
+    expect(element.bindings.store.state.iconAssetsPath).toBe('/new/icon/assets/path');
   });
 
   // #updateLanguage
@@ -439,10 +395,7 @@ describe('atomic-insight-interface', () => {
     it('should call InterfaceController.onLanguageChange with no argument', async () => {
       const element = await setupElement({language: 'en'});
       await element.initialize(insightEngineConfig);
-      const onLanguageChangeSpy = vi.spyOn(
-        InterfaceController.prototype,
-        'onLanguageChange'
-      );
+      const onLanguageChangeSpy = vi.spyOn(InterfaceController.prototype, 'onLanguageChange');
 
       element.language = 'fr';
       await element.updateComplete;
@@ -481,9 +434,7 @@ describe('atomic-insight-interface', () => {
     it('should render a full-search slot', async () => {
       const element = await setupElement();
 
-      const fullSearchSlot = element.shadowRoot?.querySelector(
-        'slot[name="full-search"]'
-      );
+      const fullSearchSlot = element.shadowRoot?.querySelector('slot[name="full-search"]');
       expect(fullSearchSlot).toBeTruthy();
     });
 

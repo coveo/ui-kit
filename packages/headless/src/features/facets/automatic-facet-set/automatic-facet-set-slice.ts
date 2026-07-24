@@ -39,9 +39,7 @@ export const automaticFacetSetReducer = createReducer(
         if (!facet) {
           return;
         }
-        const value = facet.values.find(
-          (value) => value.value === selection.value
-        );
+        const value = facet.values.find((value) => value.value === selection.value);
         if (!value) {
           return;
         }
@@ -67,9 +65,7 @@ export const automaticFacetSetReducer = createReducer(
         for (const field in af) {
           if (!state.set[field]) {
             const response = buildTemporaryAutomaticFacetResponse(field);
-            const values = af[field].map((value) =>
-              buildTemporarySelectedFacetValue(value)
-            );
+            const values = af[field].map((value) => buildTemporarySelectedFacetValue(value));
             response.values.push(...values);
             state.set[field] = {response};
           }
@@ -127,9 +123,7 @@ export const automaticFacetSetReducer = createReducer(
   }
 );
 
-function buildTemporaryAutomaticFacetResponse(
-  field: string
-): AutomaticFacetResponse {
+function buildTemporaryAutomaticFacetResponse(field: string): AutomaticFacetResponse {
   return {
     field,
     values: [],

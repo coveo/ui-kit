@@ -28,9 +28,7 @@ export interface PipelineActionCreators {
  * @group Actions
  * @category Pipeline
  */
-export function loadPipelineActions(
-  engine: CoreEngine
-): PipelineActionCreators {
+export function loadPipelineActions(engine: CoreEngine): PipelineActionCreators {
   engine.addReducers({pipeline});
 
   return {

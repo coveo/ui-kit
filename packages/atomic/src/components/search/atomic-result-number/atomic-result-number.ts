@@ -50,11 +50,7 @@ export class AtomicResultNumber
   constructor() {
     super();
 
-    new ValidatePropsController(
-      this,
-      () => ({field: this.field}),
-      AtomicResultNumber.propsSchema
-    );
+    new ValidatePropsController(this, () => ({field: this.field}), AtomicResultNumber.propsSchema);
   }
 
   connectedCallback() {
@@ -88,19 +84,14 @@ export class AtomicResultNumber
   };
 
   private parseValue(): number | null {
-    const value = ResultTemplatesHelpers.getResultProperty(
-      this.result,
-      this.field
-    );
+    const value = ResultTemplatesHelpers.getResultProperty(this.result, this.field);
     if (value === null) {
       return null;
     }
 
     const valueAsNumber = parseFloat(`${value}`);
     if (Number.isNaN(valueAsNumber)) {
-      throw new Error(
-        `Could not parse "${value}" from field "${this.field}" as a number.`
-      );
+      throw new Error(`Could not parse "${value}" from field "${this.field}" as a number.`);
     }
     return valueAsNumber;
   }

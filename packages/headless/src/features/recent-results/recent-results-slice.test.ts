@@ -5,10 +5,7 @@ import {
   registerRecentResults,
 } from './recent-results-actions.js';
 import {recentResultsReducer} from './recent-results-slice.js';
-import {
-  getRecentResultsInitialState,
-  type RecentResultsState,
-} from './recent-results-state.js';
+import {getRecentResultsInitialState, type RecentResultsState} from './recent-results-state.js';
 
 describe('recent-results slice', () => {
   let state: RecentResultsState;
@@ -55,10 +52,7 @@ describe('recent-results slice', () => {
 
   it('#registerRecentResults should shorten result list if it exceeds maxLength param', () => {
     const results = [mockResult, otherMockResult];
-    state = recentResultsReducer(
-      state,
-      registerRecentResults({results: results, maxLength: 1})
-    );
+    state = recentResultsReducer(state, registerRecentResults({results: results, maxLength: 1}));
 
     expect(state.results).toEqual([mockResult]);
   });

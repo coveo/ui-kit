@@ -57,10 +57,7 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import {
-  AriaLiveRegionController,
-  FocusTargetController,
-} from '@/src/utils/accessibility-utils';
+import {AriaLiveRegionController, FocusTargetController} from '@/src/utils/accessibility-utils';
 import {getFieldCaptions, getFieldValueCaption} from '@/src/utils/field-utils';
 import {mapProperty} from '@/src/utils/props-utils';
 
@@ -105,10 +102,7 @@ import {mapProperty} from '@/src/utils/props-utils';
 @customElement('atomic-category-facet')
 @bindings()
 @withTailwindStyles
-export class AtomicCategoryFacet
-  extends LitElement
-  implements InitializableComponent<Bindings>
-{
+export class AtomicCategoryFacet extends LitElement implements InitializableComponent<Bindings> {
   private static readonly propsSchema = new Schema({
     field: new StringValue({required: true, emptyAllowed: false}),
     numberOfValues: new NumberValue({min: 1}),
@@ -343,10 +337,7 @@ export class AtomicCategoryFacet
   private headerFocus?: FocusTargetController;
   private activeValueFocus?: FocusTargetController;
 
-  private facetSearchAriaMessage = new AriaLiveRegionController(
-    this,
-    'facet-search'
-  );
+  private facetSearchAriaMessage = new AriaLiveRegionController(this, 'facet-search');
 
   constructor() {
     super();
@@ -456,8 +447,7 @@ export class AtomicCategoryFacet
     return (
       this.searchStatusState.hasError ||
       !this.facet.state.enabled ||
-      (!this.facet.state.selectedValueAncestry.length &&
-        !this.facet.state.valuesAsTrees.length)
+      (!this.facet.state.selectedValueAncestry.length && !this.facet.state.valuesAsTrees.length)
     );
   }
 
@@ -465,35 +455,25 @@ export class AtomicCategoryFacet
     return !!this.facetState.selectedValueAncestry.length;
   }
 
-  public shouldUpdate(
-    changedProperties: Map<string | number | symbol, unknown>
-  ): boolean {
+  public shouldUpdate(changedProperties: Map<string | number | symbol, unknown>): boolean {
     if (changedProperties.has('facetState')) {
       const newState = this.facetState;
-      const oldState = changedProperties.get(
-        'facetState'
-      ) as CategoryFacetState;
+      const oldState = changedProperties.get('facetState') as CategoryFacetState;
 
       if (newState && oldState) {
-        return shouldUpdateFacetSearchComponent(
-          newState.facetSearch,
-          oldState.facetSearch
-        );
+        return shouldUpdateFacetSearchComponent(newState.facetSearch, oldState.facetSearch);
       }
     }
     return super.shouldUpdate(changedProperties);
   }
 
   private initializeDependenciesManager() {
-    this.dependenciesManager = buildFacetConditionsManager(
-      this.bindings.engine,
-      {
-        facetId: this.facetId!,
-        conditions: parseDependsOn<
-          FacetValueRequest | CategoryFacetValueRequest
-        >(this.dependsOn || {}),
-      }
-    );
+    this.dependenciesManager = buildFacetConditionsManager(this.bindings.engine, {
+      facetId: this.facetId!,
+      conditions: parseDependsOn<FacetValueRequest | CategoryFacetValueRequest>(
+        this.dependsOn || {}
+      ),
+    });
   }
 
   private renderHeader() {
@@ -501,8 +481,7 @@ export class AtomicCategoryFacet
       props: {
         i18n: this.bindings.i18n,
         label: this.label,
-        numberOfActiveValues:
-          this.facetState.hasActiveValues && this.isCollapsed ? 1 : 0,
+        numberOfActiveValues: this.facetState.hasActiveValues && this.isCollapsed ? 1 : 0,
         isCollapsed: this.isCollapsed,
         headingLevel: this.headingLevel,
         onToggleCollapse: () => {
@@ -537,9 +516,7 @@ export class AtomicCategoryFacet
             this.facet.facetSearch.clear();
             return;
           }
-          this.facet.facetSearch.updateCaptions(
-            getFieldCaptions(this.field, this.bindings.i18n)
-          );
+          this.facet.facetSearch.updateCaptions(getFieldCaptions(this.field, this.bindings.i18n));
           this.facet.facetSearch.updateText(value);
           this.facet.facetSearch.search();
         },
@@ -548,10 +525,7 @@ export class AtomicCategoryFacet
     });
   }
 
-  private renderValuesTree(
-    valuesAsTrees: CategoryFacetValue[],
-    isRoot: boolean
-  ): TemplateResult {
+  private renderValuesTree(valuesAsTrees: CategoryFacetValue[], isRoot: boolean): TemplateResult {
     if (!this.hasParents) {
       return this.renderChildren();
     }
@@ -623,11 +597,7 @@ export class AtomicCategoryFacet
             this.focusTargets.activeValueFocus.setTarget(el as HTMLElement);
           },
         },
-      })(html`
-        ${renderCategoryFacetChildrenAsTreeContainer({props: {}})(
-          this.renderChildren()
-        )}
-      `)}
+      })(html` ${renderCategoryFacetChildrenAsTreeContainer({props: {}})(this.renderChildren())} `)}
     `;
   }
 
@@ -636,11 +606,7 @@ export class AtomicCategoryFacet
     isShowLessFocusTarget: boolean,
     isShowMoreFocusTarget: boolean
   ) {
-    const displayValue = getFieldValueCaption(
-      this.field,
-      facetValue.value,
-      this.bindings.i18n
-    );
+    const displayValue = getFieldValueCaption(this.field, facetValue.value, this.bindings.i18n);
     const isSelected = facetValue.state === 'selected';
 
     return html`${renderCategoryFacetValueLink({
@@ -657,10 +623,8 @@ export class AtomicCategoryFacet
         searchQuery: this.facetState.facetSearch.query,
         isLeafValue: facetValue.isLeafValue,
         setRef: (el) => {
-          isShowLessFocusTarget &&
-            this.focusTargets.showLessFocus.setTarget(el as HTMLElement);
-          isShowMoreFocusTarget &&
-            this.focusTargets.showMoreFocus.setTarget(el as HTMLElement);
+          isShowLessFocusTarget && this.focusTargets.showLessFocus.setTarget(el as HTMLElement);
+          isShowMoreFocusTarget && this.focusTargets.showMoreFocus.setTarget(el as HTMLElement);
         },
       },
     })()}`;
@@ -676,26 +640,14 @@ export class AtomicCategoryFacet
         (value) => value.state === 'selected'
       );
       if (selectedValue) {
-        return html`${map(
-          selectedValue.children,
-          (value: CategoryFacetValue, i: number) =>
-            this.renderChild(
-              value,
-              i === 0,
-              i === this.resultIndexToFocusOnShowMore
-            )
+        return html`${map(selectedValue.children, (value: CategoryFacetValue, i: number) =>
+          this.renderChild(value, i === 0, i === this.resultIndexToFocusOnShowMore)
         )}`;
       }
     }
 
-    return html`${map(
-      this.facetState.valuesAsTrees,
-      (value: CategoryFacetValue, i: number) =>
-        this.renderChild(
-          value,
-          i === 0,
-          i === this.resultIndexToFocusOnShowMore
-        )
+    return html`${map(this.facetState.valuesAsTrees, (value: CategoryFacetValue, i: number) =>
+      this.renderChild(value, i === 0, i === this.resultIndexToFocusOnShowMore)
     )}`;
   }
 
@@ -743,8 +695,7 @@ export class AtomicCategoryFacet
                 (value) => value.state === 'selected'
               );
               this.resultIndexToFocusOnShowMore =
-                selectedValue?.children.length ??
-                this.facetState.valuesAsTrees.length;
+                selectedValue?.children.length ?? this.facetState.valuesAsTrees.length;
               this.focusTargets.showMoreFocus.focusAfterSearch();
               this.facet.showMoreValues();
             },
@@ -774,11 +725,7 @@ export class AtomicCategoryFacet
       searchStatusState: {hasError, firstSearchExecuted},
     } = this;
 
-    if (
-      hasError ||
-      !enabled ||
-      (firstSearchExecuted && !valuesAsTrees.length)
-    ) {
+    if (hasError || !enabled || (firstSearchExecuted && !valuesAsTrees.length)) {
       return nothing;
     }
 

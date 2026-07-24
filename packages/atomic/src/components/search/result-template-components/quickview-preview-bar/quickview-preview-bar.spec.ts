@@ -118,8 +118,7 @@ describe('#buildQuickviewPreviewBar', () => {
   it('should clear existing preview bar inner HTML', () => {
     const existingBar = mockDocument.createElement('div');
     existingBar.id = 'CoveoPreviewBar';
-    existingBar.innerHTML =
-      '<div>existing content</div><div>some more content</div>';
+    existingBar.innerHTML = '<div>existing content</div><div>some more content</div>';
     mockDocument.body.appendChild(existingBar);
 
     const words = {test: mockWordHighlight};
@@ -265,20 +264,12 @@ describe('#buildQuickviewPreviewBar', () => {
 
     it('should not throw', () => {
       expect(() => {
-        buildQuickviewPreviewBar(
-          {test: mockWordHighlight},
-          highlightKeywords,
-          mockIframe
-        );
+        buildQuickviewPreviewBar({test: mockWordHighlight}, highlightKeywords, mockIframe);
       }).not.toThrow();
     });
 
     it('should create a preview unit', () => {
-      buildQuickviewPreviewBar(
-        {test: mockWordHighlight},
-        highlightKeywords,
-        mockIframe
-      );
+      buildQuickviewPreviewBar({test: mockWordHighlight}, highlightKeywords, mockIframe);
       const previewBar = mockDocument.getElementById('CoveoPreviewBar');
       const previewUnit = previewBar?.children[0] as HTMLElement;
 

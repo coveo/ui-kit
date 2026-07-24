@@ -3,9 +3,7 @@ export interface ShardInfo {
   total: number;
 }
 
-function parseShardDescriptor(
-  descriptor: string | undefined
-): ShardInfo | null {
+function parseShardDescriptor(descriptor: string | undefined): ShardInfo | null {
   if (!descriptor) {
     return null;
   }
@@ -19,13 +17,7 @@ function parseShardDescriptor(
   const index = Number.parseInt(rawIndex, 10);
   const total = Number.parseInt(rawTotal, 10);
 
-  if (
-    Number.isNaN(index) ||
-    Number.isNaN(total) ||
-    total < 1 ||
-    index < 1 ||
-    index > total
-  ) {
+  if (Number.isNaN(index) || Number.isNaN(total) || total < 1 || index < 1 || index > total) {
     return null;
   }
 

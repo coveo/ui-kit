@@ -55,11 +55,11 @@
   /* Gibson is Coveo's brand face (Adobe Fonts). We reference it first, then
      fall back to close free equivalents so the sample works with no license. */
   --font-body:
-    'canada-type-gibson', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto,
-    Helvetica, Arial, sans-serif;
+    'canada-type-gibson', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial,
+    sans-serif;
   --font-head:
-    'canada-type-gibson', 'Plus Jakarta Sans', 'Inter', system-ui,
-    -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    'canada-type-gibson', 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, 'Segoe UI',
+    Roboto, Helvetica, Arial, sans-serif;
 }
 
 * {

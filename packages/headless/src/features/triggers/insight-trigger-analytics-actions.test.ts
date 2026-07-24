@@ -1,9 +1,6 @@
 import {CoveoInsightClient} from 'coveo.analytics';
 import type {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
-import {
-  buildMockInsightEngine,
-  type MockedInsightEngine,
-} from '../../test/mock-engine-v2.js';
+import {buildMockInsightEngine, type MockedInsightEngine} from '../../test/mock-engine-v2.js';
 import {buildMockInsightState} from '../../test/mock-insight-state.js';
 import {getConfigurationInitialState} from '../configuration/configuration-state.js';
 import {logNotifyTrigger} from './insight-trigger-analytics-actions.js';
@@ -58,11 +55,7 @@ describe('the analytics related to the triggers feature in the insight use case'
   });
 
   it('should log #logNotifyTrigger when there are notifications', async () => {
-    await logNotifyTrigger()()(
-      engine.dispatch,
-      () => engine.state,
-      {} as ThunkExtraArguments
-    );
+    await logNotifyTrigger()()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
     const mockToUse = mockLogTriggerNotify;
     expect(mockToUse).toHaveBeenCalledTimes(1);

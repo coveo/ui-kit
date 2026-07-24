@@ -1,7 +1,4 @@
-import {
-  buildQuerySummary,
-  type QuerySummaryState,
-} from '@coveo/headless/insight';
+import {buildQuerySummary, type QuerySummaryState} from '@coveo/headless/insight';
 import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
 import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
@@ -36,23 +33,21 @@ describe('atomic-insight-query-summary', () => {
 
     vi.mocked(buildQuerySummary).mockReturnValue(mockedQuerySummary);
 
-    const {element} =
-      await renderInAtomicInsightInterface<AtomicInsightQuerySummary>({
-        template: html`<atomic-insight-query-summary></atomic-insight-query-summary>`,
-        selector: 'atomic-insight-query-summary',
-        bindings: (bindings) => {
-          bindings.engine = mockedEngine;
-          return bindings;
-        },
-      });
+    const {element} = await renderInAtomicInsightInterface<AtomicInsightQuerySummary>({
+      template: html`<atomic-insight-query-summary></atomic-insight-query-summary>`,
+      selector: 'atomic-insight-query-summary',
+      bindings: (bindings) => {
+        bindings.engine = mockedEngine;
+        return bindings;
+      },
+    });
 
     return {
       element,
       placeholder: element.shadowRoot!.querySelector('[part="placeholder"]'),
       container: element.shadowRoot!.querySelector('[part="container"]'),
       parts: (element: AtomicInsightQuerySummary) => {
-        const qs = (part: string) =>
-          element.shadowRoot?.querySelector(`[part*="${part}"]`);
+        const qs = (part: string) => element.shadowRoot?.querySelector(`[part*="${part}"]`);
         return {
           container: qs('container'),
           highlight: qs('highlight'),
@@ -127,9 +122,7 @@ describe('atomic-insight-query-summary', () => {
           hasResults: true,
         },
       });
-      expect(element.querySummary).toBe(
-        buildQuerySummaryMock.mock.results[0].value
-      );
+      expect(element.querySummary).toBe(buildQuerySummaryMock.mock.results[0].value);
     });
 
     it('should render the query summary container', async () => {
@@ -273,11 +266,7 @@ describe('atomic-insight-query-summary', () => {
   });
 
   it('should update aria message when state changes', async () => {
-    const messageSetterSpy = vi.spyOn(
-      AriaLiveRegionController.prototype,
-      'message',
-      'set'
-    );
+    const messageSetterSpy = vi.spyOn(AriaLiveRegionController.prototype, 'message', 'set');
 
     const {element} = await renderQuerySummary({
       querySummaryState: {

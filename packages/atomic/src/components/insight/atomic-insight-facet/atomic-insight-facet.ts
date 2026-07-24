@@ -34,10 +34,7 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import {
-  AriaLiveRegionController,
-  FocusTargetController,
-} from '@/src/utils/accessibility-utils';
+import {AriaLiveRegionController, FocusTargetController} from '@/src/utils/accessibility-utils';
 import type {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 import '@/src/components/common/atomic-facet-placeholder/atomic-facet-placeholder';
 import facetCommonStyles from '@/src/components/common/facets/facet-common.tw.css';
@@ -248,8 +245,7 @@ export class AtomicInsightFacet
     return (
       this.facetState.enabled &&
       !this.searchStatusState.hasError &&
-      (!this.searchStatusState.firstSearchExecuted ||
-        this.facetState.values.length > 0)
+      (!this.searchStatusState.firstSearchExecuted || this.facetState.values.length > 0)
     );
   }
 
@@ -258,9 +254,7 @@ export class AtomicInsightFacet
   render() {
     return html`${when(this.shouldRenderFacet(), () =>
       this.searchStatusState.firstSearchExecuted
-        ? renderFacetContainer()(html`
-            ${this.renderFacetHeader()} ${this.renderBody()}
-          `)
+        ? renderFacetContainer()(html` ${this.renderFacetHeader()} ${this.renderBody()} `)
         : html`<atomic-facet-placeholder
             value-count="${this.numberOfValues}"
             ?is-collapsed="${this.isCollapsed}"
@@ -301,10 +295,7 @@ export class AtomicInsightFacet
         i18n: this.bindings.i18n,
         label: this.label,
       },
-    })(html`<ul
-      class="mt-3 ${this.displayValuesAs === 'box' ? 'box-container' : ''}"
-      part="values"
-    >
+    })(html`<ul class="mt-3 ${this.displayValuesAs === 'box' ? 'box-container' : ''}" part="values">
       ${children}
     </ul>`);
   }
@@ -313,10 +304,7 @@ export class AtomicInsightFacet
     const values = this.facet.state.values.map((value, i) => {
       const shouldFocusOnShowLessAfterInteraction = i === 0;
       const shouldFocusOnShowMoreAfterInteraction =
-        i ===
-        (this.sortCriteria === 'automatic'
-          ? 0
-          : this.facetState.values.length - 1);
+        i === (this.sortCriteria === 'automatic' ? 0 : this.facetState.values.length - 1);
 
       return renderFacetValue({
         props: {
@@ -369,11 +357,7 @@ export class AtomicInsightFacet
 
   private get facetValueProps(): Pick<
     FacetValueProps,
-    | 'displayValuesAs'
-    | 'facetSearchQuery'
-    | 'enableExclusion'
-    | 'field'
-    | 'i18n'
+    'displayValuesAs' | 'facetSearchQuery' | 'enableExclusion' | 'field' | 'i18n'
   > {
     return {
       facetSearchQuery: this.facetState.facetSearch.query,
@@ -385,10 +369,7 @@ export class AtomicInsightFacet
   }
 
   private initAriaLive() {
-    this.facetSearchAriaLiveController = new AriaLiveRegionController(
-      this,
-      'facet-search'
-    );
+    this.facetSearchAriaLiveController = new AriaLiveRegionController(this, 'facet-search');
     announceFacetSearchResultsWithAriaLive(
       this.facet,
       this.label,
@@ -400,15 +381,12 @@ export class AtomicInsightFacet
   }
 
   private initConditionManager() {
-    this.facetConditionsManager = buildInsightFacetConditionsManager(
-      this.bindings.engine,
-      {
-        facetId: this.facetId!,
-        conditions: parseDependsOn<
-          InsightFacetValueRequest | InsightCategoryFacetValueRequest
-        >(this.dependsOn),
-      }
-    );
+    this.facetConditionsManager = buildInsightFacetConditionsManager(this.bindings.engine, {
+      facetId: this.facetId!,
+      conditions: parseDependsOn<InsightFacetValueRequest | InsightCategoryFacetValueRequest>(
+        this.dependsOn
+      ),
+    });
   }
 
   private initPopover() {

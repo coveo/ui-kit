@@ -1,7 +1,4 @@
-import {
-  type LegacySearchAction,
-  makeAnalyticsAction,
-} from '../analytics/analytics-utils.js';
+import {type LegacySearchAction, makeAnalyticsAction} from '../analytics/analytics-utils.js';
 import {SearchPageEvents} from '../analytics/search-action-cause.js';
 import type {SearchAction} from '../search/search-actions.js';
 import {getSortCriteriaInitialState} from './sort-criteria-state.js';

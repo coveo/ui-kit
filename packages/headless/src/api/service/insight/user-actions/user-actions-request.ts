@@ -10,9 +10,7 @@ interface UserIdParam {
   userId: string;
 }
 
-export const buildInsightUserActionsRequest = (
-  req: InsightUserActionsRequest
-) => {
+export const buildInsightUserActionsRequest = (req: InsightUserActionsRequest) => {
   return {
     ...baseInsightUserActionRequest(req, 'POST', 'application/json'),
     requestParams: {

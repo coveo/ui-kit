@@ -30,23 +30,15 @@
             <atomic-commerce-refine-toggle></atomic-commerce-refine-toggle>
           </atomic-layout-section>
           <atomic-layout-section section="products">
-            <atomic-commerce-product-list
-              display="grid"
-              density="compact"
-              image-size="small"
-            >
+            <atomic-commerce-product-list display="grid" density="compact" image-size="small">
               <atomic-product-template>
                 <template>
                   <atomic-product-section-name>
-                    <atomic-product-link
-                      class="font-bold"
-                    ></atomic-product-link>
+                    <atomic-product-link class="font-bold"></atomic-product-link>
                   </atomic-product-section-name>
                   <atomic-product-section-visual>
                     <atomic-product-field-condition if-defined="ec_thumbnails">
-                      <atomic-product-image
-                        field="ec_thumbnails"
-                      ></atomic-product-image>
+                      <atomic-product-image field="ec_thumbnails"></atomic-product-image>
                     </atomic-product-field-condition>
                   </atomic-product-section-visual>
                   <atomic-product-section-metadata>
@@ -56,17 +48,13 @@
                         class="text-neutral-dark block"
                       ></atomic-product-text>
                     </atomic-product-field-condition>
-                    <atomic-product-field-condition
-                      if-defined="cat_available_sizes"
-                    >
+                    <atomic-product-field-condition if-defined="cat_available_sizes">
                       <atomic-product-multi-value-text
                         field="cat_available_sizes"
                       ></atomic-product-multi-value-text>
                     </atomic-product-field-condition>
                     <atomic-product-field-condition if-defined="ec_rating">
-                      <atomic-product-rating
-                        field="ec_rating"
-                      ></atomic-product-rating>
+                      <atomic-product-rating field="ec_rating"></atomic-product-rating>
                     </atomic-product-field-condition>
                   </atomic-product-section-metadata>
                   <atomic-product-section-emphasized>

@@ -78,12 +78,8 @@ describe('atomic-commerce-search-box', () => {
     searchBoxValue?: string;
     additionalChildren?: TemplateResult;
   } = {}) => {
-    vi.mocked(buildRecentQueriesList).mockReturnValue(
-      buildFakeRecentQueriesList()
-    );
-    vi.mocked(loadQuerySuggestActions).mockReturnValue(
-      buildFakeLoadQuerySuggestActions()
-    );
+    vi.mocked(buildRecentQueriesList).mockReturnValue(buildFakeRecentQueriesList());
+    vi.mocked(loadQuerySuggestActions).mockReturnValue(buildFakeLoadQuerySuggestActions());
     vi.mocked(buildSearchBox).mockReturnValue(
       buildFakeSearchBox(
         {
@@ -107,55 +103,40 @@ describe('atomic-commerce-search-box', () => {
         }
       )
     );
-    vi.mocked(loadQuerySetActions).mockReturnValue(
-      buildFakeLoadQuerySetActions()
-    );
+    vi.mocked(loadQuerySetActions).mockReturnValue(buildFakeLoadQuerySetActions());
 
     const suggestions = noSuggestions
       ? ''
       : html`<fake-atomic-commerce-search-box-suggestions
           suggestion-count=${suggestionCount}
         ></fake-atomic-commerce-search-box-suggestions>`;
-    const {
-      redirectionUrl,
-      disableSearch,
-      minimumQueryLength,
-      numberOfQueries,
-      clearFilters,
-    } = searchBoxProps || {};
-    const {element} =
-      await renderInAtomicCommerceInterface<AtomicCommerceSearchBox>({
-        template: html`<atomic-commerce-search-box
-          redirection-url=${ifDefined(redirectionUrl)}
-          ?disable-search=${disableSearch ?? false}
-          minimum-query-length=${ifDefined(minimumQueryLength)}
-          number-of-queries=${ifDefined(numberOfQueries)}
-          clear-filters=${ifDefined(clearFilters)}
-        >
-          ${suggestions} ${additionalChildren}
-        </atomic-commerce-search-box>`,
-        selector: 'atomic-commerce-search-box',
-        bindings: (bindings) => {
-          bindings.engine = mockedEngine;
-          return bindings;
-        },
-      });
+    const {redirectionUrl, disableSearch, minimumQueryLength, numberOfQueries, clearFilters} =
+      searchBoxProps || {};
+    const {element} = await renderInAtomicCommerceInterface<AtomicCommerceSearchBox>({
+      template: html`<atomic-commerce-search-box
+        redirection-url=${ifDefined(redirectionUrl)}
+        ?disable-search=${disableSearch ?? false}
+        minimum-query-length=${ifDefined(minimumQueryLength)}
+        number-of-queries=${ifDefined(numberOfQueries)}
+        clear-filters=${ifDefined(clearFilters)}
+      >
+        ${suggestions} ${additionalChildren}
+      </atomic-commerce-search-box>`,
+      selector: 'atomic-commerce-search-box',
+      bindings: (bindings) => {
+        bindings.engine = mockedEngine;
+        return bindings;
+      },
+    });
 
     return {
       element,
-      spacer: element.shadowRoot!.querySelector(
-        'textarea[part="textarea-spacer"]'
-      )!,
+      spacer: element.shadowRoot!.querySelector('textarea[part="textarea-spacer"]')!,
       wrapper: element.shadowRoot!.querySelector('div[part="wrapper"]')!,
       textArea: element.shadowRoot!.querySelector('textarea[part="textarea"]')!,
-      suggestions: () =>
-        element.shadowRoot!.querySelectorAll('atomic-suggestion-renderer'),
-      clearButton: element.shadowRoot!.querySelector(
-        'button[part="clear-button"]'
-      )!,
-      submitButton: element.shadowRoot!.querySelector(
-        'button[part="submit-button"]'
-      )!,
+      suggestions: () => element.shadowRoot!.querySelectorAll('atomic-suggestion-renderer'),
+      clearButton: element.shadowRoot!.querySelector('button[part="clear-button"]')!,
+      submitButton: element.shadowRoot!.querySelector('button[part="submit-button"]')!,
       suggestionsContainer: element.shadowRoot!.querySelector(
         'div[part="suggestions-wrapper suggestions-single-list"]'
       )!,
@@ -176,10 +157,7 @@ describe('atomic-commerce-search-box', () => {
   });
 
   it('should add the event listener for the "atomic/searchBoxSuggestion/register" event', async () => {
-    const addEventListenerSpy = vi.spyOn(
-      AtomicCommerceSearchBox.prototype,
-      'addEventListener'
-    );
+    const addEventListenerSpy = vi.spyOn(AtomicCommerceSearchBox.prototype, 'addEventListener');
     await renderSearchBox();
     expect(addEventListenerSpy).toHaveBeenCalledWith(
       'atomic/searchBoxSuggestion/register',
@@ -188,10 +166,7 @@ describe('atomic-commerce-search-box', () => {
   });
 
   it('should add the event listener for the "atomic/selectChildProduct" event', async () => {
-    const addEventListenerSpy = vi.spyOn(
-      AtomicCommerceSearchBox.prototype,
-      'addEventListener'
-    );
+    const addEventListenerSpy = vi.spyOn(AtomicCommerceSearchBox.prototype, 'addEventListener');
     await renderSearchBox();
     expect(addEventListenerSpy).toHaveBeenCalledWith(
       'atomic/selectChildProduct',
@@ -234,9 +209,7 @@ describe('atomic-commerce-search-box', () => {
     const {wrapper} = await renderSearchBox({
       searchBoxProps: {disableSearch: true},
     });
-    expect(wrapper).toHaveClass(
-      'focus-within:border-disabled focus-within:ring-neutral'
-    );
+    expect(wrapper).toHaveClass('focus-within:border-disabled focus-within:ring-neutral');
   });
 
   it('should disable the search box when the "disableSearch" property is set to true', async () => {
@@ -320,48 +293,30 @@ describe('atomic-commerce-search-box', () => {
     });
 
     it('should announce "x search suggestions are available." to screen readers when there are suggestions', async () => {
-      const setMessageSpy = vi.spyOn(
-        AriaLiveRegionController.prototype,
-        'message',
-        'set'
-      );
+      const setMessageSpy = vi.spyOn(AriaLiveRegionController.prototype, 'message', 'set');
       const {element} = await renderSearchBox();
 
       await userEvent.click(element);
 
-      expect(setMessageSpy).toHaveBeenCalledWith(
-        '3 search suggestions are available.'
-      );
+      expect(setMessageSpy).toHaveBeenCalledWith('3 search suggestions are available.');
     });
 
     it('should announce "x search suggestions are available for y." to screen readers when there are suggestions & a query is entered', async () => {
-      const setMessageSpy = vi.spyOn(
-        AriaLiveRegionController.prototype,
-        'message',
-        'set'
-      );
+      const setMessageSpy = vi.spyOn(AriaLiveRegionController.prototype, 'message', 'set');
       const {element} = await renderSearchBox({searchBoxValue: 'test'});
 
       await userEvent.click(element);
 
-      expect(setMessageSpy).toHaveBeenCalledWith(
-        '3 search suggestions are available for test.'
-      );
+      expect(setMessageSpy).toHaveBeenCalledWith('3 search suggestions are available for test.');
     });
 
     it('should announce "No search suggestions are available." to screen readers when there are no suggestions', async () => {
-      const setMessageSpy = vi.spyOn(
-        AriaLiveRegionController.prototype,
-        'message',
-        'set'
-      );
+      const setMessageSpy = vi.spyOn(AriaLiveRegionController.prototype, 'message', 'set');
       const {element} = await renderSearchBox({suggestionCount: 0});
 
       await userEvent.click(element);
 
-      expect(setMessageSpy).toHaveBeenCalledWith(
-        'There are no search suggestions.'
-      );
+      expect(setMessageSpy).toHaveBeenCalledWith('There are no search suggestions.');
     });
 
     it('should be focusable & delegate focus to the text area', async () => {
@@ -629,8 +584,8 @@ describe('atomic-commerce-search-box', () => {
         });
 
         // Get the fake controller that was created during render
-        const fakeStandaloneSearchBox = vi.mocked(buildStandaloneSearchBox).mock
-          .results[0]!.value as ReturnType<typeof buildFakeStandaloneSearchBox>;
+        const fakeStandaloneSearchBox = vi.mocked(buildStandaloneSearchBox).mock.results[0]!
+          .value as ReturnType<typeof buildFakeStandaloneSearchBox>;
 
         // Add listener BEFORE triggering the redirect AND prevent default to avoid navigation
         element.addEventListener('redirect', (event) => {
@@ -658,8 +613,8 @@ describe('atomic-commerce-search-box', () => {
         });
 
         // Get the fake controller that was created during render
-        const fakeStandaloneSearchBox = vi.mocked(buildStandaloneSearchBox).mock
-          .results[0]!.value as ReturnType<typeof buildFakeStandaloneSearchBox>;
+        const fakeStandaloneSearchBox = vi.mocked(buildStandaloneSearchBox).mock.results[0]!
+          .value as ReturnType<typeof buildFakeStandaloneSearchBox>;
 
         // Prevent default to avoid navigation
         element.addEventListener('redirect', (event) => {
@@ -683,8 +638,8 @@ describe('atomic-commerce-search-box', () => {
         });
 
         // Get the fake controller that was created during render
-        const fakeStandaloneSearchBox = vi.mocked(buildStandaloneSearchBox).mock
-          .results[0]!.value as ReturnType<typeof buildFakeStandaloneSearchBox>;
+        const fakeStandaloneSearchBox = vi.mocked(buildStandaloneSearchBox).mock.results[0]!
+          .value as ReturnType<typeof buildFakeStandaloneSearchBox>;
 
         // Add event listener BEFORE triggering the redirect
         element.addEventListener('redirect', (event) => {
@@ -704,16 +659,14 @@ describe('atomic-commerce-search-box', () => {
 
 expect.extend({
   toBeDisabled(received: Element) {
-    const expectedClass =
-      'focus-within:border-disabled focus-within:ring-neutral';
+    const expectedClass = 'focus-within:border-disabled focus-within:ring-neutral';
     const pass =
       received.classList.contains('focus-within:border-disabled') &&
       received.classList.contains('focus-within:ring-neutral');
 
     return {
       pass,
-      message: () =>
-        `expected element ${pass ? 'not ' : ''}to have classes "${expectedClass}"`,
+      message: () => `expected element ${pass ? 'not ' : ''}to have classes "${expectedClass}"`,
     };
   },
 });

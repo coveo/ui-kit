@@ -42,9 +42,7 @@ export interface DictionaryFieldContextActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  setContext(
-    payload: DictionaryFieldContextPayload
-  ): PayloadAction<DictionaryFieldContextPayload>;
+  setContext(payload: DictionaryFieldContextPayload): PayloadAction<DictionaryFieldContextPayload>;
 }
 
 /**

@@ -128,8 +128,7 @@ export class AtomicCommerceFacetNumberInput
     const maxAria = this.bindings.i18n.t('number-input-maximum', {label});
     const apply = this.bindings.i18n.t('apply');
     const applyAria = this.bindings.i18n.t('number-input-apply', {label});
-    const inputClasses =
-      'p-2.5 input-primary placeholder-neutral-dark min-w-0 mr-1';
+    const inputClasses = 'p-2.5 input-primary placeholder-neutral-dark min-w-0 mr-1';
     const labelClasses = 'text-neutral-dark text-sm';
     const step = 'any';
     return html`
@@ -142,9 +141,7 @@ export class AtomicCommerceFacetNumberInput
           return false;
         }}
       >
-        <label part="label-start" class=${labelClasses} for="${facetId}_start">
-          ${minText}
-        </label>
+        <label part="label-start" class=${labelClasses} for="${facetId}_start"> ${minText} </label>
         <input
           part="input-start"
           id="${facetId}_start"
@@ -163,9 +160,7 @@ export class AtomicCommerceFacetNumberInput
             this.startRef = ref as HTMLInputElement;
           })}
         />
-        <label part="label-end" class=${labelClasses} for="${facetId}_end">
-          ${maxText}
-        </label>
+        <label part="label-end" class=${labelClasses} for="${facetId}_end"> ${maxText} </label>
         <input
           part="input-end"
           id="${facetId}_end"

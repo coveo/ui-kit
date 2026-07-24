@@ -15,10 +15,9 @@ class ProductListControllerImpl extends BaseController<ProductListControllerStat
 
     const selectors = getOrCreateProductListSelectors(options.interface);
 
-    const controllerState = createMemoizedStateSelector(
-      selectors.getProducts,
-      (products) => ({products})
-    );
+    const controllerState = createMemoizedStateSelector(selectors.getProducts, (products) => ({
+      products,
+    }));
 
     super(engine, controllerState);
   }

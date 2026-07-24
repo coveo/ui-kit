@@ -16,9 +16,7 @@ export function getAllIncludedResultsFrom(relevantResult: ResultWithFolding) {
   return resultsInCollection;
 }
 
-function getChildResultsRecursively(
-  result: ResultWithFolding
-): ResultWithFolding[] {
+function getChildResultsRecursively(result: ResultWithFolding): ResultWithFolding[] {
   if (!result.childResults) {
     return [];
   }

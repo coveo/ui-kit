@@ -29,9 +29,7 @@ export function buildInsightLayout(
   const layoutSelector = `atomic-insight-layout#${id}`;
   const widget = element.widget || false;
 
-  const hasTabs = Boolean(
-    findSection(element, 'search')?.querySelector(tabsSelector)
-  );
+  const hasTabs = Boolean(findSection(element, 'search')?.querySelector(tabsSelector));
 
   const interfaceStyle = widget
     ? `

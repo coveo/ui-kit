@@ -1,8 +1,4 @@
-import type {
-  InstantResults,
-  InstantResultsState,
-  Result,
-} from '@coveo/headless';
+import type {InstantResults, InstantResultsState, Result} from '@coveo/headless';
 import {vi} from 'vitest';
 import {genericSubscribe} from '../common';
 

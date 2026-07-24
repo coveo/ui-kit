@@ -56,11 +56,7 @@ export class NextJsNavigatorContext implements NavigatorContext {
    * @returns The forwarded-for IP address if available, otherwise an empty string.
    */
   get forwardedFor() {
-    return (
-      this.headers.get('x-forwarded-for') ||
-      this.headers.get('x-forwarded-host') ||
-      ''
-    );
+    return this.headers.get('x-forwarded-for') || this.headers.get('x-forwarded-host') || '';
   }
 
   /**

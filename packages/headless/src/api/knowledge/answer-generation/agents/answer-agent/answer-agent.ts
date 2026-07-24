@@ -7,8 +7,7 @@ import {buildBaseAnswerGenerationUrl} from '../endpoint-url-builder.js';
  */
 export class AnswerAgent extends HttpAgent {
   protected requestInit(input: RunAgentInput): RequestInit {
-    const {params, accessToken, recordDebugSession} =
-      input.forwardedProps || {};
+    const {params, accessToken, recordDebugSession} = input.forwardedProps || {};
     const body = {
       ...params,
       ...(recordDebugSession && {recordDebugSession: true}),

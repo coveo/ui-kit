@@ -1,8 +1,4 @@
-import {
-  buildQuerySummary,
-  type QuerySummary,
-  type QuerySummaryState,
-} from '@coveo/headless';
+import {buildQuerySummary, type QuerySummary, type QuerySummaryState} from '@coveo/headless';
 import {type CSSResultGroup, css, html, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {bindStateToController} from '@/src/decorators/bind-state';
@@ -70,15 +66,14 @@ export class AtomicQuerySummary
       isLoading,
     } = this.querySummaryState;
 
-    const {i18nKey, highlights, ariaLiveMessage} =
-      getQuerySummaryI18nParameters({
-        first: firstResult,
-        last: lastResult,
-        query,
-        total,
-        i18n: this.bindings.i18n,
-        isLoading,
-      });
+    const {i18nKey, highlights, ariaLiveMessage} = getQuerySummaryI18nParameters({
+      first: firstResult,
+      last: lastResult,
+      query,
+      total,
+      i18n: this.bindings.i18n,
+      isLoading,
+    });
 
     this.ariaMessage.message = ariaLiveMessage;
 
@@ -107,9 +102,7 @@ export class AtomicQuerySummary
             i18n: this.bindings.i18n,
             key: 'in-seconds',
             params: {
-              count: durationInSeconds.toLocaleString(
-                this.bindings.i18n.language
-              ),
+              count: durationInSeconds.toLocaleString(this.bindings.i18n.language),
             },
           })}
         </span>

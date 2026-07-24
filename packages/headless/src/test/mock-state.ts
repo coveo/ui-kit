@@ -45,9 +45,7 @@ import type {SearchAppState} from '../state/search-app-state.js';
  * @param config - A Partial `SearchAppState` from which to build the target `SearchAppState`.
  * @returns The new `SearchAppState`.
  */
-export function createMockState(
-  config: Partial<SearchAppState> = {}
-): SearchAppState {
+export function createMockState(config: Partial<SearchAppState> = {}): SearchAppState {
   return {
     configuration: getConfigurationInitialState(),
     advancedSearchQueries: getAdvancedSearchQueriesInitialState(),

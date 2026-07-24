@@ -9,7 +9,5 @@ export const logSearchboxSubmit = (): InsightAction =>
   makeInsightAnalyticsActionFactory(SearchPageEvents.searchboxSubmit)(
     'analytics/searchbox/submit',
     (client, state) =>
-      client.logSearchboxSubmit(
-        getCaseContextAnalyticsMetadata(state.insightCaseContext)
-      )
+      client.logSearchboxSubmit(getCaseContextAnalyticsMetadata(state.insightCaseContext))
   );

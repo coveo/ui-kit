@@ -10,10 +10,7 @@ import {
   handleFacetSearchSetClear,
   handleFacetSearchUpdate,
 } from '../facet-search-reducer-helpers.js';
-import {
-  clearFacetSearch,
-  executeFacetSearch,
-} from '../generic/generic-facet-search-actions.js';
+import {clearFacetSearch, executeFacetSearch} from '../generic/generic-facet-search-actions.js';
 import {updateFacetSearch} from '../specific/specific-facet-search-actions.js';
 import {registerCategoryFacetSearch} from './category-facet-search-actions.js';
 import {getCategoryFacetSearchSetInitialState} from './category-facet-search-set-state.js';
@@ -38,11 +35,7 @@ export const categoryFacetSearchSetReducer = createReducer(
         handleFacetSearchRejected(state, facetId);
       })
       .addCase(executeFacetSearch.fulfilled, (state, action) => {
-        handleFacetSearchFulfilled(
-          state,
-          action.payload,
-          action.meta.requestId
-        );
+        handleFacetSearchFulfilled(state, action.payload, action.meta.requestId);
       })
       .addCase(clearFacetSearch, (state, {payload: {facetId}}) => {
         handleFacetSearchClear(state, {facetId}, buildEmptyResponse);

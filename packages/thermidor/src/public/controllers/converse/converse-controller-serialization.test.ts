@@ -5,9 +5,7 @@ import {
   type SerializedTurn,
 } from './converse-controller-serialization.js';
 
-function createSerializedTurn(
-  overrides: Partial<SerializedTurn> = {}
-): SerializedTurn {
+function createSerializedTurn(overrides: Partial<SerializedTurn> = {}): SerializedTurn {
   return {
     id: 'turn-1',
     prompt: 'hello',
@@ -76,9 +74,7 @@ describe('deserializeToGenerativeState', () => {
 
   it('does not modify turns that are already in error status', () => {
     const serialized = createSerializedState({
-      turns: [
-        createSerializedTurn({status: 'error', error: 'Something broke'}),
-      ],
+      turns: [createSerializedTurn({status: 'error', error: 'Something broke'})],
     });
 
     const result = deserializeToGenerativeState(serialized);

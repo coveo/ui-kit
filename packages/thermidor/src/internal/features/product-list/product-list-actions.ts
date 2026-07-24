@@ -18,7 +18,5 @@ export function createProductListActions(interfaceId: string) {
 
 export function getOrCreateProductListActions(iface: InterfaceHandle) {
   const {stateId, cacheRegistry} = getHandleInternals(iface);
-  return cacheRegistry.getOrCreate(CACHE_KEY, () =>
-    createProductListActions(stateId)
-  );
+  return cacheRegistry.getOrCreate(CACHE_KEY, () => createProductListActions(stateId));
 }

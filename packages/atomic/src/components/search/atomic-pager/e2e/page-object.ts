@@ -15,9 +15,7 @@ export class PagerPageObject extends BasePageObject {
   }
 
   pageButton(pageNumber: number): Locator {
-    return this.page.locator(
-      `atomic-pager button[aria-label="Page ${pageNumber}"]`
-    );
+    return this.page.locator(`atomic-pager button[aria-label="Page ${pageNumber}"]`);
   }
 
   get currentPageButton(): Locator {

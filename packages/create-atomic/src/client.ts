@@ -3,11 +3,7 @@ import 'abortcontroller-polyfill';
 import {PlatformClient} from '@coveo/platform-client';
 import {HttpsProxyAgent} from 'https-proxy-agent';
 
-export function createPlatformClient(
-  host: string,
-  organizationId: string,
-  accessToken: string
-) {
+export function createPlatformClient(host: string, organizationId: string, accessToken: string) {
   const globalRequestSettings: Record<string, unknown> = {};
   const proxyServer = process.env.https_proxy || process.env.HTTPS_PROXY;
   if (proxyServer) {

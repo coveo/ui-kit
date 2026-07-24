@@ -31,36 +31,28 @@ describe('search request', () => {
 
   it('#searchRequest returns the state #query', async () => {
     state.query.q = 'hello';
-    const params = (
-      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
-    ).request;
+    const params = (await buildSearchRequest(state, buildMockNavigatorContextProvider()())).request;
 
     expect(params.q).toBe(state.query.q);
   });
 
   it('#searchRequest returns the state #enableQuerySyntax', async () => {
     state.query.enableQuerySyntax = true;
-    const params = (
-      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
-    ).request;
+    const params = (await buildSearchRequest(state, buildMockNavigatorContextProvider()())).request;
 
     expect(params.enableQuerySyntax).toBe(state.query.enableQuerySyntax);
   });
 
   it('#searchRequest returns the state #sortCriteria', async () => {
     state.sortCriteria = 'qre';
-    const params = (
-      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
-    ).request;
+    const params = (await buildSearchRequest(state, buildMockNavigatorContextProvider()())).request;
 
     expect(params.sortCriteria).toBe(state.sortCriteria);
   });
 
   it('#searchRequest returns the state #numberOfResults', async () => {
     state.pagination.numberOfResults = 10;
-    const params = (
-      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
-    ).request;
+    const params = (await buildSearchRequest(state, buildMockNavigatorContextProvider()())).request;
 
     expect(params.numberOfResults).toBe(state.pagination.numberOfResults);
   });
@@ -69,18 +61,14 @@ describe('search request', () => {
     state.pagination.numberOfResults = 10;
     state.pagination.firstResult = maximumNumberOfResultsFromIndex - 9;
 
-    const params = (
-      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
-    ).request;
+    const params = (await buildSearchRequest(state, buildMockNavigatorContextProvider()())).request;
 
     expect(params.numberOfResults).toBe(9);
   });
 
   it('#searchRequest returns the state #firstResult', async () => {
     state.pagination.firstResult = 10;
-    const params = (
-      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
-    ).request;
+    const params = (await buildSearchRequest(state, buildMockNavigatorContextProvider()())).request;
 
     expect(params.firstResult).toBe(state.pagination.firstResult);
   });
@@ -88,9 +76,7 @@ describe('search request', () => {
   it('#searchRequest returns the state #dictionaryFieldContext.contextValues', async () => {
     const contextValues = {price: 'cad'};
     state.dictionaryFieldContext.contextValues = contextValues;
-    const params = (
-      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
-    ).request;
+    const params = (await buildSearchRequest(state, buildMockNavigatorContextProvider()())).request;
 
     expect(params.dictionaryFieldContext).toBe(contextValues);
   });
@@ -98,9 +84,8 @@ describe('search request', () => {
   it('#searchRequest returns the facets in the state #facetSet', async () => {
     const request = buildMockFacetRequest({field: 'objecttype'});
     state.facetSet[1] = buildMockFacetSlice({request});
-    const {facets} = (
-      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
-    ).request;
+    const {facets} = (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
+      .request;
 
     expect(facets).toContainEqual(request);
   });
@@ -111,9 +96,8 @@ describe('search request', () => {
       sortCriteria: 'alphanumericDescending',
     });
     state.facetSet[1] = buildMockFacetSlice({request});
-    const {facets} = (
-      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
-    ).request;
+    const {facets} = (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
+      .request;
 
     expect(facets?.map((f) => f.sortCriteria)).toContainEqual({
       order: 'descending',
@@ -126,9 +110,8 @@ describe('search request', () => {
       sortCriteria: 'alphanumericNaturalDescending',
     });
     state.facetSet[1] = buildMockFacetSlice({request});
-    const {facets} = (
-      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
-    ).request;
+    const {facets} = (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
+      .request;
 
     expect(facets?.map((f) => f.sortCriteria)).toContainEqual({
       order: 'descending',
@@ -143,9 +126,8 @@ describe('search request', () => {
     });
     state.numericFacetSet[1] = buildMockNumericFacetSlice({request});
 
-    const {facets} = (
-      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
-    ).request;
+    const {facets} = (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
+      .request;
     expect(facets).toContainEqual(request);
   });
 
@@ -157,9 +139,8 @@ describe('search request', () => {
     });
     state.numericFacetSet[1] = buildMockNumericFacetSlice({request});
 
-    const {facets} = (
-      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
-    ).request;
+    const {facets} = (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
+      .request;
     expect(facets).toContainEqual(
       buildMockNumericFacetRequest({
         field: 'objecttype',
@@ -180,9 +161,8 @@ describe('search request', () => {
     });
     state.numericFacetSet[1] = buildMockNumericFacetSlice({request});
 
-    const {facets} = (
-      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
-    ).request;
+    const {facets} = (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
+      .request;
     expect(facets).toContainEqual(request);
   });
 
@@ -203,9 +183,8 @@ describe('search request', () => {
     });
     state.numericFacetSet[1] = buildMockNumericFacetSlice({request});
 
-    const {facets} = (
-      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
-    ).request;
+    const {facets} = (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
+      .request;
     expect(facets).toContainEqual(request);
   });
 
@@ -220,9 +199,8 @@ describe('search request', () => {
     });
     state.numericFacetSet[1] = buildMockNumericFacetSlice({request});
 
-    const {facets} = (
-      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
-    ).request;
+    const {facets} = (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
+      .request;
     expect(facets).toContainEqual(
       buildMockNumericFacetRequest({
         field: 'objecttype',
@@ -239,9 +217,8 @@ describe('search request', () => {
     });
     state.dateFacetSet[1] = buildMockDateFacetSlice({request});
 
-    const {facets} = (
-      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
-    ).request;
+    const {facets} = (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
+      .request;
     expect(facets).toContainEqual(request);
   });
 
@@ -253,9 +230,8 @@ describe('search request', () => {
     });
     state.dateFacetSet[1] = buildMockDateFacetSlice({request});
 
-    const {facets} = (
-      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
-    ).request;
+    const {facets} = (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
+      .request;
     expect(facets).toContainEqual(
       buildMockDateFacetRequest({
         field: 'date',
@@ -276,9 +252,8 @@ describe('search request', () => {
     });
     state.dateFacetSet[1] = buildMockDateFacetSlice({request});
 
-    const {facets} = (
-      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
-    ).request;
+    const {facets} = (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
+      .request;
     expect(facets).toContainEqual(request);
   });
 
@@ -299,9 +274,8 @@ describe('search request', () => {
     });
     state.dateFacetSet[1] = buildMockDateFacetSlice({request});
 
-    const {facets} = (
-      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
-    ).request;
+    const {facets} = (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
+      .request;
     expect(facets).toContainEqual(request);
   });
 
@@ -316,9 +290,8 @@ describe('search request', () => {
     });
     state.dateFacetSet[1] = buildMockDateFacetSlice({request});
 
-    const {facets} = (
-      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
-    ).request;
+    const {facets} = (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
+      .request;
     expect(facets).toContainEqual(
       buildMockDateFacetRequest({
         field: 'date',
@@ -330,20 +303,14 @@ describe('search request', () => {
 
   it('#searchRequest returns the state #generateAutomaticFacets.desiredCount', async () => {
     state.automaticFacetSet.desiredCount = 5;
-    const params = (
-      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
-    ).request;
+    const params = (await buildSearchRequest(state, buildMockNavigatorContextProvider()())).request;
 
-    expect(params.generateAutomaticFacets?.desiredCount).toBe(
-      state.automaticFacetSet.desiredCount
-    );
+    expect(params.generateAutomaticFacets?.desiredCount).toBe(state.automaticFacetSet.desiredCount);
   });
 
   it('#searchRequest returns the state #generateAutomaticFacets.numberOfValues', async () => {
     state.automaticFacetSet.numberOfValues = 5;
-    const params = (
-      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
-    ).request;
+    const params = (await buildSearchRequest(state, buildMockNavigatorContextProvider()())).request;
 
     expect(params.generateAutomaticFacets?.numberOfValues).toBe(
       state.automaticFacetSet.numberOfValues
@@ -392,25 +359,19 @@ describe('search request', () => {
 
   it('#searchRequest returns the state #generatedAnswer.responseFormat', async () => {
     state.generatedAnswer.responseFormat = {contentFormat: ['text/markdown']};
-    const params = (
-      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
-    ).request;
+    const params = (await buildSearchRequest(state, buildMockNavigatorContextProvider()())).request;
 
-    expect(
-      params.pipelineRuleParameters?.mlGenerativeQuestionAnswering
-        ?.responseFormat
-    ).toBe(state.generatedAnswer.responseFormat);
+    expect(params.pipelineRuleParameters?.mlGenerativeQuestionAnswering?.responseFormat).toBe(
+      state.generatedAnswer.responseFormat
+    );
   });
 
   it('#searchRequest returns the state #generatedAnswer.citationsFieldToInclude', async () => {
     state.generatedAnswer.fieldsToIncludeInCitations = ['foo', 'bar'];
-    const params = (
-      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
-    ).request;
+    const params = (await buildSearchRequest(state, buildMockNavigatorContextProvider()())).request;
 
     expect(
-      params.pipelineRuleParameters?.mlGenerativeQuestionAnswering
-        ?.citationsFieldToInclude
+      params.pipelineRuleParameters?.mlGenerativeQuestionAnswering?.citationsFieldToInclude
     ).toBe(state.generatedAnswer.fieldsToIncludeInCitations);
   });
 
@@ -418,9 +379,8 @@ describe('search request', () => {
     const request = buildMockCategoryFacetRequest({field: 'objecttype'});
     state.categoryFacetSet[1] = buildMockCategoryFacetSlice({request});
 
-    const {facets} = (
-      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
-    ).request;
+    const {facets} = (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
+      .request;
     expect(facets).toContainEqual(request);
   });
 
@@ -488,9 +448,8 @@ describe('search request', () => {
     state.facetOptions.facets.g = buildFacetOptionsSlice();
     state.facetOptions.facets.h = buildFacetOptionsSlice({enabled: false});
 
-    const {facets} = (
-      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
-    ).request;
+    const {facets} = (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
+      .request;
     expect(facets).toContainEqual(enabledFacetRequest);
     expect(facets).toContainEqual(enabledNumericFacetRequest);
     expect(facets).toContainEqual(enabledDateFacetRequest);
@@ -502,9 +461,8 @@ describe('search request', () => {
   });
 
   it('when no facets are configured, the #searchRequestParams does not contain a #facets key', async () => {
-    const request = (
-      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
-    ).request;
+    const request = (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
+      .request;
     expect(request.facets).toBe(undefined);
   });
 
@@ -522,13 +480,9 @@ describe('search request', () => {
       request: buildMockFacetRequest({facetId: facetId2}),
     });
 
-    const {facets} = (
-      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
-    ).request;
-    expect(facets).toEqual([
-      state.facetSet[facetId2].request,
-      state.facetSet[facetId1].request,
-    ]);
+    const {facets} = (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
+      .request;
+    expect(facets).toEqual([state.facetSet[facetId2].request, state.facetSet[facetId1].request]);
   });
 
   it(`when there is a facet id that is not in the facetOrder array,
@@ -545,21 +499,15 @@ describe('search request', () => {
       request: buildMockFacetRequest({facetId: facetId2}),
     });
 
-    const {facets} = (
-      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
-    ).request;
-    expect(facets).toEqual([
-      state.facetSet[facetId2].request,
-      state.facetSet[facetId1].request,
-    ]);
+    const {facets} = (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
+      .request;
+    expect(facets).toEqual([state.facetSet[facetId2].request, state.facetSet[facetId1].request]);
   });
 
   it('#searchRequestParams returns the freezeFacetOrder in state', async () => {
     state.facetOptions = buildMockFacetOptions({freezeFacetOrder: true});
 
-    const params = (
-      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
-    ).request;
+    const params = (await buildSearchRequest(state, buildMockNavigatorContextProvider()())).request;
     expect(params.facetOptions).toEqual({
       freezeFacetOrder: state.facetOptions.freezeFacetOrder,
     });
@@ -568,16 +516,14 @@ describe('search request', () => {
   it('should send analytics if analytics is enable', async () => {
     state.configuration.analytics.enabled = true;
     expect(
-      (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
-        .request.analytics
+      (await buildSearchRequest(state, buildMockNavigatorContextProvider()())).request.analytics
     ).toBeDefined();
   });
 
   it('should not send analytics if analytics is disabled', async () => {
     state.configuration.analytics.enabled = false;
     expect(
-      (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
-        .request.analytics
+      (await buildSearchRequest(state, buildMockNavigatorContextProvider()())).request.analytics
     ).not.toBeDefined();
   });
 
@@ -585,8 +531,7 @@ describe('search request', () => {
     const originLevel2 = 'youtube';
     state.configuration.analytics.originLevel2 = originLevel2;
     expect(
-      (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
-        .request.tab
+      (await buildSearchRequest(state, buildMockNavigatorContextProvider()())).request.tab
     ).toBe(originLevel2);
   });
 
@@ -595,8 +540,7 @@ describe('search request', () => {
     state.configuration.analytics.analyticsMode = 'legacy';
     state.configuration.analytics.originLevel3 = originLevel3;
     expect(
-      (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
-        .request.referrer
+      (await buildSearchRequest(state, buildMockNavigatorContextProvider()())).request.referrer
     ).toBe(originLevel3);
   });
 
@@ -604,17 +548,16 @@ describe('search request', () => {
     const navigatorContextProvider = buildMockNavigatorContextProvider({
       referrer: 'www.coveo.com',
     });
-    expect(
-      (await buildSearchRequest(state, navigatorContextProvider())).request
-        .referrer
-    ).toBe(navigatorContextProvider().referrer);
+    expect((await buildSearchRequest(state, navigatorContextProvider())).request.referrer).toBe(
+      navigatorContextProvider().referrer
+    );
   });
 
   it('#searchRequest.fieldsToInclude holds the #fieldsToInclude', async () => {
     state.fields.fieldsToInclude = ['foo', 'bar'];
     expect(
-      (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
-        .request.fieldsToInclude
+      (await buildSearchRequest(state, buildMockNavigatorContextProvider()())).request
+        .fieldsToInclude
     ).toEqual(expect.arrayContaining(['foo', 'bar']));
   });
 
@@ -622,31 +565,28 @@ describe('search request', () => {
     state.fields.fieldsToInclude = ['foo', 'bar'];
     state.fields.fetchAllFields = true;
     expect(
-      (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
-        .request.fieldsToInclude
+      (await buildSearchRequest(state, buildMockNavigatorContextProvider()())).request
+        .fieldsToInclude
     ).not.toBeDefined();
   });
 
   it('when there are no cq expressions in state, cq is undefined', async () => {
     expect(
-      (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
-        .request.cq
+      (await buildSearchRequest(state, buildMockNavigatorContextProvider()())).request.cq
     ).toBe(undefined);
   });
 
   it('when there is a cq expression, it sets the cq to the expression', async () => {
     state.advancedSearchQueries.cq = 'a';
     expect(
-      (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
-        .request.cq
+      (await buildSearchRequest(state, buildMockNavigatorContextProvider()())).request.cq
     ).toBe('a');
   });
 
   it('when there is an active tab, it sets cq to the active tab expression', async () => {
     state.tabSet.a = buildMockTabSlice({expression: 'a', isActive: true});
     expect(
-      (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
-        .request.cq
+      (await buildSearchRequest(state, buildMockNavigatorContextProvider()())).request.cq
     ).toBe('a');
   });
 
@@ -656,8 +596,7 @@ describe('search request', () => {
     state.tabSet.b = buildMockTabSlice({expression: 'b', isActive: true});
 
     expect(
-      (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
-        .request.cq
+      (await buildSearchRequest(state, buildMockNavigatorContextProvider()())).request.cq
     ).toBe('a AND b');
   });
 
@@ -667,8 +606,7 @@ describe('search request', () => {
     state.tabSet.b = buildMockTabSlice({expression: ' b ', isActive: true});
 
     expect(
-      (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
-        .request.cq
+      (await buildSearchRequest(state, buildMockNavigatorContextProvider()())).request.cq
     ).toBe('a AND b');
   });
 
@@ -679,8 +617,7 @@ describe('search request', () => {
     });
     state.staticFilterSet.a = buildMockStaticFilterSlice({values: [value]});
     expect(
-      (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
-        .request.cq
+      (await buildSearchRequest(state, buildMockNavigatorContextProvider()())).request.cq
     ).toBe('a');
   });
 
@@ -699,8 +636,7 @@ describe('search request', () => {
       values: [valueA, valueB],
     });
     expect(
-      (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
-        .request.cq
+      (await buildSearchRequest(state, buildMockNavigatorContextProvider()())).request.cq
     ).toBe('(a OR b)');
   });
 
@@ -719,8 +655,7 @@ describe('search request', () => {
       values: [valueA, valueB],
     });
     expect(
-      (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
-        .request.cq
+      (await buildSearchRequest(state, buildMockNavigatorContextProvider()())).request.cq
     ).toBe('a');
   });
 
@@ -728,8 +663,8 @@ describe('search request', () => {
     state.didYouMean.enableDidYouMean = true;
     state.didYouMean.queryCorrectionMode = 'next';
     expect(
-      (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
-        .request.queryCorrection?.enabled
+      (await buildSearchRequest(state, buildMockNavigatorContextProvider()())).request
+        .queryCorrection?.enabled
     ).toBe(true);
   });
 
@@ -738,8 +673,8 @@ describe('search request', () => {
     state.didYouMean.queryCorrectionMode = 'next';
     state.didYouMean.automaticallyCorrectQuery = true;
     expect(
-      (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
-        .request.queryCorrection?.options?.automaticallyCorrect
+      (await buildSearchRequest(state, buildMockNavigatorContextProvider()())).request
+        .queryCorrection?.options?.automaticallyCorrect
     ).toBe('whenNoResults');
   });
 
@@ -748,8 +683,8 @@ describe('search request', () => {
     state.didYouMean.queryCorrectionMode = 'next';
     state.didYouMean.automaticallyCorrectQuery = false;
     expect(
-      (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
-        .request.queryCorrection?.options?.automaticallyCorrect
+      (await buildSearchRequest(state, buildMockNavigatorContextProvider()())).request
+        .queryCorrection?.options?.automaticallyCorrect
     ).toBe('never');
   });
 });

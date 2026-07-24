@@ -52,21 +52,14 @@ export {getSampleSearchEngineConfiguration};
 
 const searchEngineReducers = {debug, pipeline, searchHub, search};
 type SearchEngineReducers = typeof searchEngineReducers;
-type SearchEngineState = StateFromReducersMapObject<SearchEngineReducers> &
-  Partial<SearchAppState>;
+type SearchEngineState = StateFromReducersMapObject<SearchEngineReducers> & Partial<SearchAppState>;
 
 function getUpdateSearchConfigurationPayload(
   configuration: SearchEngineConfiguration
 ): UpdateSearchConfigurationActionCreatorPayload {
   const {search} = configuration;
-  const {
-    proxyBaseUrl,
-    pipeline,
-    searchHub,
-    timezone,
-    locale,
-    authenticationProviders,
-  } = search ?? {};
+  const {proxyBaseUrl, pipeline, searchHub, timezone, locale, authenticationProviders} =
+    search ?? {};
 
   return {
     proxyBaseUrl,
@@ -100,9 +93,7 @@ export interface SearchEngine<State extends object = {}> extends CoreEngine<
    *
    * @param analytics - The standalone search box analytics data.
    */
-  executeFirstSearchAfterStandaloneSearchBoxRedirect(
-    analytics: StandaloneSearchBoxAnalytics
-  ): void;
+  executeFirstSearchAfterStandaloneSearchBoxRedirect(analytics: StandaloneSearchBoxAnalytics): void;
 }
 
 /**
@@ -172,9 +163,7 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
       engine.dispatch(action);
     },
 
-    executeFirstSearchAfterStandaloneSearchBoxRedirect(
-      analytics: StandaloneSearchBoxAnalytics
-    ) {
+    executeFirstSearchAfterStandaloneSearchBoxRedirect(analytics: StandaloneSearchBoxAnalytics) {
       const {cause, metadata} = analytics;
 
       if (firstSearchExecutedSelector(engine.state)) {
@@ -184,9 +173,7 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
       const isOmniboxFromLink = metadata && cause === 'omniboxFromLink';
 
       const action = executeSearch({
-        legacy: isOmniboxFromLink
-          ? logOmniboxFromLink(metadata)
-          : logSearchFromLink(),
+        legacy: isOmniboxFromLink ? logOmniboxFromLink(metadata) : logSearchFromLink(),
         next: isOmniboxFromLink ? omniboxFromLink() : searchFromLink(),
       });
       engine.dispatch(action);
@@ -194,10 +181,7 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
   };
 }
 
-function validateConfiguration(
-  configuration: SearchEngineConfiguration,
-  logger: Logger
-) {
+function validateConfiguration(configuration: SearchEngineConfiguration, logger: Logger) {
   try {
     searchEngineConfigurationSchema.validate(configuration);
   } catch (error) {
@@ -206,17 +190,13 @@ function validateConfiguration(
   }
 }
 
-function createSearchAPIClient(
-  configuration: SearchEngineConfiguration,
-  logger: Logger
-) {
+function createSearchAPIClient(configuration: SearchEngineConfiguration, logger: Logger) {
   const {search} = configuration;
   return new SearchAPIClient({
     logger,
     preprocessRequest: configuration.preprocessRequest || NoopPreprocessRequest,
     postprocessSearchResponseMiddleware:
-      search?.preprocessSearchResponseMiddleware ||
-      NoopPostprocessSearchResponseMiddleware,
+      search?.preprocessSearchResponseMiddleware || NoopPostprocessSearchResponseMiddleware,
     postprocessFacetSearchResponseMiddleware:
       search?.preprocessFacetSearchResponseMiddleware ||
       NoopPostprocessFacetSearchResponseMiddleware,

@@ -37,7 +37,4 @@ export interface NumericRangeRequest {
 }
 
 export interface NumericFacetRequest
-  extends
-    BaseRangeFacetRequest,
-    CurrentValues<NumericRangeRequest>,
-    Type<'numericalRange'> {}
+  extends BaseRangeFacetRequest, CurrentValues<NumericRangeRequest>, Type<'numericalRange'> {}

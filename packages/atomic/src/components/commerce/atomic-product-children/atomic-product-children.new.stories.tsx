@@ -34,15 +34,11 @@ const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
   },
   includeCodeRoot: false,
 });
-const {decorator: commerceProductListDecorator} = wrapInCommerceProductList(
-  'list',
-  false
-);
+const {decorator: commerceProductListDecorator} = wrapInCommerceProductList('list', false);
 const {decorator: productTemplateDecorator} = wrapInProductTemplate(false);
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-product-children',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-product-children', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-product-children',
@@ -51,9 +47,7 @@ const meta: Meta = {
   render: (args) => template(args),
   decorators: [
     (story) => html`
-      <atomic-product-section-children id="code-root">
-        ${story()}
-      </atomic-product-section-children>
+      <atomic-product-section-children id="code-root"> ${story()} </atomic-product-section-children>
     `,
     productTemplateDecorator,
     commerceProductListDecorator,

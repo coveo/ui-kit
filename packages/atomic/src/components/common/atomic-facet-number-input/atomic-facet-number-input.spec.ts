@@ -15,12 +15,8 @@ describe('atomic-facet-number-input', () => {
     applyButton: page.getByRole('button', {name: /Apply/}),
     parts: (element: AtomicFacetNumberInput) => ({
       form: element.querySelector('[part="input-form"]')!,
-      startInput: element.querySelector(
-        '[part="input-start"]'
-      )! as HTMLInputElement,
-      endInput: element.querySelector(
-        '[part="input-end"]'
-      )! as HTMLInputElement,
+      startInput: element.querySelector('[part="input-start"]')! as HTMLInputElement,
+      endInput: element.querySelector('[part="input-end"]')! as HTMLInputElement,
       startLabel: element.querySelector('[part="label-start"]')!,
       endLabel: element.querySelector('[part="label-end"]')!,
       applyButton: element.querySelector('[part="input-apply-button"]')!,
@@ -36,8 +32,7 @@ describe('atomic-facet-number-input', () => {
     }> = {}
   ) => {
     const filterState =
-      props.filterState ||
-      ({facetId: 'test-facet', range: undefined} as NumericFilterState);
+      props.filterState || ({facetId: 'test-facet', range: undefined} as NumericFilterState);
 
     filter =
       props.filter ||
@@ -46,16 +41,15 @@ describe('atomic-facet-number-input', () => {
         setRange: vi.fn(),
       } as unknown as NumericFilter);
 
-    const {element} =
-      await renderInAtomicSearchInterface<AtomicFacetNumberInput>({
-        template: html`<atomic-facet-number-input
-          type=${props.type ?? 'integer'}
-          label=${props.label ?? 'Price'}
-          .filter=${filter}
-          .filterState=${filterState}
-        ></atomic-facet-number-input>`,
-        selector: 'atomic-facet-number-input',
-      });
+    const {element} = await renderInAtomicSearchInterface<AtomicFacetNumberInput>({
+      template: html`<atomic-facet-number-input
+        type=${props.type ?? 'integer'}
+        label=${props.label ?? 'Price'}
+        .filter=${filter}
+        .filterState=${filterState}
+      ></atomic-facet-number-input>`,
+      selector: 'atomic-facet-number-input',
+    });
 
     return {element};
   };

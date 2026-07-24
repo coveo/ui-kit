@@ -5,9 +5,7 @@ let fetchMock: ReturnType<typeof vi.spyOn<typeof globalThis, 'fetch'>>;
 
 describe('fetchIcon', () => {
   beforeEach(() => {
-    fetchMock = vi
-      .spyOn(window, 'fetch')
-      .mockRejectedValue(new Error('fetch not mocked'));
+    fetchMock = vi.spyOn(window, 'fetch').mockRejectedValue(new Error('fetch not mocked'));
     clearIconCache();
   });
 
@@ -74,13 +72,11 @@ describe('fetchIcon', () => {
   });
 
   it('does not cache failed fetch requests', async () => {
-    fetchMock
-      .mockRejectedValueOnce(new Error('Network error'))
-      .mockResolvedValueOnce({
-        status: 200,
-        statusText: 'OK',
-        text: async () => '<svg></svg>',
-      });
+    fetchMock.mockRejectedValueOnce(new Error('Network error')).mockResolvedValueOnce({
+      status: 200,
+      statusText: 'OK',
+      text: async () => '<svg></svg>',
+    });
 
     await expect(fetchIcon('https://example.com/icon.svg')).rejects.toThrow();
     const result = await fetchIcon('https://example.com/icon.svg');

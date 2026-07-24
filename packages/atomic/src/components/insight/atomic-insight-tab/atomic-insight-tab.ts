@@ -1,16 +1,10 @@
-import type {
-  Tab as InsightTab,
-  TabState as InsightTabState,
-} from '@coveo/headless/insight';
+import type {Tab as InsightTab, TabState as InsightTabState} from '@coveo/headless/insight';
 import {buildTab as buildInsightTab} from '@coveo/headless/insight';
 import {css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {createAppLoadedListener} from '@/src/components/common/interface/store';
-import {
-  dispatchTabLoaded,
-  type TabCommon,
-} from '@/src/components/common/tabs/tab-common';
+import {dispatchTabLoaded, type TabCommon} from '@/src/components/common/tabs/tab-common';
 import type {InsightBindings} from '@/src/components/insight/atomic-insight-interface/atomic-insight-interface';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
@@ -148,9 +142,7 @@ export class AtomicInsightTab
     if (!tablist) {
       return;
     }
-    const tabs = Array.from(
-      tablist.querySelectorAll<HTMLElement>('[role="tab"]')
-    );
+    const tabs = Array.from(tablist.querySelectorAll<HTMLElement>('[role="tab"]'));
     const currentIndex = tabs.indexOf(this);
     if (currentIndex === -1) {
       return;

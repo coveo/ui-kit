@@ -1,8 +1,5 @@
 import {describe, it, expect, beforeEach, vi} from 'vitest';
-import {
-  createTestEngine,
-  createMockSearchResults,
-} from '@/src/test/test-utils.js';
+import {createTestEngine, createMockSearchResults} from '@/src/test/test-utils.js';
 import {Engine, getFullEngine} from '@/src/internal/engine/index.js';
 import {getHandleInternals} from '@/src/internal/utils/index.js';
 import {getOrCreateResultsActions} from '@/src/internal/features/result-list/index.js';
@@ -45,9 +42,7 @@ describe('buildResultListController', () => {
       fullEngine.mutate(actions.setResultsFromResponse(mockResults));
 
       expect(controller.state.results).toHaveLength(3);
-      expect(controller.state.results[0].uniqueId).toBe(
-        mockResults[0].uniqueId
-      );
+      expect(controller.state.results[0].uniqueId).toBe(mockResults[0].uniqueId);
       expect(controller.state.results[0].title).toBe(mockResults[0].title);
     });
   });
@@ -64,9 +59,7 @@ describe('buildResultListController', () => {
       const fullEngine = getFullEngine(engine);
 
       controller.subscribe(callback);
-      fullEngine.mutate(
-        actions.setResultsFromResponse(createMockSearchResults(1))
-      );
+      fullEngine.mutate(actions.setResultsFromResponse(createMockSearchResults(1)));
 
       expect(callback).toHaveBeenCalledTimes(1);
     });
@@ -82,12 +75,8 @@ describe('buildResultListController', () => {
       const fullEngine = getFullEngine(engine);
 
       controller.subscribe(callback);
-      fullEngine.mutate(
-        actions.setResultsFromResponse(createMockSearchResults(1))
-      );
-      fullEngine.mutate(
-        actions.setResultsFromResponse(createMockSearchResults(3))
-      );
+      fullEngine.mutate(actions.setResultsFromResponse(createMockSearchResults(1)));
+      fullEngine.mutate(actions.setResultsFromResponse(createMockSearchResults(3)));
       fullEngine.mutate(actions.setResultsFromResponse([]));
 
       expect(callback).toHaveBeenCalledTimes(3);

@@ -11,20 +11,16 @@ const meta: Meta = {
     const wrapper = document.createElement('div');
     wrapper.className = 'm-0 p-0';
 
-    const element = document.createElement(
-      'atomic-generated-answer-thread-item'
-    ) as HTMLElement & Record<string, unknown>;
+    const element = document.createElement('atomic-generated-answer-thread-item') as HTMLElement &
+      Record<string, unknown>;
     element.title = args.title;
-    element.disableCollapse =
-      args.disableCollapse ?? args['disable-collapse'] ?? false;
+    element.disableCollapse = args.disableCollapse ?? args['disable-collapse'] ?? false;
     element.hideLine = args.hideLine ?? args['hide-line'] ?? false;
     element.isExpanded = args.isExpanded ?? args['is-expanded'] ?? false;
-    element.showTimelineDot =
-      args.showTimelineDot ?? args['show-timeline-dot'] ?? true;
+    element.showTimelineDot = args.showTimelineDot ?? args['show-timeline-dot'] ?? true;
 
     const content = document.createElement('p');
-    content.textContent =
-      'Follow-up guidance and context for this generated answer thread item.';
+    content.textContent = 'Follow-up guidance and context for this generated answer thread item.';
     content.className = 'm-0 text-sm';
 
     element.appendChild(content);

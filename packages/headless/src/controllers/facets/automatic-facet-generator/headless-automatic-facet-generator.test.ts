@@ -3,10 +3,7 @@ import {setOptions} from '../../../features/facets/automatic-facet-set/automatic
 import {NUMBER_OF_VALUE_DEFAULT} from '../../../features/facets/automatic-facet-set/automatic-facet-set-constants.js';
 import {automaticFacetSetReducer as automaticFacetSet} from '../../../features/facets/automatic-facet-set/automatic-facet-set-slice.js';
 import {searchReducer as search} from '../../../features/search/search-slice.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../../test/mock-engine-v2.js';
 import {createMockState} from '../../../test/mock-state.js';
 import {
   type AutomaticFacetGenerator,
@@ -15,9 +12,7 @@ import {
   buildAutomaticFacetGenerator,
 } from './headless-automatic-facet-generator.js';
 
-vi.mock(
-  '../../../features/facets/automatic-facet-set/automatic-facet-set-actions'
-);
+vi.mock('../../../features/facets/automatic-facet-set/automatic-facet-set-actions');
 
 describe('automatic facets', () => {
   let engine: MockedSearchEngine;

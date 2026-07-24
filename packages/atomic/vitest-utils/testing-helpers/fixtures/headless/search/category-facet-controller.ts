@@ -1,8 +1,4 @@
-import type {
-  CategoryFacet,
-  CategoryFacetState,
-  CategoryFacetValue,
-} from '@coveo/headless';
+import type {CategoryFacet, CategoryFacetState, CategoryFacetValue} from '@coveo/headless';
 import {vi} from 'vitest';
 import {genericSubscribe} from '../common';
 

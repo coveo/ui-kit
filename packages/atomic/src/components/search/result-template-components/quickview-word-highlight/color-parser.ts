@@ -4,8 +4,7 @@ import {hsvToRgb, rgbToHsv} from '@/src/utils/color-utils';
  * @internal
  */
 export class ColorParser {
-  private static readonly REGEX =
-    /\s*rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)/i;
+  private static readonly REGEX = /\s*rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)/i;
 
   private red: number = 255;
   private green: number = 255;

@@ -19,9 +19,9 @@ export type {BreadcrumbManager, BreadcrumbManagerState};
  *
  * @returns The `BreadcrumbManager` controller definition.
  */
-export function defineBreadcrumbManager<
-  TOptions extends ControllerDefinitionOption | undefined,
->(options?: TOptions) {
+export function defineBreadcrumbManager<TOptions extends ControllerDefinitionOption | undefined>(
+  options?: TOptions
+) {
   ensureAtLeastOneSolutionType(options);
   return {
     listing: true,

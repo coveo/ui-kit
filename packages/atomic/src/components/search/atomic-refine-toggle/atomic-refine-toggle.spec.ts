@@ -48,9 +48,7 @@ describe('atomic-refine-toggle', () => {
     vi.mocked(buildSearchStatus).mockReturnValue(mockedSearchStatus);
 
     // Mock controllers used by atomic-refine-modal (which is dynamically created)
-    vi.mocked(buildBreadcrumbManager).mockReturnValue(
-      buildFakeBreadcrumbManager()
-    );
+    vi.mocked(buildBreadcrumbManager).mockReturnValue(buildFakeBreadcrumbManager());
     vi.mocked(buildSort).mockReturnValue(buildFakeSort());
     vi.mocked(buildQuerySummary).mockReturnValue(buildFakeSummary());
     vi.mocked(buildFacetManager).mockReturnValue(buildFakeFacetManager());

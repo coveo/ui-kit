@@ -7,9 +7,7 @@ import {getPipelineInitialState} from './pipeline-state.js';
 
 describe('pipeline slice', () => {
   it('should have initial state', () => {
-    expect(pipelineReducer(undefined, {type: 'randomAction'})).toEqual(
-      getPipelineInitialState()
-    );
+    expect(pipelineReducer(undefined, {type: 'randomAction'})).toEqual(getPipelineInitialState());
   });
 
   it('allows to set a pipeline', () => {
@@ -17,9 +15,7 @@ describe('pipeline slice', () => {
   });
 
   it('allows to set a pipeline through configuration', () => {
-    expect(
-      pipelineReducer('foo', updateSearchConfiguration({pipeline: 'bar'}))
-    ).toEqual('bar');
+    expect(pipelineReducer('foo', updateSearchConfiguration({pipeline: 'bar'}))).toEqual('bar');
   });
 
   it('allows to restore a pipeline on history change', () => {
@@ -29,10 +25,7 @@ describe('pipeline slice', () => {
       pipeline: 'bar',
     };
 
-    const nextState = pipelineReducer(
-      state,
-      change.fulfilled(historyChange, '')
-    );
+    const nextState = pipelineReducer(state, change.fulfilled(historyChange, ''));
 
     expect(nextState).toEqual('bar');
   });

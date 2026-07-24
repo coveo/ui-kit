@@ -1,11 +1,6 @@
-import type {
-  QuestionAnswer,
-  QuestionsAnswers,
-} from '../api/search/search/question-answering.js';
+import type {QuestionAnswer, QuestionsAnswers} from '../api/search/search/question-answering.js';
 
-export function buildMockQuestionAnswer(
-  config: Partial<QuestionAnswer> = {}
-): QuestionAnswer {
+export function buildMockQuestionAnswer(config: Partial<QuestionAnswer> = {}): QuestionAnswer {
   return {
     answerSnippet: '',
     documentId: {

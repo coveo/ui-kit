@@ -3,10 +3,7 @@ import {
   logClearRecentQueries,
   logRecentQueryClick,
 } from '../../../features/recent-queries/recent-queries-insight-analytics-actions.js';
-import {
-  buildMockInsightEngine,
-  type MockedInsightEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockInsightEngine, type MockedInsightEngine} from '../../../test/mock-engine-v2.js';
 import {buildMockInsightState} from '../../../test/mock-insight-state.js';
 import {
   buildCoreRecentQueriesList,
@@ -15,9 +12,7 @@ import {
 import {buildRecentQueriesList} from './headless-insight-recent-queries-list.js';
 
 vi.mock('../../../features/insight-search/insight-search-actions.js');
-vi.mock(
-  '../../../features/recent-queries/recent-queries-insight-analytics-actions'
-);
+vi.mock('../../../features/recent-queries/recent-queries-insight-analytics-actions');
 vi.mock('../../core/recent-queries-list/headless-core-recent-queries-list.js');
 
 describe('insight recent queries list', () => {

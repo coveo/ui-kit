@@ -1,7 +1,4 @@
-import type {
-  GeneratedAnswerCitation,
-  InteractiveCitation,
-} from '@coveo/headless';
+import type {GeneratedAnswerCitation, InteractiveCitation} from '@coveo/headless';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import i18next, {type i18n} from 'i18next';
 import {html} from 'lit';
@@ -26,9 +23,7 @@ async function createI18n(): Promise<i18n> {
   return instance;
 }
 
-function createGeneratedAnswer(
-  overrides: Partial<GeneratedAnswer>
-): GeneratedAnswer {
+function createGeneratedAnswer(overrides: Partial<GeneratedAnswer>): GeneratedAnswer {
   return {
     question: 'How do I reset my password?',
     isLoading: false,

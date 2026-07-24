@@ -59,16 +59,8 @@ export class AtomicFieldCondition
 
   private get conditions(): ResultTemplateCondition[] {
     return [
-      ...makeDefinedConditions(
-        this.ifDefined,
-        this.ifNotDefined,
-        ResultTemplatesHelpers
-      ),
-      ...makeMatchConditions(
-        this.mustMatch,
-        this.mustNotMatch,
-        ResultTemplatesHelpers
-      ),
+      ...makeDefinedConditions(this.ifDefined, this.ifNotDefined, ResultTemplatesHelpers),
+      ...makeMatchConditions(this.mustMatch, this.mustNotMatch, ResultTemplatesHelpers),
     ];
   }
 

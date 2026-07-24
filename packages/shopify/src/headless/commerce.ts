@@ -1,7 +1,4 @@
-import {
-  buildCommerceEngine,
-  type CommerceEngineOptions,
-} from '@coveo/headless/commerce';
+import {buildCommerceEngine, type CommerceEngineOptions} from '@coveo/headless/commerce';
 import {COVEO_SHOPIFY_CONFIG_KEY} from '../constants';
 import type {CoveoShopifyOptions} from '../types';
 import {publishCustomShopifyEvent} from '../utilities/shopify';

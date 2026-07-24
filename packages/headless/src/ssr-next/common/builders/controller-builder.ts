@@ -9,9 +9,7 @@ import type {
  * Builder class for creating controllers from definitions
  */
 export class ControllerBuilder<
-  TDefinition extends Partial<
-    BaseControllerDefinitionWithoutProps<TEngine, TController>
-  > &
+  TDefinition extends Partial<BaseControllerDefinitionWithoutProps<TEngine, TController>> &
     Partial<BaseControllerDefinitionWithProps<TEngine, TController, TProps>>,
   TEngine extends CoreEngine | CoreEngineNext,
   TProps,
@@ -34,10 +32,7 @@ export class ControllerBuilder<
   }
 
   public build(): TController {
-    if (
-      'build' in this._definition &&
-      typeof this._definition.build === 'function'
-    ) {
+    if ('build' in this._definition && typeof this._definition.build === 'function') {
       return this.buildWithoutProps();
     }
     if (
@@ -46,9 +41,7 @@ export class ControllerBuilder<
     ) {
       return this.buildWithProps();
     }
-    throw new Error(
-      'Controller definition must have a build or buildWithProps method.'
-    );
+    throw new Error('Controller definition must have a build or buildWithProps method.');
   }
 
   private buildWithoutProps(): TController {
@@ -60,27 +53,19 @@ export class ControllerBuilder<
 
   private buildWithProps(): TController {
     const buildWithPropsFn = this._definition.buildWithProps!;
-    const controller = buildWithPropsFn(
-      this._engine,
-      this._props,
-      ...this._additionalArgs
-    );
+    const controller = buildWithPropsFn(this._engine, this._props, ...this._additionalArgs);
 
-    const controllerWithInitialState = Object.create(
-      Object.getPrototypeOf(controller),
-      {
-        ...Object.getOwnPropertyDescriptors(controller),
-        initialState: {
-          value: controller.state,
-          writable: false,
-          enumerable: true,
-          configurable: false,
-        },
-      }
-    );
+    const controllerWithInitialState = Object.create(Object.getPrototypeOf(controller), {
+      ...Object.getOwnPropertyDescriptors(controller),
+      initialState: {
+        value: controller.state,
+        writable: false,
+        enumerable: true,
+        configurable: false,
+      },
+    });
 
-    controllerWithInitialState.subscribe =
-      controller.subscribe.bind(controller);
+    controllerWithInitialState.subscribe = controller.subscribe.bind(controller);
 
     return controllerWithInitialState as TController;
   }

@@ -17,10 +17,7 @@ import {facetSetReducer as facetSet} from '../../../../features/facets/facet-set
 import type {FacetRequest} from '../../../../features/facets/facet-set/interfaces/request.js';
 import type {FacetValue} from '../../../../features/facets/facet-set/interfaces/response.js';
 import type {SearchAppState} from '../../../../state/search-app-state.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../../../test/mock-engine-v2.js';
 import {buildMockFacetRequest} from '../../../../test/mock-facet-request.js';
 import {buildMockFacetResponse} from '../../../../test/mock-facet-response.js';
 import {buildMockFacetSearch} from '../../../../test/mock-facet-search.js';
@@ -28,11 +25,7 @@ import {buildMockFacetSlice} from '../../../../test/mock-facet-slice.js';
 import {buildMockFacetValue} from '../../../../test/mock-facet-value.js';
 import {createMockState} from '../../../../test/mock-state.js';
 import * as FacetIdDeterminor from '../_common/facet-id-determinor.js';
-import {
-  buildCoreFacet,
-  type CoreFacet,
-  type FacetOptions,
-} from './headless-core-facet.js';
+import {buildCoreFacet, type CoreFacet, type FacetOptions} from './headless-core-facet.js';
 
 vi.mock('../../../../features/facets/facet-set/facet-set-actions');
 vi.mock('../../../../features/facet-options/facet-options-actions');
@@ -93,10 +86,7 @@ describe('facet', () => {
 
     initFacet();
 
-    expect(FacetIdDeterminor.determineFacetId).toHaveBeenCalledWith(
-      engine,
-      options
-    );
+    expect(FacetIdDeterminor.determineFacetId).toHaveBeenCalledWith(engine, options);
   });
 
   it('registers a facet with the passed options and the default values of unspecified options', () => {
@@ -167,9 +157,7 @@ describe('facet', () => {
   function testCommonToggleSingleSelect(facetValue: () => FacetValue) {
     it('dispatches a #toggleSelect action with the passed facet value', () => {
       facet.toggleSingleSelect(facetValue());
-      expect(executeToggleFacetSelect).toHaveBeenCalledWith(
-        expect.objectContaining({facetId})
-      );
+      expect(executeToggleFacetSelect).toHaveBeenCalledWith(expect.objectContaining({facetId}));
     });
   }
 
@@ -185,16 +173,13 @@ describe('facet', () => {
   });
 
   describe('#toggleSingleSelect when the value state is not "idle"', () => {
-    const facetValue = () =>
-      buildMockFacetValue({value: 'TED', state: 'selected'});
+    const facetValue = () => buildMockFacetValue({value: 'TED', state: 'selected'});
 
     testCommonToggleSingleSelect(facetValue);
 
     it('does not dispatch a #deselectAllFacetValues action', () => {
       facet.toggleSingleSelect(facetValue());
-      expect(deselectAllFacetValues).not.toHaveBeenCalledWith(
-        expect.objectContaining({facetId})
-      );
+      expect(deselectAllFacetValues).not.toHaveBeenCalledWith(expect.objectContaining({facetId}));
     });
   });
 

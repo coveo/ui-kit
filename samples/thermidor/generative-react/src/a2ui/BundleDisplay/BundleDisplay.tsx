@@ -20,13 +20,9 @@ interface BundleTier {
   slots: BundleSlot[];
 }
 
-export function A2UIBundleDisplay({
-  surface,
-  allSurfaces,
-}: A2UIBundleDisplayProps) {
+export function A2UIBundleDisplay({surface, allSurfaces}: A2UIBundleDisplayProps) {
   const title =
-    (surface.componentProps.title as {literalString?: string})?.literalString ??
-    'Bundle';
+    (surface.componentProps.title as {literalString?: string})?.literalString ?? 'Bundle';
 
   const bundles = (surface.componentProps.bundles as BundleTier[]) ?? [];
   const [activeTier, setActiveTier] = useState(bundles[0]?.bundleId ?? '');
@@ -57,11 +53,8 @@ export function A2UIBundleDisplay({
           <p className={styles.description}>{activeBundle.description}</p>
           <div className={styles.slots}>
             {activeBundle.slots.map((slot) => {
-              const refSurface = allSurfaces.find(
-                (s) => s.surfaceId === slot.surfaceRef
-              );
-              const items =
-                (refSurface?.data.items as Record<string, unknown>[]) ?? [];
+              const refSurface = allSurfaces.find((s) => s.surfaceId === slot.surfaceRef);
+              const items = (refSurface?.data.items as Record<string, unknown>[]) ?? [];
               const item = items[0];
               return (
                 <div key={slot.surfaceRef} className={styles.slot}>

@@ -1,11 +1,4 @@
-import {
-  ArrayValue,
-  BooleanValue,
-  NumberValue,
-  RecordValue,
-  StringValue,
-  Value,
-} from '@coveo/bueno';
+import {ArrayValue, BooleanValue, NumberValue, RecordValue, StringValue, Value} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import {parseDate} from '../../../../api/search/date/date-format.js';
 import {
@@ -149,9 +142,7 @@ const dateFacetRegistrationOptionsDefinition = {
 };
 
 function getAbsoluteDate(date: string) {
-  return isRelativeDateFormat(date)
-    ? formatRelativeDateForSearchApi(date)
-    : date;
+  return isRelativeDateFormat(date) ? formatRelativeDateForSearchApi(date) : date;
 }
 
 export function validateManualDateRanges(
@@ -163,9 +154,7 @@ export function validateManualDateRanges(
 
   options.currentValues.forEach((value) => {
     const {start, end} = buildDateRange(value);
-    if (
-      parseDate(getAbsoluteDate(start)).isAfter(parseDate(getAbsoluteDate(end)))
-    ) {
+    if (parseDate(getAbsoluteDate(start)).isAfter(parseDate(getAbsoluteDate(end)))) {
       throw new Error(
         `The start value is greater than the end value for the date range ${value.start} to ${value.end}`
       );

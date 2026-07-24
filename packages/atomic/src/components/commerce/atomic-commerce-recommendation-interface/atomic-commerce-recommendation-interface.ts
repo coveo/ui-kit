@@ -25,10 +25,7 @@ import {
   type BaseAtomicInterface,
   InterfaceController,
 } from '../../common/interface/interface-controller.js';
-import {
-  type CommerceRecommendationStore,
-  createCommerceRecommendationStore,
-} from './store.js';
+import {type CommerceRecommendationStore, createCommerceRecommendationStore} from './store.js';
 
 export type CommerceBindings = CommonBindings<
   CommerceEngine,
@@ -149,15 +146,9 @@ export class AtomicCommerceRecommendationInterface
 
   public connectedCallback() {
     super.connectedCallback();
-    this.addEventListener(
-      'atomic/initializeComponent',
-      this.handleInitialization as EventListener
-    );
+    this.addEventListener('atomic/initializeComponent', this.handleInitialization as EventListener);
 
-    this.addEventListener(
-      'atomic/scrollToTop',
-      this.scrollToTop as EventListener
-    );
+    this.addEventListener('atomic/scrollToTop', this.scrollToTop as EventListener);
   }
 
   /**
@@ -195,15 +186,8 @@ export class AtomicCommerceRecommendationInterface
    * recommendationInterface.updateLocale('fr', 'CA', 'CAD');
    * ```
    */
-  public updateLocale(
-    language?: string,
-    country?: string,
-    currency?: CurrencyCodeISO4217
-  ): void {
-    if (
-      !this.interfaceController.engineIsCreated(this.engine) ||
-      !this.context
-    ) {
+  public updateLocale(language?: string, country?: string, currency?: CurrencyCodeISO4217): void {
+    if (!this.interfaceController.engineIsCreated(this.engine) || !this.context) {
       return;
     }
 
@@ -235,11 +219,7 @@ export class AtomicCommerceRecommendationInterface
   // TODO - (v4) KIT-4365: Remove.
   @watch('language')
   public async updateLanguage() {
-    if (
-      !this.interfaceController.engineIsCreated(this.engine) ||
-      !this.language ||
-      !this.context
-    ) {
+    if (!this.interfaceController.engineIsCreated(this.engine) || !this.language || !this.context) {
       return;
     }
 
@@ -259,10 +239,7 @@ export class AtomicCommerceRecommendationInterface
       'atomic/initializeComponent',
       this.handleInitialization as EventListener
     );
-    this.removeEventListener(
-      'atomic/scrollToTop',
-      this.scrollToTop as EventListener
-    );
+    this.removeEventListener('atomic/scrollToTop', this.scrollToTop as EventListener);
   }
 
   @errorGuard()
@@ -287,10 +264,7 @@ export class AtomicCommerceRecommendationInterface
   }
 
   private async internalInitialization(initEngine: () => void) {
-    await Promise.all([
-      this.interfaceController.onInitialization(initEngine),
-      this.i18Initialized,
-    ]);
+    await Promise.all([this.interfaceController.onInitialization(initEngine), this.i18Initialized]);
     this.initContext();
     this.updateLanguage();
     this.bindings = this.getBindings();

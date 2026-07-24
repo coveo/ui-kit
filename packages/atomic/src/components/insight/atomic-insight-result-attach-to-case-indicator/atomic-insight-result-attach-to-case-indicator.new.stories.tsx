@@ -1,7 +1,4 @@
-import {
-  loadAttachedResultsActions,
-  loadCaseContextActions,
-} from '@coveo/headless/insight';
+import {loadAttachedResultsActions, loadCaseContextActions} from '@coveo/headless/insight';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html, unsafeStatic} from 'lit/static-html.js';
@@ -114,10 +111,9 @@ export const Default: Story = {
     const {canvasElement, step} = context;
     await initializeInsightInterface(context);
 
-    const insightInterface =
-      canvasElement.querySelector<AtomicInsightInterface>(
-        'atomic-insight-interface'
-      );
+    const insightInterface = canvasElement.querySelector<AtomicInsightInterface>(
+      'atomic-insight-interface'
+    );
     const engine = insightInterface!.engine!;
 
     await step('Set case context', async () => {

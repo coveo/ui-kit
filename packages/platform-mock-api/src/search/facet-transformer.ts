@@ -136,18 +136,7 @@ const FACET_VALUE_POOL: Record<string, string[]> = {
     'Training Materials',
     'Product Updates',
   ],
-  year: [
-    '2025',
-    '2024',
-    '2023',
-    '2022',
-    '2021',
-    '2020',
-    '2019',
-    '2018',
-    '2017',
-    '2016',
-  ],
+  year: ['2025', '2024', '2023', '2022', '2021', '2020', '2019', '2018', '2017', '2016'],
   month: [
     'April',
     'August',
@@ -230,18 +219,7 @@ const FACET_VALUE_POOL: Record<string, string[]> = {
     'Dior',
     'Givenchy',
   ],
-  filetype: [
-    'PDF',
-    'HTML',
-    'DOC',
-    'XLS',
-    'PPT',
-    'TXT',
-    'CSV',
-    'XML',
-    'JSON',
-    'ZIP',
-  ],
+  filetype: ['PDF', 'HTML', 'DOC', 'XLS', 'PPT', 'TXT', 'CSV', 'XML', 'JSON', 'ZIP'],
   language: [
     'English',
     'French',
@@ -262,14 +240,11 @@ function generateGenericValues(field: string, count: number): string[] {
   return values;
 }
 
-function normalizeSortCriteria(
-  raw: string | {type: string; order: string}
-): string {
+function normalizeSortCriteria(raw: string | {type: string; order: string}): string {
   if (typeof raw === 'string') return raw;
   if (raw.order === 'descending') {
     if (raw.type === 'alphanumeric') return 'alphanumericDescending';
-    if (raw.type === 'alphanumericNatural')
-      return 'alphanumericNaturalDescending';
+    if (raw.type === 'alphanumericNatural') return 'alphanumericNaturalDescending';
   }
   return raw.type || 'automatic';
 }
@@ -306,28 +281,16 @@ function sortFacetValues(
       remaining = remaining.sort((a, b) => b.value.localeCompare(a.value));
       break;
     case 'alphanumericNatural':
-      remaining = orderBy(
-        remaining,
-        [(v: (typeof remaining)[0]) => v.value],
-        ['asc']
-      );
+      remaining = orderBy(remaining, [(v: (typeof remaining)[0]) => v.value], ['asc']);
       break;
     case 'alphanumericNaturalDescending':
-      remaining = orderBy(
-        remaining,
-        [(v: (typeof remaining)[0]) => v.value],
-        ['desc']
-      );
+      remaining = orderBy(remaining, [(v: (typeof remaining)[0]) => v.value], ['desc']);
       break;
     case 'occurrences':
-      remaining = remaining.sort(
-        (a, b) => b.numberOfResults - a.numberOfResults
-      );
+      remaining = remaining.sort((a, b) => b.numberOfResults - a.numberOfResults);
       break;
     case 'automatic':
-      remaining = remaining.sort(
-        (a, b) => b.numberOfResults - a.numberOfResults
-      );
+      remaining = remaining.sort((a, b) => b.numberOfResults - a.numberOfResults);
       break;
     default:
       break;
@@ -354,15 +317,13 @@ function buildFacetResponse(facetRequest: FacetRequest) {
     .filter((v) => v.state === 'selected' || v.state === 'excluded')
     .map((v) => v.value);
 
-  let values = pool
-    .slice(0, Math.max(numberOfValues, pool.length))
-    .map((value, i) => ({
-      value,
-      state: (selectedValues.includes(value)
-        ? facetValues.find((cv) => cv.value === value)?.state || 'idle'
-        : 'idle') as 'idle' | 'selected' | 'excluded',
-      numberOfResults: Math.max(1000 - i * 30, 10),
-    }));
+  let values = pool.slice(0, Math.max(numberOfValues, pool.length)).map((value, i) => ({
+    value,
+    state: (selectedValues.includes(value)
+      ? facetValues.find((cv) => cv.value === value)?.state || 'idle'
+      : 'idle') as 'idle' | 'selected' | 'excluded',
+    numberOfResults: Math.max(1000 - i * 30, 10),
+  }));
 
   values = sortFacetValues(values, sortCriteria, customSort);
 
@@ -387,10 +348,7 @@ function buildNumericFacetResponse(facetRequest: NumericFacetRequest) {
     generateAutomaticRanges,
   } = facetRequest;
 
-  if (
-    generateAutomaticRanges &&
-    (!currentValues || currentValues.length === 0)
-  ) {
+  if (generateAutomaticRanges && (!currentValues || currentValues.length === 0)) {
     const values = [];
     for (let i = numberOfValues; i >= 1; i--) {
       values.push({
@@ -431,10 +389,7 @@ function buildNumericFacetResponse(facetRequest: NumericFacetRequest) {
  * Request transformer for the search endpoint that dynamically builds facet responses
  * based on the request body. Handles facet selections, sort criteria, show more, etc.
  */
-export const searchFacetTransformer: RequestTransformer<SearchResponse> = (
-  body,
-  response
-) => {
+export const searchFacetTransformer: RequestTransformer<SearchResponse> = (body, response) => {
   const requestBody = body as SearchRequestBody;
   const facets: unknown[] = [];
 
@@ -442,8 +397,7 @@ export const searchFacetTransformer: RequestTransformer<SearchResponse> = (
     for (const facetReq of requestBody.facets) {
       if (
         facetReq.type === 'numericalRange' ||
-        ('generateAutomaticRanges' in facetReq &&
-          facetReq.generateAutomaticRanges)
+        ('generateAutomaticRanges' in facetReq && facetReq.generateAutomaticRanges)
       ) {
         facets.push(buildNumericFacetResponse(facetReq as NumericFacetRequest));
       } else if (facetReq.type === 'specific' || !facetReq.type) {
@@ -462,24 +416,15 @@ export const searchFacetTransformer: RequestTransformer<SearchResponse> = (
  * Request transformer for the search facet search endpoint (/rest/search/v2/facet).
  * Returns matching values filtered by the search query.
  */
-export const searchFacetSearchTransformer: RequestTransformer<
-  FacetSearchResponse
-> = (body) => {
+export const searchFacetSearchTransformer: RequestTransformer<FacetSearchResponse> = (body) => {
   const requestBody = body as FacetSearchRequest;
-  const {
-    field,
-    numberOfValues = 10,
-    query = '',
-    currentValues = [],
-  } = requestBody;
+  const {field, numberOfValues = 10, query = '', currentValues = []} = requestBody;
   const pool = FACET_VALUE_POOL[field] || generateGenericValues(field, 40);
   const currentSet = new Set(currentValues);
 
   const cleanQuery = query.replace(/^\*|\*$/g, '').toLowerCase();
 
-  const filtered = pool.filter(
-    (v) => v.toLowerCase().includes(cleanQuery) && !currentSet.has(v)
-  );
+  const filtered = pool.filter((v) => v.toLowerCase().includes(cleanQuery) && !currentSet.has(v));
 
   const values = filtered.slice(0, numberOfValues).map((v, i) => ({
     displayValue: v,

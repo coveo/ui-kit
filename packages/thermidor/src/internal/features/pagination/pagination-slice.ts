@@ -19,8 +19,7 @@ export const initialPaginationState: PaginationState = {
 
 type PaginationSlice = ReturnType<typeof createPaginationSlice>;
 
-const CACHE_KEY: CacheKey<PaginationSlice> =
-  createCacheKey<PaginationSlice>('pagination/slice');
+const CACHE_KEY: CacheKey<PaginationSlice> = createCacheKey<PaginationSlice>('pagination/slice');
 
 export function createPaginationSlice(
   interfaceId: string,
@@ -50,9 +49,7 @@ export function createPaginationSlice(
           state.totalCount = payload.totalCount;
           return;
         }
-        const pagination = payload.pagination as
-          | Record<string, unknown>
-          | undefined;
+        const pagination = payload.pagination as Record<string, unknown> | undefined;
         if (typeof pagination?.totalEntries === 'number') {
           state.totalCount = pagination.totalEntries;
         }

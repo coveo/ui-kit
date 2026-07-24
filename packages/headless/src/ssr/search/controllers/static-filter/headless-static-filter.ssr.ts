@@ -20,9 +20,7 @@ export interface StaticFilterDefinition extends ControllerDefinitionWithoutProps
  * @param props - The configurable `StaticFilter` properties.
  * @returns The `StaticFilter` controller definition.
  * */
-export function defineStaticFilter(
-  props: StaticFilterProps
-): StaticFilterDefinition {
+export function defineStaticFilter(props: StaticFilterProps): StaticFilterDefinition {
   return {
     build: (engine) => buildStaticFilter(engine, props),
   };

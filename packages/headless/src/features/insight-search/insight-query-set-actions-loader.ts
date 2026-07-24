@@ -8,10 +8,7 @@ import {
   updateQuerySetQuery,
 } from '../query-set/query-set-actions.js';
 
-export type {
-  RegisterQuerySetQueryActionCreatorPayload,
-  UpdateQuerySetQueryActionCreatorPayload,
-};
+export type {RegisterQuerySetQueryActionCreatorPayload, UpdateQuerySetQueryActionCreatorPayload};
 
 /**
  * The query set action creators.
@@ -50,9 +47,7 @@ export interface QuerySetActionCreators {
  * @group Actions
  * @category QuerySet
  */
-export function loadQuerySetActions(
-  engine: InsightEngine
-): QuerySetActionCreators {
+export function loadQuerySetActions(engine: InsightEngine): QuerySetActionCreators {
   engine.addReducers({querySet});
 
   return {

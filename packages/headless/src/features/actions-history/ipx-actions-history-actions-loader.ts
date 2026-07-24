@@ -7,14 +7,10 @@ import {addPageViewEntryInActionsHistory} from './ipx-actions-history-actions.js
  * @internal
  */
 export interface IPXActionsHistoryActionCreators {
-  addPageViewEntryInActionsHistory(
-    itemPermanentId: string
-  ): AsyncThunkAction<void, string, {}>;
+  addPageViewEntryInActionsHistory(itemPermanentId: string): AsyncThunkAction<void, string, {}>;
 }
 
-export function loadIPXActionsHistoryActions(
-  engine: CoreEngine
-): IPXActionsHistoryActionCreators {
+export function loadIPXActionsHistoryActions(engine: CoreEngine): IPXActionsHistoryActionCreators {
   engine.addReducers({});
 
   return {

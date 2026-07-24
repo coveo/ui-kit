@@ -37,25 +37,21 @@ export class TextParser {
     // Otherwise try to find a match between the highlight and the stemming keyword expansions
     // If nothing is found (which should not normally happen...), simply return the highlight keyword as is.
 
-    const found = Object.keys(this.stemmingInfoFromIndex).find(
-      (originalTerm) => {
-        const originalTermMatch =
-          originalTerm.toLowerCase() === highlight.toLowerCase();
-        if (originalTermMatch) {
-          return true;
-        }
-        const stemmingExpansions = this.stemmingInfoFromIndex[originalTerm];
-        if (!stemmingExpansions) {
-          return false;
-        }
-
-        const stemmingExpansionMatch = stemmingExpansions.find(
-          (stemmingExpansion) =>
-            stemmingExpansion.toLowerCase() === highlight.toLowerCase()
-        );
-        return stemmingExpansionMatch;
+    const found = Object.keys(this.stemmingInfoFromIndex).find((originalTerm) => {
+      const originalTermMatch = originalTerm.toLowerCase() === highlight.toLowerCase();
+      if (originalTermMatch) {
+        return true;
       }
-    );
+      const stemmingExpansions = this.stemmingInfoFromIndex[originalTerm];
+      if (!stemmingExpansions) {
+        return false;
+      }
+
+      const stemmingExpansionMatch = stemmingExpansions.find(
+        (stemmingExpansion) => stemmingExpansion.toLowerCase() === highlight.toLowerCase()
+      );
+      return stemmingExpansionMatch;
+    });
     return found || highlight;
   }
 }

@@ -68,11 +68,7 @@ export class Pager extends LitElement {
             </button>
           `
         )}
-        <button
-          type="button"
-          ?disabled=${!hasNextPage}
-          @click=${() => this.controller.nextPage()}
-        >
+        <button type="button" ?disabled=${!hasNextPage} @click=${() => this.controller.nextPage()}>
           Next ›
         </button>
       </div>

@@ -95,19 +95,13 @@ export class AtomicResultImage
   }
 
   public get url() {
-    const value = ResultTemplatesHelpers.getResultProperty(
-      this.result,
-      this.field
-    );
+    const value = ResultTemplatesHelpers.getResultProperty(this.result, this.field);
     return Array.isArray(value) ? value[0] : value;
   }
 
   private get altText(): string {
     if (this.imageAltField) {
-      const value = ResultTemplatesHelpers.getResultProperty(
-        this.result,
-        this.imageAltField
-      );
+      const value = ResultTemplatesHelpers.getResultProperty(this.result, this.imageAltField);
 
       if (Array.isArray(value) && typeof value[0] === 'string') {
         return value[0];

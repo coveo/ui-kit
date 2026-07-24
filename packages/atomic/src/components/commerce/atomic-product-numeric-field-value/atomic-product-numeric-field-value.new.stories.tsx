@@ -38,10 +38,7 @@ const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
   },
   includeCodeRoot: false,
 });
-const {decorator: commerceProductListDecorator} = wrapInCommerceProductList(
-  'list',
-  false
-);
+const {decorator: commerceProductListDecorator} = wrapInCommerceProductList('list', false);
 const {decorator: productTemplateDecorator} = wrapInProductTemplate();
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-product-numeric-field-value',
@@ -53,11 +50,7 @@ const meta: Meta = {
   title: 'Commerce/Product Numeric Field Value',
   id: 'atomic-product-numeric-field-value',
   render: (args) => template(args),
-  decorators: [
-    productTemplateDecorator,
-    commerceProductListDecorator,
-    commerceInterfaceDecorator,
-  ],
+  decorators: [productTemplateDecorator, commerceProductListDecorator, commerceInterfaceDecorator],
   parameters: {
     ...parameters,
     msw: {handlers: [...commerceApiHarness.handlers]},

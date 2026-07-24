@@ -41,46 +41,24 @@ function App() {
         <span className="pageTitle">{page} example</span>
         <ul>
           <HeaderLink page={LIST_PAGE} currentPage={page} setPage={setPage} />
-          <HeaderLink
-            page={FOLDED_LIST_PAGE}
-            currentPage={page}
-            setPage={setPage}
-          />
-          <HeaderLink
-            page={INSTANT_RESULTS_PAGE}
-            currentPage={page}
-            setPage={setPage}
-          />
-          <HeaderLink
-            page={TABLE_RESULT_LIST_PAGE}
-            currentPage={page}
-            setPage={setPage}
-          />
+          <HeaderLink page={FOLDED_LIST_PAGE} currentPage={page} setPage={setPage} />
+          <HeaderLink page={INSTANT_RESULTS_PAGE} currentPage={page} setPage={setPage} />
+          <HeaderLink page={TABLE_RESULT_LIST_PAGE} currentPage={page} setPage={setPage} />
           <HeaderLink page={RECS_PAGE} currentPage={page} setPage={setPage} />
-          <HeaderLink
-            page={COMMERCE_SEARCH_PAGE}
-            currentPage={page}
-            setPage={setPage}
-          />
+          <HeaderLink page={COMMERCE_SEARCH_PAGE} currentPage={page} setPage={setPage} />
           <HeaderLink
             page={COMMERCE_TABLE_PRODUCT_LIST_PAGE}
             currentPage={page}
             setPage={setPage}
           />
-          <HeaderLink
-            page={COMMERCE_RECOMMENDATIONS_PAGE}
-            currentPage={page}
-            setPage={setPage}
-          />
+          <HeaderLink page={COMMERCE_RECOMMENDATIONS_PAGE} currentPage={page} setPage={setPage} />
         </ul>
       </header>
       {page === LIST_PAGE && <ResultListPage />}
       {page === FOLDED_LIST_PAGE && <FoldedResultListPage />}
       {page === INSTANT_RESULTS_PAGE && <InstantResultsPage />}
       {page === TABLE_RESULT_LIST_PAGE && <TableResultListPage />}
-      {page === COMMERCE_TABLE_PRODUCT_LIST_PAGE && (
-        <CommerceTableProductListPage />
-      )}
+      {page === COMMERCE_TABLE_PRODUCT_LIST_PAGE && <CommerceTableProductListPage />}
       {page === RECS_PAGE && <RecsPage />}
       {page === COMMERCE_SEARCH_PAGE && <CommerceSearchPage />}
       {page === COMMERCE_RECOMMENDATIONS_PAGE && <CommerceRecommendationPage />}

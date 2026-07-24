@@ -2,10 +2,7 @@ import {buildSearchResponse} from '../../../test/mock-commerce-search.js';
 import {emptyNextCorrection} from '../../did-you-mean/did-you-mean-state.js';
 import {executeSearch} from '../search/search-actions.js';
 import {didYouMeanReducer} from './did-you-mean-slice.js';
-import {
-  type DidYouMeanState,
-  getDidYouMeanInitialState,
-} from './did-you-mean-state.js';
+import {type DidYouMeanState, getDidYouMeanInitialState} from './did-you-mean-state.js';
 
 describe('did you mean slice', () => {
   let state: DidYouMeanState;
@@ -26,10 +23,9 @@ describe('did you mean slice', () => {
           },
         ],
       };
-      expect(
-        didYouMeanReducer(state, {type: executeSearch.pending.type})
-          .queryCorrection
-      ).toEqual(emptyNextCorrection());
+      expect(didYouMeanReducer(state, {type: executeSearch.pending.type}).queryCorrection).toEqual(
+        emptyNextCorrection()
+      );
     });
     it('should set #state.wasCorrectedTo to an empty string', () => {
       state.wasCorrectedTo = 'camara';

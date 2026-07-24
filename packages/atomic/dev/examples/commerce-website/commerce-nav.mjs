@@ -100,25 +100,15 @@ if (!isOnSearchPage()) {
 
   const standaloneSearchBox = document.createElement('search');
 
-  const atomicCommerceInterface = document.body.querySelector(
-    'atomic-commerce-interface'
-  );
+  const atomicCommerceInterface = document.body.querySelector('atomic-commerce-interface');
 
   if (atomicCommerceInterface) {
     standaloneSearchBox.innerHTML = standaloneSearchBoxHTML;
-    const atomicCommerceLayout = atomicCommerceInterface.querySelector(
-      'atomic-commerce-layout'
-    );
+    const atomicCommerceLayout = atomicCommerceInterface.querySelector('atomic-commerce-layout');
     if (atomicCommerceLayout) {
-      atomicCommerceLayout.insertAdjacentHTML(
-        'afterbegin',
-        standaloneSearchBoxHTML
-      );
+      atomicCommerceLayout.insertAdjacentHTML('afterbegin', standaloneSearchBoxHTML);
     } else {
-      atomicCommerceInterface.insertAdjacentElement(
-        'afterbegin',
-        standaloneSearchBox
-      );
+      atomicCommerceInterface.insertAdjacentElement('afterbegin', standaloneSearchBox);
     }
   } else {
     standaloneSearchBox.innerHTML = `
@@ -126,9 +116,7 @@ if (!isOnSearchPage()) {
         ${standaloneSearchBoxHTML}
       </atomic-commerce-interface>`;
 
-    document.body
-      .querySelector('main')
-      .insertAdjacentElement('afterbegin', standaloneSearchBox);
+    document.body.querySelector('main').insertAdjacentElement('afterbegin', standaloneSearchBox);
 
     const script = document.createElement('script');
     script.type = 'module';

@@ -71,21 +71,18 @@ describe('atomic-load-more-results', () => {
       })
     );
 
-    const {element} =
-      await renderInAtomicSearchInterface<AtomicLoadMoreResults>({
-        template: html`<atomic-load-more-results></atomic-load-more-results>`,
-        selector: 'atomic-load-more-results',
-        bindings: (bindings) => {
-          bindings.engine = mockedEngine;
-          bindings.store.state.resultList = {
-            focusOnNextNewResult: focusOnNextNewResultSpy,
-          } as unknown as (typeof bindings.store.state)['resultList'];
-          bindings.store.state.loadingFlags = isAppLoaded
-            ? []
-            : ['app-loading'];
-          return bindings;
-        },
-      });
+    const {element} = await renderInAtomicSearchInterface<AtomicLoadMoreResults>({
+      template: html`<atomic-load-more-results></atomic-load-more-results>`,
+      selector: 'atomic-load-more-results',
+      bindings: (bindings) => {
+        bindings.engine = mockedEngine;
+        bindings.store.state.resultList = {
+          focusOnNextNewResult: focusOnNextNewResultSpy,
+        } as unknown as (typeof bindings.store.state)['resultList'];
+        bindings.store.state.loadingFlags = isAppLoaded ? [] : ['app-loading'];
+        return bindings;
+      },
+    });
 
     appLoadedCallback(isAppLoaded);
 
@@ -105,8 +102,7 @@ describe('atomic-load-more-results', () => {
         return element.shadowRoot?.querySelector('[part="container"]');
       },
       parts: (element: AtomicLoadMoreResults) => {
-        const qs = (part: string) =>
-          element.shadowRoot?.querySelector(`[part="${part}"]`);
+        const qs = (part: string) => element.shadowRoot?.querySelector(`[part="${part}"]`);
         return {
           container: qs('container'),
           showingResults: qs('showing-results'),
@@ -141,9 +137,7 @@ describe('atomic-load-more-results', () => {
 
   it('should call #buildQuerySummary with engine', async () => {
     const {element} = await renderLoadMoreResults();
-    expect(buildQuerySummary).toHaveBeenCalledExactlyOnceWith(
-      element.bindings.engine
-    );
+    expect(buildQuerySummary).toHaveBeenCalledExactlyOnceWith(element.bindings.engine);
   });
 
   it('should call #buildResultList with engine', async () => {
@@ -193,9 +187,7 @@ describe('atomic-load-more-results', () => {
       });
 
       expect(showingResults).toBeInTheDocument();
-      expect(showingResults?.textContent?.trim()).toBe(
-        'Showing 1,234 of 1,234,567 results'
-      );
+      expect(showingResults?.textContent?.trim()).toBe('Showing 1,234 of 1,234,567 results');
     });
 
     it('should render a progress bar with the correct width', async () => {
@@ -205,9 +197,7 @@ describe('atomic-load-more-results', () => {
           totalNumberOfResults: 123,
         },
       });
-      const progressBarFill = progressBar?.querySelector(
-        '[part="progress-bar"] div'
-      );
+      const progressBarFill = progressBar?.querySelector('[part="progress-bar"] div');
 
       expect(progressBar).toBeInTheDocument();
       // Math.ceil(Math.min((12 / 123) * 100, 100)) = 10, so width will be 10%
@@ -248,8 +238,7 @@ describe('atomic-load-more-results', () => {
       });
 
       it('should call #focusOnNextNewResult', async () => {
-        const {loadMoreButton, focusOnNextNewResultSpy} =
-          await renderLoadMoreResults();
+        const {loadMoreButton, focusOnNextNewResultSpy} = await renderLoadMoreResults();
 
         await loadMoreButton.click();
 

@@ -17,9 +17,7 @@ describe('HiddenStateController', () => {
   let element: TestElement;
 
   beforeEach(async () => {
-    element = await fixture<TestElement>(
-      html`<test-hidden-state></test-hidden-state>`
-    );
+    element = await fixture<TestElement>(html`<test-hidden-state></test-hidden-state>`);
   });
 
   it('should have the empty state by default', () => {

@@ -19,19 +19,16 @@ vi.mock('../hooks/use-build-controller.js', () => ({
   ],
 }));
 
-vi.mock('./LandingPage.js', () => ({
+vi.mock('./LandingPage/LandingPage.js', () => ({
   LandingPage: (props: any) => (
     <div data-testid="landing-page">
-      <button
-        data-testid="submit-btn"
-        onClick={() => props.onSubmit('hello')}
-      />
+      <button data-testid="submit-btn" onClick={() => props.onSubmit('hello')} />
       <span data-testid="streaming">{String(props.isStreaming)}</span>
     </div>
   ),
 }));
 
-vi.mock('./SearchResultsPage.js', () => ({
+vi.mock('./SearchResultsPage/SearchResultsPage.js', () => ({
   SearchResultsPage: (props: any) => (
     <div data-testid="search-results-page">
       <span data-testid="use-case">{props.routedInterface?.useCase}</span>
@@ -83,9 +80,7 @@ describe('AppShell', () => {
     };
 
     mockConverseState = {
-      turns: [
-        makeTurn({id: 'turn-1', routedInterface: routedInterface as any}),
-      ],
+      turns: [makeTurn({id: 'turn-1', routedInterface: routedInterface as any})],
       activeTurn: undefined,
       isStreaming: false,
     };
@@ -146,9 +141,7 @@ describe('AppShell', () => {
     };
 
     mockConverseState = {
-      turns: [
-        makeTurn({id: 'turn-1', routedInterface: routedInterface1 as any}),
-      ],
+      turns: [makeTurn({id: 'turn-1', routedInterface: routedInterface1 as any})],
       activeTurn: undefined,
       isStreaming: false,
     };
@@ -186,9 +179,7 @@ describe('AppShell', () => {
     };
 
     mockConverseState = {
-      turns: [
-        makeTurn({id: 'turn-1', routedInterface: routedInterface as any}),
-      ],
+      turns: [makeTurn({id: 'turn-1', routedInterface: routedInterface as any})],
       activeTurn: undefined,
       isStreaming: false,
     };
@@ -237,9 +228,7 @@ describe('AppShell', () => {
     };
 
     mockConverseState = {
-      turns: [
-        makeTurn({id: 'turn-1', routedInterface: routedInterface as any}),
-      ],
+      turns: [makeTurn({id: 'turn-1', routedInterface: routedInterface as any})],
       activeTurn: undefined,
       isStreaming: false,
     };
@@ -276,9 +265,7 @@ describe('AppShell', () => {
     };
 
     mockConverseState = {
-      turns: [
-        makeTurn({id: 'turn-1', routedInterface: routedInterface as any}),
-      ],
+      turns: [makeTurn({id: 'turn-1', routedInterface: routedInterface as any})],
       activeTurn: undefined,
       isStreaming: false,
     };

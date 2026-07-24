@@ -14,10 +14,6 @@ export type AllFacetSections = FacetSection &
   DateFacetSection &
   CategoryFacetSection;
 
-export type AnyFacetSlice =
-  | FacetSlice
-  | NumericFacetSlice
-  | DateFacetSlice
-  | CategoryFacetSlice;
+export type AnyFacetSlice = FacetSlice | NumericFacetSlice | DateFacetSlice | CategoryFacetSlice;
 
 export type AnyFacetSetState = Record<string, AnyFacetSlice>;

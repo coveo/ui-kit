@@ -3,7 +3,7 @@ import {
   useCaseEnum,
   useCaseTestCases,
 } from '../../../../../../playwright/utils/useCase';
-import facetData from './data';
+import {initialFacetData, selectedFacetData} from './data';
 
 const fixtures = {
   search: testSearch,
@@ -14,12 +14,22 @@ useCaseTestCases.forEach((useCase) => {
   let test = fixtures[useCase.value];
   test.describe(`quantic numeric facet ${useCase.label}`, () => {
     test.describe('when selecting and deselecting a facet value', () => {
+      test.use({
+        facetResponses: {
+          responses: [
+            [initialFacetData],
+            [selectedFacetData],
+            [initialFacetData],
+          ],
+        },
+      });
+
       test('should trigger a new search and log the corresponding UA analytics events', async ({
         baseFacet,
         facet,
       }) => {
         const selectedIndex = 0;
-        const {facetId, field, values} = facetData;
+        const {facetId, field, values} = initialFacetData;
         const expectedFacetData = {
           facetId,
           facetField: field,
@@ -61,12 +71,22 @@ useCaseTestCases.forEach((useCase) => {
     });
 
     test.describe('when selecting a facet value and clicking the clear filter button', () => {
+      test.use({
+        facetResponses: {
+          responses: [
+            [initialFacetData],
+            [selectedFacetData],
+            [initialFacetData],
+          ],
+        },
+      });
+
       test('should trigger a new search and log the corresponding UA analytics events', async ({
         baseFacet,
         facet,
       }) => {
         const selectedIndex = 0;
-        const {facetId, field, values} = facetData;
+        const {facetId, field, values} = initialFacetData;
         const expectedFacetData = {
           facetId,
           facetField: field,
@@ -113,7 +133,7 @@ useCaseTestCases.forEach((useCase) => {
       }) => {
         const exampleMin = '1';
         const exampleMax = '2';
-        const {facetId, field} = facetData;
+        const {facetId, field} = initialFacetData;
         const expectedFacetData = {
           facetId: `${facetId}_input`,
           facetField: field,
@@ -144,10 +164,12 @@ useCaseTestCases.forEach((useCase) => {
     if (useCase.value === useCaseEnum.search) {
       test.describe('with a selected value in the URL', () => {
         const selectedIndex = 0;
-        const {field, values} = facetData;
+        const {field, values} = initialFacetData;
         test.use({
           urlHash: `nf-${field}=${values[selectedIndex].start}...${values[selectedIndex].end}`,
-          facetResponseMock: undefined,
+          facetResponses: {
+            responses: [],
+          },
         });
 
         test('should select the correct facet value', async ({facet}) => {

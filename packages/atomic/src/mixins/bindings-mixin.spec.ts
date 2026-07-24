@@ -1,15 +1,7 @@
 import i18next from 'i18next';
 import {html, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
-import {
-  afterEach,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  type Mock,
-  vi,
-} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it, type Mock, vi} from 'vitest';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {fetchBindings} from '@/src/utils/initialization-common-utils';
@@ -48,8 +40,7 @@ describe('InitializeBindingsMixin', () => {
   const mockedFetchBindings = fetchBindings as Mock;
 
   const setupElement = async <T extends LitElement>(tag = 'test-element') => {
-    element = document.createElement(tag) as InitializableComponent<Bindings> &
-      T;
+    element = document.createElement(tag) as InitializableComponent<Bindings> & T;
     document.body.appendChild(element);
     element.bindings = bindings;
     await element.updateComplete;
@@ -102,13 +93,9 @@ describe('InitializeBindingsMixin', () => {
 
   it('should handle fetchBindings rejection gracefully', async () => {
     // Mock fetchBindings to return a rejected promise
-    mockedFetchBindings.mockRejectedValue(
-      new Error('Failed to fetch bindings')
-    );
+    mockedFetchBindings.mockRejectedValue(new Error('Failed to fetch bindings'));
 
     // Call the function and expect it to reject
-    await expect(fetchBindings(element)).rejects.toThrow(
-      'Failed to fetch bindings'
-    );
+    await expect(fetchBindings(element)).rejects.toThrow('Failed to fetch bindings');
   });
 });

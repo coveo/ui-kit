@@ -59,10 +59,9 @@ searchApiHarness.searchEndpoint.mock((response) => ({
 }));
 
 const {decorator, play} = wrapInSearchInterface();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-popover',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-popover', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-popover',

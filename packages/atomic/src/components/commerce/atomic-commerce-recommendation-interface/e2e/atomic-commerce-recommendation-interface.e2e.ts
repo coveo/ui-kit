@@ -7,16 +7,12 @@ test.describe('atomic-commerce-recommendation-interface', () => {
     await expect(commerceRecommendationInterface.interface()).toBeAttached();
   });
 
-  test('should render its children', async ({
-    commerceRecommendationInterface,
-  }) => {
+  test('should render its children', async ({commerceRecommendationInterface}) => {
     await commerceRecommendationInterface.load({
       story: 'with-recommendation-list',
     });
 
-    await expect(
-      commerceRecommendationInterface.recommendationList()
-    ).toBeVisible();
+    await expect(commerceRecommendationInterface.recommendationList()).toBeVisible();
   });
 
   // TODO (KIT-4365): remove this test in v4
@@ -27,12 +23,8 @@ test.describe('atomic-commerce-recommendation-interface', () => {
       story: 'with-recommendation-list',
       args: {language: 'es'},
     });
-    await commerceRecommendationInterface
-      .recommendationList()
-      .waitFor({state: 'visible'});
-    await commerceRecommendationInterface
-      .previousButton()
-      .waitFor({state: 'visible'});
+    await commerceRecommendationInterface.recommendationList().waitFor({state: 'visible'});
+    await commerceRecommendationInterface.previousButton().waitFor({state: 'visible'});
 
     await expect(
       commerceRecommendationInterface.previousButton()
@@ -46,19 +38,13 @@ test.describe('atomic-commerce-recommendation-interface', () => {
     await commerceRecommendationInterface.load({
       story: 'with-recommendation-list',
     });
-    await commerceRecommendationInterface
-      .recommendationList()
-      .waitFor({state: 'visible'});
+    await commerceRecommendationInterface.recommendationList().waitFor({state: 'visible'});
 
     commerceRecommendationInterface
       .interface()
-      .evaluate((el: AtomicCommerceRecommendationInterface) =>
-        el.updateLocale('fr', 'CA', 'CAD')
-      );
+      .evaluate((el: AtomicCommerceRecommendationInterface) => el.updateLocale('fr', 'CA', 'CAD'));
 
-    await commerceRecommendationInterface
-      .previousButton()
-      .waitFor({state: 'visible'});
+    await commerceRecommendationInterface.previousButton().waitFor({state: 'visible'});
 
     await expect(
       commerceRecommendationInterface.previousButton()

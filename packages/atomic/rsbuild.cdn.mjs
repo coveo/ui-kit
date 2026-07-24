@@ -10,9 +10,7 @@ import colors from '../../utils/ci/colors.mjs';
 import {generateExternalPackageMappings} from './scripts/externalPackageMappings.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const {version} = JSON.parse(
-  readFileSync(join(__dirname, 'package.json'), 'utf8')
-);
+const {version} = JSON.parse(readFileSync(join(__dirname, 'package.json'), 'utf8'));
 const packageMappings = generateExternalPackageMappings(__dirname);
 
 const rsbuild = await rsbuildApi.createRsbuild({
@@ -102,10 +100,7 @@ const rsbuild = await rsbuildApi.createRsbuild({
           type: 'javascript/auto',
           use: [
             {
-              loader: resolve(
-                __dirname,
-                'scripts/lit-css-transform-loader.mjs'
-              ),
+              loader: resolve(__dirname, 'scripts/lit-css-transform-loader.mjs'),
             },
           ],
         });
@@ -116,10 +111,7 @@ const rsbuild = await rsbuildApi.createRsbuild({
           enforce: 'pre',
           use: [
             {
-              loader: resolve(
-                __dirname,
-                'scripts/lit-css-transform-loader.mjs'
-              ),
+              loader: resolve(__dirname, 'scripts/lit-css-transform-loader.mjs'),
             },
           ],
         });
@@ -127,11 +119,7 @@ const rsbuild = await rsbuildApi.createRsbuild({
           test: (value) => {
             // If the import path matches src/components/<group>/<component>/<component>.ts or .js, mark it as side-effectful to prevent tree-shaking when imported by other modules.
             const relativePath = relative(resolve(__dirname), value);
-            return Boolean(
-              relativePath.match(
-                /^src\/components\/\w*\/([\w-]*)\/\1(\.[jt]s)?$/
-              )
-            );
+            return Boolean(relativePath.match(/^src\/components\/\w*\/([\w-]*)\/\1(\.[jt]s)?$/));
           },
           enforce: 'pre',
           sideEffects: true,

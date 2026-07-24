@@ -96,9 +96,7 @@ describe('atomic-sort-dropdown', () => {
         return page.getByRole('combobox');
       },
       get options() {
-        return Array.from(
-          element.shadowRoot?.querySelectorAll('[part="select"] option') || []
-        );
+        return Array.from(element.shadowRoot?.querySelectorAll('[part="select"] option') || []);
       },
       get label() {
         return element.shadowRoot?.querySelector('[part="label"]');
@@ -137,24 +135,16 @@ describe('atomic-sort-dropdown', () => {
       const {element} = await renderSortDropdown();
       const buildSearchStatusMock = vi.mocked(buildSearchStatus);
 
-      expect(buildSearchStatus).toHaveBeenCalledExactlyOnceWith(
-        element.bindings.engine
-      );
-      expect(element.searchStatus).toBe(
-        buildSearchStatusMock.mock.results[0].value
-      );
+      expect(buildSearchStatus).toHaveBeenCalledExactlyOnceWith(element.bindings.engine);
+      expect(element.searchStatus).toBe(buildSearchStatusMock.mock.results[0].value);
     });
 
     it('should call buildTabManager with engine', async () => {
       const {element} = await renderSortDropdown();
       const buildTabManagerMock = vi.mocked(buildTabManager);
 
-      expect(buildTabManager).toHaveBeenCalledExactlyOnceWith(
-        element.bindings.engine
-      );
-      expect(element.tabManager).toBe(
-        buildTabManagerMock.mock.results[0].value
-      );
+      expect(buildTabManager).toHaveBeenCalledExactlyOnceWith(element.bindings.engine);
+      expect(element.tabManager).toBe(buildTabManagerMock.mock.results[0].value);
     });
 
     it('should set error when no sort expressions are provided', async () => {
@@ -169,8 +159,7 @@ describe('atomic-sort-dropdown', () => {
 
   describe('rendering', () => {
     it('should render all shadow parts', async () => {
-      const {label, selectParent, select, selectSeparator} =
-        await renderSortDropdown();
+      const {label, selectParent, select, selectSeparator} = await renderSortDropdown();
 
       await expect(label).toBeInTheDocument();
       await expect(selectParent).toBeInTheDocument();
@@ -262,9 +251,7 @@ describe('atomic-sort-dropdown', () => {
       element.requestUpdate();
       await element.updateComplete;
 
-      expect(loadSortCriteriaActions).toHaveBeenCalledWith(
-        element.bindings.engine
-      );
+      expect(loadSortCriteriaActions).toHaveBeenCalledWith(element.bindings.engine);
       expect(updateSortCriterionMock).toHaveBeenCalled();
       expect(element.bindings.engine.dispatch).toHaveBeenCalled();
     });
@@ -288,13 +275,9 @@ describe('atomic-sort-dropdown', () => {
 
       element.tabManagerState = {activeTab: 'all'};
 
-      (
-        element as unknown as {onTabManagerStateChange: () => void}
-      ).onTabManagerStateChange();
+      (element as unknown as {onTabManagerStateChange: () => void}).onTabManagerStateChange();
 
-      expect(loadSortCriteriaActions).toHaveBeenCalledWith(
-        element.bindings.engine
-      );
+      expect(loadSortCriteriaActions).toHaveBeenCalledWith(element.bindings.engine);
       expect(updateSortCriterionMock).toHaveBeenCalled();
       expect(element.bindings.engine.dispatch).toHaveBeenCalled();
     });

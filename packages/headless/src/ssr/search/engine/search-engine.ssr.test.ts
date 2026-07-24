@@ -66,19 +66,15 @@ function isSearchFulfilledAction(
   return action.type === 'search/executeSearch/fulfilled';
 }
 
-function createMockResultsMiddleware(options: {
-  defaultNumberOfResults: number;
-}): Middleware {
-  const numberOfResultsPerRequestId: {[requestId: string]: number | undefined} =
-    {};
+function createMockResultsMiddleware(options: {defaultNumberOfResults: number}): Middleware {
+  const numberOfResultsPerRequestId: {[requestId: string]: number | undefined} = {};
   return (api) => (next) => (action) => {
     const possibleSearchActionWithPayload =
       action as UnknownActionWithPossibleSearchResponsePayload;
     if (isSearchPendingAction(possibleSearchActionWithPayload)) {
       const state = api.getState() as SSRSearchEngine['state'];
-      numberOfResultsPerRequestId[
-        possibleSearchActionWithPayload.meta.requestId
-      ] = state.pagination?.numberOfResults ?? options.defaultNumberOfResults;
+      numberOfResultsPerRequestId[possibleSearchActionWithPayload.meta.requestId] =
+        state.pagination?.numberOfResults ?? options.defaultNumberOfResults;
       return next(action);
     }
     if (isSearchFulfilledAction(action as UnknownAction)) {
@@ -87,10 +83,7 @@ function createMockResultsMiddleware(options: {
       ) as UnknownActionWithPossibleSearchResponsePayload;
       newAction.payload.response.results = Array.from(
         {
-          length:
-            numberOfResultsPerRequestId[
-              possibleSearchActionWithPayload.meta.requestId
-            ]!,
+          length: numberOfResultsPerRequestId[possibleSearchActionWithPayload.meta.requestId]!,
         },
         (_, index) => buildMockResult({title: `Result #${index}`})
       );
@@ -173,14 +166,9 @@ describe('SSR', () => {
     });
 
     it('should call augmentPreprocessRequestWithForwardedFor when fetchStaticState is invoked', async () => {
-      const spy = vi.spyOn(
-        augmentModule,
-        'augmentPreprocessRequestWithForwardedFor'
-      );
+      const spy = vi.spyOn(augmentModule, 'augmentPreprocessRequestWithForwardedFor');
 
-      engineDefinition.setNavigatorContextProvider(
-        mockNavigatorContextProvider
-      );
+      engineDefinition.setNavigatorContextProvider(mockNavigatorContextProvider);
       await engineDefinition.fetchStaticState();
       expect(spy).toHaveBeenCalledWith({
         loggerOptions: {level: 'warn'},
@@ -193,14 +181,11 @@ describe('SSR', () => {
 
     describe('when forwardedFor is not set in navigator context provider', () => {
       it('should log a warning', async () => {
-        const navigatorContextProviderWithoutForwardedFor =
-          buildMockNavigatorContextProvider({
-            forwardedFor: undefined,
-          });
+        const navigatorContextProviderWithoutForwardedFor = buildMockNavigatorContextProvider({
+          forwardedFor: undefined,
+        });
 
-        engineDefinition.setNavigatorContextProvider(
-          navigatorContextProviderWithoutForwardedFor
-        );
+        engineDefinition.setNavigatorContextProvider(navigatorContextProviderWithoutForwardedFor);
         await engineDefinition.fetchStaticState();
 
         expect(mockedLoggerWarn).toHaveBeenCalledWith(
@@ -213,14 +198,11 @@ describe('SSR', () => {
 
     describe('when forwardedFor is set in navigator context provider', () => {
       it('should not log a warning', async () => {
-        const navigatorContextProviderWithForwardedFor =
-          buildMockNavigatorContextProvider({
-            forwardedFor: '127.0.0.1',
-          });
+        const navigatorContextProviderWithForwardedFor = buildMockNavigatorContextProvider({
+          forwardedFor: '127.0.0.1',
+        });
 
-        engineDefinition.setNavigatorContextProvider(
-          navigatorContextProviderWithForwardedFor
-        );
+        engineDefinition.setNavigatorContextProvider(navigatorContextProviderWithForwardedFor);
         await engineDefinition.fetchStaticState();
 
         expect(mockedLoggerWarn).not.toHaveBeenCalled();
@@ -237,9 +219,7 @@ describe('SSR', () => {
       });
 
       it('hydrates engine', async () => {
-        const hydrateStaticState = vi.mocked(
-          engineDefinition.hydrateStaticState
-        );
+        const hydrateStaticState = vi.mocked(engineDefinition.hydrateStaticState);
         const hydratedState = await hydrateStaticState(staticState);
         expect(hydratedState.engine.state.configuration.organizationId).toEqual(
           getSampleSearchEngineConfiguration().organizationId
@@ -254,12 +234,8 @@ describe('SSR', () => {
       async function fetchBuildResultWithNewNumberOfResults() {
         const build = vi.mocked(engineDefinition.build);
         const buildResult = await build();
-        const {registerNumberOfResults} = loadPaginationActions(
-          buildResult.engine
-        );
-        buildResult.engine.dispatch(
-          registerNumberOfResults(newNumberOfResults)
-        );
+        const {registerNumberOfResults} = loadPaginationActions(buildResult.engine);
+        buildResult.engine.dispatch(registerNumberOfResults(newNumberOfResults));
         expect(getResultsPerPage(buildResult)).toBe(newNumberOfResults);
         return buildResult;
       }
@@ -281,9 +257,7 @@ describe('SSR', () => {
         });
 
         it('hydrates engine from build result', async () => {
-          const hydrateStaticState = vi.mocked(
-            engineDefinition.hydrateStaticState
-          );
+          const hydrateStaticState = vi.mocked(engineDefinition.hydrateStaticState);
           const buildResult = await fetchBuildResultWithNewNumberOfResults();
           const hydratedState = await hydrateStaticState.fromBuildResult({
             buildResult: buildResult,

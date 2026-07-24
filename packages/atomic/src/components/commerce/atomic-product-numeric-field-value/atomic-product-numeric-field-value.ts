@@ -7,10 +7,7 @@ import {bindings} from '@/src/decorators/bindings.js';
 import {errorGuard} from '@/src/decorators/error-guard.js';
 import type {InitializableComponent} from '@/src/decorators/types.js';
 import {LightDomMixin} from '@/src/mixins/light-dom.js';
-import {
-  defaultNumberFormatter,
-  type NumberFormatter,
-} from '../../common/formats/format-common.js';
+import {defaultNumberFormatter, type NumberFormatter} from '../../common/formats/format-common.js';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface.js';
 import {parseValue} from '../product-template-component-utils/product-utils.js';
 
@@ -41,18 +38,12 @@ export class AtomicProductNumericFieldValue
   @state() private formatter: NumberFormatter = defaultNumberFormatter;
 
   initialize() {
-    this.addEventListener(
-      'atomic/numberFormat',
-      this.setFormat as EventListener
-    );
+    this.addEventListener('atomic/numberFormat', this.setFormat as EventListener);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.removeEventListener(
-      'atomic/numberFormat',
-      this.setFormat as EventListener
-    );
+    this.removeEventListener('atomic/numberFormat', this.setFormat as EventListener);
   }
 
   private setFormat = (event: Event) => {

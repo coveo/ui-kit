@@ -1,7 +1,4 @@
-import type {
-  ResultList as ResultListController,
-  SearchEngine,
-} from '@coveo/headless';
+import type {ResultList as ResultListController, SearchEngine} from '@coveo/headless';
 import {useController} from '../use-controller';
 import {ResultLink} from './result-link';
 
@@ -24,9 +21,7 @@ export function ResultList({engine, controller}: ResultListProps) {
           <ResultLink engine={engine} result={result}>
             {result.title}
           </ResultLink>
-          {result.excerpt && (
-            <p className="result__excerpt">{result.excerpt}</p>
-          )}
+          {result.excerpt && <p className="result__excerpt">{result.excerpt}</p>}
         </li>
       ))}
     </ol>

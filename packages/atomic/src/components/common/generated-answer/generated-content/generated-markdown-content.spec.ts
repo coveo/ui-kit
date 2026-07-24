@@ -21,9 +21,7 @@ describe('#renderGeneratedMarkdownContent', () => {
     },
   });
 
-  const renderComponent = async (
-    props: Partial<GeneratedMarkdownContentProps> = {}
-  ) => {
+  const renderComponent = async (props: Partial<GeneratedMarkdownContentProps> = {}) => {
     return await renderFunctionFixture(
       html`${renderGeneratedMarkdownContent({
         props: {
@@ -103,8 +101,7 @@ describe('#renderGeneratedMarkdownContent', () => {
   });
 
   it('should render the sanitized HTML content', async () => {
-    const mockSanitizedHtml =
-      '<p part="answer-paragraph">Sanitized content</p>';
+    const mockSanitizedHtml = '<p part="answer-paragraph">Sanitized content</p>';
     vi.mocked(DOMPurify.sanitize).mockReturnValue(mockSanitizedHtml);
 
     const element = await renderComponent({answer: 'Test'});

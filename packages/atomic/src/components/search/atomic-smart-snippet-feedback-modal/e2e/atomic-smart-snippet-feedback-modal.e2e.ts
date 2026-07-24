@@ -6,9 +6,7 @@ test.describe('atomic-smart-snippet-feedback-modal', () => {
     await feedbackModal.hydrated.waitFor({state: 'attached'});
   });
 
-  test('should open the modal when open button is clicked', async ({
-    feedbackModal,
-  }) => {
+  test('should open the modal when open button is clicked', async ({feedbackModal}) => {
     await feedbackModal.openModalButton.click();
     await expect(feedbackModal.feedbackOptions).toBeVisible();
     await expect(feedbackModal.explainWhyHeading).toBeVisible();

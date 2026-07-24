@@ -33,10 +33,7 @@ export type NumericFacetOptions = Omit<
  * @group Sub-controllers
  * @category NumericFacet
  */
-export type NumericFacetState = Omit<
-  CoreCommerceFacetState<NumericFacetValue>,
-  'type'
-> & {
+export type NumericFacetState = Omit<CoreCommerceFacetState<NumericFacetValue>, 'type'> & {
   /**
    * The domain of the numeric facet.
    */
@@ -67,10 +64,7 @@ type NumericFacetDomain = {
  * @group Sub-controllers
  * @category NumericFacet
  */
-export type NumericFacet = CoreCommerceFacet<
-  NumericRangeRequest,
-  NumericFacetValue
-> & {
+export type NumericFacet = CoreCommerceFacet<NumericRangeRequest, NumericFacetValue> & {
   /**
    * Replaces the current range values with the specified ones.
    *
@@ -99,10 +93,7 @@ export function buildCommerceNumericFacet(
   engine: CommerceEngine,
   options: NumericFacetOptions
 ): NumericFacet {
-  const coreController = buildCoreCommerceFacet<
-    NumericRangeRequest,
-    NumericFacetValue
-  >(engine, {
+  const coreController = buildCoreCommerceFacet<NumericRangeRequest, NumericFacetValue>(engine, {
     options: {
       ...options,
       toggleSelectActionCreator: toggleSelectNumericFacetValue,
@@ -155,9 +146,7 @@ export const getNumericFacetState = (
   manualFacetRangeSelector: NumericRangeRequest | undefined
 ): NumericFacetState => {
   const response =
-    facetResponseSelector?.type === 'numericalRange'
-      ? facetResponseSelector
-      : undefined;
+    facetResponseSelector?.type === 'numericalRange' ? facetResponseSelector : undefined;
   return {
     ...coreState,
     ...(response?.domain && {

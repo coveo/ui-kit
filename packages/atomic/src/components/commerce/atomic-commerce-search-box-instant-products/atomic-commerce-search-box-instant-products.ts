@@ -31,10 +31,7 @@ import {encodeForDomAttribute} from '@/src/utils/string-utils';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {ProductTemplateProvider} from '../product-list/product-template-provider';
 
-type AriaLabelGenerator = (
-  bindings: CommerceBindings,
-  product: Product
-) => string | undefined;
+type AriaLabelGenerator = (bindings: CommerceBindings, product: Product) => string | undefined;
 
 /**
  * The `atomic-commerce-search-box-instant-products` component can be added as a child of an `atomic-commerce-search-box` component, allowing for the configuration of instant products behavior.
@@ -70,9 +67,7 @@ export class AtomicCommerceSearchBoxInstantProducts
    *
    * @param resultRenderingFunction
    */
-  public async setRenderFunction(
-    resultRenderingFunction: ItemRenderingFunction
-  ) {
+  public async setRenderFunction(resultRenderingFunction: ItemRenderingFunction) {
     this.itemRenderingFunction = resultRenderingFunction;
   }
 
@@ -113,15 +108,9 @@ export class AtomicCommerceSearchBoxInstantProducts
 
   private getLink(el: HTMLElement): HTMLElement | null {
     const atomicProduct =
-      el.tagName === 'ATOMIC-PRODUCT'
-        ? el
-        : el?.querySelector('atomic-product');
+      el.tagName === 'ATOMIC-PRODUCT' ? el : el?.querySelector('atomic-product');
 
-    return (
-      atomicProduct?.shadowRoot?.querySelector(
-        'atomic-product-link a:not([slot])'
-      ) || null
-    );
+    return atomicProduct?.shadowRoot?.querySelector('atomic-product-link a:not([slot])') || null;
   }
 
   private handleLinkClick(el: HTMLElement, hasModifier: boolean) {
@@ -141,53 +130,49 @@ export class AtomicCommerceSearchBoxInstantProducts
       ? this.instantProducts.state.products
       : this.products;
 
-    const elements: SearchBoxSuggestionElement[] = products.map(
-      (product: Product) => {
-        const interactiveProduct = this.instantProducts.interactiveProduct({
-          options: {product},
-        });
-        const partialItem = getPartialInstantItemElement(
-          this.bindings.i18n,
-          'instant-products-suggestion-label',
-          this.ariaLabelGenerator?.(this.bindings, product) || product.ec_name!,
-          product.permanentid
-        );
-        const key = `instant-product-${encodeForDomAttribute(
-          product.permanentid
-        )}`;
+    const elements: SearchBoxSuggestionElement[] = products.map((product: Product) => {
+      const interactiveProduct = this.instantProducts.interactiveProduct({
+        options: {product},
+      });
+      const partialItem = getPartialInstantItemElement(
+        this.bindings.i18n,
+        'instant-products-suggestion-label',
+        this.ariaLabelGenerator?.(this.bindings, product) || product.ec_name!,
+        product.permanentid
+      );
+      const key = `instant-product-${encodeForDomAttribute(product.permanentid)}`;
 
-        const template = html`${keyed(
-          key,
-          html`<atomic-product
-            part="outline"
-            .product=${product}
-            .interactiveProduct=${interactiveProduct}
-            .display=${this.display}
-            .density=${this.density}
-            .imageSize=${this.imageSize}
-            .content=${this.itemTemplateProvider.getTemplateContent(product)}
-            .stopPropagation=${false}
-            .renderingFunction=${this.itemRenderingFunction}
-          ></atomic-product>`
-        )}`;
+      const template = html`${keyed(
+        key,
+        html`<atomic-product
+          part="outline"
+          .product=${product}
+          .interactiveProduct=${interactiveProduct}
+          .display=${this.display}
+          .density=${this.density}
+          .imageSize=${this.imageSize}
+          .content=${this.itemTemplateProvider.getTemplateContent(product)}
+          .stopPropagation=${false}
+          .renderingFunction=${this.itemRenderingFunction}
+        ></atomic-product>`
+      )}`;
 
-        const container = document.createElement('div');
-        render(template, container);
-        const productElement = container.firstElementChild as HTMLElement;
-        return {
-          ...partialItem,
-          content: productElement,
-          onSelect: (e: MouseEvent) => {
-            const link = this.getLink(e.target as HTMLElement);
+      const container = document.createElement('div');
+      render(template, container);
+      const productElement = container.firstElementChild as HTMLElement;
+      return {
+        ...partialItem,
+        content: productElement,
+        onSelect: (e: MouseEvent) => {
+          const link = this.getLink(e.target as HTMLElement);
 
-            if (!link) {
-              return;
-            }
-            this.handleLinkClick(link, e.ctrlKey || e.metaKey);
-          },
-        };
-      }
-    );
+          if (!link) {
+            return;
+          }
+          this.handleLinkClick(link, e.ctrlKey || e.metaKey);
+        },
+      };
+    });
     if (elements.length) {
       const partialItem = getPartialInstantItemShowAllElement(
         this.bindings.i18n,
@@ -201,9 +186,7 @@ export class AtomicCommerceSearchBoxInstantProducts
         }),
         onSelect: () => {
           this.bindings.clearSuggestions();
-          this.bindings.searchBoxController.updateText(
-            this.instantProducts.state.query
-          );
+          this.bindings.searchBoxController.updateText(this.instantProducts.state.query);
           this.bindings.searchBoxController.submit();
         },
       });
@@ -218,17 +201,13 @@ export class AtomicCommerceSearchBoxInstantProducts
 
     this.bindings.store.onChange('activeProductChild', () => {
       if (this.bindings.store.state.activeProductChild) {
-        this.instantProducts.promoteChildToParent(
-          this.bindings.store.state.activeProductChild
-        );
+        this.instantProducts.promoteChildToParent(this.bindings.store.state.activeProductChild);
       }
     });
 
     this.itemTemplateProvider = new ProductTemplateProvider({
       includeDefaultTemplate: true,
-      templateElements: Array.from(
-        this.querySelectorAll('atomic-product-template')
-      ),
+      templateElements: Array.from(this.querySelectorAll('atomic-product-template')),
       getResultTemplateRegistered: () => true,
       setResultTemplateRegistered: () => {},
       getTemplateHasError: () => this.templateHasError,

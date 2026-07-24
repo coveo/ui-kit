@@ -1,7 +1,4 @@
-import {
-  buildSearchEngine,
-  getSampleSearchEngineConfiguration,
-} from '@coveo/headless';
+import {buildSearchEngine, getSampleSearchEngineConfiguration} from '@coveo/headless';
 
 /**
  * A single shared search engine for the app. It uses the Coveo sample

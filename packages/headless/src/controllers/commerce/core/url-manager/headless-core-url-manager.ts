@@ -17,12 +17,7 @@ import type {
   ParameterManagerProps,
 } from '../parameter-manager/headless-core-parameter-manager.js';
 
-export type {
-  BaseUrlManagerProps,
-  UrlManager,
-  UrlManagerInitialState,
-  UrlManagerState,
-};
+export type {BaseUrlManagerProps, UrlManager, UrlManagerInitialState, UrlManagerState};
 
 export interface UrlManagerProps extends BaseUrlManagerProps {
   /**
@@ -65,12 +60,7 @@ export function buildCoreUrlManager<T extends Parameters>(
     return lastRequestId !== props.requestIdSelector(engine[stateKey]);
   }
 
-  validateInitialState(
-    engine,
-    initialStateSchema,
-    props.initialState,
-    'buildUrlManager'
-  );
+  validateInitialState(engine, initialStateSchema, props.initialState, 'buildUrlManager');
 
   const controller = buildController(engine);
   let previousFragment = props.initialState.fragment;
@@ -90,11 +80,7 @@ export function buildCoreUrlManager<T extends Parameters>(
       const strictListener = () => {
         const newFragment = this.state.fragment;
         if (
-          !areFragmentsEquivalent(
-            props.serializer.deserialize,
-            previousFragment,
-            newFragment
-          ) &&
+          !areFragmentsEquivalent(props.serializer.deserialize, previousFragment, newFragment) &&
           hasRequestIdChanged()
         ) {
           previousFragment = newFragment;

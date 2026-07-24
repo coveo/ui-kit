@@ -1,10 +1,7 @@
 import {NumberValue, type SchemaDefinition, StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import type {Result} from '../../api/search/search/result.js';
-import {
-  type AsyncThunkSearchOptions,
-  isErrorResponse,
-} from '../../api/search/search-api-client.js';
+import {type AsyncThunkSearchOptions, isErrorResponse} from '../../api/search/search-api-client.js';
 import type {
   ConfigurationSection,
   FoldingSection,
@@ -65,9 +62,7 @@ export const registerFolding = createAction(
     validatePayload(payload, foldingOptionsSchemaDefinition)
 );
 
-export type StateNeededByLoadCollection = ConfigurationSection &
-  FoldingSection &
-  QuerySection;
+export type StateNeededByLoadCollection = ConfigurationSection & FoldingSection & QuerySection;
 
 export const loadCollection = createAsyncThunk<
   LoadCollectionFulfilledReturn,
@@ -107,8 +102,7 @@ export const loadCollection = createAsyncThunk<
       collectionId,
       results: response.success.results,
       searchUid: response.success.searchUid,
-      rootResult: state.folding.collections[collectionId]!
-        .result as ResultWithFolding,
+      rootResult: state.folding.collections[collectionId]!.result as ResultWithFolding,
     };
   }
 );

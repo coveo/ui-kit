@@ -121,12 +121,7 @@ export function buildStandaloneSearchBox(
     ...props.options,
   };
 
-  validateOptions(
-    engine,
-    standaloneSearchBoxSchema,
-    options,
-    'buildStandaloneSearchBox'
-  );
+  validateOptions(engine, standaloneSearchBoxSchema, options, 'buildStandaloneSearchBox');
 
   const searchBox = buildSearchBox(engine, {options});
   dispatch(
@@ -162,9 +157,7 @@ export function buildStandaloneSearchBox(
     },
 
     updateRedirectUrl(url: string) {
-      dispatch(
-        updateStandaloneSearchBoxRedirectionUrl({id, redirectionUrl: url})
-      );
+      dispatch(updateStandaloneSearchBoxRedirectionUrl({id, redirectionUrl: url}));
     },
 
     submit() {
@@ -193,10 +186,7 @@ export function buildStandaloneSearchBox(
 function loadStandaloneSearchBoxReducers(
   engine: SearchEngine
 ): engine is SearchEngine<
-  StandaloneSearchBoxSection &
-    ConfigurationSection &
-    QuerySection &
-    QuerySuggestionSection
+  StandaloneSearchBoxSection & ConfigurationSection & QuerySection & QuerySuggestionSection
 > {
   engine.addReducers({
     standaloneSearchBoxSet,

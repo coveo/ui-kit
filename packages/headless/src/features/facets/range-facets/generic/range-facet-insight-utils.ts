@@ -13,7 +13,5 @@ export const getInsightAnalyticsActionForToggleRangeFacetSelect = (
   const facetValue = `${selection.start}..${selection.end}`;
   const payload: FacetSelectionChangeMetadata = {facetId, facetValue};
 
-  return isRangeFacetValueSelected(selection)
-    ? logFacetDeselect(payload)
-    : logFacetSelect(payload);
+  return isRangeFacetValueSelected(selection) ? logFacetDeselect(payload) : logFacetSelect(payload);
 };

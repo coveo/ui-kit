@@ -3,8 +3,8 @@ import {buildConverseController, type RoutedInterface} from '@coveo/thermidor';
 import {useGenerativeInterface} from '../context/generative-interface.js';
 import {useBuildController} from '../hooks/use-build-controller.js';
 import {useAppState, deriveTransitionAction} from '../hooks/use-app-state.js';
-import {LandingPage} from './LandingPage.js';
-import {SearchResultsPage} from './SearchResultsPage.js';
+import {LandingPage} from './LandingPage/LandingPage.js';
+import {SearchResultsPage} from './SearchResultsPage/SearchResultsPage.js';
 import {ConversationPage} from './ConversationPage.js';
 
 export function AppShell() {
@@ -16,6 +16,7 @@ export function AppShell() {
   const {view, dispatch} = useAppState();
 
   const persistedInterfaceRef = useRef<RoutedInterface | null>(null);
+  const persistedInterfaceTurnIdRef = useRef<string | null>(null);
   const lastObservedTurnIdRef = useRef<string | null>(null);
 
   useEffect(() => {
@@ -41,14 +42,12 @@ export function AppShell() {
 
     const action = deriveTransitionAction(latestCompletedTurn);
 
-    if (
-      action?.type === 'NAVIGATE_SEARCH' &&
-      latestCompletedTurn.routedInterface
-    ) {
+    if (action?.type === 'NAVIGATE_SEARCH' && latestCompletedTurn.routedInterface) {
       if (persistedInterfaceRef.current) {
         persistedInterfaceRef.current.interface.dispose();
       }
       persistedInterfaceRef.current = latestCompletedTurn.routedInterface;
+      persistedInterfaceTurnIdRef.current = latestCompletedTurn.id;
       dispatch(action);
     } else if (action) {
       dispatch(action);
@@ -72,25 +71,20 @@ export function AppShell() {
     if (persistedInterfaceRef.current) {
       persistedInterfaceRef.current.interface.dispose();
       persistedInterfaceRef.current = null;
+      persistedInterfaceTurnIdRef.current = null;
     }
     controller.clear();
     dispatch({type: 'NAVIGATE_LANDING'});
   };
 
-  const lastTurn = converseState.turns[converseState.turns.length - 1];
-  const error =
-    lastTurn?.status === 'error'
-      ? (lastTurn.error ?? 'An error occurred')
-      : null;
-
   switch (view) {
     case 'search':
       return (
         <SearchResultsPage
+          key={persistedInterfaceTurnIdRef.current!}
           onSubmit={handleSubmit}
           isStreaming={converseState.isStreaming}
           routedInterface={persistedInterfaceRef.current!}
-          error={error}
         />
       );
     case 'conversation':
@@ -102,16 +96,9 @@ export function AppShell() {
           onBackToSearch={handleBackToSearch}
           canGoBackToSearch={canGoBackToSearch}
           onResetToLanding={handleResetToLanding}
-          error={error}
         />
       );
     default:
-      return (
-        <LandingPage
-          onSubmit={handleSubmit}
-          isStreaming={converseState.isStreaming}
-          error={error}
-        />
-      );
+      return <LandingPage onSubmit={handleSubmit} isStreaming={converseState.isStreaming} />;
   }
 }

@@ -1,9 +1,6 @@
 import {FieldValueIsNaNError} from '@/src/components/commerce/product-template-component-utils/error';
 
-export const computeNumberOfStars = (
-  value: unknown,
-  field: string
-): number | null => {
+export const computeNumberOfStars = (value: unknown, field: string): number | null => {
   if (value === null) {
     return null;
   }

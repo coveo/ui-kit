@@ -41,10 +41,7 @@ import {buildMockDateFacetRequest} from '../../test/mock-date-facet-request.js';
 import {buildMockDateFacetResponse} from '../../test/mock-date-facet-response.js';
 import {buildMockDateFacetSlice} from '../../test/mock-date-facet-slice.js';
 import {buildMockDateFacetValue} from '../../test/mock-date-facet-value.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../test/mock-engine-v2.js';
 import {buildMockFacetRequest} from '../../test/mock-facet-request.js';
 import {buildMockFacetResponse} from '../../test/mock-facet-response.js';
 import {buildMockFacetSlice} from '../../test/mock-facet-slice.js';
@@ -67,15 +64,11 @@ import {
 } from './headless-breadcrumb-manager.js';
 
 vi.mock('../../features/breadcrumb/breadcrumb-actions');
-vi.mock(
-  '../../features/facets/automatic-facet-set/automatic-facet-set-actions'
-);
+vi.mock('../../features/facets/automatic-facet-set/automatic-facet-set-actions');
 vi.mock('../../features/facets/category-facet-set/category-facet-set-actions');
 vi.mock('../../features/facets/facet-set/facet-set-actions');
 vi.mock('../../features/facets/range-facets/date-facet-set/date-facet-actions');
-vi.mock(
-  '../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions'
-);
+vi.mock('../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions');
 vi.mock('../../features/search/search-actions');
 vi.mock('../../features/static-filter-set/static-filter-set-actions');
 vi.mock('../../features/facets/generic/facet-generic-analytics-actions');
@@ -516,14 +509,11 @@ describe('headless breadcrumb manager', () => {
       });
       initController();
 
-      automaticFacetBreadcrumbs =
-        breadcrumbManager.state.automaticFacetBreadcrumbs;
+      automaticFacetBreadcrumbs = breadcrumbManager.state.automaticFacetBreadcrumbs;
     });
 
     it('#state get automatic facet breadcrumbs correctly', () => {
-      expect(automaticFacetBreadcrumbs[0].values[0].value).toBe(
-        mockSelectedValue
-      );
+      expect(automaticFacetBreadcrumbs[0].values[0].value).toBe(mockSelectedValue);
     });
 
     it('dispatches an executeSearch action on selection', () => {

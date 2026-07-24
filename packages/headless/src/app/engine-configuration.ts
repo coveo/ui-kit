@@ -1,13 +1,5 @@
-import {
-  BooleanValue,
-  RecordValue,
-  type SchemaDefinition,
-  StringValue,
-} from '@coveo/bueno';
-import type {
-  AnalyticsClientSendEventHook,
-  IRuntimeEnvironment,
-} from 'coveo.analytics';
+import {BooleanValue, RecordValue, type SchemaDefinition, StringValue} from '@coveo/bueno';
+import type {AnalyticsClientSendEventHook, IRuntimeEnvironment} from 'coveo.analytics';
 import type {PreprocessRequest} from '../api/preprocess-request.js';
 import type {PlatformEnvironment} from '../utils/url-utils.js';
 import {requiredNonEmptyString} from '../utils/validate-payload.js';
@@ -153,53 +145,52 @@ export interface AnalyticsConfiguration {
 
 export type AnalyticsRuntimeEnvironment = IRuntimeEnvironment;
 
-export const engineConfigurationDefinitions: SchemaDefinition<EngineConfiguration> =
-  {
-    organizationId: requiredNonEmptyString,
-    accessToken: requiredNonEmptyString,
-    name: new StringValue({
+export const engineConfigurationDefinitions: SchemaDefinition<EngineConfiguration> = {
+  organizationId: requiredNonEmptyString,
+  accessToken: requiredNonEmptyString,
+  name: new StringValue({
+    required: false,
+    emptyAllowed: false,
+  }),
+  analytics: new RecordValue({
+    options: {
       required: false,
-      emptyAllowed: false,
-    }),
-    analytics: new RecordValue({
-      options: {
+    },
+    values: {
+      enabled: new BooleanValue({
         required: false,
-      },
-      values: {
-        enabled: new BooleanValue({
-          required: false,
-        }),
-        originContext: new StringValue({
-          required: false,
-        }),
-        originLevel2: new StringValue({
-          required: false,
-        }),
-        originLevel3: new StringValue({
-          required: false,
-        }),
-        analyticsMode: new StringValue<'legacy' | 'next'>({
-          constrainTo: ['legacy', 'next'],
-          required: false,
-          default: 'next',
-        }),
-        proxyBaseUrl: new StringValue({
-          required: false,
-          url: true,
-        }),
-        trackingId: new StringValue({
-          required: false,
-          emptyAllowed: false,
-          regex: /^[a-zA-Z0-9_\-.]{1,100}$/,
-        }),
-      },
-    }),
-    environment: new StringValue<PlatformEnvironment>({
-      required: false,
-      default: 'prod',
-      constrainTo: ['prod', 'hipaa', 'stg', 'dev'],
-    }),
-  };
+      }),
+      originContext: new StringValue({
+        required: false,
+      }),
+      originLevel2: new StringValue({
+        required: false,
+      }),
+      originLevel3: new StringValue({
+        required: false,
+      }),
+      analyticsMode: new StringValue<'legacy' | 'next'>({
+        constrainTo: ['legacy', 'next'],
+        required: false,
+        default: 'next',
+      }),
+      proxyBaseUrl: new StringValue({
+        required: false,
+        url: true,
+      }),
+      trackingId: new StringValue({
+        required: false,
+        emptyAllowed: false,
+        regex: /^[a-zA-Z0-9_\-.]{1,100}$/,
+      }),
+    },
+  }),
+  environment: new StringValue<PlatformEnvironment>({
+    required: false,
+    default: 'prod',
+    constrainTo: ['prod', 'hipaa', 'stg', 'dev'],
+  }),
+};
 
 export function getSampleEngineConfiguration(): EngineConfiguration {
   return {

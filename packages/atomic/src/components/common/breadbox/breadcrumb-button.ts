@@ -5,10 +5,7 @@ import type {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import {renderButton} from '../button';
 import type {Breadcrumb} from './breadcrumb-types';
-import {
-  getFirstBreadcrumbValue,
-  joinBreadcrumbValues,
-} from './breadcrumb-utils';
+import {getFirstBreadcrumbValue, joinBreadcrumbValues} from './breadcrumb-utils';
 
 interface BreadcrumbButtonProps {
   onSelectBreadcrumb: () => void;
@@ -19,9 +16,7 @@ interface BreadcrumbButtonProps {
   ariaController: AriaLiveRegionController;
 }
 
-export const renderBreadcrumbButton: FunctionalComponentWithChildren<
-  BreadcrumbButtonProps
-> =
+export const renderBreadcrumbButton: FunctionalComponentWithChildren<BreadcrumbButtonProps> =
   ({props}) =>
   (children) => {
     const fullValue = joinBreadcrumbValues(props.breadcrumb);
@@ -41,9 +36,7 @@ export const renderBreadcrumbButton: FunctionalComponentWithChildren<
               class: 'py-2 px-3 flex items-center rounded-xl group',
               title: title,
               ariaLabel: props.i18n.t(
-                isExclusion
-                  ? 'remove-exclusion-filter-on'
-                  : 'remove-inclusion-filter-on',
+                isExclusion ? 'remove-exclusion-filter-on' : 'remove-inclusion-filter-on',
                 {
                   value: title,
                 }

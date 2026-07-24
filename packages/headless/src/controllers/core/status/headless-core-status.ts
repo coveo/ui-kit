@@ -3,10 +3,7 @@ import {firstSearchExecutedSelector} from '../../../features/search/search-selec
 import {searchReducer as search} from '../../../features/search/search-slice.js';
 import type {SearchSection} from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
-import {
-  buildController,
-  type Controller,
-} from '../../controller/headless-controller.js';
+import {buildController, type Controller} from '../../controller/headless-controller.js';
 
 /**
  * The `SearchStatus` controller lets you access search status information.
@@ -78,9 +75,7 @@ export function buildCoreStatus(engine: CoreEngine): SearchStatus {
   };
 }
 
-function loadSearchStateReducers(
-  engine: CoreEngine
-): engine is CoreEngine<SearchSection> {
+function loadSearchStateReducers(engine: CoreEngine): engine is CoreEngine<SearchSection> {
   engine.addReducers({search});
   return true;
 }

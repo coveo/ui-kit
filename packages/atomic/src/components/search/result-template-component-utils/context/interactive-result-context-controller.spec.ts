@@ -4,15 +4,12 @@ import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {InteractiveItemContextController} from '@/src/components/common/item-list/context/interactive-item-context-controller';
 import {createInteractiveResultContextController} from './interactive-result-context-controller';
 
-vi.mock(
-  '@/src/components/common/item-list/context/interactive-item-context-controller',
-  () => ({
-    InteractiveItemContextController: vi
-      .fn()
-      // oxlint-disable-next-line prefer-arrow-callback -- https://vitest.dev/guide/migration.html#spyon-and-fn-support-constructors
-      .mockImplementation(function () {}),
-  })
-);
+vi.mock('@/src/components/common/item-list/context/interactive-item-context-controller', () => ({
+  InteractiveItemContextController: vi
+    .fn()
+    // oxlint-disable-next-line prefer-arrow-callback -- https://vitest.dev/guide/migration.html#spyon-and-fn-support-constructors
+    .mockImplementation(function () {}),
+}));
 
 describe('result-template-controllers', () => {
   let mockHost: LitElement & {error: Error | null};
@@ -32,19 +29,14 @@ describe('result-template-controllers', () => {
 
       createInteractiveResultContextController(hostWithError);
 
-      expect(InteractiveItemContextController).toHaveBeenCalledWith(
-        hostWithError
-      );
+      expect(InteractiveItemContextController).toHaveBeenCalledWith(hostWithError);
     });
 
     it('should return InteractiveItemContextController instance', () => {
-      const mockController =
-        {} as InteractiveItemContextController<InteractiveResult>;
-      vi.mocked(InteractiveItemContextController).mockImplementation(
-        function (this: unknown) {
-          return mockController;
-        }
-      );
+      const mockController = {} as InteractiveItemContextController<InteractiveResult>;
+      vi.mocked(InteractiveItemContextController).mockImplementation(function (this: unknown) {
+        return mockController;
+      });
       const hostWithError = mockHost as LitElement & {error: Error};
 
       const result = createInteractiveResultContextController(hostWithError);

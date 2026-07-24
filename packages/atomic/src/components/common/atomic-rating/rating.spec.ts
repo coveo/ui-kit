@@ -21,9 +21,7 @@ describe('#renderRating', () => {
       ...overrides,
     };
 
-    const element = await renderFunctionFixture(
-      html`${renderRating({props: defaultProps})}`
-    );
+    const element = await renderFunctionFixture(html`${renderRating({props: defaultProps})}`);
 
     return {
       ratingContainer: element.querySelector('div[part="value-rating"]'),

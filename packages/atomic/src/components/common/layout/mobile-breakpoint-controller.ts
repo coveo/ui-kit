@@ -11,10 +11,7 @@ export class MobileBreakpointController implements ReactiveController {
   private store: BaseStore<{mobileBreakpoint: string}>;
   private eventListener: (e: Event) => void;
 
-  constructor(
-    host: ReactiveControllerHost,
-    store: BaseStore<{mobileBreakpoint: string}>
-  ) {
+  constructor(host: ReactiveControllerHost, store: BaseStore<{mobileBreakpoint: string}>) {
     this.host = host;
     this.store = store;
     this.eventListener = this.handleBreakpointChange.bind(this);

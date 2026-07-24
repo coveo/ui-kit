@@ -23,8 +23,9 @@ import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete
 import {parentNodeToString} from '@/src/utils/dom-utils';
 import type {InsightStore} from '../atomic-insight-interface/store';
 
-type InsightResultContextEvent<T = InsightResult | InsightFoldedResult> =
-  CustomEvent<(result: T) => void>;
+type InsightResultContextEvent<T = InsightResult | InsightFoldedResult> = CustomEvent<
+  (result: T) => void
+>;
 type InsightInteractiveResultContextEvent<
   T extends InsightInteractiveResult = InsightInteractiveResult,
 > = CustomEvent<(result: T) => void>;
@@ -34,9 +35,7 @@ type InsightInteractiveResultContextEvent<
  */
 @customElement('atomic-insight-result')
 @withTailwindStyles
-export class AtomicInsightResult extends ChildrenUpdateCompleteMixin(
-  LitElement
-) {
+export class AtomicInsightResult extends ChildrenUpdateCompleteMixin(LitElement) {
   private resultRootRef: Ref<HTMLElement> = createRef();
   private itemLayoutController!: ItemLayoutController;
 
@@ -114,8 +113,7 @@ export class AtomicInsightResult extends ChildrenUpdateCompleteMixin(
   /**
    * How large or small results should be.
    */
-  @property({reflect: true, type: String}) density: ItemDisplayDensity =
-    'normal';
+  @property({reflect: true, type: String}) density: ItemDisplayDensity = 'normal';
 
   /**
    * The size of the image section in result list items.
@@ -174,9 +172,7 @@ export class AtomicInsightResult extends ChildrenUpdateCompleteMixin(
     event.detail(this.result);
   };
 
-  public resolveInteractiveResult = (
-    event: InsightInteractiveResultContextEvent
-  ) => {
+  public resolveInteractiveResult = (event: InsightInteractiveResultContextEvent) => {
     event.preventDefault();
     event.stopPropagation();
     if (this.interactiveResult) {
@@ -188,9 +184,7 @@ export class AtomicInsightResult extends ChildrenUpdateCompleteMixin(
     event.detail(this.stopPropagation);
   };
 
-  public resolveResultDisplayConfig = (
-    event: InsightResultContextEvent<DisplayConfig>
-  ) => {
+  public resolveResultDisplayConfig = (event: InsightResultContextEvent<DisplayConfig>) => {
     event.preventDefault();
     event.stopPropagation();
     event.detail({
@@ -224,10 +218,7 @@ export class AtomicInsightResult extends ChildrenUpdateCompleteMixin(
       classesOnly: true,
     });
 
-    this.addEventListener(
-      'atomic/resolveResult',
-      this.resolveResult as EventListener
-    );
+    this.addEventListener('atomic/resolveResult', this.resolveResult as EventListener);
     this.addEventListener(
       'atomic/resolveInteractiveResult',
       this.resolveInteractiveResult as EventListener
@@ -249,10 +240,7 @@ export class AtomicInsightResult extends ChildrenUpdateCompleteMixin(
   public disconnectedCallback() {
     super.disconnectedCallback();
 
-    this.removeEventListener(
-      'atomic/resolveResult',
-      this.resolveResult as EventListener
-    );
+    this.removeEventListener('atomic/resolveResult', this.resolveResult as EventListener);
     this.removeEventListener(
       'atomic/resolveInteractiveResult',
       this.resolveInteractiveResult as EventListener
@@ -288,11 +276,7 @@ export class AtomicInsightResult extends ChildrenUpdateCompleteMixin(
     }
 
     return html`
-      <div
-        class="result-root ${this.itemLayoutController
-          .getCombinedClasses()
-          .join(' ')}"
-      >
+      <div class="result-root ${this.itemLayoutController.getCombinedClasses().join(' ')}">
         ${unsafeHTML(this.getContentHTML())}
       </div>
     `;

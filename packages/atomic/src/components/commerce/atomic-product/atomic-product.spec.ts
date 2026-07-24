@@ -1,11 +1,7 @@
 import type {Product} from '@coveo/headless/commerce';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import type {
-  ItemDisplayDensity,
-  ItemDisplayImageSize,
-  ItemDisplayLayout,
-} from '@/src/components';
+import type {ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout} from '@/src/components';
 import type {ItemRenderingFunction} from '@/src/components/common/item-list/item-list-common';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
@@ -52,9 +48,7 @@ describe('atomic-product', () => {
     } = options;
 
     const content =
-      'content' in options
-        ? options.content
-        : renderTemplateContent(defaultTemplateContent);
+      'content' in options ? options.content : renderTemplateContent(defaultTemplateContent);
     const {element} = await renderInAtomicCommerceInterface<AtomicProduct>({
       template: html`<atomic-product
         .product=${product}
@@ -172,9 +166,7 @@ describe('atomic-product', () => {
       const mockClick = vi.fn();
       const mockAnchor = {click: mockClick};
       const mockQuerySelector = vi.fn().mockReturnValue(mockAnchor);
-      vi.spyOn(element.shadowRoot!, 'querySelector').mockImplementation(
-        mockQuerySelector
-      );
+      vi.spyOn(element.shadowRoot!, 'querySelector').mockImplementation(mockQuerySelector);
 
       element.clickLinkContainer();
 
@@ -246,8 +238,7 @@ describe('atomic-product', () => {
       const element = await renderProduct({
         renderingFunction,
       });
-      const linkContainer =
-        element.shadowRoot!.querySelector('.link-container');
+      const linkContainer = element.shadowRoot!.querySelector('.link-container');
       expect(linkContainer?.textContent).toContain('Custom Link Content');
     });
 
@@ -261,8 +252,7 @@ describe('atomic-product', () => {
 
     it('should add "with-sections" class when content has sections', async () => {
       const renderingFunctionWithSections: ItemRenderingFunction = vi.fn(
-        () =>
-          '<atomic-product-section-visual">Custom</atomic-product-section-visual>'
+        () => '<atomic-product-section-visual">Custom</atomic-product-section-visual>'
       );
       const element = await renderProduct({
         renderingFunction: renderingFunctionWithSections,
@@ -336,20 +326,17 @@ describe('atomic-product', () => {
 
         expect(() => element.render()).not.toThrow();
 
-        const componentRoot =
-          element.shadowRoot!.querySelector('.result-component');
+        const componentRoot = element.shadowRoot!.querySelector('.result-component');
         const resultRoot = element.shadowRoot!.querySelector('.result-root');
         expect(componentRoot).toBeTruthy();
         expect(resultRoot).toBeNull();
       });
 
       it('should handle custom rendering function mode', async () => {
-        const renderingFunction: ItemRenderingFunction = vi.fn(
-          (_product, productRootRef) => {
-            productRootRef.textContent = 'Custom content without layout';
-            return productRootRef.outerHTML;
-          }
-        );
+        const renderingFunction: ItemRenderingFunction = vi.fn((_product, productRootRef) => {
+          productRootRef.textContent = 'Custom content without layout';
+          return productRootRef.outerHTML;
+        });
 
         const element = await renderProduct({
           content: undefined,
@@ -358,20 +345,16 @@ describe('atomic-product', () => {
 
         expect(renderingFunction).toHaveBeenCalled();
         const resultRoot = element.shadowRoot!.querySelector('.result-root');
-        expect(resultRoot?.textContent).toContain(
-          'Custom content without layout'
-        );
+        expect(resultRoot?.textContent).toContain('Custom content without layout');
       });
     });
 
     describe('#updated', () => {
       it('should not throw error when layout is undefined in custom rendering mode', async () => {
-        const renderingFunction: ItemRenderingFunction = vi.fn(
-          (_product, productRootRef) => {
-            productRootRef.textContent = 'Updated content';
-            return '<div>Updated HTML</div>';
-          }
-        );
+        const renderingFunction: ItemRenderingFunction = vi.fn((_product, productRootRef) => {
+          productRootRef.textContent = 'Updated content';
+          return '<div>Updated HTML</div>';
+        });
 
         const element = await renderProduct({
           content: undefined,

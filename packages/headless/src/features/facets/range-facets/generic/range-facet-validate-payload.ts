@@ -19,9 +19,7 @@ export const dateFacetValueDefinition = {
   numberOfResults: new NumberValue({required: true, min: 0}),
 };
 
-export const rangeFacetSelectionPayloadDefinition = (
-  selection: RangeFacetValue
-) => ({
+export const rangeFacetSelectionPayloadDefinition = (selection: RangeFacetValue) => ({
   facetId: facetIdDefinition,
   selection:
     typeof selection.start === 'string'

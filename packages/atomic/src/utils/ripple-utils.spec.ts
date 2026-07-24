@@ -226,9 +226,7 @@ describe('ripple-utils', () => {
       // Diameter = 318, radius = 159
       // Duration = Math.cbrt(159) * 129.21 ≈ 700ms
       const expectedDuration = Math.cbrt(159) * 129.21;
-      expect(ripple?.style.getPropertyValue('--animation-duration')).toBe(
-        `${expectedDuration}ms`
-      );
+      expect(ripple?.style.getPropertyValue('--animation-duration')).toBe(`${expectedDuration}ms`);
 
       vi.runAllTimers();
       await ripplePromise;
@@ -240,8 +238,7 @@ describe('ripple-utils', () => {
       const ripplePromise = createRipple(mockEvent, options);
 
       expect(eventUtils.listenOnce).toHaveBeenCalled();
-      const [element, eventType] = vi.mocked(eventUtils.listenOnce).mock
-        .calls[0];
+      const [element, eventType] = vi.mocked(eventUtils.listenOnce).mock.calls[0];
       expect(element).toBe(mockButton.querySelector('.ripple'));
       expect(eventType).toBe('animationend');
 
@@ -317,13 +314,7 @@ describe('ripple-utils', () => {
     });
 
     it('should handle different color options correctly', async () => {
-      const testColors = [
-        'primary',
-        'secondary',
-        'success',
-        'warning',
-        'error',
-      ];
+      const testColors = ['primary', 'secondary', 'success', 'warning', 'error'];
 
       for (const color of testColors) {
         const options = {color};

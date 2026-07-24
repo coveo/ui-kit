@@ -66,9 +66,7 @@ describe('buildAnalyticsParams', () => {
       trackingId: 'tracking-456',
     });
 
-    expect(result).toEqual(
-      expect.objectContaining({trackingId: 'tracking-456'})
-    );
+    expect(result).toEqual(expect.objectContaining({trackingId: 'tracking-456'}));
   });
 
   it('omits trackingId when it is an empty string', () => {

@@ -1,8 +1,5 @@
 import {getSearchApiBaseUrl} from '../../api/platform-client.js';
-import type {
-  HtmlRequest,
-  HtmlRequestOptions,
-} from '../../api/search/html/html-request.js';
+import type {HtmlRequest, HtmlRequestOptions} from '../../api/search/html/html-request.js';
 import type {
   ConfigurationSection,
   QuerySection,
@@ -23,10 +20,7 @@ export async function buildResultPreviewRequest(
   return {
     url:
       search.apiBaseUrl ??
-      getSearchApiBaseUrl(
-        state.configuration.organizationId,
-        state.configuration.environment
-      ),
+      getSearchApiBaseUrl(state.configuration.organizationId, state.configuration.environment),
     accessToken,
     organizationId,
     enableNavigation: false,

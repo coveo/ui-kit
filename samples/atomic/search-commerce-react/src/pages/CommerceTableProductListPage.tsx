@@ -21,10 +21,7 @@ import {
   AtomicProductSectionVisual,
   AtomicProductText,
 } from '@coveo/atomic-react/commerce';
-import {
-  buildCommerceEngine,
-  getSampleCommerceEngineConfiguration,
-} from '@coveo/headless/commerce';
+import {buildCommerceEngine, getSampleCommerceEngineConfiguration} from '@coveo/headless/commerce';
 import type {FunctionComponent} from 'react';
 import {useMemo} from 'react';
 

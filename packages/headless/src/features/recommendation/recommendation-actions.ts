@@ -3,19 +3,10 @@ import HistoryStore from '../../api/analytics/coveo.analytics/history-store.js';
 import {getSearchApiBaseUrl} from '../../api/platform-client.js';
 import type {RecommendationRequest} from '../../api/search/recommendation/recommendation-request.js';
 import type {Result} from '../../api/search/search/result.js';
-import {
-  type AsyncThunkSearchOptions,
-  isErrorResponse,
-} from '../../api/search/search-api-client.js';
+import {type AsyncThunkSearchOptions, isErrorResponse} from '../../api/search/search-api-client.js';
 import type {RecommendationAppState} from '../../state/recommendation-app-state.js';
-import type {
-  ConfigurationSection,
-  RecommendationSection,
-} from '../../state/state-sections.js';
-import {
-  requiredNonEmptyString,
-  validatePayload,
-} from '../../utils/validate-payload.js';
+import type {ConfigurationSection, RecommendationSection} from '../../state/state-sections.js';
+import {requiredNonEmptyString, validatePayload} from '../../utils/validate-payload.js';
 import type {AnalyticsAsyncThunk} from '../analytics/analytics-utils.js';
 import {fromAnalyticsStateToAnalyticsParams} from '../configuration/legacy-analytics-params.js';
 import type {SearchAction} from '../search/search-actions.js';
@@ -56,27 +47,24 @@ export const getRecommendations = createAsyncThunk<
   GetRecommendationsThunkReturn,
   void,
   AsyncThunkSearchOptions<StateNeededByGetRecommendations>
->(
-  'recommendation/get',
-  async (_, {getState, rejectWithValue, extra: {apiClient}}) => {
-    const state = getState();
-    const startedAt = Date.now();
-    const request = await buildRecommendationRequest(state);
-    const fetched = await apiClient.recommendations(request);
-    const duration = Date.now() - startedAt;
-    if (isErrorResponse(fetched)) {
-      return rejectWithValue(fetched.error);
-    }
-    return {
-      recommendations: fetched.success.results,
-      analyticsAction: logRecommendationUpdate(),
-      duration,
-      searchUid: fetched.success.searchUid,
-      splitTestRun: fetched.success.splitTestRun,
-      pipeline: fetched.success.pipeline,
-    };
+>('recommendation/get', async (_, {getState, rejectWithValue, extra: {apiClient}}) => {
+  const state = getState();
+  const startedAt = Date.now();
+  const request = await buildRecommendationRequest(state);
+  const fetched = await apiClient.recommendations(request);
+  const duration = Date.now() - startedAt;
+  if (isErrorResponse(fetched)) {
+    return rejectWithValue(fetched.error);
   }
-);
+  return {
+    recommendations: fetched.success.results,
+    analyticsAction: logRecommendationUpdate(),
+    duration,
+    searchUid: fetched.success.searchUid,
+    splitTestRun: fetched.success.splitTestRun,
+    pipeline: fetched.success.pipeline,
+  };
+});
 
 export const buildRecommendationRequest = async (
   s: StateNeededByGetRecommendations
@@ -85,18 +73,13 @@ export const buildRecommendationRequest = async (
   organizationId: s.configuration.organizationId,
   url:
     s.configuration.search.apiBaseUrl ??
-    getSearchApiBaseUrl(
-      s.configuration.organizationId,
-      s.configuration.environment
-    ),
+    getSearchApiBaseUrl(s.configuration.organizationId, s.configuration.environment),
   recommendation: s.recommendation.id,
   tab: s.configuration.analytics.originLevel2,
   referrer: s.configuration.analytics.originLevel3,
   timezone: s.configuration.search.timezone,
   locale: s.configuration.search.locale,
-  actionsHistory: s.configuration.analytics.enabled
-    ? HistoryStore.getInstance().getHistory()
-    : [],
+  actionsHistory: s.configuration.analytics.enabled ? HistoryStore.getInstance().getHistory() : [],
   ...(s.advancedSearchQueries && {
     aq: s.advancedSearchQueries.aq,
     cq: s.advancedSearchQueries.cq,
@@ -138,8 +121,5 @@ const buildAnalyticsSection = async (
           type: action.actionCause,
         };
 
-  return await fromAnalyticsStateToAnalyticsParams(
-    state.configuration.analytics,
-    eventDescription
-  );
+  return await fromAnalyticsStateToAnalyticsParams(state.configuration.analytics, eventDescription);
 };

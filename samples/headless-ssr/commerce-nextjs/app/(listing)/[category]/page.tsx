@@ -7,19 +7,13 @@ import FacetGenerator from '@/components/facets/facet-generator';
 import Pagination from '@/components/pagination';
 import ParameterManager from '@/components/parameter-manager';
 import ProductList from '@/components/product-list';
-import {
-  ListingProvider,
-  RecommendationProvider,
-} from '@/components/providers/providers';
+import {ListingProvider, RecommendationProvider} from '@/components/providers/providers';
 import PopularBought from '@/components/recommendations/popular-bought';
 import PopularViewed from '@/components/recommendations/popular-viewed';
 import Sort from '@/components/sort';
 import StandaloneSearchBox from '@/components/standalone-search-box';
 import Summary from '@/components/summary';
-import {
-  listingEngineDefinition,
-  recommendationEngineDefinition,
-} from '@/lib/commerce-engine';
+import {listingEngineDefinition, recommendationEngineDefinition} from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {defaultContext} from '@/utils/context';
 
@@ -65,29 +59,24 @@ export default async function Listing({
     },
   });
 
-  const recsStaticState = await recommendationEngineDefinition.fetchStaticState(
-    {
-      controllers: {
-        popularBought: {enabled: true},
-        popularViewed: {enabled: true},
-        cart: {initialState: {items}},
-        context: {
-          language: defaultContext.language,
-          country: defaultContext.country,
-          currency: defaultContext.currency,
-          view: {
-            url: `https://sports.barca.group/browse/promotions/${category}`,
-          },
+  const recsStaticState = await recommendationEngineDefinition.fetchStaticState({
+    controllers: {
+      popularBought: {enabled: true},
+      popularViewed: {enabled: true},
+      cart: {initialState: {items}},
+      context: {
+        language: defaultContext.language,
+        country: defaultContext.country,
+        currency: defaultContext.currency,
+        view: {
+          url: `https://sports.barca.group/browse/promotions/${category}`,
         },
       },
-    }
-  );
+    },
+  });
 
   return (
-    <ListingProvider
-      staticState={staticState}
-      navigatorContext={navigatorContext.marshal}
-    >
+    <ListingProvider staticState={staticState} navigatorContext={navigatorContext.marshal}>
       <ParameterManager url={navigatorContext.location} />
       <StandaloneSearchBox />
       <div className="PageLayout">

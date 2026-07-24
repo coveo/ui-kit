@@ -8,20 +8,12 @@ interface TabWrapperProps {
   activeTab: string;
 }
 
-export const renderTabWrapper: FunctionalComponentWithChildren<
-  TabWrapperProps
-> =
+export const renderTabWrapper: FunctionalComponentWithChildren<TabWrapperProps> =
   ({props}) =>
   (children) => {
     const {tabsIncluded, tabsExcluded, activeTab} = props;
 
-    if (
-      !shouldDisplayOnCurrentTab(
-        [...tabsIncluded],
-        [...tabsExcluded],
-        activeTab
-      )
-    ) {
+    if (!shouldDisplayOnCurrentTab([...tabsIncluded], [...tabsExcluded], activeTab)) {
       return nothing;
     }
 

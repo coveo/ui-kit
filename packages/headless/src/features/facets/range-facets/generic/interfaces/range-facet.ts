@@ -1,12 +1,6 @@
 import type {DateFacetSetState} from '../../date-facet-set/date-facet-set-state.js';
-import type {
-  DateFacetRequest,
-  DateRangeRequest,
-} from '../../date-facet-set/interfaces/request.js';
-import type {
-  DateFacetResponse,
-  DateFacetValue,
-} from '../../date-facet-set/interfaces/response.js';
+import type {DateFacetRequest, DateRangeRequest} from '../../date-facet-set/interfaces/request.js';
+import type {DateFacetResponse, DateFacetValue} from '../../date-facet-set/interfaces/response.js';
 import type {
   NumericFacetRequest,
   NumericRangeRequest,

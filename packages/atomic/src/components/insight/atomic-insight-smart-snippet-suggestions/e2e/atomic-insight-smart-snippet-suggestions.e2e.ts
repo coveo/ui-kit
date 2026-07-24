@@ -9,8 +9,6 @@ test.describe('atomic-insight-smart-snippet-suggestions', () => {
   test('should render the component', async ({smartSnippetSuggestions}) => {
     await expect(smartSnippetSuggestions.container).toBeVisible();
     await expect(smartSnippetSuggestions.heading).toHaveText('People also ask');
-    await expect(
-      smartSnippetSuggestions.collapsedQuestionButtons.first()
-    ).toBeVisible();
+    await expect(smartSnippetSuggestions.collapsedQuestionButtons.first()).toBeVisible();
   });
 });

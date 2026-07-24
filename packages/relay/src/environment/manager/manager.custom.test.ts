@@ -1,7 +1,4 @@
-import {
-  createMockConfig,
-  createMockConfigManager,
-} from '../../__mocks__/config.js';
+import {createMockConfig, createMockConfigManager} from '../../__mocks__/config.js';
 import {createMockEnvironment} from '../../__mocks__/environment.js';
 import {createEnvironmentManager} from './manager.js';
 

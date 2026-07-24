@@ -25,19 +25,12 @@ export default function FacetSearchCommon({
           onSubmit?.();
         }}
       >
-        <input
-          value={query}
-          onChange={(e) => onUpdateQuery?.(e.target.value)}
-        />
+        <input value={query} onChange={(e) => onUpdateQuery?.(e.target.value)} />
       </form>
       <ul>
         {facetSearchResults.map((value) => (
           <li key={value.rawValue}>
-            <button
-              type="button"
-              onClick={() => onToggle?.(value)}
-              disabled={isLoading}
-            >
+            <button type="button" onClick={() => onToggle?.(value)} disabled={isLoading}>
               {value.displayValue} ({value.count} results)
             </button>
           </li>

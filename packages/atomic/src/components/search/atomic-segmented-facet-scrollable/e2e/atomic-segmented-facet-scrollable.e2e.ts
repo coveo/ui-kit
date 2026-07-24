@@ -34,12 +34,8 @@ test.describe('atomic-segmented-facet-scrollable', () => {
     const isScrollable = await segmentedFacetScrollable.isScrollable();
 
     if (!isScrollable) {
-      await expect(segmentedFacetScrollable.leftArrowWrapper).toHaveClass(
-        /invisible/
-      );
-      await expect(segmentedFacetScrollable.rightArrowWrapper).toHaveClass(
-        /invisible/
-      );
+      await expect(segmentedFacetScrollable.leftArrowWrapper).toHaveClass(/invisible/);
+      await expect(segmentedFacetScrollable.rightArrowWrapper).toHaveClass(/invisible/);
     }
   });
 
@@ -54,32 +50,21 @@ test.describe('atomic-segmented-facet-scrollable', () => {
       const scrollPosition = await segmentedFacetScrollable.getScrollPosition();
       expect(scrollPosition).toBe(0);
 
-      await expect(segmentedFacetScrollable.rightArrowWrapper).not.toHaveClass(
-        /invisible/
-      );
-      await expect(segmentedFacetScrollable.leftArrowWrapper).toHaveClass(
-        /invisible/
-      );
+      await expect(segmentedFacetScrollable.rightArrowWrapper).not.toHaveClass(/invisible/);
+      await expect(segmentedFacetScrollable.leftArrowWrapper).toHaveClass(/invisible/);
     } else {
-      await expect(segmentedFacetScrollable.leftArrowWrapper).toHaveClass(
-        /invisible/
-      );
-      await expect(segmentedFacetScrollable.rightArrowWrapper).toHaveClass(
-        /invisible/
-      );
+      await expect(segmentedFacetScrollable.leftArrowWrapper).toHaveClass(/invisible/);
+      await expect(segmentedFacetScrollable.rightArrowWrapper).toHaveClass(/invisible/);
     }
   });
 
-  test('should scroll right when right arrow is clicked', async ({
-    segmentedFacetScrollable,
-  }) => {
+  test('should scroll right when right arrow is clicked', async ({segmentedFacetScrollable}) => {
     await segmentedFacetScrollable.page.waitForTimeout(2000);
 
     const isScrollable = await segmentedFacetScrollable.isScrollable();
 
     if (isScrollable) {
-      const initialPosition =
-        await segmentedFacetScrollable.getScrollPosition();
+      const initialPosition = await segmentedFacetScrollable.getScrollPosition();
       await segmentedFacetScrollable.clickRightArrow();
       await segmentedFacetScrollable.page.waitForTimeout(300);
 
@@ -88,9 +73,7 @@ test.describe('atomic-segmented-facet-scrollable', () => {
     }
   });
 
-  test('should show left arrow after scrolling right', async ({
-    segmentedFacetScrollable,
-  }) => {
+  test('should show left arrow after scrolling right', async ({segmentedFacetScrollable}) => {
     await segmentedFacetScrollable.page.waitForTimeout(2000);
 
     const isScrollable = await segmentedFacetScrollable.isScrollable();
@@ -99,15 +82,11 @@ test.describe('atomic-segmented-facet-scrollable', () => {
       await segmentedFacetScrollable.clickRightArrow();
       await segmentedFacetScrollable.page.waitForTimeout(300);
 
-      await expect(segmentedFacetScrollable.leftArrowWrapper).not.toHaveClass(
-        /invisible/
-      );
+      await expect(segmentedFacetScrollable.leftArrowWrapper).not.toHaveClass(/invisible/);
     }
   });
 
-  test('should scroll left when left arrow is clicked', async ({
-    segmentedFacetScrollable,
-  }) => {
+  test('should scroll left when left arrow is clicked', async ({segmentedFacetScrollable}) => {
     await segmentedFacetScrollable.page.waitForTimeout(2000);
 
     const isScrollable = await segmentedFacetScrollable.isScrollable();
@@ -116,8 +95,7 @@ test.describe('atomic-segmented-facet-scrollable', () => {
       await segmentedFacetScrollable.clickRightArrow();
       await segmentedFacetScrollable.page.waitForTimeout(300);
 
-      const beforeLeftClick =
-        await segmentedFacetScrollable.getScrollPosition();
+      const beforeLeftClick = await segmentedFacetScrollable.getScrollPosition();
       await segmentedFacetScrollable.clickLeftArrow();
       await segmentedFacetScrollable.page.waitForTimeout(300);
 

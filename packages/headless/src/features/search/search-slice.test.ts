@@ -18,11 +18,7 @@ import {
   fetchPage,
 } from './search-actions.js';
 import {searchReducer} from './search-slice.js';
-import {
-  emptyQuestionAnswer,
-  getSearchInitialState,
-  type SearchState,
-} from './search-state.js';
+import {emptyQuestionAnswer, getSearchInitialState, type SearchState} from './search-state.js';
 
 describe('search-slice', () => {
   let state: SearchState;
@@ -210,10 +206,7 @@ describe('search-slice', () => {
         response,
       });
 
-      const finalState = searchReducer(
-        state,
-        fetchMoreResults.fulfilled(search, '')
-      );
+      const finalState = searchReducer(state, fetchMoreResults.fulfilled(search, ''));
 
       expect(finalState.searchResponseId).toBe('an_initial_id');
     });
@@ -229,10 +222,7 @@ describe('search-slice', () => {
         response,
       });
 
-      const finalState = searchReducer(
-        state,
-        fetchMoreResults.fulfilled(search, '')
-      );
+      const finalState = searchReducer(state, fetchMoreResults.fulfilled(search, ''));
 
       expect(finalState.results[0].searchUid).toBe('an_initial_id');
       expect(finalState.results[1].searchUid).toBe('a_new_id');
@@ -266,10 +256,7 @@ describe('search-slice', () => {
         response: buildMockSearchResponse({results: [newResult]}),
       });
 
-      const finalState = searchReducer(
-        state,
-        fetchMoreResults.fulfilled(search, '')
-      );
+      const finalState = searchReducer(state, fetchMoreResults.fulfilled(search, ''));
 
       expect(finalState.questionAnswer).toEqual(originalQuestionAnswers);
     });
@@ -299,9 +286,7 @@ describe('search-slice', () => {
     function expectStatePreserved(finalState: SearchState) {
       expect(finalState.response).toEqual(initialMockState().response);
       expect(finalState.results).toEqual(initialMockState().results);
-      expect(finalState.questionAnswer).toEqual(
-        initialMockState().questionAnswer
-      );
+      expect(finalState.questionAnswer).toEqual(initialMockState().questionAnswer);
       expect(finalState.isLoading).toBe(false);
       expect(finalState.error).toEqual(null);
     }
@@ -434,17 +419,13 @@ describe('search-slice', () => {
       next: {actionCause: SearchPageEvents.searchboxSubmit},
     });
     const finalState = searchReducer(state, pendingAction);
-    expect(finalState.searchAction?.actionCause).toBe(
-      SearchPageEvents.searchboxSubmit
-    );
+    expect(finalState.searchAction?.actionCause).toBe(SearchPageEvents.searchboxSubmit);
   });
 
   it('set the search action cause during fetchMoreResults.pending', () => {
     const pendingAction = fetchMoreResults.pending('asd');
     const finalState = searchReducer(state, pendingAction);
-    expect(finalState.searchAction?.actionCause).toBe(
-      SearchPageEvents.browseResults
-    );
+    expect(finalState.searchAction?.actionCause).toBe(SearchPageEvents.browseResults);
   });
 
   it('set the search action cause during fetchPage.pending', () => {
@@ -453,9 +434,7 @@ describe('search-slice', () => {
       next: {actionCause: SearchPageEvents.browseResults},
     });
     const finalState = searchReducer(state, pendingAction);
-    expect(finalState.searchAction?.actionCause).toBe(
-      SearchPageEvents.browseResults
-    );
+    expect(finalState.searchAction?.actionCause).toBe(SearchPageEvents.browseResults);
   });
 
   it('update the requestId during executeSearch.pending', () => {

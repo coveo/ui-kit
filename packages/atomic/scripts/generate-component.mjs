@@ -7,21 +7,12 @@ const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 const kebabToPascal = (str) => str.split('-').map(capitalize).join('');
 
 async function generateFiles(name, outputDir) {
-  const templatesDir = path.resolve(
-    import.meta.dirname,
-    'generate-component-templates'
-  );
+  const templatesDir = path.resolve(import.meta.dirname, 'generate-component-templates');
   const resolvedOutputDir = path.resolve(outputDir);
   const githubPath = `${outputDir.split('components/')[1]}/${name}.ts`;
   const namePascalCase = kebabToPascal(name);
-  const shorterName = namePascalCase
-    .replace(/^Atomic/, '')
-    .replace(/^./, (c) => c.toLowerCase());
-  const storiesTitleName = name
-    .replace('atomic-', '')
-    .split('-')
-    .map(capitalize)
-    .join(' ');
+  const shorterName = namePascalCase.replace(/^Atomic/, '').replace(/^./, (c) => c.toLowerCase());
+  const storiesTitleName = name.replace('atomic-', '').split('-').map(capitalize).join(' ');
 
   const files = [
     {template: 'component.ts.hbs', output: `${name}.ts`},
@@ -41,10 +32,7 @@ async function generateFiles(name, outputDir) {
   for (const file of files) {
     const templatePath = path.join(templatesDir, file.template);
 
-    const outputPath = path.join(
-      resolvedOutputDir,
-      file.output.replace('noop', name)
-    );
+    const outputPath = path.join(resolvedOutputDir, file.output.replace('noop', name));
     outputPaths.push(outputPath);
 
     // Does not overwrite existing files
@@ -85,12 +73,7 @@ if (outputDir) {
   resolvedOutputDir = path.join(outputDir, normalizedComponentName);
 } else {
   // Default to src/components/commerce/<component-name> if no output dir is provided
-  resolvedOutputDir = path.resolve(
-    'src',
-    'components',
-    'commerce',
-    normalizedComponentName
-  );
+  resolvedOutputDir = path.resolve('src', 'components', 'commerce', normalizedComponentName);
 }
 
 if (!componentName) {

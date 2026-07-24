@@ -8,8 +8,7 @@ describe('renderFacetContainer', () => {
     return renderFunctionFixture(html`${renderFacetContainer()(children)}`);
   };
 
-  const getContainer = (element: HTMLElement) =>
-    element.querySelector('div[part="facet"]');
+  const getContainer = (element: HTMLElement) => element.querySelector('div[part="facet"]');
 
   it('renders correctly with children', async () => {
     const element = await setupElement(html`<div>Child Content</div>`);

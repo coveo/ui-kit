@@ -20,27 +20,21 @@ describe('format-common', () => {
     });
 
     it('should dispatch a custom event with correct type and detail', async () => {
-      const dispatchSpy = vi
-        .spyOn(element, 'dispatchEvent')
-        .mockImplementation((event) => {
-          expect(event).toBeInstanceOf(CustomEvent);
-          expect((event as CustomEvent).type).toBe('atomic/numberFormat');
-          expect((event as CustomEvent).detail).toBe(formatter);
-          return false;
-        });
+      const dispatchSpy = vi.spyOn(element, 'dispatchEvent').mockImplementation((event) => {
+        expect(event).toBeInstanceOf(CustomEvent);
+        expect((event as CustomEvent).type).toBe('atomic/numberFormat');
+        expect((event as CustomEvent).detail).toBe(formatter);
+        return false;
+      });
 
-      await expect(
-        dispatchNumberFormatEvent(formatter, element)
-      ).resolves.not.toThrow();
+      await expect(dispatchNumberFormatEvent(formatter, element)).resolves.not.toThrow();
       dispatchSpy.mockRestore();
     });
 
     it('should throw if dispatchEvent returns true', async () => {
       vi.spyOn(element, 'dispatchEvent').mockReturnValue(true);
 
-      await expect(
-        dispatchNumberFormatEvent(formatter, element)
-      ).rejects.toThrowError(
+      await expect(dispatchNumberFormatEvent(formatter, element)).rejects.toThrowError(
         'The Atomic number format component was not handled, as it is not a child of a compatible component'
       );
     });
@@ -60,9 +54,7 @@ describe('format-common', () => {
       const childElement = document.createElement('div');
       mockLitParent.appendChild(childElement);
 
-      const dispatchSpy = vi
-        .spyOn(childElement, 'dispatchEvent')
-        .mockReturnValue(false);
+      const dispatchSpy = vi.spyOn(childElement, 'dispatchEvent').mockReturnValue(false);
 
       await dispatchNumberFormatEvent(formatter, childElement);
 
@@ -84,9 +76,7 @@ describe('format-common', () => {
       const childElement = document.createElement('div');
       mockStencilParent.appendChild(childElement);
 
-      const dispatchSpy = vi
-        .spyOn(childElement, 'dispatchEvent')
-        .mockReturnValue(false);
+      const dispatchSpy = vi.spyOn(childElement, 'dispatchEvent').mockReturnValue(false);
 
       await dispatchNumberFormatEvent(formatter, childElement);
 
@@ -101,9 +91,7 @@ describe('format-common', () => {
       const childElement = document.createElement('div');
       regularParent.appendChild(childElement);
 
-      const dispatchSpy = vi
-        .spyOn(childElement, 'dispatchEvent')
-        .mockReturnValue(false);
+      const dispatchSpy = vi.spyOn(childElement, 'dispatchEvent').mockReturnValue(false);
 
       await dispatchNumberFormatEvent(formatter, childElement);
 

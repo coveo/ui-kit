@@ -28,9 +28,7 @@ export class InsightSearchBoxPageObject extends BasePageObject {
 
   searchSuggestions({index, total}: {index?: number; total?: number} = {}) {
     return this.page.getByLabel(
-      new RegExp(
-        `suggested query\\.(?: Button\\.)? ${index ?? '\\d+'} of ${total ?? '\\d+'}\\.`
-      )
+      new RegExp(`suggested query\\.(?: Button\\.)? ${index ?? '\\d+'} of ${total ?? '\\d+'}\\.`)
     );
   }
 

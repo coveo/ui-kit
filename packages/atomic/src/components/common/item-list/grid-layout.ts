@@ -8,9 +8,7 @@ export interface GridLayoutProps {
   setRef: (element?: Element) => void;
 }
 
-export const renderGridLayout: FunctionalComponentWithChildren<
-  GridLayoutProps
-> = ({props}) => {
+export const renderGridLayout: FunctionalComponentWithChildren<GridLayoutProps> = ({props}) => {
   const {selectorForItem, setRef} = props;
 
   let ref: Element | undefined;

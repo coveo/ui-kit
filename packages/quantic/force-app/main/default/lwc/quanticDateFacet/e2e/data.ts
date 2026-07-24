@@ -1,6 +1,12 @@
-const facetData = {
-  facetId: 'Date',
-  field: 'Date',
+const facetId = 'Date';
+const field = 'Date';
+
+/**
+ * Facet response before any value is selected.
+ */
+export const initialFacetData = {
+  facetId,
+  field,
   moreValuesAvailable: true,
   values: [
     {
@@ -21,4 +27,18 @@ const facetData = {
   indexScore: 0.40500903971252294,
 };
 
-export default facetData;
+const [firstRange, secondRange] = initialFacetData.values;
+
+/**
+ * Facet response after the first value is selected.
+ */
+export const selectedFacetData = {
+  ...initialFacetData,
+  values: [
+    {
+      ...firstRange,
+      state: 'selected',
+    },
+    secondRange,
+  ],
+};

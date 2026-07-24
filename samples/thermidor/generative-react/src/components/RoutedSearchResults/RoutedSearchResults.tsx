@@ -18,8 +18,7 @@ interface RoutedSearchResultsProps {
 
 export function RoutedSearchResults(props: RoutedSearchResultsProps) {
   const [state, setState] = useState<ResultListControllerState | null>(null);
-  const [paginationState, setPaginationState] =
-    useState<PaginationControllerState | null>(null);
+  const [paginationState, setPaginationState] = useState<PaginationControllerState | null>(null);
   const paginationRef = useRef<PaginationController | null>(null);
 
   useEffect(() => {
@@ -80,12 +79,8 @@ export function RoutedSearchResults(props: RoutedSearchResultsProps) {
         page={paginationState.page}
         totalPages={paginationState.totalPages}
         pageSize={paginationState.pageSize}
-        onPrevious={() =>
-          paginationRef.current?.selectPage(paginationState.page - 1)
-        }
-        onNext={() =>
-          paginationRef.current?.selectPage(paginationState.page + 1)
-        }
+        onPrevious={() => paginationRef.current?.selectPage(paginationState.page - 1)}
+        onNext={() => paginationRef.current?.selectPage(paginationState.page + 1)}
         onPageSizeChange={(size) => paginationRef.current?.setPageSize(size)}
       />
     </div>

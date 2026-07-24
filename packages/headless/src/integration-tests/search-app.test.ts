@@ -1,8 +1,5 @@
 import type {Result} from '../api/search/search/result.js';
-import {
-  buildSearchEngine,
-  type SearchEngine,
-} from '../app/search-engine/search-engine.js';
+import {buildSearchEngine, type SearchEngine} from '../app/search-engine/search-engine.js';
 import {
   getSampleSearchEngineConfiguration,
   type SearchEngineConfiguration,
@@ -16,14 +13,8 @@ import {
   type Facet,
   type FacetValue,
 } from '../controllers/facets/facet/headless-facet.js';
-import {
-  buildResultList,
-  type ResultList,
-} from '../controllers/result-list/headless-result-list.js';
-import {
-  buildSearchBox,
-  type SearchBox,
-} from '../controllers/search-box/headless-search-box.js';
+import {buildResultList, type ResultList} from '../controllers/result-list/headless-result-list.js';
+import {buildSearchBox, type SearchBox} from '../controllers/search-box/headless-search-box.js';
 import {buildSort, type Sort} from '../controllers/sort/headless-sort.js';
 import {
   buildDateSortCriterion,

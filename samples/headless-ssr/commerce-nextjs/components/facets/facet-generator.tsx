@@ -31,10 +31,7 @@ export default function FacetGenerator() {
               return (
                 <NumericFacet
                   key={facetId}
-                  controller={methods?.getFacetController(
-                    facetId,
-                    'numericalRange'
-                  )}
+                  controller={methods?.getFacetController(facetId, 'numericalRange')}
                   staticState={facetState}
                 />
               );
@@ -50,10 +47,7 @@ export default function FacetGenerator() {
               return (
                 <CategoryFacet
                   key={facetId}
-                  controller={methods?.getFacetController(
-                    facetId,
-                    'hierarchical'
-                  )}
+                  controller={methods?.getFacetController(facetId, 'hierarchical')}
                   staticState={facetState}
                 />
               );

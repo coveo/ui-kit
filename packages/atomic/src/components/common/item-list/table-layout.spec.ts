@@ -1,9 +1,6 @@
 import {html, nothing, type TemplateResult} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
-import {
-  fixture,
-  renderFunctionFixture,
-} from '@/vitest-utils/testing-helpers/fixture';
+import {fixture, renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
 import {
   renderTableData,
@@ -427,8 +424,7 @@ describe('renderTableData', () => {
     const templateContentForFirstItem = document.createDocumentFragment();
 
     const template = document.createElement('template');
-    template.innerHTML =
-      `<atomic-table-element label="Test Label 1"></atomic-table-element>
+    template.innerHTML = `<atomic-table-element label="Test Label 1"></atomic-table-element>
       <atomic-table-element label="Test Label 2"></atomic-table-element>`.trim();
 
     templateContentForFirstItem.appendChild(template.content);

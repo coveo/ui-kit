@@ -9,10 +9,7 @@ import type {BaseParam} from '../platform-service-params.js';
 import {APICallsQueue} from './api-calls-queue.js';
 import type {FacetSearchRequest} from './facet-search/facet-search-request.js';
 import type {FacetSearchResponse} from './facet-search/facet-search-response.js';
-import type {
-  FieldDescription,
-  FieldDescriptionsResponseSuccess,
-} from './fields/fields-response.js';
+import type {FieldDescription, FieldDescriptionsResponseSuccess} from './fields/fields-response.js';
 import {getHtml, type HtmlAPIClientOptions} from './html/html-api-client.js';
 import type {HtmlRequest} from './html/html-request.js';
 import type {PlanRequest} from './plan/plan-request.js';
@@ -46,11 +43,7 @@ export interface SearchOptions {
   origin: SearchOrigin;
 }
 
-export type AllSearchAPIResponse =
-  | Plan
-  | Search
-  | QuerySuggest
-  | FieldDescription;
+export type AllSearchAPIResponse = Plan | Search | QuerySuggest | FieldDescription;
 
 export interface AsyncThunkSearchOptions<
   T extends Partial<SearchAppState>,
@@ -64,16 +57,12 @@ export interface SearchAPIClientOptions extends HtmlAPIClientOptions {
   postprocessFacetSearchResponseMiddleware: PostprocessFacetSearchResponseMiddleware;
 }
 
-export type SearchAPIClientResponse<T> =
-  | {success: T}
-  | {error: SearchAPIErrorWithStatusCode};
+export type SearchAPIClientResponse<T> = {success: T} | {error: SearchAPIErrorWithStatusCode};
 
 export class SearchAPIClient implements FacetSearchAPIClient {
   constructor(private options: SearchAPIClientOptions) {}
 
-  async plan(
-    req: PlanRequest
-  ): Promise<SearchAPIClientResponse<PlanResponseSuccess>> {
+  async plan(req: PlanRequest): Promise<SearchAPIClientResponse<PlanResponseSuccess>> {
     const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'POST', 'application/json', '/plan'),
       requestParams: pickNonBaseParams(req),
@@ -152,10 +141,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     );
 
     if (response instanceof Error) {
-      return buildAPIResponseFromErrorOrThrow(
-        response,
-        options?.disableAbortWarning
-      );
+      return buildAPIResponseFromErrorOrThrow(response, options?.disableAbortWarning);
     }
 
     const body = await response.json();
@@ -163,8 +149,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
 
     if (isSuccessSearchResponse(body)) {
       payload.body = shimResponse(body);
-      const processedResponse =
-        await this.options.postprocessSearchResponseMiddleware(payload);
+      const processedResponse = await this.options.postprocessSearchResponseMiddleware(payload);
       return {
         success: processedResponse.body,
       };
@@ -190,8 +175,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     const body = await response.json();
     const payload = {response, body};
 
-    const processedResponse =
-      await this.options.postprocessFacetSearchResponseMiddleware(payload);
+    const processedResponse = await this.options.postprocessFacetSearchResponseMiddleware(payload);
 
     return processedResponse.body;
   }
@@ -213,8 +197,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     if (isSuccessSearchResponse(body)) {
       const payload = {response, body};
       payload.body = shimResponse(body);
-      const processedResponse =
-        await this.options.postprocessSearchResponseMiddleware(payload);
+      const processedResponse = await this.options.postprocessSearchResponseMiddleware(payload);
       return {
         success: processedResponse.body,
       };
@@ -251,9 +234,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
   }
 }
 
-export const isSuccessResponse = <T>(
-  r: SearchAPIClientResponse<T>
-): r is {success: T} => {
+export const isSuccessResponse = <T>(r: SearchAPIClientResponse<T>): r is {success: T} => {
   return (r as {success: T}).success !== undefined;
 };
 
@@ -263,9 +244,7 @@ export const isErrorResponse = <T>(
   return (r as {error: SearchAPIErrorWithStatusCode}).error !== undefined;
 };
 
-export function isSuccessSearchResponse(
-  body: unknown
-): body is SearchResponseSuccess {
+export function isSuccessSearchResponse(body: unknown): body is SearchResponseSuccess {
   return (body as SearchResponseSuccess).results !== undefined;
 }
 
@@ -280,9 +259,7 @@ export function shimResponse(response: SearchResponseSuccess) {
   return response;
 }
 
-function isSuccessQuerySuggestionsResponse(
-  body: unknown
-): body is QuerySuggestSuccessResponse {
+function isSuccessQuerySuggestionsResponse(body: unknown): body is QuerySuggestSuccessResponse {
   return (body as QuerySuggestSuccessResponse).completions !== undefined;
 }
 

@@ -95,11 +95,9 @@ const searchApiResponse: ConverseEvent = SearchApiResponse({
       {
         title: 'Wax or no wax? – Barca Sports Blog',
         uri: 'https://barca356.wordpress.com/2022/12/12/wax-or-no-wax/',
-        printableUri:
-          'https://barca356.wordpress.com/2022/12/12/wax-or-no-wax/',
+        printableUri: 'https://barca356.wordpress.com/2022/12/12/wax-or-no-wax/',
         clickUri: 'https://barca356.wordpress.com/2022/12/12/wax-or-no-wax/',
-        uniqueId:
-          '42.32075$https://barca356.wordpress.com/2022/12/12/wax-or-no-wax/',
+        uniqueId: '42.32075$https://barca356.wordpress.com/2022/12/12/wax-or-no-wax/',
         primaryid: 'LJZHQR3HKXB3AWLUJMZXEWCDPFRC4MZSGA3TKLTEMVTGC5LMOQ',
         excerpt:
           'Waxing a surfboard is an important step in the process of owning and caring for your board. ... etc., which can cause damage over time if not taken care of properly – reducing its lifespan ...',
@@ -141,8 +139,7 @@ const searchApiResponse: ConverseEvent = SearchApiResponse({
           sysurihash: 'ZrxGgUðYtK3rXCyb',
           urihash: 'ZrxGgUðYtK3rXCyb',
           sysindexeddate: 1761049878000,
-          permanentid:
-            '897b4167c1b1e616a93371de147e00f6604656f9fce46c12679a0770e95d',
+          permanentid: '897b4167c1b1e616a93371de147e00f6604656f9fce46c12679a0770e95d',
           date: 1673321097000,
           objecttype: 'Article',
           sourcetype: 'Sitemap',
@@ -159,11 +156,9 @@ const searchApiResponse: ConverseEvent = SearchApiResponse({
         },
         Title: 'Wax or no wax? – Barca Sports Blog',
         Uri: 'https://barca356.wordpress.com/2022/12/12/wax-or-no-wax/',
-        PrintableUri:
-          'https://barca356.wordpress.com/2022/12/12/wax-or-no-wax/',
+        PrintableUri: 'https://barca356.wordpress.com/2022/12/12/wax-or-no-wax/',
         ClickUri: 'https://barca356.wordpress.com/2022/12/12/wax-or-no-wax/',
-        UniqueId:
-          '42.32075$https://barca356.wordpress.com/2022/12/12/wax-or-no-wax/',
+        UniqueId: '42.32075$https://barca356.wordpress.com/2022/12/12/wax-or-no-wax/',
         Excerpt:
           'Waxing a surfboard is an important step in the process of owning and caring for your board. ... etc., which can cause damage over time if not taken care of properly – reducing its lifespan ...',
         FirstSentences: null,
@@ -218,8 +213,7 @@ const searchApiResponse: ConverseEvent = SearchApiResponse({
           sysurihash: '7ðPBTQN65rOJQmtq',
           urihash: '7ðPBTQN65rOJQmtq',
           sysindexeddate: 1761049874000,
-          permanentid:
-            'db8b4912f4b499426ce61e0fb5c3196c459cea2eb113bc5967c5dca1d073',
+          permanentid: 'db8b4912f4b499426ce61e0fb5c3196c459cea2eb113bc5967c5dca1d073',
           date: 1673321096000,
           objecttype: 'Article',
           sourcetype: 'Sitemap',
@@ -249,12 +243,9 @@ const searchApiResponse: ConverseEvent = SearchApiResponse({
       {
         title: 'First Time Surfer? – Barca Sports Blog',
         uri: 'https://barca356.wordpress.com/2023/01/10/first-time-surfer/',
-        printableUri:
-          'https://barca356.wordpress.com/2023/01/10/first-time-surfer/',
-        clickUri:
-          'https://barca356.wordpress.com/2023/01/10/first-time-surfer/',
-        uniqueId:
-          '42.32075$https://barca356.wordpress.com/2023/01/10/first-time-surfer/',
+        printableUri: 'https://barca356.wordpress.com/2023/01/10/first-time-surfer/',
+        clickUri: 'https://barca356.wordpress.com/2023/01/10/first-time-surfer/',
+        uniqueId: '42.32075$https://barca356.wordpress.com/2023/01/10/first-time-surfer/',
         primaryid: 'JJQXQY2BNEYHQZDZHBZVINJWMIXDGMRQG42S4ZDFMZQXK3DU',
         excerpt:
           'Surfboard Wax is an important part of having an enjoyable experience in the water. ... Make sure to check labels carefully and avoid products containing oxybenzone due its detrimental effects ...',
@@ -292,8 +283,7 @@ const searchApiResponse: ConverseEvent = SearchApiResponse({
           sysurihash: 'JaxcAi0xdy8sT56b',
           urihash: 'JaxcAi0xdy8sT56b',
           sysindexeddate: 1761049874000,
-          permanentid:
-            '190117e2f7bc7e8366df9595ff10a802a162c9a9184f01e725c6cfdfc592',
+          permanentid: '190117e2f7bc7e8366df9595ff10a802a162c9a9184f01e725c6cfdfc592',
           date: 1673404328000,
           objecttype: 'Article',
           sourcetype: 'Sitemap',
@@ -310,12 +300,9 @@ const searchApiResponse: ConverseEvent = SearchApiResponse({
         },
         Title: 'First Time Surfer? – Barca Sports Blog',
         Uri: 'https://barca356.wordpress.com/2023/01/10/first-time-surfer/',
-        PrintableUri:
-          'https://barca356.wordpress.com/2023/01/10/first-time-surfer/',
-        ClickUri:
-          'https://barca356.wordpress.com/2023/01/10/first-time-surfer/',
-        UniqueId:
-          '42.32075$https://barca356.wordpress.com/2023/01/10/first-time-surfer/',
+        PrintableUri: 'https://barca356.wordpress.com/2023/01/10/first-time-surfer/',
+        ClickUri: 'https://barca356.wordpress.com/2023/01/10/first-time-surfer/',
+        UniqueId: '42.32075$https://barca356.wordpress.com/2023/01/10/first-time-surfer/',
         Excerpt:
           'Surfboard Wax is an important part of having an enjoyable experience in the water. ... Make sure to check labels carefully and avoid products containing oxybenzone due its detrimental effects ...',
         FirstSentences: null,
@@ -323,12 +310,9 @@ const searchApiResponse: ConverseEvent = SearchApiResponse({
       {
         title: 'Racking like a King – Barca Sports Blog',
         uri: 'https://barca356.wordpress.com/2022/12/12/racking-like-a-king/',
-        printableUri:
-          'https://barca356.wordpress.com/2022/12/12/racking-like-a-king/',
-        clickUri:
-          'https://barca356.wordpress.com/2022/12/12/racking-like-a-king/',
-        uniqueId:
-          '42.32075$https://barca356.wordpress.com/2022/12/12/racking-like-a-king/',
+        printableUri: 'https://barca356.wordpress.com/2022/12/12/racking-like-a-king/',
+        clickUri: 'https://barca356.wordpress.com/2022/12/12/racking-like-a-king/',
+        uniqueId: '42.32075$https://barca356.wordpress.com/2022/12/12/racking-like-a-king/',
         primaryid: 'YOYUMV3WGVMUWWSTKFXXOODNOVKC4MZSGA3TKLTEMVTGC5LMOQ',
         excerpt:
           'Next, place the board into the rack with care and make sure it is secured tightly with straps so that it ... When racking up surfboards and paddleboards securely on a vehicle, ensure that all ...',
@@ -366,8 +350,7 @@ const searchApiResponse: ConverseEvent = SearchApiResponse({
           sysurihash: 'ñFWv5YKZSQow8muT',
           urihash: 'ñFWv5YKZSQow8muT',
           sysindexeddate: 1761049873000,
-          permanentid:
-            '306c55ce81cdf9de01762914da7f4215866bd9e513e6f644a7637ca8490d',
+          permanentid: '306c55ce81cdf9de01762914da7f4215866bd9e513e6f644a7637ca8490d',
           date: 1670881110000,
           objecttype: 'Article',
           sourcetype: 'Sitemap',
@@ -384,12 +367,9 @@ const searchApiResponse: ConverseEvent = SearchApiResponse({
         },
         Title: 'Racking like a King – Barca Sports Blog',
         Uri: 'https://barca356.wordpress.com/2022/12/12/racking-like-a-king/',
-        PrintableUri:
-          'https://barca356.wordpress.com/2022/12/12/racking-like-a-king/',
-        ClickUri:
-          'https://barca356.wordpress.com/2022/12/12/racking-like-a-king/',
-        UniqueId:
-          '42.32075$https://barca356.wordpress.com/2022/12/12/racking-like-a-king/',
+        PrintableUri: 'https://barca356.wordpress.com/2022/12/12/racking-like-a-king/',
+        ClickUri: 'https://barca356.wordpress.com/2022/12/12/racking-like-a-king/',
+        UniqueId: '42.32075$https://barca356.wordpress.com/2022/12/12/racking-like-a-king/',
         Excerpt:
           'Next, place the board into the rack with care and make sure it is secured tightly with straps so that it ... When racking up surfboards and paddleboards securely on a vehicle, ensure that all ...',
         FirstSentences: null,

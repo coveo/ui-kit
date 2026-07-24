@@ -15,9 +15,7 @@ test.describe('atomic-result-badge', () => {
       await expect(resultBadge.badgeLabel.first()).toBeVisible();
     });
 
-    test('should render atomic-result-text with the field', async ({
-      resultBadge,
-    }) => {
+    test('should render atomic-result-text with the field', async ({resultBadge}) => {
       await expect(resultBadge.resultTextField.first()).toBeVisible();
     });
   });

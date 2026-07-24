@@ -1,8 +1,5 @@
 import type {FacetSelectionChangeMetadata} from './facet-set-analytics-actions-utils.js';
-import {
-  logFacetDeselect,
-  logFacetSelect,
-} from './facet-set-insight-analytics-actions.js';
+import {logFacetDeselect, logFacetSelect} from './facet-set-insight-analytics-actions.js';
 import type {FacetValue} from './interfaces/response.js';
 
 const isFacetValueSelected = (value: FacetValue) => {
@@ -18,7 +15,5 @@ export const getInsightAnalyticsActionForToggleFacetSelect = (
     facetValue: selection.value,
   };
 
-  return isFacetValueSelected(selection)
-    ? logFacetDeselect(payload)
-    : logFacetSelect(payload);
+  return isFacetValueSelected(selection) ? logFacetDeselect(payload) : logFacetSelect(payload);
 };

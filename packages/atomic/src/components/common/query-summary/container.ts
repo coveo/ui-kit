@@ -6,9 +6,7 @@ interface Props {
   additionalClasses?: string;
 }
 
-export const renderQuerySummaryContainer: FunctionalComponentWithChildren<
-  Props
-> =
+export const renderQuerySummaryContainer: FunctionalComponentWithChildren<Props> =
   ({props}) =>
   (children) => {
     const classNames = {
@@ -16,7 +14,5 @@ export const renderQuerySummaryContainer: FunctionalComponentWithChildren<
       [props.additionalClasses ?? '']: Boolean(props.additionalClasses),
     };
 
-    return html`
-      <div class=${multiClassMap(classNames)} part="container">${children}</div>
-    `;
+    return html` <div class=${multiClassMap(classNames)} part="container">${children}</div> `;
   };

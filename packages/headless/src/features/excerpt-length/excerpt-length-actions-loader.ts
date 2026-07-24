@@ -29,9 +29,7 @@ export interface ExcerptLengthActionCreators {
  * @group Actions
  * @category ExcerptLength
  */
-export function loadExcerptLengthActions(
-  engine: SearchEngine
-): ExcerptLengthActionCreators {
+export function loadExcerptLengthActions(engine: SearchEngine): ExcerptLengthActionCreators {
   engine.addReducers({excerptLength});
 
   return {

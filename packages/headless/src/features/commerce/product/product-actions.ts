@@ -24,13 +24,10 @@ export const productClick = createAsyncThunk<
   void,
   ProductClickPayload,
   AsyncThunkCommerceOptions<CommerceEngineState>
->(
-  'commerce/product/click',
-  async (payload: ProductClickPayload, {extra, getState}) => {
-    const {relay} = extra;
-    const currency = getCurrency(getState().commerceContext);
-    const relayPayload = {currency, ...payload};
+>('commerce/product/click', async (payload: ProductClickPayload, {extra, getState}) => {
+  const {relay} = extra;
+  const currency = getCurrency(getState().commerceContext);
+  const relayPayload = {currency, ...payload};
 
-    relay.emit('ec.productClick', relayPayload);
-  }
-);
+  relay.emit('ec.productClick', relayPayload);
+});

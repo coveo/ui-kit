@@ -83,10 +83,7 @@ export function containsVisualElement(node: Node) {
   return false;
 }
 
-export function elementHasAncestorTag(
-  el: HTMLElement,
-  tagName: string
-): boolean {
+export function elementHasAncestorTag(el: HTMLElement, tagName: string): boolean {
   const parentElement = el.parentElement;
   if (!parentElement) {
     return false;
@@ -109,9 +106,7 @@ export function sanitizeStyle(style: string) {
   return wrapperEl.querySelector('style')?.innerHTML;
 }
 
-export function getFocusedElement(
-  rootElement: Document | ShadowRoot = document
-): Element | null {
+export function getFocusedElement(rootElement: Document | ShadowRoot = document): Element | null {
   const activeElement = rootElement.activeElement;
   if (activeElement?.shadowRoot) {
     return getFocusedElement(activeElement.shadowRoot) ?? activeElement;
@@ -123,8 +118,7 @@ export function isFocusingOut(event: FocusEvent) {
   return (
     document.hasFocus() &&
     (!(event.relatedTarget instanceof Node) ||
-      (event.currentTarget instanceof Node &&
-        !event.currentTarget.contains(event.relatedTarget)))
+      (event.currentTarget instanceof Node && !event.currentTarget.contains(event.relatedTarget)))
   );
 }
 
@@ -203,15 +197,10 @@ export function aggregate<V, K extends PropertyKey>(
  * @param objects the objects to "spread" together
  * @returns the spread result
  */
-export function spreadProperties<Output extends object = {}>(
-  ...objects: object[]
-) {
+export function spreadProperties<Output extends object = {}>(...objects: object[]) {
   const returnObject = {};
   for (const obj of objects) {
-    Object.defineProperties(
-      returnObject,
-      Object.getOwnPropertyDescriptors(obj)
-    );
+    Object.defineProperties(returnObject, Object.getOwnPropertyDescriptors(obj));
   }
   return returnObject as Output;
 }

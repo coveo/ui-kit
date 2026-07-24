@@ -29,14 +29,10 @@ export const getLegacyAnalyticsActionForToggleFacetSelect = (
     facetValue: selection.value,
   };
 
-  return isFacetValueSelected(selection)
-    ? logFacetDeselect(payload)
-    : logFacetSelect(payload);
+  return isFacetValueSelected(selection) ? logFacetDeselect(payload) : logFacetSelect(payload);
 };
 
-export const getAnalyticsActionForToggleFacetSelect = (
-  selection: FacetValue
-): SearchAction =>
+export const getAnalyticsActionForToggleFacetSelect = (selection: FacetValue): SearchAction =>
   isFacetValueSelected(selection) ? facetDeselect() : facetSelect();
 
 export const getLegacyAnalyticsActionForToggleFacetExclude = (
@@ -48,12 +44,8 @@ export const getLegacyAnalyticsActionForToggleFacetExclude = (
     facetValue: selection.value,
   };
 
-  return isFacetValueExcluded(selection)
-    ? logFacetUnexclude(payload)
-    : logFacetExclude(payload);
+  return isFacetValueExcluded(selection) ? logFacetUnexclude(payload) : logFacetExclude(payload);
 };
 
-export const getAnalyticsActionForToggleFacetExclude = (
-  selection: FacetValue
-): SearchAction =>
+export const getAnalyticsActionForToggleFacetExclude = (selection: FacetValue): SearchAction =>
   isFacetValueExcluded(selection) ? facetUnexclude() : facetExclude();

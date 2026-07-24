@@ -6,7 +6,9 @@
   },
   "ignorePaths": [
     "CHANGELOG.md",
-    "packages/platform-mock-api/src/converse/templates/**"
+    "packages/platform-mock-api/src/converse/templates/**",
+    "packages/coveo-analytics/README.md",
+    "packages/coveo-analytics/docs/technical-overview.md"
   ],
   "import": ["@cspell/dict-fr-fr/cspell-ext.json"],
   "words": [

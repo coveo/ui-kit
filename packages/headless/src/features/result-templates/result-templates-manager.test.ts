@@ -1,8 +1,5 @@
 import {fieldsReducer as fields} from '../../features/fields/fields-slice.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../test/mock-engine-v2.js';
 import {buildMockResult} from '../../test/mock-result.js';
 import {createMockState} from '../../test/mock-state.js';
 import {
@@ -31,9 +28,7 @@ describe('result template manager', () => {
         conditions: [() => true, () => true],
       });
 
-      expect(resultTemplateManager.selectTemplate(buildMockResult())).toBe(
-        '{{title}}'
-      );
+      expect(resultTemplateManager.selectTemplate(buildMockResult())).toBe('{{title}}');
     });
 
     it('does not return a registered template that does not match', () => {
@@ -42,9 +37,7 @@ describe('result template manager', () => {
         conditions: [() => true, () => false],
       });
 
-      expect(
-        resultTemplateManager.selectTemplate(buildMockResult())
-      ).toBeNull();
+      expect(resultTemplateManager.selectTemplate(buildMockResult())).toBeNull();
     });
 
     it(`when multiple templates match
@@ -62,9 +55,7 @@ describe('result template manager', () => {
         }
       );
 
-      expect(resultTemplateManager.selectTemplate(buildMockResult())).toBe(
-        '{{title2}}'
-      );
+      expect(resultTemplateManager.selectTemplate(buildMockResult())).toBe('{{title2}}');
     });
 
     it(`when multiple templates match & have the same priority
@@ -84,16 +75,12 @@ describe('result template manager', () => {
         }
       );
 
-      expect(resultTemplateManager.selectTemplate(buildMockResult())).toBe(
-        '{{title1}}'
-      );
+      expect(resultTemplateManager.selectTemplate(buildMockResult())).toBe('{{title1}}');
     });
 
     it('validates the template', () => {
       expect(() =>
-        resultTemplateManager.registerTemplates(
-          undefined as unknown as ResultTemplate<string>
-        )
+        resultTemplateManager.registerTemplates(undefined as unknown as ResultTemplate<string>)
       ).toThrow();
       expect(() =>
         resultTemplateManager.registerTemplates({

@@ -17,9 +17,7 @@ import {
   type FacetGeneratorOptions,
 } from './headless-commerce-facet-generator.js';
 
-vi.mock(
-  '../../../../../features/commerce/facets/core-facet/core-facet-actions'
-);
+vi.mock('../../../../../features/commerce/facets/core-facet/core-facet-actions');
 
 describe('CSR FacetGenerator', () => {
   let engine: MockedCommerceEngine;
@@ -51,8 +49,7 @@ describe('CSR FacetGenerator', () => {
         }),
       };
       state.facetSearchSet[facet.facetId] = buildMockFacetSearch();
-      state.categoryFacetSearchSet[facet.facetId] =
-        buildMockCategoryFacetSearch();
+      state.categoryFacetSearchSet[facet.facetId] = buildMockCategoryFacetSearch();
     }
   }
 
@@ -176,9 +173,7 @@ describe('CSR FacetGenerator', () => {
       const facetState = facetGenerator.facets;
 
       expect(facetState.length).toEqual(5);
-      expect(facetState.map((f) => f.state.facetId)).toEqual(
-        facets.map((f) => f.facetId)
-      );
+      expect(facetState.map((f) => f.state.facetId)).toEqual(facets.map((f) => f.facetId));
     });
   });
 

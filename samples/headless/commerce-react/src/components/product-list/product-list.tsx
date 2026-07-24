@@ -9,16 +9,13 @@ import InteractiveProduct from '../interactive-product/interactive-product.js';
 
 interface IProductListProps {
   products: HeadlessProduct[];
-  controllerBuilder: (
-    props: InteractiveProductProps
-  ) => HeadlessInteractiveProduct;
+  controllerBuilder: (props: InteractiveProductProps) => HeadlessInteractiveProduct;
   cartController: Cart;
   promoteChildToParent: (product: ChildProduct) => void;
 }
 
 export default function ProductList(props: IProductListProps) {
-  const {products, controllerBuilder, cartController, promoteChildToParent} =
-    props;
+  const {products, controllerBuilder, cartController, promoteChildToParent} = props;
 
   if (products.length === 0) {
     return null;

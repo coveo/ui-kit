@@ -22,9 +22,7 @@ test.describe('atomic-category-facet', () => {
     });
   });
 
-  test('should display child values when selecting a root value', async ({
-    facet,
-  }) => {
+  test('should display child values when selecting a root value', async ({facet}) => {
     await facet.load({story: 'with-selected-root-value'});
 
     await test.step('Verify "All Categories" button is visible', async () => {
@@ -43,9 +41,7 @@ test.describe('atomic-category-facet', () => {
     });
   });
 
-  test('should display grandchild values when selecting a child value', async ({
-    facet,
-  }) => {
+  test('should display grandchild values when selecting a child value', async ({facet}) => {
     await facet.load({story: 'with-selected-child-value'});
 
     await test.step('Verify "All Categories" button is visible', async () => {
@@ -86,9 +82,7 @@ test.describe('atomic-category-facet', () => {
     });
   });
 
-  test('should collapse and hide values when clicking the label button', async ({
-    facet,
-  }) => {
+  test('should collapse and hide values when clicking the label button', async ({facet}) => {
     await facet.load();
 
     await test.step('Verify values are initially visible', async () => {
@@ -112,9 +106,7 @@ test.describe('atomic-category-facet', () => {
     });
   });
 
-  test('should show more values in deep hierarchy and focus first new value', async ({
-    facet,
-  }) => {
+  test('should show more values in deep hierarchy and focus first new value', async ({facet}) => {
     await facet.load({story: 'with-selected-child-value-and-more-available'});
 
     await test.step('Verify deep hierarchy is displayed (2 levels deep)', async () => {

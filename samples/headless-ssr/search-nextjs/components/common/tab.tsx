@@ -8,13 +8,7 @@ interface TabCommonProps {
   tabLabel: string;
 }
 
-export default function TabCommon({
-  state,
-  methods,
-  activeTab,
-  tabName,
-  tabLabel,
-}: TabCommonProps) {
+export default function TabCommon({state, methods, activeTab, tabName, tabLabel}: TabCommonProps) {
   function handleClickTab() {
     if (activeTab !== tabName) methods?.select();
   }

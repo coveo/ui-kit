@@ -8,7 +8,7 @@ import {publint} from 'publint';
 const runCommand = promisify(execFile);
 
 const WORKSPACE_ROOTS = ['packages', 'samples', 'utils'];
-const EXCLUDED_PACKAGES = new Set(['@coveo/quantic']);
+const EXCLUDED_PACKAGES = new Set(['@coveo/quantic', 'coveo.analytics']);
 const IGNORED_DIRECTORIES = new Set([
   '.git',
   '.next',

@@ -1,10 +1,7 @@
 import {loadCollection} from '../../../features/folding/insight-folding-actions.js';
 import {fetchMoreResults} from '../../../features/insight-search/insight-search-actions.js';
 import type {InsightAppState} from '../../../state/insight-app-state.js';
-import {
-  buildMockInsightEngine,
-  type MockedInsightEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockInsightEngine, type MockedInsightEngine} from '../../../test/mock-engine-v2.js';
 import {buildMockInsightState} from '../../../test/mock-insight-state.js';
 import {buildMockResult} from '../../../test/mock-result.js';
 import {

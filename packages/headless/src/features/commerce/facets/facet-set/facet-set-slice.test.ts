@@ -25,10 +25,7 @@ import {buildSearchResponse} from '../../../../test/mock-commerce-search.js';
 import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value.js';
 import {buildMockFacetSearchResult} from '../../../../test/mock-facet-search-result.js';
 import {buildFetchProductListingResponse} from '../../../../test/mock-product-listing.js';
-import {
-  type FacetValueState,
-  facetValueStates,
-} from '../../../facets/facet-api/value.js';
+import {type FacetValueState, facetValueStates} from '../../../facets/facet-api/value.js';
 import {selectCategoryFacetSearchResult} from '../../../facets/facet-search-set/category/category-facet-search-actions.js';
 import {
   excludeFacetSearchResult,
@@ -81,15 +78,9 @@ import {
   convertCategoryFacetValueToRequest,
   convertLocationFacetValueToRequest,
 } from './facet-set-slice.js';
-import {
-  type CommerceFacetSetState,
-  getCommerceFacetSetInitialState,
-} from './facet-set-state.js';
+import {type CommerceFacetSetState, getCommerceFacetSetInitialState} from './facet-set-state.js';
 import type {FacetType} from './interfaces/common.js';
-import type {
-  CategoryFacetValueRequest,
-  LocationFacetValueRequest,
-} from './interfaces/request.js';
+import type {CategoryFacetValueRequest, LocationFacetValueRequest} from './interfaces/request.js';
 import type {AnyFacetResponse} from './interfaces/response.js';
 
 // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
@@ -124,9 +115,7 @@ describe('commerceFacetSetReducer', () => {
       action,
       responseBuilder,
     }: {
-      action:
-        | typeof fetchProductListing.fulfilled
-        | typeof executeSearch.fulfilled;
+      action: typeof fetchProductListing.fulfilled | typeof executeSearch.fulfilled;
       responseBuilder: () => ReturnType<
         typeof buildSearchResponse | typeof buildFetchProductListingResponse
       >;
@@ -173,9 +162,7 @@ describe('commerceFacetSetReducer', () => {
             const action = buildQueryAction([facet]);
             const finalState = commerceFacetSetReducer(state, action);
 
-            expect(finalState[facetId]?.request.initialNumberOfValues).toEqual(
-              5
-            );
+            expect(finalState[facetId]?.request.initialNumberOfValues).toEqual(5);
           });
         });
 
@@ -208,9 +195,7 @@ describe('commerceFacetSetReducer', () => {
           const action1 = buildQueryAction([facetResponse1]);
           const updatedState1 = commerceFacetSetReducer(state, action1);
 
-          expect(updatedState1[facetId]?.request.displayName).toEqual(
-            facetResponse1.displayName
-          );
+          expect(updatedState1[facetId]?.request.displayName).toEqual(facetResponse1.displayName);
 
           const facetResponse2 = buildMockCommerceRegularFacetResponse({
             facetId,
@@ -220,9 +205,7 @@ describe('commerceFacetSetReducer', () => {
           const action2 = buildQueryAction([facetResponse2]);
           const updatedState = commerceFacetSetReducer(state, action2);
 
-          expect(updatedState[facetId]?.request.displayName).toEqual(
-            facetResponse2.displayName
-          );
+          expect(updatedState[facetId]?.request.displayName).toEqual(facetResponse2.displayName);
         });
 
         it('sets/updates facet request #field in state from response', () => {
@@ -304,11 +287,8 @@ describe('commerceFacetSetReducer', () => {
           const action1 = buildQueryAction([facetResponse1]);
           const updatedState1 = commerceFacetSetReducer(state, action1);
 
-          const expectedFacetValueRequest1 =
-            convertFacetValueToRequest(facetValue1);
-          expect(updatedState1[facetId]?.request.values).toEqual([
-            expectedFacetValueRequest1,
-          ]);
+          const expectedFacetValueRequest1 = convertFacetValueToRequest(facetValue1);
+          expect(updatedState1[facetId]?.request.values).toEqual([expectedFacetValueRequest1]);
 
           const facetValue2 = buildMockCommerceRegularFacetValue({
             value: 'BILL',
@@ -325,11 +305,8 @@ describe('commerceFacetSetReducer', () => {
           const action2 = buildQueryAction([facetResponse2]);
           const updatedState2 = commerceFacetSetReducer(state, action2);
 
-          const expectedFacetValueRequest2 =
-            convertFacetValueToRequest(facetValue2);
-          expect(updatedState2[facetId]?.request.values).toEqual([
-            expectedFacetValueRequest2,
-          ]);
+          const expectedFacetValueRequest2 = convertFacetValueToRequest(facetValue2);
+          expect(updatedState2[facetId]?.request.values).toEqual([expectedFacetValueRequest2]);
         });
 
         describe('when found facet #type is "numericalRange"', () => {
@@ -346,12 +323,8 @@ describe('commerceFacetSetReducer', () => {
             const action1 = buildQueryAction([facetResponse1]);
             const state1 = commerceFacetSetReducer(state, action1);
 
-            const expectedFacetValueRequests1 = convertToNumericRangeRequests([
-              facetValue1,
-            ]);
-            expect(state1[facetId]?.request.values).toEqual(
-              expectedFacetValueRequests1
-            );
+            const expectedFacetValueRequests1 = convertToNumericRangeRequests([facetValue1]);
+            expect(state1[facetId]?.request.values).toEqual(expectedFacetValueRequests1);
 
             const facetValue2 = buildMockCommerceNumericFacetValue({
               start: 5,
@@ -365,12 +338,8 @@ describe('commerceFacetSetReducer', () => {
             const action2 = buildQueryAction([facetResponse2]);
             const state2 = commerceFacetSetReducer(state, action2);
 
-            const expectedFacetValueRequests2 = convertToNumericRangeRequests([
-              facetValue2,
-            ]);
-            expect(state2[facetId]?.request.values).toEqual(
-              expectedFacetValueRequests2
-            );
+            const expectedFacetValueRequests2 = convertToNumericRangeRequests([facetValue2]);
+            expect(state2[facetId]?.request.values).toEqual(expectedFacetValueRequests2);
           });
 
           it('sets/updates #interval in the facet state from response', () => {
@@ -447,12 +416,8 @@ describe('commerceFacetSetReducer', () => {
           const action1 = buildQueryAction([facetResponse1]);
           const updatedState1 = commerceFacetSetReducer(state, action1);
 
-          const expectedFacetValueRequests1 = convertToDateRangeRequests([
-            facetValue1,
-          ]);
-          expect(updatedState1[facetId]?.request.values).toEqual(
-            expectedFacetValueRequests1
-          );
+          const expectedFacetValueRequests1 = convertToDateRangeRequests([facetValue1]);
+          expect(updatedState1[facetId]?.request.values).toEqual(expectedFacetValueRequests1);
 
           const facetValue2 = buildMockCommerceDateFacetValue({
             start: '2024-01-01',
@@ -466,12 +431,8 @@ describe('commerceFacetSetReducer', () => {
           const action2 = buildQueryAction([facetResponse2]);
           const updatedState2 = commerceFacetSetReducer(state, action2);
 
-          const expectedFacetValueRequests2 = convertToDateRangeRequests([
-            facetValue2,
-          ]);
-          expect(updatedState2[facetId]?.request.values).toEqual(
-            expectedFacetValueRequests2
-          );
+          const expectedFacetValueRequests2 = convertToDateRangeRequests([facetValue2]);
+          expect(updatedState2[facetId]?.request.values).toEqual(expectedFacetValueRequests2);
         });
 
         describe('when found facet #type is "hierarchical"', () => {
@@ -522,12 +483,8 @@ describe('commerceFacetSetReducer', () => {
             const action1 = buildQueryAction([facetResponse1]);
             const updatedState1 = commerceFacetSetReducer(state, action1);
 
-            const expectedFacetValueRequests1 = [
-              convertCategoryFacetValueToRequest(facetValue1),
-            ];
-            expect(updatedState1[facetId]?.request.values).toEqual(
-              expectedFacetValueRequests1
-            );
+            const expectedFacetValueRequests1 = [convertCategoryFacetValueToRequest(facetValue1)];
+            expect(updatedState1[facetId]?.request.values).toEqual(expectedFacetValueRequests1);
 
             const facetValue2 = buildMockCategoryFacetValue({
               path: ['Beverages'],
@@ -547,12 +504,8 @@ describe('commerceFacetSetReducer', () => {
             const action2 = buildQueryAction([facetResponse2]);
             const updatedState2 = commerceFacetSetReducer(state, action2);
 
-            const expectedFacetValueRequests2 = [
-              convertCategoryFacetValueToRequest(facetValue2),
-            ];
-            expect(updatedState2[facetId]?.request.values).toEqual(
-              expectedFacetValueRequests2
-            );
+            const expectedFacetValueRequests2 = [convertCategoryFacetValueToRequest(facetValue2)];
+            expect(updatedState2[facetId]?.request.values).toEqual(expectedFacetValueRequests2);
           });
         });
       });
@@ -580,13 +533,7 @@ describe('commerceFacetSetReducer', () => {
         },
       ])(
         'for $type facets',
-        ({
-          type,
-          facetResponseBuilder,
-        }: {
-          type: FacetType;
-          facetResponseBuilder: Function;
-        }) => {
+        ({type, facetResponseBuilder}: {type: FacetType; facetResponseBuilder: Function}) => {
           it('sets #preventAutoSelect to false', () => {
             state[facetId] = buildMockCommerceFacetSlice({
               request: buildMockCommerceFacetRequest({
@@ -618,9 +565,7 @@ describe('commerceFacetSetReducer', () => {
             const action = buildQueryAction([facet]);
 
             const finalState = commerceFacetSetReducer(state, action);
-            expect(finalState[facetId]?.request.freezeCurrentValues).toBe(
-              false
-            );
+            expect(finalState[facetId]?.request.freezeCurrentValues).toBe(false);
           });
 
           it('response containing unregistered facet ids does not throw', () => {
@@ -704,13 +649,12 @@ describe('commerceFacetSetReducer', () => {
             values: [],
           },
         },
-        [getFacetIdWithCommerceFieldSuggestionNamespace('hierarchical_field')]:
-          {
-            request: {
-              initialNumberOfValues: 10,
-              values: [],
-            },
+        [getFacetIdWithCommerceFieldSuggestionNamespace('hierarchical_field')]: {
+          request: {
+            initialNumberOfValues: 10,
+            values: [],
           },
+        },
       });
     });
   });
@@ -723,8 +667,7 @@ describe('commerceFacetSetReducer', () => {
         toggleAction: toggleSelectFacetValue,
       },
       {
-        title:
-          'dispatching #toggleExcludeFacetValue with a registered facet id',
+        title: 'dispatching #toggleExcludeFacetValue with a registered facet id',
         facetValueState: 'excluded' as FacetValueState,
         toggleAction: toggleExcludeFacetValue,
       },
@@ -760,9 +703,9 @@ describe('commerceFacetSetReducer', () => {
             });
             const finalState = commerceFacetSetReducer(state, action);
 
-            const targetValue = (
-              finalState[facetId]?.request.values as FacetValueRequest[]
-            ).find((req) => req.value === facetValue.value);
+            const targetValue = (finalState[facetId]?.request.values as FacetValueRequest[]).find(
+              (req) => req.value === facetValue.value
+            );
             expect(targetValue?.state).toBe(facetValueState);
           });
 
@@ -785,9 +728,9 @@ describe('commerceFacetSetReducer', () => {
             });
             const finalState = commerceFacetSetReducer(state, action);
 
-            const targetValue = (
-              finalState[facetId]?.request.values as FacetValueRequest[]
-            ).find((req) => req.value === facetValue.value);
+            const targetValue = (finalState[facetId]?.request.values as FacetValueRequest[]).find(
+              (req) => req.value === facetValue.value
+            );
             expect(targetValue?.state).toBe(facetValueState);
           });
 
@@ -810,9 +753,9 @@ describe('commerceFacetSetReducer', () => {
             });
             const finalState = commerceFacetSetReducer(state, action);
 
-            const targetValue = (
-              finalState[facetId]?.request.values as FacetValueRequest[]
-            ).find((req) => req.value === facetValue.value);
+            const targetValue = (finalState[facetId]?.request.values as FacetValueRequest[]).find(
+              (req) => req.value === facetValue.value
+            );
             expect(targetValue?.state).toBe('idle');
           });
 
@@ -915,15 +858,13 @@ describe('commerceFacetSetReducer', () => {
 
                 const finalState = commerceFacetSetReducer(state, action);
                 expect(
-                  (
-                    finalState[facetId]?.request.values as FacetValueRequest[]
-                  ).indexOf(newFacetValue)
+                  (finalState[facetId]?.request.values as FacetValueRequest[]).indexOf(
+                    newFacetValue
+                  )
                 ).toBe(2);
                 expect(finalState[facetId]?.request.values.length).toBe(4);
                 expect(
-                  (
-                    finalState[facetId]?.request.values as FacetValueRequest[]
-                  ).at(-1)?.value
+                  (finalState[facetId]?.request.values as FacetValueRequest[]).at(-1)?.value
                 ).toBe('idle1');
               });
 
@@ -938,9 +879,7 @@ describe('commerceFacetSetReducer', () => {
                 });
                 const finalState = commerceFacetSetReducer(state, action);
 
-                expect(finalState[facetId]?.request.preventAutoSelect).toBe(
-                  true
-                );
+                expect(finalState[facetId]?.request.preventAutoSelect).toBe(true);
               });
             });
             describe('when there are no idle values', () => {
@@ -981,9 +920,9 @@ describe('commerceFacetSetReducer', () => {
 
                 const finalState = commerceFacetSetReducer(state, action);
                 expect(
-                  (
-                    finalState[facetId]?.request.values as FacetValueRequest[]
-                  ).indexOf(newFacetValue)
+                  (finalState[facetId]?.request.values as FacetValueRequest[]).indexOf(
+                    newFacetValue
+                  )
                 ).toBe(4);
                 expect(finalState[facetId]?.request.values.length).toBe(5);
               });
@@ -1050,8 +989,7 @@ describe('commerceFacetSetReducer', () => {
   describe('for location facets', () => {
     describe.each([
       {
-        title:
-          'dispatching #toggleSelectLocationFacetValue with a registered facet id',
+        title: 'dispatching #toggleSelectLocationFacetValue with a registered facet id',
         facetValueState: 'selected' as FacetValueState,
         toggleAction: toggleSelectLocationFacetValue,
       },
@@ -1073,8 +1011,7 @@ describe('commerceFacetSetReducer', () => {
             const facetValue = buildMockCommerceLocationFacetValue({
               value: 'TED',
             });
-            const facetValueRequest =
-              convertLocationFacetValueToRequest(facetValue);
+            const facetValueRequest = convertLocationFacetValueToRequest(facetValue);
 
             state[facetId] = buildMockCommerceFacetSlice({
               request: buildMockCommerceFacetRequest({
@@ -1100,8 +1037,7 @@ describe('commerceFacetSetReducer', () => {
               value: 'TED',
               state: oppositeFacetValueState,
             });
-            const facetValueRequest =
-              convertLocationFacetValueToRequest(facetValue);
+            const facetValueRequest = convertLocationFacetValueToRequest(facetValue);
 
             state[facetId] = buildMockCommerceFacetSlice({
               request: buildMockCommerceFacetRequest({
@@ -1127,8 +1063,7 @@ describe('commerceFacetSetReducer', () => {
               value: 'TED',
               state: facetValueState,
             });
-            const facetValueRequest =
-              convertLocationFacetValueToRequest(facetValue);
+            const facetValueRequest = convertLocationFacetValueToRequest(facetValue);
 
             state[facetId] = buildMockCommerceFacetSlice({
               request: buildMockCommerceFacetRequest({
@@ -1203,17 +1138,13 @@ describe('commerceFacetSetReducer', () => {
 
                 const finalState = commerceFacetSetReducer(state, action);
                 expect(
-                  (
-                    finalState[facetId]?.request
-                      .values as LocationFacetValueRequest[]
-                  ).indexOf(newFacetValue)
+                  (finalState[facetId]?.request.values as LocationFacetValueRequest[]).indexOf(
+                    newFacetValue
+                  )
                 ).toBe(2);
                 expect(finalState[facetId]?.request.values.length).toBe(4);
                 expect(
-                  (
-                    finalState[facetId]?.request
-                      .values as LocationFacetValueRequest[]
-                  ).at(-1)?.value
+                  (finalState[facetId]?.request.values as LocationFacetValueRequest[]).at(-1)?.value
                 ).toBe('idle1');
               });
             });
@@ -1256,10 +1187,9 @@ describe('commerceFacetSetReducer', () => {
 
                 const finalState = commerceFacetSetReducer(state, action);
                 expect(
-                  (
-                    finalState[facetId]?.request
-                      .values as LocationFacetValueRequest[]
-                  ).indexOf(newFacetValue)
+                  (finalState[facetId]?.request.values as LocationFacetValueRequest[]).indexOf(
+                    newFacetValue
+                  )
                 ).toBe(4);
                 expect(finalState[facetId]?.request.values.length).toBe(5);
               });
@@ -1299,14 +1229,12 @@ describe('commerceFacetSetReducer', () => {
   describe('for numericalRange facets', () => {
     describe.each([
       {
-        title:
-          'dispatching #toggleSelectNumericFacetValue with a registered facet id',
+        title: 'dispatching #toggleSelectNumericFacetValue with a registered facet id',
         facetValueState: 'selected' as FacetValueState,
         toggleAction: toggleSelectNumericFacetValue,
       },
       {
-        title:
-          'dispatching #toggleExcludeNumericFacetValue with a registered facet id',
+        title: 'dispatching #toggleExcludeNumericFacetValue with a registered facet id',
         facetValueState: 'excluded' as FacetValueState,
         toggleAction: toggleExcludeNumericFacetValue,
       },
@@ -1330,9 +1258,7 @@ describe('commerceFacetSetReducer', () => {
               end: 5,
               endInclusive: true,
             });
-            const facetValueRequests = convertToNumericRangeRequests([
-              facetValue,
-            ]);
+            const facetValueRequests = convertToNumericRangeRequests([facetValue]);
 
             state[facetId] = buildMockCommerceFacetSlice({
               request: buildMockCommerceFacetRequest({
@@ -1361,9 +1287,7 @@ describe('commerceFacetSetReducer', () => {
               endInclusive: true,
               state: oppositeFacetValueState,
             });
-            const facetValueRequests = convertToNumericRangeRequests([
-              facetValue,
-            ]);
+            const facetValueRequests = convertToNumericRangeRequests([facetValue]);
 
             state[facetId] = buildMockCommerceFacetSlice({
               request: buildMockCommerceFacetRequest({
@@ -1392,9 +1316,7 @@ describe('commerceFacetSetReducer', () => {
               endInclusive: true,
               state: facetValueState,
             });
-            const facetValueRequests = convertToNumericRangeRequests([
-              facetValue,
-            ]);
+            const facetValueRequests = convertToNumericRangeRequests([facetValue]);
 
             state[facetId] = buildMockCommerceFacetSlice({
               request: buildMockCommerceFacetRequest({
@@ -1422,9 +1344,7 @@ describe('commerceFacetSetReducer', () => {
               end: 5,
               endInclusive: true,
             });
-            const facetValueRequests = convertToNumericRangeRequests([
-              facetValue,
-            ]);
+            const facetValueRequests = convertToNumericRangeRequests([facetValue]);
 
             state[facetId] = buildMockCommerceFacetSlice({
               request: buildMockCommerceFacetRequest({
@@ -1449,9 +1369,7 @@ describe('commerceFacetSetReducer', () => {
               end: 5,
               endInclusive: true,
             });
-            const facetValueRequests = convertToNumericRangeRequests([
-              facetValue,
-            ]);
+            const facetValueRequests = convertToNumericRangeRequests([facetValue]);
 
             state[facetId] = buildMockCommerceFacetSlice({
               request: buildMockCommerceFacetRequest({
@@ -1478,9 +1396,7 @@ describe('commerceFacetSetReducer', () => {
               endInclusive: true,
               state: facetValueState,
             });
-            const facetValueRequests = convertToNumericRangeRequests([
-              facetValue,
-            ]);
+            const facetValueRequests = convertToNumericRangeRequests([facetValue]);
 
             state[facetId] = buildMockCommerceFacetSlice({
               request: buildMockCommerceFacetRequest({
@@ -1572,15 +1488,13 @@ describe('commerceFacetSetReducer', () => {
 
                 const finalState = commerceFacetSetReducer(state, action);
                 expect(
-                  (
-                    finalState[facetId]?.request.values as NumericRangeRequest[]
-                  ).indexOf(newFacetValue)
+                  (finalState[facetId]?.request.values as NumericRangeRequest[]).indexOf(
+                    newFacetValue
+                  )
                 ).toBe(2);
                 expect(finalState[facetId]?.request.values.length).toBe(4);
                 expect(
-                  (
-                    finalState[facetId]?.request.values as NumericRangeRequest[]
-                  ).at(-1)?.start
+                  (finalState[facetId]?.request.values as NumericRangeRequest[]).at(-1)?.start
                 ).toBe(16);
               });
             });
@@ -1633,9 +1547,9 @@ describe('commerceFacetSetReducer', () => {
 
                 const finalState = commerceFacetSetReducer(state, action);
                 expect(
-                  (
-                    finalState[facetId]?.request.values as NumericRangeRequest[]
-                  ).indexOf(newFacetValue)
+                  (finalState[facetId]?.request.values as NumericRangeRequest[]).indexOf(
+                    newFacetValue
+                  )
                 ).toBe(4);
                 expect(finalState[facetId]?.request.values.length).toBe(5);
               });
@@ -1723,14 +1637,12 @@ describe('commerceFacetSetReducer', () => {
   describe('for dateRange facets', () => {
     describe.each([
       {
-        title:
-          'dispatching #toggleSelectDateFacetValue with a registered facet id',
+        title: 'dispatching #toggleSelectDateFacetValue with a registered facet id',
         facetValueState: 'selected' as FacetValueState,
         toggleAction: toggleSelectDateFacetValue,
       },
       {
-        title:
-          'dispatching #toggleExcludeDateFacetValue with a registered facet id',
+        title: 'dispatching #toggleExcludeDateFacetValue with a registered facet id',
         facetValueState: 'excluded' as FacetValueState,
         toggleAction: toggleExcludeDateFacetValue,
       },
@@ -1926,15 +1838,11 @@ describe('commerceFacetSetReducer', () => {
 
                 const finalState = commerceFacetSetReducer(state, action);
                 expect(
-                  (
-                    finalState[facetId]?.request.values as DateRangeRequest[]
-                  ).indexOf(newFacetValue)
+                  (finalState[facetId]?.request.values as DateRangeRequest[]).indexOf(newFacetValue)
                 ).toBe(2);
                 expect(finalState[facetId]?.request.values.length).toBe(4);
                 expect(
-                  (
-                    finalState[facetId]?.request.values as DateRangeRequest[]
-                  ).at(-1)?.start
+                  (finalState[facetId]?.request.values as DateRangeRequest[]).at(-1)?.start
                 ).toBe('2026-01-01');
               });
             });
@@ -1987,9 +1895,7 @@ describe('commerceFacetSetReducer', () => {
 
                 const finalState = commerceFacetSetReducer(state, action);
                 expect(
-                  (
-                    finalState[facetId]?.request.values as DateRangeRequest[]
-                  ).indexOf(newFacetValue)
+                  (finalState[facetId]?.request.values as DateRangeRequest[]).indexOf(newFacetValue)
                 ).toBe(4);
                 expect(finalState[facetId]?.request.values.length).toBe(5);
               });
@@ -2063,9 +1969,7 @@ describe('commerceFacetSetReducer', () => {
 
     describe('#toggleSelectCategoryFacetValue', () => {
       const initialNumberOfValues = 5;
-      let categoryFacetRequest: ReturnType<
-        typeof buildMockCommerceFacetRequest
-      >;
+      let categoryFacetRequest: ReturnType<typeof buildMockCommerceFacetRequest>;
 
       beforeEach(() => {
         categoryFacetRequest = buildMockCommerceFacetRequest({
@@ -2195,9 +2099,7 @@ describe('commerceFacetSetReducer', () => {
 
     describe('#updateCategoryFacetNumberOfValues', () => {
       const facetId = 'category_facet_id';
-      let categoryFacetRequest: ReturnType<
-        typeof buildMockCommerceFacetRequest
-      >;
+      let categoryFacetRequest: ReturnType<typeof buildMockCommerceFacetRequest>;
       beforeEach(() => {
         categoryFacetRequest = buildMockCommerceFacetRequest({
           type: 'hierarchical',
@@ -2256,9 +2158,7 @@ describe('commerceFacetSetReducer', () => {
           value: 'A',
           children: [buildMockCategoryFacetValue({value: 'B', children: []})],
         });
-        categoryFacetRequest.values = [
-          convertCategoryFacetValueToRequest(nested),
-        ];
+        categoryFacetRequest.values = [convertCategoryFacetValueToRequest(nested)];
         const action = updateCategoryFacetNumberOfValues({
           facetId,
           numberOfValues: 5,
@@ -2374,9 +2274,9 @@ describe('commerceFacetSetReducer', () => {
         });
         const finalState = commerceFacetSetReducer(state, action);
 
-        const targetValue = (
-          finalState[facetId]?.request.values as FacetValueRequest[]
-        ).find((req) => req.value === facetValue.value);
+        const targetValue = (finalState[facetId]?.request.values as FacetValueRequest[]).find(
+          (req) => req.value === facetValue.value
+        );
         expect(targetValue?.state).toBe(expectedState);
       });
 
@@ -2402,9 +2302,9 @@ describe('commerceFacetSetReducer', () => {
         });
         const finalState = commerceFacetSetReducer(state, action);
 
-        const targetValue = (
-          finalState[facetId]?.request.values as FacetValueRequest[]
-        ).find((req) => req.value === rawValue);
+        const targetValue = (finalState[facetId]?.request.values as FacetValueRequest[]).find(
+          (req) => req.value === rawValue
+        );
         expect(targetValue?.state).toBe(expectedState);
       });
     }
@@ -2459,8 +2359,7 @@ describe('commerceFacetSetReducer', () => {
       });
       const finalState = commerceFacetSetReducer(state, action);
 
-      const targetValue = finalState[facetId]?.request
-        .values[0] as CategoryFacetValueRequest;
+      const targetValue = finalState[facetId]?.request.values[0] as CategoryFacetValueRequest;
       expect(targetValue?.state).toBe('selected');
     });
 
@@ -2492,9 +2391,8 @@ describe('commerceFacetSetReducer', () => {
       });
       const finalState = commerceFacetSetReducer(state, action);
 
-      const targetValue = (
-        finalState[facetId]?.request.values[0] as CategoryFacetValueRequest
-      ).children[0];
+      const targetValue = (finalState[facetId]?.request.values[0] as CategoryFacetValueRequest)
+        .children[0];
       expect(targetValue?.state).toBe('selected');
     });
   });
@@ -2681,9 +2579,7 @@ describe('commerceFacetSetReducer', () => {
         });
         const finalState = commerceFacetSetReducer(state, action);
 
-        expect(finalState[facetId]?.request.isFieldExpanded).toBe(
-          isFieldExpanded
-        );
+        expect(finalState[facetId]?.request.isFieldExpanded).toBe(isFieldExpanded);
       });
     });
     it('dispatching with an unregistered id does not throw', () => {
@@ -2756,15 +2652,10 @@ describe('commerceFacetSetReducer', () => {
           }),
         });
 
-        finalState = commerceFacetSetReducer(
-          state,
-          deselectAllValuesInCoreFacet({facetId})
-        );
+        finalState = commerceFacetSetReducer(state, deselectAllValuesInCoreFacet({facetId}));
       });
       it('sets #request.initialNumberOfValues to undefined', () => {
-        expect(
-          finalState[facetId]?.request.initialNumberOfValues
-        ).toBeUndefined();
+        expect(finalState[facetId]?.request.initialNumberOfValues).toBeUndefined();
       });
       it('sets #request.numberOfValues to undefined', () => {
         expect(finalState[facetId]?.request.numberOfValues).toBeUndefined();
@@ -2790,16 +2681,11 @@ describe('commerceFacetSetReducer', () => {
           }),
         });
 
-        const finalState = commerceFacetSetReducer(
-          state,
-          deselectAllValuesInCoreFacet({facetId})
-        );
+        const finalState = commerceFacetSetReducer(state, deselectAllValuesInCoreFacet({facetId}));
 
-        expect(
-          finalState[facetId]?.request.values.every(
-            (value) => value.state === 'idle'
-          )
-        ).toBe(true);
+        expect(finalState[facetId]?.request.values.every((value) => value.state === 'idle')).toBe(
+          true
+        );
       });
 
       it('should set the #numberOfValues to the #initialNumberOfValues', () => {
@@ -2816,10 +2702,7 @@ describe('commerceFacetSetReducer', () => {
           }),
         });
 
-        const finalState = commerceFacetSetReducer(
-          state,
-          deselectAllValuesInCoreFacet({facetId})
-        );
+        const finalState = commerceFacetSetReducer(state, deselectAllValuesInCoreFacet({facetId}));
 
         expect(finalState[facetId]?.request.numberOfValues).toBe(10);
       });
@@ -2837,16 +2720,11 @@ describe('commerceFacetSetReducer', () => {
         }),
       });
 
-      const finalState = commerceFacetSetReducer(
-        state,
-        deselectAllValuesInCoreFacet({facetId})
-      );
+      const finalState = commerceFacetSetReducer(state, deselectAllValuesInCoreFacet({facetId}));
 
-      expect(
-        finalState[facetId]?.request.values.every(
-          (value) => value.state === 'idle'
-        )
-      ).toBe(true);
+      expect(finalState[facetId]?.request.values.every((value) => value.state === 'idle')).toBe(
+        true
+      );
     });
   });
 

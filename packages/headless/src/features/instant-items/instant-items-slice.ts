@@ -1,17 +1,10 @@
-import {
-  hasExpired,
-  type InstantItemsCache,
-  type InstantItemsState,
-} from './instant-items-state.js';
+import {hasExpired, type InstantItemsCache, type InstantItemsState} from './instant-items-state.js';
 
 type InstantItemsStateWithCache = InstantItemsState<
   Record<string, InstantItemsCache & {error: unknown}>
 >;
 
-export const registerInstantItem = (
-  payload: {id: string},
-  state: InstantItemsStateWithCache
-) => {
+export const registerInstantItem = (payload: {id: string}, state: InstantItemsStateWithCache) => {
   const {id} = payload;
   if (state[id]) {
     return;
@@ -31,10 +24,7 @@ export const updateInstantItemQuery = (
   state[id].q = q;
 };
 
-export const clearExpiredItems = (
-  payload: {id: string},
-  state: InstantItemsStateWithCache
-) => {
+export const clearExpiredItems = (payload: {id: string}, state: InstantItemsStateWithCache) => {
   const {id} = payload;
   Object.entries(state[id].cache).forEach(([q, cached]) => {
     if (hasExpired(cached)) {
@@ -77,8 +67,7 @@ export const fetchItemsFulfilled = (
   state: InstantItemsStateWithCache,
   toAddToCache: Record<string, unknown>
 ) => {
-  const {id, q, searchUid, cacheTimeout, totalCountFiltered, duration} =
-    payload;
+  const {id, q, searchUid, cacheTimeout, totalCountFiltered, duration} = payload;
   state[id].cache[q] = {
     ...getCached(payload, state),
     ...toAddToCache,

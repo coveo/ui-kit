@@ -129,9 +129,7 @@ export const createHeadAnswerStrategy = (
         console.warn(
           `Failed to parse tool call args delta as JSON. Using raw string instead. Delta: ${delta}`
         );
-        dispatch(
-          toolCallArgs({toolCallId, args: {raw: delta}, type: 'generic'})
-        );
+        dispatch(toolCallArgs({toolCallId, args: {raw: delta}, type: 'generic'}));
       }
     },
     onTextMessageContentEvent: ({event, agent}) => {
@@ -157,9 +155,7 @@ export const createHeadAnswerStrategy = (
             dispatch(setIsEnabled(value.followUpEnabled));
           }
           if (value?.conversationToken) {
-            dispatch(
-              setFollowUpAnswersConversationToken(value.conversationToken)
-            );
+            dispatch(setFollowUpAnswersConversationToken(value.conversationToken));
           }
           return;
         }
@@ -190,9 +186,7 @@ export const createHeadAnswerStrategy = (
       dispatch(setIsAnswerGenerated(answerGenerated));
       dispatch(setCannotAnswer(!answerGenerated));
       dispatch(setIsStreaming(false));
-      dispatch(
-        logGeneratedAnswerStreamEnd(answerGenerated, runId, answerTextIsEmpty)
-      );
+      dispatch(logGeneratedAnswerStreamEnd(answerGenerated, runId, answerTextIsEmpty));
       dispatch(logGeneratedAnswerResponseLinked());
     },
   };

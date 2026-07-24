@@ -22,30 +22,21 @@ interface GeneratedAnswerErrorWithSseHelpers {
   isSseTurnLimitReachedError(): boolean;
 }
 
-const generatedAnswerSseErrorMap: Record<string, GeneratedAnswerSseErrorCode> =
-  {
-    'KNOWLEDGE:SSE_MAX_DURATION_EXCEEDED':
-      GeneratedAnswerSseErrorCode.SseMaxDurationExceeded,
-    'KNOWLEDGE:SSE_FOLLOW_UP_NOT_SUPPORTED':
-      GeneratedAnswerSseErrorCode.SseFollowUpNotSupported,
-    'KNOWLEDGE:NOT_FOUND': GeneratedAnswerSseErrorCode.ConversationNotFound,
-    'KNOWLEDGE:SSE_MODELS_NOT_AVAILABLE':
-      GeneratedAnswerSseErrorCode.SseModelsNotAvailable,
-    'KNOWLEDGE:SSE_INTERNAL_ERROR':
-      GeneratedAnswerSseErrorCode.SseInternalError,
-    'KNOWLEDGE:SSE_TURN_LIMIT_REACHED':
-      GeneratedAnswerSseErrorCode.SseTurnLimitReached,
-  };
+const generatedAnswerSseErrorMap: Record<string, GeneratedAnswerSseErrorCode> = {
+  'KNOWLEDGE:SSE_MAX_DURATION_EXCEEDED': GeneratedAnswerSseErrorCode.SseMaxDurationExceeded,
+  'KNOWLEDGE:SSE_FOLLOW_UP_NOT_SUPPORTED': GeneratedAnswerSseErrorCode.SseFollowUpNotSupported,
+  'KNOWLEDGE:NOT_FOUND': GeneratedAnswerSseErrorCode.ConversationNotFound,
+  'KNOWLEDGE:SSE_MODELS_NOT_AVAILABLE': GeneratedAnswerSseErrorCode.SseModelsNotAvailable,
+  'KNOWLEDGE:SSE_INTERNAL_ERROR': GeneratedAnswerSseErrorCode.SseInternalError,
+  'KNOWLEDGE:SSE_TURN_LIMIT_REACHED': GeneratedAnswerSseErrorCode.SseTurnLimitReached,
+};
 
 /**
  * Maps backend error codes to frontend error codes for generated answer SSE errors.
  */
 export function mapRunErrorCode(code?: string): GeneratedAnswerSseErrorCode {
   if (!code) return GeneratedAnswerSseErrorCode.SseInternalError;
-  return (
-    generatedAnswerSseErrorMap[code] ??
-    GeneratedAnswerSseErrorCode.SseInternalError
-  );
+  return generatedAnswerSseErrorMap[code] ?? GeneratedAnswerSseErrorCode.SseInternalError;
 }
 
 function attachErrorHelpers<T extends {code?: number}>(error: T) {

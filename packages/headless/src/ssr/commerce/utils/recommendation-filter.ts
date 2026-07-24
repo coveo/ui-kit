@@ -13,27 +13,18 @@ import type {
 
 export function filterRecommendationControllers<
   TControllerDefinitions extends ControllerDefinitionsMap<Controller>,
->(
-  controllers: Record<string, Controller>,
-  controllerDefinitions: TControllerDefinitions
-) {
+>(controllers: Record<string, Controller>, controllerDefinitions: TControllerDefinitions) {
   const slotIdSet = new Set<string>();
 
-  const isRecommendationDefinition = <
-    C extends ControllerDefinition<Controller>,
-  >(
+  const isRecommendationDefinition = <C extends ControllerDefinition<Controller>>(
     controllerDefinition: C
   ): controllerDefinition is C & RecommendationsDefinitionMeta => {
     const isControllerRecommendation =
-      'recommendation' in controllerDefinition &&
-      controllerDefinition.recommendation === true;
+      'recommendation' in controllerDefinition && controllerDefinition.recommendation === true;
 
     const hasSlotId =
       recommendationInternalOptionKey in controllerDefinition &&
-      'slotId' in
-        (controllerDefinition[
-          recommendationInternalOptionKey
-        ] as RecommendationsOptions);
+      'slotId' in (controllerDefinition[recommendationInternalOptionKey] as RecommendationsOptions);
 
     return isControllerRecommendation && hasSlotId;
   };
@@ -42,21 +33,19 @@ export function filterRecommendationControllers<
     throw new MultipleRecommendationError(slotId);
   };
 
-  const filtered = Object.entries(controllerDefinitions).filter(
-    ([_, value]) => {
-      if (!isRecommendationDefinition(value)) {
-        return false;
-      }
-      const {slotId} = value[recommendationInternalOptionKey];
-      const key = slotId;
-      if (slotIdSet.has(slotId)) {
-        ensureSingleRecommendationPerSlot(slotId);
-        return false;
-      }
-      slotIdSet.add(key);
-      return true;
+  const filtered = Object.entries(controllerDefinitions).filter(([_, value]) => {
+    if (!isRecommendationDefinition(value)) {
+      return false;
     }
-  );
+    const {slotId} = value[recommendationInternalOptionKey];
+    const key = slotId;
+    if (slotIdSet.has(slotId)) {
+      ensureSingleRecommendationPerSlot(slotId);
+      return false;
+    }
+    slotIdSet.add(key);
+    return true;
+  });
 
   const name = filtered.map(([name, _]) => name);
 

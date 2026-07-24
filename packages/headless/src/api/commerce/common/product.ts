@@ -1,10 +1,7 @@
 import type {HighlightKeyword} from '../../../utils/highlight.js';
 import type {ResultPosition, ResultType} from './result.js';
 
-export type ChildProduct = Omit<
-  BaseProduct,
-  'children' | 'totalNumberOfChildren'
->;
+export type ChildProduct = Omit<BaseProduct, 'children' | 'totalNumberOfChildren'>;
 
 // TODO: KIT-3164 update based on https://coveord.atlassian.net/browse/DOC-14667
 export interface BaseProduct {

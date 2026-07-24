@@ -41,18 +41,15 @@ const recommendationEngineReducers = {
   recommendation,
 };
 type RecommendationEngineReducers = typeof recommendationEngineReducers;
-type RecommendationEngineState =
-  StateFromReducersMapObject<RecommendationEngineReducers> &
-    Partial<RecommendationAppState>;
+type RecommendationEngineState = StateFromReducersMapObject<RecommendationEngineReducers> &
+  Partial<RecommendationAppState>;
 
 /**
  * The engine for powering recommendation experiences.
  *
  * @group Engine
  */
-export interface RecommendationEngine<
-  State extends object = {},
-> extends CoreEngine<
+export interface RecommendationEngine<State extends object = {}> extends CoreEngine<
   State & RecommendationEngineState,
   SearchThunkExtraArguments
 > {}
@@ -97,8 +94,7 @@ export function buildRecommendationEngine(
 
   const engine = buildEngine(augmentedOptions, thunkArguments);
 
-  const {pipeline, searchHub, timezone, locale, proxyBaseUrl} =
-    options.configuration;
+  const {pipeline, searchHub, timezone, locale, proxyBaseUrl} = options.configuration;
 
   engine.dispatch(updateSearchConfiguration({timezone, locale, proxyBaseUrl}));
 
@@ -119,10 +115,7 @@ export function buildRecommendationEngine(
   };
 }
 
-function validateConfiguration(
-  configuration: RecommendationEngineConfiguration,
-  logger: Logger
-) {
+function validateConfiguration(configuration: RecommendationEngineConfiguration, logger: Logger) {
   try {
     recommendationEngineConfigurationSchema.validate(configuration);
   } catch (error) {
@@ -131,19 +124,13 @@ function validateConfiguration(
   }
 }
 
-function createSearchAPIClient(
-  configuration: RecommendationEngineConfiguration,
-  logger: Logger
-) {
+function createSearchAPIClient(configuration: RecommendationEngineConfiguration, logger: Logger) {
   return new SearchAPIClient({
     logger,
     preprocessRequest: configuration.preprocessRequest || NoopPreprocessRequest,
     postprocessSearchResponseMiddleware:
-      configuration.preprocessSearchResponseMiddleware ||
-      NoopPostprocessSearchResponseMiddleware,
-    postprocessFacetSearchResponseMiddleware:
-      NoopPostprocessFacetSearchResponseMiddleware,
-    postprocessQuerySuggestResponseMiddleware:
-      NoopPostprocessQuerySuggestResponseMiddleware,
+      configuration.preprocessSearchResponseMiddleware || NoopPostprocessSearchResponseMiddleware,
+    postprocessFacetSearchResponseMiddleware: NoopPostprocessFacetSearchResponseMiddleware,
+    postprocessQuerySuggestResponseMiddleware: NoopPostprocessQuerySuggestResponseMiddleware,
   });
 }

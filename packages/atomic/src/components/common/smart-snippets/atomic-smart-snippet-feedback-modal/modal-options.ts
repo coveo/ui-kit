@@ -6,9 +6,7 @@ interface ModalOptionsProps {
   i18n: i18n;
 }
 
-export const renderModalOptions: FunctionalComponentWithChildren<
-  ModalOptionsProps
-> =
+export const renderModalOptions: FunctionalComponentWithChildren<ModalOptionsProps> =
   ({props: {i18n}}) =>
   (children) =>
     html`<fieldset>

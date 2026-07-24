@@ -163,8 +163,7 @@ export class SearchBox extends LitElement {
       case 'ArrowUp':
         if (suggestions.length) {
           e.preventDefault();
-          this.active =
-            (this.active - 1 + suggestions.length) % suggestions.length;
+          this.active = (this.active - 1 + suggestions.length) % suggestions.length;
         }
         break;
       case 'Enter':
@@ -201,8 +200,7 @@ export class SearchBox extends LitElement {
       suggestions: [],
     };
     const results = value ? (this.instantResults?.state.results ?? []) : [];
-    const showDropdown =
-      this.focused && value && (suggestions.length || results.length);
+    const showDropdown = this.focused && value && (suggestions.length || results.length);
 
     return html`
       <div class="search-box">
@@ -230,12 +228,9 @@ export class SearchBox extends LitElement {
                                 <button
                                   type="button"
                                   role="option"
-                                  class="suggestion ${i === this.active
-                                    ? 'active'
-                                    : ''}"
+                                  class="suggestion ${i === this.active ? 'active' : ''}"
                                   aria-selected=${i === this.active}
-                                  @click=${() =>
-                                    this.#selectSuggestion(suggestion.rawValue)}
+                                  @click=${() => this.#selectSuggestion(suggestion.rawValue)}
                                 >
                                   ${suggestion.rawValue}
                                 </button>
@@ -261,16 +256,11 @@ export class SearchBox extends LitElement {
                                   rel="noopener noreferrer"
                                   @click=${() => this.#selectInstant(result)}
                                   @auxclick=${() => this.#selectInstant(result)}
-                                  @contextmenu=${() =>
-                                    this.#selectInstant(result)}
+                                  @contextmenu=${() => this.#selectInstant(result)}
                                 >
-                                  <span class="instant-title"
-                                    >${result.title}</span
-                                  >
+                                  <span class="instant-title">${result.title}</span>
                                   ${result.excerpt
-                                    ? html`<span class="instant-excerpt"
-                                        >${result.excerpt}</span
-                                      >`
+                                    ? html`<span class="instant-excerpt">${result.excerpt}</span>`
                                     : nothing}
                                 </a>
                               </li>

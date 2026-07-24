@@ -101,14 +101,9 @@ export const renderSmartSnippetFeedbackBanner: FunctionalComponent<
     when(
       visible,
       () =>
-        html`<div
-          part="feedback-thank-you-wrapper"
-          class="flex flex-wrap gap-1"
-        >
+        html`<div part="feedback-thank-you-wrapper" class="flex flex-wrap gap-1">
           ${renderThankYouMessage()}
-          ${when(props.disliked && !props.feedbackSent, () =>
-            renderExplainWhyButton()
-          )}
+          ${when(props.disliked && !props.feedbackSent, () => renderExplainWhyButton())}
         </div>`
     );
 

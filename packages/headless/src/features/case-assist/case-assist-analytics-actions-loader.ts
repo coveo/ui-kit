@@ -99,10 +99,7 @@ export interface CaseAssistAnalyticsActionCreators {
    * @param rating - The rating.
    * @returns A dispatchable action.
    */
-  logDocumentSuggestionRating(
-    suggestionId: string,
-    rating: number
-  ): CaseAssistAction;
+  logDocumentSuggestionRating(suggestionId: string, rating: number): CaseAssistAction;
 }
 
 /**

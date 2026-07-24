@@ -1,10 +1,4 @@
-import {
-  ArrayValue,
-  BooleanValue,
-  NumberValue,
-  RecordValue,
-  StringValue,
-} from '@coveo/bueno';
+import {ArrayValue, BooleanValue, NumberValue, RecordValue, StringValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import {
   requiredNonEmptyString,
@@ -43,8 +37,7 @@ export const toggleSelectNumericFacetValue = createAction(
     })
 );
 
-export type ToggleExcludeNumericFacetValuePayload =
-  ToggleSelectNumericFacetValuePayload;
+export type ToggleExcludeNumericFacetValuePayload = ToggleSelectNumericFacetValuePayload;
 
 export const toggleExcludeNumericFacetValue = createAction(
   'commerce/facets/numericFacet/toggleExcludeValue',

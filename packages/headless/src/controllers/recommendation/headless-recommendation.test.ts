@@ -10,10 +10,7 @@ import {
   type MockedRecommendationEngine,
 } from '../../test/mock-engine-v2.js';
 import {createMockRecommendationState} from '../../test/mock-recommendation-state.js';
-import {
-  buildRecommendationList,
-  type RecommendationList,
-} from './headless-recommendation.js';
+import {buildRecommendationList, type RecommendationList} from './headless-recommendation.js';
 
 vi.mock('../../features/recommendation/recommendation-actions');
 vi.mock('../../features/pagination/pagination-actions');
@@ -45,9 +42,7 @@ describe('Recommendation', () => {
     recommendation = buildRecommendationList(engine, {options: {id: 'foo'}});
 
     expect(mockedSetRecommendationId).toHaveBeenCalledWith({id: 'foo'});
-    expect(engine.dispatch).toHaveBeenCalledWith(
-      mockedSetRecommendationId.mock.results[0].value
-    );
+    expect(engine.dispatch).toHaveBeenCalledWith(mockedSetRecommendationId.mock.results[0].value);
   });
 
   it('when #options.id is set to an empty value, it does not dispatches #setRecommendationId', () => {
@@ -66,9 +61,7 @@ describe('Recommendation', () => {
     });
 
     expect(mockedUpdateNumberOfResults).toHaveBeenCalledWith(20);
-    expect(engine.dispatch).toHaveBeenCalledWith(
-      mockedUpdateNumberOfResults.mock.results[0].value
-    );
+    expect(engine.dispatch).toHaveBeenCalledWith(mockedUpdateNumberOfResults.mock.results[0].value);
   });
 
   it('when #options.numberOfRecommendations is not set, it does not dispatches #updateNumberOfResults', () => {
@@ -91,8 +84,6 @@ describe('Recommendation', () => {
     recommendation.refresh();
 
     expect(mockedGetRecommendations).toHaveBeenCalled();
-    expect(engine.dispatch).toHaveBeenCalledWith(
-      mockedGetRecommendations.mock.results[0].value
-    );
+    expect(engine.dispatch).toHaveBeenCalledWith(mockedGetRecommendations.mock.results[0].value);
   });
 });

@@ -11,9 +11,7 @@ import type {ContextState} from './types.js';
 
 type MockContext = ContextState<any, any>;
 describe('SSR Commerce Common functions', () => {
-  const mockContext = createContext(
-    null
-  ) as unknown as Context<MockContext | null>;
+  const mockContext = createContext(null) as unknown as Context<MockContext | null>;
   const mockSingletonContext = {
     get: () => mockContext,
   };
@@ -48,10 +46,7 @@ describe('SSR Commerce Common functions', () => {
   });
 
   describe('buildStateProvider', () => {
-    const StateProvider = buildStateProvider(
-      mockSingletonContext,
-      mockSolutionType
-    );
+    const StateProvider = buildStateProvider(mockSingletonContext, mockSolutionType);
 
     test('should render with static controllers only', () => {
       render(
@@ -117,10 +112,7 @@ describe('SSR Commerce Common functions', () => {
   });
 
   describe('isomorphic behavior', () => {
-    const StateProvider = buildStateProvider(
-      mockSingletonContext,
-      mockSolutionType
-    );
+    const StateProvider = buildStateProvider(mockSingletonContext, mockSolutionType);
 
     test('should work seamlessly when transitioning from static to hydrated state', () => {
       const contextValues: (MockContext | null)[] = [];

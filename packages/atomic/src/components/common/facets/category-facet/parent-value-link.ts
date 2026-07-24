@@ -1,8 +1,5 @@
 import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
-import {
-  type CategoryFacetValueLinkProps,
-  renderCategoryFacetValueLink,
-} from './value-link';
+import {type CategoryFacetValueLinkProps, renderCategoryFacetValueLink} from './value-link';
 
 interface CategoryFacetParentValueLinkProps extends Omit<
   CategoryFacetValueLinkProps,

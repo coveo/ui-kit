@@ -61,9 +61,7 @@ export interface PaginationActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  nextPage(
-    payload?: NextPagePayload
-  ): PayloadAction<NextPagePayload | undefined>;
+  nextPage(payload?: NextPagePayload): PayloadAction<NextPagePayload | undefined>;
 
   /**
    * Selects the previous page.
@@ -71,9 +69,7 @@ export interface PaginationActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  previousPage(
-    payload?: PreviousPagePayload
-  ): PayloadAction<PreviousPagePayload | undefined>;
+  previousPage(payload?: PreviousPagePayload): PayloadAction<PreviousPagePayload | undefined>;
 }
 
 /**
@@ -85,9 +81,7 @@ export interface PaginationActionCreators {
  * @group Actions
  * @category Pagination
  */
-export function loadPaginationActions(
-  engine: CommerceEngine
-): PaginationActionCreators {
+export function loadPaginationActions(engine: CommerceEngine): PaginationActionCreators {
   engine.addReducers({commercePagination});
   return {
     registerRecommendationsSlotPagination,

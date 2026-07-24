@@ -3,6 +3,7 @@ import {
   useCaseEnum,
   useCaseTestCases,
 } from '../../../../../../playwright/utils/useCase';
+import {initialFacetData, selectedFacetData} from './data';
 
 const fixtures = {
   search: testSearch,
@@ -15,6 +16,16 @@ useCaseTestCases.forEach((useCase) => {
   let test = fixtures[useCase.value];
   test.describe(`quantic timeframe facet ${useCase.label}`, () => {
     test.describe('when selecting and deselecting a facet value', () => {
+      test.use({
+        facetResponses: {
+          responses: [
+            [initialFacetData],
+            [selectedFacetData],
+            [initialFacetData],
+          ],
+        },
+      });
+
       test('should trigger a new search and log the corresponding UA analytics events', async ({
         baseFacet,
         facet,
@@ -59,6 +70,16 @@ useCaseTestCases.forEach((useCase) => {
     });
 
     test.describe('when selecting a facet value and clicking the clear filter button', () => {
+      test.use({
+        facetResponses: {
+          responses: [
+            [initialFacetData],
+            [selectedFacetData],
+            [initialFacetData],
+          ],
+        },
+      });
+
       test('should trigger a new search and log the corresponding UA analytics events', async ({
         baseFacet,
         facet,
@@ -143,6 +164,9 @@ useCaseTestCases.forEach((useCase) => {
         const yesterdayDate = date.toISOString().slice(0, 10);
         test.use({
           urlHash: `df-${exampleField}=${yesterdayDate.replaceAll('-', '/')}@00:00:00..${todayDate.replaceAll('-', '/')}@23:59:59`,
+          facetResponses: {
+            responses: [],
+          },
         });
 
         test('should select the correct facet value', async ({facet}) => {

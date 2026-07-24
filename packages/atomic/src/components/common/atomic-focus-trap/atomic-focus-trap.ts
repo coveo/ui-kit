@@ -4,12 +4,7 @@ import {booleanConverter} from '@/src/converters/boolean-converter';
 import {watch} from '@/src/decorators/watch';
 import {LightDomMixin} from '@/src/mixins/light-dom';
 import {getFirstFocusableDescendant} from '@/src/utils/accessibility-utils';
-import {
-  defer,
-  getFocusedElement,
-  getParent,
-  isAncestorOf,
-} from '@/src/utils/utils';
+import {defer, getFocusedElement, getParent, isAncestorOf} from '@/src/utils/utils';
 
 /**
  * The `atomic-focus-trap` component manages focus within a modal or dialog,

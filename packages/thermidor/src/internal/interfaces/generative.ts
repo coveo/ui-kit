@@ -10,13 +10,11 @@ import {getOrCreateGenerativeSlice} from '@/src/internal/features/generative/ind
 
 const noopThunk = createNoopThunk('generative');
 
-const noopResolverFactory: FacadeResolverFactory = (_engine) => (_scope) =>
-  noopThunk;
+const noopResolverFactory: FacadeResolverFactory = (_engine) => (_scope) => noopThunk;
 
-const resolverFactories: Record<Facades['generative'], FacadeResolverFactory> =
-  {
-    conversation: noopResolverFactory,
-  };
+const resolverFactories: Record<Facades['generative'], FacadeResolverFactory> = {
+  conversation: noopResolverFactory,
+};
 
 export class GenerativeInterfaceImpl
   extends BaseInterface<'generative'>

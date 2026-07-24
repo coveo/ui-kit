@@ -31,9 +31,7 @@ export interface ExpandableTextProps {
   textRef: Ref<HTMLDivElement>;
 }
 
-export const renderExpandableText: FunctionalComponentWithChildren<
-  ExpandableTextProps
-> =
+export const renderExpandableText: FunctionalComponentWithChildren<ExpandableTextProps> =
   ({
     props: {
       isExpanded,
@@ -68,11 +66,7 @@ export const renderExpandableText: FunctionalComponentWithChildren<
     const icon = isExpanded ? MinusIcon : PlusIcon;
 
     return html`<div class="flex flex-col items-start">
-      <div
-        part="expandable-text"
-        class="${multiClassMap(expandableTextClasses)}"
-        ${ref(textRef)}
-      >
+      <div part="expandable-text" class="${multiClassMap(expandableTextClasses)}" ${ref(textRef)}>
         ${children}
       </div>
 
@@ -87,10 +81,7 @@ export const renderExpandableText: FunctionalComponentWithChildren<
           onClick: onToggleExpand,
         },
       })(
-        html` <atomic-icon
-            icon="${icon}"
-            class="mx-1 w-2 align-baseline"
-          ></atomic-icon>
+        html` <atomic-icon icon="${icon}" class="mx-1 w-2 align-baseline"></atomic-icon>
           ${buttonLabel}`
       )}
     </div>`;

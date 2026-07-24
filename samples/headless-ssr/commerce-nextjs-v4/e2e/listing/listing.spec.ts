@@ -27,8 +27,7 @@ test.describe('default', () => {
       let suggestionValue: string;
       test.beforeEach(async ({search}) => {
         const suggestions = search.suggestions;
-        suggestionValue =
-          (await suggestions.first().textContent()) || 'no value found';
+        suggestionValue = (await suggestions.first().textContent()) || 'no value found';
         await suggestions.first().click();
       });
 
@@ -57,8 +56,7 @@ test.describe('default', () => {
   test.describe('when changing the sort order', () => {
     let originalProductListContents: string;
     test.beforeEach(async ({sort, search}) => {
-      originalProductListContents =
-        (await search.productList.textContent()) || '';
+      originalProductListContents = (await search.productList.textContent()) || '';
 
       await sort.sortSelect.waitFor({state: 'visible'});
       await sort.sortSelect.isEnabled();
@@ -69,9 +67,7 @@ test.describe('default', () => {
     test('should update the result list', async ({search}) => {
       const productListContents = await search.productList.textContent();
 
-      expect.poll(() =>
-        expect(productListContents).not.toEqual(originalProductListContents)
-      );
+      expect.poll(() => expect(productListContents).not.toEqual(originalProductListContents));
     });
   });
 });

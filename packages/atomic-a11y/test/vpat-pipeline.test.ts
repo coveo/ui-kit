@@ -76,8 +76,7 @@ describe('transformJsonToOpenAcr (integration)', () => {
     await rm(dir, {recursive: true, force: true});
   });
 
-  const writeInput = () =>
-    writeFile(path.join(dir, 'a11y-report.json'), JSON.stringify(report));
+  const writeInput = () => writeFile(path.join(dir, 'a11y-report.json'), JSON.stringify(report));
 
   const levelOf = (
     criteria: {num: string; components: {adherence: {level: string}}[]}[],
@@ -131,8 +130,7 @@ describe('transformJsonToOpenAcr (integration)', () => {
           {
             criterion: '1.4.3',
             conformance: 'supports',
-            reason:
-              'Design tokens meet AA; the axe finding is a false positive.',
+            reason: 'Design tokens meet AA; the axe finding is a false positive.',
           },
         ],
       })
@@ -148,8 +146,6 @@ describe('transformJsonToOpenAcr (integration)', () => {
     const aa = result.chapters.success_criteria_level_aa.criteria;
     const row = aa.find((c) => c.num === '1.4.3');
     expect(row?.components[0].adherence.level).toBe('supports');
-    expect(row?.components[0].adherence.notes).toContain(
-      'Design tokens meet AA'
-    );
+    expect(row?.components[0].adherence.notes).toContain('Design tokens meet AA');
   });
 });

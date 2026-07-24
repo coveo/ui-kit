@@ -31,10 +31,7 @@ import ArrowBottomIcon from '../../../images/arrow-bottom-rounded.svg';
 @customElement('atomic-tab-popover')
 @bindings()
 @withTailwindStyles
-export class AtomicTabPopover
-  extends LitElement
-  implements InitializableComponent<Bindings>
-{
+export class AtomicTabPopover extends LitElement implements InitializableComponent<Bindings> {
   static styles = css`
     :host {
       position: absolute;
@@ -100,9 +97,7 @@ export class AtomicTabPopover
     const assignedElements = slot.assignedElements() as HTMLElement[];
 
     const isMovingToSlottedElement = assignedElements.some(
-      (element) =>
-        element === event.relatedTarget ||
-        element.contains(event.relatedTarget as Node)
+      (element) => element === event.relatedTarget || element.contains(event.relatedTarget as Node)
     );
 
     if (isMovingToSlottedElement) {
@@ -219,8 +214,7 @@ export class AtomicTabPopover
   private renderDropdownButton() {
     const label = this.bindings?.i18n.t('more');
     const ariaLabel = this.bindings?.i18n.t('tab-popover', {label});
-    const buttonClasses =
-      'relative pb-1 mt-1 group mr-6 font-semibold flex items-center';
+    const buttonClasses = 'relative pb-1 mt-1 group mr-6 font-semibold flex items-center';
 
     return renderButton({
       props: {
@@ -243,8 +237,7 @@ export class AtomicTabPopover
       </span>
       <atomic-icon
         part="arrow-icon"
-        class="group-hover:text-primary group-focus:text-primary ml-auto w-2 ${this
-          .isOpen
+        class="group-hover:text-primary group-focus:text-primary ml-auto w-2 ${this.isOpen
           ? 'rotate-180'
           : ''}"
         .icon=${ArrowBottomIcon}
@@ -284,9 +277,7 @@ export class AtomicTabPopover
   render() {
     this.classList.toggle('visibility-hidden', !this.show);
     this.ariaHidden = String(!this.show);
-    return html`
-      ${this.renderPopover()} ${when(this.isOpen, () => this.renderBackdrop())}
-    `;
+    return html` ${this.renderPopover()} ${when(this.isOpen, () => this.renderBackdrop())} `;
   }
 }
 

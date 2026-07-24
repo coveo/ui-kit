@@ -13,10 +13,7 @@ import {numericFacetSetReducer as numericFacetSet} from '../../../../features/fa
 import {executeSearch} from '../../../../features/search/search-actions.js';
 import {searchReducer as search} from '../../../../features/search/search-slice.js';
 import type {SearchAppState} from '../../../../state/search-app-state.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../../../test/mock-engine-v2.js';
 import {buildMockNumericFacetResponse} from '../../../../test/mock-numeric-facet-response.js';
 import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice.js';
 import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value.js';
@@ -31,9 +28,7 @@ import {
 
 vi.mock('../../../../features/facet-options/facet-options-actions');
 vi.mock('../../../../features/facets/facet-set/facet-set-actions');
-vi.mock(
-  '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions'
-);
+vi.mock('../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions');
 vi.mock('../../../../features/facets/range-facets/generic/range-facet-actions');
 vi.mock('../../../../features/search/search-actions');
 
@@ -81,9 +76,7 @@ describe('numeric facet', () => {
     initNumericFacet();
     expect(validateManualNumericRanges).toHaveBeenCalledWith(
       expect.objectContaining({
-        currentValues: expect.arrayContaining([
-          expect.objectContaining({start: 10, end: 0}),
-        ]),
+        currentValues: expect.arrayContaining([expect.objectContaining({start: 10, end: 0})]),
       })
     );
   });
@@ -101,10 +94,7 @@ describe('numeric facet', () => {
 
     initNumericFacet();
 
-    expect(FacetIdDeterminor.determineFacetId).toHaveBeenCalledWith(
-      engine,
-      options
-    );
+    expect(FacetIdDeterminor.determineFacetId).toHaveBeenCalledWith(engine, options);
   });
 
   it('registers a numeric facet with the passed options', () => {
@@ -119,9 +109,7 @@ describe('numeric facet', () => {
 
   it('when an option is invalid, it throws an error', () => {
     options.numberOfValues = 0;
-    expect(() => initNumericFacet()).toThrow(
-      'Check the options of buildNumericFacet'
-    );
+    expect(() => initNumericFacet()).toThrow('Check the options of buildNumericFacet');
   });
 
   describe('#toggleSelect', () => {
@@ -215,10 +203,7 @@ describe('numeric facet', () => {
     testCommonToggleSingleSelect(facetValue);
 
     it('does not dispatch a #deselectAllFacetValues action', () => {
-      const spy = vi.spyOn(
-        numericFacetActions,
-        'deselectAllNumericFacetValues'
-      );
+      const spy = vi.spyOn(numericFacetActions, 'deselectAllNumericFacetValues');
       numericFacet.toggleSingleSelect(facetValue());
 
       expect(spy).not.toHaveBeenCalled();
@@ -227,9 +212,7 @@ describe('numeric facet', () => {
 
   it('exposes a #state getter property to retrieve the values', () => {
     const values = [buildMockNumericFacetValue()];
-    state.search.response.facets = [
-      buildMockNumericFacetResponse({facetId, values}),
-    ];
+    state.search.response.facets = [buildMockNumericFacetResponse({facetId, values})];
 
     expect(numericFacet.state.values).toEqual(values);
   });

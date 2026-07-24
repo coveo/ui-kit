@@ -23,9 +23,7 @@ export default function NumericFacet(props: INumericFacetProps) {
   return (
     <fieldset className="NumericFacet">
       <legend className="FacetHeader">
-        <span className="FacetDisplayName">
-          {state.displayName ?? state.facetId}
-        </span>
+        <span className="FacetDisplayName">{state.displayName ?? state.facetId}</span>
         <button
           type="button"
           className="FacetClear"
@@ -52,12 +50,9 @@ export default function NumericFacet(props: INumericFacetProps) {
               />
               <label className="FacetValueLabel" htmlFor={id}>
                 <span className="FacetValueName">
-                  {Math.round(value.start * 100) / 100} to{' '}
-                  {Math.round(value.end * 100) / 100}
+                  {Math.round(value.start * 100) / 100} to {Math.round(value.end * 100) / 100}
                 </span>
-                <span className="FacetValueCount">
-                  ({value.numberOfResults})
-                </span>
+                <span className="FacetValueCount">({value.numberOfResults})</span>
               </label>
             </li>
           );

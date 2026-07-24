@@ -66,40 +66,38 @@ describe('atomic-quickview-modal', () => {
       modalCloseCallback: () => void;
     }>;
   } = {}) => {
-    const {element} = await renderInAtomicSearchInterface<AtomicQuickviewModal>(
-      {
-        template: html`<atomic-quickview-modal
-          .content=${props.content}
-          .result=${props.result}
-          .current=${props.current}
-          .total=${props.total}
-          .sandbox=${props.sandbox}
-          .modalCloseCallback=${props.modalCloseCallback}
-        ></atomic-quickview-modal>`,
-        selector: 'atomic-quickview-modal',
-        bindings: (bindings) => {
-          bindings.engine = mockedEngine;
-          bindings.engine.state.resultPreview = {
-            contentURL: 'https://example.com/preview',
-          };
-          bindings.engine.state.search = {
-            ...bindings.engine.state.search,
-            requestId: 'request-123',
-            response: {
-              ...bindings.engine.state.search.response,
-              termsToHighlight: {term1: ['highlight1']},
-              phrasesToHighlight: {},
-            },
-          };
-          bindings.store = {
-            ...bindings.store,
-            isMobile: vi.fn().mockReturnValue(false),
-          };
-          bindings.createStyleElement = () => document.createElement('style');
-          return bindings;
-        },
-      }
-    );
+    const {element} = await renderInAtomicSearchInterface<AtomicQuickviewModal>({
+      template: html`<atomic-quickview-modal
+        .content=${props.content}
+        .result=${props.result}
+        .current=${props.current}
+        .total=${props.total}
+        .sandbox=${props.sandbox}
+        .modalCloseCallback=${props.modalCloseCallback}
+      ></atomic-quickview-modal>`,
+      selector: 'atomic-quickview-modal',
+      bindings: (bindings) => {
+        bindings.engine = mockedEngine;
+        bindings.engine.state.resultPreview = {
+          contentURL: 'https://example.com/preview',
+        };
+        bindings.engine.state.search = {
+          ...bindings.engine.state.search,
+          requestId: 'request-123',
+          response: {
+            ...bindings.engine.state.search.response,
+            termsToHighlight: {term1: ['highlight1']},
+            phrasesToHighlight: {},
+          },
+        };
+        bindings.store = {
+          ...bindings.store,
+          isMobile: vi.fn().mockReturnValue(false),
+        };
+        bindings.createStyleElement = () => document.createElement('style');
+        return bindings;
+      },
+    });
 
     return {
       element,
@@ -179,9 +177,7 @@ describe('atomic-quickview-modal', () => {
         props: {content: mockContent, result: mockResult},
       });
 
-      const titleElement = await page
-        .getByRole('link', {name: mockResult.title})
-        .element();
+      const titleElement = await page.getByRole('link', {name: mockResult.title}).element();
       expect(titleElement).toBeTruthy();
     });
 
@@ -201,12 +197,9 @@ describe('atomic-quickview-modal', () => {
         props: {content: mockContent, result: mockResult},
       });
 
-      expect(buildInteractiveResult).toHaveBeenCalledWith(
-        element.bindings.engine,
-        {
-          options: {result: mockResult},
-        }
-      );
+      expect(buildInteractiveResult).toHaveBeenCalledWith(element.bindings.engine, {
+        options: {result: mockResult},
+      });
     });
 
     it('should render renderQuickviewSidebar component', async () => {

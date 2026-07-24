@@ -17,13 +17,7 @@ export function StarRating({rating, maxValue = 5}: StarRatingProps) {
       {Array.from({length: maxValue}, (_, i) => (
         <span
           key={i}
-          className={
-            noRating
-              ? styles.outline
-              : i < filled
-                ? styles.filled
-                : styles.empty
-          }
+          className={noRating ? styles.outline : i < filled ? styles.filled : styles.empty}
         >
           {noRating ? '☆' : '★'}
         </span>

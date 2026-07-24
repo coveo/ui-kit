@@ -18,14 +18,9 @@ export type {
   SummaryState,
 };
 
-export type SummaryDefinition =
-  SearchAndListingControllerDefinitionWithoutProps<
-    Summary<
-      | ProductListingSummaryState
-      | SearchSummaryState
-      | RecommendationsSummaryState
-    >
-  >;
+export type SummaryDefinition = SearchAndListingControllerDefinitionWithoutProps<
+  Summary<ProductListingSummaryState | SearchSummaryState | RecommendationsSummaryState>
+>;
 
 /**
  * Defines a `Summary` controller instance.

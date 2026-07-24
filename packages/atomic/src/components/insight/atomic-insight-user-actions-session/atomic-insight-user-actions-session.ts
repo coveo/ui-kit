@@ -78,9 +78,7 @@ export class AtomicInsightUserActionsSession
   private areActionsAfterCaseCreationVisible = false;
 
   private get caseCreationIndex(): number {
-    return this.userActions.findIndex(
-      ({actionType}) => actionType === 'TICKET_CREATION'
-    );
+    return this.userActions.findIndex(({actionType}) => actionType === 'TICKET_CREATION');
   }
 
   private get isCaseCreationSession(): boolean {
@@ -107,13 +105,8 @@ export class AtomicInsightUserActionsSession
       this.userActionsToDisplay = this.userActions;
       this.userActionsAfterCaseCreation = [];
     } else {
-      this.userActionsToDisplay = this.userActions.slice(
-        this.caseCreationIndex
-      );
-      this.userActionsAfterCaseCreation = this.userActions.slice(
-        0,
-        this.caseCreationIndex
-      );
+      this.userActionsToDisplay = this.userActions.slice(this.caseCreationIndex);
+      this.userActionsAfterCaseCreation = this.userActions.slice(0, this.caseCreationIndex);
     }
   }
 
@@ -126,10 +119,7 @@ export class AtomicInsightUserActionsSession
     const formatedStartDate = date.format('ddd. MMMM D, YYYY');
 
     return html`
-      <div
-        data-testid="session-start-date-container"
-        class="flex items-center px-2 pb-3"
-      >
+      <div data-testid="session-start-date-container" class="flex items-center px-2 pb-3">
         ${when(
           this.isCaseCreationSession,
           () => html`
@@ -167,10 +157,7 @@ export class AtomicInsightUserActionsSession
       count: this.userActionsAfterCaseCreation.length,
     });
     return html`
-      <div
-        data-testid="show-more-actions-button"
-        class="flex items-center px-3 pb-3"
-      >
+      <div data-testid="show-more-actions-button" class="flex items-center px-3 pb-3">
         <div class="flex justify-center pr-2">
           <atomic-icon icon=${ThreeDotsIcon} class="h-3 w-3"></atomic-icon>
         </div>
@@ -192,8 +179,7 @@ export class AtomicInsightUserActionsSession
   @bindingGuard()
   public render() {
     const isShowMoreActionsButtonVisible =
-      !this.areActionsAfterCaseCreationVisible &&
-      !!this.userActionsAfterCaseCreation.length;
+      !this.areActionsAfterCaseCreationVisible && !!this.userActionsAfterCaseCreation.length;
 
     return html`
       <div>
@@ -206,9 +192,7 @@ export class AtomicInsightUserActionsSession
             </div>
           `
         )}
-        ${when(isShowMoreActionsButtonVisible, () =>
-          this.renderShowMoreActionsButton()
-        )}
+        ${when(isShowMoreActionsButtonVisible, () => this.renderShowMoreActionsButton())}
         ${this.renderActions(this.userActionsToDisplay)}
       </div>
     `;

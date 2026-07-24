@@ -1,8 +1,5 @@
 import {getNegationPrefix, type Negatable} from '../common/negatable.js';
-import {
-  getOperatorSymbol,
-  type StringFacetFieldOperator,
-} from '../common/operator.js';
+import {getOperatorSymbol, type StringFacetFieldOperator} from '../common/operator.js';
 import type {Part} from '../common/part.js';
 
 export interface StringFacetFieldExpression extends Negatable {
@@ -22,18 +19,14 @@ export interface StringFacetFieldExpression extends Negatable {
   value: string;
 }
 
-export function buildStringFacetField(
-  config: StringFacetFieldExpression
-): Part {
+export function buildStringFacetField(config: StringFacetFieldExpression): Part {
   return {
     toQuerySyntax() {
       const prefix = getNegationPrefix(config);
       const {field, operator, value} = config;
       const symbol = getOperatorSymbol(operator);
       const formattedValue =
-        operator === 'fuzzyMatch'
-          ? ` $quoteVar(value: ${value})`
-          : `("${value}")`;
+        operator === 'fuzzyMatch' ? ` $quoteVar(value: ${value})` : `("${value}")`;
 
       return `${prefix}@${field}${symbol}${formattedValue}`;
     },

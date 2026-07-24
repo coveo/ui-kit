@@ -20,21 +20,11 @@ export type GetCaseClassificationsRequest = BaseParam &
   ContextParam &
   DebugParam;
 
-export const buildGetCaseClassificationsRequest = (
-  req: GetCaseClassificationsRequest
-) => {
-  const queryStringArguments: Record<string, string> = req.debug
-    ? {debug: '1'}
-    : {};
+export const buildGetCaseClassificationsRequest = (req: GetCaseClassificationsRequest) => {
+  const queryStringArguments: Record<string, string> = req.debug ? {debug: '1'} : {};
 
   return {
-    ...baseCaseAssistRequest(
-      req,
-      'POST',
-      'application/json',
-      '/classify',
-      queryStringArguments
-    ),
+    ...baseCaseAssistRequest(req, 'POST', 'application/json', '/classify', queryStringArguments),
     requestParams: prepareRequestParams(req),
   };
 };

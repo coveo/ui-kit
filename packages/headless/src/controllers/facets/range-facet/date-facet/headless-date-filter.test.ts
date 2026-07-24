@@ -13,10 +13,7 @@ import type {SearchAppState} from '../../../../state/search-app-state.js';
 import {buildMockDateFacetResponse} from '../../../../test/mock-date-facet-response.js';
 import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice.js';
 import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../../../test/mock-engine-v2.js';
 import {createMockState} from '../../../../test/mock-state.js';
 import * as FacetIdDeterminor from '../../../core/facets/_common/facet-id-determinor.js';
 import {buildDateRange} from '../../../core/facets/range-facet/date-facet/date-range.js';
@@ -28,9 +25,7 @@ import {
 } from './headless-date-filter.js';
 
 vi.mock('../../../../features/facet-options/facet-options-actions');
-vi.mock(
-  '../../../../features/facets/range-facets/date-facet-set/date-facet-actions'
-);
+vi.mock('../../../../features/facets/range-facets/date-facet-set/date-facet-actions');
 vi.mock('../../../../features/search/search-actions');
 
 describe('date filter', () => {
@@ -91,10 +86,7 @@ describe('date filter', () => {
 
     initDateFilter();
 
-    expect(FacetIdDeterminor.determineFacetId).toHaveBeenCalledWith(
-      engine,
-      options
-    );
+    expect(FacetIdDeterminor.determineFacetId).toHaveBeenCalledWith(engine, options);
   });
 
   it('registers a date facet with the passed options', () => {
@@ -112,9 +104,7 @@ describe('date filter', () => {
 
   it('when an option is invalid, it throws an error', () => {
     options.field = 0 as unknown as string;
-    expect(() => initDateFilter()).toThrow(
-      'Check the options of buildDateFacet'
-    );
+    expect(() => initDateFilter()).toThrow('Check the options of buildDateFacet');
   });
 
   describe('#setRange', () => {
@@ -124,9 +114,7 @@ describe('date filter', () => {
 
       expect(updateDateFacetValues).toHaveBeenCalledWith({
         facetId,
-        values: [
-          {...value, state: 'selected', numberOfResults: 0, endInclusive: true},
-        ],
+        values: [{...value, state: 'selected', numberOfResults: 0, endInclusive: true}],
       });
     });
 
@@ -162,18 +150,14 @@ describe('date filter', () => {
 
   it('the state #range property should return the range if it is selected', () => {
     const value = buildMockDateFacetValue({state: 'selected'});
-    state.search.response.facets = [
-      buildMockDateFacetResponse({facetId, values: [value]}),
-    ];
+    state.search.response.facets = [buildMockDateFacetResponse({facetId, values: [value]})];
 
     expect(dateFacet.state.range).toEqual(value);
   });
 
   it('the state #range property should not return the range if it is not selected', () => {
     const value = buildMockDateFacetValue({state: 'idle'});
-    state.search.response.facets = [
-      buildMockDateFacetResponse({facetId, values: [value]}),
-    ];
+    state.search.response.facets = [buildMockDateFacetResponse({facetId, values: [value]})];
 
     expect(dateFacet.state.range).toBeUndefined();
   });

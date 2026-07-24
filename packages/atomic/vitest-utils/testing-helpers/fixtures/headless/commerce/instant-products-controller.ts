@@ -1,7 +1,4 @@
-import type {
-  InstantProducts,
-  InstantProductsState,
-} from '@coveo/headless/commerce';
+import type {InstantProducts, InstantProductsState} from '@coveo/headless/commerce';
 import {vi} from 'vitest';
 
 export const defaultState = {
@@ -97,9 +94,7 @@ export const defaultImplementation = {
   state: defaultState,
 } satisfies InstantProducts;
 
-export const buildFakeInstantProducts = (
-  state?: Partial<InstantProductsState>
-): InstantProducts =>
+export const buildFakeInstantProducts = (state?: Partial<InstantProductsState>): InstantProducts =>
   ({
     ...defaultImplementation,
     ...{state: {...defaultState, ...(state || {})}},

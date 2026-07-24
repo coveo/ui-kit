@@ -33,22 +33,10 @@ import type {Controller} from '../../../../controller/headless-controller.js';
 import {determineFacetId} from '../../_common/facet-id-determinor.js';
 import {assertRangeFacetOptions} from '../core-range-facet-utils.js';
 import {buildCoreRangeFacet} from '../headless-core-range-facet.js';
-import {
-  buildDateRange,
-  type DateRangeInput,
-  type DateRangeOptions,
-} from './date-range.js';
-import {
-  type DateFacetOptions,
-  validateDateFacetOptions,
-} from './headless-date-facet-options.js';
+import {buildDateRange, type DateRangeInput, type DateRangeOptions} from './date-range.js';
+import {type DateFacetOptions, validateDateFacetOptions} from './headless-date-facet-options.js';
 
-export type {
-  DateFacetOptions,
-  DateRangeInput,
-  DateRangeOptions,
-  DateRangeRequest,
-};
+export type {DateFacetOptions, DateRangeInput, DateRangeOptions, DateRangeRequest};
 export {buildDateRange};
 
 export interface DateFacetProps {
@@ -190,10 +178,7 @@ export interface DateFacetState {
  * @group Controllers
  * @category DateFacet
  */
-export function buildCoreDateFacet(
-  engine: CoreEngine,
-  props: DateFacetProps
-): DateFacet {
+export function buildCoreDateFacet(engine: CoreEngine, props: DateFacetProps): DateFacet {
   if (!loadDateFacetReducers(engine)) {
     throw loadReducerError;
   }
@@ -217,13 +202,10 @@ export function buildCoreDateFacet(
 
   dispatch(registerDateFacet(options));
 
-  const rangeFacet = buildCoreRangeFacet<DateFacetRequest, DateFacetResponse>(
-    engine,
-    {
-      facetId,
-      getRequest: () => engine.state.dateFacetSet[facetId]!.request,
-    }
-  );
+  const rangeFacet = buildCoreRangeFacet<DateFacetRequest, DateFacetResponse>(engine, {
+    facetId,
+    getRequest: () => engine.state.dateFacetSet[facetId]!.request,
+  });
 
   return {
     ...rangeFacet,

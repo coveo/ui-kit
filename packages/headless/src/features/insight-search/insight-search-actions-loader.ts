@@ -22,10 +22,7 @@ import {
   fetchPage,
 } from './legacy/insight-search-actions.js';
 
-export type {
-  FetchQuerySuggestionsActionCreatorPayload,
-  RegisterQuerySuggestActionCreatorPayload,
-};
+export type {FetchQuerySuggestionsActionCreatorPayload, RegisterQuerySuggestActionCreatorPayload};
 
 export interface InsightSearchActionCreators {
   /**
@@ -120,9 +117,7 @@ export interface InsightSearchActionCreators {
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
  */
-export function loadInsightSearchActions(
-  engine: InsightEngine
-): InsightSearchActionCreators {
+export function loadInsightSearchActions(engine: InsightEngine): InsightSearchActionCreators {
   engine.addReducers({search});
 
   return {

@@ -13,9 +13,7 @@ describe('#buildOmniboxSuggestionMetadata', () => {
   });
 
   it('given an invalid query suggest id, it throws', () => {
-    expect(() =>
-      buildOmniboxSuggestionMetadata(state, {id, suggestion: ''})
-    ).toThrow();
+    expect(() => buildOmniboxSuggestionMetadata(state, {id, suggestion: ''})).toThrow();
   });
 
   it('given a valid id, it includes the query suggest expressions in the payload', () => {

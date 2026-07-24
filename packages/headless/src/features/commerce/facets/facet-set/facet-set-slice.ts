@@ -59,10 +59,7 @@ import {
   restoreFromParameters,
   selectPath,
 } from './facet-set-reducers.js';
-import {
-  type CommerceFacetSetState,
-  getCommerceFacetSetInitialState,
-} from './facet-set-state.js';
+import {type CommerceFacetSetState, getCommerceFacetSetInitialState} from './facet-set-state.js';
 import type {
   AnyFacetRequest,
   AnyFacetValueRequest,
@@ -114,9 +111,7 @@ export const commerceFacetSetReducer = createReducer(
 
         facetRequest.preventAutoSelect = true;
 
-        const existingValue = facetRequest.values.find(
-          (req) => req.value === selection.value
-        );
+        const existingValue = facetRequest.values.find((req) => req.value === selection.value);
         if (!existingValue) {
           insertNewValue(facetRequest, selection);
           return;
@@ -133,9 +128,7 @@ export const commerceFacetSetReducer = createReducer(
           return;
         }
 
-        const existingValue = facetRequest.values.find(
-          (req) => req.value === selection.value
-        );
+        const existingValue = facetRequest.values.find((req) => req.value === selection.value);
         if (!existingValue) {
           insertNewValue(facetRequest, selection);
           return;
@@ -153,10 +146,7 @@ export const commerceFacetSetReducer = createReducer(
 
         facetRequest.preventAutoSelect = true;
 
-        const existingValue = findExactRangeValue(
-          facetRequest.values,
-          selection
-        );
+        const existingValue = findExactRangeValue(facetRequest.values, selection);
         if (!existingValue) {
           insertNewValue(facetRequest, selection);
           return;
@@ -164,10 +154,7 @@ export const commerceFacetSetReducer = createReducer(
         updateExistingFacetValueState(existingValue, 'select');
         facetRequest.numberOfValues = facetRequest.initialNumberOfValues;
 
-        if (
-          facetRequest.interval === 'continuous' &&
-          existingValue.state === 'idle'
-        ) {
+        if (facetRequest.interval === 'continuous' && existingValue.state === 'idle') {
           facetRequest.values = [];
           return;
         }
@@ -182,10 +169,7 @@ export const commerceFacetSetReducer = createReducer(
 
         facetRequest.preventAutoSelect = true;
 
-        const existingValue = findExactRangeValue(
-          facetRequest.values,
-          selection
-        );
+        const existingValue = findExactRangeValue(facetRequest.values, selection);
         if (!existingValue) {
           insertNewValue(facetRequest, selection);
           return;
@@ -204,17 +188,14 @@ export const commerceFacetSetReducer = createReducer(
         const pathToSelection = path.slice(0, path.length - 1);
         const children = ensurePathAndReturnChildren(request, pathToSelection);
 
-        let selectedValue = children.find(
-          (value) => value.value === selection.value
-        );
+        let selectedValue = children.find((value) => value.value === selection.value);
 
         if (!selectedValue) {
           selectedValue = buildCategoryFacetValueRequest(selection.value);
           children.push(selectedValue);
         }
 
-        selectedValue.state =
-          selectedValue.state === 'idle' ? 'selected' : 'idle';
+        selectedValue.state = selectedValue.state === 'idle' ? 'selected' : 'idle';
 
         if (selectedValue.state === 'selected') {
           request.numberOfValues = request.initialNumberOfValues;
@@ -231,9 +212,7 @@ export const commerceFacetSetReducer = createReducer(
 
         facetRequest.preventAutoSelect = true;
 
-        const existingValue = facetRequest.values.find(
-          (req) => req.value === selection.value
-        );
+        const existingValue = facetRequest.values.find((req) => req.value === selection.value);
         if (!existingValue) {
           insertNewValue(facetRequest, selection);
           return;
@@ -252,10 +231,7 @@ export const commerceFacetSetReducer = createReducer(
 
         facetRequest.preventAutoSelect = true;
 
-        const existingValue = findExactRangeValue(
-          facetRequest.values,
-          selection
-        );
+        const existingValue = findExactRangeValue(facetRequest.values, selection);
         if (!existingValue) {
           insertNewValue(facetRequest, selection);
           return;
@@ -264,10 +240,7 @@ export const commerceFacetSetReducer = createReducer(
         updateExistingFacetValueState(existingValue, 'exclude');
         facetRequest.numberOfValues = facetRequest.initialNumberOfValues;
 
-        if (
-          facetRequest.interval === 'continuous' &&
-          existingValue.state === 'idle'
-        ) {
+        if (facetRequest.interval === 'continuous' && existingValue.state === 'idle') {
           facetRequest.values = [];
           return;
         }
@@ -282,10 +255,7 @@ export const commerceFacetSetReducer = createReducer(
 
         facetRequest.preventAutoSelect = true;
 
-        const existingValue = findExactRangeValue(
-          facetRequest.values,
-          selection
-        );
+        const existingValue = findExactRangeValue(facetRequest.values, selection);
         if (!existingValue) {
           insertNewValue(facetRequest, selection);
           return;
@@ -317,9 +287,7 @@ export const commerceFacetSetReducer = createReducer(
         facetRequest.freezeCurrentValues = true;
         facetRequest.preventAutoSelect = true;
 
-        const existingValue = facetRequest.values.find(
-          (v) => v.value === rawValue
-        );
+        const existingValue = facetRequest.values.find((v) => v.value === rawValue);
 
         if (!existingValue) {
           insertNewValue(
@@ -344,9 +312,7 @@ export const commerceFacetSetReducer = createReducer(
         facetRequest.freezeCurrentValues = true;
         facetRequest.preventAutoSelect = true;
 
-        const existingValue = facetRequest.values.find(
-          (v) => v.value === rawValue
-        );
+        const existingValue = facetRequest.values.find((v) => v.value === rawValue);
 
         if (!existingValue) {
           insertNewValue(facetRequest, {state: 'excluded', value: rawValue});
@@ -470,9 +436,7 @@ function ensureNumericFacetRequest(
   return facetRequest.type === 'numericalRange';
 }
 
-function ensureDateFacetRequest(
-  facetRequest: AnyFacetRequest
-): facetRequest is DateFacetRequest {
+function ensureDateFacetRequest(facetRequest: AnyFacetRequest): facetRequest is DateFacetRequest {
   return facetRequest.type === 'dateRange';
 }
 
@@ -484,9 +448,7 @@ function ensureCategoryFacetRequest(
 
 function handleQueryFulfilled(
   state: WritableDraft<CommerceFacetSetState>,
-  action: ReturnType<
-    typeof fetchProductListing.fulfilled | typeof executeSearch.fulfilled
-  >
+  action: ReturnType<typeof fetchProductListing.fulfilled | typeof executeSearch.fulfilled>
 ) {
   const existingFacets = new Set(Object.keys(state));
   const facets = action.payload.response.facets;
@@ -546,10 +508,7 @@ function handleDeselectAllFacetValues(request: AnyFacetRequest) {
  * Used to navigate to a specific level in the category tree before manipulating
  * values.
  */
-function ensurePathAndReturnChildren(
-  request: CategoryFacetRequest,
-  path: string[]
-) {
+function ensurePathAndReturnChildren(request: CategoryFacetRequest, path: string[]) {
   let children = request.values;
 
   for (const segment of path) {
@@ -571,25 +530,19 @@ function ensurePathAndReturnChildren(
 
 function updateExistingFacetValueState(
   existingFacetValue: WritableDraft<
-    | FacetValueRequest
-    | LocationFacetValueRequest
-    | NumericRangeRequest
-    | DateRangeRequest
+    FacetValueRequest | LocationFacetValueRequest | NumericRangeRequest | DateRangeRequest
   >,
   toggleAction: 'select' | 'exclude'
 ) {
   switch (existingFacetValue.state) {
     case 'idle':
-      existingFacetValue.state =
-        toggleAction === 'exclude' ? 'excluded' : 'selected';
+      existingFacetValue.state = toggleAction === 'exclude' ? 'excluded' : 'selected';
       break;
     case 'excluded':
-      existingFacetValue.state =
-        toggleAction === 'exclude' ? 'idle' : 'selected';
+      existingFacetValue.state = toggleAction === 'exclude' ? 'idle' : 'selected';
       break;
     case 'selected':
-      existingFacetValue.state =
-        toggleAction === 'exclude' ? 'excluded' : 'idle';
+      existingFacetValue.state = toggleAction === 'exclude' ? 'excluded' : 'idle';
       break;
     default:
       break;
@@ -620,14 +573,10 @@ function updateStateFromFacetResponse(
   facetRequest.numberOfValues = facetResponse.numberOfValues;
   facetRequest.field = facetResponse.field;
   facetRequest.type = facetResponse.type;
-  facetRequest.values =
-    getFacetRequestValuesFromFacetResponse(facetResponse) ?? [];
+  facetRequest.values = getFacetRequestValuesFromFacetResponse(facetResponse) ?? [];
   facetRequest.freezeCurrentValues = false;
   facetRequest.preventAutoSelect = false;
-  if (
-    facetResponse.type === 'hierarchical' &&
-    ensureCategoryFacetRequest(facetRequest)
-  ) {
+  if (facetResponse.type === 'hierarchical' && ensureCategoryFacetRequest(facetRequest)) {
     facetRequest.delimitingCharacter = facetResponse.delimitingCharacter;
   } else if (facetResponse.type === 'numericalRange') {
     facetRequest.interval = facetResponse.interval;
@@ -641,9 +590,7 @@ function updateStateFromFacetResponse(
   }
 }
 
-function getFacetRequestValuesFromFacetResponse(
-  facetResponse: AnyFacetResponse
-) {
+function getFacetRequestValuesFromFacetResponse(facetResponse: AnyFacetResponse) {
   switch (facetResponse.type) {
     case 'numericalRange':
       return convertToNumericRangeRequests(facetResponse.values);
@@ -663,9 +610,7 @@ function getFacetRequestValuesFromFacetResponse(
 export function convertCategoryFacetValueToRequest(
   responseValue: CategoryFacetValue
 ): CategoryFacetValueRequest {
-  const children = responseValue.children.map(
-    convertCategoryFacetValueToRequest
-  );
+  const children = responseValue.children.map(convertCategoryFacetValueToRequest);
   const {state, value} = responseValue;
   return {
     children,
@@ -682,14 +627,10 @@ export function convertLocationFacetValueToRequest(
   return {value, state};
 }
 
-function insertNewValue(
-  facetRequest: AnyFacetRequest,
-  facetValue: AnyFacetValueRequest
-) {
+function insertNewValue(facetRequest: AnyFacetRequest, facetValue: AnyFacetValueRequest) {
   const {values} = facetRequest;
   const firstIdleIndex = values.findIndex((v) => v.state === 'idle');
-  const indexToInsertAt =
-    firstIdleIndex === -1 ? values.length : firstIdleIndex;
+  const indexToInsertAt = firstIdleIndex === -1 ? values.length : firstIdleIndex;
 
   facetRequest.values.splice(indexToInsertAt, 0, facetValue);
 
@@ -701,9 +642,7 @@ function insertNewValue(
 }
 
 function setAllFacetValuesToIdle(state: CommerceFacetSetState) {
-  Object.values(state).forEach((facet) =>
-    handleDeselectAllFacetValues(facet.request)
-  );
+  Object.values(state).forEach((facet) => handleDeselectAllFacetValues(facet.request));
 }
 
 function clearAllFacetValues(state: CommerceFacetSetState) {

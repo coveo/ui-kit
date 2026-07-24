@@ -1,8 +1,5 @@
 import type {Draft} from '@reduxjs/toolkit';
-import type {
-  Correction,
-  QueryCorrection,
-} from '../../api/search/search/query-corrections.js';
+import type {Correction, QueryCorrection} from '../../api/search/search/query-corrections.js';
 import {emptyNextCorrection} from './did-you-mean-state.js';
 
 export const setToNonEmptyQueryCorrection = (
@@ -12,10 +9,7 @@ export const setToNonEmptyQueryCorrection = (
   const nonOptionalQueryCorrection = {
     ...emptyNextCorrection(),
     ...correction,
-    correctedQuery:
-      correction?.correctedQuery ||
-      correction?.corrections[0]?.correctedQuery ||
-      '',
+    correctedQuery: correction?.correctedQuery || correction?.corrections[0]?.correctedQuery || '',
   };
 
   state.queryCorrection = nonOptionalQueryCorrection;

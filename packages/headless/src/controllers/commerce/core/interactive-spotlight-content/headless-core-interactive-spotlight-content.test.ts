@@ -8,9 +8,7 @@ import {
 import {buildMockSpotlightContent} from '../../../../test/mock-spotlight-content.js';
 import {buildCoreInteractiveSpotlightContent} from './headless-core-interactive-spotlight-content.js';
 
-vi.mock(
-  '../../../../features/commerce/spotlight-content/spotlight-content-actions'
-);
+vi.mock('../../../../features/commerce/spotlight-content/spotlight-content-actions');
 
 describe('core interactive spotlight content', () => {
   let engine: MockedCommerceEngine;

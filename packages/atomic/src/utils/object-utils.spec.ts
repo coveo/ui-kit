@@ -84,9 +84,7 @@ describe('object-utils', () => {
         },
       };
 
-      expect(readFromObject(obj, 'level1.level2.level3.value')).toBe(
-        'deep value'
-      );
+      expect(readFromObject(obj, 'level1.level2.level3.value')).toBe('deep value');
     });
 
     it('should handle mixed data types in path', () => {
@@ -173,9 +171,7 @@ describe('object-utils', () => {
       };
 
       expect(readFromObject(obj, '__proto__.polluted')).toBeUndefined();
-      expect(
-        readFromObject(obj, 'constructor.prototype.polluted')
-      ).toBeUndefined();
+      expect(readFromObject(obj, 'constructor.prototype.polluted')).toBeUndefined();
     });
 
     it('should handle objects with toString methods', () => {
@@ -207,9 +203,7 @@ describe('object-utils', () => {
         },
       };
 
-      expect(readFromObject(deepObj, 'l1.l2.l3.l4.l5.l6.l7.value')).toBe(
-        'very deep'
-      );
+      expect(readFromObject(deepObj, 'l1.l2.l3.l4.l5.l6.l7.value')).toBe('very deep');
     });
 
     it('should handle objects with null prototype', () => {

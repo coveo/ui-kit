@@ -22,10 +22,7 @@ import {objectTypeIcons} from './object-type-icons';
  */
 @customElement('atomic-result-icon')
 @bindings()
-export class AtomicResultIcon
-  extends LitElement
-  implements InitializableComponent<Bindings>
-{
+export class AtomicResultIcon extends LitElement implements InitializableComponent<Bindings> {
   static styles = css`
     :host {
       display: inline-block;
@@ -80,8 +77,7 @@ export class AtomicResultIcon
 
   private renderIcon() {
     const icon = this.icon || 'document';
-    const backgroundColor =
-      bgIcons[snakeToCamel(icon) as keyof typeof bgIcons] || 'transparent';
+    const backgroundColor = bgIcons[snakeToCamel(icon) as keyof typeof bgIcons] || 'transparent';
     return html`
       <atomic-icon
         icon=${`assets://${icon}`}

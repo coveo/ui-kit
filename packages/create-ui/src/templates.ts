@@ -30,11 +30,7 @@ export const LIBRARIES: Record<Library, LibraryInfo> = {
   },
 };
 
-export const LIBRARY_ORDER: readonly Library[] = [
-  'atomic',
-  'headless',
-  'headless-ssr',
-];
+export const LIBRARY_ORDER: readonly Library[] = ['atomic', 'headless', 'headless-ssr'];
 
 export interface Template {
   /** CLI-facing template name passed to `--template`. */

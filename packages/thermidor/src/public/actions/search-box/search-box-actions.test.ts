@@ -1,9 +1,5 @@
 import {describe, it, expect, beforeEach} from 'vitest';
-import {
-  Engine,
-  FullEngine,
-  getFullEngine,
-} from '@/src/internal/engine/index.js';
+import {Engine, FullEngine, getFullEngine} from '@/src/internal/engine/index.js';
 import {createTestEngine} from '@/src/test/test-utils.js';
 import {getOrCreateSearchBoxSelectors} from '@/src/internal/features/search-box/index.js';
 import {buildSearchInterface} from '@/src/public/interfaces/search.js';

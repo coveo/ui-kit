@@ -25,8 +25,7 @@ const coveoHeadlessRga = () => {
 
   const {updateQuery} = loadQueryActions(searchEngine);
   const {executeSearch} = loadSearchActions(searchEngine);
-  const {logInterfaceLoad, logSearchboxSubmit} =
-    loadSearchAnalyticsActions(searchEngine);
+  const {logInterfaceLoad, logSearchboxSubmit} = loadSearchAnalyticsActions(searchEngine);
 
   console.log('rgaController', rgaController);
   rgaController.subscribe(() => {

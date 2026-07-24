@@ -36,11 +36,7 @@ describe('query insight analytics actions', () => {
       })
     );
 
-    await logSearchboxSubmit()()(
-      engine.dispatch,
-      () => engine.state,
-      {} as ThunkExtraArguments
-    );
+    await logSearchboxSubmit()()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
     const expectedPayload = {
       caseContext: {
@@ -52,8 +48,6 @@ describe('query insight analytics actions', () => {
     };
 
     expect(mockLogSearchboxSubmit).toHaveBeenCalledTimes(1);
-    expect(mockLogSearchboxSubmit.mock.calls[0][0]).toStrictEqual(
-      expectedPayload
-    );
+    expect(mockLogSearchboxSubmit.mock.calls[0][0]).toStrictEqual(expectedPayload);
   });
 });

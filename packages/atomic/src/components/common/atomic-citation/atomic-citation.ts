@@ -1,12 +1,5 @@
-import type {
-  GeneratedAnswerCitation,
-  InteractiveCitation,
-} from '@coveo/headless';
-import {
-  createPopper,
-  type Instance as PopperInstance,
-  preventOverflow,
-} from '@popperjs/core';
+import type {GeneratedAnswerCitation, InteractiveCitation} from '@coveo/headless';
+import {createPopper, type Instance as PopperInstance, preventOverflow} from '@popperjs/core';
 import {type CSSResultGroup, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {classMap} from 'lit/directives/class-map.js';
@@ -17,10 +10,7 @@ import {markdownToPlainText} from '@/src/components/common/generated-answer/gene
 import {renderHeading} from '../heading';
 import {renderLinkWithItemAnalytics} from '../item-link/item-link';
 import styles from './atomic-citation.tw.css';
-import {
-  generatePdfPageUrl,
-  generateTextFragmentUrl,
-} from './citation-anchoring-utils';
+import {generatePdfPageUrl, generateTextFragmentUrl} from './citation-anchoring-utils';
 
 /**
  * The `atomic-citation` component displays a citation with hover popover functionality.
@@ -48,9 +38,7 @@ export class AtomicCitation extends LitElement {
   /**
    * Callback function invoked when the user stops hovering over a citation. `citationHoverTimeMs` is the amount of time over which the citation has been hovered.
    */
-  @property({type: Object}) sendHoverEndEvent!: (
-    citationHoverTimeMs: number
-  ) => void;
+  @property({type: Object}) sendHoverEndEvent!: (citationHoverTimeMs: number) => void;
 
   /**
    * An `InteractiveCitation` controller instance. It is used when the user interacts with the citation by selecting or hovering over it.
@@ -132,21 +120,15 @@ export class AtomicCitation extends LitElement {
             className:
               'bg-background btn-outline-primary border-neutral text-on-background flex items-center rounded-full border p-1',
             onSelect: () => this.interactiveCitation.select(),
-            onBeginDelayedSelect: () =>
-              this.interactiveCitation.beginDelayedSelect(),
-            onCancelPendingSelect: () =>
-              this.interactiveCitation.cancelPendingSelect(),
+            onBeginDelayedSelect: () => this.interactiveCitation.beginDelayedSelect(),
+            onCancelPendingSelect: () => this.interactiveCitation.cancelPendingSelect(),
             stopPropagation: this.stopPropagation,
             onMouseLeave: this.delayedClosePopover,
             onMouseOver: this.delayedPopoverOpen,
             onFocus: this.openPopover,
             onBlur: this.closePopover,
           },
-        })(html`
-          <span class="citation-title mx-1 truncate">
-            ${this.citation.title}
-          </span>
-        `)}
+        })(html` <span class="citation-title mx-1 truncate"> ${this.citation.title} </span> `)}
         ${this.renderPopover()}
       </div>
     `;
@@ -199,12 +181,7 @@ export class AtomicCitation extends LitElement {
       : undefined;
   }
 
-  private anchorUrl(
-    uri: string,
-    text?: string,
-    filetype?: string,
-    pageNumber?: number
-  ) {
+  private anchorUrl(uri: string, text?: string, filetype?: string, pageNumber?: number) {
     if (this.disableCitationAnchoring) {
       return uri;
     }
@@ -247,10 +224,7 @@ export class AtomicCitation extends LitElement {
 
   private delayedPopoverOpen = () => {
     this.clearTimers();
-    this.hoverTimeout = setTimeout(
-      this.openPopover,
-      this.hoverDebounceTimeoutMs
-    );
+    this.hoverTimeout = setTimeout(this.openPopover, this.hoverDebounceTimeoutMs);
   };
 
   private renderPopover() {

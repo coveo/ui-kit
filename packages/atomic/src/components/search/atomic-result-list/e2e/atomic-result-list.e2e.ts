@@ -27,9 +27,7 @@ test.describe('When using a grid layout', () => {
     });
 
     test('should navigate', async ({page}) => {
-      await expect
-        .poll(() => page.url())
-        .toContain('https://docs.coveo.com/en/3160');
+      await expect.poll(() => page.url()).toContain('https://docs.coveo.com/en/3160');
     });
   });
 });

@@ -16,15 +16,12 @@ import '@/src/components/search/atomic-search-interface/atomic-search-interface.
 
 const searchApiHarness = new MockSearchApi();
 searchApiHarness.searchEndpoint.addRequestTransformer(searchFacetTransformer);
-searchApiHarness.facetSearchEndpoint.addRequestTransformer(
-  searchFacetSearchTransformer
-);
+searchApiHarness.facetSearchEndpoint.addRequestTransformer(searchFacetSearchTransformer);
 
 const {decorator, play} = wrapInSearchInterface();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-refine-toggle',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-refine-toggle', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-refine-toggle',
@@ -55,16 +52,8 @@ export const Default: Story = {
       <div style="display:none;">
         <atomic-facet field="author" label="Authors"></atomic-facet>
         <atomic-facet field="language" label="Language"></atomic-facet>
-        <atomic-facet
-          field="objecttype"
-          label="Type"
-          display-values-as="link"
-        ></atomic-facet>
-        <atomic-facet
-          field="year"
-          label="Year"
-          display-values-as="box"
-        ></atomic-facet>
+        <atomic-facet field="objecttype" label="Type" display-values-as="link"></atomic-facet>
+        <atomic-facet field="year" label="Year" display-values-as="box"></atomic-facet>
       </div>
     `,
     decorator,

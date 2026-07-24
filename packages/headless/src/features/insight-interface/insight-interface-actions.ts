@@ -15,8 +15,7 @@ export interface FetchInterfaceThunkReturn {
   response: GetInsightInterfaceConfigResponse;
 }
 
-export type StateNeededByFetchInterface = ConfigurationSection &
-  InsightConfigurationSection;
+export type StateNeededByFetchInterface = ConfigurationSection & InsightConfigurationSection;
 
 export const fetchInterface = createAsyncThunk<
   FetchInterfaceThunkReturn,
@@ -27,9 +26,7 @@ export const fetchInterface = createAsyncThunk<
   async (_, {getState, dispatch, rejectWithValue, extra: {apiClient}}) => {
     const state = getState();
 
-    const fetched = await apiClient.getInterface(
-      buildGetInsightInterfaceRequest(state)
-    );
+    const fetched = await apiClient.getInterface(buildGetInsightInterfaceRequest(state));
 
     if (isErrorResponse(fetched)) {
       return rejectWithValue(fetched.error);
@@ -48,9 +45,6 @@ const buildGetInsightInterfaceRequest = (
 ): GetInsightInterfaceConfigRequest => ({
   accessToken: state.configuration.accessToken,
   organizationId: state.configuration.organizationId,
-  url: getOrganizationEndpoint(
-    state.configuration.organizationId,
-    state.configuration.environment
-  ),
+  url: getOrganizationEndpoint(state.configuration.organizationId, state.configuration.environment),
   insightId: state.insightConfiguration.insightId,
 });

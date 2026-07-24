@@ -1,8 +1,4 @@
-import {
-  ChoiceIsNaNError,
-  ChoiceIsNonPositiveError,
-  InitialChoiceNotInChoicesError,
-} from './error';
+import {ChoiceIsNaNError, ChoiceIsNonPositiveError, InitialChoiceNotInChoicesError} from './error';
 
 export function convertChoicesToNumbers(choices: string) {
   return choices.split(',').map((choice) => {
@@ -18,10 +14,7 @@ export function convertChoicesToNumbers(choices: string) {
   });
 }
 
-export function validateInitialChoice(
-  initialChoice: number,
-  choices: number[]
-): number {
+export function validateInitialChoice(initialChoice: number, choices: number[]): number {
   if (!choices.includes(initialChoice)) {
     throw new InitialChoiceNotInChoicesError(initialChoice, choices);
   }

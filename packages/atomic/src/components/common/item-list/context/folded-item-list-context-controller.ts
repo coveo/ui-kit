@@ -16,9 +16,7 @@ export class MissingParentError extends Error {
  * A reactive controller that manages folded item list context data from parent components.
  * Handles fetching folded item list data via custom events and manages error states.
  */
-export class FoldedItemListContextController<
-  T = unknown,
-> implements ReactiveController {
+export class FoldedItemListContextController<T = unknown> implements ReactiveController {
   private host: ReactiveControllerHost & LitElementWithError;
   private _foldedItemList: T | null = null;
   private _error: MissingParentError | null = null;
@@ -45,13 +43,10 @@ export class FoldedItemListContextController<
   }
 
   private _resolveFoldedItemListContext(): void {
-    const event = buildCustomEvent(
-      foldedItemListContextEventName,
-      (foldedItemList: T) => {
-        this._foldedItemList = foldedItemList;
-        this.host.requestUpdate();
-      }
-    );
+    const event = buildCustomEvent(foldedItemListContextEventName, (foldedItemList: T) => {
+      this._foldedItemList = foldedItemList;
+      this.host.requestUpdate();
+    });
 
     const canceled = this.host.dispatchEvent(event);
     if (canceled) {
@@ -65,6 +60,4 @@ export class FoldedItemListContextController<
 }
 
 type FoldedItemListContextEventHandler<T> = (foldedItemList: T) => void;
-export type FoldedItemListContextEvent<T> = CustomEvent<
-  FoldedItemListContextEventHandler<T>
->;
+export type FoldedItemListContextEvent<T> = CustomEvent<FoldedItemListContextEventHandler<T>>;

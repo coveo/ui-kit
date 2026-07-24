@@ -40,10 +40,7 @@ export interface PlatformResponse<T> {
   response: Response;
 }
 
-export type PlatformClientCallError =
-  | UnauthorizedTokenError
-  | DisconnectedError
-  | Error;
+export type PlatformClientCallError = UnauthorizedTokenError | DisconnectedError | Error;
 
 // oxlint-disable-next-line unicorn/no-static-only-class -- Maybe change this into a function someday. Not worth the effort right now.
 export class PlatformClient {
@@ -53,10 +50,7 @@ export class PlatformClient {
     const defaultRequestOptions = buildDefaultRequestOptions(options);
     const {logger} = options;
 
-    const requestInfo = await PlatformClient.preprocessRequest(
-      defaultRequestOptions,
-      options
-    );
+    const requestInfo = await PlatformClient.preprocessRequest(defaultRequestOptions, options);
 
     logger.info(requestInfo, 'Platform request');
 
@@ -147,8 +141,7 @@ export function getOrganizationEndpoint(
   endpointType: 'admin' | 'analytics' | 'platform' = 'platform'
 ) {
   const environmentSuffix = environment === 'prod' ? '' : environment;
-  const endpointTypePart =
-    endpointType === 'platform' ? '' : `.${endpointType}`;
+  const endpointTypePart = endpointType === 'platform' ? '' : `.${endpointType}`;
 
   return `https://${organizationId}${endpointTypePart}.org${environmentSuffix}.coveo.com`;
 }
@@ -169,10 +162,7 @@ export function getSearchApiBaseUrl(
   organizationId: string,
   environment: PlatformEnvironment = 'prod'
 ) {
-  const organizationEndpoint = getOrganizationEndpoint(
-    organizationId,
-    environment
-  );
+  const organizationEndpoint = getOrganizationEndpoint(organizationId, environment);
 
   return `${organizationEndpoint}/rest/search/v2`;
 }
@@ -181,22 +171,14 @@ export function getAnalyticsNextApiBaseUrl(
   organizationId: string,
   environment: PlatformEnvironment = 'prod'
 ) {
-  const organizationEndpoint = getOrganizationEndpoint(
-    organizationId,
-    environment,
-    'analytics'
-  );
+  const organizationEndpoint = getOrganizationEndpoint(organizationId, environment, 'analytics');
 
   return `${organizationEndpoint}/rest/organizations/${organizationId}/events/v1`;
 }
 
-function buildDefaultRequestOptions(
-  options: PlatformClientCallOptions
-): PlatformRequestOptions {
-  const {url, method, requestParams, contentType, accessToken, signal} =
-    options;
-  const isMethodWithBody =
-    options.method === 'POST' || options.method === 'PUT';
+function buildDefaultRequestOptions(options: PlatformClientCallOptions): PlatformRequestOptions {
+  const {url, method, requestParams, contentType, accessToken, signal} = options;
+  const isMethodWithBody = options.method === 'POST' || options.method === 'PUT';
   const body = encodeBody(requestParams, contentType);
 
   return {

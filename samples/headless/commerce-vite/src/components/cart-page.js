@@ -139,22 +139,11 @@ export class CartPage extends LitElement {
                       </div>
                     </div>
                     <div class="actions">
-                      <button
-                        type="button"
-                        @click=${() => this.#adjust(item, 1)}
-                      >
-                        Add one
-                      </button>
-                      <button
-                        type="button"
-                        @click=${() => this.#adjust(item, -1)}
-                      >
+                      <button type="button" @click=${() => this.#adjust(item, 1)}>Add one</button>
+                      <button type="button" @click=${() => this.#adjust(item, -1)}>
                         Remove one
                       </button>
-                      <button
-                        type="button"
-                        @click=${() => this.#adjust(item, -item.quantity)}
-                      >
+                      <button type="button" @click=${() => this.#adjust(item, -item.quantity)}>
                         Remove all
                       </button>
                     </div>
@@ -164,16 +153,10 @@ export class CartPage extends LitElement {
             </ul>
             <div class="summary">
               <span class="total">Total: $${state.totalPrice.toFixed(2)}</span>
-              <button
-                type="button"
-                class="purchase"
-                @click=${() => this.#purchase()}
-              >
+              <button type="button" class="purchase" @click=${() => this.#purchase()}>
                 Purchase
               </button>
-              <button type="button" @click=${() => this.cart.empty()}>
-                Empty cart
-              </button>
+              <button type="button" @click=${() => this.cart.empty()}>Empty cart</button>
             </div>
           `}
 

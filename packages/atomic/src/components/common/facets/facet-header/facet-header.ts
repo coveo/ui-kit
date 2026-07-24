@@ -20,9 +20,7 @@ export interface FacetHeaderProps {
   headerRef?: (element?: HTMLButtonElement) => void;
 }
 
-export const renderFacetHeader: FunctionalComponent<FacetHeaderProps> = ({
-  props,
-}) => {
+export const renderFacetHeader: FunctionalComponent<FacetHeaderProps> = ({props}) => {
   const label = props.i18n.t(props.label);
   const expandFacet = props.i18n.t('expand-facet', {label});
   const collapseFacet = props.i18n.t('collapse-facet', {label});
@@ -39,8 +37,7 @@ export const renderFacetHeader: FunctionalComponent<FacetHeaderProps> = ({
       props: {
         part: 'label-button',
         style: 'text-transparent',
-        class:
-          'flex w-full justify-between rounded-none px-2 py-1 text-lg font-bold',
+        class: 'flex w-full justify-between rounded-none px-2 py-1 text-lg font-bold',
         ariaLabel: props.isCollapsed ? expandFacet : collapseFacet,
         onClick: props.onToggleCollapse,
         ariaExpanded: props.isCollapsed ? 'false' : 'true',

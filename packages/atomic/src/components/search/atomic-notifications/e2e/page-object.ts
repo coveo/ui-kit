@@ -7,8 +7,6 @@ export class NotificationsPageObject extends BasePageObject {
   }
 
   notification(index: number = 0) {
-    return this.page
-      .locator('atomic-notifications [part="notification"]')
-      .nth(index);
+    return this.page.locator('atomic-notifications [part="notification"]').nth(index);
   }
 }

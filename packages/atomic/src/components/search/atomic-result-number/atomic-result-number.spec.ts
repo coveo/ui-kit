@@ -12,8 +12,7 @@ import {customElement} from 'lit/decorators.js';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 
 vi.mock('@coveo/headless', async () => {
-  const actual =
-    await vi.importActual<typeof import('@coveo/headless')>('@coveo/headless');
+  const actual = await vi.importActual<typeof import('@coveo/headless')>('@coveo/headless');
   return {
     ...actual,
     ResultTemplatesHelpers: {
@@ -24,9 +23,7 @@ vi.mock('@coveo/headless', async () => {
 
 @customElement('test-formatter')
 class TestFormatter extends LitElement {
-  firstUpdated(
-    _changedProperties: Map<string | number | symbol, unknown>
-  ): void {
+  firstUpdated(_changedProperties: Map<string | number | symbol, unknown>): void {
     super.updated(_changedProperties);
     const event = new CustomEvent('atomic/numberFormat', {
       detail: (value: number) => `000${value}000`,
@@ -61,19 +58,18 @@ describe('atomic-result-number', () => {
     slottedContent?: TemplateResult;
     result?: Partial<Result>;
   } = {}) => {
-    const {element, atomicResult} =
-      await renderInAtomicResult<AtomicResultNumber>({
-        template: html`<atomic-result-number field=${ifDefined(props.field)}
-          >${ifDefined(slottedContent)}</atomic-result-number
-        >`,
-        selector: 'atomic-result-number',
-        result: result as Result,
-        bindings: (bindings) => {
-          bindings.engine = mockedEngine;
-          bindings.i18n = i18n;
-          return bindings;
-        },
-      });
+    const {element, atomicResult} = await renderInAtomicResult<AtomicResultNumber>({
+      template: html`<atomic-result-number field=${ifDefined(props.field)}
+        >${ifDefined(slottedContent)}</atomic-result-number
+      >`,
+      selector: 'atomic-result-number',
+      result: result as Result,
+      bindings: (bindings) => {
+        bindings.engine = mockedEngine;
+        bindings.i18n = i18n;
+        return bindings;
+      },
+    });
 
     return {
       element: element,
@@ -103,10 +99,7 @@ describe('atomic-result-number', () => {
     });
 
     it('should add an "atomic/numberFormat" event listener', async () => {
-      const addEventListenerSpy = vi.spyOn(
-        AtomicResultNumber.prototype,
-        'addEventListener'
-      );
+      const addEventListenerSpy = vi.spyOn(AtomicResultNumber.prototype, 'addEventListener');
 
       await renderResultNumber({props: {field: 'size'}});
 
@@ -175,9 +168,7 @@ describe('atomic-result-number', () => {
     });
 
     it('should set the error when the field value cannot be parsed as a number', async () => {
-      vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(
-        'not a number'
-      );
+      vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue('not a number');
 
       const {element} = await renderResultNumber({props: {field: 'invalid'}});
 
@@ -190,15 +181,11 @@ describe('atomic-result-number', () => {
     describe('when using the default formatter', () => {
       it('should set the error when the formatter throws', async () => {
         // Ensure the mock returns a valid number
-        vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(
-          1234.56
-        );
+        vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(1234.56);
 
         @customElement('test-throwing-formatter')
         class TestThrowingFormatter extends LitElement {
-          firstUpdated(
-            _changedProperties: Map<string | number | symbol, unknown>
-          ): void {
+          firstUpdated(_changedProperties: Map<string | number | symbol, unknown>): void {
             super.updated(_changedProperties);
             const event = new CustomEvent('atomic/numberFormat', {
               detail: () => {
@@ -227,9 +214,7 @@ describe('atomic-result-number', () => {
       });
 
       it('should format a valid number value', async () => {
-        vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(
-          1234.56
-        );
+        vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(1234.56);
 
         const {element} = await renderResultNumber({props: {field: 'size'}});
 
@@ -237,9 +222,7 @@ describe('atomic-result-number', () => {
       });
 
       it('should format a valid string value that can be parsed to a number', async () => {
-        vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(
-          '1234.56'
-        );
+        vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue('1234.56');
 
         const {element} = await renderResultNumber({props: {field: 'price'}});
 
@@ -248,9 +231,7 @@ describe('atomic-result-number', () => {
 
       it('should format using the active i18n language', async () => {
         await i18n.changeLanguage('fr');
-        vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(
-          1234.56
-        );
+        vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(1234.56);
 
         const {element} = await renderResultNumber({props: {field: 'size'}});
 
@@ -259,9 +240,7 @@ describe('atomic-result-number', () => {
     });
 
     it('should use the specified formatter instead of the default one when it has a slotted formatter', async () => {
-      vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(
-        1234.56
-      );
+      vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(1234.56);
       const {element} = await renderResultNumber({
         props: {field: 'price'},
         slottedContent: html`<test-formatter></test-formatter>`,
@@ -272,21 +251,16 @@ describe('atomic-result-number', () => {
   });
 
   it('should set the error when not used in a result template', async () => {
-    const {atomicInterface} =
-      await renderInAtomicSearchInterface<AtomicResultNumber>({
-        template: html`<atomic-result-number
-          field="size"
-        ></atomic-result-number>`,
-        selector: undefined,
-        bindings: (bindings) => {
-          bindings.engine = mockedEngine;
-          return bindings;
-        },
-      });
+    const {atomicInterface} = await renderInAtomicSearchInterface<AtomicResultNumber>({
+      template: html`<atomic-result-number field="size"></atomic-result-number>`,
+      selector: undefined,
+      bindings: (bindings) => {
+        bindings.engine = mockedEngine;
+        return bindings;
+      },
+    });
 
-    const element = atomicInterface.querySelector<AtomicResultNumber>(
-      'atomic-result-number'
-    );
+    const element = atomicInterface.querySelector<AtomicResultNumber>('atomic-result-number');
 
     expect(element).toBeInTheDocument();
     expect(element!.error).toBeInstanceOf(Error);

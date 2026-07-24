@@ -24,8 +24,7 @@ function createFacet(initial: Partial<FacetSearchState>) {
 }
 
 const i18n = {
-  t: (_key: string, opts: {count: number; label: string}) =>
-    `${opts.count} in ${opts.label}`,
+  t: (_key: string, opts: {count: number; label: string}) => `${opts.count} in ${opts.label}`,
 } as unknown as i18n;
 
 describe('#announceFacetSearchResultsWithAriaLive', () => {

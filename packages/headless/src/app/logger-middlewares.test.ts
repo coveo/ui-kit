@@ -1,10 +1,7 @@
 import {SchemaValidationError} from '@coveo/bueno';
 import type {Logger} from 'pino';
 import {serializeSchemaValidationError} from '../utils/validate-payload.js';
-import {
-  logActionErrorMiddleware,
-  logActionMiddleware,
-} from './logger-middlewares.js';
+import {logActionErrorMiddleware, logActionMiddleware} from './logger-middlewares.js';
 
 const createMiddlewareBoilerplate = () => {
   const logger = {error: vi.fn(), debug: vi.fn()} as unknown as Logger;
@@ -20,8 +17,7 @@ const createMiddlewareBoilerplate = () => {
 const createLogActionErrorMiddleware = () => {
   const {store, next, logger} = createMiddlewareBoilerplate();
 
-  const invoke = (action: unknown) =>
-    logActionErrorMiddleware(logger)(store)(next)(action);
+  const invoke = (action: unknown) => logActionErrorMiddleware(logger)(store)(next)(action);
 
   return {store, next, invoke, logger};
 };
@@ -29,8 +25,7 @@ const createLogActionErrorMiddleware = () => {
 const createLogActionMiddleware = () => {
   const {store, next, logger} = createMiddlewareBoilerplate();
 
-  const invoke = (action: unknown) =>
-    logActionMiddleware(logger)(store)(next)(action);
+  const invoke = (action: unknown) => logActionMiddleware(logger)(store)(next)(action);
 
   return {store, next, invoke, logger};
 };
@@ -52,9 +47,7 @@ describe('logActionErrorMiddleware', () => {
     const {next, logger, invoke} = createLogActionErrorMiddleware();
     invoke({
       type: 'foo',
-      error: serializeSchemaValidationError(
-        new SchemaValidationError('no bueno')
-      ),
+      error: serializeSchemaValidationError(new SchemaValidationError('no bueno')),
     });
     expect(next).not.toHaveBeenCalled();
     expect(logger.error).toHaveBeenCalled();
@@ -76,9 +69,7 @@ describe('logActionErrorMiddleware', () => {
 
   it(`when a action has an error parameter
   it should log an error`, () => {
-    const error = serializeSchemaValidationError(
-      new SchemaValidationError('no bueno')
-    );
+    const error = serializeSchemaValidationError(new SchemaValidationError('no bueno'));
     const action = {
       type: 'foo',
       error,

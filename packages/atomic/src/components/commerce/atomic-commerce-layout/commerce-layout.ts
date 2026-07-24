@@ -6,10 +6,7 @@ export const noProductsSelector = `${containerWebComponentTagName}-no-results`;
 export const errorSelector = `${containerWebComponentTagName}-error`;
 export const firstSearchExecutedSelector = `${containerWebComponentTagName}-search-executed`;
 
-export function buildCommerceLayout(
-  element: HTMLElement,
-  mobileBreakpoint: string
-) {
+export function buildCommerceLayout(element: HTMLElement, mobileBreakpoint: string) {
   return buildCommonLayout(
     element,
     mobileBreakpoint,

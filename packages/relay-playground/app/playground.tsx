@@ -41,11 +41,7 @@ export function Playground(props: React.PropsWithChildren) {
           const isDev = process.env['NODE_ENV'] === 'development';
           const slug = navLink.toLowerCase();
           const href =
-            navLink === 'SSR'
-              ? '/api/ssr'
-              : isDev
-                ? `/${slug}`
-                : `/relay/playground/${slug}.html`;
+            navLink === 'SSR' ? '/api/ssr' : isDev ? `/${slug}` : `/relay/playground/${slug}.html`;
 
           return (
             <NavLink

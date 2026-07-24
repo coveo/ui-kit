@@ -2,10 +2,7 @@ import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
 import {page} from 'vitest/browser';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
-import {
-  renderTriStateCheckbox,
-  type TriStateCheckboxProps,
-} from './triStateCheckbox';
+import {renderTriStateCheckbox, type TriStateCheckboxProps} from './triStateCheckbox';
 
 describe('#renderTriStateCheckbox', () => {
   const defaultProps: TriStateCheckboxProps = {
@@ -21,9 +18,7 @@ describe('#renderTriStateCheckbox', () => {
 
   const renderComponent = (props: Partial<TriStateCheckboxProps> = {}) => {
     const mergedProps = {...defaultProps, ...props};
-    return renderFunctionFixture(
-      html`${renderTriStateCheckbox({props: mergedProps})}`
-    );
+    return renderFunctionFixture(html`${renderTriStateCheckbox({props: mergedProps})}`);
   };
 
   it('renders the checkbox with default state', async () => {

@@ -3,9 +3,7 @@ import type {CoreEngineNext} from './engine.js';
 const stateKeyDescription = 'coveo-headless-internal-state';
 export const stateKey = Symbol.for(stateKeyDescription);
 
-export const redactEngine = <TEngine extends CoreEngineNext>(
-  engine: TEngine
-): TEngine =>
+export const redactEngine = <TEngine extends CoreEngineNext>(engine: TEngine): TEngine =>
   new Proxy(engine, {
     ownKeys(target) {
       return Reflect.ownKeys(target).filter((key) => key !== stateKey);

@@ -25,24 +25,14 @@ if (configArg === undefined) {
   throw new Error('Missing --config=[PATH] argument');
 }
 const tsConfigPath = configArg.split('=')[1];
-const transformers = [
-  versionTransformer,
-  analyticsTransformer,
-  wildcardExportTransformer,
-];
+const transformers = [versionTransformer, analyticsTransformer, wildcardExportTransformer];
 
 function loadTsConfig(configPath) {
   const configFile = readConfigFile(configPath, sys.readFile);
   if (configFile.error) {
-    throw new Error(
-      `Error loading tsconfig file: ${configFile.error.messageText}`
-    );
+    throw new Error(`Error loading tsconfig file: ${configFile.error.messageText}`);
   }
-  return parseJsonConfigFileContent(
-    configFile.config,
-    sys,
-    dirname(configPath)
-  );
+  return parseJsonConfigFileContent(configFile.config, sys, dirname(configPath));
 }
 
 function emit(program) {
@@ -73,38 +63,25 @@ function emit(program) {
  * Info: https://github.com/microsoft/TypeScript/wiki/Using-the-Compiler-API#a-minimal-compiler
  */
 function compileWithTransformer() {
-  console.log(
-    colors.blue('Using tsconfig:'),
-    colors.green(basename(tsConfigPath))
-  );
+  console.log(colors.blue('Using tsconfig:'), colors.green(basename(tsConfigPath)));
   const {options, fileNames} = loadTsConfig(tsConfigPath);
   const program = createProgram(fileNames, options);
   const emitResult = emit(program);
 
-  const allDiagnostics = getPreEmitDiagnostics(program).concat(
-    emitResult.diagnostics
-  );
+  const allDiagnostics = getPreEmitDiagnostics(program).concat(emitResult.diagnostics);
 
   let hasError = false;
 
   allDiagnostics.forEach((diagnostic) => {
     if (diagnostic.file) {
-      const {line, character} = getLineAndCharacterOfPosition(
-        diagnostic.file,
-        diagnostic.start
-      );
-      const message = flattenDiagnosticMessageText(
-        diagnostic.messageText,
-        '\n'
-      );
+      const {line, character} = getLineAndCharacterOfPosition(diagnostic.file, diagnostic.start);
+      const message = flattenDiagnosticMessageText(diagnostic.messageText, '\n');
 
       console.log(
         `${colors.cyan(relative(process.cwd(), diagnostic.file.fileName))}:${colors.yellow(line + 1)}:${colors.yellow(character + 1)} - ${colors.red('error')} ${colors.gray(message)}`
       );
     } else {
-      console.error(
-        colors.red(flattenDiagnosticMessageText(diagnostic.messageText, '\n'))
-      );
+      console.error(colors.red(flattenDiagnosticMessageText(diagnostic.messageText, '\n')));
     }
 
     if (diagnostic.category === DiagnosticCategory.Error) {

@@ -1,8 +1,4 @@
-import type {
-  RegularFacet,
-  RegularFacetState,
-  RegularFacetValue,
-} from '@coveo/headless/commerce';
+import type {RegularFacet, RegularFacetState, RegularFacetValue} from '@coveo/headless/commerce';
 import {vi} from 'vitest';
 import {genericSubscribe} from '../common';
 

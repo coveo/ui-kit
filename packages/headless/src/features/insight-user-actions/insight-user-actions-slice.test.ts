@@ -1,7 +1,4 @@
-import {
-  fetchUserActions,
-  registerUserActions,
-} from './insight-user-actions-actions.js';
+import {fetchUserActions, registerUserActions} from './insight-user-actions-actions.js';
 import {insightUserActionsReducer} from './insight-user-actions-slice.js';
 import {getInsightUserActionsInitialState} from './insight-user-actions-state.js';
 
@@ -87,11 +84,7 @@ describe('insight user actions slice', () => {
       it('should set #loading to #false', () => {
         const modifiedState = insightUserActionsReducer(
           getInsightUserActionsInitialState(),
-          fetchUserActions.fulfilled(
-            {response: {value: []}},
-            exampleUserId,
-            requestId
-          )
+          fetchUserActions.fulfilled({response: {value: []}}, exampleUserId, requestId)
         );
 
         expect(modifiedState.loading).toBe(false);
@@ -100,11 +93,7 @@ describe('insight user actions slice', () => {
       it('should set #error to #undefined', () => {
         const modifiedState = insightUserActionsReducer(
           getInsightUserActionsInitialState(),
-          fetchUserActions.fulfilled(
-            {response: {value: []}},
-            exampleUserId,
-            requestId
-          )
+          fetchUserActions.fulfilled({response: {value: []}}, exampleUserId, requestId)
         );
 
         expect(modifiedState.error).toBeUndefined();
@@ -134,9 +123,7 @@ describe('insight user actions slice', () => {
         })
       );
 
-      expect(modifiedState.excludedCustomActions).toBe(
-        testExcludedCustomActions
-      );
+      expect(modifiedState.excludedCustomActions).toBe(testExcludedCustomActions);
     });
   });
 });

@@ -1,8 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {
-  extractTextToHighlight,
-  generatePdfPageUrl,
-} from './citation-anchoring-utils';
+import {extractTextToHighlight, generatePdfPageUrl} from './citation-anchoring-utils';
 
 describe('generatePdfPageUrl', () => {
   it('generates PDF page URL given a positive page number', () => {
@@ -52,15 +49,13 @@ describe('extractTextToHighlight', () => {
   });
 
   it('trims whitespace from extracted sentence', () => {
-    const text =
-      '   This is a sentence with leading spaces. This is another sentence.';
+    const text = '   This is a sentence with leading spaces. This is another sentence.';
     const result = extractTextToHighlight(text);
     expect(result).toBe('This is a sentence with leading spaces.');
   });
 
   it("handles text with decimal numbers that shouldn't break sentence detection", () => {
-    const text =
-      'This sentence has the decimal 3.1415 in it. This is another sentence.';
+    const text = 'This sentence has the decimal 3.1415 in it. This is another sentence.';
     const result = extractTextToHighlight(text);
     expect(result).toBe('This sentence has the decimal 3.1415 in it.');
   });
@@ -78,8 +73,7 @@ describe('extractTextToHighlight', () => {
   });
 
   it('handles commas within sentences', () => {
-    const text =
-      'This is the first sentence, which has a comma. This is the second.';
+    const text = 'This is the first sentence, which has a comma. This is the second.';
     const result = extractTextToHighlight(text);
     expect(result).toBe('This is the first sentence, which has a comma.');
   });

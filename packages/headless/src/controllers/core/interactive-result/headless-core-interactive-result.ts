@@ -100,9 +100,7 @@ export function buildInteractiveResultCore(
 
 function loadInteractiveResultCoreReducers(
   engine: CoreEngine | CoreEngineNext
-): engine is
-  | CoreEngine<ConfigurationSection>
-  | CoreEngineNext<ConfigurationSection> {
+): engine is CoreEngine<ConfigurationSection> | CoreEngineNext<ConfigurationSection> {
   engine.addReducers({configuration});
   return true;
 }

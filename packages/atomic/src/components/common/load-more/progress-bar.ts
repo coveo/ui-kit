@@ -10,9 +10,9 @@ interface LoadMoreProgressBarProps {
  * @cssprop --atomic-more-results-progress-bar-color-from - Color of the start of the gradient for the load more results progress bar.
  * @cssprop --atomic-more-results-progress-bar-color-to - Color of the end of the gradient for the load more results progress bar.
  */
-export const renderLoadMoreProgressBar: FunctionalComponent<
-  LoadMoreProgressBarProps
-> = ({props}) => {
+export const renderLoadMoreProgressBar: FunctionalComponent<LoadMoreProgressBarProps> = ({
+  props,
+}) => {
   const {from, to} = props;
   const percentage = to > 0 ? Math.min((from / to) * 100, 100) : 0;
   const width = `${Math.ceil(percentage)}%`;

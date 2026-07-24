@@ -7,14 +7,8 @@ import {
 import {instantProductsReducer} from '../../../features/commerce/instant-products/instant-products-slice.js';
 import type {CommerceAppState} from '../../../state/commerce-app-state.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
-import {
-  buildMockCommerceEngine,
-  type MockedCommerceEngine,
-} from '../../../test/mock-engine-v2.js';
-import {
-  buildInstantProducts,
-  type InstantProducts,
-} from './headless-instant-products.js';
+import {buildMockCommerceEngine, type MockedCommerceEngine} from '../../../test/mock-engine-v2.js';
+import {buildInstantProducts, type InstantProducts} from './headless-instant-products.js';
 
 vi.mock('../../../features/commerce/instant-products/instant-products-actions');
 

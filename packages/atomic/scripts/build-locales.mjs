@@ -17,9 +17,7 @@ function generateLocales() {
   rmSync(generatedDir, {recursive: true, force: true});
   mkdirSync(generatedDir, {recursive: true});
 
-  const localesData = JSON.parse(
-    readFileSync(join(srcDir, 'locales.json'), 'utf8')
-  );
+  const localesData = JSON.parse(readFileSync(join(srcDir, 'locales.json'), 'utf8'));
 
   const localesMap = {dev: {}};
   for (const [stringKey, stringValues] of Object.entries(localesData)) {
@@ -37,21 +35,13 @@ function generateLocales() {
   mkdirSync(langDir, {recursive: true});
 
   for (const [localeKey, localeData] of Object.entries(localesMap)) {
-    writeFileSync(
-      join(langDir, `${localeKey}.json`),
-      JSON.stringify(localeData)
-    );
+    writeFileSync(join(langDir, `${localeKey}.json`), JSON.stringify(localeData));
   }
 
   const localesArray = Object.keys(localesMap).map((k) => k.toLowerCase());
-  writeFileSync(
-    join(generatedDir, 'availableLocales.json'),
-    JSON.stringify(localesArray)
-  );
+  writeFileSync(join(generatedDir, 'availableLocales.json'), JSON.stringify(localesArray));
 
-  console.log(
-    colors.bgGreen(`Generated ${Object.keys(localesMap).length} locale files`)
-  );
+  console.log(colors.bgGreen(`Generated ${Object.keys(localesMap).length} locale files`));
 }
 
 /**
@@ -61,23 +51,18 @@ function generateDayjsLocales() {
   const dayJsPath = fileURLToPath(import.meta.resolve('dayjs/locale.json'));
   const localesData = JSON.parse(readFileSync(dayJsPath, 'utf8'));
 
-  let fileContent =
-    'export const locales: Record<string, () => Promise<unknown>> = {';
+  let fileContent = 'export const locales: Record<string, () => Promise<unknown>> = {';
   for (const locale of localesData) {
     const key = locale.key;
     const parts = key.split('-');
-    const i18nKey =
-      parts.length > 1 ? `${parts[0]}-${parts[1].toUpperCase()}` : key;
+    const i18nKey = parts.length > 1 ? `${parts[0]}-${parts[1].toUpperCase()}` : key;
     const mapKey = i18nKey.includes('-') ? `'${i18nKey}'` : i18nKey;
     fileContent += `\n  ${mapKey}: () => import('dayjs/locale/${key}'),`;
   }
   fileContent += '\n};\n';
 
   writeFileSync(join(srcDir, 'generated/dayjs-locales-data.ts'), fileContent);
-  console.log(
-    colors.bgGreen('Generated'),
-    colors.green('dayjs-locales-data.ts')
-  );
+  console.log(colors.bgGreen('Generated'), colors.green('dayjs-locales-data.ts'));
 }
 
 /**

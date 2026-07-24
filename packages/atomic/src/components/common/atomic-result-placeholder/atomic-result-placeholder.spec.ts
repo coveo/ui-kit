@@ -25,37 +25,25 @@ describe('atomic-result-placeholder', () => {
         return element.shadowRoot?.querySelector('.result-root');
       },
       get visual() {
-        return element.shadowRoot?.querySelector(
-          'atomic-result-section-visual'
-        );
+        return element.shadowRoot?.querySelector('atomic-result-section-visual');
       },
       get badges() {
-        return element.shadowRoot?.querySelector(
-          'atomic-result-section-badges'
-        );
+        return element.shadowRoot?.querySelector('atomic-result-section-badges');
       },
       get actions() {
-        return element.shadowRoot?.querySelector(
-          'atomic-result-section-actions'
-        );
+        return element.shadowRoot?.querySelector('atomic-result-section-actions');
       },
       get title() {
         return element.shadowRoot?.querySelector('atomic-result-section-title');
       },
       get excerpt() {
-        return element.shadowRoot?.querySelector(
-          'atomic-result-section-excerpt'
-        );
+        return element.shadowRoot?.querySelector('atomic-result-section-excerpt');
       },
       get excerptLines() {
-        return element.shadowRoot?.querySelectorAll(
-          'atomic-result-section-excerpt > div'
-        );
+        return element.shadowRoot?.querySelectorAll('atomic-result-section-excerpt > div');
       },
       get bottomMetadata() {
-        return element.shadowRoot?.querySelector(
-          'atomic-result-section-bottom-metadata'
-        );
+        return element.shadowRoot?.querySelector('atomic-result-section-bottom-metadata');
       },
       get fieldPlaceholders() {
         return element.shadowRoot?.querySelectorAll('.field-value-placeholder');
@@ -70,8 +58,7 @@ describe('atomic-result-placeholder', () => {
     });
 
     it('should render all section elements', async () => {
-      const {visual, badges, actions, title, excerpt, bottomMetadata} =
-        await renderComponent();
+      const {visual, badges, actions, title, excerpt, bottomMetadata} = await renderComponent();
 
       expect(visual).toBeInTheDocument();
       expect(badges).toBeInTheDocument();
@@ -112,15 +99,11 @@ describe('atomic-result-placeholder', () => {
       {display: 'list'},
       {display: 'grid'},
       {display: 'table'},
-    ])(
-      'should apply display-$display class when display is $display',
-      async ({display}) => {
-        const {resultRoot} = await renderComponent({display});
-        const expectedClass =
-          display === 'list' ? 'display-list' : `display-${display}`;
-        expect(resultRoot?.classList.contains(expectedClass)).toBe(true);
-      }
-    );
+    ])('should apply display-$display class when display is $display', async ({display}) => {
+      const {resultRoot} = await renderComponent({display});
+      const expectedClass = display === 'list' ? 'display-list' : `display-${display}`;
+      expect(resultRoot?.classList.contains(expectedClass)).toBe(true);
+    });
   });
 
   describe('#density property', () => {
@@ -128,13 +111,10 @@ describe('atomic-result-placeholder', () => {
       {density: 'comfortable'},
       {density: 'normal'},
       {density: 'compact'},
-    ])(
-      'should apply density-$density class when density is $density',
-      async ({density}) => {
-        const {resultRoot} = await renderComponent({density});
-        expect(resultRoot?.classList.contains(`density-${density}`)).toBe(true);
-      }
-    );
+    ])('should apply density-$density class when density is $density', async ({density}) => {
+      const {resultRoot} = await renderComponent({density});
+      expect(resultRoot?.classList.contains(`density-${density}`)).toBe(true);
+    });
   });
 
   describe('#imageSize property', () => {
@@ -143,12 +123,9 @@ describe('atomic-result-placeholder', () => {
       {imageSize: 'small'},
       {imageSize: 'icon'},
       {imageSize: 'none'},
-    ])(
-      'should apply image-$imageSize class when imageSize is $imageSize',
-      async ({imageSize}) => {
-        const {resultRoot} = await renderComponent({imageSize});
-        expect(resultRoot?.classList.contains(`image-${imageSize}`)).toBe(true);
-      }
-    );
+    ])('should apply image-$imageSize class when imageSize is $imageSize', async ({imageSize}) => {
+      const {resultRoot} = await renderComponent({imageSize});
+      expect(resultRoot?.classList.contains(`image-${imageSize}`)).toBe(true);
+    });
   });
 });

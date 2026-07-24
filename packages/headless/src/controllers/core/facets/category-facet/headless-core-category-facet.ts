@@ -44,10 +44,7 @@ import type {
 import {loadReducerError} from '../../../../utils/errors.js';
 import {omit} from '../../../../utils/utils.js';
 import {validateOptions} from '../../../../utils/validate-payload.js';
-import {
-  buildController,
-  type Controller,
-} from '../../../controller/headless-controller.js';
+import {buildController, type Controller} from '../../../controller/headless-controller.js';
 import {determineFacetId} from '../_common/facet-id-determinor.js';
 import {
   type CategoryFacetOptions,
@@ -332,12 +329,7 @@ export function buildCoreCategoryFacet(
     ...registrationOptions,
   };
 
-  validateOptions(
-    engine,
-    categoryFacetOptionsSchema,
-    options,
-    'buildCategoryFacet'
-  );
+  validateOptions(engine, categoryFacetOptionsSchema, options, 'buildCategoryFacet');
 
   const getRequest = () => {
     return categoryFacetRequestSelector(engine.state, facetId);
@@ -357,9 +349,7 @@ export function buildCoreCategoryFacet(
 
     toggleSelect(selection: CategoryFacetValue) {
       const retrieveCount = options.numberOfValues;
-      dispatch(
-        toggleSelectCategoryFacetValue({facetId, selection, retrieveCount})
-      );
+      dispatch(toggleSelectCategoryFacetValue({facetId, selection, retrieveCount}));
       dispatch(updateFacetOptions());
     },
 
@@ -381,8 +371,7 @@ export function buildCoreCategoryFacet(
     showMoreValues() {
       const {numberOfValues: increment} = options;
       const {activeValue, valuesAsTrees} = this.state;
-      const numberOfValues =
-        (activeValue?.children.length ?? valuesAsTrees.length) + increment;
+      const numberOfValues = (activeValue?.children.length ?? valuesAsTrees.length) + increment;
 
       dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));
       dispatch(updateFacetOptions());
@@ -409,8 +398,7 @@ export function buildCoreCategoryFacet(
       const isLoading = getIsLoading();
       const enabled = getIsEnabled();
       const valuesAsTrees = response?.values ?? [];
-      const isHierarchical =
-        valuesAsTrees.some((value) => value.children.length > 0) ?? false;
+      const isHierarchical = valuesAsTrees.some((value) => value.children.length > 0) ?? false;
       const {parents, values} = partitionIntoParentsAndValues(response?.values);
       const selectedValueAncestry = findActiveValueAncestry(valuesAsTrees);
       const activeValue = selectedValueAncestry.length
@@ -418,9 +406,7 @@ export function buildCoreCategoryFacet(
         : undefined;
       const hasActiveValues = !!activeValue;
       const canShowMoreValues =
-        activeValue?.moreValuesAvailable ??
-        response?.moreValuesAvailable ??
-        false;
+        activeValue?.moreValuesAvailable ?? response?.moreValuesAvailable ?? false;
       const canShowLessValues = activeValue
         ? activeValue.children.length > options.numberOfValues
         : valuesAsTrees.length > options.numberOfValues;

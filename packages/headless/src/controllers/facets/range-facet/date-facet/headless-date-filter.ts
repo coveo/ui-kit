@@ -43,10 +43,7 @@ export type {
  * @group Controllers
  * @category DateFilter
  */
-export function buildDateFilter(
-  engine: SearchEngine,
-  props: DateFilterProps
-): DateFilter {
+export function buildDateFilter(engine: SearchEngine, props: DateFilterProps): DateFilter {
   if (!loadDateFilterReducer(engine)) {
     throw loadReducerError;
   }
@@ -92,9 +89,7 @@ export function buildDateFilter(
 
 function loadDateFilterReducer(
   engine: SearchEngine
-): engine is SearchEngine<
-  DateFacetSection & ConfigurationSection & SearchSection
-> {
+): engine is SearchEngine<DateFacetSection & ConfigurationSection & SearchSection> {
   engine.addReducers({dateFacetSet, configuration, search});
   return true;
 }

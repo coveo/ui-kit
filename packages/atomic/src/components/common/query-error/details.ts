@@ -6,9 +6,7 @@ interface QueryErrorDetailsProps {
   show: boolean;
 }
 
-export const renderQueryErrorDetails: FunctionalComponent<
-  QueryErrorDetailsProps
-> = ({props}) => {
+export const renderQueryErrorDetails: FunctionalComponent<QueryErrorDetailsProps> = ({props}) => {
   if (!props.show) {
     return nothing;
   }

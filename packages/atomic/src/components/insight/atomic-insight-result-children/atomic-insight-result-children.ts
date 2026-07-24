@@ -117,14 +117,9 @@ export class AtomicInsightResultChildren
 
   constructor() {
     super();
-    this.foldedItemListContextController = new FoldedItemListContextController(
-      this
-    );
-    this.childTemplatesContextController = new ChildTemplatesContextController(
-      this
-    );
-    this.displayConfigContextController =
-      new ItemDisplayConfigContextController(this);
+    this.foldedItemListContextController = new FoldedItemListContextController(this);
+    this.childTemplatesContextController = new ChildTemplatesContextController(this);
+    this.displayConfigContextController = new ItemDisplayConfigContextController(this);
     this.itemContextController = new ItemContextController(this, {
       folded: true,
       parentName: 'atomic-insight-result',
@@ -153,9 +148,7 @@ export class AtomicInsightResultChildren
       return;
     }
 
-    const childrenTemplates = Array.from(
-      this.querySelectorAll(childTemplateComponent)
-    ).filter(
+    const childrenTemplates = Array.from(this.querySelectorAll(childTemplateComponent)).filter(
       (template) => !elementHasAncestorTag(template, childTemplateComponent)
     );
 
@@ -184,8 +177,7 @@ export class AtomicInsightResultChildren
   private resolveChildTemplates = (event: ChildTemplatesContextEvent) => {
     event.preventDefault();
     const provider =
-      this.itemTemplateProvider ||
-      this.childTemplatesContextController.itemTemplateProvider;
+      this.itemTemplateProvider || this.childTemplatesContextController.itemTemplateProvider;
     event.detail(provider ?? undefined);
   };
 
@@ -202,10 +194,7 @@ export class AtomicInsightResultChildren
   }
 
   private get effectiveItemTemplateProvider(): ResultTemplateProvider | null {
-    return (
-      this.itemTemplateProvider ||
-      this.childTemplatesContextController.itemTemplateProvider
-    );
+    return this.itemTemplateProvider || this.childTemplatesContextController.itemTemplateProvider;
   }
 
   private get collection() {
@@ -219,14 +208,12 @@ export class AtomicInsightResultChildren
 
   willUpdate() {
     if (this.foldedResultList && !this.foldedResultListUnsubscriber) {
-      this.foldedResultListUnsubscriber = this.foldedResultList.subscribe(
-        () => {
-          this.foldedResultListState = this.foldedResultList!.state;
-          if (!this.initialChildren && this.collection) {
-            this.initialChildren = this.collection.children;
-          }
+      this.foldedResultListUnsubscriber = this.foldedResultList.subscribe(() => {
+        this.foldedResultListState = this.foldedResultList!.state;
+        if (!this.initialChildren && this.collection) {
+          this.initialChildren = this.collection.children;
         }
-      );
+      });
       this.foldedResultListState = this.foldedResultList.state;
     }
 
@@ -237,9 +224,7 @@ export class AtomicInsightResultChildren
 
   private loadFullCollection() {
     this.loadedFullCollection = true;
-    this.dispatchEvent(
-      buildCustomEvent('atomic/loadCollection', this.collection)
-    );
+    this.dispatchEvent(buildCustomEvent('atomic/loadCollection', this.collection));
   }
 
   private toggleShowInitialChildren = () => {
@@ -257,17 +242,13 @@ export class AtomicInsightResultChildren
   };
 
   private renderChild(child: InsightFoldedResult, isLast: boolean) {
-    const content = this.effectiveItemTemplateProvider?.getTemplateContent(
-      child.result
-    );
+    const content = this.effectiveItemTemplateProvider?.getTemplateContent(child.result);
 
     if (!content) {
       return nothing;
     }
 
-    const key =
-      child.result.uniqueId +
-      child.children.map((c) => c.result.uniqueId).join(',');
+    const key = child.result.uniqueId + child.children.map((c) => c.result.uniqueId).join(',');
 
     return html`<atomic-insight-result
       .key=${key}
@@ -289,21 +270,16 @@ export class AtomicInsightResultChildren
     }
 
     return renderChildrenWrapper()(
-      html`${map(children, (child, i) =>
-        this.renderChild(child, i === children.length - 1)
-      )}`
+      html`${map(children, (child, i) => this.renderChild(child, i === children.length - 1))}`
     );
   }
 
   private renderCollection() {
     const collection = this.collection!;
 
-    const children = this.showInitialChildren
-      ? this.initialChildren
-      : collection.children;
+    const children = this.showInitialChildren ? this.initialChildren : collection.children;
 
-    const showShouldButtons =
-      this.loadedFullCollection || collection.moreResultsAvailable;
+    const showShouldButtons = this.loadedFullCollection || collection.moreResultsAvailable;
 
     const showHideButton = showShouldButtons
       ? renderShowHideButton({
@@ -343,18 +319,14 @@ export class AtomicInsightResultChildren
   @errorGuard()
   @bindingGuard()
   render() {
-    return html`${when(
-      this.bindings && (this.displayConfig || this.inheritTemplates),
-      () =>
-        renderResultChildrenGuard({
-          props: {
-            inheritTemplates: this.inheritTemplates,
-            resultTemplateRegistered: this.resultTemplateRegistered,
-            templateHasError: this.templateHasError,
-          },
-        })(
-          this.collection ? this.renderCollection() : this.renderFoldedResult()
-        )
+    return html`${when(this.bindings && (this.displayConfig || this.inheritTemplates), () =>
+      renderResultChildrenGuard({
+        props: {
+          inheritTemplates: this.inheritTemplates,
+          resultTemplateRegistered: this.resultTemplateRegistered,
+          templateHasError: this.templateHasError,
+        },
+      })(this.collection ? this.renderCollection() : this.renderFoldedResult())
     )}`;
   }
 }
