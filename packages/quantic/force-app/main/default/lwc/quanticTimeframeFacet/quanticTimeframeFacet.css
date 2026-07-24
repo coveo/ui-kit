@@ -1,5 +1,5 @@
 @import 'c/quanticFacetStyles';
 
 .timeframe-facet__input-label {
-  color: var(--lwc-colorTextPlaceholder, var(--lwc-colorTextIconDefault, #747474));
+  color: var(--slds-g-color-on-surface-1, var(--lwc-colorTextPlaceholder, var(--lwc-colorTextIconDefault, #747474)));
 }

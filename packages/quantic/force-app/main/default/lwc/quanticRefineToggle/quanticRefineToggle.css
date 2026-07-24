@@ -13,8 +13,8 @@
 }
 
 .refine-button_filters-badge {
-  background: var(--lwc-brandAccessible, #0176d3);
-  color: var(--lwc-colorBackgroundAlt, #ffffff);
+  background: var(--slds-g-color-accent-container-1, var(--lwc-brandAccessible, #0176d3));
+  color: var(--slds-g-color-surface-1, var(--lwc-colorBackgroundAlt, #ffffff));
   border-radius: 50%;
   top: -.5rem;
   right: -.5rem;

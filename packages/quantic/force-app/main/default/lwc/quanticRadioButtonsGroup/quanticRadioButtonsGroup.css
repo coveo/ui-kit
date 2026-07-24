@@ -1,7 +1,8 @@
 :host {
   --neutral-color: rgb(94, 94, 94);
   --hover-background-color: #F4F6F9;
-  --hover-color: var(--lwc-brandAccessible,#2574A9);
+  --hover-color: var(--slds-g-color-accent-container-1, var(--lwc-brandAccessible,#2574A9));
+  --slds-g-color-accent-container-1: var(--hover-color);
   --lwc-brandAccessibleActive: var(--hover-color);
   --color-gray-6: rgb(201, 199, 197);
   --radio-button-box-shadow: 0 0 3px #0176d3;
@@ -9,7 +10,7 @@
 }
 
 .radio-buttons-group__legend {
-  color: var(--lwc-colorTextPlaceholder, #747474);
+  color: var(--slds-g-color-on-surface-1, var(--lwc-colorTextPlaceholder, #747474));
   font-weight: var(--slds-g-font-weight-4, normal);
   font-size: inherit;
   padding-top: 0;
@@ -65,8 +66,8 @@
 .radio-button--selected,
 .radio-button--selected:hover,
 .radio-button--selected:focus {
-  background-color: var(--lwc-brandAccessible,#2574A9);
-  color: var(--lwc-colorTextButtonBrand,#FFFFFF);
+  background-color: var(--slds-g-color-accent-container-1, var(--lwc-brandAccessible,#2574A9));
+  color: var(--slds-g-color-on-accent-1, var(--lwc-colorTextButtonBrand,#FFFFFF));
 }
 
 .radio-button--selected:focus-within,

@@ -1,0 +1,52 @@
+{
+  "name": "slds2-migration-agent",
+  "description": "Migrates Quantic LWC components from SLDS1 to SLDS2 design tokens without breaking changes. Use this agent when you want to migrate specific styling categories (colors, fonts, spacing, etc.) to SLDS2-compliant tokens.",
+  "prompt": "file://.kiro/agents/slds2-migration-agent.prompt.md",
+  "tools": [
+    "fs_read",
+    "fs_write",
+    "execute_bash",
+    "grep",
+    "glob",
+    "code"
+  ],
+  "allowedTools": [
+    "fs_read",
+    "grep",
+    "glob",
+    "code",
+    "@salesforce-dx"
+  ],
+  "toolsSettings": {
+    "fs_write": {
+      "allowedPaths": [
+        "force-app/main/default/lwc/**/*.css"
+      ]
+    },
+    "execute_bash": {
+      "allowedCommands": [
+        "pnpm run test:unit",
+        "npx @salesforce-ux/slds-linter report",
+        "gh pr create"
+      ],
+      "autoAllowReadonly": true
+    }
+  },
+  "resources": [
+    "file://force-app/main/default/lwc/**/*.css",
+    "file://.kiro/agents/slds2-migration-agent.prompt.md"
+  ],
+  "mcpServers": {
+    "salesforce-dx": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@salesforce/mcp",
+        "--toolsets", "lwc-experts",
+        "--tools", "guide_slds_blueprints,guide_slds_styling,explore_slds_blueprints,explore_slds_styling,orchestrate_lwc_slds2_uplift,guide_design_general",
+        "--allow-non-ga-tools"
+      ]
+    }
+  },
+  "welcomeMessage": "SLDS2 Migration Agent ready. What would you like to migrate? I can help with:\n- **Colors** (hardcoded hex/rgb → SLDS2 color tokens)\n- **Typography** (font sizes, weights → SLDS2 font tokens)\n- **Spacing** (margins, padding → SLDS2 spacing tokens)\n- **Borders** (radius, width → SLDS2 sizing tokens)\n- **A specific component** (full migration of one component)\n\nTell me what category or component to migrate."
+}

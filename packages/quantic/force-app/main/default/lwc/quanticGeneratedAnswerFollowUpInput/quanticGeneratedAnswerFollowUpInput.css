@@ -3,7 +3,7 @@
 }
 
 .follow-up-input__container--error {
-  border-color: var(--lwc-colorBorderError, #ea001e);
+  border-color: var(--slds-g-color-error-base-50, var(--lwc-colorBorderError, #ea001e));
 }
 
 .follow-up-input__expander {
@@ -39,8 +39,8 @@
   z-index: 10;
   overflow: visible;
   margin-right: 0;
-  background-color: var(--lwc-colorBackground, #fff);
-  border: 1px solid var(--lwc-brandAccessible, #0176d3);
+  background-color: var(--slds-g-color-surface-1, var(--lwc-colorBackground, #fff));
+  border: 1px solid var(--slds-g-color-accent-container-1, var(--lwc-brandAccessible, #0176d3));
   border-radius: 0.25rem;
 }
 
