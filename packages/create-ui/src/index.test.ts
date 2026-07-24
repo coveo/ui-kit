@@ -16,6 +16,15 @@ describe('templates', () => {
     expect(getTemplate('does-not-exist')).toBeUndefined();
   });
 
+  it('identifies the package used by each Headless SSR template', () => {
+    expect(describeTemplate(getTemplate('headless-ssr-commerce-nextjs')!)).toBe(
+      'Headless SSR Commerce SSR (Next.js App Router, @coveo/headless-react)'
+    );
+    expect(
+      describeTemplate(getTemplate('headless-ssr-commerce-express')!)
+    ).toBe('Headless SSR Commerce SSR (Express, @coveo/headless/ssr)');
+  });
+
   it('describes a template with its library, without the "UI" suffix', () => {
     const template = getTemplate('atomic-search')!;
     expect(describeTemplate(template)).toBe('Atomic Search (Vite)');
