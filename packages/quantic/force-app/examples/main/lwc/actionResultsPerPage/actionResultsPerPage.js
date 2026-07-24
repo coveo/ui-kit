@@ -1,4 +1,8 @@
-import {getHeadlessBundle} from 'c/quanticHeadlessLoader';
+import {
+  getHeadlessBundle,
+  registerComponentForInit,
+  initializeWithHeadless,
+} from 'c/quanticHeadlessLoader';
 import {api, LightningElement} from 'lwc';
 
 export default class ActionResultsPerPage extends LightningElement {
@@ -6,32 +10,24 @@ export default class ActionResultsPerPage extends LightningElement {
   @api disabled;
 
   resultsPerPage;
-  input;
-  headless;
 
-  handle() {
-    if (!this.input) {
-      this.input = this.template.querySelector('lightning-input');
-    }
-    const value = this.input ? Number(this.input.value) : 10;
-    if (this.resultsPerPage) {
-      this.resultsPerPage.set(value);
-    } else {
-      this.resolveResultsPerPageController().then((controller) => {
-        this.resultsPerPage = controller;
-        this.resultsPerPage.set(value);
-      });
-    }
+  connectedCallback() {
+    registerComponentForInit(this, this.engineId);
   }
 
-  resolveResultsPerPageController() {
-    this.headless = getHeadlessBundle(this.engineId);
-    return window.coveoHeadless?.[this.engineId]?.enginePromise.then(
-      (engine) => {
-        return this.headless.buildResultsPerPage(engine, {
-          initialState: {numberOfResults: 10},
-        });
-      }
-    );
+  renderedCallback() {
+    initializeWithHeadless(this, this.engineId, this.initialize);
+  }
+
+  initialize = (engine) => {
+    const headless = getHeadlessBundle(this.engineId);
+    this.resultsPerPage = headless.buildResultsPerPage(engine, {
+      initialState: {numberOfResults: 10},
+    });
+  };
+
+  handle() {
+    const value = this.refs.input ? Number(this.refs.input.value) : 10;
+    this.resultsPerPage?.set(value);
   }
 }

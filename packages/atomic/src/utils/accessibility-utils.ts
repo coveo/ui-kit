@@ -12,15 +12,18 @@ export class AriaLiveRegionController implements ReactiveController {
   private host: ReactiveControllerHost;
   private regionName: string;
   private assertive: boolean;
+  private preserveQueuedMessages: boolean;
 
   constructor(
     host: ReactiveControllerHost,
     regionName: string,
-    assertive = false
+    assertive = false,
+    preserveQueuedMessages = false
   ) {
     this.host = host;
     this.regionName = regionName;
     this.assertive = assertive;
+    this.preserveQueuedMessages = preserveQueuedMessages;
 
     this.host.addController(this);
   }
@@ -36,11 +39,18 @@ export class AriaLiveRegionController implements ReactiveController {
   }
 
   private dispatchMessage(message: string) {
-    this.getAriaLiveElement()?.updateMessage(
-      this.regionName,
-      message,
-      this.assertive
-    );
+    const ariaLiveElement = this.getAriaLiveElement();
+    if (this.preserveQueuedMessages) {
+      ariaLiveElement?.updateMessage(
+        this.regionName,
+        message,
+        this.assertive,
+        true
+      );
+      return;
+    }
+
+    ariaLiveElement?.updateMessage(this.regionName, message, this.assertive);
   }
 
   set message(msg: string) {

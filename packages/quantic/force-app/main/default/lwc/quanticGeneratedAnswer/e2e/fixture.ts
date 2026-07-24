@@ -89,6 +89,7 @@ export const testSearch =
         data.streamId
       );
 
+      await search.mockSearchWithBaseResponse();
       await page.goto(pageUrl);
       if (withFacets) {
         await generatedAnswerObject.clickAddFacetsButton();
@@ -104,10 +105,12 @@ export const testSearch =
           generatedAnswerObject.waitForHeadAnswerRequest();
       }
 
-      await search.fillSearchInput(exampleQuery);
       await search.mockSearchWithGenerativeQuestionAnsweringId(data.streamId);
-      await search.performSearch();
-      await search.waitForSearchResponse();
+      await search.fillSearchInput(exampleQuery);
+      await Promise.all([
+        search.waitForSearchResponse(),
+        search.performSearch(),
+      ]);
 
       await use(generatedAnswerObject);
     },
@@ -162,17 +165,14 @@ export const testInsight =
         data.streamId
       );
 
+      await search.mockSearchWithBaseResponse();
       await page.goto(pageUrl);
       if (withFacets) {
         await generatedAnswerObject.clickAddFacetsButton();
       }
       configuration.configure({...options, useCase: useCaseEnum.insight});
-
       await insightSetup.waitForInsightInterfaceInitialization();
-      await search.performSearch();
-      await search.waitForSearchResponse();
 
-      await search.mockSearchWithGenerativeQuestionAnsweringId(data.streamId);
       generatedAnswerObject.streamEndAnalyticRequestPromise =
         generatedAnswerObject.waitForStreamEndAnalytics();
       if (options.answerConfigurationId) {
@@ -180,9 +180,12 @@ export const testInsight =
           generatedAnswerObject.waitForHeadAnswerRequest();
       }
 
+      await search.mockSearchWithGenerativeQuestionAnsweringId(data.streamId);
       await search.fillSearchInput(exampleQuery);
-      await search.performSearch();
-      await search.waitForSearchResponse();
+      await Promise.all([
+        search.waitForSearchResponse(),
+        search.performSearch(),
+      ]);
 
       await use(generatedAnswerObject);
     },

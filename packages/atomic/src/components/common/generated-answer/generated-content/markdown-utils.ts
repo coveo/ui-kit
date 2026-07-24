@@ -1,4 +1,5 @@
-import {marked} from 'marked';
+import {Marked, Renderer} from 'marked';
+import {parseHTML} from '@/src/utils/utils';
 
 const toInlinePlainText = (textWithHtml: string): string => {
   const withoutHtmlTags = textWithHtml.replace(/<[^>]*>/g, ' ');
@@ -26,6 +27,10 @@ const completeUnclosedElement = (text: string) => {
   }
 
   return text;
+};
+
+const decodeHtmlEntities = (text: string) => {
+  return parseHTML(text).body.textContent ?? '';
 };
 
 const escapeHtml = (text: string) => {
@@ -141,6 +146,101 @@ const customRenderer = {
   },
 };
 
+class PlainTextRenderer extends Renderer {
+  blockquote(quote: string) {
+    return ` ${quote} `;
+  }
+
+  br() {
+    return ' ';
+  }
+
+  checkbox() {
+    return '';
+  }
+
+  code(code: string) {
+    return ` ${code} `;
+  }
+
+  codespan(text: string) {
+    return text;
+  }
+
+  del(text: string) {
+    return text;
+  }
+
+  em(text: string) {
+    return text;
+  }
+
+  heading(text: string) {
+    return ` ${text} `;
+  }
+
+  hr() {
+    return ' ';
+  }
+
+  html(text: string) {
+    return toInlinePlainText(text);
+  }
+
+  image(_href: string, _title: string | null, text: string) {
+    return text;
+  }
+
+  link(_href: string, _title: string | null | undefined, text: string) {
+    return text;
+  }
+
+  list(body: string) {
+    return ` ${body} `;
+  }
+
+  listitem(text: string) {
+    return ` ${text} `;
+  }
+
+  paragraph(text: string) {
+    return ` ${text} `;
+  }
+
+  strong(text: string) {
+    return text;
+  }
+
+  table(header: string, body: string) {
+    return ` ${header} ${body} `;
+  }
+
+  tablecell(content: string) {
+    return `${content} `;
+  }
+
+  tablerow(content: string) {
+    return ` ${content} `;
+  }
+
+  text(text: string) {
+    return text.replace(unclosedElement, '$2');
+  }
+}
+
+const markdownParser = new Marked();
+const plainTextMarkdownParser = new Marked();
+const htmlRenderer = Object.assign(new Renderer(), customRenderer);
+const plainTextRenderer = new PlainTextRenderer();
+
 export const transformMarkdownToHtml = (text: string): string => {
-  return marked.use({renderer: customRenderer}).parse(text) as string;
+  return markdownParser.parse(text, {renderer: htmlRenderer}) as string;
+};
+
+export const markdownToPlainText = (text: string): string => {
+  const plain = plainTextMarkdownParser.parse(text, {
+    renderer: plainTextRenderer,
+  }) as string;
+
+  return decodeHtmlEntities(plain).replace(/\s+/g, ' ').trim();
 };

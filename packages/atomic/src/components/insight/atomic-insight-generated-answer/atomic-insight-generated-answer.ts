@@ -181,7 +181,17 @@ export class AtomicInsightGeneratedAnswer
   @state()
   private copyError = false;
 
-  private ariaMessage = new AriaLiveRegionController(this, 'generated-answer');
+  private ariaMessage = new AriaLiveRegionController(
+    this,
+    'generated-answer',
+    false,
+    true
+  );
+  private ariaErrorMessage = new AriaLiveRegionController(
+    this,
+    'generated-answer-error',
+    true
+  );
 
   constructor() {
     super();
@@ -328,7 +338,14 @@ export class AtomicInsightGeneratedAnswer
       this.controller.writeStoredData(this.controller.data);
     }
 
-    this.ariaMessage.message = this.controller.getGeneratedAnswerStatus();
+    const status = this.controller.getGeneratedAnswerStatus();
+    if (this.controller.isStatusAssertive()) {
+      this.ariaMessage.message = '';
+      this.ariaErrorMessage.message = status;
+    } else {
+      this.ariaErrorMessage.message = '';
+      this.ariaMessage.message = status;
+    }
   };
 
   private get hasNoAnswerGenerated() {

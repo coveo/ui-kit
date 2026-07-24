@@ -2,6 +2,7 @@
   "name": "@coveo/pkg-new-template",
   "version": "0.0.0",
   "private": true,
+  "description": "Preview app used by pkg.pr.new to let reviewers try out Atomic and Headless builds from a pull request",
   "type": "module",
   "scripts": {
     "dev": "node ./scripts/copyResources.mjs && vite",

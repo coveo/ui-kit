@@ -1,7 +1,12 @@
 // Shared frontend contract types for the Angular sample.
 // These types re-export Thermidor's canonical conversation types and define
 // the sample-specific commerce surface shapes used across the app.
-export type {Turn, A2UISurface, ToolCall} from '@coveo/thermidor';
+export type {
+  Turn,
+  A2UISurface,
+  ReasoningStep,
+  RoutedInterface,
+} from '@coveo/thermidor';
 
 export type ProductRecord = {
   ec_product_id: string;

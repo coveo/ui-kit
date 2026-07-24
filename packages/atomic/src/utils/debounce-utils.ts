@@ -18,10 +18,12 @@ export function buildDebouncedQueue(
 ): DebouncedQueue {
   let actions: QueuedAction[] = [];
   let intervalId: ReturnType<typeof setInterval> | null = null;
+  let lastExecutedAt: number | null = null;
 
   function dequeueAction() {
     const action = actions.shift();
     if (action) {
+      lastExecutedAt = Date.now();
       action.execute();
     } else {
       clearInterval(intervalId!);
@@ -39,10 +41,28 @@ export function buildDebouncedQueue(
         cancelActionIfQueued(uniqueId);
       }
       actions.push({id: uniqueId, execute});
-      if (intervalId === null) {
-        dequeueAction();
-        intervalId = setInterval(dequeueAction, options.delay);
+
+      if (intervalId !== null) {
+        return;
       }
+
+      const elapsedSinceLastExecution =
+        lastExecutedAt === null ? null : Date.now() - lastExecutedAt;
+
+      if (
+        elapsedSinceLastExecution === null ||
+        elapsedSinceLastExecution >= options.delay
+      ) {
+        intervalId = setInterval(dequeueAction, options.delay);
+        dequeueAction();
+        return;
+      }
+
+      const remainingDelay = options.delay - elapsedSinceLastExecution;
+      intervalId = setTimeout(() => {
+        intervalId = setInterval(dequeueAction, options.delay);
+        dequeueAction();
+      }, remainingDelay) as ReturnType<typeof setInterval>;
     },
     clear() {
       actions = [];
