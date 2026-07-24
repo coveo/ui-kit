@@ -63,9 +63,7 @@ sequenceDiagram
 
 4. **Prompt-anchored scrolling via refs** — A ref on each `UserPromptBubble` allows measuring position and scrolling to it. Bottom padding is recalculated on submission and viewport resize.
 
-5. **`onSeeResults` callback** — The `ConversationPage` receives an `onSeeResults: (turnId: string) => void` callback from AppShell. When clicked, AppShell finds the turn by ID and hydrates the search page with its `routedInterface`.
-
-6. **CSS Modules** — All new components use `.module.css` files, consistent with the existing project pattern.
+5. **CSS Modules** — All new components use `.module.css` files, consistent with the existing project pattern.
 
 7. **New dependency: `marked`** — Required for markdown rendering in StreamingMessage and ThinkingBlock reasoning. Already used in `generative-react` at the catalog version.
 
@@ -83,7 +81,6 @@ interface ConversationPageProps {
   onBackToSearch: () => void;
   canGoBackToSearch: boolean;
   onResetToLanding: () => void;
-  onSeeResults: (turnId: string) => void;
 }
 ```
 
@@ -103,7 +100,6 @@ interface ConversationThreadProps {
   turns: Turn[];
   isStreaming: boolean;
   onAction: (text: string, type: string) => void;
-  onSeeResults: (turnId: string) => void;
   turnRefs: React.MutableRefObject<Map<string, HTMLDivElement>>;
 }
 ```
@@ -112,7 +108,7 @@ For each turn, renders:
 - `UserPromptBubble` (always, for all turn types)
 - Then based on turn content:
   - **Agent response turn**: `AgentResponseBlock` (ThinkingBlock + StreamingMessage + SurfaceRenderer)
-  - **Routed turn** (has `routedInterface`, status `'complete'`): `RoutedTurnBlock` with "See results" link
+  - **Routed turn** (has `routedInterface`, status `'complete'`): `RoutedTurnBlock` with static message
   - **Error turn**: `ErrorTurnBlock`
   - **Streaming turn** (no response yet): `ThinkingBlock` with animated dots
 - `TurnSeparator` between consecutive turns
@@ -156,17 +152,23 @@ interface ThinkingBlockProps {
 ```
 
 **Summary line behavior (collapsed state):**
-- No steps received yet: animated "..." dots
+- No steps received yet: "Working" + animated "..."
 - Reasoning streaming: "Reasoning" + animated "..."
-- Tool call active: tool name + animated "..."
-- Tool call completed: tool name + "✓"
-- All reasoning done: "Reasoning" + "✓"
+- Tool call active (status `'calling'`): "Calling tool: <tool_name>" + animated "..."
+- All done (isStreaming=false): "<N> tool calls" (or "1 tool call" for exactly one; "Done." if zero tool calls) — static, no animation
+
+**Expand/collapse icon:**
+- A chevron icon (▶ collapsed / ▼ expanded) rendered before the summary text
+- Changes orientation based on `<details>` open state (CSS `details[open]` selector)
+
+**Width constraint:**
+- Width: 100% of the available space (borderless section, no box styling)
 
 **Expanded state:**
 - Reasoning text rendered as markdown (via `marked`)
 - Tool calls rendered inline at their sequence position
 - Each tool call is a nested `<details>` (collapsed by default), showing:
-  - Summary: tool name
+  - Summary: "Tool call: <tool_name>" with the same chevron expand/collapse icon
   - Content: JSON arguments + result (if completed)
 
 ### StreamingMessage
@@ -196,16 +198,13 @@ Known component types: `ProductCarousel`, `BundleDisplay`, `NextActionsBar`, `Co
 
 ### RoutedTurnBlock
 
-Renders the "See results" link for a routed interface turn.
+Renders a static message for a routed interface turn (no interaction).
 
 ```typescript
-interface RoutedTurnBlockProps {
-  turnId: string;
-  onSeeResults: (turnId: string) => void;
-}
+function RoutedTurnBlock(): JSX.Element;
 ```
 
-Renders a clickable link "See results →" that triggers `onSeeResults(turnId)`.
+Renders the text "Search results updated." in an italicized style. Not clickable — the user can only view the latest search results via the "Back to search results" nav link.
 
 ### ErrorTurnBlock
 
@@ -341,7 +340,6 @@ interface ScrollAnchorState {
 | Missing `agentResponse` on streaming turn | Render ThinkingBlock with animated dots (no crash) |
 | NextActionsBar action with empty text | Button not rendered (filtered before mapping) |
 | Viewport resize during conversation | `ResizeObserver` or `resize` listener recalculates bottom padding |
-| `onSeeResults` for a turn without routedInterface | No-op (shouldn't occur if UI logic is correct; guard in AppShell) |
 
 ## Testing Strategy
 
@@ -360,7 +358,7 @@ Standard unit tests with **Vitest + @testing-library/react**. Property-based tes
 | `ThinkingBlock` | Collapsed by default; correct summary text per state; expand shows reasoning as markdown; nested tool calls collapse |
 | `StreamingMessage` | Renders markdown from messages; handles empty messages; uses `marked` correctly |
 | `SurfaceRenderer` | Dispatches to correct component; skips unknowns; skeleton for loading surfaces; replaces skeleton with real |
-| `RoutedTurnBlock` | Renders "See results" link; calls `onSeeResults` with correct turnId |
+| `RoutedTurnBlock` | Renders static "Search results updated." message |
 | `ErrorTurnBlock` | Shows error message when provided; shows fallback when empty/undefined |
 | `TurnSeparator` | Renders as expected |
 | `NextActionsBar` | Renders action buttons; calls onAction with text; filters empty actions |
@@ -417,7 +415,7 @@ src/
 │   │   └── SurfaceRenderer.module.css
 │   └── types.ts
 ├── components/
-│   ├── AppShell.tsx                    # Modified: adds onSeeResults handler
+│   ├── AppShell.tsx                    # Modified: navigation logic
 │   ├── ConversationPage/              # New directory (replaces placeholder)
 │   │   ├── ConversationPage.tsx       # Top-level page component
 │   │   ├── ConversationPage.module.css
@@ -440,7 +438,7 @@ src/
 │   │   └── index.ts                   # Re-exports ConversationPage
 │   ├── LandingPage/
 │   ├── SearchResultsPage/
-│   ├── PromptInput/                    # Existing, reused as-is
+│   ├── PromptInput/                    # Existing, extended with clearOnSubmit prop and loading spinner
 │   └── SuggestionsDropdown/            # Existing, reused as-is
 ├── hooks/
 │   ├── use-app-state.ts               # Existing
@@ -455,9 +453,26 @@ src/
 
 ### AppShell Changes
 
-The `AppShell` needs a new `onSeeResults` handler and updated `ConversationPage` props:
+The `AppShell` needs a new `onSeeResults` handler, updated `ConversationPage` props, and immediate navigation on submit:
 
 ```typescript
+const handleSubmit = (prompt: string) => {
+  if (!prompt.trim() || converseState.isStreaming) return;
+  controller.submit({prompt});
+  // From landing: wait for signal (reasoning → converse, routedInterface → search)
+  // From search: immediately go to conversation (follow-up prompt)
+  // From conversation: already there
+  if (view === 'landing') {
+    pendingLandingNavigationRef.current = true;
+  } else if (view !== 'conversation') {
+    dispatch({type: 'NAVIGATE_CONVERSATION'});
+  }
+};
+
+// In the turns useEffect, when pendingLandingNavigationRef is true:
+// - If latest turn gains routedInterface → NAVIGATE_SEARCH
+// - If latest turn gains reasoning steps → NAVIGATE_CONVERSATION
+
 const handleSeeResults = (turnId: string) => {
   const turn = converseState.turns.find((t) => t.id === turnId);
   if (turn?.routedInterface) {
