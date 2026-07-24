@@ -66,7 +66,7 @@
         "typescript": "^5.0.4"
     },
     "overrides": {
-        "plist": "3.0.5"
+        "plist": "3.1.1"
     },
     "files": [
         "modules/",
