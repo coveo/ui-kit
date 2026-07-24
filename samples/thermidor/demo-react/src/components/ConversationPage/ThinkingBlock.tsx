@@ -29,10 +29,7 @@ function formatArgs(args: string): string {
   }
 }
 
-function getSummaryContent(
-  reasoningSteps: ReasoningStep[],
-  isStreaming: boolean
-) {
+function getSummaryContent(reasoningSteps: ReasoningStep[], isStreaming: boolean) {
   if (!isStreaming) {
     const toolCallCount = reasoningSteps.filter(isToolCall).length;
     const label =
@@ -46,9 +43,9 @@ function getSummaryContent(
 
   if (reasoningSteps.length === 0) {
     return (
-      <span aria-label="Processing">
+      <span>
         Working
-        <span className={styles.animatedDots} />
+        <span className={styles.animatedDots} aria-hidden="true" />
       </span>
     );
   }
@@ -57,25 +54,22 @@ function getSummaryContent(
 
   if (isToolCall(lastStep) && lastStep.status === 'calling') {
     return (
-      <span aria-label="In progress">
+      <span>
         Calling tool: {lastStep.name}
-        <span className={styles.animatedDots} />
+        <span className={styles.animatedDots} aria-hidden="true" />
       </span>
     );
   }
 
   return (
-    <span aria-label="In progress">
+    <span>
       Reasoning
-      <span className={styles.animatedDots} />
+      <span className={styles.animatedDots} aria-hidden="true" />
     </span>
   );
 }
 
-export function ThinkingBlock({
-  reasoningSteps,
-  isStreaming,
-}: ThinkingBlockProps) {
+export function ThinkingBlock({reasoningSteps, isStreaming}: ThinkingBlockProps) {
   const summaryContent = getSummaryContent(reasoningSteps, isStreaming);
 
   return (

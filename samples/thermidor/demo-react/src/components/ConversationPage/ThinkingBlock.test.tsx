@@ -1,15 +1,10 @@
-import {render, screen} from '@testing-library/react';
+import {render} from '@testing-library/react';
 import {describe, it, expect} from 'vitest';
 import type {ReasoningStep} from '@coveo/thermidor';
 import {ThinkingBlock} from './ThinkingBlock.js';
 
-function renderThinkingBlock(
-  reasoningSteps: ReasoningStep[] = [],
-  isStreaming = true
-) {
-  return render(
-    <ThinkingBlock reasoningSteps={reasoningSteps} isStreaming={isStreaming} />
-  );
+function renderThinkingBlock(reasoningSteps: ReasoningStep[] = [], isStreaming = true) {
+  return render(<ThinkingBlock reasoningSteps={reasoningSteps} isStreaming={isStreaming} />);
 }
 
 describe('ThinkingBlock', () => {
@@ -24,9 +19,9 @@ describe('ThinkingBlock', () => {
 
   describe('shows "Working..." when no reasoning steps received', () => {
     it('shows "Working" with animated dots when streaming with no steps', () => {
-      renderThinkingBlock([], true);
-      const wrapper = screen.getByLabelText('Processing');
-      expect(wrapper.textContent).toContain('Working');
+      const {container} = renderThinkingBlock([], true);
+      const summary = container.querySelector('summary');
+      expect(summary!.textContent).toContain('Working');
     });
 
     it('does not show "Reasoning" text when no steps received', () => {
@@ -38,12 +33,10 @@ describe('ThinkingBlock', () => {
 
   describe('"Reasoning..." when reasoning messages are streaming', () => {
     it('shows "Reasoning" with animated dots while reasoning streams', () => {
-      const steps: ReasoningStep[] = [
-        {type: 'reasoning', content: 'Analyzing the query...'},
-      ];
-      renderThinkingBlock(steps, true);
-      const wrapper = screen.getByLabelText('In progress');
-      expect(wrapper.textContent).toContain('Reasoning');
+      const steps: ReasoningStep[] = [{type: 'reasoning', content: 'Analyzing the query...'}];
+      const {container} = renderThinkingBlock(steps, true);
+      const summary = container.querySelector('summary');
+      expect(summary!.textContent).toContain('Reasoning');
     });
   });
 
@@ -91,27 +84,21 @@ describe('ThinkingBlock', () => {
     });
 
     it('shows "Done." when there are no tool calls', () => {
-      const steps: ReasoningStep[] = [
-        {type: 'reasoning', content: 'Done analyzing.'},
-      ];
+      const steps: ReasoningStep[] = [{type: 'reasoning', content: 'Done analyzing.'}];
       const {container} = renderThinkingBlock(steps, false);
       const summary = container.querySelector('summary');
       expect(summary!.textContent).toContain('Done.');
     });
 
     it('does not show animated dots when complete', () => {
-      const steps: ReasoningStep[] = [
-        {type: 'reasoning', content: 'Done analyzing.'},
-      ];
-      renderThinkingBlock(steps, false);
-      expect(screen.queryByLabelText('In progress')).toBeNull();
-      expect(screen.queryByLabelText('Processing')).toBeNull();
+      const steps: ReasoningStep[] = [{type: 'reasoning', content: 'Done analyzing.'}];
+      const {container} = renderThinkingBlock(steps, false);
+      const dots = container.querySelector('[aria-hidden="true"][class*="animatedDots"]');
+      expect(dots).toBeNull();
     });
 
     it('does not show any checkmark', () => {
-      const steps: ReasoningStep[] = [
-        {type: 'reasoning', content: 'Done analyzing.'},
-      ];
+      const steps: ReasoningStep[] = [{type: 'reasoning', content: 'Done analyzing.'}];
       const {container} = renderThinkingBlock(steps, false);
       const summary = container.querySelector('summary');
       expect(summary!.textContent).not.toContain('✓');
@@ -129,10 +116,10 @@ describe('ThinkingBlock', () => {
           status: 'calling',
         },
       ];
-      renderThinkingBlock(steps, true);
-      const wrapper = screen.getByLabelText('In progress');
-      expect(wrapper.textContent).toContain('Calling tool:');
-      expect(wrapper.textContent).toContain('search_products');
+      const {container} = renderThinkingBlock(steps, true);
+      const summary = container.querySelector('summary');
+      expect(summary!.textContent).toContain('Calling tool:');
+      expect(summary!.textContent).toContain('search_products');
     });
   });
 
@@ -148,9 +135,9 @@ describe('ThinkingBlock', () => {
           status: 'completed',
         },
       ];
-      renderThinkingBlock(steps, true);
-      const wrapper = screen.getByLabelText('In progress');
-      expect(wrapper.textContent).toContain('Reasoning');
+      const {container} = renderThinkingBlock(steps, true);
+      const summary = container.querySelector('summary');
+      expect(summary!.textContent).toContain('Reasoning');
     });
   });
 
@@ -165,9 +152,7 @@ describe('ThinkingBlock', () => {
 
   describe('expanded state renders reasoning as markdown', () => {
     it('renders reasoning content as HTML via marked when details is open', () => {
-      const steps: ReasoningStep[] = [
-        {type: 'reasoning', content: '**bold reasoning**'},
-      ];
+      const steps: ReasoningStep[] = [{type: 'reasoning', content: '**bold reasoning**'}];
       const {container} = renderThinkingBlock(steps, false);
 
       const details = container.querySelector('details')!;

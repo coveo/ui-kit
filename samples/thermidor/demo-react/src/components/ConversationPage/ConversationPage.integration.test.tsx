@@ -3,9 +3,7 @@ import {describe, it, expect, vi} from 'vitest';
 import type {Turn} from '@coveo/thermidor';
 import {ConversationPage} from './ConversationPage.js';
 
-function renderPage(
-  overrides: Partial<Parameters<typeof ConversationPage>[0]> = {}
-) {
+function renderPage(overrides: Partial<Parameters<typeof ConversationPage>[0]> = {}) {
   const defaultProps = {
     onSubmit: vi.fn(),
     isStreaming: false,
@@ -30,13 +28,9 @@ describe('ConversationPage integration', () => {
           prompt: 'Find me running shoes',
           status: 'complete',
           agentResponse: {
-            messages: [
-              {content: 'Here are some running shoes.', role: 'assistant'},
-            ],
+            messages: [{content: 'Here are some running shoes.', role: 'assistant'}],
             surfaces: [],
-            reasoningSteps: [
-              {type: 'reasoning', content: 'Looking up running shoes'},
-            ],
+            reasoningSteps: [{type: 'reasoning', content: 'Looking up running shoes'}],
           },
         },
         {
@@ -113,9 +107,7 @@ describe('ConversationPage integration', () => {
       const textarea = screen.getByLabelText('Prompt') as HTMLTextAreaElement;
       expect(textarea.disabled).toBe(true);
 
-      expect(screen.getByLabelText('Processing').textContent).toContain(
-        'Working'
-      );
+      expect(screen.getByText(/Working/)).toBeDefined();
     });
 
     it('shows thinking block with reasoning steps during streaming', () => {
@@ -143,61 +135,45 @@ describe('ConversationPage integration', () => {
 
       renderPage({turns, isStreaming: true});
 
-      expect(screen.getByLabelText('In progress')).toBeDefined();
+      expect(screen.getByText(/Calling tool:/)).toBeDefined();
     });
   });
 
   describe('Back to search results visibility', () => {
     it('shows "Back to search results" when canGoBackToSearch is true', () => {
-      const turns: Turn[] = [
-        {id: 'turn-1', prompt: 'Hello', status: 'complete'},
-      ];
+      const turns: Turn[] = [{id: 'turn-1', prompt: 'Hello', status: 'complete'}];
 
       renderPage({turns, canGoBackToSearch: true});
-      expect(
-        screen.getByRole('button', {name: /Back to search results/})
-      ).toBeDefined();
+      expect(screen.getByRole('button', {name: /Back to search results/})).toBeDefined();
     });
 
     it('hides "Back to search results" when canGoBackToSearch is false', () => {
-      const turns: Turn[] = [
-        {id: 'turn-1', prompt: 'Hello', status: 'complete'},
-      ];
+      const turns: Turn[] = [{id: 'turn-1', prompt: 'Hello', status: 'complete'}];
 
       renderPage({turns, canGoBackToSearch: false});
-      expect(
-        screen.queryByRole('button', {name: /Back to search results/})
-      ).toBeNull();
+      expect(screen.queryByRole('button', {name: /Back to search results/})).toBeNull();
     });
 
     it('calls onBackToSearch when the button is clicked', () => {
       const onBackToSearch = vi.fn();
-      const turns: Turn[] = [
-        {id: 'turn-1', prompt: 'Hello', status: 'complete'},
-      ];
+      const turns: Turn[] = [{id: 'turn-1', prompt: 'Hello', status: 'complete'}];
 
       renderPage({turns, canGoBackToSearch: true, onBackToSearch});
-      fireEvent.click(
-        screen.getByRole('button', {name: /Back to search results/})
-      );
+      fireEvent.click(screen.getByRole('button', {name: /Back to search results/}));
       expect(onBackToSearch).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('Reset button', () => {
     it('is always visible regardless of canGoBackToSearch', () => {
-      const turns: Turn[] = [
-        {id: 'turn-1', prompt: 'Hello', status: 'complete'},
-      ];
+      const turns: Turn[] = [{id: 'turn-1', prompt: 'Hello', status: 'complete'}];
 
       renderPage({turns, canGoBackToSearch: false});
       expect(screen.getByRole('button', {name: 'Reset'})).toBeDefined();
     });
 
     it('is visible when canGoBackToSearch is true', () => {
-      const turns: Turn[] = [
-        {id: 'turn-1', prompt: 'Hello', status: 'complete'},
-      ];
+      const turns: Turn[] = [{id: 'turn-1', prompt: 'Hello', status: 'complete'}];
 
       renderPage({turns, canGoBackToSearch: true});
       expect(screen.getByRole('button', {name: 'Reset'})).toBeDefined();
@@ -205,9 +181,7 @@ describe('ConversationPage integration', () => {
 
     it('calls onResetToLanding when clicked', () => {
       const onResetToLanding = vi.fn();
-      const turns: Turn[] = [
-        {id: 'turn-1', prompt: 'Hello', status: 'complete'},
-      ];
+      const turns: Turn[] = [{id: 'turn-1', prompt: 'Hello', status: 'complete'}];
 
       renderPage({turns, onResetToLanding});
       fireEvent.click(screen.getByRole('button', {name: 'Reset'}));
@@ -269,9 +243,7 @@ describe('ConversationPage integration', () => {
           status: 'complete',
           agentResponse: {
             messages: [{content: 'Here is some info.', role: 'assistant'}],
-            surfaces: [
-              nextActionsSurface as unknown as Record<string, unknown>,
-            ],
+            surfaces: [nextActionsSurface as unknown as Record<string, unknown>],
             reasoningSteps: [],
           },
         },
