@@ -1,3 +1,6 @@
+import {useMemo} from 'react';
+import {marked} from 'marked';
+import DOMPurify from 'dompurify';
 import styles from './ComparisonSummary.module.css';
 import type {ParsedSurface} from '../types.js';
 
@@ -6,9 +9,13 @@ interface A2UIComparisonSummaryProps {
 }
 
 export function A2UIComparisonSummary({surface}: A2UIComparisonSummaryProps) {
-  const text =
-    (surface.componentProps.text as {literalString?: string})?.literalString ??
-    '';
+  const text = (surface.componentProps.text as {literalString?: string})?.literalString ?? '';
+
+  const html = useMemo(() => {
+    if (!text) return '';
+    const raw = marked.parse(text, {breaks: true, gfm: true}) as string;
+    return DOMPurify.sanitize(raw);
+  }, [text]);
 
   if (!text) {
     return null;
@@ -22,7 +29,7 @@ export function A2UIComparisonSummary({surface}: A2UIComparisonSummaryProps) {
         </span>
         <span className={styles.label}>AI Summary</span>
       </div>
-      <p className={styles.text}>{text}</p>
+      <div className={styles.text} dangerouslySetInnerHTML={{__html: html}} />
     </div>
   );
 }
