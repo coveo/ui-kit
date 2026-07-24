@@ -42,7 +42,7 @@ function SparkleIcon() {
   );
 }
 
-function FilterSparkleIcon() {
+function SettingsIcon() {
   return (
     <svg
       className={styles.icon}
@@ -54,12 +54,12 @@ function FilterSparkleIcon() {
       strokeLinejoin="round"
       aria-hidden="true"
     >
-      <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
-      <path
-        d="M19 3l1.5 4.5L24 9l-3.5 1.5L19 15l-1.5-4.5L14 9l3.5-1.5L19 3"
-        fill="currentColor"
-        stroke="none"
-      />
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="4" y1="12" x2="20" y2="12" />
+      <line x1="4" y1="18" x2="20" y2="18" />
+      <circle cx="8" cy="6" r="2" fill="currentColor" />
+      <circle cx="16" cy="12" r="2" fill="currentColor" />
+      <circle cx="10" cy="18" r="2" fill="currentColor" />
     </svg>
   );
 }
@@ -67,7 +67,7 @@ function FilterSparkleIcon() {
 const ICON_MAP = {
   search: SearchIcon,
   sparkle: SparkleIcon,
-  'filter-sparkle': FilterSparkleIcon,
+  settings: SettingsIcon,
 };
 
 export function SuggestionItemRow({

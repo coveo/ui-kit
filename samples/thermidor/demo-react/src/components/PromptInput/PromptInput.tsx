@@ -27,7 +27,7 @@ interface PromptInputProps {
 export function PromptInput({
   onSubmit,
   disabled = false,
-  placeholder = 'Ask something...',
+  placeholder = 'Search for products or ask a question...',
   initialValue = '',
   suggestions,
   onSuggestionSelect,
@@ -35,8 +35,13 @@ export function PromptInput({
   const [value, setValue] = useState(initialValue);
   const [showDropdown, setShowDropdown] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
+  const [pendingSuggestion, setPendingSuggestion] = useState<{
+    item: SuggestionItem;
+    sectionId: string;
+  } | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const blurTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const suppressNextFocusRef = useRef(false);
 
   const totalItems = useMemo(
     () => (suggestions ? suggestions.flatMap((s) => s.items) : []),
@@ -47,19 +52,27 @@ export function PromptInput({
     setActiveIndex(-1);
   }, [suggestions]);
 
+  useEffect(() => {
+    if (pendingSuggestion) {
+      const {item, sectionId} = pendingSuggestion;
+      setPendingSuggestion(null);
+      onSuggestionSelect?.(item, sectionId);
+    }
+  }, [pendingSuggestion, onSuggestionSelect]);
+
   const submit = useCallback(() => {
     const trimmed = value.trim();
     if (trimmed && !disabled) {
       onSubmit(trimmed);
-      setValue('');
-      if (textareaRef.current) {
-        textareaRef.current.style.height = 'auto';
-      }
     }
   }, [value, disabled, onSubmit]);
 
   function handleFocus() {
     if (disabled) {
+      return;
+    }
+    if (suppressNextFocusRef.current) {
+      suppressNextFocusRef.current = false;
       return;
     }
     if (suggestions && suggestions.length > 0) {
@@ -90,8 +103,9 @@ export function PromptInput({
         }
         count += section.items.length;
       }
-      onSuggestionSelect?.(item, sectionId);
+      setValue(item.label);
       setShowDropdown(false);
+      setPendingSuggestion({item, sectionId});
     }
   }
 
@@ -136,6 +150,12 @@ export function PromptInput({
     el.style.overflowY = el.scrollHeight > maxHeight ? 'auto' : 'hidden';
   }
 
+  function handleDropdownSelect(item: SuggestionItem, sectionId: string) {
+    setValue(item.label);
+    setShowDropdown(false);
+    setPendingSuggestion({item, sectionId});
+  }
+
   const activeDescendant =
     showDropdown && activeIndex >= 0 && totalItems[activeIndex]
       ? `suggestion-item-${totalItems[activeIndex].id}`
@@ -162,34 +182,35 @@ export function PromptInput({
           aria-controls={SUGGESTIONS_LISTBOX_ID}
           aria-activedescendant={activeDescendant}
         />
-        {value && (
-          <button
-            type="button"
-            className={`${styles.iconButton} ${styles.clearButton}`}
-            onClick={() => {
-              setValue('');
-              if (textareaRef.current) {
-                textareaRef.current.style.height = 'auto';
-                textareaRef.current.style.overflowY = 'hidden';
-                textareaRef.current.focus();
-              }
-            }}
-            aria-label="Clear"
+        <button
+          type="button"
+          className={`${styles.iconButton} ${styles.clearButton}`}
+          onClick={() => {
+            setValue('');
+            setShowDropdown(false);
+            suppressNextFocusRef.current = true;
+            if (textareaRef.current) {
+              textareaRef.current.style.height = 'auto';
+              textareaRef.current.style.overflowY = 'hidden';
+              textareaRef.current.focus();
+            }
+          }}
+          aria-label="Clear"
+          style={{visibility: value && !disabled ? 'visible' : 'hidden'}}
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
           >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
-          </button>
-        )}
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
         <button
           type="button"
           className={`${styles.iconButton} ${styles.submitButton}`}
@@ -214,10 +235,7 @@ export function PromptInput({
       {suggestions && (
         <SuggestionsDropdown
           sections={suggestions}
-          onSelect={(item, sectionId) => {
-            onSuggestionSelect?.(item, sectionId);
-            setShowDropdown(false);
-          }}
+          onSelect={handleDropdownSelect}
           visible={showDropdown}
           activeIndex={activeIndex}
         />

@@ -1,4 +1,4 @@
-import {render, screen, fireEvent, act} from '@testing-library/react';
+import {render, screen, fireEvent, act, waitFor} from '@testing-library/react';
 import {describe, it, expect, vi} from 'vitest';
 import {PromptInput} from './PromptInput.js';
 import type {SuggestionSection} from '../SuggestionsDropdown/index.js';
@@ -42,7 +42,7 @@ describe('PromptInput', () => {
     expect(onSubmit).toHaveBeenCalledWith('search query');
   });
 
-  it('clears the textarea after submission', () => {
+  it('retains the textarea value after submission', () => {
     const onSubmit = vi.fn();
     render(<PromptInput onSubmit={onSubmit} />);
 
@@ -50,7 +50,7 @@ describe('PromptInput', () => {
     fireEvent.change(textarea, {target: {value: 'query'}});
     fireEvent.keyDown(textarea, {key: 'Enter', code: 'Enter'});
 
-    expect(textarea.value).toBe('');
+    expect(textarea.value).toBe('query');
   });
 
   it('does not submit when input is empty or whitespace-only', () => {
@@ -191,7 +191,7 @@ describe('suggestions integration', () => {
     );
   });
 
-  it('Enter selects the active item', () => {
+  it('Enter selects the active item', async () => {
     const onSuggestionSelect = vi.fn();
     render(
       <PromptInput
@@ -206,13 +206,15 @@ describe('suggestions integration', () => {
     fireEvent.keyDown(textarea, {key: 'ArrowDown'});
     fireEvent.keyDown(textarea, {key: 'Enter'});
 
-    expect(onSuggestionSelect).toHaveBeenCalledWith(
-      {id: 's1', label: 'Surfboards'},
-      'search'
-    );
+    await waitFor(() => {
+      expect(onSuggestionSelect).toHaveBeenCalledWith(
+        {id: 's1', label: 'Surfboards'},
+        'search'
+      );
+    });
   });
 
-  it('calls onSuggestionSelect with item and sectionId', () => {
+  it('calls onSuggestionSelect with item and sectionId', async () => {
     const onSuggestionSelect = vi.fn();
     render(
       <PromptInput
@@ -231,14 +233,16 @@ describe('suggestions integration', () => {
     fireEvent.keyDown(textarea, {key: 'ArrowDown'});
     fireEvent.keyDown(textarea, {key: 'Enter'});
 
-    expect(onSuggestionSelect).toHaveBeenCalledWith(
-      {
-        id: 'c1',
-        label: 'Build a beginner surfing kit',
-        subtitle: 'Surfing / Budget options',
-      },
-      'conversational'
-    );
+    await waitFor(() => {
+      expect(onSuggestionSelect).toHaveBeenCalledWith(
+        {
+          id: 'c1',
+          label: 'Build a beginner surfing kit',
+          subtitle: 'Surfing / Budget options',
+        },
+        'conversational'
+      );
+    });
   });
 
   it('sets aria-activedescendant when item is highlighted', () => {

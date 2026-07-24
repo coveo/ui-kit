@@ -16,6 +16,10 @@ Create a new React sample under `samples/thermidor/demo-react/` that realizes th
 - Incremental phasing: hardcoded → real backend where available → future backends
 - URL state serialization for browser history navigation on the search page
 
+## Spec Guidelines
+
+- **No property-based testing (fast-check).** This is a demo app — standard unit tests with Vitest + Testing Library are sufficient. When writing specs for tasks in this project, do not include correctness properties or property-based test sections.
+
 ## Background
 
 - Thermidor currently provides: `Engine`, `GenerativeInterface`, `CommerceInterface`, `SearchInterface`, `ConverseController`, `SearchBoxController`, `ProductListController`, `PaginationController`
@@ -140,20 +144,22 @@ The app holds a single `ConverseController`. All prompts go through `controller.
 
 ---
 
-### Task 6: Search results page — query summary and "smart filters" placeholder
+### Task 6: Search results page — query summary
 
-**Objective:** Add a query summary ("Showing results for X") and placeholder breadcrumb/smart filter pills.
+**Objective:** Add a query summary showing the current result range and query.
 
 **Implementation guidance:**
 
-- Create a `QuerySummary` component that reads the query from the `SearchBoxController` state and the total count from the product list state (if available in `ProductListControllerState`)
-- Display: `Showing results for "query"` + result count
-- Below it, add placeholder "Smart filters" pills (hardcoded, non-functional) with a sparkle icon label — these represent the AI-suggested filters from the UX mockup
-- Clicking a smart filter shows a toast: "Smart filters not yet supported"
+- Create a `QuerySummaryPlaceholder` component that receives `query`, `totalCount`, `firstResult`, `pageSize`, and `productCount` as props
+- Display: `Products **1**-**10** of **42** for **shoes**` (bold on range, total, and query)
+- Omit the "for {query}" portion when query is empty
+- Show "No results for {query}" when totalCount is 0
+- Render nothing when both query is empty and totalCount is 0
+- ~~Smart filter pills~~ — removed from scope; the "Search refinements" section in the suggestions dropdown covers this concept
 
-**Test requirements:** Test that the query summary displays the current query. Test that clicking a smart filter pill shows the toast.
+**Test requirements:** Test that the query summary displays the correct range and count. Test the no-results and empty states.
 
-**Demo:** Search results page now shows "Showing results for 'surfboards'" and non-functional filter pills.
+**Demo:** Search results page shows "Products 1-10 of 42 for 'surfboards'" in the top-left of the content area.
 
 ---
 
@@ -314,7 +320,7 @@ These tasks are mechanical, pattern-copying, or iterative refinement. The plan g
 | ---- | ----------------------------------------------------------------------- |
 | 1    | Scaffolding — copying established patterns from `generative-react`      |
 | 3    | Landing page — UX is clear from mockup, straightforward component       |
-| 6    | Query summary + smart filters — small scope, well-defined behavior      |
+| 6    | Query summary — ~~smart filters removed~~; query summary is implemented |
 | 12   | Query suggestions Phase 2 — mostly defining a hook interface boundary   |
 | 13   | Sort control — small scope, placeholder vs functional decision is clear |
 | 14   | Polish — iterative refinement, no architectural decisions               |
