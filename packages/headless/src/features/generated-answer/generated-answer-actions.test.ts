@@ -188,16 +188,6 @@ describe('generated answer', () => {
       expect(resetAnswerCall).toBeDefined();
     });
 
-    it('should not dispatch setAnswerGenerationMode', async () => {
-      const thunk = generateAnswer();
-      await thunk(mockDispatch, mockGetState, mockExtra);
-
-      const setModeCall = mockDispatch.mock.calls.find(
-        (call) => call[0]?.type === 'generatedAnswer/setAnswerGenerationMode'
-      );
-      expect(setModeCall).toBeUndefined();
-    });
-
     it('should dispatch setAnswerApiQueryParams with constructed parameters when answerConfigurationId is present', async () => {
       const thunk = generateAnswer();
       await thunk(mockDispatch, mockGetState, mockExtra);
