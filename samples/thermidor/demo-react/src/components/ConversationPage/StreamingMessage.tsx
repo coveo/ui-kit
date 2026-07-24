@@ -13,18 +13,17 @@ export function StreamingMessage({messages}: StreamingMessageProps) {
 
   const html = useMemo(() => {
     if (!text) return '';
-    const raw = marked.parse(text, {breaks: true, gfm: true}) as string;
-    return DOMPurify.sanitize(raw);
+    try {
+      const raw = marked.parse(text, {breaks: true, gfm: true}) as string;
+      return DOMPurify.sanitize(raw);
+    } catch {
+      return DOMPurify.sanitize(text);
+    }
   }, [text]);
 
   if (!text) {
     return null;
   }
 
-  return (
-    <div
-      className={styles.messageText}
-      dangerouslySetInnerHTML={{__html: html}}
-    />
-  );
+  return <div className={styles.messageText} dangerouslySetInnerHTML={{__html: html}} />;
 }
