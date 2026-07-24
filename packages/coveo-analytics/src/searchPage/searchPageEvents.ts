@@ -73,6 +73,7 @@ export enum SearchPageEvents {
     /**
      * Identifies the custom event that gets logged when a user action triggers a new query set in the effective query pipeline on the search page.
      */
+    // oxlint-disable-next-line typescript/no-duplicate-enum-values
     triggerQuery = 'query',
     /**
      * Identifies the custom event that gets logged when a user undoes a query set in the effective query pipeline on the search page.
