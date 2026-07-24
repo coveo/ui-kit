@@ -8,18 +8,21 @@ const sample: Template[] = [
     library: 'headless',
     label: 'Search (React)',
     packageName: '@coveo/ui-kit-sample-headless-search-react',
+    firstSupportedVersion: '3.53.1',
   },
   {
     name: 'atomic-search',
     library: 'atomic',
     label: 'Search (Vite)',
     packageName: '@coveo/ui-kit-sample-atomic-search',
+    firstSupportedVersion: '3.60.1',
   },
   {
     name: 'atomic-commerce',
     library: 'atomic',
     label: 'Commerce (Vite)',
     packageName: '@coveo/ui-kit-sample-atomic-commerce',
+    firstSupportedVersion: '3.60.1',
   },
 ];
 

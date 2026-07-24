@@ -27,11 +27,15 @@ import {formatError, getPackageManager} from './utils.js';
 
 export function unavailableTemplateMessage(
   templateName: string,
-  version?: string
+  version?: string,
+  firstSupportedVersion?: string
 ): string {
-  return version
+  const message = version
     ? `Template "${templateName}" version "${version}" is not available.`
     : `Template "${templateName}" is not available.`;
+  return firstSupportedVersion
+    ? `${message} This template is supported from version "${firstSupportedVersion}" onward, when its sample was first published.`
+    : message;
 }
 
 // TODO: (KIT-5833): add a link to the "How to use @coveo/create-ui" guide here
@@ -174,7 +178,13 @@ export async function scaffold({
           `Coveo community:            https://connect.coveo.com`,
         'Need help?'
       );
-      throw new Error(unavailableTemplateMessage(template.name, error.version));
+      throw new Error(
+        unavailableTemplateMessage(
+          template.name,
+          error.version,
+          template.firstSupportedVersion
+        )
+      );
     }
     throw error;
   } finally {
