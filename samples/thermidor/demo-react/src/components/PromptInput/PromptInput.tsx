@@ -207,7 +207,7 @@ export function PromptInput({
           onKeyDown={handleKeyDown}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          placeholder={disabled && !value ? '' : placeholder}
+          placeholder={placeholder}
           disabled={disabled}
           autoFocus={autoFocus}
           rows={1}
