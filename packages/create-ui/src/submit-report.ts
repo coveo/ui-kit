@@ -4,7 +4,7 @@ import fastRedact from 'fast-redact';
 import {
   CRASH_REPORT_SCHEMA_VERSION,
   parseCrashReport,
-  scrub,
+  redactPaths,
   type CrashReport,
 } from './crash-report.js';
 import {CrashReportError} from './errors.js';
@@ -40,18 +40,18 @@ function crashTimestampSeconds(crashedOn: string): number | undefined {
   return Number.isNaN(milliseconds) ? undefined : milliseconds / 1000;
 }
 
-function scrubOptional(value: string | undefined): string | undefined {
-  return value === undefined ? undefined : scrub(value);
+function redactOptional(value: string | undefined): string | undefined {
+  return value === undefined ? undefined : redactPaths(value);
 }
 
 function scrubEventPaths(event: ErrorEvent): void {
-  event.message = scrubOptional(event.message);
+  event.message = redactOptional(event.message);
   for (const exception of event.exception?.values ?? []) {
-    exception.value = scrubOptional(exception.value);
+    exception.value = redactOptional(exception.value);
     for (const frame of exception.stacktrace?.frames ?? []) {
-      frame.filename = scrubOptional(frame.filename);
-      frame.abs_path = scrubOptional(frame.abs_path);
-      frame.module = scrubOptional(frame.module);
+      frame.filename = redactOptional(frame.filename);
+      frame.abs_path = redactOptional(frame.abs_path);
+      frame.module = redactOptional(frame.module);
     }
   }
 }

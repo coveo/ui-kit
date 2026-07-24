@@ -1,25 +1,17 @@
 import {readFile, rm} from 'node:fs/promises';
-import {homedir} from 'node:os';
-import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it} from 'vitest';
 import {
   buildCrashReport,
   CRASH_REPORT_SCHEMA_VERSION,
   crashReportPath,
   parseCrashReport,
+  redactPaths,
   resetRunContext,
-  scrub,
   setRunContext,
   writeCrashReport,
 } from './crash-report.js';
 import {CrashReportError} from './errors.js';
 import type {ProjectMetadata} from './metadata.js';
-
-// scrub and the OS block read the real environment; pin the home dir so
-// path assertions are deterministic across machines. tmpdir stays real.
-vi.mock('node:os', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('node:os')>();
-  return {...actual, homedir: vi.fn(() => '/Users/alice')};
-});
 
 const metadata: ProjectMetadata = {
   template: 'headless-search-react',
@@ -32,15 +24,10 @@ const metadata: ProjectMetadata = {
 };
 
 describe('buildCrashReport', () => {
-  beforeEach(() => {
-    resetRunContext();
-    vi.mocked(homedir).mockReturnValue('/Users/alice');
-  });
-  afterEach(() => {
-    resetRunContext();
-  });
+  beforeEach(() => resetRunContext());
+  afterEach(() => resetRunContext());
 
-  it('assembles the documented shape, scrubbing the home dir and using captured metadata', () => {
+  it('assembles the documented shape, redacting paths and using captured metadata', () => {
     setRunContext({metadata});
 
     const report = buildCrashReport(
@@ -52,7 +39,7 @@ describe('buildCrashReport', () => {
     expect(Number.isNaN(Date.parse(report.crashedOn))).toBe(false);
     expect(report.error).toEqual({
       name: 'Error',
-      message: 'failed at ~/my-app/index.js',
+      message: 'failed at index.js',
       stack: expect.any(String),
     });
     expect(report.os).toEqual({
@@ -107,18 +94,38 @@ describe('writeCrashReport', () => {
   });
 });
 
-describe('scrub', () => {
-  it('replaces the POSIX home directory with ~', () => {
-    vi.mocked(homedir).mockReturnValue('/Users/alice');
-    expect(scrub('at /Users/alice/app and /Users/alice/x')).toBe(
-      'at ~/app and ~/x'
+describe('redactPaths', () => {
+  it('reduces absolute paths and file:// URLs to the file name', () => {
+    expect(redactPaths('at /Users/alice/app/index.js:5:1')).toBe(
+      'at index.js:5:1'
+    );
+    expect(redactPaths('at scaffold (file:///Users/alice/dist/s.js:9:2)')).toBe(
+      'at scaffold (s.js:9:2)'
     );
   });
 
-  it('replaces a Windows home directory written with either separator', () => {
-    vi.mocked(homedir).mockReturnValue('C:\\Users\\carol');
-    expect(scrub('at C:\\Users\\carol\\app')).toBe('at ~\\app');
-    expect(scrub('at C:/Users/carol/app')).toBe('at ~/app');
+  it('reduces Windows paths written with either separator', () => {
+    expect(redactPaths('at C:\\Users\\carol\\index.js:5:1')).toBe(
+      'at index.js:5:1'
+    );
+    expect(redactPaths('at C:/Users/carol/index.js:5:1')).toBe(
+      'at index.js:5:1'
+    );
+  });
+
+  it('drops the directory (and the username it embeds) from a path', () => {
+    const out = redactPaths("open '/Users/jane.doe/secret/config.json'");
+    expect(out).toBe("open 'config.json'");
+    expect(out).not.toContain('jane.doe');
+  });
+
+  it('leaves node: module ids and http(s) URLs intact', () => {
+    expect(redactPaths('at node:internal/modules/esm/module_job:430:25')).toBe(
+      'at node:internal/modules/esm/module_job:430:25'
+    );
+    expect(redactPaths('see https://github.com/coveo/ui-kit/issues')).toBe(
+      'see https://github.com/coveo/ui-kit/issues'
+    );
   });
 });
 

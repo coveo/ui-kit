@@ -1,5 +1,5 @@
 import {mkdtemp, rm, writeFile} from 'node:fs/promises';
-import {homedir, tmpdir} from 'node:os';
+import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {CRASH_REPORT_SCHEMA_VERSION, type CrashReport} from './crash-report.js';
@@ -99,10 +99,9 @@ describe('submitReport', () => {
     expect(sentry.close).toHaveBeenCalled();
   });
 
-  it('beforeSend preserves the crash time, strips host/user identity, and scrubs paths', async () => {
+  it('beforeSend preserves the crash time, strips host/user identity, and reduces paths to file names', async () => {
     await submitReport(await writeValidReport());
 
-    const home = homedir();
     const processed = sentry.init.mock.calls[0][0].beforeSend({
       server_name: 'secret-hostname',
       user: {id: 'user-123'},
@@ -110,16 +109,16 @@ describe('submitReport', () => {
       modules: {'private-dep': '1.0.0'},
       breadcrumbs: [{message: 'leaky breadcrumb'}],
       contexts: {device: {name: 'Alice-MacBook'}, os: {name: 'darwin'}},
-      message: `failed at ${home}/project`,
+      message: 'failed at /Users/alice/project',
       exception: {
         values: [
           {
-            value: `boom at ${home}/project`,
+            value: 'boom at /Users/alice/project',
             stacktrace: {
               frames: [
                 {
-                  filename: `${home}/project/index.js`,
-                  abs_path: `${home}/project/index.js`,
+                  filename: '/Users/alice/project/index.js',
+                  abs_path: '/Users/alice/project/index.js',
                   vars: {secret: 'super-secret'},
                   context_line: 'const token = "abc123"',
                 },
@@ -138,9 +137,10 @@ describe('submitReport', () => {
     expect(processed.breadcrumbs).toBeUndefined();
     expect(processed.contexts.device).toBeUndefined();
     expect(processed.contexts.os).toEqual({name: 'darwin'});
-    expect(processed.message).toBe('failed at ~/project');
+    expect(processed.message).toBe('failed at project');
     const frame = processed.exception.values[0].stacktrace.frames[0];
-    expect(frame.filename).toBe('~/project/index.js');
+    expect(frame.filename).toBe('index.js');
+    expect(frame.abs_path).toBe('index.js');
     expect(frame.vars).toBeUndefined();
     expect(frame.context_line).toBeUndefined();
   });

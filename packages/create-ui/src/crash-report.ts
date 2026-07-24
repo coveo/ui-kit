@@ -1,6 +1,6 @@
 import {randomUUID} from 'node:crypto';
 import {writeFile} from 'node:fs/promises';
-import {arch, homedir, platform, release, tmpdir} from 'node:os';
+import {arch, platform, release, tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {buildProjectMetadata, type ProjectMetadata} from './metadata.js';
 import {CrashReportError} from './errors.js';
@@ -23,17 +23,17 @@ export function resetRunContext(): void {
   currentContext = {};
 }
 
-export function scrub(text: string): string {
-  const home = homedir();
-  if (home.length === 0) {
-    return text;
-  }
-  let result = text.replaceAll(home, '~');
-  const forwardSlashHome = home.replaceAll('\\', '/');
-  if (forwardSlashHome !== home) {
-    result = result.replaceAll(forwardSlashHome, '~');
-  }
-  return result;
+// Reduce absolute paths / file:// URLs (anchored to a delimiter so URLs and
+// `node:` module ids are left alone) to just the file name — no directory, and
+// no embedded username, leaves the machine (ADR 003 #5).
+const FILESYSTEM_PATH =
+  /(?<=^|[\s('"=])(?:file:\/\/)?(?:[A-Za-z]:)?(?:[/\\][^\s/\\:()]+)+/g;
+
+export function redactPaths(text: string): string {
+  return text.replace(FILESYSTEM_PATH, (match) => {
+    const segments = match.split(/[/\\]/).filter(Boolean);
+    return segments[segments.length - 1] ?? match;
+  });
 }
 
 interface CrashErrorInfo {
@@ -61,12 +61,13 @@ function toErrorInfo(error: unknown): CrashErrorInfo {
   if (error instanceof Error) {
     return {
       name: error.name || 'Error',
-      message: scrub(error.message),
-      stack: typeof error.stack === 'string' ? scrub(error.stack) : undefined,
+      message: redactPaths(error.message),
+      stack:
+        typeof error.stack === 'string' ? redactPaths(error.stack) : undefined,
     };
   }
   const raw = typeof error === 'string' ? error : String(error);
-  return {name: 'NonError', message: scrub(raw)};
+  return {name: 'NonError', message: redactPaths(raw)};
 }
 
 // Prefer the metadata captured in-memory during scaffolding (it survives the
