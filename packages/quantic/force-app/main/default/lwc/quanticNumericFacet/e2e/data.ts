@@ -1,10 +1,16 @@
-const facetData = {
+const facetId = 'ytlikecount';
+const field = 'ytlikecount';
+
+/**
+ * Facet response before any value is selected.
+ */
+export const initialFacetData = {
   domain: {
     start: 0,
     end: 200,
   },
-  facetId: 'ytlikecount',
-  field: 'ytlikecount',
+  facetId,
+  field,
   moreValuesAvailable: false,
   values: [
     {
@@ -25,4 +31,18 @@ const facetData = {
   indexScore: 0.4,
 };
 
-export default facetData;
+const [firstRange, secondRange] = initialFacetData.values;
+
+/**
+ * Facet response after the first value is selected.
+ */
+export const selectedFacetData = {
+  ...initialFacetData,
+  values: [
+    {
+      ...firstRange,
+      state: 'selected',
+    },
+    secondRange,
+  ],
+};
