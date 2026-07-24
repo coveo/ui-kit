@@ -27,7 +27,7 @@ describe('templates', () => {
 
   it('describes a template with its library, without the "UI" suffix', () => {
     const template = getTemplate('atomic-search')!;
-    expect(describeTemplate(template)).toBe('Atomic Search (Vite)');
+    expect(describeTemplate(template)).toBe('Atomic Search (Vite, @coveo/atomic)');
     expect(describeTemplate(template)).not.toContain('UI');
   });
 });
@@ -87,7 +87,7 @@ describe('main', () => {
     expect(await main(['--help'])).toBe(0);
     out.mockRestore();
     const help = chunks.join('');
-    expect(help).toContain('Atomic Search (Vite)');
+    expect(help).toContain('Atomic Search (Vite, @coveo/atomic)');
     expect(help).toContain('--template-version');
     expect(help).toMatch(/defaults\s+to\s+latest/i);
     expect(help).toContain('headless-search-react --template-version 3.2.1');
