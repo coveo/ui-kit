@@ -9,6 +9,7 @@ const selectors = {
   contentWrapper: '[data-testid="thread-item-content"]',
   visibleContent: '[data-testid="thread-item-content"] > div:not([hidden])',
   line: '[data-testid="thread-item-line"]',
+  lineColumn: '[data-testid="thread-item-line-column"]',
   dot: '[data-testid="thread-item-dot"]',
 };
 
@@ -87,6 +88,52 @@ describe('c-quantic-thread-item', () => {
       const dot = element.shadowRoot.querySelector(selectors.dot);
       expect(dot.className).not.toContain('thread-item__dot--expanded');
     });
+
+    it('dot has interactive class when collapse is enabled', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      const dot = element.shadowRoot.querySelector(selectors.dot);
+      expect(dot.className).toContain('thread-item__dot--interactive');
+    });
+
+    it('dot does not have interactive class when disableCollapse is true', async () => {
+      const element = createTestComponent({disableCollapse: true});
+      await flushPromises();
+
+      const dot = element.shadowRoot.querySelector(selectors.dot);
+      expect(dot.className).not.toContain('thread-item__dot--interactive');
+    });
+
+    it('line column has interactive class when collapse is enabled and line is visible', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      const lineColumn = element.shadowRoot.querySelector(selectors.lineColumn);
+      expect(lineColumn.className).toContain(
+        'thread-item__line-column--interactive'
+      );
+    });
+
+    it('line column does not have interactive class when disableCollapse is true', async () => {
+      const element = createTestComponent({disableCollapse: true});
+      await flushPromises();
+
+      const lineColumn = element.shadowRoot.querySelector(selectors.lineColumn);
+      expect(lineColumn.className).not.toContain(
+        'thread-item__line-column--interactive'
+      );
+    });
+
+    it('line column does not have interactive class when hideLine is true', async () => {
+      const element = createTestComponent({hideLine: true});
+      await flushPromises();
+
+      const lineColumn = element.shadowRoot.querySelector(selectors.lineColumn);
+      expect(lineColumn.className).not.toContain(
+        'thread-item__line-column--interactive'
+      );
+    });
   });
 
   describe('expanded state', () => {
@@ -142,6 +189,97 @@ describe('c-quantic-thread-item', () => {
         selectors.visibleContent
       );
       expect(content).toBeNull();
+    });
+
+    it('expands the content when the dot is clicked while collapsed', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      element.shadowRoot.querySelector(selectors.dot).click();
+      await flushPromises();
+
+      const content = element.shadowRoot.querySelector(
+        selectors.visibleContent
+      );
+      expect(content).not.toBeNull();
+    });
+
+    it('collapses the content when the dot is clicked while expanded', async () => {
+      const element = createTestComponent({isExpanded: true});
+      await flushPromises();
+
+      element.shadowRoot.querySelector(selectors.dot).click();
+      await flushPromises();
+
+      const content = element.shadowRoot.querySelector(
+        selectors.visibleContent
+      );
+      expect(content).toBeNull();
+    });
+
+    it('does not toggle when the dot is clicked and disableCollapse is true', async () => {
+      const element = createTestComponent({disableCollapse: true});
+      await flushPromises();
+
+      element.shadowRoot.querySelector(selectors.dot).click();
+      await flushPromises();
+
+      const content = element.shadowRoot.querySelector(
+        selectors.visibleContent
+      );
+      expect(content).not.toBeNull();
+    });
+
+    it('expands the content when the line column is clicked while collapsed', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      element.shadowRoot.querySelector(selectors.lineColumn).click();
+      await flushPromises();
+
+      const content = element.shadowRoot.querySelector(
+        selectors.visibleContent
+      );
+      expect(content).not.toBeNull();
+    });
+
+    it('collapses the content when the line column is clicked while expanded', async () => {
+      const element = createTestComponent({isExpanded: true});
+      await flushPromises();
+
+      element.shadowRoot.querySelector(selectors.lineColumn).click();
+      await flushPromises();
+
+      const content = element.shadowRoot.querySelector(
+        selectors.visibleContent
+      );
+      expect(content).toBeNull();
+    });
+
+    it('does not toggle when the line column is clicked and disableCollapse is true', async () => {
+      const element = createTestComponent({disableCollapse: true});
+      await flushPromises();
+
+      element.shadowRoot.querySelector(selectors.lineColumn).click();
+      await flushPromises();
+
+      const content = element.shadowRoot.querySelector(
+        selectors.visibleContent
+      );
+      expect(content).not.toBeNull();
+    });
+
+    it('does not toggle when the line column is clicked and hideLine is true', async () => {
+      const element = createTestComponent({hideLine: true, isExpanded: true});
+      await flushPromises();
+
+      element.shadowRoot.querySelector(selectors.lineColumn).click();
+      await flushPromises();
+
+      const content = element.shadowRoot.querySelector(
+        selectors.visibleContent
+      );
+      expect(content).not.toBeNull();
     });
   });
 
