@@ -54,9 +54,7 @@ describe('LandingPage', () => {
 
     fireEvent.click(screen.getByRole('button', {name: 'kayaks'}));
 
-    expect((screen.getByLabelText('Prompt') as HTMLTextAreaElement).value).toBe(
-      'kayaks'
-    );
+    expect((screen.getByLabelText('Prompt') as HTMLTextAreaElement).value).toBe('kayaks');
     expect(onSubmit).toHaveBeenCalledWith('kayaks');
   });
 
@@ -147,7 +145,6 @@ describe('ConversationPage', () => {
         onBackToSearch={vi.fn()}
         canGoBackToSearch={true}
         onResetToLanding={vi.fn()}
-        onSeeResults={vi.fn()}
       />
     );
     expect(screen.getByLabelText('Prompt')).toBeDefined();
@@ -163,7 +160,6 @@ describe('ConversationPage', () => {
         onBackToSearch={vi.fn()}
         canGoBackToSearch={true}
         onResetToLanding={vi.fn()}
-        onSeeResults={vi.fn()}
       />
     );
 
@@ -183,12 +179,9 @@ describe('ConversationPage', () => {
         onBackToSearch={vi.fn()}
         canGoBackToSearch={true}
         onResetToLanding={vi.fn()}
-        onSeeResults={vi.fn()}
       />
     );
-    expect(
-      (screen.getByLabelText('Prompt') as HTMLTextAreaElement).disabled
-    ).toBe(true);
+    expect((screen.getByLabelText('Prompt') as HTMLTextAreaElement).disabled).toBe(true);
   });
 
   it('renders "← Back to search results" button when canGoBackToSearch is true', () => {
@@ -201,7 +194,6 @@ describe('ConversationPage', () => {
         onBackToSearch={onBackToSearch}
         canGoBackToSearch={true}
         onResetToLanding={vi.fn()}
-        onSeeResults={vi.fn()}
       />
     );
 
@@ -219,12 +211,9 @@ describe('ConversationPage', () => {
         onBackToSearch={vi.fn()}
         canGoBackToSearch={false}
         onResetToLanding={vi.fn()}
-        onSeeResults={vi.fn()}
       />
     );
-    expect(
-      screen.queryByRole('button', {name: /Back to search results/})
-    ).toBeNull();
+    expect(screen.queryByRole('button', {name: /Back to search results/})).toBeNull();
   });
 
   it('calls onResetToLanding when "Reset" button is clicked', () => {
@@ -237,7 +226,6 @@ describe('ConversationPage', () => {
         onBackToSearch={vi.fn()}
         canGoBackToSearch={false}
         onResetToLanding={onReset}
-        onSeeResults={vi.fn()}
       />
     );
 
