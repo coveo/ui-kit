@@ -216,7 +216,9 @@ Apply **brand-related color hooks** (`--slds-g-color-brand-*`) where the compone
 
 ## Pull Request Creation
 
-When the user asks to create a PR, use the `gh` CLI tool with the following structure and pattern:
+**Do NOT create PRs automatically or offer to create them.** Only create a PR when the user explicitly asks for one (e.g., "create a PR", "open a pull request").
+
+When the user explicitly asks to create a PR, use the `gh` CLI tool with the following structure and pattern:
 
 ```bash
 gh pr create --title "<JIRA-TICKET> <Short title>" --body "<body>"
