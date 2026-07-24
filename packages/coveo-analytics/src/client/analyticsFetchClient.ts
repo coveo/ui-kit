@@ -38,7 +38,7 @@ export class AnalyticsFetchClient implements AnalyticsRequestClient {
     try {
       response = await fetch(url, fetchData);
     } catch (error) {
-      console.error('An error has occured when sending the event.', error);
+      console.error('An error has occurred when sending the event.', error);
       return;
     }
 
@@ -57,7 +57,7 @@ export class AnalyticsFetchClient implements AnalyticsRequestClient {
         /* If you don't parse the response, it won't appear in the network tab. */
       }
       console.error(
-        `An error has occured when sending the "${eventType}" event.`,
+        `An error has occurred when sending the "${eventType}" event.`,
         response,
         payload
       );

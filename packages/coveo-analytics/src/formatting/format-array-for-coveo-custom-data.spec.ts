@@ -11,6 +11,7 @@ describe('#formatArrayForCoveoCustomData', () => {
 
   it('correctly truncates the data when it contains more than 256 characters', () => {
     const longString =
+      /* cspell:disable-next-line */
       'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis,';
     const rawData = ['1', longString];
     expect(formatArrayForCoveoCustomData(rawData)).toEqual(longString);

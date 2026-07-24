@@ -16,7 +16,7 @@ export interface ReactNativeRuntimeOptions {
   storage: ReactNativeStorage;
   /**
    * Key for storing the visitor ID value.
-   * @defaut visitorId
+   * @default visitorId
    */
   visitorIdKey?: string;
   token?: string;
