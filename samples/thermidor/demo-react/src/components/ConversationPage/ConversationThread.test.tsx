@@ -14,13 +14,10 @@ function createTurn(overrides: Partial<Turn> = {}): Turn {
 
 function renderThread(
   turns: Turn[],
-  overrides: Partial<
-    Omit<Parameters<typeof ConversationThread>[0], 'turns'>
-  > = {}
+  overrides: Partial<Omit<Parameters<typeof ConversationThread>[0], 'turns'>> = {}
 ) {
   const defaultProps = {
     turns,
-    isStreaming: false,
     onAction: vi.fn(),
     turnRefs: {current: new Map<string, HTMLDivElement>()},
   };
@@ -45,9 +42,7 @@ describe('ConversationThread', () => {
     });
 
     it('renders a UserPromptBubble even for streaming turns without a response', () => {
-      const turns = [
-        createTurn({id: 't1', prompt: 'Pending...', status: 'streaming'}),
-      ];
+      const turns = [createTurn({id: 't1', prompt: 'Pending...', status: 'streaming'})];
 
       renderThread(turns);
 

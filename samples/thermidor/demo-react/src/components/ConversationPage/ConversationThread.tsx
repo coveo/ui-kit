@@ -9,19 +9,11 @@ import styles from './ConversationThread.module.css';
 
 interface ConversationThreadProps {
   turns: Turn[];
-  isStreaming: boolean;
   onAction: (text: string, type: string) => void;
   turnRefs: React.MutableRefObject<Map<string, HTMLDivElement>>;
 }
 
-export function ConversationThread({
-  turns,
-  isStreaming: _isStreaming,
-  onAction,
-  turnRefs,
-}: ConversationThreadProps) {
-  void _isStreaming;
-
+export function ConversationThread({turns, onAction, turnRefs}: ConversationThreadProps) {
   return (
     <div className={styles.thread}>
       {turns.map((turn, index) => (
@@ -35,9 +27,7 @@ export function ConversationThread({
             }}
           >
             <UserPromptBubble prompt={turn.prompt} />
-            <div className={styles.agentContent}>
-              {renderTurnContent(turn, onAction)}
-            </div>
+            <div className={styles.agentContent}>{renderTurnContent(turn, onAction)}</div>
           </div>
           {index < turns.length - 1 && <TurnSeparator />}
         </div>
@@ -46,19 +36,12 @@ export function ConversationThread({
   );
 }
 
-function renderTurnContent(
-  turn: Turn,
-  onAction: (text: string, type: string) => void
-) {
+function renderTurnContent(turn: Turn, onAction: (text: string, type: string) => void) {
   if (turn.status === 'error') {
     return <ErrorTurnBlock error={turn.error} />;
   }
 
-  if (
-    turn.status === 'complete' &&
-    turn.routedInterface &&
-    !turn.agentResponse
-  ) {
+  if (turn.status === 'complete' && turn.routedInterface && !turn.agentResponse) {
     return <RoutedTurnBlock />;
   }
 

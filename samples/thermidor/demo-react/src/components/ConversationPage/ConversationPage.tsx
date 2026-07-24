@@ -74,39 +74,22 @@ export function ConversationPage({
     <section className={styles.page}>
       <nav className={styles.nav} aria-label="Conversation navigation">
         {canGoBackToSearch && (
-          <button
-            type="button"
-            className={styles.backButton}
-            onClick={onBackToSearch}
-          >
+          <button type="button" className={styles.backButton} onClick={onBackToSearch}>
             &larr; Back to search results
           </button>
         )}
-        <button
-          type="button"
-          className={styles.resetButton}
-          onClick={onResetToLanding}
-        >
+        <button type="button" className={styles.resetButton} onClick={onResetToLanding}>
           Reset
         </button>
       </nav>
       <div className={styles.scrollContainer} ref={containerRef}>
         <div className={styles.scrollContent}>
-          <ConversationThread
-            turns={turns}
-            isStreaming={isStreaming}
-            onAction={handleAction}
-            turnRefs={turnRefs}
-          />
+          <ConversationThread turns={turns} onAction={handleAction} turnRefs={turnRefs} />
         </div>
       </div>
       <div className={styles.promptContainer}>
         <div className={styles.promptWrapper}>
-          <PromptInput
-            onSubmit={onSubmit}
-            disabled={isStreaming}
-            clearOnSubmit
-          />
+          <PromptInput onSubmit={onSubmit} disabled={isStreaming} clearOnSubmit />
         </div>
       </div>
     </section>
