@@ -1,0 +1,11 @@
+.bubble {
+  margin-left: auto;
+  max-width: 80%;
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-bg-user-prompt, #e3f2fd);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-md);
+  line-height: 1.5;
+  color: var(--color-text-primary);
+  word-break: break-word;
+}
