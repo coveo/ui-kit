@@ -19,6 +19,7 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  overflow: hidden;
 }
 
 .carouselHeading {
@@ -29,6 +30,7 @@
 .carouselTrack {
   display: flex;
   gap: 12px;
+  overflow: hidden;
 }
 
 .carouselCard {
@@ -152,6 +154,7 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  overflow: hidden;
 }
 
 .tableHeading {
@@ -169,7 +172,7 @@
 
 .tableRow {
   display: grid;
-  grid-template-columns: 100px repeat(3, 1fr);
+  grid-template-columns: 100px repeat(3, minmax(0, 1fr));
   border-bottom: 1px solid #eee;
   padding: 16px;
   gap: 12px;
@@ -213,6 +216,7 @@
   display: flex;
   gap: 8px;
   padding: 8px 0;
+  overflow: hidden;
 }
 
 .actionButton {

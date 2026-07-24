@@ -21,6 +21,7 @@ const KNOWN_COMPONENTS = new Set([
 export interface SurfaceRendererProps {
   surfaces: A2UISurface[];
   onAction?: (text: string, type: string) => void;
+  isStreaming?: boolean;
 }
 
 interface RenderEntry {
@@ -36,7 +37,7 @@ interface SkeletonEntry {
 
 type RenderItem = RenderEntry | SkeletonEntry;
 
-export function SurfaceRenderer({surfaces, onAction}: SurfaceRendererProps) {
+export function SurfaceRenderer({surfaces, onAction, isStreaming = true}: SurfaceRendererProps) {
   const allParsed = useMemo(() => {
     const result: ParsedSurface[] = [];
     for (const surface of surfaces) {
@@ -46,9 +47,7 @@ export function SurfaceRenderer({surfaces, onAction}: SurfaceRendererProps) {
   }, [surfaces]);
 
   const renderItems = useMemo(() => {
-    const known = allParsed.filter((s) =>
-      KNOWN_COMPONENTS.has(s.componentType)
-    );
+    const known = allParsed.filter((s) => KNOWN_COMPONENTS.has(s.componentType));
 
     const realSurfaces: ParsedSurface[] = [];
     const realDedupIds = new Set<string>();
@@ -57,8 +56,7 @@ export function SurfaceRenderer({surfaces, onAction}: SurfaceRendererProps) {
 
     for (const s of known) {
       const props = s.componentProps as Record<string, unknown>;
-      const isLoading =
-        s.surfaceId.startsWith('skeleton-') || props.isLoading === true;
+      const isLoading = s.surfaceId.startsWith('skeleton-') || props.isLoading === true;
 
       if (isLoading) {
         const ids = skeletonIdsByType.get(s.componentType) ?? new Set();
@@ -67,10 +65,7 @@ export function SurfaceRenderer({surfaces, onAction}: SurfaceRendererProps) {
       } else if (!realDedupIds.has(s.surfaceId)) {
         realDedupIds.add(s.surfaceId);
         realSurfaces.push(s);
-        realCountByType.set(
-          s.componentType,
-          (realCountByType.get(s.componentType) ?? 0) + 1
-        );
+        realCountByType.set(s.componentType, (realCountByType.get(s.componentType) ?? 0) + 1);
       }
     }
 
@@ -91,16 +86,18 @@ export function SurfaceRenderer({surfaces, onAction}: SurfaceRendererProps) {
       items.push({type: 'real', surface: s});
     }
 
-    for (const [componentType, skeletonIds] of skeletonIdsByType) {
-      const realCount = realCountByType.get(componentType) ?? 0;
-      const remaining = Math.max(0, skeletonIds.size - realCount);
-      const exampleId = skeletonIds.values().next().value!;
-      for (let i = 0; i < remaining; i++) {
-        items.push({
-          type: 'skeleton',
-          surfaceId: `${exampleId}-remaining-${i}`,
-          componentType,
-        });
+    if (isStreaming) {
+      for (const [componentType, skeletonIds] of skeletonIdsByType) {
+        const realCount = realCountByType.get(componentType) ?? 0;
+        const remaining = Math.max(0, skeletonIds.size - realCount);
+        const exampleId = skeletonIds.values().next().value!;
+        for (let i = 0; i < remaining; i++) {
+          items.push({
+            type: 'skeleton',
+            surfaceId: `${exampleId}-remaining-${i}`,
+            componentType,
+          });
+        }
       }
     }
 
@@ -115,12 +112,7 @@ export function SurfaceRenderer({surfaces, onAction}: SurfaceRendererProps) {
     <div className={styles.container}>
       {renderItems.map((item) => {
         if (item.type === 'skeleton') {
-          return (
-            <A2UISkeleton
-              key={item.surfaceId}
-              componentType={item.componentType}
-            />
-          );
+          return <A2UISkeleton key={item.surfaceId} componentType={item.componentType} />;
         }
         return (
           <A2UISurfaceComponent
@@ -141,11 +133,7 @@ interface A2UISurfaceComponentProps {
   onAction?: (text: string, type: string) => void;
 }
 
-function A2UISurfaceComponent({
-  surface,
-  allSurfaces,
-  onAction,
-}: A2UISurfaceComponentProps) {
+function A2UISurfaceComponent({surface, allSurfaces, onAction}: A2UISurfaceComponentProps) {
   switch (surface.componentType) {
     case 'ProductCarousel':
       return <A2UIProductCarousel surface={surface} />;

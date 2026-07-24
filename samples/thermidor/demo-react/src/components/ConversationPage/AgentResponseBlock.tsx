@@ -24,14 +24,11 @@ export function AgentResponseBlock({
   return (
     <div className={styles.container}>
       {showThinkingBlock && (
-        <ThinkingBlock
-          reasoningSteps={reasoningSteps}
-          isStreaming={isStreaming}
-        />
+        <ThinkingBlock reasoningSteps={reasoningSteps} isStreaming={isStreaming} />
       )}
       {showStreamingMessage && <StreamingMessage messages={messages} />}
       {showSurfaceRenderer && (
-        <SurfaceRenderer surfaces={surfaces} onAction={onAction} />
+        <SurfaceRenderer surfaces={surfaces} onAction={onAction} isStreaming={isStreaming} />
       )}
     </div>
   );
