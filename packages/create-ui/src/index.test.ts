@@ -159,7 +159,9 @@ describe('main', () => {
 
     await expect(
       main(['my-app', '--template', 'headless-search-react', '--template-version', '99.99.99'])
-    ).rejects.toThrow('Template "headless-search-react" version "99.99.99" is not available.');
+    ).rejects.toThrow(
+      'Template "headless-search-react" version "99.99.99" is not available. This template is supported from version "3.53.1" onward, when its sample was first published.'
+    );
 
     outSpy.mockRestore();
     logSpy.mockRestore();
