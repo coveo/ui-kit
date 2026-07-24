@@ -16,9 +16,24 @@ describe('templates', () => {
     expect(getTemplate('does-not-exist')).toBeUndefined();
   });
 
+  it('identifies the package used by each Headless Commerce template', () => {
+    expect(describeTemplate(getTemplate('headless-commerce')!)).toBe(
+      'Headless Commerce (Vite, @coveo/headless/commerce)'
+    );
+    expect(describeTemplate(getTemplate('headless-commerce-react')!)).toBe(
+      'Headless Commerce (React, @coveo/headless/commerce)'
+    );
+    expect(describeTemplate(getTemplate('headless-ssr-commerce-nextjs')!)).toBe(
+      'Headless SSR Commerce SSR (Next.js App Router, @coveo/headless-react)'
+    );
+    expect(describeTemplate(getTemplate('headless-ssr-commerce-express')!)).toBe(
+      'Headless SSR Commerce SSR (Express, @coveo/headless/ssr)'
+    );
+  });
+
   it('describes a template with its library, without the "UI" suffix', () => {
     const template = getTemplate('atomic-search')!;
-    expect(describeTemplate(template)).toBe('Atomic Search (Vite)');
+    expect(describeTemplate(template)).toBe('Atomic Search (Vite, @coveo/atomic)');
     expect(describeTemplate(template)).not.toContain('UI');
   });
 });
@@ -78,7 +93,7 @@ describe('main', () => {
     expect(await main(['--help'])).toBe(0);
     out.mockRestore();
     const help = chunks.join('');
-    expect(help).toContain('Atomic Search (Vite)');
+    expect(help).toContain('Atomic Search (Vite, @coveo/atomic)');
     expect(help).toContain('--template-version');
     expect(help).toMatch(/defaults\s+to\s+latest/i);
     expect(help).toContain('headless-search-react --template-version 3.2.1');
