@@ -3,7 +3,9 @@ import {afterEach, beforeEach, describe, expect, it} from 'vitest';
 import {
   buildCrashReport,
   CRASH_REPORT_SCHEMA_VERSION,
+  type CrashErrorInfo,
   crashReportPath,
+  MAX_CAUSE_DEPTH,
   parseCrashReport,
   redactPaths,
   resetRunContext,
@@ -62,6 +64,58 @@ describe('buildCrashReport', () => {
       name: 'NonError',
       message: 'a string failure',
     });
+  });
+
+  it('captures a scrubbed cause chain (Error and non-Error links)', () => {
+    setRunContext({metadata});
+
+    const report = buildCrashReport(
+      new Error('top failed at /Users/alice/app/a.js', {
+        cause: new Error('db failed at /Users/alice/app/b.js', {
+          cause: 'root string cause',
+        }),
+      })
+    );
+
+    expect(report.error.message).toBe('top failed at a.js');
+    expect(report.error.cause).toEqual({
+      name: 'Error',
+      message: 'db failed at b.js',
+      stack: expect.any(String),
+      cause: {name: 'NonError', message: 'root string cause'},
+    });
+  });
+
+  it('bounds the cause chain at MAX_CAUSE_DEPTH links', () => {
+    setRunContext({metadata});
+
+    let error = new Error('root');
+    for (let i = 0; i < MAX_CAUSE_DEPTH + 3; i++) {
+      error = new Error(`level ${i}`, {cause: error});
+    }
+    const report = buildCrashReport(error);
+
+    let depth = 0;
+    let node: CrashErrorInfo | undefined = report.error.cause;
+    while (node !== undefined) {
+      depth++;
+      node = node.cause;
+    }
+    expect(depth).toBe(MAX_CAUSE_DEPTH);
+  });
+
+  it('stops at a circular cause instead of looping forever', () => {
+    setRunContext({metadata});
+
+    const a = new Error('a');
+    const b = new Error('b', {cause: a});
+    (a as Error & {cause?: unknown}).cause = b;
+
+    const report = buildCrashReport(a);
+
+    expect(report.error.message).toBe('a');
+    expect(report.error.cause?.message).toBe('b');
+    expect(report.error.cause?.cause).toBeUndefined();
   });
 
   it('derives metadata from runtime state when none was captured', () => {

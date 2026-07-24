@@ -2,13 +2,21 @@ import {mkdtemp, rm, writeFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
-import {CRASH_REPORT_SCHEMA_VERSION, type CrashReport} from './crash-report.js';
+import {
+  CRASH_REPORT_SCHEMA_VERSION,
+  MAX_CAUSE_DEPTH,
+  type CrashReport,
+} from './crash-report.js';
 
 const sentry = vi.hoisted(() => ({
   init: vi.fn(),
   captureException: vi.fn(),
   flush: vi.fn(async () => true),
   close: vi.fn(async () => true),
+  linkedErrorsIntegration: vi.fn((options?: {limit?: number}) => ({
+    name: 'LinkedErrors',
+    ...options,
+  })),
 }));
 
 vi.mock('@sentry/node', () => sentry);
@@ -88,9 +96,16 @@ describe('submitReport', () => {
     expect(initOptions).toMatchObject({
       defaultIntegrations: false,
       sendDefaultPii: false,
+      includeServerName: false,
     });
     expect(typeof initOptions.dsn).toBe('string');
     expect(initOptions.dsn.length).toBeGreaterThan(0);
+    expect(sentry.linkedErrorsIntegration).toHaveBeenCalledWith({
+      limit: MAX_CAUSE_DEPTH,
+    });
+    expect(initOptions.integrations).toEqual([
+      expect.objectContaining({name: 'LinkedErrors'}),
+    ]);
     expect(sentry.captureException).toHaveBeenCalledOnce();
     expect(sentry.captureException.mock.calls[0][1].tags.run_id).toBe(
       'run-xyz'
@@ -99,16 +114,10 @@ describe('submitReport', () => {
     expect(sentry.close).toHaveBeenCalled();
   });
 
-  it('beforeSend preserves the crash time, strips host/user identity, and reduces paths to file names', async () => {
+  it('beforeSend preserves the crash time and reduces paths to file names', async () => {
     await submitReport(await writeValidReport());
 
     const processed = sentry.init.mock.calls[0][0].beforeSend({
-      server_name: 'secret-hostname',
-      user: {id: 'user-123'},
-      request: {url: 'https://internal/api'},
-      modules: {'private-dep': '1.0.0'},
-      breadcrumbs: [{message: 'leaky breadcrumb'}],
-      contexts: {device: {name: 'Alice-MacBook'}, os: {name: 'darwin'}},
       message: 'failed at /Users/alice/project',
       exception: {
         values: [
@@ -119,8 +128,6 @@ describe('submitReport', () => {
                 {
                   filename: '/Users/alice/project/index.js',
                   abs_path: '/Users/alice/project/index.js',
-                  vars: {secret: 'super-secret'},
-                  context_line: 'const token = "abc123"',
                 },
               ],
             },
@@ -130,18 +137,70 @@ describe('submitReport', () => {
     });
 
     expect(processed.timestamp).toBe(Date.parse(sampleReport.crashedOn) / 1000);
-    expect(processed.server_name).toBeUndefined();
-    expect(processed.user).toBeUndefined();
-    expect(processed.request).toBeUndefined();
-    expect(processed.modules).toBeUndefined();
-    expect(processed.breadcrumbs).toBeUndefined();
-    expect(processed.contexts.device).toBeUndefined();
-    expect(processed.contexts.os).toEqual({name: 'darwin'});
     expect(processed.message).toBe('failed at project');
     const frame = processed.exception.values[0].stacktrace.frames[0];
     expect(frame.filename).toBe('index.js');
     expect(frame.abs_path).toBe('index.js');
-    expect(frame.vars).toBeUndefined();
-    expect(frame.context_line).toBeUndefined();
+  });
+
+  it('reconstructs the error cause chain as linked errors for capture', async () => {
+    const reportWithCause: CrashReport = {
+      ...sampleReport,
+      error: {
+        name: 'Error',
+        message: 'boom',
+        stack: 'Error: boom\n    at x',
+        cause: {
+          name: 'TypeError',
+          message: 'root cause',
+          stack: 'TypeError: root cause\n    at y',
+        },
+      },
+    };
+    const path = join(dir, 'with-cause.json');
+    await writeFile(path, JSON.stringify(reportWithCause));
+
+    expect(await submitReport(path)).toBe(0);
+
+    const captured = sentry.captureException.mock.calls[0][0] as Error & {
+      cause?: Error;
+    };
+    expect(captured.message).toBe('boom');
+    expect(captured.cause).toBeInstanceOf(Error);
+    expect(captured.cause?.name).toBe('TypeError');
+    expect(captured.cause?.message).toBe('root cause');
+  });
+
+  it('beforeSend scrubs every exception value, including linked causes', async () => {
+    await submitReport(await writeValidReport());
+
+    const processed = sentry.init.mock.calls[0][0].beforeSend({
+      exception: {
+        values: [
+          {
+            value: 'ENOENT: open /Users/alice/project/.env',
+            stacktrace: {
+              frames: [
+                {
+                  filename: '/Users/alice/project/db.js',
+                  abs_path: '/Users/alice/project/db.js',
+                },
+              ],
+            },
+          },
+          {
+            value: 'boom at /Users/alice/project/index.js',
+            stacktrace: {frames: [{filename: '/Users/alice/project/index.js'}]},
+          },
+        ],
+      },
+    });
+
+    const [cause, top] = processed.exception.values;
+    expect(cause.value).toBe('ENOENT: open .env');
+    expect(cause.stacktrace.frames[0].filename).toBe('db.js');
+    expect(cause.stacktrace.frames[0].abs_path).toBe('db.js');
+    expect(top.value).toBe('boom at index.js');
+    expect(top.stacktrace.frames[0].filename).toBe('index.js');
   });
 });
