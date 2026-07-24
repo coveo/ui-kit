@@ -53,10 +53,7 @@ export function AppShell() {
         return;
       }
 
-      if (
-        latestTurn.agentResponse &&
-        latestTurn.agentResponse.reasoningSteps?.length > 0
-      ) {
+      if (latestTurn.agentResponse && latestTurn.agentResponse.reasoningSteps?.length > 0) {
         pendingLandingNavigationRef.current = false;
         dispatch({type: 'NAVIGATE_CONVERSATION'});
       }
@@ -144,12 +141,7 @@ export function AppShell() {
           />
         );
       default:
-        return (
-          <LandingPage
-            onSubmit={handleSubmit}
-            isStreaming={converseState.isStreaming}
-          />
-        );
+        return <LandingPage onSubmit={handleSubmit} isStreaming={converseState.isStreaming} />;
     }
   })();
 

@@ -23,9 +23,7 @@ function createMockContainer(overrides: Partial<HTMLDivElement> = {}) {
   } as unknown as HTMLDivElement;
 }
 
-function createMockTurnElement(
-  overrides: Partial<HTMLDivElement> = {}
-): HTMLDivElement {
+function createMockTurnElement(overrides: Partial<HTMLDivElement> = {}): HTMLDivElement {
   return {
     offsetHeight: 60,
     offsetTop: 100,
@@ -41,9 +39,7 @@ describe('useScrollAnchor', () => {
       const containerRef = {current: container};
       const turnRefs = {current: new Map([['turn-1', turnElement]])};
 
-      const {result} = renderHook(() =>
-        useScrollAnchor({containerRef, turnRefs})
-      );
+      const {result} = renderHook(() => useScrollAnchor({containerRef, turnRefs}));
 
       act(() => {
         result.current.scrollToPrompt('turn-1');
@@ -62,9 +58,7 @@ describe('useScrollAnchor', () => {
       const containerRef = {current: container};
       const turnRefs = {current: new Map([['turn-1', turnElement]])};
 
-      const {result} = renderHook(() =>
-        useScrollAnchor({containerRef, turnRefs})
-      );
+      const {result} = renderHook(() => useScrollAnchor({containerRef, turnRefs}));
 
       act(() => {
         result.current.scrollToPrompt('turn-1');
@@ -81,9 +75,7 @@ describe('useScrollAnchor', () => {
       const containerRef = {current: container};
       const turnRefs = {current: new Map([['turn-1', turnElement]])};
 
-      const {result} = renderHook(() =>
-        useScrollAnchor({containerRef, turnRefs})
-      );
+      const {result} = renderHook(() => useScrollAnchor({containerRef, turnRefs}));
 
       act(() => {
         result.current.scrollToPrompt('turn-1');
@@ -105,9 +97,7 @@ describe('useScrollAnchor', () => {
       const containerRef = {current: container};
       const turnRefs = {current: new Map([['turn-1', turnElement]])};
 
-      const {result} = renderHook(() =>
-        useScrollAnchor({containerRef, turnRefs})
-      );
+      const {result} = renderHook(() => useScrollAnchor({containerRef, turnRefs}));
 
       act(() => {
         result.current.scrollToPrompt('turn-1');
@@ -124,9 +114,7 @@ describe('useScrollAnchor', () => {
       const containerRef = {current: container};
       const turnRefs = {current: new Map<string, HTMLDivElement>()};
 
-      const {result} = renderHook(() =>
-        useScrollAnchor({containerRef, turnRefs})
-      );
+      const {result} = renderHook(() => useScrollAnchor({containerRef, turnRefs}));
 
       act(() => {
         result.current.scrollToPrompt('nonexistent-turn');
@@ -143,9 +131,7 @@ describe('useScrollAnchor', () => {
       const containerRef = {current: container};
       const turnRefs = {current: new Map([['turn-1', turnElement]])};
 
-      const {result} = renderHook(() =>
-        useScrollAnchor({containerRef, turnRefs})
-      );
+      const {result} = renderHook(() => useScrollAnchor({containerRef, turnRefs}));
 
       act(() => {
         result.current.scrollToPrompt('turn-1');
@@ -167,9 +153,7 @@ describe('useScrollAnchor', () => {
       const containerRef = {current: container};
       const turnRefs = {current: new Map<string, HTMLDivElement>()};
 
-      const {result} = renderHook(() =>
-        useScrollAnchor({containerRef, turnRefs})
-      );
+      const {result} = renderHook(() => useScrollAnchor({containerRef, turnRefs}));
 
       act(() => {
         result.current.recalculatePadding();
@@ -185,9 +169,7 @@ describe('useScrollAnchor', () => {
       const containerRef = {current: container};
       const turnRefs = {current: new Map([['turn-1', turnElement]])};
 
-      const {result} = renderHook(() =>
-        useScrollAnchor({containerRef, turnRefs})
-      );
+      const {result} = renderHook(() => useScrollAnchor({containerRef, turnRefs}));
 
       act(() => {
         result.current.scrollToPrompt('turn-1');

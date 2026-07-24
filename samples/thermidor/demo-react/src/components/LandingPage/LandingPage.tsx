@@ -1,8 +1,5 @@
 import {useState} from 'react';
-import {
-  SECTION_ACTIONS,
-  type SuggestionItem,
-} from '../SuggestionsDropdown/index.js';
+import {SECTION_ACTIONS, type SuggestionItem} from '../SuggestionsDropdown/index.js';
 import {PromptInput} from '../PromptInput/PromptInput.js';
 import {SuggestionPills} from '../SuggestionPills/SuggestionPills.js';
 import {useSuggestions} from '../../hooks/use-suggestions.js';

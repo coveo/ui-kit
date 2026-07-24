@@ -23,10 +23,7 @@ export function A2UISkeleton({componentType}: A2UISkeletonProps) {
 
 function ProductCarouselSkeleton() {
   return (
-    <div
-      className={styles.carouselContainer}
-      aria-label="Loading product carousel"
-    >
+    <div className={styles.carouselContainer} aria-label="Loading product carousel">
       <div className={`${styles.skeleton} ${styles.carouselHeading}`} />
       <div className={styles.carouselTrack}>
         {[0, 1, 2, 3, 4].map((i) => (
@@ -72,10 +69,7 @@ function BundleDisplaySkeleton() {
 
 function ComparisonTableSkeleton() {
   return (
-    <div
-      className={styles.tableContainer}
-      aria-label="Loading comparison table"
-    >
+    <div className={styles.tableContainer} aria-label="Loading comparison table">
       <div className={`${styles.skeleton} ${styles.tableHeading}`} />
       <div className={styles.tableGrid}>
         <div className={styles.tableRow}>
@@ -91,10 +85,7 @@ function ComparisonTableSkeleton() {
           <div key={row} className={styles.tableRow}>
             <div className={`${styles.skeleton} ${styles.tableLabel}`} />
             {[0, 1, 2].map((col) => (
-              <div
-                key={col}
-                className={`${styles.skeleton} ${styles.tableValue}`}
-              />
+              <div key={col} className={`${styles.skeleton} ${styles.tableValue}`} />
             ))}
           </div>
         ))}

@@ -20,11 +20,7 @@ vi.mock('./ThinkingBlock.js', () => ({
 }));
 
 vi.mock('./StreamingMessage.js', () => ({
-  StreamingMessage: ({
-    messages,
-  }: {
-    messages: {content: string; role: string}[];
-  }) => (
+  StreamingMessage: ({messages}: {messages: {content: string; role: string}[]}) => (
     <div data-testid="streaming-message" data-message-count={messages.length} />
   ),
 }));
@@ -45,9 +41,7 @@ vi.mock('../../a2ui/SurfaceRenderer/SurfaceRenderer.js', () => ({
   ),
 }));
 
-function createAgentResponse(
-  overrides: Partial<AgentResponse> = {}
-): AgentResponse {
+function createAgentResponse(overrides: Partial<AgentResponse> = {}): AgentResponse {
   return {
     messages: [],
     surfaces: [],
@@ -84,15 +78,9 @@ describe('AgentResponseBlock', () => {
 
       const {container} = renderBlock(agentResponse, {isStreaming: true});
 
-      const thinkingBlock = container.querySelector(
-        '[data-testid="thinking-block"]'
-      );
-      const streamingMessage = container.querySelector(
-        '[data-testid="streaming-message"]'
-      );
-      const surfaceRenderer = container.querySelector(
-        '[data-testid="surface-renderer"]'
-      );
+      const thinkingBlock = container.querySelector('[data-testid="thinking-block"]');
+      const streamingMessage = container.querySelector('[data-testid="streaming-message"]');
+      const surfaceRenderer = container.querySelector('[data-testid="surface-renderer"]');
 
       expect(thinkingBlock).not.toBeNull();
       expect(streamingMessage).not.toBeNull();
@@ -100,12 +88,8 @@ describe('AgentResponseBlock', () => {
 
       const allElements = container.querySelectorAll('[data-testid]');
       expect(allElements[0].getAttribute('data-testid')).toBe('thinking-block');
-      expect(allElements[1].getAttribute('data-testid')).toBe(
-        'streaming-message'
-      );
-      expect(allElements[2].getAttribute('data-testid')).toBe(
-        'surface-renderer'
-      );
+      expect(allElements[1].getAttribute('data-testid')).toBe('streaming-message');
+      expect(allElements[2].getAttribute('data-testid')).toBe('surface-renderer');
     });
   });
 

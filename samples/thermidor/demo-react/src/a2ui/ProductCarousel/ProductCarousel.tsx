@@ -18,8 +18,7 @@ interface ProductItem {
 
 export function A2UIProductCarousel({surface}: A2UIProductCarouselProps) {
   const heading =
-    (surface.componentProps.heading as {literalString?: string})
-      ?.literalString ?? 'Products';
+    (surface.componentProps.heading as {literalString?: string})?.literalString ?? 'Products';
 
   const items = (surface.data.items as ProductItem[]) ?? [];
   const trackRef = useRef<HTMLDivElement>(null);
@@ -30,9 +29,7 @@ export function A2UIProductCarousel({surface}: A2UIProductCarouselProps) {
     const track = trackRef.current;
     if (!track) return;
     setCanScrollLeft(track.scrollLeft > 0);
-    setCanScrollRight(
-      track.scrollLeft + track.clientWidth < track.scrollWidth - 1
-    );
+    setCanScrollRight(track.scrollLeft + track.clientWidth < track.scrollWidth - 1);
   }, []);
 
   useEffect(() => {

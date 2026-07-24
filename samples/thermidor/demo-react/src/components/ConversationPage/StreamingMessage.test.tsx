@@ -39,9 +39,7 @@ describe('StreamingMessage', () => {
   });
 
   it('renders links from markdown', () => {
-    const messages = [
-      {content: '[click here](https://example.com)', role: 'assistant'},
-    ];
+    const messages = [{content: '[click here](https://example.com)', role: 'assistant'}];
 
     const {container} = render(<StreamingMessage messages={messages} />);
 

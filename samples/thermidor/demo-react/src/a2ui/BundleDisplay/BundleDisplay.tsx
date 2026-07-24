@@ -30,13 +30,9 @@ interface BundleItem {
   clickUri?: string;
 }
 
-export function A2UIBundleDisplay({
-  surface,
-  allSurfaces,
-}: A2UIBundleDisplayProps) {
+export function A2UIBundleDisplay({surface, allSurfaces}: A2UIBundleDisplayProps) {
   const title =
-    (surface.componentProps.title as {literalString?: string})?.literalString ??
-    'Bundle';
+    (surface.componentProps.title as {literalString?: string})?.literalString ?? 'Bundle';
 
   const bundles = (surface.componentProps.bundles as BundleTier[]) ?? [];
   const [activeTier, setActiveTier] = useState(bundles[0]?.bundleId ?? '');
@@ -50,9 +46,7 @@ export function A2UIBundleDisplay({
   const resolvedItems: BundleItem[] = [];
   if (activeBundle) {
     for (const slot of activeBundle.slots) {
-      const refSurface = allSurfaces.find(
-        (s) => s.surfaceId === slot.surfaceRef
-      );
+      const refSurface = allSurfaces.find((s) => s.surfaceId === slot.surfaceRef);
       const items = (refSurface?.data.items as BundleItem[]) ?? [];
       if (items[0]) {
         resolvedItems.push(items[0]);
@@ -60,10 +54,7 @@ export function A2UIBundleDisplay({
     }
   }
 
-  const totalPrice = resolvedItems.reduce(
-    (sum, item) => sum + (item.ec_price ?? 0),
-    0
-  );
+  const totalPrice = resolvedItems.reduce((sum, item) => sum + (item.ec_price ?? 0), 0);
 
   return (
     <section className={styles.container}>
@@ -99,14 +90,10 @@ export function A2UIBundleDisplay({
                 <div className={styles.itemInfo}>
                   <span className={styles.itemName}>{item.ec_name}</span>
                   {item.ec_description && (
-                    <span className={styles.itemDescription}>
-                      {item.ec_description}
-                    </span>
+                    <span className={styles.itemDescription}>{item.ec_description}</span>
                   )}
                   {item.ec_price !== undefined && (
-                    <span className={styles.itemPrice}>
-                      {formatPrice(item.ec_price)}
-                    </span>
+                    <span className={styles.itemPrice}>{formatPrice(item.ec_price)}</span>
                   )}
                 </div>
               </div>
@@ -117,13 +104,10 @@ export function A2UIBundleDisplay({
               <div className={styles.footerLabel}>
                 <span className={styles.footerTitle}>Package Total</span>
                 <span className={styles.footerCount}>
-                  {resolvedItems.length}{' '}
-                  {resolvedItems.length === 1 ? 'item' : 'items'}
+                  {resolvedItems.length} {resolvedItems.length === 1 ? 'item' : 'items'}
                 </span>
               </div>
-              <span className={styles.footerPrice}>
-                {formatPrice(totalPrice)}
-              </span>
+              <span className={styles.footerPrice}>{formatPrice(totalPrice)}</span>
             </div>
           )}
         </div>

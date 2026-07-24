@@ -11,12 +11,9 @@ interface ActionItem {
   type?: string;
 }
 
-export function A2UINextActionsBar({
-  surface,
-  onAction,
-}: A2UINextActionsBarProps) {
-  const items = ((surface.data.actions as ActionItem[]) ?? []).filter(
-    (action) => action.text?.trim()
+export function A2UINextActionsBar({surface, onAction}: A2UINextActionsBarProps) {
+  const items = ((surface.data.actions as ActionItem[]) ?? []).filter((action) =>
+    action.text?.trim()
   );
 
   if (items.length === 0) {

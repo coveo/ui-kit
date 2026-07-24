@@ -89,8 +89,7 @@ export function useScrollAnchor({
 
     const containerHeight = container.clientHeight;
     const contentScrollHeight =
-      container.scrollHeight -
-      parseInt(container.style.paddingBottom || '0', 10);
+      container.scrollHeight - parseInt(container.style.paddingBottom || '0', 10);
     const elementOffset = targetElement.offsetTop - container.offsetTop;
     const contentBelowPrompt = contentScrollHeight - elementOffset;
     const neededPadding = Math.max(0, containerHeight - contentBelowPrompt);

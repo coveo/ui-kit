@@ -32,10 +32,7 @@ vi.mock('./SearchResultsPage/SearchResultsPage.js', () => ({
   SearchResultsPage: (props: any) => (
     <div data-testid="search-results-page">
       <span data-testid="use-case">{props.routedInterface?.useCase}</span>
-      <button
-        data-testid="search-submit-btn"
-        onClick={() => props.onSubmit('follow up')}
-      />
+      <button data-testid="search-submit-btn" onClick={() => props.onSubmit('follow up')} />
     </div>
   ),
 }));

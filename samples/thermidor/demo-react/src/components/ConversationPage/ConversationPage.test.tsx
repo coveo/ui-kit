@@ -9,9 +9,7 @@ const baseTurn: Turn = {
   status: 'complete',
 };
 
-function renderPage(
-  overrides: Partial<Parameters<typeof ConversationPage>[0]> = {}
-) {
+function renderPage(overrides: Partial<Parameters<typeof ConversationPage>[0]> = {}) {
   const defaultProps = {
     onSubmit: vi.fn(),
     isStreaming: false,
@@ -39,25 +37,19 @@ describe('ConversationPage shell', () => {
   describe('Back to search results navigation', () => {
     it('shows "Back to search results" button when canGoBackToSearch is true', () => {
       renderPage({canGoBackToSearch: true});
-      expect(
-        screen.getByRole('button', {name: /Back to search results/})
-      ).toBeDefined();
+      expect(screen.getByRole('button', {name: /Back to search results/})).toBeDefined();
     });
 
     it('hides "Back to search results" button when canGoBackToSearch is false', () => {
       renderPage({canGoBackToSearch: false});
-      expect(
-        screen.queryByRole('button', {name: /Back to search results/})
-      ).toBeNull();
+      expect(screen.queryByRole('button', {name: /Back to search results/})).toBeNull();
     });
 
     it('calls onBackToSearch when "Back to search results" is clicked', () => {
       const onBackToSearch = vi.fn();
       renderPage({canGoBackToSearch: true, onBackToSearch});
 
-      fireEvent.click(
-        screen.getByRole('button', {name: /Back to search results/})
-      );
+      fireEvent.click(screen.getByRole('button', {name: /Back to search results/}));
       expect(onBackToSearch).toHaveBeenCalledTimes(1);
     });
   });

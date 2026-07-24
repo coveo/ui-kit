@@ -20,9 +20,7 @@ interface ComparisonItem {
 }
 
 export function A2UIComparisonTable({surface}: A2UIComparisonTableProps) {
-  const heading =
-    (surface.componentProps.heading as {literalString?: string})
-      ?.literalString ?? '';
+  const heading = (surface.componentProps.heading as {literalString?: string})?.literalString ?? '';
 
   const attributes = (surface.componentProps.attributes as string[]) ?? [
     'standout',
@@ -91,14 +89,9 @@ export function A2UIComparisonTable({surface}: A2UIComparisonTableProps) {
           <div className={styles.row}>
             <div className={styles.labelCell}>Price</div>
             {visibleItems.map((item, i) => (
-              <div
-                key={`price-${item.ec_product_id ?? i}`}
-                className={styles.valueCell}
-              >
+              <div key={`price-${item.ec_product_id ?? i}`} className={styles.valueCell}>
                 <span className={styles.priceValue}>
-                  {item.ec_price !== undefined
-                    ? formatPrice(item.ec_price)
-                    : '—'}
+                  {item.ec_price !== undefined ? formatPrice(item.ec_price) : '—'}
                 </span>
               </div>
             ))}
@@ -106,16 +99,11 @@ export function A2UIComparisonTable({surface}: A2UIComparisonTableProps) {
 
           {displayAttributes.map((attr) => (
             <div key={attr} className={styles.row}>
-              <div className={styles.labelCell}>
-                {attributeLabels[attr] ?? attr}
-              </div>
+              <div className={styles.labelCell}>{attributeLabels[attr] ?? attr}</div>
               {visibleItems.map((item, i) => {
                 const value = item[attr];
                 return (
-                  <div
-                    key={`${attr}-${item.ec_product_id ?? i}`}
-                    className={styles.valueCell}
-                  >
+                  <div key={`${attr}-${item.ec_product_id ?? i}`} className={styles.valueCell}>
                     {typeof value === 'string' ? value : '—'}
                   </div>
                 );
@@ -126,9 +114,7 @@ export function A2UIComparisonTable({surface}: A2UIComparisonTableProps) {
         {canScrollRight && (
           <button
             className={`${styles.navButton} ${styles.navRight}`}
-            onClick={() =>
-              setStartIndex((i) => Math.min(items.length - MAX_VISIBLE, i + 1))
-            }
+            onClick={() => setStartIndex((i) => Math.min(items.length - MAX_VISIBLE, i + 1))}
             aria-label="Show next products"
           >
             ›
@@ -137,8 +123,8 @@ export function A2UIComparisonTable({surface}: A2UIComparisonTableProps) {
       </div>
       {items.length > MAX_VISIBLE && (
         <div className={styles.pageInfo}>
-          Showing {startIndex + 1}–
-          {Math.min(startIndex + MAX_VISIBLE, items.length)} of {items.length}
+          Showing {startIndex + 1}–{Math.min(startIndex + MAX_VISIBLE, items.length)} of{' '}
+          {items.length}
         </div>
       )}
     </section>

@@ -5,23 +5,17 @@ import {ErrorTurnBlock} from './ErrorTurnBlock.js';
 describe('ErrorTurnBlock', () => {
   it('displays the provided error message', () => {
     render(<ErrorTurnBlock error="Network request failed" />);
-    expect(screen.getByRole('alert').textContent).toBe(
-      'Network request failed'
-    );
+    expect(screen.getByRole('alert').textContent).toBe('Network request failed');
   });
 
   it('displays fallback message when error is undefined', () => {
     render(<ErrorTurnBlock />);
-    expect(screen.getByRole('alert').textContent).toBe(
-      'An unknown error occurred.'
-    );
+    expect(screen.getByRole('alert').textContent).toBe('An unknown error occurred.');
   });
 
   it('displays fallback message when error is an empty string', () => {
     render(<ErrorTurnBlock error="" />);
-    expect(screen.getByRole('alert').textContent).toBe(
-      'An unknown error occurred.'
-    );
+    expect(screen.getByRole('alert').textContent).toBe('An unknown error occurred.');
   });
 
   it('has role="alert" for accessibility', () => {
