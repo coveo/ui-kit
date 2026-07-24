@@ -2,4 +2,4 @@
 '@coveo/create-ui': patch
 ---
 
-Clarify the libraries used by Headless SSR templates.
+Clarify the primary Coveo library used by every template.
