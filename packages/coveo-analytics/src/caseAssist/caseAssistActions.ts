@@ -13,6 +13,7 @@ export enum CaseAssistActions {
     documentSuggestionQuickview = 'documentSuggestionQuickview',
     suggestionRate = 'suggestion_rate',
     nextCaseStep = 'ticket_next_stage',
+    // oxlint-disable-next-line typescript/no-duplicate-enum-values
     caseCancelled = 'ticket_cancel',
     caseSolved = 'ticket_cancel',
     caseCreated = 'ticket_create',

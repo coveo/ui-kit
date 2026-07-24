@@ -105,7 +105,7 @@ describe('CaseAssistClient', () => {
         },
     };
 
-    const expectMatchPayload = (actionName: CaseAssistActions, actionData: Object, ticket: TicketProperties) => {
+    const expectMatchPayload = (actionName: CaseAssistActions, actionData: object, ticket: TicketProperties) => {
         const body: string = lastCallBody(fetchMock);
         const content = JSON.parse(body);
 
@@ -133,7 +133,7 @@ describe('CaseAssistClient', () => {
     const expectMatchActionPayload = (
         content: Record<string, unknown>,
         actionName: CaseAssistActions,
-        actionData: Object,
+        actionData: object,
     ) => {
         expectMatchProperty(content, 'ec', 'svc');
         expectMatchProperty(content, 'svc_action', actionName);
