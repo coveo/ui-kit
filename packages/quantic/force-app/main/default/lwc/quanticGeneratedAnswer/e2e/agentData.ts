@@ -66,6 +66,13 @@ type AgentCitationType = {
   };
 };
 
+type AgentRunErrorType = {
+  type: 'RUN_ERROR';
+  timestamp: number;
+  message: string;
+  code: string;
+};
+
 const STREAM_ID = 'conv_1';
 const ANSWER_ID_1 = 'conv_1_0001';
 const ANSWER_ID_2 = 'conv_1_0002';
@@ -168,6 +175,16 @@ const runFinishedStream = (answerId: string): AgentRunType => ({
   },
 });
 
+const runErrorStream = (
+  message: string,
+  code: string
+): AgentRunErrorType => ({
+  type: 'RUN_ERROR',
+  timestamp: new Date().valueOf(),
+  message,
+  code,
+});
+
 export type AgentMessage =
   | AgentRunType
   | AgentCustomType
@@ -175,7 +192,21 @@ export type AgentMessage =
   | AgentToolCallType
   | AgentToolCallArgsType
   | AgentTextMessageType
-  | AgentCitationType;
+  | AgentCitationType
+  | AgentRunErrorType;
+
+export const turnLimitErrorStream: Array<AgentMessage> = [
+  runStartStream(ANSWER_ID_2),
+  runErrorStream(
+    'The conversation turn limit has been reached.',
+    'KNOWLEDGE:SSE_TURN_LIMIT_REACHED'
+  ),
+];
+
+export const genericErrorStream: Array<AgentMessage> = [
+  runStartStream(ANSWER_ID_2),
+  runErrorStream('An unexpected error occurred.', 'KNOWLEDGE:SSE_INTERNAL_ERROR'),
+];
 
 export type AgentData = {
   answerStreams: Array<AgentMessage>;
