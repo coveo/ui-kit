@@ -7,6 +7,11 @@ import {CrashReportError} from './errors.js';
 
 export const CRASH_REPORT_SCHEMA_VERSION = 1;
 
+// Bound the captured `error.cause` chain so a deep or cyclic chain cannot bloat
+// the report; each link is reduced to the same {name, message, stack} shape as
+// the top-level error — never arbitrary error properties (ADR 003 #5/#6).
+export const MAX_CAUSE_DEPTH = 5;
+
 export interface RunContext {
   template?: string;
   templateVersion?: string;
@@ -36,10 +41,11 @@ export function redactPaths(text: string): string {
   });
 }
 
-interface CrashErrorInfo {
+export interface CrashErrorInfo {
   name: string;
   message: string;
   stack?: string;
+  cause?: CrashErrorInfo;
 }
 
 interface CrashOsInfo {
@@ -57,17 +63,31 @@ export interface CrashReport {
   metadata: ProjectMetadata;
 }
 
-function toErrorInfo(error: unknown): CrashErrorInfo {
-  if (error instanceof Error) {
-    return {
-      name: error.name || 'Error',
-      message: redactPaths(error.message),
-      stack:
-        typeof error.stack === 'string' ? redactPaths(error.stack) : undefined,
-    };
+function normalizeError(
+  error: unknown,
+  depth: number,
+  seen: Set<unknown>
+): CrashErrorInfo {
+  if (!(error instanceof Error)) {
+    const raw = typeof error === 'string' ? error : String(error);
+    return {name: 'NonError', message: redactPaths(raw)};
   }
-  const raw = typeof error === 'string' ? error : String(error);
-  return {name: 'NonError', message: redactPaths(raw)};
+  const info: CrashErrorInfo = {
+    name: error.name || 'Error',
+    message: redactPaths(error.message),
+    stack:
+      typeof error.stack === 'string' ? redactPaths(error.stack) : undefined,
+  };
+  const cause = (error as Error & {cause?: unknown}).cause;
+  if (cause !== undefined && depth < MAX_CAUSE_DEPTH && !seen.has(cause)) {
+    seen.add(cause);
+    info.cause = normalizeError(cause, depth + 1, seen);
+  }
+  return info;
+}
+
+function toErrorInfo(error: unknown): CrashErrorInfo {
+  return normalizeError(error, 0, new Set<unknown>([error]));
 }
 
 // Prefer the metadata captured in-memory during scaffolding (it survives the

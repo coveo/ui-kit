@@ -1,11 +1,12 @@
 import {readFile} from 'node:fs/promises';
 import type {ErrorEvent} from '@sentry/node';
-import fastRedact from 'fast-redact';
 import {
   CRASH_REPORT_SCHEMA_VERSION,
+  type CrashErrorInfo,
+  type CrashReport,
+  MAX_CAUSE_DEPTH,
   parseCrashReport,
   redactPaths,
-  type CrashReport,
 } from './crash-report.js';
 import {CrashReportError} from './errors.js';
 import {log} from './log.js';
@@ -15,25 +16,6 @@ const FLUSH_TIMEOUT_MS = 4000;
 const DSN =
   'https://ff6d321a297bd57d41d0bd254c9dff85@o4506977812938752.ingest.us.sentry.io/4511779671703552';
 const ISSUES_URL = 'https://github.com/coveo/ui-kit/issues';
-
-// `censor: undefined` deletes these fields entirely rather than masking them.
-const redactEventPii = fastRedact({
-  paths: [
-    'server_name',
-    'user',
-    'request',
-    'modules',
-    'breadcrumbs',
-    'contexts.device',
-    'contexts.culture',
-    'exception.values[*].stacktrace.frames[*].vars',
-    'exception.values[*].stacktrace.frames[*].pre_context',
-    'exception.values[*].stacktrace.frames[*].context_line',
-    'exception.values[*].stacktrace.frames[*].post_context',
-  ],
-  censor: undefined,
-  serialize: false,
-});
 
 function crashTimestampSeconds(crashedOn: string): number | undefined {
   const milliseconds = Date.parse(crashedOn);
@@ -60,30 +42,43 @@ async function readReport(path: string): Promise<CrashReport> {
   return parseCrashReport(await readFile(path, 'utf8'));
 }
 
+// Rebuild the captured error and its scrubbed cause chain as linked Error
+// instances so `linkedErrorsIntegration` expands them into `exception.values`,
+// where the `beforeSend` scrubbers already run on every entry. `stack` is set
+// verbatim (undefined when absent) so no submit-time frames are fabricated.
+function reconstructError(info: CrashErrorInfo, depth = 0): Error {
+  const error = new Error(info.message);
+  error.name = info.name;
+  error.stack = info.stack;
+  if (info.cause !== undefined && depth < MAX_CAUSE_DEPTH) {
+    (error as {cause?: unknown}).cause = reconstructError(
+      info.cause,
+      depth + 1
+    );
+  }
+  return error;
+}
+
 async function sendToSentry(report: CrashReport): Promise<boolean> {
   const Sentry = await import('@sentry/node');
 
   Sentry.init({
     dsn: DSN,
     defaultIntegrations: false,
-    integrations: [],
+    integrations: [Sentry.linkedErrorsIntegration({limit: MAX_CAUSE_DEPTH})],
     sendDefaultPii: false,
+    includeServerName: false,
     maxBreadcrumbs: 0,
     beforeBreadcrumb: () => null,
     beforeSend(event) {
       event.timestamp =
         crashTimestampSeconds(report.crashedOn) ?? event.timestamp;
-      redactEventPii(event);
       scrubEventPaths(event);
       return event;
     },
   });
 
-  const syntheticError = new Error(report.error.message);
-  syntheticError.name = report.error.name;
-  if (report.error.stack !== undefined) {
-    syntheticError.stack = report.error.stack;
-  }
+  const syntheticError = reconstructError(report.error);
 
   Sentry.captureException(syntheticError, {
     level: 'error',
