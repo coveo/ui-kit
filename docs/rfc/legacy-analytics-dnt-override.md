@@ -119,8 +119,7 @@ const engine = buildSearchEngine({
 Equivalent pseudocode:
 
 ```ts
-const disableAnalytics =
-  explicitlyDisabled || (!disableBrowserPrivacySignals && doNotTrack());
+const disableAnalytics = explicitlyDisabled || (!disableBrowserPrivacySignals && doNotTrack());
 ```
 
 ### Behavior matrix

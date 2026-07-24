@@ -46,12 +46,7 @@ export function ConversationPage({
         </button>
       </nav>
       <form onSubmit={handleSubmit}>
-        <input
-          ref={inputRef}
-          type="text"
-          disabled={isStreaming}
-          aria-label="Prompt"
-        />
+        <input ref={inputRef} type="text" disabled={isStreaming} aria-label="Prompt" />
         <button type="submit" disabled={isStreaming}>
           Submit
         </button>

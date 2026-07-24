@@ -1,10 +1,4 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useRef,
-  type PropsWithChildren,
-} from 'react';
+import {createContext, useContext, useEffect, useRef, type PropsWithChildren} from 'react';
 import {Engine} from '@coveo/thermidor';
 import {getSampleConfiguration} from '../env.js';
 
@@ -21,11 +15,7 @@ export function EngineProvider({children}: PropsWithChildren) {
     return () => engineRef.current?.dispose();
   }, []);
 
-  return (
-    <EngineContext.Provider value={engineRef.current}>
-      {children}
-    </EngineContext.Provider>
-  );
+  return <EngineContext.Provider value={engineRef.current}>{children}</EngineContext.Provider>;
 }
 
 export function useEngine(): Engine {

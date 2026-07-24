@@ -5,16 +5,12 @@ import {useSuggestions} from './use-suggestions.js';
 describe('useSuggestions', () => {
   describe('context=landing', () => {
     it('returns exactly 2 sections', () => {
-      const {result} = renderHook(() =>
-        useSuggestions({inputValue: '', context: 'landing'})
-      );
+      const {result} = renderHook(() => useSuggestions({inputValue: '', context: 'landing'}));
       expect(result.current.sections).toHaveLength(2);
     });
 
     it('returns a first section with id "search", title "Search", and icon "search"', () => {
-      const {result} = renderHook(() =>
-        useSuggestions({inputValue: '', context: 'landing'})
-      );
+      const {result} = renderHook(() => useSuggestions({inputValue: '', context: 'landing'}));
       const first = result.current.sections[0];
       expect(first.id).toBe('search');
       expect(first.title).toBe('Search');
@@ -22,9 +18,7 @@ describe('useSuggestions', () => {
     });
 
     it('returns a second section with id "conversational", title "Conversational", and icon "sparkle"', () => {
-      const {result} = renderHook(() =>
-        useSuggestions({inputValue: '', context: 'landing'})
-      );
+      const {result} = renderHook(() => useSuggestions({inputValue: '', context: 'landing'}));
       const second = result.current.sections[1];
       expect(second.id).toBe('conversational');
       expect(second.title).toBe('Conversational');
@@ -67,9 +61,7 @@ describe('useSuggestions', () => {
 
   describe('isLoading', () => {
     it('returns isLoading as false for landing context', () => {
-      const {result} = renderHook(() =>
-        useSuggestions({inputValue: '', context: 'landing'})
-      );
+      const {result} = renderHook(() => useSuggestions({inputValue: '', context: 'landing'}));
       expect(result.current.isLoading).toBe(false);
     });
 

@@ -5,10 +5,7 @@ import {
   buildPaginationController,
   buildSearchBoxController,
 } from '@coveo/thermidor';
-import {
-  SECTION_ACTIONS,
-  type SuggestionItem,
-} from '../SuggestionsDropdown/index.js';
+import {SECTION_ACTIONS, type SuggestionItem} from '../SuggestionsDropdown/index.js';
 import {PromptInput} from '../PromptInput/PromptInput.js';
 import {useSuggestions} from '../../hooks/use-suggestions.js';
 import {useBuildController} from '../../hooks/use-build-controller.js';
@@ -33,11 +30,7 @@ export function SearchResultsPage(props: SearchResultsPageProps) {
   return <SearchResultsPageInner {...props} />;
 }
 
-function SearchResultsPageInner({
-  onSubmit,
-  isStreaming,
-  routedInterface,
-}: SearchResultsPageProps) {
+function SearchResultsPageInner({onSubmit, isStreaming, routedInterface}: SearchResultsPageProps) {
   const [productListController, productListState] = useBuildController(() =>
     buildProductListController({interface: routedInterface.interface})
   );
@@ -98,9 +91,7 @@ function SearchResultsPageInner({
           <QuerySummaryPlaceholder
             query={searchBoxState.query ?? ''}
             totalCount={paginationState.totalCount ?? 0}
-            firstResult={
-              (paginationState.page ?? 0) * (paginationState.pageSize ?? 0)
-            }
+            firstResult={(paginationState.page ?? 0) * (paginationState.pageSize ?? 0)}
             pageSize={paginationState.pageSize ?? 0}
             productCount={productListState.products?.length ?? 0}
           />

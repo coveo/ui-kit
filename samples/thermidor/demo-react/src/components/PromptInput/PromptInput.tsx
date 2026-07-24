@@ -118,9 +118,7 @@ export function PromptInput({
 
     if (e.key === 'ArrowDown' && showDropdown) {
       e.preventDefault();
-      setActiveIndex((prev) =>
-        prev < totalItems.length - 1 ? prev + 1 : prev
-      );
+      setActiveIndex((prev) => (prev < totalItems.length - 1 ? prev + 1 : prev));
       return;
     }
 
