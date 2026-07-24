@@ -102,7 +102,7 @@ export function SurfaceRenderer({surfaces, onAction, isStreaming = true}: Surfac
     }
 
     return items;
-  }, [allParsed]);
+  }, [allParsed, isStreaming]);
 
   if (renderItems.length === 0) {
     return null;
