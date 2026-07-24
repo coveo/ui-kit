@@ -172,7 +172,7 @@ describe('main', () => {
         '99.99.99',
       ])
     ).rejects.toThrow(
-      'Template "headless-search-react" version "99.99.99" is not available.'
+      'Template "headless-search-react" version "99.99.99" is not available. This template is supported from version "3.53.1" onward, when its sample was first published.'
     );
 
     outSpy.mockRestore();
