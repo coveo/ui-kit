@@ -40,53 +40,40 @@ describe('provenance file I/O', () => {
     await rm(dir, {recursive: true, force: true});
   });
 
-  describe('readSampleMetadata', () => {
-    it('reads the version and Coveo dependencies from package.json', async () => {
-      await writeFile(
-        join(dir, 'package.json'),
-        JSON.stringify({
-          name: '@coveo/ui-kit-sample-headless-search-react',
-          version: '3.5.0',
-          dependencies: {'@coveo/headless': '4.1.0', react: '18.0.0'},
-        })
-      );
+  it('reads the version and Coveo dependencies from a sample package.json', async () => {
+    await writeFile(
+      join(dir, 'package.json'),
+      JSON.stringify({
+        name: '@coveo/ui-kit-sample-headless-search-react',
+        version: '3.5.0',
+        dependencies: {'@coveo/headless': '4.1.0', react: '18.0.0'},
+      })
+    );
 
-      const result = await readSampleMetadata(dir);
+    const result = await readSampleMetadata(dir);
 
-      expect(result.templateVersion).toBe('3.5.0');
-      expect(result.dependencies).toEqual({'@coveo/headless': '4.1.0'});
-    });
+    expect(result.templateVersion).toBe('3.5.0');
+    expect(result.dependencies).toEqual({'@coveo/headless': '4.1.0'});
   });
 
-  describe('writeProvenance', () => {
-    it('writes pretty-printed JSON to .coveo/create-ui.json', async () => {
-      const ok = await writeProvenance(dir, sampleMetadata);
+  it('writes pretty-printed JSON that readProvenance reads back', async () => {
+    expect(await writeProvenance(dir, sampleMetadata)).toBe(true);
 
-      expect(ok).toBe(true);
-      const written = await readFile(provenancePath(dir), 'utf8');
-      expect(JSON.parse(written)).toEqual(sampleMetadata);
-      expect(written.endsWith('\n')).toBe(true);
-    });
-
-    it('warns and returns false instead of throwing when the write fails', async () => {
-      const fileAsProjectRoot = join(dir, 'not-a-dir');
-      await writeFile(fileAsProjectRoot, 'x');
-
-      const ok = await writeProvenance(fileAsProjectRoot, sampleMetadata);
-
-      expect(ok).toBe(false);
-    });
+    const written = await readFile(provenancePath(dir), 'utf8');
+    expect(written.endsWith('\n')).toBe(true);
+    expect(await readProvenance(dir)).toEqual(sampleMetadata);
   });
 
-  describe('readProvenance', () => {
-    it('reads back what writeProvenance wrote', async () => {
-      await writeProvenance(dir, sampleMetadata);
+  it('warns and returns false instead of throwing when the write fails', async () => {
+    const fileAsProjectRoot = join(dir, 'not-a-dir');
+    await writeFile(fileAsProjectRoot, 'x');
 
-      expect(await readProvenance(dir)).toEqual(sampleMetadata);
-    });
+    expect(await writeProvenance(fileAsProjectRoot, sampleMetadata)).toBe(
+      false
+    );
+  });
 
-    it('returns null when the provenance file is absent', async () => {
-      expect(await readProvenance(dir)).toBeNull();
-    });
+  it('readProvenance returns null when the file is absent', async () => {
+    expect(await readProvenance(dir)).toBeNull();
   });
 });

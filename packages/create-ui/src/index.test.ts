@@ -1,7 +1,8 @@
 import {afterEach, describe, expect, it, vi} from 'vitest';
-import {main, parseArgs, unavailableTemplateMessage} from './index.js';
+import {main, parseArgs} from './index.js';
 import {describeTemplate, getTemplate} from './templates.js';
-import {downloadTemplate, TemplateVersionUnavailableError} from './download.js';
+import {downloadTemplate} from './download.js';
+import {TemplateVersionUnavailableError} from './errors.js';
 
 vi.mock('./download.js', async (importOriginal) => {
   const actual = await importOriginal<typeof import('./download.js')>();
@@ -178,19 +179,5 @@ describe('main', () => {
     outSpy.mockRestore();
     logSpy.mockRestore();
     errSpy.mockRestore();
-  });
-});
-
-describe('unavailableTemplateMessage', () => {
-  it('includes the version when one was provided', () => {
-    expect(unavailableTemplateMessage('headless-search-react', '3.2.1')).toBe(
-      'Template "headless-search-react" version "3.2.1" is not available.'
-    );
-  });
-
-  it('omits the version when none was provided', () => {
-    expect(unavailableTemplateMessage('headless-search-react')).toBe(
-      'Template "headless-search-react" is not available.'
-    );
   });
 });

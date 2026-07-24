@@ -11,7 +11,8 @@ vi.mock('pacote', () => ({
 }));
 
 import pacote from 'pacote';
-import {downloadTemplate, TemplateVersionUnavailableError} from './download.js';
+import {downloadTemplate} from './download.js';
+import {TemplateVersionUnavailableError} from './errors.js';
 
 const extractWritesPackageJson = async (_spec: string, dest: string) => {
   await mkdir(dest, {recursive: true});
