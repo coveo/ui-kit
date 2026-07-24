@@ -44,8 +44,6 @@ function scrubOptional(value: string | undefined): string | undefined {
   return value === undefined ? undefined : scrub(value);
 }
 
-// Credential-shaped values are intentionally left to Sentry's server-side Data
-// Scrubbing (ADR 003 #5): CLI crash data is not Customer Data.
 function scrubEventPaths(event: ErrorEvent): void {
   event.message = scrubOptional(event.message);
   for (const exception of event.exception?.values ?? []) {
