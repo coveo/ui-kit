@@ -585,9 +585,7 @@ interface AnswerGeneratedWithAgent {
 }
 
 export type GeneratedAnswerBaseMeta =
-    | AnswerGeneratedWithAnswerAPI
-    | AnswerGeneratedWithSearchAPI
-    | AnswerGeneratedWithAgent;
+    AnswerGeneratedWithAnswerAPI | AnswerGeneratedWithSearchAPI | AnswerGeneratedWithAgent;
 
 export type GeneratedAnswerStreamEndMeta = GeneratedAnswerBaseMeta & {
     answerGenerated: boolean;

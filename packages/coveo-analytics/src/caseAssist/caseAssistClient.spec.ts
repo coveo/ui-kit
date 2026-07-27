@@ -13,9 +13,13 @@ import doNotTrack from '../donottrack';
 import {Cookie} from '../cookieutils';
 import {PartialDocumentInformation} from '../searchPage/searchPageEvents';
 jest.mock('../donottrack', () => {
+    const doNotTrack = jest.fn();
     return {
-        default: jest.fn(),
-        doNotTrack: jest.fn(),
+        __esModule: true,
+        default: doNotTrack,
+        doNotTrack,
+        shouldDisableAnalyticsForPrivacy: (disableBrowserPrivacySignals?: boolean) =>
+            disableBrowserPrivacySignals === true ? false : doNotTrack(),
     };
 });
 
