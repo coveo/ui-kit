@@ -56,6 +56,7 @@ it('projects a crash report through the real Sentry SDK without network access',
     schemaVersion: CRASH_REPORT_SCHEMA_VERSION,
     runId: 'contract-run',
     crashedOn: '2026-07-22T15:00:00.000Z',
+    origin: 'unhandled-rejection',
     error: {
       name: 'Error',
       message: 'top failure',
@@ -69,6 +70,26 @@ it('projects a crash report through the real Sentry SDK without network access',
         stack:
           'TypeError: root cause\n' +
           '    at download (app:///dist/download.js:21:9)',
+      },
+    },
+    diagnostics: {
+      phase: 'dependency-installation',
+      phaseElapsedMs: 2000,
+      breadcrumbs: [
+        {type: 'input.resolved', timestamp: '2026-07-22T14:59:00.000Z'},
+        {
+          type: 'dependencies.install.started',
+          timestamp: '2026-07-22T14:59:58.000Z',
+        },
+      ],
+      runtime: {
+        processUptimeMs: 3100,
+        memory: {
+          rssBytes: 1000,
+          heapTotalBytes: 800,
+          heapUsedBytes: 600,
+          externalBytes: 50,
+        },
       },
     },
     os: {platform: 'darwin', arch: 'arm64', release: '25.3.0'},
@@ -102,10 +123,20 @@ it('projects a crash report through the real Sentry SDK without network access',
       package_manager: 'npm',
       os: 'darwin',
       arch: 'arm64',
+      crash_origin: 'unhandled-rejection',
     });
     expect(event.contexts).toMatchObject({
       os: {name: 'darwin', version: '25.3.0'},
       runtime: {name: 'node', version: 'v24.14.1'},
+      create_ui: {
+        phase: 'dependency-installation',
+        phase_elapsed_ms: 2000,
+        process_uptime_ms: 3100,
+        memory_rss_bytes: 1000,
+        memory_heap_total_bytes: 800,
+        memory_heap_used_bytes: 600,
+        memory_external_bytes: 50,
+      },
     });
     expect(event.extra).toMatchObject({
       dependencies: {'@coveo/atomic': '3.60.2'},
@@ -119,6 +150,10 @@ it('projects a crash report through the real Sentry SDK without network access',
     ]);
     const top = exceptions.find(({value}) => value === 'top failure');
     const cause = exceptions.find(({value}) => value === 'root cause');
+    expect(top?.mechanism).toEqual({
+      type: 'unhandled-rejection',
+      handled: false,
+    });
     expect(top?.stacktrace?.frames).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
@@ -141,7 +176,20 @@ it('projects a crash report through the real Sentry SDK without network access',
         }),
       ])
     );
-    expect(event.breadcrumbs ?? []).toEqual([]);
+    expect(event.breadcrumbs).toEqual([
+      {
+        category: 'create-ui.lifecycle',
+        message: 'input.resolved',
+        level: 'info',
+        timestamp: Date.parse('2026-07-22T14:59:00.000Z') / 1000,
+      },
+      {
+        category: 'create-ui.lifecycle',
+        message: 'dependencies.install.started',
+        level: 'info',
+        timestamp: Date.parse('2026-07-22T14:59:58.000Z') / 1000,
+      },
+    ]);
     expect(event).not.toHaveProperty('server_name');
     expect(event).not.toHaveProperty('user');
   } finally {

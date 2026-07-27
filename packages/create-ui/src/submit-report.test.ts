@@ -4,8 +4,10 @@ import {join} from 'node:path';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {
   CRASH_REPORT_SCHEMA_VERSION,
+  crashReportReference,
   MAX_CAUSE_DEPTH,
   type CrashReport,
+  writeCrashReport,
 } from './crash-report.js';
 
 const sentry = vi.hoisted(() => ({
@@ -37,7 +39,28 @@ const sampleReport: CrashReport = {
   schemaVersion: CRASH_REPORT_SCHEMA_VERSION,
   runId: 'run-xyz',
   crashedOn: '2026-07-22T15:00:00.000Z',
+  origin: 'main-rejection',
   error: {name: 'Error', message: 'boom', stack: 'Error: boom\n    at x'},
+  diagnostics: {
+    phase: 'dependency-installation',
+    phaseElapsedMs: 2000,
+    breadcrumbs: [
+      {type: 'input.resolved', timestamp: '2026-07-22T14:59:00.000Z'},
+      {
+        type: 'dependencies.install.started',
+        timestamp: '2026-07-22T14:59:58.000Z',
+      },
+    ],
+    runtime: {
+      processUptimeMs: 3100,
+      memory: {
+        rssBytes: 1000,
+        heapTotalBytes: 800,
+        heapUsedBytes: 600,
+        externalBytes: 50,
+      },
+    },
+  },
   os: {platform: 'darwin', arch: 'arm64', release: '24.0.0'},
   metadata: {
     template: 'headless-search-react',
@@ -89,6 +112,20 @@ describe('submitReport', () => {
     expect(sentry.init).not.toHaveBeenCalled();
   });
 
+  it('submits a temp report by its short reference', async () => {
+    const report = {
+      ...sampleReport,
+      runId: 'c5c41c93-a851-4421-b27a-c8949d56dcaa',
+    };
+    const path = await writeCrashReport(report);
+    try {
+      expect(await submitReport(crashReportReference(report.runId))).toBe(0);
+      expect(sentry.captureException).toHaveBeenCalledOnce();
+    } finally {
+      await rm(path, {force: true});
+    }
+  });
+
   it('initializes Sentry with a DSN and privacy options, captures, flushes, closes, and tags the run-id', async () => {
     expect(await submitReport(await writeValidReport())).toBe(0);
 
@@ -110,6 +147,20 @@ describe('submitReport', () => {
     expect(sentry.captureException.mock.calls[0][1].tags.run_id).toBe(
       'run-xyz'
     );
+    expect(sentry.captureException.mock.calls[0][1]).toMatchObject({
+      tags: {crash_origin: 'main-rejection'},
+      contexts: {
+        create_ui: {
+          phase: 'dependency-installation',
+          phase_elapsed_ms: 2000,
+          process_uptime_ms: 3100,
+          memory_rss_bytes: 1000,
+          memory_heap_total_bytes: 800,
+          memory_heap_used_bytes: 600,
+          memory_external_bytes: 50,
+        },
+      },
+    });
     expect(sentry.flush).toHaveBeenCalled();
     expect(sentry.close).toHaveBeenCalled();
   });
@@ -138,6 +189,24 @@ describe('submitReport', () => {
     });
 
     expect(processed.timestamp).toBe(Date.parse(sampleReport.crashedOn) / 1000);
+    expect(processed.breadcrumbs).toEqual([
+      {
+        category: 'create-ui.lifecycle',
+        message: 'input.resolved',
+        level: 'info',
+        timestamp: Date.parse('2026-07-22T14:59:00.000Z') / 1000,
+      },
+      {
+        category: 'create-ui.lifecycle',
+        message: 'dependencies.install.started',
+        level: 'info',
+        timestamp: Date.parse('2026-07-22T14:59:58.000Z') / 1000,
+      },
+    ]);
+    expect(processed.exception.values[0].mechanism).toEqual({
+      type: 'main-rejection',
+      handled: false,
+    });
     expect(processed.message).toBe('failed at ~/project');
     const frame = processed.exception.values[0].stacktrace.frames[0];
     expect(frame.filename).toBe('~/project/index.js');

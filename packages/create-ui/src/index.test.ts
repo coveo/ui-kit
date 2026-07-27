@@ -1,4 +1,8 @@
 import {afterEach, describe, expect, it, vi} from 'vitest';
+import {
+  resetCrashDiagnostics,
+  snapshotCrashDiagnostics,
+} from './crash-diagnostics.js';
 import {main, parseArgs} from './index.js';
 import {describeTemplate, getTemplate} from './templates.js';
 import {downloadTemplate} from './download.js';
@@ -70,6 +74,7 @@ describe('parseArgs', () => {
 describe('main', () => {
   afterEach(() => {
     vi.mocked(downloadTemplate).mockReset();
+    resetCrashDiagnostics();
   });
 
   it('returns 0 for --help and lists templates without the "UI" suffix', async () => {
@@ -132,6 +137,12 @@ describe('main', () => {
         version: '3.2.1',
       })
     );
+    const diagnostics = snapshotCrashDiagnostics();
+    expect(diagnostics.phase).toBe('template-download');
+    expect(diagnostics.breadcrumbs.map(({type}) => type)).toEqual([
+      'input.resolved',
+      'template.download.started',
+    ]);
     logSpy.mockRestore();
     errSpy.mockRestore();
   });

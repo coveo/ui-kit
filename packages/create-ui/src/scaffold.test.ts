@@ -24,6 +24,11 @@ vi.mock('./log.js', () => ({
   },
 }));
 
+import {
+  initializeCrashDiagnostics,
+  resetCrashDiagnostics,
+  snapshotCrashDiagnostics,
+} from './crash-diagnostics.js';
 import {scaffold, unavailableTemplateMessage} from './scaffold.js';
 import {getTemplate} from './templates.js';
 
@@ -35,6 +40,7 @@ describe('scaffold provenance integration', () => {
     cwd = await mkdtemp(join(tmpdir(), 'create-ui-scaffold-'));
     originalCwd = process.cwd();
     process.chdir(cwd);
+    initializeCrashDiagnostics();
     installDependenciesMock.mockReturnValue(true);
     downloadTemplateMock.mockImplementation(
       async ({destDir}: {destDir: string}) => {
@@ -55,6 +61,7 @@ describe('scaffold provenance integration', () => {
   afterEach(async () => {
     process.chdir(originalCwd);
     await rm(cwd, {recursive: true, force: true});
+    resetCrashDiagnostics();
     vi.clearAllMocks();
   });
 
@@ -73,6 +80,34 @@ describe('scaffold provenance integration', () => {
     expect(provenance.node).toBe(process.version.replace(/^v/, ''));
     expect(typeof provenance.packageManager).toBe('string');
     expect(Date.parse(provenance.createdOn)).not.toBeNaN();
+
+    const diagnostics = snapshotCrashDiagnostics();
+    expect(diagnostics.phase).toBe('complete');
+    expect(diagnostics.breadcrumbs.map(({type}) => type)).toEqual([
+      'template.download.started',
+      'template.download.completed',
+      'project.creation.started',
+      'project.creation.completed',
+      'dependencies.install.started',
+      'dependencies.install.succeeded',
+      'scaffold.completed',
+    ]);
+  });
+
+  it('records a dependency installation failure without arbitrary data', async () => {
+    installDependenciesMock.mockReturnValue(false);
+    const template = getTemplate('headless-search-react')!;
+
+    await scaffold({template, projectName: 'my-failed-app'});
+
+    const diagnostics = snapshotCrashDiagnostics();
+    expect(diagnostics.phase).toBe('complete');
+    expect(diagnostics.breadcrumbs.map(({type}) => type)).toContain(
+      'dependencies.install.failed'
+    );
+    expect(diagnostics.breadcrumbs.map(({type}) => type)).not.toContain(
+      'dependencies.install.succeeded'
+    );
   });
 });
 

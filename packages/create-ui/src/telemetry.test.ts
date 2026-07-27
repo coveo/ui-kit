@@ -15,11 +15,15 @@ describe('isTrackingDisabled', () => {
 });
 
 describe('buildCrashDisclosure', () => {
-  it('shows the report path, the submit command, and the opt-out', () => {
-    const disclosure = buildCrashDisclosure('/tmp/create-ui-crash-abc.json');
-    expect(disclosure).toContain(
-      'npx @coveo/create-ui report /tmp/create-ui-crash-abc.json'
+  it('shows the report path, short submit command, and opt-out', () => {
+    const disclosure = buildCrashDisclosure(
+      '/tmp/create-ui-crash-c5c41c93a851.json',
+      'c5c41c93a851'
     );
+    expect(disclosure).toContain(
+      'A crash report was saved to: /tmp/create-ui-crash-c5c41c93a851.json'
+    );
+    expect(disclosure).toContain('npx @coveo/create-ui report c5c41c93a851');
     expect(disclosure).toContain('DO_NOT_TRACK=1');
   });
 });

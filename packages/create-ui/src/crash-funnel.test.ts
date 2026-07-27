@@ -1,6 +1,6 @@
-import {rm} from 'node:fs/promises';
+import {readFile, rm} from 'node:fs/promises';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
-import {resetRunContext} from './crash-report.js';
+import {resetRunContext, resolveCrashReportPath} from './crash-report.js';
 import {ExpectedError} from './errors.js';
 import {main, reportCrashIfUnexpected} from './index.js';
 import {log} from './log.js';
@@ -52,18 +52,24 @@ describe('reportCrashIfUnexpected', () => {
     expect(log.note).not.toHaveBeenCalled();
   });
 
-  it('writes a report and prints the submit command for an unexpected error', async () => {
-    await reportCrashIfUnexpected(new Error('boom'));
+  it('writes a report with its origin and prints the submit command for an unexpected error', async () => {
+    await reportCrashIfUnexpected(new Error('boom'), 'unhandled-rejection');
 
     expect(log.note).toHaveBeenCalledOnce();
     const [message, title] = vi.mocked(log.note).mock.calls[0];
     expect(title).toBe('Crash report');
     expect(message).toContain('npx @coveo/create-ui report ');
 
-    const pathMatch = message.match(/(\S*create-ui-crash-\S+\.json)/);
-    expect(pathMatch).not.toBeNull();
-    if (pathMatch) {
-      await rm(pathMatch[1], {force: true});
+    const referenceMatch = message.match(
+      /npx @coveo\/create-ui report ([a-f\d]{12})/
+    );
+    expect(referenceMatch).not.toBeNull();
+    if (referenceMatch) {
+      const reportPath = resolveCrashReportPath(referenceMatch[1]);
+      expect(message).toContain(reportPath);
+      const report = JSON.parse(await readFile(reportPath, 'utf8'));
+      expect(report.origin).toBe('unhandled-rejection');
+      await rm(reportPath, {force: true});
     }
   });
 });

@@ -1,15 +1,22 @@
-import {readFile, rm} from 'node:fs/promises';
-import {homedir} from 'node:os';
+import {readFile, rm, stat} from 'node:fs/promises';
+import {dirname, join} from 'node:path';
 import {afterEach, beforeEach, describe, expect, it} from 'vitest';
+import {
+  initializeCrashDiagnostics,
+  recordCrashLifecycleEvent,
+  resetCrashDiagnostics,
+} from './crash-diagnostics.js';
 import {
   buildCrashReport,
   CRASH_REPORT_SCHEMA_VERSION,
   type CrashErrorInfo,
   crashReportPath,
+  crashReportReference,
   MAX_CAUSE_DEPTH,
   parseCrashReport,
   redactPaths,
   resetRunContext,
+  resolveCrashReportPath,
   setRunContext,
   writeCrashReport,
 } from './crash-report.js';
@@ -27,8 +34,14 @@ const metadata: ProjectMetadata = {
 };
 
 describe('buildCrashReport', () => {
-  beforeEach(() => resetRunContext());
-  afterEach(() => resetRunContext());
+  beforeEach(() => {
+    resetRunContext();
+    resetCrashDiagnostics();
+  });
+  afterEach(() => {
+    resetRunContext();
+    resetCrashDiagnostics();
+  });
 
   it('assembles the documented shape, redacting paths and using captured metadata', () => {
     setRunContext({metadata});
@@ -51,6 +64,36 @@ describe('buildCrashReport', () => {
       release: expect.any(String),
     });
     expect(report.metadata).toEqual(metadata);
+    expect(report.origin).toBe('unknown');
+    expect(report.diagnostics).toMatchObject({
+      phase: 'unknown',
+      phaseElapsedMs: 0,
+      breadcrumbs: [],
+      runtime: {
+        processUptimeMs: expect.any(Number),
+        memory: {
+          rssBytes: expect.any(Number),
+          heapTotalBytes: expect.any(Number),
+          heapUsedBytes: expect.any(Number),
+          externalBytes: expect.any(Number),
+        },
+      },
+    });
+  });
+
+  it('captures the crash origin and current structured diagnostics', () => {
+    initializeCrashDiagnostics();
+    recordCrashLifecycleEvent('input.resolved');
+    recordCrashLifecycleEvent('template.download.started');
+
+    const report = buildCrashReport(new Error('boom'), 'unhandled-rejection');
+
+    expect(report.origin).toBe('unhandled-rejection');
+    expect(report.diagnostics.phase).toBe('template-download');
+    expect(report.diagnostics.breadcrumbs.map(({type}) => type)).toEqual([
+      'input.resolved',
+      'template.download.started',
+    ]);
   });
 
   it('normalizes own-package stack paths before writing a report', () => {
@@ -162,7 +205,21 @@ describe('writeCrashReport', () => {
   beforeEach(() => resetRunContext());
   afterEach(() => resetRunContext());
 
-  it('writes pretty-printed JSON to a run-id-named file in tmpdir', async () => {
+  it('derives a short reference that resolves within the temp directory', () => {
+    const runId = 'c5c41c93-a851-4421-b27a-c8949d56dcaa';
+    const reference = crashReportReference(runId);
+
+    expect(reference).toBe('c5c41c93a851');
+    expect(resolveCrashReportPath(reference)).toBe(crashReportPath(runId));
+    expect(resolveCrashReportPath(reference.toUpperCase())).toBe(
+      crashReportPath(runId)
+    );
+    expect(resolveCrashReportPath('/tmp/existing-report.json')).toBe(
+      '/tmp/existing-report.json'
+    );
+  });
+
+  it('writes pretty-printed JSON to a short-reference file in tmpdir', async () => {
     const report = buildCrashReport(new Error('boom'));
     const path = await writeCrashReport(report);
     try {
@@ -170,6 +227,9 @@ describe('writeCrashReport', () => {
       const written = await readFile(path, 'utf8');
       expect(JSON.parse(written)).toEqual(report);
       expect(written.endsWith('\n')).toBe(true);
+      if (process.platform !== 'win32') {
+        expect((await stat(path)).mode & 0o777).toBe(0o600);
+      }
     } finally {
       await rm(path, {force: true});
     }
@@ -248,6 +308,11 @@ describe('parseCrashReport', () => {
     expect(() =>
       parseCrashReport(JSON.stringify({schemaVersion: 1}))
     ).toThrowError(expect.objectContaining({kind: 'not-a-report'}));
+
+    const malformedError = {...buildCrashReport(new Error('boom')), error: {}};
+    expect(() => parseCrashReport(JSON.stringify(malformedError))).toThrowError(
+      expect.objectContaining({kind: 'not-a-report'})
+    );
   });
 
   it('throws not-a-report for input that is not a crash report', () => {
