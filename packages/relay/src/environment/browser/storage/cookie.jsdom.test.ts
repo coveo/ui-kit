@@ -2,6 +2,7 @@
  * @vitest-environment-options {"url": "http://docs.foo.bar.com/tamtam"}
  */
 
+import {vi} from 'vitest';
 import {cookieManager} from './cookie';
 
 describe('CookieManager', () => {
@@ -19,9 +20,13 @@ describe('CookieManager', () => {
     expect(cookieManager.getItem(key)).toBe(null);
   });
 
-  it('honors expiration date', async () => {
+  it('honors expiration date', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2023-08-15T00:00:00.000Z'));
+
     cookieManager.setItem(key, someData, 1000);
-    await new Promise((res) => setTimeout(res, 1000)); // wait for 1 sec
+    vi.advanceTimersByTime(1001);
+
     expect(cookieManager.getItem(key)).toBe(null);
   });
 
