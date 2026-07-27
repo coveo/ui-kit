@@ -45,6 +45,7 @@ function createMockStatePort(): GenerativeStatePort {
     startMessage: vi.fn(),
     appendMessageDelta: vi.fn(),
     appendActivity: vi.fn(),
+    setStateSnapshot: vi.fn(),
     startToolCall: vi.fn(),
     appendToolCallArgs: vi.fn(),
     completeToolCall: vi.fn(),
@@ -636,17 +637,20 @@ describe('GenerativeRuntime', () => {
       expect(config.statePort.completeTurn).toHaveBeenCalledWith('generated-id-1');
     });
 
-    it('ignores STATE_SNAPSHOT events', async () => {
+    it('stores STATE_SNAPSHOT events as opaque Engine state', async () => {
       const config = createMockConfig();
       const engine = createMockEngine();
+      const snapshot = {controllers: {'featured-products': {products: []}}};
       setupSuccessfulStream([
-        {type: 'STATE_SNAPSHOT'} as ConversationStreamEvent,
+        {type: 'STATE_SNAPSHOT', snapshot} as ConversationStreamEvent,
         {type: 'turn_complete'} as ConversationStreamEvent,
       ]);
 
       const runtime = GenerativeRuntime.getInstance(engine, 'state-snap', config);
       await runtime.submit('Hello');
 
+      expect(config.statePort.initAgentResponse).toHaveBeenCalledWith('generated-id-1');
+      expect(config.statePort.setStateSnapshot).toHaveBeenCalledWith('generated-id-1', snapshot);
       expect(config.statePort.completeTurn).toHaveBeenCalled();
     });
 

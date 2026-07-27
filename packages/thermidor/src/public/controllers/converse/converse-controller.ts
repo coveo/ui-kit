@@ -100,6 +100,9 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
         appendActivity: (turnId, activity) => {
           this.engine.mutate(this.#actions.appendActivity({turnId, activity}));
         },
+        setStateSnapshot: (turnId, state) => {
+          this.engine.mutate(this.#actions.setStateSnapshot({turnId, state}));
+        },
         startToolCall: (turnId, toolCallId, toolName) => {
           this.engine.mutate(this.#actions.startToolCall({turnId, toolCallId, toolName}));
         },

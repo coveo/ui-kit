@@ -112,6 +112,13 @@ export type RoutedInterface = {
 
 export interface AgentResponse {
   /**
+   * The latest server-owned AG-UI state snapshot for this turn.
+   *
+   * Thermidor retains this opaque object without coupling it to a UI protocol.
+   */
+  state: Record<string, unknown>;
+
+  /**
    * The ordered messages received from the agent during streaming.
    */
   messages: AgentMessage[];

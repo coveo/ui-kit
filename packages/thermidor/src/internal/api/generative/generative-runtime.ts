@@ -24,6 +24,7 @@ export interface GenerativeStatePort {
   startMessage(turnId: string, role: string): void;
   appendMessageDelta(turnId: string, delta: string): void;
   appendActivity(turnId: string, activity: Activity): void;
+  setStateSnapshot(turnId: string, state: Record<string, unknown>): void;
   startToolCall(turnId: string, toolCallId: string, toolName: string): void;
   appendToolCallArgs(turnId: string, toolCallId: string, delta: string): void;
   completeToolCall(turnId: string, toolCallId: string, result: string): void;
@@ -248,6 +249,8 @@ export class GenerativeRuntime {
       }
 
       case 'STATE_SNAPSHOT': {
+        this.ensureAgentResponse(turnId);
+        this.statePort.setStateSnapshot(turnId, asRecord(event.snapshot));
         return {turnId, isTerminal: false};
       }
 
@@ -307,6 +310,12 @@ export class GenerativeRuntime {
       this.agentResponseInitialized.add(turnId);
     }
   }
+}
+
+function asRecord(value: unknown): Record<string, unknown> {
+  return value && typeof value === 'object' && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : {};
 }
 
 function getErrorMessage(error: unknown): string {

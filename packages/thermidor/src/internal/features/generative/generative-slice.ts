@@ -56,6 +56,7 @@ export function createGenerativeSlice(
           const turn = state.turns.find((t) => t.id === payload.turnId);
           if (turn) {
             turn.agentResponse = {
+              state: {},
               messages: [],
               activities: [],
               reasoningSteps: [],
@@ -79,6 +80,12 @@ export function createGenerativeSlice(
           const turn = state.turns.find((t) => t.id === payload.turnId);
           if (turn?.agentResponse) {
             turn.agentResponse.activities.push(payload.activity);
+          }
+        })
+        .addCase(actions.setStateSnapshot, (state, {payload}) => {
+          const turn = state.turns.find((t) => t.id === payload.turnId);
+          if (turn?.agentResponse) {
+            turn.agentResponse.state = payload.state;
           }
         })
         .addCase(actions.startToolCall, (state, {payload}) => {

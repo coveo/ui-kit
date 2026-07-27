@@ -27,6 +27,9 @@ export function createGenerativeActions(interfaceId: string) {
       `${prefix}/appendMessageDelta`
     ),
     appendActivity: createAction<{turnId: string; activity: Activity}>(`${prefix}/appendActivity`),
+    setStateSnapshot: createAction<{turnId: string; state: Record<string, unknown>}>(
+      `${prefix}/setStateSnapshot`
+    ),
     startToolCall: createAction<{
       turnId: string;
       toolCallId: string;

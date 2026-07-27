@@ -144,6 +144,7 @@ describe('createMockConverseServer', () => {
         (frame) => JSON.parse(frame.split('\n')[1].replace('data:', '')) as Record<string, unknown>
       );
     const activity = events.find((event) => event['type'] === 'ACTIVITY_SNAPSHOT');
+    const stateSnapshot = events.find((event) => event['type'] === 'STATE_SNAPSHOT');
 
     expect(activity).toMatchObject({
       type: 'ACTIVITY_SNAPSHOT',
@@ -169,29 +170,18 @@ describe('createMockConverseServer', () => {
               ],
             },
           },
-          {
-            version: 'v0.9',
-            updateDataModel: {
-              surfaceId: 'commerce-catalog-example',
-            },
-          },
         ],
       },
     });
 
-    const content = activity?.['content'] as {a2ui_operations: Array<Record<string, unknown>>};
-    const dataModelOperation = content.a2ui_operations.find(
-      (operation) => 'updateDataModel' in operation
-    )!['updateDataModel'] as {
-      value: {
-        controllers: Record<string, {products?: unknown[]; items?: unknown[]}>;
-      };
+    const snapshot = stateSnapshot?.['snapshot'] as {
+      controllers: Record<string, {products?: unknown[]; items?: unknown[]}>;
     };
 
-    expect(dataModelOperation.value.controllers['featured-products'].products).toEqual(
+    expect(snapshot.controllers['featured-products'].products).toEqual(
       expect.arrayContaining([expect.objectContaining({permanentid: 'trail-running-shoes-001'})])
     );
-    expect(dataModelOperation.value.controllers['shopping-cart'].items).toEqual(
+    expect(snapshot.controllers['shopping-cart'].items).toEqual(
       expect.arrayContaining([
         expect.objectContaining({productId: 'trail-running-shoes-001', quantity: 1}),
       ])

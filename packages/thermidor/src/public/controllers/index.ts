@@ -38,6 +38,15 @@ export type {
   ProductListControllerProduct,
   ProductListControllerState,
 } from './product-list/product-list-controller.js';
+export {buildRemoteController, selectRemoteControllerState} from './remote/remote-controller.js';
+export type {
+  RemoteController,
+  RemoteControllerAction,
+  RemoteControllerActionDispatcher,
+  RemoteControllerOptions,
+  RemoteControllerSource,
+  RemoteControllerState,
+} from './remote/remote-controller.js';
 export {buildPaginationController} from './pagination/pagination-controller.js';
 export type {
   PaginationController,

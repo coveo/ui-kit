@@ -7,8 +7,7 @@ import {
   type GenerativeInterface,
 } from '@coveo/thermidor';
 import {A2UIProvider} from '@copilotkit/a2ui-renderer';
-import {thermidorCatalog} from './a2ui/components.js';
-import {ThermidorControllerProvider} from './a2ui/controllers.js';
+import {createThermidorCatalog} from './a2ui/components.js';
 import {getA2UIMessages, ThermidorA2UISurfaces} from './a2ui/surfaces.js';
 import {getSampleConfiguration} from './env.js';
 import {useController} from './use-controller.js';
@@ -16,11 +15,7 @@ import {useController} from './use-controller.js';
 const CONTRACT_PROMPT = 'Show the Thermidor catalog';
 
 export default function App() {
-  return (
-    <A2UIProvider catalog={thermidorCatalog}>
-      <ContractSample />
-    </A2UIProvider>
-  );
+  return <ContractSample />;
 }
 
 function ContractSample() {
@@ -36,6 +31,8 @@ function ContractSample() {
   const [controller, state] = useController<ConverseController>(() =>
     buildConverseController({interface: interfaceRef.current!})
   );
+  const catalogRef = useRef<ReturnType<typeof createThermidorCatalog> | null>(null);
+  catalogRef.current ??= createThermidorCatalog(controller);
   const [prompt, setPrompt] = useState(CONTRACT_PROMPT);
   const turn = state.activeTurn;
   const a2uiMessages = useMemo(
@@ -56,42 +53,42 @@ function ContractSample() {
   }
 
   return (
-    <main className="page-shell">
-      <section className="hero">
-        <p className="eyebrow">Thermidor + v0.9 catalog contract</p>
-        <h1>Server-owned commerce state, client-owned rendering.</h1>
-        <p>
-          Thermidor stays UI-less. This sample recognizes an <code>a2ui-surface</code> activity,
-          resolves the advertised controllers, and renders its local A2-UI component catalog.
-        </p>
-      </section>
+    <A2UIProvider catalog={catalogRef.current}>
+      <main className="page-shell">
+        <section className="hero">
+          <p className="eyebrow">Thermidor + v0.9 catalog contract</p>
+          <h1>Server-owned commerce state, client-owned rendering.</h1>
+          <p>
+            Thermidor stays UI-less. This sample recognizes an <code>a2ui-surface</code> activity,
+            resolves the advertised controllers, and renders its local A2-UI component catalog.
+          </p>
+        </section>
 
-      <form className="prompt" onSubmit={submit}>
-        <label htmlFor="contract-prompt">Ask the mock API</label>
-        <div>
-          <input
-            id="contract-prompt"
-            value={prompt}
-            onChange={(event) => setPrompt(event.target.value)}
-            disabled={state.isStreaming}
-          />
-          <button type="submit" disabled={state.isStreaming}>
-            {state.isStreaming ? 'Streaming…' : 'Run'}
-          </button>
-        </div>
-      </form>
+        <form className="prompt" onSubmit={submit}>
+          <label htmlFor="contract-prompt">Ask the mock API</label>
+          <div>
+            <input
+              id="contract-prompt"
+              value={prompt}
+              onChange={(event) => setPrompt(event.target.value)}
+              disabled={state.isStreaming}
+            />
+            <button type="submit" disabled={state.isStreaming}>
+              {state.isStreaming ? 'Streaming…' : 'Run'}
+            </button>
+          </div>
+        </form>
 
-      {turn?.agentResponse?.messages.map((message, index) => (
-        <p className="agent-message" key={`${message.role}-${index}`}>
-          {message.content}
-        </p>
-      ))}
-      {turn?.status === 'error' && <p className="error">{turn.error}</p>}
-      <ThermidorControllerProvider messages={a2uiMessages}>
+        {turn?.agentResponse?.messages.map((message, index) => (
+          <p className="agent-message" key={`${message.role}-${index}`}>
+            {message.content}
+          </p>
+        ))}
+        {turn?.status === 'error' && <p className="error">{turn.error}</p>}
         <ThermidorA2UISurfaces messages={a2uiMessages} />
-      </ThermidorControllerProvider>
-      {!turn && <p className="hint">Run the pre-filled prompt to render the schema example.</p>}
-    </main>
+        {!turn && <p className="hint">Run the pre-filled prompt to render the schema example.</p>}
+      </main>
+    </A2UIProvider>
   );
 }
 
