@@ -5,11 +5,11 @@
 }
 
 .searchbox__icon-container-left {
-  margin-left: 0.5rem;
+  margin-left: var(--slds-g-spacing-2, 0.5rem);
 }
 
 .searchbox__icon-container-right {
-  margin-right: 0.5rem;
+  margin-right: var(--slds-g-spacing-2, 0.5rem);
 }
 
 /* This is to override some style from the slds-has-input and prevent */

@@ -3,8 +3,8 @@
 }
 
 .placeholder__card-container {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
+  padding-top: var(--slds-g-spacing-4, 1rem);
+  padding-bottom: var(--slds-g-spacing-4, 1rem);
 }
 
 .placeholder__round {

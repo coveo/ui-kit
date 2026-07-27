@@ -15,6 +15,6 @@
         flex-direction: column;
     }
     .feedback-modal-qna__radio-group {
-        margin-top: 0.5rem;
+        margin-top: var(--slds-g-spacing-2, 0.5rem);
     }
 }
