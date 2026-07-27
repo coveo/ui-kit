@@ -59,7 +59,7 @@ function getCriterionAsArray(state: Partial<SortInitialState>) {
 /**
  * The `Sort` controller manages how the results are sorted.
  *
- * Example: [sort.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/sort/sort.fn.tsx)
+ * Example: [sort.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/sort.tsx)
  *
  * @group Controllers
  * @category Sort

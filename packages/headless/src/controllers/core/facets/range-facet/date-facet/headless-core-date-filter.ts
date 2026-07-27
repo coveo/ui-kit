@@ -131,7 +131,6 @@ export interface DateFilterState {
 /**
  * The `DateFilter` controller makes it possible to create a date filter.
  *
- * Example: [date-filter.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/date-filter/date-filter.fn.tsx)
  *
  * @group Controllers
  * @category DateFilter
