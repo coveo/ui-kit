@@ -4,50 +4,24 @@ import {
   type CatalogRenderers,
 } from '@copilotkit/a2ui-renderer';
 import type {RemoteControllerActionDispatcher} from '@coveo/thermidor';
-import {z} from 'zod';
 import {type EngineStateSource, useAdvertisedController} from './controllers.js';
+import {
+  cartPropsSchema,
+  productCarouselPropsSchema,
+  type CartItem,
+  type Product,
+} from './generated/catalog-components.js';
 
 export const THERMIDOR_CATALOG_ID = 'https://schema.thermidor.coveo.com/a2-ui/catalog.json';
-
-const controllerAdvertisement = z.object({
-  controllerId: z.string(),
-  controllerSchema: z.string(),
-});
-
-const product = z.object({
-  permanentid: z.string(),
-  ec_name: z.string(),
-  ec_shortdesc: z.string(),
-  ec_brand: z.string(),
-  ec_price: z.number(),
-  ec_promo_price: z.number().optional(),
-  ec_images: z.array(z.string()),
-  ec_in_stock: z.boolean(),
-  ec_rating: z.number(),
-});
-
-const cartItem = z.object({
-  productId: z.string(),
-  name: z.string(),
-  price: z.number(),
-  quantity: z.number(),
-});
-
-type Product = z.infer<typeof product>;
-type CartItem = z.infer<typeof cartItem>;
 
 export const thermidorCatalogDefinitions = {
   ProductCarousel: {
     description: 'A responsive product carousel backed by a product-list controller.',
-    props: z.object({
-      controllers: z.object({productListController: controllerAdvertisement}),
-    }),
+    props: productCarouselPropsSchema,
   },
   Cart: {
     description: 'A shopping-cart summary backed by a cart controller.',
-    props: z.object({
-      controllers: z.object({cartController: controllerAdvertisement}),
-    }),
+    props: cartPropsSchema,
   },
 } satisfies CatalogDefinitions;
 
@@ -80,15 +54,25 @@ export function createThermidorCatalog(
               const price = product.ec_promo_price ?? product.ec_price;
               return (
                 <article className="product-card" key={product.permanentid}>
-                  <img alt="" src={product.ec_images[0]} />
+                  <img alt="" src={product.ec_images?.[0]} />
                   <p className="brand">{product.ec_brand}</p>
                   <h3>{product.ec_name}</h3>
                   <p>{product.ec_shortdesc}</p>
                   <div className="product-meta">
-                    <strong>${price.toFixed(2)}</strong>
-                    <span>★ {product.ec_rating}</span>
+                    <strong>
+                      {price === undefined ? 'Price unavailable' : `$${price.toFixed(2)}`}
+                    </strong>
+                    <span>
+                      {product.ec_rating == null ? 'Not rated' : `★ ${product.ec_rating}`}
+                    </span>
                   </div>
-                  <small>{product.ec_in_stock ? 'In stock' : 'Out of stock'}</small>
+                  <small>
+                    {product.ec_in_stock === undefined
+                      ? 'Availability unknown'
+                      : product.ec_in_stock
+                        ? 'In stock'
+                        : 'Out of stock'}
+                  </small>
                 </article>
               );
             })}
