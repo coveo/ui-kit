@@ -8,6 +8,8 @@ import type {Plugin} from 'vite';
 import {mergeConfig} from 'vite';
 import {generateExternalPackageMappings} from '../scripts/externalPackageMappings.mjs';
 
+type ConfigType = 'DEVELOPMENT' | 'PRODUCTION' | undefined;
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const isVitest = process.env.VITEST !== undefined;
@@ -81,7 +83,7 @@ const virtualOpenApiModules = (): Plugin => {
   };
 };
 
-const externalizeDependencies = (configType: 'DEVELOPMENT' | 'PRODUCTION' | undefined): Plugin => {
+const externalizeDependencies = (configType: ConfigType): Plugin => {
   const packageMappings: Record<string, {cdn?: string; local: string}> =
     generateExternalPackageMappings();
   return {
@@ -344,9 +346,7 @@ const virtualAssetsList = (): Plugin => {
 };
 
 export default config;
-function markComponentImportsAsSideEffectful(
-  configType: 'DEVELOPMENT' | 'PRODUCTION' | undefined
-): Plugin {
+function markComponentImportsAsSideEffectful(configType: ConfigType): Plugin {
   const absolutePathToRoot = resolve(__dirname, '..');
   return {
     name: 'mark-components-as-side-effectful',
