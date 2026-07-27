@@ -19,7 +19,6 @@
     "**/packages/atomic/stencil-proxy/**/*",
     "**/packages/documentation/**/assets/**/*",
     "**/packages/headless/**/coveo.analytics/**/*",
-    "**/packages/coveo-analytics/**/*",
     "**/samples/headless/rga-angular/**/*.html",
     "**/*.hbs",
     "**/*.handlebars",

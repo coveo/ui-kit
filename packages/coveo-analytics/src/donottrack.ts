@@ -9,14 +9,18 @@ import {hasNavigator, hasWindow} from './detector';
 const doNotTrackValues = ['1', 1, 'yes', true];
 
 export function doNotTrack(): boolean {
-    const checks: any[] = [];
-    if (hasWindow()) {
-        checks.push((<any>window).doNotTrack);
-    }
-    if (hasNavigator()) {
-        checks.push((<any>navigator).doNotTrack, (<any>navigator).msDoNotTrack, (<any>navigator).globalPrivacyControl);
-    }
-    return checks.some((value) => doNotTrackValues.indexOf(value) !== -1);
+  const checks: any[] = [];
+  if (hasWindow()) {
+    checks.push((<any>window).doNotTrack);
+  }
+  if (hasNavigator()) {
+    checks.push(
+      (<any>navigator).doNotTrack,
+      (<any>navigator).msDoNotTrack,
+      (<any>navigator).globalPrivacyControl
+    );
+  }
+  return checks.some((value) => doNotTrackValues.indexOf(value) !== -1);
 }
 
 export default doNotTrack;

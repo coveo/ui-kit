@@ -1,12 +1,12 @@
 {
-    "extends": "./tsconfig.json",
-    "compilerOptions": {
-        "outDir": "dist_test",
-        "declaration": false,
-        "sourceMap": true,
-        "strict": false,
-        "module": "commonjs"
-    },
-    "include": ["src/**/*.spec.ts"],
-    "exclude": []
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "dist_test",
+    "declaration": false,
+    "sourceMap": true,
+    "strict": false,
+    "module": "commonjs"
+  },
+  "include": ["src/**/*.spec.ts"],
+  "exclude": []
 }
