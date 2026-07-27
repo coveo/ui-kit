@@ -8,7 +8,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  padding: 16px 24px;
+  padding: var(--space-4) var(--space-5);
   min-height: var(--header-height);
   border-bottom: 1px solid var(--color-border);
   flex-shrink: 0;

@@ -1,7 +1,7 @@
 .grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1rem;
+  gap: var(--space-4);
 }
 
 @media (min-width: 600px) {
@@ -24,6 +24,6 @@
 
 .empty {
   text-align: center;
-  color: var(--color-text-secondary, #6b7280);
-  padding: 2rem;
+  color: var(--color-text-secondary);
+  padding: var(--space-6);
 }

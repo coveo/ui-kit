@@ -2,18 +2,18 @@
   display: grid;
   grid-template-rows: auto 1fr;
   grid-template-columns: 1fr 2fr 8fr 1fr;
-  column-gap: 24px;
+  column-gap: var(--space-5);
   min-height: 100vh;
 }
 
 .header {
   grid-column: 1 / -1;
-  padding: 16px 24px;
+  padding: var(--space-4) var(--space-5);
   min-height: var(--header-height);
-  border-bottom: 1px solid var(--color-border, #e5e7eb);
+  border-bottom: 1px solid var(--color-border);
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: var(--space-4);
   position: relative;
 }
 
@@ -24,43 +24,43 @@
 
 .backToConversation {
   position: absolute;
-  left: 24px;
+  left: var(--space-5);
   top: 50%;
   transform: translateY(-50%);
   width: auto;
   margin: 0;
-  background: var(--color-bg-primary, #fff);
-  border: 1px solid var(--color-border, #e5e7eb);
-  color: var(--color-text-primary, #333);
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
   cursor: pointer;
-  font-size: 14px;
-  padding: 8px 16px;
+  font-size: var(--font-size-base);
+  padding: var(--space-2) var(--space-4);
   border-radius: 999px;
   white-space: nowrap;
   flex-shrink: 0;
 
   &:hover {
-    background: var(--color-surface-hover, #f3f4f6);
+    background: var(--color-surface-hover);
   }
 
   &:focus-visible {
-    outline: 2px solid var(--color-focus, #2563eb);
+    outline: 2px solid var(--color-focus);
     outline-offset: 2px;
   }
 }
 
 .sidebar {
   grid-column: 2;
-  padding: 24px 0;
-  border-right: 1px solid var(--color-border, #e5e7eb);
+  padding: var(--space-5) 0;
+  border-right: 1px solid var(--color-border);
 }
 
 .main {
   grid-column: 3;
-  padding: 24px 0;
+  padding: var(--space-5) 0;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--space-5);
 }
 
 .topRow {
@@ -73,20 +73,20 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 24px;
+  gap: var(--space-5);
   flex-wrap: wrap;
 }
 
 .toast {
   position: fixed;
-  bottom: 24px;
+  bottom: var(--space-5);
   left: 50%;
   transform: translateX(-50%);
-  background: var(--color-neutral-dark, #333);
-  color: var(--color-on-neutral-dark, #fff);
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-size: 14px;
+  background: var(--color-neutral-dark);
+  color: var(--color-on-neutral-dark);
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
   box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
   animation: toast-in 200ms ease-out;
   z-index: 1000;
@@ -116,6 +116,6 @@
 
   .main {
     grid-column: 1;
-    padding: 24px 16px;
+    padding: var(--space-5) var(--space-4);
   }
 }
