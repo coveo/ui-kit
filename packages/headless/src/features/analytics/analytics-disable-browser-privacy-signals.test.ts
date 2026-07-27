@@ -45,18 +45,20 @@ describe('legacy analytics disableBrowserPrivacySignals propagation', () => {
   it('passes disableBrowserPrivacySignals: true to the legacy search client when configured', () => {
     configure(true);
 
-    expect(searchPageClientConstructor).toHaveBeenCalledWith(
-      expect.objectContaining({disableBrowserPrivacySignals: true}),
-      expect.anything()
-    );
+    expect(searchPageClientConstructor).toHaveBeenCalledTimes(1);
+    const opts = searchPageClientConstructor.mock.calls[0][0] as {
+      disableBrowserPrivacySignals?: boolean;
+    };
+    expect(opts.disableBrowserPrivacySignals).toBe(true);
   });
 
   it('leaves disableBrowserPrivacySignals undefined when not configured', () => {
     configure();
 
-    expect(searchPageClientConstructor).toHaveBeenCalledWith(
-      expect.objectContaining({disableBrowserPrivacySignals: undefined}),
-      expect.anything()
-    );
+    expect(searchPageClientConstructor).toHaveBeenCalledTimes(1);
+    const opts = searchPageClientConstructor.mock.calls[0][0] as {
+      disableBrowserPrivacySignals?: boolean;
+    };
+    expect(opts.disableBrowserPrivacySignals).toBeUndefined();
   });
 });

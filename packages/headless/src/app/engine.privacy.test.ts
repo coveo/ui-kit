@@ -53,6 +53,7 @@ describe('engine privacy (disableBrowserPrivacySignals)', () => {
 
     expect(engine.state.configuration.analytics.enabled).toBe(true);
     expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('privacy compliance'));
   });
 
   it('has no effect when analyticsMode is omitted (existing behavior preserved)', () => {
