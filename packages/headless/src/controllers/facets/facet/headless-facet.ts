@@ -83,6 +83,8 @@ export interface FacetProps {
  * @param props - The configurable `Facet` properties.
  * @returns A `Facet` controller instance.
  *
+ * Example: [facet.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/facet.tsx)
+ *
  * @group Controllers
  * @category Facet
  * */

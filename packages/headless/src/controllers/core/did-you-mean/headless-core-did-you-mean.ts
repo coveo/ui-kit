@@ -43,7 +43,6 @@ export interface DidYouMeanOptions {
 /**
  * The `DidYouMean` controller is responsible for handling query corrections.
  *
- * Example: [did-you-mean.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/did-you-mean/did-you-mean.fn.tsx)
  *
  * @group Controllers
  * @category DidYouMean
