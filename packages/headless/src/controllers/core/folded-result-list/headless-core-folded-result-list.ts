@@ -89,7 +89,6 @@ export interface CoreFoldedResultListProps {
 /**
  * The `FoldedResultList` headless controller re-organizes results into hierarchical collections (a.k.a. threads).
  *
- * Example: [folded-result-list.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/folded-result-list/folded-result-list.fn.tsx)
  *
  * @group Controllers
  * @category FoldedResultList

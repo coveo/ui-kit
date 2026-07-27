@@ -17,6 +17,8 @@ export type {ResultList, ResultListOptions, ResultListProps, ResultListState};
  * @param props - The configurable `ResultList` properties.
  * @returns A `ResultList` controller instance.
  *
+ * Example: [result-list.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/result-list.tsx)
+ *
  * @group Controllers
  * @category ResultList
  */

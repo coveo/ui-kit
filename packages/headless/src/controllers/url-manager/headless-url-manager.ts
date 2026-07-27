@@ -32,7 +32,6 @@ export const initialStateSchema = new Schema<Required<UrlManagerInitialState>>({
 /**
  * The `UrlManager` controller can parse an url fragment to extract search parameters which affect the search response.
  *
- * Example: [url-manager.ts](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/url-manager/url-manager.ts)
  *
  * @group Controllers
  * @category UrlManager

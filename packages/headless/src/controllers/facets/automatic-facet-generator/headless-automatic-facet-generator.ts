@@ -28,10 +28,6 @@ export type {AutomaticFacetGeneratorOptions};
  *
  * To learn more about the automatic facet generator feature, see: [About the Facet Generator](https://docs.coveo.com/en/n9sd0159/).
  *
- * Examples:
- * - [automatic-facet-generator.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/automatic-facet-generator/automatic-facet-generator.fn.tsx)
- * - [automatic-facet-generator.class.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/automatic-facet-generator/automatic-facet-generator.class.tsx)
- *
  * @group Controllers
  * @category AutomaticFacetGenerator
  */

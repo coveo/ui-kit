@@ -179,3 +179,32 @@ describe('SearchResultsPage PageSizeSelector integration', () => {
     expect(options[2].textContent).toBe('50');
   });
 });
+
+describe('SearchResultsPage "Back to conversation" button', () => {
+  const defaultProps = {
+    onSubmit: vi.fn(),
+    isStreaming: false,
+    routedInterface: {useCase: 'search', interface: {id: 'mock'}} as any,
+    onBackToConversation: vi.fn(),
+  };
+
+  function renderPage(overrides = {}) {
+    const props = {...defaultProps, onSubmit: vi.fn(), onBackToConversation: vi.fn(), ...overrides};
+    const result = render(<SearchResultsPage {...props} />);
+    return {...result, props};
+  }
+
+  it('always shows "Back to conversation" button', () => {
+    renderPage();
+
+    expect(screen.getByRole('button', {name: /Back to conversation/})).toBeDefined();
+  });
+
+  it('calls onBackToConversation when the button is clicked', () => {
+    const onBackToConversation = vi.fn();
+    renderPage({onBackToConversation});
+
+    fireEvent.click(screen.getByRole('button', {name: /Back to conversation/}));
+    expect(onBackToConversation).toHaveBeenCalledTimes(1);
+  });
+});
