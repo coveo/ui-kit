@@ -91,11 +91,11 @@ const externalizeDependencies = (configType: ConfigType): Plugin => {
     name: 'externalize-dependencies',
     enforce: 'pre',
     resolveId(source, _importer, _options) {
-      if (/^\/(headless|bueno)/.test(source)) {
+      if (/^\/(headless|bueno|relay)/.test(source)) {
         return false;
       }
 
-      if (/(.*)(\/|\\)+(bueno|headless)\/v\d+\.\d+\.\d+(-nightly)?(\/|\\).*/.test(source)) {
+      if (/(.*)(\/|\\)+(bueno|headless|relay)\/v\d+\.\d+\.\d+(-nightly)?(\/|\\).*/.test(source)) {
         return false;
       }
 
