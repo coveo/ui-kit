@@ -24,7 +24,7 @@ jobs:
         with:
           egress-policy: audit
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
-      - uses: step-security/mise-action@v4
+      - uses: step-security/mise-action@2796166110dee826668caddd4bffedae5116e7cd # v4
         with:
           install: true
           cache: true
