@@ -86,6 +86,7 @@ const virtualOpenApiModules = (): Plugin => {
 const externalizeDependencies = (configType: ConfigType): Plugin => {
   const packageMappings: Record<string, {cdn?: string; local: string}> =
     generateExternalPackageMappings();
+
   return {
     name: 'externalize-dependencies',
     enforce: 'pre',
@@ -98,9 +99,9 @@ const externalizeDependencies = (configType: ConfigType): Plugin => {
         return false;
       }
 
-      const packageMapping = packageMappings[source];
+      const {cdn, local} = packageMappings[source] ?? {};
 
-      if (!packageMapping) {
+      if (!local) {
         // If the package isn't in our mapping, we assume it's a local dependency and leave it as-is
         return null;
       }
@@ -113,17 +114,17 @@ const externalizeDependencies = (configType: ConfigType): Plugin => {
       // For local Storybook development, we want to use local packages source to allow for easier debugging and HMR.
       if (configType === 'DEVELOPMENT') {
         return {
-          id: packageMapping.local,
+          id: local,
         };
       }
 
-      if (!packageMapping.cdn) {
+      if (!cdn) {
         return null;
       }
 
       // For production Storybook builds, we want to use Domain-relative URL to use the CDN versions of the packages.
       return {
-        id: packageMapping.cdn,
+        id: cdn,
         external: 'absolute',
       };
     },
