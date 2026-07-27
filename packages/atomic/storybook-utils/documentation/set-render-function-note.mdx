@@ -1,3 +1,7 @@
-The `setRenderFunction` method bypasses the HTML template mechanism and allows you to programmatically render items. Instead of defining a template element, you provide a callback that receives each item and renders it into a given root element.
+The `setRenderFunction` method bypasses the HTML template mechanism and allows you to programmatically render items. Instead of defining a template element, you provide a callback that receives each item and renders it into a root element. Components that support custom-rendered grid or recommendation cards can also provide a `linkContainer` element.
+
+For components with grid or recommendation card layouts, render the visible link in `root` and, when `linkContainer` is provided, render the same link there as well. The `linkContainer` is hidden, but the card-click handler uses its direct-child link to navigate when the user clicks elsewhere on a card. This pattern works across the component's supported display modes: the visible link handles list or table layouts, while the hidden link handles grid or recommendation card clicks.
+
+Components with fixed list layouts or without grid card-click handling, such as instant results, folded results, and Insight results, only need the link in `root` and do not need the third callback argument.
 
 > **Note:** `setRenderFunction` is intended for framework integrations (React, Angular, Vue) where rendering is managed programmatically. For plain HTML deployments, use the appropriate template element with `<template>` instead.

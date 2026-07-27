@@ -27,14 +27,21 @@ You can include multiple recommendation lists within a single interface:
   const recList = document.querySelector('atomic-commerce-recommendation-list');
 
   await recList.setRenderFunction((product, root, linkContainer) => {
+    const link = `<atomic-product-link>${product.ec_name}</atomic-product-link>`;
+
     root.innerHTML = `
       <atomic-product-section-name>
-        <atomic-product-link>${product.ec_name}</atomic-product-link>
+        ${link}
       </atomic-product-section-name>
       <atomic-product-section-metadata>
         <atomic-product-price></atomic-product-price>
       </atomic-product-section-metadata>
     `;
+
+    if (linkContainer) {
+      linkContainer.innerHTML = link;
+    }
+
     return root.innerHTML;
   });
 </script>

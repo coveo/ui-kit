@@ -97,7 +97,7 @@ For more information on Result Folding, see [Result Folding](https://docs.coveo.
   await customElements.whenDefined('atomic-insight-folded-result-list');
   const foldedResultList = document.querySelector('atomic-insight-folded-result-list');
 
-  await foldedResultList.setRenderFunction((result, root, linkContainer) => {
+  await foldedResultList.setRenderFunction((result, root) => {
     root.innerHTML = `
       <atomic-result-section-title>
         <atomic-result-link></atomic-result-link>

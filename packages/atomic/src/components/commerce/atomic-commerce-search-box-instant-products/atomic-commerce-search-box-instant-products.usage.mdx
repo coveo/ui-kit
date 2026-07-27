@@ -21,7 +21,7 @@ This component needs the `atomic-commerce-search-box-query-suggestions` componen
   await customElements.whenDefined('atomic-commerce-search-box-instant-products');
   const instantProducts = document.querySelector('atomic-commerce-search-box-instant-products');
 
-  await instantProducts.setRenderFunction((product, root, linkContainer) => {
+  await instantProducts.setRenderFunction((product, root) => {
     root.innerHTML = `
       <atomic-product-section-name>
         <atomic-product-link>${product.ec_name}</atomic-product-link>

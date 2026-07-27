@@ -99,14 +99,21 @@ For example,
   const productList = document.querySelector('atomic-commerce-product-list');
 
   await productList.setRenderFunction((product, root, linkContainer) => {
+    const link = `<atomic-product-link>${product.ec_name}</atomic-product-link>`;
+
     root.innerHTML = `
       <atomic-product-section-name>
-        <atomic-product-link>${product.ec_name}</atomic-product-link>
+        ${link}
       </atomic-product-section-name>
       <atomic-product-section-metadata>
         <atomic-product-price></atomic-product-price>
       </atomic-product-section-metadata>
     `;
+
+    if (linkContainer) {
+      linkContainer.innerHTML = link;
+    }
+
     return root.innerHTML;
   });
 </script>

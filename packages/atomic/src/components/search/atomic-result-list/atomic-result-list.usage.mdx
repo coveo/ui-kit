@@ -81,14 +81,21 @@ The following table outlines the key differences and best use cases for grids, l
   const resultList = document.querySelector('atomic-result-list');
 
   await resultList.setRenderFunction((result, root, linkContainer) => {
+    const link = `<atomic-result-link></atomic-result-link>`;
+
     root.innerHTML = `
       <atomic-result-section-title>
-        <atomic-result-link></atomic-result-link>
+        ${link}
       </atomic-result-section-title>
       <atomic-result-section-excerpt>
         <atomic-result-text field="excerpt"></atomic-result-text>
       </atomic-result-section-excerpt>
     `;
+
+    if (linkContainer) {
+      linkContainer.innerHTML = link;
+    }
+
     return root.innerHTML;
   });
 </script>
