@@ -1,3 +1,4 @@
+import SetRenderFunctionNote from '@/storybook-utils/documentation/set-render-function-note.mdx';
 
 This component is typically placed within the `results` section of the layout.
 
@@ -72,7 +73,7 @@ The following table outlines the key differences and best use cases for grids, l
 
 ### Using `setRenderFunction` for custom rendering
 
-The `setRenderFunction` method bypasses the HTML template mechanism and allows you to programmatically render result items. Instead of defining an `atomic-result-template`, you provide a callback that receives each result and renders it into a given root element.
+<SetRenderFunctionNote />
 
 ```html
 <script type="module">
@@ -92,5 +93,3 @@ The `setRenderFunction` method bypasses the HTML template mechanism and allows y
   });
 </script>
 ```
-
-> **Note:** `setRenderFunction` is intended for framework integrations (React, Angular, Vue) where rendering is managed programmatically. In React, `@coveo/atomic-react` exports `AtomicResultList` (backed by `ResultListWrapper`) as the canonical pattern — it calls `setRenderFunction` internally. For plain HTML deployments, use `atomic-result-template` with `<template>` elements instead.

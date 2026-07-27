@@ -1,3 +1,5 @@
+import SetRenderFunctionNote from '@/storybook-utils/documentation/set-render-function-note.mdx';
+
 The `atomic-ipx-recs-list` component displays recommendations for the In-Product Experience (IPX) use case by applying one or more result templates.
 It supports carousel pagination, customizable display layouts, and integrates with the IPX actions history for tracking user interactions.
 
@@ -52,7 +54,7 @@ Customize the number of columns using the `--atomic-recs-number-of-columns` CSS 
 
 ### Using `setRenderFunction` for custom rendering
 
-The `setRenderFunction` method bypasses the HTML template mechanism and allows you to programmatically render recommendation items. Instead of defining an `atomic-recs-result-template`, you provide a callback that receives each result and renders it into a given root element.
+<SetRenderFunctionNote />
 
 ```html
 <script type="module">
@@ -72,5 +74,3 @@ The `setRenderFunction` method bypasses the HTML template mechanism and allows y
   });
 </script>
 ```
-
-> **Note:** `setRenderFunction` is intended for framework integrations (React, Angular, Vue) where rendering is managed programmatically. There is no dedicated React wrapper for this component in `@coveo/atomic-react`. For plain HTML deployments, use `atomic-recs-result-template` with `<template>` elements instead.

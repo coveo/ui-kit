@@ -1,3 +1,5 @@
+import SetRenderFunctionNote from '@/storybook-utils/documentation/set-render-function-note.mdx';
+
 The `atomic-insight-result-list` component is responsible for displaying insight query results by applying one or more result templates.
 
 This component should be placed within an `atomic-insight-interface` component, typically inside an `atomic-insight-layout` with a results section.
@@ -56,7 +58,7 @@ The component requires at least one `atomic-insight-result-template` child to de
 
 ### Using `setRenderFunction` for custom rendering
 
-The `setRenderFunction` method bypasses the HTML template mechanism and allows you to programmatically render result items. Instead of defining an `atomic-insight-result-template`, you provide a callback that receives each result and renders it into a given root element.
+<SetRenderFunctionNote />
 
 ```html
 <script type="module">
@@ -76,5 +78,3 @@ The `setRenderFunction` method bypasses the HTML template mechanism and allows y
   });
 </script>
 ```
-
-> **Note:** `setRenderFunction` is intended for framework integrations (React, Angular, Vue) where rendering is managed programmatically. There is no dedicated React wrapper for this component in `@coveo/atomic-react`. For plain HTML deployments, use `atomic-insight-result-template` with `<template>` elements instead.

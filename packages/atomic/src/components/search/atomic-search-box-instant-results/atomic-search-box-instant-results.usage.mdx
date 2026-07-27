@@ -1,3 +1,4 @@
+import SetRenderFunctionNote from '@/storybook-utils/documentation/set-render-function-note.mdx';
 
 This component is placed inside the [atomic-search-box](/docs/atomic-search-box--docs) to display instant results as the user types.
 
@@ -13,7 +14,7 @@ This component needs the `atomic-search-box-query-suggestions` component to be p
 
 ### Using `setRenderFunction` for custom rendering
 
-The `setRenderFunction` method bypasses the HTML template mechanism and allows you to programmatically render instant result items. Instead of defining an `atomic-result-template`, you provide a callback that receives each result and renders it into a given root element.
+<SetRenderFunctionNote />
 
 ```html
 <script type="module">
@@ -33,5 +34,3 @@ The `setRenderFunction` method bypasses the HTML template mechanism and allows y
   });
 </script>
 ```
-
-> **Note:** `setRenderFunction` is intended for framework integrations (React, Angular, Vue) where rendering is managed programmatically. In React, `@coveo/atomic-react` exports `AtomicSearchBoxInstantResults` (backed by `SearchBoxInstantResultsWrapper`) as the canonical pattern — it calls `setRenderFunction` internally. For plain HTML deployments, use `atomic-result-template` with `<template>` elements instead.

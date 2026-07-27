@@ -1,3 +1,5 @@
+import SetRenderFunctionNote from '@/storybook-utils/documentation/set-render-function-note.mdx';
+
 The `atomic-insight-folded-result-list` component is responsible for displaying folded insight query results by applying one or more result templates. Folded results group related documents together, such as email threads or document versions.
 
 This component should be placed within an `atomic-insight-interface` component, typically inside an `atomic-insight-layout` with a results section.
@@ -88,7 +90,7 @@ For more information on Result Folding, see [Result Folding](https://docs.coveo.
 
 ### Using `setRenderFunction` for custom rendering
 
-The `setRenderFunction` method bypasses the HTML template mechanism and allows you to programmatically render folded result items. Instead of defining an `atomic-insight-result-template`, you provide a callback that receives each result and renders it into a given root element.
+<SetRenderFunctionNote />
 
 ```html
 <script type="module">
@@ -108,5 +110,3 @@ The `setRenderFunction` method bypasses the HTML template mechanism and allows y
   });
 </script>
 ```
-
-> **Note:** `setRenderFunction` is intended for framework integrations (React, Angular, Vue) where rendering is managed programmatically. There is no dedicated React wrapper for this component in `@coveo/atomic-react`. For plain HTML deployments, use `atomic-insight-result-template` with `<template>` elements instead.

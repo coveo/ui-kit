@@ -1,3 +1,4 @@
+import SetRenderFunctionNote from '@/storybook-utils/documentation/set-render-function-note.mdx';
 
 This component is placed inside the [atomic-commerce-search-box](/docs/atomic-commerce-search-box--docs) to display instant products as the user types.
 
@@ -13,7 +14,7 @@ This component needs the `atomic-commerce-search-box-query-suggestions` componen
 
 ### Using `setRenderFunction` for custom rendering
 
-The `setRenderFunction` method bypasses the HTML template mechanism and allows you to programmatically render instant product items. Instead of defining an `atomic-product-template`, you provide a callback that receives each product and renders it into a given root element.
+<SetRenderFunctionNote />
 
 ```html
 <script type="module">
@@ -33,5 +34,3 @@ The `setRenderFunction` method bypasses the HTML template mechanism and allows y
   });
 </script>
 ```
-
-> **Note:** `setRenderFunction` is intended for framework integrations (React, Angular, Vue) where rendering is managed programmatically. There is no dedicated React wrapper for this component in `@coveo/atomic-react`. For plain HTML deployments, use `atomic-product-template` with `<template>` elements instead.
