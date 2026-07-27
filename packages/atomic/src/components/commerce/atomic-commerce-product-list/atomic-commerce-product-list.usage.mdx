@@ -87,3 +87,28 @@ For example,
 </script>
 
 ```
+
+### Using `setRenderFunction` for custom rendering
+
+The `setRenderFunction` method bypasses the HTML template mechanism and allows you to programmatically render product items. Instead of defining an `atomic-product-template`, you provide a callback that receives each product and renders it into a given root element.
+
+```html
+<script type="module">
+  await customElements.whenDefined('atomic-commerce-product-list');
+  const productList = document.querySelector('atomic-commerce-product-list');
+
+  await productList.setRenderFunction((product, root, linkContainer) => {
+    root.innerHTML = `
+      <atomic-product-section-name>
+        <atomic-product-link>${product.ec_name}</atomic-product-link>
+      </atomic-product-section-name>
+      <atomic-product-section-metadata>
+        <atomic-product-price></atomic-product-price>
+      </atomic-product-section-metadata>
+    `;
+    return root.innerHTML;
+  });
+</script>
+```
+
+> **Note:** `setRenderFunction` is intended for framework integrations (React, Angular, Vue) where rendering is managed programmatically. In React, `@coveo/atomic-react` exports `AtomicCommerceProductList` (backed by `CommerceProductListWrapper`) as the canonical pattern — it calls `setRenderFunction` internally. For plain HTML deployments, use `atomic-product-template` with `<template>` elements instead.
