@@ -39,7 +39,7 @@ Since calls to the coveo analytics service need to be authenticated, the library
 
 ## Available actions
 
-After the library has loaded sucessfully, you can interact with coveoua through the global `coveoua` function. Any interaction with the library happens through this function by supplying both a action name, followed by an optional series of action arguments. The following actions are available:
+After the library has loaded successfully, you can interact with coveoua through the global `coveoua` function. Any interaction with the library happens through this function by supplying both a action name, followed by an optional series of action arguments. The following actions are available:
 
 ### Initialization
 
