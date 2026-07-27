@@ -35,6 +35,11 @@ const thermidorSchemaCatalogResponseEvents: ConverseEvent[] = [
             surfaceId: 'commerce-catalog-example',
             components: [
               {
+                id: 'root',
+                component: 'Column',
+                children: ['featured-products', 'cart'],
+              },
+              {
                 id: 'featured-products',
                 component: 'ProductCarousel',
                 controllers: {

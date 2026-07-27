@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from 'react';
+import {useEffect, useMemo, useRef, useState} from 'react';
 import {
   buildConverseController,
   buildGenerativeInterface,
@@ -6,14 +6,24 @@ import {
   type ConverseController,
   type GenerativeInterface,
 } from '@coveo/thermidor';
-import {CatalogSurfaceRenderer} from './a2ui/components.js';
-import {toCatalogSurfaces} from './a2ui/adapter.js';
+import {A2UIProvider} from '@copilotkit/a2ui-renderer';
+import {thermidorCatalog} from './a2ui/components.js';
+import {ThermidorControllerProvider} from './a2ui/controllers.js';
+import {getA2UIMessages, ThermidorA2UISurfaces} from './a2ui/surfaces.js';
 import {getSampleConfiguration} from './env.js';
 import {useController} from './use-controller.js';
 
 const CONTRACT_PROMPT = 'Show the Thermidor catalog';
 
 export default function App() {
+  return (
+    <A2UIProvider catalog={thermidorCatalog}>
+      <ContractSample />
+    </A2UIProvider>
+  );
+}
+
+function ContractSample() {
   const engineRef = useRef<Engine | null>(null);
   engineRef.current ??= new Engine({
     configuration: getSampleConfiguration(),
@@ -28,7 +38,10 @@ export default function App() {
   );
   const [prompt, setPrompt] = useState(CONTRACT_PROMPT);
   const turn = state.activeTurn;
-  const surfaces = toCatalogSurfaces(turn?.agentResponse?.activities ?? []);
+  const a2uiMessages = useMemo(
+    () => getA2UIMessages(turn?.agentResponse?.activities ?? []),
+    [turn?.agentResponse?.activities]
+  );
 
   useEffect(() => {
     return () => {
@@ -74,9 +87,9 @@ export default function App() {
         </p>
       ))}
       {turn?.status === 'error' && <p className="error">{turn.error}</p>}
-      {surfaces.map((surface) => (
-        <CatalogSurfaceRenderer key={surface.id} surface={surface} />
-      ))}
+      <ThermidorControllerProvider messages={a2uiMessages}>
+        <ThermidorA2UISurfaces messages={a2uiMessages} />
+      </ThermidorControllerProvider>
       {!turn && <p className="hint">Run the pre-filled prompt to render the schema example.</p>}
     </main>
   );

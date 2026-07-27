@@ -2,9 +2,9 @@
 
 This sample proves the client-side path for the v0.9 Thermidor Commerce Catalog contract:
 
-`ConverseController` → normalized Thermidor `Activity` → sample-owned A2-UI adapter → sample-owned component catalog.
+`ConverseController` → normalized Thermidor `Activity` → raw A2-UI messages → CopilotKit A2-UI renderer/catalog.
 
-Thermidor only exposes opaque activity `kind` and `payload` values. The sample is the layer that recognizes the `a2ui-surface` kind and renders the `ProductCarousel` and `Cart` components advertised by the schema catalog.
+Thermidor only exposes opaque activity `kind` and `payload` values. The sample passes the `a2ui-surface` operations to CopilotKit unchanged. Its local `ProductCarousel` and `Cart` components create their advertised controllers from `updateComponents`, hydrate them from `updateDataModel`, and subscribe to later data-model updates. CopilotKit provides only renderer and catalog state; it does not replace Thermidor's conversational endpoint or runtime.
 
 ## Run with the contract mock
 

@@ -162,7 +162,11 @@ describe('createMockConverseServer', () => {
           {
             version: 'v0.9',
             updateComponents: {
-              components: [{component: 'ProductCarousel'}, {component: 'Cart'}],
+              components: [
+                {id: 'root', component: 'Column', children: ['featured-products', 'cart']},
+                {component: 'ProductCarousel'},
+                {component: 'Cart'},
+              ],
             },
           },
           {
