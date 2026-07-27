@@ -15,7 +15,7 @@
   width: 3.25rem;
   height: 0.25rem;
   border: 0;
-  border-radius: var(--lwc-borderRadiusMedium, 0.25rem);
+  border-radius: var(--slds-g-radius-border-2, var(--lwc-borderRadiusMedium, 0.25rem));
   background-color: var(--slds-g-color-accent-light-1, var(--lwc-brandLightActive, #e3e5ed));
   transition: 0.2s;
 }
