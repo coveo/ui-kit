@@ -21,6 +21,7 @@ interface SearchResultsPageProps {
   isStreaming: boolean;
   routedInterface: RoutedInterface;
   query?: string;
+  onBackToConversation: () => void;
 }
 
 export function SearchResultsPage(props: SearchResultsPageProps) {
@@ -36,6 +37,7 @@ function SearchResultsPageInner({
   isStreaming,
   routedInterface,
   query,
+  onBackToConversation,
 }: SearchResultsPageProps) {
   const [productListController, productListState] = useBuildController(() =>
     buildProductListController({interface: routedInterface.interface})
@@ -81,6 +83,9 @@ function SearchResultsPageInner({
   return (
     <div className={styles.page} data-testid="search-results-page">
       <header className={styles.header}>
+        <button type="button" className={styles.backToConversation} onClick={onBackToConversation}>
+          &larr; Back to conversation
+        </button>
         <PromptInput
           onSubmit={onSubmit}
           disabled={isStreaming}
