@@ -268,9 +268,9 @@ describe('Analytics', () => {
     await client.sendEvent(EventType.view, {
       fine: 1,
       ok: 0,
-      notok: '',
+      emptyField: '',
       invalid: null,
-      ohno: undefined,
+      undefinedField: undefined,
     });
 
     const [body] = getParsedBodyCalls();
@@ -439,7 +439,7 @@ describe('Analytics', () => {
     describe('for API keys', () => {
       beforeEach(() => {
         client = new CoveoAnalyticsClient({
-          token: 'xxapikey',
+          token: 'testApiKey',
           endpoint: anEndpoint,
           version: A_VERSION,
         });
@@ -487,7 +487,7 @@ describe('Analytics', () => {
     describe('for OAuth Tokens', () => {
       beforeEach(() => {
         client = new CoveoAnalyticsClient({
-          token: 'xtoken',
+          token: 'testToken',
           endpoint: anEndpoint,
           version: A_VERSION,
         });
@@ -515,7 +515,7 @@ describe('Analytics', () => {
     const trackingId = 'yourfavoritefood.ca ';
     beforeEach(() => {
       client = new CoveoAnalyticsClient({
-        token: 'xtoken',
+        token: 'testToken',
         endpoint: anEndpoint,
         version: A_VERSION,
       });
@@ -545,7 +545,7 @@ describe('Analytics', () => {
     const trackingId = 'yourfavoritefood.ca ';
     beforeEach(() => {
       client = new CoveoAnalyticsClient({
-        token: 'xtoken',
+        token: 'testToken',
         endpoint: anEndpoint,
         version: A_VERSION,
       });

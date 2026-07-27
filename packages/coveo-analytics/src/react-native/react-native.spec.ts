@@ -24,7 +24,7 @@ describe('ReactNativeRuntime', () => {
 
   it('should call "storage.getItem" when getting the visitor ID', async () => {
     jest.spyOn(runtimeEnvironment.storage, 'setItem');
-    await client.setCurrentVisitorId('myid');
+    await client.setCurrentVisitorId('testVisitorId');
     expect(runtimeEnvironment.storage.setItem).toHaveBeenCalled();
   });
 });

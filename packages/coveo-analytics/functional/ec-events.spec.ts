@@ -106,7 +106,7 @@ describe('ec events', () => {
       brand: 'brand',
       unknown: 'ok',
     });
-    coveoua('ec:setAction', 'detail', {storeid: 'amazing'});
+    coveoua('ec:setAction', 'detail', {storeid: 'testStoreId'});
     await coveoua('send', 'pageview');
 
     const [body] = getParsedBody();
@@ -124,7 +124,7 @@ describe('ec events', () => {
   it('can send a product detail view event with custom values', async () => {
     coveoua('ec:addProduct', {name: 'wow', id: 'something', brand: 'brand'});
     coveoua('ec:setAction', 'detail', {
-      storeid: 'amazing',
+      storeid: 'testStoreId',
       custom: {verycustom: 'value'},
     });
     await coveoua('send', 'pageview');
@@ -606,7 +606,7 @@ describe('ec events', () => {
 
   it('context_website does not overwrite trackingId', async () => {
     const contextWebsite = 'tracksite';
-    const trackingId = 'trackingid';
+    const trackingId = 'testTrackingId';
     await coveoua('set', 'custom', {context_website: contextWebsite});
     await coveoua('set', 'trackingId', trackingId);
     await coveoua('send', 'pageview');
@@ -649,7 +649,7 @@ describe('ec events', () => {
 
   it('siteName does not overwrite trackingId', async () => {
     const website = 'tracksite';
-    const trackingId = 'trackingid';
+    const trackingId = 'testTrackingId';
     await coveoua('set', 'custom', {siteName: website});
     await coveoua('set', 'trackingId', trackingId);
     await coveoua('send', 'pageview');
@@ -667,7 +667,7 @@ describe('ec events', () => {
   describe('with auto-detection of userId', () => {
     describe('with API key', () => {
       beforeEach(() => {
-        coveoua('init', 'xxapikey', anEndpoint);
+        coveoua('init', 'testApiKey', anEndpoint);
       });
 
       it('should set userId to anonymous', async () => {
@@ -697,12 +697,7 @@ describe('ec events', () => {
     });
     describe('with Search Token', () => {
       beforeEach(() => {
-        const searchToken =
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.' +
-          'eyJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvb' +
-          'S93YXRjaD92PW9IZzVTSllSSEEwIiwidXNlcklkIj' +
-          'oiUmljayBBc3RsZXkiLCJleHAiOjE1MTYyMzkwMjJ9.' +
-          'gOxUfMZuwMFw-QK-q0xOKJ-23YgGwFJbncCIHgIxjcc';
+        const searchToken = 'e30.e30.e30';
         coveoua('init', searchToken, anEndpoint);
       });
 
@@ -780,7 +775,7 @@ describe('ec events', () => {
   });
 
   it('should be able to set the anonymizeIp to true for anything in between', async () => {
-    await coveoua('set', 'anonymizeIp', 'pôtato');
+    await coveoua('set', 'anonymizeIp', 'testValue');
     await coveoua('send', 'pageview');
 
     const [event] = getParsedBody();
@@ -1008,7 +1003,7 @@ describe('ec events', () => {
     it('can send a product with the group property', async () => {
       await coveoua('ec:addProduct', {
         id: 'something',
-        group: 'nsync',
+        group: 'testGroup',
       });
       await coveoua('send', 'event');
 
@@ -1018,7 +1013,7 @@ describe('ec events', () => {
         ...defaultContextValues,
         t: 'event',
         pr1id: 'something',
-        pr1group: 'nsync',
+        pr1group: 'testGroup',
       });
     });
 
@@ -1060,7 +1055,7 @@ describe('ec events', () => {
     // @ts-ignore
     delete window.location;
     // @ts-ignore
-    // Ooommmpf... JSDOM does not support any form of navigation, so let's overwrite the whole thing 💥.
+    // Warning: JSDOM does not support any form of navigation, so let's overwrite the whole thing 💥.
     window.location = new URL(url);
   };
 

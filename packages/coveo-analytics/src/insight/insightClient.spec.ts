@@ -1835,7 +1835,7 @@ describe('InsightClient', () => {
     const document = {
       title: 'Some Title',
       uri: 'https://www.some-uri.com',
-      uriHash: 'Acp8NfEWi0DeðeZU',
+      uriHash: 'testUriHash',
       permanentId: '8c88cd894t2767a96fa4f109041bb62bb54ca21ff31c1d760814b60cbcf2',
     };
     await client.logViewedDocumentClick(document, baseCaseMetadata);

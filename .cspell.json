@@ -4,12 +4,7 @@
   "cache": {
     "useCache": true
   },
-  "ignorePaths": [
-    "CHANGELOG.md",
-    "packages/platform-mock-api/src/converse/templates/**",
-    "packages/coveo-analytics/README.md",
-    "packages/coveo-analytics/docs/technical-overview.md"
-  ],
+  "ignorePaths": ["CHANGELOG.md", "packages/platform-mock-api/src/converse/templates/**"],
   "import": ["@cspell/dict-fr-fr/cspell-ext.json"],
   "words": [
     "adjustednumberoflikes",
@@ -344,6 +339,12 @@
     "ytvideoduration",
     "ytvideoid",
     "ytviewcount",
+    "coveoanalytics",
+    "donottrack",
+    "pageviewid",
+    "storeid",
+    "uuidv",
+    "uuidvalidate",
     "γίγγλυμος",
     "στόμα"
   ]
