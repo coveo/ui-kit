@@ -4,6 +4,9 @@ module.exports = {
       // Exclude .vscode directory
       if (file.includes('/.vscode/')) return false;
 
+      // Exclude synced agent skills
+      if (file.includes('/.agents/skills/')) return false;
+
       // Exclude quantic and create-atomic-template packages
       if (file.includes('/packages/quantic/')) return false;
       if (file.includes('/packages/create-atomic-template/')) return false;
@@ -31,6 +34,8 @@ module.exports = {
   },
   '**/*.{json,css,html}': (files) => {
     const filteredFiles = files.filter((file) => {
+      if (file.includes('/.kiro/')) return false;
+      if (file.includes('/.agents/skills/')) return false;
       if (file.includes('/.vscode/')) return false;
       if (file.includes('/packages/quantic/')) return false;
       if (file.includes('/.deployment.config/')) return false;
