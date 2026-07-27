@@ -18,7 +18,8 @@
 }
 
 .header > * {
-  width: 33.333%;
+  width: 100%;
+  max-width: 560px;
   margin: 0 auto;
 }
 

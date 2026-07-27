@@ -73,7 +73,6 @@
 }
 
 .promptWrapper {
-  width: 33.333vw;
-  min-width: 400px;
-  max-width: 720px;
+  width: 100%;
+  max-width: 560px;
 }

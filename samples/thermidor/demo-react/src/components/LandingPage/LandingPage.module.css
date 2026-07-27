@@ -23,9 +23,11 @@
 }
 
 .inputWrapper {
-  width: 33.333vw;
+  width: 100%;
+  max-width: 560px;
 }
 
 .pillsWrapper {
-  width: 33.333vw;
+  width: 100%;
+  max-width: 560px;
 }
