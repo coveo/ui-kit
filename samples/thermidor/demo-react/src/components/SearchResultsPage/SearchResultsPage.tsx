@@ -4,6 +4,7 @@ import {
   buildProductListController,
   buildPaginationController,
   buildSearchBoxController,
+  buildSortController,
 } from '@coveo/thermidor';
 import {SECTION_ACTIONS, type SuggestionItem} from '../SuggestionsDropdown/index.js';
 import {PromptInput} from '../PromptInput/PromptInput.js';
@@ -36,6 +37,9 @@ function SearchResultsPageInner({onSubmit, isStreaming, routedInterface}: Search
   );
   const [paginationController, paginationState] = useBuildController(() =>
     buildPaginationController({interface: routedInterface.interface})
+  );
+  const [sortController] = useBuildController(() =>
+    buildSortController({interface: routedInterface.interface})
   );
   const [, searchBoxState] = useBuildController(() =>
     buildSearchBoxController({interface: routedInterface.interface})
@@ -95,7 +99,7 @@ function SearchResultsPageInner({onSubmit, isStreaming, routedInterface}: Search
             pageSize={paginationState.pageSize ?? 0}
             productCount={productListState.products?.length ?? 0}
           />
-          <SortPlaceholder onToast={showToast} />
+          <SortPlaceholder controller={sortController} />
         </div>
         <ProductGrid controller={productListController} />
         <div className={styles.bottomRow}>
