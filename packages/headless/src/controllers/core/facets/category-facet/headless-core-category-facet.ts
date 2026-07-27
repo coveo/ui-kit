@@ -67,9 +67,6 @@ export interface CategoryFacetProps {
 /**
  * The `CategoryFacet` headless controller offers a high-level interface for designing a facet UI controller that renders values hierarchically.
  *
- * Example:
- * - [category-facet.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/category-facet.tsx)
- *
  * @group Controllers
  * @category CategoryFacet
  */

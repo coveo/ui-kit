@@ -70,6 +70,8 @@ export type {
  * @param props - The configurable `CategoryFacet` properties.
  * @returns A `CategoryFacet` controller instance.
  *
+ * Example: [category-facet.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/category-facet.tsx)
+ *
  * @group Controllers
  * @category CategoryFacet
  * */

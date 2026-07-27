@@ -66,9 +66,6 @@ interface CoreFacetProps {
  * If you have enabled a [Dynamic Navigation Experience (DNE)](https://docs.coveo.com/en/m2na0333/)
  * model, the `Facet` controller automatically reorders facet values according to the user query.
  *
- * Examples:
- * - [facet.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/facet.tsx)
- *
  * @group Controllers
  * @category Facet
  */
