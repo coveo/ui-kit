@@ -56,7 +56,7 @@ describe('EC plugin', () => {
     });
 
     it('should not append the product with a random event type', () => {
-      ec.addProduct({id: ':sorandom:'});
+      ec.addProduct({id: ':testProductId:'});
 
       const result = executeRegisteredHook('🎲', {});
 
@@ -299,7 +299,7 @@ describe('EC plugin', () => {
     });
 
     it('should not append the impression with a random event type', () => {
-      ec.addImpression({id: ':sorandom:'});
+      ec.addImpression({id: ':testProductId:'});
 
       const result = executeRegisteredHook('🎲', {});
 
@@ -330,14 +330,14 @@ describe('EC plugin', () => {
     });
 
     it('should convert known impression keys that are extended for Coveo into the measurement protocol format', () => {
-      ec.addImpression({name: '🧀', group: 'mahgroup'});
+      ec.addImpression({name: '🧀', group: 'testGroup'});
 
       const result = executeRegisteredHook(ECPluginEventTypes.event, {});
 
       expect(result).toEqual({
         ...defaultResult,
         il1pi1nm: '🧀',
-        il1pi1group: 'mahgroup',
+        il1pi1group: 'testGroup',
       });
     });
 

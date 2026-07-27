@@ -37,7 +37,7 @@ class TestPluginWithSpy extends TestPlugin {
 describe('simpleanalytics', () => {
   const analyticsClientMock = createAnalyticsClientMock();
   const analyticsEndpoint = 'https://analytics.cloud.coveo.com/rest/ua/v15/analytics';
-  const someRandomEventName = 'kawabunga';
+  const someRandomEventName = 'testEventName';
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -133,23 +133,23 @@ describe('simpleanalytics', () => {
 
     it('uses EC, SVC and Link plugins by default', () => {
       coveoua('init', 'SOME TOKEN');
-      expect(() => coveoua('callPlugin', 'ec', 'nosuchfunction')).toThrow(/does not exist/);
-      expect(() => coveoua('callPlugin', 'svc', 'nosuchfunction')).toThrow(/does not exist/);
-      expect(() => coveoua('callPlugin', 'link', 'nosuchfunction')).toThrow(/does not exist/);
+      expect(() => coveoua('callPlugin', 'ec', 'missingFunction')).toThrow(/does not exist/);
+      expect(() => coveoua('callPlugin', 'svc', 'missingFunction')).toThrow(/does not exist/);
+      expect(() => coveoua('callPlugin', 'link', 'missingFunction')).toThrow(/does not exist/);
     });
 
     it('can accept no plugins', () => {
       coveoua('init', 'SOME TOKEN', {plugins: []});
-      expect(() => coveoua('callPlugin', 'ec', 'nosuchfunction')).toThrow(/is not required/);
-      expect(() => coveoua('callPlugin', 'svc', 'nosuchfunction')).toThrow(/is not required/);
-      expect(() => coveoua('callPlugin', 'link', 'nosuchfunction')).toThrow(/is not required/);
+      expect(() => coveoua('callPlugin', 'ec', 'missingFunction')).toThrow(/is not required/);
+      expect(() => coveoua('callPlugin', 'svc', 'missingFunction')).toThrow(/is not required/);
+      expect(() => coveoua('callPlugin', 'link', 'missingFunction')).toThrow(/is not required/);
     });
 
     it('can accept one plugin', () => {
       coveoua('init', 'SOME TOKEN', {plugins: ['svc']});
-      expect(() => coveoua('callPlugin', 'ec', 'nosuchfunction')).toThrow(/is not required/);
-      expect(() => coveoua('callPlugin', 'link', 'nosuchfunction')).toThrow(/is not required/);
-      expect(() => coveoua('callPlugin', 'svc', 'nosuchfunction')).toThrow(/does not exist/);
+      expect(() => coveoua('callPlugin', 'ec', 'missingFunction')).toThrow(/is not required/);
+      expect(() => coveoua('callPlugin', 'link', 'missingFunction')).toThrow(/is not required/);
+      expect(() => coveoua('callPlugin', 'svc', 'missingFunction')).toThrow(/does not exist/);
     });
 
     it('can send pageview with analyticsClient', () => {

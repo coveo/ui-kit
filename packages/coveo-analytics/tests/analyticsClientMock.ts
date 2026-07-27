@@ -3,7 +3,7 @@ import {NoopAnalytics} from '../src/client/noopAnalytics';
 import {NoopRuntime} from '../src/client/runtimeEnvironment';
 import {AnyEventResponse, EventType} from '../src/events';
 
-export const visitorIdMock = 'mockvisitorid';
+export const visitorIdMock = 'mockVisitorId';
 
 const makeEvent = (eventType: EventType | string) =>
   Promise.resolve({

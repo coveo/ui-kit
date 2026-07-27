@@ -167,7 +167,7 @@ describe('CoveoLinkPlugin', () => {
   });
 
   it('errors on invalid urls', async () => {
-    const url: string = 'somethingthatisobviouslynotaurl';
+    const url: string = 'invalidTestUrl';
     await expect(link.decorate(url)).rejects.toThrow('Invalid URL provided');
   });
 

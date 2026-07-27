@@ -9,7 +9,7 @@ import {
 describe('AnalyticsBeaconClient', () => {
   const baseUrl = 'https://bloup.com';
   const token = '👛';
-  const currentVisitorId = 'hereiam';
+  const currentVisitorId = 'mockVisitorId';
 
   const originalSendBeacon = navigator.sendBeacon;
   const sendBeaconMock = jest.fn();

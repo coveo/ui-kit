@@ -67,7 +67,7 @@ describe('svc events', () => {
     coveoua('svc:setTicket', {
       subject: 'super subject',
       description: 'some description',
-      category: 'some smort category',
+      category: 'testCategory',
       custom: {verycustom: 'value'},
     });
 
@@ -81,7 +81,7 @@ describe('svc events', () => {
       svc_action_data: {classificationId: 'someId', requestID: 'someReqId'},
       svc_ticket_subject: 'super subject',
       svc_ticket_description: 'some description',
-      svc_ticket_category: 'some smort category',
+      svc_ticket_category: 'testCategory',
       svc_ticket_custom: {verycustom: 'value'},
     });
   });
@@ -90,7 +90,7 @@ describe('svc events', () => {
     await coveoua('svc:setTicket', {
       subject: 'super subject',
       description: 'some description',
-      category: 'some smort category',
+      category: 'testCategory',
       custom: {verycustom: 'value'},
       unknown: 'ok',
     });
@@ -103,7 +103,7 @@ describe('svc events', () => {
       t: 'event',
       svc_ticket_subject: 'super subject',
       svc_ticket_description: 'some description',
-      svc_ticket_category: 'some smort category',
+      svc_ticket_category: 'testCategory',
       svc_ticket_custom: {verycustom: 'value'},
     });
   });
@@ -116,7 +116,7 @@ describe('svc events', () => {
     // @ts-ignore
     delete window.location;
     // @ts-ignore
-    // Ooommmpf... JSDOM does not support any form of navigation, so let's overwrite the whole thing 💥.
+    // Warning: JSDOM does not support any form of navigation, so let's overwrite the whole thing 💥.
     window.location = new URL(url);
   };
 });
