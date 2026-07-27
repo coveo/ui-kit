@@ -214,16 +214,6 @@ Apply **brand-related color hooks** (`--slds-g-color-brand-*`) where the compone
 - Run `pnpm run test:unit -p force-app/main/default/lwc/{componentName}/` to verify unit tests still pass after changes
 - Styling should be visually unaffected (very similar) after migration — fallback values guarantee this
 
-## Pull Request Creation
-
-**Do NOT create PRs automatically or offer to create them.** Only create a PR when the user explicitly asks for one (e.g., "create a PR", "open a pull request").
-
-When the user explicitly asks to create a PR, use the `gh` CLI tool with the following structure and pattern:
-
-```bash
-gh pr create --title "<JIRA-TICKET> <Short title>" --body "<body>"
-```
-
 ### PR Description Template
 
 ```markdown
