@@ -1,4 +1,4 @@
-import type {Product} from '../utils.js';
+import type {Product} from '@coveo/thermidor';
 import {resolveProductImage} from '../utils.js';
 import styles from './ProductCard.module.css';
 
@@ -13,10 +13,7 @@ function formatPrice(value: number): string {
 export function ProductCard({product}: ProductCardProps) {
   const imageUrl = resolveProductImage(product);
 
-  const name = product.ec_name as string | undefined;
-  const brand = product.ec_brand as string | undefined;
-  const price = product.ec_price as number | undefined;
-  const promoPrice = product.ec_promo_price as number | undefined;
+  const {ec_name: name, ec_brand: brand, ec_price: price, ec_promo_price: promoPrice} = product;
 
   const hasPromo = promoPrice !== undefined && price !== undefined && promoPrice < price;
 

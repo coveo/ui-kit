@@ -64,7 +64,6 @@ export function ConversationPage({
   }, [turns, scrollToPrompt]);
 
   const handleAction = (text: string, _type: string) => {
-    void _type;
     if (text) {
       onSubmit(text);
     }

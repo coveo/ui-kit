@@ -1,8 +1,6 @@
-export interface Product {
-  ec_thumbnails?: string[];
-  ec_images?: string[];
-  [key: string]: unknown;
-}
+import type {Product} from '@coveo/thermidor';
+
+export type {Product} from '@coveo/thermidor';
 
 export function resolveProductImage(product: Product): string | null {
   if (product.ec_thumbnails?.length) return product.ec_thumbnails[0];
