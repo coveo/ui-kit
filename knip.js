@@ -4,6 +4,8 @@ export default {
   ignoreWorkspaces: ['packages/quantic', 'packages/create-atomic-component-project/template'],
   ignoreDependencies: ['semver'],
   ignore: [
+    '.kiro/**',
+    '.agents/skills/**',
     'packages/quantic/**',
     // Temporary until CAJS package activation supplies package metadata and entry points.
     'packages/coveo-analytics/**',
@@ -19,7 +21,7 @@ export default {
   },
   workspaces: {
     '.': {
-      entry: ['.agents/skills/**/scripts/*.mjs', 'scripts/**/*.{js,mjs}'],
+      entry: ['scripts/**/*.{js,mjs}'],
       ignoreBinaries: ['ts-node'],
       ignoreDependencies: ['@playwright/mcp', 'handlebars'],
     },

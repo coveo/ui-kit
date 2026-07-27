@@ -1,0 +1,7 @@
+repo: coveo/ai-tools
+ref: main
+skills:
+  - jira-writer
+  - user-story
+steering: []
+agents: []

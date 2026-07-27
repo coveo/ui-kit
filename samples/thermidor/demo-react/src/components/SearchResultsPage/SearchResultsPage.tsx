@@ -20,6 +20,7 @@ interface SearchResultsPageProps {
   onSubmit: (prompt: string) => void;
   isStreaming: boolean;
   routedInterface: RoutedInterface;
+  query?: string;
 }
 
 export function SearchResultsPage(props: SearchResultsPageProps) {
@@ -30,7 +31,12 @@ export function SearchResultsPage(props: SearchResultsPageProps) {
   return <SearchResultsPageInner {...props} />;
 }
 
-function SearchResultsPageInner({onSubmit, isStreaming, routedInterface}: SearchResultsPageProps) {
+function SearchResultsPageInner({
+  onSubmit,
+  isStreaming,
+  routedInterface,
+  query,
+}: SearchResultsPageProps) {
   const [productListController, productListState] = useBuildController(() =>
     buildProductListController({interface: routedInterface.interface})
   );
@@ -78,7 +84,7 @@ function SearchResultsPageInner({onSubmit, isStreaming, routedInterface}: Search
         <PromptInput
           onSubmit={onSubmit}
           disabled={isStreaming}
-          initialValue={searchBoxState.query ?? ''}
+          initialValue={query ?? ''}
           suggestions={sections}
           onSuggestionSelect={handleSuggestionSelect}
         />
