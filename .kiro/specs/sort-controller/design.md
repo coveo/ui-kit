@@ -32,19 +32,16 @@ graph TD
     end
 
     subgraph External
-        PAGINATION[pagination-actions]
     end
 
     SC -->|adopts| SLICE
     SC -->|reads| SELECTORS
     SC -->|dispatches| ACTIONS
-    SC -->|resets| PAGINATION
     SC -->|invokes| FACADES
 
     SA -->|adopts| SLICE
     SA -->|reads| SELECTORS
     SA -->|dispatches| ACTIONS
-    SA -->|resets| PAGINATION
     SA -->|invokes| FACADES
 
     SLICE -->|extraReducers| ACTIONS
@@ -64,14 +61,11 @@ sequenceDiagram
     participant CTRL as SortController
     participant ENG as Engine
     participant SLICE as Sort Slice
-    participant PAG as Pagination Slice
     participant FACADE as Search Facade
 
     UI->>CTRL: sortBy({sortCriteria: "@price ascending"})
     CTRL->>ENG: mutate(sortByAction(criterion))
     ENG->>SLICE: reducer updates appliedSort
-    CTRL->>ENG: mutate(setFirstResult(0))
-    ENG->>PAG: reducer resets pagination
     CTRL->>FACADE: thunk({engine})
     FACADE->>ENG: API request (includes sort in body)
     Note over FACADE: Commerce/Generative response includes sort info
@@ -190,26 +184,21 @@ import {createMemoizedStateSelector, getHandleInternals} from '@/src/internal/ut
 import {getOrCreateSortActions} from '@/src/internal/features/sort/index.js';
 import {getOrCreateSortSelectors} from '@/src/internal/features/sort/index.js';
 import {getOrCreateSortSlice} from '@/src/internal/features/sort/index.js';
-import {getOrCreatePaginationActions} from '@/src/internal/features/pagination/index.js';
-import {getOrCreatePaginationSlice} from '@/src/internal/features/pagination/index.js';
 import type {CommerceSearchSortCriterion} from '@/src/internal/api/commerce-search/index.js';
 import type {Controller} from '@/src/public/controllers/controller-types.js';
 
 class SortControllerImpl extends BaseController<SortControllerState> {
   #thunks: EndpointThunk[];
   #actions: ReturnType<typeof getOrCreateSortActions>;
-  #paginationActions: ReturnType<typeof getOrCreatePaginationActions>;
   #controllerState: StateSelector<SortControllerState>;
 
   constructor(options: SortControllerOptions) {
     const {engine, resolveFacades} = getHandleInternals(options.interface);
 
     engine.adoptSlice(getOrCreateSortSlice(options.interface));
-    engine.adoptSlice(getOrCreatePaginationSlice(options.interface));
 
     const selectors = getOrCreateSortSelectors(options.interface);
     const actions = getOrCreateSortActions(options.interface);
-    const paginationActions = getOrCreatePaginationActions(options.interface);
 
     const controllerState = createMemoizedStateSelector(
       selectors.getAppliedSort,
@@ -221,13 +210,11 @@ class SortControllerImpl extends BaseController<SortControllerState> {
 
     this.#thunks = resolveFacades('search');
     this.#actions = actions;
-    this.#paginationActions = paginationActions;
     this.#controllerState = controllerState;
   }
 
   sortBy(criterion: CommerceSearchSortCriterion): void {
     this.engine.mutate(this.#actions.sortBy(criterion));
-    this.engine.mutate(this.#paginationActions.setFirstResult(0));
     for (const thunk of this.#thunks) {
       this.engine.mutate(thunk({engine: this.engine}));
     }
@@ -269,8 +256,6 @@ import {getHandleInternals} from '@/src/internal/utils/index.js';
 import {getOrCreateSortActions} from '@/src/internal/features/sort/index.js';
 import {getOrCreateSortSelectors} from '@/src/internal/features/sort/index.js';
 import {getOrCreateSortSlice} from '@/src/internal/features/sort/index.js';
-import {getOrCreatePaginationActions} from '@/src/internal/features/pagination/index.js';
-import {getOrCreatePaginationSlice} from '@/src/internal/features/pagination/index.js';
 import type {CommerceSearchSortCriterion} from '@/src/internal/api/commerce-search/index.js';
 
 export interface LoadSortActionsOptions {
@@ -281,17 +266,14 @@ export function loadSortActions(options: LoadSortActionsOptions) {
   const {engine, resolveFacades} = getHandleInternals(options.interface);
 
   engine.adoptSlice(getOrCreateSortSlice(options.interface));
-  engine.adoptSlice(getOrCreatePaginationSlice(options.interface));
 
   const thunks = resolveFacades('search');
   const actions = getOrCreateSortActions(options.interface);
-  const paginationActions = getOrCreatePaginationActions(options.interface);
   const selectors = getOrCreateSortSelectors(options.interface);
 
   return {
     sortBy(criterion: CommerceSearchSortCriterion) {
       engine.mutate(actions.sortBy(criterion));
-      engine.mutate(paginationActions.setFirstResult(0));
       for (const thunk of thunks) {
         engine.mutate(thunk({engine}));
       }
@@ -418,7 +400,6 @@ Following the established pattern from `pagination-slice.test.ts`:
 **Sort Controller tests:**
 - `buildSortController` returns a controller with correct initial state
 - `sortBy` updates `appliedSort` in state
-- `sortBy` resets pagination `firstResult` to 0
 - `sortBy` invokes search facade thunks
 - `isSortedBy` returns `true` when criteria match
 - `isSortedBy` returns `false` when criteria differ
@@ -428,7 +409,6 @@ Following the established pattern from `pagination-slice.test.ts`:
 **Sort Public Actions tests:**
 - `loadSortActions` adopts the sort slice
 - `sortBy` updates state and triggers facades
-- `sortBy` resets pagination
 - `getState` returns current sort state
 
 **Test file location**: `src/internal/features/sort/sort-slice.test.ts` for slice tests, `src/public/controllers/sort/sort-controller.test.ts` for controller tests.

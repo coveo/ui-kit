@@ -54,7 +54,6 @@ Both APIs are unified behind the `CommerceSearchSortCriterion` type (`{sortCrite
 5. THE Sort_Controller SHALL expose an `isSortedBy` method that accepts a Sort_Criterion and returns `true` if it matches the currently applied sort, `false` otherwise.
 6. THE Sort_Controller SHALL extend `BaseController` and support subscription-based state observation via the inherited `subscribe` method.
 7. WHEN the `sortBy` method is called, THE Sort_Controller SHALL dispatch the `sortBy` mutation and then invoke all resolved `'search'` facade thunks to trigger a new API request.
-8. WHEN the `sortBy` method is called, THE Sort_Controller SHALL reset pagination to the first page before invoking the search facade thunks.
 
 ### Requirement 3: Sort Public Actions
 
@@ -65,8 +64,7 @@ Both APIs are unified behind the `CommerceSearchSortCriterion` type (`{sortCrite
 1. THE Sort_Actions module SHALL export a `loadSortActions` function that accepts an options object with an `interface` property typed as `Supports<'search'>`.
 2. WHEN `loadSortActions` is called, THE Sort_Actions module SHALL adopt the Sort_Slice for the given interface.
 3. THE `loadSortActions` function SHALL return an object with a `sortBy` method that accepts a Sort_Criterion, updates the sort state, and triggers a search request through the interface facades.
-4. WHEN the `sortBy` method returned by `loadSortActions` is called, THE Sort_Actions module SHALL reset pagination to the first page before triggering the search request.
-5. THE `loadSortActions` function SHALL return an object with a `getState` method that returns the current sort state (`appliedSort` and `availableSorts`).
+4. THE `loadSortActions` function SHALL return an object with a `getState` method that returns the current sort state (`appliedSort` and `availableSorts`).
 
 ### Requirement 4: Search Interface Sort Behavior
 
