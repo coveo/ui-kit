@@ -1,4 +1,5 @@
 import {readFile, rm} from 'node:fs/promises';
+import {homedir} from 'node:os';
 import {afterEach, beforeEach, describe, expect, it} from 'vitest';
 import {
   buildCrashReport,
@@ -33,7 +34,7 @@ describe('buildCrashReport', () => {
     setRunContext({metadata});
 
     const report = buildCrashReport(
-      new Error('failed at /Users/alice/my-app/index.js')
+      new Error(`failed at ${homedir()}/my-app/index.js`)
     );
 
     expect(report.schemaVersion).toBe(CRASH_REPORT_SCHEMA_VERSION);
@@ -41,7 +42,7 @@ describe('buildCrashReport', () => {
     expect(Number.isNaN(Date.parse(report.crashedOn))).toBe(false);
     expect(report.error).toEqual({
       name: 'Error',
-      message: 'failed at index.js',
+      message: 'failed at ~/my-app/index.js',
       stack: expect.any(String),
     });
     expect(report.os).toEqual({
@@ -50,6 +51,32 @@ describe('buildCrashReport', () => {
       release: expect.any(String),
     });
     expect(report.metadata).toEqual(metadata);
+  });
+
+  it('normalizes own-package stack paths before writing a report', () => {
+    const home = homedir();
+    const encodedHome = home.replace(/^[/\\]+/, '').replace(/[/\\]/g, '+');
+    const error = new Error('boom');
+    error.stack = [
+      'Error: boom',
+      `    at scaffold (file:///private/tmp/test-create-ui/node_modules/.pnpm/@coveo+create-ui@file+..+..+..+${encodedHome}+Developer+ui-kit_123/node_modules/@coveo/create-ui/dist/scaffold.js:77:15)`,
+      `    at dependency (${home}/project/node_modules/pacote/lib/fetch.js:9:2)`,
+      '    at async file:///private/tmp/test-create-ui/node_modules/@coveo/create-ui/dist/index.js:12:3',
+    ].join('\n');
+
+    const stack = buildCrashReport(error).error.stack;
+
+    expect(stack).toBe(
+      [
+        'Error: boom',
+        '    at scaffold (app:///dist/scaffold.js:77:15)',
+        '    at dependency (~/project/node_modules/pacote/lib/fetch.js:9:2)',
+        '    at async app:///dist/index.js:12:3',
+      ].join('\n')
+    );
+    expect(stack).not.toContain('+..+..+..+');
+    expect(stack).not.toContain(encodedHome);
+    expect(stack).not.toContain('node_modules/@coveo/create-ui');
   });
 
   it('prefers captured metadata over runtime-derived fields', () => {
@@ -68,19 +95,20 @@ describe('buildCrashReport', () => {
 
   it('captures a scrubbed cause chain (Error and non-Error links)', () => {
     setRunContext({metadata});
+    const home = homedir();
 
     const report = buildCrashReport(
-      new Error('top failed at /Users/alice/app/a.js', {
-        cause: new Error('db failed at /Users/alice/app/b.js', {
+      new Error(`top failed at ${home}/app/a.js`, {
+        cause: new Error(`db failed at ${home}/app/b.js`, {
           cause: 'root string cause',
         }),
       })
     );
 
-    expect(report.error.message).toBe('top failed at a.js');
+    expect(report.error.message).toBe('top failed at ~/app/a.js');
     expect(report.error.cause).toEqual({
       name: 'Error',
-      message: 'db failed at b.js',
+      message: 'db failed at ~/app/b.js',
       stack: expect.any(String),
       cause: {name: 'NonError', message: 'root string cause'},
     });
@@ -149,37 +177,55 @@ describe('writeCrashReport', () => {
 });
 
 describe('redactPaths', () => {
-  it('reduces absolute paths and file:// URLs to the file name', () => {
-    expect(redactPaths('at /Users/alice/app/index.js:5:1')).toBe(
-      'at index.js:5:1'
-    );
-    expect(redactPaths('at scaffold (file:///Users/alice/dist/s.js:9:2)')).toBe(
-      'at scaffold (s.js:9:2)'
-    );
+  it('replaces the home directory with ~ and keeps the rest of the path', () => {
+    expect(
+      redactPaths('at /Users/alice/app/index.js:5:1', '/Users/alice')
+    ).toBe('at ~/app/index.js:5:1');
+    expect(
+      redactPaths(
+        'at scaffold (file:///Users/alice/dist/s.js:9:2)',
+        '/Users/alice'
+      )
+    ).toBe('at scaffold (file://~/dist/s.js:9:2)');
   });
 
-  it('reduces Windows paths written with either separator', () => {
-    expect(redactPaths('at C:\\Users\\carol\\index.js:5:1')).toBe(
-      'at index.js:5:1'
-    );
-    expect(redactPaths('at C:/Users/carol/index.js:5:1')).toBe(
-      'at index.js:5:1'
-    );
+  it('preserves the node_modules structure below home', () => {
+    expect(
+      redactPaths(
+        '/Users/alice/proj/node_modules/pacote/lib/fetch.js',
+        '/Users/alice'
+      )
+    ).toBe('~/proj/node_modules/pacote/lib/fetch.js');
   });
 
-  it('drops the directory (and the username it embeds) from a path', () => {
-    const out = redactPaths("open '/Users/jane.doe/secret/config.json'");
-    expect(out).toBe("open 'config.json'");
+  it('replaces a Windows home dir written with either separator', () => {
+    expect(
+      redactPaths('at C:\\Users\\carol\\app\\index.js:5:1', 'C:\\Users\\carol')
+    ).toBe('at ~\\app\\index.js:5:1');
+    expect(
+      redactPaths('at C:/Users/carol/app/index.js:5:1', 'C:\\Users\\carol')
+    ).toBe('at ~/app/index.js:5:1');
+  });
+
+  it('removes the username embedded in the home path', () => {
+    const out = redactPaths(
+      "open '/Users/jane.doe/secret/config.json'",
+      '/Users/jane.doe'
+    );
+    expect(out).toBe("open '~/secret/config.json'");
     expect(out).not.toContain('jane.doe');
   });
 
   it('leaves node: module ids and http(s) URLs intact', () => {
-    expect(redactPaths('at node:internal/modules/esm/module_job:430:25')).toBe(
-      'at node:internal/modules/esm/module_job:430:25'
-    );
-    expect(redactPaths('see https://github.com/coveo/ui-kit/issues')).toBe(
-      'see https://github.com/coveo/ui-kit/issues'
-    );
+    expect(
+      redactPaths(
+        'at node:internal/modules/esm/module_job:430:25',
+        '/Users/alice'
+      )
+    ).toBe('at node:internal/modules/esm/module_job:430:25');
+    expect(
+      redactPaths('see https://github.com/coveo/ui-kit/issues', '/Users/alice')
+    ).toBe('see https://github.com/coveo/ui-kit/issues');
   });
 });
 
@@ -189,6 +235,19 @@ describe('parseCrashReport', () => {
   it('round-trips a report written by the capture side', () => {
     const report = buildCrashReport(new Error('boom'));
     expect(parseCrashReport(JSON.stringify(report))).toEqual(report);
+  });
+
+  it('migrates persisted v1 into the canonical model', () => {
+    const report = buildCrashReport(new Error('boom'));
+    const persistedV1 = {...report, removedByMigration: true};
+
+    expect(parseCrashReport(JSON.stringify(persistedV1))).toEqual(report);
+  });
+
+  it('rejects a malformed report through its known-version migrator', () => {
+    expect(() =>
+      parseCrashReport(JSON.stringify({schemaVersion: 1}))
+    ).toThrowError(expect.objectContaining({kind: 'not-a-report'}));
   });
 
   it('throws not-a-report for input that is not a crash report', () => {

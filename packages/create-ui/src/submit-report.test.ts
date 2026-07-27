@@ -1,5 +1,5 @@
 import {mkdtemp, rm, writeFile} from 'node:fs/promises';
-import {tmpdir} from 'node:os';
+import {homedir, tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {
@@ -114,20 +114,21 @@ describe('submitReport', () => {
     expect(sentry.close).toHaveBeenCalled();
   });
 
-  it('beforeSend preserves the crash time and reduces paths to file names', async () => {
+  it('beforeSend preserves the crash time and redacts the home directory to ~', async () => {
     await submitReport(await writeValidReport());
+    const home = homedir();
 
     const processed = sentry.init.mock.calls[0][0].beforeSend({
-      message: 'failed at /Users/alice/project',
+      message: `failed at ${home}/project`,
       exception: {
         values: [
           {
-            value: 'boom at /Users/alice/project',
+            value: `boom at ${home}/project`,
             stacktrace: {
               frames: [
                 {
-                  filename: '/Users/alice/project/index.js',
-                  abs_path: '/Users/alice/project/index.js',
+                  filename: `${home}/project/index.js`,
+                  abs_path: `${home}/project/index.js`,
                 },
               ],
             },
@@ -137,10 +138,10 @@ describe('submitReport', () => {
     });
 
     expect(processed.timestamp).toBe(Date.parse(sampleReport.crashedOn) / 1000);
-    expect(processed.message).toBe('failed at project');
+    expect(processed.message).toBe('failed at ~/project');
     const frame = processed.exception.values[0].stacktrace.frames[0];
-    expect(frame.filename).toBe('index.js');
-    expect(frame.abs_path).toBe('index.js');
+    expect(frame.filename).toBe('~/project/index.js');
+    expect(frame.abs_path).toBe('~/project/index.js');
   });
 
   it('reconstructs the error cause chain as linked errors for capture', async () => {
@@ -173,34 +174,142 @@ describe('submitReport', () => {
 
   it('beforeSend scrubs every exception value, including linked causes', async () => {
     await submitReport(await writeValidReport());
+    const home = homedir();
 
     const processed = sentry.init.mock.calls[0][0].beforeSend({
       exception: {
         values: [
           {
-            value: 'ENOENT: open /Users/alice/project/.env',
+            value: `ENOENT: open ${home}/project/.env`,
             stacktrace: {
               frames: [
                 {
-                  filename: '/Users/alice/project/db.js',
-                  abs_path: '/Users/alice/project/db.js',
+                  filename: `${home}/project/db.js`,
+                  abs_path: `${home}/project/db.js`,
                 },
               ],
             },
           },
           {
-            value: 'boom at /Users/alice/project/index.js',
-            stacktrace: {frames: [{filename: '/Users/alice/project/index.js'}]},
+            value: `boom at ${home}/project/index.js`,
+            stacktrace: {frames: [{filename: `${home}/project/index.js`}]},
           },
         ],
       },
     });
 
     const [cause, top] = processed.exception.values;
-    expect(cause.value).toBe('ENOENT: open .env');
-    expect(cause.stacktrace.frames[0].filename).toBe('db.js');
-    expect(cause.stacktrace.frames[0].abs_path).toBe('db.js');
-    expect(top.value).toBe('boom at index.js');
-    expect(top.stacktrace.frames[0].filename).toBe('index.js');
+    expect(cause.value).toBe('ENOENT: open ~/project/.env');
+    expect(cause.stacktrace.frames[0].filename).toBe('~/project/db.js');
+    expect(cause.stacktrace.frames[0].abs_path).toBe('~/project/db.js');
+    expect(top.value).toBe('boom at ~/project/index.js');
+    expect(top.stacktrace.frames[0].filename).toBe('~/project/index.js');
+  });
+
+  it('rewrites own-package frames to app:/// and strips the install path, including any username', async () => {
+    await submitReport(await writeValidReport());
+
+    const ownPath =
+      '/private/tmp/app/node_modules/.pnpm/@coveo+create-ui@file+..+..+..+Users+jane.doe+dev+ui-kit_04567/node_modules/@coveo/create-ui/dist/scaffold.js';
+    const processed = sentry.init.mock.calls[0][0].beforeSend({
+      exception: {
+        values: [
+          {
+            stacktrace: {
+              frames: [
+                {filename: ownPath, abs_path: ownPath, module: 'scaffold'},
+              ],
+            },
+          },
+        ],
+      },
+    });
+
+    const frame = processed.exception.values[0].stacktrace.frames[0];
+    expect(frame.filename).toBe('app:///dist/scaffold.js');
+    expect(frame.abs_path).toBe('app:///dist/scaffold.js');
+    expect(frame.in_app).toBe(true);
+    expect(frame.module).toBeUndefined();
+    expect(JSON.stringify(frame)).not.toContain('jane.doe');
+    expect(JSON.stringify(frame)).not.toContain('node_modules');
+  });
+
+  it('rewrites an own-package frame that only carries abs_path', async () => {
+    await submitReport(await writeValidReport());
+
+    const processed = sentry.init.mock.calls[0][0].beforeSend({
+      exception: {
+        values: [
+          {
+            stacktrace: {
+              frames: [
+                {
+                  abs_path:
+                    '/tmp/app/node_modules/@coveo/create-ui/dist/index.js',
+                },
+              ],
+            },
+          },
+        ],
+      },
+    });
+
+    const frame = processed.exception.values[0].stacktrace.frames[0];
+    expect(frame.abs_path).toBe('app:///dist/index.js');
+    expect(frame.filename).toBe('app:///dist/index.js');
+    expect(frame.in_app).toBe(true);
+  });
+
+  it('keeps node internals and dependencies out of app, local source in, and redacts home', async () => {
+    await submitReport(await writeValidReport());
+    const home = homedir();
+
+    const processed = sentry.init.mock.calls[0][0].beforeSend({
+      exception: {
+        values: [
+          {
+            stacktrace: {
+              frames: [
+                {filename: 'node:internal/process/task_queues'},
+                {
+                  filename: `${home}/.npm/_npx/ab12/node_modules/pacote/lib/fetch.js`,
+                  abs_path: `${home}/.npm/_npx/ab12/node_modules/pacote/lib/fetch.js`,
+                },
+                {
+                  filename: `${home}/dev/ui-kit/packages/create-ui/dist/index.js`,
+                  abs_path: `${home}/dev/ui-kit/packages/create-ui/dist/index.js`,
+                },
+              ],
+            },
+          },
+        ],
+      },
+    });
+
+    const [nodeFrame, depFrame, localFrame] =
+      processed.exception.values[0].stacktrace.frames;
+    expect(nodeFrame.in_app).toBe(false);
+    expect(depFrame.in_app).toBe(false);
+    expect(depFrame.filename).toBe(
+      '~/.npm/_npx/ab12/node_modules/pacote/lib/fetch.js'
+    );
+    expect(depFrame.abs_path).toBe(
+      '~/.npm/_npx/ab12/node_modules/pacote/lib/fetch.js'
+    );
+    expect(localFrame.in_app).toBe(true);
+    expect(localFrame.filename).toBe(
+      '~/dev/ui-kit/packages/create-ui/dist/index.js'
+    );
+  });
+
+  it('defaults the Sentry environment to production', async () => {
+    await submitReport(await writeValidReport());
+    expect(sentry.init.mock.calls[0][0].environment).toBe('production');
+  });
+
+  it('honors the SENTRY_ENVIRONMENT override', async () => {
+    vi.stubEnv('SENTRY_ENVIRONMENT', 'development');
+    await submitReport(await writeValidReport());
+    expect(sentry.init.mock.calls[0][0].environment).toBe('development');
   });
 });

@@ -3,7 +3,16 @@ import {Command, CommanderError} from 'commander';
 import {realpathSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {argv} from 'node:process';
-import {buildCrashReport, writeCrashReport} from './crash-report.js';
+import {
+  initializeCrashDiagnostics,
+  recordCrashLifecycleEvent,
+} from './crash-diagnostics.js';
+import {
+  buildCrashReport,
+  crashReportReference,
+  type CrashOrigin,
+  writeCrashReport,
+} from './crash-report.js';
 import {isExpectedError} from './errors.js';
 import {log} from './log.js';
 import {resolveInputs, scaffold, type CliArgs} from './scaffold.js';
@@ -79,6 +88,8 @@ export async function main(rawArgs: string[]): Promise<number> {
     return submitReport(rawArgs[1]);
   }
 
+  initializeCrashDiagnostics();
+
   let args: CliArgs;
   try {
     args = parseArgs(rawArgs);
@@ -99,6 +110,7 @@ export async function main(rawArgs: string[]): Promise<number> {
     return 1;
   }
 
+  recordCrashLifecycleEvent('input.resolved');
   await scaffold(options);
   return 0;
 }
@@ -107,32 +119,47 @@ const isDirectRun =
   argv[1] !== undefined &&
   fileURLToPath(import.meta.url) === realpathSync(argv[1]);
 
-export async function reportCrashIfUnexpected(error: unknown): Promise<void> {
+export async function reportCrashIfUnexpected(
+  error: unknown,
+  origin: CrashOrigin = 'unknown'
+): Promise<void> {
   if (isExpectedError(error) || isTrackingDisabled()) {
     return;
   }
   try {
-    const report = buildCrashReport(error);
+    const report = buildCrashReport(error, origin);
     const reportPath = await writeCrashReport(report);
-    log.note(buildCrashDisclosure(reportPath), 'Crash report');
+    log.note(
+      buildCrashDisclosure(reportPath, crashReportReference(report.runId)),
+      'Crash report'
+    );
   } catch {
     // Best-effort: never let a reporting failure hide the real crash.
   }
 }
 
 if (isDirectRun) {
-  const fail = async (error: unknown): Promise<never> => {
+  const fail = async (error: unknown, origin: CrashOrigin): Promise<never> => {
     if (error instanceof Error && error.name === 'ExitPromptError') {
       log.info('\nAborted.');
       process.exit(130);
     }
     log.error(formatError(error));
-    await reportCrashIfUnexpected(error);
+    await reportCrashIfUnexpected(error, origin);
     process.exit(1);
   };
 
-  process.on('uncaughtException', (err) => void fail(err));
-  process.on('unhandledRejection', (reason) => void fail(reason));
+  process.on(
+    'uncaughtException',
+    (error) => void fail(error, 'uncaught-exception')
+  );
+  process.on(
+    'unhandledRejection',
+    (reason) => void fail(reason, 'unhandled-rejection')
+  );
 
-  main(argv.slice(2)).then((code) => process.exit(code), fail);
+  main(argv.slice(2)).then(
+    (code) => process.exit(code),
+    (error) => fail(error, 'main-rejection')
+  );
 }

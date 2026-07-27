@@ -1,6 +1,7 @@
 import {mkdir, mkdtemp, rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join, resolve} from 'node:path';
+import {recordCrashLifecycleEvent} from './crash-diagnostics.js';
 import {setRunContext} from './crash-report.js';
 import {downloadTemplate} from './download.js';
 import {ExpectedError, TemplateVersionUnavailableError} from './errors.js';
@@ -65,6 +66,7 @@ export async function scaffold({
   let createdTargetDir = false;
 
   try {
+    recordCrashLifecycleEvent('template.download.started');
     const versionSuffix = version ? ` (${version})` : '';
     log.step(`Downloading the "${template.name}" template${versionSuffix}…`);
     const sampleDir = await downloadTemplate({
@@ -74,6 +76,7 @@ export async function scaffold({
     });
 
     const {templateVersion, dependencies} = await readSampleMetadata(sampleDir);
+    recordCrashLifecycleEvent('template.download.completed');
     const metadata = buildProjectMetadata({
       template: template.name,
       templateVersion,
@@ -81,16 +84,13 @@ export async function scaffold({
     });
     setRunContext({metadata});
 
+    recordCrashLifecycleEvent('project.creation.started');
     log.step(`Creating project in ${targetDir}…`);
     createdTargetDir = await claimTargetDir(targetDir);
     await rewritePackageJson(sampleDir, projectName);
     await moveToTarget(sampleDir, targetDir);
     await writeProvenance(targetDir, metadata);
-    // TEMPORARY demo — REMOVE after verifying Sentry. Crashes after metadata is
-    // captured; skipped under vitest so the scaffold tests still pass.
-    if (process.env.VITEST === undefined) {
-      throw new Error('Simulated crash 3.');
-    }
+    recordCrashLifecycleEvent('project.creation.completed');
   } catch (error) {
     if (createdTargetDir) {
       await rm(targetDir, {recursive: true, force: true});
@@ -111,10 +111,23 @@ export async function scaffold({
     await rm(tempDir, {recursive: true, force: true});
   }
 
+  recordCrashLifecycleEvent('dependencies.install.started');
+
+  // TEMPORARY demo — REMOVE after verifying Sentry. Crashes after metadata is
+  // captured; skipped under vitest so the scaffold tests still pass.
+  if (process.env.VITEST === undefined) {
+    throw new Error('Another Simulated crash 11.', {
+      cause: new Error('something went wrong'),
+    });
+  }
   const pm = getPackageManager();
   log.step(`Installing dependencies with ${pm}…`);
   const installed = installDependencies(targetDir);
+  recordCrashLifecycleEvent(
+    installed ? 'dependencies.install.succeeded' : 'dependencies.install.failed'
+  );
 
+  recordCrashLifecycleEvent('scaffold.completed');
   log.step('Done!');
   log.info(`\n  cd ${projectName}`);
   if (!installed) {

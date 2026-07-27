@@ -9,12 +9,15 @@ export function isTrackingDisabled(
   return normalized.length > 0 && normalized !== '0';
 }
 
-export function buildCrashDisclosure(reportPath: string): string {
+export function buildCrashDisclosure(
+  reportPath: string,
+  reportReference: string
+): string {
   return [
     `A crash report was saved to: ${reportPath}`,
     '',
     'To submit it (nothing is sent otherwise):',
-    `  npx @coveo/create-ui report ${reportPath}`,
+    `  npx @coveo/create-ui report ${reportReference}`,
     '',
     'Set DO_NOT_TRACK=1 to disable.',
   ].join('\n');
