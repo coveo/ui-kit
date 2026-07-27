@@ -38,7 +38,7 @@ This section holds the library that is compiled for browser usage. It wraps the 
 
 ### src/formatting
 
-This sections holds some formatting methods for metadata.
+This section holds some formatting methods for metadata.
 
 ### src/hook
 
