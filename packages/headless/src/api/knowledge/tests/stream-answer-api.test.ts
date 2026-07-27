@@ -231,7 +231,7 @@ describe('#streamAnswerApi', () => {
       expect(dispatch).toHaveBeenCalled();
     });
 
-    it('should invoke the provided analyticsClient.logGeneratedAnswerStreamEnd with the right arguments', () => {
+    it('should invoke the provided analyticsClient.logGeneratedAnswerStreamEnd with the right arguments when a genqa.endOfStreamType event is received', () => {
       const dispatch = vi.fn();
       const logGeneratedAnswerStreamEnd = vi.fn().mockReturnValue({
         type: 'analytics/generatedAnswer/streamEnd',
