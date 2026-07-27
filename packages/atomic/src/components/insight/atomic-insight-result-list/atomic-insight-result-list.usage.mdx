@@ -53,3 +53,28 @@ The component requires at least one `atomic-insight-result-template` child to de
   </atomic-insight-result-template>
 </atomic-insight-result-list>
 ```
+
+### Using `setRenderFunction` for custom rendering
+
+The `setRenderFunction` method bypasses the HTML template mechanism and allows you to programmatically render result items. Instead of defining an `atomic-insight-result-template`, you provide a callback that receives each result and renders it into a given root element.
+
+```html
+<script type="module">
+  await customElements.whenDefined('atomic-insight-result-list');
+  const resultList = document.querySelector('atomic-insight-result-list');
+
+  await resultList.setRenderFunction((result, root, linkContainer) => {
+    root.innerHTML = `
+      <atomic-result-section-title>
+        <atomic-result-link></atomic-result-link>
+      </atomic-result-section-title>
+      <atomic-result-section-excerpt>
+        <atomic-result-text field="excerpt"></atomic-result-text>
+      </atomic-result-section-excerpt>
+    `;
+    return root.innerHTML;
+  });
+</script>
+```
+
+> **Note:** `setRenderFunction` is intended for framework integrations (React, Angular, Vue) where rendering is managed programmatically. There is no dedicated React wrapper for this component in `@coveo/atomic-react`. For plain HTML deployments, use `atomic-insight-result-template` with `<template>` elements instead.

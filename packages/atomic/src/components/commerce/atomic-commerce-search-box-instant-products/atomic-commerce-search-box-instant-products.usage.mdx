@@ -10,3 +10,28 @@ This component needs the `atomic-commerce-search-box-query-suggestions` componen
   <atomic-commerce-search-box-instant-products></atomic-commerce-search-box-instant-products>
 </atomic-commerce-search-box>
 ```
+
+### Using `setRenderFunction` for custom rendering
+
+The `setRenderFunction` method bypasses the HTML template mechanism and allows you to programmatically render instant product items. Instead of defining an `atomic-product-template`, you provide a callback that receives each product and renders it into a given root element.
+
+```html
+<script type="module">
+  await customElements.whenDefined('atomic-commerce-search-box-instant-products');
+  const instantProducts = document.querySelector('atomic-commerce-search-box-instant-products');
+
+  await instantProducts.setRenderFunction((product, root, linkContainer) => {
+    root.innerHTML = `
+      <atomic-product-section-name>
+        <atomic-product-link>${product.ec_name}</atomic-product-link>
+      </atomic-product-section-name>
+      <atomic-product-section-metadata>
+        <atomic-product-price></atomic-product-price>
+      </atomic-product-section-metadata>
+    `;
+    return root.innerHTML;
+  });
+</script>
+```
+
+> **Note:** `setRenderFunction` is intended for framework integrations (React, Angular, Vue) where rendering is managed programmatically. There is no dedicated React wrapper for this component in `@coveo/atomic-react`. For plain HTML deployments, use `atomic-product-template` with `<template>` elements instead.
