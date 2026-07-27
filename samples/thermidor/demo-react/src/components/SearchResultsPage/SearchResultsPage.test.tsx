@@ -26,7 +26,6 @@ vi.mock('@coveo/thermidor', async (importOriginal) => {
         totalCount: 0,
         totalPages: 0,
       }),
-    buildSearchBoxController: () => createMockController({query: ''}),
   };
 });
 
@@ -60,7 +59,7 @@ describe('SearchResultsPage integration', () => {
     expect(screen.getByText('Facets (coming soon)')).toBeDefined();
   });
 
-  it('builds all 3 controllers via mock interface and renders without errors', () => {
+  it('builds controllers via mock interface and renders without errors', () => {
     renderPage();
 
     expect(screen.getByText('No results found')).toBeDefined();

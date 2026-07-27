@@ -1,7 +1,6 @@
-export interface AgentMessage {
-  content: string;
-  role: string;
-}
+import type {AgentMessage} from '@coveo/thermidor';
+
+export type {AgentMessage} from '@coveo/thermidor';
 
 /** Concatenate message contents in arrival order, separating distinct messages with newlines */
 export function assembleMessages(messages: AgentMessage[]): string {

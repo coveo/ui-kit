@@ -1,10 +1,6 @@
 import {useState, useRef, useEffect} from 'react';
 import type {RoutedInterface} from '@coveo/thermidor';
-import {
-  buildProductListController,
-  buildPaginationController,
-  buildSearchBoxController,
-} from '@coveo/thermidor';
+import {buildProductListController, buildPaginationController} from '@coveo/thermidor';
 import {SECTION_ACTIONS, type SuggestionItem} from '../SuggestionsDropdown/index.js';
 import {PromptInput} from '../PromptInput/PromptInput.js';
 import {useSuggestions} from '../../hooks/use-suggestions.js';
@@ -45,12 +41,9 @@ function SearchResultsPageInner({
   const [paginationController, paginationState] = useBuildController(() =>
     buildPaginationController({interface: routedInterface.interface})
   );
-  const [, searchBoxState] = useBuildController(() =>
-    buildSearchBoxController({interface: routedInterface.interface})
-  );
 
   const {sections} = useSuggestions({
-    inputValue: searchBoxState.query ?? '',
+    inputValue: query ?? '',
     context: 'search-results',
   });
 
@@ -100,7 +93,7 @@ function SearchResultsPageInner({
       <main className={styles.main}>
         <div className={styles.topRow}>
           <QuerySummaryPlaceholder
-            query={searchBoxState.query ?? ''}
+            query={query ?? ''}
             totalCount={paginationState.totalCount ?? 0}
             firstResult={(paginationState.page ?? 0) * (paginationState.pageSize ?? 0)}
             pageSize={paginationState.pageSize ?? 0}
