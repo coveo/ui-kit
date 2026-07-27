@@ -8,10 +8,7 @@ interface CookieDetails {
 // Code originally modified from : https://developers.livechatinc.com/blog/setting-cookies-to-subdomains-in-javascript/
 export class Cookie {
   static set(name: string, value: string, expire?: number) {
-    var domain: string,
-      expirationDate: Date | undefined,
-      domainParts: string[],
-      host: string;
+    var domain: string, expirationDate: Date | undefined, domainParts: string[], host: string;
     if (expire) {
       expirationDate = new Date();
       expirationDate.setTime(expirationDate.getTime() + expire);
@@ -23,10 +20,7 @@ export class Cookie {
     } else {
       domainParts = host.split('.');
       // we always have at least 2 domain parts
-      domain =
-        domainParts[domainParts.length - 2] +
-        '.' +
-        domainParts[domainParts.length - 1];
+      domain = domainParts[domainParts.length - 2] + '.' + domainParts[domainParts.length - 1];
       writeCookie(name, value, expirationDate, domain);
     }
   }
@@ -49,12 +43,7 @@ export class Cookie {
   }
 }
 
-function writeCookie(
-  name: string,
-  value: string,
-  expirationDate?: Date,
-  domain?: string
-) {
+function writeCookie(name: string, value: string, expirationDate?: Date, domain?: string) {
   document.cookie =
     `${name}=${value}` +
     (expirationDate ? `;expires=${expirationDate.toUTCString()}` : '') +

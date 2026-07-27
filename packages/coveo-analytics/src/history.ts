@@ -107,13 +107,11 @@ export class HistoryStore {
   getMostRecentElement(): HistoryElement | null {
     let currentHistory = this.getHistoryWithInternalTime();
     if (Array.isArray(currentHistory)) {
-      const sorted = currentHistory.sort(
-        (first: HistoryElement, second: HistoryElement) => {
-          // Internal time might not be set for all history element (on upgrade).
-          // Ensure to return the most recent element for which we have a value for internalTime.
-          return (second.internalTime || 0) - (first.internalTime || 0);
-        }
-      );
+      const sorted = currentHistory.sort((first: HistoryElement, second: HistoryElement) => {
+        // Internal time might not be set for all history element (on upgrade).
+        // Ensure to return the most recent element for which we have a value for internalTime.
+        return (second.internalTime || 0) - (first.internalTime || 0);
+      });
       return sorted[0];
     }
     return null;
@@ -132,8 +130,7 @@ export class HistoryStore {
 
     if (lastEntry && lastEntry.value == elem.value) {
       return (
-        (elem.internalTime || 0) - (lastEntry.internalTime || 0) >
-        MIN_THRESHOLD_FOR_DUPLICATE_VALUE
+        (elem.internalTime || 0) - (lastEntry.internalTime || 0) > MIN_THRESHOLD_FOR_DUPLICATE_VALUE
       );
     }
     return true;

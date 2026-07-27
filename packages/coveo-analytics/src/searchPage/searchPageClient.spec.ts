@@ -90,10 +90,7 @@ describe('SearchPageClient', () => {
     fetchMockBeforeEach();
 
     client = initClient();
-    client.coveoAnalyticsClient.runtime.storage.setItem(
-      'visitorId',
-      'visitor-id'
-    );
+    client.coveoAnalyticsClient.runtime.storage.setItem('visitorId', 'visitor-id');
     fetchMock.mock(/.*/, {
       visitId: 'visit-id',
     });
@@ -255,10 +252,7 @@ describe('SearchPageClient', () => {
     const built = await client.makeInterfaceLoad();
     await built.log({searchUID: provider.getSearchUID()});
     expectMatchPayload(SearchPageEvents.interfaceLoad);
-    expectSearchEventToMatchDescription(
-      built.description,
-      SearchPageEvents.interfaceLoad
-    );
+    expectSearchEventToMatchDescription(built.description, SearchPageEvents.interfaceLoad);
   });
 
   it('should send proper payload for #interfaceChange', async () => {
@@ -276,13 +270,9 @@ describe('SearchPageClient', () => {
     expectMatchPayload(SearchPageEvents.interfaceChange, {
       interfaceChangeTo: 'bob',
     });
-    expectSearchEventToMatchDescription(
-      built.description,
-      SearchPageEvents.interfaceChange,
-      {
-        interfaceChangeTo: 'bob',
-      }
-    );
+    expectSearchEventToMatchDescription(built.description, SearchPageEvents.interfaceChange, {
+      interfaceChangeTo: 'bob',
+    });
   });
 
   it('should send proper payload for #didyoumeanAutomatic', async () => {
@@ -294,10 +284,7 @@ describe('SearchPageClient', () => {
     const built = await client.makeDidYouMeanAutomatic();
     await built.log({searchUID: provider.getSearchUID()});
     expectMatchPayload(SearchPageEvents.didyoumeanAutomatic);
-    expectSearchEventToMatchDescription(
-      built.description,
-      SearchPageEvents.didyoumeanAutomatic
-    );
+    expectSearchEventToMatchDescription(built.description, SearchPageEvents.didyoumeanAutomatic);
   });
 
   it('should send proper payload for #didyoumeanClick', async () => {
@@ -309,10 +296,7 @@ describe('SearchPageClient', () => {
     const built = await client.makeDidYouMeanClick();
     await built.log({searchUID: provider.getSearchUID()});
     expectMatchPayload(SearchPageEvents.didyoumeanClick);
-    expectSearchEventToMatchDescription(
-      built.description,
-      SearchPageEvents.didyoumeanClick
-    );
+    expectSearchEventToMatchDescription(built.description, SearchPageEvents.didyoumeanClick);
   });
 
   it('should send proper payload for #resultsSort', async () => {
@@ -330,13 +314,9 @@ describe('SearchPageClient', () => {
     expectMatchPayload(SearchPageEvents.resultsSort, {
       resultsSortBy: 'date ascending',
     });
-    expectSearchEventToMatchDescription(
-      built.description,
-      SearchPageEvents.resultsSort,
-      {
-        resultsSortBy: 'date ascending',
-      }
-    );
+    expectSearchEventToMatchDescription(built.description, SearchPageEvents.resultsSort, {
+      resultsSortBy: 'date ascending',
+    });
   });
 
   it('should send proper payload for #searchboxSubmit', async () => {
@@ -348,10 +328,7 @@ describe('SearchPageClient', () => {
     const built = await client.makeSearchboxSubmit();
     await built.log({searchUID: provider.getSearchUID()});
     expectMatchPayload(SearchPageEvents.searchboxSubmit);
-    expectSearchEventToMatchDescription(
-      built.description,
-      SearchPageEvents.searchboxSubmit
-    );
+    expectSearchEventToMatchDescription(built.description, SearchPageEvents.searchboxSubmit);
   });
 
   it('should send proper payload for #searchboxClear', async () => {
@@ -363,10 +340,7 @@ describe('SearchPageClient', () => {
     const built = await client.makeSearchboxClear();
     await built.log({searchUID: provider.getSearchUID()});
     expectMatchPayload(SearchPageEvents.searchboxClear);
-    expectSearchEventToMatchDescription(
-      built.description,
-      SearchPageEvents.searchboxClear
-    );
+    expectSearchEventToMatchDescription(built.description, SearchPageEvents.searchboxClear);
   });
 
   it('should send proper payload for #searchboxAsYouType', async () => {
@@ -378,53 +352,30 @@ describe('SearchPageClient', () => {
     const built = await client.makeSearchboxAsYouType();
     await built.log({searchUID: provider.getSearchUID()});
     expectMatchPayload(SearchPageEvents.searchboxAsYouType);
-    expectSearchEventToMatchDescription(
-      built.description,
-      SearchPageEvents.searchboxAsYouType
-    );
+    expectSearchEventToMatchDescription(built.description, SearchPageEvents.searchboxAsYouType);
   });
 
   it('should send proper payload for #documentQuickview', async () => {
     await client.logDocumentQuickview(fakeDocInfo, fakeDocID);
-    expectMatchDocumentPayload(
-      SearchPageEvents.documentQuickview,
-      fakeDocInfo,
-      fakeDocID
-    );
+    expectMatchDocumentPayload(SearchPageEvents.documentQuickview, fakeDocInfo, fakeDocID);
   });
 
   it('should send proper payload for #makeDocumentQuickview', async () => {
     const built = await client.makeDocumentQuickview(fakeDocInfo, fakeDocID);
     await built.log({searchUID: provider.getSearchUID()});
-    expectMatchDocumentPayload(
-      SearchPageEvents.documentQuickview,
-      fakeDocInfo,
-      fakeDocID
-    );
-    expectMatchDescription(
-      built.description,
-      SearchPageEvents.documentQuickview,
-      {...fakeDocID}
-    );
+    expectMatchDocumentPayload(SearchPageEvents.documentQuickview, fakeDocInfo, fakeDocID);
+    expectMatchDescription(built.description, SearchPageEvents.documentQuickview, {...fakeDocID});
   });
 
   it('should send proper payload for #documentOpen', async () => {
     await client.logDocumentOpen(fakeDocInfo, fakeDocID);
-    expectMatchDocumentPayload(
-      SearchPageEvents.documentOpen,
-      fakeDocInfo,
-      fakeDocID
-    );
+    expectMatchDocumentPayload(SearchPageEvents.documentOpen, fakeDocInfo, fakeDocID);
   });
 
   it('should send proper payload for #makeDocumentOpen', async () => {
     const built = await client.makeDocumentOpen(fakeDocInfo, fakeDocID);
     await built.log({searchUID: provider.getSearchUID()});
-    expectMatchDocumentPayload(
-      SearchPageEvents.documentOpen,
-      fakeDocInfo,
-      fakeDocID
-    );
+    expectMatchDocumentPayload(SearchPageEvents.documentOpen, fakeDocInfo, fakeDocID);
     expectMatchDescription(built.description, SearchPageEvents.documentOpen, {
       ...fakeDocID,
     });
@@ -432,29 +383,14 @@ describe('SearchPageClient', () => {
 
   it('should send proper payload for #showMoreFoldedResults', async () => {
     await client.logShowMoreFoldedResults(fakeDocInfo, fakeDocID);
-    expectMatchDocumentPayload(
-      SearchPageEvents.showMoreFoldedResults,
-      fakeDocInfo,
-      fakeDocID
-    );
+    expectMatchDocumentPayload(SearchPageEvents.showMoreFoldedResults, fakeDocInfo, fakeDocID);
   });
 
   it('should send proper payload for #makeShowMoreFoldedResults', async () => {
-    const built = await client.makeShowMoreFoldedResults(
-      fakeDocInfo,
-      fakeDocID
-    );
+    const built = await client.makeShowMoreFoldedResults(fakeDocInfo, fakeDocID);
     await built.log({searchUID: provider.getSearchUID()});
-    expectMatchDocumentPayload(
-      SearchPageEvents.showMoreFoldedResults,
-      fakeDocInfo,
-      fakeDocID
-    );
-    expectMatchDescription(
-      built.description,
-      SearchPageEvents.showMoreFoldedResults,
-      fakeDocID
-    );
+    expectMatchDocumentPayload(SearchPageEvents.showMoreFoldedResults, fakeDocInfo, fakeDocID);
+    expectMatchDescription(built.description, SearchPageEvents.showMoreFoldedResults, fakeDocID);
   });
 
   it('should send proper payload for #showLessFoldedResults', async () => {
@@ -466,10 +402,7 @@ describe('SearchPageClient', () => {
     const built = await client.makeShowLessFoldedResults();
     await built.log({searchUID: provider.getSearchUID()});
     expectMatchCustomEventPayload(SearchPageEvents.showLessFoldedResults);
-    expectMatchDescription(
-      built.description,
-      SearchPageEvents.showLessFoldedResults
-    );
+    expectMatchDescription(built.description, SearchPageEvents.showLessFoldedResults);
   });
 
   it('should send proper payload for #omniboxAnalytics', async () => {
@@ -495,11 +428,7 @@ describe('SearchPageClient', () => {
     const built = await client.makeOmniboxAnalytics(meta);
     await built.log({searchUID: provider.getSearchUID()});
     expectMatchPayload(SearchPageEvents.omniboxAnalytics, meta);
-    expectSearchEventToMatchDescription(
-      built.description,
-      SearchPageEvents.omniboxAnalytics,
-      meta
-    );
+    expectSearchEventToMatchDescription(built.description, SearchPageEvents.omniboxAnalytics, meta);
   });
 
   it('should send proper payload for #logOmniboxFromLink', async () => {
@@ -525,11 +454,7 @@ describe('SearchPageClient', () => {
     const built = await client.makeOmniboxFromLink(meta);
     await built.log({searchUID: provider.getSearchUID()});
     expectMatchPayload(SearchPageEvents.omniboxFromLink, meta);
-    expectSearchEventToMatchDescription(
-      built.description,
-      SearchPageEvents.omniboxFromLink,
-      meta
-    );
+    expectSearchEventToMatchDescription(built.description, SearchPageEvents.omniboxFromLink, meta);
   });
 
   it('should send proper payload for #logSearchFromLink', async () => {
@@ -541,10 +466,7 @@ describe('SearchPageClient', () => {
     const built = await client.makeSearchFromLink();
     await built.log({searchUID: provider.getSearchUID()});
     expectMatchPayload(SearchPageEvents.searchFromLink);
-    expectSearchEventToMatchDescription(
-      built.description,
-      SearchPageEvents.searchFromLink
-    );
+    expectSearchEventToMatchDescription(built.description, SearchPageEvents.searchFromLink);
   });
 
   it('should send proper payload for #logTriggerNotify', async () => {
@@ -562,11 +484,7 @@ describe('SearchPageClient', () => {
     const built = await client.makeTriggerNotify(meta);
     await built.log({searchUID: provider.getSearchUID()});
     expectMatchCustomEventPayload(SearchPageEvents.triggerNotify, meta);
-    expectMatchDescription(
-      built.description,
-      SearchPageEvents.triggerNotify,
-      meta
-    );
+    expectMatchDescription(built.description, SearchPageEvents.triggerNotify, meta);
   });
 
   it('should send proper payload for #logTriggerExecute', async () => {
@@ -590,11 +508,7 @@ describe('SearchPageClient', () => {
     const built = await client.makeTriggerExecute(meta);
     await built.log({searchUID: provider.getSearchUID()});
     expectMatchCustomEventPayload(SearchPageEvents.triggerExecute, meta);
-    expectMatchDescription(
-      built.description,
-      SearchPageEvents.triggerExecute,
-      meta
-    );
+    expectMatchDescription(built.description, SearchPageEvents.triggerExecute, meta);
   });
 
   it('should send proper payload for #logTriggerQuery', async () => {
@@ -602,11 +516,7 @@ describe('SearchPageClient', () => {
       query: 'queryText',
     };
     await client.logTriggerQuery();
-    expectMatchCustomEventPayload(
-      SearchPageEvents.triggerQuery,
-      meta,
-      'queryPipelineTriggers'
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.triggerQuery, meta, 'queryPipelineTriggers');
   });
 
   it('should send proper payload for #makeTriggerQuery', async () => {
@@ -615,16 +525,8 @@ describe('SearchPageClient', () => {
     };
     const built = await client.makeTriggerQuery();
     await built.log({searchUID: provider.getSearchUID()});
-    expectMatchCustomEventPayload(
-      SearchPageEvents.triggerQuery,
-      meta,
-      'queryPipelineTriggers'
-    );
-    expectMatchDescription(
-      built.description,
-      SearchPageEvents.triggerQuery,
-      meta
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.triggerQuery, meta, 'queryPipelineTriggers');
+    expectMatchDescription(built.description, SearchPageEvents.triggerQuery, meta);
   });
 
   it('should send proper payload for #logUndoTriggerQuery', async () => {
@@ -642,11 +544,7 @@ describe('SearchPageClient', () => {
     const built = await client.makeUndoTriggerQuery(meta);
     await built.log({searchUID: provider.getSearchUID()});
     expectMatchPayload(SearchPageEvents.undoTriggerQuery, meta);
-    expectSearchEventToMatchDescription(
-      built.description,
-      SearchPageEvents.undoTriggerQuery,
-      meta
-    );
+    expectSearchEventToMatchDescription(built.description, SearchPageEvents.undoTriggerQuery, meta);
   });
 
   it('should send proper payload for #logTriggerRedirect', async () => {
@@ -666,11 +564,7 @@ describe('SearchPageClient', () => {
     const built = await client.makeTriggerRedirect(meta);
     await built.log({searchUID: provider.getSearchUID()});
     expectMatchCustomEventPayload(SearchPageEvents.triggerRedirect, meta);
-    expectMatchDescription(
-      built.description,
-      SearchPageEvents.triggerRedirect,
-      meta
-    );
+    expectMatchDescription(built.description, SearchPageEvents.triggerRedirect, meta);
   });
 
   it('should send proper payload for #logPagerResize', async () => {
@@ -688,11 +582,7 @@ describe('SearchPageClient', () => {
     const built = await client.makePagerResize(meta);
     await built.log({searchUID: provider.getSearchUID()});
     expectMatchCustomEventPayload(SearchPageEvents.pagerResize, meta);
-    expectMatchDescription(
-      built.description,
-      SearchPageEvents.pagerResize,
-      meta
-    );
+    expectMatchDescription(built.description, SearchPageEvents.pagerResize, meta);
   });
 
   it('should send proper payload for #logPagerNumber', async () => {
@@ -706,11 +596,7 @@ describe('SearchPageClient', () => {
     const built = await client.makePagerNumber(meta);
     await built.log({searchUID: provider.getSearchUID()});
     expectMatchCustomEventPayload(SearchPageEvents.pagerNumber, meta);
-    expectMatchDescription(
-      built.description,
-      SearchPageEvents.pagerNumber,
-      meta
-    );
+    expectMatchDescription(built.description, SearchPageEvents.pagerNumber, meta);
   });
 
   it('should send proper payload for #logPagerNext', async () => {
@@ -738,11 +624,7 @@ describe('SearchPageClient', () => {
     const built = await client.makePagerPrevious(meta);
     await built.log({searchUID: provider.getSearchUID()});
     expectMatchCustomEventPayload(SearchPageEvents.pagerPrevious, meta);
-    expectMatchDescription(
-      built.description,
-      SearchPageEvents.pagerPrevious,
-      meta
-    );
+    expectMatchDescription(built.description, SearchPageEvents.pagerPrevious, meta);
   });
 
   it('should send proper payload for #logPagerScrolling', async () => {
@@ -769,11 +651,9 @@ describe('SearchPageClient', () => {
     const built = await client.makeStaticFilterClearAll({staticFilterId});
     await built.log({searchUID: provider.getSearchUID()});
     expectMatchPayload(SearchPageEvents.staticFilterClearAll, {staticFilterId});
-    expectSearchEventToMatchDescription(
-      built.description,
-      SearchPageEvents.staticFilterClearAll,
-      {staticFilterId}
-    );
+    expectSearchEventToMatchDescription(built.description, SearchPageEvents.staticFilterClearAll, {
+      staticFilterId,
+    });
   });
 
   it('should send the proper payload for #logStaticFilterSelect', async () => {
@@ -858,11 +738,7 @@ describe('SearchPageClient', () => {
     const built = await client.makeFacetSearch(meta);
     await built.log({searchUID: provider.getSearchUID()});
     expectMatchPayload(SearchPageEvents.facetSearch, meta);
-    expectSearchEventToMatchDescription(
-      built.description,
-      SearchPageEvents.facetSearch,
-      meta
-    );
+    expectSearchEventToMatchDescription(built.description, SearchPageEvents.facetSearch, meta);
   });
 
   it('should send proper payload for #logFacetSelect', async () => {
@@ -887,11 +763,7 @@ describe('SearchPageClient', () => {
     const built = await client.makeFacetSelect(meta);
     await built.log({searchUID: provider.getSearchUID()});
     expectMatchPayload(SearchPageEvents.facetSelect, meta);
-    expectSearchEventToMatchDescription(
-      built.description,
-      SearchPageEvents.facetSelect,
-      meta
-    );
+    expectSearchEventToMatchDescription(built.description, SearchPageEvents.facetSelect, meta);
   });
 
   it('should send proper payload for #logFacetDeselect', async () => {
@@ -917,11 +789,7 @@ describe('SearchPageClient', () => {
     const built = await client.makeFacetDeselect(meta);
     await built.log({searchUID: provider.getSearchUID()});
     expectMatchPayload(SearchPageEvents.facetDeselect, meta);
-    expectSearchEventToMatchDescription(
-      built.description,
-      SearchPageEvents.facetDeselect,
-      meta
-    );
+    expectSearchEventToMatchDescription(built.description, SearchPageEvents.facetDeselect, meta);
   });
 
   it('should send proper payload for #logFacetExclude', async () => {
@@ -945,11 +813,7 @@ describe('SearchPageClient', () => {
     const built = await client.makeFacetExclude(meta);
     await built.log({searchUID: provider.getSearchUID()});
     expectMatchPayload(SearchPageEvents.facetExclude, meta);
-    expectSearchEventToMatchDescription(
-      built.description,
-      SearchPageEvents.facetExclude,
-      meta
-    );
+    expectSearchEventToMatchDescription(built.description, SearchPageEvents.facetExclude, meta);
   });
 
   it('should send proper payload for #logFacetUnexclude', async () => {
@@ -973,11 +837,7 @@ describe('SearchPageClient', () => {
     const built = await client.makeFacetUnexclude(meta);
     await built.log({searchUID: provider.getSearchUID()});
     expectMatchPayload(SearchPageEvents.facetUnexclude, meta);
-    expectSearchEventToMatchDescription(
-      built.description,
-      SearchPageEvents.facetUnexclude,
-      meta
-    );
+    expectSearchEventToMatchDescription(built.description, SearchPageEvents.facetUnexclude, meta);
   });
 
   it('should send proper payload for #logFacetSelectAll', async () => {
@@ -999,11 +859,7 @@ describe('SearchPageClient', () => {
     const built = await client.makeFacetSelectAll(meta);
     await built.log({searchUID: provider.getSearchUID()});
     expectMatchPayload(SearchPageEvents.facetSelectAll, meta);
-    expectSearchEventToMatchDescription(
-      built.description,
-      SearchPageEvents.facetSelectAll,
-      meta
-    );
+    expectSearchEventToMatchDescription(built.description, SearchPageEvents.facetSelectAll, meta);
   });
 
   it('should send proper payload for #logFacetUpdateSort', async () => {
@@ -1027,11 +883,7 @@ describe('SearchPageClient', () => {
     const built = await client.makeFacetUpdateSort(meta);
     await built.log({searchUID: provider.getSearchUID()});
     expectMatchPayload(SearchPageEvents.facetUpdateSort, meta);
-    expectSearchEventToMatchDescription(
-      built.description,
-      SearchPageEvents.facetUpdateSort,
-      meta
-    );
+    expectSearchEventToMatchDescription(built.description, SearchPageEvents.facetUpdateSort, meta);
   });
 
   it('should send proper payload for #logFacetShowMore', async () => {
@@ -1053,11 +905,7 @@ describe('SearchPageClient', () => {
     const built = await client.makeFacetShowMore(meta);
     await built.log({searchUID: provider.getSearchUID()});
     expectMatchCustomEventPayload(SearchPageEvents.facetShowMore, meta);
-    expectMatchDescription(
-      built.description,
-      SearchPageEvents.facetShowMore,
-      meta
-    );
+    expectMatchDescription(built.description, SearchPageEvents.facetShowMore, meta);
   });
 
   it('should send proper payload for #logFacetShowLess', async () => {
@@ -1079,11 +927,7 @@ describe('SearchPageClient', () => {
     const built = await client.makeFacetShowLess(meta);
     await built.log({searchUID: provider.getSearchUID()});
     expectMatchCustomEventPayload(SearchPageEvents.facetShowLess, meta);
-    expectMatchDescription(
-      built.description,
-      SearchPageEvents.facetShowLess,
-      meta
-    );
+    expectMatchDescription(built.description, SearchPageEvents.facetShowLess, meta);
   });
 
   it('should send proper payload for #logQueryError', async () => {
@@ -1111,11 +955,7 @@ describe('SearchPageClient', () => {
     const built = await client.makeQueryError(meta);
     await built.log({searchUID: provider.getSearchUID()});
     expectMatchCustomEventPayload(SearchPageEvents.queryError, meta);
-    expectMatchDescription(
-      built.description,
-      SearchPageEvents.queryError,
-      meta
-    );
+    expectMatchDescription(built.description, SearchPageEvents.queryError, meta);
   });
 
   it('should send proper payload for #logQueryErrorBack', async () => {
@@ -1183,26 +1023,14 @@ describe('SearchPageClient', () => {
 
   it('should send proper payload for #recommendationOpen', async () => {
     await client.logRecommendationOpen(fakeDocInfo, fakeDocID);
-    expectMatchDocumentPayload(
-      SearchPageEvents.recommendationOpen,
-      fakeDocInfo,
-      fakeDocID
-    );
+    expectMatchDocumentPayload(SearchPageEvents.recommendationOpen, fakeDocInfo, fakeDocID);
   });
 
   it('should send proper payload for #makeRecommendationOpen', async () => {
     const built = await client.makeRecommendationOpen(fakeDocInfo, fakeDocID);
     await built.log({searchUID: provider.getSearchUID()});
-    expectMatchDocumentPayload(
-      SearchPageEvents.recommendationOpen,
-      fakeDocInfo,
-      fakeDocID
-    );
-    expectMatchDescription(
-      built.description,
-      SearchPageEvents.recommendationOpen,
-      {...fakeDocID}
-    );
+    expectMatchDocumentPayload(SearchPageEvents.recommendationOpen, fakeDocInfo, fakeDocID);
+    expectMatchDescription(built.description, SearchPageEvents.recommendationOpen, {...fakeDocID});
   });
 
   it('should send proper payload for #fetchMoreResults', async () => {
@@ -1232,10 +1060,7 @@ describe('SearchPageClient', () => {
     const built = await client.makeLikeSmartSnippet();
     await built.log({searchUID: provider.getSearchUID()});
     expectMatchCustomEventPayload(SearchPageEvents.likeSmartSnippet);
-    expectMatchDescription(
-      built.description,
-      SearchPageEvents.likeSmartSnippet
-    );
+    expectMatchDescription(built.description, SearchPageEvents.likeSmartSnippet);
   });
 
   it('should send proper payload for #logDislikeSmartSnippet', async () => {
@@ -1247,10 +1072,7 @@ describe('SearchPageClient', () => {
     const built = await client.makeDislikeSmartSnippet();
     await built.log({searchUID: provider.getSearchUID()});
     expectMatchCustomEventPayload(SearchPageEvents.dislikeSmartSnippet);
-    expectMatchDescription(
-      built.description,
-      SearchPageEvents.dislikeSmartSnippet
-    );
+    expectMatchDescription(built.description, SearchPageEvents.dislikeSmartSnippet);
   });
 
   it('should send proper payload for #logExpandSmartSnippet', async () => {
@@ -1262,10 +1084,7 @@ describe('SearchPageClient', () => {
     const built = await client.makeExpandSmartSnippet();
     await built.log({searchUID: provider.getSearchUID()});
     expectMatchCustomEventPayload(SearchPageEvents.expandSmartSnippet);
-    expectMatchDescription(
-      built.description,
-      SearchPageEvents.expandSmartSnippet
-    );
+    expectMatchDescription(built.description, SearchPageEvents.expandSmartSnippet);
   });
 
   it('should send proper payload for #logCollapseSmartSnippet', async () => {
@@ -1277,55 +1096,35 @@ describe('SearchPageClient', () => {
     const built = await client.makeCollapseSmartSnippet();
     await built.log({searchUID: provider.getSearchUID()});
     expectMatchCustomEventPayload(SearchPageEvents.collapseSmartSnippet);
-    expectMatchDescription(
-      built.description,
-      SearchPageEvents.collapseSmartSnippet
-    );
+    expectMatchDescription(built.description, SearchPageEvents.collapseSmartSnippet);
   });
 
   it('should send proper payload for #logOpenSmartSnippetFeedbackModal', async () => {
     await client.logOpenSmartSnippetFeedbackModal();
-    expectMatchCustomEventPayload(
-      SearchPageEvents.openSmartSnippetFeedbackModal
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.openSmartSnippetFeedbackModal);
   });
 
   it('should send proper payload for #makeOpenSmartSnippetFeedbackModal', async () => {
     const built = await client.makeOpenSmartSnippetFeedbackModal();
     await built.log({searchUID: provider.getSearchUID()});
-    expectMatchCustomEventPayload(
-      SearchPageEvents.openSmartSnippetFeedbackModal
-    );
-    expectMatchDescription(
-      built.description,
-      SearchPageEvents.openSmartSnippetFeedbackModal
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.openSmartSnippetFeedbackModal);
+    expectMatchDescription(built.description, SearchPageEvents.openSmartSnippetFeedbackModal);
   });
 
   it('should send proper payload for #logCloseSmartSnippetFeedbackModal', async () => {
     await client.logCloseSmartSnippetFeedbackModal();
-    expectMatchCustomEventPayload(
-      SearchPageEvents.closeSmartSnippetFeedbackModal
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.closeSmartSnippetFeedbackModal);
   });
 
   it('should send proper payload for #makeCloseSmartSnippetFeedbackModal', async () => {
     const built = await client.makeCloseSmartSnippetFeedbackModal();
     await built.log({searchUID: provider.getSearchUID()});
-    expectMatchCustomEventPayload(
-      SearchPageEvents.closeSmartSnippetFeedbackModal
-    );
-    expectMatchDescription(
-      built.description,
-      SearchPageEvents.closeSmartSnippetFeedbackModal
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.closeSmartSnippetFeedbackModal);
+    expectMatchDescription(built.description, SearchPageEvents.closeSmartSnippetFeedbackModal);
   });
 
   it('should send proper payload for #logSmartSnippetFeedbackReason', async () => {
-    await client.logSmartSnippetFeedbackReason(
-      'does_not_answer',
-      'this is irrelevant'
-    );
+    await client.logSmartSnippetFeedbackReason('does_not_answer', 'this is irrelevant');
     expectMatchCustomEventPayload(SearchPageEvents.sendSmartSnippetReason, {
       details: 'this is irrelevant',
       reason: 'does_not_answer',
@@ -1342,14 +1141,10 @@ describe('SearchPageClient', () => {
       details: 'this is irrelevant',
       reason: 'does_not_answer',
     });
-    expectMatchDescription(
-      built.description,
-      SearchPageEvents.sendSmartSnippetReason,
-      {
-        details: 'this is irrelevant',
-        reason: 'does_not_answer',
-      }
-    );
+    expectMatchDescription(built.description, SearchPageEvents.sendSmartSnippetReason, {
+      details: 'this is irrelevant',
+      reason: 'does_not_answer',
+    });
   });
 
   it('should send proper payload for #logExpandSmartSnippetSuggestion', async () => {
@@ -1358,14 +1153,11 @@ describe('SearchPageClient', () => {
       answerSnippet: 'Def',
       documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
     });
-    expectMatchCustomEventPayload(
-      SearchPageEvents.expandSmartSnippetSuggestion,
-      {
-        question: 'Abc',
-        answerSnippet: 'Def',
-        documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
-      }
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.expandSmartSnippetSuggestion, {
+      question: 'Abc',
+      answerSnippet: 'Def',
+      documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
+    });
   });
 
   it('should send proper payload for #makeExpandSmartSnippetSuggestion', async () => {
@@ -1375,23 +1167,16 @@ describe('SearchPageClient', () => {
       documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
     });
     await built.log({searchUID: provider.getSearchUID()});
-    expectMatchCustomEventPayload(
-      SearchPageEvents.expandSmartSnippetSuggestion,
-      {
-        question: 'Abc',
-        answerSnippet: 'Def',
-        documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
-      }
-    );
-    expectMatchDescription(
-      built.description,
-      SearchPageEvents.expandSmartSnippetSuggestion,
-      {
-        question: 'Abc',
-        answerSnippet: 'Def',
-        documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
-      }
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.expandSmartSnippetSuggestion, {
+      question: 'Abc',
+      answerSnippet: 'Def',
+      documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
+    });
+    expectMatchDescription(built.description, SearchPageEvents.expandSmartSnippetSuggestion, {
+      question: 'Abc',
+      answerSnippet: 'Def',
+      documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
+    });
   });
 
   it('should send proper payload for #logCollapseSmartSnippetSuggestion', async () => {
@@ -1400,14 +1185,11 @@ describe('SearchPageClient', () => {
       answerSnippet: 'Def',
       documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
     });
-    expectMatchCustomEventPayload(
-      SearchPageEvents.collapseSmartSnippetSuggestion,
-      {
-        question: 'Abc',
-        answerSnippet: 'Def',
-        documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
-      }
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.collapseSmartSnippetSuggestion, {
+      question: 'Abc',
+      answerSnippet: 'Def',
+      documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
+    });
   });
 
   it('should send proper payload for #makeCollapseSmartSnippetSuggestion', async () => {
@@ -1417,23 +1199,16 @@ describe('SearchPageClient', () => {
       documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
     });
     await built.log({searchUID: provider.getSearchUID()});
-    expectMatchCustomEventPayload(
-      SearchPageEvents.collapseSmartSnippetSuggestion,
-      {
-        question: 'Abc',
-        answerSnippet: 'Def',
-        documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
-      }
-    );
-    expectMatchDescription(
-      built.description,
-      SearchPageEvents.collapseSmartSnippetSuggestion,
-      {
-        question: 'Abc',
-        answerSnippet: 'Def',
-        documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
-      }
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.collapseSmartSnippetSuggestion, {
+      question: 'Abc',
+      answerSnippet: 'Def',
+      documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
+    });
+    expectMatchDescription(built.description, SearchPageEvents.collapseSmartSnippetSuggestion, {
+      question: 'Abc',
+      answerSnippet: 'Def',
+      documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
+    });
   });
 
   it('should send proper payload for #logExpandSmartSnippetSuggestion when called with only the documentId', async () => {
@@ -1441,12 +1216,9 @@ describe('SearchPageClient', () => {
       contentIdKey: 'permanentid',
       contentIdValue: 'foo',
     });
-    expectMatchCustomEventPayload(
-      SearchPageEvents.expandSmartSnippetSuggestion,
-      {
-        documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
-      }
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.expandSmartSnippetSuggestion, {
+      documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
+    });
   });
 
   it('should send proper payload for #makeExpandSmartSnippetSuggestion when called with only the documentId', async () => {
@@ -1455,19 +1227,12 @@ describe('SearchPageClient', () => {
       contentIdValue: 'foo',
     });
     await built.log({searchUID: provider.getSearchUID()});
-    expectMatchCustomEventPayload(
-      SearchPageEvents.expandSmartSnippetSuggestion,
-      {
-        documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
-      }
-    );
-    expectMatchDescription(
-      built.description,
-      SearchPageEvents.expandSmartSnippetSuggestion,
-      {
-        documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
-      }
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.expandSmartSnippetSuggestion, {
+      documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
+    });
+    expectMatchDescription(built.description, SearchPageEvents.expandSmartSnippetSuggestion, {
+      documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
+    });
   });
 
   it('should send proper payload for #logCollapseSmartSnippetSuggestion when called with only the documentId', async () => {
@@ -1475,12 +1240,9 @@ describe('SearchPageClient', () => {
       contentIdKey: 'permanentid',
       contentIdValue: 'foo',
     });
-    expectMatchCustomEventPayload(
-      SearchPageEvents.collapseSmartSnippetSuggestion,
-      {
-        documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
-      }
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.collapseSmartSnippetSuggestion, {
+      documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
+    });
   });
 
   it('should send proper payload for #makeCollapseSmartSnippetSuggestion when called with only the documentId', async () => {
@@ -1489,19 +1251,12 @@ describe('SearchPageClient', () => {
       contentIdValue: 'foo',
     });
     await built.log({searchUID: provider.getSearchUID()});
-    expectMatchCustomEventPayload(
-      SearchPageEvents.collapseSmartSnippetSuggestion,
-      {
-        documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
-      }
-    );
-    expectMatchDescription(
-      built.description,
-      SearchPageEvents.collapseSmartSnippetSuggestion,
-      {
-        documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
-      }
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.collapseSmartSnippetSuggestion, {
+      documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
+    });
+    expectMatchDescription(built.description, SearchPageEvents.collapseSmartSnippetSuggestion, {
+      documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
+    });
   });
 
   it('should send proper payload for #logShowMoreSmartSnippetSuggestion', async () => {
@@ -1510,14 +1265,11 @@ describe('SearchPageClient', () => {
       answerSnippet: 'Def',
       documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
     });
-    expectMatchCustomEventPayload(
-      SearchPageEvents.showMoreSmartSnippetSuggestion,
-      {
-        question: 'Abc',
-        answerSnippet: 'Def',
-        documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
-      }
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.showMoreSmartSnippetSuggestion, {
+      question: 'Abc',
+      answerSnippet: 'Def',
+      documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
+    });
   });
 
   it('should send proper payload for #logShowLessSmartSnippetSuggestion', async () => {
@@ -1526,50 +1278,30 @@ describe('SearchPageClient', () => {
       answerSnippet: 'Def',
       documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
     });
-    expectMatchCustomEventPayload(
-      SearchPageEvents.showLessSmartSnippetSuggestion,
-      {
-        question: 'Abc',
-        answerSnippet: 'Def',
-        documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
-      }
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.showLessSmartSnippetSuggestion, {
+      question: 'Abc',
+      answerSnippet: 'Def',
+      documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
+    });
   });
 
   it('should send proper payload for #logOpenSmartSnippetSource', async () => {
     await client.logOpenSmartSnippetSource(fakeDocInfo, fakeDocID);
-    expectMatchDocumentPayload(
-      SearchPageEvents.openSmartSnippetSource,
-      fakeDocInfo,
-      fakeDocID
-    );
+    expectMatchDocumentPayload(SearchPageEvents.openSmartSnippetSource, fakeDocInfo, fakeDocID);
   });
 
   it('should send proper payload for #logCopyToClipboard', async () => {
     await client.logCopyToClipboard(fakeDocInfo, fakeDocID);
-    expectMatchDocumentPayload(
-      SearchPageEvents.copyToClipboard,
-      fakeDocInfo,
-      fakeDocID
-    );
+    expectMatchDocumentPayload(SearchPageEvents.copyToClipboard, fakeDocInfo, fakeDocID);
   });
 
   it('should send proper payload for #makeOpenSmartSnippetSource', async () => {
-    const built = await client.makeOpenSmartSnippetSource(
-      fakeDocInfo,
-      fakeDocID
-    );
+    const built = await client.makeOpenSmartSnippetSource(fakeDocInfo, fakeDocID);
     await built.log({searchUID: provider.getSearchUID()});
-    expectMatchDocumentPayload(
-      SearchPageEvents.openSmartSnippetSource,
-      fakeDocInfo,
-      fakeDocID
-    );
-    expectMatchDescription(
-      built.description,
-      SearchPageEvents.openSmartSnippetSource,
-      {...fakeDocID}
-    );
+    expectMatchDocumentPayload(SearchPageEvents.openSmartSnippetSource, fakeDocInfo, fakeDocID);
+    expectMatchDescription(built.description, SearchPageEvents.openSmartSnippetSource, {
+      ...fakeDocID,
+    });
   });
 
   it('should send proper payload for #logOpenSmartSnippetSuggestionSource', async () => {
@@ -1579,15 +1311,11 @@ describe('SearchPageClient', () => {
       documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
     };
     await client.logOpenSmartSnippetSuggestionSource(fakeDocInfo, meta);
-    expectMatchDocumentPayload(
-      SearchPageEvents.openSmartSnippetSuggestionSource,
-      fakeDocInfo,
-      {
-        ...meta,
-        contentIDKey: meta.documentId.contentIdKey,
-        contentIDValue: meta.documentId.contentIdValue,
-      }
-    );
+    expectMatchDocumentPayload(SearchPageEvents.openSmartSnippetSuggestionSource, fakeDocInfo, {
+      ...meta,
+      contentIDKey: meta.documentId.contentIdKey,
+      contentIDValue: meta.documentId.contentIdValue,
+    });
   });
 
   it('should send proper payload for #makeOpenSmartSnippetSuggestionSource', async () => {
@@ -1598,10 +1326,7 @@ describe('SearchPageClient', () => {
       contentIDValue: 'foo',
       documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
     };
-    const built = await client.makeOpenSmartSnippetSuggestionSource(
-      fakeDocInfo,
-      meta
-    );
+    const built = await client.makeOpenSmartSnippetSuggestionSource(fakeDocInfo, meta);
     await built.log({searchUID: provider.getSearchUID()});
     expectMatchDocumentPayload(
       SearchPageEvents.openSmartSnippetSuggestionSource,
@@ -1622,11 +1347,7 @@ describe('SearchPageClient', () => {
       linkURL: 'https://invalid.com',
     };
     await client.logOpenSmartSnippetInlineLink(fakeDocInfo, meta);
-    expectMatchDocumentPayload(
-      SearchPageEvents.openSmartSnippetInlineLink,
-      fakeDocInfo,
-      meta
-    );
+    expectMatchDocumentPayload(SearchPageEvents.openSmartSnippetInlineLink, fakeDocInfo, meta);
   });
 
   it('should send proper payload for #makeOpenSmartSnippetInlineLink', async () => {
@@ -1635,21 +1356,10 @@ describe('SearchPageClient', () => {
       linkText: 'Some text',
       linkURL: 'https://invalid.com',
     };
-    const built = await client.makeOpenSmartSnippetInlineLink(
-      fakeDocInfo,
-      meta
-    );
+    const built = await client.makeOpenSmartSnippetInlineLink(fakeDocInfo, meta);
     await built.log({searchUID: provider.getSearchUID()});
-    expectMatchDocumentPayload(
-      SearchPageEvents.openSmartSnippetInlineLink,
-      fakeDocInfo,
-      meta
-    );
-    expectMatchDescription(
-      built.description,
-      SearchPageEvents.openSmartSnippetInlineLink,
-      meta
-    );
+    expectMatchDocumentPayload(SearchPageEvents.openSmartSnippetInlineLink, fakeDocInfo, meta);
+    expectMatchDescription(built.description, SearchPageEvents.openSmartSnippetInlineLink, meta);
   });
 
   it('should send proper payload for #logOpenSmartSnippetSuggestionInlineLink', async () => {
@@ -1661,15 +1371,11 @@ describe('SearchPageClient', () => {
       linkURL: 'https://invalid.com',
     };
     await client.logOpenSmartSnippetSuggestionInlineLink(fakeDocInfo, meta);
-    expectMatchDocumentPayload(
-      SearchPageEvents.openSmartSnippetSuggestionInlineLink,
-      fakeDocInfo,
-      {
-        ...meta,
-        contentIDKey: meta.documentId.contentIdKey,
-        contentIDValue: meta.documentId.contentIdValue,
-      }
-    );
+    expectMatchDocumentPayload(SearchPageEvents.openSmartSnippetSuggestionInlineLink, fakeDocInfo, {
+      ...meta,
+      contentIDKey: meta.documentId.contentIdKey,
+      contentIDValue: meta.documentId.contentIdValue,
+    });
   });
 
   it('should send proper payload for #makeOpenSmartSnippetSuggestionInlineLink', async () => {
@@ -1682,10 +1388,7 @@ describe('SearchPageClient', () => {
       linkText: 'Some text',
       linkURL: 'https://invalid.com',
     };
-    const built = await client.makeOpenSmartSnippetSuggestionInlineLink(
-      fakeDocInfo,
-      meta
-    );
+    const built = await client.makeOpenSmartSnippetSuggestionInlineLink(fakeDocInfo, meta);
     await built.log({searchUID: provider.getSearchUID()});
     expectMatchDocumentPayload(
       SearchPageEvents.openSmartSnippetSuggestionInlineLink,
@@ -1709,10 +1412,7 @@ describe('SearchPageClient', () => {
     await built.log({searchUID: provider.getSearchUID()});
 
     expectMatchPayload(SearchPageEvents.recentQueryClick);
-    expectSearchEventToMatchDescription(
-      built.description,
-      SearchPageEvents.recentQueryClick
-    );
+    expectSearchEventToMatchDescription(built.description, SearchPageEvents.recentQueryClick);
   });
 
   it('should send proper payload for #logClearRecentQueries', async () => {
@@ -1725,10 +1425,7 @@ describe('SearchPageClient', () => {
     await built.log({searchUID: provider.getSearchUID()});
 
     expectMatchCustomEventPayload(SearchPageEvents.clearRecentQueries);
-    expectMatchDescription(
-      built.description,
-      SearchPageEvents.clearRecentQueries
-    );
+    expectMatchDescription(built.description, SearchPageEvents.clearRecentQueries);
   });
 
   it('should send proper payload for #logRecentResultClick', async () => {
@@ -1748,14 +1445,10 @@ describe('SearchPageClient', () => {
       identifier: fakeDocID,
     });
 
-    expectMatchDescription(
-      built.description,
-      SearchPageEvents.recentResultClick,
-      {
-        info: fakeDocInfo,
-        identifier: fakeDocID,
-      }
-    );
+    expectMatchDescription(built.description, SearchPageEvents.recentResultClick, {
+      info: fakeDocInfo,
+      identifier: fakeDocID,
+    });
   });
 
   it('should send proper payload for #logNoResultsBack', async () => {
@@ -1768,10 +1461,7 @@ describe('SearchPageClient', () => {
     await built.log({searchUID: provider.getSearchUID()});
 
     expectMatchPayload(SearchPageEvents.noResultsBack);
-    expectSearchEventToMatchDescription(
-      built.description,
-      SearchPageEvents.noResultsBack
-    );
+    expectSearchEventToMatchDescription(built.description, SearchPageEvents.noResultsBack);
   });
 
   it('should send proper payload for #logClearRecentResults', async () => {
@@ -1784,10 +1474,7 @@ describe('SearchPageClient', () => {
     await built.log({searchUID: provider.getSearchUID()});
 
     expectMatchCustomEventPayload(SearchPageEvents.clearRecentResults);
-    expectMatchDescription(
-      built.description,
-      SearchPageEvents.clearRecentResults
-    );
+    expectMatchDescription(built.description, SearchPageEvents.clearRecentResults);
   });
 
   it('should send proper payload for #logCustomEventWithType', async () => {
@@ -1868,20 +1555,13 @@ describe('SearchPageClient', () => {
     const built = await client.makeLikeGeneratedAnswer(meta);
     await built.log({searchUID: provider.getSearchUID()});
     expectMatchCustomEventPayload(SearchPageEvents.likeGeneratedAnswer, meta);
-    expectMatchDescription(
-      built.description,
-      SearchPageEvents.likeGeneratedAnswer,
-      meta
-    );
+    expectMatchDescription(built.description, SearchPageEvents.likeGeneratedAnswer, meta);
   });
 
   it('should send proper payload for #logDislikeGeneratedAnswer', async () => {
     const meta = {generativeQuestionAnsweringId: fakeStreamId};
     await client.logDislikeGeneratedAnswer(meta);
-    expectMatchCustomEventPayload(
-      SearchPageEvents.dislikeGeneratedAnswer,
-      meta
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.dislikeGeneratedAnswer, meta);
   });
 
   it('should send proper payload for #logDislikeGeneratedAnswer with agent metadata', async () => {
@@ -1890,25 +1570,15 @@ describe('SearchPageClient', () => {
       conversationId: fakeConversationId,
     };
     await client.logDislikeGeneratedAnswer(meta);
-    expectMatchCustomEventPayload(
-      SearchPageEvents.dislikeGeneratedAnswer,
-      meta
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.dislikeGeneratedAnswer, meta);
   });
 
   it('should send proper payload for #makeDislikeGeneratedAnswer', async () => {
     const meta = {generativeQuestionAnsweringId: fakeStreamId};
     const built = await client.makeDislikeGeneratedAnswer(meta);
     await built.log({searchUID: provider.getSearchUID()});
-    expectMatchCustomEventPayload(
-      SearchPageEvents.dislikeGeneratedAnswer,
-      meta
-    );
-    expectMatchDescription(
-      built.description,
-      SearchPageEvents.dislikeGeneratedAnswer,
-      meta
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.dislikeGeneratedAnswer, meta);
+    expectMatchDescription(built.description, SearchPageEvents.dislikeGeneratedAnswer, meta);
   });
 
   it('should send proper payload for #logOpenGeneratedAnswerSource', async () => {
@@ -1918,10 +1588,7 @@ describe('SearchPageClient', () => {
       permanentId: 'perm-id',
     };
     await client.logOpenGeneratedAnswerSource(meta);
-    expectMatchCustomEventPayload(
-      SearchPageEvents.openGeneratedAnswerSource,
-      meta
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.openGeneratedAnswerSource, meta);
   });
 
   it('should send proper payload for #logOpenGeneratedAnswerSource with agent metadata', async () => {
@@ -1932,10 +1599,7 @@ describe('SearchPageClient', () => {
       permanentId: 'perm-id',
     };
     await client.logOpenGeneratedAnswerSource(meta);
-    expectMatchCustomEventPayload(
-      SearchPageEvents.openGeneratedAnswerSource,
-      meta
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.openGeneratedAnswerSource, meta);
   });
 
   it('should send proper payload for #makeOpenGeneratedAnswerSource', async () => {
@@ -1946,15 +1610,8 @@ describe('SearchPageClient', () => {
     };
     const built = await client.makeOpenGeneratedAnswerSource(meta);
     await built.log({searchUID: provider.getSearchUID()});
-    expectMatchCustomEventPayload(
-      SearchPageEvents.openGeneratedAnswerSource,
-      meta
-    );
-    expectMatchDescription(
-      built.description,
-      SearchPageEvents.openGeneratedAnswerSource,
-      meta
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.openGeneratedAnswerSource, meta);
+    expectMatchDescription(built.description, SearchPageEvents.openGeneratedAnswerSource, meta);
   });
 
   it('should send proper payload for #logGeneratedAnswerOpenInlineLink', async () => {
@@ -1965,10 +1622,7 @@ describe('SearchPageClient', () => {
       linkURL: 'https://example.com',
     };
     await client.logGeneratedAnswerOpenInlineLink(meta);
-    expectMatchCustomEventPayload(
-      SearchPageEvents.generatedAnswerOpenInlineLink,
-      meta
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerOpenInlineLink, meta);
   });
 
   it('should send proper payload for #makeGeneratedAnswerOpenInlineLink', async () => {
@@ -1979,15 +1633,8 @@ describe('SearchPageClient', () => {
     };
     const built = await client.makeGeneratedAnswerOpenInlineLink(meta);
     await built.log({searchUID: provider.getSearchUID()});
-    expectMatchCustomEventPayload(
-      SearchPageEvents.generatedAnswerOpenInlineLink,
-      meta
-    );
-    expectMatchDescription(
-      built.description,
-      SearchPageEvents.generatedAnswerOpenInlineLink,
-      meta
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerOpenInlineLink, meta);
+    expectMatchDescription(built.description, SearchPageEvents.generatedAnswerOpenInlineLink, meta);
   });
 
   it('should send proper payload for #logGeneratedAnswerCitationClick', async () => {
@@ -1998,15 +1645,11 @@ describe('SearchPageClient', () => {
     };
 
     await client.logGeneratedAnswerCitationClick(fakeDocInfo, meta);
-    expectMatchDocumentPayload(
-      SearchPageEvents.generatedAnswerCitationClick,
-      fakeDocInfo,
-      {
-        ...meta,
-        contentIDKey: meta.documentId.contentIdKey,
-        contentIDValue: meta.documentId.contentIdValue,
-      }
-    );
+    expectMatchDocumentPayload(SearchPageEvents.generatedAnswerCitationClick, fakeDocInfo, {
+      ...meta,
+      contentIDKey: meta.documentId.contentIdKey,
+      contentIDValue: meta.documentId.contentIdValue,
+    });
   });
 
   it('should send proper payload for #logGeneratedAnswerCitationClick with agent metadata', async () => {
@@ -2018,15 +1661,11 @@ describe('SearchPageClient', () => {
     };
 
     await client.logGeneratedAnswerCitationClick(fakeDocInfo, meta);
-    expectMatchDocumentPayload(
-      SearchPageEvents.generatedAnswerCitationClick,
-      fakeDocInfo,
-      {
-        ...meta,
-        contentIDKey: meta.documentId.contentIdKey,
-        contentIDValue: meta.documentId.contentIdValue,
-      }
-    );
+    expectMatchDocumentPayload(SearchPageEvents.generatedAnswerCitationClick, fakeDocInfo, {
+      ...meta,
+      contentIDKey: meta.documentId.contentIdKey,
+      contentIDValue: meta.documentId.contentIdValue,
+    });
   });
 
   it('should send proper payload for #makeGeneratedAnswerCitationClick', async () => {
@@ -2037,21 +1676,10 @@ describe('SearchPageClient', () => {
       contentIDValue: 'foo',
       documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
     };
-    const built = await client.makeGeneratedAnswerCitationClick(
-      fakeDocInfo,
-      meta
-    );
+    const built = await client.makeGeneratedAnswerCitationClick(fakeDocInfo, meta);
     await built.log({searchUID: provider.getSearchUID()});
-    expectMatchDocumentPayload(
-      SearchPageEvents.generatedAnswerCitationClick,
-      fakeDocInfo,
-      meta
-    );
-    expectMatchDescription(
-      built.description,
-      SearchPageEvents.generatedAnswerCitationClick,
-      meta
-    );
+    expectMatchDocumentPayload(SearchPageEvents.generatedAnswerCitationClick, fakeDocInfo, meta);
+    expectMatchDescription(built.description, SearchPageEvents.generatedAnswerCitationClick, meta);
   });
 
   it('should send proper payload for #logGeneratedAnswerFollowupOpenSource', async () => {
@@ -2064,10 +1692,7 @@ describe('SearchPageClient', () => {
     };
 
     await client.logGeneratedAnswerFollowupOpenSource(meta);
-    expectMatchCustomEventPayload(
-      SearchPageEvents.generatedAnswerFollowupOpenSource,
-      meta
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerFollowupOpenSource, meta);
   });
 
   it('should send proper payload for #makeGeneratedAnswerFollowupOpenSource', async () => {
@@ -2081,10 +1706,7 @@ describe('SearchPageClient', () => {
 
     const built = await client.makeGeneratedAnswerFollowupOpenSource(meta);
     await built.log({searchUID: provider.getSearchUID()});
-    expectMatchCustomEventPayload(
-      SearchPageEvents.generatedAnswerFollowupOpenSource,
-      meta
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerFollowupOpenSource, meta);
     expectMatchDescription(
       built.description,
       SearchPageEvents.generatedAnswerFollowupOpenSource,
@@ -2099,10 +1721,7 @@ describe('SearchPageClient', () => {
       answerTextIsEmpty: false,
     };
     await client.logGeneratedAnswerStreamEnd(meta);
-    expectMatchCustomEventPayload(
-      SearchPageEvents.generatedAnswerStreamEnd,
-      meta
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerStreamEnd, meta);
   });
 
   it('should send proper payload for #logGeneratedAnswerStreamEnd with agent metadata', async () => {
@@ -2113,10 +1732,7 @@ describe('SearchPageClient', () => {
       answerTextIsEmpty: false,
     };
     await client.logGeneratedAnswerStreamEnd(meta);
-    expectMatchCustomEventPayload(
-      SearchPageEvents.generatedAnswerStreamEnd,
-      meta
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerStreamEnd, meta);
   });
 
   it('should send proper payload for #makeGeneratedAnswerStreamEnd', async () => {
@@ -2127,15 +1743,8 @@ describe('SearchPageClient', () => {
     };
     const built = await client.makeGeneratedAnswerStreamEnd(meta);
     await built.log({searchUID: provider.getSearchUID()});
-    expectMatchCustomEventPayload(
-      SearchPageEvents.generatedAnswerStreamEnd,
-      meta
-    );
-    expectMatchDescription(
-      built.description,
-      SearchPageEvents.generatedAnswerStreamEnd,
-      meta
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerStreamEnd, meta);
+    expectMatchDescription(built.description, SearchPageEvents.generatedAnswerStreamEnd, meta);
   });
 
   it('should send proper payload for #logGeneratedAnswerSourceHover', async () => {
@@ -2146,10 +1755,7 @@ describe('SearchPageClient', () => {
       citationHoverTimeMs: 100,
     };
     await client.logGeneratedAnswerSourceHover(meta);
-    expectMatchCustomEventPayload(
-      SearchPageEvents.generatedAnswerSourceHover,
-      meta
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerSourceHover, meta);
   });
 
   it('should send proper payload for #logGeneratedAnswerSourceHover with agent metadata', async () => {
@@ -2161,10 +1767,7 @@ describe('SearchPageClient', () => {
       citationHoverTimeMs: 100,
     };
     await client.logGeneratedAnswerSourceHover(meta);
-    expectMatchCustomEventPayload(
-      SearchPageEvents.generatedAnswerSourceHover,
-      meta
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerSourceHover, meta);
   });
 
   it('should send proper payload for #makeGeneratedAnswerSourceHover', async () => {
@@ -2176,24 +1779,14 @@ describe('SearchPageClient', () => {
     };
     const built = await client.makeGeneratedAnswerSourceHover(meta);
     await built.log({searchUID: provider.getSearchUID()});
-    expectMatchCustomEventPayload(
-      SearchPageEvents.generatedAnswerSourceHover,
-      meta
-    );
-    expectMatchDescription(
-      built.description,
-      SearchPageEvents.generatedAnswerSourceHover,
-      meta
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerSourceHover, meta);
+    expectMatchDescription(built.description, SearchPageEvents.generatedAnswerSourceHover, meta);
   });
 
   it('should send proper payload for #logGeneratedAnswerCopyToClipboard', async () => {
     const meta = {generativeQuestionAnsweringId: fakeStreamId};
     await client.logGeneratedAnswerCopyToClipboard(meta);
-    expectMatchCustomEventPayload(
-      SearchPageEvents.generatedAnswerCopyToClipboard,
-      meta
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerCopyToClipboard, meta);
   });
 
   it('should send proper payload for #logGeneratedAnswerCopyToClipboard with agent metadata', async () => {
@@ -2202,20 +1795,14 @@ describe('SearchPageClient', () => {
       conversationId: fakeConversationId,
     };
     await client.logGeneratedAnswerCopyToClipboard(meta);
-    expectMatchCustomEventPayload(
-      SearchPageEvents.generatedAnswerCopyToClipboard,
-      meta
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerCopyToClipboard, meta);
   });
 
   it('should send proper payload for #makeGeneratedAnswerCopyToClipboard', async () => {
     const meta = {generativeQuestionAnsweringId: fakeStreamId};
     const built = await client.makeGeneratedAnswerCopyToClipboard(meta);
     await built.log({searchUID: provider.getSearchUID()});
-    expectMatchCustomEventPayload(
-      SearchPageEvents.generatedAnswerCopyToClipboard,
-      meta
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerCopyToClipboard, meta);
     expectMatchDescription(
       built.description,
       SearchPageEvents.generatedAnswerCopyToClipboard,
@@ -2226,10 +1813,7 @@ describe('SearchPageClient', () => {
   it('should send proper payload for #logGeneratedAnswerHideAnswers', async () => {
     const meta = {generativeQuestionAnsweringId: fakeStreamId};
     await client.logGeneratedAnswerHideAnswers(meta);
-    expectMatchCustomEventPayload(
-      SearchPageEvents.generatedAnswerHideAnswers,
-      meta
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerHideAnswers, meta);
   });
 
   it('should send proper payload for #logGeneratedAnswerHideAnswers with agent metadata', async () => {
@@ -2238,34 +1822,21 @@ describe('SearchPageClient', () => {
       conversationId: fakeConversationId,
     };
     await client.logGeneratedAnswerHideAnswers(meta);
-    expectMatchCustomEventPayload(
-      SearchPageEvents.generatedAnswerHideAnswers,
-      meta
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerHideAnswers, meta);
   });
 
   it('should send proper payload for #makeGeneratedAnswerHideAnswers', async () => {
     const meta = {generativeQuestionAnsweringId: fakeStreamId};
     const built = await client.makeGeneratedAnswerHideAnswers(meta);
     await built.log({searchUID: provider.getSearchUID()});
-    expectMatchCustomEventPayload(
-      SearchPageEvents.generatedAnswerHideAnswers,
-      meta
-    );
-    expectMatchDescription(
-      built.description,
-      SearchPageEvents.generatedAnswerHideAnswers,
-      meta
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerHideAnswers, meta);
+    expectMatchDescription(built.description, SearchPageEvents.generatedAnswerHideAnswers, meta);
   });
 
   it('should send proper payload for #logGeneratedAnswerShowAnswers', async () => {
     const meta = {generativeQuestionAnsweringId: fakeStreamId};
     await client.logGeneratedAnswerShowAnswers(meta);
-    expectMatchCustomEventPayload(
-      SearchPageEvents.generatedAnswerShowAnswers,
-      meta
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerShowAnswers, meta);
   });
 
   it('should send proper payload for #logGeneratedAnswerShowAnswers with agent metadata', async () => {
@@ -2274,25 +1845,15 @@ describe('SearchPageClient', () => {
       conversationId: fakeConversationId,
     };
     await client.logGeneratedAnswerShowAnswers(meta);
-    expectMatchCustomEventPayload(
-      SearchPageEvents.generatedAnswerShowAnswers,
-      meta
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerShowAnswers, meta);
   });
 
   it('should send proper payload for #makeGeneratedAnswerShowAnswers', async () => {
     const meta = {generativeQuestionAnsweringId: fakeStreamId};
     const built = await client.makeGeneratedAnswerShowAnswers(meta);
     await built.log({searchUID: provider.getSearchUID()});
-    expectMatchCustomEventPayload(
-      SearchPageEvents.generatedAnswerShowAnswers,
-      meta
-    );
-    expectMatchDescription(
-      built.description,
-      SearchPageEvents.generatedAnswerShowAnswers,
-      meta
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerShowAnswers, meta);
+    expectMatchDescription(built.description, SearchPageEvents.generatedAnswerShowAnswers, meta);
   });
 
   it('should send proper payload for #logGeneratedAnswerExpand', async () => {
@@ -2315,35 +1876,21 @@ describe('SearchPageClient', () => {
     const built = await client.makeGeneratedAnswerExpand(meta);
     await built.log({searchUID: provider.getSearchUID()});
     expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerExpand, meta);
-    expectMatchDescription(
-      built.description,
-      SearchPageEvents.generatedAnswerExpand,
-      meta
-    );
+    expectMatchDescription(built.description, SearchPageEvents.generatedAnswerExpand, meta);
   });
 
   it('should send proper payload for #logGeneratedAnswerCollapse', async () => {
     const meta = {generativeQuestionAnsweringId: fakeStreamId};
     await client.logGeneratedAnswerCollapse(meta);
-    expectMatchCustomEventPayload(
-      SearchPageEvents.generatedAnswerCollapse,
-      meta
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerCollapse, meta);
   });
 
   it('should send proper payload for #makeGeneratedAnswerCollapse', async () => {
     const meta = {generativeQuestionAnsweringId: fakeStreamId};
     const built = await client.makeGeneratedAnswerCollapse(meta);
     await built.log({searchUID: provider.getSearchUID()});
-    expectMatchCustomEventPayload(
-      SearchPageEvents.generatedAnswerCollapse,
-      meta
-    );
-    expectMatchDescription(
-      built.description,
-      SearchPageEvents.generatedAnswerCollapse,
-      meta
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerCollapse, meta);
+    expectMatchDescription(built.description, SearchPageEvents.generatedAnswerCollapse, meta);
   });
 
   it('should send proper payload for #logGeneratedAnswerFeedbackSubmitV2', async () => {
@@ -2358,10 +1905,7 @@ describe('SearchPageClient', () => {
       documentUrl: 'https://document.com',
     };
     await client.logGeneratedAnswerFeedbackSubmitV2(meta);
-    expectMatchCustomEventPayload(
-      SearchPageEvents.generatedAnswerFeedbackSubmitV2,
-      meta
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerFeedbackSubmitV2, meta);
   });
 
   it('should send proper payload for #logGeneratedAnswerFeedbackSubmit', async () => {
@@ -2371,10 +1915,7 @@ describe('SearchPageClient', () => {
       details: 'a few additional details',
     };
     await client.logGeneratedAnswerFeedbackSubmit(meta);
-    expectMatchCustomEventPayload(
-      SearchPageEvents.generatedAnswerFeedbackSubmit,
-      meta
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerFeedbackSubmit, meta);
   });
 
   it('should send proper payload for #makeGeneratedAnswerFeedbackSubmit', async () => {
@@ -2385,15 +1926,8 @@ describe('SearchPageClient', () => {
     };
     const built = await client.makeGeneratedAnswerFeedbackSubmit(meta);
     await built.log({searchUID: provider.getSearchUID()});
-    expectMatchCustomEventPayload(
-      SearchPageEvents.generatedAnswerFeedbackSubmit,
-      meta
-    );
-    expectMatchDescription(
-      built.description,
-      SearchPageEvents.generatedAnswerFeedbackSubmit,
-      meta
-    );
+    expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerFeedbackSubmit, meta);
+    expectMatchDescription(built.description, SearchPageEvents.generatedAnswerFeedbackSubmit, meta);
   });
 
   it('should send proper payload for #logRephraseGeneratedAnswer', async () => {

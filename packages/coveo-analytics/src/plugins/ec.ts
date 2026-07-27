@@ -4,12 +4,7 @@ import {
   convertProductToMeasurementProtocol,
   convertImpressionListToMeasurementProtocol,
 } from '../client/measurementProtocolMapping/commerceMeasurementProtocolMapper';
-import {
-  BasePlugin,
-  BasePluginEventTypes,
-  PluginClass,
-  PluginOptions,
-} from './BasePlugin';
+import {BasePlugin, BasePluginEventTypes, PluginClass, PluginOptions} from './BasePlugin';
 import {coerceToNumber} from '../client/utils';
 
 export const ECPluginEventTypes = {
@@ -21,10 +16,7 @@ const allECEventTypes = Object.keys(ECPluginEventTypes).map(
 );
 
 // From https://stackoverflow.com/a/49725198/497731
-type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Pick<
-  T,
-  Exclude<keyof T, Keys>
-> &
+type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Pick<T, Exclude<keyof T, Keys>> &
   {
     [K in Keys]-?: Required<Pick<T, K>> & Partial<Pick<T, Exclude<Keys, K>>>;
   }[Keys];
@@ -138,12 +130,7 @@ export class ECPlugin extends BasePlugin {
   private addHooksForEvent() {
     this.client.addEventTypeMapping(ECPluginEventTypes.event, {
       newEventType: EventType.collect,
-      variableLengthArgumentsNames: [
-        'eventCategory',
-        'eventAction',
-        'eventLabel',
-        'eventValue',
-      ],
+      variableLengthArgumentsNames: ['eventCategory', 'eventAction', 'eventLabel', 'eventValue'],
       addVisitorIdParameter: true,
       usesMeasurementProtocol: true,
     });
@@ -176,10 +163,7 @@ export class ECPlugin extends BasePlugin {
       .reduce((newPayload, product, index) => {
         return {
           ...newPayload,
-          ...convertProductToMeasurementProtocol(
-            this.convertNumberTypes(product),
-            index
-          ),
+          ...convertProductToMeasurementProtocol(this.convertNumberTypes(product), index),
         };
       }, {});
   }
@@ -210,11 +194,7 @@ export class ECPlugin extends BasePlugin {
       .reduce((newPayload, impressionList, index) => {
         return {
           ...newPayload,
-          ...convertImpressionListToMeasurementProtocol(
-            impressionList,
-            index,
-            'pi'
-          ),
+          ...convertImpressionListToMeasurementProtocol(impressionList, index, 'pi'),
         };
       }, {});
   }

@@ -9,9 +9,7 @@ const ticketKeysMapping: {[key in keyof Ticket]: string} = {
   productId: 'svc_ticket_product_id',
   custom: 'svc_ticket_custom',
 };
-const ticketKeysMappingValues = keysOf(ticketKeysMapping).map(
-  (key) => ticketKeysMapping[key]
-);
+const ticketKeysMappingValues = keysOf(ticketKeysMapping).map((key) => ticketKeysMapping[key]);
 const ticketSubKeysMatchGroup = [...ticketKeysMappingValues].join('|');
 const ticketKeyRegex = new RegExp(`^(${ticketSubKeysMatchGroup}$)`);
 

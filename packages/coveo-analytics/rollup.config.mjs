@@ -170,9 +170,4 @@ const reactNativeConfig = {
   ],
 };
 
-export default [
-  coveouaConfig,
-  nodeModulesConfig,
-  browserModulesConfig,
-  reactNativeConfig,
-];
+export default [coveouaConfig, nodeModulesConfig, browserModulesConfig, reactNativeConfig];

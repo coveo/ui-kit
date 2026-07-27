@@ -163,10 +163,7 @@ describe('SVC plugin', () => {
       page: '/somepage',
     };
 
-    const pageview = await executeRegisteredHook(
-      SVCPluginEventTypes.pageview,
-      payload
-    );
+    const pageview = await executeRegisteredHook(SVCPluginEventTypes.pageview, payload);
     const event = await executeRegisteredHook(SVCPluginEventTypes.event, {});
 
     expect(pageview).toEqual({

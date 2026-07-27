@@ -25,9 +25,7 @@ function getDataString(data: string[]): string {
 
 export const formatArrayForCoveoCustomData = (rawData: string[]): string => {
   const dataWithoutSemicolons = removeSemicolons(rawData);
-  const dataWithoutRepeatedValues = filterConsecutiveRepeatedValues(
-    dataWithoutSemicolons
-  );
+  const dataWithoutRepeatedValues = filterConsecutiveRepeatedValues(dataWithoutSemicolons);
 
   return getDataString(dataWithoutRepeatedValues);
 };

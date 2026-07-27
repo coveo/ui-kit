@@ -6,10 +6,7 @@ export interface VisitorIdProvider {
 }
 
 export interface AnalyticsRequestClient {
-  sendEvent(
-    eventType: string,
-    payload: IRequestPayload
-  ): Promise<AnyEventResponse | void>;
+  sendEvent(eventType: string, payload: IRequestPayload): Promise<AnyEventResponse | void>;
   deleteHttpCookieVisitorId: () => Promise<void>;
 }
 

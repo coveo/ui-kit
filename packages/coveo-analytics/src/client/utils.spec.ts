@@ -9,23 +9,18 @@ describe('utils', () => {
     it.each([[8], [16], [32], [64], [128]])(
       `truncateUrl('${URL_PLAIN}', %d) truncates to exactly that length`,
       (limit) => {
-        expect(truncateUrl(URL_PLAIN, limit)).toBe(
-          URL_PLAIN.substring(0, limit)
-        );
+        expect(truncateUrl(URL_PLAIN, limit)).toBe(URL_PLAIN.substring(0, limit));
       }
     );
 
     /** Decoded: `'http://test/ ¿OKツ😅#fine'` */
-    const URL_WITH_ESCAPES =
-      'http://test/%20%C2%BFOK%E3%83%84%F0%9F%98%85#fine';
+    const URL_WITH_ESCAPES = 'http://test/%20%C2%BFOK%E3%83%84%F0%9F%98%85#fine';
     // Number of bytes in code-point:     <1>< 2  >  <   3   ><    4     >
 
     it.each([[7], [22], [45], [46], [47], [48], [100]])(
       `truncateUrl('${URL_WITH_ESCAPES}', %d) truncates to the exact limit outside of codepoints`,
       (limit) => {
-        expect(truncateUrl(URL_WITH_ESCAPES, limit)).toBe(
-          URL_WITH_ESCAPES.substring(0, limit)
-        );
+        expect(truncateUrl(URL_WITH_ESCAPES, limit)).toBe(URL_WITH_ESCAPES.substring(0, limit));
       }
     );
 

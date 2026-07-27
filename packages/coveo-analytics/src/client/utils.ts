@@ -13,9 +13,7 @@ export function isObject(o: any): boolean {
  * @returns The input, possibly coerced to a number.
  */
 export function coerceToNumber(input: any): any {
-  return typeof input === 'string' && input != '' && !Number.isNaN(+input)
-    ? +input
-    : input;
+  return typeof input === 'string' && input != '' && !Number.isNaN(+input) ? +input : input;
 }
 
 /**

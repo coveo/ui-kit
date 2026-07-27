@@ -27,18 +27,12 @@ export class CoveoLinkParam {
     return !this.expired && this.matchReferrer(referrerString, referrerList);
   }
 
-  private matchReferrer(
-    referrerString: string,
-    referrerList: string[]
-  ): boolean {
+  private matchReferrer(referrerString: string, referrerList: string[]): boolean {
     try {
       const url: URL = new URL(referrerString);
       return referrerList.some((value: string) => {
         const hostRegExp: RegExp = new RegExp(
-          value
-            .replace(/\\/g, '\\\\')
-            .replace(/\./g, '\\.')
-            .replace(/\*/g, '.*') + '$'
+          value.replace(/\\/g, '\\\\').replace(/\./g, '\\.').replace(/\*/g, '.*') + '$'
         );
         return hostRegExp.test(url.host);
       });

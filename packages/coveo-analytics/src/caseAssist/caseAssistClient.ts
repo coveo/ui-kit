@@ -1,7 +1,4 @@
-import CoveoAnalyticsClient, {
-  AnalyticsClient,
-  ClientOptions,
-} from '../client/analytics';
+import CoveoAnalyticsClient, {AnalyticsClient, ClientOptions} from '../client/analytics';
 import {NoopAnalytics} from '../client/noopAnalytics';
 import doNotTrack from '../donottrack';
 import {ClickEventRequest} from '../events';
@@ -97,9 +94,7 @@ export class CaseAssistClient {
     );
   }
 
-  public logQuickviewDocumentSuggestion(
-    meta: SelectDocumentSuggestionMetadata
-  ) {
+  public logQuickviewDocumentSuggestion(meta: SelectDocumentSuggestionMetadata) {
     return this.logClickEvent(
       CaseAssistActions.documentSuggestionQuickview,
       meta.suggestion.suggestion,

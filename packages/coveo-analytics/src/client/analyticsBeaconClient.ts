@@ -8,10 +8,7 @@ import {EventType, IRequestPayload} from '../events';
 export class AnalyticsBeaconClient implements AnalyticsRequestClient {
   constructor(private opts: IAnalyticsClientOptions) {}
 
-  public async sendEvent(
-    eventType: EventType,
-    originalPayload: IRequestPayload
-  ): Promise<void> {
+  public async sendEvent(eventType: EventType, originalPayload: IRequestPayload): Promise<void> {
     if (!this.isAvailable()) {
       throw new Error(
         `navigator.sendBeacon is not supported in this browser. Consider adding a polyfill like "sendbeacon-polyfill".`
@@ -73,18 +70,13 @@ export class AnalyticsBeaconClient implements AnalyticsRequestClient {
     };
   }
 
-  private encodeForEventType(
-    eventType: EventType,
-    payload: IRequestPayload
-  ): string {
+  private encodeForEventType(eventType: EventType, payload: IRequestPayload): string {
     return this.isEventTypeLegacy(eventType)
       ? this.encodeEventToJson(eventType, payload)
       : this.encodeEventToJson(eventType, payload, this.opts.token);
   }
 
-  private async getQueryParamsForEventType(
-    eventType: EventType
-  ): Promise<string> {
+  private async getQueryParamsForEventType(eventType: EventType): Promise<string> {
     const {token, visitorIdProvider} = this.opts;
     const visitorId = await visitorIdProvider.getCurrentVisitorId();
     return [
@@ -98,12 +90,8 @@ export class AnalyticsBeaconClient implements AnalyticsRequestClient {
 
   private isEventTypeLegacy(eventType: EventType) {
     return (
-      [
-        EventType.click,
-        EventType.custom,
-        EventType.search,
-        EventType.view,
-      ].indexOf(eventType) !== -1
+      [EventType.click, EventType.custom, EventType.search, EventType.view].indexOf(eventType) !==
+      -1
     );
   }
 

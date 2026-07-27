@@ -1,12 +1,7 @@
 import {EventType} from '../events';
 import {v4 as uuidv4} from 'uuid';
 import {convertTicketToMeasurementProtocol} from '../client/measurementProtocolMapping/serviceMeasurementProtocolMapper';
-import {
-  BasePlugin,
-  BasePluginEventTypes,
-  PluginClass,
-  PluginOptions,
-} from './BasePlugin';
+import {BasePlugin, BasePluginEventTypes, PluginClass, PluginOptions} from './BasePlugin';
 
 export const SVCPluginEventTypes = {
   ...BasePluginEventTypes,
@@ -90,12 +85,7 @@ export class SVCPlugin extends BasePlugin {
   private addHooksForEvent() {
     this.client.addEventTypeMapping(SVCPluginEventTypes.event, {
       newEventType: EventType.collect,
-      variableLengthArgumentsNames: [
-        'eventCategory',
-        'eventAction',
-        'eventLabel',
-        'eventValue',
-      ],
+      variableLengthArgumentsNames: ['eventCategory', 'eventAction', 'eventLabel', 'eventValue'],
       addVisitorIdParameter: true,
       usesMeasurementProtocol: true,
     });
@@ -106,9 +96,7 @@ export class SVCPlugin extends BasePlugin {
       ...this.getLocationInformation(eventType, payload),
       ...this.getDefaultContextInformation(eventType),
       ...(this.action ? {svcAction: this.action} : {}),
-      ...(Object.keys(this.actionData ?? {}).length > 0
-        ? {svcActionData: this.actionData}
-        : {}),
+      ...(Object.keys(this.actionData ?? {}).length > 0 ? {svcActionData: this.actionData} : {}),
     };
 
     const ticketPayload = this.getTicketPayload();

@@ -36,12 +36,8 @@ self.coveoanalytics = analytics;
 // On normal execution this library should be loaded after the snippet execution
 // so we will execute the actions in the `q` array
 if (coveoua.q) {
-  const initEvents = coveoua.q.filter(
-    (args: [string, any[]]) => args[0] === 'init'
-  );
-  const otherEvents = coveoua.q.filter(
-    (args: [string, any[]]) => args[0] !== 'init'
-  );
+  const initEvents = coveoua.q.filter((args: [string, any[]]) => args[0] === 'init');
+  const otherEvents = coveoua.q.filter((args: [string, any[]]) => args[0] !== 'init');
   [...initEvents, ...otherEvents].forEach((args: [string, any[]]) =>
     handleOneAnalyticsEvent.apply(void 0, args)
   );

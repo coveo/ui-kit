@@ -70,10 +70,7 @@ const reviewActionsKeysMapping: {[name: string]: string} = {
   comment: 'reviewComment',
 };
 
-export const commerceActionKeysMappingPerAction: Record<
-  string,
-  {[name: string]: string}
-> = {
+export const commerceActionKeysMappingPerAction: Record<string, {[name: string]: string}> = {
   add: productActionsKeysMapping,
   bookmark_add: productActionsKeysMapping,
   bookmark_remove: productActionsKeysMapping,
@@ -102,10 +99,7 @@ export const commerceActionKeysMappingPerAction: Record<
   },
 };
 
-export const convertProductToMeasurementProtocol = (
-  product: Product,
-  index: number
-) => {
+export const convertProductToMeasurementProtocol = (product: Product, index: number) => {
   return keysOf(product).reduce((mappedProduct, key) => {
     const newKey = `pr${index + 1}${productKeysMapping[key] || key}`;
     return {
@@ -124,12 +118,7 @@ export const convertImpressionListToMeasurementProtocol = (
     (mappedImpressions, impression, productIndex) => {
       return {
         ...mappedImpressions,
-        ...convertImpressionToMeasurementProtocol(
-          impression,
-          listIndex,
-          productIndex,
-          prefix
-        ),
+        ...convertImpressionToMeasurementProtocol(impression, listIndex, productIndex, prefix),
       };
     },
     {}
@@ -157,18 +146,16 @@ const convertImpressionToMeasurementProtocol = (
   }, {});
 };
 
-const productKeysMappingValues = keysOf(productKeysMapping).map(
-  (key) => productKeysMapping[key]
-);
+const productKeysMappingValues = keysOf(productKeysMapping).map((key) => productKeysMapping[key]);
 const impressionKeysMappingValues = keysOf(impressionKeysMapping).map(
   (key) => impressionKeysMapping[key]
 );
 const productActionsKeysMappingValues = keysOf(productActionsKeysMapping).map(
   (key) => productActionsKeysMapping[key]
 );
-const transactionActionsKeysMappingValues = keysOf(
-  transactionActionsKeysMapping
-).map((key) => transactionActionsKeysMapping[key]);
+const transactionActionsKeysMappingValues = keysOf(transactionActionsKeysMapping).map(
+  (key) => transactionActionsKeysMapping[key]
+);
 const reviewKeysMappingValues = keysOf(reviewActionsKeysMapping).map(
   (key) => reviewActionsKeysMapping[key]
 );
@@ -176,31 +163,20 @@ const quoteKeysMappingValues = keysOf(quoteActionsKeysMapping).map(
   (key) => quoteActionsKeysMapping[key]
 );
 
-const productSubKeysMatchGroup = [...productKeysMappingValues, 'custom'].join(
-  '|'
-);
-const impressionSubKeysMatchGroup = [
-  ...impressionKeysMappingValues,
-  'custom',
-].join('|');
+const productSubKeysMatchGroup = [...productKeysMappingValues, 'custom'].join('|');
+const impressionSubKeysMatchGroup = [...impressionKeysMappingValues, 'custom'].join('|');
 const productPrefixMatchGroup = '(pr[0-9]+)';
 const impressionPrefixMatchGroup = '(il[0-9]+pi[0-9]+)';
-const productKeyRegex = new RegExp(
-  `^${productPrefixMatchGroup}(${productSubKeysMatchGroup})$`
-);
+const productKeyRegex = new RegExp(`^${productPrefixMatchGroup}(${productSubKeysMatchGroup})$`);
 const impressionKeyRegex = new RegExp(
   `^(${impressionPrefixMatchGroup}(${impressionSubKeysMatchGroup}))|(il[0-9]+nm)$`
 );
-const productActionsKeyRegex = new RegExp(
-  `^(${productActionsKeysMappingValues.join('|')})$`
-);
+const productActionsKeyRegex = new RegExp(`^(${productActionsKeysMappingValues.join('|')})$`);
 const transactionActionsKeyRegex = new RegExp(
   `^(${transactionActionsKeysMappingValues.join('|')})$`
 );
 const customProductKeyRegex = new RegExp(`^${productPrefixMatchGroup}custom$`);
-const customImpressionKeyRegex = new RegExp(
-  `^${impressionPrefixMatchGroup}custom$`
-);
+const customImpressionKeyRegex = new RegExp(`^${impressionPrefixMatchGroup}custom$`);
 const coveoCommerceExtensionKeysRegex = new RegExp(
   `^(${[...coveoCommerceExtensionKeys, ...reviewKeysMappingValues, ...quoteKeysMappingValues].join('|')})$`
 );
@@ -208,10 +184,8 @@ const coveoCommerceExtensionKeysRegex = new RegExp(
 const isProductKey = (key: string) => productKeyRegex.test(key);
 const isImpressionKey = (key: string) => impressionKeyRegex.test(key);
 const isProductActionsKey = (key: string) => productActionsKeyRegex.test(key);
-const isTransactionActionsKeyRegex = (key: string) =>
-  transactionActionsKeyRegex.test(key);
-const isCoveoCommerceExtensionKey = (key: string) =>
-  coveoCommerceExtensionKeysRegex.test(key);
+const isTransactionActionsKeyRegex = (key: string) => transactionActionsKeyRegex.test(key);
+const isCoveoCommerceExtensionKey = (key: string) => coveoCommerceExtensionKeysRegex.test(key);
 
 export const isCommerceKey = [
   isImpressionKey,
@@ -220,7 +194,4 @@ export const isCommerceKey = [
   isTransactionActionsKeyRegex,
   isCoveoCommerceExtensionKey,
 ];
-export const isCustomCommerceKey = [
-  customProductKeyRegex,
-  customImpressionKeyRegex,
-];
+export const isCustomCommerceKey = [customProductKeyRegex, customImpressionKeyRegex];

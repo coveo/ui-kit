@@ -560,10 +560,7 @@ describe('EC plugin', () => {
       page: '/somepage',
     };
 
-    const pageview = executeRegisteredHook(
-      ECPluginEventTypes.pageview,
-      payload
-    );
+    const pageview = executeRegisteredHook(ECPluginEventTypes.pageview, payload);
     const event = executeRegisteredHook(ECPluginEventTypes.event, {});
 
     expect(pageview).toEqual({

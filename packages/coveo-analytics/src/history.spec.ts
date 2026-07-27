@@ -108,8 +108,7 @@ describe('history', () => {
       expect(elem).toHaveProperty('internalTime');
     }
 
-    const stripedHistoryElements =
-      historyStore['stripInternalTime'](historyElements);
+    const stripedHistoryElements = historyStore['stripInternalTime'](historyElements);
 
     for (let elem of stripedHistoryElements) {
       expect(elem).not.toHaveProperty('internalTime');

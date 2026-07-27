@@ -17,11 +17,9 @@ const measurementProtocolKeysMapping: {[name: string]: string} = {
 
 export const convertKeysToMeasurementProtocol = (params: any) => {
   const keysMappingForAction =
-    (!!params.action && commerceActionKeysMappingPerAction[params.action]) ||
-    {};
+    (!!params.action && commerceActionKeysMappingPerAction[params.action]) || {};
   return keysOf(params).reduce((mappedKeys, key) => {
-    const newKey =
-      keysMappingForAction[key] || measurementProtocolKeysMapping[key] || key;
+    const newKey = keysMappingForAction[key] || measurementProtocolKeysMapping[key] || key;
     return {
       ...mappedKeys,
       [newKey]: params[key],
@@ -29,21 +27,18 @@ export const convertKeysToMeasurementProtocol = (params: any) => {
   }, {});
 };
 
-const measurementProtocolKeysMappingValues = keysOf(
-  measurementProtocolKeysMapping
-).map((key) => measurementProtocolKeysMapping[key]);
+const measurementProtocolKeysMappingValues = keysOf(measurementProtocolKeysMapping).map(
+  (key) => measurementProtocolKeysMapping[key]
+);
 
 const isKnownMeasurementProtocolKey = (key: string) =>
   measurementProtocolKeysMappingValues.indexOf(key) !== -1;
 const isCustomKey = (key: string) => key === 'custom';
 
 export const isMeasurementProtocolKey = (key: string): boolean => {
-  return [
-    ...isCommerceKey,
-    ...isServiceKey,
-    isKnownMeasurementProtocolKey,
-    isCustomKey,
-  ].some((test) => test(key));
+  return [...isCommerceKey, ...isServiceKey, isKnownMeasurementProtocolKey, isCustomKey].some(
+    (test) => test(key)
+  );
 };
 
 export const convertCustomMeasurementProtocolKeys = (data: {
@@ -54,10 +49,7 @@ export const convertCustomMeasurementProtocolKeys = (data: {
     if (match) {
       return {
         ...all,
-        ...convertCustomObject(
-          match,
-          data[current] as {[name: string]: string}
-        ),
+        ...convertCustomObject(match, data[current] as {[name: string]: string}),
       };
     } else {
       return {
@@ -68,9 +60,7 @@ export const convertCustomMeasurementProtocolKeys = (data: {
   }, {});
 };
 
-const getFirstCustomMeasurementProtocolKeyMatch = (
-  key: string
-): string | undefined => {
+const getFirstCustomMeasurementProtocolKeyMatch = (key: string): string | undefined => {
   let matchedKey: string | undefined = undefined;
   [...isCustomCommerceKey].every((regex) => {
     matchedKey = regex.exec(key)?.[1];
@@ -79,10 +69,7 @@ const getFirstCustomMeasurementProtocolKeyMatch = (
   return matchedKey;
 };
 
-const convertCustomObject = (
-  prefix: string,
-  customData: {[name: string]: string}
-) => {
+const convertCustomObject = (prefix: string, customData: {[name: string]: string}) => {
   return keysOf(customData).reduce(
     (allCustom, currentCustomKey) => ({
       ...allCustom,

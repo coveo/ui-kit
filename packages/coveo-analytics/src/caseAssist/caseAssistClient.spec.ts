@@ -44,10 +44,7 @@ describe('CaseAssistClient', () => {
     fetchMockBeforeEach();
 
     client = initClient();
-    client.coveoAnalyticsClient.runtime.storage.setItem(
-      'visitorId',
-      exampleClientId
-    );
+    client.coveoAnalyticsClient.runtime.storage.setItem('visitorId', exampleClientId);
     fetchMock.mock(/.*/, {
       visitorId: 'visitor-id',
     });
@@ -258,11 +255,7 @@ describe('CaseAssistClient', () => {
       ticket: emptyTicket,
     });
 
-    expectMatchPayload(
-      CaseAssistActions.enterInterface,
-      noActionData,
-      noTicket
-    );
+    expectMatchPayload(CaseAssistActions.enterInterface, noActionData, noTicket);
   });
 
   it('should send proper payload for #logUpdateCaseField', async () => {
@@ -271,11 +264,7 @@ describe('CaseAssistClient', () => {
       ticket: fakeTicket,
     });
 
-    expectMatchPayload(
-      CaseAssistActions.fieldUpdate,
-      {fieldName: 'subject'},
-      fakeTicket
-    );
+    expectMatchPayload(CaseAssistActions.fieldUpdate, {fieldName: 'subject'}, fakeTicket);
   });
 
   it('should send proper payload for #logSelectFieldSuggestion', async () => {
@@ -284,11 +273,7 @@ describe('CaseAssistClient', () => {
       ticket: fakeTicket,
     });
 
-    expectMatchPayload(
-      CaseAssistActions.fieldSuggestionClick,
-      fakeFieldSuggestion(),
-      fakeTicket
-    );
+    expectMatchPayload(CaseAssistActions.fieldSuggestionClick, fakeFieldSuggestion(), fakeTicket);
   });
 
   it('should send proper payload for #logSelectFieldSuggestion when the autoSelection property is set to true', async () => {
@@ -299,11 +284,7 @@ describe('CaseAssistClient', () => {
       ticket: fakeTicket,
     });
 
-    expectMatchPayload(
-      CaseAssistActions.fieldSuggestionClick,
-      myFakeFieldSuggestion,
-      fakeTicket
-    );
+    expectMatchPayload(CaseAssistActions.fieldSuggestionClick, myFakeFieldSuggestion, fakeTicket);
   });
 
   it('should send proper payload for #logSelectDocumentSuggestion', async () => {
@@ -365,11 +346,7 @@ describe('CaseAssistClient', () => {
       stage: stageName,
     });
 
-    expectMatchPayload(
-      CaseAssistActions.nextCaseStep,
-      {stage: stageName},
-      fakeTicket
-    );
+    expectMatchPayload(CaseAssistActions.nextCaseStep, {stage: stageName}, fakeTicket);
   });
 
   it('should send proper payload for #logCaseCancelled', async () => {

@@ -28,9 +28,7 @@ export class AnalyticsFetchClient implements AnalyticsRequestClient {
     };
     const {url, ...fetchData}: IAnalyticsRequestOptions = {
       ...defaultOptions,
-      ...(preprocessRequest
-        ? await preprocessRequest(defaultOptions, 'analyticsFetch')
-        : {}),
+      ...(preprocessRequest ? await preprocessRequest(defaultOptions, 'analyticsFetch') : {}),
     };
 
     let response: Response;
@@ -75,12 +73,8 @@ export class AnalyticsFetchClient implements AnalyticsRequestClient {
 
   private shouldAppendVisitorId(eventType: EventType) {
     return (
-      [
-        EventType.click,
-        EventType.custom,
-        EventType.search,
-        EventType.view,
-      ].indexOf(eventType) !== -1
+      [EventType.click, EventType.custom, EventType.search, EventType.view].indexOf(eventType) !==
+      -1
     );
   }
 

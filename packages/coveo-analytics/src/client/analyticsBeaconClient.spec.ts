@@ -138,20 +138,13 @@ describe('AnalyticsBeaconClient', () => {
       await client.sendEvent(EventType.collect, {});
 
       expect(clientOrigin!).toBe('analyticsBeacon');
-      expect(sendBeaconMock).toHaveBeenCalledWith(
-        processedRequest.url,
-        expect.anything()
-      );
-      expect(await getSendBeaconFirstCallBlobArgument()).toContain(
-        '%22test%22%3A%22custom%22'
-      );
+      expect(sendBeaconMock).toHaveBeenCalledWith(processedRequest.url, expect.anything());
+      expect(await getSendBeaconFirstCallBlobArgument()).toContain('%22test%22%3A%22custom%22');
     });
 
     it('to modify the request body as a JSON string for a collect event', async () => {
       const client = setupClient((request) => {
-        const bodyShouldBeAvailableAsJSONString = JSON.parse(
-          request.body as string
-        );
+        const bodyShouldBeAvailableAsJSONString = JSON.parse(request.body as string);
         expect(bodyShouldBeAvailableAsJSONString).toEqual({foo: 'bar'});
         bodyShouldBeAvailableAsJSONString.foo = 'baz';
         request.body = JSON.stringify(bodyShouldBeAvailableAsJSONString);

@@ -42,10 +42,7 @@ import {
 } from './runtimeEnvironment';
 import HistoryStore from '../history';
 import {isApiKey} from './token';
-import {
-  isReactNative,
-  ReactNativeRuntimeWarning,
-} from '../react-native/react-native-utils';
+import {isReactNative, ReactNativeRuntimeWarning} from '../react-native/react-native-utils';
 import {doNotTrack} from '../donottrack';
 import {isObject, truncateUrl} from './utils';
 
@@ -85,25 +82,13 @@ export interface PreparedEvent<
   TCompleteRequest,
   TResponse extends AnyEventResponse,
 > extends BufferedRequest {
-  log(
-    remainingPayload: Omit<TCompleteRequest, keyof TPreparedRequest>
-  ): Promise<TResponse | void>;
+  log(remainingPayload: Omit<TCompleteRequest, keyof TPreparedRequest>): Promise<TResponse | void>;
 }
 
 export interface AnalyticsClient {
-  getPayload(
-    eventType: string,
-    ...payload: VariableArgumentsPayload
-  ): Promise<any>;
-  getParameters(
-    eventType: string,
-    ...payload: VariableArgumentsPayload
-  ): Promise<any>;
-  makeEvent<
-    TPreparedRequest,
-    TCompleteRequest,
-    TResponse extends AnyEventResponse,
-  >(
+  getPayload(eventType: string, ...payload: VariableArgumentsPayload): Promise<any>;
+  getParameters(eventType: string, ...payload: VariableArgumentsPayload): Promise<any>;
+  makeEvent<TPreparedRequest, TCompleteRequest, TResponse extends AnyEventResponse>(
     eventType: string,
     ...payload: VariableArgumentsPayload
   ): Promise<PreparedEvent<TPreparedRequest, TCompleteRequest, TResponse>>;
@@ -113,45 +98,19 @@ export interface AnalyticsClient {
   ): Promise<AnyEventResponse | void>;
   makeSearchEvent(
     request: PreparedSearchEventRequest
-  ): Promise<
-    PreparedEvent<
-      PreparedSearchEventRequest,
-      SearchEventRequest,
-      SearchEventResponse
-    >
-  >;
-  sendSearchEvent(
-    request: SearchEventRequest
-  ): Promise<SearchEventResponse | void>;
+  ): Promise<PreparedEvent<PreparedSearchEventRequest, SearchEventRequest, SearchEventResponse>>;
+  sendSearchEvent(request: SearchEventRequest): Promise<SearchEventResponse | void>;
   makeClickEvent(
     request: PreparedClickEventRequest
-  ): Promise<
-    PreparedEvent<
-      PreparedClickEventRequest,
-      ClickEventRequest,
-      ClickEventResponse
-    >
-  >;
-  sendClickEvent(
-    request: ClickEventRequest
-  ): Promise<ClickEventResponse | void>;
+  ): Promise<PreparedEvent<PreparedClickEventRequest, ClickEventRequest, ClickEventResponse>>;
+  sendClickEvent(request: ClickEventRequest): Promise<ClickEventResponse | void>;
   makeCustomEvent(
     request: PreparedCustomEventRequest
-  ): Promise<
-    PreparedEvent<
-      PreparedCustomEventRequest,
-      CustomEventRequest,
-      CustomEventResponse
-    >
-  >;
-  sendCustomEvent(
-    request: CustomEventRequest
-  ): Promise<CustomEventResponse | void>;
+  ): Promise<PreparedEvent<PreparedCustomEventRequest, CustomEventRequest, CustomEventResponse>>;
+  sendCustomEvent(request: CustomEventRequest): Promise<CustomEventResponse | void>;
   makeViewEvent(
     request: PreparedViewEventRequest
-  ): Promise<
-    PreparedEvent<PreparedViewEventRequest, ViewEventRequest, ViewEventResponse>
-  >;
+  ): Promise<PreparedEvent<PreparedViewEventRequest, ViewEventRequest, ViewEventResponse>>;
   sendViewEvent(request: ViewEventRequest): Promise<ViewEventResponse | void>;
   getVisit(): Promise<VisitResponse>;
   getHealth(): Promise<HealthResponse>;
@@ -187,8 +146,7 @@ export function buildBaseUrl(
     return `${endpoint}/${apiVersion}`;
   }
 
-  const hasUARestEndpoint =
-    endpoint.endsWith('/rest') || endpoint.endsWith('/rest/ua');
+  const hasUARestEndpoint = endpoint.endsWith('/rest') || endpoint.endsWith('/rest/ua');
 
   return `${endpoint}${hasUARestEndpoint ? '' : '/rest'}/${apiVersion}`;
 }
@@ -198,9 +156,7 @@ export function buildBaseUrl(
 // their cookie store at the same time, with corresponding downstream effects.
 const COVEO_NAMESPACE = '38824e1f-37f5-42d3-8372-a4b8fa9df946';
 
-export class CoveoAnalyticsClient
-  implements AnalyticsClient, VisitorIdProvider
-{
+export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider {
   private get defaultOptions(): ClientOptions {
     return {
       endpoint: Endpoints.default,
@@ -252,8 +208,7 @@ export class CoveoAnalyticsClient
     if (doNotTrack()) {
       this.runtime = new NoopRuntime();
     } else {
-      this.runtime =
-        this.options.runtimeEnvironment || this.initRuntime(clientsOptions);
+      this.runtime = this.options.runtimeEnvironment || this.initRuntime(clientsOptions);
     }
 
     this.addEventTypeMapping(EventType.view, {
@@ -325,31 +280,18 @@ export class CoveoAnalyticsClient
       this.setCurrentVisitorId(value.toLowerCase());
     } else {
       if (!namespace) {
-        throw Error(
-          'Cannot generate uuid client id without a specific namespace string.'
-        );
+        throw Error('Cannot generate uuid client id without a specific namespace string.');
       }
-      this.setCurrentVisitorId(
-        uuidv5(value, uuidv5(namespace, COVEO_NAMESPACE))
-      );
+      this.setCurrentVisitorId(uuidv5(value, uuidv5(namespace, COVEO_NAMESPACE)));
     }
   }
 
-  async getParameters(
-    eventType: EventType | string,
-    ...payload: VariableArgumentsPayload
-  ) {
+  async getParameters(eventType: EventType | string, ...payload: VariableArgumentsPayload) {
     return await this.resolveParameters(eventType, ...payload);
   }
 
-  async getPayload(
-    eventType: EventType | string,
-    ...payload: VariableArgumentsPayload
-  ) {
-    const parametersToSend = await this.resolveParameters(
-      eventType,
-      ...payload
-    );
+  async getPayload(eventType: EventType | string, ...payload: VariableArgumentsPayload) {
+    const parametersToSend = await this.resolveParameters(eventType, ...payload);
     return await this.resolvePayloadForParameters(eventType, parametersToSend);
   }
 
@@ -377,14 +319,11 @@ export class CoveoAnalyticsClient
       return null;
     }
     try {
-      const linkParam: string | null = new URL(urlString).searchParams.get(
-        CoveoLinkParam.cvo_cid
-      );
+      const linkParam: string | null = new URL(urlString).searchParams.get(CoveoLinkParam.cvo_cid);
       if (linkParam == null) {
         return null;
       }
-      const linker: CoveoLinkParam | null =
-        CoveoLinkParam.fromString(linkParam);
+      const linker: CoveoLinkParam | null = CoveoLinkParam.fromString(linkParam);
       if (
         !linker ||
         !hasDocument() ||
@@ -399,10 +338,7 @@ export class CoveoAnalyticsClient
     return null;
   }
 
-  async resolveParameters(
-    eventType: EventType | string,
-    ...payload: VariableArgumentsPayload
-  ) {
+  async resolveParameters(eventType: EventType | string, ...payload: VariableArgumentsPayload) {
     const {
       variableLengthArgumentsNames = [],
       addVisitorIdParameter = false,
@@ -410,18 +346,11 @@ export class CoveoAnalyticsClient
       addClientIdParameter = false,
     } = this.eventTypeMapping[eventType] || {};
 
-    const processVariableArgumentNamesStep: ProcessPayloadStep = (
-      currentPayload
-    ) =>
+    const processVariableArgumentNamesStep: ProcessPayloadStep = (currentPayload) =>
       variableLengthArgumentsNames.length > 0
-        ? this.parseVariableArgumentsPayload(
-            variableLengthArgumentsNames,
-            currentPayload
-          )
+        ? this.parseVariableArgumentsPayload(variableLengthArgumentsNames, currentPayload)
         : currentPayload[0];
-    const addVisitorIdStep: AsyncProcessPayloadStep = async (
-      currentPayload
-    ) => ({
+    const addVisitorIdStep: AsyncProcessPayloadStep = async (currentPayload) => ({
       ...currentPayload,
       visitorId: addVisitorIdParameter ? await this.getCurrentVisitorId() : '',
     });
@@ -438,9 +367,7 @@ export class CoveoAnalyticsClient
       usesMeasurementProtocol
         ? this.ensureAnonymousUserWhenUsingApiKey(currentPayload)
         : currentPayload;
-    const processBeforeSendHooksStep: AsyncProcessPayloadStep = (
-      currentPayload
-    ) =>
+    const processBeforeSendHooksStep: AsyncProcessPayloadStep = (currentPayload) =>
       this.beforeSendHooks.reduce(async (promisePayload, current) => {
         const payload = await promisePayload;
         return await current(eventType, payload);
@@ -460,12 +387,8 @@ export class CoveoAnalyticsClient
     return parametersToSend;
   }
 
-  async resolvePayloadForParameters(
-    eventType: EventType | string,
-    parameters: any
-  ) {
-    const {usesMeasurementProtocol = false} =
-      this.eventTypeMapping[eventType] || {};
+  async resolvePayloadForParameters(eventType: EventType | string, parameters: any) {
+    const {usesMeasurementProtocol = false} = this.eventTypeMapping[eventType] || {};
 
     const addTrackingIdStep: ProcessPayloadStep = (currentPayload) =>
       this.setTrackingIdIfTrackingIdNotPresent(currentPayload);
@@ -473,16 +396,10 @@ export class CoveoAnalyticsClient
       this.removeEmptyPayloadValues(currentPayload, eventType);
     const validateParams: ProcessPayloadStep = (currentPayload) =>
       this.validateParams(currentPayload, eventType);
-    const processMeasurementProtocolConversionStep: ProcessPayloadStep = (
-      currentPayload
-    ) =>
-      usesMeasurementProtocol
-        ? convertKeysToMeasurementProtocol(currentPayload)
-        : currentPayload;
+    const processMeasurementProtocolConversionStep: ProcessPayloadStep = (currentPayload) =>
+      usesMeasurementProtocol ? convertKeysToMeasurementProtocol(currentPayload) : currentPayload;
     const removeUnknownParameters: ProcessPayloadStep = (currentPayload) =>
-      usesMeasurementProtocol
-        ? this.removeUnknownParameters(currentPayload)
-        : currentPayload;
+      usesMeasurementProtocol ? this.removeUnknownParameters(currentPayload) : currentPayload;
     const processCustomParameters: ProcessPayloadStep = (currentPayload) =>
       usesMeasurementProtocol
         ? this.processCustomParameters(currentPayload)
@@ -503,25 +420,15 @@ export class CoveoAnalyticsClient
     return payloadToSend;
   }
 
-  async makeEvent<
-    TPreparedRequest,
-    TCompleteRequest,
-    TResponse extends AnyEventResponse,
-  >(
+  async makeEvent<TPreparedRequest, TCompleteRequest, TResponse extends AnyEventResponse>(
     eventType: EventType | string,
     ...payload: VariableArgumentsPayload
   ): Promise<PreparedEvent<TPreparedRequest, TCompleteRequest, TResponse>> {
     const {newEventType: eventTypeToSend = eventType as EventType} =
       this.eventTypeMapping[eventType] || {};
 
-    const parametersToSend = await this.resolveParameters(
-      eventType,
-      ...payload
-    );
-    const payloadToSend = await this.resolvePayloadForParameters(
-      eventType,
-      parametersToSend
-    );
+    const parametersToSend = await this.resolveParameters(eventType, ...payload);
+    const payloadToSend = await this.resolvePayloadForParameters(eventType, parametersToSend);
     return {
       eventType: eventTypeToSend,
       payload: payloadToSend,
@@ -541,13 +448,8 @@ export class CoveoAnalyticsClient
     };
   }
 
-  async sendEvent(
-    eventType: EventType | string,
-    ...payload: VariableArgumentsPayload
-  ) {
-    return (
-      await this.makeEvent<any, any, AnyEventResponse>(eventType, ...payload)
-    ).log({});
+  async sendEvent(eventType: EventType | string, ...payload: VariableArgumentsPayload) {
+    return (await this.makeEvent<any, any, AnyEventResponse>(eventType, ...payload)).log({});
   }
 
   private deferExecution(): Promise<void> {
@@ -558,9 +460,7 @@ export class CoveoAnalyticsClient
     const popped = this.bufferedRequests.shift();
     if (popped) {
       const {eventType, payload} = popped;
-      return this.runtime
-        .getClientDependingOnEventType(eventType)
-        .sendEvent(eventType, payload);
+      return this.runtime.getClientDependingOnEventType(eventType).sendEvent(eventType, payload);
     }
   }
 
@@ -575,63 +475,48 @@ export class CoveoAnalyticsClient
   }
 
   async makeSearchEvent(request: PreparedSearchEventRequest) {
-    return this.makeEvent<
-      PreparedSearchEventRequest,
-      SearchEventRequest,
-      SearchEventResponse
-    >(EventType.search, request);
+    return this.makeEvent<PreparedSearchEventRequest, SearchEventRequest, SearchEventResponse>(
+      EventType.search,
+      request
+    );
   }
 
-  async sendSearchEvent({
-    searchQueryUid,
-    ...preparedRequest
-  }: SearchEventRequest) {
+  async sendSearchEvent({searchQueryUid, ...preparedRequest}: SearchEventRequest) {
     return (await this.makeSearchEvent(preparedRequest)).log({searchQueryUid});
   }
 
   async makeClickEvent(request: PreparedClickEventRequest) {
-    return this.makeEvent<
-      PreparedClickEventRequest,
-      ClickEventRequest,
-      ClickEventResponse
-    >(EventType.click, request);
+    return this.makeEvent<PreparedClickEventRequest, ClickEventRequest, ClickEventResponse>(
+      EventType.click,
+      request
+    );
   }
 
-  async sendClickEvent({
-    searchQueryUid,
-    ...preparedRequest
-  }: ClickEventRequest) {
+  async sendClickEvent({searchQueryUid, ...preparedRequest}: ClickEventRequest) {
     return (await this.makeClickEvent(preparedRequest)).log({searchQueryUid});
   }
 
   async makeCustomEvent(request: PreparedCustomEventRequest) {
-    return this.makeEvent<
-      PreparedCustomEventRequest,
-      CustomEventRequest,
-      CustomEventResponse
-    >(EventType.custom, request);
+    return this.makeEvent<PreparedCustomEventRequest, CustomEventRequest, CustomEventResponse>(
+      EventType.custom,
+      request
+    );
   }
 
-  async sendCustomEvent({
-    lastSearchQueryUid,
-    ...preparedRequest
-  }: CustomEventRequest) {
+  async sendCustomEvent({lastSearchQueryUid, ...preparedRequest}: CustomEventRequest) {
     return (await this.makeCustomEvent(preparedRequest)).log({
       lastSearchQueryUid,
     });
   }
 
   async makeViewEvent(request: PreparedViewEventRequest) {
-    return this.makeEvent<
-      PreparedViewEventRequest,
-      ViewEventRequest,
-      ViewEventResponse
-    >(EventType.view, request);
+    return this.makeEvent<PreparedViewEventRequest, ViewEventRequest, ViewEventResponse>(
+      EventType.view,
+      request
+    );
   }
 
-  async sendViewEvent(
-    request: ViewEventRequest
-  ): Promise<ViewEventResponse | void> {
+  async sendViewEvent(request: ViewEventRequest): Promise<ViewEventResponse | void> {
     return (await this.makeViewEvent(request)).log({});
   }
 
@@ -667,10 +552,7 @@ export class CoveoAnalyticsClient
     else throw Error('Parameter should be an array of domain strings');
   }
 
-  private parseVariableArgumentsPayload(
-    fieldsOrder: string[],
-    payload: VariableArgumentsPayload
-  ) {
+  private parseVariableArgumentsPayload(fieldsOrder: string[], payload: VariableArgumentsPayload) {
     const parsedArguments: {[name: string]: any} = {};
     for (let i = 0, length = payload.length; i < length; i++) {
       const currentArgument = payload[i];
@@ -696,18 +578,11 @@ export class CoveoAnalyticsClient
     return match.indexOf(key) !== -1;
   }
 
-  private removeEmptyPayloadValues(
-    payload: IRequestPayload,
-    eventType: string
-  ): IRequestPayload {
+  private removeEmptyPayloadValues(payload: IRequestPayload, eventType: string): IRequestPayload {
     const isNotEmptyValue = (value: any) =>
       typeof value !== 'undefined' && value !== null && value !== '';
     return Object.keys(payload)
-      .filter(
-        (key) =>
-          this.isKeyAllowedEmpty(eventType, key) ||
-          isNotEmptyValue(payload[key])
-      )
+      .filter((key) => this.isKeyAllowedEmpty(eventType, key) || isNotEmptyValue(payload[key]))
       .reduce(
         (newPayload, key) => ({
           ...newPayload,
@@ -751,9 +626,7 @@ export class CoveoAnalyticsClient
     };
   }
 
-  private mapCustomParametersToCustomData(
-    payload: IRequestPayload
-  ): IRequestPayload {
+  private mapCustomParametersToCustomData(payload: IRequestPayload): IRequestPayload {
     const {custom, ...rest} = payload;
     if (custom && isObject(custom)) {
       const lowercasedCustom = this.lowercaseKeys(custom);
@@ -775,10 +648,7 @@ export class CoveoAnalyticsClient
     return result;
   }
 
-  private validateParams(
-    payload: IRequestPayload,
-    eventType: EventType | string
-  ): IRequestPayload {
+  private validateParams(payload: IRequestPayload, eventType: EventType | string): IRequestPayload {
     const {anonymizeIp, ...rest} = payload;
     if (anonymizeIp !== undefined) {
       if (
@@ -809,9 +679,7 @@ export class CoveoAnalyticsClient
     return rest;
   }
 
-  private ensureAnonymousUserWhenUsingApiKey(
-    payload: IRequestPayload
-  ): IRequestPayload {
+  private ensureAnonymousUserWhenUsingApiKey(payload: IRequestPayload): IRequestPayload {
     const {userId, ...rest} = payload;
     if (isApiKey(this.options.token) && !userId) {
       rest['userId'] = 'anonymous';
@@ -821,21 +689,15 @@ export class CoveoAnalyticsClient
     }
   }
 
-  private setTrackingIdIfTrackingIdNotPresent(
-    payload: IRequestPayload
-  ): IRequestPayload {
+  private setTrackingIdIfTrackingIdNotPresent(payload: IRequestPayload): IRequestPayload {
     const {trackingId, ...rest} = payload;
     if (trackingId) {
       return payload;
     }
 
     if (rest.hasOwnProperty('custom') && isObject(rest.custom)) {
-      if (
-        rest.custom.hasOwnProperty('context_website') ||
-        rest.custom.hasOwnProperty('siteName')
-      ) {
-        rest['trackingId'] =
-          rest.custom.context_website || rest.custom.siteName;
+      if (rest.custom.hasOwnProperty('context_website') || rest.custom.hasOwnProperty('siteName')) {
+        rest['trackingId'] = rest.custom.context_website || rest.custom.siteName;
       }
     }
 
@@ -844,8 +706,7 @@ export class CoveoAnalyticsClient
         rest.customData.hasOwnProperty('context_website') ||
         rest.customData.hasOwnProperty('siteName')
       ) {
-        rest['trackingId'] =
-          rest.customData.context_website || rest.customData.siteName;
+        rest['trackingId'] = rest.customData.context_website || rest.customData.siteName;
       }
     }
 
@@ -853,17 +714,11 @@ export class CoveoAnalyticsClient
   }
 
   private limit<T>(input: T, length: number): T {
-    return typeof input === 'string'
-      ? (truncateUrl(input, length) as T)
-      : input;
+    return typeof input === 'string' ? (truncateUrl(input, length) as T) : input;
   }
 
   private get baseUrl(): string {
-    return buildBaseUrl(
-      this.options.endpoint,
-      this.options.version,
-      this.options.isCustomEndpoint
-    );
+    return buildBaseUrl(this.options.endpoint, this.options.version, this.options.isCustomEndpoint);
   }
 }
 

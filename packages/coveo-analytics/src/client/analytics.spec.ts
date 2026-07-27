@@ -59,10 +59,8 @@ describe('Analytics', () => {
     visitorId: aVisitorId,
   };
 
-  const endpointForEventType = (
-    eventType: EventType,
-    endpoint: string = `${anEndpoint}/rest`
-  ) => `${endpoint}/${A_VERSION}/analytics/${eventType}?visitor=${aVisitorId}`;
+  const endpointForEventType = (eventType: EventType, endpoint: string = `${anEndpoint}/rest`) =>
+    `${endpoint}/${A_VERSION}/analytics/${eventType}?visitor=${aVisitorId}`;
   const mockFetchRequestForEventType = (eventType: EventType) => {
     const address = endpointForEventType(eventType);
     fetchMock.post(address, eventResponse);
@@ -94,10 +92,7 @@ describe('Analytics', () => {
       version: A_VERSION,
     });
 
-    fetchMock.post(
-      endpointForEventType(EventType.custom, `${legacyEndpoint}/rest`),
-      eventResponse
-    );
+    fetchMock.post(endpointForEventType(EventType.custom, `${legacyEndpoint}/rest`), eventResponse);
     const response = await client.sendEvent(EventType.custom);
     expect(response).toEqual(eventResponse);
   });
@@ -111,10 +106,7 @@ describe('Analytics', () => {
       version: A_VERSION,
     });
 
-    fetchMock.post(
-      endpointForEventType(EventType.custom, legacyEndpoint),
-      eventResponse
-    );
+    fetchMock.post(endpointForEventType(EventType.custom, legacyEndpoint), eventResponse);
     const response = await client.sendEvent(EventType.custom);
     expect(response).toEqual(eventResponse);
   });
@@ -128,10 +120,7 @@ describe('Analytics', () => {
       version: A_VERSION,
     });
 
-    fetchMock.post(
-      endpointForEventType(EventType.custom, legacyEndpoint),
-      eventResponse
-    );
+    fetchMock.post(endpointForEventType(EventType.custom, legacyEndpoint), eventResponse);
     const response = await client.sendEvent(EventType.custom);
     expect(response).toEqual(eventResponse);
   });
@@ -145,10 +134,7 @@ describe('Analytics', () => {
       version: A_VERSION,
     });
 
-    fetchMock.post(
-      endpointForEventType(EventType.custom, `${legacyEndpoint}/rest`),
-      eventResponse
-    );
+    fetchMock.post(endpointForEventType(EventType.custom, `${legacyEndpoint}/rest`), eventResponse);
     const response = await client.sendEvent(EventType.custom);
     expect(response).toEqual(eventResponse);
   });
@@ -163,10 +149,7 @@ describe('Analytics', () => {
       version: A_VERSION,
     });
 
-    fetchMock.post(
-      endpointForEventType(EventType.custom, aReverseProxyEndpoint),
-      eventResponse
-    );
+    fetchMock.post(endpointForEventType(EventType.custom, aReverseProxyEndpoint), eventResponse);
     const response = await client.sendEvent(EventType.custom);
     expect(response).toEqual(eventResponse);
   });
@@ -274,8 +257,7 @@ describe('Analytics', () => {
       const parsedBody = JSON.parse(response!.body!.toString());
       expect(parsedBody.customData.index).toBe(index);
     };
-    const [[, firstResponse], [, secondResponse], [, thirdResponse]] =
-      fetchMock.calls();
+    const [[, firstResponse], [, secondResponse], [, thirdResponse]] = fetchMock.calls();
     assertResponseHasCustomDataWithIndex(firstResponse, 0);
     assertResponseHasCustomDataWithIndex(secondResponse, 1);
     assertResponseHasCustomDataWithIndex(thirdResponse, 2);
@@ -302,8 +284,7 @@ describe('Analytics', () => {
   describe('should truncate the maxlength for URL parameters at 1024 characters for ua events', () => {
     const desiredMax: number = 1024;
     // Craft the URL so the truncation point falls in the %20 sequence
-    const longUrl: string =
-      'http://coveo.com/?q=' + 'a'.repeat(desiredMax - 22) + '%20b';
+    const longUrl: string = 'http://coveo.com/?q=' + 'a'.repeat(desiredMax - 22) + '%20b';
     const expectedTruncatedLength = longUrl.lastIndexOf('%', desiredMax);
     expect(longUrl.length).toBeGreaterThan(desiredMax);
     async function testEventType(type: EventType, url: string) {
@@ -355,12 +336,7 @@ describe('Analytics', () => {
 
   describe('with event type mapping with variable arguments', () => {
     const specialEventType = '🌟special🌟';
-    const argumentNames = [
-      'eventCategory',
-      'eventAction',
-      'eventLabel',
-      'eventValue',
-    ];
+    const argumentNames = ['eventCategory', 'eventAction', 'eventLabel', 'eventValue'];
     beforeEach(() => {
       mockFetchRequestForEventType(EventType.custom);
       client.addEventTypeMapping(specialEventType, {
@@ -443,10 +419,7 @@ describe('Analytics', () => {
         version: A_VERSION,
       });
 
-      fetchMock.post(
-        endpointForEventType(EventType.custom, endpointWithRest),
-        eventResponse
-      );
+      fetchMock.post(endpointForEventType(EventType.custom, endpointWithRest), eventResponse);
     });
 
     it('should properly send the event without appending an extra /rest', async () => {
@@ -724,48 +697,34 @@ describe('custom clientId', () => {
   it('allows setting of a custom clientId', async () => {
     const client = new CoveoAnalyticsClient({});
     client.setClientId('c7d57b22-4aa8-487a-a106-be5243885f0a');
-    expect(await client.getCurrentVisitorId()).toBe(
-      'c7d57b22-4aa8-487a-a106-be5243885f0a'
-    );
+    expect(await client.getCurrentVisitorId()).toBe('c7d57b22-4aa8-487a-a106-be5243885f0a');
   });
 
   it('persists clientId in lowercase', async () => {
     const client = new CoveoAnalyticsClient({});
     client.setClientId('C7D57B22-4AA8-487A-A106-BE5243885F0A');
-    expect(await client.getCurrentVisitorId()).toBe(
-      'c7d57b22-4aa8-487a-a106-be5243885f0a'
-    );
+    expect(await client.getCurrentVisitorId()).toBe('c7d57b22-4aa8-487a-a106-be5243885f0a');
   });
 
   it('allows setting a custom consistent clientId given a string', async () => {
     const client = new CoveoAnalyticsClient({});
     client.setClientId('somestring', 'testNameSpace');
     //uuid v5 specific uuid generation
-    expect(await client.getCurrentVisitorId()).toBe(
-      '2c356915-8223-5773-acb8-e2a34404a559'
-    );
+    expect(await client.getCurrentVisitorId()).toBe('2c356915-8223-5773-acb8-e2a34404a559');
     //check for consistent ids
     client.setClientId('somestring', 'testNameSpace');
-    expect(await client.getCurrentVisitorId()).toBe(
-      '2c356915-8223-5773-acb8-e2a34404a559'
-    );
+    expect(await client.getCurrentVisitorId()).toBe('2c356915-8223-5773-acb8-e2a34404a559');
     client.setClientId('otherstring', 'testNameSpace');
-    expect(await client.getCurrentVisitorId()).not.toBe(
-      '2c356915-8223-5773-acb8-e2a34404a559'
-    );
+    expect(await client.getCurrentVisitorId()).not.toBe('2c356915-8223-5773-acb8-e2a34404a559');
     client.setClientId('somestring', 'otherNameSpace');
-    expect(await client.getCurrentVisitorId()).not.toBe(
-      '2c356915-8223-5773-acb8-e2a34404a559'
-    );
+    expect(await client.getCurrentVisitorId()).not.toBe('2c356915-8223-5773-acb8-e2a34404a559');
   });
 
   it('errors when not providing a namespace', async () => {
     const client = new CoveoAnalyticsClient({});
     expect.assertions(1);
     await expect(client.setClientId('somestring')).rejects.toEqual(
-      Error(
-        'Cannot generate uuid client id without a specific namespace string.'
-      )
+      Error('Cannot generate uuid client id without a specific namespace string.')
     );
     //uuid v5 specific uuid generation
   });
@@ -793,54 +752,42 @@ describe('clientId from link', () => {
   it('will extract a clientId from a query param if the referrer matches all and it is not expired', async () => {
     client.setAcceptedLinkReferrers(['*']);
     const linkString = new CoveoLinkParam(forcedUUID, Date.now());
-    navigateTo(
-      'http://my.receivingdomain.com/?cvo_cid=' + linkString.toString()
-    );
+    navigateTo('http://my.receivingdomain.com/?cvo_cid=' + linkString.toString());
     expect(await client.getCurrentVisitorId()).toBe(forcedUUID);
   });
 
   it('will extract a clientId from a query param if the referrer matches the current referrer exactly and it is not expired', async () => {
     client.setAcceptedLinkReferrers(['somewhere.over']);
     const linkString = new CoveoLinkParam(forcedUUID, Date.now());
-    navigateTo(
-      'http://my.receivingdomain.com/?cvo_cid=' + linkString.toString()
-    );
+    navigateTo('http://my.receivingdomain.com/?cvo_cid=' + linkString.toString());
     expect(await client.getCurrentVisitorId()).toBe(forcedUUID);
   });
 
   it('will extract a clientId from a query param if the referrer matches the current referrer with wildcard and it is not expired', async () => {
     client.setAcceptedLinkReferrers(['*.over']);
     const linkString = new CoveoLinkParam(forcedUUID, Date.now());
-    navigateTo(
-      'http://my.receivingdomain.com/?cvo_cid=' + linkString.toString()
-    );
+    navigateTo('http://my.receivingdomain.com/?cvo_cid=' + linkString.toString());
     expect(await client.getCurrentVisitorId()).toBe(forcedUUID);
   });
 
   it('will extract a clientId from a query param if one of the referrer matches the current referrer and it is not expired', async () => {
     client.setAcceptedLinkReferrers(['*.mydomain.com', '*.over']);
     const linkString = new CoveoLinkParam(forcedUUID, Date.now());
-    navigateTo(
-      'http://my.receivingdomain.com/?cvo_cid=' + linkString.toString()
-    );
+    navigateTo('http://my.receivingdomain.com/?cvo_cid=' + linkString.toString());
     expect(await client.getCurrentVisitorId()).toBe(forcedUUID);
   });
 
   it('will not extract a clientId from a query param if the referrer matches and it is expired', async () => {
     client.setAcceptedLinkReferrers(['*']);
     const linkString = new CoveoLinkParam(forcedUUID, Date.now() - 180000);
-    navigateTo(
-      'http://my.receivingdomain.com/?cvo_cid=' + linkString.toString()
-    );
+    navigateTo('http://my.receivingdomain.com/?cvo_cid=' + linkString.toString());
     expect(await client.getCurrentVisitorId()).not.toBe(null);
     expect(await client.getCurrentVisitorId()).toBe(aVisitorId);
   });
 
   it('will not extract a clientId from a query param if there is no accept list specified', async () => {
     const linkString = new CoveoLinkParam(forcedUUID, Date.now());
-    navigateTo(
-      'http://my.receivingdomain.com/?cvo_cid=' + linkString.toString()
-    );
+    navigateTo('http://my.receivingdomain.com/?cvo_cid=' + linkString.toString());
     expect(await client.getCurrentVisitorId()).not.toBe(null);
     expect(await client.getCurrentVisitorId()).toBe(aVisitorId);
   });
@@ -848,9 +795,7 @@ describe('clientId from link', () => {
   it('will not extract a clientId from a query param if there is an empty accept list', async () => {
     client.setAcceptedLinkReferrers([]);
     const linkString = new CoveoLinkParam(forcedUUID, Date.now());
-    navigateTo(
-      'http://my.receivingdomain.com/?cvo_cid=' + linkString.toString()
-    );
+    navigateTo('http://my.receivingdomain.com/?cvo_cid=' + linkString.toString());
     expect(await client.getCurrentVisitorId()).not.toBe(null);
     expect(await client.getCurrentVisitorId()).toBe(aVisitorId);
   });
@@ -858,9 +803,7 @@ describe('clientId from link', () => {
   it('will not extract a clientId from a query param if the referrer list does not match', async () => {
     client.setAcceptedLinkReferrers(['*.mydomain.com']);
     const linkString = new CoveoLinkParam(forcedUUID, Date.now());
-    navigateTo(
-      'http://my.receivingdomain.com/?cvo_cid=' + linkString.toString()
-    );
+    navigateTo('http://my.receivingdomain.com/?cvo_cid=' + linkString.toString());
     expect(await client.getCurrentVisitorId()).not.toBe(null);
     expect(await client.getCurrentVisitorId()).toBe(aVisitorId);
   });
@@ -868,9 +811,7 @@ describe('clientId from link', () => {
   it('will not extract a clientId from a query param if the referrer list does not match the exact port', async () => {
     client.setAcceptedLinkReferrers(['*.over:9000']);
     const linkString = new CoveoLinkParam(forcedUUID, Date.now());
-    navigateTo(
-      'http://my.receivingdomain.com/?cvo_cid=' + linkString.toString()
-    );
+    navigateTo('http://my.receivingdomain.com/?cvo_cid=' + linkString.toString());
     expect(await client.getCurrentVisitorId()).not.toBe(null);
     expect(await client.getCurrentVisitorId()).toBe(aVisitorId);
   });
@@ -878,19 +819,14 @@ describe('clientId from link', () => {
   it('will not extract a clientId from a query param if the multi referrer list does not match', async () => {
     client.setAcceptedLinkReferrers(['*.mydomain.com', 'www.example.com']);
     const linkString = new CoveoLinkParam(forcedUUID, Date.now());
-    navigateTo(
-      'http://my.receivingdomain.com/?cvo_cid=' + linkString.toString()
-    );
+    navigateTo('http://my.receivingdomain.com/?cvo_cid=' + linkString.toString());
     expect(await client.getCurrentVisitorId()).not.toBe(null);
     expect(await client.getCurrentVisitorId()).toBe(aVisitorId);
   });
 
   it('will not extract a clientId from a query param if it is not a UUID', async () => {
     client.setAcceptedLinkReferrers(['*']);
-    navigateTo(
-      'http://my.receivingdomain.com/?cvo_cid=notauuid.' +
-        Math.floor(Date.now() / 1000)
-    );
+    navigateTo('http://my.receivingdomain.com/?cvo_cid=notauuid.' + Math.floor(Date.now() / 1000));
     expect(await client.getCurrentVisitorId()).not.toBe(null);
     expect(await client.getCurrentVisitorId()).toBe(aVisitorId);
   });
@@ -899,9 +835,7 @@ describe('clientId from link', () => {
     client.setAcceptedLinkReferrers(['*']);
     jest.spyOn(doNotTrack, 'doNotTrack').mockImplementation(() => true);
     const linkString = new CoveoLinkParam(forcedUUID, Date.now());
-    navigateTo(
-      'http://my.receivingdomain.com/?cvo_cid=' + linkString.toString()
-    );
+    navigateTo('http://my.receivingdomain.com/?cvo_cid=' + linkString.toString());
     expect(await client.getCurrentVisitorId()).not.toBe(null);
     expect(await client.getCurrentVisitorId()).toBe(aVisitorId);
   });

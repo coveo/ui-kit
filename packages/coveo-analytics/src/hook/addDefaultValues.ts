@@ -9,10 +9,7 @@ const eventTypesForDefaultValues: string[] = [
   EventType.view,
 ];
 
-export const addDefaultValues: AnalyticsClientSendEventHook = (
-  eventType,
-  payload
-) => {
+export const addDefaultValues: AnalyticsClientSendEventHook = (eventType, payload) => {
   return eventTypesForDefaultValues.indexOf(eventType) !== -1
     ? {
         language: hasDocument() ? document.documentElement.lang : 'unknown',

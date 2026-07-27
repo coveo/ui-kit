@@ -76,75 +76,57 @@ describe('doNotTrack', () => {
     });
 
     [true, 'yes', '1'].forEach((value) => {
-      it(
-        'should fallback on `navigator.doNotTrack`: ' + JSON.stringify(value),
-        () => {
-          initModule(true, false, {
-            navigatorDoNotTrack: value,
-          });
+      it('should fallback on `navigator.doNotTrack`: ' + JSON.stringify(value), () => {
+        initModule(true, false, {
+          navigatorDoNotTrack: value,
+        });
 
-          expect(doNotTrack()).toBeTruthy();
-        }
-      );
+        expect(doNotTrack()).toBeTruthy();
+      });
 
-      it(
-        'should fallback on `navigator.msDoNotTrack`: ' + JSON.stringify(value),
-        () => {
-          initModule(true, false, {
-            navigatorMsDoNotTrack: value,
-          });
-          expect(doNotTrack()).toBeTruthy();
-        }
-      );
+      it('should fallback on `navigator.msDoNotTrack`: ' + JSON.stringify(value), () => {
+        initModule(true, false, {
+          navigatorMsDoNotTrack: value,
+        });
+        expect(doNotTrack()).toBeTruthy();
+      });
     });
 
     [false, 'no', '0', 'unspecified'].forEach((value) => {
-      it(
-        'should fallback on `navigator.doNotTrack`: ' + JSON.stringify(value),
-        () => {
-          initModule(true, false, {
-            navigatorDoNotTrack: value,
-          });
+      it('should fallback on `navigator.doNotTrack`: ' + JSON.stringify(value), () => {
+        initModule(true, false, {
+          navigatorDoNotTrack: value,
+        });
 
-          expect(doNotTrack()).toBeFalsy();
-        }
-      );
+        expect(doNotTrack()).toBeFalsy();
+      });
 
-      it(
-        'should fallback on `navigator.msDoNotTrack`: ' + JSON.stringify(value),
-        () => {
-          initModule(true, false, {
-            navigatorMsDoNotTrack: value,
-          });
-          expect(doNotTrack()).toBeFalsy();
-        }
-      );
+      it('should fallback on `navigator.msDoNotTrack`: ' + JSON.stringify(value), () => {
+        initModule(true, false, {
+          navigatorMsDoNotTrack: value,
+        });
+        expect(doNotTrack()).toBeFalsy();
+      });
     });
   });
 
   describe('with a Window', () => {
     [true, 'yes', '1'].forEach((value) => {
-      it(
-        'should fallback on `window.doNotTrack`: ' + JSON.stringify(value),
-        () => {
-          initModule(false, true, {
-            windowDoNotTrack: value,
-          });
-          expect(doNotTrack()).toBeTruthy();
-        }
-      );
+      it('should fallback on `window.doNotTrack`: ' + JSON.stringify(value), () => {
+        initModule(false, true, {
+          windowDoNotTrack: value,
+        });
+        expect(doNotTrack()).toBeTruthy();
+      });
     });
 
     [false, 'no', '0', 'unspecified'].forEach((value) => {
-      it(
-        'should fallback on `window.doNotTrack`: ' + JSON.stringify(value),
-        () => {
-          initModule(false, true, {
-            windowDoNotTrack: value,
-          });
-          expect(doNotTrack()).toBeFalsy();
-        }
-      );
+      it('should fallback on `window.doNotTrack`: ' + JSON.stringify(value), () => {
+        initModule(false, true, {
+          windowDoNotTrack: value,
+        });
+        expect(doNotTrack()).toBeFalsy();
+      });
     });
   });
 

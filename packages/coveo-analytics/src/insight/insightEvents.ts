@@ -74,19 +74,16 @@ export interface CreateArticleMetadata {
   articleType: string;
 }
 
-export interface InsightInterfaceChangeMetadata
-  extends InterfaceChangeMetadata, CaseMetadata {}
+export interface InsightInterfaceChangeMetadata extends InterfaceChangeMetadata, CaseMetadata {}
 
 export interface InsightFacetMetadata extends FacetMetadata, CaseMetadata {}
 
 export interface InsightStaticFilterToggleValueMetadata
   extends StaticFilterToggleValueMetadata, CaseMetadata {}
 
-export interface InsightFacetRangeMetadata
-  extends FacetRangeMetadata, CaseMetadata {}
+export interface InsightFacetRangeMetadata extends FacetRangeMetadata, CaseMetadata {}
 
-export interface InsightCategoryFacetMetadata
-  extends CategoryFacetMetadata, CaseMetadata {}
+export interface InsightCategoryFacetMetadata extends CategoryFacetMetadata, CaseMetadata {}
 
 export interface InsightFacetSortMeta extends FacetSortMeta, CaseMetadata {}
 
@@ -96,5 +93,4 @@ export interface InsightQueryErrorMeta extends QueryErrorMeta, CaseMetadata {}
 
 export interface InsightPagerMetadata extends PagerMetadata, CaseMetadata {}
 
-export interface InsightResultsSortMetadata
-  extends ResultsSortMetadata, CaseMetadata {}
+export interface InsightResultsSortMetadata extends ResultsSortMetadata, CaseMetadata {}

@@ -9,14 +9,11 @@ describe('svc events', () => {
   const aToken = 'token';
   const anEndpoint = 'http://bloup';
 
-  const guidFormat =
-    /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/;
+  const guidFormat = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/;
 
   const defaultContextValues = {
     dl: `${location.protocol}//${location.hostname}${
-      location.pathname.indexOf('/') === 0
-        ? location.pathname
-        : `/${location.pathname}`
+      location.pathname.indexOf('/') === 0 ? location.pathname : `/${location.pathname}`
     }${location.search}`,
     sr: `${screen.width}x${screen.height}`,
     sd: `${screen.colorDepth}-bit`,
@@ -112,9 +109,7 @@ describe('svc events', () => {
   });
 
   const getParsedBody = (): any[] => {
-    return fetchMock
-      .calls()
-      .map(([, {body}]: any) => JSON.parse(body.toString()));
+    return fetchMock.calls().map(([, {body}]: any) => JSON.parse(body.toString()));
   };
 
   const changeDocumentLocation = (url: string) => {

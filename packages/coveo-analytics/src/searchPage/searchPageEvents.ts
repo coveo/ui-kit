@@ -369,9 +369,7 @@ export enum SearchPageEvents {
   generatedAnswerCitationDocumentAttach = 'generatedAnswerCitationDocumentAttach',
 }
 
-export const CustomEventsTypes: Partial<
-  Record<SearchPageEvents | InsightEvents, string>
-> = {
+export const CustomEventsTypes: Partial<Record<SearchPageEvents | InsightEvents, string>> = {
   [SearchPageEvents.triggerNotify]: 'queryPipelineTriggers',
   [SearchPageEvents.triggerExecute]: 'queryPipelineTriggers',
   [SearchPageEvents.triggerQuery]: 'queryPipelineTriggers',
@@ -627,11 +625,7 @@ export type GeneratedAnswerFeedbackReason =
   | 'harmful'
   | 'other';
 
-export type GeneratedAnswerRephraseFormat =
-  | 'step'
-  | 'bullet'
-  | 'concise'
-  | 'default';
+export type GeneratedAnswerRephraseFormat = 'step' | 'bullet' | 'concise' | 'default';
 
 export type GeneratedAnswerSourceHoverMeta = GeneratedAnswerCitationMeta & {
   citationHoverTimeMs: number;

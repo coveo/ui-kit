@@ -23,40 +23,32 @@ describe('CoveoLinkParam class', () => {
 
   it('can not create a new link using a non uuid', () => {
     const uuid = 'Not_a_uuid';
-    expect(() => new CoveoLinkParam(uuid, Date.now())).toThrow(
-      'Not a valid uuid'
-    );
+    expect(() => new CoveoLinkParam(uuid, Date.now())).toThrow('Not a valid uuid');
   });
 
   it('can parse a link from a string', () => {
     const link = 'c0b48880743e484f8044d7c37910c55b.1676298678';
-    const coveoLinkParam: CoveoLinkParam | null =
-      CoveoLinkParam.fromString(link);
+    const coveoLinkParam: CoveoLinkParam | null = CoveoLinkParam.fromString(link);
     expect(coveoLinkParam).not.toBeNull;
-    expect(coveoLinkParam?.clientId).toBe(
-      'c0b48880-743e-484f-8044-d7c37910c55b'
-    );
+    expect(coveoLinkParam?.clientId).toBe('c0b48880-743e-484f-8044-d7c37910c55b');
     expect(coveoLinkParam?.creationDate).toBe(1676298678);
   });
 
   it('will not parse links without a valid uuid', () => {
     const link = 'a0c56830743d46537f703.1676298678';
-    const coveoLinkParam: CoveoLinkParam | null =
-      CoveoLinkParam.fromString(link);
+    const coveoLinkParam: CoveoLinkParam | null = CoveoLinkParam.fromString(link);
     expect(coveoLinkParam).toBe(null);
   });
 
   it('will not parse links with an invalid structure', () => {
     const link = 'a0c56830743d46537f703.1676298678.353673463';
-    const coveoLinkParam: CoveoLinkParam | null =
-      CoveoLinkParam.fromString(link);
+    const coveoLinkParam: CoveoLinkParam | null = CoveoLinkParam.fromString(link);
     expect(coveoLinkParam).toBe(null);
   });
 
   it('will not parse links with invalid timestamps', () => {
     const link = 'a0c56830743d46537f703.invalidtimestamp';
-    const coveoLinkParam: CoveoLinkParam | null =
-      CoveoLinkParam.fromString(link);
+    const coveoLinkParam: CoveoLinkParam | null = CoveoLinkParam.fromString(link);
     expect(coveoLinkParam).toBe(null);
   });
 
@@ -103,15 +95,9 @@ describe('CoveoLinkParam class', () => {
       Date.now()
     );
     expect(coveoLink1.validate('http://sub.mysite.com', ['*'])).toBe(true);
-    expect(
-      coveoLink1.validate('http://sub.mysite.com', ['*.mysite.com', '*'])
-    ).toBe(true);
-    expect(coveoLink1.validate('http://sub.mysite.com', ['*.mysite.com'])).toBe(
-      true
-    );
-    expect(
-      coveoLink1.validate('http://sub.notmysite.com', ['*.mysite.com'])
-    ).toBe(false);
+    expect(coveoLink1.validate('http://sub.mysite.com', ['*.mysite.com', '*'])).toBe(true);
+    expect(coveoLink1.validate('http://sub.mysite.com', ['*.mysite.com'])).toBe(true);
+    expect(coveoLink1.validate('http://sub.notmysite.com', ['*.mysite.com'])).toBe(false);
     expect(coveoLink1.validate('http://sub.mysite.com', [])).toBe(false);
   });
 
@@ -140,8 +126,7 @@ describe('CoveoLinkPlugin', () => {
     const url: string = 'https://coveo.com';
     const result: string = await link.decorate(url);
     expect(result).toBe(
-      'https://coveo.com/?cvo_cid=85698661efdf4c6d9cadc4632bf81ce3.' +
-        currentSecsSinceEpoch()
+      'https://coveo.com/?cvo_cid=85698661efdf4c6d9cadc4632bf81ce3.' + currentSecsSinceEpoch()
     );
   });
 
@@ -174,12 +159,10 @@ describe('CoveoLinkPlugin', () => {
   });
 
   it('updates an existing decoration links with valid urls and no params', async () => {
-    const url: string =
-      'https://coveo.com/?cvo_cid=c0b48880743e484f8044d7c37910c55b.1676298678';
+    const url: string = 'https://coveo.com/?cvo_cid=c0b48880743e484f8044d7c37910c55b.1676298678';
     const result: string = await link.decorate(url);
     expect(result).toBe(
-      'https://coveo.com/?cvo_cid=85698661efdf4c6d9cadc4632bf81ce3.' +
-        currentSecsSinceEpoch()
+      'https://coveo.com/?cvo_cid=85698661efdf4c6d9cadc4632bf81ce3.' + currentSecsSinceEpoch()
     );
   });
 
@@ -195,9 +178,7 @@ describe('CoveoLinkPlugin', () => {
     link = new LinkPlugin({client: analyticsClient});
 
     const url: string = 'https://coveo.com/';
-    await expect(link.decorate(url)).rejects.toThrow(
-      'Could not retrieve current clientId'
-    );
+    await expect(link.decorate(url)).rejects.toThrow('Could not retrieve current clientId');
   });
 
   it('can set a list of referrers on the client', () => {

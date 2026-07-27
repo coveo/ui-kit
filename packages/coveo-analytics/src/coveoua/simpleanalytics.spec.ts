@@ -1,8 +1,5 @@
 import coveoua from './simpleanalytics';
-import {
-  createAnalyticsClientMock,
-  visitorIdMock,
-} from '../../tests/analyticsClientMock';
+import {createAnalyticsClientMock, visitorIdMock} from '../../tests/analyticsClientMock';
 import {TestPlugin} from '../../tests/pluginMock';
 import {v4 as uuidv4} from 'uuid';
 import {PluginOptions} from '../plugins/BasePlugin';
@@ -39,8 +36,7 @@ class TestPluginWithSpy extends TestPlugin {
 
 describe('simpleanalytics', () => {
   const analyticsClientMock = createAnalyticsClientMock();
-  const analyticsEndpoint =
-    'https://analytics.cloud.coveo.com/rest/ua/v15/analytics';
+  const analyticsEndpoint = 'https://analytics.cloud.coveo.com/rest/ua/v15/analytics';
   const someRandomEventName = 'kawabunga';
 
   beforeEach(() => {
@@ -62,9 +58,7 @@ describe('simpleanalytics', () => {
 
   describe('init', () => {
     it('throws when initializing without a token', () => {
-      expect(() => coveoua('init')).toThrow(
-        `You must pass your token when you call 'init'`
-      );
+      expect(() => coveoua('init')).toThrow(`You must pass your token when you call 'init'`);
     });
 
     it('throws when initializing with a token that is not a string nor a AnalyticClient', () => {
@@ -88,9 +82,7 @@ describe('simpleanalytics', () => {
 
       expect(fetchMock.calls().length).toBe(1);
       const foo = fetchMock.lastUrl();
-      expect(fetchMock.lastUrl()).toMatch(
-        /^https:\/\/analytics\.cloud\.coveo\.com\/rest\/ua/
-      );
+      expect(fetchMock.lastUrl()).toMatch(/^https:\/\/analytics\.cloud\.coveo\.com\/rest\/ua/);
     });
 
     it('default to analytics.cloud.coveo.com when the endpoint is an empty string', async () => {
@@ -100,9 +92,7 @@ describe('simpleanalytics', () => {
 
       expect(fetchMock.calls().length).toBe(1);
       const foo = fetchMock.lastUrl();
-      expect(fetchMock.lastUrl()).toMatch(
-        /^https:\/\/analytics\.cloud\.coveo\.com\/rest\/ua/
-      );
+      expect(fetchMock.lastUrl()).toMatch(/^https:\/\/analytics\.cloud\.coveo\.com\/rest\/ua/);
     });
 
     it('default to analytics.cloud.coveo.com when an options object is given but does not include an endpoint', async () => {
@@ -111,9 +101,7 @@ describe('simpleanalytics', () => {
       await coveoua('send', 'pageview');
 
       expect(fetchMock.calls().length).toBe(1);
-      expect(fetchMock.lastUrl()).toMatch(
-        /^https:\/\/analytics\.cloud\.coveo\.com\/rest\/ua/
-      );
+      expect(fetchMock.lastUrl()).toMatch(/^https:\/\/analytics\.cloud\.coveo\.com\/rest\/ua/);
     });
 
     it('default to analytics.cloud.coveo.com when an options object is given but the endpoint property is falsy', async () => {
@@ -122,9 +110,7 @@ describe('simpleanalytics', () => {
       await coveoua('send', 'pageview');
 
       expect(fetchMock.calls().length).toBe(1);
-      expect(fetchMock.lastUrl()).toMatch(
-        /^https:\/\/analytics\.cloud\.coveo\.com\/rest\/ua/
-      );
+      expect(fetchMock.lastUrl()).toMatch(/^https:\/\/analytics\.cloud\.coveo\.com\/rest\/ua/);
     });
 
     it('uses the endpoint given if its a non-empty string', async () => {
@@ -147,41 +133,23 @@ describe('simpleanalytics', () => {
 
     it('uses EC, SVC and Link plugins by default', () => {
       coveoua('init', 'SOME TOKEN');
-      expect(() => coveoua('callPlugin', 'ec', 'nosuchfunction')).toThrow(
-        /does not exist/
-      );
-      expect(() => coveoua('callPlugin', 'svc', 'nosuchfunction')).toThrow(
-        /does not exist/
-      );
-      expect(() => coveoua('callPlugin', 'link', 'nosuchfunction')).toThrow(
-        /does not exist/
-      );
+      expect(() => coveoua('callPlugin', 'ec', 'nosuchfunction')).toThrow(/does not exist/);
+      expect(() => coveoua('callPlugin', 'svc', 'nosuchfunction')).toThrow(/does not exist/);
+      expect(() => coveoua('callPlugin', 'link', 'nosuchfunction')).toThrow(/does not exist/);
     });
 
     it('can accept no plugins', () => {
       coveoua('init', 'SOME TOKEN', {plugins: []});
-      expect(() => coveoua('callPlugin', 'ec', 'nosuchfunction')).toThrow(
-        /is not required/
-      );
-      expect(() => coveoua('callPlugin', 'svc', 'nosuchfunction')).toThrow(
-        /is not required/
-      );
-      expect(() => coveoua('callPlugin', 'link', 'nosuchfunction')).toThrow(
-        /is not required/
-      );
+      expect(() => coveoua('callPlugin', 'ec', 'nosuchfunction')).toThrow(/is not required/);
+      expect(() => coveoua('callPlugin', 'svc', 'nosuchfunction')).toThrow(/is not required/);
+      expect(() => coveoua('callPlugin', 'link', 'nosuchfunction')).toThrow(/is not required/);
     });
 
     it('can accept one plugin', () => {
       coveoua('init', 'SOME TOKEN', {plugins: ['svc']});
-      expect(() => coveoua('callPlugin', 'ec', 'nosuchfunction')).toThrow(
-        /is not required/
-      );
-      expect(() => coveoua('callPlugin', 'link', 'nosuchfunction')).toThrow(
-        /is not required/
-      );
-      expect(() => coveoua('callPlugin', 'svc', 'nosuchfunction')).toThrow(
-        /does not exist/
-      );
+      expect(() => coveoua('callPlugin', 'ec', 'nosuchfunction')).toThrow(/is not required/);
+      expect(() => coveoua('callPlugin', 'link', 'nosuchfunction')).toThrow(/is not required/);
+      expect(() => coveoua('callPlugin', 'svc', 'nosuchfunction')).toThrow(/does not exist/);
     });
 
     it('can send pageview with analyticsClient', () => {
@@ -206,16 +174,12 @@ describe('simpleanalytics', () => {
 
   describe('send', () => {
     it('throws when not initialized', () => {
-      expect(() => coveoua('send')).toThrow(
-        `You must call init before sending an event`
-      );
+      expect(() => coveoua('send')).toThrow(`You must call init before sending an event`);
     });
 
     it('throws when send is called without any other arguments', () => {
       coveoua('init', 'MYTOKEN');
-      expect(() => coveoua('send')).toThrow(
-        `You must provide an event type when calling "send".`
-      );
+      expect(() => coveoua('send')).toThrow(`You must provide an event type when calling "send".`);
     });
 
     it('can send pageview', async () => {
@@ -240,9 +204,7 @@ describe('simpleanalytics', () => {
       await coveoua('send', 'view');
 
       expect(fetchMock.calls().length).toBe(1);
-      expect(fetchMock.lastUrl()).toBe(
-        `${analyticsEndpoint}/view?visitor=${visitorIdMock}`
-      );
+      expect(fetchMock.lastUrl()).toBe(`${analyticsEndpoint}/view?visitor=${visitorIdMock}`);
       expect(JSON.parse(lastCallBody(fetchMock)).clientId).toBe(visitorIdMock);
     });
 
@@ -251,9 +213,7 @@ describe('simpleanalytics', () => {
       await coveoua('send', someRandomEventName);
 
       expect(fetchMock.calls().length).toBe(1);
-      expect(fetchMock.lastUrl()).toBe(
-        `${analyticsEndpoint}/${someRandomEventName}`
-      );
+      expect(fetchMock.lastUrl()).toBe(`${analyticsEndpoint}/${someRandomEventName}`);
     });
 
     it('can send an event with a proxy endpoint', async () => {
@@ -300,9 +260,7 @@ describe('simpleanalytics', () => {
       await coveoua('send', someRandomEventName);
 
       expect(fetchMock.calls().length).toBe(1);
-      expect(fetchMock.lastUrl()).toBe(
-        `${analyticsEndpoint}/${someRandomEventName}`
-      );
+      expect(fetchMock.lastUrl()).toBe(`${analyticsEndpoint}/${someRandomEventName}`);
       expect(JSON.parse(lastCallBody(fetchMock))).toEqual({
         userId: 'something',
       });
@@ -316,9 +274,7 @@ describe('simpleanalytics', () => {
       await coveoua('send', someRandomEventName);
 
       expect(fetchMock.calls().length).toBe(1);
-      expect(fetchMock.lastUrl()).toBe(
-        `${analyticsEndpoint}/${someRandomEventName}`
-      );
+      expect(fetchMock.lastUrl()).toBe(`${analyticsEndpoint}/${someRandomEventName}`);
       expect(JSON.parse(lastCallBody(fetchMock))).toEqual({
         userId: 'something',
       });
@@ -440,10 +396,7 @@ describe('simpleanalytics', () => {
       expect(fetchMock.calls().length).toBe(1);
       let result = JSON.parse(lastCallBody(fetchMock));
       expect(result).toHaveProperty('somedata', 'something');
-      expect(result).toHaveProperty(
-        'customData.context_website',
-        'MY_OTHER_WEBSITE'
-      );
+      expect(result).toHaveProperty('customData.context_website', 'MY_OTHER_WEBSITE');
     });
 
     it('can set trackingId', async () => {
@@ -453,13 +406,8 @@ describe('simpleanalytics', () => {
       await coveoua('send', someRandomEventName);
 
       expect(fetchMock.calls().length).toBe(1);
-      expect(fetchMock.lastUrl()).toBe(
-        `${analyticsEndpoint}/${someRandomEventName}`
-      );
-      expect(JSON.parse(lastCallBody(fetchMock))).toHaveProperty(
-        'trackingId',
-        trackingId
-      );
+      expect(fetchMock.lastUrl()).toBe(`${analyticsEndpoint}/${someRandomEventName}`);
+      expect(JSON.parse(lastCallBody(fetchMock))).toHaveProperty('trackingId', trackingId);
     });
 
     it('context_website does not overwrite trackingId', async () => {
@@ -471,13 +419,8 @@ describe('simpleanalytics', () => {
       await coveoua('send', someRandomEventName);
 
       expect(fetchMock.calls().length).toBe(1);
-      expect(fetchMock.lastUrl()).toBe(
-        `${analyticsEndpoint}/${someRandomEventName}`
-      );
-      expect(JSON.parse(lastCallBody(fetchMock))).toHaveProperty(
-        'trackingId',
-        trackingId
-      );
+      expect(fetchMock.lastUrl()).toBe(`${analyticsEndpoint}/${someRandomEventName}`);
+      expect(JSON.parse(lastCallBody(fetchMock))).toHaveProperty('trackingId', trackingId);
     });
   });
 
@@ -526,17 +469,13 @@ describe('simpleanalytics', () => {
     it('throws when a namespaced action is called and that the namespace/plugin is not required', () => {
       coveoua('init', 'SOME TOKEN', {plugins: ['ec']});
 
-      expect(() => coveoua('callPlugin', 'svc', 'setTicket')).toThrow(
-        /is not required/
-      );
+      expect(() => coveoua('callPlugin', 'svc', 'setTicket')).toThrow(/is not required/);
     });
 
     it('throws when a namespaced action is called and that this action does not exists on the plugin', () => {
       coveoua('init', 'SOME TOKEN', {plugins: ['svc']});
 
-      expect(() => coveoua('callPlugin', 'svc', 'fooBarBaz')).toThrow(
-        /does not exist/
-      );
+      expect(() => coveoua('callPlugin', 'svc', 'fooBarBaz')).toThrow(/does not exist/);
     });
   });
 
@@ -569,9 +508,7 @@ describe('simpleanalytics', () => {
 
       coveoua('reset');
 
-      expect(() => coveoua('send')).toThrow(
-        `You must call init before sending an event`
-      );
+      expect(() => coveoua('send')).toThrow(`You must call init before sending an event`);
     });
 
     it('reset the plugins', () => {
@@ -596,9 +533,7 @@ describe('simpleanalytics', () => {
       await coveoua('send', someRandomEventName);
 
       expect(fetchMock.calls().length).toBe(1);
-      expect(fetchMock.lastUrl()).toBe(
-        `${analyticsEndpoint}/${someRandomEventName}`
-      );
+      expect(fetchMock.lastUrl()).toBe(`${analyticsEndpoint}/${someRandomEventName}`);
       expect(JSON.parse(lastCallBody(fetchMock))).toEqual({});
     });
   });

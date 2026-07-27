@@ -1,14 +1,5 @@
-import {
-  AnyEventResponse,
-  EventType,
-  SendEventArguments,
-  VariableArgumentsPayload,
-} from '../events';
-import {
-  AnalyticsClient,
-  CoveoAnalyticsClient,
-  Endpoints,
-} from '../client/analytics';
+import {AnyEventResponse, EventType, SendEventArguments, VariableArgumentsPayload} from '../events';
+import {AnalyticsClient, CoveoAnalyticsClient, Endpoints} from '../client/analytics';
 import {Plugins} from './plugins';
 import {PluginOptions} from '../plugins/BasePlugin';
 import {PluginClass} from '../plugins/BasePlugin';
@@ -32,10 +23,7 @@ export class CoveoUA {
   // @param token is your coveo access_token / api_key / ...
   // @param endpoint is the endpoint you want to target defaults to the
   //        usage analytics production endpoint
-  init(
-    token: string | AnalyticsClient,
-    optionsOrEndpoint: string | CoveoUAOptions
-  ): void {
+  init(token: string | AnalyticsClient, optionsOrEndpoint: string | CoveoUAOptions): void {
     if (!token) {
       throw new Error(`You must pass your token when you call 'init'`);
     }
@@ -61,9 +49,7 @@ export class CoveoUA {
         ...this.params,
       }));
     } else {
-      throw new Error(
-        `You must pass either your token or a valid object when you call 'init'`
-      );
+      throw new Error(`You must pass either your token or a valid object when you call 'init'`);
     }
   }
 
@@ -102,9 +88,7 @@ export class CoveoUA {
   // @param endpoint is the endpoint of your proxy.
   initForProxy(endpoint: string, isCustomEndpoint = false): void {
     if (!endpoint) {
-      throw new Error(
-        `You must pass your endpoint when you call 'initForProxy'`
-      );
+      throw new Error(`You must pass your endpoint when you call 'initForProxy'`);
     }
 
     if (typeof endpoint !== 'string') {
@@ -129,9 +113,7 @@ export class CoveoUA {
     }
   }
 
-  send(
-    ...[event, ...payload]: SendEventArguments
-  ): Promise<AnyEventResponse | void> {
+  send(...[event, ...payload]: SendEventArguments): Promise<AnyEventResponse | void> {
     if (typeof this.client == 'undefined') {
       throw new Error(`You must call init before sending an event`);
     }
@@ -140,10 +122,7 @@ export class CoveoUA {
       throw new Error(`You must provide an event type when calling "send".`);
     }
 
-    return this.client.sendEvent(
-      event.toLowerCase(),
-      ...(payload as VariableArgumentsPayload)
-    );
+    return this.client.sendEvent(event.toLowerCase(), ...(payload as VariableArgumentsPayload));
   }
 
   onLoad(callback: Function) {
@@ -187,9 +166,7 @@ export const coveoua = new CoveoUA();
 export const getCurrentClient = () => coveoua.client;
 
 export const handleOneAnalyticsEvent = (command: string, ...params: any[]) => {
-  const [, trackerName, pluginName, fn] = /^(?:(\w+)\.)?(?:(\w+):)?(\w+)$/.exec(
-    command
-  )!;
+  const [, trackerName, pluginName, fn] = /^(?:(\w+)\.)?(?:(\w+):)?(\w+)$/.exec(command)!;
 
   const actionFunction = (<any>coveoua)[fn];
   if (pluginName && fn) {

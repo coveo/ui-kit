@@ -106,10 +106,7 @@ export abstract class BasePlugin extends Plugin {
   }
 
   private updateLocationForNextPageView(eventType: string, payload: any) {
-    const {pageViewId, referrer, location} = this.getNextValues(
-      eventType,
-      payload
-    );
+    const {pageViewId, referrer, location} = this.getNextValues(eventType, payload);
 
     this.lastReferrer = referrer;
     this.pageViewId = pageViewId;
@@ -134,9 +131,7 @@ export abstract class BasePlugin extends Plugin {
         */
     return {
       pageViewId:
-        eventType === BasePluginEventTypes.pageview
-          ? this.nextPageViewId
-          : this.pageViewId,
+        eventType === BasePluginEventTypes.pageview ? this.nextPageViewId : this.pageViewId,
       referrer:
         eventType === BasePluginEventTypes.pageview && this.hasSentFirstPageView
           ? this.currentLocation
@@ -150,10 +145,8 @@ export abstract class BasePlugin extends Plugin {
 
   private getCurrentLocationFromPayload(payload: any) {
     if (payload.page) {
-      const removeStartingSlash = (page: string) =>
-        page.replace(/^\/?(.*)$/, '/$1');
-      const extractHostnamePart = (location: string) =>
-        location.split('/').slice(0, 3).join('/');
+      const removeStartingSlash = (page: string) => page.replace(/^\/?(.*)$/, '/$1');
+      const extractHostnamePart = (location: string) => location.split('/').slice(0, 3).join('/');
       return `${extractHostnamePart(this.currentLocation)}${removeStartingSlash(payload.page)}`;
     } else {
       return getFormattedLocation(window.location);

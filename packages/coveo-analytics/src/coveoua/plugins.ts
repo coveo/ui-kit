@@ -1,9 +1,4 @@
-import {
-  PluginClass,
-  PluginOptions,
-  BasePlugin,
-  Plugin,
-} from '../plugins/BasePlugin';
+import {PluginClass, PluginOptions, BasePlugin, Plugin} from '../plugins/BasePlugin';
 import {EC} from '../plugins/ec';
 import {Link} from '../plugins/link';
 import {SVC} from '../plugins/svc';
@@ -44,9 +39,7 @@ export class Plugins {
     }
     const actionFunction = plugin.getApi(fn);
     if (!actionFunction) {
-      throw new Error(
-        `The function "${fn}" does not exist on the plugin "${name}".`
-      );
+      throw new Error(`The function "${fn}" does not exist on the plugin "${name}".`);
     }
     if (typeof actionFunction !== 'function') {
       throw new Error(`"${fn}" of the plugin "${name}" is not a function.`);

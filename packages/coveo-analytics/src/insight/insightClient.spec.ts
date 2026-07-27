@@ -12,10 +12,7 @@ import {
 } from '../searchPage/searchPageEvents';
 import {CoveoInsightClient, InsightClientProvider} from './insightClient';
 import doNotTrack from '../donottrack';
-import {
-  InsightEvents,
-  InsightStaticFilterToggleValueMetadata,
-} from './insightEvents';
+import {InsightEvents, InsightStaticFilterToggleValueMetadata} from './insightEvents';
 import {Cookie} from '../cookieutils';
 
 const baseCaseMetadata = {
@@ -87,10 +84,7 @@ describe('InsightClient', () => {
     originLevel3: 'origin-level-3',
   });
 
-  const expectMatchPayload = (
-    actionCause: SearchPageEvents | InsightEvents,
-    meta = {}
-  ) => {
+  const expectMatchPayload = (actionCause: SearchPageEvents | InsightEvents, meta = {}) => {
     const body: string = lastCallBody(fetchMock);
     const customData = {foo: 'bar', genratedAnswerMetadata: 'foo', ...meta};
     expect(JSON.parse(body)).toMatchObject({
@@ -163,10 +157,7 @@ describe('InsightClient', () => {
     fetchMockBeforeEach();
 
     client = initClient();
-    client.coveoAnalyticsClient.runtime.storage.setItem(
-      'visitorId',
-      'visitor-id'
-    );
+    client.coveoAnalyticsClient.runtime.storage.setItem('visitorId', 'visitor-id');
     fetchMock.mock(/.*/, {
       visitId: 'visit-id',
     });
@@ -369,38 +360,22 @@ describe('InsightClient', () => {
 
     it('should send proper payload for #documentOpen', async () => {
       await client.logDocumentOpen(fakeDocInfo, fakeDocID);
-      expectMatchDocumentPayload(
-        SearchPageEvents.documentOpen,
-        fakeDocInfo,
-        fakeDocID
-      );
+      expectMatchDocumentPayload(SearchPageEvents.documentOpen, fakeDocInfo, fakeDocID);
     });
 
     it('should send proper payload for #copyToClipboard', async () => {
       await client.logCopyToClipboard(fakeDocInfo, fakeDocID);
-      expectMatchDocumentPayload(
-        SearchPageEvents.copyToClipboard,
-        fakeDocInfo,
-        fakeDocID
-      );
+      expectMatchDocumentPayload(SearchPageEvents.copyToClipboard, fakeDocInfo, fakeDocID);
     });
 
     it('should send proper payload for #caseSendEmail', async () => {
       await client.logCaseSendEmail(fakeDocInfo, fakeDocID);
-      expectMatchDocumentPayload(
-        SearchPageEvents.caseSendEmail,
-        fakeDocInfo,
-        fakeDocID
-      );
+      expectMatchDocumentPayload(SearchPageEvents.caseSendEmail, fakeDocInfo, fakeDocID);
     });
 
     it('should send proper payload for #feedItemTextPost', async () => {
       await client.logFeedItemTextPost(fakeDocInfo, fakeDocID);
-      expectMatchDocumentPayload(
-        SearchPageEvents.feedItemTextPost,
-        fakeDocInfo,
-        fakeDocID
-      );
+      expectMatchDocumentPayload(SearchPageEvents.feedItemTextPost, fakeDocInfo, fakeDocID);
     });
 
     it('should send proper payload for #documentQuickview', async () => {
@@ -410,11 +385,7 @@ describe('InsightClient', () => {
         documentURL: fakeDocInfo.documentUrl,
       };
       await client.logDocumentQuickview(fakeDocInfo, fakeDocID);
-      expectMatchDocumentPayload(
-        SearchPageEvents.documentQuickview,
-        fakeDocInfo,
-        expectedMetadata
-      );
+      expectMatchDocumentPayload(SearchPageEvents.documentQuickview, fakeDocInfo, expectedMetadata);
     });
 
     it('should send proper payload for #caseAttach', async () => {
@@ -425,11 +396,7 @@ describe('InsightClient', () => {
         resultUriHash: fakeDocInfo.documentUriHash,
       };
       await client.logCaseAttach(fakeDocInfo, fakeDocID);
-      expectMatchDocumentPayload(
-        SearchPageEvents.caseAttach,
-        fakeDocInfo,
-        expectedMetadata
-      );
+      expectMatchDocumentPayload(SearchPageEvents.caseAttach, fakeDocInfo, expectedMetadata);
     });
 
     it('should send proper payload for #caseDetach', async () => {
@@ -440,10 +407,7 @@ describe('InsightClient', () => {
         permanentId: mockPermanentId,
       };
       await client.logCaseDetach(mockResultUriHash, undefined, mockPermanentId);
-      expectMatchCustomEventPayload(
-        SearchPageEvents.caseDetach,
-        expectedMetadata
-      );
+      expectMatchCustomEventPayload(SearchPageEvents.caseDetach, expectedMetadata);
     });
 
     it('should send proper payload for #likeSmartSnippet', async () => {
@@ -468,16 +432,12 @@ describe('InsightClient', () => {
 
     it('should send proper payload for #openSmartSnippetFeedbackModal', async () => {
       await client.logOpenSmartSnippetFeedbackModal();
-      expectMatchCustomEventPayload(
-        SearchPageEvents.openSmartSnippetFeedbackModal
-      );
+      expectMatchCustomEventPayload(SearchPageEvents.openSmartSnippetFeedbackModal);
     });
 
     it('should send proper payload for #closeSmartSnippetFeedbackModal', async () => {
       await client.logCloseSmartSnippetFeedbackModal();
-      expectMatchCustomEventPayload(
-        SearchPageEvents.closeSmartSnippetFeedbackModal
-      );
+      expectMatchCustomEventPayload(SearchPageEvents.closeSmartSnippetFeedbackModal);
     });
 
     it('should send proper payload for #sendSmartSnippetReason', async () => {
@@ -489,10 +449,7 @@ describe('InsightClient', () => {
       };
 
       await client.logSmartSnippetFeedbackReason(reason, details);
-      expectMatchCustomEventPayload(
-        SearchPageEvents.sendSmartSnippetReason,
-        expectedMetadata
-      );
+      expectMatchCustomEventPayload(SearchPageEvents.sendSmartSnippetReason, expectedMetadata);
     });
 
     it('should send proper payload for #expandSmartSnippetSuggestion', async () => {
@@ -502,9 +459,7 @@ describe('InsightClient', () => {
         documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
       };
 
-      await client.logExpandSmartSnippetSuggestion(
-        exampleSmartSnippetSuggestion
-      );
+      await client.logExpandSmartSnippetSuggestion(exampleSmartSnippetSuggestion);
       expectMatchCustomEventPayload(
         SearchPageEvents.expandSmartSnippetSuggestion,
         exampleSmartSnippetSuggestion
@@ -518,9 +473,7 @@ describe('InsightClient', () => {
         documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
       };
 
-      await client.logCollapseSmartSnippetSuggestion(
-        exampleSmartSnippetSuggestion
-      );
+      await client.logCollapseSmartSnippetSuggestion(exampleSmartSnippetSuggestion);
       expectMatchCustomEventPayload(
         SearchPageEvents.collapseSmartSnippetSuggestion,
         exampleSmartSnippetSuggestion
@@ -529,11 +482,7 @@ describe('InsightClient', () => {
 
     it('should send proper payload for #openSmartSnippetSource', async () => {
       await client.logOpenSmartSnippetSource(fakeDocInfo, fakeDocID);
-      expectMatchDocumentPayload(
-        SearchPageEvents.openSmartSnippetSource,
-        fakeDocInfo,
-        fakeDocID
-      );
+      expectMatchDocumentPayload(SearchPageEvents.openSmartSnippetSource, fakeDocInfo, fakeDocID);
     });
 
     it('should send proper payload for #openSmartSnippetInlineLink', async () => {
@@ -544,11 +493,7 @@ describe('InsightClient', () => {
       };
 
       await client.logOpenSmartSnippetInlineLink(fakeDocInfo, meta);
-      expectMatchDocumentPayload(
-        SearchPageEvents.openSmartSnippetInlineLink,
-        fakeDocInfo,
-        meta
-      );
+      expectMatchDocumentPayload(SearchPageEvents.openSmartSnippetInlineLink, fakeDocInfo, meta);
     });
 
     it('should send proper payload for #openSmartSnippetSuggestionSource', async () => {
@@ -595,11 +540,7 @@ describe('InsightClient', () => {
     });
     it('should send proper payload for #showMoreFoldedResults', async () => {
       await client.logShowMoreFoldedResults(fakeDocInfo, fakeDocID);
-      expectMatchDocumentPayload(
-        SearchPageEvents.showMoreFoldedResults,
-        fakeDocInfo,
-        fakeDocID
-      );
+      expectMatchDocumentPayload(SearchPageEvents.showMoreFoldedResults, fakeDocInfo, fakeDocID);
     });
 
     it('should send proper payload for #showLessFoldedResults', async () => {
@@ -674,9 +615,7 @@ describe('InsightClient', () => {
         citationHoverTimeMs: 100,
       };
 
-      await client.logGeneratedAnswerSourceHover(
-        exampleGeneratedAnswerMetadata
-      );
+      await client.logGeneratedAnswerSourceHover(exampleGeneratedAnswerMetadata);
       expectMatchCustomEventPayload(
         SearchPageEvents.generatedAnswerSourceHover,
         exampleGeneratedAnswerMetadata
@@ -688,9 +627,7 @@ describe('InsightClient', () => {
         generativeQuestionAnsweringId: '123',
       };
 
-      await client.logGeneratedAnswerCopyToClipboard(
-        exampleGeneratedAnswerMetadata
-      );
+      await client.logGeneratedAnswerCopyToClipboard(exampleGeneratedAnswerMetadata);
       expectMatchCustomEventPayload(
         SearchPageEvents.generatedAnswerCopyToClipboard,
         exampleGeneratedAnswerMetadata
@@ -702,9 +639,7 @@ describe('InsightClient', () => {
         generativeQuestionAnsweringId: '123',
       };
 
-      await client.logGeneratedAnswerHideAnswers(
-        exampleGeneratedAnswerMetadata
-      );
+      await client.logGeneratedAnswerHideAnswers(exampleGeneratedAnswerMetadata);
       expectMatchCustomEventPayload(
         SearchPageEvents.generatedAnswerHideAnswers,
         exampleGeneratedAnswerMetadata
@@ -716,9 +651,7 @@ describe('InsightClient', () => {
         generativeQuestionAnsweringId: '123',
       };
 
-      await client.logGeneratedAnswerShowAnswers(
-        exampleGeneratedAnswerMetadata
-      );
+      await client.logGeneratedAnswerShowAnswers(exampleGeneratedAnswerMetadata);
       expectMatchCustomEventPayload(
         SearchPageEvents.generatedAnswerShowAnswers,
         exampleGeneratedAnswerMetadata
@@ -756,9 +689,7 @@ describe('InsightClient', () => {
         details: 'foo',
       };
 
-      await client.logGeneratedAnswerFeedbackSubmit(
-        exampleGeneratedAnswerMetadata
-      );
+      await client.logGeneratedAnswerFeedbackSubmit(exampleGeneratedAnswerMetadata);
       expectMatchCustomEventPayload(
         SearchPageEvents.generatedAnswerFeedbackSubmit,
         exampleGeneratedAnswerMetadata
@@ -772,10 +703,7 @@ describe('InsightClient', () => {
       };
 
       await client.logRephraseGeneratedAnswer(exampleGeneratedAnswerMetadata);
-      expectMatchPayload(
-        SearchPageEvents.rephraseGeneratedAnswer,
-        exampleGeneratedAnswerMetadata
-      );
+      expectMatchPayload(SearchPageEvents.rephraseGeneratedAnswer, exampleGeneratedAnswerMetadata);
     });
 
     it('should send proper payload for #retryGeneratedAnswer', async () => {
@@ -824,10 +752,7 @@ describe('InsightClient', () => {
         triggeredBy: 'CreateArticleButton',
       };
       await client.logCreateArticle(exampleCreateArticleMetadata);
-      expectMatchCustomEventPayload(
-        InsightEvents.createArticle,
-        exampleCreateArticleMetadata
-      );
+      expectMatchCustomEventPayload(InsightEvents.createArticle, exampleCreateArticleMetadata);
     });
 
     it('should send proper payload for #logTriggerNotify', async () => {
@@ -835,10 +760,7 @@ describe('InsightClient', () => {
         notifications: ['foo', 'bar'],
       };
       await client.logTriggerNotify(exampleTriggerNotifyMetadata);
-      expectMatchCustomEventPayload(
-        SearchPageEvents.triggerNotify,
-        exampleTriggerNotifyMetadata
-      );
+      expectMatchCustomEventPayload(SearchPageEvents.triggerNotify, exampleTriggerNotifyMetadata);
     });
 
     it('should send proper payload for #generatedAnswerFeedbackSubmitV2', async () => {
@@ -853,9 +775,7 @@ describe('InsightClient', () => {
         documentUrl: 'https://document.com',
       };
 
-      await client.logGeneratedAnswerFeedbackSubmitV2(
-        exampleGeneratedAnswerMetadata
-      );
+      await client.logGeneratedAnswerFeedbackSubmitV2(exampleGeneratedAnswerMetadata);
       expectMatchCustomEventPayload(
         SearchPageEvents.generatedAnswerFeedbackSubmitV2,
         exampleGeneratedAnswerMetadata
@@ -897,10 +817,7 @@ describe('InsightClient', () => {
         context_Case_Description: 'test description',
       };
       await client.logClearRecentQueries(metadata);
-      expectMatchCustomEventPayload(
-        SearchPageEvents.clearRecentQueries,
-        expectedMetadata
-      );
+      expectMatchCustomEventPayload(SearchPageEvents.clearRecentQueries, expectedMetadata);
     });
 
     it('should send proper payload for #interfaceChange', async () => {
@@ -931,10 +848,7 @@ describe('InsightClient', () => {
         type: 'getMoreResults',
       };
       await client.logFetchMoreResults(metadata);
-      expectMatchCustomEventPayload(
-        SearchPageEvents.pagerScrolling,
-        expectedMetadata
-      );
+      expectMatchCustomEventPayload(SearchPageEvents.pagerScrolling, expectedMetadata);
     });
 
     it('should send proper payload for #staticFilterDeselect', async () => {
@@ -959,10 +873,7 @@ describe('InsightClient', () => {
       };
       await client.logStaticFilterDeselect(metadata);
 
-      expectMatchPayload(
-        SearchPageEvents.staticFilterDeselect,
-        expectedMetadata
-      );
+      expectMatchPayload(SearchPageEvents.staticFilterDeselect, expectedMetadata);
     });
 
     it('should send proper payload for #breadcrumbResetAll', async () => {
@@ -1125,10 +1036,7 @@ describe('InsightClient', () => {
         facetTitle: 'title',
       };
       await client.logFacetShowMore(metadata);
-      expectMatchCustomEventPayload(
-        SearchPageEvents.facetShowMore,
-        expectedMetadata
-      );
+      expectMatchCustomEventPayload(SearchPageEvents.facetShowMore, expectedMetadata);
     });
 
     it('should send proper payload for #logFacetShowLess', async () => {
@@ -1146,10 +1054,7 @@ describe('InsightClient', () => {
         facetTitle: 'title',
       };
       await client.logFacetShowLess(metadata);
-      expectMatchCustomEventPayload(
-        SearchPageEvents.facetShowLess,
-        expectedMetadata
-      );
+      expectMatchCustomEventPayload(SearchPageEvents.facetShowLess, expectedMetadata);
     });
 
     it('should send proper payload for #logQueryError', async () => {
@@ -1173,10 +1078,7 @@ describe('InsightClient', () => {
         errorType: 'a bad one',
       };
       await client.logQueryError(metadata);
-      expectMatchCustomEventPayload(
-        SearchPageEvents.queryError,
-        expectedMetadata
-      );
+      expectMatchCustomEventPayload(SearchPageEvents.queryError, expectedMetadata);
     });
 
     it('should send proper payload for #logPagerNumber', async () => {
@@ -1190,10 +1092,7 @@ describe('InsightClient', () => {
         pagerNumber: 123,
       };
       await client.logPagerNumber(metadata);
-      expectMatchCustomEventPayload(
-        SearchPageEvents.pagerNumber,
-        expectedMetadata
-      );
+      expectMatchCustomEventPayload(SearchPageEvents.pagerNumber, expectedMetadata);
     });
 
     it('should send proper payload for #logPagerNext', async () => {
@@ -1207,10 +1106,7 @@ describe('InsightClient', () => {
         pagerNumber: 123,
       };
       await client.logPagerNext(metadata);
-      expectMatchCustomEventPayload(
-        SearchPageEvents.pagerNext,
-        expectedMetadata
-      );
+      expectMatchCustomEventPayload(SearchPageEvents.pagerNext, expectedMetadata);
     });
 
     it('should send proper payload for #logPagerPrevious', async () => {
@@ -1224,10 +1120,7 @@ describe('InsightClient', () => {
         pagerNumber: 123,
       };
       await client.logPagerPrevious(metadata);
-      expectMatchCustomEventPayload(
-        SearchPageEvents.pagerPrevious,
-        expectedMetadata
-      );
+      expectMatchCustomEventPayload(SearchPageEvents.pagerPrevious, expectedMetadata);
     });
 
     it('should send proper payload for #didyoumeanAutomatic', async () => {
@@ -1239,10 +1132,7 @@ describe('InsightClient', () => {
         context_Case_Description: 'test description',
       };
       await client.logDidYouMeanAutomatic(metadata);
-      expectMatchPayload(
-        SearchPageEvents.didyoumeanAutomatic,
-        expectedMetadata
-      );
+      expectMatchPayload(SearchPageEvents.didyoumeanAutomatic, expectedMetadata);
     });
 
     it('should send proper payload for #didyoumeanClick', async () => {
@@ -1293,11 +1183,7 @@ describe('InsightClient', () => {
         ...expectedBaseCaseMetadata,
       };
       await client.logDocumentOpen(fakeDocInfo, fakeDocID, metadata);
-      expectMatchDocumentPayload(
-        SearchPageEvents.documentOpen,
-        fakeDocInfo,
-        expectedMetadata
-      );
+      expectMatchDocumentPayload(SearchPageEvents.documentOpen, fakeDocInfo, expectedMetadata);
     });
 
     it('should send proper payload for #copyToClipboard', async () => {
@@ -1308,11 +1194,7 @@ describe('InsightClient', () => {
         ...expectedBaseCaseMetadata,
       };
       await client.logCopyToClipboard(fakeDocInfo, fakeDocID, metadata);
-      expectMatchDocumentPayload(
-        SearchPageEvents.copyToClipboard,
-        fakeDocInfo,
-        expectedMetadata
-      );
+      expectMatchDocumentPayload(SearchPageEvents.copyToClipboard, fakeDocInfo, expectedMetadata);
     });
 
     it('should send proper payload for #caseSendEmail', async () => {
@@ -1323,11 +1205,7 @@ describe('InsightClient', () => {
         ...expectedBaseCaseMetadata,
       };
       await client.logCaseSendEmail(fakeDocInfo, fakeDocID, metadata);
-      expectMatchDocumentPayload(
-        SearchPageEvents.caseSendEmail,
-        fakeDocInfo,
-        expectedMetadata
-      );
+      expectMatchDocumentPayload(SearchPageEvents.caseSendEmail, fakeDocInfo, expectedMetadata);
     });
 
     it('should send proper payload for #feedItemTextPost', async () => {
@@ -1338,11 +1216,7 @@ describe('InsightClient', () => {
         ...expectedBaseCaseMetadata,
       };
       await client.logFeedItemTextPost(fakeDocInfo, fakeDocID, metadata);
-      expectMatchDocumentPayload(
-        SearchPageEvents.feedItemTextPost,
-        fakeDocInfo,
-        expectedMetadata
-      );
+      expectMatchDocumentPayload(SearchPageEvents.feedItemTextPost, fakeDocInfo, expectedMetadata);
     });
 
     it('should send proper payload for #documentQuickview', async () => {
@@ -1355,11 +1229,7 @@ describe('InsightClient', () => {
         documentURL: fakeDocInfo.documentUrl,
       };
       await client.logDocumentQuickview(fakeDocInfo, fakeDocID, metadata);
-      expectMatchDocumentPayload(
-        SearchPageEvents.documentQuickview,
-        fakeDocInfo,
-        expectedMetadata
-      );
+      expectMatchDocumentPayload(SearchPageEvents.documentQuickview, fakeDocInfo, expectedMetadata);
     });
 
     it('should send proper payload for #caseAttach', async () => {
@@ -1373,11 +1243,7 @@ describe('InsightClient', () => {
         resultUriHash: fakeDocInfo.documentUriHash,
       };
       await client.logCaseAttach(fakeDocInfo, fakeDocID, metadata);
-      expectMatchDocumentPayload(
-        SearchPageEvents.caseAttach,
-        fakeDocInfo,
-        expectedMetadata
-      );
+      expectMatchDocumentPayload(SearchPageEvents.caseAttach, fakeDocInfo, expectedMetadata);
     });
 
     it('should send proper payload for #caseDetach', async () => {
@@ -1391,34 +1257,22 @@ describe('InsightClient', () => {
         permanentId: mockPermanentId,
       };
       await client.logCaseDetach(mockResultUriHash, metadata, mockPermanentId);
-      expectMatchCustomEventPayload(
-        SearchPageEvents.caseDetach,
-        expectedMetadata
-      );
+      expectMatchCustomEventPayload(SearchPageEvents.caseDetach, expectedMetadata);
     });
 
     it('should send proper payload for #likeSmartSnippet', async () => {
       await client.logLikeSmartSnippet(baseCaseMetadata);
-      expectMatchCustomEventPayload(
-        SearchPageEvents.likeSmartSnippet,
-        expectedBaseCaseMetadata
-      );
+      expectMatchCustomEventPayload(SearchPageEvents.likeSmartSnippet, expectedBaseCaseMetadata);
     });
 
     it('should send proper payload for #dislikeSmartSnippet', async () => {
       await client.logDislikeSmartSnippet(baseCaseMetadata);
-      expectMatchCustomEventPayload(
-        SearchPageEvents.dislikeSmartSnippet,
-        expectedBaseCaseMetadata
-      );
+      expectMatchCustomEventPayload(SearchPageEvents.dislikeSmartSnippet, expectedBaseCaseMetadata);
     });
 
     it('should send proper payload for #expandSmartSnippet', async () => {
       await client.logExpandSmartSnippet(baseCaseMetadata);
-      expectMatchCustomEventPayload(
-        SearchPageEvents.expandSmartSnippet,
-        expectedBaseCaseMetadata
-      );
+      expectMatchCustomEventPayload(SearchPageEvents.expandSmartSnippet, expectedBaseCaseMetadata);
     });
 
     it('should send proper payload for #collapseSmartSnippet', async () => {
@@ -1454,15 +1308,8 @@ describe('InsightClient', () => {
         ...expectedBaseCaseMetadata,
       };
 
-      await client.logSmartSnippetFeedbackReason(
-        reason,
-        details,
-        baseCaseMetadata
-      );
-      expectMatchCustomEventPayload(
-        SearchPageEvents.sendSmartSnippetReason,
-        expectedMetadata
-      );
+      await client.logSmartSnippetFeedbackReason(reason, details, baseCaseMetadata);
+      expectMatchCustomEventPayload(SearchPageEvents.sendSmartSnippetReason, expectedMetadata);
     });
 
     it('should send proper payload for #expandSmartSnippetSuggestion', async () => {
@@ -1476,10 +1323,7 @@ describe('InsightClient', () => {
         ...expectedBaseCaseMetadata,
       };
 
-      await client.logExpandSmartSnippetSuggestion(
-        exampleSmartSnippetSuggestion,
-        baseCaseMetadata
-      );
+      await client.logExpandSmartSnippetSuggestion(exampleSmartSnippetSuggestion, baseCaseMetadata);
       expectMatchCustomEventPayload(
         SearchPageEvents.expandSmartSnippetSuggestion,
         expectedMetadata
@@ -1512,11 +1356,7 @@ describe('InsightClient', () => {
         ...fakeDocID,
         ...expectedBaseCaseMetadata,
       };
-      await client.logOpenSmartSnippetSource(
-        fakeDocInfo,
-        fakeDocID,
-        baseCaseMetadata
-      );
+      await client.logOpenSmartSnippetSource(fakeDocInfo, fakeDocID, baseCaseMetadata);
       expectMatchDocumentPayload(
         SearchPageEvents.openSmartSnippetSource,
         fakeDocInfo,
@@ -1535,11 +1375,7 @@ describe('InsightClient', () => {
         ...expectedBaseCaseMetadata,
       };
 
-      await client.logOpenSmartSnippetInlineLink(
-        fakeDocInfo,
-        meta,
-        baseCaseMetadata
-      );
+      await client.logOpenSmartSnippetInlineLink(fakeDocInfo, meta, baseCaseMetadata);
       expectMatchDocumentPayload(
         SearchPageEvents.openSmartSnippetInlineLink,
         fakeDocInfo,
@@ -1561,11 +1397,7 @@ describe('InsightClient', () => {
         contentIDValue: meta.documentId.contentIdValue,
       };
 
-      await client.logOpenSmartSnippetSuggestionSource(
-        fakeDocInfo,
-        meta,
-        baseCaseMetadata
-      );
+      await client.logOpenSmartSnippetSuggestionSource(fakeDocInfo, meta, baseCaseMetadata);
       expectMatchDocumentPayload(
         SearchPageEvents.openSmartSnippetSuggestionSource,
         fakeDocInfo,
@@ -1588,11 +1420,7 @@ describe('InsightClient', () => {
         contentIDValue: meta.documentId.contentIdValue,
       };
 
-      await client.logOpenSmartSnippetSuggestionInlineLink(
-        fakeDocInfo,
-        meta,
-        baseCaseMetadata
-      );
+      await client.logOpenSmartSnippetSuggestionInlineLink(fakeDocInfo, meta, baseCaseMetadata);
       expectMatchDocumentPayload(
         SearchPageEvents.openSmartSnippetSuggestionInlineLink,
         fakeDocInfo,
@@ -1605,11 +1433,7 @@ describe('InsightClient', () => {
         ...fakeDocID,
         ...expectedBaseCaseMetadata,
       };
-      await client.logShowMoreFoldedResults(
-        fakeDocInfo,
-        fakeDocID,
-        baseCaseMetadata
-      );
+      await client.logShowMoreFoldedResults(fakeDocInfo, fakeDocID, baseCaseMetadata);
       expectMatchDocumentPayload(
         SearchPageEvents.showMoreFoldedResults,
         fakeDocInfo,
@@ -1622,10 +1446,7 @@ describe('InsightClient', () => {
         ...expectedBaseCaseMetadata,
       };
       await client.logShowLessFoldedResults(baseCaseMetadata);
-      expectMatchCustomEventPayload(
-        SearchPageEvents.showLessFoldedResults,
-        expectedMetadata
-      );
+      expectMatchCustomEventPayload(SearchPageEvents.showLessFoldedResults, expectedMetadata);
     });
 
     it('should send proper payload for #likeGeneratedAnswer', async () => {
@@ -1637,14 +1458,8 @@ describe('InsightClient', () => {
         ...expectedBaseCaseMetadata,
       };
 
-      await client.logLikeGeneratedAnswer(
-        exampleGeneratedAnswerMetadata,
-        baseCaseMetadata
-      );
-      expectMatchCustomEventPayload(
-        SearchPageEvents.likeGeneratedAnswer,
-        expectedMetadata
-      );
+      await client.logLikeGeneratedAnswer(exampleGeneratedAnswerMetadata, baseCaseMetadata);
+      expectMatchCustomEventPayload(SearchPageEvents.likeGeneratedAnswer, expectedMetadata);
     });
 
     it('should send proper payload for #dislikeGeneratedAnswer', async () => {
@@ -1656,14 +1471,8 @@ describe('InsightClient', () => {
         ...expectedBaseCaseMetadata,
       };
 
-      await client.logDislikeGeneratedAnswer(
-        exampleGeneratedAnswerMetadata,
-        baseCaseMetadata
-      );
-      expectMatchCustomEventPayload(
-        SearchPageEvents.dislikeGeneratedAnswer,
-        expectedMetadata
-      );
+      await client.logDislikeGeneratedAnswer(exampleGeneratedAnswerMetadata, baseCaseMetadata);
+      expectMatchCustomEventPayload(SearchPageEvents.dislikeGeneratedAnswer, expectedMetadata);
     });
 
     it('should send proper payload for #openGeneratedAnswerSource', async () => {
@@ -1677,14 +1486,8 @@ describe('InsightClient', () => {
         ...expectedBaseCaseMetadata,
       };
 
-      await client.logOpenGeneratedAnswerSource(
-        exampleGeneratedAnswerMetadata,
-        baseCaseMetadata
-      );
-      expectMatchCustomEventPayload(
-        SearchPageEvents.openGeneratedAnswerSource,
-        expectedMetadata
-      );
+      await client.logOpenGeneratedAnswerSource(exampleGeneratedAnswerMetadata, baseCaseMetadata);
+      expectMatchCustomEventPayload(SearchPageEvents.openGeneratedAnswerSource, expectedMetadata);
     });
 
     it('should send proper payload for #generatedAnswerCitationClick', async () => {
@@ -1700,11 +1503,7 @@ describe('InsightClient', () => {
         contentIDValue: meta.documentId.contentIdValue,
       };
 
-      await client.logGeneratedAnswerCitationClick(
-        fakeDocInfo,
-        meta,
-        baseCaseMetadata
-      );
+      await client.logGeneratedAnswerCitationClick(fakeDocInfo, meta, baseCaseMetadata);
       expectMatchDocumentPayload(
         SearchPageEvents.generatedAnswerCitationClick,
         fakeDocInfo,
@@ -1724,14 +1523,8 @@ describe('InsightClient', () => {
         ...expectedBaseCaseMetadata,
       };
 
-      await client.logGeneratedAnswerSourceHover(
-        exampleGeneratedAnswerMetadata,
-        baseCaseMetadata
-      );
-      expectMatchCustomEventPayload(
-        SearchPageEvents.generatedAnswerSourceHover,
-        expectedMetadata
-      );
+      await client.logGeneratedAnswerSourceHover(exampleGeneratedAnswerMetadata, baseCaseMetadata);
+      expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerSourceHover, expectedMetadata);
     });
 
     it('should send proper payload for #generatedAnswerCopyToClipboard', async () => {
@@ -1762,14 +1555,8 @@ describe('InsightClient', () => {
         ...expectedBaseCaseMetadata,
       };
 
-      await client.logGeneratedAnswerHideAnswers(
-        exampleGeneratedAnswerMetadata,
-        baseCaseMetadata
-      );
-      expectMatchCustomEventPayload(
-        SearchPageEvents.generatedAnswerHideAnswers,
-        expectedMetadata
-      );
+      await client.logGeneratedAnswerHideAnswers(exampleGeneratedAnswerMetadata, baseCaseMetadata);
+      expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerHideAnswers, expectedMetadata);
     });
 
     it('should send proper payload for #generatedAnswerShowAnswers', async () => {
@@ -1781,14 +1568,8 @@ describe('InsightClient', () => {
         ...expectedBaseCaseMetadata,
       };
 
-      await client.logGeneratedAnswerShowAnswers(
-        exampleGeneratedAnswerMetadata,
-        baseCaseMetadata
-      );
-      expectMatchCustomEventPayload(
-        SearchPageEvents.generatedAnswerShowAnswers,
-        expectedMetadata
-      );
+      await client.logGeneratedAnswerShowAnswers(exampleGeneratedAnswerMetadata, baseCaseMetadata);
+      expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerShowAnswers, expectedMetadata);
     });
 
     it('should send proper payload for #generatedAnswerExpand', async () => {
@@ -1800,14 +1581,8 @@ describe('InsightClient', () => {
         ...expectedBaseCaseMetadata,
       };
 
-      await client.logGeneratedAnswerExpand(
-        exampleGeneratedAnswerMetadata,
-        baseCaseMetadata
-      );
-      expectMatchCustomEventPayload(
-        SearchPageEvents.generatedAnswerExpand,
-        expectedMetadata
-      );
+      await client.logGeneratedAnswerExpand(exampleGeneratedAnswerMetadata, baseCaseMetadata);
+      expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerExpand, expectedMetadata);
     });
 
     it('should send proper payload for #generatedAnswerCollapse', async () => {
@@ -1819,14 +1594,8 @@ describe('InsightClient', () => {
         ...expectedBaseCaseMetadata,
       };
 
-      await client.logGeneratedAnswerCollapse(
-        exampleGeneratedAnswerMetadata,
-        baseCaseMetadata
-      );
-      expectMatchCustomEventPayload(
-        SearchPageEvents.generatedAnswerCollapse,
-        expectedMetadata
-      );
+      await client.logGeneratedAnswerCollapse(exampleGeneratedAnswerMetadata, baseCaseMetadata);
+      expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerCollapse, expectedMetadata);
     });
 
     it('should send proper payload for #generatedAnswerFeedbackSubmit', async () => {
@@ -1886,14 +1655,8 @@ describe('InsightClient', () => {
         ...expectedBaseCaseMetadata,
       };
 
-      await client.logRephraseGeneratedAnswer(
-        exampleGeneratedAnswerMetadata,
-        baseCaseMetadata
-      );
-      expectMatchPayload(
-        SearchPageEvents.rephraseGeneratedAnswer,
-        expectedMetadata
-      );
+      await client.logRephraseGeneratedAnswer(exampleGeneratedAnswerMetadata, baseCaseMetadata);
+      expectMatchPayload(SearchPageEvents.rephraseGeneratedAnswer, expectedMetadata);
     });
 
     it('should send proper payload for #retryGeneratedAnswer', async () => {
@@ -1902,10 +1665,7 @@ describe('InsightClient', () => {
       };
 
       await client.logRetryGeneratedAnswer(baseCaseMetadata);
-      expectMatchPayload(
-        SearchPageEvents.retryGeneratedAnswer,
-        expectedMetadata
-      );
+      expectMatchPayload(SearchPageEvents.retryGeneratedAnswer, expectedMetadata);
     });
 
     it('should send proper payload for #generatedAnswerStreamEnd', async () => {
@@ -1919,14 +1679,8 @@ describe('InsightClient', () => {
         ...expectedBaseCaseMetadata,
       };
 
-      await client.logGeneratedAnswerStreamEnd(
-        exampleGeneratedAnswerMetadata,
-        baseCaseMetadata
-      );
-      expectMatchCustomEventPayload(
-        SearchPageEvents.generatedAnswerStreamEnd,
-        expectedMetadata
-      );
+      await client.logGeneratedAnswerStreamEnd(exampleGeneratedAnswerMetadata, baseCaseMetadata);
+      expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerStreamEnd, expectedMetadata);
     });
 
     it('should send proper payload for #generatedAnswerCitationDocumentAttach', async () => {
@@ -1943,11 +1697,7 @@ describe('InsightClient', () => {
         contentIDValue: meta.documentId.contentIdValue,
       };
 
-      await client.logGeneratedAnswerCitationDocumentAttach(
-        fakeDocInfo,
-        meta,
-        baseCaseMetadata
-      );
+      await client.logGeneratedAnswerCitationDocumentAttach(fakeDocInfo, meta, baseCaseMetadata);
       expectMatchDocumentPayload(
         SearchPageEvents.generatedAnswerCitationDocumentAttach,
         fakeDocInfo,
@@ -1963,14 +1713,8 @@ describe('InsightClient', () => {
         ...exampleCreateArticleMetadata,
         ...expectedBaseCaseMetadata,
       };
-      await client.logCreateArticle(
-        exampleCreateArticleMetadata,
-        baseCaseMetadata
-      );
-      expectMatchCustomEventPayload(
-        InsightEvents.createArticle,
-        expectedMetadata
-      );
+      await client.logCreateArticle(exampleCreateArticleMetadata, baseCaseMetadata);
+      expectMatchCustomEventPayload(InsightEvents.createArticle, expectedMetadata);
     });
 
     it('should send proper payload for #logTriggerNotify', async () => {
@@ -1981,14 +1725,8 @@ describe('InsightClient', () => {
         ...exampleTriggerNotifyMetadata,
         ...expectedBaseCaseMetadata,
       };
-      await client.logTriggerNotify(
-        exampleTriggerNotifyMetadata,
-        baseCaseMetadata
-      );
-      expectMatchCustomEventPayload(
-        SearchPageEvents.triggerNotify,
-        expectedMetadata
-      );
+      await client.logTriggerNotify(exampleTriggerNotifyMetadata, baseCaseMetadata);
+      expectMatchCustomEventPayload(SearchPageEvents.triggerNotify, expectedMetadata);
     });
   });
 
@@ -2080,26 +1818,17 @@ describe('InsightClient', () => {
 
   it('should send proper payload for #logOpenUserActions', async () => {
     await client.logOpenUserActions(baseCaseMetadata);
-    expectMatchCustomEventPayload(
-      InsightEvents.openUserActions,
-      expectedBaseCaseMetadata
-    );
+    expectMatchCustomEventPayload(InsightEvents.openUserActions, expectedBaseCaseMetadata);
   });
 
   it('should send proper payload for #logShowPrecedingSession', async () => {
     await client.logShowPrecedingSessions(baseCaseMetadata);
-    expectMatchCustomEventPayload(
-      InsightEvents.showPrecedingSessions,
-      expectedBaseCaseMetadata
-    );
+    expectMatchCustomEventPayload(InsightEvents.showPrecedingSessions, expectedBaseCaseMetadata);
   });
 
   it('should send proper payload for #logShowFollowingSession', async () => {
     await client.logShowFollowingSessions(baseCaseMetadata);
-    expectMatchCustomEventPayload(
-      InsightEvents.showFollowingSessions,
-      expectedBaseCaseMetadata
-    );
+    expectMatchCustomEventPayload(InsightEvents.showFollowingSessions, expectedBaseCaseMetadata);
   });
 
   it('should send proper payload for #logViewedDocumentClick', async () => {
@@ -2107,8 +1836,7 @@ describe('InsightClient', () => {
       title: 'Some Title',
       uri: 'https://www.some-uri.com',
       uriHash: 'Acp8NfEWi0DeðeZU',
-      permanentId:
-        '8c88cd894t2767a96fa4f109041bb62bb54ca21ff31c1d760814b60cbcf2',
+      permanentId: '8c88cd894t2767a96fa4f109041bb62bb54ca21ff31c1d760814b60cbcf2',
     };
     await client.logViewedDocumentClick(document, baseCaseMetadata);
     expectMatchCustomEventPayload(InsightEvents.clickViewedDocument, {

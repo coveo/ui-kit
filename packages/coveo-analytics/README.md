@@ -29,12 +29,7 @@ In order to ensure the tracking code is available on your webpage, the following
     u.src = e;
     O = o.getElementsByTagName(v)[0];
     O.parentNode.insertBefore(u, O);
-  })(
-    window,
-    document,
-    'script',
-    'https://static.cloud.coveo.com/coveo.analytics.js/2/coveoua.js'
-  );
+  })(window, document, 'script', 'https://static.cloud.coveo.com/coveo.analytics.js/2/coveoua.js');
 </script>
 
 coveoua('init', #COVEO_API_KEY); // Replace #COVEO_API_KEY with your api key

@@ -37,10 +37,8 @@ export class ReactNativeRuntime implements IRuntimeEnvironment {
       token: options.token,
       baseUrl: buildBaseUrl(options.endpoint, options.version),
       visitorIdProvider: {
-        getCurrentVisitorId: async () =>
-          (await this.storage.getItem(visitorIdKey)) || uuidv4(),
-        setCurrentVisitorId: (visitorId: string) =>
-          this.storage.setItem(visitorIdKey, visitorId),
+        getCurrentVisitorId: async () => (await this.storage.getItem(visitorIdKey)) || uuidv4(),
+        setCurrentVisitorId: (visitorId: string) => this.storage.setItem(visitorIdKey, visitorId),
       },
     });
   }

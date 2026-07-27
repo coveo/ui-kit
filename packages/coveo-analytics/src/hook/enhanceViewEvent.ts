@@ -2,10 +2,7 @@ import {AnalyticsClientSendEventHook} from '../client/analytics';
 import {ViewEventRequest, EventType} from '../events';
 import {HistoryStore, STORE_KEY} from '../history';
 
-export const enhanceViewEvent: AnalyticsClientSendEventHook = async (
-  eventType,
-  payload
-) => {
+export const enhanceViewEvent: AnalyticsClientSendEventHook = async (eventType, payload) => {
   if (eventType === EventType.view) {
     await addPageViewToHistory(payload.contentIdValue);
     return {
