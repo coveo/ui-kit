@@ -6,6 +6,7 @@
   "bracketSpacing": false,
   "ignorePatterns": [
     "**/.kiro/**/*",
+    "**/.agents/**/*",
     "AGENTS.md",
     "**/packages/quantic/**/*",
     "!**/packages/quantic/catalog-info.yaml",
