@@ -81,7 +81,7 @@ export function ConversationPage({
           Reset
         </button>
       </nav>
-      <div className={styles.scrollContainer} ref={containerRef}>
+      <div className={styles.scrollContainer} ref={containerRef} aria-busy={isStreaming}>
         <div className={styles.scrollContent}>
           <ConversationThread turns={turns} onAction={handleAction} turnRefs={turnRefs} />
         </div>

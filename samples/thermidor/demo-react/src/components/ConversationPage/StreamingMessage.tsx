@@ -1,7 +1,5 @@
 import {useMemo} from 'react';
-import {marked} from 'marked';
-import DOMPurify from 'dompurify';
-import {assembleMessages, type AgentMessage} from '../../utils.js';
+import {assembleMessages, renderMarkdown, type AgentMessage} from '../../utils.js';
 import styles from './StreamingMessage.module.css';
 
 export interface StreamingMessageProps {
@@ -13,12 +11,7 @@ export function StreamingMessage({messages}: StreamingMessageProps) {
 
   const html = useMemo(() => {
     if (!text) return '';
-    try {
-      const raw = marked.parse(text, {breaks: true, gfm: true}) as string;
-      return DOMPurify.sanitize(raw);
-    } catch {
-      return DOMPurify.sanitize(text);
-    }
+    return renderMarkdown(text);
   }, [text]);
 
   if (!text) {

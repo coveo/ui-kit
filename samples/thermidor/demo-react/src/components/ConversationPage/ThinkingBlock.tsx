@@ -1,6 +1,5 @@
-import {marked} from 'marked';
-import DOMPurify from 'dompurify';
 import type {ReasoningStep, ToolCallStep} from '@coveo/thermidor';
+import {renderMarkdown} from '../../utils.js';
 import styles from './ThinkingBlock.module.css';
 
 export interface ThinkingBlockProps {
@@ -10,15 +9,6 @@ export interface ThinkingBlockProps {
 
 function isToolCall(step: ReasoningStep): step is ToolCallStep {
   return step.type === 'tool-call';
-}
-
-function renderReasoningMarkdown(content: string): string {
-  try {
-    const raw = marked.parse(content, {breaks: true, gfm: true}) as string;
-    return DOMPurify.sanitize(raw);
-  } catch {
-    return DOMPurify.sanitize(content);
-  }
 }
 
 function formatArgs(args: string): string {
@@ -86,7 +76,7 @@ export function ThinkingBlock({reasoningSteps, isStreaming}: ThinkingBlockProps)
                 key={`reasoning-${index}`}
                 className={styles.reasoningBlock}
                 dangerouslySetInnerHTML={{
-                  __html: renderReasoningMarkdown(step.content),
+                  __html: renderMarkdown(step.content),
                 }}
               />
             );
