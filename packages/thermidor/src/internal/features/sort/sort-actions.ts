@@ -2,7 +2,10 @@ import {createAction} from '@reduxjs/toolkit';
 import {type CacheKey, createCacheKey} from '@/src/internal/utils/index.js';
 import {getHandleInternals} from '@/src/internal/utils/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
-import type {CommerceSearchSort} from '@/src/internal/api/commerce-search/index.js';
+import type {
+  CommerceSearchSort,
+  CommerceSearchSortCriterion,
+} from '@/src/internal/api/commerce-search/index.js';
 
 type SortActions = ReturnType<typeof createSortActions>;
 
@@ -13,6 +16,7 @@ export function createSortActions(interfaceId: string) {
     updateFromResponse: createAction<CommerceSearchSort | undefined>(
       `${interfaceId}/sort/updateFromResponse`
     ),
+    sortBy: createAction<CommerceSearchSortCriterion>(`${interfaceId}/sort/sortBy`),
   };
 }
 
