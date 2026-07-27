@@ -84,8 +84,10 @@ export const testInsight =
 
       configuration.configure({...options, useCase: useCaseEnum.insight});
       await insightSetup.waitForInsightInterfaceInitialization();
-      await search.performSearch();
-      await search.waitForSearchResponse();
+      await Promise.all([
+        search.waitForSearchResponse(),
+        search.performSearch(),
+      ]);
       await use(smartSnippetSuggestionsObject);
     },
   });

@@ -1,4 +1,5 @@
 import {Page, Request, Response} from '@playwright/test';
+import * as querySuggestResponses from '@coveo/platform-mock-api/search/querySuggest-response';
 
 export class QuerySuggestObject {
   constructor(
@@ -36,10 +37,8 @@ export class QuerySuggestObject {
 
   async mockQuerySuggestResponse(suggestions: string[]) {
     await this.page.route(this.querySuggestRequestRegex, async (route) => {
-      const apiResponse = await this.page.request.fetch(route.request());
-      const originalBody = await apiResponse.json();
       const modifiedBody = {
-        ...originalBody,
+        ...querySuggestResponses.baseResponse,
         completions: suggestions.map((suggestion) => ({
           expression: suggestion,
           highlighted: `[${suggestion}]`,

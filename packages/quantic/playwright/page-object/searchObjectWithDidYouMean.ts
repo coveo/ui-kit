@@ -1,4 +1,5 @@
 import {Page} from '@playwright/test';
+import * as searchResponses from '@coveo/platform-mock-api/search/search-response';
 import {SearchObject} from './searchObject';
 
 export type WordCorrectionData = {
@@ -29,65 +30,59 @@ export class SearchObjectWithDidYouMeanOrTrigger extends SearchObject {
     super(page, searchRequestRegex);
   }
 
-  async mockSearchWithDidYouMeanLegacyResponse(
-    didYouMeanDataObject: DidYouMeanLegacyData
+  /**
+   * Routes the search endpoint so the first search returns the provided
+   * override (built on the mocked base response) and every subsequent search
+   * returns the plain base response. This mirrors the real flow (correction on
+   * the first query, normal results on the follow-up).
+   */
+  private async mockSearchWithFirstResponseOverride(
+    applyOverride: (body: Record<string, unknown>) => void
   ) {
+    let overrideApplied = false;
     await this.page.route(this.searchRequestRegex, async (route) => {
-      const apiResponse = await this.page.request.fetch(route.request());
-      const originalBody = await apiResponse.json();
-
-      originalBody.queryCorrections = [didYouMeanDataObject];
-      originalBody.results = [];
-      originalBody.totalCount = 0;
-      originalBody.totalCountFiltered = 0;
-
+      const body = {...searchResponses.richResponse} as Record<
+        string,
+        unknown
+      >;
+      if (!overrideApplied) {
+        overrideApplied = true;
+        applyOverride(body);
+      }
       await route.fulfill({
-        body: JSON.stringify(originalBody),
+        body: JSON.stringify(body),
         status: 200,
         headers: {
           'content-type': 'application/json',
         },
       });
-      this.page.unroute(this.searchRequestRegex);
+    });
+  }
+
+  async mockSearchWithDidYouMeanLegacyResponse(
+    didYouMeanDataObject: DidYouMeanLegacyData
+  ) {
+    await this.mockSearchWithFirstResponseOverride((body) => {
+      body.queryCorrections = [didYouMeanDataObject];
+      body.results = [];
+      body.totalCount = 0;
+      body.totalCountFiltered = 0;
     });
   }
 
   async mockSearchWithDidYouMeanNextResponse(
     didYouMeanNextDataObject: DidYouMeanNextData
   ) {
-    await this.page.route(this.searchRequestRegex, async (route) => {
-      const apiResponse = await this.page.request.fetch(route.request());
-      const originalBody = await apiResponse.json();
-
-      originalBody.queryCorrection = didYouMeanNextDataObject;
-
-      await route.fulfill({
-        body: JSON.stringify(originalBody),
-        status: 200,
-        headers: {
-          'content-type': 'application/json',
-        },
-      });
-      this.page.unroute(this.searchRequestRegex);
+    await this.mockSearchWithFirstResponseOverride((body) => {
+      body.queryCorrection = didYouMeanNextDataObject;
     });
   }
 
   async mockSearchWithQueryTriggerResponse(
     queryTriggerDataObject: QueryTriggerData
   ) {
-    await this.page.route(this.searchRequestRegex, async (route) => {
-      const apiResponse = await this.page.request.fetch(route.request());
-      const originalBody = await apiResponse.json();
-      originalBody.triggers = [queryTriggerDataObject];
-
-      await route.fulfill({
-        body: JSON.stringify(originalBody),
-        status: 200,
-        headers: {
-          'content-type': 'application/json',
-        },
-      });
-      this.page.unroute(this.searchRequestRegex);
+    await this.mockSearchWithFirstResponseOverride((body) => {
+      body.triggers = [queryTriggerDataObject];
     });
   }
 }

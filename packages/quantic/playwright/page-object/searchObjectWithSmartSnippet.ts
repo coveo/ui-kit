@@ -1,4 +1,5 @@
 import {Page} from '@playwright/test';
+import * as searchResponses from '@coveo/platform-mock-api/search/search-response';
 import {SearchObject} from './searchObject';
 
 export type QuestionAnswerData = {
@@ -34,8 +35,7 @@ export class SearchObjectWithSmartSnippet extends SearchObject {
     questionAnswerDataObject: QuestionAnswerData
   ) {
     await this.page.route(this.searchRequestRegex, async (route) => {
-      const apiResponse = await this.page.request.fetch(route.request());
-      const originalBody = await apiResponse.json();
+      const originalBody = structuredClone(searchResponses.richResponse) as any;
       const [firstResult] = originalBody.results;
       firstResult.clickUri = '#';
       originalBody.questionAnswer = {
@@ -60,8 +60,7 @@ export class SearchObjectWithSmartSnippet extends SearchObject {
     relatedQuestionsDataObject: RelatedQuestionsData
   ) {
     await this.page.route(this.searchRequestRegex, async (route) => {
-      const apiResponse = await this.page.request.fetch(route.request());
-      const originalBody = await apiResponse.json();
+      const originalBody = structuredClone(searchResponses.richResponse) as any;
       const [firstResult] = originalBody.results;
       firstResult.clickUri = '#';
       originalBody.questionAnswer = {
