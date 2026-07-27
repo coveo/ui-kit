@@ -97,12 +97,8 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
         appendMessageDelta: (turnId, delta) => {
           this.engine.mutate(this.#actions.appendMessageDelta({turnId, delta}));
         },
-        appendSurface: (turnId, surface) => {
-          this.engine.mutate(this.#actions.appendSurface({turnId, surface}));
-          const ops = (surface as {operations?: unknown[]}).operations;
-          if (Array.isArray(ops)) {
-            options.onSurfaceOperation?.(ops);
-          }
+        appendActivity: (turnId, activity) => {
+          this.engine.mutate(this.#actions.appendActivity({turnId, activity}));
         },
         startToolCall: (turnId, toolCallId, toolName) => {
           this.engine.mutate(this.#actions.startToolCall({turnId, toolCallId, toolName}));
@@ -238,5 +234,4 @@ export interface ConverseControllerState {
 export interface ConverseControllerOptions {
   interface: GenerativeInterface;
   conversationToRestore?: SerializedConverseState;
-  onSurfaceOperation?: (operations: unknown[]) => void;
 }

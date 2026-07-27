@@ -51,11 +51,15 @@ Server-side rendering with Headless controllers for improved performance and SEO
 
 Samples using `@coveo/thermidor` for upcoming conversational and search experiences.
 
-| Sample                                                | Description                                                       | Framework    | Use Case     |
-| ----------------------------------------------------- | ----------------------------------------------------------------- | ------------ | ------------ |
-| [conversation-react](./thermidor/conversation-react/) | React + Vite conversational integration sample                    | React + Vite | Conversation |
-| [commerce-react](./thermidor/commerce-react/)         | React + Vite commerce sample with ProductList, Pagination         | React + Vite | Commerce     |
-| [search-react](./thermidor/search-react/)             | React + Vite search sample with SearchBox, ResultList, Pagination | React + Vite | Search       |
+| Sample                                                      | Description                                                        | Framework    | Use Case     |
+| ----------------------------------------------------------- | ------------------------------------------------------------------ | ------------ | ------------ |
+| [conversation-react](./thermidor/conversation-react/)       | React + Vite conversational integration sample                     | React + Vite | Conversation |
+| [commerce-react](./thermidor/commerce-react/)               | React + Vite commerce sample with ProductList, Pagination          | React + Vite | Commerce     |
+| [search-react](./thermidor/search-react/)                   | React + Vite search sample with SearchBox, ResultList, Pagination  | React + Vite | Search       |
+| [generative-react](./thermidor/generative-react/)           | React + Vite generative conversation and custom A2-UI sample       | React + Vite | Conversation |
+| [generative-angular](./thermidor/generative-angular/)       | Angular generative conversation and custom A2-UI sample            | Angular      | Conversation |
+| [demo-react](./thermidor/demo-react/)                       | React demo with landing, conversation, and routed search views     | React + Vite | Conversation |
+| [schema-contract-react](./thermidor/schema-contract-react/) | v0.9 Commerce Catalog contract rendered from normalized activities | React + Vite | Contract     |
 
 ## 🚀 Quick Start
 

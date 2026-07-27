@@ -125,6 +125,75 @@ describe('createMockConverseServer', () => {
     expect(res.headers['content-type']).toBe('text/event-stream');
   });
 
+  it('streams the Thermidor schema catalog example for its dedicated prompt', async () => {
+    await startServer();
+    const res = await makeRequest(
+      server,
+      {
+        method: 'POST',
+        path: '/rest/organizations/myorg/commerce/unstable/agentic/converse',
+        headers: {'Content-Type': 'application/json'},
+      },
+      JSON.stringify({message: 'Show the Thermidor catalog'})
+    );
+
+    const events = res.body
+      .split('\n\n')
+      .filter(Boolean)
+      .map(
+        (frame) => JSON.parse(frame.split('\n')[1].replace('data:', '')) as Record<string, unknown>
+      );
+    const activity = events.find((event) => event['type'] === 'ACTIVITY_SNAPSHOT');
+
+    expect(activity).toMatchObject({
+      type: 'ACTIVITY_SNAPSHOT',
+      messageId: 'commerce-catalog-example',
+      activityType: 'a2ui-surface',
+      replace: true,
+      content: {
+        a2ui_operations: [
+          {
+            version: 'v0.9',
+            createSurface: {
+              surfaceId: 'commerce-catalog-example',
+              catalogId: 'https://schema.thermidor.coveo.com/a2-ui/catalog.json',
+            },
+          },
+          {
+            version: 'v0.9',
+            updateComponents: {
+              components: [{component: 'ProductCarousel'}, {component: 'Cart'}],
+            },
+          },
+          {
+            version: 'v0.9',
+            updateDataModel: {
+              surfaceId: 'commerce-catalog-example',
+            },
+          },
+        ],
+      },
+    });
+
+    const content = activity?.['content'] as {a2ui_operations: Array<Record<string, unknown>>};
+    const dataModelOperation = content.a2ui_operations.find(
+      (operation) => 'updateDataModel' in operation
+    )!['updateDataModel'] as {
+      value: {
+        controllers: Record<string, {products?: unknown[]; items?: unknown[]}>;
+      };
+    };
+
+    expect(dataModelOperation.value.controllers['featured-products'].products).toEqual(
+      expect.arrayContaining([expect.objectContaining({permanentid: 'trail-running-shoes-001'})])
+    );
+    expect(dataModelOperation.value.controllers['shopping-cart'].items).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({productId: 'trail-running-shoes-001', quantity: 1}),
+      ])
+    );
+  });
+
   it('returns 400 for invalid JSON payload', async () => {
     await startServer();
     const res = await makeRequest(

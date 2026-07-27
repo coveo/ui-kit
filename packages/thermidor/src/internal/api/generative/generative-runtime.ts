@@ -9,7 +9,7 @@ import {createConversationEndpointRequestSelector} from '@/src/internal/api/conv
 import {getOrCreateConfigurationSelectors} from '@/src/internal/features/configuration/index.js';
 import {generateId} from '@/src/internal/utils/index.js';
 import type {
-  A2UISurface,
+  Activity,
   RoutedUseCase,
   TurnStatus,
   UseCaseInterfaceMap,
@@ -23,7 +23,7 @@ export interface GenerativeStatePort {
   initAgentResponse(turnId: string): void;
   startMessage(turnId: string, role: string): void;
   appendMessageDelta(turnId: string, delta: string): void;
-  appendSurface(turnId: string, surface: A2UISurface): void;
+  appendActivity(turnId: string, activity: Activity): void;
   startToolCall(turnId: string, toolCallId: string, toolName: string): void;
   appendToolCallArgs(turnId: string, toolCallId: string, delta: string): void;
   completeToolCall(turnId: string, toolCallId: string, result: string): void;
@@ -253,7 +253,12 @@ export class GenerativeRuntime {
 
       case 'ACTIVITY_SNAPSHOT': {
         this.ensureAgentResponse(turnId);
-        this.statePort.appendSurface(turnId, event.content as Record<string, unknown>);
+        this.statePort.appendActivity(turnId, {
+          id: event.messageId,
+          kind: event.activityType,
+          payload: event.content as Record<string, unknown>,
+          replace: event.replace,
+        });
         return {turnId, isTerminal: false};
       }
 

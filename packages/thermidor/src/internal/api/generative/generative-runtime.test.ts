@@ -44,7 +44,7 @@ function createMockStatePort(): GenerativeStatePort {
     initAgentResponse: vi.fn(),
     startMessage: vi.fn(),
     appendMessageDelta: vi.fn(),
-    appendSurface: vi.fn(),
+    appendActivity: vi.fn(),
     startToolCall: vi.fn(),
     appendToolCallArgs: vi.fn(),
     completeToolCall: vi.fn(),
@@ -453,16 +453,16 @@ describe('GenerativeRuntime', () => {
       );
     });
 
-    it('handles ACTIVITY_SNAPSHOT by appending surface', async () => {
+    it('normalizes ACTIVITY_SNAPSHOT before appending an activity', async () => {
       const config = createMockConfig();
       const engine = createMockEngine();
-      const surface = {component: 'product-card', data: {id: 'p1'}};
+      const payload = {component: 'product-card', data: {id: 'p1'}};
       setupSuccessfulStream([
         {
           type: 'ACTIVITY_SNAPSHOT',
           messageId: 'm1',
           activityType: 'ui-surface',
-          content: surface,
+          content: payload,
           replace: false,
         } as ConversationStreamEvent,
         {type: 'turn_complete'} as ConversationStreamEvent,
@@ -471,7 +471,12 @@ describe('GenerativeRuntime', () => {
       const runtime = GenerativeRuntime.getInstance(engine, 'activity', config);
       await runtime.submit('Hello');
 
-      expect(config.statePort.appendSurface).toHaveBeenCalledWith('generated-id-1', surface);
+      expect(config.statePort.appendActivity).toHaveBeenCalledWith('generated-id-1', {
+        id: 'm1',
+        kind: 'ui-surface',
+        payload,
+        replace: false,
+      });
     });
 
     it('handles commerce_search_api_response by routing when hydration succeeds', async () => {
