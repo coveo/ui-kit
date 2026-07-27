@@ -73,3 +73,17 @@ body {
   color: var(--color-text-primary);
   background: var(--color-bg-secondary);
 }
+
+.view-transition {
+  height: 100%;
+  animation: viewFadeIn 250ms ease-out;
+}
+
+@keyframes viewFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

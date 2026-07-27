@@ -22,20 +22,10 @@ import type {
 import type {StaticFilterSection} from '../../state/state-sections.js';
 import {loadReducerError} from '../../utils/errors.js';
 import {validateOptions} from '../../utils/validate-payload.js';
-import {
-  buildController,
-  type Controller,
-} from '../controller/headless-controller.js';
-import {
-  buildStaticFilterValue,
-  type StaticFilterValueOptions,
-} from './static-filter-value.js';
+import {buildController, type Controller} from '../controller/headless-controller.js';
+import {buildStaticFilterValue, type StaticFilterValueOptions} from './static-filter-value.js';
 
-export type {
-  StaticFilterValue,
-  StaticFilterValueOptions,
-  StaticFilterValueState,
-};
+export type {StaticFilterValue, StaticFilterValueOptions, StaticFilterValueState};
 export {buildStaticFilterValue};
 
 const optionsSchema = new Schema<Required<StaticFilterOptions>>({
@@ -159,10 +149,7 @@ export interface StaticFilterState {
  * @group Controllers
  * @category StaticFilter
  */
-export function buildStaticFilter(
-  engine: SearchEngine,
-  props: StaticFilterProps
-): StaticFilter {
+export function buildStaticFilter(engine: SearchEngine, props: StaticFilterProps): StaticFilter {
   if (!loadReducers(engine)) {
     throw loadReducerError;
   }
@@ -253,20 +240,14 @@ export function buildStaticFilter(
   };
 }
 
-function loadReducers(
-  engine: SearchEngine
-): engine is SearchEngine<StaticFilterSection> {
+function loadReducers(engine: SearchEngine): engine is SearchEngine<StaticFilterSection> {
   engine.addReducers({staticFilterSet});
   return true;
 }
 
-function getLegacyAnalyticsActionForToggledValue(
-  id: string,
-  value: StaticFilterValue
-) {
+function getLegacyAnalyticsActionForToggledValue(id: string, value: StaticFilterValue) {
   const {caption, expression, state} = value;
-  const analytics =
-    state === 'idle' ? logStaticFilterSelect : logStaticFilterDeselect;
+  const analytics = state === 'idle' ? logStaticFilterSelect : logStaticFilterDeselect;
 
   return analytics({
     staticFilterId: id,

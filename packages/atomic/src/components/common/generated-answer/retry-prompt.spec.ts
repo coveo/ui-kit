@@ -55,9 +55,7 @@ describe('#renderRetryPrompt', () => {
     });
     const {messageElement} = locators(element);
 
-    expect(messageElement).toHaveTextContent(
-      'Network error. Please try again.'
-    );
+    expect(messageElement).toHaveTextContent('Network error. Please try again.');
   });
 
   it('should render with different button label', async () => {

@@ -13,10 +13,9 @@ import '@/src/components/search/atomic-search-box/atomic-search-box.js';
 import '@/src/components/search/atomic-search-interface/atomic-search-interface.js';
 import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-external',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-external', {
+  excludeCategories: ['methods'],
+});
 
 const searchApiHarness = new MockSearchApi();
 
@@ -53,11 +52,7 @@ const externalComponentDecorator = (story: () => unknown) => html`
           reflect-state-in-url="false"
         >
           <atomic-query-summary></atomic-query-summary>
-          <atomic-numeric-facet
-            field="ec_price"
-            label="Cost"
-            with-input="integer"
-          >
+          <atomic-numeric-facet field="ec_price" label="Cost" with-input="integer">
             <atomic-format-currency currency="USD"></atomic-format-currency>
           </atomic-numeric-facet>
           <atomic-search-box></atomic-search-box>

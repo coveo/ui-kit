@@ -19,8 +19,6 @@ export class ResultPrintableUriPageObject extends BasePageObject {
   }
 
   get separators() {
-    return this.page.locator(
-      'atomic-result-printable-uri .result-printable-uri-separator'
-    );
+    return this.page.locator('atomic-result-printable-uri .result-printable-uri-separator');
   }
 }

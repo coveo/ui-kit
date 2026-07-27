@@ -1,8 +1,5 @@
 import {ArrayValue, RecordValue, StringValue} from '@coveo/bueno';
-import {
-  requiredEmptyAllowedString,
-  requiredNonEmptyString,
-} from '../../utils/validate-payload.js';
+import {requiredEmptyAllowedString, requiredNonEmptyString} from '../../utils/validate-payload.js';
 import type {StaticFilterValueState} from './static-filter-set-state.js';
 
 export const staticFilterIdSchema = requiredNonEmptyString;

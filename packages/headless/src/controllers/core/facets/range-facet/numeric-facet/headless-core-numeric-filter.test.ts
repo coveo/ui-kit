@@ -26,9 +26,7 @@ import {
 } from './headless-core-numeric-filter.js';
 import {buildNumericRange} from './numeric-range.js';
 
-vi.mock(
-  '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions'
-);
+vi.mock('../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions');
 
 describe('numeric filter', () => {
   const facetId = '1';
@@ -44,9 +42,7 @@ describe('numeric filter', () => {
   }
 
   beforeEach(() => {
-    (updateNumericFacetValues as unknown as Mock).mockImplementation(
-      () => () => {}
-    );
+    (updateNumericFacetValues as unknown as Mock).mockImplementation(() => () => {});
     initialState = undefined;
 
     options = {
@@ -70,9 +66,7 @@ describe('numeric filter', () => {
     initNumericFilter();
     expect(validateManualNumericRanges).toHaveBeenCalledWith(
       expect.objectContaining({
-        currentValues: [
-          {end: 0, endInclusive: true, start: 10, state: 'selected'},
-        ],
+        currentValues: [{end: 0, endInclusive: true, start: 10, state: 'selected'}],
       })
     );
   });
@@ -91,10 +85,7 @@ describe('numeric filter', () => {
 
     initNumericFilter();
 
-    expect(FacetIdDeterminor.determineFacetId).toHaveBeenCalledWith(
-      engine,
-      options
-    );
+    expect(FacetIdDeterminor.determineFacetId).toHaveBeenCalledWith(engine, options);
   });
 
   it('registers a numeric facet with the passed options', () => {
@@ -112,9 +103,7 @@ describe('numeric filter', () => {
 
   it('when an option is invalid, it throws an error', () => {
     options.field = 0 as unknown as string;
-    expect(() => initNumericFilter()).toThrow(
-      'Check the options of buildNumericFacet'
-    );
+    expect(() => initNumericFilter()).toThrow('Check the options of buildNumericFacet');
   });
 
   describe('#setRange', () => {
@@ -124,9 +113,7 @@ describe('numeric filter', () => {
 
       expect(updateNumericFacetValues).toHaveBeenCalledWith({
         facetId,
-        values: [
-          {...value, state: 'selected', numberOfResults: 0, endInclusive: true},
-        ],
+        values: [{...value, state: 'selected', numberOfResults: 0, endInclusive: true}],
       });
     });
 
@@ -137,13 +124,11 @@ describe('numeric filter', () => {
 
     it('should return false when range start value is greater than range end value', () => {
       const value = buildMockNumericFacetValue({start: 10, end: 5});
-      (updateNumericFacetValues as unknown as Mock).mockImplementationOnce(
-        () => {
-          return {
-            error: 'oh no',
-          };
-        }
-      );
+      (updateNumericFacetValues as unknown as Mock).mockImplementationOnce(() => {
+        return {
+          error: 'oh no',
+        };
+      });
 
       expect(numericFacet.setRange(value)).toBe(false);
     });
@@ -162,18 +147,14 @@ describe('numeric filter', () => {
 
   it('the state #range property should return the range if it is selected', () => {
     const value = buildMockNumericFacetValue({state: 'selected'});
-    state.search.response.facets = [
-      buildMockNumericFacetResponse({facetId, values: [value]}),
-    ];
+    state.search.response.facets = [buildMockNumericFacetResponse({facetId, values: [value]})];
 
     expect(numericFacet.state.range).toEqual(value);
   });
 
   it('the state #range property should not return the range if it is not selected', () => {
     const value = buildMockNumericFacetValue({state: 'idle'});
-    state.search.response.facets = [
-      buildMockNumericFacetResponse({facetId, values: [value]}),
-    ];
+    state.search.response.facets = [buildMockNumericFacetResponse({facetId, values: [value]})];
 
     expect(numericFacet.state.range).toBeUndefined();
   });

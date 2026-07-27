@@ -160,10 +160,7 @@ export interface NumericFacetState {
  * @group Controllers
  * @category NumericFacet
  */
-export function buildCoreNumericFacet(
-  engine: CoreEngine,
-  props: NumericFacetProps
-): NumericFacet {
+export function buildCoreNumericFacet(engine: CoreEngine, props: NumericFacetProps): NumericFacet {
   if (!loadNumericFacetReducers(engine)) {
     throw loadReducerError;
   }
@@ -187,10 +184,7 @@ export function buildCoreNumericFacet(
 
   dispatch(registerNumericFacet(options));
 
-  const rangeFacet = buildCoreRangeFacet<
-    NumericFacetRequest,
-    NumericFacetResponse
-  >(engine, {
+  const rangeFacet = buildCoreRangeFacet<NumericFacetRequest, NumericFacetResponse>(engine, {
     facetId,
     getRequest: () => engine.state.numericFacetSet[facetId]!.request,
   });
@@ -217,10 +211,7 @@ export function buildCoreNumericFacet(
 function loadNumericFacetReducers(
   engine: CoreEngine
 ): engine is CoreEngine<
-  NumericFacetSection &
-    FacetOptionsSection &
-    ConfigurationSection &
-    SearchSection
+  NumericFacetSection & FacetOptionsSection & ConfigurationSection & SearchSection
 > {
   engine.addReducers({numericFacetSet, facetOptions, configuration, search});
   return true;

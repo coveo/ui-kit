@@ -22,8 +22,7 @@ export type CategoryFacetSearchProps = Omit<
   options: FacetSearchOptions & {type: FacetSearchType};
 };
 
-export type CategoryFacetSearchState =
-  CoreFacetSearchState<CategoryFacetSearchResult>;
+export type CategoryFacetSearchState = CoreFacetSearchState<CategoryFacetSearchResult>;
 
 export type CategoryFacetSearch = Omit<
   ReturnType<typeof buildCoreCategoryFacetSearch>,

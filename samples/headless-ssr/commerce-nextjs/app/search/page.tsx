@@ -15,11 +15,7 @@ import {searchEngineDefinition} from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {defaultContext} from '@/utils/context';
 
-export default async function Search({
-  searchParams,
-}: {
-  searchParams: Promise<URLSearchParams>;
-}) {
+export default async function Search({searchParams}: {searchParams: Promise<URLSearchParams>}) {
   // Set the navigator context provider before fetching the app static state.
   const navigatorContext = new NextJsNavigatorContext(await headers());
   searchEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
@@ -47,10 +43,7 @@ export default async function Search({
   });
 
   return (
-    <SearchProvider
-      staticState={staticState}
-      navigatorContext={navigatorContext.marshal}
-    >
+    <SearchProvider staticState={staticState} navigatorContext={navigatorContext.marshal}>
       <ParameterManager url={navigatorContext.location} />
       <SearchBox />
       <DidYouMean />

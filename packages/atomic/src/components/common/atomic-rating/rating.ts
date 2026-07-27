@@ -24,9 +24,7 @@ export type {RatingProps};
  * @cssprop --atomic-rating-icon-inactive-color - Color of the icon when inactive.
  */
 export const renderRating: FunctionalComponent<RatingProps> = ({props}) => {
-  const width =
-    ((props.numberOfActiveIcons / props.numberOfTotalIcons) * 100).toString() +
-    '%';
+  const width = ((props.numberOfActiveIcons / props.numberOfTotalIcons) * 100).toString() + '%';
   const iconSize = `${props.iconSize ?? 0.75}rem`;
 
   const renderIcon = (active: boolean) => {
@@ -74,10 +72,7 @@ export const renderRating: FunctionalComponent<RatingProps> = ({props}) => {
     })}
   >
     <div class="z-0 flex gap-0.5">${emptyIconDisplay()}</div>
-    <div
-      class="absolute top-0 left-0 z-1 flex gap-0.5 overflow-hidden"
-      style=${styleMap({width})}
-    >
+    <div class="absolute top-0 left-0 z-1 flex gap-0.5 overflow-hidden" style=${styleMap({width})}>
       ${filledIconDisplay()}
     </div>
   </div>`;

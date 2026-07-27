@@ -2,10 +2,7 @@ import {isString} from '@coveo/bueno';
 import type {Result} from '../../api/search/search/result.js';
 import type {AttachedResult} from './attached-results-state.js';
 
-const ensureStringOrUndefined = (
-  result: Result,
-  key: string
-): string | undefined =>
+const ensureStringOrUndefined = (result: Result, key: string): string | undefined =>
   isString(result.raw[key]) ? String(result.raw[key]) : undefined;
 
 /**
@@ -21,10 +18,7 @@ export const buildAttachedResultFromSearchResult = (
   return {
     articleLanguage: ensureStringOrUndefined(result, 'sflanguage'),
     articleVersionNumber: ensureStringOrUndefined(result, 'sflanguage'),
-    articlePublishStatus: ensureStringOrUndefined(
-      result,
-      'articlePublishStatus'
-    ),
+    articlePublishStatus: ensureStringOrUndefined(result, 'articlePublishStatus'),
     caseId: caseId,
     knowledgeArticleId: ensureStringOrUndefined(result, 'knowledgeArticleId'),
     permanentId: result.raw?.permanentid,

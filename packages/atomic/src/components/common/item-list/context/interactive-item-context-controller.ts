@@ -26,18 +26,13 @@ export class InteractiveItemContextController<T> implements ReactiveController {
   }
 
   private _resolveInteractiveItemContext(): void {
-    const event = buildCustomEvent(
-      interactiveItemContextEventName,
-      (item: T) => {
-        this._interactiveItem = item;
-        this.host.requestUpdate();
-      }
-    );
+    const event = buildCustomEvent(interactiveItemContextEventName, (item: T) => {
+      this._interactiveItem = item;
+      this.host.requestUpdate();
+    });
 
     this.host.dispatchEvent(event);
   }
 }
 
-export type InteractiveItemContextEvent<T> = CustomEvent<
-  (interactiveItem: T) => void
->;
+export type InteractiveItemContextEvent<T> = CustomEvent<(interactiveItem: T) => void>;

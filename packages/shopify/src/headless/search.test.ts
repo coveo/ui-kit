@@ -1,7 +1,4 @@
-import {
-  buildSearchEngine,
-  getSampleSearchEngineConfiguration,
-} from '@coveo/headless';
+import {buildSearchEngine, getSampleSearchEngineConfiguration} from '@coveo/headless';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {
   type AppProxyOptions,

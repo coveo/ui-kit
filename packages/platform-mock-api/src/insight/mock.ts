@@ -15,9 +15,7 @@ export class MockInsightApi implements MockApi {
   readonly interfaceConfigEndpoint;
 
   constructor(basePath: string = 'https://:orgId.org.coveo.com') {
-    this.searchEndpoint = new EndpointHarness<
-      InsightResponse | APIErrorWithStatusCode
-    >(
+    this.searchEndpoint = new EndpointHarness<InsightResponse | APIErrorWithStatusCode>(
       'POST',
       `${basePath}/rest/organizations/:orgId/insight/v1/configs/:insightId/search`,
       baseSearchResponse

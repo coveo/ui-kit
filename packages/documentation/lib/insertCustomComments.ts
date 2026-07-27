@@ -18,11 +18,7 @@ const comments = [
 ];
 
 // NOTE: cannot be converted into an arrow function `this`
-export function insertCustomComments(
-  this: undefined,
-  _ctx: Context,
-  refl: DeclarationReflection
-) {
+export function insertCustomComments(this: undefined, _ctx: Context, refl: DeclarationReflection) {
   for (const path of comments) {
     if (refl.sources && path.pattern.test(refl.sources[0].fileName)) {
       refl.comment = refl.comment || new Comment();

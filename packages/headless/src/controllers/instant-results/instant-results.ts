@@ -14,14 +14,8 @@ import type {InstantResultSection} from '../../state/state-sections.js';
 import {loadReducerError} from '../../utils/errors.js';
 import {randomID} from '../../utils/utils.js';
 import {validateOptions} from '../../utils/validate-payload.js';
-import {
-  buildController,
-  type Controller,
-} from '../controller/headless-controller.js';
-import {
-  type InstantResultOptions,
-  instantResultsOptionsSchema,
-} from './instant-results-options.js';
+import {buildController, type Controller} from '../controller/headless-controller.js';
+import {type InstantResultOptions, instantResultsOptionsSchema} from './instant-results-options.js';
 
 export type {InstantResultOptions} from './instant-results-options.js';
 
@@ -107,12 +101,7 @@ export function buildInstantResults(
     maxResultsPerQuery: props.options.maxResultsPerQuery,
   };
 
-  validateOptions(
-    engine,
-    instantResultsOptionsSchema,
-    options,
-    'buildInstantResults'
-  );
+  validateOptions(engine, instantResultsOptionsSchema, options, 'buildInstantResults');
 
   const searchBoxId = options.searchBoxId;
   dispatch(registerInstantResults({id: searchBoxId}));
@@ -140,10 +129,7 @@ export function buildInstantResults(
         return;
       }
       const cached = getCached(q);
-      if (
-        !cached ||
-        (!cached.isLoading && (cached.error || hasExpired(cached)))
-      ) {
+      if (!cached || (!cached.isLoading && (cached.error || hasExpired(cached)))) {
         dispatch(
           fetchInstantResults({
             id: searchBoxId,

@@ -35,10 +35,7 @@ describe('atomic-format-number', () => {
   };
 
   it('should dispatch atomic/numberFormat event on connectedCallback', async () => {
-    const dispatchEventSpy = vi.spyOn(
-      AtomicFormatNumber.prototype,
-      'dispatchEvent'
-    );
+    const dispatchEventSpy = vi.spyOn(AtomicFormatNumber.prototype, 'dispatchEvent');
 
     await renderAtomicFormatNumber();
 
@@ -51,16 +48,12 @@ describe('atomic-format-number', () => {
 
   it('should render nothing when there is no error', async () => {
     const {element} = await renderAtomicFormatNumber();
-    const errorComponent = element.shadowRoot?.querySelector(
-      'atomic-component-error'
-    );
+    const errorComponent = element.shadowRoot?.querySelector('atomic-component-error');
     expect(errorComponent).toBeNull();
   });
 
   it('should format number with minimum fraction digits', async () => {
-    let capturedFormatter:
-      | ((value: number, languages: string[]) => string)
-      | undefined;
+    let capturedFormatter: ((value: number, languages: string[]) => string) | undefined;
 
     const container = document.createElement('div');
     container.addEventListener('atomic/numberFormat', (e) => {
@@ -69,9 +62,7 @@ describe('atomic-format-number', () => {
     });
 
     await fixture<AtomicFormatNumber>(
-      html`<atomic-format-number
-        .minimumFractionDigits=${2}
-      ></atomic-format-number>`,
+      html`<atomic-format-number .minimumFractionDigits=${2}></atomic-format-number>`,
       container
     );
 
@@ -83,9 +74,7 @@ describe('atomic-format-number', () => {
   });
 
   it('should format number with maximum fraction digits', async () => {
-    let capturedFormatter:
-      | ((value: number, languages: string[]) => string)
-      | undefined;
+    let capturedFormatter: ((value: number, languages: string[]) => string) | undefined;
 
     const container = document.createElement('div');
     container.addEventListener('atomic/numberFormat', (e) => {
@@ -94,9 +83,7 @@ describe('atomic-format-number', () => {
     });
 
     await fixture<AtomicFormatNumber>(
-      html`<atomic-format-number
-        .maximumFractionDigits=${1}
-      ></atomic-format-number>`,
+      html`<atomic-format-number .maximumFractionDigits=${1}></atomic-format-number>`,
       container
     );
 
@@ -108,9 +95,7 @@ describe('atomic-format-number', () => {
   });
 
   it('should format number with minimum integer digits', async () => {
-    let capturedFormatter:
-      | ((value: number, languages: string[]) => string)
-      | undefined;
+    let capturedFormatter: ((value: number, languages: string[]) => string) | undefined;
 
     const container = document.createElement('div');
     container.addEventListener('atomic/numberFormat', (e) => {
@@ -119,9 +104,7 @@ describe('atomic-format-number', () => {
     });
 
     await fixture<AtomicFormatNumber>(
-      html`<atomic-format-number
-        .minimumIntegerDigits=${4}
-      ></atomic-format-number>`,
+      html`<atomic-format-number .minimumIntegerDigits=${4}></atomic-format-number>`,
       container
     );
 
@@ -133,9 +116,7 @@ describe('atomic-format-number', () => {
   });
 
   it('should format number with minimum significant digits', async () => {
-    let capturedFormatter:
-      | ((value: number, languages: string[]) => string)
-      | undefined;
+    let capturedFormatter: ((value: number, languages: string[]) => string) | undefined;
 
     const container = document.createElement('div');
     container.addEventListener('atomic/numberFormat', (e) => {
@@ -144,9 +125,7 @@ describe('atomic-format-number', () => {
     });
 
     await fixture<AtomicFormatNumber>(
-      html`<atomic-format-number
-        .minimumSignificantDigits=${4}
-      ></atomic-format-number>`,
+      html`<atomic-format-number .minimumSignificantDigits=${4}></atomic-format-number>`,
       container
     );
 
@@ -158,9 +137,7 @@ describe('atomic-format-number', () => {
   });
 
   it('should format number with maximum significant digits', async () => {
-    let capturedFormatter:
-      | ((value: number, languages: string[]) => string)
-      | undefined;
+    let capturedFormatter: ((value: number, languages: string[]) => string) | undefined;
 
     const container = document.createElement('div');
     container.addEventListener('atomic/numberFormat', (e) => {
@@ -169,9 +146,7 @@ describe('atomic-format-number', () => {
     });
 
     await fixture<AtomicFormatNumber>(
-      html`<atomic-format-number
-        .maximumSignificantDigits=${2}
-      ></atomic-format-number>`,
+      html`<atomic-format-number .maximumSignificantDigits=${2}></atomic-format-number>`,
       container
     );
 
@@ -187,9 +162,7 @@ describe('atomic-format-number', () => {
       const {element} = await renderAtomicFormatNumber({}, false);
 
       await element.updateComplete;
-      const errorComponent = element.shadowRoot?.querySelector(
-        'atomic-component-error'
-      );
+      const errorComponent = element.shadowRoot?.querySelector('atomic-component-error');
       expect(errorComponent).toBeTruthy();
     });
   });

@@ -1,8 +1,5 @@
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
-import {
-  interfaceChange,
-  logInterfaceChange,
-} from '../../features/analytics/analytics-actions.js';
+import {interfaceChange, logInterfaceChange} from '../../features/analytics/analytics-actions.js';
 import {executeSearch} from '../../features/search/search-actions.js';
 import {
   buildCoreTab,

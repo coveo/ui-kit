@@ -11,10 +11,7 @@ import {
   maxPageSelector,
 } from '../../../features/pagination/pagination-selectors.js';
 import {paginationReducer as pagination} from '../../../features/pagination/pagination-slice.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../../test/mock-engine-v2.js';
 import {createMockState} from '../../../test/mock-state.js';
 import {
   buildCorePager,
@@ -69,15 +66,15 @@ describe('Pager', () => {
   });
 
   it('when initialState #isActive is an invalid value, it throws an error', () => {
-    expect(() =>
-      initPager({initialState: {page: '1' as unknown as number}})
-    ).toThrow('Check the initialState of buildPager');
+    expect(() => initPager({initialState: {page: '1' as unknown as number}})).toThrow(
+      'Check the initialState of buildPager'
+    );
   });
 
   it('when options #expression is an invalid value, it throws an error', () => {
-    expect(() =>
-      initPager({options: {numberOfPages: '1' as unknown as number}})
-    ).toThrow('Check the options of buildPager');
+    expect(() => initPager({options: {numberOfPages: '1' as unknown as number}})).toThrow(
+      'Check the options of buildPager'
+    );
   });
 
   it('#state calls #currentPagesSelector with a number of page of 5 by default', () => {
@@ -104,9 +101,7 @@ describe('Pager', () => {
     initPager({initialState: {page: 2}});
 
     expect(registerPage).toHaveBeenCalledWith(2);
-    expect(engine.dispatch).toHaveBeenCalledWith(
-      mockedRegisterPageAction.mock.results[0].value
-    );
+    expect(engine.dispatch).toHaveBeenCalledWith(mockedRegisterPageAction.mock.results[0].value);
   });
 
   it('#selectPage dispatches #updatePage with the passed page', () => {

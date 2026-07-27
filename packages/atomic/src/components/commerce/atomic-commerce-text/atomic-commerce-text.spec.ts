@@ -21,30 +21,27 @@ describe('atomic-commerce-text', () => {
     );
   });
 
-  const renderComponent = async (
-    options: {value?: string; count?: number} = {}
-  ) => {
-    const {element, atomicInterface} =
-      await renderInAtomicCommerceInterface<AtomicCommerceText>({
-        template: html`<atomic-commerce-text
-          .value=${options.value || ''}
-          .count=${options.count}
-        ></atomic-commerce-text>`,
-        selector: 'atomic-commerce-text',
-        bindings: (bindings) => {
-          bindings.interfaceElement.type = 'product-listing';
-          bindings.i18n = i18n;
-          bindings.store = {
-            ...bindings.store,
-            onChange: vi.fn(),
-            state: {
-              ...bindings.store?.state,
-              loadingFlags: [],
-            },
-          };
-          return bindings;
-        },
-      });
+  const renderComponent = async (options: {value?: string; count?: number} = {}) => {
+    const {element, atomicInterface} = await renderInAtomicCommerceInterface<AtomicCommerceText>({
+      template: html`<atomic-commerce-text
+        .value=${options.value || ''}
+        .count=${options.count}
+      ></atomic-commerce-text>`,
+      selector: 'atomic-commerce-text',
+      bindings: (bindings) => {
+        bindings.interfaceElement.type = 'product-listing';
+        bindings.i18n = i18n;
+        bindings.store = {
+          ...bindings.store,
+          onChange: vi.fn(),
+          state: {
+            ...bindings.store?.state,
+            loadingFlags: [],
+          },
+        };
+        return bindings;
+      },
+    });
 
     await atomicInterface.updateComplete;
     await element.updateComplete;
@@ -120,18 +117,14 @@ describe('atomic-commerce-text', () => {
     const element = await renderComponent();
 
     expect(element.error).toBeDefined();
-    expect(element.error.message).toBe(
-      'The "value" attribute must be defined.'
-    );
+    expect(element.error.message).toBe('The "value" attribute must be defined.');
   });
 
   it('should set error when value is empty string', async () => {
     const element = await renderComponent({value: ''});
 
     expect(element.error).toBeDefined();
-    expect(element.error.message).toBe(
-      'The "value" attribute must be defined.'
-    );
+    expect(element.error.message).toBe('The "value" attribute must be defined.');
   });
 
   describe('when error is present', () => {
@@ -139,9 +132,7 @@ describe('atomic-commerce-text', () => {
       const element = await renderComponent();
 
       expect(element.error).toBeDefined();
-      expect(element.error.message).toBe(
-        'The "value" attribute must be defined.'
-      );
+      expect(element.error.message).toBe('The "value" attribute must be defined.');
     });
   });
 
@@ -157,18 +148,15 @@ describe('atomic-commerce-text', () => {
 
   describe('when different interface types are used', () => {
     it('should work with search interface type', async () => {
-      const {element} =
-        await renderInAtomicCommerceInterface<AtomicCommerceText>({
-          template: html`<atomic-commerce-text
-            .value=${'test-key'}
-          ></atomic-commerce-text>`,
-          selector: 'atomic-commerce-text',
-          bindings: (bindings) => {
-            bindings.interfaceElement.type = 'search';
-            bindings.i18n = i18n;
-            return bindings;
-          },
-        });
+      const {element} = await renderInAtomicCommerceInterface<AtomicCommerceText>({
+        template: html`<atomic-commerce-text .value=${'test-key'}></atomic-commerce-text>`,
+        selector: 'atomic-commerce-text',
+        bindings: (bindings) => {
+          bindings.interfaceElement.type = 'search';
+          bindings.i18n = i18n;
+          return bindings;
+        },
+      });
 
       expect(element).toBeDefined();
       expect(element.value).toBe('test-key');

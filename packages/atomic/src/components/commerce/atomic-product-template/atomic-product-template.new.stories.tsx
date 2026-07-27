@@ -59,10 +59,9 @@ const TEMPLATE_EXAMPLE = `<template>
   </atomic-product-section-children>
 </template>`;
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-product-template',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-product-template', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-product-template',
@@ -104,23 +103,20 @@ const meta: Meta = {
 
 export default meta;
 
-const {
-  decorator: commerceInterfaceDecorator,
-  play: initializeCommerceInterface,
-} = wrapInCommerceInterface({
-  skipFirstRequest: false,
-  engineConfig: {
-    preprocessRequest: (request) => {
-      const parsed = JSON.parse(request.body as string);
-      parsed.perPage = 4;
-      request.body = JSON.stringify(parsed);
-      return request;
+const {decorator: commerceInterfaceDecorator, play: initializeCommerceInterface} =
+  wrapInCommerceInterface({
+    skipFirstRequest: false,
+    engineConfig: {
+      preprocessRequest: (request) => {
+        const parsed = JSON.parse(request.body as string);
+        parsed.perPage = 4;
+        request.body = JSON.stringify(parsed);
+        return request;
+      },
     },
-  },
-  includeCodeRoot: false,
-});
-const {decorator: commerceProductListDecorator} =
-  wrapInCommerceProductList('list');
+    includeCodeRoot: false,
+  });
+const {decorator: commerceProductListDecorator} = wrapInCommerceProductList('list');
 
 export const InAProductList: Story = {
   name: 'In a product list',
@@ -132,15 +128,11 @@ const {
   decorator: commerceRecommendationInterfaceDecorator,
   play: initializeCommerceRecommendationInterface,
 } = wrapInCommerceRecommendationInterface();
-const {decorator: commerceRecommendationListDecorator} =
-  wrapInCommerceRecommendationList();
+const {decorator: commerceRecommendationListDecorator} = wrapInCommerceRecommendationList();
 
 export const InARecommendationList: Story = {
   name: 'In a recommendation list',
-  decorators: [
-    commerceRecommendationListDecorator,
-    commerceRecommendationInterfaceDecorator,
-  ],
+  decorators: [commerceRecommendationListDecorator, commerceRecommendationInterfaceDecorator],
   play: initializeCommerceRecommendationInterface,
 };
 
@@ -149,10 +141,7 @@ const {decorator: commerceSearchBoxInstantsProductsDecorator} =
 
 export const InASearchBoxInstantProducts: Story = {
   name: 'In a search box instant products',
-  decorators: [
-    commerceSearchBoxInstantsProductsDecorator,
-    commerceInterfaceDecorator,
-  ],
+  decorators: [commerceSearchBoxInstantsProductsDecorator, commerceInterfaceDecorator],
   parameters: {
     ...searchBoxParameters,
   },

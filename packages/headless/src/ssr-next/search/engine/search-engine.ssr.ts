@@ -52,24 +52,14 @@ export function defineSearchEngine<
 >(
   options: SearchEngineDefinitionOptions<TControllerDefinitions>
 ): {
-  searchEngineDefinition: SearchEngineDefinition<
-    SSRSearchEngine,
-    TControllerDefinitions
-  >;
-  standaloneEngineDefinition: SearchEngineDefinition<
-    SSRSearchEngine,
-    TControllerDefinitions
-  >;
+  searchEngineDefinition: SearchEngineDefinition<SSRSearchEngine, TControllerDefinitions>;
+  standaloneEngineDefinition: SearchEngineDefinition<SSRSearchEngine, TControllerDefinitions>;
 } {
   const {controllers: controllerDefinitions, ...engineOptions} = options;
 
-  const tokenManager = createAccessTokenManager(
-    engineOptions.configuration.accessToken
-  );
+  const tokenManager = createAccessTokenManager(engineOptions.configuration.accessToken);
 
-  const onAccessTokenUpdate = (
-    updateCallback: (accessToken: string) => void
-  ) => {
+  const onAccessTokenUpdate = (updateCallback: (accessToken: string) => void) => {
     tokenManager.registerCallback(updateCallback);
   };
 
@@ -92,11 +82,10 @@ export function defineSearchEngine<
     definitionOptions
   );
 
-  const fetchStandaloneStaticState =
-    fetchStandaloneStaticStateFactory<TControllerDefinitions>(
-      augmentedControllerDefinition,
-      definitionOptions
-    );
+  const fetchStandaloneStaticState = fetchStandaloneStaticStateFactory<TControllerDefinitions>(
+    augmentedControllerDefinition,
+    definitionOptions
+  );
 
   const hydrateStaticState = hydratedStaticStateFactory<TControllerDefinitions>(
     augmentedControllerDefinition,

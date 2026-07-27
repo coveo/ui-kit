@@ -190,9 +190,7 @@ describe('buildFactory', () => {
 
     it('should never add middlewares', async () => {
       await build(mockBuildOptions as StandaloneBuildConfig);
-      expect(mockBuildCommerceEngine.mock.calls[0][0].middlewares).toHaveLength(
-        0
-      );
+      expect(mockBuildCommerceEngine.mock.calls[0][0].middlewares).toHaveLength(0);
     });
   });
 
@@ -211,9 +209,7 @@ describe('buildFactory', () => {
 
     it('should always add a single middleware', async () => {
       await build(mockBuildOptions as SearchBuildConfig);
-      expect(mockBuildCommerceEngine.mock.calls[0][0].middlewares).toHaveLength(
-        1
-      );
+      expect(mockBuildCommerceEngine.mock.calls[0][0].middlewares).toHaveLength(1);
     });
   });
 
@@ -261,13 +257,9 @@ describe('buildFactory', () => {
         },
         mockEngineOptions
       );
-      await factory(SolutionType.listing)(
-        mockBuildOptions as ListingBuildConfig
-      );
+      await factory(SolutionType.listing)(mockBuildOptions as ListingBuildConfig);
 
-      expect(mockBuildCommerceEngine.mock.calls[0][0].middlewares).toHaveLength(
-        1
-      );
+      expect(mockBuildCommerceEngine.mock.calls[0][0].middlewares).toHaveLength(1);
     });
   });
 
@@ -297,9 +289,7 @@ describe('buildFactory', () => {
     it('should build an SSRCommerceEngine with recommendation solution type', async () => {
       const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
       const build = factory(SolutionType.recommendation);
-      const result = await build(
-        mockBuildOptions as RecommendationBuildConfig<{}>
-      );
+      const result = await build(mockBuildOptions as RecommendationBuildConfig<{}>);
 
       expect(result.engine).toBeDefined();
       expect(result.controllers).toBeDefined();
@@ -310,9 +300,7 @@ describe('buildFactory', () => {
         ...mockBuildOptions,
         recommendations: [],
       } as RecommendationBuildConfig<{}>);
-      expect(mockBuildCommerceEngine.mock.calls[0][0].middlewares).toHaveLength(
-        0
-      );
+      expect(mockBuildCommerceEngine.mock.calls[0][0].middlewares).toHaveLength(0);
     });
 
     it('should add a middleware for each recommendation in the build props', async () => {
@@ -320,9 +308,7 @@ describe('buildFactory', () => {
         ...mockBuildOptions,
         recommendations: ['rec1', 'rec2'],
       } as RecommendationBuildConfig<{}>);
-      expect(mockBuildCommerceEngine.mock.calls[0][0].middlewares).toHaveLength(
-        2
-      );
+      expect(mockBuildCommerceEngine.mock.calls[0][0].middlewares).toHaveLength(2);
     });
   });
 });

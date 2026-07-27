@@ -14,9 +14,7 @@ const PAGE_SIZE_OPTIONS = [5, 10, 20, 50];
       >
         &larr; Previous
       </button>
-      <span class="indicator">
-        Page {{ page() + 1 }} of {{ totalPages() }}
-      </span>
+      <span class="indicator"> Page {{ page() + 1 }} of {{ totalPages() }} </span>
       <button
         class="nav-button"
         (click)="next.emit()"
@@ -32,9 +30,7 @@ const PAGE_SIZE_OPTIONS = [5, 10, 20, 50];
         aria-label="Results per page"
       >
         @for (size of pageSizeOptions; track size) {
-          <option [value]="size" [selected]="size === pageSize()">
-            {{ size }} per page
-          </option>
+          <option [value]="size" [selected]="size === pageSize()">{{ size }} per page</option>
         }
       </select>
     </div>

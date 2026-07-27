@@ -15,10 +15,7 @@ export const logDateFacetBreadcrumb = (
   makeInsightAnalyticsActionFactory(SearchPageEvents.breadcrumbFacet)(
     'analytics/dateFacet/breadcrumb',
     (client, state) => {
-      validatePayload(
-        payload,
-        rangeFacetSelectionPayloadDefinition(payload.selection)
-      );
+      validatePayload(payload, rangeFacetSelectionPayloadDefinition(payload.selection));
       const metadata = {
         ...getRangeFacetMetadata(state, payload),
         ...getCaseContextAnalyticsMetadata(state.insightCaseContext),

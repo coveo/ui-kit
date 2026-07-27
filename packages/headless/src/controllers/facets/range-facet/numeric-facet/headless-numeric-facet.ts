@@ -52,10 +52,7 @@ export {buildNumericRange};
  * @group Controllers
  * @category NumericFacet
  */
-export function buildNumericFacet(
-  engine: SearchEngine,
-  props: NumericFacetProps
-): NumericFacet {
+export function buildNumericFacet(engine: SearchEngine, props: NumericFacetProps): NumericFacet {
   if (!loadNumericFacetReducers(engine)) {
     throw loadReducerError;
   }
@@ -90,10 +87,7 @@ export function buildNumericFacet(
       coreController.toggleSelect(selection);
       dispatch(
         executeSearch({
-          legacy: getLegacyAnalyticsActionForToggleRangeFacetSelect(
-            getFacetId(),
-            selection
-          ),
+          legacy: getLegacyAnalyticsActionForToggleRangeFacetSelect(getFacetId(), selection),
           next: getAnalyticsActionForToggleFacetSelect(selection),
         })
       );
@@ -109,9 +103,7 @@ export function buildNumericFacet(
 
 function loadNumericFacetReducers(
   engine: SearchEngine
-): engine is SearchEngine<
-  NumericFacetSection & ConfigurationSection & SearchSection
-> {
+): engine is SearchEngine<NumericFacetSection & ConfigurationSection & SearchSection> {
   engine.addReducers({numericFacetSet, configuration, search});
   return true;
 }

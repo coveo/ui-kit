@@ -133,15 +133,9 @@ describe('result insight analytics actions', () => {
         );
 
         expect(mockLogDocumentOpen).toHaveBeenCalledTimes(1);
-        expect(mockLogDocumentOpen.mock.calls[0][0]).toStrictEqual(
-          expectedDocumentInfo
-        );
-        expect(mockLogDocumentOpen.mock.calls[0][1]).toStrictEqual(
-          expectedDocumentIdentifier
-        );
-        expect(mockLogDocumentOpen.mock.calls[0][2]).toStrictEqual(
-          expectedMetadata
-        );
+        expect(mockLogDocumentOpen.mock.calls[0][0]).toStrictEqual(expectedDocumentInfo);
+        expect(mockLogDocumentOpen.mock.calls[0][1]).toStrictEqual(expectedDocumentIdentifier);
+        expect(mockLogDocumentOpen.mock.calls[0][2]).toStrictEqual(expectedMetadata);
       });
     });
   });

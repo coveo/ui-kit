@@ -3,10 +3,7 @@ import {searchReducer as search} from '../../../features/search/search-slice.js'
 import type {SearchSection} from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import type {ErrorPayload} from '../../controller/error-payload.js';
-import {
-  buildController,
-  type Controller,
-} from '../../controller/headless-controller.js';
+import {buildController, type Controller} from '../../controller/headless-controller.js';
 
 /**
  * The `QueryError` controller allows to retrieve information about the current error returned by the search API, if any.
@@ -59,9 +56,7 @@ export function buildCoreQueryError(engine: CoreEngine): QueryError {
   };
 }
 
-function loadQueryErrorReducers(
-  engine: CoreEngine
-): engine is CoreEngine<SearchSection> {
+function loadQueryErrorReducers(engine: CoreEngine): engine is CoreEngine<SearchSection> {
   engine.addReducers({search});
   return true;
 }

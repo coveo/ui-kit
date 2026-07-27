@@ -53,16 +53,10 @@ describe('CommerceStore', () => {
     const searchStore = createCommerceStore('search');
     const productListingStore = createCommerceStore('product-listing');
 
-    vi.spyOn(Selectors.Search, 'responseIdSelector').mockReturnValue(
-      'search-id'
-    );
-    vi.spyOn(Selectors.ProductListing, 'responseIdSelector').mockReturnValue(
-      'product-listing-id'
-    );
+    vi.spyOn(Selectors.Search, 'responseIdSelector').mockReturnValue('search-id');
+    vi.spyOn(Selectors.ProductListing, 'responseIdSelector').mockReturnValue('product-listing-id');
 
     expect(searchStore.getUniqueIDFromEngine(mockEngine)).toBe('search-id');
-    expect(productListingStore.getUniqueIDFromEngine(mockEngine)).toBe(
-      'product-listing-id'
-    );
+    expect(productListingStore.getUniqueIDFromEngine(mockEngine)).toBe('product-listing-id');
   });
 });

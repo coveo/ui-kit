@@ -50,10 +50,7 @@ export class InsightGeneratedAnswerPageObject {
     const citationComponent = this.citationComponents.nth(index);
 
     return await citationComponent.evaluate((citationElement) => {
-      return (
-        (citationElement as AtomicCitationElement).citation?.fields?.filetype ??
-        null
-      );
+      return (citationElement as AtomicCitationElement).citation?.fields?.filetype ?? null;
     });
   }
 }

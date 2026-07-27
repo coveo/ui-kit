@@ -14,9 +14,7 @@ interface MinimizeButtonProps {
   wordsLength: number;
 }
 
-export const renderMinimizeButton: FunctionalComponent<MinimizeButtonProps> = ({
-  props,
-}) => {
+export const renderMinimizeButton: FunctionalComponent<MinimizeButtonProps> = ({props}) => {
   const className = props.minimized ? 'w-fit' : 'ml-auto w-fit';
 
   return renderIconButton({

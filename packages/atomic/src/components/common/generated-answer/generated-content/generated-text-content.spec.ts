@@ -1,10 +1,7 @@
 import {html} from 'lit';
 import {describe, expect, it} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
-import {
-  type GeneratedTextContentProps,
-  renderGeneratedTextContent,
-} from './generated-text-content';
+import {type GeneratedTextContentProps, renderGeneratedTextContent} from './generated-text-content';
 
 describe('#renderGeneratedTextContent', () => {
   const locators = (element: Element) => ({
@@ -13,9 +10,7 @@ describe('#renderGeneratedTextContent', () => {
     },
   });
 
-  const renderComponent = async (
-    props: Partial<GeneratedTextContentProps> = {}
-  ) => {
+  const renderComponent = async (props: Partial<GeneratedTextContentProps> = {}) => {
     return await renderFunctionFixture(
       html`${renderGeneratedTextContent({
         props: {

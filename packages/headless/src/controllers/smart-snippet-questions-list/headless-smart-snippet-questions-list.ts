@@ -117,20 +117,15 @@ export function buildSmartSnippetQuestionsList(
   engine: SearchEngine,
   props?: SmartSnippetQuestionsListProps
 ): SmartSnippetQuestionsList {
-  warnIfUsingNextAnalyticsModeForServiceFeature(
-    engine.state.configuration.analytics.analyticsMode
-  );
+  warnIfUsingNextAnalyticsModeForServiceFeature(engine.state.configuration.analytics.analyticsMode);
   const smartSnippetQuestionList = buildCoreSmartSnippetQuestionsList(
     engine,
     smartSnippetAnalyticsClient
   );
 
-  const interactiveInlineLinks = buildSmartSnippetInteractiveInlineLinks(
-    engine,
-    {
-      options: {selectionDelay: props?.options?.selectionDelay},
-    }
-  );
+  const interactiveInlineLinks = buildSmartSnippetInteractiveInlineLinks(engine, {
+    options: {selectionDelay: props?.options?.selectionDelay},
+  });
 
   const interactiveQuestions = buildSmartSnippetInteractiveQuestions(engine, {
     options: {selectionDelay: props?.options?.selectionDelay},

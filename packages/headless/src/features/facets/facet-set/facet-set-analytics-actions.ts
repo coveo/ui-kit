@@ -1,12 +1,6 @@
 import {Value} from '@coveo/bueno';
-import {
-  requiredNonEmptyString,
-  validatePayload,
-} from '../../../utils/validate-payload.js';
-import {
-  type LegacySearchAction,
-  makeAnalyticsAction,
-} from '../../analytics/analytics-utils.js';
+import {requiredNonEmptyString, validatePayload} from '../../../utils/validate-payload.js';
+import {type LegacySearchAction, makeAnalyticsAction} from '../../analytics/analytics-utils.js';
 import {SearchPageEvents} from '../../analytics/search-action-cause.js';
 import type {SearchAction} from '../../search/search-actions.js';
 import {facetIdDefinition} from '../generic/facet-actions-validation.js';
@@ -21,20 +15,14 @@ import type {FacetSortCriterion} from './interfaces/request.js';
 export const logFacetShowMore = (facetId: string): LegacySearchAction =>
   makeAnalyticsAction('analytics/facet/showMore', (client, state) => {
     validatePayload(facetId, facetIdDefinition);
-    const metadata = buildFacetBaseMetadata(
-      facetId,
-      getStateNeededForFacetMetadata(state)
-    );
+    const metadata = buildFacetBaseMetadata(facetId, getStateNeededForFacetMetadata(state));
     return client.makeFacetShowMore(metadata);
   });
 
 export const logFacetShowLess = (facetId: string): LegacySearchAction =>
   makeAnalyticsAction('analytics/facet/showLess', (client, state) => {
     validatePayload(facetId, facetIdDefinition);
-    const metadata = buildFacetBaseMetadata(
-      facetId,
-      getStateNeededForFacetMetadata(state)
-    );
+    const metadata = buildFacetBaseMetadata(facetId, getStateNeededForFacetMetadata(state));
 
     return client.makeFacetShowLess(metadata);
   });
@@ -96,9 +84,7 @@ export interface LogFacetSelectActionCreatorPayload {
 }
 
 //TODO: KIT-2859
-export const logFacetSelect = (
-  payload: LogFacetSelectActionCreatorPayload
-): LegacySearchAction =>
+export const logFacetSelect = (payload: LogFacetSelectActionCreatorPayload): LegacySearchAction =>
   makeAnalyticsAction('analytics/facet/select', (client, state) => {
     validatePayload(payload, {
       facetId: facetIdDefinition,
@@ -106,10 +92,7 @@ export const logFacetSelect = (
     });
 
     const stateForAnalytics = getStateNeededForFacetMetadata(state);
-    const metadata = buildFacetSelectionChangeMetadata(
-      payload,
-      stateForAnalytics
-    );
+    const metadata = buildFacetSelectionChangeMetadata(payload, stateForAnalytics);
 
     return client.makeFacetSelect(metadata);
   });
@@ -127,9 +110,7 @@ export interface LogFacetExcludeActionCreatorPayload {
 }
 
 //TODO: KIT-2859
-export const logFacetExclude = (
-  payload: LogFacetExcludeActionCreatorPayload
-): LegacySearchAction =>
+export const logFacetExclude = (payload: LogFacetExcludeActionCreatorPayload): LegacySearchAction =>
   makeAnalyticsAction('analytics/facet/exclude', (client, state) => {
     validatePayload(payload, {
       facetId: facetIdDefinition,
@@ -137,10 +118,7 @@ export const logFacetExclude = (
     });
 
     const stateForAnalytics = getStateNeededForFacetMetadata(state);
-    const metadata = buildFacetSelectionChangeMetadata(
-      payload,
-      stateForAnalytics
-    );
+    const metadata = buildFacetSelectionChangeMetadata(payload, stateForAnalytics);
 
     return client.makeFacetExclude(metadata);
   });
@@ -167,10 +145,7 @@ export const logFacetDeselect = (
       facetValue: requiredNonEmptyString,
     });
     const stateForAnalytics = getStateNeededForFacetMetadata(state);
-    const metadata = buildFacetSelectionChangeMetadata(
-      payload,
-      stateForAnalytics
-    );
+    const metadata = buildFacetSelectionChangeMetadata(payload, stateForAnalytics);
 
     return client.makeFacetDeselect(metadata);
   });
@@ -197,10 +172,7 @@ export const logFacetUnexclude = (
       facetValue: requiredNonEmptyString,
     });
     const stateForAnalytics = getStateNeededForFacetMetadata(state);
-    const metadata = buildFacetSelectionChangeMetadata(
-      payload,
-      stateForAnalytics
-    );
+    const metadata = buildFacetSelectionChangeMetadata(payload, stateForAnalytics);
 
     return client.makeFacetUnexclude(metadata);
   });

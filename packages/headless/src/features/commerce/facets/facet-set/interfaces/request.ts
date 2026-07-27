@@ -32,31 +32,19 @@ export interface CategoryFacetValueRequest extends BaseFacetValueRequest {
   value: string;
 }
 
-export type DateFacetRequest = BaseCommerceFacetRequest<
-  DateRangeRequest,
-  'dateRange'
-> &
+export type DateFacetRequest = BaseCommerceFacetRequest<DateRangeRequest, 'dateRange'> &
   FreezableFacetRequestProperties;
 
-export type NumericFacetRequest = BaseCommerceFacetRequest<
-  NumericRangeRequest,
-  'numericalRange'
-> &
+export type NumericFacetRequest = BaseCommerceFacetRequest<NumericRangeRequest, 'numericalRange'> &
   NumericFacetExtraProperties &
   FreezableFacetRequestProperties;
 
-export type RegularFacetRequest = BaseCommerceFacetRequest<
-  FacetValueRequest,
-  'regular'
-> &
+export type RegularFacetRequest = BaseCommerceFacetRequest<FacetValueRequest, 'regular'> &
   FreezableFacetRequestProperties;
 
 export type LocationFacetValueRequest = FacetValueRequest;
 
-export type LocationFacetRequest = BaseCommerceFacetRequest<
-  LocationFacetValueRequest,
-  'location'
->;
+export type LocationFacetRequest = BaseCommerceFacetRequest<LocationFacetValueRequest, 'location'>;
 
 type BaseCommerceFacetRequest<Value, Type extends FacetType> = Pick<
   FacetRequest,
@@ -76,12 +64,7 @@ export type AnyFacetValueRequest =
   | NumericRangeRequest
   | DateRangeRequest;
 
-export type AnyFacetRequest = BaseCommerceFacetRequest<
-  AnyFacetValueRequest,
-  FacetType
-> &
+export type AnyFacetRequest = BaseCommerceFacetRequest<AnyFacetValueRequest, FacetType> &
   Partial<
-    CategoryFacetDelimitingCharacter &
-      NumericFacetExtraProperties &
-      FreezableFacetRequestProperties
+    CategoryFacetDelimitingCharacter & NumericFacetExtraProperties & FreezableFacetRequestProperties
   >;

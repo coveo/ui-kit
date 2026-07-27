@@ -13,15 +13,7 @@ import {
 } from '@coveo/headless/insight';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
-import {
-  beforeEach,
-  describe,
-  expect,
-  it,
-  type Mock,
-  type MockInstance,
-  vi,
-} from 'vitest';
+import {beforeEach, describe, expect, it, type Mock, type MockInstance, vi} from 'vitest';
 import {page, userEvent} from 'vitest/browser';
 import {shouldDisplayInputForFacetRange} from '@/src/components/common/facets/facet-common';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
@@ -109,9 +101,7 @@ describe('atomic-insight-timeframe-facet', () => {
   beforeEach(() => {
     vi.mocked(shouldDisplayInputForFacetRange).mockReset();
     mockedRegisterFacet = vi.fn();
-    mockedDeselectAllDateFacetValues = vi
-      .fn()
-      .mockReturnValue({type: 'mock-deselect'});
+    mockedDeselectAllDateFacetValues = vi.fn().mockReturnValue({type: 'mock-deselect'});
     mockedDateFacet = createMockDateFacet();
     mockedDateFilter = {
       get state() {
@@ -149,52 +139,41 @@ describe('atomic-insight-timeframe-facet', () => {
     vi.mocked(buildDateFacet).mockReturnValue(mockedDateFacet);
     vi.mocked(buildDateFilter).mockReturnValue(mockedDateFilter);
     vi.mocked(buildSearchStatus).mockReturnValue(mockedSearchStatus);
-    vi.mocked(buildFacetConditionsManager).mockReturnValue(
-      buildFakeFacetConditionsManager({})
-    );
+    vi.mocked(buildFacetConditionsManager).mockReturnValue(buildFakeFacetConditionsManager({}));
     vi.mocked(loadDateFacetSetActions).mockReturnValue({
       deselectAllDateFacetValues: mockedDeselectAllDateFacetValues,
     } as unknown as ReturnType<typeof loadDateFacetSetActions>);
 
-    const {element} =
-      await renderInAtomicInsightInterface<AtomicInsightTimeframeFacet>({
-        template: html`<atomic-insight-timeframe-facet
-          field=${props?.field ?? 'date'}
-          label=${props?.label ?? 'Date'}
-          facet-id=${ifDefined(props?.facetId)}
-          sort-criteria=${ifDefined(props?.sortCriteria)}
-          injection-depth=${ifDefined(props?.injectionDepth)}
-          heading-level=${ifDefined(props?.headingLevel)}
-          .dependsOn=${props?.dependsOn || {}}
-          ?filter-facet-count=${props?.filterFacetCount}
-          ?is-collapsed=${props?.isCollapsed}
-          ?with-date-picker=${props?.withDatePicker}
-        >
-          <atomic-timeframe
-            period="past"
-            unit="month"
-            amount="1"
-          ></atomic-timeframe>
-          <atomic-timeframe
-            period="past"
-            unit="year"
-            amount="1"
-          ></atomic-timeframe>
-        </atomic-insight-timeframe-facet>`,
-        selector: 'atomic-insight-timeframe-facet',
-        bindings: (bindings) => ({
-          ...bindings,
-          store: {
-            ...bindings.store,
-            getUniqueIDFromEngine: vi.fn().mockReturnValue('123'),
-            registerFacet: mockedRegisterFacet,
-            state: {
-              ...bindings.store.state,
-              dateFacets: {},
-            },
+    const {element} = await renderInAtomicInsightInterface<AtomicInsightTimeframeFacet>({
+      template: html`<atomic-insight-timeframe-facet
+        field=${props?.field ?? 'date'}
+        label=${props?.label ?? 'Date'}
+        facet-id=${ifDefined(props?.facetId)}
+        sort-criteria=${ifDefined(props?.sortCriteria)}
+        injection-depth=${ifDefined(props?.injectionDepth)}
+        heading-level=${ifDefined(props?.headingLevel)}
+        .dependsOn=${props?.dependsOn || {}}
+        ?filter-facet-count=${props?.filterFacetCount}
+        ?is-collapsed=${props?.isCollapsed}
+        ?with-date-picker=${props?.withDatePicker}
+      >
+        <atomic-timeframe period="past" unit="month" amount="1"></atomic-timeframe>
+        <atomic-timeframe period="past" unit="year" amount="1"></atomic-timeframe>
+      </atomic-insight-timeframe-facet>`,
+      selector: 'atomic-insight-timeframe-facet',
+      bindings: (bindings) => ({
+        ...bindings,
+        store: {
+          ...bindings.store,
+          getUniqueIDFromEngine: vi.fn().mockReturnValue('123'),
+          registerFacet: mockedRegisterFacet,
+          state: {
+            ...bindings.store.state,
+            dateFacets: {},
           },
-        }),
-      });
+        },
+      }),
+    });
 
     const qs = <T extends HTMLElement>(selector: string) =>
       element.shadowRoot!.querySelector<T>(selector);
@@ -237,14 +216,10 @@ describe('atomic-insight-timeframe-facet', () => {
         return qs('atomic-facet-date-input')!;
       },
       get inputStart() {
-        return element.shadowRoot!.querySelector(
-          '[part~=input-start]'
-        )! as HTMLInputElement;
+        return element.shadowRoot!.querySelector('[part~=input-start]')! as HTMLInputElement;
       },
       get inputEnd() {
-        return element.shadowRoot!.querySelector(
-          '[part~=input-end]'
-        )! as HTMLInputElement;
+        return element.shadowRoot!.querySelector('[part~=input-end]')! as HTMLInputElement;
       },
       get inputApplyButton() {
         return element.shadowRoot!.querySelector(
@@ -334,10 +309,7 @@ describe('atomic-insight-timeframe-facet', () => {
             ),
             element
           );
-          expect(consoleWarnSpy).toHaveBeenCalledWith(
-            expect.stringContaining(prop),
-            element
-          );
+          expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining(prop), element);
         }
       );
     });
@@ -425,9 +397,7 @@ describe('atomic-insight-timeframe-facet', () => {
     it('should not render values when numberOfResults is 0 and state is idle', async () => {
       mockedDateFacet = createMockDateFacet({
         state: {
-          values: [
-            buildMockDateFacetValue({numberOfResults: 0, state: 'idle'}),
-          ],
+          values: [buildMockDateFacetValue({numberOfResults: 0, state: 'idle'})],
         },
       });
 
@@ -481,9 +451,7 @@ describe('atomic-insight-timeframe-facet', () => {
       mockedDateFacet = createMockDateFacet({
         deselectAll: mockDeselectAll,
         state: {
-          values: [
-            buildMockDateFacetValue({state: 'selected', numberOfResults: 5}),
-          ],
+          values: [buildMockDateFacetValue({state: 'selected', numberOfResults: 5})],
         },
       });
 
@@ -494,15 +462,10 @@ describe('atomic-insight-timeframe-facet', () => {
     });
 
     it('should call #focusAfterSearch when clear button is clicked', async () => {
-      const focusAfterSearchSpy = vi.spyOn(
-        FocusTargetController.prototype,
-        'focusAfterSearch'
-      );
+      const focusAfterSearchSpy = vi.spyOn(FocusTargetController.prototype, 'focusAfterSearch');
       mockedDateFacet = createMockDateFacet({
         state: {
-          values: [
-            buildMockDateFacetValue({state: 'selected', numberOfResults: 5}),
-          ],
+          values: [buildMockDateFacetValue({state: 'selected', numberOfResults: 5})],
         },
       });
 

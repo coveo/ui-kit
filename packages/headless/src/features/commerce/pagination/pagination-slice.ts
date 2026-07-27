@@ -38,110 +38,95 @@ import {
   getCommercePaginationInitialState,
 } from './pagination-state.js';
 
-export const paginationReducer = createReducer(
-  getCommercePaginationInitialState(),
-  (builder) => {
-    builder
-      .addCase(nextPage, (state, action) => {
-        const slice = getEffectiveSlice(state, action.payload?.slotId);
+export const paginationReducer = createReducer(getCommercePaginationInitialState(), (builder) => {
+  builder
+    .addCase(nextPage, (state, action) => {
+      const slice = getEffectiveSlice(state, action.payload?.slotId);
 
-        if (!slice) {
-          return;
-        }
+      if (!slice) {
+        return;
+      }
 
-        if (slice.page < slice.totalPages - 1) {
-          ++slice.page;
-        }
-      })
-      .addCase(previousPage, (state, action) => {
-        const slice = getEffectiveSlice(state, action.payload?.slotId);
+      if (slice.page < slice.totalPages - 1) {
+        ++slice.page;
+      }
+    })
+    .addCase(previousPage, (state, action) => {
+      const slice = getEffectiveSlice(state, action.payload?.slotId);
 
-        if (!slice) {
-          return;
-        }
+      if (!slice) {
+        return;
+      }
 
-        if (slice.page > 0) {
-          --slice.page;
-        }
-      })
-      .addCase(selectPage, (state, action) => {
-        const slice = getEffectiveSlice(state, action.payload.slotId);
+      if (slice.page > 0) {
+        --slice.page;
+      }
+    })
+    .addCase(selectPage, (state, action) => {
+      const slice = getEffectiveSlice(state, action.payload.slotId);
 
-        if (!slice) {
-          return;
-        }
+      if (!slice) {
+        return;
+      }
 
-        if (
-          action.payload.page >= 0 &&
-          action.payload.page < slice.totalPages
-        ) {
-          slice.page = action.payload.page;
-        }
-      })
-      .addCase(setPageSize, (state, action) => {
-        const slice = getEffectiveSlice(state, action.payload.slotId);
+      if (action.payload.page >= 0 && action.payload.page < slice.totalPages) {
+        slice.page = action.payload.page;
+      }
+    })
+    .addCase(setPageSize, (state, action) => {
+      const slice = getEffectiveSlice(state, action.payload.slotId);
 
-        if (!slice) {
-          return;
-        }
+      if (!slice) {
+        return;
+      }
 
-        slice.page = 0;
-        slice.perPage = action.payload.pageSize;
-      })
-      .addCase(fetchProductListing.fulfilled, (state, action) => {
-        state.principal = action.payload.response.pagination;
-      })
-      .addCase(executeSearch.fulfilled, (state, action) => {
-        state.principal = action.payload.response.pagination;
-      })
-      .addCase(fetchRecommendations.fulfilled, (state, action) => {
-        state.recommendations[action.meta.arg.slotId] =
-          action.payload.response.pagination;
-      })
-      .addCase(registerRecommendationsSlotPagination, (state, action) => {
-        const slotId = action.payload.slotId;
+      slice.page = 0;
+      slice.perPage = action.payload.pageSize;
+    })
+    .addCase(fetchProductListing.fulfilled, (state, action) => {
+      state.principal = action.payload.response.pagination;
+    })
+    .addCase(executeSearch.fulfilled, (state, action) => {
+      state.principal = action.payload.response.pagination;
+    })
+    .addCase(fetchRecommendations.fulfilled, (state, action) => {
+      state.recommendations[action.meta.arg.slotId] = action.payload.response.pagination;
+    })
+    .addCase(registerRecommendationsSlotPagination, (state, action) => {
+      const slotId = action.payload.slotId;
 
-        if (slotId in state.recommendations) {
-          return;
-        }
+      if (slotId in state.recommendations) {
+        return;
+      }
 
-        state.recommendations[slotId] = getCommercePaginationInitialSlice();
-      })
-      .addCase(clearAllCoreFacets, handlePaginationReset)
-      .addCase(deselectAllValuesInCoreFacet, handlePaginationReset)
-      .addCase(toggleSelectFacetValue, handlePaginationReset)
-      .addCase(toggleExcludeFacetValue, handlePaginationReset)
-      .addCase(toggleSelectLocationFacetValue, handlePaginationReset)
-      .addCase(toggleSelectNumericFacetValue, handlePaginationReset)
-      .addCase(toggleExcludeNumericFacetValue, handlePaginationReset)
-      .addCase(toggleSelectDateFacetValue, handlePaginationReset)
-      .addCase(toggleExcludeDateFacetValue, handlePaginationReset)
-      .addCase(toggleSelectCategoryFacetValue, handlePaginationReset)
-      .addCase(applySort, handlePaginationReset)
-      .addCase(setContext, handlePaginationReset)
-      .addCase(setView, handlePaginationReset)
-      .addCase(restoreSearchParameters, handleRestoreParameters)
-      .addCase(restoreProductListingParameters, handleRestoreParameters);
-  }
-);
+      state.recommendations[slotId] = getCommercePaginationInitialSlice();
+    })
+    .addCase(clearAllCoreFacets, handlePaginationReset)
+    .addCase(deselectAllValuesInCoreFacet, handlePaginationReset)
+    .addCase(toggleSelectFacetValue, handlePaginationReset)
+    .addCase(toggleExcludeFacetValue, handlePaginationReset)
+    .addCase(toggleSelectLocationFacetValue, handlePaginationReset)
+    .addCase(toggleSelectNumericFacetValue, handlePaginationReset)
+    .addCase(toggleExcludeNumericFacetValue, handlePaginationReset)
+    .addCase(toggleSelectDateFacetValue, handlePaginationReset)
+    .addCase(toggleExcludeDateFacetValue, handlePaginationReset)
+    .addCase(toggleSelectCategoryFacetValue, handlePaginationReset)
+    .addCase(applySort, handlePaginationReset)
+    .addCase(setContext, handlePaginationReset)
+    .addCase(setView, handlePaginationReset)
+    .addCase(restoreSearchParameters, handleRestoreParameters)
+    .addCase(restoreProductListingParameters, handleRestoreParameters);
+});
 
-function getEffectiveSlice(
-  state: CommercePaginationState,
-  solutionTypeId: string | undefined
-) {
-  return solutionTypeId
-    ? state.recommendations[solutionTypeId]
-    : state.principal;
+function getEffectiveSlice(state: CommercePaginationState, solutionTypeId: string | undefined) {
+  return solutionTypeId ? state.recommendations[solutionTypeId] : state.principal;
 }
 
 function handlePaginationReset(state: CommercePaginationState) {
   state.principal.page = getCommercePaginationInitialSlice().page;
 }
 
-function handleRestoreParameters(
-  state: CommercePaginationState,
-  action: {payload: Parameters}
-) {
+function handleRestoreParameters(state: CommercePaginationState, action: {payload: Parameters}) {
   if (action.payload.page) {
     state.principal.page = action.payload.page;
   } else {

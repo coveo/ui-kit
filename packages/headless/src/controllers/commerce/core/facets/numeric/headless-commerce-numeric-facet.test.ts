@@ -22,13 +22,9 @@ import {
   type NumericFacetOptions,
 } from './headless-commerce-numeric-facet.js';
 
-vi.mock(
-  '../../../../../features/commerce/facets/numeric-facet/numeric-facet-actions'
-);
+vi.mock('../../../../../features/commerce/facets/numeric-facet/numeric-facet-actions');
 
-vi.mock(
-  '../../../../../features/commerce/product-listing/product-listing-actions'
-);
+vi.mock('../../../../../features/commerce/product-listing/product-listing-actions');
 
 describe('NumericFacet', () => {
   const facetId: string = 'numeric_facet_id';
@@ -51,9 +47,7 @@ describe('NumericFacet', () => {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
       request: buildMockCommerceFacetRequest({facetId, type, ...config}),
     });
-    facetResponseSelector.mockReturnValue(
-      buildMockCommerceNumericFacetResponse({facetId})
-    );
+    facetResponseSelector.mockReturnValue(buildMockCommerceNumericFacetResponse({facetId}));
   }
 
   beforeEach(() => {

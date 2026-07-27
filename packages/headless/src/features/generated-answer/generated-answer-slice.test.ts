@@ -114,10 +114,7 @@ describe('generated answer slice', () => {
         updateCitations({citations: newCitations})
       );
 
-      expect(finalState.citations).toEqual([
-        ...existingCitations,
-        ...newCitations,
-      ]);
+      expect(finalState.citations).toEqual([...existingCitations, ...newCitations]);
     });
 
     it('Shows only citations that have different Uris', () => {
@@ -296,13 +293,20 @@ describe('generated answer slice', () => {
     expect(finalState.answerConfigurationId).toBe('some-id');
   });
 
+  it('should not reset the answerGenerationMode', () => {
+    const state = {
+      ...baseState,
+      answerGenerationMode: 'manual' as const,
+    };
+
+    const finalState = generatedAnswerReducer(state, resetAnswer());
+    expect(finalState.answerGenerationMode).toBe('manual');
+  });
+
   test.each(generatedContentFormat)(
     '#setAnswerContentFormat should set the "%i" content format in the state',
     (format: GeneratedContentFormat) => {
-      const finalState = generatedAnswerReducer(
-        baseState,
-        setAnswerContentFormat(format)
-      );
+      const finalState = generatedAnswerReducer(baseState, setAnswerContentFormat(format));
 
       expect(finalState).toEqual({
         ...getGeneratedAnswerInitialState(),
@@ -314,10 +318,7 @@ describe('generated answer slice', () => {
   test.each(generatedContentFormat)(
     '#setAnswerContentFormat should set the "%i" content format in the state',
     (format: GeneratedContentFormat) => {
-      const finalState = generatedAnswerReducer(
-        baseState,
-        setAnswerContentFormat(format)
-      );
+      const finalState = generatedAnswerReducer(baseState, setAnswerContentFormat(format));
 
       expect(finalState).toEqual({
         ...getGeneratedAnswerInitialState(),
@@ -337,10 +338,7 @@ describe('generated answer slice', () => {
   });
 
   it('#dislikeGeneratedAnswer should set the answer as disliked in the state', () => {
-    const finalState = generatedAnswerReducer(
-      baseState,
-      dislikeGeneratedAnswer()
-    );
+    const finalState = generatedAnswerReducer(baseState, dislikeGeneratedAnswer());
 
     expect(finalState).toEqual({
       ...getGeneratedAnswerInitialState(),
@@ -350,10 +348,7 @@ describe('generated answer slice', () => {
   });
 
   it('#openGeneratedAnswerFeedbackModal should set the feedbackModalOpen attribute in the state to true', () => {
-    const finalState = generatedAnswerReducer(
-      baseState,
-      openGeneratedAnswerFeedbackModal()
-    );
+    const finalState = generatedAnswerReducer(baseState, openGeneratedAnswerFeedbackModal());
 
     expect(finalState).toEqual({
       ...getGeneratedAnswerInitialState(),
@@ -374,10 +369,7 @@ describe('generated answer slice', () => {
   });
 
   it('#sendGeneratedAnswerFeedback should set feedbackSubmitted to true in the state', () => {
-    const finalState = generatedAnswerReducer(
-      baseState,
-      sendGeneratedAnswerFeedback()
-    );
+    const finalState = generatedAnswerReducer(baseState, sendGeneratedAnswerFeedback());
 
     expect(finalState).toEqual({
       ...getGeneratedAnswerInitialState(),
@@ -471,9 +463,7 @@ describe('generated answer slice', () => {
         registerFieldsToIncludeInCitations(exampleFieldsToIncludeInCitations)
       );
 
-      expect(finalState.fieldsToIncludeInCitations).toEqual(
-        exampleFieldsToIncludeInCitations
-      );
+      expect(finalState.fieldsToIncludeInCitations).toEqual(exampleFieldsToIncludeInCitations);
     });
   });
 
@@ -832,9 +822,7 @@ describe('generated answer slice', () => {
         toolCallArgs({toolCallId: 'tc-1', args: {q: 'test'}, type: 'search'})
       );
 
-      expect(
-        finalState.generationSteps[0].toolCalls![0].toolCallArgs
-      ).toBeUndefined();
+      expect(finalState.generationSteps[0].toolCalls![0].toolCallArgs).toBeUndefined();
     });
 
     it('should not modify state when toolCallId does not match', () => {
@@ -862,9 +850,7 @@ describe('generated answer slice', () => {
         toolCallArgs({toolCallId: 'tc-999', args: {q: 'test'}, type: 'search'})
       );
 
-      expect(
-        finalState.generationSteps[0].toolCalls![0].toolCallArgs
-      ).toBeUndefined();
+      expect(finalState.generationSteps[0].toolCalls![0].toolCallArgs).toBeUndefined();
     });
   });
 
@@ -895,9 +881,7 @@ describe('generated answer slice', () => {
       );
 
       expect(finalState.generationSteps[0].toolCalls![0].finishedAt).toBe(200);
-      expect(finalState.generationSteps[0].toolCalls![0].status).toBe(
-        'completed'
-      );
+      expect(finalState.generationSteps[0].toolCalls![0].status).toBe('completed');
     });
 
     it('should not modify state when no active step exists', () => {
@@ -926,12 +910,8 @@ describe('generated answer slice', () => {
         finishToolCall({toolCallId: 'tc-1', finishedAt: 200})
       );
 
-      expect(
-        finalState.generationSteps[0].toolCalls![0].finishedAt
-      ).toBeUndefined();
-      expect(finalState.generationSteps[0].toolCalls![0].status).toBe(
-        'completed'
-      );
+      expect(finalState.generationSteps[0].toolCalls![0].finishedAt).toBeUndefined();
+      expect(finalState.generationSteps[0].toolCalls![0].status).toBe('completed');
     });
 
     it('should not modify state when toolCallId does not match', () => {
@@ -959,9 +939,7 @@ describe('generated answer slice', () => {
         finishToolCall({toolCallId: 'tc-999', finishedAt: 200})
       );
 
-      expect(
-        finalState.generationSteps[0].toolCalls![0].finishedAt
-      ).toBeUndefined();
+      expect(finalState.generationSteps[0].toolCalls![0].finishedAt).toBeUndefined();
       expect(finalState.generationSteps[0].toolCalls![0].status).toBe('active');
     });
   });

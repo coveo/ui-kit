@@ -23,13 +23,9 @@ interface UserActionProps {
   bindings: InsightBindings;
 }
 
-export const renderUserAction: FunctionalComponent<UserActionProps> = ({
-  props,
-}) => {
+export const renderUserAction: FunctionalComponent<UserActionProps> = ({props}) => {
   const renderActionTimestamp = () => {
-    const {hours, minutes} = parseTimestampToDateDetails(
-      props.action.timestamp
-    );
+    const {hours, minutes} = parseTimestampToDateDetails(props.action.timestamp);
 
     const formattedHours = String(hours).padStart(2, '0');
     const formattedMinutes = String(minutes).padStart(2, '0');
@@ -52,9 +48,7 @@ export const renderUserAction: FunctionalComponent<UserActionProps> = ({
   const renderActionTitle = () => {
     switch (props.action.actionType) {
       case 'TICKET_CREATION':
-        return html`<div
-          class="ticket-creation-action__text text-xs font-semibold"
-        >
+        return html`<div class="ticket-creation-action__text text-xs font-semibold">
           ${props.bindings.i18n.t('ticket-created')}
         </div>`;
       case 'CUSTOM':
@@ -74,9 +68,7 @@ export const renderUserAction: FunctionalComponent<UserActionProps> = ({
           ${props.action.document?.title}
         </a>`;
       case 'CLICK':
-        return html`<div class="text-xs font-semibold">
-          ${props.action.document?.title}
-        </div>`;
+        return html`<div class="text-xs font-semibold">${props.action.document?.title}</div>`;
       default:
         return nothing;
     }

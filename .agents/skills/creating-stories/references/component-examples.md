@@ -15,8 +15,7 @@ import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-w
 
 const searchApiHarness = new MockSearchApi();
 const {decorator, play} = wrapInSearchInterface();
-const {events, args, argTypes, template} =
-  getStorybookHelpers('atomic-search-box');
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-search-box');
 
 const meta: Meta = {
   component: 'atomic-search-box',
@@ -112,11 +111,7 @@ const {decorator: resultTemplateDecorator} = wrapInResultTemplate(false);
 
 const meta: Meta = {
   // ... standard config
-  decorators: [
-    resultTemplateDecorator,
-    customResultListDecorator,
-    searchInterfaceDecorator,
-  ],
+  decorators: [resultTemplateDecorator, customResultListDecorator, searchInterfaceDecorator],
 };
 ```
 
@@ -187,8 +182,7 @@ searchApiHarness.querySuggestEndpoint.mock(() => ({
 ```typescript
 import {html} from 'lit';
 
-const widthDecorator = (story) =>
-  html`<div style="min-width: 600px;">${story()}</div>`;
+const widthDecorator = (story) => html`<div style="min-width: 600px;">${story()}</div>`;
 
 const meta: Meta = {
   decorators: [widthDecorator, decorator],

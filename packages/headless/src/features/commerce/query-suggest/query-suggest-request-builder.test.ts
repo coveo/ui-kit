@@ -42,9 +42,7 @@ describe('#buildQuerySuggestRequest', () => {
   };
   beforeEach(() => {
     vi.resetAllMocks();
-    vi.mocked(buildBaseCommerceAPIRequest).mockReturnValue(
-      mockBaseCommerceAPIRequest
-    );
+    vi.mocked(buildBaseCommerceAPIRequest).mockReturnValue(mockBaseCommerceAPIRequest);
     setState();
     setNavigatorContext();
   });
@@ -56,10 +54,7 @@ describe('#buildQuerySuggestRequest', () => {
       navigatorContext
     );
 
-    expect(buildBaseCommerceAPIRequest).toHaveBeenCalledWith(
-      state,
-      navigatorContext
-    );
+    expect(buildBaseCommerceAPIRequest).toHaveBeenCalledWith(state, navigatorContext);
     expect(restOfRequest).toEqual(mockBaseCommerceAPIRequest);
   });
 

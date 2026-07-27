@@ -12,10 +12,7 @@ import {
   updateProxyBaseUrl,
 } from './configuration-actions.js';
 
-export type {
-  UpdateAnalyticsConfigurationPayload,
-  UpdateBasicConfigurationPayload,
-};
+export type {UpdateAnalyticsConfigurationPayload, UpdateBasicConfigurationPayload};
 
 /**
  * The configuration action creators.
@@ -64,9 +61,7 @@ export interface ConfigurationActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  updateProxyBaseUrl(
-    payload: UpdateProxyBaseUrlPayload
-  ): PayloadAction<UpdateProxyBaseUrlPayload>;
+  updateProxyBaseUrl(payload: UpdateProxyBaseUrlPayload): PayloadAction<UpdateProxyBaseUrlPayload>;
 }
 
 /**
@@ -78,9 +73,7 @@ export interface ConfigurationActionCreators {
  * @group Actions
  * @category Configuration
  */
-export function loadConfigurationActions(
-  engine: CommerceEngine
-): ConfigurationActionCreators {
+export function loadConfigurationActions(engine: CommerceEngine): ConfigurationActionCreators {
   engine.addReducers({configuration});
   return {
     disableAnalytics,

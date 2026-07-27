@@ -20,10 +20,7 @@ export type {ResultList, ResultListOptions, ResultListProps, ResultListState};
  * @group Controllers
  * @category ResultList
  */
-export function buildResultList(
-  engine: SearchEngine,
-  props?: ResultListProps
-): ResultList {
+export function buildResultList(engine: SearchEngine, props?: ResultListProps): ResultList {
   return buildCoreResultList(engine, {
     ...props,
     fetchMoreResultsActionCreator: fetchMoreResults,

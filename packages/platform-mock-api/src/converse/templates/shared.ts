@@ -31,11 +31,11 @@ const buildConversationResponse = ({
   TurnComplete(),
 ];
 
-const buildRoutedResponse = ({
+const buildRoutedResponse = ({routedEvent}: {routedEvent: ConverseEvent}): ConverseEvent[] => [
+  TurnStarted(),
   routedEvent,
-}: {
-  routedEvent: ConverseEvent;
-}): ConverseEvent[] => [TurnStarted(), routedEvent, TurnComplete()];
+  TurnComplete(),
+];
 
 /**
  * @deprecated Use `buildRoutedResponse` instead.
@@ -61,8 +61,4 @@ const buildActivityOnlyResponse = ({
     includeFinalStateSnapshot,
   });
 
-export {
-  buildActivityOnlyResponse,
-  buildConversationResponse,
-  buildRoutedResponse,
-};
+export {buildActivityOnlyResponse, buildConversationResponse, buildRoutedResponse};

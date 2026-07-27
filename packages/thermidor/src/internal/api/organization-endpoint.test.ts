@@ -4,9 +4,7 @@ import {getOrganizationEndpoint} from './organization-endpoint.js';
 describe('organization-endpoint', () => {
   describe('getOrganizationEndpoint()', () => {
     it('resolves default platform production endpoint', () => {
-      expect(getOrganizationEndpoint('my-org')).toBe(
-        'https://my-org.org.coveo.com'
-      );
+      expect(getOrganizationEndpoint('my-org')).toBe('https://my-org.org.coveo.com');
     });
 
     it('resolves non-production environment endpoint', () => {
@@ -16,9 +14,9 @@ describe('organization-endpoint', () => {
     });
 
     it('resolves non-platform endpoint types', () => {
-      expect(
-        getOrganizationEndpoint('my-org', {endpointType: 'analytics'})
-      ).toBe('https://my-org.analytics.org.coveo.com');
+      expect(getOrganizationEndpoint('my-org', {endpointType: 'analytics'})).toBe(
+        'https://my-org.analytics.org.coveo.com'
+      );
       expect(getOrganizationEndpoint('my-org', {endpointType: 'admin'})).toBe(
         'https://my-org.admin.org.coveo.com'
       );

@@ -12,16 +12,10 @@ import {
   updateSortCriterion,
 } from '../../../features/sort-criteria/sort-criteria-actions.js';
 import {sortCriteriaReducer as sortCriteria} from '../../../features/sort-criteria/sort-criteria-slice.js';
-import type {
-  ConfigurationSection,
-  SortSection,
-} from '../../../state/state-sections.js';
+import type {ConfigurationSection, SortSection} from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {validateInitialState} from '../../../utils/validate-payload.js';
-import {
-  buildController,
-  type Controller,
-} from '../../controller/headless-controller.js';
+import {buildController, type Controller} from '../../controller/headless-controller.js';
 
 export interface SortProps {
   /**

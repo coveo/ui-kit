@@ -19,27 +19,25 @@ vi.mock('../hooks/use-build-controller.js', () => ({
   ],
 }));
 
-vi.mock('./LandingPage.js', () => ({
+vi.mock('./LandingPage/LandingPage.js', () => ({
   LandingPage: (props: any) => (
     <div data-testid="landing-page">
-      <button
-        data-testid="submit-btn"
-        onClick={() => props.onSubmit('hello')}
-      />
+      <button data-testid="submit-btn" onClick={() => props.onSubmit('hello')} />
       <span data-testid="streaming">{String(props.isStreaming)}</span>
     </div>
   ),
 }));
 
-vi.mock('./SearchResultsPage.js', () => ({
+vi.mock('./SearchResultsPage/SearchResultsPage.js', () => ({
   SearchResultsPage: (props: any) => (
     <div data-testid="search-results-page">
       <span data-testid="use-case">{props.routedInterface?.useCase}</span>
+      <button data-testid="search-submit-btn" onClick={() => props.onSubmit('follow up')} />
     </div>
   ),
 }));
 
-vi.mock('./ConversationPage.js', () => ({
+vi.mock('./ConversationPage/index.js', () => ({
   ConversationPage: (props: any) => (
     <div data-testid="conversation-page">
       <button
@@ -83,9 +81,7 @@ describe('AppShell', () => {
     };
 
     mockConverseState = {
-      turns: [
-        makeTurn({id: 'turn-1', routedInterface: routedInterface as any}),
-      ],
+      turns: [makeTurn({id: 'turn-1', routedInterface: routedInterface as any})],
       activeTurn: undefined,
       isStreaming: false,
     };
@@ -95,7 +91,20 @@ describe('AppShell', () => {
     expect(screen.getByTestId('use-case').textContent).toBe('search');
   });
 
-  it('renders ConversationPage after a turn completes with agentResponse', () => {
+  it('renders ConversationPage after submitting and a turn completes with agentResponse', () => {
+    mockConverseState = {
+      turns: [],
+      activeTurn: undefined,
+      isStreaming: false,
+    };
+
+    const {rerender} = render(<AppShell />);
+    expect(screen.getByTestId('landing-page')).toBeDefined();
+
+    act(() => {
+      screen.getByTestId('submit-btn').click();
+    });
+
     mockConverseState = {
       turns: [
         makeTurn({
@@ -107,7 +116,7 @@ describe('AppShell', () => {
       isStreaming: false,
     };
 
-    render(<AppShell />);
+    rerender(<AppShell />);
     expect(screen.getByTestId('conversation-page')).toBeDefined();
   });
 
@@ -146,9 +155,7 @@ describe('AppShell', () => {
     };
 
     mockConverseState = {
-      turns: [
-        makeTurn({id: 'turn-1', routedInterface: routedInterface1 as any}),
-      ],
+      turns: [makeTurn({id: 'turn-1', routedInterface: routedInterface1 as any})],
       activeTurn: undefined,
       isStreaming: false,
     };
@@ -186,15 +193,17 @@ describe('AppShell', () => {
     };
 
     mockConverseState = {
-      turns: [
-        makeTurn({id: 'turn-1', routedInterface: routedInterface as any}),
-      ],
+      turns: [makeTurn({id: 'turn-1', routedInterface: routedInterface as any})],
       activeTurn: undefined,
       isStreaming: false,
     };
 
     const {rerender} = render(<AppShell />);
     expect(screen.getByTestId('search-results-page')).toBeDefined();
+
+    act(() => {
+      screen.getByTestId('search-submit-btn').click();
+    });
 
     mockConverseState = {
       turns: [
@@ -217,12 +226,24 @@ describe('AppShell', () => {
 
   it('"Back to search results" is disabled when no persisted interface exists', () => {
     mockConverseState = {
+      turns: [],
+      activeTurn: undefined,
+      isStreaming: false,
+    };
+
+    const {rerender} = render(<AppShell />);
+
+    act(() => {
+      screen.getByTestId('submit-btn').click();
+    });
+
+    mockConverseState = {
       turns: [makeTurn({id: 'turn-1', agentResponse: {text: 'Hello!'} as any})],
       activeTurn: undefined,
       isStreaming: false,
     };
 
-    render(<AppShell />);
+    rerender(<AppShell />);
     expect(screen.getByTestId('conversation-page')).toBeDefined();
 
     const backBtn = screen.getByTestId('back-btn');
@@ -237,15 +258,17 @@ describe('AppShell', () => {
     };
 
     mockConverseState = {
-      turns: [
-        makeTurn({id: 'turn-1', routedInterface: routedInterface as any}),
-      ],
+      turns: [makeTurn({id: 'turn-1', routedInterface: routedInterface as any})],
       activeTurn: undefined,
       isStreaming: false,
     };
 
     const {rerender} = render(<AppShell />);
     expect(screen.getByTestId('search-results-page')).toBeDefined();
+
+    act(() => {
+      screen.getByTestId('search-submit-btn').click();
+    });
 
     mockConverseState = {
       turns: [
@@ -276,15 +299,17 @@ describe('AppShell', () => {
     };
 
     mockConverseState = {
-      turns: [
-        makeTurn({id: 'turn-1', routedInterface: routedInterface as any}),
-      ],
+      turns: [makeTurn({id: 'turn-1', routedInterface: routedInterface as any})],
       activeTurn: undefined,
       isStreaming: false,
     };
 
     const {rerender} = render(<AppShell />);
     expect(screen.getByTestId('search-results-page')).toBeDefined();
+
+    act(() => {
+      screen.getByTestId('search-submit-btn').click();
+    });
 
     mockConverseState = {
       turns: [
@@ -303,6 +328,10 @@ describe('AppShell', () => {
     });
 
     expect(screen.getByTestId('landing-page')).toBeDefined();
+
+    act(() => {
+      screen.getByTestId('submit-btn').click();
+    });
 
     mockConverseState = {
       turns: [

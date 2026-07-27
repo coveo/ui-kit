@@ -46,11 +46,7 @@ const renderPreviousButton = (
   );
 };
 
-const renderNextButton = (
-  numberOfPages: number,
-  nextPage: () => void,
-  bindings: AnyBindings
-) => {
+const renderNextButton = (numberOfPages: number, nextPage: () => void, bindings: AnyBindings) => {
   if (numberOfPages <= 1) {
     return nothing;
   }
@@ -83,9 +79,7 @@ const renderIndicators = (numberOfPages: number, currentPage: number) => {
         return html`
           <li
             part=${`indicator${isActive ? ' active-indicator' : ''}`}
-            class=${`h-1 w-12 rounded-md ${
-              isActive ? 'bg-primary' : 'bg-neutral'
-            } `}
+            class=${`h-1 w-12 rounded-md ${isActive ? 'bg-primary' : 'bg-neutral'} `}
           ></li>
         `;
       })}
@@ -115,9 +109,7 @@ export const renderCarousel: FunctionalComponentWithChildren<CarouselProps> =
             ${renderPreviousButton(numberOfPages, previousPage, props.bindings)}
             ${renderNextButton(numberOfPages, nextPage, props.bindings)}
           </div>
-          <div class="carousel-items" aria-live="polite" aria-atomic="false">
-            ${children}
-          </div>
+          <div class="carousel-items" aria-live="polite" aria-atomic="false">${children}</div>
         </div>
         ${renderIndicators(numberOfPages, currentPage)}
       </div>

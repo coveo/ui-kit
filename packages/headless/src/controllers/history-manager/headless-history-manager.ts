@@ -12,15 +12,9 @@ import {
 import {history} from '../../features/history/history-slice.js';
 import type {HistoryState} from '../../features/history/history-state.js';
 import {executeSearch} from '../../features/search/search-actions.js';
-import type {
-  ConfigurationSection,
-  HistorySection,
-} from '../../state/state-sections.js';
+import type {ConfigurationSection, HistorySection} from '../../state/state-sections.js';
 import {loadReducerError} from '../../utils/errors.js';
-import {
-  buildController,
-  type Controller,
-} from '../controller/headless-controller.js';
+import {buildController, type Controller} from '../controller/headless-controller.js';
 
 /**
  * The `HistoryManager` controller is in charge of allowing navigating back and forward in the search interface history.

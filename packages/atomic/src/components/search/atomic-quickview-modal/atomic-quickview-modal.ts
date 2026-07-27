@@ -55,10 +55,7 @@ import type {HighlightKeywords} from './highlight-keywords';
 @customElement('atomic-quickview-modal')
 @bindings()
 @withTailwindStyles
-export class AtomicQuickviewModal
-  extends LitElement
-  implements InitializableComponent<Bindings>
-{
+export class AtomicQuickviewModal extends LitElement implements InitializableComponent<Bindings> {
   static styles: CSSResultGroup = css`
     @reference '../../../utils/tailwind.global.tw.css';
     @reference '../../../utils/tailwind-utilities/link-style.css';
@@ -199,10 +196,8 @@ export class AtomicQuickviewModal
           props: {
             href: this.result.clickUri,
             onSelect: () => this.interactiveResult?.select(),
-            onBeginDelayedSelect: () =>
-              this.interactiveResult?.beginDelayedSelect(),
-            onCancelPendingSelect: () =>
-              this.interactiveResult?.cancelPendingSelect(),
+            onBeginDelayedSelect: () => this.interactiveResult?.beginDelayedSelect(),
+            onCancelPendingSelect: () => this.interactiveResult?.cancelPendingSelect(),
             className: 'truncate',
             part: 'quickview-modal-header-title',
           },
@@ -224,10 +219,7 @@ export class AtomicQuickviewModal
   private renderBody() {
     return html`
       <div slot="body" class="grid h-full grid-cols-[min-content_auto]">
-        <div
-          class="h-full overflow-y-auto"
-          style="background-color: var(--atomic-neutral-light)"
-        >
+        <div class="h-full overflow-y-auto" style="background-color: var(--atomic-neutral-light)">
           ${renderQuickviewSidebar({
             props: {
               words: this.words,
@@ -246,9 +238,7 @@ export class AtomicQuickviewModal
         <div class="relative overflow-auto">
           ${renderQuickviewIframe({
             props: {
-              title:
-                this.result?.title ??
-                this.bindings.i18n.t('preview-modal-title'),
+              title: this.result?.title ?? this.bindings.i18n.t('preview-modal-title'),
               logger: this.logger,
               src: this.quickviewSrc,
               sandbox: this.sandbox,
@@ -256,19 +246,12 @@ export class AtomicQuickviewModal
               content: this.content,
               onSetIframeRef: async (ref: HTMLIFrameElement) => {
                 this.iframeRef = ref;
-                this.words = getWordsHighlights(
-                  this.termsToHighlight,
-                  this.iframeRef
-                );
+                this.words = getWordsHighlights(this.termsToHighlight, this.iframeRef);
                 this.handleHighlightsScripts();
               },
             },
           })}
-          ${buildQuickviewPreviewBar(
-            this.words,
-            this.highlightKeywords,
-            this.iframeRef
-          )}
+          ${buildQuickviewPreviewBar(this.words, this.highlightKeywords, this.iframeRef)}
         </div>
       </div>
     `;
@@ -385,8 +368,7 @@ export class AtomicQuickviewModal
   private get termsToHighlight() {
     const flatPhrasesToHighlight: TermsToHighlight = {};
 
-    const phrasesToHighlight =
-      this.bindings.engine.state.search.response.phrasesToHighlight;
+    const phrasesToHighlight = this.bindings.engine.state.search.response.phrasesToHighlight;
 
     Object.entries(phrasesToHighlight).forEach(([phrase, keywords]) => {
       flatPhrasesToHighlight[phrase] = Object.entries(keywords).flatMap(

@@ -3,16 +3,7 @@ import {Editor} from '@monaco-editor/react';
 import {useState} from 'react';
 import {EventDropdown} from './validator/event-dropdown';
 import {events} from './events';
-import {
-  Anchor,
-  Box,
-  Button,
-  Flex,
-  Grid,
-  List,
-  Space,
-  Title,
-} from '@mantine/core';
+import {Anchor, Box, Button, Flex, Grid, List, Space, Title} from '@mantine/core';
 import {relay} from '../relay';
 
 export default function Page() {
@@ -75,9 +66,7 @@ export default function Page() {
         </Box>
       </Grid.Col>
       <Grid.Col span={7}>
-        <Title order={2}>
-          How to validate event(s) with the Explorer chrome extension
-        </Title>
+        <Title order={2}>How to validate event(s) with the Explorer chrome extension</Title>
         <Space h="md" />
         <List type="ordered">
           <List.Item>
@@ -92,9 +81,7 @@ export default function Page() {
             </Anchor>
           </List.Item>
           <List.Item>Once installed, click on the icon to toggle on.</List.Item>
-          <List.Item>
-            Expand Explorer to see the validated events list.
-          </List.Item>
+          <List.Item>Expand Explorer to see the validated events list.</List.Item>
         </List>
       </Grid.Col>
     </Grid>

@@ -2,10 +2,7 @@ import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import Thumbs from '../../../images/thumbs.svg';
-import {
-  type FeedbackButtonProps,
-  renderFeedbackButton,
-} from './feedback-button';
+import {type FeedbackButtonProps, renderFeedbackButton} from './feedback-button';
 
 describe('#renderFeedbackButton', () => {
   const renderComponent = async (props: Partial<FeedbackButtonProps> = {}) => {

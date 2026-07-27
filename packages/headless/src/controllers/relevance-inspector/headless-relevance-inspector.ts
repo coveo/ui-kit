@@ -1,9 +1,6 @@
 import {BooleanValue, Schema} from '@coveo/bueno';
 import type {FieldDescription} from '../../api/search/fields/fields-response.js';
-import type {
-  ExecutionReport,
-  ExecutionStep,
-} from '../../api/search/search/execution-report.js';
+import type {ExecutionReport, ExecutionStep} from '../../api/search/search/execution-report.js';
 import type {QueryRankingExpression} from '../../api/search/search/query-ranking-expression.js';
 import type {Result} from '../../api/search/search/result.js';
 import type {SearchResponseSuccessWithDebugInfo} from '../../api/search/search/search-response.js';
@@ -34,10 +31,7 @@ import type {
 } from '../../state/state-sections.js';
 import {loadReducerError} from '../../utils/errors.js';
 import {validateInitialState} from '../../utils/validate-payload.js';
-import {
-  buildController,
-  type Controller,
-} from '../controller/headless-controller.js';
+import {buildController, type Controller} from '../controller/headless-controller.js';
 
 export type {
   DocumentWeights,
@@ -294,9 +288,7 @@ export function buildRelevanceInspector(
 
 function loadRelevanceInspectorReducers(
   engine: SearchEngine
-): engine is SearchEngine<
-  DebugSection & SearchSection & ConfigurationSection & FieldsSection
-> {
+): engine is SearchEngine<DebugSection & SearchSection & ConfigurationSection & FieldsSection> {
   engine.addReducers({
     debug,
     search,

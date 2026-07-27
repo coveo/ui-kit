@@ -172,9 +172,7 @@ export function renderPackagesSection(entries) {
  */
 export function replacePackagesSection(agentsMdContent, newSection) {
   const lines = agentsMdContent.split('\n');
-  const headingIndex = lines.findIndex((line) =>
-    line.startsWith('## Packages')
-  );
+  const headingIndex = lines.findIndex((line) => line.startsWith('## Packages'));
 
   if (headingIndex === -1) {
     throw new Error('Could not find "## Packages" heading in AGENTS.md');

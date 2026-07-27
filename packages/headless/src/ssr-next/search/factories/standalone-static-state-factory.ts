@@ -22,17 +22,11 @@ export function fetchStandaloneStaticStateFactory<
   options: SearchEngineDefinitionOptions<TControllerDefinitions>
 ): FetchStaticStateFunction<TControllerDefinitions> {
   return async (params: FetchStaticStateParameters<TControllerDefinitions>) => {
-    const {controllers} = await buildFactory(
-      controllerDefinitions,
-      options
-    )(params);
+    const {controllers} = await buildFactory(controllerDefinitions, options)(params);
 
     const searchActions: SearchCompletedAction[] = [];
 
-    const staticState = createStaticState<
-      SearchCompletedAction,
-      TControllerDefinitions
-    >({
+    const staticState = createStaticState<SearchCompletedAction, TControllerDefinitions>({
       searchActions,
       controllers,
     });

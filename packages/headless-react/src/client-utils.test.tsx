@@ -9,9 +9,7 @@ describe('useSyncMemoizedStore', () => {
     const subscribe = vi.fn(() => unsubscribe);
     const getSnapshot = vi.fn(() => snapshot);
 
-    const {result} = renderHook(() =>
-      useSyncMemoizedStore(subscribe, getSnapshot)
-    );
+    const {result} = renderHook(() => useSyncMemoizedStore(subscribe, getSnapshot));
 
     expect(result.current).toEqual(snapshot);
   });
@@ -22,9 +20,7 @@ describe('useSyncMemoizedStore', () => {
     const subscribe = vi.fn(() => unsubscribe);
     const getSnapshot = vi.fn(() => snapshot);
 
-    const {rerender} = renderHook(() =>
-      useSyncMemoizedStore(subscribe, getSnapshot)
-    );
+    const {rerender} = renderHook(() => useSyncMemoizedStore(subscribe, getSnapshot));
 
     expect(getSnapshot).toHaveBeenCalledTimes(1);
     rerender();
@@ -37,9 +33,7 @@ describe('useSyncMemoizedStore', () => {
     const subscribe = vi.fn(() => vi.fn());
     let getSnapshot = vi.fn(() => snapshot1);
 
-    const {result, rerender} = renderHook(() =>
-      useSyncMemoizedStore(subscribe, getSnapshot)
-    );
+    const {result, rerender} = renderHook(() => useSyncMemoizedStore(subscribe, getSnapshot));
 
     expect(result.current).toEqual(snapshot1);
     getSnapshot = vi.fn(() => snapshot2);
@@ -55,10 +49,9 @@ describe('useSyncMemoizedStore', () => {
     const subscribe2 = vi.fn(() => unsubscribe2);
     const getSnapshot = vi.fn(() => snapshot);
 
-    const {rerender} = renderHook(
-      ({subscribe}) => useSyncMemoizedStore(subscribe, getSnapshot),
-      {initialProps: {subscribe: subscribe1}}
-    );
+    const {rerender} = renderHook(({subscribe}) => useSyncMemoizedStore(subscribe, getSnapshot), {
+      initialProps: {subscribe: subscribe1},
+    });
 
     expect(subscribe1).toHaveBeenCalledTimes(1);
     expect(unsubscribe1).not.toHaveBeenCalled();

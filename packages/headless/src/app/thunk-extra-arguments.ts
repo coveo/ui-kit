@@ -2,10 +2,7 @@ import type {Relay} from '@coveo/relay';
 import type {AnalyticsClientSendEventHook} from 'coveo.analytics';
 import type {Logger} from 'pino';
 import type {GeneratedAnswerAPIClient} from '../api/generated-answer/generated-answer-client.js';
-import {
-  NoopPreprocessRequest,
-  type PreprocessRequest,
-} from '../api/preprocess-request.js';
+import {NoopPreprocessRequest, type PreprocessRequest} from '../api/preprocess-request.js';
 import {validatePayloadAndThrow} from '../utils/validate-payload.js';
 import type {EngineConfiguration} from './engine-configuration.js';
 import type {NavigatorContext} from './navigator-context-provider.js';

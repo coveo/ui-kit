@@ -44,26 +44,18 @@ export const renderKeywords: FunctionalComponent<KeywordsProps> = ({props}) => {
             keyword: keyword.text,
           });
 
-          const formattedOccurrences = new Intl.NumberFormat(
-            props.i18n.language,
-            {
-              notation: 'compact',
-            }
-          ).format(keyword.occurrences);
+          const formattedOccurrences = new Intl.NumberFormat(props.i18n.language, {
+            notation: 'compact',
+          }).format(keyword.occurrences);
 
           const toggleLabel = props.i18n.t('quickview-remove-word');
-          const ariaPressed = (!wordIsEnabled ? 'true' : 'false') as
-            | 'true'
-            | 'false';
+          const ariaPressed = (!wordIsEnabled ? 'true' : 'false') as 'true' | 'false';
           const tabIndex = props.highlightKeywords.highlightNone ? -1 : 0;
 
           return html`
             <div class="my-4 flex w-100 items-center justify-between gap-x-2">
               <div class=${multiClassMap(keywordContainerClasses)}>
-                <div
-                  class="flex grow items-center border-r p-4"
-                  aria-hidden="true"
-                >
+                <div class="flex grow items-center border-r p-4" aria-hidden="true">
                   <div
                     class="mr-2 h-5 w-5 flex-none"
                     style=${styleMap({backgroundColor: keyword.color})}

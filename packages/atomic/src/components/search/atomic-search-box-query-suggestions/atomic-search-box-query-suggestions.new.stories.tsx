@@ -15,9 +15,7 @@ import '@/src/components/search/atomic-search-box-query-suggestions/atomic-searc
 
 const searchApiHarness = new MockSearchApi();
 searchApiHarness.searchEndpoint.addRequestTransformer(searchFacetTransformer);
-searchApiHarness.facetSearchEndpoint.addRequestTransformer(
-  searchFacetSearchTransformer
-);
+searchApiHarness.facetSearchEndpoint.addRequestTransformer(searchFacetSearchTransformer);
 
 const {decorator, play} = wrapInSearchInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(
@@ -30,10 +28,7 @@ const meta: Meta = {
   title: 'Search/Search Box Query Suggestions',
   id: 'atomic-search-box-query-suggestions',
   render: (args) => template(args),
-  decorators: [
-    (story) => html`<atomic-search-box> ${story()} </atomic-search-box>`,
-    decorator,
-  ],
+  decorators: [(story) => html`<atomic-search-box> ${story()} </atomic-search-box>`, decorator],
   parameters: {
     ...parameters,
     msw: {handlers: [...searchApiHarness.handlers]},
@@ -60,8 +55,7 @@ export const A11yStatusMessage: Story = {
     await play(context);
     await testStatusMessageA11y(context, {
       triggerAction: async () => {
-        const searchBox =
-          await context.canvas.findByShadowPlaceholderText('Search');
+        const searchBox = await context.canvas.findByShadowPlaceholderText('Search');
         await userEvent.click(searchBox);
       },
       expectedText: '5 search suggestions are available.',

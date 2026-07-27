@@ -176,9 +176,7 @@ export const parseRankingInfo = (value: string) => {
     docWeightsRegexResult ? docWeightsRegexResult[1] : null
   );
   const termsWeight = parseTermsWeights(termsWeightRegexResult);
-  const totalWeight = totalWeightRegexResult
-    ? Number(totalWeightRegexResult[1])
-    : null;
+  const totalWeight = totalWeightRegexResult ? Number(totalWeightRegexResult[1]) : null;
 
   return {
     documentWeights,
@@ -188,9 +186,7 @@ export const parseRankingInfo = (value: string) => {
   };
 };
 
-const parseWeights = <T extends Record<string, number>>(
-  value: string | null
-): T | null => {
+const parseWeights = <T extends Record<string, number>>(value: string | null): T | null => {
   const REGEX_EXTRACT_LIST_OF_WEIGHTS = /(\w+(?:\s\w+)*): ([-0-9]+)/g;
   const REGEX_EXTRACT_WEIGHT_GROUP = /^(\w+(?:\s\w+)*): ([-0-9]+)$/;
 
@@ -231,11 +227,8 @@ const matchExec = (value: string, regex: RegExp) => {
   return results;
 };
 
-const parseTermsWeights = (
-  termsWeight: RegExpExecArray | null
-): TermWeightReport | null => {
-  const REGEX_EXTRACT_GROUP_OF_TERMS =
-    /((?:[^:]+: [0-9]+, [0-9]+; )+)\n((?:\w+: [0-9]+; )+)/g;
+const parseTermsWeights = (termsWeight: RegExpExecArray | null): TermWeightReport | null => {
+  const REGEX_EXTRACT_GROUP_OF_TERMS = /((?:[^:]+: [0-9]+, [0-9]+; )+)\n((?:\w+: [0-9]+; )+)/g;
   const REGEX_EXTRACT_SINGLE_TERM = /([^:]+): ([0-9]+), ([0-9]+); /g;
 
   if (!termsWeight || !termsWeight[1]) {
@@ -269,8 +262,7 @@ const parseTermsWeights = (
 };
 
 const parseQREWeights = (value: string): QueryRankingExpressionWeights[] => {
-  const REGEX_EXTRACT_QRE_WEIGHTS =
-    /(Expression:\s".*")\sScore:\s(?!0)([-0-9]+)\n+/g;
+  const REGEX_EXTRACT_QRE_WEIGHTS = /(Expression:\s".*")\sScore:\s(?!0)([-0-9]+)\n+/g;
 
   let qreWeightsRegexResult = REGEX_EXTRACT_QRE_WEIGHTS.exec(value);
 

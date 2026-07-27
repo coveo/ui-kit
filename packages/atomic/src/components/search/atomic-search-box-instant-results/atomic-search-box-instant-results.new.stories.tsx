@@ -74,8 +74,7 @@ export const Default: Story = {
       <atomic-result-template>
         <template>
           <style>
-            div.result-root.with-sections.display-list.image-icon
-              atomic-result-section-visual {
+            div.result-root.with-sections.display-list.image-icon atomic-result-section-visual {
               height: 60px;
             }
           </style>

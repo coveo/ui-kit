@@ -26,35 +26,30 @@ export async function testComboboxA11y(context: StoryContext): Promise<void> {
     const input = await root.findByShadowRole('textbox', {}, {timeout: 5000});
     const inputRoot = input.getRootNode() as Document | ShadowRoot;
 
-    await step(
-      'ArrowDown activates suggestion navigation (aria-activedescendant)',
-      async () => {
-        input.focus();
-        await userEvent.keyboard('test');
+    await step('ArrowDown activates suggestion navigation (aria-activedescendant)', async () => {
+      input.focus();
+      await userEvent.keyboard('test');
 
-        const popupId = input.getAttribute('aria-controls');
-        await waitFor(
-          () => {
-            const popup = inputRoot.getElementById(popupId!);
-            expect(popup).toBeTruthy();
-            expect(popup!.classList.contains('hidden')).toBe(false);
-          },
-          {timeout: 5000}
-        );
+      const popupId = input.getAttribute('aria-controls');
+      await waitFor(
+        () => {
+          const popup = inputRoot.getElementById(popupId!);
+          expect(popup).toBeTruthy();
+          expect(popup!.classList.contains('hidden')).toBe(false);
+        },
+        {timeout: 5000}
+      );
 
-        await userEvent.keyboard('{ArrowDown}');
+      await userEvent.keyboard('{ArrowDown}');
 
-        await waitFor(
-          () => {
-            const activeDescendant = input.getAttribute(
-              'aria-activedescendant'
-            );
-            expect(activeDescendant).toBeTruthy();
-          },
-          {timeout: 3000}
-        );
-      }
-    );
+      await waitFor(
+        () => {
+          const activeDescendant = input.getAttribute('aria-activedescendant');
+          expect(activeDescendant).toBeTruthy();
+        },
+        {timeout: 3000}
+      );
+    });
 
     await step('ArrowDown again advances active descendant', async () => {
       const first = input.getAttribute('aria-activedescendant');
@@ -85,48 +80,42 @@ export async function testComboboxA11y(context: StoryContext): Promise<void> {
       );
     });
 
-    await step(
-      'Escape dismisses popup and focus stays on input (2.1.1)',
-      async () => {
-        // Re-open popup (Enter closed it above)
-        await userEvent.keyboard('test');
+    await step('Escape dismisses popup and focus stays on input (2.1.1)', async () => {
+      // Re-open popup (Enter closed it above)
+      await userEvent.keyboard('test');
 
-        const popupId = input.getAttribute('aria-controls');
-        await waitFor(
-          () => {
-            const popup = inputRoot.getElementById(popupId!);
-            expect(popup).toBeTruthy();
-            expect(popup!.classList.contains('hidden')).toBe(false);
-          },
-          {timeout: 5000}
-        );
+      const popupId = input.getAttribute('aria-controls');
+      await waitFor(
+        () => {
+          const popup = inputRoot.getElementById(popupId!);
+          expect(popup).toBeTruthy();
+          expect(popup!.classList.contains('hidden')).toBe(false);
+        },
+        {timeout: 5000}
+      );
 
-        await userEvent.keyboard('{Escape}');
+      await userEvent.keyboard('{Escape}');
 
-        await waitFor(
-          () => {
-            const popup = inputRoot.getElementById(popupId!);
-            const isHidden = !popup || popup.classList.contains('hidden');
-            expect(isHidden, 'Popup should be hidden after Escape').toBe(true);
-          },
-          {timeout: 3000}
-        );
+      await waitFor(
+        () => {
+          const popup = inputRoot.getElementById(popupId!);
+          const isHidden = !popup || popup.classList.contains('hidden');
+          expect(isHidden, 'Popup should be hidden after Escape').toBe(true);
+        },
+        {timeout: 3000}
+      );
 
-        await waitFor(
-          () => {
-            let active: Element | null =
-              canvasElement.ownerDocument.activeElement;
-            while (active?.shadowRoot?.activeElement) {
-              active = active.shadowRoot.activeElement;
-            }
-            expect(active === input, 'Focus should remain on the input').toBe(
-              true
-            );
-          },
-          {timeout: 3000}
-        );
-      }
-    );
+      await waitFor(
+        () => {
+          let active: Element | null = canvasElement.ownerDocument.activeElement;
+          while (active?.shadowRoot?.activeElement) {
+            active = active.shadowRoot.activeElement;
+          }
+          expect(active === input, 'Focus should remain on the input').toBe(true);
+        },
+        {timeout: 3000}
+      );
+    });
   } catch (error) {
     status = 'failed';
     throw error;

@@ -1,8 +1,5 @@
 import type {MockInstance} from 'vitest';
-import {
-  PlatformClient,
-  type PlatformClientCallError,
-} from '../api/platform-client.js';
+import {PlatformClient, type PlatformClientCallError} from '../api/platform-client.js';
 import {
   buildSearchEngine,
   getSampleSearchEngineConfiguration,
@@ -68,10 +65,7 @@ import {
   logInstantResultsSearch,
   searchboxAsYouType,
 } from '../features/instant-results/instant-result-analytics-actions.js';
-import {
-  logSearchboxSubmit,
-  searchboxSubmit,
-} from '../features/query/query-analytics-actions.js';
+import {logSearchboxSubmit, searchboxSubmit} from '../features/query/query-analytics-actions.js';
 import {fetchQuerySuggestions} from '../features/query-suggest/query-suggest-actions.js';
 import type {OmniboxSuggestionMetadata} from '../features/query-suggest/query-suggest-analytics-actions.js';
 import {logRecentQueryClick} from '../features/recent-queries/recent-queries-analytics-actions.js';
@@ -79,10 +73,7 @@ import {
   logRecommendationUpdate,
   recommendationInterfaceLoad,
 } from '../features/recommendation/recommendation-analytics-actions.js';
-import {
-  executeSearch,
-  fetchFacetValues,
-} from '../features/search/search-actions.js';
+import {executeSearch, fetchFacetValues} from '../features/search/search-actions.js';
 import {
   logResultsSort,
   resultsSort,
@@ -144,10 +135,7 @@ export function extractAndExcludeProperties(
   return result;
 }
 
-function excludeProperties(
-  obj: Record<string, unknown> | object,
-  excludedKeys: string[]
-) {
+function excludeProperties(obj: Record<string, unknown> | object, excludedKeys: string[]) {
   const result = {...obj};
   excludedKeys.forEach((prop: string) => delete result[prop]);
   return result;
@@ -177,9 +165,7 @@ const ANY_RANGE_FACET_BREADCRUMB_VALUE: DateFacetValue = {
 const ANY_CATEGORY_FACET_PATH = ['any category facet path'];
 
 describe('Analytics Search Migration', () => {
-  type Procedure = (
-    ...args: unknown[]
-  ) => Promise<Response | PlatformClientCallError>;
+  type Procedure = (...args: unknown[]) => Promise<Response | PlatformClientCallError>;
 
   let callSpy: MockInstance<Procedure>;
 
@@ -395,8 +381,7 @@ describe('Analytics Search Migration', () => {
     const action = executeSearch({
       legacy: logNumericFacetBreadcrumb({
         facetId: ANY_FACET_ID,
-        selection:
-          ANY_RANGE_FACET_BREADCRUMB_VALUE as unknown as NumericFacetValue,
+        selection: ANY_RANGE_FACET_BREADCRUMB_VALUE as unknown as NumericFacetValue,
       }),
       next: numericBreadcrumbFacet(),
     });
@@ -547,8 +532,7 @@ describe('Analytics Search Migration', () => {
     const action = executeSearch({
       legacy: logNumericFacetBreadcrumb({
         facetId: ANY_FACET_ID,
-        selection:
-          ANY_RANGE_FACET_BREADCRUMB_VALUE as unknown as NumericFacetValue,
+        selection: ANY_RANGE_FACET_BREADCRUMB_VALUE as unknown as NumericFacetValue,
       }),
       next: numericBreadcrumbFacet(),
     });

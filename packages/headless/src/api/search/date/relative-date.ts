@@ -1,10 +1,7 @@
 import {NumberValue, Schema, StringValue} from '@coveo/bueno';
 import dayjs, {type QUnitType} from 'dayjs';
 import quarterOfYear from 'dayjs/plugin/quarterOfYear.js';
-import {
-  assertDateAboveAPIMinimum,
-  formatDateForSearchApi,
-} from './date-format.js';
+import {assertDateAboveAPIMinimum, formatDateForSearchApi} from './date-format.js';
 
 dayjs.extend(quarterOfYear);
 
@@ -17,23 +14,8 @@ const validRelativeDatePeriods = ['past', 'now', 'next'];
 /**
  * The unit of time in which the date is set relative to.
  */
-export type RelativeDateUnit =
-  | 'minute'
-  | 'hour'
-  | 'day'
-  | 'week'
-  | 'month'
-  | 'quarter'
-  | 'year';
-const validRelativeDateUnits = [
-  'minute',
-  'hour',
-  'day',
-  'week',
-  'month',
-  'quarter',
-  'year',
-];
+export type RelativeDateUnit = 'minute' | 'hour' | 'day' | 'week' | 'month' | 'quarter' | 'year';
+const validRelativeDateUnits = ['minute', 'hour', 'day', 'week', 'month', 'quarter', 'year'];
 
 /**
  * Defines a date relative to the current moment.
@@ -79,12 +61,9 @@ export function validateRelativeDate(date: RelativeDate | string) {
     );
   }
 
-  const relativeDate =
-    typeof date === 'string' ? parseRelativeDate(date) : date;
+  const relativeDate = typeof date === 'string' ? parseRelativeDate(date) : date;
 
-  new Schema(buildRelativeDateDefinition(relativeDate.period)).validate(
-    relativeDate
-  );
+  new Schema(buildRelativeDateDefinition(relativeDate.period)).validate(relativeDate);
 
   const dayJsDate = relativeToAbsoluteDate(relativeDate);
   const stringifiedDate = JSON.stringify(relativeDate);
@@ -120,9 +99,7 @@ function relativeToAbsoluteDate(relativeDate: RelativeDate) {
 }
 
 export function formatRelativeDateForSearchApi(relativeDate: string) {
-  return formatDateForSearchApi(
-    relativeToAbsoluteDate(parseRelativeDate(relativeDate))
-  );
+  return formatDateForSearchApi(relativeToAbsoluteDate(parseRelativeDate(relativeDate)));
 }
 
 function splitDate(date: string) {

@@ -33,9 +33,7 @@ describe('atomic-sort-expression', () => {
 
     return {
       element: insideDropdown
-        ? (element.querySelector(
-            'atomic-sort-expression'
-          ) as AtomicSortExpression)
+        ? (element.querySelector('atomic-sort-expression') as AtomicSortExpression)
         : element,
     };
   };
@@ -234,19 +232,16 @@ describe('atomic-sort-expression', () => {
       prop: 'tabsIncluded',
       invalidValue: ['invalid', 123, null],
     },
-  ])(
-    'should set error when #$prop is invalid',
-    async ({prop, invalidValue}) => {
-      const {element} = await renderSortExpression();
+  ])('should set error when #$prop is invalid', async ({prop, invalidValue}) => {
+    const {element} = await renderSortExpression();
 
-      expect(element.error).toBeUndefined();
+    expect(element.error).toBeUndefined();
 
-      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
-      (element as any)[prop] = invalidValue;
-      await element.updateComplete;
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
+    (element as any)[prop] = invalidValue;
+    await element.updateComplete;
 
-      expect(element.error).toBeDefined();
-      expect(element.error.message).toMatch(new RegExp(prop, 'i'));
-    }
-  );
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toMatch(new RegExp(prop, 'i'));
+  });
 });

@@ -1,7 +1,4 @@
-import type {
-  RecentQueriesList,
-  RecentQueriesState,
-} from '@coveo/headless/commerce';
+import type {RecentQueriesList, RecentQueriesState} from '@coveo/headless/commerce';
 import {vi} from 'vitest';
 import {genericSubscribe} from '../common';
 
@@ -13,8 +10,7 @@ export const defaultState = {
 
 export const defaultImplementation = {
   clear: vi.fn() as unknown as RecentQueriesList['clear'],
-  executeRecentQuery:
-    vi.fn() as unknown as RecentQueriesList['executeRecentQuery'],
+  executeRecentQuery: vi.fn() as unknown as RecentQueriesList['executeRecentQuery'],
   subscribe: genericSubscribe as unknown as RecentQueriesList['subscribe'],
   state: defaultState,
   updateRecentQueries: vi.fn(),

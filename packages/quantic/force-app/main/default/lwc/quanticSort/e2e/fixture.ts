@@ -33,6 +33,7 @@ export const testSearch = quanticBase.extend<QuanticSortE2ESearchFixtures>({
     await use(new SearchObject(page, searchRequestRegex));
   },
   sort: async ({page, options, configuration, search, urlHash}, use) => {
+    await search.mockSearchWithBaseResponse();
     await page.goto(urlHash ? `${sortUrl}#${urlHash}` : sortUrl);
     configuration.configure(options);
     await search.waitForSearchResponse();
@@ -49,11 +50,11 @@ export const testInsight = quanticBase.extend<QuanticSortE2EInsightFixtures>({
     await use(new InsightSetupObject(page));
   },
   sort: async ({page, options, search, configuration, insightSetup}, use) => {
+    await search.mockSearchWithBaseResponse();
     await page.goto(sortUrl);
     configuration.configure({...options, useCase: useCaseEnum.insight});
     await insightSetup.waitForInsightInterfaceInitialization();
-    await search.performSearch();
-    await search.waitForSearchResponse();
+    await Promise.all([search.waitForSearchResponse(), search.performSearch()]);
     await use(new SortObject(page));
   },
 });

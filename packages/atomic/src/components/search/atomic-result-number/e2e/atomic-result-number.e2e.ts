@@ -7,9 +7,7 @@ test.describe('atomic-result-number', () => {
       await resultNumber.hydrated.first().waitFor();
     });
 
-    test('should render the numeric value with default formatting', async ({
-      resultNumber,
-    }) => {
+    test('should render the numeric value with default formatting', async ({resultNumber}) => {
       await expect(resultNumber.formattedValue).toHaveText(/[\d,]+/);
     });
   });
@@ -20,9 +18,7 @@ test.describe('atomic-result-number', () => {
       await resultNumber.hydrated.first().waitFor();
     });
 
-    test('should render the value with currency formatting', async ({
-      resultNumber,
-    }) => {
+    test('should render the value with currency formatting', async ({resultNumber}) => {
       await expect(resultNumber.formattedValue).toHaveText(/\$[\d,]+\.\d{2}/);
     });
   });
@@ -33,9 +29,7 @@ test.describe('atomic-result-number', () => {
       await resultNumber.hydrated.first().waitFor();
     });
 
-    test('should render the value with decimal places', async ({
-      resultNumber,
-    }) => {
+    test('should render the value with decimal places', async ({resultNumber}) => {
       await expect(resultNumber.formattedValue).toHaveText(/\d+\.\d{2}/);
     });
   });

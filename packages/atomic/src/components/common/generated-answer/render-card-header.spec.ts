@@ -4,10 +4,7 @@ import {renderHeading} from '@/src/components/common/heading';
 import {renderSwitch} from '@/src/components/common/switch';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {
-  type RenderCardHeaderProps,
-  renderCardHeader,
-} from './render-card-header';
+import {type RenderCardHeaderProps, renderCardHeader} from './render-card-header';
 import {renderConversationDebugHeader} from './render-conversation-debug-header';
 
 vi.mock('@/src/components/common/heading', {spy: true});
@@ -25,9 +22,7 @@ describe('#renderCardHeader', () => {
     vi.clearAllMocks();
   });
 
-  const renderComponent = async (
-    overrides: Partial<RenderCardHeaderProps> = {}
-  ) => {
+  const renderComponent = async (overrides: Partial<RenderCardHeaderProps> = {}) => {
     const defaultProps: RenderCardHeaderProps = {
       i18n,
       isAnswerVisible: true,
@@ -37,9 +32,7 @@ describe('#renderCardHeader', () => {
       ...overrides,
     };
 
-    const element = await renderFunctionFixture(
-      html`${renderCardHeader({props: defaultProps})}`
-    );
+    const element = await renderFunctionFixture(html`${renderCardHeader({props: defaultProps})}`);
 
     return {
       element,
@@ -63,8 +56,7 @@ describe('#renderCardHeader', () => {
       props: expect.objectContaining({
         level: 0,
         part: 'header-label',
-        class:
-          'text-primary inline-block rounded-md px-2.5 py-2 font-medium mr-auto shrink-0',
+        class: 'text-primary inline-block rounded-md px-2.5 py-2 font-medium mr-auto shrink-0',
       }),
     });
   });
@@ -72,9 +64,7 @@ describe('#renderCardHeader', () => {
   it('should render the header label with generated answer title', async () => {
     const {headerLabel} = await renderComponent();
 
-    expect(headerLabel?.textContent?.trim()).toBe(
-      i18n.t('generated-answer-title')
-    );
+    expect(headerLabel?.textContent?.trim()).toBe(i18n.t('generated-answer-title'));
   });
 
   it('should render the sparkles header icon', async () => {

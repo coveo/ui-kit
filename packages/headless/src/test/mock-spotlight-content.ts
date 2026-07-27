@@ -1,7 +1,4 @@
-import type {
-  BaseSpotlightContent,
-  SpotlightContent,
-} from '../api/commerce/common/result.js';
+import type {BaseSpotlightContent, SpotlightContent} from '../api/commerce/common/result.js';
 import {ResultType} from '../api/commerce/common/result.js';
 
 export function buildMockBaseSpotlightContent(

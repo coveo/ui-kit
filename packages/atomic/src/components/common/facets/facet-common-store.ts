@@ -7,11 +7,7 @@ export interface FacetInfo {
   isHidden(): boolean;
 }
 
-export type FacetType =
-  | 'facets'
-  | 'numericFacets'
-  | 'dateFacets'
-  | 'categoryFacets';
+export type FacetType = 'facets' | 'numericFacets' | 'dateFacets' | 'categoryFacets';
 
 export interface FacetValueFormat<ValueType> {
   format(facetValue: ValueType): string;

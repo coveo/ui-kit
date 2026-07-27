@@ -11,8 +11,7 @@ import RecentQueries from './recent-queries.js';
 export default function StandaloneSearchBox() {
   const {state, methods} = useStandaloneSearchBox();
   const {state: recentQueriesState} = useRecentQueriesList();
-  const {state: instantProductsState, methods: instantProductsController} =
-    useInstantProducts();
+  const {state: instantProductsState, methods: instantProductsController} = useInstantProducts();
 
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [isSelectingSuggestion, setIsSelectingSuggestion] = useState(false);
@@ -78,14 +77,8 @@ export default function StandaloneSearchBox() {
                 <li key={suggestion.rawValue}>
                   <button
                     type="button"
-                    onMouseEnter={() =>
-                      instantProductsController?.updateQuery(
-                        suggestion.rawValue
-                      )
-                    }
-                    onClick={() =>
-                      methods?.selectSuggestion(suggestion.rawValue)
-                    }
+                    onMouseEnter={() => instantProductsController?.updateQuery(suggestion.rawValue)}
+                    onClick={() => methods?.selectSuggestion(suggestion.rawValue)}
                     dangerouslySetInnerHTML={{
                       __html: suggestion.highlightedValue,
                     }}

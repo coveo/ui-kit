@@ -6,9 +6,7 @@ test.describe('atomic-commerce-facet', () => {
     await facet.load();
   });
 
-  test('should allow to filter by selecting and deselecting a value', async ({
-    facet,
-  }) => {
+  test('should allow to filter by selecting and deselecting a value', async ({facet}) => {
     const firstFacetValue = facet.getFacetValueByPosition(0);
     const firstFacetValueBtn = await facet.getFacetValueButtonByPosition(0);
 
@@ -21,10 +19,7 @@ test.describe('atomic-commerce-facet', () => {
     await expect(firstFacetValueBtn).not.toBeChecked();
   });
 
-  test('should allow to filter by selecting multiple values', async ({
-    facet,
-    page,
-  }) => {
+  test('should allow to filter by selecting multiple values', async ({facet, page}) => {
     const firstValueBtn = facet.getFacetValueButtonByPosition(0);
     const secondValueBtn = facet.getFacetValueButtonByPosition(1);
 
@@ -38,9 +33,7 @@ test.describe('atomic-commerce-facet', () => {
     await expect(page.getByText('Clear 2 filters')).toBeVisible();
   });
 
-  test('should allow to deselect a filter with the clear button', async ({
-    facet,
-  }) => {
+  test('should allow to deselect a filter with the clear button', async ({facet}) => {
     const facetValueLabel = facet.getFacetValueByPosition(0);
 
     await expect(facet.clearFilter).toHaveCount(0);
@@ -53,10 +46,7 @@ test.describe('atomic-commerce-facet', () => {
     await expect(facet.clearFilter).toHaveCount(0);
   });
 
-  test('should allow to show more values and show less values', async ({
-    facet,
-    page,
-  }) => {
+  test('should allow to show more values and show less values', async ({facet, page}) => {
     await expect(facet.showMore).toBeVisible();
     await expect(facet.showLess).not.toBeVisible();
 
@@ -92,14 +82,9 @@ test.describe('atomic-commerce-facet', () => {
     await expect(facet.searchInput).toBeEmpty();
   });
 
-  test('behave correct when searching for a value that does not exist', async ({
-    facet,
-    page,
-  }) => {
+  test('behave correct when searching for a value that does not exist', async ({facet, page}) => {
     await facet.searchInput.fill('non-existing-value');
 
-    await expect(
-      page.getByText('No matches found for non-existing-value')
-    ).toBeVisible();
+    await expect(page.getByText('No matches found for non-existing-value')).toBeVisible();
   });
 });

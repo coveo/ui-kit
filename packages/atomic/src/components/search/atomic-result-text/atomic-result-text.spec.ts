@@ -16,8 +16,7 @@ describe('atomic-result-text', () => {
   let mockResult: Result;
 
   const locators = {
-    getText: (element: AtomicResultText) =>
-      element?.querySelector('atomic-text'),
+    getText: (element: AtomicResultText) => element?.querySelector('atomic-text'),
   };
 
   const assertTextContent = (text: Element | null, expectedContent: string) => {
@@ -62,28 +61,27 @@ describe('atomic-result-text', () => {
     } = {}
   ) => {
     const resultToUse = 'result' in options ? options.result : mockResult;
-    const {element, atomicInterface} =
-      await renderInAtomicResult<AtomicResultText>({
-        template: html`<atomic-result-text
-          field=${ifDefined(options.field)}
-          should-highlight=${ifDefined(options.shouldHighlight)}
-          default=${ifDefined(options.default)}
-        ></atomic-result-text>`,
-        selector: 'atomic-result-text',
-        result: resultToUse === null ? undefined : resultToUse,
-        bindings: (bindings) => {
-          bindings.i18n = i18n;
-          bindings.store = {
-            ...bindings.store,
-            onChange: vi.fn(),
-            state: {
-              ...bindings.store?.state,
-              loadingFlags: [],
-            },
-          };
-          return bindings;
-        },
-      });
+    const {element, atomicInterface} = await renderInAtomicResult<AtomicResultText>({
+      template: html`<atomic-result-text
+        field=${ifDefined(options.field)}
+        should-highlight=${ifDefined(options.shouldHighlight)}
+        default=${ifDefined(options.default)}
+      ></atomic-result-text>`,
+      selector: 'atomic-result-text',
+      result: resultToUse === null ? undefined : resultToUse,
+      bindings: (bindings) => {
+        bindings.i18n = i18n;
+        bindings.store = {
+          ...bindings.store,
+          onChange: vi.fn(),
+          state: {
+            ...bindings.store?.state,
+            loadingFlags: [],
+          },
+        };
+        return bindings;
+      },
+    });
 
     await atomicInterface.updateComplete;
     await element?.updateComplete;
@@ -132,21 +130,18 @@ describe('atomic-result-text', () => {
       prop: 'disableHighlight',
       invalidValue: 'not-a-boolean',
     },
-  ])(
-    'should set error when #$prop is invalid',
-    async ({prop, invalidValue}) => {
-      const element = await renderComponent({field: 'author'});
+  ])('should set error when #$prop is invalid', async ({prop, invalidValue}) => {
+    const element = await renderComponent({field: 'author'});
 
-      expect(element.error).toBeUndefined();
+    expect(element.error).toBeUndefined();
 
-      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
-      (element as any)[prop] = invalidValue;
-      await element.updateComplete;
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
+    (element as any)[prop] = invalidValue;
+    await element.updateComplete;
 
-      expect(element.error).toBeDefined();
-      expect(element.error.message).toMatch(new RegExp(prop, 'i'));
-    }
-  );
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toMatch(new RegExp(prop, 'i'));
+  });
 
   it.each<{
     prop: 'shouldHighlight' | 'disableHighlight';
@@ -357,28 +352,25 @@ describe('atomic-result-text', () => {
         value: 'This is an excerpt with highlights',
         highlightKey: 'excerptHighlights',
       },
-    ])(
-      'should render plain text for #$field field',
-      async ({field, value, highlightKey}) => {
-        const resultWithHighlights = buildFakeResult({
-          [field]: value,
-          [highlightKey]: [
-            {
-              offset: 5,
-              length: 6,
-            },
-          ],
-        });
+    ])('should render plain text for #$field field', async ({field, value, highlightKey}) => {
+      const resultWithHighlights = buildFakeResult({
+        [field]: value,
+        [highlightKey]: [
+          {
+            offset: 5,
+            length: 6,
+          },
+        ],
+      });
 
-        const element = await renderComponent({
-          field,
-          shouldHighlight: false,
-          result: resultWithHighlights,
-        });
+      const element = await renderComponent({
+        field,
+        shouldHighlight: false,
+        result: resultWithHighlights,
+      });
 
-        const text = locators.getText(element);
-        assertTextContent(text, value);
-      }
-    );
+      const text = locators.getText(element);
+      assertTextContent(text, value);
+    });
   });
 });

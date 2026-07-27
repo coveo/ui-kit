@@ -2,11 +2,7 @@ import {existsSync, readdirSync, readFileSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 
-export const workspacesRoot = resolve(
-  fileURLToPath(import.meta.url),
-  '..',
-  '..'
-);
+export const workspacesRoot = resolve(fileURLToPath(import.meta.url), '..', '..');
 
 const nestedAtomicAngularPackageDir = 'atomic-angular/projects/atomic-angular';
 
@@ -88,11 +84,7 @@ export function getAllPackageDirs(rootDir = workspacesRoot) {
 
   const packageDirs = [...topLevelPackageDirs];
 
-  if (
-    existsSync(
-      resolve(packagesRoot, nestedAtomicAngularPackageDir, 'package.json')
-    )
-  ) {
+  if (existsSync(resolve(packagesRoot, nestedAtomicAngularPackageDir, 'package.json'))) {
     packageDirs.push(nestedAtomicAngularPackageDir);
   }
 

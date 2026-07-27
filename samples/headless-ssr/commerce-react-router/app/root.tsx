@@ -4,19 +4,9 @@ import {
   SolutionType,
 } from '@coveo/headless-react/ssr-commerce';
 import type {LoaderFunctionArgs, MetaFunction} from 'react-router';
-import {
-  Links,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-  useLoaderData,
-} from 'react-router';
+import {Links, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData} from 'react-router';
 import externalCartService from '@/external-services/external-cart-service';
-import {
-  getVisitorIdSetCookieHeader,
-  shouldCapture,
-} from '@/lib/client-id.server';
+import {getVisitorIdSetCookieHeader, shouldCapture} from '@/lib/client-id.server';
 import type {
   SearchEngineDefinition,
   SearchStaticState,
@@ -30,10 +20,7 @@ import {
 import {getNavigatorContext} from '@/lib/navigator-context';
 import Header from './components/header.js';
 import ParameterManager from './components/parameter-manager.js';
-import {
-  SearchProvider,
-  StandaloneProvider,
-} from './components/providers/providers.js';
+import {SearchProvider, StandaloneProvider} from './components/providers/providers.js';
 import SearchBox from './components/search-box.js';
 import StandaloneSearchBox from './components/standalone-search-box.js';
 import QueryTrigger from './components/triggers/query-trigger.js';
@@ -57,24 +44,19 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
 
   const engineDefinition = isSearchPage
     ? await getEngineDefinition(navigatorContext, request, SolutionType.search)
-    : await getEngineDefinition(
-        navigatorContext,
-        request,
-        SolutionType.standalone
-      );
+    : await getEngineDefinition(navigatorContext, request, SolutionType.standalone);
 
   let staticState: SearchStaticState | StandaloneStaticState;
 
-  const baseFetchStaticStateConfiguration =
-    await getBaseFetchStaticStateConfiguration(url.pathname);
+  const baseFetchStaticStateConfiguration = await getBaseFetchStaticStateConfiguration(
+    url.pathname
+  );
 
   if (isSearchPage) {
     const {deserialize} = buildParameterSerializer();
     const parameters = deserialize(url.searchParams);
 
-    staticState = await (
-      engineDefinition as SearchEngineDefinition
-    ).fetchStaticState({
+    staticState = await (engineDefinition as SearchEngineDefinition).fetchStaticState({
       controllers: {
         ...baseFetchStaticStateConfiguration.controllers,
         parameterManager: {
@@ -85,9 +67,7 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
       },
     });
   } else {
-    staticState = await (
-      engineDefinition as StandaloneEngineDefinition
-    ).fetchStaticState({
+    staticState = await (engineDefinition as StandaloneEngineDefinition).fetchStaticState({
       ...baseFetchStaticStateConfiguration,
     });
   }
@@ -134,10 +114,7 @@ export function Layout({children}: {children: React.ReactNode}) {
 
       <body>
         {isSearchStaticState(staticState) ? (
-          <SearchProvider
-            navigatorContext={navigatorContext}
-            staticState={staticState}
-          >
+          <SearchProvider navigatorContext={navigatorContext} staticState={staticState}>
             <ParameterManager url={navigatorContext.location} />
             <QueryTrigger />
             <Header totalItemsInCart={totalItemsInCart}>
@@ -148,10 +125,7 @@ export function Layout({children}: {children: React.ReactNode}) {
         ) : (
           <>
             <Header totalItemsInCart={totalItemsInCart}>
-              <StandaloneProvider
-                navigatorContext={navigatorContext}
-                staticState={staticState}
-              >
+              <StandaloneProvider navigatorContext={navigatorContext} staticState={staticState}>
                 <StandaloneSearchBox />
               </StandaloneProvider>
             </Header>

@@ -24,18 +24,12 @@ import type {CommerceSearchParameters} from '../search-parameters/search-paramet
 export const responseIdSelectorFromEngine = (engine: CommerceEngine) =>
   engine[stateKey].commerceSearch.responseId;
 
-export const responseIdSelector = (state: CommerceEngineState) =>
-  state.commerceSearch.responseId;
+export const responseIdSelector = (state: CommerceEngineState) => state.commerceSearch.responseId;
 
-export const requestIdSelector = (state: CommerceEngineState) =>
-  state.commerceSearch.requestId;
+export const requestIdSelector = (state: CommerceEngineState) => state.commerceSearch.requestId;
 
-export const numberOfProductsSelector = (
-  state: Partial<CommerceSearchSection>
-) =>
-  state.commerceSearch?.results.length ||
-  state.commerceSearch?.products.length ||
-  0;
+export const numberOfProductsSelector = (state: Partial<CommerceSearchSection>) =>
+  state.commerceSearch?.results.length || state.commerceSearch?.products.length || 0;
 
 export const moreProductsAvailableSelector = createSelector(
   (state: Partial<CommercePaginationSection & CommerceSearchSection>) => ({
@@ -53,11 +47,9 @@ export const isLoadingSelector = (state: Partial<CommerceSearchSection>) => {
 export const errorSelector = (state: Partial<CommerceSearchSection>) =>
   state.commerceSearch?.error ?? null;
 
-export const querySelector = (state: CommerceQuerySection) =>
-  state.commerceQuery?.query ?? '';
+export const querySelector = (state: CommerceQuerySection) => state.commerceQuery?.query ?? '';
 
-const queryExecutedSelector = (state: CommerceSearchSection) =>
-  state.commerceSearch?.queryExecuted;
+const queryExecutedSelector = (state: CommerceSearchSection) => state.commerceSearch?.queryExecuted;
 
 export const queryExecutedFromResponseSelector = (
   state: CommerceQuerySection,
@@ -74,11 +66,7 @@ export const activeParametersSelector = (
   state: CommerceEngine[typeof stateKey]
 ): CommerceSearchParameters => {
   return {
-    ...getQ(
-      state?.commerceQuery,
-      (s) => s.query,
-      getCommerceQueryInitialState().query
-    ),
+    ...getQ(state?.commerceQuery, (s) => s.query, getCommerceQueryInitialState().query),
     ...coreActiveParametersSelector(state),
   };
 };

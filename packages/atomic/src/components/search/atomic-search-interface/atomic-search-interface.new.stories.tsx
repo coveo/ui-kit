@@ -19,16 +19,13 @@ const searchApiHarness = new MockSearchApi();
 
 async function initializeSearchInterface(canvasElement: HTMLElement) {
   await customElements.whenDefined('atomic-search-interface');
-  const searchInterface = canvasElement.querySelector(
-    'atomic-search-interface'
-  );
+  const searchInterface = canvasElement.querySelector('atomic-search-interface');
   await searchInterface!.initialize(getSampleSearchEngineConfiguration());
 }
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-search-interface',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-search-interface', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-search-interface',
@@ -45,9 +42,7 @@ const meta: Meta = {
   },
   play: async (context) => {
     await initializeSearchInterface(context.canvasElement);
-    const searchInterface = context.canvasElement.querySelector(
-      'atomic-search-interface'
-    );
+    const searchInterface = context.canvasElement.querySelector('atomic-search-interface');
     await searchInterface!.executeFirstSearch();
   },
   argTypes: {

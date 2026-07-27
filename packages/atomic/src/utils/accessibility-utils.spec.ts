@@ -15,10 +15,7 @@ import type {InitializableComponent} from '@/src/decorators/types';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import type {CommerceBindings} from '../components/commerce/atomic-commerce-interface/atomic-commerce-interface';
-import {
-  AriaLiveRegionController,
-  FocusTargetController,
-} from './accessibility-utils';
+import {AriaLiveRegionController, FocusTargetController} from './accessibility-utils';
 import {defer} from './utils';
 
 vi.mock('./utils', () => ({
@@ -41,10 +38,7 @@ class StubAriaLive extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
-    document.addEventListener(
-      'atomic/accessibility/findAriaLive',
-      this.findAriaLiveListenerSpy
-    );
+    document.addEventListener('atomic/accessibility/findAriaLive', this.findAriaLiveListenerSpy);
   }
 }
 
@@ -61,12 +55,7 @@ class TestElement extends LitElement {
 
 @customElement('preserving-test-element')
 class PreservingTestElement extends LitElement {
-  region = new AriaLiveRegionController(
-    this,
-    'preserving-test-region',
-    true,
-    true
-  );
+  region = new AriaLiveRegionController(this, 'preserving-test-region', true, true);
 
   render() {
     this.region.message = 'Test message';
@@ -94,10 +83,7 @@ class FocusTargetControllerTestComponent
 
   public get focusTargetController() {
     if (!this._focusTargetController) {
-      this._focusTargetController = new FocusTargetController(
-        this,
-        this.bindings
-      );
+      this._focusTargetController = new FocusTargetController(this, this.bindings);
     }
     return this._focusTargetController;
   }
@@ -109,9 +95,7 @@ describe('accessibility-utils', () => {
     let ariaLive: StubAriaLive;
 
     beforeEach(async () => {
-      await fixture(
-        html`<stub-aria-live></stub-aria-live> <test-element></test-element>`
-      );
+      await fixture(html`<stub-aria-live></stub-aria-live> <test-element></test-element>`);
       testElement = document.querySelector('test-element')! as TestElement;
       ariaLive = document.querySelector('stub-aria-live')! as StubAriaLive;
     });
@@ -121,20 +105,12 @@ describe('accessibility-utils', () => {
     });
 
     it('should dispatch a message to the aria live when setting the message', async () => {
-      expect(ariaLive.updateMessage).toHaveBeenCalledWith(
-        'test-region',
-        'Test message',
-        true
-      );
+      expect(ariaLive.updateMessage).toHaveBeenCalledWith('test-region', 'Test message', true);
     });
 
     it('should update the message when the message is changed', async () => {
       testElement.region.message = 'New message';
-      expect(ariaLive.updateMessage).toHaveBeenCalledWith(
-        'test-region',
-        'New message',
-        true
-      );
+      expect(ariaLive.updateMessage).toHaveBeenCalledWith('test-region', 'New message', true);
     });
 
     it('should preserve queued messages when configured', async () => {
@@ -151,18 +127,14 @@ describe('accessibility-utils', () => {
 
   describe('FocusTargetController', () => {
     const renderComponent = async (getUniqueIDFromEngine?: Mock) => {
-      const {element} =
-        await renderInAtomicCommerceInterface<FocusTargetControllerTestComponent>(
-          {
-            template: html`<focus-target-controller-test-component></focus-target-controller-test-component>`,
-            selector: 'focus-target-controller-test-component',
-            bindings: (bindings) => {
-              bindings.store.getUniqueIDFromEngine =
-                getUniqueIDFromEngine ?? vi.fn();
-              return bindings;
-            },
-          }
-        );
+      const {element} = await renderInAtomicCommerceInterface<FocusTargetControllerTestComponent>({
+        template: html`<focus-target-controller-test-component></focus-target-controller-test-component>`,
+        selector: 'focus-target-controller-test-component',
+        bindings: (bindings) => {
+          bindings.store.getUniqueIDFromEngine = getUniqueIDFromEngine ?? vi.fn();
+          return bindings;
+        },
+      });
 
       return element;
     };
@@ -217,12 +189,8 @@ describe('accessibility-utils', () => {
           });
 
           it('should not prevent the immediate next call with an element from calling the #focus method', async () => {
-            await focusTargetController.setTarget(
-              document.createElement('div')
-            );
-            await focusTargetController.setTarget(
-              document.createElement('span')
-            );
+            await focusTargetController.setTarget(document.createElement('div'));
+            await focusTargetController.setTarget(document.createElement('span'));
 
             expect(focusMethodSpy).toHaveBeenCalledOnce();
           });
@@ -336,10 +304,7 @@ describe('accessibility-utils', () => {
             const mockedDefer = vi.mocked(defer);
 
             const component = await renderComponent(
-              vi
-                .fn()
-                .mockReturnValueOnce('request-id-1')
-                .mockReturnValue('request-id-2')
+              vi.fn().mockReturnValueOnce('request-id-1').mockReturnValue('request-id-2')
             );
 
             const {focusTargetController} = component;
@@ -358,10 +323,7 @@ describe('accessibility-utils', () => {
 
           it('should cause the target element to be focused', async () => {
             const component = await renderComponent(
-              vi
-                .fn()
-                .mockReturnValueOnce('request-id-1')
-                .mockReturnValue('request-id-2')
+              vi.fn().mockReturnValueOnce('request-id-1').mockReturnValue('request-id-2')
             );
 
             const {focusTargetController} = component;
@@ -387,10 +349,7 @@ describe('accessibility-utils', () => {
             const mockedDefer = vi.mocked(defer);
 
             const component = await renderComponent(
-              vi
-                .fn()
-                .mockReturnValueOnce('request-id-1')
-                .mockReturnValue('request-id-2')
+              vi.fn().mockReturnValueOnce('request-id-1').mockReturnValue('request-id-2')
             );
 
             const {focusTargetController} = component;
@@ -405,18 +364,12 @@ describe('accessibility-utils', () => {
 
           it('should not cause any element to be focused', async () => {
             const component = await renderComponent(
-              vi
-                .fn()
-                .mockReturnValueOnce('request-id-1')
-                .mockReturnValue('request-id-2')
+              vi.fn().mockReturnValueOnce('request-id-1').mockReturnValue('request-id-2')
             );
 
             const {focusTargetController} = component;
 
-            const htmlElementFocusSpy = vi.spyOn(
-              HTMLElement.prototype,
-              'focus'
-            );
+            const htmlElementFocusSpy = vi.spyOn(HTMLElement.prototype, 'focus');
 
             component.requestUpdate();
 
@@ -432,9 +385,7 @@ describe('accessibility-utils', () => {
         it('should not cause the #defer util function to be called', async () => {
           const mockedDefer = vi.mocked(defer);
 
-          const component = await renderComponent(
-            vi.fn().mockReturnValue('request-id-1')
-          );
+          const component = await renderComponent(vi.fn().mockReturnValue('request-id-1'));
 
           const {focusTargetController} = component;
 
@@ -447,9 +398,7 @@ describe('accessibility-utils', () => {
         });
 
         it('should not cause any element to be focused', async () => {
-          const component = await renderComponent(
-            vi.fn().mockReturnValue('request-id-1')
-          );
+          const component = await renderComponent(vi.fn().mockReturnValue('request-id-1'));
 
           const {focusTargetController} = component;
 

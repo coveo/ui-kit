@@ -2,10 +2,7 @@ import type {Mock} from 'vitest';
 import {buildResultPreviewRequest} from '../../../features/result-preview/result-preview-request-builder.js';
 import {buildMockCaseAssistAPIClient} from '../../../test/mock-case-assist-api-client.js';
 import {createMockState} from '../../../test/mock-state.js';
-import {
-  getOrganizationEndpoint,
-  PlatformClient,
-} from '../../platform-client.js';
+import {getOrganizationEndpoint, PlatformClient} from '../../platform-client.js';
 import type {CaseAssistAPIClient} from './case-assist-api-client.js';
 import type {GetCaseClassificationsRequest} from './get-case-classifications/get-case-classifications-request.js';
 import type {GetDocumentSuggestionsRequest} from './get-document-suggestions/get-document-suggestions-request.js';

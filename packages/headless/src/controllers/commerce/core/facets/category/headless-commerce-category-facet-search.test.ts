@@ -18,13 +18,9 @@ import {
   type CategoryFacetSearchProps,
 } from './headless-commerce-category-facet-search.js';
 
-vi.mock(
-  '../../../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions'
-);
+vi.mock('../../../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions');
 
-vi.mock(
-  '../../../../../features/facets/facet-search-set/specific/specific-facet-search-actions'
-);
+vi.mock('../../../../../features/facets/facet-search-set/specific/specific-facet-search-actions');
 
 describe('CategoryFacetSearch', () => {
   const facetId: string = 'category_facet_id';
@@ -40,11 +36,8 @@ describe('CategoryFacetSearch', () => {
     facetSearch = buildCategoryFacetSearch(engine, props);
   }
 
-  function setFacetSearchState(
-    updates: Partial<CategoryFacetSearchState> = {}
-  ) {
-    engine[stateKey].categoryFacetSearchSet[facetId] =
-      buildMockCategoryFacetSearch(updates);
+  function setFacetSearchState(updates: Partial<CategoryFacetSearchState> = {}) {
+    engine[stateKey].categoryFacetSearchSet[facetId] = buildMockCategoryFacetSearch(updates);
   }
 
   beforeEach(() => {

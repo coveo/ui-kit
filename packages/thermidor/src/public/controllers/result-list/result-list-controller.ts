@@ -14,21 +14,18 @@ class ResultListControllerImpl extends BaseController<ResultListControllerState>
 
     const selectors = getOrCreateResultsSelectors(options.interface);
 
-    const controllerState = createMemoizedStateSelector(
-      selectors.getResults,
-      (results) => ({
-        results: results.map((result) => ({
-          uniqueId: result.uniqueId,
-          title: result.title,
-          uri: result.uri,
-          excerpt: result.excerpt,
-          printableUri: result.printableUri,
-          clickUri: result.clickUri,
-          raw: result.raw,
-          score: result.score,
-        })),
-      })
-    );
+    const controllerState = createMemoizedStateSelector(selectors.getResults, (results) => ({
+      results: results.map((result) => ({
+        uniqueId: result.uniqueId,
+        title: result.title,
+        uri: result.uri,
+        excerpt: result.excerpt,
+        printableUri: result.printableUri,
+        clickUri: result.clickUri,
+        raw: result.raw,
+        score: result.score,
+      })),
+    }));
 
     super(engine, controllerState);
   }

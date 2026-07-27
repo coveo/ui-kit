@@ -6,36 +6,25 @@ interface PagerProps {
 }
 
 export function Pager({controller}: PagerProps) {
-  const {currentPage, currentPages, hasPreviousPage, hasNextPage} =
-    useController(controller);
+  const {currentPage, currentPages, hasPreviousPage, hasNextPage} = useController(controller);
 
   return (
     <nav className="pager" aria-label="Pagination">
-      <button
-        type="button"
-        disabled={!hasPreviousPage}
-        onClick={() => controller.previousPage()}
-      >
+      <button type="button" disabled={!hasPreviousPage} onClick={() => controller.previousPage()}>
         ‹ Prev
       </button>
       {currentPages.map((page) => (
         <button
           type="button"
           key={page}
-          className={
-            page === currentPage ? 'pager__page active' : 'pager__page'
-          }
+          className={page === currentPage ? 'pager__page active' : 'pager__page'}
           aria-current={page === currentPage ? 'page' : undefined}
           onClick={() => controller.selectPage(page)}
         >
           {page}
         </button>
       ))}
-      <button
-        type="button"
-        disabled={!hasNextPage}
-        onClick={() => controller.nextPage()}
-      >
+      <button type="button" disabled={!hasNextPage} onClick={() => controller.nextPage()}>
         Next ›
       </button>
     </nav>

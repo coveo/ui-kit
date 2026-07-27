@@ -9,15 +9,10 @@ import {createSearchEndpointClient} from '@/src/internal/api/search/index.js';
 import {getOrCreateSearchEndpointSlice} from './search-thunk-slice.js';
 import {buildAnalyticsParams} from '@/src/internal/api/analytics-params.js';
 
-export function createSearchEndpointThunk(
-  engine: FullEngine,
-  scope: EndpointStateScope
-) {
+export function createSearchEndpointThunk(engine: FullEngine, scope: EndpointStateScope) {
   const {stateId} = getHandleInternals(scope.scopeInterface);
   const buildRequest = createSearchEndpointRequestSelector(scope);
-  const handleResponse = createSearchEndpointResponseHandler(
-    scope.baseInterface
-  );
+  const handleResponse = createSearchEndpointResponseHandler(scope.baseInterface);
   const configSelectors = getOrCreateConfigurationSelectors();
 
   const thunk = createAsyncThunk<void, {engine: FullEngine}>(
@@ -25,9 +20,7 @@ export function createSearchEndpointThunk(
     async ({engine}) => {
       const request = engine.read(buildRequest);
       const trackingId = engine.read(configSelectors.getTrackingId);
-      const config = engine.read(
-        configSelectors.getEndpointClientConfiguration
-      );
+      const config = engine.read(configSelectors.getEndpointClientConfiguration);
 
       const analytics = buildAnalyticsParams(engine, {
         originContext: 'Search',
@@ -39,10 +32,7 @@ export function createSearchEndpointThunk(
         ...(analytics && {analytics}),
       };
 
-      const response = await createSearchEndpointClient().call(
-        fullRequest,
-        config
-      );
+      const response = await createSearchEndpointClient().call(fullRequest, config);
 
       if (!response.success) {
         throw new Error(response.error);
@@ -54,9 +44,7 @@ export function createSearchEndpointThunk(
     }
   );
 
-  engine.adoptSlice(
-    getOrCreateSearchEndpointSlice(scope.scopeInterface, thunk)
-  );
+  engine.adoptSlice(getOrCreateSearchEndpointSlice(scope.scopeInterface, thunk));
 
   return thunk;
 }

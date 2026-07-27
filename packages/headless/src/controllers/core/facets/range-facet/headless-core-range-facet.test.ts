@@ -13,10 +13,7 @@ import type {
   FacetOptionsSection,
   SearchSection,
 } from '../../../../state/state-sections.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../../../test/mock-engine-v2.js';
 import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request.js';
 import {buildMockNumericFacetResponse} from '../../../../test/mock-numeric-facet-response.js';
 import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value.js';
@@ -41,9 +38,7 @@ describe('RangeFacet', () => {
   function initRangeFacet() {
     engine = buildMockSearchEngine(state);
     rangeFacet = buildCoreRangeFacet(
-      engine as CoreEngine<
-        ConfigurationSection & SearchSection & FacetOptionsSection
-      >,
+      engine as CoreEngine<ConfigurationSection & SearchSection & FacetOptionsSection>,
       props
     );
   }
@@ -129,8 +124,7 @@ describe('RangeFacet', () => {
   describe('#isSortedBy', () => {
     it("should return true when the passed criterion matches the facet's active sort criterion", () => {
       const criterion = 'descending';
-      props.getRequest = () =>
-        buildMockNumericFacetRequest({sortCriteria: criterion});
+      props.getRequest = () => buildMockNumericFacetRequest({sortCriteria: criterion});
       initRangeFacet();
 
       expect(rangeFacet.isSortedBy(criterion)).toBe(true);
@@ -138,8 +132,7 @@ describe('RangeFacet', () => {
 
     it("should return false when the passed criterion does not match the facet's active sort criterion", () => {
       const criterion = 'descending';
-      props.getRequest = () =>
-        buildMockNumericFacetRequest({sortCriteria: 'ascending'});
+      props.getRequest = () => buildMockNumericFacetRequest({sortCriteria: 'ascending'});
       initRangeFacet();
 
       expect(rangeFacet.isSortedBy(criterion)).toBe(false);
@@ -189,8 +182,7 @@ describe('RangeFacet', () => {
     describe('.sortCriterion', () => {
       it('should expose the sortCriteria from the request', () => {
         const criterion = 'descending';
-        props.getRequest = () =>
-          buildMockNumericFacetRequest({sortCriteria: criterion});
+        props.getRequest = () => buildMockNumericFacetRequest({sortCriteria: criterion});
         initRangeFacet();
 
         expect(rangeFacet.state.sortCriterion).toBe(criterion);
@@ -200,8 +192,7 @@ describe('RangeFacet', () => {
     describe('.resultsMustMatch', () => {
       it('should expose the resultsMustMatch value from the request', () => {
         const resultsMustMatch = 'allValues';
-        props.getRequest = () =>
-          buildMockNumericFacetRequest({resultsMustMatch});
+        props.getRequest = () => buildMockNumericFacetRequest({resultsMustMatch});
         initRangeFacet();
 
         expect(rangeFacet.state.resultsMustMatch).toBe(resultsMustMatch);
@@ -218,9 +209,7 @@ describe('RangeFacet', () => {
 
         values.pop();
         values.push(buildMockNumericFacetValue({state: 'excluded'}));
-        state.search.response.facets = [
-          buildMockNumericFacetResponse({facetId, values}),
-        ];
+        state.search.response.facets = [buildMockNumericFacetResponse({facetId, values})];
 
         expect(rangeFacet.state.hasActiveValues).toBe(true);
       });

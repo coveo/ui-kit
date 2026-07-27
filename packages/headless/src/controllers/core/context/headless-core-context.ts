@@ -1,30 +1,14 @@
 import {RecordValue, Schema} from '@coveo/bueno';
 import type {AnyAction, Dispatch} from '@reduxjs/toolkit';
 import type {CoreEngine} from '../../../app/engine.js';
-import {
-  addContext,
-  removeContext,
-  setContext,
-} from '../../../features/context/context-actions.js';
+import {addContext, removeContext, setContext} from '../../../features/context/context-actions.js';
 import {contextReducer as context} from '../../../features/context/context-slice.js';
-import type {
-  ContextPayload,
-  ContextValue,
-} from '../../../features/context/context-state.js';
-import type {
-  ConfigurationSection,
-  ContextSection,
-} from '../../../state/state-sections.js';
+import type {ContextPayload, ContextValue} from '../../../features/context/context-state.js';
+import type {ConfigurationSection, ContextSection} from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {validateInitialState} from '../../../utils/validate-payload.js';
-import {
-  buildController,
-  type Controller,
-} from '../../controller/headless-controller.js';
-import {
-  isReservedContextKey,
-  ReservedContextKeyError,
-} from './headless-context-reserved-keys.js';
+import {buildController, type Controller} from '../../controller/headless-controller.js';
+import {isReservedContextKey, ReservedContextKeyError} from './headless-context-reserved-keys.js';
 
 export interface ContextProps {
   /**
@@ -108,10 +92,7 @@ export interface ContextState {
  * @group Controllers
  * @category Context
  */
-export function buildCoreContext(
-  engine: CoreEngine,
-  props: ContextProps = {}
-): Context {
+export function buildCoreContext(engine: CoreEngine, props: ContextProps = {}): Context {
   if (!loadContextReducers(engine)) {
     throw loadReducerError;
   }

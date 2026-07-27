@@ -1,9 +1,6 @@
 import type {Logger} from 'pino';
 import {describe, expect, it, vi} from 'vitest';
-import type {
-  PlatformRequestOptions,
-  PreprocessRequest,
-} from '../../api/preprocess-request.js';
+import type {PlatformRequestOptions, PreprocessRequest} from '../../api/preprocess-request.js';
 import * as loggerModule from '../../app/logger.js';
 import type {NavigatorContextProvider} from '../../app/navigator-context-provider.js';
 import {
@@ -11,9 +8,7 @@ import {
   augmentPreprocessRequestWithForwardedFor,
 } from './augment-preprocess-request.js';
 
-function buildMockRequest(
-  headers: Record<string, string> = {}
-): PlatformRequestOptions {
+function buildMockRequest(headers: Record<string, string> = {}): PlatformRequestOptions {
   return {
     url: 'https://example.com',
     headers,

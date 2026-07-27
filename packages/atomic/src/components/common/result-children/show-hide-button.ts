@@ -11,9 +11,7 @@ export interface ShowHideButtonProps {
   collapseResults: string;
 }
 
-export const renderShowHideButton: FunctionalComponent<ShowHideButtonProps> = ({
-  props,
-}) => {
+export const renderShowHideButton: FunctionalComponent<ShowHideButtonProps> = ({props}) => {
   const handleClick = () => {
     if (props.moreResultsAvailable) {
       props.loadFullCollection();

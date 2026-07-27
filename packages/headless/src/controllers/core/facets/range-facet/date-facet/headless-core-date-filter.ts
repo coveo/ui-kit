@@ -25,10 +25,7 @@ import type {
   SearchSection,
 } from '../../../../../state/state-sections.js';
 import {loadReducerError} from '../../../../../utils/errors.js';
-import {
-  buildController,
-  type Controller,
-} from '../../../../controller/headless-controller.js';
+import {buildController, type Controller} from '../../../../controller/headless-controller.js';
 import {determineFacetId} from '../../_common/facet-id-determinor.js';
 import {validateDateFacetOptions} from './headless-date-facet-options.js';
 
@@ -171,10 +168,7 @@ export interface DateFilter extends Controller {
   state: DateFilterState;
 }
 
-export function buildCoreDateFilter(
-  engine: CoreEngine,
-  props: DateFilterProps
-): DateFilter {
+export function buildCoreDateFilter(engine: CoreEngine, props: DateFilterProps): DateFilter {
   if (!loadDateFilterReducer(engine)) {
     throw loadReducerError;
   }
@@ -243,10 +237,7 @@ export function buildCoreDateFilter(
     get state() {
       const isLoading = isFacetLoadingResponseSelector(getState());
       const enabled = getIsEnabled();
-      const selectedRanges = dateFacetSelectedValuesSelector(
-        getState(),
-        facetId
-      );
+      const selectedRanges = dateFacetSelectedValuesSelector(getState(), facetId);
       const range = selectedRanges.length ? selectedRanges[0] : undefined;
 
       return {

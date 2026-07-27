@@ -45,17 +45,14 @@ export interface NavigatorContext {
  * Note: The implementation specifics of the navigator context provider depend on the Node.js framework being used. It is the developer's responsibility to define and implement the navigator context provider to ensure accurate navigation context is available in the application. If the user fails to provide a navigator context provider, a warning will be logged either in the server or the browser console.
  */
 export type NavigatorContextProvider = () => NavigatorContext;
-export type BrowserNavigatorContextProvider = (
-  clientId: string
-) => NavigatorContext;
+export type BrowserNavigatorContextProvider = (clientId: string) => NavigatorContext;
 
-export const defaultNodeJSNavigatorContextProvider: NavigatorContextProvider =
-  () => ({
-    referrer: null,
-    userAgent: null,
-    location: null,
-    clientId: '',
-  });
+export const defaultNodeJSNavigatorContextProvider: NavigatorContextProvider = () => ({
+  referrer: null,
+  userAgent: null,
+  location: null,
+  clientId: '',
+});
 
 export const getNavigatorContext = (
   relay: Relay,

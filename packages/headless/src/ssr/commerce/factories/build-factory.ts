@@ -38,10 +38,7 @@ export interface SSRCommerceEngine extends CommerceEngine {
 /**
  * SSR-specific commerce engine options with deprecated context property.
  */
-export type SSRCommerceEngineOptions = Omit<
-  CommerceEngineOptions,
-  'configuration'
-> & {
+export type SSRCommerceEngineOptions = Omit<CommerceEngineOptions, 'configuration'> & {
   configuration: Omit<CommerceEngineOptions['configuration'], 'context'> & {
     /**
      * @deprecated In the future major release, context should be provided through `fetchStaticState` rather than in the engine definition.
@@ -59,8 +56,7 @@ export type SSRCommerceEngineOptions = Omit<
 };
 
 export type CommerceEngineDefinitionOptions<
-  TControllers extends ControllerDefinitionsMap<Controller> =
-    ControllerDefinitionsMap<Controller>,
+  TControllers extends ControllerDefinitionsMap<Controller> = ControllerDefinitionsMap<Controller>,
 > = EngineDefinitionOptions<SSRCommerceEngineOptions, TControllers> & {
   /**
    * Callback invoked when the access token changes.
@@ -95,40 +91,29 @@ function buildSSRCommerceEngine(
   options: SSRCommerceEngineOptions,
   recommendationCount: number
 ): SSRCommerceEngine {
-  let actionCompletionMiddleware: ReturnType<
-    typeof createWaitForActionMiddleware
-  >;
+  let actionCompletionMiddleware: ReturnType<typeof createWaitForActionMiddleware>;
 
   const middlewares: ReturnType<typeof createWaitForActionMiddleware>[] = [];
   const memo: Set<string> = new Set();
 
   switch (solutionType) {
     case SolutionType.listing:
-      actionCompletionMiddleware = createWaitForActionMiddleware(
-        isListingFetchCompletedAction
-      );
+      actionCompletionMiddleware = createWaitForActionMiddleware(isListingFetchCompletedAction);
       middlewares.push(actionCompletionMiddleware);
       break;
     case SolutionType.search:
-      actionCompletionMiddleware = createWaitForActionMiddleware(
-        isSearchCompletedAction
-      );
+      actionCompletionMiddleware = createWaitForActionMiddleware(isSearchCompletedAction);
       middlewares.push(actionCompletionMiddleware);
       break;
     case SolutionType.recommendation:
       middlewares.push(
         ...Array.from({length: recommendationCount}, () =>
-          createWaitForActionMiddlewareForRecommendation(
-            isRecommendationCompletedAction,
-            memo
-          )
+          createWaitForActionMiddlewareForRecommendation(isRecommendationCompletedAction, memo)
         )
       );
       break;
     case SolutionType.standalone:
-      actionCompletionMiddleware = createWaitForActionMiddleware(
-        noSearchActionRequired
-      );
+      actionCompletionMiddleware = createWaitForActionMiddleware(noSearchActionRequired);
       break;
     default:
       throw new Error('Unsupported solution type', solutionType);
@@ -136,10 +121,7 @@ function buildSSRCommerceEngine(
 
   const commerceEngine = buildCommerceEngine({
     ...options,
-    middlewares: [
-      ...(options.middlewares ?? []),
-      ...middlewares.map(({middleware}) => middleware),
-    ],
+    middlewares: [...(options.middlewares ?? []), ...middlewares.map(({middleware}) => middleware)],
   });
 
   return {
@@ -189,8 +171,10 @@ export const buildFactory =
         ? (buildOptions.controllers as ControllersPropsMap)
         : {};
 
-    const enabledRecommendationControllers =
-      fetchActiveRecommendationControllers(controllerProps, solutionType);
+    const enabledRecommendationControllers = fetchActiveRecommendationControllers(
+      controllerProps,
+      solutionType
+    );
 
     const engine = buildSSRCommerceEngine(
       solutionType,

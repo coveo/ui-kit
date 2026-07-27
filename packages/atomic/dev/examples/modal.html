@@ -43,24 +43,16 @@
       }
 
       fullscreenCheckbox.addEventListener('change', () => updateFullscreen());
-      openModalButton.addEventListener('click', () =>
-        modal.setAttribute('is-open', 'true')
-      );
-      closeModalButton.addEventListener('click', () =>
-        modal.setAttribute('is-open', 'false')
-      );
+      openModalButton.addEventListener('click', () => modal.setAttribute('is-open', 'true'));
+      closeModalButton.addEventListener('click', () => modal.setAttribute('is-open', 'false'));
       updateFullscreen();
     </script>
   </head>
 
   <body>
-    <atomic-search-interface
-      language-assets-path="./lang"
-      icon-assets-path="./assets"
-    >
+    <atomic-search-interface language-assets-path="./lang" icon-assets-path="./assets">
       <button type="button" id="btn-open-modal">Open modal</button>
-      <input type="checkbox" id="checkbox-fullscreen" /><label
-        for="checkbox-fullscreen"
+      <input type="checkbox" id="checkbox-fullscreen" /><label for="checkbox-fullscreen"
         >Fullscreen</label
       >
       <atomic-modal id="modal">

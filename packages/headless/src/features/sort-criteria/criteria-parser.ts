@@ -9,10 +9,7 @@ import {
   SortOrder,
 } from './criteria.js';
 
-function parseCriterion(criterion: {
-  by: string;
-  order?: SortOrder;
-}): SortCriterion {
+function parseCriterion(criterion: {by: string; order?: SortOrder}): SortCriterion {
   const {by, order} = criterion;
 
   switch (by) {
@@ -40,11 +37,7 @@ function parseCriterion(criterion: {
 }
 
 function isSortOrder(order?: string): order is SortOrder {
-  return (
-    order === undefined ||
-    order === SortOrder.Ascending ||
-    order === SortOrder.Descending
-  );
+  return order === undefined || order === SortOrder.Ascending || order === SortOrder.Descending;
 }
 
 /**
@@ -61,9 +54,7 @@ function isSortOrder(order?: string): order is SortOrder {
  */
 export function parseCriterionExpression(expression: string) {
   const criteria = expression.split(',');
-  const wrongFormatError = new Error(
-    `Wrong criterion expression format for "${expression}"`
-  );
+  const wrongFormatError = new Error(`Wrong criterion expression format for "${expression}"`);
   if (!criteria.length) {
     throw wrongFormatError;
   }

@@ -10,9 +10,7 @@ test.describe('atomic-insight-refine-toggle', () => {
     await expect(refineToggle.icon).toBeVisible();
   });
 
-  test('should open the modal when the button is clicked', async ({
-    refineToggle,
-  }) => {
+  test('should open the modal when the button is clicked', async ({refineToggle}) => {
     await refineToggle.button.click();
 
     await expect(refineToggle.modal).toBeVisible();

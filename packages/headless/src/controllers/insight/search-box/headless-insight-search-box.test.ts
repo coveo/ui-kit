@@ -3,10 +3,7 @@ import {
   fetchQuerySuggestions,
 } from '../../../features/insight-search/insight-search-actions.js';
 import type {InsightAppState} from '../../../state/insight-app-state.js';
-import {
-  buildMockInsightEngine,
-  type MockedInsightEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockInsightEngine, type MockedInsightEngine} from '../../../test/mock-engine-v2.js';
 import {buildMockInsightState} from '../../../test/mock-insight-state.js';
 import {buildMockQuerySuggest} from '../../../test/mock-query-suggest.js';
 import {

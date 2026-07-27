@@ -13,10 +13,7 @@ import type {LitElementWithError} from '@/src/decorators/types.js';
  * The numerical format of compatible parents will be set according to the properties of this component.
  */
 @customElement('atomic-format-number')
-export class AtomicFormatNumber
-  extends LitElement
-  implements LitElementWithError
-{
+export class AtomicFormatNumber extends LitElement implements LitElementWithError {
   /**
    * The minimum number of integer digits to use.
    */
@@ -69,12 +66,11 @@ export class AtomicFormatNumber
 
   connectedCallback() {
     super.connectedCallback();
-    dispatchNumberFormatEvent(
-      (value, languages) => this.format(value, languages),
-      this
-    ).catch((error) => {
-      this.error = error as Error;
-    });
+    dispatchNumberFormatEvent((value, languages) => this.format(value, languages), this).catch(
+      (error) => {
+        this.error = error as Error;
+      }
+    );
   }
 
   @errorGuard()

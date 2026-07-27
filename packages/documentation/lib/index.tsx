@@ -16,10 +16,7 @@ import {
   Renderer,
   RendererEvent,
 } from 'typedoc';
-import {
-  handleRendererEndPage,
-  setCodeBlockVariables,
-} from './calloutParsing.js';
+import {handleRendererEndPage, setCodeBlockVariables} from './calloutParsing.js';
 import {formatRightToc} from './formatRightToc.js';
 import {formatTypeDocToolbar} from './formatTypeDocToolbar.js';
 import {hoistOtherCategoryInArray, hoistOtherCategoryInNav} from './hoist.js';
@@ -45,8 +42,7 @@ class KebabRouter extends KindRouter {
   extension = '.html';
 
   protected getIdealBaseName(refl: Models.Reflection): string {
-    if (!(refl as DocumentReflection)?.frontmatter?.slug)
-      return super.getIdealBaseName(refl);
+    if (!(refl as DocumentReflection)?.frontmatter?.slug) return super.getIdealBaseName(refl);
     const {slug} = (refl as DocumentReflection).frontmatter as TFrontMatter;
 
     return `documents/${slug}`;
@@ -57,10 +53,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 let headlessVersion = '';
 try {
-  const pkgPath = resolve(
-    dirname(fileURLToPath(import.meta.url)),
-    '../../headless/package.json'
-  );
+  const pkgPath = resolve(dirname(fileURLToPath(import.meta.url)), '../../headless/package.json');
   const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'));
   headlessVersion = pkg.version || '';
 } catch {}
@@ -106,9 +99,7 @@ export const load = (app: Application) => {
   });
 
   const originalMethodName = 'getNavigation';
-  let originalMethod: (
-    project: ProjectReflection
-  ) => NavigationElement[] | null = null;
+  let originalMethod: (project: ProjectReflection) => NavigationElement[] | null = null;
   app.renderer.on('beginRender', () => {
     const theme = app.renderer.theme as DefaultTheme | undefined;
     if (!theme) return;
@@ -123,12 +114,10 @@ export const load = (app: Application) => {
       (opts.getValue('defaultCategory') as string) ||
       'Other';
 
-    const topLevelGroup =
-      (opts.getValue('hoistOther.topLevelGroup') as string) || 'Documents';
+    const topLevelGroup = (opts.getValue('hoistOther.topLevelGroup') as string) || 'Documents';
 
     const topLevelOrder =
-      (opts.getValue('hoistOther.topLevelOrder') as string[] | undefined) ||
-      undefined;
+      (opts.getValue('hoistOther.topLevelOrder') as string[] | undefined) || undefined;
 
     let nestedOrder = opts.getValue('hoistOther.nestedOrder') as
       | Record<string, string[]>
@@ -141,15 +130,11 @@ export const load = (app: Application) => {
     }
 
     const renameModulesTo =
-      (opts.getValue('hoistOther.renameModulesTo') as string | undefined) ||
-      undefined;
+      (opts.getValue('hoistOther.renameModulesTo') as string | undefined) || undefined;
 
     const typedNestedOrder = nestedOrder as Record<string, string[]>;
 
-    theme.getNavigation = function wrappedNavigation(
-      this: unknown,
-      ...args: unknown[]
-    ) {
+    theme.getNavigation = function wrappedNavigation(this: unknown, ...args: unknown[]) {
       const nav = originalMethod!.apply(this, args);
 
       // The nav shape can be an array of nodes or a single root with children
@@ -167,11 +152,7 @@ export const load = (app: Application) => {
         applyNestedOrderingArray(nav as TNavNode[], typedNestedOrder);
       } else if (nav && typeof nav === 'object') {
         if (renameModulesTo?.trim() && Array.isArray(nav.children)) {
-          applyTopLevelRenameArray(
-            nav.children,
-            'Modules',
-            renameModulesTo.trim()
-          );
+          applyTopLevelRenameArray(nav.children, 'Modules', renameModulesTo.trim());
         }
 
         hoistOtherCategoryInNav(nav as TNavNode, fallback);
@@ -198,10 +179,7 @@ export const load = (app: Application) => {
         <script>
           <JSX.Raw html={`(${insertBetaNote.toString()})();`} />
         </script>
-        <script
-          type="module"
-          src="https://static.cloud.coveo.com/atomic/v3/atomic.esm.js"
-        ></script>
+        <script type="module" src="https://static.cloud.coveo.com/atomic/v3/atomic.esm.js"></script>
         <script>
           <JSX.Raw
             html={`
@@ -229,14 +207,8 @@ export const load = (app: Application) => {
           integrity="sha384-XxDPxKDB79eXOLF+koPFe4h9iVF6LgQ1J6Do9sdhcohvTlVMK7EJE74b1b0iK3uK"
           crossOrigin="anonymous"
         ></script>
-        <script
-          type="module"
-          src={event.relativeURL('assets/vars/analytics.js')}
-        ></script>
-        <script
-          type="module"
-          src={event.relativeURL('assets/vars/onetrust.js')}
-        ></script>
+        <script type="module" src={event.relativeURL('assets/vars/analytics.js')}></script>
+        <script type="module" src={event.relativeURL('assets/vars/onetrust.js')}></script>
         <script>
           <JSX.Raw html={`(${formatTypeDocToolbar.toString()})();`} />
         </script>
@@ -259,23 +231,14 @@ export const load = (app: Application) => {
   // data-domain-script here needs to change based on environment: needs "test" removed for prod
   app.renderer.hooks.on('footer.end', (event) => (
     <>
-      <link
-        rel="stylesheet"
-        href={event.relativeURL('assets/css/main-new.css')}
-      />
+      <link rel="stylesheet" href={event.relativeURL('assets/css/main-new.css')} />
       <script
         type="module"
         src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       ></script>
-      <link
-        rel="stylesheet"
-        href={event.relativeURL('assets/css/docs-style.css')}
-      />
-      <link
-        rel="stylesheet"
-        href="https://static.cloud.coveo.com/atomic/v3/themes/coveo.css"
-      />
+      <link rel="stylesheet" href={event.relativeURL('assets/css/docs-style.css')} />
+      <link rel="stylesheet" href="https://static.cloud.coveo.com/atomic/v3/themes/coveo.css" />
       <link
         rel="stylesheet"
         href={event.relativeURL('assets/css/light-theme.css')}
@@ -286,14 +249,8 @@ export const load = (app: Application) => {
         href={event.relativeURL('assets/css/dark-theme.css')}
         media="(prefers-color-scheme: dark)"
       />
-      <script
-        type="module"
-        src={event.relativeURL('assets/vars/dark-mode-toggle.js')}
-      ></script>
-      <script
-        type="module"
-        src={event.relativeURL('assets/vars/dark-mode.js')}
-      ></script>
+      <script type="module" src={event.relativeURL('assets/vars/dark-mode-toggle.js')}></script>
+      <script type="module" src={event.relativeURL('assets/vars/dark-mode.js')}></script>
     </>
   ));
 
@@ -349,9 +306,7 @@ export const load = (app: Application) => {
         const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'));
         version = pkg.version;
       } catch {
-        throw new Error(
-          `Failed to determine packageVersion: could not read or parse ${pkgPath}`
-        );
+        throw new Error(`Failed to determine packageVersion: could not read or parse ${pkgPath}`);
       }
       if (!version) {
         throw new Error(

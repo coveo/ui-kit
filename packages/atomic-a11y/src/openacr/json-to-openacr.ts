@@ -1,10 +1,7 @@
 import {mkdir, readFile, writeFile} from 'node:fs/promises';
 import path from 'node:path';
 import {stringify} from 'yaml';
-import {
-  DEFAULT_A11Y_REPORT_FILENAME,
-  DEFAULT_A11Y_REPORT_OUTPUT_DIR,
-} from '../shared/constants.js';
+import {DEFAULT_A11Y_REPORT_FILENAME, DEFAULT_A11Y_REPORT_OUTPUT_DIR} from '../shared/constants.js';
 import {isA11yReport} from '../shared/guards.js';
 import type {A11yReport} from '../shared/types.js';
 import {loadManualAuditData} from './manual-audit.js';
@@ -82,28 +79,20 @@ export async function transformJsonToOpenAcr(
   options: JsonToOpenAcrOptions = {}
 ): Promise<OpenAcrReport> {
   const inputFile = path.resolve(
-    options.inputFile ??
-      path.join(DEFAULT_A11Y_REPORT_OUTPUT_DIR, DEFAULT_A11Y_REPORT_FILENAME)
+    options.inputFile ?? path.join(DEFAULT_A11Y_REPORT_OUTPUT_DIR, DEFAULT_A11Y_REPORT_FILENAME)
   );
   const outputFile = path.resolve(
-    options.outputFile ??
-      path.join(DEFAULT_A11Y_REPORT_OUTPUT_DIR, DEFAULT_OPENACR_OUTPUT_FILENAME)
+    options.outputFile ?? path.join(DEFAULT_A11Y_REPORT_OUTPUT_DIR, DEFAULT_OPENACR_OUTPUT_FILENAME)
   );
   const overridesFile = path.resolve(
-    options.overridesFile ??
-      path.join(DEFAULT_OVERRIDES_DIR, DEFAULT_OVERRIDES_FILENAME)
+    options.overridesFile ?? path.join(DEFAULT_OVERRIDES_DIR, DEFAULT_OVERRIDES_FILENAME)
   );
 
   const report = await readInputReport(inputFile);
 
   if (!report) {
-    console.warn(
-      LOG_PREFIX,
-      'No valid a11y report available. Skipping OpenACR generation.'
-    );
-    throw new Error(
-      'Cannot generate OpenACR report: a11y-report.json is missing or invalid'
-    );
+    console.warn(LOG_PREFIX, 'No valid a11y report available. Skipping OpenACR generation.');
+    throw new Error('Cannot generate OpenACR report: a11y-report.json is missing or invalid');
   }
 
   const overrides = await loadOverrides(overridesFile);
@@ -115,9 +104,7 @@ export async function transformJsonToOpenAcr(
     );
   }
 
-  const manualAuditDir = path.resolve(
-    options.manualAuditDir ?? DEFAULT_MANUAL_AUDIT_DIR
-  );
+  const manualAuditDir = path.resolve(options.manualAuditDir ?? DEFAULT_MANUAL_AUDIT_DIR);
   const manualAggregates = await loadManualAuditData(manualAuditDir);
 
   const openAcrReport = buildOpenAcrReport(report, overrides, manualAggregates);

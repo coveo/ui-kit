@@ -7,10 +7,8 @@ export interface ApplyQueryTriggerModificationPayload {
   newQuery: string;
 }
 
-export const updateIgnoreQueryTrigger = createAction(
-  'trigger/query/ignore',
-  (q: string) =>
-    validatePayload(q, new StringValue({emptyAllowed: true, required: true}))
+export const updateIgnoreQueryTrigger = createAction('trigger/query/ignore', (q: string) =>
+  validatePayload(q, new StringValue({emptyAllowed: true, required: true}))
 );
 
 export const applyQueryTriggerModification = createAction(

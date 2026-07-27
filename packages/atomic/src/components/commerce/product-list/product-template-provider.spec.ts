@@ -1,7 +1,4 @@
-import {
-  buildProductTemplatesManager,
-  type Product,
-} from '@coveo/headless/commerce';
+import {buildProductTemplatesManager, type Product} from '@coveo/headless/commerce';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import type {ItemTarget} from '@/src/components/common/layout/item-layout-utils';
 import type {TemplateProviderProps} from '@/src/components/common/template-provider/template-provider';
@@ -76,28 +73,15 @@ describe('ProductTemplateProvider', () => {
 
         expect(defaultTemplate.children.length).toBe(2);
 
-        expect(defaultTemplate.children[0]?.nodeName).toBe(
-          'ATOMIC-PRODUCT-SECTION-NAME'
-        );
+        expect(defaultTemplate.children[0]?.nodeName).toBe('ATOMIC-PRODUCT-SECTION-NAME');
         expect(defaultTemplate.children[0].children.length).toBe(1);
-        expect(defaultTemplate.children[0].children[0]?.nodeName).toBe(
-          'ATOMIC-PRODUCT-LINK'
-        );
-        await expect(defaultTemplate.children[0].children[0]).toHaveClass(
-          'font-bold'
-        );
+        expect(defaultTemplate.children[0].children[0]?.nodeName).toBe('ATOMIC-PRODUCT-LINK');
+        await expect(defaultTemplate.children[0].children[0]).toHaveClass('font-bold');
 
-        expect(defaultTemplate.children[1]?.nodeName).toBe(
-          'ATOMIC-PRODUCT-SECTION-VISUAL'
-        );
+        expect(defaultTemplate.children[1]?.nodeName).toBe('ATOMIC-PRODUCT-SECTION-VISUAL');
         expect(defaultTemplate.children[1].children.length).toBe(1);
-        expect(defaultTemplate.children[1].children[0]?.nodeName).toBe(
-          'ATOMIC-PRODUCT-IMAGE'
-        );
-        expect(defaultTemplate.children[1].children[0]).toHaveAttribute(
-          'field',
-          'ec_thumbnails'
-        );
+        expect(defaultTemplate.children[1].children[0]?.nodeName).toBe('ATOMIC-PRODUCT-IMAGE');
+        expect(defaultTemplate.children[1].children[0]).toHaveAttribute('field', 'ec_thumbnails');
       });
 
       it('should register the correct default link template when #gridCellLinkTarget is undefined', async () => {
@@ -108,14 +92,11 @@ describe('ProductTemplateProvider', () => {
 
         await vi.runAllTimersAsync();
 
-        const defaultLinkTemplate =
-          registerTemplates.mock.lastCall?.[0].linkContent;
+        const defaultLinkTemplate = registerTemplates.mock.lastCall?.[0].linkContent;
         expect(defaultLinkTemplate).toBeInstanceOf(DocumentFragment);
 
         expect(defaultLinkTemplate.children.length).toBe(1);
-        expect(defaultLinkTemplate.children[0]?.nodeName).toBe(
-          'ATOMIC-PRODUCT-LINK'
-        );
+        expect(defaultLinkTemplate.children[0]?.nodeName).toBe('ATOMIC-PRODUCT-LINK');
       });
 
       it('should register the correct default link template when #gridCellLinkTarget is defined', async () => {
@@ -126,23 +107,14 @@ describe('ProductTemplateProvider', () => {
 
         await vi.runAllTimersAsync();
 
-        const defaultLinkTemplate =
-          registerTemplates.mock.lastCall?.[0].linkContent;
+        const defaultLinkTemplate = registerTemplates.mock.lastCall?.[0].linkContent;
         expect(defaultLinkTemplate).toBeInstanceOf(DocumentFragment);
 
         expect(defaultLinkTemplate.children.length).toBe(1);
-        expect(defaultLinkTemplate.children[0]?.nodeName).toBe(
-          'ATOMIC-PRODUCT-LINK'
-        );
+        expect(defaultLinkTemplate.children[0]?.nodeName).toBe('ATOMIC-PRODUCT-LINK');
         expect(defaultLinkTemplate.children[0].children.length).toBe(1);
-        expect(defaultLinkTemplate.children[0].children[0]).toHaveAttribute(
-          'slot',
-          'attributes'
-        );
-        expect(defaultLinkTemplate.children[0].children[0]).toHaveAttribute(
-          'target',
-          '_blank'
-        );
+        expect(defaultLinkTemplate.children[0].children[0]).toHaveAttribute('slot', 'attributes');
+        expect(defaultLinkTemplate.children[0].children[0]).toHaveAttribute('target', '_blank');
       });
     });
   });

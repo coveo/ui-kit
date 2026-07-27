@@ -1,20 +1,9 @@
 import {html} from 'lit';
-import {
-  beforeAll,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  type MockedFunction,
-  vi,
-} from 'vitest';
+import {beforeAll, beforeEach, describe, expect, it, type MockedFunction, vi} from 'vitest';
 import {renderFieldsetGroup as renderCommonFieldsetGroup} from '@/src/components/common/fieldset-group';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {
-  type FacetValuesGroupProps,
-  renderFacetValuesGroup,
-} from './facet-values-group';
+import {type FacetValuesGroupProps, renderFacetValuesGroup} from './facet-values-group';
 
 vi.mock('@/src/components/common/fieldset-group', {spy: true});
 
@@ -40,9 +29,7 @@ describe('#renderFacetValuesGroup', () => {
       query: undefined,
     };
     const mergedProps = {...defaultProps, ...props};
-    return renderFunctionFixture(
-      html`${renderFacetValuesGroup({props: mergedProps})(children)}`
-    );
+    return renderFunctionFixture(html`${renderFacetValuesGroup({props: mergedProps})(children)}`);
   };
 
   it('renders a fieldset group with the correct label when query is undefined', async () => {

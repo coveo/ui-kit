@@ -57,10 +57,7 @@ export class AtomicCommerceQueryError
   @state() public error!: Error;
   @state() showMoreInfo = false;
 
-  protected ariaMessage = new AriaLiveRegionController(
-    this,
-    'commerce-query-error'
-  );
+  protected ariaMessage = new AriaLiveRegionController(this, 'commerce-query-error');
 
   public initialize() {
     if (this.bindings.interfaceElement.type === 'product-listing') {
@@ -76,11 +73,9 @@ export class AtomicCommerceQueryError
     const {error} = this.searchOrListingState;
 
     const i18n = this.bindings.i18n;
-    const {organizationId, environment, commerce} =
-      this.bindings.engine.configuration;
+    const {organizationId, environment, commerce} = this.bindings.engine.configuration;
 
-    const url =
-      commerce.apiBaseUrl ?? getCommerceApiBaseUrl(organizationId, environment);
+    const url = commerce.apiBaseUrl ?? getCommerceApiBaseUrl(organizationId, environment);
 
     const hasError = !isNullOrUndefined(error);
     if (hasError) {

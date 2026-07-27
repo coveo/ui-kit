@@ -1,8 +1,5 @@
 import {executeSearch} from '../../../features/insight-search/insight-search-actions.js';
-import {
-  buildMockInsightEngine,
-  type MockedInsightEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockInsightEngine, type MockedInsightEngine} from '../../../test/mock-engine-v2.js';
 import {buildMockInsightState} from '../../../test/mock-insight-state.js';
 import {
   buildGeneratedAnswer,

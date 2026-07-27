@@ -20,26 +20,18 @@ const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
   },
   includeCodeRoot: false,
 });
-const {decorator: commerceProductListDecorator} = wrapInCommerceProductList(
-  'list',
-  false
-);
+const {decorator: commerceProductListDecorator} = wrapInCommerceProductList('list', false);
 const {decorator: productTemplateDecorator} = wrapInProductTemplate();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-product-field-condition',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-product-field-condition', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-product-field-condition',
   title: 'Commerce/Product Field Condition',
   id: 'atomic-product-field-condition',
   render: (args) => template(args),
-  decorators: [
-    productTemplateDecorator,
-    commerceProductListDecorator,
-    commerceInterfaceDecorator,
-  ],
+  decorators: [productTemplateDecorator, commerceProductListDecorator, commerceInterfaceDecorator],
   parameters: {
     ...parameters,
     msw: {handlers: [...commerceApiHarness.handlers]},

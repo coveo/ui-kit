@@ -7,9 +7,7 @@ import {type RadioButtonProps, renderRadioButton} from './radio-button';
 vi.mock('@/src/utils/ripple-utils', {spy: true});
 
 describe('#renderRadioButton', () => {
-  const renderComponent = async (
-    props: Partial<RadioButtonProps>
-  ): Promise<HTMLElement> => {
+  const renderComponent = async (props: Partial<RadioButtonProps>): Promise<HTMLElement> => {
     return renderFunctionFixture(
       html`${renderRadioButton({props: {...props, groupName: 'test-group'}})}`
     );
@@ -23,9 +21,7 @@ describe('#renderRadioButton', () => {
     };
 
     const element = await renderComponent(props);
-    const input = element.querySelector(
-      'input[type="radio"]'
-    ) as HTMLInputElement;
+    const input = element.querySelector('input[type="radio"]') as HTMLInputElement;
 
     expect(input).toBeInTheDocument();
     expect(input.name).toBe('test-group');
@@ -43,9 +39,7 @@ describe('#renderRadioButton', () => {
     };
 
     const element = await renderComponent(props);
-    const input = element.querySelector<HTMLInputElement>(
-      'input[type="radio"]'
-    )!;
+    const input = element.querySelector<HTMLInputElement>('input[type="radio"]')!;
     input.click();
 
     expect(onChecked).toHaveBeenCalled();
@@ -64,36 +58,24 @@ describe('#renderRadioButton', () => {
       ${renderRadioButton({props: {...props, text: 'radio-4'}})}`
     );
 
-    const inputs = element.querySelectorAll(
-      'input[type="radio"]'
-    ) as NodeListOf<HTMLInputElement>;
+    const inputs = element.querySelectorAll('input[type="radio"]') as NodeListOf<HTMLInputElement>;
 
     inputs[0].focus();
     expect(document.activeElement).toBe(inputs[0]);
 
-    inputs[0].dispatchEvent(
-      new KeyboardEvent('keydown', {key: 'ArrowRight', bubbles: true})
-    );
+    inputs[0].dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowRight', bubbles: true}));
     expect(document.activeElement).toBe(inputs[1]);
 
-    inputs[1].dispatchEvent(
-      new KeyboardEvent('keydown', {key: 'ArrowRight', bubbles: true})
-    );
+    inputs[1].dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowRight', bubbles: true}));
     expect(document.activeElement).toBe(inputs[2]);
 
-    inputs[2].dispatchEvent(
-      new KeyboardEvent('keydown', {key: 'ArrowRight', bubbles: true})
-    );
+    inputs[2].dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowRight', bubbles: true}));
     expect(document.activeElement).toBe(inputs[3]);
 
-    inputs[3].dispatchEvent(
-      new KeyboardEvent('keydown', {key: 'ArrowRight', bubbles: true})
-    );
+    inputs[3].dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowRight', bubbles: true}));
     expect(document.activeElement).toBe(inputs[0]);
 
-    inputs[0].dispatchEvent(
-      new KeyboardEvent('keydown', {key: 'ArrowLeft', bubbles: true})
-    );
+    inputs[0].dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowLeft', bubbles: true}));
     expect(document.activeElement).toBe(inputs[3]);
   });
 

@@ -13,23 +13,15 @@ test.describe('user actions toggle', () => {
     });
   });
 
-  test('should display the user actions toggle button', async ({
-    userActionsToggle,
-  }) => {
+  test('should display the user actions toggle button', async ({userActionsToggle}) => {
     await expect(userActionsToggle.atomicInsightHistoryToggle).toBeVisible();
   });
 
   test.describe('when clicking the user actions toggle', () => {
-    test('should display the user actions timeline', async ({
-      userActionsToggle,
-    }) => {
+    test('should display the user actions timeline', async ({userActionsToggle}) => {
       await userActionsToggle.atomicInsightHistoryToggle.click();
-      await expect(
-        userActionsToggle.atomicInsightUserActionsModal
-      ).toBeVisible();
-      await expect(
-        userActionsToggle.atomicInsightUserActionsTimeline
-      ).toBeVisible();
+      await expect(userActionsToggle.atomicInsightUserActionsModal).toBeVisible();
+      await expect(userActionsToggle.atomicInsightUserActionsTimeline).toBeVisible();
     });
   });
 });

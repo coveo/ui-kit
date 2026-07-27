@@ -6,10 +6,7 @@ import {
 } from '../../features/pagination/pagination-analytics-actions.js';
 import {paginationReducer as pagination} from '../../features/pagination/pagination-slice.js';
 import {fetchPage} from '../../features/search/search-actions.js';
-import type {
-  ConfigurationSection,
-  PaginationSection,
-} from '../../state/state-sections.js';
+import type {ConfigurationSection, PaginationSection} from '../../state/state-sections.js';
 import {loadReducerError} from '../../utils/errors.js';
 import {
   buildCoreResultsPerPage,
@@ -19,12 +16,7 @@ import {
   type ResultsPerPageState,
 } from '../core/results-per-page/headless-core-results-per-page.js';
 
-export type {
-  ResultsPerPage,
-  ResultsPerPageInitialState,
-  ResultsPerPageProps,
-  ResultsPerPageState,
-};
+export type {ResultsPerPage, ResultsPerPageInitialState, ResultsPerPageProps, ResultsPerPageState};
 
 /**
  * Creates a `ResultsPerPage` controller instance.

@@ -16,12 +16,7 @@ import {
   type QuickviewProps,
 } from '../core/quickview/headless-core-quickview.js';
 
-export type {
-  CoreQuickview,
-  CoreQuickviewState,
-  QuickviewOptions,
-  QuickviewProps,
-};
+export type {CoreQuickview, CoreQuickviewState, QuickviewOptions, QuickviewProps};
 
 /**
  * A scoped and simplified part of the headless state that is relevant to the `Quickview` controller.
@@ -66,10 +61,7 @@ export interface Quickview extends CoreQuickview {
  * @group Controllers
  * @category Quickview
  */
-export function buildQuickview(
-  engine: SearchEngine,
-  props: QuickviewProps
-): Quickview {
+export function buildQuickview(engine: SearchEngine, props: QuickviewProps): Quickview {
   if (!loadSearchQuickviewReducers(engine)) {
     throw loadReducerError;
   }
@@ -100,9 +92,7 @@ export function buildQuickview(
       return {
         ...core.state,
         currentResult:
-          getResults().findIndex(
-            (r) => r.uniqueId === core.state.currentResultUniqueId
-          ) + 1,
+          getResults().findIndex((r) => r.uniqueId === core.state.currentResultUniqueId) + 1,
         totalResults: getResults().length,
       };
     },
@@ -111,10 +101,7 @@ export function buildQuickview(
 
 function loadSearchQuickviewReducers(
   engine: CoreEngine
-): engine is CoreEngine<
-  SearchSection,
-  ClientThunkExtraArguments<HtmlApiClient>
-> {
+): engine is CoreEngine<SearchSection, ClientThunkExtraArguments<HtmlApiClient>> {
   engine.addReducers({search});
   return true;
 }

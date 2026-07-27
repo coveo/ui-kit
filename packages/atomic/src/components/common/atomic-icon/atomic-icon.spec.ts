@@ -43,8 +43,7 @@ describe('atomic-icon', () => {
   const successfulResponse = {
     ok: true,
     status: 200,
-    text: async () =>
-      '<svg data-testid="mocked-icon"><circle cx="50" cy="50" r="40" /></svg>',
+    text: async () => '<svg data-testid="mocked-icon"><circle cx="50" cy="50" r="40" /></svg>',
   } as Response;
 
   beforeEach(() => {
@@ -56,9 +55,7 @@ describe('atomic-icon', () => {
   });
 
   const setupElement = async (icon: string) => {
-    const element = await fixture<AtomicIcon>(
-      html` <atomic-icon icon=${icon}></atomic-icon>`
-    );
+    const element = await fixture<AtomicIcon>(html` <atomic-icon icon=${icon}></atomic-icon>`);
 
     await element.initialize();
     // The atomic-icon runs asynchronous operation behind a guard, meaning the first render is _not_ the one we ought to assert on
@@ -79,9 +76,7 @@ describe('atomic-icon', () => {
     expect(fetchMock).toHaveBeenCalledWith('/assets/user.svg');
 
     await expect.element(locators.svg).toBeInTheDocument();
-    await expect
-      .element(locators.svg)
-      .toContainHTML('<circle cx="50" cy="50" r="40" />');
+    await expect.element(locators.svg).toContainHTML('<circle cx="50" cy="50" r="40" />');
   });
 
   it('should sanitizes the SVG content', async () => {
@@ -90,9 +85,7 @@ describe('atomic-icon', () => {
     );
 
     await expect.element(locators.svg).toBeInTheDocument();
-    await expect
-      .element(locators.svg.getByTestId('script'))
-      .not.toBeInTheDocument();
+    await expect.element(locators.svg.getByTestId('script')).not.toBeInTheDocument();
   });
 
   it('fetches and renders the SVG icon from a URL', async () => {
@@ -102,18 +95,13 @@ describe('atomic-icon', () => {
     await setupElement('http://example.com/icon.svg');
 
     expect(fetchMock).toHaveBeenCalledWith('http://example.com/icon.svg');
-    await expect
-      .element(locators.svg)
-      .toContainHTML('<circle cx="50" cy="50" r="40" />');
+    await expect.element(locators.svg).toContainHTML('<circle cx="50" cy="50" r="40" />');
   });
 
   it('calls parseAssetURL with the correct arguments', async () => {
     parseAssetURLMock.mockReturnValue('/assets/icon.svg');
     await setupElement('assets://icon.svg');
-    expect(parseAssetURLMock).toHaveBeenCalledWith(
-      'assets://icon.svg',
-      './assets'
-    );
+    expect(parseAssetURLMock).toHaveBeenCalledWith('assets://icon.svg', './assets');
   });
 
   it('handles fetch errors gracefully', async () => {
@@ -123,9 +111,7 @@ describe('atomic-icon', () => {
 
     await setupElement('http://example.com/icon.svg');
 
-    await expect
-      .element(page.getByText('atomic-icon component error'))
-      .toBeInTheDocument();
+    await expect.element(page.getByText('atomic-icon component error')).toBeInTheDocument();
   });
 
   it('calls fetchIcon with the correct arguments', async () => {
@@ -136,12 +122,9 @@ describe('atomic-icon', () => {
 
   it('calls DOMPurify.sanitize with the correct arguments', async () => {
     await setupElement("<svg><circle cx='50' cy='50' r='40' /></svg>");
-    expect(sanitizeMock).toHaveBeenCalledWith(
-      "<svg><circle cx='50' cy='50' r='40' /></svg>",
-      {
-        USE_PROFILES: {svg: true, svgFilters: true},
-      }
-    );
+    expect(sanitizeMock).toHaveBeenCalledWith("<svg><circle cx='50' cy='50' r='40' /></svg>", {
+      USE_PROFILES: {svg: true, svgFilters: true},
+    });
   });
 
   describe('caching', () => {
@@ -191,9 +174,7 @@ describe('atomic-icon', () => {
         .mockResolvedValueOnce(successfulResponse);
 
       await setupElement('http://example.com/icon.svg');
-      await expect
-        .element(page.getByText('atomic-icon component error'))
-        .toBeInTheDocument();
+      await expect.element(page.getByText('atomic-icon component error')).toBeInTheDocument();
 
       await setupElement('http://example.com/icon.svg');
 

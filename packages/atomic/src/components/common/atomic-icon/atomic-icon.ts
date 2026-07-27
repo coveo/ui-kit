@@ -80,10 +80,7 @@ export class AtomicIcon
     if (!this.bindings) {
       return null;
     }
-    const url = parseAssetURL(
-      this.icon,
-      this.bindings.store.state.iconAssetsPath
-    );
+    const url = parseAssetURL(this.icon, this.bindings.store.state.iconAssetsPath);
     const svg = url ? await this.fetchIcon(url) : this.icon;
 
     if (svg) {

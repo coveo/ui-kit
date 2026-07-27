@@ -34,17 +34,12 @@ export const initialSearchMappings: () => SearchMappings = () => ({
   dateFacetValueMap: {},
 });
 
-function mapDateRangeRequest(
-  value: DateRangeRequest,
-  facetId: string,
-  mappings: SearchMappings
-) {
+function mapDateRangeRequest(value: DateRangeRequest, facetId: string, mappings: SearchMappings) {
   let start = value.start;
   let end = value.end;
   if (isRelativeDateFormat(start)) {
     start = formatRelativeDateForSearchApi(start);
-    mappings.dateFacetValueMap[facetId][formatStartFacetValue(start)] =
-      value.start;
+    mappings.dateFacetValueMap[facetId][formatStartFacetValue(start)] = value.start;
   }
   if (isRelativeDateFormat(end)) {
     end = formatRelativeDateForSearchApi(end);
@@ -54,18 +49,13 @@ function mapDateRangeRequest(
   return {...value, start, end};
 }
 
-export function mapFacetRequest(
-  facetRequest: AnyFacetRequest,
-  mappings: SearchMappings
-) {
+export function mapFacetRequest(facetRequest: AnyFacetRequest, mappings: SearchMappings) {
   if (isDateFacetRequest(facetRequest)) {
     const {facetId, currentValues} = facetRequest;
     mappings.dateFacetValueMap[facetId] = {};
     return {
       ...facetRequest,
-      currentValues: currentValues.map((value) =>
-        mapDateRangeRequest(value, facetId, mappings)
-      ),
+      currentValues: currentValues.map((value) => mapDateRangeRequest(value, facetId, mappings)),
     };
   }
 
@@ -83,26 +73,16 @@ export function mapSearchRequest<T extends FacetsParam = SearchRequest>(
   const mappings = initialSearchMappings();
   const request: T = {
     ...searchRequest,
-    facets: searchRequest.facets?.map((facetRequest) =>
-      mapFacetRequest(facetRequest, mappings)
-    ),
+    facets: searchRequest.facets?.map((facetRequest) => mapFacetRequest(facetRequest, mappings)),
   };
   return {request, mappings};
 }
 
-function mapDateRangeResponse(
-  value: DateFacetValue,
-  facetId: string,
-  mappings: SearchMappings
-) {
+function mapDateRangeResponse(value: DateFacetValue, facetId: string, mappings: SearchMappings) {
   return {
     ...value,
-    start:
-      mappings.dateFacetValueMap[facetId][formatStartFacetValue(value.start)] ||
-      value.start,
-    end:
-      mappings.dateFacetValueMap[facetId][formatEndFacetValue(value.end)] ||
-      value.end,
+    start: mappings.dateFacetValueMap[facetId][formatStartFacetValue(value.start)] || value.start,
+    end: mappings.dateFacetValueMap[facetId][formatEndFacetValue(value.end)] || value.end,
   };
 }
 
@@ -113,10 +93,7 @@ function isDateFacetResponse(
   return facetResponse.facetId in mappings.dateFacetValueMap;
 }
 
-function mapFacetResponse(
-  facetResponse: AnyFacetResponse,
-  mappings: SearchMappings
-) {
+function mapFacetResponse(facetResponse: AnyFacetResponse, mappings: SearchMappings) {
   if (isDateFacetResponse(facetResponse, mappings)) {
     return {
       ...facetResponse,
@@ -137,10 +114,7 @@ export type SuccessResponse = {
 
 export function mapSearchResponse<
   ResponseSuccess extends SearchAPIClientResponse<SearchResponseSuccess>,
->(
-  response: ResponseSuccess,
-  mappings: SearchMappings
-): SuccessResponse | ErrorResponse {
+>(response: ResponseSuccess, mappings: SearchMappings): SuccessResponse | ErrorResponse {
   if ('success' in response) {
     const success: SearchResponseSuccess = {
       ...response.success,

@@ -5,14 +5,8 @@ import HistoryStore from '../../../api/analytics/coveo.analytics/history-store.j
 import type {SearchResponseSuccess} from '../../../api/search/search/search-response.js';
 import type {AsyncThunkSearchOptions} from '../../../api/search/search-api-client.js';
 import type {InstantResultSection} from '../../../state/state-sections.js';
-import {
-  requiredNonEmptyString,
-  validatePayload,
-} from '../../../utils/validate-payload.js';
-import type {
-  AnalyticsAsyncThunk,
-  LegacySearchAction,
-} from '../../analytics/analytics-utils.js';
+import {requiredNonEmptyString, validatePayload} from '../../../utils/validate-payload.js';
+import type {AnalyticsAsyncThunk, LegacySearchAction} from '../../analytics/analytics-utils.js';
 import {logInstantResultsSearch} from '../../instant-results/instant-result-analytics-actions.js';
 import {
   type FetchInstantResultsActionCreatorPayload,
@@ -21,10 +15,7 @@ import {
 } from '../../instant-results/instant-results-actions.js';
 import {buildSearchAndFoldingLoadCollectionRequest} from '../../search-and-folding/legacy/search-and-folding-request.js';
 import {logFetchMoreResults} from '../search-analytics-actions.js';
-import {
-  type MappedSearchRequest,
-  mapSearchRequest,
-} from '../search-mappings.js';
+import {type MappedSearchRequest, mapSearchRequest} from '../search-mappings.js';
 import {
   AsyncSearchThunkProcessor,
   type StateNeededByExecuteSearch,
@@ -78,14 +69,11 @@ export const fetchFacetValues = createAsyncThunk<
   ExecuteSearchThunkReturn,
   LegacySearchAction,
   AsyncThunkSearchOptions<StateNeededByExecuteSearch>
->(
-  'search/fetchFacetValues',
-  async (searchAction: LegacySearchAction, config) => {
-    const state = config.getState();
+>('search/fetchFacetValues', async (searchAction: LegacySearchAction, config) => {
+  const state = config.getState();
 
-    return await legacyFetchFacetValues(config, searchAction, state);
-  }
-);
+  return await legacyFetchFacetValues(config, searchAction, state);
+});
 
 export const fetchInstantResults = createAsyncThunk<
   FetchInstantResultsThunkReturn,
@@ -105,9 +93,7 @@ const buildFetchMoreRequest = async (
   const mappedRequest = await buildSearchRequest(state, eventDescription);
   mappedRequest.request = {
     ...mappedRequest.request,
-    firstResult:
-      (state.pagination?.firstResult ?? 0) +
-      (state.search?.results.length ?? 0),
+    firstResult: (state.pagination?.firstResult ?? 0) + (state.search?.results.length ?? 0),
   };
   return mappedRequest;
 };
@@ -117,8 +103,7 @@ const buildInstantResultSearchRequest = async (
   q: string,
   numberOfResults: number
 ) => {
-  const sharedWithFoldingRequest =
-    await buildSearchAndFoldingLoadCollectionRequest(state);
+  const sharedWithFoldingRequest = await buildSearchAndFoldingLoadCollectionRequest(state);
 
   return mapSearchRequest({
     ...sharedWithFoldingRequest,
@@ -170,19 +155,14 @@ export async function legacyFetchInstantResults(
   const {q, maxResultsPerQuery} = payload;
   const state = config.getState();
 
-  const processor = new AsyncSearchThunkProcessor<
-    ReturnType<typeof config.rejectWithValue>
-  >({...config, analyticsAction: logInstantResultsSearch()}, (modification) => {
-    config.dispatch(
-      updateInstantResultsQuery({q: modification, id: payload.id})
-    );
-  });
-
-  const request = await buildInstantResultSearchRequest(
-    state,
-    q,
-    maxResultsPerQuery
+  const processor = new AsyncSearchThunkProcessor<ReturnType<typeof config.rejectWithValue>>(
+    {...config, analyticsAction: logInstantResultsSearch()},
+    (modification) => {
+      config.dispatch(updateInstantResultsQuery({q: modification, id: payload.id}));
+    }
   );
+
+  const request = await buildInstantResultSearchRequest(state, q, maxResultsPerQuery);
 
   const fetched = await processor.fetchFromAPI(request, {
     origin: 'instantResults',
@@ -217,9 +197,7 @@ export async function legacyFetchPage(
     logger,
   });
 
-  const processor = new AsyncSearchThunkProcessor<
-    ReturnType<typeof config.rejectWithValue>
-  >({
+  const processor = new AsyncSearchThunkProcessor<ReturnType<typeof config.rejectWithValue>>({
     ...config,
     analyticsAction: searchAction,
   });
@@ -243,9 +221,7 @@ export async function legacyFetchMoreResults(
     logger,
   });
 
-  const processor = new AsyncSearchThunkProcessor<
-    ReturnType<typeof config.rejectWithValue>
-  >({
+  const processor = new AsyncSearchThunkProcessor<ReturnType<typeof config.rejectWithValue>>({
     ...config,
     analyticsAction: logFetchMoreResults(),
   });
@@ -270,9 +246,10 @@ async function legacyFetchFacetValues(
     logger,
   });
 
-  const processor = new AsyncSearchThunkProcessor<
-    ReturnType<typeof config.rejectWithValue>
-  >({...config, analyticsAction: searchAction});
+  const processor = new AsyncSearchThunkProcessor<ReturnType<typeof config.rejectWithValue>>({
+    ...config,
+    analyticsAction: searchAction,
+  });
 
   const request = await buildFetchFacetValuesRequest(state, eventDescription);
   const fetched = await processor.fetchFromAPI(request, {
@@ -300,9 +277,10 @@ export async function legacyExecuteSearch(
 
   const request = await buildSearchRequest(state, eventDescription);
 
-  const processor = new AsyncSearchThunkProcessor<
-    ReturnType<typeof config.rejectWithValue>
-  >({...config, analyticsAction: searchAction});
+  const processor = new AsyncSearchThunkProcessor<ReturnType<typeof config.rejectWithValue>>({
+    ...config,
+    analyticsAction: searchAction,
+  });
 
   const fetched = await processor.fetchFromAPI(request, {origin: 'mainSearch'});
 

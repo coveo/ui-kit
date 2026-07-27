@@ -19,16 +19,12 @@ import type {AppStaticState} from './types.js';
  * matching client-side behavior lives in each `components/*.ts` hydrate
  * function (see client.ts).
  */
-export const renderApp = (
-  staticState: AppStaticState,
-  activePath = '/search'
-) => {
+export const renderApp = (staticState: AppStaticState, activePath = '/search') => {
   const {controllers} = staticState;
 
   // The search box is search-only, but the form renders on every page (it GETs
   // to /search); listing pages just have no initial query to show.
-  const searchValue =
-    'searchBox' in controllers ? controllers.searchBox.state.value : '';
+  const searchValue = 'searchBox' in controllers ? controllers.searchBox.state.value : '';
 
   const cartState = controllers.cart.state;
   const currency = controllers.context.state.currency ?? 'USD';

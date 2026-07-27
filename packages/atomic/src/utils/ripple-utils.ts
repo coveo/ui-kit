@@ -47,16 +47,10 @@ export async function createRipple(event: MouseEvent, options: RippleOptions) {
   await cleanupAnimationOnFinish(ripple, animationDuration);
 }
 
-async function cleanupAnimationOnFinish(
-  ripple: HTMLSpanElement,
-  animationDuration: number
-) {
+async function cleanupAnimationOnFinish(ripple: HTMLSpanElement, animationDuration: number) {
   listenOnce(ripple, 'animationend', () => {
     ripple?.remove();
   });
   // Backup in case the button gets hidden or unmounted and the ripple hasn't been cleaned up.
-  setTimeout(
-    () => ripple?.remove(),
-    animationDuration + animationDuration * 0.1
-  );
+  setTimeout(() => ripple?.remove(), animationDuration + animationDuration * 0.1);
 }

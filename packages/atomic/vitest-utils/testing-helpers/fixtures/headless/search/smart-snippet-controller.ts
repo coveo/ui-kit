@@ -32,10 +32,8 @@ export const defaultImplementation = {
   beginDelayedSelectSource: vi.fn() as () => void,
   cancelPendingSelectSource: vi.fn() as () => void,
   selectInlineLink: vi.fn() as SmartSnippet['selectInlineLink'],
-  beginDelayedSelectInlineLink:
-    vi.fn() as SmartSnippet['beginDelayedSelectInlineLink'],
-  cancelPendingSelectInlineLink:
-    vi.fn() as SmartSnippet['cancelPendingSelectInlineLink'],
+  beginDelayedSelectInlineLink: vi.fn() as SmartSnippet['beginDelayedSelectInlineLink'],
+  cancelPendingSelectInlineLink: vi.fn() as SmartSnippet['cancelPendingSelectInlineLink'],
 } satisfies SmartSnippet;
 
 export const buildFakeSmartSnippet = ({

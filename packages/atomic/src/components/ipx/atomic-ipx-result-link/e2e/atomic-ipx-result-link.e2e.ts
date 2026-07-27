@@ -6,18 +6,13 @@ test.describe('atomic-ipx-result-link', () => {
     await ipxResultLink.hydrated.first().waitFor({state: 'visible'});
   });
 
-  test('should have href attribute set to result clickUri', async ({
-    ipxResultLink,
-  }) => {
+  test('should have href attribute set to result clickUri', async ({ipxResultLink}) => {
     const anchor = ipxResultLink.anchor().first();
     await expect(anchor).toHaveAttribute('href');
     await expect(anchor).toBeVisible();
   });
 
-  test('should render as links and be clickable', async ({
-    ipxResultLink,
-    page,
-  }) => {
+  test('should render as links and be clickable', async ({ipxResultLink, page}) => {
     await expect(ipxResultLink.anchor().first()).toHaveAttribute('href');
 
     await ipxResultLink.anchor().first().click({force: true});

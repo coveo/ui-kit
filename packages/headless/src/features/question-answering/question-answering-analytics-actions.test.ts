@@ -1,10 +1,7 @@
 import {createRelay} from '@coveo/relay';
 import {CoveoSearchPageClient} from 'coveo.analytics';
 import type {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../test/mock-engine-v2.js';
 import {buildMockRaw} from '../../test/mock-raw.js';
 import {buildMockResult} from '../../test/mock-result.js';
 import {buildMockSearchResponse} from '../../test/mock-search-response.js';
@@ -258,11 +255,7 @@ describe('question answering analytics actions', () => {
     });
 
     it('should log #logLikeSmartSnippet with the case payload', async () => {
-      await logLikeSmartSnippet()()(
-        engine.dispatch,
-        () => engine.state,
-        {} as ThunkExtraArguments
-      );
+      await logLikeSmartSnippet()()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
       const mockToUse = mockMakeLikeSmartSnippet;
       expect(mockToUse).toHaveBeenCalledTimes(1);
@@ -383,9 +376,7 @@ describe('question answering analytics actions', () => {
 
       const mockToUse = mockMakeExpandSmartSnippetSuggestion;
       expect(mockToUse).toHaveBeenCalledTimes(1);
-      expect(mockToUse.mock.calls[0][0]).toStrictEqual(
-        expectedRelatedQuestionPayload
-      );
+      expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedRelatedQuestionPayload);
       expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
 
@@ -402,9 +393,7 @@ describe('question answering analytics actions', () => {
 
       const mockToUse = mockMakeCollapseSmartSnippetSuggestion;
       expect(mockToUse).toHaveBeenCalledTimes(1);
-      expect(mockToUse.mock.calls[0][0]).toStrictEqual(
-        expectedRelatedQuestionPayload
-      );
+      expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedRelatedQuestionPayload);
       expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
 
@@ -422,9 +411,7 @@ describe('question answering analytics actions', () => {
       const mockToUse = mockMakeOpenSmartSnippetSuggestionSource;
       expect(mockToUse).toHaveBeenCalledTimes(1);
       expect(mockToUse.mock.calls[0][0]).toStrictEqual(expectedDocumentInfo);
-      expect(mockToUse.mock.calls[0][1]).toStrictEqual(
-        expectedRelatedQuestionPayload
-      );
+      expect(mockToUse.mock.calls[0][1]).toStrictEqual(expectedRelatedQuestionPayload);
       expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
 
@@ -491,11 +478,7 @@ describe('question answering analytics actions', () => {
     });
 
     it('should log #logLikeSmartSnippet with the case payload', async () => {
-      await logLikeSmartSnippet()()(
-        engine.dispatch,
-        () => engine.state,
-        {} as ThunkExtraArguments
-      );
+      await logLikeSmartSnippet()()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
       expect(emit).toHaveBeenCalledTimes(1);
       expect(emit.mock.calls[0]).toMatchSnapshot();

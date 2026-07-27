@@ -15,8 +15,7 @@ searchApiHarness.searchEndpoint.mock((response: any) => ({
   // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Mock API result types are loosely defined
   results: response.results.slice(0, 1).map((result: any) => ({
     ...result,
-    title:
-      "Australia's under-16s social media ban comes into effect | Global News Podcast",
+    title: "Australia's under-16s social media ban comes into effect | Global News Podcast",
     uri: 'https://youtube.com/User:bbcnews/Channel:UC16niRr50-MSBwiO3YDb3RA/Video:XjI_iE-sNcM',
     printableUri: 'https://www.youtube.com/watch?v=XjI_iE-sNcM',
     clickUri: 'https://www.youtube.com/watch?v=XjI_iE-sNcM',
@@ -52,10 +51,9 @@ const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
 const {decorator: resultListDecorator} = wrapInResultList('list', false);
 const {decorator: resultTemplateDecorator} = wrapInResultTemplate();
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-quickview',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-quickview', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-quickview',
@@ -63,11 +61,7 @@ const meta: Meta = {
   id: 'atomic-quickview',
 
   render: (args) => template(args),
-  decorators: [
-    resultTemplateDecorator,
-    resultListDecorator,
-    searchInterfaceDecorator,
-  ],
+  decorators: [resultTemplateDecorator, resultListDecorator, searchInterfaceDecorator],
   parameters: {
     ...parameters,
     msw: {
@@ -90,7 +84,6 @@ export const Default: Story = {};
 export const CustomSandbox: Story = {
   name: 'With custom sandbox attributes',
   args: {
-    sandbox:
-      'allow-scripts allow-popups allow-top-navigation allow-same-origin',
+    sandbox: 'allow-scripts allow-popups allow-top-navigation allow-same-origin',
   },
 };

@@ -18,8 +18,7 @@ export type {
   Suggestion,
 };
 
-export type SearchBoxDefinition =
-  SearchOnlyControllerDefinitionWithoutProps<SearchBox>;
+export type SearchBoxDefinition = SearchOnlyControllerDefinitionWithoutProps<SearchBox>;
 
 /**
  * Defines a `SearchBox` controller instance.
@@ -27,9 +26,7 @@ export type SearchBoxDefinition =
  *
  * @returns The `SearchBox` controller definition.
  */
-export function defineSearchBox(
-  props: SearchBoxProps = {}
-): SearchBoxDefinition {
+export function defineSearchBox(props: SearchBoxProps = {}): SearchBoxDefinition {
   return {
     search: true,
     build: (engine) => buildSearchBox(engine, props),

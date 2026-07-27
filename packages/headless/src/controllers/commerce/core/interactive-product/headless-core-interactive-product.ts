@@ -31,10 +31,7 @@ export interface InteractiveProductCoreProps extends InteractiveResultHeadlessCo
   responseIdSelector: (state: CommerceEngineState) => string;
 }
 
-export type InteractiveProductProps = Omit<
-  InteractiveProductCoreProps,
-  'responseIdSelector'
->;
+export type InteractiveProductProps = Omit<InteractiveProductCoreProps, 'responseIdSelector'>;
 
 /**
  * The `InteractiveProduct` sub-controller provides an interface for handling long presses, multiple clicks, etc. to ensure
@@ -61,30 +58,21 @@ export function buildCoreInteractiveProduct(
   let wasOpened = false;
 
   const getWarningMessage = () => {
-    const messageSegment = (
-      property: string,
-      lookupFields: string[],
-      fallback: string
-    ) =>
+    const messageSegment = (property: string, lookupFields: string[], fallback: string) =>
       `- Could not retrieve '${property}' analytics property from field${lookupFields.length > 1 ? 's' : ''} \
 '${lookupFields.join("', '")}'; fell back to ${fallback}.`;
 
     const warnings: string[] = [];
 
-    const {ec_name, ec_promo_price, ec_price, ec_product_id} =
-      props.options.product;
+    const {ec_name, ec_promo_price, ec_price, ec_product_id} = props.options.product;
     if (!ec_name) {
       warnings.push(messageSegment('name', ['ec_gender'], 'permanentid'));
     }
     if (!ec_promo_price && !ec_price) {
-      warnings.push(
-        messageSegment('price', ['ec_promo_price', 'ec_price'], 'NaN')
-      );
+      warnings.push(messageSegment('price', ['ec_promo_price', 'ec_price'], 'NaN'));
     }
     if (!ec_product_id) {
-      warnings.push(
-        messageSegment('productId', ['ec_product_id'], 'permanentid')
-      );
+      warnings.push(messageSegment('productId', ['ec_product_id'], 'permanentid'));
     }
 
     if (warnings.length === 0) {
@@ -104,20 +92,12 @@ permanentid '${props.options.product.permanentid}':\n\n${warnings.join('\n')}\n\
     engine.dispatch(
       productClick({
         product: {
-          name:
-            props.options.product.ec_name ?? props.options.product.permanentid,
-          price:
-            props.options.product.ec_promo_price ??
-            props.options.product.ec_price ??
-            NaN,
-          productId:
-            props.options.product.ec_product_id ??
-            props.options.product.permanentid,
+          name: props.options.product.ec_name ?? props.options.product.permanentid,
+          price: props.options.product.ec_promo_price ?? props.options.product.ec_price ?? NaN,
+          productId: props.options.product.ec_product_id ?? props.options.product.permanentid,
         },
         position: props.options.product.position,
-        responseId:
-          props.options.product.responseId ??
-          props.responseIdSelector(engine[stateKey]),
+        responseId: props.options.product.responseId ?? props.responseIdSelector(engine[stateKey]),
       })
     );
   };

@@ -28,9 +28,7 @@ describe('query slice', () => {
     };
 
     it('should handle updateQuery on initial state', () => {
-      expect(queryReducer(state, updateQuery({q: 'some query'}))).toEqual(
-        expectedState
-      );
+      expect(queryReducer(state, updateQuery({q: 'some query'}))).toEqual(expectedState);
     });
 
     it('should be able to update enableQuerySyntax', () => {
@@ -46,9 +44,7 @@ describe('query slice', () => {
     it('should handle updateQuery on existing state', () => {
       state.q = 'another query';
 
-      expect(queryReducer(state, updateQuery({q: 'some query'}))).toEqual(
-        expectedState
-      );
+      expect(queryReducer(state, updateQuery({q: 'some query'}))).toEqual(expectedState);
     });
   });
 
@@ -60,10 +56,7 @@ describe('query slice', () => {
 
     it('should handle updateQuery on initial state', () => {
       expect(
-        queryReducer(
-          undefined,
-          selectQuerySuggestion({id: 'id', expression: 'some expression'})
-        )
+        queryReducer(undefined, selectQuerySuggestion({id: 'id', expression: 'some expression'}))
       ).toEqual(expectedState);
     });
 
@@ -71,10 +64,7 @@ describe('query slice', () => {
       state.q = 'some query';
 
       expect(
-        queryReducer(
-          state,
-          selectQuerySuggestion({id: 'id', expression: 'some expression'})
-        )
+        queryReducer(state, selectQuerySuggestion({id: 'id', expression: 'some expression'}))
       ).toEqual(expectedState);
     });
   });
@@ -82,9 +72,9 @@ describe('query slice', () => {
   it('updates query on query correction', () => {
     state.q = 'some query';
 
-    expect(
-      queryReducer(state, applyDidYouMeanCorrection('corrected query')).q
-    ).toEqual('corrected query');
+    expect(queryReducer(state, applyDidYouMeanCorrection('corrected query')).q).toEqual(
+      'corrected query'
+    );
   });
 
   it('allows to restore a query on history change', () => {
@@ -115,10 +105,7 @@ describe('query slice', () => {
 
     it('when the object contains an #enableQuerySyntax key, it sets the value in state', () => {
       state.enableQuerySyntax = true;
-      const finalState = queryReducer(
-        state,
-        restoreSearchParameters({enableQuerySyntax: false})
-      );
+      const finalState = queryReducer(state, restoreSearchParameters({enableQuerySyntax: false}));
       expect(finalState.enableQuerySyntax).toEqual(false);
     });
 

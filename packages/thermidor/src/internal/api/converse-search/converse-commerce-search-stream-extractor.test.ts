@@ -24,19 +24,17 @@ describe('extractCommerceSearchResponseFromStream', () => {
       pagination: {totalEntries: 1},
     };
 
-    mockReadConversationEventStream.mockImplementation(
-      async ({onEvent, onDone}) => {
-        onEvent({type: 'turn_started', conversationSessionId: 'abc'});
-        onEvent({type: 'TEXT_MESSAGE_CONTENT', content: 'hello'});
-        onEvent({type: 'commerce_search_api_response', ...expectedPayload});
-        onEvent({
-          type: 'commerce_search_api_response',
-          products: [{id: '2'}],
-          pagination: {totalEntries: 2},
-        });
-        onDone?.();
-      }
-    );
+    mockReadConversationEventStream.mockImplementation(async ({onEvent, onDone}) => {
+      onEvent({type: 'turn_started', conversationSessionId: 'abc'});
+      onEvent({type: 'TEXT_MESSAGE_CONTENT', content: 'hello'});
+      onEvent({type: 'commerce_search_api_response', ...expectedPayload});
+      onEvent({
+        type: 'commerce_search_api_response',
+        products: [{id: '2'}],
+        pagination: {totalEntries: 2},
+      });
+      onDone?.();
+    });
 
     const stream = {} as ReadableStream<Uint8Array>;
     const result = await extractCommerceSearchResponseFromStream(stream);
@@ -45,63 +43,53 @@ describe('extractCommerceSearchResponseFromStream', () => {
   });
 
   it('rejects with message on RUN_ERROR before search response', async () => {
-    mockReadConversationEventStream.mockImplementation(
-      async ({onEvent, onDone}) => {
-        onEvent({type: 'turn_started'});
-        onEvent({type: 'RUN_ERROR', message: 'Agent execution failed'});
-        onDone?.();
-      }
-    );
+    mockReadConversationEventStream.mockImplementation(async ({onEvent, onDone}) => {
+      onEvent({type: 'turn_started'});
+      onEvent({type: 'RUN_ERROR', message: 'Agent execution failed'});
+      onDone?.();
+    });
 
     const stream = {} as ReadableStream<Uint8Array>;
-    await expect(
-      extractCommerceSearchResponseFromStream(stream)
-    ).rejects.toThrow('Agent execution failed');
+    await expect(extractCommerceSearchResponseFromStream(stream)).rejects.toThrow(
+      'Agent execution failed'
+    );
   });
 
   it('rejects with default message when RUN_ERROR has empty message', async () => {
-    mockReadConversationEventStream.mockImplementation(
-      async ({onEvent, onDone}) => {
-        onEvent({type: 'RUN_ERROR', message: ''});
-        onDone?.();
-      }
-    );
+    mockReadConversationEventStream.mockImplementation(async ({onEvent, onDone}) => {
+      onEvent({type: 'RUN_ERROR', message: ''});
+      onDone?.();
+    });
 
     const stream = {} as ReadableStream<Uint8Array>;
-    await expect(
-      extractCommerceSearchResponseFromStream(stream)
-    ).rejects.toThrow('A run error occurred during the converse stream');
+    await expect(extractCommerceSearchResponseFromStream(stream)).rejects.toThrow(
+      'A run error occurred during the converse stream'
+    );
   });
 
   it('rejects when stream ends without relevant event', async () => {
-    mockReadConversationEventStream.mockImplementation(
-      async ({onEvent, onDone}) => {
-        onEvent({type: 'turn_started'});
-        onEvent({type: 'TEXT_MESSAGE_CONTENT', content: 'hello'});
-        onEvent({type: 'turn_complete'});
-        onDone?.();
-      }
-    );
+    mockReadConversationEventStream.mockImplementation(async ({onEvent, onDone}) => {
+      onEvent({type: 'turn_started'});
+      onEvent({type: 'TEXT_MESSAGE_CONTENT', content: 'hello'});
+      onEvent({type: 'turn_complete'});
+      onDone?.();
+    });
 
     const stream = {} as ReadableStream<Uint8Array>;
-    await expect(
-      extractCommerceSearchResponseFromStream(stream)
-    ).rejects.toThrow('No search response received from the converse stream');
+    await expect(extractCommerceSearchResponseFromStream(stream)).rejects.toThrow(
+      'No search response received from the converse stream'
+    );
   });
 
   it('rejects on stream error propagation', async () => {
     const networkError = new Error('Network connection lost');
 
-    mockReadConversationEventStream.mockImplementation(
-      async ({onEvent, onError}) => {
-        onEvent({type: 'turn_started'});
-        onError?.(networkError);
-      }
-    );
+    mockReadConversationEventStream.mockImplementation(async ({onEvent, onError}) => {
+      onEvent({type: 'turn_started'});
+      onError?.(networkError);
+    });
 
     const stream = {} as ReadableStream<Uint8Array>;
-    await expect(extractCommerceSearchResponseFromStream(stream)).rejects.toBe(
-      networkError
-    );
+    await expect(extractCommerceSearchResponseFromStream(stream)).rejects.toBe(networkError);
   });
 });

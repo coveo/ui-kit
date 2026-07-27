@@ -11,10 +11,7 @@ import {recommendationReducer as recommendation} from '../../features/recommenda
 import {loadReducerError} from '../../utils/errors.js';
 import {validateOptions} from '../../utils/validate-payload.js';
 import type {ErrorPayload} from '../controller/error-payload.js';
-import {
-  buildController,
-  type Controller,
-} from '../controller/headless-controller.js';
+import {buildController, type Controller} from '../controller/headless-controller.js';
 
 const optionsSchema = new Schema<RecommendationListOptions>({
   id: new StringValue<string>({
@@ -121,11 +118,7 @@ export function buildRecommendationList(
   }
 
   if (options.numberOfRecommendations) {
-    dispatch(
-      loadPaginationActions(engine).updateNumberOfResults(
-        options.numberOfRecommendations
-      )
-    );
+    dispatch(loadPaginationActions(engine).updateNumberOfResults(options.numberOfRecommendations));
   }
 
   return {

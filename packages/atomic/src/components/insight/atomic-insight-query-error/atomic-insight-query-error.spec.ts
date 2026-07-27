@@ -1,8 +1,4 @@
-import {
-  buildQueryError,
-  type QueryError,
-  type QueryErrorState,
-} from '@coveo/headless/insight';
+import {buildQueryError, type QueryError, type QueryErrorState} from '@coveo/headless/insight';
 import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
 import {getAriaMessageFromErrorType} from '@/src/components/common/query-error/utils';
@@ -80,15 +76,14 @@ describe('atomic-insight-query-error', () => {
       },
     });
 
-    const {element} =
-      await renderInAtomicInsightInterface<AtomicInsightQueryError>({
-        template: html`<atomic-insight-query-error></atomic-insight-query-error>`,
-        selector: 'atomic-insight-query-error',
-        bindings: (bindings) => {
-          bindings.engine = mockedEngine;
-          return bindings;
-        },
-      });
+    const {element} = await renderInAtomicInsightInterface<AtomicInsightQueryError>({
+      template: html`<atomic-insight-query-error></atomic-insight-query-error>`,
+      selector: 'atomic-insight-query-error',
+      bindings: (bindings) => {
+        bindings.engine = mockedEngine;
+        return bindings;
+      },
+    });
 
     return {
       element,
@@ -99,8 +94,7 @@ describe('atomic-insight-query-error', () => {
       moreInfoBtn: element.shadowRoot!.querySelector('[part="more-info-btn"]'),
       errorInfo: element.shadowRoot!.querySelector('[part="error-info"]'),
       parts: (element: AtomicInsightQueryError) => {
-        const qs = (part: string) =>
-          element.shadowRoot?.querySelector(`[part="${part}"]`);
+        const qs = (part: string) => element.shadowRoot?.querySelector(`[part="${part}"]`);
         return {
           icon: qs('icon'),
           title: qs('title'),
@@ -135,9 +129,7 @@ describe('atomic-insight-query-error', () => {
     });
 
     it('should handle initialization errors gracefully', async () => {
-      const buildEngineError = new Error(
-        'Failed to build query error controller'
-      );
+      const buildEngineError = new Error('Failed to build query error controller');
       vi.mocked(buildQueryError).mockImplementation(() => {
         throw buildEngineError;
       });
@@ -157,9 +149,7 @@ describe('atomic-insight-query-error', () => {
           organizationId: 'custom-org-id',
         });
 
-        expect(element.bindings.engine.state.configuration.organizationId).toBe(
-          'custom-org-id'
-        );
+        expect(element.bindings.engine.state.configuration.organizationId).toBe('custom-org-id');
       });
 
       it('should handle different environments', async () => {
@@ -169,9 +159,7 @@ describe('atomic-insight-query-error', () => {
           environment: 'dev',
         });
 
-        expect(element.bindings.engine.state.configuration.environment).toBe(
-          'dev'
-        );
+        expect(element.bindings.engine.state.configuration.environment).toBe('dev');
       });
     });
   });
@@ -248,8 +236,7 @@ describe('atomic-insight-query-error', () => {
         const errorWithType = {...mockError, type: errorType};
         await renderQueryError({hasError: true, error: errorWithType});
 
-        const mockQueryError =
-          vi.mocked(buildQueryError).mock.results[0]?.value;
+        const mockQueryError = vi.mocked(buildQueryError).mock.results[0]?.value;
         expect(mockQueryError?.state.error?.type).toBe(errorType);
       });
 

@@ -6,16 +6,10 @@ import {
   updateNumberOfResults,
 } from '../../../features/pagination/pagination-actions.js';
 import {paginationReducer as pagination} from '../../../features/pagination/pagination-slice.js';
-import type {
-  ConfigurationSection,
-  PaginationSection,
-} from '../../../state/state-sections.js';
+import type {ConfigurationSection, PaginationSection} from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {validateInitialState} from '../../../utils/validate-payload.js';
-import {
-  buildController,
-  type Controller,
-} from '../../controller/headless-controller.js';
+import {buildController, type Controller} from '../../controller/headless-controller.js';
 
 const initialStateSchema = new Schema({
   numberOfResults: new NumberValue({min: 0}),

@@ -12,8 +12,7 @@ test.describe('atomic-result-text', () => {
       await resultText.hydrated.first().waitFor();
 
       const keywordPattern = /^Bonobo/i;
-      const highlightedText =
-        await resultText.highlightedText.allTextContents();
+      const highlightedText = await resultText.highlightedText.allTextContents();
 
       highlightedText.forEach((text) => {
         expect(text).toMatch(keywordPattern);

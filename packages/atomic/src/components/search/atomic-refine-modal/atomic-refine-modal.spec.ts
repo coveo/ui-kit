@@ -45,10 +45,8 @@ describe('atomic-refine-modal', () => {
   let mockedTabManager: TabManager;
 
   const parts = (element: AtomicRefineModal) => {
-    const qs = (part: string) =>
-      element.shadowRoot?.querySelector(`[part="${part}"]`);
-    const qsStar = (part: string) =>
-      element.shadowRoot?.querySelector(`[part*="${part}"]`);
+    const qs = (part: string) => element.shadowRoot?.querySelector(`[part="${part}"]`);
+    const qsStar = (part: string) => element.shadowRoot?.querySelector(`[part*="${part}"]`);
     return {
       title: qs('title'),
       closeButton: qs('close-button'),
@@ -155,39 +153,21 @@ describe('atomic-refine-modal', () => {
       title: element.shadowRoot?.querySelector('[part="title"]'),
       closeButton: element.shadowRoot?.querySelector('[part="close-button"]'),
       closeIcon: element.shadowRoot?.querySelector('[part="close-icon"]'),
-      footerContent: element.shadowRoot?.querySelector(
-        '[part="footer-content"]'
-      ),
+      footerContent: element.shadowRoot?.querySelector('[part="footer-content"]'),
       footerButton: element.shadowRoot?.querySelector('[part="footer-button"]'),
-      footerButtonText: element.shadowRoot?.querySelector(
-        '[part="footer-button-text"]'
-      ),
-      footerButtonCount: element.shadowRoot?.querySelector(
-        '[part="footer-button-count"]'
-      ),
+      footerButtonText: element.shadowRoot?.querySelector('[part="footer-button-text"]'),
+      footerButtonCount: element.shadowRoot?.querySelector('[part="footer-button-count"]'),
       atomicModal: element.shadowRoot?.querySelector('atomic-modal'),
       aside: element.shadowRoot?.querySelector('aside[part="content"]'),
-      sortTitle: element.shadowRoot?.querySelector(
-        '[part*="section-sort-title"]'
-      ),
-      selectWrapper: element.shadowRoot?.querySelector(
-        '[part="select-wrapper"]'
-      ),
+      sortTitle: element.shadowRoot?.querySelector('[part*="section-sort-title"]'),
+      selectWrapper: element.shadowRoot?.querySelector('[part="select-wrapper"]'),
       select: element.shadowRoot?.querySelector('select[part="select"]'),
-      selectIconWrapper: element.shadowRoot?.querySelector(
-        '[part="select-icon-wrapper"]'
-      ),
+      selectIconWrapper: element.shadowRoot?.querySelector('[part="select-icon-wrapper"]'),
       selectIcon: element.shadowRoot?.querySelector('[part="select-icon"]'),
-      filterSection: element.shadowRoot?.querySelector(
-        '[part="filter-section"]'
-      ),
-      sectionFiltersTitle: element.shadowRoot?.querySelector(
-        '[part*="section-filters-title"]'
-      ),
+      filterSection: element.shadowRoot?.querySelector('[part="filter-section"]'),
+      sectionFiltersTitle: element.shadowRoot?.querySelector('[part*="section-filters-title"]'),
       facetSlot: element.shadowRoot?.querySelector('slot[name="facets"]'),
-      filterClearAllButton: element.shadowRoot?.querySelector(
-        '[part="filter-clear-all"]'
-      ),
+      filterClearAllButton: element.shadowRoot?.querySelector('[part="filter-clear-all"]'),
     };
   };
 
@@ -197,9 +177,7 @@ describe('atomic-refine-modal', () => {
     await expect
       .element(page.getByRole('dialog', {name: 'Sort & Filter', exact: true}))
       .toBeInTheDocument();
-    await expect
-      .element(page.getByRole('button', {name: 'Close'}))
-      .toBeInTheDocument();
+    await expect.element(page.getByRole('button', {name: 'Close'})).toBeInTheDocument();
   });
 
   it('should build breadcrumb manager with engine', async () => {
@@ -410,9 +388,7 @@ describe('atomic-refine-modal', () => {
 
       await userEvent.selectOptions(select!, 'date descending');
 
-      expect(mockedSort.sortBy).toHaveBeenCalledWith([
-        {by: 'date', order: 'descending'},
-      ]);
+      expect(mockedSort.sortBy).toHaveBeenCalledWith([{by: 'date', order: 'descending'}]);
       expect(consoleWarnSpy).not.toHaveBeenCalled();
     });
 
@@ -435,10 +411,7 @@ describe('atomic-refine-modal', () => {
       const {sectionFiltersTitle} = await renderRefineModal();
 
       expect(sectionFiltersTitle).toBeInTheDocument();
-      expect(sectionFiltersTitle).toHaveAttribute(
-        'part',
-        'section-title section-filters-title'
-      );
+      expect(sectionFiltersTitle).toHaveAttribute('part', 'section-title section-filters-title');
       expect(sectionFiltersTitle).toHaveTextContent('Filters');
     });
 

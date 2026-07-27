@@ -52,7 +52,7 @@
     "@vitest/browser-playwright": "catalog:",
     "jsdom": "28.1.0",
     "playwright": "catalog:",
-    "rollup": "4.60.4",
+    "rollup": "4.62.2",
     "vitest": "catalog:"
   },
   "engines": {

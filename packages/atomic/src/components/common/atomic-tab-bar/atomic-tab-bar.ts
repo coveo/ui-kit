@@ -1,10 +1,4 @@
-import {
-  type CSSResultGroup,
-  css,
-  html,
-  LitElement,
-  type TemplateResult,
-} from 'lit';
+import {type CSSResultGroup, css, html, LitElement, type TemplateResult} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {renderButton} from '@/src/components/common/button';
 import {errorGuard} from '@/src/decorators/error-guard';
@@ -49,8 +43,8 @@ export class AtomicTabBar extends LitElement implements LitElementWithError {
   private get tabsFromSlot(): TabCommonElement[] {
     const isTab = (tagName: string) =>
       /atomic-.+-tab$/i.test(tagName) || /tab-button$/i.test(tagName);
-    return Array.from(this.querySelectorAll<TabCommonElement>('*')).filter(
-      (element) => isTab(element.tagName)
+    return Array.from(this.querySelectorAll<TabCommonElement>('*')).filter((element) =>
+      isTab(element.tagName)
     );
   }
 
@@ -60,9 +54,7 @@ export class AtomicTabBar extends LitElement implements LitElementWithError {
 
   private get slotContentWidth() {
     return this.tabsFromSlot.reduce(
-      (total, el) =>
-        total +
-        parseFloat(window.getComputedStyle(el).getPropertyValue('width')),
+      (total, el) => total + parseFloat(window.getComputedStyle(el).getPropertyValue('width')),
       0
     );
   }
@@ -76,9 +68,7 @@ export class AtomicTabBar extends LitElement implements LitElementWithError {
   }
 
   private get tabPopover() {
-    return this.shadowRoot?.querySelector<TabPopoverElement>(
-      'atomic-tab-popover'
-    );
+    return this.shadowRoot?.querySelector<TabPopoverElement>('atomic-tab-popover');
   }
 
   private get popoverWidth() {
@@ -87,13 +77,11 @@ export class AtomicTabBar extends LitElement implements LitElementWithError {
 
   private get overflowingTabs() {
     const containerRelativeRightPosition = this.getBoundingClientRect().right;
-    const selectedTabRelativeRightPosition =
-      this.selectedTab?.getBoundingClientRect().right;
+    const selectedTabRelativeRightPosition = this.selectedTab?.getBoundingClientRect().right;
 
     return this.tabsFromSlot.filter((element) => {
       const isBeforeSelectedTab = selectedTabRelativeRightPosition
-        ? selectedTabRelativeRightPosition >
-          element.getBoundingClientRect().right
+        ? selectedTabRelativeRightPosition > element.getBoundingClientRect().right
         : false;
 
       const minimumWidthNeeded = isBeforeSelectedTab
@@ -104,10 +92,7 @@ export class AtomicTabBar extends LitElement implements LitElementWithError {
         ? containerRelativeRightPosition
         : containerRelativeRightPosition - minimumWidthNeeded;
 
-      return (
-        element.getBoundingClientRect().right > rightPositionLimit &&
-        !element.active
-      );
+      return element.getBoundingClientRect().right > rightPositionLimit && !element.active;
     });
   }
 
@@ -121,27 +106,18 @@ export class AtomicTabBar extends LitElement implements LitElementWithError {
   }
 
   private get lastDisplayedTabRightPosition() {
-    return (
-      this.lastDisplayedTab.getBoundingClientRect().right -
-      this.getBoundingClientRect().left
-    );
+    return this.lastDisplayedTab.getBoundingClientRect().right - this.getBoundingClientRect().left;
   }
 
   connectedCallback() {
     super.connectedCallback();
-    this.addEventListener(
-      'atomic/tabRendered',
-      this.handleTabRendered as EventListener
-    );
+    this.addEventListener('atomic/tabRendered', this.handleTabRendered as EventListener);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     this.resizeObserver?.disconnect();
-    this.removeEventListener(
-      'atomic/tabRendered',
-      this.handleTabRendered as EventListener
-    );
+    this.removeEventListener('atomic/tabRendered', this.handleTabRendered as EventListener);
   }
 
   firstUpdated() {
@@ -180,9 +156,7 @@ export class AtomicTabBar extends LitElement implements LitElementWithError {
   }
 
   private getElementWidth = (element?: Element) => {
-    return element
-      ? parseFloat(window.getComputedStyle(element).getPropertyValue('width'))
-      : 0;
+    return element ? parseFloat(window.getComputedStyle(element).getPropertyValue('width')) : 0;
   };
 
   private hideElement = (el: HTMLElement) => {
@@ -195,10 +169,7 @@ export class AtomicTabBar extends LitElement implements LitElementWithError {
     el.ariaHidden = 'false';
   };
 
-  private updateTabVisibility = (
-    tabs: TabCommonElement[],
-    isVisible: boolean
-  ) => {
+  private updateTabVisibility = (tabs: TabCommonElement[], isVisible: boolean) => {
     const tabCount = this.tabsFromSlot.length;
 
     tabs.forEach((tab, index) => {
@@ -222,8 +193,7 @@ export class AtomicTabBar extends LitElement implements LitElementWithError {
             props: {
               part: 'popover-tab',
               style: 'text-transparent',
-              class:
-                'w-full truncate rounded px-4 py-2 text-left font-semibold',
+              class: 'w-full truncate rounded px-4 py-2 text-left font-semibold',
               ariaLabel: tab.label,
               title: tab.label,
               onClick: () => {

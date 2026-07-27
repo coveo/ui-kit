@@ -1,12 +1,5 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {
-  aggregate,
-  camelToKebab,
-  isInDocument,
-  kebabToCamel,
-  once,
-  randomID,
-} from './utils';
+import {aggregate, camelToKebab, isInDocument, kebabToCamel, once, randomID} from './utils';
 
 describe('utils', () => {
   describe('#once', () => {

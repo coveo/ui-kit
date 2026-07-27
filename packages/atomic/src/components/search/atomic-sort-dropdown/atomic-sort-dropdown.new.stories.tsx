@@ -14,10 +14,9 @@ import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
 const searchApiHarness = new MockSearchApi();
 
 const {decorator, play} = wrapInSearchInterface();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-sort-dropdown',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-sort-dropdown', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-sort-dropdown',
@@ -89,12 +88,8 @@ export const A11yStatusMessage: Story = {
     `,
   ],
   beforeEach: async () => {
-    searchApiHarness.searchEndpoint.mockOnce(
-      buildSearchResponseWithResults(120)
-    );
-    searchApiHarness.searchEndpoint.mockOnce(
-      buildSearchResponseWithResults(84)
-    );
+    searchApiHarness.searchEndpoint.mockOnce(buildSearchResponseWithResults(120));
+    searchApiHarness.searchEndpoint.mockOnce(buildSearchResponseWithResults(84));
   },
   play: async (context) => {
     await play(context);

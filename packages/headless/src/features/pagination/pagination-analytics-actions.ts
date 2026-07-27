@@ -1,8 +1,5 @@
 import type {PaginationSection} from '../../state/state-sections.js';
-import {
-  type LegacySearchAction,
-  makeAnalyticsAction,
-} from '../analytics/analytics-utils.js';
+import {type LegacySearchAction, makeAnalyticsAction} from '../analytics/analytics-utils.js';
 import {SearchPageEvents} from '../analytics/search-action-cause.js';
 import type {SearchAction} from '../search/search-actions.js';
 import {currentPageSelector} from './pagination-selectors.js';
@@ -12,8 +9,7 @@ export const logPagerResize = (): LegacySearchAction =>
   makeAnalyticsAction('analytics/pager/resize', (client, state) =>
     client.makePagerResize({
       currentResultsPerPage:
-        state.pagination?.numberOfResults ||
-        getPaginationInitialState().numberOfResults,
+        state.pagination?.numberOfResults || getPaginationInitialState().numberOfResults,
     })
   );
 

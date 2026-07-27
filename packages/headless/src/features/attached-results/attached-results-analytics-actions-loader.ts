@@ -1,10 +1,7 @@
 import type {Result} from '../../api/search/search/result.js';
 import type {InsightEngine} from '../../app/insight-engine/insight-engine.js';
 import type {InsightAction} from '../analytics/analytics-utils.js';
-import {
-  logCaseAttach,
-  logCaseDetach,
-} from './attached-results-analytics-actions.js';
+import {logCaseAttach, logCaseDetach} from './attached-results-analytics-actions.js';
 import {attachedResultsReducer as attachedResults} from './attached-results-slice.js';
 
 /**

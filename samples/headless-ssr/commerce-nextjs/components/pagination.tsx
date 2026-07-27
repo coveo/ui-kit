@@ -15,10 +15,7 @@ export default function Pagination() {
 
   // Compute a window of pages centered on the current page, clamped to range.
   const half = Math.floor(MAX_PAGE_BUTTONS / 2);
-  const end = Math.min(
-    state.totalPages,
-    Math.max(state.page + half + 1, MAX_PAGE_BUTTONS)
-  );
+  const end = Math.min(state.totalPages, Math.max(state.page + half + 1, MAX_PAGE_BUTTONS));
   const start = Math.max(0, end - MAX_PAGE_BUTTONS);
   const pages = Array.from({length: end - start}, (_, i) => start + i);
 

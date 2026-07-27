@@ -8,10 +8,7 @@ interface NoItemsGuardProps {
 }
 
 class NoItemsGuardDirective extends Directive {
-  render(
-    {firstSearchExecuted, isLoading, hasResults}: NoItemsGuardProps,
-    content: () => unknown
-  ) {
+  render({firstSearchExecuted, isLoading, hasResults}: NoItemsGuardProps, content: () => unknown) {
     if (!firstSearchExecuted || isLoading || hasResults) {
       return nothing;
     }

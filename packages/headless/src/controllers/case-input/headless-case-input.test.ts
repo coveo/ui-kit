@@ -8,15 +8,8 @@ import {caseInputReducer as caseInput} from '../../features/case-input/case-inpu
 import {fetchDocumentSuggestions} from '../../features/document-suggestion/document-suggestion-actions.js';
 import {documentSuggestionReducer as documentSuggestion} from '../../features/document-suggestion/document-suggestion-slice.js';
 import {buildMockCaseAssistState} from '../../test/mock-case-assist-state.js';
-import {
-  buildMockCaseAssistEngine,
-  type MockedCaseAssistEngine,
-} from '../../test/mock-engine-v2.js';
-import {
-  buildCaseInput,
-  type CaseInput,
-  type CaseInputOptions,
-} from './headless-case-input.js';
+import {buildMockCaseAssistEngine, type MockedCaseAssistEngine} from '../../test/mock-engine-v2.js';
+import {buildCaseInput, type CaseInput, type CaseInputOptions} from './headless-case-input.js';
 
 vi.mock('../../features/case-input/case-input-actions');
 vi.mock('../../features/case-assist/case-assist-analytics-actions');
@@ -64,9 +57,7 @@ describe('Case Input', () => {
       fieldName: testFieldName,
       fieldValue: '',
     });
-    expect(engine.dispatch).toHaveBeenCalledWith(
-      mockedUpdateCaseInput.mock.results[0].value
-    );
+    expect(engine.dispatch).toHaveBeenCalledWith(mockedUpdateCaseInput.mock.results[0].value);
   });
 
   it('do not dispatch #updateCaseInput on init if the field was already registered', () => {
@@ -88,9 +79,7 @@ describe('Case Input', () => {
 
   it('building a case input specifying an empty field name throws', () => {
     options.field = '';
-    expect(() => initCaseInput()).toThrow(
-      'Check the options of buildCaseInput'
-    );
+    expect(() => initCaseInput()).toThrow('Check the options of buildCaseInput');
   });
 
   describe('#update', () => {
@@ -106,9 +95,7 @@ describe('Case Input', () => {
         fieldName: testFieldName,
         fieldValue: testValue,
       });
-      expect(engine.dispatch).toHaveBeenCalledWith(
-        mockedUpdateCaseInput.mock.results[0].value
-      );
+      expect(engine.dispatch).toHaveBeenCalledWith(mockedUpdateCaseInput.mock.results[0].value);
     });
 
     it('dispatches a #logUpdateCaseField analytics action', () => {
@@ -116,15 +103,11 @@ describe('Case Input', () => {
 
       input.update(testValue);
 
-      expect(engine.dispatch).toHaveBeenCalledWith(
-        mockedlogUpdateCaseField.mock.results[0].value
-      );
+      expect(engine.dispatch).toHaveBeenCalledWith(mockedlogUpdateCaseField.mock.results[0].value);
     });
 
     it('dispatches a #fetchCaseClassifications action when required', () => {
-      const mockedFetchCaseClassifications = vi.mocked(
-        fetchCaseClassifications
-      );
+      const mockedFetchCaseClassifications = vi.mocked(fetchCaseClassifications);
 
       input.update(testValue, {
         caseClassifications: true,
@@ -137,9 +120,7 @@ describe('Case Input', () => {
     });
 
     it('dispatches a #fetchDocumentSuggestions action when required', () => {
-      const mockedFetchDocumentSuggestions = vi.mocked(
-        fetchDocumentSuggestions
-      );
+      const mockedFetchDocumentSuggestions = vi.mocked(fetchDocumentSuggestions);
 
       input.update(testValue, {
         documentSuggestions: true,
@@ -152,12 +133,8 @@ describe('Case Input', () => {
     });
 
     it('dispatches both #fetchCaseClassifications and #fetchDocumentSuggestions when required', () => {
-      const mockedFetchCaseClassifications = vi.mocked(
-        fetchCaseClassifications
-      );
-      const mockedFetchDocumentSuggestions = vi.mocked(
-        fetchDocumentSuggestions
-      );
+      const mockedFetchCaseClassifications = vi.mocked(fetchCaseClassifications);
+      const mockedFetchDocumentSuggestions = vi.mocked(fetchDocumentSuggestions);
 
       input.update(testValue, {
         caseClassifications: true,
@@ -175,12 +152,8 @@ describe('Case Input', () => {
     });
 
     it('does not dispatch #fetchCaseClassifications nor #fetchDocumentSuggestions when not required', () => {
-      const mockedFetchCaseClassifications = vi.mocked(
-        fetchCaseClassifications
-      );
-      const mockedFetchDocumentSuggestions = vi.mocked(
-        fetchDocumentSuggestions
-      );
+      const mockedFetchCaseClassifications = vi.mocked(fetchCaseClassifications);
+      const mockedFetchDocumentSuggestions = vi.mocked(fetchDocumentSuggestions);
 
       input.update(testValue);
 

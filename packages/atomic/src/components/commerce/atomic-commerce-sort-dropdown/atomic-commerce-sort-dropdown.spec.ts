@@ -55,15 +55,14 @@ describe('atomic-commerce-sort-dropdown', () => {
       interfaceType: 'product-listing',
     }
   ) => {
-    const {element} =
-      await renderInAtomicCommerceInterface<AtomicCommerceSortDropdown>({
-        template: html`<atomic-commerce-sort-dropdown></atomic-commerce-sort-dropdown>`,
-        selector: 'atomic-commerce-sort-dropdown',
-        bindings: (bindings) => {
-          bindings.interfaceElement.type = interfaceType;
-          return bindings;
-        },
-      });
+    const {element} = await renderInAtomicCommerceInterface<AtomicCommerceSortDropdown>({
+      template: html`<atomic-commerce-sort-dropdown></atomic-commerce-sort-dropdown>`,
+      selector: 'atomic-commerce-sort-dropdown',
+      bindings: (bindings) => {
+        bindings.interfaceElement.type = interfaceType;
+        return bindings;
+      },
+    });
 
     return element;
   };
@@ -88,9 +87,7 @@ describe('atomic-commerce-sort-dropdown', () => {
   // KIT-4158: TODO: This test intermittently fails and takes too long
   it.skip('should call sort.sortBy when select is changed', async () => {
     const mockedSortBy = vi.fn();
-    mockedSort.mockReturnValue(
-      buildFakeSort({implementation: {sortBy: mockedSortBy}})
-    );
+    mockedSort.mockReturnValue(buildFakeSort({implementation: {sortBy: mockedSortBy}}));
     await setupElement();
 
     await locators.select.selectOptions('bar');

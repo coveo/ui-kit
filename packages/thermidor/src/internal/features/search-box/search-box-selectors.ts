@@ -11,22 +11,13 @@ const CACHE_KEY: CacheKey<SearchBoxSelectors> =
   createCacheKey<SearchBoxSelectors>('searchBox/selectors');
 
 export function createSearchBoxSelectors(interfaceId: string) {
-  const sliceSelector = createSelectSlice(
-    interfaceId,
-    'searchBox',
-    initialSearchBoxState
-  );
+  const sliceSelector = createSelectSlice(interfaceId, 'searchBox', initialSearchBoxState);
   return {
-    getQuery: createMemoizedStateSelector(
-      sliceSelector,
-      (state) => state.query
-    ),
+    getQuery: createMemoizedStateSelector(sliceSelector, (state) => state.query),
   };
 }
 
 export function getOrCreateSearchBoxSelectors(iface: InterfaceHandle) {
   const {stateId, cacheRegistry} = getHandleInternals(iface);
-  return cacheRegistry.getOrCreate(CACHE_KEY, () =>
-    createSearchBoxSelectors(stateId)
-  );
+  return cacheRegistry.getOrCreate(CACHE_KEY, () => createSearchBoxSelectors(stateId));
 }

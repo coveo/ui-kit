@@ -13,9 +13,7 @@ test.describe('atomic-insight-folded-result-list', () => {
     await expect(foldedResultList.results).toHaveCount(10);
   });
 
-  test('should render the result list container', async ({
-    foldedResultList,
-  }) => {
+  test('should render the result list container', async ({foldedResultList}) => {
     await expect(foldedResultList.hydrated).toBeVisible();
   });
 });

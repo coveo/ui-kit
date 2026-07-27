@@ -4,10 +4,7 @@ import {searchReducer as search} from '../../../features/search/search-slice.js'
 import type {SearchSection} from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {sortFacets} from '../../../utils/facet-utils.js';
-import {
-  buildController,
-  type Controller,
-} from '../../controller/headless-controller.js';
+import {buildController, type Controller} from '../../controller/headless-controller.js';
 
 /**
  * A facet payload object to be sorted by the manager.
@@ -93,9 +90,7 @@ export function buildCoreFacetManager(engine: CoreEngine): FacetManager {
   };
 }
 
-function loadFacetManagerReducers(
-  engine: CoreEngine
-): engine is CoreEngine<SearchSection> {
+function loadFacetManagerReducers(engine: CoreEngine): engine is CoreEngine<SearchSection> {
   engine.addReducers({search, facetOptions});
   return true;
 }

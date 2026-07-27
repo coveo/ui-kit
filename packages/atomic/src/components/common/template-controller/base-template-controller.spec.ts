@@ -61,11 +61,7 @@ describe('BaseTemplateController', () => {
 
   it('should register itself as a controller with the host', () => {
     const addControllerSpy = vi.spyOn(mockElement, 'addController');
-    controller = new TestTemplateController(
-      mockElement,
-      ['valid-parent'],
-      false
-    );
+    controller = new TestTemplateController(mockElement, ['valid-parent'], false);
 
     expect(addControllerSpy).toHaveBeenCalledExactlyOnceWith(controller);
   });
@@ -108,9 +104,7 @@ describe('BaseTemplateController', () => {
         </empty-test-element>`
       );
 
-      const element = document.querySelector(
-        'empty-test-element'
-      ) as EmptyTestElement;
+      const element = document.querySelector('empty-test-element') as EmptyTestElement;
 
       expect(element.error).toBeUndefined();
     });
@@ -140,12 +134,8 @@ describe('BaseTemplateController', () => {
         await setupElement(
           html`<test-element>
             <template>
-              <atomic-result-section-visual
-                >section1</atomic-result-section-visual
-              >
-              <atomic-result-section-title
-                >section2</atomic-result-section-title
-              >
+              <atomic-result-section-visual>section1</atomic-result-section-visual>
+              <atomic-result-section-title>section2</atomic-result-section-title>
             </template>
           </test-element>`
         );
@@ -200,12 +190,8 @@ describe('BaseTemplateController', () => {
         await setupElement(
           html`<test-element>
             <template>
-              <atomic-table-element slot="table-column"
-                >Column 1</atomic-table-element
-              >
-              <atomic-table-element slot="table-column"
-                >Column 2</atomic-table-element
-              >
+              <atomic-table-element slot="table-column">Column 1</atomic-table-element>
+              <atomic-table-element slot="table-column">Column 2</atomic-table-element>
             </template>
           </test-element>`
         );
@@ -222,9 +208,7 @@ describe('BaseTemplateController', () => {
           setupElement(
             html`<test-element>
               <template>
-                <atomic-result-section-visual
-                  >section</atomic-result-section-visual
-                >
+                <atomic-result-section-visual>section</atomic-result-section-visual>
                 <span>other</span>
               </template>
             </test-element>`
@@ -366,9 +350,7 @@ describe('BaseTemplateController', () => {
 
   describe('#getBaseTemplate', () => {
     describe('when the template is valid', () => {
-      let result: ReturnType<
-        TestTemplateController['getBaseTemplateForTesting']
-      >;
+      let result: ReturnType<TestTemplateController['getBaseTemplateForTesting']>;
 
       beforeEach(async () => {
         const {controller} = await setupElement(
@@ -398,9 +380,7 @@ describe('BaseTemplateController', () => {
 
       it('should return the correct linkContent', () => {
         const linkTemplate = buildTemplateHtml('<test-link></test-link>');
-        expect(fragmentToHTML(result!.linkContent!)).toBe(
-          fragmentToHTML(linkTemplate.content)
-        );
+        expect(fragmentToHTML(result!.linkContent!)).toBe(fragmentToHTML(linkTemplate.content));
       });
 
       it('should return the correct priority', () => {
@@ -420,10 +400,7 @@ describe('BaseTemplateController', () => {
         const result = controller.getBaseTemplateForTesting(providedConditions);
 
         expect(result?.conditions).toHaveLength(3);
-        expect(result?.conditions).toEqual([
-          ...providedConditions,
-          ...controller.matchConditions,
-        ]);
+        expect(result?.conditions).toEqual([...providedConditions, ...controller.matchConditions]);
       });
     });
 

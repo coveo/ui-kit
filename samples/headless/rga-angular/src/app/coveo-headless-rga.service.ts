@@ -30,9 +30,7 @@ export class CoveoHeadlessRGAService {
 
   get engine(): SearchEngine {
     if (!this._engine) {
-      throw new Error(
-        'Headless Engine not initialized. Call initEngine() first.'
-      );
+      throw new Error('Headless Engine not initialized. Call initEngine() first.');
     }
     return this._engine;
   }

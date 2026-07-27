@@ -25,9 +25,7 @@ import {
   type SearchParameterManagerBuildProps,
 } from './headless-search-parameter-manager.ssr.js';
 
-vi.mock(
-  '../../../../controllers/search-parameter-manager/headless-search-parameter-manager.js'
-);
+vi.mock('../../../../controllers/search-parameter-manager/headless-search-parameter-manager.js');
 const buildSearchParameterManagerMock = vi.mocked(buildSearchParameterManager);
 
 type SearchParameterManagerDefinitionType = ControllerDefinitionWithProps<
@@ -72,9 +70,7 @@ describe('define search parameter manager', () => {
   });
 
   it('defineSearchParameterManager returns the proper type', () => {
-    expect(
-      searchParameterManagerDefinition
-    ).toMatchObject<SearchParameterManagerDefinitionType>({
+    expect(searchParameterManagerDefinition).toMatchObject<SearchParameterManagerDefinitionType>({
       buildWithProps: expect.any(Function),
     });
   });

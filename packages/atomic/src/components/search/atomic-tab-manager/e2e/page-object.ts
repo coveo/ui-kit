@@ -26,15 +26,11 @@ export class TabManagerPageObject extends BasePageObject {
     return this.page.getByLabel(/^included-facet$/);
   }
   get excludedModalFacet() {
-    return this.page
-      .locator('atomic-refine-modal')
-      .getByLabel(/^excluded-facet$/);
+    return this.page.locator('atomic-refine-modal').getByLabel(/^excluded-facet$/);
   }
 
   get includedModalFacet() {
-    return this.page
-      .locator('atomic-refine-modal')
-      .getByLabel(/^included-facet$/);
+    return this.page.locator('atomic-refine-modal').getByLabel(/^included-facet$/);
   }
 
   get smartSnippet() {
@@ -54,9 +50,7 @@ export class TabManagerPageObject extends BasePageObject {
   }
 
   get refineModalSortDropdown() {
-    return this.page
-      .locator('atomic-modal [part="select-wrapper"]')
-      .getByRole('combobox');
+    return this.page.locator('atomic-modal [part="select-wrapper"]').getByRole('combobox');
   }
 
   get refineModalCloseButton() {

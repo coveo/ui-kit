@@ -52,22 +52,14 @@ export type SearchEngineDefinitionOptions<
   TControllers extends ControllerDefinitionsMap<SSRSearchEngine, Controller>,
 > = EngineDefinitionOptions<SearchEngineOptions, TControllers>;
 
-export type SearchCompletedAction = ReturnType<
-  LegacySearchAction['fulfilled' | 'rejected']
->;
+export type SearchCompletedAction = ReturnType<LegacySearchAction['fulfilled' | 'rejected']>;
 
-function isSearchCompletedAction(
-  action: unknown
-): action is SearchCompletedAction {
-  return /^search\/executeSearch\/(fulfilled|rejected)$/.test(
-    (action as UnknownAction).type
-  );
+function isSearchCompletedAction(action: unknown): action is SearchCompletedAction {
+  return /^search\/executeSearch\/(fulfilled|rejected)$/.test((action as UnknownAction).type);
 }
 
 function buildSSRSearchEngine(options: SearchEngineOptions): SSRSearchEngine {
-  const {middleware, promise} = createWaitForActionMiddleware(
-    isSearchCompletedAction
-  );
+  const {middleware, promise} = createWaitForActionMiddleware(isSearchCompletedAction);
   const searchEngine = buildSearchEngine({
     ...options,
     middlewares: [...(options.middlewares ?? []), middleware],
@@ -85,11 +77,7 @@ function buildSSRSearchEngine(options: SearchEngineOptions): SSRSearchEngine {
 
 export interface SearchEngineDefinition<
   TControllers extends ControllerDefinitionsMap<SSRSearchEngine, Controller>,
-> extends EngineDefinition<
-  SSRSearchEngine,
-  TControllers,
-  SearchEngineOptions
-> {}
+> extends EngineDefinition<SSRSearchEngine, TControllers, SearchEngineOptions> {}
 
 /**
  * Initializes a Search engine definition in SSR with given controllers definitions and search engine config.
@@ -101,10 +89,7 @@ export interface SearchEngineDefinition<
  * @group Engine
  */
 export function defineSearchEngine<
-  TControllerDefinitions extends ControllerDefinitionsMap<
-    SearchEngine,
-    Controller
-  >,
+  TControllerDefinitions extends ControllerDefinitionsMap<SearchEngine, Controller>,
 >(
   options: SearchEngineDefinitionOptions<TControllerDefinitions>
 ): SearchEngineDefinition<TControllerDefinitions> {
@@ -113,10 +98,8 @@ export function defineSearchEngine<
   type BuildFunction = Definition['build'];
   type FetchStaticStateFunction = Definition['fetchStaticState'];
   type HydrateStaticStateFunction = Definition['hydrateStaticState'];
-  type FetchStaticStateFromBuildResultFunction =
-    FetchStaticStateFunction['fromBuildResult'];
-  type HydrateStaticStateFromBuildResultFunction =
-    HydrateStaticStateFunction['fromBuildResult'];
+  type FetchStaticStateFromBuildResultFunction = FetchStaticStateFunction['fromBuildResult'];
+  type HydrateStaticStateFromBuildResultFunction = HydrateStaticStateFunction['fromBuildResult'];
   type BuildParameters = Parameters<BuildFunction>;
   type FetchStaticStateParameters = Parameters<FetchStaticStateFunction>;
   type HydrateStaticStateParameters = Parameters<HydrateStaticStateFunction>;
@@ -125,17 +108,13 @@ export function defineSearchEngine<
   type HydrateStaticStateFromBuildResultParameters =
     Parameters<HydrateStaticStateFromBuildResultFunction>;
 
-  const tokenManager = createAccessTokenManager(
-    engineOptions.configuration.accessToken
-  );
+  const tokenManager = createAccessTokenManager(engineOptions.configuration.accessToken);
 
   const getOptions = () => {
     return engineOptions;
   };
 
-  const setNavigatorContextProvider = (
-    navigatorContextProvider: NavigatorContextProvider
-  ) => {
+  const setNavigatorContextProvider = (navigatorContextProvider: NavigatorContextProvider) => {
     engineOptions.navigatorContextProvider = navigatorContextProvider;
   };
 
@@ -154,9 +133,7 @@ export function defineSearchEngine<
       );
     }
     const engine = buildSSRSearchEngine(
-      buildOptions?.extend
-        ? await buildOptions.extend(getOptions())
-        : getOptions()
+      buildOptions?.extend ? await buildOptions.extend(getOptions()) : getOptions()
     );
 
     const updateEngineConfiguration = (accessToken: string) => {
@@ -185,12 +162,11 @@ export function defineSearchEngine<
 
   const fetchStaticState: FetchStaticStateFunction = composeFunction(
     async (...params: FetchStaticStateParameters) => {
-      engineOptions.configuration.preprocessRequest =
-        augmentPreprocessRequestWithForwardedFor({
-          preprocessRequest: engineOptions.configuration.preprocessRequest,
-          navigatorContextProvider: engineOptions.navigatorContextProvider,
-          loggerOptions: engineOptions.loggerOptions,
-        });
+      engineOptions.configuration.preprocessRequest = augmentPreprocessRequestWithForwardedFor({
+        preprocessRequest: engineOptions.configuration.preprocessRequest,
+        navigatorContextProvider: engineOptions.navigatorContextProvider,
+        loggerOptions: engineOptions.loggerOptions,
+      });
 
       const buildResult = await build(...params);
       const staticState = await fetchStaticState.fromBuildResult({
@@ -199,9 +175,7 @@ export function defineSearchEngine<
       return staticState;
     },
     {
-      fromBuildResult: async (
-        ...params: FetchStaticStateFromBuildResultParameters
-      ) => {
+      fromBuildResult: async (...params: FetchStaticStateFromBuildResultParameters) => {
         const [
           {
             buildResult: {engine, controllers},
@@ -230,9 +204,7 @@ export function defineSearchEngine<
       return staticState;
     },
     {
-      fromBuildResult: async (
-        ...params: HydrateStaticStateFromBuildResultParameters
-      ) => {
+      fromBuildResult: async (...params: HydrateStaticStateFromBuildResultParameters) => {
         const [
           {
             buildResult: {engine, controllers},

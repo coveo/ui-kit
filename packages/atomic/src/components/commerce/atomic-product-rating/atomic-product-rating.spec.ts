@@ -20,10 +20,8 @@ describe('atomic-product-rating', () => {
       element?.querySelector('[part="value-rating"]'),
     getRatingIcons: (element: AtomicProductRating) =>
       element?.querySelectorAll('atomic-icon[part="value-rating-icon"]'),
-    getRatingDetails: (element: AtomicProductRating) =>
-      element?.querySelector('.rating-details'),
-    getFilledIconsContainer: (element: AtomicProductRating) =>
-      element?.querySelector('.z-1'),
+    getRatingDetails: (element: AtomicProductRating) => element?.querySelector('.rating-details'),
+    getFilledIconsContainer: (element: AtomicProductRating) => element?.querySelector('.z-1'),
   };
 
   beforeEach(async () => {
@@ -116,10 +114,7 @@ describe('atomic-product-rating', () => {
       const ratingContainer = locators.getRatingContainer(element);
 
       expect(ratingContainer).toBeInTheDocument();
-      expect(ratingContainer).toHaveAttribute(
-        'aria-label',
-        '3.5 stars out of 5'
-      );
+      expect(ratingContainer).toHaveAttribute('aria-label', '3.5 stars out of 5');
     });
 
     it('should render nothing when field value is null', async () => {
@@ -180,10 +175,7 @@ describe('atomic-product-rating', () => {
       const ratingContainer = locators.getRatingContainer(element);
 
       expect(ratingContainer).toBeInTheDocument();
-      expect(ratingContainer).toHaveAttribute(
-        'aria-label',
-        '4 stars out of 10'
-      );
+      expect(ratingContainer).toHaveAttribute('aria-label', '4 stars out of 10');
     });
   });
 
@@ -276,10 +268,7 @@ describe('atomic-product-rating', () => {
       await element.updateComplete;
 
       const ratingContainer = locators.getRatingContainer(element);
-      expect(ratingContainer).toHaveAttribute(
-        'aria-label',
-        '3.5 stars out of 5'
-      );
+      expect(ratingContainer).toHaveAttribute('aria-label', '3.5 stars out of 5');
     });
 
     it('should update when maxValueInIndex changes', async () => {
@@ -290,10 +279,7 @@ describe('atomic-product-rating', () => {
       await element.updateComplete;
 
       const ratingContainer = locators.getRatingContainer(element);
-      expect(ratingContainer).toHaveAttribute(
-        'aria-label',
-        '4 stars out of 10'
-      );
+      expect(ratingContainer).toHaveAttribute('aria-label', '4 stars out of 10');
     });
   });
 });

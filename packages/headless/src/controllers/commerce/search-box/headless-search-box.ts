@@ -77,10 +77,7 @@ export type SearchBox = Omit<CoreSearchBox, 'submit'> & {
  * @group Buildable controllers
  * @category SearchBox
  */
-export function buildSearchBox(
-  engine: CommerceEngine,
-  props: SearchBoxProps = {}
-): SearchBox {
+export function buildSearchBox(engine: CommerceEngine, props: SearchBoxProps = {}): SearchBox {
   if (!loadSearchBoxReducers(engine)) {
     throw loadReducerError;
   }
@@ -98,19 +95,16 @@ export function buildSearchBox(
   };
 
   validateOptions(engine, searchBoxOptionsSchema, options, 'buildSearchBox');
-  dispatch(
-    registerQuerySetQuery({id, query: getState().commerceQuery.query ?? ''})
-  );
+  dispatch(registerQuerySetQuery({id, query: getState().commerceQuery.query ?? ''}));
   dispatch(registerQuerySuggest({id}));
 
   const getValue = () => getState().querySet[options.id];
 
   const performSearch = async () => {
-    const queryOptions: UpdateQueryPayload & PrepareForSearchWithQueryOptions =
-      {
-        query: getValue(),
-        clearFilters: options.clearFilters,
-      };
+    const queryOptions: UpdateQueryPayload & PrepareForSearchWithQueryOptions = {
+      query: getValue(),
+      clearFilters: options.clearFilters,
+    };
 
     dispatch(prepareForSearchWithQuery(queryOptions));
     dispatch(executeSearch({enableResults: options.enableResults}));
@@ -147,13 +141,8 @@ export function buildSearchBox(
 
     get state() {
       const querySuggest = getState().querySuggest[options.id];
-      const suggestions = getSuggestions(
-        querySuggest,
-        options.highlightOptions
-      );
-      const isLoadingSuggestions = querySuggest
-        ? querySuggest.isLoading
-        : false;
+      const suggestions = getSuggestions(querySuggest, options.highlightOptions);
+      const isLoadingSuggestions = querySuggest ? querySuggest.isLoading : false;
 
       return {
         searchBoxId: id,

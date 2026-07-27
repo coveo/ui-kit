@@ -1,9 +1,5 @@
 import {createMockAttachedResult} from '../../test/mock-attached-results.js';
-import {
-  attachResult,
-  detachResult,
-  setAttachedResults,
-} from './attached-results-actions.js';
+import {attachResult, detachResult, setAttachedResults} from './attached-results-actions.js';
 import {attachedResultsReducer} from './attached-results-slice.js';
 import {
   type AttachedResultsState,
@@ -121,10 +117,7 @@ describe('attached results slice', () => {
     const setAttachedResultsAction = setAttachedResults({
       results: [...attachedResults],
     });
-    const intermediateState = attachedResultsReducer(
-      state,
-      setAttachedResultsAction
-    );
+    const intermediateState = attachedResultsReducer(state, setAttachedResultsAction);
 
     const resultToDetach = createMockAttachedResult({
       permanentId: permanentIdToTest,

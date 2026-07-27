@@ -26,9 +26,7 @@ export function createReducerManager(
   ) => Reducer = (combined) => {
     return (state, action) => {
       const intermediate = combined(state, action);
-      const final = crossReducer
-        ? crossReducer(intermediate, action)
-        : intermediate;
+      const final = crossReducer ? crossReducer(intermediate, action) : intermediate;
       return final;
     };
   };
@@ -40,9 +38,7 @@ export function createReducerManager(
           .filter(([key]) => !(key in reducers))
           .map(([key, value]) => [key, <Reducer>(() => value)])
       );
-      return rootReducer(
-        combineReducers({...placeholderReducers, ...reducers})
-      );
+      return rootReducer(combineReducers({...placeholderReducers, ...reducers}));
     },
 
     containsAll(newReducers: ReducersMapObject) {

@@ -47,12 +47,8 @@ export class AtomicCommerceQuerySummary
 
   @bindStateToController('listingOrSearchSummary')
   @state()
-  private listingOrSearchSummaryState!:
-    | SearchSummaryState
-    | ProductListingSummaryState;
-  public listingOrSearchSummary!: Summary<
-    SearchSummaryState | ProductListingSummaryState
-  >;
+  private listingOrSearchSummaryState!: SearchSummaryState | ProductListingSummaryState;
+  public listingOrSearchSummary!: Summary<SearchSummaryState | ProductListingSummaryState>;
   protected ariaMessage = new AriaLiveRegionController(this, 'query-summary');
 
   public initialize() {
@@ -76,17 +72,16 @@ export class AtomicCommerceQuerySummary
       isLoading,
     } = this.listingOrSearchSummaryState;
 
-    const {i18nKey, highlights, ariaLiveMessage} =
-      getProductQuerySummaryI18nParameters({
-        first: firstProduct,
-        last: lastProduct,
-        query: this.isSearch(this.listingOrSearchSummaryState)
-          ? this.listingOrSearchSummaryState.query
-          : '',
-        total: totalNumberOfProducts,
-        i18n: this.bindings.i18n,
-        isLoading,
-      });
+    const {i18nKey, highlights, ariaLiveMessage} = getProductQuerySummaryI18nParameters({
+      first: firstProduct,
+      last: lastProduct,
+      query: this.isSearch(this.listingOrSearchSummaryState)
+        ? this.listingOrSearchSummaryState.query
+        : '',
+      total: totalNumberOfProducts,
+      i18n: this.bindings.i18n,
+      isLoading,
+    });
 
     this.ariaMessage.message = ariaLiveMessage;
 

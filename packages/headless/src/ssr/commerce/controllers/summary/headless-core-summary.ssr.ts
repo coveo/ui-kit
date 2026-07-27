@@ -28,9 +28,9 @@ export type {
  *
  * @returns The `Summary` controller definition.
  */
-export function defineSummary<
-  TOptions extends ControllerDefinitionOption | undefined,
->(options?: TOptions) {
+export function defineSummary<TOptions extends ControllerDefinitionOption | undefined>(
+  options?: TOptions
+) {
   ensureAtLeastOneSolutionType(options);
   return {
     listing: true,
@@ -41,11 +41,7 @@ export function defineSummary<
         ? buildProductListing(engine).summary()
         : buildSearch(engine).summary(),
   } as SubControllerDefinitionWithoutProps<
-    Summary<
-      | ProductListingSummaryState
-      | SearchSummaryState
-      | RecommendationsSummaryState
-    >,
+    Summary<ProductListingSummaryState | SearchSummaryState | RecommendationsSummaryState>,
     TOptions
   >;
 }

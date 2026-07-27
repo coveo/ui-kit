@@ -12,10 +12,7 @@ import type {
   InsightUserActionsSection,
 } from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
-import {
-  buildController,
-  type Controller,
-} from '../../controller/headless-controller.js';
+import {buildController, type Controller} from '../../controller/headless-controller.js';
 
 export type {
   UserAction,
@@ -73,10 +70,7 @@ export interface UserActions extends Controller {
  * @group Controllers
  * @category UserActions
  */
-export function buildUserActions(
-  engine: InsightEngine,
-  props: UserActionsProps
-): UserActions {
+export function buildUserActions(engine: InsightEngine, props: UserActionsProps): UserActions {
   if (!loadUserActionsReducers(engine)) {
     throw loadReducerError;
   }

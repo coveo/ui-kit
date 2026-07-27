@@ -15,10 +15,7 @@ export function parseValue(product: Product, field: string) {
   return valueAsNumber;
 }
 
-export function getStringValueFromProductOrNull(
-  product: Product,
-  field: string
-) {
+export function getStringValueFromProductOrNull(product: Product, field: string) {
   const value = ProductTemplatesHelpers.getProductProperty(product, field);
 
   if (typeof value !== 'string' || value.trim() === '') {

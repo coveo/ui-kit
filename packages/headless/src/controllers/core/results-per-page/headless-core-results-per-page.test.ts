@@ -4,10 +4,7 @@ import {
   updateNumberOfResults,
 } from '../../../features/pagination/pagination-actions.js';
 import {paginationReducer as pagination} from '../../../features/pagination/pagination-slice.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../../test/mock-engine-v2.js';
 import {buildMockPagination} from '../../../test/mock-pagination.js';
 import {createMockState} from '../../../test/mock-state.js';
 import {
@@ -67,9 +64,7 @@ describe('ResultsPerPage', () => {
   it('when #numberOfResults is set to a string, it throws an error with a context message', () => {
     props.initialState!.numberOfResults = '1' as unknown as number;
 
-    expect(() => initResultsPerPage()).toThrow(
-      'Check the initialState of buildResultsPerPage'
-    );
+    expect(() => initResultsPerPage()).toThrow('Check the initialState of buildResultsPerPage');
   });
 
   it('calling #set updates the number of results to the passed value', () => {

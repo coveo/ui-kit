@@ -15,9 +15,7 @@ describe('#renderGeneratingAnswerLabel', () => {
     i18n = await createTestI18n();
   });
 
-  const renderComponent = async (
-    overrides: Partial<RenderGeneratingAnswerLabelProps> = {}
-  ) => {
+  const renderComponent = async (overrides: Partial<RenderGeneratingAnswerLabelProps> = {}) => {
     const defaultProps: RenderGeneratingAnswerLabelProps = {
       i18n,
       isStreaming: false,

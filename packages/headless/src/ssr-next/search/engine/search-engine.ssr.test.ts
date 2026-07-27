@@ -91,21 +91,17 @@ describe('Search Engine SSR', () => {
         searchParams: {q: 'test'},
       });
 
-      const hydratedState =
-        await searchEngineDefinition.hydrateStaticState(staticState);
+      const hydratedState = await searchEngineDefinition.hydrateStaticState(staticState);
       expect(hydratedState).toBeTruthy();
       expect(hydratedState.engine).toBeDefined();
       expect(hydratedState.controllers).toBeDefined();
-      expect(hydratedState.engine.state.configuration.organizationId).toBe(
-        'some-org-id'
-      );
+      expect(hydratedState.engine.state.configuration.organizationId).toBe('some-org-id');
     });
   });
 
   describe('standaloneEngineDefinition', () => {
     it('should have all required properties', () => {
-      const {standaloneEngineDefinition} =
-        defineSearchEngine(definitionOptions);
+      const {standaloneEngineDefinition} = defineSearchEngine(definitionOptions);
       expect(standaloneEngineDefinition).toHaveProperty('fetchStaticState');
       expect(standaloneEngineDefinition).toHaveProperty('hydrateStaticState');
       expect(standaloneEngineDefinition).toHaveProperty('getAccessToken');
@@ -113,23 +109,20 @@ describe('Search Engine SSR', () => {
     });
 
     it('#getAccessToken should return the access token', () => {
-      const {standaloneEngineDefinition} =
-        defineSearchEngine(definitionOptions);
+      const {standaloneEngineDefinition} = defineSearchEngine(definitionOptions);
       const {getAccessToken} = standaloneEngineDefinition;
       expect(getAccessToken()).toBe('some-token');
     });
 
     it('#setAccessToken should update the access token', () => {
-      const {standaloneEngineDefinition} =
-        defineSearchEngine(definitionOptions);
+      const {standaloneEngineDefinition} = defineSearchEngine(definitionOptions);
       const {getAccessToken, setAccessToken} = standaloneEngineDefinition;
       setAccessToken('new-standalone-token');
       expect(getAccessToken()).toBe('new-standalone-token');
     });
 
     it('should always return parameter manager controller as well as the ones provided', async () => {
-      const {standaloneEngineDefinition} =
-        defineSearchEngine(definitionOptions);
+      const {standaloneEngineDefinition} = defineSearchEngine(definitionOptions);
       const staticState = await standaloneEngineDefinition.fetchStaticState({
         navigatorContext: mockNavigatorContext,
       });
@@ -139,8 +132,7 @@ describe('Search Engine SSR', () => {
     });
 
     it('should fetch static state successfully', async () => {
-      const {standaloneEngineDefinition} =
-        defineSearchEngine(definitionOptions);
+      const {standaloneEngineDefinition} = defineSearchEngine(definitionOptions);
       const staticState = await standaloneEngineDefinition.fetchStaticState({
         navigatorContext: mockNavigatorContext,
       });
@@ -149,20 +141,16 @@ describe('Search Engine SSR', () => {
     });
 
     it('should hydrate static state successfully', async () => {
-      const {standaloneEngineDefinition} =
-        defineSearchEngine(definitionOptions);
+      const {standaloneEngineDefinition} = defineSearchEngine(definitionOptions);
       const staticState = await standaloneEngineDefinition.fetchStaticState({
         navigatorContext: mockNavigatorContext,
       });
 
-      const hydratedState =
-        await standaloneEngineDefinition.hydrateStaticState(staticState);
+      const hydratedState = await standaloneEngineDefinition.hydrateStaticState(staticState);
       expect(hydratedState).toBeTruthy();
       expect(hydratedState.engine).toBeDefined();
       expect(hydratedState.controllers).toBeDefined();
-      expect(hydratedState.engine.state.configuration.organizationId).toBe(
-        'some-org-id'
-      );
+      expect(hydratedState.engine.state.configuration.organizationId).toBe('some-org-id');
     });
   });
 
@@ -174,8 +162,7 @@ describe('Search Engine SSR', () => {
     });
 
     it('should allow destructuring only standaloneEngineDefinition', () => {
-      const {standaloneEngineDefinition} =
-        defineSearchEngine(definitionOptions);
+      const {standaloneEngineDefinition} = defineSearchEngine(definitionOptions);
       expect(standaloneEngineDefinition).toBeDefined();
       expect(standaloneEngineDefinition.fetchStaticState).toBeDefined();
     });

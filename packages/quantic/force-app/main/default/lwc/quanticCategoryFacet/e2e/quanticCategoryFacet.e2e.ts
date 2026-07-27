@@ -3,7 +3,7 @@ import {
   useCaseEnum,
   useCaseTestCases,
 } from '../../../../../../playwright/utils/useCase';
-import facetData from './data';
+import {expandedFacetData, initialFacetData, selectedFacetData} from './data';
 
 const fixtures = {
   search: testSearch,
@@ -14,22 +14,34 @@ useCaseTestCases.forEach((useCase) => {
   let test = fixtures[useCase.value];
   test.describe(`quantic category facet ${useCase.label}`, () => {
     test.describe('when selecting a facet value and clicking the all categories button', () => {
+      const selectedIndex = 0;
+      const {facetId, field, values} = initialFacetData;
+      const selectedValue = values[selectedIndex].value;
+
+      test.use({
+        facetResponses: {
+          responses: [
+            [initialFacetData],
+            [selectedFacetData],
+            [initialFacetData],
+          ],
+        },
+      });
+
       test('should trigger a new search and log the corresponding UA analytics events', async ({
         baseFacet,
         facet,
         page,
       }) => {
-        const selectedIndex = 0;
-        const {facetId, field, values} = facetData;
         const expectedFacetData = {
           facetId,
           facetField: field,
-          facetValue: values[selectedIndex].value,
+          facetValue: selectedValue,
         };
+
         const facetSelectUaRequest =
           baseFacet.waitForFacetSelectUaAnalytics(expectedFacetData);
         const firstSearchResponsePromise = baseFacet.waitForSearchResponse();
-
         await facet.clickOnFacetValue(selectedIndex);
 
         await facetSelectUaRequest;
@@ -43,11 +55,11 @@ useCaseTestCases.forEach((useCase) => {
           );
           const url = page.url();
           expect(decodeURIComponent(url)).toContain(
-            `cf-${field}=${values[selectedIndex].value}`
+            `cf-${field}=${selectedValue}`
           );
         }
 
-        const FacetClearAllUaRequest =
+        const facetClearAllUaRequest =
           baseFacet.waitForFacetClearAllUaAnalytics({
             facetId,
             facetField: field,
@@ -56,7 +68,7 @@ useCaseTestCases.forEach((useCase) => {
 
         await facet.allCategoriesButton.click();
 
-        await FacetClearAllUaRequest;
+        await facetClearAllUaRequest;
         const secondSearchResponse = await secondSearchResponsePromise;
         const {analytics: analyticsForFacetDeselect} =
           baseFacet.extractDataFromResponse(secondSearchResponse);
@@ -66,6 +78,9 @@ useCaseTestCases.forEach((useCase) => {
 
     test.describe('when expanding and collapsing facet values using Show More/Less buttons', () => {
       test.use({
+        facetResponses: {
+          responses: [[initialFacetData], [expandedFacetData]],
+        },
         options: {
           numberOfValues: 2,
         },
@@ -75,7 +90,7 @@ useCaseTestCases.forEach((useCase) => {
         baseFacet,
         facet,
       }) => {
-        const {facetId, field} = facetData;
+        const {facetId, field} = initialFacetData;
         const uaRequest = baseFacet.waitForShowMoreFacetResultsUaAnalytics({
           facetId,
           facetField: field,
@@ -116,9 +131,12 @@ useCaseTestCases.forEach((useCase) => {
       const facetValueIndex = 0;
 
       test.use({
+        facetResponses: {
+          responses: [[initialFacetData], [selectedFacetData]],
+        },
         options: {
           caption: exampleCaption,
-          value: facetData.values[facetValueIndex].value,
+          value: initialFacetData.values[facetValueIndex].value,
         },
       });
       test('should display the custom caption instead of the raw facet value', async ({
@@ -128,7 +146,7 @@ useCaseTestCases.forEach((useCase) => {
         expect(facet.facetValue.nth(facetValueIndex)).toHaveText(
           new RegExp(exampleCaption)
         );
-        const {facetId, field, values} = facetData;
+        const {facetId, field, values} = initialFacetData;
         const expectedFacetData = {
           facetId,
           facetField: field,
@@ -165,7 +183,7 @@ useCaseTestCases.forEach((useCase) => {
           baseFacet,
           facet,
         }) => {
-          const {field: expectedField} = facetData;
+          const {field: expectedField} = initialFacetData;
           const exampleQuery = 'test';
           const facetSearchResponsePromise =
             baseFacet.waitForFacetSearchResponse();
@@ -182,10 +200,12 @@ useCaseTestCases.forEach((useCase) => {
 
       test.describe('with a selected value in the URL', () => {
         const selectedIndex = 0;
-        const {field, values} = facetData;
+        const {field, values} = initialFacetData;
         test.use({
           urlHash: `cf-${field}=${values[selectedIndex].value}`,
-          facetResponseMock: undefined,
+          facetResponses: {
+            responses: [],
+          },
         });
 
         test('should select the correct facet value', async ({facet}) => {

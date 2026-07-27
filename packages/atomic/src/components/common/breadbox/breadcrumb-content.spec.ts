@@ -129,9 +129,7 @@ describe('#renderBreadcrumbContent', () => {
     it('should have the correct classes on the label', async () => {
       const {label} = await renderExclusionState();
       expect(label).toHaveClass('excluded');
-      expect(label).toHaveClass(
-        'group-hover:text-error group-focus-visible:text-error'
-      );
+      expect(label).toHaveClass('group-hover:text-error group-focus-visible:text-error');
     });
 
     it('should have "excluded" class on the value', async () => {
@@ -144,9 +142,7 @@ describe('#renderBreadcrumbContent', () => {
     it('should have the "idle" class on the label', async () => {
       const {label} = await renderIdleState();
       expect(label).toHaveClass('idle');
-      expect(label).toHaveClass(
-        'group-hover:text-primary group-focus-visible:text-primary'
-      );
+      expect(label).toHaveClass('group-hover:text-primary group-focus-visible:text-primary');
     });
 
     it('should have the "idle" class on the value', async () => {
@@ -159,9 +155,7 @@ describe('#renderBreadcrumbContent', () => {
     it('should have the "selected" class on the label', async () => {
       const {label} = await renderSelectedState();
       expect(label).toHaveClass('selected');
-      expect(label).toHaveClass(
-        'group-hover:text-primary group-focus-visible:text-primary'
-      );
+      expect(label).toHaveClass('group-hover:text-primary group-focus-visible:text-primary');
     });
 
     it('should have the "selected" class on the value', async () => {

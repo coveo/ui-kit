@@ -46,11 +46,7 @@ export default function InstantProducts() {
                 <span className="InstantProductName">{product.ec_name}</span>
                 {product.ec_price != null && (
                   <span className="InstantProductPrice">
-                    {formatCurrency(
-                      product.ec_price,
-                      contextState.language,
-                      contextState.currency
-                    )}
+                    {formatCurrency(product.ec_price, contextState.language, contextState.currency)}
                   </span>
                 )}
               </span>

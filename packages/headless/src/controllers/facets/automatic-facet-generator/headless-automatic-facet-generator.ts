@@ -10,10 +10,7 @@ import type {
   SearchSection,
 } from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
-import {
-  buildController,
-  type Controller,
-} from '../../controller/headless-controller.js';
+import {buildController, type Controller} from '../../controller/headless-controller.js';
 import {buildAutomaticFacet} from '../automatic-facet/headless-automatic-facet.js';
 import type {FacetValue} from '../facet/headless-facet.js';
 import {
@@ -142,8 +139,8 @@ export function buildAutomaticFacetGenerator(
 
     get state() {
       const automaticFacets =
-        engine.state.search.response.generateAutomaticFacets?.facets.map(
-          (facet) => buildAutomaticFacet(engine, {field: facet.field})
+        engine.state.search.response.generateAutomaticFacets?.facets.map((facet) =>
+          buildAutomaticFacet(engine, {field: facet.field})
         ) ?? [];
       return {
         automaticFacets,
@@ -154,9 +151,7 @@ export function buildAutomaticFacetGenerator(
 
 function loadAutomaticFacetGeneratorReducers(
   engine: CoreEngine
-): engine is CoreEngine<
-  AutomaticFacetSection & ConfigurationSection & SearchSection
-> {
+): engine is CoreEngine<AutomaticFacetSection & ConfigurationSection & SearchSection> {
   engine.addReducers({automaticFacetSet, configuration, search});
   return true;
 }

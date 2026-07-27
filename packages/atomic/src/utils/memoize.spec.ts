@@ -71,10 +71,7 @@ describe('memoize', () => {
 
   it('should allow failed calls to be retried and eventually succeed', async () => {
     const error = new Error('temporary error');
-    mockFn
-      .mockRejectedValueOnce(error)
-      .mockRejectedValueOnce(error)
-      .mockResolvedValue('success');
+    mockFn.mockRejectedValueOnce(error).mockRejectedValueOnce(error).mockResolvedValue('success');
 
     const memoized = memoize(mockFn, (arg: string) => arg);
 
@@ -95,9 +92,7 @@ describe('memoize', () => {
 
   describe('LRU eviction', () => {
     it('should evict the least recently used entry when maxEntries is exceeded', async () => {
-      mockFn.mockImplementation((arg: string) =>
-        Promise.resolve(`result-${arg}`)
-      );
+      mockFn.mockImplementation((arg: string) => Promise.resolve(`result-${arg}`));
       const memoized = memoize(mockFn, (arg: string) => arg, {maxEntries: 2});
 
       await memoized.fn('a');
@@ -108,9 +103,7 @@ describe('memoize', () => {
       await memoized.fn('c');
       expect(mockFn).toHaveBeenCalledTimes(3);
 
-      mockFn.mockImplementation((arg: string) =>
-        Promise.resolve(`fresh-${arg}`)
-      );
+      mockFn.mockImplementation((arg: string) => Promise.resolve(`fresh-${arg}`));
 
       // 'b' and 'c' are still cached - no additional calls
       const resultB = await memoized.fn('b');
@@ -126,9 +119,7 @@ describe('memoize', () => {
     });
 
     it('should promote a cache hit to most recently used', async () => {
-      mockFn.mockImplementation((arg: string) =>
-        Promise.resolve(`result-${arg}`)
-      );
+      mockFn.mockImplementation((arg: string) => Promise.resolve(`result-${arg}`));
       const memoized = memoize(mockFn, (arg: string) => arg, {maxEntries: 2});
 
       await memoized.fn('a');
@@ -136,9 +127,7 @@ describe('memoize', () => {
 
       await memoized.fn('a');
 
-      mockFn.mockImplementation((arg: string) =>
-        Promise.resolve(`fresh-${arg}`)
-      );
+      mockFn.mockImplementation((arg: string) => Promise.resolve(`fresh-${arg}`));
 
       await memoized.fn('c');
 

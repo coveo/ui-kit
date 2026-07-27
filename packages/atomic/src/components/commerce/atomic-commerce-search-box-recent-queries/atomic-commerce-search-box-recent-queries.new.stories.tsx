@@ -35,8 +35,7 @@ const meta: Meta = {
 
   play: async (context) => {
     await commerceInterfacePlay(context);
-    const searchBox =
-      await context.canvas.findAllByShadowPlaceholderText('Search');
+    const searchBox = await context.canvas.findAllByShadowPlaceholderText('Search');
     await userEvent.click(searchBox[0]);
   },
   beforeEach: () => {

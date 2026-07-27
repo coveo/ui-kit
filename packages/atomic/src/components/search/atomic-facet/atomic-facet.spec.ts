@@ -29,9 +29,7 @@ describe('atomic-facet', () => {
       buildFakeSearchStatus({firstSearchExecuted: true})
     );
     vi.mocked(buildTabManager).mockReturnValue(buildFakeTabManager({}));
-    vi.mocked(buildFacetConditionsManager).mockReturnValue(
-      buildFakeFacetConditionsManager({})
-    );
+    vi.mocked(buildFacetConditionsManager).mockReturnValue(buildFakeFacetConditionsManager({}));
   });
 
   const setupElement = async (
@@ -84,12 +82,9 @@ describe('atomic-facet', () => {
         },
       }),
     });
-    const qs = (part: string) =>
-      element.shadowRoot?.querySelector(`[part~="${part}"]`)!;
+    const qs = (part: string) => element.shadowRoot?.querySelector(`[part~="${part}"]`)!;
     const qsa = (part: string, ...additionalSelector: string[]) =>
-      element.shadowRoot?.querySelectorAll(
-        `[part~="${part}"]${additionalSelector?.join('')}`
-      )!;
+      element.shadowRoot?.querySelectorAll(`[part~="${part}"]${additionalSelector?.join('')}`)!;
 
     const locators = {
       get title() {
@@ -110,9 +105,7 @@ describe('atomic-facet', () => {
       get componentError() {
         return page.getByText(/error/i);
       },
-      placeholder: element.shadowRoot?.querySelector(
-        'atomic-facet-placeholder'
-      ),
+      placeholder: element.shadowRoot?.querySelector('atomic-facet-placeholder'),
       facet: qs('facet'),
       labelButton: qs('label-button'),
       labelButtonIcon: qs('label-button-icon'),
@@ -131,10 +124,7 @@ describe('atomic-facet', () => {
       valueCount: qsa('value-count'),
       valueCheckbox: qsa('value-checkbox'),
       valueCheckboxChecked: qsa('value-checkbox-checked'),
-      valueCheckboxExcluded: qsa(
-        'value-checkbox-checked',
-        '[aria-pressed=mixed]'
-      ),
+      valueCheckboxExcluded: qsa('value-checkbox-checked', '[aria-pressed=mixed]'),
       valueCheckboxLabel: qsa('value-checkbox-label'),
       valueCheckboxIcon: qsa('value-checkbox-icon'),
       valueLink: qsa('value-link'),
@@ -408,9 +398,7 @@ describe('atomic-facet', () => {
         const {locators} = await setupElement();
 
         await expect.element(locators.clearButton).toBeVisible();
-        await expect
-          .element(locators.clearButton)
-          .toHaveTextContent('Clear filter');
+        await expect.element(locators.clearButton).toHaveTextContent('Clear filter');
         await expect.element(locators.clearButtonIcon).toBeVisible();
       });
     });
@@ -439,15 +427,9 @@ describe('atomic-facet', () => {
         const {locators} = await setupElement();
 
         await expect.element(locators.searchClearButton).toBeVisible();
-        await expect
-          .element(locators.matchesQuery)
-          .toHaveTextContent('test query');
-        await expect
-          .element(locators.moreMatches)
-          .toHaveTextContent('More matches for test query');
-        await expect
-          .element(locators.searchHighlight)
-          .toHaveTextContent('test query');
+        await expect.element(locators.matchesQuery).toHaveTextContent('test query');
+        await expect.element(locators.moreMatches).toHaveTextContent('More matches for test query');
+        await expect.element(locators.searchHighlight).toHaveTextContent('test query');
       });
 
       it('should render more matches caption when there are more values available', async () => {
@@ -471,9 +453,7 @@ describe('atomic-facet', () => {
         );
 
         await setupElement();
-        await expect
-          .element(page.getByText('More matches for test query'))
-          .toBeVisible();
+        await expect.element(page.getByText('More matches for test query')).toBeVisible();
       });
 
       it('should render proper part when there are no search results', async () => {
@@ -960,9 +940,7 @@ describe('atomic-facet', () => {
 
   describe('data validation', () => {
     it('should warn when tabsIncluded and tabsExcluded are both set', async () => {
-      const consoleWarnSpy = vi
-        .spyOn(console, 'warn')
-        .mockImplementation(() => {});
+      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
       await setupElement({
         tabsIncluded: ['tab1'],
         tabsExcluded: ['tab2'],
@@ -974,9 +952,7 @@ describe('atomic-facet', () => {
     });
 
     it('should warn when exclusions are enabled on other display values than checkbox', async () => {
-      const consoleWarnSpy = vi
-        .spyOn(console, 'warn')
-        .mockImplementation(() => {});
+      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
       await setupElement({
         displayValuesAs: 'link',
         enableExclusion: true,
@@ -1154,16 +1130,10 @@ describe('atomic-facet', () => {
         })
       );
 
-      const setMessageSpy = vi.spyOn(
-        AriaLiveRegionController.prototype,
-        'message',
-        'set'
-      );
+      const setMessageSpy = vi.spyOn(AriaLiveRegionController.prototype, 'message', 'set');
       const {locators} = await setupElement();
       await userEvent.click(locators.valueLabel[0]);
-      expect(setMessageSpy).toHaveBeenCalledWith(
-        '1 value found in the Test Field facet'
-      );
+      expect(setMessageSpy).toHaveBeenCalledWith('1 value found in the Test Field facet');
     });
   });
 

@@ -19,12 +19,7 @@
       "inputs": ["src/themes/**"]
     },
     "pre:storybook": {
-      "dependsOn": [
-        "build:cem",
-        "build:locales",
-        "build:assets",
-        "build:indexes"
-      ],
+      "dependsOn": ["build:cem", "build:locales", "build:assets", "build:indexes"],
       "outputs": []
     },
     "build:storybook": {
@@ -35,12 +30,7 @@
     "chromatic": {
       "dependsOn": [],
       "outputs": [],
-      "env": [
-        "CHROMATIC_PROJECT_TOKEN",
-        "CHROMATIC_SHA",
-        "CHROMATIC_BRANCH",
-        "CHROMATIC_SLUG"
-      ]
+      "env": ["CHROMATIC_PROJECT_TOKEN", "CHROMATIC_SHA", "CHROMATIC_BRANCH", "CHROMATIC_SLUG"]
     },
     "build:cem": {
       "outputs": ["./custom-elements.json"],
@@ -55,10 +45,7 @@
       ]
     },
     "build:indexes": {
-      "outputs": [
-        "src/components/*/index.ts",
-        "src/components/*/lazy-index.ts"
-      ],
+      "outputs": ["src/components/*/index.ts", "src/components/*/lazy-index.ts"],
       "inputs": [
         "./src/**/*.ts",
         "!./src/components/*/index.ts",
@@ -89,13 +76,7 @@
       ]
     },
     "build:cdn": {
-      "dependsOn": [
-        "^build",
-        "build:lit",
-        "build:locales",
-        "build:assets",
-        "build:themes"
-      ],
+      "dependsOn": ["^build", "build:lit", "build:locales", "build:assets", "build:themes"],
       "outputs": ["cdn/**"],
       "inputs": [
         "./src/**/*.ts",

@@ -19,30 +19,24 @@ describe('Supports<F> type safety', () => {
 
   describe('ComposedInterface', () => {
     it('accepts a composed interface with one interface that has the facade', () => {
-      expectTypeOf<ComposedInterface<'search'>>().toExtend<
-        Supports<'search'>
-      >();
+      expectTypeOf<ComposedInterface<'search'>>().toExtend<Supports<'search'>>();
     });
 
     it('accepts a composed interface with mixed types where at least one has the facade', () => {
-      expectTypeOf<ComposedInterface<'search' | 'commerce'>>().toExtend<
-        Supports<'search'>
-      >();
+      expectTypeOf<ComposedInterface<'search' | 'commerce'>>().toExtend<Supports<'search'>>();
     });
 
     it('rejects a composed interface where no interface has the facade', () => {
-      expectTypeOf<ComposedInterface<'generative'>>().not.toExtend<
-        Supports<'search'>
-      >();
+      expectTypeOf<ComposedInterface<'generative'>>().not.toExtend<Supports<'search'>>();
     });
   });
 });
 
 describe('composeInterfaces type inference', () => {
   it('infers ComposedInterface<"search"> from a single SearchInterface', () => {
-    expectTypeOf<
-      ReturnType<typeof composeInterfaces<SearchInterface>>
-    >().toEqualTypeOf<ComposedInterface<'search'>>();
+    expectTypeOf<ReturnType<typeof composeInterfaces<SearchInterface>>>().toEqualTypeOf<
+      ComposedInterface<'search'>
+    >();
   });
 
   it('infers ComposedInterface<"search" | "commerce"> from mixed search/commerce', () => {
@@ -53,24 +47,16 @@ describe('composeInterfaces type inference', () => {
 
   it('infers ComposedInterface<"search" | "generative"> from cross-type composition', () => {
     expectTypeOf<
-      ReturnType<
-        typeof composeInterfaces<SearchInterface | GenerativeInterface>
-      >
+      ReturnType<typeof composeInterfaces<SearchInterface | GenerativeInterface>>
     >().toEqualTypeOf<ComposedInterface<'search' | 'generative'>>();
   });
 
   it('cross-type composed is assignable to Supports for each constituent facade', () => {
-    expectTypeOf<ComposedInterface<'search' | 'generative'>>().toExtend<
-      Supports<'search'>
-    >();
-    expectTypeOf<ComposedInterface<'search' | 'generative'>>().toExtend<
-      Supports<'conversation'>
-    >();
+    expectTypeOf<ComposedInterface<'search' | 'generative'>>().toExtend<Supports<'search'>>();
+    expectTypeOf<ComposedInterface<'search' | 'generative'>>().toExtend<Supports<'conversation'>>();
   });
 
   it('cross-type composed is NOT assignable to Supports for unrelated facade', () => {
-    expectTypeOf<ComposedInterface<'generative'>>().not.toExtend<
-      Supports<'search'>
-    >();
+    expectTypeOf<ComposedInterface<'generative'>>().not.toExtend<Supports<'search'>>();
   });
 });

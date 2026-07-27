@@ -3,10 +3,7 @@ import type {Result} from '@coveo/headless/recommendation';
 import React, {type JSX, useEffect, useRef} from 'react';
 import {flushSync} from 'react-dom';
 import {createRoot} from 'react-dom/client';
-import {
-  AtomicResultLink,
-  AtomicRecsList as LitAtomicRecsList,
-} from '../search/components.js';
+import {AtomicResultLink, AtomicRecsList as LitAtomicRecsList} from '../search/components.js';
 
 interface Template {
   contentTemplate: JSX.Element;
@@ -100,8 +97,6 @@ export const RecsListWrapper: React.FC<WrapperProps> = (props) => {
   return <LitAtomicRecsList ref={recsListRef} {...otherProps} />;
 };
 
-const hasLinkTemplate = (
-  template: JSX.Element | Template
-): template is Template => {
+const hasLinkTemplate = (template: JSX.Element | Template): template is Template => {
   return (template as Template).linkTemplate !== undefined;
 };

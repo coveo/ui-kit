@@ -34,13 +34,8 @@ export type RangeFacetProps<T extends RangeFacetRequest> = {
   getRequest: () => T;
 };
 
-export function buildCoreRangeFacet<
-  T extends RangeFacetRequest,
-  R extends RangeFacetResponse,
->(
-  engine: CoreEngine<
-    ConfigurationSection & SearchSection & FacetOptionsSection
-  >,
+export function buildCoreRangeFacet<T extends RangeFacetRequest, R extends RangeFacetResponse>(
+  engine: CoreEngine<ConfigurationSection & SearchSection & FacetOptionsSection>,
   props: RangeFacetProps<T>
 ) {
   type RangeFacetValue = R['values'][0];
@@ -82,9 +77,7 @@ export function buildCoreRangeFacet<
 
     get state() {
       const request = getRequest();
-      const response = baseFacetResponseSelector(engine.state, facetId) as
-        | R
-        | undefined;
+      const response = baseFacetResponseSelector(engine.state, facetId) as R | undefined;
 
       const sortCriterion = request.sortCriteria;
       const resultsMustMatch = request.resultsMustMatch;
