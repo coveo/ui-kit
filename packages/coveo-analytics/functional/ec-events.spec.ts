@@ -667,7 +667,7 @@ describe('ec events', () => {
   describe('with auto-detection of userId', () => {
     describe('with API key', () => {
       beforeEach(() => {
-        coveoua('init', 'testApiKey', anEndpoint);
+        coveoua('init', 'xxTestApiKey', anEndpoint);
       });
 
       it('should set userId to anonymous', async () => {

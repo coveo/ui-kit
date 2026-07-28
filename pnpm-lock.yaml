@@ -721,7 +721,7 @@ importers:
         version: 0.6.4
       fetch-mock:
         specifier: 9.11.0
-        version: 9.11.0(node-fetch@3.3.2)
+        version: 9.11.0(node-fetch@2.7.0(encoding@0.1.13))
       husky:
         specifier: 4.3.8
         version: 4.3.8
@@ -737,6 +737,9 @@ importers:
       lint-staged:
         specifier: 13.3.0
         version: 13.3.0(enquirer@2.4.1)
+      node-fetch:
+        specifier: 2.7.0
+        version: 2.7.0(encoding@0.1.13)
       prettier:
         specifier: 3.9.5
         version: 3.9.5
@@ -27433,7 +27436,7 @@ snapshots:
       node-domexception: 1.0.0
       web-streams-polyfill: 3.3.3
 
-  fetch-mock@9.11.0(node-fetch@3.3.2):
+  fetch-mock@9.11.0(node-fetch@2.7.0(encoding@0.1.13)):
     dependencies:
       '@babel/core': 7.29.7
       '@babel/runtime': 7.29.7
@@ -27446,7 +27449,7 @@ snapshots:
       querystring: 0.2.1
       whatwg-url: 6.5.0
     optionalDependencies:
-      node-fetch: 3.3.2
+      node-fetch: 2.7.0(encoding@0.1.13)
     transitivePeerDependencies:
       - supports-color
 
