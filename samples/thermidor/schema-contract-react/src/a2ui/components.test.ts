@@ -4,6 +4,7 @@ import {DataContext, MessageProcessor} from '@a2ui/web_core/v0_9';
 import {
   cartControllerContract,
   cartItemSchema,
+  controllerActionDispatcherFunction,
   controllerActionInvocationSchema,
   productListControllerContract,
   productSchema,
@@ -14,14 +15,14 @@ const DEMO_ITEM = {productId: 'p1', name: 'Trail shoes', price: 99.99, quantity:
 
 const functionAction = (action: string, payload: unknown) => ({
   functionCall: {
-    call: 'thermidor.dispatchControllerAction',
+    call: controllerActionDispatcherFunction.name,
     args: {
       controllerId: 'shopping-cart',
       controllerSchema: CART_SCHEMA,
       action,
       payload,
     },
-    returnType: 'void' as const,
+    returnType: controllerActionDispatcherFunction.returnType,
   },
 });
 

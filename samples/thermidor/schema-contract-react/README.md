@@ -4,7 +4,7 @@ This sample proves the client-side path for the v0.9 Thermidor Commerce Catalog 
 
 `ACTIVITY_SNAPSHOT` → A2-UI `updateDataModel` → catalog data bindings → local `functionCall` → Thermidor action request → server `updateDataModel`.
 
-Thermidor retains A2-UI activities as opaque `kind` and `payload` values and passes their operations to CopilotKit unchanged. The local `ProductCarousel` and `Cart` renderers receive controller state through standard A2-UI data bindings. Cart interactions invoke the registered `thermidor.dispatchControllerAction` function, which validates the generated controller/action/payload tuple and forwards it through Thermidor's authenticated conversation transport.
+Thermidor retains A2-UI activities as opaque `kind` and `payload` values and passes their operations to CopilotKit unchanged. The local `ProductCarousel` and `Cart` renderers receive controller state through standard A2-UI data bindings. Cart interactions invoke the catalog-declared `thermidor.dispatchControllerAction` function, whose generated runtime API validates the controller/action/payload tuple before the React implementation forwards it through Thermidor's authenticated conversation transport.
 
 The function never writes to the A2-UI data model. The cart remains unchanged while the request is pending and updates only after the mock server returns a replacement `updateDataModel`. No A2-UI `event` or `userAction` is emitted for controller mutations.
 

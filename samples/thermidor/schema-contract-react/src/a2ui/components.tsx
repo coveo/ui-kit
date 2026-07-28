@@ -8,7 +8,7 @@ import type {ConverseController} from '@coveo/thermidor';
 import {
   cartControllerStateSchema,
   cartPropsSchema,
-  controllerActionInvocationSchema,
+  controllerActionDispatcherFunction,
   productCarouselPropsSchema,
   productListControllerStateSchema,
 } from '@coveo/thermidor-contracts';
@@ -118,11 +118,7 @@ export function createThermidorCatalog(
     includeBasicCatalog: true,
   });
   const dispatchControllerAction = createFunctionImplementation(
-    {
-      name: 'thermidor.dispatchControllerAction',
-      returnType: 'void',
-      schema: controllerActionInvocationSchema,
-    },
+    controllerActionDispatcherFunction,
     (args) => {
       void controller.dispatchAction(args).catch((error: unknown) => {
         onError(error instanceof Error ? error : new Error(String(error)));

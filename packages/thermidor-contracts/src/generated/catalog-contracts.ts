@@ -221,3 +221,9 @@ export const controllerActionInvocationSchema = z.union([
 ]);
 
 export type ControllerActionInvocation = z.infer<typeof controllerActionInvocationSchema>;
+
+export const controllerActionDispatcherFunction = {
+  name: 'thermidor.dispatchControllerAction',
+  returnType: 'void',
+  schema: controllerActionInvocationSchema,
+} as const;
