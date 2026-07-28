@@ -549,6 +549,12 @@ export class GeneratedAnswerObject {
     });
   }
 
+  async mockAgentFollowUpNetworkError() {
+    await this.page.route('**/agents/*/follow-up', (route) => {
+      route.abort('connectionrefused');
+    });
+  }
+
   get followUpInput(): Locator {
     return this.page.locator(
       'c-quantic-generated-answer-follow-up-input textarea'

@@ -1,4 +1,4 @@
-import * as fm from 'fetch-mock';
+import fm = require('fetch-mock');
 import * as CrossFetch from 'cross-fetch';
 
 export function mockFetch() {

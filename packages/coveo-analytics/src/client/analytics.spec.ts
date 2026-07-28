@@ -439,7 +439,7 @@ describe('Analytics', () => {
     describe('for API keys', () => {
       beforeEach(() => {
         client = new CoveoAnalyticsClient({
-          token: 'testApiKey',
+          token: 'xxTestApiKey',
           endpoint: anEndpoint,
           version: A_VERSION,
         });
