@@ -1,9 +1,8 @@
 :host {
   --neutral-color: rgb(94, 94, 94);
   --hover-background-color: #F4F6F9;
-  --hover-color: var(--slds-g-color-accent-container-1, var(--lwc-brandAccessible,#2574A9));
-  --slds-g-color-accent-container-1: var(--hover-color);
-  --lwc-brandAccessibleActive: var(--hover-color);
+  --hover-color: var(--slds-g-color-accent-container-1, var(--lwc-brandAccessible, #2574A9));
+  --lwc-brandAccessibleActive: var(--slds-g-color-accent-container-1, var(--lwc-brandAccessible, #2574A9));
   --color-gray-6: rgb(201, 199, 197);
   --radio-button-box-shadow: 0 0 3px #0176d3;
   --lwc-shadowButtonFocus: none;
