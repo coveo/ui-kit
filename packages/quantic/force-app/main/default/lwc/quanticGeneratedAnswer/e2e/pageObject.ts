@@ -549,11 +549,9 @@ export class GeneratedAnswerObject {
     });
   }
 
-  async mockAgentFollowUpNetworkError(status = 500) {
+  async mockAgentFollowUpNetworkError() {
     await this.page.route('**/agents/*/follow-up', (route) => {
-      route.fulfill({
-        status,
-      });
+      route.abort('connectionrefused');
     });
   }
 
