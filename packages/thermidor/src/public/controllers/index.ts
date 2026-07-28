@@ -42,10 +42,14 @@ export {buildRemoteController, selectRemoteControllerState} from './remote/remot
 export type {
   RemoteController,
   RemoteControllerAction,
-  RemoteControllerActionDispatcher,
+  RemoteControllerActionNameForSchema,
+  RemoteControllerActionPayloadForSchema,
+  AdvertisedRemoteController,
   RemoteControllerOptions,
+  RemoteControllerSchemaId,
   RemoteControllerSource,
-  RemoteControllerState,
+  RemoteControllerStateForSchema,
+  RemoteControllerActionsForSchema,
 } from './remote/remote-controller.js';
 export {buildPaginationController} from './pagination/pagination-controller.js';
 export type {

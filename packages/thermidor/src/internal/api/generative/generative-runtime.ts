@@ -1,6 +1,9 @@
 import {
   readConversationEventStream,
   type ConversationStreamEvent,
+  type CoveoConversationActionRequest,
+  type CoveoConversationControllerAction,
+  type CoveoConversationMessageRequest,
   createConversationEndpointClient,
 } from '@/src/internal/api/conversation/index.js';
 import type {FullEngine} from '@/src/internal/engine/index.js';
@@ -16,6 +19,7 @@ import type {
 } from '@/src/internal/features/generative/index.js';
 
 export interface GenerativeStatePort {
+  getActiveTurnId(): string | undefined;
   createTurn(payload: {id: string; prompt: string; status: TurnStatus}): void;
   setActiveTurnId(id: string): void;
   replaceTurnId(oldId: string, newId: string): void;
@@ -118,30 +122,48 @@ export class GenerativeRuntime {
     await this.executeStream(turnId);
   }
 
+  /**
+   * Sends a schema-derived UI action through the same authenticated conversation
+   * transport as prompts. The gateway owns the mutation and replies with a
+   * stream, including the resulting `STATE_SNAPSHOT` for the active turn.
+   */
+  async dispatchAction(action: CoveoConversationControllerAction): Promise<void> {
+    const turnId = this.statePort.getActiveTurnId();
+    if (!turnId) {
+      throw new Error('Cannot dispatch a controller action without an active conversation turn.');
+    }
+
+    const {message: _message, ...requestBase} = this.createConversationRequest();
+    const request: CoveoConversationActionRequest = {...requestBase, action};
+    const clientConfig = this.engine.read(this.configSelectors.getEndpointClientConfiguration);
+    const client = createConversationEndpointClient();
+    const result = await client.call(request, clientConfig);
+
+    if (!result.success) {
+      throw new Error(result.error);
+    }
+
+    let streamError: unknown;
+    await readConversationEventStream({
+      stream: result.data.stream,
+      onEvent: (event) => {
+        this.dispatchEvent(turnId, event);
+      },
+      onError: (error) => {
+        streamError = error;
+      },
+    });
+
+    if (streamError) {
+      throw streamError;
+    }
+  }
+
   private async executeStream(turnId: string): Promise<void> {
     try {
-      const {cart, ...fromState} = this.engine.read(this.buildRequest);
-      const navigatorContext = this.engine.getNavigatorContextProvider()?.();
       const clientConfig = this.engine.read(this.configSelectors.getEndpointClientConfiguration);
-
-      const request = {
-        ...fromState,
-        clientId: navigatorContext?.clientId ?? undefined,
-        context: {
-          user: {
-            userAgent: navigatorContext?.userAgent ?? null,
-          },
-          view: {
-            url: navigatorContext?.location ?? null,
-            referrer: navigatorContext?.referrer ?? null,
-          },
-          ...(cart ? {cart} : {}),
-        },
-        targetEngine: 'AGENT_CORE' as const,
-      };
-
       const client = createConversationEndpointClient();
-      const result = await client.call(request, clientConfig);
+      const result = await client.call(this.createConversationRequest(), clientConfig);
 
       if (!result.success) {
         this.statePort.failTurn(turnId, result.error);
@@ -152,6 +174,27 @@ export class GenerativeRuntime {
     } catch (error) {
       this.statePort.failTurn(turnId, getErrorMessage(error));
     }
+  }
+
+  private createConversationRequest(): CoveoConversationMessageRequest {
+    const {cart, ...fromState} = this.engine.read(this.buildRequest);
+    const navigatorContext = this.engine.getNavigatorContextProvider()?.();
+
+    return {
+      ...fromState,
+      clientId: navigatorContext?.clientId ?? undefined,
+      context: {
+        user: {
+          userAgent: navigatorContext?.userAgent ?? null,
+        },
+        view: {
+          url: navigatorContext?.location ?? null,
+          referrer: navigatorContext?.referrer ?? null,
+        },
+        ...(cart ? {cart} : {}),
+      },
+      targetEngine: 'AGENT_CORE' as const,
+    };
   }
 
   private async consumeStream(turnId: string, stream: ReadableStream<Uint8Array>): Promise<void> {

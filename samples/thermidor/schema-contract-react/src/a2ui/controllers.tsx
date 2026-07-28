@@ -1,39 +1,28 @@
-import {useCallback, useMemo, useSyncExternalStore} from 'react';
+import {useMemo} from 'react';
 import {
   buildRemoteController,
-  type RemoteController,
-  type RemoteControllerActionDispatcher,
+  type AdvertisedRemoteController,
   type RemoteControllerSource,
 } from '@coveo/thermidor';
+import type {ControllerContracts} from '@coveo/thermidor-contracts';
 
-export type ControllerAdvertisement = {
+type ControllerSchemaId = ControllerContracts['schemaId'];
+
+export type ControllerAdvertisement<TSchema extends ControllerSchemaId = ControllerSchemaId> = {
   controllerId: string;
-  controllerSchema: string;
+  controllerSchema: TSchema;
 };
-
-type ControllerState = Record<string, unknown>;
 
 export type EngineStateSource = RemoteControllerSource;
 
-export function useAdvertisedController<T extends ControllerState>(
-  source: EngineStateSource,
-  advertisement: ControllerAdvertisement,
-  dispatchAction: RemoteControllerActionDispatcher
-): [RemoteController<T>, T] {
-  const controller = useMemo(
-    () =>
-      buildRemoteController<T>({
-        source,
-        controllerId: advertisement.controllerId,
-        dispatchAction,
-      }),
-    [advertisement.controllerId, dispatchAction, source]
-  );
-  const subscribe = useCallback(
-    (listener: () => void) => controller.subscribe(() => listener()),
-    [controller]
-  );
-  const getSnapshot = useCallback(() => controller.state, [controller]);
+type AdvertisedController<TSchema extends ControllerSchemaId> = AdvertisedRemoteController<TSchema>;
 
-  return [controller, useSyncExternalStore(subscribe, getSnapshot, getSnapshot)];
+export function useAdvertisedController<TSchema extends ControllerSchemaId>(
+  source: EngineStateSource,
+  {controllerId, controllerSchema: contract}: ControllerAdvertisement<TSchema>
+): AdvertisedController<TSchema> {
+  return useMemo(
+    () => buildRemoteController({source, controllerId, contract}),
+    [controllerId, contract, source]
+  );
 }

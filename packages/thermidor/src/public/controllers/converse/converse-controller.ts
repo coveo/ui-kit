@@ -15,6 +15,7 @@ import {
   getHandleInternals,
 } from '@/src/internal/utils/index.js';
 import type {GenerativeInterface, Controller} from '@/src/internal/utils/index.js';
+import type {RemoteControllerAction} from '../remote/remote-controller.js';
 import {
   deserializeToGenerativeState,
   SerializedConverseState,
@@ -65,6 +66,9 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
       generativeInterface: options.interface,
       cartInterface: options.interface,
       statePort: {
+        getActiveTurnId: () => {
+          return this.engine.read(this.#selectors.getActiveTurnId);
+        },
         createTurn: (payload) => {
           this.engine.mutate(this.#actions.createTurn(payload));
         },
@@ -214,6 +218,10 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
     }
     this.#runtime.resubmit(id, turn.prompt);
   }
+
+  dispatchAction(action: RemoteControllerAction): Promise<void> {
+    return this.#runtime.dispatchAction(action);
+  }
 }
 
 export const buildConverseController = (options: ConverseControllerOptions): ConverseController =>
@@ -226,6 +234,8 @@ export interface ConverseController extends Controller<ConverseControllerState> 
   submit(options: {prompt: string}): void;
   selectTurn(options: {id: string}): void;
   retry(options: {id: string}): void;
+  /** Sends a schema-derived remote controller action to the AG-UI gateway. */
+  dispatchAction(action: RemoteControllerAction): Promise<void>;
 }
 
 export interface ConverseControllerState {

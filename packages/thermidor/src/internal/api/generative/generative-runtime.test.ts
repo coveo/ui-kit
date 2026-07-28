@@ -37,6 +37,7 @@ vi.mock('@/src/internal/utils/index.js', () => ({
 
 function createMockStatePort(): GenerativeStatePort {
   return {
+    getActiveTurnId: vi.fn().mockReturnValue('active-turn-id'),
     createTurn: vi.fn(),
     setActiveTurnId: vi.fn(),
     replaceTurnId: vi.fn(),
@@ -277,6 +278,57 @@ describe('GenerativeRuntime', () => {
         prompt: 'Updated prompt',
         status: 'streaming',
       });
+    });
+  });
+
+  describe('dispatchAction', () => {
+    it('posts a schema-derived action and applies its state snapshot to the active turn', async () => {
+      const config = createMockConfig();
+      const engine = createMockEngine();
+      const {mockClient} = setupSuccessfulStream([
+        {
+          type: 'STATE_SNAPSHOT',
+          snapshot: {controllers: {'shopping-cart': {items: []}}},
+        } as ConversationStreamEvent,
+      ]);
+
+      const runtime = GenerativeRuntime.getInstance(engine, 'dispatch-action', config);
+      await runtime.dispatchAction({
+        controllerId: 'shopping-cart',
+        controllerSchema: 'https://schema.thermidor.coveo.com/controllers/cart.schema.json',
+        action: 'updateItemQuantity',
+        payload: {item: {productId: 'p1', quantity: 2}},
+      });
+
+      expect(mockClient.call).toHaveBeenCalledWith(
+        expect.objectContaining({
+          action: {
+            controllerId: 'shopping-cart',
+            controllerSchema: 'https://schema.thermidor.coveo.com/controllers/cart.schema.json',
+            action: 'updateItemQuantity',
+            payload: {item: {productId: 'p1', quantity: 2}},
+          },
+        }),
+        expect.anything()
+      );
+      expect(config.statePort.setStateSnapshot).toHaveBeenCalledWith('active-turn-id', {
+        controllers: {'shopping-cart': {items: []}},
+      });
+    });
+
+    it('rejects when no active turn can receive the resulting snapshot', async () => {
+      const config = createMockConfig();
+      vi.mocked(config.statePort.getActiveTurnId).mockReturnValue(undefined);
+      const runtime = GenerativeRuntime.getInstance(createMockEngine(), 'no-active-turn', config);
+
+      await expect(
+        runtime.dispatchAction({
+          controllerId: 'shopping-cart',
+          controllerSchema: 'https://schema.thermidor.coveo.com/controllers/cart.schema.json',
+          action: 'updateItemQuantity',
+          payload: {},
+        })
+      ).rejects.toThrow('without an active conversation turn');
     });
   });
 

@@ -171,6 +171,9 @@ catalogs:
     yaml:
       specifier: 2.9.0
       version: 2.9.0
+    zod:
+      specifier: 3.25.76
+      version: 3.25.76
 
 overrides:
   braces: 3.0.3
@@ -1230,9 +1233,15 @@ importers:
       '@ag-ui/core':
         specifier: 0.0.57
         version: 0.0.57
+      '@coveo/thermidor-contracts':
+        specifier: workspace:*
+        version: link:../thermidor-contracts
       '@reduxjs/toolkit':
         specifier: 'catalog:'
         version: 2.12.0(react@19.2.7)
+      zod:
+        specifier: 'catalog:'
+        version: 3.25.76
     devDependencies:
       '@microsoft/api-extractor':
         specifier: 7.58.9
@@ -1246,6 +1255,19 @@ importers:
       vitest:
         specifier: 'catalog:'
         version: 4.1.9(@types/node@26.1.0)(@vitest/browser-playwright@4.1.9)(jsdom@28.1.0)(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(vite@8.1.3(@types/node@26.1.0)(esbuild@0.28.1)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))
+
+  packages/thermidor-contracts:
+    dependencies:
+      zod:
+        specifier: 'catalog:'
+        version: 3.25.76
+    devDependencies:
+      tsdown:
+        specifier: 0.22.0
+        version: 0.22.0(oxc-resolver@11.23.0)(publint@0.3.21)(typescript@6.0.3)
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
 
   samples/atomic/commerce-react:
     dependencies:
@@ -2109,6 +2131,9 @@ importers:
       '@coveo/thermidor':
         specifier: workspace:*
         version: link:../../../packages/thermidor
+      '@coveo/thermidor-contracts':
+        specifier: workspace:*
+        version: link:../../../packages/thermidor-contracts
       react:
         specifier: 19.2.7
         version: 19.2.7
@@ -2116,7 +2141,7 @@ importers:
         specifier: 19.2.7
         version: 19.2.7(react@19.2.7)
       zod:
-        specifier: 3.25.76
+        specifier: 'catalog:'
         version: 3.25.76
     devDependencies:
       '@types/react':
@@ -16697,6 +16722,9 @@ packages:
   zod@4.3.6:
     resolution: {integrity: sha512-rftlrkhHZOcjDwkGlnUtZZkvaPHCsDATp4pGpuOOMDaTdDDXF91wuVDJoWoPsKX/3YPQ5fHuF3STjcYyKr+Qhg==}
 
+  zod@4.4.3:
+    resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
+
   zone.js@0.15.1:
     resolution: {integrity: sha512-XE96n56IQpJM7NAoXswY3XRLcWFW83xe0BiAOeMD7K5k5xecOeul3Qcpx6GqEeeHNkW5DWL5zOyTbEfB4eti8w==}
 
@@ -17482,7 +17510,7 @@ snapshots:
 
   '@babel/generator@8.0.0-rc.6':
     dependencies:
-      '@babel/parser': 8.0.0-rc.6
+      '@babel/parser': 8.0.4
       '@babel/types': 8.0.4
       '@jridgewell/gen-mapping': 0.3.13
       '@jridgewell/trace-mapping': 0.3.31
@@ -28599,7 +28627,7 @@ snapshots:
       tinyglobby: 0.2.17
       unbash: 4.0.2
       yaml: 2.9.0
-      zod: 4.3.6
+      zod: 4.4.3
 
   koa-bodyparser@4.4.1:
     dependencies:
@@ -34207,6 +34235,8 @@ snapshots:
   zod@3.25.76: {}
 
   zod@4.3.6: {}
+
+  zod@4.4.3: {}
 
   zone.js@0.15.1: {}
 

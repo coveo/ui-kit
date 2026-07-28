@@ -13,9 +13,10 @@
   "dependencies": {
     "@copilotkit/a2ui-renderer": "1.61.2",
     "@coveo/thermidor": "workspace:*",
+    "@coveo/thermidor-contracts": "workspace:*",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "zod": "3.25.76"
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@types/react": "catalog:",

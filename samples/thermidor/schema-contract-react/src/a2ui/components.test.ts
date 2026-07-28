@@ -1,6 +1,11 @@
 import {describe, expect, it} from 'vitest';
 import {thermidorCatalogDefinitions} from './components.js';
-import {cartItemSchema, productSchema} from './generated/catalog-components.js';
+import {
+  cartControllerContract,
+  cartItemSchema,
+  productListControllerContract,
+  productSchema,
+} from '@coveo/thermidor-contracts';
 
 describe('thermidorCatalogDefinitions', () => {
   it('accepts the controller advertisements supplied by the catalog message', () => {
@@ -75,6 +80,25 @@ describe('thermidorCatalogDefinitions', () => {
             unexpected: true,
           },
         },
+      }).success
+    ).toBe(false);
+  });
+
+  it('validates generated controller state and action contracts', () => {
+    expect(
+      productListControllerContract.shape.state.safeParse({
+        products: [{permanentid: 'p1', ec_name: 'Trail shoes', additionalFields: {}}],
+      }).success
+    ).toBe(true);
+    expect(cartControllerContract.shape.state.safeParse({items: []}).success).toBe(true);
+    expect(
+      cartControllerContract.shape.setItems.safeParse({
+        items: [{productId: 'p1', name: 'Trail shoes', price: 99.99, quantity: 1}],
+      }).success
+    ).toBe(true);
+    expect(
+      cartControllerContract.shape.updateItemQuantity.safeParse({
+        item: {productId: 'p1', name: 'Trail shoes', price: 99.99, quantity: 0},
       }).success
     ).toBe(false);
   });

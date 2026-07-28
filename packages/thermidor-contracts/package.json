@@ -1,12 +1,12 @@
 {
-  "name": "@coveo/thermidor",
+  "name": "@coveo/thermidor-contracts",
   "version": "0.0.1",
-  "description": "Experimental package for a unified, framework-agnostic headless engine for search and conversational experiences",
+  "description": "Generated Zod contracts for Thermidor controller and A2-UI schemas",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/coveo/ui-kit.git",
-    "directory": "packages/thermidor"
+    "directory": "packages/thermidor-contracts"
   },
   "files": [
     "dist"
@@ -27,23 +27,14 @@
   },
   "scripts": {
     "build": "tsdown",
-    "clean": "node ../../utils/ci/rm-rf.mjs dist",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "test:dts": "api-extractor run --local",
-    "test:dts:ci": "api-extractor run"
+    "clean": "node ../../utils/ci/rm-rf.mjs dist"
   },
   "dependencies": {
-    "@ag-ui/core": "0.0.57",
-    "@coveo/thermidor-contracts": "workspace:*",
-    "@reduxjs/toolkit": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@microsoft/api-extractor": "7.58.9",
     "tsdown": "0.22.0",
-    "typescript": "catalog:",
-    "vitest": "catalog:"
+    "typescript": "catalog:"
   },
   "engines": {
     "node": "^22.11.0 || ^24.11.0"

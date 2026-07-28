@@ -1,6 +1,6 @@
 /*
- * This file is generated from integration/thermidor-schema/a2-ui/catalog.json.
- * Run `npm run generate:sample-zod` in integration/thermidor-schema after changing the catalog.
+ * This file is generated from the Thermidor A2-UI catalog and controller JSON Schemas.
+ * Run `npm run generate:thermidor-contracts` in integration/thermidor-schema after changing the catalog.
  */
 import {z} from 'zod';
 
@@ -98,3 +98,64 @@ export const cartItemSchema = z
   .strict();
 
 export type CartItem = z.infer<typeof cartItemSchema>;
+
+export const productListControllerStateSchema = z
+  .object({
+    products: z.array(productSchema),
+  })
+  .strict();
+
+export type ProductListControllerState = z.infer<typeof productListControllerStateSchema>;
+
+export type ProductListController = z.infer<typeof productListControllerContract>;
+
+export const productListControllerContract = z
+  .object({
+    schemaId: z.literal('https://schema.thermidor.coveo.com/controllers/product-list.schema.json'),
+    state: productListControllerStateSchema,
+  })
+  .strict();
+
+export const cartControllerStateSchema = z
+  .object({
+    items: z.array(cartItemSchema),
+  })
+  .strict();
+
+export type CartControllerState = z.infer<typeof cartControllerStateSchema>;
+
+export const cartControllerContractSetItemsPayloadSchema = z
+  .object({
+    items: z.array(cartItemSchema),
+  })
+  .strict();
+
+export type SetItemsPayload = z.infer<typeof cartControllerContractSetItemsPayloadSchema>;
+
+export const cartControllerContractUpdateItemQuantityPayloadSchema = z
+  .object({
+    item: cartItemSchema,
+  })
+  .strict();
+
+export type UpdateItemQuantityPayload = z.infer<
+  typeof cartControllerContractUpdateItemQuantityPayloadSchema
+>;
+
+export type CartController = z.infer<typeof cartControllerContract>;
+
+export const cartControllerContract = z
+  .object({
+    schemaId: z.literal('https://schema.thermidor.coveo.com/controllers/cart.schema.json'),
+    state: cartControllerStateSchema,
+    setItems: cartControllerContractSetItemsPayloadSchema,
+    updateItemQuantity: cartControllerContractUpdateItemQuantityPayloadSchema,
+  })
+  .strict();
+
+export const controllerContracts = z.discriminatedUnion('schemaId', [
+  productListControllerContract,
+  cartControllerContract,
+]);
+
+export type ControllerContracts = z.infer<typeof controllerContracts>;

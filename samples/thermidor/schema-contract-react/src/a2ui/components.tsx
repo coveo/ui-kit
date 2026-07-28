@@ -3,14 +3,8 @@ import {
   type CatalogDefinitions,
   type CatalogRenderers,
 } from '@copilotkit/a2ui-renderer';
-import type {RemoteControllerActionDispatcher} from '@coveo/thermidor';
 import {type EngineStateSource, useAdvertisedController} from './controllers.js';
-import {
-  cartPropsSchema,
-  productCarouselPropsSchema,
-  type CartItem,
-  type Product,
-} from './generated/catalog-components.js';
+import {cartPropsSchema, productCarouselPropsSchema} from '@coveo/thermidor-contracts';
 
 export const THERMIDOR_CATALOG_ID = 'https://schema.thermidor.coveo.com/a2-ui/catalog.json';
 
@@ -25,18 +19,14 @@ export const thermidorCatalogDefinitions = {
   },
 } satisfies CatalogDefinitions;
 
-export function createThermidorCatalog(
-  stateSource: EngineStateSource,
-  dispatchAction: RemoteControllerActionDispatcher = rejectUnhandledControllerAction
-) {
+export function createThermidorCatalog(stateSource: EngineStateSource) {
   const renderers = {
     ProductCarousel: ({props}) => {
-      const [, state] = useAdvertisedController<{products?: Product[]}>(
+      const controller = useAdvertisedController(
         stateSource,
-        props.controllers.productListController,
-        dispatchAction
+        props.controllers.productListController
       );
-      const products = Array.isArray(state.products) ? state.products : [];
+      const products = controller.state?.products ?? [];
 
       return (
         <section className="product-carousel" aria-label="Featured products">
@@ -81,12 +71,8 @@ export function createThermidorCatalog(
       );
     },
     Cart: ({props}) => {
-      const [, state] = useAdvertisedController<{items?: CartItem[]}>(
-        stateSource,
-        props.controllers.cartController,
-        dispatchAction
-      );
-      const items = Array.isArray(state.items) ? state.items : [];
+      const controller = useAdvertisedController(stateSource, props.controllers.cartController);
+      const items = controller.state?.items ?? [];
       const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
       return (
@@ -114,10 +100,4 @@ export function createThermidorCatalog(
     catalogId: THERMIDOR_CATALOG_ID,
     includeBasicCatalog: true,
   });
-}
-
-function rejectUnhandledControllerAction(): Promise<never> {
-  return Promise.reject(
-    new Error('No server transport was configured for the advertised controller action.')
-  );
 }

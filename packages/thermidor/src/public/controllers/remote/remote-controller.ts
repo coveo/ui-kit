@@ -1,48 +1,111 @@
+import type {z} from 'zod';
+import {controllerContracts, type ControllerContracts} from '@coveo/thermidor-contracts';
+import type {ConverseController} from '../converse/converse-controller.js';
 import type {Controller} from '../controller-types.js';
-import type {ConverseController, ConverseControllerState} from '../converse/converse-controller.js';
 
-export type RemoteControllerState = Record<string, unknown>;
-
-export interface RemoteControllerAction<TPayload = unknown> {
+export interface RemoteControllerAction<TAction extends string = string, TPayload = unknown> {
   controllerId: string;
-  action: string;
+  controllerSchema: string;
+  action: TAction;
   payload: TPayload;
 }
 
-/**
- * Delivers a controller action to the application's server transport.
- *
- * Thermidor deliberately does not prescribe that transport: the server owns the
- * controller state and must acknowledge a mutation by publishing a later
- * `STATE_SNAPSHOT`.
- */
-export type RemoteControllerActionDispatcher = (
-  action: RemoteControllerAction
-) => void | Promise<void>;
+export type RemoteControllerSchemaId = ControllerContracts['schemaId'];
+
+type ControllerContractSchema = (typeof controllerContracts)['options'][number];
+
+type ControllerContractSchemaFor<TSchema extends RemoteControllerSchemaId> = Extract<
+  ControllerContractSchema,
+  {shape: {schemaId: {value: TSchema}}}
+>;
+
+export type RemoteControllerActionNameForSchema<TSchema extends RemoteControllerSchemaId> = Exclude<
+  keyof Extract<ControllerContracts, {schemaId: TSchema}>,
+  'schemaId' | 'state'
+> &
+  string;
+
+export type RemoteControllerActionPayloadForSchema<
+  TSchema extends RemoteControllerSchemaId,
+  TAction extends RemoteControllerActionNameForSchema<TSchema>,
+> =
+  Extract<ControllerContracts, {schemaId: TSchema}> extends Record<TAction, infer TPayload>
+    ? TPayload
+    : never;
+
+export type RemoteControllerStateForSchema<TSchema extends RemoteControllerSchemaId> = z.infer<
+  Extract<
+    (typeof controllerContracts)['options'][number],
+    {shape: {schemaId: {value: TSchema}}}
+  >['shape']['state']
+>;
+
+export type RemoteControllerActionsForSchema<TSchema extends RemoteControllerSchemaId> = Omit<
+  Extract<ControllerContracts, {schemaId: TSchema}>,
+  'schemaId' | 'state'
+>;
 
 /**
  * A controller state source backed by Thermidor's active conversation turn.
  */
-export type RemoteControllerSource = Pick<ConverseController, 'state' | 'subscribe'>;
+export type RemoteControllerSource = Pick<
+  ConverseController,
+  'state' | 'subscribe' | 'dispatchAction'
+>;
+
+export interface RemoteController<TSchema extends RemoteControllerSchemaId> extends Controller<
+  RemoteControllerStateForSchema<TSchema> | undefined
+> {
+  readonly controllerId: string;
+  dispatch<TAction extends RemoteControllerActionNameForSchema<TSchema>>(
+    action: TAction,
+    payload: RemoteControllerActionPayloadForSchema<TSchema, TAction>
+  ): Promise<void>;
+}
+
+export type AdvertisedRemoteController<TSchema extends RemoteControllerSchemaId> =
+  RemoteController<TSchema>;
+
+export interface RemoteControllerOptions<TSchema extends RemoteControllerSchemaId> {
+  source: RemoteControllerSource;
+  controllerId: string;
+  /** The static controller schema ID advertised by the A2-UI component. */
+  contract: TSchema;
+}
 
 class RemoteControllerImpl<
-  TState extends RemoteControllerState,
-> implements RemoteController<TState> {
+  TSchema extends RemoteControllerSchemaId,
+> implements RemoteController<TSchema> {
   readonly controllerId: string;
+  #lastRawState: unknown;
+  #lastValidatedState: RemoteControllerStateForSchema<TSchema> | undefined;
 
   constructor(
     private readonly source: RemoteControllerSource,
     controllerId: string,
-    private readonly dispatchAction: RemoteControllerActionDispatcher
+    private readonly contract: ControllerContractSchemaFor<TSchema>
   ) {
     this.controllerId = controllerId;
   }
 
-  get state(): TState {
-    return selectRemoteControllerState(this.source.state, this.controllerId) as TState;
+  get state(): RemoteControllerStateForSchema<TSchema> | undefined {
+    const rawState = selectRemoteControllerState(this.source.state, this.controllerId);
+    if (rawState === this.#lastRawState) {
+      return this.#lastValidatedState;
+    }
+
+    this.#lastRawState = rawState;
+    const result = this.contract.shape.state.safeParse(rawState);
+    this.#lastValidatedState =
+      result.success && isRemoteControllerState(this.contract, result.data)
+        ? result.data
+        : undefined;
+    return this.#lastValidatedState;
   }
 
-  subscribe(callback: (state: TState) => void): () => void {
+  subscribe(
+    callback: (state: RemoteControllerStateForSchema<TSchema> | undefined) => void
+  ): () => void {
     let previousState = this.state;
 
     return this.source.subscribe(() => {
@@ -56,18 +119,28 @@ class RemoteControllerImpl<
     });
   }
 
-  dispatch<TPayload>(action: string, payload: TPayload): Promise<void> {
-    if (!action.trim()) {
-      return Promise.reject(new Error('A controller action name is required.'));
+  dispatch<TAction extends RemoteControllerActionNameForSchema<TSchema>>(
+    action: TAction,
+    payload: RemoteControllerActionPayloadForSchema<TSchema, TAction>
+  ): Promise<void> {
+    const actionSchema = Object.entries(this.contract.shape).find(([name]) => name === action)?.[1];
+    if (!actionSchema) {
+      return Promise.reject(new Error(`Unknown controller action ${this.controllerId}/${action}.`));
     }
 
-    return Promise.resolve().then(() =>
-      this.dispatchAction({
-        controllerId: this.controllerId,
-        action,
-        payload,
-      })
-    );
+    const result = actionSchema.safeParse(payload);
+    if (!result.success) {
+      return Promise.reject(
+        new Error(`Invalid payload for controller action ${this.controllerId}/${action}.`)
+      );
+    }
+
+    return this.source.dispatchAction({
+      controllerId: this.controllerId,
+      controllerSchema: this.contract.shape.schemaId.value,
+      action,
+      payload: result.data,
+    });
   }
 }
 
@@ -76,41 +149,41 @@ class RemoteControllerImpl<
  * snapshot. The controller never mutates its local state; action results arrive
  * through a subsequent snapshot from the server.
  */
-export function buildRemoteController<TState extends RemoteControllerState>(
-  options: RemoteControllerOptions
-): RemoteController<TState> {
-  return new RemoteControllerImpl<TState>(
-    options.source,
-    options.controllerId,
-    options.dispatchAction
+
+export function buildRemoteController<TSchema extends RemoteControllerSchemaId>(
+  options: RemoteControllerOptions<TSchema>
+): RemoteController<TSchema> {
+  const schema = findControllerContract(options.contract);
+  return new RemoteControllerImpl(options.source, options.controllerId, schema);
+}
+
+function findControllerContract<TSchema extends RemoteControllerSchemaId>(
+  schemaId: TSchema
+): ControllerContractSchemaFor<TSchema> {
+  const contract = controllerContracts.options.find(
+    (candidate): candidate is ControllerContractSchemaFor<TSchema> =>
+      candidate.shape.schemaId.value === schemaId
   );
+  if (!contract) {
+    throw new Error(`Unknown controller contract ${schemaId}.`);
+  }
+
+  return contract;
 }
 
-export interface RemoteController<
-  TState extends RemoteControllerState = RemoteControllerState,
-> extends Controller<TState> {
-  /** The runtime key used to select this controller's state from `controllers`. */
-  readonly controllerId: string;
-
-  /**
-   * Emits an action for this controller through the configured server transport.
-   * State remains server-owned and changes only when the server sends a snapshot.
-   */
-  dispatch<TPayload>(action: string, payload: TPayload): Promise<void>;
+function isRemoteControllerState<TSchema extends RemoteControllerSchemaId>(
+  contract: ControllerContractSchemaFor<TSchema>,
+  state: unknown
+): state is RemoteControllerStateForSchema<TSchema> {
+  return contract.shape.state.safeParse(state).success;
 }
 
-export interface RemoteControllerOptions {
-  source: RemoteControllerSource;
-  controllerId: string;
-  dispatchAction: RemoteControllerActionDispatcher;
-}
-
-const EMPTY_REMOTE_CONTROLLER_STATE: RemoteControllerState = {};
+const EMPTY_REMOTE_CONTROLLER_STATE = {};
 
 export function selectRemoteControllerState(
-  state: ConverseControllerState,
+  state: RemoteControllerSource['state'],
   controllerId: string
-): RemoteControllerState {
+): unknown {
   const snapshot = state.activeTurn?.agentResponse?.state;
   if (!isRecord(snapshot)) {
     return EMPTY_REMOTE_CONTROLLER_STATE;

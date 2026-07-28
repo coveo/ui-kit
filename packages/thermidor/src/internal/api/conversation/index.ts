@@ -7,8 +7,11 @@ export type {
 } from './conversation-endpoint-client.js';
 export type {
   CoveoConversationCartItem,
+  CoveoConversationActionRequest,
+  CoveoConversationControllerAction,
   CoveoConversationEndpointRequest,
   CoveoConversationEndpointResponse,
+  CoveoConversationMessageRequest,
 } from './conversation-endpoint-types.js';
 export {readConversationEventStream} from './conversation-event-stream.js';
 export type {
