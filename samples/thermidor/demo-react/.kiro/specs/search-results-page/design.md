@@ -2,25 +2,26 @@
 
 ## Overview
 
-The Search Results Page is the primary product-browsing view in the `demo-react` Thermidor sample application. It uses a 12-column proportional CSS Grid layout (1fr 2fr 8fr 1fr with 24px gap) — empty gutters on left/right, a facet sidebar, and a main content area — built on top of Thermidor's `ProductListController`, `PaginationController`, and `SearchBoxController`. The header spans the full width with a centered PromptInput at 1/3 width. The page receives a persisted `RoutedInterface` from the `AppShell` parent, builds controllers once per mount via the existing `useBuildController` hook, and remounts cleanly when the interface identity changes (via React key strategy).
+The Search Results Page is the primary product-browsing view in the `demo-react` Thermidor sample application. It uses a 12-column proportional CSS Grid layout (1fr 2fr 8fr 1fr with 24px gap) — empty gutters on left/right, a facet sidebar, and a main content area — built on top of Thermidor's `ProductListController` and `PaginationController`. The header spans the full width with a centered PromptInput (max-width: 560px). The page receives a persisted `RoutedInterface` and the associated `query` from the `AppShell` parent, builds controllers once per mount via the existing `useBuildController` hook, and remounts cleanly when the interface identity changes (via React key strategy).
 
 Key design goals:
 - Reuse existing infrastructure (`PromptInput`, `useSuggestions`, `useBuildController`, toast mechanism)
 - Keep presentational components pure and testable in isolation
 - Extract the pagination windowing algorithm as a pure utility for easy unit testing
 - Use CSS Modules with the project's design tokens for consistent styling
+- Responsive layout aligned with `@coveo/atomic` breakpoints (sm: 640px, md: 768px, lg: 1024px, xl: 1280px)
 
 ## Architecture
 
 ```mermaid
 graph TD
-    AppShell -->|"routedInterface, key={id}"| SearchResultsPage
+    AppShell -->|"routedInterface, query, key={id}"| SearchResultsPage
     SearchResultsPage -->|useBuildController| ProductListController
     SearchResultsPage -->|useBuildController| PaginationController
-    SearchResultsPage -->|useBuildController| SearchBoxController
     SearchResultsPage --> Header[Header Region]
     SearchResultsPage --> Sidebar[Sidebar Region]
     SearchResultsPage --> MainContent[Main Content Region]
+    Header --> BackToConversation[Back to conversation button]
     Header --> PromptInput
     Sidebar --> FacetPlaceholder["Facets (coming soon)"]
     MainContent --> TopRow[Top Row]
@@ -28,14 +29,16 @@ graph TD
     MainContent --> Pagination
     MainContent --> PageSizeSelector
     TopRow --> QuerySummaryPlaceholder
-    TopRow --> SortPlaceholder
+    TopRow --> SortPlaceholder["SortPlaceholder (desktop)"]
+    TopRow --> SortFiltersButton["Sort & Filters button (mobile)"]
+    SearchResultsPage --> SortFiltersModal["SortFiltersModal (dialog)"]
     ProductGrid --> ProductCard
 ```
 
 ### Mounting & Lifecycle
 
 1. `AppShell` renders `<SearchResultsPage key={routedInterface.interface.id} ... />` so that when the routed interface identity changes, React unmounts and remounts the entire page, discarding stale controller subscriptions.
-2. Inside `SearchResultsPage`, three `useBuildController` calls (one per controller) run their factory exactly once per mount (guarded by `useRef` inside the hook).
+2. Inside `SearchResultsPage`, two `useBuildController` calls (one for `ProductListController`, one for `PaginationController`) run their factory exactly once per mount (guarded by `useRef` inside the hook). The current search query is provided via the `query` prop from `AppShell` (sourced from `turn.prompt`).
 3. On unmount, `SearchResultsPage` does **not** dispose the interface — `AppShell` retains ownership for navigation-back scenarios.
 
 > **Tradeoff note:** The full unmount/remount strategy (via React key) is suboptimal — ideally only components whose data changed would re-render. However, this is currently unavoidable because `useBuildController` binds a controller to a specific interface instance via `useRef`, and Thermidor produces a new interface object on each routed turn rather than mutating the existing one. A future optimization would be for Thermidor to support re-binding a controller to a new interface (or providing a stable mutable handle), which would allow in-place updates without remounting. In practice, the remount cost is low since the new interface arrives pre-hydrated with data from the snapshot.
@@ -71,6 +74,9 @@ src/components/
 │   │   ├── SortPlaceholder.tsx
 │   │   ├── SortPlaceholder.module.css
 │   │   └── SortPlaceholder.test.tsx
+│   ├── SortFiltersModal/
+│   │   ├── SortFiltersModal.tsx
+│   │   └── SortFiltersModal.module.css
 │   └── PageSizeSelector/
 │       ├── PageSizeSelector.tsx
 │       ├── PageSizeSelector.module.css
@@ -85,11 +91,13 @@ interface SearchResultsPageProps {
   onSubmit: (prompt: string) => void;
   isStreaming: boolean;
   routedInterface: RoutedInterface;
+  query?: string;
+  onBackToConversation: () => void;
 }
 
 // ProductCard.tsx
 interface ProductCardProps {
-  product: Product;
+  product: Product; // imported from @coveo/thermidor
 }
 
 // ProductGrid.tsx
@@ -116,6 +124,13 @@ interface SortPlaceholderProps {
   onToast: () => void;
 }
 
+// SortFiltersModal.tsx
+interface SortFiltersModalProps {
+  open: boolean;
+  onClose: () => void;
+  onToast: () => void;
+}
+
 // PageSizeSelector.tsx
 interface PageSizeSelectorProps {
   controller: PaginationController;
@@ -124,17 +139,23 @@ interface PageSizeSelectorProps {
 
 ### Design Decisions
 
-1. **Components tightly coupled to a single controller receive the controller directly.** `ProductGrid` receives `ProductListController` and `Pagination` receives `PaginationController`. This reduces prop-threading and colocates the subscription logic with the component that renders it. Components that combine data from multiple controllers (`QuerySummaryPlaceholder` — SearchBox query + Pagination totalCount) or are leaf presentational nodes rendered in a list (`ProductCard`) still receive plain props.
+1. **Components tightly coupled to a single controller receive the controller directly.** `ProductGrid` receives `ProductListController` and `Pagination` receives `PaginationController`. This reduces prop-threading and colocates the subscription logic with the component that renders it. Components that combine data from multiple sources (`QuerySummaryPlaceholder` — query prop + Pagination totalCount) or are leaf presentational nodes rendered in a list (`ProductCard`) still receive plain props.
 
-2. **Controller-passing is the intended pattern for all future components.** When Thermidor adds controllers for facets, sort, and query summary, the current placeholders (FacetPlaceholder, SortPlaceholder, QuerySummaryPlaceholder) will be replaced with real components that receive their respective controller directly — the same pattern used by `ProductGrid` and `Pagination`. The placeholder components are temporary stand-ins designed to be swapped with minimal refactoring.
+2. **The query is provided via props, not a SearchBoxController.** The current search query is available from `turn.prompt` on the parent `AppShell`. There is no need to build a `SearchBoxController` on the routed interface just to read the query string. This simplifies the component and removes an unnecessary controller dependency.
 
-3. **Pagination receives the `PaginationController` directly** and calls `controller.selectPage(page)` internally. This colocates the navigation logic and avoids prop-threading through the parent. The `pagination-utils.ts` module remains a pure function for testability of the windowing algorithm.
+3. **Controller-passing is the intended pattern for all future components.** When Thermidor adds controllers for facets, sort, and query summary, the current placeholders (FacetPlaceholder, SortPlaceholder, QuerySummaryPlaceholder) will be replaced with real components that receive their respective controller directly — the same pattern used by `ProductGrid` and `Pagination`. The placeholder components are temporary stand-ins designed to be swapped with minimal refactoring.
 
-4. **`pagination-utils.ts` exports a pure `computeVisiblePages` function** that takes `(currentPage, totalPages)` and returns an array of page numbers or ellipsis sentinels. This enables straightforward unit testing of the windowing algorithm without DOM rendering.
+4. **Pagination receives the `PaginationController` directly** and calls `controller.selectPage(page)` internally. This colocates the navigation logic and avoids prop-threading through the parent. The `pagination-utils.ts` module remains a pure function for testability of the windowing algorithm.
 
-5. **Toast mechanism is lifted to `SearchResultsPage`** and shared between `SortPlaceholder` and suggestion actions, reusing the existing `useState`/`useRef` timer pattern already in the current codebase.
+5. **`pagination-utils.ts` exports a pure `computeVisiblePages` function** that takes `(currentPage, totalPages)` and returns an array of page numbers or ellipsis sentinels. This enables straightforward unit testing of the windowing algorithm without DOM rendering.
 
-6. **RoutedInterface null guard:** If `routedInterface` is unexpectedly null/undefined, the component returns `null` early without building controllers. In practice, `AppShell` only renders `SearchResultsPage` when the ref is non-null, but the guard provides defense-in-depth.
+6. **Toast mechanism is lifted to `SearchResultsPage`** and shared between `SortPlaceholder`, `SortFiltersModal`, and suggestion actions, reusing the existing `useState`/`useRef` timer pattern.
+
+7. **RoutedInterface null guard:** If `routedInterface` is unexpectedly null/undefined, the component returns `null` early without building controllers.
+
+8. **Responsive layout uses `@coveo/atomic` breakpoints.** The desktop/mobile split occurs at lg (1024px). Below this breakpoint: sidebar is hidden, layout collapses to single column, inline SortPlaceholder is replaced by a "Sort & Filters" pill button that opens a `<dialog>`-based modal, pagination and page-size controls are centered, and the "Back to conversation" button wraps below the search box.
+
+9. **SortFiltersModal uses native `<dialog>`** for accessibility (built-in focus trap, Escape key, backdrop). The modal has a fixed footer with "View results" that's always visible, and a scrollable content area with Sort and Filters sections.
 
 ### PageSizeSelector Design Notes
 
@@ -236,7 +257,7 @@ function truncate(text: string, maxLen: number): string {
 
 | Component / Utility | Key assertions |
 |---------------------|----------------|
-| SearchResultsPage | Renders header with PromptInput, sidebar, main content; builds all 3 controllers via mock interface; returns null when routedInterface is null |
+| SearchResultsPage | Renders header with PromptInput, sidebar, main content; builds controllers via mock interface; returns null when routedInterface is null |
 | ProductCard | Renders name, brand, price; shows placeholder when no image; shows promo price correctly; displays title attribute with full product name |
 | ProductGrid | Renders correct number of cards; shows empty state message |
 | Pagination | Renders nothing when totalPages <= 1; calls onSelectPage with correct args; disables previous-page on first page; disables next-page on last page; enables both when in middle; uses chevron icons for navigation |
