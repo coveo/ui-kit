@@ -4,19 +4,19 @@
   gap: var(--space-4);
 }
 
-@media (min-width: 600px) {
+@media (min-width: 640px) {
   .grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (min-width: 900px) {
+@media (min-width: 768px) {
   .grid {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 1280px) {
   .grid {
     grid-template-columns: repeat(4, 1fr);
   }

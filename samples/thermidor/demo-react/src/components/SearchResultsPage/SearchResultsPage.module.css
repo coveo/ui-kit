@@ -46,7 +46,7 @@
   }
 }
 
-@media (min-width: 1150px) {
+@media (min-width: 1280px) {
   .header {
     flex-wrap: nowrap;
     justify-content: center;
@@ -136,7 +136,7 @@
   }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 1023px) {
   .page {
     grid-template-columns: 1fr;
     column-gap: 0;
