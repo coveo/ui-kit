@@ -41,16 +41,18 @@ const handleConversePost = async ({request}: {request: Request}) => {
     );
   }
 
-  if (
-    typeof body !== 'object' ||
-    body === null ||
-    !('message' in body) ||
-    typeof (body as Record<string, unknown>).message !== 'string'
-  ) {
+  const payload =
+    typeof body === 'object' && body !== null ? (body as Record<string, unknown>) : {};
+  const hasMessage = typeof payload['message'] === 'string';
+  const hasAction =
+    typeof payload['action'] === 'object' &&
+    payload['action'] !== null &&
+    !Array.isArray(payload['action']);
+  if (!hasMessage && !hasAction) {
     return withCors(
       HttpResponse.json(
         {
-          error: 'Missing required field: message',
+          error: 'Missing required field: message or action',
         },
         {status: 400}
       )

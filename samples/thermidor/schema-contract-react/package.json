@@ -11,6 +11,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@a2ui/web_core": "0.9.0",
     "@copilotkit/a2ui-renderer": "1.61.2",
     "@coveo/thermidor": "workspace:*",
     "@coveo/thermidor-contracts": "workspace:*",

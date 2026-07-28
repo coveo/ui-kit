@@ -3,8 +3,15 @@ import {
   type CatalogDefinitions,
   type CatalogRenderers,
 } from '@copilotkit/a2ui-renderer';
-import {type EngineStateSource, useAdvertisedController} from './controllers.js';
-import {cartPropsSchema, productCarouselPropsSchema} from '@coveo/thermidor-contracts';
+import {Catalog, createFunctionImplementation} from '@a2ui/web_core/v0_9';
+import type {ConverseController} from '@coveo/thermidor';
+import {
+  cartControllerStateSchema,
+  cartPropsSchema,
+  controllerActionInvocationSchema,
+  productCarouselPropsSchema,
+  productListControllerStateSchema,
+} from '@coveo/thermidor-contracts';
 
 export const THERMIDOR_CATALOG_ID = 'https://schema.thermidor.coveo.com/a2-ui/catalog.json';
 
@@ -19,14 +26,15 @@ export const thermidorCatalogDefinitions = {
   },
 } satisfies CatalogDefinitions;
 
-export function createThermidorCatalog(stateSource: EngineStateSource) {
+export function createThermidorCatalog(
+  controller: Pick<ConverseController, 'dispatchAction'>,
+  onError: (error: Error) => void = () => undefined
+) {
   const renderers = {
     ProductCarousel: ({props}) => {
-      const controller = useAdvertisedController(
-        stateSource,
-        props.controllers.productListController
-      );
-      const products = controller.state?.products ?? [];
+      const binding = props.controllers.productListController;
+      const state = productListControllerStateSchema.safeParse(binding.state);
+      const products = state.success ? state.data.products : [];
 
       return (
         <section className="product-carousel" aria-label="Featured products">
@@ -35,9 +43,7 @@ export function createThermidorCatalog(stateSource: EngineStateSource) {
               <p className="eyebrow">ProductCarousel</p>
               <h2>Featured products</h2>
             </div>
-            <span className="controller-id">
-              controller: {props.controllers.productListController.controllerId}
-            </span>
+            <span className="controller-id">controller: {binding.controllerId}</span>
           </div>
           <div className="product-grid">
             {products.map((product) => {
@@ -71,9 +77,12 @@ export function createThermidorCatalog(stateSource: EngineStateSource) {
       );
     },
     Cart: ({props}) => {
-      const controller = useAdvertisedController(stateSource, props.controllers.cartController);
-      const items = controller.state?.items ?? [];
+      const binding = props.controllers.cartController;
+      const state = cartControllerStateSchema.safeParse(binding.state);
+      const items = state.success ? state.data.items : [];
       const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+      const setItems = asAction(binding.actions.setItems);
+      const updateItemQuantity = asAction(binding.actions.updateItemQuantity);
 
       return (
         <aside className="cart" aria-label="Cart">
@@ -91,13 +100,44 @@ export function createThermidorCatalog(stateSource: EngineStateSource) {
             <span>Total</span>
             <strong>${total.toFixed(2)}</strong>
           </div>
+          <div className="cart-actions">
+            <button type="button" onClick={updateItemQuantity}>
+              Set demo quantity to 2
+            </button>
+            <button type="button" onClick={setItems}>
+              Clear cart
+            </button>
+          </div>
         </aside>
       );
     },
   } satisfies CatalogRenderers<typeof thermidorCatalogDefinitions>;
 
-  return createCatalog(thermidorCatalogDefinitions, renderers, {
+  const baseCatalog = createCatalog(thermidorCatalogDefinitions, renderers, {
     catalogId: THERMIDOR_CATALOG_ID,
     includeBasicCatalog: true,
   });
+  const dispatchControllerAction = createFunctionImplementation(
+    {
+      name: 'thermidor.dispatchControllerAction',
+      returnType: 'void',
+      schema: controllerActionInvocationSchema,
+    },
+    (args) => {
+      void controller.dispatchAction(args).catch((error: unknown) => {
+        onError(error instanceof Error ? error : new Error(String(error)));
+      });
+    }
+  );
+
+  return new Catalog(
+    baseCatalog.id,
+    [...baseCatalog.components.values()],
+    [...baseCatalog.functions.values(), dispatchControllerAction],
+    baseCatalog.themeSchema
+  );
+}
+
+function asAction(value: unknown): () => void {
+  return typeof value === 'function' ? (value as () => void) : () => undefined;
 }

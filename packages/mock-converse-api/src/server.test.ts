@@ -38,6 +38,27 @@ function makeRequest(
   });
 }
 
+function parseEvents(body: string): Record<string, unknown>[] {
+  return body
+    .split('\n\n')
+    .filter(Boolean)
+    .map(
+      (frame) => JSON.parse(frame.split('\n')[1].replace('data:', '')) as Record<string, unknown>
+    );
+}
+
+function getCartItems(events: Record<string, unknown>[]): unknown[] {
+  const activity = events.find((event) => event['type'] === 'ACTIVITY_SNAPSHOT');
+  const content = activity?.['content'] as {a2ui_operations?: Array<Record<string, unknown>>};
+  const dataOperation = content.a2ui_operations?.find(
+    (operation) => 'updateDataModel' in operation
+  );
+  const update = dataOperation?.['updateDataModel'] as {
+    value?: {controllers?: Record<string, {items?: unknown[]}>};
+  };
+  return update?.value?.controllers?.['shopping-cart']?.items ?? [];
+}
+
 describe('createMockConverseServer', () => {
   let server: http.Server;
 
@@ -137,55 +158,103 @@ describe('createMockConverseServer', () => {
       JSON.stringify({message: 'Show the Thermidor catalog'})
     );
 
-    const events = res.body
-      .split('\n\n')
-      .filter(Boolean)
-      .map(
-        (frame) => JSON.parse(frame.split('\n')[1].replace('data:', '')) as Record<string, unknown>
-      );
+    const events = parseEvents(res.body);
     const activity = events.find((event) => event['type'] === 'ACTIVITY_SNAPSHOT');
-    const stateSnapshot = events.find((event) => event['type'] === 'STATE_SNAPSHOT');
 
     expect(activity).toMatchObject({
       type: 'ACTIVITY_SNAPSHOT',
       messageId: 'commerce-catalog-example',
       activityType: 'a2ui-surface',
       replace: true,
-      content: {
-        a2ui_operations: [
-          {
-            version: 'v0.9',
-            createSurface: {
-              surfaceId: 'commerce-catalog-example',
-              catalogId: 'https://schema.thermidor.coveo.com/a2-ui/catalog.json',
-            },
-          },
-          {
-            version: 'v0.9',
-            updateComponents: {
-              components: [
-                {id: 'root', component: 'Column', children: ['featured-products', 'cart']},
-                {component: 'ProductCarousel'},
-                {component: 'Cart'},
-              ],
-            },
-          },
-        ],
-      },
     });
-
-    const snapshot = stateSnapshot?.['snapshot'] as {
-      controllers: Record<string, {products?: unknown[]; items?: unknown[]}>;
-    };
-
-    expect(snapshot.controllers['featured-products'].products).toEqual(
-      expect.arrayContaining([expect.objectContaining({permanentid: 'trail-running-shoes-001'})])
+    const content = activity?.['content'] as {a2ui_operations: Array<Record<string, unknown>>};
+    expect(content.a2ui_operations).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          version: 'v0.9',
+          createSurface: expect.objectContaining({
+            surfaceId: 'commerce-catalog-example',
+            catalogId: 'https://schema.thermidor.coveo.com/a2-ui/catalog.json',
+          }),
+        }),
+        expect.objectContaining({
+          version: 'v0.9',
+          updateDataModel: expect.objectContaining({path: '/'}),
+        }),
+        expect.objectContaining({
+          version: 'v0.9',
+          updateComponents: expect.objectContaining({
+            components: expect.arrayContaining([
+              expect.objectContaining({component: 'ProductCarousel'}),
+              expect.objectContaining({component: 'Cart'}),
+            ]),
+          }),
+        }),
+      ])
     );
-    expect(snapshot.controllers['shopping-cart'].items).toEqual(
+
+    expect(events.some((event) => event['type'] === 'STATE_SNAPSHOT')).toBe(false);
+    expect(getCartItems(events)).toEqual(
       expect.arrayContaining([
         expect.objectContaining({productId: 'trail-running-shoes-001', quantity: 1}),
       ])
     );
+  });
+
+  it.each([
+    ['setItems', {items: []}, []],
+    [
+      'updateItemQuantity',
+      {
+        item: {
+          productId: 'trail-running-shoes-001',
+          name: 'Peak Trail Running Shoes',
+          price: 99.99,
+          quantity: 2,
+        },
+      },
+      [expect.objectContaining({productId: 'trail-running-shoes-001', quantity: 2})],
+    ],
+  ])('returns authoritative A2UI cart state for %s', async (action, payload, expectedItems) => {
+    await startServer();
+    const res = await makeRequest(
+      server,
+      {
+        method: 'POST',
+        path: '/rest/organizations/myorg/commerce/unstable/agentic/converse',
+        headers: {'Content-Type': 'application/json'},
+      },
+      JSON.stringify({
+        action: {
+          controllerId: 'shopping-cart',
+          controllerSchema: 'https://schema.thermidor.coveo.com/controllers/cart.schema.json',
+          action,
+          payload,
+        },
+      })
+    );
+
+    expect(res.statusCode).toBe(200);
+    expect(getCartItems(parseEvents(res.body))).toEqual(expectedItems);
+  });
+
+  it('rejects an invalid controller action', async () => {
+    await startServer();
+    const res = await makeRequest(
+      server,
+      {method: 'POST', path: '/converse', headers: {'Content-Type': 'application/json'}},
+      JSON.stringify({
+        action: {
+          controllerId: 'shopping-cart',
+          controllerSchema: 'https://schema.thermidor.coveo.com/controllers/cart.schema.json',
+          action: 'updateItemQuantity',
+          payload: {item: {quantity: 0}},
+        },
+      })
+    );
+
+    expect(res.statusCode).toBe(400);
+    expect(JSON.parse(res.body)).toEqual({error: 'Invalid controller action'});
   });
 
   it('returns 400 for invalid JSON payload', async () => {
@@ -204,7 +273,7 @@ describe('createMockConverseServer', () => {
     expect(JSON.parse(res.body)).toMatchObject({error: 'Invalid JSON'});
   });
 
-  it('returns 400 when message is missing', async () => {
+  it('returns 400 when message and action are missing', async () => {
     await startServer();
     const res = await makeRequest(
       server,
@@ -218,7 +287,7 @@ describe('createMockConverseServer', () => {
 
     expect(res.statusCode).toBe(400);
     expect(JSON.parse(res.body)).toEqual({
-      error: 'Missing required field: message',
+      error: 'Missing required field: message or action',
     });
   });
 

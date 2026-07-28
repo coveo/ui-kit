@@ -4,43 +4,30 @@
  */
 import {z} from 'zod';
 
-const productCarouselControllersSchema = z
+export const a2uiDataBindingSchema = z.object({path: z.string().min(1)}).strict();
+
+export const a2uiFunctionCallSchema = z
   .object({
-    productListController: z
+    call: z.string().min(1),
+    args: z.record(z.unknown()),
+    returnType: z.enum(['string', 'number', 'boolean', 'array', 'object', 'any', 'void']),
+  })
+  .strict();
+
+const a2uiEventActionSchema = z
+  .object({
+    event: z
       .object({
-        controllerId: z.string().min(1),
-        controllerSchema: z.literal(
-          'https://schema.thermidor.coveo.com/controllers/product-list.schema.json'
-        ),
+        name: z.string().min(1),
+        context: z.record(z.unknown()).optional(),
       })
       .strict(),
   })
   .strict();
 
-export const productCarouselPropsSchema = z
-  .object({
-    controllers: productCarouselControllersSchema,
-  })
-  .strict();
+const a2uiFunctionCallActionSchema = z.object({functionCall: a2uiFunctionCallSchema}).strict();
 
-const cartControllersSchema = z
-  .object({
-    cartController: z
-      .object({
-        controllerId: z.string().min(1),
-        controllerSchema: z.literal(
-          'https://schema.thermidor.coveo.com/controllers/cart.schema.json'
-        ),
-      })
-      .strict(),
-  })
-  .strict();
-
-export const cartPropsSchema = z
-  .object({
-    controllers: cartControllersSchema,
-  })
-  .strict();
+export const a2uiActionSchema = z.union([a2uiEventActionSchema, a2uiFunctionCallActionSchema]);
 
 export interface Product {
   permanentid: string;
@@ -153,9 +140,84 @@ export const cartControllerContract = z
   })
   .strict();
 
+const productCarouselControllersSchema = z
+  .object({
+    productListController: z
+      .object({
+        controllerId: z.string().min(1),
+        controllerSchema: z.literal(
+          'https://schema.thermidor.coveo.com/controllers/product-list.schema.json'
+        ),
+        state: z.union([
+          productListControllerStateSchema,
+          a2uiDataBindingSchema,
+          a2uiFunctionCallSchema,
+        ]),
+      })
+      .strict(),
+  })
+  .strict();
+
+export const productCarouselPropsSchema = z
+  .object({
+    controllers: productCarouselControllersSchema,
+  })
+  .strict();
+
+const cartControllersSchema = z
+  .object({
+    cartController: z
+      .object({
+        controllerId: z.string().min(1),
+        controllerSchema: z.literal(
+          'https://schema.thermidor.coveo.com/controllers/cart.schema.json'
+        ),
+        state: z.union([cartControllerStateSchema, a2uiDataBindingSchema, a2uiFunctionCallSchema]),
+        actions: z
+          .object({
+            setItems: a2uiActionSchema,
+            updateItemQuantity: a2uiActionSchema,
+          })
+          .strict(),
+      })
+      .strict(),
+  })
+  .strict();
+
+export const cartPropsSchema = z
+  .object({
+    controllers: cartControllersSchema,
+  })
+  .strict();
+
 export const controllerContracts = z.discriminatedUnion('schemaId', [
   productListControllerContract,
   cartControllerContract,
 ]);
 
 export type ControllerContracts = z.infer<typeof controllerContracts>;
+
+export const controllerActionInvocationSchema = z.union([
+  z
+    .object({
+      controllerId: z.string().min(1),
+      controllerSchema: z.literal(
+        'https://schema.thermidor.coveo.com/controllers/cart.schema.json'
+      ),
+      action: z.literal('setItems'),
+      payload: cartControllerContractSetItemsPayloadSchema,
+    })
+    .strict(),
+  z
+    .object({
+      controllerId: z.string().min(1),
+      controllerSchema: z.literal(
+        'https://schema.thermidor.coveo.com/controllers/cart.schema.json'
+      ),
+      action: z.literal('updateItemQuantity'),
+      payload: cartControllerContractUpdateItemQuantityPayloadSchema,
+    })
+    .strict(),
+]);
+
+export type ControllerActionInvocation = z.infer<typeof controllerActionInvocationSchema>;

@@ -165,6 +165,24 @@ code {
   justify-content: space-between;
   gap: 12px;
 }
+.cart-actions {
+  display: grid;
+  gap: 8px;
+  margin-top: 18px;
+}
+.cart-actions button {
+  border: 1px solid #244db6;
+  border-radius: 8px;
+  padding: 9px 12px;
+  background: white;
+  color: #244db6;
+  font-weight: 700;
+  cursor: pointer;
+}
+.cart-actions button:first-child {
+  background: #244db6;
+  color: white;
+}
 .product-meta {
   margin-bottom: 8px;
 }

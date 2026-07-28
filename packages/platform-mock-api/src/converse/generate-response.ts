@@ -1,5 +1,7 @@
 import {buildStreamingResponse} from './events.js';
 import {getTemplateEvents, type TemplateId} from './templates/templates.js';
+import {buildThermidorActionResponseEvents, type ControllerAction} from './templates/response9.js';
+import {HttpResponse} from 'msw';
 
 const DEFAULT_DELAY_MS = 25;
 
@@ -51,6 +53,16 @@ const buildConverseStreamingResponse = ({
 };
 
 const baseResponse = (body?: unknown) => {
+  if (isRecord(body) && isRecord(body['action'])) {
+    const events = buildThermidorActionResponseEvents(
+      body['action'] as unknown as ControllerAction
+    );
+    if (!events) {
+      return HttpResponse.json({error: 'Invalid controller action'}, {status: 400});
+    }
+    return buildStreamingResponse(events, {delayBetweenMessages: 'real'});
+  }
+
   let templateId: TemplateId = FALLBACK_TEMPLATE_ID;
   if (
     body &&
@@ -65,6 +77,10 @@ const baseResponse = (body?: unknown) => {
     templateId,
   });
 };
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
+}
 
 export {baseResponse, buildConverseStreamingResponse, matchPrompt};
 export type {TemplateId};

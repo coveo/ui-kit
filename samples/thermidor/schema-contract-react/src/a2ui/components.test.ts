@@ -1,14 +1,32 @@
-import {describe, expect, it} from 'vitest';
-import {thermidorCatalogDefinitions} from './components.js';
+import {describe, expect, it, vi} from 'vitest';
+import {createThermidorCatalog, thermidorCatalogDefinitions} from './components.js';
+import {DataContext, MessageProcessor} from '@a2ui/web_core/v0_9';
 import {
   cartControllerContract,
   cartItemSchema,
+  controllerActionInvocationSchema,
   productListControllerContract,
   productSchema,
 } from '@coveo/thermidor-contracts';
 
+const CART_SCHEMA = 'https://schema.thermidor.coveo.com/controllers/cart.schema.json';
+const DEMO_ITEM = {productId: 'p1', name: 'Trail shoes', price: 99.99, quantity: 1};
+
+const functionAction = (action: string, payload: unknown) => ({
+  functionCall: {
+    call: 'thermidor.dispatchControllerAction',
+    args: {
+      controllerId: 'shopping-cart',
+      controllerSchema: CART_SCHEMA,
+      action,
+      payload,
+    },
+    returnType: 'void' as const,
+  },
+});
+
 describe('thermidorCatalogDefinitions', () => {
-  it('accepts the controller advertisements supplied by the catalog message', () => {
+  it('accepts data-model bindings and function-call actions supplied by the catalog message', () => {
     expect(
       thermidorCatalogDefinitions.ProductCarousel.props.safeParse({
         controllers: {
@@ -16,6 +34,7 @@ describe('thermidorCatalogDefinitions', () => {
             controllerId: 'featured-products',
             controllerSchema:
               'https://schema.thermidor.coveo.com/controllers/product-list.schema.json',
+            state: {path: '/controllers/featured-products'},
           },
         },
       }).success
@@ -26,6 +45,11 @@ describe('thermidorCatalogDefinitions', () => {
           cartController: {
             controllerId: 'shopping-cart',
             controllerSchema: 'https://schema.thermidor.coveo.com/controllers/cart.schema.json',
+            state: {path: '/controllers/shopping-cart'},
+            actions: {
+              setItems: functionAction('setItems', {items: []}),
+              updateItemQuantity: functionAction('updateItemQuantity', {item: DEMO_ITEM}),
+            },
           },
         },
       }).success
@@ -77,6 +101,11 @@ describe('thermidorCatalogDefinitions', () => {
           cartController: {
             controllerId: 'shopping-cart',
             controllerSchema: 'https://schema.thermidor.coveo.com/controllers/cart.schema.json',
+            state: {path: '/controllers/shopping-cart'},
+            actions: {
+              setItems: functionAction('setItems', {items: []}),
+              updateItemQuantity: functionAction('updateItemQuantity', {item: DEMO_ITEM}),
+            },
             unexpected: true,
           },
         },
@@ -101,5 +130,70 @@ describe('thermidorCatalogDefinitions', () => {
         item: {productId: 'p1', name: 'Trail shoes', price: 99.99, quantity: 0},
       }).success
     ).toBe(false);
+  });
+
+  it('validates both variants of the generated controller action invocation', () => {
+    expect(
+      controllerActionInvocationSchema.safeParse({
+        controllerId: 'shopping-cart',
+        controllerSchema: CART_SCHEMA,
+        action: 'setItems',
+        payload: {items: []},
+      }).success
+    ).toBe(true);
+    expect(
+      controllerActionInvocationSchema.safeParse({
+        controllerId: 'shopping-cart',
+        controllerSchema: CART_SCHEMA,
+        action: 'updateItemQuantity',
+        payload: {item: {...DEMO_ITEM, quantity: 2}},
+      }).success
+    ).toBe(true);
+    expect(
+      controllerActionInvocationSchema.safeParse({
+        controllerId: 'shopping-cart',
+        controllerSchema: CART_SCHEMA,
+        action: 'updateItemQuantity',
+        payload: {item: {...DEMO_ITEM, quantity: 0}},
+      }).success
+    ).toBe(false);
+  });
+
+  it('forwards a function call without emitting an A2UI event or mutating its data model', () => {
+    const dispatchAction = vi.fn().mockResolvedValue(undefined);
+    const onA2uiAction = vi.fn();
+    const catalog = createThermidorCatalog({dispatchAction});
+    const processor = new MessageProcessor([catalog], onA2uiAction);
+    processor.processMessages([
+      {
+        version: 'v0.9',
+        createSurface: {
+          surfaceId: 'catalog',
+          catalogId: 'https://schema.thermidor.coveo.com/a2-ui/catalog.json',
+        },
+      },
+      {
+        version: 'v0.9',
+        updateDataModel: {
+          surfaceId: 'catalog',
+          path: '/',
+          value: {controllers: {'shopping-cart': {items: [DEMO_ITEM]}}},
+        },
+      },
+    ]);
+    const surface = processor.model.getSurface('catalog');
+    expect(surface).toBeDefined();
+    const before = structuredClone(surface!.dataModel.get('/'));
+
+    new DataContext(surface!, '/').resolveAction(functionAction('setItems', {items: []}));
+
+    expect(dispatchAction).toHaveBeenCalledWith({
+      controllerId: 'shopping-cart',
+      controllerSchema: CART_SCHEMA,
+      action: 'setItems',
+      payload: {items: []},
+    });
+    expect(onA2uiAction).not.toHaveBeenCalled();
+    expect(surface!.dataModel.get('/')).toEqual(before);
   });
 });

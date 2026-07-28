@@ -31,8 +31,11 @@ function ContractSample() {
   const [controller, state] = useController<ConverseController>(() =>
     buildConverseController({interface: interfaceRef.current!})
   );
+  const [actionError, setActionError] = useState<string>();
   const catalogRef = useRef<ReturnType<typeof createThermidorCatalog> | null>(null);
-  catalogRef.current ??= createThermidorCatalog(controller);
+  catalogRef.current ??= createThermidorCatalog(controller, (error) =>
+    setActionError(error.message)
+  );
   const [prompt, setPrompt] = useState(CONTRACT_PROMPT);
   const turn = state.activeTurn;
   const a2uiMessages = useMemo(
@@ -49,6 +52,7 @@ function ContractSample() {
 
   function submit(event: React.FormEvent) {
     event.preventDefault();
+    setActionError(undefined);
     controller.submit({prompt});
   }
 
@@ -57,10 +61,12 @@ function ContractSample() {
       <main className="page-shell">
         <section className="hero">
           <p className="eyebrow">Thermidor + v0.9 catalog contract</p>
-          <h1>Server-owned commerce state, client-owned rendering.</h1>
+          <h1>Server-owned A2-UI state, client-owned rendering.</h1>
           <p>
             Thermidor stays UI-less. This sample recognizes an <code>a2ui-surface</code> activity,
-            resolves the advertised controllers, and renders its local A2-UI component catalog.
+            binds controller state from the A2-UI data model and forwards interactions through a
+            typed local function. State changes only when the server returns another data-model
+            update.
           </p>
         </section>
 
@@ -85,6 +91,7 @@ function ContractSample() {
           </p>
         ))}
         {turn?.status === 'error' && <p className="error">{turn.error}</p>}
+        {actionError && <p className="error">{actionError}</p>}
         <ThermidorA2UISurfaces messages={a2uiMessages} />
         {!turn && <p className="hint">Run the pre-filled prompt to render the schema example.</p>}
       </main>
