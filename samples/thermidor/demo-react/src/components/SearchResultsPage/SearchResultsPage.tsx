@@ -1,4 +1,4 @@
-import {useState, useRef, useEffect} from 'react';
+import {useState, useRef, useEffect, useCallback} from 'react';
 import type {RoutedInterface} from '@coveo/thermidor';
 import {buildProductListController, buildPaginationController} from '@coveo/thermidor';
 import {SECTION_ACTIONS, type SuggestionItem} from '../SuggestionsDropdown/index.js';
@@ -9,6 +9,7 @@ import {ProductGrid} from './ProductGrid/ProductGrid.js';
 import {Pagination} from './Pagination/Pagination.js';
 import {QuerySummaryPlaceholder} from './QuerySummaryPlaceholder/QuerySummaryPlaceholder.js';
 import {SortPlaceholder} from './SortPlaceholder/SortPlaceholder.js';
+import {SortFiltersModal} from './SortFiltersModal/SortFiltersModal.js';
 import {PageSizeSelector} from './PageSizeSelector/PageSizeSelector.js';
 import styles from './SearchResultsPage.module.css';
 
@@ -48,6 +49,7 @@ function SearchResultsPageInner({
   });
 
   const [toast, setToast] = useState<string | null>(null);
+  const [sortFiltersOpen, setSortFiltersOpen] = useState(false);
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -63,6 +65,8 @@ function SearchResultsPageInner({
     setToast('Not supported yet');
     toastTimerRef.current = setTimeout(() => setToast(null), 3000);
   };
+
+  const closeSortFilters = useCallback(() => setSortFiltersOpen(false), []);
 
   const handleSuggestionSelect = (item: SuggestionItem, sectionId: string) => {
     const action = SECTION_ACTIONS[sectionId];
@@ -99,7 +103,16 @@ function SearchResultsPageInner({
             pageSize={paginationState.pageSize ?? 0}
             productCount={productListState.products?.length ?? 0}
           />
-          <SortPlaceholder onToast={showToast} />
+          <span className={styles.desktopOnly}>
+            <SortPlaceholder onToast={showToast} />
+          </span>
+          <button
+            type="button"
+            className={styles.sortFiltersButton}
+            onClick={() => setSortFiltersOpen(true)}
+          >
+            Sort & Filters
+          </button>
         </div>
         <ProductGrid controller={productListController} />
         <div className={styles.bottomRow}>
@@ -107,6 +120,8 @@ function SearchResultsPageInner({
           <PageSizeSelector controller={paginationController} />
         </div>
       </main>
+
+      <SortFiltersModal open={sortFiltersOpen} onClose={closeSortFilters} onToast={showToast} />
 
       {toast && (
         <div className={styles.toast} role="status" aria-live="polite">

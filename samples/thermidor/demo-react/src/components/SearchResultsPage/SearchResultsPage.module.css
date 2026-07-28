@@ -81,6 +81,25 @@
   justify-content: space-between;
 }
 
+.sortFiltersButton {
+  display: none;
+  padding: var(--space-2) var(--space-4);
+  font-family: var(--font-sans);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--color-text-primary);
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color var(--transition-fast);
+}
+
+.sortFiltersButton:hover {
+  border-color: var(--color-border-active);
+}
+
 .bottomRow {
   display: flex;
   align-items: center;
@@ -133,5 +152,13 @@
 
   .bottomRow {
     justify-content: center;
+  }
+
+  .sortFiltersButton {
+    display: inline-flex;
+  }
+
+  .desktopOnly {
+    display: none;
   }
 }
