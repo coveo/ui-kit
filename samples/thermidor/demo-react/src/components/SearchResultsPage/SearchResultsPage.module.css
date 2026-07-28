@@ -46,7 +46,7 @@
   }
 }
 
-@media (min-width: 900px) {
+@media (min-width: 1150px) {
   .header {
     flex-wrap: nowrap;
     justify-content: center;
