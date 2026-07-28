@@ -74,8 +74,7 @@ dedicated guidance.
   error messages), not only privacy.
 - No user ID, no automatic collection, no background transmission.
 
-This transparency-first model replaces the need for a heavy "impermeable"
-anonymization filter tested across operating systems in CI.
+This transparency-first model replaces the need for a heavy privacy filter tested across operating systems in CI.
 
 Consent is surfaced via the first-run disclosure (decision #9) and can be
 pre-empted entirely with `DO_NOT_TRACK` (decision #10).
@@ -118,6 +117,9 @@ At crash: write our own plain JSON report (no Sentry init, no DSN, no network
 during normal runs). Only the `report` subcommand initializes `@sentry/node`
 and sends. Chosen over a custom disk-writing Sentry transport so the JSON stays
 human-inspectable (decision #5) and avoids coupling to Sentry's envelope format.
+The persisted report is a versioned, vendor-neutral crash snapshot; it is not
+expected to match Sentry's event schema. The `report` subcommand is the adapter
+that projects the canonical report into the pinned SDK's current event format.
 Hook point: the existing single crash funnel in `index.ts`
 (`uncaughtException` / `unhandledRejection` / the rejection branch of
 `main().then(...)`).
@@ -159,6 +161,19 @@ inherits the file's tested no-PII guarantee.
 - The report layers only crash-specific fields on top: scrubbed error message,
   scrubbed stack, OS + arch, crash timestamp, and a random run-id.
 
+### 12. Migrate persisted schemas into one canonical model
+
+Parsing dispatches on `schemaVersion` before validating version-specific fields.
+Every released schema keeps a dedicated validator/migrator that projects it into
+the current `CrashReport` model. Callers and the Sentry adapter consume
+only that canonical model and do not branch on historical versions.
+
+Adding a schema requires adding its writer and migrator without deleting older
+migrators. Unknown versions produce a version-mismatch error; malformed data for
+a known version is rejected as an invalid report. Schema v1 is the first
+persisted format, so no fictitious earlier schema is introduced. Golden fixtures
+must be added for each persisted version when a second schema is introduced.
+
 ## Consequences
 
 - New runtime dependency `@sentry/node`, needed only on the `report` path —
@@ -167,6 +182,8 @@ inherits the file's tested no-PII guarantee.
   crash funnel is updated to write the report and print the submit command.
 - The report builder reuses `buildProjectMetadata` / `provenancePath` (PR #7954)
   for the project-metadata block — no duplicate metadata logic.
+- Persisted schemas are compatibility commitments: keep each released migrator
+  when adding a new schema.
 - Lower report volume than automatic telemetry (accepted) — reports are higher-
   signal, and users can alternatively attach the JSON to a GitHub issue.
 - Not "proactive" in the continuous sense: no release-health / sessions /
