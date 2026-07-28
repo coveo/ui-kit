@@ -21,4 +21,4 @@ https://coveord.atlassian.net/browse/TICKET-ID
 ## Checklist
 
 - [ ] PR title follows [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/) format (`style(<scope>): <description>`)
-- [ ] No changeset is included in this PR since it should not affect the public API surface.
+- [ ] No changeset is included in this PR (unless you modified source code of a public package under `packages/`; if so, add one with `pnpm changeset`).

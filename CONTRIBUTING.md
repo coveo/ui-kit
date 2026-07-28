@@ -59,10 +59,9 @@ Each template pre-fills the relevant sections and includes a shared checklist.
 
 ## Changeset
 
-This repository uses [changeset](https://changesets.dev/guide/getting-started).
+This repository uses [Changesets](https://changesets.dev/guide/getting-started).
 
-Required whenever you modify source code of the public API surface.
-
+Required whenever you modify source code of a public package under `packages/`.
 However, do not create changesets for trivial or internal changes. See the PR templates for each corresponding change type for guidance.
 
 If you determine that a changeset is required, run `pnpm changeset` and follow the instructions as prompted.

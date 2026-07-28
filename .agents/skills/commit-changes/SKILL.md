@@ -13,8 +13,8 @@ metadata:
 
 This repository follows Conventional Commits 1.0.0.
 
-Use the package directory name under `packages/` as the scope. 
-For infrastructure changes use `ci`, `deps`, `agents`, or `changesets`. 
+Use the package directory name under `packages/` as the scope.
+For infrastructure changes use `ci`, `deps`, `agents`, or `changesets`.
 Comma-separate when multiple scopes apply.
 
 ### Commit body (description)
