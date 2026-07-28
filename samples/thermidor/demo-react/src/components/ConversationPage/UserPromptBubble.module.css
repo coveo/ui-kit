@@ -3,7 +3,7 @@
   max-width: 80%;
   padding: var(--space-3) var(--space-4);
   background: var(--color-bg-user-prompt);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-lg) 0 var(--radius-lg) var(--radius-lg);
   font-size: var(--font-size-md);
   line-height: 1.5;
   color: var(--color-text-primary);
