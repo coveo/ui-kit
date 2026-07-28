@@ -37,7 +37,7 @@ class TestPluginWithSpy extends TestPlugin {
 describe('simpleanalytics', () => {
   const analyticsClientMock = createAnalyticsClientMock();
   const analyticsEndpoint = 'https://analytics.cloud.coveo.com/rest/ua/v15/analytics';
-  const someRandomEventName = 'testEventName';
+  const someRandomEventName = 'testeventname';
 
   beforeEach(() => {
     jest.clearAllMocks();
