@@ -29,7 +29,7 @@ interface PromptInputProps {
 export function PromptInput({
   onSubmit,
   disabled = false,
-  placeholder = 'Search for products or ask a question...',
+  placeholder = 'Ask anything...',
   initialValue = '',
   clearOnSubmit = false,
   autoFocus = false,
