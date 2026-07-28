@@ -10,12 +10,12 @@ The Search Results Page is the primary view for displaying product search result
 - **RoutedInterface**: A union type (`{ useCase: 'commerceSearch'; interface: CommerceInterface } | { useCase: 'search'; interface: SearchInterface }`) representing the interface created by the backend in response to a routed search query.
 - **ProductListController**: A Thermidor controller built with `buildProductListController({interface})` that exposes a `products: Product[]` array from the search response.
 - **PaginationController**: A Thermidor controller built with `buildPaginationController({interface})` that exposes page state (`page`, `pageSize`, `totalCount`, `totalPages`) and methods (`selectPage`, `setPageSize`).
+- **SearchBoxController**: A Thermidor controller built with `buildSearchBoxController({interface})` that exposes the current `query` and provides `setQuery`/`submit` methods.
 - **ProductCard**: A presentational component that renders a single product's image, name, brand, and price.
 - **ProductGrid**: A layout component that arranges ProductCard instances in a responsive CSS grid.
 - **Pagination**: A navigation component that renders page controls (previous, next, page numbers) based on PaginationController state.
 - **QuerySummaryPlaceholder**: A temporary component displaying the current query and result count, implemented without a dedicated controller since no QuerySummaryController exists in Thermidor yet.
 - **SortPlaceholder**: A non-functional dropdown element displaying a sort option label (e.g., "Sort by: Relevance"), positioned at the top-right of the product list area. It serves as a visual placeholder until a sort controller is available in Thermidor.
-- **SortFiltersModal**: A full-screen `<dialog>`-based modal shown on mobile (below lg breakpoint) that combines the Sort and Filters sections with a fixed "View results" button. Replaces the inline SortPlaceholder on narrow viewports.
 - **AppShell**: The parent component that manages the persisted RoutedInterface ref and passes it to SearchResultsPage.
 - **useBuildController**: A React hook that instantiates a Thermidor controller once (via `useRef`) and subscribes to its state via `useSyncExternalStore`.
 - **PageSizeSelector**: A dropdown control positioned adjacent to the Pagination component that allows users to change the number of products displayed per page by calling `paginationController.setPageSize(size)`.
@@ -28,7 +28,7 @@ The Search Results Page is the primary view for displaying product search result
 
 #### Acceptance Criteria
 
-1. WHEN the SearchResultsPage renders, THE SearchResultsPage SHALL display a header bar containing a "Back to conversation" navigation button and a PromptInput component (the same component used on the landing page) configured without suggestion pills and with a single-row text area. The PromptInput SHALL have a maximum width of 560px and be horizontally centered within the header. On viewports below the xl breakpoint (1280px), the back button SHALL wrap above the PromptInput. On xl+ viewports, the back button SHALL be absolutely positioned to the left of the centered input. The header SHALL NOT contain a logo element.
+1. WHEN the SearchResultsPage renders, THE SearchResultsPage SHALL display a header bar containing only a PromptInput component (the same component used on the landing page) configured without suggestion pills and with a single-row text area. The PromptInput SHALL occupy one third of the total available width and be horizontally centered within the header. The header SHALL NOT contain a logo element.
 2. WHEN the SearchResultsPage renders, THE SearchResultsPage SHALL display a sidebar region positioned to the left of the main content area, containing the visible text "Facets (coming soon)".
 3. WHEN the SearchResultsPage renders, THE SearchResultsPage SHALL display a main content area with the following top-to-bottom layout: a top row containing the QuerySummaryPlaceholder positioned at the left and the SortPlaceholder positioned at the right, followed by the ProductGrid component, followed by a bottom row with the Pagination aligned to the left and the PageSizeSelector aligned to the right.
 4. THE SearchResultsPage SHALL use a 12-column proportional grid layout with a 24px column gap: 1/12 empty left gutter, 2/12 facet sidebar, 8/12 main content, 1/12 empty right gutter. The header spans the full width above all columns.
@@ -45,9 +45,9 @@ The Search Results Page is the primary view for displaying product search result
 3. THE ProductCard SHALL display the product image sourced from `ec_thumbnails[0]` (falling back to `ec_images[0]` if `ec_thumbnails` is empty or undefined), `ec_name`, `ec_brand`, and `ec_price` formatted as a currency value.
 4. IF a product has neither `ec_thumbnails[0]` nor `ec_images[0]` available, THEN THE ProductCard SHALL render a placeholder image element of the same dimensions as a product image.
 5. WHEN a product has an `ec_promo_price` that is both defined and numerically less than `ec_price`, THE ProductCard SHALL display the original `ec_price` with a visible strikethrough style and the `ec_promo_price` as the current price.
-6. THE ProductGrid SHALL arrange ProductCard instances in a responsive CSS grid layout: 1 column by default, 2 columns at the sm breakpoint (640px), 3 columns at the md breakpoint (768px), and 4 columns at the xl breakpoint (1280px).
+6. THE ProductGrid SHALL arrange ProductCard instances in a responsive CSS grid layout that displays a minimum of 1 column on viewports narrower than 600px and a maximum of 4 columns on viewports 1200px or wider.
 7. IF `ec_name` text exceeds 2 lines within the ProductCard layout, THEN THE ProductCard SHALL truncate the text with an ellipsis and expose the full name via a `title` attribute.
-8. THE ProductCard SHALL display a subtle elevation effect (box-shadow and border color change) on hover to indicate visual feedback, but SHALL NOT display a pointer cursor since the card is not currently interactive (no click handler or link).
+8. THE ProductCard SHALL display a pointer cursor on hover to indicate interactivity.
 
 ### Requirement 3: Pagination Controls
 
@@ -73,7 +73,7 @@ The Search Results Page is the primary view for displaying product search result
 
 1. WHEN the SearchResultsPage mounts with a RoutedInterface, THE SearchResultsPage SHALL call `buildProductListController({interface: routedInterface.interface})` via the `useBuildController` hook and render product data from the resulting controller state.
 2. WHEN the SearchResultsPage mounts with a RoutedInterface, THE SearchResultsPage SHALL call `buildPaginationController({interface: routedInterface.interface})` via the `useBuildController` hook and render pagination controls from the resulting controller state.
-3. WHEN the SearchResultsPage mounts, THE SearchResultsPage SHALL pre-fill the header PromptInput with the `query` prop provided by AppShell (sourced from `turn.prompt`). No `SearchBoxController` is built — the query is passed directly as a prop.
+3. WHEN the SearchResultsPage mounts with a RoutedInterface, THE SearchResultsPage SHALL call `buildSearchBoxController({interface: routedInterface.interface})` via the `useBuildController` hook and pre-fill the header input with the current query from the controller state.
 4. THE SearchResultsPage SHALL use the `useBuildController` hook to instantiate each controller exactly once per mount, relying on the hook's internal `useRef` to prevent duplicate factory invocations on re-renders.
 5. WHEN the RoutedInterface changes identity (a new routed turn produces a new interface), THE AppShell SHALL call `dispose()` on the previous interface, store the new RoutedInterface in its ref, and cause the SearchResultsPage to remount with fresh controllers by changing the React key.
 6. IF the RoutedInterface provided to SearchResultsPage is `null` or `undefined` at mount time, THEN THE SearchResultsPage SHALL NOT call any controller build functions and SHALL render nothing (return `null`).
@@ -112,7 +112,7 @@ The Search Results Page is the primary view for displaying product search result
 
 1. WHEN the SearchResultsPage renders, THE SearchResultsPage SHALL display a sidebar area on the left side of the content region with a visible boundary and the text "Facets (coming soon)".
 2. THE sidebar placeholder SHALL occupy a proportional width of 2/12 of the available page width (as defined by the page grid) and SHALL NOT cause the main content area to shift or resize when present.
-3. WHEN the viewport width is below the lg breakpoint (1024px), THE sidebar placeholder SHALL be hidden to preserve content area usability.
+3. WHEN the viewport width is below 768px, THE sidebar placeholder SHALL be hidden to preserve content area usability.
 4. THE sidebar placeholder SHALL be non-interactive — it SHALL NOT respond to click, focus, or other user input events.
 
 ### Requirement 8: Sort Placeholder
@@ -125,7 +125,6 @@ The Search Results Page is the primary view for displaying product search result
 2. WHEN the user clicks the SortPlaceholder select, THE SortPlaceholder SHALL display a toast notification with the text "Not supported yet" that auto-dismisses after 3 seconds.
 3. THE SortPlaceholder SHALL use a native `<select>` element (matching the PageSizeSelector pattern) with 8px padding. The bold "Sort by:" label SHALL be outside the select, to its left, with 8px gap.
 4. THE SortPlaceholder SHALL NOT trigger any controller actions or modify application state beyond displaying the toast notification.
-5. WHEN the viewport width is below the lg breakpoint (1024px), THE inline SortPlaceholder SHALL be hidden and replaced by a "Sort & Filters" pill button that opens the SortFiltersModal.
 
 ### Requirement 9: Page Size Selector
 
@@ -140,17 +139,3 @@ The Search Results Page is the primary view for displaying product search result
 5. THE PageSizeSelector SHALL be positioned to the right of the Pagination component, within the same horizontal row at the bottom of the main content area.
 6. THE PageSizeSelector SHALL include a visible bold label "Products per page:" associated with the select element via an HTML `<label>` element for accessibility.
 7. THE PageSizeSelector SHALL receive the `PaginationController` directly as a prop, following the same controller-passing pattern used by the Pagination and ProductGrid components.
-
-### Requirement 10: Sort & Filters Modal (Mobile)
-
-**User Story:** As a mobile user, I want to access sort and filter controls through a full-screen modal, so that I can refine results without the inline controls taking up too much screen space.
-
-#### Acceptance Criteria
-
-1. WHEN the viewport width is below the lg breakpoint (1024px), THE SearchResultsPage SHALL display a "Sort & Filters" pill button in the top row (replacing the inline SortPlaceholder).
-2. WHEN the user clicks the "Sort & Filters" button, THE SearchResultsPage SHALL open a full-screen modal dialog using the native `<dialog>` element with `showModal()`.
-3. THE SortFiltersModal SHALL contain a header with the title "Sort & Filters" and a close button (×) in the top-right corner.
-4. THE SortFiltersModal SHALL contain a scrollable content area with two sections: "Sort" (containing the SortPlaceholder component) and "Filters" (containing a "Filters coming soon" placeholder message).
-5. THE SortFiltersModal SHALL contain a fixed footer (outside the scrollable area, always visible) with a full-width "View results" button.
-6. WHEN the user clicks the close button, presses Escape, or clicks "View results", THE SortFiltersModal SHALL close and return focus to the triggering element.
-7. THE SortFiltersModal SHALL have an `aria-label` of "Sort and filters" for screen reader accessibility.
