@@ -9,6 +9,10 @@ describe('CookieManager', () => {
   const key = 'wow';
   const someData = 'something';
 
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it('setItem writes data to a cookie', () => {
     cookieManager.setItem(key, someData, 1000);
     expect(cookieManager.getItem(key)).toBe(someData);
