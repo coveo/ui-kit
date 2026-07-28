@@ -29,7 +29,7 @@ const functionAction = (action: string, payload: unknown) => ({
 describe('thermidorCatalogDefinitions', () => {
   it('accepts data-model bindings and function-call actions supplied by the catalog message', () => {
     expect(
-      thermidorCatalogDefinitions.ProductCarousel.props.safeParse({
+      thermidorCatalogDefinitions.ProductCarousel.schema.safeParse({
         controllers: {
           productListController: {
             controllerId: 'featured-products',
@@ -41,7 +41,7 @@ describe('thermidorCatalogDefinitions', () => {
       }).success
     ).toBe(true);
     expect(
-      thermidorCatalogDefinitions.Cart.props.safeParse({
+      thermidorCatalogDefinitions.Cart.schema.safeParse({
         controllers: {
           cartController: {
             controllerId: 'shopping-cart',
@@ -87,7 +87,7 @@ describe('thermidorCatalogDefinitions', () => {
 
   it('enforces the controller contract literals and closed binding objects from JSON Schema', () => {
     expect(
-      thermidorCatalogDefinitions.ProductCarousel.props.safeParse({
+      thermidorCatalogDefinitions.ProductCarousel.schema.safeParse({
         controllers: {
           productListController: {
             controllerId: 'featured-products',
@@ -97,7 +97,7 @@ describe('thermidorCatalogDefinitions', () => {
       }).success
     ).toBe(false);
     expect(
-      thermidorCatalogDefinitions.Cart.props.safeParse({
+      thermidorCatalogDefinitions.Cart.schema.safeParse({
         controllers: {
           cartController: {
             controllerId: 'shopping-cart',

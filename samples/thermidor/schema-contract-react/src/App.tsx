@@ -6,7 +6,6 @@ import {
   type ConverseController,
   type GenerativeInterface,
 } from '@coveo/thermidor';
-import {A2UIProvider} from '@copilotkit/a2ui-renderer';
 import {createThermidorCatalog} from './a2ui/components.js';
 import {getA2UIMessages, ThermidorA2UISurfaces} from './a2ui/surfaces.js';
 import {getSampleConfiguration} from './env.js';
@@ -57,45 +56,42 @@ function ContractSample() {
   }
 
   return (
-    <A2UIProvider catalog={catalogRef.current}>
-      <main className="page-shell">
-        <section className="hero">
-          <p className="eyebrow">Thermidor + v0.9 catalog contract</p>
-          <h1>Server-owned A2-UI state, client-owned rendering.</h1>
-          <p>
-            Thermidor stays UI-less. This sample recognizes an <code>a2ui-surface</code> activity,
-            binds controller state from the A2-UI data model and forwards interactions through a
-            typed local function. State changes only when the server returns another data-model
-            update.
-          </p>
-        </section>
+    <main className="page-shell">
+      <section className="hero">
+        <p className="eyebrow">Thermidor + v0.9 catalog contract</p>
+        <h1>Server-owned A2-UI state, client-owned rendering.</h1>
+        <p>
+          Thermidor stays UI-less. This sample recognizes an <code>a2ui-surface</code> activity,
+          binds controller state from the A2-UI data model and forwards interactions through a typed
+          local function. State changes only when the server returns another data-model update.
+        </p>
+      </section>
 
-        <form className="prompt" onSubmit={submit}>
-          <label htmlFor="contract-prompt">Ask the mock API</label>
-          <div>
-            <input
-              id="contract-prompt"
-              value={prompt}
-              onChange={(event) => setPrompt(event.target.value)}
-              disabled={state.isStreaming}
-            />
-            <button type="submit" disabled={state.isStreaming}>
-              {state.isStreaming ? 'Streaming…' : 'Run'}
-            </button>
-          </div>
-        </form>
+      <form className="prompt" onSubmit={submit}>
+        <label htmlFor="contract-prompt">Ask the mock API</label>
+        <div>
+          <input
+            id="contract-prompt"
+            value={prompt}
+            onChange={(event) => setPrompt(event.target.value)}
+            disabled={state.isStreaming}
+          />
+          <button type="submit" disabled={state.isStreaming}>
+            {state.isStreaming ? 'Streaming…' : 'Run'}
+          </button>
+        </div>
+      </form>
 
-        {turn?.agentResponse?.messages.map((message, index) => (
-          <p className="agent-message" key={`${message.role}-${index}`}>
-            {message.content}
-          </p>
-        ))}
-        {turn?.status === 'error' && <p className="error">{turn.error}</p>}
-        {actionError && <p className="error">{actionError}</p>}
-        <ThermidorA2UISurfaces messages={a2uiMessages} />
-        {!turn && <p className="hint">Run the pre-filled prompt to render the schema example.</p>}
-      </main>
-    </A2UIProvider>
+      {turn?.agentResponse?.messages.map((message, index) => (
+        <p className="agent-message" key={`${message.role}-${index}`}>
+          {message.content}
+        </p>
+      ))}
+      {turn?.status === 'error' && <p className="error">{turn.error}</p>}
+      {actionError && <p className="error">{actionError}</p>}
+      <ThermidorA2UISurfaces catalog={catalogRef.current} messages={a2uiMessages} />
+      {!turn && <p className="hint">Run the pre-filled prompt to render the schema example.</p>}
+    </main>
   );
 }
 

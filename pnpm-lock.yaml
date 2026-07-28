@@ -6,6 +6,12 @@ settings:
 
 catalogs:
   default:
+    '@a2ui/react':
+      specifier: 0.10.2
+      version: 0.10.2
+    '@a2ui/web_core':
+      specifier: 0.10.5
+      version: 0.10.5
     '@ag-ui/client':
       specifier: 0.0.57
       version: 0.0.57
@@ -2125,12 +2131,12 @@ importers:
 
   samples/thermidor/schema-contract-react:
     dependencies:
+      '@a2ui/react':
+        specifier: 'catalog:'
+        version: 0.10.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zod@3.25.76)
       '@a2ui/web_core':
-        specifier: 0.9.0
-        version: 0.9.0
-      '@copilotkit/a2ui-renderer':
-        specifier: 1.61.2
-        version: 1.61.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        specifier: 'catalog:'
+        version: 0.10.5
       '@coveo/thermidor':
         specifier: workspace:*
         version: link:../../../packages/thermidor
@@ -2244,8 +2250,21 @@ packages:
       '@75lb/nature':
         optional: true
 
-  '@a2ui/web_core@0.9.0':
-    resolution: {integrity: sha512-TsMWuEeuVDsScGIGPy/fWIZu+EOBRfhx6KwjKh3VwY1AwysRenQM8zDr8VrSk14Wck/aBgVxk2zWVrMCK2/s6A==}
+  '@a2ui/markdown-it@0.1.0':
+    resolution: {integrity: sha512-Iv/4/CzFFVQTgT/qeT7lo/sJlZ3+w2+kD7dMQguZS1iZ95GNN5MILdnh+gqVWe6H9iaj+uyonLWMR7RTLHUxPQ==}
+    peerDependencies:
+      '@a2ui/web_core': ^0.10.3
+
+  '@a2ui/react@0.10.2':
+    resolution: {integrity: sha512-QDVs97a/sihcjE3DMnWbwB8bJKv1z2tn291m6+0w6+lXi8dfwnSiZilAgoQmLWjW4Oikv8OFh532NiQMqL/+nw==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      react: 19.2.7
+      react-dom: 19.2.7
+      zod: ^3.25.76
+
+  '@a2ui/web_core@0.10.5':
+    resolution: {integrity: sha512-q+HyK1V/jM8l+/VmuXRbBNCS9yDguqdjsJ7/8aqY9O/WUdRE14FbhkFyQyGWQNqPJa9QbVfQyAjGQIK0B1aQtg==}
 
   '@acemir/cssom@0.9.31':
     resolution: {integrity: sha512-ZnR3GSaH+/vJ0YlHau21FjfLYjMpYVIzTD8M8vIEQvIGxeOXyXdzCI140rrCY862p/C/BbzWsjc1dgnM9mkoTA==}
@@ -3454,17 +3473,6 @@ packages:
 
   '@colordx/core@5.5.0':
     resolution: {integrity: sha512-3PxTH8itZzltK0U9jTwVVnjLXvnDYuq3m+QXsHkENxWiPRh4WaoLcs1SQjqgZ55kS+QyirpH5BVwzP2gMVG6EQ==}
-
-  '@copilotkit/a2ui-renderer@1.61.2':
-    resolution: {integrity: sha512-NrW3R7gd7kL8Co6oirbUkV61m3V9JQ9ugT8YM2jJDC0Zr6ivkaU0g/6jF1aYK/9nmydQMWtIRib5YQvr/Svbdw==}
-    peerDependencies:
-      react: 19.2.7
-      react-dom: 19.2.7
-    peerDependenciesMeta:
-      react:
-        optional: true
-      react-dom:
-        optional: true
 
   '@coveo/atomic-component-health-check@2.2.19':
     resolution: {integrity: sha512-n/llxt8mLYW5P9G8R0ozbrMrqtnDT03oMix7tQ796+F2AFwL6F3FcXyRPVMqsWuTnKH6jOwZ04HcAoP+868Ejw==}
@@ -16741,7 +16749,23 @@ snapshots:
       lodash: 4.18.1
       typical: 7.3.0
 
-  '@a2ui/web_core@0.9.0':
+  '@a2ui/markdown-it@0.1.0(@a2ui/web_core@0.10.5)':
+    dependencies:
+      '@a2ui/web_core': 0.10.5
+      dompurify: 3.4.11
+      markdown-it: 14.3.0
+
+  '@a2ui/react@0.10.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zod@3.25.76)':
+    dependencies:
+      '@a2ui/markdown-it': 0.1.0(@a2ui/web_core@0.10.5)
+      '@a2ui/web_core': 0.10.5
+      clsx: 2.1.1
+      markdown-it: 14.3.0
+      react: 19.2.7
+      react-dom: 19.2.7(react@19.2.7)
+      zod: 3.25.76
+
+  '@a2ui/web_core@0.10.5':
     dependencies:
       '@preact/signals-core': 1.14.4
       date-fns: 4.4.0
@@ -18622,17 +18646,6 @@ snapshots:
       sisteransi: 1.0.5
 
   '@colordx/core@5.5.0': {}
-
-  '@copilotkit/a2ui-renderer@1.61.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
-    dependencies:
-      '@a2ui/web_core': 0.9.0
-      clsx: 2.1.1
-      lit: 3.3.3
-      zod: 3.25.76
-      zod-to-json-schema: 3.25.2(zod@3.25.76)
-    optionalDependencies:
-      react: 19.2.7
-      react-dom: 19.2.7(react@19.2.7)
 
   '@coveo/atomic-component-health-check@2.2.19':
     dependencies:

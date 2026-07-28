@@ -1,12 +1,18 @@
-import {useEffect, useMemo, useRef} from 'react';
-import {A2UIRenderer, useA2UI} from '@copilotkit/a2ui-renderer';
+import {useEffect, useMemo, useState} from 'react';
+import {A2uiSurface, type ReactComponentImplementation} from '@a2ui/react/v0_9';
+import {
+  type A2uiMessage,
+  type Catalog,
+  MessageProcessor,
+  type SurfaceModel,
+} from '@a2ui/web_core/v0_9';
 import type {Activity} from '@coveo/thermidor';
 
-type A2UIMessage = Record<string, unknown>;
+type OpaqueA2UIMessage = Record<string, unknown>;
 
 /** Extracts opaque A2-UI messages without translating their protocol payloads. */
-export function getA2UIMessages(activities: Activity[]): A2UIMessage[] {
-  const messages: A2UIMessage[] = [];
+export function getA2UIMessages(activities: Activity[]): OpaqueA2UIMessage[] {
+  const messages: OpaqueA2UIMessage[] = [];
 
   for (const activity of activities) {
     if (activity.kind !== 'a2ui-surface' || !isRecord(activity.payload)) {
@@ -25,50 +31,49 @@ export function getA2UIMessages(activities: Activity[]): A2UIMessage[] {
   return messages;
 }
 
-export function ThermidorA2UISurfaces({messages}: {messages: A2UIMessage[]}) {
-  const {clearSurfaces, processMessages} = useA2UI();
+export function ThermidorA2UISurfaces({
+  catalog,
+  messages,
+}: {
+  catalog: Catalog<ReactComponentImplementation>;
+  messages: OpaqueA2UIMessage[];
+}) {
   const serializedMessages = useMemo(() => JSON.stringify(messages), [messages]);
-  const surfaceIds = useMemo(() => getSurfaceIds(messages), [messages]);
-  const actionsRef = useRef({clearSurfaces, processMessages});
-  actionsRef.current = {clearSurfaces, processMessages};
+  const processor = useMemo(() => new MessageProcessor([catalog]), [catalog]);
+  const [surfaces, setSurfaces] = useState<SurfaceModel<ReactComponentImplementation>[]>([]);
 
   useEffect(() => {
-    const {clearSurfaces, processMessages} = actionsRef.current;
-    clearSurfaces();
-    if (serializedMessages !== '[]') {
-      processMessages(JSON.parse(serializedMessages) as A2UIMessage[]);
+    const updateSurfaces = () => setSurfaces([...processor.model.surfacesMap.values()]);
+    const createdSubscription = processor.onSurfaceCreated(updateSurfaces);
+    const deletedSubscription = processor.onSurfaceDeleted(updateSurfaces);
+
+    for (const surfaceId of processor.model.surfacesMap.keys()) {
+      processor.model.deleteSurface(surfaceId);
     }
-  }, [serializedMessages]);
+    if (serializedMessages !== '[]') {
+      processor.processMessages(JSON.parse(serializedMessages) as A2uiMessage[]);
+    }
+    updateSurfaces();
+
+    return () => {
+      createdSubscription.unsubscribe();
+      deletedSubscription.unsubscribe();
+    };
+  }, [processor, serializedMessages]);
 
   return (
     <>
-      {surfaceIds.map((surfaceId) => (
+      {surfaces.map((surface) => (
         <section
           className="catalog-surface"
-          aria-label={`A2-UI surface ${surfaceId}`}
-          key={surfaceId}
+          aria-label={`A2-UI surface ${surface.id}`}
+          key={surface.id}
         >
-          <A2UIRenderer surfaceId={surfaceId} />
+          <A2uiSurface surface={surface} />
         </section>
       ))}
     </>
   );
-}
-
-function getSurfaceIds(messages: A2UIMessage[]): string[] {
-  const surfaceIds = new Set<string>();
-  for (const message of messages) {
-    const createSurface = message['createSurface'];
-    if (isRecord(createSurface) && typeof createSurface['surfaceId'] === 'string') {
-      surfaceIds.add(createSurface['surfaceId']);
-      continue;
-    }
-    const deleteSurface = message['deleteSurface'];
-    if (isRecord(deleteSurface) && typeof deleteSurface['surfaceId'] === 'string') {
-      surfaceIds.delete(deleteSurface['surfaceId']);
-    }
-  }
-  return [...surfaceIds];
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

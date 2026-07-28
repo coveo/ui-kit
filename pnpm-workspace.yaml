@@ -39,6 +39,8 @@ packages:
   - utils/ci
 
 catalog:
+  '@a2ui/react': 0.10.2
+  '@a2ui/web_core': 0.10.5
   '@ag-ui/client': 0.0.57
   chromatic: 18.0.1
   '@msw/playwright': 0.6.7
