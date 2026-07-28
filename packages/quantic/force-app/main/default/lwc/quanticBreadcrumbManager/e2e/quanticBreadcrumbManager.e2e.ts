@@ -70,7 +70,7 @@ useCaseTestCases.forEach((useCase) => {
           const [facetRangeStart, facetRangeEnd] =
             (await breadcrumbManager.firstNumericFacetValue)?.split(' - ') ??
             [];
-            const searchResponsePromise = baseFacet.waitForSearchResponse();
+          const searchResponsePromise = baseFacet.waitForSearchResponse();
           await breadcrumbManager.clickFirstNumericFacetLink();
           await searchResponsePromise;
 

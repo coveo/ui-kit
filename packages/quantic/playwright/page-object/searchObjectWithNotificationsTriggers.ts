@@ -8,6 +8,7 @@ export class SearchObjectWithNotifyTrigger extends SearchObject {
   }
 
   async mockSearchWithNotifyTriggerResponse(notifications: string[]) {
+    await this.page.unroute(this.searchRequestRegex);
     await this.page.route(this.searchRequestRegex, async (route) => {
       const body = {
         ...searchResponses.richResponse,
@@ -24,7 +25,6 @@ export class SearchObjectWithNotifyTrigger extends SearchObject {
           'content-type': 'application/json',
         },
       });
-      this.page.unroute(this.searchRequestRegex);
     });
   }
 }

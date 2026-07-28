@@ -40,6 +40,7 @@ export class SearchObjectWithDidYouMeanOrTrigger extends SearchObject {
     applyOverride: (body: Record<string, unknown>) => void
   ) {
     let overrideApplied = false;
+    await this.page.unroute(this.searchRequestRegex);
     await this.page.route(this.searchRequestRegex, async (route) => {
       const body = {...searchResponses.richResponse} as Record<
         string,

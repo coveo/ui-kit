@@ -129,6 +129,7 @@ export class SearchObject {
   }
 
   async mockSearchFacetOrder(facetIds: string[]): Promise<void> {
+    await this.page.unroute(this.searchRequestRegex);
     await this.page.route(this.searchRequestRegex, async (route) => {
       const originalBody = {...searchResponses.richResponse};
       const facets = originalBody.facets;
