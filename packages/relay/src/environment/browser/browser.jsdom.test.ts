@@ -6,6 +6,10 @@ import {clientIdKey} from '../../constants.js';
 import {createBrowserStorage} from './storage/storage.js';
 
 const sendMessageSpy = vi.fn();
+const successfulFetchResponse = {
+  ok: true,
+  json: async () => ({events: []}),
+} as Response;
 vi.mock('@coveo/explorer-messenger', () => ({
   createExplorerMessenger: () => ({sendMessage: sendMessageSpy}),
 }));
@@ -24,6 +28,11 @@ describe('buildBrowserEnvironment', () => {
   beforeEach(() => {
     sendMessageSpy.mockReset();
     window.location.hostname = '';
+    vi.spyOn(window, 'fetch').mockResolvedValue(successfulFetchResponse);
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   it('environment is browser', () => {
@@ -104,7 +113,7 @@ describe('buildBrowserEnvironment', () => {
   });
 
   it('calls the Fetch API with keepAlive when using send', async () => {
-    const fetchSpy = vi.spyOn(window, 'fetch');
+    const fetchSpy = vi.mocked(window.fetch);
     const event = createMockEvent();
     await buildBrowserEnvironment().send('https://www.coveo.com/', 'token', event);
 
