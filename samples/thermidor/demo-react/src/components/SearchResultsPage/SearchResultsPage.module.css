@@ -130,4 +130,8 @@
     grid-column: 1;
     padding: var(--space-5) var(--space-4);
   }
+
+  .bottomRow {
+    justify-content: center;
+  }
 }
