@@ -8,7 +8,10 @@ import {
   updateCitations,
   updateMessage,
 } from '../../features/generated-answer/generated-answer-actions.js';
-import {logGeneratedAnswerResponseLinked} from '../../features/generated-answer/generated-answer-analytics-actions.js';
+import {
+  logGeneratedAnswerResponseLinked,
+  generatedAnswerAnalyticsClient as searchGeneratedAnswerAnalyticsClient,
+} from '../../features/generated-answer/generated-answer-analytics-actions.js';
 import type {GeneratedAnswerAnalyticsClient} from '../../features/generated-answer/generated-answer-analytics-client.js';
 import type {AnswerApiQueryParams} from '../../features/generated-answer/generated-answer-request.js';
 import {fetchEventSource} from '../../utils/fetch-event-source/fetch.js';
@@ -195,7 +198,7 @@ export const answerApi = answerSlice.injectEndpoints({
         const {configuration, generatedAnswer, insightConfiguration} =
           getState() as unknown as StreamAnswerAPIState;
         const {generatedAnswerAnalyticsClient} = extra as {
-          generatedAnswerAnalyticsClient: GeneratedAnswerAnalyticsClient;
+          generatedAnswerAnalyticsClient?: GeneratedAnswerAnalyticsClient;
         };
         const {organizationId, environment, accessToken} = configuration;
         const platformEndpoint = getApiBaseUrlOrOrganizationEndpoint(
@@ -231,7 +234,12 @@ export const answerApi = answerSlice.injectEndpoints({
           },
           onmessage: (event) => {
             updateCachedData((draft) => {
-              updateCacheWithEvent(event, draft, dispatch, generatedAnswerAnalyticsClient);
+              updateCacheWithEvent(
+                event,
+                draft,
+                dispatch,
+                generatedAnswerAnalyticsClient ?? searchGeneratedAnswerAnalyticsClient
+              );
             });
           },
           onerror: (error) => {

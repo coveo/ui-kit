@@ -27,7 +27,10 @@ import {
   requiredNonEmptyString,
   validatePayload,
 } from '../../utils/validate-payload.js';
-import {logGeneratedAnswerResponseLinked} from './generated-answer-analytics-actions.js';
+import {
+  logGeneratedAnswerResponseLinked,
+  generatedAnswerAnalyticsClient as searchGeneratedAnswerAnalyticsClient,
+} from './generated-answer-analytics-actions.js';
 import {buildStreamingRequest, constructAnswerAPIQueryParams} from './generated-answer-request.js';
 import {
   GENERATION_STEP_NAMES,
@@ -277,7 +280,7 @@ export const streamAnswer = createAsyncThunk<
   const state = config.getState();
   const {dispatch, extra, getState} = config;
   const {generatedAnswerAnalyticsClient} = extra as {
-    generatedAnswerAnalyticsClient: GeneratedAnswerAnalyticsClient;
+    generatedAnswerAnalyticsClient?: GeneratedAnswerAnalyticsClient;
   };
   const {search} = getState();
   const {queryExecuted} = search;
@@ -309,8 +312,10 @@ export const streamAnswer = createAsyncThunk<
         dispatch(setCannotAnswer(cannotAnswer));
         dispatch(setIsStreaming(false));
         dispatch(setIsAnswerGenerated(isAnswerGenerated));
+        const actualGeneratedAnswerAnalyticsClient =
+          generatedAnswerAnalyticsClient ?? searchGeneratedAnswerAnalyticsClient;
         dispatch(
-          generatedAnswerAnalyticsClient.logGeneratedAnswerStreamEnd(
+          actualGeneratedAnswerAnalyticsClient.logGeneratedAnswerStreamEnd(
             isAnswerGenerated,
             answerId,
             isAnswerGenerated ? isAnswerTextEmpty : undefined
