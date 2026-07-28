@@ -14,6 +14,7 @@
   },
   "ignorePatterns": [
     "**/.kiro/**",
+    "**/.agents/skills/**",
     "**/node_modules/**",
     "**/dist/**",
     "**/packages/quantic/**",
@@ -25,8 +26,7 @@
     "**/packages/atomic/**/*.d.ts",
     "**/packages/atomic/stencil-proxy/**",
     "**/packages/documentation/**/assets/**",
-    "**/packages/headless/**/coveo.analytics/**",
-    "**/packages/coveo-analytics/**"
+    "**/packages/headless/**/coveo.analytics/**"
   ],
   "overrides": [
     {

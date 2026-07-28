@@ -103,6 +103,108 @@ describe('createPaginationSlice', () => {
     slice.reducer(original, actions.setFirstResult(30));
     expect(original.firstResult).toBe(0);
   });
+
+  describe('hydrateFromSnapshot', () => {
+    function setup(interfaceId = 'hydrate-test') {
+      const engine = createTestEngine();
+      const iface = createTestInterface(engine, interfaceId);
+      const actions = getOrCreatePaginationActions(iface);
+      const hydrateAction = getOrCreateHydrateFromSnapshotAction(iface);
+      const slice = createPaginationSlice(interfaceId, actions, hydrateAction);
+      return {slice, hydrateAction};
+    }
+
+    it('should not modify state when payload is null', () => {
+      const {slice, hydrateAction} = setup('hydrate-null');
+      const state = slice.reducer(initialPaginationState, hydrateAction(null as never));
+      expect(state).toEqual(initialPaginationState);
+    });
+
+    it('should set totalCount from top-level totalCount (search snapshot)', () => {
+      const {slice, hydrateAction} = setup('hydrate-search-tc');
+      const state = slice.reducer(
+        initialPaginationState,
+        hydrateAction({totalCount: 42, results: []})
+      );
+      expect(state.totalCount).toBe(42);
+    });
+
+    it('should infer pageSize from results array length (search snapshot)', () => {
+      const {slice, hydrateAction} = setup('hydrate-search-ps');
+      const results = Array.from({length: 30}, (_, i) => ({id: String(i)}));
+      const state = slice.reducer(
+        initialPaginationState,
+        hydrateAction({totalCount: 100, results})
+      );
+      expect(state.pageSize).toBe(30);
+    });
+
+    it('should infer pageSize from products array length when results is absent', () => {
+      const {slice, hydrateAction} = setup('hydrate-products-ps');
+      const products = Array.from({length: 20}, (_, i) => ({id: String(i)}));
+      const state = slice.reducer(
+        initialPaginationState,
+        hydrateAction({totalCount: 50, products})
+      );
+      expect(state.pageSize).toBe(20);
+    });
+
+    it('should keep default pageSize when results array is empty', () => {
+      const {slice, hydrateAction} = setup('hydrate-empty-results');
+      const state = slice.reducer(
+        initialPaginationState,
+        hydrateAction({totalCount: 0, results: []})
+      );
+      expect(state.pageSize).toBe(10);
+    });
+
+    it('should set totalCount from pagination.totalEntries (commerce snapshot)', () => {
+      const {slice, hydrateAction} = setup('hydrate-commerce-tc');
+      const state = slice.reducer(
+        initialPaginationState,
+        hydrateAction({pagination: {totalEntries: 200, perPage: 25, page: 0}, products: []})
+      );
+      expect(state.totalCount).toBe(200);
+    });
+
+    it('should set pageSize from pagination.perPage (commerce snapshot)', () => {
+      const {slice, hydrateAction} = setup('hydrate-commerce-ps');
+      const state = slice.reducer(
+        initialPaginationState,
+        hydrateAction({pagination: {totalEntries: 200, perPage: 25, page: 0}, products: []})
+      );
+      expect(state.pageSize).toBe(25);
+    });
+
+    it('should set firstResult from pagination.page * pagination.perPage', () => {
+      const {slice, hydrateAction} = setup('hydrate-commerce-fr');
+      const state = slice.reducer(
+        initialPaginationState,
+        hydrateAction({pagination: {totalEntries: 200, perPage: 25, page: 2}, products: []})
+      );
+      expect(state.firstResult).toBe(50);
+    });
+
+    it('should prefer pagination.perPage over product array length inference', () => {
+      const {slice, hydrateAction} = setup('hydrate-prefer-perpage');
+      const products = Array.from({length: 15}, (_, i) => ({id: String(i)}));
+      const state = slice.reducer(
+        initialPaginationState,
+        hydrateAction({pagination: {totalEntries: 100, perPage: 25, page: 0}, products})
+      );
+      expect(state.pageSize).toBe(25);
+    });
+
+    it('should not override pageSize with array length when perPage is set', () => {
+      const {slice, hydrateAction} = setup('hydrate-no-override');
+      const products = Array.from({length: 50}, (_, i) => ({id: String(i)}));
+      const state = slice.reducer(
+        initialPaginationState,
+        hydrateAction({pagination: {totalEntries: 500, perPage: 50, page: 0}, products})
+      );
+      expect(state.pageSize).toBe(50);
+    });
+  });
 });
 
 describe('getOrCreatePaginationSlice', () => {

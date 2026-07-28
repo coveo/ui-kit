@@ -6,6 +6,7 @@
   "bracketSpacing": false,
   "ignorePatterns": [
     "**/.kiro/**/*",
+    "**/.agents/**/*",
     "AGENTS.md",
     "**/packages/quantic/**/*",
     "!**/packages/quantic/catalog-info.yaml",
@@ -19,7 +20,6 @@
     "**/packages/atomic/stencil-proxy/**/*",
     "**/packages/documentation/**/assets/**/*",
     "**/packages/headless/**/coveo.analytics/**/*",
-    "**/packages/coveo-analytics/**/*",
     "**/samples/headless/rga-angular/**/*.html",
     "**/*.hbs",
     "**/*.handlebars",

@@ -10,10 +10,6 @@ import {buildController, type Controller} from '../controller/headless-controlle
 /**
  * The `ExecuteTrigger` controller handles Execute triggers from the query response. An [Execute trigger](https://docs.coveo.com/en/3413#execute) query pipeline rule lets you define a custom JavaScript function to be executed in the frontend when a certain condition is met.
  *
- * Examples:
- * - [execute-trigger.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/triggers/execute-trigger.tsx)
- * - [execute-trigger.class.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/triggers/execute-trigger.class.tsx)
- *
  * @group Controllers
  * @category ExecuteTrigger
  */

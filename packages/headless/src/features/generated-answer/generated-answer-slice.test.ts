@@ -293,6 +293,16 @@ describe('generated answer slice', () => {
     expect(finalState.answerConfigurationId).toBe('some-id');
   });
 
+  it('should not reset the answerGenerationMode', () => {
+    const state = {
+      ...baseState,
+      answerGenerationMode: 'manual' as const,
+    };
+
+    const finalState = generatedAnswerReducer(state, resetAnswer());
+    expect(finalState.answerGenerationMode).toBe('manual');
+  });
+
   test.each(generatedContentFormat)(
     '#setAnswerContentFormat should set the "%i" content format in the state',
     (format: GeneratedContentFormat) => {

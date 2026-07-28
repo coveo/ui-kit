@@ -1,0 +1,79 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 16px 24px;
+  min-height: var(--header-height);
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.backButton {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  padding: var(--space-2) var(--space-4);
+  border-radius: 999px;
+}
+
+.backButton:hover {
+  background: var(--color-surface-hover);
+}
+
+.backButton:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.resetButton {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  padding: var(--space-2) var(--space-4);
+  border-radius: 999px;
+  margin-left: auto;
+}
+
+.resetButton:hover {
+  background: var(--color-surface-hover);
+}
+
+.resetButton:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.scrollContainer {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-4) var(--space-6);
+}
+
+.scrollContent {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.promptContainer {
+  flex-shrink: 0;
+  padding: var(--space-3) var(--space-6);
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  justify-content: center;
+}
+
+.promptWrapper {
+  width: 33.333vw;
+  min-width: 400px;
+  max-width: 720px;
+}

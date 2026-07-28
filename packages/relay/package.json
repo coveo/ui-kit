@@ -1,6 +1,6 @@
 {
   "name": "@coveo/relay",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "A library for sending analytics events using Coveo's Event protocol.",
   "keywords": [
     "Coveo",
@@ -52,7 +52,7 @@
     "@vitest/browser-playwright": "catalog:",
     "jsdom": "28.1.0",
     "playwright": "catalog:",
-    "rollup": "4.60.4",
+    "rollup": "4.62.2",
     "vitest": "catalog:"
   },
   "engines": {

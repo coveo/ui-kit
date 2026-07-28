@@ -38,11 +38,11 @@ This section holds the library that is compiled for browser usage. It wraps the 
 
 ### src/formatting
 
-This sections holds some formatting methods for metadata.
+This section holds some formatting methods for metadata.
 
 ### src/hook
 
-This section holds "hooks" that are executed on sending a new event. It is mostly used to centralise a specific logic that modifies the event in some way.
+This section holds "hooks" that are executed on sending a new event. It is mostly used to centralize a specific logic that modifies the event in some way.
 
 `addDefaultValues.ts` ensures that some values are always included
 
@@ -90,10 +90,10 @@ The `processVariableArgumentsNamesStep` is parsing the "variable arguments" of t
 
 ```ts
 this.client.addEventTypeMapping(ECPluginEventTypes.event, {
-    newEventType: EventType.collect,
-    variableLengthArgumentsNames: ['eventCategory', 'eventAction', 'eventLabel', 'eventValue'],
-    addVisitorIdParameter: true,
-    usesMeasurementProtocol: true,
+  newEventType: EventType.collect,
+  variableLengthArgumentsNames: ['eventCategory', 'eventAction', 'eventLabel', 'eventValue'],
+  addVisitorIdParameter: true,
+  usesMeasurementProtocol: true,
 });
 ```
 
