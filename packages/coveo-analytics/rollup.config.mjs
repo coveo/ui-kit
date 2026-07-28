@@ -105,6 +105,12 @@ const nodeModulesConfig = {
     {
       file: `./dist/library.cjs`,
       format: 'cjs',
+      plugins: [
+        aliasFile({
+          sourceFileName: './dist/library.cjs',
+          aliasFileName: './dist/library.js',
+        }),
+      ],
     },
     {
       file: `./dist/library.mjs`,
@@ -117,10 +123,6 @@ const nodeModulesConfig = {
     commonjs(),
     tsPlugin(),
     json(),
-    aliasFile({
-      sourceFileName: './dist/library.cjs',
-      aliasFileName: './dist/library.js',
-    }),
   ],
 };
 
