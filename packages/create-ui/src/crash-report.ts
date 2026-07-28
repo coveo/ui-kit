@@ -68,7 +68,7 @@ export function redactPaths(text: string, home: string = homedir()): string {
 const OWN_PACKAGE_TAIL = /^.*[/\\]node_modules[/\\]@coveo[/\\]create-ui[/\\]/;
 const APP_PREFIX = 'app:///';
 
-function ownPackageAppPath(path: string): string | undefined {
+export function ownPackageAppPath(path: string): string | undefined {
   if (path.startsWith(APP_PREFIX)) {
     return path;
   }

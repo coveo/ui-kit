@@ -37,6 +37,7 @@
   },
   "dependencies": {
     "@clack/prompts": "1.6.0",
+    "@sentry/node": "10.65.0",
     "commander": "15.0.0",
     "pacote": "21.5.1"
   },
