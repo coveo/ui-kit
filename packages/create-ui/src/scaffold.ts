@@ -1,7 +1,7 @@
 import {mkdir, mkdtemp, rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join, resolve} from 'node:path';
-import {startCrashPhase} from './crash-diagnostics.js';
+import {describeActiveCrashSpan, startCrashPhase} from './crash-diagnostics.js';
 import {setRunContext} from './crash-report.js';
 import {downloadTemplate} from './download.js';
 import {ExpectedError, TemplateVersionUnavailableError} from './errors.js';
@@ -69,6 +69,10 @@ export async function scaffold({template, projectName, version}: ScaffoldOptions
       dependencies,
     });
     setRunContext({metadata});
+    describeActiveCrashSpan(`${template.name}@${templateVersion}`, {
+      'coveo.template': template.name,
+      'coveo.template_version': templateVersion,
+    });
 
     startCrashPhase('project-creation');
     log.step(`Creating project in ${targetDir}…`);

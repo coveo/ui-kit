@@ -1,6 +1,6 @@
 import {readFile} from 'node:fs/promises';
-import type {Breadcrumb, ErrorEvent, StackFrame} from '@sentry/node';
-import type {CrashBreadcrumb} from './crash-diagnostics.js';
+import type {ErrorEvent, StackFrame} from '@sentry/node';
+import type {CrashPhase} from './crash-diagnostics.js';
 import {
   CRASH_REPORT_SCHEMA_VERSION,
   type CrashErrorInfo,
@@ -27,14 +27,8 @@ function crashTimestampSeconds(crashedOn: string): number | undefined {
   return Number.isNaN(milliseconds) ? undefined : milliseconds / 1000;
 }
 
-function toSentryBreadcrumb(breadcrumb: CrashBreadcrumb): Breadcrumb {
-  const timestamp = crashTimestampSeconds(breadcrumb.timestamp);
-  return {
-    category: 'create-ui.lifecycle',
-    message: breadcrumb.type,
-    level: breadcrumb.type.endsWith('.failed') ? 'error' : 'info',
-    ...(timestamp === undefined ? {} : {timestamp}),
-  };
+function getCrashTransactionName(report: CrashReport): string {
+  return `create ${report.metadata.template}`;
 }
 
 function applyCrashMechanism(event: ErrorEvent, origin: CrashOrigin): void {
@@ -114,6 +108,41 @@ function reconstructError(info: CrashErrorInfo, depth = 0): Error {
   return error;
 }
 
+type SentryApi = typeof import('@sentry/node');
+
+const SPAN_OP_BY_PHASE: Record<CrashPhase, string> = {
+  unknown: 'create-ui.step',
+  input: 'input.resolve',
+  'template-download': 'template.download',
+  'project-creation': 'project.create',
+  'dependency-installation': 'dependencies.install',
+  complete: 'create-ui.complete',
+};
+
+function reconstructTrace(Sentry: SentryApi, report: CrashReport, captureCrash: () => void): void {
+  const {spans} = report.diagnostics;
+  Sentry.startSpanManual(
+    {
+      name: getCrashTransactionName(report),
+      op: 'create-ui',
+      forceTransaction: true,
+      startTime: new Date(spans[0].startedOn),
+    },
+    (root) => {
+      for (const span of spans) {
+        Sentry.startInactiveSpan({
+          name: span.name,
+          op: SPAN_OP_BY_PHASE[span.op],
+          startTime: new Date(span.startedOn),
+          attributes: span.attributes,
+        }).end(new Date(span.endedOn));
+      }
+      captureCrash();
+      root.end(new Date(spans[spans.length - 1].endedOn));
+    }
+  );
+}
+
 async function sendToSentry(report: CrashReport): Promise<boolean> {
   const Sentry = await import('@sentry/node');
 
@@ -125,11 +154,10 @@ async function sendToSentry(report: CrashReport): Promise<boolean> {
     integrations: [Sentry.linkedErrorsIntegration({limit: MAX_CAUSE_DEPTH})],
     sendDefaultPii: false,
     includeServerName: false,
-    maxBreadcrumbs: 0,
-    beforeBreadcrumb: () => null,
+    tracesSampleRate: 1.0,
     beforeSend(event) {
       event.timestamp = crashTimestampSeconds(report.crashedOn) ?? event.timestamp;
-      event.breadcrumbs = report.diagnostics.breadcrumbs.map(toSentryBreadcrumb);
+      event.transaction = getCrashTransactionName(report);
       applyCrashMechanism(event, report.origin);
       normalizeFrames(event);
       scrubEventMessages(event);
@@ -139,8 +167,8 @@ async function sendToSentry(report: CrashReport): Promise<boolean> {
 
   const syntheticError = reconstructError(report.error);
 
-  Sentry.captureException(syntheticError, {
-    level: 'error',
+  const captureContext = {
+    level: 'error' as const,
     tags: {
       run_id: report.runId,
       template: report.metadata.template,
@@ -169,7 +197,14 @@ async function sendToSentry(report: CrashReport): Promise<boolean> {
       dependencies: report.metadata.dependencies,
       createdOn: report.metadata.createdOn,
     },
-  });
+  };
+
+  const {spans} = report.diagnostics;
+  if (spans.length > 0) {
+    reconstructTrace(Sentry, report, () => Sentry.captureException(syntheticError, captureContext));
+  } else {
+    Sentry.captureException(syntheticError, captureContext);
+  }
 
   const flushed = await Sentry.flush(FLUSH_TIMEOUT_MS);
   await Sentry.close(FLUSH_TIMEOUT_MS);
