@@ -62,6 +62,12 @@ describe('buildCrashReport', () => {
       arch: expect.any(String),
       release: expect.any(String),
     });
+    expect(report.device).toEqual({
+      cpuModel: expect.any(String),
+      cpuCount: expect.any(Number),
+      memoryTotalBytes: expect.any(Number),
+      memoryFreeBytes: expect.any(Number),
+    });
     expect(report.metadata).toEqual(metadata);
     expect(report.origin).toBe('unknown');
     expect(report.diagnostics).toMatchObject({
@@ -70,12 +76,6 @@ describe('buildCrashReport', () => {
       spans: [],
       runtime: {
         processUptimeMs: expect.any(Number),
-        memory: {
-          rssBytes: expect.any(Number),
-          heapTotalBytes: expect.any(Number),
-          heapUsedBytes: expect.any(Number),
-          externalBytes: expect.any(Number),
-        },
       },
     });
   });

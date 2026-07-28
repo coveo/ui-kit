@@ -48,12 +48,6 @@ describe('crash diagnostics', () => {
       ],
       runtime: {
         processUptimeMs: expect.any(Number),
-        memory: {
-          rssBytes: expect.any(Number),
-          heapTotalBytes: expect.any(Number),
-          heapUsedBytes: expect.any(Number),
-          externalBytes: expect.any(Number),
-        },
       },
     });
     expect(isCrashDiagnostics(diagnostics)).toBe(true);

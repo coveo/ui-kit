@@ -64,15 +64,15 @@ const sampleReport: CrashReport = {
     ],
     runtime: {
       processUptimeMs: 3100,
-      memory: {
-        rssBytes: 1000,
-        heapTotalBytes: 800,
-        heapUsedBytes: 600,
-        externalBytes: 50,
-      },
     },
   },
   os: {platform: 'darwin', arch: 'arm64', release: '24.0.0'},
+  device: {
+    cpuModel: 'Apple M1 Pro',
+    cpuCount: 10,
+    memoryTotalBytes: 17179869184,
+    memoryFreeBytes: 2147483648,
+  },
   metadata: {
     template: 'headless-search-react',
     templateVersion: '3.5.0',
@@ -241,14 +241,17 @@ describe('submitReport', () => {
     expect(sentry.captureException.mock.calls[0][1]).toMatchObject({
       tags: {crash_origin: 'main-rejection'},
       contexts: {
-        create_ui: {
+        device: {
+          arch: 'arm64',
+          cpu_description: 'Apple M1 Pro',
+          processor_count: 10,
+          memory_size: 17179869184,
+          free_memory: 2147483648,
+        },
+        Custom: {
           phase: 'dependency-installation',
-          phase_elapsed_ms: 2000,
-          process_uptime_ms: 3100,
-          memory_rss_bytes: 1000,
-          memory_heap_total_bytes: 800,
-          memory_heap_used_bytes: 600,
-          memory_external_bytes: 50,
+          phase_elapsed: '2 s',
+          process_uptime: '3.1 s',
         },
       },
     });

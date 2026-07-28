@@ -41,16 +41,8 @@ interface CrashSpan {
   attributes?: Record<string, string>;
 }
 
-interface CrashMemorySummary {
-  rssBytes: number;
-  heapTotalBytes: number;
-  heapUsedBytes: number;
-  externalBytes: number;
-}
-
 interface CrashRuntimeSummary {
   processUptimeMs: number;
-  memory: CrashMemorySummary;
 }
 
 export interface CrashDiagnostics {
@@ -103,18 +95,13 @@ export function isCrashDiagnostics(value: unknown): value is CrashDiagnostics {
     return false;
   }
   const candidate = value as Partial<CrashDiagnostics>;
-  const memory = candidate.runtime?.memory;
   return (
     isOneOf(candidate.phase, CRASH_PHASES) &&
     isNonNegativeNumber(candidate.phaseElapsedMs) &&
     Array.isArray(candidate.spans) &&
     candidate.spans.length <= MAX_CRASH_SPANS &&
     candidate.spans.every(isCrashSpan) &&
-    isNonNegativeNumber(candidate.runtime?.processUptimeMs) &&
-    isNonNegativeNumber(memory?.rssBytes) &&
-    isNonNegativeNumber(memory?.heapTotalBytes) &&
-    isNonNegativeNumber(memory?.heapUsedBytes) &&
-    isNonNegativeNumber(memory?.externalBytes)
+    isNonNegativeNumber(candidate.runtime?.processUptimeMs)
   );
 }
 
@@ -153,7 +140,6 @@ export function describeActiveCrashSpan(name: string, attributes?: Record<string
 
 export function snapshotCrashDiagnostics(): CrashDiagnostics {
   const now = Date.now();
-  const memory = process.memoryUsage();
   const spans: CrashSpan[] = state.phaseSpans.map((entry, index) => {
     // Each phase ends when the next one begins; the active phase ends now (at
     // the crash / snapshot).
@@ -177,12 +163,6 @@ export function snapshotCrashDiagnostics(): CrashDiagnostics {
     spans,
     runtime: {
       processUptimeMs: Math.max(0, Math.round(process.uptime() * 1000)),
-      memory: {
-        rssBytes: memory.rss,
-        heapTotalBytes: memory.heapTotal,
-        heapUsedBytes: memory.heapUsed,
-        externalBytes: memory.external,
-      },
     },
   };
 }

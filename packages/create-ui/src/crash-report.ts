@@ -1,6 +1,6 @@
 import {randomUUID} from 'node:crypto';
 import {mkdir, writeFile} from 'node:fs/promises';
-import {arch, homedir, platform, release, tmpdir} from 'node:os';
+import {arch, cpus, freemem, homedir, platform, release, tmpdir, totalmem} from 'node:os';
 import {join} from 'node:path';
 import {buildProjectMetadata, type ProjectMetadata} from './metadata.js';
 import {
@@ -114,6 +114,15 @@ interface CrashOsInfo {
   release: string;
 }
 
+// Non-PII hardware facts captured at crash time via `node:os`, projected into
+// Sentry's standard `device` context on submit.
+interface CrashDeviceInfo {
+  cpuModel: string;
+  cpuCount: number;
+  memoryTotalBytes: number;
+  memoryFreeBytes: number;
+}
+
 export interface CrashReport {
   schemaVersion: number;
   runId: string;
@@ -122,6 +131,7 @@ export interface CrashReport {
   error: CrashErrorInfo;
   diagnostics: CrashDiagnostics;
   os: CrashOsInfo;
+  device: CrashDeviceInfo;
   metadata: ProjectMetadata;
 }
 
@@ -160,6 +170,16 @@ function resolveMetadata(context: RunContext): ProjectMetadata {
   );
 }
 
+function buildDeviceInfo(): CrashDeviceInfo {
+  const cores = cpus();
+  return {
+    cpuModel: cores[0]?.model ?? 'unknown',
+    cpuCount: cores.length,
+    memoryTotalBytes: totalmem(),
+    memoryFreeBytes: freemem(),
+  };
+}
+
 export function buildCrashReport(error: unknown, origin: CrashOrigin = 'unknown'): CrashReport {
   return {
     schemaVersion: CRASH_REPORT_SCHEMA_VERSION,
@@ -169,6 +189,7 @@ export function buildCrashReport(error: unknown, origin: CrashOrigin = 'unknown'
     error: toErrorInfo(error),
     diagnostics: snapshotCrashDiagnostics(),
     os: {platform: platform(), arch: arch(), release: release()},
+    device: buildDeviceInfo(),
     metadata: resolveMetadata(currentContext),
   };
 }
@@ -241,6 +262,8 @@ function isCrashReportV1(value: unknown): value is CrashReportV1 {
     isCrashDiagnostics(candidate.diagnostics) &&
     typeof candidate.os === 'object' &&
     candidate.os !== null &&
+    typeof candidate.device === 'object' &&
+    candidate.device !== null &&
     typeof candidate.metadata === 'object' &&
     candidate.metadata !== null
   );
@@ -260,6 +283,7 @@ function migrateCrashReportV1(value: unknown): CrashReport | null {
     error: value.error,
     diagnostics: value.diagnostics,
     os: value.os,
+    device: value.device,
     metadata: value.metadata,
   };
 }

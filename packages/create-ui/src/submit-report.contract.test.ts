@@ -101,15 +101,15 @@ it('projects a crash report through the real Sentry SDK without network access',
       ],
       runtime: {
         processUptimeMs: 3100,
-        memory: {
-          rssBytes: 1000,
-          heapTotalBytes: 800,
-          heapUsedBytes: 600,
-          externalBytes: 50,
-        },
       },
     },
     os: {platform: 'darwin', arch: 'arm64', release: '25.3.0'},
+    device: {
+      cpuModel: 'Apple M1',
+      cpuCount: 8,
+      memoryTotalBytes: 17179869184,
+      memoryFreeBytes: 3221225472,
+    },
     metadata: {
       template: 'atomic-search',
       templateVersion: '3.60.2',
@@ -145,14 +145,17 @@ it('projects a crash report through the real Sentry SDK without network access',
     expect(event.contexts).toMatchObject({
       os: {name: 'darwin', version: '25.3.0'},
       runtime: {name: 'node', version: 'v24.14.1'},
-      create_ui: {
+      device: {
+        arch: 'arm64',
+        cpu_description: 'Apple M1',
+        processor_count: 8,
+        memory_size: 17179869184,
+        free_memory: 3221225472,
+      },
+      Custom: {
         phase: 'dependency-installation',
-        phase_elapsed_ms: 2000,
-        process_uptime_ms: 3100,
-        memory_rss_bytes: 1000,
-        memory_heap_total_bytes: 800,
-        memory_heap_used_bytes: 600,
-        memory_external_bytes: 50,
+        phase_elapsed: '2 s',
+        process_uptime: '3.1 s',
       },
     });
     expect(event.extra).toMatchObject({

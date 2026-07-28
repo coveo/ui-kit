@@ -27,6 +27,21 @@ function crashTimestampSeconds(crashedOn: string): number | undefined {
   return Number.isNaN(milliseconds) ? undefined : milliseconds / 1000;
 }
 
+function formatDurationMs(milliseconds: number): string {
+  const ms = Math.max(0, Math.round(milliseconds));
+  if (ms < 1000) {
+    return `${ms} ms`;
+  }
+  const totalSeconds = ms / 1000;
+  if (totalSeconds < 60) {
+    return `${Number(totalSeconds.toFixed(1))} s`;
+  }
+  const roundedSeconds = Math.round(totalSeconds);
+  const minutes = Math.floor(roundedSeconds / 60);
+  const seconds = roundedSeconds % 60;
+  return seconds === 0 ? `${minutes} min` : `${minutes} min ${seconds} s`;
+}
+
 function getCrashTransactionName(report: CrashReport): string {
   return `create ${report.metadata.template}`;
 }
@@ -183,14 +198,17 @@ async function sendToSentry(report: CrashReport): Promise<boolean> {
     contexts: {
       os: {name: report.os.platform, version: report.os.release},
       runtime: {name: 'node', version: report.metadata.node},
-      create_ui: {
+      device: {
+        arch: report.os.arch,
+        cpu_description: report.device.cpuModel,
+        processor_count: report.device.cpuCount,
+        memory_size: report.device.memoryTotalBytes,
+        free_memory: report.device.memoryFreeBytes,
+      },
+      Custom: {
         phase: report.diagnostics.phase,
-        phase_elapsed_ms: report.diagnostics.phaseElapsedMs,
-        process_uptime_ms: report.diagnostics.runtime.processUptimeMs,
-        memory_rss_bytes: report.diagnostics.runtime.memory.rssBytes,
-        memory_heap_total_bytes: report.diagnostics.runtime.memory.heapTotalBytes,
-        memory_heap_used_bytes: report.diagnostics.runtime.memory.heapUsedBytes,
-        memory_external_bytes: report.diagnostics.runtime.memory.externalBytes,
+        phase_elapsed: formatDurationMs(report.diagnostics.phaseElapsedMs),
+        process_uptime: formatDurationMs(report.diagnostics.runtime.processUptimeMs),
       },
     },
     extra: {
