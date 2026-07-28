@@ -1,4 +1,5 @@
 import {readFile, rm, stat} from 'node:fs/promises';
+import {homedir} from 'node:os';
 import {dirname, join} from 'node:path';
 import {afterEach, beforeEach, describe, expect, it} from 'vitest';
 import {
@@ -224,6 +225,9 @@ describe('writeCrashReport', () => {
     const path = await writeCrashReport(report);
     try {
       expect(path).toBe(crashReportPath(report.runId));
+      expect(dirname(path)).toContain(
+        join('@coveo', 'create-ui', 'crash-reports')
+      );
       const written = await readFile(path, 'utf8');
       expect(JSON.parse(written)).toEqual(report);
       expect(written.endsWith('\n')).toBe(true);

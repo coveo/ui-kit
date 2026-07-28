@@ -131,6 +131,7 @@ describe('submitReport', () => {
 
     const initOptions = sentry.init.mock.calls[0][0];
     expect(initOptions).toMatchObject({
+      release: 'create-ui@1.2.3',
       defaultIntegrations: false,
       sendDefaultPii: false,
       includeServerName: false,

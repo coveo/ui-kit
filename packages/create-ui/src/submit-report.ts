@@ -125,6 +125,7 @@ async function sendToSentry(report: CrashReport): Promise<boolean> {
 
   Sentry.init({
     dsn: DSN,
+    release: report.metadata.createdWith,
     environment: process.env.SENTRY_ENVIRONMENT ?? DEFAULT_ENVIRONMENT,
     defaultIntegrations: false,
     integrations: [Sentry.linkedErrorsIntegration({limit: MAX_CAUSE_DEPTH})],

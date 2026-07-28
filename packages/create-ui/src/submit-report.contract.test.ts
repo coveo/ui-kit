@@ -112,6 +112,7 @@ it('projects a crash report through the real Sentry SDK without network access',
 
     const event = eventFromEnvelope(sentryTransport.envelopes[0]);
     expect(event.timestamp).toBe(Date.parse(report.crashedOn) / 1000);
+    expect(event.release).toBe('create-ui@1.2.3');
     expect(event.environment).toBe('production');
     expect(event.level).toBe('error');
     expect(event.tags).toMatchObject({
