@@ -1,8 +1,4 @@
-import type {
-  Decorator,
-  Meta,
-  StoryObj as Story,
-} from '@storybook/web-components-vite';
+import type {Decorator, Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {html} from 'lit';
 import {testCheckboxA11y} from '@/storybook-utils/a11y/checkbox.js';
 import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
@@ -22,8 +18,7 @@ const meta: Meta = {
   component: 'atomic-automatic-facet',
   title: 'Search/Automatic Facet',
   id: 'atomic-automatic-facet',
-  render: () =>
-    html`<atomic-automatic-facet-generator></atomic-automatic-facet-generator>`,
+  render: () => html`<atomic-automatic-facet-generator></atomic-automatic-facet-generator>`,
   decorators: [facetWidthDecorator, decorator],
   parameters: {
     ...parameters,

@@ -46,9 +46,7 @@ export const WithTranslations: Story = {
   name: 'With translations',
   play: async (context) => {
     const searchInterface =
-      context.canvasElement.querySelector<AtomicSearchInterface>(
-        'atomic-search-interface'
-      )!;
+      context.canvasElement.querySelector<AtomicSearchInterface>('atomic-search-interface')!;
 
     await context.step('Load translations', async () => {
       await customElements.whenDefined('atomic-search-interface');

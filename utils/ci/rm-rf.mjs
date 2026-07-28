@@ -38,9 +38,7 @@ function expandGlob(pattern) {
 
   try {
     const entries = readdirSync(dir);
-    const regex = new RegExp(
-      `^${filePattern.replace(/\*/g, '.*').replace(/\?/g, '.')}$`
-    );
+    const regex = new RegExp(`^${filePattern.replace(/\*/g, '.*').replace(/\?/g, '.')}$`);
     const matches = entries.filter((entry) => regex.test(entry));
     return matches.map((entry) => join(dir, entry));
   } catch (_err) {
@@ -74,12 +72,7 @@ function removeRecursive(paths) {
         rmSync(resolvedPath, {recursive: true, force: true});
         console.log(`Removed: ${resolvedPath}`);
       } catch (err) {
-        if (
-          err &&
-          typeof err === 'object' &&
-          'code' in err &&
-          err.code !== 'ENOENT'
-        ) {
+        if (err && typeof err === 'object' && 'code' in err && err.code !== 'ENOENT') {
           console.error(`Error removing ${resolvedPath}:`, String(err));
         }
       }

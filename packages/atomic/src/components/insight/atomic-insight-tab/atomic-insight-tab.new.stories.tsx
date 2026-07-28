@@ -17,10 +17,7 @@ const meta: Meta = {
   id: 'atomic-insight-tab',
   render: () => html`<atomic-insight-tabs>
     <atomic-insight-tab label="All" expression="" active></atomic-insight-tab>
-    <atomic-insight-tab
-      label="Videos"
-      expression="@ytchanneltitle"
-    ></atomic-insight-tab>
+    <atomic-insight-tab label="Videos" expression="@ytchanneltitle"></atomic-insight-tab>
     <atomic-insight-tab
       label="Articles"
       expression='@documenttype==("WebPage")'

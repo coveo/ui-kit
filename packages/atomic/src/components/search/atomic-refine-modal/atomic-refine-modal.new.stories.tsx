@@ -1,8 +1,4 @@
-import type {
-  Decorator,
-  Meta,
-  StoryObj as Story,
-} from '@storybook/web-components-vite';
+import type {Decorator, Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
@@ -18,10 +14,9 @@ import '@/src/components/search/atomic-sort-expression/atomic-sort-expression.js
 
 const searchApiHarness = new MockSearchApi();
 const {decorator, play} = wrapInSearchInterface();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-refine-modal',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-refine-modal', {
+  excludeCategories: ['methods'],
+});
 const commerceFacetWidthDecorator: Decorator = (story) =>
   html`<div style="min-width: 470px;">${story()}</div> `;
 
@@ -54,15 +49,10 @@ const meta: Meta = {
   play: async (context) => {
     await play(context);
     const {canvasElement, step, userEvent} = context;
-    const refineToggleElement = within(
-      canvasElement.querySelector('atomic-refine-toggle')!
-    );
-    const refineToggleButton = await refineToggleElement.findByShadowRole(
-      'button',
-      {
-        name: 'Sort & Filter',
-      }
-    );
+    const refineToggleElement = within(canvasElement.querySelector('atomic-refine-toggle')!);
+    const refineToggleButton = await refineToggleElement.findByShadowRole('button', {
+      name: 'Sort & Filter',
+    });
     // Facets call `bindings.store.registerFacet()` during initialization to register themselves with the interface store.
     // The refine modal uses `bindings.store.getAllFacets()` to retrieve and render these registered facets.
     // This delay ensures facets have completed initialization and registration before the modal attempts to render them.
@@ -82,23 +72,12 @@ const refineModalDecorators: Decorator[] = [
     <atomic-refine-toggle></atomic-refine-toggle>
     <div style="display:none;">
       <atomic-sort-dropdown
-        ><atomic-sort-expression
-          label="relevance"
-          expression="relevancy"
-        ></atomic-sort-expression
+        ><atomic-sort-expression label="relevance" expression="relevancy"></atomic-sort-expression
       ></atomic-sort-dropdown>
       <atomic-facet field="author" label="Authors"></atomic-facet>
       <atomic-facet field="language" label="Language"></atomic-facet>
-      <atomic-facet
-        field="objecttype"
-        label="Type"
-        display-values-as="link"
-      ></atomic-facet>
-      <atomic-facet
-        field="year"
-        label="Year"
-        display-values-as="box"
-      ></atomic-facet>
+      <atomic-facet field="objecttype" label="Type" display-values-as="link"></atomic-facet>
+      <atomic-facet field="year" label="Year" display-values-as="box"></atomic-facet>
     </div>
   `,
   decorator,

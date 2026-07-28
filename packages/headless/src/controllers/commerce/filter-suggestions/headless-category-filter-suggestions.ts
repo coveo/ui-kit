@@ -22,10 +22,7 @@ import type {
   FieldSuggestionsOrderSection,
 } from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
-import {
-  buildController,
-  type Controller,
-} from '../../controller/headless-controller.js';
+import {buildController, type Controller} from '../../controller/headless-controller.js';
 import type {CategoryFacetSearchResult} from '../../facets/category-facet/headless-category-facet.js';
 import type {
   CategoryFieldSuggestionsValue,
@@ -54,8 +51,7 @@ export type CategoryFilterSuggestionsState = CoreCategoryFieldSuggestionsState &
  * @group Buildable controllers
  * @category CategoryFilterSuggestions
  */
-export interface CategoryFilterSuggestions
-  extends Controller, FacetControllerType<'hierarchical'> {
+export interface CategoryFilterSuggestions extends Controller, FacetControllerType<'hierarchical'> {
   /**
    * Resets the query in the controller state and clears the category filter suggestions.
    */
@@ -132,9 +128,7 @@ export function buildCategoryFilterSuggestions(
 
   const {dispatch} = engine;
 
-  const namespacedFacetId = getFacetIdWithCommerceFieldSuggestionNamespace(
-    options.facetId
-  );
+  const namespacedFacetId = getFacetIdWithCommerceFieldSuggestionNamespace(options.facetId);
   const facetSearch = buildCategoryFacetSearch(engine, {
     options: {
       facetId: namespacedFacetId,
@@ -154,8 +148,7 @@ export function buildCategoryFilterSuggestions(
   );
 
   const facetSearchStateSelector = createSelector(
-    (state: CommerceEngineState) =>
-      state.categoryFacetSearchSet[namespacedFacetId],
+    (state: CommerceEngineState) => state.categoryFacetSearchSet[namespacedFacetId],
     (facetSearch) => ({
       isLoading: facetSearch.isLoading,
       moreValuesAvailable: facetSearch.response.moreValuesAvailable,
@@ -184,22 +177,17 @@ export function buildCategoryFilterSuggestions(
 
     select: (value: CategoryFacetSearchResult) => {
       dispatch(clearAllCoreFacets());
-      dispatch(
-        selectCategoryFacetSearchResult({facetId: options.facetId, value})
-      );
+      dispatch(selectCategoryFacetSearchResult({facetId: options.facetId, value}));
       dispatch(
         updateQuery({
-          query:
-            engine[stateKey].categoryFacetSearchSet[namespacedFacetId].options
-              .query,
+          query: engine[stateKey].categoryFacetSearchSet[namespacedFacetId].options.query,
         })
       );
       dispatch(options.fetchProductsActionCreator());
     },
 
     get state() {
-      const {displayName, field, facetId} =
-        facetForFieldSuggestionsSelector(getState());
+      const {displayName, field, facetId} = facetForFieldSuggestionsSelector(getState());
       return {
         displayName,
         field,

@@ -95,8 +95,7 @@ id '${id}':\n\n${warnings.join('\n')}\n\nReview the configuration to ensure the 
         desktopImage: props.options.spotlightContent.desktopImage,
         position: props.options.spotlightContent.position,
         responseId:
-          props.options.spotlightContent.responseId ??
-          props.responseIdSelector(engine[stateKey]),
+          props.options.spotlightContent.responseId ?? props.responseIdSelector(engine[stateKey]),
       })
     );
   };

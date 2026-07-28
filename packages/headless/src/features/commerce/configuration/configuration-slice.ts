@@ -11,34 +11,29 @@ import {
   updateBasicConfiguration as updateBasicCommerceConfiguration,
   updateProxyBaseUrl,
 } from './configuration-actions.js';
-import {
-  type ConfigurationState,
-  getConfigurationInitialState,
-} from './configuration-state.js';
+import {type ConfigurationState, getConfigurationInitialState} from './configuration-state.js';
 
-export const configurationReducer = createReducer(
-  getConfigurationInitialState(),
-  (builder) =>
-    builder
-      .addCase(updateBasicCommerceConfiguration, (state, action) => {
-        handleUpdateBasicConfiguration(state, action.payload);
-      })
-      // This is to handle the renew access token middleware
-      .addCase(updateBasicConfiguration, (state, action) => {
-        handleUpdateBasicConfiguration(state, action.payload);
-      })
-      .addCase(updateProxyBaseUrl, (state, action) => {
-        handleUpdateCommerceProxyBaseUrl(state, action.payload);
-      })
-      .addCase(updateAnalyticsConfiguration, (state, action) => {
-        handleupdateAnalyticsConfiguration(state, action.payload);
-      })
-      .addCase(disableAnalytics, (state) => {
-        state.analytics.enabled = false;
-      })
-      .addCase(enableAnalytics, (state) => {
-        state.analytics.enabled = true;
-      })
+export const configurationReducer = createReducer(getConfigurationInitialState(), (builder) =>
+  builder
+    .addCase(updateBasicCommerceConfiguration, (state, action) => {
+      handleUpdateBasicConfiguration(state, action.payload);
+    })
+    // This is to handle the renew access token middleware
+    .addCase(updateBasicConfiguration, (state, action) => {
+      handleUpdateBasicConfiguration(state, action.payload);
+    })
+    .addCase(updateProxyBaseUrl, (state, action) => {
+      handleUpdateCommerceProxyBaseUrl(state, action.payload);
+    })
+    .addCase(updateAnalyticsConfiguration, (state, action) => {
+      handleupdateAnalyticsConfiguration(state, action.payload);
+    })
+    .addCase(disableAnalytics, (state) => {
+      state.analytics.enabled = false;
+    })
+    .addCase(enableAnalytics, (state) => {
+      state.analytics.enabled = true;
+    })
 );
 
 function handleUpdateBasicConfiguration(

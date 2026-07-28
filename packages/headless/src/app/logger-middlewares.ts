@@ -1,9 +1,4 @@
-import type {
-  Action,
-  Middleware,
-  SerializedError,
-  UnknownAction,
-} from '@reduxjs/toolkit';
+import type {Action, Middleware, SerializedError, UnknownAction} from '@reduxjs/toolkit';
 import type {Logger} from 'pino';
 
 type UnknownActionWithPossibleErrorPayload = UnknownAction & {
@@ -21,10 +16,7 @@ export const logActionErrorMiddleware: (logger: Logger) => Middleware =
     const error: SerializedError = unknownAction.error;
 
     if (!unknownAction.payload?.ignored) {
-      logger.error(
-        {error, action},
-        `Action dispatch error ${unknownAction.type}`
-      );
+      logger.error({error, action}, `Action dispatch error ${unknownAction.type}`);
     }
 
     // Validation errors should prevent further dispatching

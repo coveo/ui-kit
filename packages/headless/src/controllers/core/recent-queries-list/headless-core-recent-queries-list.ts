@@ -1,11 +1,4 @@
-import {
-  ArrayValue,
-  BooleanValue,
-  isBoolean,
-  NumberValue,
-  Schema,
-  StringValue,
-} from '@coveo/bueno';
+import {ArrayValue, BooleanValue, isBoolean, NumberValue, Schema, StringValue} from '@coveo/bueno';
 import type {CoreEngine} from '../../../app/engine.js';
 import type {UpdateQueryActionCreatorPayload} from '../../../features/query/query-actions.js';
 import {queryReducer as query} from '../../../features/query/query-slice.js';
@@ -25,14 +18,8 @@ import type {
   SearchSection,
 } from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
-import {
-  validateInitialState,
-  validateOptions,
-} from '../../../utils/validate-payload.js';
-import {
-  buildController,
-  type Controller,
-} from '../../controller/headless-controller.js';
+import {validateInitialState, validateOptions} from '../../../utils/validate-payload.js';
+import {buildController, type Controller} from '../../controller/headless-controller.js';
 
 export interface RecentQueriesListProps {
   /**
@@ -87,7 +74,6 @@ const optionsSchema = new Schema<RecentQueriesListOptions>({
 /**
  * The `RecentQueriesList` controller manages the user's recent queries.
  *
- * Example: [recent-queries.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/recent-queries/recent-queries.fn.tsx)
  *
  * @group Controllers
  * @category RecentQueriesList
@@ -135,22 +121,9 @@ export interface RecentQueriesState {
   analyticsEnabled: boolean;
 }
 
-function validateRecentQueriesProps(
-  engine: CoreEngine,
-  props?: RecentQueriesListProps
-) {
-  validateOptions(
-    engine,
-    optionsSchema,
-    props?.options,
-    'buildRecentQueriesList'
-  );
-  validateInitialState(
-    engine,
-    initialStateSchema,
-    props?.initialState,
-    'buildRecentQueriesList'
-  );
+function validateRecentQueriesProps(engine: CoreEngine, props?: RecentQueriesListProps) {
+  validateOptions(engine, optionsSchema, props?.options, 'buildRecentQueriesList');
+  validateInitialState(engine, initialStateSchema, props?.initialState, 'buildRecentQueriesList');
 }
 
 /**
@@ -239,8 +212,7 @@ export function buildCoreRecentQueriesList(
       if (errorMessage) {
         throw new Error(errorMessage);
       }
-      const queryOptions: UpdateQueryActionCreatorPayload &
-        PrepareForSearchWithQueryOptions = {
+      const queryOptions: UpdateQueryActionCreatorPayload & PrepareForSearchWithQueryOptions = {
         q: this.state.queries[index],
         clearFilters: registrationOptions.clearFilters,
       };
@@ -254,9 +226,7 @@ export function buildCoreRecentQueriesList(
 
 function loadRecentQueriesListReducer(
   engine: CoreEngine
-): engine is CoreEngine<
-  RecentQueriesSection & ConfigurationSection & SearchSection
-> {
+): engine is CoreEngine<RecentQueriesSection & ConfigurationSection & SearchSection> {
   engine.addReducers({search, recentQueries, query});
   return true;
 }

@@ -21,10 +21,7 @@ describe('SearchEndpointClient', () => {
   });
 
   it('should return configuration error when organizationId is missing', async () => {
-    const response = await client.call(
-      {q: 'test'},
-      {accessToken: 'test-token'}
-    );
+    const response = await client.call({q: 'test'}, {accessToken: 'test-token'});
 
     expect(response.success).toBe(false);
     if (response.success) {
@@ -35,10 +32,7 @@ describe('SearchEndpointClient', () => {
   });
 
   it('should return configuration error when accessToken is missing', async () => {
-    const response = await client.call(
-      {q: 'test'},
-      {organizationId: 'test-org-id'}
-    );
+    const response = await client.call({q: 'test'}, {organizationId: 'test-org-id'});
 
     expect(response.success).toBe(false);
     if (response.success) {

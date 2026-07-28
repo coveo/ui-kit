@@ -16,9 +16,7 @@ describe('atomic-commerce-category-facet', () => {
   let mockedConsoleError: MockInstance;
 
   beforeEach(() => {
-    mockedConsoleError = vi
-      .spyOn(console, 'error')
-      .mockImplementation(() => {});
+    mockedConsoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
 
     mockedSummary = buildFakeSummary({});
     mockedFacet = buildFakeCategoryFacet({
@@ -38,23 +36,20 @@ describe('atomic-commerce-category-facet', () => {
     });
   });
 
-  const setupElement = async (
-    props?: Partial<{isCollapsed: boolean; field: string}>
-  ) => {
-    const {element} =
-      await renderInAtomicCommerceInterface<AtomicCommerceCategoryFacet>({
-        template: html`<atomic-commerce-category-facet
-          .facet=${mockedFacet}
-          .summary=${mockedSummary}
-          field="cat_platform"
-          ?is-collapsed=${props?.isCollapsed || false}
-        ></atomic-commerce-category-facet>`,
-        selector: 'atomic-commerce-category-facet',
-        bindings: (bindings) => {
-          bindings.store.getUniqueIDFromEngine = vi.fn().mockReturnValue('123');
-          return bindings;
-        },
-      });
+  const setupElement = async (props?: Partial<{isCollapsed: boolean; field: string}>) => {
+    const {element} = await renderInAtomicCommerceInterface<AtomicCommerceCategoryFacet>({
+      template: html`<atomic-commerce-category-facet
+        .facet=${mockedFacet}
+        .summary=${mockedSummary}
+        field="cat_platform"
+        ?is-collapsed=${props?.isCollapsed || false}
+      ></atomic-commerce-category-facet>`,
+      selector: 'atomic-commerce-category-facet',
+      bindings: (bindings) => {
+        bindings.store.getUniqueIDFromEngine = vi.fn().mockReturnValue('123');
+        return bindings;
+      },
+    });
 
     return {
       element,
@@ -80,9 +75,7 @@ describe('atomic-commerce-category-facet', () => {
         return page.getByRole('button', {name: /show less/i});
       },
       get componentError() {
-        return page.getByText(
-          'Look at the developer console for more information'
-        );
+        return page.getByText('Look at the developer console for more information');
       },
       get allCategoryButton() {
         return element.shadowRoot!.querySelector(
@@ -117,9 +110,7 @@ describe('atomic-commerce-category-facet', () => {
         return element.shadowRoot!.querySelector('[part=search-results]')!;
       },
       get searchInput() {
-        return element.shadowRoot!.querySelector(
-          '[part=search-input]'
-        )! as HTMLInputElement;
+        return element.shadowRoot!.querySelector('[part=search-input]')! as HTMLInputElement;
       },
       get matchesQuery() {
         return element.shadowRoot!.querySelector('[part=matches-query]')!;
@@ -368,9 +359,7 @@ describe('atomic-commerce-category-facet', () => {
 
     expect(componentError).toBeVisible();
     expect(mockedConsoleError).toHaveBeenCalledWith(
-      new Error(
-        'The "facet" property is required for <atomic-commerce-category-facet>.'
-      ),
+      new Error('The "facet" property is required for <atomic-commerce-category-facet>.'),
       expect.anything()
     );
   });
@@ -412,9 +401,7 @@ describe('atomic-commerce-category-facet', () => {
     // Simulate typing in search input
     await userEvent.type(searchInput, 'test search');
 
-    expect(mockedFacet.facetSearch.updateText).toHaveBeenCalledWith(
-      'test search'
-    );
+    expect(mockedFacet.facetSearch.updateText).toHaveBeenCalledWith('test search');
     expect(mockedFacet.facetSearch.search).toHaveBeenCalled();
   });
 

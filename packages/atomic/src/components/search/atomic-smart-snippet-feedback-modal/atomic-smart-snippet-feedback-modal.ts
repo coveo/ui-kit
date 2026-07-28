@@ -1,9 +1,5 @@
 import '@/src/components/common/atomic-modal/atomic-modal';
-import {
-  buildSmartSnippet,
-  type SmartSnippet,
-  type SmartSnippetFeedback,
-} from '@coveo/headless';
+import {buildSmartSnippet, type SmartSnippet, type SmartSnippetFeedback} from '@coveo/headless';
 import {html, LitElement, type PropertyValues} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {keyed} from 'lit/directives/keyed.js';
@@ -87,9 +83,7 @@ export class AtomicSmartSnippetFeedbackModal
   private currentAnswer?: SmartSnippetFeedback | 'other';
 
   private detailsInputRef: Ref<HTMLTextAreaElement> = createRef();
-  private readonly formId = randomID(
-    'atomic-smart-snippet-feedback-modal-form-'
-  );
+  private readonly formId = randomID('atomic-smart-snippet-feedback-modal-form-');
   private smartSnippet!: SmartSnippet;
 
   public initialize() {
@@ -172,9 +166,7 @@ export class AtomicSmartSnippetFeedbackModal
     if (this.currentAnswer === 'other') {
       this.smartSnippet.sendDetailedFeedback(this.detailsInputRef.value!.value);
     } else {
-      this.smartSnippet.sendFeedback(
-        this.currentAnswer as SmartSnippetFeedback
-      );
+      this.smartSnippet.sendFeedback(this.currentAnswer as SmartSnippetFeedback);
     }
     this.dispatchEvent(new Event('feedbackSent'));
     this.isOpen = false;

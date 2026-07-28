@@ -9,10 +9,7 @@
     "esModuleInterop": true,
     "target": "ES2022",
     "paths": {
-      "atomic-angular": [
-        "dist/atomic-angular/atomic-angular",
-        "dist/atomic-angular"
-      ]
+      "atomic-angular": ["dist/atomic-angular/atomic-angular", "dist/atomic-angular"]
     },
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",

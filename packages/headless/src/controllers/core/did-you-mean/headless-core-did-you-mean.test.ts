@@ -6,10 +6,7 @@ import {
   setCorrectionMode,
 } from '../../../features/did-you-mean/did-you-mean-actions.js';
 import {didYouMeanReducer as didYouMean} from '../../../features/did-you-mean/did-you-mean-slice.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../../test/mock-engine-v2.js';
 import {createMockState} from '../../../test/mock-state.js';
 import {
   buildCoreDidYouMean,
@@ -38,10 +35,7 @@ describe('did you mean', () => {
   let dym: DidYouMean;
   let engine: MockedSearchEngine;
 
-  function initDidYouMean(
-    props: DidYouMeanProps = {},
-    state = createMockState()
-  ) {
+  function initDidYouMean(props: DidYouMeanProps = {}, state = createMockState()) {
     engine = buildMockSearchEngine(state);
     dym = buildCoreDidYouMean(engine, props);
   }

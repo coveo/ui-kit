@@ -10,8 +10,7 @@ export const initialFacetsState: FacetsState = {};
 
 type FacetsSlice = ReturnType<typeof createFacetsSlice>;
 
-const CACHE_KEY: CacheKey<FacetsSlice> =
-  createCacheKey<FacetsSlice>('facets/slice');
+const CACHE_KEY: CacheKey<FacetsSlice> = createCacheKey<FacetsSlice>('facets/slice');
 
 export function createFacetsSlice(
   interfaceId: string,

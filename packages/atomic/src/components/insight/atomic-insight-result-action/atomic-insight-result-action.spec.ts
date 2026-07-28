@@ -42,12 +42,7 @@ describe('atomic-insight-result-action', () => {
       action?: Actions | string;
     } = {}
   ) => {
-    const {
-      icon = '',
-      tooltip = 'Test Tooltip',
-      tooltipOnClick = '',
-      action = '',
-    } = options;
+    const {icon = '', tooltip = 'Test Tooltip', tooltipOnClick = '', action = ''} = options;
 
     const mockFoldedResult = buildMockInsightFoldedResult({
       uniqueId: 'test-result-id',
@@ -66,16 +61,15 @@ describe('atomic-insight-result-action', () => {
       ></atomic-insight-result-action>
     `;
 
-    const {element} =
-      await renderInAtomicInsightResult<AtomicInsightResultAction>({
-        template,
-        selector: 'atomic-insight-result-action',
-        result: mockFoldedResult,
-        bindings: (bindings) => {
-          bindings.engine = mockedEngine;
-          return bindings;
-        },
-      });
+    const {element} = await renderInAtomicInsightResult<AtomicInsightResultAction>({
+      template,
+      selector: 'atomic-insight-result-action',
+      result: mockFoldedResult,
+      bindings: (bindings) => {
+        bindings.engine = mockedEngine;
+        return bindings;
+      },
+    });
 
     return {
       element,
@@ -144,9 +138,7 @@ describe('atomic-insight-result-action', () => {
         action: Actions.CopyToClipboard,
       });
 
-      const eventPromise = new Promise<
-        CustomEvent<InsightResultActionClickedEvent>
-      >((resolve) => {
+      const eventPromise = new Promise<CustomEvent<InsightResultActionClickedEvent>>((resolve) => {
         element.addEventListener(
           'atomicInsightResultActionClicked',
           (e) => resolve(e as CustomEvent<InsightResultActionClickedEvent>),
@@ -267,9 +259,7 @@ describe('atomic-insight-result-action', () => {
   it('should emit event when activated via keyboard', async () => {
     const {element} = await renderComponent({action: Actions.CopyToClipboard});
 
-    const eventPromise = new Promise<
-      CustomEvent<InsightResultActionClickedEvent>
-    >((resolve) => {
+    const eventPromise = new Promise<CustomEvent<InsightResultActionClickedEvent>>((resolve) => {
       element.addEventListener(
         'atomicInsightResultActionClicked',
         (e) => resolve(e as CustomEvent<InsightResultActionClickedEvent>),

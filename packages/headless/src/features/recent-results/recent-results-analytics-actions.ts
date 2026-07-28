@@ -17,6 +17,4 @@ export const logRecentResultClick = (result: Result): CustomAction =>
   });
 
 export const logClearRecentResults = (): CustomAction =>
-  makeAnalyticsAction('analytics/recentResults/clear', (client) =>
-    client.makeClearRecentResults()
-  );
+  makeAnalyticsAction('analytics/recentResults/clear', (client) => client.makeClearRecentResults());

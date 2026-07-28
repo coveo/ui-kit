@@ -47,8 +47,7 @@ describe('atomic-query-summary', () => {
       placeholder: element.shadowRoot!.querySelector('[part="placeholder"]'),
       container: element.shadowRoot!.querySelector('[part="container"]'),
       parts: (element: AtomicQuerySummary) => {
-        const qs = (part: string) =>
-          element.shadowRoot?.querySelector(`[part*="${part}"]`);
+        const qs = (part: string) => element.shadowRoot?.querySelector(`[part*="${part}"]`);
         return {
           container: qs('container'),
           highlight: qs('highlight'),
@@ -103,9 +102,7 @@ describe('atomic-query-summary', () => {
     it('should bind to the query summary controller', async () => {
       const buildQuerySummaryMock = vi.mocked(buildQuerySummary);
       const {element} = await renderQuerySummary();
-      expect(element.querySummary).toBe(
-        buildQuerySummaryMock.mock.results[0].value
-      );
+      expect(element.querySummary).toBe(buildQuerySummaryMock.mock.results[0].value);
     });
 
     it('should render the query summary container', async () => {
@@ -169,9 +166,7 @@ describe('atomic-query-summary', () => {
         },
       });
 
-      const highlightedElements = container!.querySelectorAll(
-        '[part*="highlight"]'
-      );
+      const highlightedElements = container!.querySelectorAll('[part*="highlight"]');
       expect(highlightedElements.length).toBe(4);
     });
 
@@ -204,11 +199,7 @@ describe('atomic-query-summary', () => {
     });
 
     it('should handle loading state properly', async () => {
-      const messageSetterSpy = vi.spyOn(
-        AriaLiveRegionController.prototype,
-        'message',
-        'set'
-      );
+      const messageSetterSpy = vi.spyOn(AriaLiveRegionController.prototype, 'message', 'set');
 
       const {element} = await renderQuerySummary({
         querySummaryState: {

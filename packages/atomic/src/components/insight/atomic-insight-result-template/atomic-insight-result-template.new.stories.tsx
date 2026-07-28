@@ -152,10 +152,9 @@ const FOLDED_TEMPLATE_EXAMPLE = `<template>
   </atomic-result-section-children>
 </template>`;
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-insight-result-template',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-insight-result-template', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-insight-result-template',
@@ -203,11 +202,7 @@ export const Default: Story = {
     (story) => html`
       <atomic-insight-layout>
         <atomic-layout-section section="results">
-          <atomic-insight-result-list
-            display="list"
-            density="normal"
-            image-size="icon"
-          >
+          <atomic-insight-result-list display="list" density="normal" image-size="icon">
             ${story()}
           </atomic-insight-result-list>
         </atomic-layout-section>
@@ -272,11 +267,7 @@ export const WithConditions: Story = {
     (story) => html`
       <atomic-insight-layout>
         <atomic-layout-section section="results">
-          <atomic-insight-result-list
-            display="list"
-            density="normal"
-            image-size="icon"
-          >
+          <atomic-insight-result-list display="list" density="normal" image-size="icon">
             <!-- Template for specific source types -->
             <atomic-insight-result-template must-match-sourcetype="YouTube">
               <template>

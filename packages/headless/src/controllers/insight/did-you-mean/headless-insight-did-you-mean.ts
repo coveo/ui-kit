@@ -62,9 +62,7 @@ export function buildDidYouMean(
 
     applyCorrection() {
       controller.applyCorrection();
-      dispatch(
-        executeSearch({legacy: logDidYouMeanClick(), next: didYouMeanClick()})
-      );
+      dispatch(executeSearch({legacy: logDidYouMeanClick(), next: didYouMeanClick()}));
     },
   };
 }

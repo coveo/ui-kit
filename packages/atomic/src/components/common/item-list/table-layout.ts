@@ -35,33 +35,22 @@ export interface TableRowProps {
   setRef: (element?: Element) => void;
 }
 
-export const renderTableLayout: FunctionalComponentWithChildren<
-  TableLayoutProps
-> = ({props}) => {
+export const renderTableLayout: FunctionalComponentWithChildren<TableLayoutProps> = ({props}) => {
   const {host, listClasses, logger, label} = props;
 
   const fieldColumns = getFieldTableColumns(props);
 
   if (!fieldColumns.length) {
-    logger.error(
-      'atomic-table-element elements missing in the template to display columns.',
-      host
-    );
+    logger.error('atomic-table-element elements missing in the template to display columns.', host);
   }
 
   return (children) =>
-    html`<table
-      class="list-root ${listClasses}"
-      part="result-table"
-      aria-label=${label}
-    >
+    html`<table class="list-root ${listClasses}" part="result-table" aria-label=${label}>
       <thead part="result-table-heading">
         <tr part="result-table-heading-row">
           ${map(fieldColumns, (column) => {
             return html`<th part="result-table-heading-cell">
-              <atomic-text
-                .value=${column.getAttribute('label')!}
-              ></atomic-text>
+              <atomic-text .value=${column.getAttribute('label')!}></atomic-text>
             </th>`;
           })}
         </tr>
@@ -72,9 +61,7 @@ export const renderTableLayout: FunctionalComponentWithChildren<
     </table>`;
 };
 
-export const renderTableRow: FunctionalComponentWithChildren<TableRowProps> = ({
-  props,
-}) => {
+export const renderTableRow: FunctionalComponentWithChildren<TableRowProps> = ({props}) => {
   const {key, rowIndex, setRef} = props;
 
   return (children) =>
@@ -91,9 +78,7 @@ export const renderTableRow: FunctionalComponentWithChildren<TableRowProps> = ({
     )}`;
 };
 
-export const renderTableData: FunctionalComponent<TableDataProps> = ({
-  props,
-}) => {
+export const renderTableData: FunctionalComponent<TableDataProps> = ({props}) => {
   const {renderItem, firstItem, itemRenderingFunction} = props;
 
   const fieldColumns = getFieldTableColumns(props);
@@ -101,20 +86,13 @@ export const renderTableData: FunctionalComponent<TableDataProps> = ({
   let currentItemColumns = fieldColumns;
   if (itemRenderingFunction && firstItem) {
     const contentDiv = document.createElement('div');
-    const renderedHTML = itemRenderingFunction(
-      firstItem,
-      document.createElement('div')
-    );
+    const renderedHTML = itemRenderingFunction(firstItem, document.createElement('div'));
     contentDiv.innerHTML = renderedHTML;
-    currentItemColumns = Array.from(
-      contentDiv.querySelectorAll(tableElementTagName)
-    );
+    currentItemColumns = Array.from(contentDiv.querySelectorAll(tableElementTagName));
   }
 
   return html`${map(currentItemColumns, (column, index) => {
-    const label =
-      fieldColumns[index]?.getAttribute('label') ||
-      column.getAttribute('label');
+    const label = fieldColumns[index]?.getAttribute('label') || column.getAttribute('label');
     return html`${keyed(
       `${label}${props.key}`,
       html`<td part="result-table-cell">${renderItem(column)}</td>`
@@ -142,9 +120,7 @@ const getFieldTableColumnsFromRenderingFunction = (
   );
   contentOfRenderingFunction.innerHTML = contentOfRenderingFunctionAsString;
 
-  return Array.from(
-    contentOfRenderingFunction.querySelectorAll(tableElementTagName)
-  );
+  return Array.from(contentOfRenderingFunction.querySelectorAll(tableElementTagName));
 };
 
 const getFieldTableColumnsFromHTMLTemplate = (
@@ -153,7 +129,5 @@ const getFieldTableColumnsFromHTMLTemplate = (
   if (!props.templateContentForFirstItem) {
     return [];
   }
-  return Array.from(
-    props.templateContentForFirstItem.querySelectorAll(tableElementTagName)
-  );
+  return Array.from(props.templateContentForFirstItem.querySelectorAll(tableElementTagName));
 };

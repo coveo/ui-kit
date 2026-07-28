@@ -59,8 +59,7 @@ export class AtomicResultMultiValueText
   /**
    * The delimiter used to separate values when the field isn't indexed as a multi value field.
    */
-  @property({type: String, reflect: true}) public delimiter: string | null =
-    null;
+  @property({type: String, reflect: true}) public delimiter: string | null = null;
 
   @state() public bindings!: Bindings;
   @state() public error!: Error;
@@ -90,10 +89,7 @@ export class AtomicResultMultiValueText
   }
 
   private get resultValues() {
-    const value = ResultTemplatesHelpers.getResultProperty(
-      this.result,
-      this.field
-    );
+    const value = ResultTemplatesHelpers.getResultProperty(this.result, this.field);
 
     if (value === null) {
       return null;
@@ -110,9 +106,7 @@ export class AtomicResultMultiValueText
       return null;
     }
 
-    return this.delimiter
-      ? value.split(this.delimiter).map((value) => value.trim())
-      : [value];
+    return this.delimiter ? value.split(this.delimiter).map((value) => value.trim()) : [value];
   }
 
   private get facetSelectedValues() {
@@ -135,18 +129,14 @@ export class AtomicResultMultiValueText
       return;
     }
     const allValuesSet = new Set(allValues);
-    const firstValues = this.facetSelectedValues.filter((value) =>
-      allValuesSet.has(value)
-    );
+    const firstValues = this.facetSelectedValues.filter((value) => allValuesSet.has(value));
     this.sortedValues = Array.from(
       allValues.reduce((set, value) => set.add(value), new Set(firstValues))
     );
   }
 
   private getShouldDisplayLabel(values: string[]) {
-    return (
-      this.maxValuesToDisplay > 0 && values.length > this.maxValuesToDisplay
-    );
+    return this.maxValuesToDisplay > 0 && values.length > this.maxValuesToDisplay;
   }
 
   private getNumberOfValuesToDisplay(values: string[]) {
@@ -160,9 +150,7 @@ export class AtomicResultMultiValueText
       value,
       html`
         <li part="result-multi-value-text-value">
-          <slot name=${`result-multi-value-text-value-${kebabValue}`}>
-            ${label}
-          </slot>
+          <slot name=${`result-multi-value-text-value-${kebabValue}`}> ${label} </slot>
         </li>
       `
     );
@@ -180,9 +168,7 @@ export class AtomicResultMultiValueText
 
   private renderMoreLabel(value: number) {
     return html`
-      <li part="result-multi-value-text-value-more">
-        ${this.bindings.i18n.t('n-more', {value})}
-      </li>
+      <li part="result-multi-value-text-value-more">${this.bindings.i18n.t('n-more', {value})}</li>
     `;
   }
 

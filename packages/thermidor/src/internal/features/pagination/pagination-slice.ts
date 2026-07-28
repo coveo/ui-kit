@@ -19,8 +19,7 @@ export const initialPaginationState: PaginationState = {
 
 type PaginationSlice = ReturnType<typeof createPaginationSlice>;
 
-const CACHE_KEY: CacheKey<PaginationSlice> =
-  createCacheKey<PaginationSlice>('pagination/slice');
+const CACHE_KEY: CacheKey<PaginationSlice> = createCacheKey<PaginationSlice>('pagination/slice');
 
 export function createPaginationSlice(
   interfaceId: string,
@@ -46,13 +45,12 @@ export function createPaginationSlice(
         if (!payload) {
           return;
         }
+
         if (typeof payload.totalCount === 'number') {
           state.totalCount = payload.totalCount;
-          return;
         }
-        const pagination = payload.pagination as
-          | Record<string, unknown>
-          | undefined;
+
+        const pagination = payload.pagination as Record<string, unknown> | undefined;
         if (typeof pagination?.totalEntries === 'number') {
           state.totalCount = pagination.totalEntries;
         }
@@ -65,6 +63,15 @@ export function createPaginationSlice(
           pagination.perPage > 0
         ) {
           state.firstResult = pagination.page * pagination.perPage;
+        }
+
+        if (state.pageSize === initialPaginationState.pageSize && !pagination?.perPage) {
+          const products = payload.products as unknown[] | undefined;
+          const results = payload.results as unknown[] | undefined;
+          const itemCount = products?.length ?? results?.length ?? 0;
+          if (itemCount > 0) {
+            state.pageSize = itemCount;
+          }
         }
       });
     },

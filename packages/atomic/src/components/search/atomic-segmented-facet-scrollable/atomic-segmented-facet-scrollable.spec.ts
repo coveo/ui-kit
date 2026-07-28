@@ -37,9 +37,7 @@ describe('atomic-segmented-facet-scrollable', () => {
 
     const parts = {
       get scrollableContainer() {
-        return element.shadowRoot?.querySelector(
-          '[part="scrollable-container"]'
-        );
+        return element.shadowRoot?.querySelector('[part="scrollable-container"]');
       },
       get horizontalScroll() {
         return element.shadowRoot?.querySelector('[part="horizontal-scroll"]');
@@ -48,9 +46,7 @@ describe('atomic-segmented-facet-scrollable', () => {
         return element.shadowRoot?.querySelector('[part="left-arrow-wrapper"]');
       },
       get rightArrowWrapper() {
-        return element.shadowRoot?.querySelector(
-          '[part="right-arrow-wrapper"]'
-        );
+        return element.shadowRoot?.querySelector('[part="right-arrow-wrapper"]');
       },
       get leftArrowButton() {
         return element.shadowRoot?.querySelector(
@@ -102,18 +98,9 @@ describe('atomic-segmented-facet-scrollable', () => {
 
       element.connectedCallback();
 
-      expect(addEventListenerSpy).toHaveBeenCalledWith(
-        'wheel',
-        expect.any(Function)
-      );
-      expect(addEventListenerSpy).toHaveBeenCalledWith(
-        'touchmove',
-        expect.any(Function)
-      );
-      expect(addEventListenerSpy).toHaveBeenCalledWith(
-        'keydown',
-        expect.any(Function)
-      );
+      expect(addEventListenerSpy).toHaveBeenCalledWith('wheel', expect.any(Function));
+      expect(addEventListenerSpy).toHaveBeenCalledWith('touchmove', expect.any(Function));
+      expect(addEventListenerSpy).toHaveBeenCalledWith('keydown', expect.any(Function));
     });
   });
 
@@ -124,18 +111,9 @@ describe('atomic-segmented-facet-scrollable', () => {
 
       element.disconnectedCallback();
 
-      expect(removeEventListenerSpy).toHaveBeenCalledWith(
-        'wheel',
-        expect.any(Function)
-      );
-      expect(removeEventListenerSpy).toHaveBeenCalledWith(
-        'touchmove',
-        expect.any(Function)
-      );
-      expect(removeEventListenerSpy).toHaveBeenCalledWith(
-        'keydown',
-        expect.any(Function)
-      );
+      expect(removeEventListenerSpy).toHaveBeenCalledWith('wheel', expect.any(Function));
+      expect(removeEventListenerSpy).toHaveBeenCalledWith('touchmove', expect.any(Function));
+      expect(removeEventListenerSpy).toHaveBeenCalledWith('keydown', expect.any(Function));
     });
 
     it('should disconnect ResizeObserver when disconnected', async () => {
@@ -196,9 +174,7 @@ describe('atomic-segmented-facet-scrollable', () => {
       element.dispatchEvent(new WheelEvent('wheel'));
       await element.updateComplete;
 
-      expect(parts.rightArrowWrapper?.classList.contains('invisible')).toBe(
-        false
-      );
+      expect(parts.rightArrowWrapper?.classList.contains('invisible')).toBe(false);
     });
   });
 
@@ -285,12 +261,8 @@ describe('atomic-segmented-facet-scrollable', () => {
     it('should hide both arrows when content is not scrollable', async () => {
       const {parts} = await renderComponent();
 
-      expect(parts.leftArrowWrapper?.classList.contains('invisible')).toBe(
-        true
-      );
-      expect(parts.rightArrowWrapper?.classList.contains('invisible')).toBe(
-        true
-      );
+      expect(parts.leftArrowWrapper?.classList.contains('invisible')).toBe(true);
+      expect(parts.rightArrowWrapper?.classList.contains('invisible')).toBe(true);
     });
 
     it('should show right arrow when content overflows and at left edge', async () => {
@@ -321,12 +293,8 @@ describe('atomic-segmented-facet-scrollable', () => {
       element.dispatchEvent(new WheelEvent('wheel'));
       await element.updateComplete;
 
-      expect(parts.leftArrowWrapper?.classList.contains('invisible')).toBe(
-        true
-      );
-      expect(parts.rightArrowWrapper?.classList.contains('invisible')).toBe(
-        false
-      );
+      expect(parts.leftArrowWrapper?.classList.contains('invisible')).toBe(true);
+      expect(parts.rightArrowWrapper?.classList.contains('invisible')).toBe(false);
     });
 
     it('should show both arrows when scrolled to middle position', async () => {
@@ -350,12 +318,8 @@ describe('atomic-segmented-facet-scrollable', () => {
       element.dispatchEvent(new WheelEvent('wheel'));
       await element.updateComplete;
 
-      expect(parts.leftArrowWrapper?.classList.contains('invisible')).toBe(
-        false
-      );
-      expect(parts.rightArrowWrapper?.classList.contains('invisible')).toBe(
-        false
-      );
+      expect(parts.leftArrowWrapper?.classList.contains('invisible')).toBe(false);
+      expect(parts.rightArrowWrapper?.classList.contains('invisible')).toBe(false);
     });
 
     it('should show only left arrow when scrolled to right edge', async () => {
@@ -379,12 +343,8 @@ describe('atomic-segmented-facet-scrollable', () => {
       element.dispatchEvent(new WheelEvent('wheel'));
       await element.updateComplete;
 
-      expect(parts.leftArrowWrapper?.classList.contains('invisible')).toBe(
-        false
-      );
-      expect(parts.rightArrowWrapper?.classList.contains('invisible')).toBe(
-        true
-      );
+      expect(parts.leftArrowWrapper?.classList.contains('invisible')).toBe(false);
+      expect(parts.rightArrowWrapper?.classList.contains('invisible')).toBe(true);
     });
 
     it('should handle wheel events without throwing', async () => {
@@ -445,22 +405,14 @@ describe('atomic-segmented-facet-scrollable', () => {
         element.dispatchEvent(new WheelEvent('wheel'));
         await element.updateComplete;
 
-        expect(parts.leftArrowWrapper?.classList.contains('invisible')).toBe(
-          true
-        );
-        expect(parts.rightArrowWrapper?.classList.contains('invisible')).toBe(
-          false
-        );
+        expect(parts.leftArrowWrapper?.classList.contains('invisible')).toBe(true);
+        expect(parts.rightArrowWrapper?.classList.contains('invisible')).toBe(false);
 
         parts.rightArrowButton.click();
         await element.updateComplete;
 
-        expect(parts.leftArrowWrapper?.classList.contains('invisible')).toBe(
-          false
-        );
-        expect(parts.rightArrowWrapper?.classList.contains('invisible')).toBe(
-          false
-        );
+        expect(parts.leftArrowWrapper?.classList.contains('invisible')).toBe(false);
+        expect(parts.rightArrowWrapper?.classList.contains('invisible')).toBe(false);
       }
     });
   });

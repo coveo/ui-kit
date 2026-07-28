@@ -41,9 +41,7 @@ describe('i18n', () => {
 
       const options = i18nBackendOptions(atomicInterface);
       const callback = vi.fn();
-      await Promise.resolve(
-        options.request!({}, '/foo/en.json?lng=en&ns=other', {}, callback)
-      );
+      await Promise.resolve(options.request!({}, '/foo/en.json?lng=en&ns=other', {}, callback));
 
       expect(callback).toHaveBeenCalledWith(expect.any(Error), {
         status: 404,

@@ -219,9 +219,7 @@ export class AtomicResultList
    *
    * @param resultRenderingFunction
    */
-  public async setRenderFunction(
-    resultRenderingFunction: ItemRenderingFunction
-  ) {
+  public async setRenderFunction(resultRenderingFunction: ItemRenderingFunction) {
     this.itemRenderingFunction = resultRenderingFunction;
   }
 
@@ -248,21 +246,14 @@ export class AtomicResultList
   public async willUpdate(changedProperties: Map<string, unknown>) {
     super.willUpdate(changedProperties);
     if (changedProperties.has('tabManagerState')) {
-      const oldValue = changedProperties.get('tabManagerState') as
-        | TabManagerState
-        | undefined;
-      if (
-        this.tabManagerState?.activeTab !== oldValue?.activeTab &&
-        oldValue !== undefined
-      ) {
+      const oldValue = changedProperties.get('tabManagerState') as TabManagerState | undefined;
+      if (this.tabManagerState?.activeTab !== oldValue?.activeTab && oldValue !== undefined) {
         this.bindings.store.unsetLoadingFlag(this.loadingFlag);
       }
     }
 
     if (changedProperties.has('resultListState')) {
-      const oldState = changedProperties.get(
-        'resultListState'
-      ) as ResultListState;
+      const oldState = changedProperties.get('resultListState') as ResultListState;
       if (this.resultListState.firstSearchExecuted) {
         this.bindings.store.unsetLoadingFlag(this.loadingFlag);
       }
@@ -345,8 +336,7 @@ export class AtomicResultList
                       density: this.density,
                       display: this.display,
                       imageSize: this.imageSize,
-                      numberOfPlaceholders:
-                        this.resultsPerPageState.numberOfResults || 10,
+                      numberOfPlaceholders: this.resultsPerPageState.numberOfResults || 10,
                     },
                   })
                 )
@@ -361,9 +351,7 @@ export class AtomicResultList
   private initResultTemplateProvider() {
     this.resultTemplateProvider = new ResultTemplateProvider({
       includeDefaultTemplate: true,
-      templateElements: Array.from(
-        this.querySelectorAll('atomic-result-template')
-      ),
+      templateElements: Array.from(this.querySelectorAll('atomic-result-template')),
       getResultTemplateRegistered: () => this.resultTemplateRegistered,
       getTemplateHasError: () => this.templateHasError,
       setResultTemplateRegistered: (value: boolean) => {
@@ -410,8 +398,7 @@ export class AtomicResultList
           },
           selectorForItem: 'atomic-result',
           setRef: (element) => {
-            element instanceof HTMLElement &&
-              this.resultListCommon.setNewResultRef(element, index);
+            element instanceof HTMLElement && this.resultListCommon.setNewResultRef(element, index);
           },
         },
       })(

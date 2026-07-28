@@ -9,28 +9,17 @@ import {totalEntriesRecommendationSelector} from '../pagination/pagination-selec
 export const numberOfRecommendationsSelector = (
   state: Partial<RecommendationsSection>,
   slotId: string
-) =>
-  state.recommendations
-    ? state.recommendations[slotId]?.products.length || 0
-    : 0;
+) => (state.recommendations ? state.recommendations[slotId]?.products.length || 0 : 0);
 
 export const moreRecommendationsAvailableSelector = createSelector(
-  (
-    state: Partial<CommercePaginationSection & RecommendationsSection>,
-    slotId: string
-  ) => ({
+  (state: Partial<CommercePaginationSection & RecommendationsSection>, slotId: string) => ({
     total: totalEntriesRecommendationSelector(state, slotId),
     current: numberOfRecommendationsSelector(state, slotId),
   }),
   ({current, total}) => current < total
 );
 
-export const isLoadingSelector = (
-  state: Partial<RecommendationsSection>,
-  slotId: string
-) => {
-  const isLoading = state.recommendations
-    ? state.recommendations[slotId]?.isLoading
-    : false;
+export const isLoadingSelector = (state: Partial<RecommendationsSection>, slotId: string) => {
+  const isLoading = state.recommendations ? state.recommendations[slotId]?.isLoading : false;
   return isNullOrUndefined(isLoading) ? false : isLoading;
 };

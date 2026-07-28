@@ -3,9 +3,7 @@ import {html} from 'lit';
 import {localizedString} from '@/src/directives/localized-string';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 
-type TriggerCorrectionShowingItemsForKey =
-  | 'showing-products-for'
-  | 'showing-results-for';
+type TriggerCorrectionShowingItemsForKey = 'showing-products-for' | 'showing-results-for';
 interface Props {
   i18n: i18n;
   i18nKeyShowingItemsFor: TriggerCorrectionShowingItemsForKey;
@@ -14,9 +12,7 @@ interface Props {
   onClick: () => void;
 }
 
-export const renderTriggerCorrection: FunctionalComponent<Props> = ({
-  props,
-}) => {
+export const renderTriggerCorrection: FunctionalComponent<Props> = ({props}) => {
   return html`
     <p class="text-on-background text-lg leading-6" part="showing-results-for">
       ${localizedString({

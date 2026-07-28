@@ -6,10 +6,7 @@ import type {CommerceAppState} from '../../../state/commerce-app-state.js';
 import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-search.js';
 import {buildMockCommerceFacetRequest} from '../../../test/mock-commerce-facet-request.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
-import {
-  buildMockCommerceEngine,
-  type MockedCommerceEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockCommerceEngine, type MockedCommerceEngine} from '../../../test/mock-engine-v2.js';
 import {buildMockFacetSearch} from '../../../test/mock-facet-search.js';
 import {buildCategoryFilterSuggestions} from './headless-category-filter-suggestions.js';
 import {buildFilterSuggestions} from './headless-filter-suggestions.js';
@@ -39,9 +36,7 @@ describe('FilterSuggestionsGenerator', () => {
 
   function setFacetState(config: FieldSuggestionsFacet[] = []) {
     for (const facet of config) {
-      const namespacedFacetId = getFacetIdWithCommerceFieldSuggestionNamespace(
-        facet.facetId
-      );
+      const namespacedFacetId = getFacetIdWithCommerceFieldSuggestionNamespace(facet.facetId);
       state.fieldSuggestionsOrder.push(facet);
       if (facet.type === 'regular') {
         state.facetSearchSet[namespacedFacetId] = buildMockFacetSearch();
@@ -52,8 +47,7 @@ describe('FilterSuggestionsGenerator', () => {
             type: facet.type,
           }),
         };
-        state.categoryFacetSearchSet[namespacedFacetId] =
-          buildMockCategoryFacetSearch();
+        state.categoryFacetSearchSet[namespacedFacetId] = buildMockCategoryFacetSearch();
       }
     }
   }
@@ -113,8 +107,7 @@ describe('FilterSuggestionsGenerator', () => {
 
       expect(filterSuggestionsGenerator.filterSuggestions.length).toEqual(1);
       expect(filterSuggestionsGenerator.filterSuggestions[0].state).toEqual(
-        buildCategoryFilterSuggestions(engine, {facetId, ...commonOptions})
-          .state
+        buildCategoryFilterSuggestions(engine, {facetId, ...commonOptions}).state
       );
     });
 
@@ -152,9 +145,7 @@ describe('FilterSuggestionsGenerator', () => {
   });
 
   it('#state exposes the field suggestions order', () => {
-    expect(filterSuggestionsGenerator.state).toEqual(
-      state.fieldSuggestionsOrder
-    );
+    expect(filterSuggestionsGenerator.state).toEqual(state.fieldSuggestionsOrder);
 
     state.fieldSuggestionsOrder.push({
       facetId: 'new_facet_id',
@@ -165,8 +156,6 @@ describe('FilterSuggestionsGenerator', () => {
 
     initFilterSuggestionsGenerator();
 
-    expect(filterSuggestionsGenerator.state).toEqual(
-      state.fieldSuggestionsOrder
-    );
+    expect(filterSuggestionsGenerator.state).toEqual(state.fieldSuggestionsOrder);
   });
 });

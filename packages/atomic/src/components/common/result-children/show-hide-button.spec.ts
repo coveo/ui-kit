@@ -2,10 +2,7 @@ import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
 import {page} from 'vitest/browser';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
-import {
-  renderShowHideButton,
-  type ShowHideButtonProps,
-} from './show-hide-button';
+import {renderShowHideButton, type ShowHideButtonProps} from './show-hide-button';
 
 describe('#renderShowHideButton', () => {
   const defaultProps: ShowHideButtonProps = {
@@ -116,8 +113,6 @@ describe('#renderShowHideButton', () => {
       moreResultsAvailable: false,
       collapseResults: 'Custom collapse text',
     });
-    await expect
-      .element(locators.button)
-      .toHaveTextContent('Custom collapse text');
+    await expect.element(locators.button).toHaveTextContent('Custom collapse text');
   });
 });

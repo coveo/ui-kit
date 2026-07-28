@@ -12,9 +12,7 @@ vi.mock('./item-layout-utils', () => ({
   getItemLayoutClasses: vi.fn(),
 }));
 
-const mockGetItemLayoutClasses = vi.mocked(
-  ItemLayoutUtils.getItemLayoutClasses
-);
+const mockGetItemLayoutClasses = vi.mocked(ItemLayoutUtils.getItemLayoutClasses);
 
 @customElement('test-item-element')
 class TestItemElement extends LitElement implements ItemLayoutHost {
@@ -49,11 +47,7 @@ describe('ItemLayoutController', () => {
       itemClasses: vi.fn().mockReturnValue('custom-class extra-class'),
     };
 
-    mockGetItemLayoutClasses.mockReturnValue([
-      'display-list',
-      'density-normal',
-      'image-icon',
-    ]);
+    mockGetItemLayoutClasses.mockReturnValue(['display-list', 'density-normal', 'image-icon']);
 
     Object.defineProperty(mockElement, 'shadowRoot', {
       value: {
@@ -116,9 +110,7 @@ describe('ItemLayoutController', () => {
       mockRoot.appendChild(element1);
       mockRoot.appendChild(element2);
 
-      vi.spyOn(mockElement.shadowRoot!, 'querySelector').mockReturnValue(
-        mockRoot
-      );
+      vi.spyOn(mockElement.shadowRoot!, 'querySelector').mockReturnValue(mockRoot);
 
       controller.hostUpdated();
 
@@ -128,18 +120,14 @@ describe('ItemLayoutController', () => {
 
     it('should use MutationObserver when custom render function is present', () => {
       const mockRenderFunction = vi.fn();
-      mockOptions.renderingFunction = vi
-        .fn()
-        .mockReturnValue(mockRenderFunction);
+      mockOptions.renderingFunction = vi.fn().mockReturnValue(mockRenderFunction);
       controller = new ItemLayoutController(mockElement, mockOptions);
       controller.hostConnected();
 
       const mockRoot = document.createElement('div');
       mockRoot.className = 'result-root';
 
-      vi.spyOn(mockElement.shadowRoot!, 'querySelector').mockReturnValue(
-        mockRoot
-      );
+      vi.spyOn(mockElement.shadowRoot!, 'querySelector').mockReturnValue(mockRoot);
 
       const observeSpy = vi.spyOn(MutationObserver.prototype, 'observe');
 
@@ -193,8 +181,7 @@ describe('ItemLayoutController', () => {
     });
 
     it('should pass additional content to getItemLayoutClasses', () => {
-      const additionalContent =
-        '<atomic-result-section-visual></atomic-result-section-visual>';
+      const additionalContent = '<atomic-result-section-visual></atomic-result-section-visual>';
 
       controller.getCombinedClasses(additionalContent);
 
@@ -216,13 +203,7 @@ describe('ItemLayoutController', () => {
 
       const classes = controller.getCombinedClasses();
 
-      expect(classes).toEqual([
-        'display-list',
-        'density-normal',
-        'image-icon',
-        'class1',
-        'class2',
-      ]);
+      expect(classes).toEqual(['display-list', 'density-normal', 'image-icon', 'class1', 'class2']);
     });
 
     it('should return only layout classes when item classes are empty', () => {
@@ -266,15 +247,12 @@ describe('ItemLayoutController', () => {
     });
 
     it('should pass additional content to getCombinedClasses', () => {
-      const additionalContent =
-        '<atomic-result-section-visual></atomic-result-section-visual>';
+      const additionalContent = '<atomic-result-section-visual></atomic-result-section-visual>';
       vi.spyOn(controller, 'getCombinedClasses');
 
       controller.applyLayoutClassesToElement(testElement, additionalContent);
 
-      expect(controller.getCombinedClasses).toHaveBeenCalledWith(
-        additionalContent
-      );
+      expect(controller.getCombinedClasses).toHaveBeenCalledWith(additionalContent);
     });
 
     it('should not apply classes when layout is null', () => {

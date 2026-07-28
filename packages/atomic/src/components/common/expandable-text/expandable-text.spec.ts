@@ -4,15 +4,10 @@ import {userEvent} from 'vitest/browser';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import MinusIcon from '../../../images/minus.svg';
 import PlusIcon from '../../../images/plus.svg';
-import {
-  type ExpandableTextProps,
-  renderExpandableText,
-} from './expandable-text';
+import {type ExpandableTextProps, renderExpandableText} from './expandable-text';
 
 describe('#renderExpandableText', () => {
-  const renderComponent = async (
-    overrides: Partial<ExpandableTextProps> = {}
-  ) => {
+  const renderComponent = async (overrides: Partial<ExpandableTextProps> = {}) => {
     const element = await renderFunctionFixture(
       html`${renderExpandableText({
         props: {

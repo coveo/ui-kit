@@ -57,8 +57,7 @@ export class AtomicResultLink
   private removeLinkEventHandlers?: () => void;
 
   private resultContext = createResultContextController(this);
-  private interactiveResultContext =
-    createInteractiveResultContextController(this);
+  private interactiveResultContext = createInteractiveResultContextController(this);
 
   @state() public bindings!: Bindings;
   @state() public error!: Error;
@@ -73,20 +72,14 @@ export class AtomicResultLink
       }
     }
 
-    if (
-      !this.interactiveResult &&
-      this.interactiveResultContext.interactiveItem
-    ) {
+    if (!this.interactiveResult && this.interactiveResultContext.interactiveItem) {
       this.interactiveResult = this.interactiveResultContext.interactiveItem;
     }
 
     this.dispatchEvent(
-      buildCustomEvent(
-        'atomic/resolveStopPropagation',
-        (stopPropagation: boolean) => {
-          this.stopPropagation = stopPropagation;
-        }
-      )
+      buildCustomEvent('atomic/resolveStopPropagation', (stopPropagation: boolean) => {
+        this.stopPropagation = stopPropagation;
+      })
     );
   }
 
@@ -112,11 +105,7 @@ export class AtomicResultLink
 
       const href = isUndefined(this.hrefTemplate)
         ? result.clickUri
-        : buildStringTemplateFromResult(
-            this.hrefTemplate,
-            result,
-            this.bindings
-          );
+        : buildStringTemplateFromResult(this.hrefTemplate, result, this.bindings);
 
       return renderLinkWithItemAnalytics({
         props: {
@@ -135,10 +124,7 @@ export class AtomicResultLink
         },
       })(html`
         ${this.renderDefaultSlotContent(
-          html`<atomic-result-text
-            field="title"
-            default="no-title"
-          ></atomic-result-text>`
+          html`<atomic-result-text field="title" default="no-title"></atomic-result-text>`
         )}
       `);
     })}`;

@@ -39,45 +39,33 @@ commerceApiHarness.searchEndpoint.mock((response) => ({
   },
 }));
 
-const {
-  decorator: commerceInterfaceDecorator,
-  play: initializeCommerceInterface,
-} = wrapInCommerceInterface({
-  skipFirstRequest: true,
-  engineConfig: {
-    preprocessRequest: (request) => {
-      const parsed = JSON.parse(request.body as string);
-      parsed.perPage = 1;
-      request.body = JSON.stringify(parsed);
-      return request;
+const {decorator: commerceInterfaceDecorator, play: initializeCommerceInterface} =
+  wrapInCommerceInterface({
+    skipFirstRequest: true,
+    engineConfig: {
+      preprocessRequest: (request) => {
+        const parsed = JSON.parse(request.body as string);
+        parsed.perPage = 1;
+        request.body = JSON.stringify(parsed);
+        return request;
+      },
     },
-  },
-  includeCodeRoot: false,
-});
+    includeCodeRoot: false,
+  });
 
-const {decorator: commerceProductListDecorator} = wrapInCommerceProductList(
-  undefined,
-  false
-);
+const {decorator: commerceProductListDecorator} = wrapInCommerceProductList(undefined, false);
 const {decorator: productTemplateDecorator} = wrapInProductTemplate();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-product-text',
-  {
-    excludeCategories: ['methods'],
-    containerSelector: 'atomic-product-template template',
-  }
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-product-text', {
+  excludeCategories: ['methods'],
+  containerSelector: 'atomic-product-template template',
+});
 
 const meta: Meta = {
   component: 'atomic-product-text',
   title: 'Commerce/Product Text',
   id: 'atomic-product-text',
   render: (args) => template(args),
-  decorators: [
-    productTemplateDecorator,
-    commerceProductListDecorator,
-    commerceInterfaceDecorator,
-  ],
+  decorators: [productTemplateDecorator, commerceProductListDecorator, commerceInterfaceDecorator],
   parameters: {
     ...parameters,
     msw: {handlers: [...commerceApiHarness.handlers]},
@@ -99,9 +87,7 @@ export const Default: Story = {
   play: async (context) => {
     await initializeCommerceInterface(context);
 
-    const searchInterface = context.canvasElement.querySelector(
-      'atomic-commerce-interface'
-    );
+    const searchInterface = context.canvasElement.querySelector('atomic-commerce-interface');
     searchInterface?.engine?.dispatch(updateQuery({query: 'kayak'}));
 
     await searchInterface!.executeFirstRequest();

@@ -28,12 +28,11 @@ export const generateAutomaticRanges = new BooleanValue({
 const captions = new RecordValue();
 const query = new StringValue();
 
-const facetSearchOptionDefinitions: SchemaDefinition<FacetSearchRequestOptions> =
-  {
-    captions,
-    numberOfValues,
-    query,
-  };
+const facetSearchOptionDefinitions: SchemaDefinition<FacetSearchRequestOptions> = {
+  captions,
+  numberOfValues,
+  query,
+};
 
 export const facetSearch = new RecordValue({
   values: facetSearchOptionDefinitions,

@@ -13,30 +13,26 @@ import type {AtomicSmartSnippetFeedbackModal} from './atomic-smart-snippet-feedb
 import './atomic-smart-snippet-feedback-modal';
 
 vi.mock('@coveo/headless', {spy: true});
-vi.mock(
-  '@/src/components/common/smart-snippets/atomic-smart-snippet-feedback-modal/modal-header',
-  {spy: true}
-);
-vi.mock(
-  '@/src/components/common/smart-snippets/atomic-smart-snippet-feedback-modal/modal-body',
-  {spy: true}
-);
+vi.mock('@/src/components/common/smart-snippets/atomic-smart-snippet-feedback-modal/modal-header', {
+  spy: true,
+});
+vi.mock('@/src/components/common/smart-snippets/atomic-smart-snippet-feedback-modal/modal-body', {
+  spy: true,
+});
 vi.mock(
   '@/src/components/common/smart-snippets/atomic-smart-snippet-feedback-modal/modal-options',
   {spy: true}
 );
-vi.mock(
-  '@/src/components/common/smart-snippets/atomic-smart-snippet-feedback-modal/modal-option',
-  {spy: true}
-);
+vi.mock('@/src/components/common/smart-snippets/atomic-smart-snippet-feedback-modal/modal-option', {
+  spy: true,
+});
 vi.mock(
   '@/src/components/common/smart-snippets/atomic-smart-snippet-feedback-modal/modal-details',
   {spy: true}
 );
-vi.mock(
-  '@/src/components/common/smart-snippets/atomic-smart-snippet-feedback-modal/modal-footer',
-  {spy: true}
-);
+vi.mock('@/src/components/common/smart-snippets/atomic-smart-snippet-feedback-modal/modal-footer', {
+  spy: true,
+});
 
 describe('atomic-smart-snippet-feedback-modal', () => {
   let mockedSmartSnippet: SmartSnippet;
@@ -51,14 +47,13 @@ describe('atomic-smart-snippet-feedback-modal', () => {
     mockedSmartSnippet = buildFakeSmartSnippet();
     vi.mocked(buildSmartSnippet).mockReturnValue(mockedSmartSnippet);
 
-    const {element} =
-      await renderInAtomicSearchInterface<AtomicSmartSnippetFeedbackModal>({
-        template: html`<atomic-smart-snippet-feedback-modal
-          .isOpen=${isOpen}
-          .source=${source}
-        ></atomic-smart-snippet-feedback-modal>`,
-        selector: 'atomic-smart-snippet-feedback-modal',
-      });
+    const {element} = await renderInAtomicSearchInterface<AtomicSmartSnippetFeedbackModal>({
+      template: html`<atomic-smart-snippet-feedback-modal
+        .isOpen=${isOpen}
+        .source=${source}
+      ></atomic-smart-snippet-feedback-modal>`,
+      selector: 'atomic-smart-snippet-feedback-modal',
+    });
 
     return {
       element,
@@ -107,9 +102,7 @@ describe('atomic-smart-snippet-feedback-modal', () => {
       await renderFeedbackModal();
       expect(vi.mocked(renderModalBody)).toHaveBeenCalledWith({
         props: {
-          formId: expect.stringMatching(
-            /^atomic-smart-snippet-feedback-modal-form-/
-          ),
+          formId: expect.stringMatching(/^atomic-smart-snippet-feedback-modal-form-/),
           onSubmit: expect.any(Function),
         },
       });
@@ -142,9 +135,7 @@ describe('atomic-smart-snippet-feedback-modal', () => {
       const {element} = await renderFeedbackModal();
       expect(vi.mocked(renderModalFooter)).toHaveBeenCalledWith({
         props: {
-          formId: expect.stringMatching(
-            /^atomic-smart-snippet-feedback-modal-form-/
-          ),
+          formId: expect.stringMatching(/^atomic-smart-snippet-feedback-modal-form-/),
           i18n: element.bindings.i18n,
           onClick: expect.any(Function),
         },
@@ -213,9 +204,7 @@ describe('atomic-smart-snippet-feedback-modal', () => {
       bodyCall[0].props.onSubmit(submitEvent);
       await element.updateComplete;
 
-      expect(mockedSmartSnippet.sendFeedback).toHaveBeenCalledWith(
-        'does_not_answer'
-      );
+      expect(mockedSmartSnippet.sendFeedback).toHaveBeenCalledWith('does_not_answer');
     });
 
     it('should call smartSnippet.sendDetailedFeedback for "other" option', async () => {
@@ -238,9 +227,7 @@ describe('atomic-smart-snippet-feedback-modal', () => {
       bodyCall[0].props.onSubmit(submitEvent);
       await element.updateComplete;
 
-      expect(mockedSmartSnippet.sendDetailedFeedback).toHaveBeenCalledWith(
-        'Custom feedback'
-      );
+      expect(mockedSmartSnippet.sendDetailedFeedback).toHaveBeenCalledWith('Custom feedback');
     });
 
     it('should dispatch feedbackSent event', async () => {

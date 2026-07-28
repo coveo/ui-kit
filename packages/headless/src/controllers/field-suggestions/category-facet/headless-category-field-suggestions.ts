@@ -27,10 +27,7 @@ import type {
   SearchSection,
 } from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
-import {
-  buildController,
-  type Subscribable,
-} from '../../controller/headless-controller.js';
+import {buildController, type Subscribable} from '../../controller/headless-controller.js';
 import {determineFacetId} from '../../core/facets/_common/facet-id-determinor.js';
 import type {CategoryFacetOptions} from '../../facets/category-facet/headless-category-facet.js';
 import {buildCategoryFacetSearch} from '../../facets/category-facet/headless-category-facet-search.js';
@@ -93,7 +90,6 @@ export interface CategoryFieldSuggestionsState {
  *
  * This controller is a wrapper around the basic category facet controller search functionality, and thus exposes similar options and properties.
  *
- * Example: [category-suggestions.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/field-suggestions/category-field/category-suggestions.fn.tsx)
  *
  * @group Controllers
  * @category CategoryFieldSuggestions
@@ -174,8 +170,7 @@ export function buildCategoryFieldSuggestions(
   if (!loadCategoryFieldSuggestionsReducers(engine)) {
     throw loadReducerError;
   }
-  const {facetSearch: facetSearchOptions, ...facetOptions} =
-    props.options.facet;
+  const {facetSearch: facetSearchOptions, ...facetOptions} = props.options.facet;
   const facetId = determineFacetId(engine, facetOptions);
   engine.dispatch(
     registerCategoryFacet({
@@ -217,10 +212,7 @@ export function buildCategoryFieldSuggestions(
 function loadCategoryFieldSuggestionsReducers(
   engine: CoreEngine
 ): engine is CoreEngine<
-  CategoryFacetSection &
-    ConfigurationSection &
-    CategoryFacetSearchSection &
-    SearchSection,
+  CategoryFacetSection & ConfigurationSection & CategoryFacetSearchSection & SearchSection,
   SearchThunkExtraArguments
 > {
   engine.addReducers({

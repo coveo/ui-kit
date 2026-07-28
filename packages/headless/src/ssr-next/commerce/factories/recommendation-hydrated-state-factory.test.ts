@@ -37,9 +37,7 @@ describe('hydratedRecommendationStaticStateFactory', () => {
   const mockBuildResult = {
     engine: {
       dispatch: vi.fn(),
-      waitForRequestCompletedAction: vi
-        .fn()
-        .mockResolvedValue([{type: 'some-action'}]),
+      waitForRequestCompletedAction: vi.fn().mockResolvedValue([{type: 'some-action'}]),
     },
     controllers: {},
   };
@@ -52,23 +50,16 @@ describe('hydratedRecommendationStaticStateFactory', () => {
     const mockSolutionTypeBuild = vi.fn().mockResolvedValue(mockBuildResult);
     const controllerDefinitions = createControllerDefinitions();
     const options = createEngineOptions();
-    const mockRecommendationState = vi
-      .fn()
-      .mockImplementation(() => mockSolutionTypeBuild);
+    const mockRecommendationState = vi.fn().mockImplementation(() => mockSolutionTypeBuild);
     vi.mocked(buildFactory).mockReturnValue(mockRecommendationState);
 
-    const factory = hydratedRecommendationStaticStateFactory(
-      controllerDefinitions,
-      options
-    );
+    const factory = hydratedRecommendationStaticStateFactory(controllerDefinitions, options);
 
     // @ts-expect-error: do not care about hydration props here
     await factory();
 
     expect(buildFactory).toHaveBeenCalledWith(controllerDefinitions, options);
-    expect(mockRecommendationState).toHaveBeenCalledWith(
-      SolutionType.recommendation
-    );
+    expect(mockRecommendationState).toHaveBeenCalledWith(SolutionType.recommendation);
   });
 
   it('should wait for request completion', async () => {
@@ -83,9 +74,7 @@ describe('hydratedRecommendationStaticStateFactory', () => {
     // @ts-expect-error: do not care about hydration props here
     const staticState = await factory();
 
-    expect(
-      mockBuildResult.engine.waitForRequestCompletedAction
-    ).toHaveBeenCalledOnce();
+    expect(mockBuildResult.engine.waitForRequestCompletedAction).toHaveBeenCalledOnce();
     expect(staticState).toEqual(mockBuildResult);
   });
 });

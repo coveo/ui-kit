@@ -193,10 +193,7 @@ const agentMessages: AgentEvent[] = [
 
 const headAnswerMessages = agentMessages.filter(
   (message) =>
-    !(
-      message.stepName &&
-      (message.stepName === 'Searching' || message.stepName === 'Thinking')
-    )
+    !(message.stepName && (message.stepName === 'Searching' || message.stepName === 'Thinking'))
 );
 
 const cloneMessagesForResponse = (messages: AgentEvent[], answerId: string) => {
@@ -259,8 +256,7 @@ const headAnswerResponse = () =>
     answerId: HEAD_ANSWER_ID,
   });
 
-const followUpNetworkErrorResponse = () =>
-  new HttpResponse(null, {status: 500});
+const followUpNetworkErrorResponse = () => new HttpResponse(null, {status: 500});
 
 const followUpTurnLimitErrorResponse = () =>
   buildAnsweringStreamingResponse({

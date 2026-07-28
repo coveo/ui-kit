@@ -7,9 +7,7 @@ import {
 } from '@coveo/bueno';
 import type {SearchParameters} from './search-parameter-actions.js';
 
-export const searchParametersDefinition: SchemaDefinition<
-  Required<SearchParameters>
-> = {
+export const searchParametersDefinition: SchemaDefinition<Required<SearchParameters>> = {
   q: new StringValue(),
   enableQuerySyntax: new BooleanValue(),
   aq: new StringValue(),

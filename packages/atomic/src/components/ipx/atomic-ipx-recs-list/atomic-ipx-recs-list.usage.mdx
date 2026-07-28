@@ -1,3 +1,5 @@
+import SetRenderFunctionNote from '@/storybook-utils/documentation/set-render-function-note.mdx';
+
 The `atomic-ipx-recs-list` component displays recommendations for the In-Product Experience (IPX) use case by applying one or more result templates.
 It supports carousel pagination, customizable display layouts, and integrates with the IPX actions history for tracking user interactions.
 
@@ -48,4 +50,34 @@ Customize the number of columns using the `--atomic-recs-number-of-columns` CSS 
     --atomic-recs-number-of-columns: 3;
   }
 </style>
+```
+
+### Using `setRenderFunction` for custom rendering
+
+<SetRenderFunctionNote />
+
+```html
+<script type="module">
+  await customElements.whenDefined('atomic-ipx-recs-list');
+  const ipxRecsList = document.querySelector('atomic-ipx-recs-list');
+
+  await ipxRecsList.setRenderFunction((result, root, linkContainer) => {
+    const link = `<atomic-result-link></atomic-result-link>`;
+
+    root.innerHTML = `
+      <atomic-result-section-title>
+        ${link}
+      </atomic-result-section-title>
+      <atomic-result-section-excerpt>
+        <atomic-result-text field="excerpt"></atomic-result-text>
+      </atomic-result-section-excerpt>
+    `;
+
+    if (linkContainer) {
+      linkContainer.innerHTML = link;
+    }
+
+    return root.innerHTML;
+  });
+</script>
 ```

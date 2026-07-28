@@ -87,8 +87,7 @@ describe('atomic-breadbox', () => {
       showLess: () => page.getByText('Show less'),
       clearAll: () => page.getByLabelText('Clear All Filters'),
       parts: (element: AtomicBreadbox) => {
-        const qs = (part: string) =>
-          element.shadowRoot?.querySelector(`[part="${part}"]`);
+        const qs = (part: string) => element.shadowRoot?.querySelector(`[part="${part}"]`);
         return {
           container: qs('container'),
           breadcrumbListContainer: qs('breadcrumb-list-container'),
@@ -120,9 +119,7 @@ describe('atomic-breadbox', () => {
       });
 
       expect(element.error).toBeDefined();
-      expect(element.error.message).toMatch(
-        /pathLimit: minimum value of 1 not respected/i
-      );
+      expect(element.error.message).toMatch(/pathLimit: minimum value of 1 not respected/i);
     });
 
     it('should set error when valid pathLimit is updated to a value lower than 1', async () => {
@@ -135,9 +132,7 @@ describe('atomic-breadbox', () => {
       await element.updateComplete;
 
       expect(element.error).toBeDefined();
-      expect(element.error.message).toMatch(
-        /pathLimit: minimum value of 1 not respected/i
-      );
+      expect(element.error.message).toMatch(/pathLimit: minimum value of 1 not respected/i);
     });
   });
 
@@ -157,9 +152,7 @@ describe('atomic-breadbox', () => {
     it('should sync breadcrumbManagerState to controller state', async () => {
       const {element} = await renderBreadbox();
 
-      expect(element.breadcrumbManagerState).toEqual(
-        mockedBreadcrumbManager.state
-      );
+      expect(element.breadcrumbManagerState).toEqual(mockedBreadcrumbManager.state);
     });
 
     it('should sync facetManagerState to controller state', async () => {
@@ -214,9 +207,7 @@ describe('atomic-breadbox', () => {
           automaticFacetBreadcrumbs: [],
         },
       });
-      expect(
-        element.shadowRoot?.querySelector('[part="container"]')
-      ).toBeNull();
+      expect(element.shadowRoot?.querySelector('[part="container"]')).toBeNull();
     });
 
     it('should have the empty custom state when there are no breadcrumbs', async () => {
@@ -304,30 +295,16 @@ describe('atomic-breadbox', () => {
 
       const partsElements = parts(element);
 
-      await expect
-        .element(partsElements.container! as HTMLElement)
-        .toBeInTheDocument();
+      await expect.element(partsElements.container! as HTMLElement).toBeInTheDocument();
       await expect
         .element(partsElements.breadcrumbListContainer! as HTMLElement)
         .toBeInTheDocument();
-      await expect
-        .element(partsElements.breadcrumbList! as HTMLElement)
-        .toBeInTheDocument();
-      await expect
-        .element(partsElements.breadcrumbButton! as HTMLElement)
-        .toBeInTheDocument();
-      await expect
-        .element(partsElements.breadcrumbLabel! as HTMLElement)
-        .toBeInTheDocument();
-      await expect
-        .element(partsElements.breadcrumbValue! as HTMLElement)
-        .toBeInTheDocument();
-      await expect
-        .element(partsElements.breadcrumbClear! as HTMLElement)
-        .toBeInTheDocument();
-      await expect
-        .element(partsElements.clearAll! as HTMLElement)
-        .toBeInTheDocument();
+      await expect.element(partsElements.breadcrumbList! as HTMLElement).toBeInTheDocument();
+      await expect.element(partsElements.breadcrumbButton! as HTMLElement).toBeInTheDocument();
+      await expect.element(partsElements.breadcrumbLabel! as HTMLElement).toBeInTheDocument();
+      await expect.element(partsElements.breadcrumbValue! as HTMLElement).toBeInTheDocument();
+      await expect.element(partsElements.breadcrumbClear! as HTMLElement).toBeInTheDocument();
+      await expect.element(partsElements.clearAll! as HTMLElement).toBeInTheDocument();
     });
 
     it('should render show more part in shadow DOM even when not visible', async () => {
@@ -433,9 +410,7 @@ describe('atomic-breadbox', () => {
         },
       });
 
-      expect(
-        element.shadowRoot?.querySelector('[part="container"]')
-      ).not.toBeNull();
+      expect(element.shadowRoot?.querySelector('[part="container"]')).not.toBeNull();
     });
   });
 
@@ -540,9 +515,7 @@ describe('atomic-breadbox', () => {
         ],
       },
     });
-    await expect
-      .element(clearAll())
-      .toHaveAttribute('aria-label', 'Clear All Filters');
+    await expect.element(clearAll()).toHaveAttribute('aria-label', 'Clear All Filters');
   });
 
   describe('disconnectedCallback', () => {
@@ -628,9 +601,7 @@ describe('atomic-breadbox', () => {
         },
       });
 
-      expect(
-        element.shadowRoot?.querySelector('[part="container"]')
-      ).not.toBeNull();
+      expect(element.shadowRoot?.querySelector('[part="container"]')).not.toBeNull();
     });
   });
 
@@ -687,9 +658,7 @@ describe('atomic-breadbox', () => {
       });
 
       await expect.element(clearAll()).toHaveRole('button');
-      await expect
-        .element(clearAll())
-        .toHaveAttribute('aria-label', 'Clear All Filters');
+      await expect.element(clearAll()).toHaveAttribute('aria-label', 'Clear All Filters');
     });
   });
 
@@ -714,13 +683,9 @@ describe('atomic-breadbox', () => {
         },
       });
 
-      expect(
-        element.shadowRoot?.querySelector('[part="container"]')
-      ).not.toBeNull();
+      expect(element.shadowRoot?.querySelector('[part="container"]')).not.toBeNull();
 
-      const breadcrumbButtons = element.shadowRoot?.querySelectorAll(
-        '[part="breadcrumb-button"]'
-      );
+      const breadcrumbButtons = element.shadowRoot?.querySelectorAll('[part="breadcrumb-button"]');
       expect(breadcrumbButtons?.length).toBeGreaterThan(0);
 
       expect(element.isConnected).toBe(true);
@@ -783,9 +748,7 @@ describe('atomic-breadbox', () => {
         breadcrumbState,
       });
 
-      const breadcrumbButtons = element.shadowRoot?.querySelectorAll(
-        '[part="breadcrumb-button"]'
-      );
+      const breadcrumbButtons = element.shadowRoot?.querySelectorAll('[part="breadcrumb-button"]');
       expect(breadcrumbButtons?.length).toBe(5);
 
       const partsElements = parts(element);

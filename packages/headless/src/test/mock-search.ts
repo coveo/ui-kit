@@ -4,9 +4,7 @@ import type {ExecuteSearchThunkReturn} from '../features/search/search-actions.j
 import type {SearchState} from '../features/search/search-state.js';
 import {buildMockSearchResponse} from './mock-search-response.js';
 
-export function buildMockSearch(
-  config: Partial<SearchState> = {}
-): ExecuteSearchThunkReturn {
+export function buildMockSearch(config: Partial<SearchState> = {}): ExecuteSearchThunkReturn {
   return {
     response: buildMockSearchResponse(),
     duration: 0,

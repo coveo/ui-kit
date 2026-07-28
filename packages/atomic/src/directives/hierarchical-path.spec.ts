@@ -1,9 +1,6 @@
 import {html, render} from 'lit';
 import {afterEach, beforeEach, describe, expect, it} from 'vitest';
-import {
-  type HierarchicalPathProps,
-  hierarchicalPath,
-} from './hierarchical-path';
+import {type HierarchicalPathProps, hierarchicalPath} from './hierarchical-path';
 
 describe('#hierarchicalPath', () => {
   let container: HTMLElement;
@@ -39,9 +36,7 @@ describe('#hierarchicalPath', () => {
   it('should render single path item without separator', () => {
     renderPath({path: ['electronics']});
 
-    expect(container.textContent?.replace(/\s+/g, ' ').trim()).toBe(
-      'electronics'
-    );
+    expect(container.textContent?.replace(/\s+/g, ' ').trim()).toBe('electronics');
   });
 
   it('should render multiple path items with separators', () => {
@@ -58,9 +53,7 @@ describe('#hierarchicalPath', () => {
       separator: ' > ',
     });
 
-    expect(container.textContent?.replace(/\s+/g, ' ').trim()).toBe(
-      'electronics > computers'
-    );
+    expect(container.textContent?.replace(/\s+/g, ' ').trim()).toBe('electronics > computers');
   });
 
   it('should apply custom CSS classes', () => {
@@ -84,9 +77,7 @@ describe('#hierarchicalPath', () => {
       maxLength: 3,
     });
 
-    expect(container.textContent?.replace(/\s+/g, ' ').trim()).not.toContain(
-      '...'
-    );
+    expect(container.textContent?.replace(/\s+/g, ' ').trim()).not.toContain('...');
     expect(container.textContent).toContain('electronics');
     expect(container.textContent).toContain('computers');
     expect(container.textContent).toContain('laptops');
@@ -125,9 +116,7 @@ describe('#hierarchicalPath', () => {
     });
 
     const spans = container.querySelectorAll('span');
-    const ellipsisSpan = Array.from(spans).find((span) =>
-      span.textContent?.includes('...')
-    );
+    const ellipsisSpan = Array.from(spans).find((span) => span.textContent?.includes('...'));
 
     expect(ellipsisSpan).toHaveClass('ellipsis-style');
   });
@@ -138,18 +127,10 @@ describe('#hierarchicalPath', () => {
       maxLength: 1,
     });
 
-    expect(container.textContent?.replace(/\s+/g, ' ').trim()).toContain(
-      'level1'
-    );
-    expect(container.textContent?.replace(/\s+/g, ' ').trim()).not.toContain(
-      '...'
-    );
-    expect(container.textContent?.replace(/\s+/g, ' ').trim()).not.toContain(
-      'level2'
-    );
-    expect(container.textContent?.replace(/\s+/g, ' ').trim()).not.toContain(
-      'level3'
-    );
+    expect(container.textContent?.replace(/\s+/g, ' ').trim()).toContain('level1');
+    expect(container.textContent?.replace(/\s+/g, ' ').trim()).not.toContain('...');
+    expect(container.textContent?.replace(/\s+/g, ' ').trim()).not.toContain('level2');
+    expect(container.textContent?.replace(/\s+/g, ' ').trim()).not.toContain('level3');
   });
 
   it('should handle exactly maxLength items', () => {

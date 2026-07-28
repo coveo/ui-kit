@@ -1,8 +1,5 @@
 import {createMemoizedStateSelector} from '@/src/internal/utils/index.js';
-import {
-  configurationSlice,
-  initialConfigurationState,
-} from './configuration-slice.js';
+import {configurationSlice, initialConfigurationState} from './configuration-slice.js';
 import type {ConfigurationState} from './configuration-types.js';
 import type {State} from '@/src/internal/engine/engine-types.js';
 
@@ -56,22 +53,10 @@ export function createConfigurationSelectors() {
       selectConfigurationSlice,
       (state) => state.trackingId
     ),
-    getLanguage: createMemoizedStateSelector(
-      selectConfigurationSlice,
-      (state) => state.language
-    ),
-    getCountry: createMemoizedStateSelector(
-      selectConfigurationSlice,
-      (state) => state.country
-    ),
-    getCurrency: createMemoizedStateSelector(
-      selectConfigurationSlice,
-      (state) => state.currency
-    ),
-    getEndpoint: createMemoizedStateSelector(
-      selectConfigurationSlice,
-      (state) => state.endpoint
-    ),
+    getLanguage: createMemoizedStateSelector(selectConfigurationSlice, (state) => state.language),
+    getCountry: createMemoizedStateSelector(selectConfigurationSlice, (state) => state.country),
+    getCurrency: createMemoizedStateSelector(selectConfigurationSlice, (state) => state.currency),
+    getEndpoint: createMemoizedStateSelector(selectConfigurationSlice, (state) => state.endpoint),
     getEndpointClientConfiguration: createMemoizedStateSelector(
       selectConfigurationSlice,
       (state) => ({
@@ -83,8 +68,7 @@ export function createConfigurationSelectors() {
   };
 }
 
-let cachedSelectors: ReturnType<typeof createConfigurationSelectors> | null =
-  null;
+let cachedSelectors: ReturnType<typeof createConfigurationSelectors> | null = null;
 
 export function getOrCreateConfigurationSelectors() {
   if (!cachedSelectors) {

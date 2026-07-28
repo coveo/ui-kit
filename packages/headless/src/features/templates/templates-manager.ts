@@ -1,10 +1,4 @@
-import {
-  ArrayValue,
-  NumberValue,
-  Schema,
-  SchemaValidationError,
-  Value,
-} from '@coveo/bueno';
+import {ArrayValue, NumberValue, Schema, SchemaValidationError, Value} from '@coveo/bueno';
 import {requiredNonEmptyString} from '../../utils/validate-payload.js';
 
 export type TemplateCondition<ItemType> = (item: ItemType) => boolean;
@@ -48,9 +42,7 @@ export interface TemplatesManager<
   TemplateContent = unknown,
   LinkTemplateContent = unknown,
 > {
-  registerTemplates(
-    ...newTemplates: Template<ItemType, TemplateContent>[]
-  ): void;
+  registerTemplates(...newTemplates: Template<ItemType, TemplateContent>[]): void;
 
   selectTemplate(item: ItemType): TemplateContent | null;
   selectLinkTemplate(item: ItemType): LinkTemplateContent | null;
@@ -61,12 +53,8 @@ export function buildTemplatesManager<
   TemplateContent = unknown,
   LinkTemplateContent = unknown,
 >(): TemplatesManager<ItemType, TemplateContent, LinkTemplateContent> {
-  const templates: Required<
-    Template<ItemType, TemplateContent, LinkTemplateContent>
-  >[] = [];
-  const validateTemplate = (
-    template: Template<ItemType, TemplateContent, LinkTemplateContent>
-  ) => {
+  const templates: Required<Template<ItemType, TemplateContent, LinkTemplateContent>>[] = [];
+  const validateTemplate = (template: Template<ItemType, TemplateContent, LinkTemplateContent>) => {
     const validated = templateSchema.validate(template);
     const areConditionsValid = template.conditions.every(
       (condition) => condition instanceof Function
@@ -81,13 +69,7 @@ export function buildTemplatesManager<
   };
 
   return {
-    registerTemplates(
-      ...newTemplates: Template<
-        ItemType,
-        TemplateContent,
-        LinkTemplateContent
-      >[]
-    ) {
+    registerTemplates(...newTemplates: Template<ItemType, TemplateContent, LinkTemplateContent>[]) {
       newTemplates.forEach((template) => {
         const templatesWithDefault = {
           ...(validateTemplate(template) as Required<

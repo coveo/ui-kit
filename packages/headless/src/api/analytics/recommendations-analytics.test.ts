@@ -12,21 +12,14 @@ describe('recommendations analytics', () => {
   it('should properly return the pipeline from the state', () => {
     const state = getBaseState();
     state.pipeline = 'foo';
-    expect(new RecommendationAnalyticsProvider(() => state).getPipeline()).toBe(
-      'foo'
-    );
+    expect(new RecommendationAnalyticsProvider(() => state).getPipeline()).toBe('foo');
   });
 
   it('should properly return getSearchEventRequestPayload', () => {
     const state = getBaseState();
-    state.recommendation!.recommendations = [
-      buildMockResult(),
-      buildMockResult(),
-    ];
+    state.recommendation!.recommendations = [buildMockResult(), buildMockResult()];
     expect(
-      new RecommendationAnalyticsProvider(
-        () => state
-      ).getSearchEventRequestPayload()
+      new RecommendationAnalyticsProvider(() => state).getSearchEventRequestPayload()
     ).toMatchObject({
       queryText: '',
       responseTime: 0,
@@ -38,9 +31,7 @@ describe('recommendations analytics', () => {
   it('should properly return getSearchUID from recommendation.searchUid', () => {
     const state = getBaseState();
     state.recommendation!.searchUid = 'the_id';
-    expect(
-      new RecommendationAnalyticsProvider(() => state).getSearchUID()
-    ).toEqual('the_id');
+    expect(new RecommendationAnalyticsProvider(() => state).getSearchUID()).toEqual('the_id');
   });
 
   it('should return an undefined getSplitTestRunVersion if there is no splitTestRunName', () => {
@@ -56,9 +47,9 @@ describe('recommendations analytics', () => {
     state.recommendation!.splitTestRun = 'foo';
     state.recommendation!.pipeline = 'pipeline-from-response';
     state.pipeline = 'pipeline-from-state';
-    expect(
-      new RecommendationAnalyticsProvider(() => state).getSplitTestRunVersion()
-    ).toBe('pipeline-from-response');
+    expect(new RecommendationAnalyticsProvider(() => state).getSplitTestRunVersion()).toBe(
+      'pipeline-from-response'
+    );
   });
 
   it('should return getSplitTestRunVersion from the pipeline state value if there is no pipeline available in the search response', () => {
@@ -66,8 +57,8 @@ describe('recommendations analytics', () => {
     state.recommendation!.splitTestRun = 'foo';
     state.recommendation!.pipeline = '';
     state.pipeline = 'pipeline-from-state';
-    expect(
-      new RecommendationAnalyticsProvider(() => state).getSplitTestRunVersion()
-    ).toBe('pipeline-from-state');
+    expect(new RecommendationAnalyticsProvider(() => state).getSplitTestRunVersion()).toBe(
+      'pipeline-from-state'
+    );
   });
 });

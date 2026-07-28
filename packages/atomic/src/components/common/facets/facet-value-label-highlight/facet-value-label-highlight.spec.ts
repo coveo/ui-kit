@@ -18,9 +18,7 @@ describe('#renderFacetValueLabelHighlight', () => {
       isExcluded: false,
       ...props,
     };
-    return await renderFunctionFixture(
-      html`${renderFacetValueLabelHighlight({props: baseProps})}`
-    );
+    return await renderFunctionFixture(html`${renderFacetValueLabelHighlight({props: baseProps})}`);
   };
 
   const locators = {

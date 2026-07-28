@@ -3,10 +3,9 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import '@/src/components/common/atomic-focus-trap/atomic-focus-trap.js';
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-focus-trap',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-focus-trap', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-focus-trap',

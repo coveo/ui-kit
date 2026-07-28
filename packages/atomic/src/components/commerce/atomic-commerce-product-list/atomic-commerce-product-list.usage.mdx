@@ -1,3 +1,4 @@
+import SetRenderFunctionNote from '@/storybook-utils/documentation/set-render-function-note.mdx';
 
 This component is typically placed within the `products` section of the layout.
 
@@ -86,4 +87,34 @@ For example,
   await commerceInterface.executeFirstRequest();
 </script>
 
+```
+
+### Using `setRenderFunction` for custom rendering
+
+<SetRenderFunctionNote />
+
+```html
+<script type="module">
+  await customElements.whenDefined('atomic-commerce-product-list');
+  const productList = document.querySelector('atomic-commerce-product-list');
+
+  await productList.setRenderFunction((product, root, linkContainer) => {
+    const link = `<atomic-product-link>${product.ec_name}</atomic-product-link>`;
+
+    root.innerHTML = `
+      <atomic-product-section-name>
+        ${link}
+      </atomic-product-section-name>
+      <atomic-product-section-metadata>
+        <atomic-product-price></atomic-product-price>
+      </atomic-product-section-metadata>
+    `;
+
+    if (linkContainer) {
+      linkContainer.innerHTML = link;
+    }
+
+    return root.innerHTML;
+  });
+</script>
 ```

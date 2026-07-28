@@ -9,15 +9,9 @@ import {
 } from '../../../features/did-you-mean/did-you-mean-actions.js';
 import {hasQueryCorrectionSelector} from '../../../features/did-you-mean/did-you-mean-selectors.js';
 import {didYouMeanReducer as didYouMean} from '../../../features/did-you-mean/did-you-mean-slice.js';
-import type {
-  ConfigurationSection,
-  DidYouMeanSection,
-} from '../../../state/state-sections.js';
+import type {ConfigurationSection, DidYouMeanSection} from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
-import {
-  buildController,
-  type Controller,
-} from '../../controller/headless-controller.js';
+import {buildController, type Controller} from '../../controller/headless-controller.js';
 
 export interface DidYouMeanProps {
   options?: DidYouMeanOptions;
@@ -49,7 +43,6 @@ export interface DidYouMeanOptions {
 /**
  * The `DidYouMean` controller is responsible for handling query corrections.
  *
- * Example: [did-you-mean.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/did-you-mean/did-you-mean.fn.tsx)
  *
  * @group Controllers
  * @category DidYouMean
@@ -121,10 +114,7 @@ export interface DidYouMeanState {
  * @group Controllers
  * @category DidYouMean
  */
-export function buildCoreDidYouMean(
-  engine: CoreEngine,
-  props: DidYouMeanProps = {}
-): DidYouMean {
+export function buildCoreDidYouMean(engine: CoreEngine, props: DidYouMeanProps = {}): DidYouMean {
   if (!loadDidYouMeanReducers(engine)) {
     throw loadReducerError;
   }
@@ -141,8 +131,7 @@ export function buildCoreDidYouMean(
   dispatch(setCorrectionMode(props.options?.queryCorrectionMode || 'next'));
 
   const getState = () => engine.state;
-  const hasQueryCorrection = () =>
-    hasQueryCorrectionSelector(getState().didYouMean);
+  const hasQueryCorrection = () => hasQueryCorrectionSelector(getState().didYouMean);
 
   return {
     ...controller,
@@ -160,9 +149,7 @@ export function buildCoreDidYouMean(
     },
 
     applyCorrection() {
-      dispatch(
-        applyDidYouMeanCorrection(this.state.queryCorrection.correctedQuery)
-      );
+      dispatch(applyDidYouMeanCorrection(this.state.queryCorrection.correctedQuery));
     },
     updateQueryCorrectionMode(queryCorrectionMode: QueryCorrectionMode) {
       dispatch(setCorrectionMode(queryCorrectionMode));

@@ -6,10 +6,7 @@ import {
 import {productEnrichmentReducer} from '../../../features/commerce/product-enrichment/product-enrichment-slice.js';
 import {getProductEnrichmentInitialState} from '../../../features/commerce/product-enrichment/product-enrichment-state.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
-import {
-  buildMockCommerceEngine,
-  type MockedCommerceEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockCommerceEngine, type MockedCommerceEngine} from '../../../test/mock-engine-v2.js';
 import {buildMockBadgesProduct} from '../../../test/mock-product-enrichment.js';
 import {
   buildProductEnrichment,
@@ -17,9 +14,7 @@ import {
   type ProductEnrichmentProps,
 } from './headless-product-enrichment.js';
 
-vi.mock(
-  '../../../features/commerce/product-enrichment/product-enrichment-actions'
-);
+vi.mock('../../../features/commerce/product-enrichment/product-enrichment-actions');
 
 describe('ProductEnrichment', () => {
   let engine: MockedCommerceEngine;
@@ -88,9 +83,7 @@ describe('ProductEnrichment', () => {
         placementIds: [],
         productId: undefined,
       });
-      expect(engine.dispatch).toHaveBeenCalledWith(
-        mockedRegister.mock.results[0].value
-      );
+      expect(engine.dispatch).toHaveBeenCalledWith(mockedRegister.mock.results[0].value);
     });
 
     it('dispatches registerProductEnrichmentOptions with provided placementIds', () => {
@@ -107,9 +100,7 @@ describe('ProductEnrichment', () => {
         placementIds: ['placement1', 'placement2'],
         productId: undefined,
       });
-      expect(engine.dispatch).toHaveBeenCalledWith(
-        mockedRegister.mock.results[0].value
-      );
+      expect(engine.dispatch).toHaveBeenCalledWith(mockedRegister.mock.results[0].value);
     });
 
     it('dispatches registerProductEnrichmentOptions with provided placementIds and productId', () => {
@@ -127,9 +118,7 @@ describe('ProductEnrichment', () => {
         placementIds: ['placement1'],
         productId: 'product123',
       });
-      expect(engine.dispatch).toHaveBeenCalledWith(
-        mockedRegister.mock.results[0].value
-      );
+      expect(engine.dispatch).toHaveBeenCalledWith(mockedRegister.mock.results[0].value);
     });
   });
 

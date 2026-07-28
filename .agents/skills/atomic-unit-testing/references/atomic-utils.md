@@ -28,9 +28,7 @@ describe('filterProtocol', () => {
 
   it('allows good protocols', () => {
     expect(filterProtocol('https://github.com/')).toBe('https://github.com/');
-    expect(filterProtocol('mailto:user@example.com')).toBe(
-      'mailto:user@example.com'
-    );
+    expect(filterProtocol('mailto:user@example.com')).toBe('mailto:user@example.com');
   });
 });
 ```
@@ -53,15 +51,11 @@ describe('promise-utils', () => {
 
   describe('#promiseTimeout', () => {
     it('should resolve when promise completes before timeout', async () => {
-      await expect(promiseTimeout(Promise.resolve('ok'), 1000)).resolves.toBe(
-        'ok'
-      );
+      await expect(promiseTimeout(Promise.resolve('ok'), 1000)).resolves.toBe('ok');
     });
 
     it('should reject when promise exceeds timeout', async () => {
-      const slow = new Promise((resolve) =>
-        setTimeout(() => resolve('late'), 2000)
-      );
+      const slow = new Promise((resolve) => setTimeout(() => resolve('late'), 2000));
       const result = promiseTimeout(slow, 1000);
       vi.advanceTimersByTime(1000);
       await expect(result).rejects.toThrow('Promise timed out.');
@@ -139,9 +133,7 @@ beforeEach(() => {
   Object.defineProperties(mockButton, {
     clientWidth: {value: 100, writable: true, configurable: true},
     getBoundingClientRect: {
-      value: vi
-        .fn()
-        .mockReturnValue({top: 50, left: 100, width: 100, height: 80}),
+      value: vi.fn().mockReturnValue({top: 50, left: 100, width: 100, height: 80}),
       writable: true,
       configurable: true,
     },

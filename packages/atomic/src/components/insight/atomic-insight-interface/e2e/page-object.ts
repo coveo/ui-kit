@@ -89,22 +89,15 @@ export class InsightInterfacePageObject extends BasePageObject {
   }
 
   async hoverResultTitleByIndex(index: number) {
-    await this.getResultByIndex(index)
-      .locator('atomic-result-link')
-      .first()
-      .hover();
+    await this.getResultByIndex(index).locator('atomic-result-link').first().hover();
   }
 
   getActionBarByIndex(index: number) {
-    return this.getResultByIndex(index)
-      .locator('atomic-insight-result-action-bar')
-      .first();
+    return this.getResultByIndex(index).locator('atomic-insight-result-action-bar').first();
   }
 
   getResultAttachToCaseByIndex(index: number) {
-    return this.getActionBarByIndex(index).locator(
-      'atomic-insight-result-attach-to-case-action'
-    );
+    return this.getActionBarByIndex(index).locator('atomic-insight-result-attach-to-case-action');
   }
 
   getResultCopyToClipboardByIndex(index: number) {
@@ -114,9 +107,7 @@ export class InsightInterfacePageObject extends BasePageObject {
   }
 
   getResultQuickviewByIndex(index: number) {
-    return this.getActionBarByIndex(index).locator(
-      'atomic-insight-result-quickview-action'
-    );
+    return this.getActionBarByIndex(index).locator('atomic-insight-result-quickview-action');
   }
 
   async openResultQuickviewByIndex(index: number) {

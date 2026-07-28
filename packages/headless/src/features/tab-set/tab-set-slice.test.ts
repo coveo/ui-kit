@@ -107,10 +107,7 @@ describe('tab set slice', () => {
     it sets #isActive on the other tab to false`, () => {
       const tabA = buildMockTabSlice({id: 'a', isActive: false});
       const tabB = buildMockTabSlice({id: 'b', isActive: true});
-      const finalState = tabSetReducer(
-        {a: tabA, b: tabB},
-        updateActiveTab('a')
-      );
+      const finalState = tabSetReducer({a: tabA, b: tabB}, updateActiveTab('a'));
 
       expect(finalState.b).toEqual({...tabB, isActive: false});
     });
@@ -149,10 +146,7 @@ describe('tab set slice', () => {
       const tabA = buildMockTabSlice({id: 'a', isActive: false});
       const tabB = buildMockTabSlice({id: 'b', isActive: true});
 
-      const finalState = tabSetReducer(
-        {a: tabA, b: tabB},
-        restoreSearchParameters({tab: 'a'})
-      );
+      const finalState = tabSetReducer({a: tabA, b: tabB}, restoreSearchParameters({tab: 'a'}));
 
       expect(finalState).toEqual({
         a: {...tabA, isActive: true},

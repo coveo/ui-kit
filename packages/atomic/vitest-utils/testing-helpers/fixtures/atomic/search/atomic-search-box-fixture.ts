@@ -11,9 +11,7 @@ import type {
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 
-type SearchSearchBoxBindings = SearchBoxSuggestionsBindings<
-  SearchBox | StandaloneSearchBox
->;
+type SearchSearchBoxBindings = SearchBoxSuggestionsBindings<SearchBox | StandaloneSearchBox>;
 
 @customElement('atomic-search-box')
 export class FixtureAtomicSearchBox extends LitElement {
@@ -69,9 +67,7 @@ export class FixtureAtomicSearchBox extends LitElement {
     const container = document.createElement('div');
     render(this.template, container);
 
-    return this.ready
-      ? this.replaceChildren(container.firstElementChild!)
-      : nothing;
+    return this.ready ? this.replaceChildren(container.firstElementChild!) : nothing;
   }
 }
 
@@ -108,8 +104,7 @@ export const defaultBindings = {
 };
 
 defaultBindings satisfies Partial<SearchSearchBoxBindings>;
-type MinimalBindings = Partial<SearchSearchBoxBindings> &
-  typeof defaultBindings;
+type MinimalBindings = Partial<SearchSearchBoxBindings> & typeof defaultBindings;
 
 export async function renderInAtomicSearchBox<T extends LitElement>({
   template,
@@ -118,9 +113,7 @@ export async function renderInAtomicSearchBox<T extends LitElement>({
 }: {
   template: TemplateResult;
   selector: string;
-  bindings?:
-    | Partial<SearchSearchBoxBindings>
-    | ((bindings: MinimalBindings) => MinimalBindings);
+  bindings?: Partial<SearchSearchBoxBindings> | ((bindings: MinimalBindings) => MinimalBindings);
 }): Promise<{
   element: T;
   searchBox: FixtureAtomicSearchBox;

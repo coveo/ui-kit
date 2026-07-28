@@ -80,9 +80,7 @@ describe('atomic-category-facet', () => {
       );
     }
     if (options?.tabManagerState) {
-      vi.mocked(buildTabManager).mockReturnValue(
-        buildFakeTabManager(options.tabManagerState)
-      );
+      vi.mocked(buildTabManager).mockReturnValue(buildFakeTabManager(options.tabManagerState));
     }
 
     const {element} = await renderInAtomicSearchInterface<AtomicCategoryFacet>({
@@ -142,9 +140,7 @@ describe('atomic-category-facet', () => {
         return element.shadowRoot?.querySelector('[part=search-wrapper]');
       },
       get allCategoriesButton() {
-        return element.shadowRoot?.querySelector(
-          '[part=all-categories-button]'
-        );
+        return element.shadowRoot?.querySelector('[part=all-categories-button]');
       },
       get parents() {
         return element.shadowRoot?.querySelector('[part=parents]');
@@ -399,9 +395,7 @@ describe('atomic-category-facet', () => {
       tabsExcluded: ['tab2'],
     });
 
-    expect(mockedConsole.warn).toHaveBeenCalledWith(
-      expect.stringContaining('tabs-included')
-    );
+    expect(mockedConsole.warn).toHaveBeenCalledWith(expect.stringContaining('tabs-included'));
   });
 
   it('should build facet conditions manager when dependsOn is provided', async () => {
@@ -439,9 +433,7 @@ describe('atomic-category-facet', () => {
   it('should render label in facet header', async () => {
     const customLabel = 'Product Categories';
     const {labelButton} = await renderCategoryFacet({label: customLabel});
-    await expect
-      .element(labelButton as HTMLElement)
-      .toHaveTextContent(customLabel);
+    await expect.element(labelButton as HTMLElement).toHaveTextContent(customLabel);
   });
 
   it('should register facet with label in store', async () => {

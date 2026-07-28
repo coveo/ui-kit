@@ -11,24 +11,15 @@ import {
   logFacetSelect,
   logFacetUnexclude,
 } from '../../features/facets/facet-set/facet-set-analytics-actions.js';
-import {
-  logSearchboxSubmit,
-  searchboxSubmit,
-} from '../../features/query/query-analytics-actions.js';
+import {logSearchboxSubmit, searchboxSubmit} from '../../features/query/query-analytics-actions.js';
 import type {SearchParameters} from '../../features/search-parameters/search-parameter-actions.js';
 import {
   logResultsSort,
   resultsSort,
 } from '../../features/sort-criteria/sort-criteria-analytics-actions.js';
-import {
-  interfaceChange,
-  logInterfaceChange,
-} from '../analytics/analytics-actions.js';
+import {interfaceChange, logInterfaceChange} from '../analytics/analytics-actions.js';
 import type {LegacySearchAction} from '../analytics/analytics-utils.js';
-import {
-  logPageNumber,
-  logPagerResize,
-} from '../pagination/pagination-analytics-actions.js';
+import {logPageNumber, logPagerResize} from '../pagination/pagination-analytics-actions.js';
 import type {SearchAction} from '../search/search-actions.js';
 
 //TODO: KIT-2859
@@ -56,12 +47,7 @@ export function legacyLogParametersChange(
     return legacyLogFacetAnalyticsAction(previousParameters.f, newParameters.f);
   }
 
-  if (
-    areFacetParamsNotEqual(
-      previousParameters.fExcluded,
-      newParameters.fExcluded
-    )
-  ) {
+  if (areFacetParamsNotEqual(previousParameters.fExcluded, newParameters.fExcluded)) {
     return legacyLogFacetAnalyticsAction(
       previousParameters.fExcluded,
       newParameters.fExcluded,
@@ -70,31 +56,19 @@ export function legacyLogParametersChange(
   }
 
   if (areFacetParamsNotEqual(previousParameters.cf, newParameters.cf)) {
-    return legacyLogFacetAnalyticsAction(
-      previousParameters.cf,
-      newParameters.cf
-    );
+    return legacyLogFacetAnalyticsAction(previousParameters.cf, newParameters.cf);
   }
 
   if (areFacetParamsNotEqual(previousParameters.af, newParameters.af)) {
-    return legacyLogFacetAnalyticsAction(
-      previousParameters.af,
-      newParameters.af
-    );
+    return legacyLogFacetAnalyticsAction(previousParameters.af, newParameters.af);
   }
 
   if (areFacetParamsNotEqual(previousParameters.nf, newParameters.nf)) {
-    return legacyLogRangeFacetAnalyticsAction(
-      previousParameters.nf,
-      newParameters.nf
-    );
+    return legacyLogRangeFacetAnalyticsAction(previousParameters.nf, newParameters.nf);
   }
 
   if (areFacetParamsNotEqual(previousParameters.df, newParameters.df)) {
-    return legacyLogRangeFacetAnalyticsAction(
-      previousParameters.df,
-      newParameters.df
-    );
+    return legacyLogRangeFacetAnalyticsAction(previousParameters.df, newParameters.df);
   }
 
   return logInterfaceChange();
@@ -143,9 +117,7 @@ function legacyLogFacetAnalyticsAction(
   }
 
   const facetIdWithDifferentValues = newIds.find((key) =>
-    newFacets[key].filter((facetValue) =>
-      previousFacets[key].includes(facetValue)
-    )
+    newFacets[key].filter((facetValue) => previousFacets[key].includes(facetValue))
   );
   if (!facetIdWithDifferentValues) {
     return logInterfaceChange();
@@ -154,9 +126,7 @@ function legacyLogFacetAnalyticsAction(
   const previousValues = previousFacets[facetIdWithDifferentValues];
   const newValues = newFacets[facetIdWithDifferentValues];
 
-  const addedValues = newValues.filter(
-    (value) => !previousValues.includes(value)
-  );
+  const addedValues = newValues.filter((value) => !previousValues.includes(value));
 
   if (addedValues.length) {
     return excluded
@@ -170,9 +140,7 @@ function legacyLogFacetAnalyticsAction(
         });
   }
 
-  const removedValues = previousValues.filter(
-    (value) => !newValues.includes(value)
-  );
+  const removedValues = previousValues.filter((value) => !newValues.includes(value));
 
   if (removedValues.length) {
     return excluded
@@ -217,17 +185,8 @@ export function parametersChange(
     return facetAction(previousParameters.f, newParameters.f);
   }
 
-  if (
-    areFacetParamsNotEqual(
-      previousParameters.fExcluded,
-      newParameters.fExcluded
-    )
-  ) {
-    return facetAction(
-      previousParameters.fExcluded,
-      newParameters.fExcluded,
-      true
-    );
+  if (areFacetParamsNotEqual(previousParameters.fExcluded, newParameters.fExcluded)) {
+    return facetAction(previousParameters.fExcluded, newParameters.fExcluded, true);
   }
 
   if (areFacetParamsNotEqual(previousParameters.cf, newParameters.cf)) {
@@ -264,10 +223,7 @@ function areFacetParamsNotEqual(
 
 type AnyFacetParameters = FacetParameters | RangeFacetParameters;
 
-type RangeFacetParameters = Record<
-  string,
-  (NumericRangeRequest | DateRangeRequest)[]
->;
+type RangeFacetParameters = Record<string, (NumericRangeRequest | DateRangeRequest)[]>;
 
 type FacetParameters = Record<string, string[]>;
 
@@ -282,9 +238,7 @@ function facetAction(
   const removedIds = previousIds.filter((id) => !newIds.includes(id));
   if (removedIds.length) {
     const facetId = removedIds[0];
-    return previousFacets[facetId].length > 1
-      ? facetClearAll()
-      : facetDeselect();
+    return previousFacets[facetId].length > 1 ? facetClearAll() : facetDeselect();
   }
 
   const addedIds = newIds.filter((id) => !previousIds.includes(id));
@@ -293,9 +247,7 @@ function facetAction(
   }
 
   const facetIdWithDifferentValues = newIds.find((key) =>
-    newFacets[key].filter((facetValue) =>
-      previousFacets[key].includes(facetValue)
-    )
+    newFacets[key].filter((facetValue) => previousFacets[key].includes(facetValue))
   );
   if (!facetIdWithDifferentValues) {
     return interfaceChange();
@@ -304,17 +256,13 @@ function facetAction(
   const previousValues = previousFacets[facetIdWithDifferentValues];
   const newValues = newFacets[facetIdWithDifferentValues];
 
-  const addedValues = newValues.filter(
-    (value) => !previousValues.includes(value)
-  );
+  const addedValues = newValues.filter((value) => !previousValues.includes(value));
 
   if (addedValues.length) {
     return excluded ? facetExclude() : facetSelect();
   }
 
-  const removedValues = previousValues.filter(
-    (value) => !newValues.includes(value)
-  );
+  const removedValues = previousValues.filter((value) => !newValues.includes(value));
 
   if (removedValues.length) {
     return facetDeselect();

@@ -45,10 +45,7 @@ const engine = buildSearchEngine({
   configuration: {
     // ...rest of configuration
     analytics: {
-      analyticsClientMiddleware: (
-        eventName: string,
-        payload: Record<string, unknown>
-      ) => {
+      analyticsClientMiddleware: (eventName: string, payload: Record<string, unknown>) => {
         // ...
       },
     },
@@ -119,10 +116,7 @@ const engine = buildSearchEngine({
   configuration: {
     // ...
     organizationId: '<ORGANIZATION_ID>',
-    organizationEndpoints: getOrganizationEndpoints(
-      '<ORGANIZATION_ID>',
-      'hipaa'
-    ),
+    organizationEndpoints: getOrganizationEndpoints('<ORGANIZATION_ID>', 'hipaa'),
   },
 });
 ```
@@ -263,11 +257,7 @@ In v2, it could have either the `GeneratedAnswerFeedback` or `GeneratedAnswerFee
 **Headless Version 2**
 
 ```ts
-export type GeneratedAnswerFeedback =
-  | 'irrelevant'
-  | 'notAccurate'
-  | 'outOfDate'
-  | 'harmful';
+export type GeneratedAnswerFeedback = 'irrelevant' | 'notAccurate' | 'outOfDate' | 'harmful';
 
 export type GeneratedAnswerFeedbackOption = 'yes' | 'unknown' | 'no';
 

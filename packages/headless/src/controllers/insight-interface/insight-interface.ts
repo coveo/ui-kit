@@ -12,10 +12,7 @@ import type {
   SearchHubSection,
 } from '../../state/state-sections.js';
 import {loadReducerError} from '../../utils/errors.js';
-import {
-  buildController,
-  type Controller,
-} from '../controller/headless-controller.js';
+import {buildController, type Controller} from '../controller/headless-controller.js';
 
 /**
  * The `InsightInterface` controller is responsible for retrieving the Insight interface configuration.
@@ -71,10 +68,7 @@ export function buildInsightInterface(engine: InsightEngine): InsightInterface {
 function loadInsightInterfaceReducers(
   engine: InsightEngine
 ): engine is InsightEngine<
-  ConfigurationSection &
-    InsightConfigurationSection &
-    InsightInterfaceSection &
-    SearchHubSection
+  ConfigurationSection & InsightConfigurationSection & InsightInterfaceSection & SearchHubSection
 > {
   engine.addReducers({
     configuration,

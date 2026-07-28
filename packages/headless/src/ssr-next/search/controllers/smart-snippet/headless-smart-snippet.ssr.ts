@@ -20,9 +20,7 @@ export interface SmartSnippetDefinition extends ControllerDefinitionWithoutProps
  * @param props - The configurable `SmartSnippet` properties.
  * @returns The `SmartSnippet` controller definition.
  * */
-export function defineSmartSnippet(
-  props?: SmartSnippetProps
-): SmartSnippetDefinition {
+export function defineSmartSnippet(props?: SmartSnippetProps): SmartSnippetDefinition {
   return {
     build: (engine) => buildSmartSnippet(engine, props),
   };

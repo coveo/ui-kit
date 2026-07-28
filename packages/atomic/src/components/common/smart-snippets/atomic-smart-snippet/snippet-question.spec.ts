@@ -1,10 +1,7 @@
 import {html} from 'lit';
 import {describe, expect, it} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
-import {
-  renderSnippetQuestion,
-  type SnippetQuestionProps,
-} from './snippet-question';
+import {renderSnippetQuestion, type SnippetQuestionProps} from './snippet-question';
 
 describe('#renderSnippetQuestion', () => {
   const renderComponent = async (props: Partial<SnippetQuestionProps> = {}) => {

@@ -2,11 +2,7 @@ import {createAction} from '@reduxjs/toolkit';
 import {createCartKey} from '../../../../controllers/commerce/context/cart/headless-cart.js';
 import {purchase, setItems, updateItemQuantity} from './cart-actions.js';
 import {cartReducer} from './cart-slice.js';
-import {
-  type CartItemWithMetadata,
-  type CartState,
-  getCartInitialState,
-} from './cart-state.js';
+import {type CartItemWithMetadata, type CartState, getCartInitialState} from './cart-state.js';
 
 describe('cart-slice', () => {
   const someItem: CartItemWithMetadata = {
@@ -29,9 +25,7 @@ describe('cart-slice', () => {
   });
 
   it('should have an initial state', () => {
-    expect(cartReducer(undefined, {type: 'foo'})).toEqual(
-      getCartInitialState()
-    );
+    expect(cartReducer(undefined, {type: 'foo'})).toEqual(getCartInitialState());
   });
 
   it('#setItems replaces current cart state with specified state', () => {
@@ -136,10 +130,7 @@ describe('cart-slice', () => {
     });
 
     it('does not add new item to cart if item is not already in cart and specified quantity is 0', () => {
-      const updatedState = cartReducer(
-        state,
-        updateItemQuantity({...someItem, quantity: 0})
-      );
+      const updatedState = cartReducer(state, updateItemQuantity({...someItem, quantity: 0}));
       expect(updatedState.cartItems).toEqual([]);
       expect(updatedState.cart).toEqual({});
     });

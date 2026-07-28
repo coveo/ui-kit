@@ -19,9 +19,7 @@ const getLanguage = (state: ConfigurationSection) => {
 export type StateNeededByBaseAnalyticsProvider = ConfigurationSection &
   Partial<SearchHubSection & PipelineSection & QuerySection & ContextSection>;
 
-export abstract class BaseAnalyticsProvider<
-  T extends StateNeededByBaseAnalyticsProvider,
-> {
+export abstract class BaseAnalyticsProvider<T extends StateNeededByBaseAnalyticsProvider> {
   protected readonly state: T;
   constructor(protected getState: () => T) {
     this.state = getState();

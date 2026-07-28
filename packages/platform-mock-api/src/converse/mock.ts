@@ -41,9 +41,7 @@ export class MockConverseApi implements MockApi {
   }
 
   mockOnceWithEvents(events: ConverseEvent[]) {
-    this.nextResponses.push(() =>
-      buildStreamingResponse(events, {delayBetweenMessages: 'real'})
-    );
+    this.nextResponses.push(() => buildStreamingResponse(events, {delayBetweenMessages: 'real'}));
   }
 
   mockWithPrompt(message: string) {

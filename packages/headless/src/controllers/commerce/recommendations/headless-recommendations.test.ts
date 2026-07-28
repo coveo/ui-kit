@@ -6,14 +6,8 @@ import {
 } from '../../../features/commerce/recommendations/recommendations-actions.js';
 import {recommendationsReducer} from '../../../features/commerce/recommendations/recommendations-slice.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
-import {
-  buildMockCommerceEngine,
-  type MockedCommerceEngine,
-} from '../../../test/mock-engine-v2.js';
-import {
-  buildRecommendations,
-  type Recommendations,
-} from './headless-recommendations.js';
+import {buildMockCommerceEngine, type MockedCommerceEngine} from '../../../test/mock-engine-v2.js';
+import {buildRecommendations, type Recommendations} from './headless-recommendations.js';
 
 vi.mock('../../../features/commerce/recommendations/recommendations-actions');
 

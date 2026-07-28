@@ -9,17 +9,14 @@ export default function ShowMore() {
   };
 
   const isDisabled = () => {
-    return (
-      !methods ||
-      summaryState?.lastProduct === summaryState?.totalNumberOfProducts
-    );
+    return !methods || summaryState?.lastProduct === summaryState?.totalNumberOfProducts;
   };
 
   return (
     <>
       <div>
-        Displaying {summaryState?.lastProduct ?? state.pageSize} out of{' '}
-        {state.totalEntries} products
+        Displaying {summaryState?.lastProduct ?? state.pageSize} out of {state.totalEntries}{' '}
+        products
       </div>
       <button
         type="button"

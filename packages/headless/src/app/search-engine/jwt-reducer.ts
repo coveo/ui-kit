@@ -46,18 +46,13 @@ const possiblyWarnOnMismatch = (
     return;
   }
 
-  logger.warn(
-    `Mismatch on access token (JWT Token) ${tokenProp} and engine configuration.`
-  );
+  logger.warn(`Mismatch on access token (JWT Token) ${tokenProp} and engine configuration.`);
   logger.warn(
     `To remove this warning, make sure that access token value [${tokenValue}] matches engine configuration value [${stateProp}]`
   );
 };
 
-const shouldReconcileValues = (
-  tokenValue: string | undefined,
-  stateValue: string
-): boolean => {
+const shouldReconcileValues = (tokenValue: string | undefined, stateValue: string): boolean => {
   if (isNullOrUndefined(tokenValue)) {
     return false;
   }
@@ -74,10 +69,7 @@ const decodeJSONWebToken = (token: string): CoveoJSONWebToken | false => {
   return parsed ? (parsed as CoveoJSONWebToken) : false;
 };
 
-const updateSearchHub = (
-  jwt: CoveoJSONWebToken,
-  state: SearchAppState
-): SearchAppState => {
+const updateSearchHub = (jwt: CoveoJSONWebToken, state: SearchAppState): SearchAppState => {
   if (shouldReconcileValues(jwt.searchHub, state.searchHub)) {
     state.searchHub = jwt.searchHub!;
   }
@@ -101,10 +93,7 @@ const handleMismatchOnSearchHub = (
   return updateSearchHub(jwt, state);
 };
 
-const updatePipeline = (
-  jwt: CoveoJSONWebToken,
-  state: SearchAppState
-): SearchAppState => {
+const updatePipeline = (jwt: CoveoJSONWebToken, state: SearchAppState): SearchAppState => {
   if (shouldReconcileValues(jwt.pipeline, state.pipeline)) {
     state.pipeline = jwt.pipeline!;
   }
@@ -128,16 +117,8 @@ const handleMismatchOnPipeline = (
   return updatePipeline(jwt, state);
 };
 
-const updateUserDisplayName = (
-  jwt: CoveoJSONWebToken,
-  state: SearchAppState
-): SearchAppState => {
-  if (
-    shouldReconcileValues(
-      jwt.userDisplayName,
-      state.configuration.analytics.userDisplayName
-    )
-  ) {
+const updateUserDisplayName = (jwt: CoveoJSONWebToken, state: SearchAppState): SearchAppState => {
+  if (shouldReconcileValues(jwt.userDisplayName, state.configuration.analytics.userDisplayName)) {
     state.configuration.analytics.userDisplayName = jwt.userDisplayName!;
   }
   return state;
@@ -219,12 +200,7 @@ export const jwtReducer: (logger: P.Logger) => Reducer = (logger) => {
         if (!jwt) {
           return state;
         }
-        return handleMismatchOnUserDisplayName(
-          jwt,
-          state,
-          action.payload.userDisplayName,
-          logger
-        );
+        return handleMismatchOnUserDisplayName(jwt, state, action.payload.userDisplayName, logger);
       });
   });
 };

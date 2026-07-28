@@ -58,6 +58,21 @@ export default class QuanticThreadItem extends LightningElement {
     this._isExpanded = !this._isExpanded;
   }
 
+  handleDotClick(event) {
+    event.stopPropagation();
+    if (this.disableCollapse) {
+      return;
+    }
+    this._isExpanded = !this._isExpanded;
+  }
+
+  handleLineClick() {
+    if (this.disableCollapse || this.hideLine) {
+      return;
+    }
+    this._isExpanded = !this._isExpanded;
+  }
+
   get shouldDisplayLine() {
     return !this.hideLine;
   }
@@ -75,6 +90,28 @@ export default class QuanticThreadItem extends LightningElement {
   }
 
   get dotClass() {
-    return `thread-item__dot${this._isExpanded ? ' thread-item__dot--expanded' : ''}`;
+    const classes = ['thread-item__dot'];
+    if (this._isExpanded) {
+      classes.push('thread-item__dot--expanded');
+    }
+    if (!this.disableCollapse) {
+      classes.push('thread-item__dot--interactive');
+    }
+    return classes.join(' ');
+  }
+
+  get lineColumnClass() {
+    const classes = [
+      'slds-grid',
+      'slds-grid_align-center',
+      'slds-grid_vertical',
+      'slds-grid_vertical-align-center',
+      'slds-shrink-none',
+      'thread-item__timeline',
+    ];
+    if (!this.disableCollapse && !this.hideLine) {
+      classes.push('thread-item__line-column--interactive');
+    }
+    return classes.join(' ');
   }
 }

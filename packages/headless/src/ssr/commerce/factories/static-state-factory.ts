@@ -19,15 +19,9 @@ import {
   type SSRCommerceEngine,
 } from './build-factory.js';
 
-function findAndExecuteMethod(
-  controllers: Record<string, unknown>,
-  methodName: string
-): boolean {
+function findAndExecuteMethod(controllers: Record<string, unknown>, methodName: string): boolean {
   for (const controller of Object.values(controllers)) {
-    if (
-      typeof Object.getOwnPropertyDescriptor(controller, methodName)?.value ===
-      'function'
-    ) {
+    if (typeof Object.getOwnPropertyDescriptor(controller, methodName)?.value === 'function') {
       (controller as Record<string, () => void>)[methodName]();
       return true;
     }
@@ -39,10 +33,7 @@ function executeFirstRequestForListing(
   controllers: Record<string, unknown>,
   engine: SSRCommerceEngine
 ) {
-  const controllerExecuted = findAndExecuteMethod(
-    controllers,
-    'executeFirstRequest'
-  );
+  const controllerExecuted = findAndExecuteMethod(controllers, 'executeFirstRequest');
   if (!controllerExecuted) {
     buildProductListing(engine).executeFirstRequest();
   }
@@ -52,10 +43,7 @@ function executeFirstSearchForSearch(
   controllers: Record<string, unknown>,
   engine: SSRCommerceEngine
 ) {
-  const controllerExecuted = findAndExecuteMethod(
-    controllers,
-    'executeFirstSearch'
-  );
+  const controllerExecuted = findAndExecuteMethod(controllers, 'executeFirstSearch');
   if (!controllerExecuted) {
     buildSearch(engine).executeFirstSearch();
   }
@@ -66,9 +54,7 @@ export const fetchStaticStateFactory: <
 >(
   controllerDefinitions: TControllerDefinitions | undefined,
   options: CommerceEngineDefinitionOptions<TControllerDefinitions>
-) => (
-  solutionType: SolutionType
-) => FetchStaticStateFunction<TControllerDefinitions> =
+) => (solutionType: SolutionType) => FetchStaticStateFunction<TControllerDefinitions> =
   <TControllerDefinitions extends CommerceControllerDefinitionsMap>(
     controllerDefinitions: TControllerDefinitions | undefined,
     options: CommerceEngineDefinitionOptions<TControllerDefinitions>
@@ -81,12 +67,11 @@ export const fetchStaticStateFactory: <
         })(solutionType);
         const buildResult = await solutionTypeBuild(...params);
 
-        options.configuration.preprocessRequest =
-          augmentPreprocessRequestWithForwardedFor({
-            preprocessRequest: options.configuration.preprocessRequest,
-            navigatorContextProvider: options.navigatorContextProvider,
-            loggerOptions: options.loggerOptions,
-          });
+        options.configuration.preprocessRequest = augmentPreprocessRequestWithForwardedFor({
+          preprocessRequest: options.configuration.preprocessRequest,
+          navigatorContextProvider: options.navigatorContextProvider,
+          loggerOptions: options.loggerOptions,
+        });
 
         const staticStateBuild = await fetchStaticStateFactory(
           controllerDefinitions,
@@ -116,9 +101,7 @@ export const fetchStaticStateFactory: <
               break;
           }
 
-          const searchActions = await Promise.all(
-            engine.waitForRequestCompletedAction()
-          );
+          const searchActions = await Promise.all(engine.waitForRequestCompletedAction());
 
           return createStaticState({
             searchActions,

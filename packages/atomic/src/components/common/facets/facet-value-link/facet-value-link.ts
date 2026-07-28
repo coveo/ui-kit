@@ -9,9 +9,7 @@ export interface FacetValueLinkProps extends FacetValuePropsBase {
   subList?: TemplateResult;
 }
 
-export const renderFacetValueLink: FunctionalComponentWithChildren<
-  FacetValueLinkProps
-> =
+export const renderFacetValueLink: FunctionalComponentWithChildren<FacetValueLinkProps> =
   ({props}) =>
   (children) => {
     const count = props.numberOfResults.toLocaleString(props.i18n.language);
@@ -22,9 +20,7 @@ export const renderFacetValueLink: FunctionalComponentWithChildren<
       interpolation: {escapeValue: false},
     });
 
-    let part =
-      props.part ??
-      `value-link${props.isSelected ? ' value-link-selected' : ''}`;
+    let part = props.part ?? `value-link${props.isSelected ? ' value-link-selected' : ''}`;
 
     if (props.additionalPart) {
       part += ` ${props.additionalPart}`;

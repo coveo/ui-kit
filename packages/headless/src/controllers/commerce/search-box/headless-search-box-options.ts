@@ -16,10 +16,7 @@ export type SearchBoxOptions = Pick<
   enableResults?: boolean;
 };
 
-type DefaultSearchBoxOptions = Pick<
-  SearchBoxOptions,
-  'clearFilters' | 'enableResults'
->;
+type DefaultSearchBoxOptions = Pick<SearchBoxOptions, 'clearFilters' | 'enableResults'>;
 
 export const defaultSearchBoxOptions: Required<DefaultSearchBoxOptions> = {
   clearFilters: true,

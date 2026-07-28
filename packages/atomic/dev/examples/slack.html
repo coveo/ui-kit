@@ -28,9 +28,7 @@
         : import('http://localhost:3000/headless/v0.0.0/headless.esm.js'));
 
       function setExpression(engine) {
-        const action = loadAdvancedSearchQueryActions(
-          engine
-        ).updateAdvancedSearchQueries({
+        const action = loadAdvancedSearchQueryActions(engine).updateAdvancedSearchQueries({
           aq: '@sourcetype=Slack',
         });
         engine.dispatch(action);
@@ -38,9 +36,7 @@
 
       (async () => {
         await customElements.whenDefined('atomic-search-interface');
-        const searchInterface = document.querySelector(
-          'atomic-search-interface'
-        );
+        const searchInterface = document.querySelector('atomic-search-interface');
 
         // Initialization
         await searchInterface.initialize({
@@ -92,15 +88,8 @@
         <atomic-layout-section section="facets">
           <atomic-facet-manager>
             <atomic-facet field="filetype" label="Type"></atomic-facet>
-            <atomic-facet
-              field="source"
-              label="Source"
-              display-values-as="link"
-            ></atomic-facet>
-            <atomic-facet
-              field="slackmessageauthor"
-              label="Author"
-            ></atomic-facet>
+            <atomic-facet field="source" label="Source" display-values-as="link"></atomic-facet>
+            <atomic-facet field="slackmessageauthor" label="Author"></atomic-facet>
           </atomic-facet-manager>
         </atomic-layout-section>
         <atomic-layout-section section="main">
@@ -261,16 +250,12 @@
                   </style>
                   <div>
                     <atomic-result-section-badges class="slack-section-badge">
-                      <atomic-field-condition
-                        must-match-slackmessagetype="Normal"
-                      >
+                      <atomic-field-condition must-match-slackmessagetype="Normal">
                         <atomic-result-badge
                           label="MESSAGE"
                           class="slack-badge"
                         ></atomic-result-badge>
-                        <atomic-text
-                          value="&nbsp;&nbsp;in:&nbsp;"
-                        ></atomic-text>
+                        <atomic-text value="&nbsp;&nbsp;in:&nbsp;"></atomic-text>
                         <atomic-result-link
                           target="_blank"
                           href-template="${raw.clickableuri}?id=${raw.slackchannelname}"
@@ -281,16 +266,12 @@
                           ></atomic-result-text>
                         </atomic-result-link>
                       </atomic-field-condition>
-                      <atomic-field-condition
-                        must-match-slackmessagetype="ThreadStart"
-                      >
+                      <atomic-field-condition must-match-slackmessagetype="ThreadStart">
                         <atomic-result-badge
                           label="THREAD"
                           class="slack-badge"
                         ></atomic-result-badge>
-                        <atomic-text
-                          value="&nbsp;&nbsp;in:&nbsp;"
-                        ></atomic-text>
+                        <atomic-text value="&nbsp;&nbsp;in:&nbsp;"></atomic-text>
                         <atomic-result-link
                           target="_blank"
                           href-template="${raw.clickableuri}?id=${raw.slackchannelname}"
@@ -303,9 +284,7 @@
                       </atomic-field-condition>
                     </atomic-result-section-badges>
                   </div>
-                  <atomic-field-condition
-                    must-match-slackmessagetype="ThreadStart,Normal"
-                  >
+                  <atomic-field-condition must-match-slackmessagetype="ThreadStart,Normal">
                     <div class="slack-title-icon">
                       <atomic-result-section-visual
                         class="slack-atomic-result-icon"
@@ -317,9 +296,7 @@
                           />
                         </atomic-result-icon>
                       </atomic-result-section-visual>
-                      <atomic-result-section-title
-                        class="slack-msg-result-section-title"
-                      >
+                      <atomic-result-section-title class="slack-msg-result-section-title">
                         <span>
                           <atomic-result-section-visual image-size="small">
                             <atomic-result-image
@@ -331,9 +308,7 @@
                         <div>
                           <div>
                             <span class="slack-result-author-name">
-                              <atomic-result-text
-                                field="slackmessageauthor"
-                              ></atomic-result-text>
+                              <atomic-result-text field="slackmessageauthor"></atomic-result-text>
                             </span>
                             <span>
                               <atomic-result-date
@@ -345,18 +320,13 @@
                           </div>
                           <div class="slack-result-msg-excerpt">
                             <atomic-result-section-excerpt>
-                              <atomic-result-text field="excerpt">
-                              </atomic-result-text>
+                              <atomic-result-text field="excerpt"> </atomic-result-text>
                             </atomic-result-section-excerpt>
                           </div>
-                          <atomic-field-condition
-                            must-match-slackmessagetype="Normal"
-                          >
+                          <atomic-field-condition must-match-slackmessagetype="Normal">
                             <div class="slack-result-normal-top"></div>
                           </atomic-field-condition>
-                          <atomic-field-condition
-                            must-match-slackmessagetype="ThreadStart"
-                          >
+                          <atomic-field-condition must-match-slackmessagetype="ThreadStart">
                             <div class="slack-result-thread-top">
                               <atomic-result-section-bottom-metadata>
                                 <atomic-result-fields-list>
@@ -366,23 +336,13 @@
                                         field="slackmessagereplycount"
                                       ></atomic-result-number
                                     ></span>
-                                    <atomic-field-condition
-                                      must-match-slackmessagereplycount="1"
-                                    >
-                                      <span
-                                        ><atomic-text
-                                          value="reply"
-                                        ></atomic-text
-                                      ></span>
+                                    <atomic-field-condition must-match-slackmessagereplycount="1">
+                                      <span><atomic-text value="reply"></atomic-text></span>
                                     </atomic-field-condition>
                                     <atomic-field-condition
                                       must-not-match-slackmessagereplycount="1"
                                     >
-                                      <span
-                                        ><atomic-text
-                                          value="replies"
-                                        ></atomic-text
-                                      ></span>
+                                      <span><atomic-text value="replies"></atomic-text></span>
                                     </atomic-field-condition>
                                   </div>
                                 </atomic-result-fields-list>
@@ -411,37 +371,27 @@
                         ></atomic-result-link>
                       </atomic-result-section-title>
                     </div>
-                    <atomic-result-section-excerpt
-                      class="slack-result-section-excerpt"
-                    >
+                    <atomic-result-section-excerpt class="slack-result-section-excerpt">
                       <atomic-result-text field="excerpt"></atomic-result-text>
                     </atomic-result-section-excerpt>
                     <atomic-result-section-bottom-metadata>
                       <atomic-result-fields-list class="slack-result-fields">
                         <span class="field">
                           <span class="field-label">File&nbsp;type:&nbsp;</span>
-                          <atomic-result-text
-                            field="filetype"
-                          ></atomic-result-text>
+                          <atomic-result-text field="filetype"></atomic-result-text>
                         </span>
                         <span class="field">
                           <span class="field-label">Source:&nbsp;</span>
-                          <atomic-result-text
-                            field="source"
-                          ></atomic-result-text>
+                          <atomic-result-text field="source"></atomic-result-text>
                         </span>
                         <span class="field">
                           <span class="field-label">Date:&nbsp;</span>
-                          <atomic-result-date
-                            format="MMMM D, YYYY"
-                          ></atomic-result-date>
+                          <atomic-result-date format="MMMM D, YYYY"></atomic-result-date>
                         </span>
                       </atomic-result-fields-list>
                     </atomic-result-section-bottom-metadata>
                   </atomic-field-condition>
-                  <atomic-field-condition
-                    must-match-slackmessagetype="ThreadStart"
-                  >
+                  <atomic-field-condition must-match-slackmessagetype="ThreadStart">
                     <atomic-result-section-children>
                       <atomic-result-children image-size="icon">
                         <atomic-result-children-template>
@@ -494,13 +444,9 @@
                               }
                             </style>
                             <div class="slack-title-icon">
-                              <atomic-result-section-title
-                                class="slack-msg-result-section-title"
-                              >
+                              <atomic-result-section-title class="slack-msg-result-section-title">
                                 <span>
-                                  <atomic-result-section-visual
-                                    image-size="small"
-                                  >
+                                  <atomic-result-section-visual image-size="small">
                                     <atomic-result-image
                                       field="slackmessageauthorprofilepicture"
                                       aria-hidden="true"
@@ -524,8 +470,7 @@
                                   </div>
                                   <div class="slack-result-replies-excerpt">
                                     <atomic-result-section-excerpt>
-                                      <atomic-result-text field="excerpt">
-                                      </atomic-result-text>
+                                      <atomic-result-text field="excerpt"> </atomic-result-text>
                                     </atomic-result-section-excerpt>
                                   </div>
                                 </div>
@@ -542,10 +487,7 @@
                       target="_blank"
                       href-template="${raw.clickableuri}?id=${raw.slackchannelname}"
                     >
-                      <atomic-text
-                        class="slack-link"
-                        value="Open in Slack"
-                      ></atomic-text>
+                      <atomic-text class="slack-link" value="Open in Slack"></atomic-text>
                     </atomic-result-link>
                   </span>
                 </template>

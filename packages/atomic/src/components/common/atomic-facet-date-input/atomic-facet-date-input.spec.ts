@@ -29,18 +29,14 @@ describe('atomic-facet-date-input', () => {
         props.dateInputCallback ? props.dateInputCallback() : vi.fn()}
     ></atomic-facet-date-input>`;
 
-    const {element} =
-      await renderInAtomicCommerceInterface<AtomicFacetDateInput>({
-        template: html`${when(
-          props.validParent ?? true,
-          () =>
-            html`<atomic-timeframe-facet>
-              ${dateInputTemplate}
-            </atomic-timeframe-facet> `,
-          () => dateInputTemplate
-        )} `,
-        selector: 'atomic-facet-date-input',
-      });
+    const {element} = await renderInAtomicCommerceInterface<AtomicFacetDateInput>({
+      template: html`${when(
+        props.validParent ?? true,
+        () => html`<atomic-timeframe-facet> ${dateInputTemplate} </atomic-timeframe-facet> `,
+        () => dateInputTemplate
+      )} `,
+      selector: 'atomic-facet-date-input',
+    });
     return {
       element,
       get form() {
@@ -79,8 +75,7 @@ describe('atomic-facet-date-input', () => {
   });
 
   it('should render the inputs ', async () => {
-    const {startInput, startInputLabel, endInput, endInputLabel} =
-      await setupElement();
+    const {startInput, startInputLabel, endInput, endInputLabel} = await setupElement();
     expect(startInput).toBeInTheDocument();
     expect(startInputLabel).toBeInTheDocument();
     expect(endInput).toBeInTheDocument();
@@ -120,9 +115,7 @@ describe('atomic-facet-date-input', () => {
 
   it('should have correct part on apply button', async () => {
     const {applyButton} = await setupElement();
-    await expect
-      .element(applyButton)
-      .toHaveAttribute('part', 'input-apply-button');
+    await expect.element(applyButton).toHaveAttribute('part', 'input-apply-button');
   });
 
   it('should display an error when parent is invalid', async () => {

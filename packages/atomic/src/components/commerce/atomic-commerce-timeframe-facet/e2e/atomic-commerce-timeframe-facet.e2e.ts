@@ -1,9 +1,7 @@
 import {expect, test} from './fixture';
 
 test.describe('atomic-commerce-timeframe-facet', () => {
-  test('should complete the full date picker workflow', async ({
-    commerceTimeframeFacet,
-  }) => {
+  test('should complete the full date picker workflow', async ({commerceTimeframeFacet}) => {
     await commerceTimeframeFacet.load({
       args: {withDatePicker: true},
     });
@@ -22,14 +20,10 @@ test.describe('atomic-commerce-timeframe-facet', () => {
     // Verify filter is cleared
     await expect(commerceTimeframeFacet.facetInputStart).toHaveValue('');
     await expect(commerceTimeframeFacet.facetInputEnd).toHaveValue('');
-    await expect(
-      commerceTimeframeFacet.facetClearFilterButton
-    ).not.toBeVisible();
+    await expect(commerceTimeframeFacet.facetClearFilterButton).not.toBeVisible();
   });
 
-  test('should complete the full predefined values workflow', async ({
-    commerceTimeframeFacet,
-  }) => {
+  test('should complete the full predefined values workflow', async ({commerceTimeframeFacet}) => {
     await commerceTimeframeFacet.load({
       args: {withDatePicker: false},
     });
@@ -47,14 +41,10 @@ test.describe('atomic-commerce-timeframe-facet', () => {
 
     // Verify selection is cleared
     await expect(firstValue).toHaveAttribute('aria-pressed', 'false');
-    await expect(
-      commerceTimeframeFacet.facetClearFilterButton
-    ).not.toBeVisible();
+    await expect(commerceTimeframeFacet.facetClearFilterButton).not.toBeVisible();
   });
 
-  test('should support keyboard navigation for date picker', async ({
-    commerceTimeframeFacet,
-  }) => {
+  test('should support keyboard navigation for date picker', async ({commerceTimeframeFacet}) => {
     await commerceTimeframeFacet.load({
       args: {withDatePicker: true},
     });

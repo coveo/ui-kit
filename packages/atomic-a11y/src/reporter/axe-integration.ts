@@ -47,9 +47,7 @@ export function getCriteriaForRule(rule: AxeRuleResult): string[] {
 export function getIncompleteMessage(rule: AxeRuleResult): string {
   const firstNode = rule.nodes[0];
   const firstCheckMessage =
-    firstNode?.any[0]?.message ??
-    firstNode?.all[0]?.message ??
-    firstNode?.none[0]?.message;
+    firstNode?.any[0]?.message ?? firstNode?.all[0]?.message ?? firstNode?.none[0]?.message;
 
   return firstCheckMessage ?? rule.help;
 }

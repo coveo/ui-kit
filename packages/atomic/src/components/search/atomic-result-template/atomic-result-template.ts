@@ -20,10 +20,7 @@ import '@/src/components/search/atomic-result/atomic-result';
  */
 @customElement('atomic-result-template')
 @withTailwindStyles
-export class AtomicResultTemplate
-  extends LitElement
-  implements LitElementWithError
-{
+export class AtomicResultTemplate extends LitElement implements LitElementWithError {
   private resultTemplateController: ResultTemplateController;
 
   @state() error!: Error;
@@ -65,11 +62,7 @@ export class AtomicResultTemplate
       'atomic-search-box-instant-results',
     ];
     const allowEmpty = true;
-    this.resultTemplateController = new ResultTemplateController(
-      this,
-      validParent,
-      allowEmpty
-    );
+    this.resultTemplateController = new ResultTemplateController(this, validParent, allowEmpty);
   }
 
   connectedCallback() {

@@ -2,10 +2,7 @@ import type {AsyncThunkOptions} from '../../../app/async-thunk-options.js';
 import type {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments.js';
 import type {CaseAssistAppState} from '../../../state/case-assist-app-state.js';
 import {PlatformClient} from '../../platform-client.js';
-import {
-  getHtml,
-  type HtmlAPIClientOptions,
-} from '../../search/html/html-api-client.js';
+import {getHtml, type HtmlAPIClientOptions} from '../../search/html/html-api-client.js';
 import type {HtmlRequest} from '../../search/html/html-request.js';
 import {buildAPIResponseFromErrorOrThrow} from '../../search/search-api-error-response.js';
 import {

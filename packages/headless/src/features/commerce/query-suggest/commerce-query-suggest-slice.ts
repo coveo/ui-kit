@@ -23,28 +23,21 @@ export const commerceQuerySuggestReducer = createReducer(
       .addCase(fetchQuerySuggestions.fulfilled, (state, action) => {
         const querySuggest = state[action.meta.arg.id];
 
-        if (
-          !querySuggest ||
-          action.meta.requestId !== querySuggest.currentRequestId
-        ) {
+        if (!querySuggest || action.meta.requestId !== querySuggest.currentRequestId) {
           return;
         }
 
         const {query} = action.payload;
         if (query) {
-          querySuggest.partialQueries.push(
-            query.replace(/;/, encodeURIComponent(';'))
-          );
+          querySuggest.partialQueries.push(query.replace(/;/, encodeURIComponent(';')));
         }
         querySuggest.responseId = action.payload.responseId;
-        querySuggest.completions = action.payload.completions.map(
-          (completion) => ({
-            expression: completion.expression,
-            highlighted: completion.highlighted,
-            score: 0,
-            executableConfidence: 0,
-          })
-        );
+        querySuggest.completions = action.payload.completions.map((completion) => ({
+          expression: completion.expression,
+          highlighted: completion.highlighted,
+          score: 0,
+          executableConfidence: 0,
+        }));
         querySuggest.isLoading = false;
         querySuggest.error = null;
       })

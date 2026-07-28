@@ -90,8 +90,7 @@ export const WithInheritTemplates: Story = {
                     <atomic-result-link></atomic-result-link>
                   </atomic-result-section-title>
                   <atomic-result-section-children>
-                    <atomic-result-children inherit-templates>
-                    </atomic-result-children>
+                    <atomic-result-children inherit-templates> </atomic-result-children>
                   </atomic-result-section-children>
                 </template>
               </atomic-result-children-template>

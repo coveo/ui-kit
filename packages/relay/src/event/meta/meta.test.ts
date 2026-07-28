@@ -23,9 +23,7 @@ describe('createMeta', () => {
   }
 
   it('returns meta with the clientId field', () => {
-    expect(getItemViewMeta().clientId).toBe(
-      '2136b353-74be-42d7-904f-ea33a8f4a43c'
-    );
+    expect(getItemViewMeta().clientId).toBe('2136b353-74be-42d7-904f-ea33a8f4a43c');
   });
 
   it('returns meta with the referrer field', () => {
@@ -76,11 +74,7 @@ describe('createMeta', () => {
       createMockConfig({source: ['atomic@1.2', 'headless@3.4']}),
       mockEnv
     );
-    expect(sourcedMeta.source).toEqual([
-      'atomic@1.2',
-      'headless@3.4',
-      'relay@process.env.VERSION',
-    ]);
+    expect(sourcedMeta.source).toEqual(['atomic@1.2', 'headless@3.4', 'relay@process.env.VERSION']);
   });
 
   it('returns meta with the source field with a version placeholder', () => {

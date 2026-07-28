@@ -40,10 +40,7 @@ export {buildNumericRange};
  * @group Controllers
  * @category NumericFacet
  */
-export function buildNumericFacet(
-  engine: InsightEngine,
-  props: NumericFacetProps
-): NumericFacet {
+export function buildNumericFacet(engine: InsightEngine, props: NumericFacetProps): NumericFacet {
   const coreController = buildCoreNumericFacet(engine, props);
   const dispatch = engine.dispatch;
   const getFacetId = () => coreController.state.facetId;
@@ -74,10 +71,7 @@ export function buildNumericFacet(
       coreController.toggleSelect(selection);
       dispatch(
         executeSearch({
-          legacy: getInsightAnalyticsActionForToggleRangeFacetSelect(
-            getFacetId(),
-            selection
-          ),
+          legacy: getInsightAnalyticsActionForToggleRangeFacetSelect(getFacetId(), selection),
           next: getAnalyticsActionForToggleFacetSelect(selection),
         })
       );

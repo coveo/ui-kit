@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  signal,
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
 import {ConversationHeaderComponent} from './components/conversation-header.component';
 import {PromptComposerComponent} from './components/prompt-composer.component';
 import {TranscriptPanelComponent} from './components/transcript-panel.component';
@@ -11,11 +6,7 @@ import {ConversationService} from './services/conversation.service';
 
 @Component({
   selector: 'app-root',
-  imports: [
-    ConversationHeaderComponent,
-    TranscriptPanelComponent,
-    PromptComposerComponent,
-  ],
+  imports: [ConversationHeaderComponent, TranscriptPanelComponent, PromptComposerComponent],
   templateUrl: './app.html',
   styleUrl: './app.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -12,12 +12,7 @@ import {
 } from './context-actions.js';
 import {contextReducer as commerceContext} from './context-slice.js';
 
-export type {
-  SetContextPayload,
-  SetCustomPayload,
-  SetLocationPayload,
-  SetViewPayload,
-};
+export type {SetContextPayload, SetCustomPayload, SetLocationPayload, SetViewPayload};
 
 /**
  * The context action creators.
@@ -68,9 +63,7 @@ export interface ContextActionCreators {
  * @group Actions
  * @category Context
  */
-export function loadContextActions(
-  engine: CommerceEngine
-): ContextActionCreators {
+export function loadContextActions(engine: CommerceEngine): ContextActionCreators {
   engine.addReducers({commerceContext});
   return {
     setContext,

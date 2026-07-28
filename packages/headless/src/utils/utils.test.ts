@@ -2,11 +2,7 @@ import {debounce, removeDuplicates} from './utils.js';
 
 describe('removeDuplicates', () => {
   it('should return reduced array based on received predicate', () => {
-    const objectToProcess = [
-      {discriminator: 'a'},
-      {discriminator: 'b'},
-      {discriminator: 'a'},
-    ];
+    const objectToProcess = [{discriminator: 'a'}, {discriminator: 'b'}, {discriminator: 'a'}];
 
     expect(removeDuplicates(objectToProcess, (v) => v.discriminator)).toEqual([
       {discriminator: 'a'},

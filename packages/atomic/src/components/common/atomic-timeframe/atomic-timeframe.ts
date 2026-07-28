@@ -24,15 +24,7 @@ export class AtomicTimeframe
       required: false,
     }),
     unit: new StringValue({
-      constrainTo: [
-        'minute',
-        'hour',
-        'day',
-        'week',
-        'month',
-        'quarter',
-        'year',
-      ],
+      constrainTo: ['minute', 'hour', 'day', 'week', 'month', 'quarter', 'year'],
       required: true,
       emptyAllowed: false,
     }),
@@ -41,8 +33,7 @@ export class AtomicTimeframe
   /**
    * The direction of time relative to the current moment.
    */
-  @property({type: String, reflect: true}) public period: 'past' | 'next' =
-    'past';
+  @property({type: String, reflect: true}) public period: 'past' | 'next' = 'past';
 
   /**
    * The unit of time for the timeframe (e.g., "day", "week", "month").

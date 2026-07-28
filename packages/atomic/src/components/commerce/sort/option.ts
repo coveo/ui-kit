@@ -2,16 +2,11 @@ import type {SortCriterion} from '@coveo/headless/commerce';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {renderSortOption, type SortOptionProps} from '../../common/sort/option';
 
-export interface CommerceSortOptionProps extends Omit<
-  SortOptionProps,
-  'label' | 'value'
-> {
+export interface CommerceSortOptionProps extends Omit<SortOptionProps, 'label' | 'value'> {
   sort: SortCriterion;
 }
 
-export const renderCommerceSortOption: FunctionalComponent<
-  CommerceSortOptionProps
-> = ({props}) => {
+export const renderCommerceSortOption: FunctionalComponent<CommerceSortOptionProps> = ({props}) => {
   const {sort} = props;
   const label = getLabel(sort);
 

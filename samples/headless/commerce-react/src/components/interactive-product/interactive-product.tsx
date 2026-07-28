@@ -29,16 +29,11 @@ export default function InteractiveProduct(props: IInteractiveProductProps) {
   }, [cartController]);
 
   const isInCart = () => {
-    return cartState.items.some(
-      (item) => item.productId === product.ec_product_id
-    );
+    return cartState.items.some((item) => item.productId === product.ec_product_id);
   };
 
   const numberInCart = () => {
-    return (
-      cartState.items.find((item) => item.productId === product.ec_product_id)
-        ?.quantity ?? 0
-    );
+    return cartState.items.find((item) => item.productId === product.ec_product_id)?.quantity ?? 0;
   };
 
   const adjustQuantity = (delta: number) => {
@@ -53,16 +48,10 @@ export default function InteractiveProduct(props: IInteractiveProductProps) {
   const renderProductCartControls = () => {
     return (
       <div className="ProductCartControls">
-        <button
-          type="button"
-          className="CartAddOne"
-          onClick={() => adjustQuantity(1)}
-        >
+        <button type="button" className="CartAddOne" onClick={() => adjustQuantity(1)}>
           Add to cart
         </button>
-        {isInCart() && (
-          <p className="CartCurrentQuantity">In cart: {numberInCart()}</p>
-        )}
+        {isInCart() && <p className="CartCurrentQuantity">In cart: {numberInCart()}</p>}
       </div>
     );
   };
@@ -98,11 +87,7 @@ export default function InteractiveProduct(props: IInteractiveProductProps) {
         {product.ec_name}
       </button>
       <div className="ProductImageWrapper">
-        <img
-          src={product.ec_images?.[0] ?? ''}
-          alt={product.permanentid}
-          height={100}
-        ></img>
+        <img src={product.ec_images?.[0] ?? ''} alt={product.permanentid} height={100}></img>
       </div>
       {renderProductPrice()}
       <div className="ProductDescription">
@@ -116,11 +101,7 @@ export default function InteractiveProduct(props: IInteractiveProductProps) {
             key={child.permanentid}
             onClick={() => promoteChildToParent!(child)}
           >
-            <img
-              alt={child.ec_name!}
-              height="25px"
-              src={child.ec_images?.[0] ?? ''}
-            ></img>
+            <img alt={child.ec_name!} height="25px" src={child.ec_images?.[0] ?? ''}></img>
           </button>
         ) : null;
       })}

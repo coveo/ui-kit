@@ -95,19 +95,14 @@ export class AtomicResultTimespan
     }
     // oxlint-disable-next-line use-isnan -- isNan is needed here because switching to Number.isNaN would be a breaking change.
     if (isNaN(this.value)) {
-      this.error = new Error(
-        `Value ${this.value} for field ${this.field} is not a number`
-      );
+      this.error = new Error(`Value ${this.value} for field ${this.field} is not a number`);
     }
   }
 
   @bindingGuard()
   @errorGuard()
   render() {
-    const durationValue = dayjs.duration(
-      this.value,
-      this.unit as DurationUnitType
-    );
+    const durationValue = dayjs.duration(this.value, this.unit as DurationUnitType);
 
     if (this.format) {
       return html`${durationValue.format(this.format)}`;
@@ -135,10 +130,7 @@ export class AtomicResultTimespan
   }
 
   private get value() {
-    return ResultTemplatesHelpers.getResultProperty(
-      this.result,
-      this.field
-    ) as number;
+    return ResultTemplatesHelpers.getResultProperty(this.result, this.field) as number;
   }
 
   private get result(): Result {

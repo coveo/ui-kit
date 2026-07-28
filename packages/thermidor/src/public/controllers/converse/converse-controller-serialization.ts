@@ -5,10 +5,7 @@ import type {
   StateTurn,
 } from '@/src/internal/features/generative/index.js';
 
-const VALID_USE_CASES: Set<string> = new Set<string>([
-  'commerceSearch',
-  'search',
-]);
+const VALID_USE_CASES: Set<string> = new Set<string>(['commerceSearch', 'search']);
 
 export interface SerializedConverseState {
   name: string;

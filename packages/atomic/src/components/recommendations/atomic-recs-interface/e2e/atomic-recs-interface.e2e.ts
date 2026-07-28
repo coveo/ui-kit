@@ -20,9 +20,7 @@ test.describe('atomic-recs-interface', () => {
       });
       page.on('pageerror', (err) => consoleErrors.push(err.message));
 
-      await expect
-        .poll(() => consoleErrors.join('\n'))
-        .toContain(beforeInitError);
+      await expect.poll(() => consoleErrors.join('\n')).toContain(beforeInitError);
     });
   });
 
@@ -49,14 +47,9 @@ test.describe('atomic-recs-interface', () => {
       expect(count).toBeGreaterThan(0);
     });
 
-    test('should display result links that are clickable', async ({
-      recsInterface,
-    }) => {
+    test('should display result links that are clickable', async ({recsInterface}) => {
       await recsInterface.hydrated.waitFor();
-      const firstResultLink = recsInterface
-        .getResultLink(0)
-        .locator('a')
-        .first();
+      const firstResultLink = recsInterface.getResultLink(0).locator('a').first();
       await expect(firstResultLink).toBeVisible();
       await expect(firstResultLink).toHaveAttribute('href');
     });

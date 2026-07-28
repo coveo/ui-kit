@@ -78,10 +78,9 @@ const MINIMAL_TEMPLATE = `<template>
 </template>`;
 
 const {decorator, play} = wrapInRecommendationInterface();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-recs-result-template',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-recs-result-template', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-recs-result-template',

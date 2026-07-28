@@ -33,9 +33,7 @@ describe('atomic-generated-answer-inline-link', () => {
       cancelPendingSelect: vi.fn(),
     };
 
-    vi.mocked(buildInteractiveGeneratedAnswerInlineLink).mockReturnValue(
-      mockedInteractiveLink
-    );
+    vi.mocked(buildInteractiveGeneratedAnswerInlineLink).mockReturnValue(mockedInteractiveLink);
   });
 
   const setupElement = async (
@@ -54,8 +52,7 @@ describe('atomic-generated-answer-inline-link', () => {
           <atomic-generated-answer-inline-link
             href=${props?.href ?? 'https://example.com'}
             title=${props?.title ?? 'Example Title'}
-            >${props?.slotText ??
-            'Example Link'}</atomic-generated-answer-inline-link
+            >${props?.slotText ?? 'Example Link'}</atomic-generated-answer-inline-link
           >
         </test-answer-context-provider>`,
         selector: 'test-answer-context-provider',
@@ -113,9 +110,7 @@ describe('atomic-generated-answer-inline-link', () => {
 
   it('should render an external-link svg icon', async () => {
     const {element} = await setupElement();
-    const icon = element.shadowRoot?.querySelector(
-      'svg[part="answer-link-icon"]'
-    );
+    const icon = element.shadowRoot?.querySelector('svg[part="answer-link-icon"]');
 
     expect(icon).not.toBeNull();
     expect(icon?.getAttribute('aria-hidden')).toBe('true');

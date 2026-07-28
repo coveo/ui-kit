@@ -27,10 +27,7 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import {
-  AriaLiveRegionController,
-  FocusTargetController,
-} from '@/src/utils/accessibility-utils';
+import {AriaLiveRegionController, FocusTargetController} from '@/src/utils/accessibility-utils';
 import {buildCustomEvent} from '@/src/utils/event-utils';
 import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
 import ArrowRightIcon from '../../../images/arrow-right-rounded.svg';
@@ -92,10 +89,7 @@ export class AtomicInsightPager
   })
   numberOfPages: number = 5;
 
-  protected ariaMessage = new AriaLiveRegionController(
-    this,
-    'atomic-insight-pager'
-  );
+  protected ariaMessage = new AriaLiveRegionController(this, 'atomic-insight-pager');
 
   private previousButton!: FocusTargetController;
   private nextButton!: FocusTargetController;
@@ -170,9 +164,7 @@ export class AtomicInsightPager
                       await this.focusOnFirstResultAndScrollToTop();
                     },
                     page: pageNumber,
-                    text: (pageNumber + 1).toLocaleString(
-                      this.bindings.i18n.language
-                    ),
+                    text: (pageNumber + 1).toLocaleString(this.bindings.i18n.language),
                   },
                 })
               )

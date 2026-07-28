@@ -27,9 +27,7 @@ export interface ItemLinkProps {
   onInitializeLink?: (cleanupCallback: () => void) => void;
 }
 
-export const renderLinkWithItemAnalytics: FunctionalComponentWithChildren<
-  ItemLinkProps
-> =
+export const renderLinkWithItemAnalytics: FunctionalComponentWithChildren<ItemLinkProps> =
   ({props}) =>
   (children) => {
     const {

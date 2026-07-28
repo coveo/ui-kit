@@ -1,9 +1,6 @@
 import {ArrayValue, RecordValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
-import {
-  requiredEmptyAllowedString,
-  validatePayload,
-} from '../../utils/validate-payload.js';
+import {requiredEmptyAllowedString, validatePayload} from '../../utils/validate-payload.js';
 import type {DictionaryFieldContextPayload} from './dictionary-field-context-state.js';
 
 export const setContext = createAction(
@@ -51,16 +48,10 @@ export const addContext = createAction(
       },
     });
 
-    return validatePayload<AddDictionaryFieldContextActionCreatorPayload>(
-      payload,
-      schema
-    );
+    return validatePayload<AddDictionaryFieldContextActionCreatorPayload>(payload, schema);
   }
 );
 
-export const removeContext = createAction(
-  'dictionaryFieldContext/remove',
-  (payload: string) => {
-    return validatePayload(payload, requiredEmptyAllowedString);
-  }
-);
+export const removeContext = createAction('dictionaryFieldContext/remove', (payload: string) => {
+  return validatePayload(payload, requiredEmptyAllowedString);
+});

@@ -13,10 +13,9 @@ const {decorator, play} = wrapInInsightInterface({
   insightId: 'default-insight',
 });
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-insight-query-error',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-insight-query-error', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-insight-query-error',

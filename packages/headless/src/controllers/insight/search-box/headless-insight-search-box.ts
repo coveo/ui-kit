@@ -82,10 +82,7 @@ export interface SearchBox extends Controller {
  * @group Controllers
  * @category SearchBox
  */
-export function buildSearchBox(
-  engine: InsightEngine,
-  props: SearchBoxProps = {}
-): SearchBox {
+export function buildSearchBox(engine: InsightEngine, props: SearchBoxProps = {}): SearchBox {
   const searchBox = buildCoreSearchBox(engine, {
     ...props,
     executeSearchActionCreator: executeSearch,

@@ -3,7 +3,7 @@ import {
   useCaseEnum,
   useCaseTestCases,
 } from '../../../../../../playwright/utils/useCase';
-import facetData from './data';
+import {initialFacetData, selectedFacetData} from './data';
 const fixtures = {
   search: testSearch,
   insight: testInsight,
@@ -24,13 +24,23 @@ useCaseTestCases.forEach((useCase) => {
   let test = fixtures[useCase.value];
   test.describe(`quantic date facet ${useCase.label}`, () => {
     test.describe('when selecting and deselecting a facet value', () => {
+      test.use({
+        facetResponses: {
+          responses: [
+            [initialFacetData],
+            [selectedFacetData],
+            [initialFacetData],
+          ],
+        },
+      });
+
       test('should trigger a new search and log the corresponding UA analytics events', async ({
         baseFacet,
         facet,
         page,
       }) => {
         const selectedIndex = 0;
-        const {facetId, field, values} = facetData;
+        const {facetId, field, values} = initialFacetData;
         const expectedFacetData = {
           facetId,
           facetField: field,
@@ -81,12 +91,22 @@ useCaseTestCases.forEach((useCase) => {
     });
 
     test.describe('when selecting a facet value and clicking the clear filter button', () => {
+      test.use({
+        facetResponses: {
+          responses: [
+            [initialFacetData],
+            [selectedFacetData],
+            [initialFacetData],
+          ],
+        },
+      });
+
       test('should trigger a new search and log the corresponding UA analytics events', async ({
         baseFacet,
         facet,
       }) => {
         const selectedIndex = 0;
-        const {facetId, field, values} = facetData;
+        const {facetId, field, values} = initialFacetData;
         const expectedFacetData = {
           facetId,
           facetField: field,
@@ -131,7 +151,9 @@ useCaseTestCases.forEach((useCase) => {
 
         test.use({
           urlHash: `df-${exampleField}=${yesterdayDate.replaceAll('-', '/')}@00:00:00..${todayDate.replaceAll('-', '/')}@23:59:59`,
-          facetResponseMock: undefined,
+          facetResponses: {
+            responses: [],
+          },
         });
 
         test('should select the correct facet value', async ({facet}) => {

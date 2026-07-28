@@ -7,10 +7,7 @@ import type {AsyncThunkSearchOptions} from '../../api/search/search-api-client.j
 import type {AsyncThunkOptions} from '../../app/async-thunk-options.js';
 import type {NavigatorContext} from '../../app/navigator-context-provider.js';
 import type {InstantResultSection} from '../../state/state-sections.js';
-import {
-  requiredNonEmptyString,
-  validatePayload,
-} from '../../utils/validate-payload.js';
+import {requiredNonEmptyString, validatePayload} from '../../utils/validate-payload.js';
 import {
   type LegacySearchAction,
   makeBasicNewSearchAnalyticsAction,
@@ -28,10 +25,7 @@ import {
   updateInstantResultsQuery,
 } from '../instant-results/instant-results-actions.js';
 import {updatePage} from '../pagination/pagination-actions.js';
-import {
-  type UpdateQueryActionCreatorPayload,
-  updateQuery,
-} from '../query/query-actions.js';
+import {type UpdateQueryActionCreatorPayload, updateQuery} from '../query/query-actions.js';
 import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/search-and-folding-request.js';
 import {
   legacyExecuteSearch,
@@ -89,9 +83,7 @@ export const prepareForSearchWithQuery = createAsyncThunk<
   }
 
   dispatch(updateFacetAutoSelection({allow: true}));
-  dispatch(
-    updateQuery({q: payload.q, enableQuerySyntax: payload.enableQuerySyntax})
-  );
+  dispatch(updateQuery({q: payload.q, enableQuerySyntax: payload.enableQuerySyntax}));
   dispatch(updatePage(1));
 });
 
@@ -108,35 +100,27 @@ export const executeSearch = createAsyncThunk<
   ExecuteSearchThunkReturn,
   TransitiveSearchAction,
   AsyncThunkSearchOptions<StateNeededByExecuteSearch>
->(
-  'search/executeSearch',
-  async (searchAction: TransitiveSearchAction, config) => {
-    const state = config.getState();
-    if (state.configuration.analytics.analyticsMode === 'legacy') {
-      return legacyExecuteSearch(state, config, searchAction.legacy);
-    }
-    addEntryInActionsHistory(state);
-    const analyticsAction = searchAction.next
-      ? buildSearchReduxAction(searchAction.next)
-      : undefined;
-
-    const request = await buildSearchRequest(
-      state,
-      config.extra.navigatorContext,
-      analyticsAction
-    );
-
-    const processor = new AsyncSearchThunkProcessor<
-      ReturnType<typeof config.rejectWithValue>
-    >({...config, analyticsAction: analyticsAction ?? {}});
-
-    const fetched = await processor.fetchFromAPI(request, {
-      origin: 'mainSearch',
-    });
-
-    return await processor.process(fetched);
+>('search/executeSearch', async (searchAction: TransitiveSearchAction, config) => {
+  const state = config.getState();
+  if (state.configuration.analytics.analyticsMode === 'legacy') {
+    return legacyExecuteSearch(state, config, searchAction.legacy);
   }
-);
+  addEntryInActionsHistory(state);
+  const analyticsAction = searchAction.next ? buildSearchReduxAction(searchAction.next) : undefined;
+
+  const request = await buildSearchRequest(state, config.extra.navigatorContext, analyticsAction);
+
+  const processor = new AsyncSearchThunkProcessor<ReturnType<typeof config.rejectWithValue>>({
+    ...config,
+    analyticsAction: analyticsAction ?? {},
+  });
+
+  const fetched = await processor.fetchFromAPI(request, {
+    origin: 'mainSearch',
+  });
+
+  return await processor.process(fetched);
+});
 
 export const fetchPage = createAsyncThunk<
   ExecuteSearchThunkReturn,
@@ -146,25 +130,16 @@ export const fetchPage = createAsyncThunk<
   const state = config.getState();
   addEntryInActionsHistory(state);
 
-  if (
-    state.configuration.analytics.analyticsMode === 'legacy' ||
-    !searchAction.next
-  ) {
+  if (state.configuration.analytics.analyticsMode === 'legacy' || !searchAction.next) {
     return legacyFetchPage(state, config, searchAction.legacy);
   }
 
-  const processor = new AsyncSearchThunkProcessor<
-    ReturnType<typeof config.rejectWithValue>
-  >({
+  const processor = new AsyncSearchThunkProcessor<ReturnType<typeof config.rejectWithValue>>({
     ...config,
     analyticsAction: searchAction.next,
   });
 
-  const request = await buildSearchRequest(
-    state,
-    config.extra.navigatorContext,
-    searchAction.next
-  );
+  const request = await buildSearchRequest(state, config.extra.navigatorContext, searchAction.next);
   const fetched = await processor.fetchFromAPI(request, {origin: 'mainSearch'});
 
   return await processor.process(fetched);
@@ -185,9 +160,7 @@ export const fetchMoreResults = createAsyncThunk<
     config.getState
   );
 
-  const processor = new AsyncSearchThunkProcessor<
-    ReturnType<typeof config.rejectWithValue>
-  >({
+  const processor = new AsyncSearchThunkProcessor<ReturnType<typeof config.rejectWithValue>>({
     ...config,
     analyticsAction,
   });
@@ -206,29 +179,24 @@ export const fetchFacetValues = createAsyncThunk<
   ExecuteSearchThunkReturn,
   TransitiveSearchAction,
   AsyncThunkSearchOptions<StateNeededByExecuteSearch>
->(
-  'search/fetchFacetValues',
-  async (searchAction: TransitiveSearchAction, config) => {
-    const state = config.getState();
-    if (state.configuration.analytics.analyticsMode === 'legacy') {
-      return legacyExecuteSearch(state, config, searchAction.legacy);
-    }
-
-    const processor = new AsyncSearchThunkProcessor<
-      ReturnType<typeof config.rejectWithValue>
-    >({...config, analyticsAction: {}});
-
-    const request = await buildFetchFacetValuesRequest(
-      state,
-      config.extra.navigatorContext
-    );
-    const fetched = await processor.fetchFromAPI(request, {
-      origin: 'facetValues',
-    });
-
-    return await processor.process(fetched);
+>('search/fetchFacetValues', async (searchAction: TransitiveSearchAction, config) => {
+  const state = config.getState();
+  if (state.configuration.analytics.analyticsMode === 'legacy') {
+    return legacyExecuteSearch(state, config, searchAction.legacy);
   }
-);
+
+  const processor = new AsyncSearchThunkProcessor<ReturnType<typeof config.rejectWithValue>>({
+    ...config,
+    analyticsAction: {},
+  });
+
+  const request = await buildFetchFacetValuesRequest(state, config.extra.navigatorContext);
+  const fetched = await processor.fetchFromAPI(request, {
+    origin: 'facetValues',
+  });
+
+  return await processor.process(fetched);
+});
 
 export const fetchInstantResults = createAsyncThunk<
   FetchInstantResultsThunkReturn,
@@ -262,13 +230,12 @@ export const fetchInstantResults = createAsyncThunk<
       analyticsAction
     );
 
-    const processor = new AsyncSearchThunkProcessor<
-      ReturnType<typeof config.rejectWithValue>
-    >({...config, analyticsAction}, (modification) => {
-      config.dispatch(
-        updateInstantResultsQuery({q: modification, id: payload.id})
-      );
-    });
+    const processor = new AsyncSearchThunkProcessor<ReturnType<typeof config.rejectWithValue>>(
+      {...config, analyticsAction},
+      (modification) => {
+        config.dispatch(updateInstantResultsQuery({q: modification, id: payload.id}));
+      }
+    );
     const fetched = await processor.fetchFromAPI(request, {
       origin: 'instantResults',
       disableAbortWarning: true,
@@ -292,16 +259,10 @@ const buildFetchMoreRequest = async (
   navigatorContext: NavigatorContext,
   eventDescription?: EventDescription
 ): Promise<MappedSearchRequest> => {
-  const mappedRequest = await buildSearchRequest(
-    state,
-    navigatorContext,
-    eventDescription
-  );
+  const mappedRequest = await buildSearchRequest(state, navigatorContext, eventDescription);
   mappedRequest.request = {
     ...mappedRequest.request,
-    firstResult:
-      (state.pagination?.firstResult ?? 0) +
-      (state.search?.results.length ?? 0),
+    firstResult: (state.pagination?.firstResult ?? 0) + (state.search?.results.length ?? 0),
   };
   return mappedRequest;
 };
@@ -334,11 +295,7 @@ const buildFetchFacetValuesRequest = async (
   navigatorContext: NavigatorContext,
   eventDescription?: EventDescription
 ): Promise<MappedSearchRequest> => {
-  const mappedRequest = await buildSearchRequest(
-    state,
-    navigatorContext,
-    eventDescription
-  );
+  const mappedRequest = await buildSearchRequest(state, navigatorContext, eventDescription);
   // Specifying a numberOfResults of 0 will not log the query as a full fledged query in the API
   // it will also alleviate the load on the index
   mappedRequest.request.numberOfResults = 0;

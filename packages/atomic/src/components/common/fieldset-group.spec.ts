@@ -14,9 +14,7 @@ describe('renderFieldsetGroup', () => {
     children = html`<div>Child Content</div>`
   ) => {
     const mergedProps = {...defaultProps, ...props};
-    return renderFunctionFixture(
-      html`${renderFieldsetGroup({props: mergedProps})(children)}`
-    );
+    return renderFunctionFixture(html`${renderFieldsetGroup({props: mergedProps})(children)}`);
   };
 
   it('renders a fieldset element', async () => {

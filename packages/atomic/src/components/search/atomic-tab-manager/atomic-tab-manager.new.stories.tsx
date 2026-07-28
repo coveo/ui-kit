@@ -1,8 +1,4 @@
-import type {
-  Decorator,
-  Meta,
-  StoryObj as Story,
-} from '@storybook/web-components-vite';
+import type {Decorator, Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
@@ -20,15 +16,11 @@ const searchApiHarness = new MockSearchApi();
 
 const {decorator, play} = wrapInSearchInterface();
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-tab-manager',
-  {
-    excludeCategories: ['methods'],
-  }
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-tab-manager', {
+  excludeCategories: ['methods'],
+});
 
-const widthDecorator: Decorator = (story) =>
-  html`<div style="min-width: 350px;">${story()}</div> `;
+const widthDecorator: Decorator = (story) => html`<div style="min-width: 350px;">${story()}</div> `;
 
 const meta: Meta = {
   component: 'atomic-tab-manager',
@@ -88,12 +80,8 @@ export const A11yStatusMessage: Story = {
     `,
   ],
   beforeEach: async () => {
-    searchApiHarness.searchEndpoint.mockOnce(
-      buildSearchResponseWithResults(120)
-    );
-    searchApiHarness.searchEndpoint.mockOnce(
-      buildSearchResponseWithResults(42)
-    );
+    searchApiHarness.searchEndpoint.mockOnce(buildSearchResponseWithResults(120));
+    searchApiHarness.searchEndpoint.mockOnce(buildSearchResponseWithResults(42));
   },
   play: async (context) => {
     await play(context);

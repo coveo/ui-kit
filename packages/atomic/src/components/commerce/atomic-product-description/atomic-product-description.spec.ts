@@ -13,10 +13,7 @@ const LINE_HEIGHT = 16;
 
 describe('atomic-product-description', () => {
   beforeEach(() => {
-    document.documentElement.style.setProperty(
-      '--line-height',
-      `${LINE_HEIGHT}px`
-    );
+    document.documentElement.style.setProperty('--line-height', `${LINE_HEIGHT}px`);
   });
   const renderProductDescription = async (
     props: {
@@ -121,9 +118,7 @@ describe('atomic-product-description', () => {
   });
 
   describe('when isCollapsible is true', () => {
-    let locators: Awaited<
-      ReturnType<typeof renderProductDescription>
-    >['locators'];
+    let locators: Awaited<ReturnType<typeof renderProductDescription>>['locators'];
     let element: AtomicProductDescription;
 
     beforeEach(async () => {
@@ -167,9 +162,6 @@ describe('atomic-product-description', () => {
       ec_description: 'This is a description for child product.',
     });
 
-    expect(locators.text).toHaveAttribute(
-      'value',
-      'This is a description for child product.'
-    );
+    expect(locators.text).toHaveAttribute('value', 'This is a description for child product.');
   });
 });

@@ -6,8 +6,7 @@ import type {EndpointStateScope} from '@/src/internal/utils/index.js';
 const mockCall = vi.fn();
 
 vi.mock('./search-request-selector.js', () => ({
-  createSearchEndpointRequestSelector: () => (state: any) =>
-    state.__request ?? {q: ''},
+  createSearchEndpointRequestSelector: () => (state: any) => state.__request ?? {q: ''},
 }));
 
 vi.mock('./search-response-handler.js', () => ({
@@ -37,9 +36,9 @@ vi.mock('./search-thunk-slice.js', () => ({
 }));
 
 vi.mock('@/src/internal/api/analytics-params.js', async () => {
-  const actual = await vi.importActual<
-    typeof import('@/src/internal/api/analytics-params.js')
-  >('@/src/internal/api/analytics-params.js');
+  const actual = await vi.importActual<typeof import('@/src/internal/api/analytics-params.js')>(
+    '@/src/internal/api/analytics-params.js'
+  );
   return actual;
 });
 

@@ -66,10 +66,7 @@ export const createResultListComponent = (resultCount = 5) => {
   return {ResultListComponent, mockResults};
 };
 
-export const createTestComponent = (
-  testId: string,
-  content = 'Test Content'
-) => {
+export const createTestComponent = (testId: string, content = 'Test Content') => {
   function TestComponent() {
     return <div data-testid={testId}>{content}</div>;
   }

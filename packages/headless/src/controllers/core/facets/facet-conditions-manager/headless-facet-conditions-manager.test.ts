@@ -10,10 +10,7 @@ import {buildMockCategoryFacetSlice} from '../../../../test/mock-category-facet-
 import {buildMockCategoryFacetValueRequest} from '../../../../test/mock-category-facet-value-request.js';
 import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice.js';
 import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../../../test/mock-engine-v2.js';
 import {buildFacetOptionsSlice} from '../../../../test/mock-facet-options-slice.js';
 import {buildMockFacetRequest} from '../../../../test/mock-facet-request.js';
 import {buildMockFacetSlice} from '../../../../test/mock-facet-slice.js';
@@ -205,10 +202,7 @@ describe('facet conditions manager', () => {
       }
 
       function getConditionIsMet(facetId: string) {
-        return (
-          state.facetSet?.[facetId]!.request.currentValues?.[0]?.state ===
-          'selected'
-        );
+        return state.facetSet?.[facetId]!.request.currentValues?.[0]?.state === 'selected';
       }
 
       function initFacet({
@@ -624,10 +618,7 @@ describe('facet conditions manager', () => {
       }
 
       function getConditionIsMet(facetId: string) {
-        return (
-          state.facetSet?.[facetId]!.request.currentValues?.[0]?.state ===
-          'selected'
-        );
+        return state.facetSet?.[facetId]!.request.currentValues?.[0]?.state === 'selected';
       }
 
       function initFacet({

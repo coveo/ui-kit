@@ -31,13 +31,9 @@ import {
 
 vi.mock('../../../../../features/facet-options/facet-options-actions');
 
-vi.mock(
-  '../../../../../features/facets/range-facets/date-facet-set/date-facet-controller-actions'
-);
+vi.mock('../../../../../features/facets/range-facets/date-facet-set/date-facet-controller-actions');
 
-vi.mock(
-  '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions'
-);
+vi.mock('../../../../../features/facets/range-facets/date-facet-set/date-facet-actions');
 
 describe('date facet', () => {
   const facetId = '1';
@@ -65,9 +61,7 @@ describe('date facet', () => {
   });
 
   it('#initDateFacet validates manual range in the options', () => {
-    options.currentValues = [
-      buildDateRange({start: 1616679091000, end: 1616592691000}),
-    ];
+    options.currentValues = [buildDateRange({start: 1616679091000, end: 1616592691000})];
     initDateFacet();
     expect(validateManualDateRanges).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -97,10 +91,7 @@ describe('date facet', () => {
 
     initDateFacet();
 
-    expect(FacetIdDeterminor.determineFacetId).toHaveBeenCalledWith(
-      engine,
-      options
-    );
+    expect(FacetIdDeterminor.determineFacetId).toHaveBeenCalledWith(engine, options);
   });
 
   it('registers a date facet with the passed options', () => {
@@ -115,9 +106,7 @@ describe('date facet', () => {
 
   it('when an option is invalid, it throws an error', () => {
     options.numberOfValues = 0;
-    expect(() => initDateFacet()).toThrow(
-      'Check the options of buildDateFacet'
-    );
+    expect(() => initDateFacet()).toThrow('Check the options of buildDateFacet');
   });
 
   describe('#toggleSelect', () => {
@@ -159,17 +148,13 @@ describe('date facet', () => {
 
     it('dispatches an #executeToggleDateFacetSelect action', () => {
       dateFacet.toggleSingleSelect(facetValue());
-      expect(executeToggleDateFacetSelect).toHaveBeenCalledWith(
-        expect.objectContaining({facetId})
-      );
+      expect(executeToggleDateFacetSelect).toHaveBeenCalledWith(expect.objectContaining({facetId}));
     });
   });
 
   describe('#toggleSingleSelect when the value state is not "idle"', () => {
-    const selectedFacetValue = () =>
-      buildMockDateFacetValue({state: 'selected'});
-    const excludedFacetValue = () =>
-      buildMockDateFacetValue({state: 'excluded'});
+    const selectedFacetValue = () => buildMockDateFacetValue({state: 'selected'});
+    const excludedFacetValue = () => buildMockDateFacetValue({state: 'excluded'});
 
     testCommonToggleSingleSelect(selectedFacetValue);
     testCommonToggleSingleSelect(excludedFacetValue);
@@ -197,10 +182,8 @@ describe('date facet', () => {
   });
 
   describe('#toggleSingleExclude when the value state is not "idle"', () => {
-    const selectedFacetValue = () =>
-      buildMockDateFacetValue({state: 'selected'});
-    const excludedFacetValue = () =>
-      buildMockDateFacetValue({state: 'excluded'});
+    const selectedFacetValue = () => buildMockDateFacetValue({state: 'selected'});
+    const excludedFacetValue = () => buildMockDateFacetValue({state: 'excluded'});
 
     testCommonToggleExcludeSelect(selectedFacetValue);
     testCommonToggleExcludeSelect(excludedFacetValue);
@@ -213,9 +196,7 @@ describe('date facet', () => {
 
   it('exposes a #state getter property to retrieve the values', () => {
     const values = [buildMockDateFacetValue()];
-    state.search.response.facets = [
-      buildMockDateFacetResponse({facetId, values}),
-    ];
+    state.search.response.facets = [buildMockDateFacetResponse({facetId, values})];
 
     expect(dateFacet.state.values).toEqual(values);
   });

@@ -25,9 +25,7 @@ import '@/src/components/commerce/atomic-product-text/atomic-product-text.js';
 
 const commerceApiHarness = new MockCommerceApi();
 
-commerceApiHarness.recommendationEndpoint.mock(
-  () => richRecommendationResponse
-);
+commerceApiHarness.recommendationEndpoint.mock(() => richRecommendationResponse);
 
 const {decorator, play} = wrapInCommerceRecommendationInterface({});
 const {events, args, argTypes, template} = getStorybookHelpers(

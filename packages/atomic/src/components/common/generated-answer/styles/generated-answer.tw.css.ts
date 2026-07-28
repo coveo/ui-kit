@@ -133,10 +133,4 @@ const baseStyle = css`
   }
 `;
 
-export default [
-  baseStyle,
-  generatedText,
-  generatedMarkdownContent,
-  feedbackButtons,
-  copyButton,
-];
+export default [baseStyle, generatedText, generatedMarkdownContent, feedbackButtons, copyButton];

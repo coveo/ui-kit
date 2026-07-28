@@ -1,7 +1,4 @@
-import type {
-  CommerceEngine,
-  ContextOptions,
-} from '@coveo/headless/ssr-commerce';
+import type {CommerceEngine, ContextOptions} from '@coveo/headless/ssr-commerce';
 import {render, renderHook, screen} from '@testing-library/react';
 import type {PropsWithChildren} from 'react';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
@@ -15,10 +12,7 @@ import {
   defineMockCommerceController,
 } from '../__tests__/mock-ssr-controller-definitions.js';
 import {createMockCommerceEngine} from '../__tests__/mock-ssr-engine.js';
-import {
-  renderWithProvider,
-  waitForAsyncUpdates,
-} from '../__tests__/test-utils.js';
+import {renderWithProvider, waitForAsyncUpdates} from '../__tests__/test-utils.js';
 import {MissingEngineProviderError} from '../errors.js';
 import {defineCommerceEngine} from './commerce-engine.js';
 
@@ -28,19 +22,13 @@ type MockControllerDefinitions = {
 };
 
 type MockControllers = {
-  [K in keyof MockControllerDefinitions]: ReturnType<
-    typeof buildMockController
-  >;
+  [K in keyof MockControllerDefinitions]: ReturnType<typeof buildMockController>;
 };
 
 describe('Commerce Engine', () => {
   let mockControllers: MockControllers;
-  let mockNavigatorContextProvider: ReturnType<
-    typeof createMockNavigatorContextProvider
-  >;
-  let engineDefinition: ReturnType<
-    typeof defineCommerceEngine<MockControllerDefinitions>
-  >;
+  let mockNavigatorContextProvider: ReturnType<typeof createMockNavigatorContextProvider>;
+  let engineDefinition: ReturnType<typeof defineCommerceEngine<MockControllerDefinitions>>;
   let StateProvider: typeof engineDefinition.listingEngineDefinition.StateProvider;
 
   beforeEach(() => {
@@ -191,10 +179,7 @@ describe('Commerce Engine', () => {
   describe('Component Rendering', () => {
     it('should throw error when component uses hooks without provider context', () => {
       const TestComponent = createTestComponent('test-component');
-      expect(
-        () => render(<TestComponent />),
-        MissingEngineProviderError.message
-      );
+      expect(() => render(<TestComponent />), MissingEngineProviderError.message);
     });
 
     it('should render components with static state', async () => {

@@ -6,15 +6,8 @@ import type {AnyBindings} from '@/src/components/common/interface/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 import {buildCustomEvent} from '@/src/utils/event-utils';
-import {
-  type InitializeEvent,
-  isParentReady,
-  markParentAsReady,
-} from '@/src/utils/init-queue';
-import {
-  type AtomicInterface,
-  initializeEventName,
-} from '@/src/utils/initialization-common-utils';
+import {type InitializeEvent, isParentReady, markParentAsReady} from '@/src/utils/init-queue';
+import {type AtomicInterface, initializeEventName} from '@/src/utils/initialization-common-utils';
 
 /**
  * The `atomic-external` component allows components defined outside of the `atomic-search-interface` to initialize.
@@ -48,14 +41,8 @@ export class AtomicExternal extends ChildrenUpdateCompleteMixin(LitElement) {
     super.connectedCallback();
     await this.getUpdateComplete();
 
-    this.addEventListener(
-      'atomic/initializeComponent',
-      this.handleInitialization as EventListener
-    );
-    this.addEventListener(
-      'atomic/scrollToTop',
-      this.handleScrollToTop as EventListener
-    );
+    this.addEventListener('atomic/initializeComponent', this.handleInitialization as EventListener);
+    this.addEventListener('atomic/scrollToTop', this.handleScrollToTop as EventListener);
     this.#interface?.addEventListener(
       'atomic/parentReady',
       this.handleParentReady as EventListener
@@ -71,10 +58,7 @@ export class AtomicExternal extends ChildrenUpdateCompleteMixin(LitElement) {
       'atomic/initializeComponent',
       this.handleInitialization as EventListener
     );
-    this.removeEventListener(
-      'atomic/scrollToTop',
-      this.handleScrollToTop as EventListener
-    );
+    this.removeEventListener('atomic/scrollToTop', this.handleScrollToTop as EventListener);
     this.#interface?.removeEventListener(
       'atomic/parentReady',
       this.handleParentReady as EventListener
@@ -84,17 +68,13 @@ export class AtomicExternal extends ChildrenUpdateCompleteMixin(LitElement) {
   private handleInitialization = (event: InitializeEvent) => {
     event.preventDefault();
     event.stopPropagation();
-    this.#interface?.dispatchEvent(
-      buildCustomEvent(initializeEventName, event.detail)
-    );
+    this.#interface?.dispatchEvent(buildCustomEvent(initializeEventName, event.detail));
   };
 
   private handleScrollToTop = (event: CustomEvent) => {
     event.preventDefault();
     event.stopPropagation();
-    this.#interface?.dispatchEvent(
-      buildCustomEvent('atomic/scrollToTop', event.detail)
-    );
+    this.#interface?.dispatchEvent(buildCustomEvent('atomic/scrollToTop', event.detail));
   };
 
   private handleParentReady = (event: Event) => {
@@ -109,9 +89,7 @@ export class AtomicExternal extends ChildrenUpdateCompleteMixin(LitElement) {
     if (!this.boundInterface) {
       this.boundInterface = document.querySelector(this.selector) ?? undefined;
       if (!this.boundInterface) {
-        const error = new Error(
-          `Cannot find interface element with selector "${this.selector}"`
-        );
+        const error = new Error(`Cannot find interface element with selector "${this.selector}"`);
         this.error = error;
         return undefined;
       }

@@ -34,10 +34,7 @@ vi.mock('./analytics-config', {spy: true});
 
 @customElement('test-element')
 @bindings()
-class TestElement
-  extends LitElement
-  implements InitializableComponent<RecsBindings>
-{
+class TestElement extends LitElement implements InitializableComponent<RecsBindings> {
   @state()
   public bindings: RecsBindings = {} as RecsBindings;
   @state() public error!: Error;
@@ -87,9 +84,8 @@ describe('atomic-recs-interface', () => {
   };
 
   const addChildElement = async (element: Element, tag = 'test-element') => {
-    const childElement = document.createElement(
-      tag
-    ) as InitializableComponent<RecsBindings> & TestElement;
+    const childElement = document.createElement(tag) as InitializableComponent<RecsBindings> &
+      TestElement;
     element.appendChild(childElement);
 
     await childElement.updateComplete;
@@ -99,9 +95,7 @@ describe('atomic-recs-interface', () => {
   };
 
   beforeEach(() => {
-    vi.mocked(buildRecommendationEngine).mockReturnValue(
-      buildFakeRecommendationEngine()
-    );
+    vi.mocked(buildRecommendationEngine).mockReturnValue(buildFakeRecommendationEngine());
 
     vi.mocked(loadFieldActions).mockReturnValue({
       registerFieldsToInclude: vi.fn(),
@@ -137,10 +131,7 @@ describe('atomic-recs-interface', () => {
 
   describe('#connectedCallback (when added to the DOM)', () => {
     it("should add an 'atomic/initializeComponent' event listener on the element", async () => {
-      const addEventListenerSpy = vi.spyOn(
-        AtomicRecsInterface.prototype,
-        'addEventListener'
-      );
+      const addEventListenerSpy = vi.spyOn(AtomicRecsInterface.prototype, 'addEventListener');
 
       await setupElement();
 
@@ -160,9 +151,7 @@ describe('atomic-recs-interface', () => {
 
       element.dispatchEvent(event);
 
-      expect(onComponentInitializationSpy).toHaveBeenCalledExactlyOnceWith(
-        event
-      );
+      expect(onComponentInitializationSpy).toHaveBeenCalledExactlyOnceWith(event);
     });
   });
 
@@ -176,9 +165,7 @@ describe('atomic-recs-interface', () => {
       testedInitMethodName: 'initializeWithRecommendationEngine',
     },
   ])('#$testedInitMethodName', ({testedInitMethodName}) => {
-    const callTestedInitMethod = async (
-      element: Awaited<ReturnType<typeof setupElement>>
-    ) => {
+    const callTestedInitMethod = async (element: Awaited<ReturnType<typeof setupElement>>) => {
       if (testedInitMethodName === 'initialize') {
         await element.initialize(recommendationEngineConfig);
       } else {
@@ -189,16 +176,11 @@ describe('atomic-recs-interface', () => {
 
     it('should call InterfaceController.onInitialization', async () => {
       const element = await setupElement();
-      const onInitializationSpy = vi.spyOn(
-        InterfaceController.prototype,
-        'onInitialization'
-      );
+      const onInitializationSpy = vi.spyOn(InterfaceController.prototype, 'onInitialization');
 
       await callTestedInitMethod(element);
 
-      expect(onInitializationSpy).toHaveBeenCalledExactlyOnceWith(
-        expect.any(Function)
-      );
+      expect(onInitializationSpy).toHaveBeenCalledExactlyOnceWith(expect.any(Function));
     });
 
     it('should call #updateLanguage once when the language prop is specified', async () => {
@@ -273,217 +255,200 @@ describe('atomic-recs-interface', () => {
       expect(markParentAsReady).toHaveBeenCalledExactlyOnceWith(element);
     });
 
-    describe.skipIf(testedInitMethodName !== 'initialize')(
-      '#initialize only',
-      () => {
-        it('should call #buildRecommendationEngine with the correct configuration', async () => {
-          const mockedGetAnalyticsConfig = vi.mocked(getAnalyticsConfig);
-          const element = await setupElement({
+    describe.skipIf(testedInitMethodName !== 'initialize')('#initialize only', () => {
+      it('should call #buildRecommendationEngine with the correct configuration', async () => {
+        const mockedGetAnalyticsConfig = vi.mocked(getAnalyticsConfig);
+        const element = await setupElement({
+          pipeline: 'test-pipeline',
+          searchHub: 'test-hub',
+          language: 'fr',
+          timezone: 'America/Montreal',
+          logLevel: 'debug',
+        });
+        const mockedBuildRecommendationEngine = vi.mocked(buildRecommendationEngine);
+
+        // Use config without searchHub to test that property value is used
+        const {searchHub: _, ...configWithoutSearchHub} = recommendationEngineConfig;
+
+        await element.initialize(configWithoutSearchHub);
+
+        expect(getAnalyticsConfig).toHaveBeenCalledExactlyOnceWith(
+          configWithoutSearchHub,
+          element.analytics
+        );
+        expect(mockedBuildRecommendationEngine).toHaveBeenCalledExactlyOnceWith({
+          configuration: {
+            ...configWithoutSearchHub,
             pipeline: 'test-pipeline',
             searchHub: 'test-hub',
-            language: 'fr',
+            locale: 'fr',
             timezone: 'America/Montreal',
-            logLevel: 'debug',
-          });
-          const mockedBuildRecommendationEngine = vi.mocked(
-            buildRecommendationEngine
-          );
+            analytics: mockedGetAnalyticsConfig.mock.results[0].value,
+          },
+          loggerOptions: {
+            level: 'debug',
+          },
+        });
+      });
 
-          // Use config without searchHub to test that property value is used
-          const {searchHub: _, ...configWithoutSearchHub} =
-            recommendationEngineConfig;
+      it('should default searchHub to "default" when not provided', async () => {
+        const element = await setupElement();
+        const mockedBuildRecommendationEngine = vi.mocked(buildRecommendationEngine);
 
-          await element.initialize(configWithoutSearchHub);
+        await element.initialize(recommendationEngineConfig);
 
-          expect(getAnalyticsConfig).toHaveBeenCalledExactlyOnceWith(
-            configWithoutSearchHub,
-            element.analytics
-          );
-          expect(
-            mockedBuildRecommendationEngine
-          ).toHaveBeenCalledExactlyOnceWith({
-            configuration: {
-              ...configWithoutSearchHub,
-              pipeline: 'test-pipeline',
-              searchHub: 'test-hub',
-              locale: 'fr',
-              timezone: 'America/Montreal',
-              analytics: mockedGetAnalyticsConfig.mock.results[0].value,
-            },
-            loggerOptions: {
-              level: 'debug',
-            },
-          });
+        expect(mockedBuildRecommendationEngine).toHaveBeenCalledWith(
+          expect.objectContaining({
+            configuration: expect.objectContaining({
+              searchHub: 'default',
+            }),
+          })
+        );
+      });
+
+      it('should use searchHub from options when both property and options are provided', async () => {
+        const element = await setupElement({searchHub: 'property-hub'});
+        const mockedBuildRecommendationEngine = vi.mocked(buildRecommendationEngine);
+
+        await element.initialize({
+          ...recommendationEngineConfig,
+          searchHub: 'options-hub',
         });
 
-        it('should default searchHub to "default" when not provided', async () => {
-          const element = await setupElement();
-          const mockedBuildRecommendationEngine = vi.mocked(
-            buildRecommendationEngine
-          );
+        expect(mockedBuildRecommendationEngine).toHaveBeenCalledWith(
+          expect.objectContaining({
+            configuration: expect.objectContaining({
+              searchHub: 'options-hub',
+            }),
+          })
+        );
+      });
 
-          await element.initialize(recommendationEngineConfig);
+      it('should use pipeline from options when both property and options are provided', async () => {
+        const element = await setupElement({pipeline: 'property-pipeline'});
+        const mockedBuildRecommendationEngine = vi.mocked(buildRecommendationEngine);
 
-          expect(mockedBuildRecommendationEngine).toHaveBeenCalledWith(
-            expect.objectContaining({
-              configuration: expect.objectContaining({
-                searchHub: 'default',
-              }),
-            })
-          );
+        await element.initialize({
+          ...recommendationEngineConfig,
+          pipeline: 'options-pipeline',
         });
 
-        it('should use searchHub from options when both property and options are provided', async () => {
-          const element = await setupElement({searchHub: 'property-hub'});
-          const mockedBuildRecommendationEngine = vi.mocked(
-            buildRecommendationEngine
-          );
+        expect(mockedBuildRecommendationEngine).toHaveBeenCalledWith(
+          expect.objectContaining({
+            configuration: expect.objectContaining({
+              pipeline: 'options-pipeline',
+            }),
+          })
+        );
+      });
 
-          await element.initialize({
-            ...recommendationEngineConfig,
-            searchHub: 'options-hub',
-          });
-
-          expect(mockedBuildRecommendationEngine).toHaveBeenCalledWith(
-            expect.objectContaining({
-              configuration: expect.objectContaining({
-                searchHub: 'options-hub',
-              }),
-            })
-          );
-        });
-
-        it('should use pipeline from options when both property and options are provided', async () => {
-          const element = await setupElement({pipeline: 'property-pipeline'});
-          const mockedBuildRecommendationEngine = vi.mocked(
-            buildRecommendationEngine
-          );
-
-          await element.initialize({
-            ...recommendationEngineConfig,
-            pipeline: 'options-pipeline',
-          });
-
-          expect(mockedBuildRecommendationEngine).toHaveBeenCalledWith(
-            expect.objectContaining({
-              configuration: expect.objectContaining({
-                pipeline: 'options-pipeline',
-              }),
-            })
-          );
-        });
-
-        it('should update pipeline and searchHub properties from engine state', async () => {
-          const element = await setupElement();
-          const mockEngine = buildFakeRecommendationEngine({
-            state: {
-              pipeline: 'engine-pipeline',
-              searchHub: 'engine-hub',
-            },
-          });
-          vi.mocked(buildRecommendationEngine).mockReturnValue(mockEngine);
-
-          await element.initialize(recommendationEngineConfig);
-
-          expect(element.pipeline).toBe('engine-pipeline');
-          expect(element.searchHub).toBe('engine-hub');
-        });
-
-        it('should register fields to include', async () => {
-          const mockRegisterFieldsToInclude = vi.fn();
-          vi.mocked(loadFieldActions).mockReturnValue({
-            registerFieldsToInclude: mockRegisterFieldsToInclude,
-            enableFetchAllFields: vi.fn(),
-            disableFetchAllFields: vi.fn(),
-            fetchFieldsDescription: vi.fn(),
-          });
-
-          const element = await setupElement({
-            fieldsToInclude: ['custom_field_1', 'custom_field_2'],
-          });
-
-          await element.initialize(recommendationEngineConfig);
-
-          expect(mockRegisterFieldsToInclude).toHaveBeenCalledWith(
-            expect.arrayContaining([
-              ...EcommerceDefaultFieldsToInclude,
-              'custom_field_1',
-              'custom_field_2',
-            ])
-          );
-        });
-      }
-    );
-
-    describe.skipIf(
-      testedInitMethodName !== 'initializeWithRecommendationEngine'
-    )('#initializeWithRecommendationEngine only', () => {
-      it('should use the provided engine', async () => {
+      it('should update pipeline and searchHub properties from engine state', async () => {
         const element = await setupElement();
         const mockEngine = buildFakeRecommendationEngine({
           state: {
-            pipeline: 'external-pipeline',
-            searchHub: 'external-hub',
-          },
-        });
-
-        await element.initializeWithRecommendationEngine(mockEngine);
-
-        expect(element.engine).toBe(mockEngine);
-      });
-
-      it('should warn when pipeline prop does not match engine pipeline', async () => {
-        const element = await setupElement({pipeline: 'interface-pipeline'});
-        const consoleWarnSpy = vi.spyOn(console, 'warn');
-        const mockEngine = buildFakeRecommendationEngine({
-          state: {
             pipeline: 'engine-pipeline',
-            searchHub: 'default',
-          },
-        });
-
-        await element.initializeWithRecommendationEngine(mockEngine);
-
-        expect(consoleWarnSpy).toHaveBeenCalledWith(
-          expect.stringContaining('query pipeline')
-        );
-      });
-
-      it('should warn when searchHub prop does not match engine searchHub', async () => {
-        const element = await setupElement({searchHub: 'interface-hub'});
-        const consoleWarnSpy = vi.spyOn(console, 'warn');
-        const mockEngine = buildFakeRecommendationEngine({
-          state: {
-            pipeline: 'default',
             searchHub: 'engine-hub',
           },
         });
+        vi.mocked(buildRecommendationEngine).mockReturnValue(mockEngine);
 
-        await element.initializeWithRecommendationEngine(mockEngine);
+        await element.initialize(recommendationEngineConfig);
 
-        expect(consoleWarnSpy).toHaveBeenCalledWith(
-          expect.stringContaining('search hub')
+        expect(element.pipeline).toBe('engine-pipeline');
+        expect(element.searchHub).toBe('engine-hub');
+      });
+
+      it('should register fields to include', async () => {
+        const mockRegisterFieldsToInclude = vi.fn();
+        vi.mocked(loadFieldActions).mockReturnValue({
+          registerFieldsToInclude: mockRegisterFieldsToInclude,
+          enableFetchAllFields: vi.fn(),
+          disableFetchAllFields: vi.fn(),
+          fetchFieldsDescription: vi.fn(),
+        });
+
+        const element = await setupElement({
+          fieldsToInclude: ['custom_field_1', 'custom_field_2'],
+        });
+
+        await element.initialize(recommendationEngineConfig);
+
+        expect(mockRegisterFieldsToInclude).toHaveBeenCalledWith(
+          expect.arrayContaining([
+            ...EcommerceDefaultFieldsToInclude,
+            'custom_field_1',
+            'custom_field_2',
+          ])
         );
       });
+    });
 
-      it('should not warn when props match engine state', async () => {
-        const element = await setupElement({
-          pipeline: 'same-pipeline',
-          searchHub: 'same-hub',
+    describe.skipIf(testedInitMethodName !== 'initializeWithRecommendationEngine')(
+      '#initializeWithRecommendationEngine only',
+      () => {
+        it('should use the provided engine', async () => {
+          const element = await setupElement();
+          const mockEngine = buildFakeRecommendationEngine({
+            state: {
+              pipeline: 'external-pipeline',
+              searchHub: 'external-hub',
+            },
+          });
+
+          await element.initializeWithRecommendationEngine(mockEngine);
+
+          expect(element.engine).toBe(mockEngine);
         });
-        const consoleWarnSpy = vi.spyOn(console, 'warn');
-        const mockEngine = buildFakeRecommendationEngine({
-          state: {
+
+        it('should warn when pipeline prop does not match engine pipeline', async () => {
+          const element = await setupElement({pipeline: 'interface-pipeline'});
+          const consoleWarnSpy = vi.spyOn(console, 'warn');
+          const mockEngine = buildFakeRecommendationEngine({
+            state: {
+              pipeline: 'engine-pipeline',
+              searchHub: 'default',
+            },
+          });
+
+          await element.initializeWithRecommendationEngine(mockEngine);
+
+          expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('query pipeline'));
+        });
+
+        it('should warn when searchHub prop does not match engine searchHub', async () => {
+          const element = await setupElement({searchHub: 'interface-hub'});
+          const consoleWarnSpy = vi.spyOn(console, 'warn');
+          const mockEngine = buildFakeRecommendationEngine({
+            state: {
+              pipeline: 'default',
+              searchHub: 'engine-hub',
+            },
+          });
+
+          await element.initializeWithRecommendationEngine(mockEngine);
+
+          expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('search hub'));
+        });
+
+        it('should not warn when props match engine state', async () => {
+          const element = await setupElement({
             pipeline: 'same-pipeline',
             searchHub: 'same-hub',
-          },
+          });
+          const consoleWarnSpy = vi.spyOn(console, 'warn');
+          const mockEngine = buildFakeRecommendationEngine({
+            state: {
+              pipeline: 'same-pipeline',
+              searchHub: 'same-hub',
+            },
+          });
+
+          await element.initializeWithRecommendationEngine(mockEngine);
+
+          expect(consoleWarnSpy).not.toHaveBeenCalled();
         });
-
-        await element.initializeWithRecommendationEngine(mockEngine);
-
-        expect(consoleWarnSpy).not.toHaveBeenCalled();
-      });
-    });
+      }
+    );
   });
 
   describe('#getRecommendations', () => {
@@ -507,9 +472,7 @@ describe('atomic-recs-interface', () => {
       await element.getRecommendations();
 
       expect(consoleErrorSpy).toHaveBeenCalledWith(
-        expect.stringContaining(
-          'You have to wait until the "initialize" promise is fulfilled'
-        ),
+        expect.stringContaining('You have to wait until the "initialize" promise is fulfilled'),
         element
       );
     });
@@ -529,9 +492,7 @@ describe('atomic-recs-interface', () => {
       await element.getRecommendations();
 
       expect(mockGetRecommendations).toHaveBeenCalledExactlyOnceWith();
-      expect(mockDispatch).toHaveBeenCalledExactlyOnceWith(
-        mockGetRecommendations()
-      );
+      expect(mockDispatch).toHaveBeenCalledExactlyOnceWith(mockGetRecommendations());
     });
   });
 
@@ -539,10 +500,7 @@ describe('atomic-recs-interface', () => {
   it('should call InterfaceController.onAnalyticsChange when the analytics attribute changes', async () => {
     const element = await setupElement();
     await element.initialize(recommendationEngineConfig);
-    const onAnalyticsChangeSpy = vi.spyOn(
-      InterfaceController.prototype,
-      'onAnalyticsChange'
-    );
+    const onAnalyticsChangeSpy = vi.spyOn(InterfaceController.prototype, 'onAnalyticsChange');
 
     expect(onAnalyticsChangeSpy).not.toHaveBeenCalled();
 
@@ -562,16 +520,12 @@ describe('atomic-recs-interface', () => {
     const element = await setupElement();
     await element.initialize(recommendationEngineConfig);
 
-    expect(element.bindings.store.state.iconAssetsPath).not.toBe(
-      '/new/icon/assets/path'
-    );
+    expect(element.bindings.store.state.iconAssetsPath).not.toBe('/new/icon/assets/path');
 
     element.iconAssetsPath = '/new/icon/assets/path';
     await element.updateComplete;
 
-    expect(element.bindings.store.state.iconAssetsPath).toBe(
-      '/new/icon/assets/path'
-    );
+    expect(element.bindings.store.state.iconAssetsPath).toBe('/new/icon/assets/path');
   });
 
   // #updateLanguage
@@ -609,17 +563,12 @@ describe('atomic-recs-interface', () => {
         expect(mockUpdateSearchConfiguration).toHaveBeenCalledWith({
           locale: 'fr',
         });
-        expect(mockDispatch).toHaveBeenCalledWith(
-          mockUpdateSearchConfiguration({locale: 'fr'})
-        );
+        expect(mockDispatch).toHaveBeenCalledWith(mockUpdateSearchConfiguration({locale: 'fr'}));
       });
 
       it('should call InterfaceController.onLanguageChange', async () => {
         const element = await setupElement({language: 'en'});
-        const onLanguageChangeSpy = vi.spyOn(
-          InterfaceController.prototype,
-          'onLanguageChange'
-        );
+        const onLanguageChangeSpy = vi.spyOn(InterfaceController.prototype, 'onLanguageChange');
 
         await element.initialize(recommendationEngineConfig);
 

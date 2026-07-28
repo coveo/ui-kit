@@ -4,10 +4,7 @@ import {beforeAll, beforeEach, describe, expect, it, vi} from 'vitest';
 import {page} from 'vitest/browser';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {
-  type FacetSearchInputProps,
-  renderFacetSearchInput,
-} from './facet-search-input';
+import {type FacetSearchInputProps, renderFacetSearchInput} from './facet-search-input';
 
 describe('renderFacetSearchInput', () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;
@@ -18,9 +15,7 @@ describe('renderFacetSearchInput', () => {
 
   const renderComponent = (props: Partial<FacetSearchInputProps> = {}) => {
     const mergedProps = {...defaultProps, ...props};
-    return renderFunctionFixture(
-      html`${renderFacetSearchInput({props: mergedProps})}`
-    );
+    return renderFunctionFixture(html`${renderFacetSearchInput({props: mergedProps})}`);
   };
 
   const locators = {
@@ -100,9 +95,7 @@ describe('renderFacetSearchInput', () => {
     const el = await renderComponent();
     const searchIcon = locators.searchIcon(el);
 
-    await expect(
-      locators.clearButtonIcon.getAttribute('icon')
-    ).toMatchSnapshot();
+    await expect(locators.clearButtonIcon.getAttribute('icon')).toMatchSnapshot();
     await expect(searchIcon.getAttribute('icon')).toMatchSnapshot();
   });
 });

@@ -26,8 +26,7 @@ export type {Sort, SortInitialState, SortProps, SortState};
 export function buildSort(engine: InsightEngine, props: SortProps = {}): Sort {
   const {dispatch} = engine;
   const sort = buildCoreSort(engine, props);
-  const search = () =>
-    dispatch(executeSearch({legacy: logResultsSort(), next: resultsSort()}));
+  const search = () => dispatch(executeSearch({legacy: logResultsSort(), next: resultsSort()}));
 
   return {
     ...sort,

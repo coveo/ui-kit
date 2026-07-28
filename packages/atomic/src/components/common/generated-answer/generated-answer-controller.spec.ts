@@ -50,9 +50,7 @@ describe('GeneratedAnswerController', () => {
     } as unknown as ReactiveControllerHost & HTMLElement;
   });
 
-  const createController = (
-    options: Partial<GeneratedAnswerControllerOptions> = {}
-  ) => {
+  const createController = (options: Partial<GeneratedAnswerControllerOptions> = {}) => {
     const defaultOptions: GeneratedAnswerControllerOptions = {
       withToggle: false,
       getGeneratedAnswer: () => mockGeneratedAnswer,
@@ -139,9 +137,7 @@ describe('GeneratedAnswerController', () => {
         }),
       });
 
-      expect(controller.getGeneratedAnswerStatus()).toBe(
-        'Answer could not be generated'
-      );
+      expect(controller.getGeneratedAnswerStatus()).toBe('Answer could not be generated');
     });
 
     it('should return the failure status when the completed request cannot produce an answer', () => {
@@ -153,9 +149,7 @@ describe('GeneratedAnswerController', () => {
         }),
       });
 
-      expect(controller.getGeneratedAnswerStatus()).toBe(
-        'Answer could not be generated'
-      );
+      expect(controller.getGeneratedAnswerStatus()).toBe('Answer could not be generated');
     });
 
     it('should return correct translated key with answer when it has answer', () => {
@@ -167,9 +161,7 @@ describe('GeneratedAnswerController', () => {
         }),
       });
 
-      expect(controller.getGeneratedAnswerStatus()).toBe(
-        'Generated answer: Test answer'
-      );
+      expect(controller.getGeneratedAnswerStatus()).toBe('Generated answer: Test answer');
     });
 
     it('should strip markdown syntax from answer before announcing it', () => {
@@ -196,9 +188,7 @@ describe('GeneratedAnswerController', () => {
         }),
       });
 
-      expect(controller.getGeneratedAnswerStatus()).toBe(
-        'Generated answer: Test answer'
-      );
+      expect(controller.getGeneratedAnswerStatus()).toBe('Generated answer: Test answer');
     });
 
     it('should return empty string when the answer only contains whitespace', () => {
@@ -223,9 +213,7 @@ describe('GeneratedAnswerController', () => {
         }),
       });
 
-      expect(controller.getGeneratedAnswerStatus()).toBe(
-        'Answer could not be generated'
-      );
+      expect(controller.getGeneratedAnswerStatus()).toBe('Answer could not be generated');
     });
 
     describe('when status conditions overlap', () => {
@@ -250,9 +238,7 @@ describe('GeneratedAnswerController', () => {
             }),
           });
 
-          expect(controller.getGeneratedAnswerStatus()).toBe(
-            'Generated answer is hidden'
-          );
+          expect(controller.getGeneratedAnswerStatus()).toBe('Generated answer is hidden');
         }
       });
 
@@ -276,9 +262,7 @@ describe('GeneratedAnswerController', () => {
             }),
           });
 
-          expect(controller.getGeneratedAnswerStatus()).toBe(
-            'Generating answer'
-          );
+          expect(controller.getGeneratedAnswerStatus()).toBe('Generating answer');
         }
       });
     });
@@ -458,11 +442,7 @@ describe('GeneratedAnswerController', () => {
       const onCopyError = vi.fn();
       const controller = createController();
 
-      await controller.copyToClipboard(
-        'Test answer',
-        onCopySuccess,
-        onCopyError
-      );
+      await controller.copyToClipboard('Test answer', onCopySuccess, onCopyError);
 
       expect(writeTextMock).toHaveBeenCalledWith('Test answer');
       expect(onCopySuccess).toHaveBeenCalled();
@@ -482,11 +462,7 @@ describe('GeneratedAnswerController', () => {
       const onCopyError = vi.fn();
       const controller = createController();
 
-      await controller.copyToClipboard(
-        'Test answer',
-        onCopySuccess,
-        onCopyError
-      );
+      await controller.copyToClipboard('Test answer', onCopySuccess, onCopyError);
 
       expect(onCopyError).toHaveBeenCalled();
       expect(mockBindings.engine.logger.error).toHaveBeenCalled();
@@ -551,9 +527,7 @@ describe('GeneratedAnswerController', () => {
     it('should return error message when copyError is true', () => {
       const controller = createController();
 
-      expect(controller.getCopyToClipboardTooltip(false, true)).toBe(
-        'Failed to copy the answer'
-      );
+      expect(controller.getCopyToClipboardTooltip(false, true)).toBe('Failed to copy the answer');
     });
 
     it('should return copied message when copied is true', () => {
@@ -565,9 +539,7 @@ describe('GeneratedAnswerController', () => {
     it('should return copy message when not copied and no error', () => {
       const controller = createController();
 
-      expect(controller.getCopyToClipboardTooltip(false, false)).toBe(
-        'Copy answer'
-      );
+      expect(controller.getCopyToClipboardTooltip(false, false)).toBe('Copy answer');
     });
   });
 
@@ -625,9 +597,8 @@ describe('GeneratedAnswerController', () => {
 
     controller.writeStoredData({isVisible: false});
 
-    expect(mockStorage.setJSON).toHaveBeenCalledWith(
-      StorageItems.GENERATED_ANSWER_DATA,
-      {isVisible: false}
-    );
+    expect(mockStorage.setJSON).toHaveBeenCalledWith(StorageItems.GENERATED_ANSWER_DATA, {
+      isVisible: false,
+    });
   });
 });

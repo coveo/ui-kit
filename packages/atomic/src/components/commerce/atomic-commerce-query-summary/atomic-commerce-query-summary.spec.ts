@@ -20,17 +20,13 @@ vi.mock('@coveo/headless/commerce', {spy: true});
 
 describe('atomic-commerce-query-summary', () => {
   const mockedEngine = buildFakeCommerceEngine();
-  let mockedQuerySummary: Summary<
-    SearchSummaryState | ProductListingSummaryState
-  >;
+  let mockedQuerySummary: Summary<SearchSummaryState | ProductListingSummaryState>;
   const renderQuerySummary = async ({
     interfaceElementType = 'product-listing',
     querySummaryState = {},
   }: {
     interfaceElementType?: 'product-listing' | 'search';
-    querySummaryState?:
-      | Partial<SearchSummaryState>
-      | Partial<ProductListingSummaryState>;
+    querySummaryState?: Partial<SearchSummaryState> | Partial<ProductListingSummaryState>;
   } = {}) => {
     mockedQuerySummary = buildFakeSummary({state: querySummaryState});
 
@@ -49,25 +45,23 @@ describe('atomic-commerce-query-summary', () => {
       })
     );
 
-    const {element} =
-      await renderInAtomicCommerceInterface<AtomicCommerceQuerySummary>({
-        template: html`<atomic-commerce-query-summary></atomic-commerce-query-summary>`,
-        selector: 'atomic-commerce-query-summary',
-        bindings: (bindings) => {
-          bindings.interfaceElement.type = interfaceElementType;
-          bindings.engine = mockedEngine;
+    const {element} = await renderInAtomicCommerceInterface<AtomicCommerceQuerySummary>({
+      template: html`<atomic-commerce-query-summary></atomic-commerce-query-summary>`,
+      selector: 'atomic-commerce-query-summary',
+      bindings: (bindings) => {
+        bindings.interfaceElement.type = interfaceElementType;
+        bindings.engine = mockedEngine;
 
-          return bindings;
-        },
-      });
+        return bindings;
+      },
+    });
 
     return {
       element,
       placeholder: element.shadowRoot!.querySelector('[part="placeholder"]'),
       container: element.shadowRoot!.querySelector('[part="container"]'),
       parts: (element: AtomicCommerceQuerySummary) => {
-        const qs = (part: string) =>
-          element.shadowRoot?.querySelector(`[part*="${part}"]`);
+        const qs = (part: string) => element.shadowRoot?.querySelector(`[part*="${part}"]`);
         return {
           container: qs('container'),
           highlight: qs('highlight'),
@@ -221,9 +215,7 @@ describe('atomic-commerce-query-summary', () => {
         },
       });
 
-      expect(container).toHaveTextContent(
-        'Products 1-10 of 100 for test query'
-      );
+      expect(container).toHaveTextContent('Products 1-10 of 100 for test query');
     });
 
     it('should highlight the first, last, total, and query in the text', async () => {
@@ -238,18 +230,12 @@ describe('atomic-commerce-query-summary', () => {
         },
       });
 
-      const highlightedElements = container!.querySelectorAll(
-        '[part*="highlight"]'
-      );
+      const highlightedElements = container!.querySelectorAll('[part*="highlight"]');
       expect(highlightedElements.length).toBe(4);
     });
 
     it('should handle loading state properly', async () => {
-      const messageSetterSpy = vi.spyOn(
-        AriaLiveRegionController.prototype,
-        'message',
-        'set'
-      );
+      const messageSetterSpy = vi.spyOn(AriaLiveRegionController.prototype, 'message', 'set');
 
       const {element} = await renderQuerySummary({
         querySummaryState: {

@@ -28,20 +28,12 @@ export type {InlineLink};
  * @group Controllers
  * @category SmartSnippet
  * */
-export function buildSmartSnippet(
-  engine: InsightEngine,
-  props?: SmartSnippetProps
-): SmartSnippet {
-  const smartSnippet = buildCoreSmartSnippet(
-    engine,
-    insightSmartSnippetAnalyticsClient,
-    props
-  );
+export function buildSmartSnippet(engine: InsightEngine, props?: SmartSnippetProps): SmartSnippet {
+  const smartSnippet = buildCoreSmartSnippet(engine, insightSmartSnippetAnalyticsClient, props);
 
-  const interactiveInlineLinks = buildSmartSnippetInteractiveInlineLinks(
-    engine,
-    {options: {selectionDelay: props?.options?.selectionDelay}}
-  );
+  const interactiveInlineLinks = buildSmartSnippetInteractiveInlineLinks(engine, {
+    options: {selectionDelay: props?.options?.selectionDelay},
+  });
 
   return {
     ...smartSnippet,

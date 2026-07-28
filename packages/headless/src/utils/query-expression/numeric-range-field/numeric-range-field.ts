@@ -19,9 +19,7 @@ export interface NumericRangeFieldExpression extends Negatable {
   to: number;
 }
 
-export function buildNumericRangeField(
-  config: NumericRangeFieldExpression
-): Part {
+export function buildNumericRangeField(config: NumericRangeFieldExpression): Part {
   return {
     toQuerySyntax() {
       const prefix = getNegationPrefix(config);

@@ -90,12 +90,9 @@ describe('atomic-insight-facet', () => {
         },
       }),
     });
-    const qs = (part: string) =>
-      element.shadowRoot?.querySelector(`[part~="${part}"]`)!;
+    const qs = (part: string) => element.shadowRoot?.querySelector(`[part~="${part}"]`)!;
     const qsa = (part: string, ...additionalSelector: string[]) =>
-      element.shadowRoot?.querySelectorAll(
-        `[part~="${part}"]${additionalSelector?.join('')}`
-      )!;
+      element.shadowRoot?.querySelectorAll(`[part~="${part}"]${additionalSelector?.join('')}`)!;
 
     const locators = {
       get title() {
@@ -110,9 +107,7 @@ describe('atomic-insight-facet', () => {
       get componentError() {
         return page.getByText(/error/i);
       },
-      placeholder: element.shadowRoot?.querySelector(
-        'atomic-facet-placeholder'
-      ),
+      placeholder: element.shadowRoot?.querySelector('atomic-facet-placeholder'),
       facet: qs('facet'),
       labelButton: qs('label-button'),
       labelButtonIcon: qs('label-button-icon'),
@@ -123,10 +118,7 @@ describe('atomic-insight-facet', () => {
       valueCount: qsa('value-count'),
       valueCheckbox: qsa('value-checkbox'),
       valueCheckboxChecked: qsa('value-checkbox-checked'),
-      valueCheckboxExcluded: qsa(
-        'value-checkbox-checked',
-        '[aria-pressed=mixed]'
-      ),
+      valueCheckboxExcluded: qsa('value-checkbox-checked', '[aria-pressed=mixed]'),
       valueCheckboxLabel: qsa('value-checkbox-label'),
       valueCheckboxIcon: qsa('value-checkbox-icon'),
       valueLink: qsa('value-link'),
@@ -197,12 +189,8 @@ describe('atomic-insight-facet', () => {
 
     it('should render facet values', async () => {
       const {locators} = await setupElement();
-      await expect
-        .element(locators.getFacetValueByLabel('value-1'))
-        .toBeInTheDocument();
-      await expect
-        .element(locators.getFacetValueByLabel('value-2'))
-        .toBeInTheDocument();
+      await expect.element(locators.getFacetValueByLabel('value-1')).toBeInTheDocument();
+      await expect.element(locators.getFacetValueByLabel('value-2')).toBeInTheDocument();
     });
 
     it('should render facet values with checkbox display by default', async () => {
@@ -248,16 +236,12 @@ describe('atomic-insight-facet', () => {
       vi.mocked(buildInsightFacet).mockReturnValue(
         buildFakeFacet({
           state: {
-            values: [
-              {value: 'value-1', numberOfResults: 15, state: 'selected'},
-            ],
+            values: [{value: 'value-1', numberOfResults: 15, state: 'selected'}],
           },
         })
       );
       const {element} = await setupElement({enableExclusion: true});
-      const excludeButton = element.shadowRoot?.querySelector(
-        '[part~="value-exclude-button"]'
-      );
+      const excludeButton = element.shadowRoot?.querySelector('[part~="value-exclude-button"]');
       expect(excludeButton).toBeTruthy();
     });
 
@@ -267,9 +251,7 @@ describe('atomic-insight-facet', () => {
         buildFakeFacet({
           implementation: {toggleExclude},
           state: {
-            values: [
-              {value: 'value-1', numberOfResults: 15, state: 'selected'},
-            ],
+            values: [{value: 'value-1', numberOfResults: 15, state: 'selected'}],
           },
         })
       );
@@ -376,9 +358,7 @@ describe('atomic-insight-facet', () => {
         buildFakeFacet({
           implementation: {deselectAll},
           state: {
-            values: [
-              {value: 'value-1', numberOfResults: 15, state: 'selected'},
-            ],
+            values: [{value: 'value-1', numberOfResults: 15, state: 'selected'}],
           },
         })
       );
@@ -400,15 +380,10 @@ describe('atomic-insight-facet', () => {
         const {element} = await setupElement({field: ''});
 
         expect(mockedConsole.warn).toHaveBeenCalledWith(
-          expect.stringContaining(
-            'Prop validation failed for component atomic-insight-facet'
-          ),
+          expect.stringContaining('Prop validation failed for component atomic-insight-facet'),
           element
         );
-        expect(mockedConsole.warn).toHaveBeenCalledWith(
-          expect.stringContaining('field'),
-          element
-        );
+        expect(mockedConsole.warn).toHaveBeenCalledWith(expect.stringContaining('field'), element);
       });
     });
 
@@ -423,9 +398,7 @@ describe('atomic-insight-facet', () => {
         const {element} = await setupElement({numberOfValues: 0});
 
         expect(mockedConsole.warn).toHaveBeenCalledWith(
-          expect.stringContaining(
-            'Prop validation failed for component atomic-insight-facet'
-          ),
+          expect.stringContaining('Prop validation failed for component atomic-insight-facet'),
           element
         );
         expect(mockedConsole.warn).toHaveBeenCalledWith(
@@ -452,9 +425,7 @@ describe('atomic-insight-facet', () => {
         const {element} = await setupElement({injectionDepth: -1});
 
         expect(mockedConsole.warn).toHaveBeenCalledWith(
-          expect.stringContaining(
-            'Prop validation failed for component atomic-insight-facet'
-          ),
+          expect.stringContaining('Prop validation failed for component atomic-insight-facet'),
           element
         );
         expect(mockedConsole.warn).toHaveBeenCalledWith(

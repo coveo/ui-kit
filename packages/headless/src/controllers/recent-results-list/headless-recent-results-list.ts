@@ -9,14 +9,8 @@ import {logClearRecentResults} from '../../features/recent-results/recent-result
 import {recentResultsReducer as recentResults} from '../../features/recent-results/recent-results-slice.js';
 import type {RecentResultsSection} from '../../state/state-sections.js';
 import {loadReducerError} from '../../utils/errors.js';
-import {
-  validateInitialState,
-  validateOptions,
-} from '../../utils/validate-payload.js';
-import {
-  buildController,
-  type Controller,
-} from '../controller/headless-controller.js';
+import {validateInitialState, validateOptions} from '../../utils/validate-payload.js';
+import {buildController, type Controller} from '../controller/headless-controller.js';
 
 export interface RecentResultsListProps {
   /**
@@ -65,7 +59,6 @@ const optionsSchema = new Schema<RecentResultsListOptions>({
 /**
  * The `RecentResultsList` controller manages a user's recently clicked results.
  *
- * Example: [recent-results.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/recent-results/recent-results.fn.tsx)
  *
  * @group Controllers
  * @category RecentResultsList
@@ -98,22 +91,9 @@ export interface RecentResultsState {
   maxLength: number;
 }
 
-function validateRecentResultsProps(
-  engine: SearchEngine,
-  props?: RecentResultsListProps
-) {
-  validateOptions(
-    engine,
-    optionsSchema,
-    props?.options,
-    'buildRecentResultsList'
-  );
-  validateInitialState(
-    engine,
-    initialStateSchema,
-    props?.initialState,
-    'buildRecentResultsList'
-  );
+function validateRecentResultsProps(engine: SearchEngine, props?: RecentResultsListProps) {
+  validateOptions(engine, optionsSchema, props?.options, 'buildRecentResultsList');
+  validateInitialState(engine, initialStateSchema, props?.initialState, 'buildRecentResultsList');
 }
 
 /**

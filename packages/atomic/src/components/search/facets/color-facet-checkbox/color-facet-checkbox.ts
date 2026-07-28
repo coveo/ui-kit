@@ -6,9 +6,7 @@ import type {FunctionalComponentWithChildren} from '@/src/utils/functional-compo
 import {createRipple} from '@/src/utils/ripple-utils';
 import {randomID} from '@/src/utils/utils';
 
-export const renderColorFacetCheckbox: FunctionalComponentWithChildren<
-  FacetValuePropsBase
-> =
+export const renderColorFacetCheckbox: FunctionalComponentWithChildren<FacetValuePropsBase> =
   ({props}) =>
   (children) => {
     const id = randomID('facet-value-');
@@ -18,9 +16,7 @@ export const renderColorFacetCheckbox: FunctionalComponentWithChildren<
       count: props.numberOfResults,
       formattedCount: count,
     });
-    const partValue = props.displayValue
-      .match(/-?[_a-zA-Z]+[_a-zA-Z0-9-]*/)
-      ?.toString();
+    const partValue = props.displayValue.match(/-?[_a-zA-Z]+[_a-zA-Z0-9-]*/)?.toString();
     let labelRef: HTMLLabelElement;
 
     return html`
@@ -34,8 +30,7 @@ export const renderColorFacetCheckbox: FunctionalComponentWithChildren<
               props.isSelected ? ' value-checkbox-checked' : ''
             }`}
             @click=${() => props.onClick()}
-            @mousedown=${(e: MouseEvent) =>
-              createRipple(e, {color: 'neutral', parent: labelRef})}
+            @mousedown=${(e: MouseEvent) => createRipple(e, {color: 'neutral', parent: labelRef})}
             aria-checked=${getAriaCheckedValue(props.isSelected)}
             class=${`value-checkbox ${props.isSelected ? 'ring-primary' : ''}`}
             aria-label=${ariaLabel}

@@ -15,10 +15,7 @@ const mockBindings = () =>
 
 @customElement('test-element')
 @bindings()
-class TestElement
-  extends LitElement
-  implements InitializableComponent<Bindings>
-{
+class TestElement extends LitElement implements InitializableComponent<Bindings> {
   @state()
   public bindings: Bindings = {} as Bindings;
   @state() public error!: Error;
@@ -55,9 +52,7 @@ describe('bindings decorator', () => {
   let interfaceElement: TestInterfaceElement;
   let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
 
-  const setupElement = async <
-    T extends InitializableComponent<Bindings> & LitElement,
-  >(
+  const setupElement = async <T extends InitializableComponent<Bindings> & LitElement>(
     tag: string = 'test-element',
     preSetupCallback?: (element: T) => void
   ) => {
@@ -82,9 +77,7 @@ describe('bindings decorator', () => {
   };
 
   beforeEach(async () => {
-    interfaceElement = document.createElement(
-      'test-interface-element'
-    ) as TestInterfaceElement;
+    interfaceElement = document.createElement('test-interface-element') as TestInterfaceElement;
     document.body.appendChild(interfaceElement);
     interfaceElement.initialize();
 

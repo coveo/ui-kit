@@ -47,8 +47,7 @@ export interface PromoteChildToParentPayload extends UpdateInstantProductQueryPa
 
 export const promoteChildToParent = createAction(
   'commerce/instantProducts/promoteChildToParent',
-  (payload: PromoteChildToParentPayload) =>
-    validatePayload(payload, promoteChildToParentDefinition)
+  (payload: PromoteChildToParentPayload) => validatePayload(payload, promoteChildToParentDefinition)
 );
 
 export interface UpdateInstantProductQueryPayload extends CoreInstantProductPayload {
@@ -62,8 +61,7 @@ export type RegisterInstantProductPayload = CoreInstantProductPayload;
 
 export const registerInstantProducts = createAction(
   'commerce/instantProducts/register',
-  (payload: RegisterInstantProductPayload) =>
-    validatePayload(payload, instantProductsIdDefinition)
+  (payload: RegisterInstantProductPayload) => validatePayload(payload, instantProductsIdDefinition)
 );
 
 export const updateInstantProductsQuery = createAction(

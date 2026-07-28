@@ -7,26 +7,18 @@ test('home page shows recommendations', async ({page}) => {
 
 test('search page shows products and facets', async ({page}) => {
   await page.goto('/#/search');
-  await expect(
-    page.locator('commerce-search-page .product').first()
-  ).toBeVisible();
-  await expect(
-    page.locator('commerce-facet-list .facet').first()
-  ).toBeVisible();
+  await expect(page.locator('commerce-search-page .product').first()).toBeVisible();
+  await expect(page.locator('commerce-facet-list .facet').first()).toBeVisible();
 });
 
 test('listing page shows products', async ({page}) => {
   await page.goto('/#/listing');
-  await expect(
-    page.locator('commerce-listing-page .product').first()
-  ).toBeVisible();
+  await expect(page.locator('commerce-listing-page .product').first()).toBeVisible();
 });
 
 test('cart: adding a product updates the tab and cart page', async ({page}) => {
   await page.goto('/#/listing');
-  const addToCart = page
-    .locator('commerce-product-card .cart-controls .add')
-    .first();
+  const addToCart = page.locator('commerce-product-card .cart-controls .add').first();
   await addToCart.click();
 
   const cartTab = page.locator('nav a', {hasText: 'Cart'});

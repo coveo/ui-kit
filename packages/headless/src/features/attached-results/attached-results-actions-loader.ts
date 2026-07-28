@@ -62,9 +62,7 @@ export interface AttachedResultsActionCreators {
  * @group Actions
  * @category AttachedResults
  */
-export function loadAttachedResultsActions(
-  engine: InsightEngine
-): AttachedResultsActionCreators {
+export function loadAttachedResultsActions(engine: InsightEngine): AttachedResultsActionCreators {
   engine.addReducers({attachedResults});
 
   return {

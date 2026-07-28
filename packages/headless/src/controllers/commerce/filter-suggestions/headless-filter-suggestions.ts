@@ -22,10 +22,7 @@ import type {
   FieldSuggestionsOrderSection,
 } from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
-import {
-  buildController,
-  type Controller,
-} from '../../controller/headless-controller.js';
+import {buildController, type Controller} from '../../controller/headless-controller.js';
 import type {FacetControllerType} from '../core/facets/headless-core-commerce-facet.js';
 import type {RegularFacetOptions} from '../core/facets/regular/headless-commerce-regular-facet.js';
 import {
@@ -52,8 +49,7 @@ export type FilterSuggestionsState = RegularFacetSearchState &
  * @group Buildable controllers
  * @category FilterSuggestions
  */
-export interface FilterSuggestions
-  extends Controller, FacetControllerType<'regular'> {
+export interface FilterSuggestions extends Controller, FacetControllerType<'regular'> {
   /**
    * Resets the query in the controller state and clears the filter suggestions.
    */
@@ -130,9 +126,7 @@ export function buildFilterSuggestions(
 
   const {dispatch} = engine;
 
-  const namespacedFacetId = getFacetIdWithCommerceFieldSuggestionNamespace(
-    options.facetId
-  );
+  const namespacedFacetId = getFacetIdWithCommerceFieldSuggestionNamespace(options.facetId);
 
   const facetSearch = buildRegularFacetSearch(engine, {
     options: {facetId: namespacedFacetId, ...options.facetSearch},
@@ -183,16 +177,14 @@ export function buildFilterSuggestions(
       dispatch(selectFacetSearchResult({facetId: options.facetId, value}));
       dispatch(
         updateQuery({
-          query:
-            engine[stateKey].facetSearchSet[namespacedFacetId].options.query,
+          query: engine[stateKey].facetSearchSet[namespacedFacetId].options.query,
         })
       );
       dispatch(options.fetchProductsActionCreator());
     },
 
     get state() {
-      const {displayName, field, facetId} =
-        facetForFieldSuggestionsSelector(getState());
+      const {displayName, field, facetId} = facetForFieldSuggestionsSelector(getState());
       return {
         displayName,
         field,
@@ -208,10 +200,7 @@ export function buildFilterSuggestions(
 function loadFilterSuggestionsReducers(
   engine: CommerceEngine
 ): engine is CommerceEngine<
-  CommerceFacetSetSection &
-    CommerceQuerySection &
-    FacetSearchSection &
-    FieldSuggestionsOrderSection
+  CommerceFacetSetSection & CommerceQuerySection & FacetSearchSection & FieldSuggestionsOrderSection
 > {
   engine.addReducers({
     commerceFacetSet,

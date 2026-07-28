@@ -22,9 +22,7 @@ export class HeadlessController {
   }
 
   hostConnected() {
-    this.unsubscribe = this.controller.subscribe(() =>
-      this.host.requestUpdate()
-    );
+    this.unsubscribe = this.controller.subscribe(() => this.host.requestUpdate());
   }
 
   hostDisconnected() {

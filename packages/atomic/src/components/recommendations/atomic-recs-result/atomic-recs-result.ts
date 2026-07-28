@@ -95,8 +95,7 @@ export class AtomicRecsResult extends ChildrenUpdateCompleteMixin(LitElement) {
   /**
    * How large or small results should be.
    */
-  @property({reflect: true, type: String}) density: ItemDisplayDensity =
-    'normal';
+  @property({reflect: true, type: String}) density: ItemDisplayDensity = 'normal';
 
   /**
    * The size of the visual section in result list items.
@@ -172,9 +171,7 @@ export class AtomicRecsResult extends ChildrenUpdateCompleteMixin(LitElement) {
     event.detail(this.stopPropagation);
   };
 
-  public resolveResultDisplayConfig = (
-    event: CustomEvent<(config: DisplayConfig) => void>
-  ) => {
+  public resolveResultDisplayConfig = (event: CustomEvent<(config: DisplayConfig) => void>) => {
     event.preventDefault();
     event.stopPropagation();
     event.detail({
@@ -185,9 +182,7 @@ export class AtomicRecsResult extends ChildrenUpdateCompleteMixin(LitElement) {
 
   public clickLinkContainer = () => {
     this.shadowRoot
-      ?.querySelector<HTMLAnchorElement>(
-        '.link-container > atomic-result-link a:not([slot])'
-      )
+      ?.querySelector<HTMLAnchorElement>('.link-container > atomic-result-link a:not([slot])')
       ?.click();
   };
 
@@ -223,10 +218,7 @@ export class AtomicRecsResult extends ChildrenUpdateCompleteMixin(LitElement) {
       itemClasses: () => this.classes,
     });
 
-    this.addEventListener(
-      'atomic/resolveResult',
-      this.resolveResult as EventListener
-    );
+    this.addEventListener('atomic/resolveResult', this.resolveResult as EventListener);
     this.addEventListener(
       'atomic/resolveInteractiveResult',
       this.resolveInteractiveResult as EventListener
@@ -248,10 +240,7 @@ export class AtomicRecsResult extends ChildrenUpdateCompleteMixin(LitElement) {
   public disconnectedCallback() {
     super.disconnectedCallback();
 
-    this.removeEventListener(
-      'atomic/resolveResult',
-      this.resolveResult as EventListener
-    );
+    this.removeEventListener('atomic/resolveResult', this.resolveResult as EventListener);
     this.removeEventListener(
       'atomic/resolveInteractiveResult',
       this.resolveInteractiveResult as EventListener
@@ -309,9 +298,7 @@ export class AtomicRecsResult extends ChildrenUpdateCompleteMixin(LitElement) {
     return html`
       <div class=${resultComponentClass}>
         <div
-          class="result-root ${this.itemLayoutController
-            .getCombinedClasses()
-            .join(' ')}"
+          class="result-root ${this.itemLayoutController.getCombinedClasses().join(' ')}"
           .innerHTML=${this.getContentHTML()}
         ></div>
         <div class="link-container" .innerHTML=${this.getLinkHTML()}></div>

@@ -130,10 +130,7 @@ export function defineFacetGenerator(): FacetGeneratorDefinition {
  * (CMH). The implementer is only responsible for leveraging the facet controllers created by this sub-controller to
  * properly render facets in their application.
  */
-export interface FacetGenerator extends Omit<
-  CSRFacetGenerator,
-  'state' | 'facets'
-> {
+export interface FacetGenerator extends Omit<CSRFacetGenerator, 'state' | 'facets'> {
   /**
    * The state of each every facet returned by the Commerce API.
    *
@@ -215,10 +212,7 @@ export function buildFacetGenerator(
   return {
     ...restOfBaseController,
 
-    getFacetController: <T extends FacetType>(
-      facetId: string,
-      facetType: T
-    ) => {
+    getFacetController: <T extends FacetType>(facetId: string, facetType: T) => {
       const controller = baseController.facets.find(
         (f) => f.state.facetId === facetId && f.type === facetType
       );
@@ -239,15 +233,10 @@ export function buildFacetGenerator(
             return getCategoryFacetState(
               createFacetState(facetResponseSelector) as CategoryFacetState,
               categoryFacetSearchStateSelector(getEngineState(), facetId),
-              facetRequestSelector(
-                getEngineState(),
-                facetId
-              ) as CategoryFacetRequest
+              facetRequestSelector(getEngineState(), facetId) as CategoryFacetRequest
             );
           case 'dateRange':
-            return getDateFacetState(
-              createFacetState(facetResponseSelector) as DateFacetState
-            );
+            return getDateFacetState(createFacetState(facetResponseSelector) as DateFacetState);
 
           case 'numericalRange':
             return getNumericFacetState(

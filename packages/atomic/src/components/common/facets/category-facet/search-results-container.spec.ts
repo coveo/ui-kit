@@ -28,9 +28,7 @@ describe('#renderCategoryFacetSearchResultsContainer', () => {
   });
 
   it('should render children inside the ul element', async () => {
-    const {ul, container} = await renderComponent(
-      html`<li class="test-child">Test Item</li>`
-    );
+    const {ul, container} = await renderComponent(html`<li class="test-child">Test Item</li>`);
 
     const child = container.querySelector('.test-child');
 

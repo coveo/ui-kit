@@ -38,10 +38,7 @@ import {buildMockDateFacetRequest} from '../../../test/mock-date-facet-request.j
 import {buildMockDateFacetResponse} from '../../../test/mock-date-facet-response.js';
 import {buildMockDateFacetSlice} from '../../../test/mock-date-facet-slice.js';
 import {buildMockDateFacetValue} from '../../../test/mock-date-facet-value.js';
-import {
-  buildMockInsightEngine,
-  type MockedInsightEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockInsightEngine, type MockedInsightEngine} from '../../../test/mock-engine-v2.js';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request.js';
 import {buildMockFacetResponse} from '../../../test/mock-facet-response.js';
 import {buildMockFacetSlice} from '../../../test/mock-facet-slice.js';
@@ -63,21 +60,13 @@ import {
 } from './headless-insight-breadcrumb-manager.js';
 
 vi.mock('../../../features/breadcrumb/breadcrumb-actions');
-vi.mock(
-  '../../../features/facets/category-facet-set/category-facet-set-actions'
-);
+vi.mock('../../../features/facets/category-facet-set/category-facet-set-actions');
 vi.mock('../../../features/facets/facet-set/facet-set-actions');
-vi.mock(
-  '../../../features/facets/range-facets/date-facet-set/date-facet-actions'
-);
-vi.mock(
-  '../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions'
-);
+vi.mock('../../../features/facets/range-facets/date-facet-set/date-facet-actions');
+vi.mock('../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions');
 vi.mock('../../../features/insight-search/insight-search-actions');
 vi.mock('../../../features/static-filter-set/static-filter-set-actions');
-vi.mock(
-  '../../../features/facets/generic/facet-generic-insight-analytics-actions'
-);
+vi.mock('../../../features/facets/generic/facet-generic-insight-analytics-actions');
 
 describe('insight breadcrumb manager', () => {
   const facetId = 'abc123';

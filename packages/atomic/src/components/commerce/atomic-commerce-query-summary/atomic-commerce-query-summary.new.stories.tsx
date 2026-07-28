@@ -11,10 +11,9 @@ const {decorator, play} = wrapInCommerceInterface({
   skipFirstRequest: false,
 });
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-commerce-query-summary',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-commerce-query-summary', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-commerce-query-summary',

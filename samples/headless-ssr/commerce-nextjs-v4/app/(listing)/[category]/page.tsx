@@ -13,20 +13,14 @@ import Pagination from '@/components/pagination';
 import ParameterManager from '@/components/parameter-manager';
 import ProductList from '@/components/product-list';
 import ProductsPerPage from '@/components/products-per-page';
-import {
-  ListingProvider,
-  RecommendationProvider,
-} from '@/components/providers/providers';
+import {ListingProvider, RecommendationProvider} from '@/components/providers/providers';
 import PopularBought from '@/components/recommendations/popular-bought';
 import PopularViewed from '@/components/recommendations/popular-viewed';
 import Sort from '@/components/sort';
 import StandaloneSearchBox from '@/components/standalone-search-box';
 import Summary from '@/components/summary';
 import NotifyTrigger from '@/components/triggers/notify-trigger';
-import {
-  listingEngineDefinition,
-  recommendationEngineDefinition,
-} from '@/lib/commerce-engine';
+import {listingEngineDefinition, recommendationEngineDefinition} from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {defaultContext} from '@/utils/context';
 
@@ -79,14 +73,12 @@ export default async function Listing({
     searchParams: parameters,
   });
 
-  const recsStaticState = await recommendationEngineDefinition.fetchStaticState(
-    {
-      cart: {items},
-      context,
-      navigatorContext: navigatorContext.marshal,
-      recommendations: ['popularBought', 'popularViewed'],
-    }
-  );
+  const recsStaticState = await recommendationEngineDefinition.fetchStaticState({
+    cart: {items},
+    context,
+    navigatorContext: navigatorContext.marshal,
+    recommendations: ['popularBought', 'popularViewed'],
+  });
 
   return (
     <ListingProvider staticState={staticState}>

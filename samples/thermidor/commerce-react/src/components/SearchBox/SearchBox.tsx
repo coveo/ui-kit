@@ -29,11 +29,7 @@ export function SearchBox() {
         placeholder="Search products..."
         aria-label="Search products"
       />
-      <button
-        type="submit"
-        className={styles.button}
-        disabled={state.isLoading}
-      >
+      <button type="submit" className={styles.button} disabled={state.isLoading}>
         {state.isLoading ? 'Searching...' : 'Search'}
       </button>
     </form>

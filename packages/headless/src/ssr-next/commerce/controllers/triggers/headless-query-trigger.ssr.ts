@@ -7,8 +7,7 @@ import type {SearchOnlyControllerDefinitionWithoutProps} from '../../types/contr
 
 export type {QueryTriggerState} from '../../../../controllers/core/triggers/headless-core-query-trigger.js';
 export type {QueryTrigger};
-export type QueryTriggerDefinition =
-  SearchOnlyControllerDefinitionWithoutProps<QueryTrigger>;
+export type QueryTriggerDefinition = SearchOnlyControllerDefinitionWithoutProps<QueryTrigger>;
 
 /**
  * Defines the `QueryTrigger` controller for the purpose of server-side rendering.
@@ -16,9 +15,7 @@ export type QueryTriggerDefinition =
  * @param options - The configurable `QueryTrigger` controller options.
  * @returns The `QueryTrigger` controller definition.
  */
-export function defineQueryTrigger(
-  options?: QueryTriggerOptions
-): QueryTriggerDefinition {
+export function defineQueryTrigger(options?: QueryTriggerOptions): QueryTriggerDefinition {
   return {
     search: true,
     build: (engine) => buildQueryTrigger(engine, options),

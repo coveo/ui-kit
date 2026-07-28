@@ -12,18 +12,9 @@ export interface ConversationAreaProps {
   onAction?: (text: string, type: string) => void;
 }
 
-export function ConversationArea({
-  turn,
-  isStreaming,
-  onRetry,
-  onAction,
-}: ConversationAreaProps) {
+export function ConversationArea({turn, isStreaming, onRetry, onAction}: ConversationAreaProps) {
   if (!turn) {
-    return (
-      <p className={styles.placeholder}>
-        Submit a prompt to start a conversation.
-      </p>
-    );
+    return <p className={styles.placeholder}>Submit a prompt to start a conversation.</p>;
   }
 
   return (
@@ -38,14 +29,9 @@ export function ConversationArea({
       )}
       {turn.status === 'error' && (
         <div className={styles.error}>
-          <p className={styles.errorMessage}>
-            {turn.error ?? 'An unknown error occurred.'}
-          </p>
+          <p className={styles.errorMessage}>{turn.error ?? 'An unknown error occurred.'}</p>
           {onRetry && (
-            <button
-              className={styles.retryButton}
-              onClick={() => onRetry(turn.id)}
-            >
+            <button className={styles.retryButton} onClick={() => onRetry(turn.id)}>
               Retry
             </button>
           )}

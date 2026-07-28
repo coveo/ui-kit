@@ -1,15 +1,8 @@
 import {beforeEach, describe, it, expect, vi} from 'vitest';
 import {createTestEngine} from '@/src/test/test-utils.js';
-import {
-  type Engine,
-  type FullEngine,
-  getFullEngine,
-} from '@/src/internal/engine/index.js';
+import {type Engine, type FullEngine, getFullEngine} from '@/src/internal/engine/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
-import {
-  createHydrateSubInterface,
-  rehydrateRoutedInterfaces,
-} from './generative-hydration.js';
+import {createHydrateSubInterface, rehydrateRoutedInterfaces} from './generative-hydration.js';
 import {RoutedInterfaceRegistry} from './routed-interface-registry.js';
 import {CommerceInterfaceImpl} from '@/src/internal/interfaces/index.js';
 import {SearchInterfaceImpl} from '@/src/internal/interfaces/index.js';
@@ -172,11 +165,7 @@ describe('rehydrateRoutedInterfaces', () => {
 
     rehydrateRoutedInterfaces(turns, registry, mockHydrate);
 
-    expect(mockHydrate).toHaveBeenCalledWith(
-      'commerce_search_api_response',
-      snapshot,
-      'shoes'
-    );
+    expect(mockHydrate).toHaveBeenCalledWith('commerce_search_api_response', snapshot, 'shoes');
   });
 
   it('calls hydrateSubInterface with the correct activity type for search', () => {
@@ -198,11 +187,7 @@ describe('rehydrateRoutedInterfaces', () => {
 
     rehydrateRoutedInterfaces(turns, registry, mockHydrate);
 
-    expect(mockHydrate).toHaveBeenCalledWith(
-      'search_api_response',
-      snapshot,
-      'docs'
-    );
+    expect(mockHydrate).toHaveBeenCalledWith('search_api_response', snapshot, 'docs');
   });
 
   it('registers the hydration result in the registry', () => {

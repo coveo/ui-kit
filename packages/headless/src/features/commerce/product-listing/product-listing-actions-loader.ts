@@ -67,9 +67,7 @@ export interface ProductListingActionCreators {
  * @group Actions
  * @category ProductListing
  */
-export function loadProductListingActions(
-  engine: CommerceEngine
-): ProductListingActionCreators {
+export function loadProductListingActions(engine: CommerceEngine): ProductListingActionCreators {
   engine.addReducers({productListing});
 
   return {

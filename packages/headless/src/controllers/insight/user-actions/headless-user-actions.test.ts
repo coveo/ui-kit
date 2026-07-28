@@ -5,10 +5,7 @@ import {
   registerUserActions,
 } from '../../../features/insight-user-actions/insight-user-actions-actions.js';
 import {insightUserActionsReducer} from '../../../features/insight-user-actions/insight-user-actions-slice.js';
-import {
-  buildMockInsightEngine,
-  type MockedInsightEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockInsightEngine, type MockedInsightEngine} from '../../../test/mock-engine-v2.js';
 import {buildMockInsightState} from '../../../test/mock-insight-state.js';
 import {
   buildUserActions,

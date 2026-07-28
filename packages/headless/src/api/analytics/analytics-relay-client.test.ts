@@ -67,8 +67,6 @@ describe('#getRelayInstanceFromState', () => {
     state.configuration.analytics.enabled = false;
 
     getRelayInstanceFromState(state);
-    expect(mockedCreateRelay).toHaveBeenCalledWith(
-      expect.objectContaining({mode: 'disabled'})
-    );
+    expect(mockedCreateRelay).toHaveBeenCalledWith(expect.objectContaining({mode: 'disabled'}));
   });
 });
