@@ -1,5 +1,6 @@
 import {isNonNegativeNumber, isOneOf} from './validation.js';
-export const MAX_CRASH_BREADCRUMBS = 32;
+
+export const MAX_CRASH_SPANS = 16;
 
 const CRASH_PHASES = [
   'unknown',
@@ -10,24 +11,12 @@ const CRASH_PHASES = [
   'complete',
 ] as const;
 
-const CRASH_BREADCRUMB_TYPES = [
-  'input.resolved',
-  'template.download.started',
-  'template.download.completed',
-  'project.creation.started',
-  'project.creation.completed',
-  'dependencies.install.started',
-  'dependencies.install.succeeded',
-  'dependencies.install.failed',
-  'scaffold.completed',
-] as const;
-
 export type CrashPhase = (typeof CRASH_PHASES)[number];
-export type CrashBreadcrumbType = (typeof CRASH_BREADCRUMB_TYPES)[number];
 
-export interface CrashBreadcrumb {
-  type: CrashBreadcrumbType;
-  timestamp: string;
+export interface CrashSpan {
+  op: CrashPhase;
+  startedOn: string;
+  endedOn: string;
 }
 
 export interface CrashMemorySummary {
@@ -45,31 +34,28 @@ export interface CrashRuntimeSummary {
 export interface CrashDiagnostics {
   phase: CrashPhase;
   phaseElapsedMs: number;
-  breadcrumbs: CrashBreadcrumb[];
+  spans: CrashSpan[];
   runtime: CrashRuntimeSummary;
 }
 
 interface DiagnosticsState {
   phase: CrashPhase;
   phaseStartedAtMs?: number;
-  breadcrumbs: CrashBreadcrumb[];
+  phaseSpans: {phase: CrashPhase; startedAtMs: number}[];
 }
 
-const PHASE_BY_LIFECYCLE_EVENT: Partial<Record<CrashBreadcrumbType, CrashPhase>> = {
-  'template.download.started': 'template-download',
-  'project.creation.started': 'project-creation',
-  'dependencies.install.started': 'dependency-installation',
-  'scaffold.completed': 'complete',
-};
+let state: DiagnosticsState = {phase: 'unknown', phaseSpans: []};
 
-let state: DiagnosticsState = {phase: 'unknown', breadcrumbs: []};
-
-function isCrashBreadcrumb(value: unknown): value is CrashBreadcrumb {
+function isCrashSpan(value: unknown): value is CrashSpan {
   if (typeof value !== 'object' || value === null) {
     return false;
   }
-  const candidate = value as Partial<CrashBreadcrumb>;
-  return isOneOf(candidate.type, CRASH_BREADCRUMB_TYPES) && typeof candidate.timestamp === 'string';
+  const candidate = value as Partial<CrashSpan>;
+  return (
+    isOneOf(candidate.op, CRASH_PHASES) &&
+    typeof candidate.startedOn === 'string' &&
+    typeof candidate.endedOn === 'string'
+  );
 }
 
 export function isCrashDiagnostics(value: unknown): value is CrashDiagnostics {
@@ -81,9 +67,9 @@ export function isCrashDiagnostics(value: unknown): value is CrashDiagnostics {
   return (
     isOneOf(candidate.phase, CRASH_PHASES) &&
     isNonNegativeNumber(candidate.phaseElapsedMs) &&
-    Array.isArray(candidate.breadcrumbs) &&
-    candidate.breadcrumbs.length <= MAX_CRASH_BREADCRUMBS &&
-    candidate.breadcrumbs.every(isCrashBreadcrumb) &&
+    Array.isArray(candidate.spans) &&
+    candidate.spans.length <= MAX_CRASH_SPANS &&
+    candidate.spans.every(isCrashSpan) &&
     isNonNegativeNumber(candidate.runtime?.processUptimeMs) &&
     isNonNegativeNumber(memory?.rssBytes) &&
     isNonNegativeNumber(memory?.heapTotalBytes) &&
@@ -93,12 +79,16 @@ export function isCrashDiagnostics(value: unknown): value is CrashDiagnostics {
 }
 
 export function resetCrashDiagnostics(): void {
-  state = {phase: 'unknown', breadcrumbs: []};
+  state = {phase: 'unknown', phaseSpans: []};
 }
 
 function transitionToCrashPhase(phase: CrashPhase, now: number): void {
   state.phase = phase;
   state.phaseStartedAtMs = now;
+  state.phaseSpans.push({phase, startedAtMs: now});
+  if (state.phaseSpans.length > MAX_CRASH_SPANS) {
+    state.phaseSpans.splice(0, state.phaseSpans.length - MAX_CRASH_SPANS);
+  }
 }
 
 export function initializeCrashDiagnostics(): void {
@@ -106,26 +96,29 @@ export function initializeCrashDiagnostics(): void {
   transitionToCrashPhase('input', Date.now());
 }
 
-export function recordCrashLifecycleEvent(type: CrashBreadcrumbType): void {
-  const now = Date.now();
-  const phase = PHASE_BY_LIFECYCLE_EVENT[type];
-  if (phase !== undefined) {
-    transitionToCrashPhase(phase, now);
-  }
-  state.breadcrumbs.push({type, timestamp: new Date(now).toISOString()});
-  if (state.breadcrumbs.length > MAX_CRASH_BREADCRUMBS) {
-    state.breadcrumbs.splice(0, state.breadcrumbs.length - MAX_CRASH_BREADCRUMBS);
-  }
+export function startCrashPhase(phase: CrashPhase): void {
+  transitionToCrashPhase(phase, Date.now());
 }
 
 export function snapshotCrashDiagnostics(): CrashDiagnostics {
   const now = Date.now();
   const memory = process.memoryUsage();
+  const spans: CrashSpan[] = state.phaseSpans.map((entry, index) => {
+    // Each phase ends when the next one begins; the active phase ends now (at
+    // the crash / snapshot).
+    const endedAtMs =
+      index < state.phaseSpans.length - 1 ? state.phaseSpans[index + 1].startedAtMs : now;
+    return {
+      op: entry.phase,
+      startedOn: new Date(entry.startedAtMs).toISOString(),
+      endedOn: new Date(Math.max(entry.startedAtMs, endedAtMs)).toISOString(),
+    };
+  });
   return {
     phase: state.phase,
     phaseElapsedMs:
       state.phaseStartedAtMs === undefined ? 0 : Math.max(0, now - state.phaseStartedAtMs),
-    breadcrumbs: state.breadcrumbs.map((breadcrumb) => ({...breadcrumb})),
+    spans,
     runtime: {
       processUptimeMs: Math.max(0, Math.round(process.uptime() * 1000)),
       memory: {

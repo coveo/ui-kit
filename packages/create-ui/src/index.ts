@@ -3,7 +3,7 @@ import {Command, CommanderError} from 'commander';
 import {realpathSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {argv} from 'node:process';
-import {initializeCrashDiagnostics, recordCrashLifecycleEvent} from './crash-diagnostics.js';
+import {initializeCrashDiagnostics} from './crash-diagnostics.js';
 import {
   buildCrashReport,
   crashReportReference,
@@ -102,7 +102,6 @@ export async function main(rawArgs: string[]): Promise<number> {
     return 1;
   }
 
-  recordCrashLifecycleEvent('input.resolved');
   await scaffold(options);
   return 0;
 }
