@@ -18,6 +18,7 @@ packages:
   - packages/atomic-legacy
   - packages/shopify
   - packages/relay
+  - packages/coveo-analytics
   - packages/relay-playground
   - packages/create-atomic-template
   - packages/create-atomic
@@ -74,7 +75,6 @@ catalog:
   '@types/react-dom': 19.2.3
   '@vitejs/plugin-react': 6.0.3
   '@vitest/browser-playwright': 4.1.9
-  coveo.analytics: 2.30.56
   dayjs: 1.11.21
   dotenv: 17.2.3
   esbuild: 0.28.1
@@ -103,7 +103,6 @@ minimumReleaseAge: 10080
 
 minimumReleaseAgeExclude:
   - '@coveo/*'
-  - coveo.analytics
   - '@vitest/*'
   - vitest
   - oxlint
