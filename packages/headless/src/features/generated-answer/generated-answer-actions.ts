@@ -15,6 +15,7 @@ import type {StreamAnswerAPIState} from '../../api/knowledge/stream-answer-api-s
 import type {AsyncThunkOptions} from '../../app/async-thunk-options.js';
 import type {SearchThunkExtraArguments} from '../../app/search-thunk-extra-arguments.js';
 import type {AnswerApiQueryParams} from '../../features/generated-answer/generated-answer-request.js';
+import type {GeneratedAnswerAnalyticsClient} from './generated-answer-analytics-client.js';
 import type {
   ConfigurationSection,
   DebugSection,
@@ -26,10 +27,7 @@ import {
   requiredNonEmptyString,
   validatePayload,
 } from '../../utils/validate-payload.js';
-import {
-  logGeneratedAnswerResponseLinked,
-  logGeneratedAnswerStreamEnd,
-} from './generated-answer-analytics-actions.js';
+import {logGeneratedAnswerResponseLinked} from './generated-answer-analytics-actions.js';
 import {buildStreamingRequest, constructAnswerAPIQueryParams} from './generated-answer-request.js';
 import {
   GENERATION_STEP_NAMES,
@@ -278,6 +276,9 @@ export const streamAnswer = createAsyncThunk<
 >('generatedAnswer/streamAnswer', async (params, config) => {
   const state = config.getState();
   const {dispatch, extra, getState} = config;
+  const {generatedAnswerAnalyticsClient} = extra as {
+    generatedAnswerAnalyticsClient: GeneratedAnswerAnalyticsClient;
+  };
   const {search} = getState();
   const {queryExecuted} = search;
 
@@ -309,7 +310,7 @@ export const streamAnswer = createAsyncThunk<
         dispatch(setIsStreaming(false));
         dispatch(setIsAnswerGenerated(isAnswerGenerated));
         dispatch(
-          logGeneratedAnswerStreamEnd(
+          generatedAnswerAnalyticsClient.logGeneratedAnswerStreamEnd(
             isAnswerGenerated,
             answerId,
             isAnswerGenerated ? isAnswerTextEmpty : undefined

@@ -8,10 +8,8 @@ import {
   updateCitations,
   updateMessage,
 } from '../../features/generated-answer/generated-answer-actions.js';
-import {
-  logGeneratedAnswerResponseLinked,
-  logGeneratedAnswerStreamEnd,
-} from '../../features/generated-answer/generated-answer-analytics-actions.js';
+import {logGeneratedAnswerResponseLinked} from '../../features/generated-answer/generated-answer-analytics-actions.js';
+import type {GeneratedAnswerAnalyticsClient} from '../../features/generated-answer/generated-answer-analytics-client.js';
 import type {AnswerApiQueryParams} from '../../features/generated-answer/generated-answer-request.js';
 import {fetchEventSource} from '../../utils/fetch-event-source/fetch.js';
 import type {EventSourceMessage} from '../../utils/fetch-event-source/parse.js';
@@ -99,7 +97,8 @@ const handleError = (draft: GeneratedAnswerStream, message: Required<MessageType
 export const updateCacheWithEvent = (
   event: EventSourceMessage,
   draft: GeneratedAnswerStream,
-  dispatch: ThunkDispatch<StreamAnswerAPIState, unknown, UnknownAction>
+  dispatch: ThunkDispatch<StreamAnswerAPIState, unknown, UnknownAction>,
+  generatedAnswerAnalyticsClient: GeneratedAnswerAnalyticsClient
 ) => {
   const message: Required<MessageType> = JSON.parse(event.data);
   if (message.finishReason === 'ERROR' && message.errorMessage) {
@@ -132,7 +131,13 @@ export const updateCacheWithEvent = (
       const answerId = draft.answerId;
       const answerGenerated = parsedPayload.answerGenerated ?? false;
       const answerTextIsEmpty = answerGenerated ? !draft.answer?.trim() : undefined;
-      dispatch(logGeneratedAnswerStreamEnd(answerGenerated, answerId, answerTextIsEmpty));
+      dispatch(
+        generatedAnswerAnalyticsClient.logGeneratedAnswerStreamEnd(
+          answerGenerated,
+          answerId,
+          answerTextIsEmpty
+        )
+      );
       dispatch(logGeneratedAnswerResponseLinked());
       break;
     }
@@ -177,7 +182,10 @@ export const answerApi = answerSlice.injectEndpoints({
         // Standard RTK key, with analytics excluded
         return `${endpointName}(${JSON.stringify(queryArgsWithoutAnalytics)})`;
       },
-      async onCacheEntryAdded(args, {getState, cacheDataLoaded, updateCachedData, dispatch}) {
+      async onCacheEntryAdded(
+        args,
+        {getState, cacheDataLoaded, updateCachedData, dispatch, extra}
+      ) {
         await cacheDataLoaded;
         /**
          * createApi has to be called prior to creating the redux store and is used as part of the store setup sequence.
@@ -186,6 +194,9 @@ export const answerApi = answerSlice.injectEndpoints({
          */
         const {configuration, generatedAnswer, insightConfiguration} =
           getState() as unknown as StreamAnswerAPIState;
+        const {generatedAnswerAnalyticsClient} = extra as {
+          generatedAnswerAnalyticsClient: GeneratedAnswerAnalyticsClient;
+        };
         const {organizationId, environment, accessToken} = configuration;
         const platformEndpoint = getApiBaseUrlOrOrganizationEndpoint(
           configuration.search.apiBaseUrl,
@@ -220,7 +231,7 @@ export const answerApi = answerSlice.injectEndpoints({
           },
           onmessage: (event) => {
             updateCachedData((draft) => {
-              updateCacheWithEvent(event, draft, dispatch);
+              updateCacheWithEvent(event, draft, dispatch, generatedAnswerAnalyticsClient);
             });
           },
           onerror: (error) => {

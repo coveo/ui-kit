@@ -3,6 +3,7 @@ import type {AnalyticsClientSendEventHook} from 'coveo.analytics';
 import type {Logger} from 'pino';
 import type {GeneratedAnswerAPIClient} from '../api/generated-answer/generated-answer-client.js';
 import {NoopPreprocessRequest, type PreprocessRequest} from '../api/preprocess-request.js';
+import type {GeneratedAnswerAnalyticsClient} from '../features/generated-answer/generated-answer-analytics-client.js';
 import {validatePayloadAndThrow} from '../utils/validate-payload.js';
 import type {EngineConfiguration} from './engine-configuration.js';
 import type {NavigatorContext} from './navigator-context-provider.js';
@@ -15,6 +16,7 @@ export interface ClientThunkExtraArguments<
   streamingClient?: K;
   relay: Relay;
   navigatorContext: NavigatorContext;
+  generatedAnswerAnalyticsClient?: GeneratedAnswerAnalyticsClient;
 }
 
 export interface ThunkExtraArguments {
