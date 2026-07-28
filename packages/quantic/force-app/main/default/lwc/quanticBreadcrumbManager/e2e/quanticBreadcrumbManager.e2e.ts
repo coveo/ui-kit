@@ -3,6 +3,14 @@ import {
   useCaseEnum,
   useCaseTestCases,
 } from '../../../../../../playwright/utils/useCase';
+import {
+  regularSelected,
+  numericSelected,
+  timeframeSelected,
+  categorySelected,
+  regularAndTimeframeSelected,
+  allIdle,
+} from './data';
 
 const fixtures = {
   search: testSearch,
@@ -23,17 +31,22 @@ useCaseTestCases.forEach((useCase) => {
   test.describe(`quantic breadcrumb manager ${useCase.label}`, () => {
     test.describe('when de-selecting a facet value', () => {
       test.describe('with regular facet values', () => {
+        test.use({
+          facetResponses: {
+            responses: [allIdle, regularSelected, allIdle],
+          },
+        });
         test('should trigger a new search and log analytics', async ({
           breadcrumbManager,
-          search,
+          baseFacet,
         }) => {
           const firstRegularFacetValue =
             await breadcrumbManager.firstRegularFacetValue;
-          const searchResponsePromise = search.waitForSearchResponse();
+          const searchResponsePromise = baseFacet.waitForSearchResponse();
           await breadcrumbManager.clickFirstRegularFacetLink();
           await searchResponsePromise;
 
-          const secondSearchResponsePromise = search.waitForSearchResponse();
+          const secondSearchResponsePromise = baseFacet.waitForSearchResponse();
           const breadcrumbAnalyticsPromise =
             breadcrumbManager.waitForBreadcrumbFacetUaAnalytics({
               facetValue: firstRegularFacetValue,
@@ -45,18 +58,23 @@ useCaseTestCases.forEach((useCase) => {
       });
 
       test.describe('with numeric facet values', () => {
+        test.use({
+          facetResponses: {
+            responses: [allIdle, numericSelected, allIdle],
+          },
+        });
         test('should trigger a new search and log analytics', async ({
           breadcrumbManager,
-          search,
+          baseFacet,
         }) => {
           const [facetRangeStart, facetRangeEnd] =
             (await breadcrumbManager.firstNumericFacetValue)?.split(' - ') ??
             [];
-          const searchResponsePromise = search.waitForSearchResponse();
+            const searchResponsePromise = baseFacet.waitForSearchResponse();
           await breadcrumbManager.clickFirstNumericFacetLink();
           await searchResponsePromise;
 
-          const secondSearchResponsePromise = search.waitForSearchResponse();
+          const secondSearchResponsePromise = baseFacet.waitForSearchResponse();
           // We use the facet display value to compare, but the display value is localized and can contain non-numeric characters while the analytics request doesn't contain those characters.
           const breadcrumbAnalyticsPromise =
             breadcrumbManager.waitForBreadcrumbFacetUaAnalytics({
@@ -70,17 +88,22 @@ useCaseTestCases.forEach((useCase) => {
       });
 
       test.describe('with timeframe|date facet values', () => {
+        test.use({
+          facetResponses: {
+            responses: [allIdle, timeframeSelected, allIdle],
+          },
+        });
         test('should trigger a new search and log analytics', async ({
           breadcrumbManager,
-          search,
+          baseFacet,
         }) => {
           const facetValue = await breadcrumbManager.firstTimeframeFacetValue;
           test.expect(facetValue).not.toBeNull();
-          const searchResponsePromise = search.waitForSearchResponse();
+          const searchResponsePromise = baseFacet.waitForSearchResponse();
           await breadcrumbManager.clickFirstTimeframeFacetLink();
           await searchResponsePromise;
 
-          const secondSearchResponsePromise = search.waitForSearchResponse();
+          const secondSearchResponsePromise = baseFacet.waitForSearchResponse();
           // We use the facet display value to compare, but the display value is prettified and is transformed to be human readable, while the analytics request isn't.
           const [expectedFacetRangeStart, expectedFacetRangeEnd] =
             datetimeFacetLabelToValue[facetValue!].split('..');
@@ -96,17 +119,22 @@ useCaseTestCases.forEach((useCase) => {
       });
 
       test.describe('with category facet values', () => {
+        test.use({
+          facetResponses: {
+            responses: [allIdle, categorySelected, allIdle],
+          },
+        });
         test('should trigger a new search and log analytics', async ({
           breadcrumbManager,
-          search,
+          baseFacet,
         }) => {
           const facetValue = await breadcrumbManager.firstCategoryFacetValue;
           test.expect(facetValue).not.toBeNull();
-          const searchResponsePromise = search.waitForSearchResponse();
+          const searchResponsePromise = baseFacet.waitForSearchResponse();
           await breadcrumbManager.clickFirstCategoryFacetLink();
           await searchResponsePromise;
 
-          const secondSearchResponsePromise = search.waitForSearchResponse();
+          const secondSearchResponsePromise = baseFacet.waitForSearchResponse();
           const expectedFacetValue = facetValue!;
           const breadcrumbAnalyticsPromise =
             breadcrumbManager.waitForBreadcrumbFacetUaAnalytics({
@@ -120,20 +148,30 @@ useCaseTestCases.forEach((useCase) => {
     });
 
     test.describe('when clicking on the clear all filters button', () => {
+      test.use({
+        facetResponses: {
+          responses: [
+            allIdle,
+            regularSelected,
+            regularAndTimeframeSelected,
+            allIdle,
+          ],
+        },
+      });
       test('should send a clear all filters analytics event and clear all selected facets values', async ({
         breadcrumbManager,
-        search,
+        baseFacet,
       }) => {
-        const searchResponsePromise = search.waitForSearchResponse();
+        const searchResponsePromise = baseFacet.waitForSearchResponse();
         await breadcrumbManager.clickFirstRegularFacetLink();
         await searchResponsePromise;
 
-        const searchResponsePromiseTwo = search.waitForSearchResponse();
+        const searchResponsePromiseTwo = baseFacet.waitForSearchResponse();
         await breadcrumbManager.clickFirstTimeframeFacetLink();
         await searchResponsePromiseTwo;
 
         await test.expect(breadcrumbManager.clearAllButton).toBeVisible();
-        const clearAllSearchResponsePromise = search.waitForSearchResponse();
+        const clearAllSearchResponsePromise = baseFacet.waitForSearchResponse();
         const clearAllAnalyticsPromise =
           breadcrumbManager.waitForBreadcrumbResetAllUaAnalytics();
         await breadcrumbManager.clickClearAllButton();
@@ -152,6 +190,9 @@ useCaseTestCases.forEach((useCase) => {
         const facetSelectedHash = 'f-filetype=YouTubeVideo';
         test.use({
           urlHash: facetSelectedHash,
+          facetResponses: {
+            responses: [regularSelected],
+          },
         });
 
         test('should have a facet selected in the breadcrumb manager', async ({
