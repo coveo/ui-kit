@@ -68,11 +68,13 @@ export function A2UIComparisonTable({surface}: A2UIComparisonTableProps) {
             ‹
           </button>
         )}
-        <div className={styles.table}>
-          <div className={styles.row}>
-            <div className={styles.labelCell}>Product</div>
+        <div className={styles.table} role="table" aria-label={heading || 'Product comparison'}>
+          <div className={styles.row} role="row">
+            <div className={styles.labelCell} role="columnheader">
+              Product
+            </div>
             {visibleItems.map((item, i) => (
-              <div key={item.ec_product_id ?? i} className={styles.productCell}>
+              <div key={item.ec_product_id ?? i} className={styles.productCell} role="columnheader">
                 {item.ec_image && (
                   <img
                     className={styles.productImage}
@@ -86,10 +88,16 @@ export function A2UIComparisonTable({surface}: A2UIComparisonTableProps) {
             ))}
           </div>
 
-          <div className={styles.row}>
-            <div className={styles.labelCell}>Price</div>
+          <div className={styles.row} role="row">
+            <div className={styles.labelCell} role="rowheader">
+              Price
+            </div>
             {visibleItems.map((item, i) => (
-              <div key={`price-${item.ec_product_id ?? i}`} className={styles.valueCell}>
+              <div
+                key={`price-${item.ec_product_id ?? i}`}
+                className={styles.valueCell}
+                role="cell"
+              >
                 <span className={styles.priceValue}>
                   {item.ec_price !== undefined ? formatPrice(item.ec_price) : '—'}
                 </span>
@@ -98,12 +106,18 @@ export function A2UIComparisonTable({surface}: A2UIComparisonTableProps) {
           </div>
 
           {displayAttributes.map((attr) => (
-            <div key={attr} className={styles.row}>
-              <div className={styles.labelCell}>{attributeLabels[attr] ?? attr}</div>
+            <div key={attr} className={styles.row} role="row">
+              <div className={styles.labelCell} role="rowheader">
+                {attributeLabels[attr] ?? attr}
+              </div>
               {visibleItems.map((item, i) => {
                 const value = item[attr];
                 return (
-                  <div key={`${attr}-${item.ec_product_id ?? i}`} className={styles.valueCell}>
+                  <div
+                    key={`${attr}-${item.ec_product_id ?? i}`}
+                    className={styles.valueCell}
+                    role="cell"
+                  >
                     {typeof value === 'string' ? value : '—'}
                   </div>
                 );

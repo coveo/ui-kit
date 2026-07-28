@@ -18,5 +18,11 @@ export function StreamingMessage({messages}: StreamingMessageProps) {
     return null;
   }
 
-  return <div className={styles.messageText} dangerouslySetInnerHTML={{__html: html}} />;
+  return (
+    <div
+      className={styles.messageText}
+      aria-live="polite"
+      dangerouslySetInnerHTML={{__html: html}}
+    />
+  );
 }

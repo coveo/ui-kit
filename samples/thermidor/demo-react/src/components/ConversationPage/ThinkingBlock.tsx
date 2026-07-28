@@ -63,7 +63,7 @@ export function ThinkingBlock({reasoningSteps, isStreaming}: ThinkingBlockProps)
   const summaryContent = getSummaryContent(reasoningSteps, isStreaming);
 
   return (
-    <details className={styles.details}>
+    <details className={styles.details} aria-label="Agent reasoning process">
       <summary className={styles.summary}>
         <span className={styles.chevron} aria-hidden="true" />
         {summaryContent}
