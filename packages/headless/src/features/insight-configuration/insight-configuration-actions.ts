@@ -1,8 +1,5 @@
 import {createAction} from '@reduxjs/toolkit';
-import {
-  requiredNonEmptyString,
-  validatePayload,
-} from '../../utils/validate-payload.js';
+import {requiredNonEmptyString, validatePayload} from '../../utils/validate-payload.js';
 
 interface SetInsightConfigurationActionCreatorPayload {
   /**

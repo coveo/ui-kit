@@ -63,10 +63,7 @@ import {mapProperty} from '@/src/utils/props-utils';
 @customElement('atomic-timeframe-facet')
 @bindings()
 @withTailwindStyles
-export class AtomicTimeframeFacet
-  extends LitElement
-  implements InitializableComponent<Bindings>
-{
+export class AtomicTimeframeFacet extends LitElement implements InitializableComponent<Bindings> {
   private static readonly propsSchema = new Schema({
     injectionDepth: new NumberValue({min: 0, required: false}),
     headingLevel: new NumberValue({min: 0, max: 6, required: false}),
@@ -290,9 +287,7 @@ export class AtomicTimeframeFacet
       buildDependenciesManager: (facetId: string) =>
         buildFacetConditionsManager(this.bindings.engine, {
           facetId,
-          conditions: parseDependsOn<
-            FacetValueRequest | CategoryFacetValueRequest
-          >(this.dependsOn),
+          conditions: parseDependsOn<FacetValueRequest | CategoryFacetValueRequest>(this.dependsOn),
         }),
       deserializeRelativeDate,
       buildDateRange,
@@ -308,19 +303,13 @@ export class AtomicTimeframeFacet
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.tabManager = buildTabManager(this.bindings.engine);
 
-    this.addEventListener(
-      'atomic-date-input-apply',
-      this.handleDateInputApply as EventListener
-    );
+    this.addEventListener('atomic-date-input-apply', this.handleDateInputApply as EventListener);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     this.timeframeFacetCommon?.disconnectedCallback();
-    this.removeEventListener(
-      'atomic-date-input-apply',
-      this.handleDateInputApply as EventListener
-    );
+    this.removeEventListener('atomic-date-input-apply', this.handleDateInputApply as EventListener);
   }
 
   private initializeFacetForDatePicker(): DateFacet {
@@ -374,9 +363,7 @@ export class AtomicTimeframeFacet
   private handleDateInputApply = () => {
     if (this.facetId) {
       this.bindings.engine.dispatch(
-        loadDateFacetSetActions(
-          this.bindings.engine
-        ).deselectAllDateFacetValues(this.facetId)
+        loadDateFacetSetActions(this.bindings.engine).deselectAllDateFacetValues(this.facetId)
       );
     }
   };

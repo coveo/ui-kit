@@ -3,10 +3,7 @@ import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {isErrorResponse} from '../../api/search/search-api-client.js';
 import type {AsyncThunkInsightOptions} from '../../api/service/insight/insight-api-client.js';
 import type {InsightUserActionsResponse} from '../../api/service/insight/user-actions/user-actions-response.js';
-import type {
-  ConfigurationSection,
-  InsightUserActionsSection,
-} from '../../state/state-sections.js';
+import type {ConfigurationSection, InsightUserActionsSection} from '../../state/state-sections.js';
 import {nonEmptyString, validatePayload} from '../../utils/validate-payload.js';
 import {buildFetchUserActionsRequest} from './insight-user-actions-request.js';
 
@@ -37,8 +34,7 @@ export interface FetchUserActionsThunkReturn {
   response: InsightUserActionsResponse;
 }
 
-export type StateNeededByFetchUserActions = ConfigurationSection &
-  InsightUserActionsSection;
+export type StateNeededByFetchUserActions = ConfigurationSection & InsightUserActionsSection;
 
 type UserId = string;
 
@@ -46,21 +42,16 @@ export const fetchUserActions = createAsyncThunk<
   FetchUserActionsThunkReturn,
   UserId,
   AsyncThunkInsightOptions<StateNeededByFetchUserActions>
->(
-  'insight/userActions/fetch',
-  async (userId, {getState, rejectWithValue, extra: {apiClient}}) => {
-    const state = getState();
+>('insight/userActions/fetch', async (userId, {getState, rejectWithValue, extra: {apiClient}}) => {
+  const state = getState();
 
-    const fetched = await apiClient.userActions(
-      await buildFetchUserActionsRequest(state, userId)
-    );
+  const fetched = await apiClient.userActions(await buildFetchUserActionsRequest(state, userId));
 
-    if (isErrorResponse(fetched)) {
-      return rejectWithValue(fetched.error);
-    }
-
-    return {
-      response: fetched.success,
-    };
+  if (isErrorResponse(fetched)) {
+    return rejectWithValue(fetched.error);
   }
-);
+
+  return {
+    response: fetched.success,
+  };
+});

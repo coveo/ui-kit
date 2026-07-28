@@ -115,10 +115,9 @@ const PARENT_TEMPLATE_EXAMPLE = `<template>
   </atomic-result-section-children>
 </template>`;
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-result-children-template',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-result-children-template', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-result-children-template',
@@ -176,12 +175,8 @@ export const Default: Story = {
   decorators: [
     (story) => html`
       <atomic-folded-result-list image-size="small" display="grid">
-        <atomic-result-template>
-          ${unsafeHTML(PARENT_TEMPLATE_EXAMPLE)}
-        </atomic-result-template>
-        <atomic-result-children image-size="image">
-          ${story()}
-        </atomic-result-children>
+        <atomic-result-template> ${unsafeHTML(PARENT_TEMPLATE_EXAMPLE)} </atomic-result-template>
+        <atomic-result-children image-size="image"> ${story()} </atomic-result-children>
       </atomic-folded-result-list>
     `,
     decorator,

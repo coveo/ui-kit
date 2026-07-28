@@ -9,12 +9,6 @@ interface ModalBodyProps {
 export const renderModalBody: FunctionalComponentWithChildren<ModalBodyProps> =
   ({props: {formId, onSubmit}}) =>
   (children) =>
-    html`<form
-      part="form"
-      id=${formId}
-      slot="body"
-      @submit=${onSubmit}
-      class="flex flex-col gap-8"
-    >
+    html`<form part="form" id=${formId} slot="body" @submit=${onSubmit} class="flex flex-col gap-8">
       ${children}
     </form>`;

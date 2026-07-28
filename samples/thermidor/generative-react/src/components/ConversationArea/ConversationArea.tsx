@@ -1,27 +1,9 @@
+import type {Turn} from '@coveo/thermidor';
 import {UserPrompt} from '../UserPrompt/UserPrompt.js';
 import {AgentResponse} from '../AgentResponse/AgentResponse.js';
 import {RoutedCommerceResults} from '../RoutedCommerceResults/RoutedCommerceResults.js';
 import {RoutedSearchResults} from '../RoutedSearchResults/RoutedSearchResults.js';
 import styles from './ConversationArea.module.css';
-
-interface Turn {
-  id: string;
-  prompt: string;
-  status: 'streaming' | 'complete' | 'error';
-  routedInterface?: {useCase: string; interface: unknown};
-  agentResponse?: {
-    messages: {content: string; role: string}[];
-    surfaces: Record<string, unknown>[];
-    toolCalls: {
-      id: string;
-      name: string;
-      args: string;
-      result?: string;
-      status: 'calling' | 'completed';
-    }[];
-  };
-  error?: string;
-}
 
 export interface ConversationAreaProps {
   turn: Turn | undefined;
@@ -30,18 +12,9 @@ export interface ConversationAreaProps {
   onAction?: (text: string, type: string) => void;
 }
 
-export function ConversationArea({
-  turn,
-  isStreaming,
-  onRetry,
-  onAction,
-}: ConversationAreaProps) {
+export function ConversationArea({turn, isStreaming, onRetry, onAction}: ConversationAreaProps) {
   if (!turn) {
-    return (
-      <p className={styles.placeholder}>
-        Submit a prompt to start a conversation.
-      </p>
-    );
+    return <p className={styles.placeholder}>Submit a prompt to start a conversation.</p>;
   }
 
   return (
@@ -56,14 +29,9 @@ export function ConversationArea({
       )}
       {turn.status === 'error' && (
         <div className={styles.error}>
-          <p className={styles.errorMessage}>
-            {turn.error ?? 'An unknown error occurred.'}
-          </p>
+          <p className={styles.errorMessage}>{turn.error ?? 'An unknown error occurred.'}</p>
           {onRetry && (
-            <button
-              className={styles.retryButton}
-              onClick={() => onRetry(turn.id)}
-            >
+            <button className={styles.retryButton} onClick={() => onRetry(turn.id)}>
               Retry
             </button>
           )}

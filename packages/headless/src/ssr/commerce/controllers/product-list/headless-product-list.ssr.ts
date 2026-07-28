@@ -3,10 +3,7 @@ import {
   type ProductListing,
   type ProductListingState,
 } from '../../../../controllers/commerce/product-listing/headless-product-listing.js';
-import {
-  buildSearch,
-  type Search,
-} from '../../../../controllers/commerce/search/headless-search.js';
+import {buildSearch, type Search} from '../../../../controllers/commerce/search/headless-search.js';
 import {ensureAtLeastOneSolutionType} from '../../controller-utils.js';
 import {SolutionType} from '../../types/controller-constants.js';
 import type {
@@ -44,9 +41,9 @@ interface ProductListOptions {
  * @param options - The configurable `ProductList` controller options.
  * @returns The `ProductList` controller definition.
  */
-export function defineProductList<
-  TOptions extends ControllerDefinitionOption | undefined,
->(options?: TOptions & ProductListOptions) {
+export function defineProductList<TOptions extends ControllerDefinitionOption | undefined>(
+  options?: TOptions & ProductListOptions
+) {
   ensureAtLeastOneSolutionType(options);
   const {enableResults = false} = options ?? {};
   return {

@@ -3,10 +3,7 @@ import {buildDateRange} from '../../../controllers/core/facets/range-facet/date-
 import {buildNumericRange} from '../../../controllers/core/facets/range-facet/numeric-facet/numeric-range.js';
 import type {CommerceSearchParameters} from '../search-parameters/search-parameters-actions.js';
 import {buildFieldsSortCriterion, SortDirection} from '../sort/sort.js';
-import {
-  productListingSerializer,
-  searchSerializer,
-} from './parameters-serializer.js';
+import {productListingSerializer, searchSerializer} from './parameters-serializer.js';
 
 describe('searchSerializer', () => {
   const {serialize, deserialize} = searchSerializer;
@@ -28,10 +25,8 @@ describe('searchSerializer', () => {
   });
 
   it('should serialize and deserialize all search parameters', () => {
-    const parameters: Omit<
-      CommerceSearchParameters,
-      'dfExcluded' | 'mnfExcluded' | 'nfExcluded'
-    > = getParameters();
+    const parameters: Omit<CommerceSearchParameters, 'dfExcluded' | 'mnfExcluded' | 'nfExcluded'> =
+      getParameters();
 
     const serialized = serialize(parameters);
     const deserialized = deserialize(serialized);
@@ -337,18 +332,7 @@ describe.each([
   });
 });
 
-const someSpecialCharactersThatNeedsEncoding = [
-  '&',
-  ',',
-  '=',
-  '[',
-  ']',
-  '#',
-  '?',
-  ' ',
-  '/',
-  '>',
-];
+const someSpecialCharactersThatNeedsEncoding = ['&', ',', '=', '[', ']', '#', '?', ' ', '/', '>'];
 
 const getParameters = (includeQ = true) => {
   const valueWithSpecialCharacters = `a${someSpecialCharactersThatNeedsEncoding.join('')}`;

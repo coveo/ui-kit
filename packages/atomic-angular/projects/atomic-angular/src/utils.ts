@@ -59,9 +59,7 @@ export const proxyMethods = (Cmp: any, methods: string[]) => {
     Prototype[methodName] = function () {
       // oxlint-disable-next-line prefer-rest-params -- allow arguments usage here
       const args = arguments;
-      return this.z.runOutsideAngular(() =>
-        this.el[methodName].apply(this.el, args)
-      );
+      return this.z.runOutsideAngular(() => this.el[methodName].apply(this.el, args));
     };
   });
 };
@@ -83,11 +81,7 @@ export const defineCustomElement = (tagName: string, customElement: any) => {
 };
 
 /* oxlint-disable prefer-arrow-callback -- Allow function declaration for decorator */
-export function ProxyCmp(opts: {
-  defineCustomElementFn?: () => void;
-  inputs?: any;
-  methods?: any;
-}) {
+export function ProxyCmp(opts: {defineCustomElementFn?: () => void; inputs?: any; methods?: any}) {
   const decorator = function (cls: any) {
     const {defineCustomElementFn, inputs, methods} = opts;
 

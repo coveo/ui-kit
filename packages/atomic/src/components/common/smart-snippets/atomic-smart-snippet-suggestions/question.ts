@@ -1,9 +1,6 @@
 import {html} from 'lit';
 import {type ButtonProps, renderButton} from '@/src/components/common/button';
-import {
-  type HeadingProps,
-  renderHeading,
-} from '@/src/components/common/heading';
+import {type HeadingProps, renderHeading} from '@/src/components/common/heading';
 import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import {getQuestionPart} from './get-question-part';
 
@@ -49,8 +46,6 @@ export const renderQuestion: FunctionalComponentWithChildren<QuestionProps> =
     };
 
     return renderButton({props: buttonProps})(
-      html`${children}${renderHeading({props: headingProps})(
-        html`${props.question}`
-      )}`
+      html`${children}${renderHeading({props: headingProps})(html`${props.question}`)}`
     );
   };

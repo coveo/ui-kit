@@ -15,10 +15,7 @@ export interface InterfaceInternals<T extends InterfaceType = InterfaceType> {
   stateId: string;
   type: T;
   cacheRegistry: InterfaceCacheRegistry;
-  resolveFacades(
-    facade: Facades[T],
-    composedInterface?: InterfaceHandle
-  ): EndpointThunk[];
+  resolveFacades(facade: Facades[T], composedInterface?: InterfaceHandle): EndpointThunk[];
 }
 
 export let getInterfaceInternals: <T extends InterfaceType>(
@@ -74,10 +71,7 @@ export abstract class BaseInterface<T extends InterfaceType> {
     this.#engine.removeInterface(this);
   }
 
-  #resolveFacades(
-    facade: Facades[T],
-    composedInterface?: InterfaceHandle
-  ): EndpointThunk[] {
+  #resolveFacades(facade: Facades[T], composedInterface?: InterfaceHandle): EndpointThunk[] {
     this.#assertNotDisposed();
 
     const resolver = this.#facadeResolvers[facade];

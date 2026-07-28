@@ -141,13 +141,9 @@ describe('submitReport', () => {
     expect(sentry.linkedErrorsIntegration).toHaveBeenCalledWith({
       limit: MAX_CAUSE_DEPTH,
     });
-    expect(initOptions.integrations).toEqual([
-      expect.objectContaining({name: 'LinkedErrors'}),
-    ]);
+    expect(initOptions.integrations).toEqual([expect.objectContaining({name: 'LinkedErrors'})]);
     expect(sentry.captureException).toHaveBeenCalledOnce();
-    expect(sentry.captureException.mock.calls[0][1].tags.run_id).toBe(
-      'run-xyz'
-    );
+    expect(sentry.captureException.mock.calls[0][1].tags.run_id).toBe('run-xyz');
     expect(sentry.captureException.mock.calls[0][1]).toMatchObject({
       tags: {crash_origin: 'main-rejection'},
       contexts: {
@@ -286,9 +282,7 @@ describe('submitReport', () => {
         values: [
           {
             stacktrace: {
-              frames: [
-                {filename: ownPath, abs_path: ownPath, module: 'scaffold'},
-              ],
+              frames: [{filename: ownPath, abs_path: ownPath, module: 'scaffold'}],
             },
           },
         ],
@@ -314,8 +308,7 @@ describe('submitReport', () => {
             stacktrace: {
               frames: [
                 {
-                  abs_path:
-                    '/tmp/app/node_modules/@coveo/create-ui/dist/index.js',
+                  abs_path: '/tmp/app/node_modules/@coveo/create-ui/dist/index.js',
                 },
               ],
             },
@@ -356,20 +349,13 @@ describe('submitReport', () => {
       },
     });
 
-    const [nodeFrame, depFrame, localFrame] =
-      processed.exception.values[0].stacktrace.frames;
+    const [nodeFrame, depFrame, localFrame] = processed.exception.values[0].stacktrace.frames;
     expect(nodeFrame.in_app).toBe(false);
     expect(depFrame.in_app).toBe(false);
-    expect(depFrame.filename).toBe(
-      '~/.npm/_npx/ab12/node_modules/pacote/lib/fetch.js'
-    );
-    expect(depFrame.abs_path).toBe(
-      '~/.npm/_npx/ab12/node_modules/pacote/lib/fetch.js'
-    );
+    expect(depFrame.filename).toBe('~/.npm/_npx/ab12/node_modules/pacote/lib/fetch.js');
+    expect(depFrame.abs_path).toBe('~/.npm/_npx/ab12/node_modules/pacote/lib/fetch.js');
     expect(localFrame.in_app).toBe(true);
-    expect(localFrame.filename).toBe(
-      '~/dev/ui-kit/packages/create-ui/dist/index.js'
-    );
+    expect(localFrame.filename).toBe('~/dev/ui-kit/packages/create-ui/dist/index.js');
   });
 
   it('defaults the Sentry environment to production', async () => {

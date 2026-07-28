@@ -52,10 +52,7 @@
 
   <body>
     <atomic-aria-live></atomic-aria-live>
-    <atomic-search-interface
-      language-assets-path="./lang"
-      icon-assets-path="./assets"
-    >
+    <atomic-search-interface language-assets-path="./lang" icon-assets-path="./assets">
       <atomic-search-layout>
         <div class="header-bg"></div>
         <atomic-layout-section section="search">
@@ -84,11 +81,7 @@
             </atomic-segmented-facet-scrollable>
 
             <atomic-popover>
-              <atomic-facet
-                field="source"
-                label="Source"
-                display-values-as="link"
-              ></atomic-facet>
+              <atomic-facet field="source" label="Source" display-values-as="link"></atomic-facet>
             </atomic-popover>
 
             <atomic-popover>
@@ -100,11 +93,7 @@
             </atomic-popover>
 
             <atomic-popover>
-              <atomic-category-facet
-                field="geographicalhierarchy"
-                label="World Atlas"
-                with-search
-              >
+              <atomic-category-facet field="geographicalhierarchy" label="World Atlas" with-search>
               </atomic-category-facet>
             </atomic-popover>
 
@@ -122,11 +111,7 @@
                 label="Youtube Likes"
                 display-values-as="link"
               >
-                <atomic-numeric-range
-                  start="0"
-                  end="1000"
-                  label="Unpopular"
-                ></atomic-numeric-range>
+                <atomic-numeric-range start="0" end="1000" label="Unpopular"></atomic-numeric-range>
                 <atomic-numeric-range
                   start="1000"
                   end="8000"
@@ -168,11 +153,7 @@
             ></atomic-popover>
 
             <atomic-popover>
-              <atomic-rating-facet
-                field="snrating"
-                label="Rating"
-                number-of-intervals="5"
-              >
+              <atomic-rating-facet field="snrating" label="Rating" number-of-intervals="5">
               </atomic-rating-facet
             ></atomic-popover>
 

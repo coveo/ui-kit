@@ -85,10 +85,7 @@ function normalizeFrame(frame: StackFrame): void {
   frame.filename = redactOptional(frame.filename);
   frame.abs_path = redactOptional(frame.abs_path);
   frame.module = redactOptional(frame.module);
-  frame.in_app =
-    source !== undefined &&
-    !source.startsWith('node:') &&
-    !NODE_MODULES.test(source);
+  frame.in_app = source !== undefined && !source.startsWith('node:') && !NODE_MODULES.test(source);
 }
 
 function normalizeFrames(event: ErrorEvent): void {
@@ -112,10 +109,7 @@ function reconstructError(info: CrashErrorInfo, depth = 0): Error {
   error.name = info.name;
   error.stack = info.stack;
   if (info.cause !== undefined && depth < MAX_CAUSE_DEPTH) {
-    (error as {cause?: unknown}).cause = reconstructError(
-      info.cause,
-      depth + 1
-    );
+    (error as {cause?: unknown}).cause = reconstructError(info.cause, depth + 1);
   }
   return error;
 }
@@ -134,10 +128,8 @@ async function sendToSentry(report: CrashReport): Promise<boolean> {
     maxBreadcrumbs: 0,
     beforeBreadcrumb: () => null,
     beforeSend(event) {
-      event.timestamp =
-        crashTimestampSeconds(report.crashedOn) ?? event.timestamp;
-      event.breadcrumbs =
-        report.diagnostics.breadcrumbs.map(toSentryBreadcrumb);
+      event.timestamp = crashTimestampSeconds(report.crashedOn) ?? event.timestamp;
+      event.breadcrumbs = report.diagnostics.breadcrumbs.map(toSentryBreadcrumb);
       applyCrashMechanism(event, report.origin);
       normalizeFrames(event);
       scrubEventMessages(event);
@@ -168,8 +160,7 @@ async function sendToSentry(report: CrashReport): Promise<boolean> {
         phase_elapsed_ms: report.diagnostics.phaseElapsedMs,
         process_uptime_ms: report.diagnostics.runtime.processUptimeMs,
         memory_rss_bytes: report.diagnostics.runtime.memory.rssBytes,
-        memory_heap_total_bytes:
-          report.diagnostics.runtime.memory.heapTotalBytes,
+        memory_heap_total_bytes: report.diagnostics.runtime.memory.heapTotalBytes,
         memory_heap_used_bytes: report.diagnostics.runtime.memory.heapUsedBytes,
         memory_external_bytes: report.diagnostics.runtime.memory.externalBytes,
       },
@@ -204,9 +195,7 @@ function describeReadFailure(error: unknown, reportPath: string): string {
   return `Could not read "${reportPath}": ${detail}.`;
 }
 
-async function readReportOrExplain(
-  reportPath: string
-): Promise<CrashReport | null> {
+async function readReportOrExplain(reportPath: string): Promise<CrashReport | null> {
   try {
     return await readReport(reportPath);
   } catch (error) {
@@ -222,9 +211,7 @@ async function sendReport(report: CrashReport): Promise<number> {
       log.success(`Thank you! Crash report ${report.runId} was submitted.`);
       return 0;
     }
-    log.warn(
-      'The crash report could not be sent before timing out (check your network).'
-    );
+    log.warn('The crash report could not be sent before timing out (check your network).');
     return 1;
   } catch {
     log.error(
@@ -234,13 +221,8 @@ async function sendReport(report: CrashReport): Promise<number> {
   }
 }
 
-export async function submitReport(
-  reportReferenceOrPath: string | undefined
-): Promise<number> {
-  if (
-    reportReferenceOrPath === undefined ||
-    reportReferenceOrPath.trim().length === 0
-  ) {
+export async function submitReport(reportReferenceOrPath: string | undefined): Promise<number> {
+  if (reportReferenceOrPath === undefined || reportReferenceOrPath.trim().length === 0) {
     log.error('Usage: npx @coveo/create-ui report <reference-or-path>');
     return 1;
   }

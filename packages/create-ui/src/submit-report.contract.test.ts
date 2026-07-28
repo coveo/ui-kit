@@ -67,9 +67,7 @@ it('projects a crash report through the real Sentry SDK without network access',
       cause: {
         name: 'TypeError',
         message: 'root cause',
-        stack:
-          'TypeError: root cause\n' +
-          '    at download (app:///dist/download.js:21:9)',
+        stack: 'TypeError: root cause\n' + '    at download (app:///dist/download.js:21:9)',
       },
     },
     diagnostics: {

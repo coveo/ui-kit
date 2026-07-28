@@ -22,9 +22,7 @@ const CRASH_ORIGINS = [
 export type CrashOrigin = (typeof CRASH_ORIGINS)[number];
 
 function isCrashOrigin(value: unknown): value is CrashOrigin {
-  return (
-    typeof value === 'string' && CRASH_ORIGINS.includes(value as CrashOrigin)
-  );
+  return typeof value === 'string' && CRASH_ORIGINS.includes(value as CrashOrigin);
 }
 
 // Bound the captured `error.cause` chain so a deep or cyclic chain cannot bloat
@@ -101,9 +99,7 @@ function normalizeOwnPackageStackLine(line: string): string {
 }
 
 function normalizeStack(stack: string): string {
-  return redactPaths(
-    stack.split('\n').map(normalizeOwnPackageStackLine).join('\n')
-  );
+  return redactPaths(stack.split('\n').map(normalizeOwnPackageStackLine).join('\n'));
 }
 export interface CrashErrorInfo {
   name: string;
@@ -129,11 +125,7 @@ export interface CrashReport {
   metadata: ProjectMetadata;
 }
 
-function normalizeError(
-  error: unknown,
-  depth: number,
-  seen: Set<unknown>
-): CrashErrorInfo {
+function normalizeError(error: unknown, depth: number, seen: Set<unknown>): CrashErrorInfo {
   if (!(error instanceof Error)) {
     const raw = typeof error === 'string' ? error : String(error);
     return {name: 'NonError', message: redactPaths(raw)};
@@ -141,8 +133,7 @@ function normalizeError(
   const info: CrashErrorInfo = {
     name: error.name || 'Error',
     message: redactPaths(error.message),
-    stack:
-      typeof error.stack === 'string' ? normalizeStack(error.stack) : undefined,
+    stack: typeof error.stack === 'string' ? normalizeStack(error.stack) : undefined,
   };
   const cause = (error as Error & {cause?: unknown}).cause;
   if (cause !== undefined && depth < MAX_CAUSE_DEPTH && !seen.has(cause)) {
@@ -169,10 +160,7 @@ function resolveMetadata(context: RunContext): ProjectMetadata {
   );
 }
 
-export function buildCrashReport(
-  error: unknown,
-  origin: CrashOrigin = 'unknown'
-): CrashReport {
+export function buildCrashReport(error: unknown, origin: CrashOrigin = 'unknown'): CrashReport {
   return {
     schemaVersion: CRASH_REPORT_SCHEMA_VERSION,
     runId: randomUUID(),
@@ -187,18 +175,10 @@ export function buildCrashReport(
 
 const CRASH_REPORT_REFERENCE_LENGTH = 12;
 const CRASH_REPORT_REFERENCE_PATTERN = /^[a-f\d]{12}$/i;
-const CRASH_REPORT_DIRECTORY = join(
-  tmpdir(),
-  '@coveo',
-  'create-ui',
-  'crash-reports'
-);
+const CRASH_REPORT_DIRECTORY = join(tmpdir(), '@coveo', 'create-ui', 'crash-reports');
 
 export function crashReportReference(runId: string): string {
-  return runId
-    .replaceAll('-', '')
-    .slice(0, CRASH_REPORT_REFERENCE_LENGTH)
-    .toLowerCase();
+  return runId.replaceAll('-', '').slice(0, CRASH_REPORT_REFERENCE_LENGTH).toLowerCase();
 }
 
 function crashReportPathFromReference(reference: string): string {
@@ -284,9 +264,7 @@ function migrateCrashReportV1(value: unknown): CrashReport | null {
   };
 }
 
-const CRASH_REPORT_MIGRATORS = new Map<number, CrashReportMigrator>([
-  [1, migrateCrashReportV1],
-]);
+const CRASH_REPORT_MIGRATORS = new Map<number, CrashReportMigrator>([[1, migrateCrashReportV1]]);
 
 function schemaVersionOf(value: unknown): number | undefined {
   if (typeof value !== 'object' || value === null) {

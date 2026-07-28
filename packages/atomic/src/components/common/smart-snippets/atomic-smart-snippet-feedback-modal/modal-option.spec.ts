@@ -18,9 +18,7 @@ describe('#renderModalOption', () => {
   const localeKey = 'smart-snippet-feedback-reason-does-not-answer';
   const onChange = vi.fn();
 
-  const renderComponent = async (
-    currentAnswer?: SmartSnippetFeedback | 'other'
-  ) => {
+  const renderComponent = async (currentAnswer?: SmartSnippetFeedback | 'other') => {
     return await renderFunctionFixture(
       html`${renderModalOption({
         props: {
@@ -79,27 +77,21 @@ describe('#renderModalOption', () => {
 
   it('should not be checked when currentAnswer does not match', async () => {
     const element = await renderComponent('other');
-    const radio = element.querySelector(
-      'input[type="radio"]'
-    ) as HTMLInputElement;
+    const radio = element.querySelector('input[type="radio"]') as HTMLInputElement;
 
     expect(radio.checked).toBe(false);
   });
 
   it('should be checked when currentAnswer matches correspondingAnswer', async () => {
     const element = await renderComponent(correspondingAnswer);
-    const radio = element.querySelector(
-      'input[type="radio"]'
-    ) as HTMLInputElement;
+    const radio = element.querySelector('input[type="radio"]') as HTMLInputElement;
 
     expect(radio.checked).toBe(true);
   });
 
   it('should call onChange when radio is changed', async () => {
     const element = await renderComponent();
-    const radio = element.querySelector(
-      'input[type="radio"]'
-    ) as HTMLInputElement;
+    const radio = element.querySelector('input[type="radio"]') as HTMLInputElement;
 
     radio.dispatchEvent(new Event('change'));
 

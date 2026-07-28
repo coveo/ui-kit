@@ -81,6 +81,33 @@ export class SearchObject {
     });
   }
 
+  /**
+   * Mocks the search endpoint with a sequence of response body overrides,
+   * one per call. The last override is repeated for any subsequent calls.
+   */
+  protected async mockSearchResponseSequence(
+    bodyOverrides: Array<Record<string, unknown>>
+  ) {
+    await this.page.unroute(this.searchRequestRegex);
+    if (!bodyOverrides.length) {
+      return;
+    }
+    let responseIndex = 0;
+    await this.page.route(this.searchRequestRegex, async (route) => {
+      const originalBody = searchResponses.richResponse;
+      const overrides = bodyOverrides[responseIndex];
+      responseIndex = Math.min(responseIndex + 1, bodyOverrides.length - 1);
+
+      await route.fulfill({
+        body: JSON.stringify({...originalBody, ...overrides}),
+        status: 200,
+        headers: {
+          'content-type': 'application/json',
+        },
+      });
+    });
+  }
+
   async mockSearchWithGenerativeQuestionAnsweringId(streamId: string) {
     await this.page.unroute(this.searchRequestRegex);
     await this.page.route(this.searchRequestRegex, async (route) => {

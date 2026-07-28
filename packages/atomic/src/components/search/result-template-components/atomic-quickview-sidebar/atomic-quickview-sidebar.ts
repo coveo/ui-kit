@@ -17,9 +17,7 @@ interface QuickviewSidebarProps {
   onMinimize: (minimize: boolean) => void;
 }
 
-export const renderQuickviewSidebar: FunctionalComponent<
-  QuickviewSidebarProps
-> = ({props}) => {
+export const renderQuickviewSidebar: FunctionalComponent<QuickviewSidebarProps> = ({props}) => {
   const numberOfWords = Object.values(props.words).length;
 
   if (numberOfWords === 0) {
@@ -40,9 +38,7 @@ export const renderQuickviewSidebar: FunctionalComponent<
         })
       )}
       <div class="flex items-center justify-between">
-        <div class="flex items-center">
-          ${renderHighlightKeywordsCheckbox({props})}
-        </div>
+        <div class="flex items-center">${renderHighlightKeywordsCheckbox({props})}</div>
         ${when(
           !props.minimized,
           () => html`

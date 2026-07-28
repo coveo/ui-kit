@@ -83,9 +83,7 @@ export class AtomicSmartSnippetExpandableAnswer
 
   private validateProps() {
     if (this.maximumHeight < this.collapsedHeight) {
-      throw new Error(
-        'maximumHeight must be greater than or equal to collapsedHeight'
-      );
+      throw new Error('maximumHeight must be greater than or equal to collapsedHeight');
     }
   }
 
@@ -94,9 +92,7 @@ export class AtomicSmartSnippetExpandableAnswer
   }
 
   private get showButton() {
-    return (
-      this.fullHeight !== undefined && this.fullHeight > this.maximumHeight
-    );
+    return this.fullHeight !== undefined && this.fullHeight > this.maximumHeight;
   }
 
   private get isExpanded() {
@@ -115,17 +111,16 @@ export class AtomicSmartSnippetExpandableAnswer
     }
   }
 
-  protected async firstUpdated(
-    _changedProperties: PropertyValues
-  ): Promise<void> {
+  protected async firstUpdated(_changedProperties: PropertyValues): Promise<void> {
     super.firstUpdated(_changedProperties);
     this.fullHeight = await this.establishInitialHeight();
   }
 
   private async establishInitialHeight(): Promise<number> {
-    const answerElement = document.createElement(
-      'atomic-smart-snippet-answer'
-    ) as HTMLElement & {htmlContent: string; innerStyle?: string};
+    const answerElement = document.createElement('atomic-smart-snippet-answer') as HTMLElement & {
+      htmlContent: string;
+      innerStyle?: string;
+    };
     answerElement.htmlContent = this.htmlContent;
     answerElement.innerStyle = this.snippetStyle;
     answerElement.style.visibility = 'hidden';
@@ -153,15 +148,11 @@ export class AtomicSmartSnippetExpandableAnswer
   }
 
   private handleBeginDelayedSelectInlineLink(e: CustomEvent<InlineLink>) {
-    this.dispatchEvent(
-      buildCustomEvent('beginDelayedSelectInlineLink', e.detail)
-    );
+    this.dispatchEvent(buildCustomEvent('beginDelayedSelectInlineLink', e.detail));
   }
 
   private handleCancelPendingSelectInlineLink(e: CustomEvent<InlineLink>) {
-    this.dispatchEvent(
-      buildCustomEvent('cancelPendingSelectInlineLink', e.detail)
-    );
+    this.dispatchEvent(buildCustomEvent('cancelPendingSelectInlineLink', e.detail));
   }
 
   private renderAnswer() {
@@ -175,10 +166,8 @@ export class AtomicSmartSnippetExpandableAnswer
             this.fullHeight = e.detail.height;
           }}
           @selectInlineLink=${this.handleSelectInlineLink}
-          @beginDelayedSelectInlineLink=${this
-            .handleBeginDelayedSelectInlineLink}
-          @cancelPendingSelectInlineLink=${this
-            .handleCancelPendingSelectInlineLink}
+          @beginDelayedSelectInlineLink=${this.handleBeginDelayedSelectInlineLink}
+          @cancelPendingSelectInlineLink=${this.handleCancelPendingSelectInlineLink}
         ></atomic-smart-snippet-answer>
       </div>
     `;
@@ -189,17 +178,13 @@ export class AtomicSmartSnippetExpandableAnswer
       this.showButton,
       () => html`
         <button
-          @click=${() =>
-            this.isExpanded ? this.handleCollapse() : this.handleExpand()}
+          @click=${() => (this.isExpanded ? this.handleCollapse() : this.handleExpand())}
           class="text-primary mb-4 hover:underline"
           part=${this.isExpanded ? 'show-less-button' : 'show-more-button'}
           aria-expanded=${this.isExpanded ? 'true' : 'false'}
         >
           ${this.bindings.i18n.t(this.isExpanded ? 'show-less' : 'show-more')}
-          <atomic-icon
-            .icon=${ArrowDown}
-            class="ml-2 w-3 align-baseline"
-          ></atomic-icon>
+          <atomic-icon .icon=${ArrowDown} class="ml-2 w-3 align-baseline"></atomic-icon>
         </button>
       `
     );

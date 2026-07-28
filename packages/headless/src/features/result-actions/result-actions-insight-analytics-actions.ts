@@ -17,9 +17,7 @@ export const logCopyToClipboard = (result: Result): InsightAction =>
     prefix: 'analytics/resultAction/insight/copyToClipboard',
     __legacy__getBuilder: (client, state) => {
       validateResultPayload(result);
-      const metadata = getCaseContextAnalyticsMetadata(
-        state.insightCaseContext
-      );
+      const metadata = getCaseContextAnalyticsMetadata(state.insightCaseContext);
       return client.logCopyToClipboard(
         partialDocumentInformation(result, state),
         documentIdentifier(result),
@@ -44,9 +42,7 @@ export const logCaseSendEmail = (result: Result): InsightAction =>
     prefix: 'analytics/resultAction/insight/caseSendEmail',
     __legacy__getBuilder: (client, state) => {
       validateResultPayload(result);
-      const metadata = getCaseContextAnalyticsMetadata(
-        state.insightCaseContext
-      );
+      const metadata = getCaseContextAnalyticsMetadata(state.insightCaseContext);
       return client.logCaseSendEmail(
         partialDocumentInformation(result, state),
         documentIdentifier(result),
@@ -71,9 +67,7 @@ export const logFeedItemTextPost = (result: Result): InsightAction =>
     prefix: 'analytics/resultAction/insight/feedItemTextPost',
     __legacy__getBuilder: (client, state) => {
       validateResultPayload(result);
-      const metadata = getCaseContextAnalyticsMetadata(
-        state.insightCaseContext
-      );
+      const metadata = getCaseContextAnalyticsMetadata(state.insightCaseContext);
       return client.logFeedItemTextPost(
         partialDocumentInformation(result, state),
         documentIdentifier(result),

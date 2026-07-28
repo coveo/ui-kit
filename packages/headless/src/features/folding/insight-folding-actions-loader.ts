@@ -47,9 +47,7 @@ export interface InsightFoldingActionCreators {
  * @param engine - The headless engine (Insight).
  * @returns An object holding the action creators.
  */
-export function loadFoldingActions(
-  engine: InsightEngine
-): InsightFoldingActionCreators {
+export function loadFoldingActions(engine: InsightEngine): InsightFoldingActionCreators {
   engine.addReducers({folding});
 
   return {

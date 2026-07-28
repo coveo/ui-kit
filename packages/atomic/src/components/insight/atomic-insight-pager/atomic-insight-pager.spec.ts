@@ -27,8 +27,7 @@ describe('atomic-insight-pager', () => {
     previous: page.getByLabelText('Previous'),
     next: page.getByLabelText('Next'),
     parts: (element: AtomicInsightPager) => {
-      const qs = (part: string) =>
-        element.shadowRoot?.querySelector(`[part="${part}"]`);
+      const qs = (part: string) => element.shadowRoot?.querySelector(`[part="${part}"]`);
       return {
         buttons: qs('buttons'),
         pageButtons: qs('page-buttons'),
@@ -119,9 +118,7 @@ describe('atomic-insight-pager', () => {
   it('should call buildInsightSearchStatus with correct engine', async () => {
     const element = await renderPager();
 
-    expect(buildInsightSearchStatus).toHaveBeenCalledWith(
-      element.bindings.engine
-    );
+    expect(buildInsightSearchStatus).toHaveBeenCalledWith(element.bindings.engine);
   });
 
   describe('previous button', () => {
@@ -169,15 +166,11 @@ describe('atomic-insight-pager', () => {
       });
 
       it("should dispatch an 'atomic/scrollToTop' custom event", async () => {
-        expect(eventSpy).toHaveBeenCalledWith(
-          new CustomEvent('atomic/scrollToTop')
-        );
+        expect(eventSpy).toHaveBeenCalledWith(new CustomEvent('atomic/scrollToTop'));
       });
 
       it('should have accessibility features properly set up', async () => {
-        expect(
-          element.shadowRoot?.querySelector('[part*="previous-button"]')
-        ).toBeDefined();
+        expect(element.shadowRoot?.querySelector('[part*="previous-button"]')).toBeDefined();
         expect(previousSpy).toHaveBeenCalledOnce();
         expect(focusSpy).toHaveBeenCalledOnce();
       });
@@ -219,9 +212,7 @@ describe('atomic-insight-pager', () => {
       });
 
       it('should have accessibility features properly set up', async () => {
-        expect(
-          element.shadowRoot?.querySelector('[part*="next-button"]')
-        ).toBeDefined();
+        expect(element.shadowRoot?.querySelector('[part*="next-button"]')).toBeDefined();
         expect(nextSpy).toHaveBeenCalledOnce();
         expect(focusSpy).toHaveBeenCalledOnce();
       });
@@ -260,9 +251,7 @@ describe('atomic-insight-pager', () => {
     });
 
     it("should dispatch an 'atomic/scrollToTop' custom event", async () => {
-      expect(eventSpy).toHaveBeenCalledWith(
-        new CustomEvent('atomic/scrollToTop')
-      );
+      expect(eventSpy).toHaveBeenCalledWith(new CustomEvent('atomic/scrollToTop'));
     });
 
     it('should call #pager.selectPage with correct page number', async () => {
@@ -290,24 +279,12 @@ describe('atomic-insight-pager', () => {
   it('should render all expected parts', async () => {
     const element = await renderPager();
 
-    expect(
-      element.shadowRoot?.querySelector('[part*="buttons"]')
-    ).toBeDefined();
-    expect(
-      element.shadowRoot?.querySelector('button[part~="page-button"]')
-    ).toBeDefined();
-    expect(
-      element.shadowRoot?.querySelector('[part*="previous-button"]')
-    ).toBeDefined();
-    expect(
-      element.shadowRoot?.querySelector('[part*="next-button"]')
-    ).toBeDefined();
-    expect(
-      element.shadowRoot?.querySelector('[part*="previous-button-icon"]')
-    ).toBeDefined();
-    expect(
-      element.shadowRoot?.querySelector('[part*="next-button-icon"]')
-    ).toBeDefined();
+    expect(element.shadowRoot?.querySelector('[part*="buttons"]')).toBeDefined();
+    expect(element.shadowRoot?.querySelector('button[part~="page-button"]')).toBeDefined();
+    expect(element.shadowRoot?.querySelector('[part*="previous-button"]')).toBeDefined();
+    expect(element.shadowRoot?.querySelector('[part*="next-button"]')).toBeDefined();
+    expect(element.shadowRoot?.querySelector('[part*="previous-button-icon"]')).toBeDefined();
+    expect(element.shadowRoot?.querySelector('[part*="next-button-icon"]')).toBeDefined();
   });
 
   describe('when pager state changes', () => {
@@ -355,9 +332,7 @@ describe('atomic-insight-pager', () => {
   });
 
   it('should allow numberOfPages of 0', async () => {
-    const consoleErrorSpy = vi
-      .spyOn(console, 'error')
-      .mockImplementation(() => {});
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
     await renderPager({props: {numberOfPages: 0}});
 
@@ -385,12 +360,8 @@ describe('atomic-insight-pager', () => {
       searchStatusState: {hasError: false, hasResults: true},
     });
 
-    await expect
-      .element(locators.page1)
-      .toHaveAttribute('aria-label', 'Page 1');
-    await expect
-      .element(locators.previous)
-      .toHaveAttribute('aria-label', 'Previous');
+    await expect.element(locators.page1).toHaveAttribute('aria-label', 'Page 1');
+    await expect.element(locators.previous).toHaveAttribute('aria-label', 'Previous');
     await expect.element(locators.next).toHaveAttribute('aria-label', 'Next');
   });
 
@@ -413,9 +384,7 @@ describe('atomic-insight-pager', () => {
 
     const retrievePageButtons = () => {
       return Array.from(
-        element.shadowRoot?.querySelectorAll<HTMLButtonElement>(
-          'button[part~="page-button"]'
-        ) || []
+        element.shadowRoot?.querySelectorAll<HTMLButtonElement>('button[part~="page-button"]') || []
       );
     };
 
@@ -425,20 +394,14 @@ describe('atomic-insight-pager', () => {
     });
 
     it('should have proper ARIA labels on buttons', async () => {
-      await expect
-        .element(locators.previous)
-        .toHaveAttribute('aria-label', 'Previous');
+      await expect.element(locators.previous).toHaveAttribute('aria-label', 'Previous');
       await expect.element(locators.next).toHaveAttribute('aria-label', 'Next');
-      await expect
-        .element(locators.page1)
-        .toHaveAttribute('aria-label', 'Page 1');
+      await expect.element(locators.page1).toHaveAttribute('aria-label', 'Page 1');
     });
 
     it('should set aria-current=page on the active page button', async () => {
       const buttons = retrievePageButtons();
-      const activeButton = buttons.find(
-        (btn) => btn.getAttribute('aria-current') === 'page'
-      );
+      const activeButton = buttons.find((btn) => btn.getAttribute('aria-current') === 'page');
       expect(activeButton).toBeDefined();
     });
   });

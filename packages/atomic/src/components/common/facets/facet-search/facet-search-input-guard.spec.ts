@@ -2,20 +2,13 @@ import {html} from 'lit';
 import {describe, expect, it} from 'vitest';
 import {page} from 'vitest/browser';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
-import {
-  type FacetSearchInputGuardProps,
-  facetSearchInputGuard,
-} from './facet-search-input-guard';
+import {type FacetSearchInputGuardProps, facetSearchInputGuard} from './facet-search-input-guard';
 
-function renderWithGuard(
-  props: FacetSearchInputGuardProps,
-  content: string = 'Search Input'
-) {
+function renderWithGuard(props: FacetSearchInputGuardProps, content: string = 'Search Input') {
   return renderFunctionFixture(
     html`${facetSearchInputGuard(
       props,
-      () =>
-        html`<div data-testid="search-input" id="search-input">${content}</div>`
+      () => html`<div data-testid="search-input" id="search-input">${content}</div>`
     )}`
   );
 }
@@ -52,9 +45,7 @@ describe('facetSearchInputGuard', () => {
       numberOfDisplayedValues: 5,
     });
     await expect.element(locators.searchInput).not.toBeNull();
-    await expect
-      .element(locators.searchInput)
-      .toHaveTextContent('Search Input');
+    await expect.element(locators.searchInput).toHaveTextContent('Search Input');
   });
 
   it('should render content if withSearch is true, canShowMoreValues is false, but numberOfDisplayedValues >= 9', async () => {

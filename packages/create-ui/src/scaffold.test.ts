@@ -42,20 +42,18 @@ describe('scaffold provenance integration', () => {
     process.chdir(cwd);
     initializeCrashDiagnostics();
     installDependenciesMock.mockReturnValue(true);
-    downloadTemplateMock.mockImplementation(
-      async ({destDir}: {destDir: string}) => {
-        await writeFile(
-          join(destDir, 'package.json'),
-          JSON.stringify({
-            name: '@coveo/ui-kit-sample-headless-search-react',
-            version: '3.5.0',
-            private: true,
-            dependencies: {'@coveo/headless': '4.1.0', react: '18.0.0'},
-          })
-        );
-        return destDir;
-      }
-    );
+    downloadTemplateMock.mockImplementation(async ({destDir}: {destDir: string}) => {
+      await writeFile(
+        join(destDir, 'package.json'),
+        JSON.stringify({
+          name: '@coveo/ui-kit-sample-headless-search-react',
+          version: '3.5.0',
+          private: true,
+          dependencies: {'@coveo/headless': '4.1.0', react: '18.0.0'},
+        })
+      );
+      return destDir;
+    });
   });
 
   afterEach(async () => {
@@ -102,9 +100,7 @@ describe('scaffold provenance integration', () => {
 
     const diagnostics = snapshotCrashDiagnostics();
     expect(diagnostics.phase).toBe('complete');
-    expect(diagnostics.breadcrumbs.map(({type}) => type)).toContain(
-      'dependencies.install.failed'
-    );
+    expect(diagnostics.breadcrumbs.map(({type}) => type)).toContain('dependencies.install.failed');
     expect(diagnostics.breadcrumbs.map(({type}) => type)).not.toContain(
       'dependencies.install.succeeded'
     );

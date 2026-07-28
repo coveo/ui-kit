@@ -11,10 +11,7 @@ import {contextReducer as commerceContext} from '../../../features/commerce/cont
 import {contextSchema} from '../../../features/commerce/context/context-validation.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {validateOptions} from '../../../utils/validate-payload.js';
-import {
-  buildController,
-  type Controller,
-} from '../../controller/headless-controller.js';
+import {buildController, type Controller} from '../../controller/headless-controller.js';
 
 export interface ContextOptions {
   language: string;
@@ -124,10 +121,7 @@ export interface ContextState {
  * @group Buildable controllers
  * @category Context
  */
-export function buildContext(
-  engine: CommerceEngine,
-  props: ContextProps = {}
-): Context {
+export function buildContext(engine: CommerceEngine, props: ContextProps = {}): Context {
   if (!loadBaseContextReducers(engine)) {
     throw loadReducerError;
   }
@@ -180,9 +174,7 @@ export function buildContext(
   };
 }
 
-function loadBaseContextReducers(
-  engine: CommerceEngine
-): engine is CommerceEngine {
+function loadBaseContextReducers(engine: CommerceEngine): engine is CommerceEngine {
   engine.addReducers({commerceContext});
   return true;
 }

@@ -20,11 +20,8 @@ interface AugmentedPreprocessRequest extends PreprocessRequest {
   [AUGMENTED_MARKER]?: boolean;
 }
 
-export function augmentPreprocessRequestWithForwardedFor(
-  options: AugmentPreprocessRequestOptions
-) {
-  const originalPreprocessRequest =
-    options.preprocessRequest as AugmentedPreprocessRequest;
+export function augmentPreprocessRequestWithForwardedFor(options: AugmentPreprocessRequestOptions) {
+  const originalPreprocessRequest = options.preprocessRequest as AugmentedPreprocessRequest;
 
   if (originalPreprocessRequest?.[AUGMENTED_MARKER]) {
     return originalPreprocessRequest;

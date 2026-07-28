@@ -8,10 +8,9 @@ import '@/src/components/insight/atomic-insight-edit-toggle/atomic-insight-edit-
 const insightApiHarness = new MockInsightApi();
 
 const {decorator, play} = wrapInInsightInterface();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-insight-edit-toggle',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-insight-edit-toggle', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-insight-edit-toggle',

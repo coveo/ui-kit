@@ -48,28 +48,26 @@ describe('atomic-ipx-refine-toggle', () => {
     // Mock controllers used by atomic-ipx-refine-modal (which is dynamically created)
     vi.mocked(buildQuerySummary).mockReturnValue(buildFakeSummary());
 
-    const {element} =
-      await renderInAtomicSearchInterface<AtomicIpxRefineToggle>({
-        template: html`<atomic-ipx-refine-toggle
-          collapse-facets-after=${ifDefined(collapseFacetsAfter)}
-        ></atomic-ipx-refine-toggle>`,
-        selector: 'atomic-ipx-refine-toggle',
-        bindings: (bindings) => {
-          bindings.engine = mockedEngine;
-          bindings.store = {
-            ...bindings.store,
-            waitUntilAppLoaded: (cb: () => void) => cb(),
-            getFacetElements: () => [],
-          };
-          return bindings;
-        },
-      });
+    const {element} = await renderInAtomicSearchInterface<AtomicIpxRefineToggle>({
+      template: html`<atomic-ipx-refine-toggle
+        collapse-facets-after=${ifDefined(collapseFacetsAfter)}
+      ></atomic-ipx-refine-toggle>`,
+      selector: 'atomic-ipx-refine-toggle',
+      bindings: (bindings) => {
+        bindings.engine = mockedEngine;
+        bindings.store = {
+          ...bindings.store,
+          waitUntilAppLoaded: (cb: () => void) => cb(),
+          getFacetElements: () => [],
+        };
+        return bindings;
+      },
+    });
 
     return {
       element,
       parts: (el: AtomicIpxRefineToggle) => {
-        const qs = (part: string) =>
-          el.shadowRoot?.querySelector<HTMLElement>(`[part="${part}"]`);
+        const qs = (part: string) => el.shadowRoot?.querySelector<HTMLElement>(`[part="${part}"]`);
         return {
           container: qs('ipx-refine-toggle-container') ?? null,
           button: qs('ipx-refine-toggle-button') as HTMLButtonElement | null,
@@ -355,9 +353,7 @@ describe('atomic-ipx-refine-toggle', () => {
       const button = parts(element).button!;
       await userEvent.click(button);
 
-      const modal = element.parentElement?.querySelector(
-        'atomic-ipx-refine-modal'
-      );
+      const modal = element.parentElement?.querySelector('atomic-ipx-refine-modal');
       expect(modal).toBeTruthy();
       expect(modal?.isOpen).toBe(true);
     });
@@ -371,9 +367,7 @@ describe('atomic-ipx-refine-toggle', () => {
       const button = parts(element).button!;
       await userEvent.click(button);
 
-      const modal = element.parentElement?.querySelector(
-        'atomic-ipx-refine-modal'
-      );
+      const modal = element.parentElement?.querySelector('atomic-ipx-refine-modal');
       expect(modal?.collapseFacetsAfter).toBe(5);
     });
   });

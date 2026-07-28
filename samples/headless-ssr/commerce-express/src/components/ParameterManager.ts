@@ -21,10 +21,7 @@ export function hydrateParameterManager(
   // Controller state changes → URL. `pushState` does not trigger `popstate`,
   // and the `newUrl === previousUrl` guard avoids redundant history entries.
   parameterManager.subscribe(() => {
-    const newUrl = serialize(
-      parameterManager.state.parameters,
-      new URL(location.href)
-    );
+    const newUrl = serialize(parameterManager.state.parameters, new URL(location.href));
     if (newUrl === previousUrl) {
       return;
     }

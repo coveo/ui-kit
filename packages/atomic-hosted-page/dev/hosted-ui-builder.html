@@ -10,9 +10,7 @@
 
     <script type="module">
       const deploymentEnvironment =
-        typeof process !== 'undefined'
-          ? process.env.DEPLOYMENT_ENVIRONMENT
-          : 'CDN';
+        typeof process !== 'undefined' ? process.env.DEPLOYMENT_ENVIRONMENT : 'CDN';
 
       (async () => {
         if (deploymentEnvironment === 'CDN') {

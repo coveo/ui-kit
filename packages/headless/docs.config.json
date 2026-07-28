@@ -6,9 +6,7 @@
     "sections": [
       {
         "name": "AdvancedSearchQueriesActions",
-        "sources": [
-          "src/features/advanced-search-queries/advanced-search-queries-actions"
-        ]
+        "sources": ["src/features/advanced-search-queries/advanced-search-queries-actions"]
       },
       {
         "name": "BreadcrumbActions",
@@ -16,9 +14,7 @@
       },
       {
         "name": "CategoryFacetSetActions",
-        "sources": [
-          "src/features/facets/category-facet-set/category-facet-set-actions"
-        ]
+        "sources": ["src/features/facets/category-facet-set/category-facet-set-actions"]
       },
       {
         "name": "ConfigurationActions",
@@ -30,9 +26,7 @@
       },
       {
         "name": "DateFacetActions",
-        "sources": [
-          "src/features/facets/range-facets/date-facet-set/date-facet-actions"
-        ]
+        "sources": ["src/features/facets/range-facets/date-facet-set/date-facet-actions"]
       },
       {
         "name": "DidYouMeanActions",
@@ -52,9 +46,7 @@
       },
       {
         "name": "NumericFacetActions",
-        "sources": [
-          "src/features/facets/range-facets/numeric-facet-set/numeric-facet-actions"
-        ]
+        "sources": ["src/features/facets/range-facets/numeric-facet-set/numeric-facet-actions"]
       },
       {
         "name": "PaginationActions",
@@ -66,9 +58,7 @@
       },
       {
         "name": "ProductRecommendationActions",
-        "sources": [
-          "src/features/product-recommendations/product-recommendations-actions"
-        ]
+        "sources": ["src/features/product-recommendations/product-recommendations-actions"]
       },
       {
         "name": "QueryActions",

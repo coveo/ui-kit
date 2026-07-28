@@ -20,10 +20,7 @@ if (!existsSync(COMMITTED_OPENACR)) {
   console.log('⏭️  No committed openacr.yaml found. Skipping check.');
   process.exit(0);
 }
-const INPUT_REPORT = resolve(
-  REPO_ROOT,
-  'packages/atomic/reports/a11y-report.json'
-);
+const INPUT_REPORT = resolve(REPO_ROOT, 'packages/atomic/reports/a11y-report.json');
 
 if (!existsSync(INPUT_REPORT)) {
   console.log('⏭️  No a11y-report.json found. Skipping drift check.');
@@ -50,12 +47,8 @@ function stripVolatile(report) {
   return report;
 }
 
-const committed = stripVolatile(
-  parse(readFileSync(COMMITTED_OPENACR, 'utf-8'))
-);
-const generated = stripVolatile(
-  parse(readFileSync(GENERATED_OPENACR, 'utf-8'))
-);
+const committed = stripVolatile(parse(readFileSync(COMMITTED_OPENACR, 'utf-8')));
+const generated = stripVolatile(parse(readFileSync(GENERATED_OPENACR, 'utf-8')));
 
 if (isDeepStrictEqual(committed, generated)) {
   console.log('✅ openacr.yaml is up to date.');

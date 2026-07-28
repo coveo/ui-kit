@@ -13,9 +13,7 @@ describe('image-carousel-indicators', () => {
 
   const renderComponent = (props = {}) => {
     const mergedProps = {...defaultProps, ...props};
-    return renderFunctionFixture(
-      html`${renderCarouselIndicator({props: mergedProps})}`
-    );
+    return renderFunctionFixture(html`${renderCarouselIndicator({props: mergedProps})}`);
   };
 
   const locators = {
@@ -53,9 +51,7 @@ describe('image-carousel-indicators', () => {
   it('should mark the current indicator as active', async () => {
     const currentImage = 3;
     await renderComponent({currentImage});
-    expect(locators.indicatorAt(currentImage).getAttribute('part')).toContain(
-      'active-indicator'
-    );
+    expect(locators.indicatorAt(currentImage).getAttribute('part')).toContain('active-indicator');
   });
 
   it('should not mark other indicators as active', async () => {
@@ -103,20 +99,10 @@ describe('image-carousel-indicators', () => {
     });
 
     it('should apply scale-75 to first and last displayed indicators', () => {
-      const firstDisplayedIdx = Math.max(
-        0,
-        currentImage - maxImagesBeforeAndAfter
-      );
-      const lastDisplayedIdx = Math.min(
-        currentImage + maxImagesBeforeAndAfter,
-        numberOfImages - 1
-      );
-      expect(locators.indicatorAt(firstDisplayedIdx).className).toMatch(
-        /scale-75/
-      );
-      expect(locators.indicatorAt(lastDisplayedIdx).className).toMatch(
-        /scale-75/
-      );
+      const firstDisplayedIdx = Math.max(0, currentImage - maxImagesBeforeAndAfter);
+      const lastDisplayedIdx = Math.min(currentImage + maxImagesBeforeAndAfter, numberOfImages - 1);
+      expect(locators.indicatorAt(firstDisplayedIdx).className).toMatch(/scale-75/);
+      expect(locators.indicatorAt(lastDisplayedIdx).className).toMatch(/scale-75/);
     });
   });
 });

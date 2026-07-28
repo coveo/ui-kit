@@ -6,13 +6,8 @@ interface MapPropOptions {
   splitValues?: boolean;
 }
 
-export function mapProperty<Element extends ReactiveElement>(
-  options?: MapPropOptions
-) {
-  return <
-    Instance extends Element & Record<string, unknown>,
-    K extends keyof Instance,
-  >(
+export function mapProperty<Element extends ReactiveElement>(options?: MapPropOptions) {
+  return <Instance extends Element & Record<string, unknown>, K extends keyof Instance>(
     proto: ReactiveElement,
     propertyKey: K
   ) => {
@@ -22,8 +17,7 @@ export function mapProperty<Element extends ReactiveElement>(
 
     ctor.addInitializer((instance) => {
       const props = {};
-      const prefix =
-        options?.attributePrefix || camelToKebab(propertyKey.toString());
+      const prefix = options?.attributePrefix || camelToKebab(propertyKey.toString());
 
       mapAttributesToProp(
         prefix,
@@ -55,10 +49,7 @@ export function mapAttributesToProp(
   splitValues: boolean
 ) {
   const map = attributesToStringMap(prefix, attributes);
-  Object.assign(
-    mapVariable,
-    splitValues ? stringMapToStringArrayMap(map) : map
-  );
+  Object.assign(mapVariable, splitValues ? stringMapToStringArrayMap(map) : map);
 }
 
 function stringMapToStringArrayMap(map: Record<string, string>) {
@@ -66,18 +57,13 @@ function stringMapToStringArrayMap(map: Record<string, string>) {
     (acc, [key, value]) => ({
       // oxlint-disable-next-line oxc/no-accumulating-spread -- <>
       ...acc,
-      [key]: splitAttributeValueOnCommas(value).map((subValue) =>
-        subValue.trim()
-      ),
+      [key]: splitAttributeValueOnCommas(value).map((subValue) => subValue.trim()),
     }),
     {}
   );
 }
 
-function attributesToStringMap(
-  prefix: string,
-  attributes: {name: string; value: string}[]
-) {
+function attributesToStringMap(prefix: string, attributes: {name: string; value: string}[]) {
   const mapVariable: Record<string, string> = {};
   const kebabPrefix = `${camelToKebab(prefix)}-`;
   for (let i = 0; i < attributes.length; i++) {

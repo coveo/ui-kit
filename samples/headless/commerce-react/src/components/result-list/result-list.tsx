@@ -11,20 +11,13 @@ import InteractiveProduct from '../interactive-product/interactive-product.js';
 
 interface IResultListProps {
   results: HeadlessResult[];
-  productControllerBuilder: (
-    props: InteractiveProductProps
-  ) => HeadlessInteractiveProduct;
+  productControllerBuilder: (props: InteractiveProductProps) => HeadlessInteractiveProduct;
   cartController: Cart;
   promoteChildToParent: (product: ChildProduct) => void;
 }
 
 export default function ResultList(props: IResultListProps) {
-  const {
-    results,
-    productControllerBuilder,
-    cartController,
-    promoteChildToParent,
-  } = props;
+  const {results, productControllerBuilder, cartController, promoteChildToParent} = props;
 
   const products = results.filter(
     (result): result is Product => result.resultType !== ResultType.SPOTLIGHT

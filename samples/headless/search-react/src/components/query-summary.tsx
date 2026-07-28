@@ -6,8 +6,7 @@ interface QuerySummaryProps {
 }
 
 export function QuerySummary({controller}: QuerySummaryProps) {
-  const {hasResults, firstResult, lastResult, total, hasQuery, query} =
-    useController(controller);
+  const {hasResults, firstResult, lastResult, total, hasQuery, query} = useController(controller);
 
   if (!hasResults) {
     return <p className="query-summary">No results</p>;

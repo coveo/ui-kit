@@ -2,11 +2,7 @@
  * A trigger is an action that the interface will perform (show a message, execute a function, redirect users) depending on the query that was performed.<br/>
  * A trigger that can be configured in the Coveo Query Pipeline.
  */
-export type Trigger =
-  | TriggerNotify
-  | TriggerRedirect
-  | TriggerQuery
-  | TriggerExecute;
+export type Trigger = TriggerNotify | TriggerRedirect | TriggerQuery | TriggerExecute;
 
 /**
  * Notify (show a message) to a user
@@ -24,9 +20,7 @@ export interface TriggerRedirect {
   content: string;
 }
 
-export function isRedirectTrigger(
-  trigger: Trigger
-): trigger is TriggerRedirect {
+export function isRedirectTrigger(trigger: Trigger): trigger is TriggerRedirect {
   return trigger.type === 'redirect';
 }
 

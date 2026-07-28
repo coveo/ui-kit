@@ -1,9 +1,6 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import * as domUtils from './dom-utils';
-import {
-  DEFAULT_MOBILE_BREAKPOINT,
-  updateBreakpoints,
-} from './replace-breakpoint-utils';
+import {DEFAULT_MOBILE_BREAKPOINT, updateBreakpoints} from './replace-breakpoint-utils';
 
 vi.mock('./dom-utils', {spy: true});
 

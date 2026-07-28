@@ -20,9 +20,7 @@ type SpyEverything<T> = {
       : T[K];
 };
 
-type SpiedLoggerProps = SpyEverything<
-  Pick<Logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
->;
+type SpiedLoggerProps = SpyEverything<Pick<Logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>>;
 
 type MockedLogger = Logger & SpiedLoggerProps;
 
@@ -49,13 +47,12 @@ function mockRelay(): MockedRelay {
   };
 }
 
-type MockedCoreEngine<
-  State extends StateFromEngine<CoreEngine> = StateFromEngine<CoreEngine>,
-> = CoreEngine & {
-  state: State;
-  logger: MockedLogger;
-  relay: MockedRelay;
-} & SpyEverything<Omit<CoreEngine, 'logger' | 'state' | 'relay'>>;
+type MockedCoreEngine<State extends StateFromEngine<CoreEngine> = StateFromEngine<CoreEngine>> =
+  CoreEngine & {
+    state: State;
+    logger: MockedLogger;
+    relay: MockedRelay;
+  } & SpyEverything<Omit<CoreEngine, 'logger' | 'state' | 'relay'>>;
 
 function buildMockCoreEngine<State extends StateFromEngine<CoreEngine>>(
   initialState: State
@@ -84,17 +81,16 @@ function buildMockCoreEngine<State extends StateFromEngine<CoreEngine>>(
 }
 
 type MockedCoreEngineNext<
-  State extends StateFromEngineNext<CoreEngineNext> =
-    StateFromEngineNext<CoreEngineNext>,
+  State extends StateFromEngineNext<CoreEngineNext> = StateFromEngineNext<CoreEngineNext>,
 > = CoreEngineNext & {
   [stateKey]: State;
   logger: MockedLogger;
   relay: MockedRelay;
 } & SpyEverything<Omit<CoreEngineNext, 'logger' | 'stateKey' | 'relay'>>;
 
-function buildMockCoreEngineNext<
-  State extends StateFromEngineNext<CoreEngineNext>,
->(initialState: State): MockedCoreEngineNext<State> {
+function buildMockCoreEngineNext<State extends StateFromEngineNext<CoreEngineNext>>(
+  initialState: State
+): MockedCoreEngineNext<State> {
   const state: State = initialState;
   return {
     [stateKey]: state,
@@ -114,11 +110,7 @@ function buildMockCoreEngineNext<
 export type MockedSearchEngine = SearchEngine &
   MockedCoreEngine<StateFromEngine<SearchEngine>> &
   SpyEverything<
-    Pick<
-      SearchEngine,
-      | 'executeFirstSearch'
-      | 'executeFirstSearchAfterStandaloneSearchBoxRedirect'
-    >
+    Pick<SearchEngine, 'executeFirstSearch' | 'executeFirstSearchAfterStandaloneSearchBoxRedirect'>
   >;
 
 export type MockedCaseAssistEngine = CaseAssistEngine;
@@ -128,8 +120,7 @@ export type MockedInsightEngine = InsightEngine;
 
 type StateFromEngine<TEngine extends CoreEngine> = TEngine['state'];
 
-type StateFromEngineNext<TEngine extends CoreEngineNext> =
-  TEngine[typeof stateKey];
+type StateFromEngineNext<TEngine extends CoreEngineNext> = TEngine[typeof stateKey];
 
 export function buildMockSearchEngine(
   initialState: StateFromEngine<SearchEngine>
@@ -141,17 +132,17 @@ export function buildMockSearchEngine(
   };
 }
 
-export function buildMockCaseAssistEngine<
-  State extends StateFromEngine<CaseAssistEngine>,
->(initialState: State): CaseAssistEngine {
+export function buildMockCaseAssistEngine<State extends StateFromEngine<CaseAssistEngine>>(
+  initialState: State
+): CaseAssistEngine {
   return {
     ...buildMockCoreEngine<State>(initialState),
   };
 }
 
-export function buildMockCommerceEngine<
-  State extends StateFromEngineNext<CommerceEngine>,
->(initialState: State): CommerceEngine {
+export function buildMockCommerceEngine<State extends StateFromEngineNext<CommerceEngine>>(
+  initialState: State
+): CommerceEngine {
   return {
     ...buildMockCoreEngineNext(initialState),
     configuration: {
@@ -160,18 +151,18 @@ export function buildMockCommerceEngine<
   };
 }
 
-export function buildMockInsightEngine<
-  State extends StateFromEngine<InsightEngine>,
->(initialState: State): InsightEngine {
+export function buildMockInsightEngine<State extends StateFromEngine<InsightEngine>>(
+  initialState: State
+): InsightEngine {
   return {
     ...buildMockCoreEngine(initialState),
     executeFirstSearch: vi.fn(),
   };
 }
 
-export function buildMockRecommendationEngine<
-  State extends StateFromEngine<RecommendationEngine>,
->(initialState: State): RecommendationEngine {
+export function buildMockRecommendationEngine<State extends StateFromEngine<RecommendationEngine>>(
+  initialState: State
+): RecommendationEngine {
   return {
     ...buildMockCoreEngine(initialState),
   };

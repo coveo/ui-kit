@@ -45,7 +45,7 @@ export interface StandaloneSearchBoxProps {
  * The `StandaloneSearchBox` headless controller offers a high-level interface for designing a common search box UI controller.
  * Meant to be used for a search box that will redirect instead of executing a query.
  *
- * Example: [standalone-search-box.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/standalone-search-box/standalone-search-box.fn.tsx)
+ * Example: [layout.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/commerce-react/src/layout/layout.tsx)
  *
  * @group Controllers
  * @category StandaloneSearchBox
@@ -121,12 +121,7 @@ export function buildStandaloneSearchBox(
     ...props.options,
   };
 
-  validateOptions(
-    engine,
-    standaloneSearchBoxSchema,
-    options,
-    'buildStandaloneSearchBox'
-  );
+  validateOptions(engine, standaloneSearchBoxSchema, options, 'buildStandaloneSearchBox');
 
   const searchBox = buildSearchBox(engine, {options});
   dispatch(
@@ -162,9 +157,7 @@ export function buildStandaloneSearchBox(
     },
 
     updateRedirectUrl(url: string) {
-      dispatch(
-        updateStandaloneSearchBoxRedirectionUrl({id, redirectionUrl: url})
-      );
+      dispatch(updateStandaloneSearchBoxRedirectionUrl({id, redirectionUrl: url}));
     },
 
     submit() {
@@ -193,10 +186,7 @@ export function buildStandaloneSearchBox(
 function loadStandaloneSearchBoxReducers(
   engine: SearchEngine
 ): engine is SearchEngine<
-  StandaloneSearchBoxSection &
-    ConfigurationSection &
-    QuerySection &
-    QuerySuggestionSection
+  StandaloneSearchBoxSection & ConfigurationSection & QuerySection & QuerySuggestionSection
 > {
   engine.addReducers({
     standaloneSearchBoxSet,

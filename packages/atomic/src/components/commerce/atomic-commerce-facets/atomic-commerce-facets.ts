@@ -28,10 +28,7 @@ import '../atomic-commerce-facet/atomic-commerce-facet';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import '../atomic-commerce-numeric-facet/atomic-commerce-numeric-facet';
 import '../atomic-commerce-timeframe-facet/atomic-commerce-timeframe-facet';
-import type {
-  FacetType,
-  MappedGeneratedFacetController,
-} from '@coveo/headless/commerce';
+import type {FacetType, MappedGeneratedFacetController} from '@coveo/headless/commerce';
 import {keyed} from 'lit/directives/keyed.js';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {LightDomMixin} from '@/src/mixins/light-dom';
@@ -103,18 +100,13 @@ export class AtomicCommerceFacets
     if (this.collapseFacetsAfter === -1 || facet.state.hasActiveValues) {
       return false;
     }
-    return this.collapseFacetsAfter
-      ? index + 1 > this.collapseFacetsAfter
-      : true;
+    return this.collapseFacetsAfter ? index + 1 > this.collapseFacetsAfter : true;
   }
 
   private renderFacetPlaceholders() {
     return map(
       Array.from({length: this.collapseFacetsAfter}),
-      () =>
-        html`<atomic-facet-placeholder
-          value-count="8"
-        ></atomic-facet-placeholder>`
+      () => html`<atomic-facet-placeholder value-count="8"></atomic-facet-placeholder>`
     );
   }
 

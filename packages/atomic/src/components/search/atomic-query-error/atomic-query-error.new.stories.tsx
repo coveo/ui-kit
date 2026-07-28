@@ -22,10 +22,9 @@ const {play: playInitOnly} = wrapInSearchInterface({
   skipFirstSearch: true,
 });
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-query-error',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-query-error', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-query-error',
@@ -130,9 +129,7 @@ export const A11yStatusMessage: Story = {
     await playInitOnly(context);
     await testStatusMessageA11y(context, {
       triggerAction: async (canvasElement) => {
-        const searchInterface = canvasElement.querySelector(
-          'atomic-search-interface'
-        )!;
+        const searchInterface = canvasElement.querySelector('atomic-search-interface')!;
         await (searchInterface as any).executeFirstSearch();
       },
       expectedText:

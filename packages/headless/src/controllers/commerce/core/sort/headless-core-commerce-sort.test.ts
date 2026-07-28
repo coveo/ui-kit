@@ -15,9 +15,7 @@ import {
 
 vi.mock('../../../../features/commerce/sort/sort-actions');
 vi.mock('../../../../features/pagination/pagination-actions');
-vi.mock(
-  '../../../../features/commerce/product-listing/product-listing-actions'
-);
+vi.mock('../../../../features/commerce/product-listing/product-listing-actions');
 
 describe('commerce core sort', () => {
   let sort: Sort;

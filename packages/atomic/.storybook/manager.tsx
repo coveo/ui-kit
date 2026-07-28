@@ -1,12 +1,7 @@
 import {IconButton} from 'storybook/internal/components';
 import {STORY_MISSING, STORY_RENDERED} from 'storybook/internal/core-events';
 import {CogIcon, GithubIcon} from '@storybook/icons';
-import {
-  addons,
-  types,
-  useStorybookApi,
-  useStorybookState,
-} from 'storybook/manager-api';
+import {addons, types, useStorybookApi, useStorybookState} from 'storybook/manager-api';
 import {create} from 'storybook/theming';
 import {COVEO_PRIMARY, FONT_BASE, FONT_CODE} from './theme';
 import {
@@ -17,10 +12,7 @@ import {
 import React, {useEffect, useRef} from 'react';
 
 type AtomicSearchInterfaceElement = HTMLElement & {
-  initialize: (options: {
-    accessToken: string;
-    organizationId: string;
-  }) => Promise<void>;
+  initialize: (options: {accessToken: string; organizationId: string}) => Promise<void>;
 };
 
 declare global {
@@ -195,10 +187,7 @@ addons.register('custom/onetrust-button', () => {
         key="onetrust-button"
         title="Open Cookie Preferences"
         onClick={() => {
-          if (
-            window.OneTrust &&
-            typeof window.OneTrust.ToggleInfoDisplay === 'function'
-          ) {
+          if (window.OneTrust && typeof window.OneTrust.ToggleInfoDisplay === 'function') {
             window.OneTrust.ToggleInfoDisplay();
           } else {
             console.warn('OneTrust is not available on this page.');
@@ -213,10 +202,9 @@ addons.register('custom/onetrust-button', () => {
 
 const observeAndExpandButtons = () => {
   const expandButtons = () => {
-    const buttonsToExpand: NodeListOf<HTMLButtonElement> =
-      document.querySelectorAll(
-        'button[data-action="expand-all"][data-expanded="false"]'
-      );
+    const buttonsToExpand: NodeListOf<HTMLButtonElement> = document.querySelectorAll(
+      'button[data-action="expand-all"][data-expanded="false"]'
+    );
     if (!buttonsToExpand.length) return false;
     buttonsToExpand.forEach((button) => {
       button.click();
@@ -262,9 +250,7 @@ function EditInGithubToolbarButton() {
   const importPath = entry?.importPath as string | undefined;
 
   const githubUrl =
-    viewMode === 'docs'
-      ? resolveGithubDocsUrl(importPath)
-      : resolveGithubUrl(importPath);
+    viewMode === 'docs' ? resolveGithubDocsUrl(importPath) : resolveGithubUrl(importPath);
 
   if (!githubUrl) return null;
 

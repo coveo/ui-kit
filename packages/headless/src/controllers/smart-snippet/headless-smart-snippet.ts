@@ -30,23 +30,13 @@ export type {
  * @group Controllers
  * @category SmartSnippet
  * */
-export function buildSmartSnippet(
-  engine: SearchEngine,
-  props?: SmartSnippetProps
-): SmartSnippet {
-  warnIfUsingNextAnalyticsModeForServiceFeature(
-    engine.state.configuration.analytics.analyticsMode
-  );
-  const smartSnippet = buildCoreSmartSnippet(
-    engine,
-    smartSnippetAnalyticsClient,
-    props
-  );
+export function buildSmartSnippet(engine: SearchEngine, props?: SmartSnippetProps): SmartSnippet {
+  warnIfUsingNextAnalyticsModeForServiceFeature(engine.state.configuration.analytics.analyticsMode);
+  const smartSnippet = buildCoreSmartSnippet(engine, smartSnippetAnalyticsClient, props);
 
-  const interactiveInlineLinks = buildSmartSnippetInteractiveInlineLinks(
-    engine,
-    {options: {selectionDelay: props?.options?.selectionDelay}}
-  );
+  const interactiveInlineLinks = buildSmartSnippetInteractiveInlineLinks(engine, {
+    options: {selectionDelay: props?.options?.selectionDelay},
+  });
 
   return {
     ...smartSnippet,

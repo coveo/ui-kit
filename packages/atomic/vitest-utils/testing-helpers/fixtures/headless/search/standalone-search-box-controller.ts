@@ -1,7 +1,4 @@
-import type {
-  StandaloneSearchBox,
-  StandaloneSearchBoxState,
-} from '@coveo/headless';
+import type {StandaloneSearchBox, StandaloneSearchBoxState} from '@coveo/headless';
 import {vi} from 'vitest';
 
 export const defaultState: StandaloneSearchBoxState = {

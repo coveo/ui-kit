@@ -17,9 +17,7 @@ class StaticControllerBuilder {
     return this;
   }
 
-  public withInitialState(
-    initialState: StaticControllerState['initialState']
-  ): this {
+  public withInitialState(initialState: StaticControllerState['initialState']): this {
     this._initialState = clone(initialState);
     return this;
   }
@@ -46,9 +44,7 @@ export function createStaticControllerBuilder<TController extends Controller>(
   const builder = new StaticControllerBuilder().withState(controller.state);
 
   if ('initialState' in controller) {
-    builder.withInitialState(
-      (controller as Required<StaticControllerState>).initialState
-    );
+    builder.withInitialState((controller as Required<StaticControllerState>).initialState);
   }
 
   return builder;

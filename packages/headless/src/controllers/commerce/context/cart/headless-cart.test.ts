@@ -79,9 +79,7 @@ describe('headless commerce cart', () => {
       const mockedSetItems = vi.mocked(setItems);
 
       expect(mockedSetItems).toHaveBeenCalledWith(initialState.items);
-      expect(engine.dispatch).toHaveBeenCalledWith(
-        mockedSetItems.mock.results[0].value
-      );
+      expect(engine.dispatch).toHaveBeenCalledWith(mockedSetItems.mock.results[0].value);
     });
 
     it('does not dispatch #setItems if options do not include items', () => {
@@ -163,10 +161,7 @@ describe('headless commerce cart', () => {
       vi.resetAllMocks();
     });
 
-    const getExpectedCartActionPayload = (
-      action: 'add' | 'remove',
-      quantity: number = 1
-    ) => ({
+    const getExpectedCartActionPayload = (action: 'add' | 'remove', quantity: number = 1) => ({
       action,
       product: productWithoutQuantity,
       quantity,
@@ -195,9 +190,7 @@ describe('headless commerce cart', () => {
 
     it('will not dispatch an action or emit an event if item does not exist in cart and item.quantity <= 0', () => {
       const mockedUpdateItem = vi.mocked(updateItemQuantity);
-      vi.mocked(itemSelector).mockReturnValue(
-        undefined as unknown as CartItemWithMetadata
-      );
+      vi.mocked(itemSelector).mockReturnValue(undefined as unknown as CartItemWithMetadata);
 
       cart.updateItemQuantity(productWithQuantity(0));
 
@@ -216,9 +209,7 @@ describe('headless commerce cart', () => {
 
     it('dispatches #updateItemQuantity when the item does not exist in the cart state and item.quantity > 0', () => {
       const mockedUpdateItem = vi.mocked(updateItemQuantity);
-      vi.mocked(itemSelector).mockReturnValue(
-        undefined as unknown as CartItemWithMetadata
-      );
+      vi.mocked(itemSelector).mockReturnValue(undefined as unknown as CartItemWithMetadata);
 
       cart.updateItemQuantity(productWithQuantity(3));
 
@@ -240,9 +231,7 @@ describe('headless commerce cart', () => {
     });
 
     it('dispatches #emitCartAction with "add" action and correct payload if quantity > 0 and item does not exist in cart', () => {
-      vi.mocked(itemSelector).mockReturnValue(
-        undefined as unknown as CartItemWithMetadata
-      );
+      vi.mocked(itemSelector).mockReturnValue(undefined as unknown as CartItemWithMetadata);
 
       cart.updateItemQuantity(productWithQuantity(3));
 

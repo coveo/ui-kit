@@ -5,17 +5,12 @@ import {
   type ConverseController,
   type ConverseControllerState,
   type SerializedConverseState,
+  type ReasoningStep,
 } from '@coveo/thermidor';
 import {EngineService} from './engine.service';
 import {parseSurfaces} from '../a2ui-parser';
 import {CONVERSATION_STORAGE_KEY} from '../constants';
-import type {
-  A2UISurface,
-  RenderableCommerceSurface,
-  RoutedInterface,
-  ToolCall,
-  Turn,
-} from '../models';
+import type {A2UISurface, RenderableCommerceSurface, RoutedInterface, Turn} from '../models';
 
 @Injectable({providedIn: 'root'})
 export class ConversationService {
@@ -24,8 +19,7 @@ export class ConversationService {
 
   readonly busy = signal(false);
   readonly turns = signal<Turn[]>([]);
-  readonly reasoningText = signal('');
-  readonly toolActivity = signal<ToolCall[]>([]);
+  readonly reasoningSteps = signal<ReasoningStep[]>([]);
   readonly surfaces = signal<RenderableCommerceSurface[]>([]);
   readonly routedInterface = signal<RoutedInterface | undefined>(undefined);
   readonly activeTurnId = signal<string | undefined>(undefined);
@@ -73,19 +67,13 @@ export class ConversationService {
     this.routedInterface.set(activeTurn?.routedInterface);
 
     if (activeTurn) {
-      this.reasoningText.set(
-        isStreaming ? (activeTurn.agentResponse?.reasoningContent ?? '') : ''
-      );
+      this.reasoningSteps.set(activeTurn.agentResponse?.reasoningSteps ?? []);
       this.activeTurnError.set(
-        activeTurn.status === 'error'
-          ? (activeTurn.error ?? 'An error occurred')
-          : ''
+        activeTurn.status === 'error' ? (activeTurn.error ?? 'An error occurred') : ''
       );
-      this.toolActivity.set(activeTurn.agentResponse?.toolCalls ?? []);
     } else {
-      this.reasoningText.set('');
+      this.reasoningSteps.set([]);
       this.activeTurnError.set('');
-      this.toolActivity.set([]);
     }
   }
 
@@ -115,10 +103,7 @@ export class ConversationService {
   private persistState(): void {
     try {
       const serialized = this.controller.serialize();
-      localStorage.setItem(
-        CONVERSATION_STORAGE_KEY,
-        JSON.stringify(serialized)
-      );
+      localStorage.setItem(CONVERSATION_STORAGE_KEY, JSON.stringify(serialized));
     } catch {
       // Ignore persistence failures (e.g., storage disabled/quota exceeded).
     }

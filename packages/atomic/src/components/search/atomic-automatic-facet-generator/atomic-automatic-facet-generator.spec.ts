@@ -49,20 +49,19 @@ describe('atomic-automatic-facet-generator', () => {
       })
     );
 
-    const {element} =
-      await renderInAtomicSearchInterface<AtomicAutomaticFacetGenerator>({
-        template: html`<div>
-          <atomic-automatic-facet-generator
-            desired-count=${desiredCount}
-            number-of-values=${numberOfValues}
-          ></atomic-automatic-facet-generator>
-        </div>`,
-        selector: 'atomic-automatic-facet-generator',
-        bindings: (bindings) => {
-          bindings.engine = mockedEngine;
-          return bindings;
-        },
-      });
+    const {element} = await renderInAtomicSearchInterface<AtomicAutomaticFacetGenerator>({
+      template: html`<div>
+        <atomic-automatic-facet-generator
+          desired-count=${desiredCount}
+          number-of-values=${numberOfValues}
+        ></atomic-automatic-facet-generator>
+      </div>`,
+      selector: 'atomic-automatic-facet-generator',
+      bindings: (bindings) => {
+        bindings.engine = mockedEngine;
+        return bindings;
+      },
+    });
 
     return {
       element,
@@ -123,9 +122,7 @@ describe('atomic-automatic-facet-generator', () => {
       automaticFacets: facets,
     });
 
-    const automaticFacetElements = document.querySelectorAll(
-      'atomic-automatic-facet'
-    );
+    const automaticFacetElements = document.querySelectorAll('atomic-automatic-facet');
     expect(automaticFacetElements.length).toBe(2);
   });
 
@@ -135,9 +132,7 @@ describe('atomic-automatic-facet-generator', () => {
       automaticFacets: [],
     });
 
-    const automaticFacetElements = document.querySelectorAll(
-      'atomic-automatic-facet'
-    );
+    const automaticFacetElements = document.querySelectorAll('atomic-automatic-facet');
     expect(automaticFacetElements.length).toBe(0);
   });
 
@@ -153,9 +148,7 @@ describe('atomic-automatic-facet-generator', () => {
       automaticFacets: facets,
     });
 
-    const automaticFacetElement = document.querySelector(
-      'atomic-automatic-facet'
-    );
+    const automaticFacetElement = document.querySelector('atomic-automatic-facet');
 
     // The field is reflected as an attribute
     expect(automaticFacetElement?.getAttribute('field')).toBe('category');

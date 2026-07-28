@@ -41,9 +41,7 @@ describe('atomic-segmented-facet', () => {
       buildFakeSearchStatus({firstSearchExecuted: true})
     );
     vi.mocked(buildTabManager).mockReturnValue(buildFakeTabManager({}));
-    vi.mocked(buildFacetConditionsManager).mockReturnValue(
-      buildFakeFacetConditionsManager({})
-    );
+    vi.mocked(buildFacetConditionsManager).mockReturnValue(buildFakeFacetConditionsManager({}));
   });
 
   const renderComponent = async ({
@@ -94,30 +92,26 @@ describe('atomic-segmented-facet', () => {
       })
     );
 
-    const {element} = await renderInAtomicSearchInterface<AtomicSegmentedFacet>(
-      {
-        template: html`<atomic-segmented-facet
-          field=${props.field ?? 'filetype'}
-          facet-id=${ifDefined(props.facetId)}
-          label=${ifDefined(props.label)}
-          .tabsIncluded=${props.tabsIncluded ?? []}
-          .tabsExcluded=${props.tabsExcluded ?? []}
-          .filterFacetCount=${props.filterFacetCount ?? true}
-          injection-depth=${ifDefined(props.injectionDepth)}
-          number-of-values=${ifDefined(props.numberOfValues)}
-          sort-criteria=${ifDefined(props.sortCriteria)}
-          .dependsOn=${props.dependsOn ?? {}}
-          .allowedValues=${props.allowedValues ?? []}
-          .customSort=${props.customSort ?? []}
-        ></atomic-segmented-facet>`,
-        selector: 'atomic-segmented-facet',
-      }
-    );
+    const {element} = await renderInAtomicSearchInterface<AtomicSegmentedFacet>({
+      template: html`<atomic-segmented-facet
+        field=${props.field ?? 'filetype'}
+        facet-id=${ifDefined(props.facetId)}
+        label=${ifDefined(props.label)}
+        .tabsIncluded=${props.tabsIncluded ?? []}
+        .tabsExcluded=${props.tabsExcluded ?? []}
+        .filterFacetCount=${props.filterFacetCount ?? true}
+        injection-depth=${ifDefined(props.injectionDepth)}
+        number-of-values=${ifDefined(props.numberOfValues)}
+        sort-criteria=${ifDefined(props.sortCriteria)}
+        .dependsOn=${props.dependsOn ?? {}}
+        .allowedValues=${props.allowedValues ?? []}
+        .customSort=${props.customSort ?? []}
+      ></atomic-segmented-facet>`,
+      selector: 'atomic-segmented-facet',
+    });
 
-    const qs = (part: string) =>
-      element.shadowRoot?.querySelector(`[part~="${part}"]`)!;
-    const qsa = (part: string) =>
-      element.shadowRoot?.querySelectorAll(`[part~="${part}"]`)!;
+    const qs = (part: string) => element.shadowRoot?.querySelector(`[part~="${part}"]`)!;
+    const qsa = (part: string) => element.shadowRoot?.querySelectorAll(`[part~="${part}"]`)!;
 
     const locators = {
       get label() {
@@ -228,12 +222,8 @@ describe('atomic-segmented-facet', () => {
           },
         });
 
-        expect(consoleWarnSpy).toHaveBeenCalledWith(
-          expect.stringContaining('tabs-included')
-        );
-        expect(consoleWarnSpy).toHaveBeenCalledWith(
-          expect.stringContaining('tabs-excluded')
-        );
+        expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('tabs-included'));
+        expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('tabs-excluded'));
       });
     });
   });
@@ -405,9 +395,7 @@ describe('atomic-segmented-facet', () => {
           searchStatusState: {firstSearchExecuted: false},
         });
 
-        await expect
-          .element(locators.segmentedContainer)
-          .not.toBeInTheDocument();
+        await expect.element(locators.segmentedContainer).not.toBeInTheDocument();
       });
     });
 
@@ -490,9 +478,7 @@ describe('atomic-segmented-facet', () => {
       const firstValueButton = locators.valueBox[0] as HTMLElement;
       await userEvent.click(firstValueButton);
 
-      expect(mockFacet.toggleSingleSelect).toHaveBeenCalledWith(
-        defaultFacetValues[0]
-      );
+      expect(mockFacet.toggleSingleSelect).toHaveBeenCalledWith(defaultFacetValues[0]);
     });
 
     it('should call toggleSingleSelect with correct value for second item', async () => {
@@ -506,17 +492,13 @@ describe('atomic-segmented-facet', () => {
       const secondValueButton = locators.valueBox[1] as HTMLElement;
       await userEvent.click(secondValueButton);
 
-      expect(mockFacet.toggleSingleSelect).toHaveBeenCalledWith(
-        defaultFacetValues[1]
-      );
+      expect(mockFacet.toggleSingleSelect).toHaveBeenCalledWith(defaultFacetValues[1]);
     });
   });
 
   it('should call stopWatching on dependencies manager when disconnected', async () => {
     const mockDependenciesManager = buildFakeFacetConditionsManager({});
-    vi.mocked(buildFacetConditionsManager).mockReturnValue(
-      mockDependenciesManager
-    );
+    vi.mocked(buildFacetConditionsManager).mockReturnValue(mockDependenciesManager);
 
     const {element} = await renderComponent();
 
@@ -529,9 +511,7 @@ describe('atomic-segmented-facet', () => {
     it('should expose segmented-container part', async () => {
       const {locators} = await renderComponent();
 
-      expect(locators.segmentedContainer?.getAttribute('part')).toBe(
-        'segmented-container'
-      );
+      expect(locators.segmentedContainer?.getAttribute('part')).toBe('segmented-container');
     });
 
     it('should expose label part when label provided', async () => {

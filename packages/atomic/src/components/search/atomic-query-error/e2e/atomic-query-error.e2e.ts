@@ -5,9 +5,7 @@ test.describe('atomic-query-error', () => {
     await queryError.load();
   });
 
-  test('should display the component with the correct content', async ({
-    queryError,
-  }) => {
+  test('should display the component with the correct content', async ({queryError}) => {
     await expect(queryError.title).toBeVisible();
     await expect(queryError.description).toBeVisible();
     await expect(queryError.moreInfoButton).toBeVisible();

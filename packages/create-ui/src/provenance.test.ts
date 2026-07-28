@@ -3,11 +3,7 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import type {ProjectMetadata} from './metadata.js';
-import {
-  provenancePath,
-  readSampleMetadata,
-  writeProvenance,
-} from './provenance.js';
+import {provenancePath, readSampleMetadata, writeProvenance} from './provenance.js';
 
 vi.mock('./log.js', () => ({
   log: {
@@ -67,8 +63,6 @@ describe('provenance file I/O', () => {
     const fileAsProjectRoot = join(dir, 'not-a-dir');
     await writeFile(fileAsProjectRoot, 'x');
 
-    expect(await writeProvenance(fileAsProjectRoot, sampleMetadata)).toBe(
-      false
-    );
+    expect(await writeProvenance(fileAsProjectRoot, sampleMetadata)).toBe(false);
   });
 });

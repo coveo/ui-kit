@@ -14,10 +14,7 @@ import './atomic-smart-snippet-expandable-answer';
 // );
 
 describe('atomic-smart-snippet-expandable-answer', () => {
-  async function setElementHeight(
-    element: AtomicSmartSnippetExpandableAnswer,
-    height: number
-  ) {
+  async function setElementHeight(element: AtomicSmartSnippetExpandableAnswer, height: number) {
     // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Testing internal state
     (element as any).fullHeight = height;
     await element.updateComplete;
@@ -63,18 +60,11 @@ describe('atomic-smart-snippet-expandable-answer', () => {
     return {
       element,
       parts: (el: AtomicSmartSnippetExpandableAnswer) => ({
-        truncatedAnswer: el.shadowRoot?.querySelector(
-          '[part="truncated-answer"]'
-        ),
-        showMoreButton: el.shadowRoot?.querySelector(
-          '[part="show-more-button"]'
-        ),
-        showLessButton: el.shadowRoot?.querySelector(
-          '[part="show-less-button"]'
-        ),
+        truncatedAnswer: el.shadowRoot?.querySelector('[part="truncated-answer"]'),
+        showMoreButton: el.shadowRoot?.querySelector('[part="show-more-button"]'),
+        showLessButton: el.shadowRoot?.querySelector('[part="show-less-button"]'),
       }),
-      answer: () =>
-        element.shadowRoot?.querySelector('atomic-smart-snippet-answer')!,
+      answer: () => element.shadowRoot?.querySelector('atomic-smart-snippet-answer')!,
       get container() {
         return element.shadowRoot?.querySelector('div')!;
       },

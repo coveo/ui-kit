@@ -9,9 +9,7 @@ function quantityInCart(cartState: CartState, productId: string): number {
   if (!productId) {
     return 0;
   }
-  return (
-    cartState.items.find((item) => item.productId === productId)?.quantity ?? 0
-  );
+  return cartState.items.find((item) => item.productId === productId)?.quantity ?? 0;
 }
 
 function renderProductCard(product: Product, cartState: CartState): string {
@@ -33,16 +31,8 @@ function renderProductCard(product: Product, cartState: CartState): string {
         ${image}
         <span class="ProductName">${escapeHtml(name)}</span>
       </a>
-      ${
-        typeof price === 'number'
-          ? `<div class="ProductPrice">${formatCurrency(price)}</div>`
-          : ''
-      }
-      ${
-        description
-          ? `<p class="ProductDescription">${escapeHtml(description)}</p>`
-          : ''
-      }
+      ${typeof price === 'number' ? `<div class="ProductPrice">${formatCurrency(price)}</div>` : ''}
+      ${description ? `<p class="ProductDescription">${escapeHtml(description)}</p>` : ''}
       <button type="button" class="AddToCart" data-product-id="${escapeHtml(productId)}"${
         productId ? '' : ' disabled'
       }>Add to cart${inCart > 0 ? ` (${inCart})` : ''}</button>
@@ -51,15 +41,10 @@ function renderProductCard(product: Product, cartState: CartState): string {
 }
 
 function renderProductCards(products: Product[], cartState: CartState): string {
-  return products
-    .map((product) => renderProductCard(product, cartState))
-    .join('');
+  return products.map((product) => renderProductCard(product, cartState)).join('');
 }
 
-export function renderProductGrid(
-  state: ProductListState,
-  cartState: CartState
-): string {
+export function renderProductGrid(state: ProductListState, cartState: CartState): string {
   const {products} = state;
   return `
     <ul id="product-grid" class="ProductList" aria-label="Product List">${renderProductCards(products, cartState)}</ul>
@@ -81,16 +66,12 @@ export function hydrateProductGrid(productList: ProductList, cart: Cart) {
     if (noProducts) {
       noProducts.style.display = hasProducts ? 'none' : 'block';
     }
-    grid.innerHTML = hasProducts
-      ? renderProductCards(products, cart.state)
-      : '';
+    grid.innerHTML = hasProducts ? renderProductCards(products, cart.state) : '';
   };
 
   // Event delegation keeps the click handler stable across re-renders.
   grid.addEventListener('click', (event) => {
-    const button = (event.target as HTMLElement).closest<HTMLButtonElement>(
-      '.AddToCart'
-    );
+    const button = (event.target as HTMLElement).closest<HTMLButtonElement>('.AddToCart');
     if (!button) return;
 
     const productId = button.dataset.productId;

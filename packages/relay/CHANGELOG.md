@@ -1,3 +1,9 @@
+## 2.1.2
+
+### Patch Changes
+
+- [#8027](https://github.com/coveo/ui-kit/pull/8027) [`484bacf`](https://github.com/coveo/ui-kit/commit/484bacf5ef1a89c3b712744c0489fecede73e03d) - Update Rollup to 4.62.2.
+
 ## 2.1.1
 
 ### Bug Fixes

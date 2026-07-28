@@ -48,9 +48,7 @@ describe('#renderQueryErrorTitle', () => {
       errorType: 'NoEndpointsException',
     });
 
-    expect(title).toHaveTextContent(
-      'Your organization test-org has no available content.'
-    );
+    expect(title).toHaveTextContent('Your organization test-org has no available content.');
   });
 
   it('should render InvalidTokenException error title when errorType is InvalidTokenException', async () => {
@@ -58,9 +56,7 @@ describe('#renderQueryErrorTitle', () => {
       errorType: 'InvalidTokenException',
     });
 
-    expect(title).toHaveTextContent(
-      'Your organization test-org cannot be accessed.'
-    );
+    expect(title).toHaveTextContent('Your organization test-org cannot be accessed.');
   });
 
   it('should render OrganizationIsPausedException error title when errorType is OrganizationIsPausedException', async () => {

@@ -1,13 +1,7 @@
 import {executeSearch} from '../../../features/insight-search/insight-search-actions.js';
-import {
-  buildDateSortCriterion,
-  SortOrder,
-} from '../../../features/sort-criteria/criteria.js';
+import {buildDateSortCriterion, SortOrder} from '../../../features/sort-criteria/criteria.js';
 import {updateSortCriterion} from '../../../features/sort-criteria/sort-criteria-actions.js';
-import {
-  buildMockInsightEngine,
-  type MockedInsightEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockInsightEngine, type MockedInsightEngine} from '../../../test/mock-engine-v2.js';
 import {buildMockInsightState} from '../../../test/mock-insight-state.js';
 import {buildSort, type Sort, type SortProps} from './headless-insight-sort.js';
 

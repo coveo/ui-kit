@@ -32,10 +32,7 @@ import {
 
 type CommerceSearchParametersKey = keyof CommerceSearchParameters;
 type CommerceSearchParamPair<T> = [CommerceSearchParametersKey, T];
-type RangeFacetValueSearchParam = Record<
-  string,
-  DateRangeRequest[] | NumericRangeRequest[]
->;
+type RangeFacetValueSearchParam = Record<string, DateRangeRequest[] | NumericRangeRequest[]>;
 
 export function buildParameterSerializer() {
   return {deserialize, serialize};
@@ -48,9 +45,7 @@ export function buildParameterSerializer() {
  * @returns The converted CommerceSearchParameters object.
  */
 function deserialize(
-  urlCommerceSearchParams:
-    | URLSearchParams
-    | Record<string, CommerceSearchParamValue>
+  urlCommerceSearchParams: URLSearchParams | Record<string, CommerceSearchParamValue>
 ): CommerceSearchParameters {
   const commerceSearchParameters: Record<string, unknown> = {};
   const add = (key: string, value: CommerceSearchParamValue) =>
@@ -59,9 +54,7 @@ function deserialize(
   if (urlCommerceSearchParams instanceof URLSearchParams) {
     urlCommerceSearchParams.forEach((value, key) => add(key, value));
   } else {
-    Object.entries(urlCommerceSearchParams).forEach(([key, value]) =>
-      add(key, value)
-    );
+    Object.entries(urlCommerceSearchParams).forEach(([key, value]) => add(key, value));
   }
 
   return commerceSearchParameters;
@@ -74,17 +67,13 @@ function deserialize(
  * @param initialUrl - The initial URL to which the commerce search parameters will be added.
  * @returns The serialized URL.
  */
-function serialize(
-  commerceSearchParameters: CommerceSearchParameters,
-  initialUrl: URL
-) {
+function serialize(commerceSearchParameters: CommerceSearchParameters, initialUrl: URL) {
   initialUrl = new URL(initialUrl);
   const {searchParams} = initialUrl;
   const previousState = wipeSearchParamsFromUrl(searchParams);
   Object.entries(commerceSearchParameters).forEach(
     ([key, value]) =>
-      isValidKey(key) &&
-      applyToUrlSearchParam(searchParams, previousState, [key, value])
+      isValidKey(key) && applyToUrlSearchParam(searchParams, previousState, [key, value])
   );
 
   return initialUrl.href;
@@ -176,9 +165,7 @@ function applyRangeFacetValuesToSearchParams(
     facetValues.forEach(({start, end, endInclusive}) =>
       urlSearchParams.append(
         id,
-        `${start}${
-          endInclusive ? rangeDelimiterInclusive : rangeDelimiterExclusive
-        }${end}`
+        `${start}${endInclusive ? rangeDelimiterInclusive : rangeDelimiterExclusive}${end}`
       )
     );
   });
@@ -218,16 +205,10 @@ function extendSearchParams(
     return;
   }
   if (key === 'sortCriteria') {
-    commerceSearchParams[key] = deserializeSortCriteria(
-      decodeURIComponent(value as string)
-    );
+    commerceSearchParams[key] = deserializeSortCriteria(decodeURIComponent(value as string));
     return;
   }
-  if (
-    isValidBasicKey(key) &&
-    typeof value === 'string' &&
-    !isEmptyString(value)
-  ) {
+  if (isValidBasicKey(key) && typeof value === 'string' && !isEmptyString(value)) {
     const [k, v] = cast([key, value], false);
     commerceSearchParams[k] = v;
     return;
@@ -311,14 +292,7 @@ function isFacetPair(
   return isValidKey && isValidValue;
 }
 
-const validRangeFacetKeys = [
-  'nf',
-  'nfExcluded',
-  'mnf',
-  'mnfExcluded',
-  'df',
-  'dfExcluded',
-];
+const validRangeFacetKeys = ['nf', 'nfExcluded', 'mnf', 'mnfExcluded', 'df', 'dfExcluded'];
 
 function isRangeFacetPair(
   pair: [CommerceSearchParametersKey, unknown]
@@ -336,21 +310,14 @@ function isRangeFacetObject(
     return false;
   }
 
-  const isRangeValue = (v: unknown) =>
-    isObject(v) && 'start' in v && 'end' in v;
+  const isRangeValue = (v: unknown) => isObject(v) && 'start' in v && 'end' in v;
   return allEntriesAreValid(obj, isRangeValue);
 }
 
-function addFacetValuesToSearchParams(
-  facetId: string,
-  paramKey: CommerceSearchParametersKey
-) {
+function addFacetValuesToSearchParams(facetId: string, paramKey: CommerceSearchParametersKey) {
   return (searchParams: Record<string, unknown>, valueArray: unknown[]) => {
     if (paramKey in searchParams) {
-      const record = (searchParams[paramKey] ?? {}) as Record<
-        string,
-        unknown[]
-      >;
+      const record = (searchParams[paramKey] ?? {}) as Record<string, unknown[]>;
       record[facetId] = [...(record[facetId] ?? []), ...valueArray];
       searchParams[paramKey] = record;
     } else {

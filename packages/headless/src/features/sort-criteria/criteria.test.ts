@@ -15,9 +15,7 @@ describe('sort-criterion functions', () => {
   });
 
   it('#buildQueryRankingExpressionSortCriterion returns the correct value', () => {
-    const expression = buildCriterionExpression(
-      buildQueryRankingExpressionSortCriterion()
-    );
+    const expression = buildCriterionExpression(buildQueryRankingExpressionSortCriterion());
     expect(expression).toBe('qre');
   });
 
@@ -27,16 +25,12 @@ describe('sort-criterion functions', () => {
   });
 
   it('#buildDateSortCriterion with order ascending returns the correct value', () => {
-    const expression = buildCriterionExpression(
-      buildDateSortCriterion(SortOrder.Ascending)
-    );
+    const expression = buildCriterionExpression(buildDateSortCriterion(SortOrder.Ascending));
     expect(expression).toBe('date ascending');
   });
 
   it('#buildDateSortCriterion with order descending returns the correct value', () => {
-    const expression = buildCriterionExpression(
-      buildDateSortCriterion(SortOrder.Descending)
-    );
+    const expression = buildCriterionExpression(buildDateSortCriterion(SortOrder.Descending));
     expect(expression).toBe('date descending');
   });
 
@@ -67,14 +61,8 @@ describe('sort-criterion functions', () => {
 
   it('#buildCompositeSortCriterion with two sortCriteria returns the correct value', () => {
     const dateDescending = buildDateSortCriterion(SortOrder.Descending);
-    const authorAlphabetical = buildFieldSortCriterion(
-      'author',
-      SortOrder.Ascending
-    );
-    const expression = buildCriterionExpression([
-      dateDescending,
-      authorAlphabetical,
-    ]);
+    const authorAlphabetical = buildFieldSortCriterion('author', SortOrder.Ascending);
+    const expression = buildCriterionExpression([dateDescending, authorAlphabetical]);
 
     const expectedExpression = `${buildCriterionExpression(
       dateDescending

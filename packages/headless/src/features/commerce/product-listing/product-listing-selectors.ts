@@ -18,18 +18,12 @@ import {totalEntriesPrincipalSelector} from '../pagination/pagination-selectors.
 export const responseIdSelectorFromEngine = (engine: CommerceEngine) =>
   engine[stateKey].productListing.responseId;
 
-export const responseIdSelector = (state: CommerceEngineState) =>
-  state.productListing.responseId;
+export const responseIdSelector = (state: CommerceEngineState) => state.productListing.responseId;
 
-export const requestIdSelector = (state: CommerceEngineState) =>
-  state.productListing.requestId;
+export const requestIdSelector = (state: CommerceEngineState) => state.productListing.requestId;
 
-export const numberOfProductsSelector = (
-  state: Partial<ProductListingSection>
-) =>
-  state.productListing?.results.length ||
-  state.productListing?.products.length ||
-  0;
+export const numberOfProductsSelector = (state: Partial<ProductListingSection>) =>
+  state.productListing?.results.length || state.productListing?.products.length || 0;
 
 export const moreProductsAvailableSelector = createSelector(
   (state: Partial<CommercePaginationSection & ProductListingSection>) => ({

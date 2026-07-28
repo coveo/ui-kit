@@ -15,23 +15,13 @@ import {
 import type {SpecificFacetSearchState} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-state.js';
 import type {CommerceAppState} from '../../../state/commerce-app-state.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
-import {
-  buildMockCommerceEngine,
-  type MockedCommerceEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockCommerceEngine, type MockedCommerceEngine} from '../../../test/mock-engine-v2.js';
 import {buildMockFacetSearch} from '../../../test/mock-facet-search.js';
 import type {RegularFacetOptions} from '../core/facets/regular/headless-commerce-regular-facet.js';
-import {
-  buildFilterSuggestions,
-  type FilterSuggestions,
-} from './headless-filter-suggestions.js';
+import {buildFilterSuggestions, type FilterSuggestions} from './headless-filter-suggestions.js';
 
-vi.mock(
-  '../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions'
-);
-vi.mock(
-  '../../../features/facets/facet-search-set/specific/specific-facet-search-actions'
-);
+vi.mock('../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions');
+vi.mock('../../../features/facets/facet-search-set/specific/specific-facet-search-actions');
 
 vi.mock('../../../features/commerce/facets/core-facet/core-facet-actions');
 
@@ -39,8 +29,7 @@ vi.mock('../../../features/commerce/query/query-actions');
 
 describe('FilterSuggestions', () => {
   const facetId = 'cat_color';
-  const namespacedFacetId =
-    getFacetIdWithCommerceFieldSuggestionNamespace(facetId);
+  const namespacedFacetId = getFacetIdWithCommerceFieldSuggestionNamespace(facetId);
   let state: CommerceAppState;
   let engine: MockedCommerceEngine;
   let filterSuggestions: FilterSuggestions;
@@ -51,9 +40,7 @@ describe('FilterSuggestions', () => {
     filterSuggestions = buildFilterSuggestions(engine, options);
   }
 
-  function setRequestInFacetSearchSet(
-    config?: Partial<SpecificFacetSearchState>
-  ) {
+  function setRequestInFacetSearchSet(config?: Partial<SpecificFacetSearchState>) {
     state.facetSearchSet[namespacedFacetId] = buildMockFacetSearch(config);
   }
 

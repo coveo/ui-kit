@@ -40,9 +40,7 @@ export function getFollowUpAnswersInitialState(): FollowUpAnswersState {
   };
 }
 
-export const createInitialFollowUpAnswer = (
-  question: string
-): FollowUpAnswer => ({
+export const createInitialFollowUpAnswer = (question: string): FollowUpAnswer => ({
   question: question,
   isLoading: true,
   isStreaming: false,

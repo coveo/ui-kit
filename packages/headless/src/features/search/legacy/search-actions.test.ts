@@ -1,9 +1,6 @@
 import type {SearchAPIClient} from '../../../api/search/search-api-client.js';
 import type {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../../test/mock-engine-v2.js';
 import {createMockState} from '../../../test/mock-state.js';
 import {logSearchboxSubmit} from '../../query/query-analytics-actions.js';
 import {
@@ -34,11 +31,7 @@ describe('search actions', () => {
 
   describe('the search request "origin"', () => {
     it('with #executeSearch', async () => {
-      await executeSearch(logSearchboxSubmit())(
-        e.dispatch,
-        () => e.state,
-        mockExtraArguments()
-      );
+      await executeSearch(logSearchboxSubmit())(e.dispatch, () => e.state, mockExtraArguments());
       expect(apiClient.search).toHaveBeenCalledWith(
         expect.anything(),
         expect.objectContaining({
@@ -48,11 +41,7 @@ describe('search actions', () => {
     });
 
     it('with #fetchPage', async () => {
-      await fetchPage(logSearchboxSubmit())(
-        e.dispatch,
-        () => e.state,
-        mockExtraArguments()
-      );
+      await fetchPage(logSearchboxSubmit())(e.dispatch, () => e.state, mockExtraArguments());
       expect(apiClient.search).toHaveBeenCalledWith(
         expect.anything(),
         expect.objectContaining({
@@ -78,11 +67,7 @@ describe('search actions', () => {
         q,
         maxResultsPerQuery: numberOfResults,
         id: 'some-id',
-      })(
-        e.dispatch,
-        () => e.state as Required<typeof e.state>,
-        mockExtraArguments()
-      );
+      })(e.dispatch, () => e.state as Required<typeof e.state>, mockExtraArguments());
 
       expect(apiClient.search).toHaveBeenCalledWith(
         expect.anything(),
@@ -94,11 +79,7 @@ describe('search actions', () => {
     });
 
     it('with #fetchFacetValues', async () => {
-      await fetchFacetValues(logSearchboxSubmit())(
-        e.dispatch,
-        () => e.state,
-        mockExtraArguments()
-      );
+      await fetchFacetValues(logSearchboxSubmit())(e.dispatch, () => e.state, mockExtraArguments());
 
       expect(apiClient.search).toHaveBeenCalledWith(
         expect.anything(),

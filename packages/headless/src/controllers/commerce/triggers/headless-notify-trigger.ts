@@ -31,10 +31,7 @@ export function buildNotifyTrigger(engine: CommerceEngine): NotifyTrigger {
 
     subscribe(listener: () => void) {
       const strictListener = () => {
-        const hasChanged = !arrayEqual(
-          previousNotifications,
-          this.state.notifications
-        );
+        const hasChanged = !arrayEqual(previousNotifications, this.state.notifications);
         previousNotifications = this.state.notifications;
 
         if (hasChanged) {

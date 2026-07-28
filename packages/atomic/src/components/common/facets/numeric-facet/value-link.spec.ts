@@ -8,24 +8,15 @@ import type {NumberFormatter} from '@/src/components/common/formats/format-commo
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {formatHumanReadable} from './formatter';
-import {
-  type NumericFacetValueLinkProps,
-  renderNumericFacetValue,
-} from './value-link';
+import {type NumericFacetValueLinkProps, renderNumericFacetValue} from './value-link';
 
-vi.mock(
-  '@/src/components/common/facets/facet-value-checkbox/facet-value-checkbox',
-  {spy: true}
-);
+vi.mock('@/src/components/common/facets/facet-value-checkbox/facet-value-checkbox', {spy: true});
 vi.mock('@/src/components/common/facets/facet-value-link/facet-value-link', {
   spy: true,
 });
-vi.mock(
-  '@/src/components/common/facets/facet-value-label-highlight/facet-value-label-highlight',
-  {
-    spy: true,
-  }
-);
+vi.mock('@/src/components/common/facets/facet-value-label-highlight/facet-value-label-highlight', {
+  spy: true,
+});
 vi.mock('./formatter', {spy: true});
 
 describe('#renderNumericFacetValue', () => {
@@ -64,13 +55,9 @@ describe('#renderNumericFacetValue', () => {
     vi.mocked(formatHumanReadable).mockReturnValue('10 to 20');
   });
 
-  const renderComponent = async (
-    props: Partial<NumericFacetValueLinkProps> = {}
-  ) => {
+  const renderComponent = async (props: Partial<NumericFacetValueLinkProps> = {}) => {
     const mergedProps = {...defaultProps, ...props};
-    return await renderFunctionFixture(
-      html`${renderNumericFacetValue({props: mergedProps})}`
-    );
+    return await renderFunctionFixture(html`${renderNumericFacetValue({props: mergedProps})}`);
   };
 
   it('should call formatHumanReadable with correct props', async () => {

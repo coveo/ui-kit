@@ -2,10 +2,7 @@ import {getSampleInsightEngineConfiguration} from '@coveo/headless/insight';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {html} from 'lit';
 import {MockInsightApi} from '@coveo/platform-mock-api/insight/mock';
-import {
-  type baseResponse,
-  richResponse,
-} from '@coveo/platform-mock-api/insight/search-response';
+import {type baseResponse, richResponse} from '@coveo/platform-mock-api/insight/search-response';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters.js';
 import {isTestMode} from '@/storybook-utils/common/is-test-mode';
 import '@/src/components/search/atomic-facet-manager/atomic-facet-manager.js';
@@ -57,9 +54,7 @@ import '@/src/components/common/atomic-timeframe/atomic-timeframe.js';
 
 async function initializeInsightInterface(canvasElement: HTMLElement) {
   await customElements.whenDefined('atomic-insight-interface');
-  const insightInterface = canvasElement.querySelector(
-    'atomic-insight-interface'
-  );
+  const insightInterface = canvasElement.querySelector('atomic-insight-interface');
   await insightInterface!.initialize(getSampleInsightEngineConfiguration());
 }
 
@@ -78,9 +73,7 @@ const meta: Meta = {
     chromatic: {disableSnapshot: false},
   },
   beforeEach: async () => {
-    mockInsightApi.searchEndpoint.mock(
-      () => richResponse as unknown as typeof baseResponse
-    );
+    mockInsightApi.searchEndpoint.mock(() => richResponse as unknown as typeof baseResponse);
   },
   render: () => html`
     <style>
@@ -117,18 +110,12 @@ const meta: Meta = {
         <atomic-layout-section section="search">
           <atomic-insight-search-box></atomic-insight-search-box>
           <atomic-insight-refine-toggle></atomic-insight-refine-toggle>
-          <atomic-insight-edit-toggle
-            tooltip="This is a tooltip"
-          ></atomic-insight-edit-toggle>
+          <atomic-insight-edit-toggle tooltip="This is a tooltip"></atomic-insight-edit-toggle>
           <atomic-insight-history-toggle
             tooltip="This is a tooltip"
           ></atomic-insight-history-toggle>
           <atomic-insight-tabs>
-            <atomic-insight-tab
-              label="All"
-              expression=""
-              active
-            ></atomic-insight-tab>
+            <atomic-insight-tab label="All" expression="" active></atomic-insight-tab>
             <atomic-insight-tab
               label="Youtube"
               expression="@filetype==YouTubeVideo"
@@ -141,14 +128,8 @@ const meta: Meta = {
               label="Service Cases"
               expression="@objecttype==Case"
             ></atomic-insight-tab>
-            <atomic-insight-tab
-              label="Users"
-              expression="@objecttype==User"
-            ></atomic-insight-tab>
-            <atomic-insight-tab
-              label="PDF"
-              expression="@filetype==pdf"
-            ></atomic-insight-tab>
+            <atomic-insight-tab label="Users" expression="@objecttype==User"></atomic-insight-tab>
+            <atomic-insight-tab label="PDF" expression="@filetype==pdf"></atomic-insight-tab>
             <atomic-insight-tab
               label="Salesforce"
               expression="@filetype==SalesforceItem"
@@ -173,32 +154,16 @@ const meta: Meta = {
               display-values-as="link"
               with-input="integer"
             >
-              <atomic-numeric-range
-                start="0"
-                end="1000"
-                label="Low"
-              ></atomic-numeric-range>
-              <atomic-numeric-range
-                start="1000"
-                end="8000"
-                label="Medium"
-              ></atomic-numeric-range>
-              <atomic-numeric-range
-                start="8000"
-                end="100000"
-                label="High"
-              ></atomic-numeric-range>
+              <atomic-numeric-range start="0" end="1000" label="Low"></atomic-numeric-range>
+              <atomic-numeric-range start="1000" end="8000" label="Medium"></atomic-numeric-range>
+              <atomic-numeric-range start="8000" end="100000" label="High"></atomic-numeric-range>
               <atomic-numeric-range
                 start="100000"
                 end="999999999"
                 label="Very High"
               ></atomic-numeric-range>
             </atomic-insight-numeric-facet>
-            <atomic-insight-timeframe-facet
-              label="Date Range"
-              with-date-picker
-              heading-level="2"
-            >
+            <atomic-insight-timeframe-facet label="Date Range" with-date-picker heading-level="2">
               <atomic-timeframe unit="hour"></atomic-timeframe>
               <atomic-timeframe unit="day"></atomic-timeframe>
               <atomic-timeframe unit="week"></atomic-timeframe>
@@ -264,14 +229,10 @@ const meta: Meta = {
                     </atomic-result-badge>
                   </atomic-field-condition>
                   <atomic-field-condition must-match-is-recommendation="true">
-                    <atomic-result-badge
-                      label="Recommended"
-                    ></atomic-result-badge>
+                    <atomic-result-badge label="Recommended"></atomic-result-badge>
                   </atomic-field-condition>
                   <atomic-field-condition must-match-is-top-result="true">
-                    <atomic-result-badge
-                      label="Top Result"
-                    ></atomic-result-badge>
+                    <atomic-result-badge label="Top Result"></atomic-result-badge>
                   </atomic-field-condition>
                 </atomic-result-section-badges>
                 <atomic-result-section-actions>
@@ -282,14 +243,9 @@ const meta: Meta = {
                 </atomic-result-section-title>
                 <atomic-result-section-title-metadata>
                   <atomic-field-condition class="field" if-defined="snrating">
-                    <atomic-result-rating
-                      field="snrating"
-                    ></atomic-result-rating>
+                    <atomic-result-rating field="snrating"></atomic-result-rating>
                   </atomic-field-condition>
-                  <atomic-field-condition
-                    class="field"
-                    if-not-defined="snrating"
-                  >
+                  <atomic-field-condition class="field" if-not-defined="snrating">
                     <atomic-result-printable-uri
                       max-number-of-parts="3"
                     ></atomic-result-printable-uri>
@@ -307,28 +263,20 @@ const meta: Meta = {
                       <atomic-result-text field="sfid"></atomic-result-text>
                     </atomic-field-condition>
                     <atomic-field-condition class="field" if-defined="author">
-                      <span class="field-label"
-                        ><atomic-text value="author"></atomic-text>:</span
-                      >
+                      <span class="field-label"><atomic-text value="author"></atomic-text>:</span>
                       <atomic-result-text field="author"></atomic-result-text>
                     </atomic-field-condition>
                     <atomic-field-condition class="field" if-defined="source">
-                      <span class="field-label"
-                        ><atomic-text value="source"></atomic-text>:</span
-                      >
+                      <span class="field-label"><atomic-text value="source"></atomic-text>:</span>
                       <atomic-result-text field="source"></atomic-result-text>
                     </atomic-field-condition>
                     <atomic-field-condition class="field" if-defined="filetype">
-                      <span class="field-label"
-                        ><atomic-text value="fileType"></atomic-text>:</span
-                      >
+                      <span class="field-label"><atomic-text value="fileType"></atomic-text>:</span>
                       <atomic-result-text field="filetype"></atomic-result-text>
                     </atomic-field-condition>
                     <span class="field">
                       <span class="field-label">Date:</span>
-                      <atomic-result-date
-                        format="ddd MMM D YYYY"
-                      ></atomic-result-date>
+                      <atomic-result-date format="ddd MMM D YYYY"></atomic-result-date>
                     </span>
                   </atomic-result-fields-list>
                 </atomic-result-section-bottom-metadata>
@@ -346,9 +294,7 @@ const meta: Meta = {
   `,
   play: async (context) => {
     await initializeInsightInterface(context.canvasElement);
-    const insightInterface = context.canvasElement.querySelector(
-      'atomic-insight-interface'
-    );
+    const insightInterface = context.canvasElement.querySelector('atomic-insight-interface');
     await insightInterface!.executeFirstSearch();
   },
 };

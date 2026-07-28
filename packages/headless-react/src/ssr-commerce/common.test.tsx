@@ -1,8 +1,5 @@
 /* oxlint-disable @typescript-eslint/no-explicit-any -- <> */
-import {
-  SolutionType,
-  type CommerceEngine as SSRCommerceEngine,
-} from '@coveo/headless/ssr-commerce';
+import {SolutionType, type CommerceEngine as SSRCommerceEngine} from '@coveo/headless/ssr-commerce';
 import {cleanup, render, screen} from '@testing-library/react';
 import React, {type Context, createContext} from 'react';
 import {afterEach, describe, expect, test, vi} from 'vitest';
@@ -15,9 +12,7 @@ import type {ContextState} from './types.js';
 
 type MockContext = ContextState<any, any>;
 describe('SSR Commerce Common functions', () => {
-  const mockContext = createContext(
-    null
-  ) as unknown as Context<MockContext | null>;
+  const mockContext = createContext(null) as unknown as Context<MockContext | null>;
   const mockSingletonContext = {
     get: () => mockContext,
   };
@@ -52,10 +47,7 @@ describe('SSR Commerce Common functions', () => {
   });
 
   describe('buildStateProvider', () => {
-    const StateProvider = buildStateProvider(
-      mockSingletonContext,
-      mockSolutionType
-    );
+    const StateProvider = buildStateProvider(mockSingletonContext, mockSolutionType);
 
     test('should render with static controllers only', () => {
       render(
@@ -121,10 +113,7 @@ describe('SSR Commerce Common functions', () => {
   });
 
   describe('buildStaticStateProvider (deprecated)', () => {
-    const StaticStateProvider = buildStaticStateProvider(
-      mockSingletonContext,
-      mockSolutionType
-    );
+    const StaticStateProvider = buildStaticStateProvider(mockSingletonContext, mockSolutionType);
 
     test('should render with static controllers', () => {
       render(
@@ -165,10 +154,7 @@ describe('SSR Commerce Common functions', () => {
 
     test('should render with engine and controllers', () => {
       render(
-        <HydratedStateProvider
-          engine={mockEngine}
-          controllers={mockControllers}
-        >
+        <HydratedStateProvider engine={mockEngine} controllers={mockControllers}>
           <TestComponent />
         </HydratedStateProvider>
       );
@@ -185,10 +171,7 @@ describe('SSR Commerce Common functions', () => {
       };
 
       render(
-        <HydratedStateProvider
-          engine={mockEngine}
-          controllers={mockControllers}
-        >
+        <HydratedStateProvider engine={mockEngine} controllers={mockControllers}>
           <TestConsumer />
         </HydratedStateProvider>
       );
@@ -202,14 +185,8 @@ describe('SSR Commerce Common functions', () => {
   });
 
   describe('StateProvider vs deprecated providers comparison', () => {
-    const StateProvider = buildStateProvider(
-      mockSingletonContext,
-      mockSolutionType
-    );
-    const StaticStateProvider = buildStaticStateProvider(
-      mockSingletonContext,
-      mockSolutionType
-    );
+    const StateProvider = buildStateProvider(mockSingletonContext, mockSolutionType);
+    const StaticStateProvider = buildStaticStateProvider(mockSingletonContext, mockSolutionType);
     const HydratedStateProvider = buildHydratedStateProvider(
       mockSingletonContext,
       mockSolutionType
@@ -244,12 +221,8 @@ describe('SSR Commerce Common functions', () => {
       );
 
       // StateProvider should include engine: undefined, while StaticStateProvider doesn't include engine at all
-      expect(stateProviderValue!.controllers).toEqual(
-        staticProviderValue!.controllers
-      );
-      expect(stateProviderValue!.solutionType).toEqual(
-        staticProviderValue!.solutionType
-      );
+      expect(stateProviderValue!.controllers).toEqual(staticProviderValue!.controllers);
+      expect(stateProviderValue!.solutionType).toEqual(staticProviderValue!.solutionType);
       expect(stateProviderValue!.engine).toBeUndefined();
       expect('engine' in staticProviderValue!).toBe(false);
     });
@@ -277,10 +250,7 @@ describe('SSR Commerce Common functions', () => {
       );
 
       render(
-        <HydratedStateProvider
-          engine={mockEngine}
-          controllers={mockControllers}
-        >
+        <HydratedStateProvider engine={mockEngine} controllers={mockControllers}>
           <HydratedConsumer />
         </HydratedStateProvider>
       );
@@ -290,10 +260,7 @@ describe('SSR Commerce Common functions', () => {
   });
 
   describe('isomorphic behavior', () => {
-    const StateProvider = buildStateProvider(
-      mockSingletonContext,
-      mockSolutionType
-    );
+    const StateProvider = buildStateProvider(mockSingletonContext, mockSolutionType);
 
     test('should work seamlessly when transitioning from static to hydrated state', () => {
       const contextValues: (MockContext | null)[] = [];

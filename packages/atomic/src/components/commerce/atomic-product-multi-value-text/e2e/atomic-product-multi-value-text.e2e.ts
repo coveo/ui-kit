@@ -6,9 +6,7 @@ test.describe('atomic-product-multi-value-text', () => {
     await productMultiValueText.hydrated.waitFor();
   });
 
-  test('should render 3 values and 3 separators', async ({
-    productMultiValueText,
-  }) => {
+  test('should render 3 values and 3 separators', async ({productMultiValueText}) => {
     await expect(productMultiValueText.values).toHaveCount(3);
     await expect(productMultiValueText.separators).toHaveCount(3);
   });

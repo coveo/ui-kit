@@ -19,8 +19,7 @@ describe('atomic-result-link', () => {
 
   const locators = {
     getLink: () => page.getByRole('link'),
-    getText: (element: AtomicResultLink) =>
-      element?.querySelector('atomic-result-text'),
+    getText: (element: AtomicResultLink) => element?.querySelector('atomic-result-text'),
   };
 
   const parts = (element: AtomicResultLink) => ({
@@ -55,22 +54,18 @@ describe('atomic-result-link', () => {
     result?: Result;
     interactiveResult?: InteractiveResult;
   } = {}) => {
-    const {element, atomicResult, atomicInterface} =
-      await renderInAtomicResult<AtomicResultLink>({
-        template: html`<atomic-result-link
-          href-template=${ifDefined(props.hrefTemplate)}
-          >${slottedContent
-            ? unsafeHTML(slottedContent)
-            : ''}</atomic-result-link
-        >`,
-        selector: 'atomic-result-link',
-        result,
-        interactiveResult,
-        bindings: (bindings) => {
-          bindings.engine = mockedEngine;
-          return bindings;
-        },
-      });
+    const {element, atomicResult, atomicInterface} = await renderInAtomicResult<AtomicResultLink>({
+      template: html`<atomic-result-link href-template=${ifDefined(props.hrefTemplate)}
+        >${slottedContent ? unsafeHTML(slottedContent) : ''}</atomic-result-link
+      >`,
+      selector: 'atomic-result-link',
+      result,
+      interactiveResult,
+      bindings: (bindings) => {
+        bindings.engine = mockedEngine;
+        return bindings;
+      },
+    });
 
     await atomicInterface.updateComplete;
     await element?.updateComplete;
@@ -113,16 +108,11 @@ describe('atomic-result-link', () => {
       const callbackSpy = vi.fn();
       const {atomicResult, element} = await renderComponent();
 
-      atomicResult.addEventListener(
-        'atomic/resolveStopPropagation',
-        (event) => {
-          const customEvent = event as CustomEvent<
-            (stopPropagation: boolean) => void
-          >;
-          callbackSpy(true);
-          customEvent.detail(true);
-        }
-      );
+      atomicResult.addEventListener('atomic/resolveStopPropagation', (event) => {
+        const customEvent = event as CustomEvent<(stopPropagation: boolean) => void>;
+        callbackSpy(true);
+        customEvent.detail(true);
+      });
 
       element.initialize();
 
@@ -133,16 +123,11 @@ describe('atomic-result-link', () => {
       const callbackSpy = vi.fn();
       const {atomicResult, element} = await renderComponent();
 
-      atomicResult.addEventListener(
-        'atomic/resolveStopPropagation',
-        (event) => {
-          const customEvent = event as CustomEvent<
-            (stopPropagation: boolean) => void
-          >;
-          callbackSpy(false);
-          customEvent.detail(false);
-        }
-      );
+      atomicResult.addEventListener('atomic/resolveStopPropagation', (event) => {
+        const customEvent = event as CustomEvent<(stopPropagation: boolean) => void>;
+        callbackSpy(false);
+        customEvent.detail(false);
+      });
 
       element.initialize();
 
@@ -173,14 +158,11 @@ describe('atomic-result-link', () => {
         result: buildFakeResult({clickUri: 'https://example.com/click'}),
       });
 
-      await expect
-        .element(link)
-        .toHaveAttribute('href', 'https://example.com/click');
+      await expect.element(link).toHaveAttribute('href', 'https://example.com/click');
     });
 
     it('should build href from template using result properties', async () => {
-      const templateString =
-        '$' + '{clickUri}' + '?' + 'id=' + '$' + '{raw.urihash}';
+      const templateString = '$' + '{clickUri}' + '?' + 'id=' + '$' + '{raw.urihash}';
       const {link} = await renderComponent({
         props: {hrefTemplate: templateString},
         result: buildFakeResult({
@@ -189,9 +171,7 @@ describe('atomic-result-link', () => {
         }),
       });
 
-      await expect
-        .element(link)
-        .toHaveAttribute('href', 'https://example.com/test?id=hash123');
+      await expect.element(link).toHaveAttribute('href', 'https://example.com/test?id=hash123');
     });
 
     it('should handle complex template with multiple substitutions', async () => {
@@ -314,9 +294,7 @@ describe('atomic-result-link', () => {
       element.hrefTemplate = '$' + '{uri}' + '?' + 'new=param';
       await element.updateComplete;
 
-      await expect
-        .element(link)
-        .toHaveAttribute('href', `${mockResult.uri}?new=param`);
+      await expect.element(link).toHaveAttribute('href', `${mockResult.uri}?new=param`);
     });
 
     it('should render with default behavior when component has no slotted content', async () => {

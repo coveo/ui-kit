@@ -1,10 +1,5 @@
 /* oxlint-disable @typescript-eslint/no-invalid-void-type -- <> */
-import {
-  type EventSourceMessage,
-  getBytes,
-  getLines,
-  getMessages,
-} from './parse.js';
+import {type EventSourceMessage, getBytes, getLines, getMessages} from './parse.js';
 
 const EventStreamContentType = 'text/event-stream';
 

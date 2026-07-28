@@ -53,9 +53,5 @@
 }
 
 .retryButton:hover {
-  background: color-mix(
-    in srgb,
-    var(--color-error) 10%,
-    var(--color-bg-primary)
-  );
+  background: color-mix(in srgb, var(--color-error) 10%, var(--color-bg-primary));
 }

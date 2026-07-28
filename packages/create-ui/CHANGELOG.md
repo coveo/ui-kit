@@ -1,5 +1,21 @@
 # @coveo/create-ui
 
+## 0.2.1
+
+### Patch Changes
+
+- [#8063](https://github.com/coveo/ui-kit/pull/8063) [`e202d74`](https://github.com/coveo/ui-kit/commit/e202d74534b6fab8037768607b06d374b0d8ad1b) - Clarify the primary Coveo library used by every template.
+
+## 0.2.0
+
+### Minor Changes
+
+- [#7905](https://github.com/coveo/ui-kit/pull/7905) [`93855ca`](https://github.com/coveo/ui-kit/commit/93855caab19890c6b08af800389f96b0a8e251cd) - Add Headless SSR commerce templates (Next.js App Router and Express) to the scaffolding CLI.
+
+### Patch Changes
+
+- [#8036](https://github.com/coveo/ui-kit/pull/8036) [`3c643da`](https://github.com/coveo/ui-kit/commit/3c643dac76a89f5d706f6c39a6d1914845a10ddc) - Fix execution through npm-installed binaries.
+
 ## 0.1.1
 
 ### Patch Changes

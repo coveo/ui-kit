@@ -79,11 +79,9 @@ export async function testCheckboxA11y(
     await step('Checkbox has aria-checked attribute', async () => {
       const checkbox = checkboxes[0];
       const ariaChecked = checkbox.getAttribute('aria-checked');
-      expect(
-        ariaChecked === 'true' ||
-          ariaChecked === 'false' ||
-          ariaChecked === 'mixed'
-      ).toBe(true);
+      expect(ariaChecked === 'true' || ariaChecked === 'false' || ariaChecked === 'mixed').toBe(
+        true
+      );
     });
 
     await step('Space key toggles checkbox state (2.1.1)', async () => {

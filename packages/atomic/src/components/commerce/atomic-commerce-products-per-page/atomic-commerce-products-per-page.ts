@@ -59,15 +59,12 @@ export class AtomicCommerceProductsPerPage
   @state() private isAppLoaded = false;
 
   private choices!: number[];
-  private readonly radioGroupName = randomID(
-    'atomic-commerce-products-per-page-'
-  );
+  private readonly radioGroupName = randomID('atomic-commerce-products-per-page-');
 
   /**
    * A list of choices for the number of products to display per page, separated by commas.
    */
-  @property({reflect: true, attribute: 'choices-displayed'}) choicesDisplayed =
-    '10,25,50,100';
+  @property({reflect: true, attribute: 'choices-displayed'}) choicesDisplayed = '10,25,50,100';
   /**
    * The initial selection for the number of product per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
    * @type {number}
@@ -107,9 +104,7 @@ export class AtomicCommerceProductsPerPage
   render() {
     return html`
       ${when(
-        !this.summaryState.hasError &&
-          this.summaryState.hasProducts &&
-          this.isAppLoaded,
+        !this.summaryState.hasError && this.summaryState.hasProducts && this.isAppLoaded,
         () => html`
           <div class="flex items-center">
             ${renderLabel()(html`${this.label}`)}
@@ -126,8 +121,7 @@ export class AtomicCommerceProductsPerPage
                   choices: this.choices,
                   lang: this.bindings.i18n.language,
                   scrollToTopEvent: () => this.scrollToTopEvent(),
-                  setItemSize: (size: number) =>
-                    this.pagination.setPageSize(size),
+                  setItemSize: (size: number) => this.pagination.setPageSize(size),
                   focusOnFirstResultAfterNextSearch: () =>
                     this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch(),
                   focusOnNextNewResult: () =>

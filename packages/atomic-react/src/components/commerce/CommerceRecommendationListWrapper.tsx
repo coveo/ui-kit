@@ -64,45 +64,37 @@ interface WrapperProps extends AtomicCommerceRecommendationListProps {
  */
 export const ListWrapper: React.FC<WrapperProps> = (props) => {
   const {template, ...otherProps} = props;
-  const commerceRecommendationListRef =
-    useRef<HTMLAtomicCommerceRecommendationListElement>(null);
+  const commerceRecommendationListRef = useRef<HTMLAtomicCommerceRecommendationListElement>(null);
   useEffect(() => {
-    commerceRecommendationListRef.current?.setRenderFunction(
-      (product, root, linkContainer) => {
-        const templateResult = template(product as Product);
-        if (hasLinkTemplate(templateResult)) {
-          const linkRoot = createRoot(linkContainer!);
-          linkRoot.render(templateResult.linkTemplate);
-          const contentRoot = createRoot(root);
-          flushSync(() => {
-            contentRoot.render(templateResult.contentTemplate);
-          });
-          return root.innerHTML;
-        } else {
-          const contentRoot = createRoot(root);
-          const linkRoot = createRoot(linkContainer!);
-          flushSync(() => {
-            contentRoot.render(templateResult);
-            otherProps.display === 'grid'
-              ? linkRoot.render(<AtomicProductLink></AtomicProductLink>)
-              : // oxlint-disable-next-line react/jsx-no-useless-fragment -- <>
-                linkRoot.render(<></>);
-          });
-          return root.innerHTML;
-        }
+    commerceRecommendationListRef.current?.setRenderFunction((product, root, linkContainer) => {
+      const templateResult = template(product as Product);
+      if (hasLinkTemplate(templateResult)) {
+        const linkRoot = createRoot(linkContainer!);
+        linkRoot.render(templateResult.linkTemplate);
+        const contentRoot = createRoot(root);
+        flushSync(() => {
+          contentRoot.render(templateResult.contentTemplate);
+        });
+        return root.innerHTML;
+      } else {
+        const contentRoot = createRoot(root);
+        const linkRoot = createRoot(linkContainer!);
+        flushSync(() => {
+          contentRoot.render(templateResult);
+          otherProps.display === 'grid'
+            ? linkRoot.render(<AtomicProductLink></AtomicProductLink>)
+            : // oxlint-disable-next-line react/jsx-no-useless-fragment -- <>
+              linkRoot.render(<></>);
+        });
+        return root.innerHTML;
       }
-    );
+    });
   }, [otherProps.display, template]);
   return (
-    <LitAtomicCommerceRecommendationList
-      ref={commerceRecommendationListRef}
-      {...otherProps}
-    />
+    <LitAtomicCommerceRecommendationList ref={commerceRecommendationListRef} {...otherProps} />
   );
 };
 
-const hasLinkTemplate = (
-  template: JSX.Element | Template
-): template is Template => {
+const hasLinkTemplate = (template: JSX.Element | Template): template is Template => {
   return (template as Template).linkTemplate !== undefined;
 };

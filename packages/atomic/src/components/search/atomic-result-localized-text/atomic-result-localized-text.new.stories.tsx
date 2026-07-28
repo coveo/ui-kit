@@ -32,10 +32,9 @@ const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
 const {decorator: resultListDecorator} = wrapInResultList('list', false);
 const {decorator: resultTemplateDecorator} = wrapInResultTemplate();
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-result-localized-text',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-result-localized-text', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-result-localized-text',
@@ -43,11 +42,7 @@ const meta: Meta = {
   id: 'atomic-result-localized-text',
 
   render: (args) => template(args),
-  decorators: [
-    resultTemplateDecorator,
-    resultListDecorator,
-    searchInterfaceDecorator,
-  ],
+  decorators: [resultTemplateDecorator, resultListDecorator, searchInterfaceDecorator],
   parameters: {
     ...parameters,
     msw: {
@@ -67,9 +62,7 @@ const meta: Meta = {
   play: async (context) => {
     await play(context);
     const searchInterface =
-      context.canvasElement.querySelector<AtomicSearchInterface>(
-        'atomic-search-interface'
-      )!;
+      context.canvasElement.querySelector<AtomicSearchInterface>('atomic-search-interface')!;
     searchInterface.i18n.addResourceBundle('en', 'translation', {
       book_by_author: 'Book by {{name}}',
     });

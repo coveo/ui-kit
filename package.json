@@ -22,7 +22,8 @@
     "notify:docs": "node ./scripts/notify-docs/published-ui-kit.mjs",
     "release": "pnpm run build && changeset publish",
     "knip": "knip",
-    "generate:catalog-info": "node scripts/generate-catalog-info.mjs"
+    "generate:catalog-info": "node scripts/generate-catalog-info.mjs",
+    "generate:agents-md-packages": "node scripts/generate-agents-md-packages.mjs"
   },
   "devDependencies": {
     "@actions/github": "9.1.1",
@@ -54,7 +55,7 @@
     "node": "^22.14.0 || ^24.11.0",
     "pnpm": ">=10.0.0"
   },
-  "packageManager": "pnpm@10.34.4",
+  "packageManager": "pnpm@10.34.5",
   "pnpm": {
     "patchedDependencies": {
       "@stencil/core@4.20.0": "patches/@stencil+core+4.20.0.patch",

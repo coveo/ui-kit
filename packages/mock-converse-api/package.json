@@ -2,6 +2,7 @@
   "name": "@coveo/mock-converse-api",
   "version": "0.1.0",
   "private": true,
+  "description": "HTTP server exposing mock Converse API endpoints, built on @coveo/platform-mock-api, for local development and testing",
   "type": "module",
   "scripts": {
     "start": "node dist/server.js",

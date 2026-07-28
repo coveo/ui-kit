@@ -119,10 +119,7 @@ export function buildCriterionExpression(criterion: SortCriterion | undefined) {
   }
 
   return criterion.fields
-    .map(
-      (field) =>
-        `${field.name}${sortFieldAndDirectionSeparator}${field.direction}`
-    )
+    .map((field) => `${field.name}${sortFieldAndDirectionSeparator}${field.direction}`)
     .join(sortFieldsJoiner);
 }
 
@@ -156,15 +153,10 @@ function isSortCriteriaObject(obj: unknown): obj is SortCriterion | undefined {
   return false;
 }
 
-function isValidBasicKey(
-  key: string
-): key is Exclude<SearchParameterKey, FacetKey> {
+function isValidBasicKey(key: string): key is Exclude<SearchParameterKey, FacetKey> {
   const supportedBasicParameters: Record<
     Exclude<
-      keyof Omit<
-        CommerceSearchParameters,
-        'dfExcluded' | 'mnfExcluded' | 'nfExcluded'
-      >,
+      keyof Omit<CommerceSearchParameters, 'dfExcluded' | 'mnfExcluded' | 'nfExcluded'>,
       FacetParameters
     >,
     boolean
@@ -209,9 +201,7 @@ export function keyHasObjectValue(key: string): key is FacetKey {
   return key in supportedFacetParameters;
 }
 
-function isValidPair<K extends keyof Parameters>(
-  pair: string[]
-): pair is [K, string] {
+function isValidPair<K extends keyof Parameters>(pair: string[]): pair is [K, string] {
   const validKey = isValidKey(pair[0]);
   const lengthOfTwo = pair.length === 2;
   return validKey && lengthOfTwo;
@@ -231,9 +221,7 @@ function cast<K extends keyof Parameters>(pair: [K, string]): [K, unknown] {
   return [key, decodeURIComponent(value)];
 }
 
-export function deserializeSortCriteria(
-  value: string
-): SortCriterion | undefined {
+export function deserializeSortCriteria(value: string): SortCriterion | undefined {
   if (value === 'relevance') {
     return buildRelevanceSortCriterion();
   }
@@ -244,9 +232,7 @@ export function deserializeSortCriteria(
   }
 
   return criteria.reduce((acc, joinedFieldAndDirection) => {
-    const fieldAndDirection = joinedFieldAndDirection
-      .trim()
-      .split(sortFieldAndDirectionSeparator);
+    const fieldAndDirection = joinedFieldAndDirection.trim().split(sortFieldAndDirectionSeparator);
 
     if (fieldAndDirection.length !== 2) {
       return acc;
@@ -261,8 +247,7 @@ export function deserializeSortCriteria(
 }
 
 const isManualNumericFacet = (param: string) => param.startsWith('mnf-');
-const isNumericFacet = (param: string) =>
-  param.startsWith('nf-') || isManualNumericFacet(param);
+const isNumericFacet = (param: string) => param.startsWith('nf-') || isManualNumericFacet(param);
 
 function sanitizeNumericFacetParams(params: string) {
   const seenNumericFacets = new Set<string>();

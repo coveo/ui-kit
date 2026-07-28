@@ -96,8 +96,7 @@ describe('atomic-insight-result-quickview-action', () => {
     const {element, atomicResult, atomicInterface} =
       await renderInAtomicInsightResult<AtomicInsightResultQuickviewAction>({
         template: html`<atomic-insight-result-quickview-action
-          sandbox=${props.sandbox ||
-          'allow-popups allow-top-navigation allow-same-origin'}
+          sandbox=${props.sandbox || 'allow-popups allow-top-navigation allow-same-origin'}
         ></atomic-insight-result-quickview-action>`,
         selector: 'atomic-insight-result-quickview-action',
         result,
@@ -156,14 +155,11 @@ describe('atomic-insight-result-quickview-action', () => {
   it('should have default sandbox value', async () => {
     const {element} = await renderComponent();
 
-    expect(element.sandbox).toBe(
-      'allow-popups allow-top-navigation allow-same-origin'
-    );
+    expect(element.sandbox).toBe('allow-popups allow-top-navigation allow-same-origin');
   });
 
   it('should accept custom sandbox value with allow-same-origin', async () => {
-    const customSandbox =
-      'allow-same-origin allow-popups allow-scripts allow-forms';
+    const customSandbox = 'allow-same-origin allow-popups allow-scripts allow-forms';
     const {element} = await renderComponent({
       props: {sandbox: customSandbox},
     });
@@ -251,9 +247,7 @@ describe('atomic-insight-result-quickview-action', () => {
       };
       await element.updateComplete;
 
-      const firstModal = atomicInterface.querySelector(
-        'atomic-quickview-modal'
-      );
+      const firstModal = atomicInterface.querySelector('atomic-quickview-modal');
 
       element.quickviewState = {
         ...element.quickviewState,
@@ -261,15 +255,12 @@ describe('atomic-insight-result-quickview-action', () => {
       };
       await element.updateComplete;
 
-      const secondModal = atomicInterface.querySelector(
-        'atomic-quickview-modal'
-      );
+      const secondModal = atomicInterface.querySelector('atomic-quickview-modal');
       expect(firstModal).toBe(secondModal);
     });
 
     it('should set sandbox attribute on quickview modal', async () => {
-      const customSandbox =
-        'allow-popups allow-top-navigation allow-same-origin allow-scripts';
+      const customSandbox = 'allow-popups allow-top-navigation allow-same-origin allow-scripts';
       const {element, atomicInterface} = await renderComponent({
         props: {sandbox: customSandbox},
         quickviewState: {resultHasPreview: true},

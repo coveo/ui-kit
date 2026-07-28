@@ -1,9 +1,6 @@
 import type {DefaultBodyType, HttpHandler, HttpResponse} from 'msw';
 import {EndpointHarness, type MockApi} from '../_base.js';
-import {
-  headAnswerResponse,
-  followUpAnswerResponse,
-} from './generate-response.js';
+import {headAnswerResponse, followUpAnswerResponse} from './generate-response.js';
 
 export class MockAgentApi implements MockApi {
   readonly answerEndpoint;
@@ -12,18 +9,14 @@ export class MockAgentApi implements MockApi {
   private followUpAnswerIndex = 0;
 
   constructor(basePath: string = 'https://:orgId.org.coveo.com') {
-    this.answerEndpoint = new EndpointHarness<
-      () => HttpResponse<DefaultBodyType>
-    >(
+    this.answerEndpoint = new EndpointHarness<() => HttpResponse<DefaultBodyType>>(
       'POST',
       `${basePath}/api/v1/organizations/:orgId/agents/:agentId/answer`,
       headAnswerResponse,
       (response) => response()
     );
 
-    this.followUpEndpoint = new EndpointHarness<
-      () => HttpResponse<DefaultBodyType>
-    >(
+    this.followUpEndpoint = new EndpointHarness<() => HttpResponse<DefaultBodyType>>(
       'POST',
       `${basePath}/api/v1/organizations/:orgId/agents/:agentId/follow-up`,
       () => followUpAnswerResponse(++this.followUpAnswerIndex),
@@ -32,10 +25,7 @@ export class MockAgentApi implements MockApi {
   }
 
   get handlers(): HttpHandler[] {
-    return [
-      this.answerEndpoint.generateHandler(),
-      this.followUpEndpoint.generateHandler(),
-    ];
+    return [this.answerEndpoint.generateHandler(), this.followUpEndpoint.generateHandler()];
   }
 
   clearAll(): void {

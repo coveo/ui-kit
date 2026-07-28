@@ -14,10 +14,9 @@ const {decorator, play} = wrapInRecommendationInterface({
   },
 });
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-recs-error',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-recs-error', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-recs-error',

@@ -11,15 +11,11 @@ export class ResultFieldsListPageObject extends BasePageObject {
   }
 
   get hiddenChildren() {
-    return this.page.locator(
-      'atomic-result-fields-list > *[style*="display: none"]'
-    );
+    return this.page.locator('atomic-result-fields-list > *[style*="display: none"]');
   }
 
   get visibleChildren() {
-    return this.page.locator(
-      'atomic-result-fields-list > *:not([style*="display: none"])'
-    );
+    return this.page.locator('atomic-result-fields-list > *:not([style*="display: none"])');
   }
 
   get childrenWithHiddenDividers() {

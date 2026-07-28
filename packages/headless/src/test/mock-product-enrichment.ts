@@ -15,18 +15,14 @@ export function buildMockBadge(config: Partial<Badge> = {}): Badge {
   };
 }
 
-export function buildMockBadgePlacement(
-  config: Partial<BadgePlacement> = {}
-): BadgePlacement {
+export function buildMockBadgePlacement(config: Partial<BadgePlacement> = {}): BadgePlacement {
   return {
     placementId: config.placementId ?? 'placement-1',
     badges: config.badges ?? [buildMockBadge()],
   };
 }
 
-export function buildMockBadgesProduct(
-  config: Partial<BadgesProduct> = {}
-): BadgesProduct {
+export function buildMockBadgesProduct(config: Partial<BadgesProduct> = {}): BadgesProduct {
   return {
     productId: config.productId ?? 'product-1',
     badgePlacements: config.badgePlacements ?? [buildMockBadgePlacement()],

@@ -10,11 +10,7 @@ import {log} from './log.js';
 import {buildProjectMetadata} from './metadata.js';
 import {promptProjectName, selectTemplate} from './prompt.js';
 import {readSampleMetadata, writeProvenance} from './provenance.js';
-import {
-  installDependencies,
-  moveToTarget,
-  rewritePackageJson,
-} from './setup.js';
+import {installDependencies, moveToTarget, rewritePackageJson} from './setup.js';
 import {getTemplate, getTemplates, type Template} from './templates.js';
 import {getPackageManager} from './utils.js';
 
@@ -31,10 +27,7 @@ export interface ScaffoldOptions {
   version?: string;
 }
 
-export function unavailableTemplateMessage(
-  templateName: string,
-  version?: string
-): string {
+export function unavailableTemplateMessage(templateName: string, version?: string): string {
   return version
     ? `Template "${templateName}" version "${version}" is not available.`
     : `Template "${templateName}" is not available.`;
@@ -48,18 +41,12 @@ async function claimTargetDir(targetDir: string): Promise<boolean> {
     return true;
   }
   if (!(await isEmptyOrMissing(targetDir))) {
-    throw new ExpectedError(
-      `Target directory "${targetDir}" already exists and is not empty.`
-    );
+    throw new ExpectedError(`Target directory "${targetDir}" already exists and is not empty.`);
   }
   return false;
 }
 
-export async function scaffold({
-  template,
-  projectName,
-  version,
-}: ScaffoldOptions): Promise<void> {
+export async function scaffold({template, projectName, version}: ScaffoldOptions): Promise<void> {
   const targetDir = resolve(process.cwd(), projectName);
   setRunContext({template: template.name, templateVersion: version});
   const tempDir = await mkdtemp(join(tmpdir(), 'create-ui-'));
@@ -102,9 +89,7 @@ export async function scaffold({
           `Coveo community:            https://connect.coveo.com`,
         'Need help?'
       );
-      throw new ExpectedError(
-        unavailableTemplateMessage(template.name, error.version)
-      );
+      throw new ExpectedError(unavailableTemplateMessage(template.name, error.version));
     }
     throw error;
   } finally {
@@ -136,9 +121,7 @@ export async function scaffold({
   log.info(`  ${pm} run dev\n`);
 }
 
-async function resolveTemplate(
-  templateArg: string | undefined
-): Promise<Template | null> {
+async function resolveTemplate(templateArg: string | undefined): Promise<Template | null> {
   if (templateArg === undefined) {
     return selectTemplate();
   }
@@ -152,18 +135,12 @@ async function resolveTemplate(
       .map((t) => `  ${t.name}`)
       .join('\n')}`
   );
-  log.note(
-    `Run with --help to see all templates:\n` +
-      `  npm create @coveo/ui -- --help`,
-    'Tip'
-  );
+  log.note(`Run with --help to see all templates:\n` + `  npm create @coveo/ui -- --help`, 'Tip');
   return null;
 }
 
 // Returns null when validation fails, so the caller can exit non-zero.
-export async function resolveInputs(
-  args: CliArgs
-): Promise<ScaffoldOptions | null> {
+export async function resolveInputs(args: CliArgs): Promise<ScaffoldOptions | null> {
   const template = await resolveTemplate(args.template);
   if (!template) {
     return null;
@@ -173,12 +150,9 @@ export async function resolveInputs(
 
   const targetDir = resolve(process.cwd(), projectName);
   if (!(await isEmptyOrMissing(targetDir))) {
-    log.error(
-      `Target directory "${projectName}" already exists and is not empty.`
-    );
+    log.error(`Target directory "${projectName}" already exists and is not empty.`);
     log.note(
-      `Pick a different name, or remove the directory:\n` +
-        `  rm -rf ${projectName}`,
+      `Pick a different name, or remove the directory:\n` + `  rm -rf ${projectName}`,
       'Tip'
     );
     return null;

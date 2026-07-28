@@ -140,9 +140,7 @@ Map this decision to thermidor's Architecture Decision Charter requirements.
     const facade = SearchEndpointFacade.getInstance(engine, interfaceId);
     facade.onResponse((response) => {
       engine.mutate(
-        getOrCreateResultsActions(interfaceId).setResultsFromResponse(
-          response.results
-        )
+        getOrCreateResultsActions(interfaceId).setResultsFromResponse(response.results)
       );
     });
   };
@@ -184,11 +182,7 @@ Map this decision to thermidor's Architecture Decision Charter requirements.
 
     const facade = SearchEndpointFacade.getInstance(engine, interfaceId);
     facade.onResponse((response) => {
-      engine.mutate(
-        getOrCreatePaginationActions(interfaceId).setTotalCount(
-          response.totalCount
-        )
-      );
+      engine.mutate(getOrCreatePaginationActions(interfaceId).setTotalCount(response.totalCount));
     });
   };
   ```

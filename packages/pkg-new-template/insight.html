@@ -13,9 +13,7 @@
       import {loadCaseContextActions} from '@coveo/headless/insight';
 
       await customElements.whenDefined('atomic-insight-interface');
-      const insightInterface = document.querySelector(
-        'atomic-insight-interface'
-      );
+      const insightInterface = document.querySelector('atomic-insight-interface');
 
       await insightInterface.initialize({
         insightId: 'fc2ee6e0-8bda-4883-bfc6-ffc1b0ce34c7',
@@ -68,11 +66,7 @@
             <atomic-insight-search-box></atomic-insight-search-box>
             <atomic-insight-refine-toggle></atomic-insight-refine-toggle>
             <atomic-insight-tabs>
-              <atomic-insight-tab
-                label="All"
-                expression=""
-                active
-              ></atomic-insight-tab>
+              <atomic-insight-tab label="All" expression="" active></atomic-insight-tab>
               <atomic-insight-tab
                 label="YouTube"
                 expression="@filetype==YouTubeVideo"
@@ -81,14 +75,8 @@
           </atomic-layout-section>
           <atomic-layout-section section="facets">
             <atomic-facet-manager>
-              <atomic-insight-facet
-                field="source"
-                label="Source"
-              ></atomic-insight-facet>
-              <atomic-insight-facet
-                field="filetype"
-                label="File Type"
-              ></atomic-insight-facet>
+              <atomic-insight-facet field="source" label="Source"></atomic-insight-facet>
+              <atomic-insight-facet field="filetype" label="File Type"></atomic-insight-facet>
             </atomic-facet-manager>
           </atomic-layout-section>
           <atomic-layout-section section="status">

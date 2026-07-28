@@ -36,10 +36,7 @@ import {
   toggleSelectFacetValue,
 } from '../../../../features/commerce/facets/regular-facet/regular-facet-actions.js';
 import {findActiveValueAncestry} from '../../../../features/facets/category-facet-set/category-facet-utils.js';
-import type {
-  CommerceFacetSetSection,
-  FacetOrderSection,
-} from '../../../../state/state-sections.js';
+import type {CommerceFacetSetSection, FacetOrderSection} from '../../../../state/state-sections.js';
 import {loadReducerError} from '../../../../utils/errors.js';
 import type {
   BreadcrumbValue,
@@ -107,10 +104,7 @@ export interface BreadcrumbManagerState {
 /**
  * The `BreadcrumbManager` sub-controller manages a summary of the currently active facet filters.
  */
-export type BreadcrumbManager = Omit<
-  CoreBreadcrumbManager,
-  'deselectBreadcrumb' | 'state'
-> & {
+export type BreadcrumbManager = Omit<CoreBreadcrumbManager, 'deselectBreadcrumb' | 'state'> & {
   /**
    * The state of the `BreadcrumbManager` sub-controller.
    */
@@ -174,11 +168,7 @@ export function buildCoreBreadcrumbManager(
   });
 
   const getValuesForNonCategoryFacet = (
-    facet:
-      | RegularFacetResponse
-      | NumericFacetResponse
-      | DateFacetResponse
-      | LocationFacetResponse
+    facet: RegularFacetResponse | NumericFacetResponse | DateFacetResponse | LocationFacetResponse
   ) => {
     return facet.values
       .filter((value) => value.state !== 'idle')
@@ -202,10 +192,7 @@ export function buildCoreBreadcrumbManager(
               );
             }
             dispatch(options.fetchProductsActionCreator());
-          } else if (
-            selection.state === 'excluded' &&
-            facet.type !== 'location'
-          ) {
+          } else if (selection.state === 'excluded' && facet.type !== 'location') {
             dispatch(
               actions[facet.type].toggleExcludeActionCreator!({
                 facetId: facet.facetId,
@@ -226,8 +213,7 @@ export function buildCoreBreadcrumbManager(
 
   const getValuesForCategoryFacet = (facet: CategoryFacetResponse) => {
     const ancestry = findActiveValueAncestry(facet.values);
-    const activeValue =
-      ancestry.length > 0 ? ancestry[ancestry.length - 1] : undefined;
+    const activeValue = ancestry.length > 0 ? ancestry[ancestry.length - 1] : undefined;
 
     if (activeValue === undefined) {
       return [];
@@ -248,9 +234,7 @@ export function buildCoreBreadcrumbManager(
     ];
   };
 
-  const hasActiveValue = (
-    facet: AnyFacetResponse | undefined
-  ): facet is AnyFacetResponse => {
+  const hasActiveValue = (facet: AnyFacetResponse | undefined): facet is AnyFacetResponse => {
     if (!facet) {
       return false;
     }

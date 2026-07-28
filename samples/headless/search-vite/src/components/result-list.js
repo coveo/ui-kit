@@ -94,9 +94,7 @@ export class ResultList extends LitElement {
             >
               ${result.title}
             </a>
-            ${result.excerpt
-              ? html`<p class="excerpt">${result.excerpt}</p>`
-              : nothing}
+            ${result.excerpt ? html`<p class="excerpt">${result.excerpt}</p>` : nothing}
           </article>
         `
       )}

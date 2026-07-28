@@ -11,20 +11,16 @@ const meta: Meta = {
     const wrapper = document.createElement('div');
     wrapper.className = 'm-0 p-0';
 
-    const element = document.createElement(
-      'atomic-generated-answer-thread-item'
-    ) as HTMLElement & Record<string, unknown>;
+    const element = document.createElement('atomic-generated-answer-thread-item') as HTMLElement &
+      Record<string, unknown>;
     element.title = args.title;
-    element.disableCollapse =
-      args.disableCollapse ?? args['disable-collapse'] ?? false;
+    element.disableCollapse = args.disableCollapse ?? args['disable-collapse'] ?? false;
     element.hideLine = args.hideLine ?? args['hide-line'] ?? false;
     element.isExpanded = args.isExpanded ?? args['is-expanded'] ?? false;
-    element.showTimelineDot =
-      args.showTimelineDot ?? args['show-timeline-dot'] ?? true;
+    element.showTimelineDot = args.showTimelineDot ?? args['show-timeline-dot'] ?? true;
 
     const content = document.createElement('p');
-    content.textContent =
-      'Follow-up guidance and context for this generated answer thread item.';
+    content.textContent = 'Follow-up guidance and context for this generated answer thread item.';
     content.className = 'm-0 text-sm';
 
     element.appendChild(content);
@@ -78,6 +74,39 @@ export const NonCollapsibleWithoutTimeline: Story = {
     hideLine: true,
     disableCollapse: true,
   },
+};
+
+export const MultiLineQuestion: Story = {
+  name: 'Multi-Line Question',
+  args: {
+    title:
+      'What are the detailed steps I should follow to troubleshoot connectivity issues when my application fails to establish a secure connection to the remote server after upgrading the SDK?',
+  },
+  decorators: [
+    (story) => {
+      const container = document.createElement('div');
+      container.style.maxWidth = '400px';
+      container.appendChild(story() as Node);
+      return container;
+    },
+  ],
+};
+
+export const MultiLineQuestionExpanded: Story = {
+  name: 'Multi-Line Question - Expanded',
+  args: {
+    title:
+      'What are the detailed steps I should follow to troubleshoot connectivity issues when my application fails to establish a secure connection to the remote server after upgrading the SDK?',
+    isExpanded: true,
+  },
+  decorators: [
+    (story) => {
+      const container = document.createElement('div');
+      container.style.maxWidth = '400px';
+      container.appendChild(story() as Node);
+      return container;
+    },
+  ],
 };
 
 export const HoverState: Story = {

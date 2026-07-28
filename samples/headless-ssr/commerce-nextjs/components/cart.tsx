@@ -35,31 +35,16 @@ export default function Cart() {
             </p>
             <p>
               <span>Total: </span>
-              <span>
-                {formatCurrency(
-                  item.price * item.quantity,
-                  language(),
-                  currency()
-                )}
-              </span>
+              <span>{formatCurrency(item.price * item.quantity, language(), currency())}</span>
               <span> {item.price * item.quantity}</span>
             </p>
-            <button
-              type="button"
-              onClick={() => adjustQuantity(methods!, item, 1)}
-            >
+            <button type="button" onClick={() => adjustQuantity(methods!, item, 1)}>
               Add one
             </button>
-            <button
-              type="button"
-              onClick={() => adjustQuantity(methods!, item, -1)}
-            >
+            <button type="button" onClick={() => adjustQuantity(methods!, item, -1)}>
               Remove one
             </button>
-            <button
-              type="button"
-              onClick={() => adjustQuantity(methods!, item, -item.quantity)}
-            >
+            <button type="button" onClick={() => adjustQuantity(methods!, item, -item.quantity)}>
               Remove all
             </button>
           </li>
@@ -77,11 +62,7 @@ export default function Cart() {
       >
         Purchase
       </button>
-      <button
-        type="button"
-        disabled={isCartEmpty()}
-        onClick={() => emptyCart(methods!)}
-      >
+      <button type="button" disabled={isCartEmpty()} onClick={() => emptyCart(methods!)}>
         Empty cart
       </button>
     </div>

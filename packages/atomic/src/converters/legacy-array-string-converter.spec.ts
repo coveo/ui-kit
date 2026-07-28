@@ -36,37 +36,23 @@ describe('createLegacyArrayStringConverter', () => {
     },
     {
       name: 'stringified array (new)',
-      template: html`<test-element
-        value='["item1","item2","item3"]'
-      ></test-element>`,
+      template: html`<test-element value='["item1","item2","item3"]'></test-element>`,
     },
     {
       name: 'array values directly',
-      template: html`<test-element
-        .value=${['item1', 'item2', 'item3']}
-      ></test-element>`,
+      template: html`<test-element .value=${['item1', 'item2', 'item3']}></test-element>`,
     },
   ])('should support $name', async ({template}) => {
     await fixture<TestElement>(template);
 
-    await expect
-      .element(page.getByTestId('value-type'))
-      .toHaveTextContent('object');
-    await expect
-      .element(page.getByTestId('is-Array'))
-      .toHaveTextContent('true');
-    await expect
-      .element(page.getByTestId('output'))
-      .toHaveTextContent('["item1","item2","item3"]');
+    await expect.element(page.getByTestId('value-type')).toHaveTextContent('object');
+    await expect.element(page.getByTestId('is-Array')).toHaveTextContent('true');
+    await expect.element(page.getByTestId('output')).toHaveTextContent('["item1","item2","item3"]');
   });
 
   it('should print a warning when using the legacy comma-separated string', async () => {
-    const consoleWarnSpy = vi
-      .spyOn(console, 'warn')
-      .mockImplementation(() => {});
-    await fixture<TestElement>(
-      html`<test-element value="item1,item2,item3"></test-element>`
-    );
+    const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    await fixture<TestElement>(html`<test-element value="item1,item2,item3"></test-element>`);
 
     expect(consoleWarnSpy).toHaveBeenCalledWith(
       `Starting from Atomic v4, the "fields-to-include-in-citations" property will only accept an array of strings. Using a comma-separated string value ("item1,item2,item3") is now deprecated. Please update the value to be a JSON array. For example: fields-to-include-in-citations='["fieldA","fieldB"]'`
@@ -74,9 +60,7 @@ describe('createLegacyArrayStringConverter', () => {
   });
 
   it('should not print a warning when using the new JSON array format', async () => {
-    const consoleWarnSpy = vi
-      .spyOn(console, 'warn')
-      .mockImplementation(() => {});
+    const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
     await fixture<TestElement>(
       html`<test-element value='["item1","item2","item3"]'></test-element>`
     );

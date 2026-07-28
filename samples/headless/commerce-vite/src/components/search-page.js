@@ -56,24 +56,18 @@ export class SearchPage extends LitElement {
       ></commerce-search-box>
       <div class="interface">
         <div class="toolbar">
-          <commerce-sort-dropdown
-            .controller=${this.sortController}
-          ></commerce-sort-dropdown>
+          <commerce-sort-dropdown .controller=${this.sortController}></commerce-sort-dropdown>
         </div>
         <aside class="facets">
           <commerce-facet-list .controller=${this.search}></commerce-facet-list>
         </aside>
         <div class="results">
-          <commerce-breadcrumbs
-            .controller=${this.search}
-          ></commerce-breadcrumbs>
+          <commerce-breadcrumbs .controller=${this.search}></commerce-breadcrumbs>
           <commerce-product-list
             .controller=${this.search}
             .cart=${this.cart}
           ></commerce-product-list>
-          <commerce-pager
-            .controller=${this.paginationController}
-          ></commerce-pager>
+          <commerce-pager .controller=${this.paginationController}></commerce-pager>
         </div>
       </div>
     `;

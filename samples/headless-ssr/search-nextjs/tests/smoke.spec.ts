@@ -75,9 +75,7 @@ routes.forEach((route) => {
       expect(warnings).toEqual([]);
     });
 
-    test('after submitting a query, should change search results', async ({
-      page,
-    }) => {
+    test('after submitting a query, should change search results', async ({page}) => {
       const initialResults = await getResultTitles(page);
       expect(initialResults).toHaveLength(numResults);
 

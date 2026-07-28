@@ -211,8 +211,7 @@ export class StandaloneSearchBox extends LitElement {
       case 'ArrowUp':
         if (suggestions.length) {
           e.preventDefault();
-          this.active =
-            (this.active - 1 + suggestions.length) % suggestions.length;
+          this.active = (this.active - 1 + suggestions.length) % suggestions.length;
         }
         break;
       case 'Enter':
@@ -253,11 +252,8 @@ export class StandaloneSearchBox extends LitElement {
                       <li>
                         <button
                           type="button"
-                          class="suggestion ${i === this.active
-                            ? 'active'
-                            : ''}"
-                          @click=${() =>
-                            this.#selectSuggestion(suggestion.rawValue)}
+                          class="suggestion ${i === this.active ? 'active' : ''}"
+                          @click=${() => this.#selectSuggestion(suggestion.rawValue)}
                         >
                           ${suggestion.rawValue}
                         </button>
@@ -293,9 +289,7 @@ export class StandaloneSearchBox extends LitElement {
                             >
                             ${product.ec_price == null
                               ? nothing
-                              : html`<span class="instant-price"
-                                  >$${product.ec_price}</span
-                                >`}
+                              : html`<span class="instant-price">$${product.ec_price}</span>`}
                           </span>
                         </button>
                       </li>
@@ -328,9 +322,7 @@ export class StandaloneSearchBox extends LitElement {
           @blur=${() => (this.focused = false)}
           @keydown=${(e) => this.#onKeydown(e)}
         />
-        <button type="button" @click=${() => this.controller.submit()}>
-          Search
-        </button>
+        <button type="button" @click=${() => this.controller.submit()}>Search</button>
         ${this.focused ? this.#renderDropdown(suggestions, products) : nothing}
       </div>
     `;

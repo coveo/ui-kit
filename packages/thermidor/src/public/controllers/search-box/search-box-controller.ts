@@ -18,9 +18,7 @@ class SearchBoxControllerImpl extends BaseController<SearchBoxControllerState> {
     engine.adoptSlice(getOrCreateSearchBoxSlice(options.interface));
 
     const selectors = getOrCreateSearchBoxSelectors(options.interface);
-    const endpointSelectors = getOrCreateSearchEndpointSelectors(
-      options.interface
-    );
+    const endpointSelectors = getOrCreateSearchEndpointSelectors(options.interface);
 
     const controllerState = createMemoizedStateSelector(
       selectors.getQuery,
@@ -45,9 +43,7 @@ class SearchBoxControllerImpl extends BaseController<SearchBoxControllerState> {
 
   submit(): Promise<unknown[]> {
     return Promise.all(
-      this.#thunks.map((thunk) =>
-        this.engine.mutate(thunk({engine: this.engine}))
-      )
+      this.#thunks.map((thunk) => this.engine.mutate(thunk({engine: this.engine})))
     );
   }
 }

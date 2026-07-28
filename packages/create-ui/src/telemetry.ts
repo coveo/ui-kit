@@ -1,6 +1,4 @@
-export function isTrackingDisabled(
-  env: NodeJS.ProcessEnv = process.env
-): boolean {
+export function isTrackingDisabled(env: NodeJS.ProcessEnv = process.env): boolean {
   const value = env.DO_NOT_TRACK;
   if (value === undefined) {
     return false;
@@ -9,10 +7,7 @@ export function isTrackingDisabled(
   return normalized.length > 0 && normalized !== '0';
 }
 
-export function buildCrashDisclosure(
-  reportPath: string,
-  reportReference: string
-): string {
+export function buildCrashDisclosure(reportPath: string, reportReference: string): string {
   return [
     `A crash report was saved to: ${reportPath}`,
     '',

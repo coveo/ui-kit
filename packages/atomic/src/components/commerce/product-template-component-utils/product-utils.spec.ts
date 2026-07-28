@@ -40,32 +40,23 @@ describe('product-utils', () => {
       interfaceElement: {} as never,
     };
 
-    vi.spyOn(ProductTemplatesHelpers, 'getProductProperty').mockImplementation(
-      () => null
-    );
+    vi.spyOn(ProductTemplatesHelpers, 'getProductProperty').mockImplementation(() => null);
 
     vi.clearAllMocks();
   });
 
   describe('#parseValue', () => {
     it('should return parsed numeric value when field contains valid number', () => {
-      vi.spyOn(ProductTemplatesHelpers, 'getProductProperty').mockReturnValue(
-        '123.45'
-      );
+      vi.spyOn(ProductTemplatesHelpers, 'getProductProperty').mockReturnValue('123.45');
 
       const result = parseValue(mockProduct, 'price');
 
       expect(result).toBe(123.45);
-      expect(ProductTemplatesHelpers.getProductProperty).toHaveBeenCalledWith(
-        mockProduct,
-        'price'
-      );
+      expect(ProductTemplatesHelpers.getProductProperty).toHaveBeenCalledWith(mockProduct, 'price');
     });
 
     it('should return parsed numeric value when field contains integer', () => {
-      vi.spyOn(ProductTemplatesHelpers, 'getProductProperty').mockReturnValue(
-        42
-      );
+      vi.spyOn(ProductTemplatesHelpers, 'getProductProperty').mockReturnValue(42);
 
       const result = parseValue(mockProduct, 'quantity');
 
@@ -73,9 +64,7 @@ describe('product-utils', () => {
     });
 
     it('should return null when field value is null', () => {
-      vi.spyOn(ProductTemplatesHelpers, 'getProductProperty').mockReturnValue(
-        null
-      );
+      vi.spyOn(ProductTemplatesHelpers, 'getProductProperty').mockReturnValue(null);
 
       const result = parseValue(mockProduct, 'missingField');
 
@@ -83,13 +72,9 @@ describe('product-utils', () => {
     });
 
     it('should throw FieldValueIsNaNError when field value cannot be parsed as number', () => {
-      vi.mocked(ProductTemplatesHelpers.getProductProperty).mockReturnValue(
-        'not-a-number'
-      );
+      vi.mocked(ProductTemplatesHelpers.getProductProperty).mockReturnValue('not-a-number');
 
-      expect(() => parseValue(mockProduct, 'invalidField')).toThrow(
-        FieldValueIsNaNError
-      );
+      expect(() => parseValue(mockProduct, 'invalidField')).toThrow(FieldValueIsNaNError);
       expect(() => parseValue(mockProduct, 'invalidField')).toThrow(
         'Could not parse "not-a-number" from field "invalidField" as a number.'
       );
@@ -98,19 +83,13 @@ describe('product-utils', () => {
     it('should throw FieldValueIsNaNError when field value is empty string', () => {
       vi.mocked(ProductTemplatesHelpers.getProductProperty).mockReturnValue('');
 
-      expect(() => parseValue(mockProduct, 'emptyField')).toThrow(
-        FieldValueIsNaNError
-      );
+      expect(() => parseValue(mockProduct, 'emptyField')).toThrow(FieldValueIsNaNError);
     });
 
     it('should handle boolean values that cannot be parsed', () => {
-      vi.mocked(ProductTemplatesHelpers.getProductProperty).mockReturnValue(
-        true
-      );
+      vi.mocked(ProductTemplatesHelpers.getProductProperty).mockReturnValue(true);
 
-      expect(() => parseValue(mockProduct, 'booleanField')).toThrow(
-        FieldValueIsNaNError
-      );
+      expect(() => parseValue(mockProduct, 'booleanField')).toThrow(FieldValueIsNaNError);
     });
 
     it('should parse zero correctly', () => {
@@ -122,9 +101,7 @@ describe('product-utils', () => {
     });
 
     it('should parse negative numbers correctly', () => {
-      vi.mocked(ProductTemplatesHelpers.getProductProperty).mockReturnValue(
-        '-15.5'
-      );
+      vi.mocked(ProductTemplatesHelpers.getProductProperty).mockReturnValue('-15.5');
 
       const result = parseValue(mockProduct, 'negativeField');
 
@@ -134,23 +111,16 @@ describe('product-utils', () => {
 
   describe('#getStringValueFromProductOrNull', () => {
     it('should return string value when field contains valid string', () => {
-      vi.mocked(ProductTemplatesHelpers.getProductProperty).mockReturnValue(
-        'Valid String'
-      );
+      vi.mocked(ProductTemplatesHelpers.getProductProperty).mockReturnValue('Valid String');
 
       const result = getStringValueFromProductOrNull(mockProduct, 'name');
 
       expect(result).toBe('Valid String');
-      expect(ProductTemplatesHelpers.getProductProperty).toHaveBeenCalledWith(
-        mockProduct,
-        'name'
-      );
+      expect(ProductTemplatesHelpers.getProductProperty).toHaveBeenCalledWith(mockProduct, 'name');
     });
 
     it('should return null when field value is not a string', () => {
-      vi.mocked(ProductTemplatesHelpers.getProductProperty).mockReturnValue(
-        123
-      );
+      vi.mocked(ProductTemplatesHelpers.getProductProperty).mockReturnValue(123);
 
       const result = getStringValueFromProductOrNull(mockProduct, 'price');
 
@@ -166,22 +136,15 @@ describe('product-utils', () => {
     });
 
     it('should return null when field value is whitespace only', () => {
-      vi.mocked(ProductTemplatesHelpers.getProductProperty).mockReturnValue(
-        '   \t\n  '
-      );
+      vi.mocked(ProductTemplatesHelpers.getProductProperty).mockReturnValue('   \t\n  ');
 
-      const result = getStringValueFromProductOrNull(
-        mockProduct,
-        'whitespaceField'
-      );
+      const result = getStringValueFromProductOrNull(mockProduct, 'whitespaceField');
 
       expect(result).toBeNull();
     });
 
     it('should return null when field value is null', () => {
-      vi.mocked(ProductTemplatesHelpers.getProductProperty).mockReturnValue(
-        null
-      );
+      vi.mocked(ProductTemplatesHelpers.getProductProperty).mockReturnValue(null);
 
       const result = getStringValueFromProductOrNull(mockProduct, 'nullField');
 
@@ -189,27 +152,17 @@ describe('product-utils', () => {
     });
 
     it('should return null when field value is undefined', () => {
-      vi.mocked(ProductTemplatesHelpers.getProductProperty).mockReturnValue(
-        null
-      );
+      vi.mocked(ProductTemplatesHelpers.getProductProperty).mockReturnValue(null);
 
-      const result = getStringValueFromProductOrNull(
-        mockProduct,
-        'undefinedField'
-      );
+      const result = getStringValueFromProductOrNull(mockProduct, 'undefinedField');
 
       expect(result).toBeNull();
     });
 
     it('should return null when field value is boolean', () => {
-      vi.mocked(ProductTemplatesHelpers.getProductProperty).mockReturnValue(
-        true
-      );
+      vi.mocked(ProductTemplatesHelpers.getProductProperty).mockReturnValue(true);
 
-      const result = getStringValueFromProductOrNull(
-        mockProduct,
-        'booleanField'
-      );
+      const result = getStringValueFromProductOrNull(mockProduct, 'booleanField');
 
       expect(result).toBeNull();
     });
@@ -217,37 +170,21 @@ describe('product-utils', () => {
 
   describe('#buildStringTemplateFromProduct', () => {
     it('should replace template variables with product values', () => {
-      vi.mocked(readFromObject)
-        .mockReturnValueOnce('Test Product')
-        .mockReturnValueOnce('99.99');
+      vi.mocked(readFromObject).mockReturnValueOnce('Test Product').mockReturnValueOnce('99.99');
 
       const template = 'Product: ${ec_name}, Price: ${ec_price}';
-      const result = buildStringTemplateFromProduct(
-        template,
-        mockProduct,
-        mockBindings
-      );
+      const result = buildStringTemplateFromProduct(template, mockProduct, mockBindings);
 
       expect(result).toBe('Product: Test Product, Price: 99.99');
-      expect(vi.mocked(readFromObject)).toHaveBeenCalledWith(
-        mockProduct,
-        'ec_name'
-      );
-      expect(vi.mocked(readFromObject)).toHaveBeenCalledWith(
-        mockProduct,
-        'ec_price'
-      );
+      expect(vi.mocked(readFromObject)).toHaveBeenCalledWith(mockProduct, 'ec_name');
+      expect(vi.mocked(readFromObject)).toHaveBeenCalledWith(mockProduct, 'ec_price');
     });
 
     it('should handle multiple occurrences of same variable', () => {
       vi.mocked(readFromObject).mockReturnValue('Test Product');
 
       const template = '${ec_name} - ${ec_name} (${ec_name})';
-      const result = buildStringTemplateFromProduct(
-        template,
-        mockProduct,
-        mockBindings
-      );
+      const result = buildStringTemplateFromProduct(template, mockProduct, mockBindings);
 
       expect(result).toBe('Test Product - Test Product (Test Product)');
       expect(vi.mocked(readFromObject)).toHaveBeenCalledTimes(3);
@@ -256,26 +193,14 @@ describe('product-utils', () => {
     it('should fallback to window object when product property is not found', () => {
       vi.stubGlobal('$location', {hostname: 'example.com'});
 
-      vi.mocked(readFromObject)
-        .mockReturnValueOnce(undefined)
-        .mockReturnValueOnce('example.com');
+      vi.mocked(readFromObject).mockReturnValueOnce(undefined).mockReturnValueOnce('example.com');
 
       const template = 'Host: ${location.hostname}';
-      const result = buildStringTemplateFromProduct(
-        template,
-        mockProduct,
-        mockBindings
-      );
+      const result = buildStringTemplateFromProduct(template, mockProduct, mockBindings);
 
       expect(result).toBe('Host: example.com');
-      expect(vi.mocked(readFromObject)).toHaveBeenCalledWith(
-        mockProduct,
-        'location.hostname'
-      );
-      expect(vi.mocked(readFromObject)).toHaveBeenCalledWith(
-        window,
-        'location.hostname'
-      );
+      expect(vi.mocked(readFromObject)).toHaveBeenCalledWith(mockProduct, 'location.hostname');
+      expect(vi.mocked(readFromObject)).toHaveBeenCalledWith(window, 'location.hostname');
 
       vi.unstubAllGlobals();
     });
@@ -284,11 +209,7 @@ describe('product-utils', () => {
       vi.mocked(readFromObject).mockReturnValue(undefined);
 
       const template = 'Unknown: ${unknown.field}';
-      const result = buildStringTemplateFromProduct(
-        template,
-        mockProduct,
-        mockBindings
-      );
+      const result = buildStringTemplateFromProduct(template, mockProduct, mockBindings);
 
       expect(result).toBe('Unknown: ');
       expect(mockBindings.engine.logger.warn).toHaveBeenCalledWith(
@@ -300,11 +221,7 @@ describe('product-utils', () => {
       vi.mocked(readFromObject).mockReturnValue('nested-value');
 
       const template = 'Nested: ${additionalFields.customField}';
-      const result = buildStringTemplateFromProduct(
-        template,
-        mockProduct,
-        mockBindings
-      );
+      const result = buildStringTemplateFromProduct(template, mockProduct, mockBindings);
 
       expect(result).toBe('Nested: nested-value');
       expect(vi.mocked(readFromObject)).toHaveBeenCalledWith(

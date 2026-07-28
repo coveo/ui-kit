@@ -168,9 +168,7 @@ describe('atomic-smart-snippet-source', () => {
 
     it('should display clickUri in source URL link', async () => {
       const {sourceUrlLink} = await renderComponent();
-      await expect
-        .element(sourceUrlLink)
-        .toHaveTextContent(mockResult.clickUri);
+      await expect.element(sourceUrlLink).toHaveTextContent(mockResult.clickUri);
     });
 
     it('should render atomic-result-text in source title link', async () => {

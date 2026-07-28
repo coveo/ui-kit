@@ -42,9 +42,7 @@ export class NumberValue implements SchemaValue<number> {
   }
 }
 
-export function isNumberOrUndefined(
-  value: unknown
-): value is number | undefined {
+export function isNumberOrUndefined(value: unknown): value is number | undefined {
   return isUndefined(value) || isNumber(value);
 }
 

@@ -1,3 +1,4 @@
+import SetRenderFunctionNote from '@/storybook-utils/documentation/set-render-function-note.mdx';
 
 This component is placed inside the [atomic-commerce-search-box](/docs/atomic-commerce-search-box--docs) to display instant products as the user types.
 
@@ -9,4 +10,27 @@ This component needs the `atomic-commerce-search-box-query-suggestions` componen
   <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
   <atomic-commerce-search-box-instant-products></atomic-commerce-search-box-instant-products>
 </atomic-commerce-search-box>
+```
+
+### Using `setRenderFunction` for custom rendering
+
+<SetRenderFunctionNote />
+
+```html
+<script type="module">
+  await customElements.whenDefined('atomic-commerce-search-box-instant-products');
+  const instantProducts = document.querySelector('atomic-commerce-search-box-instant-products');
+
+  await instantProducts.setRenderFunction((product, root) => {
+    root.innerHTML = `
+      <atomic-product-section-name>
+        <atomic-product-link>${product.ec_name}</atomic-product-link>
+      </atomic-product-section-name>
+      <atomic-product-section-metadata>
+        <atomic-product-price></atomic-product-price>
+      </atomic-product-section-metadata>
+    `;
+    return root.innerHTML;
+  });
+</script>
 ```

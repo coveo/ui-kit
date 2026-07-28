@@ -28,11 +28,7 @@ export const ListingPage = ({title, viewUrl}: Props) => {
   return (
     <>
       <h2 className="page-title">{title}</h2>
-      <AtomicCommerceInterface
-        engine={engine}
-        type="product-listing"
-        languageAssetsPath="/lang"
-      >
+      <AtomicCommerceInterface engine={engine} type="product-listing" languageAssetsPath="/lang">
         <AtomicCommerceLayout>
           <AtomicLayoutSection section="search">
             <AtomicCommerceSearchBox redirectionUrl="/search">

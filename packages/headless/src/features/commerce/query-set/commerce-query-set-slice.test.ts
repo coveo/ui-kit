@@ -1,19 +1,10 @@
 import type {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response.js';
-import {
-  getQuerySetInitialState,
-  type QuerySetState,
-} from '../../query-set/query-set-state.js';
+import {getQuerySetInitialState, type QuerySetState} from '../../query-set/query-set-state.js';
 import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions.js';
-import {
-  executeSearch,
-  type QuerySearchCommerceAPIThunkReturn,
-} from '../search/search-actions.js';
+import {executeSearch, type QuerySearchCommerceAPIThunkReturn} from '../search/search-actions.js';
 import {restoreSearchParameters} from '../search-parameters/search-parameters-actions.js';
 import {commerceQuerySetReducer} from './commerce-query-set-slice.js';
-import {
-  registerQuerySetQuery,
-  updateQuerySetQuery,
-} from './query-set-actions.js';
+import {registerQuerySetQuery, updateQuerySetQuery} from './query-set-actions.js';
 
 describe('commerce querySet slice', () => {
   let state: QuerySetState;
@@ -120,10 +111,7 @@ describe('commerce querySet slice', () => {
     registerQueryWithId('bar');
 
     const expectedQuerySet = {foo: 'world', bar: 'world'};
-    const nextState = commerceQuerySetReducer(
-      state,
-      restoreSearchParameters({q: 'world'})
-    );
+    const nextState = commerceQuerySetReducer(state, restoreSearchParameters({q: 'world'}));
     expect(nextState).toEqual(expectedQuerySet);
   });
 
@@ -132,10 +120,7 @@ describe('commerce querySet slice', () => {
     registerQueryWithId('bar', 'bar');
 
     const expectedQuerySet = {foo: 'foo', bar: 'bar'};
-    const nextState = commerceQuerySetReducer(
-      state,
-      restoreSearchParameters({})
-    );
+    const nextState = commerceQuerySetReducer(state, restoreSearchParameters({}));
     expect(nextState).toEqual(expectedQuerySet);
   });
 });

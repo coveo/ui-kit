@@ -12,23 +12,16 @@ import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-se
 import {buildMockCommerceFacetRequest} from '../../../test/mock-commerce-facet-request.js';
 import {buildMockCommerceFacetSlice} from '../../../test/mock-commerce-facet-slice.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
-import {
-  buildMockCommerceEngine,
-  type MockedCommerceEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockCommerceEngine, type MockedCommerceEngine} from '../../../test/mock-engine-v2.js';
 import type {CategoryFacetOptions} from '../core/facets/category/headless-commerce-category-facet.js';
 import {
   buildCategoryFieldSuggestions,
   type CategoryFieldSuggestions,
 } from './headless-category-field-suggestions.js';
 
-vi.mock(
-  '../../../features/facets/facet-search-set/specific/specific-facet-search-actions'
-);
+vi.mock('../../../features/facets/facet-search-set/specific/specific-facet-search-actions');
 
-vi.mock(
-  '../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions'
-);
+vi.mock('../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions');
 
 describe('categoryFieldSuggestions', () => {
   const facetId = 'id';
@@ -45,11 +38,10 @@ describe('categoryFieldSuggestions', () => {
   function setFacetRequest(config: Partial<CategoryFacetRequest> = {}) {
     const request = buildMockCommerceFacetRequest({facetId, ...config});
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({request});
-    state.categoryFacetSearchSet[
-      getFacetIdWithCommerceFieldSuggestionNamespace(facetId)
-    ] = buildMockCategoryFacetSearch({
-      initialNumberOfValues: 5,
-    });
+    state.categoryFacetSearchSet[getFacetIdWithCommerceFieldSuggestionNamespace(facetId)] =
+      buildMockCategoryFacetSearch({
+        initialNumberOfValues: 5,
+      });
   }
 
   beforeEach(() => {

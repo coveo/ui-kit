@@ -13,17 +13,13 @@ test.describe('atomic-generated-answer', () => {
         await generatedAnswer.waitForCitations();
       });
 
-      test('should render citation when available', async ({
-        generatedAnswer,
-      }) => {
+      test('should render citation when available', async ({generatedAnswer}) => {
         const citationCount = await generatedAnswer.getCitationCount();
         expect(citationCount).toBeGreaterThan(0);
         await generatedAnswer.citation.first().screenshot();
       });
 
-      test('should only append text fragment to HTML citations', async ({
-        generatedAnswer,
-      }) => {
+      test('should only append text fragment to HTML citations', async ({generatedAnswer}) => {
         const citationCount = await generatedAnswer.getCitationCount();
 
         for (let i = 0; i < citationCount; i++) {
@@ -63,9 +59,7 @@ test.describe('atomic-generated-answer', () => {
         await generatedAnswer.waitForCitations();
       });
 
-      test('should show popover when hovering over citation', async ({
-        generatedAnswer,
-      }) => {
+      test('should show popover when hovering over citation', async ({generatedAnswer}) => {
         const popover = generatedAnswer.citationPopover.first();
         await expect(popover).toHaveClass(/hidden/);
         await expect(popover).not.toBeVisible();
@@ -112,9 +106,7 @@ test.describe('atomic-generated-answer', () => {
         await expect(popover).toBeVisible();
       });
 
-      test('should hide popover after mouse leaves citation', async ({
-        generatedAnswer,
-      }) => {
+      test('should hide popover after mouse leaves citation', async ({generatedAnswer}) => {
         const citation = generatedAnswer.citation.first();
         const popover = generatedAnswer.citationPopover.first();
 
@@ -148,21 +140,15 @@ test.describe('atomic-generated-answer', () => {
       test.describe(`when clicking the ${feedbackType} generated answer button`, () => {
         test(`should open the feedback modal`, async ({generatedAnswer}) => {
           const feedbackButton =
-            feedbackType === 'like'
-              ? generatedAnswer.likeButton
-              : generatedAnswer.dislikeButton;
+            feedbackType === 'like' ? generatedAnswer.likeButton : generatedAnswer.dislikeButton;
 
           await feedbackButton.click();
           await generatedAnswer.waitForModalToOpen();
         });
 
-        test('should close the modal when clicking the skip button', async ({
-          generatedAnswer,
-        }) => {
+        test('should close the modal when clicking the skip button', async ({generatedAnswer}) => {
           const feedbackButton =
-            feedbackType === 'like'
-              ? generatedAnswer.likeButton
-              : generatedAnswer.dislikeButton;
+            feedbackType === 'like' ? generatedAnswer.likeButton : generatedAnswer.dislikeButton;
 
           await feedbackButton.click();
           await generatedAnswer.waitForModalToOpen();
@@ -201,8 +187,7 @@ test.describe('atomic-generated-answer', () => {
 
               const evaluationRequestPromise =
                 generatedAnswer.waitForEvaluationRequest(expectedHelpfulness);
-              const analyticsRequestPromise =
-                generatedAnswer.waitForAnalyticsRequest();
+              const analyticsRequestPromise = generatedAnswer.waitForAnalyticsRequest();
 
               await generatedAnswer.feedbackModalSubmitButton.click();
 
@@ -216,13 +201,9 @@ test.describe('atomic-generated-answer', () => {
               expect(requestBodyDetails.hallucinationFree).toBe(false);
               expect(requestBodyDetails.documented).toBe(null);
               expect(requestBodyDetails.readable).toBe(true);
-              expect(requestBody.correctAnswerUrl).toBe(
-                'https://www.example.com/correct-answer'
-              );
+              expect(requestBody.correctAnswerUrl).toBe('https://www.example.com/correct-answer');
 
-              await expect(
-                generatedAnswer.feedbackModalSuccessMessage
-              ).toBeVisible();
+              await expect(generatedAnswer.feedbackModalSuccessMessage).toBeVisible();
 
               await generatedAnswer.feedbackModalSuccessMessageDoneButton.click();
               await generatedAnswer.waitForModalToClose();
@@ -230,9 +211,7 @@ test.describe('atomic-generated-answer', () => {
           });
 
           test.describe('when submitting without selecting all the required options', () => {
-            test('should display a validation error message', async ({
-              generatedAnswer,
-            }) => {
+            test('should display a validation error message', async ({generatedAnswer}) => {
               const feedbackButton =
                 feedbackType === 'like'
                   ? generatedAnswer.likeButton
@@ -246,9 +225,7 @@ test.describe('atomic-generated-answer', () => {
               const validationErrors = generatedAnswer.validationErrors;
               await expect(validationErrors.first()).toBeVisible();
 
-              await expect(
-                generatedAnswer.feedbackModalSuccessMessage
-              ).not.toBeVisible();
+              await expect(generatedAnswer.feedbackModalSuccessMessage).not.toBeVisible();
             });
           });
         });
@@ -258,9 +235,7 @@ test.describe('atomic-generated-answer', () => {
             generatedAnswer,
           }) => {
             const feedbackButton =
-              feedbackType === 'like'
-                ? generatedAnswer.likeButton
-                : generatedAnswer.dislikeButton;
+              feedbackType === 'like' ? generatedAnswer.likeButton : generatedAnswer.dislikeButton;
 
             const expectedHelpfulness = feedbackType === 'like';
 
@@ -275,27 +250,21 @@ test.describe('atomic-generated-answer', () => {
             await generatedAnswer.feedbackModalSubmitButton.click();
             await evaluationRequestPromise;
 
-            await expect(
-              generatedAnswer.feedbackModalSuccessMessage
-            ).toBeVisible();
+            await expect(generatedAnswer.feedbackModalSuccessMessage).toBeVisible();
 
             await generatedAnswer.feedbackModalSuccessMessageDoneButton.click();
             await generatedAnswer.waitForModalToClose();
 
             await feedbackButton.click();
 
-            await expect(generatedAnswer.feedbackModal).not.toHaveAttribute(
-              'is-open'
-            );
+            await expect(generatedAnswer.feedbackModal).not.toHaveAttribute('is-open');
           });
 
           test('should allow reopening the feedback modal after a new query', async ({
             generatedAnswer,
           }) => {
             const feedbackButton =
-              feedbackType === 'like'
-                ? generatedAnswer.likeButton
-                : generatedAnswer.dislikeButton;
+              feedbackType === 'like' ? generatedAnswer.likeButton : generatedAnswer.dislikeButton;
 
             const expectedHelpfulness = feedbackType === 'like';
 
@@ -310,9 +279,7 @@ test.describe('atomic-generated-answer', () => {
             await generatedAnswer.feedbackModalSubmitButton.click();
             await evaluationRequestPromise;
 
-            await expect(
-              generatedAnswer.feedbackModalSuccessMessage
-            ).toBeVisible();
+            await expect(generatedAnswer.feedbackModalSuccessMessage).toBeVisible();
 
             await generatedAnswer.feedbackModalSuccessMessageDoneButton.click();
             await generatedAnswer.waitForModalToClose();
@@ -346,11 +313,8 @@ test.describe('atomic-generated-answer', () => {
   test.describe('search agent follow-up experience', () => {
     const streamingTimeoutMs = 10000;
 
-    test('happy path: head answer, follow-up, and second follow-up', async ({
-      generatedAnswer,
-    }) => {
-      const streamEndPromise =
-        generatedAnswer.waitForStreamEndAnalyticsRequest();
+    test('happy path: head answer, follow-up, and second follow-up', async ({generatedAnswer}) => {
+      const streamEndPromise = generatedAnswer.waitForStreamEndAnalyticsRequest();
 
       await generatedAnswer.load({story: 'with-agent-id'});
 
@@ -383,15 +347,10 @@ test.describe('atomic-generated-answer', () => {
         await expect(generatedAnswer.generatedTexts).toHaveCount(2);
         await expect(generatedAnswer.generatedTexts.last()).toBeVisible();
 
-        const previousItemCollapseButton = generatedAnswer.threadItems
-          .first()
-          .locator('button', {
-            has: generatedAnswer.page.locator('[part="thread-item-title"]'),
-          });
-        await expect(previousItemCollapseButton).toHaveAttribute(
-          'aria-expanded',
-          'false'
-        );
+        const previousItemCollapseButton = generatedAnswer.threadItems.first().locator('button', {
+          has: generatedAnswer.page.locator('[part="thread-item-title"]'),
+        });
+        await expect(previousItemCollapseButton).toHaveAttribute('aria-expanded', 'false');
       });
 
       await test.step('copy follow-up answer to clipboard', async () => {
@@ -402,9 +361,7 @@ test.describe('atomic-generated-answer', () => {
         const copyPromise = generatedAnswer.waitForCustomAnalyticsEvent(
           'generatedAnswerCopyToClipboard'
         );
-        const copyButton = generatedAnswer.threadItems
-          .last()
-          .locator('[part="copy-button"]');
+        const copyButton = generatedAnswer.threadItems.last().locator('[part="copy-button"]');
         await copyButton.click();
 
         const clipboardContent = await generatedAnswer.page.evaluate(() =>
@@ -414,16 +371,12 @@ test.describe('atomic-generated-answer', () => {
 
         const copyRequest = await copyPromise;
         const copyBody = copyRequest.postDataJSON();
-        expect(copyBody.customData.generativeQuestionAnsweringId).toBe(
-          getFollowUpAnswerId(1)
-        );
+        expect(copyBody.customData.generativeQuestionAnsweringId).toBe(getFollowUpAnswerId(1));
         expect(copyBody.customData.conversationId).toBe('thread-1');
       });
 
       await test.step('like the follow-up answer', async () => {
-        const likePromise = generatedAnswer.waitForCustomAnalyticsEvent(
-          'likeGeneratedAnswer'
-        );
+        const likePromise = generatedAnswer.waitForCustomAnalyticsEvent('likeGeneratedAnswer');
         const likeButton = generatedAnswer.threadItems
           .last()
           .getByRole('button', {name: /^helpful$/i});
@@ -432,16 +385,13 @@ test.describe('atomic-generated-answer', () => {
 
         const likeRequest = await likePromise;
         const likeBody = likeRequest.postDataJSON();
-        expect(likeBody.customData.generativeQuestionAnsweringId).toBe(
-          getFollowUpAnswerId(1)
-        );
+        expect(likeBody.customData.generativeQuestionAnsweringId).toBe(getFollowUpAnswerId(1));
         expect(likeBody.customData.conversationId).toBe('thread-1');
       });
 
       await test.step('dislike the follow-up answer', async () => {
-        const dislikePromise = generatedAnswer.waitForCustomAnalyticsEvent(
-          'dislikeGeneratedAnswer'
-        );
+        const dislikePromise =
+          generatedAnswer.waitForCustomAnalyticsEvent('dislikeGeneratedAnswer');
         const dislikeButton = generatedAnswer.threadItems
           .last()
           .getByRole('button', {name: /^not helpful$/i});
@@ -454,9 +404,7 @@ test.describe('atomic-generated-answer', () => {
 
         const dislikeRequest = await dislikePromise;
         const dislikeBody = dislikeRequest.postDataJSON();
-        expect(dislikeBody.customData.generativeQuestionAnsweringId).toBe(
-          getFollowUpAnswerId(1)
-        );
+        expect(dislikeBody.customData.generativeQuestionAnsweringId).toBe(getFollowUpAnswerId(1));
         expect(dislikeBody.customData.conversationId).toBe('thread-1');
       });
 
@@ -464,10 +412,7 @@ test.describe('atomic-generated-answer', () => {
         const hoverPromise = generatedAnswer.waitForCustomAnalyticsEvent(
           'generatedAnswerSourceHover'
         );
-        const citation = generatedAnswer.threadItems
-          .last()
-          .locator('[part="citation"]')
-          .first();
+        const citation = generatedAnswer.threadItems.last().locator('[part="citation"]').first();
         await citation.hover();
 
         const popover = generatedAnswer.threadItems
@@ -481,9 +426,7 @@ test.describe('atomic-generated-answer', () => {
 
         const hoverRequest = await hoverPromise;
         const hoverBody = hoverRequest.postDataJSON();
-        expect(hoverBody.customData.generativeQuestionAnsweringId).toBe(
-          getFollowUpAnswerId(1)
-        );
+        expect(hoverBody.customData.generativeQuestionAnsweringId).toBe(getFollowUpAnswerId(1));
         expect(hoverBody.customData.conversationId).toBe('thread-1');
       });
 
@@ -500,27 +443,21 @@ test.describe('atomic-generated-answer', () => {
 
         const clickRequest = await clickPromise;
         const clickBody = clickRequest.postDataJSON();
-        expect(clickBody.customData.generativeQuestionAnsweringId).toBe(
-          getFollowUpAnswerId(1)
-        );
+        expect(clickBody.customData.generativeQuestionAnsweringId).toBe(getFollowUpAnswerId(1));
         expect(clickBody.customData.conversationId).toBe('thread-1');
       });
 
       await test.step('collapse and expand thread items', async () => {
-        const collapseButton = generatedAnswer.threadItems
-          .first()
-          .locator('button', {
-            has: generatedAnswer.page.locator('[part="thread-item-title"]'),
-          });
+        const collapseButton = generatedAnswer.threadItems.first().locator('button', {
+          has: generatedAnswer.page.locator('[part="thread-item-title"]'),
+        });
 
         await expect(collapseButton).toHaveAttribute('aria-expanded', 'false');
         await collapseButton.click();
         await expect(collapseButton).toHaveAttribute('aria-expanded', 'true');
         await collapseButton.click();
         await expect(collapseButton).toHaveAttribute('aria-expanded', 'false');
-        await expect(
-          generatedAnswer.threadItems.first().locator('[hidden]')
-        ).toHaveCount(1);
+        await expect(generatedAnswer.threadItems.first().locator('[hidden]')).toHaveCount(1);
       });
 
       await test.step('generate second follow-up', async () => {
@@ -546,33 +483,23 @@ test.describe('atomic-generated-answer', () => {
           .last()
           .getByRole('button', {name: /^helpful$/i});
         await thirdAnswerLikeButton.click();
-        await expect(thirdAnswerLikeButton).toHaveAttribute(
-          'aria-pressed',
-          'true'
-        );
+        await expect(thirdAnswerLikeButton).toHaveAttribute('aria-pressed', 'true');
 
         const likeRequest = await likePromise;
         const likeBody = likeRequest.postDataJSON();
-        expect(likeBody.customData.generativeQuestionAnsweringId).toBe(
-          getFollowUpAnswerId(2)
-        );
+        expect(likeBody.customData.generativeQuestionAnsweringId).toBe(getFollowUpAnswerId(2));
 
         await generatedAnswer.showPreviousButton.click();
 
-        const firstItemCollapseButton = generatedAnswer.threadItems
-          .first()
-          .locator('button', {
-            has: generatedAnswer.page.locator('[part="thread-item-title"]'),
-          });
+        const firstItemCollapseButton = generatedAnswer.threadItems.first().locator('button', {
+          has: generatedAnswer.page.locator('[part="thread-item-title"]'),
+        });
         await firstItemCollapseButton.click();
 
         const firstAnswerLikeButton = generatedAnswer.threadItems
           .first()
           .getByRole('button', {name: /^helpful$/i});
-        await expect(firstAnswerLikeButton).toHaveAttribute(
-          'aria-pressed',
-          'false'
-        );
+        await expect(firstAnswerLikeButton).toHaveAttribute('aria-pressed', 'false');
       });
 
       await test.step('interacting with 2nd answer after triggering a 3rd answer', async () => {
@@ -584,18 +511,14 @@ test.describe('atomic-generated-answer', () => {
         });
         await expandButton.click();
 
-        const likePromise = generatedAnswer.waitForCustomAnalyticsEvent(
-          'likeGeneratedAnswer'
-        );
+        const likePromise = generatedAnswer.waitForCustomAnalyticsEvent('likeGeneratedAnswer');
         const likeButton = secondAnswerItem.getByRole('button', {
           name: /^helpful$/i,
         });
         await likeButton.click();
         const likeRequest = await likePromise;
         const likeBody = likeRequest.postDataJSON();
-        expect(likeBody.customData.generativeQuestionAnsweringId).toBe(
-          getFollowUpAnswerId(1)
-        );
+        expect(likeBody.customData.generativeQuestionAnsweringId).toBe(getFollowUpAnswerId(1));
         expect(likeBody.customData.conversationId).toBe('thread-1');
       });
     });
@@ -604,9 +527,7 @@ test.describe('atomic-generated-answer', () => {
   test.describe('search agent follow-up error handling', () => {
     const streamingTimeoutMs = 10000;
 
-    test('displays generic error message on network failure', async ({
-      generatedAnswer,
-    }) => {
+    test('displays generic error message on network failure', async ({generatedAnswer}) => {
       await generatedAnswer.load({story: 'follow-up-network-error'});
       await expect(generatedAnswer.followUpSubmitButton).toBeEnabled({
         timeout: streamingTimeoutMs,
@@ -628,9 +549,7 @@ test.describe('atomic-generated-answer', () => {
       );
     });
 
-    test('displays turn limit error message on SSE turn-limit error', async ({
-      generatedAnswer,
-    }) => {
+    test('displays turn limit error message on SSE turn-limit error', async ({generatedAnswer}) => {
       await generatedAnswer.load({story: 'follow-up-turn-limit-error'});
       await expect(generatedAnswer.followUpSubmitButton).toBeEnabled({
         timeout: streamingTimeoutMs,
@@ -652,9 +571,7 @@ test.describe('atomic-generated-answer', () => {
       );
     });
 
-    test('displays generic error message on SSE internal error', async ({
-      generatedAnswer,
-    }) => {
+    test('displays generic error message on SSE internal error', async ({generatedAnswer}) => {
       await generatedAnswer.load({story: 'follow-up-generic-error'});
       await expect(generatedAnswer.followUpSubmitButton).toBeEnabled({
         timeout: streamingTimeoutMs,

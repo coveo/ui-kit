@@ -9,14 +9,8 @@ export {
   createCacheKey,
   getInterfaceCacheRegistryInternals,
 } from './interface-cache-registry.js';
-export type {
-  CacheKey,
-  InterfaceCacheRegistryInternals,
-} from './interface-cache-registry.js';
-export type {
-  NavigatorContext,
-  NavigatorContextProvider,
-} from './navigator-context-types.js';
+export type {CacheKey, InterfaceCacheRegistryInternals} from './interface-cache-registry.js';
+export type {NavigatorContext, NavigatorContextProvider} from './navigator-context-types.js';
 export {BaseController} from './base-controller.js';
 export type {Controller} from './controller-types.js';
 export {BaseInterface, getInterfaceInternals} from './base-interface.js';

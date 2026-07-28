@@ -27,10 +27,9 @@ import {MockCommerceApi} from '@coveo/platform-mock-api/commerce/mock';
 
 const commerceApiHarness = new MockCommerceApi();
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-commerce-product-list',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-commerce-product-list', {
+  excludeCategories: ['methods'],
+});
 
 const {decorator, play} = wrapInCommerceInterface({
   skipFirstRequest: false,

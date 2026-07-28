@@ -34,9 +34,7 @@ describe('buildBrowserEnvironment', () => {
     Object.defineProperty(window.document, 'referrer', {
       value: 'https://www.coveo.com/',
     });
-    expect(buildBrowserEnvironment().getReferrer()).toBe(
-      'https://www.coveo.com/'
-    );
+    expect(buildBrowserEnvironment().getReferrer()).toBe('https://www.coveo.com/');
   });
 
   it('does not truncate the referrer to the 1024 character limit', () => {
@@ -47,9 +45,7 @@ describe('buildBrowserEnvironment', () => {
       value: referrer,
     });
 
-    expect(buildBrowserEnvironment().getReferrer()).toHaveLength(
-      referrer.length
-    );
+    expect(buildBrowserEnvironment().getReferrer()).toHaveLength(referrer.length);
   });
 
   it('returns null when the referrer is an empty string', () => {
@@ -64,9 +60,7 @@ describe('buildBrowserEnvironment', () => {
       value: {href: 'https://www.patate.com/recettes'},
     });
 
-    expect(buildBrowserEnvironment().getLocation()).toBe(
-      'https://www.patate.com/recettes'
-    );
+    expect(buildBrowserEnvironment().getLocation()).toBe('https://www.patate.com/recettes');
   });
 
   it('does not truncate the location to the 1024 character limit', () => {
@@ -78,9 +72,7 @@ describe('buildBrowserEnvironment', () => {
       },
     });
 
-    expect(buildBrowserEnvironment().getLocation()).toHaveLength(
-      location.length
-    );
+    expect(buildBrowserEnvironment().getLocation()).toHaveLength(location.length);
   });
 
   it('retrieves the userAgent', () => {
@@ -101,9 +93,7 @@ describe('buildBrowserEnvironment', () => {
     it('returns an existing UUID when one is available in storage', () => {
       const storage = createBrowserStorage();
       storage.setItem(clientIdKey, 'e4b8c63a-0000-4dfe-9b13-000000000001');
-      expect(buildBrowserEnvironment().getClientId()).toBe(
-        'e4b8c63a-0000-4dfe-9b13-000000000001'
-      );
+      expect(buildBrowserEnvironment().getClientId()).toBe('e4b8c63a-0000-4dfe-9b13-000000000001');
     });
 
     it('generates a new UUID when the id in storage is not a valid UUID', () => {
@@ -116,11 +106,7 @@ describe('buildBrowserEnvironment', () => {
   it('calls the Fetch API with keepAlive when using send', async () => {
     const fetchSpy = vi.spyOn(window, 'fetch');
     const event = createMockEvent();
-    await buildBrowserEnvironment().send(
-      'https://www.coveo.com/',
-      'token',
-      event
-    );
+    await buildBrowserEnvironment().send('https://www.coveo.com/', 'token', event);
 
     expect(fetchSpy).toHaveBeenCalledTimes(1);
     expect(fetchSpy).toHaveBeenCalledWith(
@@ -137,22 +123,14 @@ describe('buildBrowserEnvironment', () => {
 
   it('returns undefined when calling send', async () => {
     expect(
-      await buildBrowserEnvironment().send(
-        'https://www.coveo.com/',
-        '',
-        createMockEvent()
-      )
+      await buildBrowserEnvironment().send('https://www.coveo.com/', '', createMockEvent())
     ).toBeUndefined();
   });
 
   it('calls sendMessage when calling send', async () => {
     const event = createMockEvent();
 
-    await buildBrowserEnvironment().send(
-      'https://www.coveo.com/',
-      'token',
-      event
-    );
+    await buildBrowserEnvironment().send('https://www.coveo.com/', 'token', event);
     expect(sendMessageSpy).toHaveBeenCalledTimes(1);
     expect(sendMessageSpy).toHaveBeenCalledWith({
       kind: 'EVENT_PROTOCOL',

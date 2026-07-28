@@ -20,9 +20,7 @@ export interface ResultsPerPageDefinition extends ControllerDefinitionWithoutPro
  * @param props - The configurable `ResultsPerPage` properties.
  * @returns The `ResultsPerPage` controller definition.
  * */
-export function defineResultsPerPage(
-  props?: ResultsPerPageProps
-): ResultsPerPageDefinition {
+export function defineResultsPerPage(props?: ResultsPerPageProps): ResultsPerPageDefinition {
   return {
     build: (engine) => buildResultsPerPage(engine, props),
   };

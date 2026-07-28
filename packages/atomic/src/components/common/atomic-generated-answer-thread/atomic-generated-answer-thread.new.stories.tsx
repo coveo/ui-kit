@@ -149,3 +149,46 @@ export const MultipleAnswersExpanded: Story = {
     await userEvent.click(button);
   },
 };
+
+export const MultiLineAnswers: Story = {
+  name: 'Multi-Line Answers',
+  args: {
+    generatedAnswers: [
+      createGeneratedAnswer({
+        question:
+          'What are the detailed steps I should follow to troubleshoot connectivity issues when my application fails to establish a secure connection to the remote server after upgrading the SDK?',
+        answer:
+          'Start by verifying that the SSL certificates are valid and not expired. Then check if the server endpoint URL has changed in the new SDK version. Review the migration guide for any breaking changes in the connection configuration.',
+      }),
+      createGeneratedAnswer({
+        question:
+          'Can you explain how to configure the retry policy and timeout settings for the HTTP client when dealing with intermittent network failures in a distributed microservices architecture?',
+        answer:
+          'Configure exponential backoff with a base delay of 500ms and a maximum of 3 retries. Set the connection timeout to 10 seconds and the read timeout to 30 seconds. Use a circuit breaker pattern to prevent cascading failures across services.',
+      }),
+      createGeneratedAnswer({
+        question:
+          'How do I set up comprehensive logging and monitoring for authentication failures so that the security team can detect and respond to potential brute force attacks in real time?',
+        answer:
+          'Enable audit logging for all authentication events. Configure alerts for more than 5 failed attempts within a 10-minute window from the same IP address. Integrate with your SIEM solution and set up real-time dashboards to visualize login patterns.',
+      }),
+    ],
+  },
+  decorators: [
+    (story) => {
+      const container = document.createElement('div');
+      container.style.maxWidth = '400px';
+      container.appendChild(story() as Node);
+      return container;
+    },
+  ],
+  play: async ({canvasElement}) => {
+    await customElements.whenDefined('atomic-generated-answer-thread');
+    const canvas = within(canvasElement);
+    let button!: HTMLElement;
+    await waitFor(async () => {
+      button = await canvas.findByShadowText(/show .* previous/i);
+    });
+    await userEvent.click(button);
+  },
+};

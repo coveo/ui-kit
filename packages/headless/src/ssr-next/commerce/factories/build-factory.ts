@@ -63,40 +63,29 @@ function buildSSRCommerceEngine(
   options: CommerceEngineOptions,
   recommendationCount: number
 ): SSRCommerceEngine {
-  let actionCompletionMiddleware: ReturnType<
-    typeof createWaitForActionMiddleware
-  >;
+  let actionCompletionMiddleware: ReturnType<typeof createWaitForActionMiddleware>;
 
   const middlewares: ReturnType<typeof createWaitForActionMiddleware>[] = [];
   const memo: Set<string> = new Set();
 
   switch (solutionType) {
     case SolutionType.listing:
-      actionCompletionMiddleware = createWaitForActionMiddleware(
-        isListingFetchCompletedAction
-      );
+      actionCompletionMiddleware = createWaitForActionMiddleware(isListingFetchCompletedAction);
       middlewares.push(actionCompletionMiddleware);
       break;
     case SolutionType.search:
-      actionCompletionMiddleware = createWaitForActionMiddleware(
-        isSearchCompletedAction
-      );
+      actionCompletionMiddleware = createWaitForActionMiddleware(isSearchCompletedAction);
       middlewares.push(actionCompletionMiddleware);
       break;
     case SolutionType.recommendation:
       middlewares.push(
         ...Array.from({length: recommendationCount}, () =>
-          createWaitForActionMiddlewareForRecommendation(
-            isRecommendationCompletedAction,
-            memo
-          )
+          createWaitForActionMiddlewareForRecommendation(isRecommendationCompletedAction, memo)
         )
       );
       break;
     case SolutionType.standalone:
-      actionCompletionMiddleware = createWaitForActionMiddleware(
-        noSearchActionRequired
-      );
+      actionCompletionMiddleware = createWaitForActionMiddleware(noSearchActionRequired);
       break;
     default:
       throw new Error('Unsupported solution type', solutionType);
@@ -104,10 +93,7 @@ function buildSSRCommerceEngine(
 
   const commerceEngine = buildCommerceEngine({
     ...options,
-    middlewares: [
-      ...(options.middlewares ?? []),
-      ...middlewares.map(({middleware}) => middleware),
-    ],
+    middlewares: [...(options.middlewares ?? []), ...middlewares.map(({middleware}) => middleware)],
   });
 
   return {
@@ -134,16 +120,12 @@ export const buildFactory =
       | FetchStaticStateParameters<TControllerDefinitions, TSolutionType>
       | HydrateStaticStateParameters<TControllerDefinitions, TSolutionType>
   ) => {
-    const controllerProps = wireControllerParams(
-      solutionType,
-      controllerDefinitions,
-      buildOptions
-    );
+    const controllerProps = wireControllerParams(solutionType, controllerDefinitions, buildOptions);
 
     const enabledRecommendationControllers =
       buildOptions && 'recommendations' in buildOptions
-        ? (buildOptions as RecommendationBuildConfig<TControllerDefinitions>)
-            ?.recommendations.length
+        ? (buildOptions as RecommendationBuildConfig<TControllerDefinitions>)?.recommendations
+            .length
         : 0;
 
     const engineOptions: CommerceEngineOptions = augmentCommerceEngineOptions(

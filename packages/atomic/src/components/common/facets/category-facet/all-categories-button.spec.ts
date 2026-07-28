@@ -13,9 +13,7 @@ vi.mock('./all-categories-localized-label', {spy: true});
 
 describe('#renderCategoryFacetAllCategoryButton', () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;
-  let mockedGetAllCategoriesLocalizedLabel: MockedFunction<
-    typeof getAllCategoriesLocalizedLabel
-  >;
+  let mockedGetAllCategoriesLocalizedLabel: MockedFunction<typeof getAllCategoriesLocalizedLabel>;
   beforeAll(async () => {
     i18n = await createTestI18n();
     mockedGetAllCategoriesLocalizedLabel = vi
@@ -23,9 +21,7 @@ describe('#renderCategoryFacetAllCategoryButton', () => {
       .mockReturnValue('All Categories');
   });
 
-  const renderComponent = (
-    props: Partial<CategoryFacetAllCategoryButtonProps> = {}
-  ) => {
+  const renderComponent = (props: Partial<CategoryFacetAllCategoryButtonProps> = {}) => {
     const defaultProps: CategoryFacetAllCategoryButtonProps = {
       i18n,
       onClick: vi.fn(),
@@ -69,9 +65,7 @@ describe('#renderCategoryFacetAllCategoryButton', () => {
   it('applies the correct part attribute to the button', async () => {
     await renderComponent();
     const button = page.getByRole('button');
-    await expect
-      .element(button)
-      .toHaveAttribute('part', 'all-categories-button');
+    await expect.element(button).toHaveAttribute('part', 'all-categories-button');
   });
 
   it('calls getAllCategoriesLocalizedLabel with the correct parameters', async () => {

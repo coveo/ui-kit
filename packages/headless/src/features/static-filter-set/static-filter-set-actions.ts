@@ -1,9 +1,6 @@
 import {createAction} from '@reduxjs/toolkit';
 import {validatePayload} from '../../utils/validate-payload.js';
-import {
-  type LegacySearchAction,
-  makeAnalyticsAction,
-} from '../analytics/analytics-utils.js';
+import {type LegacySearchAction, makeAnalyticsAction} from '../analytics/analytics-utils.js';
 import {
   staticFilterIdSchema,
   staticFilterValueSchema,

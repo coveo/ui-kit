@@ -60,9 +60,7 @@ describe('reportCrashIfUnexpected', () => {
     expect(title).toBe('Crash report');
     expect(message).toContain('npx @coveo/create-ui report ');
 
-    const referenceMatch = message.match(
-      /npx @coveo\/create-ui report ([a-f\d]{12})/
-    );
+    const referenceMatch = message.match(/npx @coveo\/create-ui report ([a-f\d]{12})/);
     expect(referenceMatch).not.toBeNull();
     if (referenceMatch) {
       const reportPath = resolveCrashReportPath(referenceMatch[1]);

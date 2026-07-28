@@ -30,26 +30,18 @@ const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
   },
   includeCodeRoot: false,
 });
-const {decorator: commerceProductListDecorator} = wrapInCommerceProductList(
-  'list',
-  false
-);
+const {decorator: commerceProductListDecorator} = wrapInCommerceProductList('list', false);
 const {decorator: productTemplateDecorator} = wrapInProductTemplate();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-product-link',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-product-link', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-product-link',
   title: 'Commerce/Product Link',
   id: 'atomic-product-link',
   render: (args) => template(args),
-  decorators: [
-    productTemplateDecorator,
-    commerceProductListDecorator,
-    commerceInterfaceDecorator,
-  ],
+  decorators: [productTemplateDecorator, commerceProductListDecorator, commerceInterfaceDecorator],
   parameters: {
     ...parameters,
     msw: {handlers: [...commerceApiHarness.handlers]},
@@ -90,11 +82,7 @@ export const WithAlternativeContent: Story = {
       return html`
         <atomic-product-link>
           <div>
-            <img
-              src="https://picsum.photos/seed/picsum/350"
-              alt="Thumbnail"
-              class="thumbnail"
-            />
+            <img src="https://picsum.photos/seed/picsum/350" alt="Thumbnail" class="thumbnail" />
           </div>
         </atomic-product-link>
       `;

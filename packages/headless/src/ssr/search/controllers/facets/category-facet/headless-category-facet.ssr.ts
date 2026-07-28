@@ -20,9 +20,7 @@ export interface CategoryFacetDefinition extends ControllerDefinitionWithoutProp
  * @param props - The configurable `CategoryFacet` properties.
  * @returns The `CategoryFacet` controller definition.
  * */
-export function defineCategoryFacet(
-  props: CategoryFacetProps
-): CategoryFacetDefinition {
+export function defineCategoryFacet(props: CategoryFacetProps): CategoryFacetDefinition {
   return {
     build: (engine) => buildCategoryFacet(engine, props),
   };

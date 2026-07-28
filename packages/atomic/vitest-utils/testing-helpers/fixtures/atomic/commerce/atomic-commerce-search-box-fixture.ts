@@ -11,9 +11,7 @@ import type {
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 
-type CommerceSearchBoxBindings = SearchBoxSuggestionsBindings<
-  SearchBox | StandaloneSearchBox
->;
+type CommerceSearchBoxBindings = SearchBoxSuggestionsBindings<SearchBox | StandaloneSearchBox>;
 
 @customElement('atomic-commerce-search-box')
 export class FixtureAtomicCommerceSearchBox extends LitElement {
@@ -69,9 +67,7 @@ export class FixtureAtomicCommerceSearchBox extends LitElement {
     const container = document.createElement('div');
     render(this.template, container);
 
-    return this.ready
-      ? this.replaceChildren(container.firstElementChild!)
-      : nothing;
+    return this.ready ? this.replaceChildren(container.firstElementChild!) : nothing;
   }
 }
 
@@ -90,9 +86,7 @@ export const defaultBindings = {
   } as unknown as CommerceSearchBoxBindings['store'],
   searchBoxController: {
     state: {
-      suggestions: [
-        {highlightedValue: 'suggestion1Highlighted', rawValue: 'suggestion1'},
-      ],
+      suggestions: [{highlightedValue: 'suggestion1Highlighted', rawValue: 'suggestion1'}],
       value: '',
     },
     selectSuggestion: vi.fn(),
@@ -107,8 +101,7 @@ export const defaultBindings = {
 };
 
 defaultBindings satisfies Partial<CommerceSearchBoxBindings>;
-type MinimalBindings = Partial<CommerceSearchBoxBindings> &
-  typeof defaultBindings;
+type MinimalBindings = Partial<CommerceSearchBoxBindings> & typeof defaultBindings;
 
 export async function renderInAtomicCommerceSearchBox<T extends LitElement>({
   template,
@@ -117,9 +110,7 @@ export async function renderInAtomicCommerceSearchBox<T extends LitElement>({
 }: {
   template: TemplateResult;
   selector: string;
-  bindings?:
-    | Partial<CommerceSearchBoxBindings>
-    | ((bindings: MinimalBindings) => MinimalBindings);
+  bindings?: Partial<CommerceSearchBoxBindings> | ((bindings: MinimalBindings) => MinimalBindings);
 }): Promise<{
   element: T;
   searchBox: FixtureAtomicCommerceSearchBox;

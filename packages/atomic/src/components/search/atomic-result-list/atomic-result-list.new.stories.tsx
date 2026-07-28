@@ -96,10 +96,9 @@ const {play: playNoFirstQuery} = wrapInSearchInterface({
   skipFirstSearch: true,
 });
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-result-list',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-result-list', {
+  excludeCategories: ['methods'],
+});
 
 const {play: playNoResults} = wrapInSearchInterface({
   skipFirstSearch: false,

@@ -1,9 +1,6 @@
 import type {TemplatesManager} from '@coveo/headless';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
-import {
-  TemplateProvider,
-  type TemplateProviderProps,
-} from './template-provider';
+import {TemplateProvider, type TemplateProviderProps} from './template-provider';
 
 describe('TemplateProvider', () => {
   beforeEach(() => {
@@ -68,10 +65,7 @@ describe('TemplateProvider', () => {
         const setTemplateHasError = vi.fn();
 
         setupTemplateProvider({
-          templateElements: [
-            buildFakeTemplateElement(),
-            buildFakeTemplateElement(),
-          ],
+          templateElements: [buildFakeTemplateElement(), buildFakeTemplateElement()],
           setTemplateHasError,
         });
 
@@ -133,9 +127,7 @@ describe('TemplateProvider', () => {
         setupTemplateProvider(
           {
             includeDefaultTemplate: true,
-            templateElements: [
-              buildFakeTemplateElement(vi.fn().mockResolvedValue(null)),
-            ],
+            templateElements: [buildFakeTemplateElement(vi.fn().mockResolvedValue(null))],
           },
           buildManager
         );
@@ -181,12 +173,10 @@ describe('TemplateProvider', () => {
         await vi.runAllTimersAsync();
 
         expect(registerTemplates).toHaveBeenCalledOnce();
-        expect(registerTemplates.mock.lastCall?.[0].content.textContent).toBe(
-          'Default Template'
+        expect(registerTemplates.mock.lastCall?.[0].content.textContent).toBe('Default Template');
+        expect(registerTemplates.mock.lastCall?.[0].linkContent.textContent).toBe(
+          'Default Link Template'
         );
-        expect(
-          registerTemplates.mock.lastCall?.[0].linkContent.textContent
-        ).toBe('Default Link Template');
         expect(registerTemplates.mock.lastCall?.[0].conditions.length).toBe(0);
       });
 
@@ -301,11 +291,7 @@ describe('TemplateProvider', () => {
 
   const setupTemplateProvider = (
     props: Partial<TemplateProviderProps<unknown>> = {},
-    buildManager?: () => TemplatesManager<
-      unknown,
-      DocumentFragment,
-      DocumentFragment
-    >
+    buildManager?: () => TemplatesManager<unknown, DocumentFragment, DocumentFragment>
   ) => {
     return new TestTemplateProvider(
       {

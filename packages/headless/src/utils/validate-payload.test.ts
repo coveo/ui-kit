@@ -79,20 +79,13 @@ describe('validateOptions', () => {
 
   it(`when options are valid
   should return the validated options without error`, () => {
-    const validatedOptions = validateOptions(
-      engine,
-      schema,
-      {id: 1},
-      'someFunction'
-    );
+    const validatedOptions = validateOptions(engine, schema, {id: 1}, 'someFunction');
     expect(validatedOptions.id).toEqual(1);
   });
 
   it(`when options are invalid
   should throw`, () => {
-    expect(() =>
-      validateOptions(engine, schema, {id: 11}, 'someFunction')
-    ).toThrow();
+    expect(() => validateOptions(engine, schema, {id: 11}, 'someFunction')).toThrow();
   });
 });
 
@@ -108,20 +101,13 @@ describe('validateInitialState', () => {
 
   it(`when initial state is valid
   should return the validated options without error`, () => {
-    const validatedInitialState = validateInitialState(
-      engine,
-      schema,
-      {id: 1},
-      'someFunction'
-    );
+    const validatedInitialState = validateInitialState(engine, schema, {id: 1}, 'someFunction');
     expect(validatedInitialState.id).toEqual(1);
   });
 
   it(`when initial state is invalid
   should throw`, () => {
-    expect(() =>
-      validateInitialState(engine, schema, {id: 11}, 'someFunction')
-    ).toThrow();
+    expect(() => validateInitialState(engine, schema, {id: 11}, 'someFunction')).toThrow();
   });
 });
 

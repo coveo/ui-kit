@@ -30,9 +30,7 @@ export const standaloneSearchBoxSetReducer = createReducer(
         const searchBox = state[id];
 
         if (searchBox) {
-          state[id] = buildStandaloneSearchBoxEntry(
-            searchBox.defaultRedirectionUrl
-          );
+          state[id] = buildStandaloneSearchBoxEntry(searchBox.defaultRedirectionUrl);
           return;
         }
       })
@@ -95,9 +93,7 @@ export const standaloneSearchBoxSetReducer = createReducer(
       })
 );
 
-function buildStandaloneSearchBoxEntry(
-  defaultRedirectionUrl: string
-): StandaloneSearchBoxEntry {
+function buildStandaloneSearchBoxEntry(defaultRedirectionUrl: string): StandaloneSearchBoxEntry {
   return {
     defaultRedirectionUrl,
     redirectTo: '',

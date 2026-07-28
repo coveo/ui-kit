@@ -52,34 +52,33 @@ describe('atomic-result-date', () => {
     } = {}
   ) => {
     const resultToUse = 'result' in options ? options.result : mockResult;
-    const {element, atomicInterface} =
-      await renderInAtomicResult<AtomicResultDate>({
-        template: html`<atomic-result-date
-          field=${ifDefined(options.field)}
-          format=${ifDefined(options.format)}
-          ?relative-time=${options.relativeTime}
-        ></atomic-result-date>`,
-        selector: 'atomic-result-date',
-        result: resultToUse === null ? undefined : resultToUse,
-        bindings: (bindings) => {
-          bindings.i18n = i18n;
-          bindings.store = {
-            ...bindings.store,
-            onChange: vi.fn(),
-            state: {
-              ...bindings.store?.state,
-              loadingFlags: [],
-            },
-          };
-          // Mock interfaceElement with language property
-          bindings.interfaceElement = {
-            ...bindings.interfaceElement,
-            language: 'en',
-            // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- mock interface element
-          } as any;
-          return bindings;
-        },
-      });
+    const {element, atomicInterface} = await renderInAtomicResult<AtomicResultDate>({
+      template: html`<atomic-result-date
+        field=${ifDefined(options.field)}
+        format=${ifDefined(options.format)}
+        ?relative-time=${options.relativeTime}
+      ></atomic-result-date>`,
+      selector: 'atomic-result-date',
+      result: resultToUse === null ? undefined : resultToUse,
+      bindings: (bindings) => {
+        bindings.i18n = i18n;
+        bindings.store = {
+          ...bindings.store,
+          onChange: vi.fn(),
+          state: {
+            ...bindings.store?.state,
+            loadingFlags: [],
+          },
+        };
+        // Mock interfaceElement with language property
+        bindings.interfaceElement = {
+          ...bindings.interfaceElement,
+          language: 'en',
+          // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- mock interface element
+        } as any;
+        return bindings;
+      },
+    });
 
     await atomicInterface.updateComplete;
     await element?.updateComplete;
@@ -141,9 +140,7 @@ describe('atomic-result-date', () => {
 
     // TODO V4: KIT-5197 - Remove this test
     it('should log validation warning', async () => {
-      const consoleWarnSpy = vi
-        .spyOn(console, 'warn')
-        .mockImplementation(() => {});
+      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
       const element = await renderComponent({field: 'date'});
 
@@ -151,15 +148,10 @@ describe('atomic-result-date', () => {
       await element.updateComplete;
 
       expect(consoleWarnSpy).toHaveBeenCalledWith(
-        expect.stringContaining(
-          'Prop validation failed for component atomic-result-date'
-        ),
+        expect.stringContaining('Prop validation failed for component atomic-result-date'),
         element
       );
-      expect(consoleWarnSpy).toHaveBeenCalledWith(
-        expect.stringContaining('field'),
-        element
-      );
+      expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('field'), element);
 
       consoleWarnSpy.mockRestore();
     });

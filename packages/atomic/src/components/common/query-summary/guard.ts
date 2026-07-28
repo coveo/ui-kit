@@ -7,9 +7,7 @@ interface QuerySummaryGuardProps {
   firstSearchExecuted: boolean;
 }
 
-export const renderQuerySummaryGuard: FunctionalComponentWithChildren<
-  QuerySummaryGuardProps
-> =
+export const renderQuerySummaryGuard: FunctionalComponentWithChildren<QuerySummaryGuardProps> =
   ({props}) =>
   (children) => {
     if (props.hasError || (!props.hasResults && props.firstSearchExecuted)) {

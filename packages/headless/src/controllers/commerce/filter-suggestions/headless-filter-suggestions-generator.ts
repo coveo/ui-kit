@@ -10,10 +10,7 @@ import type {FieldSuggestionsFacet} from '../../../features/commerce/facets/fiel
 import {executeSearch} from '../../../features/commerce/search/search-actions.js';
 import type {FieldSuggestionsOrderSection} from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
-import {
-  buildController,
-  type Controller,
-} from '../../controller/headless-controller.js';
+import {buildController, type Controller} from '../../controller/headless-controller.js';
 import {
   facetResponseSelector,
   isFacetLoadingResponseSelector,
@@ -22,10 +19,7 @@ import {
   buildCategoryFilterSuggestions,
   type CategoryFilterSuggestions,
 } from './headless-category-filter-suggestions.js';
-import {
-  buildFilterSuggestions,
-  type FilterSuggestions,
-} from './headless-filter-suggestions.js';
+import {buildFilterSuggestions, type FilterSuggestions} from './headless-filter-suggestions.js';
 
 export type GeneratedFilterSuggestionsControllers = Array<
   FilterSuggestions | CategoryFilterSuggestions

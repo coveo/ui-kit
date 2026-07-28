@@ -55,9 +55,7 @@ interface DiagnosticsState {
   breadcrumbs: CrashBreadcrumb[];
 }
 
-const PHASE_BY_LIFECYCLE_EVENT: Partial<
-  Record<CrashBreadcrumbType, CrashPhase>
-> = {
+const PHASE_BY_LIFECYCLE_EVENT: Partial<Record<CrashBreadcrumbType, CrashPhase>> = {
   'template.download.started': 'template-download',
   'project.creation.started': 'project-creation',
   'dependencies.install.started': 'dependency-installation',
@@ -71,10 +69,7 @@ function isCrashBreadcrumb(value: unknown): value is CrashBreadcrumb {
     return false;
   }
   const candidate = value as Partial<CrashBreadcrumb>;
-  return (
-    isOneOf(candidate.type, CRASH_BREADCRUMB_TYPES) &&
-    typeof candidate.timestamp === 'string'
-  );
+  return isOneOf(candidate.type, CRASH_BREADCRUMB_TYPES) && typeof candidate.timestamp === 'string';
 }
 
 export function isCrashDiagnostics(value: unknown): value is CrashDiagnostics {
@@ -119,10 +114,7 @@ export function recordCrashLifecycleEvent(type: CrashBreadcrumbType): void {
   }
   state.breadcrumbs.push({type, timestamp: new Date(now).toISOString()});
   if (state.breadcrumbs.length > MAX_CRASH_BREADCRUMBS) {
-    state.breadcrumbs.splice(
-      0,
-      state.breadcrumbs.length - MAX_CRASH_BREADCRUMBS
-    );
+    state.breadcrumbs.splice(0, state.breadcrumbs.length - MAX_CRASH_BREADCRUMBS);
   }
 }
 
@@ -132,9 +124,7 @@ export function snapshotCrashDiagnostics(): CrashDiagnostics {
   return {
     phase: state.phase,
     phaseElapsedMs:
-      state.phaseStartedAtMs === undefined
-        ? 0
-        : Math.max(0, now - state.phaseStartedAtMs),
+      state.phaseStartedAtMs === undefined ? 0 : Math.max(0, now - state.phaseStartedAtMs),
     breadcrumbs: state.breadcrumbs.map((breadcrumb) => ({...breadcrumb})),
     runtime: {
       processUptimeMs: Math.max(0, Math.round(process.uptime() * 1000)),

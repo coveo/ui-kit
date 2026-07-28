@@ -21,12 +21,7 @@ function parseBoolean(value: string | undefined): boolean | undefined {
 }
 
 function resolveEnvironment(value: string | undefined): PlatformEnvironment {
-  if (
-    value === 'prod' ||
-    value === 'dev' ||
-    value === 'stg' ||
-    value === 'hipaa'
-  ) {
+  if (value === 'prod' || value === 'dev' || value === 'stg' || value === 'hipaa') {
     return value;
   }
 

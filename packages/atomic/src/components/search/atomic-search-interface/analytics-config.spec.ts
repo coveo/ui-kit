@@ -1,8 +1,5 @@
 /* oxlint-disable @typescript-eslint/no-explicit-any -- <> */
-import {
-  getSampleSearchEngineConfiguration,
-  type SearchEngineConfiguration,
-} from '@coveo/headless';
+import {getSampleSearchEngineConfiguration, type SearchEngineConfiguration} from '@coveo/headless';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {getAnalyticsConfig} from './analytics-config';
 import {createSearchStore} from './store';
@@ -33,13 +30,11 @@ describe('analyticsConfig', () => {
 
   describe.each([
     {
-      describeName:
-        'when the searchEngineConfig does not have a custom analyticsClientMiddleware',
+      describeName: 'when the searchEngineConfig does not have a custom analyticsClientMiddleware',
       getSearchEngineConfig: getSampleSearchEngineConfiguration,
     },
     {
-      describeName:
-        'when the searchEngineConfig does have a custom analyticsClientMiddleware',
+      describeName: 'when the searchEngineConfig does have a custom analyticsClientMiddleware',
       getSearchEngineConfig: getConfigWithCustomAnalyticsClientMiddleware,
     },
   ])('$describeName', ({getSearchEngineConfig}) => {
@@ -83,9 +78,7 @@ describe('analyticsConfig', () => {
         buzz: 'bazz',
       }) as any;
 
-      expect(out.foo).toBe(
-        config.analytics?.analyticsClientMiddleware ? 'bar' : undefined
-      );
+      expect(out.foo).toBe(config.analytics?.analyticsClientMiddleware ? 'bar' : undefined);
     });
 
     it('augments analytics payload with Atomic version', () => {
@@ -98,26 +91,26 @@ describe('analyticsConfig', () => {
 
     it('augments analytics payload with facet title, with any type of facet registered to the store', () => {
       const resultingConfig = getAnalyticsConfig(config, true, store);
-      (
-        ['facets', 'numericFacets', 'dateFacets', 'categoryFacets'] as const
-      ).forEach((typeOfFacet) => {
-        store.registerFacet(typeOfFacet, {
-          facetId: 'some_id',
-          label: () => 'This is a label',
-          element: document.createElement('div'),
-          isHidden: () => false,
-        });
-
-        const out = resultingConfig.analyticsClientMiddleware!('an_event', {
-          customData: {
+      (['facets', 'numericFacets', 'dateFacets', 'categoryFacets'] as const).forEach(
+        (typeOfFacet) => {
+          store.registerFacet(typeOfFacet, {
             facetId: 'some_id',
-            facetTitle: 'some_title',
-          },
-          facetState: [{title: 'some_title', id: 'some_id'}],
-        }) as any;
-        expect(out.customData.facetTitle).toBe('This is a label');
-        expect(out.facetState[0].title).toBe('This is a label');
-      });
+            label: () => 'This is a label',
+            element: document.createElement('div'),
+            isHidden: () => false,
+          });
+
+          const out = resultingConfig.analyticsClientMiddleware!('an_event', {
+            customData: {
+              facetId: 'some_id',
+              facetTitle: 'some_title',
+            },
+            facetState: [{title: 'some_title', id: 'some_id'}],
+          }) as any;
+          expect(out.customData.facetTitle).toBe('This is a label');
+          expect(out.facetState[0].title).toBe('This is a label');
+        }
+      );
     });
 
     it('does not augment analytics payload with a facet title when a facet is unavailable from the store', () => {

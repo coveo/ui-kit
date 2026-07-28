@@ -21,27 +21,20 @@ vi.mock('@coveo/headless/commerce', {spy: true});
 
 describe('atomic-commerce-search-box-query-suggestions', () => {
   beforeEach(() => {
-    vi.mocked(loadQuerySuggestActions).mockReturnValue(
-      buildFakeLoadQuerySuggestActions()
-    );
+    vi.mocked(loadQuerySuggestActions).mockReturnValue(buildFakeLoadQuerySuggestActions());
   });
 
-  const renderElements = async (
-    bindings: {} = {},
-    maxWithoutQuery?: number
-  ) => {
+  const renderElements = async (bindings: {} = {}, maxWithoutQuery?: number) => {
     const {element, searchBox} =
-      await renderInAtomicCommerceSearchBox<AtomicCommerceSearchBoxQuerySuggestions>(
-        {
-          template: html`<atomic-commerce-search-box-query-suggestions
-            max-without-query=${ifDefined(maxWithoutQuery)}
-          ></atomic-commerce-search-box-query-suggestions>`,
-          selector: 'atomic-commerce-search-box-query-suggestions',
-          bindings: {
-            ...bindings,
-          },
-        }
-      );
+      await renderInAtomicCommerceSearchBox<AtomicCommerceSearchBoxQuerySuggestions>({
+        template: html`<atomic-commerce-search-box-query-suggestions
+          max-without-query=${ifDefined(maxWithoutQuery)}
+        ></atomic-commerce-search-box-query-suggestions>`,
+        selector: 'atomic-commerce-search-box-query-suggestions',
+        bindings: {
+          ...bindings,
+        },
+      });
     return {element, searchBox};
   };
 
@@ -67,11 +60,7 @@ describe('atomic-commerce-search-box-query-suggestions', () => {
 
     it('should display an error component', async () => {
       await expect
-        .element(
-          page.getByText(
-            'atomic-commerce-search-box-query-suggestions component error'
-          )
-        )
+        .element(page.getByText('atomic-commerce-search-box-query-suggestions component error'))
         .toBeInTheDocument();
     });
   });
@@ -82,22 +71,13 @@ describe('atomic-commerce-search-box-query-suggestions', () => {
     let element: AtomicCommerceSearchBoxQuerySuggestions;
 
     beforeEach(async () => {
-      dispatchSpy = vi.spyOn(
-        AtomicCommerceSearchBoxQuerySuggestions.prototype,
-        'dispatchEvent'
-      );
-      initializeSpy = vi.spyOn(
-        AtomicCommerceSearchBoxQuerySuggestions.prototype,
-        'initialize'
-      );
+      dispatchSpy = vi.spyOn(AtomicCommerceSearchBoxQuerySuggestions.prototype, 'dispatchEvent');
+      initializeSpy = vi.spyOn(AtomicCommerceSearchBoxQuerySuggestions.prototype, 'initialize');
       ({element} = await renderElements());
     });
 
     it('should dispatch the search box suggestions event', async () => {
-      const event = buildCustomEvent(
-        'atomic/searchBoxSuggestion/register',
-        vi.fn()
-      );
+      const event = buildCustomEvent('atomic/searchBoxSuggestion/register', vi.fn());
       expect(dispatchSpy).toHaveBeenCalledWith(event);
     });
 
@@ -150,9 +130,7 @@ describe('atomic-commerce-search-box-query-suggestions', () => {
 
       expect(warnSpy).toHaveBeenCalledOnce();
       const warningMessage = warnSpy.mock.calls[0][0];
-      expect(warningMessage).toContain(
-        'Query suggestions configuration mismatch'
-      );
+      expect(warningMessage).toContain('Query suggestions configuration mismatch');
       expect(warningMessage).toContain('number-of-queries="3"');
       expect(warningMessage).toContain('max-with-query="5"');
     });
@@ -188,10 +166,7 @@ describe('atomic-commerce-search-box-query-suggestions', () => {
       let items: SearchBoxSuggestionElement[];
       let content: HTMLElement;
 
-      const setupRenderItemsTest = async (
-        bindings: {} = {},
-        maxWithoutQuery?: number
-      ) => {
+      const setupRenderItemsTest = async (bindings: {} = {}, maxWithoutQuery?: number) => {
         ({element} = await renderElements(bindings, maxWithoutQuery));
         object = element.initialize();
         items = object.renderItems();
@@ -305,14 +280,13 @@ describe('atomic-commerce-search-box-query-suggestions', () => {
       });
 
       it('should have the correct onSelect function on an item', () => {
-        const suggestion =
-          element.bindings.searchBoxController.state.suggestions[0].rawValue;
+        const suggestion = element.bindings.searchBoxController.state.suggestions[0].rawValue;
 
         items[0].onSelect?.(new Event('click'));
 
-        expect(
-          element.bindings.searchBoxController.selectSuggestion
-        ).toHaveBeenCalledWith(suggestion);
+        expect(element.bindings.searchBoxController.selectSuggestion).toHaveBeenCalledWith(
+          suggestion
+        );
       });
 
       describe('when rendering the content', () => {

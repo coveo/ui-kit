@@ -17,10 +17,7 @@ import type {
   NumericFacetSection,
   SearchSection,
 } from '../../../state/state-sections.js';
-import {
-  buildController,
-  type Controller,
-} from '../../controller/headless-controller.js';
+import {buildController, type Controller} from '../../controller/headless-controller.js';
 import type {StaticFilterValue} from '../../static-filter/headless-static-filter.js';
 
 /**
@@ -189,10 +186,7 @@ export type GetBreadcrumbsConfiguration<T extends AnyFacetSetState> = {
       CategoryFacetSection
   >;
   facetSet: T;
-  executeToggleSelect: (payload: {
-    facetId: string;
-    selection: InferFacetSliceValueType<T>;
-  }) => void;
+  executeToggleSelect: (payload: {facetId: string; selection: InferFacetSliceValueType<T>}) => void;
   executeToggleExclude: (payload: {
     facetId: string;
     selection: InferFacetSliceValueType<T>;
@@ -227,18 +221,16 @@ export const getBreadcrumbs = <T extends AnyFacetSetState>(
 ): Breadcrumb<InferFacetSliceValueType<T>>[] => {
   return Object.keys(config.facetSet)
     .map((facetId) => {
-      const values = config
-        .facetValuesSelector(config.engine.state, facetId)
-        .map((selection) => ({
-          value: selection,
-          deselect: () => {
-            if (selection.state === 'selected') {
-              config.executeToggleSelect({facetId, selection});
-            } else if (selection.state === 'excluded') {
-              config.executeToggleExclude({facetId, selection});
-            }
-          },
-        }));
+      const values = config.facetValuesSelector(config.engine.state, facetId).map((selection) => ({
+        value: selection,
+        deselect: () => {
+          if (selection.state === 'selected') {
+            config.executeToggleSelect({facetId, selection});
+          } else if (selection.state === 'excluded') {
+            config.executeToggleExclude({facetId, selection});
+          }
+        },
+      }));
 
       return {
         facetId,
@@ -255,9 +247,7 @@ export const getBreadcrumbs = <T extends AnyFacetSetState>(
  * @param engine - The headless engine.
  * @returns A `BreadcrumbManager` controller instance.
  */
-export function buildCoreBreadcrumbManager(
-  engine: CoreEngine
-): BreadcrumbManager {
+export function buildCoreBreadcrumbManager(engine: CoreEngine): BreadcrumbManager {
   const controller = buildController(engine);
   const {dispatch} = engine;
 

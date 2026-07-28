@@ -25,8 +25,7 @@ export default function ProductsPerPage(props: IProductsPerPageProps) {
           <span key={id}>
             <input
               checked={
-                state.pageSize === pageSize ||
-                (pageSize === 0 && !options.includes(state.pageSize))
+                state.pageSize === pageSize || (pageSize === 0 && !options.includes(state.pageSize))
               }
               id={id}
               name={`pageSize-${pageSize}`}

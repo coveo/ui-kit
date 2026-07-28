@@ -22,10 +22,7 @@ import {mapProperty} from '@/src/utils/props-utils';
  */
 @customElement('atomic-insight-result-template')
 @withTailwindStyles
-export class AtomicInsightResultTemplate
-  extends LitElement
-  implements LitElementWithError
-{
+export class AtomicInsightResultTemplate extends LitElement implements LitElementWithError {
   private resultTemplateController: ResultTemplateController;
   @state() error!: Error;
 
@@ -61,16 +58,9 @@ export class AtomicInsightResultTemplate
 
   constructor() {
     super();
-    const validParents = [
-      'atomic-insight-result-list',
-      'atomic-insight-folded-result-list',
-    ];
+    const validParents = ['atomic-insight-result-list', 'atomic-insight-folded-result-list'];
     const allowEmpty = true;
-    this.resultTemplateController = new ResultTemplateController(
-      this,
-      validParents,
-      allowEmpty
-    );
+    this.resultTemplateController = new ResultTemplateController(this, validParents, allowEmpty);
   }
 
   connectedCallback() {
@@ -91,9 +81,7 @@ export class AtomicInsightResultTemplate
    * Gets the appropriate result template based on conditions applied.
    */
   public async getTemplate(): Promise<InsightResultTemplate<DocumentFragment> | null> {
-    const template = this.resultTemplateController?.getTemplate(
-      this.conditions
-    );
+    const template = this.resultTemplateController?.getTemplate(this.conditions);
     return template;
   }
 }

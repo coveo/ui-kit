@@ -1,10 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {change} from '../history/history-actions.js';
-import {
-  addContext,
-  removeContext,
-  setContext,
-} from './dictionary-field-context-actions.js';
+import {addContext, removeContext, setContext} from './dictionary-field-context-actions.js';
 import {getDictionaryFieldContextInitialState} from './dictionary-field-context-state.js';
 
 export const dictionaryFieldContextReducer = createReducer(
@@ -26,8 +22,7 @@ export const dictionaryFieldContextReducer = createReducer(
           return;
         }
 
-        state.contextValues =
-          action.payload.dictionaryFieldContext.contextValues;
+        state.contextValues = action.payload.dictionaryFieldContext.contextValues;
       });
   }
 );

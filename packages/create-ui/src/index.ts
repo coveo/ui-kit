@@ -3,10 +3,7 @@ import {Command, CommanderError} from 'commander';
 import {realpathSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {argv} from 'node:process';
-import {
-  initializeCrashDiagnostics,
-  recordCrashLifecycleEvent,
-} from './crash-diagnostics.js';
+import {initializeCrashDiagnostics, recordCrashLifecycleEvent} from './crash-diagnostics.js';
 import {
   buildCrashReport,
   crashReportReference,
@@ -40,10 +37,7 @@ function buildProgram(): Command {
         'configuration against the sample organization — no credentials required.'
     )
     .argument('[project-name]', 'name (and directory) of the project to create')
-    .option(
-      '--template <name>',
-      'template to scaffold (skips the interactive prompt)'
-    )
+    .option('--template <name>', 'template to scaffold (skips the interactive prompt)')
     .option(
       '--template-version <version>',
       'Headless/Atomic library version (or npm dist-tag) to scaffold (defaults to latest)'
@@ -74,9 +68,7 @@ export function parseArgs(rawArgs: string[]): CliArgs {
     projectName: program.args[0],
     template: opts.template,
     templateVersion:
-      templateVersion !== undefined && templateVersion.length > 0
-        ? templateVersion
-        : undefined,
+      templateVersion !== undefined && templateVersion.length > 0 ? templateVersion : undefined,
     docs: Boolean(opts.docs),
   };
 }
@@ -116,8 +108,7 @@ export async function main(rawArgs: string[]): Promise<number> {
 }
 
 const isDirectRun =
-  argv[1] !== undefined &&
-  fileURLToPath(import.meta.url) === realpathSync(argv[1]);
+  argv[1] !== undefined && fileURLToPath(import.meta.url) === realpathSync(argv[1]);
 
 export async function reportCrashIfUnexpected(
   error: unknown,
@@ -129,10 +120,7 @@ export async function reportCrashIfUnexpected(
   try {
     const report = buildCrashReport(error, origin);
     const reportPath = await writeCrashReport(report);
-    log.note(
-      buildCrashDisclosure(reportPath, crashReportReference(report.runId)),
-      'Crash report'
-    );
+    log.note(buildCrashDisclosure(reportPath, crashReportReference(report.runId)), 'Crash report');
   } catch {
     // Best-effort: never let a reporting failure hide the real crash.
   }
@@ -149,14 +137,8 @@ if (isDirectRun) {
     process.exit(1);
   };
 
-  process.on(
-    'uncaughtException',
-    (error) => void fail(error, 'uncaught-exception')
-  );
-  process.on(
-    'unhandledRejection',
-    (reason) => void fail(reason, 'unhandled-rejection')
-  );
+  process.on('uncaughtException', (error) => void fail(error, 'uncaught-exception'));
+  process.on('unhandledRejection', (reason) => void fail(reason, 'unhandled-rejection'));
 
   main(argv.slice(2)).then(
     (code) => process.exit(code),

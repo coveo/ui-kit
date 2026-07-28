@@ -1,6 +1,19 @@
-.generated-answer-thread__dot-column,
-.generated-answer-thread__line-column {
+.generated-answer-thread__grid {
+  display: grid;
+  grid-template-columns: 10px 1fr;
+  grid-template-rows: auto 1fr;
+  column-gap: var(--lwc-spacingXSmall, 8px);
+}
+
+.generated-answer-thread__timeline {
+  grid-row: 1 / -1;
+  align-self: stretch;
+}
+
+.generated-answer-thread__dot-column {
   width: 10px;
+  height: 1lh;
+  margin-block: var(--lwc-spacingXxSmall, 4px);
 }
 
 .generated-answer-thread__dot {
@@ -12,9 +25,8 @@
 
 .generated-answer-thread__connector {
   position: relative;
+  flex: 1;
   width: 1px;
-  height: 100%;
-  min-height: 12px;
   background-color: var(--lwc-colorBorder, #dddbda);
 }
 

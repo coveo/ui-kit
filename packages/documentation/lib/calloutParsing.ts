@@ -4,12 +4,10 @@ type VariableMap = Record<string, string>;
 
 let BLOCK_COUNTER = 0;
 let VARIABLES: VariableMap = {};
-const CODE_BLOCK_REGEX =
-  /<pre\b[^>]*>[\s\S]*?<code\b[^>]*>[\s\S]*?<\/code>[\s\S]*?<\/pre>/gi;
+const CODE_BLOCK_REGEX = /<pre\b[^>]*>[\s\S]*?<code\b[^>]*>[\s\S]*?<\/code>[\s\S]*?<\/pre>/gi;
 
 const CALLOUT_IN_TEXT_REGEX = /\/\/\s*callout\[((?:.|\n)*?)\]/i;
-const FALLBACK_CALLOUT_HTML_REGEX =
-  /(^|[^:])\/\/(?:\s|<[^>]+>)*callout\[(?:.|\n)*?\]/gi;
+const FALLBACK_CALLOUT_HTML_REGEX = /(^|[^:])\/\/(?:\s|<[^>]+>)*callout\[(?:.|\n)*?\]/gi;
 
 // ---------- Helpers (all arrow functions) ----------
 
@@ -22,8 +20,7 @@ const stripAllTags = (html: string): string => {
   return html;
 };
 
-const stripSpanWrappers = (html: string): string =>
-  html.replace(/<\/?span\b[^>]*>/gi, '');
+const stripSpanWrappers = (html: string): string => html.replace(/<\/?span\b[^>]*>/gi, '');
 
 const decodeEntities = (s: string): string =>
   s
@@ -36,11 +33,7 @@ const decodeEntities = (s: string): string =>
     .replace(/&amp;/gi, '&');
 
 const escapeAttr = (s: string): string =>
-  s
-    .replace(/&/g, '&amp;')
-    .replace(/"/g, '&quot;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
+  s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 /**
  * Allow only <a> tags; strip everything else.
@@ -72,15 +65,8 @@ const sanitizeCalloutHtml = (input: string): string => {
 
     if (/^<\/a/i.test(tag)) return '</a>';
 
-    const hrefMatch = tag.match(
-      /\bhref\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/i
-    );
-    const href = (
-      hrefMatch?.[1] ??
-      hrefMatch?.[2] ??
-      hrefMatch?.[3] ??
-      ''
-    ).trim();
+    const hrefMatch = tag.match(/\bhref\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/i);
+    const href = (hrefMatch?.[1] ?? hrefMatch?.[2] ?? hrefMatch?.[3] ?? '').trim();
 
     const isSafe =
       /^https?:\/\//i.test(href) ||
@@ -120,9 +106,7 @@ const processCodeInnerHtml = (codeInner: string) => {
       const mm = plain.match(CALLOUT_IN_TEXT_REGEX);
       if (!mm) return m;
 
-      const normalizedMatch = normalized.match(
-        /\/\/\s*callout\[((?:.|\n)*?)\]/i
-      );
+      const normalizedMatch = normalized.match(/\/\/\s*callout\[((?:.|\n)*?)\]/i);
       const payloadHtml = normalizedMatch?.[1] ?? '';
       const sanitized = sanitizeCalloutHtml(payloadHtml);
 
@@ -190,24 +174,17 @@ const transformCodeBlockHtml = (blockHtml: string): string => {
   const codeTagEnd = blockHtml.indexOf('>', codeStart);
   const codeClose = blockHtml.lastIndexOf('</code>');
 
-  if (codeStart === -1 || codeTagEnd === -1 || codeClose === -1)
-    return blockHtml;
+  if (codeStart === -1 || codeTagEnd === -1 || codeClose === -1) return blockHtml;
 
   const beforeCode = blockHtml.slice(0, codeTagEnd + 1);
   const afterCode = blockHtml.slice(codeClose);
-  const originalCodeInner = replaceVariablesInCodeBlock(
-    blockHtml.slice(codeTagEnd + 1, codeClose)
-  );
+  const originalCodeInner = replaceVariablesInCodeBlock(blockHtml.slice(codeTagEnd + 1, codeClose));
 
   const {codeInner, callouts} = processCodeInnerHtml(originalCodeInner);
-  if (callouts.length === 0)
-    return `${beforeCode}${originalCodeInner}${afterCode}`;
+  if (callouts.length === 0) return `${beforeCode}${originalCodeInner}${afterCode}`;
 
   const calloutLineItems = callouts
-    .map(
-      (c, i) =>
-        `<li id="code-callout-${BLOCK_COUNTER}-${i + 1}">${codifyCallout(c)}</li>`
-    )
+    .map((c, i) => `<li id="code-callout-${BLOCK_COUNTER}-${i + 1}">${codifyCallout(c)}</li>`)
     .join('');
   const calloutsHtml = `<section class="code-callout-list"><ol>${calloutLineItems}</ol></section>`;
 

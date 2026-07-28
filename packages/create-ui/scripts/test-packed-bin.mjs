@@ -16,33 +16,19 @@ try {
     stdio: 'inherit',
   });
 
-  const packageFile = (await readdir(tempDir)).find((file) =>
-    file.endsWith('.tgz')
-  );
+  const packageFile = (await readdir(tempDir)).find((file) => file.endsWith('.tgz'));
   if (packageFile === undefined) {
     throw new Error('pnpm pack did not produce a package tarball.');
   }
 
   execFileSync(
     'npm',
-    [
-      'install',
-      '--ignore-scripts',
-      '--no-package-lock',
-      join(tempDir, packageFile),
-    ],
+    ['install', '--ignore-scripts', '--no-package-lock', join(tempDir, packageFile)],
     {cwd: installDir, stdio: 'inherit'}
   );
   const sourceMap = JSON.parse(
     await readFile(
-      join(
-        installDir,
-        'node_modules',
-        '@coveo',
-        'create-ui',
-        'dist',
-        'index.js.map'
-      ),
+      join(installDir, 'node_modules', '@coveo', 'create-ui', 'dist', 'index.js.map'),
       'utf8'
     )
   );
@@ -51,9 +37,7 @@ try {
     !Array.isArray(sourceMap.sourcesContent) ||
     sourceMap.sourcesContent.length === 0
   ) {
-    throw new Error(
-      'Packed create-ui source maps are missing original sources.'
-    );
+    throw new Error('Packed create-ui source maps are missing original sources.');
   }
 
   execFileSync('npm', ['exec', '--no', '--', 'create-ui', '--help'], {

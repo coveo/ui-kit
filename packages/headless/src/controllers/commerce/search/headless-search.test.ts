@@ -22,10 +22,7 @@ import {commerceSearchReducer as commerceSearch} from '../../../features/commerc
 import {restoreSearchParameters} from '../../../features/commerce/search-parameters/search-parameters-actions.js';
 import {searchParametersDefinition} from '../../../features/commerce/search-parameters/search-parameters-schema.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
-import {
-  buildMockCommerceEngine,
-  type MockedCommerceEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockCommerceEngine, type MockedCommerceEngine} from '../../../test/mock-engine-v2.js';
 import * as SubControllers from '../core/sub-controller/headless-sub-controller.js';
 import {
   facetResponseSelector,
@@ -56,10 +53,7 @@ describe('headless search', () => {
   });
 
   it('uses sub-controllers', () => {
-    const buildSearchSubControllers = vi.spyOn(
-      SubControllers,
-      'buildSearchSubControllers'
-    );
+    const buildSearchSubControllers = vi.spyOn(SubControllers, 'buildSearchSubControllers');
 
     buildSearch(engine);
 
@@ -69,9 +63,7 @@ describe('headless search', () => {
     const options = call[1];
     expect(options.responseIdSelector).toBe(responseIdSelector);
     expect(options.facetResponseSelector).toBe(facetResponseSelector);
-    expect(options.isFacetLoadingResponseSelector).toBe(
-      isFacetLoadingResponseSelector
-    );
+    expect(options.isFacetLoadingResponseSelector).toBe(isFacetLoadingResponseSelector);
     expect(options.requestIdSelector).toBe(requestIdSelector);
     expect(options.serializer).toBe(searchSerializer);
     expect(options.parametersDefinition).toBe(searchParametersDefinition);
@@ -91,10 +83,7 @@ describe('headless search', () => {
   });
 
   it('creates closures for fetching products that capture default enableResults=false', () => {
-    const buildSearchSubControllers = vi.spyOn(
-      SubControllers,
-      'buildSearchSubControllers'
-    );
+    const buildSearchSubControllers = vi.spyOn(SubControllers, 'buildSearchSubControllers');
     const executeSearchMock = vi.spyOn(SearchActions, 'executeSearch');
     const fetchMoreProductsMock = vi.spyOn(SearchActions, 'fetchMoreProducts');
 
@@ -113,10 +102,7 @@ describe('headless search', () => {
   it('creates closures for fetching products that capture enableResults=true', () => {
     vi.clearAllMocks();
 
-    const buildSearchSubControllers = vi.spyOn(
-      SubControllers,
-      'buildSearchSubControllers'
-    );
+    const buildSearchSubControllers = vi.spyOn(SubControllers, 'buildSearchSubControllers');
     const executeSearchMock = vi.spyOn(SearchActions, 'executeSearch');
     const fetchMoreProductsMock = vi.spyOn(SearchActions, 'fetchMoreProducts');
 
@@ -131,10 +117,7 @@ describe('headless search', () => {
   });
 
   it('#promoteChildToParent dispatches #promoteChildToParent with the correct arguments', () => {
-    const promoteChildToParent = vi.spyOn(
-      SearchActions,
-      'promoteChildToParent'
-    );
+    const promoteChildToParent = vi.spyOn(SearchActions, 'promoteChildToParent');
     const child = {permanentid: 'childPermanentId'} as ChildProduct;
 
     search.promoteChildToParent(child);

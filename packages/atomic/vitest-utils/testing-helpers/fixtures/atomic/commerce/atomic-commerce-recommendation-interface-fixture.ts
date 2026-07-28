@@ -8,10 +8,7 @@ import type {CommerceStore} from '@/src/components/commerce/atomic-commerce-inte
 import type {CommerceBindings} from '@/src/components/commerce/atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface.js';
 import {bindingsContext} from '@/src/components/common/context/bindings-context.js';
 import type {BaseAtomicInterface} from '@/src/components/common/interface/interface-controller.js';
-import {
-  type InitializeEvent,
-  markParentAsReady,
-} from '@/src/utils/init-queue.js';
+import {type InitializeEvent, markParentAsReady} from '@/src/utils/init-queue.js';
 import {initializeEventName} from '@/src/utils/initialization-common-utils.js';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture.js';
 import {genericSubscribe} from '@/vitest-utils/testing-helpers/fixtures/headless/common.js';
@@ -93,43 +90,33 @@ export const defaultBindings = {
 defaultBindings satisfies Partial<CommerceBindings>;
 type MinimalBindings = Partial<CommerceBindings> & typeof defaultBindings;
 
-export function renderInAtomicCommerceRecommendationInterface<
-  T extends LitElement,
->({
+export function renderInAtomicCommerceRecommendationInterface<T extends LitElement>({
   template,
   selector,
   bindings,
 }: {
   template: TemplateResult;
   selector?: string;
-  bindings?:
-    | Partial<CommerceBindings>
-    | ((bindings: MinimalBindings) => MinimalBindings);
+  bindings?: Partial<CommerceBindings> | ((bindings: MinimalBindings) => MinimalBindings);
 }): Promise<{
   element: T;
   atomicInterface: FixtureAtomicCommerceRecommendationInterface;
 }>;
-export async function renderInAtomicCommerceRecommendationInterface<
-  T extends LitElement,
->({
+export async function renderInAtomicCommerceRecommendationInterface<T extends LitElement>({
   template,
   selector,
   bindings,
 }: {
   template: TemplateResult;
   selector?: string | never;
-  bindings?:
-    | Partial<CommerceBindings>
-    | ((bindings: MinimalBindings) => MinimalBindings);
+  bindings?: Partial<CommerceBindings> | ((bindings: MinimalBindings) => MinimalBindings);
 }): Promise<{
   element: null | T;
   atomicInterface: FixtureAtomicCommerceRecommendationInterface;
 }> {
-  const atomicInterface =
-    await fixture<FixtureAtomicCommerceRecommendationInterface>(
-      html`<atomic-commerce-recommendation-interface>
-      </atomic-commerce-recommendation-interface>`
-    );
+  const atomicInterface = await fixture<FixtureAtomicCommerceRecommendationInterface>(
+    html`<atomic-commerce-recommendation-interface> </atomic-commerce-recommendation-interface>`
+  );
   if (!bindings) {
     atomicInterface.setBindings({} as CommerceBindings);
   }

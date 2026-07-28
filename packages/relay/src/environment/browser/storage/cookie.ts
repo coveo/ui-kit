@@ -20,19 +20,14 @@ function createCookieManager(): CookieManager {
       for (const cookie of cookieArray) {
         const prettifyCookie = cookie.replace(/^\s+/, '');
         if (prettifyCookie.lastIndexOf(cookiePrefix, 0) === 0) {
-          return prettifyCookie.substring(
-            cookiePrefix.length,
-            prettifyCookie.length
-          );
+          return prettifyCookie.substring(cookiePrefix.length, prettifyCookie.length);
         }
       }
       return null;
     },
     setItem(key: string, data: string, expire: number): void {
       const domain = getDomain(window.location.hostname);
-      const expireSection = `;expires=${new Date(
-        new Date().getTime() + expire
-      ).toUTCString()}`;
+      const expireSection = `;expires=${new Date(new Date().getTime() + expire).toUTCString()}`;
       const domainSection = domain ? `;domain=${domain}` : '';
       document.cookie = `${prefix}${key}=${data}${expireSection}${domainSection};path=/;SameSite=Lax`;
     },

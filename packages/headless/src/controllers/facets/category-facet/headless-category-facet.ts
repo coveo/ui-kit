@@ -70,13 +70,12 @@ export type {
  * @param props - The configurable `CategoryFacet` properties.
  * @returns A `CategoryFacet` controller instance.
  *
+ * Example: [category-facet.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/category-facet.tsx)
+ *
  * @group Controllers
  * @category CategoryFacet
  * */
-export function buildCategoryFacet(
-  engine: SearchEngine,
-  props: CategoryFacetProps
-): CategoryFacet {
+export function buildCategoryFacet(engine: SearchEngine, props: CategoryFacetProps): CategoryFacet {
   if (!loadCategoryFacetReducers(engine)) {
     throw loadReducerError;
   }
@@ -164,10 +163,7 @@ export function buildCategoryFacet(
 function loadCategoryFacetReducers(
   engine: SearchEngine
 ): engine is SearchEngine<
-  CategoryFacetSection &
-    CategoryFacetSearchSection &
-    ConfigurationSection &
-    SearchSection
+  CategoryFacetSection & CategoryFacetSearchSection & ConfigurationSection & SearchSection
 > {
   engine.addReducers({
     categoryFacetSet,
@@ -178,10 +174,7 @@ function loadCategoryFacetReducers(
   return true;
 }
 
-function getLegacyToggleSelectAnalyticsAction(
-  facetId: string,
-  selection: CategoryFacetValue
-) {
+function getLegacyToggleSelectAnalyticsAction(facetId: string, selection: CategoryFacetValue) {
   const payload = {
     facetId,
     facetValue: selection.value,
@@ -191,9 +184,7 @@ function getLegacyToggleSelectAnalyticsAction(
   return isSelected ? logFacetDeselect(payload) : logFacetSelect(payload);
 }
 
-function getToggleSelectAnalyticsAction(
-  selection: CategoryFacetValue
-): SearchAction {
+function getToggleSelectAnalyticsAction(selection: CategoryFacetValue): SearchAction {
   const isSelected = selection.state === 'selected';
   return isSelected ? facetDeselect() : facetSelect();
 }

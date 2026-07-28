@@ -1,7 +1,6 @@
 export function extractTextToHighlight(text: string) {
   text = text.trim();
-  const sentenceRegex =
-    /(?<=^|\p{P}\s)\p{P}?\p{Lu}.*?[.!?]+(?=\s+(?:\p{Lu}|\d)|$)/gu;
+  const sentenceRegex = /(?<=^|\p{P}\s)\p{P}?\p{Lu}.*?[.!?]+(?=\s+(?:\p{Lu}|\d)|$)/gu;
   const fallbackWordCount = 5;
   const sentences = text.match(sentenceRegex);
   if (sentences?.length) {
@@ -10,19 +9,12 @@ export function extractTextToHighlight(text: string) {
   return text.split(/\s+/).slice(0, fallbackWordCount).join(' ');
 }
 
-export function generateTextFragmentUrl(
-  uri: string,
-  text?: string,
-  filetype?: string
-) {
+export function generateTextFragmentUrl(uri: string, text?: string, filetype?: string) {
   if (filetype !== 'html' || !text) {
     return uri;
   }
   const highlight = extractTextToHighlight(text);
-  const encodedTextFragment = encodeURIComponent(highlight).replace(
-    /-/g,
-    '%2D'
-  );
+  const encodedTextFragment = encodeURIComponent(highlight).replace(/-/g, '%2D');
   return `${uri}#:~:text=${encodedTextFragment}`;
 }
 

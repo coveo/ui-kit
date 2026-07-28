@@ -35,9 +35,7 @@ function generateRunId(): string {
   return `run-${runSequence}-${Date.now().toString(36)}`;
 }
 
-const TurnStarted = (
-  options: Partial<TurnStartedData> = {}
-): ConverseEvent => ({
+const TurnStarted = (options: Partial<TurnStartedData> = {}): ConverseEvent => ({
   event: 'turn_started',
   data: {
     conversationSessionId: options.conversationSessionId ?? DEFAULT_SESSION_ID,
@@ -45,9 +43,7 @@ const TurnStarted = (
   },
 });
 
-const TurnComplete = (
-  options: Partial<TurnStartedData> = {}
-): ConverseEvent => ({
+const TurnComplete = (options: Partial<TurnStartedData> = {}): ConverseEvent => ({
   event: 'turn_complete',
   data: {
     conversationSessionId: options.conversationSessionId ?? DEFAULT_SESSION_ID,
@@ -55,9 +51,7 @@ const TurnComplete = (
   },
 });
 
-const RunStarted = (
-  options: {threadId?: string; runId?: string} = {}
-): ConverseEvent => ({
+const RunStarted = (options: {threadId?: string; runId?: string} = {}): ConverseEvent => ({
   event: 'message',
   data: {
     type: 'RUN_STARTED',
@@ -66,9 +60,7 @@ const RunStarted = (
   },
 });
 
-const RunFinished = (
-  options: {threadId?: string; runId?: string} = {}
-): ConverseEvent => ({
+const RunFinished = (options: {threadId?: string; runId?: string} = {}): ConverseEvent => ({
   event: 'message',
   data: {
     type: 'RUN_FINISHED',
@@ -77,17 +69,12 @@ const RunFinished = (
   },
 });
 
-const StateSnapshot = (
-  snapshot: Record<string, unknown> = {}
-): ConverseEvent => ({
+const StateSnapshot = (snapshot: Record<string, unknown> = {}): ConverseEvent => ({
   event: 'message',
   data: {type: 'STATE_SNAPSHOT', snapshot},
 });
 
-const TextMessageStart = (options: {
-  messageId: string;
-  role?: string;
-}): ConverseEvent => ({
+const TextMessageStart = (options: {messageId: string; role?: string}): ConverseEvent => ({
   event: 'message',
   data: {
     type: 'TEXT_MESSAGE_START',
@@ -96,10 +83,7 @@ const TextMessageStart = (options: {
   },
 });
 
-const TextMessageContent = (options: {
-  messageId: string;
-  delta: string;
-}): ConverseEvent => ({
+const TextMessageContent = (options: {messageId: string; delta: string}): ConverseEvent => ({
   event: 'message',
   data: {
     type: 'TEXT_MESSAGE_CONTENT',
@@ -127,10 +111,7 @@ const ToolCallStart = (options: {
   },
 });
 
-const ToolCallArgs = (options: {
-  toolCallId: string;
-  delta: string;
-}): ConverseEvent => ({
+const ToolCallArgs = (options: {toolCallId: string; delta: string}): ConverseEvent => ({
   event: 'message',
   data: {
     type: 'TOOL_CALL_ARGS',
@@ -176,25 +157,17 @@ const ActivitySnapshot = (options: {
   },
 });
 
-const CommerceSearchApiResponse = (options: {
-  content: Record<string, unknown>;
-}): ConverseEvent => ({
+const CommerceSearchApiResponse = (options: {content: Record<string, unknown>}): ConverseEvent => ({
   event: 'commerce_search_api_response',
   data: options.content,
 });
 
-const SearchApiResponse = (options: {
-  content: Record<string, unknown>;
-}): ConverseEvent => ({
+const SearchApiResponse = (options: {content: Record<string, unknown>}): ConverseEvent => ({
   event: 'search_api_response',
   data: options.content,
 });
 
-function textMessage(
-  messageId: string,
-  text: string,
-  chunkSize = 4
-): ConverseEvent[] {
+function textMessage(messageId: string, text: string, chunkSize = 4): ConverseEvent[] {
   const events: ConverseEvent[] = [TextMessageStart({messageId})];
 
   const words = text.split(' ');

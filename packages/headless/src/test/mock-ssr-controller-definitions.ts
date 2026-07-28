@@ -11,10 +11,7 @@ import type {
   ControllerDefinitionWithoutProps as SearchControllerDefinitionWithoutProps,
   ControllerDefinitionWithProps as SearchControllerDefinitionWithProps,
 } from '../ssr-next/search/types/controller-definition.js';
-import {
-  buildMockController,
-  buildMockControllerWithInitialState,
-} from './mock-controller.js';
+import {buildMockController, buildMockControllerWithInitialState} from './mock-controller.js';
 
 interface MockController {
   initialState?: Record<string, unknown>;
@@ -56,9 +53,7 @@ export function defineMockControllerWithProps(): MockControllerDefinitionWithPro
   };
 }
 
-export function defineMockCommerceController(
-  options?: SolutionTypeAvailabilities
-) {
+export function defineMockCommerceController(options?: SolutionTypeAvailabilities) {
   return {
     build: vi.fn((_engine) => {
       return buildMockController();
@@ -70,9 +65,7 @@ export function defineMockCommerceController(
   };
 }
 
-export function defineMockCommerceControllerWithProps(
-  options?: SolutionTypeAvailabilities
-) {
+export function defineMockCommerceControllerWithProps(options?: SolutionTypeAvailabilities) {
   return {
     buildWithProps: vi.fn((engine, props) => ({
       ...buildMockControllerWithInitialState(engine, {

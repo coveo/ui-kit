@@ -12,8 +12,7 @@ import {
   type UpdateBasicConfigurationActionCreatorPayload,
 } from '../../configuration/configuration-actions.js';
 
-export type UpdateBasicConfigurationPayload =
-  UpdateBasicConfigurationActionCreatorPayload;
+export type UpdateBasicConfigurationPayload = UpdateBasicConfigurationActionCreatorPayload;
 
 export const updateBasicConfiguration = createAction(
   'commerce/configuration/updateBasicConfiguration',
@@ -65,10 +64,6 @@ export const updateAnalyticsConfiguration = createAction(
   }
 );
 
-export const disableAnalytics = createAction(
-  'commerce/configuration/analytics/disable'
-);
+export const disableAnalytics = createAction('commerce/configuration/analytics/disable');
 
-export const enableAnalytics = createAction(
-  'commerce/configuration/analytics/enable'
-);
+export const enableAnalytics = createAction('commerce/configuration/analytics/enable');

@@ -47,15 +47,9 @@ import type {
 import {loadReducerError} from '../../../../utils/errors.js';
 import {omit} from '../../../../utils/utils.js';
 import {validateOptions} from '../../../../utils/validate-payload.js';
-import {
-  buildController,
-  type Controller,
-} from '../../../controller/headless-controller.js';
+import {buildController, type Controller} from '../../../controller/headless-controller.js';
 import {determineFacetId} from '../_common/facet-id-determinor.js';
-import {
-  type FacetOptions,
-  facetOptionsSchema,
-} from './headless-core-facet-options.js';
+import {type FacetOptions, facetOptionsSchema} from './headless-core-facet-options.js';
 
 export type {FacetOptions, FacetValueState};
 
@@ -71,11 +65,6 @@ interface CoreFacetProps {
  * can use to refine a query by selecting filters based on item metadata (that is, field values).
  * If you have enabled a [Dynamic Navigation Experience (DNE)](https://docs.coveo.com/en/m2na0333/)
  * model, the `Facet` controller automatically reorders facet values according to the user query.
- *
- * Examples:
- * - [facet.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/facet/facet.fn.tsx)
- * - [facet-search.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/facet/facet-search.tsx)
- * - [facet.class.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/facet/facet.class.tsx)
  *
  * @group Controllers
  * @category Facet
@@ -423,9 +412,7 @@ export function buildCoreFacet(
       dispatch(executeToggleFacetSelect({facetId: options.facetId, selection})),
 
     toggleExclude: (selection: FacetValue) =>
-      dispatch(
-        executeToggleFacetExclude({facetId: options.facetId, selection})
-      ),
+      dispatch(executeToggleFacetExclude({facetId: options.facetId, selection})),
 
     // Must use a function here to properly support inheritance with `this`.
     toggleSingleSelect: function (selection: FacetValue) {
@@ -477,14 +464,9 @@ export function buildCoreFacet(
 
     showLessValues() {
       const initialNumberOfValues = options.numberOfValues;
-      const newNumberOfValues = Math.max(
-        initialNumberOfValues,
-        getNumberOfActiveValues()
-      );
+      const newNumberOfValues = Math.max(initialNumberOfValues, getNumberOfActiveValues());
 
-      dispatch(
-        updateFacetNumberOfValues({facetId, numberOfValues: newNumberOfValues})
-      );
+      dispatch(updateFacetNumberOfValues({facetId, numberOfValues: newNumberOfValues}));
       dispatch(updateFacetIsFieldExpanded({facetId, isFieldExpanded: false}));
       dispatch(updateFacetOptions());
     },
@@ -506,17 +488,13 @@ export function buildCoreFacet(
 
       if (typeof request.sortCriteria === 'object') {
         sortCriterion =
-          request.sortCriteria.order === 'descending'
-            ? 'alphanumericDescending'
-            : 'alphanumeric';
+          request.sortCriteria.order === 'descending' ? 'alphanumericDescending' : 'alphanumeric';
       } else {
         sortCriterion = request.sortCriteria;
       }
 
       const values = response ? response.values : [];
-      const hasActiveValues = values.some(
-        (facetValue) => facetValue.state !== 'idle'
-      );
+      const hasActiveValues = values.some((facetValue) => facetValue.state !== 'idle');
       const canShowMoreValues = response ? response.moreValuesAvailable : false;
 
       const resultsMustMatch = request.resultsMustMatch;
@@ -541,11 +519,7 @@ export function buildCoreFacet(
 function loadFacetReducers(
   engine: CoreEngine
 ): engine is CoreEngine<
-  FacetSection &
-    FacetOptionsSection &
-    ConfigurationSection &
-    FacetSearchSection &
-    SearchSection,
+  FacetSection & FacetOptionsSection & ConfigurationSection & FacetSearchSection & SearchSection,
   SearchThunkExtraArguments
 > {
   engine.addReducers({facetSet, facetOptions, configuration, facetSearchSet});
