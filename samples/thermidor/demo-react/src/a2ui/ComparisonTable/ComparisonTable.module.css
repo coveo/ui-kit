@@ -53,11 +53,13 @@
   gap: var(--space-2);
   padding: var(--space-4);
   text-align: center;
+  min-width: 0;
 }
 
 .productImage {
-  width: 120px;
-  height: 120px;
+  width: 100%;
+  max-width: 120px;
+  aspect-ratio: 1;
   object-fit: cover;
   border-radius: var(--radius-sm);
   background: var(--color-bg-tertiary);
@@ -77,6 +79,8 @@
   font-size: var(--font-size-sm);
   color: var(--color-text-primary);
   line-height: 1.4;
+  min-width: 0;
+  word-break: break-word;
 }
 
 .priceValue {
