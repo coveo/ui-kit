@@ -75,6 +75,22 @@ if (!isVitestVscodeExt) {
 }
 const atomicDefault = defineConfig({
   name: 'atomic-default',
+  optimizeDeps: {
+    include: [
+      '@coveo/headless',
+      '@coveo/headless/commerce',
+      '@coveo/headless/insight',
+      '@coveo/headless/recommendation',
+      '@coveo/bueno',
+      'lit',
+      'lit/decorators.js',
+      'lit/directives/if-defined.js',
+      'lit/directives/unsafe-html.js',
+      'lit/directives/when.js',
+      'lit/directives/ref.js',
+      'i18next',
+    ],
+  },
   server: {
     port: port,
   },

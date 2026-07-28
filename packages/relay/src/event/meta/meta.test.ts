@@ -18,6 +18,10 @@ describe('createMeta', () => {
     });
   });
 
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   function getItemViewMeta() {
     return createMeta('itemView', defaultConfig, mockEnv);
   }
