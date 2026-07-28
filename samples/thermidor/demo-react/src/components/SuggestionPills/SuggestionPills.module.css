@@ -23,6 +23,9 @@
     border-color var(--transition-fast),
     color var(--transition-fast);
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 .pill:hover {
