@@ -1168,6 +1168,9 @@ importers:
       rollup:
         specifier: 4.62.2
         version: 4.62.2
+      typedoc:
+        specifier: 'catalog:'
+        version: 0.28.20(typescript@6.0.3)
       vitest:
         specifier: 'catalog:'
         version: 4.1.9(@types/node@26.1.0)(@vitest/browser-playwright@4.1.9)(jsdom@28.1.0)(msw@2.15.0(@types/node@26.1.0)(typescript@6.0.3))(vite@8.1.5(@types/node@26.1.0)(esbuild@0.28.1)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))
