@@ -1,5 +1,5 @@
 .facet__search-results_no-match {
-  color: var(--lwc-colorTextLabel, #696969);
+  color: var(--slds-g-color-on-surface-1, var(--lwc-colorTextLabel, #696969));
   background-color: var(--slds-g-color-surface-2, #F6F7F9);
   font-size: var(--slds-g-font-scale-neg-1, 12px);
   border-radius: 4px;
@@ -11,16 +11,16 @@ fieldset {
 
 .facet__show-less {
   font-size: var(--slds-g-font-scale-neg-1, 12px);
-  background-color: white;
-  color: var(--lwc-colorTextPlaceholder, var(--lwc-colorTextIconDefault, #747474));
+  background-color: var(--slds-g-color-surface-1, white);
+  color: var(--slds-g-color-on-surface-1, var(--lwc-colorTextPlaceholder, var(--lwc-colorTextIconDefault, #747474)));
   border: none;
   margin-bottom: 5px;
 }
 
 .facet__show-more {
   font-size: var(--slds-g-font-scale-neg-1, 12px);
-  background-color: white;
-  color: var(--lwc-brandTextLink, dodgerblue);
+  background-color: var(--slds-g-color-surface-1, white);
+  color: var(--slds-s-link-color, var(--lwc-brandTextLink, dodgerblue));
   border: none;
 }
 
@@ -43,8 +43,8 @@ fieldset {
 }
 
 .facet__value-option:hover {
-  color: var(--lwc-brandTextLink, dodgerblue);
-  background-color: #f6f7f9;
+  color: var(--slds-s-link-color, var(--lwc-brandTextLink, dodgerblue));
+  background-color: var(--slds-g-color-surface-2, #f6f7f9);
 }
 
 .facet__clear-filter {
@@ -52,5 +52,5 @@ fieldset {
 }
 
 .facet__number-of-results {
-  color: var(--lwc-colorTextPlaceholder, var(--lwc-colorTextIconDefault, #747474));
+  color: var(--slds-g-color-on-surface-1, var(--lwc-colorTextPlaceholder, var(--lwc-colorTextIconDefault, #747474)));
 }

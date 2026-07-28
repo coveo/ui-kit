@@ -5,10 +5,7 @@ import {
 } from '../../../features/question-answering/question-answering-insight-analytics-actions.js';
 import {questionAnsweringReducer as questionAnswering} from '../../../features/question-answering/question-answering-slice.js';
 import {searchReducer as search} from '../../../features/search/search-slice.js';
-import type {
-  QuestionAnsweringSection,
-  SearchSection,
-} from '../../../state/state-sections.js';
+import type {QuestionAnsweringSection, SearchSection} from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {getObjectHash} from '../../../utils/utils.js';
 import {
@@ -50,19 +47,13 @@ interface SmartSnippetInteractiveInlineLinks {
    *
    * In a DOM context, it's recommended to call this method on the `touchstart` event.
    */
-  beginDelayedSelectInlineLink(
-    link: InlineLink,
-    questionAnswerId?: string
-  ): void;
+  beginDelayedSelectInlineLink(link: InlineLink, questionAnswerId?: string): void;
   /**
    * Cancels the pending selection caused by `beginDelayedSelect`.
    *
    * In a DOM context, it's recommended to call this method on the `touchend` event.
    */
-  cancelPendingSelectInlineLink(
-    link: InlineLink,
-    questionAnswerId?: string
-  ): void;
+  cancelPendingSelectInlineLink(link: InlineLink, questionAnswerId?: string): void;
 }
 
 /**
@@ -96,9 +87,7 @@ export function buildSmartSnippetInteractiveInlineLinks(
   };
 
   let lastSearchResponseId: string | null = null;
-  const resetInteractiveResultsIfSearchResponseChanged = (
-    currentSearchResponseId: string
-  ) => {
+  const resetInteractiveResultsIfSearchResponseChanged = (currentSearchResponseId: string) => {
     if (lastSearchResponseId !== currentSearchResponseId) {
       lastSearchResponseId = currentSearchResponseId;
       interactiveResultsPerInlineLink = {};
@@ -126,12 +115,8 @@ export function buildSmartSnippetInteractiveInlineLinks(
       }
     );
 
-  let interactiveResultsPerInlineLink: Record<string, InteractiveResultCore> =
-    {};
-  const getInteractiveResult = (
-    link: InlineLink,
-    questionAnswerId?: string
-  ) => {
+  let interactiveResultsPerInlineLink: Record<string, InteractiveResultCore> = {};
+  const getInteractiveResult = (link: InlineLink, questionAnswerId?: string) => {
     const {searchResponseId} = getState().search;
     resetInteractiveResultsIfSearchResponseChanged(searchResponseId);
 

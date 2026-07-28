@@ -15,9 +15,7 @@ import type {RedirectionTrigger} from '../core/triggers/headless-core-redirectio
  * @group Controllers
  * @category RedirectionTrigger
  * */
-export function buildRedirectionTrigger(
-  engine: SearchEngine
-): RedirectionTrigger {
+export function buildRedirectionTrigger(engine: SearchEngine): RedirectionTrigger {
   if (!loadRedirectionReducers(engine)) {
     throw loadReducerError;
   }
@@ -54,9 +52,7 @@ export function buildRedirectionTrigger(
   };
 }
 
-function loadRedirectionReducers(
-  engine: SearchEngine
-): engine is SearchEngine<TriggerSection> {
+function loadRedirectionReducers(engine: SearchEngine): engine is SearchEngine<TriggerSection> {
   engine.addReducers({triggers});
   return true;
 }

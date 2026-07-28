@@ -13,11 +13,7 @@ import type {NextFunction, Request, Response} from 'express';
  * returning visitor; the sample generates one per request when the client
  * doesn't already provide one.
  */
-export const middleware = (
-  req: Request,
-  _res: Response,
-  next: NextFunction
-) => {
+export const middleware = (req: Request, _res: Response, next: NextFunction) => {
   if (!req.headers['x-coveo-client-id']) {
     req.headers['x-coveo-client-id'] = randomUUID();
   }

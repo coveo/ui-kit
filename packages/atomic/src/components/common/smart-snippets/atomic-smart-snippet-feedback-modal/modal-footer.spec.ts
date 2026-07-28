@@ -55,9 +55,7 @@ describe('#renderModalFooter', () => {
 
   it('should call onClick when cancel button is clicked', async () => {
     const element = await renderComponent();
-    const cancelButton = element.querySelector(
-      '[part="cancel-button"]'
-    ) as HTMLButtonElement;
+    const cancelButton = element.querySelector('[part="cancel-button"]') as HTMLButtonElement;
 
     cancelButton.click();
 

@@ -3,9 +3,7 @@ import type {APIErrorWithStatusCode} from '../_common/error.js';
 
 export const buildSearchResponseWithResults =
   (totalCount: number, numberOfResults = 10) =>
-  (
-    response: SearchResponse | APIErrorWithStatusCode
-  ): SearchResponse | APIErrorWithStatusCode => {
+  (response: SearchResponse | APIErrorWithStatusCode): SearchResponse | APIErrorWithStatusCode => {
     if (!('results' in response)) {
       return response;
     }

@@ -15,8 +15,7 @@ export const buildCategoryFacetSearchRequest = async (
   const categoryFacet = state.categoryFacetSet[id]!.request;
 
   const {captions, query, numberOfValues} = options;
-  const {field, delimitingCharacter, basePath, filterFacetCount} =
-    categoryFacet;
+  const {field, delimitingCharacter, basePath, filterFacetCount} = categoryFacet;
   const path = getPathToSelectedCategoryFacetItem(categoryFacet);
   const ignorePaths = path.length ? [path] : [];
   const newQuery = `*${query}*`;
@@ -24,15 +23,11 @@ export const buildCategoryFacetSearchRequest = async (
   return {
     url:
       state.configuration.search.apiBaseUrl ??
-      getSearchApiBaseUrl(
-        state.configuration.organizationId,
-        state.configuration.environment
-      ),
+      getSearchApiBaseUrl(state.configuration.organizationId, state.configuration.environment),
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
     ...(state.configuration.search.authenticationProviders.length && {
-      authentication:
-        state.configuration.search.authenticationProviders.join(','),
+      authentication: state.configuration.search.authenticationProviders.join(','),
     }),
     basePath,
     captions,
@@ -46,15 +41,12 @@ export const buildCategoryFacetSearchRequest = async (
     ...(isFieldSuggestionsRequest
       ? {}
       : {
-          searchContext: (await buildSearchRequest(state, navigatorContext))
-            .request,
+          searchContext: (await buildSearchRequest(state, navigatorContext)).request,
         }),
   };
 };
 
-const getPathToSelectedCategoryFacetItem = (
-  categoryFacet: CategoryFacetRequest
-): string[] => {
+const getPathToSelectedCategoryFacetItem = (categoryFacet: CategoryFacetRequest): string[] => {
   const path = [];
   let selectedValue = categoryFacet.currentValues[0];
   while (selectedValue) {

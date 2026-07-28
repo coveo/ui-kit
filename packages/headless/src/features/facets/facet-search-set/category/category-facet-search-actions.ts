@@ -31,6 +31,5 @@ export const selectCategoryFacetSearchResult = createAction(
 
 export const registerCategoryFacetSearch = createAction(
   'categoryFacetSearch/register',
-  (payload: FacetSearchOptions) =>
-    validatePayload(payload, facetSearchOptionsDefinition)
+  (payload: FacetSearchOptions) => validatePayload(payload, facetSearchOptionsDefinition)
 );

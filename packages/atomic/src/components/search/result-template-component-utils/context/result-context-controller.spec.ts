@@ -3,23 +3,20 @@ import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {ItemContextController} from '@/src/components/common/item-list/context/item-context-controller';
 import {createResultContextController} from './result-context-controller';
 
-vi.mock(
-  '@/src/components/common/item-list/context/item-context-controller',
-  () => ({
+vi.mock('@/src/components/common/item-list/context/item-context-controller', () => ({
+  // oxlint-disable-next-line prefer-arrow-callback -- https://vitest.dev/guide/migration.html#spyon-and-fn-support-constructors
+  ItemContextController: vi.fn().mockImplementation(function () {}),
+  MissingParentError: vi
+    .fn()
     // oxlint-disable-next-line prefer-arrow-callback -- https://vitest.dev/guide/migration.html#spyon-and-fn-support-constructors
-    ItemContextController: vi.fn().mockImplementation(function () {}),
-    MissingParentError: vi
-      .fn()
-      // oxlint-disable-next-line prefer-arrow-callback -- https://vitest.dev/guide/migration.html#spyon-and-fn-support-constructors
-      .mockImplementation(function (elementName, parentName) {
-        const error = new Error(
-          `The "${elementName}" element must be the child of an "${parentName}" element.`
-        );
-        error.name = 'MissingParentError';
-        return error;
-      }),
-  })
-);
+    .mockImplementation(function (elementName, parentName) {
+      const error = new Error(
+        `The "${elementName}" element must be the child of an "${parentName}" element.`
+      );
+      error.name = 'MissingParentError';
+      return error;
+    }),
+}));
 
 describe('result-context-controller', () => {
   let mockHost: LitElement & {error: Error | null};
@@ -54,11 +51,9 @@ describe('result-context-controller', () => {
 
     it('should return ItemContextController instance', () => {
       const mockController = {} as ItemContextController;
-      vi.mocked(ItemContextController).mockImplementationOnce(
-        function (this: unknown) {
-          return mockController;
-        }
-      );
+      vi.mocked(ItemContextController).mockImplementationOnce(function (this: unknown) {
+        return mockController;
+      });
 
       const result = createResultContextController(mockHost);
 

@@ -11,10 +11,7 @@ import type {
   RecsBindings,
 } from '@/src/components/recommendations/atomic-recs-interface/atomic-recs-interface.js';
 import type {RecsStore} from '@/src/components/recommendations/atomic-recs-interface/store.js';
-import {
-  type InitializeEvent,
-  markParentAsReady,
-} from '@/src/utils/init-queue.js';
+import {type InitializeEvent, markParentAsReady} from '@/src/utils/init-queue.js';
 import {initializeEventName} from '@/src/utils/initialization-common-utils.js';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture.js';
 import {genericSubscribe} from '@/vitest-utils/testing-helpers/fixtures/headless/common.js';
@@ -101,9 +98,7 @@ export function renderInAtomicRecsInterface<T extends LitElement>({
 }: {
   template: TemplateResult;
   selector?: string;
-  bindings?:
-    | Partial<RecsBindings>
-    | ((bindings: MinimalBindings) => MinimalBindings);
+  bindings?: Partial<RecsBindings> | ((bindings: MinimalBindings) => MinimalBindings);
 }): Promise<{
   element: T;
   atomicInterface: FixtureAtomicRecsInterface;
@@ -115,9 +110,7 @@ export async function renderInAtomicRecsInterface<T extends LitElement>({
 }: {
   template: TemplateResult;
   selector?: string | never;
-  bindings?:
-    | Partial<RecsBindings>
-    | ((bindings: MinimalBindings) => MinimalBindings);
+  bindings?: Partial<RecsBindings> | ((bindings: MinimalBindings) => MinimalBindings);
 }): Promise<{
   element: null | T;
   atomicInterface: FixtureAtomicRecsInterface;

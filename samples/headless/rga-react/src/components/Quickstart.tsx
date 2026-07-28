@@ -31,25 +31,22 @@ export const AnswerGenerator = () => {
     return buildSearchEngine(searchEngineOptions);
   }, []);
 
-  const {generatedAnswer, updateQuery, logSearchboxSubmit, executeSearch} =
-    useMemo(() => {
-      const {updateQuery}: QueryActionCreators = loadQueryActions(engine);
-      const {
-        logInterfaceLoad,
-        logSearchboxSubmit,
-      }: SearchAnalyticsActionCreators = loadSearchAnalyticsActions(engine);
-      const {executeSearch}: SearchActionCreators = loadSearchActions(engine);
-      const generatedAnswer = buildGeneratedAnswer(engine);
+  const {generatedAnswer, updateQuery, logSearchboxSubmit, executeSearch} = useMemo(() => {
+    const {updateQuery}: QueryActionCreators = loadQueryActions(engine);
+    const {logInterfaceLoad, logSearchboxSubmit}: SearchAnalyticsActionCreators =
+      loadSearchAnalyticsActions(engine);
+    const {executeSearch}: SearchActionCreators = loadSearchActions(engine);
+    const generatedAnswer = buildGeneratedAnswer(engine);
 
-      engine.dispatch(executeSearch(logInterfaceLoad()));
+    engine.dispatch(executeSearch(logInterfaceLoad()));
 
-      return {
-        generatedAnswer,
-        updateQuery,
-        logSearchboxSubmit,
-        executeSearch,
-      };
-    }, [engine]);
+    return {
+      generatedAnswer,
+      updateQuery,
+      logSearchboxSubmit,
+      executeSearch,
+    };
+  }, [engine]);
 
   const submit = useCallback(() => {
     engine.dispatch(updateQuery({q: inputRef.current?.value}));
@@ -57,9 +54,7 @@ export const AnswerGenerator = () => {
   }, [engine, updateQuery, logSearchboxSubmit, executeSearch, inputRef]);
 
   useEffect(() => {
-    const unsubscribe = generatedAnswer.subscribe(() =>
-      setRgaState(generatedAnswer.state)
-    );
+    const unsubscribe = generatedAnswer.subscribe(() => setRgaState(generatedAnswer.state));
     return unsubscribe;
   }, [generatedAnswer, setRgaState]);
 
@@ -101,21 +96,13 @@ type TCitationsList = {
   searchEngine: SearchEngine;
 };
 
-const CitationsList = ({
-  citations,
-  isStreaming,
-  searchEngine,
-}: TCitationsList) => {
+const CitationsList = ({citations, isStreaming, searchEngine}: TCitationsList) => {
   if (!citations || isStreaming) return;
 
   return (
     <div>
       {citations.map((citation: GeneratedAnswerCitation) => (
-        <Citation
-          key={citation.id}
-          citation={citation}
-          searchEngine={searchEngine}
-        />
+        <Citation key={citation.id} citation={citation} searchEngine={searchEngine} />
       ))}
     </div>
   );
@@ -127,14 +114,11 @@ type TCitation = {
 };
 
 const Citation = ({citation, searchEngine}: TCitation) => {
-  const interactiveCitation: InteractiveCitation = buildInteractiveCitation(
-    searchEngine,
-    {
-      options: {
-        citation,
-      },
-    }
-  ); // callout[Refer to <a href="#citations-list">Citations List</a> for more additional details.]
+  const interactiveCitation: InteractiveCitation = buildInteractiveCitation(searchEngine, {
+    options: {
+      citation,
+    },
+  }); // callout[Refer to <a href="#citations-list">Citations List</a> for more additional details.]
 
   return (
     <button

@@ -113,8 +113,7 @@ const middleEvents: ConverseEvent[] = [
     data: {
       type: 'TOOL_CALL_ARGS',
       toolCallId: 'tooluse_vAN65ziAo5QHhzBNCPHyXJ',
-      delta:
-        '{"query": "snorkel mask", "perPage": 5, "surface_id": "product-surface-masks"}',
+      delta: '{"query": "snorkel mask", "perPage": 5, "surface_id": "product-surface-masks"}',
     },
   },
   {
@@ -138,8 +137,7 @@ const middleEvents: ConverseEvent[] = [
     data: {
       type: 'TOOL_CALL_ARGS',
       toolCallId: 'tooluse_Ur4HQSo5ogmFPtdjnuHTec',
-      delta:
-        '{"query": "snorkel fins", "perPage": 5, "surface_id": "product-surface-fins"}',
+      delta: '{"query": "snorkel fins", "perPage": 5, "surface_id": "product-surface-fins"}',
     },
   },
   {
@@ -163,8 +161,7 @@ const middleEvents: ConverseEvent[] = [
     data: {
       type: 'TOOL_CALL_ARGS',
       toolCallId: 'tooluse_fAAXtaCFPl9qaKxMl06e1M',
-      delta:
-        '{"query": "snorkel tube", "perPage": 5, "surface_id": "product-surface-tubes"}',
+      delta: '{"query": "snorkel tube", "perPage": 5, "surface_id": "product-surface-tubes"}',
     },
   },
   {
@@ -538,8 +535,7 @@ const middleEvents: ConverseEvent[] = [
     data: {
       type: 'TOOL_CALL_ARGS',
       toolCallId: 'tooluse_ty0NyoxBeLZFRJjb2WbisJ',
-      delta:
-        '{"surface_id": "product-surface-masks", "heading": "Snorkel Masks"}',
+      delta: '{"surface_id": "product-surface-masks", "heading": "Snorkel Masks"}',
     },
   },
   {
@@ -555,8 +551,7 @@ const middleEvents: ConverseEvent[] = [
       type: 'TOOL_CALL_RESULT',
       messageId: '02253e7d-936e-497d-9334-4f66f8e39d7f',
       toolCallId: 'tooluse_ty0NyoxBeLZFRJjb2WbisJ',
-      content:
-        "\"ProductCarousel 'Snorkel Masks' queued on surface 'product-surface-masks'.\"",
+      content: "\"ProductCarousel 'Snorkel Masks' queued on surface 'product-surface-masks'.\"",
     },
   },
   {
@@ -627,8 +622,7 @@ const middleEvents: ConverseEvent[] = [
                         },
                         {
                           key: 'ec_product_id',
-                          valueString:
-                            'gid://shopify/ProductVariant/50675057066258',
+                          valueString: 'gid://shopify/ProductVariant/50675057066258',
                         },
                         {
                           key: 'ec_description',
@@ -674,8 +668,7 @@ const middleEvents: ConverseEvent[] = [
                         },
                         {
                           key: 'ec_product_id',
-                          valueString:
-                            'gid://shopify/ProductVariant/50677132624146',
+                          valueString: 'gid://shopify/ProductVariant/50677132624146',
                         },
                         {
                           key: 'ec_description',
@@ -721,8 +714,7 @@ const middleEvents: ConverseEvent[] = [
                         },
                         {
                           key: 'ec_product_id',
-                          valueString:
-                            'gid://shopify/ProductVariant/50677131247890',
+                          valueString: 'gid://shopify/ProductVariant/50677131247890',
                         },
                         {
                           key: 'ec_description',
@@ -768,8 +760,7 @@ const middleEvents: ConverseEvent[] = [
                         },
                         {
                           key: 'ec_product_id',
-                          valueString:
-                            'gid://shopify/ProductVariant/50677132853522',
+                          valueString: 'gid://shopify/ProductVariant/50677132853522',
                         },
                         {
                           key: 'ec_description',
@@ -815,8 +806,7 @@ const middleEvents: ConverseEvent[] = [
                         },
                         {
                           key: 'ec_product_id',
-                          valueString:
-                            'gid://shopify/ProductVariant/50675056378130',
+                          valueString: 'gid://shopify/ProductVariant/50675056378130',
                         },
                         {
                           key: 'ec_description',
@@ -1016,8 +1006,7 @@ const middleEvents: ConverseEvent[] = [
     data: {
       type: 'TOOL_CALL_ARGS',
       toolCallId: 'tooluse_G0ZU5nPeakDXGW7crUgHBZ',
-      delta:
-        '{"heading": "Snorkel Fins", "surface_id": "product-surface-fins"}',
+      delta: '{"heading": "Snorkel Fins", "surface_id": "product-surface-fins"}',
     },
   },
   {
@@ -1033,8 +1022,7 @@ const middleEvents: ConverseEvent[] = [
       type: 'TOOL_CALL_RESULT',
       messageId: '118eb8fe-2111-41c1-b6bd-cb9dceaff120',
       toolCallId: 'tooluse_G0ZU5nPeakDXGW7crUgHBZ',
-      content:
-        "\"ProductCarousel 'Snorkel Fins' queued on surface 'product-surface-fins'.\"",
+      content: "\"ProductCarousel 'Snorkel Fins' queued on surface 'product-surface-fins'.\"",
     },
   },
   {
@@ -1105,8 +1093,7 @@ const middleEvents: ConverseEvent[] = [
                         },
                         {
                           key: 'ec_product_id',
-                          valueString:
-                            'gid://shopify/ProductVariant/50674637111570',
+                          valueString: 'gid://shopify/ProductVariant/50674637111570',
                         },
                         {
                           key: 'ec_description',
@@ -1152,8 +1139,7 @@ const middleEvents: ConverseEvent[] = [
                         },
                         {
                           key: 'ec_product_id',
-                          valueString:
-                            'gid://shopify/ProductVariant/50674638749970',
+                          valueString: 'gid://shopify/ProductVariant/50674638749970',
                         },
                         {
                           key: 'ec_description',
@@ -1199,8 +1185,7 @@ const middleEvents: ConverseEvent[] = [
                         },
                         {
                           key: 'ec_product_id',
-                          valueString:
-                            'gid://shopify/ProductVariant/50674638029074',
+                          valueString: 'gid://shopify/ProductVariant/50674638029074',
                         },
                         {
                           key: 'ec_description',
@@ -1246,8 +1231,7 @@ const middleEvents: ConverseEvent[] = [
                         },
                         {
                           key: 'ec_product_id',
-                          valueString:
-                            'gid://shopify/ProductVariant/50674636194066',
+                          valueString: 'gid://shopify/ProductVariant/50674636194066',
                         },
                         {
                           key: 'ec_description',
@@ -1293,8 +1277,7 @@ const middleEvents: ConverseEvent[] = [
                         },
                         {
                           key: 'ec_product_id',
-                          valueString:
-                            'gid://shopify/ProductVariant/50674642452754',
+                          valueString: 'gid://shopify/ProductVariant/50674642452754',
                         },
                         {
                           key: 'ec_description',
@@ -1470,8 +1453,7 @@ const middleEvents: ConverseEvent[] = [
     data: {
       type: 'TOOL_CALL_ARGS',
       toolCallId: 'tooluse_XYEju3TVwSinb9ryG3K8BG',
-      delta:
-        '{"heading": "Wetsuits", "surface_id": "product-surface-wetsuits"}',
+      delta: '{"heading": "Wetsuits", "surface_id": "product-surface-wetsuits"}',
     },
   },
   {
@@ -1487,8 +1469,7 @@ const middleEvents: ConverseEvent[] = [
       type: 'TOOL_CALL_RESULT',
       messageId: '8a65ac64-0a96-405f-adec-50c39f4c61f9',
       toolCallId: 'tooluse_XYEju3TVwSinb9ryG3K8BG',
-      content:
-        "\"ProductCarousel 'Wetsuits' queued on surface 'product-surface-wetsuits'.\"",
+      content: "\"ProductCarousel 'Wetsuits' queued on surface 'product-surface-wetsuits'.\"",
     },
   },
   {
@@ -1559,8 +1540,7 @@ const middleEvents: ConverseEvent[] = [
                         },
                         {
                           key: 'ec_product_id',
-                          valueString:
-                            'gid://shopify/ProductVariant/50674590384402',
+                          valueString: 'gid://shopify/ProductVariant/50674590384402',
                         },
                         {
                           key: 'ec_description',
@@ -1606,8 +1586,7 @@ const middleEvents: ConverseEvent[] = [
                         },
                         {
                           key: 'ec_product_id',
-                          valueString:
-                            'gid://shopify/ProductVariant/50674582290706',
+                          valueString: 'gid://shopify/ProductVariant/50674582290706',
                         },
                         {
                           key: 'ec_description',
@@ -1632,8 +1611,7 @@ const middleEvents: ConverseEvent[] = [
                       valueMap: [
                         {
                           key: 'ec_name',
-                          valueString:
-                            'AquaGuard Beginner Swim Suit - Black / XS',
+                          valueString: 'AquaGuard Beginner Swim Suit - Black / XS',
                         },
                         {
                           key: 'ec_brand',
@@ -1654,8 +1632,7 @@ const middleEvents: ConverseEvent[] = [
                         },
                         {
                           key: 'ec_product_id',
-                          valueString:
-                            'gid://shopify/ProductVariant/50674586222866',
+                          valueString: 'gid://shopify/ProductVariant/50674586222866',
                         },
                         {
                           key: 'ec_description',
@@ -1847,8 +1824,7 @@ const middleEvents: ConverseEvent[] = [
     data: {
       type: 'TOOL_CALL_ARGS',
       toolCallId: 'tooluse_bLBQWuyPnasPRNgyUfx9sm',
-      delta:
-        '{"heading": "Waterproof Bags", "surface_id": "product-surface-bags"}',
+      delta: '{"heading": "Waterproof Bags", "surface_id": "product-surface-bags"}',
     },
   },
   {
@@ -1864,8 +1840,7 @@ const middleEvents: ConverseEvent[] = [
       type: 'TOOL_CALL_RESULT',
       messageId: 'f106d851-8985-4790-82c0-cb688d6f7427',
       toolCallId: 'tooluse_bLBQWuyPnasPRNgyUfx9sm',
-      content:
-        "\"ProductCarousel 'Waterproof Bags' queued on surface 'product-surface-bags'.\"",
+      content: "\"ProductCarousel 'Waterproof Bags' queued on surface 'product-surface-bags'.\"",
     },
   },
   {
@@ -1936,8 +1911,7 @@ const middleEvents: ConverseEvent[] = [
                         },
                         {
                           key: 'ec_product_id',
-                          valueString:
-                            'gid://shopify/ProductVariant/50675066994962',
+                          valueString: 'gid://shopify/ProductVariant/50675066994962',
                         },
                         {
                           key: 'ec_description',
@@ -1979,8 +1953,7 @@ const middleEvents: ConverseEvent[] = [
                         },
                         {
                           key: 'ec_product_id',
-                          valueString:
-                            'gid://shopify/ProductVariant/50677148057874',
+                          valueString: 'gid://shopify/ProductVariant/50677148057874',
                         },
                         {
                           key: 'ec_description',
@@ -2078,8 +2051,7 @@ const middleEvents: ConverseEvent[] = [
       type: 'TOOL_CALL_RESULT',
       messageId: 'ccc308bf-0a70-41cb-bc22-9d952b064f23',
       toolCallId: 'tooluse_4KwZHmjY8YXakBOjbDxPg6',
-      content:
-        '"NextActionsBar queued on surface \'next-actions-surface\' with 3 action(s)."',
+      content: '"NextActionsBar queued on surface \'next-actions-surface\' with 3 action(s)."',
     },
   },
   {

@@ -42,18 +42,15 @@ interface WatchOptions {
  * This decorator was adapted from the Shoelace library.:
  * https://github.com/shoelace-style/shoelace/blob/next/src/internal/watch.ts
  */
-export function watch<
-  Component extends LitElement,
-  Prop extends PublicProperties<Component>,
->(propName: Prop, options?: WatchOptions) {
+export function watch<Component extends LitElement, Prop extends PublicProperties<Component>>(
+  propName: Prop,
+  options?: WatchOptions
+) {
   const resolvedOptions: Required<WatchOptions> = {
     waitUntilFirstUpdate: true,
     ...options,
   };
-  return (
-    target: Component,
-    decoratedFnName: UpdateHandlerFunctionKeys<Component, Prop>
-  ) => {
+  return (target: Component, decoratedFnName: UpdateHandlerFunctionKeys<Component, Prop>) => {
     // @ts-expect-error - update is a protected property
     const {update} = target;
 

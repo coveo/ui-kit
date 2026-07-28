@@ -51,25 +51,14 @@ function createSingletonContext<
  *
  * @group Engine
  */
-export function defineCommerceEngine<
-  TControllers extends ControllerDefinitionsMap<Controller>,
->(
+export function defineCommerceEngine<TControllers extends ControllerDefinitionsMap<Controller>>(
   options: CommerceEngineDefinitionOptions<TControllers>
 ): {
   useEngine: () => CommerceEngine | undefined;
   controllers: InferControllerHooksMapFromDefinition<TControllers>;
-  listingEngineDefinition: ReactCommerceEngineDefinition<
-    TControllers,
-    SolutionType.listing
-  >;
-  searchEngineDefinition: ReactCommerceEngineDefinition<
-    TControllers,
-    SolutionType.search
-  >;
-  standaloneEngineDefinition: ReactCommerceEngineDefinition<
-    TControllers,
-    SolutionType.standalone
-  >;
+  listingEngineDefinition: ReactCommerceEngineDefinition<TControllers, SolutionType.listing>;
+  searchEngineDefinition: ReactCommerceEngineDefinition<TControllers, SolutionType.search>;
+  standaloneEngineDefinition: ReactCommerceEngineDefinition<TControllers, SolutionType.standalone>;
   recommendationEngineDefinition: ReactCommerceEngineDefinition<
     TControllers,
     SolutionType.recommendation
@@ -106,10 +95,7 @@ export function defineCommerceEngine<
         SolutionType.listing
       ),
 
-      StateProvider: buildStateProvider(
-        singletonContext as ListingContext,
-        SolutionType.listing
-      ),
+      StateProvider: buildStateProvider(singletonContext as ListingContext, SolutionType.listing),
     },
     searchEngineDefinition: {
       ...searchEngineDefinition,
@@ -121,10 +107,7 @@ export function defineCommerceEngine<
         singletonContext as SearchContext,
         SolutionType.search
       ),
-      StateProvider: buildStateProvider(
-        singletonContext as SearchContext,
-        SolutionType.search
-      ),
+      StateProvider: buildStateProvider(singletonContext as SearchContext, SolutionType.search),
     },
     standaloneEngineDefinition: {
       ...standaloneEngineDefinition,

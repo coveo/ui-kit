@@ -42,10 +42,7 @@ import type {Bindings} from '../atomic-search-interface/atomic-search-interface'
 @customElement('atomic-did-you-mean')
 @withTailwindStyles
 @bindings()
-export class AtomicDidYouMean
-  extends LitElement
-  implements InitializableComponent<Bindings>
-{
+export class AtomicDidYouMean extends LitElement implements InitializableComponent<Bindings> {
   private static readonly propsSchema = new Schema({
     queryCorrectionMode: new StringValue({
       constrainTo: ['legacy', 'next'],
@@ -126,8 +123,7 @@ export class AtomicDidYouMean
   }
 
   private get content() {
-    const {hasQueryCorrection, wasAutomaticallyCorrected} =
-      this.didYouMeanState;
+    const {hasQueryCorrection, wasAutomaticallyCorrected} = this.didYouMeanState;
     const hasTrigger = this.queryTriggerState.wasQueryModified;
 
     if (hasQueryCorrection && wasAutomaticallyCorrected) {
@@ -169,8 +165,7 @@ export class AtomicDidYouMean
   @errorGuard()
   render() {
     const hasCorrection =
-      this.didYouMeanState.hasQueryCorrection ||
-      this.queryTriggerState.wasQueryModified;
+      this.didYouMeanState.hasQueryCorrection || this.queryTriggerState.wasQueryModified;
 
     if (hasCorrection) {
       this.ariaMessage.message = this.getAriaLiveMessage();
@@ -181,8 +176,7 @@ export class AtomicDidYouMean
   }
 
   private getAriaLiveMessage(): string {
-    const {hasQueryCorrection, wasAutomaticallyCorrected} =
-      this.didYouMeanState;
+    const {hasQueryCorrection, wasAutomaticallyCorrected} = this.didYouMeanState;
     const hasTrigger = this.queryTriggerState.wasQueryModified;
 
     if (hasQueryCorrection && wasAutomaticallyCorrected) {

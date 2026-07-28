@@ -63,8 +63,7 @@ function createTarEntry(filename, content) {
 
   // Pad content to 512-byte boundary
   const padding = 512 - (size % 512 || 512);
-  const paddingBuffer =
-    padding < 512 ? Buffer.alloc(padding, 0) : Buffer.alloc(0);
+  const paddingBuffer = padding < 512 ? Buffer.alloc(padding, 0) : Buffer.alloc(0);
 
   return Buffer.concat([header, Buffer.from(content), paddingBuffer]);
 }
@@ -155,9 +154,7 @@ async function packageSkill(skillPath, outputDir = null) {
 
     await pipeline(Readable.from(tarBuffer), gzip, writeStream);
 
-    console.log(
-      `\n✅ Successfully packaged ${files.length} files to: ${skillFilename}`
-    );
+    console.log(`\n✅ Successfully packaged ${files.length} files to: ${skillFilename}`);
     return skillFilename;
   } catch (error) {
     console.log(`❌ Error creating .skill file: ${error.message}`);
@@ -169,9 +166,7 @@ async function main() {
   const args = process.argv.slice(2);
 
   if (args.length < 1) {
-    console.log(
-      'Usage: node package_skill.mjs <path/to/skill-folder> [output-directory]'
-    );
+    console.log('Usage: node package_skill.mjs <path/to/skill-folder> [output-directory]');
     console.log('');
     console.log('Example:');
     console.log('  node package_skill.mjs .agents/skills/my-skill');

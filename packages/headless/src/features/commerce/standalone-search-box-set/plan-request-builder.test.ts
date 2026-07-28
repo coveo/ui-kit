@@ -23,9 +23,7 @@ describe('#buildPlanRequest', () => {
 
   const baseRequest = buildMockBaseCommerceAPIRequest();
 
-  const setState = (
-    configuration?: Partial<StateNeededForPlanCommerceAPIRequest>
-  ) => {
+  const setState = (configuration?: Partial<StateNeededForPlanCommerceAPIRequest>) => {
     state = {
       configuration: getConfigurationInitialState(),
       cart: getCartInitialState(),
@@ -49,29 +47,21 @@ describe('#buildPlanRequest', () => {
   });
 
   it('sets base properties, except #context.capture, to the value returned by #buildBaseCommerceAPIRequest(#state, #navigatorContext)', () => {
-    const {query: _query, ...restOfPlanRequest} = buildPlanRequest(
-      state,
-      navigatorContext
-    );
+    const {query: _query, ...restOfPlanRequest} = buildPlanRequest(state, navigatorContext);
 
-    const {capture: _planRequestCapture, ...restOfPlanRequestContext} =
-      restOfPlanRequest.context;
+    const {capture: _planRequestCapture, ...restOfPlanRequestContext} = restOfPlanRequest.context;
     const basePropertiesWithoutCapture = {
       ...restOfPlanRequest,
       context: {...restOfPlanRequestContext},
     };
 
-    const {capture: _baseRequestCapture, ...restOfBaseRequestContext} =
-      baseRequest.context;
+    const {capture: _baseRequestCapture, ...restOfBaseRequestContext} = baseRequest.context;
     const baseRequestWithoutCapture = {
       ...baseRequest,
       context: {...restOfBaseRequestContext},
     };
 
-    expect(buildBaseCommerceAPIRequest).toHaveBeenCalledWith(
-      state,
-      navigatorContext
-    );
+    expect(buildBaseCommerceAPIRequest).toHaveBeenCalledWith(state, navigatorContext);
     expect(basePropertiesWithoutCapture).toEqual(baseRequestWithoutCapture);
   });
 

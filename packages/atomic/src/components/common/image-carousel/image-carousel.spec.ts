@@ -51,9 +51,7 @@ describe('image-carousel', () => {
     };
     const mergedProps = {...defaultProps, ...props};
     return renderFunctionFixture(
-      html`${renderImageCarousel({props: mergedProps})(
-        children ?? defaultChildren
-      )}`
+      html`${renderImageCarousel({props: mergedProps})(children ?? defaultChildren)}`
     );
   };
 
@@ -72,19 +70,13 @@ describe('image-carousel', () => {
   it('should render an icon inside the previous button', async () => {
     await renderComponent();
     await expect(locators.previousButtonIcon).toBeVisible();
-    expect(locators.previousButtonIcon).toHaveAttribute(
-      'icon',
-      expect.stringMatching(/<svg/)
-    );
+    expect(locators.previousButtonIcon).toHaveAttribute('icon', expect.stringMatching(/<svg/));
   });
 
   it('should render an icon inside the next button', async () => {
     await renderComponent();
     expect(locators.nextButtonIcon).toBeVisible();
-    expect(locators.nextButtonIcon).toHaveAttribute(
-      'icon',
-      expect.stringMatching(/<svg/)
-    );
+    expect(locators.nextButtonIcon).toHaveAttribute('icon', expect.stringMatching(/<svg/));
   });
 
   it('should have the correct part attribute for the previous button', async () => {
@@ -101,19 +93,14 @@ describe('image-carousel', () => {
 
   it('should have the correct part attribute for the icons', async () => {
     await renderComponent();
-    expect(locators.previousButtonIcon).toHaveAttribute(
-      'part',
-      'previous-icon'
-    );
+    expect(locators.previousButtonIcon).toHaveAttribute('part', 'previous-icon');
     expect(locators.nextButtonIcon).toHaveAttribute('part', 'next-icon');
   });
 
   it('should call #previousImage when the previous button is clicked', async () => {
     const previousImageMock = vi.fn();
     const wrapper = await renderComponent({previousImage: previousImageMock});
-    const prevBtn = wrapper.querySelector(
-      '[part="previous-button"]'
-    ) as HTMLElement;
+    const prevBtn = wrapper.querySelector('[part="previous-button"]') as HTMLElement;
     prevBtn.click();
     expect(previousImageMock).toHaveBeenCalled();
   });
@@ -121,9 +108,7 @@ describe('image-carousel', () => {
   it('should call #nextImage when the next button is clicked', async () => {
     const nextImageMock = vi.fn();
     const wrapper = await renderComponent({nextImage: nextImageMock});
-    const nextBtn = wrapper.querySelector(
-      '[part="next-button"]'
-    ) as HTMLElement;
+    const nextBtn = wrapper.querySelector('[part="next-button"]') as HTMLElement;
     nextBtn.click();
     expect(nextImageMock).toHaveBeenCalled();
   });

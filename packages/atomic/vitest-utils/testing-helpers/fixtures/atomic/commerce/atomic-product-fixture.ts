@@ -30,19 +30,13 @@ export class FixtureAtomicProduct extends LitElement {
   connectedCallback() {
     super.connectedCallback();
     this.addEventListener('atomic/resolveResult', this.resolveProduct);
-    this.addEventListener(
-      'atomic/resolveInteractiveResult',
-      this.resolveInteractiveProduct
-    );
+    this.addEventListener('atomic/resolveInteractiveResult', this.resolveInteractiveProduct);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     this.removeEventListener('atomic/resolveResult', this.resolveProduct);
-    this.removeEventListener(
-      'atomic/resolveInteractiveResult',
-      this.resolveInteractiveProduct
-    );
+    this.removeEventListener('atomic/resolveInteractiveResult', this.resolveInteractiveProduct);
   }
 
   private resolveProduct = (event: CustomEvent) => {
@@ -82,9 +76,7 @@ export function renderInAtomicProduct<T extends LitElement>({
 }: {
   template: TemplateResult;
   selector?: string;
-  bindings?:
-    | Partial<CommerceBindings>
-    | ((bindings: MinimalBindings) => MinimalBindings);
+  bindings?: Partial<CommerceBindings> | ((bindings: MinimalBindings) => MinimalBindings);
   product?: Product;
   interactiveProduct?: InteractiveProduct;
 }): Promise<{
@@ -102,9 +94,7 @@ export async function renderInAtomicProduct<T extends LitElement>({
 }: {
   template: TemplateResult;
   selector?: string | never;
-  bindings?:
-    | Partial<CommerceBindings>
-    | ((bindings: MinimalBindings) => MinimalBindings);
+  bindings?: Partial<CommerceBindings> | ((bindings: MinimalBindings) => MinimalBindings);
   product?: Product;
   interactiveProduct?: InteractiveProduct;
 }): Promise<{

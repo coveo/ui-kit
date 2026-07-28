@@ -11,10 +11,7 @@ type SortCriteria = {
   order: string;
 };
 
-export function sortFacets<T extends {facetId: string}>(
-  facets: T[],
-  sortOrder: string[]
-) {
+export function sortFacets<T extends {facetId: string}>(facets: T[], sortOrder: string[]) {
   const payloadMap: Record<string, T> = {};
   facets.forEach((f) => {
     payloadMap[f.facetId] = f;
@@ -57,8 +54,7 @@ function getSpecificFacetRequests<T extends FacetSetState>(state: T) {
   return getFacetRequests(state).map((request) => {
     /* The Search API does not support 'alphanumericDescending' as a string value and instead relies on a new sort mechanism to specify sort order.
     At the moment, this is only supported for alphanumeric sorting, but will likely transition to this pattern for other types in the future. */
-    const sortCriteria =
-      sortCriteriaMap[request.sortCriteria as keyof typeof sortCriteriaMap];
+    const sortCriteria = sortCriteriaMap[request.sortCriteria as keyof typeof sortCriteriaMap];
     if (sortCriteria) {
       return {
         ...request,

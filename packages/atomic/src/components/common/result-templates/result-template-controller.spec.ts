@@ -38,9 +38,7 @@ describe('ResultTemplateController', () => {
     });
 
     it('should return null when there is an error', async () => {
-      const element = await setupResultElement(
-        html`<test-result-element></test-result-element>`
-      );
+      const element = await setupResultElement(html`<test-result-element></test-result-element>`);
       const result = element.controller.getTemplate([]);
 
       expect(result).toBeNull();
@@ -57,9 +55,7 @@ describe('ResultTemplateController', () => {
       const linkElement = controller.getLinkTemplateElement(controller.host);
 
       expect(linkElement).toBeInstanceOf(HTMLTemplateElement);
-      expect(linkElement.innerHTML).toBe(
-        '<atomic-result-link></atomic-result-link>'
-      );
+      expect(linkElement.innerHTML).toBe('<atomic-result-link></atomic-result-link>');
     });
 
     it('should use custom link template when provided', async () => {
@@ -74,9 +70,7 @@ describe('ResultTemplateController', () => {
 
       const linkElement = element.controller.getLinkTemplateElement(element);
 
-      expect(linkElement.innerHTML.trim()).toBe(
-        '<custom-result-link></custom-result-link>'
-      );
+      expect(linkElement.innerHTML.trim()).toBe('<custom-result-link></custom-result-link>');
     });
   });
 });

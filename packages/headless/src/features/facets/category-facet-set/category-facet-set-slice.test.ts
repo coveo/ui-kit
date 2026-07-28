@@ -54,10 +54,7 @@ describe('category facet slice', () => {
       categoryFacetSet,
     };
 
-    const finalState = categoryFacetSetReducer(
-      state,
-      change.fulfilled(payload, '')
-    );
+    const finalState = categoryFacetSetReducer(state, change.fulfilled(payload, ''));
 
     expect(finalState).toEqual(categoryFacetSet);
   });
@@ -98,9 +95,7 @@ describe('category facet slice', () => {
       });
 
       it('sets the request #numberOfValues to the initial number', () => {
-        expect(newState[facetId]?.request.numberOfValues).toBe(
-          initialNumberOfValues
-        );
+        expect(newState[facetId]?.request.numberOfValues).toBe(initialNumberOfValues);
       });
     });
 
@@ -108,26 +103,18 @@ describe('category facet slice', () => {
       state[facetId]!.request.preventAutoSelect = true;
       state[anotherFacetId]!.request.preventAutoSelect = true;
 
-      const finalState = categoryFacetSetReducer(
-        state,
-        updateFacetAutoSelection({allow: true})
-      );
+      const finalState = categoryFacetSetReducer(state, updateFacetAutoSelection({allow: true}));
 
       expect(finalState[facetId]!.request.preventAutoSelect).toBe(false);
       expect(finalState[anotherFacetId]!.request.preventAutoSelect).toBe(false);
     });
 
     it('dispatching #deselectAllBreadcrumbs calls #handleCategoryFacetDeselectAll for every facet', () => {
-      vi.spyOn(
-        CategoryFacetReducerHelpers,
-        'handleCategoryFacetDeselectAll'
-      ).mockReset();
+      vi.spyOn(CategoryFacetReducerHelpers, 'handleCategoryFacetDeselectAll').mockReset();
 
       categoryFacetSetReducer(state, deselectAllBreadcrumbs());
 
-      expect(
-        CategoryFacetReducerHelpers.handleCategoryFacetDeselectAll
-      ).toHaveBeenCalledTimes(2);
+      expect(CategoryFacetReducerHelpers.handleCategoryFacetDeselectAll).toHaveBeenCalledTimes(2);
     });
   });
 
@@ -138,10 +125,7 @@ describe('category facet slice', () => {
         field: '',
       };
 
-      const finalState = categoryFacetSetReducer(
-        state,
-        registerCategoryFacet(options)
-      );
+      const finalState = categoryFacetSetReducer(state, registerCategoryFacet(options));
 
       expect(finalState[facetId]?.request).toEqual({
         ...options,
@@ -169,10 +153,7 @@ describe('category facet slice', () => {
       const request = buildMockCategoryFacetRequest({facetId, field: 'a'});
       state[facetId] = buildMockCategoryFacetSlice({request});
 
-      const finalState = categoryFacetSetReducer(
-        state,
-        registerCategoryFacet(options)
-      );
+      const finalState = categoryFacetSetReducer(state, registerCategoryFacet(options));
       expect(finalState[facetId]?.request.field).toBe('a');
     });
   });
@@ -216,10 +197,7 @@ describe('category facet slice', () => {
         initialNumberOfValues,
       });
 
-      const finalState = categoryFacetSetReducer(
-        state,
-        restoreSearchParameters({cf})
-      );
+      const finalState = categoryFacetSetReducer(state, restoreSearchParameters({cf}));
       const a = buildMockCategoryFacetValueRequest({
         value: 'a',
         state: 'selected',
@@ -241,15 +219,10 @@ describe('category facet slice', () => {
         initialNumberOfValues,
       });
 
-      const finalState = categoryFacetSetReducer(
-        state,
-        restoreSearchParameters({cf})
-      );
+      const finalState = categoryFacetSetReducer(state, restoreSearchParameters({cf}));
 
       expect(finalState.geography?.request.currentValues).toEqual([]);
-      expect(finalState.geography?.request.numberOfValues).toEqual(
-        initialNumberOfValues
-      );
+      expect(finalState.geography?.request.numberOfValues).toEqual(initialNumberOfValues);
     });
 
     it('when a facet is not found in the #cf payload, it does not preventAutoSelection', () => {
@@ -263,10 +236,7 @@ describe('category facet slice', () => {
         initialNumberOfValues,
       });
 
-      const finalState = categoryFacetSetReducer(
-        state,
-        restoreSearchParameters({cf})
-      );
+      const finalState = categoryFacetSetReducer(state, restoreSearchParameters({cf}));
 
       expect(finalState.geography?.request.preventAutoSelect).toBe(false);
     });
@@ -284,10 +254,7 @@ describe('category facet slice', () => {
         initialNumberOfValues,
       });
 
-      const finalState = categoryFacetSetReducer(
-        state,
-        restoreSearchParameters({cf})
-      );
+      const finalState = categoryFacetSetReducer(state, restoreSearchParameters({cf}));
 
       expect(finalState.geography?.request.preventAutoSelect).toBe(false);
     });
@@ -305,10 +272,7 @@ describe('category facet slice', () => {
         initialNumberOfValues,
       });
 
-      const finalState = categoryFacetSetReducer(
-        state,
-        restoreSearchParameters({cf})
-      );
+      const finalState = categoryFacetSetReducer(state, restoreSearchParameters({cf}));
 
       expect(finalState.geography?.request.preventAutoSelect).toBe(true);
     });
@@ -324,30 +288,18 @@ describe('category facet slice', () => {
         initialNumberOfValues,
       });
 
-      const intermediateState = categoryFacetSetReducer(
-        state,
-        restoreSearchParameters({cf})
-      );
+      const intermediateState = categoryFacetSetReducer(state, restoreSearchParameters({cf}));
 
-      expect(
-        intermediateState.geography?.request.currentValues[0].value
-      ).toEqual('a');
-      expect(
-        intermediateState.geography?.request.currentValues[0].children[0].value
-      ).toEqual('b');
+      expect(intermediateState.geography?.request.currentValues[0].value).toEqual('a');
+      expect(intermediateState.geography?.request.currentValues[0].children[0].value).toEqual('b');
 
       path = ['a'];
       cf = {geography: path};
 
-      const finalState = categoryFacetSetReducer(
-        intermediateState,
-        restoreSearchParameters({cf})
-      );
+      const finalState = categoryFacetSetReducer(intermediateState, restoreSearchParameters({cf}));
 
       expect(finalState.geography?.request.currentValues[0].value).toEqual('a');
-      expect(
-        finalState.geography?.request.currentValues[0].children.length
-      ).toBe(0);
+      expect(finalState.geography?.request.currentValues[0].children.length).toBe(0);
     });
 
     describe('with tab-managed facets', () => {
@@ -388,9 +340,7 @@ describe('category facet slice', () => {
           restoreSearchParameters({cf, tab: 'All'})
         );
 
-        expect(finalState.geography?.request.currentValues[0].value).toEqual(
-          'a'
-        );
+        expect(finalState.geography?.request.currentValues[0].value).toEqual('a');
       });
 
       it('clears values for a facet with tabsExcluded when the active tab is in the excluded list', () => {
@@ -430,9 +380,7 @@ describe('category facet slice', () => {
           restoreSearchParameters({cf, tab: 'All'})
         );
 
-        expect(finalState.geography?.request.currentValues[0].value).toEqual(
-          'a'
-        );
+        expect(finalState.geography?.request.currentValues[0].value).toEqual('a');
       });
 
       it('restores values for a facet without tabs configuration regardless of active tab', () => {
@@ -450,9 +398,7 @@ describe('category facet slice', () => {
           restoreSearchParameters({cf, tab: 'AnyTab'})
         );
 
-        expect(finalState.geography?.request.currentValues[0].value).toEqual(
-          'a'
-        );
+        expect(finalState.geography?.request.currentValues[0].value).toEqual('a');
       });
     });
   });
@@ -471,9 +417,7 @@ describe('category facet slice', () => {
         })
       );
 
-      expect(
-        FacetReducers.handleFacetUpdateNumberOfValues
-      ).toHaveBeenCalledTimes(1);
+      expect(FacetReducers.handleFacetUpdateNumberOfValues).toHaveBeenCalledTimes(1);
     });
 
     it('sets correct retrieve count to the appropriate number', () => {
@@ -492,9 +436,7 @@ describe('category facet slice', () => {
         state,
         updateCategoryFacetNumberOfValues({facetId, numberOfValues: 10})
       );
-      expect(finalState[facetId]?.request.currentValues[0].retrieveCount).toBe(
-        10
-      );
+      expect(finalState[facetId]?.request.currentValues[0].retrieveCount).toBe(10);
     });
 
     it('should not throw when facetId does not exist', () => {
@@ -641,30 +583,23 @@ describe('category facet slice', () => {
             previousState: 'idle',
           });
 
-          const children =
-            finalState[facetId]?.request.currentValues[0].children;
+          const children = finalState[facetId]?.request.currentValues[0].children;
           expect(children).toEqual([expected]);
         });
 
         it('sets the parent state to idle', () => {
           const finalState = categoryFacetSetReducer(state, action);
-          expect(finalState[facetId]?.request.currentValues[0].state).toBe(
-            'idle'
-          );
+          expect(finalState[facetId]?.request.currentValues[0].state).toBe('idle');
         });
 
         it('sets the parent retrieveChildren to false', () => {
           const finalState = categoryFacetSetReducer(state, action);
-          expect(
-            finalState[facetId]?.request.currentValues[0].retrieveChildren
-          ).toBe(false);
+          expect(finalState[facetId]?.request.currentValues[0].retrieveChildren).toBe(false);
         });
 
         it('sets the parent previousState to undefined', () => {
           const finalState = categoryFacetSetReducer(state, action);
-          expect(
-            finalState[facetId]?.request.currentValues[0].previousState
-          ).toBeUndefined();
+          expect(finalState[facetId]?.request.currentValues[0].previousState).toBeUndefined();
         });
       });
 
@@ -740,9 +675,9 @@ describe('category facet slice', () => {
           previousState: 'idle',
         });
 
-        expect(
-          finalState[facetId]?.request.currentValues[0].children[0].children
-        ).toEqual([expected]);
+        expect(finalState[facetId]?.request.currentValues[0].children[0].children).toEqual([
+          expected,
+        ]);
       });
 
       describe('when selecting a parent value', () => {
@@ -794,9 +729,7 @@ describe('category facet slice', () => {
           buildMockCategoryFacetValue({value: 'B'}),
           buildMockCategoryFacetValue({
             value: 'C',
-            children: [
-              buildMockCategoryFacetValue({value: 'D', numberOfResults: -1}),
-            ],
+            children: [buildMockCategoryFacetValue({value: 'D', numberOfResults: -1})],
           }),
         ],
       });
@@ -844,9 +777,7 @@ describe('category facet slice', () => {
       });
 
       expect(nextState[facetId]?.request.currentValues.length).toEqual(1);
-      expect(nextState[facetId]?.request.currentValues).toContainEqual(
-        expectedRequest
-      );
+      expect(nextState[facetId]?.request.currentValues).toContainEqual(expectedRequest);
       expect(spy).toHaveBeenCalled();
     });
   });
@@ -873,10 +804,7 @@ describe('category facet slice', () => {
       const basePath: string[] = ['my', 'base', 'path'];
 
       expect(() =>
-        categoryFacetSetReducer(
-          state,
-          updateCategoryFacetBasePath({facetId, basePath})
-        )
+        categoryFacetSetReducer(state, updateCategoryFacetBasePath({facetId, basePath}))
       ).not.toThrow();
     });
   });
@@ -982,10 +910,7 @@ describe('category facet slice', () => {
 
   describe('#updateActiveTab', () => {
     it('should deselect values for a facet with tabsIncluded when switching to a non-included tab', () => {
-      vi.spyOn(
-        CategoryFacetReducerHelpers,
-        'handleCategoryFacetDeselectAll'
-      ).mockReset();
+      vi.spyOn(CategoryFacetReducerHelpers, 'handleCategoryFacetDeselectAll').mockReset();
 
       state.facet1 = buildMockCategoryFacetSlice({
         tabs: {included: ['tab1', 'tab2']},
@@ -993,16 +918,11 @@ describe('category facet slice', () => {
 
       categoryFacetSetReducer(state, updateActiveTab('tab3'));
 
-      expect(
-        CategoryFacetReducerHelpers.handleCategoryFacetDeselectAll
-      ).toHaveBeenCalledTimes(1);
+      expect(CategoryFacetReducerHelpers.handleCategoryFacetDeselectAll).toHaveBeenCalledTimes(1);
     });
 
     it('should not deselect values for a facet with tabsIncluded when switching to an included tab', () => {
-      vi.spyOn(
-        CategoryFacetReducerHelpers,
-        'handleCategoryFacetDeselectAll'
-      ).mockReset();
+      vi.spyOn(CategoryFacetReducerHelpers, 'handleCategoryFacetDeselectAll').mockReset();
 
       state.facet1 = buildMockCategoryFacetSlice({
         tabs: {included: ['tab1', 'tab2']},
@@ -1010,16 +930,11 @@ describe('category facet slice', () => {
 
       categoryFacetSetReducer(state, updateActiveTab('tab1'));
 
-      expect(
-        CategoryFacetReducerHelpers.handleCategoryFacetDeselectAll
-      ).not.toHaveBeenCalled();
+      expect(CategoryFacetReducerHelpers.handleCategoryFacetDeselectAll).not.toHaveBeenCalled();
     });
 
     it('should deselect values for a facet with tabsExcluded when switching to an excluded tab', () => {
-      vi.spyOn(
-        CategoryFacetReducerHelpers,
-        'handleCategoryFacetDeselectAll'
-      ).mockReset();
+      vi.spyOn(CategoryFacetReducerHelpers, 'handleCategoryFacetDeselectAll').mockReset();
 
       state.facet1 = buildMockCategoryFacetSlice({
         tabs: {excluded: ['tab3']},
@@ -1027,24 +942,17 @@ describe('category facet slice', () => {
 
       categoryFacetSetReducer(state, updateActiveTab('tab3'));
 
-      expect(
-        CategoryFacetReducerHelpers.handleCategoryFacetDeselectAll
-      ).toHaveBeenCalledTimes(1);
+      expect(CategoryFacetReducerHelpers.handleCategoryFacetDeselectAll).toHaveBeenCalledTimes(1);
     });
 
     it('should not deselect values for a facet without tabs configuration', () => {
-      vi.spyOn(
-        CategoryFacetReducerHelpers,
-        'handleCategoryFacetDeselectAll'
-      ).mockReset();
+      vi.spyOn(CategoryFacetReducerHelpers, 'handleCategoryFacetDeselectAll').mockReset();
 
       state.facet1 = buildMockCategoryFacetSlice();
 
       categoryFacetSetReducer(state, updateActiveTab('anyTab'));
 
-      expect(
-        CategoryFacetReducerHelpers.handleCategoryFacetDeselectAll
-      ).not.toHaveBeenCalled();
+      expect(CategoryFacetReducerHelpers.handleCategoryFacetDeselectAll).not.toHaveBeenCalled();
     });
   });
 });

@@ -3,11 +3,7 @@ import path from 'node:path';
 import {isKnownCriterion} from '../data/criterion-metadata.js';
 import {BASELINE_FILE_PATTERN} from '../shared/constants.js';
 import {isRecord} from '../shared/guards.js';
-import type {
-  ManualAuditAggregate,
-  ManualAuditFile,
-  OpenAcrConformance,
-} from './types.js';
+import type {ManualAuditAggregate, ManualAuditFile, OpenAcrConformance} from './types.js';
 import {CONFORMANCE_SEVERITY, manualStatusToConformance} from './types.js';
 
 const LOG_PREFIX = '[json-to-openacr]';
@@ -21,9 +17,7 @@ function isValidManualAuditFile(value: unknown): value is ManualAuditFile {
   );
 }
 
-function extractCriterionStatus(
-  statusValue: unknown
-): {status: string; remarks?: string} | null {
+function extractCriterionStatus(statusValue: unknown): {status: string; remarks?: string} | null {
   if (typeof statusValue === 'string') {
     return {status: statusValue};
   }
@@ -34,10 +28,7 @@ function extractCriterionStatus(
     }
     return {
       status: statusValue.conformance,
-      remarks:
-        typeof statusValue.remarks === 'string'
-          ? statusValue.remarks
-          : undefined,
+      remarks: typeof statusValue.remarks === 'string' ? statusValue.remarks : undefined,
     };
   }
 
@@ -93,9 +84,7 @@ function collectFileAggregates(
 ): number {
   let count = 0;
 
-  for (const [criterionKey, statusValue] of Object.entries(
-    file.wcag22Criteria
-  )) {
+  for (const [criterionKey, statusValue] of Object.entries(file.wcag22Criteria)) {
     const aggregate = parseCriterionEntry(criterionKey, statusValue, context);
     if (!aggregate) {
       continue;
@@ -109,18 +98,12 @@ function collectFileAggregates(
   return count;
 }
 
-function parseManualFile(
-  content: string,
-  filePath: string
-): ManualAuditFile | null {
+function parseManualFile(content: string, filePath: string): ManualAuditFile | null {
   let parsed: unknown;
   try {
     parsed = JSON.parse(content);
   } catch {
-    console.warn(
-      LOG_PREFIX,
-      `Unable to parse manual audit file ${filePath} as JSON.`
-    );
+    console.warn(LOG_PREFIX, `Unable to parse manual audit file ${filePath} as JSON.`);
     return null;
   }
 
@@ -140,20 +123,13 @@ async function loadFileNames(dirPath: string): Promise<string[] | null> {
     const files = await readdir(dirPath);
     return files.filter((file) => BASELINE_FILE_PATTERN.test(file));
   } catch (error) {
-    const errorCode =
-      isRecord(error) && typeof error.code === 'string'
-        ? error.code
-        : undefined;
+    const errorCode = isRecord(error) && typeof error.code === 'string' ? error.code : undefined;
 
     if (errorCode === 'ENOENT') {
       return null;
     }
 
-    console.warn(
-      LOG_PREFIX,
-      `Unable to read manual audit directory ${dirPath}.`,
-      error
-    );
+    console.warn(LOG_PREFIX, `Unable to read manual audit directory ${dirPath}.`, error);
     return null;
   }
 }
@@ -185,11 +161,7 @@ export async function loadManualAuditData(
     try {
       content = await readFile(filePath, 'utf8');
     } catch (error) {
-      console.warn(
-        LOG_PREFIX,
-        `Unable to read manual audit file ${filePath}.`,
-        error
-      );
+      console.warn(LOG_PREFIX, `Unable to read manual audit file ${filePath}.`, error);
       continue;
     }
 

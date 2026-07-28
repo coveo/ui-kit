@@ -4,7 +4,7 @@ export interface SuggestionItem {
   subtitle?: string;
 }
 
-export type SuggestionIconType = 'search' | 'sparkle' | 'filter-sparkle';
+export type SuggestionIconType = 'search' | 'sparkle' | 'settings';
 
 export interface SuggestionSection {
   id: string;

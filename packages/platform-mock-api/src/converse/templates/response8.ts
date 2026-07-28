@@ -4881,10 +4881,8 @@ const middleEvents: ConverseEvent[] = [
                   'gid://shopify/ProductVariant/50674633900306': {
                     standout:
                       '7mm neoprene thickness with sealed zip for maximum thermal insulation in cold water',
-                    trade_off:
-                      'Highest price at $399.99, targeted for paddleboarders',
-                    best_for:
-                      'Extreme cold-water conditions requiring peak warmth',
+                    trade_off: 'Highest price at $399.99, targeted for paddleboarders',
+                    best_for: 'Extreme cold-water conditions requiring peak warmth',
                   },
                   'gid://shopify/ProductVariant/50674625773842': {
                     standout:
@@ -4897,8 +4895,7 @@ const middleEvents: ConverseEvent[] = [
                     standout:
                       'Heat-retaining lining with high-stretch neoprene and lifetime seam warranty; best rating at 4.9 stars',
                     trade_off: 'Most affordable option at $249.99',
-                    best_for:
-                      'Cold-water surfing with durability and value for frequent surfers',
+                    best_for: 'Cold-water surfing with durability and value for frequent surfers',
                   },
                 },
                 summary_text:
@@ -4923,8 +4920,7 @@ const middleEvents: ConverseEvent[] = [
       type: 'TOOL_CALL_RESULT',
       messageId: 'b04ac841-eeaa-4d57-b2b9-d97d6e87e2b0',
       toolCallId: 'tooluse_8K4S9jpPMlBcUlrhtmITf8',
-      content:
-        '"Stored render plan for route \'comparison\' with 1 render unit(s)."',
+      content: '"Stored render plan for route \'comparison\' with 1 render unit(s)."',
     },
   },
   {
@@ -5792,10 +5788,8 @@ const middleEvents: ConverseEvent[] = [
                   'gid://shopify/ProductVariant/50674633900306': {
                     standout:
                       '7mm neoprene thickness with sealed zip for maximum thermal insulation in cold water',
-                    trade_off:
-                      'Highest price at $399.99, targeted for paddleboarders',
-                    best_for:
-                      'Extreme cold-water conditions requiring peak warmth',
+                    trade_off: 'Highest price at $399.99, targeted for paddleboarders',
+                    best_for: 'Extreme cold-water conditions requiring peak warmth',
                   },
                   'gid://shopify/ProductVariant/50674625773842': {
                     standout:
@@ -5808,8 +5802,7 @@ const middleEvents: ConverseEvent[] = [
                     standout:
                       'Heat-retaining lining with high-stretch neoprene and lifetime seam warranty; best rating at 4.9 stars',
                     trade_off: 'Most affordable option at $249.99',
-                    best_for:
-                      'Cold-water surfing with durability and value for frequent surfers',
+                    best_for: 'Cold-water surfing with durability and value for frequent surfers',
                   },
                 },
                 summary_text:
@@ -5950,8 +5943,7 @@ const middleEvents: ConverseEvent[] = [
                         },
                         {
                           key: 'ec_product_id',
-                          valueString:
-                            'gid://shopify/ProductVariant/50674633900306',
+                          valueString: 'gid://shopify/ProductVariant/50674633900306',
                         },
                         {
                           key: 'ec_description',
@@ -6001,8 +5993,7 @@ const middleEvents: ConverseEvent[] = [
                         },
                         {
                           key: 'permanentid',
-                          valueString:
-                            'gid://shopify/ProductVariant/50674633900306',
+                          valueString: 'gid://shopify/ProductVariant/50674633900306',
                         },
                         {
                           key: 'excerpt',
@@ -6020,13 +6011,11 @@ const middleEvents: ConverseEvent[] = [
                         },
                         {
                           key: 'trade_off',
-                          valueString:
-                            'Highest price at $399.99, targeted for paddleboarders',
+                          valueString: 'Highest price at $399.99, targeted for paddleboarders',
                         },
                         {
                           key: 'best_for',
-                          valueString:
-                            'Extreme cold-water conditions requiring peak warmth',
+                          valueString: 'Extreme cold-water conditions requiring peak warmth',
                         },
                       ],
                     },
@@ -6056,8 +6045,7 @@ const middleEvents: ConverseEvent[] = [
                         },
                         {
                           key: 'ec_product_id',
-                          valueString:
-                            'gid://shopify/ProductVariant/50674625773842',
+                          valueString: 'gid://shopify/ProductVariant/50674625773842',
                         },
                         {
                           key: 'ec_description',
@@ -6107,8 +6095,7 @@ const middleEvents: ConverseEvent[] = [
                         },
                         {
                           key: 'permanentid',
-                          valueString:
-                            'gid://shopify/ProductVariant/50674625773842',
+                          valueString: 'gid://shopify/ProductVariant/50674625773842',
                         },
                         {
                           key: 'excerpt',
@@ -6140,8 +6127,7 @@ const middleEvents: ConverseEvent[] = [
                       valueMap: [
                         {
                           key: 'ec_name',
-                          valueString:
-                            'WaveGuard Performance Full Suit - Black / XXL',
+                          valueString: 'WaveGuard Performance Full Suit - Black / XXL',
                         },
                         {
                           key: 'ec_brand',
@@ -6162,8 +6148,7 @@ const middleEvents: ConverseEvent[] = [
                         },
                         {
                           key: 'ec_product_id',
-                          valueString:
-                            'gid://shopify/ProductVariant/50674630951186',
+                          valueString: 'gid://shopify/ProductVariant/50674630951186',
                         },
                         {
                           key: 'ec_description',
@@ -6213,8 +6198,7 @@ const middleEvents: ConverseEvent[] = [
                         },
                         {
                           key: 'permanentid',
-                          valueString:
-                            'gid://shopify/ProductVariant/50674630951186',
+                          valueString: 'gid://shopify/ProductVariant/50674630951186',
                         },
                         {
                           key: 'excerpt',
@@ -6964,8 +6948,7 @@ const middleEvents: ConverseEvent[] = [
                       valueMap: [
                         {
                           key: 'text',
-                          valueString:
-                            'Which one should I choose for regular cold-water surfing?',
+                          valueString: 'Which one should I choose for regular cold-water surfing?',
                         },
                         {
                           key: 'type',
@@ -6977,8 +6960,7 @@ const middleEvents: ConverseEvent[] = [
                       valueMap: [
                         {
                           key: 'text',
-                          valueString:
-                            'Show me wetsuits with thicker neoprene for extreme cold',
+                          valueString: 'Show me wetsuits with thicker neoprene for extreme cold',
                         },
                         {
                           key: 'type',
@@ -6990,8 +6972,7 @@ const middleEvents: ConverseEvent[] = [
                       valueMap: [
                         {
                           key: 'text',
-                          valueString:
-                            'What accessories do I need for cold-water surfing?',
+                          valueString: 'What accessories do I need for cold-water surfing?',
                         },
                         {
                           key: 'type',

@@ -4,10 +4,7 @@ import {css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {createAppLoadedListener} from '@/src/components/common/interface/store';
-import {
-  dispatchTabLoaded,
-  type TabCommon,
-} from '@/src/components/common/tabs/tab-common';
+import {dispatchTabLoaded, type TabCommon} from '@/src/components/common/tabs/tab-common';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindings} from '@/src/decorators/bindings';
@@ -139,9 +136,7 @@ export class AtomicIpxTab
     if (!tablist) {
       return;
     }
-    const tabs = Array.from(
-      tablist.querySelectorAll<HTMLElement>('[role="tab"]')
-    );
+    const tabs = Array.from(tablist.querySelectorAll<HTMLElement>('[role="tab"]'));
     const currentIndex = tabs.indexOf(this);
     if (currentIndex === -1) {
       return;

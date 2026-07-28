@@ -15,10 +15,7 @@ import type {
 import {getOrganizationEndpoint} from '../platform-client.js';
 import type {PreprocessRequest} from '../preprocess-request.js';
 import {BaseAnalyticsProvider} from './base-analytics.js';
-import {
-  wrapAnalyticsClientSendEventHook,
-  wrapPreprocessRequest,
-} from './coveo-analytics-utils.js';
+import {wrapAnalyticsClientSendEventHook, wrapPreprocessRequest} from './coveo-analytics-utils.js';
 
 export type StateNeededByCaseAssistAnalytics = ConfigurationSection &
   Partial<CaseAssistConfigurationSection> &

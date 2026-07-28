@@ -75,9 +75,7 @@ describe('jwt-reducer', () => {
     it('should update the query pipeline, search hub and display name', () => {
       expect(initialState.pipeline).toEqual(tokenPipeline);
       expect(initialState.searchHub).toEqual(tokenSearchHub);
-      expect(initialState.configuration.analytics.userDisplayName).toEqual(
-        tokenUserDisplayName
-      );
+      expect(initialState.configuration.analytics.userDisplayName).toEqual(tokenUserDisplayName);
     });
 
     it('should not warn about anything', () => {
@@ -86,10 +84,7 @@ describe('jwt-reducer', () => {
 
     describe('when executing setSearchHub', () => {
       it('should reconcile searchHub', () => {
-        const newState = reducer(
-          initialState,
-          setSearchHub('not the correct one')
-        );
+        const newState = reducer(initialState, setSearchHub('not the correct one'));
         expect(newState).toMatchObject({
           ...initialState,
           searchHub: tokenSearchHub,
@@ -120,10 +115,7 @@ describe('jwt-reducer', () => {
 
     describe('when executing setPipeline', () => {
       it('should reconcile pipeline', () => {
-        const newState = reducer(
-          initialState,
-          setPipeline('not the correct one')
-        );
+        const newState = reducer(initialState, setPipeline('not the correct one'));
         expect(newState).toMatchObject({
           ...initialState,
           pipeline: tokenPipeline,
@@ -173,50 +165,32 @@ describe('jwt-reducer', () => {
       });
 
       it('should warn when pipeline is not default', () => {
-        reducer(
-          initialState,
-          updateSearchConfiguration({pipeline: 'not the correct one'})
-        );
+        reducer(initialState, updateSearchConfiguration({pipeline: 'not the correct one'}));
         expect(loggerSpy).toHaveBeenCalled();
       });
 
       it('should not warn when pipeline is default', () => {
-        reducer(
-          initialState,
-          updateSearchConfiguration({pipeline: getPipelineInitialState()})
-        );
+        reducer(initialState, updateSearchConfiguration({pipeline: getPipelineInitialState()}));
         expect(loggerSpy).not.toHaveBeenCalled();
       });
 
       it('should not warn when pipeline is not set', () => {
-        reducer(
-          initialState,
-          updateSearchConfiguration({locale: 'random value'})
-        );
+        reducer(initialState, updateSearchConfiguration({locale: 'random value'}));
         expect(loggerSpy).not.toHaveBeenCalled();
       });
 
       it('should warn when search hub is not default', () => {
-        reducer(
-          initialState,
-          updateSearchConfiguration({searchHub: 'not the correct one'})
-        );
+        reducer(initialState, updateSearchConfiguration({searchHub: 'not the correct one'}));
         expect(loggerSpy).toHaveBeenCalled();
       });
 
       it('should not warn when search hub is default', () => {
-        reducer(
-          initialState,
-          updateSearchConfiguration({searchHub: getSearchHubInitialState()})
-        );
+        reducer(initialState, updateSearchConfiguration({searchHub: getSearchHubInitialState()}));
         expect(loggerSpy).not.toHaveBeenCalled();
       });
 
       it('should not warn when search hub is not set', () => {
-        reducer(
-          initialState,
-          updateSearchConfiguration({locale: 'random value'})
-        );
+        reducer(initialState, updateSearchConfiguration({locale: 'random value'}));
         expect(loggerSpy).not.toHaveBeenCalled();
       });
 
@@ -278,8 +252,7 @@ describe('jwt-reducer', () => {
         reducer(
           initialState,
           updateAnalyticsConfiguration({
-            userDisplayName:
-              getConfigurationInitialState().analytics.userDisplayName,
+            userDisplayName: getConfigurationInitialState().analytics.userDisplayName,
           })
         );
         expect(loggerSpy).not.toHaveBeenCalled();

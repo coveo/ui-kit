@@ -71,8 +71,6 @@ export class UserActionsTimelinePageObject extends BasePageObject<'atomic-insigh
     // Navigate to the story with MSW configured for user actions error
     const currentUrl = page.url();
     const baseUrl = currentUrl.split('?')[0];
-    await page.goto(
-      `${baseUrl}?id=atomic-insight-user-actions-timeline--with-user-actions-error`
-    );
+    await page.goto(`${baseUrl}?id=atomic-insight-user-actions-timeline--with-user-actions-error`);
   }
 }

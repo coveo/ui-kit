@@ -21,9 +21,7 @@ import '@/src/components/search/atomic-facet/atomic-facet.js';
 
 const searchApiHarness = new MockSearchApi();
 searchApiHarness.searchEndpoint.addRequestTransformer(searchFacetTransformer);
-searchApiHarness.facetSearchEndpoint.addRequestTransformer(
-  searchFacetSearchTransformer
-);
+searchApiHarness.facetSearchEndpoint.addRequestTransformer(searchFacetSearchTransformer);
 
 const {decorator, play} = wrapInSearchInterface();
 const {events, args, argTypes, template} = getStorybookHelpers('atomic-facet', {
@@ -165,20 +163,17 @@ export const A11yStatusMessage: Story = {
     (story) => html`<atomic-query-summary></atomic-query-summary>${story()}`,
   ],
   beforeEach: () => {
-    searchApiHarness.searchEndpoint.mockOnce(
-      buildSearchResponseWithResults(120)
-    );
-    searchApiHarness.searchEndpoint.mockOnce(
-      buildSearchResponseWithResults(42)
-    );
+    searchApiHarness.searchEndpoint.mockOnce(buildSearchResponseWithResults(120));
+    searchApiHarness.searchEndpoint.mockOnce(buildSearchResponseWithResults(42));
   },
   play: async (context) => {
     await play(context);
     await testStatusMessageA11y(context, {
       triggerAction: async () => {
-        const [checkbox] = await within(
-          context.canvasElement
-        ).findAllByShadowLabelText('Inclusion filter on', {exact: false});
+        const [checkbox] = await within(context.canvasElement).findAllByShadowLabelText(
+          'Inclusion filter on',
+          {exact: false}
+        );
         checkbox.click();
       },
       expectedText: 'Results loaded. Results 1-10 of 42',
@@ -220,10 +215,9 @@ export const A11yFacetSearchNoResults: Story = {
     await play(context);
     await testStatusMessageA11y(context, {
       triggerAction: async (canvasElement) => {
-        const input = await within(canvasElement).findByShadowLabelText(
-          'Search for values in',
-          {exact: false}
-        );
+        const input = await within(canvasElement).findByShadowLabelText('Search for values in', {
+          exact: false,
+        });
         await userEvent.type(input, 'zzz');
       },
       expectedText: '0 values found in the Object Type facet',

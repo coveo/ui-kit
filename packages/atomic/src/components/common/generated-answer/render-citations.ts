@@ -1,7 +1,4 @@
-import type {
-  GeneratedAnswerCitation,
-  InteractiveCitation,
-} from '@coveo/headless';
+import type {GeneratedAnswerCitation, InteractiveCitation} from '@coveo/headless';
 import type {i18n} from 'i18next';
 import {html} from 'lit';
 import {keyed} from 'lit/directives/keyed.js';
@@ -13,9 +10,7 @@ import '@/src/components/common/atomic-citation/atomic-citation';
 export interface RenderCitationsProps {
   citations: GeneratedAnswerCitation[] | undefined;
   i18n: i18n;
-  buildInteractiveCitation: (
-    citation: GeneratedAnswerCitation
-  ) => InteractiveCitation;
+  buildInteractiveCitation: (citation: GeneratedAnswerCitation) => InteractiveCitation;
   logCitationHover: (citationId: string, citationHoverTimeMs: number) => void;
   disableCitationAnchoring?: boolean;
 }
@@ -23,16 +18,9 @@ export interface RenderCitationsProps {
 /**
  * Renders the list of citations for a generated answer.
  */
-export const renderCitations: FunctionalComponent<RenderCitationsProps> = ({
-  props,
-}) => {
-  const {
-    citations,
-    i18n,
-    buildInteractiveCitation,
-    logCitationHover,
-    disableCitationAnchoring,
-  } = props;
+export const renderCitations: FunctionalComponent<RenderCitationsProps> = ({props}) => {
+  const {citations, i18n, buildInteractiveCitation, logCitationHover, disableCitationAnchoring} =
+    props;
 
   return html`${when(citations && citations.length > 0, () =>
     citations?.map((citation: GeneratedAnswerCitation, index: number) => {

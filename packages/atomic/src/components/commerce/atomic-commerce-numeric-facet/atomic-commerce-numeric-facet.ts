@@ -23,10 +23,7 @@ import {shouldDisplayInputForFacetRange} from '../../common/facets/facet-common'
 import {renderFacetContainer} from '../../common/facets/facet-container/facet-container';
 import {renderFacetHeader} from '../../common/facets/facet-header/facet-header';
 import {renderNumericFacetValue} from '../../common/facets/numeric-facet/value-link';
-import {
-  defaultCurrencyFormatter,
-  defaultNumberFormatter,
-} from '../../common/formats/format-common';
+import {defaultCurrencyFormatter, defaultNumberFormatter} from '../../common/formats/format-common';
 import type {Range} from '../atomic-commerce-facet-number-input/atomic-commerce-facet-number-input';
 import '../atomic-commerce-facet-number-input/atomic-commerce-facet-number-input';
 import {bindings} from '@/src/decorators/bindings';
@@ -63,9 +60,7 @@ export class AtomicCommerceNumericFacet
   /**
    * The Summary controller instance.
    */
-  @property({type: Object}) summary!: Summary<
-    SearchSummaryState | ProductListingSummaryState
-  >;
+  @property({type: Object}) summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
   /**
    * The facet controller instance.
    */
@@ -147,10 +142,7 @@ export class AtomicCommerceNumericFacet
   }
 
   private get numberOfSelectedValues() {
-    return (
-      this.facetState.values.filter(({state}) => state === 'selected').length ||
-      0
-    );
+    return this.facetState.values.filter(({state}) => state === 'selected').length || 0;
   }
 
   private get hasInputRange() {
@@ -163,9 +155,8 @@ export class AtomicCommerceNumericFacet
 
   private get valuesToRender() {
     return (
-      this.facetState.values.filter(
-        (value) => value.numberOfResults || value.state !== 'idle'
-      ) || []
+      this.facetState.values.filter((value) => value.numberOfResults || value.state !== 'idle') ||
+      []
     );
   }
 
@@ -285,9 +276,7 @@ export class AtomicCommerceNumericFacet
 
   private validateFacet() {
     if (!this.facet) {
-      this.error = new Error(
-        'The "facet" property is required for <atomic-commerce-facet>.'
-      );
+      this.error = new Error('The "facet" property is required for <atomic-commerce-facet>.');
     }
   }
 }

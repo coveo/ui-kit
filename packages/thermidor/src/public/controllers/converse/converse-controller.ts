@@ -1,7 +1,4 @@
-import type {
-  RoutedInterfaceRegistry,
-  Turn,
-} from '@/src/internal/features/generative/index.js';
+import type {RoutedInterfaceRegistry, Turn} from '@/src/internal/features/generative/index.js';
 import {
   createHydrateSubInterface,
   getOrCreateGenerativeActions,
@@ -17,10 +14,7 @@ import {
   createMemoizedStateSelector,
   getHandleInternals,
 } from '@/src/internal/utils/index.js';
-import type {
-  GenerativeInterface,
-  Controller,
-} from '@/src/internal/utils/index.js';
+import type {GenerativeInterface, Controller} from '@/src/internal/utils/index.js';
 import {
   deserializeToGenerativeState,
   SerializedConverseState,
@@ -40,21 +34,11 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
     const actions = getOrCreateGenerativeActions(options.interface);
     const selectors = getOrCreateGenerativeSelectors(options.interface);
     const registry = getOrCreateRoutedInterfaceRegistry(options.interface);
-    const hydrateSubInterface = createHydrateSubInterface(
-      fullEngine,
-      options.interface
-    );
+    const hydrateSubInterface = createHydrateSubInterface(fullEngine, options.interface);
 
     if (options.conversationToRestore) {
-      rehydrateRoutedInterfaces(
-        options.conversationToRestore.turns,
-        registry,
-        hydrateSubInterface
-      );
-      const hydratedState = deserializeToGenerativeState(
-        options.conversationToRestore,
-        registry
-      );
+      rehydrateRoutedInterfaces(options.conversationToRestore.turns, registry, hydrateSubInterface);
+      const hydratedState = deserializeToGenerativeState(options.conversationToRestore, registry);
       fullEngine.mutate(actions.hydrateState(hydratedState));
     }
 
@@ -65,9 +49,7 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
         const turns = mergeTurnsWithRegistry(stateTurns, registry);
         return {
           turns,
-          activeTurn: activeTurnId
-            ? turns.find((t) => t.id === activeTurnId)
-            : undefined,
+          activeTurn: activeTurnId ? turns.find((t) => t.id === activeTurnId) : undefined,
           isStreaming: turns.some((t) => t.status === 'streaming'),
         };
       }
@@ -123,19 +105,13 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
           }
         },
         startToolCall: (turnId, toolCallId, toolName) => {
-          this.engine.mutate(
-            this.#actions.startToolCall({turnId, toolCallId, toolName})
-          );
+          this.engine.mutate(this.#actions.startToolCall({turnId, toolCallId, toolName}));
         },
         appendToolCallArgs: (turnId, toolCallId, delta) => {
-          this.engine.mutate(
-            this.#actions.appendToolCallArgs({turnId, toolCallId, delta})
-          );
+          this.engine.mutate(this.#actions.appendToolCallArgs({turnId, toolCallId, delta}));
         },
         completeToolCall: (turnId, toolCallId, result) => {
-          this.engine.mutate(
-            this.#actions.completeToolCall({turnId, toolCallId, result})
-          );
+          this.engine.mutate(this.#actions.completeToolCall({turnId, toolCallId, result}));
         },
         completeTurn: (turnId) => {
           this.engine.mutate(this.#actions.completeTurn({turnId}));
@@ -151,17 +127,13 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
           this.engine.mutate(this.#actions.startReasoning({turnId}));
         },
         appendReasoningDelta: (turnId, delta) => {
-          this.engine.mutate(
-            this.#actions.appendReasoningDelta({turnId, delta})
-          );
+          this.engine.mutate(this.#actions.appendReasoningDelta({turnId, delta}));
         },
         endReasoning: (turnId) => {
           this.engine.mutate(this.#actions.endReasoning({turnId}));
         },
         setConversationSession: (sessionId, token) => {
-          this.engine.mutate(
-            this.#actions.setConversationSession({sessionId, token})
-          );
+          this.engine.mutate(this.#actions.setConversationSession({sessionId, token}));
         },
       },
       hydrateSubInterface,
@@ -192,9 +164,7 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
     return {
       name: firstPrompt,
       timestamp: Date.now(),
-      conversationSessionId: this.engine.read(
-        this.#selectors.getConversationSessionId
-      ),
+      conversationSessionId: this.engine.read(this.#selectors.getConversationSessionId),
       conversationToken: this.engine.read(this.#selectors.getConversationToken),
       turns: serializedTurns,
       activeTurnId: activeTurn?.id,
@@ -203,11 +173,7 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
 
   restore(state: SerializedConverseState): void {
     this.#registry.clear();
-    rehydrateRoutedInterfaces(
-      state.turns,
-      this.#registry,
-      this.#hydrateSubInterface
-    );
+    rehydrateRoutedInterfaces(state.turns, this.#registry, this.#hydrateSubInterface);
     const hydratedState = deserializeToGenerativeState(state, this.#registry);
     this.engine.mutate(this.#actions.hydrateState(hydratedState));
   }
@@ -251,9 +217,8 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
   }
 }
 
-export const buildConverseController = (
-  options: ConverseControllerOptions
-): ConverseController => new ConverseControllerImpl(options);
+export const buildConverseController = (options: ConverseControllerOptions): ConverseController =>
+  new ConverseControllerImpl(options);
 
 export interface ConverseController extends Controller<ConverseControllerState> {
   serialize(): SerializedConverseState;

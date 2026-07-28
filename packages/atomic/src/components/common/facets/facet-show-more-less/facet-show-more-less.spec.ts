@@ -3,10 +3,7 @@ import {beforeAll, describe, expect, it, vi} from 'vitest';
 import {page} from 'vitest/browser';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {
-  type FacetShowMoreProps,
-  renderFacetShowMoreLess,
-} from './facet-show-more-less';
+import {type FacetShowMoreProps, renderFacetShowMoreLess} from './facet-show-more-less';
 
 describe('#renderFacetShowMoreLess', () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;
@@ -46,9 +43,7 @@ describe('#renderFacetShowMoreLess', () => {
       showLessRef: vi.fn(),
     };
     const mergedProps = {...defaultProps, ...props};
-    return renderFunctionFixture(
-      html`${renderFacetShowMoreLess({props: mergedProps})}`
-    );
+    return renderFunctionFixture(html`${renderFacetShowMoreLess({props: mergedProps})}`);
   };
 
   it('renders nothing when both canShowLessValues and canShowMoreValues are false', async () => {
@@ -108,12 +103,8 @@ describe('#renderFacetShowMoreLess', () => {
   it('should have the correct part attribute for the icon', async () => {
     await renderComponent({canShowMoreValues: true});
     await renderComponent({canShowLessValues: true});
-    await expect
-      .element(locators.showLessIcon)
-      .toHaveAttribute('part', 'show-more-less-icon');
-    await expect
-      .element(locators.showMoreIcon)
-      .toHaveAttribute('part', 'show-more-less-icon');
+    await expect.element(locators.showLessIcon).toHaveAttribute('part', 'show-more-less-icon');
+    await expect.element(locators.showMoreIcon).toHaveAttribute('part', 'show-more-less-icon');
   });
 
   it('calls #onShowMore when the "show more" button is clicked', async () => {

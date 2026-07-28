@@ -46,13 +46,7 @@ async function loadHandlebars() {
 }
 
 const ALLOWED_TYPES = ['component', 'page'];
-const ALLOWED_CATEGORIES = [
-  'search',
-  'commerce',
-  'insight',
-  'ipx',
-  'recommendations',
-];
+const ALLOWED_CATEGORIES = ['search', 'commerce', 'insight', 'ipx', 'recommendations'];
 
 function printHelp() {
   console.log(`
@@ -111,9 +105,7 @@ if (!ALLOWED_TYPES.includes(type)) {
 
 const category = getFlagValue(args, '--category') ?? 'search';
 if (!ALLOWED_CATEGORIES.includes(category)) {
-  fail(
-    `Invalid --category '${category}'. Allowed: ${ALLOWED_CATEGORIES.join(', ')}`
-  );
+  fail(`Invalid --category '${category}'. Allowed: ${ALLOWED_CATEGORIES.join(', ')}`);
 }
 
 const isResult = args.includes('--result');
@@ -207,9 +199,7 @@ function getTemplateData(componentName, cat) {
   };
 
   const config = apiConfig[cat];
-  const titleName = toTitleCase(
-    componentName.replace('atomic-', '').replace(/-/g, ' ')
-  );
+  const titleName = toTitleCase(componentName.replace('atomic-', '').replace(/-/g, ' '));
 
   return {
     componentName,

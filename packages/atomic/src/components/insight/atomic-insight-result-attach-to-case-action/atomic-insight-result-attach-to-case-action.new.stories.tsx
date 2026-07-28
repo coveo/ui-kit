@@ -17,18 +17,10 @@ import '@/src/components/search/atomic-result-text/atomic-result-text.js';
 
 const insightApiHarness = new MockInsightApi();
 
-const {decorator: insightInterfaceDecorator, play} = wrapInInsightInterface(
-  {},
-  false,
-  false
-);
+const {decorator: insightInterfaceDecorator, play} = wrapInInsightInterface({}, false, false);
 const {decorator: insightLayoutDecorator} = wrapInInsightLayout(false);
-const {decorator: insightResultListDecorator} = wrapInInsightResultList(
-  'list',
-  false
-);
-const {decorator: insightResultTemplateDecorator} =
-  wrapInInsightResultTemplate(false);
+const {decorator: insightResultListDecorator} = wrapInInsightResultList('list', false);
+const {decorator: insightResultTemplateDecorator} = wrapInInsightResultTemplate(false);
 
 const meta: Meta = {
   component: 'atomic-insight-result-attach-to-case-action',

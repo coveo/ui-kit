@@ -33,35 +33,22 @@ function ProductCard({product}: {product: Product}) {
     <CardTag className={styles.card} {...cardProps}>
       <div className={styles.imageWrapper}>
         {image ? (
-          <img
-            className={styles.image}
-            src={image}
-            alt={product.ec_name}
-            loading="lazy"
-          />
+          <img className={styles.image} src={image} alt={product.ec_name} loading="lazy" />
         ) : (
           <span className={styles.imagePlaceholder}>No image</span>
         )}
       </div>
       <div className={styles.content}>
-        {product.ec_brand && (
-          <span className={styles.brand}>{product.ec_brand}</span>
-        )}
+        {product.ec_brand && <span className={styles.brand}>{product.ec_brand}</span>}
         <h3 className={styles.name}>{product.ec_name}</h3>
         <div className={styles.pricing}>
           {hasPromo ? (
             <>
-              <span className={styles.promoPrice}>
-                {formatPrice(product.ec_promo_price!)}
-              </span>
-              <span className={styles.originalPrice}>
-                {formatPrice(product.ec_price!)}
-              </span>
+              <span className={styles.promoPrice}>{formatPrice(product.ec_promo_price!)}</span>
+              <span className={styles.originalPrice}>{formatPrice(product.ec_price!)}</span>
             </>
           ) : product.ec_price != null ? (
-            <span className={styles.price}>
-              {formatPrice(product.ec_price)}
-            </span>
+            <span className={styles.price}>{formatPrice(product.ec_price)}</span>
           ) : null}
         </div>
         <StarRating rating={product.ec_rating} />

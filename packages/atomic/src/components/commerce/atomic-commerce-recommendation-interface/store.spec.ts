@@ -4,10 +4,7 @@ import {
   setLoadingFlag,
   unsetLoadingFlag,
 } from '@/src/components/common/interface/store';
-import {
-  type CommerceRecommendationStore,
-  createCommerceRecommendationStore,
-} from './store';
+import {type CommerceRecommendationStore, createCommerceRecommendationStore} from './store';
 
 vi.mock('@/src/components/common/interface/store', {spy: true});
 const createBaseStoreSpy = vi.mocked(createBaseStore);
@@ -43,10 +40,7 @@ describe('#createCommerceRecommendationStore', () => {
 
     store.setLoadingFlag('testFlag');
 
-    expect(setLoadingFlag).toHaveBeenCalledExactlyOnceWith(
-      baseStore,
-      'testFlag'
-    );
+    expect(setLoadingFlag).toHaveBeenCalledExactlyOnceWith(baseStore, 'testFlag');
   });
 
   it('should delegate its #unsetLoadingFlag to the core #unsetLoadingFlag with the correct arguments', () => {
@@ -54,9 +48,6 @@ describe('#createCommerceRecommendationStore', () => {
 
     store.unsetLoadingFlag('testFlag');
 
-    expect(unsetLoadingFlag).toHaveBeenCalledExactlyOnceWith(
-      baseStore,
-      'testFlag'
-    );
+    expect(unsetLoadingFlag).toHaveBeenCalledExactlyOnceWith(baseStore, 'testFlag');
   });
 });

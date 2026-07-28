@@ -27,9 +27,7 @@ class DarkMode {
       if (this._themeColor && this._colorScheme && this._body) {
         this._themeColor.content = getComputedStyle(this._body).color;
         this._colorScheme.content = (e as CustomEvent).detail.colorScheme;
-        document.documentElement.dataset.theme = (
-          e as CustomEvent
-        ).detail.colorScheme;
+        document.documentElement.dataset.theme = (e as CustomEvent).detail.colorScheme;
         this._updateExternalLinkIcons();
       }
     });

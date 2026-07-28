@@ -17,8 +17,7 @@ const exampleDocumentUriHash = 'document-uri-hash';
 const exampleDocumentUri = 'http://my.document.uri';
 const exampleDocumentTitle = 'My Document';
 const exampleDocumentSuggestionId = 'document-id';
-const exampleDocumentSuggestionResponseId =
-  'last-document-suggestion-response-id';
+const exampleDocumentSuggestionResponseId = 'last-document-suggestion-response-id';
 
 describe('case assist analytics selectors', () => {
   const buildStateWithCaseInput = (): Partial<CaseAssistAppState> => ({
@@ -62,31 +61,30 @@ describe('case assist analytics selectors', () => {
     },
   });
 
-  const buildStateWithDocumentSuggestions =
-    (): Partial<CaseAssistAppState> => ({
-      documentSuggestion: {
-        documents: [
-          {
-            uniqueId: exampleDocumentSuggestionId,
-            clickUri: exampleDocumentUrl,
-            excerpt: 'The content of my document',
-            fields: {
-              uri: exampleDocumentUri,
-              urihash: exampleDocumentUriHash,
-              permanentid: examplePermanentid,
-              source: exampleSource,
-            },
-            hasHtmlVersion: false,
-            title: exampleDocumentTitle,
+  const buildStateWithDocumentSuggestions = (): Partial<CaseAssistAppState> => ({
+    documentSuggestion: {
+      documents: [
+        {
+          uniqueId: exampleDocumentSuggestionId,
+          clickUri: exampleDocumentUrl,
+          excerpt: 'The content of my document',
+          fields: {
+            uri: exampleDocumentUri,
+            urihash: exampleDocumentUriHash,
+            permanentid: examplePermanentid,
+            source: exampleSource,
           },
-        ],
-        status: {
-          loading: false,
-          error: null,
-          lastResponseId: exampleDocumentSuggestionResponseId,
+          hasHtmlVersion: false,
+          title: exampleDocumentTitle,
         },
+      ],
+      status: {
+        loading: false,
+        error: null,
+        lastResponseId: exampleDocumentSuggestionResponseId,
       },
-    });
+    },
+  });
 
   describe('#caseAssistCaseSelector', () => {
     it('should retrieve all the case information from the state', () => {
@@ -111,10 +109,7 @@ describe('case assist analytics selectors', () => {
 
   describe('#caseAssistCaseInputValueSelector', () => {
     it('should return the input value', () => {
-      const value = caseAssistCaseInputValueSelector(
-        buildStateWithCaseInput(),
-        'subject'
-      );
+      const value = caseAssistCaseInputValueSelector(buildStateWithCaseInput(), 'subject');
 
       expect(value).toBe('some case subject');
     });
@@ -131,9 +126,7 @@ describe('case assist analytics selectors', () => {
 
   describe('#caseAssistCustomCaseInputValueSelector', () => {
     it('should return all inputs except the known fields', () => {
-      const customFields = caseAssistCustomCaseInputValuesSelector(
-        buildStateWithCaseInput()
-      );
+      const customFields = caseAssistCustomCaseInputValuesSelector(buildStateWithCaseInput());
 
       expect(customFields).toHaveProperty('customFieldA', 'custom value');
       Object.values(KnownCaseFields).forEach((knownCaseField) =>
@@ -162,10 +155,7 @@ describe('case assist analytics selectors', () => {
 
   describe('#caseAssistCaseFieldValueSelector', () => {
     it('should return the field value', () => {
-      const value = caseAssistCaseFieldValueSelector(
-        buildStateWithCaseField(),
-        'category'
-      );
+      const value = caseAssistCaseFieldValueSelector(buildStateWithCaseField(), 'category');
 
       expect(value).toBe('software');
     });
@@ -182,9 +172,7 @@ describe('case assist analytics selectors', () => {
 
   describe('#caseAssistCustomCaseFieldValueSelector', () => {
     it('should return all fields except the known ones', () => {
-      const customFields = caseAssistCustomCaseFieldValuesSelector(
-        buildStateWithCaseField()
-      );
+      const customFields = caseAssistCustomCaseFieldValuesSelector(buildStateWithCaseField());
 
       expect(customFields).toHaveProperty('customFieldB', 'custom value');
       Object.values(KnownCaseFields).forEach((knownCaseField) =>
@@ -250,10 +238,7 @@ describe('case assist analytics selectors', () => {
 
     it('should throw when the classification is not found', () => {
       expect(() =>
-        caseAssistCaseClassificationSelector(
-          buildStateWithCaseField(),
-          'invalid-classification-id'
-        )
+        caseAssistCaseClassificationSelector(buildStateWithCaseField(), 'invalid-classification-id')
       ).toThrow();
     });
   });

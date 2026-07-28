@@ -62,9 +62,7 @@ export class AtomicCommerceTimeframeFacet
   /**
    * The Summary controller instance.
    */
-  @property({type: Object}) summary!: Summary<
-    SearchSummaryState | ProductListingSummaryState
-  >;
+  @property({type: Object}) summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
   /**
    * The date facet controller instance.
    */
@@ -120,9 +118,8 @@ export class AtomicCommerceTimeframeFacet
 
   private get valuesToRender() {
     return (
-      this.facetState.values.filter(
-        (value) => value.numberOfResults || value.state !== 'idle'
-      ) || []
+      this.facetState.values.filter((value) => value.numberOfResults || value.state !== 'idle') ||
+      []
     );
   }
 
@@ -159,10 +156,7 @@ export class AtomicCommerceTimeframeFacet
       return 1;
     }
 
-    return (
-      this.facetState.values.filter(({state}) => state === 'selected').length ||
-      0
-    );
+    return this.facetState.values.filter(({state}) => state === 'selected').length || 0;
   }
 
   private get hasInputRange() {
@@ -178,16 +172,11 @@ export class AtomicCommerceTimeframeFacet
     try {
       const startDate = deserializeRelativeDate(facetValue.start);
       const relativeDate =
-        startDate.period === 'past'
-          ? startDate
-          : deserializeRelativeDate(facetValue.end);
+        startDate.period === 'past' ? startDate : deserializeRelativeDate(facetValue.end);
 
-      return this.bindings.i18n.t(
-        `${relativeDate.period}-${relativeDate.unit}`,
-        {
-          count: relativeDate.amount,
-        }
-      );
+      return this.bindings.i18n.t(`${relativeDate.period}-${relativeDate.unit}`, {
+        count: relativeDate.amount,
+      });
     } catch (_error) {
       return this.bindings.i18n.t('to', {
         start: parseDate(facetValue.start).format('YYYY-MM-DD'),
@@ -197,9 +186,7 @@ export class AtomicCommerceTimeframeFacet
   }
 
   private renderValues() {
-    return this.renderValuesContainer(
-      this.valuesToRender.map((value) => this.renderValue(value))
-    );
+    return this.renderValuesContainer(this.valuesToRender.map((value) => this.renderValue(value)));
   }
 
   private renderValue(facetValue: DateFacetValue) {
@@ -268,9 +255,7 @@ export class AtomicCommerceTimeframeFacet
         .label=${this.displayName}
         .inputRange=${this.inputRange}
         .facetId=${this.facetState.facetId}
-        @atomic-date-input-apply=${(
-          event: CustomEvent<FacetDateInputEventDetails>
-        ) => {
+        @atomic-date-input-apply=${(event: CustomEvent<FacetDateInputEventDetails>) => {
           const {start, end, endInclusive} = event.detail;
           this.facet.setRanges([
             {
@@ -291,19 +276,17 @@ export class AtomicCommerceTimeframeFacet
   protected render() {
     const {hasError, firstRequestExecuted} = this.summaryState;
 
-    return html`${when(
-      !hasError && firstRequestExecuted && this.shouldRenderFacet,
-      () =>
-        renderFacetContainer()(
-          html`${this.renderHeader()}
-          ${when(
-            !this.isCollapsed,
-            () => html`
-              ${when(this.shouldRenderValues, () => this.renderValues())}
-              ${when(this.shouldRenderInput, () => this.renderDateInput())}
-            `
-          )}`
-        )
+    return html`${when(!hasError && firstRequestExecuted && this.shouldRenderFacet, () =>
+      renderFacetContainer()(
+        html`${this.renderHeader()}
+        ${when(
+          !this.isCollapsed,
+          () => html`
+            ${when(this.shouldRenderValues, () => this.renderValues())}
+            ${when(this.shouldRenderInput, () => this.renderDateInput())}
+          `
+        )}`
+      )
     )}`;
   }
 

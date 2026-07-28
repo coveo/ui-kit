@@ -1,3 +1,4 @@
+import SetRenderFunctionNote from '@/storybook-utils/documentation/set-render-function-note.mdx';
 
 This component is typically placed within the `results` section of the layout.
 
@@ -69,3 +70,33 @@ The following table outlines the key differences and best use cases for grids, l
 
 ## Reference
 [UI cheat sheet: list vs grid](https://uxdesign.cc/ui-cheat-sheet-list-vs-grids-48151a7262a7)
+
+### Using `setRenderFunction` for custom rendering
+
+<SetRenderFunctionNote />
+
+```html
+<script type="module">
+  await customElements.whenDefined('atomic-result-list');
+  const resultList = document.querySelector('atomic-result-list');
+
+  await resultList.setRenderFunction((result, root, linkContainer) => {
+    const link = `<atomic-result-link></atomic-result-link>`;
+
+    root.innerHTML = `
+      <atomic-result-section-title>
+        ${link}
+      </atomic-result-section-title>
+      <atomic-result-section-excerpt>
+        <atomic-result-text field="excerpt"></atomic-result-text>
+      </atomic-result-section-excerpt>
+    `;
+
+    if (linkContainer) {
+      linkContainer.innerHTML = link;
+    }
+
+    return root.innerHTML;
+  });
+</script>
+```

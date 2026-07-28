@@ -24,7 +24,7 @@
 }
 
 .generated-answer__collapse-generating-message {
-  color: var(--lwc-brandPrimary, #1b96ff);
+  color: var(--slds-g-color-accent-1, var(--lwc-brandPrimary, #1b96ff));
 }
 
 .generated-answer__answer::after {

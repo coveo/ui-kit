@@ -23,8 +23,7 @@ export const generativeQuestionAnsweringIdSelector = (
 
   // Used for type narrowing.
   if (isSearchSection(state)) {
-    return state.search?.response?.extendedResults
-      ?.generativeQuestionAnsweringId;
+    return state.search?.response?.extendedResults?.generativeQuestionAnsweringId;
   }
 
   return undefined;
@@ -41,39 +40,28 @@ export const isGeneratedAnswerFeatureEnabledWithAgentAPI = (
   state: Partial<SearchAppState>
 ): state is StreamAnswerAPIState => {
   const agentId = selectAgentId(state as {configuration: ConfigurationState});
-  return (
-    'generatedAnswer' in state &&
-    typeof agentId === 'string' &&
-    agentId.trim().length > 0
-  );
+  return 'generatedAnswer' in state && typeof agentId === 'string' && agentId.trim().length > 0;
 };
 
 const isSearchSection = (
   state: Partial<SearchAppState> | StreamAnswerAPIState
 ): state is SearchSection =>
-  'search' in state &&
-  state.search !== undefined &&
-  typeof state.search === 'object';
+  'search' in state && state.search !== undefined && typeof state.search === 'object';
 
-export const selectFieldsToIncludeInCitation = (
-  state: Partial<GeneratedAnswerSection>
-) => state.generatedAnswer?.fieldsToIncludeInCitations;
+export const selectFieldsToIncludeInCitation = (state: Partial<GeneratedAnswerSection>) =>
+  state.generatedAnswer?.fieldsToIncludeInCitations;
 
-export const selectFollowUpAnswersConversationId = (
-  state: Partial<FollowUpAnswersSection>
-) => state.followUpAnswers?.conversationId;
+export const selectFollowUpAnswersConversationId = (state: Partial<FollowUpAnswersSection>) =>
+  state.followUpAnswers?.conversationId;
 
-const getHeadCitations = (
-  state: Partial<GeneratedAnswerSection & FollowUpAnswersSection>
-) => state.generatedAnswer?.citations;
+const getHeadCitations = (state: Partial<GeneratedAnswerSection & FollowUpAnswersSection>) =>
+  state.generatedAnswer?.citations;
 
-const getFollowUpAnswers = (
-  state: Partial<GeneratedAnswerSection & FollowUpAnswersSection>
-) => state.followUpAnswers?.followUpAnswers;
+const getFollowUpAnswers = (state: Partial<GeneratedAnswerSection & FollowUpAnswersSection>) =>
+  state.followUpAnswers?.followUpAnswers;
 
-const getFlatFollowUpCitations = createSelector(
-  getFollowUpAnswers,
-  (followUpAnswers) => followUpAnswers?.flatMap((f) => f.citations)
+const getFlatFollowUpCitations = createSelector(getFollowUpAnswers, (followUpAnswers) =>
+  followUpAnswers?.flatMap((f) => f.citations)
 );
 
 const getCitationId = (

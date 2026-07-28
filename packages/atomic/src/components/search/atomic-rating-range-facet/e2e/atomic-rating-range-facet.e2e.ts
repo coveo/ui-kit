@@ -78,9 +78,7 @@ test.describe('atomic-rating-range-facet', () => {
     });
   });
 
-  test('should display selected value with visual indicator', async ({
-    ratingRangeFacet,
-  }) => {
+  test('should display selected value with visual indicator', async ({ratingRangeFacet}) => {
     await ratingRangeFacet.load({story: 'default'});
 
     await test.step('Select a rating value', async () => {
@@ -97,9 +95,7 @@ test.describe('atomic-rating-range-facet', () => {
   });
 
   // TODO: Issue #6691: Unskip visual tests after fixing CI snapshot issues
-  test.skip('should match baseline in default state', async ({
-    ratingRangeFacet,
-  }) => {
+  test.skip('should match baseline in default state', async ({ratingRangeFacet}) => {
     await test.step('Load facet in default state', async () => {
       await ratingRangeFacet.load({story: 'default'});
       await ratingRangeFacet.hydrated.waitFor();
@@ -115,9 +111,7 @@ test.describe('atomic-rating-range-facet', () => {
   });
 
   // TODO: Issue #6691: Unskip visual tests after fixing CI snapshot issues
-  test.skip('should match baseline after selecting a value', async ({
-    ratingRangeFacet,
-  }) => {
+  test.skip('should match baseline after selecting a value', async ({ratingRangeFacet}) => {
     await test.step('Load facet and select a value', async () => {
       await ratingRangeFacet.load({story: 'default'});
       await ratingRangeFacet.hydrated.waitFor();

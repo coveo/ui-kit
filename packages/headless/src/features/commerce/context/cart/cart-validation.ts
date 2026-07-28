@@ -1,10 +1,4 @@
-import {
-  ArrayValue,
-  NumberValue,
-  RecordValue,
-  Schema,
-  StringValue,
-} from '@coveo/bueno';
+import {ArrayValue, NumberValue, RecordValue, Schema, StringValue} from '@coveo/bueno';
 import type {CartInitialState} from '../../../../controllers/commerce/context/cart/headless-cart.js';
 import {requiredNonEmptyString} from '../../../../utils/validate-payload.js';
 

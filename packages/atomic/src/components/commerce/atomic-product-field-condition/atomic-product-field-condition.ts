@@ -59,16 +59,8 @@ export class AtomicProductFieldCondition
 
   private get conditions(): ProductTemplateCondition[] {
     return [
-      ...makeDefinedConditions(
-        this.ifDefined,
-        this.ifNotDefined,
-        ProductTemplatesHelpers
-      ),
-      ...makeMatchConditions(
-        this.mustMatch,
-        this.mustNotMatch,
-        ProductTemplatesHelpers
-      ),
+      ...makeDefinedConditions(this.ifDefined, this.ifNotDefined, ProductTemplatesHelpers),
+      ...makeMatchConditions(this.mustMatch, this.mustNotMatch, ProductTemplatesHelpers),
     ];
   }
 

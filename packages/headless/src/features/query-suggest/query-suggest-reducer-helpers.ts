@@ -3,10 +3,7 @@ import type {
   ClearQuerySuggestActionCreatorPayload,
   RegisterQuerySuggestActionCreatorPayload,
 } from './query-suggest-actions.js';
-import type {
-  QuerySuggestSet,
-  QuerySuggestState,
-} from './query-suggest-state.js';
+import type {QuerySuggestSet, QuerySuggestState} from './query-suggest-state.js';
 
 export function handleRegisterQuerySuggest(
   state: WritableDraft<QuerySuggestSet>,
@@ -21,10 +18,7 @@ export function handleRegisterQuerySuggest(
   state[id] = buildQuerySuggest(payload);
 }
 
-export function handleFetchPending(
-  state: WritableDraft<QuerySuggestSet>,
-  action: AnyAction
-) {
+export function handleFetchPending(state: WritableDraft<QuerySuggestSet>, action: AnyAction) {
   const querySuggest = state[action.meta.arg.id];
 
   if (!querySuggest) {
@@ -35,10 +29,7 @@ export function handleFetchPending(
   querySuggest.isLoading = true;
 }
 
-export function handleFetchRejected(
-  state: WritableDraft<QuerySuggestSet>,
-  action: AnyAction
-) {
+export function handleFetchRejected(state: WritableDraft<QuerySuggestSet>, action: AnyAction) {
   const querySuggest = state[action.meta.arg.id];
 
   if (!querySuggest) {
@@ -64,9 +55,7 @@ export function handleClearQuerySuggest(
   querySuggest.partialQueries = [];
 }
 
-function buildQuerySuggest(
-  config: Partial<QuerySuggestState>
-): QuerySuggestState {
+function buildQuerySuggest(config: Partial<QuerySuggestState>): QuerySuggestState {
   return {
     id: '',
     completions: [],

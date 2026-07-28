@@ -17,11 +17,7 @@ import type {
   SortCriteriaParam,
   TabParam,
 } from '../../../search/search-api-params.js';
-import {
-  baseInsightRequest,
-  type InsightParam,
-  pickNonInsightParams,
-} from '../insight-params.js';
+import {baseInsightRequest, type InsightParam, pickNonInsightParams} from '../insight-params.js';
 import type {InsightQuerySuggestRequest} from '../query-suggest/query-suggest-request.js';
 
 export type InsightQueryRequest = InsightParam &
@@ -53,9 +49,7 @@ export const buildInsightQueryRequest = (req: InsightQueryRequest) => {
   };
 };
 
-export const buildInsightQuerySuggestRequest = (
-  req: InsightQuerySuggestRequest
-) => {
+export const buildInsightQuerySuggestRequest = (req: InsightQuerySuggestRequest) => {
   return {
     ...baseInsightRequest(req, 'POST', 'application/json', '/querysuggest'),
     requestParams: pickNonInsightParams(req),

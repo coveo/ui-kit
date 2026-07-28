@@ -18,9 +18,7 @@ Build a `renderComponent` helper that merges partial overrides into required def
 ### Props only
 
 ```typescript
-const renderComponent = async (
-  props: Partial<RadioButtonProps>
-): Promise<HTMLElement> => {
+const renderComponent = async (props: Partial<RadioButtonProps>): Promise<HTMLElement> => {
   return renderFunctionFixture(
     html`${renderRadioButton({props: {...props, groupName: 'test-group'}})}`
   );
@@ -37,9 +35,7 @@ const renderComponent = async (
   children = html`<span>Default</span>`
 ) => {
   const mergedProps = {...defaultProps, ...props};
-  return renderFunctionFixture(
-    html`${renderButton({props: mergedProps})(children)}`
-  );
+  return renderFunctionFixture(html`${renderButton({props: mergedProps})(children)}`);
 };
 ```
 
@@ -63,9 +59,7 @@ const renderComponent = async (props: Partial<FacetShowMoreProps> = {}) => {
     onShowLess: vi.fn(),
   };
   const mergedProps = {...defaultProps, ...props};
-  return renderFunctionFixture(
-    html`${renderFacetShowMoreLess({props: mergedProps})}`
-  );
+  return renderFunctionFixture(html`${renderFacetShowMoreLess({props: mergedProps})}`);
 };
 ```
 
@@ -76,9 +70,7 @@ Some render helpers destructure the fixture into named elements for convenience:
 ```typescript
 const renderComponent = async (overrides: Partial<TextAreaProps> = {}) => {
   const mergedProps = {...defaultProps, ...overrides};
-  const element = await renderFunctionFixture(
-    html`${renderSearchTextArea({props: mergedProps})}`
-  );
+  const element = await renderFunctionFixture(html`${renderSearchTextArea({props: mergedProps})}`);
   return {
     element,
     get textarea() {
@@ -115,9 +107,7 @@ const locators = {
 ```typescript
 it('should render the radio button with correct attributes', async () => {
   const element = await renderComponent({text: 'Option', checked: true});
-  const input = element.querySelector(
-    'input[type="radio"]'
-  ) as HTMLInputElement;
+  const input = element.querySelector('input[type="radio"]') as HTMLInputElement;
 
   expect(input).toBeInTheDocument();
   expect(input.checked).toBe(true);
@@ -145,14 +135,10 @@ it('should handle keyboard navigation', async () => {
     html`${renderRadioButton({props: {...props, text: 'radio-1'}})}
     ${renderRadioButton({props: {...props, text: 'radio-2'}})}`
   );
-  const inputs = element.querySelectorAll(
-    'input[type="radio"]'
-  ) as NodeListOf<HTMLInputElement>;
+  const inputs = element.querySelectorAll('input[type="radio"]') as NodeListOf<HTMLInputElement>;
 
   inputs[0].focus();
-  inputs[0].dispatchEvent(
-    new KeyboardEvent('keydown', {key: 'ArrowRight', bubbles: true})
-  );
+  inputs[0].dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowRight', bubbles: true}));
   expect(document.activeElement).toBe(inputs[1]);
 });
 ```
@@ -209,9 +195,7 @@ Icons are rendered as `<atomic-icon>` custom elements. Test via attributes:
 it('should render with the correct icon', async () => {
   await renderComponent({canShowMoreValues: true});
   const icon = locators.showMoreButton.element().querySelector('atomic-icon');
-  await expect
-    .element(icon)
-    .toHaveAttribute('icon', expect.stringMatching(/<svg/));
+  await expect.element(icon).toHaveAttribute('icon', expect.stringMatching(/<svg/));
 });
 ```
 

@@ -12,9 +12,7 @@ interface QueryErrorIconProps {
   errorType?: string;
 }
 
-export const renderQueryErrorIcon: FunctionalComponent<QueryErrorIconProps> = ({
-  props,
-}) => {
+export const renderQueryErrorIcon: FunctionalComponent<QueryErrorIconProps> = ({props}) => {
   const getIconFromErrorType = () => {
     switch (props.errorType as KnownErrorType) {
       case 'Disconnected':

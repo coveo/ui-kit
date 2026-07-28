@@ -1,7 +1,4 @@
-import type {
-  RecommendationEngine,
-  RecommendationListState,
-} from '@coveo/headless/recommendation';
+import type {RecommendationEngine, RecommendationListState} from '@coveo/headless/recommendation';
 import {buildRecommendationList} from '@coveo/headless/recommendation';
 import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
@@ -27,19 +24,13 @@ describe('atomic-recs-error', () => {
       environment?: string;
     } = {}
   ) => {
-    const {
-      error = null,
-      organizationId = 'test-org',
-      environment = 'prod',
-    } = options;
+    const {error = null, organizationId = 'test-org', environment = 'prod'} = options;
 
     const mockedRecommendationList = buildFakeRecommendationList({
       state: {error: error as RecommendationListState['error']},
     });
 
-    vi.mocked(buildRecommendationList).mockReturnValue(
-      mockedRecommendationList
-    );
+    vi.mocked(buildRecommendationList).mockReturnValue(mockedRecommendationList);
 
     const {element} = await renderInAtomicRecsInterface<AtomicRecsError>({
       template: html`<atomic-recs-error></atomic-recs-error>`,
@@ -68,8 +59,7 @@ describe('atomic-recs-error', () => {
       moreInfoBtn: element.shadowRoot!.querySelector('[part="more-info-btn"]'),
       errorInfo: element.shadowRoot!.querySelector('[part="error-info"]'),
       parts: (element: AtomicRecsError) => {
-        const qs = (part: string) =>
-          element.shadowRoot?.querySelector(`[part="${part}"]`);
+        const qs = (part: string) => element.shadowRoot?.querySelector(`[part="${part}"]`);
         return {
           icon: qs('icon'),
           title: qs('title'),
@@ -91,9 +81,7 @@ describe('atomic-recs-error', () => {
     it('should build recommendation list controller with correct engine', async () => {
       const {element} = await renderRecsError();
 
-      expect(buildRecommendationList).toHaveBeenCalledWith(
-        element.bindings.engine
-      );
+      expect(buildRecommendationList).toHaveBeenCalledWith(element.bindings.engine);
       expect(element.recommendationList).toBeDefined();
     });
 
@@ -106,9 +94,7 @@ describe('atomic-recs-error', () => {
     });
 
     it('should handle initialization errors gracefully', async () => {
-      const buildEngineError = new Error(
-        'Failed to build recommendation list controller'
-      );
+      const buildEngineError = new Error('Failed to build recommendation list controller');
       vi.mocked(buildRecommendationList).mockImplementation(() => {
         throw buildEngineError;
       });
@@ -127,9 +113,7 @@ describe('atomic-recs-error', () => {
           organizationId: 'custom-org-id',
         });
 
-        expect(element.bindings.engine.state.configuration.organizationId).toBe(
-          'custom-org-id'
-        );
+        expect(element.bindings.engine.state.configuration.organizationId).toBe('custom-org-id');
       });
 
       it('should handle different environments', async () => {
@@ -138,9 +122,7 @@ describe('atomic-recs-error', () => {
           environment: 'dev',
         });
 
-        expect(element.bindings.engine.state.configuration.environment).toBe(
-          'dev'
-        );
+        expect(element.bindings.engine.state.configuration.environment).toBe('dev');
       });
     });
   });
@@ -189,8 +171,7 @@ describe('atomic-recs-error', () => {
         const errorWithType = {...mockError, type: errorType};
         await renderRecsError({error: errorWithType});
 
-        const mockRecommendationList = vi.mocked(buildRecommendationList).mock
-          .results[0]?.value;
+        const mockRecommendationList = vi.mocked(buildRecommendationList).mock.results[0]?.value;
         expect(mockRecommendationList?.state.error?.type).toBe(errorType);
       });
 
@@ -243,8 +224,7 @@ describe('atomic-recs-error', () => {
     it('should handle null error gracefully', async () => {
       await renderRecsError({error: null});
 
-      const mockRecommendationList = vi.mocked(buildRecommendationList).mock
-        .results[0]?.value;
+      const mockRecommendationList = vi.mocked(buildRecommendationList).mock.results[0]?.value;
       expect(mockRecommendationList?.state.error).toBeNull();
     });
 
@@ -255,8 +235,7 @@ describe('atomic-recs-error', () => {
       };
       await renderRecsError({error: errorWithoutType});
 
-      const mockRecommendationList = vi.mocked(buildRecommendationList).mock
-        .results[0]?.value;
+      const mockRecommendationList = vi.mocked(buildRecommendationList).mock.results[0]?.value;
       expect(mockRecommendationList?.state.error?.type).toBeUndefined();
     });
 
@@ -268,8 +247,7 @@ describe('atomic-recs-error', () => {
       };
       await renderRecsError({error: errorWithEmptyMessage});
 
-      const mockRecommendationList = vi.mocked(buildRecommendationList).mock
-        .results[0]?.value;
+      const mockRecommendationList = vi.mocked(buildRecommendationList).mock.results[0]?.value;
       expect(mockRecommendationList?.state.error?.message).toBe('');
     });
   });

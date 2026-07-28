@@ -18,11 +18,7 @@ describe('QuickviewWordHighlight', () => {
     return element;
   }
 
-  function createHighlight(
-    id: string,
-    text: string,
-    el?: HTMLElement
-  ): QuickviewWordHighlight {
+  function createHighlight(id: string, text: string, el?: HTMLElement): QuickviewWordHighlight {
     const element = el ?? createElement();
     return new QuickviewWordHighlight(id, text, baseColor, element);
   }

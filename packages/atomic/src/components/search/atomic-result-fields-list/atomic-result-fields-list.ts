@@ -100,10 +100,7 @@ export class AtomicResultFieldsList
   }
 
   private get isOverflowing() {
-    return (
-      this.scrollWidth > this.clientWidth ||
-      this.scrollHeight > this.clientHeight
-    );
+    return this.scrollWidth > this.clientWidth || this.scrollHeight > this.clientHeight;
   }
 
   private getSortedChildrenBySize() {

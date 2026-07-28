@@ -19,11 +19,7 @@ export const HomePage = () => {
     <div className="home">
       {/* Standalone search box: submitting a query redirects to the search page. */}
       <section className="home-hero">
-        <AtomicCommerceInterface
-          engine={engine}
-          type="search"
-          languageAssetsPath="/lang"
-        >
+        <AtomicCommerceInterface engine={engine} type="search" languageAssetsPath="/lang">
           <AtomicLayoutSection section="search">
             <AtomicCommerceSearchBox redirectionUrl="/search">
               <AtomicCommerceSearchBoxRecentQueries />
@@ -34,10 +30,7 @@ export const HomePage = () => {
       </section>
 
       <section className="home-recs">
-        <AtomicCommerceRecommendationInterface
-          engine={engine}
-          languageAssetsPath="/lang"
-        >
+        <AtomicCommerceRecommendationInterface engine={engine} languageAssetsPath="/lang">
           <AtomicCommerceLayout>
             <AtomicLayoutSection section="main">
               <AtomicCommerceRecommendationList

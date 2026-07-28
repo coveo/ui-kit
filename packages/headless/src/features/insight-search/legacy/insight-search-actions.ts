@@ -22,12 +22,12 @@ export async function legacyExecuteSearch(
 ) {
   addEntryInActionsHistory(state);
 
-  const processor = new AsyncInsightSearchThunkProcessor<
-    ReturnType<typeof config.rejectWithValue>
-  >({
-    ...config,
-    analyticsAction,
-  });
+  const processor = new AsyncInsightSearchThunkProcessor<ReturnType<typeof config.rejectWithValue>>(
+    {
+      ...config,
+      analyticsAction,
+    }
+  );
 
   const {analyticsClientMiddleware, preprocessRequest, logger} = config.extra;
   const {description: eventDescription} = await analyticsAction.prepare({
@@ -37,10 +37,7 @@ export async function legacyExecuteSearch(
     logger,
   });
 
-  const mappedRequest = await buildInsightSearchRequest(
-    state,
-    eventDescription
-  );
+  const mappedRequest = await buildInsightSearchRequest(state, eventDescription);
   const fetched = await processor.fetchFromAPI(mappedRequest);
 
   return await processor.process(fetched, mappedRequest);
@@ -54,12 +51,12 @@ export async function legacyFetchPage(
 ) {
   addEntryInActionsHistory(state);
 
-  const processor = new AsyncInsightSearchThunkProcessor<
-    ReturnType<typeof config.rejectWithValue>
-  >({
-    ...config,
-    analyticsAction,
-  });
+  const processor = new AsyncInsightSearchThunkProcessor<ReturnType<typeof config.rejectWithValue>>(
+    {
+      ...config,
+      analyticsAction,
+    }
+  );
 
   const {analyticsClientMiddleware, preprocessRequest, logger} = config.extra;
   const {description: eventDescription} = await analyticsAction.prepare({
@@ -69,10 +66,7 @@ export async function legacyFetchPage(
     logger,
   });
 
-  const mappedRequest = await buildInsightSearchRequest(
-    state,
-    eventDescription
-  );
+  const mappedRequest = await buildInsightSearchRequest(state, eventDescription);
   const fetched = await processor.fetchFromAPI(mappedRequest);
 
   return await processor.process(fetched, mappedRequest);
@@ -83,12 +77,12 @@ export async function legacyFetchMoreResults(
   // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
   config: any
 ) {
-  const processor = new AsyncInsightSearchThunkProcessor<
-    ReturnType<typeof config.rejectWithValue>
-  >({
-    ...config,
-    analyticsAction: logFetchMoreResults,
-  });
+  const processor = new AsyncInsightSearchThunkProcessor<ReturnType<typeof config.rejectWithValue>>(
+    {
+      ...config,
+      analyticsAction: logFetchMoreResults,
+    }
+  );
 
   const {analyticsClientMiddleware, preprocessRequest, logger} = config.extra;
   const {description: eventDescription} = await logFetchMoreResults().prepare({
@@ -98,10 +92,7 @@ export async function legacyFetchMoreResults(
     logger,
   });
 
-  const mappedRequest = await buildInsightFetchMoreResultsRequest(
-    state,
-    eventDescription
-  );
+  const mappedRequest = await buildInsightFetchMoreResultsRequest(state, eventDescription);
   const fetched = await processor.fetchFromAPI(mappedRequest);
 
   return await processor.process(fetched, mappedRequest);
@@ -113,12 +104,12 @@ export async function legacyFetchFacetValues(
   config: any,
   analyticsAction: InsightAction
 ) {
-  const processor = new AsyncInsightSearchThunkProcessor<
-    ReturnType<typeof config.rejectWithValue>
-  >({
-    ...config,
-    analyticsAction,
-  });
+  const processor = new AsyncInsightSearchThunkProcessor<ReturnType<typeof config.rejectWithValue>>(
+    {
+      ...config,
+      analyticsAction,
+    }
+  );
 
   const {analyticsClientMiddleware, preprocessRequest, logger} = config.extra;
   const {description: eventDescription} = await analyticsAction.prepare({
@@ -128,10 +119,7 @@ export async function legacyFetchFacetValues(
     logger,
   });
 
-  const mappedRequest = await buildInsightFetchFacetValuesRequest(
-    state,
-    eventDescription
-  );
+  const mappedRequest = await buildInsightFetchFacetValuesRequest(state, eventDescription);
   const fetched = await processor.fetchFromAPI(mappedRequest);
 
   return await processor.process(fetched, mappedRequest);

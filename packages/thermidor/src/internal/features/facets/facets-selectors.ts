@@ -14,16 +14,10 @@ import type {CoveoFacetRequest} from '@/src/internal/api/search/index.js';
 
 const getFacetsState = (state: State) => state.facets ?? initialFacetsState;
 
-export const all = createMemoizedStateSelector(
-  getFacetsState,
-  (facets): FacetsState => facets
-);
+export const all = createMemoizedStateSelector(getFacetsState, (facets): FacetsState => facets);
 
 export const byId = (facetId: string) =>
-  createMemoizedStateSelector(
-    getFacetsState,
-    (facets): FacetState | undefined => facets[facetId]
-  );
+  createMemoizedStateSelector(getFacetsState, (facets): FacetState | undefined => facets[facetId]);
 
 export const selectedValues = (facetId: string) =>
   createMemoizedStateSelector(
@@ -65,31 +59,21 @@ export const buildFacetsRequest = createMemoizedStateSelector(
 
 type FacetsSelectors = ReturnType<typeof createFacetsSelectors>;
 
-const CACHE_KEY: CacheKey<FacetsSelectors> =
-  createCacheKey<FacetsSelectors>('facets/selectors');
+const CACHE_KEY: CacheKey<FacetsSelectors> = createCacheKey<FacetsSelectors>('facets/selectors');
 
 export function createFacetsSelectors(interfaceId: string) {
-  const sliceSelector = createSelectSlice(
-    interfaceId,
-    'facets',
-    initialFacetsState
-  );
+  const sliceSelector = createSelectSlice(interfaceId, 'facets', initialFacetsState);
   return {
-    buildFacetsRequest: createMemoizedStateSelector(
-      sliceSelector,
-      (state: FacetsState) => {
-        return Object.entries(state).map(([facetId, facet]) => ({
-          facetId,
-          selectedValues: facet.selectedValues,
-        }));
-      }
-    ),
+    buildFacetsRequest: createMemoizedStateSelector(sliceSelector, (state: FacetsState) => {
+      return Object.entries(state).map(([facetId, facet]) => ({
+        facetId,
+        selectedValues: facet.selectedValues,
+      }));
+    }),
   };
 }
 
 export function getOrCreateFacetsSelectors(iface: InterfaceHandle) {
   const {stateId, cacheRegistry} = getHandleInternals(iface);
-  return cacheRegistry.getOrCreate(CACHE_KEY, () =>
-    createFacetsSelectors(stateId)
-  );
+  return cacheRegistry.getOrCreate(CACHE_KEY, () => createFacetsSelectors(stateId));
 }

@@ -32,10 +32,7 @@ export function buildProviderWithDefinition<
   }: PropsWithChildren<{
     staticState: EngineStaticState<
       UnknownAction,
-      InferControllerStaticStateMapFromDefinitionsWithSolutionType<
-        TControllers,
-        TSolutionType
-      >
+      InferControllerStaticStateMapFromDefinitionsWithSolutionType<TControllers, TSolutionType>
     >;
   }>) {
     const [hydratedState, setHydratedState] = useState<

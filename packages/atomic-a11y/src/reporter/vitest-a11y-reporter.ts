@@ -1,19 +1,9 @@
 import {mkdir, writeFile} from 'node:fs/promises';
 import path from 'node:path';
 import type {AxeResults, Result as AxeRuleResult} from 'axe-core';
-import type {
-  Reporter,
-  SerializedError,
-  TestCase,
-  TestModule,
-  TestRunEndReason,
-} from 'vitest/node';
+import type {Reporter, SerializedError, TestCase, TestModule, TestRunEndReason} from 'vitest/node';
 
-import {
-  getCriteriaForRule,
-  getIncompleteMessage,
-  isAxeResults,
-} from './axe-integration.js';
+import {getCriteriaForRule, getIncompleteMessage, isAxeResults} from './axe-integration.js';
 import {buildA11yReport} from './report-builder.js';
 import {
   type ComponentAccumulator,
@@ -268,19 +258,13 @@ export class VitestA11yReporter implements Reporter {
 
       await mkdir(path.dirname(this.outputFile), {recursive: true});
       await Promise.all(
-        outputPaths.map((outputPath) =>
-          writeFile(outputPath, serializedReport, 'utf8')
-        )
+        outputPaths.map((outputPath) => writeFile(outputPath, serializedReport, 'utf8'))
       );
     } catch (error) {
       this.warn('Unable to write the accessibility report JSON file.', error);
     }
 
-    if (
-      this.failOnViolations &&
-      reason !== 'interrupted' &&
-      this.violations.length > 0
-    ) {
+    if (this.failOnViolations && reason !== 'interrupted' && this.violations.length > 0) {
       this.printViolationsSummary();
       process.exitCode = 1;
     }
@@ -320,9 +304,7 @@ export class VitestA11yReporter implements Reporter {
           const wcag = record.wcagCriteria.length
             ? ` [WCAG ${record.wcagCriteria.join(', ')}]`
             : '';
-          lines.push(
-            `     • ${record.ruleId} (${record.impact}) — ${record.nodes} node(s)${wcag}`
-          );
+          lines.push(`     • ${record.ruleId} (${record.impact}) — ${record.nodes} node(s)${wcag}`);
           if (record.helpUrl) {
             lines.push(`       ${record.helpUrl}`);
           }
@@ -410,13 +392,9 @@ export class VitestA11yReporter implements Reporter {
     return null;
   }
 
-  private static getInteractiveReport(
-    meta: StorybookTaskMeta
-  ): StorybookInteractiveReport | null {
+  private static getInteractiveReport(meta: StorybookTaskMeta): StorybookInteractiveReport | null {
     const reports = meta.reports ?? [];
-    const interactiveReport = reports.find((report) =>
-      isInteractiveReport(report)
-    );
+    const interactiveReport = reports.find((report) => isInteractiveReport(report));
 
     return interactiveReport ?? null;
   }
@@ -429,10 +407,7 @@ export class VitestA11yReporter implements Reporter {
     const dir = path.dirname(this.outputFile);
     const ext = path.extname(this.outputFile);
     const base = path.basename(this.outputFile, ext);
-    const shardOutputPath = path.resolve(
-      dir,
-      `${base}.shard-${this.shardInfo.index}${ext}`
-    );
+    const shardOutputPath = path.resolve(dir, `${base}.shard-${this.shardInfo.index}${ext}`);
 
     return [this.outputFile, shardOutputPath];
   }

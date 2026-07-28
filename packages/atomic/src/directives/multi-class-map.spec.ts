@@ -16,10 +16,7 @@ describe('MultiClassMapDirective', () => {
 
   it('renders a single class correctly', () => {
     const classMapInput = {foo: true};
-    render(
-      html`<div class="${multiClassMap(classMapInput)}"></div>`,
-      container
-    );
+    render(html`<div class="${multiClassMap(classMapInput)}"></div>`, container);
 
     const div = container.querySelector('div');
     expect(div).toHaveClass('foo');
@@ -27,10 +24,7 @@ describe('MultiClassMapDirective', () => {
 
   it('renders multiple classes correctly', () => {
     const classMapInput = {'foo bar': true};
-    render(
-      html`<div class="${multiClassMap(classMapInput)}"></div>`,
-      container
-    );
+    render(html`<div class="${multiClassMap(classMapInput)}"></div>`, container);
 
     const div = container.querySelector('div');
     expect(div).toHaveClass('foo', 'bar');
@@ -38,10 +32,7 @@ describe('MultiClassMapDirective', () => {
 
   it('ignores classes with a `false` value', () => {
     const classMapInput = {foo: true, 'bar baz': false};
-    render(
-      html`<div class="${multiClassMap(classMapInput)}"></div>`,
-      container
-    );
+    render(html`<div class="${multiClassMap(classMapInput)}"></div>`, container);
 
     const div = container.querySelector('div');
     expect(div).not.toHaveClass('bar', 'baz');
@@ -49,10 +40,7 @@ describe('MultiClassMapDirective', () => {
 
   it('splits and processes space-separated class names', () => {
     const classMapInput = {'foo bar baz': true};
-    render(
-      html`<div class="${multiClassMap(classMapInput)}"></div>`,
-      container
-    );
+    render(html`<div class="${multiClassMap(classMapInput)}"></div>`, container);
 
     const div = container.querySelector('div');
     expect(div).toHaveClass('foo', 'bar', 'baz');
@@ -60,10 +48,7 @@ describe('MultiClassMapDirective', () => {
 
   it('merges multiple class names correctly', () => {
     const classMapInput = {foo: true, 'bar baz': true};
-    render(
-      html`<div class="${multiClassMap(classMapInput)}"></div>`,
-      container
-    );
+    render(html`<div class="${multiClassMap(classMapInput)}"></div>`, container);
 
     const div = container.querySelector('div');
     expect(div).toHaveClass('foo', 'bar', 'baz');
@@ -71,10 +56,7 @@ describe('MultiClassMapDirective', () => {
 
   it('renders no classes when all values are `false`', () => {
     const classMapInput = {foo: false, bar: false};
-    render(
-      html`<div class="${multiClassMap(classMapInput)}"></div>`,
-      container
-    );
+    render(html`<div class="${multiClassMap(classMapInput)}"></div>`, container);
 
     const div = container.querySelector('div');
     expect(div?.className.trim()).toBe('');
@@ -84,10 +66,7 @@ describe('MultiClassMapDirective', () => {
     const otherClasses = 'other-class another-class';
     const classMapInput = tw({foo: true, [otherClasses || '']: true});
 
-    render(
-      html`<div class="${multiClassMap(classMapInput)}"></div>`,
-      container
-    );
+    render(html`<div class="${multiClassMap(classMapInput)}"></div>`, container);
 
     const div = container.querySelector('div');
     expect(div).toHaveClass('other-class', 'another-class', 'foo');
@@ -95,10 +74,7 @@ describe('MultiClassMapDirective', () => {
 
   it('should skip empty class names from keys with leading spaces', () => {
     const classMapInput = {' foo bar': true} as Record<string, boolean>;
-    render(
-      html`<div class="${multiClassMap(classMapInput)}"></div>`,
-      container
-    );
+    render(html`<div class="${multiClassMap(classMapInput)}"></div>`, container);
 
     const div = container.querySelector('div');
     expect(div).toHaveClass('foo', 'bar');
@@ -107,10 +83,7 @@ describe('MultiClassMapDirective', () => {
 
   it('should skip empty class names from keys with trailing spaces', () => {
     const classMapInput = {'foo bar ': true} as Record<string, boolean>;
-    render(
-      html`<div class="${multiClassMap(classMapInput)}"></div>`,
-      container
-    );
+    render(html`<div class="${multiClassMap(classMapInput)}"></div>`, container);
 
     const div = container.querySelector('div');
     expect(div).toHaveClass('foo', 'bar');
@@ -119,10 +92,7 @@ describe('MultiClassMapDirective', () => {
 
   it('should skip empty class names from keys with multiple consecutive spaces', () => {
     const classMapInput = {'foo  bar   baz': true} as Record<string, boolean>;
-    render(
-      html`<div class="${multiClassMap(classMapInput)}"></div>`,
-      container
-    );
+    render(html`<div class="${multiClassMap(classMapInput)}"></div>`, container);
 
     const div = container.querySelector('div');
     expect(div).toHaveClass('foo', 'bar', 'baz');
@@ -131,10 +101,7 @@ describe('MultiClassMapDirective', () => {
 
   it('should handle a key that is only whitespace', () => {
     const classMapInput = {'   ': true} as Record<string, boolean>;
-    render(
-      html`<div class="${multiClassMap(classMapInput)}"></div>`,
-      container
-    );
+    render(html`<div class="${multiClassMap(classMapInput)}"></div>`, container);
 
     const div = container.querySelector('div');
     expect(div?.className.trim()).toBe('');
@@ -142,10 +109,7 @@ describe('MultiClassMapDirective', () => {
 
   it('should handle an empty string key', () => {
     const classMapInput = {'': true} as Record<string, boolean>;
-    render(
-      html`<div class="${multiClassMap(classMapInput)}"></div>`,
-      container
-    );
+    render(html`<div class="${multiClassMap(classMapInput)}"></div>`, container);
 
     const div = container.querySelector('div');
     expect(div?.className.trim()).toBe('');
@@ -153,10 +117,7 @@ describe('MultiClassMapDirective', () => {
 
   it('should handle keys with tab and space whitespace characters', () => {
     const classMapInput = {'foo\tbar baz': true} as Record<string, boolean>;
-    render(
-      html`<div class="${multiClassMap(classMapInput)}"></div>`,
-      container
-    );
+    render(html`<div class="${multiClassMap(classMapInput)}"></div>`, container);
 
     const div = container.querySelector('div');
     expect(div).toHaveClass('foo', 'bar', 'baz');
@@ -168,10 +129,7 @@ describe('MultiClassMapDirective', () => {
       ' foo ': true,
       ' bar ': false,
     } as Record<string, boolean>;
-    render(
-      html`<div class="${multiClassMap(classMapInput)}"></div>`,
-      container
-    );
+    render(html`<div class="${multiClassMap(classMapInput)}"></div>`, container);
 
     const div = container.querySelector('div');
     expect(div).toHaveClass('foo');

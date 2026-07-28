@@ -8,9 +8,7 @@ export interface SnippetWrapperProps {
   i18n: i18n;
 }
 
-export const renderSnippetWrapper: FunctionalComponentWithChildren<
-  SnippetWrapperProps
-> =
+export const renderSnippetWrapper: FunctionalComponentWithChildren<SnippetWrapperProps> =
   ({props}) =>
   (children) => {
     return html`<aside aria-label=${props.i18n.t('smart-snippet')}>

@@ -27,28 +27,25 @@ describe('atomic-smart-snippet-collapse-wrapper', () => {
       slottedContent?: string;
     } = {}
   ) => {
-    const {element} =
-      await renderInAtomicSearchInterface<AtomicSmartSnippetCollapseWrapper>({
-        template: html`<atomic-smart-snippet-collapse-wrapper
-          .maximumHeight=${options.maximumHeight}
-          .collapsedHeight=${options.collapsedHeight}
-        >
-          ${options.slottedContent ?? 'Default content'}
-        </atomic-smart-snippet-collapse-wrapper>`,
-        selector: 'atomic-smart-snippet-collapse-wrapper',
-        bindings: (bindings) => {
-          bindings.engine = mockedEngine;
-          bindings.i18n = i18n;
-          return bindings;
-        },
-      });
+    const {element} = await renderInAtomicSearchInterface<AtomicSmartSnippetCollapseWrapper>({
+      template: html`<atomic-smart-snippet-collapse-wrapper
+        .maximumHeight=${options.maximumHeight}
+        .collapsedHeight=${options.collapsedHeight}
+      >
+        ${options.slottedContent ?? 'Default content'}
+      </atomic-smart-snippet-collapse-wrapper>`,
+      selector: 'atomic-smart-snippet-collapse-wrapper',
+      bindings: (bindings) => {
+        bindings.engine = mockedEngine;
+        bindings.i18n = i18n;
+        return bindings;
+      },
+    });
 
     return {
       element,
       get wrapper() {
-        return element.shadowRoot?.querySelector(
-          '[part="smart-snippet-collapse-wrapper"]'
-        )!;
+        return element.shadowRoot?.querySelector('[part="smart-snippet-collapse-wrapper"]')!;
       },
       showMoreButton() {
         return element.shadowRoot?.querySelector('[part="show-more-button"]')!;
@@ -61,9 +58,7 @@ describe('atomic-smart-snippet-collapse-wrapper', () => {
 
   describe('#constructor', () => {
     it('should create an AtomicSmartSnippetCollapseWrapper instance', () => {
-      const element = document.createElement(
-        'atomic-smart-snippet-collapse-wrapper'
-      );
+      const element = document.createElement('atomic-smart-snippet-collapse-wrapper');
 
       expect(element).toBeInstanceOf(AtomicSmartSnippetCollapseWrapper);
     });
@@ -114,11 +109,9 @@ describe('atomic-smart-snippet-collapse-wrapper', () => {
 
     describe('when maximumHeight and collapsedHeight are set', () => {
       it('should render initially with invisible class until height is calculated', async () => {
-        const mock = vi
-          .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
-          .mockReturnValue({
-            height: 0,
-          } as DOMRect);
+        const mock = vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({
+          height: 0,
+        } as DOMRect);
         const {element} = await renderComponent({
           maximumHeight: 300,
           collapsedHeight: 100,
@@ -181,11 +174,9 @@ describe('atomic-smart-snippet-collapse-wrapper', () => {
 
   describe('#toggleExpanded (when button is clicked)', () => {
     it('should toggle the expanded state when show more button is clicked', async () => {
-      const mock = vi
-        .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
-        .mockReturnValue({
-          height: 500,
-        } as DOMRect);
+      const mock = vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({
+        height: 500,
+      } as DOMRect);
 
       const {showMoreButton, showLessButton} = await renderComponent({
         maximumHeight: 300,

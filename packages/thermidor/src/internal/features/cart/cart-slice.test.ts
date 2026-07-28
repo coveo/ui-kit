@@ -53,19 +53,13 @@ describe('cartSlice', () => {
 
     it('updates quantity of existing item', () => {
       const existing = {items: [item({quantity: 1})]};
-      const state = slice.reducer(
-        existing,
-        actions.updateItemQuantity(item({quantity: 5}))
-      );
+      const state = slice.reducer(existing, actions.updateItemQuantity(item({quantity: 5})));
       expect(state.items).toEqual([item({quantity: 5})]);
     });
 
     it('removes item when quantity <= 0', () => {
       const existing = {items: [item({quantity: 3})]};
-      const state = slice.reducer(
-        existing,
-        actions.updateItemQuantity(item({quantity: 0}))
-      );
+      const state = slice.reducer(existing, actions.updateItemQuantity(item({quantity: 0})));
       expect(state.items).toEqual([]);
     });
 

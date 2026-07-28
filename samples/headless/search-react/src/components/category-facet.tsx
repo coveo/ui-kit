@@ -7,18 +7,12 @@ interface CategoryFacetProps {
 }
 
 export function CategoryFacet({controller, title}: CategoryFacetProps) {
-  const {
-    valuesAsTrees,
-    selectedValueAncestry,
-    hasActiveValues,
-    canShowMoreValues,
-  } = useController(controller);
+  const {valuesAsTrees, selectedValueAncestry, hasActiveValues, canShowMoreValues} =
+    useController(controller);
 
   // When a value is selected, drill into its children; otherwise show the root level.
   const activeValue = selectedValueAncestry.at(-1);
-  const currentValues = hasActiveValues
-    ? (activeValue?.children ?? [])
-    : valuesAsTrees;
+  const currentValues = hasActiveValues ? (activeValue?.children ?? []) : valuesAsTrees;
 
   if (!hasActiveValues && currentValues.length === 0) {
     return null;
@@ -37,10 +31,7 @@ export function CategoryFacet({controller, title}: CategoryFacetProps) {
           </li>
           {selectedValueAncestry.map((value) => (
             <li key={value.path.join('/')}>
-              <button
-                type="button"
-                onClick={() => controller.toggleSelect(value)}
-              >
+              <button type="button" onClick={() => controller.toggleSelect(value)}>
                 {value.value}
               </button>
             </li>
@@ -64,11 +55,7 @@ export function CategoryFacet({controller, title}: CategoryFacetProps) {
       </ul>
 
       {canShowMoreValues && (
-        <button
-          type="button"
-          className="facet__more"
-          onClick={() => controller.showMoreValues()}
-        >
+        <button type="button" className="facet__more" onClick={() => controller.showMoreValues()}>
           Show more
         </button>
       )}

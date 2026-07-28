@@ -11,9 +11,7 @@ export interface CopyButtonProps {
   onClick: () => void;
 }
 
-export const renderCopyButton: FunctionalComponent<CopyButtonProps> = ({
-  props,
-}) => {
+export const renderCopyButton: FunctionalComponent<CopyButtonProps> = ({props}) => {
   const classes = ['rounded-md', 'p-2'];
   if (props.isCopied) {
     classes.push('copied');

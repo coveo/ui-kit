@@ -107,9 +107,7 @@ describe('ItemListCommon', () => {
     // in the #focusOnFirstResultAfterNextSearch test suite.
 
     it('should not call #getFirstFocusableDescendant / #props.nextNewItemTarget.setTarget when resultIndex is not the index of the result to focus', () => {
-      const getFirstFocusableDescendantMock = vi.mocked(
-        getFirstFocusableDescendant
-      );
+      const getFirstFocusableDescendantMock = vi.mocked(getFirstFocusableDescendant);
       const getCurrentNumberOfItems = vi.fn(() => 1);
       const itemListCommon = itemListCommonFixture({getCurrentNumberOfItems});
 
@@ -125,9 +123,7 @@ describe('ItemListCommon', () => {
     });
 
     it('should not call #getFirstFocusableDescendant / #props.nextNewItemTarget.setTarget when element has no children', () => {
-      const getFirstFocusableDescendantMock = vi.mocked(
-        getFirstFocusableDescendant
-      );
+      const getFirstFocusableDescendantMock = vi.mocked(getFirstFocusableDescendant);
       const getCurrentNumberOfItems = vi.fn(() => 0);
       const itemListCommon = itemListCommonFixture({getCurrentNumberOfItems});
 
@@ -245,9 +241,7 @@ describe('ItemListCommon', () => {
     });
 
     it('should make #setNewResultRef(e, n) not call #getFirstFocusableDescendant / #props.nextNewItemTarget.setTarget when e has children and n is not the value returned by #props.getCurrentNumberOfItems()', () => {
-      const getFirstFocusableDescendantMock = vi.mocked(
-        getFirstFocusableDescendant
-      );
+      const getFirstFocusableDescendantMock = vi.mocked(getFirstFocusableDescendant);
       const getCurrentNumberOfItems = vi.fn(() => 5);
       const nextNewItemTarget = {
         focus: vi.fn(),
@@ -273,9 +267,7 @@ describe('ItemListCommon', () => {
     });
 
     it('should make #setNewResultRef(e, n) call #getFirstFocusableDescendant / #props.nextNewItemTarget.setTarget when e has children and n is equal to the value returned by #props.getCurrentNumberOfItems()', () => {
-      const getFirstFocusableDescendantMock = vi.mocked(
-        getFirstFocusableDescendant
-      );
+      const getFirstFocusableDescendantMock = vi.mocked(getFirstFocusableDescendant);
       const getCurrentNumberOfItems = vi.fn(() => 5);
       const nextNewItemTarget = {
         focus: vi.fn(),
@@ -353,10 +345,7 @@ describe('ItemListCommon', () => {
         const engineSubscribe = vi.fn().mockReturnValue(unsubscribe);
         const itemListCommon = itemListCommonFixture({
           engineSubscribe,
-          getIsLoading: vi
-            .fn()
-            .mockReturnValue(false)
-            .mockReturnValueOnce(true),
+          getIsLoading: vi.fn().mockReturnValue(false).mockReturnValueOnce(true),
         });
 
         // This will set itemListCommon.firstResultEl to the element
@@ -455,9 +444,7 @@ describe('ItemListCommon', () => {
         });
         describe('when #props.getIsLoading() returns false and #setNewResultRef was previously called with a defined element and a result index of 0', () => {
           it('should call the #getFirstFocusableDescendant util function with the element #setNewResultRef was called with', async () => {
-            const getFirstFocusableDescendantMock = vi.mocked(
-              getFirstFocusableDescendant
-            );
+            const getFirstFocusableDescendantMock = vi.mocked(getFirstFocusableDescendant);
             const engineSubscribe = vi.fn().mockReturnValue(vi.fn());
             const itemListCommon = itemListCommonFixture({
               engineSubscribe,
@@ -474,16 +461,12 @@ describe('ItemListCommon', () => {
             await engineSubscribe.mock.lastCall?.[0]();
 
             expect(getFirstFocusableDescendantMock).toHaveBeenCalledOnce();
-            expect(getFirstFocusableDescendantMock).toHaveBeenCalledWith(
-              element
-            );
+            expect(getFirstFocusableDescendantMock).toHaveBeenCalledWith(element);
           });
 
           it('should call ##props.nextNewItemTarget.setTarget with the value returned by the #getFirstFocusableDescendant call when this value is not null', async () => {
             const focusableElement = document.createElement('button');
-            vi.mocked(getFirstFocusableDescendant).mockReturnValue(
-              focusableElement
-            );
+            vi.mocked(getFirstFocusableDescendant).mockReturnValue(focusableElement);
             const engineSubscribe = vi.fn().mockReturnValue(vi.fn());
             const setTarget = vi.fn();
             const itemListCommon = itemListCommonFixture({

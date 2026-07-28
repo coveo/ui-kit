@@ -182,10 +182,9 @@ const FOLDED_TEMPLATE_EXAMPLE = `<template>
   </atomic-result-section-children>
 </template>`;
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-result-template',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-result-template', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-result-template',
@@ -241,22 +240,20 @@ const {decorator: searchInterfaceDecorator, play: initializeSearchInterface} =
     includeCodeRoot: false,
   });
 
-const {
-  decorator: foldedSearchInterfaceDecorator,
-  play: initializeFoldedSearchInterface,
-} = wrapInSearchInterface({
-  config: {
-    preprocessRequest: (request: any) => {
-      const parsed = JSON.parse(request.body as string);
-      parsed.numberOfResults = 4;
-      parsed.aq = '@source=iNaturalistTaxons';
-      request.body = JSON.stringify(parsed);
-      return request;
+const {decorator: foldedSearchInterfaceDecorator, play: initializeFoldedSearchInterface} =
+  wrapInSearchInterface({
+    config: {
+      preprocessRequest: (request: any) => {
+        const parsed = JSON.parse(request.body as string);
+        parsed.numberOfResults = 4;
+        parsed.aq = '@source=iNaturalistTaxons';
+        request.body = JSON.stringify(parsed);
+        return request;
+      },
     },
-  },
-  skipFirstSearch: false,
-  includeCodeRoot: false,
-});
+    skipFirstSearch: false,
+    includeCodeRoot: false,
+  });
 
 export const Default: Story = {
   name: 'In a result list',
@@ -317,9 +314,7 @@ export const InASearchBoxInstantResults: Story = {
     (story) => html`
       <atomic-search-box suggestion-timeout="30000" style="width: 600px;">
         <atomic-search-box-query-suggestions>
-          <atomic-search-box-instant-results>
-            ${story()}
-          </atomic-search-box-instant-results>
+          <atomic-search-box-instant-results> ${story()} </atomic-search-box-instant-results>
         </atomic-search-box-query-suggestions>
       </atomic-search-box>
     `,

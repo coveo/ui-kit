@@ -8,18 +8,13 @@ type ItemContextEventHandler<T> = (item: T) => void;
 
 export function fetchItemContext<T>(element: Element, parentName: string) {
   return new Promise<T>((resolve, reject) => {
-    const event = buildCustomEvent<ItemContextEventHandler<T>>(
-      itemContextEventName,
-      (item: T) => {
-        return resolve(item);
-      }
-    );
+    const event = buildCustomEvent<ItemContextEventHandler<T>>(itemContextEventName, (item: T) => {
+      return resolve(item);
+    });
     element.dispatchEvent(event);
 
     if (!closest(element, parentName)) {
-      reject(
-        new MissingParentError(element.nodeName.toLowerCase(), parentName)
-      );
+      reject(new MissingParentError(element.nodeName.toLowerCase(), parentName));
     }
   });
 }

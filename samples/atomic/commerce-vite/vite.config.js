@@ -21,9 +21,7 @@ const findDir = (name) => {
 for (const name of ['lang', 'assets']) {
   const src = findDir(name);
   if (!src) {
-    throw new Error(
-      `Could not find @coveo/atomic's "${name}" directory under ${atomicPkg}/dist.`
-    );
+    throw new Error(`Could not find @coveo/atomic's "${name}" directory under ${atomicPkg}/dist.`);
   }
   const dest = resolve('public', name);
   mkdirSync(dest, {recursive: true});

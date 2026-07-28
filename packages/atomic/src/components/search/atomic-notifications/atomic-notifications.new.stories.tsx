@@ -8,10 +8,9 @@ import '@/src/components/search/atomic-notifications/atomic-notifications.js';
 
 const searchApiHarness = new MockSearchApi();
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-notifications',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-notifications', {
+  excludeCategories: ['methods'],
+});
 
 const {decorator, play} = wrapInSearchInterface();
 

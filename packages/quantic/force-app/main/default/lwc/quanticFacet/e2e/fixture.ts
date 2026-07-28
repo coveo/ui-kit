@@ -6,7 +6,7 @@ import {
   insightSearchRequestRegex,
 } from '../../../../../../playwright/utils/requests';
 import {BaseFacetObject} from '../../../../../../playwright/page-object/baseFacetObject';
-import facetData from './data';
+import {initialFacetData} from './data';
 import {facetBase} from '../../../../../../playwright/fixtures/baseFacetFixture';
 
 const pageUrl = 's/quantic-facet';
@@ -14,6 +14,7 @@ const pageUrl = 's/quantic-facet';
 interface FacetOptions {
   value?: string;
   caption?: string;
+  numberOfValues?: number;
 }
 
 type QuanticFacetE2EFixtures = {
@@ -24,20 +25,22 @@ type QuanticFacetE2EFixtures = {
 
 export const testSearch = facetBase.extend<QuanticFacetE2EFixtures>({
   options: {},
-  facetResponseMock: [facetData],
+  facetResponses: {responses: [[initialFacetData]]},
   baseFacet: async ({page}, use) => {
     await use(new BaseFacetObject(page, searchRequestRegex));
   },
   facet: async (
-    {page, options, configuration, baseFacet, urlHash, facetResponseMock},
+    {page, options, configuration, baseFacet, urlHash, facetResponses},
     use
   ) => {
+    // search use case: interface auto-triggers a search on load, hence the mockSearchWithBaseResponse call below
+    await baseFacet.mockSearchWithBaseResponse();
     await page.goto(
       `${pageUrl}${options.caption ? '-with-captions' : ''}#${urlHash ? urlHash : ''}`
     );
-    if (facetResponseMock) {
-      await baseFacet.mockSearchWithFacetResponse(facetResponseMock);
-    }
+    await baseFacet.mockSearchWithFacetResponseSequence(
+      facetResponses?.responses
+    );
     configuration.configure(options);
     await baseFacet.waitForSearchResponse();
 
@@ -47,7 +50,7 @@ export const testSearch = facetBase.extend<QuanticFacetE2EFixtures>({
 
 export const testInsight = facetBase.extend<QuanticFacetE2EFixtures>({
   options: {},
-  facetResponseMock: [facetData],
+  facetResponses: {responses: [[initialFacetData]]},
   baseFacet: async ({page}, use) => {
     await use(new BaseFacetObject(page, insightSearchRequestRegex));
   },
@@ -55,17 +58,19 @@ export const testInsight = facetBase.extend<QuanticFacetE2EFixtures>({
     await use(new InsightSetupObject(page));
   },
   facet: async (
-    {page, options, baseFacet, configuration, insightSetup, facetResponseMock},
+    {page, options, baseFacet, configuration, insightSetup, facetResponses},
     use
   ) => {
     await page.goto(`${pageUrl}${options.caption ? '-with-captions' : ''}`);
-    if (facetResponseMock) {
-      await baseFacet.mockSearchWithFacetResponse(facetResponseMock);
-    }
+    await baseFacet.mockSearchWithFacetResponseSequence(
+      facetResponses?.responses
+    );
     configuration.configure({...options, useCase: useCaseEnum.insight});
     await insightSetup?.waitForInsightInterfaceInitialization();
-    await baseFacet.performSearch();
-    await baseFacet.waitForSearchResponse();
+    await Promise.all([
+      baseFacet.waitForSearchResponse(),
+      baseFacet.performSearch(),
+    ]);
     await use(new FacetObject(page));
   },
 });

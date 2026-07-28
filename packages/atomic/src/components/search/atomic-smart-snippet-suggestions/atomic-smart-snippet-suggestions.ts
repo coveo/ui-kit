@@ -125,9 +125,7 @@ export class AtomicSmartSnippetSuggestions
 
   public initialize() {
     this.accordionId = randomID('atomic-smart-snippet-suggestions-');
-    this.smartSnippetQuestionsList = buildSmartSnippetQuestionsList(
-      this.bindings.engine
-    );
+    this.smartSnippetQuestionsList = buildSmartSnippetQuestionsList(this.bindings.engine);
   }
 
   @errorGuard()
@@ -142,19 +140,15 @@ export class AtomicSmartSnippetSuggestions
             i18n: this.bindings.i18n,
           },
         })(html`
-          ${this.smartSnippetQuestionsListState.questions.map(
-            (relatedQuestion, i) =>
-              this.renderRelatedQuestion(relatedQuestion, i)
+          ${this.smartSnippetQuestionsListState.questions.map((relatedQuestion, i) =>
+            this.renderRelatedQuestion(relatedQuestion, i)
           )}
         `),
       () => nothing
     )}`;
   }
 
-  private renderRelatedQuestion(
-    relatedQuestion: SmartSnippetRelatedQuestion,
-    index: number
-  ) {
+  private renderRelatedQuestion(relatedQuestion: SmartSnippetRelatedQuestion, index: number) {
     return renderQuestionWrapper({
       props: {
         expanded: relatedQuestion.expanded,
@@ -162,16 +156,11 @@ export class AtomicSmartSnippetSuggestions
       },
     })(html`
       ${this.renderQuestionButton(relatedQuestion, index)}
-      ${when(relatedQuestion.expanded, () =>
-        this.renderAnswer(relatedQuestion, index)
-      )}
+      ${when(relatedQuestion.expanded, () => this.renderAnswer(relatedQuestion, index))}
     `);
   }
 
-  private renderQuestionButton(
-    relatedQuestion: SmartSnippetRelatedQuestion,
-    index: number
-  ) {
+  private renderQuestionButton(relatedQuestion: SmartSnippetRelatedQuestion, index: number) {
     return renderQuestion({
       props: {
         ariaControls: `${this.accordionId}-${index}`,
@@ -189,10 +178,7 @@ export class AtomicSmartSnippetSuggestions
     `);
   }
 
-  private renderAnswer(
-    relatedQuestion: SmartSnippetRelatedQuestion,
-    index: number
-  ) {
+  private renderAnswer(relatedQuestion: SmartSnippetRelatedQuestion, index: number) {
     return renderAnswerAndSourceWrapper({
       props: {
         id: `${this.accordionId}-${index}`,
@@ -219,10 +205,7 @@ export class AtomicSmartSnippetSuggestions
           )}
       ></atomic-smart-snippet-answer>
       ${when(relatedQuestion.source, () =>
-        this.renderSource(
-          relatedQuestion.questionAnswerId,
-          relatedQuestion.source!
-        )
+        this.renderSource(relatedQuestion.questionAnswerId, relatedQuestion.source!)
       )}
     `);
   }
@@ -234,28 +217,19 @@ export class AtomicSmartSnippetSuggestions
       },
     })(html`
       <atomic-smart-snippet-source
-        .anchorAttributes=${getAttributesFromLinkSlotContent(
-          this,
-          'source-anchor-attributes'
-        )}
+        .anchorAttributes=${getAttributesFromLinkSlotContent(this, 'source-anchor-attributes')}
         @begin-delayed-select-source=${() =>
-          this.smartSnippetQuestionsList.beginDelayedSelectSource(
-            questionAnswerId
-          )}
+          this.smartSnippetQuestionsList.beginDelayedSelectSource(questionAnswerId)}
         @cancel-pending-select-source=${() =>
-          this.smartSnippetQuestionsList.cancelPendingSelectSource(
-            questionAnswerId
-          )}
-        @select-source=${() =>
-          this.smartSnippetQuestionsList.selectSource(questionAnswerId)}
+          this.smartSnippetQuestionsList.cancelPendingSelectSource(questionAnswerId)}
+        @select-source=${() => this.smartSnippetQuestionsList.selectSource(questionAnswerId)}
         .source=${source}
       ></atomic-smart-snippet-source>
     `);
   }
 
   private get computedSnippetStyle() {
-    const styleTag =
-      this.querySelector('template')?.content.querySelector('style');
+    const styleTag = this.querySelector('template')?.content.querySelector('style');
     if (!styleTag) {
       return this.snippetStyle;
     }

@@ -18,18 +18,12 @@ import type {
 import {wireControllerParams} from '../utils/controller-wiring.js';
 import {augmentSearchEngineOptions} from '../utils/engine-wiring.js';
 
-function isSearchCompletedAction(
-  action: unknown
-): action is SearchCompletedAction {
-  return /^search\/executeSearch\/(fulfilled|rejected)$/.test(
-    (action as UnknownAction).type
-  );
+function isSearchCompletedAction(action: unknown): action is SearchCompletedAction {
+  return /^search\/executeSearch\/(fulfilled|rejected)$/.test((action as UnknownAction).type);
 }
 
 function buildSSRSearchEngine(options: SearchEngineOptions): SSRSearchEngine {
-  const {middleware, promise} = createWaitForActionMiddleware(
-    isSearchCompletedAction
-  );
+  const {middleware, promise} = createWaitForActionMiddleware(isSearchCompletedAction);
   const searchEngine = buildSearchEngine({
     ...options,
     middlewares: [...(options.middlewares ?? []), middleware],
@@ -55,10 +49,7 @@ export const buildFactory =
       | FetchStaticStateParameters<TControllerDefinitions>
       | HydrateStaticStateParameters<TControllerDefinitions>
   ) => {
-    const controllerProps = wireControllerParams(
-      controllerDefinitions,
-      buildOptions
-    );
+    const controllerProps = wireControllerParams(controllerDefinitions, buildOptions);
 
     const engineOptions = augmentSearchEngineOptions(options, buildOptions);
 
@@ -91,8 +82,7 @@ export const buildFactory =
 
     return {
       engine,
-      controllers:
-        controllers as InferControllersMapFromDefinition<TControllerDefinitions> &
-          BakedInSearchControllers,
+      controllers: controllers as InferControllersMapFromDefinition<TControllerDefinitions> &
+        BakedInSearchControllers,
     };
   };

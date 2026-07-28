@@ -7,12 +7,7 @@
  * @param path - The path of the cookie. Defaults to '/'.
  * @param maxAge - The maximum age of the cookie. Default to 1 year.
  */
-export function setCookie(
-  name: string,
-  value: string,
-  path = '/',
-  maxAge = 60 * 60 * 24 * 365
-) {
+export function setCookie(name: string, value: string, path = '/', maxAge = 60 * 60 * 24 * 365) {
   document.cookie =
     `${name}=${value}` +
     `;path=${path}` +

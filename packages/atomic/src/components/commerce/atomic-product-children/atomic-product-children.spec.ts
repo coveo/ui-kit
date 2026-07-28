@@ -94,9 +94,7 @@ describe('atomic-product-children', () => {
   it('should render child products with the proper classes', async () => {
     const {childProducts} = await renderProductChildren();
 
-    expect(childProducts[0]).toHaveClass(
-      'product-child box-border rounded border border-primary'
-    );
+    expect(childProducts[0]).toHaveClass('product-child box-border rounded border border-primary');
     expect(childProducts[1]).toHaveClass('product-child');
   });
 
@@ -109,9 +107,7 @@ describe('atomic-product-children', () => {
   describe('when "Enter" is pressed on a child product', () => {
     const pressEnterOnChild = async () => {
       const {childProducts} = await renderProductChildren();
-      childProducts[1].dispatchEvent(
-        new KeyboardEvent('keypress', {key: 'Enter'})
-      );
+      childProducts[1].dispatchEvent(new KeyboardEvent('keypress', {key: 'Enter'}));
       return childProducts;
     };
 
@@ -126,10 +122,7 @@ describe('atomic-product-children', () => {
     });
 
     it('should dispatch the "atomic/selectChildProduct" event', async () => {
-      const dispatchSpy = vi.spyOn(
-        AtomicProductChildren.prototype,
-        'dispatchEvent'
-      );
+      const dispatchSpy = vi.spyOn(AtomicProductChildren.prototype, 'dispatchEvent');
       await pressEnterOnChild();
       expect(dispatchSpy).toHaveBeenCalled();
     });
@@ -153,10 +146,7 @@ describe('atomic-product-children', () => {
     });
 
     it('should dispatch the "atomic/selectChildProduct" event', async () => {
-      const dispatchSpy = vi.spyOn(
-        AtomicProductChildren.prototype,
-        'dispatchEvent'
-      );
+      const dispatchSpy = vi.spyOn(AtomicProductChildren.prototype, 'dispatchEvent');
       await hoverChild();
       expect(dispatchSpy).toHaveBeenCalled();
     });
@@ -199,10 +189,7 @@ describe('atomic-product-children', () => {
     });
 
     it('should dispatch the "atomic/selectChildProduct" event', async () => {
-      const dispatchSpy = vi.spyOn(
-        AtomicProductChildren.prototype,
-        'dispatchEvent'
-      );
+      const dispatchSpy = vi.spyOn(AtomicProductChildren.prototype, 'dispatchEvent');
       await touchChild();
       expect(dispatchSpy).toHaveBeenCalled();
     });
@@ -266,10 +253,7 @@ describe('atomic-product-children', () => {
       childProducts: [
         buildFakeProduct({
           ec_name: 'Test Child Product',
-          ec_thumbnails: [
-            'https://example.com/image1.jpg',
-            'https://example.com/image2.jpg',
-          ],
+          ec_thumbnails: ['https://example.com/image1.jpg', 'https://example.com/image2.jpg'],
         }),
       ],
     });

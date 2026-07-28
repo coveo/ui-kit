@@ -23,9 +23,7 @@ export default function DateFacet(props: IDateFacetProps) {
   return (
     <fieldset className="DateFacet">
       <legend className="FacetHeader">
-        <span className="FacetDisplayName">
-          {state.displayName ?? state.facetId}
-        </span>
+        <span className="FacetDisplayName">{state.displayName ?? state.facetId}</span>
         <button
           type="button"
           className="FacetClear"
@@ -54,9 +52,7 @@ export default function DateFacet(props: IDateFacetProps) {
                 <span className="FacetValueName">
                   {value.start} to {value.end}
                 </span>
-                <span className="FacetValueCount">
-                  ({value.numberOfResults})
-                </span>
+                <span className="FacetValueCount">({value.numberOfResults})</span>
               </label>
             </li>
           );

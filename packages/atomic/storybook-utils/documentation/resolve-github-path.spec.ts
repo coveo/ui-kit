@@ -2,16 +2,13 @@ import {describe, expect, it} from 'vitest';
 import {resolveGithubDocsUrl, resolveGithubUrl} from './resolve-github-path';
 
 describe('resolveGithubUrl', () => {
-  const EXPECTED_BASE =
-    'https://github.com/coveo/ui-kit/tree/main/packages/atomic/';
+  const EXPECTED_BASE = 'https://github.com/coveo/ui-kit/tree/main/packages/atomic/';
 
   it('should convert .new.stories.tsx to .ts', () => {
     const result = resolveGithubUrl(
       './src/components/search/atomic-pager/atomic-pager.new.stories.tsx'
     );
-    expect(result).toBe(
-      `${EXPECTED_BASE}src/components/search/atomic-pager/atomic-pager.ts`
-    );
+    expect(result).toBe(`${EXPECTED_BASE}src/components/search/atomic-pager/atomic-pager.ts`);
   });
 
   it('should convert .stories.tsx to .ts', () => {
@@ -27,9 +24,7 @@ describe('resolveGithubUrl', () => {
     const result = resolveGithubUrl(
       '/Users/dev/ui-kit/packages/atomic/src/components/common/atomic-icon/atomic-icon.new.stories.tsx'
     );
-    expect(result).toBe(
-      `${EXPECTED_BASE}src/components/common/atomic-icon/atomic-icon.ts`
-    );
+    expect(result).toBe(`${EXPECTED_BASE}src/components/common/atomic-icon/atomic-icon.ts`);
   });
 
   it('should handle repo-relative paths', () => {
@@ -50,9 +45,7 @@ describe('resolveGithubUrl', () => {
     const result = resolveGithubUrl(
       'C:\\Users\\dev\\ui-kit\\packages\\atomic\\src\\components\\search\\atomic-pager\\atomic-pager.new.stories.tsx'
     );
-    expect(result).toBe(
-      `${EXPECTED_BASE}src/components/search/atomic-pager/atomic-pager.ts`
-    );
+    expect(result).toBe(`${EXPECTED_BASE}src/components/search/atomic-pager/atomic-pager.ts`);
   });
 
   it('should return null for undefined input', () => {
@@ -72,16 +65,13 @@ describe('resolveGithubUrl', () => {
 });
 
 describe('resolveGithubDocsUrl', () => {
-  const EXPECTED_BASE =
-    'https://github.com/coveo/ui-kit/blob/main/packages/atomic/';
+  const EXPECTED_BASE = 'https://github.com/coveo/ui-kit/blob/main/packages/atomic/';
 
   it('should convert .new.stories.tsx to .mdx', () => {
     const result = resolveGithubDocsUrl(
       './src/components/search/atomic-pager/atomic-pager.new.stories.tsx'
     );
-    expect(result).toBe(
-      `${EXPECTED_BASE}src/components/search/atomic-pager/atomic-pager.mdx`
-    );
+    expect(result).toBe(`${EXPECTED_BASE}src/components/search/atomic-pager/atomic-pager.mdx`);
   });
 
   it('should convert .stories.tsx to .mdx', () => {
@@ -102,9 +92,7 @@ describe('resolveGithubDocsUrl', () => {
     const result = resolveGithubDocsUrl(
       '/Users/dev/ui-kit/packages/atomic/src/components/common/atomic-icon/atomic-icon.new.stories.tsx'
     );
-    expect(result).toBe(
-      `${EXPECTED_BASE}src/components/common/atomic-icon/atomic-icon.mdx`
-    );
+    expect(result).toBe(`${EXPECTED_BASE}src/components/common/atomic-icon/atomic-icon.mdx`);
   });
 
   it('should handle repo-relative paths', () => {
@@ -117,21 +105,15 @@ describe('resolveGithubDocsUrl', () => {
   });
 
   it('should preserve existing .mdx in story filenames', () => {
-    const result = resolveGithubDocsUrl(
-      './storybook-pages/guides/custom-styling.mdx'
-    );
-    expect(result).toBe(
-      `${EXPECTED_BASE}storybook-pages/guides/custom-styling.mdx`
-    );
+    const result = resolveGithubDocsUrl('./storybook-pages/guides/custom-styling.mdx');
+    expect(result).toBe(`${EXPECTED_BASE}storybook-pages/guides/custom-styling.mdx`);
   });
 
   it('should handle Windows-style paths', () => {
     const result = resolveGithubDocsUrl(
       'C:\\Users\\dev\\ui-kit\\packages\\atomic\\src\\components\\search\\atomic-pager\\atomic-pager.new.stories.tsx'
     );
-    expect(result).toBe(
-      `${EXPECTED_BASE}src/components/search/atomic-pager/atomic-pager.mdx`
-    );
+    expect(result).toBe(`${EXPECTED_BASE}src/components/search/atomic-pager/atomic-pager.mdx`);
   });
 
   it('should return null for undefined input', () => {

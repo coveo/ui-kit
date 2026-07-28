@@ -2,10 +2,7 @@ import {html} from 'lit';
 import {beforeAll, describe, expect, it, vi} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {
-  type CategoryFacetValueLinkProps,
-  renderCategoryFacetValueLink,
-} from './value-link';
+import {type CategoryFacetValueLinkProps, renderCategoryFacetValueLink} from './value-link';
 
 describe('#renderCategoryFacetValueLink', () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;
@@ -52,52 +49,34 @@ describe('#renderCategoryFacetValueLink', () => {
 
   it('should render the "active-parent" when isParent is true', async () => {
     const {button} = await renderComponent({isParent: true});
-    expect(button).toHaveAttribute(
-      'part',
-      expect.stringContaining('active-parent')
-    );
+    expect(button).toHaveAttribute('part', expect.stringContaining('active-parent'));
   });
 
   it('should not render the "active-parent" when isParent is false', async () => {
     const {button} = await renderComponent({isParent: false});
-    expect(button).not.toHaveAttribute(
-      'part',
-      expect.stringContaining('active-parent')
-    );
+    expect(button).not.toHaveAttribute('part', expect.stringContaining('active-parent'));
   });
 
   it('should render as selected when isSelected is true', async () => {
     const {button} = await renderComponent({isSelected: true});
-    expect(button).toHaveAttribute(
-      'part',
-      expect.stringContaining('value-link-selected')
-    );
+    expect(button).toHaveAttribute('part', expect.stringContaining('value-link-selected'));
     expect(button).toHaveAttribute('aria-pressed', 'true');
   });
 
   it('should not render as selected when isSelected is false', async () => {
     const {button} = await renderComponent({isSelected: false});
-    expect(button).not.toHaveAttribute(
-      'part',
-      expect.stringContaining('value-link-selected')
-    );
+    expect(button).not.toHaveAttribute('part', expect.stringContaining('value-link-selected'));
     expect(button).toHaveAttribute('aria-pressed', 'false');
   });
 
   it('should render as leaf when isLeafValue is true', async () => {
     const {button} = await renderComponent({isLeafValue: true});
-    expect(button).toHaveAttribute(
-      'part',
-      expect.stringContaining('leaf-value')
-    );
+    expect(button).toHaveAttribute('part', expect.stringContaining('leaf-value'));
   });
 
   it('should not render as leaf when isLeafValue is false', async () => {
     const {button} = await renderComponent({isLeafValue: false});
-    expect(button).not.toHaveAttribute(
-      'part',
-      expect.stringContaining('leaf-value')
-    );
+    expect(button).not.toHaveAttribute('part', expect.stringContaining('leaf-value'));
   });
 
   it('should call onClick when clicked', async () => {
@@ -119,10 +98,7 @@ describe('#renderCategoryFacetValueLink', () => {
   });
 
   it('should render children as subList', async () => {
-    const {container} = await renderComponent(
-      {},
-      html`<span class="child-span">Extra</span>`
-    );
+    const {container} = await renderComponent({}, html`<span class="child-span">Extra</span>`);
     const child = container.querySelector('.child-span');
     expect(child).toBeInTheDocument();
     expect(child).toHaveTextContent('Extra');

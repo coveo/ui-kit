@@ -14,8 +14,7 @@ export const categoryFacetSortCriteria: CategoryFacetSortCriterion[] = [
 ];
 export type CategoryFacetSortCriterion = 'alphanumeric' | 'occurrences';
 
-export interface CategoryFacetValueRequest
-  extends BaseFacetValueRequest, CategoryFacetValueCommon {
+export interface CategoryFacetValueRequest extends BaseFacetValueRequest, CategoryFacetValueCommon {
   children: CategoryFacetValueRequest[];
   retrieveChildren: boolean;
   retrieveCount: number;

@@ -1,11 +1,4 @@
-import {
-  ArrayValue,
-  BooleanValue,
-  NumberValue,
-  RecordValue,
-  StringValue,
-  Value,
-} from '@coveo/bueno';
+import {ArrayValue, BooleanValue, NumberValue, RecordValue, StringValue, Value} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import {
   requiredNonEmptyString,
@@ -162,8 +155,7 @@ export const toggleSelectCategoryFacetValue = createAction(
 
 export const deselectAllCategoryFacetValues = createAction(
   'categoryFacet/deselectAll',
-  (payload: string) =>
-    validatePayload(payload, categoryFacetPayloadDefinition.facetId)
+  (payload: string) => validatePayload(payload, categoryFacetPayloadDefinition.facetId)
 );
 
 export interface UpdateCategoryFacetNumberOfValuesActionCreatorPayload {

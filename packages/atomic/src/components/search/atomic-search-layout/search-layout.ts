@@ -9,10 +9,7 @@ export const firstSearchExecutedSelector = `${containerWebComponentTagName}-sear
 export function makeDesktopQuery(mobileBreakpoint: string) {
   return `only screen and (min-width: ${mobileBreakpoint})`;
 }
-export function buildSearchLayout(
-  element: HTMLElement,
-  mobileBreakpoint: string
-) {
+export function buildSearchLayout(element: HTMLElement, mobileBreakpoint: string) {
   return buildCommonLayout(
     element,
     mobileBreakpoint,

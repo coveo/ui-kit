@@ -1,3 +1,5 @@
+import SetRenderFunctionNote from '@/storybook-utils/documentation/set-render-function-note.mdx';
+
 The `atomic-insight-result-list` component is responsible for displaying insight query results by applying one or more result templates.
 
 This component should be placed within an `atomic-insight-interface` component, typically inside an `atomic-insight-layout` with a results section.
@@ -52,4 +54,27 @@ The component requires at least one `atomic-insight-result-template` child to de
     </template>
   </atomic-insight-result-template>
 </atomic-insight-result-list>
+```
+
+### Using `setRenderFunction` for custom rendering
+
+<SetRenderFunctionNote />
+
+```html
+<script type="module">
+  await customElements.whenDefined('atomic-insight-result-list');
+  const resultList = document.querySelector('atomic-insight-result-list');
+
+  await resultList.setRenderFunction((result, root) => {
+    root.innerHTML = `
+      <atomic-result-section-title>
+        <atomic-result-link></atomic-result-link>
+      </atomic-result-section-title>
+      <atomic-result-section-excerpt>
+        <atomic-result-text field="excerpt"></atomic-result-text>
+      </atomic-result-section-excerpt>
+    `;
+    return root.innerHTML;
+  });
+</script>
 ```

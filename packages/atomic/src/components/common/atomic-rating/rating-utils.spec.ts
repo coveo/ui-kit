@@ -23,15 +23,11 @@ describe('rating-utils', () => {
     });
 
     it('should throw FieldValueIsNaNError for non-numeric string', () => {
-      expect(() => computeNumberOfStars('not-a-number', 'rating')).toThrow(
-        FieldValueIsNaNError
-      );
+      expect(() => computeNumberOfStars('not-a-number', 'rating')).toThrow(FieldValueIsNaNError);
     });
 
     it('should throw FieldValueIsNaNError for undefined value', () => {
-      expect(() => computeNumberOfStars(undefined, 'rating')).toThrow(
-        FieldValueIsNaNError
-      );
+      expect(() => computeNumberOfStars(undefined, 'rating')).toThrow(FieldValueIsNaNError);
     });
 
     it('should include the field name and value in the error', () => {

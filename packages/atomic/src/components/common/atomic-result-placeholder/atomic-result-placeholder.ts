@@ -87,10 +87,7 @@ export class AtomicResultPlaceholder extends LitElement {
   private renderExcerptLine(width: string): TemplateResult {
     return html`
       <div style="height: var(--line-height); width: ${width};">
-        <div
-          class=${placeholderClasses}
-          style="height: var(--font-size);"
-        ></div>
+        <div class=${placeholderClasses} style="height: var(--font-size);"></div>
       </div>
     `;
   }
@@ -128,11 +125,7 @@ export class AtomicResultPlaceholder extends LitElement {
           <div class="fields-placeholder">
             ${Array.from(
               {length: 4},
-              () => html`
-                <div
-                  class="field-value-placeholder ${placeholderClasses}"
-                ></div>
-              `
+              () => html` <div class="field-value-placeholder ${placeholderClasses}"></div> `
             )}
           </div>
         </atomic-result-section-bottom-metadata>

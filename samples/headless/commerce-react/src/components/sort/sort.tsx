@@ -1,8 +1,4 @@
-import {
-  type Sort as HeadlessSort,
-  SortBy,
-  type SortCriterion,
-} from '@coveo/headless/commerce';
+import {type Sort as HeadlessSort, SortBy, type SortCriterion} from '@coveo/headless/commerce';
 import {useEffect, useState} from 'react';
 
 interface ISortProps {
@@ -48,10 +44,7 @@ export default function Sort(props: ISortProps) {
         name="sorts"
         id="sorts-select"
         onChange={handleChange}
-        value={
-          JSON.stringify(state.appliedSort) ??
-          JSON.stringify({by: SortBy.Relevance})
-        }
+        value={JSON.stringify(state.appliedSort) ?? JSON.stringify({by: SortBy.Relevance})}
       >
         {getValues().map((sort) => (
           <option id="0" key={sort} value={sort}>

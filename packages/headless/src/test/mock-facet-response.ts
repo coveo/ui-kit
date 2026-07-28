@@ -1,8 +1,6 @@
 import type {FacetResponse} from '../features/facets/facet-set/interfaces/response.js';
 
-export function buildMockFacetResponse(
-  config: Partial<FacetResponse> = {}
-): FacetResponse {
+export function buildMockFacetResponse(config: Partial<FacetResponse> = {}): FacetResponse {
   return {
     facetId: '',
     field: '',

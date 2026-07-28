@@ -5,10 +5,7 @@ import {buildInsightResultPreviewRequest} from '../../../features/insight-search
 import {logDocumentQuickview} from '../../../features/result-preview/result-preview-insight-analytics-actions.js';
 import {resultPreviewReducer as resultPreview} from '../../../features/result-preview/result-preview-slice.js';
 import type {InsightAppState} from '../../../state/insight-app-state.js';
-import {
-  buildMockInsightEngine,
-  type MockedInsightEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockInsightEngine, type MockedInsightEngine} from '../../../test/mock-engine-v2.js';
 import {buildMockInsightState} from '../../../test/mock-insight-state.js';
 import {buildMockResult} from '../../../test/mock-result.js';
 import {buildCoreQuickview} from '../../core/quickview/headless-core-quickview.js';
@@ -19,12 +16,8 @@ import {
 } from './headless-insight-quickview.js';
 
 vi.mock('../../core/quickview/headless-core-quickview');
-vi.mock(
-  '../../../features/result-preview/result-preview-insight-analytics-actions'
-);
-vi.mock(
-  '../../../features/insight-search/insight-result-preview-request-builder'
-);
+vi.mock('../../../features/result-preview/result-preview-insight-analytics-actions');
+vi.mock('../../../features/insight-search/insight-result-preview-request-builder');
 
 describe('Insight Quickview', () => {
   let engine: MockedInsightEngine;
@@ -71,17 +64,14 @@ describe('Insight Quickview', () => {
   });
 
   it('#buildResultPreviewRequest calls #buildInsightResultPreviewRequest and returns its results', () => {
-    const mockedBuildInsightResultPreviewRequest = vi.mocked(
-      buildInsightResultPreviewRequest
-    );
+    const mockedBuildInsightResultPreviewRequest = vi.mocked(buildInsightResultPreviewRequest);
 
     const someHtmlRequestOptions: HtmlRequestOptions = {
       uniqueId: 'some-id',
       requestedOutputSize: 0,
     };
 
-    const coreQuickviewParamsBuildResultPreviewRequest =
-      mockedBuildCoreQuickview.mock.calls[0][2];
+    const coreQuickviewParamsBuildResultPreviewRequest = mockedBuildCoreQuickview.mock.calls[0][2];
     coreQuickviewParamsBuildResultPreviewRequest(state, someHtmlRequestOptions);
 
     expect(mockedBuildInsightResultPreviewRequest).toHaveBeenCalledTimes(1);
@@ -93,14 +83,11 @@ describe('Insight Quickview', () => {
 
   it('#fetchResultContentCallback logs a document quickview', () => {
     const mockedLogDocumentQuickview = vi.mocked(logDocumentQuickview);
-    const coreQuickviewParamsFetchResultContentCallback =
-      mockedBuildCoreQuickview.mock.calls[0][4];
+    const coreQuickviewParamsFetchResultContentCallback = mockedBuildCoreQuickview.mock.calls[0][4];
 
     coreQuickviewParamsFetchResultContentCallback?.();
 
     expect(mockedLogDocumentQuickview).toHaveBeenCalledTimes(1);
-    expect(engine.dispatch).toHaveBeenCalledWith(
-      mockedLogDocumentQuickview.mock.results[0].value
-    );
+    expect(engine.dispatch).toHaveBeenCalledWith(mockedLogDocumentQuickview.mock.results[0].value);
   });
 });

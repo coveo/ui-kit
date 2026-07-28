@@ -57,11 +57,7 @@ describe('result template helpers', () => {
   describe('fieldsMustBeDefined', () => {
     it(`when sending a list of fields that are all defined in the result
     should return true`, () => {
-      const match = fieldsMustBeDefined([
-        'language',
-        'anotherfield',
-        'excerpt',
-      ]);
+      const match = fieldsMustBeDefined(['language', 'anotherfield', 'excerpt']);
       const result = buildMockResult();
       result.raw.anotherfield = 0;
       expect(match(result)).toBe(true);
@@ -79,11 +75,7 @@ describe('result template helpers', () => {
   describe('fieldsMustNotBeDefined', () => {
     it(`when sending a list of fields that are all undefined in the result
     should return true`, () => {
-      const match = fieldsMustNotBeDefined([
-        'somefield',
-        'anotherfield',
-        'excerpt',
-      ]);
+      const match = fieldsMustNotBeDefined(['somefield', 'anotherfield', 'excerpt']);
       const result = buildMockResult({excerpt: undefined});
       result.raw.anotherfield = null;
       expect(match(result)).toBe(true);
@@ -173,11 +165,7 @@ describe('result template helpers', () => {
     it(`when sending a field that contains multiple values
     when at least one of those values matches the value(s) sent
     should return false`, () => {
-      const match = fieldMustNotMatch('language', [
-        'English',
-        'Korean',
-        'Arabic',
-      ]);
+      const match = fieldMustNotMatch('language', ['English', 'Korean', 'Arabic']);
       const result = buildResult('language', ['French', 'Arabic']);
       expect(match(result)).toBe(false);
     });

@@ -20,8 +20,7 @@ interface ComparisonItem {
 
 export function A2UIComparisonTable({surface}: A2UIComparisonTableProps) {
   const heading =
-    (surface.componentProps.heading as {literalString?: string})
-      ?.literalString ?? 'Comparison';
+    (surface.componentProps.heading as {literalString?: string})?.literalString ?? 'Comparison';
 
   const attributes = (surface.componentProps.attributes as string[]) ?? [
     'standout',
@@ -68,9 +67,7 @@ export function A2UIComparisonTable({surface}: A2UIComparisonTableProps) {
                 if (!value || typeof value !== 'string') return null;
                 return (
                   <div key={attr} className={styles.attribute}>
-                    <span className={styles.attrLabel}>
-                      {attributeLabels[attr] ?? attr}
-                    </span>
+                    <span className={styles.attrLabel}>{attributeLabels[attr] ?? attr}</span>
                     <span className={styles.attrValue}>{value}</span>
                   </div>
                 );

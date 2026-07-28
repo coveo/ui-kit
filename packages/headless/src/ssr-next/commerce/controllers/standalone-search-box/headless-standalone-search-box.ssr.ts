@@ -6,11 +6,7 @@ import {
 import type {StandaloneSearchBoxProps} from '../../../../controllers/standalone-search-box/headless-standalone-search-box.js';
 import type {ListingAndStandaloneControllerWithoutProps} from '../../types/controller-definitions.js';
 
-export type {
-  StandaloneSearchBox,
-  StandaloneSearchBoxProps,
-  StandaloneSearchBoxState,
-};
+export type {StandaloneSearchBox, StandaloneSearchBoxProps, StandaloneSearchBoxState};
 
 export type StandaloneSearchBoxDefinition =
   ListingAndStandaloneControllerWithoutProps<StandaloneSearchBox>;

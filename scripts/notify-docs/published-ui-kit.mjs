@@ -9,14 +9,10 @@ const repo = 'doc_jekyll-public-site';
 const event_type = 'published_ui-kit_to_npm';
 
 async function notify() {
-  const {version: headless_version} =
-    getPackageDefinitionFromPackageDir('headless');
-  const {version: headless_react_version} =
-    getPackageDefinitionFromPackageDir('headless-react');
-  const {version: atomic_version} =
-    getPackageDefinitionFromPackageDir('atomic');
-  const {version: quantic_version} =
-    getPackageDefinitionFromPackageDir('quantic');
+  const {version: headless_version} = getPackageDefinitionFromPackageDir('headless');
+  const {version: headless_react_version} = getPackageDefinitionFromPackageDir('headless-react');
+  const {version: atomic_version} = getPackageDefinitionFromPackageDir('atomic');
+  const {version: quantic_version} = getPackageDefinitionFromPackageDir('quantic');
   const client_payload = {
     headless_version,
     headless_react_version,

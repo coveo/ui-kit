@@ -10,10 +10,7 @@ import {buildMockNumericFacetRequest} from '../../test/mock-numeric-facet-reques
 import {buildMockNumericFacetSlice} from '../../test/mock-numeric-facet-slice.js';
 import {buildMockTabSlice} from '../../test/mock-tab-state.js';
 import {getConfigurationInitialState} from '../configuration/configuration-state.js';
-import {
-  type CollectionId,
-  getFoldingInitialState,
-} from '../folding/folding-state.js';
+import {type CollectionId, getFoldingInitialState} from '../folding/folding-state.js';
 import {maximumNumberOfResultsFromIndex} from '../pagination/pagination-constants.js';
 import {
   buildInsightBaseRequest,
@@ -61,20 +58,13 @@ describe('insight search request', () => {
         actionCause: 'exampleActionCause',
       };
 
-      const request = (
-        await buildInsightSearchRequest(state, exampleEventDescription)
-      ).request.analytics;
+      const request = (await buildInsightSearchRequest(state, exampleEventDescription)).request
+        .analytics;
 
-      expect(request?.documentReferrer).toBe(
-        state.configuration.analytics.originLevel3
-      );
-      expect(request?.originContext).toBe(
-        state.configuration.analytics.originContext
-      );
+      expect(request?.documentReferrer).toBe(state.configuration.analytics.originLevel3);
+      expect(request?.originContext).toBe(state.configuration.analytics.originContext);
       expect(request?.actionCause).toBe(exampleEventDescription.actionCause);
-      expect(request?.trackingId).toBe(
-        state.configuration.analytics.trackingId
-      );
+      expect(request?.trackingId).toBe(state.configuration.analytics.trackingId);
     });
 
     it('#buildInsightSearchRequest returns the state #query', async () => {
@@ -87,18 +77,15 @@ describe('insight search request', () => {
     it('#searchRequest.tab holds the #originLevel2', async () => {
       const originLevel2 = 'youtube';
       state.configuration.analytics.originLevel2 = originLevel2;
-      expect((await buildInsightSearchRequest(state)).request.tab).toBe(
-        originLevel2
-      );
+      expect((await buildInsightSearchRequest(state)).request.tab).toBe(originLevel2);
     });
 
     it('#searchRequest.referrer holds the #originLevel3', async () => {
       const originLevel3 = 'www.coveo.com';
       state.configuration.analytics.originLevel3 = originLevel3;
-      expect(
-        (await buildInsightSearchRequest(state)).request.analytics
-          ?.documentReferrer
-      ).toBe(originLevel3);
+      expect((await buildInsightSearchRequest(state)).request.analytics?.documentReferrer).toBe(
+        originLevel3
+      );
     });
 
     it('#buildInsightSearchRequest returns the state #sortCriteria', async () => {
@@ -142,17 +129,15 @@ describe('insight search request', () => {
 
     it('#buildInsightSearchRequest.fieldsToInclude holds the #fieldsToInclude', async () => {
       state.fields.fieldsToInclude = ['foo', 'bar'];
-      expect(
-        (await buildInsightSearchRequest(state)).request.fieldsToInclude
-      ).toEqual(expect.arrayContaining(['foo', 'bar']));
+      expect((await buildInsightSearchRequest(state)).request.fieldsToInclude).toEqual(
+        expect.arrayContaining(['foo', 'bar'])
+      );
     });
 
     it('#buildInsightSearchRequest.fieldsToInclude does not holds #fieldsToInclude if #fetchAllFields is active', async () => {
       state.fields.fieldsToInclude = ['foo', 'bar'];
       state.fields.fetchAllFields = true;
-      expect(
-        (await buildInsightSearchRequest(state)).request.fieldsToInclude
-      ).toBeUndefined();
+      expect((await buildInsightSearchRequest(state)).request.fieldsToInclude).toBeUndefined();
     });
 
     it('#buildInsightSearchRequest returns the state #numberOfResults', async () => {
@@ -182,10 +167,9 @@ describe('insight search request', () => {
       state.generatedAnswer.responseFormat = {contentFormat: ['text/markdown']};
       const params = (await buildInsightSearchRequest(state)).request;
 
-      expect(
-        params.pipelineRuleParameters?.mlGenerativeQuestionAnswering
-          ?.responseFormat
-      ).toBe(state.generatedAnswer.responseFormat);
+      expect(params.pipelineRuleParameters?.mlGenerativeQuestionAnswering?.responseFormat).toBe(
+        state.generatedAnswer.responseFormat
+      );
     });
 
     it('#buildInsightSearchRequest returns the state #generatedAnswer.citationsFieldToInclude', async () => {
@@ -193,15 +177,12 @@ describe('insight search request', () => {
       const params = (await buildInsightSearchRequest(state)).request;
 
       expect(
-        params.pipelineRuleParameters?.mlGenerativeQuestionAnswering
-          ?.citationsFieldToInclude
+        params.pipelineRuleParameters?.mlGenerativeQuestionAnswering?.citationsFieldToInclude
       ).toBe(state.generatedAnswer.fieldsToIncludeInCitations);
     });
 
     it('when there are no cq expressions in state, cq is undefined', async () => {
-      expect(
-        (await buildInsightSearchRequest(state)).request.cq
-      ).toBeUndefined();
+      expect((await buildInsightSearchRequest(state)).request.cq).toBeUndefined();
     });
 
     it('when there is an active tab, it sets cq to the active tab expression', async () => {
@@ -212,9 +193,7 @@ describe('insight search request', () => {
     it('when there is a context set, it returns the context', async () => {
       const expectedState = {foo: 'bar'};
       state.context.contextValues = expectedState;
-      expect((await buildInsightSearchRequest(state)).request.context).toEqual(
-        expectedState
-      );
+      expect((await buildInsightSearchRequest(state)).request.context).toEqual(expectedState);
     });
 
     it('#buildInsightSearchRequest returns the state #caseContext', async () => {
@@ -257,9 +236,7 @@ describe('insight search request', () => {
         accessToken: '123',
         organizationId: 'foo',
       };
-      const params = (
-        await buildInsightLoadCollectionRequest(state, collectionId)
-      ).request;
+      const params = (await buildInsightLoadCollectionRequest(state, collectionId)).request;
 
       expect(params.accessToken).toBe(state.configuration.accessToken);
       expect(params.organizationId).toBe(state.configuration.organizationId);
@@ -267,9 +244,7 @@ describe('insight search request', () => {
 
     it('#buildInsightLoadCollectionRequest returns the state #insightId', async () => {
       state.insightConfiguration.insightId = '123';
-      const params = (
-        await buildInsightLoadCollectionRequest(state, collectionId)
-      ).request;
+      const params = (await buildInsightLoadCollectionRequest(state, collectionId)).request;
 
       expect(params.insightId).toBe(state.insightConfiguration.insightId);
     });
@@ -280,35 +255,24 @@ describe('insight search request', () => {
       state.configuration.analytics.analyticsMode = 'next';
       state.configuration.analytics.trackingId = '123';
 
-      const request = (
-        await buildInsightLoadCollectionRequest(state, collectionId)
-      ).request.analytics;
+      const request = (await buildInsightLoadCollectionRequest(state, collectionId)).request
+        .analytics;
 
-      expect(request?.documentReferrer).toBe(
-        state.configuration.analytics.originLevel3
-      );
-      expect(request?.originContext).toBe(
-        state.configuration.analytics.originContext
-      );
-      expect(request?.trackingId).toBe(
-        state.configuration.analytics.trackingId
-      );
+      expect(request?.documentReferrer).toBe(state.configuration.analytics.originLevel3);
+      expect(request?.originContext).toBe(state.configuration.analytics.originContext);
+      expect(request?.trackingId).toBe(state.configuration.analytics.trackingId);
     });
 
     it('#buildInsightLoadCollectionRequest returns the state #query', async () => {
       state.query.q = 'hello';
-      const params = (
-        await buildInsightLoadCollectionRequest(state, collectionId)
-      ).request;
+      const params = (await buildInsightLoadCollectionRequest(state, collectionId)).request;
 
       expect(params.q).toBe(state.query.q);
     });
 
     it('#buildInsightLoadCollectionRequest returns the state #sortCriteria', async () => {
       state.sortCriteria = 'qre';
-      const params = (
-        await buildInsightLoadCollectionRequest(state, collectionId)
-      ).request;
+      const params = (await buildInsightLoadCollectionRequest(state, collectionId)).request;
 
       expect(params.sortCriteria).toBe(state.sortCriteria);
     });
@@ -316,9 +280,7 @@ describe('insight search request', () => {
     it('#buildInsightLoadCollectionRequest returns the facets in the state #facetSet', async () => {
       const request = buildMockFacetRequest({field: 'objecttype'});
       state.facetSet[1] = buildMockFacetSlice({request});
-      const {facets} = (
-        await buildInsightLoadCollectionRequest(state, collectionId)
-      ).request;
+      const {facets} = (await buildInsightLoadCollectionRequest(state, collectionId)).request;
 
       expect(facets).toContainEqual(request);
     });
@@ -327,9 +289,7 @@ describe('insight search request', () => {
       const request = buildMockNumericFacetRequest({field: 'objecttype'});
       state.numericFacetSet[1] = buildMockNumericFacetSlice({request});
 
-      const {facets} = (
-        await buildInsightLoadCollectionRequest(state, collectionId)
-      ).request;
+      const {facets} = (await buildInsightLoadCollectionRequest(state, collectionId)).request;
       expect(facets).toContainEqual(request);
     });
 
@@ -337,9 +297,7 @@ describe('insight search request', () => {
       const request = buildMockDateFacetRequest({field: 'objecttype'});
       state.dateFacetSet[1] = buildMockDateFacetSlice({request});
 
-      const {facets} = (
-        await buildInsightLoadCollectionRequest(state, collectionId)
-      ).request;
+      const {facets} = (await buildInsightLoadCollectionRequest(state, collectionId)).request;
       expect(facets).toContainEqual(request);
     });
 
@@ -347,17 +305,14 @@ describe('insight search request', () => {
       const request = buildMockCategoryFacetRequest({field: 'objecttype'});
       state.categoryFacetSet[1] = buildMockCategoryFacetSlice({request});
 
-      const {facets} = (
-        await buildInsightLoadCollectionRequest(state, collectionId)
-      ).request;
+      const {facets} = (await buildInsightLoadCollectionRequest(state, collectionId)).request;
       expect(facets).toContainEqual(request);
     });
 
     it('#buildInsightLoadCollectionRequest.fieldsToInclude holds the #fieldsToInclude', async () => {
       state.fields.fieldsToInclude = ['foo', 'bar'];
       expect(
-        (await buildInsightLoadCollectionRequest(state, collectionId)).request
-          .fieldsToInclude
+        (await buildInsightLoadCollectionRequest(state, collectionId)).request.fieldsToInclude
       ).toEqual(expect.arrayContaining(['foo', 'bar']));
     });
 
@@ -365,16 +320,14 @@ describe('insight search request', () => {
       state.fields.fieldsToInclude = ['foo', 'bar'];
       state.fields.fetchAllFields = true;
       expect(
-        (await buildInsightLoadCollectionRequest(state, collectionId)).request
-          .fieldsToInclude
+        (await buildInsightLoadCollectionRequest(state, collectionId)).request.fieldsToInclude
       ).toBeUndefined();
     });
 
     it('#buildInsightLoadCollectionRequest sets the cq to the collectionId', async () => {
-      expect(
-        (await buildInsightLoadCollectionRequest(state, collectionId)).request
-          .cq
-      ).toBe(`@foldingcollection="${collectionId}"`);
+      expect((await buildInsightLoadCollectionRequest(state, collectionId)).request.cq).toBe(
+        `@foldingcollection="${collectionId}"`
+      );
     });
 
     it('when there is an active tab, it sets cq to the active tab expression', async () => {
@@ -382,18 +335,15 @@ describe('insight search request', () => {
         expression: collectionId,
         isActive: true,
       });
-      expect(
-        (await buildInsightLoadCollectionRequest(state, collectionId)).request
-          .cq
-      ).toBe(`@foldingcollection="${collectionId}"`);
+      expect((await buildInsightLoadCollectionRequest(state, collectionId)).request.cq).toBe(
+        `@foldingcollection="${collectionId}"`
+      );
     });
 
     it('when there is a context sets the context param', async () => {
       const expectedContext = {foo: 'bar'};
       state.context.contextValues = expectedContext;
-      const params = (
-        await buildInsightLoadCollectionRequest(state, collectionId)
-      ).request;
+      const params = (await buildInsightLoadCollectionRequest(state, collectionId)).request;
 
       expect(params.context).toBe(expectedContext);
     });
@@ -402,9 +352,7 @@ describe('insight search request', () => {
   it('should enable #queryCorrection if did you mean is enabled and #queryCorrectionMode is `next`', async () => {
     state.didYouMean.enableDidYouMean = true;
     state.didYouMean.queryCorrectionMode = 'next';
-    expect(
-      (await buildInsightBaseRequest(state)).request.queryCorrection?.enabled
-    ).toBe(true);
+    expect((await buildInsightBaseRequest(state)).request.queryCorrection?.enabled).toBe(true);
   });
 
   it('should enable #automaticallyCorrect if did you mean is enabled and #queryCorrectionMode is `next` and #automaticallyCorrectQuery is true', async () => {
@@ -412,8 +360,7 @@ describe('insight search request', () => {
     state.didYouMean.queryCorrectionMode = 'next';
     state.didYouMean.automaticallyCorrectQuery = true;
     expect(
-      (await buildInsightBaseRequest(state)).request.queryCorrection?.options
-        ?.automaticallyCorrect
+      (await buildInsightBaseRequest(state)).request.queryCorrection?.options?.automaticallyCorrect
     ).toBe('whenNoResults');
   });
 
@@ -422,23 +369,18 @@ describe('insight search request', () => {
     state.didYouMean.queryCorrectionMode = 'next';
     state.didYouMean.automaticallyCorrectQuery = false;
     expect(
-      (await buildInsightBaseRequest(state)).request.queryCorrection?.options
-        ?.automaticallyCorrect
+      (await buildInsightBaseRequest(state)).request.queryCorrection?.options?.automaticallyCorrect
     ).toBe('never');
   });
 
   it('should set #enableDidYouMean to true if did you mean is enabled and #queryCorrectionMode is `legacy`', async () => {
     state.didYouMean.enableDidYouMean = true;
     state.didYouMean.queryCorrectionMode = 'legacy';
-    expect(
-      (await buildInsightBaseRequest(state)).request.enableDidYouMean
-    ).toBe(true);
+    expect((await buildInsightBaseRequest(state)).request.enableDidYouMean).toBe(true);
   });
 
   it('should set #enableDidYouMean to false if did you mean is enabled and #queryCorrectionMode is not `legacy`', async () => {
     state.didYouMean.queryCorrectionMode = 'next';
-    expect(
-      (await buildInsightBaseRequest(state)).request.enableDidYouMean
-    ).toBe(false);
+    expect((await buildInsightBaseRequest(state)).request.enableDidYouMean).toBe(false);
   });
 });

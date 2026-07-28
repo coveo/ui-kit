@@ -19,16 +19,14 @@ export interface SetContextPayload {
   custom?: CustomContextState;
 }
 
-export const setContext = createAction(
-  'commerce/context/set',
-  (payload: SetContextPayload) => validatePayload(payload, contextDefinition)
+export const setContext = createAction('commerce/context/set', (payload: SetContextPayload) =>
+  validatePayload(payload, contextDefinition)
 );
 
 export type SetViewPayload = Pick<ViewParams, 'url'>;
 
-export const setView = createAction(
-  'commerce/context/setView',
-  (payload: SetViewPayload) => validatePayload(payload, viewDefinition)
+export const setView = createAction('commerce/context/setView', (payload: SetViewPayload) =>
+  validatePayload(payload, viewDefinition)
 );
 
 export type SetLocationPayload = LocationState;
@@ -40,8 +38,6 @@ export const setLocation = createAction(
 
 export type SetCustomPayload = CustomContextState | undefined;
 
-export const setCustom = createAction(
-  'commerce/context/setCustom',
-  (payload: SetCustomPayload) =>
-    validatePayload({custom: payload}, customDefinition)
+export const setCustom = createAction('commerce/context/setCustom', (payload: SetCustomPayload) =>
+  validatePayload({custom: payload}, customDefinition)
 );

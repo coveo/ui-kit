@@ -42,10 +42,7 @@ describe('createFollowUpStrategy', () => {
   it('tracks the active follow-up answer and toggles loading flags when a run starts', () => {
     strategy.onRunStartedEvent!({event: {runId}} as any);
 
-    expect(dispatch).toHaveBeenNthCalledWith(
-      1,
-      setActiveFollowUpAnswerId(runId)
-    );
+    expect(dispatch).toHaveBeenNthCalledWith(1, setActiveFollowUpAnswerId(runId));
     expect(dispatch).toHaveBeenNthCalledWith(
       2,
       setFollowUpIsLoading({answerId: runId, isLoading: false})
@@ -131,9 +128,7 @@ describe('createFollowUpStrategy', () => {
       },
     } as any);
 
-    expect(dispatch).toHaveBeenCalledWith(
-      followUpCitationsReceived({answerId: runId, citations})
-    );
+    expect(dispatch).toHaveBeenCalledWith(followUpCitationsReceived({answerId: runId, citations}));
   });
 
   it('records failures with normalized error codes', () => {
@@ -164,10 +159,7 @@ describe('createFollowUpStrategy', () => {
       },
     } as any);
 
-    expect(dispatch).toHaveBeenNthCalledWith(
-      1,
-      setActiveFollowUpAnswerId('run-456')
-    );
+    expect(dispatch).toHaveBeenNthCalledWith(1, setActiveFollowUpAnswerId('run-456'));
     expect(dispatch).toHaveBeenNthCalledWith(
       2,
       followUpFailed({
@@ -217,9 +209,7 @@ describe('createFollowUpStrategy', () => {
       },
     } as any);
 
-    expect(dispatch).toHaveBeenCalledWith(
-      followUpCompleted({answerId: runId, cannotAnswer: true})
-    );
+    expect(dispatch).toHaveBeenCalledWith(followUpCompleted({answerId: runId, cannotAnswer: true}));
   });
 
   it('dispatches stream end and response linked analytics when a run finishes', () => {
@@ -229,10 +219,7 @@ describe('createFollowUpStrategy', () => {
       .spyOn(generatedAnswerAnalyticsActions, 'logGeneratedAnswerStreamEnd')
       .mockReturnValue(streamEndAction);
     const responseLinkedSpy = vi
-      .spyOn(
-        generatedAnswerAnalyticsActions,
-        'logGeneratedAnswerResponseLinked'
-      )
+      .spyOn(generatedAnswerAnalyticsActions, 'logGeneratedAnswerResponseLinked')
       .mockReturnValue(responseLinkedAction);
     strategy = createFollowUpStrategy(dispatch);
     strategy.onRunStartedEvent!({event: {runId}} as any);

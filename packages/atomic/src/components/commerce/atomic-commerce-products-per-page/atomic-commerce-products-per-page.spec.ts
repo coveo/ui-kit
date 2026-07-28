@@ -29,9 +29,7 @@ vi.mock('@/src/components/common/items-per-page/validate.js', {spy: true});
 
 describe('atomic-commerce-products-per-page', () => {
   const mockedEngine = buildFakeCommerceEngine();
-  const mockedFocusOnFirstResultAfterNextSearch = vi.fn(() =>
-    Promise.resolve()
-  );
+  const mockedFocusOnFirstResultAfterNextSearch = vi.fn(() => Promise.resolve());
   const mockedFocusOnNextNewResult = vi.fn();
   let mockedSummary: Summary;
   let mockedPager: Pagination;
@@ -73,24 +71,22 @@ describe('atomic-commerce-products-per-page', () => {
       })
     );
 
-    const {element} =
-      await renderInAtomicCommerceInterface<AtomicCommerceProductsPerPage>({
-        template: html`<atomic-commerce-products-per-page
-          choices-displayed=${ifDefined(props.choicesDisplayed)}
-          initial-choice=${ifDefined(props.initialChoice)}
-        ></atomic-commerce-products-per-page>`,
-        selector: 'atomic-commerce-products-per-page',
-        bindings: (bindings) => {
-          bindings.interfaceElement.type = interfaceElementType;
-          bindings.engine = mockedEngine;
-          bindings.store.state.resultList = {
-            focusOnFirstResultAfterNextSearch:
-              mockedFocusOnFirstResultAfterNextSearch,
-            focusOnNextNewResult: mockedFocusOnNextNewResult,
-          };
-          return bindings;
-        },
-      });
+    const {element} = await renderInAtomicCommerceInterface<AtomicCommerceProductsPerPage>({
+      template: html`<atomic-commerce-products-per-page
+        choices-displayed=${ifDefined(props.choicesDisplayed)}
+        initial-choice=${ifDefined(props.initialChoice)}
+      ></atomic-commerce-products-per-page>`,
+      selector: 'atomic-commerce-products-per-page',
+      bindings: (bindings) => {
+        bindings.interfaceElement.type = interfaceElementType;
+        bindings.engine = mockedEngine;
+        bindings.store.state.resultList = {
+          focusOnFirstResultAfterNextSearch: mockedFocusOnFirstResultAfterNextSearch,
+          focusOnNextNewResult: mockedFocusOnNextNewResult,
+        };
+        return bindings;
+      },
+    });
 
     return {
       element,
@@ -107,9 +103,7 @@ describe('atomic-commerce-products-per-page', () => {
         return element.shadowRoot!.querySelectorAll('input[part*="button"]');
       },
       get activeButton() {
-        return element.shadowRoot!.querySelector(
-          'input[part*="active-button"]'
-        );
+        return element.shadowRoot!.querySelector('input[part*="active-button"]');
       },
     };
   };
@@ -134,10 +128,7 @@ describe('atomic-commerce-products-per-page', () => {
       props: {choicesDisplayed, initialChoice},
     });
 
-    expect(validateInitialChoice).toHaveBeenCalledWith(
-      initialChoice,
-      [10, 25, 50, 100]
-    );
+    expect(validateInitialChoice).toHaveBeenCalledWith(initialChoice, [10, 25, 50, 100]);
   });
 
   it('should call buildSearch when interfaceElement type is "search"', async () => {

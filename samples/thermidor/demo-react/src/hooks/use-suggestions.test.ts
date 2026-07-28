@@ -5,16 +5,12 @@ import {useSuggestions} from './use-suggestions.js';
 describe('useSuggestions', () => {
   describe('context=landing', () => {
     it('returns exactly 2 sections', () => {
-      const {result} = renderHook(() =>
-        useSuggestions({inputValue: '', context: 'landing'})
-      );
+      const {result} = renderHook(() => useSuggestions({inputValue: '', context: 'landing'}));
       expect(result.current.sections).toHaveLength(2);
     });
 
     it('returns a first section with id "search", title "Search", and icon "search"', () => {
-      const {result} = renderHook(() =>
-        useSuggestions({inputValue: '', context: 'landing'})
-      );
+      const {result} = renderHook(() => useSuggestions({inputValue: '', context: 'landing'}));
       const first = result.current.sections[0];
       expect(first.id).toBe('search');
       expect(first.title).toBe('Search');
@@ -22,9 +18,7 @@ describe('useSuggestions', () => {
     });
 
     it('returns a second section with id "conversational", title "Conversational", and icon "sparkle"', () => {
-      const {result} = renderHook(() =>
-        useSuggestions({inputValue: '', context: 'landing'})
-      );
+      const {result} = renderHook(() => useSuggestions({inputValue: '', context: 'landing'}));
       const second = result.current.sections[1];
       expect(second.id).toBe('conversational');
       expect(second.title).toBe('Conversational');
@@ -40,14 +34,14 @@ describe('useSuggestions', () => {
       expect(result.current.sections).toHaveLength(3);
     });
 
-    it('returns a first section with id "refinements", title "Search refinements", and icon "filter-sparkle"', () => {
+    it('returns a first section with id "refinements", title "Search refinements", and icon "settings"', () => {
       const {result} = renderHook(() =>
         useSuggestions({inputValue: '', context: 'search-results'})
       );
       const first = result.current.sections[0];
       expect(first.id).toBe('refinements');
       expect(first.title).toBe('Search refinements');
-      expect(first.icon).toBe('filter-sparkle');
+      expect(first.icon).toBe('settings');
     });
 
     it('returns a second section with id "search"', () => {
@@ -67,9 +61,7 @@ describe('useSuggestions', () => {
 
   describe('isLoading', () => {
     it('returns isLoading as false for landing context', () => {
-      const {result} = renderHook(() =>
-        useSuggestions({inputValue: '', context: 'landing'})
-      );
+      const {result} = renderHook(() => useSuggestions({inputValue: '', context: 'landing'}));
       expect(result.current.isLoading).toBe(false);
     });
 

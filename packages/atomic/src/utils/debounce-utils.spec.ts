@@ -149,8 +149,7 @@ describe('buildDebouncedQueue', () => {
         vi.advanceTimersByTime(gap);
         localQueue.enqueue(recordFor('query-summary'), 'query-summary');
 
-        const executionGap =
-          timestamps['query-summary'] - timestamps['generated-answer'];
+        const executionGap = timestamps['query-summary'] - timestamps['generated-answer'];
         expect(executionGap).toBeGreaterThanOrEqual(delay);
 
         localQueue.clear();
@@ -187,17 +186,13 @@ describe('buildDebouncedQueue', () => {
             if (i > 0) {
               vi.advanceTimersByTime(gap);
             }
-            localQueue.enqueue(
-              () => executionTimestamps.push(Date.now()),
-              'same-region'
-            );
+            localQueue.enqueue(() => executionTimestamps.push(Date.now()), 'same-region');
           }
           vi.runAllTimers();
 
           expect(executionTimestamps.length).toBeGreaterThan(0);
           for (let i = 1; i < executionTimestamps.length; i++) {
-            const executionGap =
-              executionTimestamps[i] - executionTimestamps[i - 1];
+            const executionGap = executionTimestamps[i] - executionTimestamps[i - 1];
             expect(executionGap).toBeGreaterThanOrEqual(delay);
           }
 
@@ -226,8 +221,7 @@ describe('buildDebouncedQueue', () => {
 
           expect(executionTimestamps).toHaveLength(actionCount);
           for (let i = 1; i < executionTimestamps.length; i++) {
-            const executionGap =
-              executionTimestamps[i] - executionTimestamps[i - 1];
+            const executionGap = executionTimestamps[i] - executionTimestamps[i - 1];
             expect(executionGap).toBeGreaterThanOrEqual(delay);
           }
 

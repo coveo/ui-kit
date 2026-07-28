@@ -40,9 +40,7 @@ describe('arrayConverter', () => {
       html`<test-element value='["item1","item2","item3"]'></test-element>`
     );
 
-    await expect
-      .element(page.getByText('["item1","item2","item3"]'))
-      .toBeInTheDocument();
+    await expect.element(page.getByText('["item1","item2","item3"]')).toBeInTheDocument();
   });
 
   it('should convert an empty JSON array to an empty array', async () => {
@@ -52,17 +50,13 @@ describe('arrayConverter', () => {
   });
 
   it('should convert invalid JSON to an empty array', async () => {
-    await fixture<TestElement>(
-      html`<test-element value="not-json"></test-element>`
-    );
+    await fixture<TestElement>(html`<test-element value="not-json"></test-element>`);
 
     await expect.element(page.getByText('[]')).toBeInTheDocument();
   });
 
   it('should convert a non-array JSON value to an empty array', async () => {
-    await fixture<TestElement>(
-      html`<test-element value='{"key":"value"}'></test-element>`
-    );
+    await fixture<TestElement>(html`<test-element value='{"key":"value"}'></test-element>`);
 
     await expect.element(page.getByText('[]')).toBeInTheDocument();
   });
@@ -74,12 +68,8 @@ describe('arrayConverter', () => {
   });
 
   it('should print a warning when parsing fails', async () => {
-    const consoleWarnSpy = vi
-      .spyOn(console, 'warn')
-      .mockImplementation(() => {});
-    await fixture<TestElement>(
-      html`<test-element value="invalid-json"></test-element>`
-    );
+    const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    await fixture<TestElement>(html`<test-element value="invalid-json"></test-element>`);
 
     await expect.element(page.getByText('[]')).toBeInTheDocument();
     expect(consoleWarnSpy).toHaveBeenCalledWith(
@@ -100,8 +90,6 @@ describe('arrayConverter', () => {
       html`<test-element value='["string",123,true,null]'></test-element>`
     );
 
-    await expect
-      .element(page.getByText('["string",123,true,null]'))
-      .toBeInTheDocument();
+    await expect.element(page.getByText('["string",123,true,null]')).toBeInTheDocument();
   });
 });

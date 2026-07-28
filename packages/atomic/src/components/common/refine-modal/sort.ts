@@ -14,10 +14,7 @@ export const renderRefineModalSortSection: FunctionalComponentWithChildren<
   ({props}) =>
   (children) => {
     return html`
-      <h2
-        part="section-title section-sort-title"
-        class="mb-3 truncate text-2xl font-bold"
-      >
+      <h2 part="section-title section-sort-title" class="mb-3 truncate text-2xl font-bold">
         ${props.i18n.t('sort')}
       </h2>
       <div part="select-wrapper" class="relative">
@@ -33,11 +30,7 @@ export const renderRefineModalSortSection: FunctionalComponentWithChildren<
           part="select-icon-wrapper"
           class="peer-hover:text-primary-light peer-focus-within:text-primary-light pointer-events-none absolute top-0 right-0 bottom-0 flex items-center justify-center pr-6"
         >
-          <atomic-icon
-            part="select-icon"
-            icon=${SortIcon}
-            class="h-6 w-6"
-          ></atomic-icon>
+          <atomic-icon part="select-icon" icon=${SortIcon} class="h-6 w-6"></atomic-icon>
         </div>
       </div>
     `;

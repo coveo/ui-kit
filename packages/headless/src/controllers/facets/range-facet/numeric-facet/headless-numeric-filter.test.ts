@@ -10,10 +10,7 @@ import {numericFacetSetReducer as numericFacetSet} from '../../../../features/fa
 import {executeSearch} from '../../../../features/search/search-actions.js';
 import {searchReducer as search} from '../../../../features/search/search-slice.js';
 import type {SearchAppState} from '../../../../state/search-app-state.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../../../test/mock-engine-v2.js';
 import {buildMockNumericFacetResponse} from '../../../../test/mock-numeric-facet-response.js';
 import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice.js';
 import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value.js';
@@ -29,9 +26,7 @@ import {
 
 vi.mock('../../../../features/search/search-actions');
 vi.mock('../../../../features/facet-options/facet-options-actions');
-vi.mock(
-  '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions'
-);
+vi.mock('../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions');
 
 describe('numeric filter', () => {
   const facetId = '1';
@@ -70,9 +65,7 @@ describe('numeric filter', () => {
     initNumericFilter();
     expect(validateManualNumericRanges).toHaveBeenCalledWith(
       expect.objectContaining({
-        currentValues: expect.arrayContaining([
-          expect.objectContaining({start: 10, end: 0}),
-        ]),
+        currentValues: expect.arrayContaining([expect.objectContaining({start: 10, end: 0})]),
       })
     );
   });
@@ -90,10 +83,7 @@ describe('numeric filter', () => {
 
     initNumericFilter();
 
-    expect(FacetIdDeterminor.determineFacetId).toHaveBeenCalledWith(
-      engine,
-      options
-    );
+    expect(FacetIdDeterminor.determineFacetId).toHaveBeenCalledWith(engine, options);
   });
 
   it('registers a numeric facet with the passed options', () => {
@@ -111,9 +101,7 @@ describe('numeric filter', () => {
 
   it('when an option is invalid, it throws an error', () => {
     options.field = 0 as unknown as string;
-    expect(() => initNumericFilter()).toThrow(
-      'Check the options of buildNumericFacet'
-    );
+    expect(() => initNumericFilter()).toThrow('Check the options of buildNumericFacet');
   });
 
   describe('#setRange', () => {
@@ -164,18 +152,14 @@ describe('numeric filter', () => {
 
   it('the state #range property should return the range if it is selected', () => {
     const value = buildMockNumericFacetValue({state: 'selected'});
-    state.search.response.facets = [
-      buildMockNumericFacetResponse({facetId, values: [value]}),
-    ];
+    state.search.response.facets = [buildMockNumericFacetResponse({facetId, values: [value]})];
 
     expect(numericFacet.state.range).toEqual(value);
   });
 
   it('the state #range property should not return the range if it is not selected', () => {
     const value = buildMockNumericFacetValue({state: 'idle'});
-    state.search.response.facets = [
-      buildMockNumericFacetResponse({facetId, values: [value]}),
-    ];
+    state.search.response.facets = [buildMockNumericFacetResponse({facetId, values: [value]})];
 
     expect(numericFacet.state.range).toBeUndefined();
   });

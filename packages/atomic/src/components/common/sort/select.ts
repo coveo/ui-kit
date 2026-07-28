@@ -10,9 +10,7 @@ export interface SortSelectProps {
   onSelect: (opt: Event) => void;
 }
 
-export const renderSortSelect: FunctionalComponentWithChildren<
-  SortSelectProps
-> =
+export const renderSortSelect: FunctionalComponentWithChildren<SortSelectProps> =
   ({props: {i18n, id, onSelect}}) =>
   (children) => {
     return html`

@@ -16,14 +16,7 @@ export interface CheckboxProps {
   part?: string;
   iconPart?: string;
   ariaLabel?: string;
-  ariaCurrent?:
-    | 'page'
-    | 'step'
-    | 'location'
-    | 'date'
-    | 'time'
-    | 'true'
-    | 'false';
+  ariaCurrent?: 'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false';
   ref?: RefOrCallback;
   onMouseDown?(evt: MouseEvent): void;
 }
@@ -33,8 +26,9 @@ export const renderCheckbox: FunctionalComponent<CheckboxProps> = ({props}) => {
 
   const classNames = tw({
     'no-outline hover:border-primary-light focus-visible:border-primary-light grid h-4 w-4 place-items-center rounded': true,
-    'selected bg-primary hover:bg-primary-light focus-visible:bg-primary-light':
-      Boolean(props.checked),
+    'selected bg-primary hover:bg-primary-light focus-visible:bg-primary-light': Boolean(
+      props.checked
+    ),
     'border-neutral-dark border': !props.checked,
     [props.class ?? '']: Boolean(props.class),
   });

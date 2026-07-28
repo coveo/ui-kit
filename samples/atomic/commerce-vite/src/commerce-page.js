@@ -14,9 +14,7 @@ if (!commerceInterface) {
 
 const viewUrl = commerceInterface.dataset.viewUrl;
 if (!viewUrl) {
-  throw new Error(
-    'The <atomic-commerce-interface> is missing its `data-view-url` attribute.'
-  );
+  throw new Error('The <atomic-commerce-interface> is missing its `data-view-url` attribute.');
 }
 
 await customElements.whenDefined('atomic-commerce-interface');

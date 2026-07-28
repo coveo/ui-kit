@@ -9,20 +9,15 @@ import {AtomicCommerceLayout} from './atomic-commerce-layout';
 
 describe('atomic-commerce-layout', () => {
   const renderCommerceLayout = async (mobileBreakpoint?: string) => {
-    const {element, atomicInterface} =
-      await renderInAtomicCommerceInterface<AtomicCommerceLayout>({
-        template: html`<atomic-commerce-layout
-          mobile-breakpoint="${ifDefined(mobileBreakpoint)}"
-        >
-          <atomic-layout-section data-testid="facets" section="facets">
-            facets...
-          </atomic-layout-section>
-          <atomic-layout-section data-testid="main" section="main">
-            main...
-          </atomic-layout-section>
-        </atomic-commerce-layout>`,
-        selector: 'atomic-commerce-layout',
-      });
+    const {element, atomicInterface} = await renderInAtomicCommerceInterface<AtomicCommerceLayout>({
+      template: html`<atomic-commerce-layout mobile-breakpoint="${ifDefined(mobileBreakpoint)}">
+        <atomic-layout-section data-testid="facets" section="facets">
+          facets...
+        </atomic-layout-section>
+        <atomic-layout-section data-testid="main" section="main"> main... </atomic-layout-section>
+      </atomic-commerce-layout>`,
+      selector: 'atomic-commerce-layout',
+    });
 
     return {
       element,

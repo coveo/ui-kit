@@ -1,9 +1,6 @@
 import {configureStore} from '@reduxjs/toolkit';
 import type {Mock} from 'vitest';
-import {
-  type AnswerEvaluationPOSTParams,
-  answerEvaluation,
-} from './post-answer-evaluation.js';
+import {type AnswerEvaluationPOSTParams, answerEvaluation} from './post-answer-evaluation.js';
 
 const {Response} = await vi.importActual('node-fetch');
 const originalFetch = global.fetch;

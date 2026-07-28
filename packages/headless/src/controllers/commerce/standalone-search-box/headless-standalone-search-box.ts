@@ -102,12 +102,7 @@ export function buildStandaloneSearchBox(
     ...props.options,
   };
 
-  validateOptions(
-    engine,
-    standaloneSearchBoxSchema,
-    options,
-    'buildStandaloneSearchBox'
-  );
+  validateOptions(engine, standaloneSearchBoxSchema, options, 'buildStandaloneSearchBox');
 
   const searchBox = buildSearchBox(engine, {options});
   dispatch(
@@ -136,9 +131,7 @@ export function buildStandaloneSearchBox(
     },
 
     updateRedirectUrl(url: string) {
-      dispatch(
-        updateStandaloneSearchBoxRedirectionUrl({id, redirectionUrl: url})
-      );
+      dispatch(updateStandaloneSearchBoxRedirectionUrl({id, redirectionUrl: url}));
     },
 
     submit() {
@@ -152,8 +145,7 @@ export function buildStandaloneSearchBox(
 
     get state() {
       const state = getState();
-      const standaloneSearchBoxState =
-        state.commerceStandaloneSearchBoxSet[id]!;
+      const standaloneSearchBoxState = state.commerceStandaloneSearchBoxSet[id]!;
       return {
         ...searchBox.state,
         redirectTo: standaloneSearchBoxState.redirectTo,

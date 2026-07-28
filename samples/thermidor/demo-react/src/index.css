@@ -50,6 +50,9 @@
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 12px;
+
+  /* Layout */
+  --header-height: 84px;
 }
 
 *,
@@ -72,4 +75,27 @@ body {
   line-height: 1.5;
   color: var(--color-text-primary);
   background: var(--color-bg-secondary);
+}
+
+.view-shell {
+  height: 100%;
+}
+
+.view-panel {
+  display: none;
+  height: 100%;
+}
+
+.view-panel--active {
+  display: block;
+  animation: viewFadeIn 250ms ease-out;
+}
+
+@keyframes viewFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

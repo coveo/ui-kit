@@ -24,9 +24,7 @@ describe('#renderQuickviewIframe', () => {
     src?: string;
     logger?: SearchEngine['logger'];
   }): Promise<HTMLIFrameElement> => {
-    const container = await renderFunctionFixture(
-      html`${renderQuickviewIframe({props})}`
-    );
+    const container = await renderFunctionFixture(html`${renderQuickviewIframe({props})}`);
 
     // Twice because renderQuickviewIframe has 2 nested async updates
     await new Promise((resolve) => setTimeout(resolve));
@@ -80,10 +78,7 @@ describe('#renderQuickviewIframe', () => {
         sandbox: 'allow-same-origin allow-scripts',
       });
 
-      expect(iframe).toHaveAttribute(
-        'sandbox',
-        'allow-same-origin allow-scripts'
-      );
+      expect(iframe).toHaveAttribute('sandbox', 'allow-same-origin allow-scripts');
     });
 
     it('should not set sandbox attribute when not provided', async () => {

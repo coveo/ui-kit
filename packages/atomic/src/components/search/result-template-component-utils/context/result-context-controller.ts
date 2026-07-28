@@ -24,6 +24,5 @@ export function createResultContextController(
 }
 
 export type ResultContextEvent<T = Result | FoldedResult> = ItemContextEvent<T>;
-export type InteractiveResultContextEvent<
-  T extends InteractiveResult = InteractiveResult,
-> = InteractiveItemContextEvent<T>;
+export type InteractiveResultContextEvent<T extends InteractiveResult = InteractiveResult> =
+  InteractiveItemContextEvent<T>;

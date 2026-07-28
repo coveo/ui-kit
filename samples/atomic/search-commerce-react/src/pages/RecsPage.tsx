@@ -21,10 +21,7 @@ import {
   AtomicResultText,
   AtomicText,
 } from '@coveo/atomic-react/recommendation';
-import {
-  buildRecommendationEngine,
-  type Result,
-} from '@coveo/headless/recommendation';
+import {buildRecommendationEngine, type Result} from '@coveo/headless/recommendation';
 import {type FunctionComponent, useMemo} from 'react';
 
 export const RecsPage: FunctionComponent = () => {

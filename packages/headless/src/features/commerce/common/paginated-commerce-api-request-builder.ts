@@ -6,8 +6,8 @@ import {
   type StateNeededForBaseCommerceAPIRequest,
 } from './base-commerce-api-request-builder.js';
 
-export type StateNeededForPaginatedCommerceAPIRequest =
-  StateNeededForBaseCommerceAPIRequest & Partial<CommercePaginationSection>;
+export type StateNeededForPaginatedCommerceAPIRequest = StateNeededForBaseCommerceAPIRequest &
+  Partial<CommercePaginationSection>;
 
 export const buildPaginatedCommerceAPIRequest = (
   state: StateNeededForPaginatedCommerceAPIRequest,
@@ -20,10 +20,7 @@ export const buildPaginatedCommerceAPIRequest = (
   };
 };
 
-const effectivePagination = (
-  state: StateNeededForPaginatedCommerceAPIRequest,
-  slotId?: string
-) => {
+const effectivePagination = (state: StateNeededForPaginatedCommerceAPIRequest, slotId?: string) => {
   const effectiveSlice = slotId
     ? state.commercePagination?.recommendations[slotId]
     : state.commercePagination?.principal;

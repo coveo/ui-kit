@@ -2,15 +2,39 @@ import {render, screen, fireEvent} from '@testing-library/react';
 import {describe, it, expect, vi} from 'vitest';
 import type {Turn, RoutedInterface} from '@coveo/thermidor';
 import {LandingPage} from './LandingPage/LandingPage.js';
-import {SearchResultsPage} from './SearchResultsPage.js';
-import {ConversationPage} from './ConversationPage.js';
+import {SearchResultsPage} from './SearchResultsPage/SearchResultsPage.js';
+import {ConversationPage} from './ConversationPage/index.js';
+
+function createMockController(state: Record<string, unknown> = {}) {
+  return {
+    state,
+    subscribe: (cb: () => void) => {
+      cb();
+      return () => {};
+    },
+  };
+}
+
+vi.mock('@coveo/thermidor', async (importOriginal) => {
+  const actual = (await importOriginal()) as Record<string, unknown>;
+  return {
+    ...actual,
+    buildProductListController: () => createMockController({products: []}),
+    buildPaginationController: () =>
+      createMockController({
+        page: 0,
+        pageSize: 10,
+        totalCount: 0,
+        totalPages: 0,
+      }),
+    buildSearchBoxController: () => createMockController({query: ''}),
+  };
+});
 
 describe('LandingPage', () => {
   it('renders the heading', () => {
     render(<LandingPage onSubmit={vi.fn()} isStreaming={false} />);
-    expect(
-      screen.getByRole('heading', {name: 'What can I help you find?'})
-    ).toBeDefined();
+    expect(screen.getByRole('heading', {name: 'What can I help you find?'})).toBeDefined();
   });
 
   it('calls onSubmit with the textarea value when Enter is pressed', () => {
@@ -24,20 +48,19 @@ describe('LandingPage', () => {
     expect(onSubmit).toHaveBeenCalledWith('hello world');
   });
 
-  it('calls onSubmit when a suggestion pill is clicked', () => {
+  it('sets textarea value and submits when a suggestion pill is clicked', () => {
     const onSubmit = vi.fn();
     render(<LandingPage onSubmit={onSubmit} isStreaming={false} />);
 
     fireEvent.click(screen.getByRole('button', {name: 'kayaks'}));
 
+    expect((screen.getByLabelText('Prompt') as HTMLTextAreaElement).value).toBe('kayaks');
     expect(onSubmit).toHaveBeenCalledWith('kayaks');
   });
 
   it('disables the textarea when isStreaming is true', () => {
     render(<LandingPage onSubmit={vi.fn()} isStreaming={true} />);
-    expect(
-      (screen.getByLabelText('Prompt') as HTMLTextAreaElement).disabled
-    ).toBe(true);
+    expect((screen.getByLabelText('Prompt') as HTMLTextAreaElement).disabled).toBe(true);
   });
 
   it('disables suggestion pills when isStreaming is true', () => {
@@ -52,29 +75,31 @@ describe('LandingPage', () => {
 describe('SearchResultsPage', () => {
   const mockRoutedInterface = {
     useCase: 'search',
-    interface: {},
+    interface: {id: 'mock'},
   } as unknown as RoutedInterface;
 
-  it('renders the "Search Results" heading', () => {
+  it('renders the search results page container', () => {
     render(
       <SearchResultsPage
         onSubmit={vi.fn()}
         isStreaming={false}
         routedInterface={mockRoutedInterface}
+        onBackToConversation={vi.fn()}
       />
     );
-    expect(screen.getByRole('heading', {name: 'Search Results'})).toBeDefined();
+    expect(screen.getByTestId('search-results-page')).toBeDefined();
   });
 
-  it('displays the routedInterface useCase', () => {
+  it('renders the facet sidebar placeholder', () => {
     render(
       <SearchResultsPage
         onSubmit={vi.fn()}
         isStreaming={false}
         routedInterface={mockRoutedInterface}
+        onBackToConversation={vi.fn()}
       />
     );
-    expect(screen.getByText('Use case: search')).toBeDefined();
+    expect(screen.getByText('Facets (coming soon)')).toBeDefined();
   });
 
   it('calls onSubmit with the input value on form submission', () => {
@@ -84,6 +109,7 @@ describe('SearchResultsPage', () => {
         onSubmit={onSubmit}
         isStreaming={false}
         routedInterface={mockRoutedInterface}
+        onBackToConversation={vi.fn()}
       />
     );
 
@@ -100,11 +126,10 @@ describe('SearchResultsPage', () => {
         onSubmit={vi.fn()}
         isStreaming={true}
         routedInterface={mockRoutedInterface}
+        onBackToConversation={vi.fn()}
       />
     );
-    expect((screen.getByLabelText('Prompt') as HTMLInputElement).disabled).toBe(
-      true
-    );
+    expect((screen.getByLabelText('Prompt') as HTMLInputElement).disabled).toBe(true);
   });
 });
 
@@ -115,7 +140,7 @@ describe('ConversationPage', () => {
     status: 'complete',
   };
 
-  it('renders the "Conversation" heading', () => {
+  it('renders the PromptInput', () => {
     render(
       <ConversationPage
         onSubmit={vi.fn()}
@@ -126,28 +151,10 @@ describe('ConversationPage', () => {
         onResetToLanding={vi.fn()}
       />
     );
-    expect(screen.getByRole('heading', {name: 'Conversation'})).toBeDefined();
+    expect(screen.getByLabelText('Prompt')).toBeDefined();
   });
 
-  it('displays the latest turn prompt', () => {
-    const turns: Turn[] = [
-      {id: 'turn-1', prompt: 'first question', status: 'complete'},
-      {id: 'turn-2', prompt: 'second question', status: 'complete'},
-    ];
-    render(
-      <ConversationPage
-        onSubmit={vi.fn()}
-        isStreaming={false}
-        turns={turns}
-        onBackToSearch={vi.fn()}
-        canGoBackToSearch={true}
-        onResetToLanding={vi.fn()}
-      />
-    );
-    expect(screen.getByText('Latest prompt: second question')).toBeDefined();
-  });
-
-  it('calls onSubmit with the input value on form submission', () => {
+  it('calls onSubmit with the input value when Enter is pressed', () => {
     const onSubmit = vi.fn();
     render(
       <ConversationPage
@@ -162,7 +169,7 @@ describe('ConversationPage', () => {
 
     const input = screen.getByLabelText('Prompt');
     fireEvent.change(input, {target: {value: 'follow up'}});
-    fireEvent.submit(input.closest('form')!);
+    fireEvent.keyDown(input, {key: 'Enter', code: 'Enter'});
 
     expect(onSubmit).toHaveBeenCalledWith('follow up');
   });
@@ -178,12 +185,10 @@ describe('ConversationPage', () => {
         onResetToLanding={vi.fn()}
       />
     );
-    expect((screen.getByLabelText('Prompt') as HTMLInputElement).disabled).toBe(
-      true
-    );
+    expect((screen.getByLabelText('Prompt') as HTMLTextAreaElement).disabled).toBe(true);
   });
 
-  it('renders "Back to search results" button when onBackToSearch is provided', () => {
+  it('renders "← Back to search results" button when canGoBackToSearch is true', () => {
     const onBackToSearch = vi.fn();
     render(
       <ConversationPage
@@ -196,7 +201,7 @@ describe('ConversationPage', () => {
       />
     );
 
-    const btn = screen.getByRole('button', {name: 'Back to search results'});
+    const btn = screen.getByRole('button', {name: /Back to search results/});
     fireEvent.click(btn);
     expect(onBackToSearch).toHaveBeenCalled();
   });
@@ -212,9 +217,7 @@ describe('ConversationPage', () => {
         onResetToLanding={vi.fn()}
       />
     );
-    expect(
-      screen.queryByRole('button', {name: 'Back to search results'})
-    ).toBeNull();
+    expect(screen.queryByRole('button', {name: /Back to search results/})).toBeNull();
   });
 
   it('calls onResetToLanding when "Reset" button is clicked', () => {

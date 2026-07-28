@@ -14,11 +14,9 @@ describe('product-template-controllers', () => {
   let mockHost: LitElement & {error: Error | null};
 
   beforeEach(() => {
-    vi.mocked(ItemContextController).mockImplementation(
-      function (this: unknown) {
-        return this;
-      }
-    );
+    vi.mocked(ItemContextController).mockImplementation(function (this: unknown) {
+      return this;
+    });
     vi.mocked(MissingParentError).mockImplementation(
       function (this: unknown, elementName, parentName) {
         const error = new Error(

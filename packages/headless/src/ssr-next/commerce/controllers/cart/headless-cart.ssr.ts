@@ -14,10 +14,7 @@ export interface CartBuildProps {
   initialState: CartInitialState;
 }
 
-export type CartDefinition = UniversalControllerDefinitionWithProps<
-  Cart,
-  CartBuildProps
->;
+export type CartDefinition = UniversalControllerDefinitionWithProps<Cart, CartBuildProps>;
 
 /**
  * Defines a `Cart` controller instance.

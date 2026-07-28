@@ -22,9 +22,7 @@ import {
   type CategoryFacetSearchProps,
 } from './headless-category-facet-search.js';
 
-vi.mock(
-  '../../../../../features/facets/facet-search-set/category/category-facet-search-actions'
-);
+vi.mock('../../../../../features/facets/facet-search-set/category/category-facet-search-actions');
 
 describe('CategoryFacetSearch', () => {
   const facetId = '1';

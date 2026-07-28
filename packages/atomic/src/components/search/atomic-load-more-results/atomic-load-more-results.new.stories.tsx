@@ -12,10 +12,9 @@ import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
 const searchApiHarness = new MockSearchApi();
 
 const {decorator, play} = wrapInSearchInterface();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-load-more-results',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-load-more-results', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-load-more-results',

@@ -1,8 +1,4 @@
-import {
-  buildBrowserEnvironment,
-  type CustomEnvironment,
-  createRelay,
-} from '@coveo/relay';
+import {buildBrowserEnvironment, type CustomEnvironment, createRelay} from '@coveo/relay';
 import {createSelector} from '@reduxjs/toolkit';
 import type {NavigatorContextProvider} from '../../app/navigator-context-provider.js';
 import type {
@@ -20,12 +16,9 @@ export const getRelayInstanceFromState = createSelector(
   (state: StateNeededByRelay) => state.configuration.environment,
   (state: StateNeededByRelay) => state.configuration.accessToken,
   (state: StateNeededByRelay) => state.configuration.analytics,
-  (state: StateNeededByRelay) =>
-    getAnalyticsSource(state.configuration.analytics),
-  (
-    _state: StateNeededByRelay,
-    navigatorContextProvider?: NavigatorContextProvider
-  ) => navigatorContextProvider,
+  (state: StateNeededByRelay) => getAnalyticsSource(state.configuration.analytics),
+  (_state: StateNeededByRelay, navigatorContextProvider?: NavigatorContextProvider) =>
+    navigatorContextProvider,
   (
     organizationId,
     platformEnvironment,
@@ -37,9 +30,7 @@ export const getRelayInstanceFromState = createSelector(
     const environment = getEnvironment(navigatorContextProvider);
     return createRelay({
       mode: enabled ? 'emit' : 'disabled',
-      url:
-        apiBaseUrl ??
-        getAnalyticsNextApiBaseUrl(organizationId, platformEnvironment),
+      url: apiBaseUrl ?? getAnalyticsNextApiBaseUrl(organizationId, platformEnvironment),
       token,
       trackingId: trackingId ?? null,
       source,
@@ -64,9 +55,7 @@ const getEnvironment = (
   }
 
   const customContext = customProvider();
-  const baseEnvironment = isBrowser()
-    ? buildBrowserEnvironment()
-    : noopRelayEnvironment;
+  const baseEnvironment = isBrowser() ? buildBrowserEnvironment() : noopRelayEnvironment;
   return {
     ...baseEnvironment,
     getClientId: () => customContext.clientId,

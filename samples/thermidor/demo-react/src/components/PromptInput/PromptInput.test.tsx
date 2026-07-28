@@ -1,4 +1,4 @@
-import {render, screen, fireEvent, act} from '@testing-library/react';
+import {render, screen, fireEvent, act, waitFor} from '@testing-library/react';
 import {describe, it, expect, vi} from 'vitest';
 import {PromptInput} from './PromptInput.js';
 import type {SuggestionSection} from '../SuggestionsDropdown/index.js';
@@ -42,7 +42,7 @@ describe('PromptInput', () => {
     expect(onSubmit).toHaveBeenCalledWith('search query');
   });
 
-  it('clears the textarea after submission', () => {
+  it('retains the textarea value after submission', () => {
     const onSubmit = vi.fn();
     render(<PromptInput onSubmit={onSubmit} />);
 
@@ -50,7 +50,7 @@ describe('PromptInput', () => {
     fireEvent.change(textarea, {target: {value: 'query'}});
     fireEvent.keyDown(textarea, {key: 'Enter', code: 'Enter'});
 
-    expect(textarea.value).toBe('');
+    expect(textarea.value).toBe('query');
   });
 
   it('does not submit when input is empty or whitespace-only', () => {
@@ -168,9 +168,7 @@ describe('suggestions integration', () => {
     fireEvent.focus(textarea);
     fireEvent.keyDown(textarea, {key: 'ArrowDown'});
 
-    expect(textarea.getAttribute('aria-activedescendant')).toBe(
-      'suggestion-item-s1'
-    );
+    expect(textarea.getAttribute('aria-activedescendant')).toBe('suggestion-item-s1');
   });
 
   it('ArrowUp decrements activeIndex', () => {
@@ -181,17 +179,13 @@ describe('suggestions integration', () => {
 
     fireEvent.keyDown(textarea, {key: 'ArrowDown'});
     fireEvent.keyDown(textarea, {key: 'ArrowDown'});
-    expect(textarea.getAttribute('aria-activedescendant')).toBe(
-      'suggestion-item-s2'
-    );
+    expect(textarea.getAttribute('aria-activedescendant')).toBe('suggestion-item-s2');
 
     fireEvent.keyDown(textarea, {key: 'ArrowUp'});
-    expect(textarea.getAttribute('aria-activedescendant')).toBe(
-      'suggestion-item-s1'
-    );
+    expect(textarea.getAttribute('aria-activedescendant')).toBe('suggestion-item-s1');
   });
 
-  it('Enter selects the active item', () => {
+  it('Enter selects the active item', async () => {
     const onSuggestionSelect = vi.fn();
     render(
       <PromptInput
@@ -206,13 +200,12 @@ describe('suggestions integration', () => {
     fireEvent.keyDown(textarea, {key: 'ArrowDown'});
     fireEvent.keyDown(textarea, {key: 'Enter'});
 
-    expect(onSuggestionSelect).toHaveBeenCalledWith(
-      {id: 's1', label: 'Surfboards'},
-      'search'
-    );
+    await waitFor(() => {
+      expect(onSuggestionSelect).toHaveBeenCalledWith({id: 's1', label: 'Surfboards'}, 'search');
+    });
   });
 
-  it('calls onSuggestionSelect with item and sectionId', () => {
+  it('calls onSuggestionSelect with item and sectionId', async () => {
     const onSuggestionSelect = vi.fn();
     render(
       <PromptInput
@@ -231,14 +224,16 @@ describe('suggestions integration', () => {
     fireEvent.keyDown(textarea, {key: 'ArrowDown'});
     fireEvent.keyDown(textarea, {key: 'Enter'});
 
-    expect(onSuggestionSelect).toHaveBeenCalledWith(
-      {
-        id: 'c1',
-        label: 'Build a beginner surfing kit',
-        subtitle: 'Surfing / Budget options',
-      },
-      'conversational'
-    );
+    await waitFor(() => {
+      expect(onSuggestionSelect).toHaveBeenCalledWith(
+        {
+          id: 'c1',
+          label: 'Build a beginner surfing kit',
+          subtitle: 'Surfing / Budget options',
+        },
+        'conversational'
+      );
+    });
   });
 
   it('sets aria-activedescendant when item is highlighted', () => {
@@ -250,9 +245,7 @@ describe('suggestions integration', () => {
     expect(textarea.getAttribute('aria-activedescendant')).toBeNull();
 
     fireEvent.keyDown(textarea, {key: 'ArrowDown'});
-    expect(textarea.getAttribute('aria-activedescendant')).toBe(
-      'suggestion-item-s1'
-    );
+    expect(textarea.getAttribute('aria-activedescendant')).toBe('suggestion-item-s1');
   });
 
   it('removes aria-activedescendant when dropdown is hidden', () => {
@@ -261,9 +254,7 @@ describe('suggestions integration', () => {
     const textarea = screen.getByLabelText('Prompt');
     fireEvent.focus(textarea);
     fireEvent.keyDown(textarea, {key: 'ArrowDown'});
-    expect(textarea.getAttribute('aria-activedescendant')).toBe(
-      'suggestion-item-s1'
-    );
+    expect(textarea.getAttribute('aria-activedescendant')).toBe('suggestion-item-s1');
 
     fireEvent.keyDown(textarea, {key: 'Escape'});
     expect(textarea.getAttribute('aria-activedescendant')).toBeNull();
@@ -277,9 +268,7 @@ describe('suggestions integration', () => {
     const textarea = screen.getByLabelText('Prompt');
     fireEvent.focus(textarea);
     fireEvent.keyDown(textarea, {key: 'ArrowDown'});
-    expect(textarea.getAttribute('aria-activedescendant')).toBe(
-      'suggestion-item-s1'
-    );
+    expect(textarea.getAttribute('aria-activedescendant')).toBe('suggestion-item-s1');
 
     // Close and re-open
     fireEvent.blur(textarea);
@@ -345,13 +334,32 @@ describe('ARIA combobox pattern', () => {
 
 describe('disabled + focus interaction', () => {
   it('does not show dropdown when disabled even with suggestions provided', () => {
-    render(
-      <PromptInput onSubmit={vi.fn()} suggestions={testSuggestions} disabled />
-    );
+    render(<PromptInput onSubmit={vi.fn()} suggestions={testSuggestions} disabled />);
 
     const textarea = screen.getByRole('combobox', {name: 'Prompt'});
     fireEvent.focus(textarea);
 
     expect(screen.queryByRole('listbox')).toBeNull();
+  });
+
+  it('updates textarea value when initialValue prop changes', () => {
+    const {rerender} = render(<PromptInput onSubmit={vi.fn()} initialValue="surfboards" />);
+
+    const textarea = screen.getByLabelText('Prompt') as HTMLTextAreaElement;
+    expect(textarea.value).toBe('surfboards');
+
+    rerender(<PromptInput onSubmit={vi.fn()} initialValue="" />);
+    expect(textarea.value).toBe('');
+  });
+
+  it('does not reset user-typed value when initialValue stays the same across rerenders', () => {
+    const {rerender} = render(<PromptInput onSubmit={vi.fn()} initialValue="surfboards" />);
+
+    const textarea = screen.getByLabelText('Prompt') as HTMLTextAreaElement;
+    fireEvent.change(textarea, {target: {value: 'wetsuits'}});
+    expect(textarea.value).toBe('wetsuits');
+
+    rerender(<PromptInput onSubmit={vi.fn()} initialValue="surfboards" />);
+    expect(textarea.value).toBe('wetsuits');
   });
 });

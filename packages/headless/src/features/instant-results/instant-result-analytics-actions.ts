@@ -15,9 +15,7 @@ import {
 import {SearchPageEvents} from '../analytics/search-action-cause.js';
 import type {SearchAction} from '../search/search-actions.js';
 
-export const logInstantResultOpen = (
-  result: Result
-): InstantResultsClickAction =>
+export const logInstantResultOpen = (result: Result): InstantResultsClickAction =>
   makeAnalyticsAction({
     prefix: 'analytics/instantResult/open',
     __legacy__getBuilder: (client, state) => {
@@ -27,9 +25,8 @@ export const logInstantResultOpen = (
         documentIdentifier(result)
       );
     },
-    __legacy__provider: (
-      getState: () => StateNeededByInstantResultsAnalyticsProvider
-    ) => new InstantResultsAnalyticsProvider(getState),
+    __legacy__provider: (getState: () => StateNeededByInstantResultsAnalyticsProvider) =>
+      new InstantResultsAnalyticsProvider(getState),
 
     analyticsType: 'itemClick',
     analyticsPayloadBuilder: (state): ItemClick => {

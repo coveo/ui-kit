@@ -55,10 +55,7 @@ describe('fetchRecommendationStaticStateFactory', () => {
     const controllerDefinitions = createControllerDefinitions();
     const options = createEngineOptions();
 
-    const factory = fetchRecommendationStaticStateFactory(
-      controllerDefinitions,
-      options
-    );
+    const factory = fetchRecommendationStaticStateFactory(controllerDefinitions, options);
 
     await factory({controllers: {}});
 

@@ -20,10 +20,7 @@ import {
 import {productListingReducer} from '../../../features/commerce/product-listing/product-listing-slice.js';
 import {restoreProductListingParameters} from '../../../features/commerce/product-listing-parameters/product-listing-parameters-actions.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
-import {
-  buildMockCommerceEngine,
-  type MockedCommerceEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockCommerceEngine, type MockedCommerceEngine} from '../../../test/mock-engine-v2.js';
 import * as SubControllers from '../core/sub-controller/headless-sub-controller.js';
 import {
   facetResponseSelector,
@@ -75,14 +72,8 @@ describe('headless product-listing', () => {
       SubControllers,
       'buildProductListingSubControllers'
     );
-    const fetchProductListingMock = vi.spyOn(
-      ProductListingActions,
-      'fetchProductListing'
-    );
-    const fetchMoreProductsMock = vi.spyOn(
-      ProductListingActions,
-      'fetchMoreProducts'
-    );
+    const fetchProductListingMock = vi.spyOn(ProductListingActions, 'fetchProductListing');
+    const fetchMoreProductsMock = vi.spyOn(ProductListingActions, 'fetchMoreProducts');
 
     buildProductListing(engine);
 
@@ -101,14 +92,8 @@ describe('headless product-listing', () => {
       SubControllers,
       'buildProductListingSubControllers'
     );
-    const fetchProductListingMock = vi.spyOn(
-      ProductListingActions,
-      'fetchProductListing'
-    );
-    const fetchMoreProductsMock = vi.spyOn(
-      ProductListingActions,
-      'fetchMoreProducts'
-    );
+    const fetchProductListingMock = vi.spyOn(ProductListingActions, 'fetchProductListing');
+    const fetchMoreProductsMock = vi.spyOn(ProductListingActions, 'fetchMoreProducts');
 
     buildProductListing(engine, {enableResults: true});
 
@@ -130,10 +115,7 @@ describe('headless product-listing', () => {
   });
 
   it('#promoteChildToParent dispatches #promoteChildToParent with the correct arguments', () => {
-    const promoteChildToParent = vi.spyOn(
-      ProductListingActions,
-      'promoteChildToParent'
-    );
+    const promoteChildToParent = vi.spyOn(ProductListingActions, 'promoteChildToParent');
     const child = {permanentid: 'childPermanentId'} as ChildProduct;
 
     const productListing = buildProductListing(engine);
@@ -145,10 +127,7 @@ describe('headless product-listing', () => {
   });
 
   it('#refresh dispatches #fetchProductListing with enableResults=false by default', () => {
-    const fetchProductListing = vi.spyOn(
-      ProductListingActions,
-      'fetchProductListing'
-    );
+    const fetchProductListing = vi.spyOn(ProductListingActions, 'fetchProductListing');
 
     const productListing = buildProductListing(engine);
     productListing.refresh();
@@ -157,10 +136,7 @@ describe('headless product-listing', () => {
   });
 
   it('#refresh dispatches #fetchProductListing with enableResults=true when specified', () => {
-    const fetchProductListing = vi.spyOn(
-      ProductListingActions,
-      'fetchProductListing'
-    );
+    const fetchProductListing = vi.spyOn(ProductListingActions, 'fetchProductListing');
     const productListingWithResults = buildProductListing(engine, {
       enableResults: true,
     });
@@ -171,10 +147,7 @@ describe('headless product-listing', () => {
   });
 
   it('#executeFirstRequest dispatches #fetchProductListing with enableResults=false by default', () => {
-    const executeRequest = vi.spyOn(
-      ProductListingActions,
-      'fetchProductListing'
-    );
+    const executeRequest = vi.spyOn(ProductListingActions, 'fetchProductListing');
     const productListing = buildProductListing(engine);
     productListing.executeFirstRequest();
 
@@ -182,10 +155,7 @@ describe('headless product-listing', () => {
   });
 
   it('#executeFirstRequest dispatches #fetchProductListing with enableResults=true when specified', () => {
-    const executeRequest = vi.spyOn(
-      ProductListingActions,
-      'fetchProductListing'
-    );
+    const executeRequest = vi.spyOn(ProductListingActions, 'fetchProductListing');
     const productListingWithResults = buildProductListing(engine, {
       enableResults: true,
     });

@@ -1,9 +1,6 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
 import type {CoreEngine, CoreEngineNext} from '../../../app/engine.js';
-import type {
-  ControllersMap,
-  ControllersPropsMap,
-} from '../../common/types/controllers.js';
+import type {ControllersMap, ControllersPropsMap} from '../../common/types/controllers.js';
 import type {BuildConfig} from './build.js';
 import type {
   SearchEngineDefinitionBuildResult,

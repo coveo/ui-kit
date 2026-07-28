@@ -9,9 +9,7 @@ export interface ExcludeProps {
   ariaLabel?: string;
 }
 
-export const renderFacetValueExclude: FunctionalComponent<ExcludeProps> = ({
-  props,
-}) => {
+export const renderFacetValueExclude: FunctionalComponent<ExcludeProps> = ({props}) => {
   return html`<button
     class="value-exclude-button peer invisible absolute right-2 z-1 order-last ml-auto flex group-hover:visible"
     part="value-exclude-button"

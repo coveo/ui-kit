@@ -31,15 +31,7 @@ export function createMemoizedStateSelector<TState, S1, S2, S3, S4, TResult>(
 ): StateSelector<TState, TResult>;
 
 // Overload: 5 input selectors
-export function createMemoizedStateSelector<
-  TState,
-  S1,
-  S2,
-  S3,
-  S4,
-  S5,
-  TResult,
->(
+export function createMemoizedStateSelector<TState, S1, S2, S3, S4, S5, TResult>(
   s1: (state: TState) => S1,
   s2: (state: TState) => S2,
   s3: (state: TState) => S3,
@@ -49,16 +41,7 @@ export function createMemoizedStateSelector<
 ): StateSelector<TState, TResult>;
 
 // Overload: 6 input selectors
-export function createMemoizedStateSelector<
-  TState,
-  S1,
-  S2,
-  S3,
-  S4,
-  S5,
-  S6,
-  TResult,
->(
+export function createMemoizedStateSelector<TState, S1, S2, S3, S4, S5, S6, TResult>(
   s1: (state: TState) => S1,
   s2: (state: TState) => S2,
   s3: (state: TState) => S3,
@@ -69,17 +52,7 @@ export function createMemoizedStateSelector<
 ): StateSelector<TState, TResult>;
 
 // Overload: 7 input selectors
-export function createMemoizedStateSelector<
-  TState,
-  S1,
-  S2,
-  S3,
-  S4,
-  S5,
-  S6,
-  S7,
-  TResult,
->(
+export function createMemoizedStateSelector<TState, S1, S2, S3, S4, S5, S6, S7, TResult>(
   s1: (state: TState) => S1,
   s2: (state: TState) => S2,
   s3: (state: TState) => S3,
@@ -91,18 +64,7 @@ export function createMemoizedStateSelector<
 ): StateSelector<TState, TResult>;
 
 // Overload: 8 input selectors
-export function createMemoizedStateSelector<
-  TState,
-  S1,
-  S2,
-  S3,
-  S4,
-  S5,
-  S6,
-  S7,
-  S8,
-  TResult,
->(
+export function createMemoizedStateSelector<TState, S1, S2, S3, S4, S5, S6, S7, S8, TResult>(
   s1: (state: TState) => S1,
   s2: (state: TState) => S2,
   s3: (state: TState) => S3,
@@ -111,32 +73,11 @@ export function createMemoizedStateSelector<
   s6: (state: TState) => S6,
   s7: (state: TState) => S7,
   s8: (state: TState) => S8,
-  projector: (
-    s1: S1,
-    s2: S2,
-    s3: S3,
-    s4: S4,
-    s5: S5,
-    s6: S6,
-    s7: S7,
-    s8: S8
-  ) => TResult
+  projector: (s1: S1, s2: S2, s3: S3, s4: S4, s5: S5, s6: S6, s7: S7, s8: S8) => TResult
 ): StateSelector<TState, TResult>;
 
 // Overload: 9 input selectors
-export function createMemoizedStateSelector<
-  TState,
-  S1,
-  S2,
-  S3,
-  S4,
-  S5,
-  S6,
-  S7,
-  S8,
-  S9,
-  TResult,
->(
+export function createMemoizedStateSelector<TState, S1, S2, S3, S4, S5, S6, S7, S8, S9, TResult>(
   s1: (state: TState) => S1,
   s2: (state: TState) => S2,
   s3: (state: TState) => S3,
@@ -146,17 +87,7 @@ export function createMemoizedStateSelector<
   s7: (state: TState) => S7,
   s8: (state: TState) => S8,
   s9: (state: TState) => S9,
-  projector: (
-    s1: S1,
-    s2: S2,
-    s3: S3,
-    s4: S4,
-    s5: S5,
-    s6: S6,
-    s7: S7,
-    s8: S8,
-    s9: S9
-  ) => TResult
+  projector: (s1: S1, s2: S2, s3: S3, s4: S4, s5: S5, s6: S6, s7: S7, s8: S8, s9: S9) => TResult
 ): StateSelector<TState, TResult>;
 
 // Overload: 10 input selectors
@@ -224,10 +155,7 @@ export function createMemoizedStateSelector(
   };
 }
 
-function areDepsEqual(
-  previousDeps: readonly unknown[],
-  currentDeps: readonly unknown[]
-): boolean {
+function areDepsEqual(previousDeps: readonly unknown[], currentDeps: readonly unknown[]): boolean {
   if (previousDeps.length !== currentDeps.length) {
     return false;
   }

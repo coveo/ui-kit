@@ -14,9 +14,7 @@ export const defaultImplementation = {
   state: defaultState,
 } satisfies QueryTrigger;
 
-export const buildFakeQueryTrigger = (
-  state?: Partial<QueryTriggerState>
-): QueryTrigger =>
+export const buildFakeQueryTrigger = (state?: Partial<QueryTriggerState>): QueryTrigger =>
   ({
     ...defaultImplementation,
     ...{state: {...defaultState, ...(state || {})}},

@@ -16,10 +16,7 @@ import {LightDomMixin} from '@/src/mixins/light-dom';
  */
 @customElement('atomic-tab-button')
 @withTailwindStyles
-export class AtomicTabButton
-  extends LightDomMixin(LitElement)
-  implements LitElementWithError
-{
+export class AtomicTabButton extends LightDomMixin(LitElement) implements LitElementWithError {
   error!: Error;
   /**
    * The label to display on the tab button.
@@ -71,10 +68,7 @@ export class AtomicTabButton
   private updateHostAttributes() {
     this.setAttribute('role', 'tab');
     this.setAttribute('aria-selected', this.active ? 'true' : 'false');
-    this.setAttribute(
-      'part',
-      this.active ? 'button-container-active' : 'button-container'
-    );
+    this.setAttribute('part', this.active ? 'button-container-active' : 'button-container');
     this.tabIndex = this.active ? 0 : -1;
   }
 
@@ -114,10 +108,7 @@ export class AtomicTabButton
       .join(' ');
 
     return html`
-      <span
-        class=${buttonClasses}
-        part=${this.active ? 'tab-button-active' : 'tab-button'}
-      >
+      <span class=${buttonClasses} part=${this.active ? 'tab-button-active' : 'tab-button'}>
         ${this.label}
       </span>
     `;

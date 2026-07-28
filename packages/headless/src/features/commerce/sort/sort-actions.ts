@@ -5,13 +5,11 @@ import {SortBy, type SortCriterion} from './sort.js';
 
 export type ApplySortPayload = SortCriterion;
 
-export const applySort = createAction(
-  'commerce/sort/apply',
-  (payload: ApplySortPayload) =>
-    validatePayload(payload, {
-      by: new EnumValue<SortBy>({
-        enum: SortBy,
-        required: true,
-      }),
-    } as SchemaDefinition<ApplySortPayload>)
+export const applySort = createAction('commerce/sort/apply', (payload: ApplySortPayload) =>
+  validatePayload(payload, {
+    by: new EnumValue<SortBy>({
+      enum: SortBy,
+      required: true,
+    }),
+  } as SchemaDefinition<ApplySortPayload>)
 );

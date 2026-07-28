@@ -1,3 +1,4 @@
+import SetRenderFunctionNote from '@/storybook-utils/documentation/set-render-function-note.mdx';
 
 This component is typically placed within the `results` section of the layout to display folded query results. Folded results group related documents together, such as email threads or document versions.
 
@@ -47,3 +48,26 @@ You can [define custom templates](https://docs.coveo.com/en/atomic/latest/usage/
 ```
 
 For more information on Result Folding, see [Result Folding](https://docs.coveo.com/en/1884).
+
+### Using `setRenderFunction` for custom rendering
+
+<SetRenderFunctionNote />
+
+```html
+<script type="module">
+  await customElements.whenDefined('atomic-folded-result-list');
+  const foldedResultList = document.querySelector('atomic-folded-result-list');
+
+  await foldedResultList.setRenderFunction((foldedResult, root) => {
+    root.innerHTML = `
+      <atomic-result-section-title>
+        <atomic-result-link></atomic-result-link>
+      </atomic-result-section-title>
+      <atomic-result-section-excerpt>
+        <atomic-result-text field="excerpt"></atomic-result-text>
+      </atomic-result-section-excerpt>
+    `;
+    return root.innerHTML;
+  });
+</script>
+```

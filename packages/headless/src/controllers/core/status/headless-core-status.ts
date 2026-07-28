@@ -3,15 +3,11 @@ import {firstSearchExecutedSelector} from '../../../features/search/search-selec
 import {searchReducer as search} from '../../../features/search/search-slice.js';
 import type {SearchSection} from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
-import {
-  buildController,
-  type Controller,
-} from '../../controller/headless-controller.js';
+import {buildController, type Controller} from '../../controller/headless-controller.js';
 
 /**
  * The `SearchStatus` controller lets you access search status information.
  *
- * Example: [search-status.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/search-status/search-status.fn.tsx)
  *
  * @group Controllers
  * @category SearchStatus
@@ -78,9 +74,7 @@ export function buildCoreStatus(engine: CoreEngine): SearchStatus {
   };
 }
 
-function loadSearchStateReducers(
-  engine: CoreEngine
-): engine is CoreEngine<SearchSection> {
+function loadSearchStateReducers(engine: CoreEngine): engine is CoreEngine<SearchSection> {
   engine.addReducers({search});
   return true;
 }

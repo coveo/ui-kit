@@ -32,18 +32,10 @@ insightApiHarness.searchEndpoint.mock((response: any) => ({
   totalCount: 3,
 }));
 
-const {decorator: insightInterfaceDecorator, play} = wrapInInsightInterface(
-  {},
-  false,
-  false
-);
+const {decorator: insightInterfaceDecorator, play} = wrapInInsightInterface({}, false, false);
 const {decorator: insightLayoutDecorator} = wrapInInsightLayout(false);
-const {decorator: insightResultListDecorator} = wrapInInsightResultList(
-  'list',
-  false
-);
-const {decorator: insightResultTemplateDecorator} =
-  wrapInInsightResultTemplate(false);
+const {decorator: insightResultListDecorator} = wrapInInsightResultList('list', false);
+const {decorator: insightResultTemplateDecorator} = wrapInInsightResultTemplate(false);
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-insight-result-quickview-action',
@@ -86,10 +78,7 @@ const meta: Meta = {
       handles: events,
     },
     msw: {
-      handlers: [
-        ...insightApiHarness.handlers,
-        searchApiHarness.htmlEndpoint.generateHandler(),
-      ],
+      handlers: [...insightApiHarness.handlers, searchApiHarness.htmlEndpoint.generateHandler()],
     },
   },
   args,
@@ -105,7 +94,6 @@ export const Default: Story = {};
 export const CustomSandbox: Story = {
   name: 'With custom sandbox attributes',
   args: {
-    sandbox:
-      'allow-scripts allow-popups allow-top-navigation allow-same-origin',
+    sandbox: 'allow-scripts allow-popups allow-top-navigation allow-same-origin',
   },
 };

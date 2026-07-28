@@ -23,8 +23,6 @@ describe('null environment', () => {
   });
 
   it('returns undefined on send', async () => {
-    expect(
-      await buildNullEnvironment().send('bap', '', createMockEvent())
-    ).toBeUndefined();
+    expect(await buildNullEnvironment().send('bap', '', createMockEvent())).toBeUndefined();
   });
 });

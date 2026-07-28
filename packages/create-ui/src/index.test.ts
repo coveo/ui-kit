@@ -16,9 +16,24 @@ describe('templates', () => {
     expect(getTemplate('does-not-exist')).toBeUndefined();
   });
 
+  it('identifies the package used by each Headless Commerce template', () => {
+    expect(describeTemplate(getTemplate('headless-commerce')!)).toBe(
+      'Headless Commerce (Vite, @coveo/headless/commerce)'
+    );
+    expect(describeTemplate(getTemplate('headless-commerce-react')!)).toBe(
+      'Headless Commerce (React, @coveo/headless/commerce)'
+    );
+    expect(describeTemplate(getTemplate('headless-ssr-commerce-nextjs')!)).toBe(
+      'Headless SSR Commerce SSR (Next.js App Router, @coveo/headless-react)'
+    );
+    expect(describeTemplate(getTemplate('headless-ssr-commerce-express')!)).toBe(
+      'Headless SSR Commerce SSR (Express, @coveo/headless/ssr)'
+    );
+  });
+
   it('describes a template with its library, without the "UI" suffix', () => {
     const template = getTemplate('atomic-search')!;
-    expect(describeTemplate(template)).toBe('Atomic Search (Vite)');
+    expect(describeTemplate(template)).toBe('Atomic Search (Vite, @coveo/atomic)');
     expect(describeTemplate(template)).not.toContain('UI');
   });
 });
@@ -47,9 +62,7 @@ describe('parseArgs', () => {
   });
 
   it('coerces an empty/whitespace --template-version to undefined', () => {
-    expect(
-      parseArgs(['--template-version', '   ']).templateVersion
-    ).toBeUndefined();
+    expect(parseArgs(['--template-version', '   ']).templateVersion).toBeUndefined();
   });
 
   it('rejects the removed --ref flag as an unknown option', () => {
@@ -80,7 +93,7 @@ describe('main', () => {
     expect(await main(['--help'])).toBe(0);
     out.mockRestore();
     const help = chunks.join('');
-    expect(help).toContain('Atomic Search (Vite)');
+    expect(help).toContain('Atomic Search (Vite, @coveo/atomic)');
     expect(help).toContain('--template-version');
     expect(help).toMatch(/defaults\s+to\s+latest/i);
     expect(help).toContain('headless-search-react --template-version 3.2.1');
@@ -101,28 +114,18 @@ describe('main', () => {
   });
 
   it('returns 1 for an invalid --template', async () => {
-    const out = vi
-      .spyOn(process.stdout, 'write')
-      .mockImplementation(() => true);
+    const out = vi.spyOn(process.stdout, 'write').mockImplementation(() => true);
     expect(await main(['my-app', '--template', 'nope'])).toBe(1);
     out.mockRestore();
   });
 
   it('threads --template-version through to downloadTemplate', async () => {
-    vi.mocked(downloadTemplate).mockRejectedValue(
-      new Error('stop-after-capture')
-    );
+    vi.mocked(downloadTemplate).mockRejectedValue(new Error('stop-after-capture'));
     const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
     const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
     await expect(
-      main([
-        'my-app',
-        '--template',
-        'headless-search-react',
-        '--template-version',
-        '3.2.1',
-      ])
+      main(['my-app', '--template', 'headless-search-react', '--template-version', '3.2.1'])
     ).rejects.toThrow();
 
     expect(downloadTemplate).toHaveBeenCalledWith(
@@ -136,44 +139,26 @@ describe('main', () => {
   });
 
   it('forwards an undefined version when --template-version is omitted', async () => {
-    vi.mocked(downloadTemplate).mockRejectedValue(
-      new Error('stop-after-capture')
-    );
+    vi.mocked(downloadTemplate).mockRejectedValue(new Error('stop-after-capture'));
     const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
     const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
-    await expect(
-      main(['my-app', '--template', 'headless-search-react'])
-    ).rejects.toThrow();
+    await expect(main(['my-app', '--template', 'headless-search-react'])).rejects.toThrow();
 
-    expect(downloadTemplate).toHaveBeenCalledWith(
-      expect.objectContaining({version: undefined})
-    );
+    expect(downloadTemplate).toHaveBeenCalledWith(expect.objectContaining({version: undefined}));
     logSpy.mockRestore();
     errSpy.mockRestore();
   });
 
   it('reports a version-aware error when the requested version is unavailable', async () => {
-    vi.mocked(downloadTemplate).mockRejectedValue(
-      new TemplateVersionUnavailableError('99.99.99')
-    );
-    const outSpy = vi
-      .spyOn(process.stdout, 'write')
-      .mockImplementation(() => true);
+    vi.mocked(downloadTemplate).mockRejectedValue(new TemplateVersionUnavailableError('99.99.99'));
+    const outSpy = vi.spyOn(process.stdout, 'write').mockImplementation(() => true);
     const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
     const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
     await expect(
-      main([
-        'my-app',
-        '--template',
-        'headless-search-react',
-        '--template-version',
-        '99.99.99',
-      ])
-    ).rejects.toThrow(
-      'Template "headless-search-react" version "99.99.99" is not available.'
-    );
+      main(['my-app', '--template', 'headless-search-react', '--template-version', '99.99.99'])
+    ).rejects.toThrow('Template "headless-search-react" version "99.99.99" is not available.');
 
     outSpy.mockRestore();
     logSpy.mockRestore();

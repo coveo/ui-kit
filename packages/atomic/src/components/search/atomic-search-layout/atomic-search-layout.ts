@@ -19,9 +19,7 @@ import {buildSearchLayout} from './search-layout';
  * @event atomic-layout-breakpoint-change - Emitted when the mobile breakpoint changes. The event detail contains `{ breakpoint: string }`.
  */
 @customElement('atomic-search-layout')
-export class AtomicSearchLayout extends LightDomMixin(
-  ChildrenUpdateCompleteMixin(LitElement)
-) {
+export class AtomicSearchLayout extends LightDomMixin(ChildrenUpdateCompleteMixin(LitElement)) {
   static styles = [styles];
 
   @state() error!: Error;

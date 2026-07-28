@@ -13,10 +13,7 @@ interface Props {
 
 export const renderSubmitButton: FunctionalComponent<Props> = ({props}) => {
   const {i18n, disabled, onClick} = props;
-  return html`<div
-    part="submit-button-wrapper"
-    class="mr-2 flex items-center justify-center py-2"
-  >
+  return html`<div part="submit-button-wrapper" class="mr-2 flex items-center justify-center py-2">
     ${renderButton({
       props: {
         style: 'text-primary',
@@ -28,12 +25,6 @@ export const renderSubmitButton: FunctionalComponent<Props> = ({props}) => {
         },
         disabled,
       },
-    })(
-      html`<atomic-icon
-        part="submit-icon"
-        icon=${SearchSlimIcon}
-        class="h-4 w-4"
-      ></atomic-icon>`
-    )}
+    })(html`<atomic-icon part="submit-icon" icon=${SearchSlimIcon} class="h-4 w-4"></atomic-icon>`)}
   </div>`;
 };

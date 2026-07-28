@@ -103,10 +103,7 @@ export class AtomicResultDate
   }
 
   private getDateToRender(): string | null {
-    const value = ResultTemplatesHelpers.getResultProperty(
-      this.result,
-      this.field
-    );
+    const value = ResultTemplatesHelpers.getResultProperty(this.result, this.field);
 
     if (value === null) {
       return null;
@@ -114,9 +111,7 @@ export class AtomicResultDate
 
     const parsedValue = parseDate(value as never);
     if (!parsedValue.isValid()) {
-      this.error = new Error(
-        `Field "${this.field}" does not contain a valid date.`
-      );
+      this.error = new Error(`Field "${this.field}" does not contain a valid date.`);
       return null;
     }
 

@@ -29,9 +29,9 @@ export type {
  * @param props - The configurable `Pagination` properties.
  * @returns The `Pagination` controller definition.
  */
-export function definePagination<
-  TOptions extends ControllerDefinitionOption | undefined,
->(props?: PaginationProps & TOptions) {
+export function definePagination<TOptions extends ControllerDefinitionOption | undefined>(
+  props?: PaginationProps & TOptions
+) {
   ensureAtLeastOneSolutionType(props);
   return {
     listing: true,

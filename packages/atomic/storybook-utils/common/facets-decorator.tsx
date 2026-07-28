@@ -15,18 +15,12 @@ export const facetDecorator: Decorator = (story, context) => html`
 
 type Position = 'before' | 'after';
 
-export const withRegularFacet: (position: Position) => Decorator =
-  (position) => (story) =>
-    html` ${html`${position === 'after' ? story() : nothing}`}
-      <atomic-facet
-        field="filetype"
-        label="File Type"
-        data-testid="regular-facet"
-      ></atomic-facet>
-      ${html`${position === 'before' ? story() : nothing}`}`;
+export const withRegularFacet: (position: Position) => Decorator = (position) => (story) =>
+  html` ${html`${position === 'after' ? story() : nothing}`}
+    <atomic-facet field="filetype" label="File Type" data-testid="regular-facet"></atomic-facet>
+    ${html`${position === 'before' ? story() : nothing}`}`;
 
-export const withBreadboxDecorator: (position: Position) => Decorator =
-  (position) => (story) =>
-    html` ${html`${position === 'after' ? story() : nothing}`}
-      <atomic-breadbox data-testid="breadbox"></atomic-breadbox>
-      ${html`${position === 'before' ? story() : nothing}`}`;
+export const withBreadboxDecorator: (position: Position) => Decorator = (position) => (story) =>
+  html` ${html`${position === 'after' ? story() : nothing}`}
+    <atomic-breadbox data-testid="breadbox"></atomic-breadbox>
+    ${html`${position === 'before' ? story() : nothing}`}`;

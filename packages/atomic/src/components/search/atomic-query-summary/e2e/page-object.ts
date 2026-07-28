@@ -13,9 +13,7 @@ export class AtomicQuerySummaryPageObject extends BasePageObject {
   }
 
   get ariaLive() {
-    return this.page
-      .getByRole('status')
-      .filter({hasText: /Results \d+-\d+ of [\d,]+/});
+    return this.page.getByRole('status').filter({hasText: /Results \d+-\d+ of [\d,]+/});
   }
 
   get duration() {

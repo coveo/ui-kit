@@ -70,9 +70,7 @@ export interface StaticFilterSetActionCreators {
  * @group Actions
  * @category StaticFilterSet
  */
-export function loadStaticFilterSetActions(
-  engine: SearchEngine
-): StaticFilterSetActionCreators {
+export function loadStaticFilterSetActions(engine: SearchEngine): StaticFilterSetActionCreators {
   engine.addReducers({staticFilterSet});
 
   return {

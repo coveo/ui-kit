@@ -39,10 +39,7 @@ export function useController<TController extends Controller>(
   controller: TController
 ): TController['state'] {
   const [state, setState] = useState(controller.state);
-  useEffect(
-    () => controller.subscribe(() => setState(controller.state)),
-    [controller]
-  );
+  useEffect(() => controller.subscribe(() => setState(controller.state)), [controller]);
   return state;
 }
 ```

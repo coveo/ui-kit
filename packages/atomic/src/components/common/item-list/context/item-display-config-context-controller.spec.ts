@@ -59,9 +59,7 @@ describe('item-display-config-context', () => {
     });
 
     it('should create a controller instance when element is connected', () => {
-      expect(element.controller).toBeInstanceOf(
-        ItemDisplayConfigContextController
-      );
+      expect(element.controller).toBeInstanceOf(ItemDisplayConfigContextController);
     });
 
     it('should initially have null config', () => {
@@ -70,9 +68,7 @@ describe('item-display-config-context', () => {
 
     describe('when #hostConnected is called', () => {
       it('should dispatch the resolveResultDisplayConfig event', () => {
-        const dispatchEventSpy = vi
-          .spyOn(element, 'dispatchEvent')
-          .mockReturnValue(false);
+        const dispatchEventSpy = vi.spyOn(element, 'dispatchEvent').mockReturnValue(false);
 
         element.controller.hostConnected();
 

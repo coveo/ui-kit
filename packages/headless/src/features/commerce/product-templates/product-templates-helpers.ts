@@ -1,8 +1,5 @@
 import {isArray, isNullOrUndefined} from '@coveo/bueno';
-import type {
-  ChildProduct,
-  Product,
-} from '../../../api/commerce/common/product.js';
+import type {ChildProduct, Product} from '../../../api/commerce/common/product.js';
 import type {ProductTemplateCondition} from './product-templates-manager.js';
 
 /**
@@ -11,10 +8,7 @@ import type {ProductTemplateCondition} from './product-templates-manager.js';
  * @param property (string) - The property to extract.
  * @returns (unknown) The value of the specified property in the specified product, or null if the property does not exist.
  */
-const getProductProperty = (
-  product: Product | ChildProduct,
-  property: string
-) => {
+const getProductProperty = (product: Product | ChildProduct, property: string) => {
   const anyProduct = product as unknown as Record<string, unknown>;
 
   if (!isNullOrUndefined(anyProduct[property])) {
@@ -33,9 +27,7 @@ const getProductProperty = (
  * @param fieldNames (string[]) - A list of fields that must be defined.
  * @returns (ProductTemplateCondition) A function that takes a product and checks if every field in the specified list is defined.
  */
-const fieldsMustBeDefined = (
-  fieldNames: string[]
-): ProductTemplateCondition => {
+const fieldsMustBeDefined = (fieldNames: string[]): ProductTemplateCondition => {
   return (product: Product) => {
     return fieldNames.every(
       (fieldName) => !isNullOrUndefined(getProductProperty(product, fieldName))
@@ -48,9 +40,7 @@ const fieldsMustBeDefined = (
  * @param fieldNames (string[]) - A list of fields that must not be defined.
  * @returns (ProductTemplateCondition) A function that takes a product and checks if every field in the specified list is not defined.
  */
-const fieldsMustNotBeDefined = (
-  fieldNames: string[]
-): ProductTemplateCondition => {
+const fieldsMustNotBeDefined = (fieldNames: string[]): ProductTemplateCondition => {
   return (product: Product) => {
     return fieldNames.every((fieldName) =>
       isNullOrUndefined(getProductProperty(product, fieldName))
@@ -64,17 +54,11 @@ const fieldsMustNotBeDefined = (
  * @param allowedValues (string[]) - The list of values that the field value can be equal to in order for the condition to evaluate to "true" (case insensitive).
  * @returns (ProductTemplateCondition) - A function that takes a Product as an argument and returns "true" if the value for the specified field is equal to any of the values in the specified list (case insensitive), and "false" otherwise.
  */
-const fieldMustMatch = (
-  fieldName: string,
-  valuesToMatch: string[]
-): ProductTemplateCondition => {
+const fieldMustMatch = (fieldName: string, valuesToMatch: string[]): ProductTemplateCondition => {
   return (product: Product) => {
     const fieldValues = getFieldValuesFromProduct(fieldName, product);
     return valuesToMatch.some((valueToMatch) =>
-      fieldValues.some(
-        (fieldValue) =>
-          `${fieldValue}`.toLowerCase() === valueToMatch.toLowerCase()
-      )
+      fieldValues.some((fieldValue) => `${fieldValue}`.toLowerCase() === valueToMatch.toLowerCase())
     );
   };
 };
@@ -93,17 +77,13 @@ const fieldMustNotMatch = (
     const fieldValues = getFieldValuesFromProduct(fieldName, product);
     return disallowedValues.every((disallowedValues) =>
       fieldValues.every(
-        (fieldValue) =>
-          `${fieldValue}`.toLowerCase() !== disallowedValues.toLowerCase()
+        (fieldValue) => `${fieldValue}`.toLowerCase() !== disallowedValues.toLowerCase()
       )
     );
   };
 };
 
-const getFieldValuesFromProduct = (
-  fieldName: string,
-  product: Product | ChildProduct
-) => {
+const getFieldValuesFromProduct = (fieldName: string, product: Product | ChildProduct) => {
   const rawValue = getProductProperty(product, fieldName);
   return isArray(rawValue) ? rawValue : [rawValue];
 };

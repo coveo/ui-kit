@@ -1,7 +1,4 @@
-import {
-  buildCriterionExpression,
-  buildRelevanceSortCriterion,
-} from './criteria.js';
+import {buildCriterionExpression, buildRelevanceSortCriterion} from './criteria.js';
 
 export type SortCriteriaState = string;
 

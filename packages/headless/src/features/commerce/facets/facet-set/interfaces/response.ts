@@ -5,10 +5,7 @@ import type {
   NumericFacetExtraProperties,
 } from './common.js';
 
-export type CategoryFacetResponse = BaseFacetResponse<
-  CategoryFacetValue,
-  'hierarchical'
-> &
+export type CategoryFacetResponse = BaseFacetResponse<CategoryFacetValue, 'hierarchical'> &
   CategoryFacetDelimitingCharacter;
 
 interface NonLocationFacetValue {
@@ -17,8 +14,7 @@ interface NonLocationFacetValue {
   isSuggested: boolean;
 }
 
-export interface CategoryFacetValue
-  extends BaseFacetValue, NonLocationFacetValue {
+export interface CategoryFacetValue extends BaseFacetValue, NonLocationFacetValue {
   value: string;
   path: string[];
   isLeafValue: boolean;
@@ -30,21 +26,14 @@ export type DateFacetResponse = BaseFacetResponse<DateFacetValue, 'dateRange'>;
 
 export type DateFacetValue = RangeFacetValue<string>;
 
-export type NumericFacetResponse = BaseFacetResponse<
-  NumericFacetValue,
-  'numericalRange'
-> &
+export type NumericFacetResponse = BaseFacetResponse<NumericFacetValue, 'numericalRange'> &
   NumericFacetExtraProperties;
 
 export type NumericFacetValue = RangeFacetValue<number>;
 
-export type RegularFacetResponse = BaseFacetResponse<
-  RegularFacetValue,
-  'regular'
->;
+export type RegularFacetResponse = BaseFacetResponse<RegularFacetValue, 'regular'>;
 
-export interface RegularFacetValue
-  extends BaseFacetValue, NonLocationFacetValue {
+export interface RegularFacetValue extends BaseFacetValue, NonLocationFacetValue {
   value: string;
   /**
    * @deprecated Use the facet's `moreValuesAvailable` property instead.
@@ -52,10 +41,7 @@ export interface RegularFacetValue
   moreValuesAvailable: boolean;
 }
 
-export type LocationFacetResponse = BaseFacetResponse<
-  LocationFacetValue,
-  'location'
->;
+export type LocationFacetResponse = BaseFacetResponse<LocationFacetValue, 'location'>;
 
 export interface LocationFacetValue extends BaseFacetValue {
   value: string;
@@ -71,10 +57,7 @@ interface RangeFacetValue<T> extends BaseFacetValue, NonLocationFacetValue {
   moreValuesAvailable: boolean;
 }
 
-interface BaseFacetResponse<
-  Value extends BaseFacetValue,
-  Type extends FacetType,
-> {
+interface BaseFacetResponse<Value extends BaseFacetValue, Type extends FacetType> {
   facetId: string;
   field: string;
   displayName: string;

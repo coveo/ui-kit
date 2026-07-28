@@ -4,19 +4,14 @@ import {
   setContext,
 } from '../../features/dictionary-field-context/dictionary-field-context-actions.js';
 import {dictionaryFieldContextReducer as dictionaryFieldContext} from '../../features/dictionary-field-context/dictionary-field-context-slice.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../test/mock-engine-v2.js';
 import {createMockState} from '../../test/mock-state.js';
 import {
   buildDictionaryFieldContext,
   type DictionaryFieldContext,
 } from './headless-dictionary-field-context.js';
 
-vi.mock(
-  '../../features/dictionary-field-context/dictionary-field-context-actions'
-);
+vi.mock('../../features/dictionary-field-context/dictionary-field-context-actions');
 
 describe('Context', () => {
   let context: DictionaryFieldContext;

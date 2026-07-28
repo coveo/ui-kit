@@ -97,10 +97,7 @@ export function buildCategoryFacet(
 
     toggleSelect(selection: CategoryFacetValue) {
       coreController.toggleSelect(selection);
-      const analyticsAction = getToggleSelectInsightAnalyticsAction(
-        getFacetId(),
-        selection
-      );
+      const analyticsAction = getToggleSelectInsightAnalyticsAction(getFacetId(), selection);
       dispatch(
         executeSearch({
           legacy: analyticsAction,
@@ -162,10 +159,7 @@ export function buildCategoryFacet(
   };
 }
 
-function getToggleSelectInsightAnalyticsAction(
-  facetId: string,
-  selection: CategoryFacetValue
-) {
+function getToggleSelectInsightAnalyticsAction(facetId: string, selection: CategoryFacetValue) {
   const payload = {
     facetId,
     facetValue: selection.value,
@@ -175,9 +169,7 @@ function getToggleSelectInsightAnalyticsAction(
   return isSelected ? logFacetDeselect(payload) : logFacetSelect(payload);
 }
 
-function getToggleSelectAnalyticsAction(
-  selection: CategoryFacetValue
-): SearchAction {
+function getToggleSelectAnalyticsAction(selection: CategoryFacetValue): SearchAction {
   const isSelected = selection.state === 'selected';
   return isSelected ? facetDeselect() : facetSelect();
 }

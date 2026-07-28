@@ -1,9 +1,6 @@
 import {RecordValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
-import {
-  requiredNonEmptyString,
-  validatePayload,
-} from '../../../../utils/validate-payload.js';
+import {requiredNonEmptyString, validatePayload} from '../../../../utils/validate-payload.js';
 import {facetValueDefinition} from '../../../facets/facet-set/facet-set-validate-payload.js';
 import type {LocationFacetValue} from '../facet-set/interfaces/response.js';
 

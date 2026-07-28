@@ -37,10 +37,7 @@ export const baseCaseAssistRequest = (
   contentType: HTTPContentType,
   path: string,
   queryStringArguments: Record<string, string> = {}
-): Pick<
-  PlatformClientCallOptions,
-  'accessToken' | 'method' | 'contentType' | 'url' | 'origin'
-> => {
+): Pick<PlatformClientCallOptions, 'accessToken' | 'method' | 'contentType' | 'url' | 'origin'> => {
   validateCaseAssistRequestParams(req);
 
   const baseUrl = `${req.url}/rest/organizations/${req.organizationId}/caseassists/${req.caseAssistId}${path}`;
@@ -56,9 +53,7 @@ export const baseCaseAssistRequest = (
   };
 };
 
-export const prepareSuggestionRequestFields = (
-  fields: CaseFields
-): CaseFields =>
+export const prepareSuggestionRequestFields = (fields: CaseFields): CaseFields =>
   Object.keys(fields)
     .filter((fieldName) => fields[fieldName].value !== '')
     .reduce((obj: CaseFields, fieldName) => {
@@ -66,9 +61,7 @@ export const prepareSuggestionRequestFields = (
       return obj;
     }, {});
 
-export const prepareContextFromFields = (
-  fields: CaseFields
-): Record<string, string | string[]> =>
+export const prepareContextFromFields = (fields: CaseFields): Record<string, string | string[]> =>
   Object.keys(fields)
     .filter((fieldName) => fields[fieldName].value !== '')
     .reduce(
@@ -84,14 +77,10 @@ const validateCaseAssistRequestParams = (req: CaseAssistParam) => {
     throw new Error("The 'url' attribute must contain a valid platform URL.");
   }
   if (!req.organizationId) {
-    throw new Error(
-      "The 'organizationId' attribute must contain a valid organization ID."
-    );
+    throw new Error("The 'organizationId' attribute must contain a valid organization ID.");
   }
   if (!req.accessToken) {
-    throw new Error(
-      "The 'accessToken' attribute must contain a valid platform access token."
-    );
+    throw new Error("The 'accessToken' attribute must contain a valid platform access token.");
   }
   if (!req.caseAssistId) {
     throw new Error(

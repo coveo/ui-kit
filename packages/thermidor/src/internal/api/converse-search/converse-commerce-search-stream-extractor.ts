@@ -29,9 +29,7 @@ export function extractCommerceSearchResponseFromStream(
       },
       onDone: () => {
         if (!resolved) {
-          reject(
-            new Error('No search response received from the converse stream')
-          );
+          reject(new Error('No search response received from the converse stream'));
         }
       },
       onError: (error) => {

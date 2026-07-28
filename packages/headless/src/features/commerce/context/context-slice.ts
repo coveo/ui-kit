@@ -1,10 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {
-  setContext,
-  setCustom,
-  setLocation,
-  setView,
-} from './context-actions.js';
+import {setContext, setCustom, setLocation, setView} from './context-actions.js';
 import {getContextInitialState} from './context-state.js';
 
 export const contextReducer = createReducer(

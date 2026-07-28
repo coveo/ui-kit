@@ -112,9 +112,7 @@ export class AtomicCommerceInterface
    * - 'search': Indicates that the interface is used for Search.
    * - 'product-listing': Indicates that the interface is used for Product listing.
    */
-  @property({type: String, reflect: true}) public type:
-    | 'search'
-    | 'product-listing' = 'search';
+  @property({type: String, reflect: true}) public type: 'search' | 'product-listing' = 'search';
 
   // TODO - KIT-4994: Add disableAnalytics property that defaults to false.
 
@@ -222,15 +220,9 @@ export class AtomicCommerceInterface
     super.connectedCallback();
     this.store.setLoadingFlag(FirstRequestExecutedFlag);
 
-    this.addEventListener(
-      'atomic/initializeComponent',
-      this.handleInitialization as EventListener
-    );
+    this.addEventListener('atomic/initializeComponent', this.handleInitialization as EventListener);
 
-    this.addEventListener(
-      'atomic/scrollToTop',
-      this.scrollToTop as EventListener
-    );
+    this.addEventListener('atomic/scrollToTop', this.scrollToTop as EventListener);
   }
 
   public disconnectedCallback() {
@@ -246,10 +238,7 @@ export class AtomicCommerceInterface
       'atomic/initializeComponent',
       this.handleInitialization as EventListener
     );
-    this.removeEventListener(
-      'atomic/scrollToTop',
-      this.scrollToTop as EventListener
-    );
+    this.removeEventListener('atomic/scrollToTop', this.scrollToTop as EventListener);
   }
 
   /**
@@ -295,11 +284,10 @@ export class AtomicCommerceInterface
     if (this.type === 'search') {
       const safeStorage = new SafeStorage();
 
-      const standaloneSearchBoxData =
-        safeStorage.getParsedJSON<StandaloneSearchBoxData | null>(
-          StorageItems.STANDALONE_SEARCH_BOX_DATA,
-          null
-        );
+      const standaloneSearchBoxData = safeStorage.getParsedJSON<StandaloneSearchBoxData | null>(
+        StorageItems.STANDALONE_SEARCH_BOX_DATA,
+        null
+      );
 
       if (!standaloneSearchBoxData) {
         (this.searchOrListing as Search).executeFirstSearch();
@@ -309,9 +297,7 @@ export class AtomicCommerceInterface
       safeStorage.removeItem(StorageItems.STANDALONE_SEARCH_BOX_DATA);
       const {value} = standaloneSearchBoxData;
 
-      this.engine.dispatch(
-        loadQueryActions(this.engine).updateQuery({query: value})
-      );
+      this.engine.dispatch(loadQueryActions(this.engine).updateQuery({query: value}));
       (this.searchOrListing as Search).executeFirstSearch();
     } else {
       (this.searchOrListing as ProductListing).executeFirstRequest();
@@ -337,15 +323,8 @@ export class AtomicCommerceInterface
    * interface.updateLocale('fr', 'CA', 'CAD');
    * ```
    */
-  public updateLocale(
-    language?: string,
-    country?: string,
-    currency?: CurrencyCodeISO4217
-  ): void {
-    if (
-      !this.interfaceController.engineIsCreated(this.engine) ||
-      !this.context
-    ) {
+  public updateLocale(language?: string, country?: string, currency?: CurrencyCodeISO4217): void {
+    if (!this.interfaceController.engineIsCreated(this.engine) || !this.context) {
       return;
     }
 
@@ -375,11 +354,7 @@ export class AtomicCommerceInterface
   // TODO - (v4) KIT-4365: Remove.
   @watch('language')
   public updateLanguage() {
-    if (
-      !this.interfaceController.engineIsCreated(this.engine) ||
-      !this.language ||
-      !this.context
-    ) {
+    if (!this.interfaceController.engineIsCreated(this.engine) || !this.language || !this.context) {
       return;
     }
 
@@ -461,8 +436,7 @@ export class AtomicCommerceInterface
 
     this.unsubscribeSummary = this.summary.subscribe(() => {
       const {firstRequestExecuted, hasProducts, hasError} = this.summary.state;
-      const hasNoProductsAfterInitialQuery =
-        firstRequestExecuted && !hasError && !hasProducts;
+      const hasNoProductsAfterInitialQuery = firstRequestExecuted && !hasError && !hasProducts;
 
       this.classList.toggle(noProductsSelector, hasNoProductsAfterInitialQuery);
 
@@ -488,18 +462,13 @@ export class AtomicCommerceInterface
       initialState: {fragment: this.fragment},
     });
 
-    this.unsubscribeUrlManager = this.urlManager.subscribe(() =>
-      this.updateHash()
-    );
+    this.unsubscribeUrlManager = this.urlManager.subscribe(() => this.updateHash());
 
     window.addEventListener('hashchange', this.onHashChange);
   }
 
   private async internalInitialization(initEngine: () => void) {
-    await Promise.all([
-      this.interfaceController.onInitialization(initEngine),
-      this.i18Initialized,
-    ]);
+    await Promise.all([this.interfaceController.onInitialization(initEngine), this.i18Initialized]);
     this.initContext();
     this.updateLanguage(); // TODO - (v4) KIT-4365: Remove.
     this.bindings = this.getBindings();

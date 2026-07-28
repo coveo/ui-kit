@@ -1,8 +1,5 @@
 import type {HtmlApiClient} from '../../../api/search/html/html-api-client.js';
-import type {
-  HtmlRequest,
-  HtmlRequestOptions,
-} from '../../../api/search/html/html-request.js';
+import type {HtmlRequest, HtmlRequestOptions} from '../../../api/search/html/html-request.js';
 import type {Result} from '../../../api/search/search/result.js';
 import {configuration} from '../../../app/common-reducers.js';
 import type {CoreEngine} from '../../../app/engine.js';
@@ -15,15 +12,9 @@ import {
 } from '../../../features/result-preview/result-preview-actions.js';
 import type {StateNeededByHtmlEndpoint} from '../../../features/result-preview/result-preview-request-builder.js';
 import {resultPreviewReducer as resultPreview} from '../../../features/result-preview/result-preview-slice.js';
-import type {
-  ConfigurationSection,
-  ResultPreviewSection,
-} from '../../../state/state-sections.js';
+import type {ConfigurationSection, ResultPreviewSection} from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
-import {
-  buildController,
-  type Controller,
-} from '../../controller/headless-controller.js';
+import {buildController, type Controller} from '../../controller/headless-controller.js';
 
 export interface QuickviewProps {
   /**
@@ -190,8 +181,7 @@ export function buildCoreQuickview(
       const state = getState();
       const resultHasPreview = result.hasHtmlVersion;
       const preview = state.resultPreview;
-      const content =
-        result.uniqueId === preview.uniqueId ? preview.content : '';
+      const content = result.uniqueId === preview.uniqueId ? preview.content : '';
       const isLoading = preview.isLoading;
       const contentURL = preview.contentURL;
       const currentResultUniqueId = getUniqueIdFromPosition();

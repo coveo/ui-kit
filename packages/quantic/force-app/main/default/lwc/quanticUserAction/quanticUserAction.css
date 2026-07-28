@@ -6,12 +6,12 @@
 .user-action__separator {
   width: 0.125rem;
   height: 1.75rem;
-  background-color: var(--lwc-colorTextIconDefault, #747474);
+  background-color: var(--slds-g-color-on-surface-1, var(--lwc-colorTextIconDefault, #747474));
   border-radius: var(--lwc-borderRadiusMedium, 0.25rem);
 }
 
 .user-action__title {
-  color: #1a1b1e;
+  color: var(--slds-g-color-on-surface-3, #1a1b1e);
 }
 
 .user-action__ticket-creation-title {
@@ -20,12 +20,12 @@
 
 .user-action__custom-action-icon,
 .user-action__search-action-icon {
-  --slds-c-icon-color-foreground-default: #1a1b1e;
+  --slds-c-icon-color-foreground-default: var(--slds-g-color-on-surface-3, #1a1b1e);
 }
 
 .user-action__click-action-icon,
 .user-action__view-action-icon {
-  --slds-c-icon-color-foreground-default: var(--lwc-colorBrandDark, #0176d3);
+  --slds-c-icon-color-foreground-default: var(--slds-g-color-accent-2, var(--lwc-colorBrandDark, #0176d3));
 }
 
 .user-action__ticket-creation-icon {
@@ -34,6 +34,6 @@
 
 .user-action__details {
   font-weight: var(--lwc-fontWeightRegular, 400);
-  color: var(--lwc-colorTextPlaceholder, #747474);
+  color: var(--slds-g-color-on-surface-1, var(--lwc-colorTextPlaceholder, #747474));
   font-size: var(--slds-g-font-scale-neg-2, 10px);
 }

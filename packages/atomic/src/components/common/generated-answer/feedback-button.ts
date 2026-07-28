@@ -19,9 +19,7 @@ export interface FeedbackButtonProps {
   onClick: () => void;
 }
 
-export const renderFeedbackButton: FunctionalComponent<FeedbackButtonProps> = ({
-  props,
-}) => {
+export const renderFeedbackButton: FunctionalComponent<FeedbackButtonProps> = ({props}) => {
   const buttonStyle: ButtonStyle = 'text-transparent';
   const rippleColor = getRippleColorForButtonStyle(buttonStyle);
   const baseClassName = getClassNameForButtonStyle(buttonStyle);

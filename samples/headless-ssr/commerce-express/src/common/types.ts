@@ -3,10 +3,7 @@ import type {
   InferStaticState,
   NavigatorContext,
 } from '@coveo/headless/ssr-commerce';
-import type {
-  listingEngineDefinition,
-  searchEngineDefinition,
-} from '../lib/engine-definition';
+import type {listingEngineDefinition, searchEngineDefinition} from '../lib/engine-definition';
 
 /** Static state fetched on the server, per page type. */
 type SearchStaticState = InferStaticState<typeof searchEngineDefinition>;
@@ -20,12 +17,8 @@ export type AppStaticState = SearchStaticState | ListingStaticState;
  * definitions. The listing page omits the search box; every other concern is
  * shared, so callers narrow with `'searchBox' in controllers`.
  */
-type SearchControllers = InferHydratedState<
-  typeof searchEngineDefinition
->['controllers'];
-type ListingControllers = InferHydratedState<
-  typeof listingEngineDefinition
->['controllers'];
+type SearchControllers = InferHydratedState<typeof searchEngineDefinition>['controllers'];
+type ListingControllers = InferHydratedState<typeof listingEngineDefinition>['controllers'];
 export type AppControllers = SearchControllers | ListingControllers;
 
 type PageType = 'search' | 'listing';

@@ -38,9 +38,7 @@ function createSingletonContext<
  */
 export function defineSearchEngine<
   TControllers extends ControllerDefinitionsMap<SearchEngine, Controller>,
->(
-  options: SearchEngineDefinitionOptions<TControllers>
-): ReactSearchEngineDefinition<TControllers> {
+>(options: SearchEngineDefinitionOptions<TControllers>): ReactSearchEngineDefinition<TControllers> {
   const singletonContext = createSingletonContext<TControllers>();
   return {
     ...defineBaseSearchEngine({...options}),

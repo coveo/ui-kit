@@ -24,27 +24,17 @@ let atomicVersion;
 if (isCDN) {
   console.log('Building for CDN');
 
-  const headlessPackageJsonPath = join(
-    __dirname,
-    '../../packages/headless/package.json'
-  );
-  const atomicPackageJsonPath = join(
-    __dirname,
-    '../../packages/atomic/package.json'
-  );
+  const headlessPackageJsonPath = join(__dirname, '../../packages/headless/package.json');
+  const atomicPackageJsonPath = join(__dirname, '../../packages/atomic/package.json');
 
   try {
-    const headlessPackageJson = JSON.parse(
-      readFileSync(headlessPackageJsonPath, 'utf8')
-    );
+    const headlessPackageJson = JSON.parse(readFileSync(headlessPackageJsonPath, 'utf8'));
     headlessVersion = isNightly
       ? `v${headlessPackageJson.version.split('.').shift()}-nightly`
       : `v${headlessPackageJson.version}`;
     console.log('Using headless version from package.json:', headlessVersion);
 
-    const atomicPackageJson = JSON.parse(
-      readFileSync(atomicPackageJsonPath, 'utf8')
-    );
+    const atomicPackageJson = JSON.parse(readFileSync(atomicPackageJsonPath, 'utf8'));
     atomicVersion = isNightly
       ? `v${atomicPackageJson.version.split('.').shift()}-nightly`
       : `v${atomicPackageJson.version}`;
@@ -55,12 +45,8 @@ if (isCDN) {
   }
 }
 
-const headlessBase = commitSha
-  ? `/headless/commits/${commitSha}`
-  : `/headless/${headlessVersion}`;
-const atomicBase = commitSha
-  ? `/atomic/commits/${commitSha}`
-  : `/atomic/${atomicVersion}`;
+const headlessBase = commitSha ? `/headless/commits/${commitSha}` : `/headless/${headlessVersion}`;
+const atomicBase = commitSha ? `/atomic/commits/${commitSha}` : `/atomic/${atomicVersion}`;
 
 const packageMappings = {
   '@coveo/headless/commerce': {

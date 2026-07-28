@@ -69,16 +69,10 @@ export const WithACustomNumberOfPages: Story = {
 export const A11yStatusMessage: Story = {
   name: 'A11y Status Message',
   tags: ['a11y', 'test', '!dev'],
-  decorators: [
-    (story) => html`<atomic-query-summary></atomic-query-summary>${story()}`,
-  ],
+  decorators: [(story) => html`<atomic-query-summary></atomic-query-summary>${story()}`],
   beforeEach: async () => {
-    searchApiHarness.searchEndpoint.mockOnce(
-      buildSearchResponseWithResults(120)
-    );
-    searchApiHarness.searchEndpoint.mockOnce(
-      buildSearchResponseWithResults(120)
-    );
+    searchApiHarness.searchEndpoint.mockOnce(buildSearchResponseWithResults(120));
+    searchApiHarness.searchEndpoint.mockOnce(buildSearchResponseWithResults(120));
   },
   play: async (context) => {
     await play(context);

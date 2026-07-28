@@ -1,9 +1,6 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import HistoryStore from '../../api/analytics/coveo.analytics/history-store.js';
-import {
-  isErrorResponse,
-  type SearchOptions,
-} from '../../api/search/search-api-client.js';
+import {isErrorResponse, type SearchOptions} from '../../api/search/search-api-client.js';
 import type {
   AsyncThunkInsightOptions,
   InsightAPIClient,
@@ -36,14 +33,8 @@ import type {
   FetchQuerySuggestionsActionCreatorPayload,
   FetchQuerySuggestionsThunkReturn,
 } from '../query-suggest/query-suggest-actions.js';
-import type {
-  ExecuteSearchThunkReturn,
-  SearchAction,
-} from '../search/search-actions.js';
-import {
-  type MappedSearchRequest,
-  mapSearchResponse,
-} from '../search/search-mappings.js';
+import type {ExecuteSearchThunkReturn, SearchAction} from '../search/search-actions.js';
+import {type MappedSearchRequest, mapSearchResponse} from '../search/search-mappings.js';
 import {buildInsightQuerySuggestRequest} from './insight-query-suggest-request.js';
 import {
   AsyncInsightSearchThunkProcessor,
@@ -87,10 +78,7 @@ export const fetchFromAPI = async (
   options?: SearchOptions
 ) => {
   const startedAt = Date.now();
-  const response = mapSearchResponse(
-    await client.query(request, options),
-    mappings
-  );
+  const response = mapSearchResponse(await client.query(request, options), mappings);
   const duration = Date.now() - startedAt;
   const queryExecuted = state.query?.q || '';
   return {
@@ -112,10 +100,7 @@ export const executeSearch = createAsyncThunk<
   AsyncThunkInsightOptions<StateNeededByExecuteSearch>
 >(
   'search/executeSearch',
-  async (
-    analyticsAction: TransitiveInsightSearchAction,
-    config: AsyncThunkConfig
-  ) => {
+  async (analyticsAction: TransitiveInsightSearchAction, config: AsyncThunkConfig) => {
     const state = config.getState();
     if (state.configuration.analytics.analyticsMode === 'legacy') {
       return legacyExecuteSearch(state, config, analyticsAction.legacy);
@@ -144,10 +129,7 @@ export const fetchPage = createAsyncThunk<
   AsyncThunkInsightOptions<StateNeededByExecuteSearch>
 >(
   'search/fetchPage',
-  async (
-    analyticsAction: TransitiveInsightSearchAction,
-    config: AsyncThunkConfig
-  ) => {
+  async (analyticsAction: TransitiveInsightSearchAction, config: AsyncThunkConfig) => {
     const state = config.getState();
 
     if (state.configuration.analytics.analyticsMode === 'legacy') {
@@ -189,10 +171,7 @@ export const fetchMoreResults = createAsyncThunk<
     actionCause: SearchPageEvents.browseResults,
   });
 
-  const request = await buildInsightFetchMoreResultsRequest(
-    state,
-    eventDescription
-  );
+  const request = await buildInsightFetchMoreResultsRequest(state, eventDescription);
   const fetched = await processor.fetchFromAPI(request);
 
   return await processor.process(fetched);
@@ -204,10 +183,7 @@ export const fetchFacetValues = createAsyncThunk<
   AsyncThunkInsightOptions<StateNeededByExecuteSearch>
 >(
   'search/fetchFacetValues',
-  async (
-    analyticsAction: TransitiveInsightSearchAction,
-    config: AsyncThunkConfig
-  ) => {
+  async (analyticsAction: TransitiveInsightSearchAction, config: AsyncThunkConfig) => {
     const state = config.getState();
 
     if (state.configuration.analytics.analyticsMode === 'legacy') {
@@ -228,10 +204,7 @@ export const fetchFacetValues = createAsyncThunk<
 export type StateNeededByQuerySuggest = ConfigurationSection &
   InsightConfigurationSection &
   Partial<
-    ConfigurationSection &
-      QuerySuggestionSection &
-      QuerySetSection &
-      InsightCaseContextSection
+    ConfigurationSection & QuerySuggestionSection & QuerySetSection & InsightCaseContextSection
   >;
 
 export const fetchQuerySuggestions = createAsyncThunk<

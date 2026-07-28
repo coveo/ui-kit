@@ -50,10 +50,7 @@ import {mapProperty} from '@/src/utils/props-utils';
 @customElement('atomic-segmented-facet')
 @bindings()
 @withTailwindStyles
-export class AtomicSegmentedFacet
-  extends LitElement
-  implements InitializableComponent<Bindings>
-{
+export class AtomicSegmentedFacet extends LitElement implements InitializableComponent<Bindings> {
   @state() bindings!: Bindings;
 
   /**
@@ -255,10 +252,7 @@ export class AtomicSegmentedFacet
 
   private dependenciesManager?: FacetConditionsManager;
 
-  static styles: CSSResultGroup = [
-    facetCommonStyles,
-    facetSegmentedValueStyles,
-  ];
+  static styles: CSSResultGroup = [facetCommonStyles, facetSegmentedValueStyles];
 
   initialize() {
     if (this.tabsIncluded.length > 0 && this.tabsExcluded.length > 0) {
@@ -271,15 +265,10 @@ export class AtomicSegmentedFacet
 
     this.facet = buildFacet(this.bindings.engine, {options: this.facetOptions});
     this.facetId = this.facet.state.facetId;
-    this.dependenciesManager = buildFacetConditionsManager(
-      this.bindings.engine,
-      {
-        facetId: this.facetId!,
-        conditions: parseDependsOn<
-          FacetValueRequest | CategoryFacetValueRequest
-        >(this.dependsOn),
-      }
-    );
+    this.dependenciesManager = buildFacetConditionsManager(this.bindings.engine, {
+      facetId: this.facetId!,
+      conditions: parseDependsOn<FacetValueRequest | CategoryFacetValueRequest>(this.dependsOn),
+    });
   }
 
   @bindingGuard()
@@ -304,10 +293,7 @@ export class AtomicSegmentedFacet
     }
 
     return html`
-      <div
-        part="segmented-container"
-        class="mr-2 flex h-10 items-center whitespace-nowrap"
-      >
+      <div part="segmented-container" class="mr-2 flex h-10 items-center whitespace-nowrap">
         ${this.renderLabel()} ${this.renderValues()}
       </div>
     `;
@@ -332,11 +318,7 @@ export class AtomicSegmentedFacet
   }
 
   private renderValue(facetValue: FacetValue, onClick: () => void) {
-    const displayValue = getFieldValueCaption(
-      this.field,
-      facetValue.value,
-      this.bindings.i18n
-    );
+    const displayValue = getFieldValueCaption(this.field, facetValue.value, this.bindings.i18n);
     const isSelected = facetValue.state !== 'idle';
 
     return renderFacetSegmentedValue({
@@ -360,10 +342,7 @@ export class AtomicSegmentedFacet
   }
 
   private renderLabel() {
-    return when(
-      this.label,
-      () => html` <b class="mr-2" part="label"> ${this.label}: </b> `
-    );
+    return when(this.label, () => html` <b class="mr-2" part="label"> ${this.label}: </b> `);
   }
 
   private get facetOptions(): FacetOptions {

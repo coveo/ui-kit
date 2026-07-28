@@ -111,11 +111,7 @@ describe('executeHttpRequest()', () => {
     it('should handle HTTP error responses', async () => {
       vi.stubGlobal(
         'fetch',
-        vi.fn(() =>
-          Promise.resolve(
-            new Response(null, {status: 401, statusText: 'Unauthorized'})
-          )
-        )
+        vi.fn(() => Promise.resolve(new Response(null, {status: 401, statusText: 'Unauthorized'})))
       );
 
       const response = await executeHttpRequest({

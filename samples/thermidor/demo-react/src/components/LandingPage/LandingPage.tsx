@@ -1,7 +1,5 @@
-import {
-  SECTION_ACTIONS,
-  type SuggestionItem,
-} from '../SuggestionsDropdown/index.js';
+import {useState} from 'react';
+import {SECTION_ACTIONS, type SuggestionItem} from '../SuggestionsDropdown/index.js';
 import {PromptInput} from '../PromptInput/PromptInput.js';
 import {SuggestionPills} from '../SuggestionPills/SuggestionPills.js';
 import {useSuggestions} from '../../hooks/use-suggestions.js';
@@ -14,6 +12,8 @@ interface LandingPageProps {
 
 export function LandingPage({onSubmit, isStreaming}: LandingPageProps) {
   const {sections} = useSuggestions({inputValue: '', context: 'landing'});
+  const [inputValue, setInputValue] = useState('');
+  const [inputKey, setInputKey] = useState(0);
 
   const handleSuggestionSelect = (item: SuggestionItem, sectionId: string) => {
     const action = SECTION_ACTIONS[sectionId];
@@ -22,20 +22,30 @@ export function LandingPage({onSubmit, isStreaming}: LandingPageProps) {
     }
   };
 
+  const handlePillSelect = (suggestion: string) => {
+    setInputValue(suggestion);
+    setInputKey((k) => k + 1);
+    onSubmit(suggestion);
+  };
+
   return (
     <section className={styles.page}>
       <div className={styles.content}>
         <h1 className={styles.title}>What can I help you find?</h1>
         <div className={styles.inputWrapper}>
           <PromptInput
+            key={inputKey}
             onSubmit={onSubmit}
             disabled={isStreaming}
             placeholder="Search for products or ask a question..."
+            initialValue={inputValue}
             suggestions={sections}
             onSuggestionSelect={handleSuggestionSelect}
           />
         </div>
-        <SuggestionPills onSelect={onSubmit} disabled={isStreaming} />
+        <div className={styles.pillsWrapper}>
+          <SuggestionPills onSelect={handlePillSelect} disabled={isStreaming} />
+        </div>
       </div>
     </section>
   );

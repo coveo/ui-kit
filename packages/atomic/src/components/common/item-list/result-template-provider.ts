@@ -1,14 +1,7 @@
-import {
-  buildResultTemplatesManager,
-  type Result,
-  type Template,
-} from '@coveo/headless';
+import {buildResultTemplatesManager, type Result, type Template} from '@coveo/headless';
 import type {ItemTarget} from '@/src/components/common/layout/item-layout-utils';
 import type {AnyBindings} from '../interface/bindings';
-import {
-  TemplateProvider,
-  type TemplateProviderProps,
-} from '../template-provider/template-provider';
+import {TemplateProvider, type TemplateProviderProps} from '../template-provider/template-provider';
 // TODO: add this import once this class isn't used in Stencil components anymore
 // import '@/src/components/search/atomic-result-link/atomic-result-link';
 
@@ -21,11 +14,7 @@ export class ResultTemplateProvider extends TemplateProvider<Result> {
   }
 
   // TODO: Add JSX support for default template
-  protected makeDefaultTemplate(): Template<
-    Result,
-    DocumentFragment,
-    DocumentFragment
-  > {
+  protected makeDefaultTemplate(): Template<Result, DocumentFragment, DocumentFragment> {
     const content = document.createDocumentFragment();
     const linkEl = document.createElement('atomic-result-link');
     content.appendChild(linkEl);

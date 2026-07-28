@@ -5,9 +5,7 @@ import {getDebugInitialState} from './debug-state.js';
 
 describe('debug slice', () => {
   it('should have initial state', () => {
-    expect(debugReducer(undefined, {type: 'randomAction'})).toEqual(
-      getDebugInitialState()
-    );
+    expect(debugReducer(undefined, {type: 'randomAction'})).toEqual(getDebugInitialState());
   });
 
   it('allows to enable debug', () => {
@@ -20,9 +18,7 @@ describe('debug slice', () => {
 
   describe('#restoreSearchParameters', () => {
     it('when the object contains a #debug key, it sets the value in state', () => {
-      expect(debugReducer(false, restoreSearchParameters({debug: true}))).toBe(
-        true
-      );
+      expect(debugReducer(false, restoreSearchParameters({debug: true}))).toBe(true);
     });
 
     it('when the object does not contain a #debug key, it sets the value in state', () => {

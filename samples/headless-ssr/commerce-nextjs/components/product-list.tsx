@@ -15,9 +15,8 @@ export default function ProductList() {
     <ul aria-label="Product List" className="ProductList">
       {state.products.map((item) => {
         const quantityInCart =
-          cartState.items.find(
-            (cartItem) => cartItem.productId === item.ec_product_id
-          )?.quantity ?? 0;
+          cartState.items.find((cartItem) => cartItem.productId === item.ec_product_id)?.quantity ??
+          0;
 
         return (
           <li key={item.ec_product_id} className="ProductCard">
@@ -27,9 +26,7 @@ export default function ProductList() {
               language={contextState.language}
               currency={contextState.currency}
             />
-            {item.ec_description && (
-              <p className="ProductDescription">{item.ec_description}</p>
-            )}
+            {item.ec_description && <p className="ProductDescription">{item.ec_description}</p>}
             <ProductVariants methods={methods} product={item} />
             <button
               type="button"
