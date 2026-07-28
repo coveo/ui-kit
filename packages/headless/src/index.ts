@@ -66,10 +66,7 @@ export type {
 export {buildContext} from './controllers/context/headless-context.js';
 export type {ErrorPayload} from './controllers/controller/error-payload.js';
 //#region Controllers
-export type {
-  Controller,
-  Subscribable,
-} from './controllers/controller/headless-controller.js';
+export type {Controller, Subscribable} from './controllers/controller/headless-controller.js';
 export {buildController} from './controllers/controller/headless-controller.js';
 export type {
   AnyFacetValuesCondition,
@@ -274,10 +271,7 @@ export type {
   PagerState,
 } from './controllers/pager/headless-pager.js';
 export {buildPager} from './controllers/pager/headless-pager.js';
-export type {
-  QueryError,
-  QueryErrorState,
-} from './controllers/query-error/headless-query-error.js';
+export type {QueryError, QueryErrorState} from './controllers/query-error/headless-query-error.js';
 export {buildQueryError} from './controllers/query-error/headless-query-error.js';
 export type {
   QuerySummary,
@@ -431,10 +425,7 @@ export type {
   TabState,
 } from './controllers/tab/headless-tab.js';
 export {buildTab} from './controllers/tab/headless-tab.js';
-export type {
-  TabManager,
-  TabManagerState,
-} from './controllers/tab-manager/headless-tab-manager.js';
+export type {TabManager, TabManagerState} from './controllers/tab-manager/headless-tab-manager.js';
 export {buildTabManager} from './controllers/tab-manager/headless-tab-manager.js';
 export type {
   ExecuteTrigger,
@@ -452,10 +443,7 @@ export type {
 } from './controllers/url-manager/headless-url-manager.js';
 export {buildUrlManager} from './controllers/url-manager/headless-url-manager.js';
 // State
-export type {
-  SearchAppState,
-  SearchParametersState,
-} from './state/search-app-state.js';
+export type {SearchAppState, SearchParametersState} from './state/search-app-state.js';
 
 //#endregion
 
@@ -473,17 +461,11 @@ export type {
   RelativeDatePeriod,
   RelativeDateUnit,
 } from './api/search/date/relative-date.js';
-export {
-  deserializeRelativeDate,
-  validateRelativeDate,
-} from './api/search/date/relative-date.js';
+export {deserializeRelativeDate, validateRelativeDate} from './api/search/date/relative-date.js';
 export type {FieldDescription} from './api/search/fields/fields-response.js';
 export type {Raw} from './api/search/search/raw.js';
 export type {Result} from './api/search/search/result.js';
-export type {
-  PhrasesToHighlight,
-  TermsToHighlight,
-} from './api/search/search/stemming.js';
+export type {PhrasesToHighlight, TermsToHighlight} from './api/search/search/stemming.js';
 export * from './features/actions-history/ipx-actions-history-actions-loader.js';
 export * from './features/advanced-search-queries/advanced-search-queries-actions-loader.js';
 export * from './features/analytics/click-analytics-actions-loader.js';
@@ -598,10 +580,7 @@ export * from './features/sort-criteria/sort-criteria-actions-loader.js';
 export * from './features/standalone-search-box-set/standalone-search-box-set-actions-loader.js';
 export * from './features/static-filter-set/static-filter-set-actions-loader.js';
 export * from './features/tab-set/tab-set-actions-loader.js';
-export type {
-  Template,
-  TemplatesManager,
-} from './features/templates/templates-manager.js';
+export type {Template, TemplatesManager} from './features/templates/templates-manager.js';
 export type {FunctionExecutionTrigger} from './features/triggers/triggers-state.js';
 export type {HighlightKeyword} from './utils/highlight.js';
 export * from './utils/query-expression/query-expression.js';

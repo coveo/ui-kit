@@ -45,9 +45,7 @@ function getFilePaths(dir, files = []) {
 
   const resolvedPaths = names.flatMap((name) => {
     const currentPath = `${dir}/${name}`;
-    return statSync(currentPath).isDirectory()
-      ? getFilePaths(currentPath)
-      : [currentPath];
+    return statSync(currentPath).isDirectory() ? getFilePaths(currentPath) : [currentPath];
   });
 
   return files.concat(resolvedPaths);

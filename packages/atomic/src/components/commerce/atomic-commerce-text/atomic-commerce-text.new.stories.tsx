@@ -11,10 +11,9 @@ const commerceApiHarness = new MockCommerceApi();
 const {decorator, play} = wrapInCommerceInterface({
   skipFirstRequest: true,
 });
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-commerce-text',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-commerce-text', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-commerce-text',
@@ -49,10 +48,9 @@ export const Default: Story = {
 export const WithTranslations: Story = {
   name: 'With translations',
   play: async (context) => {
-    const commerceInterface =
-      context.canvasElement.querySelector<AtomicCommerceInterface>(
-        'atomic-commerce-interface'
-      )!;
+    const commerceInterface = context.canvasElement.querySelector<AtomicCommerceInterface>(
+      'atomic-commerce-interface'
+    )!;
 
     await context.step('Load translations', async () => {
       await customElements.whenDefined('atomic-commerce-interface');

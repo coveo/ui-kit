@@ -345,8 +345,7 @@ export const smartSnippetSuggestionsResponse: InsightResponse = {
       contentIdValue: 'hLSngTdxUj5Upy7r',
     },
     question: 'What are nurse sharks?',
-    answerSnippet:
-      'Nurse sharks are slow-moving bottom-dwellers known for their docile nature.',
+    answerSnippet: 'Nurse sharks are slow-moving bottom-dwellers known for their docile nature.',
     score: 1337,
     relatedQuestions: [
       {

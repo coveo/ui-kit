@@ -41,17 +41,13 @@ describe('Commerce SpecificFacetSearchSet slice', () => {
   it('on #registerFacetSearch, calls #handleFacetSearchRegistration', () => {
     vi.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchRegistration');
     facetSearchSetReducer(state, registerFacetSearch({facetId}));
-    expect(
-      FacetSearchReducerHelpers.handleFacetSearchRegistration
-    ).toHaveBeenCalledTimes(1);
+    expect(FacetSearchReducerHelpers.handleFacetSearchRegistration).toHaveBeenCalledTimes(1);
   });
 
   it('on #updateFacetSearch, calls #handleFacetSearchUpdate', () => {
     vi.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchUpdate');
     facetSearchSetReducer(state, updateFacetSearch({facetId}));
-    expect(
-      FacetSearchReducerHelpers.handleFacetSearchUpdate
-    ).toHaveBeenCalledTimes(1);
+    expect(FacetSearchReducerHelpers.handleFacetSearchUpdate).toHaveBeenCalledTimes(1);
   });
 
   it('on #executeCommerceFacetSearch.pending, calls #handleFacetSearchPending', () => {
@@ -62,9 +58,7 @@ describe('Commerce SpecificFacetSearchSet slice', () => {
     });
     facetSearchSetReducer(state, pendingAction);
 
-    expect(
-      FacetSearchReducerHelpers.handleFacetSearchPending
-    ).toHaveBeenCalledTimes(1);
+    expect(FacetSearchReducerHelpers.handleFacetSearchPending).toHaveBeenCalledTimes(1);
   });
 
   it('on #executeCommerceFieldSuggest.pending, calls #handleFacetSearchPending', () => {
@@ -75,9 +69,7 @@ describe('Commerce SpecificFacetSearchSet slice', () => {
     });
     facetSearchSetReducer(state, pendingAction);
 
-    expect(
-      FacetSearchReducerHelpers.handleFacetSearchPending
-    ).toHaveBeenCalledTimes(1);
+    expect(FacetSearchReducerHelpers.handleFacetSearchPending).toHaveBeenCalledTimes(1);
   });
 
   it('on #executeCommerceFacetSearch.rejected, calls #handleFacetSearchRejected', () => {
@@ -89,9 +81,7 @@ describe('Commerce SpecificFacetSearchSet slice', () => {
     );
     facetSearchSetReducer(state, rejectedAction);
 
-    expect(
-      FacetSearchReducerHelpers.handleFacetSearchRejected
-    ).toHaveBeenCalledTimes(1);
+    expect(FacetSearchReducerHelpers.handleFacetSearchRejected).toHaveBeenCalledTimes(1);
   });
 
   it('on #executeCommerceFieldSuggest.rejected, calls #handleFacetSearchRejected', () => {
@@ -103,16 +93,11 @@ describe('Commerce SpecificFacetSearchSet slice', () => {
     );
     facetSearchSetReducer(state, rejectedAction);
 
-    expect(
-      FacetSearchReducerHelpers.handleFacetSearchRejected
-    ).toHaveBeenCalledTimes(1);
+    expect(FacetSearchReducerHelpers.handleFacetSearchRejected).toHaveBeenCalledTimes(1);
   });
 
   it('on #executeCommerceFacetSearch.fulfilled, calls #handleCommerceFacetSearchFulfilled', () => {
-    vi.spyOn(
-      CommerceFacetSearchReducerHelpers,
-      'handleCommerceFacetSearchFulfilled'
-    );
+    vi.spyOn(CommerceFacetSearchReducerHelpers, 'handleCommerceFacetSearchFulfilled');
     const response = buildMockFacetSearchResponse();
 
     const action = executeCommerceFacetSearch.fulfilled(
@@ -133,10 +118,7 @@ describe('Commerce SpecificFacetSearchSet slice', () => {
   });
 
   it('on #executeCommerceFieldSuggest.fulfilled, calls #handleCommerceFacetFieldSuggestionsFulfilled', () => {
-    vi.spyOn(
-      CommerceFacetSearchReducerHelpers,
-      'handleCommerceFacetFieldSuggestionsFulfilled'
-    );
+    vi.spyOn(CommerceFacetSearchReducerHelpers, 'handleCommerceFacetFieldSuggestionsFulfilled');
     const response = buildMockFacetSearchResponse();
     const action = executeCommerceFieldSuggest.fulfilled(
       {facetId, response: {success: response}},
@@ -179,9 +161,7 @@ describe('Commerce SpecificFacetSearchSet slice', () => {
     vi.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchClear');
     facetSearchSetReducer(state, clearFacetSearch({facetId}));
 
-    expect(
-      FacetSearchReducerHelpers.handleFacetSearchClear
-    ).toHaveBeenCalledTimes(1);
+    expect(FacetSearchReducerHelpers.handleFacetSearchClear).toHaveBeenCalledTimes(1);
   });
 
   it('on #fetchProductListing.fulfilled, calls #handleFacetSearchSetClear', () => {
@@ -189,9 +169,7 @@ describe('Commerce SpecificFacetSearchSet slice', () => {
     const response = buildFetchProductListingResponse();
     facetSearchSetReducer(state, fetchProductListing.fulfilled(response, ''));
 
-    expect(
-      FacetSearchReducerHelpers.handleFacetSearchSetClear
-    ).toHaveBeenCalledTimes(1);
+    expect(FacetSearchReducerHelpers.handleFacetSearchSetClear).toHaveBeenCalledTimes(1);
   });
 
   it('on #executeCommerceSearch.fulfilled, calls #handleFacetSearchSetClear', () => {
@@ -199,17 +177,13 @@ describe('Commerce SpecificFacetSearchSet slice', () => {
     const response = buildSearchResponse();
     facetSearchSetReducer(state, executeCommerceSearch.fulfilled(response, ''));
 
-    expect(
-      FacetSearchReducerHelpers.handleFacetSearchSetClear
-    ).toHaveBeenCalledTimes(1);
+    expect(FacetSearchReducerHelpers.handleFacetSearchSetClear).toHaveBeenCalledTimes(1);
   });
 
   it('on #setView, calls #handleFacetSearchSetClear', () => {
     vi.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchSetClear');
     facetSearchSetReducer(state, setView({url: ''}));
 
-    expect(
-      FacetSearchReducerHelpers.handleFacetSearchSetClear
-    ).toHaveBeenCalledTimes(1);
+    expect(FacetSearchReducerHelpers.handleFacetSearchSetClear).toHaveBeenCalledTimes(1);
   });
 });

@@ -30,10 +30,7 @@ interface AppProps {
 }
 
 function App({engine: providedEngine}: AppProps) {
-  const engine = useMemo(
-    () => providedEngine ?? buildEngine(),
-    [providedEngine]
-  );
+  const engine = useMemo(() => providedEngine ?? buildEngine(), [providedEngine]);
 
   const controllers = useMemo(() => {
     return {
@@ -103,22 +100,10 @@ function App({engine: providedEngine}: AppProps) {
 
         <div className="search-layout">
           <aside className="facets">
-            <CategoryFacet
-              controller={controllers.facets.category}
-              title="Category"
-            />
-            <Facet
-              controller={controllers.facets.articleType}
-              title="Article type"
-            />
-            <Facet
-              controller={controllers.facets.robotSeries}
-              title="Robot series"
-            />
-            <Facet
-              controller={controllers.facets.difficulty}
-              title="Difficulty"
-            />
+            <CategoryFacet controller={controllers.facets.category} title="Category" />
+            <Facet controller={controllers.facets.articleType} title="Article type" />
+            <Facet controller={controllers.facets.robotSeries} title="Robot series" />
+            <Facet controller={controllers.facets.difficulty} title="Difficulty" />
             <Facet controller={controllers.facets.author} title="Author" />
           </aside>
 

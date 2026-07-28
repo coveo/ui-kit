@@ -2,19 +2,10 @@ import {configuration} from '../../app/common-reducers.js';
 import {facetOrderReducer as facetOrder} from '../../features/facets/facet-order/facet-order-slice.js';
 import {back, forward} from '../../features/history/history-actions.js';
 import {history} from '../../features/history/history-slice.js';
-import {
-  extractHistory,
-  getHistoryInitialState,
-} from '../../features/history/history-state.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../test/mock-engine-v2.js';
+import {extractHistory, getHistoryInitialState} from '../../features/history/history-state.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../test/mock-engine-v2.js';
 import {createMockState} from '../../test/mock-state.js';
-import {
-  buildHistoryManager,
-  type HistoryManager,
-} from './headless-history-manager.js';
+import {buildHistoryManager, type HistoryManager} from './headless-history-manager.js';
 
 vi.mock('../../features/history/history-actions');
 

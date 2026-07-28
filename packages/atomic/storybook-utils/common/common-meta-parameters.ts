@@ -47,9 +47,7 @@ export const parameters: Parameters = {
           // Get the inner HTML of the code root, replace boolean attributes with an empty string value by the attribute name alone.
           // If code-root is not found, default back to the docs behavior.
           return formatCode(
-            codeRoot.innerHTML
-              .replaceAll(/(?<=<[^<>]*)=""(?=[^<>]*>)/gm, '')
-              .trim()
+            codeRoot.innerHTML.replaceAll(/(?<=<[^<>]*)=""(?=[^<>]*>)/gm, '').trim()
           );
         }
       },

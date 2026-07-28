@@ -29,9 +29,9 @@ export interface ItemTextHighlightedProps {
 /**
  * The renderItemTextHighlighted functional component renders text with highlighted keywords.
  */
-export const renderItemTextHighlighted: FunctionalComponent<
-  ItemTextHighlightedProps
-> = ({props}) => {
+export const renderItemTextHighlighted: FunctionalComponent<ItemTextHighlightedProps> = ({
+  props,
+}) => {
   const {
     textValue,
     highlightKeywords,
@@ -39,11 +39,7 @@ export const renderItemTextHighlighted: FunctionalComponent<
     onError = (error: Error) => console.error(error),
   } = props;
   try {
-    const highlightedValue = renderWithHighlights(
-      textValue,
-      highlightKeywords,
-      highlightString
-    );
+    const highlightedValue = renderWithHighlights(textValue, highlightKeywords, highlightString);
 
     return html`${unsafeHTML(highlightedValue)}`;
   } catch (error) {

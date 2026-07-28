@@ -113,16 +113,11 @@ describe('#renderGeneratedContentContainer', () => {
   });
 
   it('should render children in footer', async () => {
-    const element = await renderComponent(
-      {},
-      html`<div class="test-child">Child content</div>`
-    );
+    const element = await renderComponent({}, html`<div class="test-child">Child content</div>`);
     const footer = locators(element).footer;
 
     expect(footer?.querySelector('.test-child')).toBeInTheDocument();
-    expect(footer?.querySelector('.test-child')).toHaveTextContent(
-      'Child content'
-    );
+    expect(footer?.querySelector('.test-child')).toHaveTextContent('Child content');
   });
 
   it('should render multiple children in footer', async () => {

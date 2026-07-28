@@ -19,10 +19,7 @@ function getDeepActiveElement(element: Element | null): Element | null {
   return element;
 }
 
-function getTabHostFromElement(
-  element: Element | null,
-  tabs: HTMLElement[]
-): HTMLElement | null {
+function getTabHostFromElement(element: Element | null, tabs: HTMLElement[]): HTMLElement | null {
   let current: Element | null = element;
 
   while (current) {
@@ -42,22 +39,16 @@ function getTabHostFromElement(
   return null;
 }
 
-function getActiveTab(
-  tabs: HTMLElement[],
-  canvasElement: HTMLElement
-): HTMLElement | null {
+function getActiveTab(tabs: HTMLElement[], canvasElement: HTMLElement): HTMLElement | null {
   for (const tab of tabs) {
     const root = tab.getRootNode() as Document | ShadowRoot;
-    const active =
-      'activeElement' in root ? (root as Document).activeElement : null;
+    const active = 'activeElement' in root ? (root as Document).activeElement : null;
     if (active === tab) {
       return tab;
     }
   }
 
-  const deepActive = getDeepActiveElement(
-    canvasElement.ownerDocument.activeElement
-  );
+  const deepActive = getDeepActiveElement(canvasElement.ownerDocument.activeElement);
   return getTabHostFromElement(deepActive, tabs);
 }
 
@@ -114,8 +105,7 @@ export async function testTabsA11y(context: StoryContext): Promise<void> {
     });
 
     await step('Tab key enters tablist on active/first tab', async () => {
-      const activeTab =
-        tabs.find((t) => t.getAttribute('aria-selected') === 'true') ?? tabs[0];
+      const activeTab = tabs.find((t) => t.getAttribute('aria-selected') === 'true') ?? tabs[0];
 
       // userEvent.tab() does not traverse shadow DOM boundaries, so we focus
       // the active tab directly and verify it is focusable (tabindex >= 0).

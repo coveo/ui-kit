@@ -42,9 +42,9 @@ export type {
  *
  * @returns The `ParameterManager` controller definition.
  */
-export function defineParameterManager<
-  TOptions extends ControllerDefinitionOption | undefined,
->(options?: TOptions) {
+export function defineParameterManager<TOptions extends ControllerDefinitionOption | undefined>(
+  options?: TOptions
+) {
   ensureAtLeastOneSolutionType(options);
   return {
     listing: true,
@@ -86,15 +86,14 @@ export interface SSRParameterManagerProps<T extends Parameters> extends Omit<
   'excludeDefaultParameters'
 > {}
 
-type MappedParameterTypes<
-  TOptions extends ControllerDefinitionOption | undefined,
-> = TOptions extends {listing: true; search: true} | undefined
-  ? ProductListingParameters | CommerceSearchParameters
-  : TOptions extends {listing: true; search: false}
-    ? ProductListingParameters
-    : TOptions extends {listing: false; search: true}
-      ? CommerceSearchParameters
-      : never;
+type MappedParameterTypes<TOptions extends ControllerDefinitionOption | undefined> =
+  TOptions extends {listing: true; search: true} | undefined
+    ? ProductListingParameters | CommerceSearchParameters
+    : TOptions extends {listing: true; search: false}
+      ? ProductListingParameters
+      : TOptions extends {listing: false; search: true}
+        ? CommerceSearchParameters
+        : never;
 
 function loadCommerceCommonParameterReducers(
   engine: CoreEngineNext

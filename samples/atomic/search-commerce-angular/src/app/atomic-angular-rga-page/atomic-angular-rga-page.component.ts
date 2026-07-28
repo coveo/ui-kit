@@ -1,9 +1,5 @@
 import {type AfterViewInit, Component, ViewChild} from '@angular/core';
-import type {
-  AtomicSearchInterface,
-  Bindings,
-  Result,
-} from '@coveo/atomic-angular';
+import type {AtomicSearchInterface, Bindings, Result} from '@coveo/atomic-angular';
 
 @Component({
   standalone: false,
@@ -51,13 +47,10 @@ export class AtomicAngularRGAPageComponent implements AfterViewInit {
     if ('ec_price' in result.raw) {
       information.push(
         // oxlint-disable-next-line dot-notation -- <angular needs this>
-        (result.raw['ec_price'] as number).toLocaleString(
-          i18n.languages as string[],
-          {
-            style: 'currency',
-            currency: 'USD',
-          }
-        )
+        (result.raw['ec_price'] as number).toLocaleString(i18n.languages as string[], {
+          style: 'currency',
+          currency: 'USD',
+        })
       );
     }
 

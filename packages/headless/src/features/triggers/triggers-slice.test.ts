@@ -3,14 +3,8 @@ import {buildMockExecuteTrigger} from '../../test/mock-trigger-execute.js';
 import {buildMockNotifyTrigger} from '../../test/mock-trigger-notify.js';
 import {buildMockQueryTrigger} from '../../test/mock-trigger-query.js';
 import {buildMockRedirectTrigger} from '../../test/mock-trigger-redirect.js';
-import {
-  executeSearch,
-  type TransitiveSearchAction,
-} from '../search/search-actions.js';
-import {
-  applyQueryTriggerModification,
-  updateIgnoreQueryTrigger,
-} from './triggers-actions.js';
+import {executeSearch, type TransitiveSearchAction} from '../search/search-actions.js';
+import {applyQueryTriggerModification, updateIgnoreQueryTrigger} from './triggers-actions.js';
 import {triggerReducer} from './triggers-slice.js';
 import {
   handleApplyQueryTriggerModification,
@@ -28,14 +22,10 @@ describe('triggers slice', () => {
 
   beforeEach(() => {
     initialState = getTriggerInitialState();
-    initialStateCopy = JSON.parse(
-      JSON.stringify(initialState)
-    ) as typeof initialState;
+    initialStateCopy = JSON.parse(JSON.stringify(initialState)) as typeof initialState;
   });
   it('should have initial state', () => {
-    expect(triggerReducer(undefined, {type: 'randomAction'})).toEqual(
-      initialState
-    );
+    expect(triggerReducer(undefined, {type: 'randomAction'})).toEqual(initialState);
   });
 
   it('on #executeSearch.pending, updates state using #handleFetchItemsPending', () => {
@@ -54,15 +44,8 @@ describe('triggers slice', () => {
       buildMockExecuteTrigger(),
       buildMockRedirectTrigger(),
     ];
-    const action = executeSearch.fulfilled(
-      searchResponse,
-      '',
-      {} as TransitiveSearchAction
-    );
-    expectedState = handleFetchItemsFulfilled(
-      initialStateCopy,
-      action.payload.response.triggers
-    );
+    const action = executeSearch.fulfilled(searchResponse, '', {} as TransitiveSearchAction);
+    expectedState = handleFetchItemsFulfilled(initialStateCopy, action.payload.response.triggers);
     finalState = triggerReducer(initialState, action);
 
     expect(finalState).toEqual(expectedState);
@@ -73,10 +56,7 @@ describe('triggers slice', () => {
       newQuery: 'new query',
       originalQuery: 'original query',
     });
-    expectedState = handleApplyQueryTriggerModification(
-      initialStateCopy,
-      action.payload
-    );
+    expectedState = handleApplyQueryTriggerModification(initialStateCopy, action.payload);
     finalState = triggerReducer(initialState, action);
 
     expect(finalState).toEqual(expectedState);
@@ -84,10 +64,7 @@ describe('triggers slice', () => {
 
   it('on #updateIgnoreQueryTrigger, updates state using #handleUpdateIgnoreQueryTrigger', () => {
     const action = updateIgnoreQueryTrigger('query to ignore');
-    expectedState = handleUpdateIgnoreQueryTrigger(
-      initialStateCopy,
-      action.payload
-    );
+    expectedState = handleUpdateIgnoreQueryTrigger(initialStateCopy, action.payload);
     finalState = triggerReducer(initialState, action);
 
     expect(finalState).toEqual(expectedState);

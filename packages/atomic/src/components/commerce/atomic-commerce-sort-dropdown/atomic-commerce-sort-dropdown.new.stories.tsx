@@ -18,10 +18,9 @@ commerceApiHarness.productListingEndpoint.addRequestTransformer(
 );
 
 const {decorator, play} = wrapInCommerceInterface();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-commerce-sort-dropdown',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-commerce-sort-dropdown', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-commerce-sort-dropdown',

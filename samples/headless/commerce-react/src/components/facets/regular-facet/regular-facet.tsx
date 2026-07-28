@@ -27,9 +27,7 @@ export default function RegularFacet(props: IRegularFacetProps) {
 
   return (
     <fieldset className="RegularFacet">
-      <legend className="FacetDisplayName">
-        {state.displayName ?? state.facetId}
-      </legend>
+      <legend className="FacetDisplayName">{state.displayName ?? state.facetId}</legend>
       <ul className="FacetValues">
         {state.values.map((value) => {
           const id = `${state.facetId}-${value.value}-facet-value`;
@@ -46,10 +44,7 @@ export default function RegularFacet(props: IRegularFacetProps) {
               ></input>
               <label className="FacetValueLabel" htmlFor={id}>
                 <span className="FacetValueName">{value.value}</span>
-                <span className="FacetValueNumberOfProducts">
-                  {' '}
-                  ({value.numberOfResults})
-                </span>
+                <span className="FacetValueNumberOfProducts"> ({value.numberOfResults})</span>
               </label>
             </li>
           );

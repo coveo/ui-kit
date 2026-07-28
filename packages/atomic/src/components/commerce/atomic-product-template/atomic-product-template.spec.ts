@@ -17,32 +17,29 @@ describe('atomic-product-template', () => {
     AtomicProductTemplate,
     'conditions' | 'mustMatch' | 'mustNotMatch'
   >;
-  const setupElement = async (
-    options: Partial<AtomicProductTemplateProps> = {}
-  ) => {
+  const setupElement = async (options: Partial<AtomicProductTemplateProps> = {}) => {
     const defaultProps: AtomicProductTemplateProps = {
       conditions: [],
       mustMatch: {},
       mustNotMatch: {},
     };
 
-    const {element} =
-      await renderInAtomicCommerceInterface<AtomicProductTemplate>({
-        template: html`<atomic-commerce-product-list>
-          <atomic-product-template
-            .conditions=${options.conditions || defaultProps.conditions}
-            .mustMatch=${options.mustMatch || defaultProps.mustMatch}
-            .mustNotMatch=${options.mustNotMatch || defaultProps.mustNotMatch}
-          >
-            <slot slot="default">
-              <template>
-                <div>Product Template Content</div>
-              </template>
-            </slot>
-          </atomic-product-template>
-        </atomic-commerce-product-list>`,
-        selector: 'atomic-product-template',
-      });
+    const {element} = await renderInAtomicCommerceInterface<AtomicProductTemplate>({
+      template: html`<atomic-commerce-product-list>
+        <atomic-product-template
+          .conditions=${options.conditions || defaultProps.conditions}
+          .mustMatch=${options.mustMatch || defaultProps.mustMatch}
+          .mustNotMatch=${options.mustNotMatch || defaultProps.mustNotMatch}
+        >
+          <slot slot="default">
+            <template>
+              <div>Product Template Content</div>
+            </template>
+          </slot>
+        </atomic-product-template>
+      </atomic-commerce-product-list>`,
+      selector: 'atomic-product-template',
+    });
     return element;
   };
 
@@ -91,17 +88,13 @@ describe('atomic-product-template', () => {
   });
 
   it('should render an atomic-component-error if error is thrown', async () => {
-    const mockedConsoleError = vi
-      .spyOn(console, 'error')
-      .mockImplementation(() => {});
+    const mockedConsoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
 
     const element = await setupElement();
     const error = new Error('fail');
     element.error = error;
 
-    const componentError = page.getByText(
-      'atomic-product-template component error'
-    );
+    const componentError = page.getByText('atomic-product-template component error');
 
     await expect.element(componentError).toBeVisible();
     mockedConsoleError.mockRestore();

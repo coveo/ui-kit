@@ -15,10 +15,7 @@ import express, {type Request} from 'express';
 import {renderApp} from './common/renderApp.js';
 import {renderHtml} from './common/renderHtml.js';
 import {parseCartItems} from './lib/cart.js';
-import {
-  searchEngineDefinition,
-  listingEngineDefinition,
-} from './lib/engine-definition.js';
+import {searchEngineDefinition, listingEngineDefinition} from './lib/engine-definition.js';
 import {LISTING_IDS} from './lib/listings.js';
 import {getNavigatorContext} from './lib/navigatorContext.js';
 import {middleware} from './middleware.js';

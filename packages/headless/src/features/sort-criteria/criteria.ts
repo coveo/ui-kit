@@ -56,20 +56,13 @@ export type SortByField = {by: SortBy.Field; field: string; order: SortOrder};
 export type SortByNoSort = {by: SortBy.NoSort};
 
 /** Represents a criterion that can be used to sort query results. */
-export type SortCriterion =
-  | SortByRelevancy
-  | SortByQRE
-  | SortByDate
-  | SortByField
-  | SortByNoSort;
+export type SortCriterion = SortByRelevancy | SortByQRE | SortByDate | SortByField | SortByNoSort;
 
 /**
  * Builds a sort expression that can be understood and executed by the Coveo Platform.
  * @param criterion The criterion to translate to a valid sort query expression.
  */
-export const buildCriterionExpression = (
-  criterion: SortCriterion | SortCriterion[]
-): string => {
+export const buildCriterionExpression = (criterion: SortCriterion | SortCriterion[]): string => {
   if (isArray(criterion)) {
     return criterion.map((c) => buildCriterionExpression(c)).join(',');
   }
@@ -112,10 +105,7 @@ export const buildDateSortCriterion = (order: SortOrder): SortByDate => ({
  * @param order The order (ascending/descending) on which to sort.
  * @returns A `SortByField` criterion.
  */
-export const buildFieldSortCriterion = (
-  field: string,
-  order: SortOrder
-): SortByField => ({
+export const buildFieldSortCriterion = (field: string, order: SortOrder): SortByField => ({
   by: SortBy.Field,
   order,
   field,

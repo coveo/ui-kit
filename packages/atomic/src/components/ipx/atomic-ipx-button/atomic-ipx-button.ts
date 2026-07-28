@@ -28,10 +28,7 @@ const numberOrPixelValuePattern = new RegExp(/^(?=.*(?:\d+|px)$).*$/);
 @customElement('atomic-ipx-button')
 @bindings()
 @withTailwindStyles
-export class AtomicIpxButton
-  extends LitElement
-  implements InitializableComponent<Bindings>
-{
+export class AtomicIpxButton extends LitElement implements InitializableComponent<Bindings> {
   static styles = css`
     @reference '../../../utils/tailwind.global.tw.css';
 
@@ -87,14 +84,11 @@ export class AtomicIpxButton
   public initialize() {}
 
   private async getRecommendations() {
-    const recsEngine = this.bindings.interfaceElement.querySelector(
-      'atomic-recs-interface'
-    )?.engine;
+    const recsEngine =
+      this.bindings.interfaceElement.querySelector('atomic-recs-interface')?.engine;
     if (recsEngine) {
       this.recommendationsLoaded = true;
-      recsEngine.dispatch(
-        loadRecommendationActions(recsEngine).getRecommendations()
-      );
+      recsEngine.dispatch(loadRecommendationActions(recsEngine).getRecommendations());
     }
   }
 
@@ -119,19 +113,10 @@ export class AtomicIpxButton
       },
     })(html`
       <span part="button-icon">
-        <atomic-icon
-          part="ipx-close-icon"
-          .icon=${this.getIcon(this.closeIcon)}
-        ></atomic-icon>
-        <atomic-icon
-          part="ipx-open-icon"
-          .icon=${this.getIcon(this.openIcon)}
-        ></atomic-icon>
+        <atomic-icon part="ipx-close-icon" .icon=${this.getIcon(this.closeIcon)}></atomic-icon>
+        <atomic-icon part="ipx-open-icon" .icon=${this.getIcon(this.openIcon)}></atomic-icon>
       </span>
-      ${when(
-        this.label,
-        () => html`<span part="button-text">${this.label}</span>`
-      )}
+      ${when(this.label, () => html`<span part="button-text">${this.label}</span>`)}
     `);
   }
 
@@ -162,9 +147,7 @@ export class AtomicIpxButton
           }
         }
       </style>
-      <div class="flex flex-col items-center" part="container">
-        ${this.renderIPXButton()}
-      </div>
+      <div class="flex flex-col items-center" part="container">${this.renderIPXButton()}</div>
     `;
   }
 

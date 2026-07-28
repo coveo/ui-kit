@@ -4,10 +4,7 @@ import {html} from 'lit';
 import {beforeAll, describe, expect, it} from 'vitest';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {
-  AtomicAgentStreamOfThought,
-  resolveSteps,
-} from './atomic-agent-stream-of-thought';
+import {AtomicAgentStreamOfThought, resolveSteps} from './atomic-agent-stream-of-thought';
 import './atomic-agent-stream-of-thought';
 
 const STEP_NAMES = {
@@ -68,18 +65,12 @@ describe('atomic-agent-stream-of-thought', () => {
       },
       get toggleButton() {
         return (
-          element.shadowRoot?.querySelector<HTMLButtonElement>(
-            '.toggle-button'
-          ) ??
-          element.shadowRoot?.querySelector<HTMLButtonElement>(
-            '.collapsed-timeline-summary'
-          )
+          element.shadowRoot?.querySelector<HTMLButtonElement>('.toggle-button') ??
+          element.shadowRoot?.querySelector<HTMLButtonElement>('.collapsed-timeline-summary')
         );
       },
       get collapsedTimelineSummary() {
-        return element.shadowRoot?.querySelector<HTMLButtonElement>(
-          '.collapsed-timeline-summary'
-        );
+        return element.shadowRoot?.querySelector<HTMLButtonElement>('.collapsed-timeline-summary');
       },
       get chevron() {
         return element.shadowRoot?.querySelector('.chevron');
@@ -94,16 +85,12 @@ describe('atomic-agent-stream-of-thought', () => {
 
     it('should resolve thinking before searching as thinking-before-search', () => {
       const steps = [buildStep({name: 'thinking', status: 'active'})];
-      expect(resolveSteps(steps)).toEqual([
-        {type: 'thinking-before-search', status: 'active'},
-      ]);
+      expect(resolveSteps(steps)).toEqual([{type: 'thinking-before-search', status: 'active'}]);
     });
 
     it('should resolve searching as searching', () => {
       const steps = [buildStep({name: 'searching', status: 'active'})];
-      expect(resolveSteps(steps)).toEqual([
-        {type: 'searching', status: 'active'},
-      ]);
+      expect(resolveSteps(steps)).toEqual([{type: 'searching', status: 'active'}]);
     });
 
     it('should resolve thinking after searching as thinking-after-search', () => {
@@ -119,9 +106,7 @@ describe('atomic-agent-stream-of-thought', () => {
 
     it('should resolve answering as answering', () => {
       const steps = [buildStep({name: 'answering', status: 'active'})];
-      expect(resolveSteps(steps)).toEqual([
-        {type: 'answering', status: 'active'},
-      ]);
+      expect(resolveSteps(steps)).toEqual([{type: 'answering', status: 'active'}]);
     });
 
     it('should resolve a full sequence correctly', () => {
@@ -292,9 +277,7 @@ describe('atomic-agent-stream-of-thought', () => {
         isStreaming: true,
       });
 
-      expect(steps[0].textContent).toContain(
-        i18n.t('agent-generation-step-analyzing-question')
-      );
+      expect(steps[0].textContent).toContain(i18n.t('agent-generation-step-analyzing-question'));
     });
 
     it('should display the correct label for searching', async () => {
@@ -306,9 +289,7 @@ describe('atomic-agent-stream-of-thought', () => {
         isStreaming: true,
       });
 
-      expect(steps[1].textContent).toContain(
-        i18n.t('agent-generation-step-search')
-      );
+      expect(steps[1].textContent).toContain(i18n.t('agent-generation-step-search'));
     });
 
     it('should display "Analyzing results…" for thinking after search', async () => {
@@ -321,9 +302,7 @@ describe('atomic-agent-stream-of-thought', () => {
         isStreaming: true,
       });
 
-      expect(steps[2].textContent).toContain(
-        i18n.t('agent-generation-step-analyzing-results')
-      );
+      expect(steps[2].textContent).toContain(i18n.t('agent-generation-step-analyzing-results'));
     });
 
     it('should display "Analyzing results…" for thinking after each search in iterative cycles', async () => {
@@ -341,9 +320,7 @@ describe('atomic-agent-stream-of-thought', () => {
       expect(steps[2].textContent).toContain(
         i18n.t('agent-generation-step-analyzing-results-completed')
       );
-      expect(steps[4].textContent).toContain(
-        i18n.t('agent-generation-step-analyzing-results')
-      );
+      expect(steps[4].textContent).toContain(i18n.t('agent-generation-step-analyzing-results'));
     });
 
     it('should display the correct label for answering', async () => {
@@ -357,9 +334,7 @@ describe('atomic-agent-stream-of-thought', () => {
         isStreaming: true,
       });
 
-      expect(steps[3].textContent).toContain(
-        i18n.t('agent-generation-step-answering')
-      );
+      expect(steps[3].textContent).toContain(i18n.t('agent-generation-step-answering'));
     });
 
     it('should display completed label for completed steps', async () => {
@@ -468,9 +443,7 @@ describe('atomic-agent-stream-of-thought', () => {
       expect(steps[0].textContent).not.toContain(
         i18n.t('agent-generation-step-search-query-completed')
       );
-      expect(steps[0].textContent).not.toContain(
-        i18n.t('agent-generation-step-search-query')
-      );
+      expect(steps[0].textContent).not.toContain(i18n.t('agent-generation-step-search-query'));
     });
   });
 
@@ -502,9 +475,7 @@ describe('atomic-agent-stream-of-thought', () => {
       });
 
       expect(collapsedTimelineSummary).not.toBeNull();
-      expect(
-        collapsedTimelineSummary?.querySelector('.chevron')
-      ).not.toBeNull();
+      expect(collapsedTimelineSummary?.querySelector('.chevron')).not.toBeNull();
     });
 
     it('should show the last step completed label', async () => {
@@ -532,9 +503,7 @@ describe('atomic-agent-stream-of-thought', () => {
         isStreaming: false,
       });
 
-      expect(
-        collapsedTimelineSummary?.querySelector('.checkmark-icon')
-      ).not.toBeNull();
+      expect(collapsedTimelineSummary?.querySelector('.checkmark-icon')).not.toBeNull();
     });
 
     it('should have aria-expanded set to false when collapsed', async () => {
@@ -546,9 +515,7 @@ describe('atomic-agent-stream-of-thought', () => {
         isStreaming: false,
       });
 
-      expect(collapsedTimelineSummary?.getAttribute('aria-expanded')).toBe(
-        'false'
-      );
+      expect(collapsedTimelineSummary?.getAttribute('aria-expanded')).toBe('false');
     });
 
     it('should render nothing when there are no steps and not streaming', async () => {
@@ -610,14 +577,11 @@ describe('atomic-agent-stream-of-thought', () => {
       collapsedTimelineSummary?.click();
       await element.updateComplete;
 
-      const expandedToggle =
-        element.shadowRoot?.querySelector<HTMLButtonElement>('.toggle-button');
+      const expandedToggle = element.shadowRoot?.querySelector<HTMLButtonElement>('.toggle-button');
       expandedToggle?.click();
       await element.updateComplete;
 
-      expect(
-        element.shadowRoot?.querySelector('.collapsed-timeline-summary')
-      ).not.toBeNull();
+      expect(element.shadowRoot?.querySelector('.collapsed-timeline-summary')).not.toBeNull();
     });
 
     it('should show chevron pointing up when expanded', async () => {
@@ -660,8 +624,7 @@ describe('atomic-agent-stream-of-thought', () => {
       collapsedTimelineSummary?.click();
       await element.updateComplete;
 
-      const expandedToggle =
-        element.shadowRoot?.querySelector<HTMLButtonElement>('.toggle-button');
+      const expandedToggle = element.shadowRoot?.querySelector<HTMLButtonElement>('.toggle-button');
       expect(expandedToggle?.getAttribute('aria-expanded')).toBe('true');
     });
   });
@@ -690,19 +653,16 @@ describe('atomic-agent-stream-of-thought', () => {
 
       steps = element.shadowRoot?.querySelectorAll('.step') ?? [];
       expect(steps.length).toBe(0);
-      expect(
-        element.shadowRoot?.querySelector('.collapsed-timeline-summary')
-      ).not.toBeNull();
+      expect(element.shadowRoot?.querySelector('.collapsed-timeline-summary')).not.toBeNull();
     });
   });
 
   describe('single answering step', () => {
     it('should show the step without a toggle button when only answering exists', async () => {
-      const {steps, toggleButton, collapsedTimelineSummary} =
-        await renderComponent({
-          agentSteps: [buildStep({name: 'answering', status: 'completed'})],
-          isStreaming: false,
-        });
+      const {steps, toggleButton, collapsedTimelineSummary} = await renderComponent({
+        agentSteps: [buildStep({name: 'answering', status: 'completed'})],
+        isStreaming: false,
+      });
 
       expect(steps.length).toBe(1);
       expect(toggleButton).toBeNull();
@@ -728,9 +688,7 @@ describe('atomic-agent-stream-of-thought', () => {
 
       expect(steps.length).toBe(1);
       expect(checkmarks.length).toBe(1);
-      expect(steps[0].textContent).toContain(
-        i18n.t('agent-generation-step-answering-completed')
-      );
+      expect(steps[0].textContent).toContain(i18n.t('agent-generation-step-answering-completed'));
     });
   });
 });

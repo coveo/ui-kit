@@ -28,15 +28,9 @@ describe('atomic-insight-history-toggle', () => {
       element,
       button: page.getByRole('button'),
       parts: {
-        container: element.shadowRoot?.querySelector(
-          '[part="insight-history-toggle-container"]'
-        ),
-        button: element.shadowRoot?.querySelector(
-          '[part="insight-history-toggle-button"]'
-        ),
-        icon: element.shadowRoot?.querySelector(
-          '[part="insight-history-toggle-icon"]'
-        ),
+        container: element.shadowRoot?.querySelector('[part="insight-history-toggle-container"]'),
+        button: element.shadowRoot?.querySelector('[part="insight-history-toggle-button"]'),
+        icon: element.shadowRoot?.querySelector('[part="insight-history-toggle-icon"]'),
       },
     };
   };

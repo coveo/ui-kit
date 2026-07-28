@@ -14,15 +14,9 @@ import type {
   InferControllerStaticStateMapFromDefinitionsWithSolutionType,
   InferControllersMapFromDefinition,
 } from './controller-inference.js';
-import type {
-  FetchStaticState,
-  FetchStaticStateOptions,
-} from './fetch-static-state.js';
+import type {FetchStaticState, FetchStaticStateOptions} from './fetch-static-state.js';
 import type {FromBuildResult} from './from-build-result.js';
-import type {
-  HydrateStaticState,
-  HydrateStaticStateOptions,
-} from './hydrate-static-state.js';
+import type {HydrateStaticState, HydrateStaticStateOptions} from './hydrate-static-state.js';
 
 export type {
   Build,
@@ -67,10 +61,7 @@ export interface EngineDefinition<
   fetchStaticState: FetchStaticState<
     InferControllersMapFromDefinition<TControllers, TSolutionType>,
     UnknownAction,
-    InferControllerStaticStateMapFromDefinitionsWithSolutionType<
-      TControllers,
-      TSolutionType
-    >,
+    InferControllerStaticStateMapFromDefinitionsWithSolutionType<TControllers, TSolutionType>,
     InferControllerPropsMapFromDefinitions<TControllers>,
     TControllers,
     TSolutionType
@@ -106,9 +97,7 @@ export interface EngineDefinition<
    *
    * Note: The implementation specifics of the navigator context provider depend on the Node.js framework being utilized. It is the developer's responsibility to appropriately define and implement the navigator context provider to ensure accurate navigation context is available throughout the application. If the user fails to provide a navigator context provider, a warning will be logged either on the server or the browser console.
    */
-  setNavigatorContextProvider: (
-    navigatorContextProvider: NavigatorContextProvider
-  ) => void;
+  setNavigatorContextProvider: (navigatorContextProvider: NavigatorContextProvider) => void;
 
   /**
    * Returns the access token.
@@ -122,16 +111,13 @@ export interface EngineDefinition<
   setAccessToken: (accessToken: string) => void;
 }
 
-export type CommerceControllerDefinitionsMap =
-  ControllerDefinitionsMap<Controller>;
+export type CommerceControllerDefinitionsMap = ControllerDefinitionsMap<Controller>;
 
-type Definition<
-  TControllerDefinitions extends CommerceControllerDefinitionsMap,
-> = CommerceEngineDefinition<TControllerDefinitions, SolutionType>;
+type Definition<TControllerDefinitions extends CommerceControllerDefinitionsMap> =
+  CommerceEngineDefinition<TControllerDefinitions, SolutionType>;
 
-type BuildFunction<
-  TControllerDefinitions extends CommerceControllerDefinitionsMap,
-> = Definition<TControllerDefinitions>['build'];
+type BuildFunction<TControllerDefinitions extends CommerceControllerDefinitionsMap> =
+  Definition<TControllerDefinitions>['build'];
 
 export type FetchStaticStateFunction<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
@@ -149,9 +135,8 @@ type HydrateStaticStateFromBuildResultFunction<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
 > = HydrateStaticStateFunction<TControllerDefinitions>['fromBuildResult'];
 
-export type BuildParameters<
-  TControllerDefinitions extends CommerceControllerDefinitionsMap,
-> = Parameters<BuildFunction<TControllerDefinitions>>;
+export type BuildParameters<TControllerDefinitions extends CommerceControllerDefinitionsMap> =
+  Parameters<BuildFunction<TControllerDefinitions>>;
 
 export type FetchStaticStateParameters<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
@@ -167,17 +152,12 @@ export type FetchStaticStateFromBuildResultParameters<
 
 export type HydrateStaticStateFromBuildResultParameters<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
-> = Parameters<
-  HydrateStaticStateFromBuildResultFunction<TControllerDefinitions>
->;
+> = Parameters<HydrateStaticStateFromBuildResultFunction<TControllerDefinitions>>;
 
-type Controllers<
-  TControllerDefinitions extends CommerceControllerDefinitionsMap,
-> = InferControllersMapFromDefinition<TControllerDefinitions, SolutionType>;
+type Controllers<TControllerDefinitions extends CommerceControllerDefinitionsMap> =
+  InferControllersMapFromDefinition<TControllerDefinitions, SolutionType>;
 
-export type BuildResult<
-  TControllerDefinitions extends CommerceControllerDefinitionsMap,
-> = {
+export type BuildResult<TControllerDefinitions extends CommerceControllerDefinitionsMap> = {
   engine: SSRCommerceEngine;
   controllers: Controllers<TControllerDefinitions>;
 };

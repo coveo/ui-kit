@@ -13,10 +13,7 @@ interface UseSyncSearchParameterManagerProps {
   controller?: SearchParameterManager;
 }
 
-function useSearchParameterManager({
-  staticState,
-  controller,
-}: UseSyncSearchParameterManagerProps) {
+function useSearchParameterManager({staticState, controller}: UseSyncSearchParameterManagerProps) {
   const [searchParameters, setSearchParameters] = useState(staticState);
   useEffect(() => {
     if (!controller) {

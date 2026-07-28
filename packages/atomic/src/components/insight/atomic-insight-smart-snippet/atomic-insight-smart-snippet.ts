@@ -110,10 +110,7 @@ export class AtomicInsightSmartSnippet
   disconnectedCallback() {
     super.disconnectedCallback();
     if (this.modalRef) {
-      this.modalRef.removeEventListener(
-        'feedbackSent',
-        this.feedbackSentHandler
-      );
+      this.modalRef.removeEventListener('feedbackSent', this.feedbackSentHandler);
     }
   }
 
@@ -130,15 +127,10 @@ export class AtomicInsightSmartSnippet
     if (this.modalRef) {
       return;
     }
-    const modalRef = document.createElement(
-      'atomic-insight-smart-snippet-feedback-modal'
-    );
+    const modalRef = document.createElement('atomic-insight-smart-snippet-feedback-modal');
     modalRef.addEventListener('feedbackSent', this.feedbackSentHandler);
     this.modalRef = modalRef;
-    this.renderRoot.parentElement?.insertAdjacentElement(
-      'beforebegin',
-      modalRef
-    );
+    this.renderRoot.parentElement?.insertAdjacentElement('beforebegin', modalRef);
   }
 
   private renderSource() {
@@ -148,13 +140,9 @@ export class AtomicInsightSmartSnippet
     }
 
     return html`<atomic-smart-snippet-source
-      .anchorAttributes=${getAttributesFromLinkSlotContent(
-        this,
-        'source-anchor-attributes'
-      )}
+      .anchorAttributes=${getAttributesFromLinkSlotContent(this, 'source-anchor-attributes')}
       .onBeginDelayedSelectSource=${this.smartSnippet.beginDelayedSelectSource}
-      .onCancelPendingSelectSource=${this.smartSnippet
-        .cancelPendingSelectSource}
+      .onCancelPendingSelectSource=${this.smartSnippet.cancelPendingSelectSource}
       .onSelectSource=${this.smartSnippet.selectSource}
       .source=${source}
     ></atomic-smart-snippet-source>`;

@@ -51,21 +51,13 @@ describe('#fromAnalyticsStateToAnalyticsParams', () => {
   it('sets #clientId to #navigatorContext.clientId', () => {
     const clientId = 'mock-client-id';
     setNavigatorContext({clientId});
-    analyticsParam = fromAnalyticsStateToAnalyticsParams(
-      state,
-      navigatorContext,
-      eventDescription
-    );
+    analyticsParam = fromAnalyticsStateToAnalyticsParams(state, navigatorContext, eventDescription);
 
     expect(analyticsParam.analytics?.clientId).toBe(clientId);
   });
 
   it('sets #clientTimestamp to an ISO date', () => {
-    analyticsParam = fromAnalyticsStateToAnalyticsParams(
-      state,
-      navigatorContext,
-      eventDescription
-    );
+    analyticsParam = fromAnalyticsStateToAnalyticsParams(state, navigatorContext, eventDescription);
 
     expect(analyticsParam.analytics?.clientTimestamp).toMatch(
       /\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)/
@@ -75,11 +67,7 @@ describe('#fromAnalyticsStateToAnalyticsParams', () => {
   it('sets #documentReferrer to #navigatorContext.referrer', () => {
     const referrer = 'mock-referrer';
     setNavigatorContext({referrer});
-    analyticsParam = fromAnalyticsStateToAnalyticsParams(
-      state,
-      navigatorContext,
-      eventDescription
-    );
+    analyticsParam = fromAnalyticsStateToAnalyticsParams(state, navigatorContext, eventDescription);
 
     expect(analyticsParam.analytics?.documentReferrer).toBe(referrer);
   });
@@ -87,11 +75,7 @@ describe('#fromAnalyticsStateToAnalyticsParams', () => {
   it('sets #documentLocation to #navigatorContext.location', () => {
     const location = 'mock-location';
     setNavigatorContext({location});
-    analyticsParam = fromAnalyticsStateToAnalyticsParams(
-      state,
-      navigatorContext,
-      eventDescription
-    );
+    analyticsParam = fromAnalyticsStateToAnalyticsParams(state, navigatorContext, eventDescription);
 
     expect(analyticsParam.analytics?.documentLocation).toBe(location);
   });
@@ -99,11 +83,7 @@ describe('#fromAnalyticsStateToAnalyticsParams', () => {
   it('sets #originContext to #state.originContext', () => {
     const originContext = 'mock-origin-context';
     setState({originContext});
-    analyticsParam = fromAnalyticsStateToAnalyticsParams(
-      state,
-      navigatorContext,
-      eventDescription
-    );
+    analyticsParam = fromAnalyticsStateToAnalyticsParams(state, navigatorContext, eventDescription);
 
     expect(analyticsParam.analytics?.originContext).toBe(originContext);
   });
@@ -154,22 +134,14 @@ describe('#fromAnalyticsStateToAnalyticsParams', () => {
   it('when #state.userDisplayName is defined, sets #userDisplayName to its value', () => {
     const userDisplayName = 'mock-user-display-name';
     setState({userDisplayName});
-    analyticsParam = fromAnalyticsStateToAnalyticsParams(
-      state,
-      navigatorContext,
-      eventDescription
-    );
+    analyticsParam = fromAnalyticsStateToAnalyticsParams(state, navigatorContext, eventDescription);
 
     expect(analyticsParam.analytics?.userDisplayName).toBe(userDisplayName);
   });
 
   it('when #state.userDisplayName is undefined, does not set #userDisplayName', () => {
     setState({userDisplayName: undefined});
-    analyticsParam = fromAnalyticsStateToAnalyticsParams(
-      state,
-      navigatorContext,
-      eventDescription
-    );
+    analyticsParam = fromAnalyticsStateToAnalyticsParams(state, navigatorContext, eventDescription);
 
     expect(analyticsParam.analytics?.userDisplayName).toBeUndefined();
   });
@@ -177,22 +149,14 @@ describe('#fromAnalyticsStateToAnalyticsParams', () => {
   it('when #state.deviceId is defined, sets #deviceId to its value', () => {
     const deviceId = 'mock-device-id';
     setState({deviceId});
-    analyticsParam = fromAnalyticsStateToAnalyticsParams(
-      state,
-      navigatorContext,
-      eventDescription
-    );
+    analyticsParam = fromAnalyticsStateToAnalyticsParams(state, navigatorContext, eventDescription);
 
     expect(analyticsParam.analytics?.deviceId).toBe(deviceId);
   });
 
   it('when #state.deviceId is undefined, does not set #deviceId', () => {
     setState({deviceId: undefined});
-    analyticsParam = fromAnalyticsStateToAnalyticsParams(
-      state,
-      navigatorContext,
-      eventDescription
-    );
+    analyticsParam = fromAnalyticsStateToAnalyticsParams(state, navigatorContext, eventDescription);
 
     expect(analyticsParam.analytics?.deviceId).toBeUndefined();
   });
@@ -200,33 +164,21 @@ describe('#fromAnalyticsStateToAnalyticsParams', () => {
   it('when #state.trackingId is defined, sets #trackingId to its value', () => {
     const trackingId = 'mock-tracking-id';
     setState({trackingId});
-    analyticsParam = fromAnalyticsStateToAnalyticsParams(
-      state,
-      navigatorContext,
-      eventDescription
-    );
+    analyticsParam = fromAnalyticsStateToAnalyticsParams(state, navigatorContext, eventDescription);
 
     expect(analyticsParam.analytics?.trackingId).toBe(trackingId);
   });
 
   it('when #state.trackingId is undefined, does not set #trackingId', () => {
     setState({trackingId: undefined});
-    analyticsParam = fromAnalyticsStateToAnalyticsParams(
-      state,
-      navigatorContext,
-      eventDescription
-    );
+    analyticsParam = fromAnalyticsStateToAnalyticsParams(state, navigatorContext, eventDescription);
 
     expect(analyticsParam.analytics?.trackingId).toBeUndefined();
   });
 
   it('when #navigatorContext.capture is defined, sets #capture to its value', () => {
     setNavigatorContext({capture: true});
-    analyticsParam = fromAnalyticsStateToAnalyticsParams(
-      state,
-      navigatorContext,
-      eventDescription
-    );
+    analyticsParam = fromAnalyticsStateToAnalyticsParams(state, navigatorContext, eventDescription);
 
     expect(analyticsParam.analytics?.capture).toBe(true);
   });
@@ -266,24 +218,13 @@ describe('#fromAnalyticsStateToAnalyticsParams', () => {
   });
 
   it('sets #source to the value returned by #getAnalyticsSource(#state)', () => {
-    const getAnalyticsSourceMockReturnValue = [
-      '@coveo/atomic@10.0.1',
-      '@coveo/headless@10.1.2',
-    ];
+    const getAnalyticsSourceMockReturnValue = ['@coveo/atomic@10.0.1', '@coveo/headless@10.1.2'];
 
-    vi.mocked(getAnalyticsSource).mockReturnValue(
-      getAnalyticsSourceMockReturnValue
-    );
-    analyticsParam = fromAnalyticsStateToAnalyticsParams(
-      state,
-      navigatorContext,
-      eventDescription
-    );
+    vi.mocked(getAnalyticsSource).mockReturnValue(getAnalyticsSourceMockReturnValue);
+    analyticsParam = fromAnalyticsStateToAnalyticsParams(state, navigatorContext, eventDescription);
 
     expect(getAnalyticsSource).toHaveBeenCalledWith(state);
 
-    expect(analyticsParam.analytics?.source).toEqual(
-      getAnalyticsSourceMockReturnValue
-    );
+    expect(analyticsParam.analytics?.source).toEqual(getAnalyticsSourceMockReturnValue);
   });
 });

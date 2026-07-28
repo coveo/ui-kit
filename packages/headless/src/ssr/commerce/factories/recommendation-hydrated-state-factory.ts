@@ -8,10 +8,7 @@ import type {
   HydrateStaticStateFunction,
   HydrateStaticStateParameters,
 } from '../types/engine.js';
-import {
-  buildFactory,
-  type CommerceEngineDefinitionOptions,
-} from './build-factory.js';
+import {buildFactory, type CommerceEngineDefinitionOptions} from './build-factory.js';
 
 export function hydratedRecommendationStaticStateFactory<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,

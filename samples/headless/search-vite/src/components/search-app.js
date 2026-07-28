@@ -142,15 +142,10 @@ export class SearchApp extends LitElement {
 
         <div class="results-toolbar">
           <search-summary .controller=${this.querySummary}></search-summary>
-          <search-sort
-            .controller=${this.sort}
-            .options=${this.sortOptions}
-          ></search-sort>
+          <search-sort .controller=${this.sort} .options=${this.sortOptions}></search-sort>
         </div>
 
-        <search-breadcrumbs
-          .controller=${this.breadcrumbManager}
-        ></search-breadcrumbs>
+        <search-breadcrumbs .controller=${this.breadcrumbManager}></search-breadcrumbs>
 
         <div class="search-layout">
           <aside class="facets">
@@ -158,28 +153,14 @@ export class SearchApp extends LitElement {
               .controller=${this.categoryFacet}
               .heading=${'Category'}
             ></search-category-facet>
-            <search-facet
-              .controller=${this.articleType}
-              .heading=${'Article type'}
-            ></search-facet>
-            <search-facet
-              .controller=${this.robotSeries}
-              .heading=${'Robot series'}
-            ></search-facet>
-            <search-facet
-              .controller=${this.difficulty}
-              .heading=${'Difficulty'}
-            ></search-facet>
-            <search-facet
-              .controller=${this.author}
-              .heading=${'Author'}
-            ></search-facet>
+            <search-facet .controller=${this.articleType} .heading=${'Article type'}></search-facet>
+            <search-facet .controller=${this.robotSeries} .heading=${'Robot series'}></search-facet>
+            <search-facet .controller=${this.difficulty} .heading=${'Difficulty'}></search-facet>
+            <search-facet .controller=${this.author} .heading=${'Author'}></search-facet>
           </aside>
 
           <section class="results">
-            <search-result-list
-              .controller=${this.resultList}
-            ></search-result-list>
+            <search-result-list .controller=${this.resultList}></search-result-list>
             <search-pager .controller=${this.pager}></search-pager>
           </section>
         </div>

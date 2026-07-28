@@ -1,10 +1,7 @@
 import {LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {
-  ItemContextController,
-  MissingParentError,
-} from './item-context-controller';
+import {ItemContextController, MissingParentError} from './item-context-controller';
 
 @customElement('test-element')
 class TestElement extends LitElement {

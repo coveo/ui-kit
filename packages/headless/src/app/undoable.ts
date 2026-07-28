@@ -14,9 +14,7 @@ export interface StateWithHistory<State> {
   future: State[];
 }
 
-const undo = <State>(
-  state: StateWithHistory<State>
-): StateWithHistory<State> => {
+const undo = <State>(state: StateWithHistory<State>): StateWithHistory<State> => {
   const {past, present, future} = state;
   if (!present) {
     return state;
@@ -35,9 +33,7 @@ const undo = <State>(
   };
 };
 
-const redo = <State>(
-  state: StateWithHistory<State>
-): StateWithHistory<State> => {
+const redo = <State>(state: StateWithHistory<State>): StateWithHistory<State> => {
   const {past, present, future} = state;
   if (!present) {
     return state;
@@ -89,10 +85,7 @@ export const undoable = <State>(options: {
 }) => {
   const {actionTypes, reducer} = options;
   const emptyHistoryState = makeHistory<State>();
-  return (
-    state = emptyHistoryState,
-    action: AnyAction
-  ): StateWithHistory<State> => {
+  return (state = emptyHistoryState, action: AnyAction): StateWithHistory<State> => {
     switch (action.type) {
       case actionTypes.undo:
         return undo(state);

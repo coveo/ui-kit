@@ -13,10 +13,9 @@ const searchApiHarness = new MockSearchApi();
 const CircleIcon =
   '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="currentColor"/></svg>';
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-result-rating',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-result-rating', {
+  excludeCategories: ['methods'],
+});
 
 const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
   includeCodeRoot: false,
@@ -30,11 +29,7 @@ const meta: Meta = {
   title: 'Search/Result Rating',
   id: 'atomic-result-rating',
   render: (args) => template(args),
-  decorators: [
-    resultTemplateDecorator,
-    resultListDecorator,
-    searchInterfaceDecorator,
-  ],
+  decorators: [resultTemplateDecorator, resultListDecorator, searchInterfaceDecorator],
   parameters: {
     ...parameters,
     msw: {
@@ -50,15 +45,13 @@ const meta: Meta = {
     searchApiHarness.searchEndpoint.clear();
     searchApiHarness.searchEndpoint.mockOnce((response) => ({
       ...response,
-      results: (response as SearchResponse).results
-        .slice(0, 1)
-        .map((r: any) => ({
-          ...r,
-          raw: {
-            ...r.raw,
-            snrating: 3.5,
-          },
-        })),
+      results: (response as SearchResponse).results.slice(0, 1).map((r: any) => ({
+        ...r,
+        raw: {
+          ...r.raw,
+          snrating: 3.5,
+        },
+      })),
       totalCount: 1,
       totalCountFiltered: 1,
     }));

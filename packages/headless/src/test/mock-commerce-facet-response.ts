@@ -7,10 +7,7 @@ import type {
   RegularFacetResponse,
 } from '../features/commerce/facets/facet-set/interfaces/response.js';
 
-function getMockBaseCommerceFacetResponse(): Omit<
-  AnyFacetResponse,
-  'type' | 'values'
-> {
+function getMockBaseCommerceFacetResponse(): Omit<AnyFacetResponse, 'type' | 'values'> {
   return {
     displayName: '',
     facetId: '',

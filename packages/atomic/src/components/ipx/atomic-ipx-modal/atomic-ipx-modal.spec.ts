@@ -50,15 +50,9 @@ describe('atomic-ipx-modal', () => {
           .source=${props.source}
           .container=${props.container}
         >
-          ${slottedContent.header
-            ? html`<div slot="header">${slottedContent.header}</div>`
-            : ''}
-          ${slottedContent.body
-            ? html`<div slot="body">${slottedContent.body}</div>`
-            : ''}
-          ${slottedContent.footer
-            ? html`<div slot="footer">${slottedContent.footer}</div>`
-            : ''}
+          ${slottedContent.header ? html`<div slot="header">${slottedContent.header}</div>` : ''}
+          ${slottedContent.body ? html`<div slot="body">${slottedContent.body}</div>` : ''}
+          ${slottedContent.footer ? html`<div slot="footer">${slottedContent.footer}</div>` : ''}
         </atomic-ipx-modal>
       `,
       selector: 'atomic-ipx-modal',
@@ -169,15 +163,14 @@ describe('atomic-ipx-modal', () => {
     });
 
     it('should apply atomic-ipx-modal-opened to the interface element on init when isOpen=true', async () => {
-      const {atomicInterface} =
-        await renderInAtomicSearchInterface<AtomicIpxModal>({
-          template: html`<atomic-ipx-modal .isOpen=${true}></atomic-ipx-modal>`,
-          selector: 'atomic-ipx-modal',
-          bindings: (bindings) => {
-            bindings.engine = mockedEngine;
-            return bindings;
-          },
-        });
+      const {atomicInterface} = await renderInAtomicSearchInterface<AtomicIpxModal>({
+        template: html`<atomic-ipx-modal .isOpen=${true}></atomic-ipx-modal>`,
+        selector: 'atomic-ipx-modal',
+        bindings: (bindings) => {
+          bindings.engine = mockedEngine;
+          return bindings;
+        },
+      });
 
       expect(atomicInterface).toHaveClass('atomic-ipx-modal-opened');
     });
@@ -189,26 +182,18 @@ describe('atomic-ipx-modal', () => {
 
       await renderIPXModal();
 
-      expect(addEventListenerSpy).toHaveBeenCalledWith(
-        'touchmove',
-        expect.any(Function),
-        {passive: false}
-      );
+      expect(addEventListenerSpy).toHaveBeenCalledWith('touchmove', expect.any(Function), {
+        passive: false,
+      });
     });
 
     it('should remove touchmove event listener on disconnection', async () => {
-      const removeEventListenerSpy = vi.spyOn(
-        document.body,
-        'removeEventListener'
-      );
+      const removeEventListenerSpy = vi.spyOn(document.body, 'removeEventListener');
 
       const {element} = await renderIPXModal();
       element.remove();
 
-      expect(removeEventListenerSpy).toHaveBeenCalledWith(
-        'touchmove',
-        expect.any(Function)
-      );
+      expect(removeEventListenerSpy).toHaveBeenCalledWith('touchmove', expect.any(Function));
     });
 
     it('should prevent default on touchmove when modal is open', async () => {
@@ -255,25 +240,19 @@ describe('atomic-ipx-modal', () => {
       });
 
       expect(element).not.toHaveClass('open');
-      expect(document.body.classList.contains('atomic-ipx-modal-opened')).toBe(
-        false
-      );
+      expect(document.body.classList.contains('atomic-ipx-modal-opened')).toBe(false);
 
       element.isOpen = true;
       await element.updateComplete;
 
       expect(element).toHaveClass('open');
-      expect(document.body.classList.contains('atomic-ipx-modal-opened')).toBe(
-        true
-      );
+      expect(document.body.classList.contains('atomic-ipx-modal-opened')).toBe(true);
 
       element.isOpen = false;
       await element.updateComplete;
 
       expect(element).not.toHaveClass('open');
-      expect(document.body.classList.contains('atomic-ipx-modal-opened')).toBe(
-        false
-      );
+      expect(document.body.classList.contains('atomic-ipx-modal-opened')).toBe(false);
     });
 
     it('should accept the #source property', async () => {

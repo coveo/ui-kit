@@ -24,10 +24,7 @@ npm install @coveo/headless@{{packageVersion}}
 Once installed, you can import from the Commerce sub-package:
 
 ```typescript
-import {
-  buildCommerceEngine,
-  getSampleCommerceEngineConfiguration,
-} from '@coveo/headless/commerce';
+import {buildCommerceEngine, getSampleCommerceEngineConfiguration} from '@coveo/headless/commerce';
 ```
 
 ## Use via CDN
@@ -53,8 +50,7 @@ If you prefer not to use a package manager, you can load the Commerce bundle dir
 <script src="https://static.cloud.coveo.com/headless/v{{packageVersion}}/commerce/headless.js"></script>
 <script>
   // All exports are available on the global CoveoHeadlessCommerce object.
-  const {buildCommerceEngine, getSampleCommerceEngineConfiguration} =
-    CoveoHeadlessCommerce;
+  const {buildCommerceEngine, getSampleCommerceEngineConfiguration} = CoveoHeadlessCommerce;
 </script>
 ```
 

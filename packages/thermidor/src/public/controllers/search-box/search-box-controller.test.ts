@@ -4,11 +4,7 @@
 
 import {describe, it, expect, beforeEach, vi} from 'vitest';
 import {createTestEngine} from '@/src/test/test-utils.js';
-import {
-  Engine,
-  FullEngine,
-  getFullEngine,
-} from '@/src/internal/engine/index.js';
+import {Engine, FullEngine, getFullEngine} from '@/src/internal/engine/index.js';
 import {getQuery} from '@/src/internal/features/search-box/index.js';
 import {buildSearchBoxController} from './search-box-controller.js';
 import {buildSearchInterface} from '@/src/public/interfaces/search.js';
@@ -19,8 +15,7 @@ describe('buildSearchBoxController', () => {
   let fullEngine: FullEngine;
   let searchInterface: SearchInterface;
 
-  const buildController = () =>
-    buildSearchBoxController({interface: searchInterface});
+  const buildController = () => buildSearchBoxController({interface: searchInterface});
 
   beforeEach(() => {
     vi.clearAllMocks();

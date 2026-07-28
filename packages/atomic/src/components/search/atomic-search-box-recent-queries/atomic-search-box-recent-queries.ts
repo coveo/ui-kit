@@ -1,8 +1,4 @@
-import {
-  buildRecentQueriesList,
-  type RecentQueriesList,
-  type SearchBox,
-} from '@coveo/headless';
+import {buildRecentQueriesList, type RecentQueriesList, type SearchBox} from '@coveo/headless';
 import {LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {errorGuard} from '@/src/decorators/error-guard';
@@ -102,10 +98,7 @@ export class AtomicSearchBoxRecentQueries
       return this.disableFeature();
     }
 
-    return this.storage.setJSON(
-      StorageItems.RECENT_QUERIES,
-      this.recentQueriesList.state.queries
-    );
+    return this.storage.setJSON(StorageItems.RECENT_QUERIES, this.recentQueriesList.state.queries);
   }
 
   private warnUser = once(() =>
@@ -128,13 +121,12 @@ export class AtomicSearchBoxRecentQueries
     const hasQuery = query !== '';
     const max = hasQuery ? this.maxWithQuery : this.maxWithoutQuery;
     const filteredQueries = this.recentQueriesList.state.queries
-      .filter((recentQuery) =>
-        recentQuery.toLowerCase().startsWith(query.toLowerCase())
-      )
+      .filter((recentQuery) => recentQuery.toLowerCase().startsWith(query.toLowerCase()))
       .slice(0, max);
 
-    const suggestionElements: SearchBoxSuggestionElement[] =
-      filteredQueries.map((value) => this.renderItem(value));
+    const suggestionElements: SearchBoxSuggestionElement[] = filteredQueries.map((value) =>
+      this.renderItem(value)
+    );
     if (suggestionElements.length) {
       suggestionElements.unshift(this.renderClear());
     }

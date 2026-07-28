@@ -118,10 +118,7 @@ export class ProductCard extends LitElement {
 
   #quantityInCart() {
     const id = this.product.ec_product_id ?? this.product.permanentid;
-    return (
-      this.cart?.state.items.find((item) => item.productId === id)?.quantity ??
-      0
-    );
+    return this.cart?.state.items.find((item) => item.productId === id)?.quantity ?? 0;
   }
 
   #adjustQuantity(delta) {
@@ -166,16 +163,10 @@ export class ProductCard extends LitElement {
         ${this.cart
           ? html`
               <div class="cart-controls">
-                <button
-                  type="button"
-                  class="add"
-                  @click=${() => this.#adjustQuantity(1)}
-                >
+                <button type="button" class="add" @click=${() => this.#adjustQuantity(1)}>
                   Add to cart
                 </button>
-                ${quantity > 0
-                  ? html`<span class="in-cart">In cart: ${quantity}</span>`
-                  : nothing}
+                ${quantity > 0 ? html`<span class="in-cart">In cart: ${quantity}</span>` : nothing}
               </div>
             `
           : nothing}

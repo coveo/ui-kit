@@ -37,15 +37,9 @@ const {events, args, argTypes, template} = getStorybookHelpers(
   {excludeCategories: ['methods']}
 );
 
-const {decorator: insightInterfaceDecorator, play} = wrapInInsightInterface(
-  {},
-  false,
-  false
-);
-const {decorator: insightFoldedResultListDecorator} =
-  wrapInInsightFoldedResultList('list', false);
-const {decorator: insightResultTemplateDecorator} =
-  wrapInInsightResultTemplate(false);
+const {decorator: insightInterfaceDecorator, play} = wrapInInsightInterface({}, false, false);
+const {decorator: insightFoldedResultListDecorator} = wrapInInsightFoldedResultList('list', false);
+const {decorator: insightResultTemplateDecorator} = wrapInInsightResultTemplate(false);
 
 const meta: Meta = {
   component: 'atomic-insight-result-children-template',
@@ -118,9 +112,7 @@ export const WithNestedChildren: Story = {
               <atomic-result-text field="excerpt"></atomic-result-text>
             </atomic-result-section-excerpt>
             <atomic-result-section-children>
-              <atomic-insight-result-children
-                inherit-templates
-              ></atomic-insight-result-children>
+              <atomic-insight-result-children inherit-templates></atomic-insight-result-children>
             </atomic-result-section-children>
           </template>
         </atomic-insight-result-children-template>
@@ -145,9 +137,7 @@ export const WithConditions: Story = {
     <atomic-result-section-children id="code-root">
       <atomic-insight-result-children image-size="icon">
         <!-- Template for specific source types -->
-        <atomic-insight-result-children-template
-          must-match-sourcetype="YouTube"
-        >
+        <atomic-insight-result-children-template must-match-sourcetype="YouTube">
           <template>
             <atomic-result-section-badges>
               <atomic-result-badge label="YouTube"></atomic-result-badge>

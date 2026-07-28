@@ -6,9 +6,7 @@ import {renderSwitch, type SwitchProps} from './switch';
 describe('#renderSwitch', () => {
   const locators = (element: Element) => ({
     get button() {
-      return element.querySelector(
-        'button[role="switch"]'
-      ) as HTMLButtonElement;
+      return element.querySelector('button[role="switch"]') as HTMLButtonElement;
     },
     get container() {
       return element.querySelector('button > div');

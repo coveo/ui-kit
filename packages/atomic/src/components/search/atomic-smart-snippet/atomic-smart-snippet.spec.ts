@@ -32,9 +32,7 @@ describe('atomic-smart-snippet', () => {
           clickUri: 'https://example.com/guide',
           uniqueId: 'guide-123',
           raw: {},
-        } as unknown as NonNullable<
-          ReturnType<typeof buildFakeSmartSnippet>['state']['source']
-        >,
+        } as unknown as NonNullable<ReturnType<typeof buildFakeSmartSnippet>['state']['source']>,
         liked: false,
         disliked: false,
         expanded: false,
@@ -75,31 +73,21 @@ describe('atomic-smart-snippet', () => {
     });
 
     const getParts = () => ({
-      smartSnippet: element.shadowRoot?.querySelector(
-        '[part~="smart-snippet"]'
-      ),
+      smartSnippet: element.shadowRoot?.querySelector('[part~="smart-snippet"]'),
       question: element.shadowRoot?.querySelector('[part~="question"]'),
       answer: element.shadowRoot?.querySelector('atomic-smart-snippet-answer'),
-      truncatedAnswer: element.shadowRoot?.querySelector(
-        '[part~="truncated-answer"]'
-      ),
+      truncatedAnswer: element.shadowRoot?.querySelector('[part~="truncated-answer"]'),
       body: element.shadowRoot?.querySelector('[part~="body"]'),
       footer: element.shadowRoot?.querySelector('[part~="footer"]'),
-      feedbackBanner: element.shadowRoot?.querySelector(
-        '[part~="feedback-banner"]'
-      ),
+      feedbackBanner: element.shadowRoot?.querySelector('[part~="feedback-banner"]'),
       feedbackLikeButton: element.shadowRoot?.querySelector(
         '[part~="feedback-like-button"]'
       ) as HTMLElement | null,
       feedbackDislikeButton: element.shadowRoot?.querySelector(
         '[part~="feedback-dislike-button"]'
       ) as HTMLElement | null,
-      feedbackThankYou: element.shadowRoot?.querySelector(
-        '[part~="feedback-thank-you"]'
-      ),
-      expandableAnswer: element.shadowRoot?.querySelector(
-        'atomic-smart-snippet-expandable-answer'
-      ),
+      feedbackThankYou: element.shadowRoot?.querySelector('[part~="feedback-thank-you"]'),
+      expandableAnswer: element.shadowRoot?.querySelector('atomic-smart-snippet-expandable-answer'),
       source: element.shadowRoot?.querySelector('atomic-smart-snippet-source'),
       sourceUrl: element.shadowRoot?.querySelector('[part~="source-url"]'),
       sourceTitle: element.shadowRoot?.querySelector('[part~="source-title"]'),
@@ -134,9 +122,7 @@ describe('atomic-smart-snippet', () => {
       const {getParts} = await renderAtomicSmartSnippet();
       const question = getParts().question!;
       expect(question).toBeInTheDocument();
-      expect(question.textContent?.trim()).toBe(
-        mockedSmartSnippet.state.question
-      );
+      expect(question.textContent?.trim()).toBe(mockedSmartSnippet.state.question);
     });
 
     it('should render the expandable answer when snippetMaximumHeight is undefined', async () => {
@@ -175,12 +161,8 @@ describe('atomic-smart-snippet', () => {
 
       expect(sourceUrl).toBeInTheDocument();
       expect(sourceTitle).toBeInTheDocument();
-      expect(sourceUrl?.getAttribute('href')).toBe(
-        mockedSmartSnippet.state.source?.clickUri
-      );
-      expect(sourceTitle?.getAttribute('href')).toBe(
-        mockedSmartSnippet.state.source?.clickUri
-      );
+      expect(sourceUrl?.getAttribute('href')).toBe(mockedSmartSnippet.state.source?.clickUri);
+      expect(sourceTitle?.getAttribute('href')).toBe(mockedSmartSnippet.state.source?.clickUri);
     });
   });
 
@@ -258,9 +240,7 @@ describe('atomic-smart-snippet', () => {
       getParts().feedbackDislikeButton?.click();
 
       await vi.waitFor(() => {
-        const modal = element
-          .getRootNode()
-          .querySelector('atomic-smart-snippet-feedback-modal');
+        const modal = element.getRootNode().querySelector('atomic-smart-snippet-feedback-modal');
         expect(modal).not.toBeNull();
       });
     });
@@ -310,18 +290,13 @@ describe('atomic-smart-snippet', () => {
 
   describe('inline link events', () => {
     it('should call smartSnippet.selectInlineLink() when selectInlineLink event is dispatched', async () => {
-      const selectInlineLinkSpy = vi.spyOn(
-        mockedSmartSnippet,
-        'selectInlineLink'
-      );
+      const selectInlineLinkSpy = vi.spyOn(mockedSmartSnippet, 'selectInlineLink');
       const {element} = await renderAtomicSmartSnippet();
       const inlineLink: InlineLink = {
         linkText: 'test',
         linkURL: 'https://example.com',
       };
-      element.dispatchEvent(
-        new CustomEvent('selectInlineLink', {detail: inlineLink})
-      );
+      element.dispatchEvent(new CustomEvent('selectInlineLink', {detail: inlineLink}));
       expect(selectInlineLinkSpy).toHaveBeenCalledWith(inlineLink);
     });
 
@@ -335,9 +310,7 @@ describe('atomic-smart-snippet', () => {
         linkText: 'test',
         linkURL: 'https://example.com',
       };
-      element.dispatchEvent(
-        new CustomEvent('beginDelayedSelectInlineLink', {detail: inlineLink})
-      );
+      element.dispatchEvent(new CustomEvent('beginDelayedSelectInlineLink', {detail: inlineLink}));
       expect(beginDelayedSelectInlineLinkSpy).toHaveBeenCalledWith(inlineLink);
     });
 
@@ -351,9 +324,7 @@ describe('atomic-smart-snippet', () => {
         linkText: 'test',
         linkURL: 'https://example.com',
       };
-      element.dispatchEvent(
-        new CustomEvent('cancelPendingSelectInlineLink', {detail: inlineLink})
-      );
+      element.dispatchEvent(new CustomEvent('cancelPendingSelectInlineLink', {detail: inlineLink}));
       expect(cancelPendingSelectInlineLinkSpy).toHaveBeenCalledWith(inlineLink);
     });
   });
@@ -433,10 +404,7 @@ describe('atomic-smart-snippet', () => {
     const {element} = await renderAtomicSmartSnippet();
     const removeEventListenerSpy = vi.spyOn(element, 'removeEventListener');
     element.disconnectedCallback();
-    expect(removeEventListenerSpy).toHaveBeenCalledWith(
-      'selectInlineLink',
-      expect.any(Function)
-    );
+    expect(removeEventListenerSpy).toHaveBeenCalledWith('selectInlineLink', expect.any(Function));
     expect(removeEventListenerSpy).toHaveBeenCalledWith(
       'beginDelayedSelectInlineLink',
       expect.any(Function)

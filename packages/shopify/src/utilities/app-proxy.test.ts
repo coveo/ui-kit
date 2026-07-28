@@ -55,9 +55,7 @@ describe('fetchAppProxyConfig', () => {
       status: 404,
     } as unknown as Response);
 
-    await expect(
-      fetchAppProxyConfig({marketId: 'test-market'})
-    ).rejects.toThrow(
+    await expect(fetchAppProxyConfig({marketId: 'test-market'})).rejects.toThrow(
       'Failed to fetch app proxy configuration from /apps/coveo for marketId test-market. Status: 404'
     );
   });
@@ -95,14 +93,8 @@ describe('fetchAppProxyConfig', () => {
     const result2 = await fetchAppProxyConfig({marketId: 'market2'});
 
     expect(mockFetch).toHaveBeenCalledTimes(2);
-    expect(mockFetch).toHaveBeenNthCalledWith(
-      1,
-      '/apps/coveo?marketId=market1'
-    );
-    expect(mockFetch).toHaveBeenNthCalledWith(
-      2,
-      '/apps/coveo?marketId=market2'
-    );
+    expect(mockFetch).toHaveBeenNthCalledWith(1, '/apps/coveo?marketId=market1');
+    expect(mockFetch).toHaveBeenNthCalledWith(2, '/apps/coveo?marketId=market2');
     expect(result1).toEqual(mockResponse1);
     expect(result2).toEqual(mockResponse2);
   });
@@ -117,9 +109,7 @@ describe('fetchAppProxyConfig', () => {
     } as unknown as Response);
 
     // First call should fail with network error
-    await expect(
-      fetchAppProxyConfig({marketId: 'network-test'})
-    ).rejects.toThrow('Network error');
+    await expect(fetchAppProxyConfig({marketId: 'network-test'})).rejects.toThrow('Network error');
     expect(mockFetch).toHaveBeenCalledTimes(1);
 
     // Second call should succeed (not cached because first failed)
@@ -141,9 +131,7 @@ describe('fetchAppProxyConfig', () => {
       } as unknown as Response);
 
     // First call should fail
-    await expect(
-      fetchAppProxyConfig({marketId: 'http-error-test'})
-    ).rejects.toThrow(
+    await expect(fetchAppProxyConfig({marketId: 'http-error-test'})).rejects.toThrow(
       'Failed to fetch app proxy configuration from /apps/coveo for marketId http-error-test. Status: 500'
     );
     expect(mockFetch).toHaveBeenCalledTimes(1);

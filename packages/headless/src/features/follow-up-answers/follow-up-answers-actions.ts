@@ -1,16 +1,7 @@
-import {
-  ArrayValue,
-  BooleanValue,
-  NumberValue,
-  RecordValue,
-  StringValue,
-} from '@coveo/bueno';
+import {ArrayValue, BooleanValue, NumberValue, RecordValue, StringValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import type {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload.js';
-import {
-  requiredNonEmptyString,
-  validatePayload,
-} from '../../utils/validate-payload.js';
+import {requiredNonEmptyString, validatePayload} from '../../utils/validate-payload.js';
 import {
   answerContentFormatSchema,
   citationSchema,
@@ -39,10 +30,8 @@ const normalizeGenerationStepPayload = <T extends {name: string}>(
   name: normalizeGenerationStepName(payload.name),
 });
 
-export const setIsEnabled = createAction(
-  'followUpAnswers/setIsEnabled',
-  (payload: boolean) =>
-    validatePayload(payload, new BooleanValue({required: true}))
+export const setIsEnabled = createAction('followUpAnswers/setIsEnabled', (payload: boolean) =>
+  validatePayload(payload, new BooleanValue({required: true}))
 );
 
 export const setFollowUpAnswersConversationId = createAction(
@@ -173,9 +162,7 @@ export const submitFollowUpFeedback = createAction(
     })
 );
 
-export const resetFollowUpAnswers = createAction(
-  'followUpAnswers/resetFollowUpAnswers'
-);
+export const resetFollowUpAnswers = createAction('followUpAnswers/resetFollowUpAnswers');
 
 export const followUpStepStarted = createAction(
   'followUpAnswers/stepStarted',
@@ -199,12 +186,7 @@ export const followUpStepFinished = createAction(
 
 export const followUpToolCallStarted = createAction(
   'followUpAnswers/startToolCall',
-  (payload: {
-    answerId: string;
-    toolCallName: string;
-    startedAt: number;
-    toolCallId: string;
-  }) =>
+  (payload: {answerId: string; toolCallName: string; startedAt: number; toolCallId: string}) =>
     validatePayload(payload, {
       answerId: requiredNonEmptyString,
       toolCallName: requiredNonEmptyString,

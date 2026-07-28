@@ -20,9 +20,7 @@ import {
   type RegularFacetOptions,
 } from './headless-commerce-regular-facet.js';
 
-vi.mock(
-  '../../../../../features/commerce/facets/regular-facet/regular-facet-actions'
-);
+vi.mock('../../../../../features/commerce/facets/regular-facet/regular-facet-actions');
 
 describe('RegularFacet', () => {
   const facetId: string = 'regular_facet_id';
@@ -44,13 +42,9 @@ describe('RegularFacet', () => {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
       request: buildMockCommerceFacetRequest({facetId, ...config}),
     });
-    state.productListing.facets = [
-      buildMockCommerceRegularFacetResponse({facetId}),
-    ];
+    state.productListing.facets = [buildMockCommerceRegularFacetResponse({facetId})];
     state.facetSearchSet[facetId] = buildMockFacetSearch();
-    facetResponseSelector.mockReturnValue(
-      buildMockCommerceRegularFacetResponse({facetId})
-    );
+    facetResponseSelector.mockReturnValue(buildMockCommerceRegularFacetResponse({facetId}));
   }
 
   beforeEach(() => {
@@ -106,9 +100,7 @@ describe('RegularFacet', () => {
     facetSearchState.isLoading = true;
     facetSearchState.response.moreValuesAvailable = true;
     facetSearchState.options.query = 'test';
-    facetSearchState.response.values = [
-      {count: 1, displayValue: 'test', rawValue: 'test'},
-    ];
+    facetSearchState.response.values = [{count: 1, displayValue: 'test', rawValue: 'test'}];
 
     state.facetSearchSet[facetId] = facetSearchState;
 

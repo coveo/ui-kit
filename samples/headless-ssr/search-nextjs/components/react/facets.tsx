@@ -18,13 +18,9 @@ export const AuthorFacet = () => {
       facetSearchResults={state.facetSearch.values}
       isLoading={state.isLoading}
       onToggleValue={methods && ((value) => methods.toggleSelect(value))}
-      onUpdateSearchQuery={
-        methods && ((query) => methods.facetSearch.updateText(query))
-      }
+      onUpdateSearchQuery={methods && ((query) => methods.facetSearch.updateText(query))}
       onSubmitSearch={methods && (() => methods.facetSearch.search())}
-      onToggleSearchResult={
-        methods && ((result) => methods.facetSearch.select(result))
-      }
+      onToggleSearchResult={methods && ((result) => methods.facetSearch.select(result))}
     />
   );
 };

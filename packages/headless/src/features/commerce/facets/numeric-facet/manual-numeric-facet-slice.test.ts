@@ -98,10 +98,7 @@ describe('manualNumericFacetSlice', () => {
       },
     });
 
-    const finalState = manualNumericFacetReducer(
-      state.manualNumericFacetSet,
-      clearAllCoreFacets()
-    );
+    const finalState = manualNumericFacetReducer(state.manualNumericFacetSet, clearAllCoreFacets());
 
     expect(finalState).toEqual({
       'some-facet': {manualRange: undefined},

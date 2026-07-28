@@ -7,11 +7,7 @@ import {
 } from '../core/generated-answer/headless-core-interactive-citation.js';
 import {buildInteractiveCitationAnalyticsClient} from './interactive-citation-analytics-client.js';
 
-export type {
-  InteractiveCitation,
-  InteractiveCitationOptions,
-  InteractiveCitationProps,
-};
+export type {InteractiveCitation, InteractiveCitationOptions, InteractiveCitationProps};
 
 /**
  * Creates an `InteractiveCitation` controller instance.

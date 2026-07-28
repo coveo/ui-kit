@@ -5,9 +5,7 @@ import {renderCustomNoAnswerMessage} from './render-custom-no-answer-message';
 
 describe('#renderCustomNoAnswerMessage', () => {
   const renderComponent = async () => {
-    const element = await renderFunctionFixture(
-      html`${renderCustomNoAnswerMessage()}`
-    );
+    const element = await renderFunctionFixture(html`${renderCustomNoAnswerMessage()}`);
 
     return {
       element,

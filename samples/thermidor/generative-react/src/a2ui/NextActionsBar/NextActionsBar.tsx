@@ -11,10 +11,7 @@ interface ActionItem {
   type?: string;
 }
 
-export function A2UINextActionsBar({
-  surface,
-  onAction,
-}: A2UINextActionsBarProps) {
+export function A2UINextActionsBar({surface, onAction}: A2UINextActionsBarProps) {
   const items = (surface.data.actions as ActionItem[]) ?? [];
 
   if (items.length === 0) {
@@ -27,9 +24,7 @@ export function A2UINextActionsBar({
         <button
           key={i}
           className={styles.actionButton}
-          onClick={() =>
-            onAction?.(action.text ?? '', action.type ?? 'followup')
-          }
+          onClick={() => onAction?.(action.text ?? '', action.type ?? 'followup')}
           type="button"
         >
           {action.text}

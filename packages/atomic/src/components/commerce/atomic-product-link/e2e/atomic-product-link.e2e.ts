@@ -13,10 +13,7 @@ test.describe('atomic-product-link', () => {
     expect(page.url()).toContain('barca');
   });
 
-  test('should send ec.productClick event when clicking the link', async ({
-    productLink,
-    page,
-  }) => {
+  test('should send ec.productClick event when clicking the link', async ({productLink, page}) => {
     const analyticsUrlRegex =
       /https:\/\/searchuisamples\.analytics\.org\.coveo\.com\/rest\/organizations\/searchuisamples\/events\/v1.*/;
     const requestPromise = page.waitForRequest(analyticsUrlRegex);

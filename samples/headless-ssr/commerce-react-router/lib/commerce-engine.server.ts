@@ -1,14 +1,8 @@
-import {
-  type NavigatorContext,
-  SolutionType,
-} from '@coveo/headless-react/ssr-commerce';
+import {type NavigatorContext, SolutionType} from '@coveo/headless-react/ssr-commerce';
 import {coveo_accessToken} from '@/app/cookies.server';
 import externalCartService from '@/external-services/external-cart-service';
 import externalContextService from '@/external-services/external-context-service';
-import {
-  toCoveoCartItems,
-  toCoveoCurrency,
-} from '@/utils/external-api-conversions';
+import {toCoveoCartItems, toCoveoCurrency} from '@/utils/external-api-conversions';
 import {isExpired} from '../utils/access-token-utils.js';
 import {
   _listingEngineDefinition,
@@ -22,16 +16,15 @@ import {
 } from './commerce-engine.js';
 import {fetchToken} from './fetch-token.js';
 
-type MappedEngineDefinition<T extends SolutionType> =
-  T extends SolutionType.listing
-    ? ListingEngineDefinition
-    : T extends SolutionType.recommendation
-      ? RecommendationEngineDefinition
-      : T extends SolutionType.search
-        ? SearchEngineDefinition
-        : T extends SolutionType.standalone
-          ? StandaloneEngineDefinition
-          : never;
+type MappedEngineDefinition<T extends SolutionType> = T extends SolutionType.listing
+  ? ListingEngineDefinition
+  : T extends SolutionType.recommendation
+    ? RecommendationEngineDefinition
+    : T extends SolutionType.search
+      ? SearchEngineDefinition
+      : T extends SolutionType.standalone
+        ? StandaloneEngineDefinition
+        : never;
 
 export async function getEngineDefinition<T extends SolutionType>(
   navigatorContext: NavigatorContext,
@@ -62,13 +55,9 @@ export async function getEngineDefinition<T extends SolutionType>(
   }
 
   if (isExpired(engineDefinition.getAccessToken())) {
-    const accessTokenCookie = await coveo_accessToken.parse(
-      request.headers.get('Cookie')
-    );
+    const accessTokenCookie = await coveo_accessToken.parse(request.headers.get('Cookie'));
 
-    const accessToken = isExpired(accessTokenCookie)
-      ? await fetchToken()
-      : accessTokenCookie;
+    const accessToken = isExpired(accessTokenCookie) ? await fetchToken() : accessTokenCookie;
 
     engineDefinition.setAccessToken(accessToken);
   }
@@ -78,9 +67,7 @@ export async function getEngineDefinition<T extends SolutionType>(
   return engineDefinition as MappedEngineDefinition<T>;
 }
 
-export const getBaseFetchStaticStateConfiguration = async (
-  pathname: string
-) => {
+export const getBaseFetchStaticStateConfiguration = async (pathname: string) => {
   const items = await externalCartService.getItems();
   const context = await externalContextService.getContextInformation();
 

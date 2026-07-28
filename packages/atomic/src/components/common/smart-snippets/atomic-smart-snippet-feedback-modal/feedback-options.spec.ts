@@ -22,45 +22,31 @@ describe('#feedbackOptions', () => {
   });
 
   it('should include "does_not_answer" option', () => {
-    const option = feedbackOptions.find(
-      (opt) => opt.correspondingAnswer === 'does_not_answer'
-    );
+    const option = feedbackOptions.find((opt) => opt.correspondingAnswer === 'does_not_answer');
 
     expect(option).toBeDefined();
     expect(option?.id).toBe('does-not-answer');
-    expect(option?.localeKey).toBe(
-      'smart-snippet-feedback-reason-does-not-answer'
-    );
+    expect(option?.localeKey).toBe('smart-snippet-feedback-reason-does-not-answer');
   });
 
   it('should include "partially_answers" option', () => {
-    const option = feedbackOptions.find(
-      (opt) => opt.correspondingAnswer === 'partially_answers'
-    );
+    const option = feedbackOptions.find((opt) => opt.correspondingAnswer === 'partially_answers');
 
     expect(option).toBeDefined();
     expect(option?.id).toBe('partially-answers');
-    expect(option?.localeKey).toBe(
-      'smart-snippet-feedback-reason-partially-answers'
-    );
+    expect(option?.localeKey).toBe('smart-snippet-feedback-reason-partially-answers');
   });
 
   it('should include "was_not_a_question" option', () => {
-    const option = feedbackOptions.find(
-      (opt) => opt.correspondingAnswer === 'was_not_a_question'
-    );
+    const option = feedbackOptions.find((opt) => opt.correspondingAnswer === 'was_not_a_question');
 
     expect(option).toBeDefined();
     expect(option?.id).toBe('was-not-a-question');
-    expect(option?.localeKey).toBe(
-      'smart-snippet-feedback-reason-was-not-a-question'
-    );
+    expect(option?.localeKey).toBe('smart-snippet-feedback-reason-was-not-a-question');
   });
 
   it('should include "other" option', () => {
-    const option = feedbackOptions.find(
-      (opt) => opt.correspondingAnswer === 'other'
-    );
+    const option = feedbackOptions.find((opt) => opt.correspondingAnswer === 'other');
 
     expect(option).toBeDefined();
     expect(option?.id).toBe('other');

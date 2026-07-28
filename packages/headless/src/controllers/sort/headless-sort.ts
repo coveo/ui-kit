@@ -22,6 +22,8 @@ export type {Sort, SortInitialState, SortProps, SortState};
  * @param props - The configurable `Sort` controller properties.
  * @returns A `Sort` controller instance.
  *
+ * Example: [sort.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/sort.tsx)
+ *
  * @group Controllers
  * @category Sort
  */

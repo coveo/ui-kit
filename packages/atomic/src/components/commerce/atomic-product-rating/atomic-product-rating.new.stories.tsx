@@ -9,52 +9,40 @@ import '@/src/components/commerce/atomic-product-rating/atomic-product-rating.js
 
 const commerceApiHarness = new MockCommerceApi();
 
-const {
-  decorator: commerceInterfaceDecorator,
-  play: initializeCommerceInterface,
-} = wrapInCommerceInterface({
-  type: 'product-listing',
-  engineConfig: {
-    context: {
-      view: {
-        url: 'https://sports.barca.group/browse/promotions/ui-kit-testing',
+const {decorator: commerceInterfaceDecorator, play: initializeCommerceInterface} =
+  wrapInCommerceInterface({
+    type: 'product-listing',
+    engineConfig: {
+      context: {
+        view: {
+          url: 'https://sports.barca.group/browse/promotions/ui-kit-testing',
+        },
+        language: 'en',
+        country: 'US',
+        currency: 'USD',
       },
-      language: 'en',
-      country: 'US',
-      currency: 'USD',
+      preprocessRequest: (request) => {
+        const parsed = JSON.parse(request.body as string);
+        parsed.perPage = 1;
+        request.body = JSON.stringify(parsed);
+        return request;
+      },
     },
-    preprocessRequest: (request) => {
-      const parsed = JSON.parse(request.body as string);
-      parsed.perPage = 1;
-      request.body = JSON.stringify(parsed);
-      return request;
-    },
-  },
-  includeCodeRoot: false,
-});
-const {decorator: commerceProductListDecorator} = wrapInCommerceProductList(
-  'list',
-  false
-);
+    includeCodeRoot: false,
+  });
+const {decorator: commerceProductListDecorator} = wrapInCommerceProductList('list', false);
 const {decorator: productTemplateDecorator} = wrapInProductTemplate();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-product-rating',
-  {
-    excludeCategories: ['methods'],
-    containerSelector: 'atomic-product-template template',
-  }
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-product-rating', {
+  excludeCategories: ['methods'],
+  containerSelector: 'atomic-product-template template',
+});
 
 const meta: Meta = {
   component: 'atomic-product-rating',
   title: 'Commerce/Product Rating',
   id: 'atomic-product-rating',
   render: (args) => template(args),
-  decorators: [
-    productTemplateDecorator,
-    commerceProductListDecorator,
-    commerceInterfaceDecorator,
-  ],
+  decorators: [productTemplateDecorator, commerceProductListDecorator, commerceInterfaceDecorator],
   parameters: {
     ...parameters,
     msw: {handlers: [...commerceApiHarness.handlers]},

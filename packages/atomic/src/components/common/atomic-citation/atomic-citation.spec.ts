@@ -1,7 +1,4 @@
-import type {
-  GeneratedAnswerCitation,
-  InteractiveCitation,
-} from '@coveo/headless';
+import type {GeneratedAnswerCitation, InteractiveCitation} from '@coveo/headless';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
@@ -60,9 +57,7 @@ describe('atomic-citation', () => {
       element,
       locators: {
         get citationLink() {
-          return element.shadowRoot?.querySelector(
-            '[part="citation"]'
-          ) as HTMLAnchorElement | null;
+          return element.shadowRoot?.querySelector('[part="citation"]') as HTMLAnchorElement | null;
         },
         get citationPopover() {
           return element.shadowRoot?.querySelector(
@@ -70,14 +65,10 @@ describe('atomic-citation', () => {
           ) as HTMLElement | null;
         },
         get citationTitle() {
-          return element.shadowRoot?.querySelector(
-            '.citation-title'
-          ) as HTMLElement | null;
+          return element.shadowRoot?.querySelector('.citation-title') as HTMLElement | null;
         },
         get citationText() {
-          return element.shadowRoot?.querySelector(
-            'p.text-on-background'
-          ) as HTMLElement | null;
+          return element.shadowRoot?.querySelector('p.text-on-background') as HTMLElement | null;
         },
       },
     };
@@ -122,9 +113,7 @@ describe('atomic-citation', () => {
         citation: citationWithoutClickUri,
       });
 
-      expect(locators.citationPopover?.textContent).toContain(
-        'https://example.com/test'
-      );
+      expect(locators.citationPopover?.textContent).toContain('https://example.com/test');
     });
 
     it('should truncate citation text longer than 200 characters', async () => {
@@ -133,9 +122,7 @@ describe('atomic-citation', () => {
         citation: {...mockCitation, text: longText},
       });
 
-      expect(locators.citationPopover?.textContent).toContain(
-        `${'a'.repeat(200)}...`
-      );
+      expect(locators.citationPopover?.textContent).toContain(`${'a'.repeat(200)}...`);
     });
 
     it('should render citation preview text without Markdown syntax', async () => {
@@ -157,9 +144,7 @@ describe('atomic-citation', () => {
       const {locators} = await renderComponent();
 
       expect(locators.citationLink?.href).toContain('#:~:text=');
-      expect(
-        citationAnchoringUtils.generateTextFragmentUrl
-      ).toHaveBeenCalledWith(
+      expect(citationAnchoringUtils.generateTextFragmentUrl).toHaveBeenCalledWith(
         'https://example.com/test-click',
         mockCitation.text,
         'html'
@@ -181,9 +166,7 @@ describe('atomic-citation', () => {
       });
 
       expect(locators.citationLink?.href).toContain('#:~:text=');
-      expect(
-        citationAnchoringUtils.generateTextFragmentUrl
-      ).toHaveBeenCalledWith(
+      expect(citationAnchoringUtils.generateTextFragmentUrl).toHaveBeenCalledWith(
         'https://example.com/test-click',
         mockCitation.text,
         'html'
@@ -207,12 +190,8 @@ describe('atomic-citation', () => {
         'https://example.com/test-click',
         undefined
       );
-      expect(
-        citationAnchoringUtils.generateTextFragmentUrl
-      ).not.toHaveBeenCalled();
-      expect(locators.citationLink?.href).toBe(
-        'https://example.com/test-click'
-      );
+      expect(citationAnchoringUtils.generateTextFragmentUrl).not.toHaveBeenCalled();
+      expect(locators.citationLink?.href).toBe('https://example.com/test-click');
     });
 
     it('should not modify URL when citation anchoring is disabled', async () => {
@@ -220,9 +199,7 @@ describe('atomic-citation', () => {
         disableCitationAnchoring: true,
       });
 
-      expect(locators.citationLink?.href).toBe(
-        'https://example.com/test-click'
-      );
+      expect(locators.citationLink?.href).toBe('https://example.com/test-click');
       expect(locators.citationLink?.href).not.toContain('#:~:text=');
     });
   });
@@ -247,9 +224,7 @@ describe('atomic-citation', () => {
       await element.updateComplete;
       expect(locators.citationPopover).toHaveClass('desktop-only:flex');
 
-      element.dispatchEvent(
-        new KeyboardEvent('keydown', {key: 'Escape', bubbles: true})
-      );
+      element.dispatchEvent(new KeyboardEvent('keydown', {key: 'Escape', bubbles: true}));
       await element.updateComplete;
       expect(locators.citationPopover).toHaveClass('hidden');
     });
@@ -261,9 +236,7 @@ describe('atomic-citation', () => {
       await element.updateComplete;
       expect(locators.citationPopover).toHaveClass('desktop-only:flex');
 
-      element.dispatchEvent(
-        new KeyboardEvent('keydown', {key: 'Enter', bubbles: true})
-      );
+      element.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter', bubbles: true}));
       await element.updateComplete;
       expect(locators.citationPopover).toHaveClass('desktop-only:flex');
     });
@@ -272,9 +245,7 @@ describe('atomic-citation', () => {
       vi.useFakeTimers();
       const {element, locators} = await renderComponent();
 
-      locators.citationLink?.dispatchEvent(
-        new MouseEvent('mouseover', {bubbles: true})
-      );
+      locators.citationLink?.dispatchEvent(new MouseEvent('mouseover', {bubbles: true}));
       await element.updateComplete;
       expect(locators.citationPopover).toHaveClass('hidden');
 

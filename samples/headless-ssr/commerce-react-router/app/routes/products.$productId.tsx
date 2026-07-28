@@ -1,7 +1,4 @@
-import {
-  type NavigatorContext,
-  SolutionType,
-} from '@coveo/headless-react/ssr-commerce';
+import {type NavigatorContext, SolutionType} from '@coveo/headless-react/ssr-commerce';
 import type {LoaderFunctionArgs} from 'react-router';
 import {useLoaderData} from 'react-router';
 import invariant from 'tiny-invariant';
@@ -29,8 +26,7 @@ export const loader = async ({params, request}: LoaderFunctionArgs) => {
 
   const catalogItem = await externalCatalogAPI.getItem(request.url);
 
-  const {currency, language} =
-    await externalContextService.getContextInformation();
+  const {currency, language} = await externalContextService.getContextInformation();
 
   const navigatorContext = await getNavigatorContext(request);
 
@@ -40,8 +36,9 @@ export const loader = async ({params, request}: LoaderFunctionArgs) => {
     SolutionType.standalone
   );
 
-  const baseFetchStaticStateConfiguration =
-    await getBaseFetchStaticStateConfiguration(new URL(request.url).pathname);
+  const baseFetchStaticStateConfiguration = await getBaseFetchStaticStateConfiguration(
+    new URL(request.url).pathname
+  );
 
   const staticState = await standaloneEngineDefinition.fetchStaticState(
     baseFetchStaticStateConfiguration
@@ -60,14 +57,7 @@ export const loader = async ({params, request}: LoaderFunctionArgs) => {
 };
 
 export default function ProductRoute() {
-  const {
-    staticState,
-    navigatorContext,
-    catalogItem,
-    cartItem,
-    language,
-    currency,
-  } = useLoaderData<{
+  const {staticState, navigatorContext, catalogItem, cartItem, language, currency} = useLoaderData<{
     staticState: StandaloneStaticState;
     navigatorContext: NavigatorContext;
     productId: string;
@@ -78,10 +68,7 @@ export default function ProductRoute() {
   }>();
 
   return (
-    <StandaloneProvider
-      staticState={staticState}
-      navigatorContext={navigatorContext}
-    >
+    <StandaloneProvider staticState={staticState} navigatorContext={navigatorContext}>
       <ContextDropdown />
       <ProductView
         catalogItem={catalogItem}

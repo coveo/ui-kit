@@ -20,9 +20,7 @@ export interface ResultListDefinition extends ControllerDefinitionWithoutProps<
  * @param props - The configurable `ResultList` properties.
  * @returns The `ResultList` controller definition.
  * */
-export function defineResultList(
-  props?: ResultListProps
-): ResultListDefinition {
+export function defineResultList(props?: ResultListProps): ResultListDefinition {
   return {
     build: (engine) => buildResultList(engine, props),
   };

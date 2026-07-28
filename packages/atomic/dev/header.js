@@ -23,8 +23,7 @@ const links = [
 
 const header = document.createElement('header');
 
-const getCurrentExample = () =>
-  links.find((link) => link.href === window.location.pathname);
+const getCurrentExample = () => links.find((link) => link.href === window.location.pathname);
 
 const makeLinks = () => {
   const currentExample = getCurrentExample();

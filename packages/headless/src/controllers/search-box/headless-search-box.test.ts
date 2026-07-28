@@ -2,10 +2,7 @@ import {logSearchboxSubmit} from '../../features/query/query-analytics-actions.j
 import {fetchQuerySuggestions} from '../../features/query-suggest/query-suggest-actions.js';
 import {executeSearch} from '../../features/search/search-actions.js';
 import type {SearchAppState} from '../../state/search-app-state.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../test/mock-engine-v2.js';
 import {buildMockQuerySuggest} from '../../test/mock-query-suggest.js';
 import {createMockState} from '../../test/mock-state.js';
 import {

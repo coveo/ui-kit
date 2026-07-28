@@ -13,10 +13,7 @@ export function createControllerWithKind<TController, TKind extends Kind>(
   controller: TController,
   kind: TKind
 ): TController & {_kind: TKind} {
-  const copy = Object.defineProperties(
-    {},
-    Object.getOwnPropertyDescriptors(controller)
-  );
+  const copy = Object.defineProperties({}, Object.getOwnPropertyDescriptors(controller));
 
   Object.defineProperty(copy, '_kind', {
     value: kind,

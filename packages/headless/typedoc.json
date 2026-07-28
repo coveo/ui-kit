@@ -1,13 +1,5 @@
 {
-  "highlightLanguages": [
-    "typescript",
-    "javascript",
-    "jsx",
-    "tsx",
-    "json",
-    "bash",
-    "html"
-  ],
+  "highlightLanguages": ["typescript", "javascript", "jsx", "tsx", "json", "bash", "html"],
   "projectDocuments": [
     "source_docs/coveo-headless-home.md",
     "source_docs/relevance-generative-answering.md",

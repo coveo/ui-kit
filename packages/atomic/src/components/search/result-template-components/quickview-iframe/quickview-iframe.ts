@@ -20,17 +20,12 @@ const currentResultAlreadyWrittenToDocument = (
   documentWriter: Document,
   uniqueIdentifier: string
 ) => {
-  const currentDocIdentifier = documentWriter.getElementById(
-    documentIdentifierInIframe
-  );
+  const currentDocIdentifier = documentWriter.getElementById(documentIdentifierInIframe);
 
   return currentDocIdentifier?.textContent === uniqueIdentifier;
 };
 
-const ensureSameResultIsNotOverwritten = (
-  documentWriter: Document,
-  uniqueIdentifier: string
-) => {
+const ensureSameResultIsNotOverwritten = (documentWriter: Document, uniqueIdentifier: string) => {
   const docIdentifier = documentWriter.createElement('div');
   docIdentifier.style.display = 'none';
   docIdentifier.setAttribute('aria-hidden', 'true');
@@ -50,10 +45,7 @@ const warnAboutLimitedUsageQuickview = (logger?: SearchEngine['logger']) => {
 // There are only 2 safe ways to get a callback when the iframe is added:
 //   - Adding a MutationObserver on the parent document. Works, but very verbose, needs to be de-registered, and could interfere with other frameworks
 //   - Adding a load event listener on the iframe. This is technically after the iframe loads its src, but since src is about:blank, it boils down to what we want.
-const iframeConnectedEvent = async (
-  iframe: HTMLIFrameElement,
-  logger?: SearchEngine['logger']
-) => {
+const iframeConnectedEvent = async (iframe: HTMLIFrameElement, logger?: SearchEngine['logger']) => {
   if (iframe.isConnected) {
     // The iframe is already connected.
     // There would likely be no load event to catch anyway.
@@ -78,18 +70,8 @@ interface QuickviewIframeProps {
   logger?: SearchEngine['logger'];
 }
 
-export const renderQuickviewIframe: FunctionalComponent<
-  QuickviewIframeProps
-> = ({props}) => {
-  const {
-    title,
-    onSetIframeRef,
-    uniqueIdentifier,
-    content,
-    sandbox,
-    src,
-    logger,
-  } = props;
+export const renderQuickviewIframe: FunctionalComponent<QuickviewIframeProps> = ({props}) => {
+  const {title, onSetIframeRef, uniqueIdentifier, content, sandbox, src, logger} = props;
 
   // When a document is written with document.open/document.write/document.close
   // it is not synchronous and the content of the iframe is only available to be queried at the end of the current call stack.
@@ -120,9 +102,7 @@ export const renderQuickviewIframe: FunctionalComponent<
 
         return;
       }
-      if (
-        currentResultAlreadyWrittenToDocument(documentWriter, uniqueIdentifier)
-      ) {
+      if (currentResultAlreadyWrittenToDocument(documentWriter, uniqueIdentifier)) {
         return;
       }
 

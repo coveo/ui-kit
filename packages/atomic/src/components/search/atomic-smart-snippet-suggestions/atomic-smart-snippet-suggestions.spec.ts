@@ -57,95 +57,64 @@ describe('atomic-smart-snippet-suggestions', () => {
           snippet-style=${props.snippetStyle ?? ''}
         ></atomic-smart-snippet-suggestions>`;
 
-    const {element} =
-      await renderInAtomicSearchInterface<AtomicSmartSnippetSuggestions>({
-        template,
-        selector: 'atomic-smart-snippet-suggestions',
-        bindings: (bindings) => {
-          bindings.engine = mockEngine;
-          return bindings;
-        },
-      });
+    const {element} = await renderInAtomicSearchInterface<AtomicSmartSnippetSuggestions>({
+      template,
+      selector: 'atomic-smart-snippet-suggestions',
+      bindings: (bindings) => {
+        bindings.engine = mockEngine;
+        return bindings;
+      },
+    });
 
     return {
       element,
       locators: {
-        container: () =>
-          element.shadowRoot?.querySelector('[part="container"]'),
+        container: () => element.shadowRoot?.querySelector('[part="container"]'),
         heading: () => element.shadowRoot?.querySelector('[part="heading"]'),
-        questions: () =>
-          element.shadowRoot?.querySelector('[part="questions"]'),
-        questionAnswers: () =>
-          element.shadowRoot?.querySelectorAll('[part^="question-answer"]')!,
+        questions: () => element.shadowRoot?.querySelector('[part="questions"]'),
+        questionAnswers: () => element.shadowRoot?.querySelectorAll('[part^="question-answer"]')!,
         questionAnswerCollapsed: () =>
-          element.shadowRoot?.querySelector(
-            '[part="question-answer-collapsed"]'
-          ),
+          element.shadowRoot?.querySelector('[part="question-answer-collapsed"]'),
         questionAnswerExpanded: () =>
-          element.shadowRoot?.querySelector(
-            '[part="question-answer-expanded"]'
-          ),
+          element.shadowRoot?.querySelector('[part="question-answer-expanded"]'),
         questionAnswersCollapsed: () =>
-          element.shadowRoot?.querySelectorAll(
-            '[part^="question-answer-collapsed"]'
-          )!,
+          element.shadowRoot?.querySelectorAll('[part^="question-answer-collapsed"]')!,
         questionAnswersExpanded: () =>
-          element.shadowRoot?.querySelectorAll(
-            '[part^="question-answer-expanded"]'
-          )!,
+          element.shadowRoot?.querySelectorAll('[part^="question-answer-expanded"]')!,
 
         questionButtonCollapsed: () =>
-          element.shadowRoot?.querySelector(
-            '[part="question-button-collapsed"]'
-          ),
+          element.shadowRoot?.querySelector('[part="question-button-collapsed"]'),
         questionButtonsCollapsed: () =>
-          element.shadowRoot?.querySelectorAll(
-            '[part^="question-button-collapsed"]'
-          )!,
+          element.shadowRoot?.querySelectorAll('[part^="question-button-collapsed"]')!,
         questionButtonExpanded: () =>
-          element.shadowRoot?.querySelector(
-            '[part="question-button-expanded"]'
-          ),
+          element.shadowRoot?.querySelector('[part="question-button-expanded"]'),
         questionButtonsExpanded: () =>
-          element.shadowRoot?.querySelectorAll(
-            '[part^="question-button-expanded"]'
-          )!,
+          element.shadowRoot?.querySelectorAll('[part^="question-button-expanded"]')!,
         questionIconCollapsed: () =>
           element.shadowRoot?.querySelector('[part="question-icon-collapsed"]'),
         questionIconsCollapsed: () =>
-          element.shadowRoot?.querySelectorAll(
-            '[part^="question-icon-collapsed"]'
-          )!,
+          element.shadowRoot?.querySelectorAll('[part^="question-icon-collapsed"]')!,
         questionIconExpanded: () =>
           element.shadowRoot?.querySelector('[part="question-icon-expanded"]'),
         questionIconsExpanded: () =>
-          element.shadowRoot?.querySelectorAll(
-            '[part^="question-icon-expanded"]'
-          )!,
+          element.shadowRoot?.querySelectorAll('[part^="question-icon-expanded"]')!,
         questionTextCollapsed: () =>
           element.shadowRoot?.querySelector('[part="question-text-collapsed"]'),
         questionTextsCollapsed: () =>
-          element.shadowRoot?.querySelectorAll(
-            '[part^="question-text-collapsed"]'
-          )!,
+          element.shadowRoot?.querySelectorAll('[part^="question-text-collapsed"]')!,
         questionTextExpanded: () =>
           element.shadowRoot?.querySelector('[part="question-text-expanded"]'),
         questionTextsExpanded: () =>
-          element.shadowRoot?.querySelectorAll(
-            '[part^="question-text-expanded"]'
-          )!,
+          element.shadowRoot?.querySelectorAll('[part^="question-text-expanded"]')!,
         questionTexts: () =>
           Array.from(
             element.shadowRoot?.querySelectorAll(
               '[part="question-text-collapsed"], [part="question-text-expanded"]'
             )!
           ),
-        answerAndSources: () =>
-          element.shadowRoot?.querySelectorAll('[part="answer-and-source"]')!,
-        smartSnippetAnswer: () =>
-          element.shadowRoot?.querySelector('atomic-smart-snippet-answer'),
-        smartSnippetSource: () =>
-          element.shadowRoot?.querySelector('atomic-smart-snippet-source'),
+        answerAndSources: () => element.shadowRoot?.querySelectorAll('[part="answer-and-source"]')!,
+        smartSnippetAnswer: () => element.shadowRoot?.querySelector('atomic-smart-snippet-answer'),
+        smartSnippetSource: () => element.shadowRoot?.querySelector('atomic-smart-snippet-source'),
         footer: () => element.shadowRoot?.querySelector('[part="footer"]'),
       },
     };
@@ -185,9 +154,7 @@ describe('atomic-smart-snippet-suggestions', () => {
     ])(
       'should log validation warning when #headingLevel is updated to invalid value',
       async ({validValue, invalidValue}) => {
-        const consoleWarnSpy = vi
-          .spyOn(console, 'warn')
-          .mockImplementation(() => {});
+        const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
         const {element} = await renderComponent({
           props: {headingLevel: validValue},
@@ -280,9 +247,7 @@ describe('atomic-smart-snippet-suggestions', () => {
           controllerState: {questions: [question1, question2]},
         });
 
-        const questionText = locators
-          .questionTexts()
-          .map((el) => el.textContent?.trim());
+        const questionText = locators.questionTexts().map((el) => el.textContent?.trim());
 
         expect(questionText).toEqual([question1.question, question2.question]);
       });
@@ -521,9 +486,7 @@ describe('atomic-smart-snippet-suggestions', () => {
       });
 
       const sourceEl = locators.smartSnippetSource();
-      sourceEl?.dispatchEvent(
-        new CustomEvent('select-source', {bubbles: true, composed: true})
-      );
+      sourceEl?.dispatchEvent(new CustomEvent('select-source', {bubbles: true, composed: true}));
 
       expect(selectSource).toHaveBeenCalledWith('q1');
     });
@@ -628,13 +591,10 @@ describe('atomic-smart-snippet-suggestions', () => {
     expect(sourceEl).toBeInTheDocument();
     expect(sourceEl?.anchorAttributes).toBeDefined();
 
-    const attrs = sourceEl?.anchorAttributes!.reduce<Record<string, string>>(
-      (acc, attr) => {
-        acc[attr.name] = attr.value;
-        return acc;
-      },
-      {}
-    );
+    const attrs = sourceEl?.anchorAttributes!.reduce<Record<string, string>>((acc, attr) => {
+      acc[attr.name] = attr.value;
+      return acc;
+    }, {});
 
     expect(attrs).toMatchObject({
       target: '_blank',

@@ -49,9 +49,7 @@ export interface RecentResultsActionCreators {
  * @group Actions
  * @category RecentResults
  */
-export function loadRecentResultsActions(
-  engine: SearchEngine
-): RecentResultsActionCreators {
+export function loadRecentResultsActions(engine: SearchEngine): RecentResultsActionCreators {
   engine.addReducers({recentResults});
 
   return {

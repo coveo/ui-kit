@@ -28,9 +28,7 @@ describe('createRenewAccessTokenMiddleware', () => {
   }
 
   function buildDispatch() {
-    return vi.fn((action: unknown) =>
-      typeof action === 'function' ? action() : action
-    );
+    return vi.fn((action: unknown) => (typeof action === 'function' ? action() : action));
   }
 
   function buildArrayWithLengthEqualToNumberOfRetries() {
@@ -257,9 +255,7 @@ describe('createRenewAccessTokenMiddleware', () => {
 
     const payload = buildExpiredTokenPayload();
     const action = () => Promise.resolve(payload);
-    const renewFn = vi
-      .fn()
-      .mockRejectedValue(new Error('renewal service down'));
+    const renewFn = vi.fn().mockRejectedValue(new Error('renewal service down'));
     const middleware = createRenewAccessTokenMiddleware(logger, renewFn);
 
     await expect(callMiddleware(middleware, action)).resolves.not.toThrow();
@@ -271,16 +267,12 @@ describe('createRenewAccessTokenMiddleware', () => {
 
     const payload = buildExpiredTokenPayload();
     const action = () => Promise.resolve(payload);
-    const renewFn = vi
-      .fn()
-      .mockRejectedValue(new Error('renewal service down'));
+    const renewFn = vi.fn().mockRejectedValue(new Error('renewal service down'));
     const middleware = createRenewAccessTokenMiddleware(logger, renewFn);
 
     await callMiddleware(middleware, action);
 
-    expect(store.dispatch).not.toHaveBeenCalledWith(
-      updateBasicConfiguration(expect.anything())
-    );
+    expect(store.dispatch).not.toHaveBeenCalledWith(updateBasicConfiguration(expect.anything()));
   });
 
   it('should re-dispatch the original action when renewToken fails in the reactive path', async () => {
@@ -289,9 +281,7 @@ describe('createRenewAccessTokenMiddleware', () => {
 
     const payload = buildExpiredTokenPayload();
     const action = () => Promise.resolve(payload);
-    const renewFn = vi
-      .fn()
-      .mockRejectedValue(new Error('renewal service down'));
+    const renewFn = vi.fn().mockRejectedValue(new Error('renewal service down'));
     const middleware = createRenewAccessTokenMiddleware(logger, renewFn);
 
     await callMiddleware(middleware, action);
@@ -330,18 +320,14 @@ describe('createRenewAccessTokenMiddleware', () => {
 
     const middleware = createRenewAccessTokenMiddleware(logger, renewFn);
 
-    const promises = Array.from({length: 5}, () => 0).map(() =>
-      callMiddleware(middleware, action)
-    );
+    const promises = Array.from({length: 5}, () => 0).map(() => callMiddleware(middleware, action));
     await Promise.all(promises);
 
     (store.dispatch as Mock).mockReset();
     await callMiddleware(middleware, action);
 
     expect(store.dispatch).toHaveBeenCalledWith(action);
-    expect(store.dispatch).not.toHaveBeenCalledWith(
-      setError(expect.anything())
-    );
+    expect(store.dispatch).not.toHaveBeenCalledWith(setError(expect.anything()));
   });
 
   it('should not throw in the reactive path when piggybacking on a proactive renewal that rejects', async () => {

@@ -59,32 +59,28 @@ describe('atomic-insight-result', () => {
     } = options;
 
     const content =
-      'content' in options
-        ? options.content
-        : renderTemplateContent(defaultTemplateContent);
-    const {element} = await renderInAtomicInsightInterface<AtomicInsightResult>(
-      {
-        template: html`<atomic-insight-result
-          .result=${result}
-          .content=${content}
-          .density=${density}
-          .imageSize=${imageSize}
-          .stopPropagation=${true}
-          .loadingFlag=${loadingFlag}
-          .renderingFunction=${renderingFunction}
-        ></atomic-insight-result>`,
-        selector: 'atomic-insight-result',
-        bindings: (bindings) => {
-          bindings.store.onChange = vi.fn();
-          bindings.store.state.resultList = {
-            focusOnFirstResultAfterNextSearch: vi.fn(),
-            focusOnNextNewResult: vi.fn(),
-          };
-          bindings.store.state.loadingFlags = [];
-          return bindings;
-        },
-      }
-    );
+      'content' in options ? options.content : renderTemplateContent(defaultTemplateContent);
+    const {element} = await renderInAtomicInsightInterface<AtomicInsightResult>({
+      template: html`<atomic-insight-result
+        .result=${result}
+        .content=${content}
+        .density=${density}
+        .imageSize=${imageSize}
+        .stopPropagation=${true}
+        .loadingFlag=${loadingFlag}
+        .renderingFunction=${renderingFunction}
+      ></atomic-insight-result>`,
+      selector: 'atomic-insight-result',
+      bindings: (bindings) => {
+        bindings.store.onChange = vi.fn();
+        bindings.store.state.resultList = {
+          focusOnFirstResultAfterNextSearch: vi.fn(),
+          focusOnNextNewResult: vi.fn(),
+        };
+        bindings.store.state.loadingFlags = [];
+        return bindings;
+      },
+    });
     return element;
   };
 
@@ -208,9 +204,7 @@ describe('atomic-insight-result', () => {
     describe('#getContentHTML', () => {
       it('should return HTML string of the content', async () => {
         const element = await renderResult({
-          content: renderTemplateContent(
-            '<atomic-result-text field="title"></atomic-result-text>'
-          ),
+          content: renderTemplateContent('<atomic-result-text field="title"></atomic-result-text>'),
         });
         const getContentHTMLMethod = (
           element as unknown as {getContentHTML: () => string}
@@ -287,9 +281,7 @@ describe('atomic-insight-result', () => {
     describe('content rendering', () => {
       it('should render content HTML in result root', async () => {
         const element = await renderResult();
-        const contentHTML = element.shadowRoot
-          ?.querySelector('.result-root')
-          ?.innerHTML.trim();
+        const contentHTML = element.shadowRoot?.querySelector('.result-root')?.innerHTML.trim();
         expect(contentHTML).toContain('atomic-result-text');
       });
 
@@ -299,8 +291,7 @@ describe('atomic-insight-result', () => {
             '<atomic-result-text field="author"></atomic-result-text>'
           ),
         });
-        const resultText =
-          element.shadowRoot?.querySelector('atomic-result-text');
+        const resultText = element.shadowRoot?.querySelector('atomic-result-text');
 
         expect(resultText).toBeDefined();
         expect(resultText?.getAttribute('field')).toBe('author');
@@ -313,8 +304,7 @@ describe('atomic-insight-result', () => {
             <atomic-result-text field="excerpt"></atomic-result-text>
           `),
         });
-        const resultTexts =
-          element.shadowRoot?.querySelectorAll('atomic-result-text');
+        const resultTexts = element.shadowRoot?.querySelectorAll('atomic-result-text');
 
         expect(resultTexts?.length).toBe(2);
       });
@@ -324,12 +314,8 @@ describe('atomic-insight-result', () => {
           content: renderTemplateContent(templateContentWithSections),
         });
 
-        const badgesSection = element.shadowRoot?.querySelector(
-          'atomic-result-section-badges'
-        );
-        const titleSection = element.shadowRoot?.querySelector(
-          'atomic-result-section-title'
-        );
+        const badgesSection = element.shadowRoot?.querySelector('atomic-result-section-badges');
+        const titleSection = element.shadowRoot?.querySelector('atomic-result-section-title');
 
         expect(badgesSection).toBeDefined();
         expect(titleSection).toBeDefined();
@@ -346,9 +332,7 @@ describe('atomic-insight-result', () => {
           `),
         });
 
-        const titleSection = element.shadowRoot?.querySelector(
-          'atomic-result-section-title'
-        );
+        const titleSection = element.shadowRoot?.querySelector('atomic-result-section-title');
         const link = titleSection?.querySelector('atomic-result-link');
         const text = link?.querySelector('atomic-result-text');
 
@@ -397,12 +381,10 @@ describe('atomic-insight-result', () => {
 
     describe('interaction with rendering function', () => {
       it('should use rendering function when provided instead of content', async () => {
-        const renderingFunction: ItemRenderingFunction = vi.fn(
-          (_result, resultRootRef) => {
-            resultRootRef.textContent = 'Custom rendering';
-            return resultRootRef.outerHTML;
-          }
-        );
+        const renderingFunction: ItemRenderingFunction = vi.fn((_result, resultRootRef) => {
+          resultRootRef.textContent = 'Custom rendering';
+          return resultRootRef.outerHTML;
+        });
 
         const element = await renderResult({
           content: renderTemplateContent('<div>Template content</div>'),
@@ -417,23 +399,17 @@ describe('atomic-insight-result', () => {
 
       it('should pass result to rendering function', async () => {
         const result = buildFakeInsightResult();
-        const renderingFunction: ItemRenderingFunction = vi.fn(
-          (receivedResult, resultRootRef) => {
-            resultRootRef.textContent = receivedResult.title;
-            return resultRootRef.outerHTML;
-          }
-        );
+        const renderingFunction: ItemRenderingFunction = vi.fn((receivedResult, resultRootRef) => {
+          resultRootRef.textContent = receivedResult.title;
+          return resultRootRef.outerHTML;
+        });
 
         await renderResult({
           result,
           renderingFunction,
         });
 
-        expect(renderingFunction).toHaveBeenCalledWith(
-          result,
-          expect.any(HTMLElement),
-          undefined
-        );
+        expect(renderingFunction).toHaveBeenCalledWith(result, expect.any(HTMLElement), undefined);
       });
     });
   });
@@ -521,12 +497,10 @@ describe('atomic-insight-result', () => {
       });
 
       it('should handle custom rendering function mode', async () => {
-        const renderingFunction: ItemRenderingFunction = vi.fn(
-          (_result, resultRootRef) => {
-            resultRootRef.textContent = 'Custom content without layout';
-            return resultRootRef.outerHTML;
-          }
-        );
+        const renderingFunction: ItemRenderingFunction = vi.fn((_result, resultRootRef) => {
+          resultRootRef.textContent = 'Custom content without layout';
+          return resultRootRef.outerHTML;
+        });
 
         const element = await renderResult({
           content: undefined,
@@ -535,20 +509,16 @@ describe('atomic-insight-result', () => {
 
         expect(renderingFunction).toHaveBeenCalled();
         const resultRoot = element.shadowRoot!.querySelector('.result-root');
-        expect(resultRoot?.textContent).toContain(
-          'Custom content without layout'
-        );
+        expect(resultRoot?.textContent).toContain('Custom content without layout');
       });
     });
 
     describe('#updated', () => {
       it('should not throw error when layout is undefined in custom rendering mode', async () => {
-        const renderingFunction: ItemRenderingFunction = vi.fn(
-          (_result, resultRootRef) => {
-            resultRootRef.textContent = 'Updated content';
-            return '<div>Updated HTML</div>';
-          }
-        );
+        const renderingFunction: ItemRenderingFunction = vi.fn((_result, resultRootRef) => {
+          resultRootRef.textContent = 'Updated content';
+          return '<div>Updated HTML</div>';
+        });
 
         const element = await renderResult({
           content: undefined,
@@ -566,12 +536,10 @@ describe('atomic-insight-result', () => {
   });
 
   describe('when using a custom rendering function', () => {
-    const renderingFunction: ItemRenderingFunction = vi.fn(
-      (result, resultRootRef) => {
-        resultRootRef.textContent = `Custom Result: ${result.title}`;
-        return resultRootRef.outerHTML;
-      }
-    );
+    const renderingFunction: ItemRenderingFunction = vi.fn((result, resultRootRef) => {
+      resultRootRef.textContent = `Custom Result: ${result.title}`;
+      return resultRootRef.outerHTML;
+    });
 
     it('should call the custom rendering function', async () => {
       await renderResult({renderingFunction});
@@ -596,8 +564,7 @@ describe('atomic-insight-result', () => {
 
     it('should add "with-sections" class when content has sections', async () => {
       const renderingFunctionWithSections: ItemRenderingFunction = vi.fn(
-        () =>
-          '<atomic-result-section-visual>Custom</atomic-result-section-visual>'
+        () => '<atomic-result-section-visual>Custom</atomic-result-section-visual>'
       );
       const element = await renderResult({
         renderingFunction: renderingFunctionWithSections,

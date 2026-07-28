@@ -46,11 +46,7 @@ export class SearchFacet extends LitElement {
         )}
       </ul>
       ${state.hasActiveValues
-        ? html`<button
-            type="button"
-            class="clear"
-            @click=${() => this.controller.deselectAll()}
-          >
+        ? html`<button type="button" class="clear" @click=${() => this.controller.deselectAll()}>
             Clear
           </button>`
         : nothing}

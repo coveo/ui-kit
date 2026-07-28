@@ -36,21 +36,15 @@
                 <atomic-product-template>
                   <template>
                     <atomic-product-section-visual>
-                      <atomic-product-field-condition
-                        if-defined="ec_thumbnails"
-                      >
-                        <atomic-product-image
-                          field="ec_thumbnails"
-                        ></atomic-product-image>
+                      <atomic-product-field-condition if-defined="ec_thumbnails">
+                        <atomic-product-image field="ec_thumbnails"></atomic-product-image>
                       </atomic-product-field-condition>
                     </atomic-product-section-visual>
                     <atomic-product-section-name>
                       <atomic-product-link></atomic-product-link>
                     </atomic-product-section-name>
                     <atomic-product-section-emphasized>
-                      <atomic-product-price
-                        currency="USD"
-                      ></atomic-product-price>
+                      <atomic-product-price currency="USD"></atomic-product-price>
                     </atomic-product-section-emphasized>
                   </template>
                 </atomic-product-template>
@@ -70,20 +64,12 @@
             </atomic-layout-section>
 
             <atomic-layout-section section="products">
-              <atomic-commerce-product-list
-                display="grid"
-                density="compact"
-                image-size="small"
-              >
+              <atomic-commerce-product-list display="grid" density="compact" image-size="small">
                 <atomic-product-template>
                   <template>
                     <atomic-product-section-visual>
-                      <atomic-product-field-condition
-                        if-defined="ec_thumbnails"
-                      >
-                        <atomic-product-image
-                          field="ec_thumbnails"
-                        ></atomic-product-image>
+                      <atomic-product-field-condition if-defined="ec_thumbnails">
+                        <atomic-product-image field="ec_thumbnails"></atomic-product-image>
                       </atomic-product-field-condition>
                     </atomic-product-section-visual>
                     <atomic-product-section-name>
@@ -91,18 +77,12 @@
                     </atomic-product-section-name>
                     <atomic-product-section-metadata>
                       <atomic-product-field-condition if-defined="ec_brand">
-                        <atomic-product-text
-                          field="ec_brand"
-                        ></atomic-product-text>
+                        <atomic-product-text field="ec_brand"></atomic-product-text>
                       </atomic-product-field-condition>
-                      <atomic-product-rating
-                        field="ec_rating"
-                      ></atomic-product-rating>
+                      <atomic-product-rating field="ec_rating"></atomic-product-rating>
                     </atomic-product-section-metadata>
                     <atomic-product-section-emphasized>
-                      <atomic-product-price
-                        currency="USD"
-                      ></atomic-product-price>
+                      <atomic-product-price currency="USD"></atomic-product-price>
                     </atomic-product-section-emphasized>
                   </template>
                 </atomic-product-template>

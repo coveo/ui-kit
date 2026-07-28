@@ -45,10 +45,7 @@ describe('#renderFooter', () => {
   });
 
   it('should render children', async () => {
-    const footer = await renderComponent(
-      {},
-      html`<a href="#">Custom Source</a>`
-    );
+    const footer = await renderComponent({}, html`<a href="#">Custom Source</a>`);
     expect(footer.textContent).toContain('Custom Source');
   });
 });

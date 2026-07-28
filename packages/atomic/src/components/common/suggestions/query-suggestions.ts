@@ -45,10 +45,7 @@ export const renderQuerySuggestion = ({
 }: RenderQuerySuggestionOptions): HTMLElement => {
   const shouldShowIcon = alwaysShowIcon || hasMultipleKindOfSuggestions;
   const template = html`
-    <div
-      part="query-suggestion-content"
-      class="pointer-events-none flex items-center"
-    >
+    <div part="query-suggestion-content" class="pointer-events-none flex items-center">
       ${shouldShowIcon
         ? html`<atomic-icon
             part="query-suggestion-icon"

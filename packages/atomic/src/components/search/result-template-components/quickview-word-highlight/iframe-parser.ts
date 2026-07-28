@@ -50,12 +50,7 @@ class IframeParser {
       }
 
       const color = element.style.backgroundColor;
-      const highlight = new QuickviewWordHighlight(
-        identifier,
-        text,
-        color,
-        element
-      );
+      const highlight = new QuickviewWordHighlight(identifier, text, color, element);
       this.wordsHighlights[identifier] = highlight;
     }
 

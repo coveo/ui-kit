@@ -12,10 +12,7 @@ import {
   updateMessage,
   updateResponseFormat,
 } from './generated-answer-actions.js';
-import {
-  type GeneratedContentFormat,
-  generatedContentFormat,
-} from './generated-response-format.js';
+import {type GeneratedContentFormat, generatedContentFormat} from './generated-response-format.js';
 
 vi.mock('./generated-answer-request.js', () => ({
   constructAnswerAPIQueryParams: vi.fn(() => ({
@@ -43,14 +40,11 @@ vi.mock('../../api/knowledge/stream-answer-api.js', () => ({
   fetchAnswer: vi.fn(() => ({type: 'mocked/fetchAnswer'})),
 }));
 
-vi.mock(
-  '../../api/knowledge/answer-generation/endpoints/answer/answer-endpoint.js',
-  () => ({
-    initiateAnswerEndpoint: vi.fn(() => ({
-      type: 'mocked/initiateAnswerEndpoint',
-    })),
-  })
-);
+vi.mock('../../api/knowledge/answer-generation/endpoints/answer/answer-endpoint.js', () => ({
+  initiateAnswerEndpoint: vi.fn(() => ({
+    type: 'mocked/initiateAnswerEndpoint',
+  })),
+}));
 
 vi.mock('../search/search-actions.js', () => ({
   updateSearchAction: vi.fn(() => ({type: 'search/updateSearchAction'})),
@@ -196,10 +190,7 @@ describe('generated answer', () => {
         (call) => call[0]?.type === 'generatedAnswer/setAnswerApiQueryParams'
       );
       expect(setAnswerApiQueryParamsCall).toBeDefined();
-      expect(setAnswerApiQueryParamsCall?.[0].payload).toHaveProperty(
-        'q',
-        'test query'
-      );
+      expect(setAnswerApiQueryParamsCall?.[0].payload).toHaveProperty('q', 'test query');
     });
 
     it('should log warning when answerConfigurationId is missing', async () => {
@@ -218,9 +209,7 @@ describe('generated answer', () => {
       await thunk(mockDispatch, mockGetState, mockExtra);
 
       expect(mockLogger.warn).toHaveBeenCalledWith(
-        expect.stringContaining(
-          'Missing answerConfigurationId in engine configuration'
-        )
+        expect.stringContaining('Missing answerConfigurationId in engine configuration')
       );
     });
 

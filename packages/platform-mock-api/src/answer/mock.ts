@@ -7,17 +7,13 @@ export class MockAnswerApi implements MockApi {
   readonly insightGenerateEndPoint;
 
   constructor(basePath: string = 'https://:orgId.org.coveo.com') {
-    this.generateEndPoint = new EndpointHarness<
-      () => HttpResponse<DefaultBodyType>
-    >(
+    this.generateEndPoint = new EndpointHarness<() => HttpResponse<DefaultBodyType>>(
       'POST',
       `${basePath}/rest/organizations/:orgId/answer/v1/configs/:configId/generate`,
       baseGeneratedAnswer,
       (response) => response()
     );
-    this.insightGenerateEndPoint = new EndpointHarness<
-      () => HttpResponse<DefaultBodyType>
-    >(
+    this.insightGenerateEndPoint = new EndpointHarness<() => HttpResponse<DefaultBodyType>>(
       'POST',
       `${basePath}/rest/organizations/:orgId/insight/v1/configs/:insightId/answer/:configId/generate`,
       baseGeneratedAnswer,

@@ -34,6 +34,7 @@ export const testSearch = quanticBase.extend<QuanticPagerE2ESearchFixtures>({
     await use(new SearchObject(page, searchRequestRegex));
   },
   pager: async ({page, options, configuration, search, urlHash}, use) => {
+    await search.mockSearchWithBaseResponse();
     await page.goto(urlHash ? `${pageUrl}#${urlHash}` : pageUrl);
     const searchResponsePromise = search.waitForSearchResponse();
     configuration.configure(options);
@@ -52,12 +53,11 @@ export const testInsight = quanticBase.extend<QuanticPagerE2EInsightFixtures>({
     await use(new InsightSetupObject(page));
   },
   pager: async ({page, options, search, configuration, insightSetup}, use) => {
+    await search.mockSearchWithBaseResponse();
     await page.goto(pageUrl);
     configuration.configure({...options, useCase: useCaseEnum.insight});
     await insightSetup.waitForInsightInterfaceInitialization();
-    const searchResponsePromise = search.waitForSearchResponse();
-    await search.performSearch();
-    await searchResponsePromise;
+    await Promise.all([search.waitForSearchResponse(), search.performSearch()]);
     await use(new PagerObject(page));
   },
 });

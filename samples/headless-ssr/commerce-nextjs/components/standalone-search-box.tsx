@@ -3,10 +3,7 @@
 import {useRouter} from 'next/navigation';
 import {useEffect} from 'react';
 import {useSearchBoxSuggestions} from '@/hooks/use-search-box-suggestions';
-import {
-  useInstantProducts,
-  useStandaloneSearchBox,
-} from '@/lib/commerce-engine';
+import {useInstantProducts, useStandaloneSearchBox} from '@/lib/commerce-engine';
 import SearchBoxSuggestions, {
   suggestionOptionId,
   suggestionsListId,
@@ -16,8 +13,7 @@ const ID_PREFIX = 'standalone-search-box';
 
 export default function StandaloneSearchBox() {
   const {state, methods} = useStandaloneSearchBox();
-  const {state: instantProductsState, methods: instantProductsController} =
-    useInstantProducts();
+  const {state: instantProductsState, methods: instantProductsController} = useInstantProducts();
 
   const router = useRouter();
 
@@ -48,8 +44,7 @@ export default function StandaloneSearchBox() {
   };
 
   const showDropdown =
-    nav.isOpen &&
-    (state.suggestions.length > 0 || instantProductsState.products.length > 0);
+    nav.isOpen && (state.suggestions.length > 0 || instantProductsState.products.length > 0);
 
   return (
     <div className="SearchBox" ref={nav.rootRef}>
@@ -61,9 +56,7 @@ export default function StandaloneSearchBox() {
           aria-expanded={showDropdown}
           aria-controls={suggestionsListId(ID_PREFIX)}
           aria-activedescendant={
-            nav.activeIndex >= 0
-              ? suggestionOptionId(ID_PREFIX, nav.activeIndex)
-              : undefined
+            nav.activeIndex >= 0 ? suggestionOptionId(ID_PREFIX, nav.activeIndex) : undefined
           }
           aria-autocomplete="list"
           placeholder="Search"

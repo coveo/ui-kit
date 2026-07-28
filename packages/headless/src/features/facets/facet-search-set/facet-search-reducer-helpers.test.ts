@@ -52,11 +52,7 @@ describe('FacetSearch slice', () => {
         numberOfValues: 5,
       });
 
-      handleFacetSearchRegistration(
-        state,
-        {facetId, ...options},
-        buildEmptyResponse
-      );
+      handleFacetSearchRegistration(state, {facetId, ...options}, buildEmptyResponse);
       expect(state[facetId].options).not.toEqual(options);
     });
   });
@@ -174,9 +170,7 @@ describe('FacetSearch slice', () => {
       });
 
       handleFacetSearchClear(state, {facetId}, buildEmptyResponse);
-      expect(state[facetId].options.query).toBe(
-        defaultFacetSearchOptions.query
-      );
+      expect(state[facetId].options.query).toBe(defaultFacetSearchOptions.query);
     });
 
     it('when the id is unregistered, it does nothing', () => {
@@ -197,13 +191,9 @@ describe('FacetSearch slice', () => {
       handleFacetSearchSetClear(state, buildEmptyResponse);
 
       expect(state[facetId].response).toEqual(buildEmptyResponse());
-      expect(state[facetId].options.query).toEqual(
-        defaultFacetSearchOptions.query
-      );
+      expect(state[facetId].options.query).toEqual(defaultFacetSearchOptions.query);
       expect(state[anotherFacetId].response).toEqual(buildEmptyResponse());
-      expect(state[anotherFacetId].options.query).toEqual(
-        defaultFacetSearchOptions.query
-      );
+      expect(state[anotherFacetId].options.query).toEqual(defaultFacetSearchOptions.query);
       expect(state[anotherFacetId].response).toEqual(buildEmptyResponse());
     });
   });

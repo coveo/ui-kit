@@ -1,7 +1,4 @@
-import {
-  buildSearchEngine,
-  getSampleSearchEngineConfiguration,
-} from '@coveo/headless';
+import {buildSearchEngine, getSampleSearchEngineConfiguration} from '@coveo/headless';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {SafeStorage, StorageItems} from './local-storage-utils';
 
@@ -22,9 +19,7 @@ describe('Safe local storage', () => {
 
   it('allows to save and retrieve an object', () => {
     storage.setJSON(StorageItems.RECENT_QUERIES, {foo: 'bar'});
-    expect(
-      storage.getParsedJSON(StorageItems.RECENT_QUERIES, {})
-    ).toMatchObject({
+    expect(storage.getParsedJSON(StorageItems.RECENT_QUERIES, {})).toMatchObject({
       foo: 'bar',
     });
   });
@@ -50,8 +45,6 @@ describe('Safe local storage', () => {
       }),
     });
 
-    expect(storage.getParsedJSON(StorageItems.RECENT_QUERIES, 'foo')).toEqual(
-      'foo'
-    );
+    expect(storage.getParsedJSON(StorageItems.RECENT_QUERIES, 'foo')).toEqual('foo');
   });
 });

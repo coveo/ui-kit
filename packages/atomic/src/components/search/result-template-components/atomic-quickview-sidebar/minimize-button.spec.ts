@@ -40,9 +40,7 @@ describe('MinimizeButton (Lit)', () => {
       wordsLength: props?.wordsLength ?? 3,
     };
 
-    container = await renderFunctionFixture(
-      html`${renderMinimizeButton({props: allProps})}`
-    );
+    container = await renderFunctionFixture(html`${renderMinimizeButton({props: allProps})}`);
 
     const wrapper = container.firstElementChild as HTMLElement;
     const button = wrapper.firstElementChild as HTMLButtonElement;
@@ -58,9 +56,7 @@ describe('MinimizeButton (Lit)', () => {
     expect(button?.getAttribute('title')).toBe(translation);
     expect(button?.getAttribute('aria-label')).toBe(translation);
     expect(button?.getAttribute('aria-expanded')).toBe('true');
-    expect(button?.getAttribute('aria-controls')).toBe(
-      identifierKeywordsSection
-    );
+    expect(button?.getAttribute('aria-controls')).toBe(identifierKeywordsSection);
   });
 
   it('calls onMinimize with the toggled value when clicked', async () => {
@@ -79,9 +75,7 @@ describe('MinimizeButton (Lit)', () => {
       highlightKeywords: baseHighlightKeywords,
     });
 
-    const badge = container.querySelector(
-      '[part="sidebar-minimize-badge"]'
-    ) as HTMLElement | null;
+    const badge = container.querySelector('[part="sidebar-minimize-badge"]') as HTMLElement | null;
 
     expect(badge).toBeTruthy();
     expect(badge?.textContent?.trim()).toBe('5');

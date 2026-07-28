@@ -29,9 +29,7 @@ const buenoVersion = isNightly
   ? `v${buenoJson.version.split('.').shift()}-nightly`
   : `v${buenoJson.version}`;
 
-const buenoBase = commitSha
-  ? `/bueno/commits/${commitSha}`
-  : `/bueno/${buenoVersion}`;
+const buenoBase = commitSha ? `/bueno/commits/${commitSha}` : `/bueno/${buenoVersion}`;
 const buenoCdnPath = `${buenoBase}/bueno.esm.js`;
 
 function getUmdGlobalName(useCase) {
@@ -53,9 +51,7 @@ function getUmdGlobalName(useCase) {
     return globalName;
   }
 
-  throw new Error(
-    `Please specify a global name for the "${useCase}" use-case.`
-  );
+  throw new Error(`Please specify a global name for the "${useCase}" use-case.`);
 }
 
 function getPackageVersion() {
@@ -122,10 +118,7 @@ const browserUmd = Object.entries(useCaseEntries).map((entry) => {
         js: `${base.banner.js}`,
       },
       external: ['crypto', buenoCdnPath],
-      plugins: [
-        getBuenoReplacePlugin(buenoCdnPath),
-        umdWrapper({libraryName: globalName}),
-      ],
+      plugins: [getBuenoReplacePlugin(buenoCdnPath), umdWrapper({libraryName: globalName})],
     },
     outDir
   );
@@ -203,11 +196,7 @@ const quanticUmd = Object.entries(quanticUseCaseEntries).map((entry) => {
       ],
       plugins: [
         umdWrapper({libraryName: globalName}),
-        codeReplacerPlugin(
-          'src/api/knowledge/answer-slice.ts',
-          target,
-          replacement
-        ),
+        codeReplacerPlugin('src/api/knowledge/answer-slice.ts', target, replacement),
       ],
     },
     outDir
@@ -220,19 +209,13 @@ const quanticUmd = Object.entries(quanticUseCaseEntries).map((entry) => {
 function resolveEsm(moduleName) {
   const packageJsonPath = require.resolve(`${moduleName}/package.json`);
   const packageJson = require(packageJsonPath);
-  return resolve(
-    dirname(packageJsonPath),
-    packageJson.module || packageJson.main
-  );
+  return resolve(dirname(packageJsonPath), packageJson.module || packageJson.main);
 }
 
 function resolveBrowser(moduleName) {
   const packageJsonPath = require.resolve(`${moduleName}/package.json`);
   const packageJson = require(packageJsonPath);
-  return resolve(
-    dirname(packageJsonPath),
-    packageJson.browser || packageJson.main
-  );
+  return resolve(dirname(packageJsonPath), packageJson.browser || packageJson.main);
 }
 
 function getBuenoReplacePlugin(buenoPath) {

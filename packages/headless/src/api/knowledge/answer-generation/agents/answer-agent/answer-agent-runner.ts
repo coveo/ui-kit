@@ -54,10 +54,7 @@ export const createAnswerRunner = () => {
     currentAgent = agent;
 
     const strategy = createHeadAnswerStrategy(dispatch);
-    const params = constructGenerateHeadAnswerParams(
-      state,
-      getNavigatorContext()
-    );
+    const params = constructGenerateHeadAnswerParams(state, getNavigatorContext());
     try {
       dispatch(setIsLoading(true));
       await agent.runAgent(

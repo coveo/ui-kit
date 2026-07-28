@@ -115,9 +115,7 @@ describe('#renderFacetSegmentedValue', () => {
     await setupElement({isSelected: false});
     const {button} = locators;
     await expect.element(button).toHaveClass('hover:border-primary-light');
-    await expect
-      .element(button)
-      .toHaveClass('focus-visible:border-primary-light');
+    await expect.element(button).toHaveClass('focus-visible:border-primary-light');
   });
 
   it('should apply text-primary class to label when selected', async () => {
@@ -129,9 +127,7 @@ describe('#renderFacetSegmentedValue', () => {
   it('should apply hover styles to label when not selected', async () => {
     const {element} = await setupElement({isSelected: false});
     const label = parts(element).label;
-    expect(label?.classList.contains('group-hover:text-primary-light')).toBe(
-      true
-    );
+    expect(label?.classList.contains('group-hover:text-primary-light')).toBe(true);
     expect(label?.classList.contains('group-focus:text-primary')).toBe(true);
   });
 

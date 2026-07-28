@@ -23,10 +23,6 @@ interface FromBuildResultOptions<TControllers extends ControllersMap> {
 /**
  * @deprecated This type is deprecated and will be removed in future major version.
  */
-export type FromBuildResult<
-  TControllers extends ControllersMap,
-  TOptions,
-  TReturn,
-> = (
+export type FromBuildResult<TControllers extends ControllersMap, TOptions, TReturn> = (
   options: FromBuildResultOptions<TControllers> & TOptions
 ) => Promise<TReturn>;

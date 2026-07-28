@@ -1,9 +1,4 @@
-import type {
-  LitElement,
-  ReactiveController,
-  ReactiveControllerHost,
-  ReactiveElement,
-} from 'lit';
+import type {LitElement, ReactiveController, ReactiveControllerHost, ReactiveElement} from 'lit';
 import type {AnyBindings} from '../components/common/interface/bindings';
 import type {InitializableComponent} from '../decorators/types';
 import {fetchBindings} from '../utils/initialization-common-utils';
@@ -11,8 +6,7 @@ import type {Constructor} from './mixin-common';
 
 function initializeBindings<
   SpecificBindings extends AnyBindings,
-  InstanceType extends ReactiveElement &
-    InitializableComponent<SpecificBindings>,
+  InstanceType extends ReactiveElement & InitializableComponent<SpecificBindings>,
 >(instance: InstanceType): Promise<() => void> {
   return new Promise((resolve, reject) => {
     instance.initialized = true;
@@ -63,9 +57,7 @@ class BindingController implements ReactiveController {
   }
 
   hostConnected() {
-    initializeBindings(
-      this.host as ReactiveElement & InitializableComponent<AnyBindings>
-    )
+    initializeBindings(this.host as ReactiveElement & InitializableComponent<AnyBindings>)
       .then((unsubscribeLanguage) => {
         this.unsubscribeLanguage = unsubscribeLanguage;
       })
@@ -95,9 +87,7 @@ class BindingController implements ReactiveController {
  * }
  * ```
  */
-export const InitializeBindingsMixin = <T extends Constructor<LitElement>>(
-  superClass: T
-) => {
+export const InitializeBindingsMixin = <T extends Constructor<LitElement>>(superClass: T) => {
   class BindingControllerMixinClass extends superClass {
     // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
     constructor(...args: any[]) {

@@ -6,12 +6,9 @@ import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interfac
 import '@/src/components/insight/atomic-insight-pager/atomic-insight-pager.js';
 
 const {decorator, play} = wrapInInsightInterface();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-insight-pager',
-  {
-    excludeCategories: ['methods'],
-  }
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-insight-pager', {
+  excludeCategories: ['methods'],
+});
 
 const insightApiHarness = new MockInsightApi();
 

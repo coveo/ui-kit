@@ -1,8 +1,5 @@
 import type {AsyncThunkAction} from '@reduxjs/toolkit';
-import type {
-  AsyncThunkSearchOptions,
-  SearchAPIClient,
-} from '../../api/search/search-api-client.js';
+import type {AsyncThunkSearchOptions, SearchAPIClient} from '../../api/search/search-api-client.js';
 import type {AsyncThunkOptions} from '../../app/async-thunk-options.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import type {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
@@ -50,10 +47,7 @@ export interface SearchActionCreators {
   ): AsyncThunkAction<
     ExecuteSearchThunkReturn,
     LegacySearchAction,
-    AsyncThunkOptions<
-      StateNeededByExecuteSearch,
-      ClientThunkExtraArguments<SearchAPIClient>
-    >
+    AsyncThunkOptions<StateNeededByExecuteSearch, ClientThunkExtraArguments<SearchAPIClient>>
   >;
 
   /**
@@ -64,10 +58,7 @@ export interface SearchActionCreators {
   fetchMoreResults(): AsyncThunkAction<
     ExecuteSearchThunkReturn,
     void,
-    AsyncThunkOptions<
-      StateNeededByExecuteSearch,
-      ClientThunkExtraArguments<SearchAPIClient>
-    >
+    AsyncThunkOptions<StateNeededByExecuteSearch, ClientThunkExtraArguments<SearchAPIClient>>
   >;
 
   /**
@@ -81,10 +72,7 @@ export interface SearchActionCreators {
   ): AsyncThunkAction<
     ExecuteSearchThunkReturn,
     LegacySearchAction,
-    AsyncThunkOptions<
-      StateNeededByExecuteSearch,
-      ClientThunkExtraArguments<SearchAPIClient>
-    >
+    AsyncThunkOptions<StateNeededByExecuteSearch, ClientThunkExtraArguments<SearchAPIClient>>
   >;
 
   /**
@@ -107,10 +95,7 @@ export interface SearchActionCreators {
   ): AsyncThunkAction<
     ExecuteSearchThunkReturn,
     LegacySearchAction,
-    AsyncThunkOptions<
-      StateNeededByExecuteSearch,
-      ClientThunkExtraArguments<SearchAPIClient>
-    >
+    AsyncThunkOptions<StateNeededByExecuteSearch, ClientThunkExtraArguments<SearchAPIClient>>
   >;
 
   /**

@@ -112,9 +112,7 @@ export interface CategoryFacetSetActionCreators {
  * @group Actions
  * @category CategoryFacetSet
  */
-export function loadCategoryFacetSetActions(
-  engine: SearchEngine
-): CategoryFacetSetActionCreators {
+export function loadCategoryFacetSetActions(engine: SearchEngine): CategoryFacetSetActionCreators {
   engine.addReducers({categoryFacetSet});
 
   return {

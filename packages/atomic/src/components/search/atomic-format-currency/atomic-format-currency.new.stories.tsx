@@ -11,10 +11,9 @@ import '@/src/components/search/atomic-format-currency/atomic-format-currency.js
 import '@/src/components/search/atomic-numeric-facet/atomic-numeric-facet.js';
 import '@/src/components/search/atomic-result-number/atomic-result-number.js';
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-format-currency',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-format-currency', {
+  excludeCategories: ['methods'],
+});
 
 const searchApiHarness = new MockSearchApi();
 
@@ -51,9 +50,7 @@ export default meta;
 export const Facet: Story = {
   name: 'Within Numeric Facet',
   render: (args) => html`
-    <atomic-numeric-facet field="sncost" label="Cost">
-      ${template(args)}
-    </atomic-numeric-facet>
+    <atomic-numeric-facet field="sncost" label="Cost"> ${template(args)} </atomic-numeric-facet>
   `,
   args: {
     currency: 'USD',
@@ -104,9 +101,7 @@ export const Facet: Story = {
 export const Result: Story = {
   name: 'Within Numeric Result',
   render: (args) => html`
-    <atomic-result-number field="sncost">
-      ${template(args)}
-    </atomic-result-number>
+    <atomic-result-number field="sncost"> ${template(args)} </atomic-result-number>
   `,
   decorators: [resultTemplateDecorator, resultListDecorator],
   args: {

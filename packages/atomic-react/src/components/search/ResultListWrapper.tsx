@@ -3,10 +3,7 @@ import type {Result} from '@coveo/headless';
 import React, {type JSX, useEffect, useRef} from 'react';
 import {flushSync} from 'react-dom';
 import {createRoot} from 'react-dom/client';
-import {
-  AtomicResultLink,
-  AtomicResultList as LitAtomicResultList,
-} from './components.js';
+import {AtomicResultLink, AtomicResultList as LitAtomicResultList} from './components.js';
 
 interface Template {
   contentTemplate: JSX.Element;
@@ -66,12 +63,7 @@ export const ResultListWrapper: React.FC<WrapperProps> = (props) => {
       if (isTemplate(templateResult)) {
         return renderTemplate(linkContainer, templateResult, root);
       } else {
-        return renderJSXTemplate(
-          linkContainer,
-          root,
-          templateResult,
-          otherProps.display
-        );
+        return renderJSXTemplate(linkContainer, root, templateResult, otherProps.display);
       }
     });
   }, [otherProps.display, template]);

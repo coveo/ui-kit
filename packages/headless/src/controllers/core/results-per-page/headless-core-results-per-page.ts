@@ -6,16 +6,10 @@ import {
   updateNumberOfResults,
 } from '../../../features/pagination/pagination-actions.js';
 import {paginationReducer as pagination} from '../../../features/pagination/pagination-slice.js';
-import type {
-  ConfigurationSection,
-  PaginationSection,
-} from '../../../state/state-sections.js';
+import type {ConfigurationSection, PaginationSection} from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {validateInitialState} from '../../../utils/validate-payload.js';
-import {
-  buildController,
-  type Controller,
-} from '../../controller/headless-controller.js';
+import {buildController, type Controller} from '../../controller/headless-controller.js';
 
 const initialStateSchema = new Schema({
   numberOfResults: new NumberValue({min: 0}),
@@ -38,7 +32,6 @@ export interface ResultsPerPageInitialState {
 /**
  * The `ResultsPerPage` controller allows the end user to choose how many results to display per page.
  *
- * Example: [results-per-page.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/results-per-page/results-per-page.fn.tsx)
  *
  * @group Controllers
  * @category ResultsPerPage

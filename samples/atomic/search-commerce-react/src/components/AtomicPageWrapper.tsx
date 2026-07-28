@@ -80,11 +80,7 @@ function getConfigurationForSample(sample: Sample) {
   }
 }
 
-export const AtomicPageWrapper: FunctionComponent<Props> = ({
-  sample,
-  options = {},
-  children,
-}) => {
+export const AtomicPageWrapper: FunctionComponent<Props> = ({sample, options = {}, children}) => {
   const engine = useMemo(
     () =>
       buildSearchEngine({
@@ -99,9 +95,7 @@ export const AtomicPageWrapper: FunctionComponent<Props> = ({
   );
 
   if (options.advancedQuery) {
-    const action = loadAdvancedSearchQueryActions(
-      engine
-    ).updateAdvancedSearchQueries({
+    const action = loadAdvancedSearchQueryActions(engine).updateAdvancedSearchQueries({
       aq: options.advancedQuery,
     });
     engine.dispatch(action);
@@ -151,11 +145,7 @@ export const AtomicPageWrapper: FunctionComponent<Props> = ({
               displayValuesAs="link"
             >
               <AtomicNumericRange start={0} end={150} label="Few" />
-              <AtomicNumericRange
-                start={150}
-                end={650}
-                label="A moderate amount"
-              />
+              <AtomicNumericRange start={150} end={650} label="A moderate amount" />
               <AtomicNumericRange start={650} end={9999999999} label="A lot" />
             </AtomicNumericFacet>
             <AtomicColorFacet
@@ -164,11 +154,7 @@ export const AtomicPageWrapper: FunctionComponent<Props> = ({
               numberOfValues={6}
               sortCriteria="occurrences"
             />
-            <AtomicNumericFacet
-              field="ec_price"
-              label="Cost"
-              withInput="integer"
-            >
+            <AtomicNumericFacet field="ec_price" label="Cost" withInput="integer">
               <AtomicFormatCurrency currency="USD" />
             </AtomicNumericFacet>
             <AtomicTimeframeFacet withDatePicker label="Listed within">
@@ -180,11 +166,7 @@ export const AtomicPageWrapper: FunctionComponent<Props> = ({
               <AtomicTimeframe unit="year" />
               <AtomicTimeframe unit="year" amount={10} period="next" />
             </AtomicTimeframeFacet>
-            <AtomicRatingFacet
-              field="ec_rating"
-              label="Rating"
-              numberOfIntervals={5}
-            />
+            <AtomicRatingFacet field="ec_rating" label="Rating" numberOfIntervals={5} />
             <AtomicRatingRangeFacet
               field="ec_rating"
               label="Rating Range"
@@ -200,14 +182,8 @@ export const AtomicPageWrapper: FunctionComponent<Props> = ({
             <AtomicRefineToggle />
             <AtomicSortDropdown>
               <AtomicSortExpression label="relevance" expression="relevancy" />
-              <AtomicSortExpression
-                label="Price (low to high)"
-                expression="ec_price ascending"
-              />
-              <AtomicSortExpression
-                label="Price (high to low)"
-                expression="ec_price descending"
-              />
+              <AtomicSortExpression label="Price (low to high)" expression="ec_price ascending" />
+              <AtomicSortExpression label="Price (high to low)" expression="ec_price descending" />
             </AtomicSortDropdown>
 
             <AtomicDidYouMean />
@@ -242,13 +218,10 @@ function InstantResultsAriaLabelTemplate({i18n}: Bindings, result: Result) {
 
   if ('ec_price' in result.raw) {
     information.push(
-      (result.raw.ec_price as number).toLocaleString(
-        i18n.languages as string[],
-        {
-          style: 'currency',
-          currency: 'USD',
-        }
-      )
+      (result.raw.ec_price as number).toLocaleString(i18n.languages as string[], {
+        style: 'currency',
+        currency: 'USD',
+      })
     );
   }
 

@@ -8,34 +8,27 @@ const mockHandleResponse = vi.fn();
 const mockExtractStream = vi.fn();
 
 vi.mock('./converse-commerce-search-stream-extractor.js', () => ({
-  extractCommerceSearchResponseFromStream: (...args: unknown[]) =>
-    mockExtractStream(...args),
+  extractCommerceSearchResponseFromStream: (...args: unknown[]) => mockExtractStream(...args),
 }));
 
-vi.mock(
-  '@/src/internal/api/commerce-search/commerce-search-request-selector.js',
-  () => ({
-    createCommerceSearchEndpointRequestSelector: () => (state: any) =>
-      state.__request ?? {
-        trackingId: '',
-        language: '',
-        country: '',
-        currency: '',
-        query: '',
-        page: 0,
-        perPage: 10,
-        sort: [],
-        facets: [],
-      },
-  })
-);
+vi.mock('@/src/internal/api/commerce-search/commerce-search-request-selector.js', () => ({
+  createCommerceSearchEndpointRequestSelector: () => (state: any) =>
+    state.__request ?? {
+      trackingId: '',
+      language: '',
+      country: '',
+      currency: '',
+      query: '',
+      page: 0,
+      perPage: 10,
+      sort: [],
+      facets: [],
+    },
+}));
 
-vi.mock(
-  '@/src/internal/api/commerce-search/commerce-search-response-handler.js',
-  () => ({
-    createCommerceSearchEndpointResponseHandler: () => mockHandleResponse,
-  })
-);
+vi.mock('@/src/internal/api/commerce-search/commerce-search-response-handler.js', () => ({
+  createCommerceSearchEndpointResponseHandler: () => mockHandleResponse,
+}));
 
 vi.mock('@/src/internal/features/configuration/index.js', () => ({
   getOrCreateConfigurationSelectors: () => ({
@@ -65,15 +58,12 @@ vi.mock('@/src/internal/api/conversation/index.js', () => ({
   createConversationEndpointClient: () => ({call: mockCall}),
 }));
 
-vi.mock(
-  '@/src/internal/api/commerce-search/commerce-search-thunk-slice.js',
-  () => ({
-    getOrCreateCommerceSearchEndpointSlice: () => ({
-      name: 'mock/commerceSearchEndpoint',
-      reducer: () => ({}),
-    }),
-  })
-);
+vi.mock('@/src/internal/api/commerce-search/commerce-search-thunk-slice.js', () => ({
+  getOrCreateCommerceSearchEndpointSlice: () => ({
+    name: 'mock/commerceSearchEndpoint',
+    reducer: () => ({}),
+  }),
+}));
 
 vi.mock('@/src/internal/utils/index.js', () => ({
   getHandleInternals: () => ({
@@ -128,11 +118,7 @@ async function executeThunk(
     ? ({...baseEngine, ...engineOverrides} as unknown as FullEngine)
     : baseEngine;
 
-  const thunk = createConverseSearchEndpointThunk(
-    engine,
-    createScope(),
-    {} as any
-  );
+  const thunk = createConverseSearchEndpointThunk(engine, createScope(), {} as any);
   const action = thunk({engine});
   return {
     result: await action(vi.fn(), () => ({}), undefined),
@@ -158,11 +144,7 @@ describe('createConverseSearchEndpointThunk', () => {
       __cart: [{productId: 'p1', name: 'Item', price: 10, quantity: 1}],
     });
 
-    const thunk = createConverseSearchEndpointThunk(
-      engine,
-      createScope(),
-      {} as any
-    );
+    const thunk = createConverseSearchEndpointThunk(engine, createScope(), {} as any);
     const action = thunk({engine});
     await action(vi.fn(), () => ({}), undefined);
 
@@ -288,11 +270,7 @@ describe('createConverseSearchEndpointThunk', () => {
       __request: defaultRequest,
     });
 
-    const thunk = createConverseSearchEndpointThunk(
-      engine,
-      createScope(),
-      {} as any
-    );
+    const thunk = createConverseSearchEndpointThunk(engine, createScope(), {} as any);
     const action = thunk({engine});
     const result = await action(vi.fn(), () => ({}), undefined);
 
@@ -311,11 +289,7 @@ describe('createConverseSearchEndpointThunk', () => {
       __request: defaultRequest,
     });
 
-    const thunk = createConverseSearchEndpointThunk(
-      engine,
-      createScope(),
-      {} as any
-    );
+    const thunk = createConverseSearchEndpointThunk(engine, createScope(), {} as any);
     const action = thunk({engine});
     const result = await action(vi.fn(), () => ({}), undefined);
 
@@ -335,11 +309,7 @@ describe('createConverseSearchEndpointThunk', () => {
       __request: defaultRequest,
     });
 
-    const thunk = createConverseSearchEndpointThunk(
-      engine,
-      createScope(),
-      {} as any
-    );
+    const thunk = createConverseSearchEndpointThunk(engine, createScope(), {} as any);
     const action = thunk({engine});
     await action(vi.fn(), () => ({}), undefined);
 

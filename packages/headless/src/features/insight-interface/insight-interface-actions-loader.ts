@@ -36,9 +36,7 @@ export interface InsightInterfaceActionCreators {
  * @group Actions
  * @category InsightInterface
  */
-export function loadInsightInterfaceActions(
-  engine: InsightEngine
-): InsightInterfaceActionCreators {
+export function loadInsightInterfaceActions(engine: InsightEngine): InsightInterfaceActionCreators {
   engine.addReducers({insightInterface});
 
   return {

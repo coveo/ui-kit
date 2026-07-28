@@ -32,7 +32,6 @@ export interface SmartSnippetQuestionsListState extends CoreSmartSnippetQuestion
 /**
  * The `SmartSnippetQuestionsList` controller allows to manage additional queries for which a SmartSnippet model can provide relevant excerpts.
  *
- * Example: [smart-snippet-questions-list.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/smart-snippet-questions-list/smart-snippet-questions-list.fn.tsx)
  *
  * @group Controllers
  * @category SmartSnippetQuestionsList
@@ -117,20 +116,15 @@ export function buildSmartSnippetQuestionsList(
   engine: SearchEngine,
   props?: SmartSnippetQuestionsListProps
 ): SmartSnippetQuestionsList {
-  warnIfUsingNextAnalyticsModeForServiceFeature(
-    engine.state.configuration.analytics.analyticsMode
-  );
+  warnIfUsingNextAnalyticsModeForServiceFeature(engine.state.configuration.analytics.analyticsMode);
   const smartSnippetQuestionList = buildCoreSmartSnippetQuestionsList(
     engine,
     smartSnippetAnalyticsClient
   );
 
-  const interactiveInlineLinks = buildSmartSnippetInteractiveInlineLinks(
-    engine,
-    {
-      options: {selectionDelay: props?.options?.selectionDelay},
-    }
-  );
+  const interactiveInlineLinks = buildSmartSnippetInteractiveInlineLinks(engine, {
+    options: {selectionDelay: props?.options?.selectionDelay},
+  });
 
   const interactiveQuestions = buildSmartSnippetInteractiveQuestions(engine, {
     options: {selectionDelay: props?.options?.selectionDelay},

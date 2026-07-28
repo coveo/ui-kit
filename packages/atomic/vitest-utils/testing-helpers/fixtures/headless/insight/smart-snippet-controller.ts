@@ -30,13 +30,10 @@ export const defaultImplementation = {
   sendDetailedFeedback: vi.fn() as SmartSnippet['sendDetailedFeedback'],
   selectSource: vi.fn() as SmartSnippet['selectSource'],
   beginDelayedSelectSource: vi.fn() as SmartSnippet['beginDelayedSelectSource'],
-  cancelPendingSelectSource:
-    vi.fn() as SmartSnippet['cancelPendingSelectSource'],
+  cancelPendingSelectSource: vi.fn() as SmartSnippet['cancelPendingSelectSource'],
   selectInlineLink: vi.fn() as SmartSnippet['selectInlineLink'],
-  beginDelayedSelectInlineLink:
-    vi.fn() as SmartSnippet['beginDelayedSelectInlineLink'],
-  cancelPendingSelectInlineLink:
-    vi.fn() as SmartSnippet['cancelPendingSelectInlineLink'],
+  beginDelayedSelectInlineLink: vi.fn() as SmartSnippet['beginDelayedSelectInlineLink'],
+  cancelPendingSelectInlineLink: vi.fn() as SmartSnippet['cancelPendingSelectInlineLink'],
 } satisfies SmartSnippet;
 
 export const buildFakeInsightSmartSnippet = ({

@@ -90,10 +90,7 @@ describe('search-parameter-utils', () => {
 
   describe('isFacetPair', () => {
     it('should return true for a valid facet pair', () => {
-      const pair: [SearchParameterKey, unknown] = [
-        'f',
-        {color: ['red', 'blue']},
-      ];
+      const pair: [SearchParameterKey, unknown] = ['f', {color: ['red', 'blue']}];
       expect(isFacetPair(pair)).toBe(true);
     });
 

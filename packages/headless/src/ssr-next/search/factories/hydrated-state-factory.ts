@@ -12,21 +12,13 @@ import type {
 import {buildFactory} from './build-factory.js';
 
 export function hydratedStaticStateFactory<
-  TControllerDefinitions extends ControllerDefinitionsMap<
-    SSRSearchEngine,
-    Controller
-  >,
+  TControllerDefinitions extends ControllerDefinitionsMap<SSRSearchEngine, Controller>,
 >(
   controllerDefinitions: AugmentedControllerDefinition<TControllerDefinitions>,
   options: SearchEngineDefinitionOptions<TControllerDefinitions>
 ): HydrateStaticStateFunction<TControllerDefinitions> {
-  return async (
-    params: HydrateStaticStateParameters<TControllerDefinitions>
-  ) => {
-    const {engine, controllers} = await buildFactory(
-      controllerDefinitions,
-      options
-    )(params);
+  return async (params: HydrateStaticStateParameters<TControllerDefinitions>) => {
+    const {engine, controllers} = await buildFactory(controllerDefinitions, options)(params);
 
     params.searchActions.forEach((action) => {
       engine.dispatch(action);

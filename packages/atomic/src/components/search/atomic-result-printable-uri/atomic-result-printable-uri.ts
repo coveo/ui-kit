@@ -1,9 +1,5 @@
 import {NumberValue, Schema} from '@coveo/bueno';
-import {
-  buildInteractiveResult,
-  type InteractiveResult,
-  type Result,
-} from '@coveo/headless';
+import {buildInteractiveResult, type InteractiveResult, type Result} from '@coveo/headless';
 import {html, LitElement, nothing, type TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
@@ -173,9 +169,7 @@ export class AtomicResultPrintableUri
 
     const ellipsisIndex = this.getIndexOfEllipsis(parents.length);
     return html`
-      ${parents
-        .slice(0, ellipsisIndex)
-        .map((parent) => this.renderParentListItem(parent))}
+      ${parents.slice(0, ellipsisIndex).map((parent) => this.renderParentListItem(parent))}
       ${this.renderEllipsis()}
       ${parents.slice(-1).map((parent) => this.renderParentListItem(parent))}
     `;
@@ -206,8 +200,7 @@ export class AtomicResultPrintableUri
         title: content ?? undefined,
         onSelect: () => this.interactiveResult.select(),
         onBeginDelayedSelect: () => this.interactiveResult.beginDelayedSelect(),
-        onCancelPendingSelect: () =>
-          this.interactiveResult.cancelPendingSelect(),
+        onCancelPendingSelect: () => this.interactiveResult.cancelPendingSelect(),
         attributes: this.linkAttributes,
         ref: shouldSetTarget
           ? (el?: Element) => {
@@ -237,8 +230,7 @@ export class AtomicResultPrintableUri
         ariaLabel: this.result.printableUri || this.result.clickUri,
         onSelect: () => this.interactiveResult.select(),
         onBeginDelayedSelect: () => this.interactiveResult.beginDelayedSelect(),
-        onCancelPendingSelect: () =>
-          this.interactiveResult.cancelPendingSelect(),
+        onCancelPendingSelect: () => this.interactiveResult.cancelPendingSelect(),
         attributes: this.linkAttributes,
         onInitializeLink: this.registerLinkCleanup,
       },

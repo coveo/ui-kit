@@ -1135,18 +1135,17 @@ const dateRangeCurrentValues = [
   },
 ];
 
-export const streamAnswerAPIStateMockWithATabWithAnExpression: StreamAnswerAPIState =
-  {
-    ...streamAnswerAPIStateMock,
-    tabSet: {
-      ...streamAnswerAPIStateMock.tabSet,
-      default: {
-        id: 'default',
-        expression: '@fileType=html',
-        isActive: true,
-      },
+export const streamAnswerAPIStateMockWithATabWithAnExpression: StreamAnswerAPIState = {
+  ...streamAnswerAPIStateMock,
+  tabSet: {
+    ...streamAnswerAPIStateMock.tabSet,
+    default: {
+      id: 'default',
+      expression: '@fileType=html',
+      isActive: true,
     },
-  };
+  },
+};
 
 export const streamAnswerAPIStateMockWithoutAnyTab: StreamAnswerAPIState = {
   ...streamAnswerAPIStateMock,
@@ -1160,169 +1159,160 @@ export const streamAnswerAPIStateMockWithoutAnyTab: StreamAnswerAPIState = {
   },
 };
 
-export const streamAnswerAPIStateMockWithStaticFiltersSelected: StreamAnswerAPIState =
-  {
-    ...streamAnswerAPIStateMock,
-    staticFilterSet: {
-      youtube: {
-        id: 'test-static-filter',
-        values: [
-          {
-            caption: 'youtube',
-            expression: '@filetype=="youtubevideo"',
-            state: 'selected',
-          },
-        ],
-      },
+export const streamAnswerAPIStateMockWithStaticFiltersSelected: StreamAnswerAPIState = {
+  ...streamAnswerAPIStateMock,
+  staticFilterSet: {
+    youtube: {
+      id: 'test-static-filter',
+      values: [
+        {
+          caption: 'youtube',
+          expression: '@filetype=="youtubevideo"',
+          state: 'selected',
+        },
+      ],
     },
-  };
+  },
+};
 
-export const streamAnswerAPIStateMockWithNonValidFilters: StreamAnswerAPIState =
-  {
-    ...streamAnswerAPIStateMock,
-    staticFilterSet: {
-      idle: {
-        id: 'test-idle-filter',
-        values: [
-          {
-            caption: 'idle',
-            expression: '@filetype=="youtubevideo"',
-            state: 'idle',
-          },
-        ],
-      },
-      exlcuded: {
-        id: 'test-excluded-filter',
-        values: [
-          {
-            caption: 'excluded',
-            expression: '@filetype=="youtubevideo"',
-            state: 'excluded',
-          },
-        ],
-      },
-      empty: {
-        id: 'test-empty-filter',
-        values: [
-          {
-            caption: 'empty',
-            expression: '',
-            state: 'selected',
-          },
-        ],
-      },
+export const streamAnswerAPIStateMockWithNonValidFilters: StreamAnswerAPIState = {
+  ...streamAnswerAPIStateMock,
+  staticFilterSet: {
+    idle: {
+      id: 'test-idle-filter',
+      values: [
+        {
+          caption: 'idle',
+          expression: '@filetype=="youtubevideo"',
+          state: 'idle',
+        },
+      ],
     },
-  };
+    exlcuded: {
+      id: 'test-excluded-filter',
+      values: [
+        {
+          caption: 'excluded',
+          expression: '@filetype=="youtubevideo"',
+          state: 'excluded',
+        },
+      ],
+    },
+    empty: {
+      id: 'test-empty-filter',
+      values: [
+        {
+          caption: 'empty',
+          expression: '',
+          state: 'selected',
+        },
+      ],
+    },
+  },
+};
 
 export const streamAnswerAPIStateMockWithoutAnyFilters: StreamAnswerAPIState = {
   ...streamAnswerAPIStateMock,
   staticFilterSet: {},
 };
 
-export const streamAnswerAPIStateMockWithStaticFiltersAndTabExpression: StreamAnswerAPIState =
-  {
-    ...streamAnswerAPIStateMockWithATabWithAnExpression,
-    staticFilterSet: {
-      firstFilter: {
-        id: 'test-static-filter-1',
-        values: [
-          {
-            caption: 'youtube',
-            expression: '@filetype=="youtubevideo"',
-            state: 'selected',
-          },
-          {
-            caption: 'dropbox',
-            expression: '@filetype=="dropbox"',
-            state: 'selected',
-          },
-        ],
-      },
-      secondFilter: {
-        id: 'test-static-filter-2',
-        values: [
-          {
-            caption: 'html',
-            expression: '@filetype=="tsx"',
-            state: 'selected',
-          },
-        ],
-      },
+export const streamAnswerAPIStateMockWithStaticFiltersAndTabExpression: StreamAnswerAPIState = {
+  ...streamAnswerAPIStateMockWithATabWithAnExpression,
+  staticFilterSet: {
+    firstFilter: {
+      id: 'test-static-filter-1',
+      values: [
+        {
+          caption: 'youtube',
+          expression: '@filetype=="youtubevideo"',
+          state: 'selected',
+        },
+        {
+          caption: 'dropbox',
+          expression: '@filetype=="dropbox"',
+          state: 'selected',
+        },
+      ],
     },
-  };
-
-export const streamAnswerAPIStateMockWithStaticFiltersAndTabExpressionWithEmptyCQ =
-  {
-    ...streamAnswerAPIStateMockWithStaticFiltersAndTabExpression,
-    advancedSearchQueries: {
-      ...streamAnswerAPIStateMockWithStaticFiltersAndTabExpression.advancedSearchQueries!,
-      cq: '',
+    secondFilter: {
+      id: 'test-static-filter-2',
+      values: [
+        {
+          caption: 'html',
+          expression: '@filetype=="tsx"',
+          state: 'selected',
+        },
+      ],
     },
-  };
+  },
+};
 
-export const streamAnswerAPIStateMockWithoutSearchAction: StreamAnswerAPIState =
-  {
-    ...streamAnswerAPIStateMock,
-    search: {
-      ...streamAnswerAPIStateMock.search!,
-      searchAction: undefined,
-    },
-  };
+export const streamAnswerAPIStateMockWithStaticFiltersAndTabExpressionWithEmptyCQ = {
+  ...streamAnswerAPIStateMockWithStaticFiltersAndTabExpression,
+  advancedSearchQueries: {
+    ...streamAnswerAPIStateMockWithStaticFiltersAndTabExpression.advancedSearchQueries!,
+    cq: '',
+  },
+};
 
-export const streamAnswerAPIStateMockWithAnalyticsEnabled: StreamAnswerAPIState =
-  {
-    ...streamAnswerAPIStateMock,
-    configuration: {
-      ...streamAnswerAPIStateMock.configuration,
-      analytics: {
-        ...streamAnswerAPIStateMock.configuration.analytics,
-        enabled: true,
-      },
-    },
-  };
+export const streamAnswerAPIStateMockWithoutSearchAction: StreamAnswerAPIState = {
+  ...streamAnswerAPIStateMock,
+  search: {
+    ...streamAnswerAPIStateMock.search!,
+    searchAction: undefined,
+  },
+};
 
-export const streamAnswerAPIStateMockWithFoldingDisabled: StreamAnswerAPIState =
-  {
-    ...streamAnswerAPIStateMock,
-    folding: {
-      ...streamAnswerAPIStateMock.folding,
-      enabled: false,
-      fields: {
-        collection: '',
-        parent: '',
-        child: '',
-      },
-      filterFieldRange: 0,
-      collections: {},
-    },
-  };
-
-export const streamAnswerAPIStateMockWithFoldingEnabled: StreamAnswerAPIState =
-  {
-    ...streamAnswerAPIStateMock,
-    folding: {
-      ...streamAnswerAPIStateMock.folding,
+export const streamAnswerAPIStateMockWithAnalyticsEnabled: StreamAnswerAPIState = {
+  ...streamAnswerAPIStateMock,
+  configuration: {
+    ...streamAnswerAPIStateMock.configuration,
+    analytics: {
+      ...streamAnswerAPIStateMock.configuration.analytics,
       enabled: true,
-      fields: {
-        collection: 'testCollection',
-        parent: 'testParent',
-        child: 'testChild',
-      },
-      filterFieldRange: 1,
-      collections: {},
     },
-  };
+  },
+};
 
-export const streamAnswerAPIStateMockWithDictionaryFieldContext: StreamAnswerAPIState =
-  {
-    ...streamAnswerAPIStateMock,
-    dictionaryFieldContext: {
-      contextValues: {
-        key1: 'value1',
-        key2: 'value2',
-      },
+export const streamAnswerAPIStateMockWithFoldingDisabled: StreamAnswerAPIState = {
+  ...streamAnswerAPIStateMock,
+  folding: {
+    ...streamAnswerAPIStateMock.folding,
+    enabled: false,
+    fields: {
+      collection: '',
+      parent: '',
+      child: '',
     },
-  };
+    filterFieldRange: 0,
+    collections: {},
+  },
+};
+
+export const streamAnswerAPIStateMockWithFoldingEnabled: StreamAnswerAPIState = {
+  ...streamAnswerAPIStateMock,
+  folding: {
+    ...streamAnswerAPIStateMock.folding,
+    enabled: true,
+    fields: {
+      collection: 'testCollection',
+      parent: 'testParent',
+      child: 'testChild',
+    },
+    filterFieldRange: 1,
+    collections: {},
+  },
+};
+
+export const streamAnswerAPIStateMockWithDictionaryFieldContext: StreamAnswerAPIState = {
+  ...streamAnswerAPIStateMock,
+  dictionaryFieldContext: {
+    contextValues: {
+      key1: 'value1',
+      key2: 'value2',
+    },
+  },
+};
 
 export const streamAnswerAPIStateMockWithExcerptLength: StreamAnswerAPIState = {
   ...streamAnswerAPIStateMock,
@@ -1331,90 +1321,84 @@ export const streamAnswerAPIStateMockWithExcerptLength: StreamAnswerAPIState = {
   },
 };
 
-export const streamAnswerAPIStateMockWithQuerySyntaxEnabled: StreamAnswerAPIState =
-  {
-    ...streamAnswerAPIStateMock,
-    query: {
-      q: 'what is the hardest wood',
-      enableQuerySyntax: true,
-    },
-  };
+export const streamAnswerAPIStateMockWithQuerySyntaxEnabled: StreamAnswerAPIState = {
+  ...streamAnswerAPIStateMock,
+  query: {
+    q: 'what is the hardest wood',
+    enableQuerySyntax: true,
+  },
+};
 
-export const streamAnswerAPIStateMockWithCaseContextIncluded: StreamAnswerAPIState =
-  {
-    ...streamAnswerAPIStateMock,
-    insightCaseContext: {
-      caseContext: {caseSubject: 'foo', caseDescription: 'bar'},
-      caseId: '123',
-      caseNumber: '456',
-    },
-  };
+export const streamAnswerAPIStateMockWithCaseContextIncluded: StreamAnswerAPIState = {
+  ...streamAnswerAPIStateMock,
+  insightCaseContext: {
+    caseContext: {caseSubject: 'foo', caseDescription: 'bar'},
+    caseId: '123',
+    caseNumber: '456',
+  },
+};
 
 export const streamAnswerAPIStateMockWithoutContext: StreamAnswerAPIState = {
   ...streamAnswerAPIStateMock,
   context: undefined,
 };
 
-export const streamAnswerAPIStateMockWithLegacyDidYouMean: StreamAnswerAPIState =
-  {
-    ...streamAnswerAPIStateMock,
-    didYouMean: {
-      enableDidYouMean: true,
-      wasCorrectedTo: '',
-      wasAutomaticallyCorrected: false,
-      queryCorrection: {
-        correctedQuery: '',
-        wordCorrections: [],
-      },
-      originalQuery: '',
-      automaticallyCorrectQuery: false,
-      queryCorrectionMode: 'legacy',
+export const streamAnswerAPIStateMockWithLegacyDidYouMean: StreamAnswerAPIState = {
+  ...streamAnswerAPIStateMock,
+  didYouMean: {
+    enableDidYouMean: true,
+    wasCorrectedTo: '',
+    wasAutomaticallyCorrected: false,
+    queryCorrection: {
+      correctedQuery: '',
+      wordCorrections: [],
     },
-  };
+    originalQuery: '',
+    automaticallyCorrectQuery: false,
+    queryCorrectionMode: 'legacy',
+  },
+};
 
-export const streamAnswerAPIStateMockWithNextDidYouMeanAutoCorrect: StreamAnswerAPIState =
-  {
-    ...streamAnswerAPIStateMock,
-    didYouMean: {
-      enableDidYouMean: true,
-      wasCorrectedTo: '',
-      wasAutomaticallyCorrected: false,
-      queryCorrection: {
-        correctedQuery: '',
-        wordCorrections: [],
-      },
-      originalQuery: '',
-      automaticallyCorrectQuery: true,
-      queryCorrectionMode: 'next',
+export const streamAnswerAPIStateMockWithNextDidYouMeanAutoCorrect: StreamAnswerAPIState = {
+  ...streamAnswerAPIStateMock,
+  didYouMean: {
+    enableDidYouMean: true,
+    wasCorrectedTo: '',
+    wasAutomaticallyCorrected: false,
+    queryCorrection: {
+      correctedQuery: '',
+      wordCorrections: [],
     },
-  };
+    originalQuery: '',
+    automaticallyCorrectQuery: true,
+    queryCorrectionMode: 'next',
+  },
+};
 
-export const streamAnswerAPIStateMockWithNextDidYouMeanNoAutoCorrect: StreamAnswerAPIState =
-  {
-    ...streamAnswerAPIStateMock,
-    didYouMean: {
-      enableDidYouMean: true,
-      wasCorrectedTo: '',
-      wasAutomaticallyCorrected: false,
-      queryCorrection: {
-        correctedQuery: '',
-        wordCorrections: [],
-      },
-      originalQuery: '',
-      automaticallyCorrectQuery: false,
-      queryCorrectionMode: 'next',
+export const streamAnswerAPIStateMockWithNextDidYouMeanNoAutoCorrect: StreamAnswerAPIState = {
+  ...streamAnswerAPIStateMock,
+  didYouMean: {
+    enableDidYouMean: true,
+    wasCorrectedTo: '',
+    wasAutomaticallyCorrected: false,
+    queryCorrection: {
+      correctedQuery: '',
+      wordCorrections: [],
     },
-  };
+    originalQuery: '',
+    automaticallyCorrectQuery: false,
+    queryCorrectionMode: 'next',
+  },
+};
 
-export const streamAnswerAPIStateMockWithFieldsToInclude: StreamAnswerAPIState =
-  {
-    ...streamAnswerAPIStateMock,
-    fields: {
-      fieldsToInclude: ['title', 'summary', 'uri', 'author'],
-      fetchAllFields: false,
-      fieldsDescription: [],
-    },
-  };
+export const streamAnswerAPIStateMockWithFieldsToInclude: StreamAnswerAPIState = {
+  ...streamAnswerAPIStateMock,
+  fields: {
+    fieldsToInclude: ['title', 'summary', 'uri', 'author'],
+    fetchAllFields: false,
+    fieldsDescription: [],
+  },
+};
 
 export const streamAnswerAPIStateMockWithoutFields: StreamAnswerAPIState = {
   ...streamAnswerAPIStateMock,
@@ -1431,72 +1415,70 @@ export const streamAnswerAPIStateMockWithDebugFalse: StreamAnswerAPIState = {
   debug: false,
 };
 
-export const streamAnswerAPIStateMockWithDebugUndefined: StreamAnswerAPIState =
-  {
-    ...streamAnswerAPIStateMock,
-    debug: undefined,
-  };
+export const streamAnswerAPIStateMockWithDebugUndefined: StreamAnswerAPIState = {
+  ...streamAnswerAPIStateMock,
+  debug: undefined,
+};
 
-export const streamAnswerAPIStateMockWithSortableFacets: StreamAnswerAPIState =
-  {
-    ...streamAnswerAPIStateMock,
-    facetSet: {
-      'zebra-facet': {
-        request: {
-          filterFacetCount: true,
-          injectionDepth: 1000,
-          numberOfValues: 8,
-          sortCriteria: 'automatic',
-          resultsMustMatch: 'atLeastOneValue',
-          type: 'specific',
-          currentValues: [],
-          freezeCurrentValues: false,
-          isFieldExpanded: false,
-          preventAutoSelect: false,
-          facetId: 'zebra-facet',
-          field: 'zebra',
-        },
-        hasBreadcrumbs: true,
+export const streamAnswerAPIStateMockWithSortableFacets: StreamAnswerAPIState = {
+  ...streamAnswerAPIStateMock,
+  facetSet: {
+    'zebra-facet': {
+      request: {
+        filterFacetCount: true,
+        injectionDepth: 1000,
+        numberOfValues: 8,
+        sortCriteria: 'automatic',
+        resultsMustMatch: 'atLeastOneValue',
+        type: 'specific',
+        currentValues: [],
+        freezeCurrentValues: false,
+        isFieldExpanded: false,
+        preventAutoSelect: false,
+        facetId: 'zebra-facet',
+        field: 'zebra',
       },
-      'alpha-facet': {
-        request: {
-          filterFacetCount: true,
-          injectionDepth: 1000,
-          numberOfValues: 8,
-          sortCriteria: 'automatic',
-          resultsMustMatch: 'atLeastOneValue',
-          type: 'specific',
-          currentValues: [],
-          freezeCurrentValues: false,
-          isFieldExpanded: false,
-          preventAutoSelect: false,
-          facetId: 'alpha-facet',
-          field: 'alpha',
-        },
-        hasBreadcrumbs: true,
-      },
-      'beta-facet': {
-        request: {
-          filterFacetCount: true,
-          injectionDepth: 1000,
-          numberOfValues: 8,
-          sortCriteria: 'automatic',
-          resultsMustMatch: 'atLeastOneValue',
-          type: 'specific',
-          currentValues: [],
-          freezeCurrentValues: false,
-          isFieldExpanded: false,
-          preventAutoSelect: false,
-          facetId: 'beta-facet',
-          field: 'beta',
-        },
-        hasBreadcrumbs: true,
-      },
+      hasBreadcrumbs: true,
     },
-    numericFacetSet: {},
-    dateFacetSet: {},
-    categoryFacetSet: {},
-  };
+    'alpha-facet': {
+      request: {
+        filterFacetCount: true,
+        injectionDepth: 1000,
+        numberOfValues: 8,
+        sortCriteria: 'automatic',
+        resultsMustMatch: 'atLeastOneValue',
+        type: 'specific',
+        currentValues: [],
+        freezeCurrentValues: false,
+        isFieldExpanded: false,
+        preventAutoSelect: false,
+        facetId: 'alpha-facet',
+        field: 'alpha',
+      },
+      hasBreadcrumbs: true,
+    },
+    'beta-facet': {
+      request: {
+        filterFacetCount: true,
+        injectionDepth: 1000,
+        numberOfValues: 8,
+        sortCriteria: 'automatic',
+        resultsMustMatch: 'atLeastOneValue',
+        type: 'specific',
+        currentValues: [],
+        freezeCurrentValues: false,
+        isFieldExpanded: false,
+        preventAutoSelect: false,
+        facetId: 'beta-facet',
+        field: 'beta',
+      },
+      hasBreadcrumbs: true,
+    },
+  },
+  numericFacetSet: {},
+  dateFacetSet: {},
+  categoryFacetSet: {},
+};
 
 export const streamAnswerAPIStateMockWithoutAnyFacets: StreamAnswerAPIState = {
   ...streamAnswerAPIStateMock,

@@ -5,15 +5,9 @@ import {
   buildRelevanceSortCriterion,
   SortOrder,
 } from './criteria.js';
-import {
-  registerSortCriterion,
-  updateSortCriterion,
-} from './sort-criteria-actions.js';
+import {registerSortCriterion, updateSortCriterion} from './sort-criteria-actions.js';
 import {sortCriteriaReducer} from './sort-criteria-slice.js';
-import {
-  getSortCriteriaInitialState,
-  type SortCriteriaState,
-} from './sort-criteria-state.js';
+import {getSortCriteriaInitialState, type SortCriteriaState} from './sort-criteria-state.js';
 
 describe('sortCriteria', () => {
   let state: SortCriteriaState;

@@ -4,5 +4,4 @@ import type {CategoryFacetSearchState} from './category-facet-search-set-state.j
 export const categoryFacetSearchStateSelector = (
   state: CategoryFacetSearchSection,
   facetId: string
-): CategoryFacetSearchState | undefined =>
-  state.categoryFacetSearchSet[facetId];
+): CategoryFacetSearchState | undefined => state.categoryFacetSearchSet[facetId];

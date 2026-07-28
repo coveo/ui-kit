@@ -1,8 +1,4 @@
-import type {
-  NumericFacet,
-  NumericFacetState,
-  NumericFacetValue,
-} from '@coveo/headless';
+import type {NumericFacet, NumericFacetState, NumericFacetValue} from '@coveo/headless';
 import {vi} from 'vitest';
 import {genericSubscribe} from '../common';
 

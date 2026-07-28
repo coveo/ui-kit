@@ -15,8 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: 'Coveo Atomic React Next.js App Router Sample',
-  description:
-    'A sample Next.js app using Coveo Atomic React components with App Router',
+  description: 'A sample Next.js app using Coveo Atomic React components with App Router',
 };
 
 export default function RootLayout({
@@ -26,9 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        {children}
-      </body>
+      <body className={`${geistSans.variable} ${geistMono.variable}`}>{children}</body>
     </html>
   );
 }

@@ -5,17 +5,9 @@ import type {AtomicTab} from './atomic-tab';
 import './atomic-tab';
 
 describe('atomic-tab', () => {
-  const renderTab = async ({
-    label = 'Test Tab',
-    name = 'test-tab',
-    expression = '',
-  } = {}) => {
+  const renderTab = async ({label = 'Test Tab', name = 'test-tab', expression = ''} = {}) => {
     const element = await fixture<AtomicTab>(html`
-      <atomic-tab
-        label="${label}"
-        name="${name}"
-        expression="${expression}"
-      ></atomic-tab>
+      <atomic-tab label="${label}" name="${name}" expression="${expression}"></atomic-tab>
     `);
 
     return {element};

@@ -47,9 +47,7 @@ describe('atomic-insight-generate-answer-button', () => {
     props: {tooltip?: string} = {},
     querySummaryState: Partial<QuerySummaryState> = {}
   ) => {
-    vi.mocked(buildQuerySummary).mockReturnValue(
-      buildFakeQuerySummary({state: querySummaryState})
-    );
+    vi.mocked(buildQuerySummary).mockReturnValue(buildFakeQuerySummary({state: querySummaryState}));
 
     element = await fixture<AtomicInsightGenerateAnswerButton>(
       html`<atomic-insight-generate-answer-button
@@ -83,9 +81,7 @@ describe('atomic-insight-generate-answer-button', () => {
       await setupElement();
 
       expect(buildQuerySummary).toHaveBeenCalledWith(mockEngine);
-      expect(element.querySummary).toBe(
-        vi.mocked(buildQuerySummary).mock.results[0].value
-      );
+      expect(element.querySummary).toBe(vi.mocked(buildQuerySummary).mock.results[0].value);
     });
   });
 
@@ -95,30 +91,19 @@ describe('atomic-insight-generate-answer-button', () => {
         const defaultTooltip = 'Generate Answer';
         await setupElement({}, {hasQuery: false, total: 5});
 
-        const generateAnswerButton =
-          element.shadowRoot?.querySelector('button');
+        const generateAnswerButton = element.shadowRoot?.querySelector('button');
         expect(generateAnswerButton).toBeVisible();
-        expect(generateAnswerButton?.getAttribute('title')).toBe(
-          defaultTooltip
-        );
-        expect(generateAnswerButton?.getAttribute('aria-label')).toBe(
-          defaultTooltip
-        );
+        expect(generateAnswerButton?.getAttribute('title')).toBe(defaultTooltip);
+        expect(generateAnswerButton?.getAttribute('aria-label')).toBe(defaultTooltip);
       });
 
       it('should render the button with custom tooltip when specified', async () => {
         const customTooltip = 'Custom Generate Answer';
-        await setupElement(
-          {tooltip: customTooltip},
-          {hasQuery: false, total: 5}
-        );
+        await setupElement({tooltip: customTooltip}, {hasQuery: false, total: 5});
 
-        const generateAnswerButton =
-          element.shadowRoot?.querySelector('button');
+        const generateAnswerButton = element.shadowRoot?.querySelector('button');
         expect(generateAnswerButton?.getAttribute('title')).toBe(customTooltip);
-        expect(generateAnswerButton?.getAttribute('aria-label')).toBe(
-          customTooltip
-        );
+        expect(generateAnswerButton?.getAttribute('aria-label')).toBe(customTooltip);
       });
     });
 
@@ -126,8 +111,7 @@ describe('atomic-insight-generate-answer-button', () => {
       it('should not render the generate answer button', async () => {
         await setupElement({}, {hasQuery: true, total: 5});
 
-        const generateAnswerButton =
-          element.shadowRoot?.querySelector('button');
+        const generateAnswerButton = element.shadowRoot?.querySelector('button');
         expect(generateAnswerButton).toBeNull();
       });
     });
@@ -136,8 +120,7 @@ describe('atomic-insight-generate-answer-button', () => {
       it('should not render the generate answer button', async () => {
         await setupElement({}, {hasQuery: false, total: 0});
 
-        const generateAnswerButton =
-          element.shadowRoot?.querySelector('button');
+        const generateAnswerButton = element.shadowRoot?.querySelector('button');
         expect(generateAnswerButton).toBeNull();
       });
     });
@@ -146,8 +129,7 @@ describe('atomic-insight-generate-answer-button', () => {
       it('should not render the generate answer button', async () => {
         await setupElement({}, {hasQuery: true, total: 0});
 
-        const generateAnswerButton =
-          element.shadowRoot?.querySelector('button');
+        const generateAnswerButton = element.shadowRoot?.querySelector('button');
         expect(generateAnswerButton).toBeNull();
       });
     });

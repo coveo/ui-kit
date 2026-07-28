@@ -24,9 +24,7 @@ describe('suggestions-events', () => {
     });
 
     it('should call closest with correct selector', () => {
-      vi.mocked(closest).mockReturnValue(
-        document.createElement('atomic-search-box')
-      );
+      vi.mocked(closest).mockReturnValue(document.createElement('atomic-search-box'));
 
       dispatchSearchBoxSuggestionsEvent(mockEvent, mockElement);
 
@@ -84,11 +82,7 @@ describe('suggestions-events', () => {
       const customElements = ['atomic-search-box'] as const;
 
       expect(() => {
-        dispatchSearchBoxSuggestionsEvent(
-          mockEvent,
-          mockElement,
-          customElements
-        );
+        dispatchSearchBoxSuggestionsEvent(mockEvent, mockElement, customElements);
       }).toThrow(
         'The "div" component was not handled, as it is not a child of the following elements: atomic-search-box'
       );

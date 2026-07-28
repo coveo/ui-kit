@@ -1,8 +1,7 @@
-export const getCaseAssistConfigurationInitialState =
-  (): CaseAssistConfigurationState => ({
-    caseAssistId: '',
-    locale: 'en-US',
-  });
+export const getCaseAssistConfigurationInitialState = (): CaseAssistConfigurationState => ({
+  caseAssistId: '',
+  locale: 'en-US',
+});
 
 export interface CaseAssistConfigurationState {
   /**

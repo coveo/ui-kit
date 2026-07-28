@@ -1,11 +1,5 @@
 // oxlint-disable-next-line @typescript-eslint/consistent-type-imports -- <>
-import {
-  type AfterViewInit,
-  Component,
-  Input,
-  NgZone,
-  ViewChild,
-} from '@angular/core';
+import {type AfterViewInit, Component, Input, NgZone, ViewChild} from '@angular/core';
 // oxlint-disable-next-line @typescript-eslint/consistent-type-imports -- <>
 import {AtomicText} from '@coveo/atomic-angular';
 

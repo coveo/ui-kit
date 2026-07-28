@@ -25,10 +25,7 @@ import {bindingGuard} from '@/src/decorators/binding-guard';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import {
-  AriaLiveRegionController,
-  FocusTargetController,
-} from '@/src/utils/accessibility-utils';
+import {AriaLiveRegionController, FocusTargetController} from '@/src/utils/accessibility-utils';
 import {mapProperty} from '@/src/utils/props-utils';
 import {getFieldCaptions} from '../../../utils/field-utils';
 import {parseDependsOn} from '../../common/facets/depends-on';
@@ -44,10 +41,7 @@ import {
   shouldUpdateFacetSearchComponent,
 } from '../../common/facets/facet-search/facet-search-utils';
 import {renderFacetShowMoreLess} from '../../common/facets/facet-show-more-less/facet-show-more-less';
-import {
-  type FacetValueProps,
-  renderFacetValue,
-} from '../../common/facets/facet-value/facet-value';
+import {type FacetValueProps, renderFacetValue} from '../../common/facets/facet-value/facet-value';
 import {renderFacetValuesGroup} from '../../common/facets/facet-values-group/facet-values-group';
 import {initializePopover} from '../../common/facets/popover/popover-type';
 import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
@@ -104,10 +98,7 @@ import {ValidatePropsController} from '../../common/validate-props-controller/va
 @customElement('atomic-facet')
 @bindings()
 @withTailwindStyles
-export class AtomicFacet
-  extends LitElement
-  implements InitializableComponent<Bindings>
-{
+export class AtomicFacet extends LitElement implements InitializableComponent<Bindings> {
   static styles = [
     facetCommonStyles,
     facetSearchStyles,
@@ -403,9 +394,7 @@ export class AtomicFacet
         sortCriteria: this.sortCriteria,
         resultsMustMatch: this.resultsMustMatch,
         displayValuesAs: this.displayValuesAs,
-        allowedValues: Array.isArray(this.allowedValues)
-          ? this.allowedValues
-          : [],
+        allowedValues: Array.isArray(this.allowedValues) ? this.allowedValues : [],
         customSort: Array.isArray(this.customSort) ? this.customSort : [],
         tabsExcluded: this.tabsExcluded,
         tabsIncluded: this.tabsIncluded,
@@ -415,10 +404,7 @@ export class AtomicFacet
   }
 
   public initialize() {
-    if (
-      [...this.tabsIncluded].length > 0 &&
-      [...this.tabsExcluded].length > 0
-    ) {
+    if ([...this.tabsIncluded].length > 0 && [...this.tabsExcluded].length > 0) {
       console.warn(
         'Values for both "tabs-included" and "tabs-excluded" have been provided. This is could lead to unexpected behaviors.'
       );
@@ -450,9 +436,7 @@ export class AtomicFacet
   public shouldUpdate(changedProperties: Map<string, unknown>) {
     if (changedProperties.has('facetState')) {
       const currentFacetState = this.facetState;
-      const previousFacetState = changedProperties.get(
-        'facetState'
-      ) as FacetState;
+      const previousFacetState = changedProperties.get('facetState') as FacetState;
 
       if (previousFacetState && currentFacetState) {
         return shouldUpdateFacetSearchComponent(
@@ -468,8 +452,7 @@ export class AtomicFacet
     return (
       !this.searchStatusState.hasError &&
       this.facetState.enabled &&
-      (!this.searchStatusState.firstSearchExecuted ||
-        this.facetState.values.length > 0)
+      (!this.searchStatusState.firstSearchExecuted || this.facetState.values.length > 0)
     );
   }
 
@@ -478,9 +461,7 @@ export class AtomicFacet
   render() {
     return html`${when(this.shouldRenderFacet(), () =>
       this.searchStatusState.firstSearchExecuted
-        ? renderFacetContainer()(html`
-            ${this.renderFacetHeader()} ${this.renderBody()}
-          `)
+        ? renderFacetContainer()(html` ${this.renderFacetHeader()} ${this.renderBody()} `)
         : html`<atomic-facet-placeholder
             value-count="${this.numberOfValues}"
           ></atomic-facet-placeholder>`
@@ -546,9 +527,7 @@ export class AtomicFacet
   }
 
   private renderValuesContainer(children: unknown[], query?: string) {
-    const classes = `mt-3 ${
-      this.displayValuesAs === 'box' ? 'box-container' : ''
-    }`;
+    const classes = `mt-3 ${this.displayValuesAs === 'box' ? 'box-container' : ''}`;
     return renderFacetValuesGroup({
       props: {
         i18n: this.bindings.i18n,
@@ -662,9 +641,7 @@ export class AtomicFacet
       facetSearch: {numberOfValues: this.numberOfValues},
       filterFacetCount: this.filterFacetCount,
       injectionDepth: this.injectionDepth,
-      allowedValues: this.allowedValues.length
-        ? [...this.allowedValues]
-        : undefined,
+      allowedValues: this.allowedValues.length ? [...this.allowedValues] : undefined,
       customSort: this.customSort.length ? [...this.customSort] : undefined,
       tabs: {
         included: [...this.tabsIncluded],
@@ -675,11 +652,7 @@ export class AtomicFacet
 
   private get facetValueProps(): Pick<
     FacetValueProps,
-    | 'displayValuesAs'
-    | 'facetSearchQuery'
-    | 'enableExclusion'
-    | 'field'
-    | 'i18n'
+    'displayValuesAs' | 'facetSearchQuery' | 'enableExclusion' | 'field' | 'i18n'
   > {
     return {
       facetSearchQuery: this.facetState.facetSearch.query,
@@ -699,15 +672,12 @@ export class AtomicFacet
   }
 
   private initConditionManager() {
-    this.facetConditionsManager = buildFacetConditionsManager(
-      this.bindings.engine,
-      {
-        facetId: this.facetId!,
-        conditions: parseDependsOn<
-          FacetValueRequest | CategoryFacetValueRequest
-        >(this.dependsOn || {}),
-      }
-    );
+    this.facetConditionsManager = buildFacetConditionsManager(this.bindings.engine, {
+      facetId: this.facetId!,
+      conditions: parseDependsOn<FacetValueRequest | CategoryFacetValueRequest>(
+        this.dependsOn || {}
+      ),
+    });
   }
 
   private registerFacet() {
@@ -723,10 +693,7 @@ export class AtomicFacet
   }
 
   private initAriaLive() {
-    this.facetSearchAriaLive = new AriaLiveRegionController(
-      this,
-      'facet-search'
-    );
+    this.facetSearchAriaLive = new AriaLiveRegionController(this, 'facet-search');
     announceFacetSearchResultsWithAriaLive(
       this.facet,
       this.label,
@@ -747,9 +714,7 @@ export class AtomicFacet
   }
 
   private get definedLabel() {
-    return this.label === 'no-label' && this.facetState?.label
-      ? this.facetState.label
-      : this.label;
+    return this.label === 'no-label' && this.facetState?.label ? this.facetState.label : this.label;
   }
 
   private get focusTargets(): {

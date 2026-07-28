@@ -1,8 +1,5 @@
 import type {InsightPanel} from '@coveo/relay-event-types';
-import {
-  requiredNonEmptyString,
-  validatePayload,
-} from '../../utils/validate-payload.js';
+import {requiredNonEmptyString, validatePayload} from '../../utils/validate-payload.js';
 import {
   type InsightAction,
   makeInsightAnalyticsActionFactory,
@@ -21,9 +18,7 @@ export const logExpandToFullUI = (
   makeInsightAnalyticsActionFactory(SearchPageEvents.expandToFullUI)({
     prefix: 'analytics/expandToFullUI',
     __legacy__getBuilder: (client, state) => {
-      const metadata = getCaseContextAnalyticsMetadata(
-        state.insightCaseContext
-      );
+      const metadata = getCaseContextAnalyticsMetadata(state.insightCaseContext);
       const meta = {
         caseId: metadata.caseId,
         caseNumber: metadata.caseNumber,
@@ -35,9 +30,7 @@ export const logExpandToFullUI = (
     },
     analyticsType: 'InsightPanel.ExpandToFullUI',
     analyticsPayloadBuilder: (state): InsightPanel.ExpandToFullUI => {
-      const metadata = getCaseContextAnalyticsMetadata(
-        state.insightCaseContext
-      );
+      const metadata = getCaseContextAnalyticsMetadata(state.insightCaseContext);
       return {
         context: {
           targetId: metadata.caseId,
@@ -64,9 +57,7 @@ export const logInsightCreateArticle = (
     },
     analyticsType: 'InsightPanel.CreateArticle',
     analyticsPayloadBuilder: (state): InsightPanel.CreateArticle => {
-      const metadata = getCaseContextAnalyticsMetadata(
-        state.insightCaseContext
-      );
+      const metadata = getCaseContextAnalyticsMetadata(state.insightCaseContext);
       return {
         articleType: createArticleMetadata.articleType,
         context: {
@@ -82,8 +73,6 @@ export const logOpenUserActions = (): InsightAction =>
   makeInsightAnalyticsActionFactory('openUserActions')({
     prefix: 'analytics/insight/openUserActions',
     __legacy__getBuilder: (client, state) => {
-      return client.logOpenUserActions(
-        getCaseContextAnalyticsMetadata(state.insightCaseContext)
-      );
+      return client.logOpenUserActions(getCaseContextAnalyticsMetadata(state.insightCaseContext));
     },
   });

@@ -11,10 +11,7 @@ import type {
 import type {CommerceStore} from '@/src/components/commerce/atomic-commerce-interface/store.js';
 import {bindingsContext} from '@/src/components/common/context/bindings-context.js';
 import type {BaseAtomicInterface} from '@/src/components/common/interface/interface-controller.js';
-import {
-  type InitializeEvent,
-  markParentAsReady,
-} from '@/src/utils/init-queue.js';
+import {type InitializeEvent, markParentAsReady} from '@/src/utils/init-queue.js';
 import {initializeEventName} from '@/src/utils/initialization-common-utils.js';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture.js';
 import {genericSubscribe} from '@/vitest-utils/testing-helpers/fixtures/headless/common.js';
@@ -98,9 +95,7 @@ export function renderInAtomicCommerceInterface<T extends LitElement>({
 }: {
   template: TemplateResult;
   selector?: string;
-  bindings?:
-    | Partial<CommerceBindings>
-    | ((bindings: MinimalBindings) => MinimalBindings);
+  bindings?: Partial<CommerceBindings> | ((bindings: MinimalBindings) => MinimalBindings);
 }): Promise<{
   element: T;
   atomicInterface: FixtureAtomicCommerceInterface;
@@ -112,9 +107,7 @@ export async function renderInAtomicCommerceInterface<T extends LitElement>({
 }: {
   template: TemplateResult;
   selector?: string | never;
-  bindings?:
-    | Partial<CommerceBindings>
-    | ((bindings: MinimalBindings) => MinimalBindings);
+  bindings?: Partial<CommerceBindings> | ((bindings: MinimalBindings) => MinimalBindings);
 }): Promise<{
   element: null | T;
   atomicInterface: FixtureAtomicCommerceInterface;

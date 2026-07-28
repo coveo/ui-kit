@@ -31,27 +31,18 @@ describe('#renderPagerNavigation', () => {
 
   it('should set the aria-label using the translated pagination text on the <nav>', () => {
     expect(element.querySelector('nav')).toHaveAttribute('aria-label');
-    expect(element.querySelector('nav')?.getAttribute('aria-label')).toBe(
-      'Pagination'
-    );
+    expect(element.querySelector('nav')?.getAttribute('aria-label')).toBe('Pagination');
   });
 
   it('should render a <div> inside the <nav>', () => {
-    expect(
-      element.querySelector('nav')?.querySelector('div')
-    ).toBeInTheDocument();
+    expect(element.querySelector('nav')?.querySelector('div')).toBeInTheDocument();
   });
 
   it('should set the "buttons" part on the <div>', () => {
-    expect(element.querySelector('nav')?.querySelector('div')).toHaveAttribute(
-      'part',
-      'buttons'
-    );
+    expect(element.querySelector('nav')?.querySelector('div')).toHaveAttribute('part', 'buttons');
   });
 
   it('should contain the children', () => {
-    expect(
-      element.querySelector('nav')?.querySelector('div')
-    ).toHaveTextContent('children');
+    expect(element.querySelector('nav')?.querySelector('div')).toHaveTextContent('children');
   });
 });

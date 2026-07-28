@@ -4,10 +4,7 @@ import {fileURLToPath} from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const headlessFutureRoot = path.resolve(
-  __dirname,
-  '../../../packages/thermidor'
-);
+const headlessFutureRoot = path.resolve(__dirname, '../../../packages/thermidor');
 
 export default defineConfig({
   resolve: {
@@ -20,5 +17,6 @@ export default defineConfig({
     globals: true,
     exclude: ['tests/**', '**/node_modules/**'],
     passWithNoTests: true,
+    setupFiles: ['./vitest.setup.ts'],
   },
 });

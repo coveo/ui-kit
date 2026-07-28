@@ -12,31 +12,21 @@ const CACHE_KEY: CacheKey<GenerativeSelectors> =
   createCacheKey<GenerativeSelectors>('generative/selectors');
 
 export function createGenerativeSelectors(interfaceId: string) {
-  const sliceSelector = createSelectSlice(
-    interfaceId,
-    'generative',
-    initialGenerativeState
-  );
+  const sliceSelector = createSelectSlice(interfaceId, 'generative', initialGenerativeState);
 
   return {
-    getTurns: createMemoizedStateSelector(
-      sliceSelector,
-      (state): StateTurn[] => state.turns
-    ),
+    getTurns: createMemoizedStateSelector(sliceSelector, (state): StateTurn[] => state.turns),
     getActiveTurnId: createMemoizedStateSelector(
       sliceSelector,
       (state): string | undefined => state.activeTurnId
     ),
-    getActiveMessage: createMemoizedStateSelector(
-      sliceSelector,
-      (state): string => {
-        if (!state.activeTurnId) {
-          return '';
-        }
-        const turn = state.turns.find((t) => t.id === state.activeTurnId);
-        return turn?.prompt ?? '';
+    getActiveMessage: createMemoizedStateSelector(sliceSelector, (state): string => {
+      if (!state.activeTurnId) {
+        return '';
       }
-    ),
+      const turn = state.turns.find((t) => t.id === state.activeTurnId);
+      return turn?.prompt ?? '';
+    }),
     getConversationSessionId: createMemoizedStateSelector(
       sliceSelector,
       (state): string | undefined => state.conversationSessionId
@@ -50,7 +40,5 @@ export function createGenerativeSelectors(interfaceId: string) {
 
 export function getOrCreateGenerativeSelectors(iface: InterfaceHandle) {
   const {stateId, cacheRegistry} = getHandleInternals(iface);
-  return cacheRegistry.getOrCreate(CACHE_KEY, () =>
-    createGenerativeSelectors(stateId)
-  );
+  return cacheRegistry.getOrCreate(CACHE_KEY, () => createGenerativeSelectors(stateId));
 }

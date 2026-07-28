@@ -197,9 +197,7 @@ condition ? html`<div>Content</div>` : nothing;
 Use `classMap` for conditional classes:
 
 ```typescript
-html`<div class=${classMap({active: this.isActive, disabled: this.isDisabled})}>
-  Content
-</div>`;
+html`<div class=${classMap({active: this.isActive, disabled: this.isDisabled})}>Content</div>`;
 ```
 
 For Tailwind-specific conditional classes, use `tw` + `multiClassMap`:
@@ -212,9 +210,7 @@ const classNames = tw({
   'border-neutral-dark bg-white': !props.isHighlighted,
 });
 
-return html`<div class="rounded-lg border p-4 ${multiClassMap(classNames)}">
-  Content
-</div>`;
+return html`<div class="rounded-lg border p-4 ${multiClassMap(classNames)}">Content</div>`;
 ```
 
 ### Refs

@@ -29,18 +29,12 @@ describe('atomic-generated-answer-thread-item', () => {
       locators: () => ({
         timelineDot: element.shadowRoot?.querySelector('span.h-2.w-2') ?? null,
         timelineLine: element.shadowRoot?.querySelector('span.w-px') ?? null,
-        threadItemTitle:
-          element.shadowRoot?.querySelector('[part="thread-item-title"]') ??
-          null,
+        threadItemTitle: element.shadowRoot?.querySelector('[part="thread-item-title"]') ?? null,
         titleButton: element.shadowRoot?.querySelector('button') ?? null,
         timelineDotContainer:
-          element.shadowRoot
-            ?.querySelectorAll('div.items-center.justify-center')
-            ?.item(0) ?? null,
+          element.shadowRoot?.querySelectorAll('div.items-center.justify-center')?.item(0) ?? null,
         timelineLineContainer:
-          element.shadowRoot
-            ?.querySelectorAll('div.items-center.justify-center')
-            ?.item(1) ?? null,
+          element.shadowRoot?.querySelectorAll('div.items-center.justify-center')?.item(1) ?? null,
         contentRegion:
           element.shadowRoot?.querySelector(
             'div[id^="atomic-generated-answer-thread-item-content-"]'

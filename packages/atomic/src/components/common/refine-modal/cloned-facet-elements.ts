@@ -13,9 +13,7 @@ export function getClonedFacetElements(
   divSlot.style.flexDirection = 'column';
   divSlot.style.gap = 'var(--atomic-refine-modal-facet-margin, 20px)';
 
-  const allFacetTags = Array.from(
-    new Set(facetElements.map((el) => el.tagName.toLowerCase()))
-  );
+  const allFacetTags = Array.from(new Set(facetElements.map((el) => el.tagName.toLowerCase())));
 
   const allFacetsInOrderInDOM = allFacetTags.length
     ? root.querySelectorAll(allFacetTags.join(','))

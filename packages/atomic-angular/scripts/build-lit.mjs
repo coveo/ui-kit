@@ -4,10 +4,7 @@ import cem from '@coveo/atomic/custom-elements-manifest' with {type: 'json'};
 
 const generatedDir = 'projects/atomic-angular/src/lib/generated';
 
-const atomicAngularModuleFilePath = join(
-  generatedDir,
-  'atomic-angular.module.ts'
-);
+const atomicAngularModuleFilePath = join(generatedDir, 'atomic-angular.module.ts');
 const atomicAngularComponentFilePath = join(generatedDir, 'components.ts');
 
 mkdirSync(generatedDir, {recursive: true});
@@ -16,11 +13,9 @@ const litDeclarations = [];
 const litImports = new Set();
 const defineCustomElementImports = new Set();
 
-const isLitDeclaration = (declaration) =>
-  declaration?.superclass?.name === 'LitElement';
+const isLitDeclaration = (declaration) => declaration?.superclass?.name === 'LitElement';
 
-const declarationToLitImport = (declaration) =>
-  `${declaration.name} as Lit${declaration.name}`;
+const declarationToLitImport = (declaration) => `${declaration.name} as Lit${declaration.name}`;
 
 const declarationToProxyCmp = (declaration, defineCustomElementFn) =>
   `
@@ -30,9 +25,7 @@ const declarationToProxyCmp = (declaration, defineCustomElementFn) =>
       if (!attribute.fieldName) {
         return [];
       }
-      const member = declaration.members?.find(
-        (m) => m.name === attribute.fieldName
-      );
+      const member = declaration.members?.find((m) => m.name === attribute.fieldName);
       if (
         !member ||
         member.privacy === 'private' ||
@@ -147,7 +140,4 @@ export class AtomicAngularModule {
   writeFileSync(atomicAngularModuleFilePath, atomicAngularModuleFileContent);
 }
 
-writeFileSync(
-  atomicAngularComponentFilePath,
-  atomicAngularComponentFileContent.trimEnd()
-);
+writeFileSync(atomicAngularComponentFilePath, atomicAngularComponentFileContent.trimEnd());

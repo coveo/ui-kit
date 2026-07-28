@@ -13,15 +13,9 @@ import {
 import {attachedResultsReducer as attachedResults} from '../../../features/attached-results/attached-results-slice.js';
 import type {AttachedResult} from '../../../features/attached-results/attached-results-state.js';
 import {buildAttachedResultFromSearchResult} from '../../../features/attached-results/attached-results-utils.js';
-import type {
-  AttachedResultsSection,
-  ConfigurationSection,
-} from '../../../state/state-sections.js';
+import type {AttachedResultsSection, ConfigurationSection} from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
-import {
-  buildController,
-  type Controller,
-} from '../../controller/headless-controller.js';
+import {buildController, type Controller} from '../../controller/headless-controller.js';
 
 export interface AttachedResultsProps {
   /**
@@ -107,28 +101,21 @@ export function buildAttachedResults(
       return false;
     }
 
-    if (
-      isNullOrUndefined(result.raw.permanentid) &&
-      isNullOrUndefined(result.raw.urihash)
-    ) {
+    if (isNullOrUndefined(result.raw.permanentid) && isNullOrUndefined(result.raw.urihash)) {
       return false;
     }
     return engine.state.attachedResults.results.some((attached) => {
       const caseIdMatches = caseId === attached.caseId;
       const permanentIdMatches =
-        !isNullOrUndefined(attached.permanentId) &&
-        attached.permanentId === result.raw.permanentid;
+        !isNullOrUndefined(attached.permanentId) && attached.permanentId === result.raw.permanentid;
       const uriHashMatches =
-        !isNullOrUndefined(attached.uriHash) &&
-        attached.uriHash === result.raw.urihash;
+        !isNullOrUndefined(attached.uriHash) && attached.uriHash === result.raw.urihash;
       return caseIdMatches && (permanentIdMatches || uriHashMatches);
     });
   };
 
   const getAttachedResultsForRecord = (): AttachedResult[] => {
-    return engine.state.attachedResults.results.filter(
-      (attached) => attached.caseId === caseId
-    );
+    return engine.state.attachedResults.results.filter((attached) => attached.caseId === caseId);
   };
 
   return {
@@ -146,16 +133,12 @@ export function buildAttachedResults(
     },
 
     attach(result: Result): void {
-      dispatch(
-        attachResult(buildAttachedResultFromSearchResult(result, caseId))
-      );
+      dispatch(attachResult(buildAttachedResultFromSearchResult(result, caseId)));
       dispatch(logCaseAttach(result));
     },
 
     detach(result: Result): void {
-      dispatch(
-        detachResult(buildAttachedResultFromSearchResult(result, caseId))
-      );
+      dispatch(detachResult(buildAttachedResultFromSearchResult(result, caseId)));
       dispatch(logCaseDetach(result));
     },
   };

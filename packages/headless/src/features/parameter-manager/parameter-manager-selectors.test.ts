@@ -3,25 +3,21 @@ import {getSortCriteria} from './parameter-manager-selectors.js';
 describe('getSortCriteria', () => {
   describe('when the section is undefined', () => {
     it('returns an empty object', () => {
-      expect(getSortCriteria(undefined, (s: never) => s, 'relevancy')).toEqual(
-        {}
-      );
+      expect(getSortCriteria(undefined, (s: never) => s, 'relevancy')).toEqual({});
     });
   });
 
   describe('with primitive (string) sort values', () => {
     it('returns {} when the sort criteria equals the initial state', () => {
       const section = {sortCriteria: 'relevancy'};
-      expect(
-        getSortCriteria(section, (s) => s.sortCriteria, 'relevancy')
-      ).toEqual({});
+      expect(getSortCriteria(section, (s) => s.sortCriteria, 'relevancy')).toEqual({});
     });
 
     it('returns {sortCriteria} when the sort criteria differs from the initial state', () => {
       const section = {sortCriteria: 'date descending'};
-      expect(
-        getSortCriteria(section, (s) => s.sortCriteria, 'relevancy')
-      ).toEqual({sortCriteria: 'date descending'});
+      expect(getSortCriteria(section, (s) => s.sortCriteria, 'relevancy')).toEqual({
+        sortCriteria: 'date descending',
+      });
     });
   });
 
@@ -30,9 +26,7 @@ describe('getSortCriteria', () => {
       const appliedSort = {by: 'relevance'};
       const initialSort = {by: 'relevance'};
 
-      expect(
-        getSortCriteria({appliedSort}, (s) => s.appliedSort, initialSort)
-      ).toEqual({});
+      expect(getSortCriteria({appliedSort}, (s) => s.appliedSort, initialSort)).toEqual({});
     });
 
     it('returns {sortCriteria} when the sort criteria object differs from the initial state', () => {
@@ -42,9 +36,9 @@ describe('getSortCriteria', () => {
       };
       const initialSort = {by: 'relevance'};
 
-      expect(
-        getSortCriteria({appliedSort}, (s) => s.appliedSort, initialSort)
-      ).toEqual({sortCriteria: appliedSort});
+      expect(getSortCriteria({appliedSort}, (s) => s.appliedSort, initialSort)).toEqual({
+        sortCriteria: appliedSort,
+      });
     });
 
     it('returns {sortCriteria} when fields are the same but in different order', () => {
@@ -63,9 +57,9 @@ describe('getSortCriteria', () => {
         ],
       };
 
-      expect(
-        getSortCriteria({appliedSort}, (s) => s.appliedSort, initialSort)
-      ).toEqual({sortCriteria: appliedSort});
+      expect(getSortCriteria({appliedSort}, (s) => s.appliedSort, initialSort)).toEqual({
+        sortCriteria: appliedSort,
+      });
     });
   });
 });

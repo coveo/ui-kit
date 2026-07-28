@@ -1,7 +1,4 @@
-import type {
-  ProductListing,
-  ProductListingState,
-} from '@coveo/headless/commerce';
+import type {ProductListing, ProductListingState} from '@coveo/headless/commerce';
 import {vi} from 'vitest';
 import {genericSubscribe} from '../common';
 import {buildFakeProduct} from './product';

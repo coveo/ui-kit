@@ -18,27 +18,18 @@ test.describe('atomic-insight-facet', () => {
     });
   });
 
-  test('should display selected value with visual indicator', async ({
-    insightFacet,
-  }) => {
+  test('should display selected value with visual indicator', async ({insightFacet}) => {
     await insightFacet.load({story: 'with-selected-value'});
     await insightFacet.hydrated.waitFor();
 
     await test.step('Verify selected value has checked state', async () => {
-      const selectedCheckbox = insightFacet.page.locator(
-        '[part~="value-checkbox-checked"]'
-      );
+      const selectedCheckbox = insightFacet.page.locator('[part~="value-checkbox-checked"]');
       await expect(selectedCheckbox.first()).toBeVisible();
-      await expect(selectedCheckbox.first()).toHaveAttribute(
-        'aria-checked',
-        'true'
-      );
+      await expect(selectedCheckbox.first()).toHaveAttribute('aria-checked', 'true');
     });
   });
 
-  test('should collapse and hide values when clicking the label button', async ({
-    insightFacet,
-  }) => {
+  test('should collapse and hide values when clicking the label button', async ({insightFacet}) => {
     await insightFacet.load({story: 'default'});
 
     await test.step('Verify values are initially visible', async () => {

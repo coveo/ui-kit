@@ -1,8 +1,4 @@
-import type {
-  Decorator,
-  Meta,
-  StoryObj as Story,
-} from '@storybook/web-components-vite';
+import type {Decorator, Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
 import {testSwitchA11y} from '@/storybook-utils/a11y/switch.js';
@@ -24,19 +20,16 @@ insightApiHarness.searchEndpoint.mock((response) => ({
   },
 }));
 
-const {args, argTypes, template} = getStorybookHelpers(
-  'atomic-insight-generated-answer',
-  {excludeCategories: ['methods']}
-);
+const {args, argTypes, template} = getStorybookHelpers('atomic-insight-generated-answer', {
+  excludeCategories: ['methods'],
+});
 
 const layoutDecorator: Decorator = (story) => html`
   <atomic-insight-layout>
     <atomic-layout-section section="search">
       <atomic-insight-search-box></atomic-insight-search-box>
     </atomic-layout-section>
-    <atomic-layout-section section="results">
-      ${story()}
-    </atomic-layout-section>
+    <atomic-layout-section section="results"> ${story()} </atomic-layout-section>
   </atomic-insight-layout>
 `;
 
@@ -61,8 +54,7 @@ const meta: Meta = {
   argTypes,
   play: async (storyContext) => {
     await play(storyContext);
-    const searchBox =
-      await storyContext.canvas.findAllByShadowPlaceholderText('Search');
+    const searchBox = await storyContext.canvas.findAllByShadowPlaceholderText('Search');
     const query = 'how to resolve netflix connection with tivo';
     const input = searchBox[0] as HTMLTextAreaElement;
     input.scrollIntoView({block: 'center'});

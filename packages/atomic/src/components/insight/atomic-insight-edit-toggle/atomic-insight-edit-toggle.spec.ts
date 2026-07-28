@@ -6,10 +6,7 @@ import './atomic-insight-edit-toggle';
 import type {AtomicInsightEditToggle} from './atomic-insight-edit-toggle';
 
 describe('atomic-insight-edit-toggle', () => {
-  const renderComponent = async ({
-    clickCallback = vi.fn(),
-    tooltip = '',
-  } = {}) => {
+  const renderComponent = async ({clickCallback = vi.fn(), tooltip = ''} = {}) => {
     const element = await fixture<AtomicInsightEditToggle>(html`
       <atomic-insight-edit-toggle
         .clickCallback=${clickCallback}

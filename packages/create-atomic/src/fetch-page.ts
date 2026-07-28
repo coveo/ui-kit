@@ -47,10 +47,7 @@ function replaceResultsPlaceholder(manifestResponse: IManifest) {
   return manifestResponse;
 }
 
-async function getLegacyManifest(
-  client: PlatformClient,
-  pageId: string
-): Promise<IManifest> {
+async function getLegacyManifest(client: PlatformClient, pageId: string): Promise<IManifest> {
   return await client.searchInterfaces.manifest(pageId, {
     pagePlaceholders: {
       results: '--results--',
@@ -58,10 +55,7 @@ async function getLegacyManifest(
   });
 }
 
-async function getNextGenManifest(
-  client: PlatformClient,
-  pageId: string
-): Promise<IManifest> {
+async function getNextGenManifest(client: PlatformClient, pageId: string): Promise<IManifest> {
   return await client.nextGenSearchPages.manifest(pageId, {
     pagePlaceholders: {
       results: '--results--',

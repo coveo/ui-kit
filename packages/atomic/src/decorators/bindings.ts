@@ -29,9 +29,7 @@ import type {InitializableComponent} from './types';
  * ```
  */
 export function bindings() {
-  return (target: {
-    prototype: ReactiveElement & InitializableComponent<AnyBindings>;
-  }) => {
+  return (target: {prototype: ReactiveElement & InitializableComponent<AnyBindings>}) => {
     const connectedCallback = target.prototype.connectedCallback;
 
     target.prototype.connectedCallback = function () {

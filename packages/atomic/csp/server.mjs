@@ -31,11 +31,7 @@ function getContentTypeFromExtension(filePath) {
   }
 }
 const server = createServer((req, res) => {
-  const filePath = resolve(
-    __dirname,
-    '../www',
-    req.url.slice(1) || 'index.html'
-  );
+  const filePath = resolve(__dirname, '../www', req.url.slice(1) || 'index.html');
   const contentType = getContentTypeFromExtension(filePath);
   if (!contentType) {
     // Handle unknown file types

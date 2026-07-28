@@ -3,14 +3,8 @@ import {tmpdir} from 'node:os';
 import path from 'node:path';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 
-import {
-  loadManualAuditData,
-  resolveManualConformance,
-} from '../src/openacr/manual-audit.js';
-import type {
-  ManualAuditAggregate,
-  OpenAcrConformance,
-} from '../src/openacr/types.js';
+import {loadManualAuditData, resolveManualConformance} from '../src/openacr/manual-audit.js';
+import type {ManualAuditAggregate, OpenAcrConformance} from '../src/openacr/types.js';
 
 describe('loadManualAuditData', () => {
   let dir: string;
@@ -44,9 +38,7 @@ describe('loadManualAuditData', () => {
 
     const aggregates = await loadManualAuditData(dir);
 
-    expect(aggregates.get('2.4.7')).toEqual([
-      {criterionId: '2.4.7', conformance: 'supports'},
-    ]);
+    expect(aggregates.get('2.4.7')).toEqual([{criterionId: '2.4.7', conformance: 'supports'}]);
     expect(aggregates.get('1.4.3')).toEqual([
       {
         criterionId: '1.4.3',
@@ -92,16 +84,15 @@ describe('loadManualAuditData', () => {
     const aggregates = await loadManualAuditData(dir);
 
     expect(aggregates.get('2.1.4')).toHaveLength(2);
-    expect(resolveManualConformance(aggregates.get('2.1.4'))).toBe(
-      'does-not-support'
-    );
+    expect(resolveManualConformance(aggregates.get('2.1.4'))).toBe('does-not-support');
   });
 });
 
 describe('resolveManualConformance', () => {
-  const aggregate = (
-    conformance: OpenAcrConformance
-  ): ManualAuditAggregate => ({criterionId: '1.1.1', conformance});
+  const aggregate = (conformance: OpenAcrConformance): ManualAuditAggregate => ({
+    criterionId: '1.1.1',
+    conformance,
+  });
 
   it('applies worst-wins (does-not-support > partially-supports > supports > not-applicable)', () => {
     expect(
@@ -113,23 +104,15 @@ describe('resolveManualConformance', () => {
       ])
     ).toBe('does-not-support');
 
-    expect(
-      resolveManualConformance([
-        aggregate('supports'),
-        aggregate('partially-supports'),
-      ])
-    ).toBe('partially-supports');
-
-    expect(
-      resolveManualConformance([
-        aggregate('supports'),
-        aggregate('not-applicable'),
-      ])
-    ).toBe('supports');
-
-    expect(resolveManualConformance([aggregate('not-applicable')])).toBe(
-      'not-applicable'
+    expect(resolveManualConformance([aggregate('supports'), aggregate('partially-supports')])).toBe(
+      'partially-supports'
     );
+
+    expect(resolveManualConformance([aggregate('supports'), aggregate('not-applicable')])).toBe(
+      'supports'
+    );
+
+    expect(resolveManualConformance([aggregate('not-applicable')])).toBe('not-applicable');
   });
 
   it('returns undefined for empty input', () => {

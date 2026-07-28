@@ -1,9 +1,6 @@
 import {updateCaseInput} from './case-input-actions.js';
 import {caseInputReducer} from './case-input-slice.js';
-import {
-  type CaseInputState,
-  getCaseInputInitialState,
-} from './case-input-state.js';
+import {type CaseInputState, getCaseInputInitialState} from './case-input-state.js';
 
 describe('case input slice', () => {
   const testMapping = {fieldName: 'foo', fieldValue: 'fooValue'};
@@ -15,16 +12,12 @@ describe('case input slice', () => {
   });
 
   it('should have an initial state', () => {
-    expect(caseInputReducer(undefined, {type: 'foo'})).toEqual(
-      getCaseInputInitialState()
-    );
+    expect(caseInputReducer(undefined, {type: 'foo'})).toEqual(getCaseInputInitialState());
   });
 
   it('should allow to set a new case input entry', () => {
     expect(
-      caseInputReducer(state, updateCaseInput(testMapping))[
-        testMapping.fieldName
-      ].value
+      caseInputReducer(state, updateCaseInput(testMapping))[testMapping.fieldName].value
     ).toEqual(testMapping.fieldValue);
   });
 

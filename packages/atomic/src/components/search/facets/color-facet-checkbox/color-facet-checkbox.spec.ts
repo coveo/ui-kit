@@ -51,19 +51,13 @@ describe('#renderColorFacetCheckbox', () => {
 
     expect(label).toHaveAttribute('part', 'value-checkbox-label');
     expect(valueCount).toHaveAttribute('part', 'value-count');
-    expect(checkbox.element()).toHaveAttribute(
-      'part',
-      expect.stringContaining('value-checkbox')
-    );
+    expect(checkbox.element()).toHaveAttribute('part', expect.stringContaining('value-checkbox'));
   });
 
   it('should apply the correct part value based on display value', async () => {
     const {checkbox} = await setupElement({displayValue: 'TestColor'});
 
-    expect(checkbox.element()).toHaveAttribute(
-      'part',
-      expect.stringContaining('value-TestColor')
-    );
+    expect(checkbox.element()).toHaveAttribute('part', expect.stringContaining('value-TestColor'));
   });
 
   it('should add checked part when selected', async () => {
@@ -111,9 +105,7 @@ describe('#renderColorFacetCheckbox', () => {
 
     const {checkbox} = await setupElement();
 
-    checkbox
-      .element()
-      .dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));
+    checkbox.element().dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));
 
     expect(createRippleSpy).toHaveBeenCalled();
   });

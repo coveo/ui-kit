@@ -69,10 +69,6 @@ export const renderButton: FunctionalComponentWithChildren<ButtonProps> =
       ?disabled=${props.disabled}
       ${props.ref ? ref(props.ref) : nothing}
     >
-      ${when(
-        props.text,
-        () => html`<span class="truncate">${props.text}</span>`
-      )}
-      ${children}
+      ${when(props.text, () => html`<span class="truncate">${props.text}</span>`)} ${children}
     </button>`;
   };

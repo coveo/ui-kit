@@ -24,8 +24,7 @@ export const renderHeading: FunctionalComponentWithChildren<HeadingProps> =
   (children) => {
     const {level, class: classname, part} = props;
 
-    const headingTag =
-      level > 0 && level <= 6 ? unsafeStatic(`h${level}`) : literal`div`;
+    const headingTag = level > 0 && level <= 6 ? unsafeStatic(`h${level}`) : literal`div`;
 
     return html`<${headingTag}
       class="${ifDefined(classname)}"

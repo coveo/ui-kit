@@ -51,12 +51,7 @@ Slices are automatically adopted when:
 - A **mutation** is dispatched
 
 ```typescript
-import {
-  read,
-  mutate,
-  searchSelectors,
-  searchMutations,
-} from '@coveo/thermidor/core';
+import {read, mutate, searchSelectors, searchMutations} from '@coveo/thermidor/core';
 
 // This automatically adopts the 'search' slice
 const query = read(searchSelectors.query);

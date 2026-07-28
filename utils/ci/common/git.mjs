@@ -20,8 +20,7 @@ import {REPO_NAME, REPO_OWNER} from './constants.mjs';
 
 export const setupGit = async () => {
   const GIT_USERNAME = 'developer-experience-bot[bot]';
-  const GIT_EMAIL =
-    '91079284+developer-experience-bot[bot]@users.noreply.github.com';
+  const GIT_EMAIL = '91079284+developer-experience-bot[bot]@users.noreply.github.com';
   await gitSetupUser(GIT_USERNAME, GIT_EMAIL);
 };
 
@@ -97,5 +96,4 @@ function runPrecommit() {
  * @param {string|TemplateStringsArray} cmd
  * @returns
  */
-const appendCmdIfWindows = (cmd) =>
-  `${cmd}${process.platform === 'win32' ? '.cmd' : ''}`;
+const appendCmdIfWindows = (cmd) => `${cmd}${process.platform === 'win32' ? '.cmd' : ''}`;

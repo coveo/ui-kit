@@ -1,9 +1,6 @@
 import type {OmniboxSuggestionsMetadata} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents.js';
 import type {SearchAppState} from '../../state/search-app-state.js';
-import {
-  type LegacySearchAction,
-  makeAnalyticsAction,
-} from '../analytics/analytics-utils.js';
+import {type LegacySearchAction, makeAnalyticsAction} from '../analytics/analytics-utils.js';
 import {SearchPageEvents} from '../analytics/search-action-cause.js';
 import type {SearchAction} from '../search/search-actions.js';
 
@@ -47,9 +44,7 @@ export function buildOmniboxSuggestionMetadata(
     );
   }
 
-  const suggestions = querySuggest.completions.map(
-    (completion) => completion.expression
-  );
+  const suggestions = querySuggest.completions.map((completion) => completion.expression);
 
   const lastIndex = querySuggest.partialQueries.length - 1;
   const partialQuery = querySuggest.partialQueries[lastIndex] || '';

@@ -1,8 +1,5 @@
 import type {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response.js';
-import type {
-  ChildProduct,
-  Product,
-} from '../../../api/commerce/common/product.js';
+import type {ChildProduct, Product} from '../../../api/commerce/common/product.js';
 import type {
   CommerceEngine,
   CommerceEngineState,
@@ -27,10 +24,7 @@ import {
 import {recommendationsReducer as recommendations} from '../../../features/commerce/recommendations/recommendations-slice.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {validateInitialState} from '../../../utils/validate-payload.js';
-import {
-  buildController,
-  type Controller,
-} from '../../controller/headless-controller.js';
+import {buildController, type Controller} from '../../controller/headless-controller.js';
 import {
   type BaseSolutionTypeSubControllers,
   buildBaseSubControllers,
@@ -41,13 +35,12 @@ import type {RecommendationsSummaryState} from './summary/headless-recommendatio
 /**
  * The `Recommendations` controller exposes a method for retrieving recommendations content in a commerce interface.
  *
- * Example: [recommendations.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/commerce/recommendations.fn.tsx)
+ * Example: [home-page.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/commerce-react/src/pages/home-page.tsx)
  *
  * @group Buildable controllers
  * @category Recommendations
  */
-export interface Recommendations
-  extends Controller, BaseSolutionTypeSubControllers<SummaryState> {
+export interface Recommendations extends Controller, BaseSolutionTypeSubControllers<SummaryState> {
   /**
    * Fetches the recommendations.
    */
@@ -124,12 +117,7 @@ export function buildRecommendations(
     throw loadReducerError;
   }
 
-  validateInitialState(
-    engine,
-    recommendationsOptionsSchema,
-    props.options,
-    'buildRecommendations'
-  );
+  validateInitialState(engine, recommendationsOptionsSchema, props.options, 'buildRecommendations');
 
   const controller = buildController(engine);
   const {dispatch} = engine;
@@ -140,23 +128,18 @@ export function buildRecommendations(
   const recommendationStateSelector = (state: CommerceEngineState) =>
     state.recommendations[slotId]!;
 
-  const subControllers = buildBaseSubControllers<RecommendationsSummaryState>(
-    engine,
-    {
-      slotId,
-      responseIdSelector: (state) => state.recommendations[slotId]!.responseId,
-      fetchProductsActionCreator: () => fetchRecommendations({slotId}),
-      fetchMoreProductsActionCreator: () => fetchMoreRecommendations({slotId}),
-      isLoadingSelector: (state) => isLoadingSelector(state, slotId),
-      errorSelector: (state) => state.recommendations[slotId]!.error,
-      pageSelector: (state) => pageRecommendationSelector(state, slotId),
-      perPageSelector: (state) => perPageRecommendationSelector(state, slotId),
-      totalEntriesSelector: (state) =>
-        totalEntriesRecommendationSelector(state, slotId),
-      numberOfProductsSelector: (state) =>
-        numberOfRecommendationsSelector(state, slotId),
-    }
-  );
+  const subControllers = buildBaseSubControllers<RecommendationsSummaryState>(engine, {
+    slotId,
+    responseIdSelector: (state) => state.recommendations[slotId]!.responseId,
+    fetchProductsActionCreator: () => fetchRecommendations({slotId}),
+    fetchMoreProductsActionCreator: () => fetchMoreRecommendations({slotId}),
+    isLoadingSelector: (state) => isLoadingSelector(state, slotId),
+    errorSelector: (state) => state.recommendations[slotId]!.error,
+    pageSelector: (state) => pageRecommendationSelector(state, slotId),
+    perPageSelector: (state) => perPageRecommendationSelector(state, slotId),
+    totalEntriesSelector: (state) => totalEntriesRecommendationSelector(state, slotId),
+    numberOfProductsSelector: (state) => numberOfRecommendationsSelector(state, slotId),
+  });
 
   return {
     ...controller,
@@ -174,9 +157,7 @@ export function buildRecommendations(
   };
 }
 
-function loadBaseRecommendationsReducers(
-  engine: CommerceEngine
-): engine is CommerceEngine {
+function loadBaseRecommendationsReducers(engine: CommerceEngine): engine is CommerceEngine {
   engine.addReducers({recommendations});
   return true;
 }

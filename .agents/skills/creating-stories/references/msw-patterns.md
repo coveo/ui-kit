@@ -202,16 +202,11 @@ const meta: Meta = {
 Use rich response data for more realistic testing:
 
 ```typescript
-import {
-  type baseResponse,
-  richResponse,
-} from '@coveo/platform-mock-api/search/search-response';
+import {type baseResponse, richResponse} from '@coveo/platform-mock-api/search/search-response';
 
 const meta: Meta = {
   beforeEach: () => {
-    searchApiHarness.searchEndpoint.mock(
-      () => richResponse as unknown as typeof baseResponse
-    );
+    searchApiHarness.searchEndpoint.mock(() => richResponse as unknown as typeof baseResponse);
   },
 };
 ```

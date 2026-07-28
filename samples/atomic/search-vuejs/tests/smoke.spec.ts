@@ -48,8 +48,7 @@ test.describe('smoke test', () => {
 
     const filteredErrors = consoleErrors.filter(
       (error) =>
-        !error.includes('ResizeObserver loop') &&
-        !error.includes('MissingInterfaceParentError')
+        !error.includes('ResizeObserver loop') && !error.includes('MissingInterfaceParentError')
     );
     expect(filteredErrors).toEqual([]);
   });

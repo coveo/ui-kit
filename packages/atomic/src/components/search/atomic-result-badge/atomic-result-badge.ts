@@ -52,10 +52,7 @@ import type {Bindings} from '../atomic-search-interface/atomic-search-interface'
 @customElement('atomic-result-badge')
 @withTailwindStyles
 @bindings()
-export class AtomicResultBadge
-  extends LitElement
-  implements InitializableComponent<Bindings>
-{
+export class AtomicResultBadge extends LitElement implements InitializableComponent<Bindings> {
   @state() bindings!: Bindings;
   public error!: Error;
 
@@ -108,9 +105,7 @@ export class AtomicResultBadge
 
   private getTextContent() {
     if (this.field !== undefined) {
-      return html`<atomic-result-text
-        .field=${this.field}
-      ></atomic-result-text>`;
+      return html`<atomic-result-text .field=${this.field}></atomic-result-text>`;
     }
     if (this.label !== undefined) {
       return html`<atomic-text .value=${this.label}></atomic-text>`;
@@ -119,9 +114,7 @@ export class AtomicResultBadge
   }
 
   private renderText() {
-    return html`<span part="result-badge-label"
-      >${this.getTextContent()}</span
-    >`;
+    return html`<span part="result-badge-label">${this.getTextContent()}</span>`;
   }
 
   private renderBadge() {
@@ -139,8 +132,7 @@ export class AtomicResultBadge
     if (this.field && this.resultContext.item) {
       const result = this.resultContext.item as Result;
 
-      const hasValue =
-        ResultTemplatesHelpers.getResultProperty(result, this.field) !== null;
+      const hasValue = ResultTemplatesHelpers.getResultProperty(result, this.field) !== null;
       if (!hasValue) {
         this.remove();
       }

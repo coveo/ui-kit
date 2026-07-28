@@ -1,13 +1,5 @@
 import {html} from 'lit';
-import {
-  beforeAll,
-  beforeEach,
-  afterEach,
-  describe,
-  expect,
-  it,
-  vi,
-} from 'vitest';
+import {beforeAll, beforeEach, afterEach, describe, expect, it, vi} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {
@@ -38,9 +30,7 @@ describe('#renderConversationDebugHeader', () => {
     vi.unstubAllGlobals();
   });
 
-  const renderComponent = async (
-    overrides: Partial<RenderConversationDebugHeaderProps> = {}
-  ) => {
+  const renderComponent = async (overrides: Partial<RenderConversationDebugHeaderProps> = {}) => {
     const defaultProps: RenderConversationDebugHeaderProps = {
       i18n,
       conversationId: 'test-conversation-123',
@@ -59,9 +49,7 @@ describe('#renderConversationDebugHeader', () => {
       conversationId: 'my-conv-456',
     });
 
-    expect(element.textContent).toContain(
-      i18n.t('generated-answer-debug-mode-on')
-    );
+    expect(element.textContent).toContain(i18n.t('generated-answer-debug-mode-on'));
     expect(element.textContent).toContain(
       i18n.t('generated-answer-conversation-id', {
         conversationId: 'my-conv-456',
@@ -75,10 +63,7 @@ describe('#renderConversationDebugHeader', () => {
 
       const button = element.querySelector('button');
       expect(button).toBeInTheDocument();
-      expect(button).toHaveAttribute(
-        'title',
-        i18n.t('generated-answer-copy-conversation-id')
-      );
+      expect(button).toHaveAttribute('title', i18n.t('generated-answer-copy-conversation-id'));
     });
 
     it('should copy the conversation ID to the clipboard on button click', async () => {

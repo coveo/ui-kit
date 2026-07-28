@@ -124,12 +124,8 @@ describe('#logDocumentQuickview', () => {
       await clearMicrotaskQueue();
 
       expect(mockLogDocumentQuickview).toHaveBeenCalledTimes(1);
-      expect(mockLogDocumentQuickview.mock.calls[0][0]).toStrictEqual(
-        expectedDocumentInfo
-      );
-      expect(mockLogDocumentQuickview.mock.calls[0][1]).toStrictEqual(
-        expectedDocumentIdentifier
-      );
+      expect(mockLogDocumentQuickview.mock.calls[0][0]).toStrictEqual(expectedDocumentInfo);
+      expect(mockLogDocumentQuickview.mock.calls[0][1]).toStrictEqual(expectedDocumentIdentifier);
     });
   });
 

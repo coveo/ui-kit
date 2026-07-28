@@ -32,10 +32,7 @@ export function createStaticState<TSearchAction extends UnknownAction>({
 }: {
   searchActions: TSearchAction[];
   controllers: ControllersMap;
-}): EngineStaticState<
-  TSearchAction,
-  InferControllerStaticStateMapFromControllers<ControllersMap>
-> {
+}): EngineStaticState<TSearchAction, InferControllerStaticStateMapFromControllers<ControllersMap>> {
   return {
     controllers: mapObject(controllers, (controller) => ({
       state: clone(controller.state),
@@ -78,15 +75,11 @@ export function buildControllerDefinitions<
   engine: SSRCommerceEngine;
   solutionType: TSolutionType;
   propsMap: InferControllerPropsMapFromDefinitions<TControllerDefinitionsMap>;
-}): InferControllersMapFromDefinition<
-  TControllerDefinitionsMap,
-  TSolutionType
-> {
+}): InferControllersMapFromDefinition<TControllerDefinitionsMap, TSolutionType> {
   const controllerMap = mapObject(definitionsMap, (definition, key) => {
     const unavailableInSolutionType = () =>
       !(solutionType in definition) ||
-      (solutionType in definition &&
-        definition[solutionType as keyof typeof definition] === false);
+      (solutionType in definition && definition[solutionType as keyof typeof definition] === false);
 
     const props = propsMap?.[key as keyof typeof propsMap];
 
@@ -105,15 +98,10 @@ export function buildControllerDefinitions<
   return filterObject(
     controllerMap,
     (value) => value !== null
-  ) as InferControllersMapFromDefinition<
-    TControllerDefinitionsMap,
-    TSolutionType
-  >;
+  ) as InferControllersMapFromDefinition<TControllerDefinitionsMap, TSolutionType>;
 }
 
-export function ensureAtLeastOneSolutionType(
-  options?: ControllerDefinitionOption
-) {
+export function ensureAtLeastOneSolutionType(options?: ControllerDefinitionOption) {
   if (options?.listing === false && options?.search === false) {
     throw new InvalidControllerDefinition();
   }

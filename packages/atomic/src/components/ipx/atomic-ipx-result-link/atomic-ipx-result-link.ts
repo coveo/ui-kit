@@ -1,8 +1,5 @@
 import {isUndefined} from '@coveo/bueno';
-import type {
-  InteractiveResult,
-  IPXActionsHistoryActionCreators,
-} from '@coveo/headless';
+import type {InteractiveResult, IPXActionsHistoryActionCreators} from '@coveo/headless';
 import {loadIPXActionsHistoryActions} from '@coveo/headless';
 import {type CSSResultGroup, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
@@ -68,8 +65,7 @@ export class AtomicIpxResultLink
   private removeLinkEventHandlers?: () => void;
 
   private resultContext = createResultContextController(this);
-  private interactiveResultContext =
-    createInteractiveResultContextController(this);
+  private interactiveResultContext = createInteractiveResultContextController(this);
 
   public initialize() {
     if (!this.result && this.resultContext.item) {
@@ -81,25 +77,17 @@ export class AtomicIpxResultLink
       }
     }
 
-    if (
-      !this.interactiveResult &&
-      this.interactiveResultContext.interactiveItem
-    ) {
+    if (!this.interactiveResult && this.interactiveResultContext.interactiveItem) {
       this.interactiveResult = this.interactiveResultContext.interactiveItem;
     }
 
     this.dispatchEvent(
-      buildCustomEvent(
-        'atomic/resolveStopPropagation',
-        (stopPropagation: boolean) => {
-          this.stopPropagation = stopPropagation;
-        }
-      )
+      buildCustomEvent('atomic/resolveStopPropagation', (stopPropagation: boolean) => {
+        this.stopPropagation = stopPropagation;
+      })
     );
 
-    this.actionsHistoryActions = loadIPXActionsHistoryActions(
-      this.bindings.engine
-    );
+    this.actionsHistoryActions = loadIPXActionsHistoryActions(this.bindings.engine);
   }
 
   disconnectedCallback() {
@@ -113,10 +101,7 @@ export class AtomicIpxResultLink
   private onSelect() {
     const resultPermanentId = this.result.raw.permanentid;
     if (resultPermanentId && this.actionsHistoryActions) {
-      const action =
-        this.actionsHistoryActions.addPageViewEntryInActionsHistory(
-          resultPermanentId
-        );
+      const action = this.actionsHistoryActions.addPageViewEntryInActionsHistory(resultPermanentId);
       this.bindings.engine.dispatch(action);
     }
     this.interactiveResult.select();
@@ -136,11 +121,7 @@ export class AtomicIpxResultLink
 
       const href = isUndefined(this.hrefTemplate)
         ? result.clickUri
-        : buildStringTemplateFromResult(
-            this.hrefTemplate,
-            result,
-            this.bindings
-          );
+        : buildStringTemplateFromResult(this.hrefTemplate, result, this.bindings);
 
       return renderLinkWithItemAnalytics({
         props: {
@@ -159,10 +140,7 @@ export class AtomicIpxResultLink
         },
       })(html`
         ${this.renderDefaultSlotContent(
-          html`<atomic-result-text
-            field="title"
-            default="no-title"
-          ></atomic-result-text>`
+          html`<atomic-result-text field="title" default="no-title"></atomic-result-text>`
         )}
       `);
     })}`;

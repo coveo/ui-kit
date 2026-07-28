@@ -209,12 +209,8 @@ describe('Engine: constructor()', () => {
     };
     const engine = getFullEngine(new Engine({configuration: config}));
 
-    expect(engine.read((state) => state.configuration?.organizationId)).toBe(
-      'my-org'
-    );
-    expect(engine.read((state) => state.configuration?.accessToken)).toBe(
-      'my-token'
-    );
+    expect(engine.read((state) => state.configuration?.organizationId)).toBe('my-org');
+    expect(engine.read((state) => state.configuration?.accessToken)).toBe('my-token');
   });
 
   it('should set endpoint when provided in configuration', () => {
@@ -245,9 +241,7 @@ describe('Engine: constructor()', () => {
     };
     const engine = getFullEngine(new Engine({configuration: config}));
 
-    expect(
-      engine.read((state) => state.configuration?.endpoint)
-    ).toBeUndefined();
+    expect(engine.read((state) => state.configuration?.endpoint)).toBeUndefined();
   });
 
   it('should accept EngineOptions with configuration', () => {
@@ -263,9 +257,7 @@ describe('Engine: constructor()', () => {
     };
     const engine = getFullEngine(new Engine(options));
 
-    expect(engine.read((state) => state.configuration?.organizationId)).toBe(
-      'my-org'
-    );
+    expect(engine.read((state) => state.configuration?.organizationId)).toBe('my-org');
   });
 
   it('should store navigator context provider when provided', () => {
@@ -337,9 +329,7 @@ describe('Engine: constructor()', () => {
     };
     const fullEngine = getFullEngine(new Engine(options));
 
-    expect(
-      fullEngine.read((state) => state.configuration?.organizationId)
-    ).toBe('my-org');
+    expect(fullEngine.read((state) => state.configuration?.organizationId)).toBe('my-org');
     expect(fullEngine.getNavigatorContextProvider()).toBe(mockProvider);
   });
 });

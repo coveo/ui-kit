@@ -13,10 +13,7 @@ import type {Bindings} from '../atomic-search-interface/atomic-search-interface'
  */
 @customElement('atomic-text')
 @bindings()
-export class AtomicText
-  extends LitElement
-  implements InitializableComponent<Bindings>
-{
+export class AtomicText extends LitElement implements InitializableComponent<Bindings> {
   private static readonly propsSchema = new Schema({
     value: new StringValue({required: true, emptyAllowed: false}),
     count: new NumberValue({required: false}),

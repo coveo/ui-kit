@@ -15,10 +15,7 @@ test.describe('atomic-commerce-pager', () => {
     );
   });
 
-  test('should navigate through pages and update URL', async ({
-    pager,
-    page,
-  }) => {
+  test('should navigate through pages and update URL', async ({pager, page}) => {
     await expect(pager.numericButton(1)).toHaveAttribute(
       'part',
       expect.stringContaining('active-page-button')

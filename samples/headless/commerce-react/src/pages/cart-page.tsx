@@ -29,10 +29,7 @@ export default function CartPage(props: ICartPageProps) {
      */
     contextController.setView({url});
 
-    if (
-      !recommendationsController.state.isLoading &&
-      !recommendationsController.state.responseId
-    ) {
+    if (!recommendationsController.state.isLoading && !recommendationsController.state.responseId) {
       recommendationsController.refresh();
       return;
     }

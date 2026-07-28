@@ -23,10 +23,7 @@ export const getPartialRecentQueryElement = (
 
 export const getPartialRecentQueryClearElement = (
   i18n: i18n
-): Pick<
-  SearchBoxSuggestionElement,
-  'ariaLabel' | 'key' | 'part' | 'hideIfLast'
-> => {
+): Pick<SearchBoxSuggestionElement, 'ariaLabel' | 'key' | 'part' | 'hideIfLast'> => {
   return {
     key: 'recent-query-clear',
     ariaLabel: i18n.t('clear-recent-searches', {
@@ -54,11 +51,7 @@ export const renderRecentQuery = ({
     part="recent-query-content"
     class="pointer-events-none flex items-center text-left break-all"
   >
-    <atomic-icon
-      part="recent-query-icon"
-      icon=${icon}
-      class="mr-2 h-4 w-4 shrink-0"
-    ></atomic-icon>
+    <atomic-icon part="recent-query-icon" icon=${icon} class="mr-2 h-4 w-4 shrink-0"></atomic-icon>
 
     ${when(
       hasQuery,
@@ -68,8 +61,7 @@ export const renderRecentQuery = ({
           class="line-clamp-2 break-words"
           .innerHTML=${HighlightUtils.highlightString({
             content: value,
-            openingDelimiter:
-              '<span part="recent-query-text-highlight" class="font-bold">',
+            openingDelimiter: '<span part="recent-query-text-highlight" class="font-bold">',
             closingDelimiter: '</span>',
             highlights: [
               {
@@ -79,10 +71,7 @@ export const renderRecentQuery = ({
             ],
           })}
         ></span>`,
-      () =>
-        html`<span part="recent-query-text" class="line-clamp-2 break-all">
-          ${value}
-        </span>`
+      () => html`<span part="recent-query-text" class="line-clamp-2 break-all"> ${value} </span>`
     )}
   </div>`;
 
@@ -96,9 +85,7 @@ export const renderRecentQueryClear = ({i18n}: {i18n: i18n}): HTMLElement => {
     part="recent-query-title-content"
     class="pointer-events-none flex w-full justify-between"
   >
-    <span class="font-bold" part="recent-query-title">
-      ${i18n.t('recent-searches')}
-    </span>
+    <span class="font-bold" part="recent-query-title"> ${i18n.t('recent-searches')} </span>
     <span part="recent-query-clear">${i18n.t('clear')}</span>
   </div>`;
 

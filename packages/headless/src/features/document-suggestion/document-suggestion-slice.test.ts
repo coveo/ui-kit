@@ -13,8 +13,7 @@ import {
 
 describe('document suggestion slice', () => {
   let state: DocumentSuggestionState;
-  const mockDocument: DocumentSuggestionResponse =
-    buildMockDocumentSuggestion();
+  const mockDocument: DocumentSuggestionResponse = buildMockDocumentSuggestion();
 
   beforeEach(() => {
     state = getDocumentSuggestionInitialState();
@@ -27,12 +26,11 @@ describe('document suggestion slice', () => {
   });
 
   describe('#fetchDocumentSuggestions', () => {
-    const buildMockDocumentSuggestionsResponse =
-      (): GetDocumentSuggestionsResponse => ({
-        documents: [mockDocument],
-        totalCount: 0,
-        responseId: 'response-id',
-      });
+    const buildMockDocumentSuggestionsResponse = (): GetDocumentSuggestionsResponse => ({
+      documents: [mockDocument],
+      totalCount: 0,
+      responseId: 'response-id',
+    });
 
     it('when a fetchDocumentSuggestions fulfilled is received, it updates the state to the received payload', () => {
       const response = buildMockDocumentSuggestionsResponse();

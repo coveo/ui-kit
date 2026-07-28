@@ -14,8 +14,7 @@ export const initialSearchBoxState: SearchBoxState = {
 
 type SearchBoxSlice = ReturnType<typeof createSearchBoxSlice>;
 
-const CACHE_KEY: CacheKey<SearchBoxSlice> =
-  createCacheKey<SearchBoxSlice>('searchBox/slice');
+const CACHE_KEY: CacheKey<SearchBoxSlice> = createCacheKey<SearchBoxSlice>('searchBox/slice');
 
 export function createSearchBoxSlice(
   interfaceId: string,

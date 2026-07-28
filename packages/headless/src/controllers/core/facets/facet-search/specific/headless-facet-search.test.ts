@@ -28,9 +28,7 @@ import {
   type FacetSearchProps,
 } from './headless-facet-search.js';
 
-vi.mock(
-  '../../../../../features/facets/facet-search-set/specific/specific-facet-search-actions'
-);
+vi.mock('../../../../../features/facets/facet-search-set/specific/specific-facet-search-actions');
 vi.mock('../../../../../features/facets/facet-set/facet-set-actions');
 
 describe('FacetSearch', () => {
@@ -73,8 +71,9 @@ describe('FacetSearch', () => {
   it(`although the API returns an empty path for specific facet
   calling #state returns the values with only the relevant keys`, () => {
     const expectedValue = {count: 10, displayValue: 'Hello', rawValue: 'hello'};
-    (engine.state.facetSearchSet![facetId].response
-      .values as CategoryFacetSearchResult[]) = [{...expectedValue, path: []}];
+    (engine.state.facetSearchSet![facetId].response.values as CategoryFacetSearchResult[]) = [
+      {...expectedValue, path: []},
+    ];
     expect(controller.state.values[0]).toEqual(expectedValue);
   });
 

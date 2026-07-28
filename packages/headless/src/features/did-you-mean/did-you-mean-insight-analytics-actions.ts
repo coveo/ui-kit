@@ -9,16 +9,12 @@ export const logDidYouMeanClick = (): InsightAction =>
   makeInsightAnalyticsActionFactory(SearchPageEvents.didYouMeanClick)(
     'analytics/didyoumean/click',
     (client, state) =>
-      client.logDidYouMeanClick(
-        getCaseContextAnalyticsMetadata(state.insightCaseContext)
-      )
+      client.logDidYouMeanClick(getCaseContextAnalyticsMetadata(state.insightCaseContext))
   );
 
 export const logDidYouMeanAutomatic = (): InsightAction =>
   makeInsightAnalyticsActionFactory(SearchPageEvents.didYouMeanAutomatic)(
     'analytics/didyoumean/automatic',
     (client, state) =>
-      client.logDidYouMeanAutomatic(
-        getCaseContextAnalyticsMetadata(state.insightCaseContext)
-      )
+      client.logDidYouMeanAutomatic(getCaseContextAnalyticsMetadata(state.insightCaseContext))
   );

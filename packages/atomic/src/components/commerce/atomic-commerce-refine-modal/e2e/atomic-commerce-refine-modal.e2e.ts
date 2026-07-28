@@ -4,9 +4,7 @@ test.describe('atomic-commerce-refine-modal', () => {
   test.beforeEach(async ({page}) => {
     await page.goto('/iframe.html?id=atomic-commerce-refine-toggle--default');
     await page.locator('atomic-commerce-refine-toggle').waitFor();
-    await expect(
-      page.getByRole('button', {name: 'Sort & Filter'})
-    ).toBeVisible();
+    await expect(page.getByRole('button', {name: 'Sort & Filter'})).toBeVisible();
     await page.locator('atomic-commerce-refine-toggle').click();
   });
 
@@ -17,13 +15,9 @@ test.describe('atomic-commerce-refine-modal', () => {
 
   test('should be able to switch sort', async ({page}) => {
     await page.getByText('Sort', {exact: true}).waitFor();
-    await page
-      .getByLabel('Sort by', {exact: true})
-      .selectOption('Price (Low to High)');
+    await page.getByLabel('Sort by', {exact: true}).selectOption('Price (Low to High)');
 
-    const selectedSort = await page
-      .getByLabel('Sort by', {exact: true})
-      .inputValue();
+    const selectedSort = await page.getByLabel('Sort by', {exact: true}).inputValue();
     expect(selectedSort).toBe('Price (Low to High)');
   });
 

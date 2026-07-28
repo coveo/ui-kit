@@ -1,10 +1,7 @@
 import type {QuestionAnswerDocumentIdentifier} from '../../../api/search/search/question-answering.js';
 import type {Result} from '../../../api/search/search/result.js';
 import type {CoreEngine} from '../../../app/engine.js';
-import type {
-  ClickAction,
-  CustomAction,
-} from '../../../features/analytics/analytics-utils.js';
+import type {ClickAction, CustomAction} from '../../../features/analytics/analytics-utils.js';
 import {
   closeFeedbackModal,
   collapseSmartSnippet,
@@ -22,15 +19,9 @@ import {answerSourceSelector} from '../../../features/question-answering/questio
 import {questionAnsweringReducer as questionAnswering} from '../../../features/question-answering/question-answering-slice.js';
 import {pushRecentResult} from '../../../features/recent-results/recent-results-actions.js';
 import {searchReducer as search} from '../../../features/search/search-slice.js';
-import type {
-  QuestionAnsweringSection,
-  SearchSection,
-} from '../../../state/state-sections.js';
+import type {QuestionAnsweringSection, SearchSection} from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
-import {
-  buildController,
-  type Controller,
-} from '../../controller/headless-controller.js';
+import {buildController, type Controller} from '../../controller/headless-controller.js';
 import type {InlineLink} from '../../smart-snippet/headless-smart-snippet-interactive-inline-links.js';
 import {buildInteractiveResultCore} from '../interactive-result/headless-core-interactive-result.js';
 

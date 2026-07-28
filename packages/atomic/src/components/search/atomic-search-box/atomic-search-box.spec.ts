@@ -3,11 +3,7 @@ import {isMacOS} from '@/src/utils/device-utils';
 import * as replaceBreakpoint from '@/src/utils/replace-breakpoint-utils';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import '@/vitest-utils/testing-helpers/fixtures/atomic/search/fake-atomic-search-box-suggestions-fixture';
-import {
-  buildRecentQueriesList,
-  buildSearchBox,
-  buildStandaloneSearchBox,
-} from '@coveo/headless';
+import {buildRecentQueriesList, buildSearchBox, buildStandaloneSearchBox} from '@coveo/headless';
 import {html, type TemplateResult} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {describe, expect, it, vi} from 'vitest';
@@ -75,9 +71,7 @@ describe('atomic-search-box', () => {
     searchBoxValue?: string;
     additionalChildren?: TemplateResult;
   } = {}) => {
-    vi.mocked(buildRecentQueriesList).mockReturnValue(
-      buildFakeRecentQueriesList()
-    );
+    vi.mocked(buildRecentQueriesList).mockReturnValue(buildFakeRecentQueriesList());
     vi.mocked(buildSearchBox).mockReturnValue(
       buildFakeSearchBox(
         {
@@ -134,19 +128,12 @@ describe('atomic-search-box', () => {
 
     return {
       element,
-      spacer: element.shadowRoot!.querySelector(
-        'textarea[part="textarea-spacer"]'
-      )!,
+      spacer: element.shadowRoot!.querySelector('textarea[part="textarea-spacer"]')!,
       wrapper: element.shadowRoot!.querySelector('div[part="wrapper"]')!,
       textArea: element.shadowRoot!.querySelector('textarea[part="textarea"]')!,
-      suggestions: () =>
-        element.shadowRoot!.querySelectorAll('atomic-suggestion-renderer'),
-      clearButton: element.shadowRoot!.querySelector(
-        'button[part="clear-button"]'
-      )!,
-      submitButton: element.shadowRoot!.querySelector(
-        'button[part="submit-button"]'
-      )!,
+      suggestions: () => element.shadowRoot!.querySelectorAll('atomic-suggestion-renderer'),
+      clearButton: element.shadowRoot!.querySelector('button[part="clear-button"]')!,
+      submitButton: element.shadowRoot!.querySelector('button[part="submit-button"]')!,
       suggestionsContainer: element.shadowRoot!.querySelector(
         'div[part="suggestions-wrapper suggestions-single-list"]'
       )!,
@@ -158,19 +145,12 @@ describe('atomic-search-box', () => {
     expect(element.shadowRoot!.children.length).toBe(4);
     expect(element.shadowRoot!.children[0].tagName).toBe('TEXTAREA');
     expect(element.shadowRoot!.children[1].tagName).toBe('DIV');
-    expect(element.shadowRoot!.children[2].tagName).toBe(
-      'ATOMIC-SEARCH-BOX-RECENT-QUERIES'
-    );
-    expect(element.shadowRoot!.children[3].tagName).toBe(
-      'ATOMIC-SEARCH-BOX-QUERY-SUGGESTIONS'
-    );
+    expect(element.shadowRoot!.children[2].tagName).toBe('ATOMIC-SEARCH-BOX-RECENT-QUERIES');
+    expect(element.shadowRoot!.children[3].tagName).toBe('ATOMIC-SEARCH-BOX-QUERY-SUGGESTIONS');
   });
 
   it('should add the event listener for the "atomic/searchBoxSuggestion/register" event', async () => {
-    const addEventListenerSpy = vi.spyOn(
-      AtomicSearchBox.prototype,
-      'addEventListener'
-    );
+    const addEventListenerSpy = vi.spyOn(AtomicSearchBox.prototype, 'addEventListener');
     await renderSearchBox();
     expect(addEventListenerSpy).toHaveBeenCalledWith(
       'atomic/searchBoxSuggestion/register',
@@ -213,18 +193,14 @@ describe('atomic-search-box', () => {
     const {wrapper} = await renderSearchBox({
       searchBoxProps: {disableSearch: true},
     });
-    expect(wrapper).toHaveClass(
-      'focus-within:border-disabled focus-within:ring-neutral'
-    );
+    expect(wrapper).toHaveClass('focus-within:border-disabled focus-within:ring-neutral');
   });
 
   it('should disable the search box when the "disableSearch" property is set to true', async () => {
     const {wrapper} = await renderSearchBox({
       searchBoxProps: {disableSearch: true},
     });
-    expect(wrapper).toHaveClass(
-      'focus-within:border-disabled focus-within:ring-neutral'
-    );
+    expect(wrapper).toHaveClass('focus-within:border-disabled focus-within:ring-neutral');
   });
 
   it('should disable the search box when the value is lower than the minimum query length', async () => {
@@ -232,9 +208,7 @@ describe('atomic-search-box', () => {
       searchBoxProps: {minimumQueryLength: 5},
     });
     await userEvent.type(textArea, 'test');
-    expect(wrapper).toHaveClass(
-      'focus-within:border-disabled focus-within:ring-neutral'
-    );
+    expect(wrapper).toHaveClass('focus-within:border-disabled focus-within:ring-neutral');
   });
 
   it('should clear the suggestions when onFocusout is triggered on the wrapper', async () => {
@@ -303,50 +277,32 @@ describe('atomic-search-box', () => {
     });
 
     it('should announce "x search suggestions are available." to screen readers when there are suggestions', async () => {
-      const setMessageSpy = vi.spyOn(
-        AriaLiveRegionController.prototype,
-        'message',
-        'set'
-      );
+      const setMessageSpy = vi.spyOn(AriaLiveRegionController.prototype, 'message', 'set');
       const {element} = await renderSearchBox();
 
       await userEvent.click(element);
 
-      expect(setMessageSpy).toHaveBeenCalledWith(
-        '3 search suggestions are available.'
-      );
+      expect(setMessageSpy).toHaveBeenCalledWith('3 search suggestions are available.');
     });
 
     it('should announce "x search suggestions are available for y." to screen readers when there are suggestions & a query is entered', async () => {
-      const setMessageSpy = vi.spyOn(
-        AriaLiveRegionController.prototype,
-        'message',
-        'set'
-      );
+      const setMessageSpy = vi.spyOn(AriaLiveRegionController.prototype, 'message', 'set');
       const {element} = await renderSearchBox({searchBoxValue: 'test'});
 
       await userEvent.click(element);
 
-      expect(setMessageSpy).toHaveBeenCalledWith(
-        '3 search suggestions are available for test.'
-      );
+      expect(setMessageSpy).toHaveBeenCalledWith('3 search suggestions are available for test.');
     });
 
     it('should announce "No search suggestions are available." to screen readers when there are no suggestions', async () => {
-      const setMessageSpy = vi.spyOn(
-        AriaLiveRegionController.prototype,
-        'message',
-        'set'
-      );
+      const setMessageSpy = vi.spyOn(AriaLiveRegionController.prototype, 'message', 'set');
       const {element} = await renderSearchBox({
         suggestionCount: 0,
       });
 
       await userEvent.click(element);
 
-      expect(setMessageSpy).toHaveBeenCalledWith(
-        'There are no search suggestions.'
-      );
+      expect(setMessageSpy).toHaveBeenCalledWith('There are no search suggestions.');
     });
 
     it('should be focusable & delegate focus to the text area', async () => {
@@ -370,11 +326,7 @@ describe('atomic-search-box', () => {
     });
 
     it('should announce "Search box cleared" to screen readers', async () => {
-      const setMessageSpy = vi.spyOn(
-        AriaLiveRegionController.prototype,
-        'message',
-        'set'
-      );
+      const setMessageSpy = vi.spyOn(AriaLiveRegionController.prototype, 'message', 'set');
       const {clearButton} = await renderSearchBox({
         searchBoxValue: 'test',
       });
@@ -418,9 +370,7 @@ describe('atomic-search-box', () => {
   describe('when the search box is a standalone search box', () => {
     it('should not throw when redirectionUrl changes before the search box initializes', async () => {
       updateRedirectUrlMock.mockClear();
-      const element = document.createElement(
-        'atomic-search-box'
-      ) as AtomicSearchBox;
+      const element = document.createElement('atomic-search-box') as AtomicSearchBox;
 
       element.watchRedirectionUrl();
 
@@ -460,8 +410,7 @@ describe('atomic-search-box', () => {
         },
       });
 
-      const element =
-        atomicInterface.querySelector<AtomicSearchBox>('atomic-search-box')!;
+      const element = atomicInterface.querySelector<AtomicSearchBox>('atomic-search-box')!;
       const initialId = element.id;
 
       element.redirectionUrl = '/search';
@@ -490,8 +439,7 @@ describe('atomic-search-box', () => {
           capturedEvent = event as CustomEvent;
         });
 
-        (element.searchBox.state as {redirectTo: string}).redirectTo =
-          '/search?q=test';
+        (element.searchBox.state as {redirectTo: string}).redirectTo = '/search?q=test';
 
         element.requestUpdate();
         await element.updateComplete;
@@ -513,8 +461,7 @@ describe('atomic-search-box', () => {
           event.preventDefault();
         });
 
-        (element.searchBox.state as {redirectTo: string}).redirectTo =
-          '/search?q=test';
+        (element.searchBox.state as {redirectTo: string}).redirectTo = '/search?q=test';
 
         element.requestUpdate();
         await element.updateComplete;
@@ -533,8 +480,7 @@ describe('atomic-search-box', () => {
           event.preventDefault();
         });
 
-        (element.searchBox.state as {redirectTo: string}).redirectTo =
-          '/search?q=test';
+        (element.searchBox.state as {redirectTo: string}).redirectTo = '/search?q=test';
 
         element.requestUpdate();
         await element.updateComplete;

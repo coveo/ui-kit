@@ -10,9 +10,7 @@ interface RefineToggleButtonProps {
   refCallback: RefOrCallback;
 }
 
-export const renderRefineToggleButton: FunctionalComponent<
-  RefineToggleButtonProps
-> = ({props}) => {
+export const renderRefineToggleButton: FunctionalComponent<RefineToggleButtonProps> = ({props}) => {
   return html`${renderButton({
     props: {
       style: 'outline-primary',

@@ -27,10 +27,7 @@ import '../atomic-recs-result/atomic-recs-result';
  */
 @customElement('atomic-recs-result-template')
 @withTailwindStyles
-export class AtomicRecsResultTemplate
-  extends LitElement
-  implements LitElementWithError
-{
+export class AtomicRecsResultTemplate extends LitElement implements LitElementWithError {
   private recsResultTemplateController: RecsResultTemplateController;
 
   @state() error!: Error;
@@ -94,9 +91,7 @@ export class AtomicRecsResultTemplate
    * Gets the appropriate result template based on the conditions applied.
    */
   public async getTemplate(): Promise<RecsResultTemplate<DocumentFragment> | null> {
-    return (
-      this.recsResultTemplateController?.getTemplate(this.conditions) || null
-    );
+    return this.recsResultTemplateController?.getTemplate(this.conditions) || null;
   }
 }
 

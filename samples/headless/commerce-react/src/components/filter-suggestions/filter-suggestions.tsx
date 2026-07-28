@@ -38,14 +38,9 @@ export default function FilterSuggestions(props: IFilterSuggestionsProps) {
     value: RegularFacetSearchResult | CategoryFacetSearchResult
   ) => {
     return (
-      <button
-        type="button"
-        onClick={() => onClickFilterSuggestion(controller, value)}
-      >
-        Search for <em>{state.query}</em>{' '}
-        {controller.type === 'hierarchical' ? 'in' : 'with'}{' '}
-        <b>{state.displayName}</b> <em>{value.displayValue}</em> ({value.count}{' '}
-        products)
+      <button type="button" onClick={() => onClickFilterSuggestion(controller, value)}>
+        Search for <em>{state.query}</em> {controller.type === 'hierarchical' ? 'in' : 'with'}{' '}
+        <b>{state.displayName}</b> <em>{value.displayValue}</em> ({value.count} products)
       </button>
     );
   };
@@ -57,13 +52,7 @@ export default function FilterSuggestions(props: IFilterSuggestionsProps) {
       </p>
       <ul>
         {state.values.map((value) => (
-          <li
-            key={
-              'path' in value
-                ? [...value.path, value.rawValue].join(';')
-                : value.rawValue
-            }
-          >
+          <li key={'path' in value ? [...value.path, value.rawValue].join(';') : value.rawValue}>
             {renderFilterSuggestionButton(value)}
           </li>
         ))}
