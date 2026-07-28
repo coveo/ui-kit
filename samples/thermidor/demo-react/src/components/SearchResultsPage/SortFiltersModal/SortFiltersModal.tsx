@@ -31,11 +31,20 @@ export function SortFiltersModal({open, onClose, onToast}: SortFiltersModalProps
     return () => dialog.removeEventListener('close', handleClose);
   }, [onClose]);
 
+  const handleClose = () => {
+    dialogRef.current?.close();
+  };
+
   return (
     <dialog ref={dialogRef} className={styles.dialog} aria-label="Sort and filters">
       <div className={styles.header}>
         <h2 className={styles.title}>Sort & Filters</h2>
-        <button type="button" className={styles.closeButton} onClick={onClose} aria-label="Close">
+        <button
+          type="button"
+          className={styles.closeButton}
+          onClick={handleClose}
+          aria-label="Close"
+        >
           &times;
         </button>
       </div>
@@ -50,7 +59,7 @@ export function SortFiltersModal({open, onClose, onToast}: SortFiltersModalProps
         </section>
       </div>
       <div className={styles.footer}>
-        <button type="button" className={styles.viewResultsButton} onClick={onClose}>
+        <button type="button" className={styles.viewResultsButton} onClick={handleClose}>
           View results
         </button>
       </div>

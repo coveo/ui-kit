@@ -9,6 +9,9 @@
   padding: 0;
   border: none;
   background: var(--color-bg-primary);
+}
+
+.dialog[open] {
   display: flex;
   flex-direction: column;
 }
