@@ -19,6 +19,10 @@ const sentry = vi.hoisted(() => ({
     name: 'LinkedErrors',
     ...options,
   })),
+  startSpanManual: vi.fn((_options: unknown, callback: (span: {end: () => void}) => unknown) =>
+    callback({end: vi.fn()})
+  ),
+  startInactiveSpan: vi.fn(() => ({end: vi.fn()})),
 }));
 
 vi.mock('@sentry/node', () => sentry);
@@ -44,11 +48,18 @@ const sampleReport: CrashReport = {
   diagnostics: {
     phase: 'dependency-installation',
     phaseElapsedMs: 2000,
-    breadcrumbs: [
-      {type: 'input.resolved', timestamp: '2026-07-22T14:59:00.000Z'},
+    spans: [
       {
-        type: 'dependencies.install.started',
-        timestamp: '2026-07-22T14:59:58.000Z',
+        op: 'input',
+        name: 'Resolve inputs',
+        startedOn: '2026-07-22T14:59:00.000Z',
+        endedOn: '2026-07-22T14:59:58.000Z',
+      },
+      {
+        op: 'dependency-installation',
+        name: 'Install dependencies',
+        startedOn: '2026-07-22T14:59:58.000Z',
+        endedOn: '2026-07-22T15:00:00.000Z',
       },
     ],
     runtime: {
@@ -112,6 +123,88 @@ describe('submitReport', () => {
     expect(sentry.init).not.toHaveBeenCalled();
   });
 
+  it('reconstructs the captured phase spans as a transaction around the crash', async () => {
+    expect(await submitReport(await writeValidReport())).toBe(0);
+
+    expect(sentry.startSpanManual).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: 'create headless-search-react',
+        op: 'create-ui',
+        forceTransaction: true,
+      }),
+      expect.any(Function)
+    );
+    expect(sentry.startInactiveSpan).toHaveBeenCalledWith(
+      expect.objectContaining({op: 'input.resolve'})
+    );
+    expect(sentry.startInactiveSpan).toHaveBeenCalledWith(
+      expect.objectContaining({op: 'dependencies.install'})
+    );
+    expect(sentry.captureException).toHaveBeenCalledOnce();
+  });
+
+  it('projects each span name and attributes verbatim, with no per-span logic', async () => {
+    const withDownload: CrashReport = {
+      ...sampleReport,
+      diagnostics: {
+        ...sampleReport.diagnostics,
+        spans: [
+          {
+            op: 'input',
+            name: 'Resolve inputs',
+            startedOn: '2026-07-22T14:59:00.000Z',
+            endedOn: '2026-07-22T14:59:05.000Z',
+          },
+          {
+            op: 'template-download',
+            name: 'atomic-search@3.60.2',
+            startedOn: '2026-07-22T14:59:05.000Z',
+            endedOn: '2026-07-22T15:00:00.000Z',
+            attributes: {
+              'coveo.template': 'atomic-search',
+              'coveo.template_version': '3.60.2',
+            },
+          },
+        ],
+      },
+    };
+    const path = join(dir, 'with-download.json');
+    await writeFile(path, JSON.stringify(withDownload));
+
+    expect(await submitReport(path)).toBe(0);
+
+    // The download span's data-provided description and attributes flow through
+    // unchanged.
+    expect(sentry.startInactiveSpan).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: 'atomic-search@3.60.2',
+        op: 'template.download',
+        attributes: {
+          'coveo.template': 'atomic-search',
+          'coveo.template_version': '3.60.2',
+        },
+      })
+    );
+    // A span with no attributes forwards its description as-is (a human label,
+    // not the op token) and carries no attributes.
+    expect(sentry.startInactiveSpan).toHaveBeenCalledWith(
+      expect.objectContaining({name: 'Resolve inputs', op: 'input.resolve', attributes: undefined})
+    );
+  });
+
+  it('captures a plain exception when no spans were recorded', async () => {
+    const noSpans = {
+      ...sampleReport,
+      diagnostics: {...sampleReport.diagnostics, spans: []},
+    };
+    const path = join(dir, 'no-spans.json');
+    await writeFile(path, JSON.stringify(noSpans));
+
+    expect(await submitReport(path)).toBe(0);
+    expect(sentry.startSpanManual).not.toHaveBeenCalled();
+    expect(sentry.captureException).toHaveBeenCalledOnce();
+  });
+
   it('submits a temp report by its short reference', async () => {
     const report = {
       ...sampleReport,
@@ -135,6 +228,7 @@ describe('submitReport', () => {
       defaultIntegrations: false,
       sendDefaultPii: false,
       includeServerName: false,
+      tracesSampleRate: 1,
     });
     expect(typeof initOptions.dsn).toBe('string');
     expect(initOptions.dsn.length).toBeGreaterThan(0);
@@ -186,20 +280,8 @@ describe('submitReport', () => {
     });
 
     expect(processed.timestamp).toBe(Date.parse(sampleReport.crashedOn) / 1000);
-    expect(processed.breadcrumbs).toEqual([
-      {
-        category: 'create-ui.lifecycle',
-        message: 'input.resolved',
-        level: 'info',
-        timestamp: Date.parse('2026-07-22T14:59:00.000Z') / 1000,
-      },
-      {
-        category: 'create-ui.lifecycle',
-        message: 'dependencies.install.started',
-        level: 'info',
-        timestamp: Date.parse('2026-07-22T14:59:58.000Z') / 1000,
-      },
-    ]);
+    expect(processed.transaction).toBe('create headless-search-react');
+    expect(processed.breadcrumbs).toBeUndefined();
     expect(processed.exception.values[0].mechanism).toEqual({
       type: 'main-rejection',
       handled: false,

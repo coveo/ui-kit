@@ -39,13 +39,15 @@ vi.mock('./log.js', () => ({
 
 const {submitReport} = await import('./submit-report.js');
 
-function eventFromEnvelope(envelope: unknown): Event {
-  const [, items] = envelope as [unknown, Array<[{type: string}, Event]>];
-  const eventItem = items.find(([headers]) => headers.type === 'event');
-  if (eventItem === undefined) {
-    throw new Error('Sentry transport did not receive an event item.');
+function itemFromEnvelopes(envelopes: unknown[], type: string): Event {
+  for (const envelope of envelopes) {
+    const [, items] = envelope as [unknown, Array<[{type: string}, Event]>];
+    const match = items.find(([headers]) => headers.type === type);
+    if (match !== undefined) {
+      return match[1];
+    }
   }
-  return eventItem[1];
+  throw new Error(`Sentry transport did not receive a "${type}" item.`);
 }
 
 it('projects a crash report through the real Sentry SDK without network access', async () => {
@@ -73,11 +75,28 @@ it('projects a crash report through the real Sentry SDK without network access',
     diagnostics: {
       phase: 'dependency-installation',
       phaseElapsedMs: 2000,
-      breadcrumbs: [
-        {type: 'input.resolved', timestamp: '2026-07-22T14:59:00.000Z'},
+      spans: [
         {
-          type: 'dependencies.install.started',
-          timestamp: '2026-07-22T14:59:58.000Z',
+          op: 'input',
+          name: 'Resolve inputs',
+          startedOn: '2026-07-22T14:59:00.000Z',
+          endedOn: '2026-07-22T14:59:05.000Z',
+        },
+        {
+          op: 'template-download',
+          name: 'atomic-search@3.60.2',
+          startedOn: '2026-07-22T14:59:05.000Z',
+          endedOn: '2026-07-22T14:59:58.000Z',
+          attributes: {
+            'coveo.template': 'atomic-search',
+            'coveo.template_version': '3.60.2',
+          },
+        },
+        {
+          op: 'dependency-installation',
+          name: 'Install dependencies',
+          startedOn: '2026-07-22T14:59:58.000Z',
+          endedOn: '2026-07-22T15:00:00.000Z',
         },
       ],
       runtime: {
@@ -106,9 +125,8 @@ it('projects a crash report through the real Sentry SDK without network access',
     await writeFile(path, JSON.stringify(report));
 
     expect(await submitReport(path)).toBe(0);
-    expect(sentryTransport.envelopes).toHaveLength(1);
 
-    const event = eventFromEnvelope(sentryTransport.envelopes[0]);
+    const event = itemFromEnvelopes(sentryTransport.envelopes, 'event');
     expect(event.timestamp).toBe(Date.parse(report.crashedOn) / 1000);
     expect(event.release).toBe('create-ui@1.2.3');
     expect(event.environment).toBe('production');
@@ -175,22 +193,38 @@ it('projects a crash report through the real Sentry SDK without network access',
         }),
       ])
     );
-    expect(event.breadcrumbs).toEqual([
-      {
-        category: 'create-ui.lifecycle',
-        message: 'input.resolved',
-        level: 'info',
-        timestamp: Date.parse('2026-07-22T14:59:00.000Z') / 1000,
-      },
-      {
-        category: 'create-ui.lifecycle',
-        message: 'dependencies.install.started',
-        level: 'info',
-        timestamp: Date.parse('2026-07-22T14:59:58.000Z') / 1000,
-      },
-    ]);
+    expect(event.breadcrumbs ?? []).toEqual([]);
     expect(event).not.toHaveProperty('server_name');
     expect(event).not.toHaveProperty('user');
+
+    // The persisted phase spans are reconstructed as a transaction using their
+    // original timestamps, and it shares the crash's trace so the waterfall
+    // surfaces on the Issue — with no live instrumentation.
+    const transaction = itemFromEnvelopes(sentryTransport.envelopes, 'transaction');
+    expect(transaction.type).toBe('transaction');
+    // The transaction is named after what was scaffolded, so the crash Issue and
+    // the waterfall group by product instead of a constant "scaffold" label.
+    expect(transaction.transaction).toBe('create atomic-search');
+    expect(transaction.start_timestamp).toBe(Date.parse('2026-07-22T14:59:00.000Z') / 1000);
+    expect(transaction.timestamp).toBe(Date.parse('2026-07-22T15:00:00.000Z') / 1000);
+    expect((transaction.spans ?? []).map((span) => span.op)).toEqual(
+      expect.arrayContaining(['input.resolve', 'template.download', 'dependencies.install'])
+    );
+    const downloadSpan = (transaction.spans ?? []).find((span) => span.op === 'template.download');
+    expect(downloadSpan?.description).toBe('atomic-search@3.60.2');
+    expect(downloadSpan?.data).toMatchObject({
+      'coveo.template': 'atomic-search',
+      'coveo.template_version': '3.60.2',
+    });
+    // Non-download spans surface their human label; the op names the operation
+    // (e.g. `input.resolve — Resolve inputs`).
+    const inputSpan = (transaction.spans ?? []).find((span) => span.op === 'input.resolve');
+    expect(inputSpan?.description).toBe('Resolve inputs');
+    expect(transaction.contexts?.trace?.trace_id).toEqual(expect.any(String));
+    expect(event.contexts?.trace?.trace_id).toBe(transaction.contexts?.trace?.trace_id);
+    // The crash is captured inside the transaction, so the Issue inherits the
+    // product-scoped transaction name for triage.
+    expect(event.transaction).toBe('create atomic-search');
   } finally {
     await rm(dir, {recursive: true, force: true});
   }

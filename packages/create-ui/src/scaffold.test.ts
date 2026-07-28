@@ -81,18 +81,22 @@ describe('scaffold provenance integration', () => {
 
     const diagnostics = snapshotCrashDiagnostics();
     expect(diagnostics.phase).toBe('complete');
-    expect(diagnostics.breadcrumbs.map(({type}) => type)).toEqual([
-      'template.download.started',
-      'template.download.completed',
-      'project.creation.started',
-      'project.creation.completed',
-      'dependencies.install.started',
-      'dependencies.install.succeeded',
-      'scaffold.completed',
+    expect(diagnostics.spans.map(({op}) => op)).toEqual([
+      'input',
+      'template-download',
+      'project-creation',
+      'dependency-installation',
+      'complete',
     ]);
+    const download = diagnostics.spans.find((span) => span.op === 'template-download');
+    expect(download?.name).toBe('headless-search-react@3.5.0');
+    expect(download?.attributes).toEqual({
+      'coveo.template': 'headless-search-react',
+      'coveo.template_version': '3.5.0',
+    });
   });
 
-  it('records a dependency installation failure without arbitrary data', async () => {
+  it('completes the lifecycle even when dependency installation fails', async () => {
     installDependenciesMock.mockReturnValue(false);
     const template = getTemplate('headless-search-react')!;
 
@@ -100,10 +104,7 @@ describe('scaffold provenance integration', () => {
 
     const diagnostics = snapshotCrashDiagnostics();
     expect(diagnostics.phase).toBe('complete');
-    expect(diagnostics.breadcrumbs.map(({type}) => type)).toContain('dependencies.install.failed');
-    expect(diagnostics.breadcrumbs.map(({type}) => type)).not.toContain(
-      'dependencies.install.succeeded'
-    );
+    expect(diagnostics.spans.map(({op}) => op)).toContain('dependency-installation');
   });
 });
 

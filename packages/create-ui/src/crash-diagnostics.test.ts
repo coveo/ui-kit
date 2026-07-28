@@ -1,11 +1,12 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {
+  describeActiveCrashSpan,
   initializeCrashDiagnostics,
   isCrashDiagnostics,
-  MAX_CRASH_BREADCRUMBS,
-  recordCrashLifecycleEvent,
+  MAX_CRASH_SPANS,
   resetCrashDiagnostics,
   snapshotCrashDiagnostics,
+  startCrashPhase,
 } from './crash-diagnostics.js';
 
 describe('crash diagnostics', () => {
@@ -20,31 +21,29 @@ describe('crash diagnostics', () => {
     vi.useRealTimers();
   });
 
-  it('captures an allowlisted breadcrumb timeline and current phase timing', () => {
+  it('captures a per-phase span timeline and current phase timing', () => {
     initializeCrashDiagnostics();
-    recordCrashLifecycleEvent('input.resolved');
     vi.advanceTimersByTime(100);
-    recordCrashLifecycleEvent('template.download.started');
+    startCrashPhase('template-download');
     vi.advanceTimersByTime(250);
-    recordCrashLifecycleEvent('template.download.completed');
 
     const diagnostics = snapshotCrashDiagnostics();
 
     expect(diagnostics).toMatchObject({
       phase: 'template-download',
       phaseElapsedMs: 250,
-      breadcrumbs: [
+      spans: [
         {
-          type: 'input.resolved',
-          timestamp: '2026-07-27T15:00:00.000Z',
+          op: 'input',
+          name: 'Resolve inputs',
+          startedOn: '2026-07-27T15:00:00.000Z',
+          endedOn: '2026-07-27T15:00:00.100Z',
         },
         {
-          type: 'template.download.started',
-          timestamp: '2026-07-27T15:00:00.100Z',
-        },
-        {
-          type: 'template.download.completed',
-          timestamp: '2026-07-27T15:00:00.350Z',
+          op: 'template-download',
+          name: 'Download template',
+          startedOn: '2026-07-27T15:00:00.100Z',
+          endedOn: '2026-07-27T15:00:00.350Z',
         },
       ],
       runtime: {
@@ -60,18 +59,40 @@ describe('crash diagnostics', () => {
     expect(isCrashDiagnostics(diagnostics)).toBe(true);
   });
 
-  it('keeps only the newest bounded breadcrumbs', () => {
+  it('describes the active span with a name and attributes', () => {
     initializeCrashDiagnostics();
-    for (let index = 0; index < MAX_CRASH_BREADCRUMBS + 5; index++) {
+    startCrashPhase('template-download');
+    describeActiveCrashSpan('atomic-search@3.60.2', {
+      'coveo.template': 'atomic-search',
+      'coveo.template_version': '3.60.2',
+    });
+
+    const {spans} = snapshotCrashDiagnostics();
+    const download = spans.find((span) => span.op === 'template-download');
+    const input = spans.find((span) => span.op === 'input');
+
+    expect(download?.name).toBe('atomic-search@3.60.2');
+    expect(download?.attributes).toEqual({
+      'coveo.template': 'atomic-search',
+      'coveo.template_version': '3.60.2',
+    });
+    // Only the described span is annotated; other spans keep their default phase
+    // label and carry no attributes, so the trace projection has nothing to
+    // special-case.
+    expect(input?.name).toBe('Resolve inputs');
+    expect(input?.attributes).toBeUndefined();
+  });
+
+  it('keeps only the newest bounded spans', () => {
+    initializeCrashDiagnostics();
+    for (let index = 0; index < MAX_CRASH_SPANS + 5; index++) {
       vi.advanceTimersByTime(1);
-      recordCrashLifecycleEvent('input.resolved');
+      startCrashPhase('template-download');
     }
 
-    const {breadcrumbs} = snapshotCrashDiagnostics();
+    const {spans} = snapshotCrashDiagnostics();
 
-    expect(breadcrumbs).toHaveLength(MAX_CRASH_BREADCRUMBS);
-    expect(breadcrumbs[0].timestamp).toBe('2026-07-27T15:00:00.006Z');
-    expect(breadcrumbs.at(-1)?.timestamp).toBe('2026-07-27T15:00:00.037Z');
+    expect(spans).toHaveLength(MAX_CRASH_SPANS);
   });
 
   it('returns an unknown zero-duration phase before initialization', () => {
@@ -79,7 +100,7 @@ describe('crash diagnostics', () => {
 
     expect(diagnostics.phase).toBe('unknown');
     expect(diagnostics.phaseElapsedMs).toBe(0);
-    expect(diagnostics.breadcrumbs).toEqual([]);
+    expect(diagnostics.spans).toEqual([]);
     expect(isCrashDiagnostics(diagnostics)).toBe(true);
   });
 });

@@ -4,8 +4,8 @@ import {dirname, join} from 'node:path';
 import {afterEach, beforeEach, describe, expect, it} from 'vitest';
 import {
   initializeCrashDiagnostics,
-  recordCrashLifecycleEvent,
   resetCrashDiagnostics,
+  startCrashPhase,
 } from './crash-diagnostics.js';
 import {
   buildCrashReport,
@@ -67,7 +67,7 @@ describe('buildCrashReport', () => {
     expect(report.diagnostics).toMatchObject({
       phase: 'unknown',
       phaseElapsedMs: 0,
-      breadcrumbs: [],
+      spans: [],
       runtime: {
         processUptimeMs: expect.any(Number),
         memory: {
@@ -82,17 +82,13 @@ describe('buildCrashReport', () => {
 
   it('captures the crash origin and current structured diagnostics', () => {
     initializeCrashDiagnostics();
-    recordCrashLifecycleEvent('input.resolved');
-    recordCrashLifecycleEvent('template.download.started');
+    startCrashPhase('template-download');
 
     const report = buildCrashReport(new Error('boom'), 'unhandled-rejection');
 
     expect(report.origin).toBe('unhandled-rejection');
     expect(report.diagnostics.phase).toBe('template-download');
-    expect(report.diagnostics.breadcrumbs.map(({type}) => type)).toEqual([
-      'input.resolved',
-      'template.download.started',
-    ]);
+    expect(report.diagnostics.spans.map(({op}) => op)).toEqual(['input', 'template-download']);
   });
 
   it('normalizes own-package stack paths before writing a report', () => {

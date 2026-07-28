@@ -139,10 +139,7 @@ describe('main', () => {
     );
     const diagnostics = snapshotCrashDiagnostics();
     expect(diagnostics.phase).toBe('template-download');
-    expect(diagnostics.breadcrumbs.map(({type}) => type)).toEqual([
-      'input.resolved',
-      'template.download.started',
-    ]);
+    expect(diagnostics.spans.map(({op}) => op)).toEqual(['input', 'template-download']);
     logSpy.mockRestore();
     errSpy.mockRestore();
   });
