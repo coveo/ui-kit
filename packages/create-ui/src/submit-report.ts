@@ -68,19 +68,8 @@ function scrubEventMessages(event: ErrorEvent): void {
   }
 }
 
-// Older schema-compatible reports may contain the CLI's full install path,
-// which — when run through `npm create` / npx — lives under
-// `node_modules/@coveo/create-ui`. Sentry's server-side grouping
-// (`normalize_stacktraces_for_grouping`) marks anything under `node_modules` as
-// a system frame and collapses it, overriding whatever `in_app` the SDK sends.
-// Repeating the capture-side `app:///…` normalization here keeps those reports
-// expanded and grouped while stripping any machine-specific install prefix.
 const NODE_MODULES = /[/\\]node_modules[/\\]/;
 
-// `abs_path` is the field Sentry's server matches on, so own frames rewrite
-// both it and `filename`, and drop `module` so no `node_modules`-derived name
-// survives. Every other frame keeps its structure with the home directory
-// redacted to `~`; only Node internals and real dependencies stay out of app.
 function normalizeFrame(frame: StackFrame): void {
   const source = frame.abs_path ?? frame.filename;
   const appPath = source === undefined ? undefined : ownPackageAppPath(source);
@@ -109,10 +98,6 @@ async function readReport(path: string): Promise<CrashReport> {
   return parseCrashReport(await readFile(path, 'utf8'));
 }
 
-// Rebuild the captured error and its scrubbed cause chain as linked Error
-// instances so `linkedErrorsIntegration` expands them into `exception.values`,
-// where the `beforeSend` scrubbers already run on every entry. `stack` is set
-// verbatim (undefined when absent) so no submit-time frames are fabricated.
 function reconstructError(info: CrashErrorInfo, depth = 0): Error {
   const error = new Error(info.message);
   error.name = info.name;
