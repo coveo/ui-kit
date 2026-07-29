@@ -25,10 +25,7 @@ function isCrashOrigin(value: unknown): value is CrashOrigin {
   return typeof value === 'string' && CRASH_ORIGINS.includes(value as CrashOrigin);
 }
 
-// Bound the captured `error.cause` chain so a deep or cyclic chain cannot bloat
-// the report; each link is reduced to the same {name, message, stack} shape as
-// the top-level error — never arbitrary error properties (ADR 003 #5/#6).
-export const MAX_CAUSE_DEPTH = 5;
+export const MAX_CAUSE_DEPTH = 10;
 
 export interface RunContext {
   template?: string;
@@ -46,12 +43,6 @@ export function resetRunContext(): void {
   currentContext = {};
 }
 
-// Replace the user's home directory with `~` so non-own paths cannot leak a
-// username or machine-specific root while retaining their file relationships.
-// Own-package stack paths are normalized separately to `app:///…` below. Both
-// the native path and the forward-slash form used in `file://` URLs are covered;
-// `node:` ids and http(s) URLs are untouched. The home is injectable for testing
-// (defaults to the real home directory).
 export function redactPaths(text: string, home: string = homedir()): string {
   // Guard against an empty or filesystem-root home; replacing "/" would mangle
   // every path rather than just the machine-specific prefix.
