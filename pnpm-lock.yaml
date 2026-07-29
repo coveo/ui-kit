@@ -120,6 +120,9 @@ catalogs:
     jest-cli:
       specifier: 30.3.0
       version: 30.3.0
+    jsdom:
+      specifier: 28.1.0
+      version: 28.1.0
     lit:
       specifier: 3.3.3
       version: 3.3.3
@@ -687,7 +690,7 @@ importers:
         specifier: 9.11.0
         version: 9.11.0(node-fetch@2.7.0(encoding@0.1.13))
       jsdom:
-        specifier: 28.1.0
+        specifier: 'catalog:'
         version: 28.1.0
       node-fetch:
         specifier: 2.7.0
@@ -1226,7 +1229,7 @@ importers:
         specifier: 'catalog:'
         version: 4.1.9(msw@2.15.0(@types/node@26.1.0)(typescript@6.0.3))(playwright@1.60.0)(vite@8.1.5(@types/node@26.1.0)(esbuild@0.28.1)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))(vitest@4.1.9)
       jsdom:
-        specifier: 28.1.0
+        specifier: 'catalog:'
         version: 28.1.0
       playwright:
         specifier: 'catalog:'
