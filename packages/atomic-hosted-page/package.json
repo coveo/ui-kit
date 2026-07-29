@@ -40,9 +40,12 @@
     "lit": "catalog:"
   },
   "devDependencies": {
+    "@coveo/platform-mock-api": "workspace:*",
+    "@msw/playwright": "catalog:",
     "@playwright/test": "catalog:",
     "@types/node": "catalog:",
     "local-web-server": "catalog:",
+    "msw": "catalog:",
     "vite": "catalog:"
   },
   "engines": {
