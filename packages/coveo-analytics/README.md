@@ -178,8 +178,8 @@ To test out your changes, add `coveoua` function calls in the `public/index.html
 
 ## Running tests
 
-1. From the command line through `npm run test`.
-2. Debugging through VSCode debugger with the `Debug: Start Debugging` command, using the `Jest All` configuration.
+1. From the command line through `pnpm run test`.
+2. Debugging in VSCode: start a JavaScript Debug Terminal and run `pnpm run test:watch` (Vitest watch mode), then set breakpoints as needed.
 
 ## Storage and persistence
 
