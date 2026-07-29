@@ -9,13 +9,13 @@ import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-inter
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import '@/src/components/commerce/atomic-commerce-breadbox/atomic-commerce-breadbox.js';
 import '@/src/components/commerce/atomic-commerce-facets/atomic-commerce-facets.js';
-import {MockCommerceApi} from '@coveo/platform-mock-api/commerce/mock';
 import {
   commerceFacetTransformer,
+  commercePaginationTransformer,
   createFacetSearchTransformer,
-} from '@coveo/platform-mock-api/commerce/facet-transformer';
-import {commercePaginationTransformer} from '@coveo/platform-mock-api/commerce/pagination-transformer';
-import {richResponse as baseSearchResponse} from '@coveo/platform-mock-api/commerce/search-response';
+  MockCommerceApi,
+  searchResponses,
+} from '@coveo/platform-mock-api/commerce';
 
 const commerceApiHarness = new MockCommerceApi();
 commerceApiHarness.searchEndpoint.addRequestTransformer(
@@ -27,7 +27,7 @@ commerceApiHarness.productListingEndpoint.addRequestTransformer(
   commercePaginationTransformer
 );
 commerceApiHarness.facetSearchEndpoint.addRequestTransformer(
-  createFacetSearchTransformer(baseSearchResponse)
+  createFacetSearchTransformer(searchResponses.richResponse)
 );
 
 // Use shorter Brand values so breadcrumbs fit at narrow viewports (640px)

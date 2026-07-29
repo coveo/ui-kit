@@ -3,9 +3,11 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import '@/src/components/commerce/atomic-commerce-load-more-products/atomic-commerce-load-more-products.js';
-import {MockCommerceApi} from '@coveo/platform-mock-api/commerce/mock';
-import {commerceFacetTransformer} from '@coveo/platform-mock-api/commerce/facet-transformer';
-import {commercePaginationTransformer} from '@coveo/platform-mock-api/commerce/pagination-transformer';
+import {
+  commerceFacetTransformer,
+  commercePaginationTransformer,
+  MockCommerceApi,
+} from '@coveo/platform-mock-api/commerce';
 
 const commerceApiHarness = new MockCommerceApi();
 commerceApiHarness.searchEndpoint.addRequestTransformer(

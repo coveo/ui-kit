@@ -145,12 +145,12 @@ export const NoResults: Story = {
 
 | Mock                     | Import                                          | Use Case           |
 | ------------------------ | ----------------------------------------------- | ------------------ |
-| `MockSearchApi`          | `@coveo/platform-mock-api/search/mock`          | Search interface   |
-| `MockCommerceApi`        | `@coveo/platform-mock-api/commerce/mock`        | Commerce interface |
-| `MockInsightApi`         | `@coveo/platform-mock-api/insight/mock`         | Insight interface  |
-| `MockAnswerApi`          | `@coveo/platform-mock-api/answer/mock`          | Answer/RGA         |
-| `MockRecommendationApi`  | `@coveo/platform-mock-api/recommendation/mock`  | Recommendations    |
-| `MockMachineLearningApi` | `@coveo/platform-mock-api/machinelearning/mock` | ML/User Actions    |
+| `MockSearchApi`          | `@coveo/platform-mock-api/search`          | Search interface   |
+| `MockCommerceApi`        | `@coveo/platform-mock-api/commerce`        | Commerce interface |
+| `MockInsightApi`         | `@coveo/platform-mock-api/insight`         | Insight interface  |
+| `MockAnswerApi`          | `@coveo/platform-mock-api/answer`          | Answer/RGA         |
+| `MockRecommendationApi`  | `@coveo/platform-mock-api/recommendation`  | Recommendations    |
+| `MockMachineLearningApi` | `@coveo/platform-mock-api/machinelearning` | ML/User Actions    |
 
 ## Interface Wrappers
 

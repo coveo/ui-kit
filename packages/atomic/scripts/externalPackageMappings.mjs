@@ -7,6 +7,11 @@ const buenoJson = JSON.parse(readFileSync(resolve(buenoBaseDir, 'package.json'),
 const headlessBaseDir = resolve(import.meta.dirname, '../../headless');
 const headlessJson = JSON.parse(readFileSync(resolve(headlessBaseDir, 'package.json'), 'utf-8'));
 
+const platformMockApiBaseDir = resolve(import.meta.dirname, '../../platform-mock-api');
+const platformMockApiJson = JSON.parse(
+  readFileSync(resolve(platformMockApiBaseDir, 'package.json'), 'utf-8')
+);
+
 const isNightly = process.env.IS_NIGHTLY === 'true';
 const commitSha = process.env.CDN_COMMIT_SHA;
 
@@ -20,6 +25,19 @@ const buenoVersion = isNightly
 
 const headlessBase = commitSha ? `/headless/commits/${commitSha}` : `/headless/${headlessVersion}`;
 const buenoBase = commitSha ? `/bueno/commits/${commitSha}` : `/bueno/${buenoVersion}`;
+
+const platformMockApiMappings = Object.fromEntries(
+  Object.entries(platformMockApiJson.exports).map(([subpath, conditions]) => {
+    const packageName = platformMockApiJson.name;
+    const specifier = subpath === '.' ? packageName : `${packageName}${subpath.slice(1)}`;
+    return [
+      specifier,
+      {
+        local: resolve(platformMockApiBaseDir, conditions.source),
+      },
+    ];
+  })
+);
 
 export function generateExternalPackageMappings() {
   return {
@@ -47,5 +65,6 @@ export function generateExternalPackageMappings() {
       cdn: `${buenoBase}/bueno.esm.js`,
       local: resolve(buenoBaseDir, './src/index.ts'),
     },
+    ...platformMockApiMappings,
   };
 }
