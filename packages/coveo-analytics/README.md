@@ -1,7 +1,5 @@
 # ![coveo.analytics](./assets/coveo.analytics.js.png)
 
-[![Build Status](https://travis-ci.org/coveo/coveo.analytics.js.svg?branch=master)](https://travis-ci.org/coveo/coveo.analytics.js)
-[![Coverage Status](https://coveralls.io/repos/github/coveo/coveo.analytics.js/badge.svg?branch=master)](https://coveralls.io/github/coveo/coveo.analytics.js?branch=master)
 [![TypeScript](https://badges.frapsoft.com/typescript/code/typescript.png?v=100)](https://github.com/ellerbrock/typescript-badges/)
 
 # Coveo Analytics JavaScript client
@@ -168,18 +166,14 @@ npm run build
 
 ## Running and observing the code
 
-There are two ways to run your code locally:
+Run `pnpm run start` and open your browser on http://localhost:9001.
 
-1. Run `npm run start` and open your browser on http://localhost:9001
-
-2. Debugging through VSCode debugger with the `Debug: Start Debugging` command, using the `Launch Chrome` configuration.
-
-To test out your changes, add `coveoua` function calls in the `public/index.html` file and check the payload in the `Developer Console` section of your browser.
+The dev server also serves this package's `public` directory, which is not checked in. To test out your changes, create a `public/index.html`, add `coveoua` function calls to it, and check the payload in the `Developer Console` section of your browser.
 
 ## Running tests
 
-1. From the command line through `npm run test`.
-2. Debugging through VSCode debugger with the `Debug: Start Debugging` command, using the `Jest All` configuration.
+1. From the command line through `pnpm run test`.
+2. Debugging in VSCode: start a JavaScript Debug Terminal and run `pnpm run test:watch` (Vitest watch mode), then set breakpoints as needed.
 
 ## Storage and persistence
 

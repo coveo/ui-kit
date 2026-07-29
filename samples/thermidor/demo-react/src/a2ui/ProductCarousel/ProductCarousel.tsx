@@ -72,7 +72,13 @@ export function A2UIProductCarousel({surface}: A2UIProductCarouselProps) {
             ‹
           </button>
         )}
-        <div className={styles.track} ref={trackRef}>
+        <div
+          className={styles.track}
+          ref={trackRef}
+          tabIndex={0}
+          role="region"
+          aria-label={heading}
+        >
           {items.map((item, i) => (
             <div className={styles.cardSlot} key={item.ec_product_id ?? i}>
               <A2UIProductCard

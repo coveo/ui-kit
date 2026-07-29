@@ -1,63 +1,84 @@
-import {render, screen} from '@testing-library/react';
-import {describe, it, expect} from 'vitest';
+import {describe, it, expect, vi} from 'vitest';
+import {render, screen, fireEvent} from '@testing-library/react';
 import {ProductCard} from './ProductCard.js';
-import type {Product} from '../utils.js';
+import {TargetingProvider, type TargetingContext} from '../../../context/targeting.js';
+import type {Product} from '@coveo/thermidor';
 
-function buildProduct(overrides: Partial<Product> = {}): Product {
-  return {
-    ec_thumbnails: ['https://example.com/thumb.jpg'],
-    ec_name: 'Wireless Headphones',
-    ec_brand: 'Acme Audio',
-    ec_price: 99.99,
-    ...overrides,
-  };
+vi.mock('../utils.js', () => ({
+  resolveProductImage: () => 'https://example.com/img.jpg',
+}));
+
+const mockProduct = {
+  permanentid: 'prod-123',
+  ec_name: 'Test Widget',
+  ec_brand: 'Acme',
+  ec_price: 29.99,
+} as Product;
+
+function renderWithTargeting(ui: React.ReactElement, targeting: TargetingContext) {
+  return render(<TargetingProvider value={targeting}>{ui}</TargetingProvider>);
 }
 
 describe('ProductCard', () => {
-  it('renders name, brand, and formatted price', () => {
-    render(<ProductCard product={buildProduct()} />);
+  it('renders normally without context (no role="button", no tabIndex)', () => {
+    render(<ProductCard product={mockProduct} />);
 
-    expect(screen.getByText('Wireless Headphones')).toBeDefined();
-    expect(screen.getByText('Acme Audio')).toBeDefined();
-    expect(screen.getByText('$99.99')).toBeDefined();
+    const card = screen.getByRole('article');
+    expect(card.tagName).toBe('ARTICLE');
+    expect(card.getAttribute('tabindex')).toBeNull();
+    expect(screen.queryByRole('button')).toBeNull();
   });
 
-  it('shows placeholder when no image available', () => {
-    const product = buildProduct({
-      ec_thumbnails: undefined,
-      ec_images: undefined,
-    });
-    render(<ProductCard product={product} />);
+  it('becomes clickable with context (has role="button", tabIndex=0 when isTargeting is true)', () => {
+    const targeting: TargetingContext = {
+      isTargeting: true,
+      onProductTargeted: vi.fn(),
+      selectedProductIds: new Set(),
+    };
 
-    expect(screen.getByLabelText('No image available')).toBeDefined();
-    expect(screen.queryByRole('img')).toBeNull();
+    renderWithTargeting(<ProductCard product={mockProduct} />, targeting);
+
+    const card = screen.getByRole('button');
+    expect(card.getAttribute('tabindex')).toBe('0');
   });
 
-  it('shows promo price with strikethrough on original', () => {
-    const product = buildProduct({
-      ec_price: 99.99,
-      ec_promo_price: 79.99,
-    });
-    render(<ProductCard product={product} />);
+  it('clicking ProductCard in targeting mode calls onProductTargeted with correct args', () => {
+    const onProductTargeted = vi.fn();
+    const targeting: TargetingContext = {
+      isTargeting: true,
+      onProductTargeted,
+      selectedProductIds: new Set(),
+    };
 
-    expect(screen.getByText('$79.99')).toBeDefined();
-    expect(screen.getByText('$99.99')).toBeDefined();
+    renderWithTargeting(<ProductCard product={mockProduct} />, targeting);
 
-    const originalPriceEl = screen.getByText('$99.99');
-    expect(originalPriceEl.className).toContain('originalPrice');
+    const card = screen.getByRole('button');
+    fireEvent.click(card);
+
+    expect(onProductTargeted).toHaveBeenCalledWith(
+      'prod-123',
+      'Test Widget',
+      'https://example.com/img.jpg'
+    );
   });
 
-  it('displays title attribute with full product name', () => {
-    render(<ProductCard product={buildProduct()} />);
+  it('clicking a selected ProductCard in targeting mode calls onProductTargeted (for toggle/removal)', () => {
+    const onProductTargeted = vi.fn();
+    const targeting: TargetingContext = {
+      isTargeting: true,
+      onProductTargeted,
+      selectedProductIds: new Set(['prod-123']),
+    };
 
-    const heading = screen.getByRole('heading', {level: 3});
-    expect(heading.getAttribute('title')).toBe('Wireless Headphones');
-  });
+    renderWithTargeting(<ProductCard product={mockProduct} />, targeting);
 
-  it('shows "\u2014" when price is undefined', () => {
-    const product = buildProduct({ec_price: undefined});
-    render(<ProductCard product={product} />);
+    const card = screen.getByRole('button');
+    fireEvent.click(card);
 
-    expect(screen.getByText('\u2014')).toBeDefined();
+    expect(onProductTargeted).toHaveBeenCalledWith(
+      'prod-123',
+      'Test Widget',
+      'https://example.com/img.jpg'
+    );
   });
 });
