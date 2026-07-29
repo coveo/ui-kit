@@ -46,6 +46,14 @@ export function PromptInput({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const blurTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const suppressNextFocusRef = useRef(false);
+  const prevInitialValueRef = useRef(initialValue);
+
+  useEffect(() => {
+    if (initialValue !== prevInitialValueRef.current) {
+      prevInitialValueRef.current = initialValue;
+      setValue(initialValue);
+    }
+  }, [initialValue]);
 
   const totalItems = useMemo(
     () => (suggestions ? suggestions.flatMap((s) => s.items) : []),
@@ -199,7 +207,7 @@ export function PromptInput({
           onKeyDown={handleKeyDown}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          placeholder={disabled && !value ? '' : placeholder}
+          placeholder={placeholder}
           disabled={disabled}
           autoFocus={autoFocus}
           rows={1}

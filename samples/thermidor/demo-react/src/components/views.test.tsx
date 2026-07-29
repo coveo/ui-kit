@@ -84,6 +84,7 @@ describe('SearchResultsPage', () => {
         onSubmit={vi.fn()}
         isStreaming={false}
         routedInterface={mockRoutedInterface}
+        onBackToConversation={vi.fn()}
       />
     );
     expect(screen.getByTestId('search-results-page')).toBeDefined();
@@ -95,6 +96,7 @@ describe('SearchResultsPage', () => {
         onSubmit={vi.fn()}
         isStreaming={false}
         routedInterface={mockRoutedInterface}
+        onBackToConversation={vi.fn()}
       />
     );
     expect(screen.getByText('Facets (coming soon)')).toBeDefined();
@@ -107,6 +109,7 @@ describe('SearchResultsPage', () => {
         onSubmit={onSubmit}
         isStreaming={false}
         routedInterface={mockRoutedInterface}
+        onBackToConversation={vi.fn()}
       />
     );
 
@@ -123,6 +126,7 @@ describe('SearchResultsPage', () => {
         onSubmit={vi.fn()}
         isStreaming={true}
         routedInterface={mockRoutedInterface}
+        onBackToConversation={vi.fn()}
       />
     );
     expect((screen.getByLabelText('Prompt') as HTMLInputElement).disabled).toBe(true);

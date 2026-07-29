@@ -50,6 +50,9 @@
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 12px;
+
+  /* Layout */
+  --header-height: 84px;
 }
 
 *,
@@ -74,8 +77,17 @@ body {
   background: var(--color-bg-secondary);
 }
 
-.view-transition {
+.view-shell {
   height: 100%;
+}
+
+.view-panel {
+  display: none;
+  height: 100%;
+}
+
+.view-panel--active {
+  display: block;
   animation: viewFadeIn 250ms ease-out;
 }
 

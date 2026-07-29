@@ -138,7 +138,7 @@ interface PageSizeSelectorProps {
 
 ### PageSizeSelector Design Notes
 
-The PageSizeSelector receives `PaginationController` directly (same pattern as Pagination). It subscribes to the controller state via `useSyncExternalStore` to read the current `pageSize`, and renders a native `<select>` element with preset options `[10, 25, 50]`. On change, it calls both `controller.setPageSize(newSize)` and `controller.selectPage(0)` to avoid an out-of-bounds page index.
+The PageSizeSelector receives `PaginationController` directly (same pattern as Pagination). It subscribes to the controller state via `useSyncExternalStore` to read the current `pageSize`, and renders a native `<select>` element with default options `[10, 25, 50]`. If the current `pageSize` from the controller state is not among those defaults (e.g., the backend returned 30 results), it is dynamically added to the options list. All options are deduplicated via a `Set` and sorted in ascending numeric order. On change, it calls both `controller.setPageSize(newSize)` and `controller.selectPage(0)` to avoid an out-of-bounds page index.
 
 **Layout integration:** The bottom row of the main content area uses a flex container with `justify-content: space-between`. Pagination is aligned to the left, PageSizeSelector to the right.
 
@@ -245,4 +245,4 @@ function truncate(text: string, maxLen: number): string {
 | `computeVisiblePages` | Returns all pages when totalPages ≤ 5; returns correct window when current page is at start, middle, and end; always includes first and last page; returns at most 5 items for large page counts |
 | `resolveProductImage` | Returns first thumbnail when thumbnails exist; falls back to first image when no thumbnails; returns null when neither thumbnails nor images exist |
 | `formatQuerySummary` / `truncate` | Correct formatting for all state combinations (query+count, query-only, count-only, neither); truncates query at 100 characters with ellipsis; preserves short queries verbatim; formats count with locale separators |
-| PageSizeSelector | Renders select with options 10, 25, 50; reflects current pageSize; calls setPageSize on change; calls selectPage(0) on change; has accessible label "Products per page" |
+| PageSizeSelector | Renders select with options 10, 25, 50; includes current pageSize in options when not a default (e.g., 30); reflects current pageSize; calls setPageSize on change; calls selectPage(0) on change; has accessible label "Products per page" |

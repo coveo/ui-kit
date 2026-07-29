@@ -32,7 +32,6 @@ export interface ResultsPerPageInitialState {
 /**
  * The `ResultsPerPage` controller allows the end user to choose how many results to display per page.
  *
- * Example: [results-per-page.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/results-per-page/results-per-page.fn.tsx)
  *
  * @group Controllers
  * @category ResultsPerPage

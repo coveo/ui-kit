@@ -341,4 +341,25 @@ describe('disabled + focus interaction', () => {
 
     expect(screen.queryByRole('listbox')).toBeNull();
   });
+
+  it('updates textarea value when initialValue prop changes', () => {
+    const {rerender} = render(<PromptInput onSubmit={vi.fn()} initialValue="surfboards" />);
+
+    const textarea = screen.getByLabelText('Prompt') as HTMLTextAreaElement;
+    expect(textarea.value).toBe('surfboards');
+
+    rerender(<PromptInput onSubmit={vi.fn()} initialValue="" />);
+    expect(textarea.value).toBe('');
+  });
+
+  it('does not reset user-typed value when initialValue stays the same across rerenders', () => {
+    const {rerender} = render(<PromptInput onSubmit={vi.fn()} initialValue="surfboards" />);
+
+    const textarea = screen.getByLabelText('Prompt') as HTMLTextAreaElement;
+    fireEvent.change(textarea, {target: {value: 'wetsuits'}});
+    expect(textarea.value).toBe('wetsuits');
+
+    rerender(<PromptInput onSubmit={vi.fn()} initialValue="surfboards" />);
+    expect(textarea.value).toBe('wetsuits');
+  });
 });

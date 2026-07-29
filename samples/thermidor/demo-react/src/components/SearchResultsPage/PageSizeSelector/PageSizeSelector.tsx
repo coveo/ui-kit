@@ -1,8 +1,8 @@
-import {useCallback, useSyncExternalStore} from 'react';
+import {useCallback, useMemo, useSyncExternalStore} from 'react';
 import type {PaginationController} from '@coveo/thermidor';
 import styles from './PageSizeSelector.module.css';
 
-const PAGE_SIZE_OPTIONS = [10, 25, 50];
+const DEFAULT_PAGE_SIZE_OPTIONS = [10, 25, 50];
 
 interface PageSizeSelectorProps {
   controller: PaginationController;
@@ -15,6 +15,11 @@ export function PageSizeSelector({controller}: PageSizeSelectorProps) {
   );
   const getSnapshot = useCallback(() => controller.state, [controller]);
   const state = useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
+
+  const options = useMemo(() => {
+    const set = new Set([...DEFAULT_PAGE_SIZE_OPTIONS, state.pageSize]);
+    return [...set].sort((a, b) => a - b);
+  }, [state.pageSize]);
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newSize = Number(event.target.value);
@@ -33,7 +38,7 @@ export function PageSizeSelector({controller}: PageSizeSelectorProps) {
         value={state.pageSize}
         onChange={handleChange}
       >
-        {PAGE_SIZE_OPTIONS.map((size) => (
+        {options.map((size) => (
           <option key={size} value={size}>
             {size}
           </option>

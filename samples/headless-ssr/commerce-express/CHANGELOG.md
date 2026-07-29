@@ -1,0 +1,8 @@
+# @coveo/ui-kit-sample-headless-ssr-commerce-express
+
+## 3.53.2
+
+### Patch Changes
+
+- Updated dependencies [[`42f1e58`](https://github.com/coveo/ui-kit/commit/42f1e58bfbb5aeeee832d7da07b3bc77ededeff7), [`51e15d1`](https://github.com/coveo/ui-kit/commit/51e15d1435d7435a0701754d9e418d6d87d376c3)]:
+  - @coveo/headless@3.53.2

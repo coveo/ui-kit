@@ -42,7 +42,6 @@ export interface RecommendationListProps {
 /**
  * The `RecommendationList` controller retrieves information about the current recommendations by the search API, if there are any.
  *
- * Example: [recommendation-list.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/recommendation-list/recommendation-list.fn.tsx)
  *
  * @group Controllers
  * @category RecommendationList

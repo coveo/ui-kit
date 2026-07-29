@@ -36,6 +36,25 @@ describe('PageSizeSelector', () => {
     expect(options[2].value).toBe('50');
   });
 
+  it('includes the current pageSize in options even if not a default', () => {
+    const controller = createMockController({
+      page: 0,
+      pageSize: 30,
+      totalCount: 100,
+      totalPages: 4,
+    });
+
+    render(<PageSizeSelector controller={controller} />);
+
+    const select = screen.getByRole('combobox');
+    const options = select.querySelectorAll('option');
+    expect(options).toHaveLength(4);
+    expect(options[0].value).toBe('10');
+    expect(options[1].value).toBe('25');
+    expect(options[2].value).toBe('30');
+    expect(options[3].value).toBe('50');
+  });
+
   it('reflects current pageSize as selected value', () => {
     const controller = createMockController({
       page: 0,
