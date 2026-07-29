@@ -3,7 +3,7 @@
 .searchbox__container {
   display: flex;
   position: relative;
-  border-color: #e5e8e8;
+  border-color: var(--slds-g-color-border-1, #e5e8e8);
   min-height: 48px;
   box-sizing: border-box;
   border-radius: 0.25rem;

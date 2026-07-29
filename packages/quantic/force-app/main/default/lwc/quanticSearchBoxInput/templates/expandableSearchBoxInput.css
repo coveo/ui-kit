@@ -21,7 +21,7 @@
 
 .searchbox__container {
   overflow: visible;
-  border: var(--lwc-borderWidthThin, 1px) solid var(--lwc-brandAccessible, #0176d3);
+  border: var(--lwc-borderWidthThin, 1px) solid var(--slds-g-color-accent-container-1, var(--lwc-brandAccessible, #0176d3));
 }
 
 .z-index-high {
@@ -54,6 +54,6 @@ textarea.searchbox__input {
 .searchbox_floating-container {
   position: absolute;
   width: 100%;
-  background-color: var(--lwc-colorBackgroundAlt, rgb(255, 255, 255));
+  background-color: var(--slds-g-color-surface-1, var(--lwc-colorBackgroundAlt, rgb(255, 255, 255)));
   border-radius: 0.25rem;
 }
