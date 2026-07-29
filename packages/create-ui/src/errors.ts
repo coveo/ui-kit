@@ -17,8 +17,6 @@ export class TemplateVersionUnavailableError extends Error {
 
 export type CrashReportErrorKind = 'not-a-report' | 'version-mismatch';
 
-// Why a raw file could not be accepted as a crash report: not a report at all,
-// or a schema version this build does not understand.
 export class CrashReportError extends Error {
   constructor(
     readonly kind: CrashReportErrorKind,
