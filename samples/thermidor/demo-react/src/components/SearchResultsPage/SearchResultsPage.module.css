@@ -1,64 +1,59 @@
+.searchLayout {
+}
+
+.floatingBackButton {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background: var(--color-bg-primary);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  box-shadow: 0 2px 8px var(--color-shadow);
+  opacity: 0.7;
+  transition:
+    opacity var(--transition-fast),
+    background-color var(--transition-fast),
+    color var(--transition-fast),
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.floatingBackButton:hover {
+  opacity: 1;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  border-color: var(--color-border-active);
+  box-shadow: 0 4px 12px var(--color-shadow);
+}
+
+.floatingBackButton:focus-visible {
+  opacity: 1;
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.floatingBackButton svg {
+  width: 20px;
+  height: 20px;
+}
+
 .page {
   display: grid;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: 1fr;
   grid-template-columns: 1fr 2fr 8fr 1fr;
   column-gap: var(--space-5);
   min-height: 100vh;
-}
-
-.header {
-  grid-column: 1 / -1;
-  padding: var(--space-4) var(--space-5);
-  min-height: var(--header-height);
-  border-bottom: 1px solid var(--color-border);
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-3);
-}
-
-.header > * {
-  width: 100%;
-  max-width: 560px;
-}
-
-.backToConversation {
-  width: auto;
-  max-width: none;
-  order: -1;
-  background: var(--color-bg-primary);
-  border: 1px solid var(--color-border);
-  color: var(--color-text-primary);
-  cursor: pointer;
-  font-size: var(--font-size-base);
-  padding: var(--space-2) var(--space-4);
-  border-radius: 999px;
-  white-space: nowrap;
-
-  &:hover {
-    background: var(--color-surface-hover);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--color-focus);
-    outline-offset: 2px;
-  }
-}
-
-@media (min-width: 1280px) {
-  .header {
-    flex-wrap: nowrap;
-    justify-content: center;
-    position: relative;
-  }
-
-  .backToConversation {
-    position: absolute;
-    left: var(--space-5);
-    top: 50%;
-    transform: translateY(-50%);
-  }
+  border-top: 1px solid var(--color-border);
+  margin-top: var(--space-2);
 }
 
 .sidebar {
@@ -162,4 +157,9 @@
   .desktopOnly {
     display: none;
   }
+}
+
+.muted {
+  opacity: 0.4;
+  pointer-events: none;
 }

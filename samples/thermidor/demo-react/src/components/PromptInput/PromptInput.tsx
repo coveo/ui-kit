@@ -137,6 +137,11 @@ export function PromptInput({
   }
 
   function handleKeyDown(e: KeyboardEvent<HTMLTextAreaElement>) {
+    if (e.key === 'Tab' && showDropdown) {
+      setShowDropdown(false);
+      return;
+    }
+
     if (e.key === 'Escape' && showDropdown) {
       e.preventDefault();
       setShowDropdown(false);
@@ -233,6 +238,7 @@ export function PromptInput({
           }}
           aria-label="Clear"
           style={{visibility: value && !disabled ? 'visible' : 'hidden'}}
+          tabIndex={value && !disabled ? 0 : -1}
         >
           <svg
             viewBox="0 0 24 24"
@@ -253,6 +259,7 @@ export function PromptInput({
           onClick={submit}
           disabled={disabled || !value.trim()}
           aria-label="Submit"
+          tabIndex={!disabled && value.trim() ? 0 : -1}
         >
           {disabled ? (
             <svg

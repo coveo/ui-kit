@@ -2,7 +2,8 @@ import {useState, useRef, useEffect, useCallback} from 'react';
 import type {RoutedInterface} from '@coveo/thermidor';
 import {buildProductListController, buildPaginationController} from '@coveo/thermidor';
 import {SECTION_ACTIONS, type SuggestionItem} from '../SuggestionsDropdown/index.js';
-import {PromptInput} from '../PromptInput/PromptInput.js';
+import {ProductTargeting} from '../ProductTargeting/ProductTargeting.js';
+import {useTargeting, type TargetedProduct} from '../../context/targeting.js';
 import {useSuggestions} from '../../hooks/use-suggestions.js';
 import {useBuildController} from '../../hooks/use-build-controller.js';
 import {ProductGrid} from './ProductGrid/ProductGrid.js';
@@ -19,6 +20,8 @@ interface SearchResultsPageProps {
   routedInterface: RoutedInterface;
   query?: string;
   onBackToConversation: () => void;
+  products: TargetedProduct[];
+  onProductsChange: (products: TargetedProduct[]) => void;
 }
 
 export function SearchResultsPage(props: SearchResultsPageProps) {
@@ -35,6 +38,8 @@ function SearchResultsPageInner({
   routedInterface,
   query,
   onBackToConversation,
+  products,
+  onProductsChange,
 }: SearchResultsPageProps) {
   const [productListController, productListState] = useBuildController(() =>
     buildProductListController({interface: routedInterface.interface})
@@ -78,21 +83,87 @@ function SearchResultsPageInner({
   };
 
   return (
-    <div className={styles.page} data-testid="search-results-page">
-      <header className={styles.header}>
-        <button type="button" className={styles.backToConversation} onClick={onBackToConversation}>
-          &larr; Back to conversation
-        </button>
-        <PromptInput
-          onSubmit={onSubmit}
-          disabled={isStreaming}
-          initialValue={query ?? ''}
-          suggestions={sections}
-          onSuggestionSelect={handleSuggestionSelect}
+    <div className={styles.searchLayout}>
+      <ProductTargeting
+        products={products}
+        onProductsChange={onProductsChange}
+        onSubmit={onSubmit}
+        isStreaming={isStreaming}
+        promptProps={{
+          initialValue: query ?? '',
+          suggestions: sections,
+          onSuggestionSelect: handleSuggestionSelect,
+        }}
+      >
+        <SearchResultsPageContent
+          query={query}
+          productListController={productListController}
+          productListState={productListState}
+          paginationController={paginationController}
+          paginationState={paginationState}
+          showToast={showToast}
+          sortFiltersOpen={sortFiltersOpen}
+          setSortFiltersOpen={setSortFiltersOpen}
+          closeSortFilters={closeSortFilters}
+          toast={toast}
         />
-      </header>
+      </ProductTargeting>
+      <button
+        type="button"
+        className={styles.floatingBackButton}
+        onClick={onBackToConversation}
+        title="Back to conversation"
+        aria-label="Back to conversation"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+        </svg>
+      </button>
+    </div>
+  );
+}
 
-      <aside className={styles.sidebar}>Facets (coming soon)</aside>
+interface SearchResultsPageContentProps {
+  query?: string;
+  productListController: ReturnType<typeof buildProductListController>;
+  productListState: ReturnType<typeof buildProductListController>['state'];
+  paginationController: ReturnType<typeof buildPaginationController>;
+  paginationState: ReturnType<typeof buildPaginationController>['state'];
+  showToast: () => void;
+  sortFiltersOpen: boolean;
+  setSortFiltersOpen: (open: boolean) => void;
+  closeSortFilters: () => void;
+  toast: string | null;
+}
+
+function SearchResultsPageContent({
+  query,
+  productListController,
+  productListState,
+  paginationController,
+  paginationState,
+  showToast,
+  sortFiltersOpen,
+  setSortFiltersOpen,
+  closeSortFilters,
+  toast,
+}: SearchResultsPageContentProps) {
+  const targeting = useTargeting();
+  const isTargeting = targeting?.isTargeting ?? false;
+
+  return (
+    <div className={styles.page} data-testid="search-results-page">
+      <aside className={`${styles.sidebar} ${isTargeting ? styles.muted : ''}`}>
+        Facets (coming soon)
+      </aside>
 
       <main className={styles.main}>
         <div className={styles.topRow}>

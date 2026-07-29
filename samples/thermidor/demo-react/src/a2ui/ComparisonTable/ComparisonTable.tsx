@@ -1,4 +1,5 @@
 import {useState} from 'react';
+import {useTargeting} from '../../context/targeting.js';
 import {formatPrice} from '../../utils.js';
 import styles from './ComparisonTable.module.css';
 import type {ParsedSurface} from '../types.js';
@@ -21,6 +22,8 @@ interface ComparisonItem {
 
 export function A2UIComparisonTable({surface}: A2UIComparisonTableProps) {
   const heading = (surface.componentProps.heading as {literalString?: string})?.literalString ?? '';
+  const targeting = useTargeting();
+  const isTargetable = targeting?.isTargeting ?? false;
 
   const attributes = (surface.componentProps.attributes as string[]) ?? [
     'standout',
@@ -73,19 +76,47 @@ export function A2UIComparisonTable({surface}: A2UIComparisonTableProps) {
             <div className={styles.labelCell} role="columnheader">
               Product
             </div>
-            {visibleItems.map((item, i) => (
-              <div key={item.ec_product_id ?? i} className={styles.productCell} role="columnheader">
-                {item.ec_image && (
-                  <img
-                    className={styles.productImage}
-                    src={item.ec_image}
-                    alt={item.ec_name ?? 'Product'}
-                    loading="lazy"
-                  />
-                )}
-                <span className={styles.productName}>{item.ec_name}</span>
-              </div>
-            ))}
+            {visibleItems.map((item, i) => {
+              const productId = item.ec_product_id ?? '';
+              const isSelected = targeting?.selectedProductIds.has(productId) ?? false;
+
+              const cellClasses = [
+                styles.productCell,
+                isTargetable ? styles.targetable : '',
+                isSelected ? styles.selected : '',
+              ]
+                .filter(Boolean)
+                .join(' ');
+
+              const interactiveProps = isTargetable
+                ? {
+                    role: 'button' as const,
+                    tabIndex: 0,
+                    onClick: () =>
+                      targeting!.onProductTargeted(productId, item.ec_name ?? '', item.ec_image),
+                    onKeyDown: (e: React.KeyboardEvent) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        targeting!.onProductTargeted(productId, item.ec_name ?? '', item.ec_image);
+                      }
+                    },
+                  }
+                : {};
+
+              return (
+                <div key={item.ec_product_id ?? i} className={cellClasses} {...interactiveProps}>
+                  {item.ec_image && (
+                    <img
+                      className={styles.productImage}
+                      src={item.ec_image}
+                      alt={item.ec_name ?? 'Product'}
+                      loading="lazy"
+                    />
+                  )}
+                  <span className={styles.productName}>{item.ec_name}</span>
+                </div>
+              );
+            })}
           </div>
 
           <div className={styles.row} role="row">

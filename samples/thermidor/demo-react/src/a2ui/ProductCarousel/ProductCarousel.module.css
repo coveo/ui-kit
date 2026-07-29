@@ -22,6 +22,8 @@
   scroll-behavior: smooth;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  padding: 4px;
+  margin: -4px;
 }
 
 .track::-webkit-scrollbar {

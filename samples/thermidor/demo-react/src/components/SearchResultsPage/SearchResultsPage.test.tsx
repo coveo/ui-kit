@@ -34,6 +34,9 @@ describe('SearchResultsPage integration', () => {
     onSubmit: vi.fn(),
     isStreaming: false,
     routedInterface: {useCase: 'search', interface: {id: 'mock'}} as any,
+    products: [] as any[],
+    onProductsChange: vi.fn(),
+    onBackToConversation: vi.fn(),
   };
 
   function renderPage(overrides = {}) {
@@ -42,15 +45,11 @@ describe('SearchResultsPage integration', () => {
     return {...result, props};
   }
 
-  it('renders header with PromptInput', () => {
+  it('renders PromptInput via ProductTargeting', () => {
     renderPage();
-
-    const header = document.querySelector('header');
-    expect(header).not.toBeNull();
 
     const textarea = screen.getByLabelText('Prompt');
     expect(textarea).toBeDefined();
-    expect(header!.contains(textarea)).toBe(true);
   });
 
   it('renders sidebar with "Facets (coming soon)" text', () => {
@@ -67,7 +66,14 @@ describe('SearchResultsPage integration', () => {
 
   it('returns null when routedInterface is null', () => {
     const {container} = render(
-      <SearchResultsPage onSubmit={vi.fn()} isStreaming={false} routedInterface={null as any} />
+      <SearchResultsPage
+        onSubmit={vi.fn()}
+        isStreaming={false}
+        routedInterface={null as any}
+        onBackToConversation={vi.fn()}
+        products={[]}
+        onProductsChange={vi.fn()}
+      />
     );
 
     expect(container.firstChild).toBeNull();
@@ -89,6 +95,9 @@ describe('SearchResultsPage suggestions integration', () => {
     onSubmit: vi.fn(),
     isStreaming: false,
     routedInterface: {useCase: 'search', interface: {id: 'mock'}} as any,
+    products: [] as any[],
+    onProductsChange: vi.fn(),
+    onBackToConversation: vi.fn(),
   };
 
   function renderPage(overrides = {}) {
@@ -151,6 +160,9 @@ describe('SearchResultsPage PageSizeSelector integration', () => {
     onSubmit: vi.fn(),
     isStreaming: false,
     routedInterface: {useCase: 'search', interface: {id: 'mock'}} as any,
+    products: [] as any[],
+    onProductsChange: vi.fn(),
+    onBackToConversation: vi.fn(),
   };
 
   function renderPage(overrides = {}) {
@@ -185,6 +197,8 @@ describe('SearchResultsPage "Back to conversation" button', () => {
     isStreaming: false,
     routedInterface: {useCase: 'search', interface: {id: 'mock'}} as any,
     onBackToConversation: vi.fn(),
+    products: [] as any[],
+    onProductsChange: vi.fn(),
   };
 
   function renderPage(overrides = {}) {

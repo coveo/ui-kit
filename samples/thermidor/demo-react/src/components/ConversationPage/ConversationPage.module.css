@@ -4,54 +4,73 @@
   height: 100%;
 }
 
-.nav {
+.floatingBackButton {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 100;
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background: var(--color-bg-primary);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  box-shadow: 0 2px 8px var(--color-shadow);
+  opacity: 0.7;
+  transition:
+    opacity var(--transition-fast),
+    background-color var(--transition-fast),
+    color var(--transition-fast),
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.floatingBackButton:hover {
+  opacity: 1;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  border-color: var(--color-border-active);
+  box-shadow: 0 4px 12px var(--color-shadow);
+}
+
+.floatingBackButton:focus-visible {
+  opacity: 1;
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.floatingBackButton svg {
+  width: 20px;
+  height: 20px;
+}
+
+.promptAtBottom {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.promptAtBottom > div {
+  display: flex;
+  flex-direction: column-reverse;
+  flex: 1;
+  min-height: 0;
   gap: var(--space-3);
-  padding: var(--space-4) var(--space-5);
-  min-height: var(--header-height);
+}
+
+.promptAtBottom > div > div:last-child {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
   border-bottom: 1px solid var(--color-border);
-  flex-shrink: 0;
-}
-
-.backButton {
-  background: var(--color-bg-primary);
-  border: 1px solid var(--color-border);
-  color: var(--color-text-primary);
-  cursor: pointer;
-  font-size: var(--font-size-sm);
-  padding: var(--space-2) var(--space-4);
-  border-radius: 999px;
-}
-
-.backButton:hover {
-  background: var(--color-surface-hover);
-}
-
-.backButton:focus-visible {
-  outline: 2px solid var(--color-focus);
-  outline-offset: 2px;
-}
-
-.resetButton {
-  background: var(--color-bg-primary);
-  border: 1px solid var(--color-border);
-  color: var(--color-text-primary);
-  cursor: pointer;
-  font-size: var(--font-size-sm);
-  padding: var(--space-2) var(--space-4);
-  border-radius: 999px;
-  margin-left: auto;
-}
-
-.resetButton:hover {
-  background: var(--color-surface-hover);
-}
-
-.resetButton:focus-visible {
-  outline: 2px solid var(--color-focus);
-  outline-offset: 2px;
+  padding-bottom: var(--space-3);
 }
 
 .scrollContainer {
@@ -63,17 +82,4 @@
 .scrollContent {
   max-width: 720px;
   margin: 0 auto;
-}
-
-.promptContainer {
-  flex-shrink: 0;
-  padding: var(--space-3) var(--space-6);
-  border-top: 1px solid var(--color-border);
-  display: flex;
-  justify-content: center;
-}
-
-.promptWrapper {
-  width: 100%;
-  max-width: 560px;
 }

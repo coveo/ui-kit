@@ -89,3 +89,16 @@
   color: var(--color-text-muted);
   text-decoration: line-through;
 }
+
+.targetable {
+  cursor: crosshair;
+}
+
+.targetable:hover {
+  box-shadow: 0 0 0 2px var(--color-border-active);
+}
+
+.selected {
+  box-shadow: 0 0 0 2px var(--color-border-active);
+  opacity: 0.7;
+}
