@@ -6,15 +6,27 @@ import {getHandleInternals} from '@/src/internal/utils/index.js';
 import {getOrCreateSortActions} from '@/src/internal/features/sort/index.js';
 import {getOrCreateSortSelectors} from '@/src/internal/features/sort/index.js';
 import {getOrCreateSortSlice} from '@/src/internal/features/sort/index.js';
-import type {CommerceSearchSortCriterion} from '@/src/internal/api/commerce-search/index.js';
+import type {SortCriterionFor} from '@/src/public/sort-types.js';
 import type {Controller} from '@/src/public/controllers/controller-types.js';
 
-class SortControllerImpl extends BaseController<SortControllerState> {
+function structuralEqual(a: unknown, b: unknown): boolean {
+  if (Array.isArray(a) && Array.isArray(b)) {
+    return a.length === b.length && a.every((item, i) => structuralEqual(item, b[i]));
+  }
+  if (typeof a === 'object' && typeof b === 'object' && a && b) {
+    const {displayName: _a, ...restA} = a as any;
+    const {displayName: _b, ...restB} = b as any;
+    return JSON.stringify(restA) === JSON.stringify(restB);
+  }
+  return a === b;
+}
+
+class SortControllerImpl extends BaseController<SortControllerState<any>> {
   #thunks: EndpointThunk[];
   #sortActions: ReturnType<typeof getOrCreateSortActions>;
-  #controllerState: StateSelector<SortControllerState>;
+  #controllerState: StateSelector<SortControllerState<any>>;
 
-  constructor(options: SortControllerOptions) {
+  constructor(options: SortControllerOptions<any>) {
     const {engine, resolveFacades} = getHandleInternals(options.interface);
 
     engine.adoptSlice(getOrCreateSortSlice(options.interface));
@@ -26,7 +38,7 @@ class SortControllerImpl extends BaseController<SortControllerState> {
       selectors.getAppliedSort,
       selectors.getAvailableSorts,
       (appliedSort, availableSorts) => ({appliedSort, availableSorts})
-    ) as unknown as StateSelector<SortControllerState>;
+    ) as unknown as StateSelector<SortControllerState<any>>;
 
     super(engine, controllerState);
 
@@ -35,35 +47,38 @@ class SortControllerImpl extends BaseController<SortControllerState> {
     this.#controllerState = controllerState;
   }
 
-  sortBy(criterion: CommerceSearchSortCriterion): void {
+  sortBy(criterion: any): void {
     this.engine.mutate(this.#sortActions.sortBy(criterion));
     for (const thunk of this.#thunks) {
       this.engine.mutate(thunk({engine: this.engine}));
     }
   }
 
-  isSortedBy(criterion: CommerceSearchSortCriterion): boolean {
+  isSortedBy(criterion: any): boolean {
     const {appliedSort} = this.engine.read(this.#controllerState);
-    if (appliedSort === null) {
+    if (!appliedSort) {
       return false;
     }
-    return appliedSort.sortCriteria === criterion.sortCriteria;
+    return structuralEqual(appliedSort, criterion);
   }
 }
 
-export const buildSortController = (options: SortControllerOptions): SortController =>
-  new SortControllerImpl(options);
-
-export interface SortControllerState {
-  appliedSort: CommerceSearchSortCriterion | null;
-  availableSorts: CommerceSearchSortCriterion[];
+export function buildSortController<T extends Supports<'search'>>(
+  options: SortControllerOptions<T>
+): SortController<T> {
+  return new SortControllerImpl(options) as unknown as SortController<T>;
 }
 
-export interface SortController extends Controller<SortControllerState> {
-  sortBy(criterion: CommerceSearchSortCriterion): void;
-  isSortedBy(criterion: CommerceSearchSortCriterion): boolean;
+export interface SortControllerState<T> {
+  appliedSort: SortCriterionFor<T> | SortCriterionFor<T>[] | null;
+  availableSorts: SortCriterionFor<T>[];
 }
 
-export interface SortControllerOptions {
-  interface: Supports<'search'>;
+export interface SortController<T> extends Controller<SortControllerState<T>> {
+  sortBy(criterion: SortCriterionFor<T> | SortCriterionFor<T>[]): void;
+  isSortedBy(criterion: SortCriterionFor<T> | SortCriterionFor<T>[]): boolean;
+}
+
+export interface SortControllerOptions<T extends Supports<'search'>> {
+  interface: T;
 }

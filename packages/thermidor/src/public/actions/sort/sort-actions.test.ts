@@ -24,56 +24,42 @@ describe('sort actions', () => {
       expect(fullEngine.read(selectors.getAvailableSorts)).toEqual([]);
     });
 
-    it('should return an object with sortBy and getState actions', () => {
+    it('should return an object with sortBy action', () => {
       const actions = loadSortActions({interface: searchInterface});
       expect(actions).toHaveProperty('sortBy');
-      expect(actions).toHaveProperty('getState');
       expect(typeof actions.sortBy).toBe('function');
-      expect(typeof actions.getState).toBe('function');
-    });
-
-    it('should update sort state when sortBy is called', () => {
-      const actions = loadSortActions({interface: searchInterface});
-
-      actions.sortBy({sortCriteria: 'relevancy'});
-
-      expect(actions.getState().appliedSort).toEqual({sortCriteria: 'relevancy'});
     });
 
     it('should return a promise from sortBy (triggers facade thunks)', () => {
       const actions = loadSortActions({interface: searchInterface});
 
-      const result = actions.sortBy({sortCriteria: 'relevancy'});
+      const result = actions.sortBy({by: 'relevance'});
 
       expect(result).toBeInstanceOf(Promise);
     });
 
-    it('should return current sort state via getState', () => {
+    it('should update sort state when sortBy is called', () => {
       const actions = loadSortActions({interface: searchInterface});
+      const selectors = getOrCreateSortSelectors(searchInterface);
 
-      const state = actions.getState();
+      actions.sortBy({by: 'relevance'});
 
-      expect(state).toHaveProperty('appliedSort');
-      expect(state).toHaveProperty('availableSorts');
-      expect(state.appliedSort).toBeNull();
-      expect(state.availableSorts).toEqual([]);
+      expect(fullEngine.read(selectors.getAppliedSort)).toEqual({
+        by: 'relevance',
+      });
     });
 
-    it('should handle multiple sortBy calls updating state correctly', () => {
+    it('should handle sortBy with array criterion (compound sort)', () => {
       const actions = loadSortActions({interface: searchInterface});
+      const selectors = getOrCreateSortSelectors(searchInterface);
+      const compound = [
+        {by: 'field' as const, field: 'price', direction: 'ascending' as const},
+        {by: 'date' as const, direction: 'descending' as const},
+      ];
 
-      actions.sortBy({sortCriteria: 'relevancy'});
-      expect(actions.getState().appliedSort).toEqual({sortCriteria: 'relevancy'});
+      actions.sortBy(compound);
 
-      actions.sortBy({sortCriteria: 'date ascending'});
-      expect(actions.getState().appliedSort).toEqual({
-        sortCriteria: 'date ascending',
-      });
-
-      actions.sortBy({sortCriteria: '@price descending'});
-      expect(actions.getState().appliedSort).toEqual({
-        sortCriteria: '@price descending',
-      });
+      expect(fullEngine.read(selectors.getAppliedSort)).toEqual(compound);
     });
   });
 });

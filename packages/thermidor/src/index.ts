@@ -50,3 +50,14 @@ export type {
   TurnStatus,
   UseCaseInterfaceMap,
 } from '@/src/internal/features/generative/index.js';
+export type {
+  SortByRelevance,
+  SortByDate,
+  SortByField,
+  SortByQRE,
+  SortByNoSort,
+  SearchSortCriterion,
+  CommerceSortCriterion,
+  SortCriterionFor,
+  SortDirection,
+} from './public/sort-types.js';
