@@ -47,7 +47,7 @@
     "uuid": "13.0.2"
   },
   "devDependencies": {
-    "@rollup/plugin-node-resolve": "16.0.3",
+    "@rollup/plugin-node-resolve": "catalog:",
     "@rollup/plugin-replace": "catalog:",
     "@rollup/plugin-terser": "catalog:",
     "@rollup/plugin-typescript": "12.3.0",
