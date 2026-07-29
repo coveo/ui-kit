@@ -684,8 +684,8 @@ importers:
         specifier: 15.3.1
         version: 15.3.1(rollup@3.29.5)
       '@rollup/plugin-replace':
-        specifier: 5.0.7
-        version: 5.0.7(rollup@3.29.5)
+        specifier: 'catalog:'
+        version: 6.0.3(rollup@3.29.5)
       '@rollup/plugin-terser':
         specifier: 'catalog:'
         version: 1.0.0(rollup@3.29.5)
@@ -22047,19 +22047,19 @@ snapshots:
     optionalDependencies:
       rollup: 4.62.2
 
-  '@rollup/plugin-replace@5.0.7(rollup@3.29.5)':
-    dependencies:
-      '@rollup/pluginutils': 5.4.0(rollup@3.29.5)
-      magic-string: 0.30.21
-    optionalDependencies:
-      rollup: 3.29.5
-
   '@rollup/plugin-replace@5.0.7(rollup@4.62.2)':
     dependencies:
       '@rollup/pluginutils': 5.4.0(rollup@4.62.2)
       magic-string: 0.30.21
     optionalDependencies:
       rollup: 4.62.2
+
+  '@rollup/plugin-replace@6.0.3(rollup@3.29.5)':
+    dependencies:
+      '@rollup/pluginutils': 5.4.0(rollup@3.29.5)
+      magic-string: 0.30.21
+    optionalDependencies:
+      rollup: 3.29.5
 
   '@rollup/plugin-replace@6.0.3(rollup@4.62.2)':
     dependencies:
