@@ -118,14 +118,17 @@ const externalizeDependencies = (configType: ConfigType): Plugin => {
         };
       }
 
-      if (!cdn) {
-        return null;
+      // For production Storybook builds, we want to use Domain-relative URL to use the CDN versions of the packages.
+      if (cdn) {
+        return {
+          id: cdn,
+          external: 'absolute',
+        };
       }
 
-      // For production Storybook builds, we want to use Domain-relative URL to use the CDN versions of the packages.
+      // Some packages, like platform-mock-api, do not have a CDN path and are only available through the local files.
       return {
-        id: cdn,
-        external: 'absolute',
+        id: local,
       };
     },
   };
