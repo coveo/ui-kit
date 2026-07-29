@@ -11,7 +11,7 @@ function parsePrompt(prompt: string): {text: string; products: string[]} {
   if (!match) {
     return {text: prompt, products: []};
   }
-  const text = prompt.slice(0, match.index).trim();
+  const text = prompt.slice(0, match.index ?? prompt.length).trim();
   const products = match[1]
     .split(',')
     .map((name) => name.trim())

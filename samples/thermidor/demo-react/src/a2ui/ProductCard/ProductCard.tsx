@@ -15,9 +15,9 @@ export function A2UIProductCard(props: A2UIProductCardProps) {
   const {ec_name, ec_brand, ec_price, ec_image, ec_product_id, clickUri} = props;
   const targeting = useTargeting();
 
-  const productId = ec_product_id ?? '';
-  const isSelected = targeting?.selectedProductIds.has(productId) ?? false;
-  const isTargetable = targeting?.isTargeting ?? false;
+  const productId = ec_product_id ?? ec_name;
+  const isSelected = productId ? (targeting?.selectedProductIds.has(productId) ?? false) : false;
+  const isTargetable = (targeting?.isTargeting ?? false) && !!productId;
 
   const cardClasses = [
     styles.card,
@@ -28,12 +28,13 @@ export function A2UIProductCard(props: A2UIProductCardProps) {
     .join(' ');
 
   const handleTarget = () => {
-    targeting!.onProductTargeted(productId, ec_name ?? '', ec_image);
+    targeting!.onProductTargeted(productId!, ec_name ?? '', ec_image);
   };
 
   const interactiveProps = isTargetable
     ? {
         role: 'button' as const,
+        'aria-pressed': isSelected,
         tabIndex: 0,
         onClick: handleTarget,
         onKeyDown: (e: React.KeyboardEvent) => {

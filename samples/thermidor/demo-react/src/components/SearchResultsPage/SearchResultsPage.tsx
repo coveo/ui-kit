@@ -174,19 +174,19 @@ function SearchResultsPageContent({
             pageSize={paginationState.pageSize ?? 0}
             productCount={productListState.products?.length ?? 0}
           />
-          <span className={styles.desktopOnly}>
+          <span className={`${styles.desktopOnly} ${isTargeting ? styles.muted : ''}`}>
             <SortPlaceholder onToast={showToast} />
           </span>
           <button
             type="button"
-            className={styles.sortFiltersButton}
+            className={`${styles.sortFiltersButton} ${isTargeting ? styles.muted : ''}`}
             onClick={() => setSortFiltersOpen(true)}
           >
             Sort & Filters
           </button>
         </div>
         <ProductGrid controller={productListController} />
-        <div className={styles.bottomRow}>
+        <div className={`${styles.bottomRow} ${isTargeting ? styles.muted : ''}`}>
           <Pagination controller={paginationController} />
           <PageSizeSelector controller={paginationController} />
         </div>

@@ -53,6 +53,8 @@ export function ProductTargeting({
 
   const handleProductTargeted = useCallback(
     (productId: string, productName: string, productThumbnail?: string) => {
+      if (!productId) return;
+
       const existing = products.find((p) => p.id === productId);
       if (existing) {
         onProductsChange(products.filter((p) => p.id !== productId));
