@@ -45,7 +45,6 @@ vi.mock('./ConversationPage/index.js', () => ({
         onClick={props.onBackToSearch}
         disabled={!props.canGoBackToSearch}
       />
-      <button data-testid="reset-btn" onClick={props.onResetToLanding} />
     </div>
   ),
 }));
@@ -239,106 +238,6 @@ describe('AppShell', () => {
 
     mockConverseState = {
       turns: [makeTurn({id: 'turn-1', agentResponse: {text: 'Hello!'} as any})],
-      activeTurn: undefined,
-      isStreaming: false,
-    };
-
-    rerender(<AppShell />);
-    expect(screen.getByTestId('conversation-page')).toBeDefined();
-
-    const backBtn = screen.getByTestId('back-btn');
-    expect(backBtn.getAttribute('disabled')).not.toBeNull();
-  });
-
-  it('"Reset to landing" disposes interface, clears controller, and transitions to landing', () => {
-    const mockDispose = vi.fn();
-    const routedInterface = {
-      useCase: 'search' as const,
-      interface: {dispose: mockDispose},
-    };
-
-    mockConverseState = {
-      turns: [makeTurn({id: 'turn-1', routedInterface: routedInterface as any})],
-      activeTurn: undefined,
-      isStreaming: false,
-    };
-
-    const {rerender} = render(<AppShell />);
-    expect(screen.getByTestId('search-results-page')).toBeDefined();
-
-    act(() => {
-      screen.getByTestId('search-submit-btn').click();
-    });
-
-    mockConverseState = {
-      turns: [
-        makeTurn({id: 'turn-1', routedInterface: routedInterface as any}),
-        makeTurn({id: 'turn-2', agentResponse: {text: 'Hello!'} as any}),
-      ],
-      activeTurn: undefined,
-      isStreaming: false,
-    };
-
-    rerender(<AppShell />);
-    expect(screen.getByTestId('conversation-page')).toBeDefined();
-
-    act(() => {
-      screen.getByTestId('reset-btn').click();
-    });
-
-    expect(mockDispose).toHaveBeenCalledTimes(1);
-    expect(mockClear).toHaveBeenCalledTimes(1);
-    expect(screen.getByTestId('landing-page')).toBeDefined();
-  });
-
-  it('after reset, persisted interface ref is null (back button disabled on next conversation)', () => {
-    const mockDispose = vi.fn();
-    const routedInterface = {
-      useCase: 'search' as const,
-      interface: {dispose: mockDispose},
-    };
-
-    mockConverseState = {
-      turns: [makeTurn({id: 'turn-1', routedInterface: routedInterface as any})],
-      activeTurn: undefined,
-      isStreaming: false,
-    };
-
-    const {rerender} = render(<AppShell />);
-    expect(screen.getByTestId('search-results-page')).toBeDefined();
-
-    act(() => {
-      screen.getByTestId('search-submit-btn').click();
-    });
-
-    mockConverseState = {
-      turns: [
-        makeTurn({id: 'turn-1', routedInterface: routedInterface as any}),
-        makeTurn({id: 'turn-2', agentResponse: {text: 'Hello!'} as any}),
-      ],
-      activeTurn: undefined,
-      isStreaming: false,
-    };
-
-    rerender(<AppShell />);
-    expect(screen.getByTestId('conversation-page')).toBeDefined();
-
-    act(() => {
-      screen.getByTestId('reset-btn').click();
-    });
-
-    expect(screen.getByTestId('landing-page')).toBeDefined();
-
-    act(() => {
-      screen.getByTestId('submit-btn').click();
-    });
-
-    mockConverseState = {
-      turns: [
-        makeTurn({id: 'turn-1', routedInterface: routedInterface as any}),
-        makeTurn({id: 'turn-2', agentResponse: {text: 'Hello!'} as any}),
-        makeTurn({id: 'turn-3', agentResponse: {text: 'World!'} as any}),
-      ],
       activeTurn: undefined,
       isStreaming: false,
     };

@@ -1,3 +1,5 @@
+import {vi} from 'vitest';
+import type {Mock} from 'vitest';
 import {
   CoveoSearchPageClient,
   EventDescription,
@@ -19,8 +21,8 @@ import {mockFetch, lastCallBody} from '../../tests/fetchMock';
 import doNotTrack from '../donottrack';
 import {Cookie} from '../cookieutils';
 
-jest.mock('../donottrack', () => {
-  const doNotTrack = jest.fn();
+vi.mock('../donottrack', () => {
+  const doNotTrack = vi.fn();
   return {
     __esModule: true,
     default: doNotTrack,
@@ -1509,19 +1511,19 @@ describe('SearchPageClient', () => {
   });
 
   it('should disable analytics when doNotTrack is enabled', async () => {
-    (doNotTrack as jest.Mock).mockImplementationOnce(() => true);
+    (doNotTrack as Mock).mockImplementationOnce(() => true);
 
     const c = new CoveoSearchPageClient({}, provider);
     expect(c.coveoAnalyticsClient instanceof NoopAnalytics).toBe(true);
   });
 
   it('keeps a real analytics client under doNotTrack when disableBrowserPrivacySignals is true', () => {
-    (doNotTrack as jest.Mock).mockImplementation(() => true);
+    (doNotTrack as Mock).mockImplementation(() => true);
 
     const c = new CoveoSearchPageClient({disableBrowserPrivacySignals: true}, provider);
     expect(c.coveoAnalyticsClient instanceof CoveoAnalyticsClient).toBe(true);
 
-    (doNotTrack as jest.Mock).mockReset();
+    (doNotTrack as Mock).mockReset();
   });
 
   it('still disables analytics when enableAnalytics is false even if disableBrowserPrivacySignals is true', () => {

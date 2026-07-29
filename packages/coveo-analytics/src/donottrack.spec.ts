@@ -1,5 +1,21 @@
+import {vi} from 'vitest';
+
+// `vi.mock` is hoisted, so the detector's answers are held in mutable state that
+// each test rewrites. The Jest version instead called `jest.resetModules()` and
+// re-`require`d the module under test, which ESM does not allow.
+const detectorState = vi.hoisted(() => ({
+  hasNavigator: false,
+  hasWindow: false,
+}));
+
+vi.mock('./detector', () => ({
+  hasNavigator: () => detectorState.hasNavigator,
+  hasWindow: () => detectorState.hasWindow,
+}));
+
+import {doNotTrack, shouldDisableAnalyticsForPrivacy} from './donottrack';
+
 describe('doNotTrack', () => {
-  let doNotTrack: () => boolean;
   function initModule(
     hasNav: boolean,
     hasWin: boolean,
@@ -10,11 +26,8 @@ describe('doNotTrack', () => {
       windowDoNotTrack?: any;
     }
   ) {
-    jest.resetModules();
-    jest.mock('./detector', () => ({
-      hasNavigator: () => hasNav,
-      hasWindow: () => hasWin,
-    }));
+    detectorState.hasNavigator = hasNav;
+    detectorState.hasWindow = hasWin;
     if (hasNav) {
       Object.defineProperty(<any>navigator, 'globalPrivacyControl', {
         get() {
@@ -43,7 +56,6 @@ describe('doNotTrack', () => {
         configurable: true,
       });
     }
-    doNotTrack = require('./donottrack').doNotTrack;
   }
   describe('without a Navigator and without window', () => {
     it('should be false', () => {
@@ -144,14 +156,9 @@ describe('doNotTrack', () => {
 });
 
 describe('shouldDisableAnalyticsForPrivacy', () => {
-  let shouldDisableAnalyticsForPrivacy: (disableBrowserPrivacySignals?: boolean) => boolean;
-
   function initModule(signal: {navigatorGlobalPrivacyControl?: any; navigatorDoNotTrack?: any}) {
-    jest.resetModules();
-    jest.mock('./detector', () => ({
-      hasNavigator: () => true,
-      hasWindow: () => true,
-    }));
+    detectorState.hasNavigator = true;
+    detectorState.hasWindow = true;
     Object.defineProperty(<any>navigator, 'globalPrivacyControl', {
       get() {
         return signal.navigatorGlobalPrivacyControl;
@@ -176,7 +183,6 @@ describe('shouldDisableAnalyticsForPrivacy', () => {
       },
       configurable: true,
     });
-    shouldDisableAnalyticsForPrivacy = require('./donottrack').shouldDisableAnalyticsForPrivacy;
   }
 
   it('disables when DNT is active and the option is omitted', () => {

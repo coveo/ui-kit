@@ -150,3 +150,16 @@
   font-weight: 700;
   color: var(--color-text-primary);
 }
+
+.targetable {
+  cursor: crosshair;
+}
+
+.targetable:hover {
+  box-shadow: 0 0 0 2px var(--color-border-active);
+}
+
+.selected {
+  box-shadow: 0 0 0 2px var(--color-border-active);
+  opacity: 0.7;
+}

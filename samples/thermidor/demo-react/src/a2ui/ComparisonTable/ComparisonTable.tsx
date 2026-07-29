@@ -1,4 +1,5 @@
 import {useState} from 'react';
+import {useTargeting} from '../../context/targeting.js';
 import {formatPrice} from '../../utils.js';
 import styles from './ComparisonTable.module.css';
 import type {ParsedSurface} from '../types.js';
@@ -21,6 +22,8 @@ interface ComparisonItem {
 
 export function A2UIComparisonTable({surface}: A2UIComparisonTableProps) {
   const heading = (surface.componentProps.heading as {literalString?: string})?.literalString ?? '';
+  const targeting = useTargeting();
+  const isTargetable = targeting?.isTargeting ?? false;
 
   const attributes = (surface.componentProps.attributes as string[]) ?? [
     'standout',
@@ -68,28 +71,64 @@ export function A2UIComparisonTable({surface}: A2UIComparisonTableProps) {
             ‹
           </button>
         )}
-        <div className={styles.table}>
-          <div className={styles.row}>
-            <div className={styles.labelCell}>Product</div>
-            {visibleItems.map((item, i) => (
-              <div key={item.ec_product_id ?? i} className={styles.productCell}>
-                {item.ec_image && (
-                  <img
-                    className={styles.productImage}
-                    src={item.ec_image}
-                    alt={item.ec_name ?? 'Product'}
-                    loading="lazy"
-                  />
-                )}
-                <span className={styles.productName}>{item.ec_name}</span>
-              </div>
-            ))}
+        <div className={styles.table} role="table" aria-label={heading || 'Product comparison'}>
+          <div className={styles.row} role="row">
+            <div className={styles.labelCell} role="columnheader">
+              Product
+            </div>
+            {visibleItems.map((item, i) => {
+              const productId = item.ec_product_id ?? '';
+              const isSelected = targeting?.selectedProductIds.has(productId) ?? false;
+
+              const cellClasses = [
+                styles.productCell,
+                isTargetable ? styles.targetable : '',
+                isSelected ? styles.selected : '',
+              ]
+                .filter(Boolean)
+                .join(' ');
+
+              const interactiveProps = isTargetable
+                ? {
+                    role: 'button' as const,
+                    tabIndex: 0,
+                    onClick: () =>
+                      targeting!.onProductTargeted(productId, item.ec_name ?? '', item.ec_image),
+                    onKeyDown: (e: React.KeyboardEvent) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        targeting!.onProductTargeted(productId, item.ec_name ?? '', item.ec_image);
+                      }
+                    },
+                  }
+                : {};
+
+              return (
+                <div key={item.ec_product_id ?? i} className={cellClasses} {...interactiveProps}>
+                  {item.ec_image && (
+                    <img
+                      className={styles.productImage}
+                      src={item.ec_image}
+                      alt={item.ec_name ?? 'Product'}
+                      loading="lazy"
+                    />
+                  )}
+                  <span className={styles.productName}>{item.ec_name}</span>
+                </div>
+              );
+            })}
           </div>
 
-          <div className={styles.row}>
-            <div className={styles.labelCell}>Price</div>
+          <div className={styles.row} role="row">
+            <div className={styles.labelCell} role="rowheader">
+              Price
+            </div>
             {visibleItems.map((item, i) => (
-              <div key={`price-${item.ec_product_id ?? i}`} className={styles.valueCell}>
+              <div
+                key={`price-${item.ec_product_id ?? i}`}
+                className={styles.valueCell}
+                role="cell"
+              >
                 <span className={styles.priceValue}>
                   {item.ec_price !== undefined ? formatPrice(item.ec_price) : '—'}
                 </span>
@@ -98,12 +137,18 @@ export function A2UIComparisonTable({surface}: A2UIComparisonTableProps) {
           </div>
 
           {displayAttributes.map((attr) => (
-            <div key={attr} className={styles.row}>
-              <div className={styles.labelCell}>{attributeLabels[attr] ?? attr}</div>
+            <div key={attr} className={styles.row} role="row">
+              <div className={styles.labelCell} role="rowheader">
+                {attributeLabels[attr] ?? attr}
+              </div>
               {visibleItems.map((item, i) => {
                 const value = item[attr];
                 return (
-                  <div key={`${attr}-${item.ec_product_id ?? i}`} className={styles.valueCell}>
+                  <div
+                    key={`${attr}-${item.ec_product_id ?? i}`}
+                    className={styles.valueCell}
+                    role="cell"
+                  >
                     {typeof value === 'string' ? value : '—'}
                   </div>
                 );

@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The Search Results Page is the primary view for displaying product search results in the `demo-react` Thermidor sample application. When the backend routes a user prompt as a commerce search or search query (via `ConverseController`), the app transitions to this page. It presents a three-column layout with a compact header (PromptInput only), a sidebar placeholder for future facets, and a main content area with a product grid and pagination controls. The page uses the persisted `RoutedInterface` from the AppShell to build `ProductListController` and `PaginationController` instances.
+The Search Results Page is the primary view for displaying product search results in the `demo-react` Thermidor sample application. When the backend routes a user prompt as a commerce search or search query (via `ConverseController`), the app transitions to this page. It presents a three-column layout (on desktop) with a compact header (PromptInput + back navigation), a sidebar placeholder for future facets, and a main content area with a product grid and pagination controls. On mobile (below the lg breakpoint of 1024px), the layout collapses to a single column with a modal for sort/filter controls. The page uses the persisted `RoutedInterface` from the AppShell to build `ProductListController` and `PaginationController` instances, and receives the current query via props.
 
 ## Glossary
 

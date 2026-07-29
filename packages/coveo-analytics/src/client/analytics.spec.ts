@@ -1,3 +1,4 @@
+import {vi} from 'vitest';
 import {
   ClickEventRequest,
   CustomEventRequest,
@@ -17,11 +18,14 @@ import {Cookie} from '../cookieutils';
 import {CoveoLinkParam} from '../plugins/link';
 
 const aVisitorId = '123';
-jest.mock('uuid', () => ({
-  v4: () => aVisitorId,
-  validate: jest.requireActual('uuid').validate,
-  v5: jest.requireActual('uuid').v5,
-}));
+vi.mock('uuid', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('uuid')>();
+  return {
+    v4: () => aVisitorId,
+    validate: actual.validate,
+    v5: actual.v5,
+  };
+});
 
 const {fetchMock, fetchMockBeforeEach} = mockFetch();
 
@@ -69,7 +73,7 @@ describe('Analytics', () => {
   let client: CoveoAnalyticsClient;
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     fetchMockBeforeEach();
 
     new CookieStorage().removeItem('visitorId');
@@ -604,7 +608,7 @@ describe('Analytics', () => {
 
   it('should execute before send hooks passed as option', async () => {
     mockFetchRequestForEventType(EventType.search);
-    const spy = jest.fn((_, p) => p);
+    const spy = vi.fn((_, p) => p);
     const searchEventPayload = {queryText: 'potato'};
     await new CoveoAnalyticsClient({
       token: aToken,
@@ -665,7 +669,7 @@ describe('Analytics', () => {
 
 describe('doNotTrack', () => {
   it('should do business as usual if doNotTrack returns false', () => {
-    jest.spyOn(doNotTrack, 'shouldDisableAnalyticsForPrivacy').mockImplementation(() => false);
+    vi.spyOn(doNotTrack, 'shouldDisableAnalyticsForPrivacy').mockImplementation(() => false);
 
     let client = new CoveoAnalyticsClient({});
 
@@ -674,7 +678,7 @@ describe('doNotTrack', () => {
   });
 
   it('should honor doNotTrack', () => {
-    jest.spyOn(doNotTrack, 'shouldDisableAnalyticsForPrivacy').mockImplementation(() => true);
+    vi.spyOn(doNotTrack, 'shouldDisableAnalyticsForPrivacy').mockImplementation(() => true);
 
     let client = new CoveoAnalyticsClient({});
 
@@ -683,7 +687,7 @@ describe('doNotTrack', () => {
   });
 
   it('should not clear existing cookies', async () => {
-    jest.spyOn(doNotTrack, 'shouldDisableAnalyticsForPrivacy').mockImplementation(() => true);
+    vi.spyOn(doNotTrack, 'shouldDisableAnalyticsForPrivacy').mockImplementation(() => true);
     Cookie.set('coveo_visitorId', aVisitorId);
     expect(Cookie.get('coveo_visitorId')).toBe(aVisitorId);
 
@@ -746,7 +750,7 @@ describe('clientId from link', () => {
     client = new CoveoAnalyticsClient({});
     // need to clear existing clientIds
     client.clear();
-    jest.spyOn(doNotTrack, 'shouldDisableAnalyticsForPrivacy').mockImplementation(() => false);
+    vi.spyOn(doNotTrack, 'shouldDisableAnalyticsForPrivacy').mockImplementation(() => false);
   });
 
   it('will extract a clientId from a query param if the referrer matches all and it is not expired', async () => {
@@ -833,7 +837,7 @@ describe('clientId from link', () => {
 
   it('will not extract a clientId from a query param if DNT is enabled', async () => {
     client.setAcceptedLinkReferrers(['*']);
-    jest.spyOn(doNotTrack, 'shouldDisableAnalyticsForPrivacy').mockImplementation(() => true);
+    vi.spyOn(doNotTrack, 'shouldDisableAnalyticsForPrivacy').mockImplementation(() => true);
     const linkString = new CoveoLinkParam(forcedUUID, Date.now());
     navigateTo('http://my.receivingdomain.com/?cvo_cid=' + linkString.toString());
     expect(await client.getCurrentVisitorId()).not.toBe(null);
