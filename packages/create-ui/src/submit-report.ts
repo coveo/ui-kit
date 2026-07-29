@@ -68,20 +68,8 @@ function scrubEventMessages(event: ErrorEvent): void {
   }
 }
 
-// Older schema-compatible reports may contain the CLI's full install path,
-// which — when run through `npm create` / npx — lives under
-// `node_modules/@coveo/create-ui`. Sentry's server-side grouping
-// (`normalize_stacktraces_for_grouping`) marks anything under `node_modules` as
-// a system frame and collapses it, overriding whatever `in_app` the SDK sends.
-// Repeating the capture-side `app:///…` normalization here keeps those reports
-// expanded and grouped while stripping any machine-specific install prefix.
-const NODE_MODULES = /[/\\]node_modules[/\\]/;
-
-// `abs_path` is the field Sentry's server matches on, so own frames rewrite
-// both it and `filename`, and drop `module` so no `node_modules`-derived name
-// survives. Every other frame keeps its structure with the home directory
-// redacted to `~`; only Node internals and real dependencies stay out of app.
 function normalizeFrame(frame: StackFrame): void {
+  const nodeModules = /[/\\]node_modules[/\\]/;
   const source = frame.abs_path ?? frame.filename;
   const appPath = source === undefined ? undefined : ownPackageAppPath(source);
   if (appPath !== undefined) {
@@ -94,7 +82,7 @@ function normalizeFrame(frame: StackFrame): void {
   frame.filename = redactOptional(frame.filename);
   frame.abs_path = redactOptional(frame.abs_path);
   frame.module = redactOptional(frame.module);
-  frame.in_app = source !== undefined && !source.startsWith('node:') && !NODE_MODULES.test(source);
+  frame.in_app = source !== undefined && !source.startsWith('node:') && !nodeModules.test(source);
 }
 
 function normalizeFrames(event: ErrorEvent): void {
@@ -109,10 +97,6 @@ async function readReport(path: string): Promise<CrashReport> {
   return parseCrashReport(await readFile(path, 'utf8'));
 }
 
-// Rebuild the captured error and its scrubbed cause chain as linked Error
-// instances so `linkedErrorsIntegration` expands them into `exception.values`,
-// where the `beforeSend` scrubbers already run on every entry. `stack` is set
-// verbatim (undefined when absent) so no submit-time frames are fabricated.
 function reconstructError(info: CrashErrorInfo, depth = 0): Error {
   const error = new Error(info.message);
   error.name = info.name;
@@ -123,8 +107,6 @@ function reconstructError(info: CrashErrorInfo, depth = 0): Error {
   return error;
 }
 
-type SentryApi = typeof import('@sentry/node');
-
 const SPAN_OP_BY_PHASE: Record<CrashPhase, string> = {
   unknown: 'create-ui.step',
   input: 'input.resolve',
@@ -134,7 +116,11 @@ const SPAN_OP_BY_PHASE: Record<CrashPhase, string> = {
   complete: 'create-ui.complete',
 };
 
-function reconstructTrace(Sentry: SentryApi, report: CrashReport, captureCrash: () => void): void {
+function reconstructTrace(
+  Sentry: typeof import('@sentry/node'),
+  report: CrashReport,
+  captureCrash: () => void
+): void {
   const {spans} = report.diagnostics;
   Sentry.startSpanManual(
     {
