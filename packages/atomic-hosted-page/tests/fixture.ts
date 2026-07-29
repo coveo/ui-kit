@@ -7,6 +7,8 @@ interface Fixtures {
   network: NetworkFixture;
 }
 
+const platformHost = /\.org\.coveo\.com$/;
+
 export const test = base.extend<Fixtures>({
   network: [
     async ({context}, use) => {
@@ -14,7 +16,7 @@ export const test = base.extend<Fixtures>({
         context,
         handlers: [...hostedPageHandlers, ...searchHandlers],
         onUnhandledRequest: ({url}, print) => {
-          if (new URL(url).hostname.endsWith('org.coveo.com')) {
+          if (platformHost.test(new URL(url).hostname)) {
             print.error();
           }
         },
