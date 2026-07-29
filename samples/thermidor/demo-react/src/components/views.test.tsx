@@ -12,6 +12,8 @@ function createMockController(state: Record<string, unknown> = {}) {
       cb();
       return () => {};
     },
+    sortBy: vi.fn(),
+    isSortedBy: vi.fn(() => false),
   };
 }
 
@@ -27,6 +29,7 @@ vi.mock('@coveo/thermidor', async (importOriginal) => {
         totalCount: 0,
         totalPages: 0,
       }),
+    buildSortController: () => createMockController({appliedSort: null, availableSorts: []}),
     buildSearchBoxController: () => createMockController({query: ''}),
   };
 });

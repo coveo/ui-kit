@@ -13,7 +13,7 @@ import {useBuildController} from '../../hooks/use-build-controller.js';
 import {ProductGrid} from './ProductGrid/ProductGrid.js';
 import {Pagination} from './Pagination/Pagination.js';
 import {QuerySummaryPlaceholder} from './QuerySummaryPlaceholder/QuerySummaryPlaceholder.js';
-import {SortPlaceholder} from './SortPlaceholder/SortPlaceholder.js';
+import {Sort} from './Sort/Sort.js';
 import {PageSizeSelector} from './PageSizeSelector/PageSizeSelector.js';
 import styles from './SearchResultsPage.module.css';
 
@@ -99,7 +99,7 @@ function SearchResultsPageInner({onSubmit, isStreaming, routedInterface}: Search
             pageSize={paginationState.pageSize ?? 0}
             productCount={productListState.products?.length ?? 0}
           />
-          <SortPlaceholder controller={sortController} />
+          <Sort controller={sortController} />
         </div>
         <ProductGrid controller={productListController} />
         <div className={styles.bottomRow}>
