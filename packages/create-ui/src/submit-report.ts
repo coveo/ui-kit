@@ -68,9 +68,8 @@ function scrubEventMessages(event: ErrorEvent): void {
   }
 }
 
-const NODE_MODULES = /[/\\]node_modules[/\\]/;
-
 function normalizeFrame(frame: StackFrame): void {
+  const nodeModules = /[/\\]node_modules[/\\]/;
   const source = frame.abs_path ?? frame.filename;
   const appPath = source === undefined ? undefined : ownPackageAppPath(source);
   if (appPath !== undefined) {
@@ -83,7 +82,7 @@ function normalizeFrame(frame: StackFrame): void {
   frame.filename = redactOptional(frame.filename);
   frame.abs_path = redactOptional(frame.abs_path);
   frame.module = redactOptional(frame.module);
-  frame.in_app = source !== undefined && !source.startsWith('node:') && !NODE_MODULES.test(source);
+  frame.in_app = source !== undefined && !source.startsWith('node:') && !nodeModules.test(source);
 }
 
 function normalizeFrames(event: ErrorEvent): void {
