@@ -1,7 +1,5 @@
 import {isNonNegativeNumber, isOneOf} from './validation.js';
 
-export const MAX_CRASH_SPANS = 16;
-
 const CRASH_PHASES = [
   'unknown',
   'input',
@@ -13,10 +11,6 @@ const CRASH_PHASES = [
 
 export type CrashPhase = (typeof CRASH_PHASES)[number];
 
-// Default human-readable span description per phase. Populates the Sentry trace
-// waterfall so each span reads as an action rather than echoing its op, and acts
-// as a fallback description when a crash happens mid-phase before the owner could
-// name the span (e.g. a crash during the download shows "Download template").
 const CRASH_PHASE_LABELS: Record<CrashPhase, string> = {
   unknown: 'Scaffold',
   input: 'Resolve inputs',
@@ -28,16 +22,9 @@ const CRASH_PHASE_LABELS: Record<CrashPhase, string> = {
 
 interface CrashSpan {
   op: CrashPhase;
-  // Human-readable description for the trace waterfall so a span reads as an
-  // action (e.g. `project.create — Create project`) instead of echoing its op.
-  // Defaults to the phase label; the scaffold layer overrides the download span
-  // with the resolved package.
   name: string;
   startedOn: string;
   endedOn: string;
-  // Structured, non-PII attributes set by the phase that owns the span (e.g. the
-  // downloaded package). Carried as data so the Sentry projection needs no
-  // per-span special casing.
   attributes?: Record<string, string>;
 }
 
@@ -99,7 +86,6 @@ export function isCrashDiagnostics(value: unknown): value is CrashDiagnostics {
     isOneOf(candidate.phase, CRASH_PHASES) &&
     isNonNegativeNumber(candidate.phaseElapsedMs) &&
     Array.isArray(candidate.spans) &&
-    candidate.spans.length <= MAX_CRASH_SPANS &&
     candidate.spans.every(isCrashSpan) &&
     isNonNegativeNumber(candidate.runtime?.processUptimeMs)
   );
@@ -113,9 +99,6 @@ function transitionToCrashPhase(phase: CrashPhase, now: number): void {
   state.phase = phase;
   state.phaseStartedAtMs = now;
   state.phaseSpans.push({phase, startedAtMs: now});
-  if (state.phaseSpans.length > MAX_CRASH_SPANS) {
-    state.phaseSpans.splice(0, state.phaseSpans.length - MAX_CRASH_SPANS);
-  }
 }
 
 export function initializeCrashDiagnostics(): void {

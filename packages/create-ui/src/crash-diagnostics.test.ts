@@ -3,7 +3,6 @@ import {
   describeActiveCrashSpan,
   initializeCrashDiagnostics,
   isCrashDiagnostics,
-  MAX_CRASH_SPANS,
   resetCrashDiagnostics,
   snapshotCrashDiagnostics,
   startCrashPhase,
@@ -75,18 +74,6 @@ describe('crash diagnostics', () => {
     // special-case.
     expect(input?.name).toBe('Resolve inputs');
     expect(input?.attributes).toBeUndefined();
-  });
-
-  it('keeps only the newest bounded spans', () => {
-    initializeCrashDiagnostics();
-    for (let index = 0; index < MAX_CRASH_SPANS + 5; index++) {
-      vi.advanceTimersByTime(1);
-      startCrashPhase('template-download');
-    }
-
-    const {spans} = snapshotCrashDiagnostics();
-
-    expect(spans).toHaveLength(MAX_CRASH_SPANS);
   });
 
   it('returns an unknown zero-duration phase before initialization', () => {
