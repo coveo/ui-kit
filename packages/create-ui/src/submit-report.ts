@@ -108,8 +108,6 @@ function reconstructError(info: CrashErrorInfo, depth = 0): Error {
   return error;
 }
 
-type SentryApi = typeof import('@sentry/node');
-
 const SPAN_OP_BY_PHASE: Record<CrashPhase, string> = {
   unknown: 'create-ui.step',
   input: 'input.resolve',
@@ -119,7 +117,11 @@ const SPAN_OP_BY_PHASE: Record<CrashPhase, string> = {
   complete: 'create-ui.complete',
 };
 
-function reconstructTrace(Sentry: SentryApi, report: CrashReport, captureCrash: () => void): void {
+function reconstructTrace(
+  Sentry: typeof import('@sentry/node'),
+  report: CrashReport,
+  captureCrash: () => void
+): void {
   const {spans} = report.diagnostics;
   Sentry.startSpanManual(
     {
