@@ -1,3 +1,5 @@
+import {vi} from 'vitest';
+import type {Mock} from 'vitest';
 import {lastCallBody, mockFetch} from '../../tests/fetchMock';
 import CoveoAnalyticsClient from '../client/analytics';
 import {NoopAnalytics} from '../client/noopAnalytics';
@@ -30,10 +32,10 @@ const expectedBaseCaseMetadata = {
   CaseSubject: 'test subject',
 };
 
-jest.mock('../donottrack', () => {
+vi.mock('../donottrack', () => {
   return {
-    default: jest.fn(),
-    doNotTrack: jest.fn(),
+    default: vi.fn(),
+    doNotTrack: vi.fn(),
   };
 });
 
@@ -1758,7 +1760,7 @@ describe('InsightClient', () => {
   });
 
   it('should disable analytics when doNotTrack is enabled', async () => {
-    (doNotTrack as jest.Mock).mockImplementationOnce(() => true);
+    (doNotTrack as Mock).mockImplementationOnce(() => true);
 
     const c = new CoveoInsightClient({}, provider);
     expect(c.coveoAnalyticsClient instanceof NoopAnalytics).toBe(true);
