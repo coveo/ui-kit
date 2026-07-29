@@ -118,4 +118,57 @@ describe('buildBackendSearchBoxController', () => {
       query: 'blue hat',
     });
   });
+
+  it('submit includes pinnedProducts in execute_search action', () => {
+    const fullEngine = getFullEngine(engine);
+    const actions = getOrCreateBackendSurfacesActions(TEST_ID);
+
+    fullEngine.mutate(
+      actions.createSurface({
+        surfaceId: 'ui-1',
+        type: 'product_search',
+        display: 'main',
+        state: {query: 'red shirt'},
+      })
+    );
+
+    const controller = buildBackendSearchBoxController({
+      interface: generativeInterface,
+      converseController,
+      surfaceId: 'ui-1',
+    });
+
+    controller.submit({pinnedProducts: ['pid-1', 'pid-2']});
+
+    expect(converseController.sendAction).toHaveBeenCalledWith({
+      type: 'execute_search',
+      query: 'red shirt',
+      pinnedProducts: ['pid-1', 'pid-2'],
+    });
+  });
+
+  it('submit without pinnedProducts does not include the field', () => {
+    const fullEngine = getFullEngine(engine);
+    const actions = getOrCreateBackendSurfacesActions(TEST_ID);
+
+    fullEngine.mutate(
+      actions.createSurface({
+        surfaceId: 'ui-1',
+        type: 'product_search',
+        display: 'main',
+        state: {query: 'shoes'},
+      })
+    );
+
+    const controller = buildBackendSearchBoxController({
+      interface: generativeInterface,
+      converseController,
+      surfaceId: 'ui-1',
+    });
+
+    controller.submit();
+
+    const action = (converseController.sendAction as any).mock.calls[0][0];
+    expect(action).not.toHaveProperty('pinnedProducts');
+  });
 });

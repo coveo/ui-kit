@@ -13,6 +13,7 @@ export interface CoveoConversationEndpointRequest {
   clientId?: string;
   message?: string;
   action?: Record<string, unknown>;
+  pinnedProducts?: string[];
   context: {
     user: {
       userAgent?: string | null;

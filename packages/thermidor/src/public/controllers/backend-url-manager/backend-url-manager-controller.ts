@@ -10,7 +10,7 @@ import type {
 import type {Controller} from '../controller-types.js';
 
 export interface BackendUrlManagerController extends Controller<BackendUrlManagerControllerState> {
-  synchronize(fragment: string): void;
+  synchronize(fragment: string, options?: {pinnedProducts?: string[]}): void;
 }
 
 export interface BackendUrlManagerControllerState {
@@ -246,7 +246,7 @@ export const buildBackendUrlManagerController = (
       });
     },
 
-    synchronize(fragment) {
+    synchronize(fragment, syncOptions) {
       const parsed = deserializeFragment(fragment);
 
       previousFragment = fragment;
@@ -314,6 +314,9 @@ export const buildBackendUrlManagerController = (
         facets: facets.length ? facets : undefined,
         page: parsed.page ?? 0,
         sort: parsed.sort,
+        ...(syncOptions?.pinnedProducts?.length
+          ? {pinnedProducts: syncOptions.pinnedProducts}
+          : {}),
       };
 
       options.converseController.sendAction(action);

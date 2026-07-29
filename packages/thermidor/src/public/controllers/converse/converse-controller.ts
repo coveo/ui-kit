@@ -15,7 +15,7 @@ import type {GenerativeInterface} from '@/src/public/interfaces/generative.js';
 import type {Controller} from '../controller-types.js';
 
 export type BackendSurfaceAction =
-  | {type: 'execute_search'; query: string}
+  | {type: 'execute_search'; query: string; pinnedProducts?: string[]}
   | {type: 'toggle_facet'; surfaceId: string; facetId: string; value: string}
   | {
       type: 'toggle_exclude_facet';
@@ -83,6 +83,7 @@ export type BackendSurfaceAction =
       page?: number;
       pageSize?: number;
       sort?: unknown;
+      pinnedProducts?: string[];
     }
   | {
       type: 'cart_action';
@@ -95,7 +96,7 @@ export type BackendSurfaceAction =
   | {type: 'select_products'; surfaceId: string; productIds: string[]};
 
 export interface ConverseController extends Controller<ConverseControllerState> {
-  submit(options: {prompt: string}): void;
+  submit(options: {prompt: string; pinnedProducts?: string[]}): void;
   sendAction(action: BackendSurfaceAction): void;
   selectTurn(options: {id: string}): void;
   retry(options: {id: string}): void;
@@ -248,7 +249,7 @@ export const buildConverseController = (
   );
 
   return {
-    submit({prompt}) {
+    submit({prompt, pinnedProducts}) {
       if (!prompt.trim()) {
         return;
       }
@@ -256,7 +257,7 @@ export const buildConverseController = (
       if (currentState.isStreaming) {
         return;
       }
-      runtime.submit(prompt);
+      runtime.submit(prompt, pinnedProducts);
     },
 
     sendAction(action) {

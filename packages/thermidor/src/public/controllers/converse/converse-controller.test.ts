@@ -151,7 +151,7 @@ describe('buildConverseController', () => {
 
       controller.submit({prompt: 'hello world'});
 
-      expect(mockSubmit).toHaveBeenCalledWith('hello world');
+      expect(mockSubmit).toHaveBeenCalledWith('hello world', undefined);
       expect(mockSubmit).toHaveBeenCalledTimes(1);
     });
 
@@ -195,7 +195,26 @@ describe('buildConverseController', () => {
 
       controller.submit({prompt: 'new prompt'});
 
-      expect(mockSubmit).toHaveBeenCalledWith('new prompt');
+      expect(mockSubmit).toHaveBeenCalledWith('new prompt', undefined);
+    });
+
+    it('forwards pinnedProducts to the runtime', () => {
+      const controller = buildController();
+
+      controller.submit({
+        prompt: 'red shirt',
+        pinnedProducts: ['pid-1', 'pid-2'],
+      });
+
+      expect(mockSubmit).toHaveBeenCalledWith('red shirt', ['pid-1', 'pid-2']);
+    });
+
+    it('forwards undefined pinnedProducts when not provided', () => {
+      const controller = buildController();
+
+      controller.submit({prompt: 'blue hat'});
+
+      expect(mockSubmit).toHaveBeenCalledWith('blue hat', undefined);
     });
   });
 
@@ -233,6 +252,42 @@ describe('buildConverseController', () => {
       });
 
       expect(mockSubmitAction).not.toHaveBeenCalled();
+    });
+
+    it('forwards execute_search with pinnedProducts', () => {
+      const controller = buildController();
+
+      controller.sendAction({
+        type: 'execute_search',
+        query: 'red shirt',
+        pinnedProducts: ['pid-1', 'pid-2'],
+      });
+
+      expect(mockSubmitAction).toHaveBeenCalledWith({
+        type: 'execute_search',
+        query: 'red shirt',
+        pinnedProducts: ['pid-1', 'pid-2'],
+      });
+    });
+
+    it('forwards restore_state with pinnedProducts', () => {
+      const controller = buildController();
+
+      controller.sendAction({
+        type: 'restore_state',
+        surfaceId: 'ui-1',
+        query: 'shoes',
+        page: 0,
+        pinnedProducts: ['pid-3'],
+      });
+
+      expect(mockSubmitAction).toHaveBeenCalledWith({
+        type: 'restore_state',
+        surfaceId: 'ui-1',
+        query: 'shoes',
+        page: 0,
+        pinnedProducts: ['pid-3'],
+      });
     });
   });
 

@@ -238,6 +238,41 @@ describe('buildBackendUrlManagerController', () => {
     });
   });
 
+  it('synchronize with pinnedProducts includes them in restore_state', () => {
+    const controller = buildBackendUrlManagerController({
+      interface: generativeInterface,
+      converseController,
+      surfaceId: 'ui-1',
+    });
+
+    controller.synchronize('q=red+shirt&page=0&sort=relevance', {
+      pinnedProducts: ['pid-A', 'pid-B'],
+    });
+
+    expect(converseController.sendAction).toHaveBeenCalledWith({
+      type: 'restore_state',
+      surfaceId: 'ui-1',
+      query: 'red shirt',
+      facets: undefined,
+      page: 0,
+      sort: {sortCriteria: 'relevance'},
+      pinnedProducts: ['pid-A', 'pid-B'],
+    });
+  });
+
+  it('synchronize without pinnedProducts does not include the field', () => {
+    const controller = buildBackendUrlManagerController({
+      interface: generativeInterface,
+      converseController,
+      surfaceId: 'ui-1',
+    });
+
+    controller.synchronize('q=shoes&page=1&sort=relevance');
+
+    const action = (converseController.sendAction as any).mock.calls[0][0];
+    expect(action).not.toHaveProperty('pinnedProducts');
+  });
+
   it('subscriber fires when responseId changes and fragment differs', () => {
     const fullEngine = getFullEngine(engine);
     const biActions = getOrCreateBackendSurfacesActions(TEST_ID);

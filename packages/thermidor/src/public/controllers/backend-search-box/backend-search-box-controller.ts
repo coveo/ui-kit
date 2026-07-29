@@ -6,7 +6,7 @@ import type {ConverseController} from '../converse/converse-controller.js';
 import type {Controller} from '../controller-types.js';
 
 export interface BackendSearchBoxController extends Controller<BackendSearchBoxControllerState> {
-  submit(): void;
+  submit(options?: {pinnedProducts?: string[]}): void;
 }
 
 export interface BackendSearchBoxControllerState {
@@ -43,11 +43,14 @@ export const buildBackendSearchBoxController = (
     subscribe(callback) {
       return engine.subscribe(controllerState, callback);
     },
-    submit() {
+    submit(submitOptions) {
       const {query} = engine.read(controllerState);
       options.converseController.sendAction({
         type: 'execute_search',
         query,
+        ...(submitOptions?.pinnedProducts?.length
+          ? {pinnedProducts: submitOptions.pinnedProducts}
+          : {}),
       });
     },
   };

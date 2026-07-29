@@ -128,13 +128,13 @@ export class GenerativeRuntime {
     return runtime;
   }
 
-  async submit(prompt: string): Promise<void> {
+  async submit(prompt: string, pinnedProducts?: string[]): Promise<void> {
     const tempId = generateId();
 
     this.statePort.createTurn({id: tempId, prompt, status: 'streaming'});
     this.statePort.setActiveTurnId(tempId);
 
-    await this.executeStream(tempId);
+    await this.executeStream(tempId, pinnedProducts);
   }
 
   async resubmit(turnId: string, prompt: string): Promise<void> {
@@ -196,7 +196,10 @@ export class GenerativeRuntime {
     this.statePort.setConversationToken(token);
   }
 
-  private async executeStream(turnId: string): Promise<void> {
+  private async executeStream(
+    turnId: string,
+    pinnedProducts?: string[]
+  ): Promise<void> {
     try {
       const requestFromState = this.engine.read(this.buildRequest);
       const navigatorContext = this.engine.getNavigatorContextProvider()?.();
@@ -211,6 +214,7 @@ export class GenerativeRuntime {
         clientId: navigatorContext?.clientId ?? undefined,
         conversationSessionId: this.conversationSessionId,
         conversationToken: this.conversationToken,
+        ...(pinnedProducts?.length ? {pinnedProducts} : {}),
         context: {
           user: {
             userAgent: navigatorContext?.userAgent ?? null,
