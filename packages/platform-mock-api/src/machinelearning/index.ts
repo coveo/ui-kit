@@ -1,2 +1,4 @@
+import * as userActionsResponses from './user-actions-response.js';
+
 export {MockMachineLearningApi} from './mock.js';
-export * as userActionsResponses from './user-actions-response.js';
+export {userActionsResponses};
