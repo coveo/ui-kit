@@ -1,14 +1,18 @@
 import {createSlice} from '@reduxjs/toolkit';
-import type {CommerceSearchSortCriterion} from '@/src/internal/api/commerce-search/index.js';
 import {type CacheKey, createCacheKey} from '@/src/internal/utils/index.js';
 import {getHandleInternals} from '@/src/internal/utils/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
+import type {SearchSortCriterion, CommerceSortCriterion} from './sort-types.js';
 import {getOrCreateSortActions} from './sort-actions.js';
 import {getOrCreateHydrateFromSnapshotAction} from '@/src/internal/features/generative/index.js';
+import {fromCommerceApiSort} from './sort-translate.js';
 
 export interface SortState {
-  appliedSort: CommerceSearchSortCriterion | null;
-  availableSorts: CommerceSearchSortCriterion[];
+  appliedSort:
+    | (SearchSortCriterion | CommerceSortCriterion)
+    | (SearchSortCriterion | CommerceSortCriterion)[]
+    | null;
+  availableSorts: (SearchSortCriterion | CommerceSortCriterion)[];
 }
 
 export const initialSortState: SortState = {
@@ -46,18 +50,17 @@ export function createSortSlice(
         if (!payload) {
           return;
         }
-        const sort = payload.sort as {appliedSort?: unknown; availableSorts?: unknown} | undefined;
+        const sort = payload.sort as
+          | {appliedSort?: unknown; availableSorts?: unknown[]}
+          | undefined;
         if (!sort) {
           return;
         }
-        if (
-          sort.appliedSort &&
-          typeof (sort.appliedSort as Record<string, unknown>).sortCriteria === 'string'
-        ) {
-          state.appliedSort = sort.appliedSort as CommerceSearchSortCriterion;
+        if (sort.appliedSort) {
+          state.appliedSort = fromCommerceApiSort(sort.appliedSort as any);
         }
         if (Array.isArray(sort.availableSorts)) {
-          state.availableSorts = sort.availableSorts as CommerceSearchSortCriterion[];
+          state.availableSorts = sort.availableSorts.map((s: any) => fromCommerceApiSort(s));
         }
       });
     },

@@ -5,6 +5,9 @@ import {createMemoizedStateSelector} from '@/src/internal/utils/index.js';
 import {createSelectSlice} from '@/src/internal/utils/index.js';
 import {initialSortState} from './sort-slice.js';
 import type {SortState} from './sort-slice.js';
+import type {CommerceSortCriterion, SearchSortCriterion} from './sort-types.js';
+import {toCommerceApiSort, toSearchApiCompoundSort} from './sort-translate.js';
+import type {CommerceApiSortPayload} from './sort-translate.js';
 
 type SortSelectors = ReturnType<typeof createSortSelectors>;
 
@@ -22,12 +25,28 @@ export function createSortSelectors(interfaceId: string) {
       sliceSelector,
       (state: SortState) => state.availableSorts
     ),
-    buildSortRequest: createMemoizedStateSelector(sliceSelector, (state: SortState) => {
-      if (!state.appliedSort) {
-        return [];
+    buildSortRequest: createMemoizedStateSelector(
+      sliceSelector,
+      (state: SortState): CommerceApiSortPayload | undefined => {
+        if (!state.appliedSort) {
+          return undefined;
+        }
+        const criterion = Array.isArray(state.appliedSort)
+          ? state.appliedSort[0]
+          : state.appliedSort;
+        return toCommerceApiSort(criterion as CommerceSortCriterion);
       }
-      return [state.appliedSort];
-    }),
+    ),
+    buildSearchSortCriteria: createMemoizedStateSelector(
+      sliceSelector,
+      (state: SortState): string | undefined => {
+        if (!state.appliedSort) {
+          return undefined;
+        }
+        const criteria = Array.isArray(state.appliedSort) ? state.appliedSort : [state.appliedSort];
+        return toSearchApiCompoundSort(criteria as SearchSortCriterion[]);
+      }
+    ),
   };
 }
 

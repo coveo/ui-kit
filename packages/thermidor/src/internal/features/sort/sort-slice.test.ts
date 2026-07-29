@@ -1,5 +1,10 @@
 import {describe, it, expect} from 'vitest';
-import {createSortSlice, getOrCreateSortSlice, initialSortState} from './sort-slice.js';
+import {
+  createSortSlice,
+  getOrCreateSortSlice,
+  initialSortState,
+  type SortState,
+} from './sort-slice.js';
 import {createSortActions, getOrCreateSortActions} from './sort-actions.js';
 import {createSortSelectors, getOrCreateSortSelectors} from './sort-selectors.js';
 import {getOrCreateHydrateFromSnapshotAction} from '@/src/internal/features/generative/index.js';
@@ -55,16 +60,16 @@ describe('createSortSlice', () => {
     const slice = createSortSlice('test-1', actions, hydrateAction);
 
     const payload = {
-      appliedSort: {sortCriteria: 'relevancy'},
-      availableSorts: [{sortCriteria: 'relevancy'}, {sortCriteria: 'date ascending'}],
+      appliedSort: {by: 'relevance' as const},
+      availableSorts: [
+        {by: 'relevance' as const},
+        {by: 'date' as const, direction: 'ascending' as const},
+      ],
     };
 
     const state = slice.reducer(initialSortState, actions.updateFromResponse(payload));
-    expect(state.appliedSort).toEqual({sortCriteria: 'relevancy'});
-    expect(state.availableSorts).toEqual([
-      {sortCriteria: 'relevancy'},
-      {sortCriteria: 'date ascending'},
-    ]);
+    expect(state.appliedSort).toEqual({by: 'relevance'});
+    expect(state.availableSorts).toEqual([{by: 'relevance'}, {by: 'date', direction: 'ascending'}]);
   });
 
   it('should handle updateFromResponse with undefined as a no-op', () => {
@@ -74,9 +79,9 @@ describe('createSortSlice', () => {
     const hydrateAction = getOrCreateHydrateFromSnapshotAction(iface);
     const slice = createSortSlice('test-2', actions, hydrateAction);
 
-    const currentState = {
-      appliedSort: {sortCriteria: 'date ascending'},
-      availableSorts: [{sortCriteria: 'date ascending'}],
+    const currentState: SortState = {
+      appliedSort: {by: 'date', direction: 'ascending'},
+      availableSorts: [{by: 'date', direction: 'ascending'}],
     };
 
     const state = slice.reducer(currentState, actions.updateFromResponse(undefined));
@@ -90,9 +95,24 @@ describe('createSortSlice', () => {
     const hydrateAction = getOrCreateHydrateFromSnapshotAction(iface);
     const slice = createSortSlice('test-3', actions, hydrateAction);
 
-    const criterion = {sortCriteria: '@price descending'};
+    const criterion = {by: 'field' as const, field: 'price', direction: 'descending' as const};
     const state = slice.reducer(initialSortState, actions.sortBy(criterion));
     expect(state.appliedSort).toEqual(criterion);
+  });
+
+  it('should handle sortBy with an array (compound sort)', () => {
+    const engine = createTestEngine();
+    const iface = createTestInterface(engine, 'test-compound');
+    const actions = getOrCreateSortActions(iface);
+    const hydrateAction = getOrCreateHydrateFromSnapshotAction(iface);
+    const slice = createSortSlice('test-compound', actions, hydrateAction);
+
+    const criteria = [
+      {by: 'field' as const, field: 'price', direction: 'ascending' as const},
+      {by: 'date' as const, direction: 'descending' as const},
+    ];
+    const state = slice.reducer(initialSortState, actions.sortBy(criteria));
+    expect(state.appliedSort).toEqual(criteria);
   });
 
   it('should not modify availableSorts when sortBy is dispatched', () => {
@@ -102,12 +122,12 @@ describe('createSortSlice', () => {
     const hydrateAction = getOrCreateHydrateFromSnapshotAction(iface);
     const slice = createSortSlice('test-4', actions, hydrateAction);
 
-    const currentState = {
-      appliedSort: {sortCriteria: 'relevancy'},
-      availableSorts: [{sortCriteria: 'relevancy'}, {sortCriteria: 'date ascending'}],
+    const currentState: SortState = {
+      appliedSort: {by: 'relevance'},
+      availableSorts: [{by: 'relevance'}, {by: 'date', direction: 'ascending'}],
     };
 
-    const criterion = {sortCriteria: 'date ascending'};
+    const criterion = {by: 'date' as const, direction: 'ascending' as const};
     const state = slice.reducer(currentState, actions.sortBy(criterion));
     expect(state.availableSorts).toEqual(currentState.availableSorts);
   });
@@ -123,7 +143,7 @@ describe('createSortSlice', () => {
 
     const state = slice.reducer(
       initialSortState,
-      otherActions.sortBy({sortCriteria: 'date descending'})
+      otherActions.sortBy({by: 'date' as const, direction: 'descending' as const})
     );
     expect(state.appliedSort).toBeNull();
   });
@@ -136,7 +156,7 @@ describe('createSortSlice', () => {
     const slice = createSortSlice('immut-test', actions, hydrateAction);
 
     const original = {...initialSortState};
-    slice.reducer(original, actions.sortBy({sortCriteria: 'relevancy'}));
+    slice.reducer(original, actions.sortBy({by: 'relevance' as const}));
     expect(original.appliedSort).toBeNull();
   });
 
@@ -149,16 +169,19 @@ describe('createSortSlice', () => {
 
     const snapshotPayload = {
       sort: {
-        appliedSort: {sortCriteria: 'relevancy'},
-        availableSorts: [{sortCriteria: 'relevancy'}, {sortCriteria: 'date ascending'}],
+        appliedSort: {sortCriteria: 'relevance'},
+        availableSorts: [
+          {sortCriteria: 'relevance'},
+          {sortCriteria: 'fields', fields: [{field: 'price', direction: 'asc'}]},
+        ],
       },
     };
 
     const state = slice.reducer(initialSortState, hydrateAction(snapshotPayload));
-    expect(state.appliedSort).toEqual({sortCriteria: 'relevancy'});
+    expect(state.appliedSort).toEqual({by: 'relevance'});
     expect(state.availableSorts).toEqual([
-      {sortCriteria: 'relevancy'},
-      {sortCriteria: 'date ascending'},
+      {by: 'relevance'},
+      {by: 'field', field: 'price', direction: 'ascending', displayName: undefined},
     ]);
   });
 
@@ -216,24 +239,24 @@ describe('createSortSelectors', () => {
     const selectors = createSortSelectors('sel-test');
     const state = {
       'sel-test/sort': {
-        appliedSort: {sortCriteria: 'relevancy'},
-        availableSorts: [{sortCriteria: 'relevancy'}],
+        appliedSort: {by: 'relevance'},
+        availableSorts: [{by: 'relevance'}],
       },
     };
-    expect(selectors.getAppliedSort(state)).toEqual({sortCriteria: 'relevancy'});
+    expect(selectors.getAppliedSort(state)).toEqual({by: 'relevance'});
   });
 
   it('should read availableSorts from scoped state', () => {
     const selectors = createSortSelectors('sel-test-2');
     const state = {
       'sel-test-2/sort': {
-        appliedSort: {sortCriteria: 'date ascending'},
-        availableSorts: [{sortCriteria: 'relevancy'}, {sortCriteria: 'date ascending'}],
+        appliedSort: {by: 'date', direction: 'ascending'},
+        availableSorts: [{by: 'relevance'}, {by: 'date', direction: 'ascending'}],
       },
     };
     expect(selectors.getAvailableSorts(state)).toEqual([
-      {sortCriteria: 'relevancy'},
-      {sortCriteria: 'date ascending'},
+      {by: 'relevance'},
+      {by: 'date', direction: 'ascending'},
     ]);
   });
 
@@ -248,8 +271,8 @@ describe('createSortSelectors', () => {
     const selectors = createSortSelectors('cache-test');
     const state = {
       'cache-test/sort': {
-        appliedSort: {sortCriteria: 'relevancy'},
-        availableSorts: [{sortCriteria: 'relevancy'}],
+        appliedSort: {by: 'relevance'},
+        availableSorts: [{by: 'relevance'}],
       },
     };
     const first = selectors.getAvailableSorts(state);
