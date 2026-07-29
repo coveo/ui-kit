@@ -52,7 +52,7 @@
     "@rollup/plugin-terser": "1.0.0",
     "@rollup/plugin-typescript": "12.3.0",
     "@vitest/browser-playwright": "catalog:",
-    "jsdom": "28.1.0",
+    "jsdom": "catalog:",
     "playwright": "catalog:",
     "rollup": "4.62.2",
     "typedoc": "catalog:",
