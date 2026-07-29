@@ -1,0 +1,83 @@
+{
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "componentName": "siteforce:dynamicLayout",
+  "dataProviders": [],
+  "id": "a3e7c1f2-8b4d-4e6a-9f5c-2d1b8a7e4c03",
+  "label": "Search Agent Example",
+  "regions": [
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "background": "background: rgba(0,0,0,0)",
+            "backgroundOverlay": "rgba(0,0,0,0.5)",
+            "contentAreaWidth": 100,
+            "sectionConfig": {
+              "UUID": "6f8a2b1c-d4e7-4a9b-b3c5-1e9d7f4a2b6c",
+              "columns": [
+                {
+                  "UUID": "3c7e9a1d-b5f2-4d8a-a6e4-8b2c1f7d5e9a",
+                  "columnKey": "1",
+                  "columnName": "Column 1",
+                  "columnWidth": "12",
+                  "seedComponents": []
+                }
+              ]
+            },
+            "sectionHeight": 300
+          },
+          "componentName": "forceCommunity:section",
+          "id": "6f8a2b1c-d4e7-4a9b-b3c5-1e9d7f4a2b6c",
+          "regions": [
+            {
+              "components": [
+                {
+                  "componentAttributes": {
+                    "engineId": "example-search-agent"
+                  },
+                  "componentName": "c:exampleSearchAgent",
+                  "id": "9d4b2e7a-c1f5-4a8b-b6d3-5e8c2a1f7b4d",
+                  "renderPriority": "NEUTRAL",
+                  "renditionMap": {},
+                  "type": "component"
+                }
+              ],
+              "id": "3c7e9a1d-b5f2-4d8a-a6e4-8b2c1f7d5e9a",
+              "regionLabel": "Column 1",
+              "regionName": "1",
+              "renditionMap": {},
+              "type": "region"
+            }
+          ],
+          "renderPriority": "NEUTRAL",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "b2d5a8c1-e7f3-4b9d-a4c6-7e1f3b8d2a5c",
+      "regionName": "content",
+      "type": "region"
+    },
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "customHeadTags": "",
+            "description": "",
+            "title": "Search Agent Example"
+          },
+          "componentName": "forceCommunity:seoAssistant",
+          "id": "e1c4b7d2-a5f8-4e3b-9d6a-2b8c5f1e7a4d",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "f7a3d1b5-c8e2-4b6d-a9f4-3e7c1d5b8a2f",
+      "regionName": "sfdcHiddenRegion",
+      "type": "region"
+    }
+  ],
+  "themeLayoutType": "Inner",
+  "type": "view",
+  "viewType": "custom-search-agent-example"
+}

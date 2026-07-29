@@ -1,0 +1,22 @@
+/*
+ * Styling hooks are not supported by the LWC Local Development Server.
+ * You can safely comment those out in order to run the code in the Local Dev Server, these are for a11y purpose only.
+ * Issue opened to Salesforce: https://github.com/forcedotcom/salesforcedx-vscode/issues/4493
+ *
+ * These values change the border colors of the checkboxes, text inputs and buttons borders to a higher contrast value
+ * to better respect accessibility standards.
+ */
+:host {
+  --slds-c-checkbox-color-border: var(--lwc-colorTextIconDefault, #747474);
+  --slds-c-checkbox-color-border-checked: var(--lwc-colorTextIconDefault, #747474);
+  --slds-c-input-color-border: var(--lwc-colorTextIconDefault, #747474);
+  --slds-c-button-neutral-color-border: var(--lwc-colorTextIconDefault, #747474);
+}
+
+
+.search__container {
+  position: relative;
+  background: #fff;
+  border-radius: .25rem;
+  background-clip: padding-box;
+}
