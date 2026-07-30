@@ -48,10 +48,17 @@ export async function scaffold({template, projectName, version}: ScaffoldOptions
   completePhase({projectName, packageManager, installed});
 }
 
-export function unavailableTemplateMessage(templateName: string, version?: string): string {
-  return version
+export function unavailableTemplateMessage(
+  templateName: string,
+  version?: string,
+  firstSupportedVersion?: string
+): string {
+  const message = version
     ? `Template "${templateName}" version "${version}" is not available.`
     : `Template "${templateName}" is not available.`;
+  return firstSupportedVersion
+    ? `${message} This template is supported from version "${firstSupportedVersion}" onward, when its sample was first published.`
+    : message;
 }
 
 async function claimTargetDir(targetDir: string): Promise<boolean> {
@@ -146,7 +153,9 @@ function reportUnavailableTemplate(template: Template, version?: string): never 
       `Coveo community:            https://connect.coveo.com`,
     'Need help?'
   );
-  throw new ExpectedError(unavailableTemplateMessage(template.name, version));
+  throw new ExpectedError(
+    unavailableTemplateMessage(template.name, version, template.firstSupportedVersion)
+  );
 }
 
 async function resolveTemplate(templateArg: string | undefined): Promise<Template | null> {

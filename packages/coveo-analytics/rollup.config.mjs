@@ -1,4 +1,4 @@
-import typescript from 'rollup-plugin-typescript2';
+import typescript from '@rollup/plugin-typescript';
 import terser from '@rollup/plugin-terser';
 import serve from 'rollup-plugin-serve';
 import commonjs from '@rollup/plugin-commonjs';
@@ -7,6 +7,7 @@ import alias from '@rollup/plugin-alias';
 import json from '@rollup/plugin-json';
 import replace from '@rollup/plugin-replace';
 import copy from 'rollup-plugin-copy';
+import {existsSync, readFileSync, writeFileSync} from 'fs';
 import {parse, resolve} from 'path';
 import packageJson from './package.json' with {type: 'json'};
 import * as url from 'url';
@@ -29,7 +30,7 @@ const browserFetch = () =>
 
 const tsPlugin = () =>
   typescript({
-    useTsconfigDeclarationDir: true,
+    tsconfig: './tsconfig.json',
   });
 
 const versionReplace = () =>
@@ -39,6 +40,29 @@ const versionReplace = () =>
     delimiters: ["'", "'"],
     local: JSON.stringify(packageJson.version), // replaces 'local' in src/version.ts
   });
+
+/**
+ * `@rollup/plugin-typescript` emits declarations from the on-disk sources, so the
+ * `local` placeholder in `src/version.ts` survives into `version.d.ts` even though
+ * `versionReplace` rewrites it in the bundles. Patch the emitted declaration so the
+ * published types keep announcing the real version.
+ */
+const versionReplaceInDeclaration = () => ({
+  name: 'version-replace-in-declaration',
+  writeBundle() {
+    const declaration = resolve(__dirname, './dist/definitions/version.d.ts');
+    if (!existsSync(declaration)) {
+      return;
+    }
+    const contents = readFileSync(declaration, 'utf8');
+    writeFileSync(
+      declaration,
+      contents
+        .replace("'local'", `'${packageJson.version}'`)
+        .replace('"local"', `"${packageJson.version}"`)
+    );
+  },
+});
 
 /**
  * @param {{sourceFileName: string, aliasFileName: string}} options
@@ -140,8 +164,8 @@ const browserModulesConfig = {
     nodeResolve({preferBuiltins: true}),
     versionReplace(),
     typescript({
-      useTsconfigDeclarationDir: true,
-      tsconfigOverride: {compilerOptions: {target: 'es6'}},
+      tsconfig: './tsconfig.json',
+      target: 'es6',
     }),
     aliasFile({
       sourceFileName: './dist/browser.mjs',
@@ -166,9 +190,10 @@ const reactNativeConfig = {
     commonjs(),
     json(),
     typescript({
-      useTsconfigDeclarationDir: true,
-      tsconfigOverride: {compilerOptions: {target: 'es6'}},
+      tsconfig: './tsconfig.json',
+      target: 'es6',
     }),
+    versionReplaceInDeclaration(),
   ],
 };
 

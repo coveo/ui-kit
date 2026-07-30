@@ -50,7 +50,7 @@
     "@rollup/plugin-node-resolve": "catalog:",
     "@rollup/plugin-replace": "catalog:",
     "@rollup/plugin-terser": "catalog:",
-    "@rollup/plugin-typescript": "12.3.0",
+    "@rollup/plugin-typescript": "catalog:",
     "@vitest/browser-playwright": "catalog:",
     "jsdom": "catalog:",
     "playwright": "catalog:",
