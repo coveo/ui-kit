@@ -18,6 +18,7 @@ packages:
   - packages/atomic-legacy
   - packages/shopify
   - packages/relay
+  - packages/coveo-analytics
   - packages/relay-playground
   - packages/create-atomic-template
   - packages/create-atomic
@@ -64,7 +65,10 @@ catalog:
   '@react-router/serve': 7.14.2
   '@reduxjs/toolkit': 2.12.0
   'react-router': 7.14.2
+  '@rollup/plugin-json': 6.1.0
+  '@rollup/plugin-node-resolve': 16.0.3
   '@rollup/plugin-replace': 6.0.3
+  '@rollup/plugin-terser': 1.0.0
   '@rollup/plugin-url': 8.0.2
   '@stencil/core': 4.20.0
   '@testing-library/react': 16.3.2
@@ -74,13 +78,13 @@ catalog:
   '@types/react-dom': 19.2.3
   '@vitejs/plugin-react': 6.0.3
   '@vitest/browser-playwright': 4.1.9
-  coveo.analytics: 2.30.56
   dayjs: 1.11.21
   dotenv: 17.2.3
   esbuild: 0.28.1
   exponential-backoff: 3.1.3
   jest: 30.3.0
   jest-cli: 30.3.0
+  jsdom: 28.1.0
   lit: 3.3.3
   local-web-server: 5.4.0
   marked: 12.0.2
@@ -103,7 +107,6 @@ minimumReleaseAge: 10080
 
 minimumReleaseAgeExclude:
   - '@coveo/*'
-  - coveo.analytics
   - '@vitest/*'
   - vitest
   - oxlint

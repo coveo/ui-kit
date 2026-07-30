@@ -49,7 +49,6 @@ vi.mock('./ConversationPage/index.js', () => ({
       <span data-testid="turn-ids">{props.turns.map((t: Turn) => t.id).join(',')}</span>
       <span data-testid="can-go-back">{String(props.canGoBackToSearch)}</span>
       <button data-testid="back-btn" onClick={props.onBackToSearch} />
-      <button data-testid="reset-btn" onClick={props.onResetToLanding} />
       <button
         data-testid="conversation-submit"
         onClick={() => props.onSubmit('follow up question')}
@@ -423,7 +422,7 @@ describe('AppShell — bidirectional navigation flow', () => {
     expect(mockSubmit).toHaveBeenNthCalledWith(3, {prompt: 'follow up question'});
   });
 
-  it('search interface disposed only on explicit reset, not on view transitions', () => {
+  it('search interface is not disposed on view transitions', () => {
     const mockDispose = vi.fn();
     const routedInterface = {
       id: 'ri-1',
@@ -474,7 +473,7 @@ describe('AppShell — bidirectional navigation flow', () => {
     expect(screen.getByTestId('search-results-page')).toBeDefined();
     expect(mockDispose).not.toHaveBeenCalled();
 
-    // Back to conversation
+    // Back to conversation again
     act(() => {
       screen.getByTestId('search-submit-conversational').click();
     });
@@ -506,13 +505,6 @@ describe('AppShell — bidirectional navigation flow', () => {
     rerender(<AppShell />);
     expect(screen.getByTestId('conversation-page')).toBeDefined();
     expect(mockDispose).not.toHaveBeenCalled();
-
-    // Only dispose on explicit reset
-    act(() => {
-      screen.getByTestId('reset-btn').click();
-    });
-    expect(mockDispose).toHaveBeenCalledTimes(1);
-    expect(screen.getByTestId('landing-page')).toBeDefined();
   });
 
   it('"Back to conversation" button navigates from search to conversation without submitting', () => {

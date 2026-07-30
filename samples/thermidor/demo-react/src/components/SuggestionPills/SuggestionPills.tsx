@@ -30,6 +30,7 @@ export function SuggestionPills({
           className={styles.pill}
           onClick={() => onSelect(suggestion)}
           disabled={disabled}
+          title={suggestion}
         >
           {suggestion}
         </button>

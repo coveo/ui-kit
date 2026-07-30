@@ -47,7 +47,7 @@
   "dependencies": {
     "@coveo/bueno": "workspace:*",
     "@coveo/headless": "workspace:*",
-    "coveo.analytics": "catalog:",
+    "coveo.analytics": "workspace:*",
     "dompurify": "3.4.11",
     "marked": "catalog:"
   },

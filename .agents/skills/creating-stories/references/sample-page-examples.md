@@ -10,8 +10,7 @@ Complete example showing all required parts:
 import {getSampleSearchEngineConfiguration} from '@coveo/headless';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {html} from 'lit';
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
-import {richResponse, type baseResponse} from '@coveo/platform-mock-api/search/search-response';
+import {MockSearchApi, searchResponses} from '@coveo/platform-mock-api/search';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters.js';
 
 async function initializeSearchInterface(canvasElement: HTMLElement) {
@@ -32,7 +31,9 @@ const meta: Meta = {
     chromatic: {disableSnapshot: false},
   },
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.mock(() => richResponse as unknown as typeof baseResponse);
+    mockSearchApi.searchEndpoint.mock(
+      () => searchResponses.richResponse as unknown as typeof searchResponses.baseResponse
+    );
   },
   render: () => html`
     <atomic-search-interface language-assets-path="./lang" icon-assets-path="./assets">
@@ -92,8 +93,7 @@ export const Default: Story = {
 
 ```typescript
 import {getSampleCommerceEngineConfiguration} from '@coveo/headless/commerce';
-import {MockCommerceApi} from '@coveo/platform-mock-api/commerce/mock';
-import {richResponse, type baseResponse} from '@coveo/platform-mock-api/commerce/search-response';
+import {MockCommerceApi} from '@coveo/platform-mock-api/commerce';
 
 const mockCommerceApi = new MockCommerceApi();
 
@@ -139,7 +139,7 @@ const meta: Meta = {
 
 ```typescript
 import {getSampleInsightEngineConfiguration} from '@coveo/headless/insight';
-import {MockInsightApi} from '@coveo/platform-mock-api/insight/mock';
+import {MockInsightApi} from '@coveo/platform-mock-api/insight';
 
 const meta: Meta = {
   render: () => html`
@@ -166,7 +166,7 @@ const meta: Meta = {
 
 ```typescript
 import {getSampleRecommendationEngineConfiguration} from '@coveo/headless/recommendation';
-import {MockRecommendationApi} from '@coveo/platform-mock-api/recommendation/mock';
+import {MockRecommendationApi} from '@coveo/platform-mock-api/recommendation';
 
 const meta: Meta = {
   render: () => html`

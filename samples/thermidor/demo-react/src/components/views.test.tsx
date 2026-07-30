@@ -48,13 +48,12 @@ describe('LandingPage', () => {
     expect(onSubmit).toHaveBeenCalledWith('hello world');
   });
 
-  it('sets textarea value and submits when a suggestion pill is clicked', () => {
+  it('submits when a suggestion pill is clicked', () => {
     const onSubmit = vi.fn();
     render(<LandingPage onSubmit={onSubmit} isStreaming={false} />);
 
     fireEvent.click(screen.getByRole('button', {name: 'kayaks'}));
 
-    expect((screen.getByLabelText('Prompt') as HTMLTextAreaElement).value).toBe('kayaks');
     expect(onSubmit).toHaveBeenCalledWith('kayaks');
   });
 
@@ -85,6 +84,8 @@ describe('SearchResultsPage', () => {
         isStreaming={false}
         routedInterface={mockRoutedInterface}
         onBackToConversation={vi.fn()}
+        products={[]}
+        onProductsChange={vi.fn()}
       />
     );
     expect(screen.getByTestId('search-results-page')).toBeDefined();
@@ -97,6 +98,8 @@ describe('SearchResultsPage', () => {
         isStreaming={false}
         routedInterface={mockRoutedInterface}
         onBackToConversation={vi.fn()}
+        products={[]}
+        onProductsChange={vi.fn()}
       />
     );
     expect(screen.getByText('Facets (coming soon)')).toBeDefined();
@@ -110,6 +113,8 @@ describe('SearchResultsPage', () => {
         isStreaming={false}
         routedInterface={mockRoutedInterface}
         onBackToConversation={vi.fn()}
+        products={[]}
+        onProductsChange={vi.fn()}
       />
     );
 
@@ -127,6 +132,8 @@ describe('SearchResultsPage', () => {
         isStreaming={true}
         routedInterface={mockRoutedInterface}
         onBackToConversation={vi.fn()}
+        products={[]}
+        onProductsChange={vi.fn()}
       />
     );
     expect((screen.getByLabelText('Prompt') as HTMLInputElement).disabled).toBe(true);
@@ -148,7 +155,8 @@ describe('ConversationPage', () => {
         turns={[baseTurn]}
         onBackToSearch={vi.fn()}
         canGoBackToSearch={true}
-        onResetToLanding={vi.fn()}
+        products={[]}
+        onProductsChange={vi.fn()}
       />
     );
     expect(screen.getByLabelText('Prompt')).toBeDefined();
@@ -163,7 +171,8 @@ describe('ConversationPage', () => {
         turns={[baseTurn]}
         onBackToSearch={vi.fn()}
         canGoBackToSearch={true}
-        onResetToLanding={vi.fn()}
+        products={[]}
+        onProductsChange={vi.fn()}
       />
     );
 
@@ -182,7 +191,8 @@ describe('ConversationPage', () => {
         turns={[baseTurn]}
         onBackToSearch={vi.fn()}
         canGoBackToSearch={true}
-        onResetToLanding={vi.fn()}
+        products={[]}
+        onProductsChange={vi.fn()}
       />
     );
     expect((screen.getByLabelText('Prompt') as HTMLTextAreaElement).disabled).toBe(true);
@@ -197,7 +207,8 @@ describe('ConversationPage', () => {
         turns={[baseTurn]}
         onBackToSearch={onBackToSearch}
         canGoBackToSearch={true}
-        onResetToLanding={vi.fn()}
+        products={[]}
+        onProductsChange={vi.fn()}
       />
     );
 
@@ -214,26 +225,10 @@ describe('ConversationPage', () => {
         turns={[baseTurn]}
         onBackToSearch={vi.fn()}
         canGoBackToSearch={false}
-        onResetToLanding={vi.fn()}
+        products={[]}
+        onProductsChange={vi.fn()}
       />
     );
     expect(screen.queryByRole('button', {name: /Back to search results/})).toBeNull();
-  });
-
-  it('calls onResetToLanding when "Reset" button is clicked', () => {
-    const onReset = vi.fn();
-    render(
-      <ConversationPage
-        onSubmit={vi.fn()}
-        isStreaming={false}
-        turns={[baseTurn]}
-        onBackToSearch={vi.fn()}
-        canGoBackToSearch={false}
-        onResetToLanding={onReset}
-      />
-    );
-
-    fireEvent.click(screen.getByRole('button', {name: 'Reset'}));
-    expect(onReset).toHaveBeenCalled();
   });
 });

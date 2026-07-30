@@ -20,6 +20,8 @@ export function ConversationThread({turns, onAction, turnRefs}: ConversationThre
         <div key={turn.id}>
           <div
             className={styles.turnWrapper}
+            role="article"
+            aria-label={`Turn ${index + 1}`}
             ref={(el) => {
               if (el) {
                 turnRefs.current.set(turn.id, el);

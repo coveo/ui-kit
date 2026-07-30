@@ -1,4 +1,5 @@
-import type {Product} from '../utils.js';
+import type {Product} from '@coveo/thermidor';
+import {useTargeting} from '../../../context/targeting.js';
 import {resolveProductImage} from '../utils.js';
 import styles from './ProductCard.module.css';
 
@@ -12,16 +13,48 @@ function formatPrice(value: number): string {
 
 export function ProductCard({product}: ProductCardProps) {
   const imageUrl = resolveProductImage(product);
+  const targeting = useTargeting();
 
-  const name = product.ec_name as string | undefined;
-  const brand = product.ec_brand as string | undefined;
-  const price = product.ec_price as number | undefined;
-  const promoPrice = product.ec_promo_price as number | undefined;
+  const {ec_name: name, ec_brand: brand, ec_price: price, ec_promo_price: promoPrice} = product;
 
   const hasPromo = promoPrice !== undefined && price !== undefined && promoPrice < price;
 
+  const isSelected = targeting?.selectedProductIds.has(product.permanentid ?? '') ?? false;
+  const isTargetable = targeting?.isTargeting ?? false;
+
+  const cardClasses = [
+    styles.card,
+    isTargetable ? styles.targetable : '',
+    isSelected ? styles.selected : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+
+  const interactiveProps = isTargetable
+    ? {
+        role: 'button' as const,
+        tabIndex: 0,
+        onClick: () =>
+          targeting!.onProductTargeted(
+            product.permanentid ?? '',
+            product.ec_name ?? '',
+            imageUrl ?? undefined
+          ),
+        onKeyDown: (e: React.KeyboardEvent) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            targeting!.onProductTargeted(
+              product.permanentid ?? '',
+              product.ec_name ?? '',
+              imageUrl ?? undefined
+            );
+          }
+        },
+      }
+    : {};
+
   return (
-    <article className={styles.card}>
+    <article className={cardClasses} {...interactiveProps}>
       <div className={styles.imageWrapper}>
         {imageUrl ? (
           <img className={styles.image} src={imageUrl} alt={name ?? ''} />

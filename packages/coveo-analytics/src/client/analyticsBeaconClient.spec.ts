@@ -1,3 +1,4 @@
+import {vi} from 'vitest';
 import {AnalyticsBeaconClient} from './analyticsBeaconClient';
 import {EventType} from '../events';
 import {
@@ -12,7 +13,7 @@ describe('AnalyticsBeaconClient', () => {
   const currentVisitorId = 'mockVisitorId';
 
   const originalSendBeacon = navigator.sendBeacon;
-  const sendBeaconMock = jest.fn();
+  const sendBeaconMock = vi.fn();
   beforeAll(() => {
     navigator.sendBeacon = sendBeaconMock;
   });
@@ -22,7 +23,7 @@ describe('AnalyticsBeaconClient', () => {
   });
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('can send an event', async () => {

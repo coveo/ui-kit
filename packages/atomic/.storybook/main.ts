@@ -82,7 +82,7 @@ const virtualOpenApiModules = (): Plugin => {
 };
 
 const externalizeDependencies = (configType: 'DEVELOPMENT' | 'PRODUCTION' | undefined): Plugin => {
-  const packageMappings: Record<string, {cdn: string; local: string}> =
+  const packageMappings: Record<string, {cdn?: string; local: string}> =
     generateExternalPackageMappings();
   return {
     name: 'externalize-dependencies',
@@ -113,6 +113,10 @@ const externalizeDependencies = (configType: 'DEVELOPMENT' | 'PRODUCTION' | unde
         return {
           id: packageMapping.local,
         };
+      }
+
+      if (!packageMapping.cdn) {
+        return null;
       }
 
       // For production Storybook builds, we want to use Domain-relative URL to use the CDN versions of the packages.
