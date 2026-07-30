@@ -57,10 +57,6 @@
   background-color: var(--slds-g-color-neutral-base-90, var(--lwc-colorBorder, #dddbda));
 }
 
-.thread-item__dot--expanded {
-  background-color: var(--slds-g-color-on-surface-3, var(--lwc-colorTextDefault, #080707));
-}
-
 .thread-item__clamped-text {
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -70,7 +66,7 @@
 
 .thread-item__title-button {
   width: fit-content;
-  border-radius: var(--slds-g-radius-border-2, 4px);
+  border-radius: var(--slds-g-radius-border-1, 4px);
 }
 
 .thread-item__title-button:hover {

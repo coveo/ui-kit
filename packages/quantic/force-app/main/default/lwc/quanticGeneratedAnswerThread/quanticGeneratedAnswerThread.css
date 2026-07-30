@@ -50,7 +50,7 @@
 
 .generated-answer-thread__show-previous-button {
   width: fit-content;
-  border-radius: var(--slds-g-radius-border-2, 4px);
+  border-radius: var(--slds-g-radius-border-1, 4px);
   cursor: pointer;
 }
 
