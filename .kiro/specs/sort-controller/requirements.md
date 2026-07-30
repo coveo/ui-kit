@@ -84,11 +84,12 @@ This narrowing is type-level only and has zero runtime cost.
 2. THE Sort_Controller SHALL be generic over the interface type, narrowing the criterion type accordingly.
 3. WHEN the Sort_Controller is instantiated, THE Sort_Controller SHALL adopt the Sort_Slice for the given interface.
 4. THE Sort_Controller SHALL expose a `state` property containing `appliedSort` (the current Sort_Criterion or `null`) and `availableSorts` (the list of available Sort_Criterion values).
-5. THE Sort_Controller SHALL expose a `sortBy` method that accepts a single Sort_Criterion or an array of Sort_Criterion (compound sort), updates the applied sort in state, and triggers a search request through the interface facades.
-6. THE Sort_Controller SHALL expose an `isSortedBy` method that accepts a Sort_Criterion or array and returns `true` if it structurally matches the currently applied sort (excluding `displayName`), `false` otherwise.
-7. THE Sort_Controller SHALL extend `BaseController` and support subscription-based state observation via the inherited `subscribe` method.
-8. WHEN the `sortBy` method is called, THE Sort_Controller SHALL dispatch the `sortBy` mutation and then invoke all resolved `'search'` facade thunks to trigger a new API request.
-9. WHEN `sortBy` triggers a search facade thunk, THE sort state SHALL be included in the outgoing API request: as a `sortCriteria` string for Search API requests, and as a `CommerceApiSortPayload` object for Commerce API requests.
+5. THE Sort_Controller state shape SHALL be uniform across all interface types. For search interfaces where the API does not provide available sort criteria, `availableSorts` SHALL be an empty array.
+6. THE Sort_Controller SHALL expose a `sortBy` method that accepts a single Sort_Criterion or an array of Sort_Criterion (compound sort), updates the applied sort in state, and triggers a search request through the interface facades.
+7. THE Sort_Controller SHALL expose an `isSortedBy` method that accepts a Sort_Criterion or array and returns `true` if it structurally matches the currently applied sort (excluding `displayName`), `false` otherwise.
+8. THE Sort_Controller SHALL extend `BaseController` and support subscription-based state observation via the inherited `subscribe` method.
+9. WHEN the `sortBy` method is called, THE Sort_Controller SHALL dispatch the `sortBy` mutation and then invoke all resolved `'search'` facade thunks to trigger a new API request.
+10. WHEN `sortBy` triggers a search facade thunk, THE sort state SHALL be included in the outgoing API request: as a `sortCriteria` string for Search API requests, and as a `CommerceApiSortPayload` object for Commerce API requests.
 
 ### Requirement 5: Sort Public Actions
 

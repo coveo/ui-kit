@@ -285,6 +285,9 @@ export interface SortControllerState<T> {
   appliedSort: SortCriterionFor<T> | SortCriterionFor<T>[] | null;
   availableSorts: SortCriterionFor<T>[];
 }
+```
+
+> **Note**: The state shape is intentionally uniform across interface types. For search interfaces, `availableSorts` is always `[]` because the Search API does not return available sort options (sort choices are client-defined). This avoids conditional state typing complexity while keeping the controller portable.
 
 export interface SortController<T> extends Controller<SortControllerState<T>> {
   sortBy(criterion: SortCriterionFor<T> | SortCriterionFor<T>[]): void;
