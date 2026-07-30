@@ -42,7 +42,7 @@
   },
   "devDependencies": {
     "@rollup/plugin-alias": "5.1.1",
-    "@rollup/plugin-commonjs": "24.1.0",
+    "@rollup/plugin-commonjs": "catalog:",
     "@rollup/plugin-json": "catalog:",
     "@rollup/plugin-node-resolve": "catalog:",
     "@rollup/plugin-replace": "catalog:",

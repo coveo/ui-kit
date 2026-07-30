@@ -45,7 +45,7 @@
     "@lit/react": "1.0.8"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "29.0.3",
+    "@rollup/plugin-commonjs": "catalog:",
     "@rollup/plugin-json": "catalog:",
     "@rollup/plugin-node-resolve": "catalog:",
     "@rollup/plugin-typescript": "catalog:",
