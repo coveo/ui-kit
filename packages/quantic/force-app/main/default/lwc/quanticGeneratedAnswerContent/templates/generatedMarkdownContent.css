@@ -68,7 +68,7 @@ ul {
 }
 
 code {
-  padding: calc(var(--slds-g-spacing-1, var(--lwc-spacingXxxSmall, 0.125rem)) / 2) var(--slds-g-spacing-1, var(--lwc-spacingXxSmall, 0.25rem));
+  padding: 0.125rem var(--slds-g-spacing-1, var(--lwc-spacingXxSmall, 0.25rem));
   border: 1px solid;
   color: var(--quantic-genqa-inline-code);
   font-size: var(--quantic-genqa-text-small);

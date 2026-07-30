@@ -1,6 +1,5 @@
 .card {
   position: relative;
-  padding: var(--slds-g-spacing-4, 1rem) 0.9rem;
   background: var(--slds-g-color-surface-1, var(--lwc-colorBackgroundAlt, #ffffff));
   border: var(--lwc-borderWidthThin, 1px) solid var(--slds-g-color-neutral-base-90, var(--lwc-colorBorder, #dddbda));
   border-radius: 0.25rem;

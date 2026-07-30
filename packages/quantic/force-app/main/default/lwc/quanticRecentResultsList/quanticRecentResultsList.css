@@ -11,10 +11,6 @@
   min-width: 0;
 }
 
-.recent-result__icon {
-  margin-right: var(--slds-g-spacing-2, .5rem);
-}
-
 .empty-list-message {
   color: var(--slds-g-color-on-surface-1, var(--lwc-colorTextPlaceholder, var(--lwc-colorTextIconDefault, #747474)));
 }
