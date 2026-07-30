@@ -102,7 +102,7 @@ This means the working tree contains only decisions that are currently active (`
 
 ### Package symlink distribution
 
-Every immediate directory under `packages/` contains `docs/adr/ADR-template.md` as a relative symlink to the canonical root template (`../../../../docs/adr/ADR-template.md`). No package maintains a separate copy of the template. 
+Every immediate directory under `packages/` contains `docs/adr/ADR-template.md` as a relative symlink to the canonical root template (`../../../../docs/adr/ADR-template.md`). No package maintains a separate copy of the template.
 
 This ensures contributors can easily create a package ADR without locating or copying the root template and publicizes the existence of a common template.
 
