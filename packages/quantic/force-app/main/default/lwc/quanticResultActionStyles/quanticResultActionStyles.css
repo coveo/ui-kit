@@ -5,7 +5,7 @@
 }
 
 .result-action_button {
-  --lwc-borderWidthThin: 0.5px;
+  --slds-g-sizing-border-1: 0.5px;
 }
 
 .result-action_first {

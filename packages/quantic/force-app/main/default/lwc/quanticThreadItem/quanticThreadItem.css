@@ -6,7 +6,7 @@
   display: grid;
   grid-template-columns: 10px 1fr;
   grid-template-rows: auto 1fr;
-  column-gap: var(--lwc-spacingXSmall, 8px);
+  column-gap: var(--slds-g-spacing-2, var(--lwc-spacingXSmall, 8px));
 }
 
 .thread-item__timeline {
@@ -17,7 +17,7 @@
 .thread-item__dot-column {
   width: 10px;
   height: 1lh;
-  margin-block: var(--lwc-spacingXxSmall, 4px);
+  margin-block: var(--slds-g-spacing-1, var(--lwc-spacingXxSmall, 4px));
 }
 
 .thread-item__line {
