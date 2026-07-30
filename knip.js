@@ -63,11 +63,6 @@ export default {
       // `bundle/browser-fetch.ts` is reachable only through the Rollup alias that
       // swaps out `cross-fetch` for browser builds.
       entry: ['src/**/*.ts', 'bundle/browser-fetch.ts'],
-      ignoreDependencies: [
-        // Required by rollup-plugin-typescript2, which forces `importHelpers`.
-        // Never imported from source, so Knip cannot trace it.
-        'tslib',
-      ],
       // These modules intentionally expose two public bindings for the same
       // value: a named export plus a `default`, or a short plugin alias such as
       // `EC = ECPlugin`. Both spellings are part of the published API and are
