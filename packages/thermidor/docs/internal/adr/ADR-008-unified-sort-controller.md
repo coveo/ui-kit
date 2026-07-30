@@ -64,8 +64,8 @@ type SearchSortCriterion   = SortByRelevance | SortByDate | SortByField | SortBy
 type CommerceSortCriterion = SortByRelevance | SortByField;
 
 type SortCriterionFor<T> =
-  T extends Supports<'commerce'> ? CommerceSortCriterion :
-  T extends Supports<'search'> ? SearchSortCriterion :
+  T extends CommerceInterface ? CommerceSortCriterion :
+  T extends SearchInterface ? SearchSortCriterion :
   SearchSortCriterion | CommerceSortCriterion;
 ```
 
@@ -104,6 +104,33 @@ function fromCommerceApiSort(raw: APIPayload): CommerceSortCriterion {
   return { by: 'field', field: raw.fields![0].field, direction: raw.fields![0].direction!, displayName: raw.fields![0].displayName };
 }
 ```
+
+**Type narrowing via `InterfaceTypeBrand`:**
+
+`SortCriterionFor<T>` uses a conditional type to narrow the criterion union per interface. However, `SearchInterface` and `CommerceInterface` share identical facades (`'search' | 'suggestions'`), making them structurally identical to TypeScript. A nominal brand resolves this:
+
+```typescript
+declare const InterfaceTypeBrand: unique symbol;
+
+interface SearchInterface extends Supports<Facades['search']> {
+  readonly [InterfaceTypeBrand]: 'search';
+}
+
+interface CommerceInterface extends Supports<Facades['commerce']> {
+  readonly [InterfaceTypeBrand]: 'commerce';
+}
+```
+
+The brand is `declare`-only (never exists at runtime) — zero cost. `BaseInterface<T>` satisfies it via `declare readonly [InterfaceTypeBrand]: T`. This allows the conditional type to discriminate:
+
+```typescript
+type SortCriterionFor<T> =
+  T extends CommerceInterface ? CommerceSortCriterion :
+  T extends SearchInterface ? SearchSortCriterion :
+  SearchSortCriterion | CommerceSortCriterion;
+```
+
+Without the brand, both interfaces resolve to the same structural type and the conditional collapses. The exhaustive `switch` in `toCommerceApiSort` (no `default` case) relies on this narrowing — TypeScript enforces that only valid `CommerceSortCriterion` variants reach the function.
 
 - **Pros**: No leakage, full autocomplete, compile-time validation, portable UI components, zero runtime cost, tree-shakeable translation layer
 - **Cons**: Adds a generic to the public API; translation layer to maintain
