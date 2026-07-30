@@ -16,9 +16,14 @@ const resolved = path.resolve(adrDir);
 
 let entries;
 try {
+  const stat = fs.statSync(resolved);
+  if (!stat.isDirectory()) {
+    throw new Error('Not a directory');
+  }
   entries = fs.readdirSync(resolved);
 } catch {
-  entries = [];
+  console.error(`ADR directory not found or unreadable: ${resolved}`);
+  process.exit(1);
 }
 
 let max = 0;
