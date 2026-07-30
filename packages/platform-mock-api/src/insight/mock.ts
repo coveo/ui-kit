@@ -2,12 +2,7 @@ import type {HttpHandler} from 'msw';
 import {EndpointHarness, type MockApi} from '../_base.js';
 import type {APIErrorWithStatusCode} from '../_common/error.js';
 import {baseResponse as baseQuerySuggestResponse} from './querySuggest-response.js';
-import {
-  baseFoldedResponse,
-  baseResponse as baseSearchResponse,
-  type InsightResponse,
-  nestedFoldedResponse,
-} from './search-response.js';
+import {baseResponse as baseSearchResponse, type InsightResponse} from './search-response.js';
 
 export class MockInsightApi implements MockApi {
   readonly searchEndpoint;
@@ -46,5 +41,3 @@ export class MockInsightApi implements MockApi {
     this.interfaceConfigEndpoint.clear();
   }
 }
-
-export {baseFoldedResponse, nestedFoldedResponse};

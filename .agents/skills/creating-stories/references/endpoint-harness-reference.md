@@ -16,8 +16,8 @@ Atomic uses **MSW (Mock Service Worker)** to mock API responses in Storybook sto
 Each domain has a Mock API class following the naming convention `Mock[Domain]Api`:
 
 ```typescript
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
-import {MockCommerceApi} from '@coveo/platform-mock-api/commerce/mock';
+import {MockSearchApi} from '@coveo/platform-mock-api/search';
+import {MockCommerceApi} from '@coveo/platform-mock-api/commerce';
 ```
 
 Each mock class exposes endpoint properties following the pattern `[endpoint]Endpoint`:

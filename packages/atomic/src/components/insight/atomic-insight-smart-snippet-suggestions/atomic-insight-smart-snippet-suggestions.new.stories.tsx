@@ -1,11 +1,7 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {testDisclosureA11y} from '@/storybook-utils/a11y/disclosure.js';
-import {MockInsightApi} from '@coveo/platform-mock-api/insight/mock';
-import {
-  type baseResponse,
-  smartSnippetSuggestionsResponse,
-} from '@coveo/platform-mock-api/insight/search-response';
+import {MockInsightApi, searchResponses} from '@coveo/platform-mock-api/insight';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 import '@/src/components/insight/atomic-insight-smart-snippet-suggestions/atomic-insight-smart-snippet-suggestions.js';
@@ -38,7 +34,8 @@ const meta: Meta = {
   argTypes,
   beforeEach: async () => {
     insightApiHarness.searchEndpoint.mock(
-      () => smartSnippetSuggestionsResponse as unknown as typeof baseResponse
+      () =>
+        searchResponses.smartSnippetSuggestionsResponse as unknown as typeof searchResponses.baseResponse
     );
   },
   play,
