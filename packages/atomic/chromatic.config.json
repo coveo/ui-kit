@@ -3,12 +3,7 @@
   "buildCommand": "turbo run build:storybook --filter=@coveo/atomic --",
   "outputDir": "dist-storybook",
   "exitOnceUploaded": true,
-  "untraced": [
-    "package.json",
-    "pnpm-lock.yaml",
-    "/virtual:*",
-    "packages/**",
-    "!packages/atomic/**"
-  ],
-  "onlyChanged": true
+  "untraced": ["package.json", "pnpm-lock.yaml", "/virtual:*", "packages/coveo-analytics/**/*"],
+  "onlyChanged": true,
+  "traceChanged": "expanded"
 }
