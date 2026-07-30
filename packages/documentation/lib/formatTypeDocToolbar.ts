@@ -5,9 +5,7 @@ export const formatTypeDocToolbar = () => {
       header.innerHTML = '';
     }
     // Always hide TypeDoc's theme selector
-    const typedocThemeSelector = document.querySelector(
-      '.tsd-theme-toggle'
-    ) as HTMLElement;
+    const typedocThemeSelector = document.querySelector('.tsd-theme-toggle') as HTMLElement;
     if (typedocThemeSelector) {
       typedocThemeSelector.style.display = 'none';
     }

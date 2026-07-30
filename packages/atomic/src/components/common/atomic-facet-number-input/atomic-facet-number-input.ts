@@ -96,8 +96,7 @@ export class AtomicFacetNumberInput
     const apply = this.bindings.i18n.t('apply');
     const applyAria = this.bindings.i18n.t('number-input-apply', {label});
 
-    const inputClasses =
-      'p-2.5 input-primary placeholder-neutral-dark min-w-0 mr-1';
+    const inputClasses = 'p-2.5 input-primary placeholder-neutral-dark min-w-0 mr-1';
     const labelClasses = 'text-neutral-dark text-sm';
 
     const step = this.type === 'integer' ? '1' : 'any';
@@ -112,11 +111,7 @@ export class AtomicFacetNumberInput
           return false;
         }}
       >
-        <label
-          part="label-start"
-          class=${labelClasses}
-          for="${this.filterState.facetId}_start"
-        >
+        <label part="label-start" class=${labelClasses} for="${this.filterState.facetId}_start">
           ${minText}
         </label>
         <input
@@ -135,11 +130,7 @@ export class AtomicFacetNumberInput
           }}
           ${ref(this.startRef)}
         />
-        <label
-          part="label-end"
-          class=${labelClasses}
-          for="${this.filterState.facetId}_end"
-        >
+        <label part="label-end" class=${labelClasses} for="${this.filterState.facetId}_end">
           ${maxText}
         </label>
         <input
@@ -173,10 +164,7 @@ export class AtomicFacetNumberInput
   }
 
   private apply() {
-    if (
-      !this.startRef.value?.validity.valid ||
-      !this.endRef.value?.validity.valid
-    ) {
+    if (!this.startRef.value?.validity.valid || !this.endRef.value?.validity.valid) {
       return;
     }
     this.dispatchEvent(buildCustomEvent('atomic/numberInputApply'));
@@ -187,15 +175,11 @@ export class AtomicFacetNumberInput
   }
 
   private get startValue() {
-    return this.filterState.range?.start !== undefined
-      ? String(this.filterState.range.start)
-      : '';
+    return this.filterState.range?.start !== undefined ? String(this.filterState.range.start) : '';
   }
 
   private get endValue() {
-    return this.filterState.range?.end !== undefined
-      ? String(this.filterState.range.end)
-      : '';
+    return this.filterState.range?.end !== undefined ? String(this.filterState.range.end) : '';
   }
 }
 

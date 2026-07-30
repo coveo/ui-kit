@@ -1,6 +1,6 @@
 {
   "name": "@coveo/relay",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "A library for sending analytics events using Coveo's Event protocol.",
   "keywords": [
     "Coveo",
@@ -20,7 +20,8 @@
     "directory": "packages/relay"
   },
   "files": [
-    "lib/npm/*"
+    "lib/npm/*",
+    "lib/docs/*"
   ],
   "type": "module",
   "types": "./lib/npm/relay.d.ts",
@@ -34,11 +35,12 @@
     "access": "public"
   },
   "scripts": {
-    "build": "pnpm run clean && rollup --config ./config/rollup.config.mjs",
+    "build": "pnpm run clean && rollup --config ./config/rollup.config.mjs && pnpm run typedoc",
     "clean": "node ../../utils/ci/rm-rf.mjs lib",
     "test": "vitest run",
     "functional-test": "vitest run --config vitest.functional.config.ts",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "typedoc": "typedoc"
   },
   "dependencies": {
     "@coveo/explorer-messenger": "0.5.0",
@@ -50,9 +52,10 @@
     "@rollup/plugin-terser": "1.0.0",
     "@rollup/plugin-typescript": "12.3.0",
     "@vitest/browser-playwright": "catalog:",
-    "jsdom": "28.1.0",
+    "jsdom": "catalog:",
     "playwright": "catalog:",
-    "rollup": "4.60.4",
+    "rollup": "4.62.2",
+    "typedoc": "catalog:",
     "vitest": "catalog:"
   },
   "engines": {

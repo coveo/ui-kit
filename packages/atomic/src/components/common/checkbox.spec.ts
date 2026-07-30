@@ -11,9 +11,7 @@ describe('#renderCheckbox', () => {
     },
   };
 
-  const renderCheckbox = async (
-    props: Partial<CheckboxProps>
-  ): Promise<HTMLElement> => {
+  const renderCheckbox = async (props: Partial<CheckboxProps>): Promise<HTMLElement> => {
     return renderFunctionFixture(
       html`${checkbox({
         props: {

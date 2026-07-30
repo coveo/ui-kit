@@ -70,9 +70,7 @@ export function buildSmartSnippetInteractiveQuestions(
   };
 
   let lastSearchResponseId: string | null = null;
-  const resetInteractiveResultsIfSearchResponseChanged = (
-    currentSearchResponseId: string
-  ) => {
+  const resetInteractiveResultsIfSearchResponseChanged = (currentSearchResponseId: string) => {
     if (lastSearchResponseId !== currentSearchResponseId) {
       lastSearchResponseId = currentSearchResponseId;
       interactiveResultsPerRelatedQuestion = {};
@@ -80,10 +78,7 @@ export function buildSmartSnippetInteractiveQuestions(
     }
   };
 
-  const buildRelatedQuestionInteractiveResult = (
-    source: Result,
-    questionAnswerId: string
-  ) =>
+  const buildRelatedQuestionInteractiveResult = (source: Result, questionAnswerId: string) =>
     buildInteractiveResultCore(
       engine,
       {options: {selectionDelay: props?.options?.selectionDelay}},
@@ -100,10 +95,7 @@ export function buildSmartSnippetInteractiveQuestions(
       }
     );
 
-  let interactiveResultsPerRelatedQuestion: Record<
-    string,
-    InteractiveResultCore
-  > = {};
+  let interactiveResultsPerRelatedQuestion: Record<string, InteractiveResultCore> = {};
   const getInteractiveResult = (questionAnswerId: string) => {
     const {searchResponseId} = getState().search;
     resetInteractiveResultsIfSearchResponseChanged(searchResponseId);
@@ -117,8 +109,10 @@ export function buildSmartSnippetInteractiveQuestions(
       return interactiveResultsPerRelatedQuestion[questionAnswerId];
     }
 
-    interactiveResultsPerRelatedQuestion[questionAnswerId] =
-      buildRelatedQuestionInteractiveResult(source, questionAnswerId);
+    interactiveResultsPerRelatedQuestion[questionAnswerId] = buildRelatedQuestionInteractiveResult(
+      source,
+      questionAnswerId
+    );
     return interactiveResultsPerRelatedQuestion[questionAnswerId];
   };
 

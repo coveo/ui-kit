@@ -7,8 +7,7 @@ import type {SearchAppState} from '../../state/search-app-state.js';
 import type {ConfigurationSection} from '../../state/state-sections.js';
 import {fromAnalyticsStateToAnalyticsParams} from '../configuration/analytics-params.js';
 
-type StateNeededByExecuteSearchAndFolding = ConfigurationSection &
-  Partial<SearchAppState>;
+type StateNeededByExecuteSearchAndFolding = ConfigurationSection & Partial<SearchAppState>;
 
 export const buildSearchAndFoldingLoadCollectionRequest = (
   state: StateNeededByExecuteSearchAndFolding,
@@ -20,10 +19,7 @@ export const buildSearchAndFoldingLoadCollectionRequest = (
     organizationId: state.configuration.organizationId,
     url:
       state.configuration.search.apiBaseUrl ??
-      getSearchApiBaseUrl(
-        state.configuration.organizationId,
-        state.configuration.environment
-      ),
+      getSearchApiBaseUrl(state.configuration.organizationId, state.configuration.environment),
     locale: state.configuration.search.locale,
     debug: state.debug,
     tab: state.configuration.analytics.originLevel2,
@@ -75,8 +71,7 @@ export const buildSearchAndFoldingLoadCollectionRequest = (
         excerptLength: state.excerptLength.length,
       }),
     ...(state.configuration.search.authenticationProviders.length && {
-      authentication:
-        state.configuration.search.authenticationProviders.join(','),
+      authentication: state.configuration.search.authenticationProviders.join(','),
     }),
   };
 };

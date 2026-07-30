@@ -64,28 +64,21 @@ export const setAttachedResults = createAction(
 );
 
 //TODO: SFINT-6621 - Change type from insight/attachToCase/ to insight/attachedResults/
-export const attachResult = createAction(
-  'insight/attachToCase/attach',
-  (payload: AttachedResult) => validatePayloadAndPermanentIdOrUriHash(payload)
+export const attachResult = createAction('insight/attachToCase/attach', (payload: AttachedResult) =>
+  validatePayloadAndPermanentIdOrUriHash(payload)
 );
 
 //TODO: SFINT-6621 - Change type from insight/attachToCase/ to insight/attachedResults/
-export const detachResult = createAction(
-  'insight/attachToCase/detach',
-  (payload: AttachedResult) => validatePayloadAndPermanentIdOrUriHash(payload)
+export const detachResult = createAction('insight/attachToCase/detach', (payload: AttachedResult) =>
+  validatePayloadAndPermanentIdOrUriHash(payload)
 );
 
 const validatePayloadAndPermanentIdOrUriHash = (payload: AttachedResult) => {
-  if (
-    isNullOrUndefined(payload.permanentId) &&
-    isNullOrUndefined(payload.uriHash)
-  ) {
+  if (isNullOrUndefined(payload.permanentId) && isNullOrUndefined(payload.uriHash)) {
     return {
       payload,
       error: serializeSchemaValidationError(
-        new SchemaValidationError(
-          'Either permanentId or uriHash is required'
-        ) as Error
+        new SchemaValidationError('Either permanentId or uriHash is required') as Error
       ),
     };
   }

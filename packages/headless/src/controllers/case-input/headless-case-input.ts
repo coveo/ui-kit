@@ -17,14 +17,8 @@ import type {
   DocumentSuggestionSection,
 } from '../../state/state-sections.js';
 import {loadReducerError} from '../../utils/errors.js';
-import {
-  requiredNonEmptyString,
-  validateOptions,
-} from '../../utils/validate-payload.js';
-import {
-  buildController,
-  type Controller,
-} from '../controller/headless-controller.js';
+import {requiredNonEmptyString, validateOptions} from '../../utils/validate-payload.js';
+import {buildController, type Controller} from '../controller/headless-controller.js';
 
 export interface CaseInputOptions {
   field: string;
@@ -96,10 +90,7 @@ export interface CaseInputState {
  * @group Controllers
  * @category CaseInput
  */
-export function buildCaseInput(
-  engine: CaseAssistEngine,
-  props: CaseInputProps
-): CaseInput {
+export function buildCaseInput(engine: CaseAssistEngine, props: CaseInputProps): CaseInput {
   if (!loadCaseInputReducers(engine)) {
     throw loadReducerError;
   }
@@ -140,10 +131,8 @@ export function buildCaseInput(
       );
       dispatch(logUpdateCaseField(fieldName));
 
-      updatesToFetch?.caseClassifications &&
-        dispatch(fetchCaseClassifications());
-      updatesToFetch?.documentSuggestions &&
-        dispatch(fetchDocumentSuggestions());
+      updatesToFetch?.caseClassifications && dispatch(fetchCaseClassifications());
+      updatesToFetch?.documentSuggestions && dispatch(fetchDocumentSuggestions());
     },
 
     get state() {

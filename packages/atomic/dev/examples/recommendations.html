@@ -29,9 +29,7 @@
 
       (async () => {
         await customElements.whenDefined('atomic-recs-interface');
-        const recsInterfaces = Array.from(
-          document.querySelectorAll('atomic-recs-interface')
-        );
+        const recsInterfaces = Array.from(document.querySelectorAll('atomic-recs-interface'));
         await Promise.all(
           recsInterfaces.map(async (recommendationInterface) =>
             recommendationInterface.initialize({
@@ -135,24 +133,17 @@
                 }
               </style>
               <atomic-result-section-visual>
-                <atomic-result-image
-                  field="ec_images"
-                  aria-hidden="true"
-                ></atomic-result-image>
+                <atomic-result-image field="ec_images" aria-hidden="true"></atomic-result-image>
               </atomic-result-section-visual>
               <atomic-result-section-title>
                 <atomic-result-link></atomic-result-link>
               </atomic-result-section-title>
               <atomic-result-section-title-metadata>
                 <div class="rating-wrapper">
-                  <atomic-result-rating
-                    field="ec_rating"
-                  ></atomic-result-rating>
+                  <atomic-result-rating field="ec_rating"></atomic-result-rating>
                   <atomic-field-condition class="field" if-defined="ec_rating">
                     <span>
-                      <atomic-result-number
-                        field="cat_rating_count"
-                      ></atomic-result-number>
+                      <atomic-result-number field="cat_rating_count"></atomic-result-number>
                       reviews
                     </span>
                   </atomic-field-condition>
@@ -160,9 +151,7 @@
               </atomic-result-section-title-metadata>
               <atomic-result-section-emphasized>
                 <atomic-result-number field="ec_price">
-                  <atomic-format-currency
-                    currency="USD"
-                  ></atomic-format-currency>
+                  <atomic-format-currency currency="USD"></atomic-format-currency>
                 </atomic-result-number>
               </atomic-result-section-emphasized>
               <atomic-result-section-excerpt
@@ -203,24 +192,17 @@
                 }
               </style>
               <atomic-result-section-visual>
-                <atomic-result-image
-                  field="ec_images"
-                  aria-hidden="true"
-                ></atomic-result-image>
+                <atomic-result-image field="ec_images" aria-hidden="true"></atomic-result-image>
               </atomic-result-section-visual>
               <atomic-result-section-title>
                 <atomic-result-link></atomic-result-link>
               </atomic-result-section-title>
               <atomic-result-section-title-metadata>
                 <div class="rating-wrapper">
-                  <atomic-result-rating
-                    field="ec_rating"
-                  ></atomic-result-rating>
+                  <atomic-result-rating field="ec_rating"></atomic-result-rating>
                   <atomic-field-condition class="field" if-defined="ec_rating">
                     <span>
-                      <atomic-result-number
-                        field="cat_rating_count"
-                      ></atomic-result-number>
+                      <atomic-result-number field="cat_rating_count"></atomic-result-number>
                       reviews
                     </span>
                   </atomic-field-condition>
@@ -228,9 +210,7 @@
               </atomic-result-section-title-metadata>
               <atomic-result-section-emphasized>
                 <atomic-result-number field="ec_price">
-                  <atomic-format-currency
-                    currency="USD"
-                  ></atomic-format-currency>
+                  <atomic-format-currency currency="USD"></atomic-format-currency>
                 </atomic-result-number>
               </atomic-result-section-emphasized>
               <atomic-result-section-excerpt
@@ -272,24 +252,17 @@
                 }
               </style>
               <atomic-result-section-visual>
-                <atomic-result-image
-                  field="ec_images"
-                  aria-hidden="true"
-                ></atomic-result-image>
+                <atomic-result-image field="ec_images" aria-hidden="true"></atomic-result-image>
               </atomic-result-section-visual>
               <atomic-result-section-title>
                 <atomic-result-link></atomic-result-link>
               </atomic-result-section-title>
               <atomic-result-section-title-metadata>
                 <div class="rating-wrapper">
-                  <atomic-result-rating
-                    field="ec_rating"
-                  ></atomic-result-rating>
+                  <atomic-result-rating field="ec_rating"></atomic-result-rating>
                   <atomic-field-condition class="field" if-defined="ec_rating">
                     <span>
-                      <atomic-result-number
-                        field="cat_rating_count"
-                      ></atomic-result-number>
+                      <atomic-result-number field="cat_rating_count"></atomic-result-number>
                       reviews
                     </span>
                   </atomic-field-condition>
@@ -297,9 +270,7 @@
               </atomic-result-section-title-metadata>
               <atomic-result-section-emphasized>
                 <atomic-result-number field="ec_price">
-                  <atomic-format-currency
-                    currency="USD"
-                  ></atomic-format-currency>
+                  <atomic-format-currency currency="USD"></atomic-format-currency>
                 </atomic-result-number>
               </atomic-result-section-emphasized>
               <atomic-result-section-excerpt

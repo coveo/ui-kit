@@ -3,10 +3,7 @@ import type {CoreEngine} from '../../../app/engine.js';
 import {tabSetReducer as tabSet} from '../../../features/tab-set/tab-set-slice.js';
 import type {TabSection} from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
-import {
-  buildController,
-  type Controller,
-} from '../../controller/headless-controller.js';
+import {buildController, type Controller} from '../../controller/headless-controller.js';
 
 /**
  * The `TabManager` components lets you manage tabs.

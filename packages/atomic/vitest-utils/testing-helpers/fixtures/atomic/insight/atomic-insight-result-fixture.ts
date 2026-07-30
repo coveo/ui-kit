@@ -45,14 +45,8 @@ export class FixtureAtomicInsightResult extends LitElement {
   connectedCallback() {
     super.connectedCallback();
     this.addEventListener('atomic/resolveResult', this.handleResolveResult);
-    this.addEventListener(
-      'atomic/resolveInteractiveResult',
-      this.handleResolveInteractiveResult
-    );
-    this.addEventListener(
-      'atomic/resolveFoldedResultList',
-      this.handleResolveFoldedResultList
-    );
+    this.addEventListener('atomic/resolveInteractiveResult', this.handleResolveInteractiveResult);
+    this.addEventListener('atomic/resolveFoldedResultList', this.handleResolveFoldedResultList);
     this.addEventListener(
       'atomic/resolveResultDisplayConfig',
       this.handleResolveResultDisplayConfig
@@ -66,10 +60,7 @@ export class FixtureAtomicInsightResult extends LitElement {
       'atomic/resolveInteractiveResult',
       this.handleResolveInteractiveResult
     );
-    this.removeEventListener(
-      'atomic/resolveFoldedResultList',
-      this.handleResolveFoldedResultList
-    );
+    this.removeEventListener('atomic/resolveFoldedResultList', this.handleResolveFoldedResultList);
     this.removeEventListener(
       'atomic/resolveResultDisplayConfig',
       this.handleResolveResultDisplayConfig
@@ -77,9 +68,7 @@ export class FixtureAtomicInsightResult extends LitElement {
   }
 
   private handleResolveResult = (event: Event) => {
-    const customEvent = event as CustomEvent<
-      (result: Record<string, unknown>) => void
-    >;
+    const customEvent = event as CustomEvent<(result: Record<string, unknown>) => void>;
     customEvent.preventDefault();
     customEvent.stopPropagation();
     if (this.result && typeof customEvent.detail === 'function') {
@@ -88,22 +77,16 @@ export class FixtureAtomicInsightResult extends LitElement {
   };
 
   private handleResolveInteractiveResult = (event: Event) => {
-    const customEvent = event as CustomEvent<
-      (interactiveResult: Record<string, unknown>) => void
-    >;
+    const customEvent = event as CustomEvent<(interactiveResult: Record<string, unknown>) => void>;
     customEvent.preventDefault();
     customEvent.stopPropagation();
     if (this.interactiveResult && typeof customEvent.detail === 'function') {
-      customEvent.detail(
-        this.interactiveResult as unknown as Record<string, unknown>
-      );
+      customEvent.detail(this.interactiveResult as unknown as Record<string, unknown>);
     }
   };
 
   private handleResolveFoldedResultList = (event: Event) => {
-    const customEvent = event as CustomEvent<
-      (foldedResultList: InsightFoldedResultList) => void
-    >;
+    const customEvent = event as CustomEvent<(foldedResultList: InsightFoldedResultList) => void>;
     customEvent.preventDefault();
     customEvent.stopPropagation();
     if (this.foldedResultList && typeof customEvent.detail === 'function') {
@@ -112,9 +95,7 @@ export class FixtureAtomicInsightResult extends LitElement {
   };
 
   private handleResolveResultDisplayConfig = (event: Event) => {
-    const customEvent = event as CustomEvent<
-      (displayConfig: DisplayConfig) => void
-    >;
+    const customEvent = event as CustomEvent<(displayConfig: DisplayConfig) => void>;
     customEvent.preventDefault();
     customEvent.stopPropagation();
     if (this.displayConfig && typeof customEvent.detail === 'function') {
@@ -216,9 +197,7 @@ export function buildMockInsightFoldedResultList(
 /**
  * Builds a default DisplayConfig for testing.
  */
-export function buildMockDisplayConfig(
-  overrides: Partial<DisplayConfig> = {}
-): DisplayConfig {
+export function buildMockDisplayConfig(overrides: Partial<DisplayConfig> = {}): DisplayConfig {
   return {
     density: 'normal',
     imageSize: 'small',
@@ -254,9 +233,7 @@ export function renderInAtomicInsightResult<T extends LitElement>({
 }: {
   template: TemplateResult;
   selector?: string;
-  bindings?:
-    | Partial<InsightBindings>
-    | ((bindings: MinimalBindings) => MinimalBindings);
+  bindings?: Partial<InsightBindings> | ((bindings: MinimalBindings) => MinimalBindings);
   result?: InsightFoldedResult;
   interactiveResult?: InsightInteractiveResult;
   foldedResultList?: InsightFoldedResultList;
@@ -278,9 +255,7 @@ export async function renderInAtomicInsightResult<T extends LitElement>({
 }: {
   template: TemplateResult;
   selector?: string | never;
-  bindings?:
-    | Partial<InsightBindings>
-    | ((bindings: MinimalBindings) => MinimalBindings);
+  bindings?: Partial<InsightBindings> | ((bindings: MinimalBindings) => MinimalBindings);
   result?: InsightFoldedResult;
   interactiveResult?: InsightInteractiveResult;
   foldedResultList?: InsightFoldedResultList;

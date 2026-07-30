@@ -1,10 +1,7 @@
 import {executeSearch} from '../../../features/insight-search/insight-search-actions.js';
 import {restoreSearchParameters} from '../../../features/search-parameters/search-parameter-actions.js';
 import {initialSearchParameterSelector} from '../../../features/search-parameters/search-parameter-selectors.js';
-import {
-  buildMockInsightEngine,
-  type MockedInsightEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockInsightEngine, type MockedInsightEngine} from '../../../test/mock-engine-v2.js';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request.js';
 import {buildMockFacetSlice} from '../../../test/mock-facet-slice.js';
 import {buildMockFacetValueRequest} from '../../../test/mock-facet-value-request.js';

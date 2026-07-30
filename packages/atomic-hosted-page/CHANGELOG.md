@@ -1,3 +1,16 @@
+## 1.2.51
+
+### Patch Changes
+
+- Updated dependencies [[`42f1e58`](https://github.com/coveo/ui-kit/commit/42f1e58bfbb5aeeee832d7da07b3bc77ededeff7), [`51e15d1`](https://github.com/coveo/ui-kit/commit/51e15d1435d7435a0701754d9e418d6d87d376c3)]:
+  - @coveo/headless@3.53.2
+
+## 1.2.50
+
+### Patch Changes
+
+- [#8012](https://github.com/coveo/ui-kit/pull/8012) [`0a03dac`](https://github.com/coveo/ui-kit/commit/0a03dac66d5c9e483b07658a95c5d6159e6c5790) - Fix package entrypoints to reference the files emitted by the current build.
+
 ## 1.2.49
 
 ### Patch Changes

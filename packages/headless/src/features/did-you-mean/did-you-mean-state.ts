@@ -1,7 +1,4 @@
-import type {
-  Correction,
-  QueryCorrection,
-} from '../../api/search/search/query-corrections.js';
+import type {Correction, QueryCorrection} from '../../api/search/search/query-corrections.js';
 
 /**
  * Define which query correction system to use

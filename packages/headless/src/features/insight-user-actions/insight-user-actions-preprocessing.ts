@@ -86,9 +86,7 @@ const mapRawActionToUserAction = (rawAction: RawUserAction): UserAction => {
  * @param rawUserActions {rawUserAction[]} - The raw user actions to sort and map
  * @returns {UserAction[]}
  */
-export const mapAndSortActionsByMostRecent = (
-  rawUserActions: RawUserAction[]
-): UserAction[] => {
+export const mapAndSortActionsByMostRecent = (rawUserActions: RawUserAction[]): UserAction[] => {
   let parsingError = false;
   const parsedActions = rawUserActions
     .reduce((acc, rawAction) => {
@@ -100,15 +98,10 @@ export const mapAndSortActionsByMostRecent = (
       }
       return acc;
     }, [] as UserAction[])
-    .sort(
-      (firstAction, secondAction) =>
-        secondAction.timestamp - firstAction.timestamp
-    );
+    .sort((firstAction, secondAction) => secondAction.timestamp - firstAction.timestamp);
 
   if (parsingError) {
-    console.warn(
-      'Some user actions could not be parsed. Please check the raw user actions data.'
-    );
+    console.warn('Some user actions could not be parsed. Please check the raw user actions data.');
   }
 
   return parsedActions;
@@ -124,10 +117,7 @@ export const isActionWithinSessionThreshold = (
   action: UserAction,
   latestTimestampInSession: number
 ): boolean => {
-  return (
-    Math.abs(action.timestamp - latestTimestampInSession) <
-    SESSION_INACTIVITY_THRESHOLD_IN_MS
-  );
+  return Math.abs(action.timestamp - latestTimestampInSession) < SESSION_INACTIVITY_THRESHOLD_IN_MS;
 };
 
 /**
@@ -194,10 +184,7 @@ export const shouldExcludeAction = (
     const eventType = action.eventData?.type || '';
     const eventValue = action.eventData?.value || '';
 
-    return (
-      excludedCustomActions.includes(eventType) ||
-      excludedCustomActions.includes(eventValue)
-    );
+    return excludedCustomActions.includes(eventType) || excludedCustomActions.includes(eventValue);
   }
   return false;
 };
@@ -273,10 +260,7 @@ export const splitActionsIntoTimelineSessions = (
   }
 
   return {
-    precedingSessions: returnTimeline.precedingSessions.slice(
-      0,
-      NUMBER_OF_PRECEDING_SESSIONS
-    ),
+    precedingSessions: returnTimeline.precedingSessions.slice(0, NUMBER_OF_PRECEDING_SESSIONS),
     session: returnTimeline.session,
     followingSessions: returnTimeline.followingSessions.slice(
       returnTimeline.followingSessions.length - NUMBER_OF_FOLLOWING_SESSIONS

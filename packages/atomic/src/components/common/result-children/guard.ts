@@ -7,9 +7,7 @@ interface ResultChildrenGuardProps {
   templateHasError: boolean;
 }
 
-export const renderResultChildrenGuard: FunctionalComponentWithChildren<
-  ResultChildrenGuardProps
-> =
+export const renderResultChildrenGuard: FunctionalComponentWithChildren<ResultChildrenGuardProps> =
   ({props}) =>
   (children) => {
     if (!props.inheritTemplates && !props.resultTemplateRegistered) {

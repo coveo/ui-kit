@@ -11,7 +11,8 @@ vi.mock('pacote', () => ({
 }));
 
 import pacote from 'pacote';
-import {downloadTemplate, TemplateVersionUnavailableError} from './download.js';
+import {downloadTemplate} from './download.js';
+import {TemplateVersionUnavailableError} from './errors.js';
 
 const extractWritesPackageJson = async (_spec: string, dest: string) => {
   await mkdir(dest, {recursive: true});
@@ -39,9 +40,7 @@ describe('downloadTemplate', () => {
   });
 
   it('extracts the bare package name and skips the packument when no version is given', async () => {
-    vi.mocked(pacote.extract).mockImplementation(
-      extractWritesPackageJson as any
-    );
+    vi.mocked(pacote.extract).mockImplementation(extractWritesPackageJson as any);
 
     const result = await downloadTemplate({
       packageName: '@coveo/sample-x',
@@ -49,21 +48,13 @@ describe('downloadTemplate', () => {
     });
 
     expect(pacote.packument).not.toHaveBeenCalled();
-    expect(pacote.extract).toHaveBeenCalledWith(
-      '@coveo/sample-x',
-      destDir,
-      expect.anything()
-    );
+    expect(pacote.extract).toHaveBeenCalledWith('@coveo/sample-x', destDir, expect.anything());
     expect(result).toBe(destDir);
   });
 
   it('extracts the exact version when it is published', async () => {
-    vi.mocked(pacote.packument).mockResolvedValue(
-      packument({latest: '3.2.1'}, ['3.1.0', '3.2.1'])
-    );
-    vi.mocked(pacote.extract).mockImplementation(
-      extractWritesPackageJson as any
-    );
+    vi.mocked(pacote.packument).mockResolvedValue(packument({latest: '3.2.1'}, ['3.1.0', '3.2.1']));
+    vi.mocked(pacote.extract).mockImplementation(extractWritesPackageJson as any);
 
     await downloadTemplate({
       packageName: '@coveo/sample-x',
@@ -80,14 +71,9 @@ describe('downloadTemplate', () => {
 
   it('accepts a dist-tag that exists on the packument', async () => {
     vi.mocked(pacote.packument).mockResolvedValue(
-      packument({latest: '3.2.1', next: '4.0.0-next.0'}, [
-        '3.2.1',
-        '4.0.0-next.0',
-      ])
+      packument({latest: '3.2.1', next: '4.0.0-next.0'}, ['3.2.1', '4.0.0-next.0'])
     );
-    vi.mocked(pacote.extract).mockImplementation(
-      extractWritesPackageJson as any
-    );
+    vi.mocked(pacote.extract).mockImplementation(extractWritesPackageJson as any);
 
     await downloadTemplate({
       packageName: '@coveo/sample-x',
@@ -95,17 +81,11 @@ describe('downloadTemplate', () => {
       version: 'next',
     });
 
-    expect(pacote.extract).toHaveBeenCalledWith(
-      '@coveo/sample-x@next',
-      destDir,
-      expect.anything()
-    );
+    expect(pacote.extract).toHaveBeenCalledWith('@coveo/sample-x@next', destDir, expect.anything());
   });
 
   it('throws TemplateVersionUnavailableError without extracting when the version is absent', async () => {
-    vi.mocked(pacote.packument).mockResolvedValue(
-      packument({latest: '3.2.1'}, ['3.1.0', '3.2.1'])
-    );
+    vi.mocked(pacote.packument).mockResolvedValue(packument({latest: '3.2.1'}, ['3.1.0', '3.2.1']));
 
     await expect(
       downloadTemplate({

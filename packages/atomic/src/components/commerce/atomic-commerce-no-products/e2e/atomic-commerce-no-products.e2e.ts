@@ -25,12 +25,8 @@ test.describe('atomic-commerce-no-products', () => {
       await searchBox.submitButton.click();
     });
 
-    test('should display the query with HTML characters', async ({
-      noProducts,
-    }) => {
-      await expect(
-        noProducts.message('<div>$@#()-^!query</div>')
-      ).toBeVisible();
+    test('should display the query with HTML characters', async ({noProducts}) => {
+      await expect(noProducts.message('<div>$@#()-^!query</div>')).toBeVisible();
     });
   });
 });

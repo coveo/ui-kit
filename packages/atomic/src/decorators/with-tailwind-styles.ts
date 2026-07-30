@@ -27,8 +27,7 @@ function injectTailwindProperties(element: any) {
   if (typeof window === 'undefined' || !tailwindPropertiesSheet) return;
 
   const parent = element.getRootNode();
-  const isParentDocumentOrShadowRoot =
-    parent instanceof Document || parent instanceof ShadowRoot;
+  const isParentDocumentOrShadowRoot = parent instanceof Document || parent instanceof ShadowRoot;
 
   if (isParentDocumentOrShadowRoot) {
     if (!parent.adoptedStyleSheets.includes(tailwindPropertiesSheet)) {

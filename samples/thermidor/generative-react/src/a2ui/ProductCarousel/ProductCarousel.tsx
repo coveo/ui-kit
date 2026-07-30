@@ -20,8 +20,7 @@ interface ProductItem {
 
 export function A2UIProductCarousel({surface}: A2UIProductCarouselProps) {
   const heading =
-    (surface.componentProps.heading as {literalString?: string})
-      ?.literalString ?? 'Products';
+    (surface.componentProps.heading as {literalString?: string})?.literalString ?? 'Products';
 
   const items = (surface.data.items as ProductItem[]) ?? [];
   const [page, setPage] = useState(0);

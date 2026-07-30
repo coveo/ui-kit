@@ -14,25 +14,24 @@ describe('atomic-result-icon', () => {
 
   const renderComponent = async (options: {result?: Result} = {}) => {
     const resultToUse = options.result ?? mockResult;
-    const {element, atomicResult, atomicInterface} =
-      await renderInAtomicResult<AtomicResultIcon>({
-        template: html`<atomic-result-icon></atomic-result-icon>`,
-        selector: 'atomic-result-icon',
-        result: resultToUse,
-        bindings: (bindings) => {
-          bindings.engine.logger = {warn: vi.fn()} as never;
-          bindings.store = {
-            ...bindings.store,
-            onChange: vi.fn(),
-            state: {
-              ...bindings.store?.state,
-              loadingFlags: [],
-              iconAssetsPath: '',
-            },
-          };
-          return bindings;
-        },
-      });
+    const {element, atomicResult, atomicInterface} = await renderInAtomicResult<AtomicResultIcon>({
+      template: html`<atomic-result-icon></atomic-result-icon>`,
+      selector: 'atomic-result-icon',
+      result: resultToUse,
+      bindings: (bindings) => {
+        bindings.engine.logger = {warn: vi.fn()} as never;
+        bindings.store = {
+          ...bindings.store,
+          onChange: vi.fn(),
+          state: {
+            ...bindings.store?.state,
+            loadingFlags: [],
+            iconAssetsPath: '',
+          },
+        };
+        return bindings;
+      },
+    });
 
     await atomicInterface.updateComplete;
     await atomicResult.updateComplete;

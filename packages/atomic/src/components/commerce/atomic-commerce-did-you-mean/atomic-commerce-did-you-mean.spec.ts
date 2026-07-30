@@ -45,31 +45,24 @@ describe('atomic-commerce-did-you-mean', () => {
 
     vi.mocked(buildQueryTrigger).mockReturnValue(mockedQueryTrigger);
 
-    const {element} =
-      await renderInAtomicCommerceInterface<AtomicCommerceDidYouMean>({
-        template: html`<atomic-commerce-did-you-mean></atomic-commerce-did-you-mean>`,
-        selector: 'atomic-commerce-did-you-mean',
-        bindings: (bindings) => {
-          bindings.interfaceElement.type = interfaceElementType;
-          bindings.engine = mockedEngine;
+    const {element} = await renderInAtomicCommerceInterface<AtomicCommerceDidYouMean>({
+      template: html`<atomic-commerce-did-you-mean></atomic-commerce-did-you-mean>`,
+      selector: 'atomic-commerce-did-you-mean',
+      bindings: (bindings) => {
+        bindings.interfaceElement.type = interfaceElementType;
+        bindings.engine = mockedEngine;
 
-          return bindings;
-        },
-      });
+        return bindings;
+      },
+    });
 
     return {
       element,
       noResults: element.shadowRoot?.querySelector('p[part="no-results"]'),
-      autoCorrected: element.shadowRoot?.querySelector(
-        'p[part="auto-corrected"]'
-      ),
+      autoCorrected: element.shadowRoot?.querySelector('p[part="auto-corrected"]'),
       didYouMean: element.shadowRoot?.querySelector('p[part="did-you-mean"]'),
-      showingResultsFor: element.shadowRoot?.querySelector(
-        'p[part="showing-results-for"]'
-      ),
-      searchInsteadFor: element.shadowRoot?.querySelector(
-        'p[part="search-instead-for"]'
-      ),
+      showingResultsFor: element.shadowRoot?.querySelector('p[part="showing-results-for"]'),
+      searchInsteadFor: element.shadowRoot?.querySelector('p[part="search-instead-for"]'),
       undoBtn: element.shadowRoot?.querySelector('button[part="undo-btn"]'),
     };
   };
@@ -130,9 +123,7 @@ describe('atomic-commerce-did-you-mean', () => {
     });
 
     it('should display the auto correction no results content', () => {
-      expect(noResults).toHaveTextContent(
-        "We couldn't find anything for original search"
-      );
+      expect(noResults).toHaveTextContent("We couldn't find anything for original search");
     });
 
     it('should set the correct part attribute for no results', () => {
@@ -140,9 +131,7 @@ describe('atomic-commerce-did-you-mean', () => {
     });
 
     it('should highlight the original search in no results', () => {
-      expect(noResults?.querySelector('b[part="highlight"]')).toHaveTextContent(
-        'original search'
-      );
+      expect(noResults?.querySelector('b[part="highlight"]')).toHaveTextContent('original search');
     });
 
     it('should display the auto correction auto corrected content', () => {
@@ -156,9 +145,9 @@ describe('atomic-commerce-did-you-mean', () => {
     });
 
     it('should highlight the corrected search in auto corrected', () => {
-      expect(
-        autoCorrected?.querySelector('b[part="highlight"]')
-      ).toHaveTextContent('corrected search');
+      expect(autoCorrected?.querySelector('b[part="highlight"]')).toHaveTextContent(
+        'corrected search'
+      );
     });
   });
 
@@ -182,9 +171,7 @@ describe('atomic-commerce-did-you-mean', () => {
     });
 
     it('should render correction did you mean text', () => {
-      expect(didYouMean).toHaveTextContent(
-        'Did you mean: suggested correction'
-      );
+      expect(didYouMean).toHaveTextContent('Did you mean: suggested correction');
     });
 
     it('should set the correct part attribute for did you mean', () => {
@@ -192,20 +179,13 @@ describe('atomic-commerce-did-you-mean', () => {
     });
 
     it('should display suggested correction in button', () => {
-      const correctionBtn = didYouMean?.querySelector(
-        'button[part="correction-btn"]'
-      );
+      const correctionBtn = didYouMean?.querySelector('button[part="correction-btn"]');
       expect(correctionBtn).toHaveTextContent('suggested correction');
     });
 
     it('should call applyCorrection when correction button is clicked', async () => {
-      const correctionBtn = didYouMean?.querySelector(
-        'button[part="correction-btn"]'
-      );
-      const applyCorrectionSpy = vi.spyOn(
-        element.didYouMean,
-        'applyCorrection'
-      );
+      const correctionBtn = didYouMean?.querySelector('button[part="correction-btn"]');
+      const applyCorrectionSpy = vi.spyOn(element.didYouMean, 'applyCorrection');
 
       await userEvent.click(correctionBtn!);
       expect(applyCorrectionSpy).toHaveBeenCalled();
@@ -231,12 +211,10 @@ describe('atomic-commerce-did-you-mean', () => {
     });
 
     it('should display modified query in showing-results-for section', () => {
-      expect(showingResultsFor).toHaveTextContent(
-        'Showing products for modified query'
+      expect(showingResultsFor).toHaveTextContent('Showing products for modified query');
+      expect(showingResultsFor?.querySelector('b[part="highlight"]')).toHaveTextContent(
+        'modified query'
       );
-      expect(
-        showingResultsFor?.querySelector('b[part="highlight"]')
-      ).toHaveTextContent('modified query');
     });
 
     it('should set the correct part attribute for showing-results-for', () => {

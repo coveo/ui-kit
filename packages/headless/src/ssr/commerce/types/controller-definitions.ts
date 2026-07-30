@@ -14,10 +14,7 @@ import type {
   OptionsTuple,
 } from '../../common/types/utilities.js';
 import type {SSRCommerceEngine} from '../factories/build-factory.js';
-import {
-  type recommendationInternalOptionKey,
-  SolutionType,
-} from './controller-constants.js';
+import {type recommendationInternalOptionKey, SolutionType} from './controller-constants.js';
 import type {
   ListingAndStandaloneController,
   ListingOnlyController,
@@ -57,9 +54,7 @@ export type RecommendationControllerSettings = {
   enabled?: boolean;
 };
 
-export interface ControllerDefinitionWithoutProps<
-  TController extends Controller,
-> {
+export interface ControllerDefinitionWithoutProps<TController extends Controller> {
   /**
    * Creates an instance of the given controller.
    *
@@ -74,10 +69,7 @@ export interface ControllerWithKind extends Controller {
   _kind: Kind;
 }
 
-export interface ControllerDefinitionWithProps<
-  TController extends Controller,
-  TProps,
-> {
+export interface ControllerDefinitionWithProps<TController extends Controller, TProps> {
   /**
    * Creates an instance of the given controller.
    *
@@ -100,12 +92,11 @@ interface SolutionTypeAvailability {
   [SolutionType.recommendation]?: boolean;
 }
 
-export type ControllerDefinition<TController extends Controller> =
-  SolutionTypeAvailability &
-    (
-      | ControllerDefinitionWithoutProps<TController>
-      | ControllerDefinitionWithProps<TController, unknown>
-    );
+export type ControllerDefinition<TController extends Controller> = SolutionTypeAvailability &
+  (
+    | ControllerDefinitionWithoutProps<TController>
+    | ControllerDefinitionWithProps<TController, unknown>
+  );
 
 export interface ControllerDefinitionsMap<TController extends Controller> {
   [customName: string]: ControllerDefinition<TController>;
@@ -123,11 +114,7 @@ export type EngineDefinitionControllersPropsOption<
   TControllersPropsMap,
   TSolutionType
 > &
-  RequiredEngineDefinitionControllersPropsOption<
-    TControllers,
-    TControllersPropsMap,
-    TSolutionType
-  >;
+  RequiredEngineDefinitionControllersPropsOption<TControllers, TControllersPropsMap, TSolutionType>;
 
 /**
  * Represents an optional engine definition for controller properties.
@@ -174,18 +161,10 @@ type OptionalEngineDefinitionControllersPropsOption<
   TControllersPropsMap extends ControllersPropsMap,
   TSolutionType extends SolutionType,
 > = {
-  [K in keyof TControllers as HasKey<
-    TControllers[K],
-    TSolutionType
-  > extends never
+  [K in keyof TControllers as HasKey<TControllers[K], TSolutionType> extends never
     ? never
     : HasOptionalKeys<
-          ConditionalControllerProps<
-            TControllers,
-            TControllersPropsMap,
-            TSolutionType,
-            K
-          >
+          ConditionalControllerProps<TControllers, TControllersPropsMap, TSolutionType, K>
         > extends false
       ? never
       : 'controllers']?: ConditionalControllerProps<
@@ -232,18 +211,10 @@ type RequiredEngineDefinitionControllersPropsOption<
   TControllersPropsMap extends ControllersPropsMap,
   TSolutionType extends SolutionType,
 > = {
-  [K in keyof TControllers as HasKey<
-    TControllers[K],
-    TSolutionType
-  > extends never
+  [K in keyof TControllers as HasKey<TControllers[K], TSolutionType> extends never
     ? never
     : HasRequiredKeys<
-          ConditionalControllerProps<
-            TControllers,
-            TControllersPropsMap,
-            TSolutionType,
-            K
-          >
+          ConditionalControllerProps<TControllers, TControllersPropsMap, TSolutionType, K>
         > extends false
       ? never
       : 'controllers']: ConditionalControllerProps<
@@ -254,9 +225,10 @@ type RequiredEngineDefinitionControllersPropsOption<
   >;
 };
 
-type IsRecommendationController<
-  TController extends ControllerDefinition<Controller>,
-> = HasKey<TController, typeof recommendationInternalOptionKey>;
+type IsRecommendationController<TController extends ControllerDefinition<Controller>> = HasKey<
+  TController,
+  typeof recommendationInternalOptionKey
+>;
 
 /**
  * This type ensures that recommendation controller props are optional, while other controller props remain required.
@@ -307,9 +279,7 @@ type DefaultControllerProps<
   TControllersPropsMap extends ControllersPropsMap,
   K extends keyof TControllers,
 > = {
-  [I in keyof TControllersPropsMap as I extends K
-    ? I
-    : never]: TControllersPropsMap[I];
+  [I in keyof TControllersPropsMap as I extends K ? I : never]: TControllersPropsMap[I];
 };
 
 type ConditionalControllerProps<
@@ -337,28 +307,24 @@ export interface ControllerDefinitionOption {
   search?: boolean;
 }
 
-export type SearchOnlyControllerDefinitionWithoutProps<
-  TController extends Controller,
-> = ControllerDefinitionWithoutProps<TController> & SearchOnlyController;
+export type SearchOnlyControllerDefinitionWithoutProps<TController extends Controller> =
+  ControllerDefinitionWithoutProps<TController> & SearchOnlyController;
 
 type SearchOnlyControllerDefinitionWithProps<
   TController extends Controller,
   TProps,
 > = ControllerDefinitionWithProps<TController, TProps> & SearchOnlyController;
 
-export type ListingAndStandaloneControllerWithoutProps<
-  TController extends Controller,
-> = ControllerDefinitionWithoutProps<TController> &
-  ListingAndStandaloneController;
+export type ListingAndStandaloneControllerWithoutProps<TController extends Controller> =
+  ControllerDefinitionWithoutProps<TController> & ListingAndStandaloneController;
 
 export type StandaloneControllerWithProps<
   TController extends Controller,
   TProps,
 > = ControllerDefinitionWithProps<TController, TProps> & StandaloneController;
 
-type ListingOnlyControllerDefinitionWithoutProps<
-  TController extends Controller,
-> = ControllerDefinitionWithoutProps<TController> & ListingOnlyController;
+type ListingOnlyControllerDefinitionWithoutProps<TController extends Controller> =
+  ControllerDefinitionWithoutProps<TController> & ListingOnlyController;
 
 type ListingOnlyControllerDefinitionWithProps<
   TController extends Controller,
@@ -368,27 +334,23 @@ type ListingOnlyControllerDefinitionWithProps<
 export type RecommendationOnlyControllerDefinitionWithProps<
   TController extends Controller,
   TProps,
-> = ControllerDefinitionWithProps<TController, TProps> &
-  RecommendationOnlyController;
+> = ControllerDefinitionWithProps<TController, TProps> & RecommendationOnlyController;
 
-export type NonRecommendationControllerDefinitionWithoutProps<
-  TController extends Controller,
-> = ControllerDefinitionWithoutProps<TController> & NonRecommendationController;
+export type NonRecommendationControllerDefinitionWithoutProps<TController extends Controller> =
+  ControllerDefinitionWithoutProps<TController> & NonRecommendationController;
 
 export type UniversalControllerDefinitionWithProps<
   TController extends Controller,
   TProps,
 > = ControllerDefinitionWithProps<TController, TProps> & UniversalController;
 
-export type SearchAndListingControllerDefinitionWithoutProps<
-  TController extends Controller,
-> = ControllerDefinitionWithoutProps<TController> & SearchAndListingController;
+export type SearchAndListingControllerDefinitionWithoutProps<TController extends Controller> =
+  ControllerDefinitionWithoutProps<TController> & SearchAndListingController;
 
 type SearchAndListingControllerDefinitionWithProps<
   TController extends Controller,
   TProps,
-> = ControllerDefinitionWithProps<TController, TProps> &
-  SearchAndListingController;
+> = ControllerDefinitionWithProps<TController, TProps> & SearchAndListingController;
 
 export type SubControllerDefinitionWithoutProps<
   TController extends Controller,

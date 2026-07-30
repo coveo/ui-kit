@@ -52,8 +52,7 @@ describe('pagination selectors', () => {
 
     it(`totalCountFiltered greater than ${maximumNumberOfResultsFromIndex}, numberOfResults 10, maxPage is 100`, () => {
       state.pagination.numberOfResults = 10;
-      state.pagination.totalCountFiltered =
-        maximumNumberOfResultsFromIndex + 10;
+      state.pagination.totalCountFiltered = maximumNumberOfResultsFromIndex + 10;
       const maxPage = maxPageSelector(state);
 
       expect(maxPage).toBe(maximumNumberOfResultsFromIndex / 10);
@@ -66,10 +65,7 @@ describe('pagination selectors', () => {
 
     function setPage(page: number) {
       state.pagination.numberOfResults = numberOfResults;
-      state.pagination.firstResult = calculateFirstResult(
-        page,
-        numberOfResults
-      );
+      state.pagination.firstResult = calculateFirstResult(page, numberOfResults);
     }
 
     function setMaxPage(page: number) {

@@ -24,7 +24,7 @@ vi.mock('./log.js', () => ({
   },
 }));
 
-import {scaffold} from './index.js';
+import {scaffold, unavailableTemplateMessage} from './scaffold.js';
 import {getTemplate} from './templates.js';
 
 describe('scaffold provenance integration', () => {
@@ -36,20 +36,18 @@ describe('scaffold provenance integration', () => {
     originalCwd = process.cwd();
     process.chdir(cwd);
     installDependenciesMock.mockReturnValue(true);
-    downloadTemplateMock.mockImplementation(
-      async ({destDir}: {destDir: string}) => {
-        await writeFile(
-          join(destDir, 'package.json'),
-          JSON.stringify({
-            name: '@coveo/ui-kit-sample-headless-search-react',
-            version: '3.5.0',
-            private: true,
-            dependencies: {'@coveo/headless': '4.1.0', react: '18.0.0'},
-          })
-        );
-        return destDir;
-      }
-    );
+    downloadTemplateMock.mockImplementation(async ({destDir}: {destDir: string}) => {
+      await writeFile(
+        join(destDir, 'package.json'),
+        JSON.stringify({
+          name: '@coveo/ui-kit-sample-headless-search-react',
+          version: '3.5.0',
+          private: true,
+          dependencies: {'@coveo/headless': '4.1.0', react: '18.0.0'},
+        })
+      );
+      return destDir;
+    });
   });
 
   afterEach(async () => {
@@ -73,5 +71,16 @@ describe('scaffold provenance integration', () => {
     expect(provenance.node).toBe(process.version.replace(/^v/, ''));
     expect(typeof provenance.packageManager).toBe('string');
     expect(Date.parse(provenance.createdOn)).not.toBeNaN();
+  });
+});
+
+describe('unavailableTemplateMessage', () => {
+  it('includes the version when provided and omits it otherwise', () => {
+    expect(unavailableTemplateMessage('headless-search-react', '3.2.1')).toBe(
+      'Template "headless-search-react" version "3.2.1" is not available.'
+    );
+    expect(unavailableTemplateMessage('headless-search-react')).toBe(
+      'Template "headless-search-react" is not available.'
+    );
   });
 });

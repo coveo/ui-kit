@@ -15,9 +15,4 @@ export type CategoryFacetDelimitingCharacter = {
   delimitingCharacter: string;
 };
 
-export type FacetType =
-  | 'regular'
-  | 'dateRange'
-  | 'numericalRange'
-  | 'hierarchical'
-  | 'location';
+export type FacetType = 'regular' | 'dateRange' | 'numericalRange' | 'hierarchical' | 'location';

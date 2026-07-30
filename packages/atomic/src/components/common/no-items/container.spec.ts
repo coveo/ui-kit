@@ -6,9 +6,7 @@ import {renderNoItemsContainer} from './container';
 describe('#renderNoItemsContainer', () => {
   const renderComponent = async (childrenContent?: string) => {
     const children = childrenContent ? html`${childrenContent}` : html``;
-    const element = await renderFunctionFixture(
-      html`${renderNoItemsContainer()(children)}`
-    );
+    const element = await renderFunctionFixture(html`${renderNoItemsContainer()(children)}`);
 
     return {
       container: element.querySelector('div'),

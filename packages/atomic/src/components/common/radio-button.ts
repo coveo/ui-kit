@@ -23,14 +23,7 @@ export interface RadioButtonProps {
   part?: string;
   ariaLabel?: string;
   ariaRoleDescription?: string;
-  ariaCurrent?:
-    | 'page'
-    | 'step'
-    | 'location'
-    | 'date'
-    | 'time'
-    | 'true'
-    | 'false';
+  ariaCurrent?: 'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false';
   ref?: RefOrCallback;
   onFocusCallback?: (
     elements: HTMLInputElement[],
@@ -39,9 +32,7 @@ export interface RadioButtonProps {
   ) => Promise<void>;
 }
 
-export const renderRadioButton: FunctionalComponent<RadioButtonProps> = ({
-  props,
-}) => {
+export const renderRadioButton: FunctionalComponent<RadioButtonProps> = ({props}) => {
   const classNames = {
     'btn-radio': true,
     selected: Boolean(props.checked),
@@ -70,20 +61,13 @@ export const renderRadioButton: FunctionalComponent<RadioButtonProps> = ({
     event.preventDefault();
 
     const buttons = getRadioButtons(radioGroup);
-    const currentIndex = getCurrentIndex(
-      buttons,
-      event.currentTarget as HTMLInputElement
-    );
+    const currentIndex = getCurrentIndex(buttons, event.currentTarget as HTMLInputElement);
 
     const newIndex = getNewIndex(key, currentIndex, buttons.length);
 
     if (buttons[newIndex]) {
       if (props.onFocusCallback) {
-        await props.onFocusCallback(
-          buttons,
-          buttons[currentIndex],
-          buttons[newIndex]
-        );
+        await props.onFocusCallback(buttons, buttons[currentIndex], buttons[newIndex]);
       } else {
         buttons[newIndex].focus();
       }
@@ -95,15 +79,10 @@ export const renderRadioButton: FunctionalComponent<RadioButtonProps> = ({
   };
 
   const getRadioButtons = (radioGroup: ParentNode) => {
-    return Array.from(
-      radioGroup.querySelectorAll('[type="radio"]')
-    ) as HTMLInputElement[];
+    return Array.from(radioGroup.querySelectorAll('[type="radio"]')) as HTMLInputElement[];
   };
 
-  const getCurrentIndex = (
-    buttons: HTMLInputElement[],
-    currentButton: HTMLInputElement
-  ) => {
+  const getCurrentIndex = (buttons: HTMLInputElement[], currentButton: HTMLInputElement) => {
     return buttons.indexOf(currentButton);
   };
 

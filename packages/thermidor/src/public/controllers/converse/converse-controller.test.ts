@@ -1,11 +1,10 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {createTestEngine} from '@/src/test/test-utils.js';
+import {type Engine, type FullEngine, getFullEngine} from '@/src/internal/engine/index.js';
 import {
-  type Engine,
-  type FullEngine,
-  getFullEngine,
-} from '@/src/internal/engine/index.js';
-import {getOrCreateGenerativeActions} from '@/src/internal/features/generative/index.js';
+  getOrCreateGenerativeActions,
+  getOrCreateRoutedInterfaceRegistry,
+} from '@/src/internal/features/generative/index.js';
 import {
   buildGenerativeInterface,
   type GenerativeInterface,
@@ -34,27 +33,21 @@ vi.mock('@/src/internal/api/generative/index.js', () => ({
   },
 }));
 
-vi.mock(
-  '@/src/internal/features/generative/index.js',
-  async (importOriginal) => {
-    const actual =
-      await importOriginal<
-        typeof import('@/src/internal/features/generative/index.js')
-      >();
-    return {
-      ...actual,
-      createHydrateSubInterface: vi.fn(() => vi.fn()),
-    };
-  }
-);
+vi.mock('@/src/internal/features/generative/index.js', async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import('@/src/internal/features/generative/index.js')>();
+  return {
+    ...actual,
+    createHydrateSubInterface: vi.fn(() => vi.fn()),
+  };
+});
 
 describe('buildConverseController', () => {
   let engine: Engine;
   let fullEngine: FullEngine;
   let generativeInterface: GenerativeInterface;
 
-  const buildController = () =>
-    buildConverseController({interface: generativeInterface});
+  const buildController = () => buildConverseController({interface: generativeInterface});
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -86,9 +79,7 @@ describe('buildConverseController', () => {
       const controller = buildController();
       const actions = getOrCreateGenerativeActions(generativeInterface);
 
-      fullEngine.mutate(
-        actions.createTurn({id: 'turn-1', prompt: 'hello', status: 'streaming'})
-      );
+      fullEngine.mutate(actions.createTurn({id: 'turn-1', prompt: 'hello', status: 'streaming'}));
 
       expect(controller.state.turns).toHaveLength(1);
       expect(controller.state.turns[0]).toMatchObject({
@@ -102,9 +93,7 @@ describe('buildConverseController', () => {
       const controller = buildController();
       const actions = getOrCreateGenerativeActions(generativeInterface);
 
-      fullEngine.mutate(
-        actions.createTurn({id: 'turn-1', prompt: 'hello', status: 'streaming'})
-      );
+      fullEngine.mutate(actions.createTurn({id: 'turn-1', prompt: 'hello', status: 'streaming'}));
 
       expect(controller.state.isStreaming).toBe(true);
     });
@@ -113,9 +102,7 @@ describe('buildConverseController', () => {
       const controller = buildController();
       const actions = getOrCreateGenerativeActions(generativeInterface);
 
-      fullEngine.mutate(
-        actions.createTurn({id: 'turn-1', prompt: 'hello', status: 'streaming'})
-      );
+      fullEngine.mutate(actions.createTurn({id: 'turn-1', prompt: 'hello', status: 'streaming'}));
       fullEngine.mutate(actions.completeTurn({turnId: 'turn-1'}));
 
       expect(controller.state.isStreaming).toBe(false);
@@ -125,9 +112,7 @@ describe('buildConverseController', () => {
       const controller = buildController();
       const actions = getOrCreateGenerativeActions(generativeInterface);
 
-      fullEngine.mutate(
-        actions.createTurn({id: 'turn-1', prompt: 'hello', status: 'complete'})
-      );
+      fullEngine.mutate(actions.createTurn({id: 'turn-1', prompt: 'hello', status: 'complete'}));
       fullEngine.mutate(actions.setActiveTurnId('turn-1'));
 
       expect(controller.state.activeTurn?.id).toBe('turn-1');
@@ -164,9 +149,7 @@ describe('buildConverseController', () => {
       const controller = buildController();
       const actions = getOrCreateGenerativeActions(generativeInterface);
 
-      fullEngine.mutate(
-        actions.createTurn({id: 'turn-1', prompt: 'hi', status: 'streaming'})
-      );
+      fullEngine.mutate(actions.createTurn({id: 'turn-1', prompt: 'hi', status: 'streaming'}));
 
       controller.submit({prompt: 'new prompt'});
 
@@ -177,9 +160,7 @@ describe('buildConverseController', () => {
       const controller = buildController();
       const actions = getOrCreateGenerativeActions(generativeInterface);
 
-      fullEngine.mutate(
-        actions.createTurn({id: 'turn-1', prompt: 'hi', status: 'streaming'})
-      );
+      fullEngine.mutate(actions.createTurn({id: 'turn-1', prompt: 'hi', status: 'streaming'}));
       fullEngine.mutate(actions.completeTurn({turnId: 'turn-1'}));
 
       controller.submit({prompt: 'new prompt'});
@@ -193,12 +174,8 @@ describe('buildConverseController', () => {
       const controller = buildController();
       const actions = getOrCreateGenerativeActions(generativeInterface);
 
-      fullEngine.mutate(
-        actions.createTurn({id: 'turn-1', prompt: 'hello', status: 'complete'})
-      );
-      fullEngine.mutate(
-        actions.createTurn({id: 'turn-2', prompt: 'world', status: 'complete'})
-      );
+      fullEngine.mutate(actions.createTurn({id: 'turn-1', prompt: 'hello', status: 'complete'}));
+      fullEngine.mutate(actions.createTurn({id: 'turn-2', prompt: 'world', status: 'complete'}));
 
       controller.selectTurn({id: 'turn-1'});
 
@@ -209,9 +186,7 @@ describe('buildConverseController', () => {
       const controller = buildController();
       const actions = getOrCreateGenerativeActions(generativeInterface);
 
-      fullEngine.mutate(
-        actions.createTurn({id: 'turn-1', prompt: 'hello', status: 'complete'})
-      );
+      fullEngine.mutate(actions.createTurn({id: 'turn-1', prompt: 'hello', status: 'complete'}));
       fullEngine.mutate(actions.setActiveTurnId('turn-1'));
 
       controller.selectTurn({id: 'non-existent'});
@@ -225,12 +200,8 @@ describe('buildConverseController', () => {
       const controller = buildController();
       const actions = getOrCreateGenerativeActions(generativeInterface);
 
-      fullEngine.mutate(
-        actions.createTurn({id: 'turn-1', prompt: 'hello', status: 'streaming'})
-      );
-      fullEngine.mutate(
-        actions.failTurn({turnId: 'turn-1', error: 'network failure'})
-      );
+      fullEngine.mutate(actions.createTurn({id: 'turn-1', prompt: 'hello', status: 'streaming'}));
+      fullEngine.mutate(actions.failTurn({turnId: 'turn-1', error: 'network failure'}));
 
       controller.retry({id: 'turn-1'});
 
@@ -249,9 +220,7 @@ describe('buildConverseController', () => {
       const controller = buildController();
       const actions = getOrCreateGenerativeActions(generativeInterface);
 
-      fullEngine.mutate(
-        actions.createTurn({id: 'turn-1', prompt: 'hello', status: 'streaming'})
-      );
+      fullEngine.mutate(actions.createTurn({id: 'turn-1', prompt: 'hello', status: 'streaming'}));
       fullEngine.mutate(actions.completeTurn({turnId: 'turn-1'}));
 
       controller.retry({id: 'turn-1'});
@@ -263,9 +232,7 @@ describe('buildConverseController', () => {
       const controller = buildController();
       const actions = getOrCreateGenerativeActions(generativeInterface);
 
-      fullEngine.mutate(
-        actions.createTurn({id: 'turn-1', prompt: 'hello', status: 'streaming'})
-      );
+      fullEngine.mutate(actions.createTurn({id: 'turn-1', prompt: 'hello', status: 'streaming'}));
 
       controller.retry({id: 'turn-1'});
 
@@ -293,9 +260,7 @@ describe('buildConverseController', () => {
       const controller = buildController();
       const actions = getOrCreateGenerativeActions(generativeInterface);
 
-      fullEngine.mutate(
-        actions.createTurn({id: 'turn-1', prompt: 'hello', status: 'streaming'})
-      );
+      fullEngine.mutate(actions.createTurn({id: 'turn-1', prompt: 'hello', status: 'streaming'}));
       fullEngine.mutate(actions.completeTurn({turnId: 'turn-1'}));
       fullEngine.mutate(actions.setActiveTurnId('turn-1'));
 
@@ -310,9 +275,10 @@ describe('buildConverseController', () => {
       expect(result.activeTurnId).toBe('turn-1');
     });
 
-    it('reduces routedInterface to {useCase} only', () => {
+    it('serializes routedInterface with useCase, snapshot, and query (without the live interface instance)', () => {
       const controller = buildController();
       const actions = getOrCreateGenerativeActions(generativeInterface);
+      const registry = getOrCreateRoutedInterfaceRegistry(generativeInterface);
 
       fullEngine.mutate(
         actions.createTurn({
@@ -321,13 +287,16 @@ describe('buildConverseController', () => {
           status: 'streaming',
         })
       );
+      registry.register('turn-1', {
+        useCase: 'commerceSearch',
+        interface: {} as never,
+        snapshot: {results: []},
+        query: 'shoes',
+      });
       fullEngine.mutate(
         actions.setRoutedInterface({
           turnId: 'turn-1',
-          routedInterface: {
-            useCase: 'commerceSearch',
-            interface: {} as never,
-          },
+          useCase: 'commerceSearch',
         })
       );
       fullEngine.mutate(actions.completeTurn({turnId: 'turn-1'}));
@@ -336,6 +305,8 @@ describe('buildConverseController', () => {
 
       expect(result.turns[0].routedInterface).toEqual({
         useCase: 'commerceSearch',
+        snapshot: {results: []},
+        query: 'shoes',
       });
     });
 
@@ -343,16 +314,10 @@ describe('buildConverseController', () => {
       const controller = buildController();
       const actions = getOrCreateGenerativeActions(generativeInterface);
 
-      fullEngine.mutate(
-        actions.createTurn({id: 'turn-1', prompt: 'hello', status: 'streaming'})
-      );
+      fullEngine.mutate(actions.createTurn({id: 'turn-1', prompt: 'hello', status: 'streaming'}));
       fullEngine.mutate(actions.initAgentResponse({turnId: 'turn-1'}));
-      fullEngine.mutate(
-        actions.startMessage({turnId: 'turn-1', role: 'assistant'})
-      );
-      fullEngine.mutate(
-        actions.appendMessageDelta({turnId: 'turn-1', delta: 'Hi there'})
-      );
+      fullEngine.mutate(actions.startMessage({turnId: 'turn-1', role: 'assistant'}));
+      fullEngine.mutate(actions.appendMessageDelta({turnId: 'turn-1', delta: 'Hi there'}));
       fullEngine.mutate(actions.completeTurn({turnId: 'turn-1'}));
       fullEngine.mutate(actions.setActiveTurnId('turn-1'));
 
@@ -366,9 +331,7 @@ describe('buildConverseController', () => {
       const controller = buildController();
       const actions = getOrCreateGenerativeActions(generativeInterface);
 
-      fullEngine.mutate(
-        actions.createTurn({id: 'turn-1', prompt: 'hello', status: 'streaming'})
-      );
+      fullEngine.mutate(actions.createTurn({id: 'turn-1', prompt: 'hello', status: 'streaming'}));
       fullEngine.mutate(actions.completeTurn({turnId: 'turn-1'}));
 
       const result = controller.serialize();
@@ -384,9 +347,7 @@ describe('buildConverseController', () => {
       const actions = getOrCreateGenerativeActions(generativeInterface);
 
       controller.subscribe(callback);
-      fullEngine.mutate(
-        actions.createTurn({id: 'turn-1', prompt: 'hello', status: 'streaming'})
-      );
+      fullEngine.mutate(actions.createTurn({id: 'turn-1', prompt: 'hello', status: 'streaming'}));
 
       expect(callback).toHaveBeenCalled();
     });
@@ -409,9 +370,7 @@ describe('buildConverseController', () => {
       const unsubscribe = controller.subscribe(callback);
       unsubscribe();
 
-      fullEngine.mutate(
-        actions.createTurn({id: 'turn-1', prompt: 'hello', status: 'streaming'})
-      );
+      fullEngine.mutate(actions.createTurn({id: 'turn-1', prompt: 'hello', status: 'streaming'}));
 
       expect(callback).not.toHaveBeenCalled();
     });
@@ -432,8 +391,7 @@ describe('buildConverseController', () => {
             agentResponse: {
               messages: [{content: 'Hi there', role: 'assistant'}],
               surfaces: [],
-              toolCalls: [],
-              reasoningContent: '',
+              reasoningSteps: [],
             },
           },
         ],

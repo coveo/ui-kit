@@ -16,12 +16,7 @@ import {
   type QuickviewProps,
 } from '../core/quickview/headless-core-quickview.js';
 
-export type {
-  CoreQuickview,
-  CoreQuickviewState,
-  QuickviewOptions,
-  QuickviewProps,
-};
+export type {CoreQuickview, CoreQuickviewState, QuickviewOptions, QuickviewProps};
 
 /**
  * A scoped and simplified part of the headless state that is relevant to the `Quickview` controller.
@@ -47,7 +42,6 @@ export interface QuickviewState extends CoreQuickviewState {
 /**
  * The `Quickview` controller provides an interface for triggering desirable side effects, such as logging UA events to the Coveo Platform, when a user interacts with a quickview.
  *
- * Example: [quickview.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/quickview/quickview.fn.tsx)
  *
  * @group Controllers
  * @category Quickview
@@ -66,10 +60,7 @@ export interface Quickview extends CoreQuickview {
  * @group Controllers
  * @category Quickview
  */
-export function buildQuickview(
-  engine: SearchEngine,
-  props: QuickviewProps
-): Quickview {
+export function buildQuickview(engine: SearchEngine, props: QuickviewProps): Quickview {
   if (!loadSearchQuickviewReducers(engine)) {
     throw loadReducerError;
   }
@@ -100,9 +91,7 @@ export function buildQuickview(
       return {
         ...core.state,
         currentResult:
-          getResults().findIndex(
-            (r) => r.uniqueId === core.state.currentResultUniqueId
-          ) + 1,
+          getResults().findIndex((r) => r.uniqueId === core.state.currentResultUniqueId) + 1,
         totalResults: getResults().length,
       };
     },
@@ -111,10 +100,7 @@ export function buildQuickview(
 
 function loadSearchQuickviewReducers(
   engine: CoreEngine
-): engine is CoreEngine<
-  SearchSection,
-  ClientThunkExtraArguments<HtmlApiClient>
-> {
+): engine is CoreEngine<SearchSection, ClientThunkExtraArguments<HtmlApiClient>> {
   engine.addReducers({search});
   return true;
 }

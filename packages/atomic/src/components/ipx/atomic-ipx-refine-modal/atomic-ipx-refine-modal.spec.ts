@@ -33,12 +33,7 @@ describe('atomic-ipx-refine-modal', () => {
       breadcrumbManagerState?: Partial<BreadcrumbManagerState>;
     } = {}
   ) => {
-    const {
-      isOpen = true,
-      collapseFacetsAfter,
-      querySummaryState,
-      breadcrumbManagerState,
-    } = options;
+    const {isOpen = true, collapseFacetsAfter, querySummaryState, breadcrumbManagerState} = options;
 
     mockedBreadcrumbManager = buildFakeBreadcrumbManager({
       state: breadcrumbManagerState,
@@ -48,43 +43,31 @@ describe('atomic-ipx-refine-modal', () => {
     vi.mocked(buildBreadcrumbManager).mockReturnValue(mockedBreadcrumbManager);
     vi.mocked(buildQuerySummary).mockReturnValue(mockedQuerySummary);
 
-    const {element} = await renderInAtomicSearchInterface<AtomicIpxRefineModal>(
-      {
-        template: html`<atomic-ipx-refine-modal
-          ?is-open=${isOpen}
-          collapse-facets-after=${ifDefined(collapseFacetsAfter)}
-        ></atomic-ipx-refine-modal>`,
-        selector: 'atomic-ipx-refine-modal',
-        bindings: (bindings) => {
-          bindings.engine = mockedEngine;
-          bindings.store.getFacetElements = () => [
-            document.createElement('div'),
-            document.createElement('div'),
-          ];
-          return bindings;
-        },
-      }
-    );
+    const {element} = await renderInAtomicSearchInterface<AtomicIpxRefineModal>({
+      template: html`<atomic-ipx-refine-modal
+        ?is-open=${isOpen}
+        collapse-facets-after=${ifDefined(collapseFacetsAfter)}
+      ></atomic-ipx-refine-modal>`,
+      selector: 'atomic-ipx-refine-modal',
+      bindings: (bindings) => {
+        bindings.engine = mockedEngine;
+        bindings.store.getFacetElements = () => [
+          document.createElement('div'),
+          document.createElement('div'),
+        ];
+        return bindings;
+      },
+    });
 
     return {
       element,
       title: element.shadowRoot?.querySelector('[part="title"]'),
       closeButton: element.shadowRoot?.querySelector('[part="close-button"]'),
-      footerButtonText: element.shadowRoot?.querySelector(
-        '[part="footer-button-text"]'
-      ),
-      footerButtonCount: element.shadowRoot?.querySelector(
-        '[part="footer-button-count"]'
-      ),
-      filterSection: element.shadowRoot?.querySelector(
-        '[part="filter-section"]'
-      ),
-      sectionFiltersTitle: element.shadowRoot?.querySelector(
-        '[part*="section-filters-title"]'
-      ),
-      filterClearAllButton: element.shadowRoot?.querySelector(
-        '[part="filter-clear-all"]'
-      ),
+      footerButtonText: element.shadowRoot?.querySelector('[part="footer-button-text"]'),
+      footerButtonCount: element.shadowRoot?.querySelector('[part="footer-button-count"]'),
+      filterSection: element.shadowRoot?.querySelector('[part="filter-section"]'),
+      sectionFiltersTitle: element.shadowRoot?.querySelector('[part*="section-filters-title"]'),
+      filterClearAllButton: element.shadowRoot?.querySelector('[part="filter-clear-all"]'),
     };
   };
 
@@ -160,9 +143,7 @@ describe('atomic-ipx-refine-modal', () => {
           });
 
           const facetSlot = element.querySelector('[slot="facets"]');
-          const clonedFacets = Array.from(
-            facetSlot?.children ?? []
-          ) as BaseFacetElement[];
+          const clonedFacets = Array.from(facetSlot?.children ?? []) as BaseFacetElement[];
 
           expect(clonedFacets).toHaveLength(2);
           expect(clonedFacets[0].isCollapsed).toBe(false);
@@ -253,10 +234,7 @@ describe('atomic-ipx-refine-modal', () => {
       it('should render the filters section title', async () => {
         const {sectionFiltersTitle} = await renderIpxRefineModal();
 
-        expect(sectionFiltersTitle).toHaveAttribute(
-          'part',
-          'section-title section-filters-title'
-        );
+        expect(sectionFiltersTitle).toHaveAttribute('part', 'section-title section-filters-title');
         expect(sectionFiltersTitle).toHaveTextContent('Filters');
       });
 
@@ -275,10 +253,7 @@ describe('atomic-ipx-refine-modal', () => {
           });
 
           expect(filterClearAllButton).toBeInTheDocument();
-          expect(filterClearAllButton).toHaveAttribute(
-            'part',
-            'filter-clear-all'
-          );
+          expect(filterClearAllButton).toHaveAttribute('part', 'filter-clear-all');
           expect(filterClearAllButton).toHaveTextContent('Clear');
         });
 

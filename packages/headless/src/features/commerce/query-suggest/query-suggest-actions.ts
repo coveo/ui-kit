@@ -30,12 +30,10 @@ export type ClearQuerySuggestPayload = ClearQuerySuggestActionCreatorPayload;
 
 export const clearQuerySuggest = createAction(
   'commerce/querySuggest/clear',
-  (payload: ClearQuerySuggestPayload) =>
-    validatePayload(payload, {id: requiredNonEmptyString})
+  (payload: ClearQuerySuggestPayload) => validatePayload(payload, {id: requiredNonEmptyString})
 );
 
-export type FetchQuerySuggestionsPayload =
-  FetchQuerySuggestionsActionCreatorPayload;
+export type FetchQuerySuggestionsPayload = FetchQuerySuggestionsActionCreatorPayload;
 
 export type StateNeededByQuerySuggest = CommerceConfigurationSection &
   CommerceContextSection &
@@ -44,9 +42,7 @@ export type StateNeededByQuerySuggest = CommerceConfigurationSection &
   CommerceQuerySection &
   Partial<VersionSection>;
 export interface FetchQuerySuggestionsThunkReturn
-  extends
-    FetchQuerySuggestionsActionCreatorPayload,
-    QuerySuggestSuccessResponse {
+  extends FetchQuerySuggestionsActionCreatorPayload, QuerySuggestSuccessResponse {
   /**
    * The query for which query suggestions were retrieved.
    */
@@ -61,21 +57,13 @@ export const fetchQuerySuggestions = createAsyncThunk<
   'commerce/querySuggest/fetch',
   async (
     payload: {id: string},
-    {
-      getState,
-      rejectWithValue,
-      extra: {apiClient, validatePayload, navigatorContext},
-    }
+    {getState, rejectWithValue, extra: {apiClient, validatePayload, navigatorContext}}
   ) => {
     validatePayload(payload, {
       id: requiredNonEmptyString,
     });
     const state = getState();
-    const request = buildQuerySuggestRequest(
-      payload.id,
-      state,
-      navigatorContext
-    );
+    const request = buildQuerySuggestRequest(payload.id, state, navigatorContext);
     const response = await apiClient.querySuggest(request);
 
     if (isErrorResponse(response)) {
@@ -90,8 +78,7 @@ export const fetchQuerySuggestions = createAsyncThunk<
   }
 );
 
-export type RegisterQuerySuggestPayload =
-  RegisterQuerySuggestActionCreatorPayload;
+export type RegisterQuerySuggestPayload = RegisterQuerySuggestActionCreatorPayload;
 
 export const registerQuerySuggest = createAction(
   'commerce/querySuggest/register',
@@ -102,8 +89,7 @@ export const registerQuerySuggest = createAction(
     })
 );
 
-export type SelectQuerySuggestionPayload =
-  SelectQuerySuggestionActionCreatorPayload;
+export type SelectQuerySuggestionPayload = SelectQuerySuggestionActionCreatorPayload;
 
 export const selectQuerySuggestion = createAction(
   'commerce/querySuggest/selectSuggestion',

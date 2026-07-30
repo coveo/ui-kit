@@ -25,14 +25,10 @@ class LocalizedStringDirective extends Directive {
 
     const getPlaceholderForParamKey = (paramKey: string) =>
       `${this.delimitingCharacter}${this.placeholderPrefixCharacter}${paramKey}${this.delimitingCharacter}`;
-    const getParamFromPlaceholder = (placeholder: string) =>
-      params[placeholder.slice(1)];
+    const getParamFromPlaceholder = (placeholder: string) => params[placeholder.slice(1)];
 
     const placeholdersMap = Object.fromEntries(
-      Object.keys(params).map((paramKey) => [
-        paramKey,
-        getPlaceholderForParamKey(paramKey),
-      ])
+      Object.keys(params).map((paramKey) => [paramKey, getPlaceholderForParamKey(paramKey)])
     );
     const localizedStringWithPlaceholders = i18n.t(key, {
       interpolation: {escapeValue: false},
@@ -43,9 +39,7 @@ class LocalizedStringDirective extends Directive {
     return html`${localizedStringWithPlaceholders
       .split(this.delimitingCharacter)
       .map((text) =>
-        text.startsWith(this.placeholderPrefixCharacter)
-          ? getParamFromPlaceholder(text)
-          : text
+        text.startsWith(this.placeholderPrefixCharacter) ? getParamFromPlaceholder(text) : text
       )}`;
   }
 }

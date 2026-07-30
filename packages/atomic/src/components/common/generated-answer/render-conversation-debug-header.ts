@@ -15,13 +15,11 @@ export const renderConversationDebugHeader: FunctionalComponent<
   RenderConversationDebugHeaderProps
 > = ({props}) => {
   const {i18n, conversationId} = props;
-  return html`<div
-    class="flex flex-wrap gap-1.5 items-center text-neutral-dark"
-  >
+  return html`<div class="flex flex-wrap gap-1.5 items-center text-neutral-dark">
     ${i18n.t('generated-answer-debug-mode-on')}
     <div class="bg-success h-2 w-2 rounded-full shrink-0"></div>
 
-    <div class="flex items-center text-neutral-dark shrink-0">
+    <div class="flex items-center text-neutral-dark break-all">
       ${i18n.t('generated-answer-conversation-id', {conversationId})}
       ${hasClipboardSupport()
         ? renderButton({
@@ -33,12 +31,7 @@ export const renderConversationDebugHeader: FunctionalComponent<
                 navigator.clipboard.writeText(conversationId).catch(() => {});
               },
             },
-          })(
-            html`<atomic-icon
-              class="w-4 text-neutral-dark"
-              .icon=${CopyIcon}
-            ></atomic-icon>`
-          )
+          })(html`<atomic-icon class="w-4 text-neutral-dark" .icon=${CopyIcon}></atomic-icon>`)
         : nothing}
     </div>
   </div>`;

@@ -14,11 +14,7 @@ interface IpxBodyProps {
 
 export const renderIpxBody: FunctionalComponent<IpxBodyProps> = ({props}) => {
   const visibilityClass =
-    props.visibility === 'embedded'
-      ? ''
-      : props.visibility === 'open'
-        ? 'visible'
-        : 'invisible';
+    props.visibility === 'embedded' ? '' : props.visibility === 'open' ? 'visible' : 'invisible';
 
   return html`
     <article
@@ -26,13 +22,8 @@ export const renderIpxBody: FunctionalComponent<IpxBodyProps> = ({props}) => {
       class="ipx-body-container bg-background box-border flex flex-col justify-between overflow-hidden rounded ${visibilityClass}"
       @animationend=${() => props.onAnimationEnd?.()}
     >
-      <header
-        part="header-wrapper"
-        class="bg-neutral-light grid w-full items-center px-6 pt-6"
-      >
-        <div part="header" class="min-w-0 font-bold">
-          ${props.header ?? nothing}
-        </div>
+      <header part="header-wrapper" class="bg-neutral-light grid w-full items-center px-6 pt-6">
+        <div part="header" class="min-w-0 font-bold">${props.header ?? nothing}</div>
       </header>
       <hr part="header-ruler" class="border-neutral border-0 border-t" />
       <div
@@ -44,9 +35,7 @@ export const renderIpxBody: FunctionalComponent<IpxBodyProps> = ({props}) => {
       >
         <div part="body" class="w-full">${props.body ?? nothing}</div>
       </div>
-      ${props.displayFooterSlot !== false
-        ? renderFooter(props.footer ?? nothing)
-        : nothing}
+      ${props.displayFooterSlot !== false ? renderFooter(props.footer ?? nothing) : nothing}
     </article>
   `;
 };

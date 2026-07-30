@@ -1,6 +1,6 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {html} from 'lit';
-import {MockInsightApi} from '@coveo/platform-mock-api/insight/mock';
+import {MockInsightApi} from '@coveo/platform-mock-api/insight';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 import {wrapInInsightLayout} from '@/storybook-utils/insight/insight-layout-wrapper';
@@ -16,18 +16,10 @@ import '@/src/components/search/atomic-result-text/atomic-result-text.js';
 
 const insightApiHarness = new MockInsightApi();
 
-const {decorator: insightInterfaceDecorator, play} = wrapInInsightInterface(
-  {},
-  false,
-  false
-);
+const {decorator: insightInterfaceDecorator, play} = wrapInInsightInterface({}, false, false);
 const {decorator: insightLayoutDecorator} = wrapInInsightLayout(false);
-const {decorator: insightResultListDecorator} = wrapInInsightResultList(
-  'list',
-  false
-);
-const {decorator: insightResultTemplateDecorator} =
-  wrapInInsightResultTemplate(false);
+const {decorator: insightResultListDecorator} = wrapInInsightResultList('list', false);
+const {decorator: insightResultTemplateDecorator} = wrapInInsightResultTemplate(false);
 
 const meta: Meta = {
   component: 'atomic-insight-result-action',
@@ -52,13 +44,7 @@ const meta: Meta = {
   argTypes: {
     action: {
       control: 'select',
-      options: [
-        'copyToClipboard',
-        'attachToCase',
-        'quickview',
-        'postToFeed',
-        'sendAsEmail',
-      ],
+      options: ['copyToClipboard', 'attachToCase', 'quickview', 'postToFeed', 'sendAsEmail'],
       description: 'The type of action to perform when clicked',
     },
     tooltip: {

@@ -6,27 +6,24 @@ import {testCheckboxA11y} from '@/storybook-utils/a11y/checkbox.js';
 import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {facetDecorator} from '@/storybook-utils/common/facets-decorator';
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
-import {buildSearchResponseWithResults} from '@coveo/platform-mock-api/search/search-response-mocks';
 import {
-  searchFacetTransformer,
+  buildSearchResponseWithResults,
+  MockSearchApi,
   searchFacetSearchTransformer,
-} from '@coveo/platform-mock-api/search/facet-transformer';
+  searchFacetTransformer,
+} from '@coveo/platform-mock-api/search';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-rating-facet/atomic-rating-facet.js';
 import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
 
 const searchApiHarness = new MockSearchApi();
 searchApiHarness.searchEndpoint.addRequestTransformer(searchFacetTransformer);
-searchApiHarness.facetSearchEndpoint.addRequestTransformer(
-  searchFacetSearchTransformer
-);
+searchApiHarness.facetSearchEndpoint.addRequestTransformer(searchFacetSearchTransformer);
 
 const {decorator, play} = wrapInSearchInterface();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-rating-facet',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-rating-facet', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-rating-facet',
@@ -112,20 +109,17 @@ export const A11yStatusMessage: Story = {
     (story) => html`<atomic-query-summary></atomic-query-summary>${story()}`,
   ],
   beforeEach: () => {
-    searchApiHarness.searchEndpoint.mockOnce(
-      buildSearchResponseWithResults(120)
-    );
-    searchApiHarness.searchEndpoint.mockOnce(
-      buildSearchResponseWithResults(42)
-    );
+    searchApiHarness.searchEndpoint.mockOnce(buildSearchResponseWithResults(120));
+    searchApiHarness.searchEndpoint.mockOnce(buildSearchResponseWithResults(42));
   },
   play: async (context) => {
     await play(context);
     await testStatusMessageA11y(context, {
       triggerAction: async () => {
-        const [checkbox] = await within(
-          context.canvasElement
-        ).findAllByShadowLabelText('Inclusion filter on', {exact: false});
+        const [checkbox] = await within(context.canvasElement).findAllByShadowLabelText(
+          'Inclusion filter on',
+          {exact: false}
+        );
         checkbox.click();
       },
       expectedText: 'Results loaded. Results 1-10 of 42',

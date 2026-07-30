@@ -19,10 +19,7 @@ import {
 import {commerceSearchReducer as commerceSearch} from '../../../features/commerce/search/search-slice.js';
 import type {CommerceAppState} from '../../../state/commerce-app-state.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
-import {
-  buildMockCommerceEngine,
-  type MockedCommerceEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockCommerceEngine, type MockedCommerceEngine} from '../../../test/mock-engine-v2.js';
 import {buildMockQuerySuggest} from '../../../test/mock-query-suggest.js';
 import {
   buildSearchBox,
@@ -117,9 +114,7 @@ describe('headless search box', () => {
     it(`when passing an invalid id as option
       creating the controller should throw`, () => {
       props.options!.id = 1 as unknown as string;
-      expect(() => initController()).toThrow(
-        'Check the options of buildSearchBox'
-      );
+      expect(() => initController()).toThrow('Check the options of buildSearchBox');
     });
 
     it(`when passing an invalid highlightOptions as option

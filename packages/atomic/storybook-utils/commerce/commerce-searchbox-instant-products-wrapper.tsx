@@ -13,10 +13,7 @@ export const wrapInCommerceSearchBoxInstantProducts = (
 } => ({
   decorator: (story) => html`
     <div style="min-width: 600px;">
-      <atomic-commerce-search-box
-        data-testid="search-box"
-        suggestion-timeout="30000"
-      >
+      <atomic-commerce-search-box data-testid="search-box" suggestion-timeout="30000">
         <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
         <atomic-commerce-search-box-instant-products
           ${spreadProps(includeCodeRoot ? {id: 'code-root'} : {})}

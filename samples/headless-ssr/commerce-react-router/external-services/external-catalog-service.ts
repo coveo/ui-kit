@@ -19,8 +19,7 @@ class ExternalCatalogService {
 
   public static getInstance(): ExternalCatalogService {
     if (!globalThis.__externalCatalogServiceInstance) {
-      globalThis.__externalCatalogServiceInstance =
-        new ExternalCatalogService();
+      globalThis.__externalCatalogServiceInstance = new ExternalCatalogService();
     }
     return globalThis.__externalCatalogServiceInstance as ExternalCatalogService;
   }
@@ -29,9 +28,7 @@ class ExternalCatalogService {
     return await this.extractItemFromCatalog(url);
   }
 
-  private async extractItemFromCatalog(
-    url: string
-  ): Promise<ExternalCatalogItem> {
+  private async extractItemFromCatalog(url: string): Promise<ExternalCatalogItem> {
     const parsedUrl = new URL(url);
     const params = parsedUrl.searchParams;
     const uniqueId = parsedUrl.pathname.split('/products/')[1];

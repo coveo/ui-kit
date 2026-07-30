@@ -13,9 +13,7 @@ vi.mock('@coveo/headless/commerce', {spy: true});
 describe('atomic-product-price', () => {
   const mockedEngine = buildFakeCommerceEngine();
   const mockedContext = buildFakeContext({});
-  const renderProductPrice = async (
-    props: {ecPrice?: number; ecPromoPrice?: number} = {}
-  ) => {
+  const renderProductPrice = async (props: {ecPrice?: number; ecPromoPrice?: number} = {}) => {
     const mockedProduct = buildFakeProduct({
       ec_price: props.ecPrice ?? 100,
       ec_promo_price: props.ecPromoPrice ?? null,

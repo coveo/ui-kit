@@ -12,12 +12,7 @@ import {
   type ResultsPerPageState,
 } from '../../core/results-per-page/headless-core-results-per-page.js';
 
-export type {
-  ResultsPerPage,
-  ResultsPerPageInitialState,
-  ResultsPerPageProps,
-  ResultsPerPageState,
-};
+export type {ResultsPerPage, ResultsPerPageInitialState, ResultsPerPageProps, ResultsPerPageState};
 
 /**
  * Creates an insight `ResultsPerPage` controller instance.
@@ -47,9 +42,7 @@ export function buildResultsPerPage(
 
     set(num: number) {
       coreController.set(num);
-      dispatch(
-        executeSearch({legacy: logPagerResize(), next: browseResults()})
-      );
+      dispatch(executeSearch({legacy: logPagerResize(), next: browseResults()}));
     },
   };
 }

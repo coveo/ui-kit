@@ -44,8 +44,7 @@ export function buildInteractiveRecentResult(
   engine: SearchEngine,
   props: InteractiveRecentResultProps
 ): InteractiveRecentResult {
-  const logAnalytics = () =>
-    engine.dispatch(logRecentResultClick(props.options.result));
+  const logAnalytics = () => engine.dispatch(logRecentResultClick(props.options.result));
 
   return buildInteractiveResultCore(engine, props, logAnalytics);
 }

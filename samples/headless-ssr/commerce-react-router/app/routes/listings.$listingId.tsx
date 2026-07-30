@@ -11,17 +11,11 @@ import ContextDropdown from '@/app/components/context-dropdown';
 import FacetGenerator from '@/app/components/facets/facet-generator';
 import Pagination from '@/app/components/pagination';
 import ProductList from '@/app/components/product-list';
-import {
-  ListingProvider,
-  RecommendationProvider,
-} from '@/app/components/providers/providers';
+import {ListingProvider, RecommendationProvider} from '@/app/components/providers/providers';
 import PopularRecommendations from '@/app/components/recommendations/popular-recommendations';
 import Sort from '@/app/components/sort';
 import Summary from '@/app/components/summary';
-import type {
-  ListingStaticState,
-  RecommendationStaticState,
-} from '@/lib/commerce-engine';
+import type {ListingStaticState, RecommendationStaticState} from '@/lib/commerce-engine';
 import {
   getBaseFetchStaticStateConfiguration,
   getEngineDefinition,
@@ -45,10 +39,9 @@ export const loader = async ({params, request}: LoaderFunctionArgs) => {
     SolutionType.listing
   );
 
-  const baseFetchStaticStateConfiguration =
-    await getBaseFetchStaticStateConfiguration(
-      `/browse/promotions/${params.listingId}`
-    );
+  const baseFetchStaticStateConfiguration = await getBaseFetchStaticStateConfiguration(
+    `/browse/promotions/${params.listingId}`
+  );
 
   const listingStaticState = await listingEngineDefinition.fetchStaticState({
     controllers: {
@@ -67,42 +60,34 @@ export const loader = async ({params, request}: LoaderFunctionArgs) => {
     SolutionType.recommendation
   );
 
-  const recsStaticState = await recommendationEngineDefinition.fetchStaticState(
-    {
-      controllers: {
-        ...baseFetchStaticStateConfiguration.controllers,
-        popularViewedRecs: {enabled: true},
-        popularBoughtRecs: {enabled: true},
-      },
-    }
-  );
+  const recsStaticState = await recommendationEngineDefinition.fetchStaticState({
+    controllers: {
+      ...baseFetchStaticStateConfiguration.controllers,
+      popularViewedRecs: {enabled: true},
+      popularBoughtRecs: {enabled: true},
+    },
+  });
 
   return Response.json({listingStaticState, navigatorContext, recsStaticState});
 };
 
 export default function ListingRoute() {
   const params = useParams();
-  const {listingStaticState, navigatorContext, recsStaticState} =
-    useLoaderData<{
-      listingStaticState: ListingStaticState;
-      navigatorContext: NavigatorContext;
-      recsStaticState: RecommendationStaticState;
-    }>();
+  const {listingStaticState, navigatorContext, recsStaticState} = useLoaderData<{
+    listingStaticState: ListingStaticState;
+    navigatorContext: NavigatorContext;
+    recsStaticState: RecommendationStaticState;
+  }>();
 
   const getTitle = () => {
     return params.listingId
       ?.split('-')
-      .map(
-        (subString) => subString.charAt(0).toUpperCase() + subString.slice(1)
-      )
+      .map((subString) => subString.charAt(0).toUpperCase() + subString.slice(1))
       .join(' ');
   };
 
   return (
-    <ListingProvider
-      staticState={listingStaticState}
-      navigatorContext={navigatorContext}
-    >
+    <ListingProvider staticState={listingStaticState} navigatorContext={navigatorContext}>
       <ParameterManager url={navigatorContext.location} />
       <h2>{getTitle()}</h2>
       <NotifyTrigger />
@@ -131,10 +116,7 @@ export default function ListingRoute() {
         </div>
 
         <div style={{flex: 4}}>
-          <RecommendationProvider
-            staticState={recsStaticState}
-            navigatorContext={navigatorContext}
-          >
+          <RecommendationProvider staticState={recsStaticState} navigatorContext={navigatorContext}>
             <PopularRecommendations type="bought" />
             <PopularRecommendations type="viewed" />
           </RecommendationProvider>

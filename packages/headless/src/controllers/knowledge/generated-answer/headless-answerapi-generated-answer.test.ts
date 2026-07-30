@@ -1,10 +1,6 @@
 import {skipToken} from '@reduxjs/toolkit/query';
 import {answerEvaluation} from '../../../api/knowledge/post-answer-evaluation.js';
-import {
-  answerApi,
-  fetchAnswer,
-  selectAnswer,
-} from '../../../api/knowledge/stream-answer-api.js';
+import {answerApi, fetchAnswer, selectAnswer} from '../../../api/knowledge/stream-answer-api.js';
 import type {StreamAnswerAPIState} from '../../../api/knowledge/stream-answer-api-state.js';
 import {getConfigurationInitialState} from '../../../features/configuration/configuration-state.js';
 import * as answerApiSelectors from '../../../features/generated-answer/answer-api-selectors.js';
@@ -12,6 +8,7 @@ import {selectAnswerTriggerParams} from '../../../features/generated-answer/answ
 import {
   generateAnswer,
   resetAnswer,
+  setAnswerGenerationMode,
   updateAnswerConfigurationId,
   updateResponseFormat,
 } from '../../../features/generated-answer/generated-answer-actions.js';
@@ -22,10 +19,7 @@ import {
 import {getGeneratedAnswerInitialState} from '../../../features/generated-answer/generated-answer-state.js';
 import {queryReducer} from '../../../features/query/query-slice.js';
 import {buildMockAnalyticsState} from '../../../test/mock-analytics-state.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../../test/mock-engine-v2.js';
 import {createMockState} from '../../../test/mock-state.js';
 import type {
   GeneratedAnswerProps,
@@ -34,26 +28,19 @@ import type {
 import {buildAnswerApiGeneratedAnswer} from './headless-answerapi-generated-answer.js';
 
 vi.mock('../../../features/generated-answer/generated-answer-actions');
-vi.mock(
-  '../../../features/generated-answer/generated-answer-analytics-actions'
-);
+vi.mock('../../../features/generated-answer/generated-answer-analytics-actions');
 vi.mock('../../../features/search/search-actions');
 vi.mock('../../../api/knowledge/stream-answer-actions.js');
 
-vi.mock(
-  '../../../features/generated-answer/answer-api-selectors.js',
-  async () => {
-    return {
-      selectAnswerTriggerParams: vi.fn(),
-      selectAnswerApiQueryParams: vi.fn(),
-    };
-  }
-);
+vi.mock('../../../features/generated-answer/answer-api-selectors.js', async () => {
+  return {
+    selectAnswerTriggerParams: vi.fn(),
+    selectAnswerApiQueryParams: vi.fn(),
+  };
+});
 
 vi.mock('../../../api/knowledge/stream-answer-api', async () => {
-  const originalStreamAnswerApi = await vi.importActual(
-    '../../../api/knowledge/stream-answer-api'
-  );
+  const originalStreamAnswerApi = await vi.importActual('../../../api/knowledge/stream-answer-api');
   return {
     ...originalStreamAnswerApi,
     fetchAnswer: vi.fn(),
@@ -76,15 +63,9 @@ describe('knowledge-generated-answer', () => {
   const mockSelectAnswer = vi.mocked(selectAnswer);
 
   const createGeneratedAnswer = (props: GeneratedAnswerProps = {}) =>
-    buildAnswerApiGeneratedAnswer(
-      engine,
-      generatedAnswerAnalyticsClient,
-      props
-    );
+    buildAnswerApiGeneratedAnswer(engine, generatedAnswerAnalyticsClient, props);
 
-  const buildEngineWithGeneratedAnswer = (
-    initialState: Partial<StreamAnswerAPIState> = {}
-  ) => {
+  const buildEngineWithGeneratedAnswer = (initialState: Partial<StreamAnswerAPIState> = {}) => {
     const state = createMockState({
       ...initialState,
       generatedAnswer: {
@@ -122,9 +103,7 @@ describe('knowledge-generated-answer', () => {
   it('dispatches the configuration id upon initialization', () => {
     const answerConfigurationId = 'answerConfigurationId';
     createGeneratedAnswer({answerConfigurationId});
-    expect(updateAnswerConfigurationId).toHaveBeenCalledWith(
-      answerConfigurationId
-    );
+    expect(updateAnswerConfigurationId).toHaveBeenCalledWith(answerConfigurationId);
   });
 
   describe('AnswerApiGeneratedAnswer controller state', () => {
@@ -322,10 +301,7 @@ describe('knowledge-generated-answer', () => {
   });
 
   it('dispatches a retry action when there are answer api query params in the state', () => {
-    vi.spyOn(
-      answerApiSelectors,
-      'selectAnswerApiQueryParams'
-    ).mockReturnValueOnce({
+    vi.spyOn(answerApiSelectors, 'selectAnswerApiQueryParams').mockReturnValueOnce({
       q: 'this est une question',
     });
 
@@ -335,10 +311,7 @@ describe('knowledge-generated-answer', () => {
   });
 
   it('dispatches a retry action when the selector returns a skipToken', () => {
-    vi.spyOn(
-      answerApiSelectors,
-      'selectAnswerApiQueryParams'
-    ).mockReturnValueOnce(skipToken);
+    vi.spyOn(answerApiSelectors, 'selectAnswerApiQueryParams').mockReturnValueOnce(skipToken);
 
     const generatedAnswer = createGeneratedAnswer();
     generatedAnswer.retry();
@@ -387,22 +360,19 @@ describe('knowledge-generated-answer', () => {
     };
     generatedAnswer.sendFeedback(feedback);
 
-    expect(
-      generatedAnswerAnalyticsClient.logGeneratedAnswerFeedback
-    ).toHaveBeenCalledTimes(1);
-    expect(
-      generatedAnswerAnalyticsClient.logGeneratedAnswerFeedback
-    ).toHaveBeenCalledWith(feedback);
-    expect(answerEvaluation.endpoints.post.initiate).toHaveBeenCalledTimes(1);
-    expect(answerEvaluation.endpoints.post.initiate).toHaveBeenCalledWith(
-      expectedArgs
+    expect(generatedAnswerAnalyticsClient.logGeneratedAnswerFeedback).toHaveBeenCalledTimes(1);
+    expect(generatedAnswerAnalyticsClient.logGeneratedAnswerFeedback).toHaveBeenCalledWith(
+      feedback
     );
+    expect(answerEvaluation.endpoints.post.initiate).toHaveBeenCalledTimes(1);
+    expect(answerEvaluation.endpoints.post.initiate).toHaveBeenCalledWith(expectedArgs);
   });
 
   describe('subscribeToSearchRequest', () => {
     const mockSelectAnswerTriggerParams = vi.mocked(selectAnswerTriggerParams);
     const mockGenerateAnswer = vi.mocked(generateAnswer);
     const mockResetAnswer = vi.mocked(resetAnswer);
+    const mockSetAnswerGenerationMode = vi.mocked(setAnswerGenerationMode);
     let listener: () => void;
 
     beforeEach(() => {
@@ -601,6 +571,82 @@ describe('knowledge-generated-answer', () => {
           listener(); // Same request ID
 
           expect(mockGenerateAnswer).toHaveBeenCalledTimes(1);
+        });
+      });
+    });
+
+    describe('setAnswerGenerationMode behavior', () => {
+      describe('when request is new and state has a query', () => {
+        it('should dispatch setAnswerGenerationMode with automatic', () => {
+          mockSelectAnswerTriggerParams.mockReturnValue({
+            q: 'test query',
+            requestId: 'new-request',
+            cannotAnswer: false,
+            analyticsMode: 'legacy',
+            actionCause: 'searchboxSubmit',
+          });
+
+          listener();
+
+          expect(mockSetAnswerGenerationMode).toHaveBeenCalledTimes(1);
+          expect(mockSetAnswerGenerationMode).toHaveBeenCalledWith('automatic');
+        });
+      });
+
+      describe('when query is empty', () => {
+        it('should not dispatch setAnswerGenerationMode', () => {
+          mockSelectAnswerTriggerParams.mockReturnValue({
+            q: '',
+            requestId: 'valid-request',
+            cannotAnswer: false,
+            analyticsMode: 'legacy',
+            actionCause: 'searchboxSubmit',
+          });
+
+          listener();
+
+          expect(mockSetAnswerGenerationMode).not.toHaveBeenCalled();
+        });
+      });
+
+      describe('when request ID is empty', () => {
+        it('should not dispatch setAnswerGenerationMode', () => {
+          mockSelectAnswerTriggerParams.mockReturnValue({
+            q: 'test query',
+            requestId: '',
+            cannotAnswer: false,
+            analyticsMode: 'legacy',
+            actionCause: 'searchboxSubmit',
+          });
+
+          listener();
+
+          expect(mockSetAnswerGenerationMode).not.toHaveBeenCalled();
+        });
+      });
+
+      describe('when the generated answer is disabled', () => {
+        it('should not dispatch setAnswerGenerationMode', () => {
+          engine = buildEngineWithGeneratedAnswer({
+            generatedAnswer: {
+              ...getGeneratedAnswerInitialState(),
+              isEnabled: false,
+            },
+          });
+          createGeneratedAnswer();
+          const disabledListener = engine.subscribe.mock.calls[0][0];
+
+          mockSelectAnswerTriggerParams.mockReturnValue({
+            q: 'test query',
+            requestId: 'new-request',
+            cannotAnswer: false,
+            analyticsMode: 'legacy',
+            actionCause: 'searchboxSubmit',
+          });
+
+          disabledListener();
+
+          expect(mockSetAnswerGenerationMode).not.toHaveBeenCalled();
         });
       });
     });

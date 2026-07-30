@@ -157,16 +157,9 @@ const numericFacetOptionsSchema = new Schema<Required<NumericFacetOptions>>({
 });
 
 export function validateNumericFacetOptions(
-  engine: CoreEngine<
-    NumericFacetSection & ConfigurationSection & SearchSection
-  >,
+  engine: CoreEngine<NumericFacetSection & ConfigurationSection & SearchSection>,
   options: NumericFacetOptions
 ) {
-  validateOptions(
-    engine,
-    numericFacetOptionsSchema,
-    options,
-    'buildNumericFacet'
-  );
+  validateOptions(engine, numericFacetOptionsSchema, options, 'buildNumericFacet');
   validateManualNumericRanges(options);
 }

@@ -14,35 +14,25 @@ import {updateFacetSearch} from '../../../features/facets/facet-search-set/speci
 import type {CommerceAppState} from '../../../state/commerce-app-state.js';
 import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-search.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
-import {
-  buildMockCommerceEngine,
-  type MockedCommerceEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockCommerceEngine, type MockedCommerceEngine} from '../../../test/mock-engine-v2.js';
 import type {CategoryFacetOptions} from '../core/facets/category/headless-commerce-category-facet.js';
 import {
   buildCategoryFilterSuggestions,
   type CategoryFilterSuggestions,
 } from './headless-category-filter-suggestions.js';
 
-vi.mock(
-  '../../../features/facets/facet-search-set/specific/specific-facet-search-actions'
-);
-vi.mock(
-  '../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions'
-);
+vi.mock('../../../features/facets/facet-search-set/specific/specific-facet-search-actions');
+vi.mock('../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions');
 
 vi.mock('../../../features/commerce/facets/core-facet/core-facet-actions');
 
-vi.mock(
-  '../../../features/facets/facet-search-set/category/category-facet-search-actions'
-);
+vi.mock('../../../features/facets/facet-search-set/category/category-facet-search-actions');
 
 vi.mock('../../../features/commerce/query/query-actions');
 
 describe('CategoryFilterSuggestions', () => {
   const facetId = 'ec_category';
-  const namespacedFacetId =
-    getFacetIdWithCommerceFieldSuggestionNamespace(facetId);
+  const namespacedFacetId = getFacetIdWithCommerceFieldSuggestionNamespace(facetId);
   let state: CommerceAppState;
   let engine: MockedCommerceEngine;
   let filterSuggestions: CategoryFilterSuggestions;
@@ -53,11 +43,8 @@ describe('CategoryFilterSuggestions', () => {
     filterSuggestions = buildCategoryFilterSuggestions(engine, options);
   }
 
-  function setRequestInCategoryFacetSearchSet(
-    config?: Partial<CategoryFacetSearchState>
-  ) {
-    state.categoryFacetSearchSet[namespacedFacetId] =
-      buildMockCategoryFacetSearch(config);
+  function setRequestInCategoryFacetSearchSet(config?: Partial<CategoryFacetSearchState>) {
+    state.categoryFacetSearchSet[namespacedFacetId] = buildMockCategoryFacetSearch(config);
   }
 
   function setFacetInFieldSuggestionsOrder() {

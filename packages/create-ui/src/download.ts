@@ -8,13 +8,7 @@
  */
 
 import pacote, {type Packument} from 'pacote';
-
-export class TemplateVersionUnavailableError extends Error {
-  constructor(readonly version: string) {
-    super(`Version "${version}" is not available on npm.`);
-    this.name = 'TemplateVersionUnavailableError';
-  }
-}
+import {TemplateVersionUnavailableError} from './errors.js';
 
 export async function downloadTemplate(options: {
   packageName: string;

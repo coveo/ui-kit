@@ -3,7 +3,7 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
 import {testDialogA11y} from '@/storybook-utils/a11y/dialog.js';
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
+import {MockSearchApi} from '@coveo/platform-mock-api/search';
 import {parameters as commonParameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInResultList} from '@/storybook-utils/search/result-list-wrapper';
 import {wrapInResultTemplate} from '@/storybook-utils/search/result-template-wrapper';
@@ -19,8 +19,7 @@ searchApiHarness.searchEndpoint.mock((response: any) => ({
   // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Mock API result types are loosely defined
   results: response.results.slice(0, 1).map((result: any) => ({
     ...result,
-    title:
-      "Australia's under-16s social media ban comes into effect | Global News Podcast",
+    title: "Australia's under-16s social media ban comes into effect | Global News Podcast",
     uri: 'https://youtube.com/User:bbcnews/Channel:UC16niRr50-MSBwiO3YDb3RA/Video:XjI_iE-sNcM',
     printableUri: 'https://www.youtube.com/watch?v=XjI_iE-sNcM',
     clickUri: 'https://www.youtube.com/watch?v=XjI_iE-sNcM',
@@ -56,12 +55,9 @@ const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
 const {decorator: resultListDecorator} = wrapInResultList('list', false);
 const {decorator: resultTemplateDecorator} = wrapInResultTemplate();
 
-const {events, args, argTypes, styleTemplate} = getStorybookHelpers(
-  'atomic-quickview-modal',
-  {
-    excludeCategories: ['methods'],
-  }
-);
+const {events, args, argTypes, styleTemplate} = getStorybookHelpers('atomic-quickview-modal', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-quickview-modal',

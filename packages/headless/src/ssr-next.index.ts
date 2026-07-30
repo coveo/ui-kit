@@ -59,10 +59,7 @@ export type {
   EngineConfiguration,
 } from './app/engine-configuration.js';
 export type {LoggerOptions, LogLevel} from './app/logger.js';
-export type {
-  NavigatorContext,
-  NavigatorContextProvider,
-} from './app/navigator-context-provider.js';
+export type {NavigatorContext, NavigatorContextProvider} from './app/navigator-context-provider.js';
 // Main App
 export type {
   SearchConfigurationOptions,
@@ -72,10 +69,7 @@ export type {
 export {getSampleSearchEngineConfiguration} from './app/search-engine/search-engine.js';
 export type {ErrorPayload} from './controllers/controller/error-payload.js';
 //#region Controllers
-export type {
-  Controller,
-  Subscribable,
-} from './controllers/controller/headless-controller.js';
+export type {Controller, Subscribable} from './controllers/controller/headless-controller.js';
 export type {InlineLink} from './controllers/smart-snippet/headless-smart-snippet-interactive-inline-links.js';
 export type {
   AutomaticFacetBreadcrumb,
@@ -489,33 +483,21 @@ export type {
   HydrateStaticState,
 } from './ssr-next/search/types/hydrate-static-state.js';
 // State
-export type {
-  SearchAppState,
-  SearchParametersState,
-} from './state/search-app-state.js';
+export type {SearchAppState, SearchParametersState} from './state/search-app-state.js';
 
 //#endregion
 
-export {
-  getAnalyticsNextApiBaseUrl,
-  getOrganizationEndpoint,
-} from './api/platform-client.js';
+export {getAnalyticsNextApiBaseUrl, getOrganizationEndpoint} from './api/platform-client.js';
 export type {
   RelativeDate,
   RelativeDatePeriod,
   RelativeDateUnit,
 } from './api/search/date/relative-date.js';
-export {
-  deserializeRelativeDate,
-  validateRelativeDate,
-} from './api/search/date/relative-date.js';
+export {deserializeRelativeDate, validateRelativeDate} from './api/search/date/relative-date.js';
 export type {FieldDescription} from './api/search/fields/fields-response.js';
 export type {Raw} from './api/search/search/raw.js';
 export type {Result} from './api/search/search/result.js';
-export type {
-  PhrasesToHighlight,
-  TermsToHighlight,
-} from './api/search/search/stemming.js';
+export type {PhrasesToHighlight, TermsToHighlight} from './api/search/search/stemming.js';
 export * from './features/advanced-search-queries/advanced-search-queries-actions-loader.js';
 export * from './features/analytics/click-analytics-actions-loader.js';
 export * from './features/analytics/generic-analytics-actions-loader.js';

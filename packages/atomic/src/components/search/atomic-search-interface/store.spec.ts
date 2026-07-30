@@ -288,11 +288,7 @@ describe('SearchStore', () => {
       store.addFieldsToInclude(['field1', 'field2']);
       store.addFieldsToInclude(['field3']);
 
-      expect(store.state.fieldsToInclude).toEqual([
-        'field1',
-        'field2',
-        'field3',
-      ]);
+      expect(store.state.fieldsToInclude).toEqual(['field1', 'field2', 'field3']);
     });
   });
 });

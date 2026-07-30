@@ -23,26 +23,13 @@
         <atomic-layout-section section="search">
           <atomic-insight-search-box></atomic-insight-search-box>
           <atomic-insight-tabs>
-            <atomic-insight-tab
-              label="All"
-              expression=""
-              active
-            ></atomic-insight-tab>
-            <atomic-insight-tab
-              label="Articles"
-              expression="@filetype==html"
-            ></atomic-insight-tab>
+            <atomic-insight-tab label="All" expression="" active></atomic-insight-tab>
+            <atomic-insight-tab label="Articles" expression="@filetype==html"></atomic-insight-tab>
           </atomic-insight-tabs>
         </atomic-layout-section>
         <atomic-layout-section section="facets">
-          <atomic-insight-facet
-            field="source"
-            label="Source"
-          ></atomic-insight-facet>
-          <atomic-insight-facet
-            field="filetype"
-            label="File Type"
-          ></atomic-insight-facet>
+          <atomic-insight-facet field="source" label="Source"></atomic-insight-facet>
+          <atomic-insight-facet field="filetype" label="File Type"></atomic-insight-facet>
         </atomic-layout-section>
         <atomic-layout-section section="status">
           <atomic-insight-query-summary></atomic-insight-query-summary>

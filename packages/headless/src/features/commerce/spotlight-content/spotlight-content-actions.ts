@@ -26,20 +26,17 @@ export const spotlightContentClick = createAsyncThunk<
   void,
   SpotlightContentClickPayload,
   AsyncThunkCommerceOptions<CommerceEngineState>
->(
-  'commerce/spotlight-content/click',
-  async (payload: SpotlightContentClickPayload, {extra}) => {
-    const {relay} = extra;
-    const relayPayload: ItemClick = {
-      responseId: payload.responseId,
-      position: payload.position,
-      itemMetadata: {
-        uniqueFieldName: 'id',
-        uniqueFieldValue: payload.id,
-        url: payload.desktopImage,
-      },
-    };
+>('commerce/spotlight-content/click', async (payload: SpotlightContentClickPayload, {extra}) => {
+  const {relay} = extra;
+  const relayPayload: ItemClick = {
+    responseId: payload.responseId,
+    position: payload.position,
+    itemMetadata: {
+      uniqueFieldName: 'id',
+      uniqueFieldValue: payload.id,
+      url: payload.desktopImage,
+    },
+  };
 
-    relay.emit('itemClick', relayPayload);
-  }
-);
+  relay.emit('itemClick', relayPayload);
+});

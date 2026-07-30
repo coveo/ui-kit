@@ -50,9 +50,7 @@ function buildUniqueSearchResponse(
       ...buildUniqueQuestionAnswer(increment),
       relatedQuestions: Array.from({length: amountOfRelatedQuestions}, (_, i) =>
         buildUniqueQuestionAnswer(
-          increment +
-            (i + 1) /
-              10 ** (Math.floor(Math.log10(amountOfRelatedQuestions)) + 1)
+          increment + (i + 1) / 10 ** (Math.floor(Math.log10(amountOfRelatedQuestions)) + 1)
         )
       ),
     }),
@@ -172,8 +170,7 @@ describe('question answering slice', () => {
       null as never
     );
     const resulting = questionAnsweringReducer(state, searchAction);
-    const {contentIdKey, contentIdValue} =
-      response.questionAnswer.relatedQuestions[0].documentId;
+    const {contentIdKey, contentIdValue} = response.questionAnswer.relatedQuestions[0].documentId;
     expect(resulting.relatedQuestions[0]).toMatchObject({
       contentIdKey,
       contentIdValue,
@@ -185,28 +182,20 @@ describe('question answering slice', () => {
     const firstSearchResponse = buildUniqueSearchResponse(0);
     const firstResponseState = questionAnsweringReducer(
       state,
-      executeSearch.fulfilled(
-        buildMockSearch({response: firstSearchResponse}),
-        '',
-        {legacy: null as never}
-      )
+      executeSearch.fulfilled(buildMockSearch({response: firstSearchResponse}), '', {
+        legacy: null as never,
+      })
     );
 
-    const intermediateState = questionAnsweringReducer(
-      firstResponseState,
-      likeSmartSnippet()
-    );
+    const intermediateState = questionAnsweringReducer(firstResponseState, likeSmartSnippet());
 
     const secondSearchResponse = buildUniqueSearchResponse(1);
-    secondSearchResponse.questionAnswer =
-      buildUniqueSearchResponse(0).questionAnswer;
+    secondSearchResponse.questionAnswer = buildUniqueSearchResponse(0).questionAnswer;
     const finalState = questionAnsweringReducer(
       intermediateState,
-      executeSearch.fulfilled(
-        buildMockSearch({response: secondSearchResponse}),
-        '',
-        {legacy: null as never}
-      )
+      executeSearch.fulfilled(buildMockSearch({response: secondSearchResponse}), '', {
+        legacy: null as never,
+      })
     );
 
     expect(finalState.liked).toBeTruthy();
@@ -216,29 +205,21 @@ describe('question answering slice', () => {
     const firstSearchResponse = buildUniqueSearchResponse(0);
     const firstResponseState = questionAnsweringReducer(
       state,
-      executeSearch.fulfilled(
-        buildMockSearch({response: firstSearchResponse}),
-        '',
-        {legacy: null as never}
-      )
+      executeSearch.fulfilled(buildMockSearch({response: firstSearchResponse}), '', {
+        legacy: null as never,
+      })
     );
 
-    const intermediateState = questionAnsweringReducer(
-      firstResponseState,
-      likeSmartSnippet()
-    );
+    const intermediateState = questionAnsweringReducer(firstResponseState, likeSmartSnippet());
 
     const secondSearchResponse = buildUniqueSearchResponse(1);
-    secondSearchResponse.questionAnswer =
-      buildUniqueSearchResponse(0).questionAnswer;
+    secondSearchResponse.questionAnswer = buildUniqueSearchResponse(0).questionAnswer;
     secondSearchResponse.questionAnswer.question += 'a';
     const finalState = questionAnsweringReducer(
       intermediateState,
-      executeSearch.fulfilled(
-        buildMockSearch({response: secondSearchResponse}),
-        '',
-        {legacy: null as never}
-      )
+      executeSearch.fulfilled(buildMockSearch({response: secondSearchResponse}), '', {
+        legacy: null as never,
+      })
     );
 
     expect(finalState.liked).toBeFalsy();
@@ -246,48 +227,36 @@ describe('question answering slice', () => {
 
   it('when executeSearch is triggered again, resets only the altered snippets', () => {
     const relatedQuestionsCount = 5;
-    const firstSearchResponse = buildUniqueSearchResponse(
-      0,
-      relatedQuestionsCount
-    );
+    const firstSearchResponse = buildUniqueSearchResponse(0, relatedQuestionsCount);
     const firstResponseState = questionAnsweringReducer(
       state,
-      executeSearch.fulfilled(
-        buildMockSearch({response: firstSearchResponse}),
-        '',
-        {legacy: null as never}
-      )
+      executeSearch.fulfilled(buildMockSearch({response: firstSearchResponse}), '', {
+        legacy: null as never,
+      })
     );
 
-    const stateWithAllSnippetsExpanded =
-      firstResponseState.relatedQuestions.reduce(
-        (state, {questionAnswerId}) =>
-          questionAnsweringReducer(
-            state,
-            expandSmartSnippetRelatedQuestion({
-              questionAnswerId: questionAnswerId,
-            })
-          ),
-        firstResponseState
-      );
-
-    const secondSearchResponse = buildUniqueSearchResponse(
-      0,
-      relatedQuestionsCount
+    const stateWithAllSnippetsExpanded = firstResponseState.relatedQuestions.reduce(
+      (state, {questionAnswerId}) =>
+        questionAnsweringReducer(
+          state,
+          expandSmartSnippetRelatedQuestion({
+            questionAnswerId: questionAnswerId,
+          })
+        ),
+      firstResponseState
     );
-    const {relatedQuestions: expandedQuestions} =
-      secondSearchResponse.questionAnswer;
+
+    const secondSearchResponse = buildUniqueSearchResponse(0, relatedQuestionsCount);
+    const {relatedQuestions: expandedQuestions} = secondSearchResponse.questionAnswer;
     expandedQuestions[0].question += 'a';
     expandedQuestions[1].answerSnippet += 'a';
     expandedQuestions[2].documentId.contentIdKey += 'a';
     expandedQuestions[3].documentId.contentIdValue += 'a';
     const finalState = questionAnsweringReducer(
       stateWithAllSnippetsExpanded,
-      executeSearch.fulfilled(
-        buildMockSearch({response: secondSearchResponse}),
-        '',
-        {legacy: null as never}
-      )
+      executeSearch.fulfilled(buildMockSearch({response: secondSearchResponse}), '', {
+        legacy: null as never,
+      })
     );
 
     const {relatedQuestions: finalQuestions} = finalState;

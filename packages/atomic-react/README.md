@@ -90,9 +90,7 @@ import {
 } from '@coveo/atomic-react';
 import {useMemo} from 'react';
 
-const MyResultTemplateForYouTubeVideos: React.FC<{result: Result}> = ({
-  result,
-}) => {
+const MyResultTemplateForYouTubeVideos: React.FC<{result: Result}> = ({result}) => {
   return (
     <>
       <AtomicResultSectionVisual>
@@ -113,9 +111,7 @@ const MyResultTemplateForYouTubeVideos: React.FC<{result: Result}> = ({
   );
 };
 
-const MyResultTemplateForSalesforceCases: React.FC<{result: Result}> = ({
-  result,
-}) => {
+const MyResultTemplateForSalesforceCases: React.FC<{result: Result}> = ({result}) => {
   return (
     <>
       <AtomicResultSectionTitle>
@@ -197,20 +193,11 @@ This option works well if you do not need to create any CSS rule that would need
 For example, if you want to modify the color of all result links in a template to `pink`, you could do so like this:
 
 ```tsx
-import {
-  AtomicResultLink,
-  AtomicSearchInterface,
-  AtomicResultList,
-} from '@coveo/atomic-react';
-import {
-  buildSearchEngine,
-  getSampleSearchEngineConfiguration,
-} from '@coveo/headless';
+import {AtomicResultLink, AtomicSearchInterface, AtomicResultList} from '@coveo/atomic-react';
+import {buildSearchEngine, getSampleSearchEngineConfiguration} from '@coveo/headless';
 import {useMemo} from 'react';
 
-const MyStyledResultLink: React.FC<
-  React.ComponentProps<typeof AtomicResultLink>
-> = (props) => {
+const MyStyledResultLink: React.FC<React.ComponentProps<typeof AtomicResultLink>> = (props) => {
   return (
     <AtomicResultLink {...props} style={{color: 'pink'}}>
       {props.children}
@@ -251,15 +238,8 @@ This option works in all scenarios, and allows you to target any Shadow parts th
 The following is an example that makes the text of an `AtomicResultBadge` pink:
 
 ```tsx
-import {
-  AtomicSearchInterface,
-  AtomicResultList,
-  AtomicResultBadge,
-} from '@coveo/atomic-react';
-import {
-  buildSearchEngine,
-  getSampleSearchEngineConfiguration,
-} from '@coveo/headless';
+import {AtomicSearchInterface, AtomicResultList, AtomicResultBadge} from '@coveo/atomic-react';
+import {buildSearchEngine, getSampleSearchEngineConfiguration} from '@coveo/headless';
 import {useMemo} from 'react';
 
 const myStyles = `
@@ -356,31 +336,19 @@ Then, we need to add the required dependencies in our page. You can do that like
 ```html
 <head>
   <!-- React, ReactDOM and ReactDOMServer need to be included  -->
-  <script
-    crossorigin
-    src="https://unpkg.com/react@18/umd/react.production.min.js"
-  ></script>
-  <script
-    crossorigin
-    src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"
-  ></script>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script
     crossorigin
     src="https://unpkg.com/react-dom@18/umd/react-dom-server-legacy.browser.production.min.js"
   ></script>
 
   <!-- Optional script, which allows to use JSX directly in an inline script in the page -->
-  <script
-    crossorigin
-    src="https://unpkg.com/@babel/standalone@7/babel.min.js"
-  ></script>
+  <script crossorigin src="https://unpkg.com/@babel/standalone@7/babel.min.js"></script>
 
   <!-- @coveo/headless need to be included as a dependency -->
   <!-- Note the matching major and minor version as explained above -->
-  <script
-    crossorigin
-    src="https://static.cloud.coveo.com/headless/v2.8/headless.js"
-  ></script>
+  <script crossorigin src="https://static.cloud.coveo.com/headless/v2.8/headless.js"></script>
 
   <!-- @coveo/atomic need to be included as a dependency -->
   <!-- Note the matching major and minor version as explained above -->

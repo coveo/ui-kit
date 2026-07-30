@@ -1,9 +1,6 @@
 import {BooleanValue, NumberValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
-import {
-  requiredNonEmptyString,
-  validatePayload,
-} from '../../../../utils/validate-payload.js';
+import {requiredNonEmptyString, validatePayload} from '../../../../utils/validate-payload.js';
 import type {
   UpdateFacetIsFieldExpandedActionCreatorPayload,
   UpdateFacetNumberOfValuesActionCreatorPayload,
@@ -11,8 +8,7 @@ import type {
 } from '../../../facets/facet-set/facet-set-actions.js';
 import type {UpdateFacetAutoSelectionActionCreatorPayload} from '../../../facets/generic/facet-actions.js';
 
-export type UpdateCoreFacetNumberOfValuesPayload =
-  UpdateFacetNumberOfValuesActionCreatorPayload;
+export type UpdateCoreFacetNumberOfValuesPayload = UpdateFacetNumberOfValuesActionCreatorPayload;
 
 export const updateCoreFacetNumberOfValues = createAction(
   'commerce/facets/core/updateNumberOfValues',
@@ -23,8 +19,7 @@ export const updateCoreFacetNumberOfValues = createAction(
     })
 );
 
-export type UpdateCoreFacetIsFieldExpandedPayload =
-  UpdateFacetIsFieldExpandedActionCreatorPayload;
+export type UpdateCoreFacetIsFieldExpandedPayload = UpdateFacetIsFieldExpandedActionCreatorPayload;
 
 export const updateCoreFacetIsFieldExpanded = createAction(
   'commerce/facets/core/updateIsFieldExpanded',
@@ -42,9 +37,7 @@ export const updateCoreFacetIsFieldExpanded = createAction(
  */
 export const clearAllCoreFacets = createAction('commerce/facets/core/clearAll');
 
-export const deleteAllCoreFacets = createAction(
-  'commerce/facets/core/deleteAll'
-);
+export const deleteAllCoreFacets = createAction('commerce/facets/core/deleteAll');
 
 export type DeselectAllValuesInCoreFacetPayload = {
   /**

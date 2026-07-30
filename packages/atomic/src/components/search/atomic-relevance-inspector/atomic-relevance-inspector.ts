@@ -50,9 +50,7 @@ export class AtomicRelevanceInspector
         exportparts="footer"
       >
         <p slot="header">Open the relevance inspector</p>
-        <p slot="body">
-          The Relevance Inspector will open in the Coveo Administration Console.
-        </p>
+        <p slot="body">The Relevance Inspector will open in the Coveo Administration Console.</p>
         <div slot="footer" class="flex w-full items-center justify-end">
           ${renderButton({
             props: {
@@ -89,8 +87,7 @@ export class AtomicRelevanceInspector
   }
 
   private get adminHref() {
-    const {organizationId, environment} =
-      this.bindings.engine.state.configuration;
+    const {organizationId, environment} = this.bindings.engine.state.configuration;
 
     const admin = getOrganizationEndpoint(organizationId, environment, 'admin');
     const {searchResponseId} = this.bindings.engine.state.search;

@@ -30,11 +30,7 @@ import type {
   FacetValueRequest,
 } from '@coveo/headless';
 
-function makeDependent(
-  engine: SearchEngine,
-  dependentFacet: Facet,
-  parentFacets: Facet[]
-) {
+function makeDependent(engine: SearchEngine, dependentFacet: Facet, parentFacets: Facet[]) {
   const facetConditionsManager = buildFacetConditionsManager(engine, {
     facetId: dependentFacet.state.facetId,
     conditions: [
@@ -42,8 +38,7 @@ function makeDependent(
         const parentFacetHasAnySelectedValueCondition: AnyFacetValuesCondition<FacetValueRequest> =
           {
             parentFacetId: parentFacet.state.facetId,
-            condition: (parentValues) =>
-              parentValues.some((v) => v.state === 'selected'),
+            condition: (parentValues) => parentValues.some((v) => v.state === 'selected'),
           };
         return parentFacetHasAnySelectedValueCondition;
       }),
@@ -51,10 +46,7 @@ function makeDependent(
   });
 
   dependentFacet.subscribe(() => {
-    setFacetVisibility(
-      dependentFacet.state.facetId,
-      dependentFacet.state.enabled
-    );
+    setFacetVisibility(dependentFacet.state.facetId, dependentFacet.state.enabled);
   });
 
   addOnFacetDestroyedListener(dependentFacet.state.facetId, () => {

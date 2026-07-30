@@ -1,5 +1,20 @@
 # @coveo/ui-kit-sample-atomic-search-vite
 
+## 3.60.3
+
+### Patch Changes
+
+- Updated dependencies [[`42f1e58`](https://github.com/coveo/ui-kit/commit/42f1e58bfbb5aeeee832d7da07b3bc77ededeff7), [`51e15d1`](https://github.com/coveo/ui-kit/commit/51e15d1435d7435a0701754d9e418d6d87d376c3)]:
+  - @coveo/headless@3.53.2
+  - @coveo/atomic@3.60.3
+
+## 3.60.2
+
+### Patch Changes
+
+- Updated dependencies [[`fe52658`](https://github.com/coveo/ui-kit/commit/fe5265887c0c26cf3ea3699a6560a729899d3c2a), [`0dd5704`](https://github.com/coveo/ui-kit/commit/0dd57045f21029ff175ff787637c98b9e5572bba), [`3273fe6`](https://github.com/coveo/ui-kit/commit/3273fe6a761f62ebddcc6794e9a76aaeca765ca9), [`7325c0b`](https://github.com/coveo/ui-kit/commit/7325c0b771104e25c1b69143ff2d07a52f3befa1), [`deac16e`](https://github.com/coveo/ui-kit/commit/deac16e906be7eeaf9d92360972d8ed7d52f1a82)]:
+  - @coveo/atomic@3.60.2
+
 ## 3.60.1
 
 ### Patch Changes

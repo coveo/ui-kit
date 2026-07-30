@@ -59,10 +59,7 @@ export function buildInteractiveCitationCore(
     }
     wasOpened = true;
     engine.dispatch(
-      analyticsClient.logCitationOpen(
-        props.options.citation.id,
-        props.options.answerId
-      )
+      analyticsClient.logCitationOpen(props.options.citation.id, props.options.answerId)
     );
   };
 

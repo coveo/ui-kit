@@ -13,14 +13,8 @@ import {
   type StateNeededForPaginatedCommerceAPIRequest,
 } from './paginated-commerce-api-request-builder.js';
 
-export type StateNeededForFilterableCommerceAPIRequest =
-  StateNeededForPaginatedCommerceAPIRequest &
-    Partial<
-      CommerceSortSection &
-        CommerceFacetSetSection &
-        FacetOrderSection &
-        ManualRangeSection
-    >;
+export type StateNeededForFilterableCommerceAPIRequest = StateNeededForPaginatedCommerceAPIRequest &
+  Partial<CommerceSortSection & CommerceFacetSetSection & FacetOrderSection & ManualRangeSection>;
 
 export const buildFilterableCommerceAPIRequest = (
   state: StateNeededForFilterableCommerceAPIRequest,

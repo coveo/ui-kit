@@ -3,7 +3,7 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
+import {MockSearchApi} from '@coveo/platform-mock-api/search';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import {html} from 'lit/static-html.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
@@ -115,10 +115,9 @@ const PARENT_TEMPLATE_EXAMPLE = `<template>
   </atomic-result-section-children>
 </template>`;
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-result-children-template',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-result-children-template', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-result-children-template',
@@ -176,12 +175,8 @@ export const Default: Story = {
   decorators: [
     (story) => html`
       <atomic-folded-result-list image-size="small" display="grid">
-        <atomic-result-template>
-          ${unsafeHTML(PARENT_TEMPLATE_EXAMPLE)}
-        </atomic-result-template>
-        <atomic-result-children image-size="image">
-          ${story()}
-        </atomic-result-children>
+        <atomic-result-template> ${unsafeHTML(PARENT_TEMPLATE_EXAMPLE)} </atomic-result-template>
+        <atomic-result-children image-size="image"> ${story()} </atomic-result-children>
       </atomic-folded-result-list>
     `,
     decorator,

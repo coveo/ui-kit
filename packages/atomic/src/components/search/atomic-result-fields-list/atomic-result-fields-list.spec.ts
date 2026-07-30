@@ -28,31 +28,26 @@ describe('atomic-result-fields-list', () => {
     });
   });
 
-  const renderResultFieldsList = async (
-    options: {slottedContent?: string} = {}
-  ) => {
-    const {element, atomicInterface} =
-      await renderInAtomicResult<AtomicResultFieldsList>({
-        template: html`<atomic-result-fields-list
-          >${unsafeHTML(
-            options.slottedContent ?? ''
-          )}</atomic-result-fields-list
-        >`,
-        selector: 'atomic-result-fields-list',
-        result: mockResult,
-        bindings: (bindings) => {
-          bindings.i18n = i18n;
-          bindings.store = {
-            ...bindings.store,
-            onChange: vi.fn(),
-            state: {
-              ...bindings.store?.state,
-              loadingFlags: [],
-            },
-          };
-          return bindings;
-        },
-      });
+  const renderResultFieldsList = async (options: {slottedContent?: string} = {}) => {
+    const {element, atomicInterface} = await renderInAtomicResult<AtomicResultFieldsList>({
+      template: html`<atomic-result-fields-list
+        >${unsafeHTML(options.slottedContent ?? '')}</atomic-result-fields-list
+      >`,
+      selector: 'atomic-result-fields-list',
+      result: mockResult,
+      bindings: (bindings) => {
+        bindings.i18n = i18n;
+        bindings.store = {
+          ...bindings.store,
+          onChange: vi.fn(),
+          state: {
+            ...bindings.store?.state,
+            loadingFlags: [],
+          },
+        };
+        return bindings;
+      },
+    });
 
     await atomicInterface.updateComplete;
     await element?.updateComplete;
@@ -107,8 +102,7 @@ describe('atomic-result-fields-list', () => {
 
   it('should add divider pseudo-elements between children via CSS', async () => {
     const {element} = await renderResultFieldsList({
-      slottedContent:
-        '<span class="field">Field 1</span><span class="field">Field 2</span>',
+      slottedContent: '<span class="field">Field 1</span><span class="field">Field 2</span>',
     });
 
     const firstChild = element?.querySelector('.field') as HTMLElement;
@@ -119,8 +113,7 @@ describe('atomic-result-fields-list', () => {
 
   it('should hide divider on last visible child', async () => {
     const {element} = await renderResultFieldsList({
-      slottedContent:
-        '<span class="field">Field 1</span><span class="field">Field 2</span>',
+      slottedContent: '<span class="field">Field 1</span><span class="field">Field 2</span>',
     });
 
     const children = Array.from(element?.querySelectorAll('.field') ?? []);

@@ -27,9 +27,7 @@ import {
   type DateFilterOptions,
 } from './headless-core-date-filter.js';
 
-vi.mock(
-  '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions'
-);
+vi.mock('../../../../../features/facets/range-facets/date-facet-set/date-facet-actions');
 
 vi.mock('../../../../../features/facet-options/facet-options-actions');
 
@@ -47,9 +45,7 @@ describe('date filter', () => {
   }
 
   beforeEach(() => {
-    (updateDateFacetValues as unknown as Mock).mockImplementation(
-      () => () => {}
-    );
+    (updateDateFacetValues as unknown as Mock).mockImplementation(() => () => {});
     initialState = undefined;
 
     options = {
@@ -94,10 +90,7 @@ describe('date filter', () => {
 
     initDateFilter();
 
-    expect(FacetIdDeterminor.determineFacetId).toHaveBeenCalledWith(
-      engine,
-      options
-    );
+    expect(FacetIdDeterminor.determineFacetId).toHaveBeenCalledWith(engine, options);
   });
 
   it('registers a date facet with the passed options', () => {
@@ -115,9 +108,7 @@ describe('date filter', () => {
 
   it('when an option is invalid, it throws an error', () => {
     options.field = 0 as unknown as string;
-    expect(() => initDateFilter()).toThrow(
-      'Check the options of buildDateFacet'
-    );
+    expect(() => initDateFilter()).toThrow('Check the options of buildDateFacet');
   });
 
   describe('#setRange', () => {
@@ -172,18 +163,14 @@ describe('date filter', () => {
 
   it('the state #range property should return the range if it is selected', () => {
     const value = buildMockDateFacetValue({state: 'selected'});
-    state.search.response.facets = [
-      buildMockDateFacetResponse({facetId, values: [value]}),
-    ];
+    state.search.response.facets = [buildMockDateFacetResponse({facetId, values: [value]})];
 
     expect(dateFacet.state.range).toEqual(value);
   });
 
   it('the state #range property should not return the range if it is not selected', () => {
     const value = buildMockDateFacetValue({state: 'idle'});
-    state.search.response.facets = [
-      buildMockDateFacetResponse({facetId, values: [value]}),
-    ];
+    state.search.response.facets = [buildMockDateFacetResponse({facetId, values: [value]})];
 
     expect(dateFacet.state.range).toBeUndefined();
   });

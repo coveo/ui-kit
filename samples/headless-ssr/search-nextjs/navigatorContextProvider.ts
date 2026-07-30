@@ -29,11 +29,7 @@ export class NextJsAppRouterNavigatorContext implements NavigatorContext {
   }
 
   get forwardedFor() {
-    return (
-      this.headers.get('x-forwarded-for') ||
-      this.headers.get('x-forwarded-host') ||
-      ''
-    );
+    return this.headers.get('x-forwarded-for') || this.headers.get('x-forwarded-host') || '';
   }
 
   get marshal(): NavigatorContext {

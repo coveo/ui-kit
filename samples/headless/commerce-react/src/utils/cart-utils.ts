@@ -2,10 +2,7 @@ import type {CartItemWithMetadata, CartState} from '@coveo/headless/commerce';
 
 export function saveCartItemsToLocaleStorage(cartState: CartState): void {
   try {
-    window.localStorage.setItem(
-      'coveo-cartState',
-      JSON.stringify(cartState.items)
-    );
+    window.localStorage.setItem('coveo-cartState', JSON.stringify(cartState.items));
   } catch (err) {
     console.error('Failed to save cart items to local storage', err);
   }

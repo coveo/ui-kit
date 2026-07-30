@@ -88,18 +88,13 @@ const buildFetchClassificationRequest = async (
   organizationId: state.configuration.organizationId,
   url:
     state.caseAssistConfiguration.apiBaseUrl ??
-    getOrganizationEndpoint(
-      state.configuration.organizationId,
-      state.configuration.environment
-    ),
+    getOrganizationEndpoint(state.configuration.organizationId, state.configuration.environment),
   caseAssistId: state.caseAssistConfiguration.caseAssistId,
   ...(state.configuration.analytics.enabled && {
     clientId: await getVisitorID(state.configuration.analytics),
   }),
   fields: state.caseInput,
-  context: state.caseField
-    ? prepareContextFromFields(state.caseField.fields)
-    : undefined,
+  context: state.caseField ? prepareContextFromFields(state.caseField.fields) : undefined,
   locale: state.caseAssistConfiguration.locale,
   debug: state.debug,
 });

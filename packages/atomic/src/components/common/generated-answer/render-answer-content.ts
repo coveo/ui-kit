@@ -28,9 +28,7 @@ export interface RenderAnswerContentProps {
 /**
  * Renders the answer content of a given generated answer including answer text and citations.
  */
-export const renderAnswerContent: FunctionalComponent<
-  RenderAnswerContentProps
-> = ({props}) => {
+export const renderAnswerContent: FunctionalComponent<RenderAnswerContentProps> = ({props}) => {
   const {
     i18n,
     generatedAnswer,
@@ -41,8 +39,7 @@ export const renderAnswerContent: FunctionalComponent<
     onClickShowButton,
   } = props;
 
-  const {answer, isStreaming, citations, answerContentFormat, expanded, error} =
-    generatedAnswer;
+  const {answer, isStreaming, citations, answerContentFormat, expanded, error} = generatedAnswer;
   const hasRetryableError = error?.isRetryable === true;
 
   return html`

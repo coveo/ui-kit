@@ -27,10 +27,7 @@ function validateBuildConfig(buildConfig: BuildConfig): void {
  * Transforms simple user configuration into complex internal controller structures.
  */
 class ControllerWirer<
-  TControllerDefinitions extends ControllerDefinitionsMap<
-    SSRSearchEngine,
-    Controller
-  >,
+  TControllerDefinitions extends ControllerDefinitionsMap<SSRSearchEngine, Controller>,
 > {
   constructor(
     private buildConfig: BuildConfig,
@@ -69,10 +66,7 @@ class ControllerWirer<
  * @returns Formatted and validated controller properties map defined for the controller in the definition
  */
 export function wireControllerParams<
-  TControllerDefinitions extends ControllerDefinitionsMap<
-    SSRSearchEngine,
-    Controller
-  >,
+  TControllerDefinitions extends ControllerDefinitionsMap<SSRSearchEngine, Controller>,
 >(
   controllerDefinitions: TControllerDefinitions,
   buildConfig: BuildConfig & {
@@ -83,11 +77,7 @@ export function wireControllerParams<
 
   const controllerProps: ControllersPropsMap = buildConfig.controllers ?? {};
 
-  new ControllerWirer(
-    buildConfig,
-    controllerDefinitions,
-    controllerProps
-  ).wire();
+  new ControllerWirer(buildConfig, controllerDefinitions, controllerProps).wire();
 
   return controllerProps as InferControllerPropsMapFromDefinitions<TControllerDefinitions>;
 }

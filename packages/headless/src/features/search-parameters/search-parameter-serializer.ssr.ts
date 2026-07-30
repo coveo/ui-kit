@@ -56,8 +56,7 @@ function serialize(searchParameters: SearchParameters, initialUrl: URL) {
   const previousState = wipeSearchParamsFromUrl(searchParams);
   Object.entries(searchParameters).forEach(
     ([key, value]) =>
-      isValidKey(key) &&
-      applyToUrlSearchParam(searchParams, previousState, [key, value])
+      isValidKey(key) && applyToUrlSearchParam(searchParams, previousState, [key, value])
   );
 
   return initialUrl.href;
@@ -136,9 +135,7 @@ function applyRangeFacetValuesToSearchParams(
     facetValues.forEach(({start, end, endInclusive}) =>
       urlSearchParams.append(
         id,
-        `${start}${
-          endInclusive ? rangeDelimiterInclusive : rangeDelimiterExclusive
-        }${end}`
+        `${start}${endInclusive ? rangeDelimiterInclusive : rangeDelimiterExclusive}${end}`
       )
     );
   });

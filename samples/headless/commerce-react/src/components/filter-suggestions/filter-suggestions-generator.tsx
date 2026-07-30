@@ -21,9 +21,7 @@ interface IFilterSuggestionsGeneratorProps {
   ) => void;
 }
 
-export default function FilterSuggestionsGenerator(
-  props: IFilterSuggestionsGeneratorProps
-) {
+export default function FilterSuggestionsGenerator(props: IFilterSuggestionsGeneratorProps) {
   const {controller, onClickFilterSuggestion} = props;
   const [filterSuggestionsState, setFilterSuggestionsState] = useState(
     controller.filterSuggestions

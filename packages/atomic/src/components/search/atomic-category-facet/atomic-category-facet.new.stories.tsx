@@ -2,8 +2,7 @@ import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
-import {buildSearchResponseWithResults} from '@coveo/platform-mock-api/search/search-response-mocks';
+import {buildSearchResponseWithResults, MockSearchApi} from '@coveo/platform-mock-api/search';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {facetDecorator} from '@/storybook-utils/common/facets-decorator';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
@@ -177,10 +176,7 @@ const createSelectedCategoryFacetResponse = (
   facetId = 'geographicalhierarchy'
 ) => {
   // Build the parent chain with selected state
-  const buildParentChain = (
-    path: string[],
-    depth = 0
-  ): CategoryFacetValue | null => {
+  const buildParentChain = (path: string[], depth = 0): CategoryFacetValue | null => {
     if (depth >= path.length) {
       return null;
     }
@@ -211,9 +207,7 @@ const createSelectedCategoryFacetResponse = (
   };
 };
 
-const mockDefaultCategoryFacetResponse = (
-  facetId = 'geographicalhierarchy'
-) => {
+const mockDefaultCategoryFacetResponse = (facetId = 'geographicalhierarchy') => {
   searchApiHarness.searchEndpoint.mockOnce((response) => {
     if ('facets' in response) {
       return {
@@ -235,11 +229,7 @@ const mockSelectedRootValue = (facetId = 'geographicalhierarchy') => {
         ...response,
         facets: [
           ...(response.facets || []),
-          createSelectedCategoryFacetResponse(
-            ['North America'],
-            northAmericaChildValues,
-            facetId
-          ),
+          createSelectedCategoryFacetResponse(['North America'], northAmericaChildValues, facetId),
         ],
       };
     }
@@ -266,9 +256,7 @@ const mockSelectedChildValue = (facetId = 'geographicalhierarchy') => {
   });
 };
 
-const mockSelectedChildValueWithMoreAvailable = (
-  facetId = 'geographicalhierarchy'
-) => {
+const mockSelectedChildValueWithMoreAvailable = (facetId = 'geographicalhierarchy') => {
   searchApiHarness.searchEndpoint.mockOnce((response) => {
     if ('facets' in response) {
       return {
@@ -444,9 +432,7 @@ export const A11yStatusMessage: Story = {
           : response
       )
     );
-    searchApiHarness.searchEndpoint.mockOnce(
-      buildSearchResponseWithResults(42)
-    );
+    searchApiHarness.searchEndpoint.mockOnce(buildSearchResponseWithResults(42));
   },
   play: async (context) => {
     await play(context);

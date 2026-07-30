@@ -12,9 +12,7 @@ import {getFieldsInitialState} from './fields-state.js';
 export const fieldsReducer = createReducer(getFieldsInitialState(), (builder) =>
   builder
     .addCase(registerFieldsToInclude, (state, action) => {
-      state.fieldsToInclude = [
-        ...new Set(state.fieldsToInclude.concat(action.payload)),
-      ];
+      state.fieldsToInclude = [...new Set(state.fieldsToInclude.concat(action.payload))];
     })
     .addCase(enableFetchAllFields, (state) => {
       state.fetchAllFields = true;

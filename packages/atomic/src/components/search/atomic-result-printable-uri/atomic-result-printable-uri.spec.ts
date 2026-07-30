@@ -1,8 +1,4 @@
-import {
-  buildInteractiveResult,
-  type InteractiveResult,
-  type Result,
-} from '@coveo/headless';
+import {buildInteractiveResult, type InteractiveResult, type Result} from '@coveo/headless';
 import type {i18n} from 'i18next';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
@@ -27,8 +23,7 @@ const buildFakeInteractiveResult = (
 const getNameForPart = (index: number) => `Parent ${index + 1}`;
 
 const getUriForPart = (index: number) =>
-  'https://example.com/' +
-  Array.from({length: index + 1}, (_, i) => `page${i + 1}`).join('/');
+  'https://example.com/' + Array.from({length: index + 1}, (_, i) => `page${i + 1}`).join('/');
 
 const createParentsXml = (numberOfParents: number) => {
   const parents = Array.from(
@@ -60,31 +55,28 @@ describe('atomic-result-printable-uri', () => {
     vi.mocked(buildInteractiveResult).mockReturnValue(mockInteractiveResult);
   });
 
-  const renderComponent = async (
-    options: {maxNumberOfParts?: number; result?: Result} = {}
-  ) => {
+  const renderComponent = async (options: {maxNumberOfParts?: number; result?: Result} = {}) => {
     const resultToUse = options.result ?? mockResult;
-    const {element, atomicInterface} =
-      await renderInAtomicResult<AtomicResultPrintableUri>({
-        template: html`<atomic-result-printable-uri
-          max-number-of-parts=${ifDefined(options.maxNumberOfParts)}
-        ></atomic-result-printable-uri>`,
-        selector: 'atomic-result-printable-uri',
-        result: resultToUse,
-        interactiveResult: mockInteractiveResult,
-        bindings: (bindings) => {
-          bindings.i18n = i18n;
-          bindings.store = {
-            ...bindings.store,
-            onChange: vi.fn(),
-            state: {
-              ...bindings.store?.state,
-              loadingFlags: [],
-            },
-          };
-          return bindings;
-        },
-      });
+    const {element, atomicInterface} = await renderInAtomicResult<AtomicResultPrintableUri>({
+      template: html`<atomic-result-printable-uri
+        max-number-of-parts=${ifDefined(options.maxNumberOfParts)}
+      ></atomic-result-printable-uri>`,
+      selector: 'atomic-result-printable-uri',
+      result: resultToUse,
+      interactiveResult: mockInteractiveResult,
+      bindings: (bindings) => {
+        bindings.i18n = i18n;
+        bindings.store = {
+          ...bindings.store,
+          onChange: vi.fn(),
+          state: {
+            ...bindings.store?.state,
+            loadingFlags: [],
+          },
+        };
+        return bindings;
+      },
+    });
 
     await atomicInterface.updateComplete;
     await element?.updateComplete;
@@ -149,9 +141,7 @@ describe('atomic-result-printable-uri', () => {
 
         const list = locators.list();
         // Uses the actual i18n translation key 'printable-uri'
-        expect(list?.getAttribute('aria-label')).toBe(
-          'Source path of the result'
-        );
+        expect(list?.getAttribute('aria-label')).toBe('Source path of the result');
       });
 
       it('should render parent hrefs correctly', async () => {
@@ -199,9 +189,7 @@ describe('atomic-result-printable-uri', () => {
         expect(ellipsisButton).toBeTruthy();
         expect(ellipsisButton?.textContent?.trim()).toBe('...');
         // Uses the actual i18n translation key 'collapsed-uri-parts'
-        expect(ellipsisButton?.getAttribute('aria-label')).toBe(
-          'Collapsed URI parts'
-        );
+        expect(ellipsisButton?.getAttribute('aria-label')).toBe('Collapsed URI parts');
       });
 
       it('should show limited number of links with ellipsis', async () => {
@@ -232,9 +220,7 @@ describe('atomic-result-printable-uri', () => {
   });
 
   it('should set error when max-number-of-parts is less than 3', async () => {
-    const consoleWarnSpy = vi
-      .spyOn(console, 'warn')
-      .mockImplementation(() => {});
+    const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
     const {element} = await renderComponent({
       maxNumberOfParts: 2,

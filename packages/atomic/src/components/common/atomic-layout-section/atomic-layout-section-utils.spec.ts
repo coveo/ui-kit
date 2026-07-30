@@ -1,9 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {
-  findSection,
-  type Section,
-  sectionSelector,
-} from './atomic-layout-section-utils';
+import {findSection, type Section, sectionSelector} from './atomic-layout-section-utils';
 
 describe('atomic-layout-section-utils', () => {
   describe('#sectionSelector', () => {
@@ -19,9 +15,7 @@ describe('atomic-layout-section-utils', () => {
         'pagination',
       ];
       sections.forEach((section) => {
-        expect(sectionSelector(section)).toBe(
-          `atomic-layout-section[section="${section}"]`
-        );
+        expect(sectionSelector(section)).toBe(`atomic-layout-section[section="${section}"]`);
       });
     });
   });

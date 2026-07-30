@@ -40,10 +40,7 @@ export type FacetSelectionChangeMetadata = {
   facetValue: string;
 };
 
-export const buildFacetBaseMetadata = (
-  facetId: string,
-  state: SectionNeededForFacetMetadata
-) => {
+export const buildFacetBaseMetadata = (facetId: string, state: SectionNeededForFacetMetadata) => {
   const facet = getFacetRequest(state, facetId);
 
   const facetField = facet ? facet.field : '';
@@ -62,9 +59,7 @@ export function buildFacetSelectionChangeMetadata(
   return {
     ...base,
     facetValue:
-      facetType === 'hierarchical'
-        ? getCategoryFacetSelectedValue(state, facetId)
-        : facetValue,
+      facetType === 'hierarchical' ? getCategoryFacetSelectedValue(state, facetId) : facetValue,
   };
 }
 
@@ -76,22 +71,16 @@ export function getStateNeededForFacetMetadata(
     categoryFacetSet: s.categoryFacetSet ?? getCategoryFacetSetInitialState(),
     dateFacetSet: s.dateFacetSet ?? getDateFacetSetInitialState(),
     numericFacetSet: s.numericFacetSet ?? getNumericFacetSetInitialState(),
-    automaticFacetSet:
-      s.automaticFacetSet ?? getAutomaticFacetSetInitialState(),
+    automaticFacetSet: s.automaticFacetSet ?? getAutomaticFacetSetInitialState(),
   };
 }
 
-export const buildFacetStateMetadata = (
-  state: SectionNeededForFacetMetadata
-) => {
+export const buildFacetStateMetadata = (state: SectionNeededForFacetMetadata) => {
   const facetState: FacetStateMetadata[] = [];
 
   getFacetRequests(state).forEach((facetRequest, facetIndex) => {
     const facetType = getFacetType(state, facetRequest.facetId);
-    const facetRequestAnalytics = mapFacetRequestToAnalytics(
-      facetRequest,
-      facetIndex + 1
-    );
+    const facetRequestAnalytics = mapFacetRequestToAnalytics(facetRequest, facetIndex + 1);
 
     if (isCategoryFacetRequest(facetRequest)) {
       const hasSelectedValue = !!categoryFacetRequestSelectedValuesSelector(
@@ -152,8 +141,7 @@ export const buildFacetStateMetadata = (
         'specific'
       );
 
-      const facetDisplayValueAnalytics =
-        mapFacetDisplayValueToAnalytics(facetValue);
+      const facetDisplayValueAnalytics = mapFacetDisplayValueToAnalytics(facetValue);
 
       facetState.push({
         ...facetAnalytics,
@@ -166,13 +154,11 @@ export const buildFacetStateMetadata = (
   return facetState;
 };
 
-const isSpecificFacetRequest = (
-  request: AnyFacetRequest
-): request is FacetRequest => request.type === 'specific';
+const isSpecificFacetRequest = (request: AnyFacetRequest): request is FacetRequest =>
+  request.type === 'specific';
 
-const isCategoryFacetRequest = (
-  request: AnyFacetRequest
-): request is CategoryFacetRequest => request.type === 'hierarchical';
+const isCategoryFacetRequest = (request: AnyFacetRequest): request is CategoryFacetRequest =>
+  request.type === 'hierarchical';
 
 const getFacetRequests = (state: SectionNeededForFacetMetadata) => {
   return [
@@ -183,12 +169,8 @@ const getFacetRequests = (state: SectionNeededForFacetMetadata) => {
   ].map((facet) => facet.request);
 };
 
-const getAutomaticFacets = (
-  state: SectionNeededForFacetMetadata
-): AutomaticFacetResponse[] => {
-  return [...Object.values(state.automaticFacetSet.set)].map(
-    (facet) => facet.response
-  );
+const getAutomaticFacets = (state: SectionNeededForFacetMetadata): AutomaticFacetResponse[] => {
+  return [...Object.values(state.automaticFacetSet.set)].map((facet) => facet.response);
 };
 
 const mapFacetValueToAnalytics = (
@@ -222,12 +204,8 @@ const mapFacetDisplayValueToAnalytics = (facetValue: FacetValueRequest) => {
   };
 };
 
-const getCategoryFacetSelectedValue = (
-  state: SectionNeededForFacetMetadata,
-  facetId: string
-) => {
-  const selectedCategoryFacetValues =
-    categoryFacetRequestSelectedValuesSelector(state, facetId);
+const getCategoryFacetSelectedValue = (state: SectionNeededForFacetMetadata, facetId: string) => {
+  const selectedCategoryFacetValues = categoryFacetRequestSelectedValuesSelector(state, facetId);
   return selectedCategoryFacetValues
     .map((selectedCategoryFacetValue) => selectedCategoryFacetValue.value)
     .join(';');
@@ -246,10 +224,7 @@ const mapCategoryFacetValueToAnalytics = (
   };
 };
 
-const mapAutomaticFacetToAnalytics = (
-  facet: AutomaticFacetResponse,
-  facetPosition: number
-) => {
+const mapAutomaticFacetToAnalytics = (facet: AutomaticFacetResponse, facetPosition: number) => {
   return {
     title: getFacetTitle(facet.field, facet.field),
     field: facet.field,
@@ -258,10 +233,7 @@ const mapAutomaticFacetToAnalytics = (
   };
 };
 
-const mapFacetRequestToAnalytics = (
-  request: AnyFacetRequest,
-  facetPosition: number
-) => {
+const mapFacetRequestToAnalytics = (request: AnyFacetRequest, facetPosition: number) => {
   return {
     title: getFacetTitle(request.field, request.facetId),
     field: request.field,
@@ -277,12 +249,7 @@ const getFacetTitle = (field: string, facetId: string) => {
 const getFacetRequest = (
   state: SectionNeededForFacetMetadata,
   facetId: string
-):
-  | FacetRequest
-  | CategoryFacetRequest
-  | DateFacetRequest
-  | NumericFacetRequest
-  | undefined => {
+): FacetRequest | CategoryFacetRequest | DateFacetRequest | NumericFacetRequest | undefined => {
   return (
     state.facetSet[facetId]?.request ||
     state.categoryFacetSet[facetId]?.request ||
@@ -292,10 +259,7 @@ const getFacetRequest = (
   );
 };
 
-const getFacetType = (
-  state: SectionNeededForFacetMetadata,
-  facetId: string
-) => {
+const getFacetType = (state: SectionNeededForFacetMetadata, facetId: string) => {
   const facet = getFacetRequest(state, facetId);
   return facet ? facet.type : 'specific';
 };

@@ -486,8 +486,7 @@ const middleEvents: ConverseEvent[] = [
       type: 'TOOL_CALL_RESULT',
       messageId: '792dc936-e99d-46d0-8ab6-0b577ec8d3ab',
       toolCallId: 'tooluse_qkQi4iUnTHGyKsjuxb8zJd',
-      content:
-        '"NextActionsBar queued on surface \'next-actions-surface\' with 3 action(s)."',
+      content: '"NextActionsBar queued on surface \'next-actions-surface\' with 3 action(s)."',
     },
   },
   {

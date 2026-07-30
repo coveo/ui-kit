@@ -23,8 +23,8 @@ export interface QueryCommerceAPIThunkReturn {
   response: ListingCommerceSuccessResponse;
 }
 
-export type StateNeededByFetchProductListing =
-  StateNeededForFilterableCommerceAPIRequest & ProductListingSection;
+export type StateNeededByFetchProductListing = StateNeededForFilterableCommerceAPIRequest &
+  ProductListingSection;
 
 export interface FetchProductListingPayload {
   /**
@@ -41,10 +41,7 @@ export const fetchProductListing = createAsyncThunk<
   AsyncThunkCommerceOptions<StateNeededByFetchProductListing>
 >(
   'commerce/productListing/fetch',
-  async (
-    payload,
-    {getState, rejectWithValue, extra: {apiClient, navigatorContext}}
-  ) => {
+  async (payload, {getState, rejectWithValue, extra: {apiClient, navigatorContext}}) => {
     const state = getState();
     const request = buildFilterableCommerceAPIRequest(state, navigatorContext);
     const fetched = await apiClient.getProductListing({
@@ -68,10 +65,7 @@ export const fetchMoreProducts = createAsyncThunk<
   AsyncThunkCommerceOptions<StateNeededByFetchProductListing>
 >(
   'commerce/productListing/fetchMoreProducts',
-  async (
-    payload,
-    {getState, rejectWithValue, extra: {apiClient, navigatorContext}}
-  ) => {
+  async (payload, {getState, rejectWithValue, extra: {apiClient, navigatorContext}}) => {
     const state = getState();
     const moreProductsAvailable = moreProductsAvailableSelector(state);
     if (!moreProductsAvailable) {
@@ -112,6 +106,5 @@ const promoteChildToParentDefinition = {
 
 export const promoteChildToParent = createAction(
   'commerce/productListing/promoteChildToParent',
-  (payload: PromoteChildToParentPayload) =>
-    validatePayload(payload, promoteChildToParentDefinition)
+  (payload: PromoteChildToParentPayload) => validatePayload(payload, promoteChildToParentDefinition)
 );

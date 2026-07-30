@@ -1,7 +1,7 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
-import {MockInsightApi} from '@coveo/platform-mock-api/insight/mock';
+import {MockInsightApi} from '@coveo/platform-mock-api/insight';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 import '@/src/components/insight/atomic-insight-layout/atomic-insight-layout';
@@ -25,12 +25,9 @@ import '@/src/components/search/atomic-text/atomic-text.js';
 
 const {decorator: insightInterfaceDecorator, play: initializeInsightInterface} =
   wrapInInsightInterface();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-insight-result-list',
-  {
-    excludeCategories: ['methods'],
-  }
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-insight-result-list', {
+  excludeCategories: ['methods'],
+});
 
 const insightApiHarness = new MockInsightApi();
 
@@ -85,9 +82,7 @@ const TEMPLATE_EXAMPLE = `<template>
 
 const layoutDecorator = (story: () => unknown) => html`
   <atomic-insight-layout>
-    <atomic-layout-section section="results">
-      ${story()}
-    </atomic-layout-section>
+    <atomic-layout-section section="results"> ${story()} </atomic-layout-section>
   </atomic-insight-layout>
 `;
 

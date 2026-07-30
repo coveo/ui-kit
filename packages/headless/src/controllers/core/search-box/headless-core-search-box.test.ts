@@ -14,16 +14,10 @@ import {
   selectQuerySuggestion,
 } from '../../../features/query-suggest/query-suggest-actions.js';
 import {querySuggestReducer as querySuggest} from '../../../features/query-suggest/query-suggest-slice.js';
-import {
-  executeSearch,
-  prepareForSearchWithQuery,
-} from '../../../features/search/search-actions.js';
+import {executeSearch, prepareForSearchWithQuery} from '../../../features/search/search-actions.js';
 import {searchReducer as search} from '../../../features/search/search-slice.js';
 import type {SearchAppState} from '../../../state/search-app-state.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../../test/mock-engine-v2.js';
 import {buildMockQuerySuggest} from '../../../test/mock-query-suggest.js';
 import {createMockState} from '../../../test/mock-state.js';
 import {
@@ -137,9 +131,7 @@ describe('headless CoreSearchBox', () => {
 
     it('when passing an invalid option, it throws an error', () => {
       props.options!.id = 1 as unknown as string;
-      expect(() => initController()).toThrow(
-        'Check the options of buildSearchBox'
-      );
+      expect(() => initController()).toThrow('Check the options of buildSearchBox');
     });
   });
 

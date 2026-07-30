@@ -23,10 +23,7 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import {
-  AriaLiveRegionController,
-  FocusTargetController,
-} from '@/src/utils/accessibility-utils';
+import {AriaLiveRegionController, FocusTargetController} from '@/src/utils/accessibility-utils';
 import facetCommonStyles from '../../common/facets/facet-common.tw.css';
 import facetSearchStyles from '../../common/facets/facet-search/facet-search.tw.css';
 import {announceFacetSearchResultsWithAriaLive} from '../../common/facets/facet-search/facet-search-aria-live';
@@ -83,9 +80,7 @@ export class AtomicCommerceFacet
   /**
    * The Summary controller instance.
    */
-  @property({type: Object}) summary!: Summary<
-    SearchSummaryState | ProductListingSummaryState
-  >;
+  @property({type: Object}) summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
   /**
    * The facet controller instance.
    */
@@ -144,20 +139,12 @@ export class AtomicCommerceFacet
     super.disconnectedCallback();
   }
 
-  protected shouldUpdate(
-    changedProperties: Map<string | number | symbol, unknown>
-  ): boolean {
+  protected shouldUpdate(changedProperties: Map<string | number | symbol, unknown>): boolean {
     const prev = changedProperties.get('facetState');
     const next = this.facetState;
 
-    if (
-      this.isFacetState(prev, 'facetState') &&
-      this.isFacetState(next, 'facetState')
-    ) {
-      return shouldUpdateFacetSearchComponent(
-        next.facetSearch,
-        prev.facetSearch
-      );
+    if (this.isFacetState(prev, 'facetState') && this.isFacetState(next, 'facetState')) {
+      return shouldUpdateFacetSearchComponent(next.facetSearch, prev.facetSearch);
     }
     return true;
   }
@@ -319,11 +306,7 @@ export class AtomicCommerceFacet
 
   private get facetValueProps(): Pick<
     FacetValueProps,
-    | 'facetSearchQuery'
-    | 'enableExclusion'
-    | 'field'
-    | 'i18n'
-    | 'displayValuesAs'
+    'facetSearchQuery' | 'enableExclusion' | 'field' | 'i18n' | 'displayValuesAs'
   > {
     return {
       facetSearchQuery: this.facetState.facetSearch.query,
@@ -369,14 +352,8 @@ export class AtomicCommerceFacet
     };
   }
 
-  private isFacetState(
-    state: unknown,
-    propName: string
-  ): state is RegularFacetState {
-    return (
-      propName === 'facetState' &&
-      typeof (state as RegularFacetState)?.facetId === 'string'
-    );
+  private isFacetState(state: unknown, propName: string): state is RegularFacetState {
+    return propName === 'facetState' && typeof (state as RegularFacetState)?.facetId === 'string';
   }
 
   private ensureSubscribed() {
@@ -393,12 +370,8 @@ export class AtomicCommerceFacet
   protected render() {
     const {hasError, firstRequestExecuted} = this.summaryState;
     return html`
-      ${when(
-        !hasError && firstRequestExecuted && this.facetState.values.length > 0,
-        () =>
-          renderFacetContainer()(
-            html`${this.renderHeader()} ${this.renderBody()}`
-          )
+      ${when(!hasError && firstRequestExecuted && this.facetState.values.length > 0, () =>
+        renderFacetContainer()(html`${this.renderHeader()} ${this.renderBody()}`)
       )}
     `;
   }
@@ -412,9 +385,7 @@ export class AtomicCommerceFacet
 
   private validateFacet() {
     if (!this.facet) {
-      this.error = new Error(
-        'The "facet" property is required for <atomic-commerce-facet>.'
-      );
+      this.error = new Error('The "facet" property is required for <atomic-commerce-facet>.');
     }
   }
 }

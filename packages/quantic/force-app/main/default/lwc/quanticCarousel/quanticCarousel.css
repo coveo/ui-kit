@@ -16,16 +16,16 @@
   height: 0.25rem;
   border: 0;
   border-radius: var(--lwc-borderRadiusMedium, 0.25rem);
-  background-color: var(--lwc-brandLightActive, #e3e5ed);
+  background-color: var(--slds-g-color-accent-light-1, var(--lwc-brandLightActive, #e3e5ed));
   transition: 0.2s;
 }
 
 .carousel__indicator--active {
-  background-color: var(--lwc-brandPrimary, #1b96ff);
+  background-color: var(--slds-g-color-accent-1, var(--lwc-brandPrimary, #1b96ff));
 }
 
 .carousel__indicator:hover {
-  background-color: var(--lwc-brandPrimaryActive, #0176d3);
+  background-color: var(--slds-g-color-accent-2, var(--lwc-brandPrimaryActive, #0176d3));
 }
 
 .carousel__previous-navigation {

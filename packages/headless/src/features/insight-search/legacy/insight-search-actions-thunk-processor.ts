@@ -39,9 +39,7 @@ interface FetchedResponse {
   requestExecuted: InsightQueryRequest;
 }
 
-type ValidReturnTypeFromProcessingStep<RejectionType> =
-  | ExecuteSearchThunkReturn
-  | RejectionType;
+type ValidReturnTypeFromProcessingStep<RejectionType> = ExecuteSearchThunkReturn | RejectionType;
 
 export interface AsyncThunkConfig {
   getState: () => StateNeededByExecuteSearch;
@@ -59,9 +57,7 @@ type QueryCorrectionCallback = (modification: string) => void;
 export class AsyncInsightSearchThunkProcessor<RejectionType> {
   constructor(
     private config: AsyncThunkConfig,
-    private onUpdateQueryForCorrection: QueryCorrectionCallback = (
-      modification
-    ) => {
+    private onUpdateQueryForCorrection: QueryCorrectionCallback = (modification) => {
       this.dispatch(updateQuery({q: modification}));
     }
   ) {}
@@ -133,12 +129,10 @@ export class AsyncInsightSearchThunkProcessor<RejectionType> {
       results.length === 0 && queryCorrections && queryCorrections.length !== 0;
 
     const shouldExecuteNextDidYouMeanAutoCorrection =
-      !isNullOrUndefined(queryCorrection) &&
-      !isNullOrUndefined(queryCorrection.correctedQuery);
+      !isNullOrUndefined(queryCorrection) && !isNullOrUndefined(queryCorrection.correctedQuery);
 
     const shouldExitWithNoAutoCorrection =
-      !shouldExecuteLegacyDidYouMeanAutoCorrection &&
-      !shouldExecuteNextDidYouMeanAutoCorrection;
+      !shouldExecuteLegacyDidYouMeanAutoCorrection && !shouldExecuteNextDidYouMeanAutoCorrection;
 
     if (shouldExitWithNoAutoCorrection) {
       return null;
@@ -157,9 +151,7 @@ export class AsyncInsightSearchThunkProcessor<RejectionType> {
     originalFetchedResponse: FetchedResponse
   ): Promise<ExecuteSearchThunkReturn | RejectionType | null> {
     const originalQuery = this.getCurrentQuery();
-    const originalSearchSuccessResponse = this.getSuccessResponse(
-      originalFetchedResponse
-    )!;
+    const originalSearchSuccessResponse = this.getSuccessResponse(originalFetchedResponse)!;
 
     if (!originalSearchSuccessResponse.queryCorrections) {
       return null;
@@ -167,8 +159,7 @@ export class AsyncInsightSearchThunkProcessor<RejectionType> {
 
     const {correctedQuery} = originalSearchSuccessResponse.queryCorrections[0];
 
-    const retried =
-      await this.automaticallyRetryQueryWithCorrection(correctedQuery);
+    const retried = await this.automaticallyRetryQueryWithCorrection(correctedQuery);
 
     if (isErrorResponse(retried.response)) {
       this.dispatch(logQueryError(retried.response.error));
@@ -210,9 +201,7 @@ export class AsyncInsightSearchThunkProcessor<RejectionType> {
   private async automaticallyRetryQueryWithCorrection(correction: string) {
     this.dispatch(updateQuery({q: correction}));
     const state = this.getState();
-    const fetched = await this.fetchFromAPI(
-      await buildInsightSearchRequest(state)
-    );
+    const fetched = await this.fetchFromAPI(await buildInsightSearchRequest(state));
     this.dispatch(applyDidYouMeanCorrection(correction));
     return fetched;
   }
@@ -248,8 +237,7 @@ export class AsyncInsightSearchThunkProcessor<RejectionType> {
       query: {
         q: query,
         enableQuerySyntax:
-          previousState.query?.enableQuerySyntax ??
-          getQueryInitialState().enableQuerySyntax,
+          previousState.query?.enableQuerySyntax ?? getQueryInitialState().enableQuerySyntax,
       },
       search: {
         ...getSearchInitialState(),
@@ -266,10 +254,7 @@ export class AsyncInsightSearchThunkProcessor<RejectionType> {
   ) {
     const state = this.getState();
     const fetchedResponse = (
-      mapSearchResponse(
-        originalFetchedResponse.response,
-        mappedRequest.mappings
-      ) as SuccessResponse
+      mapSearchResponse(originalFetchedResponse.response, mappedRequest.mappings) as SuccessResponse
     ).success;
     this.analyticsAction?.()(
       this.dispatch,

@@ -62,18 +62,13 @@ function buildProxyConfig() {
     };
   }
 
-  const environment = resolveEnvironment(
-    env('COVEO_PLATFORM_ENVIRONMENT') || 'prod'
-  );
+  const environment = resolveEnvironment(env('COVEO_PLATFORM_ENVIRONMENT') || 'prod');
   const endpointOverride = env('COVEO_ENDPOINT');
 
   const adminTarget = endpointOverride
     ? endpointOverride
     : getOrganizationAdminEndpoint(organizationId, environment);
-  const platformTarget = getOrganizationPlatformEndpoint(
-    organizationId,
-    environment
-  );
+  const platformTarget = getOrganizationPlatformEndpoint(organizationId, environment);
 
   return {
     [`/rest/organizations/${organizationId}/commerce/unstable/agentic`]: {

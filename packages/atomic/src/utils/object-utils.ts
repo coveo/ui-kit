@@ -1,7 +1,4 @@
-export function readFromObject<T extends object>(
-  object: T,
-  key: string
-): string | undefined {
+export function readFromObject<T extends object>(object: T, key: string): string | undefined {
   const keys = key.split('.');
   let current: unknown = object;
 

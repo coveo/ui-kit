@@ -41,9 +41,7 @@ describe('category facet reducer helpers', () => {
 
     describe('when the path is an empty array', () => {
       it('sets #currentValues to an empty array', () => {
-        const currentValues = [
-          buildMockCategoryFacetValueRequest({value: 'a'}),
-        ];
+        const currentValues = [buildMockCategoryFacetValueRequest({value: 'a'})];
         const request = buildMockCategoryFacetRequest({currentValues});
 
         selectPath(request, [], initialNumberOfValues);

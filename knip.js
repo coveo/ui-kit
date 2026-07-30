@@ -1,12 +1,11 @@
 export default {
   $schema: 'https://unpkg.com/knip@6/schema.json',
   // Always ignoring quantic since it throws errors. Adding those two lines is necessary for 100% of quantic to be ignored.
-  ignoreWorkspaces: [
-    'packages/quantic',
-    'packages/create-atomic-component-project/template',
-  ],
+  ignoreWorkspaces: ['packages/quantic', 'packages/create-atomic-component-project/template'],
   ignoreDependencies: ['semver'],
   ignore: [
+    '.kiro/**',
+    '.agents/skills/**',
     'packages/quantic/**',
     'samples/headless/rga-react/src/components/Quickstart.tsx',
     'samples/headless/rga-react/src/components/Citation.tsx',
@@ -20,7 +19,7 @@ export default {
   },
   workspaces: {
     '.': {
-      entry: ['.agents/skills/**/scripts/*.mjs', 'scripts/**/*.{js,mjs}'],
+      entry: ['scripts/**/*.{js,mjs}'],
       ignoreBinaries: ['ts-node'],
       ignoreDependencies: ['@playwright/mcp', 'handlebars'],
     },
@@ -58,6 +57,32 @@ export default {
     'packages/relay': {
       entry: ['src/relay.ts', 'config/rollup.config.mjs'],
     },
+    'packages/coveo-analytics': {
+      // The package publishes `src/**/*.ts` and supports deep imports, so every
+      // source module is part of its public surface, not just the bundle entries.
+      // `bundle/browser-fetch.ts` is reachable only through the Rollup alias that
+      // swaps out `cross-fetch` for browser builds.
+      entry: ['src/**/*.ts', 'bundle/browser-fetch.ts'],
+      ignoreDependencies: [
+        // Required by rollup-plugin-typescript2, which forces `importHelpers`.
+        // Never imported from source, so Knip cannot trace it.
+        'tslib',
+      ],
+      // These modules intentionally expose two public bindings for the same
+      // value: a named export plus a `default`, or a short plugin alias such as
+      // `EC = ECPlugin`. Both spellings are part of the published API and are
+      // reachable through deep imports, so neither can be dropped. Scoped to the
+      // known files so new duplicate exports elsewhere in the package still fail.
+      ignoreIssues: {
+        'src/client/analytics.ts': ['duplicates'],
+        'src/coveoua/simpleanalytics.ts': ['duplicates'],
+        'src/donottrack.ts': ['duplicates'],
+        'src/history.ts': ['duplicates'],
+        'src/plugins/ec.ts': ['duplicates'],
+        'src/plugins/link.ts': ['duplicates'],
+        'src/plugins/svc.ts': ['duplicates'],
+      },
+    },
     'packages/documentation': {
       entry: [
         '**/assets/**/*.js',
@@ -68,10 +93,7 @@ export default {
     'samples/headless/commerce-react': {
       // ShowMore and ProductsPerPage are kept as reference examples but are not
       // wired into the UI, so Knip should not flag them as unused files.
-      ignore: [
-        'src/components/show-more/**',
-        'src/components/products-per-page/**',
-      ],
+      ignore: ['src/components/show-more/**', 'src/components/products-per-page/**'],
     },
     'samples/headless-ssr/commerce-express': {
       entry: ['src/server.ts'],
@@ -165,11 +187,7 @@ export default {
     },
     'samples/thermidor/generative-angular': {
       entry: ['proxy.conf.js'],
-      ignore: [
-        'src/app/services/engine.service.ts',
-        'src/app/app.css',
-        'src/styles.css',
-      ],
+      ignore: ['src/app/services/engine.service.ts', 'src/app/app.css', 'src/styles.css'],
     },
   },
 };

@@ -11,9 +11,7 @@ export type Section =
   | 'pagination';
 
 export function findSection(element: HTMLElement, section: Section) {
-  return element.querySelector(
-    sectionSelector(section)
-  ) as AtomicLayoutSection | null;
+  return element.querySelector(sectionSelector(section)) as AtomicLayoutSection | null;
 }
 
 export function sectionSelector(section: Section) {

@@ -9,9 +9,7 @@ interface QueryErrorShowMoreProps {
   link: TemplateResult | typeof nothing;
 }
 
-export const renderQueryErrorShowMore: FunctionalComponent<
-  QueryErrorShowMoreProps
-> = ({props}) => {
+export const renderQueryErrorShowMore: FunctionalComponent<QueryErrorShowMoreProps> = ({props}) => {
   if (props.link !== nothing) {
     return props.link;
   }

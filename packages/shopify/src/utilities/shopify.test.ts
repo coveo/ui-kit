@@ -44,15 +44,11 @@ describe('publishCustomShopifyEvent', () => {
         ) => void,
       },
     };
-    expect(() =>
-      publishCustomShopifyEvent('event', mockCustomShopifyEvent)
-    ).not.toThrow();
+    expect(() => publishCustomShopifyEvent('event', mockCustomShopifyEvent)).not.toThrow();
   });
 
   it('should not throw if window.Shopify is undefined', () => {
     window.Shopify = undefined;
-    expect(() =>
-      publishCustomShopifyEvent('event', mockCustomShopifyEvent)
-    ).not.toThrow();
+    expect(() => publishCustomShopifyEvent('event', mockCustomShopifyEvent)).not.toThrow();
   });
 });

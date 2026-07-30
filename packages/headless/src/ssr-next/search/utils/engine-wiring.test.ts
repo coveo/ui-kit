@@ -30,9 +30,7 @@ describe('#augmentSearchEngineOptions', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(buildLogger).mockReturnValue(
-      mockLogger as unknown as ReturnType<typeof buildLogger>
-    );
+    vi.mocked(buildLogger).mockReturnValue(mockLogger as unknown as ReturnType<typeof buildLogger>);
   });
 
   describe('when navigatorContext is provided', () => {
@@ -73,9 +71,7 @@ describe('#augmentSearchEngineOptions', () => {
         }
       );
 
-      expect(
-        mockedAugmentPreprocessRequestWithForwardedFor
-      ).toHaveBeenCalledWith(
+      expect(mockedAugmentPreprocessRequestWithForwardedFor).toHaveBeenCalledWith(
         expect.objectContaining({
           navigatorContext: {
             clientId: 'test-client-id',
@@ -111,14 +107,9 @@ describe('#augmentSearchEngineOptions', () => {
       );
       const buildConfigWithout: BuildConfigWithout = {};
 
-      augmentSearchEngineOptions(
-        sampleSearchConfig,
-        buildConfigWithout as BuildConfig
-      );
+      augmentSearchEngineOptions(sampleSearchConfig, buildConfigWithout as BuildConfig);
 
-      expect(
-        mockedAugmentPreprocessRequestWithForwardedFor
-      ).toHaveBeenCalledWith(
+      expect(mockedAugmentPreprocessRequestWithForwardedFor).toHaveBeenCalledWith(
         expect.objectContaining({
           navigatorContext: undefined,
         })

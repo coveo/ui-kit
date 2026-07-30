@@ -13,10 +13,7 @@ describe('#renderTextAreaClearButton', () => {
     i18n = await createTestI18n();
   });
 
-  const renderComponent = async (
-    ref?: Ref<HTMLTextAreaElement>,
-    onClick?: () => void
-  ) => {
+  const renderComponent = async (ref?: Ref<HTMLTextAreaElement>, onClick?: () => void) => {
     const element = await renderFunctionFixture(
       html`${renderTextAreaClearButton({
         props: {

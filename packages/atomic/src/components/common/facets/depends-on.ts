@@ -12,9 +12,9 @@ interface CategoryFacetValue extends SimpleFacetValue {
   children: SimpleFacetValue[];
 }
 
-export function parseDependsOn<
-  FacetValue extends SimpleFacetValue | CategoryFacetValue,
->(dependsOn: Record<string, string>): GenericCondition<FacetValue>[] {
+export function parseDependsOn<FacetValue extends SimpleFacetValue | CategoryFacetValue>(
+  dependsOn: Record<string, string>
+): GenericCondition<FacetValue>[] {
   if (Object.keys(dependsOn).length > 1) {
     throw "Depending on multiple facets isn't supported";
   }
@@ -26,22 +26,16 @@ export function parseDependsOn<
   }));
 }
 
-function buildDependsOnCondition<
-  FacetValue extends SimpleFacetValue | CategoryFacetValue,
->(expectedValue: string): (values: FacetValue[]) => boolean {
+function buildDependsOnCondition<FacetValue extends SimpleFacetValue | CategoryFacetValue>(
+  expectedValue: string
+): (values: FacetValue[]) => boolean {
   return (values: FacetValue[]) =>
     values.some((value) => {
       if (isCategoryFacetValue(value)) {
-        return matchesCategoryFacetValue(
-          value as CategoryFacetValue,
-          expectedValue
-        );
+        return matchesCategoryFacetValue(value as CategoryFacetValue, expectedValue);
       }
       if (isSimpleFacetValue(value)) {
-        return matchesSimpleFacetValue(
-          value as SimpleFacetValue,
-          expectedValue
-        );
+        return matchesSimpleFacetValue(value as SimpleFacetValue, expectedValue);
       }
       return false;
     });
@@ -58,10 +52,7 @@ function matchesCategoryFacetValue<FacetValue extends CategoryFacetValue>(
   return !expectedValue || selectedValue.value === expectedValue;
 }
 
-function matchesSimpleFacetValue(
-  value: SimpleFacetValue,
-  expectedValue: string
-): boolean {
+function matchesSimpleFacetValue(value: SimpleFacetValue, expectedValue: string): boolean {
   if (value.state !== 'selected') {
     return false;
   }
@@ -78,9 +69,7 @@ function isCategoryFacetValue(request: unknown): request is CategoryFacetValue {
   );
 }
 
-function getSelectedCategoryFacetValueRequest(
-  value: unknown
-): CategoryFacetValue | null {
+function getSelectedCategoryFacetValueRequest(value: unknown): CategoryFacetValue | null {
   if (!isCategoryFacetValue(value)) {
     return null;
   }
@@ -98,9 +87,5 @@ function getSelectedCategoryFacetValueRequest(
 
 function isSimpleFacetValue(value: unknown): value is SimpleFacetValue {
   const asRecord = value as Record<string, unknown>;
-  return (
-    'value' in asRecord &&
-    typeof asRecord.value === 'string' &&
-    !('children' in asRecord)
-  );
+  return 'value' in asRecord && typeof asRecord.value === 'string' && !('children' in asRecord);
 }

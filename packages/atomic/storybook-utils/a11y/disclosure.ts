@@ -126,8 +126,7 @@ export async function testDisclosureA11y(
 
     await step('Trigger is keyboard-focusable', async () => {
       trigger.focus();
-      const activeEl =
-        (trigger.getRootNode() as ShadowRoot).activeElement ?? trigger;
+      const activeEl = (trigger.getRootNode() as ShadowRoot).activeElement ?? trigger;
       expect(activeEl).toBe(trigger);
     });
 

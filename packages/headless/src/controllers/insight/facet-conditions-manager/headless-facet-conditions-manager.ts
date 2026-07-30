@@ -6,11 +6,7 @@ import {
   type FacetConditionsManagerProps,
 } from '../../core/facets/facet-conditions-manager/headless-facet-conditions-manager.js';
 
-export type {
-  AnyFacetValuesCondition,
-  FacetConditionsManager,
-  FacetConditionsManagerProps,
-};
+export type {AnyFacetValuesCondition, FacetConditionsManager, FacetConditionsManagerProps};
 
 /**
  * Creates an insight `FacetConditionsManager` instance.

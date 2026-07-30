@@ -67,18 +67,15 @@ const commerceEngineReducers = {
 };
 type CommerceEngineReducers = typeof commerceEngineReducers;
 
-export type CommerceEngineState =
-  StateFromReducersMapObject<CommerceEngineReducers> &
-    Partial<CommerceAppState>;
+export type CommerceEngineState = StateFromReducersMapObject<CommerceEngineReducers> &
+  Partial<CommerceAppState>;
 
 /**
  * The engine for powering commerce experiences.
  *
  * @group Engine
  */
-export interface CommerceEngine<
-  State extends object = {},
-> extends CoreEngineNext<
+export interface CommerceEngine<State extends object = {}> extends CoreEngineNext<
   State & CoreState<ConfigurationState> & CommerceEngineState,
   CommerceThunkExtraArguments,
   ConfigurationState
@@ -104,9 +101,7 @@ export interface CommerceEngineOptions extends ExternalEngineOptions<CommerceEng
  *
  * @group Engine
  */
-export function buildCommerceEngine(
-  options: CommerceEngineOptions
-): CommerceEngine {
+export function buildCommerceEngine(options: CommerceEngineOptions): CommerceEngine {
   const logger = buildLogger(options.loggerOptions);
   const {configuration} = options;
   validateConfiguration(configuration, logger);
@@ -129,23 +124,12 @@ export function buildCommerceEngine(
     reducers,
   };
 
-  const internalEngine = buildCoreEngine(
-    augmentedOptions,
-    thunkArguments,
-    configurationReducer
-  );
+  const internalEngine = buildCoreEngine(augmentedOptions, thunkArguments, configurationReducer);
 
   const {state: _, ...engine} = internalEngine;
 
-  const {
-    accessToken,
-    environment,
-    organizationId,
-    analytics,
-    proxyBaseUrl,
-    context,
-    cart,
-  } = configuration;
+  const {accessToken, environment, organizationId, analytics, proxyBaseUrl, context, cart} =
+    configuration;
 
   engine.dispatch(
     updateBasicConfiguration({
@@ -190,10 +174,7 @@ export function buildCommerceEngine(
   });
 }
 
-function validateConfiguration(
-  configuration: CommerceEngineConfiguration,
-  logger: Logger
-) {
+function validateConfiguration(configuration: CommerceEngineConfiguration, logger: Logger) {
   try {
     commerceEngineConfigurationSchema.validate(configuration);
   } catch (error) {
@@ -202,10 +183,7 @@ function validateConfiguration(
   }
 }
 
-function createCommerceAPIClient(
-  configuration: CommerceEngineConfiguration,
-  logger: Logger
-) {
+function createCommerceAPIClient(configuration: CommerceEngineConfiguration, logger: Logger) {
   return new CommerceAPIClient({
     logger,
     preprocessRequest: configuration.preprocessRequest || NoopPreprocessRequest,

@@ -6,19 +6,13 @@ import {renderShowButton} from '@/src/components/common/generated-answer/show-bu
 import {renderSourceCitations} from '@/src/components/common/generated-answer/source-citations';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {
-  type RenderAnswerContentProps,
-  renderAnswerContent,
-} from './render-answer-content';
+import {type RenderAnswerContentProps, renderAnswerContent} from './render-answer-content';
 import {renderGeneratingAnswerLabel} from './render-generating-answer-label';
 
 vi.mock('@/src/components/common/generated-answer/retry-prompt', {spy: true});
 vi.mock('@/src/components/common/generated-answer/show-button', {spy: true});
 vi.mock('./render-generating-answer-label', {spy: true});
-vi.mock(
-  '@/src/components/common/generated-answer/generated-content-container',
-  {spy: true}
-);
+vi.mock('@/src/components/common/generated-answer/generated-content-container', {spy: true});
 vi.mock('@/src/components/common/generated-answer/source-citations', {
   spy: true,
 });
@@ -49,15 +43,12 @@ describe('#renderAnswerContent', () => {
     feedbackSubmitted: false,
   };
 
-  const renderComponent = async (
-    overrides: Partial<RenderAnswerContentProps> = {}
-  ) => {
+  const renderComponent = async (overrides: Partial<RenderAnswerContentProps> = {}) => {
     const generatedAnswer = {
       ...defaultGeneratedAnswer,
       ...overrides.generatedAnswer,
       generationSteps:
-        overrides.generatedAnswer?.generationSteps ??
-        defaultGeneratedAnswer.generationSteps,
+        overrides.generatedAnswer?.generationSteps ?? defaultGeneratedAnswer.generationSteps,
     };
 
     const defaultProps: RenderAnswerContentProps = {
@@ -79,9 +70,7 @@ describe('#renderAnswerContent', () => {
       element,
       props: defaultProps,
       generatedContent: element.querySelector('[part="generated-container"]'),
-      feedbackAndCopyButtons: element.querySelector(
-        '[part="feedback-and-copy-buttons"]'
-      ),
+      feedbackAndCopyButtons: element.querySelector('[part="feedback-and-copy-buttons"]'),
       footer: element.querySelector('[part="generated-answer-footer"]'),
     };
   };
@@ -241,13 +230,12 @@ describe('#renderAnswerContent', () => {
       });
 
       it('should render feedback and copy buttons after the answer content', async () => {
-        const {feedbackAndCopyButtons, generatedContent} =
-          await renderComponent({
-            generatedAnswer: {
-              ...defaultGeneratedAnswer,
-              expanded: true,
-            },
-          });
+        const {feedbackAndCopyButtons, generatedContent} = await renderComponent({
+          generatedAnswer: {
+            ...defaultGeneratedAnswer,
+            expanded: true,
+          },
+        });
 
         expect(generatedContent).toBeInTheDocument();
         expect(feedbackAndCopyButtons).toBeInTheDocument();
@@ -257,10 +245,7 @@ describe('#renderAnswerContent', () => {
         );
 
         expect(
-          Boolean(
-            documentPosition &&
-            documentPosition & Node.DOCUMENT_POSITION_FOLLOWING
-          )
+          Boolean(documentPosition && documentPosition & Node.DOCUMENT_POSITION_FOLLOWING)
         ).toBe(true);
       });
 

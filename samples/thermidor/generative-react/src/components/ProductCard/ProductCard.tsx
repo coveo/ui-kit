@@ -20,14 +20,10 @@ export function ProductCard({product}: ProductCardProps) {
 
   return (
     <article className={styles.card}>
-      {imageUrl && (
-        <img className={styles.image} src={imageUrl} alt={product.ec_name} />
-      )}
+      {imageUrl && <img className={styles.image} src={imageUrl} alt={product.ec_name} />}
       <div className={styles.content}>
         <h3 className={styles.name}>{product.ec_name}</h3>
-        {product.ec_brand && (
-          <span className={styles.brand}>{product.ec_brand}</span>
-        )}
+        {product.ec_brand && <span className={styles.brand}>{product.ec_brand}</span>}
         {product.ec_price !== undefined && (
           <span className={styles.price}>{formatPrice(product.ec_price)}</span>
         )}

@@ -49,10 +49,7 @@ import {ComparisonTableSurface} from '../models';
               </tr>
             </thead>
             <tbody>
-              @for (
-                product of surface().products;
-                track product.ec_product_id
-              ) {
+              @for (product of surface().products; track product.ec_product_id) {
                 <tr>
                   <td>
                     <strong>{{ product.ec_name }}</strong>
@@ -62,9 +59,7 @@ import {ComparisonTableSurface} from '../models';
                     <td>{{ product[attribute] || '—' }}</td>
                   }
                   <td>
-                    {{
-                      formatPrice(product.ec_promo_price ?? product.ec_price)
-                    }}
+                    {{ formatPrice(product.ec_promo_price ?? product.ec_price) }}
                   </td>
                 </tr>
               }

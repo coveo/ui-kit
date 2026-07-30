@@ -1,3 +1,26 @@
+## 3.43.3
+
+### Patch Changes
+
+- [#8049](https://github.com/coveo/ui-kit/pull/8049) [`8c6d484`](https://github.com/coveo/ui-kit/commit/8c6d484c87e75a08d787d057a917eccac4d38586) - Made the quanticGeneratedAnswer timeline dot and lines interactive to expand/collapse.
+
+- [#8043](https://github.com/coveo/ui-kit/pull/8043) [`42f1e58`](https://github.com/coveo/ui-kit/commit/42f1e58bfbb5aeeee832d7da07b3bc77ededeff7) - fixed the issue with the no answer message not displaying after triggering the generated answer manually
+
+- Updated dependencies [[`42f1e58`](https://github.com/coveo/ui-kit/commit/42f1e58bfbb5aeeee832d7da07b3bc77ededeff7), [`51e15d1`](https://github.com/coveo/ui-kit/commit/51e15d1435d7435a0701754d9e418d6d87d376c3)]:
+  - @coveo/headless@3.53.2
+
+## 3.43.2
+
+### Patch Changes
+
+- [#7997](https://github.com/coveo/ui-kit/pull/7997) [`0dd5704`](https://github.com/coveo/ui-kit/commit/0dd57045f21029ff175ff787637c98b9e5572bba) - Fixed thread component displaying gaps in the timeline when the questions are on multiple lines.
+
+## 3.43.1
+
+### Patch Changes
+
+- [#7923](https://github.com/coveo/ui-kit/pull/7923) [`b2983bf`](https://github.com/coveo/ui-kit/commit/b2983bfa8126a61bb07a71867e7dfc506722cd9d) - quanticGenerateAnswerBody reused in generated answer template of the quanticGeneratedAnswer component
+
 ## 3.43.0
 
 ### Minor Changes

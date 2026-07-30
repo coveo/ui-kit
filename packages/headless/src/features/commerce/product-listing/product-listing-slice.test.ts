@@ -1,7 +1,4 @@
-import type {
-  ChildProduct,
-  Product,
-} from '../../../api/commerce/common/product.js';
+import type {ChildProduct, Product} from '../../../api/commerce/common/product.js';
 import {buildMockCommerceRegularFacetResponse} from '../../../test/mock-commerce-facet-response.js';
 import {
   buildMockBaseProduct,
@@ -21,10 +18,7 @@ import {
   promoteChildToParent,
 } from './product-listing-actions.js';
 import {productListingReducer} from './product-listing-slice.js';
-import {
-  getProductListingInitialState,
-  type ProductListingState,
-} from './product-listing-state.js';
+import {getProductListingInitialState, type ProductListingState} from './product-listing-state.js';
 
 describe('product-listing-slice', () => {
   let state: ProductListingState;
@@ -53,9 +47,7 @@ describe('product-listing-slice', () => {
         const finalState = productListingReducer(state, action);
 
         expect(finalState.products).toEqual(
-          response.response.products.map((p) =>
-            buildMockProduct({ec_name: p.ec_name, responseId})
-          )
+          response.response.products.map((p) => buildMockProduct({ec_name: p.ec_name, responseId}))
         );
         expect(finalState.facets[0]).toEqual(facet);
         expect(finalState.responseId).toEqual(responseId);
@@ -524,9 +516,7 @@ describe('product-listing-slice', () => {
     });
 
     it('when child does not exist, it does not change the state', () => {
-      state.products = [
-        buildMockProduct({permanentid: parentPermanentId, children: []}),
-      ];
+      state.products = [buildMockProduct({permanentid: parentPermanentId, children: []})];
 
       const finalState = productListingReducer(state, action);
 
@@ -648,9 +638,7 @@ describe('product-listing-slice', () => {
 
         expect(finalState.results).toHaveLength(2);
         expect(finalState.results[0]).toEqual(spotlight);
-        expect((finalState.results[1] as Product).permanentid).toBe(
-          permanentid
-        );
+        expect((finalState.results[1] as Product).permanentid).toBe(permanentid);
       });
     });
   });

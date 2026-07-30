@@ -1,15 +1,10 @@
 import type {i18n} from '@coveo/atomic';
-import {
-  buildSearchEngine,
-  getSampleSearchEngineConfiguration,
-} from '@coveo/headless';
+import {buildSearchEngine, getSampleSearchEngineConfiguration} from '@coveo/headless';
 // oxlint-disable-next-line @typescript-eslint/consistent-type-imports -- <React is needed>
 import React, {useEffect, useRef} from 'react';
 import {AtomicSearchInterface} from './components.js';
 
-type AtomicSearchInterfaceProps = React.ComponentProps<
-  typeof AtomicSearchInterface
->;
+type AtomicSearchInterfaceProps = React.ComponentProps<typeof AtomicSearchInterface>;
 
 type ExecuteSearch = AtomicSearchInterfaceProps['executeFirstSearch'];
 /**
@@ -46,9 +41,7 @@ const DefaultProps: Required<Pick<WrapperProps, 'onReady' | 'localization'>> = {
  * @param props
  * @returns
  */
-export const SearchInterfaceWrapper = (
-  props: React.PropsWithChildren<WrapperProps>
-) => {
+export const SearchInterfaceWrapper = (props: React.PropsWithChildren<WrapperProps>) => {
   const mergedProps = {...DefaultProps, ...props};
   if (!mergedProps.engine) {
     mergedProps.engine = buildSearchEngine({
@@ -56,8 +49,7 @@ export const SearchInterfaceWrapper = (
     });
   }
   const {engine, localization, onReady, ...allOtherProps} = mergedProps;
-  const searchInterfaceRef =
-    useRef<React.ElementRef<typeof AtomicSearchInterface>>(null);
+  const searchInterfaceRef = useRef<React.ElementRef<typeof AtomicSearchInterface>>(null);
   let initialization: Promise<void> | null = null;
 
   useEffect(() => {
@@ -66,9 +58,7 @@ export const SearchInterfaceWrapper = (
       initialization = searchInterfaceAtomic.initializeWithSearchEngine(engine);
       initialization.then(() => {
         localization(searchInterfaceAtomic.i18n);
-        onReady(
-          searchInterfaceAtomic.executeFirstSearch.bind(searchInterfaceAtomic)
-        );
+        onReady(searchInterfaceAtomic.executeFirstSearch.bind(searchInterfaceAtomic));
       });
     }
   }, [engine, initialization, localization, onReady]);

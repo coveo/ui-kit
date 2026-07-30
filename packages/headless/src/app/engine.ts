@@ -45,17 +45,16 @@ import {stateKey} from './state-key.js';
 import {type CoreExtraArguments, configureStore, type Store} from './store.js';
 import type {ThunkExtraArguments} from './thunk-extra-arguments.js';
 
-export type CoreState<
-  Configuration extends CoreConfigurationState = CoreConfigurationState,
-> = {
+export type CoreState<Configuration extends CoreConfigurationState = CoreConfigurationState> = {
   configuration: Configuration;
   version: string;
 } & Partial<SearchParametersState>;
 
-type EngineDispatch<
+type EngineDispatch<State, ExtraArguments extends ThunkExtraArguments> = ThunkDispatch<
   State,
-  ExtraArguments extends ThunkExtraArguments,
-> = ThunkDispatch<State, ExtraArguments, UnknownAction> &
+  ExtraArguments,
+  UnknownAction
+> &
   Dispatch<UnknownAction>;
 
 export interface CoreEngine<
@@ -135,9 +134,9 @@ export type CoreEngineNext<
   readonly configuration: Configuration;
 };
 
-export interface EngineOptions<
-  Reducers extends ReducersMapObject,
-> extends ExternalEngineOptions<StateFromReducersMapObject<Reducers>> {
+export interface EngineOptions<Reducers extends ReducersMapObject> extends ExternalEngineOptions<
+  StateFromReducersMapObject<Reducers>
+> {
   /**
    * Map object of reducers.
    * A reducer is a pure function that takes the previous state and an action, and returns the next state.
@@ -234,11 +233,7 @@ export function buildEngine<
     configuration,
     version,
   };
-  const engine = buildCoreEngine(
-    {...options, reducers},
-    thunkExtraArguments,
-    configuration
-  );
+  const engine = buildCoreEngine({...options, reducers}, thunkExtraArguments, configuration);
   const {accessToken, environment, organizationId} = options.configuration;
 
   engine.dispatch(
@@ -268,11 +263,7 @@ export function buildCoreEngine<
   options: EngineOptions<Reducers>,
   thunkExtraArguments: ExtraArguments,
   configurationReducer: Reducer<Configuration>
-): CoreEngine<
-  StateFromReducersMapObject<Reducers>,
-  ExtraArguments,
-  Configuration
-> {
+): CoreEngine<StateFromReducersMapObject<Reducers>, ExtraArguments, Configuration> {
   const {reducers, navigatorContextProvider} = options;
   const reducerManager = createReducerManager(
     {...reducers, configurationReducer},
@@ -291,11 +282,7 @@ export function buildCoreEngine<
       return getNavigatorContext(this.relay, navigatorContextProvider);
     },
   };
-  const store = createStore(
-    options,
-    thunkExtraArgumentsWithRelay,
-    reducerManager
-  );
+  const store = createStore(options, thunkExtraArgumentsWithRelay, reducerManager);
 
   const engine = {
     addReducers(reducers: ReducersMapObject) {
@@ -338,10 +325,7 @@ export function buildCoreEngine<
   return engine;
 }
 
-function createStore<
-  Reducers extends ReducersMapObject,
-  ExtraArguments extends CoreExtraArguments,
->(
+function createStore<Reducers extends ReducersMapObject, ExtraArguments extends CoreExtraArguments>(
   options: EngineOptions<Reducers>,
   thunkExtraArguments: ExtraArguments,
   reducerManager: ReducerManager
@@ -369,10 +353,7 @@ function createMiddleware<Reducers extends ReducersMapObject>(
   getNavigatorContext: () => NavigatorContext
 ) {
   const {renewAccessToken} = options.configuration;
-  const renewTokenMiddleware = createRenewAccessTokenMiddleware(
-    logger,
-    renewAccessToken
-  );
+  const renewTokenMiddleware = createRenewAccessTokenMiddleware(logger, renewAccessToken);
   const generateAnswerListener = createGenerateAnswerListener({
     getNavigatorContext,
   });
@@ -382,11 +363,7 @@ function createMiddleware<Reducers extends ReducersMapObject>(
     renewTokenMiddleware,
     logActionErrorMiddleware(logger),
     analyticsMiddleware,
-  ].concat(
-    answerApi.middleware,
-    generateAnswerListener.middleware,
-    options.middlewares || []
-  );
+  ].concat(answerApi.middleware, generateAnswerListener.middleware, options.middlewares || []);
 }
 
 export const nextAnalyticsUsageWithServiceFeatureWarning =
@@ -395,9 +372,7 @@ export const nextAnalyticsUsageWithServiceFeatureWarning =
   'Please switch back to the "legacy" analytics mode to ensure proper functionality.\n' +
   'For more information, refer to the documentation: https://docs.coveo.com/en/o3r90189/build-a-search-ui/event-protocol';
 
-export function warnIfUsingNextAnalyticsModeForServiceFeature(
-  analyticsMode: 'next' | 'legacy'
-) {
+export function warnIfUsingNextAnalyticsModeForServiceFeature(analyticsMode: 'next' | 'legacy') {
   if (analyticsMode === 'next') {
     console.warn(nextAnalyticsUsageWithServiceFeatureWarning);
   }

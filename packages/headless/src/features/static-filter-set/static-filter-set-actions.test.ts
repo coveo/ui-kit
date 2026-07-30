@@ -54,8 +54,6 @@ describe('static filter set actions', () => {
     };
 
     expect(mockOriginalStaticFilterDeselect).toBeCalledTimes(1);
-    expect(mockOriginalStaticFilterDeselect.mock.calls[0][0]).toStrictEqual(
-      expectedPayload
-    );
+    expect(mockOriginalStaticFilterDeselect.mock.calls[0][0]).toStrictEqual(expectedPayload);
   });
 });

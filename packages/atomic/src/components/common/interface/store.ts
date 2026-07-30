@@ -39,9 +39,7 @@ export function createBaseStore<T extends {}>(initialState: T): BaseStore<T> {
     ...store,
 
     getUniqueIDFromEngine(_engine: AnyEngineType) {
-      throw new Error(
-        'getUniqueIDFromEngine not implemented at the base store level.'
-      );
+      throw new Error('getUniqueIDFromEngine not implemented at the base store level.');
     },
   };
 }
@@ -68,10 +66,7 @@ export function registerFacet<T extends FacetType, U extends string>(
   store.state[facetType][data.facetId] = data;
 }
 
-export function setLoadingFlag(
-  store: CommonStore<{loadingFlags: string[]}>,
-  loadingFlag: string
-) {
+export function setLoadingFlag(store: CommonStore<{loadingFlags: string[]}>, loadingFlag: string) {
   const flags = store.state.loadingFlags;
   store.state.loadingFlags = flags.concat(loadingFlag);
 }
@@ -105,13 +100,8 @@ export function waitUntilAppLoaded(
 
 interface CommonStore<StoreData> {
   state: StoreData;
-  get: <PropName extends keyof StoreData>(
-    propName: PropName
-  ) => StoreData[PropName];
-  set: <PropName extends keyof StoreData>(
-    propName: PropName,
-    value: StoreData[PropName]
-  ) => void;
+  get: <PropName extends keyof StoreData>(propName: PropName) => StoreData[PropName];
+  set: <PropName extends keyof StoreData>(propName: PropName, value: StoreData[PropName]) => void;
   onChange: <PropName extends keyof StoreData>(
     propName: PropName,
     cb: (newValue: StoreData[PropName]) => void
@@ -129,10 +119,7 @@ interface Facets {
 function createStore<StoreData extends Record<string, unknown>>(
   initialState: StoreData
 ): CommonStore<StoreData> {
-  const listeners = new Map<
-    keyof StoreData,
-    Set<(newValue: unknown) => void>
-  >();
+  const listeners = new Map<keyof StoreData, Set<(newValue: unknown) => void>>();
 
   const state = new Proxy(initialState, {
     set(target, prop: string, value) {
@@ -150,9 +137,7 @@ function createStore<StoreData extends Record<string, unknown>>(
     },
   });
 
-  const get = <PropName extends keyof StoreData>(
-    propName: PropName
-  ): StoreData[PropName] => {
+  const get = <PropName extends keyof StoreData>(propName: PropName): StoreData[PropName] => {
     return state[propName];
   };
 

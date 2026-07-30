@@ -7,13 +7,8 @@ test.describe('atomic-product-rating', () => {
       await productRating.hydrated.first().waitFor();
     });
 
-    test('should have the right number of yellow icons', async ({
-      productRating,
-    }) => {
-      await expect(productRating.blueLagoonYellowIcons).toHaveAttribute(
-        'style',
-        'width:80%;'
-      );
+    test('should have the right number of yellow icons', async ({productRating}) => {
+      await expect(productRating.blueLagoonYellowIcons).toHaveAttribute('style', 'width:80%;');
     });
   });
 
@@ -22,9 +17,7 @@ test.describe('atomic-product-rating', () => {
       await productRating.load({story: 'with-a-rating-details-field'});
     });
 
-    test('should show the rating details next to the rating', async ({
-      productRating,
-    }) => {
+    test('should show the rating details next to the rating', async ({productRating}) => {
       await expect(productRating.hydrated.first().getByText('4')).toBeVisible();
     });
   });
@@ -35,13 +28,8 @@ test.describe('atomic-product-rating', () => {
       await expect(productRating.hydrated.first()).toBeVisible();
     });
 
-    test('should have the right number of yellow icons', async ({
-      productRating,
-    }) => {
-      await expect(productRating.blueLagoonYellowIcons).toHaveAttribute(
-        'style',
-        'width:40%;'
-      );
+    test('should have the right number of yellow icons', async ({productRating}) => {
+      await expect(productRating.blueLagoonYellowIcons).toHaveAttribute('style', 'width:40%;');
     });
   });
 
@@ -51,13 +39,8 @@ test.describe('atomic-product-rating', () => {
       await expect(productRating.hydrated.first()).toBeVisible();
     });
 
-    test('should have the right number of yellow icons', async ({
-      productRating,
-    }) => {
-      await expect(productRating.blueLagoonYellowIcons).toHaveAttribute(
-        'style',
-        'width:80%;'
-      );
+    test('should have the right number of yellow icons', async ({productRating}) => {
+      await expect(productRating.blueLagoonYellowIcons).toHaveAttribute('style', 'width:80%;');
     });
   });
 });

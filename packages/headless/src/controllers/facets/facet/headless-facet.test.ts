@@ -15,16 +15,10 @@ import {
 import {facetSetReducer as facetSet} from '../../../features/facets/facet-set/facet-set-slice.js';
 import type {FacetRequest} from '../../../features/facets/facet-set/interfaces/request.js';
 import type {FacetValue} from '../../../features/facets/facet-set/interfaces/response.js';
-import {
-  executeSearch,
-  fetchFacetValues,
-} from '../../../features/search/search-actions.js';
+import {executeSearch, fetchFacetValues} from '../../../features/search/search-actions.js';
 import {searchReducer as search} from '../../../features/search/search-slice.js';
 import type {SearchAppState} from '../../../state/search-app-state.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../../test/mock-engine-v2.js';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request.js';
 import {buildMockFacetResponse} from '../../../test/mock-facet-response.js';
 import {buildMockFacetSearch} from '../../../test/mock-facet-search.js';
@@ -235,10 +229,8 @@ describe('facet', () => {
   });
 
   describe('#toggleSingleSelect when the value state is not "idle"', () => {
-    const selectedFacetValue = () =>
-      buildMockFacetValue({value: 'TED', state: 'selected'});
-    const excludedFacetValue = () =>
-      buildMockFacetValue({value: 'TED', state: 'excluded'});
+    const selectedFacetValue = () => buildMockFacetValue({value: 'TED', state: 'selected'});
+    const excludedFacetValue = () => buildMockFacetValue({value: 'TED', state: 'excluded'});
 
     testCommonToggleSingleSelect(selectedFacetValue);
     testCommonToggleSingleSelect(excludedFacetValue);
@@ -284,10 +276,8 @@ describe('facet', () => {
   });
 
   describe('#toggleSingleExclude when the value state is not "idle"', () => {
-    const selectedFacetValue = () =>
-      buildMockFacetValue({value: 'TED', state: 'selected'});
-    const excludedFacetValue = () =>
-      buildMockFacetValue({value: 'TED', state: 'excluded'});
+    const selectedFacetValue = () => buildMockFacetValue({value: 'TED', state: 'selected'});
+    const excludedFacetValue = () => buildMockFacetValue({value: 'TED', state: 'excluded'});
 
     testCommonToggleSingleExclude(selectedFacetValue);
     testCommonToggleSingleExclude(excludedFacetValue);
@@ -311,10 +301,9 @@ describe('facet', () => {
   it('#isValueSelected returns false when the passed value is not selected (e.g. idle)', () => {
     const idleFacetValue = buildMockFacetValue({state: 'idle'});
     const excludedFacetValue = buildMockFacetValue({state: 'idle'});
-    expect(
-      facet.isValueSelected(idleFacetValue) ||
-        facet.isValueSelected(excludedFacetValue)
-    ).toBe(false);
+    expect(facet.isValueSelected(idleFacetValue) || facet.isValueSelected(excludedFacetValue)).toBe(
+      false
+    );
   });
 
   it('#isValueExcluded returns true when the passed value is selected', () => {
@@ -325,10 +314,9 @@ describe('facet', () => {
   it('#isValueExcluded returns false when the passed value is not selected (e.g. idle)', () => {
     const idleFacetValue = buildMockFacetValue({state: 'idle'});
     const selectedFacetValue = buildMockFacetValue({state: 'selected'});
-    expect(
-      facet.isValueExcluded(idleFacetValue) ||
-        facet.isValueExcluded(selectedFacetValue)
-    ).toBe(false);
+    expect(facet.isValueExcluded(idleFacetValue) || facet.isValueExcluded(selectedFacetValue)).toBe(
+      false
+    );
   });
 
   describe('#deselectAll', () => {

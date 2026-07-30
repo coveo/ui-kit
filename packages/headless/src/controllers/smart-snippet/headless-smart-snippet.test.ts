@@ -1,15 +1,9 @@
 import {nextAnalyticsUsageWithServiceFeatureWarning} from '../../app/engine.js';
 import {getConfigurationInitialState} from '../../features/configuration/configuration-state.js';
 import {buildMockAnalyticsState} from '../../test/mock-analytics-state.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../test/mock-engine-v2.js';
 import {createMockState} from '../../test/mock-state.js';
-import {
-  buildSmartSnippet,
-  type SmartSnippetProps,
-} from './headless-smart-snippet.js';
+import {buildSmartSnippet, type SmartSnippetProps} from './headless-smart-snippet.js';
 
 describe('smart snippet', () => {
   let engine: MockedSearchEngine;
@@ -39,9 +33,7 @@ describe('smart snippet', () => {
     it('should log a warning when the controller is used with the next analytics mode', () => {
       initSmartSnippet();
       expect(warnSpy).toHaveBeenCalledTimes(1);
-      expect(warnSpy).toHaveBeenCalledWith(
-        nextAnalyticsUsageWithServiceFeatureWarning
-      );
+      expect(warnSpy).toHaveBeenCalledWith(nextAnalyticsUsageWithServiceFeatureWarning);
     });
   });
 

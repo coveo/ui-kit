@@ -1,8 +1,4 @@
-import {
-  buildInteractiveResult,
-  type Result,
-  type SearchEngine,
-} from '@coveo/headless';
+import {buildInteractiveResult, type Result, type SearchEngine} from '@coveo/headless';
 import {type PropsWithChildren, useEffect, useMemo} from 'react';
 import {filterProtocol} from '../utils/filter-protocol';
 
@@ -23,10 +19,7 @@ export function ResultLink({engine, result, children}: ResultLinkProps) {
     [engine, result]
   );
 
-  useEffect(
-    () => () => interactiveResult.cancelPendingSelect(),
-    [interactiveResult]
-  );
+  useEffect(() => () => interactiveResult.cancelPendingSelect(), [interactiveResult]);
 
   return (
     <a

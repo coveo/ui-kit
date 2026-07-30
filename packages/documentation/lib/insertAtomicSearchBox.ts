@@ -17,10 +17,7 @@ export const insertAtomicSearchBox = () => {
   const areFunctionalCookiesEnabled = (): boolean => {
     return document.cookie
       .split('; ')
-      .some(
-        (cookie) =>
-          cookie.startsWith('OptanonConsent') && cookie.includes('C0003%3A1')
-      );
+      .some((cookie) => cookie.startsWith('OptanonConsent') && cookie.includes('C0003%3A1'));
   };
 
   document.addEventListener('DOMContentLoaded', () => {
@@ -28,10 +25,7 @@ export const insertAtomicSearchBox = () => {
     if (typedocSearchBox) {
       typedocSearchBox.innerHTML = '';
       const searchInterface = document.createElement('atomic-search-interface');
-      searchInterface.style.setProperty(
-        '--atomic-font-family',
-        'canada-type-gibson, sans-serif'
-      );
+      searchInterface.style.setProperty('--atomic-font-family', 'canada-type-gibson, sans-serif');
       searchInterface.style.setProperty('--atomic-font-normal', '300');
       searchInterface.style.setProperty('--atomic-font-bold', '500');
       searchInterface.style.setProperty('--atomic-text-base', '1rem');
@@ -39,18 +33,13 @@ export const insertAtomicSearchBox = () => {
       const initializeAnalytics = areFunctionalCookiesEnabled();
       searchInterface.setAttribute('analytics', `${initializeAnalytics}`);
       const searchBox = document.createElement('atomic-search-box');
-      searchBox.setAttribute(
-        'redirection-url',
-        'https://docs.coveo.com/en/search'
-      );
+      searchBox.setAttribute('redirection-url', 'https://docs.coveo.com/en/search');
       searchInterface.appendChild(searchBox);
       typedocSearchBox.appendChild(searchInterface);
 
       (async () => {
         await customElements.whenDefined('atomic-search-interface');
-        const searchInterfaceElement = document.querySelector(
-          'atomic-search-interface'
-        );
+        const searchInterfaceElement = document.querySelector('atomic-search-interface');
         if (searchInterfaceElement) {
           await searchInterfaceElement.initialize({
             organizationId: 'coveosearch',

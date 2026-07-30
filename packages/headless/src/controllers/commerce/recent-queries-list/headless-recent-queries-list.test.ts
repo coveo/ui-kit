@@ -10,15 +10,9 @@ import {prepareForSearchWithQuery} from '../../../features/commerce/search/searc
 import {executeSearch} from '../../../features/commerce/search/search-actions.js';
 import {commerceSearchReducer as search} from '../../../features/commerce/search/search-slice.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
-import {
-  buildMockCommerceEngine,
-  type MockedCommerceEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockCommerceEngine, type MockedCommerceEngine} from '../../../test/mock-engine-v2.js';
 import {buildMockQueryState} from '../../../test/mock-query-state.js';
-import {
-  buildRecentQueriesList,
-  type RecentQueriesList,
-} from './headless-recent-queries-list.js';
+import {buildRecentQueriesList, type RecentQueriesList} from './headless-recent-queries-list.js';
 
 vi.mock('../../../features/commerce/facets/core-facet/core-facet-actions');
 vi.mock('../../../features/commerce/search/search-actions');
@@ -71,9 +65,7 @@ describe('recent queries list', () => {
       initialState: testInitialState,
       options: testOptions,
     };
-    const mockedPrepareForSearchWithQuery = vi.mocked(
-      prepareForSearchWithQuery
-    );
+    const mockedPrepareForSearchWithQuery = vi.mocked(prepareForSearchWithQuery);
 
     beforeEach(() => {
       recentQueriesList = buildRecentQueriesList(engine, testProps);
@@ -171,9 +163,7 @@ describe('recent queries list', () => {
     });
 
     it('should throw an error if the queries array is empty', () => {
-      expect(() => recentQueriesList.updateRecentQueries([])).toThrow(
-        'value contains less than 1'
-      );
+      expect(() => recentQueriesList.updateRecentQueries([])).toThrow('value contains less than 1');
     });
   });
 });

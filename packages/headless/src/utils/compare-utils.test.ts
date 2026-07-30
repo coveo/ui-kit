@@ -1,7 +1,4 @@
-import {
-  arrayEqualStrictlyDifferentOrder,
-  deepEqualAnyOrder,
-} from './compare-utils.js';
+import {arrayEqualStrictlyDifferentOrder, deepEqualAnyOrder} from './compare-utils.js';
 
 describe('compare-utils', () => {
   describe('#deepEqualAnyOrder with an object containing primitive values', () => {
@@ -58,9 +55,7 @@ describe('compare-utils', () => {
           b1: 3,
         },
       };
-      expect(
-        deepEqualAnyOrder(objectA, objectB as unknown as typeof objectA)
-      ).toBe(false);
+      expect(deepEqualAnyOrder(objectA, objectB as unknown as typeof objectA)).toBe(false);
     });
   });
 

@@ -23,8 +23,8 @@ describe('insight analytics', () => {
   it('should be enabled by default', () => {
     const state = buildMockInsightState();
     expect(
-      configureInsightAnalytics({getState: () => state, logger})
-        .coveoAnalyticsClient instanceof CoveoAnalyticsClient
+      configureInsightAnalytics({getState: () => state, logger}).coveoAnalyticsClient instanceof
+        CoveoAnalyticsClient
     ).toBe(true);
   });
 
@@ -33,8 +33,8 @@ describe('insight analytics', () => {
     state.configuration.analytics.enabled = true;
 
     expect(
-      configureInsightAnalytics({getState: () => state, logger})
-        .coveoAnalyticsClient instanceof CoveoAnalyticsClient
+      configureInsightAnalytics({getState: () => state, logger}).coveoAnalyticsClient instanceof
+        CoveoAnalyticsClient
     ).toBe(true);
   });
 
@@ -43,8 +43,8 @@ describe('insight analytics', () => {
     state.configuration.analytics.enabled = false;
 
     expect(
-      configureInsightAnalytics({getState: () => state, logger})
-        .coveoAnalyticsClient instanceof CoveoAnalyticsClient
+      configureInsightAnalytics({getState: () => state, logger}).coveoAnalyticsClient instanceof
+        CoveoAnalyticsClient
     ).toBe(false);
   });
 
@@ -56,9 +56,7 @@ describe('insight analytics', () => {
     it('should properly return the pipeline from the state', () => {
       const state = getBaseState();
       state.pipeline = 'foo';
-      expect(new InsightAnalyticsProvider(() => state).getPipeline()).toBe(
-        'foo'
-      );
+      expect(new InsightAnalyticsProvider(() => state).getPipeline()).toBe('foo');
     });
 
     it('should properly return the pipeline from the response if not available directly from state', () => {
@@ -66,18 +64,14 @@ describe('insight analytics', () => {
       state.pipeline = undefined;
       state.search = buildMockSearchState({});
       state.search.response.pipeline = 'foo';
-      expect(new InsightAnalyticsProvider(() => state).getPipeline()).toBe(
-        'foo'
-      );
+      expect(new InsightAnalyticsProvider(() => state).getPipeline()).toBe('foo');
     });
 
     it('should return "default" if the pipeline is not available', () => {
       const state = getBaseState();
       state.pipeline = undefined;
       state.search = undefined;
-      expect(new InsightAnalyticsProvider(() => state).getPipeline()).toBe(
-        'default'
-      );
+      expect(new InsightAnalyticsProvider(() => state).getPipeline()).toBe('default');
     });
 
     it('should properly return facet state', () => {
@@ -98,22 +92,14 @@ describe('insight analytics', () => {
         }),
       ];
 
-      expect(
-        new InsightAnalyticsProvider(() => state).getFacetState().length
-      ).toBe(1);
-      expect(
-        new InsightAnalyticsProvider(() => state).getFacetState()[0].field
-      ).toBe('foo');
+      expect(new InsightAnalyticsProvider(() => state).getFacetState().length).toBe(1);
+      expect(new InsightAnalyticsProvider(() => state).getFacetState()[0].field).toBe('foo');
     });
 
     it('should properly return getSearchEventRequestPayload', () => {
       const state = getBaseState();
       state.search = buildMockSearchState({});
-      state.search.response.results = [
-        buildMockResult(),
-        buildMockResult(),
-        buildMockResult(),
-      ];
+      state.search.response.results = [buildMockResult(), buildMockResult(), buildMockResult()];
       state.query = buildMockQueryState({q: 'foo'});
       expect(
         new InsightAnalyticsProvider(() => state).getSearchEventRequestPayload()
@@ -129,27 +115,23 @@ describe('insight analytics', () => {
       const state = getBaseState();
       state.search = buildMockSearchState({searchResponseId: 'the_id'});
       state.search.response.searchUid = 'another_id';
-      expect(new InsightAnalyticsProvider(() => state).getSearchUID()).toEqual(
-        'the_id'
-      );
+      expect(new InsightAnalyticsProvider(() => state).getSearchUID()).toEqual('the_id');
     });
 
     it('should properly return getSearchUID from response.searchUid if available', () => {
       const state = getBaseState();
       state.search = buildMockSearchState({});
       state.search.response.searchUid = 'another_id';
-      expect(new InsightAnalyticsProvider(() => state).getSearchUID()).toEqual(
-        'another_id'
-      );
+      expect(new InsightAnalyticsProvider(() => state).getSearchUID()).toEqual('another_id');
     });
 
     it('should properly return the generated answer metadata from the state', () => {
       const state = getBaseState();
       state.generatedAnswer = getGeneratedAnswerInitialState();
       state.generatedAnswer.isVisible = false;
-      expect(
-        new InsightAnalyticsProvider(() => state).getGeneratedAnswerMetadata()
-      ).toEqual({showGeneratedAnswer: false});
+      expect(new InsightAnalyticsProvider(() => state).getGeneratedAnswerMetadata()).toEqual({
+        showGeneratedAnswer: false,
+      });
     });
   });
 });

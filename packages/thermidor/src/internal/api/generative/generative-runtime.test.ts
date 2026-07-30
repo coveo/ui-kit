@@ -1,9 +1,6 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {GenerativeRuntime} from './generative-runtime.js';
-import type {
-  GenerativeRuntimeConfig,
-  GenerativeStatePort,
-} from './generative-runtime.js';
+import type {GenerativeRuntimeConfig, GenerativeStatePort} from './generative-runtime.js';
 import type {FullEngine} from '@/src/internal/engine/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 import type {ConversationStreamEvent} from '@/src/internal/api/conversation/index.js';
@@ -25,8 +22,7 @@ const {
 vi.mock('@/src/internal/api/conversation/index.js', () => ({
   readConversationEventStream: mockReadConversationEventStream,
   createConversationEndpointClient: mockCreateConversationEndpointClient,
-  createConversationEndpointRequestSelector:
-    mockCreateConversationEndpointRequestSelector,
+  createConversationEndpointRequestSelector: mockCreateConversationEndpointRequestSelector,
 }));
 
 vi.mock('@/src/internal/features/configuration/index.js', () => ({
@@ -107,23 +103,19 @@ function setupSuccessfulStream(
 ) {
   const mockStream = {} as ReadableStream<Uint8Array>;
   const mockClient = {
-    call: vi
-      .fn()
-      .mockResolvedValue({success: true, data: {stream: mockStream}}),
+    call: vi.fn().mockResolvedValue({success: true, data: {stream: mockStream}}),
   };
 
   mockCreateConversationEndpointClient.mockReturnValue(mockClient);
 
-  mockReadConversationEventStream.mockImplementation(
-    async ({onEvent, onDone}) => {
-      for (const event of events) {
-        onEvent(event);
-      }
-      if (!omitTerminal) {
-        onDone?.();
-      }
+  mockReadConversationEventStream.mockImplementation(async ({onEvent, onDone}) => {
+    for (const event of events) {
+      onEvent(event);
     }
-  );
+    if (!omitTerminal) {
+      onDone?.();
+    }
+  });
 
   return {mockStream, mockClient};
 }
@@ -131,9 +123,7 @@ function setupSuccessfulStream(
 describe('GenerativeRuntime', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockCreateConversationEndpointRequestSelector.mockReturnValue(
-      (state: unknown) => state
-    );
+    mockCreateConversationEndpointRequestSelector.mockReturnValue((state: unknown) => state);
     mockGenerateId.mockReturnValue('generated-id-1');
   });
 
@@ -142,16 +132,8 @@ describe('GenerativeRuntime', () => {
       const engine = createMockEngine();
       const config = createMockConfig();
 
-      const instance1 = GenerativeRuntime.getInstance(
-        engine,
-        'iface-1',
-        config
-      );
-      const instance2 = GenerativeRuntime.getInstance(
-        engine,
-        'iface-1',
-        config
-      );
+      const instance1 = GenerativeRuntime.getInstance(engine, 'iface-1', config);
+      const instance2 = GenerativeRuntime.getInstance(engine, 'iface-1', config);
 
       expect(instance1).toBe(instance2);
     });
@@ -160,16 +142,8 @@ describe('GenerativeRuntime', () => {
       const engine = createMockEngine();
       const config = createMockConfig();
 
-      const instance1 = GenerativeRuntime.getInstance(
-        engine,
-        'iface-1',
-        config
-      );
-      const instance2 = GenerativeRuntime.getInstance(
-        engine,
-        'iface-2',
-        config
-      );
+      const instance1 = GenerativeRuntime.getInstance(engine, 'iface-1', config);
+      const instance2 = GenerativeRuntime.getInstance(engine, 'iface-2', config);
 
       expect(instance1).not.toBe(instance2);
     });
@@ -179,16 +153,8 @@ describe('GenerativeRuntime', () => {
       const engine2 = createMockEngine();
       const config = createMockConfig();
 
-      const instance1 = GenerativeRuntime.getInstance(
-        engine1,
-        'iface-1',
-        config
-      );
-      const instance2 = GenerativeRuntime.getInstance(
-        engine2,
-        'iface-1',
-        config
-      );
+      const instance1 = GenerativeRuntime.getInstance(engine1, 'iface-1', config);
+      const instance2 = GenerativeRuntime.getInstance(engine2, 'iface-1', config);
 
       expect(instance1).not.toBe(instance2);
     });
@@ -198,9 +164,7 @@ describe('GenerativeRuntime', () => {
     it('creates a turn with a generated id and streaming status', async () => {
       const config = createMockConfig();
       const engine = createMockEngine();
-      setupSuccessfulStream([
-        {type: 'turn_complete'} as ConversationStreamEvent,
-      ]);
+      setupSuccessfulStream([{type: 'turn_complete'} as ConversationStreamEvent]);
 
       const runtime = GenerativeRuntime.getInstance(engine, 'test', config);
       await runtime.submit('Hello');
@@ -216,20 +180,12 @@ describe('GenerativeRuntime', () => {
     it('sets the active turn id', async () => {
       const config = createMockConfig();
       const engine = createMockEngine();
-      setupSuccessfulStream([
-        {type: 'turn_complete'} as ConversationStreamEvent,
-      ]);
+      setupSuccessfulStream([{type: 'turn_complete'} as ConversationStreamEvent]);
 
-      const runtime = GenerativeRuntime.getInstance(
-        engine,
-        'submit-active',
-        config
-      );
+      const runtime = GenerativeRuntime.getInstance(engine, 'submit-active', config);
       await runtime.submit('Hello');
 
-      expect(config.statePort.setActiveTurnId).toHaveBeenCalledWith(
-        'generated-id-1'
-      );
+      expect(config.statePort.setActiveTurnId).toHaveBeenCalledWith('generated-id-1');
     });
 
     it('builds the request with navigator context', async () => {
@@ -270,10 +226,7 @@ describe('GenerativeRuntime', () => {
       const runtime = GenerativeRuntime.getInstance(engine, 'api-fail', config);
       await runtime.submit('Hello');
 
-      expect(config.statePort.failTurn).toHaveBeenCalledWith(
-        'generated-id-1',
-        'API error'
-      );
+      expect(config.statePort.failTurn).toHaveBeenCalledWith('generated-id-1', 'API error');
     });
 
     it('fails the turn when an exception is thrown', async () => {
@@ -284,17 +237,10 @@ describe('GenerativeRuntime', () => {
         call: vi.fn().mockRejectedValue(new Error('network failure')),
       });
 
-      const runtime = GenerativeRuntime.getInstance(
-        engine,
-        'exception',
-        config
-      );
+      const runtime = GenerativeRuntime.getInstance(engine, 'exception', config);
       await runtime.submit('Hello');
 
-      expect(config.statePort.failTurn).toHaveBeenCalledWith(
-        'generated-id-1',
-        'network failure'
-      );
+      expect(config.statePort.failTurn).toHaveBeenCalledWith('generated-id-1', 'network failure');
     });
 
     it('fails the turn with a default message for non-Error exceptions', async () => {
@@ -305,11 +251,7 @@ describe('GenerativeRuntime', () => {
         call: vi.fn().mockRejectedValue(42),
       });
 
-      const runtime = GenerativeRuntime.getInstance(
-        engine,
-        'non-error',
-        config
-      );
+      const runtime = GenerativeRuntime.getInstance(engine, 'non-error', config);
       await runtime.submit('Hello');
 
       expect(config.statePort.failTurn).toHaveBeenCalledWith(
@@ -323,16 +265,12 @@ describe('GenerativeRuntime', () => {
     it('clears the turn response and recreates it with streaming status', async () => {
       const config = createMockConfig();
       const engine = createMockEngine();
-      setupSuccessfulStream([
-        {type: 'turn_complete'} as ConversationStreamEvent,
-      ]);
+      setupSuccessfulStream([{type: 'turn_complete'} as ConversationStreamEvent]);
 
       const runtime = GenerativeRuntime.getInstance(engine, 'resubmit', config);
       await runtime.resubmit('existing-turn-id', 'Updated prompt');
 
-      expect(config.statePort.clearTurnResponse).toHaveBeenCalledWith(
-        'existing-turn-id'
-      );
+      expect(config.statePort.clearTurnResponse).toHaveBeenCalledWith('existing-turn-id');
       expect(config.statePort.createTurn).toHaveBeenCalledWith({
         id: 'existing-turn-id',
         prompt: 'Updated prompt',
@@ -348,22 +286,14 @@ describe('GenerativeRuntime', () => {
 
       const mockStream = {} as ReadableStream<Uint8Array>;
       mockCreateConversationEndpointClient.mockReturnValue({
-        call: vi
-          .fn()
-          .mockResolvedValue({success: true, data: {stream: mockStream}}),
+        call: vi.fn().mockResolvedValue({success: true, data: {stream: mockStream}}),
       });
-      mockReadConversationEventStream.mockImplementation(
-        async ({onEvent, onDone}) => {
-          onEvent({type: 'TEXT_MESSAGE_CONTENT', delta: 'hello'});
-          onDone?.();
-        }
-      );
+      mockReadConversationEventStream.mockImplementation(async ({onEvent, onDone}) => {
+        onEvent({type: 'TEXT_MESSAGE_CONTENT', delta: 'hello'});
+        onDone?.();
+      });
 
-      const runtime = GenerativeRuntime.getInstance(
-        engine,
-        'no-terminal',
-        config
-      );
+      const runtime = GenerativeRuntime.getInstance(engine, 'no-terminal', config);
       await runtime.submit('Hello');
 
       expect(config.statePort.failTurn).toHaveBeenCalledWith(
@@ -378,19 +308,13 @@ describe('GenerativeRuntime', () => {
 
       const mockStream = {} as ReadableStream<Uint8Array>;
       mockCreateConversationEndpointClient.mockReturnValue({
-        call: vi
-          .fn()
-          .mockResolvedValue({success: true, data: {stream: mockStream}}),
+        call: vi.fn().mockResolvedValue({success: true, data: {stream: mockStream}}),
       });
       mockReadConversationEventStream.mockImplementation(async ({onError}) => {
         onError?.(new Error('stream read failure'));
       });
 
-      const runtime = GenerativeRuntime.getInstance(
-        engine,
-        'stream-err',
-        config
-      );
+      const runtime = GenerativeRuntime.getInstance(engine, 'stream-err', config);
       await runtime.submit('Hello');
 
       expect(config.statePort.failTurn).toHaveBeenCalledWith(
@@ -413,11 +337,7 @@ describe('GenerativeRuntime', () => {
         {type: 'turn_complete'} as ConversationStreamEvent,
       ]);
 
-      const runtime = GenerativeRuntime.getInstance(
-        engine,
-        'turn-started',
-        config
-      );
+      const runtime = GenerativeRuntime.getInstance(engine, 'turn-started', config);
       await runtime.submit('Hello');
 
       expect(config.statePort.setConversationSession).toHaveBeenCalledWith(
@@ -437,20 +357,11 @@ describe('GenerativeRuntime', () => {
         {type: 'turn_complete'} as ConversationStreamEvent,
       ]);
 
-      const runtime = GenerativeRuntime.getInstance(
-        engine,
-        'msg-start',
-        config
-      );
+      const runtime = GenerativeRuntime.getInstance(engine, 'msg-start', config);
       await runtime.submit('Hello');
 
-      expect(config.statePort.initAgentResponse).toHaveBeenCalledWith(
-        'generated-id-1'
-      );
-      expect(config.statePort.startMessage).toHaveBeenCalledWith(
-        'generated-id-1',
-        'assistant'
-      );
+      expect(config.statePort.initAgentResponse).toHaveBeenCalledWith('generated-id-1');
+      expect(config.statePort.startMessage).toHaveBeenCalledWith('generated-id-1', 'assistant');
     });
 
     it('handles TEXT_MESSAGE_CONTENT by appending delta', async () => {
@@ -468,21 +379,11 @@ describe('GenerativeRuntime', () => {
         {type: 'turn_complete'} as ConversationStreamEvent,
       ]);
 
-      const runtime = GenerativeRuntime.getInstance(
-        engine,
-        'msg-content',
-        config
-      );
+      const runtime = GenerativeRuntime.getInstance(engine, 'msg-content', config);
       await runtime.submit('Hello');
 
-      expect(config.statePort.appendMessageDelta).toHaveBeenCalledWith(
-        'generated-id-1',
-        'Hello '
-      );
-      expect(config.statePort.appendMessageDelta).toHaveBeenCalledWith(
-        'generated-id-1',
-        'world'
-      );
+      expect(config.statePort.appendMessageDelta).toHaveBeenCalledWith('generated-id-1', 'Hello ');
+      expect(config.statePort.appendMessageDelta).toHaveBeenCalledWith('generated-id-1', 'world');
     });
 
     it('handles REASONING_MESSAGE_START/CONTENT/END lifecycle', async () => {
@@ -498,23 +399,15 @@ describe('GenerativeRuntime', () => {
         {type: 'turn_complete'} as ConversationStreamEvent,
       ]);
 
-      const runtime = GenerativeRuntime.getInstance(
-        engine,
-        'reasoning',
-        config
-      );
+      const runtime = GenerativeRuntime.getInstance(engine, 'reasoning', config);
       await runtime.submit('Hello');
 
-      expect(config.statePort.startReasoning).toHaveBeenCalledWith(
-        'generated-id-1'
-      );
+      expect(config.statePort.startReasoning).toHaveBeenCalledWith('generated-id-1');
       expect(config.statePort.appendReasoningDelta).toHaveBeenCalledWith(
         'generated-id-1',
         'thinking...'
       );
-      expect(config.statePort.endReasoning).toHaveBeenCalledWith(
-        'generated-id-1'
-      );
+      expect(config.statePort.endReasoning).toHaveBeenCalledWith('generated-id-1');
     });
 
     it('handles TOOL_CALL_START/ARGS/END/RESULT lifecycle', async () => {
@@ -540,11 +433,7 @@ describe('GenerativeRuntime', () => {
         {type: 'turn_complete'} as ConversationStreamEvent,
       ]);
 
-      const runtime = GenerativeRuntime.getInstance(
-        engine,
-        'tool-call',
-        config
-      );
+      const runtime = GenerativeRuntime.getInstance(engine, 'tool-call', config);
       await runtime.submit('Hello');
 
       expect(config.statePort.startToolCall).toHaveBeenCalledWith(
@@ -582,10 +471,7 @@ describe('GenerativeRuntime', () => {
       const runtime = GenerativeRuntime.getInstance(engine, 'activity', config);
       await runtime.submit('Hello');
 
-      expect(config.statePort.appendSurface).toHaveBeenCalledWith(
-        'generated-id-1',
-        surface
-      );
+      expect(config.statePort.appendSurface).toHaveBeenCalledWith('generated-id-1', surface);
     });
 
     it('handles commerce_search_api_response by routing when hydration succeeds', async () => {
@@ -600,25 +486,17 @@ describe('GenerativeRuntime', () => {
 
       const mockStream = {} as ReadableStream<Uint8Array>;
       mockCreateConversationEndpointClient.mockReturnValue({
-        call: vi
-          .fn()
-          .mockResolvedValue({success: true, data: {stream: mockStream}}),
+        call: vi.fn().mockResolvedValue({success: true, data: {stream: mockStream}}),
       });
-      mockReadConversationEventStream.mockImplementation(
-        async ({onEvent, onDone}) => {
-          onEvent({
-            type: 'commerce_search_api_response',
-            products: [],
-          });
-          onDone?.();
-        }
-      );
+      mockReadConversationEventStream.mockImplementation(async ({onEvent, onDone}) => {
+        onEvent({
+          type: 'commerce_search_api_response',
+          products: [],
+        });
+        onDone?.();
+      });
 
-      const runtime = GenerativeRuntime.getInstance(
-        engine,
-        'commerce-route',
-        config
-      );
+      const runtime = GenerativeRuntime.getInstance(engine, 'commerce-route', config);
       await runtime.submit('Find shoes');
 
       expect(config.hydrateSubInterface).toHaveBeenCalledWith(
@@ -645,11 +523,7 @@ describe('GenerativeRuntime', () => {
         {type: 'turn_complete'} as ConversationStreamEvent,
       ]);
 
-      const runtime = GenerativeRuntime.getInstance(
-        engine,
-        'commerce-null',
-        config
-      );
+      const runtime = GenerativeRuntime.getInstance(engine, 'commerce-null', config);
       await runtime.submit('Find shoes');
 
       expect(config.statePort.setRoutedInterface).not.toHaveBeenCalled();
@@ -667,26 +541,18 @@ describe('GenerativeRuntime', () => {
 
       const mockStream = {} as ReadableStream<Uint8Array>;
       mockCreateConversationEndpointClient.mockReturnValue({
-        call: vi
-          .fn()
-          .mockResolvedValue({success: true, data: {stream: mockStream}}),
+        call: vi.fn().mockResolvedValue({success: true, data: {stream: mockStream}}),
       });
-      mockReadConversationEventStream.mockImplementation(
-        async ({onEvent, onDone}) => {
-          onEvent({
-            type: 'search_api_response',
-            results: [],
-            totalCount: 0,
-          });
-          onDone?.();
-        }
-      );
+      mockReadConversationEventStream.mockImplementation(async ({onEvent, onDone}) => {
+        onEvent({
+          type: 'search_api_response',
+          results: [],
+          totalCount: 0,
+        });
+        onDone?.();
+      });
 
-      const runtime = GenerativeRuntime.getInstance(
-        engine,
-        'search-route',
-        config
-      );
+      const runtime = GenerativeRuntime.getInstance(engine, 'search-route', config);
       await runtime.submit('Find documents');
 
       expect(config.hydrateSubInterface).toHaveBeenCalledWith(
@@ -711,20 +577,14 @@ describe('GenerativeRuntime', () => {
         } as ConversationStreamEvent,
       ]);
 
-      const runtime = GenerativeRuntime.getInstance(
-        engine,
-        'turn-complete',
-        config
-      );
+      const runtime = GenerativeRuntime.getInstance(engine, 'turn-complete', config);
       await runtime.submit('Hello');
 
       expect(config.statePort.setConversationSession).toHaveBeenCalledWith(
         'final-session',
         'final-token'
       );
-      expect(config.statePort.completeTurn).toHaveBeenCalledWith(
-        'generated-id-1'
-      );
+      expect(config.statePort.completeTurn).toHaveBeenCalledWith('generated-id-1');
     });
 
     it('handles RUN_ERROR by failing the turn with the error message', async () => {
@@ -737,11 +597,7 @@ describe('GenerativeRuntime', () => {
         } as ConversationStreamEvent,
       ]);
 
-      const runtime = GenerativeRuntime.getInstance(
-        engine,
-        'run-error',
-        config
-      );
+      const runtime = GenerativeRuntime.getInstance(engine, 'run-error', config);
       await runtime.submit('Hello');
 
       expect(config.statePort.failTurn).toHaveBeenCalledWith(
@@ -753,15 +609,9 @@ describe('GenerativeRuntime', () => {
     it('handles RUN_ERROR with empty message using default', async () => {
       const config = createMockConfig();
       const engine = createMockEngine();
-      setupSuccessfulStream([
-        {type: 'RUN_ERROR', message: ''} as ConversationStreamEvent,
-      ]);
+      setupSuccessfulStream([{type: 'RUN_ERROR', message: ''} as ConversationStreamEvent]);
 
-      const runtime = GenerativeRuntime.getInstance(
-        engine,
-        'run-error-empty',
-        config
-      );
+      const runtime = GenerativeRuntime.getInstance(engine, 'run-error-empty', config);
       await runtime.submit('Hello');
 
       expect(config.statePort.failTurn).toHaveBeenCalledWith(
@@ -773,20 +623,12 @@ describe('GenerativeRuntime', () => {
     it('handles RUN_FINISHED by completing the turn', async () => {
       const config = createMockConfig();
       const engine = createMockEngine();
-      setupSuccessfulStream([
-        {type: 'RUN_FINISHED'} as ConversationStreamEvent,
-      ]);
+      setupSuccessfulStream([{type: 'RUN_FINISHED'} as ConversationStreamEvent]);
 
-      const runtime = GenerativeRuntime.getInstance(
-        engine,
-        'run-finished',
-        config
-      );
+      const runtime = GenerativeRuntime.getInstance(engine, 'run-finished', config);
       await runtime.submit('Hello');
 
-      expect(config.statePort.completeTurn).toHaveBeenCalledWith(
-        'generated-id-1'
-      );
+      expect(config.statePort.completeTurn).toHaveBeenCalledWith('generated-id-1');
     });
 
     it('ignores STATE_SNAPSHOT events', async () => {
@@ -797,11 +639,7 @@ describe('GenerativeRuntime', () => {
         {type: 'turn_complete'} as ConversationStreamEvent,
       ]);
 
-      const runtime = GenerativeRuntime.getInstance(
-        engine,
-        'state-snap',
-        config
-      );
+      const runtime = GenerativeRuntime.getInstance(engine, 'state-snap', config);
       await runtime.submit('Hello');
 
       expect(config.statePort.completeTurn).toHaveBeenCalled();
@@ -815,11 +653,7 @@ describe('GenerativeRuntime', () => {
         {type: 'turn_complete'} as ConversationStreamEvent,
       ]);
 
-      const runtime = GenerativeRuntime.getInstance(
-        engine,
-        'unknown-evt',
-        config
-      );
+      const runtime = GenerativeRuntime.getInstance(engine, 'unknown-evt', config);
       await runtime.submit('Hello');
 
       expect(config.statePort.completeTurn).toHaveBeenCalled();
@@ -845,11 +679,7 @@ describe('GenerativeRuntime', () => {
         {type: 'turn_complete'} as ConversationStreamEvent,
       ]);
 
-      const runtime = GenerativeRuntime.getInstance(
-        engine,
-        'idempotent',
-        config
-      );
+      const runtime = GenerativeRuntime.getInstance(engine, 'idempotent', config);
       await runtime.submit('Hello');
 
       expect(config.statePort.initAgentResponse).toHaveBeenCalledTimes(1);
@@ -860,9 +690,7 @@ describe('GenerativeRuntime', () => {
     it('handles null navigator context provider', async () => {
       const config = createMockConfig();
       const engine = createMockEngine();
-      (
-        engine.getNavigatorContextProvider as ReturnType<typeof vi.fn>
-      ).mockReturnValue(undefined);
+      (engine.getNavigatorContextProvider as ReturnType<typeof vi.fn>).mockReturnValue(undefined);
       const {mockClient} = setupSuccessfulStream([
         {type: 'turn_complete'} as ConversationStreamEvent,
       ]);

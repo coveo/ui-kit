@@ -23,9 +23,7 @@ export default function SearchPage({
   staticState: SearchStaticState;
   navigatorContext: NavigatorContext;
 }) {
-  const [hydratedState, setHydratedState] = useState<
-    SearchHydratedState | undefined
-  >(undefined);
+  const [hydratedState, setHydratedState] = useState<SearchHydratedState | undefined>(undefined);
 
   // Setting the navigator context provider also in client-side before hydrating the application
   setNavigatorContextProvider(() => navigatorContext);
@@ -96,10 +94,7 @@ export default function SearchPage({
         staticState={staticState.controllers.resultList.state}
         controller={hydratedState?.controllers.resultList}
       />
-      <HydrationMetadata
-        staticState={staticState}
-        hydratedState={hydratedState}
-      />
+      <HydrationMetadata staticState={staticState} hydratedState={hydratedState} />
     </>
   );
 }

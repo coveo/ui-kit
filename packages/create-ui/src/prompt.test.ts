@@ -46,7 +46,7 @@ describe('buildLibraryChoices', () => {
 
   it('defaults to the registered templates', () => {
     const values = buildLibraryChoices().map((c) => c.value);
-    expect(values).toEqual(['atomic', 'headless']);
+    expect(values).toEqual(['atomic', 'headless', 'headless-ssr']);
   });
 });
 

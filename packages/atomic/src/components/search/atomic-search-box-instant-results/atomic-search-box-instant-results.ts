@@ -31,10 +31,7 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import type {SearchBoxSuggestionsComponent} from '@/src/decorators/types';
 import {encodeForDomAttribute} from '@/src/utils/string-utils';
 
-type AriaLabelGenerator = (
-  bindings: Bindings,
-  result: Result
-) => string | undefined;
+type AriaLabelGenerator = (bindings: Bindings, result: Result) => string | undefined;
 
 /**
  * The `atomic-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
@@ -71,9 +68,7 @@ export class AtomicSearchBoxInstantResults
    *
    * @param resultRenderingFunction
    */
-  public async setRenderFunction(
-    resultRenderingFunction: ItemRenderingFunction
-  ) {
+  public async setRenderFunction(resultRenderingFunction: ItemRenderingFunction) {
     this.itemRenderingFunction = resultRenderingFunction;
   }
 
@@ -119,14 +114,9 @@ export class AtomicSearchBoxInstantResults
   }
 
   private getLink(el: HTMLElement): HTMLElement | null {
-    const atomicResult =
-      el.tagName === 'ATOMIC-RESULT' ? el : el?.querySelector('atomic-result');
+    const atomicResult = el.tagName === 'ATOMIC-RESULT' ? el : el?.querySelector('atomic-result');
 
-    return (
-      atomicResult?.shadowRoot?.querySelector(
-        'atomic-result-link a:not([slot])'
-      ) || null
-    );
+    return atomicResult?.shadowRoot?.querySelector('atomic-result-link a:not([slot])') || null;
   }
 
   private handleLinkClick(el: HTMLElement, hasModifier: boolean) {
@@ -146,53 +136,48 @@ export class AtomicSearchBoxInstantResults
       ? this.instantResults.state.results
       : this.results;
 
-    const elements: SearchBoxSuggestionElement[] = results.map(
-      (result: Result) => {
-        const partialItem = getPartialInstantItemElement(
-          this.bindings.i18n,
-          'instant-results-suggestion-label',
-          this.ariaLabelGenerator?.(this.bindings, result) || result.title,
-          result.uniqueId
-        );
-        const key = `instant-result-${encodeForDomAttribute(result.uniqueId)}`;
+    const elements: SearchBoxSuggestionElement[] = results.map((result: Result) => {
+      const partialItem = getPartialInstantItemElement(
+        this.bindings.i18n,
+        'instant-results-suggestion-label',
+        this.ariaLabelGenerator?.(this.bindings, result) || result.title,
+        result.uniqueId
+      );
+      const key = `instant-result-${encodeForDomAttribute(result.uniqueId)}`;
 
-        const template = html`${keyed(
-          key,
-          html`<atomic-result
-            part="outline"
-            .result=${result}
-            .interactiveResult=${buildInteractiveInstantResult(
-              this.bindings.engine,
-              {
-                options: {result},
-              }
-            )}
-            .display=${this.display}
-            .density=${this.density}
-            .imageSize=${this.imageSize}
-            .content=${this.itemTemplateProvider.getTemplateContent(result)}
-            .renderingFunction=${this.itemRenderingFunction}
-          ></atomic-result>`
-        )}`;
+      const template = html`${keyed(
+        key,
+        html`<atomic-result
+          part="outline"
+          .result=${result}
+          .interactiveResult=${buildInteractiveInstantResult(this.bindings.engine, {
+            options: {result},
+          })}
+          .display=${this.display}
+          .density=${this.density}
+          .imageSize=${this.imageSize}
+          .content=${this.itemTemplateProvider.getTemplateContent(result)}
+          .renderingFunction=${this.itemRenderingFunction}
+        ></atomic-result>`
+      )}`;
 
-        const container = document.createElement('div');
-        render(template, container);
-        const resultElement = container.firstElementChild as HTMLElement;
+      const container = document.createElement('div');
+      render(template, container);
+      const resultElement = container.firstElementChild as HTMLElement;
 
-        return {
-          ...partialItem,
-          content: resultElement,
-          onSelect: (e: MouseEvent) => {
-            const link = this.getLink(e.target as HTMLElement);
+      return {
+        ...partialItem,
+        content: resultElement,
+        onSelect: (e: MouseEvent) => {
+          const link = this.getLink(e.target as HTMLElement);
 
-            if (!link) {
-              return;
-            }
-            this.handleLinkClick(link, e.ctrlKey || e.metaKey);
-          },
-        };
-      }
-    );
+          if (!link) {
+            return;
+          }
+          this.handleLinkClick(link, e.ctrlKey || e.metaKey);
+        },
+      };
+    });
     if (elements.length) {
       const partialItem = getPartialInstantItemShowAllElement(
         this.bindings.i18n,
@@ -206,9 +191,7 @@ export class AtomicSearchBoxInstantResults
         }),
         onSelect: () => {
           this.bindings.clearSuggestions();
-          this.bindings.searchBoxController.updateText(
-            this.instantResults.state.q
-          );
+          this.bindings.searchBoxController.updateText(this.instantResults.state.q);
           this.bindings.searchBoxController.submit();
         },
       });
@@ -225,9 +208,7 @@ export class AtomicSearchBoxInstantResults
 
     this.itemTemplateProvider = new ResultTemplateProvider({
       includeDefaultTemplate: true,
-      templateElements: Array.from(
-        this.querySelectorAll('atomic-result-template')
-      ),
+      templateElements: Array.from(this.querySelectorAll('atomic-result-template')),
       getResultTemplateRegistered: () => true,
       setResultTemplateRegistered: () => {},
       getTemplateHasError: () => this.templateHasError,

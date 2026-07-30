@@ -8,17 +8,10 @@ interface FacetProps {
   controller?: FacetController;
 }
 
-export const Facet: FunctionComponent<FacetProps> = ({
-  title,
-  staticState,
-  controller,
-}) => {
+export const Facet: FunctionComponent<FacetProps> = ({title, staticState, controller}) => {
   const [state, setState] = useState(staticState);
 
-  useEffect(
-    () => controller?.subscribe?.(() => setState({...controller.state})),
-    [controller]
-  );
+  useEffect(() => controller?.subscribe?.(() => setState({...controller.state})), [controller]);
 
   if (!state.enabled) {
     return;
@@ -32,13 +25,9 @@ export const Facet: FunctionComponent<FacetProps> = ({
       facetSearchResults={state.facetSearch.values}
       isLoading={state.isLoading}
       onToggleValue={controller && ((value) => controller.toggleSelect(value))}
-      onUpdateSearchQuery={
-        controller && ((query) => controller.facetSearch.updateText(query))
-      }
+      onUpdateSearchQuery={controller && ((query) => controller.facetSearch.updateText(query))}
       onSubmitSearch={controller && (() => controller.facetSearch.search())}
-      onToggleSearchResult={
-        controller && ((result) => controller.facetSearch.select(result))
-      }
+      onToggleSearchResult={controller && ((result) => controller.facetSearch.select(result))}
     />
   );
 };

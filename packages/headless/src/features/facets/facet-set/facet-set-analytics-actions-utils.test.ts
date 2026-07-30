@@ -81,10 +81,7 @@ describe('facet-set-analytics-action-utils', () => {
         const {state, facetRequest} = getState();
         const facetValue = facetRequest.currentValues[1].value;
         expect(
-          buildFacetSelectionChangeMetadata(
-            {facetId: facetRequest.facetId, facetValue},
-            state
-          )
+          buildFacetSelectionChangeMetadata({facetId: facetRequest.facetId, facetValue}, state)
         ).toEqual(
           expect.objectContaining({
             facetField: facetRequest.field,
@@ -154,10 +151,7 @@ describe('facet-set-analytics-action-utils', () => {
         const {state, facetRequest} = getState();
         const facetValue = facetRequest.currentValues[0].value;
         expect(
-          buildFacetSelectionChangeMetadata(
-            {facetId: facetRequest.facetId, facetValue},
-            state
-          )
+          buildFacetSelectionChangeMetadata({facetId: facetRequest.facetId, facetValue}, state)
         ).toEqual(
           expect.objectContaining({
             facetField: facetRequest.field,

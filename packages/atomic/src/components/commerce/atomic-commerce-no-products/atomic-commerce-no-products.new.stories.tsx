@@ -10,7 +10,7 @@ import '@/src/components/commerce/atomic-commerce-layout/atomic-commerce-layout.
 import '@/src/components/commerce/atomic-commerce-no-products/atomic-commerce-no-products.js';
 import '@/src/components/commerce/atomic-commerce-search-box/atomic-commerce-search-box.js';
 import '@/src/components/common/atomic-layout-section/atomic-layout-section.js';
-import {MockCommerceApi} from '@coveo/platform-mock-api/commerce/mock';
+import {MockCommerceApi} from '@coveo/platform-mock-api/commerce';
 
 const commerceApiHarness = new MockCommerceApi();
 
@@ -20,10 +20,9 @@ commerceApiHarness.searchEndpoint.mock((response) => ({
   pagination: {...response.pagination, totalEntries: 0, totalPages: 0},
 }));
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-commerce-no-products',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-commerce-no-products', {
+  excludeCategories: ['methods'],
+});
 
 const {decorator, play: preprocessedPlayed} = wrapInCommerceInterface({
   skipFirstRequest: true,

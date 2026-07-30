@@ -24,9 +24,7 @@ export default function Cart({
           {items.map((item) => (
             <div key={item.uniqueId}>
               <h3>{item.productName}</h3>
-              <p>
-                Price: {formatCurrency(item.pricePerUnit, language, currency)}
-              </p>
+              <p>Price: {formatCurrency(item.pricePerUnit, language, currency)}</p>
               <p>Quantity: {item.totalQuantity}</p>
               <AddToCartButton
                 productId={item.uniqueId}

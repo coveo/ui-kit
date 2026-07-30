@@ -26,9 +26,7 @@ export class HeadlessController {
   hostConnected() {
     // `subscribe` returns an unsubscribe function and immediately invokes the
     // listener once, so the host renders the current state right away.
-    this.unsubscribe = this.controller.subscribe(() =>
-      this.host.requestUpdate()
-    );
+    this.unsubscribe = this.controller.subscribe(() => this.host.requestUpdate());
   }
 
   hostDisconnected() {

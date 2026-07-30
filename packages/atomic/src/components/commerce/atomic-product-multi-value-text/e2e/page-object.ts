@@ -7,22 +7,16 @@ export class ProductMultiValueTextPageObject extends BasePageObject {
   }
 
   get values() {
-    return this.hydrated
-      .first()
-      .locator('li[part="product-multi-value-text-value"]');
+    return this.hydrated.first().locator('li[part="product-multi-value-text-value"]');
   }
 
   get separators() {
-    return this.hydrated
-      .first()
-      .locator('li[part="product-multi-value-text-separator"]');
+    return this.hydrated.first().locator('li[part="product-multi-value-text-separator"]');
   }
 
   moreValuesIndicator(expectedNumber?: number) {
     return this.hydrated
       .first()
-      .getByText(
-        `${expectedNumber ? `${expectedNumber.toString()} ` : ''}more...`
-      );
+      .getByText(`${expectedNumber ? `${expectedNumber.toString()} ` : ''}more...`);
   }
 }

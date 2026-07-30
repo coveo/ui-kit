@@ -7,10 +7,7 @@
 import {Engine} from '@/src/internal/engine/index.js';
 import type {SearchResult} from '@/src/internal/features/result-list/index.js';
 import type {FacetValue} from '@/src/internal/features/facets/index.js';
-import {
-  buildSearchInterface,
-  type SearchInterface,
-} from '@/src/public/interfaces/search.js';
+import {buildSearchInterface, type SearchInterface} from '@/src/public/interfaces/search.js';
 
 /**
  * Create a fresh engine instance for testing
@@ -24,19 +21,14 @@ export function createTestEngine(): Engine {
  * Create a mock interface handle for testing controllers that require a search-capable interface.
  * The stateId defaults to 'test'.
  */
-export function createTestInterface(
-  engine: Engine,
-  stateId = 'test'
-): SearchInterface {
+export function createTestInterface(engine: Engine, stateId = 'test'): SearchInterface {
   return buildSearchInterface({engine, id: stateId});
 }
 
 /**
  * Mock search result builder
  */
-export function createMockSearchResult(
-  overrides?: Partial<SearchResult>
-): SearchResult {
+export function createMockSearchResult(overrides?: Partial<SearchResult>): SearchResult {
   return {
     uniqueId: 'result-1',
     title: 'Test Result',
@@ -67,9 +59,7 @@ export function createMockSearchResults(count: number): SearchResult[] {
 /**
  * Mock facet value builder
  */
-export function createMockFacetValue(
-  overrides?: Partial<FacetValue>
-): FacetValue {
+export function createMockFacetValue(overrides?: Partial<FacetValue>): FacetValue {
   return {
     id: 'test-value',
     label: 'Test Value',

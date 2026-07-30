@@ -252,8 +252,6 @@ export const setOriginLevel3 = createAction(
     validatePayload(payload, {originLevel3: originSchemaOnUpdate()})
 );
 
-export const setAgentId = createAction(
-  'knowledge/setAgentId',
-  (payload: string) =>
-    validatePayload(payload, new StringValue({required: true}))
+export const setAgentId = createAction('knowledge/setAgentId', (payload: string) =>
+  validatePayload(payload, new StringValue({required: true}))
 );

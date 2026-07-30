@@ -3,10 +3,7 @@ import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
 import {page} from 'vitest/browser';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
-import {
-  AtomicCommerceFacetNumberInput,
-  type Range,
-} from './atomic-commerce-facet-number-input';
+import {AtomicCommerceFacetNumberInput, type Range} from './atomic-commerce-facet-number-input';
 import './atomic-commerce-facet-number-input';
 
 describe('atomic-commerce-facet-number-input', () => {
@@ -24,35 +21,28 @@ describe('atomic-commerce-facet-number-input', () => {
       ({
         state: {field: 'ec_price', facetId: 'test-facet'},
       } as NumericFacet);
-    const {element} =
-      await renderInAtomicCommerceInterface<AtomicCommerceFacetNumberInput>({
-        template: html`<atomic-commerce-facet-number-input
-          label=${props.label ?? 'Price'}
-          .range=${props.range}
-          .facet=${facet}
-        ></atomic-commerce-facet-number-input>`,
-        selector: 'atomic-commerce-facet-number-input',
-      });
+    const {element} = await renderInAtomicCommerceInterface<AtomicCommerceFacetNumberInput>({
+      template: html`<atomic-commerce-facet-number-input
+        label=${props.label ?? 'Price'}
+        .range=${props.range}
+        .facet=${facet}
+      ></atomic-commerce-facet-number-input>`,
+      selector: 'atomic-commerce-facet-number-input',
+    });
 
     return {
       element,
       get startInput() {
-        return page.getByLabelText(
-          'Enter a minimum numerical value for the Price facet'
-        );
+        return page.getByLabelText('Enter a minimum numerical value for the Price facet');
       },
       get endInput() {
-        return page.getByLabelText(
-          'Enter a maximum numerical value for the Price facet'
-        );
+        return page.getByLabelText('Enter a maximum numerical value for the Price facet');
       },
       get form() {
         return element.querySelector('form');
       },
       get applyButton() {
-        return page.getByLabelText(
-          'Apply custom numerical values for the Price facet'
-        );
+        return page.getByLabelText('Apply custom numerical values for the Price facet');
       },
       get minLabel() {
         return page.getByText('Min');

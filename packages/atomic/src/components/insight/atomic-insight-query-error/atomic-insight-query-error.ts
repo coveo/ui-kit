@@ -61,8 +61,7 @@ export class AtomicInsightQueryError
   render() {
     const {hasError, error} = this.queryErrorState;
     const i18n = this.bindings.i18n;
-    const {organizationId, environment} =
-      this.bindings.engine.state.configuration;
+    const {organizationId, environment} = this.bindings.engine.state.configuration;
     const url = getOrganizationEndpoint(organizationId, environment);
     if (hasError) {
       this.ariaMessage.message = getAriaMessageFromErrorType(

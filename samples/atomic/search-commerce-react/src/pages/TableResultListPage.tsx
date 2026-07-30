@@ -20,11 +20,7 @@ import {AtomicPageWrapper} from '../components/AtomicPageWrapper';
 export const TableResultListPage: FunctionComponent = () => {
   return (
     <AtomicPageWrapper sample="electronics">
-      <AtomicResultList
-        display="table"
-        imageSize="large"
-        template={MyTemplate}
-      />
+      <AtomicResultList display="table" imageSize="large" template={MyTemplate} />
     </AtomicPageWrapper>
   );
 };

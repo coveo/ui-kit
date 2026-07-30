@@ -11,10 +11,7 @@ import type {
   InsightBindings,
 } from '@/src/components/insight/atomic-insight-interface/atomic-insight-interface.js';
 import type {InsightStore} from '@/src/components/insight/atomic-insight-interface/store.js';
-import {
-  type InitializeEvent,
-  markParentAsReady,
-} from '@/src/utils/init-queue.js';
+import {type InitializeEvent, markParentAsReady} from '@/src/utils/init-queue.js';
 import {initializeEventName} from '@/src/utils/initialization-common-utils.js';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture.js';
 import {genericSubscribe} from '@/vitest-utils/testing-helpers/fixtures/headless/common.js';
@@ -102,9 +99,7 @@ export function renderInAtomicInsightInterface<T extends LitElement>({
 }: {
   template: TemplateResult;
   selector?: string;
-  bindings?:
-    | Partial<InsightBindings>
-    | ((bindings: MinimalBindings) => MinimalBindings);
+  bindings?: Partial<InsightBindings> | ((bindings: MinimalBindings) => MinimalBindings);
 }): Promise<{
   element: T;
   atomicInterface: FixtureAtomicInsightInterface;
@@ -116,9 +111,7 @@ export async function renderInAtomicInsightInterface<T extends LitElement>({
 }: {
   template: TemplateResult;
   selector?: string | never;
-  bindings?:
-    | Partial<InsightBindings>
-    | ((bindings: MinimalBindings) => MinimalBindings);
+  bindings?: Partial<InsightBindings> | ((bindings: MinimalBindings) => MinimalBindings);
 }): Promise<{
   element: null | T;
   atomicInterface: FixtureAtomicInsightInterface;
