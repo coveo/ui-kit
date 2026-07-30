@@ -112,6 +112,7 @@ jobs:
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/setup-sfdx
       - name: Delete Quantic scratch orgs
+        run: |
           umask 077
           printf '%s\n' "$SFDX_AUTH_JWT_KEY" > server.key
           trap 'rm -f -- server.key' EXIT

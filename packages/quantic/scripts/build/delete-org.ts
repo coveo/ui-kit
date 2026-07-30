@@ -69,6 +69,7 @@ async function deleteScratchOrgs(log: StepLogger, options: Options) {
   deletedOrgUsernames.forEach((username) => {
     log(`Organization ${username} deleted successfully.`);
   });
+}
 
 (async function () {
   try {
