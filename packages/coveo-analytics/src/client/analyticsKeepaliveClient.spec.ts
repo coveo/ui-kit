@@ -1,6 +1,6 @@
 import {vi, type Mock} from 'vitest';
 import * as CrossFetch from 'cross-fetch';
-import {AnalyticsBeaconClient} from './analyticsBeaconClient';
+import {AnalyticsKeepaliveClient} from './analyticsKeepaliveClient';
 import {EventType} from '../events';
 import {
   AnalyticsClientOrigin,
@@ -8,7 +8,7 @@ import {
   PreprocessAnalyticsRequest,
 } from './analyticsRequestClient';
 
-describe('AnalyticsBeaconClient', () => {
+describe('AnalyticsKeepaliveClient', () => {
   const baseUrl = 'https://bloup.com';
   const token = '👛';
   const currentVisitorId = 'mockVisitorId';
@@ -21,7 +21,7 @@ describe('AnalyticsBeaconClient', () => {
   });
 
   const buildClient = (preprocessRequest?: PreprocessAnalyticsRequest) =>
-    new AnalyticsBeaconClient({
+    new AnalyticsKeepaliveClient({
       baseUrl,
       token,
       visitorIdProvider: {

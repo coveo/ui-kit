@@ -20,7 +20,7 @@ The "runtime" is a small wrapper around features that are only available in Node
 
 The "fetchClient" is using a standard "fetch" to send the event.
 
-The "beaconClient" is used to send "beacons" from the navigator. This "beacon" has _no response validation from the browser_ (send and forget), so it is especially useful when the event is sent on an outgoing click.
+The "keepaliveClient" is used for events that must survive a page unload, such as an outgoing click. It sends them with `fetch` and `keepalive: true`, and ignores the response (send and forget).
 
 Everything related to "Measurement Protocol Mapping" contain all the logic to map human-readable attribute to the Measurement Protocol condensed format.
 
@@ -141,7 +141,7 @@ The trick here is to flush the buffer with a `setTimeout(flush, 0)` so that the 
 
 This ensures that we use `keepalive` on the right occasion, and a regular `fetch` for the rest of the times.
 
-The keepalive client lives in `analyticsBeaconClient.ts` and still reports `analyticsBeacon` as its `clientOrigin` to `preprocessRequest`, for backward compatibility: it used `navigator.sendBeacon` until the Beacon API was dropped in favor of `fetch`. The Beacon API accepts no headers, so a `preprocessRequest` hook could not add any to click events; with `fetch`, hooks receive and can mutate the same request options as for any other event.
+The keepalive client lives in `analyticsKeepaliveClient.ts` and still reports `analyticsBeacon` as its `clientOrigin` to `preprocessRequest`, for backward compatibility: it used `navigator.sendBeacon` until the Beacon API was dropped in favor of `fetch`. The Beacon API accepts no headers, so a `preprocessRequest` hook could not add any to click events; with `fetch`, hooks receive and can mutate the same request options as for any other event.
 
 Browsers cap the cumulative body size of all in-flight `keepalive` requests to 64 KiB. When flushing the buffer would exceed that budget, the oversized event is sent without the flag rather than not being sent at all.
 

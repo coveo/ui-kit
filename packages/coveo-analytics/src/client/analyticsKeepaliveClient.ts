@@ -15,14 +15,13 @@ let inFlightKeepaliveBodyInBytes = 0;
 
 /**
  * Sends events that must survive a page unload, such as click events and the events
- * replayed on `beforeunload`.
+ * replayed on `beforeunload`, using `fetch` with `keepalive: true`.
  *
- * Despite its name, this client no longer relies on the Beacon API: it uses `fetch` with
- * `keepalive: true`, which offers the same delivery guarantee while allowing a
- * `preprocessRequest` hook to alter headers. The `analyticsBeacon` client origin is kept
+ * This replaces the Beacon API, which accepted no headers and therefore prevented a
+ * `preprocessRequest` hook from altering them. The `analyticsBeacon` client origin is kept
  * so that existing hooks branching on it keep working.
  */
-export class AnalyticsBeaconClient implements AnalyticsRequestClient {
+export class AnalyticsKeepaliveClient implements AnalyticsRequestClient {
   constructor(private opts: IAnalyticsClientOptions) {}
 
   public async sendEvent(eventType: EventType, originalPayload: IRequestPayload): Promise<void> {

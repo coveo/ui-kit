@@ -1,5 +1,5 @@
 import {WebStorage, NullStorage, CookieAndLocalStorage} from '../storage';
-import {AnalyticsBeaconClient} from './analyticsBeaconClient';
+import {AnalyticsKeepaliveClient} from './analyticsKeepaliveClient';
 import {hasLocalStorage, hasCookieStorage} from '../detector';
 import {
   AnalyticsRequestClient,
@@ -19,7 +19,7 @@ export interface IRuntimeEnvironment {
 export class BrowserRuntime implements IRuntimeEnvironment {
   public storage: WebStorage;
   public client: AnalyticsFetchClient;
-  private beaconClient: AnalyticsBeaconClient;
+  private keepaliveClient: AnalyticsKeepaliveClient;
 
   constructor(
     clientOptions: IAnalyticsClientOptions,
@@ -34,18 +34,18 @@ export class BrowserRuntime implements IRuntimeEnvironment {
       this.storage = new NullStorage();
     }
     this.client = new AnalyticsFetchClient(clientOptions);
-    this.beaconClient = new AnalyticsBeaconClient(clientOptions);
+    this.keepaliveClient = new AnalyticsKeepaliveClient(clientOptions);
     window.addEventListener('beforeunload', () => {
       const requests = getUnprocessedRequests();
       for (let {eventType, payload} of requests) {
-        this.beaconClient.sendEvent(eventType, payload);
+        this.keepaliveClient.sendEvent(eventType, payload);
       }
     });
   }
 
   public getClientDependingOnEventType(eventType: EventType) {
-    return eventType === 'click' && this.beaconClient.isAvailable()
-      ? this.beaconClient
+    return eventType === 'click' && this.keepaliveClient.isAvailable()
+      ? this.keepaliveClient
       : this.client;
   }
 }
