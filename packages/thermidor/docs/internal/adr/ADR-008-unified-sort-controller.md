@@ -24,6 +24,8 @@ Thermidor exposes a single `buildSortController` for all interface types. The cr
 
 No `initialState` prop — initial sort is set via `loadSortActions().sortBy()` or hydrated from response/snapshot. An internal translation layer converts between domain types and API formats.
 
+The controller state shape is uniform across interface types: `{ appliedSort, availableSorts }`. For search interfaces, `availableSorts` is always an empty array (the Search API does not return available sorts — sort options are client-defined). This keeps the API surface simple and consistent rather than conditionally narrowing the state shape per interface type.
+
 ## 3. Requirements & Considerations Mapping
 
 - **Requirement**: Full use-case support
