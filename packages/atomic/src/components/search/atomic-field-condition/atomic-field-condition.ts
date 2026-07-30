@@ -77,8 +77,9 @@ export class AtomicFieldCondition
     const result = this.getResult();
 
     if (!result || !this.conditions.every((condition) => condition(result))) {
-      // TODO: Replace this.hidden = true with this.remove() once all Search components are migrated from Stencil to Lit.
-      // Currently using hidden to avoid breaking Stencil initialization event system in mixed Stencil/Lit component trees.
+      // TODO V4: Replace this.hidden = true with this.remove().
+      // Removing the element instead of hiding it changes the DOM contract for consumers,
+      // so it must wait for a major version.
       this.hidden = true;
       return html``;
     }

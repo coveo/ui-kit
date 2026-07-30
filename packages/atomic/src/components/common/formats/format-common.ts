@@ -1,4 +1,4 @@
-import type {HTMLStencilElement} from '@stencil/core/internal';
+import type {ComponentOnReadyElement} from '@/src/utils/dom-utils';
 import {buildCustomEvent} from '@/src/utils/event-utils';
 
 export type NumberFormatter = (value: number, languages: string[]) => string;
@@ -14,7 +14,7 @@ export const dispatchNumberFormatEvent = async (formatter: NumberFormatter, elem
   if (element.parentElement && 'updateComplete' in element.parentElement) {
     await (element.parentElement as {updateComplete: Promise<boolean>}).updateComplete;
   } else if ('componentOnReady' in element.parentElement!) {
-    await (element.parentElement as HTMLStencilElement).componentOnReady();
+    await (element.parentElement as ComponentOnReadyElement).componentOnReady();
   }
   const handled = !element.dispatchEvent(event);
   if (!handled) {

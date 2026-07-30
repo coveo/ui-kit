@@ -1,6 +1,5 @@
-import type {HTMLStencilElement} from '@stencil/core/internal';
 import type {LitElement} from 'lit';
-import {closest} from '../../../utils/dom-utils';
+import {closest, type ComponentOnReadyElement} from '../../../utils/dom-utils';
 import {buildCustomEvent} from '../../../utils/event-utils';
 import type {AnyBindings} from '../interface/bindings';
 import type {SearchBoxSuggestionsEvent} from './suggestions-types';
@@ -52,7 +51,7 @@ const dispatchSearchBoxSuggestionsEventEventually = async <
   if (isLitElementLoosely(interfaceElement)) {
     await interfaceElement.updateComplete;
   } else if ('componentOnReady' in interfaceElement) {
-    await (interfaceElement as HTMLStencilElement).componentOnReady();
+    await (interfaceElement as ComponentOnReadyElement).componentOnReady();
   }
   element.dispatchEvent(buildCustomEvent('atomic/searchBoxSuggestion/register', event));
 };

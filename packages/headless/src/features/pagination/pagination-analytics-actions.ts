@@ -34,7 +34,6 @@ export const logPagePrevious = (): LegacySearchAction =>
     })
   );
 
-// TODO KIT-2983
 export const browseResults = (): SearchAction => ({
   actionCause: SearchPageEvents.browseResults,
 });

@@ -130,7 +130,6 @@ describe('#renderCheckbox', () => {
     expect(button).toHaveClass('test-class');
     expect(button).toHaveClass(
       'w-4',
-      // TODO: KIT-3907
       'h-4',
       'grid',
       'place-items-center',

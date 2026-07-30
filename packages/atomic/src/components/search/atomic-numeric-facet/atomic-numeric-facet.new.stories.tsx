@@ -196,8 +196,6 @@ export const WithDependsOn: Story = {
     'depends-on-filetype': 'YouTubeVideo',
   },
   play: async (context) => {
-    //TODO: Fix component registration race condition #6480
-    await customElements.whenDefined('atomic-facet');
     await play(context);
     const {canvas, step} = context;
     await step('Select YouTubeVideo in filetype facet', async () => {

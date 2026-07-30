@@ -4,8 +4,6 @@ This is a starter project for building web components for Coveo Atomic using Ste
 
 ## Getting Started
 
-<!-- TODO CDX-1358: Insert instruction to create other components -->
-
 If you used `npm init @coveo/atomic-component` or `npm init @coveo/atomic-result-component`, your component should already be in `src/components`.
 You can use either of these commands at the root of your project to add another component.
 
@@ -15,10 +13,6 @@ Visit [Create a custom component](https://docs.coveo.com/en/atomic/latest/cc-sea
 
 You can test your component locally by adding it to `src/pages/index.html`.
 The code of the component should already be included. You just need to add the component tag to the markup of the page.
-
-<!--
-    TODO CDX-1356: tldr best practices and/or doc link.
--->
 
 ## Using a custom component
 

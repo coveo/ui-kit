@@ -1,5 +1,5 @@
-import type {HTMLStencilElement} from '@stencil/core/internal';
 import {LitElement} from 'lit';
+import type {ComponentOnReadyElement} from '@/src/utils/dom-utils';
 import type {Constructor} from './mixin-common';
 
 export const ChildrenUpdateCompleteMixin = <T extends Constructor<LitElement>>(superClass: T) => {
@@ -24,7 +24,7 @@ export const ChildrenUpdateCompleteMixin = <T extends Constructor<LitElement>>(s
             }
             await child.updateComplete;
           } else if ('componentOnReady' in child) {
-            await (child as HTMLStencilElement).componentOnReady();
+            await (child as ComponentOnReadyElement).componentOnReady();
           }
         })
       );
