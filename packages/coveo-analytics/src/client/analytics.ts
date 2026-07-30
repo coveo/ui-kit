@@ -286,7 +286,10 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     }
   }
 
-  async getParameters(eventType: EventType | string, ...payload: VariableArgumentsPayload) {
+  async getParameters(
+    eventType: EventType | string,
+    ...payload: VariableArgumentsPayload
+  ): Promise<VariableArgumentsPayload> {
     return await this.resolveParameters(eventType, ...payload);
   }
 
@@ -338,7 +341,10 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     return null;
   }
 
-  async resolveParameters(eventType: EventType | string, ...payload: VariableArgumentsPayload) {
+  async resolveParameters(
+    eventType: EventType | string,
+    ...payload: VariableArgumentsPayload
+  ): Promise<VariableArgumentsPayload> {
     const {
       variableLengthArgumentsNames = [],
       addVisitorIdParameter = false,
