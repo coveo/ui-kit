@@ -1,4 +1,5 @@
-import {vi} from 'vitest';
+import {vi, type Mock} from 'vitest';
+import * as CrossFetch from 'cross-fetch';
 import {AnalyticsBeaconClient} from './analyticsBeaconClient';
 import {EventType} from '../events';
 import {
@@ -12,67 +13,59 @@ describe('AnalyticsBeaconClient', () => {
   const token = '👛';
   const currentVisitorId = 'mockVisitorId';
 
-  const originalSendBeacon = navigator.sendBeacon;
-  const sendBeaconMock = vi.fn();
-  beforeAll(() => {
-    navigator.sendBeacon = sendBeaconMock;
-  });
-
-  afterAll(() => {
-    navigator.sendBeacon = originalSendBeacon;
-  });
+  const fetchMock = CrossFetch.fetch as unknown as Mock;
 
   beforeEach(() => {
     vi.clearAllMocks();
+    fetchMock.mockReset().mockResolvedValue({ok: true});
   });
 
-  it('can send an event', async () => {
-    const eventType: EventType = EventType.custom;
-
-    const client = new AnalyticsBeaconClient({
+  const buildClient = (preprocessRequest?: PreprocessAnalyticsRequest) =>
+    new AnalyticsBeaconClient({
       baseUrl,
       token,
       visitorIdProvider: {
         getCurrentVisitorId: () => Promise.resolve(currentVisitorId),
-        setCurrentVisitorId: (visitorId) => {},
+        setCurrentVisitorId: () => {},
       },
+      preprocessRequest,
     });
 
-    await client.sendEvent(eventType, {
-      wow: 'ok',
-    });
+  const getFetchFirstCallUrl = (): string => fetchMock.mock.calls[0][0];
+  const getFetchFirstCallOptions = (): RequestInit => fetchMock.mock.calls[0][1];
+  const getFetchFirstCallBody = (): string => getFetchFirstCallOptions().body as string;
 
-    expect(sendBeaconMock).toHaveBeenCalledWith(
-      `${baseUrl}/analytics/custom?access_token=👛&visitorId=${currentVisitorId}&discardVisitInfo=true`,
-      expect.anything()
+  it('can send an event', async () => {
+    await buildClient().sendEvent(EventType.custom, {wow: 'ok'});
+
+    expect(getFetchFirstCallUrl()).toBe(
+      `${baseUrl}/analytics/custom?access_token=👛&visitorId=${currentVisitorId}&discardVisitInfo=true`
     );
-    expect(await getSendBeaconFirstCallBlobArgument()).toBe(
-      `customEvent=${encodeURIComponent('{"wow":"ok"}')}`
-    );
+    expect(getFetchFirstCallBody()).toBe(`customEvent=${encodeURIComponent('{"wow":"ok"}')}`);
+  });
+
+  it('sends the event with fetch and keepalive instead of the Beacon API', async () => {
+    await buildClient().sendEvent(EventType.click, {actionCause: 'documentOpen'});
+
+    expect(getFetchFirstCallOptions()).toMatchObject({
+      method: 'POST',
+      keepalive: true,
+      credentials: 'include',
+      mode: 'cors',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    });
   });
 
   it('can send a collect event with the proper payload', async () => {
-    const eventType: EventType = EventType.collect;
-
-    const client = new AnalyticsBeaconClient({
-      baseUrl,
-      token,
-      visitorIdProvider: {
-        getCurrentVisitorId: () => Promise.resolve(currentVisitorId),
-        setCurrentVisitorId: (visitorId) => {},
-      },
-    });
-
-    await client.sendEvent(eventType, {
+    await buildClient().sendEvent(EventType.collect, {
       pr1a: 'value',
       'to encode': 'to encode',
     });
 
-    expect(sendBeaconMock).toHaveBeenCalledWith(
-      `${baseUrl}/analytics/collect?visitorId=${currentVisitorId}&discardVisitInfo=true`,
-      expect.anything()
+    expect(getFetchFirstCallUrl()).toBe(
+      `${baseUrl}/analytics/collect?visitorId=${currentVisitorId}&discardVisitInfo=true`
     );
-    expect(await getSendBeaconFirstCallBlobArgument()).toBe(
+    expect(getFetchFirstCallBody()).toBe(
       `access_token=${encodeURIComponent('👛')}&collectEvent=${encodeURIComponent(
         '{"pr1a":"value","to encode":"to encode"}'
       )}`
@@ -80,58 +73,46 @@ describe('AnalyticsBeaconClient', () => {
   });
 
   it('can send a collect event with a more complex payload', async () => {
-    const eventType: EventType = EventType.collect;
+    await buildClient().sendEvent(EventType.collect, {value: {subvalue: 'ok'}});
 
-    const client = new AnalyticsBeaconClient({
-      baseUrl,
-      token,
-      visitorIdProvider: {
-        getCurrentVisitorId: () => {
-          return Promise.resolve(currentVisitorId);
-        },
-        setCurrentVisitorId: (visitorId) => {},
-      },
-    });
-
-    await client.sendEvent(eventType, {
-      value: {
-        subvalue: 'ok',
-      },
-    });
-
-    expect(sendBeaconMock).toHaveBeenCalledWith(
-      `${baseUrl}/analytics/collect?visitorId=${currentVisitorId}&discardVisitInfo=true`,
-      expect.anything()
+    expect(getFetchFirstCallUrl()).toBe(
+      `${baseUrl}/analytics/collect?visitorId=${currentVisitorId}&discardVisitInfo=true`
     );
-    expect(await getSendBeaconFirstCallBlobArgument()).toBe(
+    expect(getFetchFirstCallBody()).toBe(
       `access_token=${encodeURIComponent('👛')}&collectEvent=${encodeURIComponent('{"value":{"subvalue":"ok"}}')}`
     );
   });
 
-  describe('allows to preprocessRequest', () => {
-    const setupClient = (preprocessRequest: PreprocessAnalyticsRequest) => {
-      return new AnalyticsBeaconClient({
-        baseUrl,
-        token,
-        visitorIdProvider: {
-          getCurrentVisitorId: () => {
-            return Promise.resolve(currentVisitorId);
-          },
-          setCurrentVisitorId: () => {},
-        },
-        preprocessRequest,
-      });
-    };
+  it('should not reject when the request fails', async () => {
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+    fetchMock.mockRejectedValue(new Error('network down'));
 
+    await expect(buildClient().sendEvent(EventType.click, {})).resolves.toBeUndefined();
+
+    consoleError.mockRestore();
+  });
+
+  describe('when the keepalive body size limit is exceeded', () => {
+    it('sends the event without keepalive', async () => {
+      const consoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+      await buildClient().sendEvent(EventType.click, {actionCause: 'a'.repeat(64 * 1024)});
+
+      expect(getFetchFirstCallOptions().keepalive).toBe(false);
+      expect(consoleWarn).toHaveBeenCalled();
+
+      consoleWarn.mockRestore();
+    });
+  });
+
+  describe('allows to preprocessRequest', () => {
     it('to modify the origin and the body of the request', async () => {
       let clientOrigin: AnalyticsClientOrigin;
       const processedRequest: IAnalyticsRequestOptions = {
         url: 'https://www.myownanalytics.com/endpoint',
-        body: JSON.stringify({
-          test: 'custom',
-        }),
+        body: JSON.stringify({test: 'custom'}),
       };
-      const client = setupClient((_request, type) => {
+      const client = buildClient((_request, type) => {
         clientOrigin = type;
         return processedRequest;
       });
@@ -139,12 +120,48 @@ describe('AnalyticsBeaconClient', () => {
       await client.sendEvent(EventType.collect, {});
 
       expect(clientOrigin!).toBe('analyticsBeacon');
-      expect(sendBeaconMock).toHaveBeenCalledWith(processedRequest.url, expect.anything());
-      expect(await getSendBeaconFirstCallBlobArgument()).toContain('%22test%22%3A%22custom%22');
+      expect(getFetchFirstCallUrl()).toBe(processedRequest.url);
+      expect(getFetchFirstCallBody()).toContain('%22test%22%3A%22custom%22');
+    });
+
+    it('to modify the headers of a click event', async () => {
+      const client = buildClient((request) => {
+        request.headers = {
+          ...request.headers,
+          'x-apigee-api-key': 'my-api-key',
+        };
+        return request;
+      });
+
+      await client.sendEvent(EventType.click, {actionCause: 'documentOpen'});
+
+      expect(getFetchFirstCallOptions().headers).toEqual({
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'x-apigee-api-key': 'my-api-key',
+      });
+    });
+
+    it('to receive the same option shape as the fetch client', async () => {
+      let receivedRequest: IAnalyticsRequestOptions | undefined;
+      const client = buildClient((request) => {
+        receivedRequest = request;
+        return request;
+      });
+
+      await client.sendEvent(EventType.click, {actionCause: 'documentOpen'});
+
+      expect(receivedRequest).toEqual({
+        url: `${baseUrl}/analytics/click?access_token=👛&visitorId=${currentVisitorId}&discardVisitInfo=true`,
+        credentials: 'include',
+        mode: 'cors',
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: JSON.stringify({actionCause: 'documentOpen'}),
+      });
     });
 
     it('to modify the request body as a JSON string for a collect event', async () => {
-      const client = setupClient((request) => {
+      const client = buildClient((request) => {
         const bodyShouldBeAvailableAsJSONString = JSON.parse(request.body as string);
         expect(bodyShouldBeAvailableAsJSONString).toEqual({foo: 'bar'});
         bodyShouldBeAvailableAsJSONString.foo = 'baz';
@@ -153,13 +170,14 @@ describe('AnalyticsBeaconClient', () => {
       });
 
       await client.sendEvent(EventType.collect, {foo: 'bar'});
-      expect(await getSendBeaconFirstCallBlobArgument()).toBe(
+
+      expect(getFetchFirstCallBody()).toBe(
         'access_token=%F0%9F%91%9B&collectEvent=%7B%22foo%22%3A%22baz%22%7D'
       );
     });
 
     it('to modify the request body as a JSON string for a click event', async () => {
-      const client = setupClient((request) => {
+      const client = buildClient((request) => {
         const bodyParsedAsJSON = JSON.parse(request.body as string);
         expect(bodyParsedAsJSON).toEqual({actionCause: 'foo'});
         bodyParsedAsJSON.actionCause = 'bar';
@@ -168,13 +186,14 @@ describe('AnalyticsBeaconClient', () => {
       });
 
       await client.sendEvent(EventType.click, {actionCause: 'foo'});
-      expect(await getSendBeaconFirstCallBlobArgument()).toContain(
+
+      expect(getFetchFirstCallBody()).toContain(
         `clickEvent=${encodeURIComponent('{"actionCause":"bar"}')}`
       );
     });
 
     it('to augment the request body as a JSON string for a click event', async () => {
-      const client = setupClient((request) => {
+      const client = buildClient((request) => {
         const bodyParsedAsJSON = JSON.parse(request.body as string);
         bodyParsedAsJSON.aNewProperty = 'bar';
         request.body = JSON.stringify(bodyParsedAsJSON);
@@ -182,33 +201,26 @@ describe('AnalyticsBeaconClient', () => {
       });
 
       await client.sendEvent(EventType.click, {actionCause: 'foo'});
-      expect(await getSendBeaconFirstCallBlobArgument()).toContain(
+
+      expect(getFetchFirstCallBody()).toContain(
         `clickEvent=${encodeURIComponent('{"actionCause":"foo","aNewProperty":"bar"}')}`
       );
     });
 
     it('should keep original request body if preprocessRequest returns an invalid JSON string', async () => {
-      const client = setupClient((request) => {
+      const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+      const client = buildClient((request) => {
         request.body = 'invalid JSON string';
         return request;
       });
 
       await client.sendEvent(EventType.click, {actionCause: 'bar'});
-      expect(await getSendBeaconFirstCallBlobArgument()).toContain(
+
+      expect(getFetchFirstCallBody()).toContain(
         `clickEvent=${encodeURIComponent(`{"actionCause":"bar"}`)}`
       );
+
+      consoleError.mockRestore();
     });
   });
-
-  const getSendBeaconFirstCallBlobArgument = async () => {
-    const blobArgument: Blob = sendBeaconMock.mock.calls[0][1];
-    expect(blobArgument.size).toBeGreaterThan(0);
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.addEventListener('loadend', () => {
-        resolve(reader.result);
-      });
-      reader.readAsText(blobArgument);
-    });
-  };
 });

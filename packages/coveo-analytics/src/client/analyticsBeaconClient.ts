@@ -1,17 +1,34 @@
 import {
   AnalyticsRequestClient,
   IAnalyticsClientOptions,
+  IAnalyticsRequestOptions,
   PreprocessAnalyticsRequest,
 } from './analyticsRequestClient';
 import {EventType, IRequestPayload} from '../events';
+import {fetch} from 'cross-fetch';
 
+// Browsers cap the cumulative body size of all in-flight `keepalive` requests to 64 KiB.
+// Past that budget, requests are rejected outright, so oversized events are sent without
+// the flag rather than not being sent at all.
+const keepaliveBodyLimitInBytes = 64 * 1024;
+let inFlightKeepaliveBodyInBytes = 0;
+
+/**
+ * Sends events that must survive a page unload, such as click events and the events
+ * replayed on `beforeunload`.
+ *
+ * Despite its name, this client no longer relies on the Beacon API: it uses `fetch` with
+ * `keepalive: true`, which offers the same delivery guarantee while allowing a
+ * `preprocessRequest` hook to alter headers. The `analyticsBeacon` client origin is kept
+ * so that existing hooks branching on it keep working.
+ */
 export class AnalyticsBeaconClient implements AnalyticsRequestClient {
   constructor(private opts: IAnalyticsClientOptions) {}
 
   public async sendEvent(eventType: EventType, originalPayload: IRequestPayload): Promise<void> {
     if (!this.isAvailable()) {
       throw new Error(
-        `navigator.sendBeacon is not supported in this browser. Consider adding a polyfill like "sendbeacon-polyfill".`
+        `fetch is not supported in this browser. Consider adding a polyfill like "whatwg-fetch".`
       );
     }
 
@@ -19,55 +36,91 @@ export class AnalyticsBeaconClient implements AnalyticsRequestClient {
 
     const paramsFragments = await this.getQueryParamsForEventType(eventType);
 
-    const {url, payload} = await this.preProcessRequestAsPotentialJSONString(
-      `${baseUrl}/analytics/${eventType}?${paramsFragments}`,
+    const defaultOptions: IAnalyticsRequestOptions = {
+      url: `${baseUrl}/analytics/${eventType}?${paramsFragments}`,
+      credentials: 'include',
+      mode: 'cors',
+      method: 'POST',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: JSON.stringify(originalPayload),
+    };
+
+    const {options, payload} = await this.preProcessRequestAsPotentialJSONString(
+      defaultOptions,
       originalPayload,
       preprocessRequest
     );
 
-    const parsedRequestData = this.encodeForEventType(eventType, payload);
-    const body = new Blob([parsedRequestData], {
-      type: 'application/x-www-form-urlencoded',
+    this.sendWithKeepalive({
+      ...options,
+      body: this.encodeForEventType(eventType, payload),
     });
-
-    navigator.sendBeacon(url, body as any); // https://github.com/microsoft/TypeScript/issues/38715
-    return;
   }
 
   public isAvailable() {
-    return 'sendBeacon' in navigator;
+    return typeof fetch === 'function';
   }
 
   public deleteHttpCookieVisitorId() {
     return Promise.resolve();
   }
 
-  private async preProcessRequestAsPotentialJSONString(
-    originalURL: string,
-    originalPayload: IRequestPayload,
-    preprocessRequest?: PreprocessAnalyticsRequest
-  ): Promise<{url: string; payload: IRequestPayload}> {
-    let returnedUrl = originalURL;
-    let returnedPayload = originalPayload;
+  /**
+   * Deliberately not awaited: callers such as the `beforeunload` handler must not block on
+   * the response, and the Beacon API they replace never surfaced one either.
+   */
+  private sendWithKeepalive({url, ...requestOptions}: IAnalyticsRequestOptions) {
+    const bodyInBytes = this.getBodySizeInBytes(requestOptions.body as string);
+    const keepalive = inFlightKeepaliveBodyInBytes + bodyInBytes <= keepaliveBodyLimitInBytes;
 
-    if (preprocessRequest) {
-      const processedRequest = await preprocessRequest(
-        {url: originalURL, body: JSON.stringify(originalPayload)},
-        'analyticsBeacon'
+    if (keepalive) {
+      inFlightKeepaliveBodyInBytes += bodyInBytes;
+    } else {
+      console.warn(
+        `The keepalive body size limit of ${keepaliveBodyLimitInBytes} bytes is reached. The event is sent without keepalive and may be cancelled if the page unloads.`
       );
-      const {url: processedURL, body: processedBody} = processedRequest;
-      returnedUrl = processedURL || originalURL;
-      try {
-        returnedPayload = JSON.parse(processedBody as string);
-      } catch (e) {
-        console.error('Unable to process the request body as a JSON string', e);
-      }
     }
 
-    return {
-      payload: returnedPayload,
-      url: returnedUrl,
+    const releaseBudget = () => {
+      if (keepalive) {
+        inFlightKeepaliveBodyInBytes -= bodyInBytes;
+      }
     };
+
+    fetch(url, {...requestOptions, keepalive}).then(releaseBudget, (error) => {
+      releaseBudget();
+      console.error('An error has occurred when sending the event.', error);
+    });
+  }
+
+  private getBodySizeInBytes(body: string) {
+    return typeof TextEncoder === 'undefined' ? body.length : new TextEncoder().encode(body).length;
+  }
+
+  private async preProcessRequestAsPotentialJSONString(
+    defaultOptions: IAnalyticsRequestOptions,
+    originalPayload: IRequestPayload,
+    preprocessRequest?: PreprocessAnalyticsRequest
+  ): Promise<{options: IAnalyticsRequestOptions; payload: IRequestPayload}> {
+    if (!preprocessRequest) {
+      return {options: defaultOptions, payload: originalPayload};
+    }
+
+    const processedRequest = await preprocessRequest(defaultOptions, 'analyticsBeacon');
+    const options: IAnalyticsRequestOptions = {
+      ...defaultOptions,
+      ...processedRequest,
+      url: processedRequest.url || defaultOptions.url,
+    };
+
+    let payload = originalPayload;
+    try {
+      payload = JSON.parse(options.body as string);
+    } catch (e) {
+      console.error('Unable to process the request body as a JSON string', e);
+    }
+
+    return {options, payload};
   }
 
   private encodeForEventType(eventType: EventType, payload: IRequestPayload): string {

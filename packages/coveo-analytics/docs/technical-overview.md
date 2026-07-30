@@ -131,12 +131,18 @@ The `baseMeasurementProtocolMapper` includes the mappings to be done for every p
 
 `serviceMeasurementProtocolMapper` is similar, but contains stuff for the Service use case.
 
-### Beacon VS Fetch, and the buffer
+### Keepalive VS Fetch, and the buffer
 
-If you try to send an event with `fetch` and a redirection happens, the event will get canceled because the browser waits for the response and it will never actually send the event. To fix this, you need to use `navigator.sendBeacon`.
+If you try to send an event with a plain `fetch` and a redirection happens, the event will get canceled because the browser waits for the response and it will never actually send the event. To fix this, the request must be sent with `keepalive: true`, which tells the browser to complete it even after the page is gone.
 
 To simplify the whole thing, we introduce a mini-buffer that holds the event.".
 
-The trick here is to flush the buffer with a `setTimeout(flush, 0)` so that the event is sent as soon as the thread is available. But on a `beforeunload` event, triggered when a redirection happen, flush the events with the `beacon`.
+The trick here is to flush the buffer with a `setTimeout(flush, 0)` so that the event is sent as soon as the thread is available. But on a `beforeunload` event, triggered when a redirection happen, flush the events with the keepalive client.
 
-This ensures that we use `beacon` on the right occasion, and `fetch` for the rest of the times.
+This ensures that we use `keepalive` on the right occasion, and a regular `fetch` for the rest of the times.
+
+The keepalive client lives in `analyticsBeaconClient.ts` and still reports `analyticsBeacon` as its `clientOrigin` to `preprocessRequest`, for backward compatibility: it used `navigator.sendBeacon` until the Beacon API was dropped in favor of `fetch`. The Beacon API accepts no headers, so a `preprocessRequest` hook could not add any to click events; with `fetch`, hooks receive and can mutate the same request options as for any other event.
+
+Browsers cap the cumulative body size of all in-flight `keepalive` requests to 64 KiB. When flushing the buffer would exceed that budget, the oversized event is sent without the flag rather than not being sent at all.
+
+Note that browser bundles alias the `cross-fetch` dependency to the native `fetch` (see `bundle/browser-fetch.ts`). This matters because the `whatwg-fetch` ponyfill that `cross-fetch` would otherwise provide ignores `keepalive`.

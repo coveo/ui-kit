@@ -19,3 +19,13 @@ export function lastCallBody(fetchMock: fm.FetchMockSandbox): string {
   const {body} = res!;
   return body!.toString();
 }
+
+/**
+ * Events sent through the keepalive client, such as click events, are form-encoded as
+ * `<eventType>Event=<uri-encoded JSON>`. Returns the JSON payload of such a body, or the
+ * body itself when it is already JSON.
+ */
+export function decodeEventBody(body: string): string {
+  const encodedEvent = /(?:^|&)\w+Event=(.*)$/.exec(body);
+  return encodedEvent ? decodeURIComponent(encodedEvent[1]) : body;
+}

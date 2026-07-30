@@ -1,6 +1,6 @@
 import {vi} from 'vitest';
 import type {Mock} from 'vitest';
-import {lastCallBody, mockFetch} from '../../tests/fetchMock';
+import {decodeEventBody, lastCallBody, mockFetch} from '../../tests/fetchMock';
 import CoveoAnalyticsClient from '../client/analytics';
 import {NoopAnalytics} from '../client/noopAnalytics';
 import {
@@ -124,7 +124,7 @@ describe('InsightClient', () => {
     doc: PartialDocumentInformation,
     meta = {}
   ) => {
-    const body: string = lastCallBody(fetchMock);
+    const body: string = decodeEventBody(lastCallBody(fetchMock));
     const customData = {foo: 'bar', ...meta};
     expect(JSON.parse(body.toString())).toMatchObject({
       actionCause,

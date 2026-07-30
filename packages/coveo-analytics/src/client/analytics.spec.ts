@@ -11,7 +11,7 @@ import {CoveoAnalyticsClient} from './analytics';
 import {IAnalyticsRequestOptions} from './analyticsRequestClient';
 import {CookieAndLocalStorage, CookieStorage, NullStorage} from '../storage';
 import HistoryStore from '../history';
-import {mockFetch} from '../../tests/fetchMock';
+import {decodeEventBody, mockFetch} from '../../tests/fetchMock';
 import {BrowserRuntime, NoopRuntime} from './runtimeEnvironment';
 import * as doNotTrack from '../donottrack';
 import {Cookie} from '../cookieutils';
@@ -65,8 +65,14 @@ describe('Analytics', () => {
 
   const endpointForEventType = (eventType: EventType, endpoint: string = `${anEndpoint}/rest`) =>
     `${endpoint}/${A_VERSION}/analytics/${eventType}?visitor=${aVisitorId}`;
+  // Click events go through the keepalive client, which uses its own query parameters.
+  const keepaliveEndpointForEventType = (eventType: EventType) =>
+    `${anEndpoint}/rest/${A_VERSION}/analytics/${eventType}?access_token=${aToken}&visitorId=${aVisitorId}&discardVisitInfo=true`;
   const mockFetchRequestForEventType = (eventType: EventType) => {
-    const address = endpointForEventType(eventType);
+    const address =
+      eventType === EventType.click
+        ? keepaliveEndpointForEventType(eventType)
+        : endpointForEventType(eventType);
     fetchMock.post(address, eventResponse);
   };
 
@@ -662,7 +668,7 @@ describe('Analytics', () => {
 
   const getParsedBodyCalls = (): any[] => {
     return fetchMock.calls().map(([, {body}]: any) => {
-      return JSON.parse(body.toString());
+      return JSON.parse(decodeEventBody(body.toString()));
     });
   };
 });

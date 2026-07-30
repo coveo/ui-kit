@@ -24,7 +24,11 @@ export interface EngineConfiguration {
   /**
    * Allows for augmenting a Platform request before it is sent.
    * @param request Request to be augmented
-   * @param clientOrigin The origin of the client, can be "analyticsFetch", "analyticsBeacon" or "searchApiFetch"
+   * @param clientOrigin The origin of the client, can be "analyticsFetch", "analyticsBeacon" or "searchApiFetch".
+   * The "analyticsBeacon" origin identifies analytics events that must survive a page unload, such as click events.
+   * Those events are now sent with `fetch` and `keepalive` rather than the Beacon API, so headers set on them are
+   * applied to the outgoing request. The value is deprecated and will be merged into "analyticsFetch" in a future
+   * major version.
    *
    * @returns Augmented request
    */
