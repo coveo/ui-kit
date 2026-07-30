@@ -188,7 +188,7 @@ export async function deleteActiveScratchOrgs(
       deletedOrgUsernames.push(username);
     } catch (error) {
       console.warn(`Failed to delete organization ${username}`);
-      console.warn(JSON.stringify(error));
+      console.warn(error instanceof Error ? error.stack ?? error.message : String(error));
     }
   }
 
