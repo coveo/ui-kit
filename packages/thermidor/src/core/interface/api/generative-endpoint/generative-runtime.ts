@@ -218,6 +218,12 @@ export class GenerativeRuntime {
         context: {
           user: {
             userAgent: navigatorContext?.userAgent ?? null,
+            ...(requestFromState.context?.user?.latitude != null
+              ? {latitude: requestFromState.context.user.latitude}
+              : {}),
+            ...(requestFromState.context?.user?.longitude != null
+              ? {longitude: requestFromState.context.user.longitude}
+              : {}),
           },
           view: {
             url: navigatorContext?.location ?? null,
@@ -225,6 +231,15 @@ export class GenerativeRuntime {
           },
           ...(requestFromState.cart.length > 0
             ? {cart: requestFromState.cart}
+            : {}),
+          ...(requestFromState.context?.dictionaryFieldContext
+            ? {
+                dictionaryFieldContext:
+                  requestFromState.context.dictionaryFieldContext,
+              }
+            : {}),
+          ...(requestFromState.context?.fieldAliases
+            ? {fieldAliases: requestFromState.context.fieldAliases}
             : {}),
         },
         targetEngine: 'AGENT_CORE',
@@ -265,6 +280,12 @@ export class GenerativeRuntime {
         context: {
           user: {
             userAgent: navigatorContext?.userAgent ?? null,
+            ...(requestFromState.context?.user?.latitude != null
+              ? {latitude: requestFromState.context.user.latitude}
+              : {}),
+            ...(requestFromState.context?.user?.longitude != null
+              ? {longitude: requestFromState.context.user.longitude}
+              : {}),
           },
           view: {
             url: navigatorContext?.location ?? null,
@@ -272,6 +293,15 @@ export class GenerativeRuntime {
           },
           ...(requestFromState.cart.length > 0
             ? {cart: requestFromState.cart}
+            : {}),
+          ...(requestFromState.context?.dictionaryFieldContext
+            ? {
+                dictionaryFieldContext:
+                  requestFromState.context.dictionaryFieldContext,
+              }
+            : {}),
+          ...(requestFromState.context?.fieldAliases
+            ? {fieldAliases: requestFromState.context.fieldAliases}
             : {}),
         },
         targetEngine: 'AGENT_CORE',

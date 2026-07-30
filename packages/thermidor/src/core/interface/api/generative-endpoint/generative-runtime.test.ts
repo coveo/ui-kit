@@ -233,3 +233,114 @@ describe('GenerativeRuntime.dispatchEvent — A2UI + CUSTOM events', () => {
     expect(result.isTerminal).toBe(false);
   });
 });
+
+describe('GenerativeRuntime.submit — context fields in request', () => {
+  let mockCall: ReturnType<typeof vi.fn>;
+
+  beforeEach(async () => {
+    vi.resetModules();
+
+    mockCall = vi.fn().mockResolvedValue({
+      success: true,
+      data: {stream: new ReadableStream({start: (c) => c.close()})},
+    });
+
+    const {createConversationEndpointClient} =
+      await import('@/src/api/index.js');
+    (createConversationEndpointClient as any).mockReturnValue({call: mockCall});
+  });
+
+  async function buildRuntimeAndSubmit(contextConfig: unknown) {
+    const {GenerativeRuntime} = await import('./generative-runtime.js');
+
+    const mockEngine = {
+      read: vi.fn(() => ({
+        trackingId: 'test',
+        language: 'en',
+        country: 'US',
+        currency: 'USD',
+        message: 'hello',
+        cart: [],
+        context: contextConfig,
+      })),
+      getNavigatorContextProvider: vi.fn(() => () => ({
+        clientId: 'client-1',
+        location: 'https://store.example.com',
+        referrer: null,
+        userAgent: 'TestAgent/1.0',
+      })),
+      subscribe: vi.fn(),
+      mutate: vi.fn(),
+      adoptSlice: vi.fn(),
+      storeHydrationSnapshot: vi.fn(),
+    } as any;
+
+    const statePort = createMockStatePort();
+    const runtime = GenerativeRuntime.getInstance(
+      mockEngine,
+      `ctx-test-${Math.random()}`,
+      {
+        generativeInterfaceId: 'ctx-test',
+        cartInterfaceId: 'ctx-test',
+        statePort,
+      }
+    );
+
+    await runtime.submit('hello');
+    return mockCall.mock.calls[0][0];
+  }
+
+  it('includes latitude and longitude in context.user when configured', async () => {
+    const request = await buildRuntimeAndSubmit({
+      user: {latitude: 45.5, longitude: -73.5},
+    });
+
+    expect(request.context.user).toEqual({
+      userAgent: 'TestAgent/1.0',
+      latitude: 45.5,
+      longitude: -73.5,
+    });
+  });
+
+  it('includes dictionaryFieldContext when configured', async () => {
+    const request = await buildRuntimeAndSubmit({
+      dictionaryFieldContext: {price: 'usd'},
+    });
+
+    expect(request.context.dictionaryFieldContext).toEqual({price: 'usd'});
+  });
+
+  it('includes fieldAliases when configured', async () => {
+    const request = await buildRuntimeAndSubmit({
+      fieldAliases: {priceField: 'ec_price_usd'},
+    });
+
+    expect(request.context.fieldAliases).toEqual({
+      priceField: 'ec_price_usd',
+    });
+  });
+
+  it('omits context fields when not configured', async () => {
+    const request = await buildRuntimeAndSubmit(undefined);
+
+    expect(request.context.user).toEqual({userAgent: 'TestAgent/1.0'});
+    expect(request.context.dictionaryFieldContext).toBeUndefined();
+    expect(request.context.fieldAliases).toBeUndefined();
+  });
+
+  it('includes all context fields together', async () => {
+    const request = await buildRuntimeAndSubmit({
+      user: {latitude: 40.7, longitude: -74.0},
+      dictionaryFieldContext: {price: 'cad'},
+      fieldAliases: {nameField: 'ec_name_fr'},
+    });
+
+    expect(request.context.user).toEqual({
+      userAgent: 'TestAgent/1.0',
+      latitude: 40.7,
+      longitude: -74.0,
+    });
+    expect(request.context.dictionaryFieldContext).toEqual({price: 'cad'});
+    expect(request.context.fieldAliases).toEqual({nameField: 'ec_name_fr'});
+  });
+});

@@ -17,12 +17,16 @@ export interface CoveoConversationEndpointRequest {
   context: {
     user: {
       userAgent?: string | null;
+      latitude?: number | null;
+      longitude?: number | null;
     };
     view: {
       url?: string | null;
       referrer?: string | null;
     };
     cart?: CoveoConversationCartItem[];
+    dictionaryFieldContext?: Record<string, string>;
+    fieldAliases?: Record<string, string>;
   };
   conversationSessionId?: string;
   conversationToken?: string;

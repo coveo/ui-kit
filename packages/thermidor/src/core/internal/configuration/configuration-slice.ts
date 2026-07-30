@@ -19,6 +19,7 @@ export const initialConfigurationState: ConfigurationState = {
   country: '',
   currency: '',
   endpoint: undefined,
+  context: undefined,
 };
 
 export const configurationSlice = createSlice({

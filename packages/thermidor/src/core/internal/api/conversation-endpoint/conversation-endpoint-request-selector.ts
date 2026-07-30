@@ -3,6 +3,7 @@ import {getOrCreateConfigurationSelectors} from '@/src/core/internal/configurati
 import {getOrCreateGenerativeSelectors} from '@/src/core/internal/generative/generative-selectors.js';
 import {getOrCreateCartSelectors} from '@/src/core/internal/cart/cart-selectors.js';
 import type {CoveoConversationCartItem} from '@/src/api/interface/conversation-endpoint/conversation-endpoint-types.js';
+import type {ConfigurationState} from '@/src/core/interface/configuration/configuration-types.js';
 
 export interface ConversationEndpointRequestFromState {
   trackingId: string;
@@ -11,6 +12,7 @@ export interface ConversationEndpointRequestFromState {
   currency: string;
   message: string;
   cart: CoveoConversationCartItem[];
+  context: ConfigurationState['context'];
 }
 
 export function createConversationEndpointRequestSelector(
@@ -28,13 +30,15 @@ export function createConversationEndpointRequestSelector(
     configuration.getCurrency,
     generative.getActiveMessage,
     cart.getItems,
+    configuration.getContext,
     (
       trackingId,
       language,
       country,
       currency,
       message,
-      cartItems
+      cartItems,
+      context
     ): ConversationEndpointRequestFromState => ({
       trackingId,
       language,
@@ -42,6 +46,7 @@ export function createConversationEndpointRequestSelector(
       currency,
       message,
       cart: cartItems,
+      context,
     })
   );
 }

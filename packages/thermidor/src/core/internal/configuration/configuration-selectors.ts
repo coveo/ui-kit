@@ -28,6 +28,10 @@ export function createConfigurationSelectors() {
       selectConfigurationSlice,
       (state) => state.currency
     ),
+    getContext: createMemoizedStateSelector(
+      selectConfigurationSlice,
+      (state) => state.context
+    ),
   };
 }
 

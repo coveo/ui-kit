@@ -28,6 +28,7 @@ describe('configurationSlice: initialState', () => {
       accessToken: '',
       ...localeDefaults,
       endpoint: undefined,
+      context: undefined,
     });
   });
 });
@@ -212,6 +213,31 @@ describe('configurationSlice: setConfiguration', () => {
     );
 
     expect(state.endpoint).toBeUndefined();
+  });
+
+  it('should persist context fields through setConfiguration', () => {
+    const newConfig = {
+      organizationId: 'org-id',
+      accessToken: 'token',
+      ...localeDefaults,
+      endpoint: undefined,
+      context: {
+        user: {latitude: 45.5, longitude: -73.5},
+        dictionaryFieldContext: {price: 'usd'},
+        fieldAliases: {priceField: 'ec_price_usd'},
+      },
+    };
+
+    const state = configurationSlice.reducer(
+      initialConfigurationState,
+      setConfiguration(newConfig)
+    );
+
+    expect(state.context).toEqual({
+      user: {latitude: 45.5, longitude: -73.5},
+      dictionaryFieldContext: {price: 'usd'},
+      fieldAliases: {priceField: 'ec_price_usd'},
+    });
   });
 
   it('should return new state object (not modify existing)', () => {

@@ -27,4 +27,10 @@ export interface ConfigurationState {
   agentRuntimeName?: string;
   /** Optional agent runtime qualifier override */
   agentRuntimeQualifier?: string;
+  /** Optional context fields included in every request to the gateway */
+  context?: {
+    user?: {latitude?: number; longitude?: number};
+    dictionaryFieldContext?: Record<string, string>;
+    fieldAliases?: Record<string, string>;
+  };
 }
