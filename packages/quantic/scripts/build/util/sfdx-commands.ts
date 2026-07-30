@@ -162,15 +162,21 @@ interface DeleteActiveScratchOrgsArguments {
   jwtKeyFile: string;
 }
 
+export interface DeleteActiveScratchOrgsResult {
+  foundOrgUsernames: string[];
+  deletedOrgUsernames: string[];
+}
+
 export async function deleteActiveScratchOrgs(
   args: DeleteActiveScratchOrgsArguments
-): Promise<void> {
-  const usernames = await getActiveScratchOrgUsernames(
+): Promise<DeleteActiveScratchOrgsResult> {
+  const foundOrgUsernames = await getActiveScratchOrgUsernames(
     args.devHubUsername,
     args.scratchOrgName
   );
+  const deletedOrgUsernames: string[] = [];
 
-  for (const username of usernames) {
+  for (const username of foundOrgUsernames) {
     try {
       await authorizeOrg({
         username,
@@ -179,11 +185,14 @@ export async function deleteActiveScratchOrgs(
         jwtKeyFile: args.jwtKeyFile,
       });
       await deleteOrg(username);
+      deletedOrgUsernames.push(username);
     } catch (error) {
       console.warn(`Failed to delete organization ${username}`);
       console.warn(JSON.stringify(error));
     }
   }
+
+  return {foundOrgUsernames, deletedOrgUsernames};
 }
 
 interface DeleteOldScratchOrgsArguments {
