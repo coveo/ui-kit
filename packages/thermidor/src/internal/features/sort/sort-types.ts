@@ -1,3 +1,5 @@
+import type {CommerceInterface, SearchInterface} from '@/src/internal/utils/index.js';
+
 export type SortDirection = 'ascending' | 'descending';
 
 export type SortByRelevance = {by: 'relevance'};
@@ -20,4 +22,8 @@ export type SearchSortCriterion =
 
 export type CommerceSortCriterion = SortByRelevance | SortByField;
 
-export type SortCriterionFor<_T> = SearchSortCriterion | CommerceSortCriterion;
+export type SortCriterionFor<T> = T extends CommerceInterface
+  ? CommerceSortCriterion
+  : T extends SearchInterface
+    ? SearchSortCriterion
+    : SearchSortCriterion | CommerceSortCriterion;

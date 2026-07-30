@@ -5,6 +5,11 @@ import type {CommerceInterface} from '@/src/public/interfaces/commerce.js';
 import type {GenerativeInterface} from '@/src/public/interfaces/generative.js';
 import type {ComposedInterface} from '@/src/public/interfaces/compose.js';
 import type {composeInterfaces} from '@/src/public/interfaces/compose.js';
+import type {
+  SortCriterionFor,
+  CommerceSortCriterion,
+  SearchSortCriterion,
+} from '@/src/internal/features/sort/index.js';
 
 describe('Supports<F> type safety', () => {
   describe('BaseInterface', () => {
@@ -58,5 +63,14 @@ describe('composeInterfaces type inference', () => {
 
   it('cross-type composed is NOT assignable to Supports for unrelated facade', () => {
     expectTypeOf<ComposedInterface<'generative'>>().not.toExtend<Supports<'search'>>();
+  });
+});
+
+describe('SortCriterionFor narrowing', () => {
+  it('narrows to CommerceSortCriterion for CommerceInterface', () => {
+    expectTypeOf<SortCriterionFor<CommerceInterface>>().toEqualTypeOf<CommerceSortCriterion>();
+  });
+  it('narrows to SearchSortCriterion for SearchInterface', () => {
+    expectTypeOf<SortCriterionFor<SearchInterface>>().toEqualTypeOf<SearchSortCriterion>();
   });
 });
