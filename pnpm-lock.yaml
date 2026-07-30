@@ -683,9 +683,6 @@ importers:
       cross-fetch:
         specifier: 3.2.0
         version: 3.2.0(encoding@0.1.13)
-      react-native-get-random-values:
-        specifier: 1.11.0
-        version: 1.11.0(react-native@0.86.0(@babel/core@7.29.7)(@types/react@19.2.17)(react@19.2.7))
       uuid:
         specifier: 'catalog:'
         version: 14.0.1
@@ -723,6 +720,9 @@ importers:
       node-fetch:
         specifier: 2.7.0
         version: 2.7.0(encoding@0.1.13)
+      react-native-get-random-values:
+        specifier: 1.11.0
+        version: 1.11.0(react-native@0.86.0(@babel/core@7.29.7)(@types/react@19.2.17)(react@19.2.7))
       rollup:
         specifier: 'catalog:'
         version: 4.62.2
