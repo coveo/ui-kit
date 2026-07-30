@@ -377,7 +377,7 @@ export type {
 
 | Scenario | Behavior |
 |----------|----------|
-| `sortBy` called with criterion unsupported by the interface's API | Falls back to `{ sortCriteria: 'relevance' }` at the translation layer. Type narrowing is aspirational — `SortCriterionFor<T>` does not narrow today due to structural identity of `SearchInterface` and `CommerceInterface`. |
+| `sortBy` called with criterion unsupported by the interface's API | Caught at compile time via `SortCriterionFor<T>` narrowing (enabled by `InterfaceTypeBrand` nominal branding). |
 | `updateFromResponse` receives `undefined` | Slice retains current state (no-op). |
 | `isSortedBy` called when `appliedSort` is `null` | Returns `false`. |
 | Slice not yet adopted when reading state | Selectors fall back to `initialSortState`. |

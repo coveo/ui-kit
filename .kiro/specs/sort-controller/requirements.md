@@ -39,7 +39,9 @@ This narrowing is type-level only and has zero runtime cost.
    - `SortByField`: `{ by: 'field'; field: string; direction: SortDirection; displayName?: string }`
    - `SortByQRE`: `{ by: 'qre' }`
    - `SortByNoSort`: `{ by: 'nosort' }`
-2. THE criterion type SHOULD narrow based on the interface type (search: full set, commerce: `SortByRelevance | SortByField`). **Note**: This narrowing is aspirational — `SearchInterface` and `CommerceInterface` are structurally identical in the current type system, so `SortCriterionFor<T>` resolves to the full union for both. A runtime fallback in `toCommerceApiSort` handles unsupported variants gracefully.
+2. THE criterion type SHALL narrow based on the interface type via nominal branding (`InterfaceTypeBrand`):
+   - Search interfaces: `SortByRelevance | SortByDate | SortByField | SortByQRE | SortByNoSort`
+   - Commerce interfaces: `SortByRelevance | SortByField`
 3. THE `displayName` property on `SortByField` SHALL be optional and used for UI rendering only — excluded from equality comparisons.
 4. THE public API SHALL NOT expose any REST API syntax (e.g., `"@price descending"`, `{ sortCriteria: "fields" }`).
 
