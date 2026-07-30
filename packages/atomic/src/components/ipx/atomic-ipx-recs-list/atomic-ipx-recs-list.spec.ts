@@ -39,12 +39,8 @@ describe('atomic-ipx-recs-list', () => {
   };
 
   beforeEach(() => {
-    vi.mocked(loadIPXActionsHistoryActions).mockReturnValue(
-      mockIPXActionsHistoryActions as never
-    );
-    vi.mocked(loadConfigurationActions).mockReturnValue(
-      mockConfigurationActions as never
-    );
+    vi.mocked(loadIPXActionsHistoryActions).mockReturnValue(mockIPXActionsHistoryActions as never);
+    vi.mocked(loadConfigurationActions).mockReturnValue(mockConfigurationActions as never);
     vi.mocked(buildRecommendationList).mockImplementation(() =>
       buildFakeRecommendationList({
         state: {
@@ -57,68 +53,55 @@ describe('atomic-ipx-recs-list', () => {
         },
       })
     );
-    vi.mocked(buildRecsInteractiveResult).mockImplementation(
-      (_engine, {options}) => ({
-        select: vi.fn(),
-        beginDelayedSelect: vi.fn(),
-        cancelPendingSelect: vi.fn(),
-        state: {isLoading: false},
-        subscribe: genericSubscribe,
-        result: options.result,
-      })
-    );
+    vi.mocked(buildRecsInteractiveResult).mockImplementation((_engine, {options}) => ({
+      select: vi.fn(),
+      beginDelayedSelect: vi.fn(),
+      cancelPendingSelect: vi.fn(),
+      state: {isLoading: false},
+      subscribe: genericSubscribe,
+      result: options.result,
+    }));
   });
 
   describe('#initialize', () => {
     it('should initialize #recommendationList with buildRecommendationList', async () => {
       const element = await setupElement({recommendation: 'MyRecs'});
 
-      expect(buildRecommendationList).toHaveBeenCalledWith(
-        element.bindings.engine,
-        {
-          options: {
-            id: 'MyRecs',
-            numberOfRecommendations: 10,
-          },
-        }
-      );
+      expect(buildRecommendationList).toHaveBeenCalledWith(element.bindings.engine, {
+        options: {
+          id: 'MyRecs',
+          numberOfRecommendations: 10,
+        },
+      });
       expect(element.recommendationList).toBeDefined();
     });
 
     it('should use default recommendation identifier when not specified', async () => {
       const element = await setupElement();
 
-      expect(buildRecommendationList).toHaveBeenCalledWith(
-        element.bindings.engine,
-        {
-          options: {
-            id: 'Recommendation',
-            numberOfRecommendations: 10,
-          },
-        }
-      );
+      expect(buildRecommendationList).toHaveBeenCalledWith(element.bindings.engine, {
+        options: {
+          id: 'Recommendation',
+          numberOfRecommendations: 10,
+        },
+      });
     });
 
     it('should initialize with custom numberOfRecommendations', async () => {
       const element = await setupElement({numberOfRecommendations: 20});
 
-      expect(buildRecommendationList).toHaveBeenCalledWith(
-        element.bindings.engine,
-        {
-          options: {
-            id: 'Recommendation',
-            numberOfRecommendations: 20,
-          },
-        }
-      );
+      expect(buildRecommendationList).toHaveBeenCalledWith(element.bindings.engine, {
+        options: {
+          id: 'Recommendation',
+          numberOfRecommendations: 20,
+        },
+      });
     });
 
     it('should load IPX actions history actions', async () => {
       const element = await setupElement();
 
-      expect(loadIPXActionsHistoryActions).toHaveBeenCalledWith(
-        element.bindings.engine
-      );
+      expect(loadIPXActionsHistoryActions).toHaveBeenCalledWith(element.bindings.engine);
     });
   });
 
@@ -163,9 +146,7 @@ describe('atomic-ipx-recs-list', () => {
     });
 
     it('should not throw when numberOfRecommendationsPerPage is valid', async () => {
-      await expect(
-        setupElement({numberOfRecommendationsPerPage: 5})
-      ).resolves.toBeDefined();
+      await expect(setupElement({numberOfRecommendationsPerPage: 5})).resolves.toBeDefined();
     });
 
     it('should set error when numberOfRecommendationsPerPage is 0', async () => {
@@ -174,9 +155,7 @@ describe('atomic-ipx-recs-list', () => {
       });
 
       expect(element.error).toBeDefined();
-      expect(element.error.message).toContain(
-        'The "numberOfRecommendationsPerPage" is invalid'
-      );
+      expect(element.error.message).toContain('The "numberOfRecommendationsPerPage" is invalid');
     });
 
     it('should set error when numberOfRecommendationsPerPage equals numberOfRecommendations', async () => {
@@ -186,9 +165,7 @@ describe('atomic-ipx-recs-list', () => {
       });
 
       expect(element.error).toBeDefined();
-      expect(element.error.message).toContain(
-        'The "numberOfRecommendationsPerPage" is invalid'
-      );
+      expect(element.error.message).toContain('The "numberOfRecommendationsPerPage" is invalid');
     });
 
     it('should set error when numberOfRecommendationsPerPage exceeds numberOfRecommendations', async () => {
@@ -198,9 +175,7 @@ describe('atomic-ipx-recs-list', () => {
       });
 
       expect(element.error).toBeDefined();
-      expect(element.error.message).toContain(
-        'The "numberOfRecommendationsPerPage" is invalid'
-      );
+      expect(element.error.message).toContain('The "numberOfRecommendationsPerPage" is invalid');
     });
   });
 
@@ -243,15 +218,13 @@ describe('atomic-ipx-recs-list', () => {
         expectedResult: true,
       },
       {
-        description:
-          'should not change isEveryResultReady when staying in loading state',
+        description: 'should not change isEveryResultReady when staying in loading state',
         oldState: true,
         newState: true,
         expectedResult: true,
       },
       {
-        description:
-          'should not change isEveryResultReady when staying in not loading state',
+        description: 'should not change isEveryResultReady when staying in not loading state',
         oldState: false,
         newState: false,
         expectedResult: true,
@@ -267,9 +240,7 @@ describe('atomic-ipx-recs-list', () => {
         searchResponseId: 'test-response-id',
         error: null,
       };
-      element.willUpdate(
-        new Map([['recommendationListState', {isLoading: oldState}]])
-      );
+      element.willUpdate(new Map([['recommendationListState', {isLoading: oldState}]]));
 
       // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- accessing private property in test
       expect((element as any).isEveryResultReady).toBe(expectedResult);
@@ -362,16 +333,15 @@ describe('atomic-ipx-recs-list', () => {
       const element = await setupElement();
       await element.updateComplete;
 
-      const atomicRecsResult =
-        element.shadowRoot?.querySelector('atomic-recs-result');
+      const atomicRecsResult = element.shadowRoot?.querySelector('atomic-recs-result');
       expect(atomicRecsResult).toBeTruthy();
 
       const interactiveResult = atomicRecsResult!.interactiveResult;
       interactiveResult.select();
 
-      expect(
-        mockIPXActionsHistoryActions.addPageViewEntryInActionsHistory
-      ).toHaveBeenCalledWith('test-permanentid');
+      expect(mockIPXActionsHistoryActions.addPageViewEntryInActionsHistory).toHaveBeenCalledWith(
+        'test-permanentid'
+      );
     });
 
     it('should not dispatch addPageViewEntryInActionsHistory when permanentid is missing', async () => {
@@ -393,16 +363,13 @@ describe('atomic-ipx-recs-list', () => {
       const element = await setupElement();
       await element.updateComplete;
 
-      const atomicRecsResult =
-        element.shadowRoot?.querySelector('atomic-recs-result');
+      const atomicRecsResult = element.shadowRoot?.querySelector('atomic-recs-result');
       expect(atomicRecsResult).toBeTruthy();
 
       const interactiveResult = atomicRecsResult!.interactiveResult;
       interactiveResult.select();
 
-      expect(
-        mockIPXActionsHistoryActions.addPageViewEntryInActionsHistory
-      ).not.toHaveBeenCalled();
+      expect(mockIPXActionsHistoryActions.addPageViewEntryInActionsHistory).not.toHaveBeenCalled();
     });
   });
 
@@ -534,8 +501,7 @@ describe('atomic-ipx-recs-list', () => {
 
       await element.updateComplete;
 
-      const recsResults =
-        element.shadowRoot?.querySelectorAll('atomic-recs-result');
+      const recsResults = element.shadowRoot?.querySelectorAll('atomic-recs-result');
       expect(recsResults).toHaveLength(5);
     });
 
@@ -570,56 +536,50 @@ describe('atomic-ipx-recs-list', () => {
       expect(parts.nextButton?.item(0)).toBeFalsy();
     });
 
-    describe.each<{display: ItemDisplayBasicLayout}>([
-      {display: 'list'},
-      {display: 'grid'},
-    ])('when display is $display', ({display}) => {
-      it('should render with correct display classes', async () => {
-        const element = await setupElement({display});
-
-        await element.updateComplete;
-
-        const listWrapper = element.shadowRoot?.querySelector('.list-wrapper');
-        expect(listWrapper?.classList.contains('display-grid')).toBe(true);
-      });
-
-      describe.each<{density: ItemDisplayDensity}>([
-        {density: 'comfortable'},
-        {density: 'compact'},
-        {density: 'normal'},
-      ])('when density is $density', ({density}) => {
-        it('should render with correct density class', async () => {
-          const element = await setupElement({display, density});
+    describe.each<{display: ItemDisplayBasicLayout}>([{display: 'list'}, {display: 'grid'}])(
+      'when display is $display',
+      ({display}) => {
+        it('should render with correct display classes', async () => {
+          const element = await setupElement({display});
 
           await element.updateComplete;
 
-          const listWrapper =
-            element.shadowRoot?.querySelector('.list-wrapper');
-          expect(listWrapper?.classList.contains(`density-${density}`)).toBe(
-            true
-          );
+          const listWrapper = element.shadowRoot?.querySelector('.list-wrapper');
+          expect(listWrapper?.classList.contains('display-grid')).toBe(true);
         });
-      });
 
-      describe.each<{imageSize: ItemDisplayImageSize}>([
-        {imageSize: 'icon'},
-        {imageSize: 'large'},
-        {imageSize: 'none'},
-        {imageSize: 'small'},
-      ])('when imageSize is $imageSize', ({imageSize}) => {
-        it('should render with correct image size class', async () => {
-          const element = await setupElement({display, imageSize});
+        describe.each<{density: ItemDisplayDensity}>([
+          {density: 'comfortable'},
+          {density: 'compact'},
+          {density: 'normal'},
+        ])('when density is $density', ({density}) => {
+          it('should render with correct density class', async () => {
+            const element = await setupElement({display, density});
 
-          await element.updateComplete;
+            await element.updateComplete;
 
-          const listWrapper =
-            element.shadowRoot?.querySelector('.list-wrapper');
-          expect(listWrapper?.classList.contains(`image-${imageSize}`)).toBe(
-            true
-          );
+            const listWrapper = element.shadowRoot?.querySelector('.list-wrapper');
+            expect(listWrapper?.classList.contains(`density-${density}`)).toBe(true);
+          });
         });
-      });
-    });
+
+        describe.each<{imageSize: ItemDisplayImageSize}>([
+          {imageSize: 'icon'},
+          {imageSize: 'large'},
+          {imageSize: 'none'},
+          {imageSize: 'small'},
+        ])('when imageSize is $imageSize', ({imageSize}) => {
+          it('should render with correct image size class', async () => {
+            const element = await setupElement({display, imageSize});
+
+            await element.updateComplete;
+
+            const listWrapper = element.shadowRoot?.querySelector('.list-wrapper');
+            expect(listWrapper?.classList.contains(`image-${imageSize}`)).toBe(true);
+          });
+        });
+      }
+    );
 
     it('should render result-list part', async () => {
       const element = await setupElement();
@@ -628,9 +588,7 @@ describe('atomic-ipx-recs-list', () => {
       const resultList = parts.resultList?.item(0);
 
       expect(resultList).toBeTruthy();
-      await expect
-        .element(page.elementLocator(resultList!))
-        .toBeInTheDocument();
+      await expect.element(page.elementLocator(resultList!)).toBeInTheDocument();
     });
 
     it('should render placeholders when results are not ready', async () => {
@@ -648,9 +606,7 @@ describe('atomic-ipx-recs-list', () => {
       const element = await setupElement();
       await element.updateComplete;
 
-      const placeholders = element.shadowRoot?.querySelectorAll(
-        'atomic-result-placeholder'
-      );
+      const placeholders = element.shadowRoot?.querySelectorAll('atomic-result-placeholder');
       expect(placeholders!.length).toBeGreaterThan(0);
     });
 
@@ -680,10 +636,7 @@ describe('atomic-ipx-recs-list', () => {
 
       const parts = getParts(element);
 
-      expect(parts.previousButton?.item(0)).toHaveAttribute(
-        'part',
-        'previous-button'
-      );
+      expect(parts.previousButton?.item(0)).toHaveAttribute('part', 'previous-button');
       expect(parts.nextButton?.item(0)).toHaveAttribute('part', 'next-button');
       expect(parts.indicators?.item(0)).toHaveAttribute('part', 'indicators');
       expect(parts.indicator?.item(0)).toHaveAttribute('part', 'indicator');
@@ -735,12 +688,9 @@ describe('atomic-ipx-recs-list', () => {
       element.requestUpdate();
       await element.updateComplete;
 
-      const atomicRecsResultElement =
-        element.shadowRoot?.querySelector('atomic-recs-result');
+      const atomicRecsResultElement = element.shadowRoot?.querySelector('atomic-recs-result');
 
-      expect(atomicRecsResultElement?.renderingFunction).toBe(
-        mockRenderingFunction
-      );
+      expect(atomicRecsResultElement?.renderingFunction).toBe(mockRenderingFunction);
     });
   });
 });
@@ -814,10 +764,7 @@ const getParts = (element: AtomicIpxRecsList) => {
 
   return {
     resultList: qs('result-list'),
-    resultListGridClickableContainer: qs(
-      'result-list-grid-clickable-container',
-      false
-    ),
+    resultListGridClickableContainer: qs('result-list-grid-clickable-container', false),
     label: qs('label'),
     previousButton: qs('previous-button'),
     nextButton: qs('next-button'),

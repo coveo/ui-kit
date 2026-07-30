@@ -26,15 +26,25 @@
 
   --color-border: #e2e8f0;
   --color-border-active: #3b82f6;
+  --color-border-hover: #94a3b8;
+
+  --color-primary: #1d4ed8;
+  --color-surface: #ffffff;
+  --color-surface-hover: #f3f4f6;
+  --color-focus: #2563eb;
+  --color-neutral-dark: #333333;
+  --color-on-neutral-dark: #ffffff;
 
   --color-success: #10b981;
   --color-processing: #f59e0b;
   --color-error: #ef4444;
   --color-shadow: rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
 
   /* Typography */
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --font-size-xs: 12px;
   --font-size-sm: 13px;
   --font-size-base: 14px;
   --font-size-md: 15px;
@@ -50,6 +60,15 @@
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 12px;
+
+  /* Layout */
+  --header-height: 84px;
+
+  /* Breakpoints (aligned with @coveo/atomic) */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
 }
 
 *,
@@ -72,4 +91,27 @@ body {
   line-height: 1.5;
   color: var(--color-text-primary);
   background: var(--color-bg-secondary);
+}
+
+.view-shell {
+  height: 100%;
+}
+
+.view-panel {
+  display: none;
+  height: 100%;
+}
+
+.view-panel--active {
+  display: block;
+  animation: viewFadeIn 250ms ease-out;
+}
+
+@keyframes viewFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

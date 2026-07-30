@@ -4,10 +4,7 @@ import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {type QuestionProps, renderQuestion} from './question';
 
 describe('#renderQuestion', () => {
-  const renderComponent = async (
-    props: Partial<QuestionProps> = {},
-    children = html``
-  ) => {
+  const renderComponent = async (props: Partial<QuestionProps> = {}, children = html``) => {
     const element = await renderFunctionFixture(
       html`${renderQuestion({
         props: {
@@ -56,9 +53,7 @@ describe('#renderQuestion', () => {
   it('should render heading with collapsed text part when not expanded', async () => {
     const button = await renderComponent({expanded: false});
     const headingElement = button.querySelector('[part*="question-text"]');
-    expect(headingElement?.getAttribute('part')).toBe(
-      'question-text-collapsed'
-    );
+    expect(headingElement?.getAttribute('part')).toBe('question-text-collapsed');
   });
 
   it('should render heading with expanded text part when expanded', async () => {

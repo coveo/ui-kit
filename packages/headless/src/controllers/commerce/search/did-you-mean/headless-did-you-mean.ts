@@ -9,10 +9,7 @@ import {updateQuery} from '../../../../features/commerce/query/query-actions.js'
 import {executeSearch} from '../../../../features/commerce/search/search-actions.js';
 import type {CommerceDidYouMeanSection} from '../../../../state/state-sections.js';
 import {loadReducerError} from '../../../../utils/errors.js';
-import {
-  buildController,
-  type Controller,
-} from '../../../controller/headless-controller.js';
+import {buildController, type Controller} from '../../../controller/headless-controller.js';
 import type {DidYouMeanState} from '../../../did-you-mean/headless-did-you-mean.js';
 
 export type {DidYouMeanState, QueryCorrection, WordCorrection};
@@ -73,9 +70,7 @@ export function buildDidYouMean(
     ...controller,
 
     applyCorrection() {
-      engine.dispatch(
-        updateQuery({query: this.state.queryCorrection.correctedQuery})
-      );
+      engine.dispatch(updateQuery({query: this.state.queryCorrection.correctedQuery}));
       engine.dispatch(executeSearch({enableResults}));
     },
 

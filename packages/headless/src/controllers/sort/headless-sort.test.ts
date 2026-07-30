@@ -1,13 +1,7 @@
 import {executeSearch} from '../../features/search/search-actions.js';
-import {
-  buildDateSortCriterion,
-  SortOrder,
-} from '../../features/sort-criteria/criteria.js';
+import {buildDateSortCriterion, SortOrder} from '../../features/sort-criteria/criteria.js';
 import {updateSortCriterion} from '../../features/sort-criteria/sort-criteria-actions.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../test/mock-engine-v2.js';
 import {createMockState} from '../../test/mock-state.js';
 import {buildSort, type Sort, type SortProps} from './headless-sort.js';
 

@@ -1,10 +1,4 @@
-import {
-  type CSSResult,
-  type CSSResultGroup,
-  html,
-  LitElement,
-  unsafeCSS,
-} from 'lit';
+import {type CSSResult, type CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
 import {customElement} from 'lit/decorators.js';
 import {beforeAll, beforeEach, describe, expect, it} from 'vitest';
 import globalStyles from '@/src/utils/tailwind.global.tw.css';
@@ -13,9 +7,7 @@ import {withTailwindStyles} from './with-tailwind-styles';
 
 // Remove any global CSS injected in setup before running this suite
 beforeAll(() => {
-  document.head
-    .querySelectorAll('style, link[rel="stylesheet"]')
-    .forEach((el) => el.remove());
+  document.head.querySelectorAll('style, link[rel="stylesheet"]').forEach((el) => el.remove());
 });
 
 const componentStyles = `
@@ -27,9 +19,7 @@ const componentStyles = `
 @customElement('test-tailwind-element')
 @withTailwindStyles
 class TestTailwindElement extends LitElement {
-  static styles: CSSResultGroup | CSSStyleSheet | undefined = [
-    unsafeCSS(componentStyles),
-  ];
+  static styles: CSSResultGroup | CSSStyleSheet | undefined = [unsafeCSS(componentStyles)];
 
   render() {
     return html`<div class="rounded-3xl border">Test Element</div>`;
@@ -39,13 +29,10 @@ class TestTailwindElement extends LitElement {
 @customElement('test-tailwind-element-without-array')
 @withTailwindStyles
 class TestTailwindElementWithoutArray extends LitElement {
-  static styles: CSSResultGroup | CSSStyleSheet | undefined =
-    unsafeCSS(componentStyles);
+  static styles: CSSResultGroup | CSSStyleSheet | undefined = unsafeCSS(componentStyles);
 
   render() {
-    return html`<div class="rounded-3xl border">
-      Test Element Without Array
-    </div>`;
+    return html`<div class="rounded-3xl border">Test Element Without Array</div>`;
   }
 }
 
@@ -76,9 +63,7 @@ describe('withTailwindStyles decorator', () => {
     let styles: CSSResultGroup | CSSStyleSheet | undefined;
 
     beforeEach(async () => {
-      await fixture<TestTailwindElement>(
-        html`<test-tailwind-element></test-tailwind-element>`
-      );
+      await fixture<TestTailwindElement>(html`<test-tailwind-element></test-tailwind-element>`);
     });
 
     testCases.forEach(({description, index, expected}) => {

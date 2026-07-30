@@ -14,16 +14,13 @@ import './atomic-insight-smart-snippet.js';
 vi.mock('@coveo/headless/insight', {spy: true});
 
 // Mock atomic-result-text to avoid result context dependencies
-vi.mock(
-  '@/src/components/search/atomic-result-text/atomic-result-text',
-  () => ({
-    AtomicResultText: class extends HTMLElement {
-      connectedCallback() {
-        this.textContent = 'Mocked Result Text';
-      }
-    },
-  })
-);
+vi.mock('@/src/components/search/atomic-result-text/atomic-result-text', () => ({
+  AtomicResultText: class extends HTMLElement {
+    connectedCallback() {
+      this.textContent = 'Mocked Result Text';
+    }
+  },
+}));
 
 describe('atomic-insight-smart-snippet', () => {
   let mockEngine: ReturnType<typeof buildFakeInsightEngine>;
@@ -64,16 +61,11 @@ describe('atomic-insight-smart-snippet', () => {
     return {
       element,
       atomicInterface,
-      smartSnippet:
-        shadow?.querySelector<HTMLElement>('[part="smart-snippet"]') ?? null,
+      smartSnippet: shadow?.querySelector<HTMLElement>('[part="smart-snippet"]') ?? null,
       question: shadow?.querySelector<HTMLElement>('[part="question"]') ?? null,
-      expandableAnswer:
-        shadow?.querySelector('atomic-smart-snippet-expandable-answer') ?? null,
-      feedbackBanner:
-        shadow?.querySelector<HTMLElement>('[part="feedback-banner"]') ?? null,
-      source:
-        shadow?.querySelector<HTMLElement>('atomic-smart-snippet-source') ??
-        null,
+      expandableAnswer: shadow?.querySelector('atomic-smart-snippet-expandable-answer') ?? null,
+      feedbackBanner: shadow?.querySelector<HTMLElement>('[part="feedback-banner"]') ?? null,
+      source: shadow?.querySelector<HTMLElement>('atomic-smart-snippet-source') ?? null,
       likeButton:
         shadow?.querySelector<HTMLInputElement>(
           '[part="feedback-like-button"] input[type="radio"]'
@@ -82,13 +74,9 @@ describe('atomic-insight-smart-snippet', () => {
         shadow?.querySelector<HTMLInputElement>(
           '[part="feedback-dislike-button"] input[type="radio"]'
         ) ?? null,
-      thankYouMessage:
-        shadow?.querySelector<HTMLElement>('[part="feedback-thank-you"]') ??
-        null,
+      thankYouMessage: shadow?.querySelector<HTMLElement>('[part="feedback-thank-you"]') ?? null,
       explainWhyButton:
-        shadow?.querySelector<HTMLElement>(
-          '[part="feedback-explain-why-button"]'
-        ) ?? null,
+        shadow?.querySelector<HTMLElement>('[part="feedback-explain-why-button"]') ?? null,
       feedbackModal:
         element.renderRoot.parentElement?.querySelector(
           'atomic-insight-smart-snippet-feedback-modal'
@@ -120,15 +108,10 @@ describe('atomic-insight-smart-snippet', () => {
 
   describe('when answer is found', () => {
     it('should render smart snippet components and not have atomic-hidden class', async () => {
-      const {
-        element,
-        smartSnippet,
-        question,
-        expandableAnswer,
-        feedbackBanner,
-      } = await renderComponent({
-        controllerState: {answerFound: true, question: 'What is AI?'},
-      });
+      const {element, smartSnippet, question, expandableAnswer, feedbackBanner} =
+        await renderComponent({
+          controllerState: {answerFound: true, question: 'What is AI?'},
+        });
 
       await expect.element(smartSnippet).toBeInTheDocument();
       await expect.element(question).toBeInTheDocument();
@@ -277,35 +260,27 @@ describe('atomic-insight-smart-snippet', () => {
       element.requestUpdate();
       await element.updateComplete;
 
-      expect((element as unknown as {feedbackSent: boolean}).feedbackSent).toBe(
-        false
-      );
+      expect((element as unknown as {feedbackSent: boolean}).feedbackSent).toBe(false);
     });
 
     it('should not reset feedbackSent when liked or disliked', async () => {
       const likedResult = await renderComponent({
         controllerState: {answerFound: true, liked: true},
       });
-      (likedResult.element as unknown as {feedbackSent: boolean}).feedbackSent =
-        true;
+      (likedResult.element as unknown as {feedbackSent: boolean}).feedbackSent = true;
       likedResult.element.requestUpdate();
       await likedResult.element.updateComplete;
-      expect(
-        (likedResult.element as unknown as {feedbackSent: boolean}).feedbackSent
-      ).toBe(true);
+      expect((likedResult.element as unknown as {feedbackSent: boolean}).feedbackSent).toBe(true);
 
       const dislikedResult = await renderComponent({
         controllerState: {answerFound: true, disliked: true},
       });
-      (
-        dislikedResult.element as unknown as {feedbackSent: boolean}
-      ).feedbackSent = true;
+      (dislikedResult.element as unknown as {feedbackSent: boolean}).feedbackSent = true;
       dislikedResult.element.requestUpdate();
       await dislikedResult.element.updateComplete;
-      expect(
-        (dislikedResult.element as unknown as {feedbackSent: boolean})
-          .feedbackSent
-      ).toBe(true);
+      expect((dislikedResult.element as unknown as {feedbackSent: boolean}).feedbackSent).toBe(
+        true
+      );
     });
   });
 
@@ -317,9 +292,7 @@ describe('atomic-insight-smart-snippet', () => {
 
       const expandSpy = vi.fn();
       element.smartSnippet.expand = expandSpy;
-      expandableAnswer?.dispatchEvent(
-        new CustomEvent('expand', {bubbles: true, composed: true})
-      );
+      expandableAnswer?.dispatchEvent(new CustomEvent('expand', {bubbles: true, composed: true}));
       await element.updateComplete;
 
       expect(expandSpy).toHaveBeenCalled();
@@ -332,9 +305,7 @@ describe('atomic-insight-smart-snippet', () => {
 
       const collapseSpy = vi.fn();
       element.smartSnippet.collapse = collapseSpy;
-      expandableAnswer?.dispatchEvent(
-        new CustomEvent('collapse', {bubbles: true, composed: true})
-      );
+      expandableAnswer?.dispatchEvent(new CustomEvent('collapse', {bubbles: true, composed: true}));
       await element.updateComplete;
 
       expect(collapseSpy).toHaveBeenCalled();

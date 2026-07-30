@@ -57,11 +57,7 @@ export function isParentReady(parent: Element): boolean {
   return parentReadyMap.get(parent) || false;
 }
 
-export function queueEventForParent(
-  parent: Element,
-  event: InitializeEvent,
-  element: Element
-) {
+export function queueEventForParent(parent: Element, event: InitializeEvent, element: Element) {
   const eventQueueMap = getEventQueueMap();
   if (!eventQueueMap.has(parent)) {
     eventQueueMap.set(parent, []);

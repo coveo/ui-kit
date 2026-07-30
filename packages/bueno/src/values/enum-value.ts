@@ -23,9 +23,7 @@ export class EnumValue<T> implements SchemaValue<T> {
       return null;
     }
 
-    const valueInEnum = Object.values(this.config.enum).find(
-      (enumValue) => enumValue === value
-    );
+    const valueInEnum = Object.values(this.config.enum).find((enumValue) => enumValue === value);
 
     if (!valueInEnum) {
       return 'value is not in enum.';

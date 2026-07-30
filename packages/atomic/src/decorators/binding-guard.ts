@@ -1,13 +1,8 @@
 import {type LitElement, nothing} from 'lit';
 import type {TemplateResultType} from 'lit/directive-helpers.js';
-import type {
-  GenericRender,
-  InitializableComponent,
-  RenderGuardDecorator,
-} from './types';
+import type {GenericRender, InitializableComponent, RenderGuardDecorator} from './types';
 
-type LitElementWithBindings = Pick<InitializableComponent, 'bindings'> &
-  LitElement;
+type LitElementWithBindings = Pick<InitializableComponent, 'bindings'> & LitElement;
 /**
  * A decorator that guards the render method based on the presence of component bindings.
  *
@@ -38,15 +33,11 @@ export function bindingGuard<
 >(): RenderGuardDecorator<Component, T> {
   return (_, propertyKey, descriptor) => {
     if (descriptor?.value === undefined || propertyKey !== 'render') {
-      throw new Error(
-        '@bindingGuard decorator can only be used on render method'
-      );
+      throw new Error('@bindingGuard decorator can only be used on render method');
     }
     const originalMethod = descriptor.value;
     descriptor.value = function (this: Component) {
-      return this.bindings
-        ? originalMethod?.call(this)
-        : (nothing as GenericRender<T>);
+      return this.bindings ? originalMethod?.call(this) : (nothing as GenericRender<T>);
     };
     return descriptor;
   };

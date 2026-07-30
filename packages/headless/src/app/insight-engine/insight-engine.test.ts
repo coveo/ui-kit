@@ -11,10 +11,7 @@ import {
 } from './insight-engine.js';
 
 const fetchInterfaceSpy = vi.spyOn(InsightInterfaceActions, 'fetchInterface');
-const updateSearchConfigurationSpy = vi.spyOn(
-  ConfigurationActions,
-  'updateSearchConfiguration'
-);
+const updateSearchConfigurationSpy = vi.spyOn(ConfigurationActions, 'updateSearchConfiguration');
 
 function getSampleInsightEngineConfiguration(): InsightEngineConfiguration {
   return {
@@ -99,8 +96,7 @@ describe('buildInsightEngine', () => {
 
     it('passing trackingId containing an invalid character throws', () => {
       options.configuration.analytics = {
-        trackingId:
-          'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-.\\',
+        trackingId: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-.\\',
       };
       expect(initEngine).toThrow();
     });
@@ -124,9 +120,7 @@ describe('buildInsightEngine', () => {
         initEngine();
 
         expect(warnSpy).toHaveBeenCalledTimes(1);
-        expect(warnSpy).toHaveBeenCalledWith(
-          nextAnalyticsUsageWithServiceFeatureWarning
-        );
+        expect(warnSpy).toHaveBeenCalledWith(nextAnalyticsUsageWithServiceFeatureWarning);
       });
 
       it('should not log a warning when the insight engine is used with the legacy analytics mode', () => {
@@ -146,9 +140,7 @@ describe('buildInsightEngine', () => {
   });
 
   it('sets the insight ID correctly', () => {
-    expect(engine.state.insightConfiguration?.insightId).toEqual(
-      options.configuration.insightId
-    );
+    expect(engine.state.insightConfiguration?.insightId).toEqual(options.configuration.insightId);
   });
 
   it('sets the locale correctly', () => {
@@ -183,9 +175,7 @@ describe('buildInsightEngine', () => {
   });
 
   it('should ensure that engine.relay is the same reference as thunk extra args relay', async () => {
-    const thunkRelay = await engine.dispatch(
-      (_dispatch, _getState, extra) => extra.relay
-    );
+    const thunkRelay = await engine.dispatch((_dispatch, _getState, extra) => extra.relay);
 
     expect(thunkRelay).toBe(engine.relay);
   });

@@ -93,9 +93,7 @@ describe('static filter set expressions', () => {
       };
 
       const result = selectStaticFilterExpressions(state);
-      expect(result).toEqual([
-        '(@filetype=="pdf" OR @filetype=="youtubevideo")',
-      ]);
+      expect(result).toEqual(['(@filetype=="pdf" OR @filetype=="youtubevideo")']);
     });
 
     it('returns an array with multiple different selected filter expressions', () => {

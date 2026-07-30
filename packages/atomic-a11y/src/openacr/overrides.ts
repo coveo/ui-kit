@@ -13,28 +13,20 @@ function isValidOverrideEntry(entry: unknown): entry is A11yOverrideEntry {
   return (
     typeof entry.criterion === 'string' &&
     typeof entry.conformance === 'string' &&
-    VALID_OVERRIDE_CONFORMANCE_VALUES.has(
-      entry.conformance as OpenAcrConformance
-    ) &&
+    VALID_OVERRIDE_CONFORMANCE_VALUES.has(entry.conformance as OpenAcrConformance) &&
     typeof entry.reason === 'string' &&
     entry.reason.length > 0
   );
 }
 
-function parseOverrides(
-  content: string,
-  filePath: string
-): Map<string, A11yOverrideEntry> {
+function parseOverrides(content: string, filePath: string): Map<string, A11yOverrideEntry> {
   const overrides = new Map<string, A11yOverrideEntry>();
 
   let parsed: unknown;
   try {
     parsed = JSON.parse(content);
   } catch {
-    console.warn(
-      LOG_PREFIX,
-      `Unable to parse overrides file ${filePath} as JSON.`
-    );
+    console.warn(LOG_PREFIX, `Unable to parse overrides file ${filePath} as JSON.`);
     return overrides;
   }
 
@@ -58,27 +50,18 @@ function parseOverrides(
   return overrides;
 }
 
-export async function loadOverrides(
-  filePath: string
-): Promise<Map<string, A11yOverrideEntry>> {
+export async function loadOverrides(filePath: string): Promise<Map<string, A11yOverrideEntry>> {
   try {
     const content = await readFile(filePath, 'utf8');
     return parseOverrides(content, filePath);
   } catch (error) {
-    const errorCode =
-      isRecord(error) && typeof error.code === 'string'
-        ? error.code
-        : undefined;
+    const errorCode = isRecord(error) && typeof error.code === 'string' ? error.code : undefined;
 
     if (errorCode === 'ENOENT') {
       return new Map();
     }
 
-    console.warn(
-      LOG_PREFIX,
-      `Unable to read overrides file ${filePath}.`,
-      error
-    );
+    console.warn(LOG_PREFIX, `Unable to read overrides file ${filePath}.`, error);
     return new Map();
   }
 }

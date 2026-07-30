@@ -1,8 +1,4 @@
-import {
-  buildProductListing,
-  buildSearch,
-  type Pagination,
-} from '@coveo/headless/commerce';
+import {buildProductListing, buildSearch, type Pagination} from '@coveo/headless/commerce';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, type Mock, vi} from 'vitest';
 import {page} from 'vitest/browser';
@@ -86,22 +82,19 @@ describe('atomic-commerce-load-more-products', () => {
       );
     }
 
-    const {element} =
-      await renderInAtomicCommerceInterface<AtomicCommerceLoadMoreProducts>({
-        template: html`<atomic-commerce-load-more-products></atomic-commerce-load-more-products>`,
-        selector: 'atomic-commerce-load-more-products',
-        bindings: (bindings) => {
-          bindings.interfaceElement.type = interfaceType;
-          bindings.engine = mockedEngine;
-          bindings.store.state.resultList = {
-            focusOnNextNewResult: focusOnNextNewResultSpy,
-          } as unknown as ResultListInfo;
-          bindings.store.state.loadingFlags = isAppLoaded
-            ? []
-            : ['app-loading'];
-          return bindings;
-        },
-      });
+    const {element} = await renderInAtomicCommerceInterface<AtomicCommerceLoadMoreProducts>({
+      template: html`<atomic-commerce-load-more-products></atomic-commerce-load-more-products>`,
+      selector: 'atomic-commerce-load-more-products',
+      bindings: (bindings) => {
+        bindings.interfaceElement.type = interfaceType;
+        bindings.engine = mockedEngine;
+        bindings.store.state.resultList = {
+          focusOnNextNewResult: focusOnNextNewResultSpy,
+        } as unknown as ResultListInfo;
+        bindings.store.state.loadingFlags = isAppLoaded ? [] : ['app-loading'];
+        return bindings;
+      },
+    });
 
     appLoadedCallback(isAppLoaded);
 
@@ -163,17 +156,12 @@ describe('atomic-commerce-load-more-products', () => {
 
     it('should call #buildProductListing with engine', async () => {
       expect(buildProductListing).toHaveBeenCalledExactlyOnceWith(mockedEngine);
-      expect(element.listingOrSearch.state.responseId).toBe(
-        'product-listing-response-id'
-      );
+      expect(element.listingOrSearch.state.responseId).toBe('product-listing-response-id');
     });
 
     it('should initialize pagination controller from product listing', async () => {
       expect(paginationSpy).toHaveBeenCalledOnce();
-      expect(element.pagination.state).toHaveProperty(
-        'testId',
-        'product-listing-pagination'
-      );
+      expect(element.pagination.state).toHaveProperty('testId', 'product-listing-pagination');
     });
   });
 
@@ -191,17 +179,12 @@ describe('atomic-commerce-load-more-products', () => {
 
     it('should call #buildSearch with engine', async () => {
       expect(buildSearch).toHaveBeenCalledExactlyOnceWith(mockedEngine);
-      expect(element.listingOrSearch.state.responseId).toBe(
-        'search-response-id'
-      );
+      expect(element.listingOrSearch.state.responseId).toBe('search-response-id');
     });
 
     it('should initialize pagination controller from search', async () => {
       expect(paginationSpy).toHaveBeenCalledOnce();
-      expect(element.pagination.state).toHaveProperty(
-        'testId',
-        'search-pagination'
-      );
+      expect(element.pagination.state).toHaveProperty('testId', 'search-pagination');
     });
   });
 
@@ -237,9 +220,7 @@ describe('atomic-commerce-load-more-products', () => {
       const summaryElement = locators.showingResults;
 
       expect(summaryElement).toBeInTheDocument();
-      expect(summaryElement?.textContent?.trim()).toBe(
-        'Showing 1,234 of 1,234,567 products'
-      );
+      expect(summaryElement?.textContent?.trim()).toBe('Showing 1,234 of 1,234,567 products');
     });
 
     it('should render a progress bar with the correct width', async () => {
@@ -248,9 +229,7 @@ describe('atomic-commerce-load-more-products', () => {
         totalNumberOfProducts: 123,
       });
       const progressBar = locators.progressBar;
-      const progressBarFill = progressBar?.querySelector(
-        '[part="progress-bar"] div'
-      );
+      const progressBarFill = progressBar?.querySelector('[part="progress-bar"] div');
 
       expect(progressBar).toBeInTheDocument();
       // Math.ceil(Math.min((12 / 123) * 100, 100)) = 10, so width will be 10%

@@ -15,9 +15,7 @@ export interface SuggestionsWrapperProps {
   i18n: i18n;
 }
 
-export const renderSuggestionsWrapper: FunctionalComponentWithChildren<
-  SuggestionsWrapperProps
-> =
+export const renderSuggestionsWrapper: FunctionalComponentWithChildren<SuggestionsWrapperProps> =
   ({props}) =>
   (children) => {
     const containerClasses = tw({

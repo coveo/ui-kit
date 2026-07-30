@@ -183,9 +183,7 @@ export const createFollowUpStrategy = (
           answerId: runId,
         })
       );
-      dispatch(
-        logGeneratedAnswerStreamEnd(answerGenerated, runId, answerTextIsEmpty)
-      );
+      dispatch(logGeneratedAnswerStreamEnd(answerGenerated, runId, answerTextIsEmpty));
       dispatch(logGeneratedAnswerResponseLinked(runId));
       runId = '';
       answerHasText = false;

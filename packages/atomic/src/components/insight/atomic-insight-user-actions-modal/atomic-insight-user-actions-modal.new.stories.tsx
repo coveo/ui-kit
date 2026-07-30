@@ -1,13 +1,9 @@
-import type {
-  Decorator,
-  Meta,
-  StoryObj as Story,
-} from '@storybook/web-components-vite';
+import type {Decorator, Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
 import {testDialogA11y} from '@/storybook-utils/a11y/dialog.js';
-import {MockInsightApi} from '@coveo/platform-mock-api/insight/mock';
-import {MockMachineLearningApi} from '@coveo/platform-mock-api/machinelearning/mock';
+import {MockInsightApi} from '@coveo/platform-mock-api/insight';
+import {MockMachineLearningApi} from '@coveo/platform-mock-api/machinelearning';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 import '@/src/components/insight/atomic-insight-user-actions-modal/atomic-insight-user-actions-modal.js';
@@ -62,10 +58,7 @@ const meta: Meta = {
       },
     },
     msw: {
-      handlers: [
-        ...insightApiHarness.handlers,
-        ...machineLearningApiHarness.handlers,
-      ],
+      handlers: [...insightApiHarness.handlers, ...machineLearningApiHarness.handlers],
     },
   },
   beforeEach: () => {

@@ -55,20 +55,14 @@ describe('TimeframeFacetCommon', () => {
   let buildDependenciesManagerSpy: Mock<
     (facetId: string) => ReturnType<typeof buildFakeFacetConditionsManager>
   >;
-  let buildDateRangeSpy: Mock<
-    (config: {start: unknown; end: unknown}) => DateRangeRequest
-  >;
+  let buildDateRangeSpy: Mock<(config: {start: unknown; end: unknown}) => DateRangeRequest>;
   let initializeFacetForDatePickerSpy: Mock<() => DateFacet>;
-  let initializeFacetForDateRangeSpy: Mock<
-    (values: DateRangeRequest[]) => DateFacet
-  >;
+  let initializeFacetForDateRangeSpy: Mock<(values: DateRangeRequest[]) => DateFacet>;
   let initializeFilterSpy: Mock<() => DateFilter>;
 
   beforeEach(async () => {
     mockHost = document.createElement('div');
-    mockHost.querySelectorAll = vi.fn(
-      () => []
-    ) as unknown as typeof mockHost.querySelectorAll;
+    mockHost.querySelectorAll = vi.fn(() => []) as unknown as typeof mockHost.querySelectorAll;
 
     mockBindings = {
       store: {
@@ -89,9 +83,7 @@ describe('TimeframeFacetCommon', () => {
           hasResults: true,
         }) as SearchStatusState
     );
-    buildDependenciesManagerSpy = vi.fn(() =>
-      buildFakeFacetConditionsManager()
-    );
+    buildDependenciesManagerSpy = vi.fn(() => buildFakeFacetConditionsManager());
     buildDateRangeSpy = vi.fn(
       (config) => ({start: config.start, end: config.end}) as DateRangeRequest
     );
@@ -195,9 +187,7 @@ describe('TimeframeFacetCommon', () => {
   });
 
   it('should NOT create facetForDateRange when manualTimeframes is empty', () => {
-    mockHost.querySelectorAll = vi.fn(
-      () => []
-    ) as unknown as typeof mockHost.querySelectorAll;
+    mockHost.querySelectorAll = vi.fn(() => []) as unknown as typeof mockHost.querySelectorAll;
 
     createInstance();
 
@@ -236,9 +226,7 @@ describe('TimeframeFacetCommon', () => {
   });
 
   it('should NOT create facetForDateRangeDependenciesManager when facetForDateRange does not exist', () => {
-    mockHost.querySelectorAll = vi.fn(
-      () => []
-    ) as unknown as typeof mockHost.querySelectorAll;
+    mockHost.querySelectorAll = vi.fn(() => []) as unknown as typeof mockHost.querySelectorAll;
 
     createInstance();
 
@@ -246,9 +234,7 @@ describe('TimeframeFacetCommon', () => {
   });
 
   it('should NOT create facetForDatePickerDependenciesManager when facetForDatePicker does not exist', () => {
-    mockHost.querySelectorAll = vi.fn(
-      () => []
-    ) as unknown as typeof mockHost.querySelectorAll;
+    mockHost.querySelectorAll = vi.fn(() => []) as unknown as typeof mockHost.querySelectorAll;
 
     createInstance();
 
@@ -256,9 +242,7 @@ describe('TimeframeFacetCommon', () => {
   });
 
   it('should NOT create filterDependenciesManager when filter does not exist', () => {
-    mockHost.querySelectorAll = vi.fn(
-      () => []
-    ) as unknown as typeof mockHost.querySelectorAll;
+    mockHost.querySelectorAll = vi.fn(() => []) as unknown as typeof mockHost.querySelectorAll;
 
     createInstance();
 
@@ -301,8 +285,7 @@ describe('TimeframeFacetCommon', () => {
     createInstance();
 
     // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Test spy access
-    const registerCall = (mockBindings.store!.registerFacet as any).mock
-      .calls[0];
+    const registerCall = (mockBindings.store!.registerFacet as any).mock.calls[0];
     expect(registerCall[1]).toHaveProperty('format');
     expect(typeof registerCall[1].format).toBe('function');
   });
@@ -326,8 +309,7 @@ describe('TimeframeFacetCommon', () => {
       createInstance({deserializeRelativeDate: deserializeRelativeDateSpy});
 
       // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Test spy access
-      const formatFn = (mockBindings.store!.registerFacet as any).mock
-        .calls[0][1].format;
+      const formatFn = (mockBindings.store!.registerFacet as any).mock.calls[0][1].format;
 
       const facetValue: DateFacetValue = {
         start: '2023-01-01',
@@ -357,8 +339,7 @@ describe('TimeframeFacetCommon', () => {
       createInstance({deserializeRelativeDate: deserializeRelativeDateSpy});
 
       // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Test spy access
-      const formatFn = (mockBindings.store!.registerFacet as any).mock
-        .calls[0][1].format;
+      const formatFn = (mockBindings.store!.registerFacet as any).mock.calls[0][1].format;
 
       const facetValue: DateFacetValue = {
         start: '2023-01-01',
@@ -374,9 +355,7 @@ describe('TimeframeFacetCommon', () => {
     });
 
     it('should use start date period for past ranges', () => {
-      const mockTimeframeElements = [
-        {amount: 24, unit: 'hour', period: 'past'},
-      ];
+      const mockTimeframeElements = [{amount: 24, unit: 'hour', period: 'past'}];
       mockHost.querySelectorAll = vi.fn(
         () => mockTimeframeElements
       ) as unknown as typeof mockHost.querySelectorAll;
@@ -391,8 +370,7 @@ describe('TimeframeFacetCommon', () => {
       createInstance({deserializeRelativeDate: deserializeRelativeDateSpy});
 
       // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Test spy access
-      const formatFn = (mockBindings.store!.registerFacet as any).mock
-        .calls[0][1].format;
+      const formatFn = (mockBindings.store!.registerFacet as any).mock.calls[0][1].format;
 
       const facetValue: DateFacetValue = {
         start: '2023-01-01',
@@ -425,8 +403,7 @@ describe('TimeframeFacetCommon', () => {
       createInstance({deserializeRelativeDate: deserializeRelativeDateSpy});
 
       // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Test spy access
-      const formatFn = (mockBindings.store!.registerFacet as any).mock
-        .calls[0][1].format;
+      const formatFn = (mockBindings.store!.registerFacet as any).mock.calls[0][1].format;
 
       const facetValue: DateFacetValue = {
         start: '2023-01-01',
@@ -448,8 +425,7 @@ describe('TimeframeFacetCommon', () => {
       createInstance({deserializeRelativeDate: deserializeRelativeDateSpy});
 
       // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Test spy access
-      const formatFn = (mockBindings.store!.registerFacet as any).mock
-        .calls[0][1].format;
+      const formatFn = (mockBindings.store!.registerFacet as any).mock.calls[0][1].format;
 
       const facetValue: DateFacetValue = {
         start: '2023-01-01T00:00:00.000Z',
@@ -656,9 +632,7 @@ describe('TimeframeFacetCommon', () => {
     });
 
     it('should render nothing when shouldRenderFacet is false', () => {
-      mockHost.querySelectorAll = vi.fn(
-        () => []
-      ) as unknown as typeof mockHost.querySelectorAll;
+      mockHost.querySelectorAll = vi.fn(() => []) as unknown as typeof mockHost.querySelectorAll;
 
       const common = createInstance();
 

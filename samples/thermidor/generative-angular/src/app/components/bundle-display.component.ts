@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  input,
-  signal,
-  computed,
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, input, signal, computed} from '@angular/core';
 import {BundleDisplaySurface} from '../models';
 
 @Component({
@@ -41,10 +35,7 @@ import {BundleDisplaySurface} from '../models';
           <p class="tier-description">{{ tier.description }}</p>
 
           <div class="slot-carousel">
-            @for (
-              slot of tier.slots;
-              track slot.surfaceRef + ':' + slot.categoryLabel
-            ) {
+            @for (slot of tier.slots; track slot.surfaceRef + ':' + slot.categoryLabel) {
               <div class="slot-card">
                 <span class="slot-label">{{ slot.categoryLabel }}</span>
                 @if (slot.product) {
@@ -59,9 +50,7 @@ import {BundleDisplaySurface} from '../models';
                   <strong class="slot-name">{{ slot.product.ec_name }}</strong>
                   <small class="slot-brand">{{ slot.product.ec_brand }}</small>
                   @if (slot.product.ec_price) {
-                    <span class="slot-price">{{
-                      formatPrice(slot.product.ec_price)
-                    }}</span>
+                    <span class="slot-price">{{ formatPrice(slot.product.ec_price) }}</span>
                   }
                 } @else {
                   <div class="slot-empty">Loading…</div>

@@ -100,14 +100,8 @@ describe('#getAllCategoriesLocalizedLabel', () => {
 
       getAllCategoriesLocalizedLabel({facetId, field, i18n});
 
-      expect(existsSpy).toHaveBeenNthCalledWith(
-        1,
-        'all-categories-nonExistentFacet'
-      );
-      expect(existsSpy).toHaveBeenNthCalledWith(
-        2,
-        'all-categories-product_category'
-      );
+      expect(existsSpy).toHaveBeenNthCalledWith(1, 'all-categories-nonExistentFacet');
+      expect(existsSpy).toHaveBeenNthCalledWith(2, 'all-categories-product_category');
     });
   });
 

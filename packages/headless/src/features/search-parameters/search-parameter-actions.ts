@@ -1,8 +1,5 @@
 import {createAction} from '@reduxjs/toolkit';
-import {
-  requiredNonEmptyString,
-  validatePayload,
-} from '../../utils/validate-payload.js';
+import {requiredNonEmptyString, validatePayload} from '../../utils/validate-payload.js';
 import type {DateRangeRequest} from '../facets/range-facets/date-facet-set/interfaces/request.js';
 import type {NumericRangeRequest} from '../facets/range-facets/numeric-facet-set/interfaces/request.js';
 import {searchParametersDefinition} from './search-parameter-schema.js';
@@ -103,15 +100,13 @@ type TabId = string;
 
 export const restoreSearchParameters = createAction(
   'searchParameters/restore',
-  (payload: SearchParameters) =>
-    validatePayload(payload, searchParametersDefinition)
+  (payload: SearchParameters) => validatePayload(payload, searchParametersDefinition)
 );
 
 /**
  * Restores a tab from the search parameters.
  * @deprecated This action will be removed in V4. Use alternative tab management methods instead.
  */
-export const restoreTab = createAction(
-  'searchParameters/restoreTab',
-  (payload: TabId) => validatePayload(payload, requiredNonEmptyString)
+export const restoreTab = createAction('searchParameters/restoreTab', (payload: TabId) =>
+  validatePayload(payload, requiredNonEmptyString)
 );

@@ -113,9 +113,7 @@ export interface CategoryFacetSearchOptions {
   query?: string;
 }
 
-export const categoryFacetOptionsSchema = new Schema<
-  Required<CategoryFacetOptions>
->({
+export const categoryFacetOptionsSchema = new Schema<Required<CategoryFacetOptions>>({
   field,
   tabs: new RecordValue({
     options: {

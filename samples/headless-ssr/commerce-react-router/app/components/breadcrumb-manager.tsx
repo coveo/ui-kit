@@ -25,17 +25,9 @@ export default function BreadcrumbManager() {
       case 'regular':
         return (value as RegularFacetValue).value;
       case 'numericalRange':
-        return (
-          (value as NumericFacetValue).start +
-          ' - ' +
-          (value as NumericFacetValue).end
-        );
+        return (value as NumericFacetValue).start + ' - ' + (value as NumericFacetValue).end;
       case 'dateRange':
-        return (
-          (value as DateFacetValue).start +
-          ' - ' +
-          (value as DateFacetValue).end
-        );
+        return (value as DateFacetValue).start + ' - ' + (value as DateFacetValue).end;
       default:
         // TODO COMHUB-291 support location breadcrumb
         return null;

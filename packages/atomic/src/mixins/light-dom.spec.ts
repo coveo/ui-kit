@@ -62,9 +62,7 @@ describe('#LightDomMixin', () => {
 
   describe('#createRenderRoot', () => {
     it('should return the element itself instead of creating shadow root', async () => {
-      const element = await fixture<StyledElement>(
-        html`<styled-element></styled-element>`
-      );
+      const element = await fixture<StyledElement>(html`<styled-element></styled-element>`);
 
       expect(element.renderRoot).toBe(element);
       expect(element.shadowRoot).toBeNull();
@@ -98,9 +96,7 @@ describe('#LightDomMixin', () => {
 
   describe('#injectStyles', () => {
     it('should inject static styles when called without arguments', async () => {
-      const element = await fixture<StyledElement>(
-        html`<styled-element></styled-element>`
-      );
+      const element = await fixture<StyledElement>(html`<styled-element></styled-element>`);
 
       document.adoptedStyleSheets = [];
 
@@ -112,9 +108,7 @@ describe('#LightDomMixin', () => {
     });
 
     it('should inject both static and dynamic styles when called with dynamic styles', async () => {
-      const element = await fixture<StyledElement>(
-        html`<styled-element></styled-element>`
-      );
+      const element = await fixture<StyledElement>(html`<styled-element></styled-element>`);
 
       document.adoptedStyleSheets = [];
 
@@ -131,9 +125,7 @@ describe('#LightDomMixin', () => {
     });
 
     it('should handle array of dynamic styles', async () => {
-      const element = await fixture<StyledElement>(
-        html`<styled-element></styled-element>`
-      );
+      const element = await fixture<StyledElement>(html`<styled-element></styled-element>`);
 
       document.adoptedStyleSheets = [];
 
@@ -157,9 +149,7 @@ describe('#LightDomMixin', () => {
     });
 
     it('should not inject duplicate stylesheets', async () => {
-      const element = await fixture<StyledElement>(
-        html`<styled-element></styled-element>`
-      );
+      const element = await fixture<StyledElement>(html`<styled-element></styled-element>`);
 
       await element.injectStyles();
       await element.injectStyles();
@@ -188,9 +178,7 @@ describe('#LightDomMixin', () => {
           </shadow-dom-parent-element>
         `);
 
-        const shadowRoot = document.querySelector(
-          'shadow-dom-parent-element'
-        )?.shadowRoot;
+        const shadowRoot = document.querySelector('shadow-dom-parent-element')?.shadowRoot;
         const adoptedStyleSheets = shadowRoot?.adoptedStyleSheets || [];
 
         expect(adoptedStyleSheets).toHaveLength(1);
@@ -210,9 +198,7 @@ describe('#LightDomMixin', () => {
 
     describe('when element has no static styles', () => {
       it('should only inject dynamic styles', async () => {
-        const element = await fixture<UnstyledElement>(
-          html`<unstyled-element></unstyled-element>`
-        );
+        const element = await fixture<UnstyledElement>(html`<unstyled-element></unstyled-element>`);
 
         const dynamicStyle = css`
           h1 {
@@ -227,9 +213,7 @@ describe('#LightDomMixin', () => {
       });
 
       it('should do nothing when called without arguments and no static styles', async () => {
-        const element = await fixture<UnstyledElement>(
-          html`<unstyled-element></unstyled-element>`
-        );
+        const element = await fixture<UnstyledElement>(html`<unstyled-element></unstyled-element>`);
 
         await element.injectStyles();
 
@@ -238,9 +222,7 @@ describe('#LightDomMixin', () => {
     });
 
     it('should handle CSSStyleSheet instances', async () => {
-      const element = await fixture<UnstyledElement>(
-        html`<unstyled-element></unstyled-element>`
-      );
+      const element = await fixture<UnstyledElement>(html`<unstyled-element></unstyled-element>`);
 
       const styleSheet = new CSSStyleSheet();
       styleSheet.replaceSync('h2 { color: orange; }');

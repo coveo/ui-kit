@@ -40,20 +40,12 @@ describe('item-layout-utils', () => {
 
     it('should return correct classes for grid display', () => {
       const classes = getItemDisplayClasses('grid', 'comfortable', 'large');
-      expect(classes).toEqual([
-        'display-grid',
-        'density-comfortable',
-        'image-large',
-      ]);
+      expect(classes).toEqual(['display-grid', 'density-comfortable', 'image-large']);
     });
 
     it('should return correct classes for table display', () => {
       const classes = getItemDisplayClasses('table', 'compact', 'small');
-      expect(classes).toEqual([
-        'display-table',
-        'density-compact',
-        'image-small',
-      ]);
+      expect(classes).toEqual(['display-table', 'density-compact', 'image-small']);
     });
 
     it('should handle none image size', () => {
@@ -64,53 +56,23 @@ describe('item-layout-utils', () => {
 
   describe('#getItemListDisplayClasses', () => {
     it('should return joined classes string', () => {
-      const classes = getItemListDisplayClasses(
-        'list',
-        'normal',
-        'icon',
-        false,
-        false
-      );
+      const classes = getItemListDisplayClasses('list', 'normal', 'icon', false, false);
       expect(classes).toBe('display-list density-normal image-icon');
     });
 
     it('should include loading class when isLoading is true', () => {
-      const classes = getItemListDisplayClasses(
-        'grid',
-        'comfortable',
-        'large',
-        true,
-        false
-      );
-      expect(classes).toBe(
-        'display-grid density-comfortable image-large loading'
-      );
+      const classes = getItemListDisplayClasses('grid', 'comfortable', 'large', true, false);
+      expect(classes).toBe('display-grid density-comfortable image-large loading');
     });
 
     it('should include placeholder class when isAppLoading is true', () => {
-      const classes = getItemListDisplayClasses(
-        'table',
-        'compact',
-        'small',
-        false,
-        true
-      );
-      expect(classes).toBe(
-        'display-table density-compact image-small placeholder'
-      );
+      const classes = getItemListDisplayClasses('table', 'compact', 'small', false, true);
+      expect(classes).toBe('display-table density-compact image-small placeholder');
     });
 
     it('should include both loading and placeholder classes', () => {
-      const classes = getItemListDisplayClasses(
-        'list',
-        'normal',
-        'none',
-        true,
-        true
-      );
-      expect(classes).toBe(
-        'display-list density-normal image-none loading placeholder'
-      );
+      const classes = getItemListDisplayClasses('list', 'normal', 'none', true, true);
+      expect(classes).toBe('display-list density-normal image-none loading placeholder');
     });
   });
 
@@ -120,11 +82,7 @@ describe('item-layout-utils', () => {
 
       const classes = getItemLayoutClasses(config);
 
-      expect(classes).toEqual([
-        'display-list',
-        'density-normal',
-        'image-large',
-      ]);
+      expect(classes).toEqual(['display-list', 'density-normal', 'image-large']);
       expect(mockContainsSections).toHaveBeenCalledWith(mockChildren);
     });
 
@@ -133,28 +91,17 @@ describe('item-layout-utils', () => {
 
       const classes = getItemLayoutClasses(config);
 
-      expect(classes).toEqual([
-        'display-list',
-        'density-normal',
-        'image-large',
-        'with-sections',
-      ]);
+      expect(classes).toEqual(['display-list', 'density-normal', 'image-large', 'with-sections']);
       expect(mockContainsSections).toHaveBeenCalledWith(mockChildren);
     });
 
     it('should include with-sections class when sections are detected in HTML content', () => {
-      const htmlContent =
-        '<atomic-result-section-visual></atomic-result-section-visual>';
+      const htmlContent = '<atomic-result-section-visual></atomic-result-section-visual>';
       mockContainsSections.mockReturnValue(true);
 
       const classes = getItemLayoutClasses(config, htmlContent);
 
-      expect(classes).toEqual([
-        'display-list',
-        'density-normal',
-        'image-large',
-        'with-sections',
-      ]);
+      expect(classes).toEqual(['display-list', 'density-normal', 'image-large', 'with-sections']);
       expect(mockContainsSections).toHaveBeenCalledWith(htmlContent);
     });
 
@@ -164,11 +111,7 @@ describe('item-layout-utils', () => {
 
       const classes = getItemLayoutClasses(config, htmlContent);
 
-      expect(classes).toEqual([
-        'display-list',
-        'density-normal',
-        'image-large',
-      ]);
+      expect(classes).toEqual(['display-list', 'density-normal', 'image-large']);
       expect(mockContainsSections).toHaveBeenCalledWith(htmlContent);
     });
 
@@ -177,11 +120,7 @@ describe('item-layout-utils', () => {
 
       const classes = getItemLayoutClasses(config);
 
-      expect(classes).toEqual([
-        'display-list',
-        'density-normal',
-        'image-large',
-      ]);
+      expect(classes).toEqual(['display-list', 'density-normal', 'image-large']);
     });
 
     it('should fallback to config image size when no visual section', () => {
@@ -197,11 +136,7 @@ describe('item-layout-utils', () => {
 
       const classes = getItemLayoutClasses(emptyConfig);
 
-      expect(classes).toEqual([
-        'display-grid',
-        'density-compact',
-        'image-small',
-      ]);
+      expect(classes).toEqual(['display-grid', 'density-compact', 'image-small']);
     });
 
     it('should handle different display, density, and image combinations', () => {

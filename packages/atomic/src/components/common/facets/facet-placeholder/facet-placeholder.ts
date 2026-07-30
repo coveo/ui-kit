@@ -7,16 +7,11 @@ interface FacetPlaceholderProps {
   isCollapsed: boolean;
 }
 
-export const renderFacetPlaceholder: FunctionalComponent<
-  FacetPlaceholderProps
-> = ({props}) => {
+export const renderFacetPlaceholder: FunctionalComponent<FacetPlaceholderProps> = ({props}) => {
   const facetValues: TemplateResult[] = [];
   for (let i = 0; i < props.numberOfValues; i++) {
     facetValues.push(
-      html`<div
-        class="bg-neutral mt-4 flex h-5"
-        style="width: 100%; opacity: 0.5"
-      ></div>`
+      html`<div class="bg-neutral mt-4 flex h-5" style="width: 100%; opacity: 0.5"></div>`
     );
   }
 
@@ -26,9 +21,6 @@ export const renderFacetPlaceholder: FunctionalComponent<
     aria-hidden="true"
   >
     <div class="bg-neutral h-8 rounded" style="width: 75%"></div>
-    ${when(
-      !props.isCollapsed,
-      () => html`<div class="mt-7">${facetValues}</div>`
-    )}
+    ${when(!props.isCollapsed, () => html`<div class="mt-7">${facetValues}</div>`)}
   </div>`;
 };

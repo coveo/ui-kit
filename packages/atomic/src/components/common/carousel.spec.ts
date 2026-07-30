@@ -87,20 +87,14 @@ describe('carousel', () => {
     await renderComponent();
 
     await expect(locators.previousButtonIcon).toBeVisible();
-    expect(locators.previousButtonIcon).toHaveAttribute(
-      'icon',
-      expect.stringMatching(/<svg/)
-    );
+    expect(locators.previousButtonIcon).toHaveAttribute('icon', expect.stringMatching(/<svg/));
   });
 
   it('should render an icon inside the next button', async () => {
     await renderComponent();
 
     expect(locators.nextButtonIcon).toBeVisible();
-    expect(locators.nextButtonIcon).toHaveAttribute(
-      'icon',
-      expect.stringMatching(/<svg/)
-    );
+    expect(locators.nextButtonIcon).toHaveAttribute('icon', expect.stringMatching(/<svg/));
   });
 
   it('should have the proper aria-label for the carousel container', async () => {
@@ -122,10 +116,7 @@ describe('carousel', () => {
 
   it('should have the correct part attribute for the icon', async () => {
     await renderComponent();
-    expect(locators.previousButtonIcon).toHaveAttribute(
-      'part',
-      'previous-icon'
-    );
+    expect(locators.previousButtonIcon).toHaveAttribute('part', 'previous-icon');
     expect(locators.nextButtonIcon).toHaveAttribute('part', 'next-icon');
   });
 
@@ -135,9 +126,7 @@ describe('carousel', () => {
     const carouselElement = await renderComponent({
       previousPage: previousPageMock,
     });
-    const previousButton = carouselElement.querySelector(
-      '[part="previous-button"]'
-    ) as HTMLElement;
+    const previousButton = carouselElement.querySelector('[part="previous-button"]') as HTMLElement;
     previousButton.click();
     expect(previousPageMock).toHaveBeenCalled();
   });
@@ -147,9 +136,7 @@ describe('carousel', () => {
     const carouselElement = await renderComponent({
       nextPage: nextPageMock,
     });
-    const nextButton = carouselElement.querySelector(
-      '[part="next-button"]'
-    ) as HTMLElement;
+    const nextButton = carouselElement.querySelector('[part="next-button"]') as HTMLElement;
     nextButton.click();
     expect(nextPageMock).toHaveBeenCalled();
   });
@@ -158,9 +145,7 @@ describe('carousel', () => {
     const carouselElement = await renderComponent({
       numberOfPages: 1,
     });
-    const previousButton = carouselElement.querySelector(
-      '[part="previous-button"]'
-    );
+    const previousButton = carouselElement.querySelector('[part="previous-button"]');
     const nextButton = carouselElement.querySelector('[part="next-button"]');
     const indicators = carouselElement.querySelector('[part="indicators"]');
 
@@ -175,10 +160,7 @@ describe('carousel', () => {
     await renderComponent({numberOfPages, currentPage});
     const listItem = (page: number) => locators.indicator.nth(page);
 
-    expect(listItem(currentPage)).toHaveAttribute(
-      'part',
-      'indicator active-indicator'
-    );
+    expect(listItem(currentPage)).toHaveAttribute('part', 'indicator active-indicator');
   });
 
   it('should not mark other pages active', async () => {
@@ -187,13 +169,7 @@ describe('carousel', () => {
     await renderComponent({numberOfPages, currentPage});
     const listItem = (page: number) => locators.indicator.nth(page);
 
-    expect(listItem(0)).not.toHaveAttribute(
-      'part',
-      'indicator active-indicator'
-    );
-    expect(listItem(2)).not.toHaveAttribute(
-      'part',
-      'indicator active-indicator'
-    );
+    expect(listItem(0)).not.toHaveAttribute('part', 'indicator active-indicator');
+    expect(listItem(2)).not.toHaveAttribute('part', 'indicator active-indicator');
   });
 });

@@ -51,8 +51,7 @@ export class AtomicInsightResultAttachToCaseIndicator
       return;
     }
 
-    const caseId: string =
-      this.bindings.engine.state.insightCaseContext?.caseId || '';
+    const caseId: string = this.bindings.engine.state.insightCaseContext?.caseId || '';
     this.attachToCase = buildAttachToCase(this.bindings.engine, {
       options: {
         result,

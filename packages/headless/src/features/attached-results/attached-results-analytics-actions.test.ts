@@ -30,8 +30,7 @@ vi.mocked(CoveoInsightClient).mockImplementation(function () {
   this.disable = () => {};
   this.logCaseAttach = mockLogCaseAttach;
   this.logCaseDetach = mockLogCaseDetach;
-  this.logGeneratedAnswerCitationDocumentAttach =
-    mockLogGeneratedAnswerCitationDocumentAttach;
+  this.logGeneratedAnswerCitationDocumentAttach = mockLogGeneratedAnswerCitationDocumentAttach;
 });
 
 vi.mocked(createRelay).mockReturnValue({
@@ -186,15 +185,9 @@ describe('attached results analytics actions', () => {
         );
 
         expect(mockLogCaseAttach).toHaveBeenCalledTimes(1);
-        expect(mockLogCaseAttach.mock.calls[0][0]).toStrictEqual(
-          expectedDocumentInfo
-        );
-        expect(mockLogCaseAttach.mock.calls[0][1]).toStrictEqual(
-          expectedDocumentIdentifier
-        );
-        expect(mockLogCaseAttach.mock.calls[0][2]).toStrictEqual(
-          expectedMetadata
-        );
+        expect(mockLogCaseAttach.mock.calls[0][0]).toStrictEqual(expectedDocumentInfo);
+        expect(mockLogCaseAttach.mock.calls[0][1]).toStrictEqual(expectedDocumentIdentifier);
+        expect(mockLogCaseAttach.mock.calls[0][2]).toStrictEqual(expectedMetadata);
       });
     });
 
@@ -207,12 +200,8 @@ describe('attached results analytics actions', () => {
         );
 
         expect(mockLogCaseDetach).toHaveBeenCalledTimes(1);
-        expect(mockLogCaseDetach.mock.calls[0][0]).toStrictEqual(
-          testResult.raw.urihash
-        );
-        expect(mockLogCaseDetach.mock.calls[0][1]).toStrictEqual(
-          expectedMetadata
-        );
+        expect(mockLogCaseDetach.mock.calls[0][0]).toStrictEqual(testResult.raw.urihash);
+        expect(mockLogCaseDetach.mock.calls[0][1]).toStrictEqual(expectedMetadata);
       });
     });
 
@@ -224,18 +213,16 @@ describe('attached results analytics actions', () => {
           {} as ThunkExtraArguments
         );
 
-        expect(
-          mockLogGeneratedAnswerCitationDocumentAttach
-        ).toHaveBeenCalledTimes(1);
-        expect(
-          mockLogGeneratedAnswerCitationDocumentAttach.mock.calls[0][0]
-        ).toStrictEqual(expectedCitationDocumentInfo);
-        expect(
-          mockLogGeneratedAnswerCitationDocumentAttach.mock.calls[0][1]
-        ).toStrictEqual(expectedCitationPayload);
-        expect(
-          mockLogGeneratedAnswerCitationDocumentAttach.mock.calls[0][2]
-        ).toStrictEqual(expectedMetadata);
+        expect(mockLogGeneratedAnswerCitationDocumentAttach).toHaveBeenCalledTimes(1);
+        expect(mockLogGeneratedAnswerCitationDocumentAttach.mock.calls[0][0]).toStrictEqual(
+          expectedCitationDocumentInfo
+        );
+        expect(mockLogGeneratedAnswerCitationDocumentAttach.mock.calls[0][1]).toStrictEqual(
+          expectedCitationPayload
+        );
+        expect(mockLogGeneratedAnswerCitationDocumentAttach.mock.calls[0][2]).toStrictEqual(
+          expectedMetadata
+        );
       });
     });
 
@@ -248,15 +235,9 @@ describe('attached results analytics actions', () => {
         );
 
         expect(mockLogCaseDetach).toHaveBeenCalledTimes(1);
-        expect(mockLogCaseDetach.mock.calls[0][0]).toStrictEqual(
-          testCitation.fields.urihash
-        );
-        expect(mockLogCaseDetach.mock.calls[0][1]).toStrictEqual(
-          expectedMetadata
-        );
-        expect(mockLogCaseDetach.mock.calls[0][2]).toStrictEqual(
-          testCitation.permanentid
-        );
+        expect(mockLogCaseDetach.mock.calls[0][0]).toStrictEqual(testCitation.fields.urihash);
+        expect(mockLogCaseDetach.mock.calls[0][1]).toStrictEqual(expectedMetadata);
+        expect(mockLogCaseDetach.mock.calls[0][2]).toStrictEqual(testCitation.permanentid);
       });
     });
   });

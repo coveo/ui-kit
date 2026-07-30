@@ -11,18 +11,9 @@ import {useContext, useEngine} from '@/lib/commerce-engine';
 // A hardcoded list of storefront associations for switching app context by language, country, and currency.
 // Found in the admin console under "Storefront Associations," this list is static for demonstration purposes.
 // In a real application, these values would likely come from sources like environment variables or an API.
-const storefrontAssociations = [
-  'en-CA-CAD',
-  'fr-CA-CAD',
-  'en-GB-GBP',
-  'en-US-USD',
-];
+const storefrontAssociations = ['en-CA-CAD', 'fr-CA-CAD', 'en-GB-GBP', 'en-US-USD'];
 
-export default function ContextDropdown({
-  useCase,
-}: {
-  useCase?: 'listing' | 'search';
-}) {
+export default function ContextDropdown({useCase}: {useCase?: 'listing' | 'search'}) {
   const {state, methods} = useContext();
   const engine = useEngine();
 
@@ -40,14 +31,10 @@ export default function ContextDropdown({
           methods?.setCustom({storefrontAssociation: e.target.value});
 
           useCase === 'search'
-            ? engine?.dispatch(
-                loadSearchActions(engine as CommerceEngine).executeSearch()
-              )
+            ? engine?.dispatch(loadSearchActions(engine as CommerceEngine).executeSearch())
             : useCase === 'listing' &&
               engine?.dispatch(
-                loadProductListingActions(
-                  engine as CommerceEngine
-                ).fetchProductListing()
+                loadProductListingActions(engine as CommerceEngine).fetchProductListing()
               );
         }}
       >

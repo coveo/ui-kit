@@ -10,10 +10,7 @@ export {
   getOrCreateRoutedInterfaceRegistry,
   mergeTurnsWithRegistry,
 } from './routed-interface-registry.js';
-export type {
-  RoutedInterfaceEntry,
-  RoutedInterfaceRegistry,
-} from './routed-interface-registry.js';
+export type {RoutedInterfaceEntry, RoutedInterfaceRegistry} from './routed-interface-registry.js';
 export type {
   A2UISurface,
   AgentMessage,

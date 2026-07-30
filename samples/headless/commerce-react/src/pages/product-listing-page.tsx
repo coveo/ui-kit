@@ -66,10 +66,7 @@ export default function ProductListingPage(props: IProductListingPageProps) {
     contextController.setView({url});
     const unsubscribe = bindUrlManager();
 
-    if (
-      !productListingController.state.isLoading &&
-      !productListingController.state.responseId
-    ) {
+    if (!productListingController.state.isLoading && !productListingController.state.responseId) {
       productListingController.executeFirstRequest();
     } else if (!productListingController.state.isLoading) {
       productListingController.refresh();

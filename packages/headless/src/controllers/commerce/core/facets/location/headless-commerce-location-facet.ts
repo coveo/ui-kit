@@ -23,10 +23,7 @@ export type LocationFacetOptions = Omit<
  * @group Sub-controllers
  * @category LocationFacet
  */
-export type LocationFacetState = Omit<
-  CoreCommerceFacetState<LocationFacetValue>,
-  'type'
-> & {
+export type LocationFacetState = Omit<CoreCommerceFacetState<LocationFacetValue>, 'type'> & {
   type: 'location';
 };
 

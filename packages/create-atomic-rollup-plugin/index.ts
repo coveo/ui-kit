@@ -47,11 +47,7 @@ export function coveoNpmResolve() {
 function nodeResolve(source: string, conditions: string[] = []) {
   return spawnSync(
     process.argv[0],
-    [
-      ...conditions.flatMap((condition) => ['-C', condition]),
-      '-p',
-      `require.resolve('${source}')`,
-    ],
+    [...conditions.flatMap((condition) => ['-C', condition]), '-p', `require.resolve('${source}')`],
     {encoding: 'utf-8'}
   ).stdout.trim();
 }

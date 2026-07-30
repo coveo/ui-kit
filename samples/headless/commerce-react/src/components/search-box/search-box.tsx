@@ -19,11 +19,7 @@ interface ISearchBoxProps {
 }
 
 export default function SearchBox(props: ISearchBoxProps) {
-  const {
-    controller,
-    instantProductsController,
-    filterSuggestionsGeneratorController,
-  } = props;
+  const {controller, instantProductsController, filterSuggestionsGeneratorController} = props;
 
   const [state, setState] = useState(controller.state);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
@@ -74,9 +70,7 @@ export default function SearchBox(props: ISearchBoxProps) {
     showDropdown();
   };
 
-  const onSearchBoxInputKeyDown = (
-    e: React.KeyboardEvent<HTMLInputElement>
-  ) => {
+  const onSearchBoxInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     switch (e.key) {
       case 'Escape':
         if (isDropdownVisible) {
@@ -106,9 +100,7 @@ export default function SearchBox(props: ISearchBoxProps) {
           break;
         }
         e.preventDefault();
-        const next =
-          (activeSuggestion - 1 + state.suggestions.length) %
-          state.suggestions.length;
+        const next = (activeSuggestion - 1 + state.suggestions.length) % state.suggestions.length;
         setActiveSuggestion(next);
         onFocusSuggestion(state.suggestions[next]);
         showDropdown();
@@ -154,10 +146,7 @@ export default function SearchBox(props: ISearchBoxProps) {
 
   const renderDropdown = () => {
     return (
-      <div
-        className="SearchBoxDropdown row"
-        onMouseDown={(e) => e.preventDefault()}
-      >
+      <div className="SearchBoxDropdown row" onMouseDown={(e) => e.preventDefault()}>
         {state.suggestions.length > 0 && (
           <div className="QuerySuggestion column small">
             <p>Query suggestions</p>
@@ -233,9 +222,7 @@ export default function SearchBox(props: ISearchBoxProps) {
       <button
         aria-label="Clear query"
         className="SearchBoxClear"
-        disabled={
-          state.isLoadingSuggestions || state.isLoading || state.value === ''
-        }
+        disabled={state.isLoadingSuggestions || state.isLoading || state.value === ''}
         onClick={onClickSearchBoxClear}
         title="Clear query"
         type="reset"

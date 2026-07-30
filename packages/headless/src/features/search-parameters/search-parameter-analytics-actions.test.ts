@@ -1,7 +1,4 @@
-import {
-  interfaceChange,
-  logInterfaceChange,
-} from '../analytics/analytics-actions.js';
+import {interfaceChange, logInterfaceChange} from '../analytics/analytics-actions.js';
 import type {LegacySearchAction} from '../analytics/analytics-utils.js';
 import {
   facetClearAll,
@@ -13,37 +10,19 @@ import {
   logFacetSelect,
   logFacetUnexclude,
 } from '../facets/facet-set/facet-set-analytics-actions.js';
-import {
-  logPageNumber,
-  logPagerResize,
-} from '../pagination/pagination-analytics-actions.js';
-import {
-  logSearchboxSubmit,
-  searchboxSubmit,
-} from '../query/query-analytics-actions.js';
-import {
-  logResultsSort,
-  resultsSort,
-} from '../sort-criteria/sort-criteria-analytics-actions.js';
-import {
-  legacyLogParametersChange,
-  parametersChange,
-} from './search-parameter-analytics-actions.js';
+import {logPageNumber, logPagerResize} from '../pagination/pagination-analytics-actions.js';
+import {logSearchboxSubmit, searchboxSubmit} from '../query/query-analytics-actions.js';
+import {logResultsSort, resultsSort} from '../sort-criteria/sort-criteria-analytics-actions.js';
+import {legacyLogParametersChange, parametersChange} from './search-parameter-analytics-actions.js';
 import {logParametersChange} from './search-parameter-insight-analytics-actions.js';
 
 describe('legacyLogParametersChange', () => {
-  function expectIdenticalActionType(
-    action1: LegacySearchAction,
-    action2: LegacySearchAction
-  ) {
+  function expectIdenticalActionType(action1: LegacySearchAction, action2: LegacySearchAction) {
     expect(action1.typePrefix).toEqual(action2.typePrefix);
   }
 
   it('should log #logSearchboxSubmit when #q parameter changes', () => {
-    expectIdenticalActionType(
-      legacyLogParametersChange({}, {q: 'test'}),
-      logSearchboxSubmit()
-    );
+    expectIdenticalActionType(legacyLogParametersChange({}, {q: 'test'}), logSearchboxSubmit());
   });
 
   it('should log #logResultsSort when #sortCriteria parameter changes', () => {
@@ -54,10 +33,7 @@ describe('legacyLogParametersChange', () => {
   });
 
   it('should log #logPageNumber when #firstResult parameter changes', () => {
-    expectIdenticalActionType(
-      legacyLogParametersChange({}, {firstResult: 10}),
-      logPageNumber()
-    );
+    expectIdenticalActionType(legacyLogParametersChange({}, {firstResult: 10}), logPageNumber());
   });
 
   it('should log #logPagerResize when #firstResult parameter changes', () => {
@@ -76,19 +52,13 @@ describe('legacyLogParametersChange', () => {
   legacyTestFacetExcludeLogging(expectIdenticalActionType);
 
   it('should log a generic #logInterfaceChange when an unmanaged parameter', () => {
-    expectIdenticalActionType(
-      legacyLogParametersChange({}, {cq: 'hello'}),
-      logInterfaceChange()
-    );
+    expectIdenticalActionType(legacyLogParametersChange({}, {cq: 'hello'}), logInterfaceChange());
   });
 });
 
 function legacyTestFacetSelectLogging(
   parameter: string,
-  expectIdenticalActionType: (
-    action1: LegacySearchAction,
-    action2: LegacySearchAction
-  ) => void
+  expectIdenticalActionType: (action1: LegacySearchAction, action2: LegacySearchAction) => void
 ) {
   legacyTestFacetLogging(parameter, expectIdenticalActionType);
 
@@ -111,10 +81,7 @@ function legacyTestFacetSelectLogging(
 }
 
 function legacyTestFacetExcludeLogging(
-  expectIdenticalActionType: (
-    action1: LegacySearchAction,
-    action2: LegacySearchAction
-  ) => void
+  expectIdenticalActionType: (action1: LegacySearchAction, action2: LegacySearchAction) => void
 ) {
   it('should log #logFacetUnexclude when an fExcluded parameter with a single value is removed', () => {
     expectIdenticalActionType(
@@ -160,10 +127,7 @@ function legacyTestFacetExcludeLogging(
 
 function legacyTestFacetLogging(
   parameter: string,
-  expectIdenticalActionType: (
-    action1: LegacySearchAction,
-    action2: LegacySearchAction
-  ) => void
+  expectIdenticalActionType: (action1: LegacySearchAction, action2: LegacySearchAction) => void
 ) {
   it(`should log #logFacetDeselect when an ${parameter} parameter with a single value is removed`, () => {
     expectIdenticalActionType(
@@ -174,10 +138,7 @@ function legacyTestFacetLogging(
 
   it(`should log #logFacetClearAll when an ${parameter} parameter with multiple values is removed`, () => {
     expectIdenticalActionType(
-      legacyLogParametersChange(
-        {[parameter]: {author: ['Cervantes', 'Orwell']}},
-        {}
-      ),
+      legacyLogParametersChange({[parameter]: {author: ['Cervantes', 'Orwell']}}, {}),
       logFacetClearAll('author')
     );
   });
@@ -249,10 +210,7 @@ function testFacetSelectLogging(parameter: string) {
   });
 
   it(`should log #facetClearAll when an ${parameter} parameter with multiple values is removed`, () => {
-    const action = parametersChange(
-      {[parameter]: {author: ['Cervantes', 'Orwell']}},
-      {}
-    );
+    const action = parametersChange({[parameter]: {author: ['Cervantes', 'Orwell']}}, {});
 
     expect(action.actionCause).toEqual(facetClearAll().actionCause);
   });

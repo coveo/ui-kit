@@ -14,10 +14,7 @@ import {
   updateSearchConfiguration,
 } from './configuration-actions.js';
 import {configurationReducer} from './configuration-slice.js';
-import {
-  type ConfigurationState,
-  getConfigurationInitialState,
-} from './configuration-state.js';
+import {type ConfigurationState, getConfigurationInitialState} from './configuration-state.js';
 import {getSearchAgentDebugMagicCookie} from './magic-cookie.js';
 
 vi.mock('../../api/analytics/coveo-analytics-utils');
@@ -253,17 +250,13 @@ describe('configuration slice', () => {
     const state = getConfigurationInitialState();
     state.analytics.enabled = true;
 
-    expect(
-      configurationReducer(state, disableAnalytics()).analytics.enabled
-    ).toBe(false);
+    expect(configurationReducer(state, disableAnalytics()).analytics.enabled).toBe(false);
   });
 
   it('should handle enable analytics', () => {
     const state = getConfigurationInitialState();
     state.analytics.enabled = false;
-    expect(
-      configurationReducer(state, enableAnalytics()).analytics.enabled
-    ).toBe(true);
+    expect(configurationReducer(state, enableAnalytics()).analytics.enabled).toBe(true);
   });
 
   it('should handle #setOriginLevel2', () => {
@@ -271,8 +264,7 @@ describe('configuration slice', () => {
     const state = getConfigurationInitialState();
     state.analytics.originLevel2 = 'foo';
     expect(
-      configurationReducer(state, setOriginLevel2({originLevel2})).analytics
-        .originLevel2
+      configurationReducer(state, setOriginLevel2({originLevel2})).analytics.originLevel2
     ).toBe(originLevel2);
   });
 
@@ -281,8 +273,7 @@ describe('configuration slice', () => {
     const state = getConfigurationInitialState();
     state.analytics.originLevel3 = 'foo';
     expect(
-      configurationReducer(state, setOriginLevel3({originLevel3})).analytics
-        .originLevel3
+      configurationReducer(state, setOriginLevel3({originLevel3})).analytics.originLevel3
     ).toBe(originLevel3);
   });
 
@@ -297,10 +288,7 @@ describe('configuration slice', () => {
   describe('#restoreTab', () => {
     it('updates the originLevel2 to the tab id', () => {
       const state = getConfigurationInitialState();
-      const finalState = configurationReducer(
-        state,
-        restoreTab('restoredTabId')
-      );
+      const finalState = configurationReducer(state, restoreTab('restoredTabId'));
       expect(finalState.analytics.originLevel2).toBe('restoredTabId');
     });
   });

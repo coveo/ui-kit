@@ -40,9 +40,7 @@ describe('validateControllerNames', () => {
       searchBox: {},
     };
 
-    expect(() =>
-      validateControllerNames(controllersWithParameterManager)
-    ).toThrow(
+    expect(() => validateControllerNames(controllersWithParameterManager)).toThrow(
       'Reserved controller names found: parameterManager. Please use different controller names than context, cart, parameterManager.'
     );
   });
@@ -61,8 +59,6 @@ describe('validateControllerNames', () => {
       facetManager: {nested: {object: true}},
     };
 
-    expect(() =>
-      validateControllerNames(controllersWithDifferentValues)
-    ).not.toThrow();
+    expect(() => validateControllerNames(controllersWithDifferentValues)).not.toThrow();
   });
 });

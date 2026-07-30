@@ -78,9 +78,7 @@ export interface InstantProductsActionCreators {
  * @group Actions
  * @category InstantProducts
  */
-export function loadInstantProductsActions(
-  engine: CommerceEngine
-): InstantProductsActionCreators {
+export function loadInstantProductsActions(engine: CommerceEngine): InstantProductsActionCreators {
   engine.addReducers({instantProducts});
   return {
     clearExpiredProducts,

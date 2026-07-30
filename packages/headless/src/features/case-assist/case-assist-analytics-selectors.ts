@@ -34,9 +34,7 @@ export const caseAssistCaseInputValueSelector = (
   fieldName: string
 ) => state?.caseInput?.[fieldName]?.value;
 
-export const caseAssistCustomCaseInputValuesSelector = (
-  state: Partial<CaseAssistAppState>
-) =>
+export const caseAssistCustomCaseInputValuesSelector = (state: Partial<CaseAssistAppState>) =>
   Object.keys(state?.caseInput ?? []).reduce((customFields, fieldName) => {
     if (isCustomFieldName(fieldName)) {
       const value = state?.caseInput?.[fieldName]?.value;
@@ -54,41 +52,32 @@ export const caseAssistCaseFieldValueSelector = (
   fieldName: string
 ) => state?.caseField?.fields[fieldName]?.value;
 
-export const caseAssistCustomCaseFieldValuesSelector = (
-  state: Partial<CaseAssistAppState>
-) =>
-  Object.keys(state?.caseField?.fields ?? []).reduce(
-    (customFields, fieldName) => {
-      if (isCustomFieldName(fieldName)) {
-        const value = state?.caseField?.fields?.[fieldName]?.value;
-        if (value) {
-          // oxlint-disable-next-line oxc/no-accumulating-spread -- <>
-          return {...customFields, [fieldName]: value};
-        }
+export const caseAssistCustomCaseFieldValuesSelector = (state: Partial<CaseAssistAppState>) =>
+  Object.keys(state?.caseField?.fields ?? []).reduce((customFields, fieldName) => {
+    if (isCustomFieldName(fieldName)) {
+      const value = state?.caseField?.fields?.[fieldName]?.value;
+      if (value) {
+        // oxlint-disable-next-line oxc/no-accumulating-spread -- <>
+        return {...customFields, [fieldName]: value};
       }
+    }
 
-      return customFields;
-    },
-    {}
-  );
+    return customFields;
+  }, {});
 
 export const caseAssistCaseClassificationSelector = (
   state: Partial<CaseAssistAppState>,
   classificationId: string,
   autoSelection = false
 ) => {
-  const classificationFieldName = Object.keys(
-    state?.caseField?.fields ?? {}
-  ).find((fieldName) =>
+  const classificationFieldName = Object.keys(state?.caseField?.fields ?? {}).find((fieldName) =>
     state?.caseField?.fields[fieldName].suggestions.some(
       (suggestion) => suggestion.id === classificationId
     )
   );
 
   if (!classificationFieldName) {
-    throw new Error(
-      `Classification with ID '${classificationId}' could not be found.`
-    );
+    throw new Error(`Classification with ID '${classificationId}' could not be found.`);
   }
 
   const classificationField = state?.caseField?.fields[classificationFieldName];
@@ -129,9 +118,7 @@ export const caseAssistDocumentSuggestionSelector = (
   });
 
   if (!suggestion) {
-    throw new Error(
-      `Document Suggestion with ID '${suggestionId}' could not be found.`
-    );
+    throw new Error(`Document Suggestion with ID '${suggestionId}' could not be found.`);
   }
 
   const result = {

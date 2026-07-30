@@ -12,10 +12,7 @@ import {NextActionsBarSurface} from '../models';
 
       @if (!surface().isLoading) {
         <div class="actions">
-          @for (
-            action of surface().actions;
-            track action.text + ':' + action.type
-          ) {
+          @for (action of surface().actions; track action.text + ':' + action.type) {
             <button type="button" (click)="handleAction(action.text)">
               {{ action.text }}
             </button>

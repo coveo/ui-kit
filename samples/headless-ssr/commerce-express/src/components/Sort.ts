@@ -17,10 +17,7 @@ function getSortLabel(criterion: SortCriterion): string {
       return 'Relevance';
     case SortBy.Fields:
       return criterion.fields
-        .map(
-          (field) =>
-            field.displayName ?? `${field.name} ${field.direction ?? ''}`.trim()
-        )
+        .map((field) => field.displayName ?? `${field.name} ${field.direction ?? ''}`.trim())
         .join(', ');
     default:
       return 'Sort';

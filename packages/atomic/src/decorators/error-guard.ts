@@ -1,11 +1,7 @@
 import {html} from 'lit';
 import type {TemplateResultType} from 'lit/directive-helpers.js';
 import '../components/common/atomic-component-error/atomic-component-error';
-import type {
-  GenericRender,
-  LitElementWithError,
-  RenderGuardDecorator,
-} from './types';
+import type {GenericRender, LitElementWithError, RenderGuardDecorator} from './types';
 
 /**
  * A decorator that guards the render method of a LitElement component against errors.
@@ -31,9 +27,7 @@ export function errorGuard<
 >(): RenderGuardDecorator<Component, T> {
   return (_, propertyKey, descriptor) => {
     if (descriptor?.value === undefined || propertyKey !== 'render') {
-      throw new Error(
-        '@errorGuard decorator can only be used on render method'
-      );
+      throw new Error('@errorGuard decorator can only be used on render method');
     }
     const originalMethod = descriptor.value;
     descriptor.value = function (this: Component) {

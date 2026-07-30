@@ -12,9 +12,7 @@ export interface SearchAPIErrorWithExceptionInBody {
   exception: QueryException;
 }
 
-function buildDisconnectedError(
-  error: DisconnectedError
-): SearchAPIErrorWithStatusCode {
+function buildDisconnectedError(error: DisconnectedError): SearchAPIErrorWithStatusCode {
   return {
     statusCode: error.statusCode,
     type: error.name,
@@ -22,9 +20,7 @@ function buildDisconnectedError(
   };
 }
 
-function buildIgnoredAbortedError(
-  error: DOMException
-): SearchAPIErrorWithStatusCode {
+function buildIgnoredAbortedError(error: DOMException): SearchAPIErrorWithStatusCode {
   return {
     statusCode: error.code,
     type: error.name,

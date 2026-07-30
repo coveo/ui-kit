@@ -1,7 +1,7 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
+import {MockSearchApi} from '@coveo/platform-mock-api/search';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-query-error/atomic-query-error.js';
@@ -22,10 +22,9 @@ const {play: playInitOnly} = wrapInSearchInterface({
   skipFirstSearch: true,
 });
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-query-error',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-query-error', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-query-error',
@@ -130,9 +129,7 @@ export const A11yStatusMessage: Story = {
     await playInitOnly(context);
     await testStatusMessageA11y(context, {
       triggerAction: async (canvasElement) => {
-        const searchInterface = canvasElement.querySelector(
-          'atomic-search-interface'
-        )!;
+        const searchInterface = canvasElement.querySelector('atomic-search-interface')!;
         await (searchInterface as any).executeFirstSearch();
       },
       expectedText:

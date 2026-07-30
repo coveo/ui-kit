@@ -60,10 +60,7 @@ describe('#renderItemTextFallback', () => {
     mockGetProperty.mockReturnValue('fieldValue');
     mockIsUndefined.mockReturnValue(false);
 
-    const children = [
-      html`<span>First child</span>`,
-      html`<span>Second child</span>`,
-    ];
+    const children = [html`<span>First child</span>`, html`<span>Second child</span>`];
     const result = renderItemTextFallback({props})(children);
 
     expect(result).toEqual(html`${children}`);

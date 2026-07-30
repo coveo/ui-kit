@@ -7,9 +7,7 @@ export interface SnippetQuestionProps {
   question: string;
 }
 
-export const renderSnippetQuestion: FunctionalComponent<
-  SnippetQuestionProps
-> = ({props}) => {
+export const renderSnippetQuestion: FunctionalComponent<SnippetQuestionProps> = ({props}) => {
   return renderHeading({
     props: {
       level: props.headingLevel ? props.headingLevel + 1 : 0,

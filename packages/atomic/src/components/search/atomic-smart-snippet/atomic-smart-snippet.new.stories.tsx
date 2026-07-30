@@ -3,17 +3,16 @@ import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {testDisclosureA11y} from '@/storybook-utils/a11y/disclosure.js';
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
+import {MockSearchApi} from '@coveo/platform-mock-api/search';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-smart-snippet/atomic-smart-snippet.js';
 
 const searchApiHarness = new MockSearchApi();
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-smart-snippet',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-smart-snippet', {
+  excludeCategories: ['methods'],
+});
 
 const {decorator, play} = wrapInSearchInterface();
 
@@ -83,9 +82,7 @@ export const Default: Story = {};
 
 export const A11yDisclosure: Story = {
   tags: ['a11y', 'test', '!dev'],
-  decorators: [
-    (story) => html`<div style="max-width: 200px;">${story()}</div>`,
-  ],
+  decorators: [(story) => html`<div style="max-width: 200px;">${story()}</div>`],
   play: async (context) => {
     await play(context);
     await testDisclosureA11y(context, {

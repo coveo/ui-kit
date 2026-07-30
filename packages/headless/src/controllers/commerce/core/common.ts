@@ -1,8 +1,4 @@
-import type {
-  AsyncThunkAction,
-  PayloadActionCreator,
-  PrepareAction,
-} from '@reduxjs/toolkit';
+import type {AsyncThunkAction, PayloadActionCreator, PrepareAction} from '@reduxjs/toolkit';
 import type {AsyncThunkOptions} from '../../../app/async-thunk-options.js';
 
 export type FetchProductsActionCreator = () => AsyncThunkAction<
@@ -11,8 +7,4 @@ export type FetchProductsActionCreator = () => AsyncThunkAction<
   AsyncThunkOptions<unknown>
 >;
 
-export type ToggleActionCreator = PayloadActionCreator<
-  unknown,
-  string,
-  PrepareAction<unknown>
->;
+export type ToggleActionCreator = PayloadActionCreator<unknown, string, PrepareAction<unknown>>;

@@ -42,6 +42,5 @@ export interface UpdateQuerySetQueryActionCreatorPayload {
 
 export const updateQuerySetQuery = createAction(
   'querySet/update',
-  (payload: UpdateQuerySetQueryActionCreatorPayload) =>
-    validatePayload(payload, querySetDefinition)
+  (payload: UpdateQuerySetQueryActionCreatorPayload) => validatePayload(payload, querySetDefinition)
 );

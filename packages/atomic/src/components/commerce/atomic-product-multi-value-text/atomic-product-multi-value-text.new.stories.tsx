@@ -1,6 +1,6 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
-import {MockCommerceApi} from '@coveo/platform-mock-api/commerce/mock';
+import {MockCommerceApi} from '@coveo/platform-mock-api/commerce';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {wrapInCommerceProductList} from '@/storybook-utils/commerce/commerce-product-list-wrapper';
 import {wrapInProductTemplate} from '@/storybook-utils/commerce/commerce-product-template-wrapper';
@@ -22,14 +22,10 @@ commerceApiHarness.searchEndpoint.mock((response) => ({
 }));
 
 const {decorator: productDecorator} = wrapInProductTemplate();
-const {decorator: commerceProductListDecorator} = wrapInCommerceProductList(
-  'list',
-  false
-);
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-product-multi-value-text',
-  {excludeCategories: ['methods']}
-);
+const {decorator: commerceProductListDecorator} = wrapInCommerceProductList('list', false);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-product-multi-value-text', {
+  excludeCategories: ['methods'],
+});
 const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
   engineConfig: {
     preprocessRequest: (request) => {
@@ -56,11 +52,7 @@ const meta: Meta = {
   },
   argTypes,
 
-  decorators: [
-    productDecorator,
-    commerceProductListDecorator,
-    commerceInterfaceDecorator,
-  ],
+  decorators: [productDecorator, commerceProductListDecorator, commerceInterfaceDecorator],
   play,
   args: {
     ...args,

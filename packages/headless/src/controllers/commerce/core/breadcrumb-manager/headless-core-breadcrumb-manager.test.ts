@@ -54,16 +54,10 @@ import {
 } from './headless-core-breadcrumb-manager.js';
 
 vi.mock('../../../../features/commerce/facets/core-facet/core-facet-actions');
-vi.mock(
-  '../../../../features/commerce/facets/numeric-facet/numeric-facet-actions'
-);
+vi.mock('../../../../features/commerce/facets/numeric-facet/numeric-facet-actions');
 vi.mock('../../../../features/commerce/facets/date-facet/date-facet-actions');
-vi.mock(
-  '../../../../features/commerce/facets/regular-facet/regular-facet-actions'
-);
-vi.mock(
-  '../../../../features/commerce/facets/location-facet/location-facet-actions'
-);
+vi.mock('../../../../features/commerce/facets/regular-facet/regular-facet-actions');
+vi.mock('../../../../features/commerce/facets/location-facet/location-facet-actions');
 
 describe('core breadcrumb manager', () => {
   let engine: MockedCommerceEngine;
@@ -123,9 +117,7 @@ describe('core breadcrumb manager', () => {
     });
 
     it('#hasBreadcrumbs is false when there are no facet values', () => {
-      setFacetsState(
-        buildMockCommerceRegularFacetResponse({facetId, values: []})
-      );
+      setFacetsState(buildMockCommerceRegularFacetResponse({facetId, values: []}));
       expect(breadcrumbManager.state.hasBreadcrumbs).toEqual(false);
     });
 
@@ -227,10 +219,7 @@ describe('core breadcrumb manager', () => {
       setFacetsState(
         buildMockCommerceRegularFacetResponse({
           facetId,
-          values: [
-            {value: 'Acme', state: 'idle'},
-            breadcrumb,
-          ] as RegularFacetValue[],
+          values: [{value: 'Acme', state: 'idle'}, breadcrumb] as RegularFacetValue[],
         })
       );
     });
@@ -255,10 +244,7 @@ describe('core breadcrumb manager', () => {
       setFacetsState(
         buildMockCommerceLocationFacetResponse({
           facetId,
-          values: [
-            {value: 'Acme', state: 'idle'},
-            breadcrumb,
-          ] as LocationFacetValue[],
+          values: [{value: 'Acme', state: 'idle'}, breadcrumb] as LocationFacetValue[],
         })
       );
     });
@@ -297,10 +283,7 @@ describe('core breadcrumb manager', () => {
       setFacetsState(
         buildMockCommerceNumericFacetResponse({
           facetId,
-          values: [
-            {start: 0, end: 100, state: 'idle'},
-            breadcrumb,
-          ] as NumericFacetValue[],
+          values: [{start: 0, end: 100, state: 'idle'}, breadcrumb] as NumericFacetValue[],
         })
       );
     });
@@ -326,10 +309,7 @@ describe('core breadcrumb manager', () => {
       setFacetsState(
         buildMockCommerceDateFacetResponse({
           facetId,
-          values: [
-            {start: '2019', end: '2020', state: 'idle'},
-            breadcrumb,
-          ] as DateFacetValue[],
+          values: [{start: '2019', end: '2020', state: 'idle'}, breadcrumb] as DateFacetValue[],
         })
       );
     });
@@ -387,9 +367,7 @@ describe('core breadcrumb manager', () => {
     });
   });
 
-  function expectBreadcrumbToBePresentInState(
-    breadcrumb: AnyFacetValueResponse
-  ) {
+  function expectBreadcrumbToBePresentInState(breadcrumb: AnyFacetValueResponse) {
     expect(breadcrumbManager.state.facetBreadcrumbs[0].values).toEqual(
       expect.arrayContaining([
         expect.objectContaining({

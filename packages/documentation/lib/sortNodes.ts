@@ -2,10 +2,7 @@ import {normalize} from './normalize.js';
 import type {TNavNode} from './types.js';
 
 // Top-level & nested ordering utilities
-export const applyTopLevelOrderingArray = (
-  items: TNavNode[],
-  order: string[]
-) => {
+export const applyTopLevelOrderingArray = (items: TNavNode[], order: string[]) => {
   if (!Array.isArray(items) || items.length === 0 || !order?.length) return;
   const spec = order.map((s) => normalize(s));
   const wildcard = spec.indexOf('*');
@@ -27,9 +24,7 @@ export const applyNestedOrderingNode = (
 ) => {
   if (!root) return;
   if (Array.isArray(root.children) && root.children.length) {
-    const key = [keyPrefix, normalize(String(root.text ?? ''))]
-      .join(' ')
-      .trim();
+    const key = [keyPrefix, normalize(String(root.text ?? ''))].join(' ').trim();
     const spec = orderMap && (orderMap[key] || orderMap['*']);
     if (spec?.length) applyOrderingArray(root.children, spec);
     else root.children.sort(alphaByText);
@@ -51,12 +46,7 @@ const applyOrderingArray = (items: TNavNode[], order: string[]) => {
   items.sort((a, b) => rankCompare(a, b, spec, wildcard));
 };
 
-const rankCompare = (
-  a: TNavNode,
-  b: TNavNode,
-  spec: string[],
-  wildcardIdx: number
-) => {
+const rankCompare = (a: TNavNode, b: TNavNode, spec: string[], wildcardIdx: number) => {
   const an = normalize(String(a.text ?? ''));
   const bn = normalize(String(b.text ?? ''));
   const ar = spec.indexOf(an);
@@ -70,7 +60,5 @@ const rankCompare = (
 };
 
 const alphaByText = (a: TNavNode, b: TNavNode) => {
-  return normalize(String(a.text ?? '')).localeCompare(
-    normalize(String(b.text ?? ''))
-  );
+  return normalize(String(a.text ?? '')).localeCompare(normalize(String(b.text ?? '')));
 };

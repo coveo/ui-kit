@@ -1,9 +1,6 @@
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {HasKey, HasKeys} from '../../common/types/utilities.js';
-import type {
-  recommendationInternalOptionKey,
-  SolutionType,
-} from './controller-constants.js';
+import type {recommendationInternalOptionKey, SolutionType} from './controller-constants.js';
 import type {
   ControllerDefinition,
   ControllerDefinitionsMap,
@@ -43,10 +40,7 @@ export type InferControllerPropsFromDefinition<
       ? Props
       : Props & RecommendationControllerSettings
     : TController extends ControllerDefinitionWithoutProps<Controller>
-      ? HasKey<
-          TController,
-          typeof recommendationInternalOptionKey
-        > extends never
+      ? HasKey<TController, typeof recommendationInternalOptionKey> extends never
         ? {}
         : RecommendationControllerSettings
       : unknown;
@@ -61,21 +55,14 @@ export type InferControllerPropsMapFromDefinitions<
     : K]: InferControllerPropsFromDefinition<TControllers[K]>;
 };
 
-export type InferControllerFromDefinition<
-  TDefinition extends ControllerDefinition<Controller>,
-> =
-  TDefinition extends ControllerDefinition<infer TController>
-    ? TController
-    : never;
+export type InferControllerFromDefinition<TDefinition extends ControllerDefinition<Controller>> =
+  TDefinition extends ControllerDefinition<infer TController> ? TController : never;
 
 export type InferControllersMapFromDefinition<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
 > = {
-  [K in keyof TControllers as HasKey<
-    TControllers[K],
-    TSolutionType
-  > extends never
+  [K in keyof TControllers as HasKey<TControllers[K], TSolutionType> extends never
     ? never
     : K]: InferControllerFromDefinition<TControllers[K]>;
 };
@@ -84,12 +71,7 @@ export type InferControllerStaticStateMapFromDefinitionsWithSolutionType<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
 > = {
-  [K in keyof TControllers as HasKey<
-    TControllers[K],
-    TSolutionType
-  > extends never
+  [K in keyof TControllers as HasKey<TControllers[K], TSolutionType> extends never
     ? never
-    : K]: InferControllerStaticStateFromController<
-    InferControllerFromDefinition<TControllers[K]>
-  >;
+    : K]: InferControllerStaticStateFromController<InferControllerFromDefinition<TControllers[K]>>;
 };

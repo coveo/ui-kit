@@ -5,9 +5,7 @@ test.describe('atomic-commerce-numeric-facet', () => {
     await numericFacet.load();
   });
 
-  test('should allow to select and deselect a range', async ({
-    numericFacet,
-  }) => {
+  test('should allow to select and deselect a range', async ({numericFacet}) => {
     const facetValueLabel = numericFacet.getFacetValueByPosition(0);
     const facetValueBtn = numericFacet.getFacetValueButtonByPosition(0);
 
@@ -20,9 +18,7 @@ test.describe('atomic-commerce-numeric-facet', () => {
     await expect(facetValueBtn).not.toBeChecked();
   });
 
-  test('should allow to deselect a filter with the clear button', async ({
-    numericFacet,
-  }) => {
+  test('should allow to deselect a filter with the clear button', async ({numericFacet}) => {
     const facetValueLabel = numericFacet.getFacetValueByPosition(0);
 
     await facetValueLabel.click();

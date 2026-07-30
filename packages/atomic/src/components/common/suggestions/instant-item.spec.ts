@@ -54,10 +54,7 @@ describe('instant-item', () => {
     });
 
     it('should return the correct object structure', () => {
-      const result = getPartialInstantItemShowAllElement(
-        i18n,
-        'show-all-products'
-      );
+      const result = getPartialInstantItemShowAllElement(i18n, 'show-all-products');
 
       expect(result).toEqual({
         key: 'instant-results-show-all-button',
@@ -82,9 +79,7 @@ describe('instant-item', () => {
 
       expect(button).toBeInstanceOf(HTMLElement);
       expect(button.textContent?.trim()).toBe('See all products');
-      expect(button.getAttribute('part')).toBe(
-        'instant-results-show-all-button'
-      );
+      expect(button.getAttribute('part')).toBe('instant-results-show-all-button');
     });
 
     it('should have the correct part', () => {
@@ -93,9 +88,7 @@ describe('instant-item', () => {
         i18nKey: 'show-all-products',
       });
 
-      expect(button.getAttribute('part')).toBe(
-        'instant-results-show-all-button'
-      );
+      expect(button.getAttribute('part')).toBe('instant-results-show-all-button');
     });
 
     it('should have pointer-events-none class to allow clicks on parent', () => {

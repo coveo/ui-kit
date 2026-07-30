@@ -20,19 +20,13 @@ export const renderRefineModalFiltersSection: FunctionalComponentWithChildren<
   (children) => {
     return html`
       <div part="filter-section" class="mt-8 mb-3 flex w-full justify-between">
-        <h2
-          part="section-title section-filters-title"
-          class="truncate text-2xl font-bold"
-        >
+        <h2 part="section-title section-filters-title" class="truncate text-2xl font-bold">
           ${props.i18n.t('filters')}
         </h2>
         ${children}
       </div>
       ${when(props.withFacets, () => html`<slot name="facets"></slot>`)}
-      ${when(
-        props.withAutomaticFacets,
-        () => html`<slot name="automatic-facets"></slot>`
-      )}
+      ${when(props.withAutomaticFacets, () => html`<slot name="automatic-facets"></slot>`)}
     `;
   };
 

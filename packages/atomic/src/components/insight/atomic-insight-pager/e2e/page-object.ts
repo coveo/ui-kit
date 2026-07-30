@@ -7,9 +7,7 @@ export class InsightPagerPageObject extends BasePageObject {
   }
 
   get previousButton(): Locator {
-    return this.page.locator(
-      'atomic-insight-pager button[aria-label="Previous"]'
-    );
+    return this.page.locator('atomic-insight-pager button[aria-label="Previous"]');
   }
 
   get nextButton(): Locator {
@@ -17,20 +15,14 @@ export class InsightPagerPageObject extends BasePageObject {
   }
 
   pageButton(pageNumber: number): Locator {
-    return this.page.locator(
-      `atomic-insight-pager button[aria-label="Page ${pageNumber}"]`
-    );
+    return this.page.locator(`atomic-insight-pager button[aria-label="Page ${pageNumber}"]`);
   }
 
   get currentPageButton(): Locator {
-    return this.page.locator(
-      'atomic-insight-pager button[aria-current="page"]'
-    );
+    return this.page.locator('atomic-insight-pager button[aria-current="page"]');
   }
 
   get pageButtons(): Locator {
-    return this.page.locator(
-      'atomic-insight-pager button[part~="page-button"]'
-    );
+    return this.page.locator('atomic-insight-pager button[part~="page-button"]');
   }
 }

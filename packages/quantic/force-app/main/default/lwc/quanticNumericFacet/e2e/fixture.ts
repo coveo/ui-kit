@@ -6,7 +6,7 @@ import {
   insightSearchRequestRegex,
 } from '../../../../../../playwright/utils/requests';
 import {BaseFacetObject} from '../../../../../../playwright/page-object/baseFacetObject';
-import facetData from './data';
+import {initialFacetData} from './data';
 import {facetBase} from '../../../../../../playwright/fixtures/baseFacetFixture';
 
 const pageUrl = 's/quantic-numeric-facet';
@@ -23,18 +23,20 @@ type QuanticNumericFacetE2EFixtures = {
 
 export const testSearch = facetBase.extend<QuanticNumericFacetE2EFixtures>({
   options: {withInput: true},
-  facetResponseMock: [facetData],
+  facetResponses: {responses: [[initialFacetData]]},
   baseFacet: async ({page}, use) => {
     await use(new BaseFacetObject(page, searchRequestRegex));
   },
   facet: async (
-    {page, options, configuration, baseFacet, urlHash, facetResponseMock},
+    {page, options, configuration, baseFacet, urlHash, facetResponses},
     use
   ) => {
+    // search use case: interface auto-triggers a search on load, hence the mockSearchWithBaseResponse call below
+    await baseFacet.mockSearchWithBaseResponse();
     await page.goto(`${pageUrl}#${urlHash ? urlHash : ''}`);
-    if (facetResponseMock) {
-      await baseFacet.mockSearchWithFacetResponse(facetResponseMock);
-    }
+    await baseFacet.mockSearchWithFacetResponseSequence(
+      facetResponses?.responses
+    );
 
     configuration.configure(options);
     await baseFacet.waitForSearchResponse();
@@ -45,7 +47,7 @@ export const testSearch = facetBase.extend<QuanticNumericFacetE2EFixtures>({
 
 export const testInsight = facetBase.extend<QuanticNumericFacetE2EFixtures>({
   options: {withInput: true},
-  facetResponseMock: [facetData],
+  facetResponses: {responses: [[initialFacetData]]},
   baseFacet: async ({page}, use) => {
     await use(new BaseFacetObject(page, insightSearchRequestRegex));
   },
@@ -53,17 +55,19 @@ export const testInsight = facetBase.extend<QuanticNumericFacetE2EFixtures>({
     await use(new InsightSetupObject(page));
   },
   facet: async (
-    {page, options, baseFacet, configuration, insightSetup, facetResponseMock},
+    {page, options, baseFacet, configuration, insightSetup, facetResponses},
     use
   ) => {
     await page.goto(pageUrl);
-    if (facetResponseMock) {
-      await baseFacet.mockSearchWithFacetResponse(facetResponseMock);
-    }
+    await baseFacet.mockSearchWithFacetResponseSequence(
+      facetResponses?.responses
+    );
     configuration.configure({...options, useCase: useCaseEnum.insight});
     await insightSetup?.waitForInsightInterfaceInitialization();
-    await baseFacet.performSearch();
-    await baseFacet.waitForSearchResponse();
+    await Promise.all([
+      baseFacet.waitForSearchResponse(),
+      baseFacet.performSearch(),
+    ]);
     await use(new NumericFacetObject(page));
   },
 });

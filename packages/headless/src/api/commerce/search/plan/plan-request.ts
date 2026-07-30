@@ -27,8 +27,7 @@ export const getPlanRequestOptions = (req: CommercePlanRequest) => {
 };
 
 const prepareRequestParams = (req: CommercePlanRequest) => {
-  const {trackingId, query, clientId, context, language, country, currency} =
-    req;
+  const {trackingId, query, clientId, context, language, country, currency} = req;
   return {
     trackingId,
     query,

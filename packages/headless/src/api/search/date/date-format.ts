@@ -35,9 +35,7 @@ export function validateAbsoluteDate(date: AbsoluteDate, dateFormat?: string) {
       '. Please provide a date format string in the configuration options. See https://day.js.org/docs/en/parse/string-format for more information.';
     const withFormat = ` with the format "${dateFormat}"`;
     throw new Error(
-      `Could not parse the provided date "${date}"${
-        dateFormat ? withFormat : provideFormat
-      }`
+      `Could not parse the provided date "${date}"${dateFormat ? withFormat : provideFormat}`
     );
   }
 
@@ -46,8 +44,6 @@ export function validateAbsoluteDate(date: AbsoluteDate, dateFormat?: string) {
 
 export function assertDateAboveAPIMinimum(date: dayjs.Dayjs) {
   if (date.isBefore(API_DATE_MINIMUM)) {
-    throw new Error(
-      `Date is before year 1401, which is unsupported by the API: ${date}`
-    );
+    throw new Error(`Date is before year 1401, which is unsupported by the API: ${date}`);
   }
 }

@@ -4,10 +4,7 @@ import {
   buildMockBadgePlacement,
   buildMockBadgesProduct,
 } from '../../../test/mock-product-enrichment.js';
-import {
-  fetchBadges,
-  registerProductEnrichmentOptions,
-} from './product-enrichment-actions.js';
+import {fetchBadges, registerProductEnrichmentOptions} from './product-enrichment-actions.js';
 import {productEnrichmentReducer} from './product-enrichment-slice.js';
 import {
   getProductEnrichmentInitialState,
@@ -127,11 +124,9 @@ describe('product-enrichment-slice', () => {
         }),
       ];
 
-      const action = fetchBadges.fulfilled(
-        buildFetchBadgesResponse({products}),
-        '',
-        {placementIds: []}
-      );
+      const action = fetchBadges.fulfilled(buildFetchBadgesResponse({products}), '', {
+        placementIds: [],
+      });
       const finalState = productEnrichmentReducer(state, action);
 
       expect(finalState.products).toEqual(products);
@@ -146,11 +141,9 @@ describe('product-enrichment-slice', () => {
         type: 'type',
       };
 
-      const action = fetchBadges.fulfilled(
-        buildFetchBadgesResponse({products: []}),
-        '',
-        {placementIds: []}
-      );
+      const action = fetchBadges.fulfilled(buildFetchBadgesResponse({products: []}), '', {
+        placementIds: [],
+      });
       const finalState = productEnrichmentReducer(state, action);
 
       expect(finalState.error).toBeNull();
@@ -159,22 +152,18 @@ describe('product-enrichment-slice', () => {
     it('sets #isLoading to false', () => {
       state.isLoading = true;
 
-      const action = fetchBadges.fulfilled(
-        buildFetchBadgesResponse({products: []}),
-        '',
-        {placementIds: []}
-      );
+      const action = fetchBadges.fulfilled(buildFetchBadgesResponse({products: []}), '', {
+        placementIds: [],
+      });
       const finalState = productEnrichmentReducer(state, action);
 
       expect(finalState.isLoading).toBe(false);
     });
 
     it('handles empty products array', () => {
-      const action = fetchBadges.fulfilled(
-        buildFetchBadgesResponse({products: []}),
-        '',
-        {placementIds: []}
-      );
+      const action = fetchBadges.fulfilled(buildFetchBadgesResponse({products: []}), '', {
+        placementIds: [],
+      });
       const finalState = productEnrichmentReducer(state, action);
 
       expect(finalState.products).toEqual([]);
@@ -203,11 +192,9 @@ describe('product-enrichment-slice', () => {
         }),
       ];
 
-      const action = fetchBadges.fulfilled(
-        buildFetchBadgesResponse({products}),
-        '',
-        {placementIds: []}
-      );
+      const action = fetchBadges.fulfilled(buildFetchBadgesResponse({products}), '', {
+        placementIds: [],
+      });
       const finalState = productEnrichmentReducer(state, action);
 
       expect(finalState.products[0].badgePlacements).toHaveLength(2);
@@ -230,11 +217,9 @@ describe('product-enrichment-slice', () => {
         }),
       ];
 
-      const action = fetchBadges.fulfilled(
-        buildFetchBadgesResponse({products}),
-        '',
-        {placementIds: []}
-      );
+      const action = fetchBadges.fulfilled(buildFetchBadgesResponse({products}), '', {
+        placementIds: [],
+      });
       const finalState = productEnrichmentReducer(state, action);
 
       expect(finalState.products[0].badgePlacements[0].badges).toHaveLength(2);

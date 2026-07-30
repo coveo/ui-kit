@@ -23,6 +23,4 @@ export type FromBuildResult<
   TControllers extends ControllersMap,
   TOptions,
   TReturn,
-> = (
-  options: FromBuildResultOptions<TEngine, TControllers> & TOptions
-) => Promise<TReturn>;
+> = (options: FromBuildResultOptions<TEngine, TControllers> & TOptions) => Promise<TReturn>;

@@ -1,9 +1,6 @@
 import {facetOptionsReducer as facetOptions} from '../../../features/facet-options/facet-options-slice.js';
 import {searchReducer as search} from '../../../features/search/search-slice.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../../test/mock-engine-v2.js';
 import {buildMockFacetResponse} from '../../../test/mock-facet-response.js';
 import {createMockState} from '../../../test/mock-state.js';
 import {
@@ -42,10 +39,7 @@ describe('facet manager', () => {
 
     engine.state.search.response.facets = [facet1, facet2];
 
-    expect(facetManager.state.facetIds).toEqual([
-      facet1.facetId,
-      facet2.facetId,
-    ]);
+    expect(facetManager.state.facetIds).toEqual([facet1.facetId, facet2.facetId]);
   });
 
   describe('#sort', () => {
@@ -69,9 +63,7 @@ describe('facet manager', () => {
 
       const facets = [facet1];
 
-      engine.state.search.response.facets = [
-        buildMockFacetResponse({facetId: '1'}),
-      ];
+      engine.state.search.response.facets = [buildMockFacetResponse({facetId: '1'})];
 
       expect(facetManager.sort(facets)).toEqual([facet1]);
     });

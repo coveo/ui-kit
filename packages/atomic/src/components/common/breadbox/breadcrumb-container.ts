@@ -8,9 +8,7 @@ interface BreadcrumbContainerProps {
   i18n: i18n;
 }
 
-export const renderBreadcrumbContainer: FunctionalComponentWithChildren<
-  BreadcrumbContainerProps
-> =
+export const renderBreadcrumbContainer: FunctionalComponentWithChildren<BreadcrumbContainerProps> =
   ({props}) =>
   (children) => {
     const listClass = tw({

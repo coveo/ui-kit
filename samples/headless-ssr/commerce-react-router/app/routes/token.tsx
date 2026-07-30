@@ -7,9 +7,7 @@ import {coveo_accessToken} from '../cookies.server.js';
 export const loader = async ({request}: LoaderFunctionArgs) => {
   // In an SSR scenario, we recommend storing the search token in a cookie to minimize the number of network requests.
   // This is not mandatory, but it can help improve the performance of your application.
-  const accessTokenCookie = await coveo_accessToken.parse(
-    request.headers.get('Cookie')
-  );
+  const accessTokenCookie = await coveo_accessToken.parse(request.headers.get('Cookie'));
 
   if (!isExpired(accessTokenCookie)) {
     return Response.json({token: accessTokenCookie});
@@ -60,8 +58,7 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
   if (!parsedToken) {
     return Response.json(
       {
-        message:
-          'The access token returned by the Coveo Search API could not be parsed',
+        message: 'The access token returned by the Coveo Search API could not be parsed',
       },
       {status: 500}
     );

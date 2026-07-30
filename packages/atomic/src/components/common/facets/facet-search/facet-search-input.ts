@@ -18,9 +18,7 @@ export interface FacetSearchInputProps {
   onChange(value: string): void;
 }
 
-export const renderFacetSearchInput: FunctionalComponent<
-  FacetSearchInputProps
-> = ({props}) => {
+export const renderFacetSearchInput: FunctionalComponent<FacetSearchInputProps> = ({props}) => {
   const label = props.i18n.t(props.label);
   const search = props.i18n.t('facet-search-input');
   const facetSearch = props.i18n.t('facet-search', {label});
@@ -37,8 +35,7 @@ export const renderFacetSearchInput: FunctionalComponent<
           placeholder=${search}
           aria-label=${facetSearch}
           .value=${props.query}
-          @input=${(e: Event) =>
-            props.onChange((e.target as HTMLInputElement).value)}
+          @input=${(e: Event) => props.onChange((e.target as HTMLInputElement).value)}
         />
         <div
           class="search-icon text-on-background pointer-events-none absolute left-0 inline-flex h-full w-9 items-center justify-center"
@@ -57,12 +54,7 @@ export const renderFacetSearchInput: FunctionalComponent<
                 inputRef.value?.focus();
               },
             },
-          })(
-            html`<atomic-icon
-              part="search-clear-button"
-              .icon=${CloseIcon}
-            ></atomic-icon>`
-          )
+          })(html`<atomic-icon part="search-clear-button" .icon=${CloseIcon}></atomic-icon>`)
         )}
       </div>
     </div>

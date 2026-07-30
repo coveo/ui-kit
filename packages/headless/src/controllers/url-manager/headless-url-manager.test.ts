@@ -3,10 +3,7 @@ import {configuration} from '../../app/common-reducers.js';
 import {executeSearch} from '../../features/search/search-actions.js';
 import {restoreSearchParameters} from '../../features/search-parameters/search-parameter-actions.js';
 import {initialSearchParameterSelector} from '../../features/search-parameters/search-parameter-selectors.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../test/mock-engine-v2.js';
 import {createMockState} from '../../test/mock-state.js';
 import {buildUrlManager, type UrlManager} from './headless-url-manager.js';
 
@@ -78,8 +75,9 @@ describe('url manager', () => {
       engine.state.query!.q = 'test';
       manager.synchronize('');
 
-      const {tab: _tab, ...initialParametersWithoutTab} =
-        initialSearchParameterSelector(engine.state);
+      const {tab: _tab, ...initialParametersWithoutTab} = initialSearchParameterSelector(
+        engine.state
+      );
 
       expect(restoreSearchParameters).toHaveBeenCalledWith(
         expect.objectContaining(initialParametersWithoutTab)

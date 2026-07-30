@@ -25,11 +25,7 @@ const fetchIconUnmemoized = async (url: string) =>
     })
     .then((response) => {
       if (response.status !== 200 && response.status !== 304) {
-        throw IconFetchError.fromStatusCode(
-          url,
-          response.status,
-          response.statusText
-        );
+        throw IconFetchError.fromStatusCode(url, response.status, response.statusText);
       }
       return response.text();
     });

@@ -1,7 +1,4 @@
-import {
-  buildCommerceEngine,
-  getSampleCommerceEngineConfiguration,
-} from '@coveo/headless/commerce';
+import {buildCommerceEngine, getSampleCommerceEngineConfiguration} from '@coveo/headless/commerce';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {
   type AppProxyOptions,

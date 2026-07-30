@@ -1,8 +1,4 @@
-import type {
-  DateFacet,
-  DateFacetState,
-  DateFacetValue,
-} from '@coveo/headless/commerce';
+import type {DateFacet, DateFacetState, DateFacetValue} from '@coveo/headless/commerce';
 import {vi} from 'vitest';
 import {genericSubscribe} from '../common';
 

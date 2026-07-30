@@ -3,16 +3,10 @@ import * as externalCartAPI from '@/actions/external-cart-api';
 import ContextDropdown from '@/components/context-dropdown';
 import ProductBadges from '@/components/product-badges';
 import ProductViewer from '@/components/product-viewer';
-import {
-  RecommendationProvider,
-  StandaloneProvider,
-} from '@/components/providers/providers';
+import {RecommendationProvider, StandaloneProvider} from '@/components/providers/providers';
 import ViewedTogether from '@/components/recommendations/viewed-together';
 import StandaloneSearchBox from '@/components/standalone-search-box';
-import {
-  recommendationEngineDefinition,
-  standaloneEngineDefinition,
-} from '@/lib/commerce-engine';
+import {recommendationEngineDefinition, standaloneEngineDefinition} from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {defaultContext} from '@/utils/context';
 import type {ContextOptions} from '../../../../../../packages/headless/dist/definitions/controllers/commerce/context/headless-context';
@@ -56,14 +50,12 @@ export default async function ProductDescriptionPage({
     },
   });
 
-  const recsStaticState = await recommendationEngineDefinition.fetchStaticState(
-    {
-      cart: {items},
-      context,
-      navigatorContext: navigatorContext.marshal,
-      recommendations: ['viewedTogether'],
-    }
-  );
+  const recsStaticState = await recommendationEngineDefinition.fetchStaticState({
+    cart: {items},
+    context,
+    navigatorContext: navigatorContext.marshal,
+    recommendations: ['viewedTogether'],
+  });
 
   const resolvedSearchParams = await searchParams;
   const price = Number(resolvedSearchParams.price);

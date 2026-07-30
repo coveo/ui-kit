@@ -18,16 +18,13 @@ const moduleLinkPhase = ({moduleDoc}) => {
       keptAttributes.push(attribute);
       copyAttributesFromMember(attribute, memberLike);
     }
-    declaration.attributes =
-      keptAttributes.length > 0 ? keptAttributes : undefined;
+    declaration.attributes = keptAttributes.length > 0 ? keptAttributes : undefined;
 
     if (!declaration.members) {
       continue;
     }
 
-    declaration.members = declaration.members.filter(
-      (member) => member?.privacy !== 'private'
-    );
+    declaration.members = declaration.members.filter((member) => member?.privacy !== 'private');
   }
 
   moduleDoc.exports = cleanExports(moduleDoc.exports);
@@ -53,9 +50,7 @@ function cleanExports(exports) {
 }
 
 function findMember(declaration, attribute) {
-  return declaration.members.find(
-    (member) => attribute.fieldName === member.name
-  );
+  return declaration.members.find((member) => attribute.fieldName === member.name);
 }
 
 function copyAttributesFromMember(attribute, member) {
@@ -141,9 +136,7 @@ export function removeUndefinedTypePlugin() {
         if (declaration.attributes) {
           for (const attribute of declaration.attributes) {
             if (attribute.type?.text) {
-              attribute.type.text = removeUndefinedFromType(
-                attribute.type.text
-              );
+              attribute.type.text = removeUndefinedFromType(attribute.type.text);
             }
           }
         }
@@ -227,8 +220,7 @@ export function hideBaseInitializableComponentFieldsPlugin() {
 
         // Use either explicit implements or presence of the fields
         const shouldProcess =
-          extendsLitElement &&
-          (implementsBaseInitializable || hasBaseInitializableFields);
+          extendsLitElement && (implementsBaseInitializable || hasBaseInitializableFields);
 
         // If both conditions are met, mark the BaseInitializableComponent fields as private
         if (shouldProcess && declaration.members) {
@@ -243,9 +235,7 @@ export function hideBaseInitializableComponentFieldsPlugin() {
             const attributesToRemove = [];
             for (let i = 0; i < declaration.attributes.length; i++) {
               const attribute = declaration.attributes[i];
-              if (
-                baseInitializableComponentFields.includes(attribute.fieldName)
-              ) {
+              if (baseInitializableComponentFields.includes(attribute.fieldName)) {
                 attributesToRemove.push(i);
               }
             }

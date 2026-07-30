@@ -26,6 +26,7 @@
 - [`@coveo/atomic-react`](packages/atomic-react/): React specific wrapper for the Atomic component library
 - [`@coveo/auth`](packages/auth/): Functions to help authenticate with the Coveo platform.
 - [`@coveo/bueno`](packages/bueno/): A simple validator
+- [`coveo.analytics`](packages/coveo-analytics/): 📈 Coveo analytics client (node and browser compatible) 
 - [`@coveo/create-atomic`](packages/create-atomic/): Coveo Atomic Generator
 - [`@coveo/create-atomic-component`](packages/create-atomic-component/): Initialize a Coveo Atomic Component
 - [`@coveo/create-atomic-component-project`](packages/create-atomic-component-project/): Initialize a Coveo Atomic Library Project
@@ -66,7 +67,6 @@
 - Discover available Agent Skills under `.agents/skills` when beginning a new session
 - Add a changeset file when modifying source code of any public package
 - Run `pnpm run lint:fix` before committing work
-- Use the Conventional Commits 1.0.0 specification when composing a commit message
 
 ---
 

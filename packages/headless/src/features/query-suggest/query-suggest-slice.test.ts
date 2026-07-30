@@ -110,8 +110,7 @@ describe('querySuggest slice', () => {
     describe('#fetchQuerySuggestions.fulfilled', () => {
       const responseId = 'response-uuid';
       const completions = getCompletions();
-      const fetchQuerySuggestionsFulfilledAction =
-        buildFetchQuerySuggestFulfilledAction();
+      const fetchQuerySuggestionsFulfilledAction = buildFetchQuerySuggestFulfilledAction();
 
       fetchQuerySuggestionsFulfilledAction.meta.requestId = 'the_right_id';
 
@@ -141,10 +140,7 @@ describe('querySuggest slice', () => {
       should update the completions`, () => {
         state[id]!.currentRequestId = 'the_right_id';
 
-        const finalState = querySuggestReducer(
-          state,
-          fetchQuerySuggestionsFulfilledAction
-        );
+        const finalState = querySuggestReducer(state, fetchQuerySuggestionsFulfilledAction);
 
         expect(finalState[id]?.completions).toEqual(completions);
       });
@@ -156,10 +152,7 @@ describe('querySuggest slice', () => {
           isLoading: true,
         });
 
-        const finalState = querySuggestReducer(
-          state,
-          fetchQuerySuggestionsFulfilledAction
-        );
+        const finalState = querySuggestReducer(state, fetchQuerySuggestionsFulfilledAction);
 
         expect(finalState[id]?.isLoading).toBe(false);
       });
@@ -168,10 +161,7 @@ describe('querySuggest slice', () => {
       it sets the responseId`, () => {
         state[id]!.currentRequestId = 'the_right_id';
 
-        const finalState = querySuggestReducer(
-          state,
-          fetchQuerySuggestionsFulfilledAction
-        );
+        const finalState = querySuggestReducer(state, fetchQuerySuggestionsFulfilledAction);
 
         expect(finalState[id]?.responseId).toBe(responseId);
       });
@@ -183,10 +173,7 @@ describe('querySuggest slice', () => {
           currentRequestId: 'the_right_id',
         });
 
-        const finalState = querySuggestReducer(
-          state,
-          fetchQuerySuggestionsFulfilledAction
-        );
+        const finalState = querySuggestReducer(state, fetchQuerySuggestionsFulfilledAction);
 
         expect(finalState[id]?.error).toBe(null);
       });
@@ -195,18 +182,15 @@ describe('querySuggest slice', () => {
       should not update the completions`, () => {
         state[id]!.currentRequestId = 'the_wrong_id';
 
-        expect(
-          querySuggestReducer(state, fetchQuerySuggestionsFulfilledAction)
-        ).toMatchObject(state);
+        expect(querySuggestReducer(state, fetchQuerySuggestionsFulfilledAction)).toMatchObject(
+          state
+        );
       });
 
       it('should add the executed query to the list of partialQueries', () => {
         state[id] = buildMockQuerySuggest({currentRequestId: 'the_right_id'});
 
-        const nextState = querySuggestReducer(
-          state,
-          fetchQuerySuggestionsFulfilledAction
-        );
+        const nextState = querySuggestReducer(state, fetchQuerySuggestionsFulfilledAction);
 
         const {q} = fetchQuerySuggestionsFulfilledAction.payload;
         expect(nextState[id]?.partialQueries).toEqual([q]);
@@ -217,10 +201,7 @@ describe('querySuggest slice', () => {
 
         state[id] = buildMockQuerySuggest({currentRequestId: 'the_right_id'});
 
-        const nextState = querySuggestReducer(
-          state,
-          fetchQuerySuggestionsFulfilledAction
-        );
+        const nextState = querySuggestReducer(state, fetchQuerySuggestionsFulfilledAction);
 
         const {q} = fetchQuerySuggestionsFulfilledAction.payload;
         expect(nextState[id]?.partialQueries).toEqual([encodeURIComponent(q)]);

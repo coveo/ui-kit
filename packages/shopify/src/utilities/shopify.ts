@@ -6,19 +6,13 @@ declare global {
   interface Window {
     Shopify?: {
       analytics: {
-        publish: (
-          eventName: string,
-          eventData: CoveoShopifyCustomEvent
-        ) => void;
+        publish: (eventName: string, eventData: CoveoShopifyCustomEvent) => void;
       };
     };
   }
 }
 
-export function publishCustomShopifyEvent(
-  key: string,
-  customData: CoveoShopifyCustomEvent
-) {
+export function publishCustomShopifyEvent(key: string, customData: CoveoShopifyCustomEvent) {
   if (typeof window.Shopify?.analytics?.publish === 'function') {
     window.Shopify.analytics.publish(key, customData);
   }

@@ -69,21 +69,15 @@ function getRadioButtons(group: HTMLElement): HTMLElement[] {
 function getCheckedRadio(radios: HTMLElement[]): HTMLElement | null {
   return (
     radios.find(
-      (r) =>
-        (r as HTMLInputElement).checked ||
-        r.getAttribute('aria-checked') === 'true'
+      (r) => (r as HTMLInputElement).checked || r.getAttribute('aria-checked') === 'true'
     ) ?? null
   );
 }
 
-function getActiveRadio(
-  radios: HTMLElement[],
-  canvasElement: HTMLElement
-): HTMLElement | null {
+function getActiveRadio(radios: HTMLElement[], canvasElement: HTMLElement): HTMLElement | null {
   for (const radio of radios) {
     const root = radio.getRootNode() as Document | ShadowRoot;
-    const active =
-      'activeElement' in root ? (root as Document).activeElement : null;
+    const active = 'activeElement' in root ? (root as Document).activeElement : null;
     if (active === radio) {
       return radio;
     }
@@ -128,23 +122,20 @@ export async function testRadioGroupA11y(
       expect(radios.length).toBeGreaterThanOrEqual(2);
     });
 
-    await step(
-      'Initial focus lands on checked radio (or first if none checked)',
-      async () => {
-        const checked = getCheckedRadio(radios);
-        const expectedFocus = checked ?? radios[0];
+    await step('Initial focus lands on checked radio (or first if none checked)', async () => {
+      const checked = getCheckedRadio(radios);
+      const expectedFocus = checked ?? radios[0];
 
-        expectedFocus.focus();
+      expectedFocus.focus();
 
-        await waitFor(
-          () => {
-            const active = getActiveRadio(radios, canvasElement);
-            expect(active).toBe(expectedFocus);
-          },
-          {timeout: 3000}
-        );
-      }
-    );
+      await waitFor(
+        () => {
+          const active = getActiveRadio(radios, canvasElement);
+          expect(active).toBe(expectedFocus);
+        },
+        {timeout: 3000}
+      );
+    });
 
     await step('ArrowRight moves focus to next radio', async () => {
       const checked = getCheckedRadio(radios);

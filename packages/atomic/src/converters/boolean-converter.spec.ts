@@ -36,25 +36,19 @@ describe('booleanConverter', () => {
   }
 
   it('should convert "true" to true', async () => {
-    await fixture<TestElement>(
-      html`<test-element value="true"></test-element>`
-    );
+    await fixture<TestElement>(html`<test-element value="true"></test-element>`);
 
     await expect.element(page.getByText('true')).toBeInTheDocument();
   });
 
   it('should convert "false" to false', async () => {
-    await fixture<TestElement>(
-      html`<test-element value="false"></test-element>`
-    );
+    await fixture<TestElement>(html`<test-element value="false"></test-element>`);
 
     await expect.element(page.getByText('false')).toBeInTheDocument();
   });
 
   it('should convert "other" to true', async () => {
-    await fixture<TestElement>(
-      html`<test-element value="other"></test-element>`
-    );
+    await fixture<TestElement>(html`<test-element value="other"></test-element>`);
 
     await expect.element(page.getByText('true')).toBeInTheDocument();
   });
@@ -72,12 +66,8 @@ describe('booleanConverter', () => {
   });
 
   it('should print a warning when converting "false" to false', async () => {
-    const consoleWarnSpy = vi
-      .spyOn(console, 'warn')
-      .mockImplementation(() => {});
-    await fixture<TestElement>(
-      html`<test-element value="false"></test-element>`
-    );
+    const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    await fixture<TestElement>(html`<test-element value="false"></test-element>`);
 
     await expect.element(page.getByText('false')).toBeInTheDocument();
     expect(consoleWarnSpy).toHaveBeenCalledWith(

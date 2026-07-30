@@ -89,15 +89,12 @@ export class AtomicAutomaticFacetGenerator
 
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
-    this.automaticFacetGenerator = buildAutomaticFacetGenerator(
-      this.bindings.engine,
-      {
-        options: {
-          desiredCount: this.desiredCount,
-          numberOfValues: this.numberOfValues,
-        },
-      }
-    );
+    this.automaticFacetGenerator = buildAutomaticFacetGenerator(this.bindings.engine, {
+      options: {
+        desiredCount: this.desiredCount,
+        numberOfValues: this.numberOfValues,
+      },
+    });
   }
 
   /**
@@ -113,10 +110,7 @@ export class AtomicAutomaticFacetGenerator
       this.collapseFacetsAfter = -1;
       return;
     }
-    this.collapseFacetsAfter = Math.max(
-      0,
-      collapseAfter - numberOfVisibleFacets
-    );
+    this.collapseFacetsAfter = Math.max(0, collapseAfter - numberOfVisibleFacets);
   }
 
   @bindingGuard()
@@ -145,20 +139,19 @@ export class AtomicAutomaticFacetGenerator
       return nothing;
     }
 
-    return html`${this.automaticFacetGeneratorState.automaticFacets.map(
-      (facet, index) =>
-        keyed(
-          facet.state.field,
-          html`
-            <atomic-automatic-facet
-              .field=${facet.state.field}
-              .facetId=${facet.state.field}
-              .facet=${facet}
-              .searchStatus=${this.searchStatus}
-              ?isCollapsed=${this.shouldCollapseFacet(index)}
-            ></atomic-automatic-facet>
-          `
-        )
+    return html`${this.automaticFacetGeneratorState.automaticFacets.map((facet, index) =>
+      keyed(
+        facet.state.field,
+        html`
+          <atomic-automatic-facet
+            .field=${facet.state.field}
+            .facetId=${facet.state.field}
+            .facet=${facet}
+            .searchStatus=${this.searchStatus}
+            ?isCollapsed=${this.shouldCollapseFacet(index)}
+          ></atomic-automatic-facet>
+        `
+      )
     )}`;
   }
 
@@ -166,9 +159,7 @@ export class AtomicAutomaticFacetGenerator
     if (this.collapseFacetsAfter === -1) {
       return false;
     }
-    return this.collapseFacetsAfter
-      ? index + 1 > this.collapseFacetsAfter
-      : true;
+    return this.collapseFacetsAfter ? index + 1 > this.collapseFacetsAfter : true;
   }
 }
 

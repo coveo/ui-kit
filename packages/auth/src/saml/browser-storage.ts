@@ -1,7 +1,4 @@
-export type BrowserStorage = Pick<
-  Storage,
-  'setItem' | 'getItem' | 'removeItem'
->;
+export type BrowserStorage = Pick<Storage, 'setItem' | 'getItem' | 'removeItem'>;
 
 export function getBrowserStorage(): BrowserStorage {
   try {

@@ -43,10 +43,7 @@ export type {
  * @group Controllers
  * @category NumericFilter
  */
-export function buildNumericFilter(
-  engine: SearchEngine,
-  props: NumericFilterProps
-): NumericFilter {
+export function buildNumericFilter(engine: SearchEngine, props: NumericFilterProps): NumericFilter {
   if (!loadNumericFilterReducer(engine)) {
     throw loadReducerError;
   }
@@ -92,9 +89,7 @@ export function buildNumericFilter(
 
 function loadNumericFilterReducer(
   engine: SearchEngine
-): engine is SearchEngine<
-  NumericFacetSection & ConfigurationSection & SearchSection
-> {
+): engine is SearchEngine<NumericFacetSection & ConfigurationSection & SearchSection> {
   engine.addReducers({numericFacetSet, configuration, search});
   return true;
 }

@@ -10,9 +10,7 @@ interface LoadMoreButtonProps {
   label: 'load-more-results' | 'load-more-products';
 }
 
-export const renderLoadMoreButton: FunctionalComponent<LoadMoreButtonProps> = ({
-  props,
-}) => {
+export const renderLoadMoreButton: FunctionalComponent<LoadMoreButtonProps> = ({props}) => {
   const {i18n, onClick, moreAvailable, label} = props;
 
   if (!moreAvailable) {

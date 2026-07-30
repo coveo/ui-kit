@@ -18,10 +18,7 @@ export default function ProductList() {
         if (item?.resultType === ResultType.SPOTLIGHT) {
           return (
             <li key={item.id} className="spotlight-content">
-              <SpotlightContentButton
-                methods={methods}
-                spotlightContent={item}
-              />
+              <SpotlightContentButton methods={methods} spotlightContent={item} />
             </li>
           );
         }
@@ -30,10 +27,7 @@ export default function ProductList() {
           <li key={item.ec_product_id}>
             <ProductButtonWithImage methods={methods} product={item} />
 
-            <button
-              type="button"
-              onClick={() => addToCart(cartMethods!, cartState, item, methods)}
-            >
+            <button type="button" onClick={() => addToCart(cartMethods!, cartState, item, methods)}>
               Add to cart
             </button>
           </li>

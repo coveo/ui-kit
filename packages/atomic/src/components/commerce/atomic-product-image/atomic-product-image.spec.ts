@@ -57,9 +57,7 @@ describe('atomic-product-image', () => {
 
     return {
       element,
-      productImage: element?.shadowRoot?.querySelector(
-        '[part="product-image"]'
-      ),
+      productImage: element?.shadowRoot?.querySelector('[part="product-image"]'),
       previousButton: element?.shadowRoot?.querySelector(
         '[part="previous-button"]'
       ) as HTMLButtonElement | null,
@@ -70,9 +68,7 @@ describe('atomic-product-image', () => {
       indicator: element?.shadowRoot?.querySelectorAll(
         '[part="indicator"], [part="indicator active-indicator"]'
       ) as NodeListOf<HTMLLIElement>,
-      activeIndicator: element?.shadowRoot?.querySelector(
-        '[part="indicator active-indicator"]'
-      ),
+      activeIndicator: element?.shadowRoot?.querySelector('[part="indicator active-indicator"]'),
     };
   };
 
@@ -96,8 +92,7 @@ describe('atomic-product-image', () => {
 
   describe('when product has a single image', () => {
     it('should render single image without carousel controls', async () => {
-      const {productImage, previousButton, nextButton, indicators} =
-        await renderProductImage();
+      const {productImage, previousButton, nextButton, indicators} = await renderProductImage();
 
       expect(productImage).toBeInTheDocument();
       expect(previousButton).not.toBeInTheDocument();
@@ -108,23 +103,14 @@ describe('atomic-product-image', () => {
     it('should render default alt text when no imageAltField specified', async () => {
       const {productImage} = await renderProductImage();
 
-      expect(productImage).toHaveAttribute(
-        'alt',
-        'Image 1 out of 1 for Test Product'
-      );
+      expect(productImage).toHaveAttribute('alt', 'Image 1 out of 1 for Test Product');
     });
   });
 
   describe('when product has multiple images', () => {
     let productImageObject: Awaited<ReturnType<typeof renderProductImage>>;
 
-    const IMAGES = [
-      'image1.jpg',
-      'image2.jpg',
-      'image3.jpg',
-      'image4.jpg',
-      'image5.jpg',
-    ];
+    const IMAGES = ['image1.jpg', 'image2.jpg', 'image3.jpg', 'image4.jpg', 'image5.jpg'];
 
     beforeEach(async () => {
       productImageObject = await renderProductImage({
@@ -136,8 +122,7 @@ describe('atomic-product-image', () => {
     });
 
     it('should render carousel with navigation controls', () => {
-      const {productImage, previousButton, nextButton, indicators} =
-        productImageObject;
+      const {productImage, previousButton, nextButton, indicators} = productImageObject;
       expect(productImage).toBeInTheDocument();
       expect(previousButton).toBeInTheDocument();
       expect(nextButton).toBeInTheDocument();
@@ -174,8 +159,7 @@ describe('atomic-product-image', () => {
       });
 
       it('should go to first image when on last image', async () => {
-        const {element, productImage, indicator, nextButton} =
-          productImageObject;
+        const {element, productImage, indicator, nextButton} = productImageObject;
 
         indicator[IMAGES.length - 1].click();
         await element.updateComplete;
@@ -189,8 +173,7 @@ describe('atomic-product-image', () => {
 
     describe('when clicking the previous button', () => {
       it('should go to previous image when not on first image', async () => {
-        const {element, productImage, indicator, previousButton} =
-          productImageObject;
+        const {element, productImage, indicator, previousButton} = productImageObject;
 
         indicator[1].click();
         await element.updateComplete;
@@ -240,19 +223,13 @@ describe('atomic-product-image', () => {
       expect(productImage).toBeTruthy();
       expect(productImage).toBeInTheDocument();
 
-      expect(productImage).toHaveAttribute(
-        'src',
-        expect.stringContaining('data:image/svg+xml')
-      );
+      expect(productImage).toHaveAttribute('src', expect.stringContaining('data:image/svg+xml'));
     });
 
     it('should render default alt text when no custom alt field', () => {
       const {productImage} = productImageObject;
       expect(productImage).toBeTruthy();
-      expect(productImage).toHaveAttribute(
-        'alt',
-        'No image available for Test Product.'
-      );
+      expect(productImage).toHaveAttribute('alt', 'No image available for Test Product.');
     });
   });
 
@@ -381,19 +358,13 @@ describe('atomic-product-image', () => {
   });
 
   it('should render all expected shadow parts', async () => {
-    const {
-      productImage,
-      previousButton,
-      nextButton,
-      indicators,
-      indicator,
-      activeIndicator,
-    } = await renderProductImage({
-      product: buildFakeProduct({
-        ec_name: 'Test Product',
-        ec_thumbnails: Array(3).fill(DEFAULT_IMAGE),
-      }),
-    });
+    const {productImage, previousButton, nextButton, indicators, indicator, activeIndicator} =
+      await renderProductImage({
+        product: buildFakeProduct({
+          ec_name: 'Test Product',
+          ec_thumbnails: Array(3).fill(DEFAULT_IMAGE),
+        }),
+      });
 
     expect(productImage).toBeInTheDocument();
     expect(previousButton).toBeInTheDocument();

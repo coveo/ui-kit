@@ -7,14 +7,10 @@ export class ResultTextPageObject extends BasePageObject {
   }
 
   get textContent() {
-    return this.page.locator(
-      'atomic-result-text:not(atomic-result-link atomic-result-text)'
-    );
+    return this.page.locator('atomic-result-text:not(atomic-result-link atomic-result-text)');
   }
 
   get highlightedText() {
-    return this.page.locator(
-      'atomic-result-text:not(atomic-result-link atomic-result-text) b'
-    );
+    return this.page.locator('atomic-result-text:not(atomic-result-link atomic-result-text) b');
   }
 }

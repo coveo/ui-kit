@@ -25,18 +25,10 @@ export interface GenericFacetSearchProps<T extends FacetSearchState> {
 
   executeFacetSearchActionCreator: (
     facetId: string
-  ) => AsyncThunkAction<
-    unknown,
-    unknown,
-    AsyncThunkOptions<unknown, ThunkExtraArguments>
-  >;
+  ) => AsyncThunkAction<unknown, unknown, AsyncThunkOptions<unknown, ThunkExtraArguments>>;
   executeFieldSuggestActionCreator: (
     facetId: string
-  ) => AsyncThunkAction<
-    unknown,
-    unknown,
-    AsyncThunkOptions<unknown, ThunkExtraArguments>
-  >;
+  ) => AsyncThunkAction<unknown, unknown, AsyncThunkOptions<unknown, ThunkExtraArguments>>;
 }
 
 export type GenericFacetSearch = ReturnType<typeof buildGenericFacetSearch>;

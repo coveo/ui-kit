@@ -48,6 +48,4 @@ export const config = {
     }),
     searchParameterManager: defineSearchParameterManager(),
   },
-} satisfies SearchEngineDefinitionOptions<
-  ControllerDefinitionsMap<SearchEngine, Controller>
->;
+} satisfies SearchEngineDefinitionOptions<ControllerDefinitionsMap<SearchEngine, Controller>>;

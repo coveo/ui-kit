@@ -20,12 +20,9 @@ export function createConverseSearchEndpointThunk(
 ) {
   const configSelectors = getOrCreateConfigurationSelectors();
   const buildRequest = createCommerceSearchEndpointRequestSelector(scope);
-  const generativeSelectors =
-    getOrCreateGenerativeSelectors(generativeInterface);
+  const generativeSelectors = getOrCreateGenerativeSelectors(generativeInterface);
   const cartSelectors = getOrCreateCartSelectors(generativeInterface);
-  const handleResponse = createCommerceSearchEndpointResponseHandler(
-    scope.baseInterface
-  );
+  const handleResponse = createCommerceSearchEndpointResponseHandler(scope.baseInterface);
 
   const {stateId} = getHandleInternals(scope.scopeInterface);
 
@@ -33,12 +30,8 @@ export function createConverseSearchEndpointThunk(
     `${stateId}/converseSearchEndpoint/execute`,
     async ({engine}) => {
       const request = engine.read(buildRequest);
-      const conversationSessionId = engine.read(
-        generativeSelectors.getConversationSessionId
-      );
-      const conversationToken = engine.read(
-        generativeSelectors.getConversationToken
-      );
+      const conversationSessionId = engine.read(generativeSelectors.getConversationSessionId);
+      const conversationToken = engine.read(generativeSelectors.getConversationToken);
       const cart = engine.read(cartSelectors.getCartContext);
       const navigatorContext = engine.getNavigatorContextProvider()?.();
 
@@ -68,28 +61,19 @@ export function createConverseSearchEndpointThunk(
         targetEngine: 'AGENT_CORE',
       };
 
-      const config = engine.read(
-        configSelectors.getEndpointClientConfiguration
-      );
-      const result = await createConversationEndpointClient().call(
-        converseRequest,
-        config
-      );
+      const config = engine.read(configSelectors.getEndpointClientConfiguration);
+      const result = await createConversationEndpointClient().call(converseRequest, config);
 
       if (!result.success) {
         throw new Error(result.error);
       }
 
-      const response = await extractCommerceSearchResponseFromStream(
-        result.data.stream
-      );
+      const response = await extractCommerceSearchResponseFromStream(result.data.stream);
       handleResponse(engine, response);
     }
   );
 
-  engine.adoptSlice(
-    getOrCreateCommerceSearchEndpointSlice(scope.scopeInterface, thunk)
-  );
+  engine.adoptSlice(getOrCreateCommerceSearchEndpointSlice(scope.scopeInterface, thunk));
 
   return thunk;
 }

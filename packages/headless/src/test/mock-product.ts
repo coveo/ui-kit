@@ -1,13 +1,7 @@
-import type {
-  BaseProduct,
-  ChildProduct,
-  Product,
-} from '../api/commerce/common/product.js';
+import type {BaseProduct, ChildProduct, Product} from '../api/commerce/common/product.js';
 import {ResultType} from '../api/commerce/common/result.js';
 
-export function buildMockChildProduct(
-  config: Partial<ChildProduct> = {}
-): ChildProduct {
+export function buildMockChildProduct(config: Partial<ChildProduct> = {}): ChildProduct {
   return {
     permanentid: '',
     clickUri: '',
@@ -33,9 +27,7 @@ export function buildMockChildProduct(
   };
 }
 
-export function buildMockBaseProduct(
-  config: Partial<BaseProduct> = {}
-): BaseProduct {
+export function buildMockBaseProduct(config: Partial<BaseProduct> = {}): BaseProduct {
   const {children, totalNumberOfChildren, ...childProductConfig} = config;
   return {
     ...buildMockChildProduct(childProductConfig),

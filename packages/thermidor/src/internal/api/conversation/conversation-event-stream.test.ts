@@ -31,12 +31,10 @@ describe('readConversationEventStream', () => {
     const normalizedEvent = {type: 'turn_complete'};
 
     mockParseSSEEvent.mockReturnValue(normalizedEvent);
-    mockReadEventStream.mockImplementation(
-      async ({onEvent: onRawEvent, onDone}) => {
-        onRawEvent({event: 'turn_complete', data: '{}'});
-        onDone?.();
-      }
-    );
+    mockReadEventStream.mockImplementation(async ({onEvent: onRawEvent, onDone}) => {
+      onRawEvent({event: 'turn_complete', data: '{}'});
+      onDone?.();
+    });
 
     await readConversationEventStream({stream, onEvent});
 

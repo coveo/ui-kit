@@ -3,6 +3,12 @@
   "buildCommand": "turbo run build:storybook --filter=@coveo/atomic --",
   "outputDir": "dist-storybook",
   "exitOnceUploaded": true,
-  "untraced": ["/virtual:*"],
+  "untraced": [
+    "package.json",
+    "pnpm-lock.yaml",
+    "/virtual:*",
+    "packages/**",
+    "!packages/atomic/**"
+  ],
   "onlyChanged": true
 }

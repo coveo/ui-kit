@@ -1,10 +1,6 @@
 import {beforeEach, describe, expect, it} from 'vitest';
 import {createTestEngine} from '@/src/test/test-utils.js';
-import {
-  Engine,
-  FullEngine,
-  getFullEngine,
-} from '@/src/internal/engine/index.js';
+import {Engine, FullEngine, getFullEngine} from '@/src/internal/engine/index.js';
 import {
   accessToken,
   country,

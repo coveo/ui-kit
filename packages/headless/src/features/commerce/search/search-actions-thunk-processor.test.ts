@@ -40,10 +40,7 @@ describe('commerce AsyncSearchThunkProcessor', () => {
 
   describe('fetchFromAPI', () => {
     it('captures enableResults: true from request', async () => {
-      const processor =
-        new AsyncSearchThunkProcessor<QuerySearchCommerceAPIThunkReturn>(
-          config
-        );
+      const processor = new AsyncSearchThunkProcessor<QuerySearchCommerceAPIThunkReturn>(config);
       const mockResponse = buildSearchResponse({
         products: [buildMockProduct()],
       });
@@ -52,10 +49,7 @@ describe('commerce AsyncSearchThunkProcessor', () => {
       );
 
       const request = {
-        ...buildFilterableCommerceAPIRequest(
-          state,
-          config.extra.navigatorContext
-        ),
+        ...buildFilterableCommerceAPIRequest(state, config.extra.navigatorContext),
         enableResults: true,
       };
 
@@ -65,10 +59,7 @@ describe('commerce AsyncSearchThunkProcessor', () => {
     });
 
     it('captures enableResults: false from request', async () => {
-      const processor =
-        new AsyncSearchThunkProcessor<QuerySearchCommerceAPIThunkReturn>(
-          config
-        );
+      const processor = new AsyncSearchThunkProcessor<QuerySearchCommerceAPIThunkReturn>(config);
       const mockResponse = buildSearchResponse({
         products: [buildMockProduct()],
       });
@@ -77,10 +68,7 @@ describe('commerce AsyncSearchThunkProcessor', () => {
       );
 
       const request = {
-        ...buildFilterableCommerceAPIRequest(
-          state,
-          config.extra.navigatorContext
-        ),
+        ...buildFilterableCommerceAPIRequest(state, config.extra.navigatorContext),
         enableResults: false,
       };
 
@@ -91,20 +79,14 @@ describe('commerce AsyncSearchThunkProcessor', () => {
   });
 
   async function simulateProcessing(
-    response:
-      | {error: CommerceAPIErrorStatusResponse}
-      | {success: SearchCommerceSuccessResponse}
+    response: {error: CommerceAPIErrorStatusResponse} | {success: SearchCommerceSuccessResponse}
   ) {
-    const processor =
-      new AsyncSearchThunkProcessor<QuerySearchCommerceAPIThunkReturn>(config);
+    const processor = new AsyncSearchThunkProcessor<QuerySearchCommerceAPIThunkReturn>(config);
     const fetched = {
       response,
       duration: 123,
       queryExecuted: 'foo',
-      requestExecuted: buildFilterableCommerceAPIRequest(
-        state,
-        config.extra.navigatorContext
-      ),
+      requestExecuted: buildFilterableCommerceAPIRequest(state, config.extra.navigatorContext),
     };
     return processor.process(fetched);
   }
@@ -145,9 +127,7 @@ describe('commerce AsyncSearchThunkProcessor', () => {
 
     expect(config.dispatch).toHaveBeenCalledWith(updateQuery({query: 'bar'}));
     expect(config.extra.apiClient.search).not.toHaveBeenCalled();
-    expect(processed.response).toMatchObject(
-      originalResponseWithProductsAndChangedQuery.response
-    );
+    expect(processed.response).toMatchObject(originalResponseWithProductsAndChangedQuery.response);
     expect(processed.originalQuery).toBe('foo');
     expect(processed.queryExecuted).toBe('bar');
   });
@@ -189,16 +169,12 @@ describe('commerce AsyncSearchThunkProcessor', () => {
       Promise.resolve({success: responseAfterModification})
     );
 
-    const processor =
-      new AsyncSearchThunkProcessor<QuerySearchCommerceAPIThunkReturn>(config);
+    const processor = new AsyncSearchThunkProcessor<QuerySearchCommerceAPIThunkReturn>(config);
     const fetched = {
       response: {success: originalResponseWithQueryTrigger.response},
       duration: 123,
       queryExecuted: 'query me',
-      requestExecuted: buildFilterableCommerceAPIRequest(
-        state,
-        config.extra.navigatorContext
-      ),
+      requestExecuted: buildFilterableCommerceAPIRequest(state, config.extra.navigatorContext),
       enableResults: true,
     };
 
@@ -226,16 +202,12 @@ describe('commerce AsyncSearchThunkProcessor', () => {
       Promise.resolve({success: responseAfterModification})
     );
 
-    const processor =
-      new AsyncSearchThunkProcessor<QuerySearchCommerceAPIThunkReturn>(config);
+    const processor = new AsyncSearchThunkProcessor<QuerySearchCommerceAPIThunkReturn>(config);
     const fetched = {
       response: {success: originalResponseWithQueryTrigger.response},
       duration: 123,
       queryExecuted: 'query me',
-      requestExecuted: buildFilterableCommerceAPIRequest(
-        state,
-        config.extra.navigatorContext
-      ),
+      requestExecuted: buildFilterableCommerceAPIRequest(state, config.extra.navigatorContext),
       enableResults: false,
     };
 

@@ -39,12 +39,8 @@ describe('#renderRefineModal', () => {
       closeIcon: element.querySelector('atomic-icon[part="close-icon"]'),
       footerContent: element.querySelector('div[part="footer-content"]'),
       footerButton: element.querySelector('button[part="footer-button"]'),
-      footerButtonText: element.querySelector(
-        'span[part="footer-button-text"]'
-      ),
-      footerButtonCount: element.querySelector(
-        'span[part="footer-button-count"]'
-      ),
+      footerButtonText: element.querySelector('span[part="footer-button-text"]'),
+      footerButtonCount: element.querySelector('span[part="footer-button-count"]'),
       children: element.querySelector('.test-children'),
     };
   };

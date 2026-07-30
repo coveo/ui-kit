@@ -3,8 +3,7 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
 import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
-import {buildSearchResponseWithResults} from '@coveo/platform-mock-api/search/search-response-mocks';
+import {buildSearchResponseWithResults, MockSearchApi} from '@coveo/platform-mock-api/search';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-segmented-facet/atomic-segmented-facet.js';
@@ -12,12 +11,9 @@ import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
 
 const searchApiHarness = new MockSearchApi();
 const {decorator, play} = wrapInSearchInterface();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-segmented-facet',
-  {
-    excludeCategories: ['methods'],
-  }
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-segmented-facet', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-segmented-facet',
@@ -92,20 +88,17 @@ export const A11yStatusMessage: Story = {
     `,
   ],
   beforeEach: () => {
-    searchApiHarness.searchEndpoint.mockOnce(
-      buildSearchResponseWithResults(120)
-    );
-    searchApiHarness.searchEndpoint.mockOnce(
-      buildSearchResponseWithResults(42)
-    );
+    searchApiHarness.searchEndpoint.mockOnce(buildSearchResponseWithResults(120));
+    searchApiHarness.searchEndpoint.mockOnce(buildSearchResponseWithResults(42));
   },
   play: async (context) => {
     await play(context);
     await testStatusMessageA11y(context, {
       triggerAction: async () => {
-        const [button] = await within(
-          context.canvasElement
-        ).findAllByShadowLabelText('Inclusion filter on', {exact: false});
+        const [button] = await within(context.canvasElement).findAllByShadowLabelText(
+          'Inclusion filter on',
+          {exact: false}
+        );
         button.click();
       },
       expectedText: 'Results loaded. Results 1-10 of 42',

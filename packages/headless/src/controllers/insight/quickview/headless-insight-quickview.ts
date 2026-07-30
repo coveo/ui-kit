@@ -80,10 +80,7 @@ export interface QuickviewState {
  * @group Controllers
  * @category Quickview
  */
-export function buildQuickview(
-  engine: InsightEngine,
-  props: QuickviewProps
-): Quickview {
+export function buildQuickview(engine: InsightEngine, props: QuickviewProps): Quickview {
   if (!loadQuickviewReducers(engine)) {
     throw loadReducerError;
   }
@@ -104,10 +101,7 @@ export function buildQuickview(
     engine,
     coreProps,
     (state, options) =>
-      buildInsightResultPreviewRequest(
-        state as StateNeededByInsightHtmlEndpoint,
-        options
-      ),
+      buildInsightResultPreviewRequest(state as StateNeededByInsightHtmlEndpoint, options),
     path,
     fetchResultContentCallback
   );

@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic-react",
-  "version": "3.11.34",
+  "version": "3.11.35",
   "description": "React specific wrapper for the Atomic component library",
   "license": "Apache-2.0",
   "repository": {
@@ -46,9 +46,9 @@
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "29.0.3",
-    "@rollup/plugin-json": "6.1.0",
-    "@rollup/plugin-node-resolve": "16.0.3",
-    "@rollup/plugin-typescript": "12.3.0",
+    "@rollup/plugin-json": "catalog:",
+    "@rollup/plugin-node-resolve": "catalog:",
+    "@rollup/plugin-typescript": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",

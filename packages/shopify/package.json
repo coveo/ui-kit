@@ -1,6 +1,6 @@
 {
   "name": "@coveo/shopify",
-  "version": "1.9.38",
+  "version": "1.9.39",
   "description": "Utilities to integrate Shopify with Coveo's commerce engine",
   "license": "Apache-2.0",
   "repository": {

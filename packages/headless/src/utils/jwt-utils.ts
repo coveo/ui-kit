@@ -39,10 +39,7 @@ export function parseJWT(token?: string): JWTPayload | null {
  * @param bufferSeconds - Buffer time in seconds before expiration to consider token as needing renewal
  * @returns true if the token should be renewed (expired or expiring within buffer time), false otherwise
  */
-export function shouldRenewJWT(
-  token?: string,
-  bufferSeconds: number = 60
-): boolean {
+export function shouldRenewJWT(token?: string, bufferSeconds: number = 60): boolean {
   if (!token) {
     return false;
   }

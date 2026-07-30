@@ -13,15 +13,9 @@ export function hydratedRecommendationStaticStateFactory<
 >(
   controllerDefinitions: AugmentedControllerDefinition<TControllerDefinitions>,
   options: CommerceEngineDefinitionOptions<TControllerDefinitions>
-): HydrateStaticStateFunction<
-  TControllerDefinitions,
-  SolutionType.recommendation
-> {
+): HydrateStaticStateFunction<TControllerDefinitions, SolutionType.recommendation> {
   return async (
-    params: HydrateStaticStateParameters<
-      TControllerDefinitions,
-      SolutionType.recommendation
-    >
+    params: HydrateStaticStateParameters<TControllerDefinitions, SolutionType.recommendation>
   ) => {
     const solutionTypeBuild = await buildFactory(
       controllerDefinitions,

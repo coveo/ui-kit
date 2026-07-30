@@ -7,6 +7,4 @@ export enum SolutionType {
 
 const recommendationOptionKey = 'recommendation-internal-options';
 
-export const recommendationInternalOptionKey = Symbol.for(
-  recommendationOptionKey
-);
+export const recommendationInternalOptionKey = Symbol.for(recommendationOptionKey);

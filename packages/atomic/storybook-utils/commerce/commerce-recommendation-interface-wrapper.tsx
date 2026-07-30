@@ -27,9 +27,7 @@ export const wrapInCommerceRecommendationInterface = (
     </atomic-commerce-recommendation-interface>
   `,
   play: async ({canvasElement}) => {
-    await customElements.whenDefined(
-      'atomic-commerce-recommendation-interface'
-    );
+    await customElements.whenDefined('atomic-commerce-recommendation-interface');
     const recommendationInterface =
       canvasElement.querySelector<AtomicCommerceRecommendationInterface>(
         'atomic-commerce-recommendation-interface'

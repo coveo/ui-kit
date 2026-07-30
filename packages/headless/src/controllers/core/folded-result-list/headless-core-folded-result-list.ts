@@ -2,10 +2,7 @@ import {Schema} from '@coveo/bueno';
 import type {AsyncThunkAction} from '@reduxjs/toolkit';
 import type {Result} from '../../../api/search/search/result.js';
 import type {CoreEngine} from '../../../app/engine.js';
-import type {
-  ClickAction,
-  CustomAction,
-} from '../../../features/analytics/analytics-utils.js';
+import type {ClickAction, CustomAction} from '../../../features/analytics/analytics-utils.js';
 import {configurationReducer as configuration} from '../../../features/configuration/configuration-slice.js';
 import {
   foldingOptionsSchemaDefinition,
@@ -36,9 +33,7 @@ import type {SearchStatusState} from '../status/headless-core-status.js';
 
 export type {FoldedCollection, FoldedResult};
 
-const optionsSchema = new Schema<Required<FoldingOptions>>(
-  foldingOptionsSchemaDefinition
-);
+const optionsSchema = new Schema<Required<FoldingOptions>>(foldingOptionsSchemaDefinition);
 
 export interface FoldingOptions {
   /**
@@ -94,7 +89,6 @@ export interface CoreFoldedResultListProps {
 /**
  * The `FoldedResultList` headless controller re-organizes results into hierarchical collections (a.k.a. threads).
  *
- * Example: [folded-result-list.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/folded-result-list/folded-result-list.fn.tsx)
  *
  * @group Controllers
  * @category FoldedResultList
@@ -196,12 +190,7 @@ export function buildCoreFoldedResultList(
   const getState = () => engine.state;
 
   const options = props.options?.folding
-    ? validateOptions(
-        engine,
-        optionsSchema,
-        props.options!.folding!,
-        'buildFoldedResultList'
-      )
+    ? validateOptions(engine, optionsSchema, props.options!.folding!, 'buildFoldedResultList')
     : {};
 
   dispatch(registerFolding({...options}));
@@ -212,9 +201,7 @@ export function buildCoreFoldedResultList(
     loadCollection: (collection) => {
       dispatch(
         props.loadCollectionActionCreator(
-          collection.result.raw[
-            engine.state.folding.fields.collection
-          ] as string
+          collection.result.raw[engine.state.folding.fields.collection] as string
         )
       );
       dispatch(analyticsClient.logShowMoreFoldedResults(collection.result));
@@ -236,9 +223,7 @@ export function buildCoreFoldedResultList(
     findResultByCollection(collection) {
       return searchForResult(
         this.state.results,
-        (r) =>
-          r.result.raw.foldingcollection ===
-          collection.result.raw.foldingcollection
+        (r) => r.result.raw.foldingcollection === collection.result.raw.foldingcollection
       );
     },
 
@@ -248,9 +233,7 @@ export function buildCoreFoldedResultList(
       return {
         ...controller.state,
         results: controller.state.results.map((result) => {
-          const collectionId = result.raw[state.folding.fields.collection] as
-            | string
-            | undefined;
+          const collectionId = result.raw[state.folding.fields.collection] as string | undefined;
           if (!collectionId || !state.folding.collections[collectionId]) {
             return {
               result,
@@ -268,9 +251,7 @@ export function buildCoreFoldedResultList(
 
 function loadFoldingReducer(
   engine: CoreEngine
-): engine is CoreEngine<
-  SearchSection & ConfigurationSection & FoldingSection & QuerySection
-> {
+): engine is CoreEngine<SearchSection & ConfigurationSection & FoldingSection & QuerySection> {
   engine.addReducers({search, configuration, folding, query});
   return true;
 }

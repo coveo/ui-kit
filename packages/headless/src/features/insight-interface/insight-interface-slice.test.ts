@@ -31,10 +31,7 @@ describe('insight interface slice', () => {
       error: errorResponse,
     };
 
-    const modifiedState = insightInterfaceReducer(
-      errorState,
-      fetchInterface.pending(requestId)
-    );
+    const modifiedState = insightInterfaceReducer(errorState, fetchInterface.pending(requestId));
 
     expect(modifiedState.error).toBeUndefined();
   });
@@ -137,8 +134,7 @@ describe('insight interface slice', () => {
         fetchInterface.fulfilled(fetchInterfaceResponse, requestId)
       );
 
-      const {searchHub: _searchHub, ...expectedConfig} =
-        fetchInterfaceResponse.response;
+      const {searchHub: _searchHub, ...expectedConfig} = fetchInterfaceResponse.response;
 
       expect(modifiedState.config).toStrictEqual(expectedConfig);
     });

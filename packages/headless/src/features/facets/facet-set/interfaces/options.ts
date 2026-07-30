@@ -3,10 +3,6 @@ import type {FacetOptions} from '../../../../controllers/core/facets/facet/headl
 export type FacetOptionalParameters = Required<
   Pick<
     FacetOptions,
-    | 'filterFacetCount'
-    | 'injectionDepth'
-    | 'numberOfValues'
-    | 'sortCriteria'
-    | 'resultsMustMatch'
+    'filterFacetCount' | 'injectionDepth' | 'numberOfValues' | 'sortCriteria' | 'resultsMustMatch'
   >
 >;

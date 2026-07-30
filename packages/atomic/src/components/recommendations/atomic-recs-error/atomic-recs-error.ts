@@ -37,10 +37,7 @@ import type {RecsBindings} from '../atomic-recs-interface/atomic-recs-interface'
 @customElement('atomic-recs-error')
 @bindings()
 @withTailwindStyles
-export class AtomicRecsError
-  extends LitElement
-  implements InitializableComponent<RecsBindings>
-{
+export class AtomicRecsError extends LitElement implements InitializableComponent<RecsBindings> {
   @bindStateToController('recommendationList')
   @state()
   private recommendationListState!: RecommendationListState;
@@ -62,8 +59,7 @@ export class AtomicRecsError
     const {error} = this.recommendationListState;
     const hasError = error !== null && error !== undefined;
     const i18n = this.bindings.i18n;
-    const {organizationId, environment} =
-      this.bindings.engine.state.configuration;
+    const {organizationId, environment} = this.bindings.engine.state.configuration;
     const url = getOrganizationEndpoint(organizationId, environment);
 
     if (hasError) {

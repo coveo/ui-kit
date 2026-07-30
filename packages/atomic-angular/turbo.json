@@ -10,14 +10,8 @@
       "outputs": ["projects/atomic-angular/src/lib/generated/**/*"]
     },
     "build:assets": {
-      "dependsOn": [
-        "@coveo/atomic#build:locales",
-        "@coveo/atomic#build:assets"
-      ],
-      "outputs": [
-        "projects/atomic-angular/dist/assets/**",
-        "projects/atomic-angular/dist/lang/**"
-      ]
+      "dependsOn": ["@coveo/atomic#build:locales", "@coveo/atomic#build:assets"],
+      "outputs": ["projects/atomic-angular/dist/assets/**", "projects/atomic-angular/dist/lang/**"]
     },
     "build:bundles": {
       "dependsOn": ["gen:lit", "@coveo/atomic#build:lit"],

@@ -26,10 +26,7 @@ export const baseInsightRequest = (
   method: HttpMethods,
   contentType: HTTPContentType,
   path: string
-): Pick<
-  PlatformClientCallOptions,
-  'accessToken' | 'method' | 'contentType' | 'url' | 'origin'
-> => {
+): Pick<PlatformClientCallOptions, 'accessToken' | 'method' | 'contentType' | 'url' | 'origin'> => {
   validateInsightRequestParams(req);
 
   const baseUrl = baseInsightUrl(req, path);
@@ -47,10 +44,7 @@ export const baseInsightUserActionRequest = (
   req: InsightUserActionsRequest,
   method: HttpMethods,
   contentType: HTTPContentType
-): Pick<
-  PlatformClientCallOptions,
-  'accessToken' | 'method' | 'contentType' | 'url' | 'origin'
-> => {
+): Pick<PlatformClientCallOptions, 'accessToken' | 'method' | 'contentType' | 'url' | 'origin'> => {
   validateInsightUserActionRequestParams(req);
 
   const baseUrl = baseInsightUserActionsUrl(req);
@@ -74,14 +68,10 @@ const validateConfigParams = (req: BaseParam) => {
     throw new Error("The 'url' attribute must contain a valid platform URL.");
   }
   if (!req.organizationId) {
-    throw new Error(
-      "The 'organizationId' attribute must contain a valid organization ID."
-    );
+    throw new Error("The 'organizationId' attribute must contain a valid organization ID.");
   }
   if (!req.accessToken) {
-    throw new Error(
-      "The 'accessToken' attribute must contain a valid platform access token."
-    );
+    throw new Error("The 'accessToken' attribute must contain a valid platform access token.");
   }
 };
 
@@ -94,9 +84,7 @@ const validateInsightRequestParams = (req: InsightParam) => {
   }
 };
 
-const validateInsightUserActionRequestParams = (
-  req: InsightUserActionsRequest
-) => {
+const validateInsightUserActionRequestParams = (req: InsightUserActionsRequest) => {
   validateConfigParams(req);
   if (!req.userId) {
     throw new Error("The 'userId' attribute must contain a valid user ID.");

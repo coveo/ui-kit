@@ -12,9 +12,7 @@ export interface LoadSearchParametersActionsOptions {
  * @param options - The options containing the interface handle.
  * @returns The search parameters actions: `setPipeline` and `setConstantQuery`.
  */
-export function loadSearchParametersActions(
-  options: LoadSearchParametersActionsOptions
-) {
+export function loadSearchParametersActions(options: LoadSearchParametersActionsOptions) {
   const {engine} = getHandleInternals(options.interface);
 
   engine.adoptSlice(getOrCreateSearchParametersSlice(options.interface));

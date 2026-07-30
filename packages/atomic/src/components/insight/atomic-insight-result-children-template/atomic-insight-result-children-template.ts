@@ -23,10 +23,7 @@ import {mapProperty} from '@/src/utils/props-utils';
  */
 @customElement('atomic-insight-result-children-template')
 @withTailwindStyles
-export class AtomicInsightResultChildrenTemplate
-  extends LitElement
-  implements LitElementWithError
-{
+export class AtomicInsightResultChildrenTemplate extends LitElement implements LitElementWithError {
   @state() error!: Error;
 
   /**
@@ -80,21 +77,14 @@ export class AtomicInsightResultChildrenTemplate
   constructor() {
     super();
     const validParents = ['atomic-insight-result-children'];
-    this.resultTemplateController = new ResultTemplateController(
-      this,
-      validParents
-    );
+    this.resultTemplateController = new ResultTemplateController(this, validParents);
   }
 
   connectedCallback() {
     super.connectedCallback();
     this.conditions = [
       ...this.conditions,
-      ...makeDefinedConditions(
-        this.ifDefined,
-        this.ifNotDefined,
-        InsightResultTemplatesHelpers
-      ),
+      ...makeDefinedConditions(this.ifDefined, this.ifNotDefined, InsightResultTemplatesHelpers),
     ];
     this.resultTemplateController.matchConditions = makeMatchConditions(
       this.mustMatch,
@@ -112,9 +102,7 @@ export class AtomicInsightResultChildrenTemplate
    * Returns the result template to apply to a child result, based on all defined conditions.
    */
   public async getTemplate(): Promise<InsightResultTemplate<DocumentFragment> | null> {
-    const template = this.resultTemplateController?.getTemplate(
-      this.conditions
-    );
+    const template = this.resultTemplateController?.getTemplate(this.conditions);
     return template;
   }
 }

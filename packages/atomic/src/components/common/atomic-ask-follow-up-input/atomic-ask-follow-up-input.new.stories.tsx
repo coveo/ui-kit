@@ -31,9 +31,7 @@ const meta: Meta = {
     wrapper.style.width = '90vw';
     wrapper.style.maxWidth = '600px';
 
-    const element = document.createElement(
-      'atomic-ask-follow-up-input'
-    ) as AtomicAskFollowUpInput;
+    const element = document.createElement('atomic-ask-follow-up-input') as AtomicAskFollowUpInput;
     element.i18n = i18nInstance;
     element.submitButtonDisabled = args.submitButtonDisabled as boolean;
     element.askFollowUp = args.askFollowUp as (query: string) => Promise<void>;
@@ -68,8 +66,7 @@ export const ExpandedWithText: Story = {
   play: async ({canvasElement}) => {
     await customElements.whenDefined('atomic-ask-follow-up-input');
     const element = canvasElement.querySelector('atomic-ask-follow-up-input');
-    const textarea =
-      element?.shadowRoot?.querySelector<HTMLTextAreaElement>('textarea');
+    const textarea = element?.shadowRoot?.querySelector<HTMLTextAreaElement>('textarea');
     if (textarea) {
       await userEvent.type(
         textarea,
@@ -84,8 +81,7 @@ export const OverCharacterLimit: Story = {
   play: async ({canvasElement}) => {
     await customElements.whenDefined('atomic-ask-follow-up-input');
     const element = canvasElement.querySelector('atomic-ask-follow-up-input');
-    const textarea =
-      element?.shadowRoot?.querySelector<HTMLTextAreaElement>('textarea');
+    const textarea = element?.shadowRoot?.querySelector<HTMLTextAreaElement>('textarea');
     if (textarea) {
       await userEvent.type(textarea, 'abc '.repeat(100));
     }

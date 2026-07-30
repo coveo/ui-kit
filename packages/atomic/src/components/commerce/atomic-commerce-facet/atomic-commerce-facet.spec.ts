@@ -1,14 +1,6 @@
 import type {RegularFacet, Summary} from '@coveo/headless/commerce';
 import {html, LitElement} from 'lit';
-import {
-  afterEach,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  type MockInstance,
-  vi,
-} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
 import {page, userEvent} from 'vitest/browser';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeRegularFacet} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/facet-controller';
@@ -41,18 +33,14 @@ describe('atomic-commerce-facet', () => {
       return page.getByLabelText(`Inclusion filter on ${value}`);
     },
     get componentError() {
-      return page.getByText(
-        'Look at the developer console for more information'
-      );
+      return page.getByText('Look at the developer console for more information');
     },
     moreMatches(element: Element) {
       return element.shadowRoot!.querySelector('[part=more-matches]')!;
     },
     parts: (element: Element) => {
-      const qs = (part: string) =>
-        element.shadowRoot?.querySelector(`[part~="${part}"]`);
-      const qsa = (part: string) =>
-        element.shadowRoot?.querySelectorAll(`[part~="${part}"]`);
+      const qs = (part: string) => element.shadowRoot?.querySelector(`[part~="${part}"]`);
+      const qsa = (part: string) => element.shadowRoot?.querySelectorAll(`[part~="${part}"]`);
       return {
         facet: qs('facet'),
         labelButton: qs('label-button'),
@@ -82,9 +70,7 @@ describe('atomic-commerce-facet', () => {
   };
 
   beforeEach(() => {
-    mockedConsoleError = vi
-      .spyOn(console, 'error')
-      .mockImplementation(() => {});
+    mockedConsoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
 
     mockedSummary = buildFakeSummary({});
     mockedFacet = buildFakeRegularFacet({
@@ -113,20 +99,19 @@ describe('atomic-commerce-facet', () => {
   });
 
   const setupElement = async ({isCollapsed} = {isCollapsed: false}) => {
-    const {element} =
-      await renderInAtomicCommerceInterface<AtomicCommerceFacet>({
-        template: html`<atomic-commerce-facet
-          .facet=${mockedFacet}
-          .summary=${mockedSummary}
-          ?is-collapsed=${isCollapsed}
-          field="testField"
-        ></atomic-commerce-facet>`,
-        selector: 'atomic-commerce-facet',
-        bindings: (bindings) => {
-          bindings.store.getUniqueIDFromEngine = vi.fn().mockReturnValue('123');
-          return bindings;
-        },
-      });
+    const {element} = await renderInAtomicCommerceInterface<AtomicCommerceFacet>({
+      template: html`<atomic-commerce-facet
+        .facet=${mockedFacet}
+        .summary=${mockedSummary}
+        ?is-collapsed=${isCollapsed}
+        field="testField"
+      ></atomic-commerce-facet>`,
+      selector: 'atomic-commerce-facet',
+      bindings: (bindings) => {
+        bindings.store.getUniqueIDFromEngine = vi.fn().mockReturnValue('123');
+        return bindings;
+      },
+    });
     return element;
   };
 
@@ -156,8 +141,7 @@ describe('atomic-commerce-facet', () => {
 
   it('should render the first facet value button label', async () => {
     await setupElement();
-    const facetValueButtonLabel =
-      locators.getFacetValueButtonByLabel('value-1');
+    const facetValueButtonLabel = locators.getFacetValueButtonByLabel('value-1');
     await expect.element(facetValueButtonLabel).toBeVisible();
   });
 
@@ -252,9 +236,7 @@ describe('atomic-commerce-facet', () => {
 
     expect(locators.componentError).toBeVisible();
     expect(mockedConsoleError).toHaveBeenCalledWith(
-      new Error(
-        'The "facet" property is required for <atomic-commerce-facet>.'
-      ),
+      new Error('The "facet" property is required for <atomic-commerce-facet>.'),
       expect.anything()
     );
   });
@@ -488,9 +470,7 @@ describe('atomic-commerce-facet', () => {
     const searchInput = locators.parts(element).searchInput!;
     await userEvent.type(searchInput, 'test query');
 
-    expect(mockedFacet.facetSearch.updateText).toHaveBeenCalledWith(
-      'test query'
-    );
+    expect(mockedFacet.facetSearch.updateText).toHaveBeenCalledWith('test query');
     expect(mockedFacet.facetSearch.search).toHaveBeenCalled();
   });
 
@@ -553,12 +533,8 @@ describe('atomic-commerce-facet', () => {
 
     await expect.element(parts.searchClearButton!).toBeVisible();
     await expect.element(parts.matchesQuery!).toHaveTextContent('test query');
-    await expect
-      .element(parts.moreMatches!)
-      .toHaveTextContent('More matches for test query');
-    await expect
-      .element(parts.searchHighlight!)
-      .toHaveTextContent('test query');
+    await expect.element(parts.moreMatches!).toHaveTextContent('More matches for test query');
+    await expect.element(parts.searchHighlight!).toHaveTextContent('test query');
   });
 
   it('should render "more matches" caption when there are move values available', async () => {
@@ -580,9 +556,7 @@ describe('atomic-commerce-facet', () => {
     });
 
     await setupElement();
-    await expect
-      .element(page.getByText('More matches for test query'))
-      .toBeVisible();
+    await expect.element(page.getByText('More matches for test query')).toBeVisible();
   });
 
   it('should render proper part when there are no facet search results', async () => {
@@ -601,9 +575,7 @@ describe('atomic-commerce-facet', () => {
 
     const parts = locators.parts(element);
     await expect.element(parts.noMatches!).toBeVisible();
-    await expect
-      .element(parts.noMatches!)
-      .toHaveTextContent('No matches found for test query');
+    await expect.element(parts.noMatches!).toHaveTextContent('No matches found for test query');
   });
 
   it('does not render the body when isCollapsed is true', async () => {

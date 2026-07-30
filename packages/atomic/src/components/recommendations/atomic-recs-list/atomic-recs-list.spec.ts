@@ -39,23 +39,17 @@ describe('atomic-recs-list', () => {
       })
     );
 
-    vi.mocked(buildRecsInteractiveResult).mockImplementation(
-      (_engine, props) => {
-        return interactiveResult(props);
-      }
-    );
+    vi.mocked(buildRecsInteractiveResult).mockImplementation((_engine, props) => {
+      return interactiveResult(props);
+    });
 
     vi.mocked(loadConfigurationActions).mockImplementation(() => ({
       setOriginLevel2: vi.fn().mockReturnValue({type: 'setOriginLevel2'}),
       setOriginLevel3: vi.fn().mockReturnValue({type: 'setOriginLevel3'}),
       disableAnalytics: vi.fn().mockReturnValue({type: 'disableAnalytics'}),
       enableAnalytics: vi.fn().mockReturnValue({type: 'enableAnalytics'}),
-      updateAnalyticsConfiguration: vi
-        .fn()
-        .mockReturnValue({type: 'updateAnalyticsConfiguration'}),
-      updateBasicConfiguration: vi
-        .fn()
-        .mockReturnValue({type: 'updateBasicConfiguration'}),
+      updateAnalyticsConfiguration: vi.fn().mockReturnValue({type: 'updateAnalyticsConfiguration'}),
+      updateBasicConfiguration: vi.fn().mockReturnValue({type: 'updateBasicConfiguration'}),
     }));
   });
 
@@ -95,29 +89,23 @@ describe('atomic-recs-list', () => {
       prop: 'imageSize',
       invalidValue: 'invalid',
     },
-  ])(
-    'should set error when #$prop is invalid',
-    async ({prop, invalidValue}) => {
-      const element = await setupElement();
+  ])('should set error when #$prop is invalid', async ({prop, invalidValue}) => {
+    const element = await setupElement();
 
-      expect(element.error).toBeUndefined();
+    expect(element.error).toBeUndefined();
 
-      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
-      (element as any)[prop] = invalidValue;
-      await element.updateComplete;
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
+    (element as any)[prop] = invalidValue;
+    await element.updateComplete;
 
-      expect(element.error).toBeDefined();
-      expect(element.error.message).toMatch(new RegExp(prop, 'i'));
-    }
-  );
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toMatch(new RegExp(prop, 'i'));
+  });
 
   // TODO V4: KIT-5197 - Remove this test
   it.each<{
     prop: 'density' | 'display' | 'imageSize';
-    validValue:
-      | ItemDisplayDensity
-      | ItemDisplayBasicLayout
-      | ItemDisplayImageSize;
+    validValue: ItemDisplayDensity | ItemDisplayBasicLayout | ItemDisplayImageSize;
     invalidValue: string | number;
   }>([
     {
@@ -138,9 +126,7 @@ describe('atomic-recs-list', () => {
   ])(
     'should log validation warning when #$prop is updated to invalid value',
     async ({prop, validValue, invalidValue}) => {
-      const consoleWarnSpy = vi
-        .spyOn(console, 'warn')
-        .mockImplementation(() => {});
+      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
       const element = await setupElement({[prop]: validValue});
 
@@ -149,15 +135,10 @@ describe('atomic-recs-list', () => {
       await element.updateComplete;
 
       expect(consoleWarnSpy).toHaveBeenCalledWith(
-        expect.stringContaining(
-          'Prop validation failed for component atomic-recs-list'
-        ),
+        expect.stringContaining('Prop validation failed for component atomic-recs-list'),
         element
       );
-      expect(consoleWarnSpy).toHaveBeenCalledWith(
-        expect.stringContaining(prop),
-        element
-      );
+      expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining(prop), element);
 
       consoleWarnSpy.mockRestore();
     }
@@ -189,15 +170,13 @@ describe('atomic-recs-list', () => {
         expectedResult: true,
       },
       {
-        description:
-          'should not change #isEveryResultReady when staying in loading state',
+        description: 'should not change #isEveryResultReady when staying in loading state',
         oldState: true,
         newState: true,
         expectedResult: true,
       },
       {
-        description:
-          'should not change #isEveryResultReady when staying in not loading state',
+        description: 'should not change #isEveryResultReady when staying in not loading state',
         oldState: false,
         newState: false,
         expectedResult: true,
@@ -208,9 +187,7 @@ describe('atomic-recs-list', () => {
         recommendations: [buildFakeResult()],
         searchResponseId: 'test-response-id',
       };
-      element.willUpdate(
-        new Map([['recommendationListState', {isLoading: oldState}]])
-      );
+      element.willUpdate(new Map([['recommendationListState', {isLoading: oldState}]]));
 
       expect(element.isEveryResultReady).toBe(expectedResult);
     });
@@ -270,9 +247,7 @@ describe('atomic-recs-list', () => {
 
       expect(resultListParts).toHaveLength(1);
 
-      await expect
-        .element(page.elementLocator(resultListParts!.item(0)))
-        .toBeInTheDocument();
+      await expect.element(page.elementLocator(resultListParts!.item(0))).toBeInTheDocument();
     });
 
     it('should render correct # of atomic-recs-result', async () => {
@@ -280,8 +255,7 @@ describe('atomic-recs-list', () => {
 
       const element = await setupElement();
 
-      const atomicRecsResultElements =
-        element.shadowRoot?.querySelectorAll('atomic-recs-result');
+      const atomicRecsResultElements = element.shadowRoot?.querySelectorAll('atomic-recs-result');
 
       expect(atomicRecsResultElements).toHaveLength(5);
     });
@@ -296,19 +270,13 @@ describe('atomic-recs-list', () => {
 
       expect(resultListGridClickableContainerParts).toHaveLength(3);
       await expect
-        .element(
-          page.elementLocator(resultListGridClickableContainerParts!.item(0))
-        )
+        .element(page.elementLocator(resultListGridClickableContainerParts!.item(0)))
         .toBeInTheDocument();
       await expect
-        .element(
-          page.elementLocator(resultListGridClickableContainerParts!.item(1))
-        )
+        .element(page.elementLocator(resultListGridClickableContainerParts!.item(1)))
         .toBeInTheDocument();
       await expect
-        .element(
-          page.elementLocator(resultListGridClickableContainerParts!.item(2))
-        )
+        .element(page.elementLocator(resultListGridClickableContainerParts!.item(2)))
         .toBeInTheDocument();
     });
 
@@ -320,19 +288,13 @@ describe('atomic-recs-list', () => {
       it('should render list wrapper & root with correct density class', async () => {
         const element = await setupElement({density});
 
-        const listWrapperElements =
-          element.shadowRoot?.querySelectorAll('.list-wrapper');
-        const listWrapperLocator = page.elementLocator(
-          listWrapperElements!.item(0)
-        );
+        const listWrapperElements = element.shadowRoot?.querySelectorAll('.list-wrapper');
+        const listWrapperLocator = page.elementLocator(listWrapperElements!.item(0));
 
-        const listRootElements =
-          element.shadowRoot?.querySelectorAll('.list-root');
+        const listRootElements = element.shadowRoot?.querySelectorAll('.list-root');
         const listRootLocator = page.elementLocator(listRootElements!.item(0));
 
-        await expect
-          .element(listWrapperLocator)
-          .toHaveClass(`density-${density}`);
+        await expect.element(listWrapperLocator).toHaveClass(`density-${density}`);
         await expect.element(listRootLocator).toHaveClass(`density-${density}`);
       });
     });
@@ -346,19 +308,13 @@ describe('atomic-recs-list', () => {
       it('should render list wrapper & root with correct image size class', async () => {
         const element = await setupElement({imageSize});
 
-        const listWrapperElements =
-          element.shadowRoot?.querySelectorAll('.list-wrapper');
-        const listWrapperLocator = page.elementLocator(
-          listWrapperElements!.item(0)
-        );
+        const listWrapperElements = element.shadowRoot?.querySelectorAll('.list-wrapper');
+        const listWrapperLocator = page.elementLocator(listWrapperElements!.item(0));
 
-        const listRootElements =
-          element.shadowRoot?.querySelectorAll('.list-root');
+        const listRootElements = element.shadowRoot?.querySelectorAll('.list-root');
         const listRootLocator = page.elementLocator(listRootElements!.item(0));
 
-        await expect
-          .element(listWrapperLocator)
-          .toHaveClass(`image-${imageSize}`);
+        await expect.element(listWrapperLocator).toHaveClass(`image-${imageSize}`);
         await expect.element(listRootLocator).toHaveClass(`image-${imageSize}`);
       });
     });
@@ -368,8 +324,7 @@ describe('atomic-recs-list', () => {
         const density = 'comfortable';
         const element = await setupElement({density});
 
-        const atomicRecsResultElement =
-          element.shadowRoot?.querySelector('atomic-recs-result');
+        const atomicRecsResultElement = element.shadowRoot?.querySelector('atomic-recs-result');
 
         expect(atomicRecsResultElement?.density).toBe(density);
       });
@@ -378,8 +333,7 @@ describe('atomic-recs-list', () => {
         const display = 'grid';
         const element = await setupElement({display});
 
-        const atomicRecsResultElement =
-          element.shadowRoot?.querySelector('atomic-recs-result');
+        const atomicRecsResultElement = element.shadowRoot?.querySelector('atomic-recs-result');
 
         expect(atomicRecsResultElement?.display).toBe(display);
       });
@@ -388,8 +342,7 @@ describe('atomic-recs-list', () => {
         const imageSize = 'none';
         const element = await setupElement({imageSize});
 
-        const atomicRecsResultElement =
-          element.shadowRoot?.querySelector('atomic-recs-result');
+        const atomicRecsResultElement = element.shadowRoot?.querySelector('atomic-recs-result');
 
         expect(atomicRecsResultElement?.imageSize).toBe(imageSize);
       });
@@ -409,8 +362,7 @@ describe('atomic-recs-list', () => {
 
         const element = await setupElement();
 
-        const atomicRecsResultElements =
-          element.shadowRoot?.querySelectorAll('atomic-recs-result');
+        const atomicRecsResultElements = element.shadowRoot?.querySelectorAll('atomic-recs-result');
 
         expect(atomicRecsResultElements?.[0].result).toBe(mockResult1);
         expect(atomicRecsResultElements?.[1].result).toBe(mockResult2);
@@ -419,8 +371,7 @@ describe('atomic-recs-list', () => {
       it('should pass correct #store', async () => {
         const element = await setupElement();
 
-        const atomicRecsResultElement =
-          element.shadowRoot?.querySelector('atomic-recs-result');
+        const atomicRecsResultElement = element.shadowRoot?.querySelector('atomic-recs-result');
 
         expect(atomicRecsResultElement?.store).toEqual(element.bindings.store);
       });
@@ -434,9 +385,7 @@ describe('atomic-recs-list', () => {
       const labelParts = getParts(element).label;
 
       expect(labelParts).toHaveLength(1);
-      await expect
-        .element(page.elementLocator(labelParts!.item(0)))
-        .toBeInTheDocument();
+      await expect.element(page.elementLocator(labelParts!.item(0))).toBeInTheDocument();
     });
 
     it('should not render heading when label is not provided', async () => {
@@ -480,8 +429,7 @@ describe('atomic-recs-list', () => {
 
       const element = await setupElement({numberOfRecommendationsPerPage: 3});
 
-      const atomicRecsResultElements =
-        element.shadowRoot?.querySelectorAll('atomic-recs-result');
+      const atomicRecsResultElements = element.shadowRoot?.querySelectorAll('atomic-recs-result');
 
       expect(atomicRecsResultElements).toHaveLength(3);
     });
@@ -498,12 +446,9 @@ describe('atomic-recs-list', () => {
       element.requestUpdate();
       await element.updateComplete;
 
-      const atomicRecsResultElement =
-        element.shadowRoot?.querySelector('atomic-recs-result');
+      const atomicRecsResultElement = element.shadowRoot?.querySelector('atomic-recs-result');
 
-      expect(atomicRecsResultElement?.renderingFunction).toBe(
-        mockRenderingFunction
-      );
+      expect(atomicRecsResultElement?.renderingFunction).toBe(mockRenderingFunction);
     });
   });
 
@@ -554,16 +499,11 @@ describe('atomic-recs-list', () => {
 
   const getParts = (element: AtomicRecsList) => {
     const qs = (part: string, exact = true) =>
-      element.shadowRoot?.querySelectorAll(
-        `[part${exact ? '' : '*'}="${part}"]`
-      );
+      element.shadowRoot?.querySelectorAll(`[part${exact ? '' : '*'}="${part}"]`);
 
     return {
       resultList: qs('result-list'),
-      resultListGridClickableContainer: qs(
-        'result-list-grid-clickable-container',
-        false
-      ),
+      resultListGridClickableContainer: qs('result-list-grid-clickable-container', false),
       label: qs('label'),
       previousButton: qs('previous-button'),
       nextButton: qs('next-button'),

@@ -32,9 +32,8 @@ const caseassistEngineReducers = {
   searchHub,
 };
 type CaseAssistEngineReducers = typeof caseassistEngineReducers;
-type CaseAssistEngineState =
-  StateFromReducersMapObject<CaseAssistEngineReducers> &
-    Partial<CaseAssistAppState>;
+type CaseAssistEngineState = StateFromReducersMapObject<CaseAssistEngineReducers> &
+  Partial<CaseAssistAppState>;
 
 /**
  * The engine for powering case assist experiences.
@@ -70,16 +69,11 @@ export interface CaseAssistEngineOptions extends ExternalEngineOptions<CaseAssis
  *
  * @group Engine
  */
-export function buildCaseAssistEngine(
-  options: CaseAssistEngineOptions
-): CaseAssistEngine {
+export function buildCaseAssistEngine(options: CaseAssistEngineOptions): CaseAssistEngine {
   const logger = buildLogger(options.loggerOptions);
   validateConfiguration(options.configuration, logger);
 
-  const caseAssistAPIClient = createCaseAssistAPIClient(
-    options.configuration,
-    logger
-  );
+  const caseAssistAPIClient = createCaseAssistAPIClient(options.configuration, logger);
 
   const thunkArguments = {
     ...buildThunkExtraArguments(options.configuration, logger),
@@ -92,9 +86,7 @@ export function buildCaseAssistEngine(
   };
 
   const engine = buildEngine(augmentedOptions, thunkArguments);
-  warnIfUsingNextAnalyticsModeForServiceFeature(
-    engine.state.configuration.analytics.analyticsMode
-  );
+  warnIfUsingNextAnalyticsModeForServiceFeature(engine.state.configuration.analytics.analyticsMode);
 
   const {caseAssistId, locale, searchHub, proxyBaseUrl} = options.configuration;
 
@@ -119,10 +111,7 @@ export function buildCaseAssistEngine(
   };
 }
 
-function validateConfiguration(
-  configuration: CaseAssistEngineConfiguration,
-  logger: Logger
-) {
+function validateConfiguration(configuration: CaseAssistEngineConfiguration, logger: Logger) {
   try {
     caseAssistEngineConfigurationSchema.validate(configuration);
   } catch (error) {
@@ -132,10 +121,7 @@ function validateConfiguration(
   }
 }
 
-function createCaseAssistAPIClient(
-  configuration: CaseAssistEngineConfiguration,
-  logger: Logger
-) {
+function createCaseAssistAPIClient(configuration: CaseAssistEngineConfiguration, logger: Logger) {
   return new CaseAssistAPIClient({
     logger,
     preprocessRequest: configuration.preprocessRequest || NoopPreprocessRequest,

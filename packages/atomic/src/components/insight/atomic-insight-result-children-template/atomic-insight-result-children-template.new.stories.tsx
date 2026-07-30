@@ -1,11 +1,7 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
-import {
-  baseFoldedResponse,
-  MockInsightApi,
-  nestedFoldedResponse,
-} from '@coveo/platform-mock-api/insight/mock';
+import {MockInsightApi, searchResponses} from '@coveo/platform-mock-api/insight';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 import {wrapInInsightFoldedResultList} from '@/storybook-utils/insight/insight-result-list-wrapper';
@@ -21,7 +17,7 @@ import '@/src/components/search/atomic-result-section-title/atomic-result-sectio
 import '@/src/components/search/atomic-result-text/atomic-result-text.js';
 
 const insightApiHarness = new MockInsightApi();
-insightApiHarness.searchEndpoint.mock(() => baseFoldedResponse);
+insightApiHarness.searchEndpoint.mock(() => searchResponses.baseFoldedResponse);
 
 const CHILDREN_TEMPLATE_EXAMPLE = `<template>
   <atomic-result-section-title>
@@ -37,15 +33,9 @@ const {events, args, argTypes, template} = getStorybookHelpers(
   {excludeCategories: ['methods']}
 );
 
-const {decorator: insightInterfaceDecorator, play} = wrapInInsightInterface(
-  {},
-  false,
-  false
-);
-const {decorator: insightFoldedResultListDecorator} =
-  wrapInInsightFoldedResultList('list', false);
-const {decorator: insightResultTemplateDecorator} =
-  wrapInInsightResultTemplate(false);
+const {decorator: insightInterfaceDecorator, play} = wrapInInsightInterface({}, false, false);
+const {decorator: insightFoldedResultListDecorator} = wrapInInsightFoldedResultList('list', false);
+const {decorator: insightResultTemplateDecorator} = wrapInInsightResultTemplate(false);
 
 const meta: Meta = {
   component: 'atomic-insight-result-children-template',
@@ -118,9 +108,7 @@ export const WithNestedChildren: Story = {
               <atomic-result-text field="excerpt"></atomic-result-text>
             </atomic-result-section-excerpt>
             <atomic-result-section-children>
-              <atomic-insight-result-children
-                inherit-templates
-              ></atomic-insight-result-children>
+              <atomic-insight-result-children inherit-templates></atomic-insight-result-children>
             </atomic-result-section-children>
           </template>
         </atomic-insight-result-children-template>
@@ -128,10 +116,10 @@ export const WithNestedChildren: Story = {
     </atomic-result-section-children>
   `,
   beforeEach: async () => {
-    insightApiHarness.searchEndpoint.mock(() => nestedFoldedResponse);
+    insightApiHarness.searchEndpoint.mock(() => searchResponses.nestedFoldedResponse);
     return () => {
       insightApiHarness.searchEndpoint.reset();
-      insightApiHarness.searchEndpoint.mock(() => baseFoldedResponse);
+      insightApiHarness.searchEndpoint.mock(() => searchResponses.baseFoldedResponse);
     };
   },
 };
@@ -145,9 +133,7 @@ export const WithConditions: Story = {
     <atomic-result-section-children id="code-root">
       <atomic-insight-result-children image-size="icon">
         <!-- Template for specific source types -->
-        <atomic-insight-result-children-template
-          must-match-sourcetype="YouTube"
-        >
+        <atomic-insight-result-children-template must-match-sourcetype="YouTube">
           <template>
             <atomic-result-section-badges>
               <atomic-result-badge label="YouTube"></atomic-result-badge>

@@ -21,10 +21,7 @@ import {type CSSResultGroup, css, html, LitElement} from 'lit';
 import {customElement, property, query, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {bindingsContext} from '@/src/components/common/context/bindings-context';
-import type {
-  CommonBindings,
-  NonceBindings,
-} from '@/src/components/common/interface/bindings';
+import type {CommonBindings, NonceBindings} from '@/src/components/common/interface/bindings';
 import {
   type BaseAtomicInterface,
   InterfaceController,
@@ -56,11 +53,7 @@ import {createSearchStore, type SearchStore} from './store';
 
 type InitializationOptions = SearchEngineConfiguration;
 
-export type Bindings = CommonBindings<
-  SearchEngine,
-  SearchStore,
-  AtomicSearchInterface
-> &
+export type Bindings = CommonBindings<SearchEngine, SearchStore, AtomicSearchInterface> &
   //TODO: KIT-4893 - Remove once atomic-quickview-modal migration is complete.
   NonceBindings;
 
@@ -273,15 +266,9 @@ export class AtomicSearchInterface
     this.store.setLoadingFlag(FirstSearchExecutedFlag);
     this.initFieldsToInclude();
 
-    this.addEventListener(
-      'atomic/initializeComponent',
-      this.handleInitialization as EventListener
-    );
+    this.addEventListener('atomic/initializeComponent', this.handleInitialization as EventListener);
 
-    this.addEventListener(
-      'atomic/scrollToTop',
-      this.scrollToTop as EventListener
-    );
+    this.addEventListener('atomic/scrollToTop', this.scrollToTop as EventListener);
   }
 
   public willUpdate(changedProperties: Map<string, unknown>) {
@@ -305,10 +292,7 @@ export class AtomicSearchInterface
       'atomic/initializeComponent',
       this.handleInitialization as EventListener
     );
-    this.removeEventListener(
-      'atomic/scrollToTop',
-      this.scrollToTop as EventListener
-    );
+    this.removeEventListener('atomic/scrollToTop', this.scrollToTop as EventListener);
   }
 
   // TODO - (v4) KIT-4991: Make private.
@@ -384,11 +368,10 @@ export class AtomicSearchInterface
     }
 
     const safeStorage = new SafeStorage();
-    const standaloneSearchBoxData =
-      safeStorage.getParsedJSON<StandaloneSearchBoxData | null>(
-        StorageItems.STANDALONE_SEARCH_BOX_DATA,
-        null
-      );
+    const standaloneSearchBoxData = safeStorage.getParsedJSON<StandaloneSearchBoxData | null>(
+      StorageItems.STANDALONE_SEARCH_BOX_DATA,
+      null
+    );
 
     if (!standaloneSearchBoxData) {
       this.engine.executeFirstSearch();
@@ -414,9 +397,7 @@ export class AtomicSearchInterface
       return;
     }
 
-    const {updateSearchConfiguration} = loadSearchConfigurationActions(
-      this.engine
-    );
+    const {updateSearchConfiguration} = loadSearchConfigurationActions(this.engine);
     this.engine.dispatch(
       updateSearchConfiguration({
         [updatedProp]: newValue,
@@ -426,9 +407,7 @@ export class AtomicSearchInterface
 
   public registerFieldsToInclude() {
     this.engine?.dispatch(
-      loadFieldActions(this.engine!).registerFieldsToInclude(
-        this.store.state.fieldsToInclude
-      )
+      loadFieldActions(this.engine!).registerFieldsToInclude(this.store.state.fieldsToInclude)
     );
   }
 
@@ -452,16 +431,11 @@ export class AtomicSearchInterface
 
   @watch('language')
   public updateLanguage() {
-    if (
-      !this.interfaceController.engineIsCreated(this.engine) ||
-      !this.language
-    ) {
+    if (!this.interfaceController.engineIsCreated(this.engine) || !this.language) {
       return;
     }
 
-    const {updateSearchConfiguration} = loadSearchConfigurationActions(
-      this.engine
-    );
+    const {updateSearchConfiguration} = loadSearchConfigurationActions(this.engine);
     this.engine.dispatch(
       updateSearchConfiguration({
         locale: this.language,
@@ -479,9 +453,7 @@ export class AtomicSearchInterface
   render() {
     return html`
       ${when(
-        this.bindings?.engine &&
-          this.enableRelevanceInspector &&
-          !this.disableRelevanceInspector,
+        this.bindings?.engine && this.enableRelevanceInspector && !this.disableRelevanceInspector,
         () => html`<atomic-relevance-inspector></atomic-relevance-inspector>`
       )}
       <slot></slot>
@@ -523,11 +495,7 @@ export class AtomicSearchInterface
 
   private initEngine(options: InitializationOptions) {
     const searchConfig = this.getSearchConfiguration(options);
-    const analyticsConfig = getAnalyticsConfig(
-      options,
-      this.analytics,
-      this.store
-    );
+    const analyticsConfig = getAnalyticsConfig(options, this.analytics, this.store);
     try {
       this.engine = buildSearchEngine({
         configuration: {
@@ -579,18 +547,13 @@ export class AtomicSearchInterface
       initialState: {fragment: this.fragment},
     });
 
-    this.unsubscribeUrlManager = this.urlManager.subscribe(() =>
-      this.updateHash()
-    );
+    this.unsubscribeUrlManager = this.urlManager.subscribe(() => this.updateHash());
 
     window.addEventListener('hashchange', this.onHashChange);
   }
 
   private async internalInitialization(initEngine: () => void) {
-    await Promise.all([
-      this.interfaceController.onInitialization(initEngine),
-      this.i18Initialized,
-    ]);
+    await Promise.all([this.interfaceController.onInitialization(initEngine), this.i18Initialized]);
     this.updateLanguage();
     this.bindings = this.getBindings();
     markParentAsReady(this);

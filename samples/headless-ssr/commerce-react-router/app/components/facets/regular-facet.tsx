@@ -26,9 +26,7 @@ export default function RegularFacet({
     facetSearchInputRef.current?.focus();
   };
 
-  const onChangeFacetSearchInput = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ): void => {
+  const onChangeFacetSearchInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
     if (e.target.value === '') {
       setShowFacetSearchResults(false);
       controller?.facetSearch.clear();
@@ -87,21 +85,14 @@ export default function RegularFacet({
         <button
           aria-label="Clear facet search query"
           className="FacetSearchClear"
-          disabled={
-            !controller ||
-            state.facetSearch.query === '' ||
-            state.facetSearch.isLoading
-          }
+          disabled={!controller || state.facetSearch.query === '' || state.facetSearch.isLoading}
           onClick={onClickFacetSearchClear}
           type="reset"
         >
           X
         </button>
         {state.facetSearch.isLoading && (
-          <span className="FacetSearchLoading">
-            {' '}
-            Facet search is loading...
-          </span>
+          <span className="FacetSearchLoading"> Facet search is loading...</span>
         )}
       </search>
     );
@@ -141,10 +132,7 @@ export default function RegularFacet({
                 }}
               ></span>
             </label>
-            <span className="FacetSearchResultNumberOfProducts">
-              {' '}
-              ({value.count})
-            </span>
+            <span className="FacetSearchResultNumberOfProducts"> ({value.count})</span>
           </li>
         ))}
       </ul>
@@ -163,9 +151,7 @@ export default function RegularFacet({
         >
           X
         </button>
-        {state.isLoading && (
-          <span className="FacetLoading"> Facet is loading...</span>
-        )}
+        {state.isLoading && <span className="FacetLoading"> Facet is loading...</span>}
         <ul className="FacetValues">
           {state.values.map((value) => (
             <li className="FacetValue" key={value.value}>
@@ -180,10 +166,7 @@ export default function RegularFacet({
               ></input>
               <label className="FacetValueLabel" htmlFor={value.value}>
                 <span className="FacetValueName">{value.value}</span>
-                <span className="FacetValueNumberOfProducts">
-                  {' '}
-                  ({value.numberOfResults})
-                </span>
+                <span className="FacetValueNumberOfProducts"> ({value.numberOfResults})</span>
               </label>
             </li>
           ))}
@@ -212,13 +195,9 @@ export default function RegularFacet({
 
   return (
     <fieldset className="RegularFacet">
-      <legend className="FacetDisplayName">
-        {state.displayName ?? state.facetId}
-      </legend>
+      <legend className="FacetDisplayName">{state.displayName ?? state.facetId}</legend>
       {renderFacetSearchControls()}
-      {showFacetSearchResults
-        ? renderFacetSearchResults()
-        : renderFacetValues()}
+      {showFacetSearchResults ? renderFacetSearchResults() : renderFacetValues()}
     </fieldset>
   );
 }

@@ -5,9 +5,7 @@ test.describe('atomic-breadbox', () => {
     await breadbox.load();
   });
 
-  test('should show breadcrumb when facet value is selected', async ({
-    breadbox,
-  }) => {
+  test('should show breadcrumb when facet value is selected', async ({breadbox}) => {
     await breadbox.getFacetValue('objecttype').first().click();
     const breadcrumbButton = breadbox.getBreadcrumbButtons().first();
 
@@ -23,9 +21,7 @@ test.describe('atomic-breadbox', () => {
     await expect(breadbox.getBreadcrumbButtons()).toHaveCount(0);
   });
 
-  test('should show Clear All button when breadcrumbs exist', async ({
-    breadbox,
-  }) => {
+  test('should show Clear All button when breadcrumbs exist', async ({breadbox}) => {
     await breadbox.getFacetValue('objecttype').first().click();
     await breadbox.getBreadcrumbButtons().first().waitFor({state: 'visible'});
 
@@ -33,9 +29,7 @@ test.describe('atomic-breadbox', () => {
     await expect(clearAllButton).toBeVisible();
   });
 
-  test('should clear all breadcrumbs when Clear All is clicked', async ({
-    breadbox,
-  }) => {
+  test('should clear all breadcrumbs when Clear All is clicked', async ({breadbox}) => {
     await breadbox.getFacetValue('objecttype').first().click();
     await breadbox.getFacetValue('filetype').first().click();
 
@@ -60,22 +54,15 @@ test.describe('atomic-breadbox', () => {
     await expect(breadcrumbButton.first()).toContainText('Object type: People');
   });
 
-  test('should display breadcrumb when selecting a facet value', async ({
-    breadbox,
-  }) => {
+  test('should display breadcrumb when selecting a facet value', async ({breadbox}) => {
     await breadbox.getFacetValue('objecttype').first().click();
 
     await expect(breadbox.getBreadcrumbButtons()).toHaveCount(1);
 
-    await expect(breadbox.getBreadcrumbButtons().nth(0)).toContainText(
-      'Object type:'
-    );
+    await expect(breadbox.getBreadcrumbButtons().nth(0)).toContainText('Object type:');
   });
 
-  test('should show more/less functionality with viewport changes', async ({
-    breadbox,
-    page,
-  }) => {
+  test('should show more/less functionality with viewport changes', async ({breadbox, page}) => {
     await breadbox.getFacetValue('objecttype').first().click();
     await breadbox.getFacetValue('objecttype').nth(1).click();
     await breadbox.getFacetValue('objecttype').nth(2).click();
@@ -92,9 +79,7 @@ test.describe('atomic-breadbox', () => {
     await page.setViewportSize({width: 280, height: 600});
 
     const showMoreButton = breadbox.getShowMoreButton();
-    const isShowMoreVisible = await showMoreButton
-      .isVisible()
-      .catch(() => false);
+    const isShowMoreVisible = await showMoreButton.isVisible().catch(() => false);
 
     if (isShowMoreVisible) {
       await showMoreButton.click();

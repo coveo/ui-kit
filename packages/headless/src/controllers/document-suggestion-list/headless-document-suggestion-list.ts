@@ -15,10 +15,7 @@ import type {
   DocumentSuggestionSection,
 } from '../../state/state-sections.js';
 import {loadReducerError} from '../../utils/errors.js';
-import {
-  buildController,
-  type Controller,
-} from '../controller/headless-controller.js';
+import {buildController, type Controller} from '../controller/headless-controller.js';
 
 /**
  * The `DocumentSuggestion` controller is responsible for getting document suggestions using case information present in the state.
@@ -71,9 +68,7 @@ export interface DocumentSuggestionListState {
  * @group Controllers
  * @category DocumentSuggestionList
  */
-export function buildDocumentSuggestionList(
-  engine: CaseAssistEngine
-): DocumentSuggestionList {
+export function buildDocumentSuggestionList(engine: CaseAssistEngine): DocumentSuggestionList {
   if (!loadDocumentSuggestionListReducers(engine)) {
     throw loadReducerError;
   }

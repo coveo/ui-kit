@@ -74,10 +74,7 @@ export interface SearchBoxSuggestions {
 /**
  * The bindings passed from the search box to the suggestions.
  */
-export type SearchBoxSuggestionsBindings<
-  SearchBoxController,
-  Bindings = AnyBindings,
-> = Bindings & {
+export type SearchBoxSuggestionsBindings<SearchBoxController, Bindings = AnyBindings> = Bindings & {
   /**
    * The unique id of the search box.
    */
@@ -124,10 +121,7 @@ export type SearchBoxSuggestionsBindings<
 /**
  * Event sent from the registered query suggestions to the parent search box.
  */
-export type SearchBoxSuggestionsEvent<
-  SearchBoxController,
-  Bindings = AnyBindings,
-> = (
+export type SearchBoxSuggestionsEvent<SearchBoxController, Bindings = AnyBindings> = (
   /**
    * The bindings passed from the search box to the suggestions.
    */

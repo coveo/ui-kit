@@ -21,8 +21,6 @@ describe('parseAssetURL', () => {
   });
 
   it('works with Atomic assets (with .svg)', () => {
-    expect(parseAssetURL('assets://attachment.svg')).toBe(
-      '/assets/attachment.svg'
-    );
+    expect(parseAssetURL('assets://attachment.svg')).toBe('/assets/attachment.svg');
   });
 });

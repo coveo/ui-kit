@@ -14,10 +14,7 @@ describe('field-utils', () => {
       const mockedGetResourceBundle = vi.spyOn(i18n, 'getResourceBundle');
       getFieldCaptions('author', i18n);
 
-      expect(mockedGetResourceBundle).toHaveBeenCalledWith(
-        'en',
-        'caption-author'
-      );
+      expect(mockedGetResourceBundle).toHaveBeenCalledWith('en', 'caption-author');
     });
 
     it('returns an empty object if no resource bundle exists', () => {

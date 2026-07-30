@@ -1,9 +1,6 @@
 import type {SearchAPIClient} from '../../api/search/search-api-client.js';
 import type {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../test/mock-engine-v2.js';
 import {buildMockFieldDescription} from '../../test/mock-field-description.js';
 import {createMockState} from '../../test/mock-state.js';
 import {
@@ -17,19 +14,13 @@ import {type FieldsState, getFieldsInitialState} from './fields-state.js';
 
 describe('fields slice', () => {
   it('should have initial state', () => {
-    expect(fieldsReducer(undefined, {type: 'randomAction'})).toEqual(
-      getFieldsInitialState()
-    );
+    expect(fieldsReducer(undefined, {type: 'randomAction'})).toEqual(getFieldsInitialState());
   });
 
   it('should handle registerFieldsToInclude on initial state', () => {
     const expectedState: FieldsState = {
       ...getFieldsInitialState(),
-      fieldsToInclude: [
-        ...getFieldsInitialState().fieldsToInclude,
-        'field1',
-        'field2',
-      ],
+      fieldsToInclude: [...getFieldsInitialState().fieldsToInclude, 'field1', 'field2'],
     };
 
     const action = registerFieldsToInclude(['field1', 'field2']);
@@ -42,17 +33,15 @@ describe('fields slice', () => {
   });
 
   it('should fetch all fields if requested', () => {
-    expect(
-      fieldsReducer(getFieldsInitialState(), enableFetchAllFields())
-        .fetchAllFields
-    ).toBe(true);
+    expect(fieldsReducer(getFieldsInitialState(), enableFetchAllFields()).fetchAllFields).toBe(
+      true
+    );
   });
 
   it('should not fetch all fields if requested', () => {
-    expect(
-      fieldsReducer(getFieldsInitialState(), disableFetchAllFields())
-        .fetchAllFields
-    ).toBe(false);
+    expect(fieldsReducer(getFieldsInitialState(), disableFetchAllFields()).fetchAllFields).toBe(
+      false
+    );
   });
 
   describe('when fetching fields description', () => {
@@ -79,9 +68,7 @@ describe('fields slice', () => {
         [buildMockFieldDescription(), buildMockFieldDescription()],
         ''
       );
-      expect(
-        fieldsReducer(getFieldsInitialState(), action).fieldsDescription.length
-      ).toBe(2);
+      expect(fieldsReducer(getFieldsInitialState(), action).fieldsDescription.length).toBe(2);
     });
   });
 });

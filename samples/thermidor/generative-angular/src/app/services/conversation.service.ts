@@ -10,12 +10,7 @@ import {
 import {EngineService} from './engine.service';
 import {parseSurfaces} from '../a2ui-parser';
 import {CONVERSATION_STORAGE_KEY} from '../constants';
-import type {
-  A2UISurface,
-  RenderableCommerceSurface,
-  RoutedInterface,
-  Turn,
-} from '../models';
+import type {A2UISurface, RenderableCommerceSurface, RoutedInterface, Turn} from '../models';
 
 @Injectable({providedIn: 'root'})
 export class ConversationService {
@@ -74,9 +69,7 @@ export class ConversationService {
     if (activeTurn) {
       this.reasoningSteps.set(activeTurn.agentResponse?.reasoningSteps ?? []);
       this.activeTurnError.set(
-        activeTurn.status === 'error'
-          ? (activeTurn.error ?? 'An error occurred')
-          : ''
+        activeTurn.status === 'error' ? (activeTurn.error ?? 'An error occurred') : ''
       );
     } else {
       this.reasoningSteps.set([]);
@@ -110,10 +103,7 @@ export class ConversationService {
   private persistState(): void {
     try {
       const serialized = this.controller.serialize();
-      localStorage.setItem(
-        CONVERSATION_STORAGE_KEY,
-        JSON.stringify(serialized)
-      );
+      localStorage.setItem(CONVERSATION_STORAGE_KEY, JSON.stringify(serialized));
     } catch {
       // Ignore persistence failures (e.g., storage disabled/quota exceeded).
     }

@@ -13,10 +13,7 @@ import type {Serializer} from '../../../../features/commerce/parameters/paramete
 import type {ProductListingParameters} from '../../../../features/commerce/product-listing-parameters/product-listing-parameters-actions.js';
 import type {CommerceSearchParameters} from '../../../../features/commerce/search-parameters/search-parameters-actions.js';
 import type {ProductListingSummaryState} from '../../product-listing/summary/headless-product-listing-summary.js';
-import {
-  buildDidYouMean,
-  type DidYouMean,
-} from '../../search/did-you-mean/headless-did-you-mean.js';
+import {buildDidYouMean, type DidYouMean} from '../../search/did-you-mean/headless-did-you-mean.js';
 import type {SearchSummaryState} from '../../search/summary/headless-search-summary.js';
 import {
   type BreadcrumbManager,
@@ -52,11 +49,7 @@ import {
   type ParameterManager,
   type ParameterManagerProps,
 } from '../parameter-manager/headless-core-parameter-manager.js';
-import {
-  buildCoreSort,
-  type Sort,
-  type SortProps,
-} from '../sort/headless-core-commerce-sort.js';
+import {buildCoreSort, type Sort, type SortProps} from '../sort/headless-core-commerce-sort.js';
 import {
   buildCoreSummary,
   type Summary,
@@ -132,9 +125,7 @@ export interface SearchAndListingSubControllers<
    * @param props - The properties for the `InteractiveSpotlightContent` sub-controller.
    * @returns An `InteractiveSpotlightContent` sub-controller.
    */
-  interactiveSpotlightContent(
-    props: InteractiveSpotlightContentProps
-  ): InteractiveSpotlightContent;
+  interactiveSpotlightContent(props: InteractiveSpotlightContentProps): InteractiveSpotlightContent;
 }
 
 export interface SearchSubControllers extends SearchAndListingSubControllers<
@@ -152,9 +143,7 @@ interface BaseSubControllerProps<S extends SummaryState> {
   responseIdSelector: (state: CommerceEngineState) => string;
   isLoadingSelector: (state: CommerceEngineState) => boolean;
   numberOfProductsSelector: (state: CommerceEngineState) => number;
-  errorSelector: (
-    state: CommerceEngineState
-  ) => CommerceAPIErrorStatusResponse | null;
+  errorSelector: (state: CommerceEngineState) => CommerceAPIErrorStatusResponse | null;
   pageSelector: (state: CommerceEngineState) => number;
   perPageSelector: (state: CommerceEngineState) => number;
   totalEntriesSelector: (state: CommerceEngineState) => number;
@@ -172,9 +161,7 @@ export interface SearchAndListingSubControllerProps<
     state: CommerceEngine[typeof stateKey],
     facetId: string
   ) => AnyFacetResponse | undefined;
-  isFacetLoadingResponseSelector: (
-    state: CommerceEngine[typeof stateKey]
-  ) => boolean;
+  isFacetLoadingResponseSelector: (state: CommerceEngine[typeof stateKey]) => boolean;
   requestIdSelector: (state: CommerceEngine[typeof stateKey]) => string;
   serializer: Serializer<P>;
   parametersDefinition: SchemaDefinition<Required<P>>;
@@ -193,10 +180,7 @@ export interface SearchAndListingSubControllerProps<
 export function buildSearchSubControllers(
   engine: CommerceEngine,
   subControllerProps: Omit<
-    SearchAndListingSubControllerProps<
-      CommerceSearchParameters,
-      SearchSummaryState
-    >,
+    SearchAndListingSubControllerProps<CommerceSearchParameters, SearchSummaryState>,
     'facetSearchType'
   >,
   options?: {enableResults?: boolean}
@@ -222,10 +206,7 @@ export function buildSearchSubControllers(
 export function buildProductListingSubControllers(
   engine: CommerceEngine,
   subControllerProps: Omit<
-    SearchAndListingSubControllerProps<
-      ProductListingParameters,
-      ProductListingSummaryState
-    >,
+    SearchAndListingSubControllerProps<ProductListingParameters, ProductListingSummaryState>,
     'facetSearchType'
   >
 ): SearchAndListingSubControllers<Parameters, ProductListingSummaryState> {
@@ -244,10 +225,7 @@ export function buildProductListingSubControllers(
  * @param subControllerProps - The properties for the search and product listing sub-controllers.
  * @returns The search and product listing sub-controllers.
  */
-export function buildSearchAndListingsSubControllers<
-  P extends Parameters,
-  S extends SummaryState,
->(
+export function buildSearchAndListingsSubControllers<P extends Parameters, S extends SummaryState>(
   engine: CommerceEngine,
   subControllerProps: SearchAndListingSubControllerProps<P, S>
 ): SearchAndListingSubControllers<P, S> {
@@ -302,8 +280,7 @@ export function buildSearchAndListingsSubControllers<
       return buildCoreUrlManager(engine, {
         ...props,
         requestIdSelector,
-        parameterManagerBuilder: (_engine, props) =>
-          this.parameterManager(props),
+        parameterManagerBuilder: (_engine, props) => this.parameterManager(props),
         serializer,
       });
     },

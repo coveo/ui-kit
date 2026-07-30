@@ -37,56 +37,47 @@ describe('atomic-insight-refine-modal', () => {
     });
     mockedQuerySummary = buildFakeQuerySummary({state: querySummaryState});
 
-    vi.mocked(buildInsightBreadcrumbManager).mockReturnValue(
-      mockedBreadcrumbManager
-    );
+    vi.mocked(buildInsightBreadcrumbManager).mockReturnValue(mockedBreadcrumbManager);
     vi.mocked(buildInsightQuerySummary).mockReturnValue(mockedQuerySummary);
 
-    const {element} =
-      await renderInAtomicInsightInterface<AtomicInsightRefineModal>({
-        template: html`<atomic-insight-refine-modal
-          ?is-open=${isOpen}
-        ></atomic-insight-refine-modal>`,
-        selector: 'atomic-insight-refine-modal',
-        bindings: (bindings) => {
-          bindings.engine = mockedEngine;
-          bindings.store.getFacetElements = () => [
-            document.createElement('div'),
-            document.createElement('div'),
-          ];
-          bindings.store.getAllFacets = () => ({
-            '1': {
-              facetId: '1',
-              label: () => 'Test Facet',
-              element: document.createElement('div'),
-              isHidden: () => false,
-            },
-          });
-          return bindings;
-        },
-      });
+    const {element} = await renderInAtomicInsightInterface<AtomicInsightRefineModal>({
+      template: html`<atomic-insight-refine-modal
+        ?is-open=${isOpen}
+      ></atomic-insight-refine-modal>`,
+      selector: 'atomic-insight-refine-modal',
+      bindings: (bindings) => {
+        bindings.engine = mockedEngine;
+        bindings.store.getFacetElements = () => [
+          document.createElement('div'),
+          document.createElement('div'),
+        ];
+        bindings.store.getAllFacets = () => ({
+          '1': {
+            facetId: '1',
+            label: () => 'Test Facet',
+            element: document.createElement('div'),
+            isHidden: () => false,
+          },
+        });
+        return bindings;
+      },
+    });
 
     return {
       element,
       title: element.shadowRoot?.querySelector('[part="title"]'),
       closeButton: element.shadowRoot?.querySelector('[part="close-button"]'),
       closeIcon: element.shadowRoot?.querySelector('[part="close-icon"]'),
-      footerContent: element.shadowRoot?.querySelector(
-        '[part="footer-content"]'
-      ),
+      footerContent: element.shadowRoot?.querySelector('[part="footer-content"]'),
       footerButton: element.shadowRoot?.querySelector('[part="footer-button"]'),
-      footerButtonText: element.shadowRoot?.querySelector(
-        '[part="footer-button-text"]'
-      ),
-      footerButtonCount: element.shadowRoot?.querySelector(
-        '[part="footer-button-count"]'
-      ),
+      footerButtonText: element.shadowRoot?.querySelector('[part="footer-button-text"]'),
+      footerButtonCount: element.shadowRoot?.querySelector('[part="footer-button-count"]'),
       atomicModal: element.shadowRoot?.querySelector('atomic-modal'),
       body: element.shadowRoot?.querySelector('aside[slot="body"]'),
       facetSlot: element.shadowRoot?.querySelector('slot[name="facets"]'),
       getClearAllButton: () =>
-        Array.from(element.shadowRoot?.querySelectorAll('button') ?? []).find(
-          (btn) => btn.textContent?.includes('Clear All Filters')
+        Array.from(element.shadowRoot?.querySelectorAll('button') ?? []).find((btn) =>
+          btn.textContent?.includes('Clear All Filters')
         ),
     };
   };
@@ -239,9 +230,7 @@ describe('atomic-insight-refine-modal', () => {
     it('should append facet slot when modal is opened', async () => {
       const {element} = await renderRefineModal({isOpen: false});
 
-      expect(
-        element.querySelector('div[slot="facets"]')
-      ).not.toBeInTheDocument();
+      expect(element.querySelector('div[slot="facets"]')).not.toBeInTheDocument();
 
       element.isOpen = true;
       await element.updateComplete;

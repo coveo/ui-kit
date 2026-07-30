@@ -76,8 +76,7 @@ export class AtomicProductDescription
     this.resizeObserver = new ResizeObserver(() => {
       if (this.descriptionRef.value) {
         this.isTruncated =
-          this.descriptionRef.value.scrollHeight >
-          this.descriptionRef.value.clientHeight;
+          this.descriptionRef.value.scrollHeight > this.descriptionRef.value.clientHeight;
       }
     });
   }
@@ -98,10 +97,7 @@ export class AtomicProductDescription
 
   updated(changedProperties: Map<string, unknown>) {
     super.updated(changedProperties);
-    if (
-      changedProperties.has('truncateAfter') ||
-      changedProperties.has('field')
-    ) {
+    if (changedProperties.has('truncateAfter') || changedProperties.has('field')) {
       this.validateProps();
     }
   }
@@ -149,9 +145,7 @@ export class AtomicProductDescription
         isCollapsible: this.isCollapsible,
         textRef: this.descriptionRef,
       },
-    })(html`
-      <atomic-product-text field=${this.field}></atomic-product-text>
-    `)}`;
+    })(html` <atomic-product-text field=${this.field}></atomic-product-text> `)}`;
   }
 }
 

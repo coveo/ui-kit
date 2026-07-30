@@ -1,10 +1,6 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {html} from 'lit';
-import {
-  baseFoldedResponse,
-  MockSearchApi,
-  nestedFoldedResponse,
-} from '@coveo/platform-mock-api/search/mock';
+import {MockSearchApi, searchResponses} from '@coveo/platform-mock-api/search';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-folded-result-list/atomic-folded-result-list.js';
@@ -18,7 +14,7 @@ import '@/src/components/search/atomic-result-template/atomic-result-template.js
 import '@/src/components/search/atomic-result-text/atomic-result-text.js';
 
 const searchApiHarness = new MockSearchApi();
-searchApiHarness.searchEndpoint.mock(() => baseFoldedResponse);
+searchApiHarness.searchEndpoint.mock(() => searchResponses.baseFoldedResponse);
 
 const {decorator, play} = wrapInSearchInterface();
 
@@ -69,10 +65,10 @@ export const Default: Story = {
 export const WithInheritTemplates: Story = {
   name: 'With inherit-templates',
   beforeEach: async () => {
-    searchApiHarness.searchEndpoint.mock(() => nestedFoldedResponse);
+    searchApiHarness.searchEndpoint.mock(() => searchResponses.nestedFoldedResponse);
     return () => {
       searchApiHarness.searchEndpoint.reset();
-      searchApiHarness.searchEndpoint.mock(() => baseFoldedResponse);
+      searchApiHarness.searchEndpoint.mock(() => searchResponses.baseFoldedResponse);
     };
   },
   render: () => html`
@@ -90,8 +86,7 @@ export const WithInheritTemplates: Story = {
                     <atomic-result-link></atomic-result-link>
                   </atomic-result-section-title>
                   <atomic-result-section-children>
-                    <atomic-result-children inherit-templates>
-                    </atomic-result-children>
+                    <atomic-result-children inherit-templates> </atomic-result-children>
                   </atomic-result-section-children>
                 </template>
               </atomic-result-children-template>

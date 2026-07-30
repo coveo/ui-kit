@@ -54,10 +54,7 @@ For testing purposes, you can pass the sample configuration for the engine build
 ```ts
 // app/Engine.ts
 
-import {
-  buildSearchEngine,
-  getSampleSearchEngineConfiguration,
-} from '@coveo/headless';
+import {buildSearchEngine, getSampleSearchEngineConfiguration} from '@coveo/headless';
 
 export const headlessEngine = buildSearchEngine({
   configuration: getSampleSearchEngineConfiguration(),

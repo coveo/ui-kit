@@ -12,9 +12,7 @@ test.describe('atomic-ipx-refine-modal', () => {
     await expect(refineModal.viewResultsButton).toBeVisible();
   });
 
-  test('should hide the modal properly when it is closed', async ({
-    refineModal,
-  }) => {
+  test('should hide the modal properly when it is closed', async ({refineModal}) => {
     await expect(refineModal.title).toBeVisible();
 
     await refineModal.closeButton.click();

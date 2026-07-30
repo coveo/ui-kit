@@ -26,9 +26,7 @@ describe('atomic-timeframe', () => {
       ></atomic-timeframe>
     `);
 
-    const timeframe = element.querySelector(
-      'atomic-timeframe'
-    ) as AtomicTimeframe;
+    const timeframe = element.querySelector('atomic-timeframe') as AtomicTimeframe;
 
     return {element, timeframe};
   };
@@ -53,18 +51,13 @@ describe('atomic-timeframe', () => {
     expect(timeframe.period).toBe('next');
   });
 
-  it.each<RelativeDateUnit>([
-    'minute',
-    'hour',
-    'day',
-    'week',
-    'month',
-    'quarter',
-    'year',
-  ])('should set unit to "%s"', async (unit) => {
-    const {timeframe} = await renderTimeframe({unit});
-    expect(timeframe.unit).toBe(unit);
-  });
+  it.each<RelativeDateUnit>(['minute', 'hour', 'day', 'week', 'month', 'quarter', 'year'])(
+    'should set unit to "%s"',
+    async (unit) => {
+      const {timeframe} = await renderTimeframe({unit});
+      expect(timeframe.unit).toBe(unit);
+    }
+  );
 
   it('should set amount to a valid value', async () => {
     const {timeframe} = await renderTimeframe({amount: 10});
@@ -121,9 +114,7 @@ describe('atomic-timeframe', () => {
   ])(
     'should log validation warning when #$prop is updated to invalid value',
     async ({prop, validValue, invalidValue}) => {
-      const consoleWarnSpy = vi
-        .spyOn(console, 'warn')
-        .mockImplementation(() => {});
+      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
       const {timeframe} = await renderTimeframe({[prop]: validValue});
 
@@ -132,15 +123,10 @@ describe('atomic-timeframe', () => {
       await timeframe.updateComplete;
 
       expect(consoleWarnSpy).toHaveBeenCalledWith(
-        expect.stringContaining(
-          'Prop validation failed for component atomic-timeframe'
-        ),
+        expect.stringContaining('Prop validation failed for component atomic-timeframe'),
         timeframe
       );
-      expect(consoleWarnSpy).toHaveBeenCalledWith(
-        expect.stringContaining(prop),
-        timeframe
-      );
+      expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining(prop), timeframe);
 
       consoleWarnSpy.mockRestore();
     }

@@ -88,11 +88,9 @@ export function buildCoreFacetConditionsManager(
     engine.state.dateFacetSet?.[facetId]?.request?.currentValues ??
     null;
 
-  const isFacetRegistered = (facetId: string) =>
-    facetId in engine.state.facetOptions.facets;
+  const isFacetRegistered = (facetId: string) => facetId in engine.state.facetOptions.facets;
 
-  const selectTabSettings = (facetId: string) =>
-    engine.state.facetOptions.facets[facetId]?.tabs;
+  const selectTabSettings = (facetId: string) => engine.state.facetOptions.facets[facetId]?.tabs;
 
   const getRelevantStateHash = () =>
     getObjectHash({
@@ -140,9 +138,7 @@ export function buildCoreFacetConditionsManager(
       Object.entries(engine.state.facetSet).forEach(
         ([facetId, slice]) =>
           slice.request.freezeCurrentValues &&
-          engine.dispatch(
-            updateFreezeCurrentValues({facetId, freezeCurrentValues: false})
-          )
+          engine.dispatch(updateFreezeCurrentValues({facetId, freezeCurrentValues: false}))
       );
     }
   };
@@ -159,11 +155,7 @@ export function buildCoreFacetConditionsManager(
     );
     const shouldBeEnabled = conditionsMet && isVisibleOnTab;
     if (isEnabled !== shouldBeEnabled) {
-      engine.dispatch(
-        shouldBeEnabled
-          ? enableFacet(props.facetId)
-          : disableFacet(props.facetId)
-      );
+      engine.dispatch(shouldBeEnabled ? enableFacet(props.facetId) : disableFacet(props.facetId));
       unfreezeFacetValues();
     }
   };

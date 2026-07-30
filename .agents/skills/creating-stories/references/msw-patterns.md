@@ -7,8 +7,8 @@ This document covers advanced patterns for MSW API mocking in Storybook stories.
 When a component uses multiple APIs, create harnesses for each:
 
 ```typescript
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
-import {MockAnswerApi} from '@coveo/platform-mock-api/answer/mock';
+import {MockSearchApi} from '@coveo/platform-mock-api/search';
+import {MockAnswerApi} from '@coveo/platform-mock-api/answer';
 
 const searchApiHarness = new MockSearchApi();
 const answerApiHarness = new MockAnswerApi();
@@ -87,7 +87,7 @@ const meta: Meta = {
 ### Product Recommendations
 
 ```typescript
-import {MockCommerceApi} from '@coveo/platform-mock-api/commerce/mock';
+import {MockCommerceApi} from '@coveo/platform-mock-api/commerce';
 
 const commerceApiHarness = new MockCommerceApi();
 
@@ -114,7 +114,7 @@ commerceApiHarness.productListingEndpoint.mock((response) => ({
 ## Insight API Mocking
 
 ```typescript
-import {MockInsightApi} from '@coveo/platform-mock-api/insight/mock';
+import {MockInsightApi} from '@coveo/platform-mock-api/insight';
 
 const insightApiHarness = new MockInsightApi();
 
@@ -138,7 +138,7 @@ const meta: Meta = {
 For streaming answer components:
 
 ```typescript
-import {MockAnswerApi} from '@coveo/platform-mock-api/answer/mock';
+import {MockAnswerApi} from '@coveo/platform-mock-api/answer';
 
 const answerApiHarness = new MockAnswerApi();
 
@@ -158,7 +158,7 @@ Note: Answer API uses streaming responses. The mock handles SSE (Server-Sent Eve
 For components that track user actions:
 
 ```typescript
-import {MockMachineLearningApi} from '@coveo/platform-mock-api/machinelearning/mock';
+import {MockMachineLearningApi} from '@coveo/platform-mock-api/machinelearning';
 
 const mlApiHarness = new MockMachineLearningApi();
 
@@ -202,15 +202,12 @@ const meta: Meta = {
 Use rich response data for more realistic testing:
 
 ```typescript
-import {
-  type baseResponse,
-  richResponse,
-} from '@coveo/platform-mock-api/search/search-response';
+import {searchResponses} from '@coveo/platform-mock-api/search';
 
 const meta: Meta = {
   beforeEach: () => {
     searchApiHarness.searchEndpoint.mock(
-      () => richResponse as unknown as typeof baseResponse
+      () => searchResponses.richResponse as unknown as typeof searchResponses.baseResponse
     );
   },
 };
@@ -218,9 +215,9 @@ const meta: Meta = {
 
 Available rich responses:
 
-- `search/search-response.ts` - `richResponse`
-- `commerce/search-response.ts` - `richResponse`
-- `insight/search-response.ts` - `richResponse`
+- `@coveo/platform-mock-api/search` - `searchResponses.richResponse`
+- `@coveo/platform-mock-api/commerce` - `searchResponses.richResponse`
+- `@coveo/platform-mock-api/insight` - `searchResponses.richResponse`
 
 ## Testing Empty States
 

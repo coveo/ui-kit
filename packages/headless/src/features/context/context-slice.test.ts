@@ -63,10 +63,7 @@ describe('context slice', () => {
       context: {contextValues: {foo: 'bar'}},
     };
 
-    const nextState = contextReducer(
-      state,
-      change.fulfilled(historyChange, '')
-    );
+    const nextState = contextReducer(state, change.fulfilled(historyChange, ''));
 
     expect(nextState.contextValues).toEqual({
       foo: 'bar',

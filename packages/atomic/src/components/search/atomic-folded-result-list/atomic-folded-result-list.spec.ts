@@ -74,33 +74,30 @@ describe('atomic-folded-result-list', () => {
     numberOfFoldedResults,
     isAppLoaded = true,
   }: RenderOptions = {}) => {
-    const {element} =
-      await renderInAtomicSearchInterface<AtomicFoldedResultList>({
-        template: html`<atomic-folded-result-list
-          .density=${ifDefined(density)}
-          .imageSize=${ifDefined(imageSize)}
-          .tabsIncluded=${ifDefined(tabsIncluded)}
-          .tabsExcluded=${ifDefined(tabsExcluded)}
-          .collectionField=${ifDefined(collectionField)}
-          .parentField=${ifDefined(parentField)}
-          .childField=${ifDefined(childField)}
-          .numberOfFoldedResults=${ifDefined(numberOfFoldedResults)}
-        >
-          <atomic-result-template>
-            <template>
-              <div>Result Content</div>
-            </template>
-          </atomic-result-template>
-        </atomic-folded-result-list>`,
-        selector: 'atomic-folded-result-list',
-        bindings: (bindings) => {
-          bindings.store.state.loadingFlags = isAppLoaded
-            ? []
-            : ['loading-flag'];
-          bindings.engine = mockedEngine;
-          return bindings;
-        },
-      });
+    const {element} = await renderInAtomicSearchInterface<AtomicFoldedResultList>({
+      template: html`<atomic-folded-result-list
+        .density=${ifDefined(density)}
+        .imageSize=${ifDefined(imageSize)}
+        .tabsIncluded=${ifDefined(tabsIncluded)}
+        .tabsExcluded=${ifDefined(tabsExcluded)}
+        .collectionField=${ifDefined(collectionField)}
+        .parentField=${ifDefined(parentField)}
+        .childField=${ifDefined(childField)}
+        .numberOfFoldedResults=${ifDefined(numberOfFoldedResults)}
+      >
+        <atomic-result-template>
+          <template>
+            <div>Result Content</div>
+          </template>
+        </atomic-result-template>
+      </atomic-folded-result-list>`,
+      selector: 'atomic-folded-result-list',
+      bindings: (bindings) => {
+        bindings.store.state.loadingFlags = isAppLoaded ? [] : ['loading-flag'];
+        bindings.engine = mockedEngine;
+        return bindings;
+      },
+    });
 
     return {
       element,
@@ -135,19 +132,16 @@ describe('atomic-folded-result-list', () => {
     it('should call buildFoldedResultList with engine and default options', async () => {
       await renderFoldedResultList();
 
-      expect(vi.mocked(buildFoldedResultList)).toHaveBeenCalledWith(
-        mockedEngine,
-        {
-          options: {
-            folding: {
-              collectionField: undefined,
-              parentField: undefined,
-              childField: undefined,
-              numberOfFoldedResults: 2,
-            },
+      expect(vi.mocked(buildFoldedResultList)).toHaveBeenCalledWith(mockedEngine, {
+        options: {
+          folding: {
+            collectionField: undefined,
+            parentField: undefined,
+            childField: undefined,
+            numberOfFoldedResults: 2,
           },
-        }
-      );
+        },
+      });
     });
 
     it('should call buildFoldedResultList with custom folding options', async () => {
@@ -158,19 +152,16 @@ describe('atomic-folded-result-list', () => {
         numberOfFoldedResults: 5,
       });
 
-      expect(vi.mocked(buildFoldedResultList)).toHaveBeenCalledWith(
-        mockedEngine,
-        {
-          options: {
-            folding: {
-              collectionField: 'custom-collection',
-              parentField: 'custom-parent',
-              childField: 'custom-child',
-              numberOfFoldedResults: 5,
-            },
+      expect(vi.mocked(buildFoldedResultList)).toHaveBeenCalledWith(mockedEngine, {
+        options: {
+          folding: {
+            collectionField: 'custom-collection',
+            parentField: 'custom-parent',
+            childField: 'custom-child',
+            numberOfFoldedResults: 5,
           },
-        }
-      );
+        },
+      });
     });
 
     it('should call buildResultsPerPage with engine', async () => {
@@ -192,9 +183,7 @@ describe('atomic-folded-result-list', () => {
       const {parts} = await renderFoldedResultList();
 
       expect(parts.resultList).toBeTruthy();
-      await expect
-        .element(page.elementLocator(parts.resultList!))
-        .toBeInTheDocument();
+      await expect.element(page.elementLocator(parts.resultList!)).toBeInTheDocument();
     });
 
     it('should render atomic-result for each folded collection', async () => {
@@ -209,9 +198,7 @@ describe('atomic-folded-result-list', () => {
       mockFoldedCollections(1);
       const {element} = await renderFoldedResultList();
 
-      const result = element.shadowRoot?.querySelector(
-        'atomic-result[part="outline"]'
-      );
+      const result = element.shadowRoot?.querySelector('atomic-result[part="outline"]');
       expect(result).toBeTruthy();
       await expect.element(page.elementLocator(result!)).toBeInTheDocument();
     });
@@ -228,9 +215,7 @@ describe('atomic-folded-result-list', () => {
 
       const {element} = await renderFoldedResultList({isAppLoaded: false});
 
-      const placeholders = element.shadowRoot?.querySelectorAll(
-        'atomic-result-placeholder'
-      );
+      const placeholders = element.shadowRoot?.querySelectorAll('atomic-result-placeholder');
       expect(placeholders?.length).toBe(numberOfPlaceholders);
     });
   });
@@ -292,9 +277,7 @@ describe('atomic-folded-result-list', () => {
 
       element.dispatchEvent(event);
 
-      expect(element.foldedResultList.loadCollection).toHaveBeenCalledWith(
-        mockCollection
-      );
+      expect(element.foldedResultList.loadCollection).toHaveBeenCalledWith(mockCollection);
     });
 
     it('should prevent event default', async () => {

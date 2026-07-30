@@ -11,10 +11,7 @@ export default function InstantProducts(props: IInstantProductProps) {
   const {controller} = props;
   const [state, setState] = useState(controller.state);
 
-  useEffect(
-    () => controller.subscribe(() => setState({...controller.state})),
-    [controller]
-  );
+  useEffect(() => controller.subscribe(() => setState({...controller.state})), [controller]);
 
   if (state.products.length === 0 || !state.query) {
     return null;
@@ -41,9 +38,7 @@ export default function InstantProducts(props: IInstantProductProps) {
                 <span className="InstantProductInfo">
                   <span className="InstantProductName">{product.ec_name}</span>
                   {price != null && (
-                    <span className="InstantProductPrice">
-                      {formatCurrency(price)}
-                    </span>
+                    <span className="InstantProductPrice">{formatCurrency(price)}</span>
                   )}
                 </span>
               </button>

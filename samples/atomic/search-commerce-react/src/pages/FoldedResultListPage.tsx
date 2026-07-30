@@ -22,10 +22,7 @@ import {AtomicPageWrapper} from '../components/AtomicPageWrapper';
 
 export const FoldedResultListPage: FunctionComponent = () => {
   return (
-    <AtomicPageWrapper
-      sample="service"
-      options={{advancedQuery: '@source=iNaturalistTaxons'}}
-    >
+    <AtomicPageWrapper sample="service" options={{advancedQuery: '@source=iNaturalistTaxons'}}>
       <AtomicFoldedResultList imageSize="large" template={MyTemplate} />
     </AtomicPageWrapper>
   );
@@ -59,18 +56,13 @@ function MyTemplate(result: FoldedResult) {
         )}
       </AtomicResultSectionBadges>
       <AtomicResultSectionVisual>
-        <AtomicResultImage
-          field="ec_images"
-          fallback="https://picsum.photos/seed/picsum/350"
-        />
+        <AtomicResultImage field="ec_images" fallback="https://picsum.photos/seed/picsum/350" />
       </AtomicResultSectionVisual>
       <AtomicResultSectionTitle>
         <AtomicResultLink />
       </AtomicResultSectionTitle>
       <AtomicResultSectionTitleMetadata>
-        <AtomicResultPrintableUri
-          maxNumberOfParts={3}
-        ></AtomicResultPrintableUri>
+        <AtomicResultPrintableUri maxNumberOfParts={3}></AtomicResultPrintableUri>
       </AtomicResultSectionTitleMetadata>
       <AtomicResultSectionExcerpt>
         <AtomicResultText field="excerpt" />

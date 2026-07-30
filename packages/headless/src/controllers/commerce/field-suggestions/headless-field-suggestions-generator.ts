@@ -10,10 +10,7 @@ import type {FieldSuggestionsFacet} from '../../../features/commerce/facets/fiel
 import {executeSearch} from '../../../features/commerce/search/search-actions.js';
 import type {FieldSuggestionsOrderSection} from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
-import {
-  buildController,
-  type Controller,
-} from '../../controller/headless-controller.js';
+import {buildController, type Controller} from '../../controller/headless-controller.js';
 import {
   facetResponseSelector,
   isFacetLoadingResponseSelector,
@@ -27,8 +24,7 @@ import {
  * @alpha
  * @deprecated
  */
-export type GeneratedFieldSuggestionsControllers =
-  Array<CategoryFieldSuggestions>;
+export type GeneratedFieldSuggestionsControllers = Array<CategoryFieldSuggestions>;
 
 /**
  * The `FieldSuggestionsGenerator` controller is responsible for generating field suggestions controllers for a given commerce engine.
@@ -60,9 +56,7 @@ export interface FieldSuggestionsGenerator extends Controller {
  * @alpha
  * @deprecated
  */
-export function buildFieldSuggestionsGenerator(
-  engine: CommerceEngine
-): FieldSuggestionsGenerator {
+export function buildFieldSuggestionsGenerator(engine: CommerceEngine): FieldSuggestionsGenerator {
   if (!loadFieldSuggestionsGeneratorReducers(engine)) {
     throw loadReducerError;
   }
@@ -94,9 +88,7 @@ export function buildFieldSuggestionsGenerator(
     ...controller,
 
     get fieldSuggestions() {
-      return createFieldSuggestionsControllers(engine[stateKey]).filter(
-        (v) => v !== undefined
-      );
+      return createFieldSuggestionsControllers(engine[stateKey]).filter((v) => v !== undefined);
     },
 
     get state() {

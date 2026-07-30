@@ -228,10 +228,7 @@ export class AtomicFoldedResultList
       'atomic/resolveFoldedResultList',
       this.handleResolveFoldedResultList as EventListener
     );
-    this.removeEventListener(
-      'atomic/loadCollection',
-      this.handleLoadCollection as EventListener
-    );
+    this.removeEventListener('atomic/loadCollection', this.handleLoadCollection as EventListener);
   }
 
   public initialize() {
@@ -250,10 +247,7 @@ export class AtomicFoldedResultList
       'atomic/resolveFoldedResultList',
       this.handleResolveFoldedResultList as EventListener
     );
-    this.addEventListener(
-      'atomic/loadCollection',
-      this.handleLoadCollection as EventListener
-    );
+    this.addEventListener('atomic/loadCollection', this.handleLoadCollection as EventListener);
   }
 
   /**
@@ -262,26 +256,20 @@ export class AtomicFoldedResultList
    *
    * Do not use this method if you integrate Atomic in a plain HTML deployment.
    */
-  public async setRenderFunction(
-    resultRenderingFunction: ItemRenderingFunction
-  ) {
+  public async setRenderFunction(resultRenderingFunction: ItemRenderingFunction) {
     this.itemRenderingFunction = resultRenderingFunction;
   }
 
   willUpdate(changedProperties: Map<string | number | symbol, unknown>): void {
     if (changedProperties.has('tabManagerState')) {
-      const oldState = changedProperties.get(
-        'tabManagerState'
-      ) as TabManagerState;
+      const oldState = changedProperties.get('tabManagerState') as TabManagerState;
       if (this.tabManagerState?.activeTab !== oldState?.activeTab) {
         this.bindings.store.unsetLoadingFlag(this.loadingFlag);
       }
     }
 
     if (changedProperties.has('foldedResultListState')) {
-      const oldState = changedProperties.get(
-        'foldedResultListState'
-      ) as FoldedResultListState;
+      const oldState = changedProperties.get('foldedResultListState') as FoldedResultListState;
       if (this.foldedResultListState.firstSearchExecuted) {
         this.bindings.store.unsetLoadingFlag(this.loadingFlag);
       }
@@ -349,8 +337,7 @@ export class AtomicFoldedResultList
                       density: this.density,
                       display: this.display,
                       imageSize: this.imageSize,
-                      numberOfPlaceholders:
-                        this.resultsPerPageState.numberOfResults || 10,
+                      numberOfPlaceholders: this.resultsPerPageState.numberOfResults || 10,
                     },
                   })
                 )
@@ -362,9 +349,7 @@ export class AtomicFoldedResultList
     )}`;
   }
 
-  private handleResolveFoldedResultList = (
-    event: FoldedItemListContextEvent<FoldedResultList>
-  ) => {
+  private handleResolveFoldedResultList = (event: FoldedItemListContextEvent<FoldedResultList>) => {
     event.preventDefault();
     event.stopPropagation();
     event.detail(this.foldedResultList);
@@ -376,9 +361,7 @@ export class AtomicFoldedResultList
     this.foldedResultList.loadCollection(event.detail);
   };
 
-  private initFolding(
-    props: ResultListProps = {options: {}}
-  ): FoldedResultList {
+  private initFolding(props: ResultListProps = {options: {}}): FoldedResultList {
     return buildFoldedResultList(this.bindings.engine, {
       options: {
         ...props.options,
@@ -395,9 +378,7 @@ export class AtomicFoldedResultList
   private initResultTemplateProvider() {
     this.resultTemplateProvider = new ResultTemplateProvider({
       includeDefaultTemplate: true,
-      templateElements: Array.from(
-        this.querySelectorAll('atomic-result-template')
-      ),
+      templateElements: Array.from(this.querySelectorAll('atomic-result-template')),
       getResultTemplateRegistered: () => this.resultTemplateRegistered,
       getTemplateHasError: () => this.templateHasError,
       setResultTemplateRegistered: (value: boolean) => {
@@ -435,31 +416,28 @@ export class AtomicFoldedResultList
   }
 
   private renderList() {
-    return html`${map(
-      this.foldedResultListState.results,
-      (collection, index) => {
-        return html`${keyed(
-          this.getResultId(collection),
-          html`<atomic-result
-            part="outline"
-            ${ref(
-              (element) =>
-                element instanceof HTMLElement &&
-                this.resultListCommon.setNewResultRef(element, index)
-            )}
-            .content=${this.getContent(collection)}
-            .density=${this.density}
-            .display=${this.display}
-            .imageSize=${this.imageSize}
-            .interactiveResult=${this.getInteractiveResult(collection)}
-            .loadingFlag=${this.loadingFlag}
-            .result=${collection}
-            .renderingFunction=${this.itemRenderingFunction}
-            .store=${this.bindings.store as never}
-          ></atomic-result>`
-        )}`;
-      }
-    )}`;
+    return html`${map(this.foldedResultListState.results, (collection, index) => {
+      return html`${keyed(
+        this.getResultId(collection),
+        html`<atomic-result
+          part="outline"
+          ${ref(
+            (element) =>
+              element instanceof HTMLElement &&
+              this.resultListCommon.setNewResultRef(element, index)
+          )}
+          .content=${this.getContent(collection)}
+          .density=${this.density}
+          .display=${this.display}
+          .imageSize=${this.imageSize}
+          .interactiveResult=${this.getInteractiveResult(collection)}
+          .loadingFlag=${this.loadingFlag}
+          .result=${collection}
+          .renderingFunction=${this.itemRenderingFunction}
+          .store=${this.bindings.store as never}
+        ></atomic-result>`
+      )}`;
+    })}`;
   }
 
   private get focusTarget() {

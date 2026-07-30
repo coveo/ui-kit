@@ -30,15 +30,14 @@ describe('atomic-relevance-inspector', () => {
   });
 
   const renderRelevanceInspector = async () => {
-    const {element} =
-      await renderInAtomicSearchInterface<AtomicRelevanceInspector>({
-        template: html`<atomic-relevance-inspector></atomic-relevance-inspector>`,
-        selector: 'atomic-relevance-inspector',
-        bindings: (bindings) => {
-          bindings.engine = engine;
-          return bindings;
-        },
-      });
+    const {element} = await renderInAtomicSearchInterface<AtomicRelevanceInspector>({
+      template: html`<atomic-relevance-inspector></atomic-relevance-inspector>`,
+      selector: 'atomic-relevance-inspector',
+      bindings: (bindings) => {
+        bindings.engine = engine;
+        return bindings;
+      },
+    });
     return {
       element,
       get ignoreButton() {
@@ -62,15 +61,9 @@ describe('atomic-relevance-inspector', () => {
   describe('#initialize', () => {
     it('should add a "dblclick" event listener on the search interface element', async () => {
       const {element} = await renderRelevanceInspector();
-      const addEventListenerSpy = vi.spyOn(
-        element.bindings.interfaceElement,
-        'addEventListener'
-      );
+      const addEventListenerSpy = vi.spyOn(element.bindings.interfaceElement, 'addEventListener');
       element.initialize();
-      expect(addEventListenerSpy).toHaveBeenCalledWith(
-        'dblclick',
-        expect.any(Function)
-      );
+      expect(addEventListenerSpy).toHaveBeenCalledWith('dblclick', expect.any(Function));
     });
   });
 
@@ -82,10 +75,7 @@ describe('atomic-relevance-inspector', () => {
         'removeEventListener'
       );
       element.remove();
-      expect(removeEventListenerSpy).toHaveBeenCalledWith(
-        'dblclick',
-        expect.any(Function)
-      );
+      expect(removeEventListenerSpy).toHaveBeenCalledWith('dblclick', expect.any(Function));
     });
   });
 

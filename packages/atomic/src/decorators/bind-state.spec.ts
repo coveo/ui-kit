@@ -79,8 +79,7 @@ describe('@bindStateToController decorator', () => {
   }
 
   const setupElement = async <T extends LitElement>(tag = 'test-element') => {
-    element = document.createElement(tag) as InitializableComponent<Bindings> &
-      T;
+    element = document.createElement(tag) as InitializableComponent<Bindings> & T;
     document.body.appendChild(element);
     await element.updateComplete;
   };

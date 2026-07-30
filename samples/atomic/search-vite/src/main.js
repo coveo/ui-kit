@@ -1,9 +1,6 @@
 import {defineCustomElements} from '@coveo/atomic/loader';
 import '@coveo/atomic/themes/coveo.css';
-import {
-  buildSearchEngine,
-  getSampleSearchEngineConfiguration,
-} from '@coveo/headless';
+import {buildSearchEngine, getSampleSearchEngineConfiguration} from '@coveo/headless';
 
 // Register every Atomic custom element (<atomic-search-interface>, etc.).
 defineCustomElements();

@@ -26,9 +26,7 @@ export interface SearchParameterActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  restoreSearchParameters(
-    payload: SearchParameters
-  ): PayloadAction<SearchParameters>;
+  restoreSearchParameters(payload: SearchParameters): PayloadAction<SearchParameters>;
 
   /**
    * Restores the tab.
@@ -49,9 +47,7 @@ export interface SearchParameterActionCreators {
  * @group Actions
  * @category SearchParameters
  */
-export function loadSearchParameterActions(
-  engine: CoreEngine
-): SearchParameterActionCreators {
+export function loadSearchParameterActions(engine: CoreEngine): SearchParameterActionCreators {
   engine.addReducers({
     facetOrder,
     facetSet,

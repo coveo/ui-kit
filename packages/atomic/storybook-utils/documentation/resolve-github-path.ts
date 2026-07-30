@@ -10,9 +10,7 @@
  *
  * Returns `null` when no recognisable pattern is found.
  */
-function extractAtomicRelativePath(
-  importPath: string | undefined
-): string | null {
+function extractAtomicRelativePath(importPath: string | undefined): string | null {
   if (!importPath) {
     return null;
   }
@@ -34,8 +32,7 @@ function extractAtomicRelativePath(
   return null;
 }
 
-const GITHUB_ATOMIC_BASE =
-  'https://github.com/coveo/ui-kit/blob/main/packages/atomic/';
+const GITHUB_ATOMIC_BASE = 'https://github.com/coveo/ui-kit/blob/main/packages/atomic/';
 
 /**
  * Builds the GitHub URL for the **component source** (`.ts`) that corresponds
@@ -47,9 +44,7 @@ const GITHUB_ATOMIC_BASE =
  * resolveGithubUrl('./src/components/search/atomic-pager/atomic-pager.new.stories.tsx')
  * // => 'https://github.com/coveo/ui-kit/blob/main/packages/atomic/src/components/search/atomic-pager/atomic-pager.ts'
  */
-export function resolveGithubUrl(
-  importPath: string | undefined
-): string | null {
+export function resolveGithubUrl(importPath: string | undefined): string | null {
   const relative = extractAtomicRelativePath(importPath);
   if (!relative) {
     return null;
@@ -77,9 +72,7 @@ export function resolveGithubUrl(
  * resolveGithubDocsUrl('./.storybook/Introduction.mdx')
  * // => 'https://github.com/coveo/ui-kit/blob/main/packages/atomic/.storybook/Introduction.mdx'
  */
-export function resolveGithubDocsUrl(
-  importPath: string | undefined
-): string | null {
+export function resolveGithubDocsUrl(importPath: string | undefined): string | null {
   const relative = extractAtomicRelativePath(importPath);
   if (!relative) {
     return null;
@@ -87,9 +80,7 @@ export function resolveGithubDocsUrl(
 
   const filePath = /\.mdx$/i.test(relative)
     ? relative
-    : relative
-        .replace(/\.new\.stories\.tsx?$/i, '.mdx')
-        .replace(/\.stories\.tsx?$/i, '.mdx');
+    : relative.replace(/\.new\.stories\.tsx?$/i, '.mdx').replace(/\.stories\.tsx?$/i, '.mdx');
 
   return `${GITHUB_ATOMIC_BASE}${filePath}`;
 }

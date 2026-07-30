@@ -117,19 +117,13 @@ export function buildSmartSnippetQuestionsList(
     insightSmartSnippetAnalyticsClient
   );
 
-  const interactiveInlineLinks = buildSmartSnippetInteractiveInlineLinks(
-    engine,
-    {
-      options: {selectionDelay: props?.options?.selectionDelay},
-    }
-  );
+  const interactiveInlineLinks = buildSmartSnippetInteractiveInlineLinks(engine, {
+    options: {selectionDelay: props?.options?.selectionDelay},
+  });
 
-  const interactiveQuestions = buildInsightSmartSnippetInteractiveQuestions(
-    engine,
-    {
-      options: {selectionDelay: props?.options?.selectionDelay},
-    }
-  );
+  const interactiveQuestions = buildInsightSmartSnippetInteractiveQuestions(engine, {
+    options: {selectionDelay: props?.options?.selectionDelay},
+  });
 
   return {
     ...smartSnippetQuestionList,

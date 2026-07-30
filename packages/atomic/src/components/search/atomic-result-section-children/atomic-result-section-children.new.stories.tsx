@@ -6,15 +6,13 @@ import {
   getResultSectionArgTypes,
   getResultSectionDecorators,
 } from '@/storybook-utils/search/result-section-story-utils';
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
+import {MockSearchApi, type SearchResponse} from '@coveo/platform-mock-api/search';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-result-section-children/atomic-result-section-children.js';
-import {SearchResponse} from '@coveo/platform-mock-api/search/search-response';
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-result-section-children',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-result-section-children', {
+  excludeCategories: ['methods'],
+});
 
 const searchApiHarness = new MockSearchApi();
 searchApiHarness.searchEndpoint.mock((response) => ({
