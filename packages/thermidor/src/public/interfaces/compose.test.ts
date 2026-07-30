@@ -77,7 +77,7 @@ describe('composeInterfaces', () => {
     });
 
     const thunks = getComposedInternals(
-      composed as ComposedInterfaceImpl<'search' | 'generative'>
+      composed as unknown as ComposedInterfaceImpl<'search' | 'generative'>
     ).resolveFacades('search');
     expect(thunks).toHaveLength(1);
     expect(thunks[0]).toBe(mockSearchThunk);
@@ -98,7 +98,7 @@ describe('composeInterfaces', () => {
     const ifaceA = new TestSearchInterface(engine, 'a');
 
     const composed = composeInterfaces({interfaces: [ifaceA]});
-    const {stateId} = getComposedInternals(composed as ComposedInterfaceImpl<'search'>);
+    const {stateId} = getComposedInternals(composed as unknown as ComposedInterfaceImpl<'search'>);
 
     expect(typeof stateId).toBe('string');
     expect(stateId.length).toBeGreaterThan(0);

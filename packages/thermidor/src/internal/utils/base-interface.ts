@@ -7,6 +7,7 @@ import type {
   Facades,
   InterfaceHandle,
   InterfaceType,
+  InterfaceTypeBrand,
   SupportsBrand,
 } from './interface-types.js';
 
@@ -24,6 +25,7 @@ export let getInterfaceInternals: <T extends InterfaceType>(
 
 export abstract class BaseInterface<T extends InterfaceType> {
   declare readonly [SupportsBrand]: {[K in Facades[T]]: true};
+  declare readonly [InterfaceTypeBrand]: T;
 
   get disposed(): boolean {
     return this.#disposed;

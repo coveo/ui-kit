@@ -33,4 +33,5 @@ export type {
   Supports,
   SupportsBrand,
 } from './interface-types.js';
+export {InterfaceTypeBrand} from './interface-types.js';
 export {createNoopThunk} from './noop-thunk.js';

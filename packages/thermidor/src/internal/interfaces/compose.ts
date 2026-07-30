@@ -7,6 +7,7 @@ import type {
   Facades,
   InterfaceHandle,
   InterfaceType,
+  InterfaceTypeBrand,
   SupportsBrand,
 } from '@/src/internal/utils/index.js';
 
@@ -26,6 +27,7 @@ export let getComposedInternals: <T extends InterfaceType>(
 
 export class ComposedInterfaceImpl<T extends InterfaceType> implements ComposedInterface<T> {
   declare readonly [SupportsBrand]: {[K in Facades[T]]: true};
+  declare readonly [InterfaceTypeBrand]: T;
 
   get disposed(): boolean {
     return this.#disposed;
