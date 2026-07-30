@@ -3,6 +3,15 @@ on:
   pull_request:
   merge_group:
 
+# Cancel superseded in-progress runs for the same PR when new commits are pushed.
+# For pull_request events, github.ref is refs/pull/<number>/merge (stable per PR),
+# so a new push cancels the previous run. For merge_group events, github.ref is a
+# unique merge-queue ref and cancel-in-progress is false, so merge-queue runs are
+# never cancelled and the queue keeps working.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 permissions:
   contents: read
 
