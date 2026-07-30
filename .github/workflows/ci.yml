@@ -360,6 +360,7 @@ jobs:
   chromatic:
     name: 'Run Chromatic visual tests on Atomic'
     needs: affected
+    if: vars.RUN_CHROMATIC == 'true'
     runs-on: ubuntu-latest
     env:
       CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}

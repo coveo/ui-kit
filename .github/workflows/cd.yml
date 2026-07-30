@@ -245,6 +245,7 @@ jobs:
           CHANNELS: ${{ needs.release.outputs.published == 'true' && 'private,preview' || 'private' }}
   chromatic-update-main:
     name: 'Update Chromatic baseline on main'
+    if: vars.RUN_CHROMATIC == 'true'
     runs-on: ubuntu-latest
     env:
       CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
