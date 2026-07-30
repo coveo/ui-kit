@@ -102,14 +102,6 @@ describe('toCommerceApiSort', () => {
     });
     expect(result.fields![0]).not.toHaveProperty('displayName');
   });
-
-  it('falls back to relevance for unsupported criterion types', () => {
-    const dateCriterion = {by: 'date', direction: 'ascending'} as any;
-    expect(toCommerceApiSort(dateCriterion)).toEqual({sortCriteria: 'relevance'});
-
-    const qreCriterion = {by: 'qre'} as any;
-    expect(toCommerceApiSort(qreCriterion)).toEqual({sortCriteria: 'relevance'});
-  });
 });
 
 describe('fromCommerceApiSort', () => {

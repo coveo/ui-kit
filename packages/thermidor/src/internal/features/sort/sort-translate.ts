@@ -45,8 +45,6 @@ export function toCommerceApiSort(criterion: CommerceSortCriterion): CommerceApi
           },
         ],
       };
-    default:
-      return {sortCriteria: 'relevance'};
   }
 }
 
