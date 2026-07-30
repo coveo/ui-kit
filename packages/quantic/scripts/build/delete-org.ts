@@ -60,10 +60,15 @@ async function deleteScratchOrgs(log: StepLogger, options: Options) {
     return;
   }
 
+  if (deletedOrgUsernames.length !== foundOrgUsernames.length) {
+    console.warn(
+      `Deleted ${deletedOrgUsernames.length}/${foundOrgUsernames.length} scratch org(s) named ${options.scratchOrgName}.`
+    );
+  }
+
   deletedOrgUsernames.forEach((username) => {
     log(`Organization ${username} deleted successfully.`);
   });
-}
 
 (async function () {
   try {
