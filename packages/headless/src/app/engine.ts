@@ -218,7 +218,12 @@ function getUpdateAnalyticsConfigurationPayload(
     };
   }
 
-  if (browserPrivacyGateApplies && doNotTrack() && privacySignalsOverridden) {
+  if (
+    browserPrivacyGateApplies &&
+    doNotTrack() &&
+    privacySignalsOverridden &&
+    payloadWithURL.enabled !== false
+  ) {
     logger.warn(
       'Browser privacy signals (Do Not Track and Global Privacy Control) are present but are being ignored because analytics.disableBrowserPrivacySignals is set to true. Legacy analytics events will be sent, and your integration is responsible for privacy compliance.'
     );
