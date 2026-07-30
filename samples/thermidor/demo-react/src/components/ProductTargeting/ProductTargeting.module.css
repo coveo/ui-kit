@@ -1,0 +1,268 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: var(--space-4) var(--space-5);
+}
+
+.promptArea {
+  position: relative;
+  border: 1px solid var(--color-border, #e0e0e0);
+  border-radius: 12px;
+  background: var(--color-surface, #fff);
+  transition: box-shadow 0.15s ease;
+  max-width: 560px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.promptArea:focus-within {
+  box-shadow: 0 0 0 2px var(--color-border-active, #1976d2);
+}
+
+.promptArea :global(.wrapper) {
+  position: static;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.promptArea :global(.textarea),
+.promptArea textarea {
+  border: none;
+  border-radius: 12px 12px 0 0;
+  box-shadow: none;
+  min-height: 44px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.promptArea :global(.textarea):disabled,
+.promptArea textarea:disabled {
+  opacity: 1;
+  background: transparent;
+}
+
+.promptArea:has(textarea:disabled) {
+  opacity: 0.6;
+  background: var(--color-bg-secondary, #f5f5f5);
+}
+
+.promptArea :global(.textarea):focus,
+.promptArea textarea:focus {
+  border: none;
+  box-shadow: none;
+}
+
+.promptArea button[aria-label='Submit'],
+.promptArea button[aria-label='Clear'] {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  min-height: 42px;
+  padding: 6px 8px;
+  border-top: 1px solid var(--color-border, #e0e0e0);
+  gap: 8px;
+  overflow: visible;
+}
+
+.attachButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 4px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--color-text-secondary, #666);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.attachButton:hover:not(:disabled) {
+  background: var(--color-hover, #f5f5f5);
+  color: var(--color-text-primary, #333);
+}
+
+.attachButton:disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.attachButtonActive {
+  background: var(--color-primary-light, #e3f2fd);
+  border-color: var(--color-primary, #1976d2);
+  color: var(--color-primary, #1976d2);
+}
+
+.attachButtonActive:hover:not(:disabled) {
+  background: var(--color-primary-lighter, #bbdefb);
+}
+
+.attachButton svg {
+  width: 16px;
+  height: 16px;
+}
+
+.separator {
+  width: 1px;
+  height: 20px;
+  background: var(--color-border, #e0e0e0);
+  flex-shrink: 0;
+}
+
+.pillsArea {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+  overflow: visible;
+}
+
+.hintText {
+  font-size: 13px;
+  color: var(--color-text-muted, #bbb);
+  font-style: italic;
+  white-space: nowrap;
+}
+
+.pill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: opacity 0.15s ease;
+}
+
+.pill:hover .pillThumbnail,
+.pill:hover .pillPlaceholder {
+  opacity: 0.7;
+}
+
+.pill:hover .pillBadge {
+  opacity: 1;
+}
+
+.pill:focus-visible {
+  outline: 2px solid var(--color-primary, #1976d2);
+  outline-offset: 1px;
+}
+
+.pillDisabled {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.pillThumbnail {
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  object-fit: cover;
+  transition: opacity 0.15s ease;
+}
+
+.pillPlaceholder {
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  background: var(--color-border, #ccc);
+  transition: opacity 0.15s ease;
+}
+
+.pillBadge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--color-text-secondary, #666);
+  color: #fff;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+
+.clearButton {
+  margin-left: auto;
+  padding: 2px 10px;
+  border: 1px solid var(--color-border, #e0e0e0);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--color-text-secondary, #666);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.clearButton:hover:not(:disabled) {
+  background: var(--color-surface-hover, #f5f5f5);
+  color: var(--color-text-primary, #333);
+  border-color: var(--color-text-secondary, #666);
+}
+
+.clearButton:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.clearButton:disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.doneButton {
+  margin-left: auto;
+  padding: 2px 10px;
+  border: 1px solid var(--color-primary, #1976d2);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--color-primary, #1976d2);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.doneButton:hover {
+  background: var(--color-primary, #1976d2);
+  color: #fff;
+}
+
+.doneButton:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.targetingActive {
+  cursor: crosshair;
+}

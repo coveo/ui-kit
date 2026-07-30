@@ -68,10 +68,6 @@ This section holds the objects related to react-native runtime.
 
 This section holds tests that mimic real user behavior. Some methods are available to get back the request and the response for each call. The goal here is to have as many "real use cases" tests.
 
-### Cypress
-
-This section holds an e2e test that loads the page and sends a pageview. The purpose of this is to monitor that the `coveoua` script can be called from the browser by using the static endpoint at any time.
-
 ## Quirks in the Project
 
 ### Plugins

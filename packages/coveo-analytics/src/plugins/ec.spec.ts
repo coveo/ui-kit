@@ -1,3 +1,4 @@
+import {vi} from 'vitest';
 import {ECPlugin, ECPluginEventTypes, Product} from './ec';
 import {createAnalyticsClientMock} from '../../tests/analyticsClientMock';
 
@@ -5,7 +6,7 @@ describe('EC plugin', () => {
   let ec: ECPlugin;
   let client: ReturnType<typeof createAnalyticsClientMock>;
 
-  const someUUIDGenerator = jest.fn(() => someUUID);
+  const someUUIDGenerator = vi.fn(() => someUUID);
   const someUUID = '13ccebdb-0138-45e8-bf70-884817ead190';
   const defaultResult = {
     pageViewId: someUUID,
@@ -23,7 +24,7 @@ describe('EC plugin', () => {
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     client = createAnalyticsClientMock();
     ec = new ECPlugin({client, uuidGenerator: someUUIDGenerator as any});
   });
@@ -196,7 +197,7 @@ describe('EC plugin', () => {
 
     describe('when the position is invalid', () => {
       it('should warn when executing hook on added product', () => {
-        jest.spyOn(console, 'warn').mockImplementation();
+        vi.spyOn(console, 'warn').mockImplementation();
 
         const aProductWithATooSmallPosition = {
           name: 'A product with a too small position',
@@ -216,7 +217,7 @@ describe('EC plugin', () => {
       });
 
       it('should remove the position when executing hook on added product', () => {
-        jest.spyOn(console, 'warn').mockImplementation();
+        vi.spyOn(console, 'warn').mockImplementation();
 
         ec.addProduct({
           name: 'A product with a too small position',
@@ -230,7 +231,7 @@ describe('EC plugin', () => {
       });
 
       it('should warn first using the product name then the id', () => {
-        jest.spyOn(console, 'warn').mockImplementation();
+        vi.spyOn(console, 'warn').mockImplementation();
 
         const aProductWithANameAndId = {
           name: 'A product with a name and id',
@@ -258,7 +259,7 @@ describe('EC plugin', () => {
       });
 
       it('should tolerate an absent or undefined position', () => {
-        jest.spyOn(console, 'warn').mockImplementation();
+        vi.spyOn(console, 'warn').mockImplementation();
 
         ec.addProduct({
           name: 'A product with no position',
@@ -414,7 +415,7 @@ describe('EC plugin', () => {
 
     describe('when the position is invalid', () => {
       it('should warn when executing hook on added impression', () => {
-        jest.spyOn(console, 'warn').mockImplementation();
+        vi.spyOn(console, 'warn').mockImplementation();
 
         const anImpression = {
           name: 'An impression with a too small position',
@@ -434,7 +435,7 @@ describe('EC plugin', () => {
       });
 
       it('should remove the position when executing hook on added impression', () => {
-        jest.spyOn(console, 'warn').mockImplementation();
+        vi.spyOn(console, 'warn').mockImplementation();
 
         ec.addImpression({
           name: 'An impression with a too small position',
@@ -448,7 +449,7 @@ describe('EC plugin', () => {
       });
 
       it('should warn first using the impression name then the id', () => {
-        jest.spyOn(console, 'warn').mockImplementation();
+        vi.spyOn(console, 'warn').mockImplementation();
 
         const anImpressionWithANameAndId = {
           name: 'An impression with a name and id',
@@ -476,7 +477,7 @@ describe('EC plugin', () => {
       });
 
       it('should tolerate an absent or undefined position', () => {
-        jest.spyOn(console, 'warn').mockImplementation();
+        vi.spyOn(console, 'warn').mockImplementation();
 
         ec.addImpression({
           name: 'An impression with no position',

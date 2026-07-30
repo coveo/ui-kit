@@ -3,6 +3,7 @@ import {buildConverseController, type RoutedInterface, type Turn} from '@coveo/t
 import {useGenerativeInterface} from '../context/generative-interface.js';
 import {useBuildController} from '../hooks/use-build-controller.js';
 import {useAppState, deriveTransitionAction} from '../hooks/use-app-state.js';
+import type {TargetedProduct} from '../context/targeting.js';
 import {LandingPage} from './LandingPage/LandingPage.js';
 import {SearchResultsPage} from './SearchResultsPage/SearchResultsPage.js';
 import {ConversationPage} from './ConversationPage/index.js';
@@ -21,6 +22,7 @@ export function AppShell() {
   const lastObservedTurnIdRef = useRef<string | null>(null);
   const pendingNavigationRef = useRef(false);
   const [canGoBackToSearch, setCanGoBackToSearch] = useState(false);
+  const [targetedProducts, setTargetedProducts] = useState<TargetedProduct[]>([]);
 
   const persistAndNavigateToSearch = useCallback(
     (turn: Turn) => {
@@ -117,6 +119,7 @@ export function AppShell() {
       persistedInterfaceTurnIdRef.current = null;
       setCanGoBackToSearch(false);
     }
+    setTargetedProducts([]);
     controller.clear();
     dispatch({type: 'NAVIGATE_LANDING'});
   };
@@ -132,6 +135,8 @@ export function AppShell() {
             routedInterface={persistedInterfaceRef.current}
             query={persistedQueryRef.current}
             onBackToConversation={handleBackToConversation}
+            products={targetedProducts}
+            onProductsChange={setTargetedProducts}
           />
         </div>
       )}
@@ -144,7 +149,8 @@ export function AppShell() {
               turns={converseState.turns}
               onBackToSearch={handleBackToSearch}
               canGoBackToSearch={canGoBackToSearch}
-              onResetToLanding={handleResetToLanding}
+              products={targetedProducts}
+              onProductsChange={setTargetedProducts}
             />
           ) : (
             <LandingPage onSubmit={handleSubmit} isStreaming={converseState.isStreaming} />

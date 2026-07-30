@@ -1,3 +1,5 @@
+import {vi} from 'vitest';
+import type {Mock} from 'vitest';
 import coveoua from './simpleanalytics';
 import {createAnalyticsClientMock, visitorIdMock} from '../../tests/analyticsClientMock';
 import {TestPlugin} from '../../tests/pluginMock';
@@ -7,17 +9,17 @@ import {mockFetch, lastCallBody} from '../../tests/fetchMock';
 import {CookieStorage} from '../storage';
 import {libVersion} from '../version';
 
-const uuidv4Mock = jest.fn();
-jest.mock('uuid', () => ({v4: () => uuidv4Mock()}));
+const uuidv4Mock = vi.fn();
+vi.mock('uuid', () => ({v4: () => uuidv4Mock()}));
 
 const {fetchMock, fetchMockBeforeEach} = mockFetch();
 
 class TestPluginWithSpy extends TestPlugin {
   public static readonly Id: 'test';
-  public static spy: jest.Mock;
+  public static spy: Mock;
   constructor({client, uuidGenerator = uuidv4}: PluginOptions) {
     super({client, uuidGenerator});
-    TestPluginWithSpy.spy = jest.fn();
+    TestPluginWithSpy.spy = vi.fn();
   }
 
   public getApi(name: string): Function | null {
@@ -37,10 +39,10 @@ class TestPluginWithSpy extends TestPlugin {
 describe('simpleanalytics', () => {
   const analyticsClientMock = createAnalyticsClientMock();
   const analyticsEndpoint = 'https://analytics.cloud.coveo.com/rest/ua/v15/analytics';
-  const someRandomEventName = 'testEventName';
+  const someRandomEventName = 'testeventname';
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     fetchMockBeforeEach();
 
     new CookieStorage().removeItem('visitorId');
@@ -426,7 +428,7 @@ describe('simpleanalytics', () => {
 
   describe('onLoad', () => {
     it('can execute callback with onLoad event', () => {
-      var callback = jest.fn();
+      var callback = vi.fn();
 
       coveoua('onLoad', callback);
 
