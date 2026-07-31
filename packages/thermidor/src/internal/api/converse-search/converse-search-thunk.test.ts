@@ -94,7 +94,7 @@ const defaultRequest = {
   query: 'shoes',
   page: 0,
   perPage: 20,
-  sort: {field: 'price', direction: 'asc'},
+  sort: {sortCriteria: 'fields' as const, fields: [{field: 'price', direction: 'asc' as const}]},
   facets: [{facetId: 'brand', selectedValues: ['Nike']}],
 };
 
@@ -157,7 +157,7 @@ describe('createConverseSearchEndpointThunk', () => {
         message: 'shoes',
         page: 0,
         perPage: 20,
-        sort: {field: 'price', direction: 'asc'},
+        sort: {sortCriteria: 'fields', fields: [{field: 'price', direction: 'asc'}]},
         facets: [{facetId: 'brand', selectedValues: ['Nike']}],
         clientId: 'client-abc',
         conversationSessionId: 'session-123',
@@ -274,7 +274,7 @@ describe('createConverseSearchEndpointThunk', () => {
     const action = thunk({engine});
     const result = await action(vi.fn(), () => ({}), undefined);
 
-    expect(result.meta.rejectedWithValue).toBeFalsy();
+    expect((result as any).meta.rejectedWithValue).toBeFalsy();
     expect((result as any).error.message).toBe('Converse endpoint failed');
   });
 
@@ -293,7 +293,7 @@ describe('createConverseSearchEndpointThunk', () => {
     const action = thunk({engine});
     const result = await action(vi.fn(), () => ({}), undefined);
 
-    expect(result.meta.rejectedWithValue).toBeFalsy();
+    expect((result as any).meta.rejectedWithValue).toBeFalsy();
     expect((result as any).error.message).toBe(
       'No search response received from the converse stream'
     );

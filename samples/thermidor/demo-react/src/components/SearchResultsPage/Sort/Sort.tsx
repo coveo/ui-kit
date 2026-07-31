@@ -1,5 +1,5 @@
 import type {CommerceSortCriterion, SearchSortCriterion, SortController} from '@coveo/thermidor';
-import {useCallback, useSyncExternalStore} from 'react';
+import {type ChangeEvent, useCallback, useSyncExternalStore} from 'react';
 import styles from './Sort.module.css';
 
 type AnyCriterion = SearchSortCriterion | CommerceSortCriterion;
@@ -30,7 +30,7 @@ export function Sort({controller}: SortProps) {
 
   const selectedIndex = STATIC_OPTIONS.findIndex((opt) => controller.isSortedBy(opt.criterion));
 
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const index = Number(e.target.value);
     const option = STATIC_OPTIONS[index];
     if (option) {
@@ -40,21 +40,20 @@ export function Sort({controller}: SortProps) {
 
   return (
     <div className={styles.container}>
-      <label className={styles.label} htmlFor="sort-select">
+      <label className={styles.label}>
         <strong>Sort by:</strong>
+        <select
+          className={styles.select}
+          value={selectedIndex >= 0 ? String(selectedIndex) : '0'}
+          onChange={handleChange}
+        >
+          {STATIC_OPTIONS.map((option, index) => (
+            <option key={index} value={String(index)}>
+              {option.label}
+            </option>
+          ))}
+        </select>
       </label>
-      <select
-        id="sort-select"
-        className={styles.select}
-        value={selectedIndex >= 0 ? String(selectedIndex) : '0'}
-        onChange={handleChange}
-      >
-        {STATIC_OPTIONS.map((option, index) => (
-          <option key={index} value={String(index)}>
-            {option.label}
-          </option>
-        ))}
-      </select>
     </div>
   );
 }

@@ -3,23 +3,14 @@ import type {Supports, EndpointThunk} from '@/src/internal/utils/index.js';
 import type {StateSelector} from '@/src/internal/engine/index.js';
 import {createMemoizedStateSelector} from '@/src/internal/utils/index.js';
 import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {deepEqual} from '@/src/internal/utils/index.js';
 import {getOrCreateSortActions} from '@/src/internal/features/sort/index.js';
 import {getOrCreateSortSelectors} from '@/src/internal/features/sort/index.js';
 import {getOrCreateSortSlice} from '@/src/internal/features/sort/index.js';
 import type {SortCriterionFor} from '@/src/public/sort-types.js';
 import type {Controller} from '@/src/public/controllers/controller-types.js';
 
-function structuralEqual(a: unknown, b: unknown): boolean {
-  if (Array.isArray(a) && Array.isArray(b)) {
-    return a.length === b.length && a.every((item, i) => structuralEqual(item, b[i]));
-  }
-  if (typeof a === 'object' && typeof b === 'object' && a && b) {
-    const {displayName: _a, ...restA} = a as any;
-    const {displayName: _b, ...restB} = b as any;
-    return JSON.stringify(restA) === JSON.stringify(restB);
-  }
-  return a === b;
-}
+const SORT_COMPARE_OPTIONS = {excludeKeys: ['displayName']};
 
 class SortControllerImpl extends BaseController<SortControllerState<any>> {
   #thunks: EndpointThunk[];
@@ -59,7 +50,7 @@ class SortControllerImpl extends BaseController<SortControllerState<any>> {
     if (!appliedSort) {
       return false;
     }
-    return structuralEqual(appliedSort, criterion);
+    return deepEqual(appliedSort, criterion, SORT_COMPARE_OPTIONS);
   }
 }
 

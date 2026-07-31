@@ -1,3 +1,4 @@
+import type {ChangeEvent} from 'react';
 import {buildSortController} from '@coveo/thermidor';
 import type {SearchSortCriterion} from '@coveo/thermidor';
 import {useSearchInterface} from '../../context/search-interface.js';
@@ -19,7 +20,7 @@ export function Sort() {
     controller.isSortedBy(opt.criterion as Parameters<typeof controller.isSortedBy>[0])
   );
 
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const index = parseInt(e.target.value, 10);
     const option = SORT_OPTIONS[index];
     if (option) {

@@ -35,3 +35,4 @@ export type {
   SupportsBrand,
 } from './interface-types.js';
 export {createNoopThunk} from './noop-thunk.js';
+export {deepEqual} from './deep-equal.js';

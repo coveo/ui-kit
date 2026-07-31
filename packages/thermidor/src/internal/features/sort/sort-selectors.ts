@@ -6,7 +6,7 @@ import {createSelectSlice} from '@/src/internal/utils/index.js';
 import {initialSortState} from './sort-slice.js';
 import type {SortState} from './sort-slice.js';
 import type {CommerceSortCriterion, SearchSortCriterion} from './sort-types.js';
-import {toCommerceApiSort, toSearchApiCompoundSort} from './sort-translate.js';
+import {toSearchApiCompoundSort} from './sort-translate.js';
 import type {CommerceApiSortPayload} from './sort-translate.js';
 
 type SortSelectors = ReturnType<typeof createSortSelectors>;
@@ -31,10 +31,26 @@ export function createSortSelectors(interfaceId: string) {
         if (!state.appliedSort) {
           return undefined;
         }
-        const criterion = Array.isArray(state.appliedSort)
-          ? state.appliedSort[0]
-          : state.appliedSort;
-        return toCommerceApiSort(criterion as CommerceSortCriterion);
+        const criteria = Array.isArray(state.appliedSort) ? state.appliedSort : [state.appliedSort];
+
+        if (criteria.length === 0) {
+          return undefined;
+        }
+
+        const hasRelevance = criteria.some((c) => c.by === 'relevance');
+        if (hasRelevance) {
+          return {sortCriteria: 'relevance'};
+        }
+
+        const fields: CommerceApiSortPayload['fields'] = criteria
+          .filter((c): c is CommerceSortCriterion & {by: 'field'} => c.by === 'field')
+          .map((c) => ({
+            field: c.field,
+            direction: (c.direction === 'ascending' ? 'asc' : 'desc') as 'asc' | 'desc',
+            ...(c.displayName ? {displayName: c.displayName} : {}),
+          }));
+
+        return {sortCriteria: 'fields', fields};
       }
     ),
     buildSearchSortCriteria: createMemoizedStateSelector(

@@ -16,6 +16,8 @@ function createMockController(state: Record<string, unknown> = {}) {
   };
 }
 
+const mockSortController = createMockController({appliedSort: null, availableSorts: []});
+
 vi.mock('@coveo/thermidor', async (importOriginal) => {
   const actual = (await importOriginal()) as Record<string, unknown>;
   return {
@@ -28,7 +30,7 @@ vi.mock('@coveo/thermidor', async (importOriginal) => {
         totalCount: 0,
         totalPages: 0,
       }),
-    buildSortController: () => createMockController({appliedSort: null, availableSorts: []}),
+    buildSortController: () => mockSortController,
   };
 });
 
@@ -85,10 +87,10 @@ describe('SearchResultsPage integration', () => {
   it('calls sortBy when a sort option is selected', () => {
     renderPage();
 
-    const sortSelect = screen.getByLabelText('Sort by:') as HTMLSelectElement;
-    fireEvent.change(sortSelect, {target: {value: '1'}});
+    const sortSelects = screen.getAllByLabelText('Sort by:') as HTMLSelectElement[];
+    fireEvent.change(sortSelects[0], {target: {value: '1'}});
 
-    expect(sortSelect).toBeDefined();
+    expect(mockSortController.sortBy).toHaveBeenCalledTimes(1);
   });
 });
 

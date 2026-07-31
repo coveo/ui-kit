@@ -53,7 +53,7 @@ export function fromCommerceApiSort(raw: CommerceApiSortPayload): CommerceSortCr
     return {by: 'relevance'};
   }
 
-  if (raw.sortCriteria === 'fields' && Array.isArray(raw.fields) && raw.fields.length > 0) {
+  if (Array.isArray(raw.fields) && raw.fields.length > 0) {
     const first = raw.fields[0];
     return {
       by: 'field',
