@@ -3,10 +3,26 @@
   "tasks": {
     "test:dts": {
       "dependsOn": ["build"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!**/*.md",
+        "!**/LICENSE*",
+        "!**/.vscode/**",
+        "!**/catalog-info*.yaml",
+        "!docs/**"
+      ],
       "outputs": []
     },
     "test:dts:ci": {
       "dependsOn": ["build"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!**/*.md",
+        "!**/LICENSE*",
+        "!**/.vscode/**",
+        "!**/catalog-info*.yaml",
+        "!docs/**"
+      ],
       "outputs": []
     }
   }
