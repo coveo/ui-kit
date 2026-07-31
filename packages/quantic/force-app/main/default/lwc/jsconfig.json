@@ -26,6 +26,9 @@
         "quanticCategoryFacetValue/quanticCategoryFacetValue.js"
       ],
       "c/quanticFacet": ["quanticFacet/quanticFacet.js"],
+      "c/quanticLoadMoreResults": [
+        "quanticLoadMoreResults/quanticLoadMoreResults.js"
+      ],
       "c/quanticPager": ["quanticPager/quanticPager.js"],
       "c/quanticPlaceholder": ["quanticPlaceholder/quanticPlaceholder.js"],
       "c/quanticQueryError": ["quanticQueryError/quanticQueryError.js"],

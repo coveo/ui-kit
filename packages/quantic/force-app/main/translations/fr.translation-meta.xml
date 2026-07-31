@@ -964,4 +964,24 @@
     <label>Je n'aime pas</label>
     <name>quantic_Dislike</name>
   </customLabels>
+  <customLabels>
+    <label>Charger plus de résultats</label>
+    <name>quantic_LoadMoreResults</name>
+  </customLabels>
+  <customLabels>
+    <label>Affichage de {{0}} résultat sur {{1}}</label>
+    <name>quantic_ShowingResultsOfLoadMore</name>
+  </customLabels>
+  <customLabels>
+    <label>Affichage de {{0}} résultats sur {{1}}</label>
+    <name>quantic_ShowingResultsOfLoadMore_plural</name>
+  </customLabels>
+  <customLabels>
+    <label>Aucun résultat</label>
+    <name>quantic_ShowingResultsOfLoadMore_zero</name>
+  </customLabels>
+  <customLabels>
+    <label>Tous les résultats ont été chargés.</label>
+    <name>quantic_AllResultsLoaded</name>
+  </customLabels>
 </Translations>
