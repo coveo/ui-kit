@@ -24,7 +24,7 @@
   position: relative;
   flex: 1;
   width: 1px;
-  background-color: var(--slds-g-color-neutral-base-90, var(--lwc-colorBorder, #dddbda));
+  background-color: var(--lwc-colorBorder, #dddbda);
   transition: background-color 0.2s ease;
 }
 
@@ -35,7 +35,7 @@
   left: 0;
   width: 1px;
   height: var(--slds-g-sizing-3, 8px);
-  background-color: var(--slds-g-color-neutral-base-90, var(--lwc-colorBorder, #dddbda));
+  background-color: var(--lwc-colorBorder, #dddbda);
   transition: background-color 0.2s ease;
 }
 
@@ -66,11 +66,7 @@
   height: var(--slds-g-sizing-3, 8px);
   width: var(--slds-g-sizing-3, 8px);
   border-radius: 50%;
-  background-color: var(--slds-g-color-neutral-base-90, var(--lwc-colorBorder, #dddbda));
-}
-
-.thread-item__dot--expanded {
-  background-color: var(--slds-g-color-on-surface-3, var(--lwc-colorTextDefault, #080707));
+  background-color: var(--lwc-colorBorder, #dddbda);
   transition: background-color 0.2s ease;
 }
 
@@ -83,7 +79,7 @@
 }
 
 .thread-item__dot--expanded {
-  background-color: var(--slds-g-color-on-surface-3, var(--lwc-colorTextDefault, #080707));
+  background-color: var(--lwc-colorTextDefault, #080707);
 }
 
 .thread-item__clamped-text {
@@ -99,5 +95,5 @@
 }
 
 .thread-item__title-button:hover {
-  background-color: var(--slds-g-color-surface-container-1, var(--lwc-colorBackgroundRowHover, #f3f2f2));
+  background-color: var(--lwc-colorBackgroundRowHover, #f3f2f2);
 }
