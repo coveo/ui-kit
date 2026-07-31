@@ -79,11 +79,12 @@ function normalizeOwnPackageStackLine(line: string): string {
     }
   }
 
-  const bareFrame = /^(\s*at\s+(?:async\s+)?)(.*)$/.exec(line);
-  if (bareFrame !== null) {
-    const appPath = ownPackageAppPath(bareFrame[2]);
+  const bareFramePrefix = /^\s*at\s+(?:async\s+)?/.exec(line);
+  if (bareFramePrefix !== null) {
+    const prefix = bareFramePrefix[0];
+    const appPath = ownPackageAppPath(line.slice(prefix.length));
     if (appPath !== undefined) {
-      return `${bareFrame[1]}${appPath}`;
+      return `${prefix}${appPath}`;
     }
   }
   return line;
