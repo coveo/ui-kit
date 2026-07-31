@@ -10,7 +10,8 @@ function renderPage(overrides: Partial<Parameters<typeof ConversationPage>[0]> =
     turns: [] as Turn[],
     onBackToSearch: vi.fn(),
     canGoBackToSearch: false,
-    onResetToLanding: vi.fn(),
+    products: [],
+    onProductsChange: vi.fn(),
   };
 
   return {
@@ -161,31 +162,6 @@ describe('ConversationPage integration', () => {
       renderPage({turns, canGoBackToSearch: true, onBackToSearch});
       fireEvent.click(screen.getByRole('button', {name: /Back to search results/}));
       expect(onBackToSearch).toHaveBeenCalledTimes(1);
-    });
-  });
-
-  describe('Reset button', () => {
-    it('is always visible regardless of canGoBackToSearch', () => {
-      const turns: Turn[] = [{id: 'turn-1', prompt: 'Hello', status: 'complete'}];
-
-      renderPage({turns, canGoBackToSearch: false});
-      expect(screen.getByRole('button', {name: 'Reset'})).toBeDefined();
-    });
-
-    it('is visible when canGoBackToSearch is true', () => {
-      const turns: Turn[] = [{id: 'turn-1', prompt: 'Hello', status: 'complete'}];
-
-      renderPage({turns, canGoBackToSearch: true});
-      expect(screen.getByRole('button', {name: 'Reset'})).toBeDefined();
-    });
-
-    it('calls onResetToLanding when clicked', () => {
-      const onResetToLanding = vi.fn();
-      const turns: Turn[] = [{id: 'turn-1', prompt: 'Hello', status: 'complete'}];
-
-      renderPage({turns, onResetToLanding});
-      fireEvent.click(screen.getByRole('button', {name: 'Reset'}));
-      expect(onResetToLanding).toHaveBeenCalledTimes(1);
     });
   });
 

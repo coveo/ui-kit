@@ -4,7 +4,7 @@
   align-items: center;
   justify-content: center;
   min-height: 100%;
-  padding: var(--space-6);
+  padding: var(--space-6) var(--space-4);
 }
 
 .content {
@@ -12,6 +12,7 @@
   flex-direction: column;
   align-items: center;
   width: 100%;
+  max-width: 560px;
 }
 
 .title {
@@ -23,9 +24,9 @@
 }
 
 .inputWrapper {
-  width: 33.333vw;
+  width: 100%;
 }
 
 .pillsWrapper {
-  width: 33.333vw;
+  width: 100%;
 }

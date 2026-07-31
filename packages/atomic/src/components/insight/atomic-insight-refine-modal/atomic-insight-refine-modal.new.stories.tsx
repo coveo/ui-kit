@@ -3,8 +3,7 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
 import {testDialogA11y} from '@/storybook-utils/a11y/dialog.js';
-import {MockInsightApi} from '@coveo/platform-mock-api/insight/mock';
-import {type baseResponse, richResponse} from '@coveo/platform-mock-api/insight/search-response';
+import {MockInsightApi, searchResponses} from '@coveo/platform-mock-api/insight';
 import {parameters as commonParameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 import '@/src/components/insight/atomic-insight-facet/atomic-insight-facet.js';
@@ -45,7 +44,9 @@ const meta: Meta = {
   },
   argTypes,
   beforeEach: async () => {
-    insightApiHarness.searchEndpoint.mock(() => richResponse as unknown as typeof baseResponse);
+    insightApiHarness.searchEndpoint.mock(
+      () => searchResponses.richResponse as unknown as typeof searchResponses.baseResponse
+    );
   },
   play: async (context) => {
     await play(context);

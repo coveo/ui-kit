@@ -1,4 +1,5 @@
 import {useState} from 'react';
+import {useTargeting} from '../../context/targeting.js';
 import {formatPrice} from '../../utils.js';
 import styles from './BundleDisplay.module.css';
 import type {ParsedSurface} from '../types.js';
@@ -36,6 +37,8 @@ export function A2UIBundleDisplay({surface, allSurfaces}: A2UIBundleDisplayProps
 
   const bundles = (surface.componentProps.bundles as BundleTier[]) ?? [];
   const [activeTier, setActiveTier] = useState(bundles[0]?.bundleId ?? '');
+  const targeting = useTargeting();
+  const isTargetable = targeting?.isTargeting ?? false;
 
   if (bundles.length === 0) {
     return null;
@@ -77,27 +80,55 @@ export function A2UIBundleDisplay({surface, allSurfaces}: A2UIBundleDisplayProps
         <div className={styles.tierContent}>
           <p className={styles.description}>{activeBundle.description}</p>
           <div className={styles.itemList}>
-            {resolvedItems.map((item, i) => (
-              <div key={item.ec_product_id ?? i} className={styles.itemRow}>
-                {item.ec_image && (
-                  <img
-                    className={styles.itemImage}
-                    src={item.ec_image}
-                    alt={item.ec_name ?? 'Product'}
-                    loading="lazy"
-                  />
-                )}
-                <div className={styles.itemInfo}>
-                  <span className={styles.itemName}>{item.ec_name}</span>
-                  {item.ec_description && (
-                    <span className={styles.itemDescription}>{item.ec_description}</span>
+            {resolvedItems.map((item, i) => {
+              const productId = item.ec_product_id ?? '';
+              const isSelected = targeting?.selectedProductIds.has(productId) ?? false;
+
+              const rowClasses = [
+                styles.itemRow,
+                isTargetable ? styles.targetable : '',
+                isSelected ? styles.selected : '',
+              ]
+                .filter(Boolean)
+                .join(' ');
+
+              const interactiveProps = isTargetable
+                ? {
+                    role: 'button' as const,
+                    tabIndex: 0,
+                    onClick: () =>
+                      targeting!.onProductTargeted(productId, item.ec_name ?? '', item.ec_image),
+                    onKeyDown: (e: React.KeyboardEvent) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        targeting!.onProductTargeted(productId, item.ec_name ?? '', item.ec_image);
+                      }
+                    },
+                  }
+                : {};
+
+              return (
+                <div key={item.ec_product_id ?? i} className={rowClasses} {...interactiveProps}>
+                  {item.ec_image && (
+                    <img
+                      className={styles.itemImage}
+                      src={item.ec_image}
+                      alt={item.ec_name ?? 'Product'}
+                      loading="lazy"
+                    />
                   )}
-                  {item.ec_price !== undefined && (
-                    <span className={styles.itemPrice}>{formatPrice(item.ec_price)}</span>
-                  )}
+                  <div className={styles.itemInfo}>
+                    <span className={styles.itemName}>{item.ec_name}</span>
+                    {item.ec_description && (
+                      <span className={styles.itemDescription}>{item.ec_description}</span>
+                    )}
+                    {item.ec_price !== undefined && (
+                      <span className={styles.itemPrice}>{formatPrice(item.ec_price)}</span>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
           {resolvedItems.length > 0 && (
             <div className={styles.footer}>

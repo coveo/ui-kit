@@ -1,4 +1,4 @@
-import * as searchResponses from '@coveo/platform-mock-api/search/search-response';
+import {searchResponses} from '@coveo/platform-mock-api/search';
 import {Page, Locator, Response, Request} from '@playwright/test';
 
 const selectors = {

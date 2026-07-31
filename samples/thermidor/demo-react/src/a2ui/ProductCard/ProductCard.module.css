@@ -55,3 +55,16 @@ a.name:hover {
   color: var(--color-text-primary);
   margin-top: auto;
 }
+
+.targetable {
+  cursor: crosshair;
+}
+
+.targetable:hover {
+  box-shadow: 0 0 0 2px var(--color-border-active);
+}
+
+.selected {
+  box-shadow: 0 0 0 2px var(--color-border-active);
+  opacity: 0.7;
+}

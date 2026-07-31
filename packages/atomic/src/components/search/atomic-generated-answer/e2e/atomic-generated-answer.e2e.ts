@@ -1,4 +1,4 @@
-import {getFollowUpAnswerId} from '@coveo/platform-mock-api/agent/generate-response';
+import {getFollowUpAnswerId} from '@coveo/platform-mock-api/agent';
 import {expect, test} from './fixture';
 
 const closePopoverDebounceMs = 100;

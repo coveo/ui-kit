@@ -24,7 +24,12 @@ vi.mock('./log.js', () => ({
   },
 }));
 
-import {scaffold} from './index.js';
+import {
+  initializeCrashDiagnostics,
+  resetCrashDiagnostics,
+  snapshotCrashDiagnostics,
+} from './crash-diagnostics.js';
+import {scaffold, unavailableTemplateMessage} from './scaffold.js';
 import {getTemplate} from './templates.js';
 
 describe('scaffold provenance integration', () => {
@@ -35,6 +40,7 @@ describe('scaffold provenance integration', () => {
     cwd = await mkdtemp(join(tmpdir(), 'create-ui-scaffold-'));
     originalCwd = process.cwd();
     process.chdir(cwd);
+    initializeCrashDiagnostics();
     installDependenciesMock.mockReturnValue(true);
     downloadTemplateMock.mockImplementation(async ({destDir}: {destDir: string}) => {
       await writeFile(
@@ -53,6 +59,7 @@ describe('scaffold provenance integration', () => {
   afterEach(async () => {
     process.chdir(originalCwd);
     await rm(cwd, {recursive: true, force: true});
+    resetCrashDiagnostics();
     vi.clearAllMocks();
   });
 
@@ -71,5 +78,54 @@ describe('scaffold provenance integration', () => {
     expect(provenance.node).toBe(process.version.replace(/^v/, ''));
     expect(typeof provenance.packageManager).toBe('string');
     expect(Date.parse(provenance.createdOn)).not.toBeNaN();
+
+    const diagnostics = snapshotCrashDiagnostics();
+    expect(diagnostics.phase).toBe('complete');
+    expect(diagnostics.spans.map(({op}) => op)).toEqual([
+      'input',
+      'template-download',
+      'project-creation',
+      'dependency-installation',
+      'complete',
+    ]);
+    const download = diagnostics.spans.find((span) => span.op === 'template-download');
+    expect(download?.name).toBe('headless-search-react@3.5.0');
+    expect(download?.attributes).toEqual({
+      'coveo.template': 'headless-search-react',
+      'coveo.template_version': '3.5.0',
+    });
+  });
+
+  it('completes the lifecycle even when dependency installation fails', async () => {
+    installDependenciesMock.mockReturnValue(false);
+    const template = getTemplate('headless-search-react')!;
+
+    await scaffold({template, projectName: 'my-failed-app'});
+
+    const diagnostics = snapshotCrashDiagnostics();
+    expect(diagnostics.phase).toBe('complete');
+    expect(diagnostics.spans.map(({op}) => op)).toContain('dependency-installation');
+  });
+});
+
+describe('unavailableTemplateMessage', () => {
+  it('includes the version when provided and omits it otherwise', () => {
+    expect(unavailableTemplateMessage('headless-search-react', '3.2.1')).toBe(
+      'Template "headless-search-react" version "3.2.1" is not available.'
+    );
+    expect(unavailableTemplateMessage('headless-search-react')).toBe(
+      'Template "headless-search-react" is not available.'
+    );
+  });
+});
+
+describe('unavailableTemplateMessage', () => {
+  it('includes the version when provided and omits it otherwise', () => {
+    expect(unavailableTemplateMessage('headless-search-react', '3.2.1')).toBe(
+      'Template "headless-search-react" version "3.2.1" is not available.'
+    );
+    expect(unavailableTemplateMessage('headless-search-react')).toBe(
+      'Template "headless-search-react" is not available.'
+    );
   });
 });
