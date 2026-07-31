@@ -94,6 +94,6 @@
   border-radius: var(--slds-g-radius-border-1, 4px);
 }
 
-.thread-item__title-button:hover {
-  background-color: var(--slds-g-color-surface-container-1, var(--lwc-colorBackgroundRowHover, #f3f2f2));
+button.thread-item__title-button:hover {
+  background-color: var(--lwc-colorBackgroundRowHover, #f3f2f2);
 }
