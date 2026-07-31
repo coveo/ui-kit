@@ -1,26 +1,26 @@
 .container {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .label {
-  font-size: var(--font-size-sm, 14px);
-  color: var(--color-text-muted, #666);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
   white-space: nowrap;
 }
 
 .select {
-  padding: 6px 12px;
-  border: 1px solid var(--color-border, #ccc);
-  border-radius: var(--radius-md, 6px);
-  background: var(--color-surface, #fff);
-  color: var(--color-text, #333);
-  font-size: var(--font-size-sm, 14px);
+  padding: 6px var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
   cursor: pointer;
-  transition: border-color 150ms ease;
+  transition: border-color var(--transition-fast);
 }
 
 .select:hover {
-  border-color: var(--color-border-hover, #999);
+  border-color: var(--color-border-hover);
 }
