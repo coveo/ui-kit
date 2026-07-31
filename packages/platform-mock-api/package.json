@@ -11,13 +11,63 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
+      "source": "./src/index.ts",
       "import": "./dist/index.js",
       "default": "./dist/index.js"
     },
-    "./*": {
-      "types": "./dist/*.d.ts",
-      "import": "./dist/*.js",
-      "default": "./dist/*.js"
+    "./search": {
+      "types": "./dist/search/index.d.ts",
+      "source": "./src/search/index.ts",
+      "import": "./dist/search/index.js",
+      "default": "./dist/search/index.js"
+    },
+    "./commerce": {
+      "types": "./dist/commerce/index.d.ts",
+      "source": "./src/commerce/index.ts",
+      "import": "./dist/commerce/index.js",
+      "default": "./dist/commerce/index.js"
+    },
+    "./insight": {
+      "types": "./dist/insight/index.d.ts",
+      "source": "./src/insight/index.ts",
+      "import": "./dist/insight/index.js",
+      "default": "./dist/insight/index.js"
+    },
+    "./recommendation": {
+      "types": "./dist/recommendation/index.d.ts",
+      "source": "./src/recommendation/index.ts",
+      "import": "./dist/recommendation/index.js",
+      "default": "./dist/recommendation/index.js"
+    },
+    "./machinelearning": {
+      "types": "./dist/machinelearning/index.d.ts",
+      "source": "./src/machinelearning/index.ts",
+      "import": "./dist/machinelearning/index.js",
+      "default": "./dist/machinelearning/index.js"
+    },
+    "./agent": {
+      "types": "./dist/agent/index.d.ts",
+      "source": "./src/agent/index.ts",
+      "import": "./dist/agent/index.js",
+      "default": "./dist/agent/index.js"
+    },
+    "./answer": {
+      "types": "./dist/answer/index.d.ts",
+      "source": "./src/answer/index.ts",
+      "import": "./dist/answer/index.js",
+      "default": "./dist/answer/index.js"
+    },
+    "./converse": {
+      "types": "./dist/converse/index.d.ts",
+      "source": "./src/converse/index.ts",
+      "import": "./dist/converse/index.js",
+      "default": "./dist/converse/index.js"
+    },
+    "./hostedpage": {
+      "types": "./dist/hostedpage/index.d.ts",
+      "source": "./src/hostedpage/index.ts",
+      "import": "./dist/hostedpage/index.js",
+      "default": "./dist/hostedpage/index.js"
     }
   },
   "scripts": {

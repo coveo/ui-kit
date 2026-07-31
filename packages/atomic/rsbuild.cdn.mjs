@@ -40,7 +40,7 @@ const rsbuild = await rsbuildApi.createRsbuild({
         ({request}, callback) => {
           if (!request) return callback();
           const mapping = packageMappings[request];
-          if (mapping) {
+          if (mapping?.cdn) {
             return callback(null, mapping.cdn);
           }
           callback();

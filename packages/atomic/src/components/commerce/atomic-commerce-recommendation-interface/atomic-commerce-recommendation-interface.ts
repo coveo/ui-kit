@@ -260,7 +260,7 @@ export class AtomicCommerceRecommendationInterface
       return;
     }
 
-    scrollContainerElement.scrollIntoView({behavior: 'smooth'});
+    scrollContainerElement.scrollIntoView();
   }
 
   private async internalInitialization(initEngine: () => void) {
