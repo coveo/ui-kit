@@ -5,12 +5,12 @@ import {within} from 'shadow-dom-testing-library';
 import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {facetDecorator} from '@/storybook-utils/common/facets-decorator';
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
-import {buildSearchResponseWithResults} from '@coveo/platform-mock-api/search/search-response-mocks';
 import {
-  searchFacetTransformer,
+  buildSearchResponseWithResults,
+  MockSearchApi,
   searchFacetSearchTransformer,
-} from '@coveo/platform-mock-api/search/facet-transformer';
+  searchFacetTransformer,
+} from '@coveo/platform-mock-api/search';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-rating-range-facet/atomic-rating-range-facet.js';
 import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';

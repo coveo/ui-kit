@@ -1,0 +1,279 @@
+.skeleton {
+  border-radius: var(--radius-md);
+  background: linear-gradient(
+    90deg,
+    var(--color-bg-skeleton-highlight) 25%,
+    var(--color-bg-skeleton) 50%,
+    var(--color-bg-skeleton-highlight) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* ProductCarousel skeleton */
+.carouselContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  overflow: hidden;
+}
+
+.carouselHeading {
+  width: 140px;
+  height: 20px;
+}
+
+.carouselTrack {
+  display: flex;
+  gap: var(--space-3);
+  overflow: hidden;
+}
+
+.carouselCard {
+  flex: 0 0 160px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.carouselImage {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 0;
+}
+
+.carouselCardContent {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: var(--space-3);
+}
+
+.carouselName {
+  width: 80%;
+  height: 14px;
+}
+
+.carouselPrice {
+  width: 50px;
+  height: 16px;
+}
+
+/* BundleDisplay skeleton */
+.bundleContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-secondary);
+}
+
+.bundleHeading {
+  width: 180px;
+  height: 22px;
+}
+
+.bundleTabs {
+  display: flex;
+  gap: var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: var(--space-2);
+}
+
+.bundleTab {
+  width: 90px;
+  height: 16px;
+  border-radius: var(--radius-sm);
+}
+
+.bundleDescription {
+  width: 80%;
+  height: 14px;
+}
+
+.bundleItems {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.bundleRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.bundleRowImage {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+}
+
+.bundleRowInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.bundleRowName {
+  width: 160px;
+  height: 14px;
+}
+
+.bundleRowDesc {
+  width: 80%;
+  height: 12px;
+}
+
+.bundleRowPrice {
+  width: 50px;
+  height: 16px;
+}
+
+.bundleFooter {
+  height: 48px;
+  border-radius: var(--radius-md);
+}
+
+/* ComparisonTable skeleton */
+.tableContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  overflow: hidden;
+}
+
+.tableHeading {
+  width: 160px;
+  height: 22px;
+}
+
+.tableGrid {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.tableRow {
+  display: grid;
+  grid-template-columns: 100px repeat(3, minmax(0, 1fr));
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--space-4);
+  gap: var(--space-3);
+}
+
+.tableRow:last-child {
+  border-bottom: none;
+}
+
+.tableLabel {
+  width: 60px;
+  height: 14px;
+}
+
+.tableProductCell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.tableImage {
+  width: 100px;
+  height: 100px;
+  border-radius: var(--radius-sm);
+}
+
+.tableName {
+  width: 80%;
+  height: 14px;
+}
+
+.tableValue {
+  width: 80%;
+  height: 14px;
+  align-self: center;
+}
+
+/* NextActionsBar skeleton */
+.actionsContainer {
+  display: flex;
+  gap: var(--space-2);
+  padding: var(--space-2) 0;
+  overflow: hidden;
+}
+
+.actionButton {
+  width: 180px;
+  height: 36px;
+  border-radius: 18px;
+}
+
+/* ComparisonSummary skeleton */
+.summaryContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-secondary);
+}
+
+.summaryHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.summaryIcon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+.summaryLabel {
+  width: 80px;
+  height: 14px;
+}
+
+.summaryLine {
+  width: 100%;
+  height: 14px;
+}
+
+.summaryLineShort {
+  width: 70%;
+  height: 14px;
+}
+
+/* Generic skeleton */
+.genericContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+}

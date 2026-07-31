@@ -24,6 +24,8 @@ export type {Pager, PagerInitialState, PagerOptions, PagerProps, PagerState};
  * @param props - The configurable `Pager` properties.
  * @returns A `Pager` controller instance.
  *
+ * Example: [pager.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/pager.tsx)
+ *
  * @group Controllers
  * @category Pager
  * */

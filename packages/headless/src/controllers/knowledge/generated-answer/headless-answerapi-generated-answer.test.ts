@@ -8,6 +8,7 @@ import {selectAnswerTriggerParams} from '../../../features/generated-answer/answ
 import {
   generateAnswer,
   resetAnswer,
+  setAnswerGenerationMode,
   updateAnswerConfigurationId,
   updateResponseFormat,
 } from '../../../features/generated-answer/generated-answer-actions.js';
@@ -371,6 +372,7 @@ describe('knowledge-generated-answer', () => {
     const mockSelectAnswerTriggerParams = vi.mocked(selectAnswerTriggerParams);
     const mockGenerateAnswer = vi.mocked(generateAnswer);
     const mockResetAnswer = vi.mocked(resetAnswer);
+    const mockSetAnswerGenerationMode = vi.mocked(setAnswerGenerationMode);
     let listener: () => void;
 
     beforeEach(() => {
@@ -569,6 +571,82 @@ describe('knowledge-generated-answer', () => {
           listener(); // Same request ID
 
           expect(mockGenerateAnswer).toHaveBeenCalledTimes(1);
+        });
+      });
+    });
+
+    describe('setAnswerGenerationMode behavior', () => {
+      describe('when request is new and state has a query', () => {
+        it('should dispatch setAnswerGenerationMode with automatic', () => {
+          mockSelectAnswerTriggerParams.mockReturnValue({
+            q: 'test query',
+            requestId: 'new-request',
+            cannotAnswer: false,
+            analyticsMode: 'legacy',
+            actionCause: 'searchboxSubmit',
+          });
+
+          listener();
+
+          expect(mockSetAnswerGenerationMode).toHaveBeenCalledTimes(1);
+          expect(mockSetAnswerGenerationMode).toHaveBeenCalledWith('automatic');
+        });
+      });
+
+      describe('when query is empty', () => {
+        it('should not dispatch setAnswerGenerationMode', () => {
+          mockSelectAnswerTriggerParams.mockReturnValue({
+            q: '',
+            requestId: 'valid-request',
+            cannotAnswer: false,
+            analyticsMode: 'legacy',
+            actionCause: 'searchboxSubmit',
+          });
+
+          listener();
+
+          expect(mockSetAnswerGenerationMode).not.toHaveBeenCalled();
+        });
+      });
+
+      describe('when request ID is empty', () => {
+        it('should not dispatch setAnswerGenerationMode', () => {
+          mockSelectAnswerTriggerParams.mockReturnValue({
+            q: 'test query',
+            requestId: '',
+            cannotAnswer: false,
+            analyticsMode: 'legacy',
+            actionCause: 'searchboxSubmit',
+          });
+
+          listener();
+
+          expect(mockSetAnswerGenerationMode).not.toHaveBeenCalled();
+        });
+      });
+
+      describe('when the generated answer is disabled', () => {
+        it('should not dispatch setAnswerGenerationMode', () => {
+          engine = buildEngineWithGeneratedAnswer({
+            generatedAnswer: {
+              ...getGeneratedAnswerInitialState(),
+              isEnabled: false,
+            },
+          });
+          createGeneratedAnswer();
+          const disabledListener = engine.subscribe.mock.calls[0][0];
+
+          mockSelectAnswerTriggerParams.mockReturnValue({
+            q: 'test query',
+            requestId: 'new-request',
+            cannotAnswer: false,
+            analyticsMode: 'legacy',
+            actionCause: 'searchboxSubmit',
+          });
+
+          disabledListener();
+
+          expect(mockSetAnswerGenerationMode).not.toHaveBeenCalled();
         });
       });
     });

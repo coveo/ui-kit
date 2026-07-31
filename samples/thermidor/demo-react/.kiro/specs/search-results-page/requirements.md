@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The Search Results Page is the primary view for displaying product search results in the `demo-react` Thermidor sample application. When the backend routes a user prompt as a commerce search or search query (via `ConverseController`), the app transitions to this page. It presents a three-column layout with a compact header (PromptInput only), a sidebar placeholder for future facets, and a main content area with a product grid and pagination controls. The page uses the persisted `RoutedInterface` from the AppShell to build `ProductListController` and `PaginationController` instances.
+The Search Results Page is the primary view for displaying product search results in the `demo-react` Thermidor sample application. When the backend routes a user prompt as a commerce search or search query (via `ConverseController`), the app transitions to this page. It presents a three-column layout (on desktop) with a compact header (PromptInput + back navigation), a sidebar placeholder for future facets, and a main content area with a product grid and pagination controls. On mobile (below the lg breakpoint of 1024px), the layout collapses to a single column with a modal for sort/filter controls. The page uses the persisted `RoutedInterface` from the AppShell to build `ProductListController` and `PaginationController` instances, and receives the current query via props.
 
 ## Glossary
 
@@ -132,7 +132,7 @@ The Search Results Page is the primary view for displaying product search result
 
 #### Acceptance Criteria
 
-1. WHEN the SearchResultsPage renders, THE PageSizeSelector SHALL display a `<select>` element with the options 10, 25, and 50 as available page sizes.
+1. WHEN the SearchResultsPage renders, THE PageSizeSelector SHALL display a `<select>` element with the default options 10, 25, and 50. IF the current `paginationController.state.pageSize` is not already among those defaults, THE PageSizeSelector SHALL include it as an additional option, and all options SHALL be rendered in ascending numeric order.
 2. THE PageSizeSelector SHALL reflect the current `paginationController.state.pageSize` as its selected value.
 3. WHEN the user selects a different page size option, THE PageSizeSelector SHALL call `paginationController.setPageSize(newSize)` with the newly selected numeric value.
 4. WHEN the user selects a different page size option, THE PageSizeSelector SHALL call `paginationController.selectPage(0)` to reset navigation to the first page.

@@ -10,22 +10,22 @@
 }
 
 .quickview__result-date {
-  color: #3E3E3C;
+  color: var(--slds-g-color-on-surface-2, #3E3E3C);
   font-weight: var(--slds-g-font-weight-4, normal);
   font-size: var(--slds-g-font-scale-2, 15px);
 }
 
 .quickview__button-base:not([disabled]){
   border-radius: 0.25rem;
-  color: var(--lwc-colorTextLinkActive, #0f2d5d);
+  color: var(--slds-s-link-color-active, var(--lwc-colorTextLinkActive, #0f2d5d));
 }
 
 .quickview__button-base:not([disabled]):hover {
-  background-color: #f6f7f9;
-  box-shadow: 0 0 0 0.25rem #f6f7f9;
+  background-color: var(--slds-g-color-surface-2, #f6f7f9);
+  box-shadow: 0 0 0 0.25rem var(--slds-g-color-surface-2, #f6f7f9);
 }
 
 .quickview-modal__footer {
-  background-color: white;
+  background-color: var(--slds-g-color-surface-1, white);
   text-align: unset;
 }

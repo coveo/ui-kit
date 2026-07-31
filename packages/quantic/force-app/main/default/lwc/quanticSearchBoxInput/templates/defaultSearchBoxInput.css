@@ -5,5 +5,5 @@
 }
 
 input {
-  border: var(--lwc-borderWidthThin, 1px) solid var(--lwc-brandAccessible, #0176d3);
+  border: var(--lwc-borderWidthThin, 1px) solid var(--slds-g-color-accent-container-1, var(--lwc-brandAccessible, #0176d3));
 }

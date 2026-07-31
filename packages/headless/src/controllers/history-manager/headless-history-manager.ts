@@ -19,7 +19,6 @@ import {buildController, type Controller} from '../controller/headless-controlle
 /**
  * The `HistoryManager` controller is in charge of allowing navigating back and forward in the search interface history.
  *
- * Example: [history-manager.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/history-manager/history-manager.fn.tsx)
  *
  * @group Controllers
  * @category HistoryManager

@@ -43,7 +43,7 @@ import {
 /**
  * The `Search` controller lets you create a commerce search page.
  *
- * Example: [search.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/commerce/search.fn.tsx)
+ * Example: [search-page.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/commerce-react/src/pages/search-page.tsx)
  *
  * @group Buildable controllers
  * @category Search

@@ -35,7 +35,7 @@ import type {RecommendationsSummaryState} from './summary/headless-recommendatio
 /**
  * The `Recommendations` controller exposes a method for retrieving recommendations content in a commerce interface.
  *
- * Example: [recommendations.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/commerce/recommendations.fn.tsx)
+ * Example: [home-page.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/commerce-react/src/pages/home-page.tsx)
  *
  * @group Buildable controllers
  * @category Recommendations

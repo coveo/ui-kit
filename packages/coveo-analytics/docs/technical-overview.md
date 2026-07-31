@@ -38,11 +38,11 @@ This section holds the library that is compiled for browser usage. It wraps the 
 
 ### src/formatting
 
-This sections holds some formatting methods for metadata.
+This section holds some formatting methods for metadata.
 
 ### src/hook
 
-This section holds "hooks" that are executed on sending a new event. It is mostly used to centralise a specific logic that modifies the event in some way.
+This section holds "hooks" that are executed on sending a new event. It is mostly used to centralize a specific logic that modifies the event in some way.
 
 `addDefaultValues.ts` ensures that some values are always included
 
@@ -68,10 +68,6 @@ This section holds the objects related to react-native runtime.
 
 This section holds tests that mimic real user behavior. Some methods are available to get back the request and the response for each call. The goal here is to have as many "real use cases" tests.
 
-### Cypress
-
-This section holds an e2e test that loads the page and sends a pageview. The purpose of this is to monitor that the `coveoua` script can be called from the browser by using the static endpoint at any time.
-
 ## Quirks in the Project
 
 ### Plugins
@@ -90,10 +86,10 @@ The `processVariableArgumentsNamesStep` is parsing the "variable arguments" of t
 
 ```ts
 this.client.addEventTypeMapping(ECPluginEventTypes.event, {
-    newEventType: EventType.collect,
-    variableLengthArgumentsNames: ['eventCategory', 'eventAction', 'eventLabel', 'eventValue'],
-    addVisitorIdParameter: true,
-    usesMeasurementProtocol: true,
+  newEventType: EventType.collect,
+  variableLengthArgumentsNames: ['eventCategory', 'eventAction', 'eventLabel', 'eventValue'],
+  addVisitorIdParameter: true,
+  usesMeasurementProtocol: true,
 });
 ```
 

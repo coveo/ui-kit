@@ -36,6 +36,9 @@ describe('Facet sidebar placeholder', () => {
     onSubmit: vi.fn(),
     isStreaming: false,
     routedInterface: {useCase: 'search', interface: {id: 'mock'}} as any,
+    onBackToConversation: vi.fn(),
+    products: [] as any[],
+    onProductsChange: vi.fn(),
   };
 
   it('renders text "Facets (coming soon)"', () => {

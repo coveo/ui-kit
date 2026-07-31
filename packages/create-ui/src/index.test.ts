@@ -1,7 +1,9 @@
 import {afterEach, describe, expect, it, vi} from 'vitest';
-import {main, parseArgs, unavailableTemplateMessage} from './index.js';
+import {resetCrashDiagnostics, snapshotCrashDiagnostics} from './crash-diagnostics.js';
+import {main, parseArgs} from './index.js';
 import {describeTemplate, getTemplate} from './templates.js';
-import {downloadTemplate, TemplateVersionUnavailableError} from './download.js';
+import {downloadTemplate} from './download.js';
+import {TemplateVersionUnavailableError} from './errors.js';
 
 vi.mock('./download.js', async (importOriginal) => {
   const actual = await importOriginal<typeof import('./download.js')>();
@@ -16,9 +18,24 @@ describe('templates', () => {
     expect(getTemplate('does-not-exist')).toBeUndefined();
   });
 
+  it('identifies the package used by each Headless Commerce template', () => {
+    expect(describeTemplate(getTemplate('headless-commerce')!)).toBe(
+      'Headless Commerce (Vite, @coveo/headless/commerce)'
+    );
+    expect(describeTemplate(getTemplate('headless-commerce-react')!)).toBe(
+      'Headless Commerce (React, @coveo/headless/commerce)'
+    );
+    expect(describeTemplate(getTemplate('headless-ssr-commerce-nextjs')!)).toBe(
+      'Headless SSR Commerce SSR (Next.js App Router, @coveo/headless-react)'
+    );
+    expect(describeTemplate(getTemplate('headless-ssr-commerce-express')!)).toBe(
+      'Headless SSR Commerce SSR (Express, @coveo/headless/ssr)'
+    );
+  });
+
   it('describes a template with its library, without the "UI" suffix', () => {
     const template = getTemplate('atomic-search')!;
-    expect(describeTemplate(template)).toBe('Atomic Search (Vite)');
+    expect(describeTemplate(template)).toBe('Atomic Search (Vite, @coveo/atomic)');
     expect(describeTemplate(template)).not.toContain('UI');
   });
 });
@@ -67,6 +84,7 @@ describe('parseArgs', () => {
 describe('main', () => {
   afterEach(() => {
     vi.mocked(downloadTemplate).mockReset();
+    resetCrashDiagnostics();
   });
 
   it('returns 0 for --help and lists templates without the "UI" suffix', async () => {
@@ -78,7 +96,7 @@ describe('main', () => {
     expect(await main(['--help'])).toBe(0);
     out.mockRestore();
     const help = chunks.join('');
-    expect(help).toContain('Atomic Search (Vite)');
+    expect(help).toContain('Atomic Search (Vite, @coveo/atomic)');
     expect(help).toContain('--template-version');
     expect(help).toMatch(/defaults\s+to\s+latest/i);
     expect(help).toContain('headless-search-react --template-version 3.2.1');
@@ -119,6 +137,9 @@ describe('main', () => {
         version: '3.2.1',
       })
     );
+    const diagnostics = snapshotCrashDiagnostics();
+    expect(diagnostics.phase).toBe('template-download');
+    expect(diagnostics.spans.map(({op}) => op)).toEqual(['input', 'template-download']);
     logSpy.mockRestore();
     errSpy.mockRestore();
   });
@@ -143,24 +164,10 @@ describe('main', () => {
 
     await expect(
       main(['my-app', '--template', 'headless-search-react', '--template-version', '99.99.99'])
-    ).rejects.toThrow('Template "headless-search-react" version "99.99.99" is not available.');
+    ).rejects.toThrow(/headless-search-react.*99\.99\.99.*3\.53\.1/);
 
     outSpy.mockRestore();
     logSpy.mockRestore();
     errSpy.mockRestore();
-  });
-});
-
-describe('unavailableTemplateMessage', () => {
-  it('includes the version when one was provided', () => {
-    expect(unavailableTemplateMessage('headless-search-react', '3.2.1')).toBe(
-      'Template "headless-search-react" version "3.2.1" is not available.'
-    );
-  });
-
-  it('omits the version when none was provided', () => {
-    expect(unavailableTemplateMessage('headless-search-react')).toBe(
-      'Template "headless-search-react" is not available.'
-    );
   });
 });

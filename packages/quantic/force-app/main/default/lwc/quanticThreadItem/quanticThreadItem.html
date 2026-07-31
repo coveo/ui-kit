@@ -1,11 +1,19 @@
 <template>
   <li class="thread-item">
     <div class="thread-item__grid">
-      <div class="slds-grid slds-grid_vertical slds-grid_vertical-align-center thread-item__timeline">
+      <div
+        class={lineColumnClass}
+        data-testid="thread-item-line-column"
+        onclick={handleLineClick}
+      >
         <div
           class="slds-grid slds-grid_align-center slds-grid_vertical-align-center thread-item__dot-column"
         >
-          <span class={dotClass} data-testid="thread-item-dot"></span>
+          <span
+            class={dotClass}
+            data-testid="thread-item-dot"
+            onclick={handleDotClick}
+          ></span>
         </div>
         <template lwc:if={shouldDisplayLine}>
           <span class="thread-item__line" data-testid="thread-item-line"></span>
