@@ -21,6 +21,7 @@ export interface InterfaceRegistry {
   search: {interface: SearchInterface; facades: 'search' | 'suggestions'};
   commerce: {interface: CommerceInterface; facades: 'search' | 'suggestions'};
   generative: {interface: GenerativeInterface; facades: 'conversation'};
+  generativeUnified: {interface: GenerativeUnifiedInterface; facades: 'conversation'};
 }
 
 export type InterfaceType = keyof InterfaceRegistry;
@@ -46,5 +47,7 @@ export interface SearchInterface extends Supports<Facades['search']> {}
 export interface CommerceInterface extends Supports<Facades['commerce']> {}
 
 export interface GenerativeInterface extends Supports<Facades['generative']> {}
+
+export interface GenerativeUnifiedInterface extends Supports<Facades['generativeUnified']> {}
 
 export interface ComposedInterface<T extends InterfaceType> extends Supports<Facades[T]> {}

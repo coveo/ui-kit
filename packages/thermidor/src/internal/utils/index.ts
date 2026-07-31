@@ -24,6 +24,7 @@ export type {
   FacadeResolverFactory,
   Facades,
   GenerativeInterface,
+  GenerativeUnifiedInterface,
   InferInterfaceType,
   InterfaceHandle,
   InterfaceRegistry,
