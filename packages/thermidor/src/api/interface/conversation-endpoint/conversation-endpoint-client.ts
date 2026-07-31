@@ -10,6 +10,7 @@ import {getOrganizationEndpoint} from '@/src/api/internal/utils/organization-end
 
 const featureFlagOverridesHeaderValue = JSON.stringify({
   'use-demo-agent-core-runtime': false,
+  'cpd-stateful-commerce-enabled': true,
 });
 
 const createCallConversationEndpoint =
