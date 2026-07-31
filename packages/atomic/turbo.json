@@ -20,10 +20,26 @@
     },
     "pre:storybook": {
       "dependsOn": ["build:cem", "build:locales", "build:assets", "build:indexes"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!**/*.md",
+        "!**/LICENSE*",
+        "!**/.vscode/**",
+        "!**/catalog-info*.yaml",
+        "!licenses/**"
+      ],
       "outputs": []
     },
     "build:storybook": {
       "dependsOn": ["^build", "pre:storybook"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!**/*.md",
+        "!**/LICENSE*",
+        "!**/.vscode/**",
+        "!**/catalog-info*.yaml",
+        "!licenses/**"
+      ],
       "outputs": ["./dist-storybook/**"],
       "env": ["STORYBOOK_INVOKED_BY"]
     },
@@ -91,14 +107,38 @@
     },
     "tsc:check": {
       "dependsOn": ["^build", "build:locales"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!**/*.md",
+        "!**/LICENSE*",
+        "!**/.vscode/**",
+        "!**/catalog-info*.yaml",
+        "!licenses/**"
+      ],
       "outputs": []
     },
     "test:lit": {
       "dependsOn": ["^build"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!**/*.md",
+        "!**/LICENSE*",
+        "!**/.vscode/**",
+        "!**/catalog-info*.yaml",
+        "!licenses/**"
+      ],
       "outputs": ["coverage/**"]
     },
     "test:storybook": {
       "dependsOn": ["^build", "build"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!**/*.md",
+        "!**/LICENSE*",
+        "!**/.vscode/**",
+        "!**/catalog-info*.yaml",
+        "!licenses/**"
+      ],
       "outputs": []
     },
     "dev": {
