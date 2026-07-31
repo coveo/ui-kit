@@ -204,8 +204,9 @@ describe('c-quantic-load-more-results', () => {
     });
 
     describe('#click behavior (AC3)', () => {
-      it('should call fetchMoreResults and keep prior results referenced in state when clicked', async () => {
+      it('should call fetchMoreResults and append newly fetched results without discarding prior ones when clicked', async () => {
         resultListState = {...resultListState, moreResultsAvailable: true};
+        querySummaryState = {...querySummaryState, lastResult: 2, total: 6};
         const element = createTestComponent();
         await flushPromises();
 
@@ -216,7 +217,34 @@ describe('c-quantic-load-more-results', () => {
         button.click();
 
         expect(functionsMocks.fetchMoreResults).toHaveBeenCalledTimes(1);
-        expect(resultListState.results).toEqual(initialResultListState.results);
+
+        const appendedResults = [
+          ...initialResultListState.results,
+          {title: 'result 3'},
+          {title: 'result 4'},
+          {title: 'result 5'},
+          {title: 'result 6'},
+        ];
+        resultListState = {
+          ...resultListState,
+          results: appendedResults,
+          moreResultsAvailable: false,
+        };
+        querySummaryState = {...querySummaryState, lastResult: 6, total: 6};
+        functionsMocks.subscribeResultList.mock.calls[0][0]();
+        functionsMocks.subscribeQuerySummary.mock.calls[0][0]();
+        await flushPromises();
+
+        expect(resultListState.results).toEqual(appendedResults);
+        expect(resultListState.results).toHaveLength(6);
+
+        const summary = element.shadowRoot.querySelector(selectors.summary);
+        expect(summary.textContent).toContain('6');
+
+        const progressBar = element.shadowRoot.querySelector(
+          selectors.progressBar
+        );
+        expect(progressBar.getAttribute('aria-valuenow')).toBe('100');
       });
     });
 
