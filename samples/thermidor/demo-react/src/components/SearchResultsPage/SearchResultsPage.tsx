@@ -202,7 +202,11 @@ function SearchResultsPageContent({
         </div>
       </main>
 
-      <SortFiltersModal open={sortFiltersOpen} onClose={closeSortFilters} sortController={sortController} />
+      <SortFiltersModal
+        open={sortFiltersOpen}
+        onClose={closeSortFilters}
+        sortController={sortController}
+      />
 
       {toast && (
         <div className={styles.toast} role="status" aria-live="polite">

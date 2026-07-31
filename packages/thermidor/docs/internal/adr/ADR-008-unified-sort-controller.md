@@ -56,36 +56,37 @@ The controller state shape is uniform across interface types: `{ appliedSort, av
 ```typescript
 type SortDirection = 'ascending' | 'descending';
 
-type SortByRelevance = { by: 'relevance' };
-type SortByDate      = { by: 'date'; direction: SortDirection };
-type SortByField     = { by: 'field'; field: string; direction: SortDirection; displayName?: string };
-type SortByQRE       = { by: 'qre' };
-type SortByNoSort    = { by: 'nosort' };
+type SortByRelevance = {by: 'relevance'};
+type SortByDate = {by: 'date'; direction: SortDirection};
+type SortByField = {by: 'field'; field: string; direction: SortDirection; displayName?: string};
+type SortByQRE = {by: 'qre'};
+type SortByNoSort = {by: 'nosort'};
 
-type SearchSortCriterion   = SortByRelevance | SortByDate | SortByField | SortByQRE | SortByNoSort;
+type SearchSortCriterion = SortByRelevance | SortByDate | SortByField | SortByQRE | SortByNoSort;
 type CommerceSortCriterion = SortByRelevance | SortByField;
 
-type SortCriterionFor<T> =
-  T extends CommerceInterface ? CommerceSortCriterion :
-  T extends SearchInterface ? SearchSortCriterion :
-  SearchSortCriterion | CommerceSortCriterion;
+type SortCriterionFor<T> = T extends CommerceInterface
+  ? CommerceSortCriterion
+  : T extends SearchInterface
+    ? SearchSortCriterion
+    : SearchSortCriterion | CommerceSortCriterion;
 ```
 
 **Consumer experience:**
 
 ```typescript
 // Search
-const sort = buildSortController({ interface: searchInterface });
-sort.sortBy({ by: 'field', field: 'price', direction: 'ascending' });
+const sort = buildSortController({interface: searchInterface});
+sort.sortBy({by: 'field', field: 'price', direction: 'ascending'});
 sort.sortBy([
-  { by: 'field', field: 'price', direction: 'ascending' },
-  { by: 'field', field: 'name', direction: 'ascending' },
+  {by: 'field', field: 'price', direction: 'ascending'},
+  {by: 'field', field: 'name', direction: 'ascending'},
 ]);
 
 // Commerce — type error on search-only modes
-const sort = buildSortController({ interface: commerceInterface });
-sort.sortBy({ by: 'field', field: 'price', direction: 'descending' });
-sort.sortBy({ by: 'qre' }); // ✗ type error
+const sort = buildSortController({interface: commerceInterface});
+sort.sortBy({by: 'field', field: 'price', direction: 'descending'});
+sort.sortBy({by: 'qre'}); // ✗ type error
 ```
 
 **Internal translation (anti-corruption layer):**
@@ -93,17 +94,27 @@ sort.sortBy({ by: 'qre' }); // ✗ type error
 ```typescript
 function toSearchApiSort(criterion: SearchSortCriterion): string {
   switch (criterion.by) {
-    case 'relevance': return 'relevancy';
-    case 'date':      return `date ${criterion.direction}`;
-    case 'field':     return `@${criterion.field} ${criterion.direction}`;
-    case 'qre':       return 'qre';
-    case 'nosort':    return 'nosort';
+    case 'relevance':
+      return 'relevancy';
+    case 'date':
+      return `date ${criterion.direction}`;
+    case 'field':
+      return `@${criterion.field} ${criterion.direction}`;
+    case 'qre':
+      return 'qre';
+    case 'nosort':
+      return 'nosort';
   }
 }
 
 function fromCommerceApiSort(raw: APIPayload): CommerceSortCriterion {
-  if (raw.sortCriteria === 'relevance') return { by: 'relevance' };
-  return { by: 'field', field: raw.fields![0].field, direction: raw.fields![0].direction!, displayName: raw.fields![0].displayName };
+  if (raw.sortCriteria === 'relevance') return {by: 'relevance'};
+  return {
+    by: 'field',
+    field: raw.fields![0].field,
+    direction: raw.fields![0].direction!,
+    displayName: raw.fields![0].displayName,
+  };
 }
 ```
 
@@ -126,10 +137,11 @@ interface CommerceInterface extends Supports<Facades['commerce']> {
 The brand is `declare`-only (never exists at runtime) — zero cost. `BaseInterface<T>` satisfies it via `declare readonly [InterfaceTypeBrand]: T`. This allows the conditional type to discriminate:
 
 ```typescript
-type SortCriterionFor<T> =
-  T extends CommerceInterface ? CommerceSortCriterion :
-  T extends SearchInterface ? SearchSortCriterion :
-  SearchSortCriterion | CommerceSortCriterion;
+type SortCriterionFor<T> = T extends CommerceInterface
+  ? CommerceSortCriterion
+  : T extends SearchInterface
+    ? SearchSortCriterion
+    : SearchSortCriterion | CommerceSortCriterion;
 ```
 
 Without the brand, both interfaces resolve to the same structural type and the conditional collapses. The exhaustive `switch` in `toCommerceApiSort` (no `default` case) relies on this narrowing — TypeScript enforces that only valid `CommerceSortCriterion` variants reach the function.
@@ -183,18 +195,18 @@ Option A satisfies the non-leakage policy, provides autocomplete-driven discover
 
 ## 8. Migration and Rollout Plan
 
-| Current Headless (Search) | Thermidor |
-|---|---|
-| `buildRelevanceSortCriterion()` | `{ by: 'relevance' }` |
-| `buildDateSortCriterion(SortOrder.Descending)` | `{ by: 'date', direction: 'descending' }` |
+| Current Headless (Search)                               | Thermidor                                                 |
+| ------------------------------------------------------- | --------------------------------------------------------- |
+| `buildRelevanceSortCriterion()`                         | `{ by: 'relevance' }`                                     |
+| `buildDateSortCriterion(SortOrder.Descending)`          | `{ by: 'date', direction: 'descending' }`                 |
 | `buildFieldSortCriterion('price', SortOrder.Ascending)` | `{ by: 'field', field: 'price', direction: 'ascending' }` |
-| `sort.state.sortCriteria` (raw string) | `controller.state.appliedSort` (domain object) |
+| `sort.state.sortCriteria` (raw string)                  | `controller.state.appliedSort` (domain object)            |
 
-| Current Headless (Commerce) | Thermidor |
-|---|---|
-| `{ sortCriteria: SortBy.Fields, fields: [{field, direction}] }` | `{ by: 'field', field, direction }` |
-| `sort.state.appliedSort` (API DTO) | `controller.state.appliedSort` (domain object) |
-| `sort.isAvailable(criterion)` | `controller.state.availableSorts.some(...)` |
+| Current Headless (Commerce)                                     | Thermidor                                      |
+| --------------------------------------------------------------- | ---------------------------------------------- |
+| `{ sortCriteria: SortBy.Fields, fields: [{field, direction}] }` | `{ by: 'field', field, direction }`            |
+| `sort.state.appliedSort` (API DTO)                              | `controller.state.appliedSort` (domain object) |
+| `sort.isAvailable(criterion)`                                   | `controller.state.availableSorts.some(...)`    |
 
 - **Rollout**: Part of Thermidor's initial release.
 - **Rollback**: Consumers stay on headless until adoption.

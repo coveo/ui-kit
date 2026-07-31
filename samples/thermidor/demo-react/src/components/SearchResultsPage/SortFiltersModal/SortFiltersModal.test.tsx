@@ -27,18 +27,26 @@ beforeEach(() => {
 describe('SortFiltersModal', () => {
   it('calls showModal when open transitions to true', () => {
     const {rerender} = render(
-      <SortFiltersModal open={false} onClose={vi.fn()} sortController={createMockSortController()} />
+      <SortFiltersModal
+        open={false}
+        onClose={vi.fn()}
+        sortController={createMockSortController()}
+      />
     );
 
     expect(HTMLDialogElement.prototype.showModal).not.toHaveBeenCalled();
 
-    rerender(<SortFiltersModal open={true} onClose={vi.fn()} sortController={createMockSortController()} />);
+    rerender(
+      <SortFiltersModal open={true} onClose={vi.fn()} sortController={createMockSortController()} />
+    );
 
     expect(HTMLDialogElement.prototype.showModal).toHaveBeenCalledTimes(1);
   });
 
   it('calls dialog.close when the close button is clicked', () => {
-    render(<SortFiltersModal open={true} onClose={vi.fn()} sortController={createMockSortController()} />);
+    render(
+      <SortFiltersModal open={true} onClose={vi.fn()} sortController={createMockSortController()} />
+    );
 
     fireEvent.click(screen.getByRole('button', {name: 'Close'}));
 
@@ -46,7 +54,9 @@ describe('SortFiltersModal', () => {
   });
 
   it('calls dialog.close when "View results" button is clicked', () => {
-    render(<SortFiltersModal open={true} onClose={vi.fn()} sortController={createMockSortController()} />);
+    render(
+      <SortFiltersModal open={true} onClose={vi.fn()} sortController={createMockSortController()} />
+    );
 
     fireEvent.click(screen.getByRole('button', {name: 'View results'}));
 
@@ -55,7 +65,9 @@ describe('SortFiltersModal', () => {
 
   it('calls onClose when the dialog fires the native close event', () => {
     const onClose = vi.fn();
-    render(<SortFiltersModal open={true} onClose={onClose} sortController={createMockSortController()} />);
+    render(
+      <SortFiltersModal open={true} onClose={onClose} sortController={createMockSortController()} />
+    );
 
     fireEvent.click(screen.getByRole('button', {name: 'Close'}));
 
@@ -67,13 +79,21 @@ describe('SortFiltersModal', () => {
       <SortFiltersModal open={true} onClose={vi.fn()} sortController={createMockSortController()} />
     );
 
-    rerender(<SortFiltersModal open={false} onClose={vi.fn()} sortController={createMockSortController()} />);
+    rerender(
+      <SortFiltersModal
+        open={false}
+        onClose={vi.fn()}
+        sortController={createMockSortController()}
+      />
+    );
 
     expect(HTMLDialogElement.prototype.close).toHaveBeenCalled();
   });
 
   it('renders the Sort and Filters sections', () => {
-    render(<SortFiltersModal open={true} onClose={vi.fn()} sortController={createMockSortController()} />);
+    render(
+      <SortFiltersModal open={true} onClose={vi.fn()} sortController={createMockSortController()} />
+    );
 
     expect(screen.getByText('Sort & Filters')).toBeDefined();
     expect(screen.getByText('Sort')).toBeDefined();
@@ -82,7 +102,9 @@ describe('SortFiltersModal', () => {
   });
 
   it('has an accessible aria-label on the dialog', () => {
-    render(<SortFiltersModal open={true} onClose={vi.fn()} sortController={createMockSortController()} />);
+    render(
+      <SortFiltersModal open={true} onClose={vi.fn()} sortController={createMockSortController()} />
+    );
 
     expect(screen.getByRole('dialog', {name: 'Sort and filters'})).toBeDefined();
   });
