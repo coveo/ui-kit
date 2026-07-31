@@ -42,20 +42,21 @@
   },
   "devDependencies": {
     "@rollup/plugin-alias": "5.1.1",
-    "@rollup/plugin-commonjs": "24.1.0",
+    "@rollup/plugin-commonjs": "catalog:",
     "@rollup/plugin-json": "catalog:",
     "@rollup/plugin-node-resolve": "catalog:",
     "@rollup/plugin-replace": "catalog:",
     "@rollup/plugin-terser": "catalog:",
     "@rollup/plugin-typescript": "catalog:",
-    "@types/node": "6.14.13",
+    "@types/node": "catalog:",
     "fetch-mock": "9.11.0",
     "jsdom": "catalog:",
     "node-fetch": "2.7.0",
-    "rollup": "3.29.5",
+    "rollup": "catalog:",
     "rollup-plugin-copy": "3.5.0",
     "rollup-plugin-serve": "1.1.1",
-    "typescript": "5.0.4",
+    "tslib": "catalog:",
+    "typescript": "catalog:",
     "vitest": "catalog:"
   }
 }
