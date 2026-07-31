@@ -2,7 +2,7 @@ import type {Decorator, Meta, StoryObj as Story} from '@storybook/web-components
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {testComboboxA11y} from '@/storybook-utils/a11y/combobox.js';
-import {MockInsightApi} from '@coveo/platform-mock-api/insight/mock';
+import {MockInsightApi} from '@coveo/platform-mock-api/insight';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 import '@/src/components/insight/atomic-insight-search-box/atomic-insight-search-box.js';

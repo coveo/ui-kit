@@ -1,7 +1,7 @@
 import {getSampleRecommendationEngineConfiguration} from '@coveo/headless/recommendation';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {html} from 'lit';
-import {MockRecommendationApi} from '@coveo/platform-mock-api/recommendation/mock';
+import {MockRecommendationApi} from '@coveo/platform-mock-api/recommendation';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters.js';
 import {isTestMode} from '@/storybook-utils/common/is-test-mode';
 import '@/src/components/search/atomic-field-condition/atomic-field-condition.js';

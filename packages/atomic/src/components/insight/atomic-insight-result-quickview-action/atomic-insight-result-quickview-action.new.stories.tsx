@@ -1,8 +1,8 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
-import {MockInsightApi} from '@coveo/platform-mock-api/insight/mock';
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
+import {MockInsightApi} from '@coveo/platform-mock-api/insight';
+import {MockSearchApi} from '@coveo/platform-mock-api/search';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 import {wrapInInsightLayout} from '@/storybook-utils/insight/insight-layout-wrapper';

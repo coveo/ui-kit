@@ -305,7 +305,7 @@ export class AtomicSearchInterface
       return;
     }
 
-    scrollContainerElement.scrollIntoView({behavior: 'smooth'});
+    scrollContainerElement.scrollIntoView();
   }
 
   /**
