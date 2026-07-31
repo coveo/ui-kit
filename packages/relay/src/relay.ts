@@ -81,7 +81,9 @@ export function createRelay(initialConfig: RelayConfig): Relay {
   const configManager = createConfigManager(initialConfig);
   const listenerManager = createListenerManager();
   const environmentManager = createEnvironmentManager(configManager);
-
+  // Emulate mean bug in Relay
+  throw new Error('POTATO!');
+  // oxlint-disable-next-line no-unreachable
   return {
     emit: async (type: string, payload: Record<string, any>) => {
       const config = configManager.get();
