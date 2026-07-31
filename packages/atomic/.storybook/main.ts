@@ -103,13 +103,14 @@ const externalizeDependencies = (configType: 'DEVELOPMENT' | 'PRODUCTION' | unde
         return null;
       }
 
-      // For all testing, we want to use the local versions of all packages to ensure everything is properly bundled together for testing
-      if (isVitest || isChromatic || isPlaywright) {
+      // For most testing, we want to use the local versions of all packages to ensure everything is properly bundled together for testing
+      if (isVitest || isPlaywright) {
         return null;
       }
 
       // For local Storybook development, we want to use local packages source to allow for easier debugging and HMR.
-      if (configType === 'DEVELOPMENT') {
+      // We also want to use local packages for Chromatic builds so TurboSnap can resolve changes in Atomic dependencies.
+      if (configType === 'DEVELOPMENT' || isChromatic) {
         return {
           id: packageMapping.local,
         };
