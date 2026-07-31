@@ -1,5 +1,6 @@
+import {randomBytes} from 'node:crypto';
 import {readFile} from 'node:fs/promises';
-import type {ErrorEvent, StackFrame} from '@sentry/node';
+import type {ErrorEvent, Event, StackFrame} from '@sentry/node';
 import type {CrashPhase} from './crash-diagnostics.js';
 import {
   CRASH_REPORT_SCHEMA_VERSION,
@@ -116,36 +117,52 @@ const SPAN_OP_BY_PHASE: Record<CrashPhase, string> = {
   complete: 'create-ui.complete',
 };
 
-function reconstructTrace(
-  Sentry: typeof import('@sentry/node'),
-  report: CrashReport,
-  captureCrash: () => void
-): void {
+interface CrashTrace {
+  traceId: string;
+  rootSpanId: string;
+}
+
+function newTraceId(): string {
+  return randomBytes(16).toString('hex');
+}
+
+function newSpanId(): string {
+  return randomBytes(8).toString('hex');
+}
+
+function toEpochSeconds(timestamp: string): number {
+  return Date.parse(timestamp) / 1000;
+}
+
+function buildCrashTransactionEvent(report: CrashReport, trace: CrashTrace): Event {
   const {spans} = report.diagnostics;
-  Sentry.startSpanManual(
-    {
-      name: getCrashTransactionName(report),
-      op: 'create-ui',
-      forceTransaction: true,
-      startTime: new Date(spans[0].startedOn),
+  return {
+    type: 'transaction',
+    transaction: getCrashTransactionName(report),
+    start_timestamp: toEpochSeconds(spans[0].startedOn),
+    timestamp: toEpochSeconds(spans[spans.length - 1].endedOn),
+    contexts: {
+      trace: {trace_id: trace.traceId, span_id: trace.rootSpanId, op: 'create-ui'},
     },
-    (root) => {
-      for (const span of spans) {
-        Sentry.startInactiveSpan({
-          name: span.name,
-          op: SPAN_OP_BY_PHASE[span.op],
-          startTime: new Date(span.startedOn),
-          attributes: span.attributes,
-        }).end(new Date(span.endedOn));
-      }
-      captureCrash();
-      root.end(new Date(spans[spans.length - 1].endedOn));
-    }
-  );
+    spans: spans.map((span) => ({
+      op: SPAN_OP_BY_PHASE[span.op],
+      description: span.name,
+      span_id: newSpanId(),
+      parent_span_id: trace.rootSpanId,
+      trace_id: trace.traceId,
+      start_timestamp: toEpochSeconds(span.startedOn),
+      timestamp: toEpochSeconds(span.endedOn),
+      data: span.attributes ?? {},
+      status: 'ok',
+    })),
+  };
 }
 
 async function sendToSentry(report: CrashReport): Promise<boolean> {
   const Sentry = await import('@sentry/node');
+  const {spans} = report.diagnostics;
+  const trace: CrashTrace | undefined =
+    spans.length > 0 ? {traceId: newTraceId(), rootSpanId: newSpanId()} : undefined;
 
   Sentry.init({
     dsn: DSN,
@@ -155,13 +172,18 @@ async function sendToSentry(report: CrashReport): Promise<boolean> {
     integrations: [Sentry.linkedErrorsIntegration({limit: MAX_CAUSE_DEPTH})],
     sendDefaultPii: false,
     includeServerName: false,
-    tracesSampleRate: 1.0,
     beforeSend(event) {
       event.timestamp = crashTimestampSeconds(report.crashedOn) ?? event.timestamp;
       event.transaction = getCrashTransactionName(report);
       applyCrashMechanism(event, report.origin);
       normalizeFrames(event);
       scrubEventMessages(event);
+      if (trace !== undefined) {
+        event.contexts = {
+          ...event.contexts,
+          trace: {trace_id: trace.traceId, span_id: trace.rootSpanId},
+        };
+      }
       return event;
     },
   });
@@ -203,11 +225,9 @@ async function sendToSentry(report: CrashReport): Promise<boolean> {
     },
   };
 
-  const {spans} = report.diagnostics;
-  if (spans.length > 0) {
-    reconstructTrace(Sentry, report, () => Sentry.captureException(syntheticError, captureContext));
-  } else {
-    Sentry.captureException(syntheticError, captureContext);
+  Sentry.captureException(syntheticError, captureContext);
+  if (trace !== undefined) {
+    Sentry.captureEvent(buildCrashTransactionEvent(report, trace));
   }
 
   const flushed = await Sentry.flush(FLUSH_TIMEOUT_MS);

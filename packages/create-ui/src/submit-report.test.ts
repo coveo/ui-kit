@@ -13,16 +13,13 @@ import {
 const sentry = vi.hoisted(() => ({
   init: vi.fn(),
   captureException: vi.fn(),
+  captureEvent: vi.fn(),
   flush: vi.fn(async () => true),
   close: vi.fn(async () => true),
   linkedErrorsIntegration: vi.fn((options?: {limit?: number}) => ({
     name: 'LinkedErrors',
     ...options,
   })),
-  startSpanManual: vi.fn((_options: unknown, callback: (span: {end: () => void}) => unknown) =>
-    callback({end: vi.fn()})
-  ),
-  startInactiveSpan: vi.fn(() => ({end: vi.fn()})),
 }));
 
 vi.mock('@sentry/node', () => sentry);
@@ -123,27 +120,26 @@ describe('submitReport', () => {
     expect(sentry.init).not.toHaveBeenCalled();
   });
 
-  it('reconstructs the captured phase spans as a transaction around the crash', async () => {
+  it('captures the phase spans as a transaction that shares the crash trace', async () => {
     expect(await submitReport(await writeValidReport())).toBe(0);
 
-    expect(sentry.startSpanManual).toHaveBeenCalledWith(
-      expect.objectContaining({
-        name: 'create headless-search-react',
-        op: 'create-ui',
-        forceTransaction: true,
-      }),
-      expect.any(Function)
-    );
-    expect(sentry.startInactiveSpan).toHaveBeenCalledWith(
-      expect.objectContaining({op: 'input.resolve'})
-    );
-    expect(sentry.startInactiveSpan).toHaveBeenCalledWith(
-      expect.objectContaining({op: 'dependencies.install'})
-    );
+    expect(sentry.captureEvent).toHaveBeenCalledOnce();
+    const transaction = sentry.captureEvent.mock.calls[0][0];
+    expect(transaction.type).toBe('transaction');
+    expect(transaction.transaction).toBe('create headless-search-react');
+    expect(transaction.start_timestamp).toBe(Date.parse('2026-07-22T14:59:00.000Z') / 1000);
+    expect(transaction.timestamp).toBe(Date.parse('2026-07-22T15:00:00.000Z') / 1000);
+    expect(transaction.spans.map((span: {op: string}) => span.op)).toEqual([
+      'input.resolve',
+      'dependencies.install',
+    ]);
     expect(sentry.captureException).toHaveBeenCalledOnce();
+
+    const processed = sentry.init.mock.calls[0][0].beforeSend({});
+    expect(processed.contexts.trace.trace_id).toBe(transaction.contexts.trace.trace_id);
   });
 
-  it('projects each span name and attributes verbatim, with no per-span logic', async () => {
+  it('projects each span description and data verbatim, with no per-span logic', async () => {
     const withDownload: CrashReport = {
       ...sampleReport,
       diagnostics: {
@@ -173,23 +169,24 @@ describe('submitReport', () => {
 
     expect(await submitReport(path)).toBe(0);
 
+    const transaction = sentry.captureEvent.mock.calls[0][0];
     // The download span's data-provided description and attributes flow through
     // unchanged.
-    expect(sentry.startInactiveSpan).toHaveBeenCalledWith(
-      expect.objectContaining({
-        name: 'atomic-search@3.60.2',
-        op: 'template.download',
-        attributes: {
-          'coveo.template': 'atomic-search',
-          'coveo.template_version': '3.60.2',
-        },
-      })
+    const download = transaction.spans.find(
+      (span: {op: string}) => span.op === 'template.download'
     );
+    expect(download).toMatchObject({
+      description: 'atomic-search@3.60.2',
+      data: {
+        'coveo.template': 'atomic-search',
+        'coveo.template_version': '3.60.2',
+      },
+    });
     // A span with no attributes forwards its description as-is (a human label,
-    // not the op token) and carries no attributes.
-    expect(sentry.startInactiveSpan).toHaveBeenCalledWith(
-      expect.objectContaining({name: 'Resolve inputs', op: 'input.resolve', attributes: undefined})
-    );
+    // not the op token) and carries empty data.
+    const input = transaction.spans.find((span: {op: string}) => span.op === 'input.resolve');
+    expect(input.description).toBe('Resolve inputs');
+    expect(input.data).toEqual({});
   });
 
   it('captures a plain exception when no spans were recorded', async () => {
@@ -201,7 +198,7 @@ describe('submitReport', () => {
     await writeFile(path, JSON.stringify(noSpans));
 
     expect(await submitReport(path)).toBe(0);
-    expect(sentry.startSpanManual).not.toHaveBeenCalled();
+    expect(sentry.captureEvent).not.toHaveBeenCalled();
     expect(sentry.captureException).toHaveBeenCalledOnce();
   });
 
@@ -228,7 +225,6 @@ describe('submitReport', () => {
       defaultIntegrations: false,
       sendDefaultPii: false,
       includeServerName: false,
-      tracesSampleRate: 1,
     });
     expect(typeof initOptions.dsn).toBe('string');
     expect(initOptions.dsn.length).toBeGreaterThan(0);
