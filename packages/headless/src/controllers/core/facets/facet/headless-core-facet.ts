@@ -500,7 +500,7 @@ export function buildCoreFacet(
       const resultsMustMatch = request.resultsMustMatch;
 
       return {
-        label: response?.label,
+        label: 'POTATO!',
         facetId,
         tabs,
         values,
