@@ -132,7 +132,7 @@ export function toCommerceApiSort(criterion: CommerceSortCriterion): CommerceAPI
 // Commerce API: response → domain
 export function fromCommerceApiSort(raw: CommerceAPISortPayload): CommerceSortCriterion {
   if (raw.sortCriteria === 'relevance') return { by: 'relevance' };
-  if (raw.sortCriteria === 'fields' && raw.fields?.length) {
+  if (Array.isArray(raw.fields) && raw.fields.length > 0) {
     return {
       by: 'field',
       field: raw.fields[0].field,
@@ -155,8 +155,21 @@ The translation layer is integrated into both API request paths via selectors in
 // In sort-selectors.ts
 buildSortRequest: createMemoizedStateSelector(sliceSelector, (state: SortState): CommerceApiSortPayload | undefined => {
   if (!state.appliedSort) { return undefined; }
-  const criterion = Array.isArray(state.appliedSort) ? state.appliedSort[0] : state.appliedSort;
-  return toCommerceApiSort(criterion as CommerceSortCriterion);
+  const criteria = Array.isArray(state.appliedSort) ? state.appliedSort : [state.appliedSort];
+  if (criteria.length === 0) { return undefined; }
+
+  const hasRelevance = criteria.some((c) => c.by === 'relevance');
+  if (hasRelevance) { return {sortCriteria: 'relevance'}; }
+
+  const fields = criteria
+    .filter((c): c is CommerceSortCriterion & {by: 'field'} => c.by === 'field')
+    .map((c) => ({
+      field: c.field,
+      direction: (c.direction === 'ascending' ? 'asc' : 'desc') as 'asc' | 'desc',
+      ...(c.displayName ? {displayName: c.displayName} : {}),
+    }));
+
+  return {sortCriteria: 'fields', fields};
 }),
 
 buildSearchSortCriteria: createMemoizedStateSelector(sliceSelector, (state: SortState): string | undefined => {
@@ -303,26 +316,30 @@ export function buildSortController<T extends Supports<'search'>>(
 ): SortController<T>;
 ```
 
-**`isSortedBy` implementation** — structural equality excluding `displayName`:
+**`isSortedBy` implementation** — structural equality excluding `displayName`, using the reusable `deepEqual` utility from `src/internal/utils/deep-equal.ts`:
 
 ```typescript
+import {deepEqual} from '@/src/internal/utils/index.js';
+
+const SORT_COMPARE_OPTIONS = {excludeKeys: ['displayName']};
+
+// ...
+
 isSortedBy(criterion: SortCriterionFor<T> | SortCriterionFor<T>[]): boolean {
   const {appliedSort} = this.engine.read(this.#controllerState);
   if (!appliedSort) return false;
-  return structuralEqual(appliedSort, criterion);
+  return deepEqual(appliedSort, criterion, SORT_COMPARE_OPTIONS);
 }
+```
 
-function structuralEqual(a: unknown, b: unknown): boolean {
-  if (Array.isArray(a) && Array.isArray(b)) {
-    return a.length === b.length && a.every((item, i) => structuralEqual(item, b[i]));
-  }
-  if (typeof a === 'object' && typeof b === 'object' && a && b) {
-    const {displayName: _a, ...restA} = a as any;
-    const {displayName: _b, ...restB} = b as any;
-    return JSON.stringify(restA) === JSON.stringify(restB);
-  }
-  return a === b;
-}
+The `deepEqual` utility performs recursive, key-order-independent comparison with an optional `excludeKeys` option to skip presentational properties:
+
+```typescript
+export function deepEqual(
+  a: unknown,
+  b: unknown,
+  options?: {excludeKeys?: string[]}
+): boolean;
 ```
 
 ### Public Actions: `src/public/actions/sort/sort-actions.ts`
