@@ -7,10 +7,12 @@
         "build:doc",
         "babel:headless"
       ],
+      "inputs": ["$TURBO_EXTENDS$", "!.kiro/**"],
       "outputs":[]
     },
     "build:staticresources": {
       "dependsOn": ["^build", "babel:headless"],
+      "inputs": ["$TURBO_DEFAULT$", "!**/*.md", "!**/LICENSE*", "!**/.vscode/**", "!**/catalog-info*.yaml", "!.kiro/**"],
       "outputs": [
         "force-app/main/default/staticresources/coveobueno/**",
         "force-app/main/default/staticresources/coveoheadless/**",
@@ -21,10 +23,12 @@
     },
     "build:doc": {
       "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", "!**/*.md", "!**/LICENSE*", "!**/.vscode/**", "!**/catalog-info*.yaml", "!.kiro/**", "!docs/adr/**"],
       "outputs": ["docs/out/**"]
     },
     "babel:headless": {
       "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", "!**/*.md", "!**/LICENSE*", "!**/.vscode/**", "!**/catalog-info*.yaml", "!.kiro/**"],
       "outputs": [
         ".tmp/quantic-compiled/**"
       ]
@@ -38,22 +42,27 @@
       "outputs": []
     },
     "test": {
+      "inputs": ["$TURBO_EXTENDS$", "!.kiro/**"],
       "outputs": [],
       "dependsOn": ["test:unit", "lint:check:tests", "validate:types", "validate:types:build-scripts"]
     },
     "test:unit": {
       "dependsOn": ["build"],
+      "inputs": ["$TURBO_DEFAULT$", "!**/*.md", "!**/LICENSE*", "!**/.vscode/**", "!**/catalog-info*.yaml", "!.kiro/**"],
       "outputs": []
     },
     "validate:types": {
       "dependsOn": ["build"],
+      "inputs": ["$TURBO_DEFAULT$", "!**/*.md", "!**/LICENSE*", "!**/.vscode/**", "!**/catalog-info*.yaml", "!.kiro/**"],
       "outputs": []
     },
     "validate:types:build-scripts": {
+      "inputs": ["$TURBO_DEFAULT$", "!**/*.md", "!**/LICENSE*", "!**/.vscode/**", "!**/catalog-info*.yaml", "!.kiro/**"],
       "outputs": []
     },
     "lint:check:tests": {
       "dependsOn": ["build"],
+      "inputs": ["$TURBO_DEFAULT$", "!**/*.md", "!**/LICENSE*", "!**/.vscode/**", "!**/catalog-info*.yaml", "!.kiro/**"],
       "outputs": []
     }
   }
