@@ -6,6 +6,9 @@ on:
 permissions:
   contents: read
 
+env:
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+
 jobs:
   pr-report:
     if: ${{ github.event_name == 'pull_request' && !startsWith(github.head_ref, 'changeset-release/') }}
@@ -40,7 +43,6 @@ jobs:
       - uses: ./.github/actions/setup
         with:
           skip-build: 'true'
-          load-cache: 'false'
       - run: pnpm run pr:report
         env:
           GITHUB_CREDENTIALS: ${{ steps.generate-token.outputs.token }}
@@ -60,8 +62,6 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
       - uses: ./.github/actions/setup
-        with:
-          load-cache: 'false'
   build-missing:
     name: 'Build & commit missing generated files'
     if: ${{ github.event_name != 'pull_request' || !startsWith(github.head_ref, 'changeset-release/') }}
@@ -79,8 +79,6 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
       - uses: ./.github/actions/setup
-        with:
-          load-cache: 'false'
       - name: Check for uncommitted changes
         id: check-changes
         run: |
@@ -117,8 +115,6 @@ jobs:
 
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
       - uses: ./.github/actions/setup
-        with:
-          save-cache: 'true'
   build-cdn:
     name: Build CDN
     if: ${{ github.event_name != 'pull_request' || !startsWith(github.head_ref, 'changeset-release/') }}
@@ -198,7 +194,6 @@ jobs:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
       - uses: ./.github/actions/setup
         with:
-          cache-prefix: 'cdn'
           build-command: "pnpm exec turbo build --filter='!./samples/**'"
       - name: 'Run CDN checks'
         uses: ./.github/actions/cdn-checks
@@ -643,6 +638,7 @@ jobs:
     secrets:
       SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
       SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
   publish-preview:
     if: ${{ !cancelled() && github.event_name == 'pull_request' && !startsWith(github.head_ref, 'changeset-release/') }}
     needs: build
@@ -655,8 +651,6 @@ jobs:
           egress-policy: audit
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
       - uses: ./.github/actions/setup
-        with:
-          load-cache: 'false'
       - name: Resolve catalog references in pkg.pr.new templates
         run: node packages/pkg-new-template/scripts/flatten-catalog.mjs
       - name: Publish to pkg.pr.new
