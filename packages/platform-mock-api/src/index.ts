@@ -8,4 +8,5 @@ export {MockRecommendationApi} from './recommendation/mock.js';
 export {MockAgentApi} from './agent/mock.js';
 export {MockAnswerApi} from './answer/mock.js';
 export {MockConverseApi} from './converse/mock.js';
+export {MockHostedPageApi} from './hostedpage/mock.js';
 export {MockMachineLearningApi} from './machinelearning/mock.js';
