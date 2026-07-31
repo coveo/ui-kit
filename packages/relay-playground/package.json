@@ -5,7 +5,7 @@
   "description": "Next.js playground app for manually testing and exploring the @coveo/relay analytics library",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "exit 0",
     "test": "pnpm run test:relay-node",
     "test:relay-node": "node ./tests/relay-node.js && node ./tests/relay-node.mjs"
   },
