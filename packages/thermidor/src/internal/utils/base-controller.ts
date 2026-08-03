@@ -1,5 +1,5 @@
 import type {FullEngine} from '@/src/internal/engine/index.js';
-import type {StateSelector, Unsubscribe} from '@/src/internal/engine/index.js';
+import type {StateSelector} from '@/src/internal/engine/index.js';
 import type {Controller} from './controller-types.js';
 
 export abstract class BaseController<TState> implements Controller<TState> {
@@ -16,7 +16,7 @@ export abstract class BaseController<TState> implements Controller<TState> {
     this.#stateSelector = stateSelector;
   }
 
-  subscribe(callback: (state: TState) => void): Unsubscribe {
-    return this.engine.subscribe(this.#stateSelector, callback);
+  subscribe(listener: () => void): () => void {
+    return this.engine.subscribe(this.#stateSelector, () => listener());
   }
 }
