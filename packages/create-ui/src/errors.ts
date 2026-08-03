@@ -15,6 +15,18 @@ export class TemplateVersionUnavailableError extends Error {
   }
 }
 
+export type CrashReportErrorKind = 'not-a-report' | 'version-mismatch';
+
+export class CrashReportError extends Error {
+  constructor(
+    readonly kind: CrashReportErrorKind,
+    readonly reportVersion?: number
+  ) {
+    super(kind);
+    this.name = 'CrashReportError';
+  }
+}
+
 export function isExpectedError(error: unknown): boolean {
   if (error instanceof ExpectedError) {
     return true;
