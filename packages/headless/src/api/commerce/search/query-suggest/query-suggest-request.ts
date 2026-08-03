@@ -10,7 +10,7 @@ import type {
 } from '../../commerce-api-params.js';
 import {baseRequest} from '../../common/request.js';
 
-export interface CountParam {
+interface CountParam {
   count?: number;
 }
 
