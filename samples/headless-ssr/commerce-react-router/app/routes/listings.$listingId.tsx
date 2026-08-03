@@ -24,12 +24,11 @@ import {getNavigatorContext} from '@/lib/navigator-context';
 import ParameterManager from '../components/parameter-manager.js';
 import NotifyTrigger from '../components/triggers/notify-trigger.js';
 
-export const loader = async ({params, request}: LoaderFunctionArgs) => {
+export const loader = async ({params, request, url}: LoaderFunctionArgs) => {
   invariant(params.listingId, 'Missing listingId parameter');
 
-  const navigatorContext = await getNavigatorContext(request);
+  const navigatorContext = await getNavigatorContext(request, url);
 
-  const url = new URL(request.url);
   const {deserialize} = buildParameterSerializer();
   const parameters = deserialize(url.searchParams);
 
